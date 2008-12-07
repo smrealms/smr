@@ -1,0 +1,432 @@
+<?php
+require_once('SmrMySqlDatabase.class.inc');
+class SmrForce
+{
+	protected static $CACHE_FORCES = array();
+	protected static $CACHE_SECTOR_FORCES = array();
+	
+	protected static $refreshAllHREF;
+	
+	protected $db;
+	
+	protected $ownerID;
+	protected $sectorID;
+	protected $gameID;
+	protected $combatDrones=0;
+	protected $scoutDrones=0;
+	protected $mines=0;
+	protected $expire=0;
+	
+	protected $hasChanged = false;
+	
+	protected $examineDropForcesHREF;
+	protected $examineAttackForcesHREF;
+	protected $refreshHREF;
+	protected $dropSDHREF;
+	protected $takeSDHREF;
+	protected $dropCDHREF;
+	protected $takeCDHREF;
+	protected $dropMineHREF;
+	protected $takeMineHREF;
+	
+	public static function &getSectorForces($gameID,$sectorID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID . ':' . $sectorID]))
+		{
+			$db = new SmrMySqlDatabase();
+			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
+			$db->query('SELECT owner_id FROM sector_has_forces WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID);
+			$forces = array();
+			while($db->nextRecord())
+			{
+				$forces[$db->getField('owner_id')] =& self::getForce($gameID,$sectorID,$db->getField('owner_id'));
+			}
+			return self::$CACHE_SECTOR_FORCES[$gameID . ':' . $sectorID] =& $forces;
+		}
+		return self::$CACHE_SECTOR_FORCES[$gameID . ':' . $sectorID];
+	}
+	
+	public static function &getForce($gameID,$sectorID,$ownerID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID]))
+		{
+			$p = new SmrForce($gameID,$sectorID,$ownerID);
+			return self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID] =& $p;
+		}
+		return self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID];
+		
+	}
+	
+	protected function __construct($gameID,$sectorID, $ownerID)
+	{
+		$this->db = new SmrMySqlDatabase();
+		$this->db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
+		$this->db->query('SELECT * FROM sector_has_forces WHERE game_id = '.$gameID.' AND ' .
+														   'sector_id = '.$sectorID.' AND ' .
+														   'owner_id = '.$ownerID.'  LIMIT 1');
+		$this->ownerID			= $ownerID;
+		$this->sectorID			= $sectorID;
+		$this->gameID			= $gameID;
+		if($this->db->nextRecord())
+		{
+			$this->combatDrones		= $this->db->getField('combat_drones');
+			$this->scoutDrones		= $this->db->getField('scout_drones');
+			$this->mines			= $this->db->getField('mines');
+			$this->expire			= $this->db->getField('expire_time');
+		}
+
+		// let forces expire (simply let all expire) (update refreshing first)
+//		$db = new SMR_DB();
+//		$db2 = new SMR_DB();
+//		$time = time();
+//		$db->query('SELECT * FROM force_refresh WHERE refresh_at <= '.$time);
+//		while ($db->next_record()) {
+//			
+//			$total = $db->f('num_forces');
+//			$days = ceil($total / 10);
+//			if ($days > 5) $days = 5;
+//			$ex_time = $db->f('refresh_at') + ($days * 86400);
+//			$db2->query('UPDATE sector_has_forces SET expire_time = '.$ex_time.' WHERE game_id = '.$this->gameID.' AND sector_id = ' . $db->f('sector_id') . ' AND owner_id = ' . $db->f('owner_id'));
+//			$db2->query('DELETE FROM force_refresh WHERE game_id = '.$this->gameID.' ' .
+//					'AND sector_id = ' . $db->f('sector_id') . ' AND owner_id = ' . $db->f('owner_id'));
+//						
+//		}
+	}
+	public function exists()
+	{
+		return ($this->hasCDs()>0||$this->hasSDs()||$this->hasMines())&&!$this->hasExpired();
+	}
+	public function getTypeID()
+	{
+		return $this->typeID;
+	}
+	
+	public function getName()
+	{
+		return $this->name;
+	}
+	
+	public function getProcessor()
+	{
+		return $this->processor;
+	}
+	
+	public function getImage()
+	{
+		return $this->image;
+	}
+	
+	public function getHREF()
+	{
+		if(!isset($this->HREF))
+		{
+			$container = array();
+			$container['url'] = 'skeleton.php';
+			$container['body'] = $this->getProcessor();
+			$this->HREF = SmrSession::get_new_href($container);
+		}
+		return $this->HREF;
+	}
+	
+	public function canAcceptCDs()
+	{
+		return $this->getCDs()<50;
+	}
+	
+	public function canAcceptSDs()
+	{
+		return $this->getSDs()<5;
+	}
+	
+	public function canAcceptMines()
+	{
+		return $this->getMines()<50;
+	}
+	
+	public function hasCDs()
+	{
+		return $this->getCDs()>0;
+	}
+	
+	public function hasSDs()
+	{
+		return $this->getSDs()>0;
+	}
+	
+	public function hasMines()
+	{
+		return $this->getMines()>0;
+	}
+	
+	public function getCDs()
+	{
+		return $this->combatDrones;
+	}
+	
+	public function getSDs()
+	{
+		return $this->scoutDrones;
+	}
+	
+	public function getMines()
+	{
+		return $this->mines;
+	}
+	
+	public function addMines($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot add negative mines.');
+		$this->setMines($this->getMines() + $amount);
+	}
+	
+	public function addCDs($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot add negative CDs.');
+		$this->setCDs($this->getCDs() + $amount);
+	}
+	
+	public function addSDs($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot add negative SDs.');
+		$this->setSDs($this->getSDs() + $amount);
+	}
+	
+	public function takeMines($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot take negative mines.');
+		$this->setMines($this->getMines() - $amount);
+	}
+	
+	public function takeCDs($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot take negative CDs.');
+		$this->setCDs($this->getCDs() - $amount);
+	}
+	
+	public function takeSDs($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot take negative SDs.');
+		$this->setSDs($this->getSDs() - $amount);
+	}
+	
+	public function setMines($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot set negative mines.');
+		if($amount==$this->getMines())
+			return;
+		$this->hasChanged = true;
+		$this->mines = $amount;
+	}
+	
+	public function setCDs($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot set negative CDs.');
+		if($amount==$this->getCDs())
+			return;
+		$this->hasChanged = true;
+		$this->combatDrones = $amount;
+	}
+	
+	public function setSDs($amount)
+	{
+		if($amount<0)
+			throw new Exception('Cannot set negative SDs.');
+		if($amount==$this->getSDs())
+			return;
+		$this->hasChanged = true;
+		$this->scoutDrones = $amount;
+	}
+	
+	public function hasExpired()
+	{
+		return $this->expire<TIME;
+	}
+	
+	public function getExpire()
+	{
+		return $this->expire;
+	}
+	
+	public function setExpire($time)
+	{
+		if($time<0)
+			throw new Exception('Cannot set negative expiry.');
+		if($time==$this->getExpire())
+			return;
+		$this->hasChanged = true;
+		$this->expire = $time;
+	}
+	
+	public function getOwnerID()
+	{
+		return $this->ownerID;
+	}
+	
+	public function getGameID()
+	{
+		return $this->gameID;
+	}
+	
+	public function getSectorID()
+	{
+		return $this->sectorID;
+	}
+
+	function &getOwner()
+	{
+		require_once(get_file_loc('SmrPlayer.class.inc'));
+		return SmrPlayer::getPlayer($this->getOwnerID(),$this->getGameID());
+	}
+
+	public function update()
+	{
+		if ($this->mines == 0 && $this->combatDrones == 0 && $this->scoutDrones == 0)
+		{
+			$this->db->query('DELETE FROM sector_has_forces ' .
+						 'WHERE game_id = '.$this->gameID.' AND ' .
+							   'sector_id = '.$this->sectorID.' AND ' .
+							   'owner_id = '.$this->ownerID);
+		}
+		else
+		{
+			$this->db->query('REPLACE INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time) ' .
+												  'VALUES('.$this->gameID.', '.$this->sectorID.', '.$this->ownerID.', '.$this->combatDrones.', '.$this->scoutDrones.', '.$this->mines.', '.$this->expire.')');
+		}
+	}
+	
+	public function getExamineDropForcesHREF()
+	{
+		if(!isset($this->examineDropForcesHREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'forces_drop.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$this->examineDropForcesHREF = SmrSession::get_new_href($container);
+		}
+		return $this->examineDropForcesHREF;
+	}
+	
+	public function getExamineAttackForcesHREF()
+	{
+		if(!isset($this->examineAttackForcesHREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'forces_examine.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$this->examineAttackForcesHREF = SmrSession::get_new_href($container);
+		}
+		return $this->examineAttackForcesHREF;
+	}
+	
+	public function getRefreshHREF()
+	{
+		if(!isset($this->refreshHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_refresh_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$this->refreshHREF = SmrSession::get_new_href($container);
+		}
+		return $this->refreshHREF;
+	}
+	
+	public function getDropSDHREF()
+	{
+		if(!isset($this->dropSDHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_drop_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$container['drop_scout_drones']	= 1;
+			$this->dropSDHREF = SmrSession::get_new_href($container);
+		}
+		return $this->dropSDHREF;
+	}
+	
+	public function getTakeSDHREF()
+	{
+		if(!isset($this->takeSDHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_drop_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$container['take_scout_drones']	= 1;
+			$this->takeSDHREF = SmrSession::get_new_href($container);
+		}
+		return $this->takeSDHREF;
+	}
+	
+	public function getDropCDHREF()
+	{
+		if(!isset($this->dropCDHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_drop_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$container['drop_combat_drones']	= 1;
+			$this->dropCDHREF = SmrSession::get_new_href($container);
+		}
+		return $this->dropCDHREF;
+	}
+	
+	public function getTakeCDHREF()
+	{
+		if(!isset($this->takeCDHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_drop_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$container['take_combat_drones']	= 1;
+			$this->takeCDHREF = SmrSession::get_new_href($container);
+		}
+		return $this->takeCDHREF;
+	}
+	
+	public function getDropMineHREF()
+	{
+		if(!isset($this->dropMineHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_drop_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$container['drop_mines']	= 1;
+			$this->dropMineHREF = SmrSession::get_new_href($container);
+		}
+		return $this->dropMineHREF;
+	}
+	
+	public function getTakeMineHREF()
+	{
+		if(!isset($this->takeMineHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_drop_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$container['take_mines']	= 1;
+			$this->takeMineHREF = SmrSession::get_new_href($container);
+		}
+		return $this->takeMineHREF;
+	}
+	
+	public static function getRefreshAllHREF()
+	{
+		if(!isset(self::$refreshAllHREF))
+		{
+			$container = array();
+			$container['url']		= 'forces_mass_refresh.php';
+			self::$refreshAllHREF	= SmrSession::get_new_href($container);
+		}
+		return self::$refreshAllHREF;
+	}
+}
+?>

@@ -1,0 +1,2021 @@
+<?
+require_once('AbstractSmrPlayer.class.inc');
+require_once('Globals.class.inc');
+
+
+class SmrPlayer extends AbstractSmrPlayer
+{
+	protected static $CACHE_SECTOR_PLAYERS = array();
+	protected static $CACHE_PLAYERS = array();
+	
+//	var $race_name;
+//	var $level_id;
+//	var $level_name;
+//	var $alliance_description;
+//	var $military_payment;
+//	var $controlled;
+//	var $old_dead;
+	protected $newbieWarning;
+//	var $relations_global;
+//	var $relations_global_rev;
+//	var $display_experience;
+//	var $display_level_id;
+//	var $display_level_name;
+//	var $sector_change;
+//	var $game_type;
+//	var $game_speed;
+	protected $validated;
+//	var $out_of_game;
+//	var $last_ticker_update;
+	protected $ticker;
+//    var $safe_exit;
+//    var $detected;
+	protected $lastSectorID;
+	protected $turns;
+	protected $originalMaintenance;
+	protected $lastMaintenanceUpdate;
+	protected $lastShipMod;
+	protected $lastNewsUpdate;
+	protected $stunned;
+	protected $fleed;
+	protected $attackColor;
+	protected $kicked;
+	protected $lastCPLAction;
+//	protected $pastKnowledge;
+	protected $governmentHelp;
+//	protected $allianceJoinable;
+	protected $lastPort;
+	protected $bank;
+	protected $zoom;
+//	protected $zoomOn;
+//	protected $chat;
+//	protected $chatPosition;
+	protected $displayMissions;
+	protected $ignoreGlobals;
+//	protected $changedStats;
+	protected $maxTurns = 1000;
+	protected $completedMissions;
+	protected $missions;
+	protected $mining;
+	protected $plottedCourse;
+	
+	
+	
+	protected $HOF;
+	
+	protected $examineTraderHREF;
+	protected $traderSearchHREF;
+	protected $allianceRosterHREF;
+	
+//	public static function getPlayers($gameAccountIDArray,$forceUpdate = false)
+//	{
+//		global $CACHE_PLAYERS;
+//		$playerArray = array();
+//		if(!$forceUpdate)
+//		{
+//			foreach($gameAccountIDArray as $gameAccountID)
+//			{
+//				$playerArray[$gameAccountID['Account ID']] = $CACHE_PLAYERS[$gameAccountID['Game ID'].$gameAccountID['Account ID']];
+//			}
+//		}
+//	}
+
+	public static function &getSectorPlayers($gameID,$sectorID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID]))
+		{
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID);
+			$players = array();
+			while($db->nextRecord())
+			{
+				$accountID = $db->getField('account_id');
+				$players[$db->getField('account_id')] =& self::getPlayer($accountID,$gameID);
+			}
+			return self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID] =& $players;
+		}
+		return self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID];
+		
+	}
+
+	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false)
+	{
+		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID . ':' . $accountIDOrResultArray]))
+		{
+			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
+			return self::$CACHE_PLAYERS[$gameID . ':' . $p->getAccountID()] =& $p;
+		}
+		return self::$CACHE_PLAYERS[$gameID. ':' .$accountIDOrResultArray];
+		
+	}
+	
+	protected function __construct($gameID,&$accountIDOrResultArray)
+	{
+		parent::__construct();
+		$this->tableSQL='player';
+		global $GOODS, $TRADABLE_GOODS, $GAME_SPEED, $BASE_PRICES;
+		$result=false;
+		if (is_array($accountIDOrResultArray))
+			$result =& $accountIDOrResultArray;
+		else
+		{
+			$sql = $this->db->query('SELECT * FROM player WHERE account_id = '.$accountIDOrResultArray.' AND game_id = '.$gameID.' LIMIT 1');
+			$this->db->nextRecord($sql);
+			$result = $this->db->getRow();
+		}
+		if($result)
+		{
+			$this->accountID = $result['account_id'];
+			$this->gameID = $result['game_id'];
+			$this->playerName = $result['player_name'];
+			$this->playerID = $result['player_id'];
+			$this->sectorID = $result['sector_id'];
+			$this->lastSectorID = $result['last_sector_id'];
+			$this->turns = $result['turns'];
+			$this->originalMaintenance = $this->turns;
+			$this->lastMaintenanceUpdate = $result['last_turn_update'];
+			$this->newbieTurns = $result['newbie_turns'];
+			$this->lastShipMod = $result['last_ship_mod'];
+			$this->lastNewsUpdate = $result['last_news_update'];
+			$this->stunned = $result['stunned'];
+			$this->fleed = $result['fleed'];
+			$this->attackColor = $result['attack_warning'];
+			$this->dead = $result['dead']=='TRUE';
+			$this->startDead = $this->dead;
+			$this->landedOnPlanet = $result['land_on_planet']=='TRUE';
+			$this->kicked = $result['kicked'];
+			$this->lastShieldUpdate = $result['last_shield_update'];
+			$this->lastActive = $result['last_active'];
+			$this->lastCPLAction = $result['last_cpl_action'];
+			$this->raceID = $result['race_id'];
+			$this->credits = $result['credits'];
+			$this->experience = $result['experience'];
+			$this->alignment = $result['alignment'];
+//			$this->pastKnowledge = $result['past_knowledge'];
+			$this->governmentHelp = $result['government_help'];
+			$this->allianceID = $result['alliance_id'];
+//			$this->allianceJoinable = $result['alliance_join'];
+			$this->shipID = $result['ship_type_id'];
+			$this->kills = $result['kills'];
+			$this->deaths = $result['deaths'];
+			$this->lastPort = $result['last_port'];
+			$this->bank = $result['bank'];
+			$this->zoom = $result['zoom'];
+//			$this->zoomOn = $result['zoom_on']=='TRUE';
+//			$this->chat = $result['chat'];
+//			$this->chatPosition = $result['chat_position'];
+			$this->displayMissions = $result['display_missions'];
+			$this->ignoreGlobals = $result['ignore_globals'];
+			$this->newbieWarning = $result['newbie_warning']=='TRUE';
+//			$this->changedStats = $result['changed_stats'];
+
+
+			// is account validated?
+			$this->db->query('SELECT * FROM account WHERE account_id = '.$this->accountID);
+			if ($this->db->nextRecord())
+				$this->validated = $this->db->getField('validated')=='TRUE';
+			
+			$this->SQL = 'account_id = '.$this->accountID.' AND game_id = '.$this->gameID;
+		}
+		else
+		{
+			throw new Exception('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
+		}
+	}
+	
+	function get($bit)
+	{
+		switch($bit)
+		{
+			case 'Sector ID':
+				return $this->sectorID;
+			case 'Last Sector ID':
+				return $this->lastSectorID;
+			case 'Player Name':
+				return $this->playerName;
+			case 'Player ID':
+				return $this->playerID;
+			case 'Land On Planet':
+				return $this->landedOnPlanet;
+			case 'Kicked':
+				return $this->kicked;
+			case 'Newbie Turns':
+				return $this->newbieTurns;
+			case 'Race ID':
+				return $this->raceID;
+			case 'Credits':
+				return $this->credits;
+			case 'Experience':
+				return $this->experience;
+			case 'Kills':
+				return $this->kills;
+			case 'Deaths':
+				return $this->deaths;
+			case 'Alignment':
+				return $this->alignment;
+//			case 'Past Knowledge':
+//				return $this->pastKnowledge;
+			case 'Government Help':
+				return $this->governmentHelp;
+			case 'Alliance ID':
+				return $this->allianceID;
+//			case 'Alliance Joinable':
+//				return $this->allianceJoinable;
+			case 'Ship ID':
+				return $this->shipID;
+			case 'Dead':
+				return $this->dead;
+			case 'Last Port':
+				return $this->lastPort;
+			case 'Last News':
+				return $this->lastNewsUpdate;
+			case 'Last Ship Mod':
+				return $this->lastShipMod;
+			case 'Default Zoom':
+				return $this->zoom;
+//			case 'Default Zoom Toggle':
+//				return $this->zoomOn;
+			case 'Bank':
+				return $this->bank;
+			case 'Maintenance':
+			case 'Turns':
+				return $this->turns;
+			case 'Last Maintenance Update':
+				return $this->lastMaintenanceUpdate;
+			case 'Last Active':
+				return $this->lastActive;
+			case 'Last CPL Action':
+				return $this->lastCPLAction;
+			case 'Last Shield Regen':
+				return $this->lastShieldUpdate;
+			case 'Stunned':
+				return $this->stunned;
+			case 'Fleed':
+				return $this->fleed;
+			case 'Attack Color':
+				return $this->attackWarning;
+//			case 'Chat':
+//				return $this->chat;
+//			case 'Chat Position':
+//				return $this->chatPosition;
+			case 'Display Missions':
+				return $this->displayMissions;
+			case 'Ignore Global':
+				return $this->ignoreGlobals;
+			case 'Max Maintenance':
+				return $this->getMaxTurns();
+			case 'Level ID':
+				return $this->getLevelID();
+			case 'Display Name':
+				return $this->getDisplayName();
+			case 'Span Color':
+				return $this->getSpanColour();
+//			case 'Ship Size':
+//				return $this->getShipSize();
+				
+			case 'Goods':
+				return $this->getGoods();
+			case 'Stats':
+				return $this->getStats();
+			case 'Erebus Knowledge':
+				return $this->getKnowledge('Erebus');
+			case 'Nyx Knowledge':
+				return $this->getKnowledge('Nyx');
+			case 'Tartarus Knowledge':
+				return $this->getKnowledge('Tartarus');
+			case 'Aether Knowledge':
+				return $this->getKnowledge('Aether');
+			default:
+				throw new Exception('Player->get('.$bit.') not found, report to Page.');
+		}
+	}
+	
+	public function &getAccount()
+	{
+		require_once('SmrAccount.class.inc');
+		return SmrAccount::getAccount($this->getAccountID());
+	}
+	
+	public function getKicked()
+	{
+		return $this->kicked;
+	}
+	
+	public function setKicked($boolStr)
+	{
+		if($this->kicked == $boolStr)
+			return;
+		$this->kicked=$boolStr;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET kicked = '.$this->db->escapeString($boolStr).' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function getStunned()
+	{
+		return $this->stunned;
+	}
+	
+	function setStunned($time)
+	{
+		if($this->stunned == $time)
+			return;
+		$this->stunned=$time;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET stunned = ' . $this->stunned . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function getFleed()
+	{
+		return $this->fleed;
+	}
+	
+	function setFleed($boolStr)
+	{
+		if($this->fleed == $boolStr)
+			return;
+		$this->fleed=$boolStr;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET fleed='.$this->db->escapeString($boolStr).' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function getZoom()
+	{
+		return $this->zoom;
+	}
+	
+	function setZoom($zoom)
+	{
+		if ($zoom < 0) $zoom = 0;
+		if ($zoom > 12) $zoom = 12;
+		if($this->zoom == $zoom)
+			return;
+		$this->zoom=$zoom;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET zoom = ' . $zoom . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function increaseZoom($zoom)
+	{
+		if ($zoom < 0)
+			throw new Exception('Trying to increase negative zoom.');
+		$this->setZoom($this->getZoom()+$zoom);
+	}
+	
+	function decreaseZoom($zoom)
+	{
+		if ($zoom < 0)
+			throw new Exception('Trying to decrease negative zoom.');
+		$this->setZoom($this->getZoom()-$zoom);
+	}
+	
+//	function isZoomOn()
+//	{
+//		return $this->zoomOn;
+//	}
+	
+	function getAlignment()
+	{
+		return $this->alignment;
+	}
+	
+	function increaseAlignment($align)
+	{
+		if($align < 0)
+			throw new Exception('Trying to increase negative align.');
+		if($align == 0)
+			return;
+		$align += $this->alignment;
+		$this->setAlignment($align);
+	}
+	function decreaseAlignment($align)
+	{
+		if($align < 0)
+			throw new Exception('Trying to decrease negative align.');
+		if($align == 0)
+			return;
+		$align = $this->alignment - $align;
+		$this->setAlignment($align);
+	}
+	function setAlignment($align)
+	{
+		if($this->alignment == $align)
+			return;
+		$this->alignment = $align;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET alignment = '.$this->alignment.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	function setSectorID($sectorID)
+	{
+		$this->lastSectorID = $this->sectorID;
+		$this->sectorID = $sectorID;
+		$this->updateLastCPLAction();
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET sector_id = ' . $this->sectorID . ', last_sector_id = '.$this->lastSectorID. ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function getLastSectorID()
+	{
+		return $this->lastSectorID;
+	}
+	
+	function setLastSectorID($lastSectorID)
+	{
+		if($this->lastSectorID == $lastSectorID)
+			return;
+		$this->lastSectorID=$lastSectorID;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET last_sector_id = '.$this->lastSectorID.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	function leaveAlliance()
+	{
+		$this->setAllianceID(0);
+//		$this->setAllianceJoinable(TIME + 1 * 3600);
+		$this->db->query('DELETE FROM player_has_alliance_role WHERE '.$this->SQL);
+	}
+	
+//	function getAllianceJoinable()
+//	{
+//		return $this->allianceJoinable;
+//	}
+	
+//	function setAllianceJoinable($time)
+//	{
+//		if($this->allianceJoinable == $time)
+//			return;
+//		$this->allianceJoinable=$time;
+//		$this->hasChanged=true;
+//		$this->db->query('UPDATE player SET alliance_join = '.$time.' WHERE '.$this->SQL.' LIMIT 1');
+//	}
+	
+	function getAttackColor()
+	{
+		return $this->attackColor;
+	}
+	
+	function setAttackColor($colour)
+	{
+		if($this->attackColor == $colour)
+			return;
+		$this->attackColor=$colour;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColor) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function getBank()
+	{
+		return $this->bank;
+	}
+
+	function increaseBank($credits)
+	{
+		if($credits < 0)
+			throw new Exception('Trying to increase negative credits.');
+		if($credits == 0)
+			return;
+		$credits += $this->bank;
+		$this->setBank($credits);
+	}
+	function decreaseBank($credits)
+	{
+		if($credits < 0)
+			throw new Exception('Trying to decrease negative credits.');
+		if($credits == 0)
+			return;
+		$credits = $this->bank - $credits;
+		$this->setBank($credits);
+	}
+	function setBank($credits)
+	{
+		if($this->bank == $credits)
+			return;
+		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) return;
+		if($credits < 0)
+			throw new Exception('Trying to set negative credits.');
+		if($credits > MAX_MONEY)
+			throw new Exception('Trying to set more than max credits.');
+		$this->bank = $credits;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET bank = '.$this->bank.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+
+	function increaseCredits($credits)
+	{
+		if($credits < 0)
+			throw new Exception('Trying to increase negative credits.');
+		if($credits == 0)
+			return;
+		$credits += $this->credits;
+		$this->setCredits($credits);
+	}
+	function decreaseCredits($credits)
+	{
+		if($credits < 0)
+			throw new Exception('Trying to decrease negative credits.');
+		if($credits == 0)
+			return;
+		$credits = $this->credits - $credits;
+		$this->setCredits($credits);
+	}
+	function setCredits($credits)
+	{
+		if($this->credits == $credits)
+			return;
+		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) return;
+		if($credits < 0)
+			throw new Exception('Trying to set negative credits.');
+		if($credits > MAX_MONEY)
+			throw new Exception('Trying to set more than max credits.');
+		$this->credits = $credits;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET credits = '.$this->credits.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	function increaseExperience($experience,$type='Undefined')
+	{
+		if($experience < 0)
+			throw new Exception('Trying to increase negative experience.');
+		if($experience == 0)
+			return;
+		$newExperience = $this->experience + $experience;
+		$this->setExperience($newExperience);
+		$this->increaseHOF($experience,'Experience',$type);
+	}
+	function decreaseExperience($experience,$type='Undefined')
+	{
+		if($experience < 0)
+			throw new Exception('Trying to decrease negative experience.');
+		if($experience == 0)
+			return;
+		$newExperience = $this->experience - $experience;
+		$this->setExperience($newExperience);
+		$this->decreaseHOF($experience,'Experience',$type);
+	}
+	function setExperience($experience)
+	{
+		if($this->experience == $experience)
+			return;
+		if($experience < 0)
+			$experience=0;
+		global $MIN_EXPERIENCE;
+		if($experience<$MIN_EXPERIENCE)
+			$experience = $MIN_EXPERIENCE;
+		$this->experience = $experience;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET experience = '.$this->experience.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+
+	function getLastNewsUpdate()
+	{
+		return $this->lastNewsUpdate;
+	}
+
+	function setLastNewsUpdate($time)
+	{
+		if($this->lastNewsUpdate == $time)
+			return;
+		$this->lastNewsUpdate=$time;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET last_news_update = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+
+	function updateLastNewsUpdate()
+	{
+		$this->setLastNewsUpdate(TIME);
+	}
+
+	function getGovernmentHelp()
+	{
+		return $this->governmentHelp;
+	}
+
+//	function getPastKnowledge()
+//	{
+//		return $this->pastKnowledge;
+//	}
+	
+//	function getChangedStats()
+//	{
+//		return $this->changedStats;
+//	}
+//	
+//	function setChangedStats($boolStr)
+//	{
+//		if($this->changedStats == $boolStr)
+//			return;
+//		$this->changedStats=$boolStr;
+//		$this->hasChanged=true;
+//		$this->db->query('UPDATE player SET changed_stats = '.$this->db->escapeString($boolStr).' WHERE '.$this->SQL.' LIMIT 1');
+//	}
+	
+//	function getChat()
+//	{
+//		return $this->chat;
+//	}
+//	
+//	function setChat($chat)
+//	{
+//		if($this->chat == $chat)
+//			return;
+//		$this->chat=$chat;
+//		$this->hasChanged=true;
+//		$this->db->query('UPDATE player SET chat = ' . $this->db->escapeString($chat) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//	}
+//	
+//	function getChatPosition()
+//	{
+//		return $this->chatPosition;
+//	}
+//	
+//	function setChatPosition($chatPosition)
+//	{
+//		if($this->chatPosition == $chatPosition)
+//			return;
+//		$this->chatPosition=$chatPosition;
+//		$this->hasChanged=true;
+//		$this->db->query('UPDATE player SET chat_position = ' . $this->db->escapeString($chatPosition) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//	}
+	
+	function getMaxTurns()
+	{
+		return $this->maxTurns;
+	}
+	
+	function getTurns()
+	{
+		return $this->turns;
+	}
+	
+	function getOriginalMaintenance()
+	{
+		return $this->originalMaintenance;
+	}
+
+	function takeTurns($take, $noob = 0,$updateLastActive = true) // taking maint counts as activity by default
+	{
+		if($take < 0 || $noob < 0)
+			throw new Exception('Trying to take negative turns.');
+		$new_maint = $this->turns - $take;
+		$new_noob = $this->newbieTurns - $noob;
+		
+		if(!has_beta_privilege('No SC Loss'))
+			$this->setTurns($new_maint,$new_noob,$updateLastActive);
+	}
+	function giveTurns($give, $noob = 0,$updateLastActive = false)
+	{
+		if($give < 0 || $noob < 0)
+			throw new Exception('Trying to give negative turns.');
+		$new_maint = $this->turns + $give;
+		$new_noob = $this->newbieTurns + $noob;
+		
+		if(!has_beta_privilege('No SC Gain'))
+			$this->setTurns($new_maint,$new_noob,$updateLastActive);
+	}
+	
+	public function updateTurns()
+	{
+		// is account validated?
+		if (!$this->isValidated()) return;
+		$ship =& $this->getShip();
+		
+		// update turns?
+		$time_diff = TIME - $this->getLastMaintenanceUpdate();
+		
+		// how many turns would he get right now?
+		$extraMaint = floor($time_diff * $ship->getSpeed() * Globals::getGameSpeed($this->gameID) / 3600);
+		
+		// do we have at least one turn to give?
+		if ($extraMaint > 0)
+		{
+			// recalc the time to avoid errors
+			$this->setLastMaintenanceUpdate($this->getLastMaintenanceUpdate() + ceil($extraMaint * 3600 / ($ship->getSpeed() * Globals::getGameSpeed($this->gameID))));
+			
+			$this->giveTurns($extraMaint);	
+		}
+	}
+		
+
+	function setTurns($maint,$newNoob = -1,$updateLastActive = false)
+	{
+		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)))
+			return;
+		$this->turns = $maint;
+
+		if ($this->turns < 0)
+			$this->turns = 0;
+		if ($this->turns > $this->getMaxTurns())
+			$this->turns = $this->getMaxTurns();
+			
+		if($newNoob != -1)
+			$this->newbieTurns = $newNoob;
+		if ($this->newbieTurns < 0)
+			$this->newbieTurns = 0;
+	
+		if (has_privilege('Unlimited Maintenance'))
+			$this->turns = $this->getMaxTurns();
+		
+		$this->hasChanged=true;
+		$sql = 'UPDATE player SET ' . ($updateLastActive === true ? 'last_active=' . TIME . ',last_cpl_action=' . TIME .',' : '') . (!$maintSame ? 'turns=' . $this->turns:'') . (!$newbSame ? (!$maintSame?',':'').'newbie_turns='.$this->newbieTurns : '' ).' WHERE ' . $this->SQL . ' LIMIT 1';
+		if(!has_beta_privilege('No SC Change'))
+			$this->db->query($sql);
+	}
+	
+	function getIgnoreGlobals()
+	{
+		return $this->ignoreGlobals;
+	}
+	
+	function setIgnoreGlobals($boolStr)
+	{
+		if($this->ignoreGlobals == $boolStr)
+			return;
+		$this->ignoreGlobals=$boolStr;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET ignore_globals = '.$this->db->escapeString($boolStr).' WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	
+	function getLastPort()
+	{
+		return $this->lastPort;
+	}
+	
+	function setLastPort($lastPort)
+	{
+		if($this->lastPort == $lastPort)
+			return;
+		$this->lastPort=$lastPort;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET last_port = ' . $this->lastPort . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function getLastCPLAction()
+	{
+		return $this->lastCPLAction;
+	}
+	
+	function setLastCPLAction($time)
+	{
+		if($this->lastCPLAction == $time)
+			return;
+		$this->lastCPLAction=$time;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET last_cpl_action=' . $this->lastCPLAction . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+	
+	function updateLastCPLAction()
+	{
+		$this->setLastCPLAction(TIME);
+	}
+	
+	function getDisplayMissions()
+	{
+		return $this->displayMissions;
+	}
+	
+	function setDisplayMissions($boolString)
+	{
+		if($this->displayMissions == $boolString)
+			return;
+		$this->displayMissions=$boolString;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET display_missions = '.$this->db->escapeString($boolString).' WHERE '.$this->SQL.' LIMIT 1');
+	
+	}
+	
+	function getLastMaintenanceUpdate()
+	{
+		return $this->lastMaintenanceUpdate;
+	}
+	
+	function setLastMaintenanceUpdate($time)
+	{
+		if($this->lastMaintenanceUpdate == $time)
+			return;
+		$this->lastMaintenanceUpdate=$time;
+		$this->hasChanged=true;
+		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastMaintenanceUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
+	}
+	
+	function getLastShipMod()
+	{
+		return $this->lastShipMod;
+	}
+	
+	function setLastShipMod($time)
+	{
+		if($this->lastShipMod == $time)
+			return;
+		$this->lastShipMod = $time;
+		$this->hasChanged=true;
+		$this->db->query('UPDATE player SET last_ship_mod = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
+	}
+
+	function getDisplayName()
+	{
+//NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
+			return get_colored_text($this->alignment,$this->playerName.' ('.$this->playerID.')');
+	}
+	function getLevelID()
+	{
+		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+		foreach ($LEVELS_REQUIREMENTS as $level_id => $require)
+		{
+			if ($this->experience >= $require['Requirement']) continue;
+				return $level_id - 1;
+		}
+		return max(array_keys($LEVELS_REQUIREMENTS));
+	}
+	function getLevelName()
+	{
+		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+		return $LEVELS_REQUIREMENTS[$this->getLevelID()]['Name'];
+	}
+	
+	function getPastMaintBought()
+	{
+		if(!isset($this->pastMaintBought))
+		{
+			//get past maint
+			global $TIME;
+			$this->db->query('DELETE FROM player_repaired WHERE time < '.($TIME - 3600 * 20));
+			$sql = $this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE ' . $this->SQL . ' AND amount > 0 LIMIT 1');
+			if ($this->db->nextRecord($sql)) $this->pastMaintBought = $this->db->getField('sum');
+			else $this->pastMaintBought = 0;
+		}
+		return $this->pastMaintBought;
+	}
+	
+	function getPastMaintCredit()
+	{
+		if(!isset($this->pastMaintCredit))
+		{
+			//get past maint
+			global $TIME;
+			$this->db->query('DELETE FROM player_repaired WHERE time < '.($TIME - 3600 * 20));
+			$m_sql = $this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE '.$this->SQL.' AND amount < 0 LIMIT 1');
+			if ($this->db->nextRecord($m_sql)) $this->pastMaintCredit = $this->db->getField('sum');
+			else $this->pastMaintCredit = 0;
+		}
+		return $this->pastMaintCredit;
+	}
+		
+	function removePastMaint()
+	{
+		$this->pastMaint=0;
+		$this->db->query('DELETE FROM player_repaired WHERE '.$this->SQL);
+	}
+	
+	function addPastMaintBought($amount,$type='Normal')
+	{
+		global $TIME;
+		$this->getPastMaintBought();
+		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->accountID . ',' . $this->gameID . ',' . $TIME . ',' . $amount . ','.$this->db->escapeString($type).')');
+		$this->giveTurns($amount*10);
+		$this->pastMaintBought+=$amount;
+	}
+	
+	function getStats()
+	{
+		if(!isset($this->stats))
+		{
+			//initialize stats
+			global $STATS;
+			foreach ($STATS as $stat_name => $statArray)
+				$temp_stats[$statArray['ID']] = 0;
+			$sql = $this->db->query('SELECT stat_type_id, amount FROM player_has_special WHERE ' . $this->SQL . ' LIMIT ' . sizeof($STATS));
+			while ($this->db->nextRecord($sql))
+				$temp_stats[$this->db->getField('stat_type_id')] = $this->db->getField('amount');
+			//put stats in a more user friendly form
+			$this->stats = array();
+			foreach ($STATS as $stat_name => $statArray)
+				$this->stats[$stat_name] = $temp_stats[$statArray['ID']];
+		}
+		return $this->stats;
+	}
+	
+	function deleteStats()
+	{
+		$this->getStats();
+		$this->db->query('DELETE FROM player_has_special WHERE '.$this->SQL.' LIMIT '.count($this->stats));
+		unset($this->stats);
+	}
+	
+	protected function getPureRelationsData()
+	{
+		if(!isset($this->pureRelations))
+		{
+			//get relations
+			$RACES = Globals::getRaces();
+			$this->pureRelations = array();
+			foreach ($RACES as $race_id => $race_name)
+			{
+				$this->pureRelations[$race_id] = 0;
+			}
+			$r_sql = $this->db->query('SELECT race_id,relation FROM player_has_relation WHERE '.$this->SQL.' LIMIT '.sizeof($RACES));
+			while ($this->db->nextRecord($r_sql))
+			{
+				$this->pureRelations[$this->db->getField('race_id')] = $this->db->getField('relation');
+			}
+		}
+	}
+
+	function increaseRelations($relations,$raceID)
+	{
+		if($relations < 0)
+			throw new Exception('Trying to increase negative relations.');
+		if($relations == 0)
+			return;
+		if($relations > 10)
+			$relations=10;
+		$relations += $this->getPureRelation($raceID);
+		$this->setRelations($relations,$raceID);
+	}
+	function decreaseRelations($relations,$raceID)
+	{
+		if($relations < 0)
+			throw new Exception('Trying to decrease negative relations.');
+		if($relations == 0)
+			return;
+		$relations = $this->getPureRelation($raceID) - $relations;
+		$this->setRelations($relations,$raceID);
+	}
+	function setRelations($relations,$raceID)
+	{
+		$this->getPureRelations();
+		$this->getRelations();
+		if($this->pureRelations[$raceID] == $relations)
+			return;
+		global $MIN_RELATIONS;
+		if($relations < $MIN_RELATIONS)
+			$relations = $MIN_RELATIONS;
+		$this->pureRelations[$raceID] = $relations;
+		$this->relations[$raceID] = round($relations + $this->getStat('Relations') / 2);
+		$this->db->query('UPDATE player_has_relation SET relation = '.$this->pureRelations[$raceID].' WHERE '.$this->SQL.' AND race_id = '.$raceID.' LIMIT 1');
+	}
+	
+	protected function getGoodsInfo()
+	{
+		
+		if(!isset($this->goods) || !isset($this->goodsExpGained))
+		{
+			//Get Player Goods
+			global $GOODS;
+			$this->goods = array();
+			$this->goodsExpGained = array();
+			foreach ($GOODS as $good_id => $good_name)
+			{
+				$this->goods[$good_id] = 0;
+				$this->goodsExpGained[$good_id] = 0;
+			}
+			$result = $this->db->query('SELECT good_id,amount,exp_gained FROM player_has_goods WHERE ' . $this->SQL);
+			while ($this->db->nextRecord($result))
+			{
+				$this->goods[$this->db->getField('good_id')] = $this->db->getField('amount');
+				$this->goodsExpGained[$this->db->getField('good_id')] = $this->db->getField('exp_gained');
+			}
+		}
+	}
+	
+	function getGoods()
+	{
+		if(!isset($this->goods))
+		{
+			$this->getGoodsInfo();
+		}
+		return $this->goods;
+	}
+	function getGood($goodID)
+	{
+		$goods = $this->getGoods();
+		return $goods[$goodID];
+	}
+	function getGoodsExpGained()
+	{
+		if(!isset($this->goodsExpGained))
+		{
+			$this->getGoodsInfo();
+		}
+		return $this->goodsExpGained;
+	}
+	function getGoodExpGained($goodID)
+	{
+		$goodsExp = $this->getGoodsExpGained();
+		return $goodsExp[$goodID];
+	}
+	
+	function increaseGoods($goodID,$amount,$exp)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative goods.');
+		if($amount == 0)
+			return;
+		$this->getGoodsInfo();
+		$amount += $this->goods[$goodID];
+		$exp += $this->goodsExpGained[$goodID];
+		$this->setGoods($goodID,$amount,$exp);
+	}
+	function decreaseGoods($goodID,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative goods.');
+		if($amount == 0)
+			return;
+		$this->getGoodsInfo();
+		$expLost = round($this->goodsExpGained[$goodID] * $amount / $this->goods[$goodID]);
+		$amount = $this->goods[$goodID] - $amount;
+		$this->setGoods($goodID,$amount,$this->goodsExpGained[$goodID] - $expLost);
+		return $expLost;
+	}
+	function setGoods($goodID,$amount,$exp)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to set negative goods.');
+		$this->getGoodsInfo();
+		if($amount == 0)
+		{
+			if(!isset($this->goods[$goodID]))
+				return;
+			$exp = 0;
+			$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' AND good_id = '.$goodID.' LIMIT 1');
+		}
+		else
+		{
+			if($this->goods[$goodID] == $amount && $this->goodsExpGained[$goodID] == $exp)
+				return;
+			$this->db->query('REPLACE INTO player_has_goods (account_id, game_id, good_id, amount, exp_gained) VALUES ('.$this->accountID.','.$this->gameID.','.$goodID.','.$amount.','.$exp.')');
+		}
+		$this->goods[$goodID] = $amount;
+		$this->goodsExpGained[$goodID] = $exp;
+	}
+	
+	function getGadgets()
+	{
+		if(!isset($this->gadgets))
+		{
+			//Get Player Gadgets
+			$sql = $this->db->query('SELECT gadget_id,equipped,cooldown,lasts_until FROM player_has_gadget WHERE ' . $this->SQL);
+			$this->gadgets = array();
+			while ($this->db->nextRecord($sql))
+				$this->gadgets[$this->db->getField('gadget_id')] = array('Equipped' => $this->db->getField('equipped'), 'Cooldown' => $this->db->getField('cooldown'), 'Expires' => $this->db->getField('lasts_until'));
+		}
+		return $this->gadgets;
+	}
+	function setGadgets($keyOrUpdateArray,$value)
+	{
+		$this->getGadgets();
+
+		if(is_array($keyOrUpdateArray))
+		{
+			$set = '';
+			foreach($keyOrUpdateArray as $key => $newInfo)
+			{
+				$field = $this->gadgetKeyToField($key);
+				if($field!==false)
+				{
+					foreach($this->gadgets as $gadgetID => $gadget)
+					{
+						$this->gadgets[$gadgetID][$key] = $newInfo;
+					}
+					$set .= $field.' = '.$this->db->escapeString($newInfo).',';
+				}
+			}
+			if($set!=='')
+			{
+				$set=substr($set,0,-1);
+				$this->db->query('UPDATE player_has_gadget SET '.$set.' WHERE '.$this->SQL.' LIMIT '.count($this->gadgets));
+			}
+		}
+		else
+		{
+			$field = $this->gadgetKeyToField($keyOrUpdateArray);
+			if($field!==false)
+			{
+				foreach($this->gadgets as $gadgetID => $gadget)
+				{
+					$this->gadgets[$gadgetID][$keyOrUpdateArray] = $value;
+				}
+				$this->db->query('UPDATE player_has_gadget SET '.$field.' = '.$value.' WHERE '.$this->SQL.' LIMIT '.count($this->gadgets));
+			}
+		}
+	}
+	
+	function setGadget($gadgetID,$keyOrUpdateArray,$value)
+	{
+		if(!is_numeric($gadgetID))
+		{
+			global $GADGETS;
+			$gadgetID = $GADGETS[$gadgetID]['ID'];
+		}
+		$this->getGadgets();
+		if(isset($this->gadgets[$gadgetID]))
+		{
+			if(is_array($keyOrUpdateArray))
+			{
+				$set = '';
+				foreach($keyOrUpdateArray as $key => $newInfo)
+				{
+					$field = $this->gadgetKeyToField($key);
+					if($field!==false)
+					{
+						if($this->gadgets[$gadgetID][$key] != $newInfo)
+						{
+							$this->gadgets[$gadgetID][$key]=$newInfo;
+							$set .= $field.' = '.$this->db->escapeString($newInfo).',';
+						}
+					}
+				}
+				if($set!=='')
+				{
+					$set=substr($set,0,-1);
+					$this->db->query('UPDATE player_has_gadget SET '.$set.' WHERE '.$this->SQL.' AND gadget_id = '.$gadgetID.' LIMIT 1');
+					return true;
+				}
+			}
+			else
+			{
+				$field = $this->gadgetKeyToField($keyOrUpdateArray);
+				if($field!==false)
+				{
+					if($this->gadgets[$gadgetID][$keyOrUpdateArray] == $value)
+						return;
+					$this->gadgets[$gadgetID][$keyOrUpdateArray]=$value;
+					$this->db->query('UPDATE player_has_gadget SET '.$field.' = '.$value.' WHERE '.$this->SQL.' AND gadget_id = '.$gadgetID.' LIMIT 1');
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public function addGadget($gadgetID)
+	{
+		if(isset($this->gadgets[$gadgetID]))
+			return false;
+		$this->gadgets[$gadgetID] = array('Equipped' => 0, 'Cooldown' => 0, 'Expires' => 0);
+		$this->db->query('REPLACE INTO player_has_gadget (game_id, account_id, gadget_id, cooldown, equipped,lasts_until) VALUES ('.$this->gameID.','.$this->accountID.','.$gadgetID.',0,0,0)');
+		return true;
+	}
+	
+	protected function gadgetKeyToField($key)
+	{
+		switch($key)
+		{
+			case 'Equipped':
+				return 'equipped';
+			break;
+			case 'Cooldown':
+				return 'cooldown';
+			break;
+			case 'Expires':
+				return 'lasts_until';
+			break;
+			default:
+				throw new Exception('Invalid gadget attribute: '.$key);
+		}
+	}
+	
+	
+	function getCompletedMissions()
+	{
+		if(!isset($this->completedMissions))
+		{
+			//Get Player missions
+			$sql = $this->db->query('SELECT mission_id FROM player_completed_mission WHERE ' . $this->SQL);
+			$this->completedMissions = array();
+			while ($this->db->nextRecord($sql))
+				$this->completedMissions[$this->db->getField('mission_id')] = $this->db->getField('mission_id');
+		}
+		return $this->completedMissions;
+	}
+	
+	function getMissions()
+	{
+		if(!isset($this->missions))
+		{
+			//Get Player missions
+			global $MISSIONS;
+			$sql = $this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
+			$this->missions = array();
+			while ($this->db->nextRecord($sql))
+			{
+				$this->missions[$this->db->getField('mission_id')] = array(
+								'On Step' => $this->db->getField('on_step'),
+								'Total' => $this->db->getField('total_steps'),
+								'Progress' => $this->db->getField('progress'),
+								'Next Step' => $this->db->getField('next_step'),
+								'Expires' => $this->db->getField('step_fails'),
+								'Mission ID' => $this->db->getField('mission_id'),
+								'Sector' => $this->db->getField('mission_sector'),
+								'Starting Sector' => $this->db->getField('starting_sector')
+								);
+				$this->rebuildMission($this->db->getField('mission_id'));
+			}
+		}
+		return $this->missions;
+	}
+	
+	function getMission($missionID)
+	{
+		$missions = $this->getMissions();
+		if(isset($missions[$missionID]))
+			return $missions[$missionID];
+		return false;
+	}
+	
+	function updateMission($missionID,$keyOrUpdateArray,$newInfo=false)
+	{
+		$this->getMissions();
+		if(isset($this->missions[$missionID]))
+		{
+			if(is_array($keyOrUpdateArray))
+			{
+				$set = '';
+				foreach($keyOrUpdateArray as $bit => $newInfo)
+				{
+					$field = $this->missionKeyToField($bit);
+					if($field!==false)
+					{
+						$this->missions[$missionID][$bit]=$newInfo;
+						$set .= $field.' = '.$this->db->escapeString($newInfo).',';
+					}
+				}
+				if($set!=='')
+				{
+					$set=substr($set,0,-1);
+					$this->db->query('UPDATE player_has_mission SET '.$set.' WHERE '.$this->SQL.' AND mission_id = '.$missionID.' LIMIT 1');
+					$this->rebuildMission($missionID);
+					return true;
+				}
+			}
+			else
+			{
+				$field = $this->missionKeyToField($keyOrUpdateArray);
+				if($field!==false)
+				{
+					$this->missions[$missionID][$keyOrUpdateArray]=$newInfo;
+					$this->db->query('UPDATE player_has_mission SET '.$field.' = '.$newInfo.' WHERE '.$this->SQL.' AND mission_id = '.$missionID.' LIMIT 1');
+					$this->rebuildMission($missionID);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	function addMission($missionID,$randomSector)
+	{
+		global $MISSIONS,$TIME;
+		$this->getMissions();
+
+		if(isset($this->missions[$missionID]))
+			return;
+			
+		$mission = $MISSIONS[$missionID];
+		$playerMission = array(
+						'On Step' => 1,
+						'Total' => sizeof($mission['Steps']),
+						'Progress' => 0,
+						'Next Step' => 'TRUE',
+						'Expires' => ($TIME + 24 * 3600),
+						'Mission ID' => $missionID,
+						'Sector' => $randomSector,
+						'Starting Sector' => $this->getSectorID()
+						);
+						
+		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' . 
+				'VALUES ('.$this->gameID.','.$this->accountID.','.$missionID.','.$playerMission['On Step'].','.$playerMission['Progress'].','.$this->db->escapeString($playerMission['Next Step']).','.$playerMission['Total'].','.$playerMission['Starting Sector'].','.$playerMission['Sector'].','.$playerMission['Expires'].')');
+		$this->missions[$missionID] = $playerMission;
+		$this->rebuildMission($missionID);
+	}
+	
+	function rebuildMission($missionID)
+	{
+		global $MISSIONS;
+		$RACES = Globals::getRaces();
+		$missionInfo = $this->missions[$missionID];
+		$currentStep = $MISSIONS[$missionID]['Steps'][$missionInfo['On Step']];
+		$detail = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Detail']);
+		$text = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Text']);
+		$task = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Task']);
+		if (isset($currentStep['Level']))
+			$step_level = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
+		else $step_level = 0;
+		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
+		$this->missions[$missionID]['Location'] = $MISSIONS[$missionID]['Location'];
+		$this->missions[$missionID]['Task']['Step'] = $currentStep['Step'];
+		$this->missions[$missionID]['Task']['Level'] = $step_level;
+		$this->missions[$missionID]['Task']['Detail'] = $detail;
+		$this->missions[$missionID]['Task']['Text'] = $text;
+		$this->missions[$missionID]['Task']['Task'] = $task;
+	}
+	
+	function deleteMission($missionID)
+	{
+		$this->getMissions();
+		if(isset($this->missions[$missionID]))
+		{
+			unset($this->missions[$missionID]);
+			$this->db->query('DELETE FROM player_has_mission WHERE '.$this->SQL.' AND mission_id = '.$missionID.' LIMIT 1');
+			return true;
+		}
+		return false;
+	}
+	
+	protected function missionKeyToField($bit)
+	{
+		$field = false;
+		switch($bit)
+		{
+			case 'On Step':
+				$field='on_step';
+			break;
+			case 'Total':
+				$field='total_steps';
+			break;
+			case 'Progress':
+				$field='progress';
+			break;
+			case 'Next Step':
+				$field='next_step';
+			break;
+			case 'Expires':
+				$field='step_fails';
+			break;
+			case 'Mission ID':
+				$field='mission_id';
+			break;
+		}
+		return $field;
+	}
+	
+	function getMining($mineID=false)
+	{
+		if(!isset($this->mining))
+		{
+			//Get Player Mining Info
+			$this->mining = array();
+			$sql = $this->db->query('SELECT sector_has_mining.mine_id as mine_id, level, type, started, amount, starting_amount' . 
+							' FROM player_is_mining, sector_has_mining WHERE sector_id = ' . $this->sectorID . 
+							' AND sector_has_mining.game_id = player_is_mining.game_id' . 
+							' AND sector_has_mining.mine_id = player_is_mining.mine_id' . 
+							' AND account_id = ' . $this->accountID . ' AND sector_has_mining.game_id = ' . $this->gameID .' LIMIT 1');
+			while ($this->db->nextRecord($sql))
+			{
+				$this->mining[$this->db->getField('mine_id')] = array('Level' => $this->db->getField('level'),
+																	'Started' => $this->db->getField('started'),
+																	'Amount' => $this->db->getField('amount'),
+																	'Type' => $this->db->getField('type'),
+																	'Starting Amount' => $this->db->getField('starting_amount'));
+			}
+		}
+		if($mineID===false)
+			return $this->mining;
+		if(isset($this->mining[$mineID]))
+			return $this->mining[$mineID];
+		return false;
+	}
+	
+	function updateMiningStarted($mineID,$time)
+	{
+		$this->getMining();
+		$this->mining[$mineID]['Started'] = $time;
+		$this->db->query('UPDATE player_is_mining SET started = ' . $time . ' WHERE ' . $this->SQL . ' AND mine_id = ' . $mineID . ' LIMIT 1');
+	}
+	
+	function deleteMining($mineID=false)
+	{
+		$this->getMining();
+		if($mineID===false)
+		{
+			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL . ' LIMIT ' . count($this->getMining()));
+			$this->mining=array();
+		}
+		else if(isset($this->mining[$mineID]))
+		{
+	
+			unset($this->mining[$mineID]);
+			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL.' AND mine_id='.$mineID.' LIMIT 1');
+		}
+	}
+	
+	function getKnowledge($knowledgeType=false)
+	{
+		if(!isset($this->knowledge))
+		{
+			//get players faction knowledge
+			$sql = $this->db->query('SELECT * FROM player_knows_faction WHERE ' . $this->SQL . ' LIMIT 1');
+			if ($this->db->nextRecord($sql))
+			{
+				$this->knowledge['Erebus'] = $this->db->getField('erebus');
+				$this->knowledge['Aether'] = $this->db->getField('aether');
+				$this->knowledge['Tartarus'] = $this->db->getField('tartarus');
+				$this->knowledge['Nyx'] = $this->db->getField('nyx');
+				$this->knowledge['Federation'] = 0;
+				$this->knowledge['Underground'] = 0;
+			}
+			else
+			{
+				$this->knowledge['Erebus'] = 0;
+				$this->knowledge['Aether'] = 0;
+				$this->knowledge['Tartarus'] = 0;
+				$this->knowledge['Nyx'] = 0;
+				$this->knowledge['Federation'] = 0;
+				$this->knowledge['Underground'] = 0;
+			}
+		}
+		if($knowledgeType===false)
+			return $this->knowledge;
+		if(isset($this->knowledge[$knowledgeType]))
+			return $this->knowledge[$knowledgeType];
+		return false;
+	}
+	
+	public function killPlayer($sectorID,$news_message)
+	{
+		$sector =& SmrSector::getSector($this->getGameID(),$sectorID,$this->getAccountID());
+		$news_message = strip_tags($news_message, '<font><span>');
+		//msg taken care of in trader_att_proc.php
+		// forget plotted course
+		$this->deletePlottedCourse();
+
+		// insert the news entry
+		$this->db->query('INSERT INTO news ' .
+					 '(game_id, time, news_message) ' .
+					 'VALUES('.$this->getGameID().', ' . time() . ', ' . $this->db->escapeString($news_message) . ')');
+
+		$sector->died_here($this);
+		
+		// if we are in an alliance we increase their deaths
+		if ($this->hasAlliance())
+			$this->db->query('UPDATE alliance SET alliance_deaths = alliance_deaths + 1 ' .
+						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
+
+		// record death stat
+		$this->increaseHOF(1,'deaths');
+
+		// reset the turns used since last death stat
+		$this->db->query('UPDATE account_has_stats SET turns_used = 0 WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+
+		// 1/4 of ship value -> insurance
+		$this->db->query('SELECT cost, speed FROM player, ship_type ' .
+					 'WHERE player.ship_type_id = ship_type.ship_type_id AND ' .
+					 'account_id = '.$this->getAccountID().' AND ' .
+						   'game_id = '.$this->getGameID().' LIMIT 1');
+		$newCredits=0;
+		if ($this->db->nextRecord())
+		{
+			$newCredits = round($this->db->getField('cost') / 4);
+			$old_speed = $this->db->getField('speed');
+		}
+		if ($newCredits < 100000)
+			$newCredits = 100000;
+		$this->setCredits($newCredits);
+
+		// speed for pod
+		$new_speed = 7;
+
+		// adapt turns
+		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
+
+		$this->setSectorID($this->getHome());
+		$this->increaseDeaths(1);
+		$this->setLandedOnPlanet(false);
+		$this->setDead(true);
+		$this->setNewbieWarning(true);
+		$this->getShip()->get_pod();
+	}
+	
+	public function getHome()
+	{
+		global $GOVERNMENT;
+
+		// get his home sector
+		$hq_id = $GOVERNMENT + $this->getRaceID();
+		$this->db->query('SELECT location.sector_id FROM location NATURAL JOIN sector ' .
+					 'WHERE location.game_id = '.$this->getGameID().' AND ' .
+						   'location_type_id = '.$hq_id.' LIMIT 1');
+		if ($this->db->nextRecord())
+			return $this->db->getField('sector_id');
+		else
+			return 1;
+	}
+	
+	public function killPlayerByForces(&$forces)
+	{
+		global $PLAYERMSG;
+		
+		$owner =& $forces->getOwner();
+		// send a message to the person who died
+		$this->sendMessage($owner->getAccountID(), $PLAYERMSG, $this->db->escapeString('Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID()));
+		$owner->sendMessage($this->getAccountID(), $PLAYERMSG, $this->db->escapeString('You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID()));
+
+		$news_message = $this->getDisplayName();
+		$db2 = new SMR_DB();
+		$db = new SMR_DB();
+		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
+					'account_id = '.$this->getAccountID());
+		if ($db2->next_record())
+		{
+			
+			//they have a name so we echo it
+			$db->query('SELECT ' . htmlentities($db2->f('ship_name')) . ' LIKE \'&lt;img%\'');
+			$named_ship = stripslashes($db2->f('ship_name'));
+			$named_ship = strip_tags($db2->f('ship_name'), '<font><span>');
+			if ($db->next_record() && $db->f(0) != 0) {
+				//nothing
+			} else
+				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			
+		}
+		$news_message .= ' was destroyed ' .
+						'by forces in sector&nbsp#'.$forces->getSectorID();
+
+		$this->killPlayer($forces->getSectorID(),$news_message);
+		$percentage = 33;
+		if ($percentage > 0 )
+			$this->decreaseExperience($this->getExperience() * $percentage / 100);
+		$db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' . 
+						'alliance_id_2 = '.$this->getAllianceID().' AND game_id = '.$this->getGameID());
+		if ($db->next_record()) $db->query('UPDATE alliance_vs_alliance SET kills = kills + 1 ' .
+											'WHERE alliance_id_1 = -1 AND alliance_id_2 = '.$this->getAllianceID().' AND ' .
+											'game_id = '.$this->getGameID());
+		else $db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
+						'VALUES ('.$this->getGameID().', -1, '.$this->getAllianceID().', 1)');
+	}
+	
+	function changeShip(&$ship,$shipID)
+	{
+		$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' LIMIT 1');
+		decloak($ship);
+		$this->db->query('DELETE FROM player_has_illusion WHERE '.$this->SQL.' LIMIT 1');
+		$this->setShipID($shipID);
+		$ship = get_ship($this);
+		checkShipForExcess($ship,$this);
+	}
+	
+	public function save()
+	{
+		if($this->hasChanged)
+		{
+			$this->db->query('UPDATE player SET player_name='.$this->db->escapeString($this->playerName).
+				', player_id='.$this->db->escapeString($this->playerID).
+				', sector_id='.$this->db->escapeString($this->sectorID).
+				', last_sector_id='.$this->db->escapeString($this->lastSectorID).
+				', turns='.$this->db->escapeString($this->turns).
+				', last_turn_update='.$this->db->escapeString($this->lastMaintenanceUpdate).
+				', newbie_turns='.$this->db->escapeString($this->newbieTurns).
+				', last_ship_mod='.$this->db->escapeString($this->lastShipMod).
+				', last_news_update='.$this->db->escapeString($this->lastNewsUpdate).
+				', stunned='.$this->db->escapeString($this->stunned).
+				', fleed='.$this->db->escapeString($this->fleed).
+				', attack_warning='.$this->db->escapeString($this->attackColor).
+				', dead='.$this->db->escapeString($this->dead).
+				', land_on_planet='.$this->db->escapeString($this->landedOnPlanet).
+				', kicked='.$this->db->escapeString($this->kicked).
+				', last_shield_update='.$this->db->escapeString($this->lastShieldUpdate).
+				', last_active='.$this->db->escapeString($this->lastActive).
+				', last_cpl_action='.$this->db->escapeString($this->lastCPLAction).
+				', race_id='.$this->db->escapeString($this->raceID).
+				', credits='.$this->db->escapeString($this->credits).
+				', experience='.$this->db->escapeString($this->experience).
+				', alignment='.$this->db->escapeString($this->alignment).
+//				', past_knowledge='.$this->db->escapeString($this->pastKnowledge).
+				', government_help='.$this->db->escapeString($this->governmentHelp).
+				', alliance_id='.$this->db->escapeString($this->allianceID).
+//				', alliance_join='.$this->db->escapeString($this->allianceJoinable).
+				', ship_type_id='.$this->db->escapeString($this->shipID).
+				', kills='.$this->db->escapeString($this->kills).
+				', deaths='.$this->db->escapeString($this->deaths).
+				', last_port='.$this->db->escapeString($this->lastPort).
+				', bank='.$this->db->escapeString($this->bank).
+				', zoom='.$this->db->escapeString($this->zoom).
+//				', zoom_on='.$this->db->escapeString($this->zoomOn).
+//				', chat='.$this->db->escapeString($this->chat).
+//				', chat_position='.$this->db->escapeString($this->chatPosition).
+				', display_missions='.$this->db->escapeString($this->displayMissions).
+				', ignore_globals='.$this->db->escapeString($this->ignoreGlobals).
+//				', changed_stats='.$this->db->escapeString($this->changedStats).
+				', newbie_warning = ' . $this->db->escapeString($this->newbieWarning).
+				' WHERE '.$this->SQL.' LIMIT 1');
+		}
+	}
+	
+	function getHOF()
+	{
+		if(!isset($this->HOF))
+		{
+			//Get Player HOF
+			$result = $this->db->query('SELECT * FROM player_hof WHERE ' . $this->SQL .' LIMIT 1');
+			$this->HOF = array();
+			if($this->db->nextRecord($result))
+			{
+				foreach($this->db->getRow() as $key => $value)
+				{
+					if($key == 'account_id' || $key == 'game_id')
+						continue;
+					if (strpos($key,'-'))
+					{
+						list($type,$subtype) = explode('-',$key);
+						$this->HOF[$type][$subtype] = $value;
+					}
+					else
+					{
+						$this->HOF[$key] = $value;
+					}
+				}
+			}
+		}
+		return $this->HOF;
+	}
+	
+	function increaseHOF($amount,$type,$subtype=false)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative HOF: '.$type.'-'.$subtype);
+		if($amount == 0)
+			return;
+		$this->getHOF();
+		if($subtype===false)
+			$amount+=$this->HOF[$type];
+		else
+			$amount+=$this->HOF[$type][$subtype];
+		$this->setHOF($amount,$type,$subtype);
+	}
+	
+	function decreaseHOF($amount,$type,$subtype=false)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative HOF: '.$type.'-'.$subtype);
+		if($amount == 0)
+			return;
+		$this->getHOF();
+		if($subtype===false)
+			$amount=$this->HOF[$type]-$amount;
+		else
+			$amount=$this->HOF[$type][$subtype]-$amount;
+		$this->setHOF($amount,$type,$subtype);
+	}
+	
+	function setHOF($amount,$type,$subtype=false)
+	{
+		if(($subtype!==false && $this->HOF[$type]==$amount)||$this->HOF[$type][$subtype]==$amount)
+			return;
+		if($amount < 0)
+			$amount=0;
+		$this->getHOF();
+		if($subtype===false)
+			$this->HOF[$type]=$amount;
+		else
+			$this->HOF[$type][$subtype]=$amount;
+//PAGE
+//TODO: Add hof stuff.
+//		$result = $this->db->query('UPDATE player_hof SET `'.$type.($subtype!==false?'-'.$subtype:'').'`='.$amount.' WHERE ' . $this->SQL);
+	}
+	
+	function isInCouncil()
+	{
+		$president = false;
+		$sql = $this->db->query('SELECT account_id,alignment FROM player WHERE game_id = '.$this->gameID.' AND race_id = '.$this->getRaceID().' AND experience > 0 ORDER BY experience DESC, player_name LIMIT 20');
+		while ($this->db->nextRecord($sql))
+		{
+			if ($this->db->getField('alignment') >= 150 && $president == false) $president = $this->db->getField('account_id');
+			if ($this->db->getField('account_id') == $this->accountID)
+			{
+				if ($president == $this->accountID) return 'President';
+				else return 'Member';
+			}
+		}
+		return false;
+	}
+	
+	
+	
+	public function isValidated()
+	{
+		return $this->validated;
+	}
+	
+	public function setNewbieWarning($bool)
+	{
+		$this->newbieWarning=$bool;
+		$query = 'UPDATE player SET newbie_warning = ' . $this->db->escapeString($this->newbieWarning);
+		$this->hasChanged=true;
+	}
+	
+	public function getNewbieWarning()
+	{
+		return $this->newbieWarning;
+	}
+	
+	public function getTicker()
+	{
+		if(!isset($this->ticker))
+		{
+			//get ticker info
+			$this->db->query('SELECT type FROM player_has_ticker WHERE account_id = ' . $this->SQL .' AND type != '.$this->db->escapeString('BLOCK').' LIMIT 1');
+			if ($this->db->nextRecord()) $this->ticker = strtoupper($this->db->getField('type'));
+			else $this->ticker = false;
+		}
+		return $this->ticker;
+	}
+	
+	public function hasTicker()
+	{
+	 	return $this->getTicker()!== false && $this->getTicker() != 'BLOCK';
+	}
+	
+	public function getTurnsLevel()
+	{
+		if ($this->getTurns()     <= (300 - round($this->getStat('Mechanics') / 4) ) / 2 ) return 'LOW';
+		else if ($this->getTurns() <= (300 - round($this->getStat('Mechanics') / 4)) ) return 'MEDIUM';
+		else return 'HIGH';
+	}
+	
+	public function canSeeAny($otherPlayerArray)
+	{
+		$canSee=false;
+		foreach($otherPlayerArray as $otherPlayer)
+		{
+			if($this->canSee($otherPlayer))
+				$canSee = true;
+		}
+		return $canSee;
+	}
+	
+	public function canSee($otherPlayer)
+	{
+		if($this->getLevelID()>$otherPlayer->getLevelID())
+			return true;
+		$otherShip =& $otherPlayer->getShip();
+		if($otherShip->hasActiveCloak())
+			return false;
+		return true;
+	}
+	
+	public function update()
+	{
+		$this->save();
+	}
+	
+	function sendMessage($receiver_id, $message_type_id, $message)
+	{
+		//get expire time
+		global $GLOBALMSG, $PLAYERMSG, $PLANETMSG, $SCOUTMSG, $POLITICALMSG, $ALLIANCEMSG, $ADMINMSG ;
+		
+		// Don't send messages to players ignoring us
+		$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiver_id . ' AND blacklisted_id=' . $this->accountID . ' AND game_id = ' . $this->gameID . ' LIMIT 1');
+		if($this->db->nextRecord()) {
+			return;
+		}		
+		
+		$message = word_filter($message);
+		
+		if ($message_type_id == $GLOBALMSG) $expire = 3600;
+		elseif ($message_type_id == $PLAYERMSG) $expire = 3600 * 24 * 7;
+		elseif ($message_type_id == $PLANETMSG) $expire = 3600 * 24 * 3;
+		elseif ($message_type_id == $SCOUTMSG) $expire = 3600 * 24 * 3;
+		elseif ($message_type_id == $POLITICALMSG) $expire = 3600 * 24 * 2;
+		elseif ($message_type_id == $ALLIANCEMSG) $expire = 3600 * 24 * 2;
+		elseif ($message_type_id == $ADMINMSG) $expire = 3600 * 24 * 7;
+		else $expire = 3600 * 24 * 2;
+		$expire += time();
+		// send him the message
+		$this->db->query('INSERT INTO	message
+			(account_id,game_id,message_type_id,message_text,
+			sender_id,send_time,expire_time) VALUES(' . 
+			$receiver_id . ',' .
+			$this->gameID . ',' .
+			$message_type_id . ',' .
+			$message . ',' .
+			$this->accountID . ',' .
+			TIME . ',' .
+			$expire . ')'
+		);
+
+		// give him the message icon
+		$this->db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
+						'('.$this->gameID.', '.$receiver_id.', '.$message_type_id.')');
+
+	}
+	
+	function setMessagesRead($messageTypeID)
+	{
+
+		$this->db->query('DELETE FROM player_has_unread_messages WHERE '.$this->SQL.' AND ' .
+					'message_type_id = '.$messageTypeID);
+
+	}
+	
+	function isFedProtected()
+	{
+	//exit;
+        global $session;
+        
+        //PAGE BAD BAD BAD!
+		// If there isn't a fed beacon we aren't protected
+		$this->db->query('SELECT sector_id FROM location ' .
+					 'WHERE location_type_id=201 AND sector_id = '.$this->sectorID.' AND ' .
+						   'game_id = '.$this->gameID.' LIMIT 1');
+		if (!$this->db->getNumRows())
+		{
+			return 0;
+		}	
+			
+		// for rating
+		$this->db->query('SELECT sum(shield_damage), sum(armor_damage) FROM ship_has_weapon NATURAL JOIN weapon_type ' .
+					 'WHERE account_id = '.$this->accountID.' AND ' .
+						   'game_id = '.$this->gameID);
+		if ($this->db->nextRecord()) {
+
+			$sum_shield_damage = $this->db->getField('sum(shield_damage)');
+			$sum_armor_damage = $this->db->getField('sum(armor_damage)');
+
+		}
+
+		$this->db->query('SELECT amount FROM ship_has_hardware ' .
+					 'WHERE account_id = '.$this->accountID.' AND ' .
+						   'game_id = '.$this->gameID.' AND ' .
+						   'hardware_type_id = 4 LIMIT 1');
+		$combat_drones=0;
+		if ($this->db->nextRecord())
+			$combat_drones = $this->db->getField('amount');
+		$total_damage = $sum_shield_damage + $sum_armor_damage;
+		$maxDronesPercent = (35 + $this->getLevelID() * .6 + ($this->getLevelID() - 1) * .4 + 15) * .01;
+		$maxDrones = $maxDronesPercent * $combat_drones;
+		$attack_rating = round((($total_damage + $maxDrones * 2) / 40));
+
+        $ship =& SmrShip::getShip($this->getGameID(),$this->getAccountID());
+        
+		if ($ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12))
+			return 0;
+		elseif ($attack_rating > 8)
+			return 0;
+		elseif ($attack_rating == 0)
+			return 1;
+		elseif ($this->getAlignment() >= 0 && $this->getAlignment() >= ($attack_rating - 3) * 150)
+			return 1;
+		elseif ($this->getAlignment() < 0 && $this->getAlignment() > ($attack_rating - 4) * 150)
+			return 1;
+		else
+			return 0;
+	}
+	
+	public function getPlottedCourse()
+	{
+		if(!isset($this->plottedCourse))
+		{
+			// check if we have a course plotted
+			$this->db->query('SELECT course,distance FROM player_plotted_course 
+			WHERE account_id=' . $this->getAccountID() . '
+			AND game_id=' . $this->getGameID() . '
+			LIMIT 1'
+			);
+			
+			if ($this->db->nextRecord())
+			{
+				// get the array back
+				$course	= unserialize($this->db->getField('course'));
+			
+			
+				$this->plottedCourse = array('Course' => $course,
+							'Length' => $this->db->getField('distance'));
+			
+				// get the first sector in that list
+				$this->plottedCourse['NextSector'] = current($this->plottedCourse['Course']);
+
+				$plottedCourse = $this->getPlottedCourse();
+				$sectors = '';
+				$first=true;
+				foreach($this->plottedCourse['Course'] as $nextSec)
+				{
+					if($first)
+					{
+						$sectors .= $nextSec;
+						$first=false;
+					}
+					else
+						$sectors .= ' - '.$nextSec;
+				}
+				$this->plottedCourse['CourseString'] = $sectors;
+			}
+		}
+		return $this->plottedCourse;
+	}
+	
+	public function hasPlottedCourse()
+	{
+		return $this->getPlottedCourse();
+	}
+	
+	function isPartOfCourse($sectorOrSectorID)
+	{
+		if($sectorOrSectorID instanceof SmrSector )
+		{
+			$sectorID = $sectorOrSectorID->getSectorID();
+		}
+		else
+		{
+			$sectorID = $sectorOrSectorID;
+		}
+		$course = $this->getPlottedCourse();
+		foreach($course['Course'] as $plotSector)
+		{
+			if($plotSector == $sectorID)
+				return true;
+		}
+		return false;
+	}
+	
+	function deletePlottedCourse()
+	{
+		$this->db->query('DELETE FROM player_plotted_course ' .
+					 'WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	public function &getShip()
+	{
+		return SmrShip::getShip($this->getGameID(),$this->getAccountID());
+	}
+	
+	public function getExamineTraderHREF()
+	{
+		if(!isset($this->examineTraderHREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'trader_examine.php';
+			$container['target']	= $this->getAccountID();
+			$this->examineTraderHREF = SmrSession::get_new_href($container);
+		}
+		return $this->examineTraderHREF;
+	}
+	
+	public function getTraderSearchHREF()
+	{
+		if(!isset($this->traderSearchHREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'trader_search_result.php';
+			$container['player_id']	= $this->getPlayerID();
+			$this->traderSearchHREF = SmrSession::get_new_href($container);
+		}
+		return $this->traderSearchHREF;
+	}
+	
+	public function getAllianceRosterHREF()
+	{
+		if(!isset($this->allianceRosterHREF))
+		{
+			$container = array();
+			$container['url']			= 'skeleton.php';
+			$container['body']			= 'alliance_roster.php';
+			$container['alliance_id']	= $this->getAllianceID();
+			$this->allianceRosterHREF = SmrSession::get_new_href($container);
+		}
+		return $this->allianceRosterHREF;
+	}
+	
+	public function equals($otherPlayer)
+	{
+		return $this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
+	}
+	
+	public function sameAlliance($otherPlayer)
+	{
+		return $this->equals($otherPlayer) || ($this->getAllianceID()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
+	}
+	
+	public function sharedForceAlliance($otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function forceNAPAlliance($otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderMAPAlliance($otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function meetsRestriction($restriction)
+	{
+		switch($restriction)
+		{
+			case 0:
+				return true;
+			case 1:
+				return $this->getAlignment()>=150;
+			case 2:
+				return $this->getAlignment()<=-150;
+			default:
+				return false;
+		}
+	}
+}
+?>
