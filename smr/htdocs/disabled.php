@@ -55,7 +55,7 @@ if (SmrSession::$account_id > 0) {
 				<table border='0' cellpadding='3' cellspacing='2' width='100%'>
 				<tr bgcolor='#0B8D35'>
 					<td align='center'>
-						<font face='Times New Roman' size='+2' color='#FFFFFF'><p>Your account is <strong>DISABLED</strong>.</p></font>
+						<p><font face='Times New Roman' size='+2' color='#FFFFFF'>Your account is <strong>DISABLED</strong>.</font></p>
 						<p><? $PHP_OUTPUT.=($reason); ?></p>
 					</td>
 				</tr>

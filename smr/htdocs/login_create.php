@@ -46,7 +46,7 @@
 						<th colspan='2'>User Information</th>
 					</tr>
 					<tr>
-						<td colspan='2'>&nbsp;</th>
+						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
 						<td width='27%'>First Name:</td>
@@ -318,7 +318,7 @@
 					<tr>
 						<td width='27%'>Local Time:</td>
 						<td width='73%'>
-							<select name="timez" id="InputFields">';
+							<select name="timez" id="InputFields">
 								<?php
 								$time = time();
 									for ($i = -12; $i<= 11; $i++) echo('<option value='.$i.'>' . date('g:i:s A', $time + $i * 3600));
@@ -327,13 +327,13 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan='2'>&nbsp;</th>
+						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
 						<th colspan='2'>Game Information</th>
 					</tr>
 					<tr>
-						<td colspan='2'>&nbsp;</th>
+						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
 						<td width='27%'>User name:</td>
@@ -356,13 +356,13 @@
 						<td width='73%'><input type='text' name='email_verify' size='50' maxlength='128' id='InputFields'></td>
 					</tr>
 					<tr>
-						<td colspan='2'>&nbsp;</th>
+						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
 						<th colspan='2'>Various Information</th>
 					</tr>
 					<tr>
-						<td colspan='2'>&nbsp;</th>
+						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
 						<td width='27%'>ICQ:</td>

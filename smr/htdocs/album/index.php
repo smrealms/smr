@@ -13,36 +13,37 @@ $session = new SmrSession();
 // database object
 $db = new SMR_DB();
 $db2 = new SMR_DB();
-echo('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
-echo('<html>');
-echo('<head>');
-echo('<link rel="stylesheet" type="text/css" href="'.$URL.'/default.css">');
-echo('<title>Space Merchant Realms - Photo Album</title>');
-echo('<meta http-equiv="pragma" content="no-cache">');
-echo('</head>');
-echo('<body>');
+?>
+<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="'.$URL.'/default.css">
+<title>Space Merchant Realms - Photo Album</title>
+<meta http-equiv="pragma" content="no-cache">
+</head>
+<body>
 
-echo('<table width="850" border="0" align="center" cellpadding="0" cellspacing="0" >');
-echo('<tr>');
-echo('<td align="center" colspan="2"><h1>Space Merchant Realms - Photo Album</h1></td>');
-echo('</tr>');
-echo('<tr>');
-echo('<td>');
-echo('<table width="750" border="0" cellspacing="0" cellpadding="0">');
-echo('<tr>');
-echo('<td>');
+<table width="850" border="0" align="center" cellpadding="0" cellspacing="0" >
+<tr>
+<td align="center" colspan="2"><h1>Space Merchant Realms - Photo Album</h1></td>
+</tr>
+<tr>
+<td>
+<table width="750" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td>
 
-echo('<table cellspacing="0" cellpadding="0" border="0" width="700">');
-echo('<tr>');
-echo('<td colspan="3" height="1" bgcolor="#0B8D35"></td>');
-echo('</tr>');
-echo('<tr>');
-echo('<td width="1" bgcolor="#0B8D35"></td>');
-echo('<td align="left" valign="top" bgcolor="#06240E">');
-echo('<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">');
-echo('<tr>');
-echo('<td valign="top">');
-
+<table cellspacing="0" cellpadding="0" border="0" width="700">
+<tr>
+<td colspan="3" height="1" bgcolor="#0B8D35"></td>
+</tr>
+<tr>
+<td width="1" bgcolor="#0B8D35"></td>
+<td align="left" valign="top" bgcolor="#06240E">
+<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
+<tr>
+<td valign="top">
+<?php
 if (!empty($_SERVER['QUERY_STRING'])) {
 
 	// query string should be a nick or some letters of a nick
@@ -91,61 +92,60 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 
 } else
 	main_page();
-
-echo('</td>');
-echo('</tr>');
-echo('</table>');
-echo('</td>');
-echo('<td width="1" bgcolor="#0B8D35"></td>');
-echo('</tr>');
-echo('<tr>');
-echo('<td colspan="3" height="1" bgcolor="#0b8d35"></td>');
-echo('</tr>');
-echo('</table>');
-
-echo('</td>');
-echo('<td width="20">&nbsp;</td>');
-echo('<td height="100%">');
-
-echo('<table cellspacing="0" cellpadding="0" border="0" width="150" height="100%">');
-echo('<tr>');
-echo('<td colspan="3" height="1" bgcolor="#0B8D35"></td>');
-echo('</tr>');
-echo('<tr>');
-echo('<td width="1" bgcolor="#0B8D35"></td>');
-echo('<td align="left" valign="top" bgcolor="#06240E">');
-echo('<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">');
-echo('<tr>');
-echo('<td valign="top" align="center">');
-echo('<form action="'.$URL.'/album/search_processing.php">');
-echo('Quick Search:<br>');
-echo('<input type="text" name="nick" size="10" id="InputFields"><br>');
-echo('<input type="submit" value="Search" id="InputFields">');
-echo('</form>');
-
-echo('</td>');
-echo('</tr>');
-echo('</table>');
-echo('</td>');
-echo('<td width="1" bgcolor="#0B8D35"></td>');
-echo('</tr>');
-echo('<tr>');
-echo('<td colspan="3" height="1" bgcolor="#0b8d35"></td>');
-echo('</tr>');
-echo('</table>');
-
-echo('</td>');
-echo('</tr>');
-echo('</table>');
-echo('</td>');
-echo('</tr>');
-
-echo('<tr>');
 ?>
-<td align='right' style='font-size:65%;'>
-    &copy; 2002-2007 by <a href='<?php echo($URL); ?>'><?php echo($URL); ?></a><br/>
-    Hosted by <a href='http://www.fem.tu-ilmenau.de/index.php?id=93&L=1' target='fem'>FeM</a>
 </td>
+</tr>
+</table>
+</td>
+<td width="1" bgcolor="#0B8D35"></td>
+</tr>
+<tr>
+<td colspan="3" height="1" bgcolor="#0b8d35"></td>
+</tr>
+</table>
+
+</td>
+<td width="20">&nbsp;</td>
+<td height="100%">
+
+<table cellspacing="0" cellpadding="0" border="0" width="150" height="100%">
+<tr>
+<td colspan="3" height="1" bgcolor="#0B8D35"></td>
+</tr>
+<tr>
+<td width="1" bgcolor="#0B8D35"></td>
+<td align="left" valign="top" bgcolor="#06240E">
+<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
+<tr>
+<td valign="top" align="center">
+<form action="<?php echo $URL; ?>/album/search_processing.php">
+Quick Search:<br>
+<input type="text" name="nick" size="10" id="InputFields"><br>
+<input type="submit" value="Search" id="InputFields">
+</form>
+
+</td>
+</tr>
+</table>
+</td>
+<td width="1" bgcolor="#0B8D35"></td>
+</tr>
+<tr>
+<td colspan="3" height="1" bgcolor="#0b8d35"></td>
+</tr>
+</table>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+
+<tr>
+	<td align='right' style='font-size:65%;'>
+	    &copy; 2002-2007 by <a href="<?php echo $URL; ?>"><?php echo $URL; ?></a><br/>
+	    Hosted by <a href='http://www.fem.tu-ilmenau.de/index.php?id=93&L=1' target='fem'>FeM</a>
+	</td>
 
 </tr>
 </table>

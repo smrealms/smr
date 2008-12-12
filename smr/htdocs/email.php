@@ -49,13 +49,12 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 
 				<h1>Invalid eMail</h1>
 
-				<p>We detected that the your eMail (<?php $PHP_OUTPUT.=($account->email); ?>) is invalid!<br>
+				<p>We detected that the your eMail (<?php echo $account->email; ?>) is invalid!<br>
 				Please enter a new one.</p>
 
 				<form action='email_processing.php' method='post'>
 				    <div align='center'>
-					    <p>
-					        <table border='0'>
+				        <table border='0'>
 					        <tr>
 					            <th align='right'>eMail Address:</th>
 					            <td><input type='text' name='email' size='50' maxlength='128' id='InputFields'></td>
@@ -64,8 +63,7 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 					            <th align='right'>Verify eMail Address:</th>
 					            <td><input type='text' name='email_verify' size='50' maxlength='128' id='InputFields'></td>
 					        </tr>
-					        </table>
-					    </p>
+				        </table>
 				        <p><input type='submit' value='Change eMail' id='InputFields'></p>
 				    </div>
 				</form>

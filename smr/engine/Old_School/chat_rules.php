@@ -44,41 +44,42 @@ B. Disciplinary actions.
 <br><br>
 
 <ol>
-<li>There are 4 kinds of disciplinary action: a verbal warning, a kick, a short term ban (normally 24 hours), and a long term ban (up to life time).</li>
-
-<li>Disciplinary actions should start with the lowest level and continue to the highest.</li>
-
-<li>Normally, only the first 3 levels will be used with only 1 stop at each of the 2 lower levels.</li>
-
-<li>The amount of stops at lower levels can be increased if:
-<ol type='a'>
-<li>the offender is a newer chat user,</li>
-<li>the offence is very mild (for example usage of a language other than English), or</li>
-<li>other special circumstances are at hand.</li>
+	<li>There are 4 kinds of disciplinary action: a verbal warning, a kick, a short term ban (normally 24 hours), and a long term ban (up to life time).</li>
+	
+	<li>Disciplinary actions should start with the lowest level and continue to the highest.</li>
+	
+	<li>Normally, only the first 3 levels will be used with only 1 stop at each of the 2 lower levels.</li>
+	
+	<li>The amount of stops at lower levels can be increased if:
+		<ol type='a'>
+			<li>the offender is a newer chat user,</li>
+			<li>the offence is very mild (for example usage of a language other than English), or</li>
+			<li>other special circumstances are at hand.</li>
+		</ol>
+	</li>
+	
+	<li>The amount of stops at lower levels can be decreased if:
+		<ol type='a'>
+			<li>the offender has been punished multiple times,</li>
+			<li>the offence is especially severe (for example spamming or impersonation of an old and well known member of community (for example Speef or MrSpock)), or</li>
+			<li>other special circumstances are at hand.</li>
+		</ol>
+	</li>
+	
+	<li>In extreme cases of severe and/or multiple offences long term bans will be issued.</li>
+	
+	<li>In especially severe cases, including, but not limited to ban hopping in game action will be taken.</li>
+	
+	<li>If you disagree with the action taken against you feel free to complain to the chat admin aka Blum in chat or through email chat@smrealms.de</li>
 </ol>
-</li>
+<br />
+<br />
+<br />
 
-<li>The amount of stops at lower levels can be decreased if:
-<ol type='a'>
-<li>the offender has been punished multiple times,</li>
-<li>the offence is especially severe (for example spamming or impersonation of an old and well known member of community (for example Speef or MrSpock)), or</li>
-<li>other special circumstances are at hand.</li>
-</ol>
-</li>
+<center><form method="POST" action="http://chat.vjtd3.com/sjc.php?Nickname=<?php echo urlencode('SMR-'.strtr($player->getPlayerName(), array(' ' => '_'))); ?>&Channel=%23smr" name="loginform" onsubmit="setjs();return true;" id="ietest" target="_chat">
 
-<li>In extreme cases of severe and/or multiple offences long term bans will be issued.</li>
-
-<li>In especially severe cases, including, but not limited to ban hopping in game action will be taken.</li>
-
-<li>If you disagree with the action taken against you feel free to complain to the chat admin aka Blum in chat or through email chat@smrealms.de</li><br>
-<br><br>
-<br>
-<?php
-
-$PHP_OUTPUT.=('
-<center><form method="POST" action="http://chat.vjtd3.com/sjc.php?Nickname=' . urlencode('SMR-'.strtr($player->getPlayerName(), array(' ' => '_'))) . '&Channel=%23smr" name="loginform" onsubmit="setjs();return true;" id="ietest" target="_chat">');
-
-$PHP_OUTPUT.=('<input type="hidden" name="interface" value="nonjs">');
+<input type="hidden" name="interface" value="nonjs">
+<?php 
 //$PHP_OUTPUT.=('<input type="hidden" name="Nickname" value="' . strtr($player->getPlayerName(), array(' ' => '_')) . '">');
 //<input type='hidden' name='Channel' value='#SMR'>
 ?>

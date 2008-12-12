@@ -1,3 +1,4 @@
+<?php
 /////////////////////////////////////////////////
 //
 // NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE
@@ -14,7 +15,7 @@
 /////////////////////////////////////////////////
 $sector = array();
 $db2 = new SMR_DB();
-$db->query('SELECT * FORM sector WHERE game_id = '.$game_id);
+$db->query('SELECT * FROM sector WHERE game_id = '.$game_id);
 while ($db->next_record()) {
 
 	$sec_id = $db->f('sector_id');
@@ -143,11 +144,11 @@ if (empty($to) || !is_numeric($to) || $to == $from) {
 
 $db->query('SELECT * FROM sector WHERE sector_id = $to AND game_id = '.SmrSession::$game_id);
 if ($db->nf() == 0)
-	create_error('That sector doesn't exist. Try a new one.');
+	create_error('That sector doesn\'t exist. Try a new one.');
 
 $db->query('SELECT * FROM sector WHERE sector_id = $from AND game_id = '.SmrSession::$game_id);
 if ($db->nf() == 0)
-	create_error('That sector doesn't exist. Try a new one.');
+	create_error('That sector doesn\'t exist. Try a new one.');
 	
 //get our arrays
 $db->query('SELECT * FROM universe_array WHERE game_id = '.$player->getGameID());
@@ -236,7 +237,7 @@ while (sizeof($sector_queue) > 0) {
 
 // Check if we found a distance
 if (!isset($sector_distance[$to]))
-	create_error('You can't plot through unknown space!');
+	create_error('You can\'t plot through unknown space!');
 
 // initialize the array where our path will be in
 $sector_path = array();
@@ -269,7 +270,7 @@ while (!in_array($from, $sector_path)) {
 	elseif ($curr_sector_warp > 0 && isset($sector_distance[$curr_sector_warp])&& $sector_distance[$curr_sector_warp] + 5 == $sector_distance[$curr_sector_id])
 		array_push($sector_path, $curr_sector_warp);
 	else
-		create_error('Something really, really strange happend. Contact SPOCK');
+		create_error('Something really, really strange happened. Contact SPOCK');
 }
 
 $container = array();
@@ -279,3 +280,4 @@ $container['plotted_course'] = serialize(array_reverse($sector_path));
 $container['distance'] = $sector_distance[$to];
 
 forward($container);
+?>
