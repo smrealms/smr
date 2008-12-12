@@ -1,5 +1,5 @@
 function OpenWindow(linkName) {
-popUpWindow = window.open(linkName, 'chat', 'resizeable, toolbar=no, location=no, directories=no, status=no, menubar=no, copyhistory=no, width=575, height=425')
+var popUpWindow = window.open(linkName, 'chat', 'resizeable, toolbar=no, location=no, directories=no, status=no, menubar=no, copyhistory=no, width=575, height=425')
 popUpWindow.focus(); } 
 
 var AttackToggle = 0;

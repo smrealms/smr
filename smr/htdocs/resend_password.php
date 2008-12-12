@@ -32,18 +32,16 @@
 
 				<form action='resend_password_processing.php' method='get'>
 				    <div align='center'>
-					    <p>
 					        <table border='0'>
-					        <tr>
-					            <th align='right'>Username:</th>
-					            <td><input name='login' id='InputFields'></td>
-					        </tr>
-					        <tr>
-					            <th align='right'>Email:</th>
-					            <td><input name='email' id='InputFields'></td>
-					        </tr>
+						        <tr>
+						            <th align='right'>Username:</th>
+						            <td><input name='login' id='InputFields'></td>
+						        </tr>
+						        <tr>
+						            <th align='right'>Email:</th>
+						            <td><input name='email' id='InputFields'></td>
+						        </tr>
 					        </table>
-					    </p>
 				        <p><input type='submit' value='Resend my password' id='InputFields'></p>
 				    </div>
 				</form>

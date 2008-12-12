@@ -43,7 +43,7 @@ if ($db->next_record()) {
 				<table border='0' cellpadding='3' cellspacing='2' width='100%'>
 				<tr bgcolor='#0B8D35'>
 					<td align='center'>
-						<font face='Times New Roman' size='+2' color='#FFFFFF'><p>Space Merchant Realms is currently <strong>OFF-LINE</strong>.</p></font>
+						<p><font face='Times New Roman' size='+2' color='#FFFFFF'>Space Merchant Realms is currently <strong>OFF-LINE</strong>.</font></p>
 						<p><? $PHP_OUTPUT.=($reason); ?></p>
 					</td>
 				</tr>

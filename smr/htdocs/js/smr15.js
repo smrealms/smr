@@ -78,9 +78,9 @@ var last_cs_comp = 1;
 var intervalCS;
 function startCS(cs_type)
 {
-	if (cs_type == 'part') { var r_time = 60000; }
-	else if (cs_type == 'fed') { var r_time = 5000; }
-	else { var r_time = 800; }
+	var r_time = 800;
+	if (cs_type == 'part') r_time = 60000;
+	else if (cs_type == 'fed') r_time = 5000;
 	intervalCS = setInterval("updateCS('"+cs_type+"')",r_time);
 }
 function updateCS(cs_type)
@@ -291,8 +291,8 @@ function startRP(speed)
 {
 	if (began == 1) return;
 	began = 1;
-	if (speed == 'fast') { var rp_time = 800; }
-	else { var rp_time = 5000; }
+	var rp_time = 5000;
+	if (speed == 'fast') rp_time = 800;
 	intervalRP = setInterval("updateRP()",rp_time);
 }
 function updateRP()
