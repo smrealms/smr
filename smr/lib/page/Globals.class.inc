@@ -4,20 +4,19 @@ require_once('SmrMySqlDatabase.class.inc');
 
 class Globals
 {
-	private static $PLANET_BUILDINGS = null;
-	private static $LEVEL_REQUIREMENTS = null;
-	private static $RACES = null;
-	private static $GOODS = null;
-	private static $WEAPONS = array();
-	private static $GAME_SPEEDS = array();
-	private static $RACE_RELATIONS = array();
-	private static $db = null;
+	protected static $PLANET_BUILDINGS = null;
+	protected static $LEVEL_REQUIREMENTS = null;
+	protected static $RACES = null;
+	protected static $GOODS = null;
+	protected static $GAME_SPEEDS = array();
+	protected static $RACE_RELATIONS = array();
+	protected static $db = null;
 	
 	private function __construct()
 	{
 	}
 	
-	private static function initialiseDatabase()
+	protected static function initialiseDatabase()
 	{
 		if(self::$db==null)
 			self::$db = new SmrMySqlDatabase();
@@ -132,33 +131,6 @@ class Globals
 			self::$GOODS =& $GOODS;
 		}
 		return self::$GOODS;
-	}
-	
-	public static function getWeapon($weaponID)
-	{
-		if(!isset(self::$WEAPONS[$weaponID])) //use cached if available
-		{
-			self::initialiseDatabase();
-			self::$WEAPONS[$weaponID] = array();
-			
-				
-			self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armor_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponID . ' LIMIT 1');
-			
-			if(self::$db->nextRecord())
-			{
-				self::$WEAPONS[$weaponID] = array(
-												'Name' => self::$db->getField('weapon_name'),
-												'RaceID' => (int)self::$db->getField('race_id'),
-												'Cost' => (int)self::$db->getField('cost'),
-												'ShieldDamage' => (int)self::$db->getField('shield_damage'),
-												'ArmourDamage' => (int)self::$db->getField('armor_damage'),
-												'Accuracy' => (int)self::$db->getField('accuracy'),
-												'PowerLevel' => (int)self::$db->getField('power_level'),
-												'BuyerRestriction' => (int)self::$db->getField('buyer_restriction')
-											);
-			}
-		}
-		return self::$WEAPONS[$weaponID];
 	}
 	
 	public static function getGameSpeed($gameID)

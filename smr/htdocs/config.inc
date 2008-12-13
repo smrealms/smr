@@ -1,14 +1,5 @@
 <?
 	require_once('config.php');
-	$MIDDLE_BIT_OF_URL = 'page219.dyndns.org';//'localhost';//
-	$URL		=	'http://'.$MIDDLE_BIT_OF_URL.'/smr1';
-	$ROOT		=	'/home/page/smr/';
-
-	$LIB		=	$ROOT . 'lib/';
-	$WWW		=	$ROOT . 'htdocs/';
-	$ENGINE		=	$ROOT . 'engine/';
-	$UPLOAD		=	$WWW .  'upload/';
-	$ADMIN		=	$ROOT . 'admin/';
 
 	// hardware
 	$SHIELDS		= 1;

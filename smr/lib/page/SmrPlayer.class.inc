@@ -125,48 +125,48 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		if($result)
 		{
-			$this->accountID = $result['account_id'];
-			$this->gameID = $result['game_id'];
-			$this->playerName = $result['player_name'];
-			$this->playerID = $result['player_id'];
-			$this->sectorID = $result['sector_id'];
-			$this->lastSectorID = $result['last_sector_id'];
-			$this->turns = $result['turns'];
-			$this->originalMaintenance = $this->turns;
-			$this->lastMaintenanceUpdate = $result['last_turn_update'];
-			$this->newbieTurns = $result['newbie_turns'];
-			$this->lastShipMod = $result['last_ship_mod'];
-			$this->lastNewsUpdate = $result['last_news_update'];
-			$this->stunned = $result['stunned'];
-			$this->fleed = $result['fleed'];
-			$this->attackColor = $result['attack_warning'];
-			$this->dead = $result['dead']=='TRUE';
-			$this->startDead = $this->dead;
-			$this->landedOnPlanet = $result['land_on_planet']=='TRUE';
-			$this->kicked = $result['kicked'];
-			$this->lastShieldUpdate = $result['last_shield_update'];
-			$this->lastActive = $result['last_active'];
-			$this->lastCPLAction = $result['last_cpl_action'];
-			$this->raceID = $result['race_id'];
-			$this->credits = $result['credits'];
-			$this->experience = $result['experience'];
-			$this->alignment = $result['alignment'];
+			$this->accountID				= (int) $result['account_id'];
+			$this->gameID					= (int) $result['game_id'];
+			$this->playerName				= (string) $result['player_name'];
+			$this->playerID					= (int) $result['player_id'];
+			$this->sectorID					= (int) $result['sector_id'];
+			$this->lastSectorID				= (int) $result['last_sector_id'];
+			$this->turns					= (int) $result['turns'];
+			$this->originalMaintenance		= $this->turns;
+			$this->lastMaintenanceUpdate	= (int) $result['last_turn_update'];
+			$this->newbieTurns				= (int) $result['newbie_turns'];
+			$this->lastShipMod				= (int) $result['last_ship_mod'];
+			$this->lastNewsUpdate			= (int) $result['last_news_update'];
+			$this->stunned					= (int) $result['stunned'];
+			$this->fleed					= (boolean) $result['fleed'];
+			$this->attackColor				= (string) $result['attack_warning'];
+			$this->dead						= $result['dead']=='TRUE';
+			$this->startDead				= $this->dead;
+			$this->landedOnPlanet			= $result['land_on_planet']=='TRUE';
+			$this->kicked					= (boolean) $result['kicked'];
+			$this->lastShieldUpdate			= (int) $result['last_shield_update'];
+			$this->lastActive				= (int) $result['last_active'];
+			$this->lastCPLAction			= (int) $result['last_cpl_action'];
+			$this->raceID					= (int) $result['race_id'];
+			$this->credits					= (int) $result['credits'];
+			$this->experience				= (int) $result['experience'];
+			$this->alignment				= (int) $result['alignment'];
 //			$this->pastKnowledge = $result['past_knowledge'];
-			$this->governmentHelp = $result['government_help'];
-			$this->allianceID = $result['alliance_id'];
+			$this->governmentHelp			= (int) $result['government_help'];
+			$this->allianceID				= (int) $result['alliance_id'];
 //			$this->allianceJoinable = $result['alliance_join'];
-			$this->shipID = $result['ship_type_id'];
-			$this->kills = $result['kills'];
-			$this->deaths = $result['deaths'];
-			$this->lastPort = $result['last_port'];
-			$this->bank = $result['bank'];
-			$this->zoom = $result['zoom'];
+			$this->shipID					= (int) $result['ship_type_id'];
+			$this->kills					= (int) $result['kills'];
+			$this->deaths					= (int) $result['deaths'];
+			$this->lastPort					= (int) $result['last_port'];
+			$this->bank						= (int) $result['bank'];
+			$this->zoom						= (int) $result['zoom'];
 //			$this->zoomOn = $result['zoom_on']=='TRUE';
 //			$this->chat = $result['chat'];
 //			$this->chatPosition = $result['chat_position'];
-			$this->displayMissions = $result['display_missions'];
-			$this->ignoreGlobals = $result['ignore_globals'];
-			$this->newbieWarning = $result['newbie_warning']=='TRUE';
+			$this->displayMissions			= $result['display_missions'];
+			$this->ignoreGlobals			= $result['ignore_globals'];
+			$this->newbieWarning			= $result['newbie_warning']=='TRUE';
 //			$this->changedStats = $result['changed_stats'];
 
 
@@ -301,13 +301,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->kicked;
 	}
 	
-	public function setKicked($boolStr)
+	public function setKicked($bool)
 	{
-		if($this->kicked == $boolStr)
+		if($this->kicked == $bool)
 			return;
-		$this->kicked=$boolStr;
+		$this->kicked=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET kicked = '.$this->db->escapeString($boolStr).' WHERE ' . $this->SQL . ' LIMIT 1');
+		$this->db->query('UPDATE player SET kicked = '.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getStunned()
@@ -329,13 +329,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->fleed;
 	}
 	
-	function setFleed($boolStr)
+	function setFleed($bool)
 	{
-		if($this->fleed == $boolStr)
+		if($this->fleed == $bool)
 			return;
-		$this->fleed=$boolStr;
+		$this->fleed=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET fleed='.$this->db->escapeString($boolStr).' WHERE ' . $this->SQL . ' LIMIT 1');
+		$this->db->query('UPDATE player SET fleed='.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getZoom()
@@ -726,13 +726,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->ignoreGlobals;
 	}
 	
-	function setIgnoreGlobals($boolStr)
+	function setIgnoreGlobals($bool)
 	{
-		if($this->ignoreGlobals == $boolStr)
+		if($this->ignoreGlobals == $bool)
 			return;
-		$this->ignoreGlobals=$boolStr;
+		$this->ignoreGlobals=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET ignore_globals = '.$this->db->escapeString($boolStr).' WHERE '.$this->SQL.' LIMIT 1');
+		$this->db->query('UPDATE player SET ignore_globals = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	
@@ -774,13 +774,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->displayMissions;
 	}
 	
-	function setDisplayMissions($boolString)
+	function setDisplayMissions($bool)
 	{
-		if($this->displayMissions == $boolString)
+		if($this->displayMissions == $bool)
 			return;
-		$this->displayMissions=$boolString;
+		$this->displayMissions=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET display_missions = '.$this->db->escapeString($boolString).' WHERE '.$this->SQL.' LIMIT 1');
+		$this->db->query('UPDATE player SET display_missions = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	
 	}
 	
@@ -955,102 +955,102 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('UPDATE player_has_relation SET relation = '.$this->pureRelations[$raceID].' WHERE '.$this->SQL.' AND race_id = '.$raceID.' LIMIT 1');
 	}
 	
-	protected function getGoodsInfo()
-	{
-		
-		if(!isset($this->goods) || !isset($this->goodsExpGained))
-		{
-			//Get Player Goods
-			global $GOODS;
-			$this->goods = array();
-			$this->goodsExpGained = array();
-			foreach ($GOODS as $good_id => $good_name)
-			{
-				$this->goods[$good_id] = 0;
-				$this->goodsExpGained[$good_id] = 0;
-			}
-			$result = $this->db->query('SELECT good_id,amount,exp_gained FROM player_has_goods WHERE ' . $this->SQL);
-			while ($this->db->nextRecord($result))
-			{
-				$this->goods[$this->db->getField('good_id')] = $this->db->getField('amount');
-				$this->goodsExpGained[$this->db->getField('good_id')] = $this->db->getField('exp_gained');
-			}
-		}
-	}
+//	protected function getGoodsInfo()
+//	{
+//		
+//		if(!isset($this->goods) || !isset($this->goodsExpGained))
+//		{
+//			//Get Player Goods
+//			global $GOODS;
+//			$this->goods = array();
+//			$this->goodsExpGained = array();
+//			foreach ($GOODS as $good_id => $good_name)
+//			{
+//				$this->goods[$good_id] = 0;
+//				$this->goodsExpGained[$good_id] = 0;
+//			}
+//			$result = $this->db->query('SELECT good_id,amount,exp_gained FROM player_has_goods WHERE ' . $this->SQL);
+//			while ($this->db->nextRecord($result))
+//			{
+//				$this->goods[$this->db->getField('good_id')] = $this->db->getField('amount');
+//				$this->goodsExpGained[$this->db->getField('good_id')] = $this->db->getField('exp_gained');
+//			}
+//		}
+//	}
+//	
+//	function getGoods()
+//	{
+//		if(!isset($this->goods))
+//		{
+//			$this->getGoodsInfo();
+//		}
+//		return $this->goods;
+//	}
+//	function getGood($goodID)
+//	{
+//		$goods = $this->getGoods();
+//		return $goods[$goodID];
+//	}
+//	function getGoodsExpGained()
+//	{
+//		if(!isset($this->goodsExpGained))
+//		{
+//			$this->getGoodsInfo();
+//		}
+//		return $this->goodsExpGained;
+//	}
+//	function getGoodExpGained($goodID)
+//	{
+//		$goodsExp = $this->getGoodsExpGained();
+//		return $goodsExp[$goodID];
+//	}
+//	
+//	function increaseGoods($goodID,$amount,$exp)
+//	{
+//		if($amount < 0)
+//			throw new Exception('Trying to increase negative goods.');
+//		if($amount == 0)
+//			return;
+//		$this->getGoodsInfo();
+//		$amount += $this->goods[$goodID];
+//		$exp += $this->goodsExpGained[$goodID];
+//		$this->setGoods($goodID,$amount,$exp);
+//	}
+//	function decreaseGoods($goodID,$amount)
+//	{
+//		if($amount < 0)
+//			throw new Exception('Trying to decrease negative goods.');
+//		if($amount == 0)
+//			return;
+//		$this->getGoodsInfo();
+//		$expLost = round($this->goodsExpGained[$goodID] * $amount / $this->goods[$goodID]);
+//		$amount = $this->goods[$goodID] - $amount;
+//		$this->setGoods($goodID,$amount,$this->goodsExpGained[$goodID] - $expLost);
+//		return $expLost;
+//	}
+//	function setGoods($goodID,$amount,$exp)
+//	{
+//		if($amount < 0)
+//			throw new Exception('Trying to set negative goods.');
+//		$this->getGoodsInfo();
+//		if($amount == 0)
+//		{
+//			if(!isset($this->goods[$goodID]))
+//				return;
+//			$exp = 0;
+//			$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' AND good_id = '.$goodID.' LIMIT 1');
+//		}
+//		else
+//		{
+//			if($this->goods[$goodID] == $amount && $this->goodsExpGained[$goodID] == $exp)
+//				return;
+//			$this->db->query('REPLACE INTO player_has_goods (account_id, game_id, good_id, amount, exp_gained) VALUES ('.$this->accountID.','.$this->gameID.','.$goodID.','.$amount.','.$exp.')');
+//		}
+//		$this->goods[$goodID] = $amount;
+//		$this->goodsExpGained[$goodID] = $exp;
+//	}
 	
-	function getGoods()
-	{
-		if(!isset($this->goods))
-		{
-			$this->getGoodsInfo();
-		}
-		return $this->goods;
-	}
-	function getGood($goodID)
-	{
-		$goods = $this->getGoods();
-		return $goods[$goodID];
-	}
-	function getGoodsExpGained()
-	{
-		if(!isset($this->goodsExpGained))
-		{
-			$this->getGoodsInfo();
-		}
-		return $this->goodsExpGained;
-	}
-	function getGoodExpGained($goodID)
-	{
-		$goodsExp = $this->getGoodsExpGained();
-		return $goodsExp[$goodID];
-	}
-	
-	function increaseGoods($goodID,$amount,$exp)
-	{
-		if($amount < 0)
-			throw new Exception('Trying to increase negative goods.');
-		if($amount == 0)
-			return;
-		$this->getGoodsInfo();
-		$amount += $this->goods[$goodID];
-		$exp += $this->goodsExpGained[$goodID];
-		$this->setGoods($goodID,$amount,$exp);
-	}
-	function decreaseGoods($goodID,$amount)
-	{
-		if($amount < 0)
-			throw new Exception('Trying to decrease negative goods.');
-		if($amount == 0)
-			return;
-		$this->getGoodsInfo();
-		$expLost = round($this->goodsExpGained[$goodID] * $amount / $this->goods[$goodID]);
-		$amount = $this->goods[$goodID] - $amount;
-		$this->setGoods($goodID,$amount,$this->goodsExpGained[$goodID] - $expLost);
-		return $expLost;
-	}
-	function setGoods($goodID,$amount,$exp)
-	{
-		if($amount < 0)
-			throw new Exception('Trying to set negative goods.');
-		$this->getGoodsInfo();
-		if($amount == 0)
-		{
-			if(!isset($this->goods[$goodID]))
-				return;
-			$exp = 0;
-			$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' AND good_id = '.$goodID.' LIMIT 1');
-		}
-		else
-		{
-			if($this->goods[$goodID] == $amount && $this->goodsExpGained[$goodID] == $exp)
-				return;
-			$this->db->query('REPLACE INTO player_has_goods (account_id, game_id, good_id, amount, exp_gained) VALUES ('.$this->accountID.','.$this->gameID.','.$goodID.','.$amount.','.$exp.')');
-		}
-		$this->goods[$goodID] = $amount;
-		$this->goodsExpGained[$goodID] = $exp;
-	}
-	
-	function getGadgets()
+	public function getGadgets()
 	{
 		if(!isset($this->gadgets))
 		{
@@ -1062,7 +1062,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		return $this->gadgets;
 	}
-	function setGadgets($keyOrUpdateArray,$value)
+	public function setGadgets($keyOrUpdateArray,$value)
 	{
 		$this->getGadgets();
 
@@ -1502,7 +1502,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return 1;
 	}
 	
-	public function killPlayerByForces(&$forces)
+	public function killPlayerByForces(SmrForce &$forces)
 	{
 		global $PLAYERMSG;
 		
@@ -1545,7 +1545,7 @@ class SmrPlayer extends AbstractSmrPlayer
 						'VALUES ('.$this->getGameID().', -1, '.$this->getAllianceID().', 1)');
 	}
 	
-	function changeShip(&$ship,$shipID)
+	function changeShip(SmrShip &$ship,$shipID)
 	{
 		$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' LIMIT 1');
 		decloak($ship);
@@ -1700,7 +1700,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function setNewbieWarning($bool)
 	{
 		$this->newbieWarning=$bool;
-		$query = 'UPDATE player SET newbie_warning = ' . $this->db->escapeString($this->newbieWarning);
+		$query = 'UPDATE player SET newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning);
 		$this->hasChanged=true;
 	}
 	
@@ -1733,7 +1733,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		else return 'HIGH';
 	}
 	
-	public function canSeeAny($otherPlayerArray)
+	public function canSeeAny(array $otherPlayerArray)
 	{
 		$canSee=false;
 		foreach($otherPlayerArray as $otherPlayer)
@@ -1744,7 +1744,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $canSee;
 	}
 	
-	public function canSee($otherPlayer)
+	public function canSee(AbstractSmrPlayer $otherPlayer)
 	{
 		if($this->getLevelID()>$otherPlayer->getLevelID())
 			return true;
@@ -1978,27 +1978,27 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->allianceRosterHREF;
 	}
 	
-	public function equals($otherPlayer)
+	public function equals(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
 	}
 	
-	public function sameAlliance($otherPlayer)
+	public function sameAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->equals($otherPlayer) || ($this->getAllianceID()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
 	}
 	
-	public function sharedForceAlliance($otherPlayer)
+	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function forceNAPAlliance($otherPlayer)
+	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderMAPAlliance($otherPlayer)
+	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}

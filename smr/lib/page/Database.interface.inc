@@ -1,26 +1,26 @@
 <?php
 interface Database
 {
-	function query($query);
+	public function query($query);
 	
-	function nextRecord();
+	public function nextRecord();
 	
-	function getField($name);
+	public function getField($name);
 	
-	function getRow();
+	public function getRow();
 	
-	function lockTable($table);
+	public function lockTable($table);
 	
-	function unlock();
+	public function unlock();
 	
-	function getNumRows();
+	public function getNumRows();
 	
-	function insertId();
-	
-	function error($err);
+	public function insertId();
 	
 	//  function free();
 	
-	function escapeString($string,$quotes=true);
+	public function escapeString($string,$quotes=true);
+	
+	public function escapeBoolean($bool);
 }
 ?>

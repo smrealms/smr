@@ -26,7 +26,7 @@ abstract class MySqlDatabase implements Database
 		}
 	}
 	
-	function query($query) {
+	public function query($query) {
 		
 		
 		if(!$this->dbResult = @mysql_query($query, self::$dbConn)) {
@@ -37,7 +37,7 @@ abstract class MySqlDatabase implements Database
 		
 	}
 	
-	function nextRecord() {
+	public function nextRecord() {
 		
 		if(!$this->dbResult) {
 			$this->error('No resource to get record from.');
@@ -53,19 +53,19 @@ abstract class MySqlDatabase implements Database
 	
 	
 	
-	function getField($name) {
+	public function getField($name) {
 		
 		return $this->dbRecord[$name];
 		
 	}
 	
-	function getRow() {
+	public function getRow() {
 		
 		return $this->dbRecord;
 		
 	}
 	
-	function lockTable($table) {
+	public function lockTable($table) {
 		
 		if(!@mysql_query('LOCK TABLES ' . $table . ' WRITE', self::$dbConn)) {
 			$this->error('Unable to lock table');
@@ -73,7 +73,7 @@ abstract class MySqlDatabase implements Database
 		
 	}
 	
-	function unlock() {
+	public function unlock() {
 		if(!@mysql_query('UNLOCK TABLES', self::$dbConn))
 		{
 			$this->error('Unable to remove table locks.');
@@ -81,18 +81,18 @@ abstract class MySqlDatabase implements Database
 		
 	}
 	
-	function getNumRows() {
+	public function getNumRows() {
 		
 		return @mysql_num_rows($this->dbResult);
 		
 	}
 	
-	function insertId() {
+	public function insertId() {
 		return @mysql_insert_id($this->dbResult);
 		
 	}
 	
-	function error($err) {
+	protected function error($err) {
 		
 		global $URL;
 		
@@ -110,7 +110,7 @@ abstract class MySqlDatabase implements Database
 		
 	}
 	
-	function escapeString($string,$quotes=true) {
+	public function escapeString($string,$quotes=true) {
 		if($string===true)
 			$string = 'TRUE';
 		else if($string===false)
@@ -128,6 +128,17 @@ abstract class MySqlDatabase implements Database
 		return '\'' . mysql_real_escape_string($string) . '\'';
 		else
 			return mysql_real_escape_string($string);
+	}
+	
+	public function escapeBoolean($bool)
+	{
+		if($string===true)
+			$string = 'TRUE';
+		else if($string===false)
+			$string = 'FALSE';
+		else
+			throw new Exception('Not a boolean!');
+		return mysql_real_escape_string($string);
 	}
 }
 

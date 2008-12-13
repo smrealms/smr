@@ -159,7 +159,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->dead=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET dead = '.$this->db->escapeString($bool).' WHERE '.$this->SQL.' LIMIT 1');
+		$this->db->query('UPDATE '.$this->tableSQL.' SET dead = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getKills()
@@ -226,7 +226,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->landedOnPlanet=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET land_on_planet = '.$this->db->escapeString($bool).' WHERE '.$this->SQL.' LIMIT 1');
+		$this->db->query('UPDATE '.$this->tableSQL.' SET land_on_planet = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public abstract function getLevelID();
