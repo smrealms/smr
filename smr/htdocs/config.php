@@ -5,13 +5,7 @@
  */
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 
-define('URL', 'http://'.$MIDDLE_BIT_OF_URL.'/smr1');
-define('ROOT','/home/page/smr/'); 
-define('LIB', ROOT . 'lib/');
-define('ENGINE', ROOT . 'engine/');
-define('WWW', ROOT . 'htdocs/');
-define('UPLOAD', '/home/page/wwwWrite/upload/');
-define('ADMIN', ROOT . 'admin/');
+require_once('config.specific.php');
 
 /*
  * Messaging system
@@ -72,6 +66,10 @@ define('NUM_RACES', 8);
 
 define('TIME', time());
 
+define('ACCURACY_STAT_FACTOR', 0.04);
+define('INCREASED_ACC_GADGET_FACTOR', 0.15);
+define('INCREASED_MAN_GADGET_FACTOR', 0.15);
+define('MR_FACTOR', 12);
 	
 define('NEWBIE_TURNS_WARNING_LIMIT',20);
 
