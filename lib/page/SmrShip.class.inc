@@ -1,5 +1,7 @@
 <?
 require_once('SmrMySqlDatabase.class.inc');
+
+require_once('SmrWeapon.class.inc');
 class SmrShip
 {
 	protected static $CACHE_SHIPS = array();
