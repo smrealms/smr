@@ -3,6 +3,8 @@
 require_once('SmrMySqlDatabase.class.inc');
 require_once('Globals.class.inc');
 
+require_once('SmrShip.class.inc');
+
 abstract class AbstractSmrPlayer
 {
 	protected $db;
@@ -146,6 +148,41 @@ abstract class AbstractSmrPlayer
 	public function isDead()
 	{
 		return $this->dead;
+	}
+	
+	function isFedProtected()
+	{
+	//exit;
+        global $session;
+        
+        //PAGE BAD BAD BAD!
+		// If there isn't a fed beacon we aren't protected
+		$this->db->query('SELECT sector_id FROM location ' .
+					 'WHERE location_type_id=201 AND sector_id = '.$this->sectorID.' AND ' .
+						   'game_id = '.$this->gameID.' LIMIT 1');
+		if (!$this->db->getNumRows())
+		{
+			return false;
+		}	
+
+        $ship =& SmrShip::getShip($this->getGameID(),$this->getAccountID());
+        $attackRating = $ship->getAttackRating();
+		if ($attackRating > 8)
+			return false;
+		if ($attackRating == 0)
+			return true;
+		if ($this->getAlignment() >= 0 && $this->getAlignment() >= ($attack_rating - 3) * 150)
+			return true;
+		if ($this->getAlignment() < 0 && $this->getAlignment() > ($attack_rating - 4) * 150)
+			return true;
+		if ($ship->hasIllegalGoods())
+			return false;
+		return false;
+	}
+	
+	public function canFight()
+	{
+		return !$this->hasNewbieTurns() && !$this->isDead() && !$this->hasFederalProtection();
 	}
 	
 	public function getStartDead()
@@ -399,6 +436,16 @@ abstract class AbstractSmrPlayer
 	{
 		$rels = $this->getRelations();
 		return $rels[$raceID];
+	}
+	
+	public function &getShip()
+	{
+		return SmrShip::getShip($this->getGameID(),$this->getAccountID());
+	}
+	
+	public function getDimishingTraderAttack()
+	{
+		return min(0,max(1, 1 - ($weaponPlayer->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
 	}
 }
 ?>
