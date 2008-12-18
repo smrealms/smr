@@ -81,7 +81,7 @@ define('SMARTY_LIBS_DIR',LIB.'/smarty/libs/');
 define('SMARTY_TEMPLATES_DIR',LIB . 'smarty/templates/');
 define('SMARTY_CONFIG_DIR',LIB . 'smarty/config/');
 define('SMARTY_PLUGINS_DIR',LIB . 'smarty/plugins/');
-define('SMARTY_COMPILE_DIR','/home/page/wwwWrite/smarty/templates_c/');
+
 define('DEFAULT_CSS','default.css');
 
 	
