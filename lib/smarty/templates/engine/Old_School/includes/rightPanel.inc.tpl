@@ -57,7 +57,7 @@ Shields : <span id="shields">{$ThisShip->getShields()}/{$ThisShip->getMaxShields
 Armor : <span id="armor">{$ThisShip->getArmour()}/{$ThisShip->getMaxArmour()}</span><br />
 <a href="{$HardwareLink}">CIJSD</a> : {if $ThisShip->hasCloak()}*{else}-{/if}{if $ThisShip->hasIllusion()}*{else}-{/if}{if $ThisShip->hasJump()}*{else}-{/if}{if $ThisShip->hasScanner()}*{else}-{/if}{if $ThisShip->hasDCS()}*{else}-{/if}<br />
 {if $ThisShip->hasCloak()}
-	{if $ThisShip->hasActiveCloak()}
+	{if $ThisShip->isCloaked()}
 		<strong style="color:lime;">*** Cloak active ***</strong>
 	{else}
 		<strong style="color:red;">*** Cloak inactive ***</strong>

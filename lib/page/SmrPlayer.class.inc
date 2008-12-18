@@ -1893,8 +1893,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		if($this->getLevelID()>$otherPlayer->getLevelID())
 			return true;
-		$otherShip =& $otherPlayer->getShip();
-		if($otherShip->isCloaked())
+		if($otherPlayer->getShip()->isCloaked())
 			return false;
 		return true;
 	}

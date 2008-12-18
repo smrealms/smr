@@ -391,7 +391,7 @@ class SmrShip
 		}
 	}
 	
-	public function hasActiveCloak()
+	public function isCloaked()
 	{
 		if(!$this->hasCloak())
 			return false;
@@ -480,7 +480,7 @@ class SmrShip
 	
 	function cloak_overload() {
 		// 1 in 25 chance of cloak being destroyed if active
-		if($this->hasActiveCloak() && mt_rand(0,99) < 5)
+		if($this->isCloaked() && mt_rand(0,99) < 5)
 		{
 			$this->db->query(
 				'DELETE FROM ship_has_hardware ' .
