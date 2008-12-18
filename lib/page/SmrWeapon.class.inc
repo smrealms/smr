@@ -22,8 +22,8 @@ class SmrWeapon
 	
 	protected static function initialiseDatabase()
 	{
-		if(self::$staticDB==null)
-			self::$staticDB = new SmrMySqlDatabase();
+		if(self::$db==null)
+			self::$db = new SmrMySqlDatabase();
 	}
 
 	public static function &getWeapon($gameID,$weaponTypeID,$forceUpdate = false)
