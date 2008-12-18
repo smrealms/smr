@@ -95,7 +95,7 @@ class SmrShip
 			
 			$order_id		= $this->db->getField('order_id');
 			
-			$this->weapon[$order_id] = Globals::getWeapon($this->db->getField('weapon_type_id'));
+			$this->weapon[$order_id] =& SmrWeapon::getWeapon($this->db->getField('weapon_type_id'));
 			
 		}
 	}
@@ -261,17 +261,13 @@ class SmrShip
 			'WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID());
 		$count = 1;
-		foreach ($this->weapon as $order_id => $weapon_name) {
-			
-			// get the weapon_id first
-			$this->db->query('SELECT * FROM weapon_type WHERE weapon_name = '.$this->escapeString($weapon_name));
-			$this->db->nextRecord();
-			$weapon_type_id = $this->db->getField('weapon_type_id');
-			
+		foreach ($this->weapon as $order_id => &$weapon)
+		{
 			$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-				'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$count.', '.$weapon_type_id.')');
+				'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$count.', '.$weapon->getWeaponTypeID().')');
 			$count++;
-		}
+		} unset($weapon);
+		
 	}
 	
 	function update() {
