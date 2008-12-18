@@ -909,9 +909,9 @@ class SmrShip
 	{
 		$weapons = $this->getWeapons();
 		$shieldDamage = 0;
-		foreach($weapons as $weapon)
+		foreach($weapons as &$weapon)
 		{
-			$shieldDamage+=$weap->getShieldDamage();
+			$shieldDamage+=$weapon->getShieldDamage();
 		}
 		return $shieldDamage;
 	}
@@ -920,7 +920,7 @@ class SmrShip
 	{
 		$weapons = $this->getWeapons();
 		$armourDamage = 0;
-		foreach($weapons as $weapon)
+		foreach($weapons as &$weapon)
 		{
 			$armourDamage+=$weapon->getArmourDamage();
 		}
