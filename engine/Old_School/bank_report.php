@@ -6,7 +6,7 @@ define('DEPOSIT',1);
 
 $smarty->assign('PageTopic','Alliance Bank Report');
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bank_menue();
 
 //get all transactions

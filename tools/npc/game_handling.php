@@ -39,7 +39,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	$db->query('SELECT account_id
 				FROM player
 				WHERE game_id = '.$game_id.' AND
-					  player_name = '.$db->escapeString($player_name'
+					  player_name = '.$db->escapeString($player_name).'
 			   ');
 	if ($db->nf() > 0)
 		log_message('.$db->escapeString($player_name already joined that game.', ERROR);
@@ -52,7 +52,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	if (!$db->nf())
 		$db->query('INSERT INTO account_has_stats
 					(account_id, HoF_name)
-					VALUES ($account->account_id, '.$db->escapeString($player_name')
+					VALUES ($account->account_id, '.$db->escapeString($player_name).')
 				   ');
 
 	// put him in a sector with a hq
@@ -118,7 +118,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	// insert into player table.
 	$db->query('INSERT INTO player
 				(account_id, game_id, player_id, player_name, race_id, ship_type_id, sector_id, last_turn_update, last_active)
-				VALUES($account->account_id, $game_id, $player_id, '.$db->escapeString($player_name', $race_id, $ship_id, $home_sector_id, $last_turn_update, ' . time() . ')
+				VALUES($account->account_id, $game_id, $player_id, '.$db->escapeString($player_name).', $race_id, $ship_id, $home_sector_id, $last_turn_update, ' . time() . ')
 			   ');
 
 	$db->unlock();
@@ -159,10 +159,10 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 				WHERE game_id = '.$game_id.'
 			   ');
 	if (!$db->next_record())
-		log_message($account_id, 'This game doesn't have any sectors', ERROR);
+		log_message($account_id, 'This game doesn\'t have any sectors', ERROR);
 
-	$min_sector = $db->f('MIN(sector_id)');
-	$max_sector = $db->f('MAX(sector_id)');
+	$min_sector = $db->f(\'MIN(sector_id)\');
+	$max_sector = $db->f(\'MAX(sector_id)\');
 
 	for ($i = $min_sector; $i <= $max_sector; $i++) {
 
@@ -172,8 +172,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 
 	    $db->query('INSERT INTO player_visited_sector
 	    			(account_id, game_id, sector_id)
-	    			VALUES ($account->account_id, $game_id, $i)
-	    		   ');
+	    			VALUES ($account->account_id, $game_id, $i)');
 
 	}
 

@@ -26,7 +26,7 @@ function set_short_term_goal($account_id, $game_id, $type, $task) {
 
 	$db->query('REPLACE INTO npc_short_term_goal
 				(account_id, game_id, type, task)
-				VALUES ($account_id, $game_id, '.$db->escapeString($type', '.$db->escapeString($task')
+				VALUES ($account_id, $game_id, '.$db->escapeString($type).', '.$db->escapeString($task).')
 			   ');
 
 }
@@ -67,7 +67,7 @@ function set_long_term_goal($account_id, $game_id, $type, $task) {
 
 	$db->query('REPLACE INTO npc_long_term_goal
 				(account_id, game_id, type, task)
-				VALUES ($account_id, $game_id, '.$db->escapeString($type', '.$db->escapeString($task')
+				VALUES ($account_id, $game_id, '.$db->escapeString($type).', '.$db->escapeString($task).')
 			   ');
 
 }

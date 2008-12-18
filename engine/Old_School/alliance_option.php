@@ -6,7 +6,7 @@ $db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE gam
 $db->next_record();
 $leader_id = $db->f('leader_id');
 $smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->f('alliance_id') . ')');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
 
 $container=array();

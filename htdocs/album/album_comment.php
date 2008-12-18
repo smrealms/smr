@@ -11,10 +11,10 @@ function create_error_offline($msg) {
 
 
 include('../config.inc');
-require_once($ENGINE . 'Old_School/smr.inc');
+require_once(ENGINE . 'Old_School/smr.inc');
 include($LIB . 'global/smr_db.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
-include($ENGINE . 'Old_School/smr.inc');
+include(ENGINE . 'Old_School/smr.inc');
 
 include('album_functions.php');
 

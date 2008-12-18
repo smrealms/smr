@@ -1,7 +1,7 @@
 <?
 
 $smarty->assign('PageTopic','VIEWING MEMBERS');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 
 $container = array();

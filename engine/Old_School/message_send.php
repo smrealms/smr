@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','SEND MESSAGE');
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_message_menue();
 
 $PHP_OUTPUT.=('<p>');

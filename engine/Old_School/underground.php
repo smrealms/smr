@@ -9,7 +9,7 @@ if ($player->getAlignment() >= 100) {
 
 $smarty->assign('PageTopic','Underground HQ');
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_ug_menue();
 
 $db2 = new SMR_DB();

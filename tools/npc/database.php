@@ -40,7 +40,7 @@ function set_player($account_id, $game_id, $column, $value) {
 	$db = new SMR_DB();
 
 	$db->query('UPDATE player
-				SET $column = '.$db->escapeString($value'
+				SET $column = '.$db->escapeString($value).'
 				WHERE account_id = '.$account_id.' AND
 					  game_id = '.$game_id.'
 			   ');
@@ -106,7 +106,7 @@ function set_stats($account_id, $column, $value) {
 	$db = new SMR_DB();
 
 	$db->query('UPDATE account_has_stats
-				SET $column = $column + '.$db->escapeString($value'
+				SET $column = $column + '.$db->escapeString($value).'
 				WHERE account_id = '.$account_id.'
 			   ');
 

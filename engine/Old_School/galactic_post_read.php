@@ -13,7 +13,7 @@ if ($db->nf()) {
     $paper_name = stripslashes($db2->f('title'));
 
     $smarty->assign('PageTopic','READING <i>GALACTIC POST</i> EDITION : '.$paper_name);
-	include($ENGINE . 'global/menue.inc');
+	include(ENGINE . 'global/menue.inc');
     $PHP_OUTPUT.=create_galactic_post_menue();
     $db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());
     if (floor($db2->nf() / 2) == $db2->nf() / 2)
@@ -65,7 +65,7 @@ if ($db->nf()) {
     $PHP_OUTPUT.=('</table>');
 } else {
 
-	include($ENGINE . 'global/menue.inc');
+	include(ENGINE . 'global/menue.inc');
     $PHP_OUTPUT.=create_galactic_post_menue();
     $PHP_OUTPUT.=('There is no current edition of the Galactic Post for this game.');
 

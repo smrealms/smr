@@ -209,7 +209,7 @@ function sector_set_visited($account_id, $game_id, $sector_id) {
 		//give them the port info
 		$db->query('REPLACE INTO player_visited_port
 					(account_id, game_id, sector_id, visited, port_info)
-					VALUES ($account_id, $game_id, $sector_id, $curr_time, '.$db->escapeString($port_info')
+					VALUES ($account_id, $game_id, $sector_id, $curr_time, '.$db->escapeString($port_info).')
 				   ');
 
 	}
