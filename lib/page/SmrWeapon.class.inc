@@ -44,9 +44,9 @@ class SmrWeapon
 		$this->gameID = $gameID;
 		$this->weaponTypeID = $weaponTypeID;
 			
-		self::$staticDB->query('SELECT weapon_name,race_id,cost,shield_damage,armor_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
+		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armor_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
 		
-		if(self::$staticDB->nextRecord())
+		if(self::$db->nextRecord())
 		{
 			$this->name = self::$db->getField('weapon_name');
 			$this->raceID = (int)self::$db->getField('race_id');
