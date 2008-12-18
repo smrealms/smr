@@ -1775,7 +1775,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->HOF;
 	}
 	
-	function increaseHOF($amount,$type,$subtype=false)
+	function increaseHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
 	{
 		if($amount < 0)
 			throw new Exception('Trying to increase negative HOF: '.$type.'-'.$subtype);
@@ -1783,13 +1783,13 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->getHOF();
 		if($subtype===false)
-			$amount+=$this->HOF[$type];
+			$amount+=@$this->HOF[$type];
 		else
-			$amount+=$this->HOF[$type][$subtype];
+			$amount+=@$this->HOF[$type][$subtype];
 		$this->setHOF($amount,$type,$subtype);
 	}
 	
-	function decreaseHOF($amount,$type,$subtype=false)
+	function decreaseHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
 	{
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative HOF: '.$type.'-'.$subtype);
@@ -1797,13 +1797,13 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->getHOF();
 		if($subtype===false)
-			$amount=$this->HOF[$type]-$amount;
+			$amount=@$this->HOF[$type]-$amount;
 		else
-			$amount=$this->HOF[$type][$subtype]-$amount;
+			$amount=@$this->HOF[$type][$subtype]-$amount;
 		$this->setHOF($amount,$type,$subtype);
 	}
 	
-	function setHOF($amount,$type,$subtype=false)
+	function setHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
 	{
 		if(($subtype!==false && $this->HOF[$type]==$amount)||$this->HOF[$type][$subtype]==$amount)
 			return;
@@ -1811,9 +1811,9 @@ class SmrPlayer extends AbstractSmrPlayer
 			$amount=0;
 		$this->getHOF();
 		if($subtype===false)
-			$this->HOF[$type]=$amount;
+			@$this->HOF[$type]=$amount;
 		else
-			$this->HOF[$type][$subtype]=$amount;
+			@$this->HOF[$type][$subtype]=$amount;
 //PAGE
 //TODO: Add hof stuff.
 //		$result = $this->db->query('UPDATE player_hof SET `'.$type.($subtype!==false?'-'.$subtype:'').'`='.$amount.' WHERE ' . $this->SQL);
