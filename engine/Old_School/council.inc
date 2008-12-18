@@ -31,7 +31,8 @@ function getPresident($race_id) {
 	{
 		$accountID = $db->f('account_id');
 		$president =& SmrPlayer::getPlayer($accountID, $player->getGameID());
-		$pres_xp = $president->getExperience();
+		if($president->getAlignment>=150)
+			$pres_xp = $president->getExperience(); //only want to set their exp if they are deputy
 	}
 		
 
@@ -46,7 +47,8 @@ function getPresident($race_id) {
 			   'ORDER by experience DESC ' .
 			   'LIMIT 1');
 
-	if ($db->next_record()) {
+	if ($db->next_record())
+	{
 		$accountID = $db->f('account_id');
 		$president =& SmrPlayer::getPlayer($accountID, $player->getGameID());
 
