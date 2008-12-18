@@ -23,7 +23,8 @@ checkPacts($race_id);
 
 $PHP_OUTPUT.=('<div align="center" style="font-weight:bold;">President</div>');
 
-if ($president->getAccountID() > 0) {
+if ($president!=null)
+{
 
 	$PHP_OUTPUT.=('<p><table border="0" class="standard" cellspacing="0" align="center" width="75%">');
 	$PHP_OUTPUT.=('<tr>');
