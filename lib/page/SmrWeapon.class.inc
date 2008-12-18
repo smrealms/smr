@@ -1,8 +1,8 @@
 <?
 require_once('SmrMySqlDatabase.class.inc');
 
-require_once('SmrPlayer.class.inc');
-class SmrWeapon
+require_once('AbstractSmrPlayer.class.inc');
+class SmrShip
 {
 	protected static $CACHE_WEAPONS = array();
 	
@@ -18,12 +18,14 @@ class SmrWeapon
 	protected $accuracy;
 	protected $powerLevel;
 	protected $buyerRestriction;
+	protected $damageRollover;
+	protected $raidWeapon;
 
 	
 	protected static function initialiseDatabase()
 	{
-		if(self::$db==null)
-			self::$db = new SmrMySqlDatabase();
+		if(self::$staticDB==null)
+			self::$staticDB = new SmrMySqlDatabase();
 	}
 
 	public static function &getWeapon($gameID,$weaponTypeID,$forceUpdate = false)
@@ -44,9 +46,9 @@ class SmrWeapon
 		$this->gameID = $gameID;
 		$this->weaponTypeID = $weaponTypeID;
 			
-		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armor_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
+		self::$staticDB->query('SELECT weapon_name,race_id,cost,shield_damage,armor_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
 		
-		if(self::$db->nextRecord())
+		if(self::$staticDB->nextRecord())
 		{
 			$this->name = self::$db->getField('weapon_name');
 			$this->raceID = (int)self::$db->getField('race_id');
@@ -56,10 +58,12 @@ class SmrWeapon
 			$this->accuracy = (int)self::$db->getField('accuracy');
 			$this->powerLevel = (int)self::$db->getField('power_level');
 			$this->buyerRestriction = (int)self::$db->getField('buyer_restriction');
+			$this->damageRollover = false;
+			$this->raidWeapon = false;
 		}
 	}
 	
-	public function getGeneralModifiedAccuracy(SmrPlayer &$weaponPlayer)
+	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
 	{
 		$modifiedAccuracy = $this->accuracy;
 		$modifiedAccuracy += $this->accuracy * ($weaponPlayer->getStat('Accuracy') * ACCURACY_STAT_FACTOR)/100;
@@ -69,9 +73,9 @@ class SmrWeapon
 		return $modifiedAccuracy;
 	}
 	
-	public function getModifiedAccuracyAgainstPlayer(SmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
+	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
-		$modifiedAccuracy = $this->getGeneralModifiedAccuracy($weaponPlayer);
+		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
 		$modifiedAccuracy -= $this->accuracy * ($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2;
 		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
 			$modifiedAccuracy -= $this->accuracy * INCREASED_MAN_GADGET_FACTOR/100;
@@ -85,7 +89,69 @@ class SmrWeapon
 		return $modifiedAccuracy;
 	}
 	
+	public function getShieldDamage()
+	{
+		return $this->shieldDamage;
+	}
 	
+	public function getArmourDamage()
+	{
+		return $this->armourDamage;
+	}
+	
+	public function isDamageRollover()
+	{
+		return $this->damageRollover;
+	}
+	
+	public function isRaidWeapon()
+	{
+		return $this->raidWeapon;
+	}
+	
+	public function canShootTraders()
+	{
+		return !$this->isRaidWeapon();
+	}
+	
+	public function getDamage()
+	{
+		return array('Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover());
+	}
+	
+	public function getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)
+	{
+		$damage = $this->getDamage();
+		//do they have the weapon damage gadget?
+		if($weaponPlayer->isGadgetEquipped('Increased Weapon Damage'))
+		{
+			$damage['Shield'] += $this->getShieldDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
+			$damage['Armour'] += $this->getArmourDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
+		}
+		//increase for weapon damage stat
+		$damage['Shield'] += $this->getShieldDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
+		$damage['Armour'] += $this->getArmourDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
+	}
+	
+	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
+	{
+		if(!$this->canShootTraders()) // If we can't shot traders then just return a damageless array and don't waste resources calculated any damage mods.
+			return array('Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		$damage = $this->getModifiedDamage($weaponPlayer);
+		
+		
+		$diminishing = $weaponPlayer->getDiminishingTraderAttack();
+		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
+		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+	}
+	
+	public function shootPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
+	{
+		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer)) //Check if we miss
+			return array('Weapon' => &$this, 'Target' => &$targetPlayer, 'Hit' => false);
+		$weaponDamage = $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
+		return array('Weapon' => &$this, 'Target' => &$targetPlayer, 'Hit' => true,'WeaponDamage' => $weaponDamage, 'ActualDamage' => $targetPlayer->getShip()->doWeaponDamage($weaponDamage));
+	}
 	
 //private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null)
 //{
@@ -106,21 +172,12 @@ class SmrWeapon
 //	else $this_weapon['May Damage Fleet'] = 'FALSE';
 //	
 //	//Determine New Damage
-//	//do they have the weapon damage gadget?
-//	if (gadget_equipped($weaponPlayer,'Increased Weapon Damage'))
-//	{
-//		$this_weapon['Shield Damage'] *= $INCREASED_DAMAGE_GADGET_VALUE;
-//		$this_weapon['Armor Damage'] *= $INCREASED_DAMAGE_GADGET_VALUE;
-//	}
 //	//do they have the raid damage gadget and are raiding?
 //	if (gadget_equipped($weaponPlayer,'Weapon Accelerator') && ($purpose == 'PortRaid' || $purpose == 'PlanetRaid'))
 //	{
 //		$this_weapon['Shield Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
 //		$this_weapon['Armor Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
 //	}
-//	//increase for weapon damage stat
-//	$this_weapon['Shield Damage'] *= 1 + ($WEAPON_DAMAGE_MOD * $weaponPlayer->getStat('Weapon Damage')) / 100;
-//	$this_weapon['Armor Damage'] *= 1 + ($WEAPON_DAMAGE_MOD * $weaponPlayer->getStat('Weapon Damage')) / 100;
 //	//increase for raid damage stat if they are raiding
 //	if ($purpose == 'PortRaid' || $purpose == 'PlanetRaid')
 //	{
