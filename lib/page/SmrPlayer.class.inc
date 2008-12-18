@@ -1805,7 +1805,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	function setHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
 	{
-		if(($subtype!==false && $this->HOF[$type]==$amount)||$this->HOF[$type][$subtype]==$amount)
+		if(($subtype!==false && @$this->HOF[$type]==$amount)||@$this->HOF[$type][$subtype]==$amount)
 			return;
 		if($amount < 0)
 			$amount=0;
