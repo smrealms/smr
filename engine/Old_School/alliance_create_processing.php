@@ -40,8 +40,7 @@ $db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_
 						  'VALUES('.$alliance_id.', '.SmrSession::$game_id.', ' . $db->escape_string($name, true) . ', ' . $db->escape_string($description, false) . ', '.$db->escapeString($password).', '.SmrSession::$account_id.', '.$db->escapeString($recruit).')');
 
 // assign the player to the current alliance
-$db->query('UPDATE player SET alliance_id = '.$alliance_id.' WHERE account_id = '.SmrSession::$account_id.' AND ' .
-															  'game_id = '.SmrSession::$game_id);
+$player->setAllianceID($alliance_id);
 
 $withPerDay = -2;
 $removeMember = TRUE;
