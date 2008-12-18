@@ -132,12 +132,12 @@ abstract class MySqlDatabase implements Database
 	
 	public function escapeBoolean($bool)
 	{
-		if($string===true)
+		if($bool===true)
 			$string = 'TRUE';
-		else if($string===false)
+		else if($bool===false)
 			$string = 'FALSE';
 		else
-			throw new Exception('Not a boolean!');
+			throw new Exception('Not a boolean!'); //TEST
 		return mysql_real_escape_string($string);
 	}
 }
