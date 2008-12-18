@@ -1,6 +1,7 @@
 <?
 require_once('SmrMySqlDatabase.class.inc');
 
+require_once('SmrPlayer.class.inc');
 require_once('SmrWeapon.class.inc');
 class SmrShip
 {
@@ -89,15 +90,14 @@ class SmrShip
 		$this->weapon_used = $this->db->getNumRows();
 		$this->weapon_open = $this->hardpoint - $this->weapon_used;
 		
-		$this->weapon = array();
+		$this->weapons = array();
 		
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord())
 		{
 			
 			$order_id		= $this->db->getField('order_id');
-			
-			$this->weapon[$order_id] =& SmrWeapon::getWeapon($this->getGameID(),$this->db->getField('weapon_type_id'));
+			$this->weapons[$order_id] =& SmrWeapon::getWeapon($this->gameID,$this->db->getField('weapon_type_id'));
 			
 		}
 	}
@@ -184,9 +184,13 @@ class SmrShip
 		return $this->getAttackRating();
 	}
 	
+	public function hasIllegalGoods()
+	{
+		return $ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12);
+	}
+	
 	public function getAttackRating()
 	{
-		
 		// for rating
 		$this->db->query('SELECT sum(shield_damage), sum(armor_damage) FROM ship_has_weapon, weapon_type ' .
 			'WHERE ship_has_weapon.weapon_type_id = weapon_type.weapon_type_id AND ' .
@@ -263,13 +267,12 @@ class SmrShip
 			'WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID());
 		$count = 1;
-		foreach ($this->weapon as $order_id => &$weapon)
+		foreach ($this->weapons as $order_id => &$weapon)
 		{
 			$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
 				'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$count.', '.$weapon->getWeaponTypeID().')');
 			$count++;
-		} unset($weapon);
-		
+		}
 	}
 	
 	function update() {
@@ -318,7 +321,7 @@ class SmrShip
 		$this->db->query('SELECT * FROM weapon_type WHERE weapon_type_id = '.$weapon_type_id);
 		if ($this->db->nextRecord()) {
 			
-			array_push($this->weapon, $this->db->getField('weapon_name'));
+			array_push($this->weapons, $this->db->getField('weapon_name'));
 			$this->update_weapon();
 			
 		}
@@ -335,7 +338,7 @@ class SmrShip
 	
 	function remove_all_weapon() {
 		
-		$this->weapon = array();
+		$this->weapons = array();
 		$this->db->query('DELETE FROM ship_has_weapon WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID());
 		
@@ -388,21 +391,18 @@ class SmrShip
 		}
 	}
 	
-	function cloak_active()
-	{
-		return $this->hasActiveCloak();
-		
-	}
-	
 	public function hasActiveCloak()
 	{
 		if(!$this->hasCloak())
 			return false;
-		$this->db->query('SELECT * FROM ship_is_cloaked ' .
-			'WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID().' LIMIT 1');
-		return $this->db->getNumRows()>0;
-		
+		if(!isset($this->isCloaked))
+		{
+			$this->db->query('SELECT * FROM ship_is_cloaked ' .
+				'WHERE account_id = '.$this->getAccountID().' AND ' .
+				'game_id = '.$this->getGameID().' LIMIT 1');
+			$this->isCloaked = $this->db->getNumRows()>0;
+		}
+		return $this->isCloaked;
 	}
 	
 	public function hasCloak()
@@ -464,20 +464,24 @@ class SmrShip
 		return $this->getMaxHardware(HARDWARE_SCANNER);
 	}
 	
-	function disable_cloak() {
+	function decloak()
+	{
+		$this->isCloaked = false;
 		$this->db->query('DELETE FROM ship_is_cloaked WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID());
+			'game_id = '.$this->getGameID() .' LIMIT 1');
 	}
 	
-	function enable_cloak() {
-		
+	function enable_cloak()
+	{
+		$this->isCloaked = true;
 		$this->db->query('REPLACE INTO ship_is_cloaked VALUES('.$this->getAccountID().', '.$this->getGameID().')');
 		
 	}
 	
 	function cloak_overload() {
 		// 1 in 25 chance of cloak being destroyed if active
-		if($this->cloak_active() && mt_rand(0,99) < 5) {
+		if($this->hasActiveCloak() && mt_rand(0,99) < 5)
+		{
 			$this->db->query(
 				'DELETE FROM ship_has_hardware ' .
 				'WHERE account_id=' . $this->getAccountID() . ' ' .
@@ -485,7 +489,7 @@ class SmrShip
 				'AND hardware_type_id=8 ' .
 				'limit 1'
 			);
-			$this->disable_cloak();
+			$this->decloak();
 			$this->hardware[8] = 0;
 			return true;
 		}	
@@ -572,6 +576,11 @@ class SmrShip
 		$this->db->query('SELECT * FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND hardware_type_id = '.$hardware_type_id.' AND amount != old_amount LIMIT 1');
 		return $this->db->getNumRows();
 		
+	}
+	
+	public function &getPlayer()
+	{
+		return SmrPlayer::getPlayer($this->getAccountID(),$this->getGameID());
 	}
 	
 	public function getAccountID()
@@ -888,7 +897,7 @@ class SmrShip
 	
 	public function getWeapons()
 	{
-		return $this->weapon;
+		return $this->weapons;
 	}
 	
 	public function getOpenWeaponSlots()
@@ -902,7 +911,7 @@ class SmrShip
 		$shieldDamage = 0;
 		foreach($weapons as $weapon)
 		{
-			$shieldDamage+=$weapon->getShieldDamage();
+			$shieldDamage+=$weap->getShieldDamage();
 		}
 		return $shieldDamage;
 	}
@@ -949,6 +958,71 @@ class SmrShip
 	{
 		$downgradeWait = 24 * 3600;
 		return $this->getLastDowngrade() - (TIME - $downgradeWait);
+	}
+	
+	public function shootPlayer(AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->shootPlayers(array(&$targetPlayer));
+	}
+	
+	public function shootPlayers(array &$targetPlayers)
+	{
+		if($this->getPlayer()->isDead())
+			return array('DeadBeforeShot' => true);
+		$results = array('DeadBeforeShot' => false);
+		foreach($this->weapons as $orderID => &$weapon)
+		{
+			$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
+			$results[$orderID] =& $this->weapons[$orderID]->shootPlayer($this->getPlayer(), $targetPlayer);
+			$this->getPlayer()->increaseHOF($results[$orderID]['TotalDamage'],'player_damage');
+			if($results[$orderID]['ActualDamage']['KillingShot'])
+				$targetPlayer->killByTrader($this->getPlayer());
+		}
+		return $results;
+	}
+	
+	public function doWeaponDamage(array $damage)
+	{
+		$alreadyDead = $this->isDead();
+		$armourDamage = 0;
+		$cdDamage = 0;
+		$shieldDamage = doShieldDamage($damage['Shield']);
+		if($shieldDamage == 0 || $damage['Rollover'])
+		{
+			$cdDamage = doCDDamage($damage['Armour']);
+			$damage['Armour'] -= $cdDamage;
+			if(!$this->hasCDs())
+				$armourDamage = doArmourDamage($damage['Armour']);
+		}
+		return array(
+						'KillingShot' => $alreadyDead != $this->isDead(),
+						'TargetAlreadyDead' => $alreadyDead,
+						'Shield' => $shieldDamage,
+						'CDs' => $cdDamage,
+						'Armour' => $armourDamage,
+						'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
+		);
+	}
+	
+	protected function doShieldDamage($damage)
+	{
+		$actualDamage = min($this->getShields(),$damage);
+		$this->decreaseShields($actualDamage);
+		return $actualDamage;
+	}
+	
+	protected function doCDDamage($damage)
+	{
+		$actualDamage = min($this->getCDs(),$damage/CD_ARMOUR);
+		$this->decreaseCDs($actualDamage);
+		return $actualDamage*CD_ARMOUR;
+	}
+	
+	protected function doArmourDamage($damage)
+	{
+		$actualDamage = min($this->getArmour(),$damage);
+		$this->decreaseArmour($actualDamage);
+		return $actualDamage;
 	}
 	
 	public function getUpgradeShipHREF()
