@@ -8,11 +8,13 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 	global $player, $var, $alliance, $HIDDEN_PLAYERS;
 
 	$db2 = new SMR_DB();
-	if($alliance_id) {
+	if($alliance_id)
+	{
 		$in_alliance = ($alliance_id == $player->getAllianceID());
 	}
-	else{
-		$in_alliance = ($alliance->alliance_id == $player->getAllianceID());
+	else
+	{
+		$in_alliance = $player->hasAlliance();
 	}
 	$db2->query('SELECT mb_read, mod_read, planet_land FROM alliance_treaties
 					WHERE (alliance_id_1 = '.$alliance_id.' OR alliance_id_1 = '.$player->getAllianceID().')
