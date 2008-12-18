@@ -109,12 +109,12 @@ if ($db->nf() > 0)
 		$PHP_OUTPUT.=('<td align="center"');
 		if ($council->getAccountID() == $player->getAccountID())
 			$PHP_OUTPUT.=(' style="font-weight:bold;"');
-		$PHP_OUTPUT.=('>$count.</td>');
+		$PHP_OUTPUT.=('>'.$count.'.</td>');
 
 		$PHP_OUTPUT.=('<td valign="middle"');
 		if ($council->getAccountID() == $player->getAccountID())
 			$PHP_OUTPUT.=(' style="font-weight:bold;"');
-		$PHP_OUTPUT.=('>$council->display_level_name ');
+		$PHP_OUTPUT.=('>'.$council->getLevelName().' ');
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'trader_search_result.php';
