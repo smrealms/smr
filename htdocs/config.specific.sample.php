@@ -12,8 +12,8 @@ $URL		=	URL;
 $ROOT		=	ROOT;
 
 $LIB		=	LIB;
-$WWW		=	ENGINE;
-$ENGINE		=	WWW;
+$WWW		=	WWW;
+$ENGINE		=	ENGINE;
 $UPLOAD		=	UPLOAD;
 $ADMIN		=	ADMIN;
 ?>
