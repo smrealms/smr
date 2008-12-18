@@ -17,8 +17,8 @@ function echo_nav($topic_id) {
 		$order_id = $db->f('order_id');
 		$topic = stripslashes($db->f('topic'));
 
-		$PHP_OUTPUT.=('<table>');
-		$PHP_OUTPUT.=('<tr>');
+		echo ('<table>');
+		echo ('<tr>');
 
 		// **************************
 		// **  PREVIOUS
@@ -29,31 +29,31 @@ function echo_nav($topic_id) {
 		if (!$db2->nf())
 			$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
 
-		$PHP_OUTPUT.=('<th width="32">');
+		echo ('<th width="32">');
 		if ($db2->next_record()) {
 
 			$previous_topic_id = $db2->f('topic_id');
 			$previous_topic = stripslashes($db2->f('topic'));
-			$PHP_OUTPUT.=('<a href="'.$URL.'/manual.php?'.$previous_topic_id.'"><img src="'.$URL.'/images/help/previous.jpg" width="32" height="32" border="0"></a>');
+			echo ('<a href="'.$URL.'/manual.php?'.$previous_topic_id.'"><img src="'.$URL.'/images/help/previous.jpg" width="32" height="32" border="0"></a>');
 
 		} else
-			$PHP_OUTPUT.=('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
-		$PHP_OUTPUT.=('</th>');
+			echo ('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
+		echo ('</th>');
 
 		// **************************
 		// **  UP
 		// **************************
 		$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
-		$PHP_OUTPUT.=('<th width="32">');
+		echo ('<th width="32">');
 		if ($db2->next_record()) {
 
 			$up_topic_id = $db2->f('topic_id');
 			$up_topic = stripslashes($db2->f('topic'));
-			$PHP_OUTPUT.=('<a href="'.$URL.'/manual.php?'.$up_topic_id.'"><img src="'.$URL.'/images/help/up.jpg" width="32" height="32" border="0"></a>');
+			echo ('<a href="'.$URL.'/manual.php?'.$up_topic_id.'"><img src="'.$URL.'/images/help/up.jpg" width="32" height="32" border="0"></a>');
 
 		} else
-			$PHP_OUTPUT.=('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
-		$PHP_OUTPUT.=('</th>');
+			echo ('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
+		echo ('</th>');
 
 		// **************************
 		// **  NEXT
@@ -75,36 +75,36 @@ function echo_nav($topic_id) {
 
 		}
 
-		$PHP_OUTPUT.=('<th width="32">');
+		echo ('<th width="32">');
 		if ($db2->next_record()) {
 
 			$next_topic_id = $db2->f('topic_id');
 			$next_topic = stripslashes($db2->f('topic'));
-			$PHP_OUTPUT.=('<a href="'.$URL.'/manual.php?'.$next_topic_id.'"><img src="'.$URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
+			echo ('<a href="'.$URL.'/manual.php?'.$next_topic_id.'"><img src="'.$URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
 
 		} else
-			$PHP_OUTPUT.=('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
-		$PHP_OUTPUT.=('</th>');
+			echo ('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
+		echo ('</th>');
 
-		$PHP_OUTPUT.=('<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">' . get_numbering($topic_id) . $topic.'</th>');
-		$PHP_OUTPUT.=('<th width="32"><a href="'.$URL.'/manual_toc.php"><img src="'.$URL.'/images/help/contents.jpg" width="32" height="32" border="0"></a></th>');
+		echo ('<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">' . get_numbering($topic_id) . $topic.'</th>');
+		echo ('<th width="32"><a href="'.$URL.'/manual_toc.php"><img src="'.$URL.'/images/help/contents.jpg" width="32" height="32" border="0"></a></th>');
 
-		$PHP_OUTPUT.=('</tr>');
+		echo ('</tr>');
 
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td colspan="5">');
+		echo ('<tr>');
+		echo ('<td colspan="5">');
 		if ($previous_topic_id > 0)
-			$PHP_OUTPUT.=('<b>Previous:</b> <a href="'.$URL.'/manual.php?'.$previous_topic_id.'">' . get_numbering($previous_topic_id) . $previous_topic.'</a>&nbsp;&nbsp;&nbsp;');
+			echo ('<b>Previous:</b> <a href="'.$URL.'/manual.php?'.$previous_topic_id.'">' . get_numbering($previous_topic_id) . $previous_topic.'</a>&nbsp;&nbsp;&nbsp;');
 		if ($up_topic_id > 0)
-			$PHP_OUTPUT.=('<b>Up:</b> <a href="'.$URL.'/manual.php?'.$up_topic_id.'">' . get_numbering($up_topic_id) . $up_topic.'</a>&nbsp;&nbsp;&nbsp;');
+			echo ('<b>Up:</b> <a href="'.$URL.'/manual.php?'.$up_topic_id.'">' . get_numbering($up_topic_id) . $up_topic.'</a>&nbsp;&nbsp;&nbsp;');
 		if ($next_topic_id > 0)
-			$PHP_OUTPUT.=('<b>Next:</b> <a href="'.$URL.'/manual.php?'.$next_topic_id.'">' . get_numbering($next_topic_id) . $next_topic.'</a>');
-		$PHP_OUTPUT.=('</tr>');
+			echo ('<b>Next:</b> <a href="'.$URL.'/manual.php?'.$next_topic_id.'">' . get_numbering($next_topic_id) . $next_topic.'</a>');
+		echo ('</tr>');
 
-		$PHP_OUTPUT.=('</table>');
+		echo ('</table>');
 
 	} else
-		$PHP_OUTPUT.=('Invalid Topic!');
+		echo ('Invalid Topic!');
 
 }
 
@@ -122,13 +122,13 @@ function echo_content($topic_id) {
 		$topic = stripslashes($db->f('topic'));
 		$text = stripslashes($db->f('text'));
 
-		$PHP_OUTPUT.=('<div id="help_content">');
-		$PHP_OUTPUT.=('<h1>' . get_numbering($topic_id) . $topic.'</h1>');
-		$PHP_OUTPUT.=('<p>'.$text.'<p>');
-		$PHP_OUTPUT.=('</div>');
+		echo ('<div id="help_content">');
+		echo ('<h1>' . get_numbering($topic_id) . $topic.'</h1>');
+		echo ('<p>'.$text.'<p>');
+		echo ('</div>');
 
 	} else
-		$PHP_OUTPUT.=('Invalid Topic!');
+		echo ('Invalid Topic!');
 
 }
 
