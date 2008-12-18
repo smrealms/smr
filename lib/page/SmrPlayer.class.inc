@@ -1,7 +1,5 @@
 <?
 require_once('AbstractSmrPlayer.class.inc');
-require_once('Globals.class.inc');
-
 
 class SmrPlayer extends AbstractSmrPlayer
 {
@@ -80,6 +78,17 @@ class SmrPlayer extends AbstractSmrPlayer
 //		}
 //	}
 
+	public static function &getSectorPlayersByAlliances($gameID,$sectorID, array $allianceIDs, $forceUpdate = false)
+	{
+		$players = self::getSectorPlayers($gameID,$sectorID,$forceUpdate); // Don't use & as we do an unset
+		foreach($players as $accountID => &$player)
+		{
+			if(!in_array($player->getAllianceID(),$allianceIDs))
+				unset($players[$accountID]);
+		}
+		return $players;
+	}
+
 	public static function &getSectorPlayers($gameID,$sectorID,$forceUpdate = false)
 	{
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID]))
@@ -95,7 +104,6 @@ class SmrPlayer extends AbstractSmrPlayer
 			return self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID] =& $players;
 		}
 		return self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID];
-		
 	}
 
 	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false)
@@ -1432,18 +1440,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		return false;
 	}
 	
-	public function killPlayer($sectorID,$news_message)
+	public function killPlayer($sectorID)
 	{
 		$sector =& SmrSector::getSector($this->getGameID(),$sectorID,$this->getAccountID());
-		$news_message = strip_tags($news_message, '<font><span>');
 		//msg taken care of in trader_att_proc.php
 		// forget plotted course
 		$this->deletePlottedCourse();
-
-		// insert the news entry
-		$this->db->query('INSERT INTO news ' .
-					 '(game_id, time, news_message) ' .
-					 'VALUES('.$this->getGameID().', ' . time() . ', ' . $this->db->escapeString($news_message) . ')');
 
 		$sector->died_here($this);
 		
@@ -1454,21 +1456,15 @@ class SmrPlayer extends AbstractSmrPlayer
 
 		// record death stat
 		$this->increaseHOF(1,'deaths');
-
-		// reset the turns used since last death stat
-		$this->db->query('UPDATE account_has_stats SET turns_used = 0 WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		//record cost of ship lost
+		$this->increaseHOF($this->getShip()->getCost(),'ship_cost_lost');
+		// reset turns since last death
+		$this->setHOF(0,'turns_used');
 
 		// 1/4 of ship value -> insurance
-		$this->db->query('SELECT cost, speed FROM player, ship_type ' .
-					 'WHERE player.ship_type_id = ship_type.ship_type_id AND ' .
-					 'account_id = '.$this->getAccountID().' AND ' .
-						   'game_id = '.$this->getGameID().' LIMIT 1');
-		$newCredits=0;
-		if ($this->db->nextRecord())
-		{
-			$newCredits = round($this->db->getField('cost') / 4);
-			$old_speed = $this->db->getField('speed');
-		}
+		$newCredits = round($this->getShip()->getCost() / 4);
+		$old_speed = $this->getShip()->getSpeed();
+			
 		if ($newCredits < 100000)
 			$newCredits = 100000;
 		$this->setCredits($newCredits);
@@ -1502,14 +1498,157 @@ class SmrPlayer extends AbstractSmrPlayer
 			return 1;
 	}
 	
+	public function killPlayerByTrader(AbstractSmrPlayer &$killer)
+	{
+		$msg = $this->getPlayerName();
+	
+//		if(isset($ship_names[$killed_id])) {
+//			$msg .= ' flying ';
+//			if(!stristr($ship_names[$killed_id],'<img')){
+//				if(stristr($ship_names[$killed_id],'<mar')) $msg .= '<span class="yellow">' . strip_tags($ship_names[$killed_id]) . '</span>';
+//				else {
+//					$msg .= $ship_names[$killed_id];
+//				}
+//			} else $msg .= strip_tags($ship_names[$killed_id], '<img>');
+//		}
+		$msg .= ' was destroyed by ';
+		$msg .= $killer->getPlayerName();
+//		if(isset($ship_names[$killer_id])) {
+//			$msg .= ' flying ';
+//			if(!stristr($ship_names[$killer_id],'<img')){
+//				if(stristr($ship_names[$killer_id],'<mar')) $msg .= '<span class="yellow">' . strip_tags($ship_names[$killer_id]) . '</span>';
+//				else {
+//					$msg .= $ship_names[$killer_id];
+//				}
+//			} else $msg .= strip_tags($ship_names[$killer_id], '<img>');
+//		}
+		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
+		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID()) . ',' . TIME . ',' . $db->escapeString($msg) . ',\'regular\')';
+		
+		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+		
+		// The person who got the kill gains experience
+		$gainedExp = ceil(0.75*((((($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID())) + 1) * 0.04 * $this->getExperience()) + (0.025 * $this->getExperience())));
+	
+		$killer->increaseExperience($gainedExp);
+		$killer->increaseHOF($gainedExp,'kill_exp_gain');
+		$killer->increaseHOF($this->getExperience(),'traders_killed_exp');
+		// Dead player loses experience
+		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
+		if($expLossPercentage > 0)
+		{
+			$this->decreaseExperience(floor($this->getExperience() * $exp_loss_percentage));
+		}
+
+		$killer->increaseCredits($this->getCredits());
+		$killer->increaseHOF($this->getCredits(),'kill_money_gain');
+		$killer->increaseHOF($this->getShip()->getCost(),'ships_killed_cost');
+
+		// The killer may change alignment
+		$relations =& Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
+		$relation = $relations[$this->getRaceID()];
+
+		$alignChangePerRelation = 0.1;
+		if($relation >= 300 || $relation <= -300)
+			$alignChangePerRelation = 0.04;
+
+		$alignChange = $relation * $alignChangePerRelation;
+		if($alignChange>0)
+			$killer->increaseAlignment($alignChange);
+		else
+			$killer->decreaseAlignment(-$alignChange);
+		// War setting gives them military pay
+		if($relation <= -300)
+		{
+			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($gainedExp/2,0.25))));
+		}
+		
+		//check for federal bounty being offered for current port raiders
+		$allowed = TIME - 60 * 60 * 3;
+		$this->db->query('DELETE FROM player_attacks_port WHERE time < '.$allowed);
+		$query = 'SELECT count(*) as numAttacks
+					FROM player_attacks_port, player, port
+					WHERE player_attacks_port.game_id = port.game_id
+					AND port.game_id = player.game_id
+					AND armor > 0
+					AND player_attacks_port.sector_id = port.sector_id
+					AND player.account_id = player_attacks_port.account_id
+					AND player.account_id = ' . $killed_id . '
+					AND player.game_id = ' . $player->getGameID();
+		$this->db->query($query);
+		if ($this->db->nextRecord())
+		{
+			if ($db->getField('numAttacks'))
+			{
+				$numAttacks = $db->getField('numAttacks');
+				$multiplier = round(.4 * $this->getLevelID());
+				$portBounty = $numAttacks * 1000000 * $multiplier;
+				$db->query('INSERT INTO bounty (account_id, game_id, type, amount, claimer_id, time) VALUES ('.$this->getAccountID().', '.$player->getGameID().', \'HQ\', ' . 
+							$portBounty.', '.$killer_id.', ' . TIME . ')');
+			}
+		}
+	
+		// Killer get marked as claimer of podded player's bounties even if they don't exist
+		$this->setBountiesClaimable($killer->getAccountID());
+
+		// If the alignment difference is greater than 200 then a bounty may be set
+		$alignment_diff = abs($this->getAlignment() - $killer->getAlignment());
+		if($alignment_diff >= 200)
+		{
+			// If the podded players alignment makes them deputy or member then set bounty
+			if($this->getAlignment() >= 100)
+			{
+				$bounty_type = 0;
+			}
+			else if ($this->getAlignment() <= 100)
+			{
+				$bounty_type = 1;
+			}
+
+			if(isset($bounty_type))
+			{
+				$killer->increaseBounty($bounty_type,floor(pow($alignment_diff, 2.56)));
+			}
+		}
+		
+		$killer->increaseKills(1);
+		$killer->increaseHOF(1,'kills');
+
+		if($this->hasAlliance())
+		{
+			$this->db->query('UPDATE alliance SET alliance_deaths=alliance_deaths+1 WHERE alliance_id=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID . ' LIMIT 1');
+		}
+		if($killer->hasAlliance())
+		{
+			$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $killer->getAllianceID() . ' AND game_id=' . $killer->getGameID() . ' LIMIT 1');
+		}
+
+		if($this->hasAlliance() && $killer->hasAlliance())
+		{
+			$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $killer->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+			if($this->db->nextRecord())
+			{
+				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $player->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+			}
+			else
+			{
+				$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->getGameID() . ',' . $killer->getAllianceID() . ',' . $this->getAllianceID() . ',1)');
+			}
+		}
+		
+		
+		$this->killPlayer($this->getSectorID());
+	}
+	
 	public function killPlayerByForces(SmrForce &$forces)
 	{
 		global $PLAYERMSG;
 		
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
-		$this->sendMessage($owner->getAccountID(), $PLAYERMSG, $this->db->escapeString('Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID()));
-		$owner->sendMessage($this->getAccountID(), $PLAYERMSG, $this->db->escapeString('You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID()));
+		$this->sendMessage($owner->getAccountID(), $PLAYERMSG, $this->db->escapeString('Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID()),false);
+		$owner->sendMessage($this->getAccountID(), $PLAYERMSG, $this->db->escapeString('You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID()),false);
 
 		$news_message = $this->getDisplayName();
 		$db2 = new SMR_DB();
@@ -1531,8 +1670,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed ' .
 						'by forces in sector&nbsp#'.$forces->getSectorID();
-
-		$this->killPlayer($forces->getSectorID(),$news_message);
+		// insert the news entry
+		$this->db->query('INSERT INTO news ' .
+					 '(game_id, time, news_message) ' .
+					 'VALUES('.$this->getGameID().', ' . time() . ', ' . $this->db->escapeString($news_message) . ')');
+		
 		$percentage = 33;
 		if ($percentage > 0 )
 			$this->decreaseExperience($this->getExperience() * $percentage / 100);
@@ -1543,6 +1685,9 @@ class SmrPlayer extends AbstractSmrPlayer
 											'game_id = '.$this->getGameID());
 		else $db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
 						'VALUES ('.$this->getGameID().', -1, '.$this->getAllianceID().', 1)');
+		
+		
+		$this->killPlayer($forces->getSectorID());
 	}
 	
 	function changeShip(SmrShip &$ship,$shipID)
@@ -1749,7 +1894,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($this->getLevelID()>$otherPlayer->getLevelID())
 			return true;
 		$otherShip =& $otherPlayer->getShip();
-		if($otherShip->hasActiveCloak())
+		if($otherShip->isCloaked())
 			return false;
 		return true;
 	}
@@ -1759,17 +1904,20 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->save();
 	}
 	
-	function sendMessage($receiver_id, $message_type_id, $message)
+	function sendMessage($receiver_id, $message_type_id, $message, $canBeIgnored = true)
 	{
 		//get expire time
 		global $GLOBALMSG, $PLAYERMSG, $PLANETMSG, $SCOUTMSG, $POLITICALMSG, $ALLIANCEMSG, $ADMINMSG ;
 		
-		// Don't send messages to players ignoring us
-		$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiver_id . ' AND blacklisted_id=' . $this->accountID . ' AND game_id = ' . $this->gameID . ' LIMIT 1');
-		if($this->db->nextRecord()) {
-			return;
-		}		
-		
+		if($canBeIgnored)
+		{
+			// Don't send messages to players ignoring us
+			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiver_id . ' AND blacklisted_id=' . $this->accountID . ' AND game_id = ' . $this->gameID . ' LIMIT 1');
+			if($this->db->nextRecord()) {
+				return;
+			}		
+		}
+				
 		$message = word_filter($message);
 		
 		if ($message_type_id == $GLOBALMSG) $expire = 3600;
@@ -1782,7 +1930,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		else $expire = 3600 * 24 * 2;
 		$expire += time();
 		// send him the message
-		$this->db->query('INSERT INTO	message
+		$this->db->query('INSERT INTO message
 			(account_id,game_id,message_type_id,message_text,
 			sender_id,send_time,expire_time) VALUES(' . 
 			$receiver_id . ',' .
@@ -1806,60 +1954,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('DELETE FROM player_has_unread_messages WHERE '.$this->SQL.' AND ' .
 					'message_type_id = '.$messageTypeID);
 
-	}
-	
-	function isFedProtected()
-	{
-	//exit;
-        global $session;
-        
-        //PAGE BAD BAD BAD!
-		// If there isn't a fed beacon we aren't protected
-		$this->db->query('SELECT sector_id FROM location ' .
-					 'WHERE location_type_id=201 AND sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		if (!$this->db->getNumRows())
-		{
-			return 0;
-		}	
-			
-		// for rating
-		$this->db->query('SELECT sum(shield_damage), sum(armor_damage) FROM ship_has_weapon NATURAL JOIN weapon_type ' .
-					 'WHERE account_id = '.$this->accountID.' AND ' .
-						   'game_id = '.$this->gameID);
-		if ($this->db->nextRecord()) {
-
-			$sum_shield_damage = $this->db->getField('sum(shield_damage)');
-			$sum_armor_damage = $this->db->getField('sum(armor_damage)');
-
-		}
-
-		$this->db->query('SELECT amount FROM ship_has_hardware ' .
-					 'WHERE account_id = '.$this->accountID.' AND ' .
-						   'game_id = '.$this->gameID.' AND ' .
-						   'hardware_type_id = 4 LIMIT 1');
-		$combat_drones=0;
-		if ($this->db->nextRecord())
-			$combat_drones = $this->db->getField('amount');
-		$total_damage = $sum_shield_damage + $sum_armor_damage;
-		$maxDronesPercent = (35 + $this->getLevelID() * .6 + ($this->getLevelID() - 1) * .4 + 15) * .01;
-		$maxDrones = $maxDronesPercent * $combat_drones;
-		$attack_rating = round((($total_damage + $maxDrones * 2) / 40));
-
-        $ship =& SmrShip::getShip($this->getGameID(),$this->getAccountID());
-        
-		if ($ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12))
-			return 0;
-		elseif ($attack_rating > 8)
-			return 0;
-		elseif ($attack_rating == 0)
-			return 1;
-		elseif ($this->getAlignment() >= 0 && $this->getAlignment() >= ($attack_rating - 3) * 150)
-			return 1;
-		elseif ($this->getAlignment() < 0 && $this->getAlignment() > ($attack_rating - 4) * 150)
-			return 1;
-		else
-			return 0;
 	}
 	
 	public function getPlottedCourse()
@@ -1934,11 +2028,6 @@ class SmrPlayer extends AbstractSmrPlayer
 					 'WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	public function &getShip()
-	{
-		return SmrShip::getShip($this->getGameID(),$this->getAccountID());
-	}
-	
 	public function getExamineTraderHREF()
 	{
 		if(!isset($this->examineTraderHREF))
@@ -1998,7 +2087,17 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
@@ -2016,6 +2115,18 @@ class SmrPlayer extends AbstractSmrPlayer
 			default:
 				return false;
 		}
+	}
+	
+
+	
+	public function shootPlayer(AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->getShip()->shootPlayer($targetPlayer);
+	}
+	
+	public function shootPlayers(array &$targetPlayers)
+	{
+		return $this->getShip()->shootPlayers($targetPlayers);
 	}
 }
 ?>
