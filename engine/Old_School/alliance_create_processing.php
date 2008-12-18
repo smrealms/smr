@@ -15,8 +15,9 @@ else $recruit = FALSE;
 $perms = $_REQUEST['Perms'];
 if (empty($password))
 	create_error('You must enter a password!');
-if (empty($description))
-	create_error('You must enter a description!');
+//No need to have a description really.
+//if (empty($description))
+//	create_error('You must enter a description!');
 if (empty($name))
 	create_error('You must enter an alliance name!');
 $name2 = strtolower($name);
