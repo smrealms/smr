@@ -1,9 +1,11 @@
 <?
 
-if (isset($var['alliance_id'])) {
+if (isset($var['alliance_id']))
+{
 	$alliance_id=$var['alliance_id'];
 }
-else {
+else
+{
 	$alliance_id=$player->getAllianceID();
 }
 
