@@ -4,7 +4,7 @@ $smarty->assign('PageTopic','Space Merchant Realms Chat Room Rules');
 
 //$PHP_OUTPUT.=('<div align=center><br><br><br>VJ Has temporarly taken down the applet.  Please visit <a href="http://www.vjtd3.com/irc"><b>VJTD3's chat page</b></a> for a link to many applets.</div>');
 //include('http://irc.VJTD3.com/index.shtml?' . strtr($player->getPlayerName(), array(' ' => '+')));
-?>
+$PHP_OUTPUT .= "
 <script language='JavaScript'>function setjs() {if(navigator.product == 'Gecko') {document.loginform['interface'].value = 'mozilla';}else if(navigator.appName == 'Microsoft Internet Explorer' &&window['ietest'] && window['ietest'].innerHTML) {document.loginform['interface'].value = 'ie';}else if(window.opera) {document.loginform['interface'].value = 'opera';}}</script>
 These rules have been created for all chatters in #SMR. The purpose of #SMR is to have a general gathering of all players, newbies and vets, and anyone else who may decide to enter the channel. The channel is meant to help anyone with any questions or problems they may have regarding the game. The following is a list of the rules we ask that everyone follow:<br><br>
 <b>News Last Updated: <u>Sunday, 09-Feb-2003 19:45:15 EST</u></b><br>
@@ -74,14 +74,15 @@ B. Disciplinary actions.
 </ol>
 <br />
 <br />
-<br />
+<br />";
 
-<center><form method="POST" action="http://chat.vjtd3.com/sjc.php?Nickname=<?php echo urlencode('SMR-'.strtr($player->getPlayerName(), array(' ' => '_'))); ?>&Channel=%23smr" name="loginform" onsubmit="setjs();return true;" id="ietest" target="_chat">
+$PHP_OUTPUT .= '<center><form method="POST" action="http://chat.vjtd3.com/sjc.php?Nickname='. urlencode('SMR-'.strtr($player->getPlayerName(), array(' ' => '_'))) .'&Channel=%23smr" name="loginform" onsubmit="setjs();return true;" id="ietest" target="_chat">
 
-<input type="hidden" name="interface" value="nonjs">
-<?php 
+<input type="hidden" name="interface" value="nonjs">';
+ 
 //$PHP_OUTPUT.=('<input type="hidden" name="Nickname" value="' . strtr($player->getPlayerName(), array(' ' => '_')) . '">');
 //<input type='hidden' name='Channel' value='#SMR'>
+$PHP_OUTPUT .= "<input type='submit' name='action' value='Chat' id='InputFields'></form></center>
+<br><font size='2'><i>This Page Was Last Updated: Tuesday, 30-Mar-2004 21:41:44 EST</i></font>";
+
 ?>
-<input type='submit' name='action' value='Chat' id='InputFields'></form></center>
-<br><font size='2'><i>This Page Was Last Updated: Tuesday, 30-Mar-2004 21:41:44 EST</i></font>
