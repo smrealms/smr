@@ -59,7 +59,7 @@ while ($db->next_record()) {
 }
 
 // take weapons that we can't carry
-$ship->weapon = array_slice($ship->weapon, 0, $ship->hardpoint);
+$ship->weapon = array_slice($ship->weapon, 0, $ship->getHardpoints());
 
 // disable hardware
 $db->query('DELETE FROM ship_is_cloaked WHERE account_id = '.$player->getAccountID().' AND ' .
