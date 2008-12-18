@@ -45,7 +45,9 @@ if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 	$container['body'] = $var['target_page'];
 	forward($container);
 }
-if(isset($_REQUEST['action'])) {
+$action = '';
+if(isset($_REQUEST['action']))
+{
 	$action = $_REQUEST['action'];
 	if ($action == 'No')
 		forward(create_container('skeleton.php', $var['target_page']));

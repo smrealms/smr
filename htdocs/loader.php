@@ -176,7 +176,7 @@ function do_voodoo() {
 		$db->next_record();
 		$sector_id=$db->f('sector_id');
 
-		if(!$lock && $var['body'] != 'error.php' && !isset($var['ForwardError']))
+		if(!$lock && (!isset($var['body']) || $var['body'] != 'error.php') && !isset($var['ForwardError']))
 		{
 			if(!acquire_lock($sector_id))
 			{
