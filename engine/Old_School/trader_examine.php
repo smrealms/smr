@@ -57,7 +57,7 @@ $players[SmrSession::$account_id] = array(
 	(int)$player->getRaceID(),
 	(int)$player->getShipID(),
 	(int)$player->getExperience(),
-	(int)$player->getAlignment(),0,0,0,0,array(),$ship->ship_name,0,0,0,0
+	(int)$player->getAlignment(),0,0,0,0,array(),$ship->getName(),0,0,0,0
 );
 $attackers = array();
 $defenders = array();

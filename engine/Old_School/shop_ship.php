@@ -130,13 +130,13 @@ if (isset($var['ship_id'])) {
 	$PHP_OUTPUT.= '</td></tr>';
 
 	$PHP_OUTPUT.= '<tr><td>Hardpoints</td><td>';
-	$PHP_OUTPUT.= $ship->hardpoint;
+	$PHP_OUTPUT.= $ship->getHardpoints();
 	$PHP_OUTPUT.= '</td><td>';
 	$PHP_OUTPUT.= $hardpoint;
 	$PHP_OUTPUT.= '</td></tr>';
 
 	$PHP_OUTPUT.= '<tr><td>Speed</td><td>';
-	$PHP_OUTPUT.= $ship->getSpeed * $game_speed;
+	$PHP_OUTPUT.= $ship->getSpeed() * $game_speed;
 	$PHP_OUTPUT.= ' TPH</td><td>';
 	$PHP_OUTPUT.= $dis_speed;
 	$PHP_OUTPUT.= ' TPH</td></tr>';

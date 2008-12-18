@@ -905,6 +905,11 @@ class SmrShip
 		return $this->weapon_open;
 	}
 	
+	public function getHardpoints()
+	{
+		return $this->hardpoint;
+	}
+	
 	public function getTotalShieldDamage()
 	{
 		$weapons = $this->getWeapons();
