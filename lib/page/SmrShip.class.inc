@@ -97,7 +97,7 @@ class SmrShip
 			
 			$order_id		= $this->db->getField('order_id');
 			
-			$this->weapon[$order_id] =& SmrWeapon::getWeapon($this->db->getField('weapon_type_id'));
+			$this->weapon[$order_id] =& SmrWeapon::getWeapon($this->getGameID(),$this->db->getField('weapon_type_id'));
 			
 		}
 	}
