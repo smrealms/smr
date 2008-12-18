@@ -116,7 +116,7 @@ class Globals
 			$GOODS = array();
 			
 			// determine user level
-			self::$db->query('SELECT good_id,good_name,max_amount,base_price,good_class,restriction FROM good');
+			self::$db->query('SELECT good_id,good_name,max_amount,base_price,good_class'./*,restriction*/' FROM good'); //TODO add field to database
 			while(self::$db->nextRecord())
 			{
 				$GOODS[self::$db->getField('good_id')] = array();
