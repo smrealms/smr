@@ -41,7 +41,7 @@ else
 	$smarty->assign('PageTopic','FEDERAL HQ');
 
 // header menue
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_hq_menue();
 
 // secondary db object

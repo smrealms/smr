@@ -1,6 +1,6 @@
 <?
 $smarty->assign('PageTopic','VIEWING ARTICLES');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $db2 = new SMR_DB();
 $db3 = new SMR_DB();

@@ -1,7 +1,7 @@
 <?
 
 $smarty->assign('PageTopic','VIEWING APPLICATIONS');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->getGameID());
 if ($db->nf()) {

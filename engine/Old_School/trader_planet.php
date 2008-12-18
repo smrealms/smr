@@ -12,7 +12,7 @@ function echo_time($sek) {
 
 $smarty->assign('PageTopic','PLANETS');
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();
 
 $db2 = new SMR_DB();

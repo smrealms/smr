@@ -1,7 +1,7 @@
 <?
 
 $smarty->assign('PageTopic','Galactic Post Application');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $container = array();
 $container['url'] = 'galactic_post_application_processing.php';

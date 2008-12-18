@@ -1,7 +1,7 @@
 <?
 
 $smarty->assign('PageTopic','WRITTING AN ARTICLE');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $PHP_OUTPUT.=('What is the title?<br>');
 $container = array();

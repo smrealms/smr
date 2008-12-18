@@ -6,7 +6,7 @@ if ($db->next_record())
 
 $smarty->assign('PageTopic','Send message to ruling council of the '.$race_name);
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_message_menue();
 
 $PHP_OUTPUT.=('<p>');

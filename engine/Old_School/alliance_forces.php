@@ -8,7 +8,7 @@ $db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE gam
 $db->next_record();
 $smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->f('alliance_id') . ')');
 //$smarty->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
 
 //get the sequence

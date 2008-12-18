@@ -18,7 +18,7 @@ if ($db->next_record()) $smarty->assign('PageTopic','Welcome to ' . $db->f('loca
 else $smarty->assign('PageTopic','Welcome to this bar');
 
 //include menu (not menue ;) )
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bar_menue();
 
 //get rid of drinks older than 30 mins

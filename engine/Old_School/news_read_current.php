@@ -1,7 +1,7 @@
 <?
 
 $smarty->assign('PageTopic','CURRENT NEWS');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_news_menue();
 //we we check for a lotto winner...
 $db->lock('player_has_ticket');

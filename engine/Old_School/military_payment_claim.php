@@ -4,7 +4,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 
 $smarty->assign('PageTopic','Military Payment Center');
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 if ($sector->has_hq())
 	$PHP_OUTPUT.=create_hq_menue();
 else

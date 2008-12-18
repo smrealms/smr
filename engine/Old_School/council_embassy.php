@@ -1,7 +1,7 @@
 <?
 
 include(get_file_loc('council.inc'));
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 
 $smarty->assign('PageTopic','RULING COUNCIL OF '.$player->getRaceName());
 

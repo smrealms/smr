@@ -14,7 +14,7 @@ if ($account->validated == 'FALSE') {
 
 $smarty->assign('PageTopic','bank');
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bank_menue();
 
 $PHP_OUTPUT.= 'Hello ';

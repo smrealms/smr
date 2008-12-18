@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','Anonymous accounts for '.$player->getPlayerName());
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();
 
 $PHP_OUTPUT.=('<br><br>');

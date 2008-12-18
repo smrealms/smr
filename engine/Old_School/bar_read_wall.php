@@ -4,7 +4,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 
 $smarty->assign('PageTopic','READING THE WALL');
 
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bar_menue();
 
 $db = new SMR_DB();

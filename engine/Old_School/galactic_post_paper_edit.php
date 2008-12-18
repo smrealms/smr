@@ -5,7 +5,7 @@ $db->query('SELECT * FROM galactic_post_paper WHERE paper_id = '.$var['id'].' AN
 $db->next_record();
 $paper_title = stripslashes($db->f('title'));
 $db->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$var['id']);
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $PHP_OUTPUT.=($paper_title.'<br><br><ul>');
 while ($db->next_record()) {

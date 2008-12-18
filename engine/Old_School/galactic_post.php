@@ -20,7 +20,7 @@ if ($db->next_record()) {
 
 if ($allowed_edit == 'yes') {
 
-	include($ENGINE . 'global/menue.inc');
+	include(ENGINE . 'global/menue.inc');
     $PHP_OUTPUT.=create_galactic_post_menue();
     $PHP_OUTPUT.=('<b>EDITOR OPTIONS<br></b>');
     $PHP_OUTPUT.=('Welcome '.$player->getPlayerName().' your position is <i>Editor</i><br>');

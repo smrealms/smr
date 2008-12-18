@@ -2,7 +2,7 @@
 
 	$smarty->assign('PageTopic','PlAYER BLACKLIST');
 
-	include($ENGINE . 'global/menue.inc');
+	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();
  
  	if(isset($var['error'])) {

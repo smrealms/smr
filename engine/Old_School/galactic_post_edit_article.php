@@ -1,7 +1,7 @@
 <?
 
 $smarty->assign('PageTopic','EDITING AN ARTICLE');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID().' AND article_id = '.$var['id']);
 $db->next_record();

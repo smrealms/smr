@@ -4,7 +4,7 @@ if (!isset($var['folder_id'])) {
 
 	$smarty->assign('PageTopic','VIEW MESSAGES');
 
-	include($ENGINE . 'global/menue.inc');
+	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();
 
 	$PHP_OUTPUT.=('<p>Please choose your Message folder!</p>');
@@ -102,7 +102,7 @@ if (!isset($var['folder_id'])) {
 	if ($db->next_record())
 		$smarty->assign('PageTopic','VIEW ' . $db->f('message_type_name'));
 
-	include($ENGINE . 'global/menue.inc');
+	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();
 
 	if ($var['folder_id'] == $GLOBALMSG) {

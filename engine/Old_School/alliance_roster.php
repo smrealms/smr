@@ -10,7 +10,7 @@ else {
 $db->query('SELECT alliance_name,leader_id,alliance_password FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->next_record();
 $smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $alliance_id . ')');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
 
 $leader_id = $db->f('leader_id');

@@ -2,8 +2,8 @@
 
 include('config.inc');
 require_once($LIB . 'global/smr_db.inc');
-include($ENGINE . 'Old_School/smr.inc');
-include($ENGINE . 'Old_School/help.inc');
+include(ENGINE . 'Old_School/smr.inc');
+include(ENGINE . 'Old_School/help.inc');
 
 $PHP_OUTPUT.=('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
 

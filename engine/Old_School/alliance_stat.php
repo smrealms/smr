@@ -8,7 +8,7 @@ $desc = strip_tags($db->f('alliance_description'));
 $img = $db->f('img_src');
 $mod = strip_tags($db->f('mod'));
 $smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->f('alliance_id') . ')');
-include($ENGINE . 'global/menue.inc');
+include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
 
 $container=array();
