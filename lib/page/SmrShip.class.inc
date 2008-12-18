@@ -902,7 +902,7 @@ class SmrShip
 		$shieldDamage = 0;
 		foreach($weapons as $weapon)
 		{
-			$shieldDamage+=$weapon['ShieldDamage'];
+			$shieldDamage+=$weapon->getShieldDamage();
 		}
 		return $shieldDamage;
 	}
@@ -913,7 +913,7 @@ class SmrShip
 		$armourDamage = 0;
 		foreach($weapons as $weapon)
 		{
-			$armourDamage+=$weapon['ArmourDamage'];
+			$armourDamage+=$weapon->getArmourDamage();
 		}
 		return $armourDamage;
 	}
