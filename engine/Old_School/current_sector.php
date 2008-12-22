@@ -4,7 +4,6 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 
 $smarty->assign('ThisSector',$sector);
-$smarty->assign('ThisPlayer',$player);
 
 // get our rank
 $rank_id = $account->get_rank();
