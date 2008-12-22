@@ -195,7 +195,6 @@ function create_error($message) {
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'error.php';
 	$container['message'] = $message;
-	var_dump($container);
 	forward($container);
 	
 	/*
@@ -226,7 +225,6 @@ function forward($new_container)
 	$var = $new_container;
 	$container = $new_container;
 
-	var_dump($new_container);
 	do_voodoo();
 
 }
