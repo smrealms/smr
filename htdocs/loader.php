@@ -226,7 +226,8 @@ function do_voodoo()
 	{
 		release_lock($lock);
 	}
-
+	
+	$smarty->display(get_template_loc($var['url']));
 	exit;
 }
 
