@@ -28,14 +28,18 @@ if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
 else
 	$curr_ip = $_SERVER['REMOTE_ADDR'];
 
+$account->generateResetPassword();
+
+$resetURL = $URL.'/reset_password.php?login='.$account->login.'&resetcode='.$account->getResetPassword();
 // send email with password to user
 mail($email, 'Space Merchant Realms Password',
-	 'A user from ' . $curr_ip . ' requested your password!\n\r\n\r' .
-	 '   Your password is: ' . $account->password . '\n\r\n\r' .
+	 'A user from ' . $curr_ip . ' requested to reset your password!'."\n\r\n\r" .
+	 '   Your password reset code is: ' . $account->getResetPassword()."\n\r" .
+	 '   You can use this url: <a href="'.$resetURL.'">'.$resetURL.'</a>' . "\n\r\n\r" .
 	 'The Space Merchant Realms server is on the web at '.$URL.'/',
 	 'From: support@smrealms.de');
 
-header('Location: '.$URL.'/login.php');
+header('Location: '.$URL.'/reset_password.php');
 exit;
 
 ?>

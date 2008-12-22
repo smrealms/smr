@@ -26,6 +26,8 @@ if (SmrSession::$account_id > 0)
 
 // db object
 $db = new SMR_DB();
+$db->query("ALTER TABLE `account` 
+  ADD `password_reset` char(32) NOT NULL default 'qwertyuiopasdfghjklzxcvbnm'");
 $login = $_REQUEST['login'];
 $password = $_REQUEST['password'];
 if (strstr($login, '\'') || strstr($password, '\'')) {

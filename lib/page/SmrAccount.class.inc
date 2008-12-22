@@ -38,6 +38,7 @@ class SmrAccount
 	var $fontsize;
 	var $rank;
 	var $rank_name;
+	protected $passwordReset;
 	
 	public static function &getAccount($accountID,$forceUpdate = false)
 	{
@@ -80,6 +81,8 @@ class SmrAccount
 			$this->offset			= $row['offset'];
 			$this->images			= $row['images'];
 			$this->fontsize			= $row['fontsize'];
+			
+			$this->passwordReset	= $row['password_reset'];
 			
 			$this->db->query('SELECT * FROM account_has_stats WHERE account_id = ' . $this->account_id . ' LIMIT 1');
 			
@@ -153,13 +156,14 @@ class SmrAccount
 		return $this->db->getNumRows();
 	}
 	
-	function update() {
-		
+	function update()
+	{
 		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).', ' .
 			'validation_code = '.$this->db->escapeString($this->validation_code).', ' .
 			'validated = '.$this->db->escapeString($this->validated).', ' .
 			'password = '.$this->db->escapeString($this->password).', ' .
-			'`images` = '.$this->db->escapeString($this->images).' ' .
+			'`images` = '.$this->db->escapeString($this->images).', ' .
+			'`password_reset` = '.$this->db->escapeString($this->passwordReset).' ' .
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
 		
 	}
@@ -304,10 +308,42 @@ class SmrAccount
 		
 	}
 	
-	
-	function getAccountID()
+	public function getAccountID()
 	{
 		return $this->accountID;
+	}
+	
+	public function getEmail()
+	{
+		return $this->email;
+	}
+	
+	protected function getPassword()
+	{
+		return $this->password;
+	}
+	
+	public function setPassword($password)
+	{
+		$this->password = md5($password);
+		$this->generateResetPassword();
+		$this->update();
+	}
+	
+	public function generateResetPassword()
+	{
+		$this->setResetPassword(md5($this->getEmail().$account->getPassword().$this->getResetPassword()));
+	}
+	
+	public function getResetPassword()
+	{
+		return $this->resetPassword;
+	}
+	
+	protected function setResetPassword($passwordReset)
+	{
+		$this->passwordReset=$passwordReset;
+		$this->update();
 	}
 }
 
