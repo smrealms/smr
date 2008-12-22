@@ -342,9 +342,6 @@ if ($launch - $now > 0)
 	echo '<br />SMR 1.5 Launch in ' . format_time($launch - $now, TRUE) . '</span>!';
 
 
-
-$smarty->display(get_template_loc('skeleton'));
-
 SmrSession::update();
 
 function format_time($seconds, $short=FALSE)
