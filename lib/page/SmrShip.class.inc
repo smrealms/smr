@@ -325,17 +325,12 @@ class SmrShip
 		return 1;
 	}
 	
-	function add_weapon($weapon_type_id) {
-		
-		// get the weapon_name first
-		$this->db->query('SELECT * FROM weapon_type WHERE weapon_type_id = '.$weapon_type_id);
-		if ($this->db->nextRecord()) {
-			
-			array_push($this->weapons, $this->db->getField('weapon_name'));
-			$this->update_weapon();
-			
-		}
-		
+	function &add_weapon($weaponTypeID)
+	{
+		$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
+		$this->weapons[] = $weapon;
+		$this->update_weapon();
+		return $weapon;
 	}
 	
 	function remove_weapon($weapon_type_id) {
