@@ -111,6 +111,7 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 // *
 // ********************************
 $sn = $_REQUEST['sn'];
+$globals['sn'] =& $sn;
 // check if we got a sn number with our url
 if (empty($sn))
 	create_error('Your browser lost the SN. Try to reload the page!');
