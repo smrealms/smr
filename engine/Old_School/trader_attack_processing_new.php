@@ -744,8 +744,9 @@ foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer)
 	$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($teamPlayer);
 
-
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escape_string(gzcompress(serialize($results))) . ', \'FALSE\')');
+$serializedResults = serialize($results);
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
+unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
 $container['url'] = 'skeleton.php';
