@@ -19,8 +19,6 @@ require_once(get_file_loc('SmrAccount.class.inc'));
 // *
 // ********************************
 
-// creates a new session object
-$session = new SmrSession();
 
 if (SmrSession::$account_id > 0) {
 

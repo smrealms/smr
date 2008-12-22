@@ -1,6 +1,5 @@
 <?
 require_once('SmrMySqlDatabase.class.inc');
-SmrSession::init();
 class SmrSession
 {
 	protected static $db;
@@ -71,15 +70,15 @@ class SmrSession
 	
 	public static function update()
 	{
-		$compressed = mysql_real_escape_string(gzcompress(serialize(self::$var)));
+		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate)
 		{
-			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . ',last_accessed=' . time() . ',session_var=\'' . $compressed  . '\' WHERE session_id=\'' . self::$session_id . '\'');
+			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . ',last_accessed=' . time() . ',session_var=' . self::$db->escapeString($compressed)  . ' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		}
 		else
 		{
 			self::$db->query('DELETE FROM active_session WHERE account_id=' . self::$account_id . ' LIMIT 1');
-			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(\'' . self::$session_id . '\',' . self::$account_id . ',' . self::$game_id . ',' . time() . ',\'' . $compressed  . '\')');
+			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$account_id . ',' . self::$game_id . ',' . TIME . ',' . self::$db->escapeString($compressed)  . ')');
 		}
 	}
 
@@ -106,4 +105,5 @@ class SmrSession
 
 }
 
+SmrSession::init();
 ?>

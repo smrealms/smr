@@ -76,8 +76,6 @@ $db = new SMR_DB();
 // *
 // ********************************
 
-// creates a new session object
-$session = new SmrSession();
 //echo '<pre>';echo_r($session);echo'</pre>';
 //exit;
 // do we have a session?
@@ -211,6 +209,7 @@ function do_voodoo()
 		}
 
 		$ship	=& SmrShip::getShip(SmrSession::$game_id,SmrSession::$account_id);
+		$GLOBALS['ship'] =& $ship;
 
 		// update turns on that player
 		$player->updateTurns();
@@ -236,7 +235,7 @@ function do_voodoo()
 
 // This is hackish, but without row level locking it's the best we can do
 function acquire_lock($sector) {
-	global $db, $lock,$session;
+	global $db, $lock;
 
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . time() . ')');

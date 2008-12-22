@@ -78,7 +78,7 @@ define('DEBUG',0);
 function getPlanetArray()
 {
 	if (DEBUG) $PHP_OUTPUT.=('Entered planet array<br>');
-	global $db, $session, $player, $account;
+	global $db, $player, $account;
 	$db->query('SELECT  * FROM planet WHERE sector_id = ' . $player->getSectorID() . ' AND game_id = ' . $player->getGameID());
 	if ($db->next_record()) {
 		$planet = array($db->f('shields'),
@@ -119,7 +119,7 @@ function getPlanetArray()
 function getPlayerArray()
 {
 	if (DEBUG) $PHP_OUTPUT.=('Entered player array<br>');
-	global $db, $session, $player, $account;
+	global $db, $player, $account;
 	//insert our trigger into the players array
 	$query = 'SELECT * FROM player WHERE account_id = ' . $player->getAccountID() . ' AND game_id = ' . $player->getGameID();
 	$db->query($query);
@@ -263,7 +263,7 @@ function build_ships($ship_ids) {
 }
 function build_hqs(&$races) {
 	if (DEBUG) $PHP_OUTPUT.=('Build HQ<br>');
-	global $db,$session;
+	global $db;
 	// We know that race HQs have a location id of 101 + race_id
 	$temp = array();
 	foreach($races as $race_id) {
@@ -278,7 +278,7 @@ function build_hqs(&$races) {
 function getHardware(&$players)
 {
 	if (DEBUG) $PHP_OUTPUT.=('Get Hardware<br>');
-	global $db, $session, $player, $account;
+	global $db, $player, $account;
 	$players_in = implode(',',array_keys($players));
 	
 	$db->query('SELECT account_id,weapon_type_id FROM ship_has_weapon WHERE account_id IN (' . $players_in . ') AND game_id=' . SmrSession::$game_id . ' ORDER BY order_id ASC');
@@ -319,7 +319,7 @@ function getHardware(&$players)
 function getWeapons($weapon_ids)
 {
 	if (DEBUG) $PHP_OUTPUT.=('Get Weps<br>');
-	global $db,$session;
+	global $db;
 	$weapons = array();
 	if (!sizeof($weapon_ids)) return $weapons;
 	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armor_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
@@ -336,7 +336,7 @@ function getWeapons($weapon_ids)
 }
 function getFleet(&$players,&$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Get Fleet<br>');
-	global $db,$session,$player;
+	global $db,$player;
 	
 	$player_ids = array_keys($players);
 	$fleet = array();
@@ -446,7 +446,7 @@ function protected_rating($account_id,&$players,&$weapons) {
 function planetFires(&$attackers, &$planet, &$players)
 {
 	if (DEBUG) $PHP_OUTPUT.=('Planet Fires<br>');
-	global $db,$session,$player;
+	global $db,$player;
 	//Turrets Fire
 	for ($i = 0; $i < $planet[TURRETS]; $i++)
 	{
@@ -577,7 +577,7 @@ function fleetFires(&$attackers, &$planet, &$players, &$weapons)
 function playerFires($attacker, &$planet, &$players, &$weapons)
 {
 	if (DEBUG) $PHP_OUTPUT.=('Player fires<br>');
-	global $db,$session,$player;
+	global $db,$player;
 	
 	$num_weapons = count($players[$attacker][WEAPONS]);
 	// Process each weapon in turn
@@ -928,7 +928,7 @@ function processResults($players, $planet, $fleet, $weapons) {
 }
 function podPlayers($IDArray, $ships, $hqs, $planet, $players) {
 	if (DEBUG) $PHP_OUTPUT.=('Podding Players<br>');
-	global $db, $session, $player;
+	global $db, $player;
 	if (!sizeof($IDArray)) return;
 	$hqs = build_hqs(array_unique($hqs));
 	$ships = build_ships(array_unique($ships));

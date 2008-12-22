@@ -13,9 +13,6 @@ require_once(ENGINE . 'Old_School/smr.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
 require_once(get_file_loc('SmrAccount.class.inc'));
 
-// creates a new session object
-$session = new SmrSession();
-
 if (SmrSession::$account_id > 0)
 {
 	$msg = 'You already logged in! Creating multis is against the rules!';

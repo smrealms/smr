@@ -98,7 +98,7 @@ function echo_galactic_post_menue() {
 }
 function create_galactic_post_menue() {
 
-	global $session, $player;
+	global $player;
 	$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_read.php'),
 												  'Current Edition');
 
@@ -172,7 +172,7 @@ function echo_combat_log_menue() {
 }
 function create_combat_log_menue() {
 
-	global $player,$session;
+	global $player;
 
 	$container = array();
 	$container['url'] = 'skeleton.php';

@@ -18,9 +18,6 @@ include(ENGINE . 'Old_School/smr.inc');
 
 include('album_functions.php');
 
-// get session
-$session = new SmrSession();
-
 if (SmrSession::$account_id == 0)
 	$PHP_OUTPUT.=create_error_offline('You need to logged in to post comments!');
 

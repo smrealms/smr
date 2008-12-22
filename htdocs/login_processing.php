@@ -23,8 +23,6 @@ $db2 = new SMR_DB();
 // *
 // ********************************
 
-// creates a new session and account object
-$session = new SmrSession();
 $login = (isset($_REQUEST['login']) ? $_REQUEST['login'] : (isset($var['login']) ? $var['login'] : ''));
 $password = (isset($_REQUEST['password']) ? $_REQUEST['password'] : (isset($var['password']) ? $var['password'] : ''));
 if (SmrSession::$account_id == 0) {
