@@ -145,7 +145,7 @@ class SmrWeapon
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 	}
 	
-	public function shootPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
+	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
 		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer)) //Check if we miss
