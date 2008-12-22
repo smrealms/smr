@@ -10,11 +10,11 @@ function scout($account_id, $game_id) {
 
 	// get current sector
 	$sector_id = get_current_sector($account_id, $game_id);
-	log_message($account_id, 'I'm currently in sector #$sector_id');
+	log_message($account_id, 'I\'m currently in sector #'.$sector_id);
 
 	// first we need to verify whats the distance to the next fed space
 	$distance_to_fed = get_distance_to_fed($sector_id, $game_id, $account_id);
-	log_message($account_id, 'This is $distance_to_fed sectors away from FED');
+	log_message($account_id, 'This is '.$distance_to_fed.' sectors away from FED');
 
 	$turns = get_player($account_id, $game_id, 'turns');
 	$newbie_turns = get_player($account_id, $game_id, 'newbie_turns');

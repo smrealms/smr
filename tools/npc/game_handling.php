@@ -161,10 +161,11 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	if (!$db->next_record())
 		log_message($account_id, 'This game doesn\'t have any sectors', ERROR);
 
-	$min_sector = $db->f(\'MIN(sector_id)\');
-	$max_sector = $db->f(\'MAX(sector_id)\');
+	$min_sector = $db->f('MIN(sector_id)');
+	$max_sector = $db->f('MAX(sector_id)');
 
-	for ($i = $min_sector; $i <= $max_sector; $i++) {
+	for ($i = $min_sector; $i <= $max_sector; $i++)
+	{
 
 	    //if this is our home sector we dont add it.
 	    if ($i == $home_sector_id)
@@ -172,7 +173,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 
 	    $db->query('INSERT INTO player_visited_sector
 	    			(account_id, game_id, sector_id)
-	    			VALUES ($account->account_id, $game_id, $i)');
+	    			VALUES ('.$account->account_id.', '.$game_id.', '.$i.')');
 
 	}
 
@@ -207,7 +208,7 @@ function get_colored_text($value, $text) {
 	else
 		$color = 'yellow';
 
-	return '<span style="color:$color;">$text</span>';
+	return '<span style="color:$color;">'.$text.'</span>';
 
 }
 
