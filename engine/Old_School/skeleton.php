@@ -126,7 +126,6 @@ $smarty->assign('DonateLink',SmrSession::get_new_href($container));
 $PHP_OUTPUT='';
 include(get_file_loc($var['body']));
 $smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
-$smarty->assign('TemplateBody',$var['body']);
 
 if (SmrSession::$game_id != 0)
 {
