@@ -152,9 +152,6 @@ abstract class AbstractSmrPlayer
 	
 	function hasFederalProtection()
 	{
-	//exit;
-        global $session;
-        
         //PAGE BAD BAD BAD!
 		// If there isn't a fed beacon we aren't protected
 		$this->db->query('SELECT sector_id FROM location ' .

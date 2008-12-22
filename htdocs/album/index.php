@@ -7,9 +7,6 @@ require_once(get_file_loc('SmrSession.class.inc'));
 
 include('album_functions.php');
 
-// get session
-$session = new SmrSession();
-
 // database object
 $db = new SMR_DB();
 $db2 = new SMR_DB();
@@ -64,7 +61,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 				ORDER BY HoF_name');
 		
 		if ($db2->next_record())
-			album_entry($session, $db2->f('album_id'));
+			album_entry($db2->f('album_id'));
 		else {
 			
 			// get all id's and build array
@@ -83,7 +80,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 	} elseif ($db->nf() == 1) {
 
 		if ($db->next_record())
-			album_entry($session, $db->f('album_id'));
+			album_entry($db->f('album_id'));
 		else
 			main_page();
 

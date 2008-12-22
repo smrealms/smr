@@ -83,25 +83,21 @@ function create_form_name($container, $name) {
 }
 
 function create_form_parameter($container, $param) {
-	global $session;
 	return '<form '.$param.' method="POST" action="loader.php">' .
 		'<input type="hidden" name="sn" value="' . SmrSession::get_new_sn($container) . '">';
 }
 
 function create_header_link($container, $text) {
-	global $session;
 	return '<a class="header" href="loader.php?sn=' . SmrSession::get_new_sn($container) . '">' . $text . '</a>';
 }
 
 
 
 function create_button($container,$text) {
-	global $session;
 	return '<div class="buttonA"><a class="buttonA" href="loader.php?sn=' . SmrSession::get_new_sn($container). '">&nbsp;' . $text . '&nbsp;</a></div>';
 }
 
 function create_form($container,$actions) {
-	global $session;
 	static $form_id = 0;
 	$form = array();
 	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="loader.php?sn=' . SmrSession::get_new_sn($container) . '">';
@@ -129,15 +125,15 @@ function create_submit_style($value, $style) {
 	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" style="$style">');
 }
 
-function get_file_loc($file_name, $exists = 1) {
-
-	global $ADMIN, $session, $includes, $g_id;
+function get_file_loc($file_name, $exists = 1)
+{
+	global $includes, $g_id;
 	static $stored_dir;
 	if(isset($stored_dir)) {
 		$game_dir = $stored_dir;
 	}
 	else {
-		if ((isset($session) && SmrSession::$game_id > 0) || $g_id > 0) {
+		if ((SmrSession::$game_id > 0) || $g_id > 0) {
 			if ($g_id > 0) $game_id = $g_id;
 			else $g_id = SmrSession::$game_id;
 			$includes->query('SELECT game_type FROM game WHERE game_id = '.$g_id.' LIMIT 1	');
@@ -153,8 +149,8 @@ function get_file_loc($file_name, $exists = 1) {
 	elseif (file_exists(ENGINE . 'Old_School/' . $file_name)) return ENGINE . 'Old_School/' . $file_name;
 	elseif (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
 	elseif (file_exists(LIB . 'Old_School/' . $file_name)) return LIB . 'Old_School/' . $file_name;
-	elseif (file_exists($ADMIN . $game_dir . $file_name)) return $ADMIN . $game_dir . $file_name;
-	elseif (file_exists($ADMIN . 'Old_School/' . $file_name)) return $ADMIN . 'Old_School/' . $file_name;
+	elseif (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
+	elseif (file_exists(ADMIN . 'Old_School/' . $file_name)) return ADMIN . 'Old_School/' . $file_name;
 	elseif (file_exists(WWW . $file_name)) return WWW . $file_name;
 	elseif ($exists == 1) return ENGINE . 'empty.php';
 	else return $file_name;
@@ -163,13 +159,13 @@ function get_file_loc($file_name, $exists = 1) {
 
 function get_template_loc($file_name, $exists = 1) {
 
-	global $ADMIN, $session, $includes, $g_id;
+	global $includes, $g_id;
 	static $stored_dir;
 	if(isset($stored_dir)) {
 		$game_dir = $stored_dir;
 	}
 	else {
-		if ((isset($session) && SmrSession::$game_id > 0) || $g_id > 0) {
+		if (SmrSession::$game_id > 0 || $g_id > 0) {
 			if ($g_id > 0) $game_id = $g_id;
 			else $g_id = SmrSession::$game_id;
 			$includes->query('SELECT game_type FROM game WHERE game_id = '.$g_id.' LIMIT 1	');
@@ -212,7 +208,7 @@ function create_error($message) {
 
 function forward($new_container)
 {
-	global $session, $URL, $time_start,$sn,$container,$var;
+	global $URL, $time_start,$sn,$container,$var;
 
 	// add start time of that script to next page
 	$new_container['time'] = $time_start;
@@ -232,7 +228,7 @@ function forward($new_container)
 function forwardURL($new_container)
 {
 
-	global $session, $URL, $time_start,$sn,$container,$var;
+	global $URL, $time_start,$sn,$container,$var;
 
 	// add start time of that script to next page
 	$new_container['time'] = $time_start;

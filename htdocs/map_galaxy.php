@@ -31,8 +31,6 @@ header('Cache-Control: post-check=0, pre-check=0', FALSE);
 // *
 // ********************************
 
-// creates a new session object
-$session = new SmrSession();
 
 // do we have a session?
 if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {

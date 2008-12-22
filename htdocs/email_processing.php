@@ -6,9 +6,6 @@ require_once(ENGINE . 'Old_School/smr.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrSession.class.inc'));
 
-// get session
-$session = new SmrSession();
-
 $db = new SMR_DB();
 
 // do we have a session?

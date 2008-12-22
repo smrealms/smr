@@ -72,7 +72,7 @@ function main_page() {
 
 }
 
-function album_entry($session, $album_id) {
+function album_entry($album_id) {
 
 	global $URL;
 

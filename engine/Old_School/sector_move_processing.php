@@ -260,7 +260,7 @@ forward($container);
 
 
 function get_forces_query($galaxy_id) {
-	global $account,$session,$player,$db;
+	global $account,$player,$db;
 	$db->query('SELECT * FROM alliance_treaties WHERE (alliance_id_1 = '.$player->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')
 				AND game_id = '.$player->getGameID().'
 				AND official = \'TRUE\'
@@ -313,7 +313,7 @@ function get_forces_query($galaxy_id) {
 }
 
 function send_scout_messages($scout_owners,$direction){
-	global $db,$player,$SCOUTMSG,$session;
+	global $db,$player,$SCOUTMSG;
 	$scout_query = '';
 	$scout_query2 = '';
 	$helper_query = ',' . SmrSession::$game_id .',' . $SCOUTMSG . ',';
