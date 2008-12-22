@@ -99,6 +99,11 @@ class SmrWeapon
 		return $this->name;
 	}
 	
+	public function getCost()
+	{
+		return $this->cost;
+	}
+	
 	public function getShieldDamage()
 	{
 		return $this->shieldDamage;

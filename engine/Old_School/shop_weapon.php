@@ -75,7 +75,8 @@ if ($db->nf() > 0 ) {
 
 }
 
-if (sizeof($ship->weapon) > 0) {
+if ($ship->hasWeapons())
+{
 
 	$smarty->assign('PageTopic','SELL WEAPONS');
 
@@ -86,33 +87,26 @@ if (sizeof($ship->weapon) > 0) {
 	$PHP_OUTPUT.=('<th align="center">Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	foreach ($ship->weapon as $order_id => $weapon_name) {
-
-		$db->query('SELECT * FROM weapon_type WHERE weapon_name = '.$db->escapeString($weapon_name));
-		while ($db->next_record()) {
-
-			$weapon_type_id = $db->f('weapon_type_id');
-			$cost = $db->f('cost') / 2;
+	foreach ($ship->getWeapons() as $order_id => &$weapon)
+	{
+			$cost = $weapon->getCost() / 2;
 
 			$container = array();
 			$container['url'] = 'shop_weapon_processing.php';
 			$container['order_id'] = $order_id;
 			$container['cash_back'] = $cost;
-			$container['weapon_type_id'] = $weapon_type_id;
+			$container['weapon_type_id'] = $weapon->getWeaponTypeID();
 			$PHP_OUTPUT.=create_echo_form($container);
 
 			$PHP_OUTPUT.=('<tr>');
-			$PHP_OUTPUT.=('<td align="center">'.$weapon_name.'</td>');
+			$PHP_OUTPUT.=('<td align="center">'.$weapon->getName().'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$cost.'</td>');
 			$PHP_OUTPUT.=('<td align="center">');
 			$PHP_OUTPUT.=create_submit('Sell');
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('</tr>');
 			$PHP_OUTPUT.=('</form>');
-
-		}
-
-	}
+	} unset($weapon);
 
 	$PHP_OUTPUT.=('</table>');
 
