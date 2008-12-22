@@ -177,9 +177,9 @@ if ($db->nf() > 0) {
 //BETA
 $betaKey = $_REQUEST['beta_key'];
 $db->query('SELECT used FROM beta_key WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
-if (!$db->next_record() || $db->f('used') == 'FALSE')
+if (!$db->next_record() || $db->f('used') == 'TRUE')
 {
-	$msg = 'Registering is currently disabled.';
+	$msg = 'Invalid or used beta key.';
 	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 }
