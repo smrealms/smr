@@ -35,7 +35,7 @@ $resetURL = $URL.'/reset_password.php?login='.$account->login.'&resetcode='.$acc
 mail($email, 'Space Merchant Realms Password',
 	 'A user from ' . $curr_ip . ' requested to reset your password!'."\n\r\n\r" .
 	 '   Your password reset code is: ' . $account->getPasswordReset()."\n\r" .
-	 '   You can use this url: <a href="'.$resetURL.'">'.$resetURL.'</a>' . "\n\r\n\r" .
+	 '   You can use this url: '.$resetURL . "\n\r\n\r" .
 	 'The Space Merchant Realms server is on the web at '.$URL.'/',
 	 'From: support@smrealms.de');
 
