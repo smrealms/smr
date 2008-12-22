@@ -965,12 +965,12 @@ class SmrShip
 		return $this->getLastDowngrade() - (TIME - $downgradeWait);
 	}
 	
-	public function shootPlayer(AbstractSmrPlayer &$targetPlayer)
+	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
 	{
 		return $this->shootPlayers(array(&$targetPlayer));
 	}
 	
-	public function shootPlayers(array &$targetPlayers)
+	public function &shootPlayers(array &$targetPlayers)
 	{
 		$thisPlayer =& $this->getPlayer();
 		if($thisPlayer->isDead())
@@ -980,7 +980,8 @@ class SmrShip
 		{
 			$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
 			$results['Weapons'][$orderID] =& $this->weapons[$orderID]->shootPlayer($thisPlayer, $targetPlayer);
-			$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+			if($results['Weapons'][$orderID]['Hit'])
+				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 		}
 		
 		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
@@ -988,7 +989,7 @@ class SmrShip
 		return $results;
 	}
 	
-	public function doWeaponDamage(array $damage)
+	public function &doWeaponDamage(array $damage)
 	{
 		$alreadyDead = $this->isDead();
 		$armourDamage = 0;
