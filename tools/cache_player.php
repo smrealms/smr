@@ -18,7 +18,7 @@ query('OPTIMIZE TABLE `active_session`');
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
 // overwrite database class to use our db
-include( $LIB . 'global/smr_db.inc' );
+include( LIB . 'global/smr_db.inc' );
 
 // new db object
 $player = new SMR_DB();

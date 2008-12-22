@@ -2,7 +2,7 @@
 
 include('../config.inc');
 require_once(ENGINE . 'Old_School/smr.inc');
-include($LIB . 'global/smr_db.inc');
+include(LIB . 'global/smr_db.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
 
 include('album_functions.php');

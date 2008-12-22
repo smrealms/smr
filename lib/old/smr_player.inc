@@ -1,8 +1,8 @@
 <?
 //// TODO: Plenty of room for improvement here
 //// include file with database class
-////require_once($LIB . 'smr_db.inc');
-//require_once($LIB . 'global/smr_db.inc');
+////require_once(LIB . 'smr_db.inc');
+//require_once(LIB . 'global/smr_db.inc');
 //
 //class SMR_PLAYER extends SMR_DB {
 //

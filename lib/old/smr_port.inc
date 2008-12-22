@@ -1,8 +1,8 @@
 <?
 //
 //// include file with database class
-////require_once($LIB . 'smr_db.inc');
-//require_once($LIB . 'global/smr_db.inc');
+////require_once(LIB . 'smr_db.inc');
+//require_once(LIB . 'global/smr_db.inc');
 //
 //class SMR_PORT extends SMR_DB {
 //

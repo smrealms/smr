@@ -1,5 +1,5 @@
 <?
-require_once($LIB . 'global/smr_alliance.inc');
+require_once(LIB . 'global/smr_alliance.inc');
 
 $alliance = new SMR_ALLIANCE($player->getAllianceID(), SmrSession::$game_id);
 $action = $var['action'];
