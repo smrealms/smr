@@ -26,12 +26,6 @@ if (SmrSession::$account_id > 0)
 
 // db object
 $db = new SMR_DB();
-$db->query("CREATE TABLE IF NOT EXISTS `beta_key` (
-  `key` char(5) NOT NULL default '0',
-  `used` enum('TRUE','FALSE') NOT NULL default 'FALSE',
-  PRIMARY KEY  (`key`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
-$db->query('INSERT IGNORE INTO beta_key (`key`) VALUES (\'asdfg\'),(\'zxcvb\'),(\'qwerty\')');
 $login = $_REQUEST['login'];
 $password = $_REQUEST['password'];
 if (strstr($login, '\'') || strstr($password, '\'')) {
