@@ -1,4 +1,9 @@
 <?php
+error_reporting(E_ALL | E_STRICT); // optional
+@date_default_timezone_set(@date_default_timezone_get());
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+
 /*
  * FILE: /htdocs/config.php
  * TODO: Transfer all globals into defines in this file
