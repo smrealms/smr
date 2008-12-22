@@ -323,6 +323,11 @@ class SmrAccount
 		return $this->password;
 	}
 	
+	public function checkPassword($password)
+	{
+		return $this->getPassword()==$password;
+	}
+	
 	public function setPassword($password)
 	{
 		$this->password = md5($password);

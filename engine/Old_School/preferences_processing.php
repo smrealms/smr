@@ -58,7 +58,7 @@ if ($action == 'Save and resend validation code') {
   if (empty($new_password))
     create_error('You must enter a non empty password!');
 
-  if ($old_password != $account->password)
+  if ($account->checkPassword($old_password))
     create_error('Your current password is wrong!');
 
   if ($new_password != $retype_password)
@@ -67,9 +67,7 @@ if ($action == 'Save and resend validation code') {
   if ($new_password == $account->login)
     create_error('Your choosen password is invalid!');
 
-  $account->password = $new_password;
-  $account->update();
-
+  $account->setPassword($new_password);
 } elseif ($action == 'Change Name') {
 
   // disallow certain ascii chars
