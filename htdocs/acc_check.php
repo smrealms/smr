@@ -1,7 +1,7 @@
 <?php
 
 include('config.inc');
-require_once($LIB . 'global/smr_db.inc');
+require_once(LIB . 'global/smr_db.inc');
 include(ENGINE . 'Old_School/smr.inc');
 include(ENGINE . 'Old_School/help.inc');
 

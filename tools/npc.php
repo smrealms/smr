@@ -6,8 +6,8 @@ mt_srand((double)microtime()*1000000);
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-include($LIB . 'smr_db.inc');
-include($LIB . 'smr_account.inc');
+include(LIB . 'smr_db.inc');
+include(LIB . 'smr_account.inc');
 
 include('npc/logger.php');
 include('npc/game_handling.php');

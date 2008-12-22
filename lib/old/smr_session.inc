@@ -1,7 +1,7 @@
 <?
 
 // include file with database class
-require_once($LIB . 'global/smr_db.inc');
+require_once(LIB . 'global/smr_db.inc');
 
 class SMR_SESSION extends SMR_DB {
 

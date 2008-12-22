@@ -16,7 +16,7 @@ function echo_r($message)
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-include($LIB . 'global/smr_db.inc');
+include(LIB . 'global/smr_db.inc');
 
 include(ENGINE . '/Old_School/smr.inc');
 

@@ -4,10 +4,10 @@
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-include($LIB . 'global/smr_db.inc');
+include(LIB . 'global/smr_db.inc');
 
 // mailer
-require($LIB . 'class.phpmailer.php');
+require(LIB . 'class.phpmailer.php');
 
 // database objects
 $db = new SMR_DB();

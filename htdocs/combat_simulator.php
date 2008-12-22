@@ -51,7 +51,7 @@ define('ASSIST',2);
 
 include('config.inc');
 include('config.php');
-require_once($LIB . 'global/smr_db.inc');
+require_once(LIB . 'global/smr_db.inc');
 $db = new SMR_DB();
 
 

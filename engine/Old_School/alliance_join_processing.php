@@ -1,6 +1,6 @@
 <?
 
-require_once($LIB . 'global/smr_alliance.inc');
+require_once(LIB . 'global/smr_alliance.inc');
 
 // ********************************
 // *

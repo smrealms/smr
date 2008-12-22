@@ -8,7 +8,7 @@
 // ********************************
 
 include('config.inc');
-require_once($LIB . 'global/smr_db.inc');
+require_once(LIB . 'global/smr_db.inc');
 
 $db = new SMR_DB();
 

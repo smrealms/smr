@@ -4,7 +4,7 @@
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-include($LIB . 'global/smr_db.inc');
+include(LIB . 'global/smr_db.inc');
 
 $db = new SMR_DB();
 $db2 = new SMR_DB();
