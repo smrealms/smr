@@ -332,7 +332,7 @@ class SmrAccount
 	
 	public function generatePasswordReset()
 	{
-		$this->setPasswordReset(md5($this->getEmail().$this->getPassword().$this->getResetPassword()));
+		$this->setPasswordReset(md5($this->getEmail().$this->getPassword().$this->getPasswordReset()));
 	}
 	
 	public function getPasswordReset()
