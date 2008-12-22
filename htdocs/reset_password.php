@@ -35,19 +35,19 @@
 					        <table border="0">
 						        <tr>
 						            <th align="right">Username:</th>
-						            <td><input name="login" id="InputFields" value="<?php echo $_REQUEST['login']?>" /></td>
+						            <td><input name="login" type="text" id="InputFields" value="<?php echo $_REQUEST['login']?>" /></td>
 						        </tr>
 						        <tr>
 						            <th align="right">Password Reset Code:</th>
-						            <td><input name="password_reset" id="InputFields" value="<?php echo $_REQUEST['resetcode']?>" /></td>
+						            <td><input name="password_reset" type="text" id="InputFields" value="<?php echo $_REQUEST['resetcode']?>" /></td>
 						        </tr>
 						        <tr>
 						            <th align="right">New Password:</th>
-						            <td><input name="password" id="InputFields" /></td>
+						            <td><input name="password" type="password" id="InputFields" /></td>
 						        </tr>
 						        <tr>
 						            <th align="right">Reset New Password:</th>
-						            <td><input name="pass_reset" id="InputFields" /></td>
+						            <td><input name="pass_verify" type="password" id="InputFields" /></td>
 						        </tr>
 					        </table>
 				        <p><input type="submit" value="Reset my password" id="InputFields" /></p>
