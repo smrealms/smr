@@ -89,6 +89,11 @@ class SmrWeapon
 		return $modifiedAccuracy;
 	}
 	
+	public function getName()
+	{
+		return $this->name;
+	}
+	
 	public function getShieldDamage()
 	{
 		return $this->shieldDamage;
