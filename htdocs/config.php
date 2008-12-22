@@ -95,6 +95,7 @@ define('DEFAULT_CSS','default.css');
 	
 	require_once(SMARTY_LIBS_DIR . 'Smarty.class.php');
 	$smarty = new Smarty();
+	$GLOBALS['smarty'] =& $smarty;
 	$smarty->template_dir = SMARTY_TEMPLATES_DIR;
 	$smarty->compile_dir = SMARTY_COMPILE_DIR;
 	$smarty->config_dir = SMARTY_CONFIG_DIR;
