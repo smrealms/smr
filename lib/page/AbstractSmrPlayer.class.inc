@@ -445,7 +445,7 @@ abstract class AbstractSmrPlayer
 	
 	public function getDiminishingTraderAttack()
 	{
-		return min(0,max(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
+		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
 	}
 }
 ?>
