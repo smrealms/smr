@@ -1040,7 +1040,7 @@ class SmrShip
 	
 	protected function doCDDamage($damage)
 	{
-		$actualDamage = min($this->getCDs(),$damage/CD_ARMOUR);
+		$actualDamage = min($this->getCDs()*CD_ARMOUR,$damage/CD_ARMOUR);
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage*CD_ARMOUR;
 	}
