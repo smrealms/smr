@@ -196,9 +196,6 @@ if (SmrSession::$game_id != 0)
 		}
 	}
 
-	$smarty->assign('ThisPlayer',$player);
-	$smarty->assign('ThisShip',$ship);
-
 	$container = array();
 	$container['url']		= 'skeleton.php';
 	$container['body']		= 'trader_search_result.php';
