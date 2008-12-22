@@ -12,7 +12,7 @@
 		{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 		{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=`$DamageTypes+1}{/if}
 		
-		{$ShootingPlayer->getName()} fires their {$ShootingWeapon.getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()} {*
+		{$ShootingPlayer->getName()} fires their {$ShootingWeapon->getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()} {*
 		*}{if !$ActualDamage.TargetAlreadyDead}{*
 			*}{if !$ShotHit}and misses{elseif $ActualDamage.TotalDamage == 0}{*
 				*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
