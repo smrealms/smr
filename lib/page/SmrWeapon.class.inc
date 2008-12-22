@@ -89,6 +89,11 @@ class SmrWeapon
 		return $modifiedAccuracy;
 	}
 	
+	public function getWeaponTypeID()
+	{
+		return $this->weaponTypeID;
+	}
+	
 	public function getName()
 	{
 		return $this->name;
