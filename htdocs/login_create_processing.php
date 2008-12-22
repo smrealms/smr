@@ -31,7 +31,7 @@ $db->query("CREATE TABLE IF NOT EXISTS `beta_key` (
   `used` enum('TRUE','FALSE') NOT NULL default 'FALSE',
   PRIMARY KEY  (`key`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
-$db->query('INSERT IGNORE INTO beta_key (key) VALUES (asdfg),(zxcvb),(qwerty)');
+$db->query('INSERT IGNORE INTO beta_key (`key`) VALUES (\'asdfg\'),(\'zxcvb\'),(\'qwerty\')');
 $login = $_REQUEST['login'];
 $password = $_REQUEST['password'];
 if (strstr($login, '\'') || strstr($password, '\'')) {
