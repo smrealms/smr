@@ -2141,12 +2141,12 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 
 	
-	public function shootPlayer(AbstractSmrPlayer &$targetPlayer)
+	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
 	{
 		return $this->getShip()->shootPlayer($targetPlayer);
 	}
 	
-	public function shootPlayers(array &$targetPlayers)
+	public function &shootPlayers(array &$targetPlayers)
 	{
 		return $this->getShip()->shootPlayers($targetPlayers);
 	}
