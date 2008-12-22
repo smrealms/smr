@@ -1002,7 +1002,7 @@ class SmrShip
 			if(!$this->hasCDs())
 				$armourDamage = $this->doArmourDamage($damage['Armour']);
 		}
-		return array(
+		$return = array(
 						'KillingShot' => $alreadyDead != $this->isDead(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
@@ -1012,6 +1012,7 @@ class SmrShip
 						'HasCDs' => $this->hasCDs(),
 						'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
 		);
+		return $return;
 	}
 	
 	protected function doShieldDamage($damage)
