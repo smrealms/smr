@@ -8,17 +8,17 @@
 		{assign var=WeaponDamage value=$WeaponResults.WeaponDamage}
 		{assign var=TargetPlayer value=$WeaponResults.TargetPlayer}
 		{assign var=DamageTypes value=0}
-		{if $ActualDamage.Shield > 0}{assign var=DamageTypes value=$DamageTypes + 1}{/if}
-		{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes + 1}{/if}
-		{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=$DamageTypes + 1}{/if}
+		{if $ActualDamage.Shield > 0}{assign var=DamageTypes value=`$DamageTypes + 1`}{/if}
+		{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=`$DamageTypes + 1`}{/if}
+		{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=`$DamageTypes + 1`}{/if}
 		
 		{$ShootingPlayer->getName()} fires their {$ShootingWeapon.getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()} {*
 		*}{if !$ActualDamage.TargetAlreadyDead}{*
 			*}{if !$ShotHit}and misses{elseif $ActualDamage.TotalDamage == 0}{*
 				*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
 				*}{elseif $WeaponDamage.Armour > 0}which is deflected by their shields{/if}{*
-				*}{else}destroying {if $ActualDamage.Shield > 0}<span class="cyan">{$ActualDamage.Shield}</span> shields{if DamageTypes == 3}, {elseif DamageTypes == 2} and {/if}{assign var=DamageTypes value=($DamageTypes - 1)}{*
-					*}{elseif $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs}</span> drones{if DamageTypes == 2} and {/if}{assign var=DamageTypes value=($DamageTypes - 1)}{*
+				*}{else}destroying {if $ActualDamage.Shield > 0}<span class="cyan">{$ActualDamage.Shield}</span> shields{if DamageTypes == 3}, {elseif DamageTypes == 2} and {/if}{assign var=DamageTypes value=`$DamageTypes - 1`}{*
+					*}{elseif $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs}</span> drones{if DamageTypes == 2} and {/if}{assign var=DamageTypes value=`$DamageTypes - 1`}{*
 					*}{elseif $ActualDamage.Armour > 0}<span class="red">{$ActualDamage.Armour}</span> plates of armour{/if}{*
 		*}{/if}{/if}.
 		{if $ActualDamage.KillingShot}<br />{assign var=KillResults value=$WeaponResults.KillResults}
