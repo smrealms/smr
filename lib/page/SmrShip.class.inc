@@ -911,7 +911,7 @@ class SmrShip
 		unset($this->weapons[$orderID]);
 	}
 	
-	public function getNumWeapon()
+	public function getNumWeapons()
 	{
 		return $this->getHardpoints-count($this->getWeapons());
 	}
