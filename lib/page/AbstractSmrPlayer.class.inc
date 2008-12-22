@@ -443,7 +443,7 @@ abstract class AbstractSmrPlayer
 		return SmrShip::getShip($this->getGameID(),$this->getAccountID());
 	}
 	
-	public function getDimishingTraderAttack()
+	public function getDiminishingTraderAttack()
 	{
 		return min(0,max(1, 1 - ($weaponPlayer->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
 	}
