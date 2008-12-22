@@ -8,10 +8,6 @@
 
 include('config.inc');
 
-$msg = 'Registering is currently disabled.';
-header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-exit;
-
 require_once($LIB . 'global/smr_db.inc');
 require_once(ENGINE . 'Old_School/smr.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
@@ -20,8 +16,8 @@ require_once(get_file_loc('SmrAccount.class.inc'));
 // creates a new session object
 $session = new SmrSession();
 
-if (SmrSession::$account_id > 0) {
-
+if (SmrSession::$account_id > 0)
+{
 	$msg = 'You already logged in! Creating multis is against the rules!';
 	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
@@ -30,6 +26,12 @@ if (SmrSession::$account_id > 0) {
 
 // db object
 $db = new SMR_DB();
+$db->query("CREATE TABLE IF NOT EXISTS `beta_key` (
+  `key` char(5) NOT NULL default '0',
+  `used` enum('TRUE','FALSE') NOT NULL default 'FALSE',
+  PRIMARY KEY  (`key`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;");
+$db->query('INSERT IGNORE INTO beta_key (key) VALUES (asdfg),(zxcvb),(qwerty)');
 $login = $_REQUEST['login'];
 $password = $_REQUEST['password'];
 if (strstr($login, '\'') || strstr($password, '\'')) {
@@ -141,9 +143,10 @@ if ($email != $email_verify) {
 	exit;
 }
 
-if ($login == $password) {
+if ($login == $password)
+{
 
-	$msg = 'Your choosen password is invalid!';
+	$msg = 'Your chosen password is invalid!';
 	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 }
@@ -174,6 +177,19 @@ if ($db->nf() > 0) {
 	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 }
+
+
+
+//BETA
+$betaKey = $_REQUEST['beta_key'];
+$db->query('SELECT used FROM beta_key WHERE key = '.$db->escapeString($betaKey).' LIMIT 1');
+if (!$db->next_record() || $db->f('used') == 'FALSE')
+{
+	$msg = 'Registering is currently disabled.';
+	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+	exit;
+}
+$db->query('UPDATE beta_key SET used = '.$db->escapeString('TRUE').' WHERE key = '.$db->escapeString($betaKey).' LIMIT 1');
 
 // create validation code
 $validation_code = substr(SmrSession::$session_id, 0, 10);
