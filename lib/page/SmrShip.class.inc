@@ -1034,6 +1034,31 @@ class SmrShip
 		return $actualDamage;
 	}
 	
+	public function getMR()
+	{
+		return round(
+						700 - 
+						(
+							(
+								$this->getShields()
+								+$this->getArmour()
+								+$this->getCDs()*3
+							)/25
+							+(
+								$this->getCargoHolds()/100
+								-$this->getSpeed()*5
+								+($this->getHardpoints()/*+$ship['Increases']['Ship Power']*/)*5
+								/*+(
+									$ship['Increases']['Mines']
+									+$ship['Increases']['Scout Drones']
+								)/12*/
+								+$this->getCDs()/5
+							)
+						)
+//						+ $player->getStat('Maneuverability') * $MANEUV_MOD
+					);
+	}
+	
 	public function getUpgradeShipHREF()
 	{
 		if(!isset($this->upgradeShipHREF))
