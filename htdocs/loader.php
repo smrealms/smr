@@ -169,7 +169,8 @@ SmrSession::update();
 do_voodoo();
 
 // This function is a hack around the old style http forward mechanism
-function do_voodoo() {
+function do_voodoo()
+{
 //	ob_clean();
 
 	global $lock, $var;
@@ -198,8 +199,6 @@ function do_voodoo() {
 		}
 
 		// Now that they've acquire a lock we can move on
-//		$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
-		//PAGE
 		$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 		$GLOBALS['player'] =& $player;
 
@@ -225,7 +224,8 @@ function do_voodoo() {
 
 	require_once(get_file_loc($var['url']));
 
-	if($lock) {
+	if($lock)
+	{
 		release_lock($lock);
 	}
 

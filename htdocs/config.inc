@@ -42,11 +42,7 @@
 	$NUM_RACES = 8;
 
 	$TIME = TIME;
-	
-//	$smarty->assign( 'currentTime', $this->startTime );
 
-	error_reporting(E_ALL | E_STRICT); // optional
-	@date_default_timezone_set(@date_default_timezone_get());
 	
 
 	$STATS = array(
