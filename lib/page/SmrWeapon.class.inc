@@ -119,7 +119,7 @@ class SmrWeapon
 		return array('Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover());
 	}
 	
-	public function getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)
+	public function &getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)
 	{
 		$damage = $this->getDamage();
 		//do they have the weapon damage gadget?
@@ -131,18 +131,20 @@ class SmrWeapon
 		//increase for weapon damage stat
 		$damage['Shield'] += $this->getShieldDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
 		$damage['Armour'] += $this->getArmourDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
+		return $damage;
 	}
 	
-	public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
+	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
 	{
 		if(!$this->canShootTraders()) // If we can't shot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage = $this->getModifiedDamage($weaponPlayer);
+		$damage =& $this->getModifiedDamage($weaponPlayer);
 		
 		
 		$diminishing = $weaponPlayer->getDiminishingTraderAttack();
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+		return $damage;
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
