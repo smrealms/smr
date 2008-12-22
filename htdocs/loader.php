@@ -230,6 +230,7 @@ function do_voodoo()
 		release_lock($lock);
 	}
 	global $smarty,$sector,$player,$ship;
+	var_dump($var);
 	$smarty->assign('ThisSector',$sector);
 	$smarty->assign('ThisPlayer',$player);
 	$smarty->assign('ThisShip',$ship);
