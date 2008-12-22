@@ -150,7 +150,7 @@ abstract class AbstractSmrPlayer
 		return $this->dead;
 	}
 	
-	function isFedProtected()
+	function hasFederalProtection()
 	{
 	//exit;
         global $session;
