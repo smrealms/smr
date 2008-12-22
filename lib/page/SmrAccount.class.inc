@@ -326,7 +326,7 @@ class SmrAccount
 	public function setPassword($password)
 	{
 		$this->password = md5($password);
-		$this->generateResetPassword();
+		$this->generatePasswordReset();
 		$this->update();
 	}
 	
