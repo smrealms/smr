@@ -162,7 +162,7 @@ if ($player->getNewbieTurns())
 	else
 		$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="green">NEWBIE</span> protection.';
 }
-elseif ($player->isFedProtected())
+elseif ($player->hasFederalProtection())
 {
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="blue">FEDERAL</span> protection.';
 }

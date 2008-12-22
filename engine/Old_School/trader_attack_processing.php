@@ -509,7 +509,7 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (TRADER_ATTACK_PROCCESSING)';
 //	}
 //
 //} // end of while ($result)
-//if ($player->isFedProtected()) $container['continue'] = 'No';
+//if ($player->hasFederalProtection()) $container['continue'] = 'No';
 //if (!$debug || $container['continue'] == 'Yes') {
 //
 //	transfer('target');

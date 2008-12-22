@@ -21,7 +21,7 @@ $PHP_OUTPUT.=('<h1>EXAMINE FORCES</h1>');
 
 // should we display an attack button
 if (($attacker_ship->attack_rating() > 0 || $attacker_ship->getCDs() > 0) &&
-	!$attacker->isFedProtected() &&
+	!$attacker->hasFederalProtection() &&
 	$attacker->getNewbieTurns() == 0 &&
 	!$attacker->isLandedOnPlanet() &&
 	($attacker->getAllianceID() == 0 || $forces_owner->getAllianceID() == 0 || $forces_owner->getAllianceID() != $attacker->getAllianceID()) &&
@@ -35,7 +35,7 @@ if (($attacker_ship->attack_rating() > 0 || $attacker_ship->getCDs() > 0) &&
 	$PHP_OUTPUT.=create_submit('Attack Forces (3)');
 	$PHP_OUTPUT.=('</form>');
 
-} elseif ($attacker->isFedProtected())
+} elseif ($attacker->hasFederalProtection())
 	$PHP_OUTPUT.=('<p><big style="color:#3333FF;">You are under federal protection! That wouldn\'t be fair.</big></p>');
 elseif ($attacker->getNewbieTurns() > 0)
 	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">You are under newbie protection!</big></p>');
@@ -70,7 +70,7 @@ if ($attacker->getAccountID() > 0) {
 
 		$curr_player =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
 
-		if (!$curr_player->isFedProtected()) {
+		if (!$curr_player->hasFederalProtection()) {
 
 			if ($attacker_list) $attacker_list .= ',';
 			$attacker_list .= $curr_player->getAccountID();

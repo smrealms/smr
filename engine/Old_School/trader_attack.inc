@@ -66,12 +66,12 @@ function shoot_trader($attacker_team, $defender_team) {
 				$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> fires a '.$weapon_name.' at <span style="color:yellow;">'.$curr_defender->getPlayerName().'</span> as he flees the sector.';
 				continue;
 			}
-			if ($curr_defender->isFedProtected()) {
+			if ($curr_defender->hasFederalProtection()) {
 
 				$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> fires a '.$weapon_name.' at <span style="color:yellow;">'.$curr_defender->getPlayerName().'</span> as he flees to the protection of the federal government.';
 				continue;
 			}
-			if ($curr_attacker->isFedProtected()) {
+			if ($curr_attacker->hasFederalProtection()) {
 
 				$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> prepares to fire a '.$weapon_name.' at <span style="color:yellow;">'.$curr_defender->getPlayerName().'</span> but then notices the proximity of the federal ships.';
 				continue;
@@ -191,7 +191,7 @@ function shoot_trader($attacker_team, $defender_team) {
 		// create ship object for current defender
 		$curr_defender_ship =& SmrShip::getShip($curr_defender->getGameID(),$curr_defender->getAccountID());
 		$continue_drones = 'yes';
-		if ($curr_defender->isFedProtected() && $curr_attacker_ship->getCDs() > 0) {
+		if ($curr_defender->hasFederalProtection() && $curr_attacker_ship->getCDs() > 0) {
 
 			$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> launches drones at <span style="color:yellow;">'.$curr_defender->getPlayerName().'</span> as he flees to the protection of the federal government.';
 			$continue_drones = 'no';
@@ -213,7 +213,7 @@ function shoot_trader($attacker_team, $defender_team) {
 			$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> launches drones at <span style="color:yellow;">'.$curr_defender->getPlayerName().'</span> as he flees the sector.';
 			$continue_drones = 'no';
 		}
-		if ($curr_attacker->isFedProtected()) {
+		if ($curr_attacker->hasFederalProtection()) {
 
 			$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> prepares to launch drones at <span style="color:yellow;">'.$curr_defender->getPlayerName().'</span> but then notices the proximity of the federal ships.';
 			$continue_drones = 'no';

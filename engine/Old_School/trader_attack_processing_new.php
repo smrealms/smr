@@ -620,7 +620,7 @@ function update_podded(&$killed_ids) {
 	}
 }
 
-if($player->isFedProtected())
+if($player->hasFederalProtection())
 {
 	$container=array();
 	$container['url'] = 'skeleton.php';
@@ -686,7 +686,7 @@ $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 		forward($container);
 		exit;
 	}
-	else if($targetPlayer->isFedProtected())
+	else if($targetPlayer->hasFederalProtection())
 	{
 		$container=array();
 		$container['url'] = 'skeleton.php';

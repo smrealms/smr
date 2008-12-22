@@ -16,7 +16,7 @@ if($player->getNewbieTurns()) {
 	$container['body'] = 'leave_newbie.php';
 	$PHP_OUTPUT.=create_button($container, 'Leave Newbie Protection');
 }
-else if($player->isFedProtected()) {
+else if($player->hasFederalProtection()) {
 	$PHP_OUTPUT.= 'You are under <span class="blue">FEDERAL</span> protection.';
 }
 else {

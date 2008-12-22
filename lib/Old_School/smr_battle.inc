@@ -63,7 +63,7 @@ class SMR_BATTLE extends SMR_DB {
 
 				$curr_player =& SmrPlayer::getPlayer($this->f('account_id'), $game_id);
 
-				if (!$curr_player->isFedProtected()) {
+				if (!$curr_player->hasFederalProtection()) {
 
 					// add to fleet
 					$this->fleet[] = $this->f('account_id');

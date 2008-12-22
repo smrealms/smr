@@ -10,7 +10,7 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //if ($player->getNewbieTurns() > 0)
 //	create_error('You are under newbie protection!');
 //
-//if ($player->isFedProtected())
+//if ($player->hasFederalProtection())
 //	create_error('You are under federal protection! That wouldn\'t be fair.');
 //
 //if (!$sector->hasPort())
