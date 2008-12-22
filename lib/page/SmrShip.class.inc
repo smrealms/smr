@@ -994,13 +994,13 @@ class SmrShip
 		$alreadyDead = $this->isDead();
 		$armourDamage = 0;
 		$cdDamage = 0;
-		$shieldDamage = doShieldDamage($damage['Shield']);
+		$shieldDamage = $this->doShieldDamage($damage['Shield']);
 		if($shieldDamage == 0 || $damage['Rollover'])
 		{
-			$cdDamage = doCDDamage($damage['Armour']);
+			$cdDamage = $this->doCDDamage($damage['Armour']);
 			$damage['Armour'] -= $cdDamage;
 			if(!$this->hasCDs())
-				$armourDamage = doArmourDamage($damage['Armour']);
+				$armourDamage = $this->doArmourDamage($damage['Armour']);
 		}
 		return array(
 						'KillingShot' => $alreadyDead != $this->isDead(),
