@@ -26,8 +26,6 @@ class SmrShip
 	
 	protected $hardpoint;
 	protected $weapon;
-	protected $weapon_open;
-	protected $weapon_used;
 	
 	protected $player_exp;
 	protected $player_level;
@@ -97,8 +95,6 @@ class SmrShip
 			'account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID().
 		' ORDER BY order_id LIMIT ' . $this->hardpoint);
-		$this->weapon_used = $this->db->getNumRows();
-		$this->weapon_open = $this->hardpoint - $this->weapon_used;
 		
 		$this->weapons = array();
 		
@@ -912,12 +908,17 @@ class SmrShip
 	
 	public function removeWeapon($orderID)
 	{
-		unset($this->weapons[$weapon]);
+		unset($this->weapons[$orderID]);
+	}
+	
+	public function getNumWeapon()
+	{
+		return $this->getHardpoints-count($this->getWeapons());
 	}
 	
 	public function getOpenWeaponSlots()
 	{
-		return $this->weapon_open;
+		return $this->getHardpoints-$this->getNumWeapons();
 	}
 	
 	public function getHardpoints()
