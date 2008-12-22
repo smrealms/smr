@@ -1538,7 +1538,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
 		if($expLossPercentage > 0)
 		{
-			$this->decreaseExperience(floor($this->getExperience() * $exp_loss_percentage));
+			$this->decreaseExperience(floor($this->getExperience() * $expLossPercentage));
 		}
 
 		$killer->increaseCredits($this->getCredits());
@@ -1574,7 +1574,7 @@ class SmrPlayer extends AbstractSmrPlayer
 					AND armor > 0
 					AND player_attacks_port.sector_id = port.sector_id
 					AND player.account_id = player_attacks_port.account_id
-					AND player.account_id = ' . $killed_id . '
+					AND player.account_id = ' . $this->getAccountID() . '
 					AND player.game_id = ' . $player->getGameID();
 		$this->db->query($query);
 		if ($this->db->nextRecord())
@@ -1585,7 +1585,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				$multiplier = round(.4 * $this->getLevelID());
 				$portBounty = $numAttacks * 1000000 * $multiplier;
 				$db->query('INSERT INTO bounty (account_id, game_id, type, amount, claimer_id, time) VALUES ('.$this->getAccountID().', '.$player->getGameID().', \'HQ\', ' . 
-							$portBounty.', '.$killer_id.', ' . TIME . ')');
+							$portBounty.', '.$killer->getAccountID().', ' . TIME . ')');
 			}
 		}
 	
