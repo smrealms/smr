@@ -16,7 +16,7 @@ if ($action == 'Buy') {
 	if ($cant_buy == 'Yes')
     	create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
 
-    if ($ship->weapon_open < 1)
+    if ($ship->getOpenWeaponSlots() < 1)
 		create_error('You can\'t buy any more weapon!');
 
 	if ($var['buyer_restriction'] == 2 && $player->getAlignment() > -100)
