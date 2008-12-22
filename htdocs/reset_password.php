@@ -30,7 +30,7 @@
 
 				For security reasons, please enter your username and the password reset code you requested:
 
-				<form action="reset_password_processing.php" method="get">
+				<form action="reset_password_processing.php" method="POST">
 				    <div align="center">
 					        <table border="0">
 						        <tr>
