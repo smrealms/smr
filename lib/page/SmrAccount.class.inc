@@ -330,17 +330,17 @@ class SmrAccount
 		$this->update();
 	}
 	
-	public function generateResetPassword()
+	public function generatePasswordReset()
 	{
-		$this->setResetPassword(md5($this->getEmail().$this->getPassword().$this->getResetPassword()));
+		$this->setPasswordReset(md5($this->getEmail().$this->getPassword().$this->getResetPassword()));
 	}
 	
-	public function getResetPassword()
+	public function getPasswordReset()
 	{
-		return $this->resetPassword;
+		return $this->passwordReset;
 	}
 	
-	protected function setResetPassword($passwordReset)
+	protected function setPasswordReset($passwordReset)
 	{
 		$this->passwordReset=$passwordReset;
 		$this->update();
