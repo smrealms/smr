@@ -170,7 +170,7 @@ function do_voodoo()
 {
 //	ob_clean();
 
-	global $lock, $var;
+	global $lock, $var, $smarty;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
