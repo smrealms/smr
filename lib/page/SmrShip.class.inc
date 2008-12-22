@@ -35,6 +35,17 @@ class SmrShip
 	protected $illusionShip;
 	
 	protected $upgradeShipHREF;
+	
+	public static function saveShips()
+	{
+		foreach(self::$CACHE_SHIPS as &$ship)
+		{
+			$ship->update_hardware();
+			$ship->update_weapon();
+			$ship->update_cargo();
+			$ship->update();
+		}
+	}
 
 	public static function &getShip($gameID,$accountID,$forceUpdate = false)
 	{
@@ -44,7 +55,6 @@ class SmrShip
 			return self::$CACHE_SHIPS[$gameID . ':' . $s->getAccountID()] =& $s;
 		}
 		return self::$CACHE_SHIPS[$gameID. ':' .$accountID];
-		
 	}
 	
 	protected function __construct($gameID, $accountID)

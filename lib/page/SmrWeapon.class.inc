@@ -139,7 +139,7 @@ class SmrWeapon
 		return $damage;
 	}
 	
-	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, SmrPlayer &$targetPlayer)
+	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		if(!$this->canShootTraders()) // If we can't shot traders then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
