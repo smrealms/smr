@@ -209,6 +209,9 @@ function do_voodoo()
 
 		$ship	=& SmrShip::getShip(SmrSession::$game_id,SmrSession::$account_id);
 		$GLOBALS['ship'] =& $ship;
+		
+		$sector	=& SmrSector::getSector(SmrSession::$game_id,$player->getSectorID(),SmrSession::$account_id);
+		$GLOBALS['sector'] =& $sector;
 
 		// update turns on that player
 		$player->updateTurns();
@@ -226,7 +229,8 @@ function do_voodoo()
 	{
 		release_lock($lock);
 	}
-	global $smarty,$sector,$ship;
+	global $smarty,$sector,$player,$ship;
+	$smarty->assign('ThisSector',$sector);
 	$smarty->assign('ThisPlayer',$player);
 	$smarty->assign('ThisShip',$ship);
 	$smarty->assign('TemplateBody',$var['body']);
