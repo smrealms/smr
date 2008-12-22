@@ -121,6 +121,7 @@ if (empty(SmrSession::$var[$sn]))
 
 // now get the container array for this sn object
 $var = SmrSession::$var[$sn];
+$globals['var'] =& $var;
 
 //used for include if we need a spec game script outside of the game
 if (isset($var['game_id'])) $g_id = $var['game_id'];
