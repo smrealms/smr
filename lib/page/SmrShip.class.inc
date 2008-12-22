@@ -972,17 +972,19 @@ class SmrShip
 	
 	public function shootPlayers(array &$targetPlayers)
 	{
-		if($this->getPlayer()->isDead())
-			return array('DeadBeforeShot' => true);
-		$results = array('DeadBeforeShot' => false);
+		$thisPlayer =& $this->getPlayer();
+		if($thisPlayer->isDead())
+			return array('Player' => &$thisPlayer, 'DeadBeforeShot' => true);
+		$results = array('Player' => &$thisPlayer, 'DeadBeforeShot' => false, 'TotalDamage' => 0);
 		foreach($this->weapons as $orderID => &$weapon)
 		{
 			$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
-			$results[$orderID] =& $this->weapons[$orderID]->shootPlayer($this->getPlayer(), $targetPlayer);
-			$this->getPlayer()->increaseHOF($results[$orderID]['TotalDamage'],'player_damage');
-			if($results[$orderID]['ActualDamage']['KillingShot'])
-				$targetPlayer->killByTrader($this->getPlayer());
+			$results['Weapons'][$orderID] =& $this->weapons[$orderID]->shootPlayer($thisPlayer, $targetPlayer);
+			$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 		}
+		
+		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
+		$thisPlayer->increaseHOF($results['TotalDamage'],'player_damage');
 		return $results;
 	}
 	
@@ -1004,7 +1006,9 @@ class SmrShip
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
 						'CDs' => $cdDamage,
+						'NumCDs' => $cdDamage/CD_ARMOUR,
 						'Armour' => $armourDamage,
+						'HasCDs' => $this->hasCDs(),
 						'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
 		);
 	}

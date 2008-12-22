@@ -1,6 +1,8 @@
 <?
 require_once('SmrMySqlDatabase.class.inc');
 
+require_once(get_file_loc('SmrPlayer.class.inc'));
+		
 class SmrSector
 {
 	protected static $CACHE_SECTORS = array();
@@ -290,7 +292,7 @@ class SmrSector
 
 	}
 
-	function died_here(&$player)
+	function died_here(SmrPlayer &$player)
 	{
 		global $SCOUTMSG;
 		$account =& $player->getAccount();
@@ -494,13 +496,30 @@ class SmrSector
 
 	public function &getTraders()
 	{
-		require_once(get_file_loc('SmrPlayer.class.inc'));
 		return SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID());
+	}
+
+	public function &getFightingTraders(SmrPlayer &$attackingPlayer, SmrPlayer &$defendingPlayer)
+	{
+		if($attackingPlayer->traderNAPAlliance($defendingPlayer))
+			throw new Exception('These traders are NAPed.');
+		$fightingPlayers = array('Attackers' => array(), 'Defenders' => array());
+		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
+		foreach($alliancePlayers as $accountID => $player)
+		{
+			if($player->canFight())
+			{
+				if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
+					$fightingPlayers['Attackers'][$accountID] =& $alliancePlayers[$accountID];
+				else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player))
+					$fightingPlayers['Defenders'][$accountID] =& $alliancePlayers[$accountID];
+			}
+		}
+		return $fightingPlayers;
 	}
 
 	public function &getOtherTraders()
 	{
-		require_once(get_file_loc('SmrPlayer.class.inc'));
 		$players = SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
 		unset($players[$this->accountID]);
 		return $players;
@@ -509,6 +528,22 @@ class SmrSector
 	public function getBattles()
 	{
 		return $this->battles;
+	}
+	
+	public function decreaseBattles($amount)
+	{
+		$this->battles = $amount;
+		$db->query('UPDATE sector SET '.$this->battles.' WHERE sector_id=' . $this->getSectorID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+	}
+	
+	public function decreaseBattles($amount)
+	{
+		$this->setBattles($this->battles-$amount);
+	}
+	
+	public function increaseBattles($amount)
+	{
+		$this->setBattles($this->battles+$amount);
 	}
 	
 	function equals($otherSector)

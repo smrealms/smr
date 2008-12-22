@@ -93,6 +93,7 @@ define('DEFAULT_CSS','default.css');
 	$smarty->plugins_dir[] = SMARTY_PLUGINS_DIR;
 //	$smarty->assign('links',$db->_LINKS);
 //	$smarty->assign('javaScriptFiles',$db->_JS);
+	$smarty->assign('Globals',new Globals()); //Allow access to static globals in smarty
 	$smarty->assign('CSSLink',DEFAULT_CSS);
 	$smarty->assign('Title','Space Merchant Realms 1.6:');
 	$smarty->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));

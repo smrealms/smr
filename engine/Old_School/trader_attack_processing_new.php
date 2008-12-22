@@ -729,18 +729,23 @@ unset($teamPlayers);
 $player->takeTurns(3);
 $player->update();
 
-$results = array();
-foreach($fightingPlayers['Attackers'] as $team => &$teamPlayer)
+$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0), 
+				'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
+foreach($fightingPlayers['Attackers'] as $accountID => &$teamPlayer)
 {
-	$results[$team][$teamPlayer->getAccountID()] =& $teamPlayer->shootPlayers($fightingPlayers['Defenders']);
+	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Defenders']);
+	$results['Attackers']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
+	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($teamPlayer);
-foreach($fightingPlayers['Defenders'] as $team => &$teamPlayer)
+foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer)
 {
-	$results[$team][$teamPlayer->getAccountID()] =& $teamPlayer->shootPlayers($fightingPlayers['Attackers']);
+	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Attackers']);
+	$results['Defenders']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
+	$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($teamPlayer);
 
 
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escape_string(gzcompress($results)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escape_string(gzcompress(serialize($results))) . ', \'FALSE\')');
 
 $container = array();
 $container['url'] = 'skeleton.php';
