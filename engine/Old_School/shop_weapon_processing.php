@@ -45,7 +45,7 @@ if ($action == 'Buy') {
 	$player->update();
 
 	// take weapon
-	unset($ship->weapon[$var['order_id']]);
+	$ship->removeWeapon($var['order_id']);
 
 	// update
 	$ship->update_weapon();

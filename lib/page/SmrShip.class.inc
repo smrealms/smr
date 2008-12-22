@@ -905,9 +905,19 @@ class SmrShip
 		return $this->hasLostShields() || $this->hasLostArmour() || $this->hasLostCDs();
 	}
 	
-	public function getWeapons()
+	public function hasWeapons()
+	{
+		return count($this->getWeapons())>0;
+	}
+	
+	public function &getWeapons()
 	{
 		return $this->weapons;
+	}
+	
+	public function removeWeapon($orderID)
+	{
+		unset($this->weapons[$weapon]);
 	}
 	
 	public function getOpenWeaponSlots()
