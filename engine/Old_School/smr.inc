@@ -1,4 +1,5 @@
 <?
+require_once(LIB . 'page/SmrSession.class.inc');
 
 function has_beta_privilege($priv = '', $acc = 0)
 {
@@ -129,11 +130,14 @@ function get_file_loc($file_name, $exists = 1)
 {
 	global $includes, $g_id;
 	static $stored_dir;
-	if(isset($stored_dir)) {
+	if(isset($stored_dir))
+	{
 		$game_dir = $stored_dir;
 	}
-	else {
-		if ((SmrSession::$game_id > 0) || $g_id > 0) {
+	else
+	{
+		if (SmrSession::$game_id > 0 || $g_id > 0)
+		{
 			if ($g_id > 0) $game_id = $g_id;
 			else $g_id = SmrSession::$game_id;
 			$includes->query('SELECT game_type FROM game WHERE game_id = '.$g_id.' LIMIT 1	');
