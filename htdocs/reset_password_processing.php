@@ -49,4 +49,7 @@ if ($account==null || empty($passwordReset) || $account->getPasswordReset() != $
 }
 
 $account->setPassword($password);
+
+
+header('Location: '.$URL.'/login.php');
 ?>
