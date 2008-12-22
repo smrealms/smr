@@ -51,7 +51,6 @@ require_once(ENGINE . 'Old_School/smr.inc');
 // overwrite database class to use our db
 require_once(LIB . 'global/smr_db.inc');
 
-require_once(get_file_loc('SmrSession.class.inc'));
 require_once(get_file_loc('SmrAccount.class.inc'));
 // require_once(LIB . 'global/smr_player.inc');
 //PAGE
