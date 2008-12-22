@@ -62,6 +62,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $HOF;
 	
 	protected $examineTraderHREF;
+	protected $attackTraderHREF;
 	protected $traderSearchHREF;
 	protected $allianceRosterHREF;
 	
@@ -1498,8 +1499,9 @@ class SmrPlayer extends AbstractSmrPlayer
 			return 1;
 	}
 	
-	public function killPlayerByTrader(AbstractSmrPlayer &$killer)
+	public function killPlayerByPlayer(AbstractSmrPlayer &$killer)
 	{
+		$return = array();
 		$msg = $this->getPlayerName();
 	
 //		if(isset($ship_names[$killed_id])) {
@@ -1530,19 +1532,25 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		// The person who got the kill gains experience
 		$gainedExp = ceil(0.75*((((($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID())) + 1) * 0.04 * $this->getExperience()) + (0.025 * $this->getExperience())));
-	
+		
+		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
 		$killer->increaseHOF($gainedExp,'kill_exp_gain');
 		$killer->increaseHOF($this->getExperience(),'traders_killed_exp');
 		// Dead player loses experience
 		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
+		$return['DeadExp'] = 0;
 		if($expLossPercentage > 0)
 		{
-			$this->decreaseExperience(floor($this->getExperience() * $expLossPercentage));
+			$lostExp = floor($this->getExperience() * $expLossPercentage);
+			$return['DeadExp'] = $lostExp;
+			$this->decreaseExperience($lostExp);
 		}
-
-		$killer->increaseCredits($this->getCredits());
-		$killer->increaseHOF($this->getCredits(),'kill_money_gain');
+		
+		$creditsGained = $this->getCredits();
+		$return['KillerCredits'] = $creditsGained;
+		$killer->increaseCredits($creditsGained);
+		$killer->increaseHOF($creditsGained,'kill_money_gain');
 		$killer->increaseHOF($this->getShip()->getCost(),'ships_killed_cost');
 
 		// The killer may change alignment
@@ -1554,6 +1562,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$alignChangePerRelation = 0.04;
 
 		$alignChange = $relation * $alignChangePerRelation;
+		$return['KillerAlign'] = $alignChange;
 		if($alignChange>0)
 			$killer->increaseAlignment($alignChange);
 		else
@@ -1639,6 +1648,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		
 		$this->killPlayer($this->getSectorID());
+		return $return;
 	}
 	
 	public function killPlayerByForces(SmrForce &$forces)
@@ -2038,6 +2048,19 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->examineTraderHREF = SmrSession::get_new_href($container);
 		}
 		return $this->examineTraderHREF;
+	}
+	
+	public function getAttackTraderHREF()
+	{
+		if(!isset($this->attackTraderHREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'trader_attack_processing_new.php';
+			$container['target']	= $this->getAccountID();
+			$this->attackTraderHREF = SmrSession::get_new_href($container);
+		}
+		return $this->attackTraderHREF;
 	}
 	
 	public function getTraderSearchHREF()

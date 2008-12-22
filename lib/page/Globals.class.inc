@@ -12,7 +12,7 @@ class Globals
 	protected static $RACE_RELATIONS = array();
 	protected static $db = null;
 	
-	private function __construct()
+	public function __construct() //required public for smarty
 	{
 	}
 	
@@ -168,6 +168,36 @@ class Globals
 			}
 		}
 		return self::$RACE_RELATIONS[$gameID][$raceID];
+	}
+	
+	
+	protected static $CURRENT_SECTOR_HREF;
+	protected static $POD_SCREEN_HREF;
+	
+	public static function getCurrentSectorHREF()
+	{
+		if(!isset(self::$CURRENT_SECTOR_HREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'current_sector.php';
+			$container['target']	= $this->getAccountID();
+			self::$CURRENT_SECTOR_HREF = SmrSession::get_new_href($container);
+		}
+		return self::$CURRENT_SECTOR_HREF;
+	}
+	
+	public static function getPodScreenHREF()
+	{
+		if(!isset(self::$POD_SCREEN_HREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'death.php';
+			$container['target']	= $this->getAccountID();
+			self::$POD_SCREEN_HREF = SmrSession::get_new_href($container);
+		}
+		return self::$POD_SCREEN_HREF;
 	}
 }
 ?>

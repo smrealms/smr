@@ -1,8 +1,16 @@
 <?
 
-$PHP_OUTPUT.= $var['results'];
+$smarty->assign('TraderCombatResults',$var['results']);
+if($var['target'])
+	$smarty->assign('Target',SmrPlayer::getPlayer($var['target'],SmrSession::$game_id));
+if(isset($var['override_death']))
+	$smarty->assign('OverrideDeath',true);
+else
+	$smarty->assign('OverrideDeath',false);
 
-if($var['target']) {
+
+if($var['target'])
+{
 	$container = array();
 	$container['url'] = 'trader_attack_processing_new.php';
 	$container['target'] = $var['target'];

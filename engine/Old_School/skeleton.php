@@ -17,8 +17,7 @@ if (SmrSession::$game_id > 0) {
 	}
 	else
 	{
-		$container['body'] = 'current_sector.php';
-		$smarty->assign('CurrentSectorLink',SmrSession::get_new_href($container));
+		$smarty->assign('CurrentSectorLink',Globals::getCurrentSectorHREF());
 
 		$container['body'] = 'map_local.php';
 		$smarty->assign('LocalMapLink',SmrSession::get_new_href($container));
