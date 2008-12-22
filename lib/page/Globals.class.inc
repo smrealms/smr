@@ -1,5 +1,4 @@
 <?php
-
 require_once('SmrMySqlDatabase.class.inc');
 
 class Globals
@@ -200,4 +199,7 @@ class Globals
 		return self::$POD_SCREEN_HREF;
 	}
 }
+
+
+$smarty->assign('Globals',new Globals()); //Allow access to static globals in smarty
 ?>
