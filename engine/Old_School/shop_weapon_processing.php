@@ -30,11 +30,8 @@ if ($action == 'Buy') {
 	$player->update();
 
 	// add the weapon to the users ship
-	$ship->add_weapon($var['weapon_id']);
-	$db->query('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $var['weapon_type_id']);
-	$db->next_record();
-	$wep_name = $db->f('weapon_name');
-	$account->log(10, 'Player Buys a '.$wep_name, $player->getSectorID());
+	$weapon =& $ship->add_weapon($var['weapon_id']);
+	$account->log(10, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
 
 } elseif ($action == 'Sell') {
 
