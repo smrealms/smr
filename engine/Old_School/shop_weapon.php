@@ -87,7 +87,8 @@ if ($ship->hasWeapons())
 	$PHP_OUTPUT.=('<th align="center">Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	foreach ($ship->getWeapons() as $order_id => &$weapon)
+	$shipWeapons =& $ship->getWeapons();
+	foreach ($shipWeapons as $order_id => &$weapon)
 	{
 			$cost = $weapon->getCost() / 2;
 
