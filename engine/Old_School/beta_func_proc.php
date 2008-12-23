@@ -55,10 +55,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	//now make sure they don't have extra hardware
 	$db->query('DELETE FROM ship_is_cloaked WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 	$db->query('DELETE FROM ship_has_illusion WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	$container = array();
-	$container['url'] = 'beta_func_proc.php';
-	$container['func'] = 'Uno';
-	forward($container);	
+	doUNO();	
 	
 } elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
@@ -76,14 +73,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 
 } elseif ($var['func'] == 'Uno') {
 
-	$db->query('SELECT * FROM ship_type_support_hardware WHERE ship_type_id = '.$ship->getShipTypeID());
-	$db2 = new SMR_DB();
-	while ($db->next_record()) {
-		$hardware_id = $db->f('hardware_type_id');
-		$amount = $db->f('max_amount');
-		$db2->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES ' .
-				'('.$player->getAccountID().', '.$player->getGameID().', '.$hardware_id.', '.$amount.', '.$amount.')');
-	}
+	doUNO();
 
 } elseif ($var['func'] == 'Warp') {
 	$sector_to = $_REQUEST['sector_to'];
@@ -123,4 +113,17 @@ $container['url'] = 'skeleton.php';
 $container['body'] = $var['body'];
 forward($container);
 
+
+function doUNO()
+{
+	$db = new SMR_DB();
+	$db->query('SELECT * FROM ship_type_support_hardware WHERE ship_type_id = '.$ship->getShipTypeID());
+	$db2 = new SMR_DB();
+	while ($db->next_record()) {
+		$hardware_id = $db->f('hardware_type_id');
+		$amount = $db->f('max_amount');
+		$db2->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES ' .
+				'('.$player->getAccountID().', '.$player->getGameID().', '.$hardware_id.', '.$amount.', '.$amount.')');
+	}
+}
 ?>
