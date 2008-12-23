@@ -29,6 +29,7 @@
 	<span class="small">{$MessagePlanetNum}</span>
 	{/if}
 </span>
+{if isset($MessageGlobalLink) || isset($MessagePlayerLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink)}<br />{/if}
 {$ThisPlayer->getLevelName()}<br />
 <a href="{$PlayerNameLink}">{$ThisPlayer->getDisplayName()}</a><br />
 {if isset($PlayerInvisible)}
