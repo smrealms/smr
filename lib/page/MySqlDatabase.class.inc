@@ -110,7 +110,8 @@ abstract class MySqlDatabase implements Database
 		
 	}
 	
-	public function escapeString($string,$quotes=true) {
+	public function escapeString($string,$quotes=true)
+	{
 		if($string===true)
 			$string = 'TRUE';
 		else if($string===false)
