@@ -1525,7 +1525,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			} else $msg .= strip_tags($ship_names[$killer_id], '<img>');
 //		}
 		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
-		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $db->escapeString($msg) . ',\'regular\')');
+		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg) . ',\'regular\')');
 		
 		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
@@ -1588,12 +1588,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query($query);
 		if ($this->db->nextRecord())
 		{
-			if ($db->getField('numAttacks'))
+			if ($this->db->getField('numAttacks'))
 			{
-				$numAttacks = $db->getField('numAttacks');
+				$numAttacks = $this->db->getField('numAttacks');
 				$multiplier = round(.4 * $this->getLevelID());
 				$portBounty = $numAttacks * 1000000 * $multiplier;
-				$db->query('INSERT INTO bounty (account_id, game_id, type, amount, claimer_id, time) VALUES ('.$this->getAccountID().', '.$player->getGameID().', \'HQ\', ' . 
+				$this->db->query('INSERT INTO bounty (account_id, game_id, type, amount, claimer_id, time) VALUES ('.$this->getAccountID().', '.$player->getGameID().', \'HQ\', ' . 
 							$portBounty.', '.$killer->getAccountID().', ' . TIME . ')');
 			}
 		}
@@ -1688,12 +1688,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		$percentage = 33;
 		if ($percentage > 0 )
 			$this->decreaseExperience($this->getExperience() * $percentage / 100);
-		$db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' . 
+		$this->db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' . 
 						'alliance_id_2 = '.$this->getAllianceID().' AND game_id = '.$this->getGameID());
-		if ($db->next_record()) $db->query('UPDATE alliance_vs_alliance SET kills = kills + 1 ' .
+		if ($this->db->next_record()) $this->db->query('UPDATE alliance_vs_alliance SET kills = kills + 1 ' .
 											'WHERE alliance_id_1 = -1 AND alliance_id_2 = '.$this->getAllianceID().' AND ' .
 											'game_id = '.$this->getGameID());
-		else $db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
+		else $this->db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
 						'VALUES ('.$this->getGameID().', -1, '.$this->getAllianceID().', 1)');
 		
 		
