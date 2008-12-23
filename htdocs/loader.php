@@ -224,7 +224,10 @@ function do_voodoo()
 	}
 
 	require_once(get_file_loc($var['url']));
+	$PHP_OUTPUT = '';
 	include_once(get_file_loc($var['body']));
+	if($PHP_OUTPUT!='')
+		$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	if($lock)
 	{
 		release_lock($lock);
