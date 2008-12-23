@@ -60,15 +60,9 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 } elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
 	$amount = $_REQUEST['amount'];
-	$db->query('SELECT * FROM ship_has_weapon WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID().' ORDER BY order_id DESC');
-	if ($db->next_record())
-		$next = $db->f('order_id') + 1;
-	else
-		$next = 1;
-	for ($i = 1; $i <= $amount; $i++) {
-		$db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) VALUES ' .
-					'('.$player->getAccountID().', '.$player->getGameID().', '.$next.', '.$weapon_id.')');
-		$next += 1;
+	for ($i = 1; $i <= $amount; $i++)
+	{
+		$ship->addWeapon($weapon_id);
 	}
 
 } elseif ($var['func'] == 'Uno') {
