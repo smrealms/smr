@@ -13,6 +13,7 @@
 				<div class="m2">
 					<div id="middle_panel">
 						{if $PageTopic}<h1>{$PageTopic}</h1><br />{/if}
+						{if $MenuBar}{$MenuBar}{/if}
 						{include_template template=$TemplateBody assign=Template}{include file=$Template}
 					</div>
 				</div>
