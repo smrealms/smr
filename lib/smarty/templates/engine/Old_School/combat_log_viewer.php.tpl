@@ -1,4 +1,4 @@
-{if $TraderCombatResults}
+{if isset($TraderCombatResults)}
 	Sector {$CombatLogSector}<br/>
 	{$CombatLogTimestamp}<br/>
 	<br/>
