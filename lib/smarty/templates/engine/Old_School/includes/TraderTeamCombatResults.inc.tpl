@@ -27,7 +27,9 @@
 		<br />
 	{foreachelse}
 		{if $TraderResults.DeadBeforeShot}{$ShootingPlayer->getName()} died before they were able to fire their weapons!{/if}
+		<br />
 	{/foreach}
+	<br />
 	{$ShootingPlayer->getName()} {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round. Maybe they should go back to the academy{/if}.<br /><br />
 {/foreach}
 {assign var=TotalDamage value=$TraderTeamCombatResults.TotalDamage}
