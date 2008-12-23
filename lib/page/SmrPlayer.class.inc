@@ -1554,7 +1554,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$killer->increaseHOF($this->getShip()->getCost(),'ships_killed_cost');
 
 		// The killer may change alignment
-		$relations =& Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
+		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
 		$relation = $relations[$this->getRaceID()];
 
 		$alignChangePerRelation = 0.1;
