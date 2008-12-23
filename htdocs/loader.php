@@ -111,6 +111,14 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 // *
 // ********************************
 $sn = $_REQUEST['sn'];
+
+// now get the container array for this sn object
+$var = SmrSession::$var[$sn];
+// empty session container
+SmrSession::$var = array();
+// allow the user to reload current page
+SmrSession::$var[$sn] = $var;
+	
 // check if we got a sn number with our url
 if (empty($sn))
 	create_error('Your browser lost the SN. Try to reload the page!');
@@ -119,8 +127,6 @@ if (empty($sn))
 if (empty(SmrSession::$var[$sn]))
 	create_error('Please avoid using the back button!');
 
-// now get the container array for this sn object
-$var = SmrSession::$var[$sn];
 
 //used for include if we need a spec game script outside of the game
 if (isset($var['game_id'])) $g_id = $var['game_id'];
@@ -129,19 +135,6 @@ else $g_id = 0;
 // check if the last script had a start time
 if (isset($var['time']))
 	$time_start = $var['time'];
-
-// reset session var if we don't have an error
-// this makes the previous links (beside the current)
-// unavailable for a reload
-if (!empty($var['body']) && $var['body'] != 'error.php')
-{
-	// empty session container
-	SmrSession::$var = array();
-
-	// allow the user to reload current page
-	SmrSession::$var[$sn] = $var;
-
-}
 
 
 // now deny reload for processing scripts
