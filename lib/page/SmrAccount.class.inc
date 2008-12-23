@@ -54,8 +54,9 @@ class SmrAccount
 	{
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE login = '.$db->escapeString($login).' LIMIT 1');
-		$db->nextRecord();
-		return self::getAccount($db->getField('account_id'),$forceUpdate);
+		if($db->nextRecord());
+			return self::getAccount($db->getField('account_id'),$forceUpdate);
+		return null;
 	}
 	
 	function __construct($accountID)
