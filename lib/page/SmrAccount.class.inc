@@ -56,7 +56,8 @@ class SmrAccount
 		$db->query('SELECT account_id FROM account WHERE login = '.$db->escapeString($login).' LIMIT 1');
 		if($db->nextRecord())
 			return self::getAccount($db->getField('account_id'),$forceUpdate);
-		return null;
+		$return = null;
+		return $return;
 	}
 	
 	function __construct($accountID)
