@@ -124,10 +124,9 @@ abstract class MySqlDatabase implements Database
 			}
 			return substr($escapedString,0,-1);
 		}
-		elseif($quotes)
-		return '\'' . mysql_real_escape_string($string) . '\'';
-		else
-			return mysql_real_escape_string($string);
+		if($quotes)
+			return '\'' . mysql_real_escape_string($string) . '\'';
+		return mysql_real_escape_string($string);
 	}
 	
 	public function escapeBoolean($bool)
