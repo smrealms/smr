@@ -133,10 +133,9 @@ if (isset($var['time']))
 // reset session var if we don't have an error
 // this makes the previous links (beside the current)
 // unavailable for a reload
-if (!empty($var['body']) && $var['body'] != 'error.php') {
-
+if (!empty($var['body']) && $var['body'] != 'error.php')
+{
 	// empty session container
-//BACKBUTTON	
 	SmrSession::$var = array();
 
 	// allow the user to reload current page

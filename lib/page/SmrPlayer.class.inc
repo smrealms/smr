@@ -1702,7 +1702,13 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function setBountiesClaimable(AbstractSmrPlayer $claimer)
 	{
-		
+		$this->db->query('UPDATE bounty 
+			SET claimer_id=' . $claimer->getAccountID() . '
+			WHERE account_id='.$this->getAccountID().'
+			AND game_id='.$this->getGameID().'
+			AND claimer_id=0
+			LIMIT 1'
+		);
 	}
 	
 	function changeShip(SmrShip &$ship,$shipID)
