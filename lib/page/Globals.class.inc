@@ -172,6 +172,7 @@ class Globals
 	
 	protected static $CURRENT_SECTOR_HREF;
 	protected static $POD_SCREEN_HREF;
+	protected static $BETA_FUNCTIONS_HREF;
 	
 	public static function getCurrentSectorHREF()
 	{
@@ -195,6 +196,18 @@ class Globals
 			self::$POD_SCREEN_HREF = SmrSession::get_new_href($container);
 		}
 		return self::$POD_SCREEN_HREF;
+	}
+	
+	public static function getBetaFunctionsHREF()
+	{
+		if(!isset(self::$BETA_FUNCTIONS_HREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'beta_functions.php';
+			self::$BETA_FUNCTIONS_HREF = SmrSession::get_new_href($container);
+		}
+		return self::$BETA_FUNCTIONS_HREF;
 	}
 }
 
