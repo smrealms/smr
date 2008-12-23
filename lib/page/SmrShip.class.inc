@@ -994,9 +994,13 @@ class SmrShip
 	public function &shootPlayers(array &$targetPlayers)
 	{
 		$thisPlayer =& $this->getPlayer();
+		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
 		if($thisPlayer->isDead())
-			return array('Player' => &$thisPlayer, 'DeadBeforeShot' => true, 'TotalDamage' => 0);
-		$results = array('Player' => &$thisPlayer, 'DeadBeforeShot' => false, 'TotalDamage' => 0);
+		{
+			$results['DeadBeforeShot'] = false;
+			return $results;
+		}
+		$results['DeadBeforeShot'] = false;
 		foreach($this->weapons as $orderID => &$weapon)
 		{
 			$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
