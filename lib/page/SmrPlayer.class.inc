@@ -1584,7 +1584,7 @@ class SmrPlayer extends AbstractSmrPlayer
 					AND player_attacks_port.sector_id = port.sector_id
 					AND player.account_id = player_attacks_port.account_id
 					AND player.account_id = ' . $this->getAccountID() . '
-					AND player.game_id = ' . $player->getGameID();
+					AND player.game_id = ' . $this->getGameID();
 		$this->db->query($query);
 		if ($this->db->nextRecord())
 		{
@@ -1593,7 +1593,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				$numAttacks = $this->db->getField('numAttacks');
 				$multiplier = round(.4 * $this->getLevelID());
 				$portBounty = $numAttacks * 1000000 * $multiplier;
-				$this->db->query('INSERT INTO bounty (account_id, game_id, type, amount, claimer_id, time) VALUES ('.$this->getAccountID().', '.$player->getGameID().', \'HQ\', ' . 
+				$this->db->query('INSERT INTO bounty (account_id, game_id, type, amount, claimer_id, time) VALUES ('.$this->getAccountID().', '.$this->getGameID().', \'HQ\', ' . 
 							$portBounty.', '.$killer->getAccountID().', ' . TIME . ')');
 			}
 		}
@@ -1638,7 +1638,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $killer->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
 			if($this->db->nextRecord())
 			{
-				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $player->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
 			}
 			else
 			{
