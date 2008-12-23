@@ -5,7 +5,7 @@ $smarty->assign('PageTopic','Beta LITE');
 $PHP_OUTPUT.=('<b style="color:red;">This is the <i>LITE</i> version of the crib...imagine the power of the real one.</b><br /><br />');
 
 // container for all links
-$container = create_container('beta_func_proc.php', '');
+$container = create_container('beta_func_proc.php', 'beta_functions_lite.php');
 
 //first lets let them map all
 $container['func'] = 'Map';

@@ -198,7 +198,7 @@ class Globals
 		return self::$POD_SCREEN_HREF;
 	}
 	
-	public static function getBetaFunctionsHREF()
+	public static function getBetaFunctionsHREF() //BETA
 	{
 		if(!isset(self::$BETA_FUNCTIONS_HREF))
 		{
