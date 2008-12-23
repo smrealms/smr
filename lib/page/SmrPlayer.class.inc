@@ -1599,7 +1599,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	
 		// Killer get marked as claimer of podded player's bounties even if they don't exist
-		$this->setBountiesClaimable($killer->getAccountID());
+		$this->setBountiesClaimable($killer);
 
 		// If the alignment difference is greater than 200 then a bounty may be set
 		$alignment_diff = abs($this->getAlignment() - $killer->getAlignment());
@@ -1698,6 +1698,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		
 		$this->killPlayer($forces->getSectorID());
+	}
+	
+	public function setBountiesClaimable(AbstractSmrPlayer $claimer)
+	{
+		
 	}
 	
 	function changeShip(SmrShip &$ship,$shipID)
