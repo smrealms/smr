@@ -218,7 +218,6 @@ function forward($new_container)
 	$new_container['time'] = $time_start;
 	// this sn identifies our container later
 
-	SmrSession::$var = array();
 	SmrSession::$var[$sn] = $new_container;
 
 	SmrSession::update();
@@ -238,8 +237,6 @@ function forwardURL($new_container)
 	$new_container['time'] = $time_start;
 	// this sn identifies our container later
 
-//BACKBUTTON	
-	SmrSession::$var = array();
 	SmrSession::$var[$sn] = $new_container;
 
 	SmrSession::update();
