@@ -4,9 +4,9 @@
 		<a  href="{$MessageGlobalLink}"><img src="images/global_msg.gif" alt="Global Messages" /></a>
 		<span class="small">{$MessageGlobalNum}</span>
 	{/if}
-	{if isset($MessagePlayerLink)}
-	<a  href="{$MessagePlayerLink}"><img src="images/personal_msg.gif" alt="Player Messages" /></a>
-	<span class="small">{$MessagePlayerNum}</span>
+	{if isset($MessagePersonalLink)}
+	<a  href="{$MessagePersonalLink}"><img src="images/personal_msg.gif" alt="Personal Messages" /></a>
+	<span class="small">{$MessagePersonalNum}</span>
 	{/if}
 	{if isset($MessageScoutLink)}
 	<a  href="{$MessageScoutLink}"><img src="images/scout_msg.gif" alt="Scout Messages" /></a>

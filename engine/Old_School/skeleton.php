@@ -161,7 +161,7 @@ if (SmrSession::$game_id != 0)
 
 		if(isset($messages[$PLAYERMSG])) {
 			$container['folder_id'] = $PLAYERMSG;
-			$smarty->assign('MessagePlayerLink',SmrSession::get_new_href($container));
+			$smarty->assign('MessagePersonalLink',SmrSession::get_new_href($container));
 			$smarty->assign('MessagePersonalNum',$messages[$PLAYERMSG]);
 		}
 
