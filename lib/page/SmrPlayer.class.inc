@@ -1525,7 +1525,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			} else $msg .= strip_tags($ship_names[$killer_id], '<img>');
 //		}
 		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
-		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID()) . ',' . TIME . ',' . $db->escapeString($msg) . ',\'regular\')';
+		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $db->escapeString($msg) . ',\'regular\')');
 		
 		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);

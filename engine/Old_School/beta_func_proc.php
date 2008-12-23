@@ -48,7 +48,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 		}
 	}
 	//now adapt turns
-	$turns = $player->getTurns() * ($speed / $ship->speed);
+	$turns = $player->getTurns() * ($speed / $ship->getSpeed());
 	if ($turns > $player->getMaxTurns()) $turns = $player->getMaxTurns();
 	$player->setTurns($turns);
 	$player->update();
