@@ -120,7 +120,7 @@ elseif ($var['func'] == 'Hard_add') {
 	$db->query('UPDATE race_has_relation SET relation = '.$db->escapeString($amount).' WHERE race_id_1 = '.$race.' AND race_id_2 = '.$player->getRaceID().' AND game_id = '.$player->getGameID());
 }
 $container['url'] = 'skeleton.php';
-$container['body'] = 'beta_functions_lite.php';
+$container['body'] = $var['body'];
 forward($container);
 
 ?>
