@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','Combat Logs');
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_combat_log_menue();
+$smarty->assign('MenuBar',create_combat_log_menue());
 if (isset($_REQUEST['action'])) {
 	$submitAction = $_REQUEST['action'];
 	if ($submitAction == 'Save' && isset($_POST['id'])) {
@@ -86,10 +86,9 @@ if(isset($display_id)){
 	$db->query('SELECT timestamp,sector_id,result FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
 
 	if($db->next_record()) {
-		$PHP_OUTPUT.= 'Sector ' . $db->f('sector_id') . '<br />';
-		$PHP_OUTPUT.= date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$db->f('timestamp'));
-		$PHP_OUTPUT.= '<br><br>';
-		$PHP_OUTPUT.= unserialize(gzuncompress($db->f('result')));
+		$smarty->assign('CombatLogSector',$db->f('sector_id'));
+		$smarty->assign('CombatLogTimestamp',date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$db->f('timestamp')));
+		$smarty->assign('TraderCombatResults',unserialize(gzuncompress($db->f('result'))));
 	}
 	else {
 		$PHP_OUTPUT.= '<span class="red bold">Error:</span> log not found';
