@@ -25,6 +25,8 @@
 		{$TargetPlayer->getName()} has been <span class="red">DESTROYED!</span><br />
 		{$ShootingPlayer->getName()} salvages <span class="yellow">{$KillResults.KillerCredits|number_format}</span> credits from the wreckage and gains <span class="blue">{$KillResults.KillerExp|number_format}</span> experience.{/if}
 		<br />
+	{foreachelse}
+		{$ShootingPlayer->getName()} died before they were able to fire their weapons!
 	{/foreach}
 	{$ShootingPlayer->getName()} {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round. Maybe they should go back to the academy{/if}.<br /><br />
 {/foreach}
