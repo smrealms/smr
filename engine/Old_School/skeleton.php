@@ -338,9 +338,6 @@ $now = time();
 if ($launch - $now > 0)
 	echo '<br />SMR 1.5 Launch in ' . format_time($launch - $now, TRUE) . '</span>!';
 
-
-SmrSession::update();
-
 function format_time($seconds, $short=FALSE)
 {
 	$minutes=0;

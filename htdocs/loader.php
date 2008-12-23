@@ -235,6 +235,8 @@ function do_voodoo()
 	$smarty->assign('ThisShip',$ship);
 	$smarty->assign('TemplateBody',$var['body']);
 	$smarty->display(get_template_loc($var['url']));
+	
+	SmrSession::update();
 	exit;
 }
 
