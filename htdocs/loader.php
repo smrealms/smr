@@ -170,7 +170,7 @@ function do_voodoo()
 {
 //	ob_clean();
 
-	global $lock, $var,$smarty;
+	global $lock, $var,$smarty,$time_start;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -234,6 +234,9 @@ function do_voodoo()
 	$smarty->assign('ThisPlayer',$player);
 	$smarty->assign('ThisShip',$ship);
 	$smarty->assign('TemplateBody',$var['body']);
+	$time_elapsed = microtime(true) - $time_start;
+	$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
+	
 	$smarty->display(get_template_loc($var['url']));
 	
 	SmrSession::update();
