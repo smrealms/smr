@@ -224,7 +224,7 @@ function do_voodoo()
 	}
 
 	require_once(get_file_loc($var['url']));
-
+	include_once(get_file_loc($var['body']));
 	if($lock)
 	{
 		release_lock($lock);
