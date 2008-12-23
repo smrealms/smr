@@ -170,7 +170,7 @@ function do_voodoo()
 {
 //	ob_clean();
 
-	global $lock, $var;
+	global $lock, $var,$smarty;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -229,8 +229,7 @@ function do_voodoo()
 	{
 		release_lock($lock);
 	}
-	global $smarty,$sector,$player,$ship;
-	var_dump($var);
+	global $sector,$player,$ship;
 	$smarty->assign('ThisSector',$sector);
 	$smarty->assign('ThisPlayer',$player);
 	$smarty->assign('ThisShip',$ship);

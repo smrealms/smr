@@ -124,7 +124,6 @@ if (SmrSession::$game_id > 0)
 $container['body'] = 'donation.php';
 $smarty->assign('DonateLink',SmrSession::get_new_href($container));
 $PHP_OUTPUT='';
-var_dump($var['body']);
 include(get_file_loc($var['body']));
 $smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 
