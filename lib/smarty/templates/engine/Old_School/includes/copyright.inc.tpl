@@ -11,7 +11,7 @@
 		</td>
 		<td class="right">
 			<div align="right">
-				SMR {$Version}&copy;2007-{$CurrentYear} Azool and SMR<br />
+				SMR {$Version}&copy;2007-{$CurrentYear} Page and SMR<br />
 				Kindly Hosted by <a href="http://www.fem.tu-ilmenau.de/index.php?id=93&amp;L=1" target="fem">FeM</a><br />
 				Script runtime: <span id="runtime">{$ScriptRuntime}</span> seconds<br />
 				<a href="imprint.html">[Imprint]</a>
