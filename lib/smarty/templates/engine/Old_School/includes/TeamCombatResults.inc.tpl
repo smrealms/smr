@@ -17,9 +17,9 @@
 			*}{if !$ShotHit}and misses{elseif $ActualDamage.TotalDamage == 0}{*
 				*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
 				*}{elseif $WeaponDamage.Armour > 0}which is deflected by their shields{else}but it cannot do any damage{/if}{*
-				*}{else}destroying {if $ActualDamage.Shield > 0}<span class="cyan">{$ActualDamage.Shield}</span> shields{if DamageTypes == 3}, {elseif DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{*
-					*}{elseif $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs}</span> drones{if DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{*
-					*}{elseif $ActualDamage.Armour > 0}<span class="red">{$ActualDamage.Armour}</span> plates of armour{/if}{*
+				*}{else}destroying {if $ActualDamage.Shield > 0}<span class="cyan">{$ActualDamage.Shield|number_format}</span> shields{if DamageTypes == 3}, {elseif DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{*
+					*}{elseif $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs|number_format}</span> drones{if DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{*
+					*}{elseif $ActualDamage.Armour > 0}<span class="red">{$ActualDamage.Armour|number_format}</span> plates of armour{/if}{*
 		*}{/if}{/if}.
 		{if $ActualDamage.KillingShot}<br />{assign var=KillResults value=$WeaponResults.KillResults}
 		{$TargetPlayer->getName()} has been <span class="red">DESTROYED!</span><br />
