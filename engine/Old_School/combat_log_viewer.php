@@ -89,7 +89,7 @@ if(isset($display_id)){
 		$PHP_OUTPUT.= 'Sector ' . $db->f('sector_id') . '<br />';
 		$PHP_OUTPUT.= date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$db->f('timestamp'));
 		$PHP_OUTPUT.= '<br><br>';
-		$PHP_OUTPUT.= gzuncompress($db->f('result'));
+		$PHP_OUTPUT.= unserialize(gzuncompress($db->f('result')));
 	}
 	else {
 		$PHP_OUTPUT.= '<span class="red bold">Error:</span> log not found';

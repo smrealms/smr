@@ -1,10 +1,4 @@
-<h1>Attacker Results</h1><br />
-{include_template template="includes/TeamCombatResults.inc" assign=Template}{include file=$Template TeamCombatResults=$TraderCombatResults.Attackers}<br />
-<br />
-<img src="images/creonti_cruiser.jpg" alt="Creonti Cruiser" title="Creonti Cruiser"><br />
-<br />
-<h1>Defender Results</h1><br />
-{include_template template="includes/TeamCombatResults.inc" assign=Template}{include file=$Template TeamCombatResults=$TraderCombatResults.Defenders}<br />
+{include_template template="includes/TraderFullCombatResults.inc" assign=Template}{include file=$Template}<br />
 <br />
 <div align="center">
 	{if isset($Target)}{assign_random var=RandomPosition min=0 max=2}
