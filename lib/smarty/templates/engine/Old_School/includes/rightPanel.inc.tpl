@@ -91,5 +91,5 @@ Power Used: Not Done Yet<br /><br />
 <br />
 <a  href="main.php?action=78"><span class="bold">Track Damages</span></a><br />
 <br />
-<a  href="main.php?action=5"><span class="bold">Beta Functions</span></a>
+<a href="{$Globals->getBetaFunctionsHREF()}"><span class="bold">Beta Functions</span></a>
 <script type="text/javascript">initRP(450,150,450,175,175,450,0,0,15,100,'dgreen');startRP('slow');</script>
