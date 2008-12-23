@@ -331,8 +331,6 @@ if ($db->next_record()) {
 
 $smarty->assign('Version',$version);
 $smarty->assign('CurrentYear',date('Y',$TIME));
-$time_elapsed = microtime(true) - $time_start;
-$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
 $launch = mktime(0,0,0,3,12,2008);
 $now = time();
 if ($launch - $now > 0)
