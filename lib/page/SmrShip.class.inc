@@ -995,7 +995,7 @@ class SmrShip
 	{
 		$thisPlayer =& $this->getPlayer();
 		if($thisPlayer->isDead())
-			return array('Player' => &$thisPlayer, 'DeadBeforeShot' => true);
+			return array('Player' => &$thisPlayer, 'DeadBeforeShot' => true, 'TotalDamage' => 0);
 		$results = array('Player' => &$thisPlayer, 'DeadBeforeShot' => false, 'TotalDamage' => 0);
 		foreach($this->weapons as $orderID => &$weapon)
 		{
