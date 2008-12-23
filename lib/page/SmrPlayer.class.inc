@@ -1943,10 +1943,10 @@ class SmrPlayer extends AbstractSmrPlayer
 			(account_id,game_id,message_type_id,message_text,
 			sender_id,send_time,expire_time) VALUES(' . 
 			$receiver_id . ',' .
-			$this->gameID . ',' .
+			$this->getGameID() . ',' .
 			$message_type_id . ',' .
-			$message . ',' .
-			$this->accountID . ',' .
+			$this->db->escapeString($message,true) . ',' .
+			$this->getAccountID() . ',' .
 			TIME . ',' .
 			$expire . ')'
 		);
