@@ -609,6 +609,11 @@ class SmrShip
 		return $this->shipName;
 	}
 	
+	public function getCost()
+	{
+		return $this->cost;
+	}
+	
 	public function getSpeed()
 	{
 		return $this->speed;
