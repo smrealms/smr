@@ -33,7 +33,7 @@
 			{assign var=Drones value=$TraderResults.Drones}
 			{assign var=ActualDamage value=$Drones.ActualDamage}
 			{assign var=WeaponDamage value=$Drones.WeaponDamage}
-			{$ShootingPlayer->getName()} {if $Drones.Launched == 0}fails to launch their combat drones{else}launches <span class="yellow">{$Drones.Launched}</span> combat drones at{if $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()} {*
+			{$ShootingPlayer->getName()} {if $WeaponDamage.Launched == 0}fails to launch their combat drones{else}launches <span class="yellow">{$Drones.Launched}</span> combat drones at{if $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()} {*
 			*}{if !$ActualDamage.TargetAlreadyDead}{*
 				*}{if $ActualDamage.TotalDamage == 0}{*
 					*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
