@@ -697,11 +697,11 @@ $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 	}
 
 $sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID());
-$fightingPlayers = $sector->getFightingTraders($player,$targetPlayer);
+$fightingPlayers =& $sector->getFightingTraders($player,$targetPlayer);
 
 
 // Cap fleets to the required size
-foreach($fightingPlayers as $team => &$teamPlayers)//$i=0;$i<2;++$i)
+foreach($fightingPlayers as $team => &$teamPlayers)
 {
 	$fleet_size = count($teamPlayers);
 	if($fleet_size > MAXIMUM_FLEET_SIZE)
