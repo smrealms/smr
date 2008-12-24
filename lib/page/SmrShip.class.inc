@@ -1004,7 +1004,7 @@ class SmrShip
 		foreach($this->weapons as $orderID => &$weapon)
 		{
 			$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
-			$results['Weapons'][$orderID] =& $this->weapons[$orderID]->shootPlayer($thisPlayer, $targetPlayer);
+			$results['Weapons'][$orderID] =& $weapon->shootPlayer($thisPlayer, $targetPlayer);
 			if($results['Weapons'][$orderID]['Hit'])
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 		}
@@ -1024,12 +1024,12 @@ class SmrShip
 		{
 			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
 			$damage['MaxDamage'] -= $shieldDamage;
-			if($shieldDamage == 0 || $damage['Rollover'])
+			if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
 			{
 				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
 				$damage['Armour'] -= $cdDamage;
 				$damage['MaxDamage'] -= $cdDamage;
-				if(!$this->hasCDs())
+				if(!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
 					$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']));
 			}
 		}
