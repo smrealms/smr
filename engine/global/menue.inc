@@ -53,7 +53,7 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 	else $role_id = 0;
 	$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
 	$db2->next_record();
-	$send = $db2->f('send_alliance_msg');
+	$send = $db2->f('send_alliance_msg') == 'TRUE';
 	$container=array();
 	$container['url']='skeleton.php';
 	$container['alliance_id'] = $alliance_id;

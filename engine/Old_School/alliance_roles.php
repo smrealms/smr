@@ -42,35 +42,37 @@ while ($db->next_record()) {
 		$PHP_OUTPUT.= '<tr><td align="left">Positive Balance:<input type="checkbox" name="positive" alt="Memebers must deposit more than they withdrawl."';
 		if ($db->f('with_per_day') == -1) $PHP_OUTPUT.= ' checked';
 		$PHP_OUTPUT.= '></td></tr>';
-		if (!$db->f('treaty_created')) {
+		if ($db->f('treaty_created') == 'FALSE') {
 			$PHP_OUTPUT.= '<tr><td align="left">Remove Member</td><td align="left"><input type="checkbox" name="removeMember"';
-			if ($db->f('remove_member')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('remove_member') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 			$PHP_OUTPUT.= '<tr><td align="left">Change Password</td><td align="left"><input type="checkbox" name="changePW"';
-			if ($db->f('change_pass')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('change_pass') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 			$PHP_OUTPUT.= '<tr><td align="left">Change MoD</td><td align="left"><input type="checkbox" name="changeMoD"';
-			if ($db->f('change_mod')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('change_mod') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 			$PHP_OUTPUT.= '<tr><td align="left">Change Roles</td><td align="left"><input type="checkbox" name="changeRoles"';
-			if ($db->f('change_roles')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('change_roles') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 			$PHP_OUTPUT.= '<tr><td align="left">Land On Planets</td><td align="left"><input type="checkbox" name="planets"';
-			if ($db->f('planet_access')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('planet_access') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 			$PHP_OUTPUT.= '<tr><td align="left">Delete messageboard messages</td><td align="left"><input type="checkbox" name="mbMessages"';
-			if ($db->f('mb_messages')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('mb_messages') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 			$PHP_OUTPUT.= '<tr><td align="left">Make withdrawls exempt</td><td align="left"><input type="checkbox" name="exemptWithdrawls" alt="This user can mark withdrawls from the alliance account as \'for the alliance\' instead of \'for the individual\'"';
-			if ($db->f('exempt_with')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('exempt_with') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 			$PHP_OUTPUT.= '<tr><td align="left">Send Alliance Message</td><td align="left"><input type="checkbox" name="sendAllMsg"';
-			if ($db->f('send_alliance_msg')) $PHP_OUTPUT.= ' checked';
+			if ($db->f('send_alliance_msg') == 'TRUE') $PHP_OUTPUT.= ' checked';
 			$PHP_OUTPUT.= '></td></tr>';
 		}
 		$PHP_OUTPUT.= '<tr><td colspan="2" align="center">' . $form['submit'] . '</td></tr>';
 		$PHP_OUTPUT.= '</table></form><br />';
-	} else {
+	}
+	else
+	{
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'alliance_roles.php';

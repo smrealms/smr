@@ -168,7 +168,7 @@ $db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player
 if ($db2->next_record()) $my_role_id = $db2->f('role_id');
 else $my_role_id = 0;
 $db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' . 
-					'role_id = '.$my_role_id.' AND change_roles = 1');
+					'role_id = '.$my_role_id.' AND change_roles = \'TRUE\'');
 if ($db2->next_record()) $allowed = TRUE;
 while ($db->next_record()) {
 	// check if this guy is the current guy
