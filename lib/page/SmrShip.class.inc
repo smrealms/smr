@@ -1003,12 +1003,16 @@ class SmrShip
 		$results['DeadBeforeShot'] = false;
 		foreach($this->weapons as $orderID => &$weapon)
 		{
-			$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
-			$results['Weapons'][$orderID] =& $weapon->shootPlayer($thisPlayer, $targetPlayer);
+			$results['Weapons'][$orderID] =& $weapon->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
 			if($results['Weapons'][$orderID]['Hit'])
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 		}
-		
+		if($this->hasCDs())
+		{
+			$thisCDs =& new SmrCombatDrones($this->getGameID(),$this->getCDs());
+			$results['Drones'] =& $thisCDs->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
+			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+		}
 		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],'player_damage');
 		return $results;
