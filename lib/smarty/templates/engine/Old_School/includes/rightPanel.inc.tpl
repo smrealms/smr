@@ -1,4 +1,4 @@
-<span id="attack_area">{if $ThisShip->isUnderAttack()}<div class="attack_warning">You Are Under Attack!</div>{/if}</span>
+<span id="attack_area">{if $ThisShip->removeUnderAttack()}<div class="attack_warning">You Are Under Attack!</div>{/if}</span>
 <span id="message_area">
 	{if isset($MessageGlobalLink)}
 		<a  href="{$MessageGlobalLink}"><img src="images/global_msg.gif" alt="Global Messages" /></a>
