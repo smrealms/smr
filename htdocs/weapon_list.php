@@ -22,8 +22,8 @@ echo ('<meta http-equiv="pragma" content="no-cache">');
 echo ('</head>');
 
 echo ('<body>');
-$seq = $_REQUEST['seq'];
-$order = $_REQUEST['order'];
+$seq = isset($_REQUEST['seq']) ? $_REQUEST['seq'] : '';
+$order = isset($_REQUEST['order']) ? $_REQUEST['order'] : '';
 if (empty($seq))
 	$seq = 'ASC';
 elseif ($seq == 'ASC')
