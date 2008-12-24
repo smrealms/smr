@@ -806,7 +806,7 @@ class SmrShip
 		return $this->getOldHardware(HARDWARE_COMBAT);
 	}
 	
-	public function setCDs($amount)
+	public function setOldCDs($amount)
 	{
 		$this->setOldHardware(HARDWARE_COMBAT,$amount);
 	}
