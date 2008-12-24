@@ -9,8 +9,6 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	
 	public function __construct($gameID,$numberOfCDs)
 	{
-		self::initialiseDatabase();
-		
 		$this->gameID = $gameID;
 		$this->numberOfCDs = $numberOfCDs;
 		$this->name = 'Combat Drones';
