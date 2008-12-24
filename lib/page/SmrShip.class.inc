@@ -239,32 +239,27 @@ class SmrShip
 	
 	function update_hardware()
 	{
-		
 		$this->db->lockTable('ship_has_hardware');
 		
 		// write hardware info
-		foreach ($this->hardware as $hardware_type_id => $amount) {
-			
-			if ($amount > 0) {
-				
+		foreach ($this->hardware as $hardware_type_id => $amount)
+		{
+			if ($amount > 0)
+			{
 				$this->db->query('SELECT * FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
-				if ($this->db->nextRecord()) {
-					
-					$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
-					
-				} else {
-					
-					$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$amount.')');
-					
+				if ($this->db->nextRecord())
+				{
+					$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->oldHardware[$hardware_type_id].' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);	
 				}
-				
-			} else
+				else
+				{	
+					$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$this->oldHardware[$hardware_type_id].')');
+				}
+			}
+			else
 				$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND hardware_type_id = '.$hardware_type_id);
-			
 		}
-		
 		$this->db->unlock();
-		
 	}
 	
 	function update_weapon() {
