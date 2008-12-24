@@ -927,6 +927,7 @@ class SmrShip
 		$this->setOldShields($this->getShields());
 		$this->setOldCDs($this->getCDs());
 		$this->setOldArmour($this->getArmour());
+		$this->update_hardware(); //for smarty as it doesn't use references.
 		return $underAttack;
 	}
 	
