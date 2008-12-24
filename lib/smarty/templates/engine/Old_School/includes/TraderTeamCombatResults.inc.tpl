@@ -33,6 +33,7 @@
 			{assign var=Drones value=$TraderResults.Drones}
 			{assign var=WeaponDamage value=$Drones.WeaponDamage}
 			{assign var=ActualDamage value=$Drones.ActualDamage}
+			{assign var=DamageTypes value=0}
 			{if $ActualDamage.Shield > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=`$DamageTypes+1}{/if}
