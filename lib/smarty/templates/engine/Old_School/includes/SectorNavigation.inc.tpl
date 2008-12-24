@@ -35,8 +35,8 @@
 			{/if}
 			
 			
-			<a href="{$CurrentSectorLink}" class="dgreen">
-				<div class="cs_mid move_text move_hover">{$CurrentSectorID}</div>
+			<a href="{$ThisSector->getCurrentSectorHREF()}" class="dgreen">
+				<div class="cs_mid move_text move_hover">{$ThisSector->getSectorID()}</div>
 			</a>
 			
 			

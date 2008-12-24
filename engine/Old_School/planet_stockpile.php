@@ -1,11 +1,7 @@
 <?
-		require_once(get_file_loc('SmrPlanet.class.inc'));
-if (!$player->isLandedOnPlanet()) {
-
-	$PHP_OUTPUT.=create_echo_error('You are not on a planet!');
-	return;
-
-}
+if (!$player->isLandedOnPlanet())
+	create_error('You are not on a planet!');
+require_once(get_file_loc('SmrPlanet.class.inc'));
 
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());

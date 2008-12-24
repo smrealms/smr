@@ -3,8 +3,8 @@
 </span><br />
 <br />
 {if isset($GameID)}
-	{if isset($CurrentSectorLink)}
-		<a class="bold" href="{$CurrentSectorLink}">Current Sector</a><br />
+	{if !$ThisPlayer->isLandedOnPlanet()}
+		<a class="bold" href="{$ThisSector->getCurrentSectorHREF()}">Current Sector</a><br />
 	{/if}
 	{if isset($PlanetMainLink)}
 		<a class="bold" href="{$PlanetMainLink}">Planet Main</a><br />
