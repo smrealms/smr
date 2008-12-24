@@ -655,8 +655,10 @@ class SmrShip
 		return $this->getHardware(HARDWARE_SHIELDS);
 	}
 	
-	public function setShields($amount)
+	public function setShields($amount,$updateOldAmount=false)
 	{
+		if($updateOldAmount && !$this->hasLostShields())
+			$this->setOldHardware(HARDWARE_SHIELDS,$amount);
 		$this->setHardware(HARDWARE_SHIELDS,$amount);
 	}
 	
@@ -673,6 +675,11 @@ class SmrShip
 	public function getOldShields()
 	{
 		return $this->getOldHardware(HARDWARE_SHIELDS);
+	}
+	
+	public function setOldShields($amount)
+	{
+		$this->setOldHardware(HARDWARE_SHIELDS,$amount);
 	}
 	
 	public function hasShields()
@@ -695,8 +702,10 @@ class SmrShip
 		return $this->getHardware(HARDWARE_ARMOUR);
 	}
 	
-	public function setArmour($amount)
+	public function setArmour($amount,$updateOldAmount=false)
 	{
+		if($updateOldAmount && !$this->hasLostArmour())
+			$this->setOldHardware(HARDWARE_ARMOUR,$amount);
 		$this->setHardware(HARDWARE_ARMOUR,$amount);
 	}
 	
@@ -713,6 +722,11 @@ class SmrShip
 	public function getOldArmour()
 	{
 		return $this->getOldHardware(HARDWARE_ARMOUR);
+	}
+	
+	public function setOldArmour($amount)
+	{
+		$this->setOldHardware(HARDWARE_ARMOUR,$amount);
 	}
 	
 	public function hasArmour()
@@ -790,6 +804,11 @@ class SmrShip
 	public function getOldCDs()
 	{
 		return $this->getOldHardware(HARDWARE_COMBAT);
+	}
+	
+	public function setCDs($amount)
+	{
+		$this->setOldHardware(HARDWARE_COMBAT,$amount);
 	}
 	
 	public function hasLostCDs()
