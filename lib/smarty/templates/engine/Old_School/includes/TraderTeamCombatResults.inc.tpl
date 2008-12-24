@@ -13,7 +13,7 @@
 			{assign var=DamageTypes value=0}
 			{if $ActualDamage.Shield > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
-			{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=same t$DamageTypes+1}{/if}
+			{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			
 			{$ShootingPlayer->getName()} fires their {$ShootingWeapon->getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()} {*
 			*}{if !$ActualDamage.TargetAlreadyDead}{*
