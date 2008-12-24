@@ -9,7 +9,7 @@ $PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->f('leader_id'))
 $PHP_OUTPUT.= '<h2>Exemption Requests</h2><br />';
 $PHP_OUTPUT.=('Selecting a box will authorize it, leaving a box unselected will make it unauthorized after you submit.<br />');
 //get rid of already approved entries
-$db->f('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
+$db->query('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
 //build player array
 $db->query('SELECT * FROM player WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID());
 while ($db->next_record()) $players[$db->f('account_id')] = stripslashes($db->f('player_name'));

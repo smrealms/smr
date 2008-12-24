@@ -1,6 +1,6 @@
 <?
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = '.$player->getAllianceID().';
+else $alliance_id = $player->getAllianceID();
 $thread_index = $var['thread_index'];
 $thread_id = $var['thread_ids'][$thread_index];
 
