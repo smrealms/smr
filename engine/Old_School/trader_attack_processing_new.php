@@ -743,6 +743,7 @@ foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer)
 	$results['Defenders']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
 	$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($teamPlayer);
+$ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
