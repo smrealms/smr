@@ -27,11 +27,11 @@ $PHP_OUTPUT.= $form['form'];
 //$PHP_OUTPUT.=create_echo_form(create_container('alliance_stat_processing.php', ''));
 $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="nobord nohpad">';
 
-if ($db->f('change_pass')) {
+if ($db->f('change_pass') == 'TRUE') {
 	$PHP_OUTPUT.= '<tr><td class="top">Password:&nbsp;</td><td><input type="password" name="password" size="30" value="';
 	$PHP_OUTPUT.= $pw;
 	$PHP_OUTPUT.= '"></td></tr>';
-} if ($db->f('change_mod')) {
+} if ($db->f('change_mod') == 'TRUE') {
 	$PHP_OUTPUT.= '<tr><td class="top">Description:&nbsp;</td><td><textarea name="description">';
 	$PHP_OUTPUT.= $desc;
 	$PHP_OUTPUT.= '</textarea></td></tr>';

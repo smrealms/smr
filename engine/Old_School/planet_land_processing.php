@@ -15,7 +15,7 @@ if ($player->getAllianceID() > 0)
 	else $role_id = 0;
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
 	$db->next_record();
-	if (!$db->f('planet_access'))
+	if ($db->f('planet_access') == 'FALSE')
 	{
 		$db->query('SELECT owner_id FROM planet WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' LIMIT 1');
 		$db->next_record();

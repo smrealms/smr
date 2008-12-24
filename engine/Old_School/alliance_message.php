@@ -103,7 +103,7 @@ if ($db->nf() > 0) {
 		else $role_id = 0;
 		$db3->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
 		$db3->next_record();
-		if ($player->getAccountID() == $sender_id || $db3->f('mb_messages')) {
+		if ($player->getAccountID() == $sender_id || $db3->f('mb_messages') == 'TRUE') {
 			$container['thread_id'] = $db->f('thread');
 			$threads[$i]['tail'] .= '<br><small>';
 			$threads[$i]['tail'] .= create_link($container, 'Delete Thread!');

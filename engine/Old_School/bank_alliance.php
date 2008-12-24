@@ -68,7 +68,7 @@ if ($alliance_id == $player->getAllianceID()) {
 	$query = 'role = ' . $db->escape_string($player->getAllianceName());
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $alliance_id . ' AND game_id = ' . $player->getGameID() . ' AND ' . $query);
 $db->next_record();
-$exempt = $db->f('exempt_with');
+$exempt = $db->f('exempt_with') == 'TRUE';
 if ($db->f('with_per_day') == -2) $PHP_OUTPUT.=('You can withdraw an unlimited amount from this account. <br />');
 elseif ($db->f('with_per_day') == -1) $PHP_OUTPUT.=('You can only withdraw ' . number_format($differential) . ' more credits based on your deposits.<br />');
 else {
