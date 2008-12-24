@@ -3,6 +3,7 @@ require_once('SmrMySqlDatabase.class.inc');
 
 require_once('SmrPlayer.class.inc');
 require_once('SmrWeapon.class.inc');
+require_once('SmrCombatDrones.class.inc');
 class SmrShip
 {
 	protected static $CACHE_SHIPS = array();
