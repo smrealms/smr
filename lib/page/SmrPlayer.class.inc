@@ -725,8 +725,12 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->turns = $this->getMaxTurns();
 		
 		$this->hasChanged=true;
+		if($updateLastActive === true)
+		{
+			$this->lastActive=TIME;
+			$this->lastCPLAction=TIME;
+		}
 		$sql = 'UPDATE player SET ' . ($updateLastActive === true ? 'last_active=' . TIME . ',last_cpl_action=' . TIME . ((!$maintSame||!$newbSame) ? ',' : '' ) : '') . (!$maintSame ? 'turns=' . $this->turns:'') . (!$newbSame ? (!$maintSame?',':'').'newbie_turns='.$this->newbieTurns : '' ).' WHERE ' . $this->SQL . ' LIMIT 1';
-		echo $sql;
 		if(!has_beta_privilege('No SC Change'))
 			$this->db->query($sql);
 	}
