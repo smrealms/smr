@@ -902,6 +902,15 @@ class SmrShip
 		return $this->hasLostShields() || $this->hasLostArmour() || $this->hasLostCDs();
 	}
 	
+	public function removeUnderAttack()
+	{
+		$underAttack = $this->isUnderAttack();
+		$this->setOldShields($this->getShields());
+		$this->setOldCDs($this->getCDs());
+		$this->setOldArmour($this->getArmour());
+		return $underAttack;
+	}
+	
 	public function hasWeapons()
 	{
 		return count($this->getWeapons())>0;
