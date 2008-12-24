@@ -55,7 +55,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	//now make sure they don't have extra hardware
 	$db->query('DELETE FROM ship_is_cloaked WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 	$db->query('DELETE FROM ship_has_illusion WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	doUNO();	
+	doUNO($player,$ship);	
 	
 } elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
@@ -67,7 +67,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 
 } elseif ($var['func'] == 'Uno') {
 
-	doUNO();
+	doUNO($player,$ship);
 
 } elseif ($var['func'] == 'Warp') {
 	$sector_to = $_REQUEST['sector_to'];
@@ -108,7 +108,7 @@ $container['body'] = $var['body'];
 forward($container);
 
 
-function doUNO()
+function doUNO(&$player,&$ship)
 {
 	$db = new SMR_DB();
 	$db->query('SELECT * FROM ship_type_support_hardware WHERE ship_type_id = '.$ship->getShipTypeID());
