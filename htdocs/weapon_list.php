@@ -39,14 +39,14 @@ else
 $db->query('SELECT * FROM weapon_type, race WHERE weapon_type.race_id = race.race_id ORDER BY '.$order_by.' '.$seq);
 echo ('<table class="standard" cellspacing="0">');
 echo ('<tr>');
-echo ('<th align="center"><a href="'.URL.'?order=weapon_name&seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
-echo ('<th align="center"><a href="'.URL.'?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Race</span></a></th>');
-echo ('<th align="center"><a href="'.URL.'?order=cost&seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
-echo ('<th align="center"><a href="'.URL.'?order=shield_damage&seq='.$seq.'"><span style=color:#80C870;>Shield Damage</span></a></th>');
-echo ('<th align="center"><a href="'.URL.'?order=armor_damage&seq='.$seq.'"><span style=color:#80C870;>Armor Damage</span></a></th>');
-echo ('<th align="center"><a href="'.URL.'?order=accuracy&seq='.$seq.'"><span style=color:#80C870;>Accuracy</span></a></th>');
-echo ('<th align="center"><a href="'.URL.'?order=power_level&seq='.$seq.'"><span style=color:#80C870;>Power Level</span></a></th>');
-echo ('<th align="center"><a href="'.URL.'?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
+echo ('<th align="center"><a href="?order=weapon_name&seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
+echo ('<th align="center"><a href="?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Race</span></a></th>');
+echo ('<th align="center"><a href="?order=cost&seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
+echo ('<th align="center"><a href="?order=shield_damage&seq='.$seq.'"><span style=color:#80C870;>Shield Damage</span></a></th>');
+echo ('<th align="center"><a href="?order=armor_damage&seq='.$seq.'"><span style=color:#80C870;>Armor Damage</span></a></th>');
+echo ('<th align="center"><a href="?order=accuracy&seq='.$seq.'"><span style=color:#80C870;>Accuracy</span></a></th>');
+echo ('<th align="center"><a href="?order=power_level&seq='.$seq.'"><span style=color:#80C870;>Power Level</span></a></th>');
+echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
 echo ('</tr>');
 while ($db->next_record()) {
 
