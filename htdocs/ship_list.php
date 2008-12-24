@@ -150,7 +150,8 @@ else
                 'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id ' .
                 'ORDER BY '.$order_by);
 
-	while ($db->next_record()) {
+	while ($db->next_record())
+	{
 
 		//we want to put them all in an array so we dont have to have 15 td rows
     	$stat = array();
@@ -178,9 +179,10 @@ else
 		$stat[] = $hardware_dis[1];
     	$hardware_id = 2;
 	    //get our hardware
-	    while ($hardware_id <= 11) {
-
-			if($db->next_record()) {
+	    while ($hardware_id <= 11)
+	    {
+			if($db->next_record())
+			{
 
 		    	if ($hardware_id < 7)
     		    	$stat[] = $db->f('max_amount');
@@ -188,10 +190,8 @@ else
             		$stat[] = 'Yes';
 	            else
     	        	$stat[] = '&nbsp;';
-	        	$hardware_id++;
-
 		    }
-
+	        $hardware_id++;
 		}
     	$loop++;
 	    echo ('<tr>');
