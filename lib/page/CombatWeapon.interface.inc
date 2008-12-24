@@ -7,8 +7,6 @@ interface CombatWeapon
 	
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer);
 	
-	public function getWeaponTypeID();
-	
 	public function getName();
 	
 	public function getShieldDamage();
