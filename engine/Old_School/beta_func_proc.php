@@ -22,7 +22,7 @@ if ($var['func'] == 'Map') {
 	}
 
 } elseif ($var['func'] == 'Money')
-	$db->query('UPDATE player SET credits = 50000000 WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+	$player->setCredits(50000000);
 elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68) {
 	$ship_id = $_REQUEST['ship_id'];
 	
@@ -71,16 +71,16 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 
 } elseif ($var['func'] == 'Warp') {
 	$sector_to = $_REQUEST['sector_to'];
-	$db->query('UPDATE player SET sector_id = '.$db->escapeString($sector_to).' WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+	$player->setSectorID($sector_to);
 } elseif ($var['func'] == 'Exp') {
 	$exp = $_REQUEST['exp'];
 	if ($exp > 500000) $exp = 500000;
-	$db->query('UPDATE player SET experience = '.$db->escapeString($exp).' WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+	$player->setExperience($exp);
 } elseif ($var['func'] == 'Align'){
 	$align = $_REQUEST['align'];
 	if($align > 500) $align=500;
 	else if($align<-500) $align=-500;
-	$db->query('UPDATE player SET alignment = '.$db->escapeString($align).' WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+	$player->setAlignment($align);
 } elseif ($var['func'] == 'Kills') {
 	$kills = $_REQUEST['kills'];
 	$db->query('UPDATE account_has_stats SET kills = '.$db->escapeString($kills).' WHERE account_id = '.$player->getAccountID());
