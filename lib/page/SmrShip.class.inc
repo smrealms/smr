@@ -617,7 +617,7 @@ class SmrShip
 	
 	public function getHardware($hardwareTypeID)
 	{
-		return $this->hardware[$hardwareTypeID];
+		return isset($this->hardware[$hardwareTypeID]) ? $this->hardware[$hardwareTypeID] : 0;
 	}
 	
 	public function setHardware($hardwareTypeID,$amount)
