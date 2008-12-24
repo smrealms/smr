@@ -11,17 +11,17 @@ require_once(LIB . 'global/smr_db.inc');
 
 $db = new SMR_DB();
 
-$PHP_OUTPUT.=('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
-$PHP_OUTPUT.=('<html>');
-$PHP_OUTPUT.=('<head>');
-$PHP_OUTPUT.=('<link rel="stylesheet" type="text/css" href="default.css">');
-$PHP_OUTPUT.=('<title>Ship List</title>');
-$PHP_OUTPUT.=('<meta http-equiv="pragma" content="no-cache">');
-$PHP_OUTPUT.=('</head>');
+echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
+echo ('<html>');
+echo ('<head>');
+echo ('<link rel="stylesheet" type="text/css" href="default.css">');
+echo ('<title>Ship List</title>');
+echo ('<meta http-equiv="pragma" content="no-cache">');
+echo ('</head>');
 $seq = $_REQUEST['seq'];
 $order = $_REQUEST['order'];
 $hardwarea = $_REQUEST['hardwarea'];
-$PHP_OUTPUT.=('<body>');
+echo ('<body>');
 if (empty($seq))
 	$seq = 'ASC';
 elseif ($seq == 'ASC')
@@ -46,44 +46,44 @@ elseif (isset($hardwarea)) {
 
 
 $order_by .= ', ship_name ASC, ship_type_support_hardware.hardware_type_id ASC';
-$PHP_OUTPUT.=('<form>');
+echo ('<form>');
 
-$site = $URL . '/ship_list.php';
-
-$PHP_OUTPUT.=('<table class="standard"  cellspacing="0">');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th align="left"><a href="$site?order=ship_name&seq='.$seq.'"><span style=color:#80C870;>Ship Name</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Ship Race</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?order=cost&seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?order=speed&seq='.$seq.'"><span style=color:#80C870;>Speed</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?order=hardpoint&seq='.$seq.'"><span style=color:#80C870;>Hardpoints</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?order=lvl_needed&seq='.$seq.'"><span style=color:#80C870;>Level Needed(Semi War)</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=1&seq='.$seq.'"><span style=color:#80C870;>Shields</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=2&seq='.$seq.'"><span style=color:#80C870;>Armor</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=3&seq='.$seq.'"><span style=color:#80C870;>Cargo</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=4&seq='.$seq.'"><span style=color:#80C870;>Combat Drones</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=5&seq='.$seq.'"><span style=color:#80C870;>Scout Drones</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=6&seq='.$seq.'"><span style=color:#80C870;>Mines</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=7&seq='.$seq.'"><span style=color:#80C870;>Scanner</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=8&seq='.$seq.'"><span style=color:#80C870;>Cloak</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=9&seq='.$seq.'"><span style=color:#80C870;>Illusion</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=10&seq='.$seq.'"><span style=color:#80C870;>Jump</span></a></th>');
-$PHP_OUTPUT.=('<th align="center"><a href="$site?hardwarea=11&seq='.$seq.'"><span style=color:#80C870;>Drone Scrambler</span></a></th>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('</form>');
+echo ('<table class="standard"  cellspacing="0">');
+echo ('<tr>');
+echo ('<th align="left"><a href="?order=ship_name&seq='.$seq.'"><span style=color:#80C870;>Ship Name</span></a></th>');
+echo ('<th align="center"><a href="?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Ship Race</span></a></th>');
+echo ('<th align="center"><a href="?order=cost&seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
+echo ('<th align="center"><a href="?order=speed&seq='.$seq.'"><span style=color:#80C870;>Speed</span></a></th>');
+echo ('<th align="center"><a href="?order=hardpoint&seq='.$seq.'"><span style=color:#80C870;>Hardpoints</span></a></th>');
+echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
+echo ('<th align="center"><a href="?order=lvl_needed&seq='.$seq.'"><span style=color:#80C870;>Level Needed(Semi War)</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=1&seq='.$seq.'"><span style=color:#80C870;>Shields</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=2&seq='.$seq.'"><span style=color:#80C870;>Armor</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=3&seq='.$seq.'"><span style=color:#80C870;>Cargo</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=4&seq='.$seq.'"><span style=color:#80C870;>Combat Drones</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=5&seq='.$seq.'"><span style=color:#80C870;>Scout Drones</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=6&seq='.$seq.'"><span style=color:#80C870;>Mines</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=7&seq='.$seq.'"><span style=color:#80C870;>Scanner</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=8&seq='.$seq.'"><span style=color:#80C870;>Cloak</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=9&seq='.$seq.'"><span style=color:#80C870;>Illusion</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=10&seq='.$seq.'"><span style=color:#80C870;>Jump</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=11&seq='.$seq.'"><span style=color:#80C870;>Drone Scrambler</span></a></th>');
+echo ('</tr>');
+echo ('</form>');
 $loop = 1;
 
-if (is_array($ship_array)) {
+if (is_array($ship_array))
+{
 
-    while (sizeof($ship_array) > 0) {
+    while (sizeof($ship_array) > 0)
+    {
 
 		$db_id = array_shift ($ship_array);
-		//$PHP_OUTPUT.=(sizeof($ship_array));
+		//echo (sizeof($ship_array));
 		$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
                 'WHERE race.race_id = ship_type.race_id AND ' .
                 'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND ' .
-                'ship_type.ship_type_id = $db_id ' .
+                'ship_type.ship_type_id = '.$db_id.' ' .
                 'ORDER BY ship_type_support_hardware.hardware_type_id');
 
 		while ($db->next_record()) {
@@ -130,23 +130,25 @@ if (is_array($ship_array)) {
 
 		    }
     		$loop++;
-	    	$PHP_OUTPUT.=('<tr>');
+	    	echo ('<tr>');
 
 		    foreach ($stat as $value)
-    		    $PHP_OUTPUT.=('<td align="center">$value</td>');
+    		    echo ('<td align="center">'.$value.'</td>');
 
-		    $PHP_OUTPUT.=('</tr>');
+		    echo ('</tr>');
 
 		}
 
     }
-	$PHP_OUTPUT.=('</table>');
-} else {
+	echo ('</table>');
+}
+else
+{
 
 	$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
                 'WHERE race.race_id = ship_type.race_id AND ' .
                 'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id ' .
-                'ORDER BY $order_by');
+                'ORDER BY '.$order_by);
 
 	while ($db->next_record()) {
 
@@ -192,14 +194,14 @@ if (is_array($ship_array)) {
 
 		}
     	$loop++;
-	    $PHP_OUTPUT.=('<tr>');
+	    echo ('<tr>');
 
 		foreach ($stat as $value)
-    		$PHP_OUTPUT.=('<td align="center">$value</td>');
+    		echo ('<td align="center">'.$value.'</td>');
 
-		$PHP_OUTPUT.=('</tr>');
+		echo ('</tr>');
 
 	}
-$PHP_OUTPUT.=('</table>');
+echo ('</table>');
 }
 ?>
