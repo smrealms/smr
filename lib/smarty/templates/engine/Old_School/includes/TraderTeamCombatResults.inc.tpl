@@ -31,8 +31,11 @@
 		{/foreach}
 		{if isset($TraderResults.Drones)}
 			{assign var=Drones value=$TraderResults.Drones}
-			{assign var=ActualDamage value=$Drones.ActualDamage}
 			{assign var=WeaponDamage value=$Drones.WeaponDamage}
+			{assign var=ActualDamage value=$Drones.ActualDamage}
+			{if $ActualDamage.Shield > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
+			{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
+			{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=`$DamageTypes+1}{/if}
 			{$ShootingPlayer->getName()} {if $WeaponDamage.Launched == 0}fails to launch their combat drones{else}launches <span class="yellow">{$WeaponDamage.Launched}</span> combat drones at{if $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()} {*
 			*}{if !$ActualDamage.TargetAlreadyDead}{*
 				*}{if $ActualDamage.TotalDamage == 0}{*
@@ -52,29 +55,3 @@
 {/foreach}
 {assign var=TotalDamage value=$TraderTeamCombatResults.TotalDamage}
 This fleet {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round. You call that a fleet? They need a better recruiter{/if}.
-{*
-
-function build_results(&$players,&$fleets,&$weapons,&$killed_ids,&$killer_ids) {
-	for($i=0;$i<2;++$i) {
-		$fleet_damage = 0;
-		
-		foreach($fleets[$i] as $attacker) {
-			$total_damage = 0;
-			$weapon = 0;
-			foreach($players[$attacker][RESULTS] as $result) {
-				$total_damage += ($result[0] + $result[1] + $result[2]);
-				$results .=  $players[$attacker][PLAYER_NAME];
-				if(!$players[$attacker][WEAPONS][$weapon]) {
-					if($result[3]) {
-						$results .= ' launches <span class="yellow">' . $result[3] . '</span> drones';
-					}
-					else {
-						$results .= ' fails to launch their drones';
-					}
-			}
-	
-		}
-	}
-	
-	return $results;
-*}
