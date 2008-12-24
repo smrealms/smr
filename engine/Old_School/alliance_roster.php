@@ -280,7 +280,7 @@ if ($alliance_id == $player->getAllianceID()) {
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'alliance_roster.php';
-	if(!isset($varAction) || $varAction == 'Hide Alliance Roles') {
+	if($varAction == '' || $varAction == 'Hide Alliance Roles') {
 		$container['action'] = 'Show Alliance Roles';
 		$PHP_OUTPUT.=create_button($container,'Show Alliance Roles');
 	}
