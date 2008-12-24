@@ -307,7 +307,7 @@ if (!empty($delete)) {
 
 			$db->query('UPDATE account_has_stats SET games_joined=games_joined-1 WHERE account_id=' . $account_id);
 
-			$msg .= 'deleted player from game $game_id ';
+			$msg .= 'deleted player from game '.$game_id.' ';
 		}
 	}
 
