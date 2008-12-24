@@ -321,7 +321,7 @@ class SmrShip
 		return 1;
 	}
 	
-	function &add_weapon($weaponTypeID)
+	function &addWeapon($weaponTypeID)
 	{
 		$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
 		$this->weapons[] = $weapon;

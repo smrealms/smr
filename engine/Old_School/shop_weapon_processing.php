@@ -30,7 +30,7 @@ if ($action == 'Buy') {
 	$player->update();
 
 	// add the weapon to the users ship
-	$weapon =& $ship->add_weapon($var['weapon_id']);
+	$weapon =& $ship->addWeapon($var['weapon_id']);
 	$account->log(10, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
 
 } elseif ($action == 'Sell') {
