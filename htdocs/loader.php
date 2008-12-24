@@ -124,7 +124,7 @@ if (empty($sn))
 	create_error('Your browser lost the SN. Try to reload the page!');
 
 // do we have such a container object in the db?
-if (empty(SmrSession::$var[$sn]))
+if (!isset(SmrSession::$var[$sn]) || empty(SmrSession::$var[$sn]))
 	create_error('Please avoid using the back button!');
 
 
