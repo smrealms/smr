@@ -17,8 +17,6 @@ if (SmrSession::$game_id > 0) {
 	}
 	else
 	{
-		$smarty->assign('CurrentSectorLink',Globals::getCurrentSectorHREF());
-
 		$container['body'] = 'map_local.php';
 		$smarty->assign('LocalMapLink',SmrSession::get_new_href($container));
 	}
@@ -130,7 +128,6 @@ $smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 
 if (SmrSession::$game_id != 0)
 {
-	$smarty->assign('CurrentSectorID',$player->getSectorID());
 //	if ($under_attack_shields || $under_attack_armor || $under_attack_drones) {
 //		echo '
 //			<div id="attack_warning" class="attack_warning"><nobr>You are under attack!</nobr></div>
