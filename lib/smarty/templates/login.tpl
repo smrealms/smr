@@ -113,48 +113,84 @@ input.inputbox {
 	<h4 style="margin-bottom: 0px;">{$Message}</h4>
 {/if}
 
-<table border="0" cellspacing="20" cellpadding="10" width="770px"><tr><td width="300px">
-
-<form action="login_processing.php" method="post">
-<table border="0" cellspacing="0" cellpadding="0"><tr><td colspan="3"><img src="images/login/login_top.gif"></td></tr><tr><td><img src="images/login/loginPw.gif" /></td>
-<td><input id="InputFields" class="inputbox" type="text" name="login"><br />
-<input id="InputFields" type="password" class="inputbox" name="password"></td>
-<td><img src="images/login/loginPwRight.gif"></td></tr><tr><td colspan="3"><img src="images/login/loginPwMid.gif"></td></tr></table>
-<table border="0" cellspacing="0" cellpadding="0"><tr><td><img src="images/login/regLeft.gif"><a href="{$Links.Register}"><img src="images/login/register.gif"></a><a href="resend_password.php"><img src="images/login/pw_reset.gif"></a><img src="images/login/regRight.gif"></td></tr>
-<tr><td><img src="images/login/loginMid.gif"></td></tr>
-<tr><td><img src="images/login/enter_left.gif"><input type="image" SRC="images/login/enter.gif"><img src="images/login/enter_right.gif"></td></tr>
-<tr><td><img src="images/login/enter_bottom.gif"></td></tr>
-</table>
-</form>
-
-</td><td width="470px">
-
-
-{if $LoginNews}
-	<table border="0" class="standard" cellspacing="0" cellpadding="5">
-	<tr><th>Date</th><th>News</th></tr>
-	{foreach from=$LoginNews item=News}
-		<tr><td><span class="small">
-		{if $News.Recent} * {/if}
-		{$News.Time}</span></td>
-		<td><span class="small">{$News.Message}
-		{if $AdminName}<br /><br />-{$AdminName}{/if}
-		</span></td></tr>
-	{/foreach}
-	</table>
-{/if}
-</td></tr>
-
-<tr><td align="center" colspan="2">
-Players Online Now: {$NumberOnCPL}<br /><br />
-Recent News<br />
-<table class="standard" width="100%"><tr><th align="center">Time</th><th align="center">News</th></tr>
-{foreach from=$GameNews item=News}
-	<tr><td>{$News.Date}<br />{$News.Time}</td><td>{$News.Message}</td></tr>
-{/foreach}
-</table>
-</td></tr>
-
+<table border="0" cellspacing="20" cellpadding="10" width="770px">
+	<tr>
+		<td width="300px">
+			<form action="login_processing.php" method="post">
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td colspan="3">
+							<img src="images/login/login_top.gif">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<img src="images/login/loginPw.gif" />
+						</td>
+						<td>
+							<input id="InputFields" class="inputbox" type="text" name="login"><br />
+							<input id="InputFields" type="password" class="inputbox" name="password">
+						</td>
+						<td>
+							<img src="images/login/loginPwRight.gif">
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<img src="images/login/loginPwMid.gif">
+						</td>
+					</tr>
+				</table>
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td>
+							<img src="images/login/regLeft.gif"><a href="{$Links.Register}"><img src="images/login/register.gif"></a><a href="resend_password.php"><img src="images/login/pw_reset.gif"></a><img src="images/login/regRight.gif">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<img src="images/login/loginMid.gif">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<img src="images/login/enter_left.gif"><input type="image" SRC="images/login/enter.gif"><img src="images/login/enter_right.gif">
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<img src="images/login/enter_bottom.gif">
+						</td>
+					</tr>
+				</table>
+			</form>
+		</td>
+		<td width="470px">
+			{if $LoginNews}
+				<table border="0" class="standard" cellspacing="0" cellpadding="5">
+				<tr><th>Date</th><th>News</th></tr>
+				{foreach from=$LoginNews item=News}
+					<tr><td><span class="small">
+					{if $News.Recent} * {/if}
+					{$News.Time}</span></td>
+					<td><span class="small">{$News.Message}
+					{if $AdminName}<br /><br />-{$AdminName}{/if}
+					</span></td></tr>
+				{/foreach}
+				</table>
+			{/if}
+			</td></tr>
+			
+			<tr><td align="center" colspan="2">
+			Players Online Now: {$NumberOnCPL}<br /><br />
+			Recent News<br />
+			<table class="standard" width="100%"><tr><th align="center">Time</th><th align="center">News</th></tr>
+			{foreach from=$GameNews item=News}
+				<tr><td>{$News.Date}<br />{$News.Time}</td><td>{$News.Message}</td></tr>
+			{/foreach}
+			</table>
+		</td>
+	</tr>
 </table>
 
 <br />

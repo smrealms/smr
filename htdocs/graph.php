@@ -10,35 +10,35 @@ if ($val == 3) {
 	$hunt = 8;
 	
 }
-$PHP_OUTPUT.=('<body background="http://beta.smrealms.de/images/graph$val.gif">');
+echo ('<body background="http://beta.smrealms.de/images/graph'.$val.'.gif">');
 /*
-$PHP_OUTPUT.=('<font color=white size=4><div align=center valign=top><font size=1>&nbsp;&nbsp;&nbsp;</font>$trade</div>');
-$PHP_OUTPUT.=('<br><br><br><br><br><br><br><font size=1><br><br><br></font><div align=justify>$combat&nbsp;');
-$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('.$db->escapeString($hunt</div>');
-$PHP_OUTPUT.=('<br><br><br><br><br><br><br><br><font size=1><br></font><div align=center><font size=1>&nbsp;&nbsp;&nbsp;</font>$util</div></font>');
+echo ('<font color=white size=4><div align=center valign=top><font size=1>&nbsp;&nbsp;&nbsp;</font>$trade</div>');
+echo ('<br><br><br><br><br><br><br><font size=1><br><br><br></font><div align=justify>$combat&nbsp;');
+echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
+echo ('&nbsp;&nbsp;&nbsp;&nbsp;');
+echo ('.$db->escapeString($hunt</div>');
+echo ('<br><br><br><br><br><br><br><br><font size=1><br></font><div align=center><font size=1>&nbsp;&nbsp;&nbsp;</font>$util</div></font>');
 
 
-$PHP_OUTPUT.=('<font color="white" size="4">');
-$PHP_OUTPUT.=('Trade - $trade<br>');
-$PHP_OUTPUT.=('Combat Strength - $combat<br>');
-$PHP_OUTPUT.=('Hunting - $hunt<br>');
-$PHP_OUTPUT.=('Utility - $util<br>');
-$PHP_OUTPUT.=('</font>');
+echo ('<font color="white" size="4">');
+echo ('Trade - $trade<br>');
+echo ('Combat Strength - $combat<br>');
+echo ('Hunting - $hunt<br>');
+echo ('Utility - $util<br>');
+echo ('</font>');
 
-$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0">');
-$PHP_OUTPUT.=('<tr><th align="center">Trait</th><th align="center">Rating</th></tr>');
-$PHP_OUTPUT.=('<tr><td align="center">Trade - $trade</td></tr>');
-$PHP_OUTPUT.=('<tr><td align="center">Combat Strength - $combat</td></tr>');
-$PHP_OUTPUT.=('<tr><td align="center">Hunting - $hunt</td></tr>');
-$PHP_OUTPUT.=('<tr><td align="center">Utility - $util</td></tr>');
-$PHP_OUTPUT.=('</table>');*/
-$PHP_OUTPUT.=('</body>');
+echo ('<table border="0" class="standard" cellspacing="0">');
+echo ('<tr><th align="center">Trait</th><th align="center">Rating</th></tr>');
+echo ('<tr><td align="center">Trade - $trade</td></tr>');
+echo ('<tr><td align="center">Combat Strength - $combat</td></tr>');
+echo ('<tr><td align="center">Hunting - $hunt</td></tr>');
+echo ('<tr><td align="center">Utility - $util</td></tr>');
+echo ('</table>');*/
+echo ('</body>');
 
 ?>
