@@ -223,10 +223,6 @@ function do_voodoo()
 		if($PHP_OUTPUT!='')
 			$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
-	if($lock)
-	{
-		release_lock($lock);
-	}
 	global $sector,$player,$ship;
 	$smarty->assign('ThisSector',$sector);
 	$smarty->assign('ThisPlayer',$player);
@@ -237,6 +233,11 @@ function do_voodoo()
 	
 	$smarty->display(get_template_loc($var['url']));
 	
+	SmrShip::saveShips();
+	if($lock)
+	{
+		release_lock($lock);
+	}
 	SmrSession::update();
 	exit;
 }

@@ -765,7 +765,6 @@ if($player->isDead())
 	$container['override_death'] = TRUE;
 	$container['target'] = 0;
 }
-SmrShip::saveShips();
 
 $container['results'] = $serializedResults;
 forward($container);
