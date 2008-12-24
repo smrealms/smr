@@ -1022,13 +1022,15 @@ class SmrShip
 		$shieldDamage = 0;
 		if(!$alreadyDead)
 		{
-			$this->doShieldDamage($damage['Shield']);
+			$shieldDamage = $this->doShieldDamage(max($damage['MaxDamage'],$damage['Shield']));
+			$damage['MaxDamage'] -= $shieldDamage;
 			if($shieldDamage == 0 || $damage['Rollover'])
 			{
-				$cdDamage = $this->doCDDamage($damage['Armour']);
+				$cdDamage = $this->doCDDamage(max($damage['MaxDamage'],$damage['Armour']));
 				$damage['Armour'] -= $cdDamage;
+				$damage['MaxDamage'] -= $cdDamage;
 				if(!$this->hasCDs())
-					$armourDamage = $this->doArmourDamage($damage['Armour']);
+					$armourDamage = $this->doArmourDamage(max($damage['MaxDamage'],$damage['Armour']));
 			}
 		}
 		$return = array(

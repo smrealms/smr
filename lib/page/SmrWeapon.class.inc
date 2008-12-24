@@ -1,25 +1,18 @@
 <?
+require_once('AbstractSmrCombatWeapon.class.inc');
 require_once('SmrMySqlDatabase.class.inc');
 
 require_once('AbstractSmrPlayer.class.inc');
-class SmrWeapon
+class SmrWeapon extends AbstractSmrCombatWeapon
 {
 	protected static $CACHE_WEAPONS = array();
 	
 	protected static $db;
 	
-	protected $gameID;
 	protected $weaponTypeID;
-	protected $name;
-	protected $raceID;
 	protected $cost;
-	protected $shieldDamage;
-	protected $armourDamage;
-	protected $accuracy;
 	protected $powerLevel;
 	protected $buyerRestriction;
-	protected $damageRollover;
-	protected $raidWeapon;
 
 	
 	protected static function initialiseDatabase()
@@ -60,33 +53,8 @@ class SmrWeapon
 			$this->buyerRestriction = (int)self::$db->getField('buyer_restriction');
 			$this->damageRollover = false;
 			$this->raidWeapon = false;
+			$this->maxDamage = max($this->shieldDamage,$this->armourDamage);
 		}
-	}
-	
-	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
-	{
-		$modifiedAccuracy = $this->accuracy;
-		$modifiedAccuracy += $this->accuracy * ($weaponPlayer->getStat('Accuracy') * ACCURACY_STAT_FACTOR)/100;
-		$modifiedAccuracy += $this->accuracy * ($weaponPlayer->getLevelID()*$weaponPlayer->getLevelID()*.008+.219*$weaponPlayer->getLevelID()+1.1694) / 2;
-		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
-			$modifiedAccuracy += $this->accuracy * INCREASED_ACC_GADGET_FACTOR/100;
-		return $modifiedAccuracy;
-	}
-	
-	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
-	{
-		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		$modifiedAccuracy -= $this->accuracy * ($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2;
-		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
-			$modifiedAccuracy -= $this->accuracy * INCREASED_MAN_GADGET_FACTOR/100;
-		
-		$weaponShip =& $weaponPlayer->getShip();
-		$targetShip =& $targetPlayer->getShip();
-		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
-		if($mrDiff > 0)
-			$modifiedAccuracy -= $this->accuracy * ($mrDiff/MR_FACTOR)/100;
-	
-		return $modifiedAccuracy;
 	}
 	
 	public function getWeaponTypeID()
@@ -94,44 +62,35 @@ class SmrWeapon
 		return $this->weaponTypeID;
 	}
 	
-	public function getName()
-	{
-		return $this->name;
-	}
-	
 	public function getCost()
 	{
 		return $this->cost;
 	}
 	
-	public function getShieldDamage()
+	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
 	{
-		return $this->shieldDamage;
+		$modifiedAccuracy = $this->getBaseAccuracy();
+		$modifiedAccuracy += $this->getBaseAccuracy() * ($weaponPlayer->getStat('Accuracy') * ACCURACY_STAT_FACTOR)/100;
+		$modifiedAccuracy += $this->getBaseAccuracy() * ($weaponPlayer->getLevelID()*$weaponPlayer->getLevelID()*.008+.219*$weaponPlayer->getLevelID()+1.1694) / 2;
+		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
+			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR/100;
+		return $modifiedAccuracy;
 	}
 	
-	public function getArmourDamage()
+	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
-		return $this->armourDamage;
-	}
+		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
+		$modifiedAccuracy -= $this->getBaseAccuracy() * ($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2;
+		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
+			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR/100;
+		
+		$weaponShip =& $weaponPlayer->getShip();
+		$targetShip =& $targetPlayer->getShip();
+		$mrDiff = $targetShip->getMR() - $weaponShip->getMR();
+		if($mrDiff > 0)
+			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff/MR_FACTOR)/100;
 	
-	public function isDamageRollover()
-	{
-		return $this->damageRollover;
-	}
-	
-	public function isRaidWeapon()
-	{
-		return $this->raidWeapon;
-	}
-	
-	public function canShootTraders()
-	{
-		return !$this->isRaidWeapon();
-	}
-	
-	public function getDamage()
-	{
-		return array('Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover());
+		return $modifiedAccuracy;
 	}
 	
 	public function &getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)
@@ -140,10 +99,12 @@ class SmrWeapon
 		//do they have the weapon damage gadget?
 		if($weaponPlayer->isGadgetEquipped('Increased Weapon Damage'))
 		{
+			$damage['MaxDamage'] += $this->getMaxDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 			$damage['Shield'] += $this->getShieldDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 			$damage['Armour'] += $this->getArmourDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
 		}
 		//increase for weapon damage stat
+		$damage['MaxDamage'] += $this->getMaxDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
 		$damage['Shield'] += $this->getShieldDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
 		$damage['Armour'] += $this->getArmourDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
 		return $damage;
@@ -152,11 +113,11 @@ class SmrWeapon
 	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		if(!$this->canShootTraders()) // If we can't shot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return array('Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage($weaponPlayer);
 		
-		
 		$diminishing = $weaponPlayer->getDiminishingTraderAttack();
+		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		return $damage;
@@ -173,7 +134,7 @@ class SmrWeapon
 		$return['Hit'] = true;
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
-		$killResults = array();
+
 		if($return['ActualDamage']['KillingShot'])
 			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
 		return $return;
