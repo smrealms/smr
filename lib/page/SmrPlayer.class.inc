@@ -707,7 +707,7 @@ class SmrPlayer extends AbstractSmrPlayer
 
 	function setTurns($maint,$newNoob = -1,$updateLastActive = false)
 	{
-		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)))
+		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)) && !$updateLastActive)
 			return;
 		$this->turns = $maint;
 
@@ -725,7 +725,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->turns = $this->getMaxTurns();
 		
 		$this->hasChanged=true;
-		$sql = 'UPDATE player SET ' . ($updateLastActive === true ? 'last_active=' . TIME . ',last_cpl_action=' . TIME .',' : '') . (!$maintSame ? 'turns=' . $this->turns:'') . (!$newbSame ? (!$maintSame?',':'').'newbie_turns='.$this->newbieTurns : '' ).' WHERE ' . $this->SQL . ' LIMIT 1';
+		$sql = 'UPDATE player SET ' . ($updateLastActive === true ? 'last_active=' . TIME . ',last_cpl_action=' . TIME . ((!$maintSame||!$newbSame) ? ',' : '' ) : '') . (!$maintSame ? 'turns=' . $this->turns:'') . (!$newbSame ? (!$maintSame?',':'').'newbie_turns='.$this->newbieTurns : '' ).' WHERE ' . $this->SQL . ' LIMIT 1';
+		echo $sql;
 		if(!has_beta_privilege('No SC Change'))
 			$this->db->query($sql);
 	}
