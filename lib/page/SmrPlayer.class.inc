@@ -1499,7 +1499,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return 1;
 	}
 	
-	public function killPlayerByPlayer(AbstractSmrPlayer &$killer)
+	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer)
 	{
 		$return = array();
 		$msg = $this->getPlayerName();
