@@ -1009,7 +1009,7 @@ class SmrShip
 		}
 		if($this->hasCDs())
 		{
-			$thisCDs =& new SmrCombatDrones($this->getGameID(),$this->getCDs());
+			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
 			$results['Drones'] =& $thisCDs->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
