@@ -100,6 +100,7 @@ define('DEFAULT_CSS','default.css');
 	$smarty->compile_dir = SMARTY_COMPILE_DIR;
 	$smarty->config_dir = SMARTY_CONFIG_DIR;
 	$smarty->plugins_dir[] = SMARTY_PLUGINS_DIR;
+	$smarty->load_filter('pre','trimwhitespace');
 //	$smarty->assign('links',$db->_LINKS);
 //	$smarty->assign('javaScriptFiles',$db->_JS);
 	$smarty->assign('CSSLink',DEFAULT_CSS);

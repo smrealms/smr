@@ -223,17 +223,17 @@ function do_voodoo()
 		if($PHP_OUTPUT!='')
 			$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
-	SmrShip::saveShips();
 	global $sector,$player,$ship;
-	$smarty->assign('ThisSector',&$sector);
-	$smarty->assign('ThisPlayer',&$player);
-	$smarty->assign('ThisShip',&$ship);
+	$smarty->assign_by_ref('ThisSector',$sector);
+	$smarty->assign_by_ref('ThisPlayer',$player);
+	$smarty->assign_by_ref('ThisShip',$ship);
 	$smarty->assign('TemplateBody',$var['body']);
 	$time_elapsed = microtime(true) - $time_start;
 	$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
 	$smarty->display(get_template_loc($var['url']));
 	
+	SmrShip::saveShips();
 	if($lock)
 	{
 		release_lock($lock);

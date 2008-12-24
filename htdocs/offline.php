@@ -44,7 +44,7 @@ if ($db->next_record()) {
 				<tr bgcolor='#0B8D35'>
 					<td align='center'>
 						<p><font face='Times New Roman' size='+2' color='#FFFFFF'>Space Merchant Realms is currently <strong>OFF-LINE</strong>.</font></p>
-						<p><? $PHP_OUTPUT.=($reason); ?></p>
+						<p><? echo ($reason); ?></p>
 					</td>
 				</tr>
 				</table>
