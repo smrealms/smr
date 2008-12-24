@@ -21,6 +21,11 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$this->raidWeapon = false;
 	}
 	
+	public function getNumberOfCDs()
+	{
+		return $this->numberOfCDs;
+	}
+	
 	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
 	{
 		$modifiedAccuracy = $this->getBaseAccuracy();
@@ -40,7 +45,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		if($mrDiff > 0)
 			$modifiedAccuracy -= $this->accuracy * ($mrDiff/MR_FACTOR)/100;
 	
-		return $modifiedAccuracy;
+		return max(0,min(100,$modifiedAccuracy));
 	}
 	
 	public function &getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)
@@ -69,7 +74,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
-		$damage['Launched'] = $this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer);
+		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
