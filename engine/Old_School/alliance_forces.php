@@ -1,6 +1,6 @@
 <?
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = '.$player->getAllianceID().';
+else $alliance_id = $player->getAllianceID();
 define('MINES',0);
 define('CDS',1);
 define('SDS',2);

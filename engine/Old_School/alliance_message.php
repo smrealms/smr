@@ -1,7 +1,7 @@
 <?
 
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = '.$player->getAllianceID().';
+else $alliance_id = $player->getAllianceID();
 $db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->next_record();
 $smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->f('alliance_id') . ')');
