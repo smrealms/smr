@@ -249,11 +249,11 @@ class SmrShip
 				$this->db->query('SELECT * FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
 				if ($this->db->nextRecord())
 				{
-					$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->oldHardware[$hardware_type_id].' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);	
+					$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->getOldHardware($hardware_type_id).' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);	
 				}
 				else
 				{	
-					$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$this->oldHardware[$hardware_type_id].')');
+					$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$this->getOldHardware($hardware_type_id).')');
 				}
 			}
 			else
@@ -632,7 +632,7 @@ class SmrShip
 	
 	public function getOldHardware($hardwareTypeID)
 	{
-		return $this->oldHardware[$hardwareTypeID];
+		return isset($this->oldHardware[$hardwareTypeID]) ? $this->oldHardware[$hardwareTypeID] : 0;
 	}
 	
 	public function setOldHardware($hardwareTypeID,$amount)
