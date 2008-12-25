@@ -3,7 +3,7 @@
 $bounties = 0;
 $id = $var['id'];
 $curr_player =& SmrPlayer::getPlayer($id, $player->getGameID());
-$smarty->assign('PageTopic','Viewing '.$curr_player->player_name);
+$smarty->assign('PageTopic','Viewing '.$curr_player->getPlayerName());
 $db->query('SELECT * FROM bounty WHERE account_id = '.$id.' AND game_id = '.$player->getGameID().' AND type = ' . $db->escape_string('HQ'));
 while ($db->next_record()) {
 

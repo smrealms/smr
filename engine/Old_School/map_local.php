@@ -531,10 +531,6 @@ $smarty->assign('GalaxyName',$galaxy_name);
 
 $smarty->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
-//$smarty->assign('Player',$player);
-$smarty->assign('CurrentSector',SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID()));
-
-
 $db->query('
 SELECT
 MIN(sector_id),
@@ -696,7 +692,7 @@ for ($i=1;$i<=$span&&$i<=$rows;$i++)
 		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec,SmrSession::$account_id);
 	}
 }
-$smarty->assign('MapSectors',$mapSectors);
+$smarty->assign_by_ref('MapSectors',$mapSectors);
 
 function get_real_up($sector)
 {

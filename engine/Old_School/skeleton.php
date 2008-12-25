@@ -199,7 +199,6 @@ if (SmrSession::$game_id != 0)
 	$container['body']		= 'trader_search_result.php';
 	$container['player_id']	= $player->getPlayerID();
 	$smarty->assign('PlayerNameLink',SmrSession::get_new_href($container));
-	$smarty->assign('PlayerDisplayName',$player->getDisplayName());
 	
 	if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $smarty->assign('PlayerInvisible',true);
 
