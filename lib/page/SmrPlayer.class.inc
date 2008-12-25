@@ -78,6 +78,14 @@ class SmrPlayer extends AbstractSmrPlayer
 //			}
 //		}
 //	}
+	
+	public static function savePlayers()
+	{
+		foreach(self::$CACHE_PLAYERS as &$player)
+		{
+			$player->save();
+		}
+	}
 
 	public static function &getSectorPlayersByAlliances($gameID,$sectorID, array $allianceIDs, $forceUpdate = false)
 	{
@@ -147,12 +155,12 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->lastShipMod				= (int) $result['last_ship_mod'];
 			$this->lastNewsUpdate			= (int) $result['last_news_update'];
 			$this->stunned					= (int) $result['stunned'];
-			$this->fleed					= (boolean) $result['fleed'];
+			$this->fleed					= $result['fleed']=='TRUE';
 			$this->attackColor				= (string) $result['attack_warning'];
 			$this->dead						= $result['dead']=='TRUE';
 			$this->startDead				= $this->dead;
 			$this->landedOnPlanet			= $result['land_on_planet']=='TRUE';
-			$this->kicked					= (boolean) $result['kicked'];
+			$this->kicked					= $result['kicked']=='TRUE';
 			$this->lastShieldUpdate			= (int) $result['last_shield_update'];
 			$this->lastActive				= (int) $result['last_active'];
 			$this->lastCPLAction			= (int) $result['last_cpl_action'];
@@ -173,8 +181,8 @@ class SmrPlayer extends AbstractSmrPlayer
 //			$this->zoomOn = $result['zoom_on']=='TRUE';
 //			$this->chat = $result['chat'];
 //			$this->chatPosition = $result['chat_position'];
-			$this->displayMissions			= $result['display_missions'];
-			$this->ignoreGlobals			= $result['ignore_globals'];
+			$this->displayMissions			= $result['display_missions']=='TRUE';
+			$this->ignoreGlobals			= $result['ignore_globals']=='TRUE';
 			$this->newbieWarning			= $result['newbie_warning']=='TRUE';
 //			$this->changedStats = $result['changed_stats'];
 
@@ -316,7 +324,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->kicked=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET kicked = '.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET kicked = '.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getStunned()
@@ -330,7 +338,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->stunned=$time;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET stunned = ' . $this->stunned . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET stunned = ' . $this->stunned . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getFleed()
@@ -344,7 +352,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->fleed=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET fleed='.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET fleed='.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getZoom()
@@ -360,7 +368,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->zoom=$zoom;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET zoom = ' . $zoom . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET zoom = ' . $zoom . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function increaseZoom($zoom)
@@ -411,7 +419,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->alignment = $align;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET alignment = '.$this->alignment.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE player SET alignment = '.$this->alignment.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	function setSectorID($sectorID)
@@ -420,7 +428,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->sectorID = $sectorID;
 		$this->updateLastCPLAction();
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET sector_id = ' . $this->sectorID . ', last_sector_id = '.$this->lastSectorID. ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET sector_id = ' . $this->sectorID . ', last_sector_id = '.$this->lastSectorID. ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getLastSectorID()
@@ -434,14 +442,14 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->lastSectorID=$lastSectorID;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET last_sector_id = '.$this->lastSectorID.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE player SET last_sector_id = '.$this->lastSectorID.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	function leaveAlliance()
 	{
 		$this->setAllianceID(0);
 //		$this->setAllianceJoinable(TIME + 1 * 3600);
-		$this->db->query('DELETE FROM player_has_alliance_role WHERE '.$this->SQL);
+//		$this->db->query('DELETE FROM player_has_alliance_role WHERE '.$this->SQL);
 	}
 	
 //	function getAllianceJoinable()
@@ -469,7 +477,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->attackColor=$colour;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColor) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColor) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getBank()
@@ -506,7 +514,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			throw new Exception('Trying to set more than max credits.');
 		$this->bank = $credits;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET bank = '.$this->bank.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE player SET bank = '.$this->bank.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 
 	function increaseCredits($credits)
@@ -538,7 +546,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			throw new Exception('Trying to set more than max credits.');
 		$this->credits = $credits;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET credits = '.$this->credits.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE player SET credits = '.$this->credits.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	function increaseExperience($experience,$type='Undefined')
@@ -572,7 +580,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$experience = $MIN_EXPERIENCE;
 		$this->experience = $experience;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET experience = '.$this->experience.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE player SET experience = '.$this->experience.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 
 	function getLastNewsUpdate()
@@ -586,7 +594,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->lastNewsUpdate=$time;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET last_news_update = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET last_news_update = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
 	function updateLastNewsUpdate()
@@ -711,10 +719,13 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->turns = $maint;
 
-		if ($this->turns < 0)
-			$this->turns = 0;
-		if ($this->turns > $this->getMaxTurns())
-			$this->turns = $this->getMaxTurns();
+		if(!has_beta_privilege('No SC Change'))
+		{
+			if ($this->turns < 0)
+				$this->turns = 0;
+			if ($this->turns > $this->getMaxTurns())
+				$this->turns = $this->getMaxTurns();
+		}
 			
 		if($newNoob != -1)
 			$this->newbieTurns = $newNoob;
@@ -727,12 +738,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->hasChanged=true;
 		if($updateLastActive === true)
 		{
-			$this->lastActive=TIME;
-			$this->lastCPLAction=TIME;
+			$this->setLastActive=TIME;
+			$this->setLastCPLAction=TIME;
 		}
-		$sql = 'UPDATE player SET ' . ($updateLastActive === true ? 'last_active=' . TIME . ',last_cpl_action=' . TIME . ((!$maintSame||!$newbSame) ? ',' : '' ) : '') . (!$maintSame ? 'turns=' . $this->turns:'') . (!$newbSame ? (!$maintSame?',':'').'newbie_turns='.$this->newbieTurns : '' ).' WHERE ' . $this->SQL . ' LIMIT 1';
-		if(!has_beta_privilege('No SC Change'))
-			$this->db->query($sql);
+//		$sql = 'UPDATE player SET ' . ($updateLastActive === true ? 'last_active=' . TIME . ',last_cpl_action=' . TIME . ((!$maintSame||!$newbSame) ? ',' : '' ) : '') . (!$maintSame ? 'turns=' . $this->turns:'') . (!$newbSame ? (!$maintSame?',':'').'newbie_turns='.$this->newbieTurns : '' ).' WHERE ' . $this->SQL . ' LIMIT 1';
+//		if(!has_beta_privilege('No SC Change'))
+//			$this->db->query($sql);
 	}
 	
 	function getIgnoreGlobals()
@@ -746,7 +757,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->ignoreGlobals=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET ignore_globals = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE player SET ignore_globals = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	
@@ -761,7 +772,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->lastPort=$lastPort;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET last_port = ' . $this->lastPort . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET last_port = ' . $this->lastPort . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function getLastCPLAction()
@@ -775,7 +786,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->lastCPLAction=$time;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET last_cpl_action=' . $this->lastCPLAction . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET last_cpl_action=' . $this->lastCPLAction . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	function updateLastCPLAction()
@@ -794,7 +805,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->displayMissions=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET display_missions = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE player SET display_missions = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	
 	}
 	
@@ -809,7 +820,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->lastMaintenanceUpdate=$time;
 		$this->hasChanged=true;
-		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastMaintenanceUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
+//		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastMaintenanceUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
 	}
 	
 	function getLastShipMod()
@@ -823,7 +834,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		$this->lastShipMod = $time;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE player SET last_ship_mod = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET last_ship_mod = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
 	function getDisplayName()
@@ -1518,8 +1529,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //				}
 //			} else $msg .= strip_tags($ship_names[$killed_id], '<img>');
 //		}
-		$msg .= ' was destroyed by ';
-		$msg .= $killer->getPlayerName();
+		$msg .= ' was destroyed by ' . $killer->getPlayerName();
 //		if(isset($ship_names[$killer_id])) {
 //			$msg .= ' flying ';
 //			if(!stristr($ship_names[$killer_id],'<img')){
@@ -1740,11 +1750,11 @@ class SmrPlayer extends AbstractSmrPlayer
 				', last_ship_mod='.$this->db->escapeString($this->lastShipMod).
 				', last_news_update='.$this->db->escapeString($this->lastNewsUpdate).
 				', stunned='.$this->db->escapeString($this->stunned).
-				', fleed='.$this->db->escapeString($this->fleed).
+				', fleed='.$this->db->escapeBoolean($this->fleed).
 				', attack_warning='.$this->db->escapeString($this->attackColor).
-				', dead='.$this->db->escapeString($this->dead).
-				', land_on_planet='.$this->db->escapeString($this->landedOnPlanet).
-				', kicked='.$this->db->escapeString($this->kicked).
+				', dead='.$this->db->escapeBoolean($this->dead).
+				', land_on_planet='.$this->db->escapeBoolean($this->landedOnPlanet).
+				', kicked='.$this->db->escapeBoolean($this->kicked).
 				', last_shield_update='.$this->db->escapeString($this->lastShieldUpdate).
 				', last_active='.$this->db->escapeString($this->lastActive).
 				', last_cpl_action='.$this->db->escapeString($this->lastCPLAction).
@@ -1762,14 +1772,14 @@ class SmrPlayer extends AbstractSmrPlayer
 				', last_port='.$this->db->escapeString($this->lastPort).
 				', bank='.$this->db->escapeString($this->bank).
 				', zoom='.$this->db->escapeString($this->zoom).
-//				', zoom_on='.$this->db->escapeString($this->zoomOn).
 //				', chat='.$this->db->escapeString($this->chat).
 //				', chat_position='.$this->db->escapeString($this->chatPosition).
-				', display_missions='.$this->db->escapeString($this->displayMissions).
-				', ignore_globals='.$this->db->escapeString($this->ignoreGlobals).
+				', display_missions='.$this->db->escapeBoolean($this->displayMissions).
+				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
 //				', changed_stats='.$this->db->escapeString($this->changedStats).
-				', newbie_warning = ' . $this->db->escapeString($this->newbieWarning).
+				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).
 				' WHERE '.$this->SQL.' LIMIT 1');
+			$this->hasChanged=false;
 		}
 	}
 	
@@ -1871,7 +1881,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function setNewbieWarning($bool)
 	{
 		$this->newbieWarning=$bool;
-		$query = 'UPDATE player SET newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning);
+//		$query = 'UPDATE player SET newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning);
 		$this->hasChanged=true;
 	}
 	
@@ -1978,7 +1988,6 @@ class SmrPlayer extends AbstractSmrPlayer
 
 		$this->db->query('DELETE FROM player_has_unread_messages WHERE '.$this->SQL.' AND ' .
 					'message_type_id = '.$messageTypeID);
-
 	}
 	
 	public function getPlottedCourse()
