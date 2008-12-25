@@ -234,6 +234,7 @@ function do_voodoo()
 	$smarty->display(get_template_loc($var['url']));
 	
 	SmrShip::saveShips();
+	SmrPlayer::savePlayers();
 	if($lock)
 	{
 		release_lock($lock);
