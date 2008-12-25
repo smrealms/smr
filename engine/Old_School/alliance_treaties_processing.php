@@ -133,7 +133,6 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$PHP_OUTPUT.=('</div>');
 	
 } else {
-	define('TIME', time());
 	define('MESSAGE_EXPIRES', TIME + 259200);
 	$alliance_id_2 = $var['proposedAlliance'];
 	$db->query('INSERT INTO alliance_treaties (alliance_id_1,alliance_id_2,game_id,trader_assist,trader_defend,trader_nap,raid_assist,planet_land,planet_nap,forces_nap,aa_access,mb_read,mb_write,mod_read,official) 
