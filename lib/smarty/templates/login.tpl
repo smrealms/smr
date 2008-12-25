@@ -174,7 +174,7 @@ input.inputbox {
 					{if $News.Recent} * {/if}
 					{$News.Time}</span></td>
 					<td><span class="small">{$News.Message}
-					{if $AdminName}<br /><br />-{$AdminName}{/if}
+					{if $News.AdminName}<br /><br />- {$News.AdminName}{/if}
 					</span></td></tr>
 				{/foreach}
 				</table>
