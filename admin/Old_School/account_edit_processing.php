@@ -227,23 +227,25 @@ if ($except != 'Add An Exception' && $except != '') {
 }
 
 if (!empty($names))
-	foreach ($names as $game_id => $new_name) {
-		
-		$db->query('SELECT * FROM player WHERE game_id = '.$game_id.' AND player_name = ' . $db->escape_string($new_name, FALSE));
-		if (!$db->next_record()) {
-			$db->query('SELECT player_name, player_id FROM player WHERE game_id='.$game_id.' AND account_id = '.$account_id.' LIMIT 1');
-			$db->next_record();
-			$old_name = $db->f('player_name');
-			$player_id = $db->f('player_id');
-			
-			$db->query('UPDATE player SET player_name = ' . $db->escape_string($new_name, FALSE) . ' WHERE game_id = '.$game_id.' AND account_id = '.$account_id);
-			$msg .= 'changed players name to '.$new_name.' ';
-			//insert news message
-
-			$news = '<span class="blue">ADMIN</span> Please be advised that <span class="yellow">' . $old_name . '(' . $player_id . ')</span> has had their name changed to <span class="yellow">' . $new_name . '(' . $player_id . ')</span>';
-			
-			$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . time() . ',' . $db->escape_string($news, FALSE) . ','.$game_id.')');
-					
+	foreach ($names as $game_id => $new_name)
+	{
+		if(!empty($new_name))
+		{
+			$db->query('SELECT * FROM player WHERE game_id = '.$game_id.' AND player_name = ' . $db->escape_string($new_name, FALSE));
+			if (!$db->next_record()) {
+				$db->query('SELECT player_name, player_id FROM player WHERE game_id='.$game_id.' AND account_id = '.$account_id.' LIMIT 1');
+				$db->next_record();
+				$old_name = $db->f('player_name');
+				$player_id = $db->f('player_id');
+				
+				$db->query('UPDATE player SET player_name = ' . $db->escape_string($new_name, FALSE) . ' WHERE game_id = '.$game_id.' AND account_id = '.$account_id);
+				$msg .= 'changed players name to '.$new_name.' ';
+				//insert news message
+	
+				$news = '<span class="blue">ADMIN</span> Please be advised that <span class="yellow">' . $old_name . '(' . $player_id . ')</span> has had their name changed to <span class="yellow">' . $new_name . '(' . $player_id . ')</span>';
+				
+				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . time() . ',' . $db->escape_string($news, FALSE) . ','.$game_id.')');
+			}
 		}
 		
 	}
