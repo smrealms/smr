@@ -2,8 +2,8 @@
 	{foreach from=$MapSectors item=MapSector}
 		<tr>
 			{foreach from=$MapSector item=Sector}
-				{assign var=isCurrentSector value=$CurrentSector->equals($Sector)}
-				{assign var=isLinkedSector value=$CurrentSector->isLinked($Sector)}
+				{assign var=isCurrentSector value=$ThisSector->equals($Sector)}
+				{assign var=isLinkedSector value=$ThisSector->isLinked($Sector)}
 				<td>
 					<div class="{if $isCurrentSector}currentSeclm{elseif $isLinkedSector}connectSeclm{elseif $Sector->isVisited()}normalSeclm{else}normalSeclmu{/if} lm_sector">
 						<div class="lmup">

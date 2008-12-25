@@ -130,9 +130,8 @@ $smarty->assign('GalaxyName',$galaxy_name);
 
 $smarty->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
-//$smarty->assign('Player',$player);
 $smarty->assign('PlayerHasScanner',$ship->hasScanner());
-$smarty->assign('CurrentSector',SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID()));
+$smarty->assign_by_ref('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID()));
 
 $db->query('
 SELECT
@@ -189,8 +188,8 @@ for ($i=1;$i<=$span&&$i<=$rows;$i++)
 		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec,SmrSession::$account_id);
 	}
 }
-$smarty->assign('MapSectors',$mapSectors);
-$smarty->assign('ThisShip',$ship);
+$smarty->assign_by_ref('MapSectors',$mapSectors);
+$smarty->assign_by_ref('ThisShip',$ship);
 $smarty->display(get_template_loc('GalaxyMap'));
 
 function get_real_up($sector)
