@@ -41,7 +41,6 @@ define ('SHIELD_DAMAGE', 1);
 define ('ARMOR_DAMAGE', 2);
 define ('ACCURACY', 3);
 
-define('TIME', time());
 define('MESSAGE_EXPIRES', TIME + 259200);
 
 //treaty stuff
