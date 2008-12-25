@@ -57,7 +57,7 @@ $gameNews = array();
 $db->query('SELECT * FROM news ORDER BY time DESC LIMIT 4');
 while ($db->next_record())
 {
-	$gameNews[] = array('Date' => date('n/j/Y',$db->f('time')), 'Time' => date('g:i:s A',$db->f('time')), 'Message' => $db->f('news_message'), 'AdminName' => $db->f('admin_name'));
+	$gameNews[] = array('Date' => date('n/j/Y',$db->f('time')), 'Time' => date('g:i:s A',$db->f('time')), 'Message' => $db->f('news_message'));
 }
 $smarty->assign('GameNews',$gameNews);
 
