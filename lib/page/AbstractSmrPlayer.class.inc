@@ -1,6 +1,4 @@
 <?php
-
-require_once('SmrMySqlDatabase.class.inc');
 require_once('Globals.class.inc');
 
 require_once('SmrShip.class.inc');
@@ -66,17 +64,8 @@ abstract class AbstractSmrPlayer
 	
 	protected $hasChanged=false;
 	
-	protected $tableSQL;
-	protected $SQL;
-	
 	protected function __construct()
 	{
-		$this->db = new SmrMySqlDatabase();
-	}
-	
-	public function getSQL()
-	{
-		return $this->SQL;
 	}
 	
 	public function getAccountID()
@@ -344,7 +333,7 @@ abstract class AbstractSmrPlayer
 			//get alliance info
 			if ($this->allianceID > 0)
 			{
-				$sql = $this->db->query('SELECT alliance_name FROM alliance WHERE alliance_id = ' . $this->allianceID . ' AND game_id = ' . $this->gameID . ' LIMIT 1');
+				$sql = $this->db->query('SELECT alliance_name FROM alliance WHERE alliance_id = ' . $this->getAllianceID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
 				$this->db->nextRecord($sql);
 				$this->allianceName = stripslashes($this->db->getField('alliance_name'));
 			}

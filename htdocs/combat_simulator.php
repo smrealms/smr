@@ -50,6 +50,17 @@ define('ASSIST',2);
 
 include('config.inc');
 require_once(LIB . 'global/smr_db.inc');
+require_once(get_file_loc('DummyPlayer.class.inc'));
+
+$gameID=0;
+$playerName='Dummy';
+$raceID=1;
+$experience=1000;
+$alignment=100;
+$allianceID=0;
+$shipTypeID=60;
+$dummyPlayer = new DummyPlayer($gameID,$playerName,$raceID,$experience,$alignment,$allianceID,$shipTypeID);
+
 $db = new SMR_DB();
 
 
