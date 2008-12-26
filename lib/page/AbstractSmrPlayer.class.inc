@@ -104,7 +104,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->newbieTurns=$newbieTurns;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET newbie_turns = '.$this->newbieTurns.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET newbie_turns = '.$this->newbieTurns.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getShipID()
@@ -118,7 +118,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->shipID=$shipID;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET ship_type_id = '.$this->shipID.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET ship_type_id = '.$this->shipID.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getLastActive()
@@ -137,7 +137,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->lastShieldUpdate=$time;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET last_shield_update = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET last_shield_update = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	public function getSectorID()
@@ -193,7 +193,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->dead=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET dead = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET dead = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getKills()
@@ -212,7 +212,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->kills=$kills;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET kills = ' . $kills .' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET kills = ' . $kills .' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getDeaths()
@@ -231,7 +231,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->deaths = $deaths;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET deaths = '.$this->deaths.' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET deaths = '.$this->deaths.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getAlignment()
@@ -260,7 +260,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->landedOnPlanet=$bool;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET land_on_planet = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET land_on_planet = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public abstract function getLevelID();
@@ -315,7 +315,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->raceID=$raceID;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET race_id = '.$this->raceID.' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET race_id = '.$this->raceID.' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
 	public function getAllianceID()
@@ -334,7 +334,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->allianceID=$ID;
 		$this->hasChanged=true;
-		$this->db->query('UPDATE '.$this->tableSQL.' SET alliance_id = ' . $this->allianceID . ' WHERE '.$this->SQL.' LIMIT 1');
+//		$this->db->query('UPDATE '.$this->tableSQL.' SET alliance_id = ' . $this->allianceID . ' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getAllianceName()
