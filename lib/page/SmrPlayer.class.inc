@@ -1,10 +1,13 @@
 <?
 require_once('AbstractSmrPlayer.class.inc');
+require_once('SmrMySqlDatabase.class.inc');
 
 class SmrPlayer extends AbstractSmrPlayer
 {
 	protected static $CACHE_SECTOR_PLAYERS = array();
 	protected static $CACHE_PLAYERS = array();
+	
+	protected $db;
 	
 //	var $race_name;
 //	var $level_id;
@@ -65,6 +68,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $attackTraderHREF;
 	protected $traderSearchHREF;
 	protected $allianceRosterHREF;
+	
+	protected $SQL;
 	
 //	public static function getPlayers($gameAccountIDArray,$forceUpdate = false)
 //	{
@@ -129,8 +134,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected function __construct($gameID,&$accountIDOrResultArray)
 	{
 		parent::__construct();
-		$this->tableSQL='player';
 		global $GOODS, $TRADABLE_GOODS, $GAME_SPEED, $BASE_PRICES;
+		$this->db = new SmrMySqlDatabase();
 		$result=false;
 		if (is_array($accountIDOrResultArray))
 			$result =& $accountIDOrResultArray;
@@ -198,6 +203,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			throw new Exception('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
 		}
+	}
+	
+	public function getSQL()
+	{
+		return $this->SQL;
 	}
 	
 	function get($bit)
