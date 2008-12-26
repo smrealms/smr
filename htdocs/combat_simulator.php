@@ -50,6 +50,7 @@ define('ASSIST',2);
 
 include('config.inc');
 require_once(LIB . 'global/smr_db.inc');
+require_once(ENGINE . 'Old_School/smr.inc');
 require_once(get_file_loc('DummyPlayer.class.inc'));
 
 $gameID=0;
