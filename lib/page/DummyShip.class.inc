@@ -17,6 +17,31 @@ class DummyShip extends AbstractSmrShip
 		$this->cargo = array();
 		$this->cargo_left = $this->getCargoHolds();
 	}
+	
+	function decloak()
+	{
+	}
+	
+	function enableCloak()
+	{
+	}
+	
+	function setIllusion($ship_id, $attack, $defense)
+	{
+	}
+	
+	function disableIllusion()
+	{
+	}
+	
+	public function getIllusionShip()
+	{
+		if(!isset($this->illusionShip))
+		{
+			$this->illusionShip=false;
+		}
+		return $this->illusionShip;
+	}
     
     public function cacheDummyPlayer()
     {

@@ -377,7 +377,7 @@ class SmrShip extends AbstractSmrShip
 			'game_id = '.$this->getGameID() .' LIMIT 1');
 	}
 	
-	function enable_cloak()
+	function enableCloak()
 	{
 		$this->isCloaked = true;
 		$this->db->query('REPLACE INTO ship_is_cloaked VALUES('.$this->getAccountID().', '.$this->getGameID().')');
@@ -404,7 +404,7 @@ class SmrShip extends AbstractSmrShip
 		return false;
 	}
 	
-	function set_illusion($ship_id, $attack, $defense)
+	function setIllusion($ship_id, $attack, $defense)
 	{
 		$this->db->query('REPLACE INTO ship_has_illusion VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$ship_id.', '.$attack.', '.$defense.')');
 	}
@@ -432,11 +432,6 @@ class SmrShip extends AbstractSmrShip
 		}
 		return $this->illusionShip;
 		
-	}
-	
-	public function &getPlayer()
-	{
-		return $this->player;
 	}
 	
 	public function getUpgradeShipHREF()

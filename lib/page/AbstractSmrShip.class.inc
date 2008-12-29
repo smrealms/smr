@@ -300,9 +300,9 @@ abstract class AbstractSmrShip
 	
 	abstract function decloak();
 	
-	abstract function enable_cloak();
+	abstract function enableCloak();
 	
-	abstract function set_illusion($ship_id, $attack, $defense);
+	abstract function setIllusion($ship_id, $attack, $defense);
 	
 	abstract function disableIllusion();
 	
@@ -332,7 +332,10 @@ abstract class AbstractSmrShip
 		return $this->illusionShip['Defense'];
 	}
 	
-	abstract public function &getPlayer();
+	public function &getPlayer()
+	{
+		return $this->player;
+	}
 	
 	public function getGameID()
 	{
