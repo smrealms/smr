@@ -221,14 +221,14 @@ abstract class AbstractSmrShip
 		
 		$this->db->query('DELETE FROM ship_has_illusion WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID());
-		
+		$this->hasChangedHardware = true;
 	}
 	
 	function get_pod()
 	{
 		$this->removeAllWeapons();
 		$this->removeAllCargo();
-		$this->remove_all_hardware();
+		$this->removeAllHardware();
 		
 		$this->hardware[1] = 50;
 		$this->hardware[2] = 50;

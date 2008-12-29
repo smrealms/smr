@@ -28,7 +28,7 @@ class DummyShip extends AbstractSmrShip
 		}
 	}
 	
-	protected function regenerate(AbstractSmrPlayer &$player)
+	public function regenerate(AbstractSmrPlayer &$player)
 	{
 		$this->player = $player;
 		$this->regenerateBaseShip();

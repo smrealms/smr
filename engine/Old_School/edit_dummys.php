@@ -11,16 +11,22 @@ $smarty->assign_by_ref('Weapons',SmrWeapon::getAllWeapons(0));
 $smarty->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
 
 $dummyPlayer =& DummyPlayer::getCachedDummyPlayer($_REQUEST['dummy_name']);
+$dummyShip =& $dummyPlayer->getShip();
 
 if(isset($_REQUEST['save_dummy']))
 {
 	$dummyPlayer->setPlayerName($_REQUEST['dummy_name']);
 	$dummyPlayer->setExperience($_REQUEST['level']);
 	$dummyPlayer->setShipTypeID($_REQUEST['ship_id']);
+	$dummyShip->regenerate($dummyPlayer);
+	$dummyShip->removeAllWeapons();
+	foreach($_REQUEST['weapons'] as $weaponTypeID)
+	{
+		$dummyShip->addWeapon($weaponTypeID);
+	}
 	$dummyPlayer->cacheDummyPlayer();
 }
 
-$dummyShip =& $dummyPlayer->getShip();
 
 $smarty->assign_by_ref('DummyPlayer',$dummyPlayer);
 $smarty->assign_by_ref('DummyShip',$dummyShip);
