@@ -80,7 +80,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT info FROM cached_dummys ' .
 						  'WHERE type = \'DummyPlayer\' AND ' .
-						  		'id = '.$name.' LIMIT 1');
+						  		'id = '.$db->escapeString($name).' LIMIT 1');
 		if($db->nextRecord())
 		{
 			return unserialize($db->getField('info'));
