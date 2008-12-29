@@ -82,7 +82,7 @@ class DummyShip extends AbstractSmrShip
 		if($db->nextRecord($player))
 		{
 			$return = unserialize($db->getField('info'));
-			$return->regenerate();
+			$return->regenerate($player);
 			return $return;
 		}
 		else
