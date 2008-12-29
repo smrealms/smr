@@ -836,7 +836,7 @@ class SmrPort
 	{
 		if ($this->exists())
 		{
-			$cache =& serialize(&$this);
+			$cache = serialize(&$this);
 			//give them the port info
 			$command = 'REPLACE';
 			if(!$forceUpdate)
