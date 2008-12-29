@@ -3,13 +3,13 @@
 // sleep(1);
 if ($var['action'] == 'Enable') {
 
-	$ship->enable_cloak();
+	$ship->enableCloak();
 
 }
 
 elseif ($var['action'] == 'Disable') {
 
-	$ship->disable_cloak();
+	$ship->decloak();
 
 }
 
@@ -20,7 +20,7 @@ elseif ($var['action'] == 'Set Illusion')
 		!is_numeric($_REQUEST['defense']))
 		create_error('Numbers only please');
 
-	$ship->set_illusion($_REQUEST['ship_id'], $_REQUEST['attack'], $_REQUEST['defense']);
+	$ship->setIllusion($_REQUEST['ship_id'], $_REQUEST['attack'], $_REQUEST['defense']);
 
 }
 
