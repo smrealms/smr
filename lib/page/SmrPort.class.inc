@@ -765,7 +765,7 @@ class SmrPort
 			$relations=1000;
 		$goods = $this->getGoods();
 		$good = $goods['All Goods'][$goodID];
-		$base = $goodID['BasePrice'];
+		$base = $good['BasePrice'];
 		$maxSupply = $good['Max'];
 		$supply = $good['Amount'];
 	
