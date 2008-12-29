@@ -1,4 +1,5 @@
 <?
+require_once(LIB . '/page/Globals.class.inc');
 require_once(LIB . 'global/smr_db.inc'); //uses for finding file locations.
 require_once(LIB . 'page/SmrSession.class.inc');
 
@@ -124,7 +125,7 @@ function create_submit($value) {
 }
 
 function create_submit_style($value, $style) {
-	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" style="$style">');
+	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" style="'.$style.'">');
 }
 
 function get_file_loc($file_name, $exists = 1)
