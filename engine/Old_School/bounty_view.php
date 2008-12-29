@@ -11,11 +11,11 @@ while ($db->next_record()) {
 	//$days = (TIME - $db->f('time')) / 60 / 60 / 24;
     //$amount = round($db->f('amount') * pow(1.05,$days));
     $amount = $db->f('amount');
-    $PHP_OUTPUT.=('The <font color=green>Federal Government</font> is offering a bounty on '.$curr_player->player_name.' worth <font color=yellow>'.$amount.'</font> credits.<br>  ');
+    $PHP_OUTPUT.=('The <font color=green>Federal Government</font> is offering a bounty on '.$curr_player->getPlayerName().' worth <font color=yellow>'.$amount.'</font> credits.<br>  ');
     if ($claimer != 0) {
 
         $claiming_player =& SmrPlayer::getPlayer($claimer, $player->getGameID());
-        $PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->player_name.'<br>');
+        $PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->getPlayerName().'<br>');
 
     }
     $bounties += 1;
@@ -32,11 +32,11 @@ while ($db->next_record()) {
 	//$days = (TIME - $db->f('time')) / 60 / 60 / 24;
     //$amount = round($db->f('amount') * pow(1.05,$days));
     $amount = $db->f('amount');
-    $PHP_OUTPUT.=('The <font color=red>Underground</font> is offering a bounty on '.$curr_player->player_name.' worth <font color=yellow>'.$amount.'</font> credits.<br>');
+    $PHP_OUTPUT.=('The <font color=red>Underground</font> is offering a bounty on '.$curr_player->getPlayerName().' worth <font color=yellow>'.$amount.'</font> credits.<br>');
     if ($claimer != 0) {
 
         $claiming_player =& SmrPlayer::getPlayer($claimer, $player->getGameID());
-        $PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->player_name.'<br>');
+        $PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->getPlayerName().'<br>');
 
     }
 	$bounties += 1;

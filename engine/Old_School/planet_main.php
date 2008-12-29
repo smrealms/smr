@@ -94,7 +94,7 @@ while ($db->next_record()) {
     $container['body']        = 'trader_search_result.php';
     $container['player_id']    = $planet_player->getPlayerID();
 
-    $PHP_OUTPUT.=create_link($container, '<span style="color:yellow;">'.$planet_player->player_name.'</span>');
+    $PHP_OUTPUT.=create_link($container, '<span style="color:yellow;">'.$planet_player->getPlayerName().'</span>');
     $PHP_OUTPUT.=('&nbsp;');
 
     // should we be able to kick this player from our rock?

@@ -113,7 +113,7 @@ if ($curr_account->account_id != 0) {
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align="right">Game ID:</td><td>'.$game_id.'</td></tr><tr>');
 			$PHP_OUTPUT.=('<td align="right">Name:</td>');
-			$PHP_OUTPUT.=('<td><input type=text name=player_name['.$game_id.'] value="'.$curr_player->player_name.'">('.$curr_player->getPlayerID().')</td>');
+			$PHP_OUTPUT.=('<td><input type=text name=player_name['.$game_id.'] value="'.$curr_player->getPlayerName().'">('.$curr_player->getPlayerID().')</td>');
 			$PHP_OUTPUT.=('</tr>');
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align="right">Experience:</td>');
