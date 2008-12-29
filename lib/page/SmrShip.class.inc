@@ -347,6 +347,8 @@ class SmrShip
 	function moveWeaponDown($orderID)
 	{
 		$replacement = $orderID + 1;
+			var_dump($replacement);
+			var_dump($orderID);
 		if($replacement > count($this->weapon))
 		{
 			// Shift everything down by one and put the selected weapon at the top
@@ -363,9 +365,6 @@ class SmrShip
 			$temp =& $this->weapon[$replacement];
 			$this->weapon[$replacement] =& $this->weapon[$orderID];
 			$this->weapon[$orderID] =& $temp;
-			
-			var_dump($replacement);
-			var_dump($orderID);
 			
 			var_dump($this->weapon);
 		}

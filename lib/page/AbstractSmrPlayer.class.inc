@@ -365,7 +365,12 @@ abstract class AbstractSmrPlayer
 		return $pastMaint;
 	}
 	
-	public abstract function getStats();
+	protected abstract function getStatsData();
+	public function getStats()
+	{
+		$this->getStatsData();
+		return $this->stats;
+	}
 	
 	public function getStat($name)
 	{
