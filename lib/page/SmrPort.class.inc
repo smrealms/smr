@@ -836,7 +836,7 @@ class SmrPort
 	{
 		if ($this->exists())
 		{
-			$cache = serialize(SmrPort::getPort($this->getGameID(),$this->getSectorID()));
+			$cache =& serialize(&$this);
 			//give them the port info
 			$command = 'REPLACE';
 			if(!$forceUpdate)
@@ -845,6 +845,7 @@ class SmrPort
 						'(account_id, game_id, sector_id, visited, port_info) ' .
 						'VALUES ('.$accountID.', '.$this->getGameID().', '.$this->getSectorID().', '.$this->getCachedTime().', '.$this->db->escapeString($cache).')');	
 			$this->cachedVersion = false; //Serializing this would have designated it as cached, this version isn't.
+			unserialize(&$cache);
 		}
 	}
 	public static function &getCachedPort($gameID,$sectorID,$accountID,$forceUpdate=false)
@@ -859,7 +860,7 @@ class SmrPort
 							  		
 			if($db->nextRecord())
 			{
-				return self::$CACHE_CACHED_PORTS[$gameID . ':' . $sectorID . ':' . $accountID] = unserialize($db->getField('port_info'));;
+				return self::$CACHE_CACHED_PORTS[$gameID . ':' . $sectorID . ':' . $accountID] = unserialize($db->getField('port_info'));
 			}
 			else
 				return self::$CACHE_CACHED_PORTS[$gameID . ':' . $sectorID . ':' . $accountID] = false;

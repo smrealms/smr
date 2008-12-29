@@ -23,7 +23,9 @@ if (empty($var['receiver']))
 		$player->sendMessage($db->f('account_id'), $GLOBALMSG, $message);
 	}
 
-} else {
+}
+else
+{
 	$player->sendMessage($var['receiver'], $PLAYERMSG, $message);
 }
 

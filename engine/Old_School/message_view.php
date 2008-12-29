@@ -110,12 +110,12 @@ if (!isset($var['folder_id'])) {
 		$PHP_OUTPUT.=create_echo_form(create_container('message_global_ignore.php', ''));
 		$PHP_OUTPUT.=('<div align="center">Ignore global messages?&nbsp;&nbsp;');
 
-		if ($player->ignore_global == 'YES')
+		if ($player->isIgnoreGlobals())
 			$PHP_OUTPUT.=create_submit_style('Yes', 'background-color:green;');
 		else
 			$PHP_OUTPUT.=create_submit('Yes');
 		$PHP_OUTPUT.=('&nbsp;');
-		if ($player->ignore_global == 'NO')
+		if (!$player->isIgnoreGlobals())
 			$PHP_OUTPUT.=create_submit_style('No', 'background-color:green;');
 		else
 			$PHP_OUTPUT.=create_submit('No');
