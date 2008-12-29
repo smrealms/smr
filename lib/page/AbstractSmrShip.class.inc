@@ -87,13 +87,11 @@ abstract class AbstractSmrShip
 	
 	public function checkForExcessWeapons()
 	{
-		$i = 1;
+		var_dump($this);
 		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints()))
 		{
-			echo $i .'<br />';
 			//erase the first weapon 1 at a time until we are okay
 			$this->removeWeapon(1);
-			++$i;
 		}
 	}
 	
