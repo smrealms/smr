@@ -79,7 +79,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		$db = new SmrMySqlDatabase();
 		$db->query('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
-					'VALUES (\'DummyPlayer\', '.$this->getPlayerName().', '.$this->db->escapeString($cache).')');	
+					'VALUES (\'DummyPlayer\', '.$this->getPlayerName().', '.$db->escapeString($cache).')');	
 	}
 	
 	public static function &getCachedDummyPlayer($name)
