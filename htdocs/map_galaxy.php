@@ -190,6 +190,7 @@ for ($i=1;$i<=$span&&$i<=$rows;$i++)
 }
 $smarty->assign_by_ref('MapSectors',$mapSectors);
 $smarty->assign_by_ref('ThisShip',$ship);
+$smarty->assign_by_ref('ThisPlayer',$player);
 $smarty->display(get_template_loc('GalaxyMap'));
 
 function get_real_up($sector)
