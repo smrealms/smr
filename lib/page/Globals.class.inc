@@ -21,7 +21,7 @@ class Globals
 			self::$db = new SmrMySqlDatabase();
 	}
 
-	public static function getPlanetBuildings()
+	public static function &getPlanetBuildings()
 	{
 		if(self::$PLANET_BUILDINGS==null) //use cached if available
 		{
@@ -66,7 +66,7 @@ class Globals
 		return self::$PLANET_BUILDINGS;
 		}
 	
-	public static function getLevelRequirements()
+	public static function &getLevelRequirements()
 	{
 		if(self::$LEVEL_REQUIREMENTS==null) //use cached if available
 		{
@@ -87,7 +87,7 @@ class Globals
 		return self::$LEVEL_REQUIREMENTS;
 	}
 	
-	public static function getRaces()
+	public static function &getRaces()
 	{
 		if(self::$RACES==null) //use cached if available
 		{
@@ -107,7 +107,7 @@ class Globals
 		return self::$RACES;
 	}
 	
-	public static function getGoods()
+	public static function &getGoods()
 	{
 		if(self::$GOODS==null) //use cached if available
 		{
@@ -132,7 +132,7 @@ class Globals
 		return self::$GOODS;
 	}
 	
-	public static function getGameSpeed($gameID)
+	public static function &getGameSpeed($gameID)
 	{
 		if(!isset(self::$GAME_SPEEDS[$gameID]))
 		{
@@ -144,7 +144,7 @@ class Globals
 		return self::$GAME_SPEEDS[$gameID];
 	}
 	
-	public static function getRaceRelations($gameID,$raceID)
+	public static function &getRaceRelations($gameID,$raceID)
 	{
 		if(!isset(self::$RACE_RELATIONS[$gameID]))
 		{
@@ -174,7 +174,7 @@ class Globals
 	protected static $POD_SCREEN_HREF;
 	protected static $BETA_FUNCTIONS_HREF;
 	
-	public static function getCurrentSectorHREF()
+	public static function &getCurrentSectorHREF()
 	{
 		if(!isset(self::$CURRENT_SECTOR_HREF))
 		{
@@ -186,7 +186,7 @@ class Globals
 		return self::$CURRENT_SECTOR_HREF;
 	}
 	
-	public static function getPodScreenHREF()
+	public static function &getPodScreenHREF()
 	{
 		if(!isset(self::$POD_SCREEN_HREF))
 		{
@@ -198,7 +198,7 @@ class Globals
 		return self::$POD_SCREEN_HREF;
 	}
 	
-	public static function getBetaFunctionsHREF() //BETA
+	public static function &getBetaFunctionsHREF() //BETA
 	{
 		if(!isset(self::$BETA_FUNCTIONS_HREF))
 		{
