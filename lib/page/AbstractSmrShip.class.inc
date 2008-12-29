@@ -11,20 +11,14 @@ abstract class AbstractSmrShip
 	protected $player;
 	
 	protected $gameID;
-	protected $shipName;
-	protected $shipTypeID;
+	protected $baseShip;
 	
 	protected $hardware;
-	protected $maxHardware;
 	protected $oldHardware;
 	
 	protected $cargo;
 	protected $cargo_left;
 	
-	protected $speed;
-	protected $cost;
-	
-	protected $hardpoint;
 	protected $weapons;
 	
 	protected $illusionShip;
@@ -41,8 +35,7 @@ abstract class AbstractSmrShip
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$shipTypeID.' LIMIT 1'); //TODO add game type id
 			$db->nextRecord();
-			$s = self::buildBaseShip($db);
-			return self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& $s;
+			self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& self::buildBaseShip($db);
 		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID. ':' .$shipTypeID];
 	}
@@ -75,7 +68,8 @@ abstract class AbstractSmrShip
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM ship_type'); //TODO add game type id
 		while($db->nextRecord())
-			self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $db->getField('ship_type_id')] =& self::buildBaseShip($db);
+			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $db->getField('ship_type_id')]))
+				self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $db->getField('ship_type_id')] =& self::buildBaseShip($db);
 		return self::$CACHE_BASE_SHIPS;
 	}
 	
@@ -88,13 +82,7 @@ abstract class AbstractSmrShip
 	
 	protected function regenerateBaseShip()
 	{
-		$baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID),$this->player->getShipTypeID());
-		$this->shipName		= $baseShip['Name'];
-		$this->shipTypeID	= $baseShip['ShipTypeID'];
-		$this->hardpoint	= $baseShip['Hardpoint'];
-		$this->speed		= $baseShip['Speed'];
-		$this->cost			= $baseShip['Cost'];
-		$this->maxHardware	= $baseShip['MaxHardware'];
+		$this->baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID),$this->player->getShipTypeID());
 	}
 	
 	public function checkForExcessWeapons()
@@ -235,7 +223,7 @@ abstract class AbstractSmrShip
 		$this->hardware[3] = 5;
 		$this->update_hardware();
 		
-		$this->shipTypeID = 69;
+		$this->setShipTypeID(69);
 		$this->update();
 		
 		$this->mark_seen();
@@ -370,28 +358,28 @@ abstract class AbstractSmrShip
 	
 	public function getShipTypeID()
 	{
-		return $this->shipTypeID;
+		return $this->baseShip['ShipTypeID'];
 	}
 	
 	public function setShipTypeID($shipTypeID)
 	{
-		$this->shipTypeID=$shipTypeID;
-		$this->hasChanged = true;
+		$this->getPlayer()->setShipTypeID($shipTypeID);
+		$this->regenerateBaseShip();
 	}
 	
 	public function getName()
 	{
-		return $this->shipName;
+		return $this->baseShip['Name'];
 	}
 	
 	public function getCost()
 	{
-		return $this->cost;
+		return $this->baseShip['Cost'];
 	}
 	
 	public function getSpeed()
 	{
-		return $this->speed;
+		return $this->baseShip['Speed'];
 	}
 	
 	public function getHardware($hardwareTypeID)
@@ -427,7 +415,7 @@ abstract class AbstractSmrShip
 	
 	public function getMaxHardware($hardwareTypeID)
 	{
-		return $this->maxHardware[$hardwareTypeID];
+		return $this->baseShip['MaxHardware'][$hardwareTypeID];
 	}
 	
 	public function getShields()
@@ -735,7 +723,7 @@ abstract class AbstractSmrShip
 	
 	public function getHardpoints()
 	{
-		return $this->hardpoint;
+		return $this->baseShip['Hardpoint'];
 	}
 	
 	public function getTotalShieldDamage()

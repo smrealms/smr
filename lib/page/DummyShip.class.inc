@@ -98,7 +98,7 @@ class DummyShip extends AbstractSmrShip
 		return self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()];
 	}
 	
-	public static function getDummyShipNames()
+	public static function &getDummyShipNames()
 	{
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT id FROM cached_dummys ' .
