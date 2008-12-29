@@ -16,6 +16,7 @@ if(isset($_REQUEST['save_dummy']))
 	$dummyPlayer->setPlayerName($_REQUEST['dummy_name']);
 	$dummyPlayer->setExperience($_REQUEST['level']);
 	$dummyPlayer->setShipTypeID($_REQUEST['ship_id']);
+	$dummyPlayer->cacheDummyPlayer();
 }
 
 $dummyShip =& $dummyPlayer->getShip();

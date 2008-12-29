@@ -10,16 +10,27 @@ class DummyShip extends AbstractSmrShip
 		
 		$this->hardware = array();
 		$this->oldHardware = array();
-		foreach($this->maxHardware as $hardwareTypeID => $max)
-		{
-			$this->hardware[$hardwareTypeID] = $max;
-			$this->oldHardware[$hardwareTypeID] = $max;
-		}
+		$this->doFullUNO();
 		
 		$this->weapons = array();
 		
 		$this->cargo = array();
 		$this->cargo_left = $this->getCargoHolds();
+	}
+	protected function doFullUNO()
+	{
+		foreach($this->maxHardware as $hardwareTypeID => $max)
+		{
+			$this->hardware[$hardwareTypeID] = $max;
+			$this->oldHardware[$hardwareTypeID] = $max;
+		}
+	}
+	
+	protected function regenerate(AbstractSmrPlayer &$player)
+	{
+		$this->player = $player;
+		$this->regenerateBaseShip();
+		$this->doFullUNO();
 	}
 	
 	function decloak()
@@ -47,28 +58,29 @@ class DummyShip extends AbstractSmrShip
 		return $this->illusionShip;
 	}
     
-    public function cacheDummyPlayer()
+    public function cacheDummyShip()
     {
 		$cache = serialize($this);
 		$this->db->query('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
-					'VALUES (\'DummyPlayer\', '.$this->getPlayerName().', '.$this->db->escapeString($cache).')');	
+					'VALUES (\'DummyShip\', '.$this->getPlayer()->getName().', '.$this->db->escapeString($cache).')');	
     }
     
-    public static function &getCachedDummyShip($name)
+    public static function &getCachedDummyShip(AbstractSmrPlayer &$player)
     {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT info FROM cached_dummys ' .
 						  'WHERE type = \'DummyShip\' AND ' .
-						  		'id = '.$db->escapeString($name).' LIMIT 1');
-		if($db->nextRecord())
+						  		'id = '.$db->escapeString($player->getPlayerName()).' LIMIT 1');
+		if($db->nextRecord($player))
 		{
 			$return = unserialize($db->getField('info'));
+			$return->regenerate();
 			return $return;
 		}
 		else
 		{
-			$return = new DummyPlayer();
+			$return = new DummyShip($player);
 			return $return;
 		}
     }
