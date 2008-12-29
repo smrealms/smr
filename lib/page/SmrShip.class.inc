@@ -359,7 +359,7 @@ class SmrShip
 			$this->weapon[1] =& $temp;
 		}
 		else {
-			$temp =& $ship->weapon[$replacement];
+			$temp =& $this->weapon[$replacement];
 			$this->weapon[$replacement] =& $this->weapon[$orderID];
 			$this->weapon[$orderID] =& $temp;
 		}
