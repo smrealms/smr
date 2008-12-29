@@ -1947,7 +1947,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	function sendMessage($receiver_id, $message_type_id, $message, $canBeIgnored = true)
 	{
 		//get expire time
-		global $GLOBALMSG, $PLAYERMSG, $PLANETMSG, $SCOUTMSG, $POLITICALMSG, $ALLIANCEMSG, $ADMINMSG ;
+		global $GLOBALMSG, $PLAYERMSG, $PLANETMSG, $SCOUTMSG, $POLITICALMSG, $ALLIANCEMSG, $ADMINMSG;
 		
 		if($canBeIgnored)
 		{

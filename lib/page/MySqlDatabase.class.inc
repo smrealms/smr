@@ -138,7 +138,7 @@ abstract class MySqlDatabase implements Database
 			$string = 'FALSE';
 		else
 			throw new Exception('Not a boolean!'); //TEST
-		return mysql_real_escape_string($string);
+		return '\'' . mysql_real_escape_string($string) . '\'';
 	}
 }
 
