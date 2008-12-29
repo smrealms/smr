@@ -4,14 +4,12 @@ $smarty->assign('PageTopic','WEAPON REORDER');
 
 if (isset($var['up']) && is_numeric($var['up']))
 {
-	$weapon = $var['up'];
-	$ship->moveWeaponUp($weapon);
+	$ship->moveWeaponUp($var['up']);
 }
 
 if (isset($var['down']) && is_numeric($var['down']))
 {
-	$weapon = $var['down'];
-	$ship->moveWeaponDown($weapon);
+	$ship->moveWeaponDown($var['down']);
 }
 
 if ($ship->hasWeapons())
