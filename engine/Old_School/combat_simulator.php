@@ -52,6 +52,8 @@ define('ASSIST',2);
 require_once(ENGINE . 'Old_School/smr.inc');
 require_once(get_file_loc('DummyPlayer.class.inc'));
 
+$smarty->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
+
 $attackers = array();
 if(isset($_POST['attackers']))
 	foreach($_POST['attackers'] as $orderID => $attackerName)

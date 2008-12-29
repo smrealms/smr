@@ -1,4 +1,11 @@
-<a href="{$EditDummysLink}">Edit Dummys</a>
+<form action="{$EditDummysLink}" method="GET">
+	Edit Dummy:
+	<select name="dummyname">
+		{foreach from=$DummyNames item=DummyName}
+			<option value="{$DummyName}" selected="selected">{$DummyName}</option>
+	</select><br />
+	<input type="submit" value="Select Dummy" />
+</form>
 
 <table>
 	<tr>
