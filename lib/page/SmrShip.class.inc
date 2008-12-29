@@ -268,12 +268,10 @@ class SmrShip
 		$this->db->query('DELETE FROM ship_has_weapon ' .
 			'WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID());
-		$count = 1;
 		foreach ($this->weapons as $order_id => &$weapon)
 		{
 			$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-				'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$count.', '.$weapon->getWeaponTypeID().')');
-			$count++;
+				'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$order_id.', '.$weapon->getWeaponTypeID().')');
 		}
 	}
 	
@@ -358,7 +356,8 @@ class SmrShip
 			}	
 			$this->weapon[1] =& $temp;
 		}
-		else {
+		else
+		{
 			$temp =& $this->weapon[$replacement];
 			$this->weapon[$replacement] =& $this->weapon[$orderID];
 			$this->weapon[$orderID] =& $temp;
