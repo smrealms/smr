@@ -50,7 +50,7 @@ class SmrShip extends AbstractSmrShip
 		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon WHERE ' .
 			'account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID().
-		' ORDER BY order_id LIMIT ' . $this->hardpoint);
+		' ORDER BY order_id LIMIT ' . $this->getHardpoints());
 		
 		$this->weapons = array();
 		
