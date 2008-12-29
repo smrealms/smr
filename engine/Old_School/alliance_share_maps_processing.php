@@ -93,7 +93,7 @@ while ($db->next_record())
 	{
 		// need to insert this entry first
 		// ignore if it exists
-		$cachedPort->addCachePort($id,false);
+		$cachedPort->addCachePort($id);
 	}
 	
 	// update all port infos
