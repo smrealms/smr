@@ -102,13 +102,12 @@ abstract class AbstractSmrPlayer
 		return $this->shipID;
 	}
 	
-	function setShipID($shipID)
+	function setShipTypeID($shipID)
 	{
 		if($this->shipID == $shipID)
 			return;
 		$this->shipID=$shipID;
 		$this->hasChanged=true;
-//		$this->db->query('UPDATE '.$this->tableSQL.' SET ship_type_id = '.$this->shipID.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getLastActive()
@@ -239,6 +238,18 @@ abstract class AbstractSmrPlayer
 		return $this->experience;
 	}
 	
+	public function setExperience($experience)
+	{
+		if($this->experience == $experience)
+			return;
+		if($experience<MIN_EXPERIENCE)
+			$experience = MIN_EXPERIENCE;
+		if($experience>MAX_EXPERIENCE)
+			$experience = MAX_EXPERIENCE;
+		$this->experience = $experience;
+		$this->hasChanged=true;
+	}
+	
 	public function isLandedOnPlanet()
 	{
 		return $this->landedOnPlanet;
@@ -285,6 +296,12 @@ abstract class AbstractSmrPlayer
 	public function getPlayerName()
 	{
 		return $this->playerName;
+	}
+	
+	public function setPlayerName($name)
+	{
+		$this->playerName = $name;
+		$this->hasChanged = true;
 	}
 	
 	public function getName()

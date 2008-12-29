@@ -11,9 +11,9 @@
 <table>
 	<tr>
 		<td style="vertical-align:top">
-			<u>Player One</u><br/><br />
+			<u>{$DummyPlayer->getPlayerName()}</u><br/><br />
 			<form action="{$EditDummysLink}" method="POST">
-				<input type="text" name="dummy_name" value="{$DummyName}" />
+				<input type="text" name="dummy_name" value="{$DummyPlayer->getPlayerName()}" />
 				Level
 				<select name="level">
 					{foreach from=$Levels item=Level}
@@ -26,9 +26,9 @@
 						<option value="{$Ship.TypeID}"{if $Ship.TypeID==$DummyPlayer->getShipTypeID()} selected="selected"{/if}>{$Ship.Name}</option>
 					{/foreach}
 				</select>
-				&nbsp;DCS&nbsp;<input type="checkbox" name="DCS" />
-				<input type="submit" value="Alter Player One" /><br /><br />
-				Weapon: 1&nbsp;<select name="weapon_0"><option value="1" selected="selected">Newbie Pulse Laser (dmg: 40/40 acc: 65% lvl:3)</option></select><br />
+				&nbsp;DCS&nbsp;<input type="checkbox" name="DCS" /><br />
+				Weapon: 1&nbsp;<select name="weapon_0"><option value="1" selected="selected">Newbie Pulse Laser (dmg: 40/40 acc: 65% lvl:3)</option></select><br /><br />
+				<input type="submit" name="save_dummy" value="Save Dummy" />
 			</form>
 		</td>
 		<td style="vertical-align:top">

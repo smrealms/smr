@@ -585,19 +585,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->setExperience($newExperience);
 		$this->decreaseHOF($experience,'Experience',$type);
 	}
-	function setExperience($experience)
-	{
-		if($this->experience == $experience)
-			return;
-		if($experience < 0)
-			$experience=0;
-		global $MIN_EXPERIENCE;
-		if($experience<$MIN_EXPERIENCE)
-			$experience = $MIN_EXPERIENCE;
-		$this->experience = $experience;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET experience = '.$this->experience.' WHERE '.$this->SQL.' LIMIT 1');
-	}
 
 	function getLastNewsUpdate()
 	{
