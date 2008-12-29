@@ -70,7 +70,7 @@ if ($ship->hasWeapons())
 
 		$PHP_OUTPUT.=('</tr>');
 
-	}
+	} unset($weapon);
 
 	$PHP_OUTPUT.=('</table>');
 
