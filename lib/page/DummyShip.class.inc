@@ -6,15 +6,15 @@ class DummyShip extends AbstractSmrShip
 	public function __construct(AbstractSmrPlayer &$player)
 	{
 		parent::__construct($player);
-		$this->player = $player;
-		
-		$this->hardware = array();
-		$this->oldHardware = array();
-		$this->doFullUNO();
 		
 		$this->weapons = array();
-		
+		$this->hardware = array();
+		$this->oldHardware = array();
 		$this->cargo = array();
+		
+		$this->regenerate($player);
+		$this->doFullUNO();
+		
 		$this->cargo_left = $this->getCargoHolds();
 	}
 	protected function doFullUNO()
@@ -31,7 +31,7 @@ class DummyShip extends AbstractSmrShip
 		$this->player = $player;
 		$this->regenerateBaseShip();
 		$this->doFullUNO();
-		for($i=1;$i<=$this->hardpoint;++$i)
+		for($i=1;$i<=$this->getHardpoints();++$i)
 		{
 			if(!isset($this->weapons[$i]))
 				$this->weapons[$i] = SmrWeapon::getWeapon($player->getGameID(),1);
