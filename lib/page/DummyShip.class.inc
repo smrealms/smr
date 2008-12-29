@@ -89,7 +89,9 @@ echo memory_get_usage() . '<br />';
 			if($db->nextRecord($player))
 			{
 				$return = unserialize($db->getField('info'));
+echo memory_get_usage() . '<br />';
 				$return->regenerate($player);
+echo memory_get_usage() . '<br />';
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] =& $return;
 			}
 			else
