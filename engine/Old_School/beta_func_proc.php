@@ -31,7 +31,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	// update
 	$ship->update();
 
-	$player->setShipID($ship_id);
+	$player->setShipTypeID($ship_id);
 	//check for more weapons than allowed
 	$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$ship_id);
 	$db->next_record();
