@@ -51,5 +51,10 @@ class DummyPlayer extends AbstractSmrPlayer
     {
     	
     }
+    
+    public function getStatsData()
+    {
+    	
+    }
 }
 ?>

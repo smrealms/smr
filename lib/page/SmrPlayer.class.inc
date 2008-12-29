@@ -907,7 +907,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->pastMaintBought+=$amount;
 	}
 	
-	function getStats()
+	protected function getStatsData()
 	{
 		if(!isset($this->stats))
 		{
@@ -923,7 +923,6 @@ class SmrPlayer extends AbstractSmrPlayer
 			foreach ($STATS as $stat_name => $statArray)
 				$this->stats[$stat_name] = $temp_stats[$statArray['ID']];
 		}
-		return $this->stats;
 	}
 	
 	function deleteStats()
