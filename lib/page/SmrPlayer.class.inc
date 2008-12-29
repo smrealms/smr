@@ -434,14 +434,17 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	function setSectorID($sectorID)
 	{
-		$this->lastSectorID = $this->sectorID;
+		require_once('SmrPort.class.inc');
+		$port =& SmrPort::getPort($this->getGameID(),$this->getSectorID());
+		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
+		
+		$this->lastSectorID = $this->getSectorID();
 		$this->sectorID = $sectorID;
 		$this->updateLastCPLAction();
 		$this->hasChanged=true;
 		
-		require_once('SmrPort.class.inc');
-		$cachedPort =& SmrPort::getPort($this->getGameID(),$sectorID);
-		$cachedPort->addCachePort($this->getAccountID());
+		$port =& SmrPort::getPort($this->getGameID(),$sectorID);
+		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
 	}
 	
 	function getLastSectorID()

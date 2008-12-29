@@ -832,7 +832,7 @@ class SmrPort
 	{
 		return $this->cachedTime;
 	}
-	public function addCachePort($accountID)
+	public function addCachePort($accountID,$forceUpdate=true)
 	{
 		if ($this->exists())
 		{
