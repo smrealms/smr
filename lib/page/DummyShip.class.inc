@@ -61,7 +61,8 @@ class DummyShip extends AbstractSmrShip
     public function cacheDummyShip()
     {
 		$cache = serialize($this);
-		$this->db->query('REPLACE INTO cached_dummys ' .
+		$db = new SmrMySqlDatabase();
+		$db->query('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
 					'VALUES (\'DummyShip\', '.$this->getPlayer()->getName().', '.$this->db->escapeString($cache).')');	
     }
