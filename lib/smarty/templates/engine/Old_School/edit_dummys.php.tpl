@@ -1,4 +1,4 @@
-<form action="{$EditDummysLink}" method="GET">
+<form action="{$EditDummysLink}" method="POST">
 	Edit Dummy:
 	<select name="dummy_name">
 		{foreach from=$DummyNames item=DummyName}
