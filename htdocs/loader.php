@@ -199,7 +199,7 @@ function do_voodoo()
 				forward($container);
 		}
 
-		$ship	=& SmrShip::getShip(SmrSession::$game_id,SmrSession::$account_id);
+		$ship	=& $player->getShip();
 		$GLOBALS['ship'] =& $ship;
 		
 		$sector	=& SmrSector::getSector(SmrSession::$game_id,$player->getSectorID(),SmrSession::$account_id);

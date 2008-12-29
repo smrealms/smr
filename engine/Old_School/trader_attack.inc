@@ -14,7 +14,7 @@ function shoot_trader($attacker_team, $defender_team) {
 		// get attacker
 		$curr_att_id = $attacker_team->next(true);
 		$curr_attacker =& SmrPlayer::getPlayer($curr_att_id, SmrSession::$game_id);
-		$curr_attacker_ship =& SmrShip::getShip(SmrSession::$game_id,$curr_attacker->getAccountID());
+		$curr_attacker_ship =& $curr_attacker->getShip(SmrSession::$game_id,$curr_attacker->getAccountID());
 		//used in kill table so we have a real sector id not an HQ
 		$this_sector = $sector_id;
 		// disable cloak
@@ -78,7 +78,7 @@ function shoot_trader($attacker_team, $defender_team) {
 			}
 
 			// create ship object for current defender
-			$curr_defender_ship =& SmrShip::getShip($curr_defender->getGameID(),$curr_defender->getAccountID());
+			$curr_defender_ship =& $curr_defender->getShip();
 
 			// calc accuracy for this weapon
 			$hit = round(($accuracy + $curr_attacker->level_id) - ($curr_defender->level_id / 2));
@@ -189,7 +189,7 @@ function shoot_trader($attacker_team, $defender_team) {
 		$curr_defender =& SmrPlayer::getPlayer($defender_team->next(false), $curr_attacker->getGameID());
 
 		// create ship object for current defender
-		$curr_defender_ship =& SmrShip::getShip($curr_defender->getGameID(),$curr_defender->getAccountID());
+		$curr_defender_ship =& $curr_defender_ship->getShip();
 		$continue_drones = 'yes';
 		if ($curr_defender->hasFederalProtection() && $curr_attacker_ship->getCDs() > 0) {
 

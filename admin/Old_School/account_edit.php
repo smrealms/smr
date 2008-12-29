@@ -108,7 +108,7 @@ if ($curr_account->account_id != 0) {
 
 			$game_id = $db->f('game_id');
 			$curr_player =& SmrPlayer::getPlayer($db->f('account_id'), $game_id);
-			$curr_ship =& SmrShip::getShip($game_id,$db->f('account_id'));
+			$curr_ship =& $curr_player->getShip();
 			
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align="right">Game ID:</td><td>'.$game_id.'</td></tr><tr>');
@@ -121,7 +121,7 @@ if ($curr_account->account_id != 0) {
 			$PHP_OUTPUT.=('</tr>');
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align="right">Ship:</td>');
-			$PHP_OUTPUT.=('<td>'.$curr_ship->ship_name.' (' . $curr_ship->attack_rating() . '/' . $curr_ship->defense_rating() . ')</td></tr>');
+			$PHP_OUTPUT.=('<td>'.$curr_ship->getName().' (' . $curr_ship->getAttackRating() . '/' . $curr_ship->getDefenseRating() . ')</td></tr>');
 			$PHP_OUTPUT.=('<tr><td><input type="radio" name="delete['.$game_id.']" value="TRUE" unchecked>Yes<input type="radio" name="delete['.$game_id.']" value="FALSE" checked>No</td><td>Delete player</td>');
 			$PHP_OUTPUT.=('</tr>');
 

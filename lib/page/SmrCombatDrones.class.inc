@@ -5,6 +5,7 @@ require_once('SmrMySqlDatabase.class.inc');
 require_once('AbstractSmrPlayer.class.inc');
 class SmrCombatDrones extends AbstractSmrCombatWeapon
 {
+	const MAX_CDS_RAND = 54;
 	protected $numberOfCDs;
 	
 	public function __construct($gameID,$numberOfCDs)
@@ -34,10 +35,13 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
-//		3 + ()/1.5 + MR Factor + Triangle Factor where
-		
+		return $this->getModifiedAccuracyAgainstPlayerUsingRandomAbstractSmrPlayer($weaponPlayer,$targetPlayer,mt_rand(3,self::$MAX_CDS_RAND));
+	}
+	
+	protected function getModifiedAccuracyAgainstPlayerUsingRandom(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer, $random)
+	{
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		$modifiedAccuracy += (mt_rand(3,54) + mt_rand($weaponPlayer->getLevelID() / 2,$weaponPlayer->getLevelID()) - ($targetPlayer->getLevelID() - $weaponPlayer->getLevelID())/3)/1.5;
+		$modifiedAccuracy += ($random + mt_rand($weaponPlayer->getLevelID() / 2,$weaponPlayer->getLevelID()) - ($targetPlayer->getLevelID() - $weaponPlayer->getLevelID())/3)/1.5;
 
 		$weaponShip =& $weaponPlayer->getShip();
 		$targetShip =& $targetPlayer->getShip();
@@ -46,6 +50,11 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 			$modifiedAccuracy -= $this->accuracy * ($mrDiff/MR_FACTOR)/100;
 	
 		return max(0,min(100,$modifiedAccuracy));
+	}
+	
+	public function getMaxModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->getModifiedAccuracyAgainstPlayerUsingRandomAbstractSmrPlayer($weaponPlayer,$targetPlayer,self::$MAX_CDS_RAND);
 	}
 	
 	public function &getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)

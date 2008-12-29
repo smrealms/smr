@@ -88,7 +88,7 @@ if (isset($var['ship_id'])) {
 	transfer('ship_id');
 
 	$PHP_OUTPUT.= '<table cellspacing="0"class="standard"><tr><th>&nbsp;</th><th>';
-	$PHP_OUTPUT.= $ship->ship_name;
+	$PHP_OUTPUT.= $ship->getName();
 	$PHP_OUTPUT.= '</th><th>';
 	$PHP_OUTPUT.= $ship_name;
 	$PHP_OUTPUT.= '</th></tr>';

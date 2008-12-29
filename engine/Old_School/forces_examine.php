@@ -4,7 +4,7 @@ mt_srand((double)microtime()*1000000);
 
 // creates a new player object for attacker and defender
 $attacker		=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
-$attacker_ship	=& SmrShip::getShip(SmrSession::$game_id,SmrSession::$account_id);
+$attacker_ship	=& $attacker->getShip();
 $forces_owner	=& SmrPlayer::getPlayer($var['owner_id'], SmrSession::$game_id);
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
@@ -20,7 +20,7 @@ if ($attacker->getSectorID() != $forces->getSectorID()) {
 $PHP_OUTPUT.=('<h1>EXAMINE FORCES</h1>');
 
 // should we display an attack button
-if (($attacker_ship->attack_rating() > 0 || $attacker_ship->getCDs() > 0) &&
+if (($attacker_ship->getAttackRating() > 0 || $attacker_ship->getCDs() > 0) &&
 	!$attacker->hasFederalProtection() &&
 	$attacker->getNewbieTurns() == 0 &&
 	!$attacker->isLandedOnPlanet() &&
@@ -102,7 +102,7 @@ if ($attacker_list == '()') {
 	while ($db->next_record()) {
 
 		 $curr_player =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
-		 $curr_ship =& SmrShip::getShip(SmrSession::$game_id,$db->f('account_id'));
+		 $curr_ship =& $curr_player->getShip();
 
 		 $PHP_OUTPUT.=($player->getLevelName().'<br>');
 		 $PHP_OUTPUT.=('<span style="color:yellow;">'.$curr_player->getPlayerName().' ('.$curr_player->getPlayerID().')</span><br>');
@@ -110,8 +110,8 @@ if ($attacker_list == '()') {
 		 $PHP_OUTPUT.=('Level: '.$curr_player->level_id.'<br>');
 		 $PHP_OUTPUT.=('Alliance: '.$curr_player->getAllianceName().'<br><br>');
 		 $PHP_OUTPUT.=('<small>');
-		 $PHP_OUTPUT.=($curr_ship->ship_name.'<br>');
-		 $PHP_OUTPUT.=('Rating : ' . $curr_ship->attack_rating() . '/' . $curr_ship->defense_rating() . '<br>');
+		 $PHP_OUTPUT.=($curr_ship->getName().'<br>');
+		 $PHP_OUTPUT.=('Rating : ' . $curr_ship->getAttackRating() . '/' . $curr_ship->getDefenseRating() . '<br>');
 		 $PHP_OUTPUT.=('Shields : ' . $curr_ship->shield_low() . '-' . $curr_ship->shield_high() . '<br>');
 		 $PHP_OUTPUT.=('Armor : ' . $curr_ship->armor_low() . '-' . $curr_ship->armor_high() . '<br>');
 		 $PHP_OUTPUT.=('Hard Points: '.$curr_ship->weapon_used.'<br>');

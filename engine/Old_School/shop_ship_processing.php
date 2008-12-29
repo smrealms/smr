@@ -39,13 +39,10 @@ $player->update();
 $ship->setShipTypeID($var['ship_id']);
 
 // delete cargo
-$ship->remove_all_cargo();
+$ship->removeAllCargo();
 
 // update
 $ship->update();
-
-// get new ship object
-$ship =& SmrShip::getShip(SmrSession::$game_id,SmrSession::$account_id);
 
 // adapt hardware
 $db->query('SELECT * FROM hardware_type');
@@ -75,7 +72,7 @@ $ship->update_hardware();
 $ship->update_weapon();
 $ship->mark_seen();
 
-$account->log(10, 'Buys a '.$ship->ship_name.' for '.$cost.' credits', $player->getSectorID());
+$account->log(10, 'Buys a '.$ship->getName().' for '.$cost.' credits', $player->getSectorID());
 
 forward(create_container('skeleton.php', 'current_sector.php'));
 

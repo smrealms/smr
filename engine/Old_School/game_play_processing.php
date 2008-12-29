@@ -32,7 +32,7 @@ else
 	require_once(get_file_loc('SmrSector.class.inc'));
 
 	$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
-	$ship	=& SmrShip::getShip(SmrSession::$game_id,SmrSession::$account_id);
+	$ship	=& $player->getShip();
 	$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 
 	// update turns on that player

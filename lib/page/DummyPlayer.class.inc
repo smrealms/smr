@@ -1,7 +1,7 @@
 <?php
-require_once('AbstractSmrPlayer.class.inc');
+require_once('AbstractSmrShip.class.inc');
 
-class DummyPlayer extends AbstractSmrPlayer
+class DummyPlayer extends AbstractSmrShip
 {
     function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60)
     {
@@ -93,7 +93,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		}
     }
     
-    public static function getDummyNames()
+    public static function getDummyPlayerNames()
     {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT id FROM cached_dummys ' .

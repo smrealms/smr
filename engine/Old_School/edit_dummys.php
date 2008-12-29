@@ -14,11 +14,11 @@ if(isset($_REQUEST['save_dummy']))
 }
 
 
-$smarty->assign('DummyNames', DummyPlayer::getDummyNames());
+$smarty->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 $smarty->assign_by_ref('DummyPlayer',$dummyPlayer);
 $smarty->assign_by_ref('Levels',Globals::getLevelRequirements());
 
 //TODO add game type id
-$smarty->assign_by_ref('Ships',SmrShip::getAllBaseShips(0));
+$smarty->assign_by_ref('Ships',AbstractSmrShip::getAllBaseShips(0));
 
 ?>

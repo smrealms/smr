@@ -7,7 +7,7 @@ class Globals
 	protected static $LEVEL_REQUIREMENTS = null;
 	protected static $RACES = null;
 	protected static $GOODS = null;
-	protected static $GAME_SPEEDS = array();
+	protected static $GAMES = array();
 	protected static $RACE_RELATIONS = array();
 	protected static $db = null;
 	
@@ -132,16 +132,30 @@ class Globals
 		return self::$GOODS;
 	}
 	
-	public static function &getGameSpeed($gameID)
+	public static function &getGameInfo($gameID)
 	{
-		if(!isset(self::$GAME_SPEEDS[$gameID]))
+		if(!isset(self::$GAMES[$gameID]))
 		{
 			self::initialiseDatabase();
 			self::$db->query('SELECT * FROM game WHERE game_id = '.$gameID.' LIMIT 1');
 			self::$db->nextRecord();
-			self::$GAME_SPEEDS[$gameID] = (int)self::$db->getField('game_speed');
+			self::$GAMES[$gameID] = array();
+			self::$GAMES[$gameID]['Speed'] = (int)self::$db->getField('game_speed');
+			self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
 		}
-		return self::$GAME_SPEEDS[$gameID];
+		return self::$GAMES[$gameID];
+	}
+	
+	public static function &getGameSpeed($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['Speed'];
+	}
+	
+	public static function &getGameType($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['GameType'];
 	}
 	
 	public static function &getRaceRelations($gameID,$raceID)

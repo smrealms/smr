@@ -112,7 +112,7 @@ if (!isset($galaxy_id)) {
 $galaxy_id = (int)$galaxy_id;
 
 require_once(get_file_loc('SmrShip.class.inc'));
-$ship =& SmrShip::getShip(SmrSession::$game_id,SmrSession::$account_id);
+$ship =& $player->getShip(SmrSession::$game_id,SmrSession::$account_id);
 
 $db->query('SELECT
 galaxy.galaxy_id as galaxy_id,

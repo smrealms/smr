@@ -101,7 +101,7 @@ echo '<br>Alignment : ' . get_colored_text($player->getAlignment(),$player->getA
 echo '<br>Alliance : ' . $player->getAllianceName();
 
 if ($player->getAllianceID() > 0) echo ' (' . $player->getAllianceID() . ')';
-echo '<br><br><b style="color:yellow;">' . $ship->ship_name . '</b><br>';
+echo '<br><br><b style="color:yellow;">' . $ship->getName() . '</b><br>';
 
 $db->query('SELECT ship_name FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 			'account_id = '.$player->getAccountID().' LIMIT 1');
@@ -110,7 +110,7 @@ if ($db->next_record()) {
 	echo stripslashes($db->f('ship_name'));
 }
 
-echo 'Rating : ' . $ship->attack_rating() . '/' . $ship->defense_rating() . '<br>';
+echo 'Rating : ' . $ship->getAttackRating() . '/' . $ship->getDefenseRating() . '<br>';
 
 // ******* Shields *******
 $am=$ship->getShields();
@@ -150,12 +150,9 @@ if ($ship->cloak_active()) echo '<strong style="color:lime;">*** Cloak active **
 else if (!empty($ship->hardware[8])) echo '<strong style="color:red;">*** Cloak inactive ***</strong><br /><br />';
 
 
-if ($ship->get_illusion() > 0) {
-
-	$db->query('SELECT ship_name FROM ship_type WHERE ship_type_id = ' . $ship->get_illusion() . ' LIMIT 1');
-	$db->next_record();
-	$ship_name = $db->f('ship_name');
-	echo '<strong style="color:cyan;"> ' . $ship_name . '</strong><br/>IG Rating : (' . $ship->get_illusion_attack() . '/' . $ship->get_illusion_defense() . ')<br /><br />';
+if ($ship->hasActiveIllusion())
+{
+	echo '<strong style="color:cyan;"> ' . $ship->getIllusionShipName() . '</strong><br/>IG Rating : (' . $ship->getIllusionAttack() . '/' . $ship->getIllusionDefense() . ')<br /><br />';
 
 }
 
