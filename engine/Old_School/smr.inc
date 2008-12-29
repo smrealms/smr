@@ -141,9 +141,7 @@ function get_file_loc($file_name, $exists = 1)
 		{
 			if ($g_id > 0) $game_id = $g_id;
 			else $g_id = SmrSession::$game_id;
-			$includes->query('SELECT game_type FROM game WHERE game_id = '.$g_id.' LIMIT 1	');
-			$includes->next_record();
-			$stored_dir = $includes->f('game_type') . '/';
+			$stored_dir = Globals::getGameType($g_id) . '/';
 			$game_dir = $stored_dir;
 		} else $game_dir = 'Old_School/';
 	}
