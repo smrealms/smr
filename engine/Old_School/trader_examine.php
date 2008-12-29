@@ -55,7 +55,7 @@ $players[SmrSession::$account_id] = array(
 	get_colored_text($player->getAlignment(),$player->getPlayerName() . ' (' . $player->getPlayerID() . ')'),
 	(int)$player->getAllianceID(),
 	(int)$player->getRaceID(),
-	(int)$player->getShipID(),
+	(int)$player->getShipTypeID(),
 	(int)$player->getExperience(),
 	(int)$player->getAlignment(),0,0,0,0,array(),$ship->getName(),0,0,0,0
 );
