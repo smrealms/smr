@@ -57,6 +57,7 @@ abstract class AbstractSmrPlayer
 	protected $goods;
 	protected $goodsExpGained;
 	protected $gadgets;
+	protected $stats;
 	protected $pastMaintBought;
 	protected $pastMaintCredit;
 	protected $pureRelations;
