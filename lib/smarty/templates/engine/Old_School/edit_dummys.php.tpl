@@ -16,13 +16,13 @@
 				<input type="text" name="dummy_name" value="{$DummyName}" />
 				Level
 				<select name="level">
-					{foreach from=$Levels item=$Level}
+					{foreach from=$Levels item=Level}
 						<option value="{$Level.Requirement}"{if $Level.ID==$DummyPlayer->getLevelID()} selected="selected"{/if}>{$Level.ID}</option>
 					{/foreach}
 				</select>
 				Ship:
 				<select name="ship_id">
-					{foreach from=$Ships item=$Ship}
+					{foreach from=$Ships item=Ship}
 						<option value="{$Ship.TypeID}"{if $Ship.TypeID==$DummyPlayer->getShipTypeID()} selected="selected"{/if}>{$Ship.Name}</option>
 					{/foreach}
 				</select>
