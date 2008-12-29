@@ -35,7 +35,7 @@ if ($db->nf() > 0)
 //		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
 		//PAGE
 		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
-		$curr_ship =& SmrShip::getShip($game_id,SmrSession::$account_id);
+		$curr_ship =& $curr_player->getShip();
 
 		// update turns for this game
 		$curr_player->updateTurns();

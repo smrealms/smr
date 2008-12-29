@@ -26,7 +26,7 @@ elseif ($var['action'] == 'Set Illusion')
 
 elseif ($var['action'] == 'Disable Illusion') {
 
-	$ship->disable_illusion();
+	$ship->disableIllusion();
 
 }
 

@@ -151,7 +151,7 @@ abstract class AbstractSmrPlayer
 			return false;
 		}	
 
-        $ship =& SmrShip::getShip($this->getGameID(),$this->getAccountID());
+        $ship =& $this->getShip();
         $attackRating = $ship->getAttackRating();
 		if ($attackRating > 8)
 			return false;
@@ -463,7 +463,7 @@ abstract class AbstractSmrPlayer
 	
 	public function &getShip()
 	{
-		return SmrShip::getShip($this->getGameID(),$this->getAccountID());
+		return SmrShip::getShip($this);
 	}
 	
 	public function getDiminishingTraderAttack()

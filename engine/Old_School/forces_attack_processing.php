@@ -76,7 +76,7 @@ if ($player->getAllianceID() != 0) {
 if ($db->next_record()) {
 
 	$curr_attacker =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
-	$curr_attacker_ship =& SmrShip::getShip(SmrSession::$game_id,$db->f('account_id'));
+	$curr_attacker_ship =& $curr_attacker->getShip();
 	
 	// disable cloak
 	$curr_attacker_ship->disable_cloak();
@@ -416,7 +416,7 @@ $db2 = new SMR_DB();
 while ($db->next_record() && ($forces->getCDs() > 0 || $forces->getSDs() > 0 || $forces->getMines() > 0)) {
 
 	$curr_attacker =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
-	$curr_attacker_ship =& SmrShip::getShip(SmrSession::$game_id,$db->f('account_id'));
+	$curr_attacker_ship =& $curr_attacker->getShip();
 
 	// disable cloak
 	$curr_attacker_ship->disable_cloak();

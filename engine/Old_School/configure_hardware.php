@@ -38,8 +38,8 @@ $PHP_OUTPUT.= '</small>';
 if ($ship->hasIllusion())
 {
 
-	if ($ship->get_illusion() > 0)
-		$default_id = $ship->get_illusion();
+	if ($ship->hasIllusion())
+		$default_id = $ship->getIllusionShipID();
 	else
 		$default_id = $ship->getShipTypeID();
 
