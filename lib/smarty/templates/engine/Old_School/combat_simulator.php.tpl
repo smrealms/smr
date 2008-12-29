@@ -1,6 +1,10 @@
 <table>
 	<tr>
 		<td style="vertical-align:top">
+Attackers<br />
+<table>
+	<tr>
+		<td style="vertical-align:top">
 			<u>Player One</u><br/><br />
 			<form action="/loader.php?sn=6233138d" method="POST">
 				<input type="hidden" name="action" value="1" /><input type="hidden" name="stored" value="YToyOntpOjE7YTo0OntpOjA7aTowO2k6MTtpOjE7aToyO2k6MDtpOjM7YToxOntpOjA7aToxO319aToyO2E6NDp7aTowO2k6MDtpOjE7aToxO2k6MjtpOjA7aTozO2E6MTp7aTowO2k6MTt9fX0=" />
@@ -15,6 +19,13 @@
 			<u>Current Details</u><br/><br/>Level: 0<br />Ship: Galactic Semi<br />DCS: false<br/>Weapons:<br/>Newbie Pulse Laser<br />
 		</td>
 	</tr>
+</table>
+		</td>
+	</tr>
+	<tr>
+		<td style="vertical-align:top">
+Defenders<br />
+<table>
 	<tr>
 		<td style="vertical-align:top">
 			<u>Player Two</u><br/><br />
@@ -27,6 +38,9 @@
 		</td>
 		<td style="vertical-align:top">
 			<u>Current Details</u><br/><br/>Level: 0<br />Ship: Galactic Semi<br />DCS: false<br/>Weapons:<br/>Newbie Pulse Laser<br /></td></tr><tr><td colspan = "2" style="text-align:center"><br />All drones, shields, armour assumed full at the start of the simulation<br/><br /></form><form action="/loader.php?sn=6233138d" method="POST"><input type="hidden" name="action" value="3" /><input type="hidden" name="stored" value="YToyOntpOjE7YTo0OntpOjA7aTowO2k6MTtpOjE7aToyO2k6MDtpOjM7YToxOntpOjA7aToxO319aToyO2E6NDp7aTowO2k6MDtpOjE7aToxO2k6MjtpOjA7aTozO2E6MTp7aTowO2k6MTt9fX0=" /><input type="submit" value="Run Simulation" /></form>
+		</td>
+	</tr>
+</table>
 		</td>
 	</tr>
 </table>
