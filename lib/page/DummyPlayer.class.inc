@@ -41,5 +41,15 @@ class DummyPlayer extends AbstractSmrPlayer
 		$this->bank						= 0;
 		$this->zoom						= 0;
     }
+    
+    public function getPastMaintBought()
+    {
+    	
+    }
+    
+    public function getPastMaintCredit()
+    {
+    	
+    }
 }
 ?>

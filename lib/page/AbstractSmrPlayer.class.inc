@@ -243,7 +243,7 @@ abstract class AbstractSmrPlayer
 		return $this->landedOnPlanet;
 	}
 	
-	function setLandedOnPlanet($bool)
+	public function setLandedOnPlanet($bool)
 	{
 		if($this->landedOnPlanet == $bool)
 			return;
@@ -252,7 +252,16 @@ abstract class AbstractSmrPlayer
 //		$this->db->query('UPDATE '.$this->tableSQL.' SET land_on_planet = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	public abstract function getLevelID();
+	public function getLevelID()
+	{
+		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+		foreach ($LEVELS_REQUIREMENTS as $level_id => $require)
+		{
+			if ($this->experience >= $require['Requirement']) continue;
+				return $level_id - 1;
+		}
+		return max(array_keys($LEVELS_REQUIREMENTS));
+	}
 	
 	public function getLevelName()
 	{
@@ -293,12 +302,12 @@ abstract class AbstractSmrPlayer
 		return $races[$this->getRaceID()]['Race Name'];
 	}
 	
-	function getColoredRaceName($otherRaceID)
+	public function getColoredRaceName($otherRaceID)
 	{
 		return get_colored_text($this->getRelation($otherRaceID), $this->getRaceName());
 	}
 	
-	function setRaceID($raceID)
+	public function setRaceID($raceID)
 	{
 		if($this->raceID == $raceID)
 			return;
@@ -317,7 +326,7 @@ abstract class AbstractSmrPlayer
 		return $this->getAllianceID()!=0;
 	}
 	
-	function setAllianceID($ID)
+	public function setAllianceID($ID)
 	{
 		if($this->allianceID == $ID)
 			return;
