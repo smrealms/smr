@@ -53,17 +53,20 @@ require_once(ENGINE . 'Old_School/smr.inc');
 require_once(get_file_loc('DummyPlayer.class.inc'));
 
 $attackers = array();
-foreach($_POST['attackers'] as $orderID => $attackerName)
-{
-	$attackers[$orderID] =& DummyPlayer::getCachedDummyPlayer($attackerName);
-	$attackers[$orderID]->setAllianceID(1);
-}
+if(isset($_POST['attackers']))
+	foreach($_POST['attackers'] as $orderID => $attackerName)
+	{
+		$attackers[$orderID] =& DummyPlayer::getCachedDummyPlayer($attackerName);
+		$attackers[$orderID]->setAllianceID(1);
+	}
+	
 $defenders = array();
-foreach($_POST['defenders'] as $orderID => $defenderName)
-{
-	$defenders[$orderID] =& DummyPlayer::getCachedDummyPlayer($defenderName);
-	$defenders[$orderID]->setAllianceID(2);
-}
+if(isset($_POST['defenders']))
+	foreach($_POST['defenders'] as $orderID => $defenderName)
+	{
+		$defenders[$orderID] =& DummyPlayer::getCachedDummyPlayer($defenderName);
+		$defenders[$orderID]->setAllianceID(2);
+	}
 
 if(isset($_POST['action']) && $_POST['action'] == 1) 
 {
