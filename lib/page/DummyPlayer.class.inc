@@ -83,12 +83,25 @@ class DummyPlayer extends AbstractSmrPlayer
 						  		'id = '.$name.' LIMIT 1');
 		if($db->nextRecord())
 		{
-			return unserialize($db->getField('port_info'));
+			return unserialize($db->getField('info'));
 		}
 		else
 		{
 			return new DummyPlayer();
 		}
+    }
+    
+    public function getDummyNames()
+    {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT id FROM cached_dummys ' .
+						  'WHERE type = \'DummyPlayer\'');
+		$dummyNames = array();
+		while($db->nextRecord())
+		{
+			$dummyNames[] = $db->getField('id');
+		}
+		return $dummyNames;
     }
 }
 ?>
