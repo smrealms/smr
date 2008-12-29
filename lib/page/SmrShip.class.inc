@@ -325,6 +325,46 @@ class SmrShip
 		return $weapon;
 	}
 	
+	function moveWeaponUp($orderID)
+	{
+		$replacement = $orderID - 1;
+		if($replacement < 1)
+		{
+			// Shift everything up by one and put the selected weapon at the bottom
+			$temp =& $this->weapon[$orderID];
+			for($i=1;$i<count($this->weapon);++$i)
+			{
+				$ship->weapon[$i] =& $this->weapon[$i+1];
+			}
+			$ship->weapon[count($this->weapon)] =& $temp;
+		}
+		else
+		{
+			$temp =& $this->weapon[$replacement];
+			$this->weapon[$replacement] =& $this->weapon[$orderID];
+			$this->weapon[$orderID] =& $temp;
+		}
+	}
+	
+	function moveWeaponDown($orderID)
+	{
+		$replacement = $orderID + 1;
+		if($replacement > count($this->weapon))
+		{
+			// Shift everything down by one and put the selected weapon at the top
+			$temp =& $this->weapon[count($this->weapon)];
+			for($i=count($this->weapon);$i>1;--$i) {
+				$this->weapon[$i] =& $this->weapon[$i-1];
+			}	
+			$this->weapon[1] =& $temp;
+		}
+		else {
+			$temp =& $ship->weapon[$replacement];
+			$this->weapon[$replacement] =& $this->weapon[$orderID];
+			$this->weapon[$orderID] =& $temp;
+		}
+	}
+	
 	function remove_weapon($weapon_type_id) {
 		
 		$this->db->query('DELETE FROM ship_has_weapon WHERE account_id = '.$this->getAccountID().' AND ' .
@@ -927,7 +967,7 @@ class SmrShip
 	
 	public function hasWeapons()
 	{
-		return count($this->getWeapons())>0;
+		return $this->getNumWeapons()>0;
 	}
 	
 	public function &getWeapons()
