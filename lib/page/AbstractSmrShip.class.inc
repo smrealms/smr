@@ -83,7 +83,11 @@ abstract class AbstractSmrShip
 	{
 		$this->player = $player;
 		$this->gameID = $player->getGameID();
-		
+		$this->regenerateBaseShip();
+	}
+	
+	protected function regenerateBaseShip()
+	{
 		$baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID),$this->player->getShipTypeID());
 		$this->shipName		= $baseShip['Name'];
 		$this->shipTypeID	= $baseShip['ShipTypeID'];

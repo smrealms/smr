@@ -70,7 +70,7 @@ class DummyPlayer extends AbstractSmrPlayer
 	public function &getShip()
 	{
 		require_once(get_file_loc('DummyShip.class.inc'));
-		return DummyShip::getCachedDummyShip($this->getPlayerName());
+		return DummyShip::getCachedDummyShip($this);
 	}
 	
 	public function cacheDummyPlayer()
