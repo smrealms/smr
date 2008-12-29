@@ -29,7 +29,7 @@ if ($ship->hasWeapons())
 	foreach ($shipWeapons as $order_id => &$weapon)
 	{
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td>'.$order_id.$weapon->getName().'</td>');
+		$PHP_OUTPUT.=('<td>'.$weapon->getName().'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$weapon->getShieldDamage().'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$weapon->getArmourDamage().'</td>');
 		$PHP_OUTPUT.= '<td>';
