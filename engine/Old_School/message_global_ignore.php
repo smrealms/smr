@@ -2,7 +2,7 @@
 
 $value = strtoupper($_POST['action']);
 
-$db->query('UPDATE player SET ignore_global = '.$db->escapeString($value).' WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+$player->setIgnoreGlobals($value == 'YES');
 
 $container = array();
 $container['url'] = 'skeleton.php';

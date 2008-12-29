@@ -3,8 +3,7 @@ require_once('AbstractSmrPlayer.class.inc');
 
 class DummyPlayer extends AbstractSmrPlayer
 {
-
-    function __construct($gameID,$playerName,$raceID,$experience,$alignment,$allianceID,$shipTypeID)
+    function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60)
     {
 		parent::__construct();
 		$this->accountID				= 0;
@@ -66,6 +65,30 @@ class DummyPlayer extends AbstractSmrPlayer
     
     public function getPureRelationsData()
     {
+    }
+    
+    public function cacheDummyPlayer()
+    {
+		$cache = serialize($this);
+		$this->db->query('REPLACE INTO cached_dummys ' .
+					'(type, id, info) ' .
+					'VALUES (\'DummyPlayer\', '.$this->getPlayerName().', '.$this->db->escapeString($cache).')');	
+    }
+    
+    public function &getCachedDummyPlayer($name)
+    {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT info FROM cached_dummys ' .
+						  'WHERE type = \'DummyPlayer\' AND ' .
+						  		'id = '.$name.' LIMIT 1');
+		if($db->nextRecord())
+		{
+			return unserialize($db->getField('port_info'));
+		}
+		else
+		{
+			return new DummyPlayer();
+		}
     }
 }
 ?>

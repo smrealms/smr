@@ -762,7 +762,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			$this->db->query($sql);
 	}
 	
-	function getIgnoreGlobals()
+	function isIgnoreGlobals()
 	{
 		return $this->ignoreGlobals;
 	}
