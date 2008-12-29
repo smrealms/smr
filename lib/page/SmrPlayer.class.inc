@@ -858,16 +858,6 @@ class SmrPlayer extends AbstractSmrPlayer
 //NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
 			return get_colored_text($this->alignment,$this->playerName.' ('.$this->playerID.')');
 	}
-	function getLevelID()
-	{
-		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-		foreach ($LEVELS_REQUIREMENTS as $level_id => $require)
-		{
-			if ($this->experience >= $require['Requirement']) continue;
-				return $level_id - 1;
-		}
-		return max(array_keys($LEVELS_REQUIREMENTS));
-	}
 	function getLevelName()
 	{
 		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
