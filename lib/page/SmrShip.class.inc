@@ -37,7 +37,7 @@ class SmrShip extends AbstractSmrShip
 	
 	protected function __construct(AbstractSmrPlayer &$player)
 	{
-		parent::_construct($player);
+		parent::__construct($player);
 		$this->db = new SmrMySqlDatabase();
 		
 		$this->load_hardware();
