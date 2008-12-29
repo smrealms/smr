@@ -40,21 +40,32 @@ class DummyPlayer extends AbstractSmrPlayer
 		$this->lastPort					= 0;
 		$this->bank						= 0;
 		$this->zoom						= 0;
+		
+		$this->stats = array();
+		$this->gadgets = array();
+		$this->pureRelations = array();
     }
     
     public function getPastMaintBought()
     {
-    	
+    	return 0;
     }
     
     public function getPastMaintCredit()
     {
-    	
+    	return 0;
     }
     
     public function getStatsData()
     {
-    	
+    }
+    
+    public function getGadgetsData()
+    {
+    }
+    
+    public function getPureRelationsData()
+    {
     }
 }
 ?>
