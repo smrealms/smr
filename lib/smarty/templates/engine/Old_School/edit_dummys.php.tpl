@@ -3,6 +3,7 @@
 	<select name="dummyname">
 		{foreach from=$DummyNames item=DummyName}
 			<option value="{$DummyName}" selected="selected">{$DummyName}</option>
+		{/foreach}
 	</select><br />
 	<input type="submit" value="Select Dummy" />
 </form>

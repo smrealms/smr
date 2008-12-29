@@ -75,7 +75,7 @@ class DummyPlayer extends AbstractSmrPlayer
 					'VALUES (\'DummyPlayer\', '.$this->getPlayerName().', '.$this->db->escapeString($cache).')');	
     }
     
-    public function &getCachedDummyPlayer($name)
+    public static function &getCachedDummyPlayer($name)
     {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT info FROM cached_dummys ' .
@@ -91,7 +91,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		}
     }
     
-    public function getDummyNames()
+    public static function getDummyNames()
     {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT id FROM cached_dummys ' .
