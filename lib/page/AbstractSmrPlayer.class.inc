@@ -97,7 +97,7 @@ abstract class AbstractSmrPlayer
 //		$this->db->query('UPDATE '.$this->tableSQL.' SET newbie_turns = '.$this->newbieTurns.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	public function getShipID()
+	public function getShipTypeID()
 	{
 		return $this->shipID;
 	}

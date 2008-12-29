@@ -64,7 +64,7 @@ class Globals
 			self::$PLANET_BUILDINGS =& $PLANET_BUILDINGS;
 		}
 		return self::$PLANET_BUILDINGS;
-		}
+	}
 	
 	public static function &getLevelRequirements()
 	{
