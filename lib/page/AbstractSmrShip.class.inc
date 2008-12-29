@@ -6,6 +6,8 @@ require_once('SmrWeapon.class.inc');
 require_once('SmrCombatDrones.class.inc');
 abstract class AbstractSmrShip
 {
+	protected static $CACHE_BASE_SHIPS = array();
+	
 	protected $player;
 	
 	protected $gameID;

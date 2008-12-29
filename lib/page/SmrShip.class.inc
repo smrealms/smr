@@ -8,7 +8,6 @@ require_once('SmrCombatDrones.class.inc');
 class SmrShip extends AbstractSmrShip
 {
 	protected static $CACHE_SHIPS = array();
-	protected static $CACHE_BASE_SHIPS = array();
 	
 	protected $db;
 	
