@@ -98,7 +98,7 @@ class SmrShip extends AbstractSmrShip
 	function load_hardware() {
 		
 		$this->hardware = array();
-		$this->maxHardware = array();
+		$this->oldHardware = array();
 		
 		// get currently hardware from db
 		$this->db->query('SELECT * FROM ship_has_hardware, hardware_type ' .
@@ -113,30 +113,6 @@ class SmrShip extends AbstractSmrShip
 			// adding hardware to array
 			$this->hardware[$hardware_type_id]		= $this->db->getField('amount');
 			$this->oldHardware[$hardware_type_id] = $this->db->getField('old_amount');
-			
-		}
-		// get supported hardware from db
-		$this->db->query('SELECT hardware_type.hardware_type_id as hardware_type_id, max_amount FROM ship_type_support_hardware, hardware_type ' .
-			'WHERE ship_type_support_hardware.hardware_type_id = hardware_type.hardware_type_id AND ' .
-			'ship_type_id = '.$this->getShipTypeID());
-		
-		while ($this->db->nextRecord()) {
-			
-			$hardware_type_id	= $this->db->getField('hardware_type_id');
-			
-			// adding hardware to array
-			$this->maxHardware[$hardware_type_id] = $this->db->getField('max_amount');
-		}
-		
-		// initialize empty hardware
-		$this->db->query('SELECT hardware_type_id FROM hardware_type');
-		while ($this->db->nextRecord()) {
-			
-			$hardware_type_id = $this->db->getField('hardware_type_id');
-			
-			// initialize empty hardware
-			if (empty($this->hardware[$hardware_type_id])) $this->hardware[$hardware_type_id] = 0;
-			if (empty($this->maxHardware[$hardware_type_id])) $this->maxHardware[$hardware_type_id] = 0;
 		}
 		
 	}

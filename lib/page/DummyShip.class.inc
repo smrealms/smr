@@ -14,63 +14,15 @@ class DummyShip extends AbstractSmrShip
 		parent::__construct($player);
 		$this->player = $player;
 		
-		$this->load_hardware();
-		$this->load_weapon();
-		$this->load_cargo();
-	}
-	
-	function load_weapon()
-	{
-		
-		// determine weapon
-		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon WHERE ' .
-			'account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID().
-		' ORDER BY order_id LIMIT ' . $this->hardpoint);
+		$this->hardware = array();
+		$this->maxHardware = array();
+		$this->oldHardware = array();
 		
 		$this->weapons = array();
 		
-		// generate list of weapon names the user transports
-		while ($this->db->nextRecord())
-		{
-			
-			$order_id		= $this->db->getField('order_id');
-			$this->weapons[$order_id] =& SmrWeapon::getWeapon($this->gameID,$this->db->getField('weapon_type_id'));
-			
-		}
-	}
-	
-	function load_cargo() {
-		
-		// initialize cargo array
 		$this->cargo = array();
 		$this->cargo_left = $this->getCargoHolds();
-		
-		// get cargo from db
-		$this->db->query('SELECT * FROM ship_has_cargo, good WHERE ship_has_cargo.good_id = good.good_id AND ' .
-			'account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID());
-		while ($this->db->nextRecord()) {
-			
-			$good_id	= $this->db->getField('good_id');
-			$amount		= $this->db->getField('amount');
-			
-			// subtract the current amount from cargo_hold to get cargo left value
-			$this->cargo_left -= $amount;
-			
-			// adding cargo and amount to array
-			$this->cargo[$good_id] = $amount;
-		}
-		
-		// initialize empty cargo
-		$this->db->query('SELECT good_id FROM good');
-		while ($this->db->nextRecord()) {
-			
-			$good_id = $this->db->getField('good_id');
-			if (empty($this->cargo[$good_id])) $this->cargo[$good_id] = 0;
-		}
 	}
-	
 	function load_hardware() {
 		
 		$this->hardware = array();
@@ -90,18 +42,6 @@ class DummyShip extends AbstractSmrShip
 			$this->hardware[$hardware_type_id]		= $this->db->getField('amount');
 			$this->oldHardware[$hardware_type_id] = $this->db->getField('old_amount');
 			
-		}
-		// get supported hardware from db
-		$this->db->query('SELECT hardware_type.hardware_type_id as hardware_type_id, max_amount FROM ship_type_support_hardware, hardware_type ' .
-			'WHERE ship_type_support_hardware.hardware_type_id = hardware_type.hardware_type_id AND ' .
-			'ship_type_id = '.$this->getShipTypeID());
-		
-		while ($this->db->nextRecord()) {
-			
-			$hardware_type_id	= $this->db->getField('hardware_type_id');
-			
-			// adding hardware to array
-			$this->maxHardware[$hardware_type_id] = $this->db->getField('max_amount');
 		}
 		
 		// initialize empty hardware

@@ -1,7 +1,7 @@
 <?php
-require_once('AbstractSmrShip.class.inc');
+require_once('AbstractSmrPlayer.class.inc');
 
-class DummyPlayer extends AbstractSmrShip
+class DummyPlayer extends AbstractSmrPlayer
 {
 	public function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60)
 	{

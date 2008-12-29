@@ -51,10 +51,21 @@ abstract class AbstractSmrShip
 	{
 		$ship = array();
 		$ship['Name']		= $db->getField('ship_name');
-		$ship['ShipTypeID']		= $db->getField('ship_type_id');
+		$ship['ShipTypeID']	= $db->getField('ship_type_id');
 		$ship['Hardpoint']	= $db->getField('hardpoint');
 		$ship['Speed']		= $db->getField('speed');
 		$ship['Cost']		= $db->getField('cost');
+		
+		// get supported hardware from db
+		$db2 = new SmrMySqlDatabase();
+		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
+			'WHERE ship_type_id = '.$ship['ShipTypeID']);
+		
+		while ($db2->nextRecord())
+		{
+			// adding hardware to array
+			$ship['MaxHardware'][$db2->getField('hardware_type_id')] = $db2->getField('max_amount');
+		}
 		return $ship;
 	}
 
@@ -79,6 +90,7 @@ abstract class AbstractSmrShip
 		$this->hardpoint	= $baseShip['Hardpoint'];
 		$this->speed		= $baseShip['Speed'];
 		$this->cost			= $baseShip['Cost'];
+		$this->maxHardware	= $baseShip['MaxHardware'];
 	}
 	
 	public function hasIllegalGoods()
