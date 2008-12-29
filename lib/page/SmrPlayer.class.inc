@@ -317,6 +317,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
+	public function &getShip()
+	{
+		return SmrShip::getShip($this);
+	}
+	
 	public function &getAccount()
 	{
 		require_once('SmrAccount.class.inc');
