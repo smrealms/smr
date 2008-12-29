@@ -147,7 +147,7 @@ class SmrPort
 		}
 		return $this->goods;
 	}
-	public function getVisibleGoods(&$player)
+	public function getVisibleGoods(AbstractSmrPlayer &$player)
 	{
 		$goods = $this->getGoods();
 		$visibleGoods = array();
@@ -174,7 +174,7 @@ class SmrPort
 		$goods = $this->getVisibleGoods($player);
 		return $goods['Sell'];
 	}
-	public function getVisibleGoodsBought(&$player)
+	public function getVisibleGoodsBought(AbstractSmrPlayer &$player)
 	{
 		$goods = $this->getVisibleGoods($player);
 		return $goods['Buy'];
@@ -832,7 +832,7 @@ class SmrPort
 	{
 		return $this->cachedTime;
 	}
-	public function addCachePort($accountID,$forceUpdate=true)
+	public function addCachePort($accountID)
 	{
 		if ($this->exists())
 		{

@@ -438,7 +438,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->sectorID = $sectorID;
 		$this->updateLastCPLAction();
 		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET sector_id = ' . $this->sectorID . ', last_sector_id = '.$this->lastSectorID. ' WHERE ' . $this->SQL . ' LIMIT 1');
+		$cachedPort =& SmrPort::getPort($this->getGameID(),$sectorID);
+		$cachedPort->addCachePort($this->getAccountID);
 	}
 	
 	function getLastSectorID()

@@ -223,10 +223,14 @@ function do_voodoo()
 		if($PHP_OUTPUT!='')
 			$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
-	global $sector,$player,$ship;
-	$smarty->assign_by_ref('ThisSector',$sector);
-	$smarty->assign_by_ref('ThisPlayer',$player);
-	$smarty->assign_by_ref('ThisShip',$ship);
+	
+	if (SmrSession::$game_id > 0)
+	{
+		global $sector,$player,$ship;
+		$smarty->assign_by_ref('ThisSector',$sector);
+		$smarty->assign_by_ref('ThisPlayer',$player);
+		$smarty->assign_by_ref('ThisShip',$ship);
+	}
 	$smarty->assign('TemplateBody',$var['body']);
 	$time_elapsed = microtime(true) - $time_start;
 	$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
