@@ -83,11 +83,13 @@ class DummyPlayer extends AbstractSmrPlayer
 						  		'id = '.$db->escapeString($name).' LIMIT 1');
 		if($db->nextRecord())
 		{
-			return unserialize($db->getField('info'));
+			$return = unserialize($db->getField('info'));
+			return $return;
 		}
 		else
 		{
-			return new DummyPlayer();
+			$return = new DummyPlayer();
+			return $return;
 		}
     }
     
