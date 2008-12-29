@@ -1,8 +1,8 @@
 <form action="{$EditDummysLink}" method="GET">
 	Edit Dummy:
-	<select name="dummyname">
+	<select name="dummy_name">
 		{foreach from=$DummyNames item=DummyName}
-			<option value="{$DummyName}" selected="selected">{$DummyName}</option>
+			<option value="{$DummyName}"{if $DummyName==$DummyPlayer->getPlayerName()} selected="selected"{/if}>{$DummyName}</option>
 		{/foreach}
 	</select><br />
 	<input type="submit" value="Select Dummy" />
@@ -13,9 +13,19 @@
 		<td style="vertical-align:top">
 			<u>Player One</u><br/><br />
 			<form action="{$EditDummysLink}" method="POST">
-				<input type="hidden" name="action" value="1" /><input type="hidden" name="stored" value="YToyOntpOjE7YTo0OntpOjA7aTowO2k6MTtpOjE7aToyO2k6MDtpOjM7YToxOntpOjA7aToxO319aToyO2E6NDp7aTowO2k6MDtpOjE7aToxO2k6MjtpOjA7aTozO2E6MTp7aTowO2k6MTt9fX0=" />
-				Level:&nbsp;<select name="level"><option value="0" selected="selected">0</option></select>
-				&nbsp;Ship:&nbsp;<select name="ship_id"><option value="1" selected="selected">Galactic Semi</option></select>
+				<input type="text" name="dummy_name" value="{$DummyName}" />
+				Level
+				<select name="level">
+					{foreach from=$Levels item=$Level}
+						<option value="{$Level.Requirement}"{if $Level.ID==$DummyPlayer->getLevelID()} selected="selected"{/if}>{$Level.ID}</option>
+					{/foreach}
+				</select>
+				Ship:
+				<select name="ship_id">
+					{foreach from=$Ships item=$Ship}
+						<option value="{$Ship.TypeID}"{if $Ship.TypeID==$DummyPlayer->getShipTypeID()} selected="selected"{/if}>{$Ship.Name}</option>
+					{/foreach}
+				</select>
 				&nbsp;DCS&nbsp;<input type="checkbox" name="DCS" />
 				<input type="submit" value="Alter Player One" /><br /><br />
 				Weapon: 1&nbsp;<select name="weapon_0"><option value="1" selected="selected">Newbie Pulse Laser (dmg: 40/40 acc: 65% lvl:3)</option></select><br />
