@@ -41,7 +41,8 @@ abstract class AbstractSmrShip
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$shipTypeID.' LIMIT 1'); //TODO add game type id
 			$db->nextRecord();
-			return self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& self::buildBaseShip($db);
+			$s = self::buildBaseShip($db);
+			return self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& $s;
 		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID. ':' .$shipTypeID];
 	}
@@ -52,8 +53,8 @@ abstract class AbstractSmrShip
 		$ship['Name']		= $db->getField('ship_name');
 		$ship['ShipTypeID']		= $db->getField('ship_type_id');
 		$ship['Hardpoint']	= $db->getField('hardpoint');
-		$ship['speed']		= $db->getField('speed');
-		$ship['cost	']		= $db->getField('cost');
+		$ship['Speed']		= $db->getField('speed');
+		$ship['Cost']		= $db->getField('cost');
 		return $ship;
 	}
 
