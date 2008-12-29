@@ -31,6 +31,12 @@ class DummyShip extends AbstractSmrShip
 		$this->player = $player;
 		$this->regenerateBaseShip();
 		$this->doFullUNO();
+		for($i=1;$i<=$this->hardpoint;++$i)
+		{
+			if(!isset($this->weapons[$i]))
+				$this->weapons[$i] = SmrWeapon::getWeapon($player->getGameID(),1);
+		}
+		$this->checkForExcessWeapons();
 	}
 	
 	function decloak()

@@ -97,6 +97,28 @@ abstract class AbstractSmrShip
 		$this->maxHardware	= $baseShip['MaxHardware'];
 	}
 	
+	public function checkForExcessWeapons()
+	{
+		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints()))
+		{
+			//erase the first weapon 1 at a time until we are okay
+			$this->removeWeapon(1);
+		}
+	}
+	
+	public function getPowerUsed()
+	{
+		$power = 0;
+		foreach ($this->weapons as &$weapon)
+			$power += $weapon->getPowerLevel();
+		$power=0;
+	}
+	
+	public function getMaxPower()
+	{
+		return 50;
+	}
+	
 	public function hasIllegalGoods()
 	{
 		return $ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12);

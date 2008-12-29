@@ -62,6 +62,8 @@ class SmrShip extends AbstractSmrShip
 			$this->weapons[$order_id] =& SmrWeapon::getWeapon($this->gameID,$this->db->getField('weapon_type_id'));
 			
 		}
+		
+		$this->checkForExcessWeapons();
 	}
 	
 	function load_cargo() {
