@@ -26,7 +26,7 @@ class SmrShip
 	protected $cost;
 	
 	protected $hardpoint;
-	protected $weapon;
+	protected $weapons;
 	
 	protected $player_exp;
 	protected $player_level;
@@ -329,18 +329,18 @@ class SmrShip
 		if($replacement < 1)
 		{
 			// Shift everything up by one and put the selected weapon at the bottom
-			$temp =& $this->weapon[$orderID];
-			for($i=1;$i<count($this->weapon);++$i)
+			$temp =& $this->weapons[$orderID];
+			for($i=1;$i<count($this->weapons);++$i)
 			{
-				$ship->weapon[$i] =& $this->weapon[$i+1];
+				$ship->weapons[$i] =& $this->weapons[$i+1];
 			}
-			$ship->weapon[count($this->weapon)] =& $temp;
+			$ship->weapon[count($this->weapons)] =& $temp;
 		}
 		else
 		{
-			$temp =& $this->weapon[$replacement];
-			$this->weapon[$replacement] =& $this->weapon[$orderID];
-			$this->weapon[$orderID] =& $temp;
+			$temp =& $this->weapons[$replacement];
+			$this->weapons[$replacement] =& $this->weapons[$orderID];
+			$this->weapons[$orderID] =& $temp;
 		}
 	}
 	
