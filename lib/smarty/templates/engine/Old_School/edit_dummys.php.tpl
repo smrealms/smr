@@ -22,8 +22,8 @@
 				</select>
 				Ship:
 				<select name="ship_id">
-					{foreach from=$Ships item=Ship}
-						<option value="{$Ship.ShipTypeID}"{if $Ship.ShipTypeID==$DummyPlayer->getShipTypeID()} selected="selected"{/if}>{$Ship.Name}</option>
+					{foreach from=$BaseShips item=BaseShip}
+						<option value="{$BaseShip.ShipTypeID}"{if $BaseShip.ShipTypeID==$DummyPlayer->getShipTypeID()} selected="selected"{/if}>{$BaseShip.Name}</option>
 					{/foreach}
 				</select>
 				&nbsp;DCS&nbsp;<input type="checkbox" name="DCS" /><br />

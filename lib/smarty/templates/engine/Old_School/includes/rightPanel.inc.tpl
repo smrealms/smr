@@ -85,7 +85,7 @@ Empty : {$ThisShip->getEmptyHolds()}<br /><br />
 	{/foreach}
 </div>
 Open : {$ThisShip->getOpenWeaponSlots()}<br />Total Damage: ({$ThisShip->getTotalShieldDamage()}/{$ThisShip->getTotalArmourDamage()})<br />
-Power Used: Not Done Yet<br /><br />
+Power Used: {$ThisShip->getPowerUsed()}/{$ThisShip->getMaxPower()}<br /><br />
 <a  href="main.php?action=53"><span class="bold">Gadget Slot</span></a><br />
 <span id="gadgets">Empty<br /></span><br />
 <br />
