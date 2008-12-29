@@ -29,7 +29,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 			return self::$CACHE_WEAPONS[$gameID . ':' . $weaponTypeID] =& $w;
 		}
 		return self::$CACHE_WEAPONS[$gameID . ':' . $weaponTypeID];
-		
+	}
+
+	public static function &getAllWeapons($gameID,$forceUpdate = false)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT weapon_type_id FROM weapon_type');
+		$weapons=array();
+		while($db->nextRecord())
+		{
+			$weapons[] =& self::getWeapon($gameID,$db->getField('weapon_type_id'),$forceUpdate);
+		}
+		return $weapons;
 	}
 	
 	protected function __construct($gameID,$weaponTypeID)
