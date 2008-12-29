@@ -11,7 +11,7 @@ class DummyShip extends AbstractSmrShip
 	
 	public function __construct(AbstractSmrPlayer &$player)
 	{
-		parent::_construct($player);
+		parent::__construct($player);
 		$this->player = $player;
 		
 		$this->load_hardware();
