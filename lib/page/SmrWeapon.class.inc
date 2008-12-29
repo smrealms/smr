@@ -67,6 +67,11 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $this->cost;
 	}
 	
+	public function getPowerLevel()
+	{
+		return $this->powerLevel;
+	}
+	
 	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
 	{
 		$modifiedAccuracy = $this->getBaseAccuracy();
