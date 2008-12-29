@@ -85,7 +85,7 @@ if ($db->nf() > 0) {
 		
 		$exp = $db->f('experience');
 		$db_player =& SmrPlayer::getPlayer($db->f('account_id'), $game_id);
-		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->player_name.'</td><td align=center>'.$exp.'</td></tr>');
+		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->getPlayerName().'</td><td align=center>'.$exp.'</td></tr>');
 		
 	}
 	$PHP_OUTPUT.=('</table>');
@@ -101,7 +101,7 @@ if ($db->nf() > 0) {
 		
 		$kills = $db->f('kills');
 		$db_player =& SmrPlayer::getPlayer($db->f('account_id'), $game_id);
-		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->player_name.'</td><td align=center>'.$kills.'</td></tr>');
+		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->getPlayerName().'</td><td align=center>'.$kills.'</td></tr>');
 		
 	}
 	$PHP_OUTPUT.=('</table>');
