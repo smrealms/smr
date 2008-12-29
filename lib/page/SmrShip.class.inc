@@ -358,9 +358,16 @@ class SmrShip
 		}
 		else
 		{
+			var_dump($this->weapon);
+			
 			$temp =& $this->weapon[$replacement];
 			$this->weapon[$replacement] =& $this->weapon[$orderID];
 			$this->weapon[$orderID] =& $temp;
+			
+			var_dump($replacement);
+			var_dump($orderID);
+			
+			var_dump($this->weapon);
 		}
 	}
 	
