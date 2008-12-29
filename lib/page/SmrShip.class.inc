@@ -7,6 +7,7 @@ require_once('SmrCombatDrones.class.inc');
 class SmrShip
 {
 	protected static $CACHE_SHIPS = array();
+	protected static $CACHE_BASE_SHIPS = array();
 	
 	protected $db;
 	
@@ -54,6 +55,40 @@ class SmrShip
 			return self::$CACHE_SHIPS[$gameID . ':' . $s->getAccountID()] =& $s;
 		}
 		return self::$CACHE_SHIPS[$gameID. ':' .$accountID];
+	}
+
+	public static function &getBaseShip($gameTypeID,$shipTypeID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID]))
+		{
+			// determine ship
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$shipTypeID.' LIMIT 1'); //TODO add game type id
+			$db->nextRecord();
+			return self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& self::buildBaseShip($db);
+		}
+		return self::$CACHE_BASE_SHIPS[$gameTypeID. ':' .$shipTypeID];
+	}
+	
+	protected static function &buildBaseShip(Database &$db)
+	{
+		$ship = array();
+		$ship['Name']		= $db->getField('ship_name');
+		$ship['TypeID']		= $db->getField('ship_type_id');
+		$ship['Hardpoint']	= $db->getField('hardpoint');
+		$ship['speed']		= $db->getField('speed');
+		$ship['cost	']		= $db->getField('cost');
+		return $ship;
+	}
+
+	public static function &getAllBaseShips($gameTypeID,$forceUpdate = false)
+	{
+		// determine ship
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT * FROM ship_type'); //TODO add game type id
+		while($db->nextRecord())
+			self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $db->getField('ship_type_id')] =& self::buildBaseShip($db);
+		return self::$CACHE_BASE_SHIPS;
 	}
 	
 	protected function __construct($gameID, $accountID)
