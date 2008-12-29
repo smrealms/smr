@@ -30,7 +30,7 @@ class DummyShip extends AbstractSmrShip
 	
 	public function regenerate(AbstractSmrPlayer &$player)
 	{
-		$this->player = $player;
+		$this->player =& $player;
 		$this->regenerateBaseShip();
 		$this->doFullUNO();
 		for($i=1;$i<=$this->getHardpoints();++$i)
@@ -120,7 +120,7 @@ echo memory_get_usage() . '-x<br />';
 	
 	public function __sleep()
 	{
-        return array('weapons');
+        return array('gameID','weapons');
 	}
 	
 	public function __wakeup()
