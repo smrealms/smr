@@ -461,10 +461,7 @@ abstract class AbstractSmrPlayer
 		return $rels[$raceID];
 	}
 	
-	public function &getShip()
-	{
-		return SmrShip::getShip($this);
-	}
+	abstract public function &getShip();
 	
 	public function getDiminishingTraderAttack()
 	{

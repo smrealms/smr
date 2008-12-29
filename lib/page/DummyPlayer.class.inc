@@ -3,8 +3,8 @@ require_once('AbstractSmrShip.class.inc');
 
 class DummyPlayer extends AbstractSmrShip
 {
-    function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60)
-    {
+	public function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60)
+	{
 		parent::__construct();
 		$this->accountID				= 0;
 		$this->gameID					= (int) $gameID;
@@ -43,40 +43,46 @@ class DummyPlayer extends AbstractSmrShip
 		$this->stats = array();
 		$this->gadgets = array();
 		$this->pureRelations = array();
-    }
-    
-    public function getPastMaintBought()
-    {
-    	return 0;
-    }
-    
-    public function getPastMaintCredit()
-    {
-    	return 0;
-    }
-    
-    public function getStatsData()
-    {
-    }
-    
-    public function getGadgetsData()
-    {
-    }
-    
-    public function getPureRelationsData()
-    {
-    }
-    
-    public function cacheDummyPlayer()
-    {
+	}
+	
+	public function getPastMaintBought()
+	{
+		return 0;
+	}
+	
+	public function getPastMaintCredit()
+	{
+		return 0;
+	}
+	
+	public function getStatsData()
+	{
+	}
+	
+	public function getGadgetsData()
+	{
+	}
+	
+	public function getPureRelationsData()
+	{
+	}
+	
+	public function &getShip()
+	{
+		require_once(get_file_loc('DummyShip.class.inc'));
+		return DummyShip::getCachedDummyShip($this->getPlayerName());
+	}
+	
+	public function cacheDummyPlayer()
+	{
 		$cache = serialize($this);
 		$this->db->query('REPLACE INTO cached_dummys ' .
 					'(type, id, info) ' .
 					'VALUES (\'DummyPlayer\', '.$this->getPlayerName().', '.$this->db->escapeString($cache).')');	
-    }
-    
-    public static function &getCachedDummyPlayer($name)
-    {
+	}
+	
+	public static function &getCachedDummyPlayer($name)
+	{
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT info FROM cached_dummys ' .
 						  'WHERE type = \'DummyPlayer\' AND ' .
@@ -91,10 +97,10 @@ class DummyPlayer extends AbstractSmrShip
 			$return = new DummyPlayer();
 			return $return;
 		}
-    }
-    
-    public static function getDummyPlayerNames()
-    {
+	}
+	
+	public static function getDummyPlayerNames()
+	{
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT id FROM cached_dummys ' .
 						  'WHERE type = \'DummyPlayer\'');
@@ -104,6 +110,6 @@ class DummyPlayer extends AbstractSmrShip
 			$dummyNames[] = $db->getField('id');
 		}
 		return $dummyNames;
-    }
+	}
 }
 ?>
