@@ -6,23 +6,33 @@ require_once(get_file_loc('DummyShip.class.inc'));
 require_once(get_file_loc('SmrWeapon.class.inc'));
 //TODO add game type id
 
+echo memory_get_usage() . '<br />';
+
 $smarty->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
 
+echo memory_get_usage() . '<br />';
 $dummyPlayer =& DummyPlayer::getCachedDummyPlayer($_REQUEST['dummy_name']);
+echo memory_get_usage() . '<br />';
 $dummyShip =& $dummyPlayer->getShip();
 
+echo memory_get_usage() . '<br />';
 if(isset($_REQUEST['save_dummy']))
 {
 	$dummyPlayer->setPlayerName($_REQUEST['dummy_name']);
 	$dummyPlayer->setExperience($_REQUEST['level']);
 	$dummyPlayer->setShipTypeID($_REQUEST['ship_id']);
+echo memory_get_usage() . '<br />';
 	$dummyShip->regenerate($dummyPlayer);
+echo memory_get_usage() . '<br />';
 	$dummyShip->removeAllWeapons();
+echo memory_get_usage() . '<br />';
 	foreach($_REQUEST['weapons'] as $weaponTypeID)
 	{
 		$dummyShip->addWeapon($weaponTypeID);
 	}
+echo memory_get_usage() . '<br />';
 	$dummyPlayer->cacheDummyPlayer();
+echo memory_get_usage() . '<br />';
 }
 
 
