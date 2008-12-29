@@ -9,8 +9,12 @@ class DummyShip extends AbstractSmrShip
 		$this->player = $player;
 		
 		$this->hardware = array();
-		$this->maxHardware = array();
 		$this->oldHardware = array();
+		foreach($this->maxHardware as $hardwareTypeID => $max)
+		{
+			$this->hardware[$hardwareTypeID] = $max;
+			$this->oldHardware[$hardwareTypeID] = $max;
+		}
 		
 		$this->weapons = array();
 		
