@@ -315,7 +315,7 @@ class SmrShip
 		return 1;
 	}
 	
-	function &addWeapon($weaponTypeID)
+	public function &addWeapon($weaponTypeID)
 	{
 		$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
 		$this->weapons[] = $weapon;
@@ -323,7 +323,7 @@ class SmrShip
 		return $weapon;
 	}
 	
-	function moveWeaponUp($orderID)
+	public function moveWeaponUp($orderID)
 	{
 		$replacement = $orderID - 1;
 		if($replacement < 1)
@@ -344,34 +344,28 @@ class SmrShip
 		}
 	}
 	
-	function moveWeaponDown($orderID)
+	public function moveWeaponDown($orderID)
 	{
 		$replacement = $orderID + 1;
-			var_dump($replacement);
-			var_dump($orderID);
-		if($replacement > count($this->weapon))
+		if($replacement > count($this->weapons))
 		{
 			// Shift everything down by one and put the selected weapon at the top
-			$temp =& $this->weapon[count($this->weapon)];
-			for($i=count($this->weapon);$i>1;--$i) {
-				$this->weapon[$i] =& $this->weapon[$i-1];
+			$temp =& $this->weapons[count($this->weapons)];
+			for($i=count($this->weapons);$i>1;--$i) {
+				$this->weapons[$i] =& $this->weapons[$i-1];
 			}	
-			$this->weapon[1] =& $temp;
+			$this->weapons[1] =& $temp;
 		}
 		else
 		{
-			var_dump($this->weapon);
-			
-			$temp =& $this->weapon[$replacement];
-			$this->weapon[$replacement] =& $this->weapon[$orderID];
-			$this->weapon[$orderID] =& $temp;
-			
-			var_dump($this->weapon);
+			$temp =& $this->weapons[$replacement];
+			$this->weapons[$replacement] =& $this->weapons[$orderID];
+			$this->weapons[$orderID] =& $temp;
 		}
 	}
 	
-	function remove_weapon($weapon_type_id) {
-		
+	function remove_weapon($weapon_type_id)
+	{
 		$this->db->query('DELETE FROM ship_has_weapon WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID().' AND ' .
 			'weapon_type_id = '.$weapon_type_id);

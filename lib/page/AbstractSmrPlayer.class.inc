@@ -378,7 +378,12 @@ abstract class AbstractSmrPlayer
 		return $stats[$name];
 	}
 	
-	public abstract function getGadgets();
+	protected abstract function getGadgetsData();
+	public function getGadgets()
+	{
+		$this->getGadgetsData();
+		return $this->gadgets;
+	}
 	
 	public function getGadget($gadgetID)
 	{

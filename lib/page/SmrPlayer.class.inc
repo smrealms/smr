@@ -1080,7 +1080,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->goodsExpGained[$goodID] = $exp;
 //	}
 	
-	public function getGadgets()
+	protected function getGadgetsData()
 	{
 		if(!isset($this->gadgets))
 		{
@@ -1090,8 +1090,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			while ($this->db->nextRecord($sql))
 				$this->gadgets[$this->db->getField('gadget_id')] = array('Equipped' => $this->db->getField('equipped'), 'Cooldown' => $this->db->getField('cooldown'), 'Expires' => $this->db->getField('lasts_until'));
 		}
-		return $this->gadgets;
 	}
+	
 	public function setGadgets($keyOrUpdateArray,$value)
 	{
 		$this->getGadgets();
