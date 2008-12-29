@@ -47,4 +47,5 @@ $smarty->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $smarty->assign_by_ref('BaseShips',AbstractSmrShip::getAllBaseShips(0));
 $smarty->assign_by_ref('Weapons',SmrWeapon::getAllWeapons(0));
+echo memory_get_peak_usage() . '<br />';
 ?>
