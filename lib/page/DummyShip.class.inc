@@ -110,5 +110,16 @@ class DummyShip extends AbstractSmrShip
 		}
 		return $dummyNames;
 	}
+	
+	
+	
+	public function __sleep()
+	{
+        return array('weapons');
+	}
+	
+	public function __wakeup()
+	{
+	}
 }
 ?>
