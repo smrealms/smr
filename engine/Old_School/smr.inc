@@ -1,4 +1,5 @@
 <?
+require_once(LIB . 'global/smr_db.inc'); //uses for finding file locations.
 require_once(LIB . 'page/SmrSession.class.inc');
 
 function has_beta_privilege($priv = '', $acc = 0)
