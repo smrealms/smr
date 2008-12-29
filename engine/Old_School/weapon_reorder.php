@@ -37,7 +37,7 @@ if ($ship->hasWeapons())
 		$PHP_OUTPUT.= '<td>';
 		$PHP_OUTPUT.= $weapon->getPowerLevel();
 		$PHP_OUTPUT.= '</td><td>';
-		$PHP_OUTPUT.= $weapon->getAccuracy();
+		$PHP_OUTPUT.= $weapon->getBaseAccuracy();
 		$PHP_OUTPUT.= '</td>';
 
 		$PHP_OUTPUT.=('<td>');
