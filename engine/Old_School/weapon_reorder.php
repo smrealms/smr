@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','WEAPON REORDER');
 
-$weapon_count = count($ship->weapon);
+$weapon_count = $ship->getNumWeapons();
 
 if (isset($var['up']) && is_numeric($var['up'])) {
 	$weapon = $var['up'];

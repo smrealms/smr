@@ -942,7 +942,7 @@ class SmrShip
 	
 	public function getNumWeapons()
 	{
-		return $this->getHardpoints-count($this->getWeapons());
+		return count($this->getWeapons());
 	}
 	
 	public function getOpenWeaponSlots()
