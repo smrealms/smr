@@ -441,7 +441,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		require_once('SmrPort.class.inc');
 		$cachedPort =& SmrPort::getPort($this->getGameID(),$sectorID);
-		$cachedPort->addCachePort($this->getAccountID);
+		$cachedPort->addCachePort($this->getAccountID());
 	}
 	
 	function getLastSectorID()
