@@ -21,7 +21,7 @@ class DummyShip extends AbstractSmrShip
 	}
 	protected function doFullUNO()
 	{
-		foreach($this->maxHardware as $hardwareTypeID => $max)
+		foreach($this->getMaxHardware() as $hardwareTypeID => $max)
 		{
 			$this->hardware[$hardwareTypeID] = $max;
 			$this->oldHardware[$hardwareTypeID] = $max;
