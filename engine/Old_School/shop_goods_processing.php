@@ -107,10 +107,6 @@ else
 if ($ideal_price == 0 || $offered_price == 0)
 	create_error('Port calculation error...buy more goods.');
 
-
-var_dump($bargain_price);
-var_dump($ideal_price);
-var_dump($portGood);
 // can we accept the current price?
 if (!empty($bargain_price) &&
 	(($portGood['TransactionType'] == 'Buy' && $bargain_price >= $ideal_price) ||
