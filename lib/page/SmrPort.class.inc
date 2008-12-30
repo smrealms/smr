@@ -243,7 +243,7 @@ class SmrPort
 	
 	public function increaseGoodAmount($goodID,$amount)
 	{
-		$this->setGoodAmount($goodID,$this->getGood($goodID) + $amount);
+		$this->setGoodAmount($goodID,$this->getGoodAmount($goodID) + $amount);
 	}
 	
 	protected function refreshGoods($classTraded,$amountTraded)
