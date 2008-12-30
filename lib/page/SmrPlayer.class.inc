@@ -916,6 +916,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$relations = $MIN_RELATIONS;
 		$this->pureRelations[$raceID] = $relations;
 		$this->relations[$raceID] = round($relations + $this->getStat('Relations') / 2);
+		var_dump('UPDATE player_has_relation SET relation = '.$this->pureRelations[$raceID].' WHERE '.$this->SQL.' AND race_id = '.$raceID.' LIMIT 1');
 		$this->db->query('UPDATE player_has_relation SET relation = '.$this->pureRelations[$raceID].' WHERE '.$this->SQL.' AND race_id = '.$raceID.' LIMIT 1');
 	}
 	
