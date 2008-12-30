@@ -29,7 +29,7 @@ if ($player->getCredits() < $cost)
 	create_error('You do not have enough cash to purchase this ship!');
 
 // adapt turns
-$player->setTurns($player->getTurns() * $speed / $ship->getSpeed());
+$player->setTurns(round($player->getTurns() * $speed / $ship->getSpeed()));
 
 // take the money from the user
 $player->decreaseCredits($cost);
