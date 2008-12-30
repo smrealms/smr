@@ -119,10 +119,6 @@ abstract class AbstractSmrShip
 	
 	public function checkForExcessMiningDrones()
 	{
-		global $HARDWARE;
-		foreach ($HARDWARE as $hard_id => $hard_name)
-			$reverse_hard[$hard_name] = $hard_id;
-		
 		if (($totalDrones = array_sum($drones = $this->getMiningDrones())) > $this->getMaxMiningDrones())
 		{
 			$need_to_lose = $totalDrones - $this->getMaxMiningDrones();
@@ -136,7 +132,7 @@ abstract class AbstractSmrShip
 			}
 			foreach ($remove as $type => $amount)
 			{
-				$this->decreaseMiningDrones($reverse_hard[$type],$amount);
+				$this->decreaseMiningDrones($type,$amount);
 			}
 		}
 	}
