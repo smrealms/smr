@@ -32,7 +32,10 @@ if ($player->getCredits() < $cost)
 $player->setTurns(round($player->getTurns() * $speed / $ship->getSpeed()));
 
 // take the money from the user
-$player->decreaseCredits($cost);
+if($cost>0)
+	$player->decreaseCredits($cost);
+else
+	$player->increaseCredits(-$cost);
 $player->update();
 
 // assign the new ship
