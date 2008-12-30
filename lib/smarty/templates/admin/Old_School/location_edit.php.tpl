@@ -1,7 +1,7 @@
 <table>
 	<tr>
 		<th>Name</th>
-		<th>Processor</th>
+		<th>Action</th>
 		<th>Image</th>
 		<th>Fed</th>
 		<th>Bar</th>
@@ -13,7 +13,7 @@
 	{foreach from=$Locations item=Location}
 	<tr>
 		<td>{$Location->getName()}</td>
-		<td>{$Location->getProcessor()}</td>
+		<td>{$Location->getAction()}</td>
 		<td>{$Location->isFed()}</td>
 		<td>{$Location->isBar()}</td>
 		<td>{$Location->isBank()}</td>
