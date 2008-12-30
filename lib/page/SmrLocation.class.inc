@@ -163,7 +163,7 @@ class SmrLocation
 			$this->hardwareSold = array();
 			$this->db->query('SELECT * FROM location_sells_hardware NATURAL JOIN hardware_type WHERE location_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
-				$this->hardwareSold[$db->getField('hardware_type_id')] = $db->getField('hardware_name');
+				$this->hardwareSold[$db->getField('hardware_type_id')] = $this->db->getField('hardware_name');
 		}
 		return $this->hardwareSold;
 	}
@@ -182,7 +182,7 @@ class SmrLocation
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE location_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
-				$this->shipsSold[$db->getField('ship_type_id')] =& SmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$db->getField('ship_type_id'));
+				$this->shipsSold[$db->getField('ship_type_id')] =& SmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$this->db->getField('ship_type_id'));
 		}
 		return $this->shipsSold;
 	}
@@ -201,7 +201,7 @@ class SmrLocation
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons WHERE weapon_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
-				$this->weaponsSold[$db->getField('weapon_type_id')] =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$db->getField('weapon_type_id'));
+				$this->weaponsSold[$db->getField('weapon_type_id')] =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getField('weapon_type_id'));
 		}
 		return $this->weaponsSold;
 	}
