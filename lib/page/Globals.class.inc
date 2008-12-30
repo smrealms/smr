@@ -125,7 +125,7 @@ class Globals
 				$GOODS[self::$db->getField('good_id')]['BasePrice'] = (int)self::$db->getField('base_price');
 				$GOODS[self::$db->getField('good_id')]['Class'] = (int)self::$db->getField('good_class');
 				$GOODS[self::$db->getField('good_id')]['ImageLink'] = 'images/port/' . self::$db->getField('good_id') . '.gif';
-				$GOODS[self::$db->getField('good_id')]['Restriction'] = @(int)self::$db->getField('restriction'); //TODO add field to database
+				$GOODS[self::$db->getField('good_id')]['AlignRestriction'] = (int)self::$db->getField('align_restriction');
 			}
 			self::$GOODS =& $GOODS;
 		}

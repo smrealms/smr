@@ -156,7 +156,7 @@ class SmrPort
 		$visibleGoods['Buy'] = array();
 		foreach($goods['All Goods'] as $key => &$good)
 		{
-			if($player->meetsRestriction($good['Restriction']))
+			if($player->meetsAlignmentRestriction($good['AlignRestriction']))
 			{
 				$visibleGoods['All Goods'][$key] =& $good;
 				$visibleGoods[$good['TransactionType']][$key] =& $good;
