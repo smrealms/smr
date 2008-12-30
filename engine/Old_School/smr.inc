@@ -3,6 +3,14 @@ require_once(LIB . '/page/Globals.class.inc');
 require_once(LIB . 'global/smr_db.inc'); //uses for finding file locations.
 require_once(LIB . 'page/SmrSession.class.inc');
 
+function hardware_is_mining_drone($hardwareTypeID)
+{
+//	if ($hardware == 'Rundown Mining Drones' || $hardware == 'Simple Mining Drones' || $hardware == 'Basic Mining Drones' || $hardware == 'Advanced Mining Drones' || $hardware == 'Elite Mining Drones')
+//		return TRUE;
+//	else
+		return FALSE;
+}
+
 function has_beta_privilege($priv = '', $acc = 0)
 {
 	//PAGE
