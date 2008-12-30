@@ -132,7 +132,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected function __construct($gameID,&$accountIDOrResultArray)
 	{
 		parent::__construct();
-		global $GOODS, $TRADABLE_GOODS, $GAME_SPEED, $BASE_PRICES;
 		$this->db = new SmrMySqlDatabase();
 		$result=false;
 		if (is_array($accountIDOrResultArray))
@@ -298,8 +297,6 @@ class SmrPlayer extends AbstractSmrPlayer
 //			case 'Ship Size':
 //				return $this->getShipSize();
 				
-			case 'Goods':
-				return $this->getGoods();
 			case 'Stats':
 				return $this->getStats();
 			case 'Erebus Knowledge':
@@ -970,51 +967,6 @@ class SmrPlayer extends AbstractSmrPlayer
 //	{
 //		$goodsExp = $this->getGoodsExpGained();
 //		return $goodsExp[$goodID];
-//	}
-//	
-//	function increaseGoods($goodID,$amount,$exp)
-//	{
-//		if($amount < 0)
-//			throw new Exception('Trying to increase negative goods.');
-//		if($amount == 0)
-//			return;
-//		$this->getGoodsInfo();
-//		$amount += $this->goods[$goodID];
-//		$exp += $this->goodsExpGained[$goodID];
-//		$this->setGoods($goodID,$amount,$exp);
-//	}
-//	function decreaseGoods($goodID,$amount)
-//	{
-//		if($amount < 0)
-//			throw new Exception('Trying to decrease negative goods.');
-//		if($amount == 0)
-//			return;
-//		$this->getGoodsInfo();
-//		$expLost = round($this->goodsExpGained[$goodID] * $amount / $this->goods[$goodID]);
-//		$amount = $this->goods[$goodID] - $amount;
-//		$this->setGoods($goodID,$amount,$this->goodsExpGained[$goodID] - $expLost);
-//		return $expLost;
-//	}
-//	function setGoods($goodID,$amount,$exp)
-//	{
-//		if($amount < 0)
-//			throw new Exception('Trying to set negative goods.');
-//		$this->getGoodsInfo();
-//		if($amount == 0)
-//		{
-//			if(!isset($this->goods[$goodID]))
-//				return;
-//			$exp = 0;
-//			$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' AND good_id = '.$goodID.' LIMIT 1');
-//		}
-//		else
-//		{
-//			if($this->goods[$goodID] == $amount && $this->goodsExpGained[$goodID] == $exp)
-//				return;
-//			$this->db->query('REPLACE INTO player_has_goods (account_id, game_id, good_id, amount, exp_gained) VALUES ('.$this->accountID.','.$this->gameID.','.$goodID.','.$amount.','.$exp.')');
-//		}
-//		$this->goods[$goodID] = $amount;
-//		$this->goodsExpGained[$goodID] = $exp;
 //	}
 	
 	protected function getGadgetsData()

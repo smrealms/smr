@@ -83,6 +83,15 @@ abstract class AbstractSmrShip
 	protected function regenerateBaseShip()
 	{
 		$this->baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID),$this->player->getShipTypeID());
+		$this->checkForExcess();
+	}
+	
+	public function checkForExcess()
+	{
+		$this->checkForExcessHardware();
+		$this->checkForExcessMiningDrones();
+		$this->checkForExcessWeapons();
+		$this->checkForExcessCargo();
 	}
 	
 	public function checkForExcessWeapons()
@@ -91,6 +100,57 @@ abstract class AbstractSmrShip
 		{
 			//erase the first weapon 1 at a time until we are okay
 			$this->removeWeapon(1);
+		}
+	}
+	
+	public function checkForExcessCargo()
+	{
+		while(($total=array_sum($goods=$this->getCargo())) > $this->getCargoHolds())
+		{
+			do
+			{
+				list($goodID,$amount)=each($goods);
+			} while($amount==0);
+			if($amount > $total-$this->getCargoHolds())
+				$amount = $total-$this->getCargoHolds();
+			$this->decreaseCargo($goodID,$amount);
+		}
+	}
+	
+	public function checkForExcessMiningDrones()
+	{
+		global $HARDWARE;
+		foreach ($HARDWARE as $hard_id => $hard_name)
+			$reverse_hard[$hard_name] = $hard_id;
+		
+		if (($totalDrones = array_sum($drones = $this->getMiningDrones())) > $this->getMaxMiningDrones())
+		{
+			$need_to_lose = $totalDrones - $this->getMaxMiningDrones();
+			foreach ($drones as $type => $amount)
+			{
+				if ($amount > $need_to_lose)
+					$remove[$type] = $need_to_lose;
+				else
+					$remove[$type] = $amount;
+				$need_to_lose -= $remove[$type];
+			}
+			foreach ($remove as $type => $amount)
+			{
+				$this->decreaseMiningDrones($reverse_hard[$type],$amount);
+			}
+		}
+	}
+	
+	public function checkForExcessHardware()
+	{
+		//check hardware to see if anything needs to be removed
+		foreach ($this->getHardware() as $hardwareTypeID => $amount)
+		{
+			if (hardware_is_mining_drone($hardwareTypeID)) continue;
+			if ($amount > ($max=$this->getMaxHardware($hardwareTypeID)))
+			{
+				$this->setHardware($hardwareTypeID,$max,true);
+			}
 		}
 	}
 	
@@ -382,8 +442,10 @@ abstract class AbstractSmrShip
 		return $this->baseShip['Speed'];
 	}
 	
-	public function getHardware($hardwareTypeID)
+	public function getHardware($hardwareTypeID = false)
 	{
+		if($hardwareTypeID === false)
+			return $this->hardware;
 		return isset($this->hardware[$hardwareTypeID]) ? $this->hardware[$hardwareTypeID] : 0;
 	}
 	
@@ -400,8 +462,10 @@ abstract class AbstractSmrShip
 		$this->setHardware($hardwareTypeID,$this->getHardware($hardwareTypeID)+$amount);
 	}
 	
-	public function getOldHardware($hardwareTypeID)
+	public function getOldHardware($hardwareTypeID = false)
 	{
+		if($hardwareTypeID === false)
+			return $this->oldHardware;
 		return isset($this->oldHardware[$hardwareTypeID]) ? $this->oldHardware[$hardwareTypeID] : 0;
 	}
 	
@@ -670,11 +734,15 @@ abstract class AbstractSmrShip
 	
 	public function decreaseCargo($goodID,$amount)
 	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative cargo.');
 		$this->setCargo($goodID,$this->getCargo($goodID)-$amount);
 	}
 	
 	public function increaseCargo($goodID,$amount)
 	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative cargo.');
 		$this->setCargo($goodID,$this->getCargo($goodID)+$amount);
 	}
 	
