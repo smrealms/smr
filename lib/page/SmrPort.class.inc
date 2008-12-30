@@ -783,7 +783,7 @@ class SmrPort
 		$relations=max(0,min(1000,$relations));
 		$relationsEffect = pow(1+($relations-1000)/10000,1.2-$relations/1000);
 		 
-		 if($transactionType == 'Sell')
+		 if($transactionType == 'Buy')
 			$relationsEffect = 2-$relationsEffect;
 		return round($idealPrice * $relationsEffect);
 //		$range = .11 - .095;
