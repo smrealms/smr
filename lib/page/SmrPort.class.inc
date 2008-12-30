@@ -154,12 +154,12 @@ class SmrPort
 		$visibleGoods['All Goods'] = array();
 		$visibleGoods['Sell'] = array();
 		$visibleGoods['Buy'] = array();
-		foreach($goods['All Goods'] as $key => $good)
+		foreach($goods['All Goods'] as $key => &$good)
 		{
 			if($player->meetsRestriction($good['Restriction']))
 			{
-				$visibleGoods['All Goods'][$key] = $good;
-				$visibleGoods[$good['TransactionType']][$key] = $good;
+				$visibleGoods['All Goods'][$key] =& $good;
+				$visibleGoods[$good['TransactionType']][$key] =& $good;
 			}
 		}
 		return $visibleGoods;
