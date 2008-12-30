@@ -132,7 +132,7 @@ abstract class AbstractSmrShip
 	public function &addWeapon($weaponTypeID)
 	{
 		$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
-		$this->weapons[] = $weapon;
+		$this->weapons[count($this->weapons)+1] = $weapon;
 		$this->hasChangedWeapons = true;
 		return $weapon;
 	}
