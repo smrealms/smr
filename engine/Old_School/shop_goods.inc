@@ -224,7 +224,7 @@ function check_bargain_number() {
 				if ($relation_modifier > 10)
 					$relation_modifier = 10;
 
-				$player->relations[$port->getRaceID()] -= $relation_modifier;
+				$player->decreaseRelations($port->getRaceID(),$relation_modifier);
 
 				/*what the hell is this doing here Spock??? ;)
 				//any player can just go to a port and make their - 500 personal align go to 0
