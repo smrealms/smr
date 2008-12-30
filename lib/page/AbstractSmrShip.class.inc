@@ -105,15 +105,18 @@ abstract class AbstractSmrShip
 	
 	public function checkForExcessCargo()
 	{
-		while(($total=array_sum($goods=$this->getCargo())) > $this->getCargoHolds())
+		if($this->hasCargo())
 		{
-			do
+			while(($total=array_sum($goods=$this->getCargo())) > $this->getCargoHolds())
 			{
-				list($goodID,$amount)=each($goods);
-			} while($amount==0);
-			if($amount > $total-$this->getCargoHolds())
-				$amount = $total-$this->getCargoHolds();
-			$this->decreaseCargo($goodID,$amount);
+				do
+				{
+					list($goodID,$amount)=each($goods);
+				} while($amount==0);
+				if($amount > $total-$this->getCargoHolds())
+					$amount = $total-$this->getCargoHolds();
+				$this->decreaseCargo($goodID,$amount);
+			}
 		}
 	}
 	
