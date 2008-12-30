@@ -1,5 +1,7 @@
 <?php
 
+require_once(get_file_loc('SmrLocation.class.inc'));
+
 $db = new SmrMySqlDatabase();
 $db->query('SELECT location_type_id FROM location_type');
 
