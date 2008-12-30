@@ -752,10 +752,22 @@ abstract class AbstractSmrShip
 	}
 	
 	
-	public function getMaxCargoHolds()
+	public function getMaxMiningDrones()
 	{
 		return $this->getMaxHardware(HARDWARE_CARGO);
 	}
+	
+	public function getMiningDrones()
+	{
+		$miningDrones = array();
+		foreach($this->hardware as $hardwareTypeID => $amount)
+		{
+			if(hardware_is_mining_drone($hardwareTypeID))
+				$hardwareTypeID[$hardwareTypeID] = $hardwareTypeID;
+		}
+		return $miningDrones;
+	}
+	
 	
 	public function isUnderAttack()
 	{
