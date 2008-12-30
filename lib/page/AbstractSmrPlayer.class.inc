@@ -143,8 +143,8 @@ abstract class AbstractSmrPlayer
 	{
         //PAGE BAD BAD BAD!
 		// If there isn't a fed beacon we aren't protected
-		$this->db->query('SELECT sector_id FROM location ' .
-					 'WHERE location_type_id=201 AND sector_id = '.$this->sectorID.' AND ' .
+		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_is_fed ' .
+					 'WHERE sector_id = '.$this->getSectorID().' AND ' .
 						   'game_id = '.$this->getGameID().' LIMIT 1');
 		if (!$this->db->getNumRows())
 		{
