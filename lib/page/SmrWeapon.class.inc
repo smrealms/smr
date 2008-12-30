@@ -21,33 +21,33 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 			self::$db = new SmrMySqlDatabase();
 	}
 
-	public static function &getWeapon($gameID,$weaponTypeID,$forceUpdate = false)
+	public static function &getWeapon($gameTypeID,$weaponTypeID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$gameID . ':' . $weaponTypeID]))
+		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$gameTypeID . ':' . $weaponTypeID]))
 		{
-			$w = new SmrWeapon($gameID,$weaponTypeID);
-			return self::$CACHE_WEAPONS[$gameID . ':' . $weaponTypeID] =& $w;
+			$w = new SmrWeapon($gameTypeID,$weaponTypeID);
+			return self::$CACHE_WEAPONS[$gameTypeID . ':' . $weaponTypeID] =& $w;
 		}
-		return self::$CACHE_WEAPONS[$gameID . ':' . $weaponTypeID];
+		return self::$CACHE_WEAPONS[$gameTypeID . ':' . $weaponTypeID];
 	}
 
-	public static function &getAllWeapons($gameID,$forceUpdate = false)
+	public static function &getAllWeapons($gameTypeID,$forceUpdate = false)
 	{
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT weapon_type_id FROM weapon_type');
 		$weapons=array();
 		while($db->nextRecord())
 		{
-			$weapons[] =& self::getWeapon($gameID,$db->getField('weapon_type_id'),$forceUpdate);
+			$weapons[] =& self::getWeapon($gameTypeID,$db->getField('weapon_type_id'),$forceUpdate);
 		}
 		return $weapons;
 	}
 	
-	protected function __construct($gameID,$weaponTypeID)
+	protected function __construct($gameTypeID,$weaponTypeID)
 	{
 		self::initialiseDatabase();
 		
-		$this->gameID = $gameID;
+		$this->gameTypeID = $gameTypeID;
 		$this->weaponTypeID = $weaponTypeID;
 			
 		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armor_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
