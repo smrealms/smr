@@ -94,7 +94,7 @@ class SmrPort
 		}
 	}
 	
-	public function getGoods()
+	public function &getGoods()
 	{
 		if(!$this->isCachedVersion() && empty($this->goods))
 		{
@@ -147,7 +147,7 @@ class SmrPort
 		}
 		return $this->goods;
 	}
-	public function getVisibleGoods(AbstractSmrPlayer &$player)
+	public function &getVisibleGoods(AbstractSmrPlayer &$player)
 	{
 		$goods = $this->getGoods();
 		$visibleGoods = array();
@@ -164,41 +164,41 @@ class SmrPort
 		}
 		return $visibleGoods;
 	}
-	public function getVisibleGoodsAll(&$player)
+	public function &getVisibleGoodsAll(&$player)
 	{
 		$goods = $this->getVisibleGoods($player);
 		return $goods['All Goods'];
 	}
-	public function getVisibleGoodsSold(&$player)
+	public function &getVisibleGoodsSold(&$player)
 	{
 		$goods = $this->getVisibleGoods($player);
 		return $goods['Sell'];
 	}
-	public function getVisibleGoodsBought(AbstractSmrPlayer &$player)
+	public function &getVisibleGoodsBought(AbstractSmrPlayer &$player)
 	{
 		$goods = $this->getVisibleGoods($player);
 		return $goods['Buy'];
 	}
 	
-	public function getGoodsAll()
+	public function &getGoodsAll()
 	{
 		$this->getGoods();
 		return $this->goods['All Goods'];
 	}
 	
-	public function getGoodsSold()
+	public function &getGoodsSold()
 	{
 		$this->getGoods();
 		return $this->goods['Sell'];
 	}
 	
-	public function getGoodsBought()
+	public function &getGoodsBought()
 	{
 		$this->getGoods();
 		return $this->goods['Buy'];
 	}
 	
-	public function getGood($goodID)
+	public function &getGood($goodID)
 	{
 		$goods = $this->getGoods();
 		return $goods['All Goods'][$goodID];
@@ -230,7 +230,7 @@ class SmrPort
 		return $good['Amount'];
 	}
 	
-	public function decreaseGood($good,$amount,$doRefresh)
+	public function decreaseGood(array &$good,$amount,$doRefresh)
 	{
 		$this->setGoodAmount($good['ID'],$this->getGoodAmount($good['ID']) - $amount);
 		if($doRefresh===true)
@@ -241,13 +241,18 @@ class SmrPort
 		}
 	}
 	
+	public function increaseGoodAmount($goodID,$amount)
+	{
+		$this->setGoodAmount($goodID,$this->getGood($goodID) + $amount);
+	}
+	
 	protected function refreshGoods($classTraded,$amountTraded)
 	{
 		$refreshAmount = $amountTraded / 8;
 		//refresh goods that need it
 		$portGoods = $this->getGoods();
 		$refreshClass = $classTraded-1;
-		foreach ($portGoods as $good)
+		foreach ($portGoods as &$good)
 		{
 			if($good['Class']==$refreshClass)
 			{
@@ -256,12 +261,7 @@ class SmrPort
 		}
 	}
 	
-	public function increaseGoodAmount($goodID,$amount)
-	{
-		$this->setGoodAmount($goodID,$this->getGood($goodID) + $amount);
-	}
-	
-	public function buyGoods($good,$amount,$cost,$exp)
+	public function buyGoods(array &$good,$amount,$cost,$exp)
 	{
 		$this->increaseUpgrade($cost);
 		$this->increaseCredits($cost);
@@ -270,7 +270,7 @@ class SmrPort
 //		$this->setGood($goodID,$this->getGood($goodID) + $amount);
 	}
 	
-	public function sellGoods($good,$amount,$cost,$exp)
+	public function sellGoods(array &$good,$amount,$cost,$exp)
 	{
 		$this->increaseExperience($exp);
 		$this->decreaseGood($good,$amount,true);
@@ -771,9 +771,9 @@ class SmrPort
 	
 //		$relations_factor_buy = 2-(($relations + 500) / 1500);
 //		$relations_factor_sell = ($relations + 500) / 1500;
-		if($transactionType == 'Buy')
+		if($transactionType == 'Sell')
 			$idealPrice = round( $numGoods * $base * 0.6 * (pow($dist + .5, 1.8)) * (2.5-($supply / $maxSupply)) * (($relations + 350) / 8415) );
-		else if($transactionType == 'Sell')
+		else if($transactionType == 'Buy')
 			$idealPrice = round( $numGoods * $base * 0.5 * pow($dist, 1.84) * (2.5-($supply / $maxSupply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 38.56 * (1 + (10 - $this->getLevel()) / 50));
 		return $idealPrice;
 	}
