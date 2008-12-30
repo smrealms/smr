@@ -143,14 +143,15 @@ abstract class AbstractSmrShip
 	public function checkForExcessHardware()
 	{
 		//check hardware to see if anything needs to be removed
-		foreach ($this->getHardware() as $hardwareTypeID => $amount)
-		{
-			if (hardware_is_mining_drone($hardwareTypeID)) continue;
-			if ($amount > ($max=$this->getMaxHardware($hardwareTypeID)))
+		if(is_array($hardware = $this->getHardware()))
+			foreach ($hardware as $hardwareTypeID => $amount)
 			{
-				$this->setHardware($hardwareTypeID,$max,true);
+				if (hardware_is_mining_drone($hardwareTypeID)) continue;
+				if ($amount > ($max=$this->getMaxHardware($hardwareTypeID)))
+				{
+					$this->setHardware($hardwareTypeID,$max,true);
+				}
 			}
-		}
 	}
 	
 	public function getPowerUsed()
@@ -720,7 +721,9 @@ abstract class AbstractSmrShip
 	{
 		if($goodID!==false)
 			return $this->getCargo($goodID)>0;
-		return array_sum($this->getCargo())>0;
+		if(is_array($cargo = $this->getCargo()))
+			return array_sum($cargo)>0;
+		return false;
 	}
 	
 	public function setCargo($goodID,$amount)
@@ -764,11 +767,12 @@ abstract class AbstractSmrShip
 	public function getMiningDrones()
 	{
 		$miningDrones = array();
-		foreach($this->hardware as $hardwareTypeID => $amount)
-		{
-			if(hardware_is_mining_drone($hardwareTypeID))
-				$hardwareTypeID[$hardwareTypeID] = $hardwareTypeID;
-		}
+		if(is_array($hardware = $this->getHardware()))
+			foreach ($hardware as $hardwareTypeID => $amount)
+			{
+				if(hardware_is_mining_drone($hardwareTypeID))
+					$hardwareTypeID[$hardwareTypeID] = $hardwareTypeID;
+			}
 		return $miningDrones;
 	}
 	
