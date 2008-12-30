@@ -1,4 +1,4 @@
-<a href="{$EditDummysLink}">Edit Dummys</a>
+<a href="{$EditDummysLink}">Edit Combat Dummys</a><br /><br />
 
 {if $Duplicates}<h1>Do not use duplicate dummy names, they would interfere with each other</h1>{/if}
 
