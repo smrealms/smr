@@ -109,8 +109,8 @@ if ($ideal_price == 0 || $offered_price == 0)
 
 // can we accept the current price?
 if (!empty($bargain_price) &&
-	($portGood['TransactionType'] == 'Buy' && $bargain_price >= $ideal_price ||
-	 $portGood['TransactionType'] == 'Sell' && $bargain_price <= $ideal_price)) {
+	(($portGood['TransactionType'] == 'Buy' && $bargain_price >= $ideal_price) ||
+	 ($portGood['TransactionType'] == 'Sell' && $bargain_price <= $ideal_price))) {
 
 	// the url we going to
 	$container['url'] = 'skeleton.php';
