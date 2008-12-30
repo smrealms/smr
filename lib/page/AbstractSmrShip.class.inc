@@ -747,6 +747,11 @@ abstract class AbstractSmrShip
 		return $this->cargo_left;
 	}
 	
+	public function getMaxCargoHolds()
+	{
+		return $this->getMaxHardware(HARDWARE_CARGO);
+	}
+	
 	
 	public function getMaxMiningDrones()
 	{
