@@ -1998,19 +1998,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function meetsRestriction($restriction)
+	public function meetsAlignmentRestriction($restriction)
 	{
-		switch($restriction)
-		{
-			case 0:
-				return true;
-			case 1:
-				return $this->getAlignment()>=150;
-			case 2:
-				return $this->getAlignment()<=-150;
-			default:
-				return false;
-		}
+		if($restriction<0)
+			return $this->getAlignment()<=$restriction;
+		if($restriction>0)
+			return $this->getAlignment()>=$restriction;
+		return true;
 	}
 }
 ?>
