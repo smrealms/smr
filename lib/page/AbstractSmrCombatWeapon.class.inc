@@ -5,7 +5,7 @@ require_once('SmrMySqlDatabase.class.inc');
 require_once('AbstractSmrPlayer.class.inc');
 abstract class AbstractSmrCombatWeapon implements CombatWeapon
 {
-	protected $gameID;
+	protected $gameTypeID;
 	protected $name;
 	protected $raceID;
 	protected $maxDamage;
