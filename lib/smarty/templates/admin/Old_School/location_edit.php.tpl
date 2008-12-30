@@ -20,17 +20,17 @@
 		<td>{$Location->isHQ()}</td>
 		<td>{$Location->isUG()}</td>
 		<td>
-			{foreach from=$Locations->getHardwareSold() item=Hardware}
+			{foreach from=$Location->getHardwareSold() item=Hardware}
 				{$Hardware}<br />
 			{/foreach}
 		</td>
 		<td>
-			{foreach from=$Locations->getShipsSold() item=Ship}
+			{foreach from=$Location->getShipsSold() item=Ship}
 				{$Ship.Name}<br />
 			{/foreach}
 		</td>
 		<td>
-			{foreach from=$Locations->getWeaponsSold item=Weapon}
+			{foreach from=$Location->getWeaponsSold item=Weapon}
 				{$Weapon->getName()}<br />
 			{/foreach}
 		</td>
