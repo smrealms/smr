@@ -5,7 +5,8 @@ require_once(get_file_loc('DummyPlayer.class.inc'));
 require_once(get_file_loc('DummyShip.class.inc'));
 require_once(get_file_loc('SmrWeapon.class.inc'));
 //TODO add game type id
-
+$smarty->assign_by_ref('BaseShips',AbstractSmrShip::getAllBaseShips(0));
+$smarty->assign_by_ref('Weapons',SmrWeapon::getAllWeapons(0));
 
 $smarty->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
 
@@ -35,7 +36,4 @@ $smarty->assign_by_ref('Levels',Globals::getLevelRequirements());
 
 
 $smarty->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
-
-$smarty->assign_by_ref('BaseShips',AbstractSmrShip::getAllBaseShips(0));
-$smarty->assign_by_ref('Weapons',SmrWeapon::getAllWeapons(0));
 ?>

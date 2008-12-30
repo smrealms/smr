@@ -26,7 +26,6 @@
 						<option value="{$BaseShip.ShipTypeID}"{if $BaseShip.ShipTypeID==$DummyPlayer->getShipTypeID()} selected="selected"{/if}>{$BaseShip.Name}</option>
 					{/foreach}
 				</select>
-				&nbsp;DCS&nbsp;<input type="checkbox" name="DCS" /><br />
 				
 				{foreach from=$ShipWeapons key=OrderID item=ShipWeapon}
 					Weapon: {$OrderID}

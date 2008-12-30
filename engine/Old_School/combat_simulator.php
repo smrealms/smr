@@ -54,43 +54,77 @@ require_once(get_file_loc('DummyPlayer.class.inc'));
 $smarty->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
 $smarty->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
+$duplicates = false;
+$usedNames = array();
 $attackers = array();
+$i=1;
 if(isset($_POST['attackers']))
-	foreach($_POST['attackers'] as $orderID => $attackerName)
+	foreach($_POST['attackers'] as $attackerName)
 	{
-		$attackers[$orderID] =& DummyPlayer::getCachedDummyPlayer($attackerName);
-		$attackers[$orderID]->setAllianceID(1);
-	}
-	
-$defenders = array();
-if(isset($_POST['defenders']))
-	foreach($_POST['defenders'] as $orderID => $defenderName)
-	{
-		$defenders[$orderID] =& DummyPlayer::getCachedDummyPlayer($defenderName);
-		$defenders[$orderID]->setAllianceID(2);
+		if($attackerName=='none')
+			continue;
+		if(isset($usedNames[$attackerName]))
+		{
+			$duplicates = true;
+			continue;
+		}
+		$usedNames[$attackerName] = true;
+		$attackers[$i] =& DummyPlayer::getCachedDummyPlayer($attackerName);
+		$attackers[$i]->setAllianceID(1);
+		++$i;
 	}
 
-if(isset($_POST['action']) && $_POST['action'] == 1) 
-{
-	$store[1][0] = $_POST['level'];
-	$store[1][1] = $_POST['ship_id'];
-	if(isset($_POST['DCS'])) {
-		$store[1][2] = 1;
-	}
-	else {
-		$store[1][2] = 0;	
+for(;$i<=10;++$i)
+	$attackers[$i] = null;
+$smarty->assign_by_ref('Attackers',$attackers);
+
+$i=1;
+$defenders = array();
+if(isset($_POST['defenders']))
+	foreach($_POST['defenders'] as $defenderName)
+	{
+		if($defenderName=='none')
+			continue;
+		if($usedNames[$defenderName])
+		{
+			$duplicates = true;
+			continue;
+		}
+		$usedNames[$attackerName] = true;
+		$defenders[$i] =& DummyPlayer::getCachedDummyPlayer($defenderName);
+		$defenders[$i]->setAllianceID(2);
+		++$i;
 	}
 	
-	// Grab weapons;
-	for($i=0;$i<8;++$i) {
-		if($i >= $ships[$store[1][1]][1]) {
-			unset($store[1][3][$i]);
-		}
-		else if(isset($_POST['weapon_' . $i])) {
-			$store[1][3][$i] = (int)$_POST['weapon_' . $i];
-		}	
-	}
-}
+for(;$i<=10;++$i)
+	$defenders[$i] = null;
+$smarty->assign_by_ref('Defenders',$defenders);
+
+$smarty->assign('Duplicates',$duplicates);
+
+$smarty->assign('CombatSimHREF',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
+
+//if(isset($_POST['action']) && $_POST['action'] == 1) 
+//{
+//	$store[1][0] = $_POST['level'];
+//	$store[1][1] = $_POST['ship_id'];
+//	if(isset($_POST['DCS'])) {
+//		$store[1][2] = 1;
+//	}
+//	else {
+//		$store[1][2] = 0;	
+//	}
+//	
+//	// Grab weapons;
+//	for($i=0;$i<8;++$i) {
+//		if($i >= $ships[$store[1][1]][1]) {
+//			unset($store[1][3][$i]);
+//		}
+//		else if(isset($_POST['weapon_' . $i])) {
+//			$store[1][3][$i] = (int)$_POST['weapon_' . $i];
+//		}	
+//	}
+//}
 
 
 
