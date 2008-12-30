@@ -250,7 +250,7 @@ class SmrPort
 	{
 		$refreshAmount = $amountTraded / 8;
 		//refresh goods that need it
-		$portGoods = $this->getGoods();
+		$portGoods =& $this->getGoodsAll();
 		$refreshClass = $classTraded-1;
 		foreach ($portGoods as &$good)
 		{
