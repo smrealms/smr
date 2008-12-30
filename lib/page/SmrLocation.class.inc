@@ -1,5 +1,6 @@
 <?php
 require_once('SmrMySqlDatabase.class.inc');
+
 class SmrLocation
 {
 	protected static $CACHE_LOCATIONS = array();
@@ -177,6 +178,7 @@ class SmrLocation
 	{
 		if(!isset($this->shipsSold))
 		{
+			require_once(get_file_loc('SmrShip.class.inc'));
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE location_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
@@ -195,6 +197,7 @@ class SmrLocation
 	{
 		if(!isset($this->weaponsSold))
 		{
+			require_once(get_file_loc('SmrWeapon.class.inc'));
 			$this->weaponsSold = array();
 			$this->db->query('SELECT * FROM location_sells_weapons WHERE weapon_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
