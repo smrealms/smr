@@ -63,6 +63,8 @@ abstract class AbstractSmrPlayer
 	protected $pureRelations;
 	protected $relations;
 	
+	protected $HOF;
+	
 	protected $hasChanged=false;
 	
 	protected function __construct()
@@ -243,6 +245,59 @@ abstract class AbstractSmrPlayer
 			$experience = MAX_EXPERIENCE;
 		$this->experience = $experience;
 		$this->hasChanged=true;
+	}
+
+	function increaseCredits($credits)
+	{
+		if($credits < 0)
+			throw new Exception('Trying to increase negative credits.');
+		if($credits == 0)
+			return;
+		$credits += $this->credits;
+		$this->setCredits($credits);
+	}
+	function decreaseCredits($credits)
+	{
+		if($credits < 0)
+			throw new Exception('Trying to decrease negative credits.');
+		if($credits == 0)
+			return;
+		$credits = $this->credits - $credits;
+		$this->setCredits($credits);
+	}
+	function setCredits($credits)
+	{
+		if($this->credits == $credits)
+			return;
+		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) return;
+		if($credits < 0)
+			throw new Exception('Trying to set negative credits.');
+		if($credits > MAX_MONEY)
+			throw new Exception('Trying to set more than max credits.');
+		$this->credits = $credits;
+		$this->hasChanged=true;
+//		$this->db->query('UPDATE player SET credits = '.$this->credits.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	function increaseExperience($experience,$type='Undefined')
+	{
+		if($experience < 0)
+			throw new Exception('Trying to increase negative experience.');
+		if($experience == 0)
+			return;
+		$newExperience = $this->experience + $experience;
+		$this->setExperience($newExperience);
+		$this->increaseHOF($experience,'Experience',$type);
+	}
+	function decreaseExperience($experience,$type='Undefined')
+	{
+		if($experience < 0)
+			throw new Exception('Trying to decrease negative experience.');
+		if($experience == 0)
+			return;
+		$newExperience = $this->experience - $experience;
+		$this->setExperience($newExperience);
+		$this->decreaseHOF($experience,'Experience',$type);
 	}
 	
 	public function isLandedOnPlanet()
@@ -458,6 +513,68 @@ abstract class AbstractSmrPlayer
 	public function getDiminishingTraderAttack()
 	{
 		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
+	}
+	
+	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->getShip()->shootPlayer($targetPlayer);
+	}
+	
+	public function &shootPlayers(array &$targetPlayers)
+	{
+		return $this->getShip()->shootPlayers($targetPlayers);
+	}
+	
+	abstract protected function getHOFData();
+	
+	public function getHOF()
+	{
+		$this->getHOFData();
+		return $this->HOF;
+	}
+	
+	public function increaseHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
+	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative HOF: '.$type.'-'.$subtype);
+		if($amount == 0)
+			return;
+		$this->getHOF();
+		if($subtype===false)
+			$amount+=@$this->HOF[$type];
+		else
+			$amount+=@$this->HOF[$type][$subtype];
+		$this->setHOF($amount,$type,$subtype);
+	}
+	
+	public function decreaseHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
+	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative HOF: '.$type.'-'.$subtype);
+		if($amount == 0)
+			return;
+		$this->getHOF();
+		if($subtype===false)
+			$amount=@$this->HOF[$type]-$amount;
+		else
+			$amount=@$this->HOF[$type][$subtype]-$amount;
+		$this->setHOF($amount,$type,$subtype);
+	}
+	
+	public function setHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
+	{
+		if(($subtype!==false && @$this->HOF[$type]==$amount)||@$this->HOF[$type][$subtype]==$amount)
+			return;
+		if($amount < 0)
+			$amount=0;
+		$this->getHOF();
+		if($subtype===false)
+			@$this->HOF[$type]=$amount;
+		else
+			@$this->HOF[$type][$subtype]=$amount;
+//PAGE
+//TODO: Add hof stuff.
+//		$result = $this->db->query('UPDATE player_hof SET `'.$type.($subtype!==false?'-'.$subtype:'').'`='.$amount.' WHERE ' . $this->SQL);
 	}
 }
 ?>

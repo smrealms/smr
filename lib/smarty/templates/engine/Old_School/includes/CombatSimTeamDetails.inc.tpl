@@ -5,7 +5,7 @@
 			<u>{$MemberDescription} {$OrderID}</u><br/><br />
 		</td>
 		<td style="vertical-align:top">
-			<select name="attackers[]">
+			<select name="{$MemberInputName}[]">
 				<option value="none">None</option>
 				{foreach from=$DummyNames item=DummyName}
 					<option value="{$DummyName}"{if $Dummy && $DummyName==$Dummy->getPlayerName()} selected="selected"{/if}>{$DummyName}</option>

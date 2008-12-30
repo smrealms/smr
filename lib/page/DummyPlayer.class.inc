@@ -55,15 +55,19 @@ class DummyPlayer extends AbstractSmrPlayer
 		return 0;
 	}
 	
-	public function getStatsData()
+	protected function getStatsData()
 	{
 	}
 	
-	public function getGadgetsData()
+	protected function getGadgetsData()
 	{
 	}
 	
-	public function getPureRelationsData()
+	protected function getPureRelationsData()
+	{
+	}
+	
+	protected function getHOFData()
 	{
 	}
 	
