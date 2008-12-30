@@ -99,7 +99,7 @@ abstract class AbstractSmrShip
 		$power = 0;
 		foreach ($this->weapons as &$weapon)
 			$power += $weapon->getPowerLevel();
-		$power=0;
+		return $power;
 	}
 	
 	public function getMaxPower()
