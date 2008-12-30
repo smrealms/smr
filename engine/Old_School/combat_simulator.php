@@ -56,6 +56,7 @@ $smarty->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $duplicates = false;
 $usedNames = array();
+$realAttackers = array();
 $attackers = array();
 $i=1;
 if(isset($_POST['attackers']))
@@ -71,6 +72,7 @@ if(isset($_POST['attackers']))
 		$usedNames[$attackerName] = true;
 		$attackers[$i] =& DummyPlayer::getCachedDummyPlayer($attackerName);
 		$attackers[$i]->setAllianceID(1);
+		$realAttackers[$i] =& $attackers[$i];
 		++$i;
 	}
 
@@ -79,13 +81,14 @@ for(;$i<=10;++$i)
 $smarty->assign_by_ref('Attackers',$attackers);
 
 $i=1;
+$realDefenders = array();
 $defenders = array();
 if(isset($_POST['defenders']))
 	foreach($_POST['defenders'] as $defenderName)
 	{
 		if($defenderName=='none')
 			continue;
-		if($usedNames[$defenderName])
+		if(isset($usedNames[$defenderName]))
 		{
 			$duplicates = true;
 			continue;
@@ -93,6 +96,7 @@ if(isset($_POST['defenders']))
 		$usedNames[$attackerName] = true;
 		$defenders[$i] =& DummyPlayer::getCachedDummyPlayer($defenderName);
 		$defenders[$i]->setAllianceID(2);
+		$realDefenders[$i] =& $defenders[$i];
 		++$i;
 	}
 	
@@ -104,6 +108,24 @@ $smarty->assign('Duplicates',$duplicates);
 
 $smarty->assign('CombatSimHREF',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
 
+if(isset($_REQUEST['run']))
+{
+	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0), 
+					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
+	foreach($realAttackers as $accountID => &$teamPlayer)
+	{
+		$playerResults =& $teamPlayer->shootPlayers($realDefenders);
+		$results['Attackers']['Traders'][$teamPlayer->getAccountID()] =& $playerResults;
+		$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
+	} unset($teamPlayer);
+	foreach($realDefenders as $accountID => &$teamPlayer)
+	{
+		$playerResults =& $teamPlayer->shootPlayers($realAttackers);
+		$results['Defenders']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
+		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
+	} unset($teamPlayer);
+	$smarty->assign_by_ref('TraderCombatResults',$results);
+}
 //if(isset($_POST['action']) && $_POST['action'] == 1) 
 //{
 //	$store[1][0] = $_POST['level'];
