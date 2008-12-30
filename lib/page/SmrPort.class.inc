@@ -780,8 +780,7 @@ class SmrPort
 	
 	function getOfferPrice($idealPrice, $relations, $transactionType)
 	{
-		if($relations>1000)
-			$relations=1000;
+		$relations=max(0,min(1000,$relations));
 		$relationsEffect = pow(1+($relations-1000)/10000,1.2-$relations/1000);
 		 
 		 if($transactionType == 'Sell')
