@@ -258,16 +258,6 @@ if (SmrSession::$game_id != 0)
 
 	$smarty->assign('CargoJettisonLink',SmrSession::get_new_href(create_container('skeleton.php', 'cargo_dump.php')));
 
-	$cargo = $ship->getCargo();
-	foreach ($cargo as $id => $amount)
-		if ($amount > 0) {
-
-			$db->query('SELECT good_name FROM good WHERE good_id=' .  $id);
-			if ($db->next_record())
-				echo '<img src="images/port/' . $id . '.gif" alt="' . $db->f('good_name') . '">&nbsp;:&nbsp;' . $amount . '<br>';
-
-		}
-
 	$smarty->assign('WeaponReorderLink',SmrSession::get_new_href(create_container('skeleton.php', 'weapon_reorder.php')));
 
 	

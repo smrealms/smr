@@ -70,30 +70,14 @@ class SmrShip extends AbstractSmrShip
 		
 		// initialize cargo array
 		$this->cargo = array();
-		$this->cargo_left = $this->getCargoHolds();
 		
 		// get cargo from db
-		$this->db->query('SELECT * FROM ship_has_cargo, good WHERE ship_has_cargo.good_id = good.good_id AND ' .
-			'account_id = '.$this->getAccountID().' AND ' .
+		$this->db->query('SELECT * FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID());
-		while ($this->db->nextRecord()) {
-			
-			$good_id	= $this->db->getField('good_id');
-			$amount		= $this->db->getField('amount');
-			
-			// subtract the current amount from cargo_hold to get cargo left value
-			$this->cargo_left -= $amount;
-			
+		while ($this->db->nextRecord())
+		{
 			// adding cargo and amount to array
-			$this->cargo[$good_id] = $amount;
-		}
-		
-		// initialize empty cargo
-		$this->db->query('SELECT good_id FROM good');
-		while ($this->db->nextRecord()) {
-			
-			$good_id = $this->db->getField('good_id');
-			if (empty($this->cargo[$good_id])) $this->cargo[$good_id] = 0;
+			$this->cargo[$this->db->getField('good_id')] = $this->db->getField('amount');
 		}
 	}
 	
@@ -126,12 +110,8 @@ class SmrShip extends AbstractSmrShip
 	
 	function update_cargo() {
 		
-		$this->cargo_left = $this->getCargoHolds();
-		
 		// write cargo info
 		foreach ($this->cargo as $id => $amount) {
-			
-			$this->cargo_left -= $amount;
 			
 			if ($amount != 0)
 				$this->db->query('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$id.', '.$amount.')');

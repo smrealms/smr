@@ -131,6 +131,11 @@ class Globals
 		}
 		return self::$GOODS;
 	}
+	public static function &getGood($goodID)
+	{
+		$goods =& self::getGoods();
+		return $goods[$goodID];
+	}
 	
 	public static function &getGameInfo($gameID)
 	{

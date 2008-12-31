@@ -77,6 +77,12 @@ Ship Condition : <span id="condition"><span class="dgreen">{$ThisPlayer->getTurn
 {if isset($DropCDLink)}<a href="{$DropCDLink}"><span class="bold">[X]</span></a>{/if}Combat : <span id="cds">{$ThisShip->getCDs()}/{$ThisShip->getMaxCDs()}</span><br />
 {if isset($DropSDLink)}<a href="{$DropSDLink}"><span class="bold">[X]</span></a>{/if}Scout : {$ThisShip->getSDs()}/{$ThisShip->getMaxSDs()}<br /><br />
 <a  href="{$CargoJettisonLink}"><span class="bold">Cargo Holds ({$ThisShip->getCargoHolds()}/{$ThisShip->getMaxCargoHolds()})</span></a><br />
+{if $ThisShip->hasCargo()}
+	{foreach from=$ThisShip->getCargo() key=GoodID item=GoodAmount}
+		{assign var=Good value=$Globals->getGood($GoodID)}
+		<img src="{$Good.ImageLink}" alt="{$Good.Name}"> : {$GoodAmount}<br />
+	{/foreach}
+{/if}
 Empty : {$ThisShip->getEmptyHolds()}<br /><br />
 <a  href="{$WeaponReorderLink}"><span class="bold">Weapons</span></a><br />
 <div class="wep_drop1" onclick="toggleWepD({$ShipWeapons|@count});">Show/Hide
