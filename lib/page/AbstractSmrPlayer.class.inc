@@ -369,9 +369,13 @@ abstract class AbstractSmrPlayer
 		return $races[$this->getRaceID()]['Race Name'];
 	}
 	
-	public function getColoredRaceName($otherRaceID)
+	public function getColouredRaceName($otherRaceID)
 	{
-		return get_colored_text($this->getRelation($otherRaceID), $this->getRaceName());
+		$races =& Globals::getRaces();
+		
+		$raceRelations =& Globals::getRaceRelations($this->getGameID(),$this->getRaceID());
+
+		return get_colored_text($raceRelations[$otherRaceID], $races[$otherRaceID]['Race Name']);
 	}
 	
 	public function setRaceID($raceID)

@@ -48,7 +48,7 @@ if ($president!=null)
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
 	$container['race_id'] = $president->getRaceID();
-	$PHP_OUTPUT.=create_link($container, $president->getColoredRaceName($president->getRaceID()));
+	$PHP_OUTPUT.=create_link($container, $president->getColouredRaceName($president->getRaceID()));
 	$PHP_OUTPUT.=('</td>');
 
 	$PHP_OUTPUT.=('<td>');
@@ -122,7 +122,7 @@ if ($db->nf() > 0)
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'council_send_message.php';
 		$container['race_id'] = $council->getRaceID();
-		$PHP_OUTPUT.=create_link($container, $council->getColoredRaceName($council->getRaceID()));
+		$PHP_OUTPUT.=create_link($container, $council->getColouredRaceName($council->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
 
 		$PHP_OUTPUT.=('<td');

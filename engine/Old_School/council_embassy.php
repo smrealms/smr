@@ -31,7 +31,7 @@ while($db->next_record())
 	if ($db2->nf() > 0) continue;
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="center">' . $player->getColoredRaceName($race_id) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($race_id) . '</td>');
 
 	$container = array();
 	$container['url']		= 'council_embassy_processing.php';

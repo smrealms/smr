@@ -37,7 +37,7 @@ while($db->next_record()) {
 	$race_name	= $db->f('race_name');
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="center">' . $player->getColoredRaceName($race_id) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($race_id) . '</td>');
 
 	$container = array();
 	$container['url']		= 'council_vote_processing.php';
@@ -96,7 +96,7 @@ if ($db->nf() > 0) {
 		$end_time	= $db->f('end_time');
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center">' . $player->getColoredRaceName($race_id_2) . '</td>');
+		$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($race_id_2) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$type.'</td>');
 
 		$container = array();
