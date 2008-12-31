@@ -17,7 +17,6 @@ abstract class AbstractSmrShip
 	protected $oldHardware;
 	
 	protected $cargo;
-	protected $cargo_left;
 	
 	protected $weapons;
 	
@@ -710,7 +709,7 @@ abstract class AbstractSmrShip
 		return $this->getHardware(HARDWARE_CARGO);
 	}
 	
-	public function getCargo($goodID=false)
+	public function &getCargo($goodID=false)
 	{
 		if($goodID!==false)
 			return $this->cargo[$goodID];
@@ -750,7 +749,7 @@ abstract class AbstractSmrShip
 	
 	public function getEmptyHolds()
 	{
-		return $this->cargo_left;
+		return array_sum($this->getCargo());
 	}
 	
 	public function getMaxCargoHolds()
