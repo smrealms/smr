@@ -13,9 +13,14 @@
 										<img src="images/link_hor.gif" alt="Up" title="Up" />
 									{/if}
 								</div>
-								{if $Sector->hasMine()}
+								{if $Sector->hasMine() || $ThisPlayer->isPartOfCourse($Sector)}
 									<div class="lmp">
-										<img src="images/asteroid.gif" alt="Mining Available Here" title="Mining Available Here" />
+										{if $ThisPlayer->isPartOfCourse($Sector)}
+											<img title="Course" alt="Course" src="images/plot_icon.gif"/>
+										{/if}
+										{if $Sector->hasMine()}
+											<img src="images/asteroid.gif" alt="Mining Available Here" title="Mining Available Here" />
+										{/if}
 									</div>
 								{/if}
 							{/if}
