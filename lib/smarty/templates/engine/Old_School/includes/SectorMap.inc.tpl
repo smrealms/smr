@@ -22,7 +22,6 @@
 											{if $isCurrentSector}{assign var=WarpSector val=$Sector->getLinkWarpSector()}<a href="{$WarpSector->getLocalMapHREF()}">{/if}
 												<img title="Warp to #{$Sector->getLinkWarp()}" alt="Warp to #{$Sector->getLinkWarp()}" src="images/warp.gif" />
 											{if $isCurrentSector}</a>{/if}
-											<img title="Warp to #1997" alt="Warp to #1997" src="images/warp.gif"/>
 										{/if}
 										{if $Sector->hasMine()}
 											<img src="images/asteroid.gif" alt="Mining Available Here" title="Mining Available Here" />
