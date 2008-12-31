@@ -412,7 +412,7 @@ class SmrSector
 	
 	public function &getLinkWarpSector()
 	{
-		return SmrSector::getSector($this->getGameID(),getLinkWarp(),$this->getAccountID());
+		return SmrSector::getSector($this->getGameID(),$this->getLinkWarp(),$this->getAccountID());
 	}
 	
 	public function hasWarp()
