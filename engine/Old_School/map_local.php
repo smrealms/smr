@@ -722,7 +722,7 @@ function get_real_right($sector)
 {
 	global $offset, $size, $col, $rows;
 	$sector_check = $sector - $offset;
-	if ($sector_check % $col == 0) $right = $sector - $col + 1;
+	if ($sector_check % $col == 0) $right = ($sector - $col) + 1;
 	else $right = $sector + 1;
 	return $right;
 }
