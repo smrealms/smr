@@ -545,8 +545,7 @@ global $col,$rows,$size,$offset;
 $size = $db->f('COUNT(*)');
 $col = $rows = sqrt($size);
 //echo $db->f('COUNT(*)');
-$top_left = $db->f('MIN(sector_id)');
-$offset = $db->f('MIN(sector_id)') -1;
+$offset = $top_left = $db->f('MIN(sector_id)');
 //$current_y = floor(($player->getSectorID() - $start)/$width);
 //$current_x = ($player->getSectorID() - $start) % $width;
 
