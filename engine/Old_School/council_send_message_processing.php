@@ -10,7 +10,7 @@ $db->query('SELECT * FROM player ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
 				 'race_id = '.$var['race_id'].' ' .
 		   'ORDER by experience DESC ' .
-		   'LIMIT 20');
+		   'LIMIT ' . MAX_COUNCIL_MEMBERS);
 
 while ($db->next_record()) {
 	$player->sendMessage($db->f('account_id'), $POLITICALMSG, $message);

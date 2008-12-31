@@ -76,17 +76,8 @@ $db->query('SELECT * FROM player ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
 				 'race_id = '.$race_id.' ' .
 		   'ORDER by experience DESC ' .
-		   'LIMIT 20');
+		   'LIMIT ' . MAX_COUNCIL_MEMBERS);
 		   
-if ($db->nf() > 0) {
-	
-	$list = '(0';
-	while ($db->next_record()) $list .= ',' . $db->f('account_id');
-	$list .= ')';
-	
-}
-$db->query('SELECT * FROM player WHERE account_id IN '.$list.' AND game_id = '.$player->getGameID().' ORDER BY experience DESC');
-
 if ($db->nf() > 0)
 {
 

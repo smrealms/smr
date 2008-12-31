@@ -9,7 +9,7 @@ function onCouncil($race_id) {
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
 					 'race_id = '.$race_id.' ' .
 			   'ORDER by experience DESC ' .
-			   'LIMIT 20');
+			   'LIMIT '.MAX_COUNCIL_MEMBERS);
 	while ($db->next_record())
 		if ($db->f('account_id') == $player->getAccountID())
 			return 1;
