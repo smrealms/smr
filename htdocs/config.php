@@ -81,6 +81,7 @@ define('CD_ARMOUR', 3);
 
 define('MIN_EXPERIENCE',0);
 define('MAX_EXPERIENCE',4294967296);
+define('MAX_COUNCIL_MEMBERS',10);
 	
 define('NEWBIE_TURNS_WARNING_LIMIT',20);
 
