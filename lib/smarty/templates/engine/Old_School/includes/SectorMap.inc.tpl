@@ -19,7 +19,7 @@
 											<img title="Course" alt="Course" src="images/plot_icon.gif"/>
 										{/if}
 										{if $Sector->hasWarp()}
-											{if $isCurrentSector}{assign var=WarpSector val=$Sector->getLinkWarpSector()}<a href="{$WarpSector->getLocalMapHREF()}">{/if}
+											{if $isCurrentSector}{assign var=WarpSector value=$Sector->getLinkWarpSector()}<a href="{$WarpSector->getLocalMapHREF()}">{/if}
 												<img title="Warp to #{$Sector->getLinkWarp()}" alt="Warp to #{$Sector->getLinkWarp()}" src="images/warp.gif" />
 											{if $isCurrentSector}</a>{/if}
 										{/if}
