@@ -1,4 +1,3 @@
-
 <?
 require_once('AbstractSmrPlayer.class.inc');
 require_once('SmrMySqlDatabase.class.inc');
