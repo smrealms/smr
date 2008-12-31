@@ -1876,17 +1876,21 @@ class SmrPlayer extends AbstractSmrPlayer
 				}
 				$this->plottedCourse['CourseString'] = $sectors;
 			}
+			else
+				return false;
 		}
 		return $this->plottedCourse;
 	}
 	
 	public function hasPlottedCourse()
 	{
-		return $this->getPlottedCourse();
+		return $this->getPlottedCourse()!==false;
 	}
 	
 	function isPartOfCourse($sectorOrSectorID)
 	{
+		if(!$this->hasPlottedCourse())
+			return false;
 		if($sectorOrSectorID instanceof SmrSector )
 		{
 			$sectorID = $sectorOrSectorID->getSectorID();
