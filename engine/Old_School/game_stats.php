@@ -186,7 +186,7 @@ if ($count_last_active > 0) {
 		$PHP_OUTPUT.=($name);
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align="center"'.$style.'>');
-		$race = $player->getColoredRaceName($curr_player->getRaceID());
+		$race = $player->getColouredRaceName($curr_player->getRaceID());
 		$PHP_OUTPUT.=($race);
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td'.$style.'>');

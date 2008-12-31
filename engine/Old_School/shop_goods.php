@@ -34,7 +34,7 @@ $container['body'] = 'council_send_message.php';
 $container['race_id'] = $port->getRaceID();
 $container['race_name'] = $port->getRaceName();
 
-$PHP_OUTPUT.=('<p>This is a level '.$port->getLevel().' port and run by the ' . create_link($container, $player->getColoredRaceName($port->getRaceID())) . '.<br>');
+$PHP_OUTPUT.=('<p>This is a level '.$port->getLevel().' port and run by the ' . create_link($container, $player->getColouredRaceName($port->getRaceID())) . '.<br>');
 $PHP_OUTPUT.=('Your relations with them are ' . get_colored_text($relations, $relations) . '.</p>');
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');

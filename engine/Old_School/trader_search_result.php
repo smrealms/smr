@@ -86,7 +86,7 @@ if ($db->nf() > 0) {
 		$container['race_id'] = $curr_player->getRaceID();
 		$container['race_name'] = $curr_player->getRaceName();
 		$PHP_OUTPUT.=('<td align="center" valign="middle">');
-		$PHP_OUTPUT.=create_link($container, $player->getColoredRaceName($curr_player->getRaceID()));
+		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getExperience().'</td>');
 		if ($curr_player->getLastCPLAction() > time() - 600)
@@ -193,7 +193,7 @@ if (empty($player_id)) {
 			$container['race_id'] = $curr_player->getRaceID();
 			$container['race_name'] = $curr_player->getRaceName();
 			$PHP_OUTPUT.=('<td align="center" valign="middle">');
-			$PHP_OUTPUT.=create_link($container, $player->getColoredRaceName($curr_player->getRaceID()));
+			$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getExperience().'</td>');
 			if ($curr_player->getLastCPLAction() > TIME - 600)

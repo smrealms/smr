@@ -205,7 +205,7 @@ while ($db->next_record()) {
 	$container['race_name']	= $races[$db->f('race_id')];
 	unset($container['player_id']);
 
-	$PHP_OUTPUT.=create_link($container, $player->getColoredRaceName($db->f('race_id')));
+	$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($db->f('race_id')));
 
 	// xp
 	$PHP_OUTPUT.= '</td><td class="shrink center">';

@@ -142,7 +142,7 @@ if ($count_last_active > 0) {
 		$container['body'] = 'council_list.php';
 		$container['race_id'] = $curr_player->getRaceID();
 		$PHP_OUTPUT.=('<td style="text-align:center" '.$style.'>');
-		$PHP_OUTPUT.=create_link($container, $player->getColoredRaceName($curr_player->getRaceID()));
+		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td '.$style.'>');
 		if ($curr_player->getAllianceID() > 0) {
