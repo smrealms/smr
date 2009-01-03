@@ -588,14 +588,12 @@ abstract class AbstractSmrPlayer
 	
 	public function getBountyAmount($bountyID)
 	{
-		$bounties = $this->getBounties();
-		return $bounties[$bountyID]['Amount'];
+		$bounty = $this->getBounty($bountyID);
+		return $bounty['Amount'];
 	}
 	
-	public function createBounty($bountyID,$type)
+	protected function createBounty($type)
 	{
-		if($this->hasBounty($bountyID))
-			throw new Exception('Trying to create negative bounty.');
 		$bounty = array('Amount' => 0,
 						'Type' => $type,
 						'Claimer' => 0,
@@ -603,12 +601,11 @@ abstract class AbstractSmrPlayer
 						'ID' => $this->getNextBountyID(),
 						'New' => true);
 		$this->setBounty($bounty);
-		$this->hasBountyChanged[$bountyID]=true;
 	}
 	
 	public function getNextBountyID()
 	{
-		return max(array_keys($this->getBounties()));
+		return max(array_keys($this->getBounties()))+1;
 	}
 	
 	public function setBounty(array $bounty)
@@ -617,7 +614,7 @@ abstract class AbstractSmrPlayer
 		$this->hasBountyChanged[$bounty['ID']]=true;
 	}
 	
-	public function setBountyAmounty($bountyID, $amount)
+	public function setBountyAmount($bountyID, $amount)
 	{
 		$bounty = $this->getBounty($bountyID);
 		$bounty['Amount'] = $amount;
@@ -637,6 +634,64 @@ abstract class AbstractSmrPlayer
 			throw new Exception('Trying to decrease negative bounty.');
 		$this->setBountyAmount($this->getBountyAmount($bountyID)+$amount);
 	}
+	
+	
+	public function getCurrentBounty($type)
+	{
+		$bounties = $this->getBounties();
+		foreach($bounties as $bounty)
+		{
+			if($bounty['Claimer'] == 0 && $bounty['Type']==$type)
+				return $bounty;
+		}
+		return $this->createBounty($type);
+	}
+	
+	public function hasBounty($bountyID)
+	{
+		return $this->getBounty($bountyID)!==false;
+	}
+	
+	public function getCurrentBountyAmount($type)
+	{
+		$bounty = $this->getCurrentBounty();
+		return $bounty['Amount'];
+	}
+	
+	public function setCurrentBountyAmount($type, $amount)
+	{
+		$bounty = $this->getCurrentBounty($type);
+		$bounty['Amount'] = $amount;
+		$this->setBounty($bounty);
+	}
+	
+	public function increaseCurrentBountyAmount($type,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative current bounty.');
+		$this->setCurrentBountyAmount($this->getCurrentBountyAmount($type)+$amount);
+	}
+	
+	public function decreaseCurrentBountyAmount($type,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative current bounty.');
+		$this->setCurrentBountyAmount($this->getCurrentBountyAmount($type)-$amount);
+	}
+	
+	public function setBountiesClaimable(AbstractSmrPlayer $claimer)
+	{
+		$bounties = $this->getBounties();
+		foreach($bounties as $bounty)
+		{
+			if($bounty['Claimer'] == 0)
+			{
+				$bounty['Claimer'] = $claimer->getAccountID();
+				$this->setBounty($bounty);
+			}
+		}
+	}
+	
 	
 	abstract protected function getHOFData();
 	

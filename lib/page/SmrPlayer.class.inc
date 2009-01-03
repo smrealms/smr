@@ -1501,9 +1501,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			{
 				$numAttacks = $this->db->getField('numAttacks');
 				$multiplier = round(.4 * $this->getLevelID());
-				$portBounty = $numAttacks * 1000000 * $multiplier;
-				$this->db->query('INSERT INTO bounty (account_id, game_id, type, amount, claimer_id, time) VALUES ('.$this->getAccountID().', '.$this->getGameID().', \'HQ\', ' . 
-							$portBounty.', '.$killer->getAccountID().', ' . TIME . ')');
+				$this->increaseCurrentBountyAmount('HQ',$numAttacks * 1000000 * $multiplier);
 			}
 		}
 	
@@ -1517,16 +1515,16 @@ class SmrPlayer extends AbstractSmrPlayer
 			// If the podded players alignment makes them deputy or member then set bounty
 			if($this->getAlignment() >= 100)
 			{
-				$bounty_type = 0;
+				$bounty_type = 'HQ';
 			}
 			else if ($this->getAlignment() <= 100)
 			{
-				$bounty_type = 1;
+				$bounty_type = 'UG';
 			}
 
 			if(isset($bounty_type))
 			{
-				$killer->increaseBounty($bounty_type,floor(pow($alignment_diff, 2.56)));
+				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
 			}
 		}
 		
@@ -1609,17 +1607,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->killPlayer($forces->getSectorID());
 	}
 	
-	public function setBountiesClaimable(AbstractSmrPlayer $claimer)
-	{
-		$this->db->query('UPDATE bounty 
-			SET claimer_id=' . $claimer->getAccountID() . '
-			WHERE account_id='.$this->getAccountID().'
-			AND game_id='.$this->getGameID().'
-			AND claimer_id=0
-			LIMIT 1'
-		);
-	}
-	
 	function changeShip(SmrShip &$ship,$shipID)
 	{
 		$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' LIMIT 1');
@@ -1682,16 +1669,19 @@ class SmrPlayer extends AbstractSmrPlayer
 			{
 				$bountyChanged = false;
 				$bounty = $this->getBounty($key);
-				if($bounty['New'] === true)
-					$db->query('INSERT IGNORE INTO bounty(account_id,game_id,type,amount,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $bounty['Type'] . ',' . $bounty['Amount'] .',' . $bounty['Claimer'] . ',' . $bounty['Time']);
-				else
-					$db->query('UPDATE bounty 
-					SET amount=' . $bounty['Amount'] . ',
-					type=' . $bounty['Type'] . ',
-					claimer_id=' . $bounty['Claimer'] . ',
-					time=' . $bounty['Time'] . '
-					WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1'
-				);
+				if($bounty['Amount'] > 0)
+				{
+					if($bounty['New'] === true)
+						$db->query('INSERT IGNORE INTO bounty(account_id,game_id,type,amount,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $bounty['Type'] . ',' . $bounty['Amount'] .',' . $bounty['Claimer'] . ',' . $bounty['Time']);
+					else
+						$db->query('UPDATE bounty 
+						SET amount=' . $bounty['Amount'] . ',
+						type=' . $bounty['Type'] . ',
+						claimer_id=' . $bounty['Claimer'] . ',
+						time=' . $bounty['Time'] . '
+						WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1'
+					);
+				}
 			}
 		}
 	}
