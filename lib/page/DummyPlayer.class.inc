@@ -31,6 +31,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		$this->credits					= 0;
 		$this->experience				= (int) $experience;
 		$this->alignment				= (int) $alignment;
+		$this->militaryPayment			= 0;
 		$this->governmentHelp			= 0;
 		$this->allianceID				= (int) $allianceID;
 		$this->shipID					= (int) $shipTypeID;
