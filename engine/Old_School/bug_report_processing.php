@@ -8,18 +8,18 @@ $account_id = $_REQUEST['account_id'];
 $description = $_REQUEST['description'];
 $new_sub = '[Bug] '.$subject;
 
-$message = 'Login:\n------'.EOL.$login.'\n'.EOL .
-	 'Account ID:\n-----------'.EOL.$account_id.'\n'.EOL .
-	 'Description:\n------------'.EOL.$description.'\n'.EOL .
-	 'Steps to repeat:\n----------------'.EOL.$steps.'\n'.EOL .
-	 'Error Message:\n--------------'.EOL.$error_msg;
+$message = 'Login: '.$login.EOL.EOL.'-----------'.EOL.EOL.
+	 'Account ID: '.$account_id.EOL.EOL.'-----------'.EOL.EOL.
+	 'Description: '.$description.EOL.EOL.'-----------'.EOL.EOL.
+	 'Steps to repeat: '.$steps.EOL.EOL.'-----------'.EOL.EOL.
+	 'Error Message: '.$error_msg;
 	 
 //mail('bugs@smrealms.de',
 //	 $new_sub,
 //	 $message,
 //	 'From: '.$account->email);
 
-$player->sendMessage(ACCOUNT_PAGE, MSG_PLAYER, $message);
+$player->sendMessage(ACCOUNT_PAGE, MSG_PLAYER, nl2br($message));
 
 $container = array();
 $container['url'] = 'skeleton.php';
