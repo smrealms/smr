@@ -254,13 +254,15 @@ function acquire_lock($sector)
 {
 	global $db, $lock;
 
+	var_dump($lock);
 	if($lock)
 		return true;
 		
 	// Insert ourselves into the queue.
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . time() . ')');
+	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 			
 	$lock = $db->insert_id();
+	var_dump($lock);
 
 	for($i=0;$i<200;++$i)
 	{
@@ -277,8 +279,10 @@ function acquire_lock($sector)
 			{
 				if($db->f('COUNT(*)') > 1)
 				{
-					create_error('Multiple actions cannot be performed at the same time!');
+					var_dump($db->f('COUNT(*)'));
+					var_dump($lock);
 					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
+					create_error('Multiple actions cannot be performed at the same time!');
 					exit;
 				}
 			}
@@ -299,7 +303,7 @@ function acquire_lock($sector)
 function release_lock() {
 	global $db, $lock;
 
-	$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (time() - 15));
+	$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - 15));
 
 	$lock=false;
 }
