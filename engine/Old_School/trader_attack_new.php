@@ -1,6 +1,6 @@
 <?
-
-$smarty->assign_by_ref('TraderCombatResults',unserialize($var['results']));
+$results = unserialize($var['results']);
+$smarty->assign_by_ref('TraderCombatResults',$results);
 if($var['target'])
 	$smarty->assign_by_ref('Target',SmrPlayer::getPlayer($var['target'],SmrSession::$game_id));
 if(isset($var['override_death']))
