@@ -554,7 +554,7 @@ abstract class AbstractSmrPlayer
 		$this->setMilitaryPayment($this->getMilitaryPayment()+$amount);
 	}
 	
-	public function increaseMilitaryPayment($amount)
+	public function decreaseMilitaryPayment($amount)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative military payment.');
