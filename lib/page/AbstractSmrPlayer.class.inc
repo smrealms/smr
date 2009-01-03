@@ -647,7 +647,7 @@ abstract class AbstractSmrPlayer
 		return $this->createBounty($type);
 	}
 	
-	public function hasCurrentBounty($bountyID)
+	public function hasCurrentBounty($type)
 	{
 		$bounties = $this->getBounties();
 		foreach($bounties as $bounty)
