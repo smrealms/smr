@@ -267,11 +267,13 @@ $container=array();
 $container['url'] = 'vote_link.php';
 
 $in_game = isset(SmrSession::$game_id) && SmrSession::$game_id>0;
-if($in_game) {
-
+if($in_game)
+{
 	$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' ORDER BY link_id LIMIT 3');
-	while($db->next_record()){
-		if($db->f('timeout') < time() - 86400) {
+	while($db->next_record())
+	{
+		if($db->f('timeout') < TIME - 86400)
+		{
 			$turns_for_votes[$db->f('link_id')] = 1;
 		}
 		else {

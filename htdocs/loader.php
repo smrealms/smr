@@ -253,12 +253,14 @@ function do_voodoo()
 function acquire_lock($sector)
 {
 	global $db, $lock;
-var_dump($lock);
+
+	if($lock)
+		return true;
+		
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . time() . ')');
 			
 	$lock = $db->insert_id();
-var_dump($lock);
 
 	for($i=0;$i<200;++$i)
 	{
