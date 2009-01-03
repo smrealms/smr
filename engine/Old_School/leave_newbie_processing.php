@@ -1,12 +1,9 @@
 <?
 $action = $_REQUEST['action'];
-if ($action == 'Yes!') {
-
-	$db->query('UPDATE player SET newbie_turns = 0, ' .
-								 'newbie_warning = \'FALSE\' ' .
-			   'WHERE account_id = '.SmrSession::$account_id.' AND ' .
-					 'game_id = '.SmrSession::$game_id);
-
+if ($action == 'Yes!')
+{
+	$player->setNewbieTurns(0);
+	$player->setNewbieWarning(false);
 }
 if ($player->isLandedOnPlanet())
 	$area = 'planet_main.php';
