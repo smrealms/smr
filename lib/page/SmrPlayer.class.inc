@@ -169,6 +169,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->credits					= (int) $result['credits'];
 			$this->experience				= (int) $result['experience'];
 			$this->alignment				= (int) $result['alignment'];
+			$this->militaryPayment			= (int) $result['military_payment'];
 //			$this->pastKnowledge = $result['past_knowledge'];
 			$this->governmentHelp			= (int) $result['government_help'];
 			$this->allianceID				= (int) $result['alliance_id'];
@@ -1655,6 +1656,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				', credits='.$this->db->escapeString($this->credits).
 				', experience='.$this->db->escapeString($this->experience).
 				', alignment='.$this->db->escapeString($this->alignment).
+				', military_payment='.$this->db->escapeString($this->militaryPayment).
 //				', past_knowledge='.$this->db->escapeString($this->pastKnowledge).
 				', government_help='.$this->db->escapeString($this->governmentHelp).
 				', alliance_id='.$this->db->escapeString($this->allianceID).

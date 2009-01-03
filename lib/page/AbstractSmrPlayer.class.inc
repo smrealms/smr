@@ -62,6 +62,7 @@ abstract class AbstractSmrPlayer
 	protected $pastMaintCredit;
 	protected $pureRelations;
 	protected $relations;
+	protected $militaryPayment;
 	
 	protected $HOF;
 	
@@ -191,6 +192,8 @@ abstract class AbstractSmrPlayer
 	
 	public function increaseKills($kills)
 	{
+		if($kills < 0)
+			throw new Exception('Trying to increase negative kills.');
 		$this->setKills($this->kills+$kills);
 	}
 	
@@ -209,6 +212,8 @@ abstract class AbstractSmrPlayer
 	
 	public function increaseDeaths($deaths)
 	{
+		if($deaths < 0)
+			throw new Exception('Trying to increase negative deaths.');
 		$this->setDeaths($this->getDeaths()+$deaths);
 	}
 	
@@ -527,6 +532,33 @@ abstract class AbstractSmrPlayer
 	public function &shootPlayers(array &$targetPlayers)
 	{
 		return $this->getShip()->shootPlayers($targetPlayers);
+	}
+	
+	public function getMilitaryPayment()
+	{
+		return $this->militaryPayment;
+	}
+	
+	public function setMilitaryPayment($amount)
+	{
+		if($this->militaryPayment == $amount)
+			return;
+		$this->militaryPayment = $amount;
+		$this->hasChanged=true;
+	}
+	
+	public function increaseMilitaryPayment($amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative military payment.');
+		$this->setMilitaryPayment($this->getMilitaryPayment()+$amount);
+	}
+	
+	public function increaseMilitaryPayment($amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative military payment.');
+		$this->setMilitaryPayment($this->getMilitaryPayment()-$amount);
 	}
 	
 	abstract protected function getHOFData();
