@@ -11,19 +11,16 @@ $PHP_OUTPUT.=('<table>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td style="font-weight:bold;">Login:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="login" value="'.$account->login.'">');
 $PHP_OUTPUT.=('<td>'.$account->login.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td style="font-weight:bold;">eMail:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="email" value="'.$account->email.'">');
 $PHP_OUTPUT.=('<td>'.$account->email.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td style="font-weight:bold;">Account ID:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="account_id" value="'.$account->account_id.'">');
 $PHP_OUTPUT.=('<td>'.$account->account_id.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
