@@ -67,6 +67,7 @@ abstract class AbstractSmrPlayer
 	protected $HOF;
 	
 	protected $hasChanged=false;
+	protected $hasBountyChanged = array();
 	
 	protected function __construct()
 	{
@@ -559,6 +560,82 @@ abstract class AbstractSmrPlayer
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative military payment.');
 		$this->setMilitaryPayment($this->getMilitaryPayment()-$amount);
+	}
+	
+	abstract protected function getBountiesData();
+	
+	public function getBounties()
+	{
+		$this->getBountiesData();
+		return $this->bounties;
+	}
+	
+	public function hasBounties()
+	{
+		return count($this->getBounties())>0;
+	}
+	
+	public function getBounty($bountyID)
+	{
+		$bounties = $this->getBounties();
+		return isset($bounties[$bountyID]) ? $bounties[$bountyID] : false;
+	}
+	
+	public function hasBounty($bountyID)
+	{
+		return $this->getBounty($bountyID)!==false;
+	}
+	
+	public function getBountyAmount($bountyID)
+	{
+		$bounties = $this->getBounties();
+		return $bounties[$bountyID]['Amount'];
+	}
+	
+	public function createBounty($bountyID,$type)
+	{
+		if($this->hasBounty($bountyID))
+			throw new Exception('Trying to create negative bounty.');
+		$bounty = array('Amount' => 0,
+						'Type' => $type,
+						'Claimer' => 0,
+						'Time' => TIME,
+						'ID' => $this->getNextBountyID(),
+						'New' => true);
+		$this->setBounty($bounty);
+		$this->hasBountyChanged[$bountyID]=true;
+	}
+	
+	public function getNextBountyID()
+	{
+		return max(array_keys($this->getBounties()));
+	}
+	
+	public function setBounty(array $bounty)
+	{
+		$this->bounties[$bounty['ID']] = $bounty;
+		$this->hasBountyChanged[$bounty['ID']]=true;
+	}
+	
+	public function setBountyAmounty($bountyID, $amount)
+	{
+		$bounty = $this->getBounty($bountyID);
+		$bounty['Amount'] = $amount;
+		$this->setBounty($bounty);
+	}
+	
+	public function increaseBountyAmount($bountyID,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative bounty.');
+		$this->setBountyAmount($this->getBountyAmount($bountyID)+$amount);
+	}
+	
+	public function decreaseBountyAmount($bountyID,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative bounty.');
+		$this->setBountyAmount($this->getBountyAmount($bountyID)+$amount);
 	}
 	
 	abstract protected function getHOFData();
