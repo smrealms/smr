@@ -3,13 +3,11 @@
 $steps = $_REQUEST['steps'];
 $subject = $_REQUEST['subject'];
 $error_msg = $_REQUEST['error_msg'];
-$login = $_REQUEST['login'];
-$account_id = $_REQUEST['account_id'];
 $description = $_REQUEST['description'];
 $new_sub = '[Bug] '.$subject;
 
-$message = 'Login: '.$login.EOL.EOL.'-----------'.EOL.EOL.
-	 'Account ID: '.$account_id.EOL.EOL.'-----------'.EOL.EOL.
+$message = 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
+	 'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
 	 'Description: '.$description.EOL.EOL.'-----------'.EOL.EOL.
 	 'Steps to repeat: '.$steps.EOL.EOL.'-----------'.EOL.EOL.
 	 'Error Message: '.$error_msg;
