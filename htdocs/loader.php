@@ -250,25 +250,31 @@ function do_voodoo()
 //xdebug_dump_function_profile(2);
 
 // This is hackish, but without row level locking it's the best we can do
-function acquire_lock($sector) {
+function acquire_lock($sector)
+{
 	global $db, $lock;
-
+var_dump($lock);
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . time() . ')');
 			
 	$lock = $db->insert_id();
+var_dump($lock);
 
-	for($i=0;$i<200;++$i) {
+	for($i=0;$i<200;++$i)
+	{
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' LIMIT 1');
 		$db->next_record();
-		if($db->f('COUNT(*)')){
+		if($db->f('COUNT(*)'))
+		{
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
 			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' LIMIT 1');
-			if($db->next_record()) {
-				if($db->f('COUNT(*)') > 1) {
+			if($db->next_record())
+			{
+				if($db->f('COUNT(*)') > 1)
+				{
 					create_error('Multiple actions cannot be performed at the same time!');
 					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
 					exit;
@@ -278,7 +284,8 @@ function acquire_lock($sector) {
 			usleep(25000 * $db->f('COUNT(*)'));
 			continue;
 		}
-		else {
+		else
+		{
 			return true;
 		}
 	}
