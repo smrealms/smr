@@ -32,7 +32,7 @@ if ($time_rem <= 0) {
 		
 	}
 	$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID().' AND account_id = '.$winner_id);
-	$db->query('UPDATE player_has_ticket SET time = 0, prize = $amount WHERE time = '.TIME.' AND ' .
+	$db->query('UPDATE player_has_ticket SET time = 0, prize = '.$amount.' WHERE time = '.TIME.' AND ' .
 					'account_id = '.$winner_id.' AND game_id = '.$player->getGameID());
 	//delete losers
 	$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$player->getGameID());
