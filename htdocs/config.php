@@ -4,6 +4,8 @@ error_reporting(E_ALL | E_STRICT); // optional
 ini_set('display_errors', TRUE);
 ini_set('display_startup_errors', TRUE);
 
+define('ACCOUNT_PAGE',1403); //BETA
+
 /*
  * FILE: /htdocs/config.php
  * TODO: Transfer all globals into defines in this file
