@@ -1632,7 +1632,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function save()
 	{
-		if($this->hasChanged)
+		if($this->hasChanged === true)
 		{
 			$this->db->query('UPDATE player SET player_name='.$this->db->escapeString($this->playerName).
 				', player_id='.$this->db->escapeString($this->playerID).
@@ -1676,6 +1676,24 @@ class SmrPlayer extends AbstractSmrPlayer
 				' WHERE '.$this->SQL.' LIMIT 1');
 			$this->hasChanged=false;
 		}
+		foreach($this->hasBountyChanged as $key => &$bountyChanged)
+		{
+			if($bountyChanged===true)
+			{
+				$bountyChanged = false;
+				$bounty = $this->getBounty($key);
+				if($bounty['New'] === true)
+					$db->query('INSERT IGNORE INTO bounty(account_id,game_id,type,amount,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $bounty['Type'] . ',' . $bounty['Amount'] .',' . $bounty['Claimer'] . ',' . $bounty['Time']);
+				else
+					$db->query('UPDATE bounty 
+					SET amount=' . $bounty['Amount'] . ',
+					type=' . $bounty['Type'] . ',
+					claimer_id=' . $bounty['Claimer'] . ',
+					time=' . $bounty['Time'] . '
+					WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1'
+				);
+			}
+		}
 	}
 	
 	protected function getHOFData()
@@ -1701,6 +1719,24 @@ class SmrPlayer extends AbstractSmrPlayer
 						$this->HOF[$key] = $value;
 					}
 				}
+			}
+		}
+	}
+	
+	protected function getBountiesData()
+	{
+		if(!isset($this->bounties))
+		{
+			$this->bounties = array();
+			$this->db->query('SELECT bounty_id,claimer_id,amount,type,time FROM bounty WHERE account_id = ' . $this->getAccountID() . ' AND game_id=' . $this->getGameID());
+			while($this->db->nextRecord())
+			{
+				$this->bounties[$this->db->getField('bounty_id')] = array('Amount' => $this->db->getField('amount'),
+							'Type' => $this->db->getField('type'),
+							'Claimer' => $this->db->getField('claimer_id'),
+							'Time' => $this->db->getField('time'),
+							'ID' => $this->db->getField('bounty_id'),
+							'New' => false);
 			}
 		}
 	}
