@@ -646,7 +646,11 @@ abstract class AbstractSmrPlayer
 	
 	public function getNextBountyID()
 	{
-		return max(array_keys($this->getBounties()))+1;
+		$keys = array_keys($this->getBounties());
+		if(count($keys)>0)
+			return max($keys)+1;
+		else
+			return 0;
 	}
 	
 	public function setBounty(array $bounty)
@@ -676,7 +680,6 @@ abstract class AbstractSmrPlayer
 		$this->setBountyAmount($this->getBountyAmount($bountyID)+$amount);
 	}
 	
-	
 	public function getCurrentBounty($type)
 	{
 		$bounties = $this->getBounties();
@@ -701,7 +704,7 @@ abstract class AbstractSmrPlayer
 	
 	public function getCurrentBountyAmount($type)
 	{
-		$bounty = $this->getCurrentBounty();
+		$bounty = $this->getCurrentBounty($type);
 		return $bounty['Amount'];
 	}
 	
@@ -716,14 +719,14 @@ abstract class AbstractSmrPlayer
 	{
 		if($amount < 0)
 			throw new Exception('Trying to increase negative current bounty.');
-		$this->setCurrentBountyAmount($this->getCurrentBountyAmount($type)+$amount);
+		$this->setCurrentBountyAmount($type,$this->getCurrentBountyAmount($type)+$amount);
 	}
 	
 	public function decreaseCurrentBountyAmount($type,$amount)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative current bounty.');
-		$this->setCurrentBountyAmount($this->getCurrentBountyAmount($type)-$amount);
+		$this->setCurrentBountyAmount($type,$this->getCurrentBountyAmount($type)-$amount);
 	}
 	
 	public function setBountiesClaimable(AbstractSmrPlayer $claimer)
