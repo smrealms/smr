@@ -10,7 +10,7 @@ function get_album_nick($album_id) {
 	// get hof name
 	$album->query('SELECT HoF_name
 				   FROM account_has_stats
-				   WHERE account_id = $album_id');
+				   WHERE account_id = '.$album_id);
 	if ($album->next_record())
 		$nick = $album->f('HoF_name');
 
@@ -19,7 +19,7 @@ function get_album_nick($album_id) {
 
 		$album->query('SELECT login
 					   FROM account
-					   WHERE account_id = $album_id');
+					   WHERE account_id = '.$album_id);
 		if ($album->next_record())
 			$nick = $album->f('login');
 

@@ -1,3 +1,5 @@
+{if !$Locations}<a href="{$ViewAllLocationsLink}">View All Locations</a><br /><br />{/if}
+
 <table>
 	<tr>
 		<th>Name</th>
@@ -8,32 +10,91 @@
 		<th>Bank</th>
 		<th>HQ</th>
 		<th>UG</th>
-		<th></th>
+		<th>Hardware</th>
+		<th>Ships</th>
+		<th>Weapons</th>
+		<th>Edit</th>
 	</tr>
-	{foreach from=$Locations item=Location}
+{if $Locations}
+	{include_template template="includes/ViewLocations.inc" assign=Template}{include file=$Template Locations=$Locations}
+{else}
 	<tr>
-		<td>{$Location->getName()}</td>
-		<td>{$Location->getAction()}</td>
-		<td>{$Location->isFed()}</td>
-		<td>{$Location->isBar()}</td>
-		<td>{$Location->isBank()}</td>
-		<td>{$Location->isHQ()}</td>
-		<td>{$Location->isUG()}</td>
-		<td>
-			{foreach from=$Location->getHardwareSold() item=Hardware}
-				{$Hardware}<br />
-			{/foreach}
-		</td>
-		<td>
-			{foreach from=$Location->getShipsSold() item=Ship}
-				{$Ship.Name}<br />
-			{/foreach}
-		</td>
-		<td>
-			{foreach from=$Location->getWeaponsSold item=Weapon}
-				{$Weapon->getName()}<br />
-			{/foreach}
-		</td>
+		<form action="{$Location->getEditHREF()}" method="POST">
+			<td><input name="name" type="text" value="{$Location->getName()}" /></td>
+			<td><input name="action" type="text" value="{$Location->getAction()}" /></td>
+			<td><input name="image" type="text" value="{$Location->getImage()}" /></td>
+			<td><input name="fed" type="checkbox" {if $Location->isFed()}checked="checked"{/if} /></td>
+			<td><input name="bar" type="checkbox" {if $Location->isBar()}checked="checked"{/if} /></td>
+			<td><input name="bank" type="checkbox" {if $Location->isBank()}checked="checked"{/if} /></td>
+			<td><input name="hq" type="checkbox" {if $Location->isHQ()}checked="checked"{/if} /></td>
+			<td><input name="ug" type="checkbox" {if $Location->isUG()}checked="checked"{/if} /></td>
+			<td>
+				<table>
+					{foreach from=$Location->getHardwareSold() key=HardwareID item=Hardware}
+						<tr>
+							<td>{$Hardware}</td>
+							<td><input type="checkbox" name="hardware[]" value="{$HardwareID}" checked="checked" /></td>
+						</tr>
+					{/foreach}
+					<tr>
+						<td>Add Hardware:</td>
+						<td>
+							<select name="add_hardware_id">
+								<option value="0">None</option>
+								{foreach from=$AllHardware item=Hardware}
+									<option value="{$Hardware.ID}">{$Hardware.Name}</option>
+								{/foreach}
+						</select>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					{foreach from=$Location->getShipsSold() item=Ship}
+						<tr>
+							<td>{$Ship.Name}</td>
+							<td><input type="checkbox" name="ships[]" value="{$Ship.ShipTypeID}" checked="checked" /></td>
+						</tr>
+					{/foreach}
+					<tr>
+						<td>Add Ship:</td>
+						<td>
+							<select name="add_ship_id">
+								<option value="0">None</option>
+								{foreach from=$Ships item=Ship}
+									<option value="{$Ship.ShipTypeID}">{$Ship.Name}</option>
+								{/foreach}
+						</select>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<table>
+					{foreach from=$Location->getWeaponsSold() item=Weapon}
+						<tr>
+							<td>{$Weapon->getName()}</td>
+							<td><input type="checkbox" name="weapons[]" value="{$Weapon->getWeaponTypeID()}" checked="checked" /></td>
+						</tr>
+					{/foreach}
+					<tr>
+						<td>Add Weapon:</td>
+						<td>
+							<select name="add_weapon_id">
+								<option value="0">None</option>
+								{foreach from=$Weapons item=Weapon}
+									<option value="{$Weapon->getWeaponTypeID()}">{$Weapon->getName()}</option>
+								{/foreach}
+						</select>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td>
+				<input type="submit" value="Save"/>
+			</td>
+		</form>
 	</tr>
-	{/foreach}
+{/if}
 </table>

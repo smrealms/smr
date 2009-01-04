@@ -24,6 +24,7 @@ class SmrLocation
 	protected $weaponsSold;
 	
 	protected $HREF;
+	protected $editHREF;
 	
 	public static function &getSectorLocations($gameID,$sectorID,$forceUpdate = false)
 	{
@@ -174,23 +175,47 @@ class SmrLocation
 		return isset($hardware[$hardwareTypeID]);
 	}
 	
+	public function addHardwareSold($hardwareTypeID)
+	{
+		if($this->isHardwareSold($hardwareTypeID))
+			return;
+		$this->db->query('SELECT * FROM hardware_type WHERE hardware_type_id = ' . $hardwareTypeID . ' LIMIT 1');
+		if(!$this->db->nextRecord())
+			throw new Exception('Invalid hardware type id given');
+		$this->db->query('INSERT INTO location_sells_hardware (location_type_id,hardware_type_id) values (' . $this->getTypeID(). ',' . $hardwareTypeID . ')');
+		$this->hardwareSold[$hardwareTypeID] = $this->db->getField('hardware_name');
+	}
+	
 	public function getShipsSold()
 	{
 		if(!isset($this->shipsSold))
 		{
-			require_once(get_file_loc('SmrShip.class.inc'));
+			require_once(get_file_loc('AbstractSmrShip.class.inc'));
 			$this->shipsSold = array();
 			$this->db->query('SELECT * FROM location_sells_ships WHERE location_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
-				$this->shipsSold[$this->db->getField('ship_type_id')] =& SmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$this->db->getField('ship_type_id'));
+				$this->shipsSold[$this->db->getField('ship_type_id')] =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$this->db->getField('ship_type_id'));
 		}
 		return $this->shipsSold;
 	}
 	
 	public function isShipSold($shipTypeID)
 	{
-		$ships = $this->getHardwareSold();
+		$ships = $this->getShipsSold();
 		return isset($ships[$shipTypeID]);
+	}
+	
+	public function addShipSold($shipTypeID)
+	{
+		if($this->isShipSold($shipTypeID))
+			return;
+		require_once(get_file_loc('AbstractSmrShip.class.inc'));
+		$ship =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$shipTypeID);
+		if($ship===false)
+			throw new Exception('Invalid ship type id given');
+		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->getTypeID(). ',' . $shipTypeID . ')');
+		$this->shipsSold[$shipTypeID] =& $ship;
+		
 	}
 	
 	public function getWeaponsSold()
@@ -199,7 +224,7 @@ class SmrLocation
 		{
 			require_once(get_file_loc('SmrWeapon.class.inc'));
 			$this->weaponsSold = array();
-			$this->db->query('SELECT * FROM location_sells_weapons WHERE weapon_type_id = ' . $this->getTypeID());
+			$this->db->query('SELECT * FROM location_sells_weapons WHERE location_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
 				$this->weaponsSold[$this->db->getField('weapon_type_id')] =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getField('weapon_type_id'));
 		}
@@ -208,8 +233,20 @@ class SmrLocation
 	
 	public function isWeaponSold($weaponTypeID)
 	{
-		$weapons = $this->getHardwareSold();
+		$weapons = $this->getWeaponsSold();
 		return isset($weapons[$weaponTypeID]);
+	}
+	
+	public function addWeaponSold($weaponTypeID)
+	{
+		if($this->isWeaponSold($weaponTypeID))
+			return;
+		require_once(get_file_loc('SmrWeapon.class.inc'));
+		$weapon =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$weaponTypeID);
+		if($weapon===false)
+			throw new Exception('Invalid weapon type id given');
+		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->getTypeID(). ',' . $weaponTypeID . ')');
+		$this->weaponsSold[$weaponTypeID] =& $weapon;
 	}
 	
 	public function getExamineHREF()
@@ -222,6 +259,20 @@ class SmrLocation
 			$this->HREF = SmrSession::get_new_href($container);
 		}
 		return $this->HREF;
+	}
+	
+	public function getEditHREF()
+	{
+		if(!isset($this->editHREF))
+		{
+			$container = array();
+			$container['url'] = 'skeleton.php';
+			$container['body'] = 'location_edit.php';
+			$container['game_type_id'] = 0; //TODO add game type id
+			$container['location_type_id'] = $this->getTypeID();
+			$this->editHREF = SmrSession::get_new_href($container);
+		}
+		return $this->editHREF;
 	}
 }
 ?>
