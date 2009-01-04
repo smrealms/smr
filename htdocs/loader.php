@@ -239,11 +239,11 @@ function do_voodoo()
 	
 	SmrShip::saveShips();
 	SmrPlayer::savePlayers();
+	SmrSession::update();
 	if($lock)
 	{
 		release_lock($lock);
 	}
-	SmrSession::update();
 	exit;
 }
 
@@ -263,6 +263,7 @@ function acquire_lock($sector)
 			
 	$lock = $db->insert_id();
 	var_dump($lock);
+	return true;
 
 	for($i=0;$i<100;++$i)
 	{
@@ -282,7 +283,6 @@ function acquire_lock($sector)
 					var_dump($db->f('COUNT(*)'));
 					var_dump($lock);
 					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
-					throw new Exception();
 					create_error('Multiple actions cannot be performed at the same time!');
 					exit;
 				}
