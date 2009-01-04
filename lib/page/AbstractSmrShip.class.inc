@@ -436,7 +436,7 @@ abstract class AbstractSmrShip
 	
 	public function setHardware($hardwareTypeID,$amount)
 	{
-		if($this->hardware[$hardwareTypeID] == $amount)
+		if($this->getHardware($hardwareTypeID) == $amount)
 			return;
 		$this->hardware[$hardwareTypeID] = $amount;
 		$this->hasChangedHardware = true;
