@@ -264,7 +264,7 @@ function acquire_lock($sector)
 	$lock = $db->insert_id();
 	var_dump($lock);
 
-	for($i=0;$i<200;++$i)
+	for($i=0;$i<100;++$i)
 	{
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' LIMIT 1');
@@ -281,9 +281,9 @@ function acquire_lock($sector)
 				{
 					var_dump($db->f('COUNT(*)'));
 					var_dump($lock);
-//					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
-//					create_error('Multiple actions cannot be performed at the same time!');
-//					exit;
+					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
+					create_error('Multiple actions cannot be performed at the same time!');
+					exit;
 				}
 			}
 			
@@ -300,7 +300,8 @@ function acquire_lock($sector)
 	return false;
 }
 
-function release_lock() {
+function release_lock()
+{
 	global $db, $lock;
 
 	$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - 15));

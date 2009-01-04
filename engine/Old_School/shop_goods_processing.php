@@ -23,7 +23,7 @@ require_once('shop_goods.inc');
 
 // creates needed objects
 $port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
-$_GLOBALS['port'] =& $port;
+$GLOBALS['port'] =& $port;
 $amount = get_amount();
 $bargain_price = get_bargain_price();
 
