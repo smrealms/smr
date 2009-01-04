@@ -282,6 +282,7 @@ function acquire_lock($sector)
 					var_dump($db->f('COUNT(*)'));
 					var_dump($lock);
 					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
+					throw new Exception();
 					create_error('Multiple actions cannot be performed at the same time!');
 					exit;
 				}
