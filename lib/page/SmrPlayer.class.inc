@@ -1545,9 +1545,9 @@ class SmrPlayer extends AbstractSmrPlayer
 				if($bounty['Amount'] > 0)
 				{
 					if($bounty['New'] === true)
-						$db->query('INSERT IGNORE INTO bounty(account_id,game_id,type,amount,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeString($bounty['Type']) . ',' . $bounty['Amount'] .',' . $bounty['Claimer'] . ',' . $bounty['Time']);
+						$this->db->query('INSERT IGNORE INTO bounty(account_id,game_id,type,amount,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeString($bounty['Type']) . ',' . $bounty['Amount'] .',' . $bounty['Claimer'] . ',' . $bounty['Time']);
 					else
-						$db->query('UPDATE bounty 
+						$this->db->query('UPDATE bounty 
 						SET amount=' . $bounty['Amount'] . ',
 						type=' . $this->db->escapeString($bounty['Type']) . ',
 						claimer_id=' . $bounty['Claimer'] . ',
