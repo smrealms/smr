@@ -32,8 +32,8 @@ abstract class MySqlDatabase implements Database
 			$this->error('SQL query failed (' . $query . ')');
 		}
 		
-	    if(preg_match('/lock/i',$query))
-	  	  echo $query,'<br />';
+//	    if(preg_match('/lock/i',$query))
+//	  	  echo $query,'<br />';
 	}
 	
 	public function nextRecord()
