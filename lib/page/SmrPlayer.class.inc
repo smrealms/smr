@@ -1542,18 +1542,22 @@ class SmrPlayer extends AbstractSmrPlayer
 			{
 				$bountyChanged = false;
 				$bounty = $this->getBounty($key);
-				if($bounty['Amount'] > 0)
+				if($bounty['New'] === true)
 				{
-					if($bounty['New'] === true)
+					if($bounty['Amount'] > 0)
 						$this->db->query('INSERT INTO bounty (account_id,game_id,type,amount,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeString($bounty['Type']) . ',' . $bounty['Amount'] .',' . $bounty['Claimer'] . ',' . $bounty['Time'] .')');
-					else
+				}
+				else
+				{
+					if($bounty['Amount'] > 0)
 						$this->db->query('UPDATE bounty 
-						SET amount=' . $bounty['Amount'] . ',
-						type=' . $this->db->escapeString($bounty['Type']) . ',
-						claimer_id=' . $bounty['Claimer'] . ',
-						time=' . $bounty['Time'] . '
-						WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1'
-					);
+							SET amount=' . $bounty['Amount'] . ',
+							type=' . $this->db->escapeString($bounty['Type']) . ',
+							claimer_id=' . $bounty['Claimer'] . ',
+							time=' . $bounty['Time'] . '
+							WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
+					else
+						$this->db->query('DELETE FROM bounty WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
 				}
 			}
 		}
