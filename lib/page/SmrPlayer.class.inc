@@ -1479,7 +1479,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		// War setting gives them military pay
 		if($relation <= -300)
 		{
-//			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($gainedExp/2,0.25))));
+			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($gainedExp/2,0.25))));
 		}
 		
 		//check for federal bounty being offered for current port raiders
@@ -1501,12 +1501,12 @@ class SmrPlayer extends AbstractSmrPlayer
 			{
 				$numAttacks = $this->db->getField('numAttacks');
 				$multiplier = round(.4 * $this->getLevelID());
-//				$this->increaseCurrentBountyAmount('HQ',$numAttacks * 1000000 * $multiplier);
+				$this->increaseCurrentBountyAmount('HQ',$numAttacks * 1000000 * $multiplier);
 			}
 		}
 	
 		// Killer get marked as claimer of podded player's bounties even if they don't exist
-//		$this->setBountiesClaimable($killer);
+		$this->setBountiesClaimable($killer);
 
 		// If the alignment difference is greater than 200 then a bounty may be set
 		$alignment_diff = abs($this->getAlignment() - $killer->getAlignment());
@@ -1524,7 +1524,7 @@ class SmrPlayer extends AbstractSmrPlayer
 
 			if(isset($bounty_type))
 			{
-//				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
+				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
 			}
 		}
 		
