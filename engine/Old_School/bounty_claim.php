@@ -33,9 +33,8 @@ if ($db->nf()) {
 
 		// add bounty to our cash
 		$player->increaseCredits($amount);
-		$player->update();
 		$name =& SmrPlayer::getPlayer($acc_id, $player->getGameID());
-		$PHP_OUTPUT.=('<span style="color:yellow;">'.$name->player_name.'</span> : <span style="color:red;">' . number_format($amount) . '</span><br>');
+		$PHP_OUTPUT.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span><br>');
 
 		// add HoF stat
 		$player->increaseHOF(1,'bounties_claimed');
