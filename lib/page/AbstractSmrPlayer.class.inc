@@ -11,9 +11,6 @@ abstract class AbstractSmrPlayer
 //	var $level_id;
 //	var $level_name;
 //	var $alliance_description;
-//	var $last_turn_update;
-//	var $military_payment;
-//	var $last_sector_id;
 //	var $controlled;
 //	var $old_dead;
 //	var $bank;
@@ -39,6 +36,7 @@ abstract class AbstractSmrPlayer
 	protected $playerName;
 	protected $playerID;
 	protected $sectorID;
+	protected $lastSectorID;
 	protected $newbieTurns;
 	protected $dead;
 	protected $startDead;
@@ -63,6 +61,10 @@ abstract class AbstractSmrPlayer
 	protected $pureRelations;
 	protected $relations;
 	protected $militaryPayment;
+	protected $bounties;
+	protected $turns;
+	protected $maxTurns = 1000;
+	protected $lastCPLAction;
 	
 	protected $HOF;
 	
@@ -134,6 +136,19 @@ abstract class AbstractSmrPlayer
 	public function getSectorID()
 	{
 		return $this->sectorID;
+	}
+	
+	public function setSectorID($sectorID)
+	{
+		$this->lastSectorID = $this->getSectorID();
+		$this->sectorID = $sectorID;
+		$this->updateLastCPLAction();
+		$this->hasChanged=true;
+	}
+	
+	public function getLastSectorID()
+	{
+		return $this->lastSectorID;
 	}
 	
 	public function isDead()
@@ -229,6 +244,32 @@ abstract class AbstractSmrPlayer
 	public function getAlignment()
 	{
 		return $this->alignment;
+	}
+	
+	function increaseAlignment($align)
+	{
+		if($align < 0)
+			throw new Exception('Trying to increase negative align.');
+		if($align == 0)
+			return;
+		$align += $this->alignment;
+		$this->setAlignment($align);
+	}
+	function decreaseAlignment($align)
+	{
+		if($align < 0)
+			throw new Exception('Trying to decrease negative align.');
+		if($align == 0)
+			return;
+		$align = $this->alignment - $align;
+		$this->setAlignment($align);
+	}
+	function setAlignment($align)
+	{
+		if($this->alignment == $align)
+			return;
+		$this->alignment = $align;
+		$this->hasChanged=true;
 	}
 	
 	public function getCredits()
@@ -450,7 +491,7 @@ abstract class AbstractSmrPlayer
 	public function getStat($name)
 	{
 		$stats = $this->getStats();
-		return $stats[$name];
+		return isset($stats[$name]) ? $stats[$name] : 0;
 	}
 	
 	protected abstract function getGadgetsData();
@@ -688,12 +729,15 @@ abstract class AbstractSmrPlayer
 	public function setBountiesClaimable(AbstractSmrPlayer $claimer)
 	{
 		$bounties = $this->getBounties();
-		foreach($bounties as $bounty)
+		if(is_array($bounties))
 		{
-			if($bounty['Claimer'] == 0)
+			foreach($bounties as $bounty)
 			{
-				$bounty['Claimer'] = $claimer->getAccountID();
-				$this->setBounty($bounty);
+				if($bounty['Claimer'] == 0)
+				{
+					$bounty['Claimer'] = $claimer->getAccountID();
+					$this->setBounty($bounty);
+				}
 			}
 		}
 	}
@@ -749,6 +793,90 @@ abstract class AbstractSmrPlayer
 //PAGE
 //TODO: Add hof stuff.
 //		$result = $this->db->query('UPDATE player_hof SET `'.$type.($subtype!==false?'-'.$subtype:'').'`='.$amount.' WHERE ' . $this->SQL);
+	}
+	
+	abstract public function killPlayer($sectorID);
+	abstract public function &killPlayerByPlayer(AbstractSmrPlayer &$killer);
+	abstract public function getHome();
+	
+	
+	function getTurns()
+	{
+		return $this->turns;
+	}
+	
+	function getMaxTurns()
+	{
+		return $this->maxTurns;
+	}
+
+	function setTurns($maint,$newNoob = -1,$updateLastActive = false)
+	{
+		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)) && !$updateLastActive)
+			return;
+		$this->turns = $maint;
+
+		if(!has_beta_privilege('No SC Change'))
+		{
+			if ($this->turns < 0)
+				$this->turns = 0;
+			if ($this->turns > $this->getMaxTurns())
+				$this->turns = $this->getMaxTurns();
+		}
+		
+		if($newNoob != -1)
+			$this->newbieTurns = $newNoob;
+		if ($this->newbieTurns < 0)
+			$this->newbieTurns = 0;
+	
+		if (has_privilege('Unlimited Maintenance'))
+			$this->turns = $this->getMaxTurns();
+		
+		$this->hasChanged=true;
+		if($updateLastActive === true)
+		{
+			$this->setLastActive=TIME;
+			$this->setLastCPLAction=TIME;
+		}
+	}
+
+	function takeTurns($take, $noob = 0,$updateLastActive = true) // taking maint counts as activity by default
+	{
+		if($take < 0 || $noob < 0)
+			throw new Exception('Trying to take negative turns.');
+		$new_maint = $this->turns - $take;
+		$new_noob = $this->newbieTurns - $noob;
+		
+		if(!has_beta_privilege('No SC Loss'))
+			$this->setTurns($new_maint,$new_noob,$updateLastActive);
+	}
+	function giveTurns($give, $noob = 0,$updateLastActive = false)
+	{
+		if($give < 0 || $noob < 0)
+			throw new Exception('Trying to give negative turns.');
+		$new_maint = $this->turns + $give;
+		$new_noob = $this->newbieTurns + $noob;
+		
+		if(!has_beta_privilege('No SC Gain'))
+			$this->setTurns($new_maint,$new_noob,$updateLastActive);
+	}
+	
+	function getLastCPLAction()
+	{
+		return $this->lastCPLAction;
+	}
+	
+	function setLastCPLAction($time)
+	{
+		if($this->lastCPLAction == $time)
+			return;
+		$this->lastCPLAction=$time;
+		$this->hasChanged=true;
+	}
+	
+	function updateLastCPLAction()
+	{
+		$this->setLastCPLAction(TIME);
 	}
 }
 ?>

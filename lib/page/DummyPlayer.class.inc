@@ -44,6 +44,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		$this->stats = array();
 		$this->gadgets = array();
 		$this->pureRelations = array();
+		$this->bounties = array();
 	}
 	
 	public function getPastMaintBought()
@@ -74,6 +75,205 @@ class DummyPlayer extends AbstractSmrPlayer
 	
 	protected function getBountiesData()
 	{
+	}
+	
+	public function killPlayer($sectorID)
+	{
+		$sector =& SmrSector::getSector($this->getGameID(),$sectorID,$this->getAccountID());
+		//msg taken care of in trader_att_proc.php
+		// forget plotted course
+//		$this->deletePlottedCourse();
+
+		$sector->died_here($this);
+		
+		// if we are in an alliance we increase their deaths
+//		if ($this->hasAlliance())
+//			$this->db->query('UPDATE alliance SET alliance_deaths = alliance_deaths + 1 ' .
+//						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
+
+		// record death stat
+		$this->increaseHOF(1,'deaths');
+		//record cost of ship lost
+		$this->increaseHOF($this->getShip()->getCost(),'ship_cost_lost');
+		// reset turns since last death
+		$this->setHOF(0,'turns_used');
+
+		// 1/4 of ship value -> insurance
+		$newCredits = round($this->getShip()->getCost() / 4);
+		$old_speed = $this->getShip()->getSpeed();
+			
+		if ($newCredits < 100000)
+			$newCredits = 100000;
+		$this->setCredits($newCredits);
+
+		// speed for pod
+		$new_speed = 7;
+
+		// adapt turns
+		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
+
+		$this->setSectorID($this->getHome());
+		$this->increaseDeaths(1);
+		$this->setLandedOnPlanet(false);
+		$this->setDead(true);
+//		$this->setNewbieWarning(true);
+		$this->getShip()->get_pod();
+		
+	}
+	
+	public function getHome()
+	{
+		return 1;
+	}
+	
+	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer)
+	{
+		
+		$return = array();
+		$msg = $this->getPlayerName();
+	
+//		if(isset($ship_names[$killed_id])) {
+//			$msg .= ' flying ';
+//			if(!stristr($ship_names[$killed_id],'<img')){
+//				if(stristr($ship_names[$killed_id],'<mar')) $msg .= '<span class="yellow">' . strip_tags($ship_names[$killed_id]) . '</span>';
+//				else {
+//					$msg .= $ship_names[$killed_id];
+//				}
+//			} else $msg .= strip_tags($ship_names[$killed_id], '<img>');
+//		}
+		$msg .= ' was destroyed by ' . $killer->getPlayerName();
+//		if(isset($ship_names[$killer_id])) {
+//			$msg .= ' flying ';
+//			if(!stristr($ship_names[$killer_id],'<img')){
+//				if(stristr($ship_names[$killer_id],'<mar')) $msg .= '<span class="yellow">' . strip_tags($ship_names[$killer_id]) . '</span>';
+//				else {
+//					$msg .= $ship_names[$killer_id];
+//				}
+//			} else $msg .= strip_tags($ship_names[$killer_id], '<img>');
+//		}
+		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
+//		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg,true) . ',\'regular\')');
+		
+//		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+//		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+		
+		// The person who got the kill gains experience
+		$gainedExp = ceil(0.75*((((($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID())) + 1) * 0.04 * $this->getExperience()) + (0.025 * $this->getExperience())));
+		
+		$return['KillerExp'] = $gainedExp;
+		$killer->increaseExperience($gainedExp);
+		$killer->increaseHOF($gainedExp,'kill_exp_gain');
+		$killer->increaseHOF($this->getExperience(),'traders_killed_exp');
+		// Dead player loses experience
+		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
+		$return['DeadExp'] = 0;
+		if($expLossPercentage > 0)
+		{
+			$lostExp = floor($this->getExperience() * $expLossPercentage);
+			$return['DeadExp'] = $lostExp;
+			$this->decreaseExperience($lostExp);
+		}
+		
+		$creditsGained = $this->getCredits();
+		$return['KillerCredits'] = $creditsGained;
+		$killer->increaseCredits($creditsGained);
+		$killer->increaseHOF($creditsGained,'kill_money_gain');
+		$killer->increaseHOF($this->getShip()->getCost(),'ships_killed_cost');
+
+		// The killer may change alignment
+		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
+		$relation = $relations[$this->getRaceID()];
+
+		$alignChangePerRelation = 0.1;
+		if($relation >= 300 || $relation <= -300)
+			$alignChangePerRelation = 0.04;
+
+		$alignChange = $relation * $alignChangePerRelation;
+		$return['KillerAlign'] = $alignChange;
+		if($alignChange>0)
+			$killer->increaseAlignment($alignChange);
+		else
+			$killer->decreaseAlignment(-$alignChange);
+		// War setting gives them military pay
+		if($relation <= -300)
+		{
+			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($gainedExp/2,0.25))));
+		}
+		
+		//check for federal bounty being offered for current port raiders
+//		$allowed = TIME - 60 * 60 * 3;
+//		$this->db->query('DELETE FROM player_attacks_port WHERE time < '.$allowed);
+//		$query = 'SELECT count(*) as numAttacks
+//					FROM player_attacks_port, player, port
+//					WHERE player_attacks_port.game_id = port.game_id
+//					AND port.game_id = player.game_id
+//					AND armor > 0
+//					AND player_attacks_port.sector_id = port.sector_id
+//					AND player.account_id = player_attacks_port.account_id
+//					AND player.account_id = ' . $this->getAccountID() . '
+//					AND player.game_id = ' . $this->getGameID();
+//		$this->db->query($query);
+//		if ($this->db->nextRecord())
+//		{
+//			if ($this->db->getField('numAttacks'))
+//			{
+//				$numAttacks = $this->db->getField('numAttacks');
+//				$multiplier = round(.4 * $this->getLevelID());
+//				$this->increaseCurrentBountyAmount('HQ',$numAttacks * 1000000 * $multiplier);
+//			}
+//		}
+	
+		// Killer get marked as claimer of podded player's bounties even if they don't exist
+		$this->setBountiesClaimable($killer);
+
+		// If the alignment difference is greater than 200 then a bounty may be set
+		$alignment_diff = abs($this->getAlignment() - $killer->getAlignment());
+		if($alignment_diff >= 200)
+		{
+			// If the podded players alignment makes them deputy or member then set bounty
+			if($this->getAlignment() >= 100)
+			{
+				$bounty_type = 'HQ';
+			}
+			else if ($this->getAlignment() <= 100)
+			{
+				$bounty_type = 'UG';
+			}
+
+			if(isset($bounty_type))
+			{
+				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
+			}
+		}
+		
+		$killer->increaseKills(1);
+		$killer->increaseHOF(1,'kills');
+
+//		if($this->hasAlliance())
+//		{
+//			$this->db->query('UPDATE alliance SET alliance_deaths=alliance_deaths+1 WHERE alliance_id=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+//		}
+//		if($killer->hasAlliance())
+//		{
+//			$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $killer->getAllianceID() . ' AND game_id=' . $killer->getGameID() . ' LIMIT 1');
+//		}
+//
+//		if($this->hasAlliance() && $killer->hasAlliance())
+//		{
+//			$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $killer->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+//			if($this->db->nextRecord())
+//			{
+//				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+//			}
+//			else
+//			{
+//				$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->getGameID() . ',' . $killer->getAllianceID() . ',' . $this->getAllianceID() . ',1)');
+//			}
+//		}
+		
+		
+		$this->killPlayer($this->getSectorID());
+		return $return;
 	}
 	
 	public function &getShip()

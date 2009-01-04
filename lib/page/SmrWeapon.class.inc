@@ -148,12 +148,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 			return $return;
 		}
 		$return['Hit'] = true;
-		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
-		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
-
-		if($return['ActualDamage']['KillingShot'])
-			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
-		return $return;
+		return $this->doDamageToPlayer($return,$weaponPlayer, $targetPlayer);
 	}
 	
 //private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null)

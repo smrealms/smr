@@ -212,7 +212,7 @@ if ($days > 5) $days = 5;
 $forces->setExpire(TIME + ($days * 86400));
 
 $ship->update_hardware();
-$ship->mark_seen();
+$ship->removeUnderAttack();
 $forces->update();
 
 forward(create_container('skeleton.php', 'current_sector.php'));
