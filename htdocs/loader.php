@@ -162,7 +162,7 @@ function do_voodoo()
 {
 //	ob_clean();
 
-//	global $lock, $var,$smarty,$time_start;
+	global $lock, $var,$smarty,$time_start;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -237,11 +237,11 @@ function do_voodoo()
 	
 	$smarty->display(get_template_loc($var['url']));
 	
-	SmrShip::saveShips();
-	SmrPlayer::savePlayers();
-	SmrSession::update();
 	if($lock)
-	{
+	{ //only save if we have the lock.
+		SmrShip::saveShips();
+		SmrPlayer::savePlayers();
+		SmrSession::update();
 		release_lock($lock);
 	}
 	exit;
