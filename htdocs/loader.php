@@ -162,7 +162,7 @@ function do_voodoo()
 {
 //	ob_clean();
 
-	global $lock, $var,$smarty,$time_start;
+//	global $lock, $var,$smarty,$time_start;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
