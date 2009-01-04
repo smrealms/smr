@@ -89,8 +89,9 @@ if(isset($display_id)){
 		$smarty->assign('CombatLogSector',$db->f('sector_id'));
 		$smarty->assign('CombatLogTimestamp',date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$db->f('timestamp')));
 		
-		var_dump(unserialize(gzuncompress($db->f('result'))));
-//		$smarty->assign_by_ref('TraderCombatResults',));
+		$results = unserialize(gzuncompress($db->f('result')));
+		var_dump($results);
+		$smarty->assign_by_ref('TraderCombatResults',$results);
 	}
 	else {
 		$PHP_OUTPUT.= '<span class="red bold">Error:</span> log not found';
