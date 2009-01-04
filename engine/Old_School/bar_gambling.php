@@ -88,7 +88,7 @@ if ($action == 'lotto') {
 	if ($val == 1) {
 		// create news msg
 		$winner =& SmrPlayer::getPlayer($winner_id, $player->getGameID());
-		$news_message = '<font color=yellow>'.$winner->player_name.'</font> has won the lotto!  The jackpot was ' . number_format($amount) . '.  <font color=yellow>'.$winner->player_name.'</font> can report to any bar to claim his prize!';
+		$news_message = '<font color=yellow>'.$winner->getPlayerName().'</font> has won the lotto!  The jackpot was ' . number_format($amount) . '.  <font color=yellow>'.$winner->getPlayerName().'</font> can report to any bar to claim his prize!';
 		// insert the news entry delete old first
 		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$player->getGameID());
 		$db->query('INSERT INTO news ' .

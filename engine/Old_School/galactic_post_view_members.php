@@ -25,7 +25,7 @@ if ($db->nf()) {
 	    $curr_writter =& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
     	$time = $db->f('last_wrote');
         $PHP_OUTPUT.=('<tr>');
-	    $PHP_OUTPUT.=('<td align="center">'.$curr_writter->player_name.'</td>');
+	    $PHP_OUTPUT.=('<td align="center">'.$curr_writter->getPlayerName().'</td>');
     	$PHP_OUTPUT.=('<td align="center"> ' . date('n/j/Y g:i:s A', $time) . '</td>');
 	    $container['id'] = $curr_writter->account_id;
 	    $PHP_OUTPUT.=create_echo_form($container);

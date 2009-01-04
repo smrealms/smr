@@ -66,7 +66,7 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (TRADER_ATTACK_PROCCESSING)';
 //$defender =& SmrPlayer::getPlayer($defender_id, SmrSession::$game_id);
 //
 //// log action
-//$account->log(8, 'Attacks $defender->player_name', $player->getSectorID());
+//$account->log(8, 'Attacks $defender->getPlayerName()', $player->getSectorID());
 //
 //$container = array();
 //$container['url'] = 'skeleton.php';
@@ -146,8 +146,8 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (TRADER_ATTACK_PROCCESSING)';
 //			$container['continue'] = 'No';
 //
 //		// save some time here
-//		$killer_name = get_colored_text($killer->alignment, $killer->player_name);
-//		$killed_name = get_colored_text($killed->alignment, $killed->player_name);
+//		$killer_name = get_colored_text($killer->alignment, $killer->getPlayerName());
+//		$killed_name = get_colored_text($killed->alignment, $killed->getPlayerName());
 //
 //	if ($debug) $PHP_OUTPUT.=('newbie turns<br>');
 //		$db->query('UPDATE player SET newbie_turns = 100 WHERE account_id = $killed_id AND game_id = '.$player->getGameID());

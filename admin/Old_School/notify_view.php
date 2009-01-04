@@ -31,14 +31,14 @@ if ($db->nf()) {
 		$PHP_OUTPUT.=('<td nowrap="nowrap">');
 		
 		$offender = 'From: '.$sender_acc->login.' ('.$sender_acc->account_id.')';
-		if ($sender_acc->login != $sender->player_name)
-			$offender .= ' a.k.a '.$sender->player_name;
+		if ($sender_acc->login != $sender->getPlayerName())
+			$offender .= ' a.k.a '.$sender->getPlayerName();
 		$PHP_OUTPUT.=create_link($container, $offender);
 		$PHP_OUTPUT.=('</td><td nowrap="nowrap">');
 		//To: $receiver_acc->login ($receiver_acc->account_id)');
 		$offended = 'To: '.$receiver_acc->login.' ('.$receiver_acc->account_id.')';
-		if ($receiver_acc->login != $receiver->player_name)
-			$offended .= ' a.k.a '.$receiver->player_name;
+		if ($receiver_acc->login != $receiver->getPlayerName())
+			$offended .= ' a.k.a '.$receiver->getPlayerName();
 		$PHP_OUTPUT.=create_link($container, $offended);
 		$PHP_OUTPUT.=('</td><td>');
 		$db2->query('SELECT * FROM game WHERE game_id = ' . $db->f('game_id'));

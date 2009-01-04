@@ -49,11 +49,11 @@ else $PHP_OUTPUT.=create_ug_menue();
 $bounty_guy =& SmrPlayer::getPlayer($account_id, $player->getGameID());
 
 $PHP_OUTPUT.=('Are you sure you want to place a <span style="color:yellow;">' . number_format($amount) .
-	  '</span> bounty on <span style="color:yellow;">'.$bounty_guy->player_name.'</span>?');
+	  '</span> bounty on <span style="color:yellow;">'.$bounty_guy->getPlayerName().'</span>?');
 
 $container = array();
 $container['url'] = 'bounty_place_processing.php';
-$container['account_id'] = $bounty_guy->account_id;
+$container['account_id'] = $bounty_guy->getAccountID();
 $container['amount'] = $amount;
 
 $PHP_OUTPUT.=create_echo_form($container);
