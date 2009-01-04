@@ -19,7 +19,7 @@ while ($db->next_record()) {
     $container['url'] = 'skeleton.php';
     $container['body'] = 'galactic_post_view_applications.php';
     $container['id'] = $appliee->account_id;
-    $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$appliee->player_name.'</font>');
+    $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$appliee->getPlayerName().'</font>');
     $PHP_OUTPUT.=(' who has ');
     if ($db->f('written_before') == 'YES')
         $PHP_OUTPUT.=('written for some kind of a newspaper before.');
@@ -35,7 +35,7 @@ if (isset($var['id'])) {
     $db->next_record();
     $desc = stripslashes($db->f('description'));
     $applie =& SmrPlayer::getPlayer($var['id'], $player->getGameID());
-    $PHP_OUTPUT.=('Name : '.$applie->player_name.'<br>');
+    $PHP_OUTPUT.=('Name : '.$applie->getPlayerName().'<br>');
     $PHP_OUTPUT.=('Have you written for some kind of newspaper before? ' . $db->f('written_before'));
     $PHP_OUTPUT.=('<br>');
     $PHP_OUTPUT.=('How many articles are you willing to write per day? ' . $db->f('articles_per_day'));

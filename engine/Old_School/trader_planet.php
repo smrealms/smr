@@ -126,7 +126,7 @@ if ($player->getAllianceID() != 0) {
 			$planet->build();
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
-			$PHP_OUTPUT.=('<td>'.$planet_owner->player_name.'</td>');
+			$PHP_OUTPUT.=('<td>'.$planet_owner->getPlayerName().'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$planet->sector_id.'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$planet_sector->galaxy_name.'</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->construction[1] . '</td>');
