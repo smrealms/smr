@@ -33,7 +33,7 @@
 					{foreach from=$Location->getHardwareSold() key=HardwareID item=Hardware}
 						<tr>
 							<td>{$Hardware}</td>
-							<td><input type="checkbox" name="hardware[]" value="{$HardwareID}" checked="checked" /></td>
+							<td><input type="checkbox" name="remove_hardware[]" value="{$HardwareID}" /></td>
 						</tr>
 					{/foreach}
 					<tr>
@@ -54,7 +54,7 @@
 					{foreach from=$Location->getShipsSold() item=Ship}
 						<tr>
 							<td>{$Ship.Name}</td>
-							<td><input type="checkbox" name="ships[]" value="{$Ship.ShipTypeID}" checked="checked" /></td>
+							<td><input type="checkbox" name="remove_ships[]" value="{$Ship.ShipTypeID}" /></td>
 						</tr>
 					{/foreach}
 					<tr>
@@ -75,7 +75,7 @@
 					{foreach from=$Location->getWeaponsSold() item=Weapon}
 						<tr>
 							<td>{$Weapon->getName()}</td>
-							<td><input type="checkbox" name="weapons[]" value="{$Weapon->getWeaponTypeID()}" checked="checked" /></td>
+							<td><input type="checkbox" name="remove_weapons[]" value="{$Weapon->getWeaponTypeID()}" /></td>
 						</tr>
 					{/foreach}
 					<tr>

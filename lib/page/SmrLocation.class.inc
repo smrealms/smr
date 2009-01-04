@@ -266,6 +266,14 @@ class SmrLocation
 		$this->hardwareSold[$hardwareTypeID] = $this->db->getField('hardware_name');
 	}
 	
+	public function removeHardwareSold($hardwareTypeID)
+	{
+		if(!$this->isHardwareSold($hardwareTypeID))
+			return;
+		$this->db->query('DELETE FROM location_sells_hardware WHERE location_type_id = ' . $this->getTypeID() . ' AND hardware_type_id = ' . $hardwareTypeID . ' LIMIT 1');
+		unset($this->hardwareSold[$hardwareTypeID]);
+	}
+	
 	public function getShipsSold()
 	{
 		if(!isset($this->shipsSold))
@@ -295,7 +303,14 @@ class SmrLocation
 			throw new Exception('Invalid ship type id given');
 		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->getTypeID(). ',' . $shipTypeID . ')');
 		$this->shipsSold[$shipTypeID] =& $ship;
-		
+	}
+	
+	public function removeShipSold($shipTypeID)
+	{
+		if(!$this->isShipSold($shipTypeID))
+			return;
+		$this->db->query('DELETE FROM location_sells_hardware WHERE location_type_id = ' . $this->getTypeID() . ' AND hardware_type_id = ' . $shipTypeID . ' LIMIT 1');
+		unset($this->shipsSold[$shipTypeID]);
 	}
 	
 	public function getWeaponsSold()
@@ -327,6 +342,14 @@ class SmrLocation
 			throw new Exception('Invalid weapon type id given');
 		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->getTypeID(). ',' . $weaponTypeID . ')');
 		$this->weaponsSold[$weaponTypeID] =& $weapon;
+	}
+	
+	public function removeWeaponSold($weaponTypeID)
+	{
+		if(!$this->isWeaponSold($weaponTypeID))
+			return;
+		$this->db->query('DELETE FROM location_sells_hardware WHERE location_type_id = ' . $this->getTypeID() . ' AND hardware_type_id = ' . $weaponTypeID . ' LIMIT 1');
+		unset($this->weaponsSold[$weaponTypeID]);
 	}
 	
 	public function getExamineHREF()
