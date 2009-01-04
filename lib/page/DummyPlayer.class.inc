@@ -72,6 +72,10 @@ class DummyPlayer extends AbstractSmrPlayer
 	{
 	}
 	
+	protected function getBountiesData()
+	{
+	}
+	
 	public function &getShip()
 	{
 		require_once(get_file_loc('DummyShip.class.inc'));
