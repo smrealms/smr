@@ -254,7 +254,6 @@ function acquire_lock($sector)
 {
 	global $db, $lock;
 
-	var_dump($lock);
 	if($lock)
 		return true;
 		
@@ -262,8 +261,6 @@ function acquire_lock($sector)
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 			
 	$lock = $db->insert_id();
-	var_dump($lock);
-	return true;
 
 	for($i=0;$i<100;++$i)
 	{
@@ -280,8 +277,6 @@ function acquire_lock($sector)
 			{
 				if($db->f('COUNT(*)') > 1)
 				{
-					var_dump($db->f('COUNT(*)'));
-					var_dump($lock);
 					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
 					create_error('Multiple actions cannot be performed at the same time!');
 					exit;

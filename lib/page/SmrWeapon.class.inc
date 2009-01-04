@@ -152,11 +152,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 
 		if($return['ActualDamage']['KillingShot'])
-		{
 			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
-			echo 'Weapon';
-			usleep(250000);
-		}
 		return $return;
 	}
 	
