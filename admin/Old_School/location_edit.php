@@ -7,12 +7,20 @@ require_once(get_file_loc('SmrLocation.class.inc'));
 if(isset($var['location_type_id']))
 {
 	$location =& SmrLocation::getLocation($var['location_type_id']);
-	if(isset($_REQUEST['add_ship_id']) && $_REQUEST['add_ship_id']!=0)
-		$location->addShipSold($_REQUEST['add_ship_id']);
-	if(isset($_REQUEST['add_weapon_id']) && $_REQUEST['add_weapon_id']!=0)
-		$location->addWeaponSold($_REQUEST['add_weapon_id']);
-	if(isset($_REQUEST['add_hardware_id']) && $_REQUEST['add_hardware_id']!=0)
-		$location->addHardwareSold($_REQUEST['add_hardware_id']);
+	if(isset($_REQUEST['save']))
+	{
+		if($_REQUEST['add_ship_id']!=0)
+			$location->addShipSold($_REQUEST['add_ship_id']);
+		if($_REQUEST['add_weapon_id']!=0)
+			$location->addWeaponSold($_REQUEST['add_weapon_id']);
+		if($_REQUEST['add_hardware_id']!=0)
+			$location->addHardwareSold($_REQUEST['add_hardware_id']);
+		$location->setFed(isset($_REQUEST['fed']));
+		$location->setBar(isset($_REQUEST['bar']));
+		$location->setBank(isset($_REQUEST['bank']));
+		$location->setHQ(isset($_REQUEST['hq']));
+		$location->setUG(isset($_REQUEST['ug']));
+	}
 	
 	
 	$smarty->assign_by_ref('Location',$location);

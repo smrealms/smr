@@ -105,6 +105,22 @@ class SmrLocation
 		return $this->fed;
 	}
 	
+	public function setFed($bool)
+	{
+		if($this->fed===$bool)
+			return;
+		if($bool===true)
+		{
+			$this->db->query('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->fed = true;
+		}
+		else if($bool===false)
+		{
+			$this->db->query('DELETE FROM location_is_fed WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->fed = false;
+		}
+	}
+	
 	public function isBank()
 	{
 		if(!isset($this->bank))
@@ -116,6 +132,22 @@ class SmrLocation
 				$this->bank = false;
 		}
 		return $this->bank;
+	}
+	
+	public function setBank($bool)
+	{
+		if($this->bank===$bool)
+			return;
+		if($bool===true)
+		{
+			$this->db->query('INSERT INTO location_is_bank (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->bank = true;
+		}
+		else if($bool===false)
+		{
+			$this->db->query('DELETE FROM location_is_bank WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->bank = false;
+		}
 	}
 	
 	public function isBar()
@@ -131,6 +163,22 @@ class SmrLocation
 		return $this->bar;
 	}
 	
+	public function setBar($bool)
+	{
+		if($this->bar===$bool)
+			return;
+		if($bool===true)
+		{
+			$this->db->query('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->bar = true;
+		}
+		else if($bool===false)
+		{
+			$this->db->query('DELETE FROM location_is_bar WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->bar = false;
+		}
+	}
+	
 	public function isHQ()
 	{
 		if(!isset($this->HQ))
@@ -144,6 +192,22 @@ class SmrLocation
 		return $this->HQ;
 	}
 	
+	public function setHQ($bool)
+	{
+		if($this->HQ===$bool)
+			return;
+		if($bool===true)
+		{
+			$this->db->query('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->HQ = true;
+		}
+		else if($bool===false)
+		{
+			$this->db->query('DELETE FROM location_is_hq WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->HQ = false;
+		}
+	}
+	
 	public function isUG()
 	{
 		if(!isset($this->UG))
@@ -155,6 +219,22 @@ class SmrLocation
 				$this->UG = false;
 		}
 		return $this->UG;
+	}
+	
+	public function setUG($bool)
+	{
+		if($this->UG===$bool)
+			return;
+		if($bool===true)
+		{
+			$this->db->query('INSERT INTO location_is_ug (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->UG = true;
+		}
+		else if($bool===false)
+		{
+			$this->db->query('DELETE FROM location_is_ug WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->UG = false;
+		}
 	}
 	
 	public function getHardwareSold()

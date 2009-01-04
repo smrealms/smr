@@ -92,7 +92,7 @@
 				</table>
 			</td>
 			<td>
-				<input type="submit" value="Save"/>
+				<input type="submit" name="save" value="Save"/>
 			</td>
 		</form>
 	</tr>
