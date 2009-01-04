@@ -110,14 +110,8 @@ forward($container);
 
 function doUNO(&$player,&$ship)
 {
-	$db = new SMR_DB();
-	$db->query('SELECT * FROM ship_type_support_hardware WHERE ship_type_id = '.$ship->getShipTypeID());
-	$db2 = new SMR_DB();
-	while ($db->next_record()) {
-		$hardware_id = $db->f('hardware_type_id');
-		$amount = $db->f('max_amount');
-		$db2->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES ' .
-				'('.$player->getAccountID().', '.$player->getGameID().', '.$hardware_id.', '.$amount.', '.$amount.')');
-	}
+	$maxHardware = $ship->getMaxHardware();
+	foreach($maxHardware as $key => $max)
+		$ship->setHardware($key,$max);
 }
 ?>
