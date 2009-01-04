@@ -191,7 +191,7 @@ class SmrShip extends AbstractSmrShip
 		return 1;
 	}
 	
-	function mark_seen() {
+	function removeUnderAttack() {
 		foreach ($this->hardware as $hardware_type_id => $amount) {
 			$this->db->query('UPDATE ship_has_hardware SET old_amount = '.$amount.' ' .
 				'WHERE account_id = '.$this->getAccountID().' AND ' .

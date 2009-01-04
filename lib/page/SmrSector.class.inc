@@ -292,13 +292,13 @@ class SmrSector
 
 	}
 
-	function died_here(SmrPlayer &$player)
+	function died_here(AbstractSmrPlayer &$player)
 	{
 		global $SCOUTMSG;
-		$account =& $player->getAccount();
+//		$account =& $player->getAccount();
 
 		// get our rank
-		$rank_id = $account->get_rank();
+//		$rank_id = $account->get_rank();
 
 		// the sector saw a battle now
 		$this->db->query('UPDATE sector SET battles = battles + 1 ' .
@@ -316,15 +316,15 @@ class SmrSector
 			if ($owner->sameAlliance($player)) continue;
 
 			// we may skip player if this is a protected gal.
-			if ($this->is_protected_gal()) {
-
-				$curr_account =& SmrAccount::getAccount($this->db->getField('owner_id'));
-
-				// if one is vet and the other is newbie we skip it
-				if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
-					continue;
-
-			}
+//			if ($this->is_protected_gal()) {
+//
+//				$curr_account =& SmrAccount::getAccount($this->db->getField('owner_id'));
+//
+//				// if one is vet and the other is newbie we skip it
+//				if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
+//					continue;
+//
+//			}
 
 			// send scout messages to user
 			$message = 'Your forces have spotted that ' . $player->getDisplayName() . ' has been <font color=red>DESTROYED</font> in sector #'.$this->sectorID;
@@ -509,7 +509,7 @@ class SmrSector
 		return SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID());
 	}
 
-	public function &getFightingTraders(SmrPlayer &$attackingPlayer, SmrPlayer &$defendingPlayer)
+	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer)
 	{
 		if($attackingPlayer->traderNAPAlliance($defendingPlayer))
 			throw new Exception('These traders are NAPed.');

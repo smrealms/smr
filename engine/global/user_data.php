@@ -11,7 +11,7 @@ if ($under_attack_shields || $under_attack_armor || $under_attack_drones) {
 		SetBlink();
 		</script>
 		';
-	$ship->mark_seen();
+	$ship->removeUnderAttack();
 }
 
 $db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $player->getAccountID() . ' AND game_id=' . $player->getGameID() . ' GROUP BY message_type_id');

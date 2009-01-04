@@ -49,7 +49,7 @@ $ship->removeAllCargo();
 
 // update again
 $ship->update();
-$ship->mark_seen();
+$ship->removeUnderAttack();
 
 $account->log(10, 'Buys a '.$ship->getName().' for '.$cost.' credits', $player->getSectorID());
 

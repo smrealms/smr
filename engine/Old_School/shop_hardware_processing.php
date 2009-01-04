@@ -30,7 +30,7 @@ $player->update();
 $ship->increaseHardware($hardware_id,$amount);
 $ship->update_hardware();
 
-$ship->mark_seen();
+$ship->removeUnderAttack();
 
 //HoF
 if ($hardware_id == 4) $player->increaseHOF($amount,'combat_drones');

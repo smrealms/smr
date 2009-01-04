@@ -350,11 +350,11 @@
 //		$this->ship_type_id = 69;
 //		$this->update();
 //
-//		$this->mark_seen();
+//		$this->removeUnderAttack();
 //
 //	}
 //
-//	function mark_seen() {
+//	function removeUnderAttack() {
 //		foreach ($this->hardware as $hardware_type_id => $amount) {
 //			$this->query('UPDATE ship_has_hardware SET old_amount = '.$amount.' ' .
 //							 'WHERE account_id = '.$this->account_id.' AND ' .

@@ -31,8 +31,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $ticker;
 //    var $safe_exit;
 //    var $detected;
-	protected $lastSectorID;
-	protected $turns;
 	protected $originalMaintenance;
 	protected $lastMaintenanceUpdate;
 	protected $lastShipMod;
@@ -41,7 +39,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $fleed;
 	protected $attackColor;
 	protected $kicked;
-	protected $lastCPLAction;
 //	protected $pastKnowledge;
 	protected $governmentHelp;
 //	protected $allianceJoinable;
@@ -54,7 +51,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $displayMissions;
 	protected $ignoreGlobals;
 //	protected $changedStats;
-	protected $maxTurns = 1000;
 	protected $completedMissions;
 	protected $missions;
 	protected $mining;
@@ -399,57 +395,17 @@ class SmrPlayer extends AbstractSmrPlayer
 //	{
 //		return $this->zoomOn;
 //	}
-	
-	function getAlignment()
-	{
-		return $this->alignment;
-	}
-	
-	function increaseAlignment($align)
-	{
-		if($align < 0)
-			throw new Exception('Trying to increase negative align.');
-		if($align == 0)
-			return;
-		$align += $this->alignment;
-		$this->setAlignment($align);
-	}
-	function decreaseAlignment($align)
-	{
-		if($align < 0)
-			throw new Exception('Trying to decrease negative align.');
-		if($align == 0)
-			return;
-		$align = $this->alignment - $align;
-		$this->setAlignment($align);
-	}
-	function setAlignment($align)
-	{
-		if($this->alignment == $align)
-			return;
-		$this->alignment = $align;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET alignment = '.$this->alignment.' WHERE '.$this->SQL.' LIMIT 1');
-	}
-	
-	function setSectorID($sectorID)
+
+	public function setSectorID($sectorID)
 	{
 		require_once('SmrPort.class.inc');
 		$port =& SmrPort::getPort($this->getGameID(),$this->getSectorID());
 		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
 		
-		$this->lastSectorID = $this->getSectorID();
-		$this->sectorID = $sectorID;
-		$this->updateLastCPLAction();
-		$this->hasChanged=true;
+		parent::setSectorID($sectorID);
 		
 		$port =& SmrPort::getPort($this->getGameID(),$sectorID);
 		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
-	}
-	
-	function getLastSectorID()
-	{
-		return $this->lastSectorID;
 	}
 	
 	function setLastSectorID($lastSectorID)
@@ -604,40 +560,9 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET chat_position = ' . $this->db->escapeString($chatPosition) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 //	}
 	
-	function getMaxTurns()
-	{
-		return $this->maxTurns;
-	}
-	
-	function getTurns()
-	{
-		return $this->turns;
-	}
-	
 	function getOriginalMaintenance()
 	{
 		return $this->originalMaintenance;
-	}
-
-	function takeTurns($take, $noob = 0,$updateLastActive = true) // taking maint counts as activity by default
-	{
-		if($take < 0 || $noob < 0)
-			throw new Exception('Trying to take negative turns.');
-		$new_maint = $this->turns - $take;
-		$new_noob = $this->newbieTurns - $noob;
-		
-		if(!has_beta_privilege('No SC Loss'))
-			$this->setTurns($new_maint,$new_noob,$updateLastActive);
-	}
-	function giveTurns($give, $noob = 0,$updateLastActive = false)
-	{
-		if($give < 0 || $noob < 0)
-			throw new Exception('Trying to give negative turns.');
-		$new_maint = $this->turns + $give;
-		$new_noob = $this->newbieTurns + $noob;
-		
-		if(!has_beta_privilege('No SC Gain'))
-			$this->setTurns($new_maint,$new_noob,$updateLastActive);
 	}
 	
 	public function updateTurns()
@@ -662,39 +587,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 		
-
-	function setTurns($maint,$newNoob = -1,$updateLastActive = false)
-	{
-		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)) && !$updateLastActive)
-			return;
-		$this->turns = $maint;
-
-		if(!has_beta_privilege('No SC Change'))
-		{
-			if ($this->turns < 0)
-				$this->turns = 0;
-			if ($this->turns > $this->getMaxTurns())
-				$this->turns = $this->getMaxTurns();
-		}
-			
-		if($newNoob != -1)
-			$this->newbieTurns = $newNoob;
-		if ($this->newbieTurns < 0)
-			$this->newbieTurns = 0;
-	
-		if (has_privilege('Unlimited Maintenance'))
-			$this->turns = $this->getMaxTurns();
-		
-		$this->hasChanged=true;
-		if($updateLastActive === true)
-		{
-			$this->setLastActive=TIME;
-			$this->setLastCPLAction=TIME;
-		}
-//		$sql = 'UPDATE player SET ' . ($updateLastActive === true ? 'last_active=' . TIME . ',last_cpl_action=' . TIME . ((!$maintSame||!$newbSame) ? ',' : '' ) : '') . (!$maintSame ? 'turns=' . $this->turns:'') . (!$newbSame ? (!$maintSame?',':'').'newbie_turns='.$this->newbieTurns : '' ).' WHERE ' . $this->SQL . ' LIMIT 1';
-//		if(!has_beta_privilege('No SC Change'))
-//			$this->db->query($sql);
-	}
 	
 	function isIgnoreGlobals()
 	{
@@ -723,25 +615,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->lastPort=$lastPort;
 		$this->hasChanged=true;
 //		$this->db->query('UPDATE player SET last_port = ' . $this->lastPort . ' WHERE ' . $this->SQL . ' LIMIT 1');
-	}
-	
-	function getLastCPLAction()
-	{
-		return $this->lastCPLAction;
-	}
-	
-	function setLastCPLAction($time)
-	{
-		if($this->lastCPLAction == $time)
-			return;
-		$this->lastCPLAction=$time;
-		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET last_cpl_action=' . $this->lastCPLAction . ' WHERE ' . $this->SQL . ' LIMIT 1');
-	}
-	
-	function updateLastCPLAction()
-	{
-		$this->setLastCPLAction(TIME);
 	}
 	
 	function getDisplayMissions()

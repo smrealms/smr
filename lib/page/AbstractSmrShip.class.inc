@@ -265,9 +265,7 @@ abstract class AbstractSmrShip
 		
 		$this->hardware = array();
 		$this->decloak();
-		
-		$this->db->query('DELETE FROM ship_has_illusion WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID());
+		$this->disableIllusion();
 		$this->hasChangedHardware = true;
 	}
 	
@@ -280,22 +278,10 @@ abstract class AbstractSmrShip
 		$this->hardware[1] = 50;
 		$this->hardware[2] = 50;
 		$this->hardware[3] = 5;
-		$this->update_hardware();
 		
 		$this->setShipTypeID(69);
-		$this->update();
 		
-		$this->mark_seen();
-		
-	}
-	
-	function mark_seen() {
-		foreach ($this->hardware as $hardware_type_id => $amount) {
-			$this->db->query('UPDATE ship_has_hardware SET old_amount = '.$amount.' ' .
-				'WHERE account_id = '.$this->getAccountID().' AND ' .
-				'game_id = '.$this->getGameID().' AND ' .
-				'hardware_type_id = '.$hardware_type_id.' LIMIT 1');
-		}
+		$this->removeUnderAttack();
 	}
 	
 	public function isCloaked()
@@ -922,7 +908,7 @@ abstract class AbstractSmrShip
 			}
 		}
 		$return = array(
-						'KillingShot' => $alreadyDead != $this->isDead(),
+						'KillingShot' => !$alreadyDead && $this->isDead(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
 						'CDs' => $cdDamage,

@@ -59,6 +59,18 @@ abstract class AbstractSmrCombatWeapon implements CombatWeapon
 	{
 		return array('MaxDamage' => $this->getMaxDamage(), 'Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover());
 	}
+	
+//	abstract public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer);
+	
+	protected function &doDamageToPlayer(array &$return, AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
+		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
+		return $return;
+	}
 }
 
 ?>
