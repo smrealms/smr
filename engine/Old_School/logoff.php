@@ -3,7 +3,6 @@
 if($lock) {
 	release_lock();
 }
-$lock=false;
 SmrSession::destroy();
 
 ?>
