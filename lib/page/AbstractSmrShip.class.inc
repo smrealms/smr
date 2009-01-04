@@ -33,8 +33,10 @@ abstract class AbstractSmrShip
 			// determine ship
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$shipTypeID.' LIMIT 1'); //TODO add game type id
-			$db->nextRecord();
-			self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& self::buildBaseShip($db);
+			if($db->nextRecord())
+				self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& self::buildBaseShip($db);
+			else
+				self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] = false;
 		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID. ':' .$shipTypeID];
 	}
