@@ -97,11 +97,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
 		if($return['ActualDamage']['KillingShot'])
-		{
-			echo 'CDS';
-			usleep(250000);
 			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
-		}
 		return $return;
 	}
 }
