@@ -42,6 +42,13 @@ function echomicrotime($rt) {
 	}
 	
 }
+// We want these to be already defined as globals
+$player=null;
+$ship=null;
+$sector=null;
+$container=null;
+$var=null;
+$lock=false;
 
 // config file
 require_once('config.inc');
@@ -58,13 +65,6 @@ require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 
-// We want these to be already defined as globals
-$player=null;
-$ship=null;
-$sector=null;
-$container=null;
-$var=null;
-$lock=false;
 
 // new db object
 $db = new SMR_DB();
@@ -281,9 +281,9 @@ function acquire_lock($sector)
 				{
 					var_dump($db->f('COUNT(*)'));
 					var_dump($lock);
-					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
-					create_error('Multiple actions cannot be performed at the same time!');
-					exit;
+//					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
+//					create_error('Multiple actions cannot be performed at the same time!');
+//					exit;
 				}
 			}
 			
