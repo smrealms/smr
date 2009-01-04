@@ -26,81 +26,73 @@ abstract class MySqlDatabase implements Database
 		}
 	}
 	
-	public function query($query) {
-		
-		
+	public function query($query)
+	{
 		if(!$this->dbResult = @mysql_query($query, self::$dbConn)) {
 			$this->error('SQL query failed (' . $query . ')');
 		}
 		
-		//echo $query,'\n\r';
-		
+	    if(preg_match('/lock/i',$query))
+	  	  echo $query,'<br />';
 	}
 	
-	public function nextRecord() {
-		
-		if(!$this->dbResult) {
+	public function nextRecord()
+	{
+		if(!$this->dbResult)
 			$this->error('No resource to get record from.');
-		}
 		
-		if($this->dbRecord = mysql_fetch_assoc($this->dbResult)) {
+		if($this->dbRecord = mysql_fetch_assoc($this->dbResult))
 			return true;
-		}
-		
 		return false;
-		
 	}
 	
 	
 	
-	public function getField($name) {
-		
+	public function getField($name)
+	{
 		return $this->dbRecord[$name];
-		
 	}
 	
-	public function getRow() {
-		
+	public function getRow()
+	{
 		return $this->dbRecord;
-		
 	}
 	
-	public function lockTable($table) {
-		
-		if(!@mysql_query('LOCK TABLES ' . $table . ' WRITE', self::$dbConn)) {
+	public function lockTable($table)
+	{
+		if(!@mysql_query('LOCK TABLES ' . $table . ' WRITE', self::$dbConn))
+		{
 			$this->error('Unable to lock table');
 		}
-		
 	}
 	
-	public function unlock() {
+	public function unlock()
+	{
 		if(!@mysql_query('UNLOCK TABLES', self::$dbConn))
 		{
 			$this->error('Unable to remove table locks.');
 		}
-		
 	}
 	
-	public function getNumRows() {
-		
+	public function getNumRows()
+	{
 		return @mysql_num_rows($this->dbResult);
-		
 	}
 	
-	public function insertId() {
+	public function insertId()
+	{
 		return @mysql_insert_id($this->dbResult);
-		
 	}
 	
-	protected function error($err) {
-		
+	protected function error($err)
+	{
 		global $URL;
 		
 		echo mysql_error();
 		throw new Exception($err);
-		if(!$this->debug) {
+		if(!$this->debug)
+		{
 			echo 'ERROR: db_mysql_inc - ' . $err;
-			
 		} 
 		else {
 			header('location: ' . $URL . '/error.php?msg=Database Error');
