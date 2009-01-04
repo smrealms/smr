@@ -50,7 +50,7 @@
 				*}{/if}{*
 			*}{/if}.
 			{if $ActualDamage.KillingShot}
-				{include_template template="includes/TraderCombatKillMessage.inc" assign=Template}{include file=$Template KillResults=$WeaponResults.KillResults}
+				{include_template template="includes/TraderCombatKillMessage.inc" assign=Template}{include file=$Template KillResults=$Drones.KillResults}
 			{/if}
 			<br />
 		{/if}
