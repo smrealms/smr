@@ -1,9 +1,9 @@
 <?
 
-include('config.inc');
+require_once('config.inc');
 require_once(LIB . 'global/smr_db.inc');
-include(ENGINE . 'Old_School/smr.inc');
-include(ENGINE . 'Old_School/help.inc');
+require_once(ENGINE . 'Old_School/smr.inc');
+require_once(ENGINE . 'Old_School/help.inc');
 
 $topic_id = $_SERVER['QUERY_STRING'];
 if (empty($topic_id))

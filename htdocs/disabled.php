@@ -1,7 +1,7 @@
 <?php
 
 // includes
-include('config.inc');
+require_once('config.inc');
 require_once(ENGINE . 'Old_School/smr.inc');
 require_once(LIB . '/global/smr_db.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));

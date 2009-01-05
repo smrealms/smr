@@ -1,5 +1,5 @@
 <?
-	include('config.inc');
+	require_once('config.inc');
 ?>
 
 <!doctype html public '-//W3C//DTD HTML 4.0 Transitional//EN'>

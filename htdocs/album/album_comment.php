@@ -10,13 +10,12 @@ function create_error_offline($msg) {
 }
 
 
-include('../config.inc');
+require_once('../config.inc');
 require_once(ENGINE . 'Old_School/smr.inc');
-include(LIB . 'global/smr_db.inc');
+require_once(LIB . 'global/smr_db.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
-include(ENGINE . 'Old_School/smr.inc');
 
-include('album_functions.php');
+require_once('album_functions.php');
 
 if (SmrSession::$account_id == 0)
 	$PHP_OUTPUT.=create_error_offline('You need to logged in to post comments!');
