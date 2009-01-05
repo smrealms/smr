@@ -1,6 +1,6 @@
 <?
 
-include('config.inc');
+require_once('config.inc');
 require_once(LIB . 'global/smr_db.inc');
 
 // new db object
