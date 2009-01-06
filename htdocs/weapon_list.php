@@ -23,7 +23,6 @@ echo ('</head>');
 
 echo ('<body>');
 $seq = isset($_REQUEST['seq']) ? $_REQUEST['seq'] : '';
-$order = isset($_REQUEST['order']) ? $_REQUEST['order'] : '';
 if (empty($seq))
 	$seq = 'ASC';
 elseif ($seq == 'ASC')
@@ -31,8 +30,8 @@ elseif ($seq == 'ASC')
 else
 	$seq = 'ASC';
 
-if (isset($order))
-	$order_by = $order;
+if (isset($_REQUEST['order']))
+	$order_by = $_REQUEST['order'];
 else
 	$order_by = 'weapon_type_id';
 
@@ -48,8 +47,8 @@ echo ('<th align="center"><a href="?order=accuracy&seq='.$seq.'"><span style=col
 echo ('<th align="center"><a href="?order=power_level&seq='.$seq.'"><span style=color:#80C870;>Power Level</span></a></th>');
 echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
 echo ('</tr>');
-while ($db->next_record()) {
-
+while ($db->next_record())
+{
 	//we need an array so we dont have 8 td rows
     $stat = array();
     $stat[] = $db->f('weapon_name');
