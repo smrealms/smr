@@ -562,6 +562,7 @@ class SmrPort
 			return;
 		$this->upgrade = $upgrade;
 		$this->db->query('UPDATE port SET upgrade = '.$this->upgrade.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->checkForUpgrade();
 	}
 	
 	public function increaseUpgrade($upgrade)
