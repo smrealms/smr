@@ -303,12 +303,24 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	$container['body'] = 'message_notify_confirm.php';
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
-	$container['notified_time'] = time();
+	$container['notified_time'] = TIME;
 	$return.= create_link($container, '<img src="images/notify.gif" border="0" align="right"title="Report this message to an admin">');
 	$return.= ('</td>');
+
+	$return.= ('<td>');
+	if (!empty($sender_id))
+	{
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'message_send.php';
+		$container['receiver']	= $sender->getAccountID();
+		$return.=create_link($container, 'Reply');
+		$return.= ('</td>');
+	}
+	
 	$return.= ('</tr>');
 	$return.= ('<tr>');
-	$return.= ('<td colspan="4">'.$message_text.'</td>');
+	$return.= ('<td colspan="5">'.$message_text.'</td>');
 	$return.= ('</tr>');
 	return $return;
 }

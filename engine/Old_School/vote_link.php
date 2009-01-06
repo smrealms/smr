@@ -20,7 +20,7 @@ if($var['link_id'] > 3 || $var['link_id'] < 1 ) {
 
 if($valid == true) {
 	// Allow vote
-	$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . SmrSession::$account_id . ',' . $var['link_id'] . ',' . time() . ')');
+	$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . SmrSession::$account_id . ',' . $var['link_id'] . ',' . TIME . ')');
 	// They get 1/3 of their hourly turns for a valid click (They CAN go above max turns for the game this way)
 	$player->giveTurns($ship->getSpeed()*Globals::getGameSpeed($player->getGameID()));
 }

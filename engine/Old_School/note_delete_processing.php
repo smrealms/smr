@@ -15,7 +15,7 @@ if(isset($_POST['note_id'])) {
 	$note_ids = $_POST['note_id'];
 	$verified = true;
 	foreach($note_ids as $note_id) {
-		if(preg_match('/[^0-9]',$note_id)) {
+		if(preg_match('/[^0-9]/',$note_id)) {
 			$verified = false;
 		}
 	}

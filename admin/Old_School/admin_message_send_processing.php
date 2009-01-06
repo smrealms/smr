@@ -11,11 +11,11 @@ if (!empty($account_id) || $game_id == 20000) {
 	if ($game_id != 20000) {
 		
 		$db->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time, expire_time)
-					VALUES($account_id, $game_id, $ADMINMSG, $message, 0, $current_time, $expire)');
+					VALUES('.$account_id.', '.$game_id.', '.$ADMINMSG.', '.$message.', 0, '.$current_time.', '.$expire.')');
 	
 		// give him the message icon
 		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-					($game_id, $account_id, $ADMINMSG)');
+					('.$game_id.', '.$account_id.', '.$ADMINMSG.')');
 					
 	} else {
 		
