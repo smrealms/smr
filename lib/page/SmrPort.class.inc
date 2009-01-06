@@ -85,7 +85,7 @@ class SmrPort
 	{
 		if(!$this->isUnderAttack())
 		{
-			$rich_mod = floor($this->upgrade / $this->getPortUpgradeReq()); // be equal to port level for bonus
+			$rich_mod = floor($this->upgrade / $this->getUpgradeRequirement()); // be equal to port level for bonus
 			if($rich_mod < 0) $rich_mod = 0;
 			
 			$this->setShields($this->getLevel() * 1000 + 1000 + round($rich_mod * 375));
@@ -281,12 +281,12 @@ class SmrPort
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot upgrade a cached port!');
-		while($this->upgrade >= $this->getPortUpgradeReq() && $this->level < 9)
+		while($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9)
 		{
 			global $LEVEL_1_GOODS,$LEVEL_2_GOODS,$LEVEL_3_GOODS,$LEVEL_4_GOODS;
 			
-			$this->upgrade -= $this->getPortUpgradeReq();
-			$this->credits -= $this->getPortUpgradeReq();
+			$this->upgrade -= $this->getUpgradeRequirement();
+			$this->credits -= $this->getUpgradeRequirement();
 			
 			$level1_goods = $LEVEL_1_GOODS; //5 of these chosen for lvl 9 port
 			$level2_goods = $LEVEL_2_GOODS; //4 of these chosen for lvl 9 port
@@ -363,9 +363,10 @@ class SmrPort
 		}
 	}
 	
-	public function getPortUpgradeReq()
+	public function getUpgradeRequirement()
 	{
-		return round(exp($this->level/1.7)+3)*1000000;
+//		return round(exp($this->getLevel()/1.7)+3)*1000000;
+		return $this->getLevel() * 1000000;
 	}
 	
 	protected function addPortGood($good_id,$type)
@@ -687,7 +688,7 @@ class SmrPort
 
 	function getUpgradePercent()
 	{
-		return min(1,$this->upgrade / $this->getPortUpgradeReq());
+		return min(1,$this->upgrade / $this->getUpgradeRequirement());
 	}
 	
 	function getCreditsPercent()
