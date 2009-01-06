@@ -263,7 +263,7 @@ class SmrPort
 	
 	public function buyGoods(array &$good,$amount,$cost,$exp)
 	{
-		$this->increaseUpgrade($cost);
+		$this->increaseUpgrade(min($amount * 1000,$cost));
 		$this->increaseCredits($cost);
 		$this->increaseExperience($exp);
 		$this->decreaseGood($good,$amount,true);

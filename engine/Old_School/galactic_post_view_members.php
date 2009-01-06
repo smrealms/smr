@@ -27,7 +27,7 @@ if ($db->nf()) {
         $PHP_OUTPUT.=('<tr>');
 	    $PHP_OUTPUT.=('<td align="center">'.$curr_writter->getPlayerName().'</td>');
     	$PHP_OUTPUT.=('<td align="center"> ' . date('n/j/Y g:i:s A', $time) . '</td>');
-	    $container['id'] = $curr_writter->account_id;
+	    $container['id'] = $curr_writter->getAccountID();
 	    $PHP_OUTPUT.=create_echo_form($container);
         $PHP_OUTPUT.=('<td>');
     	$PHP_OUTPUT.=create_submit('Remove');

@@ -85,7 +85,7 @@ if ($attacker->getAccountID() > 0) {
 
 	// mhh. we are not in an alliance.
 	// so we fighting alone.
-	$attacker_list = '(' . $attacker->account_id . ')';
+	$attacker_list = '(' . $attacker->getAccountID() . ')';
 
 }
 

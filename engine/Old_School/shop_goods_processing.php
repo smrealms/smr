@@ -170,17 +170,17 @@ if (!empty($bargain_price) &&
 		$player->decreaseCredits($bargain_price);
 		$player->decreaseHOF($bargain_price,'trade_profit');
 		$player->increaseHOF($bargain_price,'trade_buys');
+//
+//		$cap = $amount * 1000;
+//
+//		if($bargain_price > $cap) {
+//			$credits_in = $cap;
+//		}
+//		else {
+//			$credits_in = $bargain_price;
+//		}
 
-		$cap = $amount * 1000;
-
-		if($bargain_price > $cap) {
-			$credits_in = $cap;
-		}
-		else {
-			$credits_in = $bargain_price;
-		}
-
-		$port->buyGoods($portGood,$amount,$credits_in,$gained_exp);
+		$port->buyGoods($portGood,$amount,$bargain_price,$gained_exp);
 
 	}
 	elseif ($portGood['TransactionType'] == 'Sell')
