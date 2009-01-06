@@ -125,7 +125,7 @@ if ($db->nf() > 0) {
 			$PHP_OUTPUT.=create_submit_style('No', 'background-color:green;');
 		else
 			$PHP_OUTPUT.=create_submit('No');
-		if ($president->account_id == $player->getAccountID()) {
+		if ($president->getAccountID() == $player->getAccountID()) {
 
 			$PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=create_submit('Veto');
