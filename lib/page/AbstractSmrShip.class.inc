@@ -737,6 +737,11 @@ abstract class AbstractSmrShip
 	
 	public function getEmptyHolds()
 	{
+		return $this->getCargoHolds()-$this->getUsedHolds();
+	}
+	
+	public function getUsedHolds()
+	{
 		return array_sum($this->getCargo());
 	}
 	
