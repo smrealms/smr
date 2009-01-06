@@ -32,8 +32,6 @@ if ($db->nf() > 0)
 		$games['Play'][$game_id]['PlayGameLink'] = SmrSession::get_new_href($container);
 
 		// creates a new player object
-//		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
-		//PAGE
 		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
 		$curr_ship =& $curr_player->getShip();
 

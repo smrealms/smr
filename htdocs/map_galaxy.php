@@ -37,8 +37,6 @@ if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {
 	exit;
 
 }
-//$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
-//PAGE
 $player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 
 // create account object
