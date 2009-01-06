@@ -9,7 +9,7 @@ $owner =& SmrPlayer::getPlayer($planet->owner_id, $player->getGameID());
 if ($owner->alliance_id != $player->getAllianceID())
 	create_error('You can not kick someone off a planet your alliance does not own!');
 $message = 'You have been kicked from '.$planet->planet_name.' in #'.$player->getSectorID();
-$player->sendMessage($planet_player->account_id, 2, $db->escape_string($message, false));
+$player->sendMessage($planet_player->getAccountID(), 2, $db->escape_string($message, false));
 
 $planet_player->setLandedOnPlanet(false);
 //update their last active time so that they are visable if kicked

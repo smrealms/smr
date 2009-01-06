@@ -18,7 +18,7 @@ while ($db->next_record()) {
     $container = array();
     $container['url'] = 'skeleton.php';
     $container['body'] = 'galactic_post_view_applications.php';
-    $container['id'] = $appliee->account_id;
+    $container['id'] = $appliee->getAccountID();
     $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$appliee->getPlayerName().'</font>');
     $PHP_OUTPUT.=(' who has ');
     if ($db->f('written_before') == 'YES')

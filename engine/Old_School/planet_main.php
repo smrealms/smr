@@ -85,7 +85,7 @@ while ($db->next_record()) {
 
     $container = array();
     $container['url']            = 'planet_kick_processing.php';
-    $container['account_id']    = $planet_player->account_id;
+    $container['account_id']    = $planet_player->getAccountID();
 
     $PHP_OUTPUT.=create_echo_form($container);
 
