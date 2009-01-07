@@ -137,10 +137,8 @@ else if ($action == 'Alter Player') {
 		create_error('Name is already being used in this game!');
 	}
 	
-	$db->query('SELECT player_name,player_id,name_changed FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . $var['game_id'] . ' LIMIT 1');
-	$db->next_record();
-	$old_name = $db->f('player_name');
-	$player_id = $db->f('player_id');
+	$changePlayer =& SmrPlayer::getPlayer(SmrSession::$account_id,$var['game_id']);
+	$old_name = $changePlayer->getDisplayName();
 	
 	if($old_name == $player_name) {
 		create_error('Your player already has that name!');
@@ -150,10 +148,10 @@ else if ($action == 'Alter Player') {
 		create_error('You have already changed your name once!');
 	}
 	
-	$db->query('UPDATE player SET player_name=\'' . $player_name . '\',name_changed=\'true\' WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . $var['game_id'] . ' LIMIT 1');
+	$changePlayer->setPlayerName($player_name);
 
-	$news = '<span class="blue">ADMIN</span> Please be advised that <span class="yellow">' . $old_name . '(' . $player_id . ')</span> has changed their name to <span class="yellow">' . $player_name . '(' . $player_id . ')</span>';
-	$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . time() . ',' . $db->escape_string($news, FALSE) . ',' . $var['game_id'] . ')');
+	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player_name . '</span>';
+	$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . $var['game_id'] . ')');
 }
 
 forward($container);

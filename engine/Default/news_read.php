@@ -76,7 +76,7 @@ if ($db->nf()) {
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">' . date('n/j/Y g:i:s A', $time) . '</td>');
-		$PHP_OUTPUT.=('<td style="text-align:left;vertical-align:middle;">$news</td>');
+		$PHP_OUTPUT.=('<td style="text-align:left;vertical-align:middle;">'.$news.'</td>');
 		$PHP_OUTPUT.=('</tr>');
 
 	}

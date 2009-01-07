@@ -55,7 +55,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $missions;
 	protected $mining;
 	protected $plottedCourse;
-	
+	protected $nameChanged;
 	
 	protected $examineTraderHREF;
 	protected $attackTraderHREF;
@@ -790,6 +790,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->pureRelations[$raceID] = $relations;
 		$this->relations[$raceID] = round($relations + $this->getStat('Relations') / 2);
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values ('.$this->getAccountID().','.$this->getGameID().','.$raceID.','.$this->pureRelations[$raceID].')');
+	}
+	
+	public function setPlayerName($playerName)
+	{
+		$this->playerName=$playerName;
+		$this->nameChanged=true;
+		$this->hasChanged=true;
 	}
 	
 //	protected function getGoodsInfo()
@@ -1533,6 +1540,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
 //				', changed_stats='.$this->db->escapeString($this->changedStats).
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).
+				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged).
 				' WHERE '.$this->SQL.' LIMIT 1');
 			$this->hasChanged=false;
 		}
