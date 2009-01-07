@@ -128,7 +128,7 @@ if (!$ship->canHaveScanner() &&
     !$ship->canHaveJump() &&
     !$ship->canHaveDCS()) $PHP_OUTPUT.= 'none<br>';
 
-$PHP_OUTPUT.= '<br><span class="yellow bold">Next Level</span><br>';
+$PHP_OUTPUT.= '<br><a href="'.URL.'/level_requirements.php"><span class="yellow bold">Next Level</span></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
 $db->next_record();
 $PHP_OUTPUT.= $db->f('level_name') . ': ' . number_format($db->f('requirement')) . 'xp';
