@@ -80,11 +80,11 @@ if ($time_since_start > 86400)
 // credit him this time
 $last_turn_update = time() - $time_since_start;
 
-// newbie leaders need to put into there alliances
-if (SmrSession::$account_id >= 13 && SmrSession::$account_id <= 20)
-  $alliance_id = 302;
-else
-  $alliance_id = 0;
+//// newbie leaders need to put into there alliances
+//if (SmrSession::$account_id >= 13 && SmrSession::$account_id <= 20)
+//  $alliance_id = 302;
+//else
+//  $alliance_id = 0;
 
 $db->lock('player');
 
