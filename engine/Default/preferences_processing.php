@@ -65,7 +65,7 @@ if ($action == 'Save and resend validation code') {
     create_error('The passwords you entered don\'t match!');
 
   if ($new_password == $account->login)
-    create_error('Your choosen password is invalid!');
+    create_error('Your chosen password is invalid!');
 
   $account->setPassword($new_password);
 } elseif ($action == 'Change Name') {
