@@ -14,7 +14,7 @@ if ($amount <= 0)
 	create_error('You must enter an amount > 0');
 
 // check if there are enough left at port
-if ($port->amount[$good_id] < $amount)
+if ($port->getGoodAmount($good_id) < $amount)
    create_error('There isnt that much to loot.');
 
 // check if we have enough room for the thing we are going to buy
