@@ -53,7 +53,7 @@ $lock=false;
 // config file
 require_once('config.inc');
 require_once('config.php');
-require_once(ENGINE . 'Old_School/smr.inc');
+require_once(ENGINE . 'Default/smr.inc');
 
 // overwrite database class to use our db
 require_once(LIB . 'global/smr_db.inc');

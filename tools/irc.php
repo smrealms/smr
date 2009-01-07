@@ -18,7 +18,7 @@ include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
 include(LIB . 'global/smr_db.inc');
 
-include(ENGINE . '/Old_School/smr.inc');
+include(ENGINE . '/Default/smr.inc');
 
 $channel = '#smr-beta';
 $nick = 'Rawr';
