@@ -87,7 +87,7 @@ $db->query('SELECT sector_id,visited
 				  game_id = '.SmrSession::$game_id);
 while ($db->next_record())
 {
-	$cachedPort =& SmrPort::getPort($db->f('sector_id'));
+	$cachedPort =& SmrPort::getPort(SmrSession::$game_id,$db->f('sector_id'));
 	$visited	= $db->f('visited');
 	$port_info[$db->f('sector_id')]		= $db->f('port_info');
 	foreach ($alliance_ids as $id)
