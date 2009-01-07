@@ -182,6 +182,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->displayMissions			= $result['display_missions']=='TRUE';
 			$this->ignoreGlobals			= $result['ignore_globals']=='TRUE';
 			$this->newbieWarning			= $result['newbie_warning']=='TRUE';
+			$this->nameChanged				= $result['name_changed']=='TRUE';
 //			$this->changedStats = $result['changed_stats'];
 
 
