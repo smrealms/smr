@@ -160,7 +160,7 @@ if (!isset($account_num) && !isset($make)) {
         	$PHP_OUTPUT.=create_button($container, 'Access Account');
 			$PHP_OUTPUT.= '</td></tr>';
     	}
-		$PHP_OUTPUT.= '</table></div><br>';
+		$PHP_OUTPUT.= '</table></div><br /><br />';
 	}
 
 	$container = array();
@@ -170,8 +170,8 @@ if (!isset($account_num) && !isset($make)) {
 	$PHP_OUTPUT.=create_button($container,'Create an account');
 }
 
-if (isset($account_num)) {
-
+if (isset($account_num))
+{
 	//they didnt come from the creation screen so we need to check if the pw is correct
     $db->query('SELECT *
 				FROM anon_bank
@@ -179,20 +179,23 @@ if (isset($account_num)) {
 				AND game_id=' . $player->getGameID() . ' LIMIT 1'
 				);
 
-	if($db->next_record()) {
-		if ($var['allowed'] != 'yes') {
+	if($db->next_record())
+	{
+		if ($var['allowed'] != 'yes')
+		{
     		if (isset($_REQUEST['pass'])) $pass = $_REQUEST['pass'];
     		else $pass = $var['password'];
 
-			if ($db->f('password') != $pass) {
-
-				$PHP_OUTPUT.=create_echo_error('Invalid password.');
+			if ($db->f('password') != $pass)
+			{
+				$PHP_OUTPUT.=create_error('Invalid password.');
 				return;
 			}
 		}
 	}
-	else {
-		$PHP_OUTPUT.=create_echo_error('This account does not exist');
+	else
+	{
+		$PHP_OUTPUT.=create_error('This account does not exist');
        	return;
 	}
 
