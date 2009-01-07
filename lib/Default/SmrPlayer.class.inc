@@ -1285,7 +1285,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer)
 	{
 		$return = array();
-		$msg = $this->getPlayerName();
+		$msg = $this->getDisplayName();
 	
 //		if(isset($ship_names[$killed_id])) {
 //			$msg .= ' flying ';
@@ -1296,7 +1296,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //				}
 //			} else $msg .= strip_tags($ship_names[$killed_id], '<img>');
 //		}
-		$msg .= ' was destroyed by ' . $killer->getPlayerName();
+		$msg .= ' was destroyed by ' . $killer->getDisplayName();
 //		if(isset($ship_names[$killer_id])) {
 //			$msg .= ' flying ';
 //			if(!stristr($ship_names[$killer_id],'<img')){
