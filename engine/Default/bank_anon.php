@@ -188,7 +188,7 @@ if (isset($account_num))
 
 			if ($db->f('password') != $pass)
 			{
-				$PHP_OUTPUT.=create_error('Invalid password.');
+				$PHP_OUTPUT.=create_error('Invalid password');
 				return;
 			}
 		}
