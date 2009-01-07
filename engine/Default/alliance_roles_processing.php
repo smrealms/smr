@@ -6,7 +6,7 @@ if (!isset($var['role_id'])) {
 
 	// role empty too? that doesn't make sence
 	if (empty($_POST['role']))
-		create_error('You must enter a role if you wnat create a new one.');
+		create_error('You must enter a role if you want to create a new one.');
 
 	$db->lock('alliance_has_roles');
 
@@ -14,7 +14,7 @@ if (!isset($var['role_id'])) {
 	$db->query('SELECT MAX(role_id)
 				FROM alliance_has_roles
 				WHERE game_id = '.$player->getGameID().' AND
-					  alliance_id = $alliance_id');
+					  alliance_id = '.$alliance_id);
 	if ($db->next_record())
 		$role_id = $db->f('MAX(role_id)') + 1;
 	else
@@ -22,7 +22,7 @@ if (!isset($var['role_id'])) {
 	if ($_REQUEST['unlimited']) $withPerDay = -2;
 	elseif ($_REQUEST['positive']) $withPerDay = -1;
 	else $withPerDay = $_REQUEST['maxWith'];
-	if (!is_numeric($withPerDay) || $withPerDay < -2) create_error('You must enter a number for max withdrawls per 24 hours.');
+	if (!is_numeric($withPerDay) || $withPerDay < -2) create_error('You must enter a number for max withdrawals per 24 hours.');
 	if ($_REQUEST['changePW']) $changePass = TRUE;
 	else $changePass = FALSE;
 	if ($_REQUEST['removeMember']) $removeMember = TRUE;
