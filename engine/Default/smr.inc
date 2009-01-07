@@ -152,17 +152,16 @@ function get_file_loc($file_name, $exists = 1)
 			else $g_id = SmrSession::$game_id;
 			$stored_dir = Globals::getGameType($g_id) . '/';
 			$game_dir = $stored_dir;
-		} else $game_dir = 'Old_School/';
+		} else $game_dir = 'Default/';
 	}
 	
 //PAGE
-	if (file_exists(LIB . 'page/' . $file_name)) return LIB . 'page/' . $file_name;
-	elseif (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
-	elseif (file_exists(ENGINE . 'Old_School/' . $file_name)) return ENGINE . 'Old_School/' . $file_name;
+	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
+	elseif (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
 	elseif (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
-	elseif (file_exists(LIB . 'Old_School/' . $file_name)) return LIB . 'Old_School/' . $file_name;
+	elseif (file_exists(LIB . 'Default/' . $file_name)) return LIB . 'Default/' . $file_name;
 	elseif (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
-	elseif (file_exists(ADMIN . 'Old_School/' . $file_name)) return ADMIN . 'Old_School/' . $file_name;
+	elseif (file_exists(ADMIN . 'Default/' . $file_name)) return ADMIN . 'Default/' . $file_name;
 	elseif (file_exists(WWW . $file_name)) return WWW . $file_name;
 	elseif ($exists == 1) return ENGINE . 'empty.php';
 	else return $file_name;
@@ -182,13 +181,13 @@ function get_template_loc($file_name, $exists = 1) {
 			else $g_id = SmrSession::$game_id;
 			$stored_dir = Globals::getGameType($g_id) . '/';
 			$game_dir = $stored_dir;
-		} else $game_dir = 'Old_School/';
+		} else $game_dir = 'Default/';
 	}
 	$file_name .= '.tpl';
 	if (file_exists(SMARTY_TEMPLATES_DIR . 'engine/' . $game_dir . $file_name)) return SMARTY_TEMPLATES_DIR . 'engine/' . $game_dir . $file_name;
-	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'engine/' . 'Old_School/' . $file_name)) return SMARTY_TEMPLATES_DIR . 'engine/' . 'Old_School/' . $file_name;
+	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'engine/' . 'Default/' . $file_name)) return SMARTY_TEMPLATES_DIR . 'engine/' . 'Default/' . $file_name;
 	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'admin/' . $game_dir . $file_name)) return SMARTY_TEMPLATES_DIR . 'admin/' . $game_dir . $file_name;
-	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'admin/' . 'Old_School/' . $file_name)) return SMARTY_TEMPLATES_DIR . 'admin/' . 'Old_School/' . $file_name;
+	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'admin/' . 'Default/' . $file_name)) return SMARTY_TEMPLATES_DIR . 'admin/' . 'Default/' . $file_name;
 	elseif (file_exists(SMARTY_TEMPLATES_DIR .  $file_name)) return SMARTY_TEMPLATES_DIR . $file_name;
 //	elseif ($exists == 1) return ENGINE . 'empty.php';
 	else return 'default.tpl';//return $file_name;
