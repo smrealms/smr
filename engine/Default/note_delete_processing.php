@@ -2,7 +2,7 @@
 
 /*
  * Script:
- * 		/engine/Old_School/note_delete_processing.php
+ * 		/engine/Default/note_delete_processing.php
  * 
  * Changelog:
  * 		24/10/06 - Created (Curufir)

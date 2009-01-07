@@ -1,7 +1,7 @@
 <?php
 /*
  * Script:
- * 		/engine/Old_School/mgu_create_new.php
+ * 		/engine/Default/mgu_create_new.php
  * 
  * Changelog:
  * 		30/09/09 - Created (Curufir)
