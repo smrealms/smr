@@ -152,7 +152,7 @@ else if ($action == 'Alter Player') {
 	
 	$changePlayer->setPlayerName($player_name);
 
-	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player_name . '</span>';
+	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $changePlayer->getDisplayName() . '</span>';
 	$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . $var['game_id'] . ')');
 }
 
