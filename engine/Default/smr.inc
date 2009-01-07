@@ -1,7 +1,7 @@
 <?
-require_once(LIB . '/page/Globals.class.inc');
+require_once(get_file_loc('Globals.class.inc'));
 require_once(LIB . 'global/smr_db.inc'); //uses for finding file locations.
-require_once(LIB . 'page/SmrSession.class.inc');
+require_once(get_file_loc('SmrSession.class.inc'));
 
 function hardware_is_mining_drone($hardwareTypeID)
 {
