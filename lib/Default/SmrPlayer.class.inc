@@ -796,7 +796,18 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function setPlayerName($playerName)
 	{
 		$this->playerName=$playerName;
-		$this->nameChanged=true;
+		$this->setNameChanged(true);
+		$this->hasChanged=true;
+	}
+	
+	public function isNameChanged()
+	{
+		return $this->nameChanged;
+	}
+	
+	public function setNameChanged($bool)
+	{
+		$this->nameChanged = $bool;
 		$this->hasChanged=true;
 	}
 	
@@ -1643,7 +1654,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function setNewbieWarning($bool)
 	{
 		$this->newbieWarning=$bool;
-//		$query = 'UPDATE player SET newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning);
 		$this->hasChanged=true;
 	}
 	

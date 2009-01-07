@@ -140,11 +140,13 @@ else if ($action == 'Alter Player') {
 	$changePlayer =& SmrPlayer::getPlayer(SmrSession::$account_id,$var['game_id']);
 	$old_name = $changePlayer->getDisplayName();
 	
-	if($old_name == $player_name) {
+	if($old_name == $player_name)
+	{
 		create_error('Your player already has that name!');
 	}
 	
-	if($db->f('name_changed') != 'false') {
+	if($changePlayer->isNameChanged())
+	{
 		create_error('You have already changed your name once!');
 	}
 	
