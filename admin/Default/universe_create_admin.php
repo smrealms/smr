@@ -82,14 +82,13 @@ while ($db->next_record()) {
 	$race_name = substr($db->f('location_name'), 0, -3);
 
 	// get race id for this race
-	$db2->query('SELECT race_id FROM race WHERE race_name = '.$db->escapeString($race_name));
+	$db2->query('SELECT race_id FROM race WHERE race_name = '.$db->escapeString($race_name) .' LIMIT 1');
 	if ($db2->next_record())
 		$race_id = $db2->f('race_id');
 	else
 		create_error('Couldn\'t find the '.$race_name.' in database!');
 	if (in_array($race_id, $only)) continue;
 	$only[] = $race_id;
-	$race_name = stripslashes($race_name);
 	// hack for the user mrspock
 	if ($player_name == 'MrSpock' && $race_name == 'Salvene')
 		$selected = ' selected';
