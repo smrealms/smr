@@ -190,6 +190,7 @@ class Globals
 	
 	
 	protected static $CURRENT_SECTOR_HREF;
+	protected static $LOCAL_MAP_HREF;
 	protected static $POD_SCREEN_HREF;
 	protected static $BETA_FUNCTIONS_HREF;
 	
@@ -203,6 +204,18 @@ class Globals
 			self::$CURRENT_SECTOR_HREF = SmrSession::get_new_href($container);
 		}
 		return self::$CURRENT_SECTOR_HREF;
+	}
+	
+	public static function &getLocalMapHREF()
+	{
+		if(!isset(self::$LOCAL_MAP_HREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'map_local.php';
+			self::$LOCAL_MAP_HREF = SmrSession::get_new_href($container);
+		}
+		return self::$LOCAL_MAP_HREF;
 	}
 	
 	public static function &getPodScreenHREF()
