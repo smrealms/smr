@@ -80,22 +80,26 @@ class SmrSector
 			$this->links['Right']=$this->link_right;
 		if($this->warp)
 			$this->links['Warp']=$this->warp;
-			
-		// let forces expire (simply let all expire) (refresh first)
-//		$db2 = new SMR_DB();
-//		$time = time();
-//		$db->query('SELECT * FROM force_refresh WHERE refresh_at <= '.$time);
-//		while ($db->next_record()) {
-//			
-//			$total = $db->f('num_forces');
-//			$days = ceil($total / 10);
-//			if ($days > 5) $days = 5;
-//			$ex_time = $db->f('refresh_at') + ($days * 86400);
-//			$db2->query('UPDATE sector_has_forces SET expire_time = '.$ex_time.' WHERE game_id = '.$this->game_id.' AND sector_id = ' . $db->f('sector_id') . ' AND owner_id = ' . $db->f('owner_id'));
-//			$db2->query('DELETE FROM force_refresh WHERE game_id = '.$this->game_id .
-//					' AND sector_id = ' . $db->f('sector_id') . ' AND owner_id = ' . $db->f('owner_id'));
-//						
-//		}
+
+
+		// *******************************************
+		// *
+		// * Refresh Forces
+		// *
+		// *******************************************
+		
+		$db->query('SELECT * FROM sector_has_forces WHERE sector_id = '.$sectorID .
+				' AND game_id = '.$gameID.' AND refresh_at <= '.TIME.' AND refresher = '.$accountID);
+		while ($db->next_record())
+		{	
+			$total = $db->f('combat_drones')+$db->f('scout_drones')+$db->f('mines');
+			$days = ceil($total / 10);
+			if ($days > 5) $days = 5;
+			$expire = $db->f('refresh_at') + ($days * 86400);
+			$db->query('UPDATE sector_has_forces SET expire_time = '.$expire.' WHERE game_id = '.$db->f('game_id').' AND sector_id = '.$db->f('sector_id').' AND ' . 
+						'owner_id = '.$db->f('owner_id').' LIMIT 1');
+		}
+
 		$this->db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 	}
 

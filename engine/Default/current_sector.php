@@ -18,25 +18,6 @@ if ($sector->getGalaxyID()<9 && $rank_id < FLEDGLING && $account->veteran == 'FA
 
 $smarty->assign('Topic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$galaxyName . ')');
 
-
-// *******************************************
-// *
-// * Refresh Forces
-// *
-// *******************************************
-
-$db->query('SELECT * FROM sector_has_forces WHERE sector_id = '.$player->getSectorID() .
-		' AND game_id = '.$player->getGameID().' AND refresh_at <= '.TIME.' AND refresher = '.$player->getAccountID());
-while ($db->next_record())
-{	
-	$total = $db->f('combat_drones')+$db->f('scout_drones')+$db->f('mines');
-	$days = ceil($total / 10);
-	if ($days > 5) $days = 5;
-	$expire = $db->f('refresh_at') + ($days * 86400);
-	$db->query('UPDATE sector_has_forces SET expire_time = '.$expire.' WHERE game_id = '.$db->f('game_id').' AND sector_id = '.$db->f('sector_id').' AND ' . 
-				'owner_id = '.$db->f('owner_id').' LIMIT 1');
-}
-
 // *******************************************
 // *
 // * Sector List
@@ -191,8 +172,20 @@ if ($db->next_record())
 		$smarty->assign('ForceRefreshMessage',$forceRefreshMessage);
 	}
 }
-if (isset($var['msg']))	$smarty->assign('VarMessage',$var['msg']);
-
+if (isset($var['msg']))
+{
+	if ($msg == '[Force Check]')
+	{
+		$db->query('SELECT * FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
+		if ($db->next_record())
+		{
+			$remainingTime = $db->f('refresh_at') - TIME;
+			$msg = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
+			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', '.$db->escapeString('[Force Check]').')');
+		} else $msg = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
+	}
+	$smarty->assign('VarMessage',$var['msg']);
+}
 
 
 if ($player->getAccountID() == 2)

@@ -2,7 +2,6 @@
 
 //variables
 $db2 = new SMR_DB();
-$time = TIME;
 //get treaties
 $db->query('SELECT * FROM alliance_treaties WHERE (alliance_id_1 = '.$player->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')
 			AND game_id = '.$player->getGameID().'
@@ -20,6 +19,7 @@ $db->query('SELECT account_id FROM player, sector_has_forces
 		AND sector_has_forces.owner_id = player.account_id
 		AND player.game_id = '.$player->getGameID());	
 $list = '(';
+$time = TIME;
 while ($db->next_record())
 {
 	$db2->query('UPDATE sector_has_forces SET refresh_at='.$time.', refresher='.$player->getAccountID() .' WHERE game_id = '.$player->getGameID().' AND sector_id = ' .
