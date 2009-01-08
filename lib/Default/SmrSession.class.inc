@@ -144,7 +144,7 @@ class SmrSession
 		return $sn;
 	}
 	
-	protected function generateSN(&$container)
+	protected static function generateSN(&$container)
 	{
 		$container['CommonID'] = self::getCommonID($container);
 		if(isset(self::$commonIDs[$container['CommonID']]))
@@ -155,7 +155,7 @@ class SmrSession
 		return $sn;
 	}
 	
-	protected function getCommonID($commonContainer)
+	protected static function getCommonID($commonContainer)
 	{
 		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
