@@ -59,7 +59,7 @@ $PHP_OUTPUT.=('<table>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Nick:</td>');
-$PHP_OUTPUT.=('<td>$account->HoF_name</td>');
+$PHP_OUTPUT.=('<td>'.$account->HoF_name.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
@@ -79,9 +79,9 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Birthdate:</td>');
-$PHP_OUTPUT.=('<td>Month:&nbsp;<input type="text" name="day" id="InputFields" value="$day" size="3" maxlength="2" style="text-align:center;" onFocus="javascript:if (this.value == \'N/A\') {this.value = \'\';}" onBlur="javascript:if (this.value == \'\') {this.value = \'N/A\';}">&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('Day:&nbsp;<input type="text" name="month" id="InputFields" value="$month" size="3" maxlength="2" style="text-align:center;" onFocus="javascript:if (this.value == \'N/A\') {this.value = \'\';}" onBlur="javascript:if (this.value == \'\') {this.value = \'N/A\';}">&nbsp;&nbsp;&nbsp;');
-$PHP_OUTPUT.=('Year:&nbsp;<input type="text" name="year" id="InputFields" value="$year" size="3" maxlength="4" style="text-align:center;" onFocus="javascript:if (this.value == \'N/A\') {this.value = \'\';}" onBlur="javascript:if (this.value == \'\') {this.value = \'N/A\';}"></td>');
+$PHP_OUTPUT.=('<td>Month:&nbsp;<input type="text" name="day" id="InputFields" value="'.$day.'" size="3" maxlength="2" style="text-align:center;" onFocus="javascript:if (this.value == \'N/A\') {this.value = \'\';}" onBlur="javascript:if (this.value == \'\') {this.value = \'N/A\';}">&nbsp;&nbsp;&nbsp;');
+$PHP_OUTPUT.=('Day:&nbsp;<input type="text" name="month" id="InputFields" value="'.$month.'" size="3" maxlength="2" style="text-align:center;" onFocus="javascript:if (this.value == \'N/A\') {this.value = \'\';}" onBlur="javascript:if (this.value == \'\') {this.value = \'N/A\';}">&nbsp;&nbsp;&nbsp;');
+$PHP_OUTPUT.=('Year:&nbsp;<input type="text" name="year" id="InputFields" value="'.$year.'" size="3" maxlength="4" style="text-align:center;" onFocus="javascript:if (this.value == \'N/A\') {this.value = \'\';}" onBlur="javascript:if (this.value == \'\') {this.value = \'N/A\';}"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
