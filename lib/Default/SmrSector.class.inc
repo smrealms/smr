@@ -228,16 +228,6 @@ class SmrSector
 			// send scout messages to user
 			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->sectorID;
 			$player->sendMessage($owner->accountID, $SCOUTMSG, $this->db->escapeString($message, false));
-			//insert into ticker
-			$db = new SMR_DB();
-			$time = time();
-			$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$owner->getAccountID().' AND game_id = '.$owner->getGameID().' AND type = \'scout\'');
-			if ($db->next_record()) {
-
-				$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$player->getAccountID().' AND type = \'block\'');
-				if (!$db->next_record()) $db->query('UPDATE player_has_ticker SET recent = ' . $db->escape_string($message, false) . ', time = '.$time.' WHERE account_id = '.$owner->getAccountID().' AND game_id = '.$owner->getGameID());
-
-			}
 
 		}
 

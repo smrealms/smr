@@ -73,17 +73,18 @@ $smarty->assign('Sectors',$links);
 
 
 //any ticker news?
-if($player->hasTicker())
+if($player->hasTickers())
 {
 	$ticker = array();
-	$max = time() - 60;
-	if($player->ticker == 'NEWS')
+	$max = TIME - 60;
+	if($player->hasTicker('NEWS'))
 	{
 		$text = '';
 		//get recent news (5 mins)
 		
 		$db->query('SELECT time,news_message FROM news WHERE game_id = '.$player->getGameID().' AND time >= '.$max.' ORDER BY time DESC LIMIT 4');
-		if ($db->nf()) {
+		if ($db->nf())
+		{
 			while($db->next_record())
 			{
 				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->f('time')),
@@ -91,11 +92,11 @@ if($player->hasTicker())
 			}
 		}
 	}
-	else if ($player->ticker=='SCOUT')
+	if ($player->hasTicker('SCOUT'))
 	{
 		$text = '';
 		//get people who have blockers
-		$db->query('SELECT * FROM player_has_ticker WHERE type=\'block\' AND game_id = ' . $player->getGameID());
+		$db->query('SELECT * FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires < '. TIME .' AND game_id = ' . $player->getGameID());
 		$temp=array();
 		$temp[] = 0;
 		while ($db->next_record()) $temp[] = $db->f('account_id');
@@ -110,15 +111,14 @@ if($player->hasTicker())
 		$db->query($query);
 		unset($temp);
 		if ($db->nf()) {
-			while($db->next_record()){
+			while($db->next_record())
+			{
 				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->f('send_time')),
 								'Message'=>$db->f('message_text'));
 			}
 		}
 	}
 	$smarty->assign('Ticker',$ticker);
-	$player->last_ticker_update = TIME;
-	$player->update();
 }
 
 // *******************************************

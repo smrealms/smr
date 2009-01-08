@@ -15,27 +15,15 @@ $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var
 
 // take the turns
 $player->takeTurns(3,1);
-$player->update();
 
 // delete plotted course
 $player->deletePlottedCourse();
 
 // send message if scouts are present
-if ($forces->getSDs() > 0) {
-
+if ($forces->hasSDs())
+{
 	$message = 'Your forces in sector '.$forces->getSectorID().' are being attacked by '.$player->getPlayerName();
-	$player->sendMessage($forces->getOwnerID(), $SCOUTMSG, $db->escape_string($message, false));
-	//insert into ticker
-	$owner_id = $var['owner_id'];
-	$time = time();
-	$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$owner_id.' AND game_id = '.$player->getGameID().' AND type = \'scout\'');
-	if ($db->next_record()) {
-				
-		$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$player->getAccountID().' AND type = \'block\'');
-		if (!$db->next_record()) $db->query('UPDATE player_has_ticker SET recent = ' . $db->escape_string($message, false) . ', time = '.$time.' WHERE account_id = '.$owner_id.' AND game_id = '.$player->getGameID());
-		
-	}
-
+	$forces->ping($message, $player);
 }
 
 $container = array();
@@ -52,7 +40,8 @@ $container['forced'] = 'no';
 
 $force_msg = array();
 
-if ($player->getAllianceID() != 0) {
+if ($player->hasAlliance())
+{
 
 	$db->query('SELECT * FROM player ' .
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
@@ -62,7 +51,9 @@ if ($player->getAllianceID() != 0) {
 					 'newbie_turns = 0 ' .
 			   'ORDER BY rand() LIMIT 1');
 
-} else {
+}
+else
+{
 
 	$db->query('SELECT * FROM player ' .
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
@@ -73,7 +64,8 @@ if ($player->getAllianceID() != 0) {
 			   'ORDER BY rand() LIMIT 1');
 
 }
-if ($db->next_record()) {
+if ($db->next_record())
+{
 
 	$curr_attacker =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
 	$curr_attacker_ship =& $curr_attacker->getShip();

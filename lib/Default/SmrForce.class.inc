@@ -1,5 +1,7 @@
 <?php
 require_once('SmrMySqlDatabase.class.inc');
+
+require_once(get_file_loc('SmrPlayer.class.inc'));
 class SmrForce
 {
 	protected static $CACHE_FORCES = array();
@@ -279,10 +281,18 @@ class SmrForce
 	{
 		return $this->sectorID;
 	}
+	
+	public function ping($pingMessage, AbstractSmrPlayer &$playerPinging)
+	{
+		$owner =& $this->getOwner();
+		if(!$playerPinging->sameAlliance($owner))
+		{
+			$player->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage);
+		}
+	}
 
 	function &getOwner()
 	{
-		require_once(get_file_loc('SmrPlayer.class.inc'));
 		return SmrPlayer::getPlayer($this->getOwnerID(),$this->getGameID());
 	}
 

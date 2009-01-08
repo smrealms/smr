@@ -16,18 +16,11 @@ if ($forces->getMines() == 0)
 $player->deletePlottedCourse();
 
 // send message if scouts are present
-if ($forces->getSDs() > 0) {
+if ($forces->hasSDs())
+{
 
 	$message = 'Your forces in sector '.$forces->getSectorID().' are being attacked by '.$player->getPlayerName();
-	$player->sendMessage($forces->getOwnerID(), $SCOUTMSG, $db->escape_string($message, false));
-	//insert into ticker
-	$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$owner_id.' AND game_id = '.$player->getGameID().' AND type = \'scout\'');
-	if ($db->next_record()) {
-				
-		$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$player->getAccountID().' AND type = \'block\'');
-		if (!$db->next_record()) $db->query('UPDATE player_has_ticker SET recent = ' . $db->escape_string($message, false) . ', time = '.TIME.' WHERE account_id = '.$owner_id.' AND game_id = '.$player->getGameID());
-		
-	}
+	$forces->ping($message, $player);
 
 }
 

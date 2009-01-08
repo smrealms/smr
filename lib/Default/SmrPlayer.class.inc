@@ -27,8 +27,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //	var $game_speed;
 	protected $validated;
 //	var $out_of_game;
-//	var $last_ticker_update;
-	protected $ticker;
+	protected $tickers;
 //    var $safe_exit;
 //    var $detected;
 	protected $originalMaintenance;
@@ -1662,21 +1661,47 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->newbieWarning;
 	}
 	
-	public function getTicker()
+	public function getTickers()
 	{
-		if(!isset($this->ticker))
+		if(!isset($this->tickers))
 		{
+			$this->tickers = array();
 			//get ticker info
-			$this->db->query('SELECT type FROM player_has_ticker WHERE account_id = ' . $this->SQL .' AND type != '.$this->db->escapeString('BLOCK').' LIMIT 1');
-			if ($this->db->nextRecord()) $this->ticker = strtoupper($this->db->getField('type'));
-			else $this->ticker = false;
+			$this->db->query('SELECT type,time,expires,recent FROM player_has_ticker WHERE account_id = ' . $this->SQL .' AND type != '.$this->db->escapeString('BLOCK').' AND expires > ' . TIME . ' LIMIT 1');
+			while($this->db->nextRecord())
+				$this->tickers[$this->db->getField('type')] = array( 'Type' => $this->db->getField('type'),
+																				'Time' => $this->db->getField('time'),
+																				'Expires' => $this->db->getField('expires'),
+																				'Recent' => $this->db->getField('recent'));
 		}
-		return $this->ticker;
+		return $this->tickers;
 	}
 	
-	public function hasTicker()
+	public function hasTickers()
 	{
-	 	return $this->getTicker()!== false && $this->getTicker() != 'BLOCK';
+		$tickers = $this->getTickers();
+		if(count($tickers) > 0)
+		{
+			foreach($tickers as $ticker)
+			{
+				if($ticker['Expires'] > TIME)
+					return true;
+			}
+		}
+		return false;
+	}
+	
+	public function getTicker($tickerType)
+	{
+		$tickers = $this->getTickers();
+		if(isset($tickers[$tickerType]))
+			return $tickers[$tickerType];
+		return false;
+	}
+	
+	public function hasTicker($tickerType)
+	{
+		return $this->getTicker($tickerType) !== false;
 	}
 	
 	public function getTurnsLevel()
@@ -1711,10 +1736,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->save();
 	}
 	
-	function sendMessage($receiver_id, $message_type_id, $message, $canBeIgnored = true)
+	public function sendMessage($receiver_id, $message_type_id, $message, $canBeIgnored = true)
 	{
 		//get expire time
-		global $GLOBALMSG, $PLAYERMSG, $PLANETMSG, $SCOUTMSG, $POLITICALMSG, $ALLIANCEMSG, $ADMINMSG;
 		
 		if($canBeIgnored)
 		{
@@ -1727,15 +1751,33 @@ class SmrPlayer extends AbstractSmrPlayer
 				
 		$message = word_filter($message);
 		
-		if ($message_type_id == $GLOBALMSG) $expire = 3600;
-		elseif ($message_type_id == $PLAYERMSG) $expire = 3600 * 24 * 7;
-		elseif ($message_type_id == $PLANETMSG) $expire = 3600 * 24 * 3;
-		elseif ($message_type_id == $SCOUTMSG) $expire = 3600 * 24 * 3;
-		elseif ($message_type_id == $POLITICALMSG) $expire = 3600 * 24 * 2;
-		elseif ($message_type_id == $ALLIANCEMSG) $expire = 3600 * 24 * 2;
-		elseif ($message_type_id == $ADMINMSG) $expire = 3600 * 24 * 7;
-		else $expire = 3600 * 24 * 2;
-		$expire += time();
+		switch ($message_type_id)
+		{
+			case MSG_GLOBAL:
+				$expire = 3600;
+			break;
+			case MSG_PLAYER:
+				$expire = 3600 * 24 * 7;
+			break;
+			case MSG_PLANET:
+				$expire = 3600 * 24 * 3;
+			break;
+			case MSG_SCOUT:
+				$expire = 3600 * 24 * 3;
+			break;
+			case MSG_POLITICAL:
+				$expire = 3600 * 24 * 2;
+			break;
+			case MSG_ALLIANCE:
+				$expire = 3600 * 24 * 2;
+			break;
+			case MSG_ADMIN:
+				$expire = 3600 * 24 * 7;
+			break;
+			default:
+				$expire = 3600 * 24 * 2;
+		}
+		$expire += TIME;
 		// send him the message
 		$this->db->query('INSERT INTO message
 			(account_id,game_id,message_type_id,message_text,
@@ -1752,10 +1794,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		// give him the message icon
 		$this->db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
 						'('.$this->gameID.', '.$receiver_id.', '.$message_type_id.')');
-
 	}
 	
-	function setMessagesRead($messageTypeID)
+	public function setMessagesRead($messageTypeID)
 	{
 
 		$this->db->query('DELETE FROM player_has_unread_messages WHERE '.$this->SQL.' AND ' .
