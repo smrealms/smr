@@ -116,8 +116,8 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 <tr>
 <td valign="top" align="center">
 <form action="<?php echo $URL; ?>/album/search_processing.php">
-Quick Search:<br>
-<input type="text" name="nick" size="10" id="InputFields"><br>
+Quick Search:<br />
+<input type="text" name="nick" size="10" id="InputFields"><br />
 <input type="submit" value="Search" id="InputFields">
 </form>
 

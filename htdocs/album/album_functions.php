@@ -21,14 +21,14 @@ function main_page() {
 	echo('<li>Please respect all members in this area. Treat them as you would want to be treated. Do not post cruel or otherwise unneeded comments about someone or their property.</li>');
 	echo('<li>You must be logged into your account to post within this album, therefore if you break any of these rules your account may be subject to disablement. Prolonged periods will incur if you break any of these rules more than once.</li>');
 	echo('</ol>');
-	echo('<small><b>Please Note:</b> Your warning is written here. You will not be warned beyond this point. It will be a 24 hour disablement beyond this warning the first time you break a rule. (IF you break a rule)</small><br><br>');
-	echo('Mouse<br>Photo Album Administrator');
+	echo('<small><b>Please Note:</b> Your warning is written here. You will not be warned beyond this point. It will be a 24 hour disablement beyond this warning the first time you break a rule. (IF you break a rule)</small><br /><br />');
+	echo('Mouse<br />Photo Album Administrator');
 	echo('</p>');
 
 	echo('<p>&nbsp;</p>');
 
 	// most hits
-	echo('<p><u>Top 5 Pictures</u><br><br>');
+	echo('<p><u>Top 5 Pictures</u><br /><br />');
 	$db->query('SELECT *
 				FROM album
 				WHERE approved = \'YES\'
@@ -41,14 +41,14 @@ function main_page() {
 			$page_views = $db->f('page_views');
 			$nick = get_album_nick($db->f('account_id'));
 
-			echo('<a href="'.$URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> ('.$page_views.')<br>');
+			echo('<a href="'.$URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> ('.$page_views.')<br />');
 
 		}
 
 	}
 
 	// latest picture
-	echo('<p><u>Latest Picture</u><br><br>');
+	echo('<p><u>Latest Picture</u><br /><br />');
 	$db->query('SELECT *
 				FROM album
 				WHERE approved = \'YES\'
@@ -61,7 +61,7 @@ function main_page() {
 			$created = $db->f('created');
 			$nick = get_album_nick($db->f('account_id'));
 
-			echo('<span style="font-size:85%;"><b>[' . date('n/j/Y g:i A', $created) . ']</b> Picture of <a href="'.$URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> added</span><br>');
+			echo('<span style="font-size:85%;"><b>[' . date('n/j/Y g:i A', $created) . ']</b> Picture of <a href="'.$URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> added</span><br />');
 
 		}
 
@@ -198,12 +198,12 @@ function album_entry($album_id) {
 	if (empty($other))
 		$other = 'N/A';
 	echo('<tr>');
-	echo('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info :<br><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
+	echo('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info :<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
 	echo('</tr>');
 
 	echo('<tr>');
 	echo('<td colspan="2">');
-	echo('<u>Comments</u><br><br>');
+	echo('<u>Comments</u><br /><br />');
 
 	$db->query('SELECT *
 				FROM album_has_comments
@@ -214,7 +214,7 @@ function album_entry($album_id) {
 		$postee	= get_album_nick($db->f('post_id'));
 		$msg	= stripslashes($db->f('msg'));
 
-		echo('<span style="font-size:85%;">[' . date('Y/n/j g:i A', $time) . '] &lt;'.$postee.'&gt; $msg</span><br>');
+		echo('<span style="font-size:85%;">[' . date('Y/n/j g:i A', $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span><br />');
 
 	}
 
@@ -224,15 +224,15 @@ function album_entry($album_id) {
 		echo('<input type="hidden" name="album_id" value="'.$album_id.'">');
 		echo('<table>');
 		echo('<tr>');
-		echo('<td style="color:green; font-size:70%;">Nick:<br><input type="text" size="10" name="nick" value="' . get_album_nick(SmrSession::$account_id) . '" id="InputFields" readonly></td>');
-		echo('<td style="color:green; font-size:70%;">Comment:<br><input type="text" size="50" name="comment" id="InputFields"></td>');
-		echo('<td style="color:green; font-size:70%;"><br><input type="submit" value="Send" id="InputFields"></td>');
+		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . get_album_nick(SmrSession::$account_id) . '" id="InputFields" readonly></td>');
+		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment" id="InputFields"></td>');
+		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send" id="InputFields"></td>');
 		$db->query('SELECT *
 					FROM account_has_permission
 					WHERE account_id = '.SmrSession::$account_id.' AND
 						  permission_id = 20');
 		if ($db->next_record())
-			echo('<td style="color:green; font-size:70%;"><br><input type="submit" name="action" value="Moderate" id="InputFields"></td>');
+			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" id="InputFields"></td>');
 
 		echo('</tr>');
 		echo('</table>');
@@ -267,7 +267,7 @@ function search_result($album_ids) {
 
 		$nick = get_album_nick($album_id);
 
-		echo('<a href="'.$URL.'/album/?' . urlencode($nick) . '" style="font-size:80%;">'.$nick.'</a><br>');
+		echo('<a href="'.$URL.'/album/?' . urlencode($nick) . '" style="font-size:80%;">'.$nick.'</a><br />');
 
 		if ($count % floor(sizeof($album_ids) / 4) == 0)
 			echo('</td><td width="25%" valign="top">');
