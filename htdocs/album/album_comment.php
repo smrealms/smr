@@ -20,7 +20,7 @@ require_once('album_functions.php');
 if (SmrSession::$account_id == 0)
 	$PHP_OUTPUT.=create_error_offline('You need to logged in to post comments!');
 
-if (empty($_GET['album_id']))
+if (!isset($_GET['album_id']) || empty($_GET['album_id']))
 	$PHP_OUTPUT.=create_error_offline('Which picture do you want comment?');
 else
 	$album_id = $_GET['album_id'];
@@ -31,7 +31,7 @@ if (!is_numeric($album_id))
 if ($album_id < 1)
 	$PHP_OUTPUT.=create_error_offline('Picture ID has to be positive!');
 
-if ($_GET['action'] == 'Moderate') {
+if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
 
 	$container = create_container('skeleton.php', 'album_moderate.php');
 	$container['account_id'] = $album_id;
@@ -43,7 +43,7 @@ if ($_GET['action'] == 'Moderate') {
 
 $db = new SMR_DB();
 
-if (empty($_GET['comment']))
+if (!isset($_GET['comment']) || empty($_GET['comment']))
 	$PHP_OUTPUT.=create_error_offline('Please enter a comment');
 else
 	$comment = mysql_escape_string($_GET['comment']);
