@@ -10,6 +10,7 @@ class SmrSession
 	public static $last_accessed;
 	public static $fast_forward;
 	public static $var;
+	public static $ids;
 	public static $generate;
 	
 	
@@ -48,6 +49,30 @@ class SmrSession
 				self::$game_id		= 0;
 				self::$var			= array();
 			}
+			else
+			{
+				foreach(self::$var as $key => &$value)
+				{
+					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) // Use 0 for infinity
+					{
+						//This link is no longer valid
+						unset(self::$var[$key]);
+					}
+					else if ($value['RemainingPageLoads'] < 0)
+					{
+						//This link is no longer valid
+						unset(self::$var[$key]);
+					}
+					else
+					{
+						--$value['RemainingPageLoads'];
+						if (isset($value['ID']))
+						{
+							self::$ids[$value['ID']] = $key;
+						}
+					}
+				} unset($value);
+			}
 		}
 		else
 		{
@@ -70,6 +95,14 @@ class SmrSession
 	
 	public static function update()
 	{
+		foreach(self::$var as $key => &$value)
+		{
+			if ($value['RemainingPageLoads'] <= 0)
+			{
+				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
+				unset(self::$var[$key]);
+			}
+		} unset($value);
 		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate)
 		{
@@ -84,23 +117,57 @@ class SmrSession
 
 	public static function destroy() {
 
-		self::$db->query('DELETE FROM active_session WHERE session_id = \'' . self::$session_id . '\' LIMIT 1');
+		self::$db->query('DELETE FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		self::$session_id = '';
 		self::$account_id = 0;
 		self::$game_id = 0;
-
 	}
-
-	public static function get_new_sn($container) {
-		// 8 chars is more than we need to avoid clashes
-		do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
+	
+	public static function retrieveVar($sn)
+	{
+		self::$var[$sn]['RemainingPageLoads'] = 1; // Allow refreshing
+		self::$var[$sn]['Expires'] = 0; // Allow refreshing forever
+		return self::$var[$sn];
+	}
+	
+	public static function addLink($container, $forceSN = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
+	{
+		if(!isset($container['Expires']))
+			$container['Expires'] = 0; // Lasts forever
+		if(!isset($container['RemainingPageLoads']))
+			$container['RemainingPageLoads'] = 1; // One refresh to destroy the link
+		if(isset($container['ID']))
+		{
+			if($forceSN === false)
+			{
+				if(isset(self::$ids[$container['ID']]))
+					$sn = self::$ids[$container['ID']];
+				else // 8 chars is more than we need to avoid clashes
+				{
+					do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
+					self::$ids[$container['ID']] = $sn;
+				}
+			}
+			else
+			{
+				self::$ids[$container['ID']] = $forceSN;
+			}
+		}
+		else if($forceSN === false)
+			do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
+		else $sn = $forceSN;
 		self::$var[$sn] = $container;
 		return $sn;
 	}
 
+	public static function get_new_sn($container, $forceSN = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
+	{
+		return self::addLink($container, $forceSN);
+	}
+
 	public static function get_new_href($container)
 	{
-		return 'loader.php?sn=' . self::get_new_sn($container);
+		return 'loader.php?sn=' . self::addLink($container);
 	}
 
 }
