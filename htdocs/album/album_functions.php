@@ -207,7 +207,7 @@ function album_entry($album_id) {
 
 	$db->query('SELECT *
 				FROM album_has_comments
-				WHERE album_id = $album_id');
+				WHERE album_id = '.$album_id);
 	while ($db->next_record()) {
 
 		$time	= $db->f('time');
