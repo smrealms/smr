@@ -10,7 +10,7 @@ class SmrSession
 	public static $last_accessed;
 	public static $fast_forward;
 	public static $var;
-	public static $ids;
+	public static $commonIDs;
 	public static $generate;
 	
 	
@@ -66,10 +66,7 @@ class SmrSession
 					else
 					{
 						--$value['RemainingPageLoads'];
-						if (isset($value['ID']))
-						{
-							self::$ids[$value['ID']] = $key;
-						}
+						self::$commonIDs[$value['CommonID']] = $key;
 					}
 				} unset($value);
 			}
@@ -141,13 +138,28 @@ class SmrSession
 			
 		if($sn === false)
 		{
-			$commonContainer = $container;
-			unset($commonContainer['Expires']);
-			unset($commonContainer['RemainingPageLoads']);
-			$sn = md5(serialize($commonContainer));
+			$sn = self::generateSN($container);
 		}
 		self::$var[$sn] = $container;
 		return $sn;
+	}
+	
+	protected function generateSN(&$container)
+	{
+		$container['CommonID'] = self::getCommonID($container);
+		if(isset(self::$commonIDs[$container['CommonID']]))
+			$sn = self::$commonIDs[$container['CommonID']];
+		else
+			do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
+		self::$commonIDs[$container['CommonID']] = $sn;
+		return $sn;
+	}
+	
+	protected function getCommonID($commonContainer)
+	{
+		unset($commonContainer['Expires']);
+		unset($commonContainer['RemainingPageLoads']);
+		return md5(serialize($commonContainer));
 	}
 
 	public static function get_new_sn($container, $forceSN = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
