@@ -260,7 +260,7 @@ class SmrSector
 			$force->ping($message,$player);
 
 		}
-		$db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' . 
+		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' . 
 					'refresher = '.$this->getAccountID());
 	}
 
@@ -277,42 +277,14 @@ class SmrSector
 					 'WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' LIMIT 1');
 		
 		// iterate over all scout drones in sector
-		$this->db->query('SELECT * FROM sector_has_forces ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' AND ' .
-						   'owner_id != '.$this->accountID.' AND ' .
-						   'scout_drones > 0');
-		while ($this->db->nextRecord()) {
-
-			$owner =& SmrPlayer::getPlayer($this->db->getField('owner_id'), $this->gameID);
-			if ($owner->sameAlliance($player)) continue;
-
-			// we may skip player if this is a protected gal.
-//			if ($this->is_protected_gal()) {
-//
-//				$curr_account =& SmrAccount::getAccount($this->db->getField('owner_id'));
-//
-//				// if one is vet and the other is newbie we skip it
-//				if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
-//					continue;
-//
-//			}
-
+		$forces =& $this->getForces();
+		foreach($forces as &$force)
+		{
 			// send scout messages to user
 			$message = 'Your forces have spotted that ' . $player->getDisplayName() . ' has been <font color=red>DESTROYED</font> in sector #'.$this->sectorID;
-			$player->sendMessage($owner->getAccountID(), $SCOUTMSG, $this->db->escapeString($message));
-			//insert into ticker
-			$db = new SMR_DB();
-			$time = time();
-			$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$owner->getAccountID().' AND game_id = '.$owner->getGameID().' AND type = \'scout\'');
-			if ($db->next_record()) {
+			$force->ping($message,$player);
 
-				$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$player->getAccountID().' AND type = \'block\'');
-				if (!$db->next_record()) $db->query('UPDATE player_has_ticker SET recent = ' . $db->escape_string($message, false) . ', time = '.$time.' WHERE account_id = '.$owner->getAccountID().' AND game_id = '.$owner->getGameID());
-
-			}
-
-		}
+		}unset($force);
 
 	}
 
