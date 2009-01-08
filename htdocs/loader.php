@@ -111,11 +111,7 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 $sn = $_REQUEST['sn'];
 
 // now get the container array for this sn object
-$var = SmrSession::$var[$sn];
-// empty session container
-SmrSession::$var = array();
-// allow the user to reload current page
-SmrSession::$var[$sn] = $var;
+$var = SmrSession::retrieveVar($sn);
 	
 // check if we got a sn number with our url
 if (empty($sn))

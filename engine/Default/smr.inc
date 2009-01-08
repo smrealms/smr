@@ -215,39 +215,30 @@ function create_error($message) {
 
 }
 
-function forward($new_container)
+function resetContainer($new_container)
 {
-	global $URL, $time_start,$sn,$container,$var;
+	global $time_start,$sn,$container,$var;
 
 	// add start time of that script to next page
 	$new_container['time'] = $time_start;
 	// this sn identifies our container later
 
-	SmrSession::$var[$sn] = $new_container;
+	SmrSession::addLink($new_container,$sn);
 
-	SmrSession::update();
 	$var = $new_container;
 	$container = $new_container;
+}
 
+function forward($new_container)
+{
+	resetContainer($new_container);
 	do_voodoo();
-
 }
 
 function forwardURL($new_container)
 {
-
-	global $URL, $time_start,$sn,$container,$var;
-
-	// add start time of that script to next page
-	$new_container['time'] = $time_start;
-	// this sn identifies our container later
-
-	SmrSession::$var[$sn] = $new_container;
-
-	SmrSession::update();
-	$var = $new_container;
-	$container = $new_container;
-
+	resetContainer($new_container);
+	global $var;
 	require_once(get_file_loc($var['url']));
 
 }
