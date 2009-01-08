@@ -123,7 +123,7 @@ if ($db->next_record()) {
 
 	// add album entry
 	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved) ' .
-			   'VALUES('.SmrSession::$account_id.', '.$location.', '.$email.', '.$db->escapeString($website).', '.$day.', '.$month.', '.$year.', '.$other.', '.$curr_time.', '.$curr_time.', \'TBC\')');
+			   'VALUES('.SmrSession::$account_id.', '.$db->escapeString($location).', '.$db->escapeString($email).', '.$db->escapeString($website).', '.$day.', '.$month.', '.$year.', '.$other.', '.$curr_time.', '.$curr_time.', \'TBC\')');
 
 }
 
