@@ -176,7 +176,7 @@ if (isset($var['msg']))
 {
 	if ($msg == '[Force Check]')
 	{
-		$db->query('SELECT * FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
+		$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
 		if ($db->next_record())
 		{
 			$remainingTime = $db->f('refresh_at') - TIME;
