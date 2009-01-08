@@ -246,6 +246,11 @@ class SmrPort
 		$this->setGoodAmount($goodID,$this->getGoodAmount($goodID) + $amount);
 	}
 	
+	public function decreaseGoodAmount($goodID,$amount)
+	{
+		$this->setGoodAmount($goodID,$this->getGoodAmount($goodID) - $amount);
+	}
+	
 	protected function refreshGoods($classTraded,$amountTraded)
 	{
 		$refreshAmount = $amountTraded / 8;
