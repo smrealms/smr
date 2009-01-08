@@ -233,19 +233,35 @@ class SmrSector
 
 	}
 
-	function leaving_sector($player)
+	function leavingSector(AbstractSmrPlayer &$player, $movementType)
 	{
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
 		foreach($forces as $force)
 		{
 			// send scout messages to user
-			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' leaving sector #'.$this->getSectorID();
+			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
+			
+			switch($movementType)
+			{
+				case MOVEMENT_WALK:
+					$message .= 'leaving';
+				break;
+				case MOVEMENT_JUMP:
+					$message .= 'jumping from';
+				break;
+				case MOVEMENT_WARP:
+					$message .= 'warping from';
+				break;
+				default:
+					$message .= 'leaving';
+			}
+			$message .= ' sector #'.$this->getSectorID();
 			$force->ping($message,$player);
 
 		}
 		$db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' . 
-					'refresher = '.$this->getAccountID().' LIMIT 1');
+					'refresher = '.$this->getAccountID());
 	}
 
 	function died_here(AbstractSmrPlayer &$player)
