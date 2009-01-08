@@ -85,12 +85,12 @@ function album_entry($album_id) {
 	if (SmrSession::$account_id != 0 && $album_id != SmrSession::$account_id)
 		$db->query('UPDATE album
 				SET page_views = page_views + 1
-				WHERE account_id = $album_id AND
+				WHERE account_id = '.$album_id.' AND
 					  approved = \'YES\'');
 
 	$db->query('SELECT *
 				FROM album
-				WHERE account_id = $album_id AND
+				WHERE account_id = '.$album_id.' AND
 					  approved = \'YES\'');
 	if ($db->next_record()) {
 
@@ -324,7 +324,7 @@ function get_album_nick($album_id) {
 	// get hof name
 	$album->query('SELECT HoF_name
 				   FROM account_has_stats
-				   WHERE account_id = $album_id');
+				   WHERE account_id = '.$album_id);
 	if ($album->next_record())
 		$nick = $album->f('HoF_name');
 
@@ -333,7 +333,7 @@ function get_album_nick($album_id) {
 
 		$album->query('SELECT login
 					   FROM account
-					   WHERE account_id = $album_id');
+					   WHERE account_id = '.$album_id);
 		if ($album->next_record())
 			$nick = $album->f('login');
 
