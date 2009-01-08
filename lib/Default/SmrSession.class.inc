@@ -125,6 +125,8 @@ class SmrSession
 	
 	public static function retrieveVar($sn)
 	{
+		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
+			return false;
 		self::$var[$sn]['RemainingPageLoads'] = 1; // Allow refreshing
 		self::$var[$sn]['Expires'] = 0; // Allow refreshing forever
 		return self::$var[$sn];

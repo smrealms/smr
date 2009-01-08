@@ -111,14 +111,14 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 $sn = $_REQUEST['sn'];
 
 // now get the container array for this sn object
-$var = SmrSession::retrieveVar($sn);
+;
 	
 // check if we got a sn number with our url
 if (empty($sn))
 	create_error('Your browser lost the SN. Try to reload the page!');
 
 // do we have such a container object in the db?
-if (!isset(SmrSession::$var[$sn]) || empty(SmrSession::$var[$sn]))
+if (!($var = SmrSession::retrieveVar($sn)))
 	create_error('Please avoid using the back button!');
 
 
