@@ -4,16 +4,10 @@ if ($_POST['action'] == 'Delete Entry')
 	forward(create_container('skeleton.php', 'album_delete_confirmation.php'));
 
 // get location
-if ($_POST['location'] != 'N/A')
-	$location = $db->escape_string($_POST['location'], TRUE);
-else
-	$location = '';
+$location = $_POST['location'];
 
 // get email
-if ($_POST['email'] != 'N/A')
-	$email = $db->escape_string($_POST['email'], TRUE);
-else
-	$email = '';
+$email = $_POST['email'];
 
 // get website (and validate it)
 if ($_POST['website'] != 'http://') {
@@ -34,10 +28,7 @@ if ($_POST['website'] != 'http://') {
 	$website = '';
 
 // get 'other' info
-if ($_POST['other'] != 'N/A')
-	$other = $db->escape_string($_POST['other'], TRUE);
-else
-	$other = '';
+$other = $_POST['other'];
 
 // get day
 if ($_POST['day'] != 'N/A')
@@ -106,7 +97,7 @@ if ($db->next_record()) {
 					day = '.$day.',
 					month = '.$month.',
 					year = '.$year.',
-					other = '.$other.',
+					other = '.$db->escapeString($other).',
 					last_changed = '.$curr_time.',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
@@ -123,7 +114,7 @@ if ($db->next_record()) {
 
 	// add album entry
 	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved) ' .
-			   'VALUES('.SmrSession::$account_id.', '.$db->escapeString($location).', '.$db->escapeString($email).', '.$db->escapeString($website).', '.$day.', '.$month.', '.$year.', '.$other.', '.$curr_time.', '.$curr_time.', \'TBC\')');
+			   'VALUES('.SmrSession::$account_id.', '.$db->escapeString($location).', '.$db->escapeString($email).', '.$db->escapeString($website).', '.$day.', '.$month.', '.$year.', '.$db->escapeString($other).', '.$curr_time.', '.$curr_time.', \'TBC\')');
 
 }
 
