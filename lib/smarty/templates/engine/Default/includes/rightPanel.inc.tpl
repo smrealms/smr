@@ -85,7 +85,7 @@ Ship Condition : <span id="condition"><span class="dgreen">{$ThisPlayer->getTurn
 {/if}
 Empty : {$ThisShip->getEmptyHolds()}<br /><br />
 <a  href="{$WeaponReorderLink}"><span class="bold">Weapons</span></a><br />
-<div class="wep_drop1" onclick="toggleWepD({$ShipWeapons|@count});">Show/Hide
+<div class="wep_drop1" onclick="toggleWepD({$ThisShip->getNumWeapons()});">Show/Hide
 	{foreach from=$ThisShip->getWeapons() item=Weapon name=WeaponLoop}
 		<div class="wep1" id="wep_item{$smarty.foreach.WeaponLoop.iteration}">{$Weapon->getName()}</div>
 	{/foreach}
