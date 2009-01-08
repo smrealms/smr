@@ -101,7 +101,7 @@ if ($db->next_record()) {
 					last_changed = '.$curr_time.',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
-				WHERE account_id = '.SmrSession::$account_id);
+				WHERE account_id = '.SmrSession::$account_id . ' LIMIT 1');
 
 } else {
 
