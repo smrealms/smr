@@ -32,7 +32,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'port_loot.php';
 $ship->increaseCargo($good_id,$amount);
 $ship->update_cargo();
-$port->amount[$good_id] -= $amount;
+$port->decreaseGoodAmount($good_id,$amount);
 $port->update();
 forward($container);
 
