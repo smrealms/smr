@@ -232,7 +232,7 @@ if (mt_rand(1, 100) <= $failure_chance) {
 $account->log(5, 'Jumps to sector: '.$to.' but hits: '.$player->getSectorID(), $sector->getSectorID());
 
 // send scout msg
-$sector->leaving_sector();
+$sector->leavingSector($player,MOVEMENT_JUMP);
 
 //set the last sector
 $player->setLastSectorID($sector->getSectorID());

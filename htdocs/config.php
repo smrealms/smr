@@ -26,6 +26,14 @@ define('MSG_ALLIANCE', 6);
 define('MSG_ADMIN', 7);
 
 /*
+ * Movement types
+ */
+define('MOVEMENT_WALK', 1);
+define('MOVEMENT_JUMP', 2);
+define('MOVEMENT_WARP', 3);
+
+
+/*
  * Special locations
  */
 define('GOVERNMENT', 101);
