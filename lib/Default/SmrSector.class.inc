@@ -88,18 +88,8 @@ class SmrSector
 		// *
 		// *******************************************
 		
-		$db->query('SELECT * FROM sector_has_forces WHERE sector_id = '.$sectorID .
+		$this->db->query('UPDATE sector_has_forces SET expire_time = MAX(432000,(refresh_at + (combat_drones+scout_drones+mines)*8640)), refresher = 0 WHERE sector_id = '.$sectorID .
 				' AND game_id = '.$gameID.' AND refresh_at <= '.TIME.' AND refresher = '.$accountID);
-		while ($db->next_record())
-		{	
-			$total = $db->f('combat_drones')+$db->f('scout_drones')+$db->f('mines');
-			$days = ceil($total / 10);
-			if ($days > 5) $days = 5;
-			$expire = $db->f('refresh_at') + ($days * 86400);
-			$db->query('UPDATE sector_has_forces SET expire_time = '.$expire.' WHERE game_id = '.$db->f('game_id').' AND sector_id = '.$db->f('sector_id').' AND ' . 
-						'owner_id = '.$db->f('owner_id').' LIMIT 1');
-		}
-
 		$this->db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 	}
 
@@ -251,49 +241,19 @@ class SmrSector
 
 	}
 
-	function leaving_sector() {
-
-		global $player, $account;
-		global $SCOUTMSG;
-
-		// get our rank
-		$rank_id = $account->get_rank();
-
+	function leaving_sector($player)
+	{
 		// iterate over all scout drones in sector
-		$this->db->query('SELECT * FROM sector_has_forces ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' AND ' .
-						   'owner_id != '.$this->accountID.' AND ' .
-						   'scout_drones > 0');
-		while ($this->db->nextRecord()) {
-
-			$owner =& SmrPlayer::getPlayer($this->db->getField('owner_id'), $this->gameID);
-			if ($owner->alliance_id == $player->getAllianceID() && $player->getAllianceID() != 0) continue;
-
-			// we may skip player if this is a protected gal.
-			if ($this->is_protected_gal()) {
-
-				$curr_account =& SmrAccount::getAccount($this->db->getField('owner_id'));
-				if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran)) continue;
-
-			}
-
+		$forces =& $this->getForces();
+		foreach($forces as $force)
+		{
 			// send scout messages to user
-			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' leaving sector #'.$this->sectorID;
-			$player->sendMessage($owner->getAccountID(), $SCOUTMSG, $this->db->escapeString($message, false));
-			//insert into ticker
-			$db = new SMR_DB();
-			$time = time();
-			$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$owner->getAccountID().' AND game_id = '.$owner->getGameID().' AND type = \'scout\'');
-			if ($db->next_record()) {
-
-				$db->query('SELECT * FROM player_has_ticker WHERE account_id = '.$player->getAccountID().' AND type = \'block\'');
-				if (!$db->next_record()) $db->query('UPDATE player_has_ticker SET recent = ' . $db->escape_string($message, false) . ', time = '.$time.' WHERE account_id = '.$owner->getAccountID().' AND game_id = '.$owner->getGameID());
-
-			}
+			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' leaving sector #'.$this->getSectorID();
+			$force->ping($message,$player);
 
 		}
-
+		$db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' . 
+					'refresher = '.$this->getAccountID().' LIMIT 1');
 	}
 
 	function died_here(AbstractSmrPlayer &$player)
