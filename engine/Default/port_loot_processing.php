@@ -13,12 +13,13 @@ $amount = floor($amount);
 if ($amount <= 0)
 	create_error('You must enter an amount > 0');
 
+$good =& $port->getGood($good_id);
 // check if there are enough left at port
-if ($port->getGoodAmount($good_id) < $amount)
+if ($good['Amount'] < $amount)
    create_error('There isnt that much to loot.');
 
 // check if we have enough room for the thing we are going to buy
-if ($port->transaction[$good_id] == 'Buy' && $amount > $ship->getEmptyHolds())
+if ($good['TransactionType'] == 'Buy' && $amount > $ship->getEmptyHolds())
    create_error('Scanning your ships indicates you don\'t have enough free cargo bay!');
 
 // do we have enough turns?
