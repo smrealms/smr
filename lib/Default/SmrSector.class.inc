@@ -487,7 +487,7 @@ class SmrSector
 	public function setBattles($amount)
 	{
 		$this->battles = $amount;
-		$db->query('UPDATE sector SET '.$this->battles.' WHERE sector_id=' . $this->getSectorID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+		$this->db->query('UPDATE sector SET '.$this->battles.' WHERE sector_id=' . $this->getSectorID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
 	}
 	
 	public function decreaseBattles($amount)
