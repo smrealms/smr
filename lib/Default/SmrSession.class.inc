@@ -66,7 +66,7 @@ class SmrSession
 					else
 					{
 						--$value['RemainingPageLoads'];
-						self::$commonIDs[$value['CommonID']] = $key;
+						self::$commonIDs[@$value['CommonID']] = $key;
 					}
 				} unset($value);
 			}
