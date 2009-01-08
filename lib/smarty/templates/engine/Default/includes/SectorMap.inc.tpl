@@ -80,9 +80,9 @@
 							</div>
 						{/if}
 						{if $isLinkedSector}
-							<a href="{$Sector->getLocalMapHREF()}"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a>
+							<a href="{$Globals->getLocalMapHREF()}"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a>
 						{elseif $isCurrentSector}
-							<a href="{$Sector->getCurrentSectorHREF()}"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a>
+							<a href="{$Globals->getCurrentSectorHREF()}"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a>
 						{/if}
 					</div>
 				</td>

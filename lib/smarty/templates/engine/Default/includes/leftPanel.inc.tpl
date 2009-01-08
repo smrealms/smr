@@ -4,13 +4,13 @@
 <br />
 {if isset($GameID)}
 	{if !$ThisPlayer->isLandedOnPlanet()}
-		<a class="bold" href="{$ThisSector->getCurrentSectorHREF()}">Current Sector</a><br />
+		<a class="bold" href="{$Globals->getCurrentSectorHREF()}">Current Sector</a><br />
 	{/if}
 	{if isset($PlanetMainLink)}
 		<a class="bold" href="{$PlanetMainLink}">Planet Main</a><br />
 	{/if}
 	{if isset($LocalMapLink)}
-		<a class="bold" href="{$LocalMapLink}">Local Map</a><br />
+		<a class="bold" href="{$Globals->getLocalMapHREF()}">Local Map</a><br />
 	{/if}
 	{if isset($PlotCourseLink)}
 		<a class="bold" href="{$PlotCourseLink}">Plot A Course</a><br />

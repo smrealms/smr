@@ -249,7 +249,7 @@ if ($mine_owner_id) {
 	else {
 		$owner_id = $mine_owner_id;
 		include('forces_minefield_processing.php');
-		exit;
+		return;
 	}
 }
 
