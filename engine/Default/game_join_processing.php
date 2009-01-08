@@ -84,7 +84,7 @@ $last_turn_update = time() - $time_since_start;
 //if (SmrSession::$account_id >= 13 && SmrSession::$account_id <= 20)
 //  $alliance_id = 302;
 //else
-//  $alliance_id = 0;
+  $alliance_id = 0;
 
 $db->lock('player');
 
