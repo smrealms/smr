@@ -240,7 +240,7 @@ $player->setLastSectorID($sector->getSectorID());
 // Move the user around (Must be done while holding both sector locks)
 $player->takeTurns(15,15);
 //$player->sector_change();
-$player->detected = 'false';
+//$player->detected = 'false';
 $player->update();
 
 // We need to release the lock on our old sector
