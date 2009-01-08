@@ -130,32 +130,20 @@ class SmrSession
 		return self::$var[$sn];
 	}
 	
-	public static function addLink($container, $forceSN = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
+	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
 	{
 		if(!isset($container['Expires']))
 			$container['Expires'] = 0; // Lasts forever
 		if(!isset($container['RemainingPageLoads']))
 			$container['RemainingPageLoads'] = 1; // One refresh to destroy the link
-		if(isset($container['ID']))
+			
+		if($sn === false)
 		{
-			if($forceSN === false)
-			{
-				if(isset(self::$ids[$container['ID']]))
-					$sn = self::$ids[$container['ID']];
-				else // 8 chars is more than we need to avoid clashes
-				{
-					do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
-					self::$ids[$container['ID']] = $sn;
-				}
-			}
-			else
-			{
-				self::$ids[$container['ID']] = $forceSN;
-			}
+			$commonContainer = $container;
+			unset($commonContainer['Expires']);
+			unset($commonContainer['RemainingPageLoads']);
+			$sn = md5(serialize($commonContainer));
 		}
-		else if($forceSN === false)
-			do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
-		else $sn = $forceSN;
 		self::$var[$sn] = $container;
 		return $sn;
 	}
