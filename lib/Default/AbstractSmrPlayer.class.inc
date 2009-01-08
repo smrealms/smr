@@ -27,8 +27,6 @@ abstract class AbstractSmrPlayer
 //	var $game_speed;
 //	var $validated;
 //	var $out_of_game;
-//	var $last_ticker_update;
-//	var $ticker;
 //    var $safe_exit;
 //    var $detected;
 	protected $accountID;

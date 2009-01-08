@@ -124,8 +124,8 @@ if ($db->nf() == 0)
 // *
 // ******************************************
 
-$db->query('DELETE FROM player_has_ticker WHERE expires <= ' . time());
-$db->query('DELETE FROM cpl_tag WHERE expires <= ' . time() . ' AND expires > 0');
+$db->query('DELETE FROM player_has_ticker WHERE expires <= ' . TIME);
+$db->query('DELETE FROM cpl_tag WHERE expires <= ' . TIME . ' AND expires > 0');
 // get this user from db
 $account =& SmrAccount::getAccount(SmrSession::$account_id);
 
