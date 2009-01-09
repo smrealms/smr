@@ -100,7 +100,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID);
+			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(false));
 			$players = array();
 			while($db->nextRecord())
 			{
