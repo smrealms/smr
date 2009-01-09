@@ -47,12 +47,12 @@ $PHP_OUTPUT.=create_hq_menue();
 // secondary db object
 $db2 = new SMR_DB();
 
-if (isset($location_type_id)) {
-
+if (isset($location_type_id))
+{
 	$PHP_OUTPUT.=('<div align="center">We are at WAR with<br><br>');
 	$db->query('SELECT * FROM race_has_relation WHERE game_id = '.$player->getGameID().' AND race_id_1 = '.$race_id);
-	while($db->next_record()) {
-
+	while($db->next_record())
+	{
 		$relation = $db->f('relation');
 		$race_2 = $db->f('race_id_2');
 
@@ -69,10 +69,9 @@ if (isset($location_type_id)) {
 }
 
 $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'HQ\' AND claimer_id = 0 ORDER BY amount DESC');
-
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
-if ($db->nf()) {
-
+if ($db->nf())
+{
 	$PHP_OUTPUT.=('<div align="center">Most Wanted by Federal Government</div><br>');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
@@ -80,8 +79,8 @@ if ($db->nf()) {
 	$PHP_OUTPUT.=('<th>Bounty Amount</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
-
+	while ($db->next_record())
+	{
 		$id = $db->f('account_id');
 		$db2->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = '.$id);
 		if ($db2->next_record())
@@ -93,9 +92,34 @@ if ($db->nf()) {
 		$PHP_OUTPUT.=('</tr>');
 
 	}
-
 	$PHP_OUTPUT.=('</table>');
+}
 
+$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'HQ\' AND claimer_id = '.$player->getAccountID.' ORDER BY amount DESC');
+$PHP_OUTPUT.=('<p>&nbsp;</p>');
+if ($db->nf())
+{
+	$PHP_OUTPUT.=('<div align="center">Claimable Bounties</div><br>');
+	$PHP_OUTPUT.=create_table();
+	$PHP_OUTPUT.=('<tr>');
+	$PHP_OUTPUT.=('<th>Player Name</th>');
+	$PHP_OUTPUT.=('<th>Bounty Amount</th>');
+	$PHP_OUTPUT.=('</tr>');
+
+	while ($db->next_record())
+	{
+		$id = $db->f('account_id');
+		$db2->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = '.$id);
+		if ($db2->next_record())
+			$name = stripslashes($db2->f('player_name'));
+		$amount = $db->f('amount');
+		$PHP_OUTPUT.=('<tr>');
+		$PHP_OUTPUT.=('<td align="center"><font color=yellow>'.$name.'</font></td>');
+		$PHP_OUTPUT.=('<td align="center"><font color=red> ' . number_format($amount) . ' </font></td>');
+		$PHP_OUTPUT.=('</tr>');
+
+	}
+	$PHP_OUTPUT.=('</table>');
 }
 
 if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100) {
