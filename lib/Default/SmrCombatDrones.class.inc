@@ -40,7 +40,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	
 		return max(0,min(100,$modifiedAccuracy));
 	}
-	public function getMaxModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
+	public function getMaxModifiedAccuracyAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
 	{
 		return $this->getModifiedAccuracyAgainstForcesUsingRandom($weaponPlayer,$forces,self::MAX_CDS_RAND);
 	}
