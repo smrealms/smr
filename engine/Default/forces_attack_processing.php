@@ -74,7 +74,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'forces_attack.php';
 
 // If their target is dead there is no continue attack button
-if($forces->exist())
+if($forces->exists())
 	$container['owner_id'] = $var['owner_id'];
 else
 	$container['owner_id'] = 0;
