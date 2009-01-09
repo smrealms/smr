@@ -284,7 +284,7 @@ abstract class AbstractSmrPlayer
 	
 	public function getNextLevelPercentRemaining()
 	{
-		return 100 - $this->getThisLevelExperience();
+		return 100 - $this->getNextLevelPercentAcquired();
 	}
 	
 	public function getNextLevelExperience()
