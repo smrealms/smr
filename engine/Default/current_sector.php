@@ -96,10 +96,19 @@ if($player->hasTickers())
 	{
 		$text = '';
 		//get people who have blockers
+		echo 'SELECT * FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > '. TIME .' AND game_id = ' . $player->getGameID();
 		$db->query('SELECT * FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > '. TIME .' AND game_id = ' . $player->getGameID());
 		$temp=array();
 		$temp[] = 0;
 		while ($db->next_record()) $temp[] = $db->f('account_id');
+		echo 'SELECT message_text,send_time FROM message
+					WHERE account_id=' . $player->getAccountID() . '
+					AND game_id=' . $player->getGameID() . '
+					AND message_type_id=' . MSG_SCOUT . '
+					AND send_time>=' . $max . '
+					AND sender_id NOT IN (' . implode(',', $temp) . ')
+					ORDER BY send_time DESC
+					LIMIT 4';
 		$query = 'SELECT message_text,send_time FROM message
 					WHERE account_id=' . $player->getAccountID() . '
 					AND game_id=' . $player->getGameID() . '
@@ -110,7 +119,8 @@ if($player->hasTickers())
 					LIMIT 4';
 		$db->query($query);
 		unset($temp);
-		if ($db->nf()) {
+		if ($db->nf())
+		{
 			while($db->next_record())
 			{
 				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->f('send_time')),
