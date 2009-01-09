@@ -9,7 +9,7 @@
 	{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 	{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 	
-	<span style="color:yellow;">{$ActualDamage.Launched}</span>
+	<span style="color:yellow;">{$WeaponDamage.Launched}</span>
 	{if $ForceType == 'Mines'}
 		 mines kamikaze themselves against
 	{elseif $ForceType == 'Drones'}
