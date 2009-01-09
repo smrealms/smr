@@ -4,13 +4,18 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 if ($player->getNewbieTurns() > 0)
 	create_error('You are under newbie protection!');
 
+if($player->forceNAPAlliance($forceOwner))
+	create_error('You have a force NAP, you cannot attack these forces!');
+	
 //turns are taken b4 player fires.
 
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
 
 if ($forces->getMines() == 0)
-	create_error('No mines in sector! You should never be see this! Why are you looking at this! STOP! NOW! GO AWAY! PLEASE!!! STOP READING THIS NOW!!! PLEASE!!!');
+	create_error('No mines in sector!');
+
+$forceOwner =& $forces->getOwner();
 
 // delete plotted course
 $player->deletePlottedCourse();
@@ -18,10 +23,8 @@ $player->deletePlottedCourse();
 // send message if scouts are present
 if ($forces->hasSDs())
 {
-
 	$message = 'Your forces in sector '.$forces->getSectorID().' are being attacked by '.$player->getPlayerName();
 	$forces->ping($message, $player);
-
 }
 
 $force_msg = array();
