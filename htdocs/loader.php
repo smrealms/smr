@@ -213,7 +213,11 @@ function do_voodoo()
 	if($var['body'])
 	{
 		$PHP_OUTPUT = '';
-		include(get_file_loc($var['body']));
+		if($var['body']=='error.php') // infinite includes for error page
+			include(get_file_loc($var['body']));
+		else
+			include_once(get_file_loc($var['body']));
+			
 		if($PHP_OUTPUT!='')
 			$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
