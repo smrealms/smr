@@ -702,7 +702,7 @@ abstract class AbstractSmrShip
 	{
 		if($goodID!==false)
 		{
-			if($this->cargo[$goodID])
+			if(isset($this->cargo[$goodID]))
 				return $this->cargo[$goodID];
 			$cargo = 0;
 			return $cargo;
