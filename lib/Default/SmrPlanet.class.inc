@@ -259,6 +259,11 @@ class SmrPlanet
 		return $this->inhabitable_time<= TIME;
 	}
 	
+	public function isInhabitable()
+	{
+		return $this->owner_id>0;
+	}
+	
 	public function getExamineHREF()
 	{
 		if(!isset($this->examineHREF))
