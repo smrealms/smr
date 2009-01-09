@@ -14,7 +14,7 @@ if(!$forces->exists())
 	
 $forceOwner =& $forces->getOwner();
 
-if(!$player->forceNAPAlliance($forceOwner))
+if($player->forceNAPAlliance($forceOwner))
 	create_error('You have a force NAP, you cannot attack these forces!');
 
 // take the turns
