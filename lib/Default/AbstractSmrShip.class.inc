@@ -871,7 +871,7 @@ abstract class AbstractSmrShip
 	
 	public function isFederal()
 	{
-		return $curr_attacker_ship->getShipTypeID() == 20 || $curr_attacker_ship->getShipTypeID() == 21 || $curr_attacker_ship->getShipTypeID() == 22;
+		return $this->getShipTypeID() == 20 || $this->getShipTypeID() == 21 || $this->getShipTypeID() == 22;
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
