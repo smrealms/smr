@@ -18,6 +18,9 @@ require_once('config.specific.php');
  * Combat system
  */
 define('MAXIMUM_FLEET_SIZE', 10);
+define('MINE_ARMOUR', 3);
+define('CD_ARMOUR', 3);
+define('SD_ARMOUR', 3);
  
 
 /*
@@ -93,7 +96,6 @@ define('INCREASED_MAN_GADGET_FACTOR', 0.15);
 define('MR_FACTOR', 12);
 define('INCREASED_DAMAGE_GADGET_FACTOR', .07);
 define('WEAPON_DAMAGE_STAT_FACTOR', .025);
-define('CD_ARMOUR', 3);
 
 define('MIN_EXPERIENCE',0);
 define('MAX_EXPERIENCE',4294967296);

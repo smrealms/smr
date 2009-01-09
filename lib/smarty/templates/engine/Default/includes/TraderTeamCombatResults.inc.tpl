@@ -21,13 +21,13 @@
 					*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
 					*}{elseif $WeaponDamage.Armour > 0}which is deflected by their shields{else}but it cannot do any damage{/if}{*
 					*}{else}destroying {if $ActualDamage.Shield > 0}<span class="cyan">{$ActualDamage.Shield|number_format}</span> shields{if $DamageTypes == 3}, {elseif $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
-						*}{if $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs|number_format}</span> drones{if $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
+						*}{if $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs|number_format}</span> combat drones{if $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
 						*}{if $ActualDamage.Armour > 0}<span class="red">{$ActualDamage.Armour|number_format}</span> plates of armour{/if}{*
 			*}{/if}{/if}.
+			<br />
 			{if $ActualDamage.KillingShot}
 				{include_template template="includes/TraderCombatKillMessage.inc" assign=Template}{include file=$Template KillResults=$WeaponResults.KillResults}
 			{/if}
-			<br />
 		{/foreach}
 		{if isset($TraderResults.Drones)}
 			{assign var=Drones value=$TraderResults.Drones}
@@ -44,15 +44,15 @@
 						*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
 						*}{elseif $WeaponDamage.Armour > 0}which is deflected by their shields{else}but they cannot do any damage{/if}{*
 					*}{else}destroying {if $ActualDamage.Shield > 0}<span class="cyan">{$ActualDamage.Shield|number_format}</span> shields{if $DamageTypes == 3}, {elseif $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
-							*}{if $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs|number_format}</span> drones{if $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
+							*}{if $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs|number_format}</span> combat drones{if $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
 							*}{if $ActualDamage.Armour > 0}<span class="red">{$ActualDamage.Armour|number_format}</span> plates of armour{/if}{*
 					*}{/if}{*
 				*}{/if}{*
 			*}{/if}.
+			<br />
 			{if $ActualDamage.KillingShot}
 				{include_template template="includes/TraderCombatKillMessage.inc" assign=Template}{include file=$Template KillResults=$Drones.KillResults}
 			{/if}
-			<br />
 		{/if}
 	{/if}
 	{$ShootingPlayer->getName()} {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round.{if !$TraderResults.DeadBeforeShot} Maybe they should go back to the academy{/if}{/if}.<br /><br />

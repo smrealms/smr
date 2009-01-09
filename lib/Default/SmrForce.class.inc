@@ -23,6 +23,7 @@ class SmrForce
 	
 	protected $examineDropForcesHREF;
 	protected $examineAttackForcesHREF;
+	protected $attackForcesHREF;
 	protected $refreshHREF;
 	protected $dropSDHREF;
 	protected $takeSDHREF;
@@ -338,6 +339,19 @@ class SmrForce
 		return $this->examineAttackForcesHREF;
 	}
 	
+	public function getAttackForcesHREF()
+	{
+		if(!isset($this->attackForcesHREF))
+		{
+			$container = array();
+			$container['url']		= 'skeleton.php';
+			$container['body']		= 'forces_attack_processing.php';
+			$container['owner_id']	= $this->getOwnerID();
+			$this->attackForcesHREF = SmrSession::get_new_href($container);
+		}
+		return $this->attackForcesHREF;
+	}
+	
 	public function getRefreshHREF()
 	{
 		if(!isset($this->refreshHREF))
@@ -437,6 +451,111 @@ class SmrForce
 			self::$refreshAllHREF	= SmrSession::get_new_href($container);
 		}
 		return self::$refreshAllHREF;
+	}
+	
+	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer,$justMines)
+	{
+		return $this->shootPlayers(array($targetPlayer),$justMines);
+	}
+	
+	public function &shootPlayers(array &$targetPlayers,$justMines)
+	{
+		$results = array('TotalDamage' => 0);
+		if(!$this->exists())
+		{
+			$results['DeadBeforeShot'] = true;
+			return $results;
+		}
+		$results['DeadBeforeShot'] = false;
+		
+		
+		if($this->hasMines())
+		{
+			require_once(get_file_loc('SmrMines.class.inc'));
+			$thisMines = new SmrMines($this->getGameID(),$this->getMines());
+			$results['Results']['Mines'] =& $thisMines->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)]);
+			$results['TotalDamage'] += $results['Mines']['ActualDamage']['TotalDamage'];
+		}
+		
+		if(!$justMines)
+		{
+			if($this->hasCDs())
+			{
+				require_once(get_file_loc('SmrCombatDrones.class.inc'));
+				$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
+				$results['Results']['Drones'] =& $thisCDs->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)]);
+				$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+			}
+	
+			if($this->hasSDs())
+			{
+				require_once(get_file_loc('SmrScoutDrones.class.inc'));
+				$thisSDs = new SmrScoutDrones($this->getGameID(),$this->getSDs());
+				$results['Results']['Scouts'] =& $thisSDs->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)]);
+				$results['TotalDamage'] += $results['Scouts']['ActualDamage']['TotalDamage'];
+			}
+		}
+		
+		$results['ForcesDestroyed'] = $this->exists();
+		return $results;
+	}
+	
+	public function &doWeaponDamage(array $damage)
+	{
+		$alreadyDead = $this->exists();
+		$armourDamage = 0;
+		$cdDamage = 0;
+		$shieldDamage = 0;
+		if(!$alreadyDead)
+		{
+			$minesDamage = $this->doMinesDamage(min($damage['MaxDamage'],$damage['Armour']));
+			$damage['Armour'] -= $cdDamage;
+			$damage['MaxDamage'] -= $shieldDamage;
+			if(!$this->hasMines() && ($minesDamage == 0 || $damage['Rollover']))
+			{
+				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
+				$damage['Armour'] -= $cdDamage;
+				$damage['MaxDamage'] -= $cdDamage;
+				if(!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
+					$sdDamage = $this->doSDDamage(min($damage['MaxDamage'],$damage['Armour']));
+			}
+		}
+		$return = array(
+						'KillingShot' => !$alreadyDead && $this->exists(),
+						'TargetAlreadyDead' => $alreadyDead,
+						'Mines' => $minesDamage,
+						'NumMines' => $minesDamage/MINE_ARMOUR,
+						'HasMines' => $this->hasMines(),
+						'CDs' => $cdDamage,
+						'NumCDs' => $cdDamage/CD_ARMOUR,
+						'HasCDs' => $this->hasCDs(),
+						'SDs' => $sdDamage,
+						'NumSDs' => $sdDamage/SD_ARMOUR,
+						'HasSDs' => $this->hasSDs(),
+						'TotalDamage' => $minesDamage+$cdDamage+$sdDamage
+		);
+		return $return;
+	}
+	
+	protected function doMinesDamage($damage)
+	{
+		$actualDamage = min($this->getMines(),floor($damage/MINE_ARMOUR));
+		$this->takeMines($actualDamage);
+		return $actualDamage*MINE_ARMOUR;
+	}
+	
+	protected function doCDDamage($damage)
+	{
+		$actualDamage = min($this->getCDs(),floor($damage/CD_ARMOUR));
+		$this->decreaseCDs($actualDamage);
+		return $actualDamage*CD_ARMOUR;
+	}
+	
+	protected function doSDDamage($damage)
+	{
+		$actualDamage = min($this->getArmour(),floor($damage/SD_ARMOUR));
+		$this->takeSDs($actualDamage);
+		return $actualDamage*SD_ARMOUR;
 	}
 }
 ?>

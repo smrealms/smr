@@ -659,17 +659,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->hasChanged=true;
 //		$this->db->query('UPDATE player SET last_ship_mod = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
-
-	function getDisplayName()
-	{
-//NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
-			return get_colored_text($this->alignment,$this->playerName.' ('.$this->playerID.')');
-	}
-	function getLevelName()
-	{
-		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-		return $LEVELS_REQUIREMENTS[$this->getLevelID()]['Name'];
-	}
 	
 	function getPastMaintBought()
 	{
@@ -1451,12 +1440,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function killPlayerByForces(SmrForce &$forces)
 	{
-		global $PLAYERMSG;
 		
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
-		$this->sendMessage($owner->getAccountID(), $PLAYERMSG, $this->db->escapeString('Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID()),false);
-		$owner->sendMessage($this->getAccountID(), $PLAYERMSG, $this->db->escapeString('You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID()),false);
+		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, $this->db->escapeString('Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID()),false);
+		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, $this->db->escapeString('You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID()),false);
 
 		$news_message = $this->getDisplayName();
 		$db2 = new SMR_DB();
@@ -1962,6 +1950,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	}
 	
 	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
