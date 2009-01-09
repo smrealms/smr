@@ -3,9 +3,6 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 if ($player->getNewbieTurns() > 0)
 	create_error('You are under newbie protection!');
-
-if($player->forceNAPAlliance($forceOwner))
-	create_error('You have a force NAP, you cannot attack these forces!');
 	
 //turns are taken b4 player fires.
 
@@ -16,6 +13,9 @@ if ($forces->getMines() == 0)
 	create_error('No mines in sector!');
 
 $forceOwner =& $forces->getOwner();
+
+if($player->forceNAPAlliance($forceOwner))
+	create_error('You have a force NAP, you cannot attack these forces!');
 
 // delete plotted course
 $player->deletePlottedCourse();
