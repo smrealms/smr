@@ -557,5 +557,10 @@ class SmrForce
 		$this->takeSDs($actualDamage);
 		return $actualDamage*SD_ARMOUR;
 	}
+	
+	public function killForcesByPlayer(AbstractSmrPlayer &$killer)
+	{
+		
+	}
 }
 ?>
