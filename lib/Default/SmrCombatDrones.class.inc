@@ -130,7 +130,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	
 	public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
 	{
-		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
+		$return = array('Weapon' => &$this, 'TargetForces' => &$forces);
 		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces)) //Check if we miss
 		{
 			$return['Hit'] = false;
