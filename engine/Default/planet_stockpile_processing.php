@@ -9,7 +9,7 @@ if (!is_numeric($amount))
 $amount = floor($amount);
 
 if ($amount <= 0)
-	create_error('You must actually enter an ammount > 0!');
+	create_error('You must actually enter an amount > 0!');
 
 // get a planet from the sector where the player is in
 $planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$player->getSectorID());
@@ -34,8 +34,9 @@ if ($action == 'Ship') {
 	$account->log(11, 'Player takes '.$amount.' '.$good_name.' from planet.', $player->getSectorID());
 
 // transfer to planet
-} elseif ($action == 'Planet') {
-
+}
+elseif ($action == 'Planet')
+{
 	// do we want transfer more than we have?
 	if ($amount > $ship->getCargo($var['good_id']))
 		create_error('You can\'t store more than you carry!');
@@ -47,7 +48,6 @@ if ($action == 'Ship') {
 	// now transfer
 	$planet->stockpile[$var['good_id']] += $amount;
 	$ship->decreaseCargo($var['good_id'],$amount);
-
 }
 
 // update both
