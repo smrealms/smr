@@ -170,6 +170,11 @@ class SmrSector
 
 	}
 
+	function offersFederalProtection()
+	{
+		return $this->has_fed_beacon();
+	}
+
 	function has_bar() {
 
 		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_is_bar ' .
@@ -451,6 +456,24 @@ class SmrSector
 	public function &getTraders()
 	{
 		return SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID());
+	}
+
+	public function &getFightingTradersAgainstForces(AbstractSmrPlayer &$attackingPlayer, SmrForce &$defendingForces)
+	{
+		$forceOwner =& $defendingForces->getOwner();
+		if($attackingPlayer->forceNAPAlliance($forceOwner))
+			throw new Exception('The trader has a force NAP.');
+		$fightingPlayers = array('Attackers' => array(), 'Defenders' => array());
+		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
+		foreach($alliancePlayers as $accountID => $player)
+		{
+			if($player->canFight())
+			{
+				if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
+					$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+			}
+		}
+		return $fightingPlayers;
 	}
 
 	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer)
