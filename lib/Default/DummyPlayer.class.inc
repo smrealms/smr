@@ -276,6 +276,10 @@ class DummyPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
+	public function killPlayerByForces(SmrForce &$forces)
+	{
+	}
+	
 	public function &getShip()
 	{
 		require_once(get_file_loc('DummyShip.class.inc'));
