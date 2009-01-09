@@ -239,6 +239,7 @@ function do_voodoo()
 	{ //only save if we have the lock.
 		SmrShip::saveShips();
 		SmrPlayer::savePlayers();
+		SmrForce::saveForces();
 		release_lock($lock);
 	}
 	SmrSession::update();
