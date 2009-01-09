@@ -18,9 +18,9 @@ require_once('config.specific.php');
  * Combat system
  */
 define('MAXIMUM_FLEET_SIZE', 10);
-define('MINE_ARMOUR', 3);
+define('MINE_ARMOUR', 20);
 define('CD_ARMOUR', 3);
-define('SD_ARMOUR', 3);
+define('SD_ARMOUR', 20);
  
 
 /*
