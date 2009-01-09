@@ -213,7 +213,7 @@ function do_voodoo()
 	if($var['body'])
 	{
 		$PHP_OUTPUT = '';
-		include_once(get_file_loc($var['body']));
+		include(get_file_loc($var['body']));
 		if($PHP_OUTPUT!='')
 			$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
