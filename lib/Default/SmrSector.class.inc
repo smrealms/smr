@@ -324,6 +324,11 @@ class SmrSector
 		return $this->galaxyName;
 	}
 	
+	public function getNumberOfLinks()
+	{
+		return count($this->getLinks());
+	}
+	
 	public function getLinks()
 	{
 		return $this->links;

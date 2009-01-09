@@ -31,22 +31,24 @@ class SmrMines extends AbstractSmrCombatWeapon
 		return $modifiedAccuracy;
 	}
 	
-	public function getModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer)
+	public function getModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
 	{
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,mt_rand(1,7) * mt_rand(1,7));
+		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,mt_rand(1,7) * mt_rand(1,7),$minesAreAttacker);
 	}
 	
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer, $random)
+	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer, $random,$minesAreAttacker=false)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
-	
+		if($minesAreAttacker)
+			$modifiedAccuracy /= SmrSector::getSector($forces->getGameID(),$forces->getSectorID(),$targetPlayer->getAccountID())->getNumberOfLinks();
+		
 		return max(0,min(100,$modifiedAccuracy));
 	}
 	
-	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer)
+	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
 	{
-		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,49);
+		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,49,$minesAreAttacker);
 	}
 	
 	public function &getModifiedDamage()
@@ -67,7 +69,7 @@ class SmrMines extends AbstractSmrCombatWeapon
 		return $return;
 	}
 	
-	public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
+	public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
 	{
 		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 		{
@@ -81,7 +83,7 @@ class SmrMines extends AbstractSmrCombatWeapon
 			$damage['Shield'] /= 2;
 			$damage['Armour'] /= 2;
 		}
-		$damage['Launched'] = ceil($this->getNumberOfMines() * $this->getModifiedForceAccuracyAgainstPlayer($forces,$targetPlayer) / 100);
+		$damage['Launched'] = ceil($this->getNumberOfMines() * $this->getModifiedForceAccuracyAgainstPlayer($forces,$targetPlayer,$minesAreAttacker) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
@@ -100,11 +102,21 @@ class SmrMines extends AbstractSmrCombatWeapon
 		return $return;
 	}
 	
-	public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
+	public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
 		$this->doForceDamageToPlayer($return, $forces, $targetPlayer);
 		$forces->takeMines($return['WeaponDamage']['Launched']);
+		return $return;
+	}
+	
+	protected function &doForceDamageToPlayer(array &$return, SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces,$targetPlayer,$minesAreAttacker);
+		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);
 		return $return;
 	}
 }

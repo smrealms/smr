@@ -466,7 +466,7 @@ class SmrForce
 		return $this->shootPlayers(array($targetPlayer),$justMines);
 	}
 	
-	public function &shootPlayers(array &$targetPlayers,$justMines)
+	public function &shootPlayers(array &$targetPlayers,$minesAreAttacker)
 	{
 		$results = array('TotalDamage' => 0);
 		if(!$this->exists())
@@ -481,11 +481,11 @@ class SmrForce
 		{
 			require_once(get_file_loc('SmrMines.class.inc'));
 			$thisMines = new SmrMines($this->getGameID(),$this->getMines());
-			$results['Results']['Mines'] =& $thisMines->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)]);
+			$results['Results']['Mines'] =& $thisMines->shootPlayerAsForce($this, $targetPlayers[array_rand($targetPlayers)],$minesAreAttacker);
 			$results['TotalDamage'] += $results['Results']['Mines']['ActualDamage']['TotalDamage'];
 		}
 		
-		if(!$justMines)
+		if(!$minesAreAttacker)
 		{
 			if($this->hasCDs())
 			{
