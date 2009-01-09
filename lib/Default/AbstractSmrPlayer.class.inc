@@ -279,6 +279,8 @@ abstract class AbstractSmrPlayer
 	
 	public function getNextLevelPercentAcquired()
 	{
+		if($this->getNextLevelExperience() == $this->getThisLevelExperience())
+			return 100;
 		return max(0,min(100,round(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience())*100)));
 	}
 	
@@ -290,6 +292,8 @@ abstract class AbstractSmrPlayer
 	public function getNextLevelExperience()
 	{
 		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+		if(isset($LEVELS_REQUIREMENTS[$this->getLevelID()+1]))
+			return $this->getThisLevelExperience(); //Return current level experience if on last level.
 		return $LEVELS_REQUIREMENTS[$this->getLevelID()+1]['Requirement'];
 	}
 	
