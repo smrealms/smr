@@ -38,10 +38,10 @@ if ($action == 'Save and resend validation code') {
                    'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . time() . ')');
 
   mail($email, 'Your validation code!',
-    'You changed your email address registered within SMR and need to revalidate now!'.EOL.'\r'.EOL.'\r' .
-    '   Your new validation code is: '.$account->validation_code.EOL.'\r'.EOL.'\r' .
-    'The Space Merchant Realms server is on the web at '.$URL.'/.'.EOL.'\r' .
-    'You\'ll find a quick how-to-play here '.$URL.'/manual.php'.EOL.'\r' .
+    'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
+    '   Your new validation code is: '.$account->validation_code.EOL.EOL.
+    'The Space Merchant Realms server is on the web at '.$URL.'/.'.EOL.
+    'You\'ll find a quick how-to-play here '.$URL.'/manual.php'.EOL.
     'Please verify within the next 7 days or your account will be automatically deleted.',
     'From: support@smrealms.de');
 
