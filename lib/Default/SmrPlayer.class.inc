@@ -1655,6 +1655,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			$this->tickers = array();
 			//get ticker info
+			echo 'SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL .' AND expires > ' . TIME;
 			$this->db->query('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL .' AND expires > ' . TIME);
 			while($this->db->nextRecord())
 				$this->tickers[$this->db->getField('type')] = array( 'Type' => $this->db->getField('type'),
