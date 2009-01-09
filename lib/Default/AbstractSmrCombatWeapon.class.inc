@@ -73,6 +73,8 @@ abstract class AbstractSmrCombatWeapon
 	{
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstForces($weaponPlayer,$forces);
 		$return['ActualDamage'] =& $forces->doWeaponDamage($return['WeaponDamage']);
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $forces->killForcesByPlayer($weaponPlayer);
 		return $return;
 	}
 	
