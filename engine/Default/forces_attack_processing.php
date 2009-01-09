@@ -53,7 +53,7 @@ $results['Forces'] =& $forces->shootPlayers($attackers,false);
 foreach($attackers as &$attacker)
 {
 	$playerResults =& $attacker->shootForces($forces);
-	$results['Attackers']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
+	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($attacker);
 
