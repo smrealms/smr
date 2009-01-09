@@ -95,7 +95,7 @@ if ($db->nf())
 	$PHP_OUTPUT.=('</table>');
 }
 
-$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'HQ\' AND claimer_id = '.$player->getAccountID.' ORDER BY amount DESC');
+$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'HQ\' AND claimer_id = '.$player->getAccountID().' ORDER BY amount DESC');
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 if ($db->nf())
 {
