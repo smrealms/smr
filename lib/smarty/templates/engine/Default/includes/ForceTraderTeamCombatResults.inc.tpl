@@ -21,9 +21,9 @@
 					*}{if $WeaponDamage.Shield > 0}which proves ineffective against the {if $ActualDamage.HasMines}mines{elseif $ActualDamage.HasCDs}combat drones{else}scout drones{/if}{*
 					*}{elseif $WeaponDamage.Armour > 0}which is deflected by the {if $ActualDamage.HasMines}mines{elseif $ActualDamage.HasCDs}combat drones{else}scout drones{/if} shields{*
 					*}{else}but it cannot do any damage{/if}{*
-				*}{else}destroying {if $ActualDamage.Shield > 0}<span class="cyan">{$ActualDamage.NumMines|number_format}</span> mines{if $DamageTypes == 3}, {elseif $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
+				*}{else}destroying {if $ActualDamage.NumMines > 0}<span class="cyan">{$ActualDamage.NumMines|number_format}</span> mines{if $DamageTypes == 3}, {elseif $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
 					*}{if $ActualDamage.NumCDs > 0}<span class="yellow">{$ActualDamage.NumCDs|number_format}</span> combat drones{if $DamageTypes == 2} and {/if}{assign var=DamageTypes value=$DamageTypes-1}{/if}{*
-					*}{if $ActualDamage.Armour > 0}<span class="red">{$ActualDamage.NumSDs|number_format}</span> scout drones{/if}{*
+					*}{if $ActualDamage.NumSDs > 0}<span class="red">{$ActualDamage.NumSDs|number_format}</span> scout drones{/if}{*
 			*}{/if}{/if}.
 			<br />
 			{if $ActualDamage.KillingShot}
