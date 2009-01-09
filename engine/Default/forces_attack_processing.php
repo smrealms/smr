@@ -11,6 +11,11 @@ $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var
 
 if(!$forces->exists())
 	create_error('These forces no longer exist.');
+	
+$forceOwner =& $forces->getOwner();
+
+if(!$player->forceNAPAlliance($forceOwner))
+	create_error('You have a force NAP, you cannot attack these forces!');
 
 // take the turns
 $player->takeTurns(3,1);
@@ -60,7 +65,7 @@ foreach($attackers as &$attacker)
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $forceOwner->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
