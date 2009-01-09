@@ -15,7 +15,7 @@
 			{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			{if $ActualDamage.NumSDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			
-			{$ShootingPlayer->getName()} fires their {$ShootingWeapon->getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} the forces{*
+			{$ShootingPlayer->getName()} fires their {$ShootingWeapon|var_dump} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} the forces{*
 			*}{if !$ActualDamage.TargetAlreadyDead} {*
 				*}{if !$ShotHit}and misses{elseif $ActualDamage.TotalDamage == 0}{*
 					*}{if $WeaponDamage.Shield > 0}which proves ineffective against the {if $ActualDamage.HasMines}mines{elseif $ActualDamage.HasCDs}combat drones{else}scout drones{/if}{*
