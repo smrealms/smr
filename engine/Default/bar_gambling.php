@@ -138,9 +138,8 @@ if ($action == 'lotto') {
 	$decks = 1;
 	$max_cards = 52 * $decks;
 	//commonly used functions for bj
-	function draw_card($curr_cards) {
-	
-		global $decks;
+	function draw_card($decks,$curr_cards)
+	{
 		//get a card to give this person
 		//get real values of $curr_cards (1-52)
 		$real_cards = array();
@@ -186,11 +185,10 @@ if ($action == 'lotto') {
 		elseif ($result == 13) $result = 'K';
 		$result = $result.'-'.$suit.'-'.$down;
 		return $result;
-		
 	}
 	
-	function get_value($deck) {
-		
+	function get_value($deck)
+	{
 		//this function used to find the value of a player's/bank's cards
 		//if this is just one card push it into an array so we can run the func
 		if (!is_array($deck)) $deck = array($deck);
@@ -231,12 +229,13 @@ if ($action == 'lotto') {
 		$return=('<td>');
 		//lets try and echo cards
 		$return.=('<table style="border:1px solid green"><tr><td><table><tr><td valign=top align=left height='.$card_height.' width='.$card_width.'>');
-		if ($show) $return.=('<h1>$first<img src="'.$dir.'/'.$second.'.gif"></h1></td></tr>');
+		if ($show) $return.=('<h1>'.$first.'<img src="'.$dir.'/'.$second.'.gif"></h1></td></tr>');
 		else $return.=('</td></tr>');
 		$return.=('<tr><td valign=bottom align=right height='.$card_height.' width='.$card_width.'>');
 		if ($show) $return.=('<h1><img src="'.$dir.'/'.$second.'.gif">'.$first.'</h1></td></tr></table>');
 		else $return.=('</td></tr></table>');
 		$return.=('</td></tr></table></td>');
+		return $return;
 	}
 	
 	function check_for_win($comp, $play) {
@@ -302,19 +301,19 @@ if ($action == 'lotto') {
 		$ai_aces = 0;
 		if (isset($var['cards'])) $cards = $var['cards'];
 		if (empty($cards)) $cards = array();
-		$player_curr_card = draw_card($cards);
+		$player_curr_card = draw_card($decks,$cards);
 		$player_card[] = $player_curr_card;
 		$cards[] = $player_curr_card;
 		if (sizeof($cards) >= $max_cards) $cards = array();
-		$ai_curr_card = draw_card($cards);
+		$ai_curr_card = draw_card($decks,$cards);
 		$ai_card[] = $ai_curr_card;
 		$cards[] = $ai_curr_card;
 		if (sizeof($cards) >= $max_cards) $cards = array();
-		$player_curr_card = draw_card($cards);
+		$player_curr_card = draw_card($decks,$cards);
 		$player_card[] = $player_curr_card;
 		$cards[] = $player_curr_card;
 		if (sizeof($cards) >= $max_cards) $cards = array();
-		$ai_curr_card = draw_card($cards);
+		$ai_curr_card = draw_card($decks,$cards);
 		$ai_card[] = $ai_curr_card;
 		$cards[] = $ai_curr_card;
 		if (sizeof($cards) >= $max_cards) $cards = array();
@@ -333,7 +332,7 @@ if ($action == 'lotto') {
 	}
 	if ($do == 'HIT') {
 		
-		$player_curr_card = draw_card($cards);
+		$player_curr_card = draw_card($decks,$cards);
 		$player_card[] = $player_curr_card;
 		$cards[] = $player_curr_card;
 		if (sizeof($cards) >= $max_cards) $cards = array();
@@ -407,7 +406,7 @@ if ($action == 'lotto') {
 		} else
 			while (get_value($ai_card) < 17) {
 			
-				$ai_curr_card = draw_card($cards);
+				$ai_curr_card = draw_card($decks,$cards);
 				$ai_card[] = $ai_curr_card;
 				$cards[] = $ai_curr_card;
 				if (sizeof($cards) >= $max_cards) $cards = array();
