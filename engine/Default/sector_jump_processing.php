@@ -108,12 +108,12 @@ if ($sector->getGalaxyID() != $target_sector->getGalaxyID())
 {
 	//we need to see if they can jump this many gals
 	$db->query('SELECT * FROM warp WHERE game_id = '.$player->getGameID());
-	while($db->next_record()) {
-
+	while($db->next_record())
+	{
 		$warp_sector1 =& SmrSector::getSector(SmrSession::$game_id, $db->f('sector_id_1'), SmrSession::$account_id);
 		$warp_sector2 =& SmrSector::getSector(SmrSession::$game_id, $db->f('sector_id_2'), SmrSession::$account_id);
 
-		if ($warp_sector1->getGalaxyID() == $target_sector->getGalaxyID() && $warp_sector2->galaxy_id == $sector->getGalaxyID())
+		if ($warp_sector1->getGalaxyID() == $target_sector->getGalaxyID() && $warp_sector2->getGalaxyID() == $sector->getGalaxyID())
 			$allowed = true;
 		if ($warp_sector1->getGalaxyID() == $sector->getGalaxyID() && $warp_sector2->getGalaxyID() == $target_sector->getGalaxyID())
 			$allowed = true;
