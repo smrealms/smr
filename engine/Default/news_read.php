@@ -54,7 +54,7 @@ if (empty($min_news) || empty($max_news)) {
 }
 elseif ($min_news > $max_news) {
 
-		$PHP_OUTPUT.=create_echo_error('The first number must be lower than the second number!');
+		create_error('The first number must be lower than the second number!');
 		return;
 
 }

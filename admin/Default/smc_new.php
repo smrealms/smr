@@ -229,7 +229,7 @@ while ($db->next_record()) {
 	if ($amount == 0)
 		$PHP_OUTPUT.=(',');
 	//next line
-	$PHP_OUTPUT.=(''.EOL);
+	$PHP_OUTPUT.=(EOL);
 }
 
 //now sectors
@@ -308,7 +308,7 @@ while ($db->next_record()) {
 			$alliance = 'None';
 		$PHP_OUTPUT.=('.$db->escapeString($level:$alliance');
 	}
-	$PHP_OUTPUT.=(''.EOL);
+	$PHP_OUTPUT.=(EOL);
 		
 }
 

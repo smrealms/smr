@@ -3,7 +3,7 @@
 $num_creds = $account->get_credits();
 if ($num_creds == 0) {
 	
-	$PHP_OUTPUT.=create_echo_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 	return;
 	
 }
@@ -25,7 +25,7 @@ if ($action == 'Paint a logo (3 SMR Credits)') {
 		// check if we really have a jpg
 		if ($size[2] < 1 || $size[2] > 3) {
 			
-			$PHP_OUTPUT.=create_echo_error('Only gif, jpg or png-image allowed! s = '.$size[2]);
+			create_error('Only gif, jpg or png-image allowed! s = '.$size[2]);
 			return;
 			
 		}
@@ -33,7 +33,7 @@ if ($action == 'Paint a logo (3 SMR Credits)') {
 		// check if width > 200
 		if ($size[0] > 200) {
 			
-			$PHP_OUTPUT.=create_echo_error('Image is wider than 200 pixels!');
+			create_error('Image is wider than 200 pixels!');
 			return;
 			
 		}
@@ -41,13 +41,13 @@ if ($action == 'Paint a logo (3 SMR Credits)') {
 		// check if height > 30
 		if ($size[1] > 30) {
 			
-			$PHP_OUTPUT.=create_echo_error('Image is higher than 30 pixels!');
+			create_error('Image is higher than 30 pixels!');
 			return;
 		
 		}
 		if (filesize($_FILES['photo']['tmp_name']) > 20560 && SmrSession::$account_id >= 100) {
 			
-			$PHP_OUTPUT.=create_echo_error('Image is bigger than 20k');
+			create_error('Image is bigger than 20k');
 			return;
 			
 		}
@@ -65,7 +65,7 @@ if ($action == 'Paint a logo (3 SMR Credits)') {
 		
 	} else {
 		
-		$PHP_OUTPUT.=create_echo_error('Error while uploading');
+		create_error('Error while uploading');
 		return;
 		
 	}
@@ -106,9 +106,9 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 			if (stristr($name, $check)) {
 			
 				$check .= '*>';
-				if ($check != '<h*>' && $check != '</marquee>?*>') $PHP_OUTPUT.=create_echo_error(htmlentities($check, ENT_NOQUOTES) . ' tag is not allowed in ship names.<br><small>If you believe the name is appropriate please contact an admin.</small>');
-				elseif ($check == '</marquee>?*>') $PHP_OUTPUT.=create_echo_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
-				else $PHP_OUTPUT.=create_echo_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES) . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES) . ' tag which is not needed.');
+				if ($check != '<h*>' && $check != '</marquee>?*>') create_error(htmlentities($check, ENT_NOQUOTES) . ' tag is not allowed in ship names.<br><small>If you believe the name is appropriate please contact an admin.</small>');
+				elseif ($check == '</marquee>?*>') create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
+				else create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES) . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES) . ' tag which is not needed.');
 				return;
 		
 			}
@@ -117,14 +117,14 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 		list ($first, $second) = split ('</marquee>', $name);
 		if ($second != '') {
 			
-			$PHP_OUTPUT.=create_echo_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
+			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
 			return;
 			
 		}
 		list ($first, $second) = split ('<marquee>', $name);
 		if ($first != '' && $second != '') {
 			
-			$PHP_OUTPUT.=create_echo_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES) . ' tag.');
+			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES) . ' tag.');
 			return;
 			
 		}
@@ -152,13 +152,13 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 		}
 		if ($open > 0) {
 			
-			$PHP_OUTPUT.=create_echo_error('You must close all HTML tags.  (i.e a &lt;font color=red&gt tag must have a &lt;/font&gt; tag somewhere after it).<br><small>If you think you received this message in error please contact an admin.');
+			create_error('You must close all HTML tags.  (i.e a &lt;font color=red&gt tag must have a &lt;/font&gt; tag somewhere after it).<br><small>If you think you received this message in error please contact an admin.');
 			return;
 			
 		}
 		if ($close > $real_open || $ha || $open < 0) {
 			
-			$PHP_OUTPUT.=create_echo_error('You can not close tags that do not exist!<br><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
+			create_error('You can not close tags that do not exist!<br><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
 			return;
 			
 		}
@@ -182,13 +182,13 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	if (!$done)	$orig_name .= '<br>';
 	if (strlen($orig_name) > $max_len) {
 		
-		$PHP_OUTPUT.=create_echo_error('That won\'t fit on your ship!');
+		create_error('That won\'t fit on your ship!');
 		return;
 		
 	}
 	if ($num_creds < $cred_cost) {
 	
-		$PHP_OUTPUT.=create_echo_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 		return;
 		
 	}
@@ -196,7 +196,7 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	for ($i = 0; $i < strlen($orig_name); $i++)
 		if (ord($orig_name[$i]) < 32 || ord($orig_name[$i]) > 127 || in_array(ord($orig_name[$i]), array(37,39,59,92,63,42))) {
 			
-			$PHP_OUTPUT.=create_echo_error('The ship name contains invalid characters! ' . chr(ord($orig_name[$i])));
+			create_error('The ship name contains invalid characters! ' . chr(ord($orig_name[$i])));
 			return;
 			
 		}

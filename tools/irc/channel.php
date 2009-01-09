@@ -67,7 +67,7 @@ function channel_nick($fp, $rdata) {
 				   'SET nick = '.$db->escapeString($msg[4]).' ' .
 				   'WHERE nick = '.$db->escapeString($msg[1]).' AND ' .
 						 'user = '.$db->escapeString($msg[2]).' AND ' .
-						 'host = '.$db->escapeString($msg[3]).'');
+						 'host = '.$db->escapeString($msg[3]));
 
 		// update seen stats
 		$db->query('SELECT * FROM irc_seen ' .

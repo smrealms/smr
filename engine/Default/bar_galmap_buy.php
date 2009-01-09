@@ -5,7 +5,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 $num_creds = $account->get_credits();
 if ($num_creds < 2) {
 	
-	$PHP_OUTPUT.=create_echo_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+	$PHP_OUTPUT.=create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 	return;
 	
 }
@@ -16,7 +16,7 @@ if (isset($var['process'])) {
 	$gal_id = $_REQUEST['gal_id'];
 	if ($gal_id == 0) {
 		
-		$PHP_OUTPUT.=create_echo_error('You must select a galaxy to buy the map of!');
+		create_error('You must select a galaxy to buy the map of!');
 		return;
 		
 	}
@@ -37,7 +37,7 @@ if (isset($var['process'])) {
 	// Have they already got this map? (Are there any unexplored sectors?
 	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id.' LIMIT 1');
 	if(!$db->next_record()) {
-		$PHP_OUTPUT.=create_echo_error('You already have maps of this galaxy!');
+		create_error('You already have maps of this galaxy!');
 		return;
 	}
 	

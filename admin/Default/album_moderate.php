@@ -40,7 +40,7 @@ if (empty($account_id))
 // check if input is numeric
 if (!is_numeric($account_id)) {
 
-	$PHP_OUTPUT.=create_echo_error('Please enter an account ID, which has to be nummeric!');
+	create_error('Please enter an account ID, which has to be numeric!');
 	return;
 
 }
@@ -100,12 +100,12 @@ if (empty($account_id)) {
 	$PHP_OUTPUT.=create_submit('Disable');
 	$PHP_OUTPUT.=('</td>');
 
-	$default_email = 'Dear Photo Album User,\n'.EOL .
+	$default_email = 'Dear Photo Album User,'.EOL.EOL .
 					 'You have received this email as notification that the picture you submitted to the Space Merchant Realms Photo Album has been temporarily disabled due to a Photo Album Rules violation.'.EOL .
 					 'Please visit '.$URL.'/album.php or log into the SMR site to upload a new picture.'.EOL .
 					 'Reply to this email when you have uploaded a new picture so we may re-enable your pic.'.EOL .
 					 'Note: Please allow up to 48 hours for changes to occur.'.EOL .
-					 'Thanks,\n'.EOL .
+					 'Thanks,'.EOL.EOL .
 					 'Admin Team';
 
 	$PHP_OUTPUT.=('<td colspan="2"><img src="'.$URL.'/upload/'.$account_id.'"></td>');

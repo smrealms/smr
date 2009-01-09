@@ -12,9 +12,8 @@ $db->query('SELECT account_has_logs.account_id as account_id, login, player_name
 			GROUP BY account_has_logs.account_id');
 if (!$db->nf()) {
 
-	$PHP_OUTPUT.=create_echo_error('There are no log entries at all!');
+	$PHP_OUTPUT.=create_error('There are no log entries at all!');
 	return;
-
 }
 
 while ($db->next_record()) {
@@ -29,7 +28,7 @@ while ($db->next_record()) {
 $db->query('SELECT * FROM anon_bank_transactions WHERE account_id IN ('.$account_list.') ORDER BY anon_id');
 if (!$db->nf()) {
 
-	$PHP_OUTPUT.=create_echo_error('None of the entries in all the logfiles contains anonymous bank transaction!');
+	$PHP_OUTPUT.=create_error('None of the entries in all the logfiles contains anonymous bank transaction!');
 	return;
 
 }

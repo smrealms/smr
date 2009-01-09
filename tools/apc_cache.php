@@ -23,13 +23,13 @@ function compile_files($dir,$exts=array('*.php'))
 	
 	foreach($exts as $ext)
 	{
-		echo "\n\n".'Compiling '.$ext."\n";
+		echo "'.EOL.EOL.'".'Compiling '.$ext."'.EOL.'";
 		$files = glob($dir . DIRECTORY_SEPARATOR . $ext);
 		if (is_array($files) && count($files) > 0)
 		{
 			while(list(,$v) = each($files))
 			{
-				echo 'Compiling '.$v."\n";
+				echo 'Compiling '.$v."'.EOL.'";
 				apc_compile_file($v);
 			}
 		}

@@ -41,7 +41,7 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (DEBUG)';
 //				var debugwindow;
 //				debugwindow = window.open('', 'T_'.md5($_SERVER['HTTP_HOST']), 'menubar=no,scrollbars=yes,resizable=yes,width=640,height=480');
 //				debugwindow.document.open();
-//				debugwindow.document.write(''.$db->escape_string($output));
+//				debugwindow.document.write($db->escape_string($output));
 //				debugwindow.document.close();
 //				debugwindow.document.title = 'Debugwindow for : http://'.$debugwindow_origin;
 //				debugwindow.focus();
@@ -55,7 +55,7 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (DEBUG)';
 //				var debugwindow;
 //				debugwindow = window.open('', 'S_'.md5($_SERVER['HTTP_HOST']), 'menubar=yes,scrollbars=yes,resizable=yes,width=640,height=480');
 //				debugwindow.document.open();
-//				debugwindow.document.write(''.$db->escape_string( serialize($array) ));
+//				debugwindow.document.write($db->escape_string( serialize($array) ));
 //				debugwindow.document.close();
 //				debugwindow.document.title = 'Debugwindow for : http://'.$debugwindow_origin;
 //				debugwindow.focus();
@@ -180,14 +180,14 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (DEBUG)';
 //						$value = nl2br($value);
 //
 //						/* use different color for string background */
-//						if(strstr($value, ''.EOL)) $value_style_content = 'background:#ECEDFE;';
+//						if(strstr($value, EOL)) $value_style_content = 'background:#ECEDFE;';
 //
 //					}
 //					break;
 //			}
 //
 //			$this->output .= '<tr>';
-//			$this->output .= '<td nowrap='nowrap' align=''.$this->keyalign style='padding:0px 3px 0px 3px;background-color:#'.$key_bg_color.';'.$key_style.';font:bold '.$this->fontsize.' '.$this->fontfamily.';' title=''.gettype( $key ).'['.$type_title.']'>';
+//			$this->output .= '<td nowrap='nowrap' align=$this->keyalign style='padding:0px 3px 0px 3px;background-color:#'.$key_bg_color.';'.$key_style.';font:bold '.$this->fontsize.' '.$this->fontfamily.';' title=gettype( $key ).'['.$type_title.']'>';
 //			$this->output .= $this->_handle_whitespace( $key );
 //			$this->output .= '</td>';
 //			$this->output .= '<td nowrap='nowrap' style='background-color:#'.$this->value_bg_color.';font: '.$this->fontsize.' '.$this->fontfamily.'; color:black;'>';
@@ -195,7 +195,7 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (DEBUG)';
 //
 //			# value output
 //			if($type == 'array' && preg_match('/#RAS/', $key) ) { /* only used for special recursive array constructs which i use sometimes */
-//				$this->output .= '<div style=''.$value_style_box>recursion!</div>';
+//				$this->output .= '<div style=$value_style_box>recursion!</div>';
 //			} elseif($type == 'array') {
 //				if( ! empty( $value ) ) {
 //					$this->echo_a( $value, TRUE, $key_bg_color );
@@ -206,14 +206,14 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (DEBUG)';
 //				if( $this->show_object_vars ) {
 //					$this->echo_a( get_object_vars( $value ), TRUE, $key_bg_color );
 //				} else {
-//					$this->output .= '<div style=''.$value_style_box>OBJECT</div>';
+//					$this->output .= '<div style=$value_style_box>OBJECT</div>';
 //				}
 //			} elseif($type == 'boolean') {
-//				$this->output .= '<div style=''.$value_style_box title=''.$type>'.($value ? 'TRUE' : 'FALSE').'</div>';
+//				$this->output .= '<div style=$value_style_box title=$type>'.($value ? 'TRUE' : 'FALSE').'</div>';
 //			} elseif($type == 'NULL') {
-//				$this->output .= '<div style=''.$value_style_box title=''.$type>NULL</div>';
+//				$this->output .= '<div style=$value_style_box title=$type>NULL</div>';
 //			} else {
-//				$this->output .= '<div style=''.$value_style_box title=''.$type><span style=''.$value_style_content>'.$value.'</span></div>';
+//				$this->output .= '<div style=$value_style_box title=$type><span style=$value_style_content>'.$value.'</span></div>';
 //			}
 //
 //			$this->output .= '</td>';

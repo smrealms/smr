@@ -2,11 +2,11 @@
 
 $num_creds = $account->get_credits();
 
-if (isset($var['process'])) {
-	
+if (isset($var['process']))
+{
 	if ($num_creds == 0) {
-		$PHP_OUTPUT.=create_echo_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
-		return;	
+		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+		return;
 	}
 	$type = $_REQUEST['type'];
 	$expires = TIME + (5*24*60*60);

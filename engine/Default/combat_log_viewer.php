@@ -87,7 +87,7 @@ if(isset($display_id)){
 
 	if($db->next_record()) {
 		$smarty->assign('CombatLogSector',$db->f('sector_id'));
-		$smarty->assign('CombatLogTimestamp',date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$db->f('timestamp')));
+		$smarty->assign('CombatLogTimestamp',date('n/j/Y&'.EOL.'\b\s\p;g:i:s&'.EOL.'\b\s\p;&'.EOL.'\b\s\p;A',$db->f('timestamp')));
 		$results = unserialize(gzuncompress($db->f('result')));
 		$smarty->assign_by_ref('TraderCombatResults',$results);
 	}
@@ -208,7 +208,7 @@ if($action != 5) {
 				$defender_name = $players[$info[1]];
 			else
 				$defender_name = 'Unknown Defender';
-			$PHP_OUTPUT.= '<td class="shrink nowrap">' . date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$info[2]) . '</td>';
+			$PHP_OUTPUT.= '<td class="shrink nowrap">' . date('n/j/Y&'.EOL.'\b\s\p;g:i:s&'.EOL.'\b\s\p;&'.EOL.'\b\s\p;A',$info[2]) . '</td>';
 			$PHP_OUTPUT.= '<td class="center shrink">' . $info[3] . '</td>';
 			$PHP_OUTPUT.= '<td>' . $attacker_name . '</td>';
 			$PHP_OUTPUT.= '<td>' . $defender_name . '</td>';

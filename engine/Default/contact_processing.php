@@ -6,9 +6,9 @@ $msg = $_REQUEST['msg'];
 
 mail($receiver,
 	 $subject,
-	 'Login:\n------'.EOL.$account->login.'\n'.EOL .
-	 'Account ID:\n-----------'.EOL.$account->account_id.'\n'.EOL .
-	 'Message:\n------------'.EOL.$msg,
+	 'Login:'.EOL.'------'.EOL.$account->login.EOL.EOL .
+	 'Account ID:'.EOL.'-----------'.EOL.$account->account_id.EOL.EOL .
+	 'Message:'.EOL.'------------'.EOL.$msg,
 	 'From: '.$account->email);
 	 
 $container = array();

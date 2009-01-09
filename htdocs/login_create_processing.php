@@ -204,7 +204,7 @@ $account->update_ip();
 
 // send email with validation code to user
 mail($email, 'New Space Merchant Realms User',
-			 'Your validation code is: '.$validation_code.'\nThe Space Merchant Realms server is on the web at '.$URL.'/'.EOL .
+			 'Your validation code is: '.$validation_code.EOL.'The Space Merchant Realms server is on the web at '.$URL.'/'.EOL .
 			 'Please verify within the next 7 days or your account will be automatically deleted.',
 			 'From: support@smrealms.de');
 

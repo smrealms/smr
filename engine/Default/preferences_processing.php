@@ -38,10 +38,10 @@ if ($action == 'Save and resend validation code') {
                    'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . time() . ')');
 
   mail($email, 'Your validation code!',
-    'You changed your email address registered within SMR and need to revalidate now!\n\r\n\r' .
-    '   Your new validation code is: '.$account->validation_code.'\n\r\n\r' .
-    'The Space Merchant Realms server is on the web at '.$URL.'/.\n\r' .
-    'You\'ll find a quick how-to-play here '.$URL.'/manual.php\n\r' .
+    'You changed your email address registered within SMR and need to revalidate now!'.EOL.'\r'.EOL.'\r' .
+    '   Your new validation code is: '.$account->validation_code.EOL.'\r'.EOL.'\r' .
+    'The Space Merchant Realms server is on the web at '.$URL.'/.'.EOL.'\r' .
+    'You\'ll find a quick how-to-play here '.$URL.'/manual.php'.EOL.'\r' .
     'Please verify within the next 7 days or your account will be automatically deleted.',
     'From: support@smrealms.de');
 
@@ -83,7 +83,7 @@ if ($action == 'Save and resend validation code') {
   if ($db->next_record()) create_error('Someone is already using that name!');
 
   // set the HoF name in account stat
-  $db->query('UPDATE account_has_stats SET HoF_name = ' . $db->escape_string($HoF_name, true) . ' WHERE account_id = '.$account->account_id.'');
+  $db->query('UPDATE account_has_stats SET HoF_name = ' . $db->escape_string($HoF_name, true) . ' WHERE account_id = '.$account->account_id);
 
 } elseif ($action == 'Yes')  {
 

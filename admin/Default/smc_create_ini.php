@@ -10,8 +10,8 @@ $db->query('SELECT * FROM game WHERE game_id = '.$game_id);
 $db->next_record();
 
 $PHP_OUTPUT.=('[Settings]'.EOL);
-$PHP_OUTPUT.=('Name=' . $db->f('game_name') . ''.EOL);
-$PHP_OUTPUT.=('ID=' . $db->f('game_id') . '\n'.EOL);
+$PHP_OUTPUT.=('Name=' . $db->f('game_name') . EOL);
+$PHP_OUTPUT.=('ID=' . $db->f('game_id') . EOL.EOL);
 
 $PHP_OUTPUT.=('[Galaxy]'.EOL);
 $db->query('SELECT galaxy_name, count(sector_id) as num FROM sector NATURAL JOIN galaxy WHERE game_id = '.$game_id.' GROUP BY sector.galaxy_id ORDER BY sector.sector_id');
@@ -27,7 +27,7 @@ while ($db->next_record()) {
 // expire all forces first
 $db->query('DELETE FROM sector_has_forces WHERE expire_time < \'' . time() . '\'');
 
-$PHP_OUTPUT.=('\n[Marks]'.EOL);
+$PHP_OUTPUT.=(EOL.'[Marks]'.EOL);
 $db->query('SELECT * FROM sector_has_forces WHERE game_id = '.$game_id.' GROUP BY sector_id ORDER BY sector_id');
 while ($db->next_record()) {
 

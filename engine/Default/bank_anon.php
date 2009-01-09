@@ -10,7 +10,7 @@
 // is account validated?
 if ($account->validated == 'FALSE') {
 
-	$PHP_OUTPUT.=create_echo_error('You are not validated so you can\'t use banks.');
+	create_error('You are not validated so you cannot use banks.');
 	return;
 
 }
@@ -77,7 +77,7 @@ if (isset($made)) {
 	$verify_pass = $_REQUEST['verify_pass'];
 
     if ($password != $verify_pass) {
-    	$PHP_OUTPUT.=create_echo_error('The passwords do NOT match');
+    	create_error('The passwords do NOT match');
         return;
     }
 

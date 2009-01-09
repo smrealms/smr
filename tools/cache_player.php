@@ -60,7 +60,7 @@ function send_irc_message($message) {
 	@fwrite($fsockopen, 'GET /smrnews.php?'.rawurlencode($message).' HTTP/1.0'.EOL);
 	unset($message);
 	@fwrite($fsockopen, 'Host: Chat.VJTD3.com'.EOL);
-	@fwrite($fsockopen, ''.EOL);
+	@fwrite($fsockopen, EOL);
 	if ($fsockopen)
 	{
 		while (!feof($fsockopen))
@@ -70,7 +70,7 @@ function send_irc_message($message) {
 	}
 	fclose($fsockopen);
 	unset($fsockopen);
-	$data = explode('\n'.EOL, $data, 2);
+	$data = explode(EOL.EOL, $data, 2);
 	$data = @$data['1'];
 	return (@$data['0'] === '1' ? 1 : 0);
 }

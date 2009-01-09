@@ -12,7 +12,7 @@ function log_message($account_id, $message, $level = 0) {
 
 	$login = get_account($account_id, 'login');
 
-	$PHP_OUTPUT.=(date('M j  H:i:s') . ' - ' . $login . ' - ' . $LOG_LEVEL[$level] . ' - ' . $message . ''.EOL);
+	$PHP_OUTPUT.=(date('M j  H:i:s') . ' - ' . $login . ' - ' . $LOG_LEVEL[$level] . ' - ' . $message . EOL);
 
 	if ($level == ERROR)
 		exit;

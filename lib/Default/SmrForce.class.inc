@@ -288,7 +288,7 @@ class SmrForce
 		$owner =& $this->getOwner();
 		if(!$playerPinging->sameAlliance($owner))
 		{
-			$player->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage);
+			$playerPinging->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage);
 		}
 	}
 
