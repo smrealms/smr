@@ -32,6 +32,14 @@ class SmrForce
 	protected $dropMineHREF;
 	protected $takeMineHREF;
 	
+	public static function saveForces()
+	{
+		foreach(self::$CACHE_FORCES as &$forces)
+		{
+			$forces->update();
+		}
+	}
+	
 	public static function &getSectorForces($gameID,$sectorID,$forceUpdate = false)
 	{
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID . ':' . $sectorID]))
