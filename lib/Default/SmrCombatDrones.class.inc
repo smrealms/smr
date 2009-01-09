@@ -103,7 +103,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		if(!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage();
-		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstForces($weaponPlayer,$weaponPlayer) / 100);
+		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
