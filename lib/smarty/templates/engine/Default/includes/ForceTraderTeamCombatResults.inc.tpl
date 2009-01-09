@@ -52,7 +52,7 @@
 				*}{/if}{*
 			*}{/if}.
 			{if $ActualDamage.KillingShot}
-				{include_template template="includes/TraderCombatKillMessage.inc" assign=Template}{include file=$Template KillResults=$Drones.KillResults}
+				Forces are <span style="color:red;">DESTROYED!</span><br />
 			{/if}
 			<br />
 		{/if}
