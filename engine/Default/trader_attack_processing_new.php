@@ -99,10 +99,12 @@ foreach($fightingPlayers as $team => &$teamPlayers)
 	
 //decloak all fighters
 foreach($fightingPlayers as &$teamPlayers)
+{
 	foreach($teamPlayers as &$teamPlayer)
+	{
 		$teamPlayer->getShip()->decloak();
-		unset($teamPlayer);
-unset($teamPlayers);
+	} unset($teamPlayer);
+} unset($teamPlayers);
 
 // Take off the 3 turns for attacking
 $player->takeTurns(3);
