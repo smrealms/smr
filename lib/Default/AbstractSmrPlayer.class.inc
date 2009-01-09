@@ -292,7 +292,7 @@ abstract class AbstractSmrPlayer
 	public function getNextLevelExperience()
 	{
 		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-		if(isset($LEVELS_REQUIREMENTS[$this->getLevelID()+1]))
+		if(!isset($LEVELS_REQUIREMENTS[$this->getLevelID()+1]))
 			return $this->getThisLevelExperience(); //Return current level experience if on last level.
 		return $LEVELS_REQUIREMENTS[$this->getLevelID()+1]['Requirement'];
 	}
