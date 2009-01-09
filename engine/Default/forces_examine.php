@@ -60,8 +60,6 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 $attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
 
-var_dump($attackers);
-
 $PHP_OUTPUT.=('<td valign="top">');
 
 foreach($attackers as &$attacker)
