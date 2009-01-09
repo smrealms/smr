@@ -277,6 +277,28 @@ abstract class AbstractSmrPlayer
 		return $this->experience;
 	}
 	
+	public function getNextLevelPercentAcquired()
+	{
+		return round(($this->getExperience() - $this->getThisLevelExperience()) / ($this->getNextLevelExperience() - $this->getThisLevelExperience())*100);
+	}
+	
+	public function getNextLevelPercentRemaining()
+	{
+		return 100 - $this->getThisLevelExperience();
+	}
+	
+	public function getNextLevelExperience()
+	{
+		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+		return $LEVELS_REQUIREMENTS[$this->getLevelID()+1]['Requirement'];
+	}
+	
+	public function getThisLevelExperience()
+	{
+		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+		return $LEVELS_REQUIREMENTS[$this->getLevelID()]['Requirement'];
+	}
+	
 	public function setExperience($experience)
 	{
 		if($this->experience == $experience)
@@ -360,7 +382,7 @@ abstract class AbstractSmrPlayer
 		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
 		foreach ($LEVELS_REQUIREMENTS as $level_id => $require)
 		{
-			if ($this->experience >= $require['Requirement']) continue;
+			if ($this->getExperience >= $require['Requirement']) continue;
 				return $level_id - 1;
 		}
 		return max(array_keys($LEVELS_REQUIREMENTS));
