@@ -73,7 +73,7 @@ $damage = $number_hitting * $forces_damage;
 //}
 //else {
 	// Whatever happens the cloak gets disabled
-	$ship->disable_cloak();
+	$ship->decloak();
 //}
 
 

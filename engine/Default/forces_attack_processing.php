@@ -123,7 +123,7 @@ while ($db->next_record() && ($forces->getCDs() > 0 || $forces->getSDs() > 0 || 
 	$curr_attacker_ship =& $curr_attacker->getShip();
 
 	// disable cloak
-	$curr_attacker_ship->disable_cloak();
+	$curr_attacker_ship->decloak();
 
 	$db2->query('SELECT * FROM ship_has_weapon, weapon_type ' .
 				'WHERE account_id = '.$curr_attacker->getAccountID().' AND ' .
