@@ -46,6 +46,7 @@ if (isset($var['process'])) {
 	$db->query('DELETE FROM player_visited_port WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id);
 	//start section
 	
+	require_once(get_file_loc('SmrPort.class.inc'));
 	// add port infos
 	$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' AND sector_id <= '.$high.' AND sector_id >= '.$low.' ORDER BY sector_id');
 	while ($db->next_record())
