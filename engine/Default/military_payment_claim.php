@@ -18,7 +18,7 @@ if ($player->hasMilitaryPayment()) {
 
 	// add to our cash
 	$player->increaseCredits($player->getMilitaryPayment());
-	$player->military_payment = 0;
+	$player->setMilitaryPayment(0);
 	$player->update();
 
 } else
