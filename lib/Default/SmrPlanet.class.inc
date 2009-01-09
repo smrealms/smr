@@ -259,7 +259,7 @@ class SmrPlanet
 		return $this->inhabitable_time<= TIME;
 	}
 	
-	public function isInhabitable()
+	public function isClaimed()
 	{
 		return $this->owner_id>0;
 	}
