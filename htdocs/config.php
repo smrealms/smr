@@ -15,6 +15,12 @@ define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 require_once('config.specific.php');
 
 /*
+ * Combat system
+ */
+define('MAXIMUM_FLEET_SIZE', 10);
+ 
+
+/*
  * Messaging system
  */
 define('MSG_GLOBAL', 1);
