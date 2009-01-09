@@ -12,7 +12,7 @@ else
 
 if ($player->military_payment > 0) {
 
-	$PHP_OUTPUT.=('For your military help you have been paid <font color=yellow>'.$player->military_payment.'</font> credits');
+	$PHP_OUTPUT.=('For your military help you have been paid <font color=yellow>'.$player->getMilitaryPayment().'</font> credits');
 
 	$player->increaseHOF($player->military_payment,'military_claimed');
 
