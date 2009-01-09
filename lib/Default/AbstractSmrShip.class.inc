@@ -909,7 +909,7 @@ abstract class AbstractSmrShip
 	public function &shootForces(SmrForce &$forces)
 	{
 		$thisPlayer =& $this->getPlayer();
-		$results = array('Forces' => &$forces, 'TotalDamage' => 0);
+		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
 		if($thisPlayer->isDead())
 		{
 			$results['DeadBeforeShot'] = true;
