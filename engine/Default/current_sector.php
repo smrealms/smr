@@ -148,7 +148,7 @@ elseif ($player->hasFederalProtection())
 {
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are under <span class="blue">FEDERAL</span> protection.';
 }
-else
+elseif($sector->offersFederalProtection())
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 
 $smarty->assign('ProtectionMessage',$protectionMessage);
