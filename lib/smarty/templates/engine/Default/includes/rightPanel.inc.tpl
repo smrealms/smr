@@ -44,10 +44,10 @@ Credits : {$ThisPlayer->getCredits()}<br />
 Experience : {$ThisPlayer->getExperience()}<br />
 Level : {$ThisPlayer->getLevelID()}<br />
 Next Level :<br />
-<img src="images/bar_left.gif" title="0/83" alt="0/83" />
-<img src="images/blue.gif" style="width:0px;height:10px;" title="0/83" alt="0/83" />
-<img src="images/bar_border.gif" style="width:100px;height:10px;" title="0/83" alt="0/83" />
-<img src="images/bar_right.gif" title="0/83" alt="0/83" /><br />
+<img src="images/bar_left.gif" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" />
+<img src="images/blue.gif" style="width:{$ThisPlayer->getNextLevelPercentAcquired()}px;height:10px;" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" />
+<img src="images/bar_border.gif" style="width:{$ThisPlayer->getNextLevelPercentRemaining()}px;height:10px;" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" />
+<img src="images/bar_right.gif" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" /><br />
 Alignment : {$ThisPlayer->getAlignment()}<br />
 Alliance : {$ThisPlayer->getAllianceName()}{if $ThisPlayer->hasAlliance()} ({$ThisPlayer->getAllianceID()}){/if}<br />
 <br />
