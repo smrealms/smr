@@ -77,10 +77,10 @@ class Globals
 			self::$db->query('SELECT * FROM level ORDER BY level_id ASC');
 			while (self::$db->nextRecord())
 			{
-				$LEVEL_REQUIREMENTS[self::$db->getField('level_id')] = array();
-				$LEVEL_REQUIREMENTS[self::$db->getField('level_id')]['ID'] = (int)self::$db->getField('level_id');
-				$LEVEL_REQUIREMENTS[self::$db->getField('level_id')]['Name'] = self::$db->getField('level_name');
-				$LEVEL_REQUIREMENTS[self::$db->getField('level_id')]['Requirement'] = (int)self::$db->getField('requirement');
+				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')] = array();
+				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')]['ID'] = (int)self::$db->getField('level_id');
+				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')]['Name'] = self::$db->getField('level_name');
+				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')]['Requirement'] = (int)self::$db->getField('requirement');
 			}
 			self::$LEVEL_REQUIREMENTS =& $LEVEL_REQUIREMENTS;
 		}
