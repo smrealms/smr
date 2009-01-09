@@ -72,6 +72,8 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 } elseif ($var['func'] == 'Warp') {
 	$sector_to = $_REQUEST['sector_to'];
 	$player->setSectorID($sector_to);
+} elseif ($var['func'] == 'Turns') {
+	$player->setTurns($_REQUEST['turns']);
 } elseif ($var['func'] == 'Exp') {
 	$exp = $_REQUEST['exp'];
 	if ($exp > 500000) $exp = 500000;
