@@ -382,7 +382,7 @@ abstract class AbstractSmrPlayer
 		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
 		foreach ($LEVELS_REQUIREMENTS as $level_id => $require)
 		{
-			if ($this->getExperience >= $require['Requirement']) continue;
+			if ($this->getExperience() >= $require['Requirement']) continue;
 				return $level_id - 1;
 		}
 		return max(array_keys($LEVELS_REQUIREMENTS));
