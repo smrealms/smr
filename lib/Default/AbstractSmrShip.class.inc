@@ -701,7 +701,9 @@ abstract class AbstractSmrShip
 	{
 		if($goodID!==false)
 		{
-			$cargo = isset($this->cargo[$goodID]) ? $this->cargo[$goodID] : 0;
+			if($this->cargo[$goodID])
+				return $this->cargo[$goodID];
+			$cargo = 0;
 			return $cargo;
 		}
 		return $this->cargo;
