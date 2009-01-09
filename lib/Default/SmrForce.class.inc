@@ -503,14 +503,14 @@ class SmrForce
 	public function &doWeaponDamage(array $damage)
 	{
 		$alreadyDead = $this->exists();
-		$armourDamage = 0;
+		$minesDamage = 0;
 		$cdDamage = 0;
-		$shieldDamage = 0;
+		$sdDamage = 0;
 		if(!$alreadyDead)
 		{
 			$minesDamage = $this->doMinesDamage(min($damage['MaxDamage'],$damage['Armour']));
-			$damage['Armour'] -= $cdDamage;
-			$damage['MaxDamage'] -= $shieldDamage;
+			$damage['Armour'] -= $minesDamage;
+			$damage['MaxDamage'] -= $minesDamage;
 			if(!$this->hasMines() && ($minesDamage == 0 || $damage['Rollover']))
 			{
 				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
