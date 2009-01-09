@@ -404,11 +404,6 @@ abstract class AbstractSmrPlayer
 //NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
 			return get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
 	}
-	function getLevelName()
-	{
-		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
-		return $LEVELS_REQUIREMENTS[$this->getLevelID()]['Name'];
-	}
 	
 	public function getRaceID()
 	{
