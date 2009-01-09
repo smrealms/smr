@@ -171,14 +171,14 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	
 	public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
 	{
-		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
+		$return = array('Weapon' => &$this, 'TargetForces' => &$forces);
 		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces)) //Check if we miss
 		{
 			$return['Hit'] = false;
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPlayerDamageToForce($return,$weaponPlayer, $targetPlayer);
+		return $this->doPlayerDamageToForce($return,$weaponPlayer, $forces);
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
