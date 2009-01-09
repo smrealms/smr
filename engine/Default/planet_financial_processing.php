@@ -40,8 +40,11 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 	$player->update();
 	$planet->update();
 
-} elseif ($action == 'Bond It!') {
-
+}
+elseif ($action == 'Bond It!')
+{
+	if($planet->isClaimed())
+		create_error('Cannot bond on an unclaimed planet.');
 	// add it to bond
 	$planet->bonds += $planet->credits;
 
