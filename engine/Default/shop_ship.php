@@ -190,11 +190,11 @@ if (isset($var['ship_id'])) {
 	$PHP_OUTPUT.= '</td></tr>';
 	$PHP_OUTPUT.= '<tr><td><hr style="width:200px"></td></tr>';
 	$PHP_OUTPUT.= '<tr><td class="right">- ';
-	$PHP_OUTPUT.= number_format( $ship->cost >> 1);
+	$PHP_OUTPUT.= number_format( $ship->getCost() >> 1);
 	$PHP_OUTPUT.= '</td></tr>';
 	$PHP_OUTPUT.= '<tr><td><hr style="width:200px"></td></tr>';
 	$PHP_OUTPUT.= '<tr><td class="right">= ';
-	$PHP_OUTPUT.= number_format( $cost - ($ship->cost >> 1));
+	$PHP_OUTPUT.= number_format( $cost - ($ship->getCost() >> 1));
 	$PHP_OUTPUT.= '</td></tr>';
 	$PHP_OUTPUT.= '<tr><td><hr style="width:200px"></td></tr>';
 	$PHP_OUTPUT.= '<tr><td class="right">';
