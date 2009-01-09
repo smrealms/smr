@@ -50,7 +50,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	}
 	
 	
-	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, SmrForce &$targetPlayer)
+	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		return $this->getModifiedAccuracyAgainstPlayerUsingRandom($weaponPlayer,$targetPlayer,mt_rand(3,self::MAX_CDS_RAND));
 	}
