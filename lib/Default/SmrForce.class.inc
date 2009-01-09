@@ -553,7 +553,7 @@ class SmrForce
 	
 	protected function doSDDamage($damage)
 	{
-		$actualDamage = min($this->getArmour(),floor($damage/SD_ARMOUR));
+		$actualDamage = min($this->getSDs(),floor($damage/SD_ARMOUR));
 		$this->takeSDs($actualDamage);
 		return $actualDamage*SD_ARMOUR;
 	}
