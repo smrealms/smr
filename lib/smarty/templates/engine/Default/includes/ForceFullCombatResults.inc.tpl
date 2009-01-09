@@ -1,4 +1,4 @@
-{if $Forced}
+{if $FullForceCombatResults.Forced}
 	<h1>Force Results</h1><br />
 	{include_template template="includes/ForcesCombatResults.inc" assign=Template}{include file=$Template ForcesCombatResults=$FullForceCombatResults.Forces}
 {else}
@@ -9,7 +9,7 @@
 <br />
 <img src="images/creonti_cruiser.jpg" alt="Creonti Cruiser" title="Creonti Cruiser"><br />
 <br />
-{if !$Forced}
+{if !$FullForceCombatResults.Forced}
 	<h1>Force Results</h1><br />
 	{include_template template="includes/ForcesCombatResults.inc" assign=Template}{include file=$Template ForcesCombatResults=$FullForceCombatResults.Forces}
 {else}
