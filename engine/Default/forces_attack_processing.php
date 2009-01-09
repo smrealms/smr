@@ -53,8 +53,6 @@ foreach($attackers as &$attacker)
 	$attacker->getShip()->decloak();
 } unset($attacker);
 
-$results['Forces'] =& $forces->shootPlayers($attackers,false);
-
 $results['Attackers'] = array('TotalDamage' => 0);
 foreach($attackers as &$attacker)
 {
@@ -62,6 +60,8 @@ foreach($attackers as &$attacker)
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($attacker);
+
+$results['Forces'] =& $forces->shootPlayers($attackers,false);
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
