@@ -874,7 +874,7 @@ abstract class AbstractSmrShip
 		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
 		if($thisPlayer->isDead())
 		{
-			$results['DeadBeforeShot'] = false;
+			$results['DeadBeforeShot'] = true;
 			return $results;
 		}
 		$results['DeadBeforeShot'] = false;
