@@ -547,7 +547,7 @@ class SmrForce
 	protected function doCDDamage($damage)
 	{
 		$actualDamage = min($this->getCDs(),floor($damage/CD_ARMOUR));
-		$this->decreaseCDs($actualDamage);
+		$this->takeCDs($actualDamage);
 		return $actualDamage*CD_ARMOUR;
 	}
 	
