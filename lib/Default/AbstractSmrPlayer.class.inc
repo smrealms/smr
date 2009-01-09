@@ -156,12 +156,8 @@ abstract class AbstractSmrPlayer
 	
 	function hasFederalProtection()
 	{
-        //PAGE BAD BAD BAD!
-		// If there isn't a fed beacon we aren't protected
-		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_is_fed ' .
-					 'WHERE sector_id = '.$this->getSectorID().' AND ' .
-						   'game_id = '.$this->getGameID().' LIMIT 1');
-		if (!$this->db->getNumRows())
+		$sector =& SmrSector::getSector($this->getGameID(),$this->getSectorID(),$this->getAccountID());
+		if (!$sector->offersFederalProtection())
 		{
 			return false;
 		}	
@@ -401,6 +397,17 @@ abstract class AbstractSmrPlayer
 	public function getName()
 	{
 		return $this->playerName;
+	}
+
+	function getDisplayName()
+	{
+//NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
+			return get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
+	}
+	function getLevelName()
+	{
+		$LEVELS_REQUIREMENTS = Globals::getLevelRequirements();
+		return $LEVELS_REQUIREMENTS[$this->getLevelID()]['Name'];
 	}
 	
 	public function getRaceID()
@@ -798,6 +805,7 @@ abstract class AbstractSmrPlayer
 	
 	abstract public function killPlayer($sectorID);
 	abstract public function &killPlayerByPlayer(AbstractSmrPlayer &$killer);
+	abstract public function killPlayerByForces(SmrForce &$forces);
 	abstract public function getHome();
 	
 	
