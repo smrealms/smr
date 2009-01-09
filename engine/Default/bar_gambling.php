@@ -193,6 +193,7 @@ if ($action == 'lotto') {
 		//if this is just one card push it into an array so we can run the func
 		if (!is_array($deck)) $deck = array($deck);
 		$curr_aces = 0;
+		$return_val = 0;
 		foreach ($deck as $key => $card_val) {
 			
 			//get total value of cards
