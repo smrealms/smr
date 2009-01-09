@@ -51,7 +51,7 @@ if (isset($var['process'])) {
 	$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' AND sector_id <= '.$high.' AND sector_id >= '.$low.' ORDER BY sector_id');
 	while ($db->next_record())
 	{
-		SmrPort::getPort($game_id,$db->f('sector_id'))->cachePort($account_id);
+		SmrPort::getPort($game_id,$db->f('sector_id'))->addCachePort($account_id);
 	}
 
 	//offer another drink and such
