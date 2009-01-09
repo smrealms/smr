@@ -447,8 +447,8 @@ class Course_Plotter extends SMR_DB{
 
 			// We need 2 entries in $network_map (One for each sector)
 			$i = count($links)-1;
-			$network_map[$sector_id_1][count($network_map[$sector_id_1])] = $i;
-			$network_map[$sector_id_2][count($network_map[$sector_id_2])] = $i;
+			$network_map[$sector_id_1][isset($network_map[$sector_id_1]) ? count($network_map[$sector_id_1]) : 0] = $i;
+			$network_map[$sector_id_2][isset($network_map[$sector_id_2]) ? count($network_map[$sector_id_2]) : 0] = $i;
 
 		}
 
