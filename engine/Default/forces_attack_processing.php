@@ -48,7 +48,7 @@ foreach($attackers as &$attacker)
 	$attacker->getShip()->decloak();
 } unset($attacker);
 
-$results['Forces'] =& $forces->shootPlayers($attackers);
+$results['Forces'] =& $forces->shootPlayers($attackers,false);
 
 foreach($attackers as &$attacker)
 {
