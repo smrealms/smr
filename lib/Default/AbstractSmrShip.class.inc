@@ -4,6 +4,7 @@ require_once('SmrMySqlDatabase.class.inc');
 require_once('AbstractSmrPlayer.class.inc');
 require_once('SmrWeapon.class.inc');
 require_once('SmrCombatDrones.class.inc');
+require_once('SmrForce.class.inc');
 abstract class AbstractSmrShip
 {
 	protected static $CACHE_BASE_SHIPS = array();
@@ -905,6 +906,33 @@ abstract class AbstractSmrShip
 		return $results;
 	}
 	
+	public function &shootForces(SmrForce &$forces)
+	{
+		$thisPlayer =& $this->getPlayer();
+		$results = array('Forces' => &$forces, 'TotalDamage' => 0);
+		if($thisPlayer->isDead())
+		{
+			$results['DeadBeforeShot'] = true;
+			return $results;
+		}
+		$results['DeadBeforeShot'] = false;
+		foreach($this->weapons as $orderID => &$weapon)
+		{
+			$results['Weapons'][$orderID] =& $weapon->shootForces($thisPlayer, $forces);
+			if($results['Weapons'][$orderID]['Hit'])
+				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+		}
+		if($this->hasCDs())
+		{
+			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
+			$results['Drones'] =& $thisCDs->shootForces($thisPlayer, $forces);
+			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+		}
+		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
+		$thisPlayer->increaseHOF($results['TotalDamage'],'player_damage');
+		return $results;
+	}
+	
 	public function &doWeaponDamage(array $damage)
 	{
 		$alreadyDead = $this->getPlayer()->isDead();
@@ -946,7 +974,7 @@ abstract class AbstractSmrShip
 	
 	protected function doCDDamage($damage)
 	{
-		$actualDamage = min($this->getCDs(),$damage/CD_ARMOUR);
+		$actualDamage = min($this->getCDs(),floor($damage/CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage*CD_ARMOUR;
 	}

@@ -1,9 +1,5 @@
 <?
 
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
-
-
 if ($player->getNewbieTurns() > 0)
 	create_error('You are under newbie protection!');
 
@@ -12,6 +8,9 @@ if ($player->getTurns() < 3)
 
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+
+if(!$forces->exists())
+	create_error('These forces no longer exist.');
 
 // take the turns
 $player->takeTurns(3,1);
@@ -38,341 +37,54 @@ $container['forced'] = 'no';
 // *
 // ********************************
 
-$force_msg = array();
 
-if ($player->hasAlliance())
+require_once(get_file_loc('SmrSector.class.inc'));
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$attackers =& $sector->getFightingTradersAgainstForces($player, $defendingForces);
+
+//decloak all attackers
+foreach($attackers as &$attacker)
 {
+	$attacker->getShip()->decloak();
+} unset($attacker);
 
-	$db->query('SELECT * FROM player ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'alliance_id = '.$player->getAllianceID().' AND ' .
-					 'sector_id = '.$player->getSectorID().' AND ' .
-					 'land_on_planet = \'FALSE\' AND ' .
-					 'newbie_turns = 0 ' .
-			   'ORDER BY rand() LIMIT 1');
+$results['Forces'] =& $forces->shootPlayers($attackers);
 
-}
+foreach($attackers as &$attacker)
+{
+	$playerResults =& $attacker->shootForces($forces);
+	$results['Attackers']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
+	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
+} unset($attacker);
+
+$ship->removeUnderAttack(); //Don't show attacker the under attack message.
+
+$serializedResults = serialize($results);
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
+unserialize($serializedResults); //because of references we have to undo this.
+
+$container = array();
+$container['url'] = 'skeleton.php';
+$container['body'] = 'forces_attack.php';
+
+// If their target is dead there is no continue attack button
+if($forces->exist())
+	$container['owner_id'] = $var['owner_id'];
 else
+	$container['owner_id'] = 0;
+
+// If they died on the shot they get to see the results
+if($player->isDead())
 {
-
-	$db->query('SELECT * FROM player ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'sector_id = '.$player->getSectorID().' AND ' .
-					 'account_id = '.$player->getAccountID().' AND ' .
-					 'land_on_planet = \'FALSE\' AND ' .
-					 'newbie_turns = 0 ' .
-			   'ORDER BY rand() LIMIT 1');
-
-}
-if ($db->next_record())
-{
-
-	$curr_attacker =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
-	$curr_attacker_ship =& $curr_attacker->getShip();
-	
-	// disable cloak
-	$curr_attacker_ship->disable_cloak();
-	
-	// fed ships take half damage from mines
-	if ($curr_attacker_ship->getShipTypeID() == 20 || $curr_attacker_ship->getShipTypeID() == 21 || $curr_attacker_ship->getShipTypeID() == 22)
-		$forces_damage = 10;
-	else
-		$forces_damage = 20;
-
-	// Mines attacking
-	if ($forces->getMines() > 0) {
-
-		//formula......100% - ((your level) + (rand(1,7)*rand(1,7))) mines will hit for 20 damage each.
-		$percent_hitting = 100 - (($curr_attacker->getLevelID()) + (mt_rand(1,7) * mt_rand(1,7)));
-		//find out how many are going to attack you
-		$number_hitting = round($forces->getMines() * ($percent_hitting / 100));
-
-		// fed ships take half damage from mines
-		$damage = $number_hitting * $forces_damage;
-
-		//Does attacker have shields?
-		if ($curr_attacker_ship->getShields() > 0 && $number_hitting > 0) {
-
-			// do we make more damage than shields left?
-			if ($damage > $curr_attacker_ship->getShields()) {
-
-				// reduce damage to number of shields left
-				$damage = $curr_attacker_ship->getShields();
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-
-			// add the force_damage
-			$force_damage += $damage;
-
-			// subtract the shield damage
-			$curr_attacker_ship->decreaseShields($damage);
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> mines kamikaze themselves against <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span>\'s ship for <span style="color:red;">'.$damage.'</span> shields.';
-
-			//subtract mines that hit
-			$forces->takeMines($number_hitting);
-
-		} elseif ($curr_attacker_ship->getArmour() > 0 && $number_hitting > 0) {
-
-			// do we make more damage than armor left?
-			if ($damage > $curr_attacker_ship->getArmour()) {
-
-				// reduce damage to number of drones left
-				$damage = $curr_attacker_ship->getArmour();
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-
-			//subtract the damage
-			$curr_attacker_ship->decreaseArmour($damage);
-
-			// add the force_damage
-			$force_damage += $damage;
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> mines kamikaze themselves against <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span>\'s ship destroying <span style="color:red;">'.$damage.'</span> armor.';
-
-			//subtract mines that hit
-			$forces->takeMines($number_hitting);
-
-		}
-
-	}
-
-	// is he dead now?
-	if ($curr_attacker_ship->getShields() == 0 && $curr_attacker_ship->getArmour() == 0)
-		$curr_attacker->setDead(true);
-
-	if ($forces->getSDs() > 0 && !$curr_attacker->isDead()) {
-
-		$number_hitting = $forces->getSDs();
-
-		// fed ships take half damage from drones
-		$damage = $number_hitting * $forces_damage;
-
-		// does the attacker have shields left?
-		if ($curr_attacker_ship->getShields() > 0) {
-
-			//Can we destroy all the shields or do they not have enough?
-			if ($damage > $curr_attacker_ship->getShields()) {
-
-				// reduce damage to number of shields left
-				$damage = $curr_attacker_ship->getShields();
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-			
-			//scouts kamikaze
-			$forces->takeSDs($number_hitting);
-			
-			// accumulate the force_damage
-			$force_damage += $damage;
-
-			// subtract the shield damage
-			$curr_attacker_ship->decreaseShields($damage);
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> scout drones kamikaze themselves against <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span>\'s ship destroying <span style="color:red;">'.$damage.'</span> shields.';
-
-		// does the attacker has drones left?
-		} elseif ($curr_attacker_ship->getCDs() > 0) {
-
-			// do we make more damage than drones left?
-			if ($damage > $curr_attacker_ship->getCDs() * 3) {
-
-				// reduce damage to number of drones left
-				$damage = $curr_attacker_ship->getCDs() * 3;
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-			
-			//scouts kamikaze
-			$forces->takeSDs($number_hitting);
-
-			// add the force_damage
-			$force_damage += $damage;
-
-			// subtract the shield damage
-			$curr_attacker_ship->decreaseCDs(round( $damage / 3 ));
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> scout drones kamikaze themselves against <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span>\'s ship destroying <span style="color:red;">' . round( $damage / 3 ) . '</span> drones.';
-
-		// does the attacker has armor left?
-		} elseif ($curr_attacker_ship->getArmour() > 0) {
-
-			//can we kill all armor?
-			if ($damage > $curr_attacker_ship->getArmour()) {
-
-				// reduce damage to number of armor left
-				$damage = $curr_attacker_ship->getArmour();
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-			
-			//scouts kamikaze
-			$forces->takeSDs($number_hitting);
-
-			// add the force_damage
-			$force_damage += $damage;
-
-			//subtract the damage
-			$curr_attacker_ship->decreaseArmour($damage);
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> scout drones kamikaze themselves against <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span>\'s ship destroying <span style="color:red;">'.$damage.'</span> armor.';
-
-		}
-
-	} //end of scout drones
-
-	// is he dead now?
-	if ($curr_attacker_ship->getShields() == 0 && $curr_attacker_ship->getArmour() == 0)
-		$curr_attacker->setDead(true);
-
-	if ($forces->getCDs() > 0 && !$curr_attacker->isDead()) {
-
-		//find out how many are going to attack you
-		$number_hitting = round($forces->getCDs() * mt_rand(3, 54) / 100);
-
-		// for drones we adept the force damage.
-		// mines and sd's doing 20 damage to normal ships
-		// drones only 2 damage
-		$forces_damage /= 10;
-
-		// fed ships take half damage from drones
-		$damage = $number_hitting * $forces_damage;
-		//if we have dcs drones do less
-		if ($curr_attacker_ship->hasDCS() == 1)
-			$damage = round( $damage / (4 / 3) );
-
-		// does the attacker has shields left?
-		if ($curr_attacker_ship->getShields() > 0) {
-
-			//Can we destroy all the shields or do they not have enough?
-			if ($damage > $curr_attacker_ship->getShields()) {
-
-				// reduce damage to number of shields left
-				$damage = $curr_attacker_ship->getShields();
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-
-			// accumulate the force_damage
-			$force_damage += $damage;
-
-			// subtract the shield damage
-			$curr_attacker_ship->decreaseShields($damage);
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> combat drones drones launch at <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> destroying <span style="color:red;">'.$damage.'</span> shields.';
-
-		// does the attacker has drones left?
-		} elseif ($curr_attacker_ship->getCDs() > 0) {
-
-			// do we make more damage than drones left?
-			if ($damage > $curr_attacker_ship->getCDs() * 3) {
-
-				// reduce damage to number of drones left
-				$damage = $curr_attacker_ship->getCDs() * 3;
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-
-			// add the force_damage
-			$force_damage += $damage;
-
-			// subtract the shield damage
-			$curr_attacker_ship->decreaseCDs(round( $damage / 3 ));
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> combat drones drones launch at <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> destroying <span style="color:red;">'.$damage.'</span> drones.';
-
-		// does the attacker has armor left?
-		} elseif ($curr_attacker_ship->getArmour() > 0) {
-
-			//can we kill all armor?
-			if ($damage > $curr_attacker_ship->getArmour()) {
-
-				// reduce damage to number of armor left
-				$damage = $curr_attacker_ship->getArmour();
-
-				// calc how many are actually hitting
-				$number_hitting = ceil( $damage / $forces_damage );
-
-			}
-
-			// add the force_damage
-			$force_damage += $damage;
-
-			//subtract the damage
-			$curr_attacker_ship->decreaseArmour($damage);
-
-			// echo message
-			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> combat drones drones launch at <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> destroying <span style="color:red;">'.$damage.'</span> armor.';
-
-		}
-
-	}
-
-	// update ship
-	$curr_attacker_ship->update_hardware();
-
-	// is he dead now?
-	if ($curr_attacker_ship->getShields() == 0 && $curr_attacker_ship->getArmour() == 0)
-		$curr_attacker->setDead(true);
-
-	// is he dead?
-	if ($curr_attacker->isDead()) {
-
-		// echo message
-		$force_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> is <span style="color:red;">DESTROYED!</span>';
-
-		// run through dead methods for player and ship
-		$curr_attacker->killPlayerByForces($forces);
-
-		// if we are the guy who's dead
-		if ($curr_attacker->getAccountID() == $player->getAccountID())
-		{
-			// we don't want to get a pod screen
-			$curr_attacker->setDead(false);
-
-			// and there shouldn't be a cont' button
-			$container['continue'] = 'no';
-		}
-
-		// make it permanent
-		$curr_attacker->update();
-
-	}
-	if (!$forces->exists()) {
-		$attacker_msg[] = 'Forces are <span style="color:red;">DESTROYED!</span>';
-		$container['continue'] = 'no';
-	}
-
+	$container['override_death'] = TRUE;
+	$container['target'] = 0;
 }
 
-// echo the overall damage
-if ($force_damage > 0)
-	$force_msg[] = '<br>This team does a total of <span style="color:red;">$force_damage</span> damage in this round of combat.';
-else
-	$force_msg[] = '<br>This team does no damage at all. You call that a team? They need a better recruiter.';
+$container['forced'] = false;
+$container['results'] = $serializedResults;
+forward($container);
+
+
 
 // ********************************
 // *
@@ -620,11 +332,11 @@ else
 	$attacker_msg[] = '<br>This team does no damage at all. You call that a team? They need a better recruiter.';
 
 $attacker_total_msg[] = $attacker_msg;
-
-// info for the next page
-$container['force_msg'] = $force_msg;
-$container['attacker_total_msg'] = $attacker_total_msg;
-transfer('owner_id');
-forward($container);
+//
+//// info for the next page
+//$container['force_msg'] = $force_msg;
+//$container['attacker_total_msg'] = $attacker_total_msg;
+//transfer('owner_id');
+//forward($container);
 
 ?>

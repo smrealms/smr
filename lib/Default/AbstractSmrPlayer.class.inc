@@ -2,6 +2,7 @@
 require_once('Globals.class.inc');
 
 require_once('SmrShip.class.inc');
+require_once('SmrForce.class.inc');
 
 abstract class AbstractSmrPlayer
 {
@@ -369,10 +370,10 @@ abstract class AbstractSmrPlayer
 	{
 		$LEVEL_REQUIREMENTS = Globals::getLevelRequirements();
 		$RACES = Globals::getRaces();
-		if ($this->alignment > 150) $a_name = 'Federation';
-		elseif ($this->alignment < -150) $a_name = 'Underground';
+		if ($this->getAlignment() > 150) $a_name = 'Federation';
+		elseif ($this->getAlignment() < -150) $a_name = 'Underground';
 		else $a_name = 'Sector';
-		$level_name = $LEVEL_REQUIREMENTS[$this->getLevelID()]['Level Name'];
+		$level_name = $LEVEL_REQUIREMENTS[$this->getLevelID()]['Name'];
 		$level_name = str_replace('Race',$RACES[$this->raceID]['Race Name'],$level_name);
 		$level_name = str_replace('Alignment',$a_name,$level_name);
 		return $level_name;
@@ -561,6 +562,11 @@ abstract class AbstractSmrPlayer
 	
 	abstract public function &getShip();
 	
+	public function getDiminishingForceAttack()
+	{
+		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 900))));
+	}
+	
 	public function getDiminishingTraderAttack()
 	{
 		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 475))));
@@ -569,6 +575,11 @@ abstract class AbstractSmrPlayer
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
 	{
 		return $this->getShip()->shootPlayer($targetPlayer);
+	}
+	
+	public function &shootForces(SmrForce &$forces)
+	{
+		return $this->getShip()->shootForces($forces);
 	}
 	
 	public function &shootPlayers(array &$targetPlayers)

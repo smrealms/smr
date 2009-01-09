@@ -1,9 +1,9 @@
 <?
-require_once('CombatWeapon.interface.inc');
 require_once('SmrMySqlDatabase.class.inc');
 
 require_once('AbstractSmrPlayer.class.inc');
-abstract class AbstractSmrCombatWeapon implements CombatWeapon
+require_once('SmrForce.class.inc');
+abstract class AbstractSmrCombatWeapon
 {
 	protected $gameTypeID;
 	protected $name;
@@ -50,6 +50,11 @@ abstract class AbstractSmrCombatWeapon implements CombatWeapon
 		return $this->raidWeapon;
 	}
 	
+	public function canShootForces()
+	{
+		return !$this->isRaidWeapon();
+	}
+	
 	public function canShootTraders()
 	{
 		return !$this->isRaidWeapon();
@@ -60,9 +65,18 @@ abstract class AbstractSmrCombatWeapon implements CombatWeapon
 		return array('MaxDamage' => $this->getMaxDamage(), 'Shield' => $this->getShieldDamage(), 'Armour' => $this->getArmourDamage(), 'Rollover' => $this->isDamageRollover());
 	}
 	
-//	abstract public function getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer);
+	abstract public function &getModifiedDamageAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces);
+	abstract public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer);
+	abstract public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer);
 	
-	protected function &doDamageToPlayer(array &$return, AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
+	protected function &doPlayerDamageToForce(array &$return, AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstForces($weaponPlayer,$forces);
+		$return['ActualDamage'] =& $forces->doWeaponDamage($return['WeaponDamage']);
+		return $return;
+	}
+	
+	protected function &doPlayerDamageToPlayer(array &$return, AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlayer($weaponPlayer,$targetPlayer);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
@@ -71,6 +85,20 @@ abstract class AbstractSmrCombatWeapon implements CombatWeapon
 			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
 		return $return;
 	}
+	
+	protected function &doForceDamageToPlayer(array &$return, SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces,$targetPlayer);
+		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);
+		return $return;
+	}
+	
+	abstract public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces);
+	abstract public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer);
+	abstract public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer);
 }
 
 ?>

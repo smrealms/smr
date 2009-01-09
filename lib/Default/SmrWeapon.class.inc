@@ -2,7 +2,6 @@
 require_once('AbstractSmrCombatWeapon.class.inc');
 require_once('SmrMySqlDatabase.class.inc');
 
-require_once('AbstractSmrPlayer.class.inc');
 class SmrWeapon extends AbstractSmrCombatWeapon
 {
 	protected static $CACHE_WEAPONS = array();
@@ -96,6 +95,12 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $modifiedAccuracy;
 	}
 	
+	public function getModifiedAccuracyAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
+	{
+		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
+		return $modifiedAccuracy;
+	}
+	
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
@@ -129,10 +134,32 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $damage;
 	}
 	
+	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
+	{
+		if(!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		$damage =& $this->getModifiedDamage($weaponPlayer);
+		
+		$diminishing = $weaponPlayer->getDiminishingForceAttack();
+		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
+		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+		return $damage;
+	}
+	
+	public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		return $return;
+	}
+	
 	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
-		if(!$this->canShootTraders()) // If we can't shot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
+		{
+			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+			return $return;
+		}
 		$damage =& $this->getModifiedDamage($weaponPlayer);
 		
 		$diminishing = $weaponPlayer->getDiminishingTraderAttack();
@@ -140,6 +167,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		return $damage;
+	}
+	
+	public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
+		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces)) //Check if we miss
+		{
+			$return['Hit'] = false;
+			return $return;
+		}
+		$return['Hit'] = true;
+		return $this->doPlayerDamageToForce($return,$weaponPlayer, $targetPlayer);
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
@@ -151,7 +190,13 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doDamageToPlayer($return,$weaponPlayer, $targetPlayer);
+		return $this->doPlayerDamageToPlayer($return,$weaponPlayer, $targetPlayer);
+	}
+	
+	public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => false);
+		return $return;
 	}
 	
 //private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null)

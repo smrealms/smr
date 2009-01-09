@@ -57,28 +57,51 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return $this->getModifiedAccuracyAgainstPlayerUsingRandom($weaponPlayer,$targetPlayer,self::MAX_CDS_RAND);
 	}
 	
-	public function &getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)
+	public function getModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,mt_rand(3,self::MAX_CDS_RAND));
+	}
+	
+	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer, $random)
+	{
+		$modifiedAccuracy = $this->getModifiedAccuracy();
+		$modifiedAccuracy += $random;
+	
+		return max(0,min(100,$modifiedAccuracy));
+	}
+	
+	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,self::MAX_CDS_RAND);
+	}
+	
+	public function &getModifiedDamage()
 	{
 		$damage = $this->getDamage();
-		//do they have the weapon damage gadget?
-		if($weaponPlayer->isGadgetEquipped('Increased Weapon Damage'))
-		{
-			$damage['MaxDamage'] += $this->getMaxDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
-			$damage['Shield'] += $this->getShieldDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
-			$damage['Armour'] += $this->getArmourDamage() * INCREASED_DAMAGE_GADGET_FACTOR;
-		}
-		//increase for weapon damage stat
-		$damage['MaxDamage'] += $this->getMaxDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
-		$damage['Shield'] += $this->getShieldDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
-		$damage['Armour'] += $this->getArmourDamage() * WEAPON_DAMAGE_STAT_FACTOR * $weaponPlayer->getStat('Weapon Damage') / 100;
+		return $damage;
+	}
+	
+	public function &getModifiedDamageAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
+	{
+		if(!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		$damage =& $this->getModifiedDamage($weaponPlayer);
+		
+		$diminishing = $weaponPlayer->getDiminishingForceAttack();
+		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
+		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		return $damage;
 	}
 	
 	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
-		if(!$this->canShootTraders()) // If we can't shot traders then just return a damageless array and don't waste resources calculated any damage mods.
-			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
-		$damage =& $this->getModifiedDamage($weaponPlayer);
+		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
+		{
+			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+			return $return;
+		}
+		$damage =& $this->getModifiedDamage();
 		$diminishing = $weaponPlayer->getDiminishingTraderAttack();
 		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
@@ -90,11 +113,43 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return $damage;
 	}
 	
+	public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
+	{
+		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
+		{
+			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+			return $return;
+		}
+		$damage =& $this->getModifiedDamage();
+		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces,$targetPlayer) / 100);
+		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
+		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
+		return $damage;
+	}
+	
+	public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
+		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces)) //Check if we miss
+		{
+			$return['Hit'] = false;
+			return $return;
+		}
+		$return['Hit'] = true;
+		return $this->doPlayerDamageToForce($return,$weaponPlayer, $targetPlayer);
+	}
+	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
-		
-		return $this->doDamageToPlayer($return, $weaponPlayer, $targetPlayer);
+		return $this->doPlayerDamageToPlayer($return, $weaponPlayer, $targetPlayer);
+	}
+	
+	public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
+		return $this->doForceDamageToPlayer($return, $targetPlayer);
 	}
 }
 
