@@ -8,7 +8,7 @@ if (!$sector->has_bar()) create_error('So two guys walk into this bar...');
 //get script to include
 if (isset($var['script'])) $script = $var['script'];
 else $script = 'bar_opening.php';
-if ($script == 'bar_gambling_bet.php') create_error('Blackjack is currently outlawed, you will have to come back later.');
+//if ($script == 'bar_gambling_bet.php') create_error('Blackjack is currently outlawed, you will have to come back later.');
 //get bar name
 $db->query('SELECT location_name FROM location_type NATURAL JOIN location WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND location_type.location_type_id > 800 AND location_type.location_type_id < 900');
 
