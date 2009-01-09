@@ -170,7 +170,7 @@ abstract class AbstractSmrShip
 	
 	public function hasIllegalGoods()
 	{
-		return $ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12);
+		return $this->hasCargo(5) || $this->hasCargo(9) || $this->hasCargo(12);
 	}
 	
 	public function getAttackRating()
@@ -861,6 +861,11 @@ abstract class AbstractSmrShip
 	{
 		$downgradeWait = 24 * 3600;
 		return $this->getLastDowngrade() - (TIME - $downgradeWait);
+	}
+	
+	public function isFederal()
+	{
+		return $curr_attacker_ship->getShipTypeID() == 20 || $curr_attacker_ship->getShipTypeID() == 21 || $curr_attacker_ship->getShipTypeID() == 22;
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
