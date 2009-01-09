@@ -46,16 +46,16 @@ if ($sector->hasForces()) {
 					 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0)');
 	while ($db->next_record()) {
 
-		// we may skip forces if this is a protected gal.
-		if ($sector->is_protected_gal()) {
-
-			$forces_account =& SmrAccount::getAccount($db->f('owner_id'));
-
-			// if one is vet and the other is newbie we skip it
-			if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
-				continue;
-
-		}
+//		// we may skip forces if this is a protected gal.
+//		if ($sector->is_protected_gal()) {
+//
+//			$forces_account =& SmrAccount::getAccount($db->f('owner_id'));
+//
+//			// if one is vet and the other is newbie we skip it
+//			if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
+//				continue;
+//
+//		}
 
 		create_error('You cant jump when there are unfriendly forces in the sector!');
 
@@ -74,31 +74,31 @@ if (empty($to))
 if (!is_numeric($to))
 	create_error('Please enter only numbers!');
 
-// ok we can only get the leave save heaven if we go through a warp
-if ($action != 'Yes') {
-
-	// are we a noob
-	if ($rank_id < FLEDGLING && $account->veteran == 'FALSE') {
-
-		// get new sector object
-		$new_sector =& SmrSector::getSector($player->getGameID(), $to, $player->getAccountID());
-
-		// are we going to leave the save heaven?
-		if ($sector->is_protected_gal() && !$new_sector->is_protected_gal()) {
-
-			$container = create_container('skeleton.php', 'leaving_newbie_galaxy.php');
-			$container['target_sector'] = $to;
-			$container['method'] = 'jump';
-
-			transfer('target_page');
-
-			forward($container);
-
-		}
-
-	}
-
-}
+//// ok we can only get the leave save heaven if we go through a warp
+//if ($action != 'Yes') {
+//
+//	// are we a noob
+//	if ($rank_id < FLEDGLING && $account->veteran == 'FALSE') {
+//
+//		// get new sector object
+//		$new_sector =& SmrSector::getSector($player->getGameID(), $to, $player->getAccountID());
+//
+//		// are we going to leave the save heaven?
+//		if ($sector->is_protected_gal() && !$new_sector->is_protected_gal()) {
+//
+//			$container = create_container('skeleton.php', 'leaving_newbie_galaxy.php');
+//			$container['target_sector'] = $to;
+//			$container['method'] = 'jump';
+//
+//			transfer('target_page');
+//
+//			forward($container);
+//
+//		}
+//
+//	}
+//
+//}
 
 // create sector object for target sector
 $target_sector =& SmrSector::getSector(SmrSession::$game_id, $to, SmrSession::$account_id);
@@ -276,17 +276,17 @@ $db->query('SELECT * FROM sector_has_forces, player ' .
 
 while ($db->next_record()) {
 
-	// we may skip forces if this is a protected gal.
-	if ($sector->is_protected_gal())
-	{
-
-		$forces_account =& SmrAccount::getAccount($db->f('owner_id'));
-
-		// if one is vet and the other is newbie we skip it
-		if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
-			continue;
-
-	}
+//	// we may skip forces if this is a protected gal.
+//	if ($sector->is_protected_gal())
+//	{
+//
+//		$forces_account =& SmrAccount::getAccount($db->f('owner_id'));
+//
+//		// if one is vet and the other is newbie we skip it
+//		if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
+//			continue;
+//
+//	}
 
 	if ($player->getNewbieTurns() > 0) {
 

@@ -214,20 +214,20 @@ class SmrSector
 		while ($this->db->nextRecord()) {
 
 			$owner =& SmrPlayer::getPlayer($this->db->getField('owner_id'), $this->gameID);
-			if ($owner->alliance_id == $player->getAllianceID() && $player->getAllianceID() != 0) continue;
+			if ($owner->sameAlliance($player)) continue;
 
-			// we may skip player if this is a protected gal.
-			if ($this->is_protected_gal()) {
-
-				$curr_account =& SmrAccount::getAccount($this->db->getField('owner_id'));
-
-				if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
-				continue;
-			}
+//			// we may skip player if this is a protected gal.
+//			if ($this->is_protected_gal()) {
+//
+//				$curr_account =& SmrAccount::getAccount($this->db->getField('owner_id'));
+//
+//				if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
+//				continue;
+//			}
 
 			// send scout messages to user
-			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->sectorID;
-			$player->sendMessage($owner->accountID, $SCOUTMSG, $this->db->escapeString($message, false));
+			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->getSectorID();
+			$player->sendMessage($owner->getAccountID(), $SCOUTMSG, $this->db->escapeString($message, false));
 
 		}
 
@@ -288,11 +288,11 @@ class SmrSector
 
 	}
 
-	function is_protected_gal() {
-
-		return $this->galaxyID < 9;
-
-	}
+//	function is_protected_gal() {
+//
+//		return $this->galaxyID < 9;
+//
+//	}
 	
 	public function getGameID()
 	{

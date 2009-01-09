@@ -112,7 +112,7 @@ if ($db->next_record()) {
 // *
 // *********************************
 $db->query('SELECT * FROM active_session ' .
-		   'WHERE last_accessed > ' . (time() - 1800));
+		   'WHERE last_accessed > ' . (TIME - 1800));
 if ($db->nf() == 0)
 	$db->query('UPDATE player SET newbie_turns = 1
 				WHERE newbie_turns = 0 AND
