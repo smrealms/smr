@@ -27,7 +27,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return $this->numberOfCDs;
 	}
 	
-	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
+	public function getModifiedAccuracy()
 	{
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		return $modifiedAccuracy;
@@ -57,7 +57,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	
 	protected function getModifiedAccuracyAgainstPlayerUsingRandom(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer, $random)
 	{
-		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
+		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy += ($random + mt_rand($weaponPlayer->getLevelID() / 2,$weaponPlayer->getLevelID()) - ($targetPlayer->getLevelID() - $weaponPlayer->getLevelID())/3)/1.5;
 
 		$weaponShip =& $weaponPlayer->getShip();
