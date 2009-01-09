@@ -50,16 +50,16 @@ class SMR_BATTLE extends SMR_DB {
 
 			while ($this->next_record() && $this->get_fleet_size() <= $max_fleet_size) {
 
-				// we may skip player if this is a protected gal.
-				if ($sector->is_protected_gal()) {
-
-					$curr_account =& SmrAccount::getAccount($this->f('account_id'));
-
-					// if one is vet and the other is newbie we skip it
-					if (different_level($rank_id, $curr_account->get_rank(), $initiator_account->veteran, $curr_account->veteran))
-						continue;
-
-				}
+//				// we may skip player if this is a protected gal.
+//				if ($sector->is_protected_gal()) {
+//
+//					$curr_account =& SmrAccount::getAccount($this->f('account_id'));
+//
+//					// if one is vet and the other is newbie we skip it
+//					if (different_level($rank_id, $curr_account->get_rank(), $initiator_account->veteran, $curr_account->veteran))
+//						continue;
+//
+//				}
 
 				$curr_player =& SmrPlayer::getPlayer($this->f('account_id'), $game_id);
 

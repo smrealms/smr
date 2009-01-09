@@ -18,16 +18,16 @@ $allForces =& SmrForce::getSectorForces($player->getGameID(), $var['target_secto
 foreach ($allForces as $forces)
 {
 
-	// we may skip forces if this is a protected gal.
-	if ($sector->is_protected_gal()) {
-
-		$forces_account =& SmrAccount::getAccount($forces->getOwnerID());
-
-		// if one is vet and the other is newbie we skip it
-		if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
-			continue;
-
-	}
+//	// we may skip forces if this is a protected gal.
+//	if ($sector->is_protected_gal()) {
+//
+//		$forces_account =& SmrAccount::getAccount($forces->getOwnerID());
+//
+//		// if one is vet and the other is newbie we skip it
+//		if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
+//			continue;
+//
+//	}
 
 	// decide if it's a friendly or enemy stack
 	$forces_owner	=& $forces->getOwner();
@@ -48,16 +48,16 @@ $db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND ' 
 while ($db->next_record())
 {
 
-	// we may skip player if this is a protected gal.
-	if ($sector->is_protected_gal())
-	{
-
-		$curr_account =& SmrAccount::getAccount($db->f('account_id'));
-
-		// if one is vet and the other is newbie we skip it
-		if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
-			continue;
-	}
+//	// we may skip player if this is a protected gal.
+//	if ($sector->is_protected_gal())
+//	{
+//
+//		$curr_account =& SmrAccount::getAccount($db->f('account_id'));
+//
+//		// if one is vet and the other is newbie we skip it
+//		if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
+//			continue;
+//	}
 
 	$curr_player	=& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
 	$curr_ship		=& $curr_player->getShip();
