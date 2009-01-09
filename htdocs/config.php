@@ -105,7 +105,7 @@ define('NEWBIE_TURNS_WARNING_LIMIT',20);
 
 define('MAX_MONEY',4294967296);
 
-define('EOL',"'.EOL.'");
+define('EOL',"\n");
 
 define('SMARTY_LIBS_DIR',LIB.'/smarty/libs/');
 define('SMARTY_TEMPLATES_DIR',LIB . 'smarty/templates/');
