@@ -502,7 +502,7 @@ class SmrForce
 	
 	public function &doWeaponDamage(array $damage)
 	{
-		$alreadyDead = $this->exists();
+		$alreadyDead = !$this->exists();
 		$minesDamage = 0;
 		$cdDamage = 0;
 		$sdDamage = 0;
@@ -521,7 +521,7 @@ class SmrForce
 			}
 		}
 		$return = array(
-						'KillingShot' => !$alreadyDead && $this->exists(),
+						'KillingShot' => !$alreadyDead && !$this->exists(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Mines' => $minesDamage,
 						'NumMines' => $minesDamage/MINE_ARMOUR,
