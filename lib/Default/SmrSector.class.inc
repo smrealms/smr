@@ -464,7 +464,7 @@ class SmrSector
 		if($attackingPlayer->forceNAPAlliance($forceOwner))
 			throw new Exception('The trader has a force NAP.');
 		$fightingPlayers = array('Attackers' => array(), 'Defenders' => array());
-		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
+		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
 		foreach($alliancePlayers as $accountID => $player)
 		{
 			if($player->canFight())
