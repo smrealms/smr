@@ -10,7 +10,7 @@ if ($sector->has_hq())
 else
 	$PHP_OUTPUT.=create_ug_menue();
 
-if ($player->military_payment > 0) {
+if ($player->hasMilitaryPayment()) {
 
 	$PHP_OUTPUT.=('For your military help you have been paid <font color=yellow>'.$player->getMilitaryPayment().'</font> credits');
 
