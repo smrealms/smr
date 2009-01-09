@@ -402,7 +402,7 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //	$curr_attacker->update();
 //
 //	// disable cloak
-//	$curr_attacker_ship->disable_cloak();
+//	$curr_attacker_ship->decloak();
 //
 //	// the damage this attacker is going to do
 //	$attacker_damage = 0;
