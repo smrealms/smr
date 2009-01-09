@@ -60,7 +60,7 @@ $PHP_OUTPUT.=('</form>');
 //set turns
 $container['func'] = 'Turns';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="sector_to" value="'.$player->getTurns().'">&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="text" name="turns" value="'.$player->getTurns().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set Turns');
 $PHP_OUTPUT.=('</form>');
 
