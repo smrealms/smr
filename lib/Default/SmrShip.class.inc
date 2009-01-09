@@ -111,9 +111,9 @@ class SmrShip extends AbstractSmrShip
 	function update_cargo() {
 		
 		// write cargo info
-		foreach ($this->cargo as $id => $amount) {
-			
-			if ($amount != 0)
+		foreach ($this->getCargo() as $id => $amount)
+		{
+			if ($amount > 0)
 				$this->db->query('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$id.', '.$amount.')');
 			else
 				$this->db->query('DELETE FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND good_id = '.$id.' LIMIT 1');
