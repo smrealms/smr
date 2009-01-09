@@ -2,7 +2,7 @@
 
 // check if our alignment is high enough
 if ($player->getAlignment() <= -100) {
-	$PHP_OUTPUT.=create_echo_error('You are not allowed to enter our Government HQ!');
+	create_error('You are not allowed to enter our Government HQ!');
 	return;
 }
 
@@ -23,14 +23,14 @@ if ($db->next_record()) {
 
 // did we get a result
 if (empty($race_id)) {
-  $PHP_OUTPUT.=create_echo_error('There is no headquarter. Obviously.');
+  create_error('There is no headquarter. Obviously.');
   return;
 }
 
 // are we at war?
 $db->query('SELECT * FROM race_has_relation WHERE game_id = '.SmrSession::$game_id.' AND race_id_1 = '.$race_id.' AND race_id_2 = '.$player->getRaceID());
 if ($db->next_record() && $db->f('relation') <= -300) {
-	$PHP_OUTPUT.=create_echo_error('We are at WAR with your race! Get outta here before I call the guards!');
+	create_error('We are at WAR with your race! Get outta here before I call the guards!');
 	return;
 }
 

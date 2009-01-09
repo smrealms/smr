@@ -1,6 +1,6 @@
 <?
 if($player->isLandedOnPlanet())
-	$PHP_OUTPUT.=create_echo_error('You are on a planet!');
+	create_error('You are on a planet!');
 
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);

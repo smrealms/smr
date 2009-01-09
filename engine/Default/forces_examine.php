@@ -12,7 +12,7 @@ $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var
 // first check if both ship and forces are in same sector
 if ($attacker->getSectorID() != $forces->getSectorID()) {
 
-	$PHP_OUTPUT.=create_echo_error('Those forces are no longer here!');
+	create_error('Those forces are no longer here!');
 	return;
 
 }

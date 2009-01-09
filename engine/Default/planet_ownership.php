@@ -4,7 +4,7 @@ if (!$player->isLandedOnPlanet())
 require_once(get_file_loc('SmrPlanet.class.inc'));
 if (!$player->isLandedOnPlanet()) {
 	
-	$PHP_OUTPUT.=create_echo_error('You are not on a planet!');
+	create_error('You are not on a planet!');
 	return;
 	
 }

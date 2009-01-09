@@ -2,7 +2,7 @@
 
 if ($player->getAlignment() >= 100) {
 
-	$PHP_OUTPUT.=create_echo_error('You are not allowed to come in here!');
+	create_error('You are not allowed to come in here!');
 	return;
 
 }

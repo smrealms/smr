@@ -234,11 +234,11 @@ Table of Content
 			setError('You are under newbie protection!');
 
 	If you are within a script that is loaded from the skeleton.php page
-	you must use $PHP_OUTPUT.=create_echo_error AND return from current script
+	you must use create_error AND return from current script
 
 		if ($player->getNewbieTurns() > 0) {
 
-	        $PHP_OUTPUT.=create_echo_error('You are under newbie protection!');
+	        create_error('You are under newbie protection!');
 	        return;
 
 		}

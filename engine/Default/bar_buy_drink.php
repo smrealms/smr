@@ -6,7 +6,7 @@ $smarty->assign('PageTopic','DRINKING');
 $db2 = new SMR_DB();
 if ($player->getCredits() < 10)
 {
-	$PHP_OUTPUT.=create_echo_error('Come back when you get some money!');
+	create_error('Come back when you get some money!');
 	return;
 }
 $player->decreaseCredits(10);

@@ -4,21 +4,21 @@ $amount = $_REQUEST['amount'];
 $account_id = $_REQUEST['account_id'];
 if (!is_numeric($amount)) {
 
-	$PHP_OUTPUT.=create_echo_error('Numbers only please');
+	create_error('Numbers only please');
 	return;
 
 }
 $amount = round($amount);
 if ($amount <= 0) {
 
-	$PHP_OUTPUT.=create_echo_error('You can only tranfer a positive amount');
+	create_error('You can only tranfer a positive amount');
 	return;
 
 }
 
 if ($amount > $account->get_credits()) {
 
-	$PHP_OUTPUT.=create_echo_error('You can\'t transfer more than you have!');
+	create_error('You can\'t transfer more than you have!');
 	return;
 
 }

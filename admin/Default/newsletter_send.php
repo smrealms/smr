@@ -39,7 +39,7 @@ if ($db->next_record()) {
 	$mail->Body    = $db->f('newsletter');
 
 	// attach footer
-	$mail->Body   .= '\n\nThank you,\n   SMR Support Team\n\nNote: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
+	$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
 
 }
 

@@ -178,12 +178,12 @@ function php_link_check($url, $r = FALSE)
 		$head = '';
 		$httpRequest = 'HEAD '. $url['path'] .' HTTP/1.1\r'.EOL
 								.'Host: '. $url['host'] .'\r'.EOL
-								.'Connection: close\r\n\r'.EOL;
+								.'Connection: close\r'.EOL.'\r'.EOL;
 		fputs($fp, $httpRequest);
 		while(!feof($fp)) $head .= fgets($fp, 1024);
 		fclose($fp);
 
-		preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
+		preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r'.EOL.']*)=', $head, $matches);
 		$http['Status-Line'] = $matches[0];
 		$http['HTTP-Version'] = $matches[1];
 		$http['Status-Code'] = $matches[2];
@@ -195,7 +195,7 @@ function php_link_check($url, $r = FALSE)
 		$rclass = array('Informational', 'Success', 'Redirection', 'Client Error', 'Server Error');
 		$http['Response-Class'] = $rclass[$http['Status-Code'][0] - 1];
 
-		preg_match_all('=^(.+): ([^\r\n]*)=m', $head, $matches, PREG_SET_ORDER);
+		preg_match_all('=^(.+): ([^\r'.EOL.']*)=m', $head, $matches, PREG_SET_ORDER);
 		foreach($matches as $line) $http[$line[1]] = $line[2];
 
 		return $http;

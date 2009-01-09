@@ -6,7 +6,7 @@ if (isset($var['reason']))
 	$PHP_OUTPUT.=('<p><big><b style="color:red;">' . $var['reason'] . '</b></big></p>');
 
 //find how many credits they have
-$db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id.'');
+$db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id);
 if ($db->next_record())
 	$have = $db->f('credits_left');
 else

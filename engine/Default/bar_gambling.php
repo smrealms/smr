@@ -9,7 +9,7 @@ $time = time();
 if ($action == 'process') {
 	
 	if ($player->getCredits() < 1000000) {
-		$PHP_OUTPUT.=create_echo_error('There once was a man with less than $1,000,000...wait...thats you!');
+		create_error('There once was a man with less than $1,000,000...wait...thats you!');
 		return;
 	}
 	$player->decreaseCredits(1000000);
@@ -260,38 +260,38 @@ if ($action == 'lotto') {
 		else $bet = $_REQUEST['bet'];
 		if (!is_numeric($bet)) {
 			
-			$PHP_OUTPUT.=create_echo_error('Only Numbers Please');
+			create_error('Only Numbers Please');
 			return;
 			
 		}
 		$bet = round($bet);
 		if ($player->getCredits() < $bet) {
 			
-			$PHP_OUTPUT.=create_echo_error('Not even enough to play BlackJack...you need to trade!');
+			create_error('Not even enough to play BlackJack...you need to trade!');
 			return;
 			
 		}
 		if ($bet == 0) {
 			
-			$PHP_OUTPUT.=create_echo_error('We don\'t want you here if you don\'t want to play with cash!');
+			create_error('We don\'t want you here if you don\'t want to play with cash!');
 			return;
 			
 		}
 		if ($bet > 100 && $player->getNewbieTurns() > 0) {
 			
-			$PHP_OUTPUT.=create_echo_error('Sorry.  According to Galactic Laws we can only play with up to 100 credits while under newbie protection.');
+			create_error('Sorry.  According to Galactic Laws we can only play with up to 100 credits while under newbie protection.');
 			return;
 			
 		}
 		if ($bet > 10000) {
 			
-			$PHP_OUTPUT.=create_echo_error('Sorry.  According to Galactic Laws we can only play with up to 10,000 credits');
+			create_error('Sorry.  According to Galactic Laws we can only play with up to 10,000 credits');
 			return;
 			
 		}
 		if ($bet < 0) {
 			
-			$PHP_OUTPUT.=create_echo_error('Yeah...we are gonna give you money to play us! GREAT IDEA!!');
+			create_error('Yeah...we are gonna give you money to play us! GREAT IDEA!!');
 			return;
 		
 		}
@@ -393,7 +393,7 @@ if ($action == 'lotto') {
 		if ($db->next_record()) $old_card = unserialize($db->f('last_hand'));
 		if ($old_card == $player_card) {
 			
-			$PHP_OUTPUT.=create_echo_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');
+			create_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');
 			return;
 			
 		}

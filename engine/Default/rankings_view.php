@@ -40,7 +40,7 @@ while ($db->next_record()) {
 }
 $db2 = new SMR_DB();
 $PHP_OUTPUT.=('<br><br>');
-$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->account_id.'');
+$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->account_id);
 if ($db->next_record()) {
 
 	$PHP_OUTPUT.=('<b>Extended Stats</b><br>');
@@ -54,7 +54,7 @@ if ($db->next_record()) {
 	$PHP_OUTPUT.=('You have explored ' . $db->f('sectors_explored') . ' sectors.<br>');
 	$PHP_OUTPUT.=('You have died ' . $db->f('deaths') . ' times.<br>');
 	$PHP_OUTPUT.=('You have traded ' . $db->f('goods_traded') . ' goods.<br>');
-	$db2->query('SELECT sum(amount) as amount FROM account_donated WHERE account_id = '.$account->account_id.'');
+	$db2->query('SELECT sum(amount) as amount FROM account_donated WHERE account_id = '.$account->account_id);
 	if ($db2->next_record())
 	    $PHP_OUTPUT.=('You have donated ' . $db2->f('amount') . ' dollars to SMR.<br>');
 	$PHP_OUTPUT.=('You have claimed ' . $db->f('bounties_claimed') . ' bounties.<br>');

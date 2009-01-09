@@ -5,7 +5,7 @@ $player_id = $_REQUEST['player_id'];
 $player_name = $_REQUEST['player_name'];
 if (!is_numeric($player_id) && !empty($player_id)) {
 
-	$PHP_OUTPUT.=create_echo_error('Please enter only numbers!');
+	create_error('Please enter only numbers!');
 	return;
 
 }

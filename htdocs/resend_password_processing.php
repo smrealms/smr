@@ -33,9 +33,9 @@ $account->generatePasswordReset();
 $resetURL = $URL.'/reset_password.php?login='.$account->login.'&resetcode='.$account->getPasswordReset();
 // send email with password to user
 mail($email, 'Space Merchant Realms Password',
-	 'A user from ' . $curr_ip . ' requested to reset your password!'."\n\r\n\r" .
-	 '   Your password reset code is: ' . $account->getPasswordReset()."\n\r" .
-	 '   You can use this url: '.$resetURL . "\n\r\n\r" .
+	 'A user from ' . $curr_ip . ' requested to reset your password!'."'.EOL.'\r'.EOL.'\r" .
+	 '   Your password reset code is: ' . $account->getPasswordReset()."'.EOL.'\r" .
+	 '   You can use this url: '.$resetURL . "'.EOL.'\r'.EOL.'\r" .
 	 'The Space Merchant Realms server is on the web at '.$URL.'/',
 	 'From: support@smrealms.de');
 

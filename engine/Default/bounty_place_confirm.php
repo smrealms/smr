@@ -7,34 +7,34 @@ $amount = $_REQUEST['amount'];
 $account_id = $_REQUEST['account_id'];
 if ($account_id == 0) {
 	
-	$PHP_OUTPUT.=create_echo_error('Uhhh...who is [Please Select]?');
+	create_error('Uhhh...who is [Please Select]?');
 	return;
 	
 }
 if (!is_numeric($amount)) {
 
-	$PHP_OUTPUT.=create_echo_error('Numbers only please');
+	create_error('Numbers only please');
 	return;
 
 }
 $amount = round($amount);
 if ($player->getCredits() < $amount) {
 
-	$PHP_OUTPUT.=create_echo_error('You dont have that much money.');
+	create_error('You dont have that much money.');
 	return;
 
 }
 
 if ($amount <= 0) {
 
-	$PHP_OUTPUT.=create_echo_error('You must enter an amount greater than 0');
+	create_error('You must enter an amount greater than 0');
 	return;
 
 }
 
 if (empty($amount) || empty($account_id)) {
 
-	$PHP_OUTPUT.=create_echo_error('Dont you want to place bounty?');
+	create_error('Dont you want to place bounty?');
 	return;
 
 }

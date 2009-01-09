@@ -44,7 +44,7 @@ if (!isset($var['order']))
 // nothing marked?
 if (!$account_list) {
 
-	$PHP_OUTPUT.=create_echo_error('You have to select the log files you want to view/delete!');
+	$PHP_OUTPUT.=create_error('You have to select the log files you want to view/delete!');
 	return;
 
 }
@@ -152,7 +152,7 @@ if ($action == 'Delete') {
 	foreach ($log_notes as $note) {
 
 		if ($flat_notes)
-			$flat_notes .= ''.EOL;
+			$flat_notes .= EOL;
 		$flat_notes .= $note;
 
 	}

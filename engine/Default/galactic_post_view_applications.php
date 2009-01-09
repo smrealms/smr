@@ -38,7 +38,7 @@ if (isset($var['id'])) {
     $PHP_OUTPUT.=('Name : '.$applie->getPlayerName().'<br>');
     $PHP_OUTPUT.=('Have you written for some kind of newspaper before? ' . $db->f('written_before'));
     $PHP_OUTPUT.=('<br>');
-    $PHP_OUTPUT.=('How many articles are you willing to write per day? ' . $db->f('articles_per_day'));
+    $PHP_OUTPUT.=('How many articles are you willing to write per week? ' . $db->f('articles_per_day'));
     $PHP_OUTPUT.=('<br>');
     $PHP_OUTPUT.=('What do you want to tell the editor?<br><br>'.$desc);
     $container = array();

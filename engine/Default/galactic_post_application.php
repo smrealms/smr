@@ -10,7 +10,7 @@ $PHP_OUTPUT.=('<br>Have you ever written for any type of newspaper before?<br>')
 $PHP_OUTPUT.=('Yes : <input type="radio" name="exp" value="1"><br>');
 $PHP_OUTPUT.=('No : <input type="radio" name="exp" value="2"><br>');
 $PHP_OUTPUT.=('<br>');
-$PHP_OUTPUT.=('How many articles would you write per day if you were selected?<br>');
+$PHP_OUTPUT.=('How many articles would you write per week if you were selected?<br>');
 $PHP_OUTPUT.=('<input type="text" name="amount" value="0" id="InputFields" style="text-align:right;width:25;">');
 $PHP_OUTPUT.=('<br>');
 $PHP_OUTPUT.=('In 255 characters or less please describe why you should be accepted<br>');
