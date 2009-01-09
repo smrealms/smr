@@ -22,7 +22,7 @@ if ($ship->hasCloak())
 
 	$PHP_OUTPUT.= '<b>Cloaking Device:</b>&nbsp;&nbsp;&nbsp;&nbsp;';
 
-	if (!$ship->cloak_active()) {
+	if (!$ship->isCloaked()) {
 		$container['action'] = 'Enable';
 		$PHP_OUTPUT.= create_button($container,'Enable');
 	}

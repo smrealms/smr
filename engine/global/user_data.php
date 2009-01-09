@@ -146,7 +146,7 @@ $ship->hasScanner() ? $cijsd .= '*' : $cijsd .= '-';
 echo $cijsd;
 echo '<br /><br />';
 
-if ($ship->cloak_active()) echo '<strong style="color:lime;">*** Cloak active ***</strong><br /><br />';
+if ($ship->isCloaked()) echo '<strong style="color:lime;">*** Cloak active ***</strong><br /><br />';
 else if (!empty($ship->hardware[8])) echo '<strong style="color:red;">*** Cloak inactive ***</strong><br /><br />';
 
 
