@@ -55,6 +55,7 @@ foreach($attackers as &$attacker)
 
 $results['Forces'] =& $forces->shootPlayers($attackers,false);
 
+$results['Attackers'] = array('TotalDamage' => 0);
 foreach($attackers as &$attacker)
 {
 	$playerResults =& $attacker->shootForces($forces);
@@ -65,7 +66,7 @@ foreach($attackers as &$attacker)
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $forceOwner->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $forceOwner->getAllianceID() . ',' . $forceOwner->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
