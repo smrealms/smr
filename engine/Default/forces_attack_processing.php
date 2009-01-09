@@ -40,7 +40,7 @@ $container['forced'] = 'no';
 
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
-$attackers =& $sector->getFightingTradersAgainstForces($player, $defendingForces);
+$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
 
 //decloak all attackers
 foreach($attackers as &$attacker)
