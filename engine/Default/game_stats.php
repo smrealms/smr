@@ -69,7 +69,7 @@ $PHP_OUTPUT.='
 </td>
 </tr>
 </table><br>';
-$PHP_OUTPUT.=_table();
+$PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.='
 <tr>
 <td align=center>Top 10 Players in Experience</td>
