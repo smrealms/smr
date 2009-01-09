@@ -618,6 +618,11 @@ abstract class AbstractSmrPlayer
 		return $this->militaryPayment;
 	}
 	
+	public function hasMilitaryPayment()
+	{
+		return $this->getMilitaryPayment()>0;
+	}
+	
 	public function setMilitaryPayment($amount)
 	{
 		if($this->militaryPayment == $amount)
