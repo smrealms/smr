@@ -81,7 +81,7 @@ class SmrMines extends AbstractSmrCombatWeapon
 			$damage['Shield'] /= 2;
 			$damage['Armour'] /= 2;
 		}
-		$damage['Launched'] = ceil($this->getNumberOfMines() * $this->getModifiedAccuracyAgainstPlayer($targetPlayer) / 100);
+		$damage['Launched'] = ceil($this->getNumberOfMines() * $this->getModifiedForceAccuracyAgainstPlayer($targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
