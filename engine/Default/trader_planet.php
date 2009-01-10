@@ -64,7 +64,7 @@ if ($db->nf() > 0) {
 		$PHP_OUTPUT.=('<td align="center">'.$planet->shields.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$planet->drones.'</td>');
 		$PHP_OUTPUT.=('<td align="left">');
-		foreach ($planet->stockpile as $id => $amount)
+		foreach ($planet->getStockpile() as $id => $amount)
 
 			if ($amount > 0) {
 
@@ -147,7 +147,7 @@ if ($player->getAllianceID() != 0) {
 			$PHP_OUTPUT.=('<td align="center">'.$planet->drones.'</td>');
 			$PHP_OUTPUT.=('<td align="left">');
 			$supply = false;
-			foreach ($planet->stockpile as $id => $amount)
+			foreach ($planet->getStockpile() as $id => $amount)
 	
 				if ($amount > 0) {
 	

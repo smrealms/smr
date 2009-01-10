@@ -30,7 +30,7 @@ while($db->next_record())
 	$good_id	= $db->f('good_id');
 	$good_name	= $db->f('good_name');
 
-	if (!$ship->hasCargo($good_id) && empty($planet->stockpile[$good_id])) continue;
+	if (!$ship->hasCargo($good_id) && empty($planet->getStockpile($good_id))) continue;
 
 	$container = array();
 	$container['url'] = 'planet_stockpile_processing.php';
@@ -40,7 +40,7 @@ while($db->next_record())
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td>'.$good_name.'</td>');
 	$PHP_OUTPUT.=('<td align="center">' . $ship->getCargo($good_id) . '</td>');
-	$PHP_OUTPUT.=('<td align="center">' . $planet->stockpile[$good_id] . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . $planet->getStockpile($good_id) . '</td>');
 	$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="0" id="InputFields" size="4" style="text-align:center;"></td>');
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=create_submit('Ship');

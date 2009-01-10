@@ -130,7 +130,7 @@ while ($db->next_record())
 		$good_name	= $db2->f('good_name');
 		$amount		= $db2->f('amount');
 
-		if ($planet->stockpile[$good_id] < $amount)
+		if ($planet->getStockpile($good_id) < $amount)
 		{
 			$PHP_OUTPUT.=('<span style="color:red;">'.$amount.'-'.$good_name.', </span>');
 			$missing_good = true;
@@ -180,7 +180,7 @@ $PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.=('<p>Your stockpile contains :</p>');
 $PHP_OUTPUT.=('<ul>');
-foreach ($planet->stockpile as $id => $amount)
+foreach ($planet->getStockpile() as $id => $amount)
 {
 	if ($amount > 0)
 	{
