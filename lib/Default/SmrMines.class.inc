@@ -113,7 +113,7 @@ class SmrMines extends AbstractSmrCombatWeapon
 	protected function &doForceDamageToPlayer(array &$return, SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
 	{
 		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces,$targetPlayer,$minesAreAttacker);
-		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+		$return['ActualDamage'] =& $targetPlayer->getShip()->doMinesDamage($return['WeaponDamage']);
 
 		if($return['ActualDamage']['KillingShot'])
 			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);

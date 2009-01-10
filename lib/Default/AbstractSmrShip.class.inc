@@ -965,6 +965,34 @@ abstract class AbstractSmrShip
 		return $return;
 	}
 	
+	public function &doMinesDamage(array $damage)
+	{
+		$alreadyDead = $this->getPlayer()->isDead();
+		$armourDamage = 0;
+		$cdDamage = 0;
+		$shieldDamage = 0;
+		if(!$alreadyDead)
+		{
+			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
+			$damage['MaxDamage'] -= $shieldDamage;
+			if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+			{ //skip CDs if it's mines
+				$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']));
+			}
+		}
+		$return = array(
+						'KillingShot' => !$alreadyDead && $this->isDead(),
+						'TargetAlreadyDead' => $alreadyDead,
+						'Shield' => $shieldDamage,
+						'CDs' => $cdDamage,
+						'NumCDs' => $cdDamage/CD_ARMOUR,
+						'Armour' => $armourDamage,
+						'HasCDs' => $this->hasCDs(),
+						'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
+		);
+		return $return;
+	}
+	
 	protected function doShieldDamage($damage)
 	{
 		$actualDamage = min($this->getShields(),$damage);
