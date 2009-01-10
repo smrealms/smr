@@ -52,7 +52,7 @@ if ($db->nf() > 0) {
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 
-		if ($planet->build()) {
+		if ($planet->isCurrentlyBuilding()) {
 
 			$PHP_OUTPUT.=($planet->current_building_name.'<br />');
 			$PHP_OUTPUT.=(echo_time($planet->time_left));
@@ -123,7 +123,6 @@ if ($player->getAllianceID() != 0) {
 			$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->f('sector_id'));
 			$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->f('sector_id'), SmrSession::$account_id);
 			$planet_owner =& SmrPlayer::getPlayer($planet->owner_id, SmrSession::$game_id);
-			$planet->build();
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
 			$PHP_OUTPUT.=('<td>'.$planet_owner->getPlayerName().'</td>');
@@ -134,7 +133,7 @@ if ($player->getAllianceID() != 0) {
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">');
 	
-			if ($planet->build()) {
+			if ($planet->isCurrentlyBuilding()) {
 	
 				$PHP_OUTPUT.=($planet->current_building_name.'<br />');
 				$PHP_OUTPUT.=(echo_time($planet->time_left));

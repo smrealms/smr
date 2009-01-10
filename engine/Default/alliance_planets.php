@@ -50,13 +50,12 @@ if ($db->nf() > 0) {
 
     while ($db->next_record()) {
 		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->f('sector_id'));
-		$planet->build();
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= $planet->planet_name;
 		$PHP_OUTPUT.= '</td><td>';
 		$PHP_OUTPUT.= stripslashes($db->f('player_name'));
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
-		$PHP_OUTPUT.= $planet->sector_id;
+		$PHP_OUTPUT.= $planet->getSectorID();
 		$PHP_OUTPUT.= '&nbsp;(';
 		$PHP_OUTPUT.= $db->f('galaxy_name');
 		$PHP_OUTPUT.= ')</td><td class="shrink center">';
@@ -87,7 +86,7 @@ if ($db->nf() > 0) {
 		}
 
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap center">';
-		if ($planet->build()) {
+		if ($planet->isCurrentlyBuilding()) {
 
 			$PHP_OUTPUT.= $planet->current_building_name;
 			

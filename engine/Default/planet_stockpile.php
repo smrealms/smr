@@ -5,7 +5,6 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
-$planet->build();
 
 $smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$player->getSectorID().']');
 
