@@ -26,7 +26,7 @@ if ($action == 'Ship') {
 		create_error('You can\'t take more than you can carry!');
 
 	// now transfer
-	$planet->stockpile[$var['good_id']] -= $amount;
+	$planet->decreaseStockpile($var['good_id'],$amount);
 	$ship->increaseCargo($var['good_id'],$amount);
 	$db->query('SELECT * FROM good WHERE good_id = '.$var['good_id']);
 	$db->next_record();
@@ -46,7 +46,7 @@ elseif ($action == 'Planet')
 		create_error('You can only put 600 per item at planet!');
 
 	// now transfer
-	$planet->stockpile[$var['good_id']] += $amount;
+	$planet->increaseStockpile($var['good_id'],$amount);
 	$ship->decreaseCargo($var['good_id'],$amount);
 }
 

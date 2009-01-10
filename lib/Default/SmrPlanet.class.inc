@@ -17,14 +17,16 @@ class SmrPlanet
 	var $credits;
 	var $bonds;
 	var $maturity;
-	var $stockpile;
-	var $buildings;
+	protected $stockpile;
+	protected $buildings;
 	var $max_construction;
 	var $inhabitable_time;
 	var $level;
 	var $current_building_id;
 	var $current_building_name;
 	var $time_left;
+	
+	protected $hasChangedStockpile = false;
 	
 	protected $examineHREF;
 
@@ -162,6 +164,30 @@ class SmrPlanet
 	public function hasStockpile($goodID=false)
 	{
 		return $this->getStockpile($goodID) > 0;
+	}
+	
+	public function setStockpile($goodID,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to set negative stockpile.');
+		if($this->getStockpile($goodID) == $amount)
+			return;
+		$this->stockpile[$goodID] = $amount;
+		$this->hasChangedStockpile = true;
+	}
+	
+	public function decreaseStockpile($goodID,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to decrease negative stockpile.');
+		$this->setStockpile($goodID,$this->getStockpile($goodID) - $amount);
+	}
+	
+	public function increaseStockpile($goodID,$amount)
+	{
+		if($amount < 0)
+			throw new Exception('Trying to increase negative stockpile.');
+		$this->setStockpile($goodID,$this->getStockpile($goodID) + $amount);
 	}
 	
 	public function getBuildings()
@@ -340,7 +366,7 @@ class SmrPlanet
 			$good_id	= $this->db->getField('good_id');
 			$amount		= $this->db->getField('amount');
 
-			$this->stockpile[$good_id] -= $amount;
+			$this->decreaseStockpile($good_id,$amount);
 		}
 
 		$this->update();
