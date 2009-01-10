@@ -3,7 +3,7 @@
 $PHP_OUTPUT.= '<div align=center>';
 $smarty->assign('PageTopic','DRINKING');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 if ($player->getCredits() < 10)
 {
 	create_error('Come back when you get some money!');

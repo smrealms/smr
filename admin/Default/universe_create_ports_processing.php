@@ -40,7 +40,7 @@ if ($action == 'Skip >>') {
 // initialize random generator.
 mt_srand((double)microtime()*1000000);
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 $goods = array();
 $curr_good_class = 0;

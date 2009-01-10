@@ -15,7 +15,7 @@ $smarty->assign('PageTopic','PLANETS');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM player, planet WHERE player.account_id = planet.owner_id AND ' .
 											  'player.game_id = '.$player->getGameID().' AND ' .
 											  'planet.game_id = '.$player->getGameID().' AND ' .
@@ -95,7 +95,7 @@ if ($player->getAllianceID() != 0) {
 	
 	$smarty->assign('PageTopic','PLANET LIST FOR '.$player->getAllianceName().' ('.$player->getAllianceID().')');
 	
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 	if (!isset($planet_sec)) $planet_sec = 0;
 	$db->query('SELECT * FROM player, planet WHERE player.game_id = planet.game_id AND ' .
 												  'owner_id = account_id AND ' .

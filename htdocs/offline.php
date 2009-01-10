@@ -1,10 +1,10 @@
 <?
 
 require_once('config.inc');
-require_once(LIB . 'global/smr_db.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 // new db object
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 $db->query('SELECT * FROM game_disable');
 if ($db->next_record()) {

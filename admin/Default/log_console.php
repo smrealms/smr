@@ -12,7 +12,7 @@ $db->query('SELECT account_has_logs.account_id as account_id, login, player_name
 if ($db->nf()) {
 
 	// a second db object
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'log_console_detail.php'));
 

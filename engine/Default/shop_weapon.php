@@ -1,6 +1,6 @@
 <?
 $smarty->assign('PageTopic','WEAPON DEALER');
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM location, location_sells_weapons, location_type, weapon_type ' .
 					'WHERE location.sector_id = '.$player->getSectorID().' AND ' .
     					  'location.game_id = '.SmrSession::$game_id.' AND ' .

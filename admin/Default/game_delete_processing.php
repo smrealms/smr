@@ -2,9 +2,9 @@
 require_once(get_file_loc('smr_history_db.inc'));
 
 // additional db objects
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
-$smr_db_sql = array();
+$SmrMySqlDatabase_sql = array();
 $history_db_sql = array();
 
 $action = $_REQUEST['action'];
@@ -64,13 +64,13 @@ if ($action == 'Yes') {
 	}
 
 	// these table is nothing worth without the players
-	//$smr_db_sql[] = 'DELETE FROM account_has_logs WHERE game_id = '.$game_id;
+	//$SmrMySqlDatabase_sql[] = 'DELETE FROM account_has_logs WHERE game_id = '.$game_id;
 
-	$smr_db_sql[] = 'DELETE FROM alliance WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM alliance_bank_transactions WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM alliance_has_roles WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM alliance_thread WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM alliance_thread_topic WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance_bank_transactions WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance_has_roles WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance_thread WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance_thread_topic WHERE game_id = '.$game_id;
 	
 	if ($save) {
 		
@@ -88,18 +88,18 @@ if ($action == 'Yes') {
 	}
 			
 			
-	$smr_db_sql[] = 'DELETE FROM alliance_vs_alliance WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM anon_bank WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM anon_bank_transactions WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM bar_tender WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM bar_wall WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM blackjack WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM galactic_post_applications WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM galactic_post_article WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM galactic_post_online WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM galactic_post_paper WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM galactic_post_paper_content WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM galactic_post_writer WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance_vs_alliance WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM anon_bank WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM anon_bank_transactions WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM bar_tender WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM bar_wall WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM blackjack WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_applications WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_article WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_online WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_paper WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_paper_content WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_writer WHERE game_id = '.$game_id;
 
 	if ($save) {
 
@@ -122,11 +122,11 @@ if ($action == 'Yes') {
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM kills WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM location WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM mb_exceptions WHERE value LIKE '.$db->escapeString($game_id.'%');
-	$smr_db_sql[] = 'DELETE FROM message WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM message_notify WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM kills WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM location WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM mb_exceptions WHERE value LIKE '.$db->escapeString($game_id.'%');
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM message WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM message_notify WHERE game_id = '.$game_id;
 
 	if ($save) {
 
@@ -146,7 +146,7 @@ if ($action == 'Yes') {
 		}
 	}
 
-	$smr_db_sql[] = 'DELETE FROM news WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM news WHERE game_id = '.$game_id;
 
 	if ($save) {
 
@@ -178,11 +178,11 @@ if ($action == 'Yes') {
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM planet WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM planet_attack WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM planet_is_building WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM planet_has_cargo WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM planet_has_building WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM planet WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM planet_attack WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM planet_is_building WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM planet_has_cargo WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM planet_has_building WHERE game_id = '.$game_id;
 
 	if ($save) {
 
@@ -222,7 +222,7 @@ if ($action == 'Yes') {
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM player WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player WHERE game_id = '.$game_id;
 
 	if ($save) {
 
@@ -272,27 +272,27 @@ if ($action == 'Yes') {
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM player_has_stats WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM bounty WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_has_ticker WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_has_ticket WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_has_alliance_role WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_has_drinks WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_has_relation WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_has_unread_messages WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_is_president WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_plotted_course WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_read_thread WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_visited_port WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_visited_sector WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_votes_pact WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM player_votes_relation WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM plot_cache WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM port WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM port_attack_times WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM port_has_goods WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM race_has_relation WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM race_has_voting WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_has_stats WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM bounty WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_has_ticker WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_has_ticket WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_has_alliance_role WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_has_drinks WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_has_relation WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_has_unread_messages WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_is_president WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_plotted_course WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_read_thread WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_visited_port WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_visited_sector WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_votes_pact WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM player_votes_relation WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM plot_cache WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM port WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM port_attack_times WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM port_has_goods WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM race_has_relation WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM race_has_voting WHERE game_id = '.$game_id;
 
 	if ($save) {
 
@@ -332,19 +332,19 @@ if ($action == 'Yes') {
 
 	}
 
-	$smr_db_sql[] = 'DELETE FROM sector WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM sector_has_forces WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_cargo WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_hardware WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_name WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_illusion WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_has_weapon WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM warp WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM game WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM sector WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM sector_has_forces WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM ship_has_cargo WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM ship_has_hardware WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM ship_has_name WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM ship_has_illusion WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM ship_has_weapon WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM warp WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM game WHERE game_id = '.$game_id;
 
 	// now do the sql stuff
-	foreach($smr_db_sql as $sql) {
+	foreach($SmrMySqlDatabase_sql as $sql) {
 
 		$db->query($sql);
 
@@ -359,10 +359,10 @@ if ($action == 'Yes') {
 
 	// don't know why exactly we have to do that,
 	// but it seems that the db is used globally instead kept to each object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 }
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 //forward em
 forward(create_container('skeleton.php', 'game_play.php'));
 

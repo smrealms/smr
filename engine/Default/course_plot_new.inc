@@ -7,7 +7,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
  */
 function get_galaxy_id($sector_id, $game_id) {
 
-	$temp_db = new SMR_DB();
+	$temp_db = new SmrMySqlDatabase();
 
 	$temp_db->query('SELECT galaxy_id FROM sector
 					 WHERE sector_id = '.$this->escapeString($sector_id).' AND
@@ -39,8 +39,8 @@ function get_plot(&$route_in, $game_id) {
 
 	}
 
-	$db = new SMR_DB();
-	$db2 = new SMR_DB();
+	$db = new SmrMySqlDatabase();
+	$db2 = new SmrMySqlDatabase();
 
 	// First things first, get every sector in the galaxy
 

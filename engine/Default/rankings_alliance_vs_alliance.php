@@ -4,7 +4,7 @@ $smarty->assign('PageTopic','ALLIANCE VS ALLIANCE RANKINGS');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_ranking_menue(1, 3);
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'rankings_alliance_vs_alliance.php';

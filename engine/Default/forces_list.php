@@ -13,7 +13,7 @@ if (!isset($var['category']))
 else
     $category = $var['category'];
 $db->query('SELECT * FROM sector_has_forces WHERE owner_id = '.$player->getAccountID().' AND game_id = '.SmrSession::$game_id.' ORDER BY '.$category.' '.$order);
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 if ($db->nf() > 0) {
 	
 	$container = array();

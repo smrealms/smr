@@ -33,7 +33,7 @@ function private_msg_weapon($fp, $rdata) {
 	$a[] = 'race_id';
 	$a[] = 'buyer_restriction';
 	$a[] = 'power_level';
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	if ($type == 1)
 		$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE weapon_name LIKE '.$db->escape_string('%' . $msg_1[4] . '%'));

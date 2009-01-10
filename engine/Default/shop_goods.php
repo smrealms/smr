@@ -77,7 +77,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 		{
 			//find the fine
 			//get base for ports that dont happen to trade that good
-			$query = new SMR_DB();
+			$query = new SmrMySqlDatabase();
 			$GOODS = Globals::getGoods();
 			$fine = $port->getLevel() * (($ship->getCargo(5) * $GOODS[5]['BasePrice']) +
 									($ship->getCargo(9) * $GOODS[9]['BasePrice']) +

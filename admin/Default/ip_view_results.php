@@ -1,7 +1,7 @@
 <?
 $variable = $_REQUEST['variable'];
 $type = $_REQUEST['type'];
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 //used to make sure we don't display deleted accounts
 $del_num = 5;
 $close_reason = '&nbsp;';

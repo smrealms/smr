@@ -1,6 +1,6 @@
 <?
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM galactic_post_paper WHERE paper_id = '.$var['id'].' AND game_id = '.$player->getGameID());
 $db->next_record();
 $paper_title = stripslashes($db->f('title'));

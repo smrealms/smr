@@ -7,7 +7,7 @@ function private_msg_login($fp, $rdata) {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s'.$nick.'\s:login\s(.*)\s(.*)\s(.*)\s$/i', $rdata, $msg)) {
 
 		echo_r($msg);
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 
 		$db->query('SELECT * FROM account WHERE login = '.$db->escapeString($msg[4]));
 		if ($db->next_record()) {

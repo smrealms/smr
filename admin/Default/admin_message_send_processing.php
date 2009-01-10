@@ -20,7 +20,7 @@ if (!empty($account_id) || $game_id == 20000) {
 	} else {
 		
 		//send to all players
-		$db2 = new SMR_DB();
+		$db2 = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM player');
 		while ($db->next_record()) {
 			

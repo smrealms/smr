@@ -71,7 +71,7 @@ if (isset($var['process'])) {
 	$PHP_OUTPUT.=('<select type=select name=gal_id>');
 	$PHP_OUTPUT.=('<option value=0>[Select a galaxy]</option>');
 	$db->query('SELECT galaxy_id FROM sector WHERE game_id = '.$player->getGameID().' GROUP BY galaxy_id ORDER BY galaxy_id ASC');
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 	while ($db->next_record()) {
 		
 		$gal_id = $db->f('galaxy_id');

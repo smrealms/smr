@@ -1,7 +1,7 @@
 <?
 
 //we are gonna check for reducing points...
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->lock('account_has_points');
 $week = time() - (7 * 24 * 60 * 60);
 $db->query('SELECT * FROM account_has_points WHERE last_update < '.$week.' AND points > 0 AND points < 100');

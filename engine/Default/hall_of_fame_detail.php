@@ -153,7 +153,7 @@ if (!isset($per) && isset($id)) {
             //get the account
             $curr_account =& SmrAccount::getAccount($db->f('account_id'));
             $name = stripslashes($curr_account->HoF_name);
-            $db2 = new SMR_DB();
+            $db2 = new SmrMySqlDatabase();
             if ($id == 'donation') {
 
                 $db2->query('SELECT sum(amount) FROM account_donated WHERE account_id = '.$curr_account->account_id);
@@ -220,7 +220,7 @@ if (!isset($per) && isset($id)) {
         $PHP_OUTPUT.=('<th align="center">'.$second_display.'</th>');
         $PHP_OUTPUT.=('</tr>');
         $count = 1;
-        $db4 = new SMR_DB();
+        $db4 = new SmrMySqlDatabase();
         while ($db->next_record()) {
 
             //get the account

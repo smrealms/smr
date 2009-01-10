@@ -17,7 +17,7 @@ if (empty($_REQUEST['acct_game'])) {
 } else {
 
 	//db object
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 	//split the name
 	list ($acc, $game) = split('/',$_REQUEST['acct_game']);
 	//get account info

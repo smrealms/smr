@@ -1,7 +1,7 @@
 <?
 
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 if (isset($var['article'])) {
 
     $db->query('SELECT * FROM galactic_post_article WHERE article_id = '.$var['id'].' AND game_id = '.$player->getGameID());

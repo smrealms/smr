@@ -16,7 +16,7 @@ function echo_r($message)
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-include(LIB . 'global/smr_db.inc');
+include(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 include(ENGINE . '/Default/smr.inc');
 
@@ -101,7 +101,7 @@ function doIRCListen($socket)
 		fputs($fp, 'WHO '.$channel.EOL);
 	
 		// database object
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 	
 		// avoid that some1 uses another one nick
 		$db->query('TRUNCATE irc_logged_in');

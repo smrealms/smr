@@ -62,7 +62,7 @@ if ($action == 'Delete') {
 } else {
 
 	// a second db object
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 
 	// predefine a color array
 	$avail_colors = array('#FFFFFF', '#FF0000', '#00FF00', '#0000FF');

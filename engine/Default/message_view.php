@@ -17,7 +17,7 @@ if (!isset($var['folder_id'])) {
 	$PHP_OUTPUT.=('<th>&nbsp;</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 	
 	include(get_file_loc('council.inc'));
 

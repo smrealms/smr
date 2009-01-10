@@ -20,7 +20,7 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 $PHP_OUTPUT.=('<p>Please select the account to add:<br /><br />');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 $PHP_OUTPUT.=('<select name="admin_id" id="InputFields" style="padding-left:10px;">');
 // check if mrspock was created

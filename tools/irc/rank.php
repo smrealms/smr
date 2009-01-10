@@ -20,8 +20,8 @@ function channel_msg_rank($fp, $rdata) {
 		preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s'.$nick.'\s:?rank\s(.*)\s$/i', $rdata, $msg)) {
 
 		echo_r($msg);
-		$db = new SMR_DB();
-		$db2 = new SMR_DB();
+		$db = new SmrMySqlDatabase();
+		$db2 = new SmrMySqlDatabase();
 
 		$db->query('SELECT * FROM player WHERE player_name = ' . $db->escape_string($msg[4], true));
 		if ($db->nf()) {

@@ -21,7 +21,7 @@ foreach($_REQUEST['entry_ids'] as $entry_id) {
 	}
 }
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 $db->query('DELETE FROM message_blacklist WHERE account_id=' . SmrSession::$account_id . ' AND entry_id IN (' . implode(',',$entry_ids) . ')');
 forward($container);
 

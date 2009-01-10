@@ -12,7 +12,7 @@ $smarty->assign('PageTopic','Underground HQ');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_ug_menue();
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'UG\' AND claimer_id = 0 ORDER BY amount DESC');
 if ($db->nf())
 {

@@ -42,7 +42,7 @@ if ($db->nf() > 0)
 		if (strlen($game_id_list)>0) $game_id_list .= ',';
 		$game_id_list .= $game_id;
 
-		$db2 = new SMR_DB();
+		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT count(*) as num_playing FROM player ' .
 					'WHERE last_cpl_action >= ' . (time() - 600) . ' AND ' .
 						  'game_id = '.$game_id);
@@ -163,7 +163,7 @@ if ($db->nf())
 }
 
 // restore old database
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 
 // ***************************************

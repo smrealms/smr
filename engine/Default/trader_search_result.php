@@ -1,6 +1,6 @@
 <?
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $player_id = $_REQUEST['player_id'];
 $player_name = $_REQUEST['player_name'];
 if (!is_numeric($player_id) && !empty($player_id)) {

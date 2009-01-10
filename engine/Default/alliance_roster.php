@@ -18,7 +18,7 @@ $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
 $leader_id = $db->f('leader_id');
 $password = $db->f('alliance_password');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $varAction = isset($var['action']) ? $var['action'] : '';
 // Does anyone actually use these?
 if ($varAction == 'Show Alliance Roles') {
@@ -217,7 +217,7 @@ while ($db->next_record()) {
 
 		$PHP_OUTPUT.= '<td class="shrink right">';
 
-		$db2 = new SMR_DB();
+		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT role_id
 					FROM player_has_alliance_role
 					WHERE account_id=' . $db->f('account_id') .'

@@ -5,7 +5,7 @@ $skipClosedAccs = FALSE;
 $skipExceptions = FALSE;
 
 //extra db object and other vars
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $used = array();
 $cookieVersion = 'v2';
 

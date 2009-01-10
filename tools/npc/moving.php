@@ -66,7 +66,7 @@ function move_to_sector($account_id, $game_id, $target_sector) {
 function leaving_sector($account_id, $game_id, $sector_id) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	// we need that for the rank
 	$account = new SMR_ACCOUNT();
@@ -122,7 +122,7 @@ function leaving_sector($account_id, $game_id, $sector_id) {
 function entering_sector($account_id, $game_id, $sector_id) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	// we need that for the rank
 	$account = new SMR_ACCOUNT();

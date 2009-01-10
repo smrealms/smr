@@ -2,8 +2,8 @@
 $smarty->assign('PageTopic','VIEWING ARTICLES');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 if (isset($var['news'])) {
 
 $db3->query('INSERT INTO news ' .

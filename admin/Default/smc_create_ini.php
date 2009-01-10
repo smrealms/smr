@@ -4,7 +4,7 @@ header('Content-Type: text/plain; charset=ISO-8859-1'.EOL);
 header('Content-Disposition: attachment; filename=Game.ini'.EOL);
 header('Content-transfer-encoding: base64'.EOL);
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $game_id = $_REQUEST['game_id'];
 $db->query('SELECT * FROM game WHERE game_id = '.$game_id);
 $db->next_record();

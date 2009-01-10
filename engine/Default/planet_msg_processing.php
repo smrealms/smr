@@ -8,7 +8,7 @@ if ($player->getAllianceID() == 0) {
 	$container['folder_id'] = $PLANETMSG;
 	forward($container);
 }
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 //check for planet messages
 $db->query('SELECT * FROM alliance_thread_topic WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' .
 					'topic LIKE \'Planet Attack Report Sector %\'');

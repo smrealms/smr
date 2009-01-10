@@ -1,7 +1,7 @@
 <?
 		require_once(get_file_loc('SmrPlanet.class.inc'));
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 $game_id = $_REQUEST['game_id'];
 //first get file name
 $db->query('SELECT * FROM game WHERE game_id = '.$game_id);

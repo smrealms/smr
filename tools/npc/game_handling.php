@@ -3,7 +3,7 @@
 function player_joined_game($account_id, $game_id) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	// check if there is an entry in the player table
 	$db->query('SELECT account_id
@@ -34,7 +34,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	$account->get_by_id($account_id);
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT account_id
 				FROM player

@@ -1,5 +1,5 @@
 <?
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $smarty->assign('PageTopic','SHIP DEALER');
 
 $db->query('SELECT 

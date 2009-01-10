@@ -31,7 +31,7 @@ if (isset($game_id)) {
 		$past = 'Yes';
 		$table = 'player_has_stats WHERE game_id = '.$game_id.' AND';
 
-	} else $db = new SMR_DB();
+	} else $db = new SmrMySqlDatabase();
 
 }
 else $table = 'account_has_stats_cache WHERE';
@@ -139,5 +139,5 @@ if ($better >= 25) {
 $PHP_OUTPUT.=('</table>');
 
 $PHP_OUTPUT.=('</div>');
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 ?>

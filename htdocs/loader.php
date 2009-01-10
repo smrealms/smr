@@ -56,7 +56,7 @@ require_once('config.php');
 require_once(ENGINE . 'Default/smr.inc');
 
 // overwrite database class to use our db
-require_once(LIB . 'global/smr_db.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
@@ -65,7 +65,7 @@ require_once(get_file_loc('SmrSector.class.inc'));
 
 
 // new db object
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 // ********************************
 // *

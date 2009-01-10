@@ -60,9 +60,9 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //$player->takeTurns(3,1);
 //$player->update();
 //// db objects for queries
-//$db2 = new SMR_DB();
-//$db3 = new SMR_DB();
-//$db6 = new SMR_DB();
+//$db2 = new SmrMySqlDatabase();
+//$db3 = new SmrMySqlDatabase();
+//$db6 = new SmrMySqlDatabase();
 //
 //// log action
 //$account->log(7, 'Attacks a level '.$port->getLevel().' port', $player->getSectorID());
@@ -410,7 +410,7 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //	// and his message array
 //	$damage_msg = array();
 //
-//	$weapon = new SMR_DB();
+//	$weapon = new SmrMySqlDatabase();
 //	$weapon->query('SELECT * FROM ship_has_weapon NATURAL JOIN weapon_type ' .
 //				   'WHERE account_id = '.$curr_attacker->getAccountID().' AND ' .
 //						 'game_id = '.$curr_attacker->getGameID().' ' .

@@ -133,7 +133,7 @@ if (!isset($account_num) && !isset($make)) {
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bank_anon.php';
-		$db2 = new SMR_DB();
+		$db2 = new SmrMySqlDatabase();
 		while ($db->next_record()) {
 			$db2->query('SELECT MAX(time) FROM anon_bank_transactions
 						WHERE game_id=' . $player->getGameID() . '

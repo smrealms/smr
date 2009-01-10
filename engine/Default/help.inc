@@ -5,9 +5,9 @@ function echo_nav($topic_id) {
 	global $URL;
 
 	// database object
-	$db = new SMR_DB();
-	$db2 = new SMR_DB();
-	$db3 = new SMR_DB();
+	$db = new SmrMySqlDatabase();
+	$db2 = new SmrMySqlDatabase();
+	$db3 = new SmrMySqlDatabase();
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
@@ -111,7 +111,7 @@ function echo_nav($topic_id) {
 function echo_content($topic_id) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
@@ -135,7 +135,7 @@ function echo_content($topic_id) {
 function echo_subsection($topic_id) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 	$return='';
 	// check if there are subsections
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' ORDER BY order_id');
@@ -157,7 +157,7 @@ function echo_menu($topic_id) {
 	global $URL;
 	$return='';
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' ORDER BY order_id');
 	if ($db->nf()) {
@@ -181,7 +181,7 @@ function echo_menu($topic_id) {
 
 function get_numbering($topic_id) {
 
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
 	if ($db->next_record()) {

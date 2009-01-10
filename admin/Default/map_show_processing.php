@@ -1,6 +1,6 @@
 <?
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $account_id = $_REQUEST['account_id'];
 if (!empty($account_id))
 {

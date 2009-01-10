@@ -7,7 +7,7 @@ function channel_msg_ship($fp, $rdata) {
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s'.$channel.'\s:!ship\s(.*)\s$/i', $rdata, $msg)) {
 
 		echo_r($msg);
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM ship_type WHERE ship_name LIKE '.$db->escape_string('%' . $msg[4] . '%'));
 		if ($db->next_record()) {
 

@@ -8,14 +8,14 @@
 // ********************************
 
 require_once('config.inc');
-require_once(LIB . 'global/smr_db.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(ENGINE . 'Default/smr.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrSession.class.inc'));
 
 
-$db = new SMR_DB();
-$db2 = new SMR_DB();
+$db = new SmrMySqlDatabase();
+$db2 = new SmrMySqlDatabase();
 
 // ********************************
 // *
@@ -62,7 +62,7 @@ if (SmrSession::$account_id == 0) {
 $db->query('SELECT * FROM game_disable');
 if ($db->nf()) {
 
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 
 	// allow admins to access it
 	$db2->query('SELECT * FROM account_has_permission WHERE account_id = '.SmrSession::$account_id.' AND permission_id = 3');
@@ -208,7 +208,7 @@ SmrSession::update();
 $time = time();
 $db2->query('DELETE FROM message WHERE expire_time < '.$time.' AND expire_time > 0');
 //check to see if we need to remove player_has_unread
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$account->account_id.' AND message_type_id != 3');
 $db2->query('SELECT * FROM message WHERE account_id = '.$account->account_id.' AND msg_read = \'FALSE\'');
 

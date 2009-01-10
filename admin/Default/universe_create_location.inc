@@ -3,13 +3,13 @@
 function create_location($game_id, $galaxy_id, $location_type_id, $sector_id = 0) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	// if we didn't get a sector we choose one
 	if ($sector_id == 0) {
 
 		// new db object for inner loop
-		$db2 = new SMR_DB();
+		$db2 = new SmrMySqlDatabase();
 
 		// for security reasons we set a loop_counter
 		// to avoid invinite recursion
@@ -56,7 +56,7 @@ function create_location($game_id, $galaxy_id, $location_type_id, $sector_id = 0
 function get_sector($game_id, $sector_id, $distance) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT link_up, link_down, link_left, link_right
 				FROM sector
@@ -75,7 +75,7 @@ function create_fed($game_id, $galaxy_id, $sector_id = 0) {
 	global $FED;
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	// if we didn't get a sector we choose one
 	if ($sector_id == 0) {

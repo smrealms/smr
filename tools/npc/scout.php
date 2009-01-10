@@ -40,7 +40,7 @@ function get_current_sector($account_id, $game_id) {
 function get_warp($account_id, $game_id, $sector_id) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT *
 				FROM warp
@@ -62,7 +62,7 @@ function get_distance_to_fed($sector_id, $game_id, $account_id) {
 	$distance_to_fed = 9999;
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	// fill the galaxy_map with a fake sector 0
 	$galaxy_map[0] = array(0, 0, 0, 0, 0);
@@ -125,7 +125,7 @@ function get_distance_to_fed($sector_id, $game_id, $account_id) {
 function load_sector($game_id, $sector_id, $distance) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT link_up, link_down, link_left, link_right
 				FROM sector
@@ -142,7 +142,7 @@ function load_sector($game_id, $sector_id, $distance) {
 function sector_is_fed($sector_id, $game_id) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT *
 				FROM location NATURAL JOIN location_is_fed
@@ -157,7 +157,7 @@ function sector_is_fed($sector_id, $game_id) {
 function sector_visited($account_id, $game_id, $sector_id) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT *
 				FROM player_visited_sector
@@ -173,7 +173,7 @@ function sector_visited($account_id, $game_id, $sector_id) {
 function sector_has_port($game_id, $sector_id) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT *
 				FROM port
@@ -188,7 +188,7 @@ function sector_has_port($game_id, $sector_id) {
 function sector_set_visited($account_id, $game_id, $sector_id) {
 
 	// database object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	if (sector_has_port($game_id, $sector_id)) {
 
