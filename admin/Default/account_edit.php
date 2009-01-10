@@ -358,6 +358,8 @@ if ($curr_account->account_id != 0) {
 
 $PHP_OUTPUT.=( '</table>' );
 
+if(isset($var['errorMsg']))
+	$PHP_OUTPUT.=('<div align="center">'.$var['errorMsg'].'</div>');
 $PHP_OUTPUT.=('<div align="center">'.$var['msg'].'</div>');
 
 ?>
