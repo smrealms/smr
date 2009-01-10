@@ -158,15 +158,15 @@ if ($action == 'Yes') {
 			$sector = $db->f('sector_id');
 			$owner = $db->f('owner_id');
 
-			$db2->query('SELECT * FROM planet_has_construction WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 1');
+			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 1');
 			if ($db2->next_record()) $gens = $db2->f('amount');
 			else $gens = 0;
 
-			$db2->query('SELECT * FROM planet_has_construction WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 2');
+			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 2');
 			if ($db2->next_record()) $hangs = $db2->f('amount');
 			else $hangs = 0;
 
-			$db2->query('SELECT * FROM planet_has_construction WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 3');
+			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 3');
 			if ($db2->next_record()) $turs = $db2->f('amount');
 			else $turs = 0;
 
@@ -180,9 +180,9 @@ if ($action == 'Yes') {
 
 	$smr_db_sql[] = 'DELETE FROM planet WHERE game_id = '.$game_id;
 	$smr_db_sql[] = 'DELETE FROM planet_attack WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM planet_build_construction WHERE game_id = '.$game_id;
+	$smr_db_sql[] = 'DELETE FROM planet_is_building WHERE game_id = '.$game_id;
 	$smr_db_sql[] = 'DELETE FROM planet_has_cargo WHERE game_id = '.$game_id;
-	$smr_db_sql[] = 'DELETE FROM planet_has_construction WHERE game_id = '.$game_id;
+	$smr_db_sql[] = 'DELETE FROM planet_has_building WHERE game_id = '.$game_id;
 
 	if ($save) {
 

@@ -38,13 +38,70 @@ class SmrPlanet
 		return self::$CACHE_PLANETS[$gameID . ':' . $sectorID];
 	}
 
-	protected function __construct($game_id,$curr_sector_id)
+	protected function __construct($gameID,$sectorID)
 	{
 		$this->db = new SmrMySqlDatabase();
+		
+		
+	if ($result = next_record($sql))
+	{
+		global $PLANET_TYPES, $PLANET_RESEARCH, $GOODS, $PRIMARY_BUILDINGS;
+		$PLANET_BUILDINGS = Globals::getPlanetBuildings();
+		//get rev planet buildings
+		foreach ($PLANET_BUILDINGS as $building_id => $build_arr) $rev_build[$build_arr['Name']] = $building_id;
+	
+		
+		$planet['Gal ID']					= $result['gal_id'];
+		$planet['Last Interest Check']		= $result['last_interest_check'];
+		$planet['Assets Frozen Until']		= $result['assets_frozen_until'];
+		$planet['Population']				= $result['population'];
+		$planet['Last Population Update']	= $result['last_population_update'];
+		$planet['Last Cargo Update']		= $result['last_cargo_update'];
+		$planet['Type ID']					= $result['planet_type'];
+		$planet['Area']						= $result['area'];
+		$planet['Metals']					= $result['metals'];
+		$planet['Energy']					= $result['energy'];
+		$planet['Shields Stored']			= $result['shields_storage'];
+		$planet['Combat Drones Stored']		= $result['combat_drones_storage'];
+		$planet['Next Destroy']				= $result['next_destroy'];
+		$planet['Defined']					= FALSE;
+		$planet['Research Points']			= 16;
+		$planet['Current Research'] 		= array();
+		
+		//these will be adjusted later on in the function
+		$planet['Area Available'] = $planet['Area'];
+		$planet['Metals Available'] = $planet['Metals'];
+		$planet['Energy Available'] = $planet['Energy'];
+		
+		//get the possible buildings we can build, this is updated lower in the function
+		$planet['Building Types Available'] = array();
+		foreach($PLANET_BUILDINGS as $buildingID => $building)
+			$planet['Building Types Available'][$buildingID] = 0;
+		checkForPopIncrease($planet);
+		
+		getOwnerInfo($planet);
+		getGalaxyPlanets($planet);
+		
+		getThisPlanetInfo($planet,$rev_build);
+		
+		
+		//get the benefits
+		$planet['Shield Recovery'] = $planet['Galaxy Buildings'][$rev_build['Shield Relay']] * 100;
+		$planet['Drone Recovery'] = $planet['Galaxy Buildings'][$rev_build['Drone Control Tower']] * 20;
+		//TODO: Get drone delay (30-45 min for lvl 70 is avg, 10 mins for lvl 25)
+		
+		
+		checkForInterest($planet,$rev_build);
+	}
+	else
+	{
+		return FALSE;
+	}
+	return $planet;
 
 
-		$this->db->query('SELECT * FROM planet WHERE game_id = '.$game_id.' AND ' .
-												'sector_id = '.$curr_sector_id);
+		$this->db->query('SELECT * FROM planet WHERE game_id = '.$gameID.' AND ' .
+												'sector_id = '.$sectorID);
 		if ($this->db->nextRecord())
 		{
 			$this->sector_id		= $this->db->getField('sector_id');
@@ -59,54 +116,11 @@ class SmrPlanet
 			$this->maturity			= $this->db->getField('maturity');
 			$this->inhabitable_time = $this->db->getField('inhabitable_time');
 
-			// initialize cargo array
-			$this->stockpile = array();
+			$this->getStockpile();
+			$this->getBuildings();
+			$this->getCurrentlyBuilding();
+			$this->getMaxBuildings();
 			$this->level = $this->level();
-			// get supplies from db
-			$this->db->query('SELECT * FROM planet_has_cargo, good WHERE planet_has_cargo.good_id = good.good_id AND ' .
-																	'game_id = '.$this->game_id.' AND ' .
-																	'sector_id = '.$this->sector_id);
-			// adding cargo and amount to array
-			while ($this->db->nextRecord())
-				$this->stockpile[$this->db->getField('good_id')] = $this->db->getField('amount');
-	
-			// initialize empty cargo
-			$this->db->query('SELECT * FROM good');
-			while ($this->db->nextRecord()) {
-	
-				$good_id = $this->db->getField('good_id');
-				if (empty($this->stockpile[$good_id]))
-					$this->stockpile[$good_id] = 0;
-	
-			}
-	
-			$this->construction = array();
-	
-			// get constructions from db
-			$this->db->query('SELECT * FROM planet_has_construction WHERE game_id = '.$this->game_id.' AND ' .
-																	 'sector_id = '.$this->sector_id);
-			// adding building and amount to array
-			while ($this->db->nextRecord())
-				$this->construction[$this->db->getField('construction_id')] = $this->db->getField('amount');
-	
-			$this->max_construction = array();
-	
-			// get constructions from db
-			$this->db->query('SELECT * FROM planet_construction');
-			while ($this->db->nextRecord()) {
-	
-				$construction_id	= $this->db->getField('construction_id');
-				$max_construction	= $this->db->getField('max_construction');
-	
-				$this->max_construction[$construction_id] = $max_construction;
-	
-				if (empty($this->max_construction[$construction_id]))
-					$this->max_construction[$construction_id] = 0;
-				if (empty($this->construction[$construction_id]))
-				$this->construction[$construction_id] = 0;
-
-			}
-
 		}
 	}
 	
@@ -123,6 +137,114 @@ class SmrPlanet
 	public function exists()
 	{
 		return $this->getGameID()!=null && $this->getSectorID()!==null;
+	}
+	
+	public function getStockpile()
+	{
+		if(!isset($this->stockpile))
+		{
+			// initialize cargo array
+			$this->stockpile = array();
+			// get supplies from db
+			$this->db->query('SELECT * FROM planet_has_cargo WHERE game_id = '.$this->game_id.' AND ' .
+																	'sector_id = '.$this->sector_id);
+			// adding cargo and amount to array
+			while ($this->db->nextRecord())
+				$this->stockpile[$this->db->getField('good_id')] = $this->db->getField('amount');
+		}
+		return $this->stockpile;
+	}
+	
+	public function getBuildings()
+	{
+		if(!isset($this->construction))
+		{
+			$this->construction = array();
+			
+			// get constructions from db
+			$this->db->query('SELECT * FROM planet_has_building WHERE game_id = '.$this->getGameID().' AND ' .
+																	 'sector_id = '.$this->getSectorID());
+			// adding building and amount to array
+			while ($this->db->nextRecord())
+				$this->construction[$this->db->getField('construction_id')] = $this->db->getField('amount');
+		}
+		return $this->construction;
+	}
+	
+	public function getTotalBuildings()
+	{
+		$totalBuildings = 0;
+		foreach($this->getBuildings() as $building)
+		{
+			$totalBuildings += $building;
+		}
+		return $totalBuildings;
+	}
+	
+	function getCurrentlyBuilding()
+	{
+		if(!isset($this->currentlyBuilding))
+		{
+			$this->currentlyBuilding = array();
+			$this->db->query('SELECT * FROM planet_is_building ' .
+								 'WHERE game_id = '.$this->game_id.' AND ' .
+									   'sector_id = '.$this->sector_id);
+			while($this->db->nextRecord())
+			{
+				if($this->db->getField('time_complete') <= TIME)
+				{
+					$this->db->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
+											 'sector_id = '.$this->getSectorID() . ' AND building_slot_id = ' . $this->db->getField('building_slot_id') . ' LIMIT 1');
+					$this->construction[$this->db->getField('construction_id')] += 1;
+					$this->update();
+				}
+				else
+				{
+					$this->currentlyBuilding[$this->db->getField('building_slot_id')] = array(
+							'ConstructionID' => $this->db->getField('construction_id'),
+							'ConstructorID' => $this->db->getField('constructor_id'),
+							'Finishes' => $this->db->getField('time_complete'),
+							'TimeRemaining' => $this->db->getField('time_complete') - TIME
+						);
+				}
+			}
+		}
+	}
+		
+	public function getMaxBuildings()
+	{
+		if(!isset($this->max_construction))
+		{
+//			global $PRIMARY_BUILDINGS;
+//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
+			$this->max_construction = array();
+	
+			// get constructions from db
+			$this->db->query('SELECT * FROM planet_construction');
+			while ($this->db->nextRecord())
+			{
+				$construction_id	= $this->db->getField('construction_id');
+				$max_construction	= $this->db->getField('max_construction');
+	
+				$this->max_construction[$construction_id] = $max_construction;
+			}
+		}
+		return $this->max_construction;
+//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
+//					$planet['Defined'] = TRUE;
+//				
+//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks']))
+//					{
+//						foreach ($PLANET_BUILDINGS[$building_type_id]['Unlocks'] as $building_id => $max_amount)
+//							$planet['Building Types Available'][$building_id] += $max_amount;
+//					}
+//					
+//					//define planet
+//					if (isset($PRIMARY_BUILDINGS[$building_type_id]))
+//					{
+//						$planet['Type ID'] = $PRIMARY_BUILDINGS[$building_type_id];
+//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
+//					}
 	}
 
 	function update() {
@@ -155,10 +277,10 @@ class SmrPlanet
 		foreach ($this->construction as $id => $amount) {
 
 			if ($amount != 0)
-				$this->db->query('REPLACE INTO planet_has_construction (game_id, sector_id, construction_id, amount) ' .
+				$this->db->query('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
 															'VALUES('.$this->game_id.', '.$this->sector_id.', '.$id.', '.$amount.')');
 			else
-				$this->db->query('DELETE FROM planet_has_construction WHERE game_id = '.$this->game_id.' AND ' .
+				$this->db->query('DELETE FROM planet_has_building WHERE game_id = '.$this->game_id.' AND ' .
 																	   'sector_id = '.$this->sector_id.' AND ' .
 																	   'construction_id = '.$id);
 		}
@@ -187,34 +309,9 @@ class SmrPlanet
 	/**
 	 * Returns true if there is a construction in building
 	 */
-	function build() {
-
-		$this->db->query('SELECT * FROM planet_build_construction, planet_construction ' .
-							 'WHERE planet_build_construction.construction_id = planet_construction.construction_id AND ' .
-							 	   'game_id = '.$this->game_id.' AND ' .
-								   'sector_id = '.$this->sector_id);
-		if ($this->db->nextRecord()) {
-
-			$this->current_building_id		= $this->db->getField('construction_id');
-			$this->current_building_name	= $this->db->getField('construction_name');
-			$this->time_left				= $this->db->getField('time_complete') - time();
-
-			// is the construction ready
-			if ($this->time_left < 0) {
-
-				$this->db->query('DELETE FROM planet_build_construction WHERE game_id = '.$this->game_id.' AND ' .
-																		 'sector_id = '.$this->sector_id);
-				$this->construction[$this->current_building_id] += 1;
-				$this->update();
-				return false;
-
-			}
-
-			return true;
-
-		} else
-			return false;
-
+	function build()
+	{
+		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
 	function start_construction($construction_id) {
@@ -244,7 +341,7 @@ class SmrPlanet
 		if ($this->db->nextRecord())
 			$time_complete = time() + round($this->db->getField('amount') / $game_speed);
 
-		$this->db->query('INSERT INTO planet_build_construction (game_id, sector_id, construction_id, time_complete) ' .
+		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, time_complete) ' .
 													'VALUES ('.$this->game_id.', '.$this->sector_id.', '.$construction_id.', '.$time_complete.')');
 
 	}
