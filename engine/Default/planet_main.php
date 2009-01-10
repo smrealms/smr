@@ -97,7 +97,7 @@ while ($db->next_record()) {
     $PHP_OUTPUT.=('&nbsp;');
 
     // should we be able to kick this player from our rock?
-    if (($player->getAllianceID() != $planet_player->alliance_id || $player->getAllianceID() == 0) && $planet->owner_id == $player->getAccountID())
+    if (($player->sameAlliance($planet_player) || $player->getAllianceID() == 0) && $planet->getOwnerID() == $player->getAccountID())
         $PHP_OUTPUT.=create_submit('Kick');
 
     $PHP_OUTPUT.=('</form>');
