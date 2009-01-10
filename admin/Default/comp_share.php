@@ -35,7 +35,7 @@ while ($db->next_record()) {
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currTabAccId);
 			if ($db2->next_record()) {
 				
-				if ($db2->f('reason_id') != 5) $PHP_OUTPUT.=('Closed: ' . $db2->f('suspicion') . '.<br>');
+				if ($db2->f('reason_id') != 5) $PHP_OUTPUT.=('Closed: ' . $db2->f('suspicion') . '.<br />');
 				else continue;
 				
 			}
@@ -43,7 +43,7 @@ while ($db->next_record()) {
 		if (!$skipExceptions)
 		{
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currTabAccId);
-			if ($db2->next_record()) $PHP_OUTPUT.=('Exception: ' . $db2->f('reason') . '.<br>');
+			if ($db2->next_record()) $PHP_OUTPUT.=('Exception: ' . $db2->f('reason') . '.<br />');
 		} else continue;
 		echo_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Accounts</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
@@ -75,7 +75,7 @@ while ($db->next_record()) {
 			$used[$currLinkAccId] = TRUE;
 			
 		}
-		$PHP_OUTPUT.=('</table><br>');
+		$PHP_OUTPUT.=('</table><br />');
 		
 	}
 }

@@ -95,7 +95,7 @@ if ($action == 'Delete') {
 	transfer('item');
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=create_submit('Update');
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 
 	$db->query('SELECT * FROM log_type');
 	while ($db->next_record()) {
@@ -109,7 +109,7 @@ if ($action == 'Delete') {
 			$log_type_id_list .= $db->f('log_type_id');
 
 		}
-		$PHP_OUTPUT.=('>' . $db->f('log_type_entry') . '<br>');
+		$PHP_OUTPUT.=('>' . $db->f('log_type_entry') . '<br />');
 
 	}
 	$PHP_OUTPUT.=('</form>');
@@ -136,7 +136,7 @@ if ($action == 'Delete') {
 
 	$PHP_OUTPUT.=('<input type="hidden" name="account_ids" value="'.$account_ids.'">');
 	$PHP_OUTPUT.=create_submit('Save');
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 
 	$log_notes = array();
 

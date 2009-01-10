@@ -9,7 +9,7 @@ if ($db->next_record())
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding ports</d>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('Without ports there is no trading and it\'s called Space <i>Merchant</i> Realms! First you have to enter the total number of ports per galaxy. ');
-$PHP_OUTPUT.=('In the next step you need to specify which type of port levels will be created.<br>PLEASE NOTE: The percentages of different port levels must add up to exactly 100! ');
+$PHP_OUTPUT.=('In the next step you need to specify which type of port levels will be created.<br />PLEASE NOTE: The percentages of different port levels must add up to exactly 100! ');
 $PHP_OUTPUT.=('You can see this in the <i>sum</i> column.</dd>');
 $PHP_OUTPUT.=('</dl>');
 

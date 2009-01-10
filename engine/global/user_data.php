@@ -68,10 +68,10 @@ if($db->nf()) {
 		$PHP_OUTPUT.=create_link($container, '<img src="images/planet_msg.gif" border="0" alt="Planet Messages">');
 		echo '<small>' . $messages[$PLANETMSG] . '</small>';
 	}
-	echo '<br>';
+	echo '<br />';
 }
 
-echo $player->getLevelName() . '<br><big>';
+echo $player->getLevelName() . '<br /><big>';
 
 $container = array();
 $container['url']		= 'skeleton.php';
@@ -80,8 +80,8 @@ $container['player_id']	= $player->getPlayerID();
 $PHP_OUTPUT.=create_link($container, $player->getDisplayName());
 echo '</big>';
 if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $PHP_OUTPUT.=('<br /><span style="font-size:small">INVISIBLE</span>');
-echo '<br><br>Race : ' . $player->getRaceName();
-echo '<br>Turns : ' . $player->getTurns() . '<br>';
+echo '<br /><br />Race : ' . $player->getRaceName();
+echo '<br />Turns : ' . $player->getTurns() . '<br />';
 
 if ($player->getNewbieTurns() > 0) {
 	echo 'Newbie Turns Left: <span style="color:#';
@@ -91,17 +91,17 @@ if ($player->getNewbieTurns() > 0) {
 	else
 		echo 'BB0000';
 
-	echo ';">' . $player->getNewbieTurns()  . '</span><br>';
+	echo ';">' . $player->getNewbieTurns()  . '</span><br />';
 }
 
-echo 'Cash : ' . number_format($player->getCredits()) . '<br>';
-echo 'Experience : ' . number_format($player->getExperience()) . '<br>';
+echo 'Cash : ' . number_format($player->getCredits()) . '<br />';
+echo 'Experience : ' . number_format($player->getExperience()) . '<br />';
 echo 'Level : ' .  $player->getLevelID();
-echo '<br>Alignment : ' . get_colored_text($player->getAlignment(),$player->getAlignment());
-echo '<br>Alliance : ' . $player->getAllianceName();
+echo '<br />Alignment : ' . get_colored_text($player->getAlignment(),$player->getAlignment());
+echo '<br />Alliance : ' . $player->getAllianceName();
 
 if ($player->getAllianceID() > 0) echo ' (' . $player->getAllianceID() . ')';
-echo '<br><br><b style="color:yellow;">' . $ship->getName() . '</b><br>';
+echo '<br /><br /><b style="color:yellow;">' . $ship->getName() . '</b><br />';
 
 $db->query('SELECT ship_name FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 			'account_id = '.$player->getAccountID().' LIMIT 1');
@@ -110,7 +110,7 @@ if ($db->next_record()) {
 	echo stripslashes($db->f('ship_name'));
 }
 
-echo 'Rating : ' . $ship->getAttackRating() . '/' . $ship->getDefenseRating() . '<br>';
+echo 'Rating : ' . $ship->getAttackRating() . '/' . $ship->getDefenseRating() . '<br />';
 
 // ******* Shields *******
 $am=$ship->getShields();
@@ -119,7 +119,7 @@ if ($under_attack_shields)
 	echo '<span style="color:red;">' . $am . '</span>';
 else
 	echo $am;
-echo '/' . $ship->getMaxShields() . '<br>';
+echo '/' . $ship->getMaxShields() . '<br />';
 
 // ******* Armor *******
 $am=$ship->getArmour();
@@ -128,7 +128,7 @@ if ($under_attack_armor)
 	echo '<span style="color:red;">' . $am . '</span>';
 else
 	echo $am;
-echo '/' . $ship->getMaxArmour() . '<br>';
+echo '/' . $ship->getMaxArmour() . '<br />';
 
 //var_dump($ship);
 // ******* Hardware *******
@@ -158,7 +158,7 @@ if ($ship->hasActiveIllusion())
 
 // ******* Forces *******
 $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'forces_drop.php'), '<b>Forces</b>');
-echo '<br>';
+echo '<br />';
 
 if ($ship->hasMines()) {
 
@@ -169,7 +169,7 @@ if ($ship->hasMines()) {
 	$PHP_OUTPUT.=create_link($container, '<b>[x]</b> ');
 
 }
-echo 'Mines : ' . $ship->getMines() . '/' . $ship->getMaxMines() . '<br>';
+echo 'Mines : ' . $ship->getMines() . '/' . $ship->getMaxMines() . '<br />';
 
 if ($ship->hasCDs()) {
 
@@ -180,7 +180,7 @@ if ($ship->hasCDs()) {
 	$PHP_OUTPUT.=create_link($container, '<b>[x]</b> ');
 
 }
-echo 'Combat : ' . $ship->getCDs() . '/' . $ship->getMaxCDs() . '<br>';
+echo 'Combat : ' . $ship->getCDs() . '/' . $ship->getMaxCDs() . '<br />';
 
 if ($ship->hasSDs())  {
 
@@ -192,27 +192,27 @@ if ($ship->hasSDs())  {
 
 }
 echo 'Scout : ' . $ship->getSDs() . '/' . $ship->getMaxSDs();
-echo '<br><br>';
+echo '<br /><br />';
 $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'cargo_dump.php'), '<b>Cargo Holds</b>');
 
-echo '&nbsp;(' . $ship->getCargoHolds() . '/' . $ship->getMaxCargoHolds() . ')<br>';
+echo '&nbsp;(' . $ship->getCargoHolds() . '/' . $ship->getMaxCargoHolds() . ')<br />';
 $cargo = $ship->getCargo();
 foreach ($cargo as $id => $amount)
 	if ($amount > 0) {
 
 		$db->query('SELECT good_name FROM good WHERE good_id=' .  $id);
 		if ($db->next_record())
-			echo '<img src="images/port/' . $id . '.gif" alt="' . $db->f('good_name') . '">&nbsp;:&nbsp;' . $amount . '<br>';
+			echo '<img src="images/port/' . $id . '.gif" alt="' . $db->f('good_name') . '">&nbsp;:&nbsp;' . $amount . '<br />';
 
 	}
 
 echo 'Empty : ' . $ship->getEmptyHolds();
-echo '<br><br>';
+echo '<br /><br />';
 $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'weapon_reorder.php'), '<b>Weapons</b>');
-echo '<br>';
+echo '<br />';
 
 foreach($ship->weapon as $weapon_name)
-	echo $weapon_name . '<br>';
+	echo $weapon_name . '<br />';
 
 echo 'Open : ' . $ship->weapon_open;
 

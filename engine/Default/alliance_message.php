@@ -105,7 +105,7 @@ if ($db->nf() > 0) {
 		$db3->next_record();
 		if ($player->getAccountID() == $sender_id || $db3->f('mb_messages') == 'TRUE') {
 			$container['thread_id'] = $db->f('thread');
-			$threads[$i]['tail'] .= '<br><small>';
+			$threads[$i]['tail'] .= '<br /><small>';
 			$threads[$i]['tail'] .= create_link($container, 'Delete Thread!');
 			$threads[$i]['tail'] .= '</small>';
 		}
@@ -135,13 +135,13 @@ if ($db->nf() > 0) {
 	}
 		
 
-	$PHP_OUTPUT.= '</table></div><br>';
+	$PHP_OUTPUT.= '</table></div><br />';
 	$db2->free();
 	$db->free();
 }
 
 if ($mbWrite || in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
-	$PHP_OUTPUT.= '<h2>Create Thread</h2><br>';
+	$PHP_OUTPUT.= '<h2>Create Thread</h2><br />';
 	$container = array();
 	$container['url'] = 'alliance_message_add_processing.php';
 	$container['alliance_id'] = $alliance_id;
@@ -158,7 +158,7 @@ if ($mbWrite || in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 			<td class="top">Body:&nbsp;</td>
 			<td colspan="2"><textarea name="body"></textarea></td>
 		</tr>
-	</table><br>
+	</table><br />
 	';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';

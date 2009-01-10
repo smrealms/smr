@@ -21,14 +21,14 @@ if(isset($var['error'])) {
 			echo '<span class="red bold">ERROR: </span>Unknown error event.';
 			break;
 	}
-	echo '<br><br>';
+	echo '<br /><br />';
 }
  	
-echo '<h2>Filtered Words</h2><br>';
+echo '<h2>Filtered Words</h2><br />';
  	
 if(!$db->nf()) {
 	
-	echo 'No words are currently being filtered.<br><br>';
+	echo 'No words are currently being filtered.<br /><br />';
 		
 }
 
@@ -48,13 +48,13 @@ else {
 		echo '<td>' . $row['word_replacement'] . '</td>';
 		echo '</tr>';
 	}
-	echo '</table><br>';
+	echo '</table><br />';
 	echo $form['submit'];
-	echo '</form><br>';
+	echo '</form><br />';
 	
 } 
  
-echo '<h2>Add Word To Filter</h2><br>';
+echo '<h2>Add Word To Filter</h2><br />';
 $container = array();
 $container['url'] = 'word_filter_add.php';
 $form = create_form($container,'Add');
@@ -69,7 +69,7 @@ echo '
 		<td class="top">Replacement:&nbsp;</td>
 		<td class="mb"><input type="text" name="WordReplacement" size="30"></td>
 	</tr>
-</table><br>
+</table><br />
 ';
 echo $form['submit'];
 echo '</form>';

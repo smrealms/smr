@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','Log Console');
 
-$PHP_OUTPUT.=('<p>Choose the logfiles you whish to view or delete!<br>Don\'t keep unnecessary data!</p>');
+$PHP_OUTPUT.=('<p>Choose the logfiles you whish to view or delete!<br />Don\'t keep unnecessary data!</p>');
 
 $db->query('SELECT account_has_logs.account_id as account_id, login, player_name, count(account_has_logs.account_id) as number_of_entries
 			FROM account_has_logs

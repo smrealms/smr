@@ -53,7 +53,7 @@ function go()
 </SCRIPT>
 <?php
 
-$PHP_OUTPUT.=('Please select the type of IP search you would like.<br>');
+$PHP_OUTPUT.=('Please select the type of IP search you would like.<br />');
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'ip_view_results.php';
@@ -72,8 +72,8 @@ echo'<select name=type onchange=go() id="InputFields">
 <option value="comp_share">Computer Sharing</option>
 <option value="all_acc">List all Accounts</option>
 <option value="request">Want more? Request it from Azool</option>
-</select><br>';
-$PHP_OUTPUT.=('<input type=text size=64 value="Enter how many IPs per page" name=variable id="InputFields"><br>');
+</select><br />';
+$PHP_OUTPUT.=('<input type=text size=64 value="Enter how many IPs per page" name=variable id="InputFields"><br />');
 $PHP_OUTPUT.=create_submit('Continue');
 $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('<SCRIPT LANGUAGE="javascript">'.EOL);

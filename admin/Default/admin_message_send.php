@@ -36,11 +36,11 @@ if (empty($game_id)) {
 		while ($db->next_record())
 			$PHP_OUTPUT.=('<option value="' . $db->f('account_id') . '">' . stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')</option>');
 	
-		$PHP_OUTPUT.=('</select><br><br>');
+		$PHP_OUTPUT.=('</select><br /><br />');
 		
 	}
-	$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br>');
-	$PHP_OUTPUT.=('Hours Till Expire: <input type=text name=expire value=1 size=2 id=InputFields> (0 = never expire)<br><br>');
+	$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br />');
+	$PHP_OUTPUT.=('Hours Till Expire: <input type=text name=expire value=1 size=2 id=InputFields> (0 = never expire)<br /><br />');
 	$PHP_OUTPUT.=create_submit('Send message');
 	$PHP_OUTPUT.=('</form>');
 

@@ -23,7 +23,7 @@ $form = create_form($container,'Plot Course');
 
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '
-<h2>Conventional</h2><br>
+<h2>Conventional</h2><br />
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">
 	<tr>
 		<td>From:&nbsp;</td>
@@ -51,8 +51,8 @@ if ($ship->hasJump()) {
 
 	$PHP_OUTPUT.= $form['form'];
 	$PHP_OUTPUT.= '
-	<br>
-	<h2>Jumpdrive</h2><br>
+	<br />
+	<h2>Jumpdrive</h2><br />
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 

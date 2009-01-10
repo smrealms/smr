@@ -23,7 +23,7 @@ while ($db->next_record()) {
 
 	$race_name = $db->f('race_name');
 	$otherRaceRelations = Globals::getRaceRelations(SmrSession::$game_id,$race_id);
-	$PHP_OUTPUT.=($race_name.' : ' . get_colored_text($otherRaceRelations[$player->getRaceID()], $otherRaceRelations[$player->getRaceID()]) . '<br>');
+	$PHP_OUTPUT.=($race_name.' : ' . get_colored_text($otherRaceRelations[$player->getRaceID()], $otherRaceRelations[$player->getRaceID()]) . '<br />');
 
 }
 $PHP_OUTPUT.=('</p>');
@@ -40,7 +40,7 @@ while ($db->next_record()) {
 	if ($race_id == 1) continue;
 
 	$race_name = $db->f('race_name');
-	$PHP_OUTPUT.=($race_name.' : ' . get_colored_text($player->getRelation($race_id), $player->getRelation($race_id)) . '<br>');
+	$PHP_OUTPUT.=($race_name.' : ' . get_colored_text($player->getRelation($race_id), $player->getRelation($race_id)) . '<br />');
 
 }
 $PHP_OUTPUT.=('</p>');

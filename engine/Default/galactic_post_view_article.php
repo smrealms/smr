@@ -14,8 +14,8 @@ $db3->query('INSERT INTO news ' .
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID());
 if ($db->nf()) {
 
-    $PHP_OUTPUT.=('It is your responsibility to make sure ALL HTML tages are closed!<br>');
-    $PHP_OUTPUT.=('You have the following articles to view.<br><br>');
+    $PHP_OUTPUT.=('It is your responsibility to make sure ALL HTML tages are closed!<br />');
+    $PHP_OUTPUT.=('You have the following articles to view.<br /><br />');
 
 }
 else
@@ -32,12 +32,12 @@ while ($db->next_record()) {
         $container['body'] = 'galactic_post_view_article.php';
         $container['id'] = $db->f('article_id');
         $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$title.'</font> written by '.$writter->getPlayerName());
-        $PHP_OUTPUT.=('<br>');
+        $PHP_OUTPUT.=('<br />');
 
     }
 
 }
-$PHP_OUTPUT.=('<br><br>');
+$PHP_OUTPUT.=('<br /><br />');
 if (isset($var['id'])) {
 
     $db->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID().' AND article_id = '.$var['id']);
@@ -45,21 +45,21 @@ if (isset($var['id'])) {
     $title = stripslashes($db->f('title'));
     $message = stripslashes($db->f('text'));
     $PHP_OUTPUT.=($title);
-    $PHP_OUTPUT.=('<br><br>'.$message.'<br>');
-    $PHP_OUTPUT.=('<br>');
+    $PHP_OUTPUT.=('<br /><br />'.$message.'<br />');
+    $PHP_OUTPUT.=('<br />');
     $container = array();
     $container['url'] = 'skeleton.php';
     $container['body'] = 'galactic_post_edit_article.php';
     transfer('id');
     $PHP_OUTPUT.=create_link($container, '<b>Edit this article</b>');
-    $PHP_OUTPUT.=('<br>');
+    $PHP_OUTPUT.=('<br />');
     $container = array();
     $container['url'] = 'skeleton.php';
     $container['body'] = 'galactic_post_delete_confirm.php';
     $container['article'] = 'yes';
     transfer('id');
     $PHP_OUTPUT.=create_link($container, '<b>Delete This article</b>');
-    $PHP_OUTPUT.=('<br><br>');
+    $PHP_OUTPUT.=('<br /><br />');
     $db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.SmrSession::$game_id);
     $container = array();
     $container['url'] = 'galactic_post_add_article_to_paper.php';
@@ -77,7 +77,7 @@ if (isset($var['id'])) {
         $paper_id = $db->f('paper_id');
         $container['paper_id'] = $paper_id;
         $PHP_OUTPUT.=create_link($container, '<b>Add this article to '.$paper_title.'!</b>');
-        $PHP_OUTPUT.=('<br>');
+        $PHP_OUTPUT.=('<br />');
 
     }
     $container = array();
@@ -85,7 +85,7 @@ if (isset($var['id'])) {
     $container['body'] = 'galactic_post_view_article.php';
     $container['news'] = $message;
     transfer('id');
-    $PHP_OUTPUT.=('<small><br>note: breaking news is in the news section.<br></small>');
+    $PHP_OUTPUT.=('<small><br />note: breaking news is in the news section.<br /></small>');
     $PHP_OUTPUT.=create_link($container, 'Add to Breaking News');
 
 }

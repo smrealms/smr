@@ -1,7 +1,7 @@
 <h1>Play Game</h1>
 
 <a href="{$UserRankName}"><b style="color:yellow;">Rankings</b></a>
-<br>You are ranked as a{if $UserRankName[0] == 'a' || $UserRankName[0] == 'A'}n{/if} <span style="font-size:125%;color:greenyellow;">{$UserRankName}</span> player.<p><br /><br />
+<br />You are ranked as a{if $UserRankName[0] == 'a' || $UserRankName[0] == 'A'}n{/if} <span style="font-size:125%;color:greenyellow;">{$UserRankName}</span> player.<p><br /><br />
 
 
 {if $Games.Play}

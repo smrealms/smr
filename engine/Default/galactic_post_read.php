@@ -51,8 +51,8 @@ if ($db->nf()) {
         }
 
         $PHP_OUTPUT.=('<td align=center valign=top width=50%>');
-        $PHP_OUTPUT.=('<font size=6>'.$article_title.'</font><br><br><br>');
-        $PHP_OUTPUT.=('<div align="justify">'.$article_text.'</div><br><br><br>');
+        $PHP_OUTPUT.=('<font size=6>'.$article_title.'</font><br /><br /><br />');
+        $PHP_OUTPUT.=('<div align="justify">'.$article_text.'</div><br /><br /><br />');
         $PHP_OUTPUT.=('</td>');
         if (floor($curr_position / 2) == $curr_position / 2) {
 

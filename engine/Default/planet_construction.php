@@ -5,72 +5,64 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
-$planet->build();
 $smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$player->getSectorID().']');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_planet_menue();
 
-if ($planet->build())
+if ($planet->hasCurrentlyBuilding())
 {
-	$db->query('SELECT * FROM planet_is_building NATURAL JOIN planet_construction ' .
-						'WHERE game_id = '.$player->getGameID().' AND ' .
-							  'sector_id = '.$player->getSectorID());
-	if ($db->next_record())
+	$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+	$PHP_OUTPUT.=('<p>You are currently building:<br />');
+	$currentlyBuilding = $planet->getCurrentlyBuilding();
+	foreach($currentlyBuilding as $building)
 	{
-		$construction_name	= $db->f('construction_name');
-		$construction_id	= $db->f('construction_id');
-		$time_left			= $db->f('time_complete') - time();
-
-	}
-
-	$hours = floor($time_left / 3600);
-	$minutes = floor(($time_left - $hours * 3600) / 60);
-	$seconds = $time_left - $hours * 3600 - $minutes * 60;
-
-	$PHP_OUTPUT.=('<p>You are currently building: '.$construction_name.'.<br>');
-	$PHP_OUTPUT.=('Finished in ');
-
-	if ($hours > 0)
-	{
-		if ($hours == 1)
-			$PHP_OUTPUT.=($hours.' hour');
-		else
-			$PHP_OUTPUT.=($hours.' hours');
-
-		if ($minutes > 0 && $seconds > 0)
-			$PHP_OUTPUT.=(', ');
-		elseif
-			($minutes > 0 || $seconds > 0) $PHP_OUTPUT.=(' and ');
-		else
-			$PHP_OUTPUT.=('.');
-	}
-	if ($minutes > 0)
-	{
-		if ($minutes == 1)
-			$PHP_OUTPUT.=($minutes.' minute');
-		else
-			$PHP_OUTPUT.=($minutes.' minutes');
+		$hours = floor($building['TimeRemaining'] / 3600);
+		$minutes = floor(($building['TimeRemaining'] - $hours * 3600) / 60);
+		$seconds = $building['TimeRemaining'] - $hours * 3600 - $minutes * 60;
+	
+		$PHP_OUTPUT.=($PLANET_BUILDINGS[$building['ConstructionID']]['Name'].' which will finish in ');
+	
+		if ($hours > 0)
+		{
+			if ($hours == 1)
+				$PHP_OUTPUT.=($hours.' hour');
+			else
+				$PHP_OUTPUT.=($hours.' hours');
+	
+			if ($minutes > 0 && $seconds > 0)
+				$PHP_OUTPUT.=(', ');
+			elseif
+				($minutes > 0 || $seconds > 0) $PHP_OUTPUT.=(' and ');
+			else
+				$PHP_OUTPUT.=('.');
+		}
+		if ($minutes > 0)
+		{
+			if ($minutes == 1)
+				$PHP_OUTPUT.=($minutes.' minute');
+			else
+				$PHP_OUTPUT.=($minutes.' minutes');
+			if ($seconds > 0)
+				$PHP_OUTPUT.=(' and ');
+		}
 		if ($seconds > 0)
-			$PHP_OUTPUT.=(' and ');
+			if ($seconds == 1)
+				$PHP_OUTPUT.=($seconds.' second');
+			else
+				$PHP_OUTPUT.=($seconds.' seconds');
+	
+		// esp. if no time left...
+		if ($hours == 0 && $minutes == 0 && $seconds == 0)
+			$PHP_OUTPUT.=('0 seconds');
+	
+		$container = array();
+		$container['url'] = 'planet_construction_processing.php';
+		$container['id'] = $building['ConstructionID'];
+		$PHP_OUTPUT.=create_echo_form($container);
+		$PHP_OUTPUT.=create_submit('Cancel');
+		$PHP_OUTPUT.=('</form>');
 	}
-	if ($seconds > 0)
-		if ($seconds == 1)
-			$PHP_OUTPUT.=($seconds.' second');
-		else
-			$PHP_OUTPUT.=($seconds.' seconds');
-
-	// esp. if no time left...
-	if ($hours == 0 && $minutes == 0 && $seconds == 0)
-		$PHP_OUTPUT.=('0 seconds');
-
-	$container = array();
-	$container['url'] = 'planet_construction_processing.php';
-	$container['id'] = $construction_id;
-	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=create_submit('Cancel');
-	$PHP_OUTPUT.=('</form>');
-
 }
 else
 	$PHP_OUTPUT.=('<p>You are currently building: Nothing</p>');

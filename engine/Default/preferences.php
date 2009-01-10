@@ -161,7 +161,7 @@ $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Display Ship Images:</td>');
 $PHP_OUTPUT.=('<td>Yes: <input type="radio" name="images" id="InputFields" value="Yes"');
 if ($account->images == 'Yes') $PHP_OUTPUT.=(' CHECKED');
-$PHP_OUTPUT.=('><br>No: <input type="radio" name="images" id="InputFields" value="No"');
+$PHP_OUTPUT.=('><br />No: <input type="radio" name="images" id="InputFields" value="No"');
 if ($account->images == 'No') $PHP_OUTPUT.=(' CHECKED');
 $PHP_OUTPUT.=('>');
 $PHP_OUTPUT.=('</td>');
@@ -189,7 +189,7 @@ $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</p>');
 
-$PHP_OUTPUT.= '<h2>Account players</h2><br>';
+$PHP_OUTPUT.= '<h2>Account players</h2><br />';
 $db->query('select game.game_id as game_id, game.game_name as game_name, player.player_name as player_name, player.name_changed as name_changed from player natural join game where player.account_id=' . SmrSession::$account_id . ' and game.enabled=true and game.end_date>\'' . date('Y-m-d') . '\'');
 if($db->nf()) {
 	$PHP_OUTPUT.= '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Game</th><th>Name</th></tr>';

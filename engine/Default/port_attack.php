@@ -21,7 +21,7 @@ if (!isset($var['dead'])) {
 
 		//all this info comes from the last page look there for more info
 		//this is the planet shooting.
-		$PHP_OUTPUT.=($msg.'<br>');
+		$PHP_OUTPUT.=($msg.'<br />');
 
 	}
 
@@ -36,14 +36,14 @@ if (!isset($var['dead'])) {
 
 			//same as above...came from port_attack_processing.php
 			//players have shot here
-			$PHP_OUTPUT.=($msg.'<br>');
+			$PHP_OUTPUT.=($msg.'<br />');
 
 		}
 
 	}
 
 } else
-	$PHP_OUTPUT.=('The port has no more defences!<br><br>');
+	$PHP_OUTPUT.=('The port has no more defences!<br /><br />');
 
 //now we have all the info we need so lets check if this player can fire again
 if ($sector->hasPort())

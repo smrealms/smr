@@ -137,7 +137,7 @@ if (!isset($per) && isset($id)) {
     else
         $db->query('SELECT sum(amount), account_id FROM account_donated WHERE amount > 0 GROUP BY account_id ORDER BY \'sum(amount)\' DESC');
 
-    $PHP_OUTPUT.=($first_display.'<br><br>View your rank at the bottom of the screen<br><br>');
+    $PHP_OUTPUT.=($first_display.'<br /><br />View your rank at the bottom of the screen<br /><br />');
     if ($db->nf()) {
 
         //we have people who we can display
@@ -174,7 +174,7 @@ if (!isset($per) && isset($id)) {
 
         }
         $PHP_OUTPUT.=('</table>');
-        $PHP_OUTPUT.=('<br><br>');
+        $PHP_OUTPUT.=('<br /><br />');
         $PHP_OUTPUT.=create_table();
         $PHP_OUTPUT.=('<tr>');
         $PHP_OUTPUT.=('<th align="center">Rank</th>');
@@ -209,7 +209,7 @@ if (!isset($per) && isset($id)) {
 
     }
     $db->query('SELECT * FROM '.$table.' WHERE '.$id.' > 0 AND '.$per.' > 0 ORDER BY '.$id.' / '.$per.' DESC LIMIT '.$amount);
-    $PHP_OUTPUT.=($first_display.'<br><br>View your rank at the bottom of the screen<br><br>');
+    $PHP_OUTPUT.=($first_display.'<br /><br />View your rank at the bottom of the screen<br /><br />');
     if ($db->nf()) {
 
         //we have people who meet this category
@@ -239,7 +239,7 @@ if (!isset($per) && isset($id)) {
 
         }
         $PHP_OUTPUT.=('</table>');
-        $PHP_OUTPUT.=('<br><br>');
+        $PHP_OUTPUT.=('<br /><br />');
         $PHP_OUTPUT.=create_table();
         $PHP_OUTPUT.=('<tr>');
         $PHP_OUTPUT.=('<th align="center">Rank</th>');

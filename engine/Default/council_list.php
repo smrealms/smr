@@ -70,7 +70,7 @@ if ($president!=null)
 } else
 	$PHP_OUTPUT.=('<div align="center">This council doesn\'t have a president!</div>');
 
-$PHP_OUTPUT.=('<br><br><div align="center" style="font-weight:bold;">Member</div>');
+$PHP_OUTPUT.=('<br /><br /><div align="center" style="font-weight:bold;">Member</div>');
 
 $db->query('SELECT * FROM player ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
@@ -157,7 +157,7 @@ if ($db->nf() > 0)
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
-$PHP_OUTPUT.=('<b>View Council</b><br>');
+$PHP_OUTPUT.=('<b>View Council</b><br />');
 $db->query('SELECT * FROM race WHERE race_id > 1');
 while($db->next_record()) {
 
@@ -170,7 +170,7 @@ while($db->next_record()) {
 	$container['race_id']	= $race_id;
 
 	$PHP_OUTPUT.=create_link($container, '<span style="font-size:75%;">'.$race_name.'</span>');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 
 }
 

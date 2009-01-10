@@ -14,7 +14,7 @@ $player->update();
 
 if (isset($var['action']) && $var['action'] != 'drink') {
 
-	$PHP_OUTPUT.= 'You ask the bartender for some water and you quickly down it.<br>You dont feel quite so intoxicated anymore.<br>';
+	$PHP_OUTPUT.= 'You ask the bartender for some water and you quickly down it.<br />You dont feel quite so intoxicated anymore.<br />';
 	$db2->query('DELETE FROM player_has_drinks WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $player->getAccountID() . ' LIMIT 1');
 
 }
@@ -45,14 +45,14 @@ else {
 
 		} else {
 
-			$PHP_OUTPUT.=('The bartender says, Ive got something special for ya.<br>');
-			$PHP_OUTPUT.=('The bartender turns around for a minute and whips up a '.$drink_name.'.<br>');
+			$PHP_OUTPUT.=('The bartender says, Ive got something special for ya.<br />');
+			$PHP_OUTPUT.=('The bartender turns around for a minute and whips up a '.$drink_name.'.<br />');
 
-			if ($drink_id == 1) $PHP_OUTPUT.=('The bartender says that Spock himself gave him the directions to make this drink.<br>');
+			if ($drink_id == 1) $PHP_OUTPUT.=('The bartender says that Spock himself gave him the directions to make this drink.<br />');
 
-			$PHP_OUTPUT.=('You drink the '.$drink_name.' and feel like like you have been drinking for hours.<br>');
+			$PHP_OUTPUT.=('You drink the '.$drink_name.' and feel like like you have been drinking for hours.<br />');
 
-			if ($drink_id == 11) $PHP_OUTPUT.=('After drinking the $drink_name you feel like nothing can bring you down and like you are the best trader in the universe.<br>');
+			if ($drink_id == 11) $PHP_OUTPUT.=('After drinking the $drink_name you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
 
 			//has the power of 2 drinks
 			$db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.SmrSession::$game_id.', '.$curr_drink_id.', '.TIME.')');
@@ -66,9 +66,9 @@ else {
 	$db->query('SELECT * FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
 	$num_drinks = $db->nf();
 	//display woozy message
-	$PHP_OUTPUT.= '<br>You feel a little W';
+	$PHP_OUTPUT.= '<br />You feel a little W';
 	for ($i = 1; $i <= $num_drinks; ++$i) $PHP_OUTPUT.= 'oO';
-	$PHP_OUTPUT.= 'zy<br>';
+	$PHP_OUTPUT.= 'zy<br />';
 }
 
 //see if the player blacksout or not
@@ -78,7 +78,7 @@ if ($num_drinks > 15)
 	$percent = mt_rand(1,25);
 	$lost_credits = round($player->getCredits() * $percent / 100);
 
-	$PHP_OUTPUT.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br>About 10 minutes later you wake up and find yourself missing ' . number_format($lost_credits) . ' credits</span><br>';
+	$PHP_OUTPUT.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lost_credits) . ' credits</span><br />';
 
 	$player->decreaseCredits($lost_credits);
 	$player->update();

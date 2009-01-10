@@ -27,7 +27,7 @@
 
 				<p><b><big><? echo (addslashes(htmlentities($_REQUEST['msg'], ENT_NOQUOTES))); ?>
 				</big></b></p>
-				<br><br><br>
+				<br /><br /><br />
 				<p><small>If the error was caused by something you entered, press back and try again.</small></p>
 				<p><small>If it was a DB Error, press back and try again, or logoff and log back on.</small></p>
 				<p><small>If the error was unrecognizable, please notify the administrators.</small></p>

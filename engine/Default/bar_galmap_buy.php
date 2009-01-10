@@ -55,7 +55,7 @@ if (isset($var['process'])) {
 	}
 
 	//offer another drink and such
-	$PHP_OUTPUT.=('<div align=center>Galaxy Info has been added.  Enjoy!</div><br>');
+	$PHP_OUTPUT.=('<div align=center>Galaxy Info has been added.  Enjoy!</div><br />');
 	include(get_file_loc('bar_opening.php'));
 	
 } else {
@@ -66,7 +66,7 @@ if (isset($var['process'])) {
 	$container['body'] = 'bar_main.php';
 	$container['script'] = 'bar_galmap_buy.php';
 	$container['process'] = 'yes';
-	$PHP_OUTPUT.=('<div align=center>What galaxy do you want info on?<br>');
+	$PHP_OUTPUT.=('<div align=center>What galaxy do you want info on?<br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('<select type=select name=gal_id>');
 	$PHP_OUTPUT.=('<option value=0>[Select a galaxy]</option>');
@@ -79,7 +79,7 @@ if (isset($var['process'])) {
 		if ($db2->next_record()) $PHP_OUTPUT.=('<option value='.$gal_id.'>' . $db2->f('galaxy_name') . '</option>');
 		
 	}
-	$PHP_OUTPUT.=('</select><br>');
+	$PHP_OUTPUT.=('</select><br />');
 	$PHP_OUTPUT.=create_submit('Buy the map');
 	$PHP_OUTPUT.=('</form></div>');
 	

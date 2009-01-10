@@ -655,7 +655,7 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //
 //			$damage_msg[] = 'Port defenses are <span style="color:red;">DESTROYED!</span>';
 //
-//			//$damage_msg[] = '<br>Start<br>';
+//			//$damage_msg[] = '<br />Start<br />';
 //			//itterate through since the last port reset
 //			$db->query('SELECT * FROM player_attacks_port WHERE game_id = '.SmrSession::$game_id.' AND sector_id = '.$sector->getSectorID().' AND time < '.$port->getReinforceTime());
 //			while ($db->next_record()) {
@@ -685,14 +685,14 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //
 //		}
 //
-//		$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> does a total of <span style="color:red;">'.$attacker_damage.'</span> damage.<br><br>';
+//		$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> does a total of <span style="color:red;">'.$attacker_damage.'</span> damage.<br /><br />';
 //
 //		// 5% of the damage goes to xp
 //		$curr_attacker->getExperience() += $attacker_damage * .05;
 //		$curr_attacker->update();
 //
 //	} else
-//		$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> does absolutely no damage this round. Send the worthless lout back to the academy!<br><br>';
+//		$damage_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> does absolutely no damage this round. Send the worthless lout back to the academy!<br /><br />';
 //
 //	$attacker_team_damage += $attacker_damage;
 //	$curr_attacker->update_stat('port_damage', $attacker_damage);
@@ -707,7 +707,7 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //if ($attacker_team_damage > 0)
 //	$damage_msg[] = 'This team does a total of <span style="color:red;">'.$attacker_team_damage.'</span> damage in this round of combat.';
 //else
-//	$damage_msg[] = 'This team does no damage at all. You call that a team? They need a better recruiter.<br>';
+//	$damage_msg[] = 'This team does no damage at all. You call that a team? They need a better recruiter.<br />';
 //
 //
 ////check for port downgrade.

@@ -18,7 +18,7 @@ $db2 = new SMR_DB();
 
 if ($db->nf()) {
 
-	$PHP_OUTPUT.=('You have claimed the following bounties<br><br>');
+	$PHP_OUTPUT.=('You have claimed the following bounties<br /><br />');
 
 	while ($db->next_record()) {
 
@@ -34,7 +34,7 @@ if ($db->nf()) {
 		// add bounty to our cash
 		$player->increaseCredits($amount);
 		$name =& SmrPlayer::getPlayer($acc_id, $player->getGameID());
-		$PHP_OUTPUT.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span><br>');
+		$PHP_OUTPUT.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span><br />');
 
 		// add HoF stat
 		$player->increaseHOF(1,'bounties_claimed');
@@ -49,6 +49,6 @@ if ($db->nf()) {
 	}
 
 } else
-	$PHP_OUTPUT.=('You have no claimable bounties<br><br>');
+	$PHP_OUTPUT.=('You have no claimable bounties<br /><br />');
 
 ?>

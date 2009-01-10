@@ -113,7 +113,7 @@ if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id) {
 
 		$container['url']	= 'skeleton.php';
         $container['body']	= 'current_sector.php';
-        $container['msg']	= 'You have just flown past a sprinkle of mines.<br>Because of your newbie status you have been spared from the harsh reality of the forces.<br>It has cost you ';
+        $container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
 		if($forces[$mine_owner_id][2] < 10) {
        	    $player->takeTurns(1,1);
 			$container['msg'] .= '1 turn';
@@ -224,7 +224,7 @@ if ($mine_owner_id) {
 
 		$container['url']	= 'skeleton.php';
         $container['body']	= 'current_sector.php';
-        $container['msg']	= 'You have just flown past a sprinkle of mines.<br>Because of your newbie status you have been spared from the harsh reality of the forces.<br>It has cost you ';
+        $container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
 
 		if($forces[$mine_owner_id][2] < 10) {
        	    $player->takeTurns(1,1);

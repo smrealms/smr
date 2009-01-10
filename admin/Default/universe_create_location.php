@@ -8,7 +8,7 @@ if ($db->next_record())
 	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game:<dt><dd>' . $db->f('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding special Location</d>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">Here you can add special locations, like Race Headquarters, Underground HQ, Bars and Banks. ');
-$PHP_OUTPUT.=('Each Headquarter should be only once in the game. The numbers provided are absolut numbers per galaxy.<br>');
+$PHP_OUTPUT.=('Each Headquarter should be only once in the game. The numbers provided are absolut numbers per galaxy.<br />');
 $PHP_OUTPUT.=('PLEASE NOTE: Galaxies with a Racial Headquarter DON\'T need additional FED Space, it will generated automatically for these!</dd>');
 $PHP_OUTPUT.=('</dl>');
 

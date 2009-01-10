@@ -217,7 +217,7 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.= '</tr></form></table></div>';
 }
 else {
-	$PHP_OUTPUT.= 'Your alliance account is still unused<br>';
+	$PHP_OUTPUT.= 'Your alliance account is still unused<br />';
 }
 //TODO: location of report button
 $container=array();
@@ -242,7 +242,7 @@ $form = create_form($container,$actions);
 
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '
-<h2>Make transaction</h2><br>
+<h2>Make transaction</h2><br />
 <table cellspacing="0" cellpadding="0" class="nobord nohpad">
 	<tr>
 		<td class="top">Amount:&nbsp;</td>
@@ -254,7 +254,7 @@ $PHP_OUTPUT.= '
 		<td><textarea name="message"></textarea></td>
 	</tr>
 </table>
-<br>';
+<br />';
 
 
 $PHP_OUTPUT.= $form['submit']['Deposit'];

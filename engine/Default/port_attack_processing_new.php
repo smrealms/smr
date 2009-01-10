@@ -79,7 +79,7 @@ define('DMG_TO_PLAYER',4);
 define('DEBUG',0);
 function getPortArray()
 {
-	if (DEBUG) $PHP_OUTPUT.=('Entered port array<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Entered port array<br />');
 	global $db, $player;
 	$db->query('SELECT  * FROM port WHERE sector_id = ' . $player->getSectorID() . ' AND game_id = ' . $player->getGameID());
 	if ($db->next_record()) {
@@ -121,7 +121,7 @@ function getPortArray()
 }
 function getPlayerArray()
 {
-	if (DEBUG) $PHP_OUTPUT.=('Entered player array<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Entered player array<br />');
 	global $db, $player, $account;
 	//insert our trigger into the players array
 	$query = 'SELECT * FROM player WHERE account_id = ' . $player->getAccountID() . ' AND game_id = ' . $player->getGameID();
@@ -256,7 +256,7 @@ function getPlayerArray()
 	
 }
 function build_ships($ship_ids) {
-	if (DEBUG) $PHP_OUTPUT.=('Build Ships<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Build Ships<br />');
 	global $db;
 	$db->query('SELECT ship_type_id,cost,speed FROM ship_type WHERE ship_type_id IN (' . implode(',',$ship_ids) . ') LIMIT ' . count($ship_ids));
 	while($db->next_record()) {
@@ -265,7 +265,7 @@ function build_ships($ship_ids) {
 	return $ships;
 }
 function build_hqs(&$races) {
-	if (DEBUG) $PHP_OUTPUT.=('Build HQ<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Build HQ<br />');
 	global $db;
 	// We know that race HQs have a location id of 101 + race_id
 	$temp = array();
@@ -280,7 +280,7 @@ function build_hqs(&$races) {
 }
 function getHardware(&$players)
 {
-	if (DEBUG) $PHP_OUTPUT.=('Get Hardware<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Get Hardware<br />');
 	global $db, $player, $account;
 	$players_in = implode(',',array_keys($players));
 	
@@ -321,7 +321,7 @@ function getHardware(&$players)
 }
 function getWeapons($weapon_ids)
 {
-	if (DEBUG) $PHP_OUTPUT.=('Get Weps<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Get Weps<br />');
 	global $db;
 	$weapons = array();
 	if (!sizeof($weapon_ids)) return $weapons;
@@ -338,7 +338,7 @@ function getWeapons($weapon_ids)
 	return $weapons;
 }
 function getFleet(&$players,&$weapons) {
-	if (DEBUG) $PHP_OUTPUT.=('Get Fleet<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Get Fleet<br />');
 	global $db,$player;
 	
 	$player_ids = array_keys($players);
@@ -419,7 +419,7 @@ function getFleet(&$players,&$weapons) {
 	return $fleet;
 }
 function protected_rating($account_id,&$players,&$weapons) {
-	if (DEBUG) $PHP_OUTPUT.=('Checking Protected Rating<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Checking Protected Rating<br />');
 	// Calculate their attack rating
 	$weapons_damage = 0;
 	foreach($players[$account_id][WEAPONS] as $weapon) {
@@ -449,7 +449,7 @@ function protected_rating($account_id,&$players,&$weapons) {
 }
 function portFires(&$attackers, &$port, &$players)
 {
-	if (DEBUG) $PHP_OUTPUT.=('Port Fires<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Port Fires<br />');
 	global $db,$player;
 	//Turrets Fire
 	for ($i = 0; $i < NUM_TURRETS; $i++)
@@ -478,7 +478,7 @@ function portFires(&$attackers, &$port, &$players)
 }
 
 function portFiresTurret($attackers, $port, &$players, $target) {
-	if (DEBUG) $PHP_OUTPUT.=('Port Fires its turret<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Port Fires its turret<br />');
 	$result = array(0,0,0,0,NORMAL_HIT);
 	$portAccuracy = ($port[PORT_LEVEL] * 10) - ($players[$target][LEVEL] / 2);
 	if ($portAccuracy < 0)
@@ -524,7 +524,7 @@ function portFiresTurret($attackers, $port, &$players, $target) {
 
 function portFiresDrones($attackers, $port, &$players, $target)
 {
-	if (DEBUG) $PHP_OUTPUT.=('Port Fires drones<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Port Fires drones<br />');
 	$result = array(0,0,0,0,NORMAL_HIT);
 	$result[DRONES_FIRED] = $port[PORT_DRONES];
 	$damage = $port[PORT_DRONES];
@@ -574,7 +574,7 @@ function portFiresDrones($attackers, $port, &$players, $target)
 }
 function fleetFires(&$attackers, &$port, &$players, &$weapons)
 {
-	if (DEBUG) $PHP_OUTPUT.=('Fleet Fires<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Fleet Fires<br />');
 	$fleet_size = count($attackers);
 	// Process each player in turn
 	for($i=0;$i<$fleet_size;++$i) {
@@ -583,7 +583,7 @@ function fleetFires(&$attackers, &$port, &$players, &$weapons)
 }
 function playerFires($attacker, &$port, &$players, &$weapons)
 {
-	if (DEBUG) $PHP_OUTPUT.=('Player fires<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Player fires<br />');
 	global $db,$player;
 	
 	$num_weapons = count($players[$attacker][WEAPONS]);
@@ -604,7 +604,7 @@ function playerFires($attacker, &$port, &$players, &$weapons)
 }
 function playerFiresWeapon($weapon,$attacker,&$port,&$players,&$weapons)
 {
-	if (DEBUG) $PHP_OUTPUT.=('Player Fires Weap<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Player Fires Weap<br />');
 	$result = array(0,0,0,NORMAL_HIT,0);
 
 	// Does the weapon hit?
@@ -748,7 +748,7 @@ function playerFiresWeapon($weapon,$attacker,&$port,&$players,&$weapons)
 }
 function processNews() {
 	global $db, $player;
-	if (DEBUG) $PHP_OUTPUT.=('News Process<br>');
+	if (DEBUG) $PHP_OUTPUT.=('News Process<br />');
 	$text = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector';
 	$text .= ' <span class="yellow">'.$player->getSectorID().'</span>.';
 	if ($player->getAllianceID()) {
@@ -763,7 +763,7 @@ function processNews() {
 	$db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'regular\')');
 }
 function hofTracker($players, $port) {
-	if (DEBUG) $PHP_OUTPUT.=('Tracking HoF<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Tracking HoF<br />');
 	global $db, $player;
 	//keep track of players who should get credit if the PB is successful.
 	$allowed = TIME - 60 * 60 * 3;
@@ -774,7 +774,7 @@ function hofTracker($players, $port) {
 	}
 }
 function processResults(&$players, &$port, $fleet, $weapons) {
-	if (DEBUG) $PHP_OUTPUT.=('Processing Results<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Processing Results<br />');
 	global $db, $player;
 	$results = array('','',0,0,array());
 	//port is updated in downgrade function, all we need to do is format text
@@ -960,7 +960,7 @@ function processResults(&$players, &$port, $fleet, $weapons) {
 	return $results;
 }
 function podPlayers($IDArray, $ships, $hqs, $port, $players) {
-	if (DEBUG) $PHP_OUTPUT.=('Podding Players<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Podding Players<br />');
 	global $db, $player;
 	if (!sizeof($IDArray)) return;
 	$hqs = build_hqs(array_unique($hqs));
@@ -1020,7 +1020,7 @@ function podPlayers($IDArray, $ships, $hqs, $port, $players) {
 	}
 }
 function sendReport($results, $port) {
-	if (DEBUG) $PHP_OUTPUT.=('Sending Reports<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Sending Reports<br />');
 	global $player, $db;
 	$mainText = 'From the reports we have been able to gather the following information:<br /><br />';
 	$mainText .= $results[PORT_DISPLAY] . '<br />' . $results[PLAYER_DISPLAY];
@@ -1050,7 +1050,7 @@ function sendReport($results, $port) {
 	}
 }
 function portDowngrade(&$results, &$port) {
-	if (DEBUG) $PHP_OUTPUT.=('Downgrading<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Downgrading<br />');
 	global $db, $player;
 	if ($port[PORT_LEVEL] > 1) {
 		$numberOfChances = floor($results[TOTAL_PLAYER_DMG] / 500);
@@ -1086,12 +1086,12 @@ function portDowngrade(&$results, &$port) {
     			' WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
 }
 function doLog($results) {
-	if (DEBUG) $PHP_OUTPUT.=('Logging<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Logging<br />');
 	global $account, $player;
 	$account->log(7, 'Player attacks port their team does ' . $results[TOTAL_PLAYER_DMG], $player->getSectorID());
 }
 function checkContinue($players, $port) {
-	if (DEBUG) $PHP_OUTPUT.=('Continue?<br>');
+	if (DEBUG) $PHP_OUTPUT.=('Continue?<br />');
 	global $player;
 	if ($players[$player->getAccountID()][KILLER]) return FALSE;
 	if ($port[PORT_ARMOR] == 0) return FALSE;
@@ -1099,7 +1099,7 @@ function checkContinue($players, $port) {
 }
 if ($player->getNewbieTurns()) create_error('You can\'t shoot at that port while under newbie protection.');
 if ($player->getTurns() < 3) create_error('Insufficient turns to perform that action');
-if (DEBUG) $PHP_OUTPUT.=('Opening<br>');
+if (DEBUG) $PHP_OUTPUT.=('Opening<br />');
 //$players contains all player info for the trigger and his alliance IS
 $players = getPlayerArray();
 //$weapons contains info for weapons being used this battle
@@ -1108,13 +1108,13 @@ if (!sizeof($players[$player->getAccountID()][WEAPONS])) create_error('What are 
 $port = getPortArray();
 //in case there are more than 10 players IS.  $fleet contains account_ids of the attackers
 $fleet = getFleet($players, $weapons);
-if (DEBUG) $PHP_OUTPUT.=('Pre news<br>');
+if (DEBUG) $PHP_OUTPUT.=('Pre news<br />');
 hofTracker($players, $port);
 // Take off the 3 turns for attacking
 $player->takeTurns(3,1);
 $player->update();
 // fire shots
-if (DEBUG) $PHP_OUTPUT.=('Pre Shots<br>');
+if (DEBUG) $PHP_OUTPUT.=('Pre Shots<br />');
 portFires($fleet,$port,$players);
 fleetFires($fleet,$port,$players,$weapons);
 //get results in a way we want them
@@ -1127,7 +1127,7 @@ doLog($results);
 //insert into combat logs
 $finalResults = $results[0] . '<br /><img src="images/portAttack.jpg" width="480px" height="330px" alt="Port Attack" title="Port Attack"><br />' . $results[1];
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PORT\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',0,0,' . $db->escape_string(gzcompress($finalResults)) . ', \'FALSE\')');
-if (DEBUG) $PHP_OUTPUT.=('Pre Forward/Display<br>');
+if (DEBUG) $PHP_OUTPUT.=('Pre Forward/Display<br />');
 $container=array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'port_attack_new.php';

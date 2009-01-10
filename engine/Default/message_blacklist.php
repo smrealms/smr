@@ -23,9 +23,9 @@
  				$PHP_OUTPUT.= '<span class="red bold">ERROR: </span>Unknown error event.';
  				break;
  		}
- 		$PHP_OUTPUT.= '<br><br>';
+ 		$PHP_OUTPUT.= '<br /><br />';
  	}
-  $PHP_OUTPUT.= '<h2>Blacklisted Players</h2><br>';
+  $PHP_OUTPUT.= '<h2>Blacklisted Players</h2><br />';
   
   $db = new SMR_DB();
   
@@ -48,18 +48,18 @@
 			$PHP_OUTPUT.= '</tr>';
 		}
 		
-  	$PHP_OUTPUT.= '</table><br>';
+  	$PHP_OUTPUT.= '</table><br />';
 		$PHP_OUTPUT.= $form['submit'];
-		$PHP_OUTPUT.= '</form><br>';
+		$PHP_OUTPUT.= '</form><br />';
 	
   }
   else {
 
-  	$PHP_OUTPUT.= 'You are currently accepting all communications.<br>';
+  	$PHP_OUTPUT.= 'You are currently accepting all communications.<br />';
   	
   }
   
-	$PHP_OUTPUT.= '<br><h2>Blacklist Player</h2><br>';
+	$PHP_OUTPUT.= '<br /><h2>Blacklist Player</h2><br />';
 	$container = array();
 	$container['url'] = 'message_blacklist_add.php';
 	$form = create_form($container,'Blacklist');
@@ -69,7 +69,7 @@
 		<tr>
 			<td class="top">Name:&nbsp;</td>
 			<td class="mb"><input type="text" name="PlayerName" size="30"></td>
-	</table><br>
+	</table><br />
 	';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';

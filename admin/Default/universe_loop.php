@@ -3,7 +3,7 @@
 //this gets us around the universe problem temporarly so I can add stuff to universe.
 $container = array();
 $container['url'] = 'universe_loop_proc.php';
-$PHP_OUTPUT.=('What game<br>');
+$PHP_OUTPUT.=('What game<br />');
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="game_id" size="1" id="InputFields">');
 

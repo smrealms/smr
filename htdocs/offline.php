@@ -32,7 +32,7 @@ if ($db->next_record()) {
 
 <table border='0' cellpadding='0' cellspacing='1' width='85%'>
 <tr>
-	<td align='center'><b style='color:red;font-size:125%;'><br><br></b>
+	<td align='center'><b style='color:red;font-size:125%;'><br /><br /></b>
 	</td>
 </tr>
 <tr>

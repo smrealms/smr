@@ -18,7 +18,7 @@ $president = getPresident($race_id);
 $PHP_OUTPUT.=create_council_menue($race_id, $president);
 
 $PHP_OUTPUT.=('<div align="center">');
-$PHP_OUTPUT.=('<p>We are at War/Peace<br>with the following races:</p>');
+$PHP_OUTPUT.=('<p>We are at War/Peace<br />with the following races:</p>');
 
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr>');

@@ -95,13 +95,13 @@ $smarty->assign('PreferencesLink',SmrSession::get_new_href($container));
 $container['body'] = '';
 $container['url'] = 'mgu_create.php';
 $PHP_OUTPUT.=create_link($container, 'DL MGU Maps');
-echo '<br>';
+echo '<br />';
 */
 //if (SmrSession::$game_id > 0) {
 //	$container['body'] = '';
 //	$container['url'] = 'mgu_create_new.php';
 //	$PHP_OUTPUT.=create_link($container, 'DL MGU Maps');
-//	echo '<br>';
+//	echo '<br />';
 //}
 $container['url'] = 'skeleton.php';
 $container['body'] = 'album_edit.php';

@@ -15,7 +15,7 @@ if ($db->next_record()) {
 
 	$time = $db->f('time');
     $PHP_OUTPUT.=create_link($container, '<b>MAJOR NEWS! - ' . date('n/j/Y g:i:s A', $time) . '</b>');
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 
 }
 if (isset($var['breaking'])) {
@@ -33,15 +33,15 @@ if (isset($var['breaking'])) {
 	$PHP_OUTPUT.=('<td align="left">$text</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('</table>');
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 
 }
-$PHP_OUTPUT.=('<div align="center">View News entries</div><br>');
+$PHP_OUTPUT.=('<div align="center">View News entries</div><br />');
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'news_read.php';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<div align="center"><input type="text" name="min_news" value="1" size="3" id="InputFields" style="text-align:center;">&nbsp;-&nbsp;<input type="text" name="max_news" value="50" size="3" id="InputFields" style="text-align:center;">&nbsp;<br>');
+$PHP_OUTPUT.=('<div align="center"><input type="text" name="min_news" value="1" size="3" id="InputFields" style="text-align:center;">&nbsp;-&nbsp;<input type="text" name="max_news" value="50" size="3" id="InputFields" style="text-align:center;">&nbsp;<br />');
 $PHP_OUTPUT.=create_submit('View');
 $PHP_OUTPUT.=('</div></form>');
 if (isset($_REQUEST['min_news'])) $min_news = $_REQUEST['min_news'];

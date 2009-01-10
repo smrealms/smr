@@ -6,7 +6,7 @@ $db->query('SELECT * FROM mb_keywords WHERE type = \'find\' AND `use` = 1');
 $db2 = new SMR_DB();
 $db3 = new SMR_DB();
 $db4 = new SMR_DB();
-if (isset($var['msg'])) $PHP_OUTPUT.=($var['msg'] . '<br><br>');
+if (isset($var['msg'])) $PHP_OUTPUT.=($var['msg'] . '<br /><br />');
 
 $container = array();
 $container['url'] = 'keyword_processing.php';
@@ -91,14 +91,14 @@ while ($db->next_record()) {
 }
 
 if ($count == 0)
-	$PHP_OUTPUT.=('No harmful messages found on alliance webboards<br></form>');
+	$PHP_OUTPUT.=('No harmful messages found on alliance webboards<br /></form>');
 else {
-	$PHP_OUTPUT.=('</table><br>');
+	$PHP_OUTPUT.=('</table><br />');
 	$PHP_OUTPUT.=('<a name=button1>');
 	$PHP_OUTPUT.=create_submit('Add To Exception Table');
 	$PHP_OUTPUT.=('</a></form>');
 }
-$PHP_OUTPUT.=('<br><br>');
+$PHP_OUTPUT.=('<br /><br />');
 
 $container = array();
 $container['url'] = 'keyword_processing.php';
@@ -170,7 +170,7 @@ while ($db->next_record()) {
 }
 
 if ($count == 0)
-	$PHP_OUTPUT.=('No harmful messages found in personal messages</form><br>');
+	$PHP_OUTPUT.=('No harmful messages found in personal messages</form><br />');
 else {
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=('<a name=button2>');

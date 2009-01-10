@@ -26,7 +26,7 @@ if (1 == 1) {
                 $new_ip = array();
                 foreach ($curr_account->ip as $ip) {
 
-                    //$PHP_OUTPUT.=('added '.$ip.' to array<br>');
+                    //$PHP_OUTPUT.=('added '.$ip.' to array<br />');
                     if (in_array ($ip, $new_ip)) continue;
                     $new_ip[] = $ip;
 

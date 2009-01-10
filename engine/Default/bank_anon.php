@@ -40,11 +40,11 @@ if (isset($make)) {
 
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
-	$PHP_OUTPUT.= '<br><br>';
+	$PHP_OUTPUT.= '<br /><br />';
 
-	$PHP_OUTPUT.= '<h2>Create Account</h2><br>';
+	$PHP_OUTPUT.= '<h2>Create Account</h2><br />';
 
-	$PHP_OUTPUT.= 'Please enter the password you would like<br><br>';
+	$PHP_OUTPUT.= 'Please enter the password you would like<br /><br />';
 	$container = array();
     $container['url'] = 'skeleton.php';
     $container['body'] = 'bank_anon.php';
@@ -62,7 +62,7 @@ if (isset($make)) {
 			<td><input type="password" name="verify_pass" size="30"></td>
 		</tr>
 	</table>
-	<br>
+	<br />
 	';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';
@@ -71,7 +71,7 @@ if (isset($make)) {
 if (isset($made)) {
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
-	$PHP_OUTPUT.= '<br><br>';
+	$PHP_OUTPUT.= '<br /><br />';
 
 	$password = $_REQUEST['password'];
 	$verify_pass = $_REQUEST['verify_pass'];
@@ -89,7 +89,7 @@ if (isset($made)) {
     $db->query('INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES ('.SmrSession::$game_id.', '.$new_acc.', '.$player->getAccountID().', '.$db->escapeString($password).', 0)');
     $PHP_OUTPUT.= 'Account #';
 	$PHP_OUTPUT.= $new_acc;
-	$PHP_OUTPUT.= ' has been opened for you.<br><br>';
+	$PHP_OUTPUT.= ' has been opened for you.<br /><br />';
 
 
 }
@@ -100,9 +100,9 @@ $container['url'] = 'skeleton.php';
 if (!isset($account_num) && !isset($make)) {
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
-	$PHP_OUTPUT.= '<br><br>';
+	$PHP_OUTPUT.= '<br /><br />';
 
-	$PHP_OUTPUT.= '<h2>Access accounts</h2><br>';
+	$PHP_OUTPUT.= '<h2>Access accounts</h2><br />';
     $container['body'] = 'bank_anon.php';
 	$form = create_form($container,'Access Account');
 	$PHP_OUTPUT.= $form['form'];
@@ -117,7 +117,7 @@ if (!isset($account_num) && !isset($make)) {
 			<td><input type="password" name="pass" size="30"></td>
 		</tr>
 	</table>
-	<br>';
+	<br />';
 
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';
@@ -126,7 +126,7 @@ if (!isset($account_num) && !isset($make)) {
 				WHERE owner_id=' . $player->getAccountID() . '
 				AND game_id=' . $player->getGameID());
 	if ($db->nf()) {
-		$PHP_OUTPUT.= '<br><h2>Your accounts</h2><br>';
+		$PHP_OUTPUT.= '<br /><h2>Your accounts</h2><br />';
 		$PHP_OUTPUT.= '<div align=center>';
 		$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset" ><tr><th>ID</th><th>Password</th><th>Last Transaction</th><th>Balance</th><th>Option</th></tr>';
 	
@@ -204,7 +204,7 @@ if (isset($account_num))
 
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
-	$PHP_OUTPUT.= '<br>';
+	$PHP_OUTPUT.= '<br />';
 
 	if (isset($_REQUEST['maxValue'])
 		&& is_numeric($_REQUEST['maxValue'])
@@ -314,11 +314,11 @@ if (isset($account_num))
 		$PHP_OUTPUT.= '</td></tr></table></div>';
 	}
 	else {
-		$PHP_OUTPUT.= '<br>No transactions have been made on this account.<br>';
+		$PHP_OUTPUT.= '<br />No transactions have been made on this account.<br />';
 	}
 
-	$PHP_OUTPUT.= '<br>';
-	$PHP_OUTPUT.= '<h2>Make transaction</h2><br>';
+	$PHP_OUTPUT.= '<br />';
+	$PHP_OUTPUT.= '<h2>Make transaction</h2><br />';
 	$container=array();
 	$container['url'] = 'bank_anon_processing.php';
     $container['password'] = $password;
@@ -329,7 +329,7 @@ if (isset($account_num))
 	$form = create_form($container,$actions);
 
 	$PHP_OUTPUT.= $form['form'];
-	$PHP_OUTPUT.= 'Amount:&nbsp;<input type="text" name="amount" size="10" value="0"><br><br>';
+	$PHP_OUTPUT.= 'Amount:&nbsp;<input type="text" name="amount" size="10" value="0"><br /><br />';
 
 	$PHP_OUTPUT.= $form['submit']['Deposit'];
 	$PHP_OUTPUT.= '&nbsp;&nbsp;';

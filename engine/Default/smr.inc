@@ -60,7 +60,7 @@ function create_echo_error($message) {
 
 	$return=('<h1>ERROR</h1>');
 	$return.=('<p><b><big>'.$message.'</big></b></p>');
-	$return.=('<br><br><br>');
+	$return.=('<br /><br /><br />');
 	$return.=('<p><small>If the error was caused by something you entered, press back and try again.</small></p>');
 	$return.=('<p><small>If it was a DB Error, press back and try again, or logoff and log back on.</small></p>');
 	$return.=('<p><small>If the error was unrecognizable, please notify the administrators.</small></p>');

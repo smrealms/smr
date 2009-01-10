@@ -8,33 +8,33 @@ if (isset($_REQUEST['action'])) $action = $_REQUEST['action'];
 $PHP_OUTPUT.=('<div align=center>');
 if (empty($action)) {
 
-	$PHP_OUTPUT.=('Click a link to view those stats.<br><br>');
+	$PHP_OUTPUT.=('Click a link to view those stats.<br /><br />');
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'games_previous.php';
 	$container['game_id'] = $game_id;
 	$container['game_name'] = $game_name;
 	$PHP_OUTPUT.=create_link($container, '<b>Basic Game Stats</b>');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$container['body'] = 'games_previous_detail.php';
 	$container['game_id'] = $game_id;
 	$container['game_name'] = $game_name;
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=create_submit('Top Mined Sectors');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Sectors with most Forces');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Top Killing Sectors');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Top Planets');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Top Alliance Experience');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Top Alliance Kills');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Top Alliance Deaths');
 	$PHP_OUTPUT.=('</form>');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 
 } else {
 

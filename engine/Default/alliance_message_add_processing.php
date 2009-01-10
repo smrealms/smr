@@ -1,7 +1,7 @@
 <?
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
-// transform line breaks to <br>
+// transform line breaks to <br />
 $body = nl2br($db->escape_string($_POST['body'], true));
 $topic = $_REQUEST['topic'];
 if (isset($_REQUEST['allEyesOnly'])) $allEyesOnly = TRUE;

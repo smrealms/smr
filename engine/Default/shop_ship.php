@@ -37,7 +37,7 @@ if ($db->nf() > 0 ) {
 		$PHP_OUTPUT.= '</td></tr>';
 	}
 
-	$PHP_OUTPUT.= '</table><br>';
+	$PHP_OUTPUT.= '</table><br />';
 
 }
 
@@ -181,7 +181,7 @@ if (isset($var['ship_id'])) {
 	else $PHP_OUTPUT.= '-';
 	$PHP_OUTPUT.= '</td></tr>';
 
-	$PHP_OUTPUT.= '</table><br>';
+	$PHP_OUTPUT.= '</table><br />';
 
 	$PHP_OUTPUT.= '<table cellspacing="0"class="nobord">';
 	$PHP_OUTPUT.= '<tr><td><hr style="width:200px"></td></tr>';

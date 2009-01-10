@@ -2,17 +2,17 @@
 
 $smarty->assign('PageTopic','Space Merchant Realms Chat Room Rules');
 
-//$PHP_OUTPUT.=('<div align=center><br><br><br>VJ Has temporarly taken down the applet.  Please visit <a href="http://www.vjtd3.com/irc"><b>VJTD3's chat page</b></a> for a link to many applets.</div>');
+//$PHP_OUTPUT.=('<div align=center><br /><br /><br />VJ Has temporarly taken down the applet.  Please visit <a href="http://www.vjtd3.com/irc"><b>VJTD3's chat page</b></a> for a link to many applets.</div>');
 //include('http://irc.VJTD3.com/index.shtml?' . strtr($player->getPlayerName(), array(' ' => '+')));
 $PHP_OUTPUT .= "
 <script language='JavaScript'>function setjs() {if(navigator.product == 'Gecko') {document.loginform['interface'].value = 'mozilla';}else if(navigator.appName == 'Microsoft Internet Explorer' &&window['ietest'] && window['ietest'].innerHTML) {document.loginform['interface'].value = 'ie';}else if(window.opera) {document.loginform['interface'].value = 'opera';}}</script>
-These rules have been created for all chatters in #SMR. The purpose of #SMR is to have a general gathering of all players, newbies and vets, and anyone else who may decide to enter the channel. The channel is meant to help anyone with any questions or problems they may have regarding the game. The following is a list of the rules we ask that everyone follow:<br><br>
-<b>News Last Updated: <u>Sunday, 09-Feb-2003 19:45:15 EST</u></b><br>
-MrSpock setup so the applet can be administered, no longer having to ban the applet for a single abusive user ;)<br>
-<br><br>
-<b>Rules Last Updated: <u>Sunday, 21-Dec-2003 01:47:22 EST</u></b><br>
-<br><br>
-A. Rules <br><br>
+These rules have been created for all chatters in #SMR. The purpose of #SMR is to have a general gathering of all players, newbies and vets, and anyone else who may decide to enter the channel. The channel is meant to help anyone with any questions or problems they may have regarding the game. The following is a list of the rules we ask that everyone follow:<br /><br />
+<b>News Last Updated: <u>Sunday, 09-Feb-2003 19:45:15 EST</u></b><br />
+MrSpock setup so the applet can be administered, no longer having to ban the applet for a single abusive user ;)<br />
+<br /><br />
+<b>Rules Last Updated: <u>Sunday, 21-Dec-2003 01:47:22 EST</u></b><br />
+<br /><br />
+A. Rules <br /><br />
 
 <ol>
 <li>No foul language is allowed. That includes swearing, explicit language, derogatory racial comments, and similar activities. </li>
@@ -39,9 +39,9 @@ A. Rules <br><br>
 </li>
 </ol>
 
-<br><br>
+<br /><br />
 B. Disciplinary actions. 
-<br><br>
+<br /><br />
 
 <ol>
 	<li>There are 4 kinds of disciplinary action: a verbal warning, a kick, a short term ban (normally 24 hours), and a long term ban (up to life time).</li>
@@ -83,6 +83,6 @@ $PHP_OUTPUT .= '<center><form method="POST" action="http://chat.vjtd3.com/sjc.ph
 //$PHP_OUTPUT.=('<input type="hidden" name="Nickname" value="' . strtr($player->getPlayerName(), array(' ' => '_')) . '">');
 //<input type='hidden' name='Channel' value='#SMR'>
 $PHP_OUTPUT .= "<input type='submit' name='action' value='Chat' id='InputFields'></form></center>
-<br><font size='2'><i>This Page Was Last Updated: Tuesday, 30-Mar-2004 21:41:44 EST</i></font>";
+<br /><font size='2'><i>This Page Was Last Updated: Tuesday, 30-Mar-2004 21:41:44 EST</i></font>";
 
 ?>

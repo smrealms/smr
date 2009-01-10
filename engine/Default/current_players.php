@@ -14,7 +14,7 @@ $db->query('SELECT * FROM player ' .
 		   'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
 				 'game_id = '.SmrSession::$game_id.' ' .
 		   'ORDER BY '.$sort.' '.$seq);
-//$PHP_OUTPUT.=('.$db->escapeString($sort, $seq<br>');
+//$PHP_OUTPUT.=('.$db->escapeString($sort, $seq<br />');
 $count_last_active = $db->nf();
 $list = '(0';
 while ($db->next_record()) $list .= ',' . $db->f('account_id');
@@ -43,17 +43,17 @@ if ($sort == 'experience DESC, player_name' || ($sort == 'experience' && $seq ==
 	arsort($exp, SORT_NUMERIC);
 elseif ($sort == 'experience' && $seq == 'ASC')
 	asort($exp);
-//foreach ($exp as $acc_id => $val) $PHP_OUTPUT.=('.$db->escapeString($acc_id, $val<br>');
+//foreach ($exp as $acc_id => $val) $PHP_OUTPUT.=('.$db->escapeString($acc_id, $val<br />');
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>There ');
 if ($count_real_last_active != 1)
 	$PHP_OUTPUT.=('are '.$count_real_last_active.' players who have ');
 else
 	$PHP_OUTPUT.=('is 1 player who has ');
-$PHP_OUTPUT.=('accessed the server in the last 10 minutes.<br>');
+$PHP_OUTPUT.=('accessed the server in the last 10 minutes.<br />');
 
 if ($count_last_active == 0)
-	$PHP_OUTPUT.=('No one was moving so your ship computer can\'t intercept any transmissions.<br>');
+	$PHP_OUTPUT.=('No one was moving so your ship computer can\'t intercept any transmissions.<br />');
 else {
 
 	if ($count_last_active == $count_real_last_active)
@@ -64,9 +64,9 @@ else {
 	$PHP_OUTPUT.=('were moving so your ship computer was able to intercept $count_last_active transmission');
 
 	if ($count_last_active > 1)
-		$PHP_OUTPUT.=('s.<br>');
+		$PHP_OUTPUT.=('s.<br />');
 	else
-		$PHP_OUTPUT.=('.<br>');
+		$PHP_OUTPUT.=('.<br />');
 }
 	$PHP_OUTPUT.=('The traders listed in <span style="font-style:italic;">italics</span> are still ranked as Newbie or Beginner.</p>');
 

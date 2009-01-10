@@ -56,7 +56,7 @@ while ($planet->maturity < $curr_time && $planet->maturity > 0) {
 
 $PHP_OUTPUT.=('<p>Balance: <b>' . number_format($planet->credits) . '</b></p>');
 if (!empty($interest))
-	$PHP_OUTPUT.=('<span style="font-size:75%">Since your last visit<br>you got <b>' . number_format(round($interest)) . '</b> credits interest!</span>');
+	$PHP_OUTPUT.=('<span style="font-size:75%">Since your last visit<br />you got <b>' . number_format(round($interest)) . '</b> credits interest!</span>');
 
 
 $PHP_OUTPUT.=create_echo_form(create_container('planet_financial_processing.php', ''));
@@ -78,7 +78,7 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
 $bond_time = 48 / Globals::getGameSpeed($player->getGameID());
 
-$PHP_OUTPUT.=('<p>You are able to transfer this money into a saving bond.<br>');
+$PHP_OUTPUT.=('<p>You are able to transfer this money into a saving bond.<br />');
 $PHP_OUTPUT.=('It remains there for ' . floor($bond_time) . ' hours');
 //php doesn't like floats with modulus operator...so we have to make them both integers with same ratio
 //to be safe we will make it * 10000 (it allows us to have speeds like 1.2501)
@@ -86,7 +86,7 @@ $speed = Globals::getGameSpeed($player->getGameID()) * 10000;
 if (480000 % $speed != 0)
 	$PHP_OUTPUT.=(', ' . round(($bond_time - floor($bond_time)) * 60) . ' minutes');
 
-$PHP_OUTPUT.=(' and will gain ' . ($rate * 100 - 100) . '% interest.<br><br>');
+$PHP_OUTPUT.=(' and will gain ' . ($rate * 100 - 100) . '% interest.<br /><br />');
 
 if ($planet->bonds > 0) {
 

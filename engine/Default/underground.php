@@ -16,7 +16,7 @@ $db2 = new SMR_DB();
 $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'UG\' AND claimer_id = 0 ORDER BY amount DESC');
 if ($db->nf())
 {
-	$PHP_OUTPUT.=('Most Wanted by the Underground<br><br>');
+	$PHP_OUTPUT.=('Most Wanted by the Underground<br /><br />');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Player Name</th>');
@@ -44,7 +44,7 @@ $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND ty
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 if ($db->nf())
 {
-	$PHP_OUTPUT.=('<div align="center">Claimable Bounties</div><br>');
+	$PHP_OUTPUT.=('<div align="center">Claimable Bounties</div><br />');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Player Name</th>');

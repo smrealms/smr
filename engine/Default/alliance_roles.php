@@ -7,7 +7,7 @@ $smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
 
-$PHP_OUTPUT.= '<h2>Current Roles</h2><br>';
+$PHP_OUTPUT.= '<h2>Current Roles</h2><br />';
 
 $db->query('SELECT * 
 FROM alliance_has_roles
@@ -82,7 +82,7 @@ while ($db->next_record()) {
 		$PHP_OUTPUT.= $form['form'];
 		$PHP_OUTPUT.= '<input type="text" name="role" value="' . stripslashes($db->f('role')) . '" maxlength="32">&nbsp;&nbsp;';
 		$PHP_OUTPUT.= $form['submit'];
-		$PHP_OUTPUT.= '</form><br>';
+		$PHP_OUTPUT.= '</form><br />';
 	}
 }
 $PHP_OUTPUT.= '<h2>Create Role</h2><br />';
@@ -110,6 +110,6 @@ $PHP_OUTPUT.= '<tr><td align="left">Send Alliance Message</td><td align="left"><
 $PHP_OUTPUT.= '<tr><td colspan="2" align="center">' . $form['submit'] . '</td></tr>';
 $PHP_OUTPUT.= '</table></form><br />';
 
-$PHP_OUTPUT.= '<b>Usage:</b><br>To add a new entry input the name of the role in the name field and press \'Create\'.<br />To delete an entry clear the box and click \'Edit\'.';
+$PHP_OUTPUT.= '<b>Usage:</b><br />To add a new entry input the name of the role in the name field and press \'Create\'.<br />To delete an entry clear the box and click \'Edit\'.';
 
 ?>

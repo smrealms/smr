@@ -34,7 +34,7 @@ while ($db->next_record()) {
 }
 if (!isset($actual_id)) {
 	$player->remove_message('3');
-	create_error('An error occured while processing your request.<br><small>This error most likely occured due to your leader deleting the message</small>');
+	create_error('An error occured while processing your request.<br /><small>This error most likely occured due to your leader deleting the message</small>');
 }
 
 if (sizeof($msg) == 1)

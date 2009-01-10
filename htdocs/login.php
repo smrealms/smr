@@ -100,11 +100,11 @@ $smarty->display('login.tpl');
 	?>
 	<table border='0' cellpadding='0' cellspacing='1' width='85%'>
 	<tr>
-		<td align='center'><b style='color:red;font-size:125%;'><br>
+		<td align='center'><b style='color:red;font-size:125%;'><br />
 			<?php
 			if ($launch - $now > 0)
 				echo 'SMR 1.5 Launch in ' . format_time($launch - $now) . '!<br />';
-			?><br></b>
+			?><br /></b>
 		</td>
 	</tr>
 	<tr>
@@ -191,7 +191,7 @@ $smarty->display('login.tpl');
 							</p>
 							<p align='justify'>
 								<small>
-									<font face='Verdana, Arial, Helvetica' color='#FFFFFF'><br>
+									<font face='Verdana, Arial, Helvetica' color='#FFFFFF'><br />
 										Space Merchant Realms is a game of skill, strategy, and
 										roleplaying. Top rank isn't always determined by your
 										skills at trading or fighting, but also by your ability
@@ -204,7 +204,7 @@ $smarty->display('login.tpl');
 							</p>
 							<p align='center' style='font-size:75%;'>
 								<small>
-									<font face='Verdana, Arial, Helvetica' color='#FFFFFF'><br>
+									<font face='Verdana, Arial, Helvetica' color='#FFFFFF'><br />
 										<a href='imecho.html'>Imecho</a>
 									</font>
 								</small>

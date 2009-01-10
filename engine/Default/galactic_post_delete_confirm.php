@@ -28,7 +28,7 @@ if (isset($var['article'])) {
     $db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.$player->getGameID().' AND paper_id = '.$var['id']);
     $db->next_record();
     $title = $db->f('title');
-    $PHP_OUTPUT.=('Are you sure you want to delete the paper titled '.$title.' and the following articles with it<br><br>');
+    $PHP_OUTPUT.=('Are you sure you want to delete the paper titled '.$title.' and the following articles with it<br /><br />');
     $db2->query('SELECT * FROM galactic_post_paper_content WHERE game_id = '.$player->getGameID().' AND paper_id = '.$var['id']);
     while($db2->next_record()) {
 
@@ -36,10 +36,10 @@ if (isset($var['article'])) {
         $db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID().' AND article_id = '.$article_id);
         $db3->next_record();
         $article_title = stripslashes($db3->f('title'));
-        $PHP_OUTPUT.=($article_title.'<br>');
+        $PHP_OUTPUT.=($article_title.'<br />');
 
     }
-    $PHP_OUTPUT.=('<br>');
+    $PHP_OUTPUT.=('<br />');
 
     $container = array();
     $container['url'] = 'galactic_post_delete.php';

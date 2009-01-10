@@ -7,7 +7,7 @@
 <form name="FORM" method="POST" action="{$CreateGalaxiesFormAction}">
 	<input type="hidden" name="sn" value="{$CreateGalaxiesFormSN}">
 	{if $ChooseNumberOfGalaxies}
-			<p>Select number of galaxies<br>you want create!</p>
+			<p>Select number of galaxies<br />you want create!</p>
 			<input type="text" name="galaxy_count" value="10" id="InputFields" size="3">&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Next >>" id="InputFields">
 	{else}
 		<p>

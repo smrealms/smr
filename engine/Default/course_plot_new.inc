@@ -23,7 +23,7 @@ function get_galaxy_id($sector_id, $game_id) {
 
 function get_plot(&$route_in, $game_id) {
 
-	// echo 'PLOT COURSE IS CURRENTLY UNDERGOING TESTING, HIT THE BACK BUTTON AND USE CURRENT SECTOR/LOCAL MAP INSTEAD<br>';
+	// echo 'PLOT COURSE IS CURRENTLY UNDERGOING TESTING, HIT THE BACK BUTTON AND USE CURRENT SECTOR/LOCAL MAP INSTEAD<br />';
 	// do a check if start and target are the same
 	if ($route_in['START'] == $route_in['END']) {
 
@@ -178,7 +178,7 @@ function get_plot(&$route_in, $game_id) {
 						if ($k == 0) {
 								
 								$so_far[] = $len[0][$runner_sector] + $len[1][$sector_id] + $add_value;
-								//$PHP_OUTPUT.=($len[0][$runner_sector] . ' + ' . $len[1][$sector_id] + $add_value . '<br>');
+								//$PHP_OUTPUT.=($len[0][$runner_sector] . ' + ' . $len[1][$sector_id] + $add_value . '<br />');
 								//maybe its not in a real runner already
 								if ($runners[1][$sector_id] == '') $runners[1][$sector_id] = $new_runners[1][$sector_id];
 								if ($runners[0][$runner_sector] == '') $runners[0][$runner_sector] = $new_runners[0][$sector_id];
@@ -187,7 +187,7 @@ function get_plot(&$route_in, $game_id) {
 						} else {
 								
 								$so_far[] = $len[0][$sector_id] + $len[1][$runner_sector] + $add_value;
-								//$PHP_OUTPUT.=($len[0][$sector_id] . ' + ' . $len[1][$runner_sector] + $add_value . '<br>');
+								//$PHP_OUTPUT.=($len[0][$sector_id] . ' + ' . $len[1][$runner_sector] + $add_value . '<br />');
 								//maybe its in a real runner already
 								if ($new_runners[0][$sector_id] == '') $new_runners[0][$sector_id] = $runners[0][$sector_id];
 								if ($new_runners[1][$runner_sector] == '') $new_runners[1][$runner_sector] = $runners[1][$runner_sector];

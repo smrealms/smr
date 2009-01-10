@@ -2,10 +2,10 @@
 
 $smarty->assign('PageTopic','HALL OF FAME');
 
-$PHP_OUTPUT.=('Welcome to the Hall of Fame $player->getPlayerName()!<br>The Hall of Fame is a comprehensive ');
+$PHP_OUTPUT.=('Welcome to the Hall of Fame $player->getPlayerName()!<br />The Hall of Fame is a comprehensive ');
 $PHP_OUTPUT.=('list of player accomplishments. Here you can view how players rank in many different ');
-$PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br>');
-$PHP_OUTPUT.=('The Hall of Fame is updated only once every 24 hours on midnight.<br>');
+$PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />');
+$PHP_OUTPUT.=('The Hall of Fame is updated only once every 24 hours on midnight.<br />');
 
 //put em in a table so they look kinda nice
 $PHP_OUTPUT.=create_table();
@@ -275,11 +275,11 @@ $PHP_OUTPUT.=create_submit('Experience Gained');
 //duplicate
 //$PHP_OUTPUT.=('&nbsp;');
 //$PHP_OUTPUT.=create_submit('Damage Done');
-$PHP_OUTPUT.=('<br>');
+$PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=create_submit('Experience From Killing');
-$PHP_OUTPUT.=('<br>');
+$PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=create_submit('Total Experience of Players Killed');
-$PHP_OUTPUT.=('<br>');
+$PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=create_submit('Average Experience of Players Killed');
 $PHP_OUTPUT.=('</td></tr>');
 $PHP_OUTPUT.=('</form>');

@@ -90,7 +90,7 @@ while ($db->next_record()) {
 	$PHP_OUTPUT.=('<br /><br />');
 }
 $smarty->assign('PageTopic','Offer A Treaty');
-$PHP_OUTPUT.=('Select the alliance you wish to offer a treaty.<br /><small>Note: Treaties require 24 hours to be canceled once in effect</small><br>');
+$PHP_OUTPUT.=('Select the alliance you wish to offer a treaty.<br /><small>Note: Treaties require 24 hours to be canceled once in effect</small><br />');
 $container=array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'alliance_treaties_processing.php';
@@ -100,7 +100,7 @@ $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.=('<select name="proposedAlliance" id="InputFields">');
 foreach ($temp as $allId => $allName) $PHP_OUTPUT.=('<option value="'.$allId.'">'.$allName.'</option>');
 $PHP_OUTPUT.=('</select');
-$PHP_OUTPUT.=('<br>Choose the treaty terms<br>');
+$PHP_OUTPUT.=('<br />Choose the treaty terms<br />');
 $PHP_OUTPUT.=create_table();
 foreach ($types as $checkName => $displayInfo)
 	$PHP_OUTPUT.=('<tr><td>' . $displayInfo[0] . '<br /><small>' . $displayInfo[1] . '</small></td><td><input type="checkbox" name="' . $checkName . '"></td></tr>');

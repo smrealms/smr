@@ -34,7 +34,7 @@ $container['body'] = 'council_send_message.php';
 $container['race_id'] = $port->getRaceID();
 $container['race_name'] = $port->getRaceName();
 
-$PHP_OUTPUT.=('<p>This is a level '.$port->getLevel().' port and run by the ' . create_link($container, $player->getColouredRaceName($port->getRaceID())) . '.<br>');
+$PHP_OUTPUT.=('<p>This is a level '.$port->getLevel().' port and run by the ' . create_link($container, $player->getColouredRaceName($port->getRaceID())) . '.<br />');
 $PHP_OUTPUT.=('Your relations with them are ' . get_colored_text($relations, $relations) . '.</p>');
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
@@ -49,7 +49,7 @@ if (!empty($var['traded_xp']) ||
 
 	$PHP_OUTPUT.=('<p>You have just ' . $var['traded_transaction'] . ' <span style="color:yellow;">' . $var['traded_amount'] . '</span> units ');
 	$PHP_OUTPUT.=('of <span style="color:yellow;">' . $var['traded_good'] . '</span> for ');
-	$PHP_OUTPUT.=('<span style="color:yellow;">' . $var['traded_credits'] . '</span> credits.<br>');
+	$PHP_OUTPUT.=('<span style="color:yellow;">' . $var['traded_credits'] . '</span> credits.<br />');
 	if ($var['traded_xp'] > 0)
 		$PHP_OUTPUT.=('<p>For your excellent trading skills you have gained <span style="color:blue;">' . $var['traded_xp'] . '</span> experience points!</p>');
 
@@ -96,7 +96,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 				}
 			}
 
-			$PHP_OUTPUT.=('<span style="color:red;">The Federation searched your ship and illegal goods were found!</span><br>');
+			$PHP_OUTPUT.=('<span style="color:red;">The Federation searched your ship and illegal goods were found!</span><br />');
 			$PHP_OUTPUT.=('<span style="color:red;">All illegal goods have been removed from your ship and you have been fined ' . number_format($fine) . ' credits</span>');
 
 			//lose align and the good your carrying along with money

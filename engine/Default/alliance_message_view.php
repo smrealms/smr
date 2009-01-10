@@ -41,7 +41,7 @@ if(
 	isset($var['thread_ids'][$thread_index - 1]) ||
 	isset($var['thread_ids'][$thread_index + 1]) 
 ) {
-	$PHP_OUTPUT.= '<h2>Switch Topic</h2><br><table cellspacing="0" cellpadding="0" class="nobord fullwidth">';
+	$PHP_OUTPUT.= '<h2>Switch Topic</h2><br /><table cellspacing="0" cellpadding="0" class="nobord fullwidth">';
 	if (isset($var['thread_ids'][$thread_index - 1])) {
 		$PHP_OUTPUT.= '<tr><td style="text-align:left">';
 		$container['thread_index'] = $thread_index - 1;
@@ -60,12 +60,12 @@ if(
 		$PHP_OUTPUT.=create_link($container, '<img src="images/album/fwd.jpg" alt="Next" title="Next">');
 		$PHP_OUTPUT.= '</td></tr>';
 	} else $PHP_OUTPUT.= '<td>&nbsp;</td></tr>';
-	$PHP_OUTPUT.= '</table><br>';
+	$PHP_OUTPUT.= '</table><br />';
 }
 
 $PHP_OUTPUT.= '<h2>Messages</h2><div align="center">';
-if (is_array($var['alliance_eyes']) && $var['alliance_eyes'][$thread_index]) $PHP_OUTPUT.= '<br>Note: This topic is for alliance eyes only.';
-$PHP_OUTPUT.= '<br><table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Author</th><th>Message</th><th>Time</th></tr>';
+if (is_array($var['alliance_eyes']) && $var['alliance_eyes'][$thread_index]) $PHP_OUTPUT.= '<br />Note: This topic is for alliance eyes only.';
+$PHP_OUTPUT.= '<br /><table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Author</th><th>Message</th><th>Time</th></tr>';
 //for report type (system sent) messages
 $players[0] = 'Planet Reporter';
 $players[-1] = 'Bank Reporter';
@@ -103,7 +103,7 @@ while ($db->next_record()) {
 $PHP_OUTPUT.=('</table></div>');
 
 if ($mbWrite || in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
-	$PHP_OUTPUT.= '<br><h2>Create Reply</h2><br>';
+	$PHP_OUTPUT.= '<br /><h2>Create Reply</h2><br />';
 	$container = array();
 	$container['url'] = 'alliance_message_add_processing.php';
 	$container['alliance_id'] = $alliance_id;
@@ -121,7 +121,7 @@ if ($mbWrite || in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 			<td class="top">Body:&nbsp;</td>
 			<td><textarea name="body"></textarea></td>
 		</tr>
-	</table><br>
+	</table><br />
 	';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';

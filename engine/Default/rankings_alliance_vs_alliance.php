@@ -13,7 +13,7 @@ $PHP_OUTPUT.=create_echo_form($container);
 
 if (isset($_POST['alliancer'])) $alliancer = $_POST['alliancer'];
 $PHP_OUTPUT.=('<div align="center">');
-$PHP_OUTPUT.=('<p>Here are the rankings of alliances vs other alliances<br>');
+$PHP_OUTPUT.=('<p>Here are the rankings of alliances vs other alliances<br />');
 $PHP_OUTPUT.=('Click on an alliances name for more detailed death stats.</p>');
 
 $PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" class="standard" width="95%">');
@@ -156,7 +156,7 @@ foreach ($alliance_vs as $key => $id) {
 
 $PHP_OUTPUT.=('</table>');
 
-$PHP_OUTPUT.=('<br>');
+$PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=create_submit('Show');
 $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('</div>');

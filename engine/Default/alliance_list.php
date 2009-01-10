@@ -9,7 +9,7 @@ if ($player->getAllianceID() == 0) {
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'alliance_create.php';
 	$PHP_OUTPUT.=create_button($container,'Create your own alliance!');
-	$PHP_OUTPUT.= '<br><br>';
+	$PHP_OUTPUT.= '<br /><br />';
 }
 
 
@@ -103,7 +103,7 @@ if ($db->nf() > 0)
 		$PHP_OUTPUT.= '<td class="right">' . $db->f('alliance_member_count') . '</td></tr>';
 
 	}
-	$PHP_OUTPUT.= '</table><br>Click column table to reorder!';
+	$PHP_OUTPUT.= '</table><br />Click column table to reorder!';
 
 }
 else

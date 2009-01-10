@@ -33,7 +33,7 @@ while ($db->next_record()) {
 	$PHP_OUTPUT.= ')</option>';
 }
 
-$PHP_OUTPUT.=('</select><br><br>');
+$PHP_OUTPUT.=('</select><br /><br />');
 
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '</form>';

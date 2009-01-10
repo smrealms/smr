@@ -13,7 +13,7 @@ $PHP_OUTPUT.=create_planet_menue();
 
 //echo the dump cargo message or other message.
 if (isset($var['msg']))
-   $PHP_OUTPUT.=($var['msg'] . '<br>');
+   $PHP_OUTPUT.=($var['msg'] . '<br />');
 
 
 $PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
@@ -104,7 +104,7 @@ while ($db->next_record()) {
     $PHP_OUTPUT.=('</form>');
 
 }
-if($db->nf() > 0 ) $PHP_OUTPUT.=('<br>');
+if($db->nf() > 0 ) $PHP_OUTPUT.=('<br />');
 
 $PHP_OUTPUT.=create_echo_form(create_container('planet_launch_processing.php', ''));
 $PHP_OUTPUT.=create_submit('Launch');
