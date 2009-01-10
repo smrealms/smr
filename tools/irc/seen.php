@@ -68,8 +68,8 @@ function channel_msg_seen($fp, $rdata) {
 			fputs($fp, 'PRIVMSG '.$channel.' :'.$msg[1].', do I look like a mirror?'.EOL);
 			return true;
 		}
-		$db = new SMR_DB();
-		$db2 = new SMR_DB();
+		$db = new SmrMySqlDatabase();
+		$db2 = new SmrMySqlDatabase();
 
 		$found = false;
 

@@ -3,9 +3,9 @@
 //script to search alliance message boards and personal messages for cheats/loopholes
 //first get our keywords
 $db->query('SELECT * FROM mb_keywords WHERE type = \'find\' AND `use` = 1');
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
-$db4 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
+$db4 = new SmrMySqlDatabase();
 if (isset($var['msg'])) $PHP_OUTPUT.=($var['msg'] . '<br /><br />');
 
 $container = array();

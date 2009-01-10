@@ -1,5 +1,5 @@
 <?
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $amount = $_REQUEST['amount'];
 $account_id = $_REQUEST['account_id'];
 if (!is_numeric($amount)) {

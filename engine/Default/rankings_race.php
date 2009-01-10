@@ -17,7 +17,7 @@ $PHP_OUTPUT.=('<th>Total Traders</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->query('SELECT player.race_id as race_id, race_name, sum(player.experience) as experience_sum, count(player.account_id) as members FROM player NATURAL JOIN race WHERE race.race_id = player.race_id AND player.game_id = '.$player->getGameID().' GROUP BY player.race_id ORDER BY experience_sum DESC');
 while ($db->next_record()) {
 

@@ -21,7 +21,7 @@ foreach($_REQUEST['word_ids'] as $word_id) {
 	}
 }
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 $db->query('DELETE FROM word_filter WHERE word_id IN (' . implode(',',$word_ids) . ')');
 forward($container);
  

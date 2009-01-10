@@ -45,7 +45,7 @@ include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_hq_menue();
 
 // secondary db object
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 if (isset($location_type_id))
 {

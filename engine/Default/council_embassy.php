@@ -13,7 +13,7 @@ $PHP_OUTPUT.=('<th>Race</th>');
 $PHP_OUTPUT.=('<th>Treaty</th>');
 $PHP_OUTPUT.=('</tr>');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 $db->query('SELECT * FROM race ' .
 		   'WHERE race_id != '.$player->getRaceID().' AND ' .

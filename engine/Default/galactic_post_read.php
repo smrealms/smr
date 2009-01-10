@@ -2,8 +2,8 @@
 
 $smarty->assign('PageTopic','GALACTIC POST');
 
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM galactic_post_online WHERE game_id = '.$player->getGameID());
 if ($db->nf()) {
     $db->next_record();

@@ -12,7 +12,7 @@ if ($action == 'Skip >>' || $num_gals == 1) {
 
 }
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $warp = $_REQUEST['warp'];
 foreach($warp as $galaxy_id_1 => $temp_array) {
 

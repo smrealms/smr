@@ -1,7 +1,7 @@
 <?
 
 //variables
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 //get treaties
 $db->query('SELECT * FROM alliance_treaties WHERE (alliance_id_1 = '.$player->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')
 			AND game_id = '.$player->getGameID().'

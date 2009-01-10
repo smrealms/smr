@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','Change Log');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $first_entry = true;
 $link_set_live = true;
 

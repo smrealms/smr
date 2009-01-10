@@ -33,7 +33,7 @@ foreach ($galaxies as $galaxy_id => $galaxy_name)
 	$PHP_OUTPUT.=('<th>'.$galaxy_name.'</th>');
 $PHP_OUTPUT.=('</tr>');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 // iterate over all weapon shops
 $db->query('SELECT DISTINCT location_type.location_type_id as type_id, location_name FROM location_type, location_sells_weapons ' .

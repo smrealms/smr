@@ -48,5 +48,5 @@ while ($db->next_record()) {
 	
 }
 $PHP_OUTPUT.=('</table></div>');
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 ?>

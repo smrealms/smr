@@ -12,7 +12,7 @@ define ('TIMEOUT_TO_DELETE',7200);
 //	Use plot() to process the plot
 //	$plotted_course[0] is the distance, $plotted_course[1] is an array of sectors describing the route
 // NOTE: This generates distance AND the course. For distance only plots use the Distance_Plotter class in distance_plot.inc
-class Course_Plotter extends SMR_DB{
+class Course_Plotter extends SmrMySqlDatabase{
 	// Public data
 
 	// Container for the resultant plotted course
@@ -69,7 +69,7 @@ class Course_Plotter extends SMR_DB{
 		$this->network_map = array();
 		$this->plotted_course = array();
 		// Make sure the constructor in the DB class is called to setup the DB connection
-		$this->SMR_DB();
+		$this->SmrMySqlDatabase();
 	}
 
 	// Desctructor (PHP doesn't implement desctuctor natively so you'll have to remember to call it in the code that uses this object).

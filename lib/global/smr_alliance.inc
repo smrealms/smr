@@ -1,9 +1,9 @@
 <?
 
 // include file with database class
-require_once(LIB . 'global/smr_db.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
-class SMR_ALLIANCE extends SMR_DB {
+class SMR_ALLIANCE extends SmrMySqlDatabase {
 
 	var $game_id;
 	var $alliance_id;

@@ -27,8 +27,8 @@ $db->query('OPTIMIZE TABLE `account` , `account_donated` , `account_exceptions` 
 //
 ///////////////////////////////////////////
 
-$file_name = $ROOT . 'documentation/SMR_DB_BACKUP_' . date('m-d') . '.sql';
-$db2 = new SMR_DB();
+$file_name = $ROOT . 'documentation/SmrMySqlDatabase_BACKUP_' . date('m-d') . '.sql';
+$db2 = new SmrMySqlDatabase();
 if (!file_exists($file_name)) {
 	
 	//we are good to create!
@@ -43,7 +43,7 @@ if (!file_exists($file_name)) {
 
 		//we are good to add entries
 		$db->query('SHOW TABLES');
-		$db2 = new SMR_DB();
+		$db2 = new SmrMySqlDatabase();
 		while ($db->next_record()) {
 			
 			$table = $db->f(0);

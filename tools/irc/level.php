@@ -10,7 +10,7 @@ function channel_msg_level($fp, $rdata) {
 		preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s'.$nick.'\s:?level\s(.*)\s$/i', $rdata, $msg)) {
 
 		echo_r($msg);
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM level WHERE level_id = ' . $msg[4]);
 		if ($db->next_record()) {
 

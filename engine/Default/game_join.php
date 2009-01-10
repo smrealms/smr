@@ -87,7 +87,7 @@ $smarty->assign('JoinGameFormSN',SmrSession::get_new_sn($container));
 
 
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 //this prevents multiple races appearing when there is more than 1 game
 $only = array();
 // get all available hq's

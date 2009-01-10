@@ -64,8 +64,8 @@ $file .= addbyte(5);
 $file .= 'Enemy';
 //done with all header info
 
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 
 $db->query('SELECT * FROM sector WHERE game_id = '.$game_id.' ORDER BY sector_id');
 while ($db->next_record())

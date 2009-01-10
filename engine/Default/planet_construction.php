@@ -84,7 +84,7 @@ $db->query('SELECT * FROM game WHERE game_id = '.$player->getGameID());
 if ($db->next_record())
 	$game_speed = $db->f('game_speed');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM planet_construction ORDER BY construction_id');
 while ($db->next_record())
 {

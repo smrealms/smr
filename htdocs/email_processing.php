@@ -6,7 +6,7 @@ require_once(ENGINE . 'Default/smr.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrSession.class.inc'));
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 // do we have a session?
 if (SmrSession::$account_id == 0) {

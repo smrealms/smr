@@ -225,5 +225,5 @@ if (!isset($game_name)) {
 }
 $PHP_OUTPUT.=('</div>');
 //to stop errors on the following scripts
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 ?>

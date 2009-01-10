@@ -13,7 +13,7 @@ $planet = $_REQUEST['planet'];
 if (!isset($planet))
 	create_error('Couldn\'t determine how many planets to add!');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db2->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
 $db2->next_record();
 $date = $db2->f('start_date');

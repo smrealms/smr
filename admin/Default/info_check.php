@@ -33,8 +33,8 @@ if (!isset($number) && !isset($var['number'])) {
 
 } else {
 
-    $db2 = new SMR_DB();
-    $db3 = new SMR_DB();
+    $db2 = new SmrMySqlDatabase();
+    $db3 = new SmrMySqlDatabase();
     $container = array();
     $container['url'] = 'account_reopen.php';
     $PHP_OUTPUT.=create_echo_form($container);

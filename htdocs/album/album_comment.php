@@ -12,7 +12,7 @@ function create_error_offline($msg) {
 
 require_once('../config.inc');
 require_once(ENGINE . 'Default/smr.inc');
-require_once(LIB . 'global/smr_db.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
 
 require_once('album_functions.php');
@@ -41,7 +41,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
 
 }
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 if (!isset($_GET['comment']) || empty($_GET['comment']))
 	$PHP_OUTPUT.=create_error_offline('Please enter a comment');

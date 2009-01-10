@@ -10,7 +10,7 @@ function channel_join($fp, $rdata) {
 		if ($msg[1] == 'MrSpock' && $msg[2] == '~foo' && $msg[3] == 'jfwmodule.intershop.de')
 			fputs($fp, 'PRIVMSG '.$channel.' :The creator! The God! He\'s among us! Praise him!'.EOL);
 
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 
 		$db->query('INSERT irc_logged_in (nick, user, host)' .
 				   ' values ('.$db->escapeString($msg[1]).','.$db->escapeString($msg[2]).','.$db->escapeString($msg[3]).')');
@@ -59,8 +59,8 @@ function channel_nick($fp, $rdata) {
 		echo_r($msg);
 
 		// database object
-		$db = new SMR_DB();
-		$db2 = new SMR_DB();
+		$db = new SmrMySqlDatabase();
+		$db2 = new SmrMySqlDatabase();
 
 		// update nick if he's logged in
 		$db->query('UPDATE irc_logged_in ' .
@@ -108,7 +108,7 @@ function channel_part($fp, $rdata) {
 		// delete this user from the active session
 
 		// database object
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 
 		// avoid that some1 uses another one nick
 		$db->query('DELETE FROM irc_logged_in ' .
@@ -157,7 +157,7 @@ function channel_who($fp, $rdata)
 	{
 		echo_r($msg);
 //		sleep(8);
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 
 		$db->query('INSERT IGNORE INTO irc_logged_in (nick, user, host)' .
 				   ' values ('.$db->escapeString($msg[5]).','.$db->escapeString($msg[2]).','.$db->escapeString($msg[3]).')');

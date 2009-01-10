@@ -1,7 +1,7 @@
 <?
 require_once(LIB . '/Default/SmrSession.class.inc');
 require_once(LIB . '/Default/Globals.class.inc');
-require_once(LIB . 'global/smr_db.inc'); //uses for finding file locations.
+require_once(LIB . '/Default/SmrMySqlDatabase.class.inc'); //uses for finding file locations.
 
 function hardware_is_mining_drone($hardwareTypeID)
 {
@@ -367,7 +367,7 @@ function word_filter($string) {
 	static $words;
 	
 	if(!is_array($words)) {
-		$db = new SMR_DB();
+		$db = new SmrMySqlDatabase();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
 		while($db->next_record()) {

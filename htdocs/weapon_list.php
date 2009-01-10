@@ -8,9 +8,9 @@
 // ********************************
 
 require_once('config.inc');
-require_once(LIB . 'global/smr_db.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
 

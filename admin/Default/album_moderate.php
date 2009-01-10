@@ -5,7 +5,7 @@ function get_album_nick($album_id) {
 	if ($album_id == 0)
 		return 'System';
 
-	$album = new SMR_DB();
+	$album = new SmrMySqlDatabase();
 
 	// get hof name
 	$album->query('SELECT HoF_name

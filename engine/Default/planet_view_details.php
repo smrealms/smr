@@ -3,7 +3,7 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 		require_once(get_file_loc('SmrPlanet.class.inc'));
 $smarty->assign('PageTopic','VIEWING PLANET DETAILS');
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 if ($player->getAllianceID() != 0)
 	$db->query('SELECT planet.sector_id as sector, player.game_id as game, time_attack, attacker_damage, planet_damage, trigger_id FROM player, planet, planet_attack WHERE player.game_id = planet.game_id AND ' .
 											  'owner_id = account_id AND ' .

@@ -14,7 +14,7 @@
 //
 /////////////////////////////////////////////////
 $sector = array();
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM sector WHERE game_id = '.$game_id);
 while ($db->next_record()) {
 
@@ -45,8 +45,8 @@ $db->query('INSERT INTO universe_array (game_id, array) VALUES ($game_id, $secto
 // Run this (or player update) at game_play_proc
 //
 /////////////////////////////////////////////////
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 $explored = array();
 $db->query('SELECT * FROM sector WHERE game_id = '.$player->getGameID().' ORDER BY sector_id');
 while ($db->next_record()) {
@@ -80,8 +80,8 @@ $db->query('REPLACE INTO alliance_maps (game_id, alliance_id, maps) VALUES ' .
 //
 ///////////////////////////////////////////////////
 
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 $explored = array();
 $db->query('SELECT * FROM sector WHERE game_id = '.$player->getGameID().' ORDER BY sector_id');
 while ($db->next_record()) {

@@ -102,6 +102,6 @@ if (empty($action)) {
 
 }
 $PHP_OUTPUT.=('</div>');
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 ?>

@@ -19,7 +19,7 @@ if(empty($word) || empty($word_replacement)) {
 	exit;	
 }
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 $db->query('SELECT word_id FROM word_filter WHERE word_value=\'' . $word . '\' LIMIT 1');
 

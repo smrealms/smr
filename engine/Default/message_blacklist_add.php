@@ -12,7 +12,7 @@ if(!isset($_REQUEST['PlayerName'])) {
 
 $player_name = mysql_real_escape_string($_REQUEST['PlayerName']);
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 $db->query('SELECT account_id FROM player WHERE player_name=\'' . $player_name . '\' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 

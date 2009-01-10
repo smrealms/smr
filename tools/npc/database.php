@@ -3,7 +3,7 @@
 function get_sector($account_id, $game_id, $column) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT $column
 				FROM sector
@@ -19,7 +19,7 @@ function get_sector($account_id, $game_id, $column) {
 function get_player($account_id, $game_id, $column) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT $column
 				FROM player
@@ -37,7 +37,7 @@ function get_player($account_id, $game_id, $column) {
 function set_player($account_id, $game_id, $column, $value) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('UPDATE player
 				SET $column = '.$db->escapeString($value).'
@@ -50,7 +50,7 @@ function set_player($account_id, $game_id, $column, $value) {
 function get_account($account_id, $column) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT $column
 				FROM account
@@ -67,7 +67,7 @@ function get_account($account_id, $column) {
 function get_ship($account_id, $game_id, $column) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT $column
 				FROM player, ship_type
@@ -86,7 +86,7 @@ function get_ship($account_id, $game_id, $column) {
 function get_game($game_id, $column) {
 	$account_id=1;
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT $column
 				FROM game
@@ -103,7 +103,7 @@ function get_game($game_id, $column) {
 function set_stats($account_id, $column, $value) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('UPDATE account_has_stats
 				SET $column = $column + '.$db->escapeString($value).'

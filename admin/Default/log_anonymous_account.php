@@ -3,7 +3,7 @@
 $smarty->assign('PageTopic','Check Anonymous Accounts');
 
 // a second db object
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 $db->query('SELECT account_has_logs.account_id as account_id, login, player_name, count(account_has_logs.account_id) as number_of_entries
 			FROM account_has_logs

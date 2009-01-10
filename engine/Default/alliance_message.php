@@ -39,8 +39,8 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.= '<div align="center">';
 	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Topic</th><th>Author</th><th>Replies</th><th>Last Reply</th></tr>';
 
-	$db2 = new SMR_DB();
-	$db3 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
+	$db3 = new SmrMySqlDatabase();
 	$threads = array();
 
 	$container = array();

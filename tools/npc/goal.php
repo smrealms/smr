@@ -5,7 +5,7 @@
 function get_short_term_goal($account_id, $game_id) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT *
 				FROM npc_short_term_goal
@@ -22,7 +22,7 @@ function get_short_term_goal($account_id, $game_id) {
 function set_short_term_goal($account_id, $game_id, $type, $task) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('REPLACE INTO npc_short_term_goal
 				(account_id, game_id, type, task)
@@ -34,7 +34,7 @@ function set_short_term_goal($account_id, $game_id, $type, $task) {
 function delete_short_term_goal($account_id, $game_id) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('DELETE FROM npc_short_term_goal
 				WHERE account_id = '.$account_id.' AND
@@ -46,7 +46,7 @@ function delete_short_term_goal($account_id, $game_id) {
 function get_long_term_goal($account_id, $game_id) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT *
 				FROM npc_long_term_goal
@@ -63,7 +63,7 @@ function get_long_term_goal($account_id, $game_id) {
 function set_long_term_goal($account_id, $game_id, $type, $task) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('REPLACE INTO npc_long_term_goal
 				(account_id, game_id, type, task)
@@ -75,7 +75,7 @@ function set_long_term_goal($account_id, $game_id, $type, $task) {
 function delete_long_term_goal($account_id, $game_id) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$db->query('DELETE FROM npc_long_term_goal
 				WHERE account_id = '.$account_id.' AND
@@ -87,7 +87,7 @@ function delete_long_term_goal($account_id, $game_id) {
 function set_npc_sleep($account_id, $game_id, $time) {
 
 	// new db object
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 
 	$time += time();
 

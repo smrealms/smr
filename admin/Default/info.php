@@ -36,8 +36,8 @@ if (!isset($number) && !isset($var['number'])) {
 } else {
 
 	if (isset($var['number'])) $number = $var['number'];
-    $db2 = new SMR_DB();
-    $db3 = new SMR_DB();
+    $db2 = new SmrMySqlDatabase();
+    $db3 = new SmrMySqlDatabase();
     $container = array();
     $container['url'] = 'info_proc.php';
     $PHP_OUTPUT.=create_form_parameter($container, 'name="form_inf"');

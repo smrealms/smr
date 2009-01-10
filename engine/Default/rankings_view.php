@@ -38,7 +38,7 @@ while ($db->next_record()) {
     $PHP_OUTPUT.=($db->f(kills_needed) . ' kills and ' . $db->f(experience_needed) . ' experience');
 	$i++;
 }
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 $PHP_OUTPUT.=('<br /><br />');
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->account_id);
 if ($db->next_record()) {

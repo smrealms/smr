@@ -29,7 +29,7 @@ if ($var['sending_page'] == 'hof') {
 	$PHP_OUTPUT.=($hof_name.' has <font color="red">'.$kills.'</font> kills and <font color="red">'.$exp.'</font> traded experience<br /><br />');
 	$PHP_OUTPUT.=($hof_name.' is ranked as a <font size="4" color="greenyellow">'.$rank_name.'</font> player.<br /><br />');
 	
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM account_has_stats_cache WHERE account_id = $db_acc->account_id');
 	if ($db->next_record()) {
 	
@@ -77,7 +77,7 @@ if ($var['sending_page'] == 'hof') {
 		$db = new SMR_HISTORY_DB();
 		$past = 'Yes';
 	
-	} else $db = new SMR_DB();
+	} else $db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM player WHERE game_id = '.$game_id.' AND account_id = '.$acc_id);
 	if ($db->next_record()) $playerName = stripslashes($db->f('player_name'));
 	else $playerName = 'Unknown Player';
@@ -119,5 +119,5 @@ if ($var['sending_page'] == 'hof') {
 }
 //this is needed to make the rest of loader function
 //FIXME: just rename the hof variable sometime, after reviewing, rewriting the whole page might be best.
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 ?>

@@ -3,8 +3,8 @@
 $smarty->assign('PageTopic','PASSWORD CHECKER');
 
 // create account object
-$db2 = new SMR_DB();
-$db3 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 
 $db->query('SELECT count(password) as pwd_count, password FROM account ' .
 		   'GROUP BY password ' .

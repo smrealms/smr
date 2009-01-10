@@ -18,12 +18,12 @@ query('OPTIMIZE TABLE `active_session`');
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
 // overwrite database class to use our db
-include( LIB . 'global/smr_db.inc' );
+include( LIB . 'Default/SmrMySqlDatabase.class.inc' );
 
 // new db object
-$player = new SMR_DB();
-$cache = new SMR_DB();
-$news = new SMR_DB();
+$player = new SmrMySqlDatabase();
+$cache = new SmrMySqlDatabase();
+$news = new SmrMySqlDatabase();
 
 $player->query('SELECT account_id, game_id, experience FROM player');
 while ($player->next_record()) {

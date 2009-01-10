@@ -2,14 +2,14 @@
 
 require_once('../config.inc');
 require_once(ENGINE . 'Default/smr.inc');
-require_once(LIB . 'global/smr_db.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
 
 require_once('album_functions.php');
 
 // database object
-$db = new SMR_DB();
-$db2 = new SMR_DB();
+$db = new SmrMySqlDatabase();
+$db2 = new SmrMySqlDatabase();
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>

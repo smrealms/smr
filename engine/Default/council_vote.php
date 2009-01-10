@@ -87,7 +87,7 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.=('<th>End Time</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 
 	while ($db->next_record()) {
 

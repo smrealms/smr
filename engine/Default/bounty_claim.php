@@ -13,7 +13,7 @@ if ($sector->has_hq()) {
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'UG\'');
 }
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 
 if ($db->nf()) {

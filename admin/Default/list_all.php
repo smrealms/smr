@@ -1,6 +1,6 @@
 <?
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 //split variable to get start and end
 list ($start, $end) = split (',', $variable);
 $db->query('SELECT * FROM account WHERE account_id >= '.$start.' AND account_id <= '.$end.' ORDER BY account_id');

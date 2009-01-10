@@ -77,7 +77,7 @@ function modifyRelations($race_id_1) {
 
 	$endtime = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
 
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM player_votes_relation ' .
 			   'WHERE time < '.$endtime.' AND ' .
@@ -126,7 +126,7 @@ function checkPacts($race_id_1) {
 	global $player, $db;
 
 	$endtime = time();
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM race_has_voting ' .
 			   'WHERE end_time < '.$endtime.' AND ' .

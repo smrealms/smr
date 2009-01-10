@@ -1449,8 +1449,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
 
 		$news_message = $this->getDisplayName();
-		$db2 = new SMR_DB();
-		$db = new SMR_DB();
+		$db2 = new SmrMySqlDatabase();
+		$db = new SmrMySqlDatabase();
 		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
 					'account_id = '.$this->getAccountID());
 		if ($db2->next_record())

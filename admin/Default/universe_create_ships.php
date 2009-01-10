@@ -33,7 +33,7 @@ foreach ($galaxies as $galaxy_id => $galaxy_name)
 	$PHP_OUTPUT.=('<th>'.$galaxy_name.'</th>');
 $PHP_OUTPUT.=('</tr>');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 // iterate over all ship shops
 $db->query('SELECT location_type_id, location_name FROM location_type ' .

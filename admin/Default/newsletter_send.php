@@ -14,14 +14,14 @@ $PHP_OUTPUT.=('</form>');
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-include(LIB . 'global/smr_db.inc');
+include(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 // mailer
 require(LIB . 'class.phpmailer.php');
 
 // database objects
-$db = new SMR_DB();
-$db2 = new SMR_DB();
+$db = new SmrMySqlDatabase();
+$db2 = new SmrMySqlDatabase();
 
 $mail = new PHPMailer();
 

@@ -1,7 +1,7 @@
 <?
 
 $smarty->assign('PageTopic','VIEWING IPs');
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 //this used to come from another page and im am WAY to lazy to unindent it all :)
 $container = array();
 $container['url'] = 'account_close.php';

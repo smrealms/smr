@@ -46,7 +46,7 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //
 //$PHP_OUTPUT.=('</td>');
 //
-//$db = new SMR_DB();
+//$db = new SmrMySqlDatabase();
 //$db->query('SELECT *
 //			FROM version
 //			ORDER BY went_live DESC

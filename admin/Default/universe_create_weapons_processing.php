@@ -13,7 +13,7 @@ $id = $_REQUEST['id'];
 if (!isset($id))
 	create_error('Couldn\'t determine how many weapon shops to add!');
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 reset($id);
 foreach($id as $location_type_id => $temp_array) {

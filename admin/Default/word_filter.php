@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','WORD FILTER');
 
-$db = new SMR_DB();
+$db = new SmrMySqlDatabase();
 
 $db->query('SELECT * FROM word_filter');
 
