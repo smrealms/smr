@@ -81,7 +81,7 @@ abstract class MySqlDatabase implements Database
 	
 	public function getInsertID()
 	{
-		return @mysql_insert_id($this->dbResult);
+		return @mysql_insert_id(self::$dbConn);
 	}
 	
 	protected function error($err)
