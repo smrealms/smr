@@ -110,48 +110,48 @@ $smarty->assign('Games',$games);
 // ** Previous Games
 // ***************************************
 
-$db = new SMR_HISTORY_DB();
-$db->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, ' .
+$historyDB = new SMR_HISTORY_DB();
+$historyDB->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, ' .
 		   'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 		   'FROM game ORDER BY game_id');
-if ($db->nf())
+if ($historyDB->nf())
 {
 
 	$PHP_OUTPUT.=('<p>');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr><th align=center>Game Name</th><th align=center>Start Date</th><th align=center>End Date</th><th align=center>Speed</th><th align=center colspan=3>Options</th></tr>');
-	while ($db->next_record()) {
+	while ($historyDB->next_record()) {
 
-		$id = $db->f('game_id');
+		$id = $historyDB->f('game_id');
 		$container = array();
 		$container['url'] = 'skeleton.php';
-		$container['game_id'] = $db->f('game_id');
-		$container['game_name'] = $db->f('game_name');
+		$container['game_id'] = $historyDB->f('game_id');
+		$container['game_name'] = $historyDB->f('game_name');
 		$container['body'] = 'games_previous.php';
-		$name = $db->f('game_name');
+		$name = $historyDB->f('game_name');
 		$PHP_OUTPUT.=('<tr><td>');
-		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($name ($id)');
+		$PHP_OUTPUT.=create_link($container, '.$historyDB->escapeString($name ($id)');
 		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $db->f('start_date') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $db->f('end_date') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $db->f('speed') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $historyDB->f('start_date') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $historyDB->f('end_date') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $historyDB->f('speed') . '</td>');
 		$PHP_OUTPUT.=('<td align=center>');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'hall_of_fame_new.php';
-		$container['game_id'] = $db->f('game_id');
+		$container['game_id'] = $historyDB->f('game_id');
 		$PHP_OUTPUT.=create_link($container, 'Hall of Fame');
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align=center>');
 		$container['body'] = 'games_previous_news.php';
-		$container['game_id'] = $db->f('game_id');
-		$container['game_name'] = $db->f('game_name');
+		$container['game_id'] = $historyDB->f('game_id');
+		$container['game_name'] = $historyDB->f('game_name');
 		$PHP_OUTPUT.=create_link($container, 'Game News');
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align=center>');
 		$container['body'] = 'games_previous_detail.php';
-		$container['game_id'] = $db->f('game_id');
-		$container['game_name'] = $db->f('game_name');
+		$container['game_id'] = $historyDB->f('game_id');
+		$container['game_name'] = $historyDB->f('game_name');
 		$PHP_OUTPUT.=create_link($container, 'Game Stats');
 		$PHP_OUTPUT.=('</td>');
 
@@ -161,9 +161,6 @@ if ($db->nf())
 	$PHP_OUTPUT.=('</p>');
 
 }
-
-// restore old database
-$db = new SmrMySqlDatabase();
 
 
 // ***************************************
