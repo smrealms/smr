@@ -79,7 +79,7 @@ abstract class MySqlDatabase implements Database
 		return @mysql_num_rows($this->dbResult);
 	}
 	
-	public function insertId()
+	public function getInsertID()
 	{
 		return @mysql_insert_id($this->dbResult);
 	}

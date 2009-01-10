@@ -13,7 +13,7 @@ if ($action == 'Build') {
 	$player->update();
 
 	// now start the construction
-	$planet->start_construction($var['construction_id']);
+	$planet->startBuilding($player->getAccountID(),$var['construction_id']);
 
 	$db->query('SELECT * FROM planet_construction WHERE construction_id = ' . $var['construction_id']);
 	$db->next_record();

@@ -317,7 +317,7 @@ class SmrPlanet
 		}
 
 		// write building info
-		foreach ($this->buildings as $id => $amount) {
+		foreach ($this->getBuildings() as $id => $amount) {
 
 			if ($amount != 0)
 				$this->db->query('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
@@ -354,7 +354,7 @@ class SmrPlanet
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
-	function start_construction($construction_id)
+	function startBuilding($constructor_id,$construction_id)
 	{
 		// take the goods that are needed
 		$this->db->query('SELECT * FROM planet_cost_good, good ' .
@@ -381,9 +381,15 @@ class SmrPlanet
 		if ($this->db->nextRecord())
 			$time_complete = time() + round($this->db->getField('amount') / $game_speed);
 
-		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, time_complete) ' .
-													'VALUES ('.$this->game_id.', '.$this->sector_id.', '.$construction_id.', '.$time_complete.')');
-
+		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
+													'VALUES ('.$this->game_id.', '.$this->sector_id.', '.$construction_id.', '.$constructor_id.','.$time_complete.')');
+		
+		$this->currentlyBuilding[$this->db->getInsertID()] = array(
+				'ConstructionID' => $construction_id,
+				'ConstructorID' => $constructor_id,
+				'Finishes' => $time_complete,
+				'TimeRemaining' => $time_complete - TIME
+			);
 	}
 	
 	public function getName()
