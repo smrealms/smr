@@ -10,7 +10,7 @@ $smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$playe
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_planet_menue();
 
-if ($planet->hasCurrentlyBuilding())
+if ($planet->isCurrentlyBuilding())
 {
 	$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 	$PHP_OUTPUT.=('<p>You are currently building:<br />');
