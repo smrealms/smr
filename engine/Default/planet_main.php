@@ -25,7 +25,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Generator</td><td align="center">');
-$PHP_OUTPUT.=($planet->construction[1]);
+$PHP_OUTPUT.=($planet->getBuilding(1));
 $PHP_OUTPUT.=('</td><td align="center">');
 $PHP_OUTPUT.=($planet->max_construction[1]);
 $PHP_OUTPUT.=('</td>');
@@ -33,7 +33,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Hangar</td><td align="center">');
-$PHP_OUTPUT.=($planet->construction[2]);
+$PHP_OUTPUT.=($planet->getBuilding(2));
 $PHP_OUTPUT.=('</td><td align="center">');
 $PHP_OUTPUT.=($planet->max_construction[2]);
 $PHP_OUTPUT.=('</td>');
@@ -41,7 +41,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Turret</td><td align="center">');
-$PHP_OUTPUT.=($planet->construction[3]);
+$PHP_OUTPUT.=($planet->getBuilding(3));
 $PHP_OUTPUT.=('</td><td align="center">');
 $PHP_OUTPUT.=($planet->max_construction[3]);
 $PHP_OUTPUT.=('</td>');
@@ -67,7 +67,7 @@ $PHP_OUTPUT.=('<td>Combat Drones</td><td align="center">'.$planet->drones.'</td>
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td>Turrets</td><td align="center">' . $planet->construction[3] . '</td><td align="center">' . $planet->accuracy() . ' %</td>');
+$PHP_OUTPUT.=('<td>Turrets</td><td align="center">' . $planet->getBuilding(3) . '</td><td align="center">' . $planet->accuracy() . ' %</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('</table>');

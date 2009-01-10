@@ -114,7 +114,7 @@ while ($db->next_record())
 	$PHP_OUTPUT.=('<td>'.$construction_name.'</td>');
 	$PHP_OUTPUT.=('<td>'.$construction_description.'</td>');
 	$PHP_OUTPUT.=('<td align="center">');
-	$PHP_OUTPUT.=($planet->construction[$construction_id]);
+	$PHP_OUTPUT.=($planet->getBuilding($construction_id));
 	$PHP_OUTPUT.=('/');
 	$PHP_OUTPUT.=($planet->max_construction[$construction_id]);
 	$PHP_OUTPUT.=('</td>');
@@ -156,7 +156,7 @@ while ($db->next_record())
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	if (!$missing_good && !$missing_credits && !$planet->build() && $planet->construction[$construction_id] < $planet->max_construction[$construction_id])
+	if (!$missing_good && !$missing_credits && !$planet->build() && $planet->getBuilding($construction_id) < $planet->max_construction[$construction_id])
 	{
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
