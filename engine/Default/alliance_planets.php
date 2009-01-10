@@ -86,7 +86,7 @@ if ($db->nf() > 0) {
 		}
 
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap center">';
-		if ($planet->isCurrentlyBuilding())
+		if ($planet->hasCurrentlyBuilding())
 		{
 			$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 			foreach($planet->getCurrentlyBuilding() as $building)
