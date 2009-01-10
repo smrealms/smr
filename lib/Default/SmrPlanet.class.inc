@@ -22,6 +22,7 @@ class SmrPlanet
 	var $max_construction;
 	var $inhabitable_time;
 	var $level;
+	protected $currentlyBuilding;
 	
 	protected $hasChangedStockpile = false;
 	
