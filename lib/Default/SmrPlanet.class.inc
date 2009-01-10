@@ -351,7 +351,7 @@ class SmrPlanet
 	/**
 	 * Returns true if there is a building in progress
 	 */
-	function hasCurrentlyBuilding()
+	function isCurrentlyBuilding()
 	{
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
