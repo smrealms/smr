@@ -156,7 +156,7 @@ function do_voodoo()
 {
 //	ob_clean();
 
-	global $lock, $var,$smarty,$time_start,$db;
+	global $lock, $var,$smarty,$time_start,$db,$account;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -230,7 +230,7 @@ function do_voodoo()
 		$smarty->assign_by_ref('ThisPlayer',$player);
 		$smarty->assign_by_ref('ThisShip',$ship);
 	}
-	doSkeletionAssigns($smarty,$player,$ship,$sector,$db);
+	doSkeletionAssigns($smarty,$player,$ship,$sector,$db,$account);
 	$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
 	$smarty->display(get_template_loc($var['url']));
@@ -304,7 +304,7 @@ function release_lock()
 	$lock=false;
 }
 
-function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db)
+function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 {
 	$smarty->assign('fontSize',$account->fontsize);
 	$smarty->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
