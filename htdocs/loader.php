@@ -260,8 +260,6 @@ function acquire_lock($sector)
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 			
 	$lock = $db->insert_id();
-	if(!$lock)
-		return false;
 
 	for($i=0;$i<100;++$i)
 	{
