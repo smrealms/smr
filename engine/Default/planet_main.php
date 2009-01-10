@@ -11,6 +11,8 @@ include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_planet_menue();
 
 //echo the dump cargo message or other message.
+if (isset($var['errorMsg']))
+   $PHP_OUTPUT.=($var['errorMsg'] . '<br />');
 if (isset($var['msg']))
    $PHP_OUTPUT.=($var['msg'] . '<br />');
 

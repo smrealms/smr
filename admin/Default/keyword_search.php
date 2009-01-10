@@ -6,6 +6,7 @@ $db->query('SELECT * FROM mb_keywords WHERE type = \'find\' AND `use` = 1');
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
 $db4 = new SmrMySqlDatabase();
+if(isset($var['errorMsg'])) $PHP_OUTPUT.=($var['errorMsg'] . '<br /><br />');
 if (isset($var['msg'])) $PHP_OUTPUT.=($var['msg'] . '<br /><br />');
 
 $container = array();

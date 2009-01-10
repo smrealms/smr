@@ -134,6 +134,11 @@ class SmrPlanet
 		return $this->sector_id;
 	}
 	
+	public function getOwnerID()
+	{
+		return $this->owner_id;
+	}
+	
 	public function exists()
 	{
 		return $this->getGameID()!=null && $this->getSectorID()!==null;
