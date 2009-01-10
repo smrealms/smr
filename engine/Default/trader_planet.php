@@ -52,12 +52,16 @@ if ($db->nf() > 0) {
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 
-		if ($planet->isCurrentlyBuilding()) {
-
-			$PHP_OUTPUT.=($planet->current_building_name.'<br />');
-			$PHP_OUTPUT.=(echo_time($planet->time_left));
-
-		} else
+		if ($planet->isCurrentlyBuilding())
+		{
+			$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+			foreach($planet->getCurrentlyBuilding() as $building)
+			{
+				$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['BuildingID']]['Name'].'<br />';
+				$PHP_OUTPUT.=(echo_time($building['TimeRemaining']));
+			}
+		}
+		else
 			$PHP_OUTPUT.=('Nothing');
 
 		$PHP_OUTPUT.=('</td>');
@@ -133,12 +137,16 @@ if ($player->getAllianceID() != 0) {
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">');
 	
-			if ($planet->isCurrentlyBuilding()) {
-	
-				$PHP_OUTPUT.=($planet->current_building_name.'<br />');
-				$PHP_OUTPUT.=(echo_time($planet->time_left));
-	
-			} else
+			if ($planet->isCurrentlyBuilding())
+			{
+				$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+				foreach($planet->getCurrentlyBuilding() as $building)
+				{
+					$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['BuildingID']]['Name'].'<br />';
+					$PHP_OUTPUT.=(echo_time($building['TimeRemaining']));
+				}
+			}
+			else
 				$PHP_OUTPUT.=('Nothing');
 	
 			$PHP_OUTPUT.=('</td>');

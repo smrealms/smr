@@ -86,16 +86,19 @@ if ($db->nf() > 0) {
 		}
 
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap center">';
-		if ($planet->isCurrentlyBuilding()) {
-
-			$PHP_OUTPUT.= $planet->current_building_name;
-			
-			echof('<br />%d:%d:%d ',
-				$planet->time_left / 3600 % 24,
-				$planet->time_left / 60 % 60,
-				$planet->time_left % 60
-			);
-
+		if ($planet->isCurrentlyBuilding())
+		{
+			$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+			foreach($planet->getCurrentlyBuilding() as $building)
+			{
+				$PHP_OUTPUT.= $PLANET_BUILDINGS[$building['BuildingID']]['Name'];
+				
+				echof('<br />%d:%d:%d ',
+					$building['TimeRemaining'] / 3600 % 24,
+					$building['TimeRemaining'] / 60 % 60,
+					$building['TimeRemaining'] % 60
+				);
+			}
 		}
 		else {
 			$PHP_OUTPUT.= 'Nothing';

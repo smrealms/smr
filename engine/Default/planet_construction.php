@@ -21,7 +21,7 @@ if ($planet->hasCurrentlyBuilding())
 		$minutes = floor(($building['TimeRemaining'] - $hours * 3600) / 60);
 		$seconds = $building['TimeRemaining'] - $hours * 3600 - $minutes * 60;
 	
-		$PHP_OUTPUT.=($PLANET_BUILDINGS[$building['ConstructionID']]['Name'].' which will finish in ');
+		$PHP_OUTPUT.=($PLANET_BUILDINGS[$building['BuildingID']]['Name'].' which will finish in ');
 	
 		if ($hours > 0)
 		{
@@ -58,7 +58,7 @@ if ($planet->hasCurrentlyBuilding())
 	
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
-		$container['id'] = $building['ConstructionID'];
+		$container['id'] = $building['BuildingID'];
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('Cancel');
 		$PHP_OUTPUT.=('</form>');
