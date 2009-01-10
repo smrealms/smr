@@ -119,6 +119,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		
+		$damage['Launched'] += $damage['Kamikaze'];
 		$damage['MaxDamage'] += $damage['Kamikaze'] * MINE_ARMOUR;
 		$damage['Shield'] += $damage['Kamikaze'] * MINE_ARMOUR;
 		$damage['Armour'] += $damage['Kamikaze'] * MINE_ARMOUR;
