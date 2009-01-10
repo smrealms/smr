@@ -85,7 +85,7 @@ else
 if($player->isDead())
 {
 	$container['override_death'] = TRUE;
-	$container['target'] = 0;
+	$container['owner_id'] = 0;
 }
 
 $container['results'] = $serializedResults;
