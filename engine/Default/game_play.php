@@ -162,7 +162,7 @@ if ($historyDB->nf())
 
 }
 
-$db = new SmrMySqlDatabase1(); // restore database
+$db = new SmrMySqlDatabase(); // restore database
 
 // ***************************************
 // ** Donation Link
