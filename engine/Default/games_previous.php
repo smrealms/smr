@@ -1,6 +1,6 @@
 <?
 
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 $PHP_OUTPUT.=('<div align=center>');
 
 //topic
@@ -13,7 +13,7 @@ $smarty->assign('PageTopic','Viewing Old SMR '.$topic);
 if (!isset($game_name)) {
 
 	//list old games
-	$db2 = new SMR_HISTORY_DB();
+	$db2 = new SmrHistoryMySqlDatabase();
 	$db2->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, ' .
 				'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 				'FROM game ORDER BY game_id');
@@ -65,7 +65,7 @@ if (!isset($game_name)) {
 
 	//code for the game goes in here
 
-	$db2 = new SMR_HISTORY_DB();
+	$db2 = new SmrHistoryMySqlDatabase();
 	$db2->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, type, ' .
 				'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 				'FROM game WHERE game_id = '.$game_id);

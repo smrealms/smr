@@ -1,5 +1,5 @@
 <?
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 //get vars
 $action = $_REQUEST['action'];
 $row = $var['row'];
@@ -22,12 +22,12 @@ if (isset($game_id)) {
 
 	$table = 'player_has_stats_cache WHERE game_id = '.$game_id.' AND';
 
-	$db2 = new SMR_HISTORY_DB();
+	$db2 = new SmrHistoryMySqlDatabase();
 	$db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
 	//if next record we have an old game so we query the hist db
 	if ($db2->next_record()) {
 
-		$db = new SMR_HISTORY_DB();
+		$db = new SmrHistoryMySqlDatabase();
 		$past = 'Yes';
 		$table = 'player_has_stats WHERE game_id = '.$game_id.' AND';
 
@@ -84,7 +84,7 @@ while ($db->next_record()) {
 }
 
 //our rank goes here if we aren't shown...first get our value
-if (isset($past)) $db = new SMR_HISTORY_DB();
+if (isset($past)) $db = new SmrHistoryMySqlDatabase();
 if ($cat == '<b>Money Donated to SMR</b>')
 	$db->query('SELECT account_id, sum(amount) as amount FROM account_donated ' .
 			'WHERE account_id = '.SmrSession::$account_id.' GROUP BY account_id');

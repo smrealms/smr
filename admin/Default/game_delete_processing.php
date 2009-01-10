@@ -1,5 +1,5 @@
 <?
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 
 // additional db objects
 $db2 = new SmrMySqlDatabase();
@@ -350,7 +350,7 @@ if ($action == 'Yes') {
 
 	}
 
-	$db = new SMR_HISTORY_DB();
+	$db = new SmrHistoryMySqlDatabase();
 	foreach($history_db_sql as $sql) {
 
 		$db->query($sql);

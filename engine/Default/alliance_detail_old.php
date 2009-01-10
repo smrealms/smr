@@ -1,10 +1,10 @@
 <?
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 //offer a back button
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'games_previous.php';
-$db = new SMR_HISTORY_DB();
+$db = new SmrHistoryMySqlDatabase();
 $db->query('SELECT * FROM game WHERE game_id = '.$var[$game_id]);
 $db->next_record();
 $game_id = $db->f('game_id');

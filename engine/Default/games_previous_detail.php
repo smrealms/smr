@@ -1,5 +1,5 @@
 <?
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 $game_name = $var['game_name'];
 $game_id = $var['game_id'];
 $smarty->assign('PageTopic',$game_name.' - Extended Stats');
@@ -46,7 +46,7 @@ if (empty($action)) {
 	elseif ($action == 'Top Alliance Kills') { $sql = 'kills'; $from = 'alliance'; $dis = 'Alliance Kills'; $gr = 'dummy';}
 	elseif ($action == 'Top Alliance Deaths') { $sql = 'deaths'; $from = 'alliance'; $dis = 'Alliance Deaths'; $gr = 'dummy';}
 
-	$db2 = new SMR_HISTORY_DB();
+	$db2 = new SmrHistoryMySqlDatabase();
 	if (empty($gr)) {
 		
 		$db2->query('SELECT $sql as val, sector_id FROM $from WHERE game_id = '.$game_id.' '.$gr.' ORDER BY '.$sql.' DESC LIMIT 30');
@@ -71,7 +71,7 @@ if (empty($action)) {
 	} else {
 		$sql = 'SELECT alliance_id, '.$sql.' as val FROM $from WHERE game_id = '.$game_id.' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC LIMIT 30';
 		$db2->query($sql);
-		$db = new SMR_HISTORY_DB();
+		$db = new SmrHistoryMySqlDatabase();
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'games_previous_detail.php';
