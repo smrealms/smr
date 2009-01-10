@@ -166,7 +166,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$this->doPlayerDamageToForce($return,$weaponPlayer, $forces);
 		if($return['WeaponDamage']['Kamikaze'] > 0)
 		{
-			$weaponPlayer->decreaseCDs($return['WeaponDamage']['Kamikaze']);
+			$weaponPlayer->getShip()->decreaseCDs($return['WeaponDamage']['Kamikaze']);
 		}
 		return $return;
 	}
