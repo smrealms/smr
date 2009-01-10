@@ -73,7 +73,7 @@ if ($db->nf() > 0) {
 
 		$supply = false;
 
-		foreach ($planet->stockpile as $id => $amount) {
+		foreach ($planet->getStockpile() as $id => $amount) {
 			if ($amount > 0) {
 				$PHP_OUTPUT.= '<span class="nowrap">' . $goods_cache[$id] . '</span>: ';
 				$PHP_OUTPUT.= $amount;

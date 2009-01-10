@@ -18,7 +18,7 @@ $action = $_REQUEST['action'];
 if ($action == 'Ship') {
 
 	// do we want transfer more than we have?
-	if ($amount > $planet->stockpile[$var['good_id']])
+	if ($amount > $planet->getStockpile($var['good_id']))
 		create_error('You can\'t take more than on planet!');
 
 	// do we want to transfer more than we can carry?

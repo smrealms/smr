@@ -139,7 +139,7 @@ class SmrPlanet
 		return $this->getGameID()!=null && $this->getSectorID()!==null;
 	}
 	
-	public function getStockpile()
+	public function getStockpile($goodID=false)
 	{
 		if(!isset($this->stockpile))
 		{
@@ -152,7 +152,11 @@ class SmrPlanet
 			while ($this->db->nextRecord())
 				$this->stockpile[$this->db->getField('good_id')] = $this->db->getField('amount');
 		}
-		return $this->stockpile;
+		if($goodID===false)
+			return $this->stockpile;
+		if(isset($this->stockpile[$goodID]))
+			return $this->stockpile[$goodID];
+		return 0;
 	}
 	
 	public function getBuildings()
@@ -269,7 +273,7 @@ class SmrPlanet
 										  'sector_id = '.$this->sector_id);
 
 		// write stockpile info
-		foreach ($this->stockpile as $id => $amount)
+		foreach ($this->getStockpile() as $id => $amount)
 		{
 
 			if ($amount != 0)
@@ -308,7 +312,7 @@ class SmrPlanet
 
 	function stockpile_left($id)
 	{
-		return 600 - $this->stockpile[$id];
+		return 600 - $this->getStockpile($id);
 	}
 
 	/**
