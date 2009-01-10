@@ -144,6 +144,11 @@ if ($curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<td>&nbsp;</td>');
 	$PHP_OUTPUT.=('<td><input type="checkbox" name="smr_credit" checked> Grant SMR Credits</td>');
 	$PHP_OUTPUT.=('</tr>');
+	
+	$PHP_OUTPUT.=('<tr>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Grant Reward SMR Credits:</td>');
+	$PHP_OUTPUT.=('<td><input type="text" name="grant_credits" size="5" id="InputFields" style="text-align:center;"> Credits</td>');
+	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
 	
