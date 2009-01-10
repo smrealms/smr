@@ -1478,7 +1478,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->decreaseExperience($this->getExperience() * $percentage / 100);
 		$this->db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' . 
 						'alliance_id_2 = '.$this->getAllianceID().' AND game_id = '.$this->getGameID());
-		if ($this->db->next_record()) $this->db->query('UPDATE alliance_vs_alliance SET kills = kills + 1 ' .
+		if ($this->db->nextRecord()) $this->db->query('UPDATE alliance_vs_alliance SET kills = kills + 1 ' .
 											'WHERE alliance_id_1 = -1 AND alliance_id_2 = '.$this->getAllianceID().' AND ' .
 											'game_id = '.$this->getGameID());
 		else $this->db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
