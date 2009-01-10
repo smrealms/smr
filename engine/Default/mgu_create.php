@@ -170,7 +170,7 @@ while ($db->next_record())
 			$planet = 1;
 			//get level (start at 0)
 			$level = 0;
-			$db2->query('SELECT * FROM planet_has_construction WHERE game_id = '.$game_id.' AND sector_id = '.$sector_id);
+			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector_id);
 			while ($db2->next_record())
 			{
 				$level += $db2->f('amount');

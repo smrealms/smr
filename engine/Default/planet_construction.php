@@ -11,13 +11,13 @@ $smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$playe
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_planet_menue();
 
-if ($planet->build()) {
-
-	$db->query('SELECT * FROM planet_build_construction NATURAL JOIN planet_construction ' .
+if ($planet->build())
+{
+	$db->query('SELECT * FROM planet_is_building NATURAL JOIN planet_construction ' .
 						'WHERE game_id = '.$player->getGameID().' AND ' .
 							  'sector_id = '.$player->getSectorID());
-	if ($db->next_record()) {
-
+	if ($db->next_record())
+	{
 		$construction_name	= $db->f('construction_name');
 		$construction_id	= $db->f('construction_id');
 		$time_left			= $db->f('time_complete') - time();
@@ -31,8 +31,8 @@ if ($planet->build()) {
 	$PHP_OUTPUT.=('<p>You are currently building: '.$construction_name.'.<br>');
 	$PHP_OUTPUT.=('Finished in ');
 
-	if ($hours > 0) {
-
+	if ($hours > 0)
+	{
 		if ($hours == 1)
 			$PHP_OUTPUT.=($hours.' hour');
 		else
@@ -45,18 +45,15 @@ if ($planet->build()) {
 		else
 			$PHP_OUTPUT.=('.');
 	}
-
-	if ($minutes > 0) {
-
+	if ($minutes > 0)
+	{
 		if ($minutes == 1)
 			$PHP_OUTPUT.=($minutes.' minute');
 		else
 			$PHP_OUTPUT.=($minutes.' minutes');
-
 		if ($seconds > 0)
 			$PHP_OUTPUT.=(' and ');
 	}
-
 	if ($seconds > 0)
 		if ($seconds == 1)
 			$PHP_OUTPUT.=($seconds.' second');
@@ -74,7 +71,8 @@ if ($planet->build()) {
 	$PHP_OUTPUT.=create_submit('Cancel');
 	$PHP_OUTPUT.=('</form>');
 
-} else
+}
+else
 	$PHP_OUTPUT.=('<p>You are currently building: Nothing</p>');
 
 $PHP_OUTPUT.=('<p>');
@@ -96,8 +94,8 @@ if ($db->next_record())
 
 $db2 = new SMR_DB();
 $db->query('SELECT * FROM planet_construction ORDER BY construction_id');
-while ($db->next_record()) {
-
+while ($db->next_record())
+{
 	$construction_id			= $db->f('construction_id');
 	$construction_name			= $db->f('construction_name');
 	$construction_description	= $db->f('construction_description');
@@ -126,29 +124,30 @@ while ($db->next_record()) {
 						'WHERE planet_cost_good.good_id = good.good_id AND ' .
 							  'construction_id = '.$construction_id.' ' .
 						'ORDER BY good.good_id');
-	while ($db2->next_record()) {
-
+	while ($db2->next_record())
+	{
 		$good_id	= $db2->f('good_id');
 		$good_name	= $db2->f('good_name');
 		$amount		= $db2->f('amount');
 
-		if ($planet->stockpile[$good_id] < $amount) {
-
+		if ($planet->stockpile[$good_id] < $amount)
+		{
 			$PHP_OUTPUT.=('<span style="color:red;">'.$amount.'-'.$good_name.', </span>');
 			$missing_good = true;
 
-		} else
+		}
+		else
 			$PHP_OUTPUT.=($amount.'-'.$good_name.', ');
 
 	}
 
 	$missing_credits = false;
-	if ($player->getCredits() < $cost) {
-
+	if ($player->getCredits() < $cost)
+	{
 		$PHP_OUTPUT.=('<span style="color:red;">'.$cost.'-credits, </span>');
 		$missing_credits = true;
-
-	} else
+	}
+	else
 		$PHP_OUTPUT.=($cost.'-credits, ');
 
 	$db2->query('SELECT * FROM planet_cost_time WHERE construction_id = '.$construction_id);
@@ -182,13 +181,16 @@ $PHP_OUTPUT.=('</p>');
 $PHP_OUTPUT.=('<p>Your stockpile contains :</p>');
 $PHP_OUTPUT.=('<ul>');
 foreach ($planet->stockpile as $id => $amount)
-	if ($amount > 0) {
+{
+	if ($amount > 0)
+	{
 
 		$db->query('SELECT * FROM good WHERE good_id = '.$id);
 		if ($db->next_record())
 			$PHP_OUTPUT.=('<li>' . $db->f('good_name') . ': '.$amount.'</li>');
 
 	}
+}
 $PHP_OUTPUT.=('</ul>');
 
 ?>
