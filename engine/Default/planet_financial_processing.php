@@ -52,7 +52,7 @@ elseif ($action == 'Bond It!')
 	$planet->credits = 0;
 
 	// initialize time
-	$planet->maturity = time() + round(172800 / Globals::getGameSpeed($player->getGameID()));
+	$planet->maturity = TIME + round(172800 / Globals::getGameSpeed($player->getGameID()));
 
 	// save to db
 	$planet->update();
