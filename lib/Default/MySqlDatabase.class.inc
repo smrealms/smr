@@ -142,8 +142,6 @@ abstract class MySqlDatabase implements Database
 	
 	
 	
-	
-	
 	//below this is purely for compatibility reasons
   
   function next_record() { return $this->nextRecord(); }
