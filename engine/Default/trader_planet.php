@@ -52,7 +52,7 @@ if ($db->nf() > 0) {
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 
-		if ($planet->isCurrentlyBuilding())
+		if ($planet->hasCurrentlyBuilding())
 		{
 			$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 			foreach($planet->getCurrentlyBuilding() as $building)
@@ -137,7 +137,7 @@ if ($player->getAllianceID() != 0) {
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">');
 	
-			if ($planet->isCurrentlyBuilding())
+			if ($planet->hasCurrentlyBuilding())
 			{
 				$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 				foreach($planet->getCurrentlyBuilding() as $building)

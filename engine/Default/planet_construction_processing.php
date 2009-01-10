@@ -6,7 +6,7 @@ $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 $action = $_REQUEST['action'];
 if ($action == 'Build') {
 
-	if ($planet->isCurrentlyBuilding())
+	if ($planet->hasCurrentlyBuilding())
 		create_error('There is already a building in progress!');
 
 	$player->decreaseCredits($var['cost']);
