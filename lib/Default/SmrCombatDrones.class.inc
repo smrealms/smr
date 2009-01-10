@@ -181,7 +181,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
-		return $this->doForceDamageToPlayer($return, $targetPlayer);
+		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
 	}
 }
 
