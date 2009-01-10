@@ -13,7 +13,8 @@ abstract class MySqlDatabase implements Database
 		if(!self::$dbConn)
 		{
 			if(!self::$dbConn = @mysql_connect($host, $user, $password)) {
-				$this->error('Connection failed.');
+			echo 'ERROR: db_mysql_inc - Connection failed.';
+//				$this->error('Connection failed.');
 			}
 		}
 		
@@ -21,7 +22,8 @@ abstract class MySqlDatabase implements Database
 			self::$currDbName = $databaseName;
 			if(!@mysql_select_db(self::$currDbName, self::$dbConn))
 			{
-				$this->error('database selection failed.');
+			echo 'ERROR: db_mysql_inc - database selection failed.';
+//				$this->error('database selection failed.');
 			}
 		}
 	}
