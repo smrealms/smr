@@ -214,7 +214,4 @@ abstract class MySqlDatabase implements Database
 	  
   }
 }
-
-//include function
-$includes = new SmrMySqlDatabase();
 ?>

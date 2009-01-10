@@ -138,7 +138,7 @@ function create_submit_style($value, $style) {
 
 function get_file_loc($file_name, $exists = 1)
 {
-	global $includes, $g_id;
+	global $g_id;
 	static $stored_dir;
 	if(isset($stored_dir))
 	{
@@ -170,7 +170,7 @@ function get_file_loc($file_name, $exists = 1)
 
 function get_template_loc($file_name, $exists = 1) {
 
-	global $includes, $g_id;
+	global $g_id;
 	static $stored_dir;
 	if(isset($stored_dir)) {
 		$game_dir = $stored_dir;
