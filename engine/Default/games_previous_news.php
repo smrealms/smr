@@ -1,5 +1,5 @@
 <?
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 //games_previous_news.php
 if (isset($_REQUEST['min'])) $min = $_REQUEST['min'];
 else $min = 1;
@@ -15,7 +15,7 @@ $PHP_OUTPUT.=('<div align=center>Show News<br />Min:<input id=Inputfields type=t
 $PHP_OUTPUT.=create_submit('Show');
 $PHP_OUTPUT.=('</form>');
 
-$db2 = new SMR_HISTORY_DB();
+$db2 = new SmrHistoryMySqlDatabase();
 $db2->query('SELECT * FROM news WHERE game_id = '.$game_id.' AND news_id >= '.$min.' AND news_id <= '.$max);
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.=('<tr><th align=center>Time</th><th align=center>News</th></tr>');

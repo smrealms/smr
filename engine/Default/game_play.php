@@ -1,5 +1,5 @@
 <?
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 if (isset($var['msg']))
 	$PHP_OUTPUT.=($var['msg'].'<br />');
 
@@ -110,7 +110,7 @@ $smarty->assign('Games',$games);
 // ** Previous Games
 // ***************************************
 
-$historyDB = new SMR_HISTORY_DB();
+$historyDB = new SmrHistoryMySqlDatabase();
 $historyDB->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, ' .
 		   'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 		   'FROM game ORDER BY game_id');

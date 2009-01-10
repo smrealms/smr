@@ -1,5 +1,5 @@
 <?
-require_once(get_file_loc('smr_history_db.inc'));
+require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 function cust_round($x) {
 	return round($x/10)*10;
 }
@@ -69,12 +69,12 @@ if ($var['sending_page'] == 'hof') {
 } else {
 	
 	//current game stats
-	$db2 = new SMR_HISTORY_DB();
+	$db2 = new SmrHistoryMySqlDatabase();
 	$db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
 	//if next record we have an old game so we query the hist db
 	if ($db2->next_record()) {
 	
-		$db = new SMR_HISTORY_DB();
+		$db = new SmrHistoryMySqlDatabase();
 		$past = 'Yes';
 	
 	} else $db = new SmrMySqlDatabase();
