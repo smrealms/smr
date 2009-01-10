@@ -583,7 +583,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if ($extraMaint > 0)
 		{
 			// recalc the time to avoid errors
-			$this->setLastMaintenanceUpdate($this->getLastMaintenanceUpdate() + ceil($extraMaint * 3600 / ($ship->getSpeed() * Globals::getGameSpeed($this->gameID))));
+			$this->setLastMaintenanceUpdate($this->getLastMaintenanceUpdate() + ceil($extraMaint * 3600 / ($ship->getSpeed() * Globals::getGameSpeed($this->getGameID()))));
 			
 			$this->giveTurns($extraMaint);	
 		}
