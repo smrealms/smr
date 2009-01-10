@@ -304,17 +304,20 @@ class SmrPlanet
 									'WHERE game_id = '.$this->game_id.' AND ' .
 										  'sector_id = '.$this->sector_id);
 
-		// write stockpile info
-		foreach ($this->getStockpile() as $id => $amount)
+		if($this->hasChangedStockpile)
 		{
+			// write stockpile info
+			foreach ($this->getStockpile() as $id => $amount)
+			{
 
-			if ($amount != 0)
-				$this->db->query('REPLACE INTO planet_has_cargo (game_id, sector_id, good_id, amount) ' .
-													 'VALUES('.$this->game_id.', '.$this->sector_id.', '.$id.', '.$amount.')');
-			else
-				$this->db->query('DELETE FROM planet_has_cargo WHERE game_id = '.$this->game_id.' AND ' .
-																'sector_id = '.$this->sector_id.' AND ' .
-																'good_id = '.$id);
+				if ($amount != 0)
+					$this->db->query('REPLACE INTO planet_has_cargo (game_id, sector_id, good_id, amount) ' .
+														 'VALUES('.$this->getGameID().', '.$this->getSectorID().', '.$id.', '.$amount.')');
+				else
+					$this->db->query('DELETE FROM planet_has_cargo WHERE game_id = '.$this->getGameID().' AND ' .
+														'sector_id = '.$this->getSectorID().' AND ' .
+														'good_id = '.$id);
+			}
 		}
 
 		// write building info
