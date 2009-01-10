@@ -19,11 +19,11 @@ $PHP_OUTPUT.=create_bank_menue();
 
 $PHP_OUTPUT.= 'Hello ';
 $PHP_OUTPUT.= $player->getPlayerName();
-$PHP_OUTPUT.= '<br><br>';
+$PHP_OUTPUT.= '<br /><br />';
 
 $PHP_OUTPUT.= 'Balance: <b>';
 $PHP_OUTPUT.= number_format($player->getBank());
-$PHP_OUTPUT.= '</b><br><br><h2>Make transaction</h2><br>';
+$PHP_OUTPUT.= '</b><br /><br /><h2>Make transaction</h2><br />';
 
 $container=array();
 $container['url'] = 'bank_personal_processing.php';
@@ -34,7 +34,7 @@ $actions[] = array('Withdraw','Withdraw');
 $form = create_form($container,$actions);
 
 $PHP_OUTPUT.= $form['form'];
-$PHP_OUTPUT.= 'Amount:&nbsp;<input class="text" type="text" name="amount" size="10" value="0"><br><br>';
+$PHP_OUTPUT.= 'Amount:&nbsp;<input class="text" type="text" name="amount" size="10" value="0"><br /><br />';
 
 $PHP_OUTPUT.= $form['submit']['Deposit'];
 $PHP_OUTPUT.= '&nbsp;&nbsp;';

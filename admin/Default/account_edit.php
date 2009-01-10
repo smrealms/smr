@@ -233,7 +233,7 @@ if ($curr_account->account_id != 0) {
 			} else
 				$admin = 'System';
 
-			$PHP_OUTPUT.=(date('n/j/Y g:i:s A', $curr_time) . ' - '.$action.' by '.$admin.'<br>');
+			$PHP_OUTPUT.=(date('n/j/Y g:i:s A', $curr_time) . ' - '.$action.' by '.$admin.'<br />');
 
 		}
 
@@ -254,7 +254,7 @@ if ($curr_account->account_id != 0) {
 		$PHP_OUTPUT.=('<td>'.$reason_txt.'</td>');
 
 	} else
-		$PHP_OUTPUT.=('<td>This account is not listed.<br><input type=text name=exception_add value="Add An Exception"></td>');
+		$PHP_OUTPUT.=('<td>This account is not listed.<br /><input type=text name=exception_add value="Add An Exception"></td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');

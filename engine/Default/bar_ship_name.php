@@ -52,7 +52,7 @@ if ($action == 'Paint a logo (3 SMR Credits)') {
 			
 		}
 		
-		$orig_name = '<img style="padding: 3px 3px 3px 3px;" src="'.$URL.'/upload/' . $db->escapeString(SmrSession::$account_id) . 'logo"><br>';
+		$orig_name = '<img style="padding: 3px 3px 3px 3px;" src="'.$URL.'/upload/' . $db->escapeString(SmrSession::$account_id) . 'logo"><br />';
 		$cred_cost = 3;
 		$account->set_credits($num_creds - $cred_cost);
 		$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
@@ -75,9 +75,9 @@ if ($action == 'Paint a logo (3 SMR Credits)') {
 if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	
 	$PHP_OUTPUT.=('<div align=center>If you ship is found to use HTML inappropriatly you may be banned.');
-	$PHP_OUTPUT.=('  Innappropriate HTML includes but is not limited to something that can either cause display errors or cause functionallity of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br>');
-	$PHP_OUTPUT.=('Preview<br>' . stripslashes($name) . '<br></div>');
-	$PHP_OUTPUT.=('Are you sure you want to continue?<br>');
+	$PHP_OUTPUT.=('  Innappropriate HTML includes but is not limited to something that can either cause display errors or cause functionallity of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />');
+	$PHP_OUTPUT.=('Preview<br />' . stripslashes($name) . '<br /></div>');
+	$PHP_OUTPUT.=('Are you sure you want to continue?<br />');
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'bar_main.php';
@@ -87,7 +87,7 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	$container['done'] = TRUE;
 	$container['ship_name'] = stripslashes($name);
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('Yes:<input type=radio name=continue value=TRUE><br>No:<input type=radio name=continue value=FALSE><br>');
+	$PHP_OUTPUT.=('Yes:<input type=radio name=continue value=TRUE><br />No:<input type=radio name=continue value=FALSE><br />');
 	$PHP_OUTPUT.=create_submit('Continue');
 	$PHP_OUTPUT.=('</form>');
 	
@@ -106,7 +106,7 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 			if (stristr($name, $check)) {
 			
 				$check .= '*>';
-				if ($check != '<h*>' && $check != '</marquee>?*>') create_error(htmlentities($check, ENT_NOQUOTES) . ' tag is not allowed in ship names.<br><small>If you believe the name is appropriate please contact an admin.</small>');
+				if ($check != '<h*>' && $check != '</marquee>?*>') create_error(htmlentities($check, ENT_NOQUOTES) . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
 				elseif ($check == '</marquee>?*>') create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
 				else create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES) . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES) . ' tag which is not needed.');
 				return;
@@ -152,13 +152,13 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 		}
 		if ($open > 0) {
 			
-			create_error('You must close all HTML tags.  (i.e a &lt;font color=red&gt tag must have a &lt;/font&gt; tag somewhere after it).<br><small>If you think you received this message in error please contact an admin.');
+			create_error('You must close all HTML tags.  (i.e a &lt;font color=red&gt tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.');
 			return;
 			
 		}
 		if ($close > $real_open || $ha || $open < 0) {
 			
-			create_error('You can not close tags that do not exist!<br><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
+			create_error('You can not close tags that do not exist!<br /><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
 			return;
 			
 		}
@@ -179,7 +179,7 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 		if (stristr($name, $bad)) $done = TRUE;
 		
 	}
-	if (!$done)	$orig_name .= '<br>';
+	if (!$done)	$orig_name .= '<br />';
 	if (strlen($orig_name) > $max_len) {
 		
 		create_error('That won\'t fit on your ship!');
@@ -204,9 +204,9 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($orig_name, FALSE) . ')');
 	$account->set_credits($num_creds - $cred_cost);
 	
-	$PHP_OUTPUT.=('<div align=center>Thanks for your purchase! Your ship is ready!<br>');
+	$PHP_OUTPUT.=('<div align=center>Thanks for your purchase! Your ship is ready!<br />');
 	if ($html) $PHP_OUTPUT.=('If you ship is found to use HTML inappropriatly you may be banned.  If your ship does contain inappropriate HTML talk to an admin ASAP.');
-	$PHP_OUTPUT.=('<br></div>');
+	$PHP_OUTPUT.=('<br /></div>');
 	//offer another drink and such
 	include(get_file_loc('bar_opening.php'));
 	
@@ -220,9 +220,9 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	//next welcome them
 	if ($db->next_record()) $PHP_OUTPUT.=('<div align=center>So you want to name your ship?  Great!  ' .
 					'Anyone who knows anything will tell you ' . $db->f('location_name') . ' ' .
-					'is the place to get it done!<br><br>');
+					'is the place to get it done!<br /><br />');
 					
-	$PHP_OUTPUT.=('So...what do you want to name it? (max 48 text chars) (max 30 height by 200 width and 20k for logos)<br>');
+	$PHP_OUTPUT.=('So...what do you want to name it? (max 48 text chars) (max 30 height by 200 width and 20k for logos)<br />');
 	//start form
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -230,14 +230,14 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	$container['script'] = 'bar_ship_name.php';
 	$container['process'] = 'yes';
 	$PHP_OUTPUT.=create_form_parameter($container, 'name="ship_naming" enctype="multipart/form-data"');
-	$PHP_OUTPUT.=('<input type="text" name="ship_name" value="Enter Name Here" id="InputFields"><Br><br>');
-	//$PHP_OUTPUT.=('Include HTML? (2 SMR Credits)<input type=checkbox name=html><br>');
+	$PHP_OUTPUT.=('<input type="text" name="ship_name" value="Enter Name Here" id="InputFields"><br /><br />');
+	//$PHP_OUTPUT.=('Include HTML? (2 SMR Credits)<input type=checkbox name=html><br />');
 	$PHP_OUTPUT.=create_submit('Get It Painted! (1 SMR Credit)');
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 	$PHP_OUTPUT.=create_submit('Include HTML (2 SMR Credits)');
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 	$PHP_OUTPUT.=('Image: <input type="file" name="photo" accept="image/jpeg" id="InputFields" style="width:40%;">');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Paint a logo (3 SMR Credits)');
 	$PHP_OUTPUT.=('</form></div>');
 

@@ -10,8 +10,8 @@ if (isset($number))
 if (!isset($number) && !isset($var['number'])) {
 
     $PHP_OUTPUT.=create_echo_form($container);
-    $PHP_OUTPUT.=('How many player\'s info do you need to check?<br>');
-    $PHP_OUTPUT.=('<input type="text" name="number" maxlength="5" size="5" id="InputFields" style="text-align:center;"><br>');
+    $PHP_OUTPUT.=('How many player\'s info do you need to check?<br />');
+    $PHP_OUTPUT.=('<input type="text" name="number" maxlength="5" size="5" id="InputFields" style="text-align:center;"><br />');
     $PHP_OUTPUT.=create_submit('Next Page');
     $PHP_OUTPUT.=('</form>');
 
@@ -19,15 +19,15 @@ if (!isset($number) && !isset($var['number'])) {
 
     $PHP_OUTPUT.=create_echo_form($container);
     $i = 0;
-    $PHP_OUTPUT.=('Enter the login names in the following boxes please.<br>');
+    $PHP_OUTPUT.=('Enter the login names in the following boxes please.<br />');
     while ($i < $number) {
 
         $PHP_OUTPUT.=('<input type="text" name="login['.$i.']" maxlength="35" size="35" id="InputFields" style="text-align:center;">');
         $i ++;
-        $PHP_OUTPUT.=('<br><br>');
+        $PHP_OUTPUT.=('<br /><br />');
 
     }
-    $PHP_OUTPUT.=('<br>');
+    $PHP_OUTPUT.=('<br />');
     $PHP_OUTPUT.=create_submit('Check');
     $PHP_OUTPUT.=('</form>');
 
@@ -110,7 +110,7 @@ if (!isset($number) && !isset($var['number'])) {
                             if (!in_array($match_sec, $names)) {
 
                                 $continue = 'next';
-                                $PHP_OUTPUT.=$login_name.' is disabled matching '.$match_sec.'<br>';
+                                $PHP_OUTPUT.=$login_name.' is disabled matching '.$match_sec.'<br />';
 
                             } elseif (in_array($match_sec, $next_arr)) {
 
@@ -127,7 +127,7 @@ if (!isset($number) && !isset($var['number'])) {
 
                     } elseif ($isset == 'yes' && !$db2->next_record()) {
 
-                        $PHP_OUTPUT.=('Data Error 2: '.$match_sec.' does not exist!<br>');
+                        $PHP_OUTPUT.=('Data Error 2: '.$match_sec.' does not exist!<br />');
                         $continue = '0';
 
                     } else
@@ -153,13 +153,13 @@ if (!isset($number) && !isset($var['number'])) {
                             $continue = 'TRUE';
                             $names[] = $match;
                             if ($match != $login_name)
-                                $PHP_OUTPUT.=($login_name.' is disabled matching '.$match.'<br>');
+                                $PHP_OUTPUT.=($login_name.' is disabled matching '.$match.'<br />');
 
                         }
 
                     } else {
 
-                        $PHP_OUTPUT.=('Data Error 1: '.$match.' does not exist!<br>');
+                        $PHP_OUTPUT.=('Data Error 1: '.$match.' does not exist!<br />');
                         $continue = 'next';
                         $names[] = $login_name;
 

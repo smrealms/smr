@@ -84,7 +84,7 @@ if ($db->nf() != 0) {
 
 	} // end of while
 
-	$PHP_OUTPUT.= '</table><br>';
+	$PHP_OUTPUT.= '</table><br />';
 
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';

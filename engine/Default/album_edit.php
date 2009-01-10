@@ -2,9 +2,9 @@
 
 $smarty->assign('PageTopic','Edit Photo');
 
-$PHP_OUTPUT.=('<p><span style="font-size:80%;">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br>');
-$PHP_OUTPUT.=('We only accept jpg or gif images to a maximum of 500 x 500 in size.<br>');
-$PHP_OUTPUT.=('Your image will be posted under your <i>Hall Of Fame</i> nick!<br>');
+$PHP_OUTPUT.=('<p><span style="font-size:80%;">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br />');
+$PHP_OUTPUT.=('We only accept jpg or gif images to a maximum of 500 x 500 in size.<br />');
+$PHP_OUTPUT.=('Your image will be posted under your <i>Hall Of Fame</i> nick!<br />');
 $PHP_OUTPUT.=('<b>Please Note:</b> Your entry needs to be approved by an admin before going online</p>');
 
 $PHP_OUTPUT.=('<p style="font-size:150%;">');
@@ -85,7 +85,7 @@ $PHP_OUTPUT.=('Year:&nbsp;<input type="text" name="year" id="InputFields" value=
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Other Info:<br><small>(AIM/ICQ)</small></td>');
+$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Other Info:<br /><small>(AIM/ICQ)</small></td>');
 $PHP_OUTPUT.=('<td><textarea name="other" id="InputFields" style="width:303px;height:100px;" onFocus="javascript:if (this.value == \'N/A\') {this.value = \'\';}" onBlur="javascript:if (this.value == \'\') {this.value = \'N/A\';}">'.$other.'</textarea></td>');
 $PHP_OUTPUT.=('</tr>');
 

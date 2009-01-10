@@ -54,7 +54,7 @@ if ($db->nf() > 0) {
 
 		if ($planet->build()) {
 
-			$PHP_OUTPUT.=($planet->current_building_name.'<br>');
+			$PHP_OUTPUT.=($planet->current_building_name.'<br />');
 			$PHP_OUTPUT.=(echo_time($planet->time_left));
 
 		} else
@@ -70,7 +70,7 @@ if ($db->nf() > 0) {
 
 				$db2->query('SELECT * FROM good WHERE good_id = '.$id);
 				if ($db2->next_record())
-					$PHP_OUTPUT.=($db2->f('good_name') . ': '.$amount.'<br>');
+					$PHP_OUTPUT.=($db2->f('good_name') . ': '.$amount.'<br />');
 				$supply = true;
 			}
 
@@ -83,7 +83,7 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.=('</div>');
 
 } else
-	$PHP_OUTPUT.=('You don\'t have a planet claimed!<br><br>');
+	$PHP_OUTPUT.=('You don\'t have a planet claimed!<br /><br />');
 	
 if ($player->getAllianceID() != 0) {
 	
@@ -136,7 +136,7 @@ if ($player->getAllianceID() != 0) {
 	
 			if ($planet->build()) {
 	
-				$PHP_OUTPUT.=($planet->current_building_name.'<br>');
+				$PHP_OUTPUT.=($planet->current_building_name.'<br />');
 				$PHP_OUTPUT.=(echo_time($planet->time_left));
 	
 			} else
@@ -153,7 +153,7 @@ if ($player->getAllianceID() != 0) {
 	
 					$db2->query('SELECT * FROM good WHERE good_id = '.$id);
 					if ($db2->next_record())
-						$PHP_OUTPUT.=($db2->f('good_name') . ': '.$amount.'<br>');
+						$PHP_OUTPUT.=($db2->f('good_name') . ': '.$amount.'<br />');
 					$supply = true;
 				}
 	

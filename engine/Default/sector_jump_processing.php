@@ -293,7 +293,7 @@ while ($db->next_record()) {
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'current_sector.php';;
-		$container['msg']		= 'You have just flown past a sprinkle of mines.<br>Because of your newbie status you have been spared from the harsh reality of the forces.';
+		$container['msg']		= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.';
 		forward($container);
 
 	} else {

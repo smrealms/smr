@@ -109,7 +109,7 @@ if ($db->next_record()) {
 	if (empty($other))
 		$other = 'N/A';
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info :<br><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info :<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('</table>');
 

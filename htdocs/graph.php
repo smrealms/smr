@@ -13,7 +13,7 @@ if ($val == 3) {
 echo ('<body background="http://beta.smrealms.de/images/graph'.$val.'.gif">');
 /*
 echo ('<font color=white size=4><div align=center valign=top><font size=1>&nbsp;&nbsp;&nbsp;</font>$trade</div>');
-echo ('<br><br><br><br><br><br><br><font size=1><br><br><br></font><div align=justify>$combat&nbsp;');
+echo ('<br /><br /><br /><br /><br /><br /><br /><font size=1><br /><br /><br /></font><div align=justify>$combat&nbsp;');
 echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
 echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
 echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
@@ -22,14 +22,14 @@ echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
 echo ('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;');
 echo ('&nbsp;&nbsp;&nbsp;&nbsp;');
 echo ('.$db->escapeString($hunt</div>');
-echo ('<br><br><br><br><br><br><br><br><font size=1><br></font><div align=center><font size=1>&nbsp;&nbsp;&nbsp;</font>$util</div></font>');
+echo ('<br /><br /><br /><br /><br /><br /><br /><br /><font size=1><br /></font><div align=center><font size=1>&nbsp;&nbsp;&nbsp;</font>$util</div></font>');
 
 
 echo ('<font color="white" size="4">');
-echo ('Trade - $trade<br>');
-echo ('Combat Strength - $combat<br>');
-echo ('Hunting - $hunt<br>');
-echo ('Utility - $util<br>');
+echo ('Trade - $trade<br />');
+echo ('Combat Strength - $combat<br />');
+echo ('Hunting - $hunt<br />');
+echo ('Utility - $util<br />');
 echo ('</font>');
 
 echo ('<table border="0" class="standard" cellspacing="0">');

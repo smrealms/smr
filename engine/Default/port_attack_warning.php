@@ -1,8 +1,8 @@
 <?
 require_once(get_file_loc('SmrPort.class.inc'));
 $smarty->assign('PageTopic','PORT RAID');
-$PHP_OUTPUT.=('<font color=red>WARNING WARNING</font> port assault about to commence!!<br>');
-$PHP_OUTPUT.=('Are you sure you want to attack this port?<br><br>');
+$PHP_OUTPUT.=('<font color=red>WARNING WARNING</font> port assault about to commence!!<br />');
+$PHP_OUTPUT.=('Are you sure you want to attack this port?<br /><br />');
 $port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 $time = time();
 
@@ -15,7 +15,7 @@ $time = time();
 //		$federal_mod = ($time - $port->getReinforceTime() - $minsToStay * 60) / (-6 * $minsToStay);
 //	else $federal_mod = 0;
 //	if ($federal_mod < 0) $federal_mod = 0;
-//	if ($federal_mod > 0) $PHP_OUTPUT.=('Ships dispatched by the Federal Government have just arrived and are in a defensive position around the port.<br>');
+//	if ($federal_mod > 0) $PHP_OUTPUT.=('Ships dispatched by the Federal Government have just arrived and are in a defensive position around the port.<br />');
 //	$rich_mod = floor( $port->getCredits() * 1e-7 );
 //	if($rich_mod < 0) $rich_mod = 0;
 //	$port->shields = round(($port->getLevel() * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));

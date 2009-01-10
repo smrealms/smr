@@ -37,7 +37,7 @@ if ($action == 'process') {
 	$db->next_record();
 	$num = $db->f('num');
 	$PHP_OUTPUT.=('<div align=center>Thanks for your purchase and good luck!!!  You currently');
-	$PHP_OUTPUT.=(' own '.$num.' tickets!</div><br>');
+	$PHP_OUTPUT.=(' own '.$num.' tickets!</div><br />');
 	$action = 'Play the Galactic Lotto';
 	
 }
@@ -117,8 +117,8 @@ if ($action == 'lotto') {
 	$time_rem -= $mins * 60;
 	$secs = $time_rem;
 	$time_rem = '<b>'.$days.' Days, '.$hours.' Hours, '.$mins.' Minutes, and '.$secs.' Seconds</b>';
-	$PHP_OUTPUT.=('<br><div align=center>Currently '.$time_rem.' remain until the winning ticket');
-	$PHP_OUTPUT.=(' is drawn, and the prize is $' . number_format($amount) . '.</div><br>');
+	$PHP_OUTPUT.=('<br /><div align=center>Currently '.$time_rem.' remain until the winning ticket');
+	$PHP_OUTPUT.=(' is drawn, and the prize is $' . number_format($amount) . '.</div><br />');
 	$PHP_OUTPUT.=('<div align=center>Ahhhh so your interested in the lotto huh?  ');
 	$PHP_OUTPUT.=('Well here is how it works.  First you will need to buy a ticket, ');
 	$PHP_OUTPUT.=('they cost $1,000,000 a piece.  Next you need to watch the news.  Once the winning ');
@@ -348,7 +348,7 @@ if ($action == 'lotto') {
 		$i = 1;
 		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2)
 			$PHP_OUTPUT.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
-		$PHP_OUTPUT.=('<div align=center>Bank\'s Cards are</div><br><table align=center><tr>');
+		$PHP_OUTPUT.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
 		foreach ($ai_card as $key => $value) {
 			
 			if ($key == 0) {
@@ -378,11 +378,11 @@ if ($action == 'lotto') {
 		$PHP_OUTPUT.=('</td></tr></table>');
 		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
 			
-			$PHP_OUTPUT.=('<div align=center>Bank has BLACKJACK!</div><br>');
+			$PHP_OUTPUT.=('<div align=center>Bank has BLACKJACK!</div><br />');
 			$win = 'no';
 			
-		} elseif (get_value($player_card) >= 21) $PHP_OUTPUT.=('<div align=center>Bank has ' . get_value($ai_card) . '</div><br><br>');
-		else $PHP_OUTPUT.=('<div align=center>Bank has at least '.$ai_val.'</div><br>');
+		} elseif (get_value($player_card) >= 21) $PHP_OUTPUT.=('<div align=center>Bank has ' . get_value($ai_card) . '</div><br /><br />');
+		else $PHP_OUTPUT.=('<div align=center>Bank has at least '.$ai_val.'</div><br />');
 		
 	}
 	
@@ -417,7 +417,7 @@ if ($action == 'lotto') {
 		if ($win == 'yes' || $win == 'bj') $PHP_OUTPUT.=('<div align=center><h1><font color=red>You Win</font></h1></div>');
 		elseif ($win == 'tie') $PHP_OUTPUT.=('<div align=center><h1><font color=red>TIE Game</font></h1></div>');
 		else $PHP_OUTPUT.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
-		$PHP_OUTPUT.=('<div align=center>Bank\'s Cards are</div><br><table align=center><tr>');
+		$PHP_OUTPUT.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
 		foreach ($ai_card as $key => $value) {
 			
 			//now row?			
@@ -427,8 +427,8 @@ if ($action == 'lotto') {
 			
 		}
 		$PHP_OUTPUT.=('</td></tr></table><div align=center>');
-		if (get_value($ai_card) > 21) $PHP_OUTPUT.=('Bank <font color=red><b>BUSTED</b></font><br><br>');
-		else $PHP_OUTPUT.=('Bank has ' . get_value($ai_card) . '<br><br>');
+		if (get_value($ai_card) > 21) $PHP_OUTPUT.=('Bank <font color=red><b>BUSTED</b></font><br /><br />');
+		else $PHP_OUTPUT.=('Bank has ' . get_value($ai_card) . '<br /><br />');
 		$PHP_OUTPUT.=('</div>');
 		
 	}
@@ -437,7 +437,7 @@ if ($action == 'lotto') {
 
 	$val1 = get_value($player_card);
 
-	$PHP_OUTPUT.=('<div align=center>Your Cards are</div><br><table align=center><tr>');
+	$PHP_OUTPUT.=('<div align=center>Your Cards are</div><br /><table align=center><tr>');
 	foreach ($player_card as $key => $value) {
 
 		if ($i == 4 || $i == 7 || $i == 10) $PHP_OUTPUT.=('</tr><tr>');
@@ -447,7 +447,7 @@ if ($action == 'lotto') {
 	}
 	$PHP_OUTPUT.=('</td></tr></table>');
 
-	$PHP_OUTPUT.=('<div align=center>You have a total of ' . get_value($player_card) . ' </div><br>');
+	$PHP_OUTPUT.=('<div align=center>You have a total of ' . get_value($player_card) . ' </div><br />');
 	//check for win
 	if ($do == 'STAY') {
 		$win = check_for_win(get_value($ai_card), get_value($player_card));
@@ -486,7 +486,7 @@ if ($action == 'lotto') {
 		$container['player_val'] = $val1;
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('HIT');
-		$PHP_OUTPUT.=('<br><small><br></small></form>');
+		$PHP_OUTPUT.=('<br /><small><br /></small></form>');
 		$container['player_does'] = 'STAY';
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('STAY');

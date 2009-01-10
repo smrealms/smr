@@ -244,6 +244,7 @@ class SmrPlanet
 				else
 				{
 					$this->currentlyBuilding[$this->db->getField('building_slot_id')] = array(
+							'BuildingSlotID' => $this->db->getField('building_slot_id'),
 							'ConstructionID' => $this->db->getField('construction_id'),
 							'ConstructorID' => $this->db->getField('constructor_id'),
 							'Finishes' => $this->db->getField('time_complete'),
@@ -349,7 +350,7 @@ class SmrPlanet
 	/**
 	 * Returns true if there is a building in progress
 	 */
-	function build()
+	function hasCurrentlyBuilding()
 	{
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
@@ -385,11 +386,34 @@ class SmrPlanet
 													'VALUES ('.$this->game_id.', '.$this->sector_id.', '.$construction_id.', '.$constructor_id.','.$time_complete.')');
 		
 		$this->currentlyBuilding[$this->db->getInsertID()] = array(
+				'BuildingSlotID' => $this->db->getInsertID(),
 				'ConstructionID' => $construction_id,
 				'ConstructorID' => $constructor_id,
 				'Finishes' => $time_complete,
 				'TimeRemaining' => $time_complete - TIME
 			);
+	}
+
+	function stopBuilding($constructionID)
+	{
+		$currentlyBuilding = $this->getCurrentlyBuilding();
+		$matchingBuilding = false;
+		$latestFinish = 0;
+		foreach($currentlyBuilding as $key => $building)
+		{
+			if($building['ConstructionID'] == $constructionID && $building['Finishes'] > $latestFinish)
+			{
+				$latestFinish = $building['Finishes'];
+				$matchingBuilding = $building;
+			}
+		}
+		if($matchingBuilding)
+		{
+			unset($this->currentlyBuilding[$matchingBuilding['BuildingSlotID']]);
+			$db->query('DELETE FROM planet_is_building WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND building_slot_id = ' . $matchingBuilding['BuildingSlotID'].' LIMIT 1');
+			return true;
+		}
+		return false;
 	}
 	
 	public function getName()

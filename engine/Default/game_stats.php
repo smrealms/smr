@@ -68,7 +68,7 @@ $PHP_OUTPUT.='
 </table>
 </td>
 </tr>
-</table><br>';
+</table><br />';
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.='
 <tr>
@@ -134,10 +134,10 @@ if ($count_real_last_active != 1)
 	$PHP_OUTPUT.=('are '.$count_real_last_active.' players who have ');
 else
 	$PHP_OUTPUT.=('is 1 player who has ');
-$PHP_OUTPUT.=('accessed the server in the last 10 minutes.<br>');
+$PHP_OUTPUT.=('accessed the server in the last 10 minutes.<br />');
 
 if ($count_last_active == 0)
-	$PHP_OUTPUT.=('Noone was moving so your ship computer can\'t intercept any transmissions.<br>');
+	$PHP_OUTPUT.=('Noone was moving so your ship computer can\'t intercept any transmissions.<br />');
 else {
 
 	if ($count_last_active == $count_real_last_active)
@@ -148,9 +148,9 @@ else {
 	$PHP_OUTPUT.=('were moving so your ship computer was able to intercept '.$count_last_active.' transmission');
 
 	if ($count_last_active > 1)
-		$PHP_OUTPUT.=('s.<br>');
+		$PHP_OUTPUT.=('s.<br />');
 	else
-		$PHP_OUTPUT.=('.<br>');
+		$PHP_OUTPUT.=('.<br />');
 }
 	$PHP_OUTPUT.=('The traders listed in <span style="font-style:italic;">italics</span> are still ranked as Newbie or Beginner.</p>');
 

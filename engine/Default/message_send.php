@@ -12,7 +12,7 @@ $container['url'] = 'message_send_processing.php';
 transfer('receiver');
 
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<p><small><b>From:</b> '.$player->getPlayerName().' ('.$player->getPlayerID().')<br>');
+$PHP_OUTPUT.=('<p><small><b>From:</b> '.$player->getPlayerName().' ('.$player->getPlayerID().')<br />');
 
 if (!empty($var['receiver'])) {
 
@@ -21,7 +21,7 @@ if (!empty($var['receiver'])) {
 
 } else $PHP_OUTPUT.=('<b>To:</b> All Online</small></p>');
 
-$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br><br>');
+$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br /><br />');
 $PHP_OUTPUT.=create_submit('Send message');
 $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('</p>');

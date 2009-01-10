@@ -6,7 +6,7 @@ if (!empty($var['admin_id']))
 
 $smarty->assign('PageTopic','Manage Admin Permissions');
 
-$PHP_OUTPUT.=('List of Accounts with Permissions:<br><small>Click for details</small>');
+$PHP_OUTPUT.=('List of Accounts with Permissions:<br /><small>Click for details</small>');
 $PHP_OUTPUT.=('<ul>');
 
 $container = create_container('skeleton.php', 'permission_manage.php');
@@ -31,7 +31,7 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 // we offer a list to choose
 if (empty($admin_id)) {
 
-	$PHP_OUTPUT.=('Select an Account to add Permissions:<br><br>');
+	$PHP_OUTPUT.=('Select an Account to add Permissions:<br /><br />');
 
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'permission_manage.php'));
 	$PHP_OUTPUT.=('<select name="admin_id">');
@@ -63,7 +63,7 @@ if (!$db->next_record()) {
 
 }
 
-$PHP_OUTPUT.=('<u>' . $db->f('login') . '</u>!<br><br>');
+$PHP_OUTPUT.=('<u>' . $db->f('login') . '</u>!<br /><br />');
 
 $container = create_container('permission_manage_processing.php', '');
 $container['admin_id'] = $admin_id;
@@ -89,9 +89,9 @@ while ($db->next_record()) {
 		$checked = ' checked';
 	else
 		$checked = '';
-	$PHP_OUTPUT.=('<input type="checkbox" name="permission_ids[]" value="' . $db->f('permission_id') . '"'.$checked.'>' . $db->f('permission_name') . '<br>');
+	$PHP_OUTPUT.=('<input type="checkbox" name="permission_ids[]" value="' . $db->f('permission_id') . '"'.$checked.'>' . $db->f('permission_name') . '<br />');
 }
-$PHP_OUTPUT.=('<br>');
+$PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=create_submit('Change');
 $PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Select Another User');

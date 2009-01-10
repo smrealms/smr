@@ -6,7 +6,7 @@ $smarty->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAlli
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->f('leader_id'));
 
-$PHP_OUTPUT.= 'Do you really want to leave this alliance?<br><br>';
+$PHP_OUTPUT.= 'Do you really want to leave this alliance?<br /><br />';
 
 $container = array();
 $container['url'] = 'alliance_leave_processing.php';

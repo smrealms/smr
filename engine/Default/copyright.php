@@ -8,7 +8,7 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //$container=array();
 //$container['url'] = 'vote_link.php';
 //
-//$PHP_OUTPUT.=('<br><center><span style="font-size:75%;">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</span></center>');
+//$PHP_OUTPUT.=('<br /><center><span style="font-size:75%;">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</span></center>');
 //
 //$db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' AND link_id=1 LIMIT 1');
 //if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->next_record() || $db->f('timeout') < (time() - 86400)) && rand(0,100) < 80) {
@@ -67,7 +67,7 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //
 //$db_year = date('Y');
 //$time_elapsed = getmicrotime() - $time_start;
-//$PHP_OUTPUT.=('<td align="right" width="100%" style="vertical-align:bottom"><span style="font-size:75%;">Space Merchant Realms<br>$version&nbsp;&nbsp;&nbsp;&copy; 2001-$db_year<br>hosted by <a href="http://www.fem.tu-ilmenau.de/fem_neu/scripts/index.php?fuseaction=page.content&id=1&menue_name=englisch" target="fem">FeM</a><br />Script runtime: ' . number_format($time_elapsed, 3) . ' sec</span></td>');
+//$PHP_OUTPUT.=('<td align="right" width="100%" style="vertical-align:bottom"><span style="font-size:75%;">Space Merchant Realms<br />$version&nbsp;&nbsp;&nbsp;&copy; 2001-$db_year<br />hosted by <a href="http://www.fem.tu-ilmenau.de/fem_neu/scripts/index.php?fuseaction=page.content&id=1&menue_name=englisch" target="fem">FeM</a><br />Script runtime: ' . number_format($time_elapsed, 3) . ' sec</span></td>');
 //$PHP_OUTPUT.=('</tr>');
 //$PHP_OUTPUT.=('</table>');
 

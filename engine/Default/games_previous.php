@@ -115,7 +115,7 @@ if (!isset($game_name)) {
 	</table>
 	</td>
 	</tr>
-	</table><br>';
+	</table><br />';
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.='
 	<tr>
@@ -159,7 +159,7 @@ if (!isset($game_name)) {
 	$PHP_OUTPUT.='
 	</td>
 	</tr>
-	</table><br>';
+	</table><br />';
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.='<tr><td align=center>Top 10 Alliances in Experience</td><td align=center>Top 10 Alliances in Kills</td></tr>
 	<tr>
@@ -220,7 +220,7 @@ if (!isset($game_name)) {
 	$PHP_OUTPUT.='
 	</td>
 	</tr>
-	</table><br>';
+	</table><br />';
 
 }
 $PHP_OUTPUT.=('</div>');

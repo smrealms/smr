@@ -36,7 +36,7 @@ if ($portGood['TransactionType'] == 'Sell')
 	$PHP_OUTPUT.=('buy ');
 elseif ($portGood['TransactionType'] == 'Buy')
 	$PHP_OUTPUT.=('offer you ');
-$PHP_OUTPUT.=($var['amount'] . ' pcs. of ' . $var['good_name'] . ' for ' . $var['offered_price'] . ' credits!<br>');
+$PHP_OUTPUT.=($var['amount'] . ' pcs. of ' . $var['good_name'] . ' for ' . $var['offered_price'] . ' credits!<br />');
 $PHP_OUTPUT.=('Note: In order to maximize your experience you have to bargain with the port owner, unless you have maxmium relations (1000) with that race, which gives full experience without the need to bargain.</p>');
 
 $container = array();
@@ -101,7 +101,7 @@ $PHP_OUTPUT.=('<h2>Or do you want:</h2>');
 $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'shop_goods.php'));
 $PHP_OUTPUT.=create_submit('Select a different good');
 $PHP_OUTPUT.=('</form>');
-$PHP_OUTPUT.=('<br><br>');
+$PHP_OUTPUT.=('<br /><br />');
 $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'current_sector.php'));
 $PHP_OUTPUT.=create_submit('Leave Port');
 $PHP_OUTPUT.=('</form>');

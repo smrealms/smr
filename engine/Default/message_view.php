@@ -123,7 +123,7 @@ if (!isset($var['folder_id'])) {
 
 	}
 
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$container = array();
 	$container['url'] = 'message_delete_processing.php';
 	transfer('folder_id');
@@ -155,7 +155,7 @@ if (!isset($var['folder_id'])) {
 		$dispContainer['show_all'] = TRUE;
 		if ($unread_messages > 25 || $message_count - $unread_messages > 25) {
 			$PHP_OUTPUT.=create_button($dispContainer, 'Show all Messages');
-			$PHP_OUTPUT.=('<br>');
+			$PHP_OUTPUT.=('<br />');
 		}
 		if ($unread_messages > 25) {
 			//here we group new messages

@@ -13,7 +13,7 @@ if (SmrSession::$game_id > 0) {
 } else {
 	$PHP_OUTPUT.=('<h1>ERROR</h1>');
 	$PHP_OUTPUT.=('<p><b><big>' . $var['message'] . '</big></b></p>');
-	$PHP_OUTPUT.=('<br><br><br>');
+	$PHP_OUTPUT.=('<br /><br /><br />');
 	$PHP_OUTPUT.=('<p><small>If the error was caused by something you entered, press back and try again.</small></p>');
 	$PHP_OUTPUT.=('<p><small>If it was a DB Error, press back and try again, or logoff and log back on.</small></p>');
 	$PHP_OUTPUT.=('<p><small>If the error was unrecognizable, please notify the administrators.</small></p>');

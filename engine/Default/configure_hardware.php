@@ -30,7 +30,7 @@ if ($ship->hasCloak())
 		$container['action'] = 'Disable';
 		$PHP_OUTPUT.= create_button($container,'Disable');
 	}
-	$PHP_OUTPUT.= '<br><br>';
+	$PHP_OUTPUT.= '<br /><br />';
 }
 
 $PHP_OUTPUT.= '</small>';
@@ -48,7 +48,7 @@ if ($ship->hasIllusion())
 	$container['body'] = '';
 	$container['action'] = 'Set Illusion';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.= '<b>Illusion Generator:</b><br><br>';
+	$PHP_OUTPUT.= '<b>Illusion Generator:</b><br /><br />';
 	$PHP_OUTPUT.= '<table cellspacing="0" class="nobord">';
 	$PHP_OUTPUT.= '<tr><td>Ship:</td><td><select name="ship_id" size="1" id="InputFields">';
 

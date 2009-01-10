@@ -26,39 +26,51 @@ class Globals
 		if(self::$PLANET_BUILDINGS==null) //use cached if available
 		{
 			self::initialiseDatabase();
+			$db2 = new SmrMySqlDatabase();
 			$PLANET_BUILDINGS = array();
-			$result = self::$db->query('SELECT * FROM planet_buildings');
-			while(self::$db->next_record($result))
+			$result = self::$db->query('SELECT * FROM planet_construction');
+			while(self::$db->nextRecord($result))
 			{
-				$row = self::$db->getRow();
-				$PLANET_BUILDINGS[$row['building_id']]['Name'] = $row['name'];
-				$PLANET_BUILDINGS[$row['building_id']]['Area'] = array($row['area'],$row['metals'],$row['energy']);
-				$PLANET_BUILDINGS[$row['building_id']]['Max Amount'] = $row['max_amount'];
-				$PLANET_BUILDINGS[$row['building_id']]['Build Time'] = $row['build_time'];
-				$PLANET_BUILDINGS[$row['building_id']]['Credit Cost'] = $row['cost'];
+				$buildingID = self::$db->getField('building_id');
+				$PLANET_BUILDINGS[$buildingID]['Name'] = self::$db->getField('construction_name');
+//				$PLANET_BUILDINGS[$buildingID]['Area'] = array(self::$db->getField('area'),self::$db->getField('metals'),self::$db->getField('energy'));
+				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = self::$db->getField('max_construction');
 				
-				
-				$PLANET_BUILDINGS[$row['building_id']]['Goods'] = array();
-				$goodsResult = query('SELECT * FROM planet_building_goods_required WHERE building_id=' . $row['building_id']);
-				while($goodsRow = next_record($goodsResult))
+				$PLANET_BUILDINGS[$buildingID]['Build Time'] = 0;
+				$db2->query('SELECT * FROM planet_cost_credits WHERE building_id=' . $buildingID);
+				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$row['building_id']]['Goods'][$goodsRow['good_id']] = $goodsRow['amount'];
+					$PLANET_BUILDINGS[$buildingID]['Build Time'] += $db2->getField('amount');
 				}
 				
-				global $PLANET_RESEARCH;
-				$PLANET_BUILDINGS[$row['building_id']]['Research'] = array();
-				$researchResult = query('SELECT * FROM planet_building_research_required WHERE building_id=' . $row['building_id']);
-				while($researchRow = next_record($researchResult))
+				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = 0;
+				$db2->query('SELECT * FROM planet_cost_credits WHERE building_id=' . $buildingID);
+				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$row['building_id']]['Research'][$PLANET_RESEARCH[$researchRow['research_id']]['Name']] = $researchRow['amount'];
+					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += $db2->getField('amount');
 				}
 				
-				$PLANET_BUILDINGS[$row['building_id']]['Unlocks'] = array();
-				$unlocksResult = query('SELECT * FROM planet_building_unlocks WHERE building_id=' . $row['building_id']);
-				while($unlocksRow = next_record($unlocksResult))
+				$PLANET_BUILDINGS[$buildingID]['Goods'] = array();
+				$db2->query('SELECT * FROM planet_cost_good WHERE building_id=' . $buildingID);
+				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$row['building_id']]['Unlocks'][$unlocksRow['unlock_id']] = $unlocksRow['amount'];
+					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getField('good_id')] = $db2->getField('amount');
 				}
+				
+//				global $PLANET_RESEARCH;
+//				$PLANET_BUILDINGS[$buildingID]['Research'] = array();
+//				$researchResult = query('SELECT * FROM planet_building_research_required WHERE building_id=' . $buildingID);
+//				while($researchRow = next_record($researchResult))
+//				{
+//					$PLANET_BUILDINGS[$buildingID]['Research'][$PLANET_RESEARCH[$researchRow['research_id']]['Name']] = $researchRow['amount'];
+//				}
+				
+//				$PLANET_BUILDINGS[$buildingID]['Unlocks'] = array();
+//				$unlocksResult = query('SELECT * FROM planet_building_unlocks WHERE building_id=' . $buildingID);
+//				while($unlocksRow = next_record($unlocksResult))
+//				{
+//					$PLANET_BUILDINGS[$buildingID]['Unlocks'][$unlocksRow['unlock_id']] = $unlocksRow['amount'];
+//				}
 				
 			}
 			self::$PLANET_BUILDINGS =& $PLANET_BUILDINGS;

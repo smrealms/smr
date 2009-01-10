@@ -33,7 +33,7 @@ if ($db->nf() > 0) {
 
     $PHP_OUTPUT.= 'Your alliance currently has ';
     $PHP_OUTPUT.= $db->nf();
-    $PHP_OUTPUT.= ' planets in the universe!<br><br>';
+    $PHP_OUTPUT.= ' planets in the universe!<br /><br />';
 	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Name</th><th>Owner</th><th>Sector<th>G</th><th>H</th><th>T</th><th>Shields</th><th>Drones</th><th>Supplies</th><th>Build</th></tr>';
 
 	$db2 = new SMR_DB();
@@ -77,7 +77,7 @@ if ($db->nf() > 0) {
 			if ($amount > 0) {
 				$PHP_OUTPUT.= '<span class="nowrap">' . $goods_cache[$id] . '</span>: ';
 				$PHP_OUTPUT.= $amount;
-				$PHP_OUTPUT.= '<br>';
+				$PHP_OUTPUT.= '<br />';
 				$supply = true;
 			}
 		}
@@ -91,7 +91,7 @@ if ($db->nf() > 0) {
 
 			$PHP_OUTPUT.= $planet->current_building_name;
 			
-			echof('<br>%d:%d:%d ',
+			echof('<br />%d:%d:%d ',
 				$planet->time_left / 3600 % 24,
 				$planet->time_left / 60 % 60,
 				$planet->time_left % 60

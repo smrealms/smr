@@ -155,7 +155,7 @@ elseif ($type == 'list') {
 	if (isset($var['closed_so_far']))
 		$PHP_OUTPUT.=('<input type=hidden name=closed_so_far value='.$var['closed_so_far'].'>');
 	$PHP_OUTPUT.=create_submit('Next Page No Disable');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Disable');
 	$PHP_OUTPUT.=('</form>');
 	
@@ -167,7 +167,7 @@ elseif ($type == 'list') {
 	
 	if ($host == $ip)
 		$host = 'unknown';
-	$PHP_OUTPUT.=(ip.'. Host: '.$host.'<br><br><br>');
+	$PHP_OUTPUT.=(ip.'. Host: '.$host.'<br /><br /><br />');
 	$db->query('SELECT * FROM account_has_ip WHERE ip = '.$db->escapeString($ip).' ORDER BY account_id');
 	$container = array();
 	$container['url'] = 'account_close.php';
@@ -216,7 +216,7 @@ elseif ($type == 'list') {
 	
 } elseif ($type == 'account_ips') {
 	
-	$PHP_OUTPUT.=('<center>Account '.$variable.' has had the following IPs at the following times.<br>');
+	$PHP_OUTPUT.=('<center>Account '.$variable.' has had the following IPs at the following times.<br />');
 	$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$variable);
 	if ($db2->next_record()) {
 		$ex = $db2->f('reason');
@@ -227,7 +227,7 @@ elseif ($type == 'list') {
 		$close_reason = $db2->f('reason');
 		$PHP_OUTPUT.=('This account is closed: '.$reason);
 	}
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 	$container = array();
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=create_echo_form($container);
@@ -270,7 +270,7 @@ elseif ($type == 'list') {
 	$db2->query('SELECT * FROM alliance WHERE alliance_id = '.$alliance.' AND game_id = '.$game);
 	$db2->next_record();
 	$name = stripslashes($db2->f('alliance_name'));
-	$PHP_OUTPUT.=('<center>Listing all IPs for alliance '.$name.' in game with ID '.$game.'<br><br>');
+	$PHP_OUTPUT.=('<center>Listing all IPs for alliance '.$name.' in game with ID '.$game.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	echo_table();
 	$PHP_OUTPUT.=('<tr><th align=center>Account ID</th>');
@@ -338,7 +338,7 @@ elseif ($type == 'list') {
 		$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
 		$container = array();
 		$container['url'] = 'account_close.php';
-		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br><br>');
+		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
 		$PHP_OUTPUT.=create_echo_form($container);
 		echo_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Account ID</th>');
@@ -408,7 +408,7 @@ elseif ($type == 'list') {
 		$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
 		$container = array();
 		$container['url'] = 'account_close.php';
-		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br><br>');
+		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
 		$PHP_OUTPUT.=create_echo_form($container);
 		echo_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Account ID</th>');
@@ -505,7 +505,7 @@ elseif ($type == 'list') {
 	$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
 	$container = array();
 	$container['url'] = 'account_close.php';
-	$PHP_OUTPUT.=('<center>Listing all IPs for ingame names '.$variable.'<br><br>');
+	$PHP_OUTPUT.=('<center>Listing all IPs for ingame names '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	echo_table();
 	echo'<tr>
@@ -598,7 +598,7 @@ elseif ($type == 'list') {
 	$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
 	$container = array();
 	$container['url'] = 'account_close.php';
-	$PHP_OUTPUT.=('<center>Listing all IPs for logins '.$variable.'<br><br>');
+	$PHP_OUTPUT.=('<center>Listing all IPs for logins '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	echo_table();
 	echo'<tr>
@@ -666,7 +666,7 @@ elseif ($type == 'list') {
 
 	$container = array();
 	$container['url'] = 'account_close.php';
-	$PHP_OUTPUT.=('<center>Listing all IPs LIKE '.$variable.'<br><br>');
+	$PHP_OUTPUT.=('<center>Listing all IPs LIKE '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	echo_table();
 	echo'<tr>
@@ -734,7 +734,7 @@ elseif ($type == 'list') {
 
 	$container = array();
 	$container['url'] = 'account_close.php';
-	$PHP_OUTPUT.=('<center>Listing all hosts LIKE '.$variable.'<br><br>');
+	$PHP_OUTPUT.=('<center>Listing all hosts LIKE '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	echo_table();
 	echo'<tr>

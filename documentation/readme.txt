@@ -144,7 +144,7 @@ Table of Content
 	To echo the form use the following lines:
 
 		$PHP_OUTPUT.=create_echo_form($container);
-		$PHP_OUTPUT.=('<textarea name="message" id="InputFields"></textarea><br>');
+		$PHP_OUTPUT.=('<textarea name="message" id="InputFields"></textarea><br />');
 		$PHP_OUTPUT.=create_submit('Send message');
 		$PHP_OUTPUT.=('</form>');
 
@@ -156,7 +156,7 @@ Table of Content
 	Without transfering the receiver_id in the above example you would use this:
 
 		$PHP_OUTPUT.=create_echo_form(create_container('message_send_processing.php', ''));
-		$PHP_OUTPUT.=('<textarea name="message" id="InputFields"></textarea><br>');
+		$PHP_OUTPUT.=('<textarea name="message" id="InputFields"></textarea><br />');
 		$PHP_OUTPUT.=create_submit('Send message');
 		$PHP_OUTPUT.=('</form>');
 

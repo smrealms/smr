@@ -57,7 +57,7 @@ if ($db->nf() > 0) {
 
 		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
-		$PHP_OUTPUT.=('<br>');
+		$PHP_OUTPUT.=('<br />');
 		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 				'account_id = '.$curr_player->getAccountID());
 		if ($db2->next_record()) {
@@ -104,14 +104,14 @@ if ($db->nf() > 0) {
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bounty_view.php';
 		$container['id'] = $curr_player->getAccountID();
-		$PHP_OUTPUT.=create_link($container, '<br><font color=yellow>View Bounty</font><br>');
+		$PHP_OUTPUT.=create_link($container, '<br /><font color=yellow>View Bounty</font><br />');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'hall_of_fame_player_detail.php';
 		$container['acc_id'] = $curr_player->getAccountID();
 		$container['game_id'] = $player->getGameID();
 		$container['sending_page'] = 'search';
-		$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br>');
+		$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
 		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 			$container=array();
 			$container['url'] = 'sector_jump_processing.php';
@@ -164,7 +164,7 @@ if (empty($player_id)) {
 	
 			$PHP_OUTPUT.=('<td>');
 			$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
-			$PHP_OUTPUT.=('<br>');
+			$PHP_OUTPUT.=('<br />');
 			$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$curr_player->getAccountID());
 			if ($db2->next_record()) {
@@ -211,14 +211,14 @@ if (empty($player_id)) {
 			$container['url'] = 'skeleton.php';
 			$container['body'] = 'bounty_view.php';
 			$container['id'] = $curr_player->getAccountID();
-			$PHP_OUTPUT.=create_link($container, '<br><font color=yellow>View Bounty</font><br>');
+			$PHP_OUTPUT.=create_link($container, '<br /><font color=yellow>View Bounty</font><br />');
 			$container = array();
 			$container['url'] = 'skeleton.php';
 			$container['body'] = 'hall_of_fame_player_detail.php';
 			$container['acc_id'] = $curr_player->getAccountID();
 			$container['game_id'] = $player->getGameID();
 			$container['sending_page'] = 'search';
-			$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br>');
+			$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
 			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 				$container=array();
 				$container['url'] = 'sector_jump_processing.php';

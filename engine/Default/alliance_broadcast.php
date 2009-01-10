@@ -11,13 +11,13 @@ $container['url'] = 'alliance_broadcast_processing.php';
 $container['alliance_id'] = $var['alliance_id'];
 $PHP_OUTPUT.= '<b>From: </b>';
 $PHP_OUTPUT.= $player->getPlayerName() . '(' . $player->getPlayerID();
-$PHP_OUTPUT.= ')<br><b>To:</b> Whole Alliance<br><br>';
+$PHP_OUTPUT.= ')<br /><b>To:</b> Whole Alliance<br /><br />';
 
 $form = create_form($container,'Send Message');
 
 $PHP_OUTPUT.= $form['form'];
 
-$PHP_OUTPUT.= '<textarea name=\'message\'></textarea><br><br>';
+$PHP_OUTPUT.= '<textarea name=\'message\'></textarea><br /><br />';
 
 $PHP_OUTPUT.= $form['submit'];
 

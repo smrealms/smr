@@ -31,7 +31,7 @@ if ($game['Credits'] > 0) {
 	// do we have enough
 	if ($have < $game['Credits']) {
 
-	    create_error('Sorry you dont have enough SMR Credits to play this game.<br>To get SMR credits you need to donate to SMR');
+	    create_error('Sorry you dont have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR');
 	    return;
 
 	}

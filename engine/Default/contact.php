@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','Report a Bug');
 
-$PHP_OUTPUT.=('<span style="font-size:75%;">Please use this form to either send your feedback or<br>');
+$PHP_OUTPUT.=('<span style="font-size:75%;">Please use this form to either send your feedback or<br />');
 $PHP_OUTPUT.=('questions to the admin team of Space Merchant Realms!</span>');
 
 $PHP_OUTPUT.=create_echo_form(create_container('contact_processing.php', ''));

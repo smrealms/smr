@@ -23,7 +23,7 @@ function category($name, $options, $row,&$PHP_OUTPUT) {
 		if (isset($two)) $PHP_OUTPUT.=('<input type=hidden name=mod[] value="'.$echo.'">');
 		$PHP_OUTPUT.=create_submit($one);
 		$PHP_OUTPUT.=('&nbsp;');
-		if ($i % 3 == 0) $PHP_OUTPUT.=('<br>');
+		if ($i % 3 == 0) $PHP_OUTPUT.=('<br />');
 		//unset vars for next sub cat
 		unset($one, $two);
 		
@@ -56,10 +56,10 @@ $PHP_OUTPUT.=('<div align=center>');
 
 $smarty->assign('PageTopic',$topic);
 
-$PHP_OUTPUT.=('Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) . '!<br>The Hall of Fame is a comprehensive ');
+$PHP_OUTPUT.=('Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) . '!<br />The Hall of Fame is a comprehensive ');
 $PHP_OUTPUT.=('list of player accomplishments.  Here you can view how players rank in many different ');
-$PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br>');
-$PHP_OUTPUT.=('The Hall of Fame is updated only once every 24 hours on midnight.<br>');
+$PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />');
+$PHP_OUTPUT.=('The Hall of Fame is updated only once every 24 hours on midnight.<br />');
 
 $PHP_OUTPUT.= create_table();
 $PHP_OUTPUT.=('<tr><th align=center>Category</th><th align=center width=60%>Subcategory</th></tr>');

@@ -14,10 +14,10 @@ $PHP_OUTPUT.= '<div align="center">';
 if (strlen($db->f('img_src')) && $db->f('img_src') != 'http://') {
 	$PHP_OUTPUT.= '<img class="alliance" src="';
 	$PHP_OUTPUT.= $db->f('img_src');
-	$PHP_OUTPUT.= '" alt="' . stripslashes($db->f('alliance_name')) . ' Banner"><br><br>';
+	$PHP_OUTPUT.= '" alt="' . stripslashes($db->f('alliance_name')) . ' Banner"><br /><br />';
 }
 
-$PHP_OUTPUT.= '<span class="yellow">Message from your leader</span><br><br>';
+$PHP_OUTPUT.= '<span class="yellow">Message from your leader</span><br /><br />';
 $PHP_OUTPUT.= $db->f('mod');
 
 $db->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
@@ -26,7 +26,7 @@ else $role_id = 0;
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
 $db->next_record();
 if ($db->f('change_mod') == 'TRUE' || $db->f('change_pass') == 'TRUE') {
-	$PHP_OUTPUT.= '<br><br>';
+	$PHP_OUTPUT.= '<br /><br />';
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'alliance_stat.php';

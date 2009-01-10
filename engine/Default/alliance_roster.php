@@ -85,7 +85,7 @@ $member_count = $db->f('alliance_member_count');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<div align="center">';
 $PHP_OUTPUT.= $db->f('description');
-$PHP_OUTPUT.= '<br><br>';
+$PHP_OUTPUT.= '<br /><br />';
 
 $PHP_OUTPUT.= '
 <table cellspacing="0" cellpadding="0" class="standard inset">
@@ -116,9 +116,9 @@ $PHP_OUTPUT.= '
 	</tr>
 </table>';
 
-$PHP_OUTPUT.= '</div><br>';
+$PHP_OUTPUT.= '</div><br />';
 
-$PHP_OUTPUT.= '<h2>Current Members</h2><br>';
+$PHP_OUTPUT.= '<h2>Current Members</h2><br />';
 
 $PHP_OUTPUT.= '<div align="center">';
 
@@ -261,13 +261,13 @@ if ($player->getAllianceID() == 0) {
 
 	// Newbie alliance is unlimited members, * means no new members allowed
 	if (($member_count < 30 || $alliance_id==302) && $password != '*') {
-		$PHP_OUTPUT.= '<br>';
+		$PHP_OUTPUT.= '<br />';
 		$container = array();
 		$container['url'] = 'alliance_join_processing.php';
 		$container['alliance_id'] = $alliance_id;
 		$form = create_form($container, 'Join');
 		$PHP_OUTPUT.= $form['form'];
-		$PHP_OUTPUT.= 'Enter password to join alliance<br><br>';
+		$PHP_OUTPUT.= 'Enter password to join alliance<br /><br />';
 		$PHP_OUTPUT.= '<input type="password" name="password" size="30">&nbsp;';
 		$PHP_OUTPUT.= $form['submit'];
 		$PHP_OUTPUT.= '</form>';
@@ -276,7 +276,7 @@ if ($player->getAllianceID() == 0) {
 }
 
 if ($alliance_id == $player->getAllianceID()) {
-	$PHP_OUTPUT.= '<br><h2>Options</h2><br>';
+	$PHP_OUTPUT.= '<br /><h2>Options</h2><br />';
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'alliance_roster.php';

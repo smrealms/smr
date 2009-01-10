@@ -24,8 +24,8 @@ $PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" align="center"
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>Race</th>');
 $PHP_OUTPUT.=('<th>Vote</th>');
-$PHP_OUTPUT.=('<th>Our Relation<br>with them</th>');
-$PHP_OUTPUT.=('<th>Their Relation<br>with us</th>');
+$PHP_OUTPUT.=('<th>Our Relation<br />with them</th>');
+$PHP_OUTPUT.=('<th>Their Relation<br />with us</th>');
 $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM race ' .
 		   'WHERE race_id != '.$player->getRaceID().' AND ' .
@@ -150,7 +150,7 @@ if ($db->nf() > 0) {
 		$no_votes = $db2->nf();
 
 		$PHP_OUTPUT.=('<td align="center">'.$yes_votes.' / '.$no_votes.'</td>');
-		$PHP_OUTPUT.=('<td nowrap="nowrap"align="center">' . date('n/j/Y', $end_time) . '<br>' . date('g:i:s A', $end_time) . '</td>');
+		$PHP_OUTPUT.=('<td nowrap="nowrap"align="center">' . date('n/j/Y', $end_time) . '<br />' . date('g:i:s A', $end_time) . '</td>');
 		$PHP_OUTPUT.=('</form>');
 		$PHP_OUTPUT.=('</tr>');
 

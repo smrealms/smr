@@ -5,21 +5,21 @@ $smarty->assign('PageTopic','Anonymous accounts for '.$player->getPlayerName());
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();
 
-$PHP_OUTPUT.=('<br><br>');
+$PHP_OUTPUT.=('<br /><br />');
 $db->query('SELECT * FROM anon_bank WHERE owner_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 if ($db->nf()) {
 
-    $PHP_OUTPUT.=('You own the following accounts<br><br>');
+    $PHP_OUTPUT.=('You own the following accounts<br /><br />');
 	while ($db->next_record()) {
 
 		$acc_id = $db->f('anon_id');
     	$pass = $db->f('password');
-	    $PHP_OUTPUT.=('Account <font color=yellow>'.$acc_id.'</font> with password <font color=yellow>'.$pass.'</font><br>');
+	    $PHP_OUTPUT.=('Account <font color=yellow>'.$acc_id.'</font> with password <font color=yellow>'.$pass.'</font><br />');
 
     }
 
 } else
-	$PHP_OUTPUT.=('You own no anonymous accounts<br>');
+	$PHP_OUTPUT.=('You own no anonymous accounts<br />');
 
 $time = time();
 $db->lock('player_has_ticket');
@@ -87,14 +87,14 @@ $time_rem = '<b>'.$days.' Days, '.$hours.' Hours, '.$mins.' Minutes, and '.$secs
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .
 			$player->getAccountID().' AND time > 0');
 $tickets = $db->nf();
-$PHP_OUTPUT.=('<br>You own <font color=yellow>'.$tickets.'</font> Lotto Tickets.<br>There are '.$time_rem.' remaining until the drawing.');
+$PHP_OUTPUT.=('<br />You own <font color=yellow>'.$tickets.'</font> Lotto Tickets.<br />There are '.$time_rem.' remaining until the drawing.');
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND time > 0');
 $tickets_tot = $db->nf();
 if ($tickets_tot > 0) {
 	
 	$chance = round(($tickets / $tickets_tot) * 100,2);
-	$PHP_OUTPUT.=('<br>Currently you have a '.$chance.' % chance to win.');
-	$PHP_OUTPUT.=('<br>');
+	$PHP_OUTPUT.=('<br />Currently you have a '.$chance.' % chance to win.');
+	$PHP_OUTPUT.=('<br />');
 	
 }
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .

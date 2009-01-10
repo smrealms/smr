@@ -66,19 +66,19 @@ foreach($attackers as &$attacker)
 {
 	 $attackerShip =& $attacker->getShip();
 
-	 $PHP_OUTPUT.=($attacker->getLevelName().'<br>');
-	 $PHP_OUTPUT.=('<span style="color:yellow;">'.$attacker->getPlayerName().' ('.$attacker->getPlayerID().')</span><br>');
-	 $PHP_OUTPUT.=('Race: '.$attacker->getRaceName().'<br>');
-	 $PHP_OUTPUT.=('Level: '.$attacker->getLevelID().'<br>');
-	 $PHP_OUTPUT.=('Alliance: '.$attacker->getAllianceName().'<br><br>');
+	 $PHP_OUTPUT.=($attacker->getLevelName().'<br />');
+	 $PHP_OUTPUT.=('<span style="color:yellow;">'.$attacker->getPlayerName().' ('.$attacker->getPlayerID().')</span><br />');
+	 $PHP_OUTPUT.=('Race: '.$attacker->getRaceName().'<br />');
+	 $PHP_OUTPUT.=('Level: '.$attacker->getLevelID().'<br />');
+	 $PHP_OUTPUT.=('Alliance: '.$attacker->getAllianceName().'<br /><br />');
 	 $PHP_OUTPUT.=('<small>');
-	 $PHP_OUTPUT.=($attackerShip->getName().'<br>');
-	 $PHP_OUTPUT.=('Rating : ' . $attackerShip->getAttackRating() . '/' . $attackerShip->getDefenseRating() . '<br>');
-	 $PHP_OUTPUT.=('Shields : ' . $attackerShip->shield_low() . '-' . $attackerShip->shield_high() . '<br>');
-	 $PHP_OUTPUT.=('Armor : ' . $attackerShip->armor_low() . '-' . $attackerShip->armor_high() . '<br>');
-	 $PHP_OUTPUT.=('Hard Points: '.$attackerShip->getNumWeapons().'<br>');
+	 $PHP_OUTPUT.=($attackerShip->getName().'<br />');
+	 $PHP_OUTPUT.=('Rating : ' . $attackerShip->getAttackRating() . '/' . $attackerShip->getDefenseRating() . '<br />');
+	 $PHP_OUTPUT.=('Shields : ' . $attackerShip->shield_low() . '-' . $attackerShip->shield_high() . '<br />');
+	 $PHP_OUTPUT.=('Armor : ' . $attackerShip->armor_low() . '-' . $attackerShip->armor_high() . '<br />');
+	 $PHP_OUTPUT.=('Hard Points: '.$attackerShip->getNumWeapons().'<br />');
 	 $PHP_OUTPUT.=('Combat Drones: ' . $attackerShip->combat_drones_low() . '-' . $attackerShip->combat_drones_high());
-	 $PHP_OUTPUT.=('</small><br><br><br>');
+	 $PHP_OUTPUT.=('</small><br /><br /><br />');
 }
 
 $PHP_OUTPUT.=('</td>');
@@ -102,10 +102,10 @@ if ($player->forceNAPAlliance($forces_owner)) {
 
 }
 
-$PHP_OUTPUT.=('Mines: '.$forces->getMines().'<br>');
-$PHP_OUTPUT.=('Combat Drones: '.$forces->getCDs().'<br>');
-$PHP_OUTPUT.=('Scouts: '.$forces->getSDs().'<br>');
-$PHP_OUTPUT.=('Alliance: '.$forces_owner->getAllianceName().'<br><br>');
+$PHP_OUTPUT.=('Mines: '.$forces->getMines().'<br />');
+$PHP_OUTPUT.=('Combat Drones: '.$forces->getCDs().'<br />');
+$PHP_OUTPUT.=('Scouts: '.$forces->getSDs().'<br />');
+$PHP_OUTPUT.=('Alliance: '.$forces_owner->getAllianceName().'<br /><br />');
 
 
 $PHP_OUTPUT.=('</td>');

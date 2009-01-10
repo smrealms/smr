@@ -18,7 +18,7 @@ $container['game_id']	= $var['game_id'];
 $PHP_OUTPUT.=create_echo_form($container);
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
-$PHP_OUTPUT.=('<p>Please select the account to add:<br><br>');
+$PHP_OUTPUT.=('<p>Please select the account to add:<br /><br />');
 
 $db2 = new SMR_DB();
 
@@ -58,12 +58,12 @@ if ($db->next_record()) {
 	$readonly = ' readonly';
 
 }
-$PHP_OUTPUT.=('</select><br><br><br>');
+$PHP_OUTPUT.=('</select><br /><br /><br />');
 
-$PHP_OUTPUT.=('Player Name:<br><br>');
-$PHP_OUTPUT.=('<input type="text" name="player_name" value="'.$player_name.'" id="InputFields" style="padding-left:10px;"'.$readonly.'><br><br><br>');
+$PHP_OUTPUT.=('Player Name:<br /><br />');
+$PHP_OUTPUT.=('<input type="text" name="player_name" value="'.$player_name.'" id="InputFields" style="padding-left:10px;"'.$readonly.'><br /><br /><br />');
 
-$PHP_OUTPUT.=('Player Race:<br><br>');
+$PHP_OUTPUT.=('Player Race:<br /><br />');
 
 $PHP_OUTPUT.=('<select name="race_id" id="InputFields" style="padding-left:10px;">');
 //this prevents multiple races appearing when there is more than 1 game
@@ -97,7 +97,7 @@ while ($db->next_record()) {
 	$PHP_OUTPUT.=('<option value="'.$race_id.'"'.$selected.'>'.$race_name.'</option>');
 
 }
-$PHP_OUTPUT.=('</select><br><br><br>');
+$PHP_OUTPUT.=('</select><br /><br /><br />');
 
 $PHP_OUTPUT.=('</p>');
 

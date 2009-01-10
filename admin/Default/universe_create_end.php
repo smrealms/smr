@@ -3,7 +3,7 @@
 $PHP_OUTPUT.=('<h1>CREATE UNIVERSE - FINISH</h1>');
 
 $PHP_OUTPUT.=('<p>Congratulations!</p>');
-$PHP_OUTPUT.=('<p>You successfully created a universe with all the stuff in it.<br>It still needs to be approved by MrSpock (noone will be able to join before that)</p>');
+$PHP_OUTPUT.=('<p>You successfully created a universe with all the stuff in it.<br />It still needs to be approved by MrSpock (noone will be able to join before that)</p>');
 $game_id = $var['game_id'];
 $db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES ' .
 			'(1,'.$game_id.',\'Game Admins\',\'One Alliance to Rule Them All\',\'*\',1,\'We are the Admins!\')');

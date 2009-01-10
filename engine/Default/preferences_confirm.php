@@ -25,7 +25,7 @@ if ($amount > $account->get_credits()) {
 
 $smarty->assign('PageTopic','Confirmation');
 
-$PHP_OUTPUT.=('Are you sure you want to transfer '.$amount.' credits to<br>');
+$PHP_OUTPUT.=('Are you sure you want to transfer '.$amount.' credits to<br />');
 
 $db->query('SELECT * FROM account WHERE account_id = '.$account_id);
 if ($db->next_record())
@@ -43,12 +43,12 @@ if ($db->nf()) {
     	if ($db2->next_record())
 			$game_name = $db2->f('game_name');
 
-		$PHP_OUTPUT.=($player_name.' in game '.$game_name.'('.$game_id.')<br>');
+		$PHP_OUTPUT.=($player_name.' in game '.$game_name.'('.$game_id.')<br />');
 
 	}
 
 } else
-	$PHP_OUTPUT.=('Player with login name '.$login.'?<br>');
+	$PHP_OUTPUT.=('Player with login name '.$login.'?<br />');
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 

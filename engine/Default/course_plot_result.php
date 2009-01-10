@@ -71,7 +71,7 @@ if ($next_sector == $sector->getLinkUp() ||
 	}
 }
 
-$PHP_OUTPUT.= '</td></tr></table><br><h2>Plotted Course</h2><br>';
+$PHP_OUTPUT.= '</td></tr></table><br /><h2>Plotted Course</h2><br />';
 $PHP_OUTPUT.= $full;
 
 ?>

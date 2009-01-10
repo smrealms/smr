@@ -9,9 +9,9 @@ $container['url'] = 'skeleton.php';
 
 $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard fullwidth"><tr><td style="width:50%" class="top">';
 
-$PHP_OUTPUT.= '<span class="yellow bold">Protection</span><br>';
+$PHP_OUTPUT.= '<span class="yellow bold">Protection</span><br />';
 if($player->getNewbieTurns()) {
-	$PHP_OUTPUT.= 'You are under <span class="green">NEWBIE</span> protection.<br><br>';
+	$PHP_OUTPUT.= 'You are under <span class="green">NEWBIE</span> protection.<br /><br />';
 
 	$container['body'] = 'leave_newbie.php';
 	$PHP_OUTPUT.=create_button($container, 'Leave Newbie Protection');
@@ -23,7 +23,7 @@ else {
 	$PHP_OUTPUT.= 'You are <span class="red">NOT</span> under protection.';
 }
 
-$PHP_OUTPUT.= '<br><br>';
+$PHP_OUTPUT.= '<br /><br />';
 
 $container['body'] = 'trader_relations.php';
 
@@ -38,18 +38,18 @@ AND player_has_relation.account_id=' . SmrSession::$account_id . '
 AND race.race_id=player_has_relation.race_id
 ORDER BY race.race_id LIMIT 8');
 
-$PHP_OUTPUT.= '<br>';
+$PHP_OUTPUT.= '<br />';
 while($db->next_record()) {
 	$PHP_OUTPUT.= $db->f('race_name');
 	$PHP_OUTPUT.= ' : ';
 	$PHP_OUTPUT.= get_colored_text($db->f('relation'), $db->f('relation'));
-	$PHP_OUTPUT.= '<br>';
+	$PHP_OUTPUT.= '<br />';
 }
-$PHP_OUTPUT.= '<br>';
+$PHP_OUTPUT.= '<br />';
 
 $container['body'] = 'council_list.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Politics</span>');
-$PHP_OUTPUT.= '<br>';
+$PHP_OUTPUT.= '<br />';
 
 include(get_file_loc('council.inc'));
 
@@ -66,11 +66,11 @@ else {
 	$PHP_OUTPUT.= 'You are <span class="red">NOT</span> a member of the ruling council.';
 }
 
-$PHP_OUTPUT.= '<br><br>';
+$PHP_OUTPUT.= '<br /><br />';
 
 $container['body'] = 'trader_savings.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Savings</span>');
-$PHP_OUTPUT.= '<br>You have <span class="yellow">';
+$PHP_OUTPUT.= '<br />You have <span class="yellow">';
 
 $PHP_OUTPUT.= number_format($player->getBank());
 $PHP_OUTPUT.= '</span> credits in your personal account.';
@@ -92,14 +92,14 @@ while($db->next_record()) {
 		$bounty[1] = $db->f('amount');
 	}
 }
-$PHP_OUTPUT.= '<br><span class="green">Federal: </span>';
+$PHP_OUTPUT.= '<br /><span class="green">Federal: </span>';
 if($bounty[0]) {
 	$PHP_OUTPUT.= number_format($bounty[0]);
 }
 else {
 	$PHP_OUTPUT.= 'None';
 }
-$PHP_OUTPUT.= '<br><span class="red">Underground: </span>';
+$PHP_OUTPUT.= '<br /><span class="red">Underground: </span>';
 if($bounty[1]) {
 	$PHP_OUTPUT.= number_format($bounty[1]);
 }
@@ -107,33 +107,33 @@ else {
 	$PHP_OUTPUT.= 'None';
 }
 
-$PHP_OUTPUT.= '<br><br><span class="yellow bold">Ship</span><br>Name: ';
+$PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><br />Name: ';
 
 $PHP_OUTPUT.= $ship->getName();
-$PHP_OUTPUT.= '<br>Speed: ';
+$PHP_OUTPUT.= '<br />Speed: ';
 $PHP_OUTPUT.= ($ship->getSpeed() * Globals::getGameSpeed($player->getGameID()));
-$PHP_OUTPUT.= ' turns/hour<br>Max: ';
+$PHP_OUTPUT.= ' turns/hour<br />Max: ';
 $PHP_OUTPUT.= $player->getMaxTurns();
-$PHP_OUTPUT.= ' turns<br><br><span class="yellow bold">Supported Hardware</span><br>';
+$PHP_OUTPUT.= ' turns<br /><br /><span class="yellow bold">Supported Hardware</span><br />';
 
-if ($ship->canHaveScanner()) $PHP_OUTPUT.= 'Scanner<br>';
-if ($ship->canHaveIllusion()) $PHP_OUTPUT.= 'Illusion Generator<br>';
-if ($ship->canHaveCloak()) $PHP_OUTPUT.= 'Cloaking Device<br>';
-if ($ship->canHaveJump()) $PHP_OUTPUT.= 'Jump Drive<br>';
-if ($ship->canHaveDCS()) $PHP_OUTPUT.= 'Drone Scrambler<br>';
+if ($ship->canHaveScanner()) $PHP_OUTPUT.= 'Scanner<br />';
+if ($ship->canHaveIllusion()) $PHP_OUTPUT.= 'Illusion Generator<br />';
+if ($ship->canHaveCloak()) $PHP_OUTPUT.= 'Cloaking Device<br />';
+if ($ship->canHaveJump()) $PHP_OUTPUT.= 'Jump Drive<br />';
+if ($ship->canHaveDCS()) $PHP_OUTPUT.= 'Drone Scrambler<br />';
 
 if (!$ship->canHaveScanner() &&
     !$ship->canHaveIllusion() &&
     !$ship->canHaveCloak() &&
     !$ship->canHaveJump() &&
-    !$ship->canHaveDCS()) $PHP_OUTPUT.= 'none<br>';
+    !$ship->canHaveDCS()) $PHP_OUTPUT.= 'none<br />';
 
-$PHP_OUTPUT.= '<br><a href="'.URL.'/level_requirements.php" target="_blank"><span class="yellow bold">Next Level</span></a><br />';
+$PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="_blank"><span class="yellow bold">Next Level</span></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
 $db->next_record();
 $PHP_OUTPUT.= $db->f('level_name') . ': ' . number_format($db->f('requirement')) . 'xp';
 
-$PHP_OUTPUT.= '<br><br>';
+$PHP_OUTPUT.= '<br /><br />';
 $container['body'] = 'rankings_view.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">User Ranking</span>');
 
@@ -141,9 +141,9 @@ $rank_id = $account->get_rank();
 
 $db->query('SELECT rankings_name FROM rankings WHERE rankings_id=' . $rank_id . ' LIMIT 1');
 $db->next_record();
-$PHP_OUTPUT.= '<br>You are ranked as a <span class="green">';
+$PHP_OUTPUT.= '<br />You are ranked as a <span class="green">';
 $PHP_OUTPUT.= $db->f('rankings_name');
-$PHP_OUTPUT.= '</span> player.<br><br>';
+$PHP_OUTPUT.= '</span> player.<br /><br />';
 $PHP_OUTPUT.= '</td></tr></table><br />';
 
 $container = array();

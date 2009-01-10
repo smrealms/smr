@@ -12,11 +12,11 @@ $db->query('SELECT message_text
 if (!$db->next_record())
 	create_error('Could not find the message you selected!');
 
-$PHP_OUTPUT.=('You have selected the following message:<br><br>');
+$PHP_OUTPUT.=('You have selected the following message:<br /><br />');
 $PHP_OUTPUT.=('<textarea id="InputFields" style="width:400px;height:300px;">' . stripslashes($db->f('message_text')) . '</textarea>');
 
-$PHP_OUTPUT.=('<p>Are you sure you want to notify this message to the admins?<br>');
-$PHP_OUTPUT.=('<small><b>Please note:</b> Abuse of this system could end in disablement<br>Therefore, please only notify if the message is inappropriate</small></p>');
+$PHP_OUTPUT.=('<p>Are you sure you want to notify this message to the admins?<br />');
+$PHP_OUTPUT.=('<small><b>Please note:</b> Abuse of this system could end in disablement<br />Therefore, please only notify if the message is inappropriate</small></p>');
 
 $container = create_container('message_notify_processing.php', '');
 transfer('message_id');

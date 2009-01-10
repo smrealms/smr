@@ -66,7 +66,7 @@ if ($db->next_record()) {
 
     $time = $db->f('time');
     $PHP_OUTPUT.=create_link($container, '<b>MAJOR NEWS! - ' . date('n/j/Y g:i:s A', $time) . '</b>');
-    $PHP_OUTPUT.=('<br><br>');
+    $PHP_OUTPUT.=('<br /><br />');
 
 }
 if (isset($var['breaking'])) {
@@ -84,7 +84,7 @@ if (isset($var['breaking'])) {
     $PHP_OUTPUT.=('<td align="left">'.$text.'</td>');
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('</table>');
-    $PHP_OUTPUT.=('<br><br>');
+    $PHP_OUTPUT.=('<br /><br />');
 
 }
 //display lottonews if we have it
@@ -103,7 +103,7 @@ while ($db->next_record()) {
     $PHP_OUTPUT.=('</td>');
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('</table>');
-	$PHP_OUTPUT.=('<br><br>');
+	$PHP_OUTPUT.=('<br /><br />');
 }
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND time > '.$curr_allowed.' AND type = \'regular\' ORDER BY news_id DESC');
 $player->updateLastNewsUpdate();

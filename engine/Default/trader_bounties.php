@@ -5,7 +5,7 @@ $smarty->assign('PageTopic','BOUNTIES');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();
 
-$PHP_OUTPUT.= 'Bounties awaiting collection.<br><br>';
+$PHP_OUTPUT.= 'Bounties awaiting collection.<br /><br />';
 
 $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard fullwidth"><tr><th>Federal</th><th>Underground</th></tr>';
 
@@ -36,7 +36,7 @@ if(count($bounties['HQ']) > 0) {
 		$PHP_OUTPUT.= ' : <span class="yellow">';
 		$PHP_OUTPUT.= number_format($bounty[1]);
 		$PHP_OUTPUT.= '</span>';
-		$PHP_OUTPUT.= '<br>';
+		$PHP_OUTPUT.= '<br />';
 	}
 }
 else {
@@ -51,7 +51,7 @@ if(count($bounties['UG']) > 0) {
 		$PHP_OUTPUT.= ' : <span class="yellow">';
 		$PHP_OUTPUT.= number_format($bounty[1]);
 		$PHP_OUTPUT.= '</span>';
-		$PHP_OUTPUT.= '<br>';
+		$PHP_OUTPUT.= '<br />';
 	}
 }
 else {

@@ -12,8 +12,8 @@ $u = 3;
 if (!isset($number) && !isset($var['number'])) {
 
     $PHP_OUTPUT.=create_echo_form($container);
-    $PHP_OUTPUT.=('How many player\'s info do you need to check?<br>');
-    $PHP_OUTPUT.=('<input type="text" name="number" maxlength="5" size="5" id="InputFields" style="text-align:center;"><br>');
+    $PHP_OUTPUT.=('How many player\'s info do you need to check?<br />');
+    $PHP_OUTPUT.=('<input type="text" name="number" maxlength="5" size="5" id="InputFields" style="text-align:center;"><br />');
     $PHP_OUTPUT.=create_submit('Next Page');
     $PHP_OUTPUT.=('</form>');
 
@@ -21,15 +21,15 @@ if (!isset($number) && !isset($var['number'])) {
 
     $PHP_OUTPUT.=create_form_parameter($container, 'name="form_inf"');
     $i = 0;
-    $PHP_OUTPUT.=('Enter the login names in the following boxes please.<br>');
+    $PHP_OUTPUT.=('Enter the login names in the following boxes please.<br />');
     while ($i < $number) {
 
         $PHP_OUTPUT.=('<input type="text" name="login['.$i.']" maxlength="35" size="35" id="InputFields" style="text-align:center;">');
         $i ++;
-        $PHP_OUTPUT.=('<br><br>');
+        $PHP_OUTPUT.=('<br /><br />');
 
     }
-    $PHP_OUTPUT.=('<br>');
+    $PHP_OUTPUT.=('<br />');
     $PHP_OUTPUT.=create_submit('Check');
     $PHP_OUTPUT.=('</form>');
 
@@ -65,8 +65,8 @@ if (!isset($number) && !isset($var['number'])) {
             $city = $db->f('city');
             $email = $db->f('email');
             $id = $db->f('account_id');
-            $PHP_OUTPUT.=('<td align="center">'.$aname.'<br>'.$name.'<br>Account:'.$id.'</td>');
-            $PHP_OUTPUT.=('<td align="center">'.$city.'<br>'.$email.'</td>');
+            $PHP_OUTPUT.=('<td align="center">'.$aname.'<br />'.$name.'<br />Account:'.$id.'</td>');
+            $PHP_OUTPUT.=('<td align="center">'.$city.'<br />'.$email.'</td>');
 			//check who they match...first find out the method.
             $db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
             if ($db2->next_record()) $reason = $db2->f('suspicion');
@@ -285,14 +285,14 @@ if (!isset($number) && !isset($var['number'])) {
             $db3->query('SELECT * FROM account_exceptions WHERE account_id = '.$account_wanted);
             if ($db3->next_record())
             	$value = $db3->f('reason');
-            $PHP_OUTPUT.=('<td align=center><input type="text" name="exception['.$account_wanted.']" value="$value" size="15" id="InputFields" disabled><br><input onclick=go(this,'.$u.') type="checkbox" name="account_id[]" value="'.$account_wanted.'"></td>');
+            $PHP_OUTPUT.=('<td align=center><input type="text" name="exception['.$account_wanted.']" value="$value" size="15" id="InputFields" disabled><br /><input onclick=go(this,'.$u.') type="checkbox" name="account_id[]" value="'.$account_wanted.'"></td>');
             $u += 2;
             $value2 = 'Check Box Below';
             $db3->query('SELECT * FROM account_is_closed NATURAL JOIN closing_reason WHERE account_id = '.$account_wanted);
             if ($db3->next_record())
             	$value2 = $db3->f('reason');
             $PHP_OUTPUT.=('<td align="center">');
-            $PHP_OUTPUT.=('<input type=text name="ban['.$account_wanted.']" value="'.$value2.'" size=15 id=Inputfields disabled><br><input type=checkbox name="bancheck[]" value="'.$account_wanted.'" onclick=go2(this,'.$u.')>');
+            $PHP_OUTPUT.=('<input type=text name="ban['.$account_wanted.']" value="'.$value2.'" size=15 id=Inputfields disabled><br /><input type=checkbox name="bancheck[]" value="'.$account_wanted.'" onclick=go2(this,'.$u.')>');
             $PHP_OUTPUT.=('&nbsp;');
             $PHP_OUTPUT.=('</td>');
             $u += 2;

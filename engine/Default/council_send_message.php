@@ -16,11 +16,11 @@ $container['url'] = 'council_send_message_processing.php';
 transfer('race_id');
 
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<p><small><b>From:</b> '.$player->getPlayerName().' ('.$player->getPlayerID().')<br>');
+$PHP_OUTPUT.=('<p><small><b>From:</b> '.$player->getPlayerName().' ('.$player->getPlayerID().')<br />');
 
 $PHP_OUTPUT.=('<b>To:</b> Ruling Council of '.$race_name.'</small></p>');
 
-$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br><br>');
+$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br /><br />');
 $PHP_OUTPUT.=create_submit('Send message');
 $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('</p>');

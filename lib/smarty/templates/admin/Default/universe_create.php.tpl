@@ -88,7 +88,7 @@
 </form>
 
 {if $DisabledGames}
-	<p>The following games haven\'t been approved yet, but are in the database!<br>
+	<p>The following games haven\'t been approved yet, but are in the database!<br />
 		So they are <b>NOT</b> visible on the Game-Play Page!
 	</p>
 		<ul>

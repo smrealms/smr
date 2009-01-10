@@ -8,7 +8,7 @@ if (empty($_REQUEST['acct_game'])) {
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'anon_acc_view.php';
-	$PHP_OUTPUT.=('What account would you like to view? (account_id/game_id)<br>');
+	$PHP_OUTPUT.=('What account would you like to view? (account_id/game_id)<br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('<input type=text name=acct_game value="120/5">');
 	$PHP_OUTPUT.=create_submit('Continue');

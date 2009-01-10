@@ -20,9 +20,10 @@ if ($action == 'Build') {
 	$name = $db->f('construction_name');
 	$account->log(11, 'Player starts a '.$name.' on planet.', $player->getSectorID());
 
-} elseif ($action == 'Cancel') {
-
-	$db->query('DELETE FROM planet_is_building WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
+}
+elseif ($action == 'Cancel')
+{
+	$planet->stopBuilding($var['construction_id']);
 	$account->log(11, 'Player cancels planet construction', $player->getSectorID());
 
 }

@@ -43,8 +43,8 @@ $container['body'] = 'hall_of_fame_new.php';
 if (isset($game_id))
 	$container['game_id'] = $game_id;
 $PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
-$PHP_OUTPUT.=('<br>');
-$PHP_OUTPUT.=('Here are the ranks of players by '.$cat.' '.$action.'<br><br>');
+$PHP_OUTPUT.=('<br />');
+$PHP_OUTPUT.=('Here are the ranks of players by '.$cat.' '.$action.'<br /><br />');
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.=('<tr><th align=center>Rank</th><th align=center>Player</th><th align=center>'.$cat.' '.$action.'</th></tr>');
 if ($cat == '<b>Money Donated to SMR</b>')

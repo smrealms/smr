@@ -49,7 +49,7 @@ $db2 = new SMR_DB();
 
 if (isset($location_type_id))
 {
-	$PHP_OUTPUT.=('<div align="center">We are at WAR with<br><br>');
+	$PHP_OUTPUT.=('<div align="center">We are at WAR with<br /><br />');
 	$db->query('SELECT * FROM race_has_relation WHERE game_id = '.$player->getGameID().' AND race_id_1 = '.$race_id);
 	while($db->next_record())
 	{
@@ -60,11 +60,11 @@ if (isset($location_type_id))
 		$db2->next_record();
 		$race_name = $db2->f('race_name');
 		if ($relation <= -300)
-			$PHP_OUTPUT.=('<span style="color:red;">The '.$race_name.'<br></span>');
+			$PHP_OUTPUT.=('<span style="color:red;">The '.$race_name.'<br /></span>');
 
 	}
 
-	$PHP_OUTPUT.=('<br>The government will PAY for the destruction of their ships!');
+	$PHP_OUTPUT.=('<br />The government will PAY for the destruction of their ships!');
 
 }
 
@@ -72,7 +72,7 @@ $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND ty
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 if ($db->nf())
 {
-	$PHP_OUTPUT.=('<div align="center">Most Wanted by Federal Government</div><br>');
+	$PHP_OUTPUT.=('<div align="center">Most Wanted by Federal Government</div><br />');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Player Name</th>');
@@ -99,7 +99,7 @@ $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND ty
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 if ($db->nf())
 {
-	$PHP_OUTPUT.=('<div align="center">Claimable Bounties</div><br>');
+	$PHP_OUTPUT.=('<div align="center">Claimable Bounties</div><br />');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Player Name</th>');

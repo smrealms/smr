@@ -46,7 +46,7 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 
 				<h1>Invalid eMail</h1>
 
-				<p>We detected that your eMail (<?php echo $account->email; ?>) is invalid!<br>
+				<p>We detected that your eMail (<?php echo $account->email; ?>) is invalid!<br />
 				Please enter a new one.</p>
 
 				<form action='email_processing.php' method='post'>

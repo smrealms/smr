@@ -28,7 +28,7 @@ if (isset($_REQUEST['action'])) {
 						(game_id,type,sector_id,timestamp,attacker_id,attacker_alliance_id,defender_id,defender_alliance_id,result,saved)
 						VALUES ' . $query);
 		}
-		$PHP_OUTPUT.=('<div align="center">' . count($log_ids) . ' logs have been saved.<br>');
+		$PHP_OUTPUT.=('<div align="center">' . count($log_ids) . ' logs have been saved.<br />');
 		//back to viewing
 		$var['action'] = $var['old_action'];
 	} elseif (!isset($_POST['id'])) $var['action'] = $var['old_action'];
@@ -180,7 +180,7 @@ if($action != 5) {
 		$PHP_OUTPUT.= $form['submit']['View'];
 		$PHP_OUTPUT.= '&nbsp';
 		$PHP_OUTPUT.= $form['submit']['Save'];
-		$PHP_OUTPUT.= '<br><br><table cellspacing="0" cellpadding="5" class="standard fullwidth">';
+		$PHP_OUTPUT.= '<br /><br /><table cellspacing="0" cellpadding="5" class="standard fullwidth">';
 		$PHP_OUTPUT.= '<tr><th>View</th><th>Date</th><th>Sector</th><th>Attacker</th><th>Defender</th></tr>';
 		while($db->next_record()) {
 			//attacker_id,defender_id,timestamp,sector_id,log_id

@@ -51,9 +51,9 @@ while ($db->next_record()) {
 						 	   'location_type.location_type_id = '.$location_type_id);
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b><br>');
+	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b><br />');
 	while ($db2->next_record())
-		$PHP_OUTPUT.=('<span style="font-size:65%;">' . $db2->f('ship_name') . '</span><br>');
+		$PHP_OUTPUT.=('<span style="font-size:65%;">' . $db2->f('ship_name') . '</span><br />');
 	$PHP_OUTPUT.=('</td>');
 	foreach ($galaxies as $galaxy_id => $galaxy_name)
 		$PHP_OUTPUT.=('<td align="center"><input type="input" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" style="text-align:center;"></td>');
