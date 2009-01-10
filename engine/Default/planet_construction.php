@@ -148,7 +148,7 @@ while ($db->next_record())
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	if (!$missing_good && !$missing_credits && !$planet->build() && $planet->getBuilding($construction_id) < $planet->max_construction[$construction_id])
+	if (!$missing_good && !$missing_credits && !$planet->isCurrentlyBuilding() && $planet->getBuilding($construction_id) < $planet->max_construction[$construction_id])
 	{
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
