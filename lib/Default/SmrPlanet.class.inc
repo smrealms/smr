@@ -18,7 +18,7 @@ class SmrPlanet
 	var $bonds;
 	var $maturity;
 	var $stockpile;
-	var $construction;
+	var $buildings;
 	var $max_construction;
 	var $inhabitable_time;
 	var $level;
@@ -157,18 +157,26 @@ class SmrPlanet
 	
 	public function getBuildings()
 	{
-		if(!isset($this->construction))
+		if(!isset($this->buildings))
 		{
-			$this->construction = array();
+			$this->buildings = array();
 			
-			// get constructions from db
+			// get buildingss from db
 			$this->db->query('SELECT * FROM planet_has_building WHERE game_id = '.$this->getGameID().' AND ' .
 																	 'sector_id = '.$this->getSectorID());
 			// adding building and amount to array
 			while ($this->db->nextRecord())
-				$this->construction[$this->db->getField('construction_id')] = $this->db->getField('amount');
+				$this->buildings[$this->db->getField('construction_id')] = $this->db->getField('amount');
 		}
-		return $this->construction;
+		return $this->buildings;
+	}
+	
+	public function getBuilding($buildingTypeID)
+	{
+		$buildings = $this->getBuildings();
+		if(isset($buildings[$buildingTypeID]))
+			return $buildings[$buildingTypeID];
+		return 0;
 	}
 	
 	public function getTotalBuildings()
@@ -195,7 +203,7 @@ class SmrPlanet
 				{
 					$this->db->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
 											 'sector_id = '.$this->getSectorID() . ' AND building_slot_id = ' . $this->db->getField('building_slot_id') . ' LIMIT 1');
-					$this->construction[$this->db->getField('construction_id')] += 1;
+					$this->getBuilding[$this->db->getField('construction_id')] += 1;
 					$this->update();
 				}
 				else
@@ -219,7 +227,7 @@ class SmrPlanet
 //			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 			$this->max_construction = array();
 	
-			// get constructions from db
+			// get buildingss from db
 			$this->db->query('SELECT * FROM planet_construction');
 			while ($this->db->nextRecord())
 			{
@@ -274,7 +282,7 @@ class SmrPlanet
 		}
 
 		// write building info
-		foreach ($this->construction as $id => $amount) {
+		foreach ($this->buildings as $id => $amount) {
 
 			if ($amount != 0)
 				$this->db->query('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
@@ -286,43 +294,40 @@ class SmrPlanet
 		}
 	}
 
-	function level() {
-
-		return number_format(($this->construction[1] +
-							  $this->construction[2] +
-							  $this->construction[3]) / 3, 2);
-
+	function level()
+	{
+		return number_format(($this->getBuilding(1) +
+							  $this->getBuilding(2) +
+							  $this->getBuilding(3)) / 3, 2);
 	}
 
-	function accuracy() {
-
+	function accuracy()
+	{
 		return round(25 + $this->level());
-
 	}
 
-	function stockpile_left($id) {
-
+	function stockpile_left($id)
+	{
 		return 600 - $this->stockpile[$id];
-
 	}
 
 	/**
-	 * Returns true if there is a construction in building
+	 * Returns true if there is a building in progress
 	 */
 	function build()
 	{
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
-	function start_construction($construction_id) {
-
+	function start_construction($construction_id)
+	{
 		// take the goods that are needed
 		$this->db->query('SELECT * FROM planet_cost_good, good ' .
 							  'WHERE planet_cost_good.good_id = good.good_id AND ' .
 									'construction_id = '.$construction_id.' ' .
 							  'ORDER BY good.good_id');
-		while ($this->db->nextRecord()) {
-
+		while ($this->db->nextRecord())
+		{
 			$good_id	= $this->db->getField('good_id');
 			$amount		= $this->db->getField('amount');
 
@@ -336,7 +341,7 @@ class SmrPlanet
 		if ($this->db->nextRecord())
 			$game_speed = $this->db->getField('game_speed');
 
-		// gets the time for the construction
+		// gets the time for the buildings
 		$this->db->query('SELECT * FROM planet_cost_time WHERE construction_id = '.$construction_id);
 		if ($this->db->nextRecord())
 			$time_complete = time() + round($this->db->getField('amount') / $game_speed);

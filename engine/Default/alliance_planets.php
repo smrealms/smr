@@ -60,11 +60,11 @@ if ($db->nf() > 0) {
 		$PHP_OUTPUT.= '&nbsp;(';
 		$PHP_OUTPUT.= $db->f('galaxy_name');
 		$PHP_OUTPUT.= ')</td><td class="shrink center">';
-		$PHP_OUTPUT.= $planet->construction[1];
+		$PHP_OUTPUT.= $planet->getBuilding(1);
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
-		$PHP_OUTPUT.= $planet->construction[2];
+		$PHP_OUTPUT.= $planet->getBuilding(2);
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
-		$PHP_OUTPUT.= $planet->construction[3];
+		$PHP_OUTPUT.= $planet->getBuilding(3);
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
 		$PHP_OUTPUT.= $planet->shields;
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
