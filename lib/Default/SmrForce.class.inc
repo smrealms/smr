@@ -504,7 +504,7 @@ class SmrForce
 			}
 		}
 		
-		$results['ForcesDestroyed'] = $this->exists();
+		$results['ForcesDestroyed'] = !$this->exists();
 		return $results;
 	}
 	
