@@ -15,7 +15,7 @@ interface Database
 	
 	public function getNumRows();
 	
-	public function insertId();
+	public function getInsertID();
 	
 	//  function free();
 	
