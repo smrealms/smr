@@ -40,20 +40,20 @@ Race : {$ThisPlayer->getRaceName()}<br />
 {if $ThisPlayer->hasNewbieTurns()}
 	Newbie Turns : <span class="{$NewbieTurnsColour}">{$ThisPlayer->getNewbieTurns()}</span><br />
 {/if}
-Credits : {$ThisPlayer->getCredits()}<br />
-Experience : {$ThisPlayer->getExperience()}<br />
+Credits : {$ThisPlayer->getCredits()|number_format}<br />
+Experience : {$ThisPlayer->getExperience()|number_format}<br />
 Level : {$ThisPlayer->getLevelID()}<br />
 Next Level :<br />
-<img src="images/bar_left.gif" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" />
-<img src="images/blue.gif" style="width:{$ThisPlayer->getNextLevelPercentAcquired()}px;height:10px;" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" />
-<img src="images/bar_border.gif" style="width:{$ThisPlayer->getNextLevelPercentRemaining()}px;height:10px;" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" />
-<img src="images/bar_right.gif" title="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" alt="{$ThisPlayer->getExperience()}/{$ThisPlayer->getNextLevelExperience()}" /><br />
-Alignment : {$ThisPlayer->getAlignment()}<br />
-Alliance : {$ThisPlayer->getAllianceName()}{if $ThisPlayer->hasAlliance()} ({$ThisPlayer->getAllianceID()}){/if}<br />
+<img src="images/bar_left.gif" title="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" alt="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" />
+<img src="images/blue.gif" style="width:{$ThisPlayer->getNextLevelPercentAcquired()}px;height:10px;" title="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" alt="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" />
+<img src="images/bar_border.gif" style="width:{$ThisPlayer->getNextLevelPercentRemaining()}px;height:10px;" title="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" alt="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" />
+<img src="images/bar_right.gif" title="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" alt="{$ThisPlayer->getExperience()|number_format}/{$ThisPlayer->getNextLevelExperience()|number_format}" /><br />
+Alignment : {$ThisPlayer->getAlignment()|number_format}<br />
+Alliance : {$ThisPlayer->getAllianceName()}{if $ThisPlayer->hasAlliance()} ({$ThisPlayer->getAllianceID()|number_format}){/if}<br />
 <br />
 <span id="ship_name"><a  href="{$ThisShip->getUpgradeShipHREF()}"><span class="yellow bold">{$ThisShip->getName()}</span></a></span><br />
 {if $PlayerShipCustomName}{$PlayerShipCustomName}<br />{/if}
-Rating : <span id="offense">{$ThisShip->getAttackRating()}</span>/<span id="defense">{$ThisShip->getDefenseRating()}</span><br />
+Rating : <span id="offense">{$ThisShip->getAttackRating()|number_format}</span>/<span id="defense">{$ThisShip->getDefenseRating()|number_format}</span><br />
 Shields : <span id="shields">{$ThisShip->getShields()}/{$ThisShip->getMaxShields()}</span><br />
 Armor : <span id="armor">{$ThisShip->getArmour()}/{$ThisShip->getMaxArmour()}</span><br />
 <a href="{$HardwareLink}">CIJSD</a> : {if $ThisShip->hasCloak()}*{else}-{/if}{if $ThisShip->hasIllusion()}*{else}-{/if}{if $ThisShip->hasJump()}*{else}-{/if}{if $ThisShip->hasScanner()}*{else}-{/if}{if $ThisShip->hasDCS()}*{else}-{/if}<br />
