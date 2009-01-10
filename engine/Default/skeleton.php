@@ -121,10 +121,8 @@ if (SmrSession::$game_id > 0)
 
 $container['body'] = 'donation.php';
 $smarty->assign('DonateLink',SmrSession::get_new_href($container));
-$PHP_OUTPUT='';
 
-include_once(get_file_loc($var['body']));
-$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
+
 
 if (SmrSession::$game_id != 0)
 {
@@ -323,6 +321,12 @@ $launch = mktime(0,0,0,3,12,2008);
 $now = time();
 if ($launch - $now > 0)
 	echo '<br />SMR 1.5 Launch in ' . format_time($launch - $now, TRUE) . '</span>!';
+
+
+$PHP_OUTPUT='';
+
+include_once(get_file_loc($var['body']));
+$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
 
 function format_time($seconds, $short=FALSE)
 {
