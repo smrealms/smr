@@ -104,6 +104,12 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage();
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces) / 100);
+		$damage['Kamikaze'] = 0;
+		if($weaponPlayer->isCombatDronesKamikazeOnMines()) // If kamikaze then damage is same as MINE_ARMOUR
+		{
+			$damage['Kamikaze'] = min($damage['Launched'],$forces->getMines());
+			$damage['Launched'] -= $damage['Kamikaze'];
+		}
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
@@ -112,6 +118,11 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+		
+		$damage['MaxDamage'] += $damage['Kamikaze'] * MINE_ARMOUR;
+		$damage['Shield'] += $damage['Kamikaze'] * MINE_ARMOUR;
+		$damage['Armour'] += $damage['Kamikaze'] * MINE_ARMOUR;
+			
 		return $damage;
 	}
 	
@@ -152,7 +163,12 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
 	{
 		$return = array('Weapon' => &$this, 'TargetForces' => &$forces, 'Hit' => true);
-		return $this->doPlayerDamageToForce($return,$weaponPlayer, $forces);
+		$this->doPlayerDamageToForce($return,$weaponPlayer, $forces);
+		if($return['WeaponDamage']['Kamikaze'] > 0)
+		{
+			$weaponPlayer->takeCDs($return['WeaponDamage']['Kamikaze']);
+		}
+		return $return;
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)

@@ -499,6 +499,16 @@ abstract class AbstractSmrPlayer
 		return get_colored_name('NA', $this->alignment, 'Game', 'Color');
 	}
 	
+	public function isCombatDronesKamikazeOnMines()
+	{
+		return $this->combatDronesKamikazeOnMines;
+	}
+	
+	public function setCombatDronesKamikazeOnMines($bool)
+	{
+		$this->combatDronesKamikazeOnMines = $bool;
+	}
+	
 	public abstract function getPastMaintBought();
 	public abstract function getPastMaintCredit();
 	public function getPastMaint()

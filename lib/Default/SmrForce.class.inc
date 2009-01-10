@@ -566,9 +566,10 @@ class SmrForce
 		return $actualDamage*SD_ARMOUR;
 	}
 	
-	public function killForcesByPlayer(AbstractSmrPlayer &$killer)
+	public function &killForcesByPlayer(AbstractSmrPlayer &$killer)
 	{
-		
+		$return = array();
+		return $return;
 	}
 }
 ?>
