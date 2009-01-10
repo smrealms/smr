@@ -1938,6 +1938,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->sameAlliance($otherPlayer);
 	}
 	
+	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
+	}
+	
 	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
