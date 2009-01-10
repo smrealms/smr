@@ -146,67 +146,27 @@ abstract class MySqlDatabase implements Database
 	
 	//below this is purely for compatibility reasons
   
-  function next_record() {
-
-    if(!$this->db_res) {
-      $this->error('No resource to get record from.');
-    }
-    
-    if($this->db_rec = @mysql_fetch_assoc($this->db_res)) {
-      return true;
-    }
-   
-    return false;
-    
-  }
+  function next_record() { return $this->nextRecord(); }
   
   
-  function f($name) {
-	  
-	  return($this->db_rec[$name]);
-	  
-  }
+  function f($name) { return $this->getField($name); }
   
-  function fetch_row() {
-	  
-	  return($this->db_rec);
-	  
-  }
+  function fetch_row() { return $this->getRow(); }
   
-  function lock($table) {
-	  
-	  if(!@mysql_query('LOCK TABLES ' . $table . ' WRITE', self::$dbConn)) {
-		  $this->error('Unable to lock table');
-	  }
-	  
-  }
+  function lock($table) { $this->lockTable($table); }
   
-  function nf() {
-	  
-	  return @mysql_num_rows($this->db_res);
-	  
-  }
+  function nf() { return $this->getNumRows(); }
   
-  function insert_id() {
-	  
-	  return @mysql_insert_id(self::$dbConn);
-	  
-  }
+  function insert_id() { $this->getInsertID(); }
   
-  function p($name) {
-	  return $this->f($name);
-  }
+  function p($name) { return $this->getField(); }
   
-  function np() {
-	  return $this->nf();
-  }
+  function np() { return $this->getNumRows(); }
   
-  function free() {
-	  
-  }
+  function free() { }
   
-  function escape_string($db_str, $transfer_html=false) {
-	  
+  function escape_string($db_str, $transfer_html=false)
+  {
 	  if ($transfer_html)
 		  return '\'' . mysql_escape_string(htmlentities($db_str)) . '\'';
 	  else
