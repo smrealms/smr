@@ -13,7 +13,7 @@ abstract class MySqlDatabase implements Database
 		if(!self::$dbConn)
 		{
 			if(!self::$dbConn = @mysql_connect($host, $user, $password)) {
-				$this->error('Connection failed.');        
+				$this->error('Connection failed.');
 			}
 		}
 		
@@ -31,9 +31,6 @@ abstract class MySqlDatabase implements Database
 		if(!$this->dbResult = @mysql_query($query, self::$dbConn)) {
 			$this->error('SQL query failed (' . $query . ')');
 		}
-		
-//	    if(preg_match('/lock/i',$query))
-//	  	  echo $query,'<br />';
 	}
 	
 	public function nextRecord()
@@ -113,7 +110,7 @@ abstract class MySqlDatabase implements Database
 			$escapedString = '';
 			foreach($string as $value)
 			{
-				$escapedString .= $this->escape_string($value, $quotes) .',';
+				$escapedString .= $this->escapeString($value, $quotes) .',';
 			}
 			return substr($escapedString,0,-1);
 		}
@@ -143,33 +140,43 @@ abstract class MySqlDatabase implements Database
 	
 	
 	//below this is purely for compatibility reasons
-  
-  function next_record() { return $this->nextRecord(); }
-  
-  
-  function f($name) { return $this->getField($name); }
-  
-  function fetch_row() { return $this->getRow(); }
-  
-  function lock($table) { $this->lockTable($table); }
-  
-  function nf() { return $this->getNumRows(); }
-  
-  function insert_id() { return $this->getInsertID(); }
-  
-  function p($name) { return $this->getField(); }
-  
-  function np() { return $this->getNumRows(); }
-  
-  function free() { }
-  
-  function escape_string($db_str, $transfer_html=false)
-  {
-	  if ($transfer_html)
-		  return '\'' . mysql_escape_string(htmlentities($db_str)) . '\'';
-	  else
-		  return '\'' . mysql_escape_string($db_str) . '\'';
-	  
-  }
+	
+	function next_record() { return $this->nextRecord(); }
+	
+	
+	function f($name) { return $this->getField($name); }
+	
+	function fetch_row() { return $this->getRow(); }
+	
+	function lock($table) { $this->lockTable($table); }
+	
+	function nf() { return $this->getNumRows(); }
+	
+	function insert_id() { return $this->getInsertID(); }
+	
+	function p($name) { return $this->getField(); }
+	
+	function np() { return $this->getNumRows(); }
+	
+	function free() { }
+	
+	function escape_string($string, $transfer_html=false)
+	{
+		
+		if(is_array($string))
+		{
+			$escapedString = '';
+			foreach($string as $value)
+			{
+				$escapedString .= $this->escape_string($value, $transfer_html) .',';
+			}
+			return substr($escapedString,0,-1);
+		}
+		
+		if ($transfer_html)
+			return '\'' . mysql_escape_string(htmlentities($string)) . '\'';
+		else
+			return '\'' . mysql_escape_string($string) . '\'';
+	}
 }
 ?>
