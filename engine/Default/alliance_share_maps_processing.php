@@ -51,7 +51,7 @@ while ($db->next_record())
 for ($i = $min_sector; $i <= $max_sector; $i++) {
 
 	// when it's not an unvisitted sector
-	if (!$unvisitted_sectors[$i]) {
+	if (!isset($unvisitted_sectors[$i]) || !$unvisitted_sectors[$i]) {
 
 		// it has to be a sector where we've already been
 		if ($visitted_sector_list)
