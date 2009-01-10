@@ -32,4 +32,4 @@
 {if $ForcesCombatResults.ForcesDestroyed}Forces are <span style="color:red;">DESTROYED!</span><br />{/if}
 
 {assign var=TotalDamage value=$ForcesCombatResults.TotalDamage}
-The forces {if $TotalDamage > 0}hit for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}do no damage this round.{/if}.
+The forces {if $TotalDamage > 0}hit for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}do no damage this round{/if}.
