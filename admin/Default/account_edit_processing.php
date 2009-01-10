@@ -56,15 +56,17 @@ if (!empty($donation)) {
 }
 if(!empty($_REQUEST['grant_credits']))
 {
+    $db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account_id);
+    if ($db->next_record())
+    	$amount_credits = $db->f('credits_left');
+    else
+    	$amount_credits = 0;
+    $new_amount = $amount_credits + $_REQUEST['grant_credits'];
+    $db->query('REPLACE INTO account_has_reward_credits (account_id, credits_left) VALUES ('.$account_id.', '.$new_amount.')');
 
-	    $db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account_id);
-	    if ($db->next_record())
-	    	$amount_credits = $db->f('credits_left');
-	    else
-	    	$amount_credits = 0;
-	    $new_amount = $amount_credits + $_REQUEST['grant_credits'];
-	    $db->query('REPLACE INTO account_has_reward_credits (account_id, credits_left) VALUES ('.$account_id.', '.$new_amount.')');
-
+	if (strlen($msg) > 9)
+		$msg .= 'and ';
+	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
 }
 
 if ($choise == 'pre_select' && $points > 0) {
