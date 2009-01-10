@@ -46,7 +46,7 @@ if ($db->nf() > 0) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
 		$PHP_OUTPUT.=('<td align="right">'.$planet->sector_id.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$planet_sector->galaxy_name.'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$planet_sector->getGalaxyName().'</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(1) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(2) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
@@ -131,7 +131,7 @@ if ($player->getAllianceID() != 0) {
 			$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
 			$PHP_OUTPUT.=('<td>'.$planet_owner->getPlayerName().'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$planet->sector_id.'</td>');
-			$PHP_OUTPUT.=('<td align="center">'.$planet_sector->galaxy_name.'</td>');
+			$PHP_OUTPUT.=('<td align="center">'.$planet_sector->getGalaxyName().'</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(1) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(2) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
