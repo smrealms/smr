@@ -30,7 +30,7 @@ while($db->next_record())
 	$good_id	= $db->f('good_id');
 	$good_name	= $db->f('good_name');
 
-	if (!$ship->hasCargo($good_id) && empty($planet->getStockpile($good_id))) continue;
+	if (!$ship->hasCargo($good_id) && !$planet->hasStockpile($good_id)) continue;
 
 	$container = array();
 	$container['url'] = 'planet_stockpile_processing.php';

@@ -159,6 +159,11 @@ class SmrPlanet
 		return 0;
 	}
 	
+	public function hasStockpile($goodID=false)
+	{
+		return $this->getStockpile($goodID) > 0;
+	}
+	
 	public function getBuildings()
 	{
 		if(!isset($this->buildings))
