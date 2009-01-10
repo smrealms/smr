@@ -363,33 +363,21 @@ class SmrPlanet
 
 	function startBuilding($constructor_id,$construction_id)
 	{
+		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 		// take the goods that are needed
-		$this->db->query('SELECT * FROM planet_cost_good, good ' .
-							  'WHERE planet_cost_good.good_id = good.good_id AND ' .
-									'construction_id = '.$construction_id.' ' .
-							  'ORDER BY good.good_id');
-		while ($this->db->nextRecord())
+		foreach($PLANET_BUILDINGS[$construction_id]['Goods'] as $goodID => $amount)
 		{
-			$good_id	= $this->db->getField('good_id');
-			$amount		= $this->db->getField('amount');
-
-			$this->decreaseStockpile($good_id,$amount);
+			$this->decreaseStockpile($goodID,$amount);
 		}
 
 		$this->update();
 
-		// get game speed
-		$this->db->query('SELECT * FROM game WHERE game_id = '.$this->game_id);
-		if ($this->db->nextRecord())
-			$game_speed = $this->db->getField('game_speed');
-
+	
 		// gets the time for the buildings
-		$this->db->query('SELECT * FROM planet_cost_time WHERE construction_id = '.$construction_id);
-		if ($this->db->nextRecord())
-			$time_complete = time() + round($this->db->getField('amount') / $game_speed);
+		$time_complete = TIME + round($PLANET_BUILDINGS[$construction_id]['Build Time'] / Globals::getGameSpeed($this->getGameID()));
 
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
-													'VALUES ('.$this->game_id.', '.$this->sector_id.', '.$construction_id.', '.$constructor_id.','.$time_complete.')');
+													'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$construction_id.', '.$constructor_id.','.$time_complete.')');
 		
 		$this->currentlyBuilding[$this->db->getInsertID()] = array(
 				'BuildingSlotID' => $this->db->getInsertID(),
