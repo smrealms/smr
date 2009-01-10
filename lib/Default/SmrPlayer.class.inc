@@ -55,6 +55,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $mining;
 	protected $plottedCourse;
 	protected $nameChanged;
+	protected $combatDronesKamikazeOnMines;
 	
 	protected $examineTraderHREF;
 	protected $attackTraderHREF;
@@ -138,50 +139,51 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		if($result)
 		{
-			$this->accountID				= (int) $result['account_id'];
-			$this->gameID					= (int) $result['game_id'];
-			$this->playerName				= (string) $result['player_name'];
-			$this->playerID					= (int) $result['player_id'];
-			$this->sectorID					= (int) $result['sector_id'];
-			$this->lastSectorID				= (int) $result['last_sector_id'];
-			$this->turns					= (int) $result['turns'];
-			$this->originalMaintenance		= $this->turns;
-			$this->lastMaintenanceUpdate	= (int) $result['last_turn_update'];
-			$this->newbieTurns				= (int) $result['newbie_turns'];
-			$this->lastShipMod				= (int) $result['last_ship_mod'];
-			$this->lastNewsUpdate			= (int) $result['last_news_update'];
-			$this->stunned					= (int) $result['stunned'];
-			$this->fleed					= $result['fleed']=='TRUE';
-			$this->attackColor				= (string) $result['attack_warning'];
-			$this->dead						= $result['dead']=='TRUE';
-			$this->startDead				= $this->dead;
-			$this->landedOnPlanet			= $result['land_on_planet']=='TRUE';
-			$this->kicked					= $result['kicked']=='TRUE';
-			$this->lastShieldUpdate			= (int) $result['last_shield_update'];
-			$this->lastActive				= (int) $result['last_active'];
-			$this->lastCPLAction			= (int) $result['last_cpl_action'];
-			$this->raceID					= (int) $result['race_id'];
-			$this->credits					= (int) $result['credits'];
-			$this->experience				= (int) $result['experience'];
-			$this->alignment				= (int) $result['alignment'];
-			$this->militaryPayment			= (int) $result['military_payment'];
+			$this->accountID					= (int) $result['account_id'];
+			$this->gameID						= (int) $result['game_id'];
+			$this->playerName					= (string) $result['player_name'];
+			$this->playerID						= (int) $result['player_id'];
+			$this->sectorID						= (int) $result['sector_id'];
+			$this->lastSectorID					= (int) $result['last_sector_id'];
+			$this->turns						= (int) $result['turns'];
+			$this->originalMaintenance			= $this->turns;
+			$this->lastMaintenanceUpdate		= (int) $result['last_turn_update'];
+			$this->newbieTurns					= (int) $result['newbie_turns'];
+			$this->lastShipMod					= (int) $result['last_ship_mod'];
+			$this->lastNewsUpdate				= (int) $result['last_news_update'];
+			$this->stunned						= (int) $result['stunned'];
+			$this->fleed						= $result['fleed']=='TRUE';
+			$this->attackColor					= (string) $result['attack_warning'];
+			$this->dead							= $result['dead']=='TRUE';
+			$this->startDead					= $this->dead;
+			$this->landedOnPlanet				= $result['land_on_planet']=='TRUE';
+			$this->kicked						= $result['kicked']=='TRUE';
+			$this->lastShieldUpdate				= (int) $result['last_shield_update'];
+			$this->lastActive					= (int) $result['last_active'];
+			$this->lastCPLAction				= (int) $result['last_cpl_action'];
+			$this->raceID						= (int) $result['race_id'];
+			$this->credits						= (int) $result['credits'];
+			$this->experience					= (int) $result['experience'];
+			$this->alignment					= (int) $result['alignment'];
+			$this->militaryPayment				= (int) $result['military_payment'];
 //			$this->pastKnowledge = $result['past_knowledge'];
-			$this->governmentHelp			= (int) $result['government_help'];
-			$this->allianceID				= (int) $result['alliance_id'];
+			$this->governmentHelp				= (int) $result['government_help'];
+			$this->allianceID					= (int) $result['alliance_id'];
 //			$this->allianceJoinable = $result['alliance_join'];
-			$this->shipID					= (int) $result['ship_type_id'];
-			$this->kills					= (int) $result['kills'];
-			$this->deaths					= (int) $result['deaths'];
-			$this->lastPort					= (int) $result['last_port'];
-			$this->bank						= (int) $result['bank'];
-			$this->zoom						= (int) $result['zoom'];
+			$this->shipID						= (int) $result['ship_type_id'];
+			$this->kills						= (int) $result['kills'];
+			$this->deaths						= (int) $result['deaths'];
+			$this->lastPort						= (int) $result['last_port'];
+			$this->bank							= (int) $result['bank'];
+			$this->zoom							= (int) $result['zoom'];
 //			$this->zoomOn = $result['zoom_on']=='TRUE';
 //			$this->chat = $result['chat'];
 //			$this->chatPosition = $result['chat_position'];
-			$this->displayMissions			= $result['display_missions']=='TRUE';
-			$this->ignoreGlobals			= $result['ignore_globals']=='TRUE';
-			$this->newbieWarning			= $result['newbie_warning']=='TRUE';
-			$this->nameChanged				= $result['name_changed']=='TRUE';
+			$this->displayMissions				= $result['display_missions']=='TRUE';
+			$this->ignoreGlobals				= $result['ignore_globals']=='TRUE';
+			$this->newbieWarning				= $result['newbie_warning']=='TRUE';
+			$this->nameChanged					= $result['name_changed']=='TRUE';
+			$this->combatDronesKamikazeOnMines	= $result['combat_drones_kamikaze_on_mines']=='TRUE';
 //			$this->changedStats = $result['changed_stats'];
 
 
@@ -1540,6 +1542,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //				', changed_stats='.$this->db->escapeString($this->changedStats).
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).
 				', name_changed = ' . $this->db->escapeBoolean($this->nameChanged).
+				', combat_drones_kamikaze_on_mines = ' . $this->db->escapeBoolean($this->combatDronesKamikazeOnMines).
 				' WHERE '.$this->SQL.' LIMIT 1');
 			$this->hasChanged=false;
 		}

@@ -10,6 +10,4 @@ if(isset($var['override_death']))
 	$smarty->assign('OverrideDeath',true);
 else
 	$smarty->assign('OverrideDeath',false);
-
-$smarty->assign('Forced',$var['forced']);
 ?>

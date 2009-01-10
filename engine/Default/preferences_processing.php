@@ -118,6 +118,10 @@ else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQU
 	$account->fontsize = $_REQUEST['fontsize'];
 
 }
+else if ($action == 'Change Kamikaze Setting')
+{
+	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze']=='Yes');
+}
 else if ($action == 'Alter Player') {
 	
 	// disallow certain ascii chars

@@ -186,6 +186,23 @@ $PHP_OUTPUT.= '<td>';
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '</td></tr>';
 $PHP_OUTPUT.=('</form>');
+
+$container = array();
+$container['url'] = 'preferences_processing.php';
+$form = create_form($container, 'Change Kamikaze Setting');
+
+$PHP_OUTPUT.= $form['form'];
+
+$PHP_OUTPUT.= '<tr><td>Combat drones kamikaze on mines</td>';
+$PHP_OUTPUT.=('<td>Yes: <input type="radio" name="kamikaze" id="InputFields" value="Yes"');
+if ($player->isCombatDronesKamikazeOnMines()) $PHP_OUTPUT.=(' checked="checked"');
+$PHP_OUTPUT.=('><br />No: <input type="radio" name="kamikaze" id="InputFields" value="No"');
+if (!$player->isCombatDronesKamikazeOnMines()) $PHP_OUTPUT.=(' checked="checked"');
+$PHP_OUTPUT.= '></td>';
+$PHP_OUTPUT.= '<td>';
+$PHP_OUTPUT.= $form['submit'];
+$PHP_OUTPUT.= '</td></tr>';
+$PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</p>');
 
