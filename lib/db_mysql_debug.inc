@@ -19,7 +19,7 @@
 
     if ($this->lock($this->Seq_Table)) {
       /* get sequence number (locked) and increment */
-      $q  = sechof('select nextid from %s where seq_name = \'%s\'',
+      $q  = sprintf('select nextid from %s where seq_name = \'%s\'',
                 $this->Seq_Table,
                 $seq_name);
       $id  = @mysql_query($q, $this->Link_ID);
@@ -28,7 +28,7 @@
       /* No current value, make one */
       if (!is_array($res)) {
         $currentid = 0;
-        $q = sechof('insert into %s values(\'%s\', %s)',
+        $q = sprintf('insert into %s values(\'%s\', %s)',
                  $this->Seq_Table,
                  $seq_name,
                  $currentid);
@@ -37,7 +37,7 @@
         $currentid = $res['nextid'];
       }
       $nextid = $currentid + 1;
-      $q = sechof('update %s set nextid = \'%s\' where seq_name = \'%s\'',
+      $q = sprintf('update %s set nextid = \'%s\' where seq_name = \'%s\'',
                $this->Seq_Table,
                $nextid,
                $seq_name);

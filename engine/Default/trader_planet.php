@@ -3,10 +3,7 @@ require_once(LIB . 'global/smr_alliance.inc');
 require_once(get_file_loc('SmrPlanet.class.inc'));
 function echo_time($sek) {
 
-	$i = sechof('%d:%d:%d ',
-				 $sek / 3600 % 24,
-				 $sek / 60 % 60,
-				 $sek % 60);
+	$i = ($sek / 3600 % 24).':'.($sek / 60 % 60).':'.($sek % 60);
 	return $i;
 }
 

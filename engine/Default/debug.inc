@@ -115,7 +115,7 @@ echo 'TELL PAGE YOU SAW THIS MESSAGE (DEBUG)';
 //				$c = hexdec( $c );
 //				( $c += 15 ) > 255 and $c = 255;
 //				isset($tmp_key_bg_color) or $tmp_key_bg_color = '';
-//				$tmp_key_bg_color .= sechof( '%02X', $c );
+//				$tmp_key_bg_color .= sprintf( '%02X', $c );
 //			}
 //			$key_bg_color = $tmp_key_bg_color;
 //		}

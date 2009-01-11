@@ -68,7 +68,7 @@ if ($db->nf() != 0) {
 			}
 
 			$PHP_OUTPUT.= '<tr><td>';
-			$PHP_OUTPUT.= stripslashes(echof('player_name'));
+			$PHP_OUTPUT.= stripslashes($db->f('player_name'));
 			$PHP_OUTPUT.= '(';
 			$PHP_OUTPUT.= $db->f('player_id');
 			$PHP_OUTPUT.= ')</td><td class="shrink nowrap center" style="color:' . $color;
