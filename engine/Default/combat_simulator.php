@@ -67,13 +67,13 @@ if(isset($_REQUEST['run']))
 	foreach($realAttackers as $accountID => &$teamPlayer)
 	{
 		$playerResults =& $teamPlayer->shootPlayers($realDefenders);
-		$results['Attackers']['Traders'][$teamPlayer->getAccountID()] =& $playerResults;
+		$results['Attackers']['Traders'][] =& $playerResults;
 		$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 	} unset($teamPlayer);
 	foreach($realDefenders as $accountID => &$teamPlayer)
 	{
 		$playerResults =& $teamPlayer->shootPlayers($realAttackers);
-		$results['Defenders']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
+		$results['Defenders']['Traders'][]  =& $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 	} unset($teamPlayer);
 	$smarty->assign_by_ref('TraderCombatResults',$results);
