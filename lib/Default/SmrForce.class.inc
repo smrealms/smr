@@ -326,7 +326,7 @@ class SmrForce
 	{
 		if(!$this->isNew)
 		{
-			if ($this->exists())
+			if (!$this->exists())
 			{
 				$this->db->query('DELETE FROM sector_has_forces ' .
 							 'WHERE game_id = '.$this->gameID.' AND ' .
