@@ -182,7 +182,7 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.= '<tr><td class="center shrink">';
 		$PHP_OUTPUT.= $db->getField('transaction_id');
 		$PHP_OUTPUT.= '</td><td class="shrink center nowrap">';
-		$PHP_OUTPUT.= date('n/j/Y\<b\r /\>g:i:s A', $db->getField('time'));
+		$PHP_OUTPUT.= date(DATE_FULL_SHORT_SPLIT, $db->getField('time'));
 		$PHP_OUTPUT.= '</td><td>';
 		if ($db->getField('exempt')) $PHP_OUTPUT.= 'Alliance Funds c/o<br />';
 		$container['player_id']	= $db->getField('player_id');

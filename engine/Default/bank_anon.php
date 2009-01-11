@@ -295,7 +295,7 @@ if (isset($account_num))
 			$PHP_OUTPUT.= '<tr><td class="shrink center">';
 			$PHP_OUTPUT.= $db->getField('transaction_id');
 			$PHP_OUTPUT.= '</td><td class="shrink center nowrap">';
-			$PHP_OUTPUT.= date('n/j/Y\<b\r /\>g:i:s A', $db->getField('time'));
+			$PHP_OUTPUT.= date(DATE_FULL_SHORT_SPLIT, $db->getField('time'));
 			$PHP_OUTPUT.= '</td><td>';
 			$container['player_id']	= $db->getField('player_id');
 			$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('alignment'),stripslashes($db->getField('player_name'))));

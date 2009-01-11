@@ -238,9 +238,9 @@ $db->query('SELECT * FROM sector WHERE game_id = '.$game_id.' ORDER BY sector_id
 while ($db->nextRecord()) {
 	$id = $db->getField('sector_id');
 	//right now assume they visited now...since we have no ay of telling the last visit
-	$now = date('m/d/Y H:i:s', TIME);
+	$now = date(DATE_FULL_SHORT, TIME);
 	$timestamp = $now;
-	$PHP_OUTPUT.=('.$db->escapeString($id=$timestamp,');
+	$PHP_OUTPUT.=($id.'='.$timestamp);
 	if ($db->getField('link_up') > 0)
 		$PHP_OUTPUT.=('N');
 	if ($db->getField('link_right') > 0)
@@ -253,12 +253,12 @@ while ($db->nextRecord()) {
 	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND sector_id_1 = $id');
 	if ($db2->nextRecord()) {
 		$warp = $db2->getField('sector_id_2');
-		$PHP_OUTPUT.=('.$db->escapeString($warp');
+		$PHP_OUTPUT.=($warp);
 	}
 	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND sector_id_2 = $id');
 	if ($db2->nextRecord()) {
 		$warp = $db2->getField('sector_id_1');
-		$PHP_OUTPUT.=('.$db->escapeString($warp');
+		$PHP_OUTPUT.=($warp);
 	}
 	$PHP_OUTPUT.=(',');
 	$db2->query('SELECT * FROM port WHERE game_id = '.$game_id.' AND sector_id = $id');
@@ -267,7 +267,7 @@ while ($db->nextRecord()) {
 		$port_lvl = $db2->getField('level');
 	}
 	if (isset($port_race_id)) {
-		$PHP_OUTPUT.=('.$db->escapeString($port_race_id:$port_lvl');
+		$PHP_OUTPUT.=($port_race_id.':'.$port_lvl);
 		$db3->query('SELECT * FROM port_has_goods WHERE game_id = '.$game_id.' AND sector_id = $id ORDER BY good_id');
 		while ($db3->nextRecord()) {
 			$good_id = $db3->getField('good_id');
@@ -288,7 +288,7 @@ while ($db->nextRecord()) {
 		$add = 'LOC' . $loc_id;
 		if ($amount > 0)
 			$PHP_OUTPUT.=('+');
-		$PHP_OUTPUT.=('.$db->escapeString($add');
+		$PHP_OUTPUT.=($add);
 		$amount += 1;
 	}
 	$PHP_OUTPUT.=(',');
@@ -306,7 +306,7 @@ while ($db->nextRecord()) {
 			$alliance = stripslashes($db2->getField('alliance_name'));
 		} else
 			$alliance = 'None';
-		$PHP_OUTPUT.=('.$db->escapeString($level:$alliance');
+		$PHP_OUTPUT.=($level.':'.$alliance);
 	}
 	$PHP_OUTPUT.=(EOL);
 		

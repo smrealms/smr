@@ -290,7 +290,7 @@ function release_lock()
 function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 {
 	$smarty->assign('fontSize',$account->fontsize);
-	$smarty->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
+	$smarty->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
 	
 	$container = array();
 	$container['url'] = 'skeleton.php';

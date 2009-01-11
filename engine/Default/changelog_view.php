@@ -16,7 +16,7 @@ while ($db->nextRecord()) {
 
 	// get human readable format for date
 	if ($went_live > 0)
-		$went_live = date('m/d/Y - h:i A', $went_live);
+		$went_live = date(DATE_FULL_SHORT, $went_live);
 	else
 		$went_live = 'never';
 

@@ -21,7 +21,7 @@ while ($db->nextRecord()) {
 		$link_set_live = false;
 
 		// get human readable format for date
-		$went_live = date('m/d/Y - h:i A', $went_live);
+		$went_live = date(DATE_FULL_SHORT, $went_live);
 
 	} else {
 
