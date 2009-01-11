@@ -58,7 +58,7 @@ if ($planet->hasCurrentlyBuilding())
 	
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
-		$container['id'] = $building['ConstructionID'];
+		$container['construction_id'] = $building['ConstructionID'];
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('Cancel');
 		$PHP_OUTPUT.=('</form>');
