@@ -22,9 +22,9 @@ $list = '(';
 $time = TIME;
 while ($db->nextRecord())
 {
+	$time += 2;
 	$db2->query('UPDATE sector_has_forces SET refresh_at='.$time.', refresher='.$player->getAccountID() .' WHERE game_id = '.$player->getGameID().' AND sector_id = ' .
 		$player->getSectorID().' AND owner_id='.$db->getField('account_id').' LIMIT 1');
-	$time += 2;
 }
 $message = '[Force Check]'; //this notifies the CS to look for info.
 /*$db->query('REPLACE INTO sector_message (account_id, game_id, message) VALUES ' .
