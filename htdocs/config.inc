@@ -1,35 +1,5 @@
 <?
 	require_once('config.php');
-
-	// hardware
-	$SHIELDS		= 1;
-	$ARMOR			= 2;
-	$CARGO			= 3;
-	$COMBATDRONES	= 4;
-	$SCOUTDRONES	= 5;
-	$MINES			= 6;
-	$SCANNER		= 7;
-	$CLOAK			= 8;
-	$ILLUSION		= 9;
-	$JUMP			= 10;
-	$DCS			= 11;
-
-	// planet
-	$GENERATOR		= 1;
-	$HANGAR			= 2;
-	$TURRET			= 3;
-
-	// message types
-
-	// locations
-	$GOVERNMENT		= 101;
-	$UNDERGROUND	= 102;
-	$FED			= 201;
-	$RACIAL_SHIPS	= 400;
-	$RACIAL_SHOPS	= 900;
-	$RACE_WARS_SHIPS= 512;
-	$RACE_WARS_WEPS = 326;
-	$RACE_WARS_HARD = 607;
 	
 	//num races
 	$NUM_RACES = 8;

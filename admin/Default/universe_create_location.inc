@@ -70,10 +70,8 @@ function get_sector($game_id, $sector_id, $distance) {
 
 }
 
-function create_fed($game_id, $galaxy_id, $sector_id = 0) {
-
-	global $FED;
-
+function create_fed($game_id, $galaxy_id, $sector_id = 0)
+{
 	// database object
 	$db = new SmrMySqlDatabase();
 
@@ -120,7 +118,7 @@ function create_fed($game_id, $galaxy_id, $sector_id = 0) {
 			continue;
 
 		// put fed sector in for it
-		create_location($game_id, $galaxy_id, $FED, $curr_sector);
+		create_location($game_id, $galaxy_id, FED, $curr_sector);
 
 		// for every 4 possible exit sectors we loop over galaxy_map
 		for ($i = 0; $i < 4; $i++) {

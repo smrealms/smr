@@ -47,7 +47,7 @@ $PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">Headquarter</b></td>'
 foreach ($galaxies as $galaxy_id => $galaxy_name) {
 
 	$PHP_OUTPUT.=('<td>');
-	$PHP_OUTPUT.=('<select name="id['.$GOVERNMENT.']['.$galaxy_id.']" size="1">');
+	$PHP_OUTPUT.=('<select name="id['.GOVERNMENT.']['.$galaxy_id.']" size="1">');
 	$PHP_OUTPUT.=('<option value="1">[None]</option>');
 
 	foreach ($races as $race_id => $race_name) {
@@ -69,14 +69,14 @@ $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">Federal Space</b></td>');
 foreach ($galaxies as $galaxy_id => $galaxy_name)
-	$PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="id['.$FED.']['.$galaxy_id.']"></td>');
+	$PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="id['.FED.']['.$galaxy_id.']"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 // ug
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">Underground HQ</b></td>');
 foreach ($galaxies as $galaxy_id => $galaxy_name)
-	$PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="id['.$UNDERGROUND.']['.$galaxy_id.']"></td>');
+	$PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="id['.UNDERGROUND.']['.$galaxy_id.']"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size="1"></td></tr>');

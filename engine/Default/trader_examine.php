@@ -259,7 +259,7 @@ else $query .= ' AND alliance_id = 0';
 $query .= ' LIMIT ' . $limit;
 $db->query($query);
 while ($db->nextRecord()) $alliances[$db->getField('alliance_id')] = stripslashes($db->getField('alliance_name'));
-$db->query('SELECT * FROM location WHERE location_type_id = '.$FED.' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' LIMIT 1');
+$db->query('SELECT * FROM location WHERE location_type_id = '.FED.' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' LIMIT 1');
 if ($db->nextRecord()) $fedBeacon = TRUE;
 else $fedBeacon = FALSE;
 $attackingFleet = array();

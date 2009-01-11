@@ -1278,10 +1278,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function getHome()
 	{
-		global $GOVERNMENT;
-
 		// get his home sector
-		$hq_id = $GOVERNMENT + $this->getRaceID();
+		$hq_id = GOVERNMENT + $this->getRaceID();
 		$this->db->query('SELECT location.sector_id FROM location NATURAL JOIN sector ' .
 					 'WHERE location.game_id = '.$this->getGameID().' AND ' .
 						   'location_type_id = '.$hq_id.' LIMIT 1');
