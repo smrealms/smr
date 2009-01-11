@@ -154,7 +154,7 @@ abstract class MySqlDatabase implements Database
 	
 	function insert_id() { return $this->getInsertID(); }
 	
-	function p($name) { return $this->getField(); }
+	function p($name) { return $this->getField($name); }
 	
 	function np() { return $this->getNumRows(); }
 	
