@@ -32,12 +32,14 @@ class Globals
 			while(self::$db->nextRecord($result))
 			{
 				$buildingID = self::$db->getField('construction_id');
+				$PLANET_BUILDINGS[$buildingID]['ConstructionID'] = $buildingID;
 				$PLANET_BUILDINGS[$buildingID]['Name'] = self::$db->getField('construction_name');
+				$PLANET_BUILDINGS[$buildingID]['Description'] = self::$db->getField('construction_description');
 //				$PLANET_BUILDINGS[$buildingID]['Area'] = array(self::$db->getField('area'),self::$db->getField('metals'),self::$db->getField('energy'));
 				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = self::$db->getField('max_construction');
 				
 				$PLANET_BUILDINGS[$buildingID]['Build Time'] = 0;
-				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . $buildingID);
+				$db2->query('SELECT * FROM planet_cost_time WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
 					$PLANET_BUILDINGS[$buildingID]['Build Time'] += $db2->getField('amount');
