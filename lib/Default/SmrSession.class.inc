@@ -125,6 +125,9 @@ class SmrSession
 	{
 		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
 			return false;
+		if(isset(self::$var[$sn]['CommonID']))
+			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
+		
 		self::$var[$sn]['RemainingPageLoads'] = 1; // Allow refreshing
 		self::$var[$sn]['Expires'] = 0; // Allow refreshing forever
 		return self::$var[$sn];
