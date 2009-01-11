@@ -66,7 +66,7 @@ $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type
 if ($db->nextRecord()) {
 
     $time = $db->getField('time');
-    $PHP_OUTPUT.=create_link($container, '<b>MAJOR NEWS! - ' . date('n/j/Y g:i:s A', $time) . '</b>');
+    $PHP_OUTPUT.=create_link($container, '<b>MAJOR NEWS! - ' . date(DATE_FULL_SHORT, $time) . '</b>');
     $PHP_OUTPUT.=('<br /><br />');
 
 }
@@ -81,7 +81,7 @@ if (isset($var['breaking'])) {
     $PHP_OUTPUT.=('<th align="center"><span style="color:#80C870;">Breaking News</span></th>');
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('<tr>');
-    $PHP_OUTPUT.=('<td align="center"> ' . date('n/j/Y g:i:s A', $time) . ' </td>');
+    $PHP_OUTPUT.=('<td align="center"> ' . date(DATE_FULL_SHORT, $time) . ' </td>');
     $PHP_OUTPUT.=('<td align="left">'.$text.'</td>');
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('</table>');
@@ -98,7 +98,7 @@ while ($db->nextRecord()) {
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('<tr>');
     $time = $db->getField('time');
-    $PHP_OUTPUT.=('<td align="center"> ' . date('n/j/Y g:i:s A', $time) . ' </td>');
+    $PHP_OUTPUT.=('<td align="center"> ' . date(DATE_FULL_SHORT, $time) . ' </td>');
     $PHP_OUTPUT.=('<td align="left">' . $db->getField('news_message') . '</td>');
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('</table>');
@@ -123,7 +123,7 @@ if ($db->getNumRows()) {
         $news = stripslashes($db->getField('news_message'));
 
         $PHP_OUTPUT.=('<tr>');
-        $PHP_OUTPUT.=('<td align="center">' . date('n/j/Y g:i:s A', $time) . '</td>');
+        $PHP_OUTPUT.=('<td align="center">' . date(DATE_FULL_SHORT, $time) . '</td>');
         $PHP_OUTPUT.=('<td align="left">'.$news.'</td>');
         $PHP_OUTPUT.=('</tr>');
 

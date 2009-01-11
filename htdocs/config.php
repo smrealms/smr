@@ -15,6 +15,12 @@ define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 require_once('config.specific.php');
 
 /*
+ * Localisations
+ */
+define('DATE_FULL_SHORT','j/n/Y g:i:s A');
+ 
+ 
+/*
  * Combat system
  */
 define('MAXIMUM_FLEET_SIZE', 10);

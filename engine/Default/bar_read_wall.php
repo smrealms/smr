@@ -33,7 +33,7 @@ if ($db->getNumRows()) {
 		$message_on_wall = stripslashes($db->getField('message'));
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center"><b> ' . date('n/j/Y g:i:s A', $time) . ' </b></td>');
+		$PHP_OUTPUT.=('<td align="center"><b> ' . date(DATE_FULL_SHORT, $time) . ' </b></td>');
 		$PHP_OUTPUT.=('<td align="center"><b>'.$message_on_wall.'</b></td>');
 		$PHP_OUTPUT.=('</tr>');
 

@@ -124,7 +124,7 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
 		$PHP_OUTPUT.= $db->getField('mines');
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
-        $PHP_OUTPUT.= date('n/j/Y g:i:s A', $db->getField('expire_time'));
+        $PHP_OUTPUT.= date(DATE_FULL_SHORT, $db->getField('expire_time'));
         $PHP_OUTPUT.= '</td></tr>';
     }
 	$PHP_OUTPUT.= '</table>';

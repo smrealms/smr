@@ -146,7 +146,7 @@ if (!isset($account_num) && !isset($make)) {
 			$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
 
 			if($db2->nextRecord() && $db2->getField('MAX(time)')) {
-				$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db2->getField('MAX(time)'));
+				$PHP_OUTPUT.= date(DATE_FULL_SHORT, $db2->getField('MAX(time)'));
 			}
 			else {
 				$PHP_OUTPUT.= 'No transactions';

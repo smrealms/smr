@@ -32,7 +32,7 @@ while ($db->nextRecord()) {
 	$planet_damage = $db->getField('planet_damage');
 	$planet =& SmrPlanet::getPlanet($player->getGameID(),$db->getField('sector'));
 	$PHP_OUTPUT.=('Planet <span style=font-variant:small-caps>'.$planet->planet_name.'</span> is under attack by ' . $attacker->get_colored_name() . '<br />');
-	$PHP_OUTPUT.=('This shot was at ' . date('n/j/Y g:i:s A', $time) . '.  The attacking team did '.$att_damage.' damage ');
+	$PHP_OUTPUT.=('This shot was at ' . date(DATE_FULL_SHORT, $time) . '.  The attacking team did '.$att_damage.' damage ');
 	$PHP_OUTPUT.=('while the planet did '.$planet_damage.' damage<br /><br />');
 
 }

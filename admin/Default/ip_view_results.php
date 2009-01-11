@@ -191,7 +191,7 @@ elseif ($type == 'list') {
 		$db2->query('SELECT login FROM account WHERE account_id = '.$id);
 		$db2->nextRecord();
 		$login = $db2->getField('login');
-		$PHP_OUTPUT.=('<td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+		$PHP_OUTPUT.=('<td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td><input type=checkbox name=same_ip[] value='.$id.'></td>');
 		$PHP_OUTPUT.=('<td>');
 		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
@@ -244,7 +244,7 @@ elseif ($type == 'list') {
 		
 		if ($host == $ip)
 			$host = 'unknown';
-		$PHP_OUTPUT.=('<tr><td>'.$ip.'</td><td>'.$host.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td></tr>');
+		$PHP_OUTPUT.=('<tr><td>'.$ip.'</td><td>'.$host.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td></tr>');
 	}
 	$PHP_OUTPUT.=('</table>Reason:&nbsp;<input type=text name=rea value="Reason Here"><input type=hidden name=second value='.$variable.'>');
 	$PHP_OUTPUT.=create_submit('Disable Account');
@@ -300,7 +300,7 @@ elseif ($type == 'list') {
 		$db2->query('SELECT * FROM account WHERE account_id = '.$id);
 		$db2->nextRecord();
 		$login = $db2->getField('login');
-		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
 		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
 		if ($db2->nextRecord()) {
@@ -368,7 +368,7 @@ elseif ($type == 'list') {
 			$db2->query('SELECT * FROM account WHERE account_id = '.$id);
 			$db2->nextRecord();
 			$login = $db2->getField('login');
-			$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+			$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 			$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
 			if ($db2->nextRecord()) {
@@ -444,7 +444,7 @@ elseif ($type == 'list') {
 			$names = array();
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
-			$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+			$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 			$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td>');
 			$a = 1;
 			foreach ($names as $echoed) {
@@ -541,7 +541,7 @@ elseif ($type == 'list') {
 			$names = array();
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
-		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td>');
 		$a = 1;
 		foreach ($names as $echoed) {
@@ -631,7 +631,7 @@ elseif ($type == 'list') {
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
 		$host = gethostbyaddr($ip);
-		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td>');
 		$a = 1;
 		foreach ($names as $echoed) {
@@ -699,7 +699,7 @@ elseif ($type == 'list') {
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
 		$host = gethostbyaddr($ip);
-		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td>');
 		$a = 1;
 		foreach ($names as $echoed) {
@@ -767,7 +767,7 @@ elseif ($type == 'list') {
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
 		$host = gethostbyaddr($ip);
-		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date('n/j/Y g:i:s A',$time) . '</td>');
+		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td>');
 		$a = 1;
 		foreach ($names as $echoed) {

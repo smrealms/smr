@@ -23,7 +23,7 @@ while ($db2->nextRecord()) {
 
 	$time = $db2->getField('time');
 	$news = $db2->getField('message');
-	$PHP_OUTPUT.=('<tr><td>' . date('n/j/Y g:i:s A', $time) . '</td><td>'.$news.'</td></tr>');
+	$PHP_OUTPUT.=('<tr><td>' . date(DATE_FULL_SHORT, $time) . '</td><td>'.$news.'</td></tr>');
 
 }
 $PHP_OUTPUT.=('</table></div>');
