@@ -13,8 +13,8 @@ if (SmrSession::$account_id > 0) {
 
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	$db->query('SELECT * FROM account_is_closed WHERE account_id = '.SmrSession::$account_id);
-	if ($db->next_record())
-		$time = $db->f('expires');
+	if ($db->nextRecord())
+		$time = $db->getField('expires');
 	
 	$reason = $account->is_disabled();
 	if ($time > 0) $reason .= '  Your account is set to reopen ' . date('n/j/Y g:i:s A', $time) . '.';

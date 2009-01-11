@@ -11,7 +11,7 @@ if ($action == 'Remove')
 	$db->query('DELETE FROM galactic_post_writer WHERE game_id = '.$player->getGameID().' AND account_id = '.$var['id']);
 
 $db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.$player->getGameID().' AND account_id != '.$player->getAccountID());
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
@@ -20,10 +20,10 @@ if ($db->nf()) {
     $PHP_OUTPUT.=('<th align="center">Options</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-    while ($db->next_record()) {
+    while ($db->nextRecord()) {
 
-	    $curr_writter =& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
-    	$time = $db->f('last_wrote');
+	    $curr_writter =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
+    	$time = $db->getField('last_wrote');
         $PHP_OUTPUT.=('<tr>');
 	    $PHP_OUTPUT.=('<td align="center">'.$curr_writter->getPlayerName().'</td>');
     	$PHP_OUTPUT.=('<td align="center"> ' . date('n/j/Y g:i:s A', $time) . '</td>');

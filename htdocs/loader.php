@@ -91,8 +91,8 @@ if (SmrSession::$account_id == 0) {
 
 $db->query('SELECT account_id FROM hidden_players');
 $HIDDEN_PLAYERS = array(0);//stop errors
-while ($db->next_record())
-	$HIDDEN_PLAYERS[] = $db->f('account_id');
+while ($db->nextRecord())
+	$HIDDEN_PLAYERS[] = $db->getField('account_id');
 
 // ********************************
 // *
@@ -170,8 +170,8 @@ function do_voodoo()
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
 		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
-		$db->next_record();
-		$sector_id=$db->f('sector_id');
+		$db->nextRecord();
+		$sector_id=$db->getField('sector_id');
 
 		if(!$lock && (!isset($var['body']) || $var['body'] != 'error.php') && !isset($var['ForwardError']))
 		{
@@ -259,22 +259,22 @@ function acquire_lock($sector)
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 			
-	$lock = $db->insert_id();
+	$lock = $db->getInsertID();
 
 	for($i=0;$i<100;++$i)
 	{
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' LIMIT 1');
-		$db->next_record();
-		if($db->f('COUNT(*)'))
+		$db->nextRecord();
+		if($db->getField('COUNT(*)'))
 		{
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
 			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' LIMIT 1');
-			if($db->next_record())
+			if($db->nextRecord())
 			{
-				if($db->f('COUNT(*)') > 1)
+				if($db->getField('COUNT(*)') > 1)
 				{
 					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
 					create_error('Multiple actions cannot be performed at the same time!');
@@ -282,7 +282,7 @@ function acquire_lock($sector)
 				}
 			}
 			
-			usleep(25000 * $db->f('COUNT(*)'));
+			usleep(25000 * $db->getField('COUNT(*)'));
 			continue;
 		}
 		else
@@ -444,10 +444,10 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $player->getAccountID() . ' AND game_id=' . $player->getGameID() . ' GROUP BY message_type_id');
 	
-		if($db->nf()) {
+		if($db->getNumRows()) {
 			$messages = array();
-			while($db->next_record()) {
-				$messages[$db->f('message_type_id')] = $db->f('COUNT(*)');
+			while($db->nextRecord()) {
+				$messages[$db->getField('message_type_id')] = $db->getField('COUNT(*)');
 			}
 	
 			$container = array();
@@ -515,9 +515,9 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 		$db->query('SELECT ship_name FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID().' LIMIT 1');
-		if ($db->next_record()) {
+		if ($db->nextRecord()) {
 			//they have a name so we echo it
-			$smarty->assign('PlayerShipCustomName',stripslashes($db->f('ship_name')));
+			$smarty->assign('PlayerShipCustomName',stripslashes($db->getField('ship_name')));
 		}
 	
 		// ******* Hardware *******
@@ -575,14 +575,14 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	if($in_game)
 	{
 		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' ORDER BY link_id LIMIT 3');
-		while($db->next_record())
+		while($db->nextRecord())
 		{
-			if($db->f('timeout') < TIME - 86400)
+			if($db->getField('timeout') < TIME - 86400)
 			{
-				$turns_for_votes[$db->f('link_id')] = 1;
+				$turns_for_votes[$db->getField('link_id')] = 1;
 			}
 			else {
-				$turns_for_votes[$db->f('link_id')] = 0;
+				$turns_for_votes[$db->getField('link_id')] = 0;
 			}
 		}
 	}
@@ -614,11 +614,11 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 	
-		$version_id = $db->f('version_id');
+		$version_id = $db->getField('version_id');
 		$container = array('url' => 'skeleton.php', 'body' => 'changelog_view.php', 'version_id' => $version_id );
-		$version = create_link($container, 'v' . $db->f('major_version') . '.' . $db->f('minor_version') . '.' . $db->f('patch_level'));
+		$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
 	
 	}
 	

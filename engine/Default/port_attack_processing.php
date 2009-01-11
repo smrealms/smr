@@ -24,11 +24,11 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //				   'WHERE account_id = '.$player->getAccountID().' AND ' .
 //						 'game_id = '.$player->getGameID().' ' .
 //				   'ORDER BY order_id');
-//if (!$db->next_record()) {
+//if (!$db->nextRecord()) {
 //	
 //	//do we have drones to attack?
 //	$db->query('SELECT * FROM ship_has_hardware WHERE hardware_type_id = HARDWARE_COMBAT AND account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-//	if (!$db->next_record())
+//	if (!$db->nextRecord())
 //		create_error('What are you gonna do? Insult it to death?');
 //		
 //}
@@ -37,16 +37,16 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //$time = time();
 //
 ////only 1 shot per 2 seconds (stop double port raids)
-//$db->lock('port_attack_times');
+//$db->lockTable('port_attack_times');
 ////init vars
 //$db->query('SELECT * FROM port_attack_times WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID());
-//if ($db->next_record()) $att_time = $db->f('time');
+//if ($db->nextRecord()) $att_time = $db->getField('time');
 //else $att_time = 0;
 //while ($att_time + 2 >= $time) {
 //	
 //	usleep(50000);
 //	$db->query('SELECT * FROM port_attack_times WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID());
-//	if ($db->next_record()) $att_time = $db->f('time');
+//	if ($db->nextRecord()) $att_time = $db->getField('time');
 //	else $att_time = 0;
 //	$time = time();
 //
@@ -389,7 +389,7 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //	//this player has successfully shot the port.
 //	$db->query('SELECT * FROM player_attacks_port WHERE game_id = '.SmrSession::$game_id.' AND sector_id = '.$sector->getSectorID().' AND account_id = '.$curr_attacker->getAccountID());
 //	//is he already recorded?  If so we don't want to lower the lvl of the port he is attacking.
-//	if (!$db->next_record())
+//	if (!$db->nextRecord())
 //		$db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ('.SmrSession::$game_id.', '.$curr_attacker->getAccountID().', '.$sector->getSectorID().', '.$time.', '.$port->getLevel().')');
 //	$atts[] = $curr_att_id;
 //	// reduce his relations
@@ -417,13 +417,13 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //				   'ORDER BY order_id');
 //
 //	// iterate over all existing weapons
-//	while ($weapon->next_record()) {
+//	while ($weapon->nextRecord()) {
 //
 //		//vars
-//		$weapon_name = $weapon->f('weapon_name');
-//		$shield_damage = $weapon->f('shield_damage');
-//		$armor_damage = $weapon->f('armor_damage');
-//		$accuracy = $weapon->f('accuracy');
+//		$weapon_name = $weapon->getField('weapon_name');
+//		$shield_damage = $weapon->getField('shield_damage');
+//		$armor_damage = $weapon->getField('armor_damage');
+//		$accuracy = $weapon->getField('accuracy');
 //
 //		// calc accuracy for this weapon
 //		$hit = round(($accuracy + $curr_attacker->level_id) - ($port->getLevel() / 2));
@@ -658,12 +658,12 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //			//$damage_msg[] = '<br />Start<br />';
 //			//itterate through since the last port reset
 //			$db->query('SELECT * FROM player_attacks_port WHERE game_id = '.SmrSession::$game_id.' AND sector_id = '.$sector->getSectorID().' AND time < '.$port->getReinforceTime());
-//			while ($db->next_record()) {
+//			while ($db->nextRecord()) {
 //				
-//				$update_attacker =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
+//				$update_attacker =& SmrPlayer::getPlayer($db->getField('account_id'), SmrSession::$game_id);
 //				$update_attacker->update_stat('port_raids', 1);
-//				$update_attacker->update_stat('port_raid_levels', $db->f('level'));
-//				$port_original_level = $db->f('level');
+//				$update_attacker->update_stat('port_raid_levels', $db->getField('level'));
+//				$port_original_level = $db->getField('level');
 //				$db2->query('DELETE FROM player_attacks_port WHERE game_id = '.SmrSession::$game_id.' AND sector_id = '.$sector->getSectorID().' AND account_id = '.$update_attacker->getAccountID());
 //				
 //			}
@@ -756,10 +756,10 @@ echo 'TELL PAGE YOU SAW THIS (PORT_ATTACK_PROCESSING)';
 //	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID().' ' .
 //		'AND claimer_id = 0 AND type = \'HQ\'');
 //	$amount = $curr_attacker->getExperience() * $port->getLevel();
-//	if ($db->next_record()) {
+//	if ($db->nextRecord()) {
 //		//include interest
-//		$bounty_id = $db->f('bounty_id');
-//		$curr_amount = $db->f('amount');
+//		$bounty_id = $db->getField('bounty_id');
+//		$curr_amount = $db->getField('amount');
 //		$new_amount = $curr_amount + $amount;
 //		$db->query('UPDATE bounty SET amount = '.$new_amount.', time = '.$time.' WHERE game_id = '.$player->getGameID().' AND bounty_id = '.$bounty_id);
 //	} else {

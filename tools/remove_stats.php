@@ -9,39 +9,39 @@ include(LIB . 'Default/SmrMySqlDatabase.class.inc');
 $db = new SmrMySqlDatabase();
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM player_has_stats WHERE game_id = 20');
-while ($db->next_record())
+while ($db->nextRecord())
 {
-	$planet_busts = $db->f('planet_busts');
-	$planet_bust_levels = $db->f('planet_bust_levels');
-	$port_raids = $db->f('port_raids');
-	$port_raid_level = $db->f('port_raid_levels');
-	$sectors_explored = $db->f('sectors_explored');
-	$deaths = $db->f('deaths');
-	$kills = $db->f('kills');
-	$goods_traded = $db->f('goods_traded');
-	$experience_traded = $db->f('experience_traded');
-	$bounties_claimed = $db->f('bounties_claimed');
-	$bounty_amount_claimed = $db->f('bounty_amount_claimed');
-	$military_claimed = $db->f('military_claimed');
-	$bounty_amount_on = $db->f('bounty_amount_on');
-	$player_damage = $db->f('player_damage');
-	$port_damage = $db->f('port_damage');
-	$planet_damage = $db->f('planet_damage');
-	$turns_used = $db->f('turns_used');
-	$kill_exp = $db->f('kill_exp');
-	$traders_killed_exp = $db->f('traders_killed_exp');
-	$blackjack_win = $db->f('blackjack_win');
-	$blackjack_lose = $db->f('blackjack_lose');
-	$lotto = $db->f('lotto');
-	$drinks = $db->f('drinks');
-	$trade_profit = $db->f('trade_profit');
-	$trade_sales = $db->f('trade_sales');
-	$mines = $db->f('mines');
-	$combat_drones = $db->f('combat_drones');
-	$scout_drones = $db->f('scout_drones');
-	$money_gained = $db->f('money_gained');
-	$killed_ships = $db->f('killed_ships');
-	$died_ships = $db->f('died_ships');
+	$planet_busts = $db->getField('planet_busts');
+	$planet_bust_levels = $db->getField('planet_bust_levels');
+	$port_raids = $db->getField('port_raids');
+	$port_raid_level = $db->getField('port_raid_levels');
+	$sectors_explored = $db->getField('sectors_explored');
+	$deaths = $db->getField('deaths');
+	$kills = $db->getField('kills');
+	$goods_traded = $db->getField('goods_traded');
+	$experience_traded = $db->getField('experience_traded');
+	$bounties_claimed = $db->getField('bounties_claimed');
+	$bounty_amount_claimed = $db->getField('bounty_amount_claimed');
+	$military_claimed = $db->getField('military_claimed');
+	$bounty_amount_on = $db->getField('bounty_amount_on');
+	$player_damage = $db->getField('player_damage');
+	$port_damage = $db->getField('port_damage');
+	$planet_damage = $db->getField('planet_damage');
+	$turns_used = $db->getField('turns_used');
+	$kill_exp = $db->getField('kill_exp');
+	$traders_killed_exp = $db->getField('traders_killed_exp');
+	$blackjack_win = $db->getField('blackjack_win');
+	$blackjack_lose = $db->getField('blackjack_lose');
+	$lotto = $db->getField('lotto');
+	$drinks = $db->getField('drinks');
+	$trade_profit = $db->getField('trade_profit');
+	$trade_sales = $db->getField('trade_sales');
+	$mines = $db->getField('mines');
+	$combat_drones = $db->getField('combat_drones');
+	$scout_drones = $db->getField('scout_drones');
+	$money_gained = $db->getField('money_gained');
+	$killed_ships = $db->getField('killed_ships');
+	$died_ships = $db->getField('died_ships');
 		$PHP_OUTPUT.=('UPDATE account_has_stats SET ' . 
 				'planet_busts = planet_busts - ' . $planet_busts . ', ' .
 				'planet_bust_levels = planet_bust_levels - ' . $planet_bust_levels . ', ' .
@@ -74,7 +74,7 @@ while ($db->next_record())
 				'money_gained = money_gained - ' . $money_gained . ', ' .
 				'killed_ships = killed_ships - ' . $killed_ships . ', ' .
 				'died_ships = died_ships - ' . $died_ships . ' ' .
-				'WHERE account_id = ' . $db->f('account_id') . ' LIMIT 1;'.EOL);
+				'WHERE account_id = ' . $db->getField('account_id') . ' LIMIT 1;'.EOL);
 
 }
 

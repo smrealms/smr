@@ -19,25 +19,25 @@ if ($action == 'Yes') {
 
 		$db->query('SELECT * FROM alliance WHERE game_id = '.$game_id);
 		
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 		
-			$id = $db->f('alliance_id');
+			$id = $db->getField('alliance_id');
 			//we need info for forces
 			//populate alliance list
 			$db2->query('SELECT * FROM player WHERE alliance_id = '.$id.' ' .
 					'AND game_id = '.$game_id);	
 			$list = '(';
-			while ($db2->next_record()) $list .= $db2->f('account_id') . ',';
+			while ($db2->nextRecord()) $list .= $db2->getField('account_id') . ',';
 			$list .= '0)';
 			$db2->query('SELECT sum(mines) as sum_m, sum(combat_drones) as cds, ' .
 					'sum(scout_drones) as sds ' .
 					'FROM sector_has_forces ' .
 					'WHERE owner_id IN '.$list.' AND game_id = '.$game_id);
-			if ($db2->next_record()) {
+			if ($db2->nextRecord()) {
 				
-				$mines = $db2->f('sum_m');
-				$cds = $db2->f('cds');
-				$sds = $db2->f('sds');
+				$mines = $db2->getField('sum_m');
+				$cds = $db2->getField('cds');
+				$sds = $db2->getField('sds');
 				if (!is_numeric($mines)) $mines = 0;
 				if (!is_numeric($cds)) $cds = 0;
 				if (!is_numeric($sds)) $sds = 0;
@@ -51,10 +51,10 @@ if ($action == 'Yes') {
 			}
 			
 			// get info we want
-			$name = $db->f('alliance_name');
-			$leader = $db->f('leader_id');
-			$kills = $db->f('alliance_kills');
-			$deaths = $db->f('alliance_deaths');
+			$name = $db->getField('alliance_name');
+			$leader = $db->getField('leader_id');
+			$kills = $db->getField('alliance_kills');
+			$deaths = $db->getField('alliance_deaths');
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO alliance (game_id, alliance_id, leader_id, kills, deaths, alliance_name, mines, cds, sds) ' .
 								'VALUES ('.$game_id.', '.$id.', '.$leader.', '.$kills.', '.$deaths.', ' . $db->escape_string($name,FALSE) . ', '.$mines.', '.$cds.', '.$sds.')';
@@ -75,11 +75,11 @@ if ($action == 'Yes') {
 	if ($save) {
 		
 		$db->query('SELECT * FROM alliance_vs_alliance WHERE game_id = '.$game_id);
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 			
-			$alliance_1 = $db->f('alliance_id_1');
-			$alliance_2 = $db->f('alliance_id_2');
-			$kills = $db->f('kills');
+			$alliance_1 = $db->getField('alliance_id_1');
+			$alliance_2 = $db->getField('alliance_id_2');
+			$kills = $db->getField('kills');
 			$history_db_sql[] = 'INSERT INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
 								'VALUES ('.$game_id.', '.$alliance_1.', '.$alliance_2.', '.$kills.')';
 								
@@ -105,14 +105,14 @@ if ($action == 'Yes') {
 
 		$db->query('SELECT * FROM game WHERE game_id = '.$game_id);
 
-		if ($db->next_record()) {
+		if ($db->nextRecord()) {
 
 			// get info we want
-			$end = $db->f('end_date');
-			$start = $db->f('start_date');
-			$name = $db->f('game_name');
-			$speed = $db->f('game_speed');
-			$type = $db->f('game_type');
+			$end = $db->getField('end_date');
+			$start = $db->getField('start_date');
+			$name = $db->getField('game_name');
+			$speed = $db->getField('game_speed');
+			$type = $db->getField('game_type');
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
@@ -133,11 +133,11 @@ if ($action == 'Yes') {
 		$db->query('SELECT * FROM news WHERE game_id = '.$game_id.' AND type = \'regular\'');
 		$id = 1;
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
 			// get info we want
-			$time = $db->f('time');
-			$msg = $db->f('news_message');
+			$time = $db->getField('time');
+			$msg = $db->getField('news_message');
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO news (game_id, news_id, time, message) VALUES ('.$game_id.', '.$id.', '.$time.', ' . $db->escape_string($msg,FALSE) . ')';
@@ -152,22 +152,22 @@ if ($action == 'Yes') {
 
 		$db->query('SELECT * FROM planet WHERE game_id = '.$game_id);
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
 			// get info we want
-			$sector = $db->f('sector_id');
-			$owner = $db->f('owner_id');
+			$sector = $db->getField('sector_id');
+			$owner = $db->getField('owner_id');
 
 			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 1');
-			if ($db2->next_record()) $gens = $db2->f('amount');
+			if ($db2->nextRecord()) $gens = $db2->getField('amount');
 			else $gens = 0;
 
 			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 2');
-			if ($db2->next_record()) $hangs = $db2->f('amount');
+			if ($db2->nextRecord()) $hangs = $db2->getField('amount');
 			else $hangs = 0;
 
 			$db2->query('SELECT * FROM planet_has_building WHERE game_id = '.$game_id.' AND sector_id = '.$sector.' AND construction_id = 3');
-			if ($db2->next_record()) $turs = $db2->f('amount');
+			if ($db2->nextRecord()) $turs = $db2->getField('amount');
 			else $turs = 0;
 
 			// insert into history db
@@ -188,30 +188,30 @@ if ($action == 'Yes') {
 
 		$db->query('SELECT * FROM player WHERE game_id = '.$game_id);
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
 			// get info we want
-			$acc_id = $db->f('account_id');
-			$name = stripslashes($db->f('player_name'));
-			$id = $db->f('player_id');
-			$exp = $db->f('experience');
-			$ship = $db->f('ship_type_id');
-			$race = $db->f('race_id');
-			$align = $db->f('alignment');
-			$alli = $db->f('alliance_id');
-			$kills = $db->f('kills');
-			$deaths = $db->f('deaths');
+			$acc_id = $db->getField('account_id');
+			$name = stripslashes($db->getField('player_name'));
+			$id = $db->getField('player_id');
+			$exp = $db->getField('experience');
+			$ship = $db->getField('ship_type_id');
+			$race = $db->getField('race_id');
+			$align = $db->getField('alignment');
+			$alli = $db->getField('alliance_id');
+			$kills = $db->getField('kills');
+			$deaths = $db->getField('deaths');
 
 			$db2->query('SELECT sum(amount) as bounty_am FROM bounty WHERE game_id = '.$game_id.' AND account_id = '.$acc_id.' AND claimer_id = 0');
-			if ($db2->next_record()) {
+			if ($db2->nextRecord()) {
 
-				if (is_int($db2->f('bounty_am'))) $amount = $db2->f('bounty_am');
+				if (is_int($db2->getField('bounty_am'))) $amount = $db2->getField('bounty_am');
 				else $amount = 0;
 
 			} else $amount = 0;
 
 			$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$game_id.' AND account_id = '.$acc_id);
-			if ($db2->next_record()) $ship_name = $db2->f('ship_name');
+			if ($db2->nextRecord()) $ship_name = $db2->getField('ship_name');
 			else $ship_name = 'None';
 
 			// insert into history db
@@ -228,41 +228,41 @@ if ($action == 'Yes') {
 
 		$db->query('SELECT * FROM player_has_stats WHERE game_id = '.$game_id);
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
 			// get info we want
-			$acc_id = $db->f('account_id');
-			$planet_busts = $db->f('planet_busts');
-			$planet_bust_levels = $db->f('planet_bust_levels');
-			$port_raids = $db->f('port_raids');
-			$port_raid_levels = $db->f('port_raid_levels');
-			$sectors_explored = $db->f('sectors_explored');
-			$deaths = $db->f('deaths');
-			$kills = $db->f('kills');
-			$goods_traded = $db->f('goods_traded');
-			$experience_traded = $db->f('experience_traded');
-			$bounties_claimed = $db->f('bounties_claimed');
-			$bounty_amount_claimed = $db->f('bounty_amount_claimed');
-			$military_claimed = $db->f('military_claimed');
-			$bounty_amount_on = $db->f('bounty_amount_on');
-			$player_damage = $db->f('player_damage');
-			$port_damage = $db->f('port_damage');
-			$planet_damage = $db->f('planet_damage');
-			$turns_used = $db->f('turns_used');
-			$kill_exp = $db->f('kill_exp');
-			$traders_killed_exp = $db->f('traders_killed_exp');
-			$blackjack_win = $db->f('blackjack_win');
-			$blackjack_lose = $db->f('blackjack_lose');
-			$lotto = $db->f('lotto');
-			$drinks = $db->f('drinks');
-			$trade_profit = $db->f('trade_profit');
-			$trade_sales = $db->f('trade_sales');
-			$mines = $db->f('mines');
-			$cds = $db->f('combat_drones');
-			$sds = $db->f('scout_drones');
-			$money_gained = $db->f('money_gained');
-			$killed_ships = $db->f('killed_ships');
-			$died_ships = $db->f('died_ships');
+			$acc_id = $db->getField('account_id');
+			$planet_busts = $db->getField('planet_busts');
+			$planet_bust_levels = $db->getField('planet_bust_levels');
+			$port_raids = $db->getField('port_raids');
+			$port_raid_levels = $db->getField('port_raid_levels');
+			$sectors_explored = $db->getField('sectors_explored');
+			$deaths = $db->getField('deaths');
+			$kills = $db->getField('kills');
+			$goods_traded = $db->getField('goods_traded');
+			$experience_traded = $db->getField('experience_traded');
+			$bounties_claimed = $db->getField('bounties_claimed');
+			$bounty_amount_claimed = $db->getField('bounty_amount_claimed');
+			$military_claimed = $db->getField('military_claimed');
+			$bounty_amount_on = $db->getField('bounty_amount_on');
+			$player_damage = $db->getField('player_damage');
+			$port_damage = $db->getField('port_damage');
+			$planet_damage = $db->getField('planet_damage');
+			$turns_used = $db->getField('turns_used');
+			$kill_exp = $db->getField('kill_exp');
+			$traders_killed_exp = $db->getField('traders_killed_exp');
+			$blackjack_win = $db->getField('blackjack_win');
+			$blackjack_lose = $db->getField('blackjack_lose');
+			$lotto = $db->getField('lotto');
+			$drinks = $db->getField('drinks');
+			$trade_profit = $db->getField('trade_profit');
+			$trade_sales = $db->getField('trade_sales');
+			$mines = $db->getField('mines');
+			$cds = $db->getField('combat_drones');
+			$sds = $db->getField('scout_drones');
+			$money_gained = $db->getField('money_gained');
+			$killed_ships = $db->getField('killed_ships');
+			$died_ships = $db->getField('died_ships');
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO player_has_stats (account_id,game_id,planet_busts,planet_bust_levels,port_raids,port_raid_levels,sectors_explored,deaths,kills,goods_traded,experience_traded,bounties_claimed,bounty_amount_claimed,military_claimed,bounty_amount_on,player_damage,port_damage,planet_damage,turns_used,kill_exp,traders_killed_exp,blackjack_win,blackjack_lose,lotto,drinks,trade_profit,trade_sales,mines,combat_drones,scout_drones,money_gained,killed_ships,died_ships) ' .
@@ -298,20 +298,20 @@ if ($action == 'Yes') {
 
 		$db->query('SELECT * FROM sector WHERE game_id = '.$game_id);
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
 			// get info we want
-			$sector = $db->f('sector_id');
-			$kills = $db->f('battles');
-			$gal_id = $db->f('galaxy_id');
+			$sector = $db->getField('sector_id');
+			$kills = $db->getField('battles');
+			$gal_id = $db->getField('galaxy_id');
 
 			$db2->query('SELECT sum(mines) as sum_mines, sum(combat_drones) as cds, sum(scout_drones) as sds FROM sector_has_forces ' .
 						'WHERE sector_id = '.$sector.' AND game_id = '.$game_id.' GROUP BY sector_id');
-			if ($db2->next_record()) {
+			if ($db2->nextRecord()) {
 
-				$mines = $db2->f('sum_mines');
-				$cds = $db2->f('cds');
-				$sds = $db2->f('sds');
+				$mines = $db2->getField('sum_mines');
+				$cds = $db2->getField('cds');
+				$sds = $db2->getField('sds');
 				if (!is_numeric($mines)) $mines = 0;
 				if (!is_numeric($cds)) $cds = 0;
 				if (!is_numeric($sds)) $sds = 0;

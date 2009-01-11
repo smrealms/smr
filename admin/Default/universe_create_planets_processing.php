@@ -15,8 +15,8 @@ if (!isset($planet))
 
 $db2 = new SmrMySqlDatabase();
 $db2->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
-$db2->next_record();
-$date = $db2->f('start_date');
+$db2->nextRecord();
+$date = $db2->getField('start_date');
 list ($year, $month, $day) = split('-', $date);
 // adjust the time so it is game start time
 $time = mktime(0,0,0,$month,$day,$year);
@@ -29,15 +29,15 @@ foreach($planet as $galaxy_id => $amount) {
 	$db->query('SELECT * FROM sector WHERE game_id = ' . $var['game_id'] . ' AND ' .
 										  'galaxy_id = '.$galaxy_id.' ' .
 									'ORDER BY rand()');
-	while ($count < $amount && $db->next_record()) {
+	while ($count < $amount && $db->nextRecord()) {
 
-		$sector_id = $db->f('sector_id');
+		$sector_id = $db->getField('sector_id');
 
 		// does this sector have a fed beacon??
 		$db2->query('SELECT * FROM location WHERE game_id = ' . $var['game_id'] . ' AND ' .
 												 'sector_id = '.$sector_id.' AND ' .
 												 'location_type_id = 1');
-		if ($db2->nf() > 0) continue;
+		if ($db2->getNumRows() > 0) continue;
 
 		// ok we did $count planets so far
 		$count++;

@@ -19,9 +19,9 @@ if (isset($offenderReply) && $offenderReply != '') {
 	{
 		$reasonID = 7;
 		$db->query('SELECT * FROM account_has_points WHERE account_id = '.$var['offender']);
-		if ($db->next_record())	{
+		if ($db->nextRecord())	{
 	
-			$currPoints = $db->f('points');
+			$currPoints = $db->getField('points');
 			$newPoints = $currPoints + $_REQUEST['offenderBanPoints'];
 			$db->query('UPDATE account_has_points SET points = '.$newPoints.', last_update = '.$currTime.' WHERE account_id = '.$var['offender']);
 	
@@ -67,7 +67,7 @@ if (isset($offenderReply) && $offenderReply != '') {
 					   'WHERE account_id = '.$var['offender'].' AND ' .
 							 'newbie_turns = 0 AND ' .
 							 'land_on_planet = \'FALSE\'');
-			$db->lock('active_session');
+			$db->lockTable('active_session');
 			$db->query('DELETE FROM active_session ' .
 					   'WHERE account_id = '.$var['offender']);
 			$db->unlock();
@@ -90,9 +90,9 @@ if (isset($offendedReply) && $offendedReply != '') {
 	{
 		$reasonID = 7;
 		$db->query('SELECT * FROM account_has_points WHERE account_id = '.$var['offended']);
-		if ($db->next_record())	{
+		if ($db->nextRecord())	{
 	
-			$currPoints = $db->f('points');
+			$currPoints = $db->getField('points');
 			$newPoints = $currPoints + $_REQUEST['offendedBanPoints'];
 			$db->query('UPDATE account_has_points SET points = '.$newPoints.', last_update = '.$currTime.' WHERE account_id = '.$var['offended']);
 	
@@ -138,7 +138,7 @@ if (isset($offendedReply) && $offendedReply != '') {
 					   'WHERE account_id = '.$var['offended'].' AND ' .
 							 'newbie_turns = 0 AND ' .
 							 'land_on_planet = \'FALSE\'');
-			$db->lock('active_session');
+			$db->lockTable('active_session');
 			$db->query('DELETE FROM active_session ' .
 					   'WHERE account_id = '.$var['offended']);
 			$db->unlock();

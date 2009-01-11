@@ -4,8 +4,8 @@ $smarty->assign('PageTopic','CREATE UNIVERSE - ADDING SPECIAL LOCATIONS (4/10)')
 
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
-if ($db->next_record())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game:<dt><dd>' . $db->f('game_name') . '</dd>');
+if ($db->nextRecord())
+	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game:<dt><dd>' . $db->getField('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding special Location</d>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">Here you can add special locations, like Race Headquarters, Underground HQ, Bars and Banks. ');
 $PHP_OUTPUT.=('Each Headquarter should be only once in the game. The numbers provided are absolut numbers per galaxy.<br />');
@@ -19,15 +19,15 @@ $db->query('SELECT DISTINCT galaxy.galaxy_id as id, galaxy_name as name
 			WHERE game_id = ' . $var['game_id'] . ' AND
 				  sector.galaxy_id = galaxy.galaxy_id
 			ORDER BY galaxy.galaxy_id');
-while ($db->next_record())
-	$galaxies[$db->f('id')] = $db->f('name');
+while ($db->nextRecord())
+	$galaxies[$db->getField('id')] = $db->getField('name');
 
 // put races into an array (id => name)
 $db->query('SELECT * FROM race
 			WHERE race_id != 1
 			ORDER BY race_id');
-while($db->next_record())
-	$races[$db->f('race_id')] = $db->f('race_name');
+while($db->nextRecord())
+	$races[$db->getField('race_id')] = $db->getField('race_name');
 
 $container = array();
 $container['url']		= 'universe_create_location_processing.php';
@@ -84,10 +84,10 @@ $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size
 // banks
 $db->query('SELECT * FROM location_type NATURAL JOIN location_is_bank ' .
 		   'ORDER BY location_name');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$location_name		= $db->f('location_name');
-	$location_type_id	= $db->f('location_type_id');
+	$location_name		= $db->getField('location_name');
+	$location_type_id	= $db->getField('location_type_id');
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b></td>');
@@ -100,10 +100,10 @@ $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size
 // bars
 $db->query('SELECT * FROM location_type NATURAL JOIN location_is_bar ' .
 		   'ORDER BY location_name');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$location_name		= $db->f('location_name');
-	$location_type_id	= $db->f('location_type_id');
+	$location_name		= $db->getField('location_name');
+	$location_type_id	= $db->getField('location_type_id');
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b></td>');

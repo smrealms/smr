@@ -18,10 +18,10 @@ function channel_join($fp, $rdata) {
 		$db->query('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escape_string('%'.$msg[1].'%'));
 
 		// exiting nick?
-		if($db->next_record())
+		if($db->nextRecord())
 		{
 
-			$seen_id = $db->f('seen_id');
+			$seen_id = $db->getField('seen_id');
 
 			$db->query('UPDATE irc_seen SET signed_on = ' . time() . ' WHERE seen_id = '.$seen_id);
 
@@ -73,10 +73,10 @@ function channel_nick($fp, $rdata) {
 		$db->query('SELECT * FROM irc_seen ' .
 				   'WHERE user = '.$db->escapeString($msg[2]).' AND ' .
 						 'host = '.$db->escapeString($msg[3]));
-		while($db->next_record()) {
+		while($db->nextRecord()) {
 
-			$seen_id = $db->f('seen_id');
-			$nick_list = unserialize($db->f('nick'));
+			$seen_id = $db->getField('seen_id');
+			$nick_list = unserialize($db->getField('nick'));
 
 			// add this nick if it isn't in current nicklist
 			if (!array_search($msg[1], $nick_list))
@@ -119,9 +119,9 @@ function channel_part($fp, $rdata) {
 		$db->query('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escape_string('%'.$msg[1].'%'));
 
 		// exiting nick?
-		if($db->next_record()) {
+		if($db->nextRecord()) {
 
-			$seen_id = $db->f('seen_id');
+			$seen_id = $db->getField('seen_id');
 
 			$db->query('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = '.$seen_id);
 
@@ -165,10 +165,10 @@ function channel_who($fp, $rdata)
 		$db->query('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escape_string('%'.$msg[5].'%'));
 
 		// exiting nick?
-		if($db->next_record())
+		if($db->nextRecord())
 		{
 
-			$seen_id = $db->f('seen_id');
+			$seen_id = $db->getField('seen_id');
 
 			$db->query('UPDATE irc_seen SET signed_on = ' . time() . ' WHERE seen_id = '.$seen_id);
 

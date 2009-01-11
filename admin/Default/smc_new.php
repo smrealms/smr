@@ -5,8 +5,8 @@ $db3 = new SmrMySqlDatabase();
 $game_id = $_REQUEST['game_id'];
 //first get file name
 $db->query('SELECT * FROM game WHERE game_id = '.$game_id);
-$db->next_record();
-$file = $db->f('game_name');
+$db->nextRecord();
+$file = $db->getField('game_name');
 $file .= '.txt';
 //we need to make a file for the SMC thing.
 header('Content-Type: text/plain; charset=ISO-8859-1'.EOL);
@@ -15,16 +15,16 @@ header('Content-transfer-encoding: base64'.EOL);
 
 //game heading and info
 $PHP_OUTPUT.=('[GAME]'.EOL);
-$name = $db->f('game_name');
-$id = $db->f('game_id');
+$name = $db->getField('game_name');
+$id = $db->getField('game_id');
 $PHP_OUTPUT.=('.$db->escapeString($id=$name'.EOL);
 
 //get races
 $PHP_OUTPUT.=('[RACES]'.EOL);
 $db->query('SELECT * FROM race ORDER BY race_id');
-while ($db->next_record()) {
-	$id = $db->f('race_id');
-	$name = $db->f('race_name');
+while ($db->nextRecord()) {
+	$id = $db->getField('race_id');
+	$name = $db->getField('race_name');
 	$PHP_OUTPUT.=('R' . $id . '=$name'.EOL);
 }
 
@@ -32,10 +32,10 @@ while ($db->next_record()) {
 $PHP_OUTPUT.=('[GALAXIES]'.EOL);
 $db->query('SELECT galaxy_name, count(sector_id) as num FROM sector NATURAL JOIN galaxy WHERE game_id = '.$game_id.' GROUP BY sector.galaxy_id ORDER BY sector.sector_id');
 $i = 1;
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$name = $db->f('galaxy_name');
-	$size = sqrt($db->f('num'));
+	$name = $db->getField('galaxy_name');
+	$size = sqrt($db->getField('num'));
 	$PHP_OUTPUT.=('GAL' . $i . '=$name,$size,$size'.EOL);
 	$i++;
 
@@ -71,10 +71,10 @@ $PHP_OUTPUT.=('IPlan=Planet'.EOL);
 //goods
 $PHP_OUTPUT.=('[GOODS]'.EOL);
 $db->query('SELECT * FROM good ORDER BY good_id');
-while ($db->next_record()) {
-	$fmv = $db->f('base_price');
-	$name = $db->f('good_name');
-	$id = $db->f('good_id');
+while ($db->nextRecord()) {
+	$fmv = $db->getField('base_price');
+	$name = $db->getField('good_name');
+	$id = $db->getField('good_id');
 	//assume it is a nuetral good for now
 	$align = '0';
 	//get evil goods here
@@ -104,29 +104,29 @@ $PHP_OUTPUT.=('SP14=DCS,bool'.EOL);
 //ships
 $PHP_OUTPUT.=('[SHIPS]'.EOL);
 $db->query('SELECT * FROM ship_type ORDER BY ship_type_id');
-while ($db->next_record()) {
-	$id = $db->f('ship_type_id');
-	$name = $db->f('ship_name');
-	$race_id = 'R' . $db->f('race_id');
-	$res = $db->f('buyer_restriction');
+while ($db->nextRecord()) {
+	$id = $db->getField('ship_type_id');
+	$name = $db->getField('ship_name');
+	$race_id = 'R' . $db->getField('race_id');
+	$res = $db->getField('buyer_restriction');
 	if ($res == 1)
 		$align = '+';
 	elseif ($res == 2)
 		$align = '-';
 	else
 		$align = '0';
-	$speed = $db->f('speed');
-	$cost = $db->f('cost');
-	$hard = $db->f('hardpoint');
+	$speed = $db->getField('speed');
+	$cost = $db->getField('cost');
+	$hard = $db->getField('hardpoint');
 	//assuem 10 for now its not implemented
 	$mr = 10;
 	$db3->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 	$props = array();
-	while ($db3->next_record()) {
-		$hard_id = $db3->f('hardware_type_id');
+	while ($db3->nextRecord()) {
+		$hard_id = $db3->getField('hardware_type_id');
 		$db2->query('SELECT * FROM ship_type_support_hardware WHERE ship_type_id = $id ORDER BY hardware_type_id AND hardware_type_id = $hard_id');
-		while ($db2->next_record())
-			$props[$hard_id] = $db2->f('max_amount');
+		while ($db2->nextRecord())
+			$props[$hard_id] = $db2->getField('max_amount');
 	}
 	$shields = $props[HARDWARE_SHIELDS];
 	$armor = $props[HARDWARE_ARMOR];
@@ -146,43 +146,43 @@ while ($db->next_record()) {
 //weapons
 $PHP_OUTPUT.=('[WEAPONS]'.EOL);
 $db->query('SELECT * FROM weapon_type ORDER BY weapon_type_id');
-while ($db->next_record()) {
-	$id = $db->f('weapon_type_id');
-	$name = $db->f('weapon_name');
-	$res = $db->f('buyer_restriction');
+while ($db->nextRecord()) {
+	$id = $db->getField('weapon_type_id');
+	$name = $db->getField('weapon_name');
+	$res = $db->getField('buyer_restriction');
 	if ($res == 1)
 		$align = '+';
 	elseif ($res == 2)
 		$align = '-';
 	else
 		$align = '0';
-	$race_id = 'R' . $db->f('race_id');
-	$cost = $db->f('cost');
-	$shi_dam = $db->f('shield_damage');
-	$arm_dam = $db->f('armor_damage');
-	$acc = $db->f('accuracy');
-	$power = $db->f('power_level');
+	$race_id = 'R' . $db->getField('race_id');
+	$cost = $db->getField('cost');
+	$shi_dam = $db->getField('shield_damage');
+	$arm_dam = $db->getField('armor_damage');
+	$acc = $db->getField('accuracy');
+	$power = $db->getField('power_level');
 	$PHP_OUTPUT.=('WEP' . $id . '=$name,$race_id,$align,$cost,$shi_dam,$arm_dam,$acc,$power'.EOL);
 }
 
 //items
 $PHP_OUTPUT.=('[ITEMS]'.EOL);
 $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-while ($db->next_record()) {
-	$name = $db->f('hardware_name');
-	$id = $db->f('hardware_type_id');
+while ($db->nextRecord()) {
+	$name = $db->getField('hardware_name');
+	$id = $db->getField('hardware_type_id');
 	$PHP_OUTPUT.=('ITEM' . $id . '=$name'.EOL);
 }
 
 //locations & what they sell
 $PHP_OUTPUT.=('[LOCATIONS]'.EOL);
 $db->query('SELECT * FROM location_type ORDER BY location_type_id');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	//set amount of things it sells to 0 for comma reasons
 	$amount = 0;
-	$id = $db->f('location_type_id');
-	$name = $db->f('location_name');
-	$loc_proc = $db->f('location_processor');
+	$id = $db->getField('location_type_id');
+	$name = $db->getField('location_name');
+	$loc_proc = $db->getField('location_processor');
 	if ($loc_proc == 'shop_weapon.php')
 		$icon = 'IWeap';
 	elseif ($loc_proc == 'shop_shop.php')
@@ -205,22 +205,22 @@ while ($db->next_record()) {
 	$PHP_OUTPUT.=('LOC' . $id . '=$name,$icon');
 	//now do we have locations
 	$db2->query('SELECT * FROM location_sells_hardware WHERE location_type_id = $id');
-	while ($db2->next_record()) {
-		$hard_id = $db2->f('hardware_type_id');
+	while ($db2->nextRecord()) {
+		$hard_id = $db2->getField('hardware_type_id');
 		$add = 'ITEM' . $hard_id;
 		$PHP_OUTPUT.=(',$add');
 		$amount += 1;
 	}
 	$db2->query('SELECT * FROM location_sells_ships WHERE location_type_id = $id');
-	while ($db2->next_record()) {
-		$hard_id = $db2->f('ship_type_id');
+	while ($db2->nextRecord()) {
+		$hard_id = $db2->getField('ship_type_id');
 		$add = 'SHIP' . $hard_id;
 		$PHP_OUTPUT.=(',$add');
 		$amount += 1;
 	}
 	$db2->query('SELECT * FROM location_sells_weapons WHERE location_type_id = $id');
-	while ($db2->next_record()) {
-		$hard_id = $db2->f('weapon_type_id');
+	while ($db2->nextRecord()) {
+		$hard_id = $db2->getField('weapon_type_id');
 		$add = 'WEP' . $hard_id;
 		$PHP_OUTPUT.=(',$add');
 		$amount += 1;
@@ -235,43 +235,43 @@ while ($db->next_record()) {
 //now sectors
 $PHP_OUTPUT.=('[SECTORS]'.EOL);
 $db->query('SELECT * FROM sector WHERE game_id = '.$game_id.' ORDER BY sector_id');
-while ($db->next_record()) {
-	$id = $db->f('sector_id');
+while ($db->nextRecord()) {
+	$id = $db->getField('sector_id');
 	//right now assume they visited now...since we have no ay of telling the last visit
 	$now = date('m/d/Y H:i:s', TIME);
 	$timestamp = $now;
 	$PHP_OUTPUT.=('.$db->escapeString($id=$timestamp,');
-	if ($db->f('link_up') > 0)
+	if ($db->getField('link_up') > 0)
 		$PHP_OUTPUT.=('N');
-	if ($db->f('link_right') > 0)
+	if ($db->getField('link_right') > 0)
 		$PHP_OUTPUT.=('E');
-	if ($db->f('link_down') > 0)
+	if ($db->getField('link_down') > 0)
 		$PHP_OUTPUT.=('S');
-	if ($db->f('link_left') > 0)
+	if ($db->getField('link_left') > 0)
 		$PHP_OUTPUT.=('W');
 	$PHP_OUTPUT.=(',');
 	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND sector_id_1 = $id');
-	if ($db2->next_record()) {
-		$warp = $db2->f('sector_id_2');
+	if ($db2->nextRecord()) {
+		$warp = $db2->getField('sector_id_2');
 		$PHP_OUTPUT.=('.$db->escapeString($warp');
 	}
 	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND sector_id_2 = $id');
-	if ($db2->next_record()) {
-		$warp = $db2->f('sector_id_1');
+	if ($db2->nextRecord()) {
+		$warp = $db2->getField('sector_id_1');
 		$PHP_OUTPUT.=('.$db->escapeString($warp');
 	}
 	$PHP_OUTPUT.=(',');
 	$db2->query('SELECT * FROM port WHERE game_id = '.$game_id.' AND sector_id = $id');
-	if ($db2->next_record()) {
-		$port_race_id = 'R' . $db2->f('race_id');
-		$port_lvl = $db2->f('level');
+	if ($db2->nextRecord()) {
+		$port_race_id = 'R' . $db2->getField('race_id');
+		$port_lvl = $db2->getField('level');
 	}
 	if (isset($port_race_id)) {
 		$PHP_OUTPUT.=('.$db->escapeString($port_race_id:$port_lvl');
 		$db3->query('SELECT * FROM port_has_goods WHERE game_id = '.$game_id.' AND sector_id = $id ORDER BY good_id');
-		while ($db3->next_record()) {
-			$good_id = $db3->f('good_id');
-			$trans = $db3->f('transaction');
+		while ($db3->nextRecord()) {
+			$good_id = $db3->getField('good_id');
+			$trans = $db3->getField('transaction');
 			if ($trans == 'Buy')
 				$PHP_OUTPUT.=('-G' . $good_id);
 			else
@@ -283,8 +283,8 @@ while ($db->next_record()) {
 	$PHP_OUTPUT.=(',');
 	$db2->query('SELECT * FROM location WHERE game_id = '.$game_id.' AND sector_id = $id');
 	$amount = 0;
-	while ($db2->next_record()) {
-		$loc_id = $db2->f('location_type_id');
+	while ($db2->nextRecord()) {
+		$loc_id = $db2->getField('location_type_id');
 		$add = 'LOC' . $loc_id;
 		if ($amount > 0)
 			$PHP_OUTPUT.=('+');
@@ -293,17 +293,17 @@ while ($db->next_record()) {
 	}
 	$PHP_OUTPUT.=(',');
 	$db2->query('SELECT * FROM planet WHERE game_id = '.$game_id.' AND sector_id = $id');
-	if ($db2->next_record()) {
+	if ($db2->nextRecord()) {
 		$planet =& SmrPlanet::getPlanet($game_id,$id);
 		$level = $planet->level();
 		$owner = $planet->owner_id;
 		$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' AND account_id = $owner');
-		$db2->next_record();
-		$all_id = $db2->f('alliance_id');
+		$db2->nextRecord();
+		$all_id = $db2->getField('alliance_id');
 		if ($all_id > 0) {
 			$db2->query('SELECT * FROM alliance WHERE game_id = '.$game_id.' AND alliance_id = $all_id');
-			$db2->next_record();
-			$alliance = stripslashes($db2->f('alliance_name'));
+			$db2->nextRecord();
+			$alliance = stripslashes($db2->getField('alliance_name'));
 		} else
 			$alliance = 'None';
 		$PHP_OUTPUT.=('.$db->escapeString($level:$alliance');

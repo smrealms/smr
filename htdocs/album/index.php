@@ -52,7 +52,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 					  approved = \'YES\'
 				ORDER BY HoF_name');
 
-	if ($db->nf() > 1) {
+	if ($db->getNumRows() > 1) {
 
 		$db2->query('SELECT album.account_id as album_id
 				FROM album NATURAL JOIN account_has_stats
@@ -60,15 +60,15 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 					  approved = \'YES\'
 				ORDER BY HoF_name');
 		
-		if ($db2->next_record())
-			album_entry($db2->f('album_id'));
+		if ($db2->nextRecord())
+			album_entry($db2->getField('album_id'));
 		else {
 			
 			// get all id's and build array
 			$album_ids = array();
 	
-			while ($db->next_record())
-				$album_ids[] = $db->f('album_id');
+			while ($db->nextRecord())
+				$album_ids[] = $db->getField('album_id');
 	
 			// double check if we have id's
 			if (count($album_ids) > 0)
@@ -77,10 +77,10 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 				main_page();
 		}
 
-	} elseif ($db->nf() == 1) {
+	} elseif ($db->getNumRows() == 1) {
 
-		if ($db->next_record())
-			album_entry($db->f('album_id'));
+		if ($db->nextRecord())
+			album_entry($db->getField('album_id'));
 		else
 			main_page();
 

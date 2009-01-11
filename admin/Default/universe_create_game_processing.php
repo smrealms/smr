@@ -20,10 +20,10 @@ if ($action == 'Create >>') {
 	$db->query('INSERT INTO game (game_name, game_description, start_date, end_date, max_players, game_type, credits_needed, game_speed) ' .
 						  'VALUES('.$db->escapeString($game_name).', '.$db->escapeString($game_description).', '.$db->escapeString($start_date).', '.$db->escapeString($end_date).', '.$max_player.', '.$db->escapeString($game_type).', '.$credits.', '.$speed.')');
 
-	$container['game_id']	= $db->insert_id();
+	$container['game_id']	= $db->getInsertID();
 
 	$db->query('SELECT * FROM race');
-	$race_count = $db->nf();
+	$race_count = $db->getNumRows();
 
 	for ($race_id_1 = 2; $race_id_1 <= $race_count; $race_id_1++) {
 

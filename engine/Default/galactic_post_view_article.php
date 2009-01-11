@@ -12,7 +12,7 @@ $db3->query('INSERT INTO news ' .
 
 }
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID());
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
     $PHP_OUTPUT.=('It is your responsibility to make sure ALL HTML tages are closed!<br />');
     $PHP_OUTPUT.=('You have the following articles to view.<br /><br />');
@@ -20,17 +20,17 @@ if ($db->nf()) {
 }
 else
     $PHP_OUTPUT.=('There are no articles to view');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-    $db2->query('SELECT * FROM galactic_post_paper_content WHERE game_id = '.$player->getGameID().' AND article_id = ' . $db->f('article_id'));
-    if (!$db2->next_record()) {
+    $db2->query('SELECT * FROM galactic_post_paper_content WHERE game_id = '.$player->getGameID().' AND article_id = ' . $db->getField('article_id'));
+    if (!$db2->nextRecord()) {
 
-        $title = stripslashes($db->f('title'));
-        $writter =& SmrPlayer::getPlayer($db->f('writer_id'), $player->getGameID());
+        $title = stripslashes($db->getField('title'));
+        $writter =& SmrPlayer::getPlayer($db->getField('writer_id'), $player->getGameID());
         $container = array();
         $container['url'] = 'skeleton.php';
         $container['body'] = 'galactic_post_view_article.php';
-        $container['id'] = $db->f('article_id');
+        $container['id'] = $db->getField('article_id');
         $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$title.'</font> written by '.$writter->getPlayerName());
         $PHP_OUTPUT.=('<br />');
 
@@ -41,9 +41,9 @@ $PHP_OUTPUT.=('<br /><br />');
 if (isset($var['id'])) {
 
     $db->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID().' AND article_id = '.$var['id']);
-    $db->next_record();
-    $title = stripslashes($db->f('title'));
-    $message = stripslashes($db->f('text'));
+    $db->nextRecord();
+    $title = stripslashes($db->getField('title'));
+    $message = stripslashes($db->getField('text'));
     $PHP_OUTPUT.=($title);
     $PHP_OUTPUT.=('<br /><br />'.$message.'<br />');
     $PHP_OUTPUT.=('<br />');
@@ -64,17 +64,17 @@ if (isset($var['id'])) {
     $container = array();
     $container['url'] = 'galactic_post_add_article_to_paper.php';
     transfer('id');
-    if (!$db->nf()) {
+    if (!$db->getNumRows()) {
 
         $PHP_OUTPUT.=('You have no papers made that you can add an article to.');
         $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'galactic_post_make_paper.php'), '<b>Click Here</b>');
         $PHP_OUTPUT.=('To make a new one.');
 
     }
-    while ($db->next_record()) {
+    while ($db->nextRecord()) {
 
-        $paper_title = $db->f('title');
-        $paper_id = $db->f('paper_id');
+        $paper_title = $db->getField('title');
+        $paper_id = $db->getField('paper_id');
         $container['paper_id'] = $paper_id;
         $PHP_OUTPUT.=create_link($container, '<b>Add this article to '.$paper_title.'!</b>');
         $PHP_OUTPUT.=('<br />');

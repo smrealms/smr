@@ -13,11 +13,11 @@ $PHP_OUTPUT.=('<select name="game_id" id="InputFields">');
 $PHP_OUTPUT.=('<option value=None selected>[Select the game]</option>');
 
 $db->query('SELECT * FROM game');
-while($db->next_record()) {
+while($db->nextRecord()) {
 
 	//check to see if it needs to be deleted
-    $id_game = $db->f('game_id');
-    $name = $db->f('game_name');
+    $id_game = $db->getField('game_id');
+    $name = $db->getField('game_name');
 
 	$PHP_OUTPUT.=('<option value="'.$id_game.'">'.$name.'</option>');
 

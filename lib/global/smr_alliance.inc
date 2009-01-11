@@ -26,16 +26,16 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 
 			$this->query('SELECT * FROM alliance WHERE game_id = '.$this->game_id.' AND ' .
 													  'alliance_id = '.$this->alliance_id);
-			$this->next_record();
-			$this->alliance_name	= stripslashes($this->f('alliance_name'));
-			$this->password			= stripslashes($this->f('alliance_password'));
-			$this->description		= strip_tags(stripslashes($this->f('alliance_description')));
-			$this->leader_id		= $this->f('leader_id');
-			$this->account			= $this->f('alliance_account');
-			$this->kills			= $this->f('alliance_kills');
-			$this->deaths			= $this->f('alliance_deaths');
-			$this->mod				= strip_tags(stripslashes($this->f('mod')));
-			$this->img_src			= $this->f('img_src');
+			$this->nextRecord();
+			$this->alliance_name	= stripslashes($this->getField('alliance_name'));
+			$this->password			= stripslashes($this->getField('alliance_password'));
+			$this->description		= strip_tags(stripslashes($this->getField('alliance_description')));
+			$this->leader_id		= $this->getField('leader_id');
+			$this->account			= $this->getField('alliance_account');
+			$this->kills			= $this->getField('alliance_kills');
+			$this->deaths			= $this->getField('alliance_deaths');
+			$this->mod				= strip_tags(stripslashes($this->getField('mod')));
+			$this->img_src			= $this->getField('img_src');
 
 			if (empty($this->kills))
 				$this->kills = 0;
@@ -66,8 +66,8 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 
 		//we have the list of players put them in an array now
 		$member_list = array();
-		while ($this->next_record())
-			$member_list[] = $this->f('account_id');
+		while ($this->nextRecord())
+			$member_list[] = $this->getField('account_id');
 
 		return $member_list;
 

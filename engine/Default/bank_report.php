@@ -11,14 +11,14 @@ $PHP_OUTPUT.=create_bank_menue();
 
 //get all transactions
 $db->query('SELECT * FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID());
-if (!$db->nf()) create_error('Your alliance has no recorded transactions');
-while ($db->next_record()) {
-	if ($db->f('transaction') == 'Payment') {
-		if (!$db->f('exempt')) $trans[$db->f('payee_id')][WITHDRAW] += $db->f('amount');
-		else $trans[0][WITHDRAW] += $db->f('amount');
+if (!$db->getNumRows()) create_error('Your alliance has no recorded transactions');
+while ($db->nextRecord()) {
+	if ($db->getField('transaction') == 'Payment') {
+		if (!$db->getField('exempt')) $trans[$db->getField('payee_id')][WITHDRAW] += $db->getField('amount');
+		else $trans[0][WITHDRAW] += $db->getField('amount');
 	} else {
-		if (!$db->f('exempt')) $trans[$db->f('payee_id')][DEPOSIT] += $db->f('amount');
-		else $trans[0][DEPOSIT] += $db->f('amount');
+		if (!$db->getField('exempt')) $trans[$db->getField('payee_id')][DEPOSIT] += $db->getField('amount');
+		else $trans[0][DEPOSIT] += $db->getField('amount');
 	}
 }
 
@@ -28,7 +28,7 @@ foreach ($trans as $accId => $transArray) $totals[$accId] = $transArray[DEPOSIT]
 arsort($totals, SORT_NUMERIC);
 $db->query('SELECT * FROM player WHERE account_id IN (' . implode(',',$playerIDs) . ') AND game_id = '.$player->getGameID().' ORDER BY player_name');
 $players[0] = 'Alliance Funds';
-while ($db->next_record()) $players[$db->f('account_id')] = stripslashes($db->f('player_name'));
+while ($db->nextRecord()) $players[$db->getField('account_id')] = stripslashes($db->getField('player_name'));
 //format it this way so its easy to send to the alliance MB if requested.
 $text = '<table class="nobord" cellspacing="0" align="center">';
 foreach ($totals as $accId => $total) {
@@ -59,11 +59,11 @@ if (isset($var['text'])) {
 	$bankReporterID = -1;
 	$textInsert = $db->escape_string($text);
 	$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$alliance_id.' AND topic = \'Bank Statement\' LIMIT 1');
-	if ($db->next_record()) $thread_id = $db->f('thread_id');
+	if ($db->nextRecord()) $thread_id = $db->getField('thread_id');
 	if ($thread_id == 0) {
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$alliance_id.' ORDER BY thread_id DESC LIMIT 1');
-		if ($db->next_record())
-			$thread_id = $db->f('thread_id') + 1;
+		if ($db->nextRecord())
+			$thread_id = $db->getField('thread_id') + 1;
 		else $thread_id = 1;
 		$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ' .
 					'('.$player->getGameID().', '.$alliance_id.', '.$thread_id.', \'Bank Statement\')');

@@ -81,20 +81,20 @@ $PHP_OUTPUT.=('</tr>');
 
 // get game speed
 $db->query('SELECT * FROM game WHERE game_id = '.$player->getGameID());
-if ($db->next_record())
-	$game_speed = $db->f('game_speed');
+if ($db->nextRecord())
+	$game_speed = $db->getField('game_speed');
 
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM planet_construction ORDER BY construction_id');
-while ($db->next_record())
+while ($db->nextRecord())
 {
-	$construction_id			= $db->f('construction_id');
-	$construction_name			= $db->f('construction_name');
-	$construction_description	= $db->f('construction_description');
+	$construction_id			= $db->getField('construction_id');
+	$construction_name			= $db->getField('construction_name');
+	$construction_description	= $db->getField('construction_description');
 
 	$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id = '.$construction_id);
-	if ($db2->next_record())
-		$cost = $db2->f('amount');
+	if ($db2->nextRecord())
+		$cost = $db2->getField('amount');
 
 	/*$container = array();
 	$container['url'] = 'planet_construction_processing.php';
@@ -116,11 +116,11 @@ while ($db->next_record())
 						'WHERE planet_cost_good.good_id = good.good_id AND ' .
 							  'construction_id = '.$construction_id.' ' .
 						'ORDER BY good.good_id');
-	while ($db2->next_record())
+	while ($db2->nextRecord())
 	{
-		$good_id	= $db2->f('good_id');
-		$good_name	= $db2->f('good_name');
-		$amount		= $db2->f('amount');
+		$good_id	= $db2->getField('good_id');
+		$good_name	= $db2->getField('good_name');
+		$amount		= $db2->getField('amount');
 
 		if ($planet->getStockpile($good_id) < $amount)
 		{
@@ -143,8 +143,8 @@ while ($db->next_record())
 		$PHP_OUTPUT.=($cost.'-credits, ');
 
 	$db2->query('SELECT * FROM planet_cost_time WHERE construction_id = '.$construction_id);
-	if ($db2->next_record())
-		$PHP_OUTPUT.=(($db2->f('amount') / 3600 / $game_speed) . '-hours');
+	if ($db2->nextRecord())
+		$PHP_OUTPUT.=(($db2->getField('amount') / 3600 / $game_speed) . '-hours');
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
@@ -178,8 +178,8 @@ foreach ($planet->getStockpile() as $id => $amount)
 	{
 
 		$db->query('SELECT * FROM good WHERE good_id = '.$id);
-		if ($db->next_record())
-			$PHP_OUTPUT.=('<li>' . $db->f('good_name') . ': '.$amount.'</li>');
+		if ($db->nextRecord())
+			$PHP_OUTPUT.=('<li>' . $db->getField('good_name') . ': '.$amount.'</li>');
 
 	}
 }

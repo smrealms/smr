@@ -16,9 +16,9 @@ if ($var['func'] == 'Map') {
 
 	// add port infos
 	$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' ORDER BY sector_id');
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		SmrPort::getPort($game_id,$db->f('sector_id'))->addCachePort($account_id);
+		SmrPort::getPort($game_id,$db->getField('sector_id'))->addCachePort($account_id);
 	}
 
 } elseif ($var['func'] == 'Money')
@@ -34,16 +34,16 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	$player->setShipTypeID($ship_id);
 	//check for more weapons than allowed
 	$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$ship_id);
-	$db->next_record();
-	$max_weps = $db->f('hardpoint');
-	$speed = $db->f('speed');
+	$db->nextRecord();
+	$max_weps = $db->getField('hardpoint');
+	$speed = $db->getField('speed');
 	$db->query('SELECT * FROM ship_has_weapon WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	if ($db->nf() > $max_weps) {
-		$extra = $db->nf() - $max_weps;
+	if ($db->getNumRows() > $max_weps) {
+		$extra = $db->getNumRows() - $max_weps;
 		for ($i=1; $i <= $extra; $i++) {
 			$db->query('SELECT * FROM ship_has_weapon WHERE account_id = '.$player->getAccountID().' ORDER BY order_id DESC');
-			$db->next_record();
-			$order_id = $db->f('order_id');
+			$db->nextRecord();
+			$order_id = $db->getField('order_id');
 			$db->query('DELETE FROM ship_has_weapon WHERE account_id = '.$player->getAccountID().' AND order_id = '.$order_id);
 		}
 	}

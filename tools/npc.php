@@ -29,7 +29,7 @@ while (true) {
 				ORDER BY next_active
 				LIMIT 1
 			   ');
-	if (!$db->next_record()) {
+	if (!$db->nextRecord()) {
 
 		sleep(1);
 		continue;
@@ -37,8 +37,8 @@ while (true) {
 	}
 
 	// the game we going to play
-	$account_id	= $db->f('account_id');
-	$game_id	= $db->f('game_id');
+	$account_id	= $db->getField('account_id');
+	$game_id	= $db->getField('game_id');
 
 	// check if the player joined that game.
 	if (!player_joined_game($account_id, $game_id))

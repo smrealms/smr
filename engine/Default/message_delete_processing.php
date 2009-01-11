@@ -16,8 +16,8 @@ if ($action == 'Marked Messages') {
 						AND account_id = ' . $player->getAccountID() . '
 						AND message_type_id = ' . $SCOUTMSG;
 			$db->query($query);
-			while ($db->next_record()) {
-				$newId = $db->f('message_id');
+			while ($db->nextRecord()) {
+				$newId = $db->getField('message_id');
 				if ($message_id_list) $message_id_list .= ', ';
         		$message_id_list .= $newId;
 			}

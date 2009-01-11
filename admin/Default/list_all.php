@@ -12,21 +12,21 @@ $PHP_OUTPUT.=('<th align=center>eMail</th>');
 $PHP_OUTPUT.=('<th align=center>Last IP</th>');
 $PHP_OUTPUT.=('<th align=center>Exception</th>');
 $PHP_OUTPUT.=('</tr>');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	
-	$acc_id = $db->f('account_id');
+	$acc_id = $db->getField('account_id');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align=center>$acc_id</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('login') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('email') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('login') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('email') . '</td>');
 	$db2->query('SELECT * FROM account_has_ip WHERE account_id = '.$acc_id.' ORDER BY time DESC LIMIT 1');
-	if ($db2->next_record())
-		$PHP_OUTPUT.=('<td align=center>' . $db2->f('ip') . '</td>');
+	if ($db2->nextRecord())
+		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('ip') . '</td>');
 	else
 		$PHP_OUTPUT.=('<td align=center>No Last IP</td>');
 	$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$acc_id);
-	if ($db2->next_record())
-		$PHP_OUTPUT.=('<td align=center>' . $db2->f('reason') . '</td>');
+	if ($db2->nextRecord())
+		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('reason') . '</td>');
 	else
 		$PHP_OUTPUT.=('<td align=center>No Exception</td>');
 	$PHP_OUTPUT.=('</tr>');

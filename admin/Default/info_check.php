@@ -52,23 +52,23 @@ if (!isset($number) && !isset($var['number'])) {
 
         $db->query('SELECT * FROM account WHERE login = '.$db->escapeString($name));
 
-        if ($db->next_record()) {
+        if ($db->nextRecord()) {
 
             $PHP_OUTPUT.=('<tr>');
-            $aname = $db->f('first_name');
-            $login_name = $db->f('login');
+            $aname = $db->getField('first_name');
+            $login_name = $db->getField('login');
             $aname .= '&nbsp;';
-            $aname .= $db->f('last_name');
-            $city = $db->f('city');
-            $email = $db->f('email');
-            $id = $db->f('account_id');
+            $aname .= $db->getField('last_name');
+            $city = $db->getField('city');
+            $email = $db->getField('email');
+            $id = $db->getField('account_id');
             $PHP_OUTPUT.=('<td align="center">'.$name.'</td>');
             $PHP_OUTPUT.=('<td align="center">'.$aname.'</td>');
             $PHP_OUTPUT.=('<td align="center">'.$city.'</td>');
             $PHP_OUTPUT.=('<td align="center">'.$email.'</td>');
             $names = array();
             $db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
-            if ($db2->next_record())
+            if ($db2->nextRecord())
                 $continue = 'TRUE';
             else
                 $continue = '0';
@@ -100,11 +100,11 @@ if (!isset($number) && !isset($var['number'])) {
                     }
                     $db3->query('SELECT * FROM account_is_closed WHERE suspicion = '.$db->escapeString($match_sec));
                     $db2->query('SELECT * FROM account WHERE login = '.$db->escapeString($match_sec));
-                    if ($db3->nf()) {
-                        while ($db3->next_record()) {
+                    if ($db3->getNumRows()) {
+                        while ($db3->nextRecord()) {
 
                             //we have a match the other way
-                            $curr_acc =& SmrAccount::getAccount($db3->f('account_id'));
+                            $curr_acc =& SmrAccount::getAccount($db3->getField('account_id'));
                             $id = $curr_acc->account_id;
                             $match_sec = $curr_acc->login;
                             if (!in_array($match_sec, $names)) {
@@ -125,7 +125,7 @@ if (!isset($number) && !isset($var['number'])) {
 
                        }
 
-                    } elseif ($isset == 'yes' && !$db2->next_record()) {
+                    } elseif ($isset == 'yes' && !$db2->nextRecord()) {
 
                         $PHP_OUTPUT.=('Data Error 2: '.$match_sec.' does not exist!<br />');
                         $continue = '0';
@@ -142,9 +142,9 @@ if (!isset($number) && !isset($var['number'])) {
 
                     }
                     $db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
-                    if($db2->next_record()) {
+                    if($db2->nextRecord()) {
 
-                        $match = $db2->f('suspicion');
+                        $match = $db2->getField('suspicion');
 
                         if (in_array($match, $names))
                             $continue = 'next';
@@ -168,7 +168,7 @@ if (!isset($number) && !isset($var['number'])) {
                 }
             } //end while (continue)
             $PHP_OUTPUT.=('</td>');
-            $account_wanted = $db->f('account_id');
+            $account_wanted = $db->getField('account_id');
             $PHP_OUTPUT.=('<td align=center><input type="text" name="exception['.$account_wanted.']" value="no_reason" size="30" id="InputFields"></td>');
             $PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="account_id[]" value="'.$account_wanted.'"></td>');
             $PHP_OUTPUT.=('</tr>');

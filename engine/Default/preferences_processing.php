@@ -25,7 +25,7 @@ if ($action == 'Save and resend validation code') {
     create_error('The eMail is invalid! It cannot contain any spaces.');
   
   $db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $account->account_id);
-  if ($db->nf() > 0)
+  if ($db->getNumRows() > 0)
     create_error('This eMail address is already registered.');
 
   $account->email = $email;
@@ -80,7 +80,7 @@ if ($action == 'Save and resend validation code') {
 
   //no duplicates
   $db->query('SELECT * FROM account_has_stats WHERE HoF_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id <> '.$account->account_id);
-  if ($db->next_record()) create_error('Someone is already using that name!');
+  if ($db->nextRecord()) create_error('Someone is already using that name!');
 
   // set the HoF name in account stat
   $db->query('UPDATE account_has_stats SET HoF_name = ' . $db->escape_string($HoF_name, true) . ' WHERE account_id = '.$account->account_id);
@@ -137,7 +137,7 @@ else if ($action == 'Alter Player') {
 	
 	// Check if name is in use.
 	$db->query('SELECT account_id FROM player WHERE account_id!=' . SmrSession::$account_id . ' AND game_id=' . $var['game_id'] . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
-	if($db->nf())	{
+	if($db->getNumRows())	{
 		create_error('Name is already being used in this game!');
 	}
 	

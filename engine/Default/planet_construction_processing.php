@@ -16,8 +16,8 @@ if ($action == 'Build') {
 	$planet->startBuilding($player->getAccountID(),$var['construction_id']);
 
 	$db->query('SELECT * FROM planet_construction WHERE construction_id = ' . $var['construction_id']);
-	$db->next_record();
-	$name = $db->f('construction_name');
+	$db->nextRecord();
+	$name = $db->getField('construction_name');
 	$account->log(11, 'Player starts a '.$name.' on planet.', $player->getSectorID());
 
 }

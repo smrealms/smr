@@ -17,16 +17,16 @@ if ($action == 'Deposit') {
 
     $player->decreaseCredits($amount);
     $db->query('SELECT * FROM anon_bank_transactions WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num.' ORDER BY transaction_id DESC LIMIT 1');
-    if ($db->next_record())
-        $trans_id = $db->f('transaction_id') + 1;
+    if ($db->nextRecord())
+        $trans_id = $db->getField('transaction_id') + 1;
     else
         $trans_id = 1;
     $db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time) ' .
                             'VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$account_num.', '.$trans_id.', \'Deposit\', '.$amount.', '.TIME.')');
     $db->query('UPDATE anon_bank SET amount = amount + '.$amount.' WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num);
     $db->query('SELECT * FROM anon_bank WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num);
-    $db->next_record();
-    $total = $db->f('amount');
+    $db->nextRecord();
+    $total = $db->getField('amount');
     //too much money?
 //	if ($total > 4294967295) {
 //		
@@ -43,12 +43,12 @@ if ($action == 'Deposit') {
 } else {
 
     $db->query('SELECT * FROM anon_bank WHERE anon_id = '.$account_num.' AND game_id = '.$player->getGameID());
-    $db->next_record();
-    if ($db->f('amount') < $amount)
+    $db->nextRecord();
+    if ($db->getField('amount') < $amount)
         create_error('You don\'t have that much money on your account!');
     $db->query('SELECT * FROM anon_bank_transactions WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num.' ORDER BY transaction_id DESC LIMIT 1');
-    if ($db->next_record())
-        $trans_id = $db->f('transaction_id') + 1;
+    if ($db->nextRecord())
+        $trans_id = $db->getField('transaction_id') + 1;
     else
         $trans_id = 1;
     $db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time) ' .
@@ -56,8 +56,8 @@ if ($action == 'Deposit') {
     $db->query('UPDATE anon_bank SET amount = amount - '.$amount.' WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num);
     $player->increaseCredits($amount);
     $db->query('SELECT * FROM anon_bank WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num);
-    $db->next_record();
-    $total = $db->f('amount');
+    $db->nextRecord();
+    $total = $db->getField('amount');
     //too much money?
 //	if ($player->getCredits() > 4294967295) {
 //		

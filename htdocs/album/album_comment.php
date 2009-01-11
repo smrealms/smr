@@ -49,11 +49,11 @@ else
 $curr_time = time();
 
 // check if we have comments for this album already
-$db->lock('album_has_comments');
+$db->lockTable('album_has_comments');
 
 $db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$album_id);
-if ($db->next_record())
-	$comment_id = $db->f('MAX(comment_id)') + 1;
+if ($db->nextRecord())
+	$comment_id = $db->getField('MAX(comment_id)') + 1;
 else
 	$comment_id = 1;
 

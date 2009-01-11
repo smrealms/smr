@@ -82,8 +82,8 @@ if (isset($made)) {
     }
 
 	$db->query('SELECT MAX(anon_id) FROM anon_bank WHERE game_id = '.SmrSession::$game_id);
-    if ($db->next_record())
-	    $new_acc = $db->f('MAX(anon_id)') + 1;
+    if ($db->nextRecord())
+	    $new_acc = $db->getField('MAX(anon_id)') + 1;
     else
     	$new_acc = 1;
     $db->query('INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES ('.SmrSession::$game_id.', '.$new_acc.', '.$player->getAccountID().', '.$db->escapeString($password).', 0)');
@@ -125,7 +125,7 @@ if (!isset($account_num) && !isset($make)) {
 	$db->query('SELECT * FROM anon_bank 
 				WHERE owner_id=' . $player->getAccountID() . '
 				AND game_id=' . $player->getGameID());
-	if ($db->nf()) {
+	if ($db->getNumRows()) {
 		$PHP_OUTPUT.= '<br /><h2>Your accounts</h2><br />';
 		$PHP_OUTPUT.= '<div align=center>';
 		$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset" ><tr><th>ID</th><th>Password</th><th>Last Transaction</th><th>Balance</th><th>Option</th></tr>';
@@ -134,29 +134,29 @@ if (!isset($account_num) && !isset($make)) {
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bank_anon.php';
 		$db2 = new SmrMySqlDatabase();
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 			$db2->query('SELECT MAX(time) FROM anon_bank_transactions
 						WHERE game_id=' . $player->getGameID() . '
-						AND anon_id=' . $db->f('anon_id') . ' LIMIT 1');
+						AND anon_id=' . $db->getField('anon_id') . ' LIMIT 1');
 
 			$PHP_OUTPUT.= '<tr><td class="shrink center">';
-			$PHP_OUTPUT.= $db->f('anon_id');
+			$PHP_OUTPUT.= $db->getField('anon_id');
 			$PHP_OUTPUT.= '</td><td>';
-			$PHP_OUTPUT.= $db->f('password');
+			$PHP_OUTPUT.= $db->getField('password');
 			$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
 
-			if($db2->next_record() && $db2->f('MAX(time)')) {
-				$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db2->f('MAX(time)'));
+			if($db2->nextRecord() && $db2->getField('MAX(time)')) {
+				$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db2->getField('MAX(time)'));
 			}
 			else {
 				$PHP_OUTPUT.= 'No transactions';
 			}
 		
 			$PHP_OUTPUT.= '</td><td class="right shrink">';
-			$PHP_OUTPUT.= $db->f('amount');
+			$PHP_OUTPUT.= $db->getField('amount');
 			$PHP_OUTPUT.= '</td><td class="button">';
-        	$container['account_num'] = $db->f('anon_id');
-        	$container['password'] = $db->f('password');
+        	$container['account_num'] = $db->getField('anon_id');
+        	$container['password'] = $db->getField('password');
         	$PHP_OUTPUT.=create_button($container, 'Access Account');
 			$PHP_OUTPUT.= '</td></tr>';
     	}
@@ -179,14 +179,14 @@ if (isset($account_num))
 				AND game_id=' . $player->getGameID() . ' LIMIT 1'
 				);
 
-	if($db->next_record())
+	if($db->nextRecord())
 	{
 		if ($var['allowed'] != 'yes')
 		{
     		if (isset($_REQUEST['pass'])) $pass = $_REQUEST['pass'];
     		else $pass = $var['password'];
 
-			if ($db->f('password') != $pass)
+			if ($db->getField('password') != $pass)
 			{
 				$PHP_OUTPUT.=create_error('Invalid password');
 				return;
@@ -199,8 +199,8 @@ if (isset($account_num))
        	return;
 	}
 
-	$balance = $db->f('amount');
-	$password= $db->f('password');
+	$balance = $db->getField('amount');
+	$password= $db->getField('password');
 
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
@@ -217,8 +217,8 @@ if (isset($account_num))
 					WHERE game_id=' . $player->getGameID() . '
 					AND anon_id=' . $account_num
 					);
-		if($db->next_record()) {
-			$maxValue = $db->f('MAX(transaction_id)');
+		if($db->nextRecord()) {
+			$maxValue = $db->getField('MAX(transaction_id)');
 			$minValue = $maxValue - 5;
 			if($minValue < 1) {
 				$minValue = 1;
@@ -267,7 +267,7 @@ if (isset($account_num))
 	$db->query($query);
 
 	// only if we have at least one result
-	if ($db->nf() > 0) {
+	if ($db->getNumRows() > 0) {
 
 		$PHP_OUTPUT.= '<div align="center">';
  
@@ -291,19 +291,19 @@ if (isset($account_num))
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'trader_search_result.php';
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 			$PHP_OUTPUT.= '<tr><td class="shrink center">';
-			$PHP_OUTPUT.= $db->f('transaction_id');
+			$PHP_OUTPUT.= $db->getField('transaction_id');
 			$PHP_OUTPUT.= '</td><td class="shrink center nowrap">';
-			$PHP_OUTPUT.= date('n/j/Y\<b\r /\>g:i:s A', $db->f('time'));
+			$PHP_OUTPUT.= date('n/j/Y\<b\r /\>g:i:s A', $db->getField('time'));
 			$PHP_OUTPUT.= '</td><td>';
-			$container['player_id']	= $db->f('player_id');
-			$PHP_OUTPUT.=create_link($container, get_colored_text($db->f('alignment'),stripslashes($db->f('player_name'))));
+			$container['player_id']	= $db->getField('player_id');
+			$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('alignment'),stripslashes($db->getField('player_name'))));
 			$PHP_OUTPUT.= '</td><td class="shrink right">';
-			if ($db->f('transaction') == 'Payment') $PHP_OUTPUT.= (number_format($db->f('amount')));
+			if ($db->getField('transaction') == 'Payment') $PHP_OUTPUT.= (number_format($db->getField('amount')));
 			else $PHP_OUTPUT.= '&nbsp;';
 			$PHP_OUTPUT.= '</td><td class="shrink right">';
-			if ($db->f('transaction') == 'Deposit') $PHP_OUTPUT.=(number_format($db->f('amount')));
+			if ($db->getField('transaction') == 'Deposit') $PHP_OUTPUT.=(number_format($db->getField('amount')));
 			else $PHP_OUTPUT.= '&nbsp;';
 			$PHP_OUTPUT.= '</td></tr>';
 		}

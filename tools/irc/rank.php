@@ -24,30 +24,30 @@ function channel_msg_rank($fp, $rdata) {
 		$db2 = new SmrMySqlDatabase();
 
 		$db->query('SELECT * FROM player WHERE player_name = ' . $db->escape_string($msg[4], true));
-		if ($db->nf()) {
+		if ($db->getNumRows()) {
 
-			while($db->next_record()) {
+			while($db->nextRecord()) {
 
-				$player_name = stripslashes($db->f('player_name'));
-				$experience = $db->f('experience');
-				$game_id = $db->f('game_id');
+				$player_name = stripslashes($db->getField('player_name'));
+				$experience = $db->getField('experience');
+				$game_id = $db->getField('game_id');
 
 				$db2->query('SELECT COUNT(*) as our_rank FROM player ' .
 							'WHERE game_id = '.$game_id.' AND ' .
 								  '(experience > '.$experience.' OR ' .
 								  '(experience = '.$experience.' AND ' .
 								  'player_name <= ' . $db->escape_string($player_name, true) . ' ))');
-				if ($db2->next_record())
-					$our_rank = $db2->f('our_rank');
+				if ($db2->nextRecord())
+					$our_rank = $db2->getField('our_rank');
 
 				// how many players are there?
 				$db2->query('SELECT COUNT(*) as total_player FROM player WHERE game_id = '.$game_id);
-				if ($db2->next_record())
-					$total_player = $db2->f('total_player');
+				if ($db2->nextRecord())
+					$total_player = $db2->getField('total_player');
 
 				$db2->query('SELECT game_name FROM game WHERE game_id = '.$game_id);
-				if ($db2->next_record())
-					$game_name = $db2->f('game_name');
+				if ($db2->nextRecord())
+					$game_name = $db2->getField('game_name');
 
 				fputs($fp, 'NOTICE '.$msg[1].' :'.$msg[1].' you are ranked '.$our_rank.' out of '.$total_player.' in '.$game_name.'!'.EOL);
 

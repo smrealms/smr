@@ -9,7 +9,7 @@ $db->query('SELECT account_has_logs.account_id as account_id, login, player_name
 			NATURAL JOIN account
 			NATURAL JOIN player
 			GROUP BY account_has_logs.account_id');
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	// a second db object
 	$db2 = new SmrMySqlDatabase();
@@ -25,12 +25,12 @@ if ($db->nf()) {
 	$PHP_OUTPUT.=('<th>Notes</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$account_id			= $db->f('account_id');
-		$login				= $db->f('login');
-		$player_name		= stripslashes($db->f('player_name'));
-		$number_of_entries	= $db->f('number_of_entries');
+		$account_id			= $db->getField('account_id');
+		$login				= $db->getField('login');
+		$player_name		= stripslashes($db->getField('player_name'));
+		$number_of_entries	= $db->getField('number_of_entries');
 
 		if (is_array($var['account_ids']) && in_array($account_id, $var['account_ids']))
 			$checked = ' checked';
@@ -39,8 +39,8 @@ if ($db->nf()) {
 
 		// put hidden fields in for log type to have all fields selected on next page.
 		$db2->query('SELECT * FROM log_type');
-		while ($db2->next_record())
-			$PHP_OUTPUT.=('<input type="hidden" name="log_type_ids[' . $db2->f('log_type_id') . ']" value="1">');
+		while ($db2->nextRecord())
+			$PHP_OUTPUT.=('<input type="hidden" name="log_type_ids[' . $db2->getField('log_type_id') . ']" value="1">');
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td valign="top">'.$login.'</td>');
@@ -49,8 +49,8 @@ if ($db->nf()) {
 		$PHP_OUTPUT.=('<td valign="middle" align="center"><input type="checkbox" name="account_ids[]" value="'.$account_id.'"'.$checked.'></td>');
 
 		$db2->query('SELECT * FROM log_has_notes WHERE account_id = '.$account_id);
-		if ($db2->next_record())
-			$PHP_OUTPUT.=('<td>' . nl2br($db2->f('notes')) . '</td>');
+		if ($db2->nextRecord())
+			$PHP_OUTPUT.=('<td>' . nl2br($db2->getField('notes')) . '</td>');
 		else
 			$PHP_OUTPUT.=('<td>&nbsp;</td>');
 		$PHP_OUTPUT.=('</tr>');

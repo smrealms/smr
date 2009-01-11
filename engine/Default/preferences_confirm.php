@@ -28,20 +28,20 @@ $smarty->assign('PageTopic','Confirmation');
 $PHP_OUTPUT.=('Are you sure you want to transfer '.$amount.' credits to<br />');
 
 $db->query('SELECT * FROM account WHERE account_id = '.$account_id);
-if ($db->next_record())
-	$login = $db->f('login');
+if ($db->nextRecord())
+	$login = $db->getField('login');
 
 $db->query('SELECT * FROM player WHERE account_id = '.$account_id);
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-	    $player_name = stripslashes($db->f('player_name'));
-    	$game_id = $db->f('game_id');
+	    $player_name = stripslashes($db->getField('player_name'));
+    	$game_id = $db->getField('game_id');
 
 	    $db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
-    	if ($db2->next_record())
-			$game_name = $db2->f('game_name');
+    	if ($db2->nextRecord())
+			$game_name = $db2->getField('game_name');
 
 		$PHP_OUTPUT.=($player_name.' in game '.$game_name.'('.$game_id.')<br />');
 

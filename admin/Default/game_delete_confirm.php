@@ -5,10 +5,10 @@ $game_id = $_REQUEST['game_id'];
 $db->query('SELECT game_name, end_date
 			FROM game
 			WHERE game_id = '.$game_id);
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$name		= $db->f('game_name');
-	$end_date	= $db->f('end_date');
+	$name		= $db->getField('game_name');
+	$end_date	= $db->getField('end_date');
 
 	$PHP_OUTPUT.=('Are you sure you want to delete <i>'.$name.'?</i><br />');
 	if (date('Y-m-d') < $end_date)

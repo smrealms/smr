@@ -17,7 +17,7 @@
   function nextid($seq_name) {
     $this->connect();
 
-    if ($this->lock($this->Seq_Table)) {
+    if ($this->lockTable($this->Seq_Table)) {
       /* get sequence number (locked) and increment */
       $q  = sprintf('select nextid from %s where seq_name = \'%s\'',
                 $this->Seq_Table,

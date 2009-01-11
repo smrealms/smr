@@ -27,16 +27,16 @@ if (isset($var['process'])) {
 	$game_id = $player->getGameID();
 	//get start sector
 	$db->query('SELECT * FROM sector WHERE galaxy_id = '.$gal_id.' AND game_id = '.$player->getGameID().' ORDER BY sector_id LIMIT 1');
-	$db->next_record();
-	$low = $db->f('sector_id');
+	$db->nextRecord();
+	$low = $db->getField('sector_id');
 	//get end sector
 	$db->query('SELECT * FROM sector WHERE galaxy_id = '.$gal_id.' AND game_id = '.$player->getGameID().' ORDER BY sector_id DESC LIMIT 1');
-	$db->next_record();
-	$high = $db->f('sector_id');
+	$db->nextRecord();
+	$high = $db->getField('sector_id');
 
 	// Have they already got this map? (Are there any unexplored sectors?
 	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id.' LIMIT 1');
-	if(!$db->next_record()) {
+	if(!$db->nextRecord()) {
 		create_error('You already have maps of this galaxy!');
 		return;
 	}
@@ -49,9 +49,9 @@ if (isset($var['process'])) {
 	require_once(get_file_loc('SmrPort.class.inc'));
 	// add port infos
 	$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' AND sector_id <= '.$high.' AND sector_id >= '.$low.' ORDER BY sector_id');
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		SmrPort::getPort($game_id,$db->f('sector_id'))->addCachePort($account_id);
+		SmrPort::getPort($game_id,$db->getField('sector_id'))->addCachePort($account_id);
 	}
 
 	//offer another drink and such
@@ -72,11 +72,11 @@ if (isset($var['process'])) {
 	$PHP_OUTPUT.=('<option value=0>[Select a galaxy]</option>');
 	$db->query('SELECT galaxy_id FROM sector WHERE game_id = '.$player->getGameID().' GROUP BY galaxy_id ORDER BY galaxy_id ASC');
 	$db2 = new SmrMySqlDatabase();
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 		
-		$gal_id = $db->f('galaxy_id');
+		$gal_id = $db->getField('galaxy_id');
 		$db2->query('SELECT * FROM galaxy WHERE galaxy_id = '.$gal_id);
-		if ($db2->next_record()) $PHP_OUTPUT.=('<option value='.$gal_id.'>' . $db2->f('galaxy_name') . '</option>');
+		if ($db2->nextRecord()) $PHP_OUTPUT.=('<option value='.$gal_id.'>' . $db2->getField('galaxy_name') . '</option>');
 		
 	}
 	$PHP_OUTPUT.=('</select><br />');

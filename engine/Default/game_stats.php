@@ -7,20 +7,20 @@ $db->query('SELECT game_description, credits_needed, game_name, game_speed, max_
 			'game_type, DATE_FORMAT(start_date, \'%c/%e/%Y\') as format_start_date, ' . 
 			'DATE_FORMAT(end_date, \'%c/%e/%Y\') as format_end_date FROM game ' . 
 			'WHERE game_id = '.$game_id);
-$db->next_record();
-$game_name = $db->f('game_name');
-$game_desc = $db->f('game_description');
-$start = $db->f('format_start_date');
-$end = $db->f('format_end_date');
-$speed = $db->f('game_speed');
-$max = $db->f('max_players');
-$type = $db->f('game_type');
-$creds = $db->f('credits_needed');
+$db->nextRecord();
+$game_name = $db->getField('game_name');
+$game_desc = $db->getField('game_description');
+$start = $db->getField('format_start_date');
+$end = $db->getField('format_end_date');
+$speed = $db->getField('game_speed');
+$max = $db->getField('max_players');
+$type = $db->getField('game_type');
+$creds = $db->getField('credits_needed');
 
 $db->query('SELECT * FROM player ' .
 			'WHERE last_cpl_action >= ' . (time() - 600) . ' AND ' .
 				  'game_id = '.$game_id);
-$current = $db->nf();
+$current = $db->getNumRows();
 $PHP_OUTPUT.=('<div align=center>');
 $smarty->assign('PageTopic','Game Stats for '.$game_name);
 $PHP_OUTPUT.=create_table();
@@ -40,22 +40,22 @@ $PHP_OUTPUT.='<tr><td align=center>General Info</td><td align=center>Other Info<
 </table>
 </td>';
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 	
-	$players = $db->nf();
-	$max_exp = $db->f('experience');
+	$players = $db->getNumRows();
+	$max_exp = $db->getField('experience');
 	
 }
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY alignment DESC');
-if ($db->next_record()) $align = $db->f('alignment');
+if ($db->nextRecord()) $align = $db->getField('alignment');
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY alignment ASC');
-if ($db->next_record()) $align_low = $db->f('alignment');
+if ($db->nextRecord()) $align_low = $db->getField('alignment');
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY kills DESC');
-if ($db->next_record()) $kills = $db->f('kills');
+if ($db->nextRecord()) $kills = $db->getField('kills');
 
 	
 $db->query('SELECT * FROM alliance WHERE game_id = '.$game_id);
-if ($db->next_record()) $alliances = $db->nf();
+if ($db->nextRecord()) $alliances = $db->getNumRows();
 $PHP_OUTPUT.='
 <td valign=top align=center>
 <table class="nobord">
@@ -79,12 +79,12 @@ $PHP_OUTPUT.='
 <td align=center style="border:none">';
 $rank = 0;
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC LIMIT 10');
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('<table class="nobord"><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Experience</th></tr>');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 		
-		$exp = $db->f('experience');
-		$db_player =& SmrPlayer::getPlayer($db->f('account_id'), $game_id);
+		$exp = $db->getField('experience');
+		$db_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
 		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->getPlayerName().'</td><td align=center>'.$exp.'</td></tr>');
 		
 	}
@@ -95,12 +95,12 @@ $PHP_OUTPUT.='
 </td><td align=center>';
 $rank = 0;
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY kills DESC LIMIT 10');
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('<table class="nobord"><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Kills</th></tr>');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 		
-		$kills = $db->f('kills');
-		$db_player =& SmrPlayer::getPlayer($db->f('account_id'), $game_id);
+		$kills = $db->getField('kills');
+		$db_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
 		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->getPlayerName().'</td><td align=center>'.$kills.'</td></tr>');
 		
 	}
@@ -117,13 +117,13 @@ $smarty->assign('PageTopic','CURRENT PLAYERS');
 $db->query('SELECT * FROM active_session
 			WHERE last_accessed >= ' . (time() - 600) . ' AND
 				  game_id = '.$game_id);
-$count_real_last_active = $db->nf();
+$count_real_last_active = $db->getNumRows();
 
 $db->query('SELECT * FROM player ' .
 		   'WHERE last_cpl_action >= ' . (time() - 600) . ' AND ' .
 				 'game_id = '.$game_id.' ' .
 		   'ORDER BY experience DESC, player_name');
-$count_last_active = $db->nf();
+$count_last_active = $db->getNumRows();
 
 // fix it if some1 is using the logoff button
 if ($count_real_last_active < $count_last_active)
@@ -165,12 +165,12 @@ if ($count_last_active > 0) {
 	$PHP_OUTPUT.=('<th>Experience</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$curr_account =& SmrAccount::getAccount($db->f('account_id'));
+		$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 		//reset style
 		$style = '';
-		$curr_player =& SmrPlayer::getPlayer($db->f('account_id'), $game_id);
+		$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
 
 		if ($curr_account->veteran == 'FALSE' && $curr_account->get_rank() < FLEDGLING)
 			$style = 'font-style:italic;';

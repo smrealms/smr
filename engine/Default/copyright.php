@@ -11,7 +11,7 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //$PHP_OUTPUT.=('<br /><center><span style="font-size:75%;">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</span></center>');
 //
 //$db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' AND link_id=1 LIMIT 1');
-//if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->next_record() || $db->f('timeout') < (time() - 86400)) && rand(0,100) < 80) {
+//if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->nextRecord() || $db->getField('timeout') < (time() - 86400)) && rand(0,100) < 80) {
 //$container['link_id'] = 1;
 //	echo'<a href="javascript:window.open(\'http://www.mpogd.com/gotm/vote.asp\');document.location="'.URL.'/loader.php?sn=' . SmrSession::get_new_sn($container) . '"><img border="0" src="images/game_sites/mpogd_vote.gif" width="98" height="41"></a>';
 //}
@@ -22,7 +22,7 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //
 //
 //$db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' AND link_id=2 LIMIT 1');
-//if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->next_record() || $db->f('timeout') < (time() - 86400)) && rand(0,100) < 80) {
+//if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->nextRecord() || $db->getField('timeout') < (time() - 86400)) && rand(0,100) < 80) {
 //$container['link_id'] = 2;
 //	echo'<a href='javascript:window.open("http://www.topwebgames.com/in.asp?id=136");document.location="'.URL.'/loader.php?sn=' . SmrSession::get_new_sn($container) . '"'><img border="0" src="images/game_sites/twg_vote.gif" width="98" height="41"></a>';
 //}
@@ -33,7 +33,7 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //
 //
 //$db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' AND link_id=3 LIMIT 1');
-//if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->next_record() || $db->f('timeout') < (time() - 86400)) && rand(0,100) < 80) {
+//if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->nextRecord() || $db->getField('timeout') < (time() - 86400)) && rand(0,100) < 80) {
 //$container['link_id'] = 3;
 //	echo'<a href='javascript:window.open("http://www.omgn.com/topgames/vote.php?Game_ID=30");document.location="'.URL.'/loader.php?sn=' . SmrSession::get_new_sn($container) . '"'><img border="0" src="images/game_sites/omgn_vote.jpg" width="98" height="41"></a>';
 //}
@@ -53,15 +53,15 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //			LIMIT 1
 //		   ');
 //
-//if ($db->next_record()) {
+//if ($db->nextRecord()) {
 //
-//	$version_id = $db->f('version_id');
+//	$version_id = $db->getField('version_id');
 //
 //	$container = array('url' => 'skeleton.php',
 //					   'body' => 'changelog_view.php',
 //					   'version_id' => $version_id
 //					  );
-//	$version = create_link($container, 'v' . $db->f('major_version') . '.' . $db->f('minor_version') . '.' . $db->f('patch_level'));
+//	$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
 //
 //}
 //

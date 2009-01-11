@@ -3,9 +3,9 @@
 $smarty->assign('PageTopic','GALACTIC POST');
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-    $position = $db->f('position');
+    $position = $db->getField('position');
     if ($position == 'writer')
         $allowed_write = 'yes';
     else
@@ -33,16 +33,16 @@ if ($allowed_edit == 'yes') {
     $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'galactic_post_view_members.php'), 'View Members');
     $PHP_OUTPUT.=('<br />');
     $db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.$player->getGameID());
-    if ($db->nf())
+    if ($db->getNumRows())
         $PHP_OUTPUT.=('The following papers are already made (note papers must have 3-8 articles to go to the press)');
-    while($db->next_record()) {
+    while($db->nextRecord()) {
 
-        $paper_name = $db->f('title');
-        $paper_id = $db->f('paper_id');
+        $paper_name = $db->getField('title');
+        $paper_id = $db->getField('paper_id');
         $PHP_OUTPUT.=('<font color=red>***</font><i>'.$paper_name.'</i>');
         $db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());
-        $PHP_OUTPUT.=(' which contains <font color=red> ' . $db2->nf() . ' </font>articles. ');
-        if ($db2->nf() > 2 && $db2->nf() < 9) {
+        $PHP_OUTPUT.=(' which contains <font color=red> ' . $db2->getNumRows() . ' </font>articles. ');
+        if ($db2->getNumRows() > 2 && $db2->getNumRows() < 9) {
 
             $container = array();
             $container['url'] = 'galactic_post_make_current.php';

@@ -9,12 +9,12 @@ function channel_msg_ship($fp, $rdata) {
 		echo_r($msg);
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM ship_type WHERE ship_name LIKE '.$db->escape_string('%' . $msg[4] . '%'));
-		if ($db->next_record()) {
+		if ($db->nextRecord()) {
 
-			$ship_name	= $db->f('ship_name');
-			$hardpoint	= $db->f('hardpoint');
-			$speed		= $db->f('speed');
-			$cost		= $db->f('cost');
+			$ship_name	= $db->getField('ship_name');
+			$hardpoint	= $db->getField('hardpoint');
+			$speed		= $db->getField('speed');
+			$cost		= $db->getField('cost');
 
 			$name_length = strlen($ship_name);
 			$hp_length = strlen('Hardpoints');

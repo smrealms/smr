@@ -1,8 +1,8 @@
 <?
 
 $db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.$player->getGameID().' ORDER BY paper_id DESC');
-if ($db->next_record())
-    $num = $db->f('paper_id') + 1;
+if ($db->nextRecord())
+    $num = $db->getField('paper_id') + 1;
 else
     $num = 1;
 $title = $_REQUEST['title'];

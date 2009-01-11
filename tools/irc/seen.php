@@ -74,24 +74,24 @@ function channel_msg_seen($fp, $rdata) {
 		$found = false;
 
 		$db->query('SELECT * FROM irc_logged_in WHERE nick = '.$db->escape_string($msg[4]));
-		if($db->next_record())
+		if($db->nextRecord())
 		{
 			fputs($fp, 'PRIVMSG '.$channel.' :'.$msg[1].', please look a bit closer at the memberlist of this channel.'.EOL);
 			return true;
 		}
 		$db->query('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escapeString('%'.$msg[4].'%'));
 		echo_r('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escapeString('%'.$msg[4].'%'));
-		while($db->next_record())
+		while($db->nextRecord())
 		{
-			$nick_list	= unserialize($db->f('nick'));
+			$nick_list	= unserialize($db->getField('nick'));
 
 			// search for the nick in the nicklist
 			if (array_search($msg[4], $nick_list) !== false)
 			{
-				$user		= $db->f('user');
-				$host		= $db->f('host');
-				$signed_on	= $db->f('signed_on');
-				$signed_off	= $db->f('signed_off');
+				$user		= $db->getField('user');
+				$host		= $db->getField('host');
+				$signed_on	= $db->getField('signed_on');
+				$signed_off	= $db->getField('signed_off');
 
 				fputs($fp, 'PRIVMSG '.$channel.' :'.$msg[1].', '.$msg[4].' ('.$user.'@'.$host.') was last seen quitting '.$channel.' ' . format_time($signed_off) . ' ago after spending ' . format_time($signed_off - $signed_on) . ' there.'.EOL);
 				return true;

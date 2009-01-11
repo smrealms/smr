@@ -17,31 +17,31 @@ $PHP_OUTPUT.=create_echo_form($container);
 $count = 0;
 //array for mb so we dont duplicate
 $mb_msgs = array();
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	
 	//search every message on webboards for each word first
-	$id = $db->f('id');
-	$word = $db->f('keyword');
+	$id = $db->getField('id');
+	$word = $db->getField('keyword');
 	
 	$db2->query('SELECT * FROM alliance_thread WHERE sender_id != 0 AND text LIKE \'%'.$word.'%\' ORDER BY time DESC');
-	while ($db2->next_record()) {
+	while ($db2->nextRecord()) {
 		//assume we arent skipping
 		$skip = 'no';
-		$bad = $db2->f('text');
+		$bad = $db2->getField('text');
 		$db3->query('SELECT * FROM mb_keywords WHERE assoc = '.$id.' AND type = \'ignore\' AND `use` = 1');
-		while ($db3->next_record()) {
-			$word2 = $db3->f('keyword');
+		while ($db3->nextRecord()) {
+			$word2 = $db3->getField('keyword');
 			$sql = 'SELECT '.$db->escapeString($bad).' LIKE \'%'.$word2.'%\'';
 			$db4->query($sql);
-			$db4->next_record();
-			if ($db4->f(0)) $skip = 'yes';
+			$db4->nextRecord();
+			if ($db4->getField(0)) $skip = 'yes';
 		}
 		if ($skip == 'yes') continue;
 		//get info
-		$game_id = $db2->f('game_id');
-		$alliance_id = $db2->f('alliance_id');
-		$thread_id = $db2->f('thread_id');
-		$reply_id = $db2->f('reply_id');
+		$game_id = $db2->getField('game_id');
+		$alliance_id = $db2->getField('alliance_id');
+		$thread_id = $db2->getField('thread_id');
+		$reply_id = $db2->getField('reply_id');
 		//put in an array
 		$array_filler = $game_id.','.$alliance_id.','.$thread_id.','.$reply_id;
 		//check if its already been done
@@ -51,7 +51,7 @@ while ($db->next_record()) {
 			$mb_msgs[] = $array_filler;
 		//check if msg is okay or not
 		$db3->query('SELECT * FROM mb_exceptions WHERE type = \'alliance\' AND value = '.$db->escapeString($array_filler));
-		if ($db3->nf())
+		if ($db3->getNumRows())
 			continue;
 		//only if this is first message found
 		if ($count == 0) {
@@ -81,7 +81,7 @@ while ($db->next_record()) {
 		$array[] = strtoupper($word);
 		$array[] = strtolower($word);
 		$bad = str_replace($array, '<b><font color=red>'.$word.'</font></b>', $db->escapeString($bad));
-		$PHP_OUTPUT.=('<td align=center>' . $db2->f('sender_id') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('sender_id') . '</td>');
 		$PHP_OUTPUT.=('<td align=center>'.$bad.'</td>');
 		$PHP_OUTPUT.=('<td align=center><input type=checkbox name=alliance[] value='.$array_filler.'></td>');
 		$PHP_OUTPUT.=('</tr>');
@@ -111,34 +111,34 @@ $db->query('SELECT * FROM mb_keywords WHERE type = \'find\' AND `use` = 1');
 $count = 0;
 //array so we dont duplicate messages
 $personal_msgs = array();
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	
 	//now search personal messages
-	$word = $db->f('keyword');
-	$id = $db->f('id');
+	$word = $db->getField('keyword');
+	$id = $db->getField('id');
 	$db2->query('SELECT * FROM message WHERE message_type_id = 2 AND sender_id != 0 AND message_text LIKE \'%'.$word.'%\' ORDER BY send_time DESC');
-	while ($db2->next_record()) {
+	while ($db2->nextRecord()) {
 		
 		//assume we arent skipping
 		$skip = 'no';
-		$bad = $db2->f('message_text');
+		$bad = $db2->getField('message_text');
 		$db3->query('SELECT * FROM mb_keywords WHERE assoc = '.$id.' AND type = \'ignore\' AND `use` = 1');
-		while ($db3->next_record()) {
-			$word2 = $db3->f('keyword');
+		while ($db3->nextRecord()) {
+			$word2 = $db3->getField('keyword');
 			$sql = 'SELECT '.$db->escapeString($bad).' LIKE \'%'.$word2.'%\'';
 			$db4->query($sql);
-			$db4->next_record();
-			if ($db4->f(0)) $skip = 'yes';
+			$db4->nextRecord();
+			if ($db4->getField(0)) $skip = 'yes';
 		}
 		if ($skip == 'yes') continue;
 		//first message only
-		$msg_id = $db2->f('message_id');
+		$msg_id = $db2->getField('message_id');
 		if (in_array($msg_id,$personal_msgs))
 			continue;
 		$personal_msgs[] = $msg_id;
 		//check if msg is okay or not
 		$db3->query('SELECT * FROM mb_exceptions WHERE type = \'personal\' AND value = '.$db->escapeString($msg_id));
-		if ($db3->nf())
+		if ($db3->getNumRows())
 			continue;
 		if ($count == 0) {
 			//start table
@@ -154,8 +154,8 @@ while ($db->next_record()) {
 		
 		//lets echo this message
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align=center>' . $db2->f('game_id') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $db2->f('sender_id') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('game_id') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('sender_id') . '</td>');
 		$array = array();
 		$array[] = ucfirst($word);
 		$array[] = strtoupper($word);

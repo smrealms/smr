@@ -66,12 +66,12 @@ $db->query('SELECT route, length, timeout
 				  game_id = '.$player->getGameID().'
 			LIMIT 1');
 
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$routes['LEN']	= $db->f('length');		// Store the length of the route
-	$routes['RAW']	= $db->f('route');		// Store the raw route information
+	$routes['LEN']	= $db->getField('length');		// Store the length of the route
+	$routes['RAW']	= $db->getField('route');		// Store the raw route information
 	$cached				= true;					// Set the route as having come from the cache
-	$cache_timeout		= $db->f('timeout');	// Store the timeout for that information
+	$cache_timeout		= $db->getField('timeout');	// Store the timeout for that information
 
 } else
 	$cached				= false;				// Set the route as not having come from the cache

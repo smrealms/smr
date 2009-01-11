@@ -10,10 +10,10 @@ function private_msg_login($fp, $rdata) {
 		$db = new SmrMySqlDatabase();
 
 		$db->query('SELECT * FROM account WHERE login = '.$db->escapeString($msg[4]));
-		if ($db->next_record()) {
+		if ($db->nextRecord()) {
 
-			$account_id		= $db->f('account_id');
-			$password		= $db->f('password');
+			$account_id		= $db->getField('account_id');
+			$password		= $db->getField('password');
 
 			// does pwd match?
 			if ($msg[5] != $password) {
@@ -25,7 +25,7 @@ function private_msg_login($fp, $rdata) {
 
 			// check if this game exist
 			$db->query('SELECT * FROM game WHERE game_id = '.$msg[6]);
-			if (!$db->nf()) {
+			if (!$db->getNumRows()) {
 
 				fputs($fp, 'NOTICE '.$msg[1].' :Game doesn\'t exist!'.EOL);
 				return true;

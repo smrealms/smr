@@ -83,10 +83,10 @@ if (!isset($galaxy_id)) {
 			   'WHERE game_id = '.$player->getGameID().' ' .
 			   'GROUP BY sector.galaxy_id ' .
 			   'ORDER BY sector.sector_id');
-	while($db->next_record()) {
+	while($db->nextRecord()) {
 
-		$galaxy_id		= $db->f('galaxy_id');
-		$galaxy_name	= $db->f('galaxy_name');
+		$galaxy_id		= $db->getField('galaxy_id');
+		$galaxy_name	= $db->getField('galaxy_name');
 
 		if ($galaxy_id == $sector->getGalaxyID())
 			$galaxy_name = '<b>' . $galaxy_name . '</b>';
@@ -117,10 +117,10 @@ FROM galaxy
 WHERE galaxy.galaxy_id = '.$galaxy_id.'
 LIMIT 1');
 
-$db->next_record();
+$db->nextRecord();
 
-$galaxy_name = $db->f('galaxy_name');
-$galaxy_id = $db->f('galaxy_id');
+$galaxy_name = $db->getField('galaxy_name');
+$galaxy_id = $db->getField('galaxy_id');
 
 $smarty->assign('GalaxyName',$galaxy_name);
 
@@ -138,15 +138,15 @@ FROM sector
 WHERE galaxy_id=' . $galaxy_id . '
 AND game_id=' . SmrSession::$game_id);
 
-$db->next_record();
+$db->nextRecord();
 
 global $col,$rows,$size,$offset;
-$size = $db->f('COUNT(*)');
+$size = $db->getField('COUNT(*)');
 $col = $rows = sqrt($size);
 $dist = $size; //Much bigger than actual map, so will show all
-$galaxy_top_left = $db->f('MIN(sector_id)');
-$galaxy_bottom_right = $db->f('MAX(sector_id)');
-$offset = $db->f('MIN(sector_id)') -1;
+$galaxy_top_left = $db->getField('MIN(sector_id)');
+$galaxy_bottom_right = $db->getField('MAX(sector_id)');
+$offset = $db->getField('MIN(sector_id)') -1;
 
 $span = 1 + ($dist * 2);
 //echo $player->getZoom();

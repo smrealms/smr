@@ -7,7 +7,7 @@ $db->query('SELECT * FROM account, announcement ' .
 $container = array();
 
 // do we have announcements?
-if ($db->nf() != 0) {
+if ($db->getNumRows() != 0) {
 
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'announcements.php';

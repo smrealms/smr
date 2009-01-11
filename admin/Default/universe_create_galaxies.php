@@ -3,14 +3,14 @@
 $smarty->assign('PageTopic','CREATE UNIVERSE - ADDING GALAXIES (2/10)');
 
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
-if ($db->next_record())
-	$smarty->assign('GameName',$db->f('game_name'));
+if ($db->nextRecord())
+	$smarty->assign('GameName',$db->getField('game_name'));
 $galaxy_count = isset($_REQUEST['galaxy_count']) ? $_REQUEST['galaxy_count'] : 0;
 if (empty($galaxy_count)) {
 
 	// do we already have galaxies?
 	$db->query('SELECT * FROM sector WHERE game_id = ' . $var['game_id'] . ' GROUP BY galaxy_id');
-	$galaxy_count = $db->nf();
+	$galaxy_count = $db->getNumRows();
 
 }
 
@@ -37,16 +37,16 @@ else
 	
 	$db->query('SELECT * FROM galaxy');
 	$galaxyNames = array();
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$galaxyNames[$db->f('galaxy_id')] = $db->f('galaxy_name');
+		$galaxyNames[$db->getField('galaxy_id')] = $db->getField('galaxy_name');
 	}
 	$smarty->assign('GalaxyNames',$galaxyNames);
 
 
 	// do we already have galaxies?
 	$db->query('SELECT * FROM sector WHERE game_id = ' . $var['game_id']);
-	if ($db->nf() > 0)
+	if ($db->getNumRows() > 0)
 		$smarty->assign('CanSkip', true);
 
 }

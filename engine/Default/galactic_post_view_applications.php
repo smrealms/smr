@@ -4,16 +4,16 @@ $smarty->assign('PageTopic','VIEWING APPLICATIONS');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->getGameID());
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
     $PHP_OUTPUT.=('You have recieved an application from the following players (click name to view description)<br />');
     $PHP_OUTPUT.=('Becareful when choosing your writters.  Make sure it is someone who will actually help you.<br /><br />');
 
 } else
     $PHP_OUTPUT.=('You have no applications to view at the current time.');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-    $appliee =& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
+    $appliee =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
     $container = array();
     $container['url'] = 'skeleton.php';
@@ -21,7 +21,7 @@ while ($db->next_record()) {
     $container['id'] = $appliee->getAccountID();
     $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$appliee->getPlayerName().'</font>');
     $PHP_OUTPUT.=(' who has ');
-    if ($db->f('written_before') == 'YES')
+    if ($db->getField('written_before') == 'YES')
         $PHP_OUTPUT.=('written for some kind of a newspaper before.');
     else
         $PHP_OUTPUT.=('not written for a newspaper before.');
@@ -32,13 +32,13 @@ $PHP_OUTPUT.=('<br /><br />');
 if (isset($var['id'])) {
 
     $db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->getGameID().' AND account_id = '.$var['id']);
-    $db->next_record();
-    $desc = stripslashes($db->f('description'));
+    $db->nextRecord();
+    $desc = stripslashes($db->getField('description'));
     $applie =& SmrPlayer::getPlayer($var['id'], $player->getGameID());
     $PHP_OUTPUT.=('Name : '.$applie->getPlayerName().'<br />');
-    $PHP_OUTPUT.=('Have you written for some kind of newspaper before? ' . $db->f('written_before'));
+    $PHP_OUTPUT.=('Have you written for some kind of newspaper before? ' . $db->getField('written_before'));
     $PHP_OUTPUT.=('<br />');
-    $PHP_OUTPUT.=('How many articles are you willing to write per week? ' . $db->f('articles_per_day'));
+    $PHP_OUTPUT.=('How many articles are you willing to write per week? ' . $db->getField('articles_per_day'));
     $PHP_OUTPUT.=('<br />');
     $PHP_OUTPUT.=('What do you want to tell the editor?<br /><br />'.$desc);
     $container = array();

@@ -1,8 +1,8 @@
 <?
 
 $db->query('SELECT * FROM race WHERE race_id = ' . $var['race_id']);
-if ($db->next_record())
-	$race_name = $db->f('race_name');
+if ($db->nextRecord())
+	$race_name = $db->getField('race_name');
 
 $smarty->assign('PageTopic','Send message to ruling council of the '.$race_name);
 

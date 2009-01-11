@@ -10,7 +10,7 @@ $db->query('SELECT * FROM player_votes_twg ' .
 		   'WHERE account_id = '.$player->getAccountID().' AND ' .
 				 'game_id = '.$player->getGameID().' AND ' .
 				 'time > '.$midnight);
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 	return;
 
 // give him 5 turns
@@ -19,8 +19,8 @@ $player->giveTurns(5);
 // make it permanent
 $player->update();
 $db->query('SELECT * FROM game WHERE game_id = '.$player->getGameID());
-$db->next_record();
-$type = $db->f('game_type');
+$db->nextRecord();
+$type = $db->getField('game_type');
 
 $db->query('UPDATE account_has_stats ' .
 		   'SET bonus_turns = bonus_turns + 5 ' .

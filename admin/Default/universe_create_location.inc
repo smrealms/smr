@@ -25,16 +25,16 @@ function create_location($game_id, $galaxy_id, $location_type_id, $sector_id = 0
 						LIMIT 1');
 
 			// no sectors for this gal?
-			if (!$db->next_record())
+			if (!$db->nextRecord())
 				return false;
 
 			// check if this sector already got a location
 			$db2->query('SELECT location_type_id
 						 FROM location
 						 WHERE game_id = '.$game_id.' AND
-							   sector_id = ' . $db->f('sector_id'));
-			if (!$db2->next_record())
-				$sector_id = $db->f('sector_id');
+							   sector_id = ' . $db->getField('sector_id'));
+			if (!$db2->nextRecord())
+				$sector_id = $db->getField('sector_id');
 
 			// next loop run
 			// increase safety counter
@@ -62,11 +62,11 @@ function get_sector($game_id, $sector_id, $distance) {
 				FROM sector
 				WHERE game_id = '.$game_id.' AND
 					  sector_id = '.$sector_id);
-	if (!$db->next_record())
+	if (!$db->nextRecord())
 		return false;
 
 	// the last entry is the distance to the start sector
-	return array($db->f('link_up'), $db->f('link_down'), $db->f('link_left'), $db->f('link_right'), $distance);
+	return array($db->getField('link_up'), $db->getField('link_down'), $db->getField('link_left'), $db->getField('link_right'), $distance);
 
 }
 
@@ -87,10 +87,10 @@ function create_fed($game_id, $galaxy_id, $sector_id = 0) {
 					ORDER BY rand()
 					LIMIT 1');
 
-		if (!$db->next_record())
+		if (!$db->nextRecord())
 			return false;
 
-		$sector_id = $db->f('sector_id');
+		$sector_id = $db->getField('sector_id');
 
 	}
 

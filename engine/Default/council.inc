@@ -10,8 +10,8 @@ function onCouncil($race_id) {
 					 'race_id = '.$race_id.' ' .
 			   'ORDER by experience DESC ' .
 			   'LIMIT '.MAX_COUNCIL_MEMBERS);
-	while ($db->next_record())
-		if ($db->f('account_id') == $player->getAccountID())
+	while ($db->nextRecord())
+		if ($db->getField('account_id') == $player->getAccountID())
 			return 1;
 
 	return 0;
@@ -27,9 +27,9 @@ function getPresident($race_id) {
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
 				 'race_id = '.$race_id);
 	$pres_xp = 0;
-	if ($db->next_record())
+	if ($db->nextRecord())
 	{
-		$accountID = $db->f('account_id');
+		$accountID = $db->getField('account_id');
 		$president =& SmrPlayer::getPlayer($accountID, $player->getGameID());
 		if($president->getAlignment()>=150)
 			$pres_xp = $president->getExperience(); //only want to set their exp if they are deputy
@@ -47,9 +47,9 @@ function getPresident($race_id) {
 			   'ORDER by experience DESC ' .
 			   'LIMIT 1');
 
-	if ($db->next_record())
+	if ($db->nextRecord())
 	{
-		$accountID = $db->f('account_id');
+		$accountID = $db->getField('account_id');
 		$president =& SmrPlayer::getPlayer($accountID, $player->getGameID());
 
 		$db->query('REPLACE INTO player_is_president ' .
@@ -83,11 +83,11 @@ function modifyRelations($race_id_1) {
 			   'WHERE time < '.$endtime.' AND ' .
 					 'game_id = '.$player->getGameID().' AND ' .
 					 'race_id_1 = '.$race_id_1);
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$account_id	= $db->f('account_id');
-		$race_id_2	= $db->f('race_id_2');
-		$action		= $db->f('action');
+		$account_id	= $db->getField('account_id');
+		$race_id_2	= $db->getField('race_id_2');
+		$action		= $db->getField('action');
 
 		if ($action == 'INC')
 			$relation_modifier = 10;
@@ -98,8 +98,8 @@ function modifyRelations($race_id_1) {
 					'WHERE race_id_1 = '.$race_id_1.' AND ' .
 						  'race_id_2 = '.$race_id_2.' AND ' .
 						  'game_id = '.$player->getGameID());
-		if ($db2->next_record())
-			$relation = $db2->f('relation') + $relation_modifier;
+		if ($db2->nextRecord())
+			$relation = $db2->getField('relation') + $relation_modifier;
 
 		if ($relation < -500)
 			$relation = -500;
@@ -132,10 +132,10 @@ function checkPacts($race_id_1) {
 			   'WHERE end_time < '.$endtime.' AND ' .
 					 'game_id = '.$player->getGameID().' AND ' .
 					 'race_id_1 = '.$race_id_1);
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$race_id_2	= $db->f('race_id_2');
-		$type		= $db->f('type');
+		$race_id_2	= $db->getField('race_id_2');
+		$type		= $db->getField('type');
 
 		// get 'yes' votes
 		$db2->query('SELECT * FROM player_votes_pact ' .
@@ -143,7 +143,7 @@ function checkPacts($race_id_1) {
 						  'race_id_1 = '.$race_id_1.' AND ' .
 						  'race_id_2 = '.$race_id_2.' AND ' .
 						  'vote = \'YES\'');
-		$yes_votes = $db2->nf();
+		$yes_votes = $db2->getNumRows();
 
 		// get 'no' votes
 		$db2->query('SELECT * FROM player_votes_pact ' .
@@ -151,7 +151,7 @@ function checkPacts($race_id_1) {
 						  'race_id_1 = '.$race_id_1.' AND ' .
 						  'race_id_2 = '.$race_id_2.' AND ' .
 						  'vote = \'NO\'');
-		$no_votes = $db2->nf();
+		$no_votes = $db2->getNumRows();
 
 		if ($type == 'WAR') {
 
@@ -166,12 +166,12 @@ function checkPacts($race_id_1) {
 
 				//get races
 				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_1);
-				if ($db2->next_record())
-					$our_race = $db2->f('race_name');
+				if ($db2->nextRecord())
+					$our_race = $db2->getField('race_name');
 
 				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_2);
-				if ($db2->next_record())
-					$their_race = $db2->f('race_name');
+				if ($db2->nextRecord())
+					$their_race = $db2->getField('race_name');
 
 				// get news message
 				$news = 'The '.$our_race.' have declared <span style="color:red;">WAR</span> on the '.$their_race;
@@ -188,7 +188,7 @@ function checkPacts($race_id_1) {
 							  'race_id_1 = '.$race_id_2.' AND ' .
 							  'race_id_2 = '.$race_id_1.' AND ' .
 							  'vote = \'YES\'');
-			$rev_yes_votes = $db2->nf();
+			$rev_yes_votes = $db2->getNumRows();
 
 			// get 'no' votes
 			$db2->query('SELECT * FROM player_votes_pact ' .
@@ -196,7 +196,7 @@ function checkPacts($race_id_1) {
 							  'race_id_1 = '.$race_id_2.' AND ' .
 							  'race_id_2 = '.$race_id_1.' AND ' .
 							  'vote = \'NO\'');
-			$rev_no_votes = $db2->nf();
+			$rev_no_votes = $db2->getNumRows();
 
 			// more yes than no?
 			if ($rev_yes_votes > $rev_no_votes) {
@@ -210,12 +210,12 @@ function checkPacts($race_id_1) {
 
 				//get races
 				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_1);
-				if ($db2->next_record())
-					$our_race = $db2->f('race_name');
+				if ($db2->nextRecord())
+					$our_race = $db2->getField('race_name');
 
 				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_2);
-				if ($db2->next_record())
-					$their_race = $db2->f('race_name');
+				if ($db2->nextRecord())
+					$their_race = $db2->getField('race_name');
 
 				//get news message
 				$news = 'The '.$our_race.' have signed a <span style="color:green;">PEACE</span> treaty with the '.$their_race;

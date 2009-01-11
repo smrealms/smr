@@ -3,14 +3,14 @@
 if (empty($_POST['change_message']))
 	create_error('The message can\'t be empty!');
 
-$db->lock('changelog');
+$db->lockTable('changelog');
 
 $db->query('SELECT MAX(changelog_id)
 			FROM changelog
 			WHERE version_id = ' . $var['version_id']
 		   );
-if ($db->next_record())
-	$changelog_id = $db->f('MAX(changelog_id)') + 1;
+if ($db->nextRecord())
+	$changelog_id = $db->getField('MAX(changelog_id)') + 1;
 else
 	$changelog_id = 1;
 

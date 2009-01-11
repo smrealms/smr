@@ -370,8 +370,8 @@ function word_filter($string) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
-		while($db->next_record()) {
-			$row = $db->fetch_row();
+		while($db->nextRecord()) {
+			$row = $db->getRow();
 			$words[] = array('word_value' => $row['word_value'],'word_replacement'=> $row['word_replacement']);
 		}
 	}

@@ -26,14 +26,14 @@ foreach($id as $location_type_id => $temp_array) {
 		$db->query('SELECT * FROM sector WHERE game_id = ' . $var['game_id'] . ' AND ' .
 											  'galaxy_id = '.$galaxy_id.' ' .
 										'ORDER BY rand()');
-		while ($count < $amount && $db->next_record()) {
+		while ($count < $amount && $db->nextRecord()) {
 
-			$sector_id = $db->f('sector_id');
+			$sector_id = $db->getField('sector_id');
 
 			// does this sector already have a ship yard?
 			$db2->query('SELECT * FROM location WHERE game_id = ' . $var['game_id'] . ' AND ' .
 													 'sector_id = '.$sector_id);
-			if ($db2->nf() > 0) continue;
+			if ($db2->getNumRows() > 0) continue;
 
 			// ok we did $count locations so far
 			$count++;

@@ -12,10 +12,10 @@ function channel_msg_level($fp, $rdata) {
 		echo_r($msg);
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM level WHERE level_id = ' . $msg[4]);
-		if ($db->next_record()) {
+		if ($db->nextRecord()) {
 
-			$level_name		= $db->f('level_name');
-			$experience		= $db->f('requirement');
+			$level_name		= $db->getField('level_name');
+			$experience		= $db->getField('requirement');
 
 			fputs($fp, 'NOTICE '.$msg[1].' :For a '.$level_name.' you need to have '.$experience.' experience points!'.EOL);
 

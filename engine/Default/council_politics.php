@@ -10,8 +10,8 @@ if (empty($race_id))
 
 $db->query('SELECT * FROM race ' .
 		   'WHERE race_id = '.$race_id);
-if ($db->next_record())
-	$smarty->assign('PageTopic','RULING COUNCIL OF ' . $db->f('race_name'));
+if ($db->nextRecord())
+	$smarty->assign('PageTopic','RULING COUNCIL OF ' . $db->getField('race_name'));
 
 // get president and echo menue
 $president = getPresident($race_id);
@@ -37,14 +37,14 @@ $db->query('SELECT race_name, race.race_id as race_id, relation FROM race_has_re
 				 'race_has_relation.race_id_1 != race_has_relation.race_id_2 AND ' .
 				 'race_has_relation.relation >= 300 AND ' .
 				 'race_has_relation.game_id = '.$player->getGameID());
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
-	$container['race_id'] = $db->f('race_id');
+	$container['race_id'] = $db->getField('race_id');
 	$PHP_OUTPUT.=('<tr><td align="center">');
-	$PHP_OUTPUT.=create_link($container, get_colored_text($db->f('relation'), $db->f('race_name')));
+	$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('relation'), $db->getField('race_name')));
 	$PHP_OUTPUT.=('</td></tr>');
 
 }
@@ -61,14 +61,14 @@ $db->query('SELECT race_name, race.race_id as race_id, relation FROM race_has_re
 				 'race_has_relation.race_id_1 != race_has_relation.race_id_2 AND ' .
 				 'race_has_relation.relation <= -300 AND ' .
 				 'race_has_relation.game_id = '.$player->getGameID());
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
-	$container['race_id'] = $db->f('race_id');
+	$container['race_id'] = $db->getField('race_id');
 	$PHP_OUTPUT.=('<tr><td align="center">');
-	$PHP_OUTPUT.=create_link($container, get_colored_text($db->f('relation'), $db->f('race_name')));
+	$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('relation'), $db->getField('race_name')));
 	$PHP_OUTPUT.=('</td></tr>');
 
 }

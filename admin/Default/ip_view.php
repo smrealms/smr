@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','IP MENU');
 $db->query('SELECT * FROM account');
-$amount = $db->nf();
+$amount = $db->getNumRows();
 ?>
 <SCRIPT LANGUAGE=JavaScript>
 function go()

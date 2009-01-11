@@ -19,8 +19,8 @@ $PHP_OUTPUT.=('Select the player you want to add the bounty to<br />');
 $PHP_OUTPUT.=('<select name="account_id" size="1" id="InputFields">');
 $PHP_OUTPUT.=('<option value=0>[Please Select]</option>');
 $db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' ORDER BY player_name');
-while($db->next_record()) {
-	$PHP_OUTPUT.=('<option value="' . $db->f('account_id') . '">' . $db->f('player_name') . '</option>');
+while($db->nextRecord()) {
+	$PHP_OUTPUT.=('<option value="' . $db->getField('account_id') . '">' . $db->getField('player_name') . '</option>');
 }
 $PHP_OUTPUT.=('</select>');
 

@@ -1,10 +1,10 @@
 <?
 
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
-$db->next_record();
+$db->nextRecord();
 $smarty->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->f('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
 
 $PHP_OUTPUT.= 'Do you really want to leave this alliance?<br /><br />';
 

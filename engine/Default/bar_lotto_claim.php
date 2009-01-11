@@ -4,9 +4,9 @@
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND ' . 
 			'account_id = '.$player->getAccountID().' AND time = 0');
 $PHP_OUTPUT.=('<div align=center>');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	
-	$prize = $db->f('prize');
+	$prize = $db->getField('prize');
 	$NHLAmount = ($prize - 1000000) / 9;
 	$NHLAccount = 13;
 	$db->query('UPDATE player SET bank = bank + '.$NHLAmount.' WHERE account_id = '.$NHLAccount.' AND game_id = '.$player->getGameID());

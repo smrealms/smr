@@ -5,10 +5,10 @@ $thread_index = $var['thread_index'];
 $thread_id = $var['thread_ids'][$thread_index];
 
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->next_record();
+$db->nextRecord();
 $smarty->assign('PageTopic',stripslashes($var['thread_topics'][$thread_index]));
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 $curr_time = time() + 2;
 
@@ -23,7 +23,7 @@ if ($alliance_id != $player->getAllianceID()) {
 					' AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')'.
 					' AND game_id = '.$player->getGameID().
 					' AND mb_write = 1 AND official = \'TRUE\'');
-	if ($db->next_record()) $mbWrite = TRUE;
+	if ($db->nextRecord()) $mbWrite = TRUE;
 	else $mbWrite = FALSE;
 }
 
@@ -75,7 +75,7 @@ $db->query('SELECT account_id as id, player_name as name FROM player, alliance_t
 			'WHERE alliance_thread.game_id = '.$player->getGameID().' AND player.game_id = '.$player->getGameID().' ' .
 			'AND alliance_thread.alliance_id = '.$alliance_id.' AND alliance_thread.thread_id = ' .
 			$thread_id);
-while ($db->next_record()) $players[$db->f('id')] = stripslashes($db->f('name'));
+while ($db->nextRecord()) $players[$db->getField('id')] = stripslashes($db->getField('name'));
 
 $db->query('SELECT 
 alliance_thread.text as text,
@@ -87,16 +87,16 @@ AND alliance_thread.alliance_id=' .  $alliance_id . '
 AND alliance_thread.thread_id=' .  $thread_id . '
 ORDER BY reply_id LIMIT ' . $var['thread_replies'][$thread_index]);
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	$PHP_OUTPUT.= '<tr>';
 	$PHP_OUTPUT.= '<td class="shrink nowrap top">';
-	$PHP_OUTPUT.= $players[$db->f('sender_id')];
+	$PHP_OUTPUT.= $players[$db->getField('sender_id')];
 	$PHP_OUTPUT.= '</td>';
 	$PHP_OUTPUT.= '<td>';
-	$PHP_OUTPUT.= stripslashes($db->f('text'));
+	$PHP_OUTPUT.= stripslashes($db->getField('text'));
 	$PHP_OUTPUT.= '</td>';
 	$PHP_OUTPUT.= '<td class="shrink nowrap top">';
-	$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db->f('sendtime'));
+	$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db->getField('sendtime'));
 	$PHP_OUTPUT.= '</td></tr>';
 }
 

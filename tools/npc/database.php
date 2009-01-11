@@ -9,8 +9,8 @@ function get_sector($account_id, $game_id, $column) {
 				FROM sector
 				WHERE game_id = '.$game_id.'
 			   ');
-	if ($db->next_record())
-		return $db->f($column);
+	if ($db->nextRecord())
+		return $db->getField($column);
 	else
 		log_message($account_id, 'Column $column for this sector not found', ERROR);
 
@@ -27,8 +27,8 @@ function get_player($account_id, $game_id, $column) {
 					  game_id = '.$game_id.'
 			   ');
 
-	if ($db->next_record())
-		return $db->f($column);
+	if ($db->nextRecord())
+		return $db->getField($column);
 	else
 		log_message($account_id, 'Column $column for this player not found', ERROR);
 
@@ -57,8 +57,8 @@ function get_account($account_id, $column) {
 				WHERE account_id = '.$account_id.'
 			   ');
 
-	if ($db->next_record())
-		return $db->f($column);
+	if ($db->nextRecord())
+		return $db->getField($column);
 	else
 		log_message($account_id, 'Column $column for this account not found', ERROR);
 
@@ -76,8 +76,8 @@ function get_ship($account_id, $game_id, $column) {
 					  player.game_id = '.$game_id.'
 			   ');
 
-	if ($db->next_record())
-		return $db->f($column);
+	if ($db->nextRecord())
+		return $db->getField($column);
 	else
 		log_message($account_id, 'Column $column for this ship not found', ERROR);
 
@@ -93,8 +93,8 @@ function get_game($game_id, $column) {
 				WHERE game_id = '.$game_id.'
 			   ');
 
-	if ($db->next_record())
-		return $db->f($column);
+	if ($db->nextRecord())
+		return $db->getField($column);
 	else
 		log_message($account_id, 'Column $column for this game not found', ERROR);
 

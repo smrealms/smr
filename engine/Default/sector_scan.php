@@ -45,21 +45,21 @@ $db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND ' 
 									  'last_cpl_action > '.$last_active.' AND ' .
 									  'land_on_planet = \'FALSE\' AND ' .
 									  'account_id NOT IN (' . implode(',', $HIDDEN_PLAYERS) . ')');
-while ($db->next_record())
+while ($db->nextRecord())
 {
 
 //	// we may skip player if this is a protected gal.
 //	if ($sector->is_protected_gal())
 //	{
 //
-//		$curr_account =& SmrAccount::getAccount($db->f('account_id'));
+//		$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 //
 //		// if one is vet and the other is newbie we skip it
 //		if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
 //			continue;
 //	}
 
-	$curr_player	=& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
+	$curr_player	=& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 	$curr_ship		=& $curr_player->getShip();
 
 	// he's a friend if he's in our alliance (and we are not in a 0 alliance

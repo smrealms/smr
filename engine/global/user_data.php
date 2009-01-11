@@ -16,10 +16,10 @@ if ($under_attack_shields || $under_attack_armor || $under_attack_drones) {
 
 $db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $player->getAccountID() . ' AND game_id=' . $player->getGameID() . ' GROUP BY message_type_id');
 
-if($db->nf()) {
+if($db->getNumRows()) {
 	$messages = array();
-	while($db->next_record()) {
-		$messages[$db->f('message_type_id')] = $db->f('COUNT(*)');
+	while($db->nextRecord()) {
+		$messages[$db->getField('message_type_id')] = $db->getField('COUNT(*)');
 	}
 
 	$container = array();
@@ -105,9 +105,9 @@ echo '<br /><br /><b style="color:yellow;">' . $ship->getName() . '</b><br />';
 
 $db->query('SELECT ship_name FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 			'account_id = '.$player->getAccountID().' LIMIT 1');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 	//they have a name so we echo it
-	echo stripslashes($db->f('ship_name'));
+	echo stripslashes($db->getField('ship_name'));
 }
 
 echo 'Rating : ' . $ship->getAttackRating() . '/' . $ship->getDefenseRating() . '<br />';
@@ -201,8 +201,8 @@ foreach ($cargo as $id => $amount)
 	if ($amount > 0) {
 
 		$db->query('SELECT good_name FROM good WHERE good_id=' .  $id);
-		if ($db->next_record())
-			echo '<img src="images/port/' . $id . '.gif" alt="' . $db->f('good_name') . '">&nbsp;:&nbsp;' . $amount . '<br />';
+		if ($db->nextRecord())
+			echo '<img src="images/port/' . $id . '.gif" alt="' . $db->getField('good_name') . '">&nbsp;:&nbsp;' . $amount . '<br />';
 
 	}
 

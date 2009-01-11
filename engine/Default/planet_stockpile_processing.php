@@ -29,8 +29,8 @@ if ($action == 'Ship') {
 	$planet->decreaseStockpile($var['good_id'],$amount);
 	$ship->increaseCargo($var['good_id'],$amount);
 	$db->query('SELECT * FROM good WHERE good_id = '.$var['good_id']);
-	$db->next_record();
-	$good_name = $db->f('good_name');
+	$db->nextRecord();
+	$good_name = $db->getField('good_name');
 	$account->log(11, 'Player takes '.$amount.' '.$good_name.' from planet.', $player->getSectorID());
 
 // transfer to planet

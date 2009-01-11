@@ -7,10 +7,10 @@ $container['url'] = 'smc_create.php';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="game_id" id="InputFields">');
 $db->query('SELECT sector.game_id as sec, game_name FROM sector, game WHERE sector.game_id = game.game_id AND enabled = \'TRUE\' GROUP BY sector.game_id');
-while($db->next_record()) {
+while($db->nextRecord()) {
 
-	$id = $db->f('sec');
-	$name = $db->f('game_name');
+	$id = $db->getField('sec');
+	$name = $db->getField('game_name');
 	$PHP_OUTPUT.=('<option value="$id">$name</option>');
 
 }
@@ -24,10 +24,10 @@ $container['url'] = 'smc_create_ini.php';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="game_id" id="InputFields">');
 $db->query('SELECT sector.game_id as sec, game_name FROM sector, game WHERE sector.game_id = game.game_id AND enabled = \'TRUE\' GROUP BY sector.game_id');
-while($db->next_record()) {
+while($db->nextRecord()) {
 
-	$id = $db->f('sec');
-	$name = $db->f('game_name');
+	$id = $db->getField('sec');
+	$name = $db->getField('game_name');
 	$PHP_OUTPUT.=('<option value="$id">$name</option>');
 
 }
@@ -42,10 +42,10 @@ $container['url'] = 'smc_new.php';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="game_id" id="InputFields">');
 $db->query('SELECT sector.game_id as sec, game_name FROM sector, game WHERE sector.game_id = game.game_id AND enabled = \'TRUE\' GROUP BY sector.game_id');
-while($db->next_record()) {
+while($db->nextRecord()) {
 
-	$id = $db->f('sec');
-	$name = $db->f('game_name');
+	$id = $db->getField('sec');
+	$name = $db->getField('game_name');
 	$PHP_OUTPUT.=('<option value="$id">$name</option>');
 
 }

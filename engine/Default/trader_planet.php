@@ -18,7 +18,7 @@ $db->query('SELECT * FROM player, planet WHERE player.account_id = planet.owner_
 											  'planet.game_id = '.$player->getGameID().' AND ' .
 											  'player.account_id = '.$player->getAccountID());
 $smarty->assign('PageTopic','YOUR PLANET');
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
 	$PHP_OUTPUT.=('<div align="center">');
 	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard" width="95%">');
@@ -35,11 +35,11 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.=('<th align="center">Supplies</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->f('sector_id'));
-		$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->f('sector_id'), SmrSession::$account_id);
-		$planet_sec = $db->f('sector_id');
+		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
+		$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id'), SmrSession::$account_id);
+		$planet_sec = $db->getField('sector_id');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
 		$PHP_OUTPUT.=('<td align="right">'.$planet->sector_id.'</td>');
@@ -70,8 +70,8 @@ if ($db->nf() > 0) {
 			if ($amount > 0) {
 
 				$db2->query('SELECT * FROM good WHERE good_id = '.$id);
-				if ($db2->next_record())
-					$PHP_OUTPUT.=($db2->f('good_name') . ': '.$amount.'<br />');
+				if ($db2->nextRecord())
+					$PHP_OUTPUT.=($db2->getField('good_name') . ': '.$amount.'<br />');
 				$supply = true;
 			}
 
@@ -101,7 +101,7 @@ if ($player->getAllianceID() != 0) {
 												  'planet.sector_id != '.$planet_sec.' AND ' .
 												  'alliance_id = '.$player->getAllianceID().' ' .
 											'ORDER BY planet.sector_id');
-	if ($db->nf() > 0) {
+	if ($db->getNumRows() > 0) {
 	
 		$PHP_OUTPUT.=('<div align="center">');
 		$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard" width="95%">');
@@ -119,10 +119,10 @@ if ($player->getAllianceID() != 0) {
 		$PHP_OUTPUT.=('<th align="center">Supplies</th>');
 		$PHP_OUTPUT.=('</tr>');
 	
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 	
-			$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->f('sector_id'));
-			$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->f('sector_id'), SmrSession::$account_id);
+			$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
+			$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id'), SmrSession::$account_id);
 			$planet_owner =& SmrPlayer::getPlayer($planet->owner_id, SmrSession::$game_id);
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
@@ -156,8 +156,8 @@ if ($player->getAllianceID() != 0) {
 				if ($amount > 0) {
 	
 					$db2->query('SELECT * FROM good WHERE good_id = '.$id);
-					if ($db2->next_record())
-						$PHP_OUTPUT.=($db2->f('good_name') . ': '.$amount.'<br />');
+					if ($db2->nextRecord())
+						$PHP_OUTPUT.=($db2->getField('good_name') . ': '.$amount.'<br />');
 					$supply = true;
 				}
 	

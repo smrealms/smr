@@ -48,7 +48,7 @@ if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
 }
 
 $db->query('SELECT * FROM account WHERE email = ' . $db->escape_string($_POST['email']));
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
 	$msg = 'This eMail address is already registered.';
 	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));

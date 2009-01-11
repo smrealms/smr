@@ -22,15 +22,15 @@ else
                                             'player.game_id = '.$player->getGameID().' ' .
                                       'ORDER BY time_attack DESC');
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$game_id = $db->f('game');
-    $sector_id = $db->f('sector');
-	$time = $db->f('time_attack');
-    $attacker =& SmrPlayer::getPlayer($db->f('trigger_id'), $player->getGameID());
-	$att_damage = $db->f('attacker_damage');
-	$planet_damage = $db->f('planet_damage');
-	$planet =& SmrPlanet::getPlanet($player->getGameID(),$db->f('sector'));
+	$game_id = $db->getField('game');
+    $sector_id = $db->getField('sector');
+	$time = $db->getField('time_attack');
+    $attacker =& SmrPlayer::getPlayer($db->getField('trigger_id'), $player->getGameID());
+	$att_damage = $db->getField('attacker_damage');
+	$planet_damage = $db->getField('planet_damage');
+	$planet =& SmrPlanet::getPlanet($player->getGameID(),$db->getField('sector'));
 	$PHP_OUTPUT.=('Planet <span style=font-variant:small-caps>'.$planet->planet_name.'</span> is under attack by ' . $attacker->get_colored_name() . '<br />');
 	$PHP_OUTPUT.=('This shot was at ' . date('n/j/Y g:i:s A', $time) . '.  The attacking team did '.$att_damage.' damage ');
 	$PHP_OUTPUT.=('while the planet did '.$planet_damage.' damage<br /><br />');

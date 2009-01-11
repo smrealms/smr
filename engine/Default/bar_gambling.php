@@ -20,7 +20,7 @@ if ($action == 'process') {
 		//stop double entries...250,000 usecs at a time so as to not slow them down too much.
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID().' AND time = '.$time);
-		if ($db->nf()) {
+		if ($db->getNumRows()) {
 		
 			usleep(250000);
 			$time = time();
@@ -34,8 +34,8 @@ if ($action == 'process') {
 				$player->getGameID().', '.$player->getAccountID().', '.$time.')');
 	$db->query('SELECT count(*) as num FROM player_has_ticket WHERE game_id = '.$player->getGameID() .
 				' AND account_id = '.$player->getAccountID().' AND time > 0 GROUP BY account_id');
-	$db->next_record();
-	$num = $db->f('num');
+	$db->nextRecord();
+	$num = $db->getField('num');
 	$PHP_OUTPUT.=('<div align=center>Thanks for your purchase and good luck!!!  You currently');
 	$PHP_OUTPUT.=(' own '.$num.' tickets!</div><br />');
 	$action = 'Play the Galactic Lotto';
@@ -47,13 +47,13 @@ if ($action == 'lotto') {
 	
 	//do we have a winner first...
 	$time = time();
-	$db->lock('player_has_ticket');
+	$db->lockTable('player_has_ticket');
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
 			'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
-	$db->next_record();
-	if ($db->f('num') > 0) {
-		$amount = ($db->f('num') * 1000000 * .9) + 1000000;
-		$first_buy = $db->f('time');
+	$db->nextRecord();
+	if ($db->getField('num') > 0) {
+		$amount = ($db->getField('num') * 1000000 * .9) + 1000000;
+		$first_buy = $db->getField('time');
 	} else {
 		$amount = 1000000;
 		$first_buy = time();
@@ -64,14 +64,14 @@ if ($action == 'lotto') {
 		
 		//we need to pick a winner
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand()');
-		if ($db->next_record()) {
-			$winner_id = $db->f('account_id');
-			$time = $db->f('time');
+		if ($db->nextRecord()) {
+			$winner_id = $db->getField('account_id');
+			$time = $db->getField('time');
 		}
 		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
-		if ($db->next_record()) {
+		if ($db->nextRecord()) {
 		
-			$amount += $db->f('prize');
+			$amount += $db->getField('prize');
 			$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
 			
 		}
@@ -99,10 +99,10 @@ if ($action == 'lotto') {
 	//end do we have winner
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
 				'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
-	$db->next_record();
-	if ($db->f('num') > 0) {
-		$amount = ($db->f('num') * 1000000 * .9) + 1000000;
-		$first_buy = $db->f('time');
+	$db->nextRecord();
+	if ($db->getField('num') > 0) {
+		$amount = ($db->getField('num') * 1000000 * .9) + 1000000;
+		$first_buy = $db->getField('time');
 	} else {
 		$amount = 1000000;
 		$first_buy = time();
@@ -389,7 +389,7 @@ if ($action == 'lotto') {
 
 		$db->query('SELECT * FROM blackjack WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID());
-		if ($db->next_record()) $old_card = unserialize($db->f('last_hand'));
+		if ($db->nextRecord()) $old_card = unserialize($db->getField('last_hand'));
 		if ($old_card == $player_card) {
 			
 			create_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');

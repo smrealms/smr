@@ -14,16 +14,16 @@ $db->query('SELECT * FROM alliance_thread_topic WHERE alliance_id = '.$player->g
 					'topic LIKE \'Planet Attack Report Sector %\'');
 $container = array();
 $msg = array();
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
 	//get the newest post time and such
-	$thread_id = $db->f('thread_id');
+	$thread_id = $db->getField('thread_id');
 	$db2->query('SELECT * FROM alliance_thread WHERE thread_id = '.$thread_id.' AND alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' ORDER BY reply_id DESC');
-	$db2->next_record();
-	$post_time = $db2->f('time');
+	$db2->nextRecord();
+	$post_time = $db2->getField('time');
 	$db2->query('SELECT * FROM player_read_thread WHERE thread_id = '.$thread_id.' AND alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
-	if($db2->next_record())
-		$time_read = $db2->f('time');
+	if($db2->nextRecord())
+		$time_read = $db2->getField('time');
 	else
 		$time_read = 0;
 	if ($time_read < $post_time) {
@@ -55,15 +55,15 @@ AND alliance_thread.thread_id=alliance_thread_topic.thread_id
 GROUP BY alliance_thread.thread_id ORDER BY sendtime DESC
 ');
 $alliance_eyes = array();
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 	$i=0;
-	while ($db->next_record()) {
-		if ($db->f('thread') == $actual_id) $j = $i;
-		if ($db->f('alliance_only')) $alliance_eyes[$i] = TRUE;
+	while ($db->nextRecord()) {
+		if ($db->getField('thread') == $actual_id) $j = $i;
+		if ($db->getField('alliance_only')) $alliance_eyes[$i] = TRUE;
 		else $alliance_eyes[$i] = FALSE;
-		$thread_ids[$i] = $db->f('thread');
-		$thread_topics[$i] = $db->f('topic');
-		$thread_replies[$i] = $db->f('num_replies');
+		$thread_ids[$i] = $db->getField('thread');
+		$thread_topics[$i] = $db->getField('topic');
+		$thread_replies[$i] = $db->getField('num_replies');
 		++$i;
 	}
 	$db->free();

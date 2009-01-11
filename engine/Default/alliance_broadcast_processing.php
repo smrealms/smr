@@ -10,8 +10,8 @@ $db->query('
 	' AND alliance_id=' . $var['alliance_id'] . ' LIMIT 30'
 );
 
-while ($db->next_record()) {
-	$player->sendMessage($db->f('account_id'), $ALLIANCEMSG, $message);
+while ($db->nextRecord()) {
+	$player->sendMessage($db->getField('account_id'), $ALLIANCEMSG, $message);
 }
 $container=array();
 $container['url'] = 'skeleton.php';

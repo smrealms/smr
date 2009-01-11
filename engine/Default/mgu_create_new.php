@@ -28,8 +28,8 @@ $db->query(
 	'SELECT game_name FROM game WHERE game_id=' .  $game_id . ' LIMIT 1'
 );
 
-$db->next_record();
-$game_name = $db->f('game_name');
+$db->nextRecord();
+$game_name = $db->getField('game_name');
 $total_sectors = 0;
 
 // Build the galaxy array.
@@ -45,13 +45,13 @@ $db->query(
 	'GROUP BY galaxy_id ORDER BY start'
 );
 
-while($db->next_record()) {
-	$num_sectors = 1 + $db->f('end') - $db->f('start');
+while($db->nextRecord()) {
+	$num_sectors = 1 + $db->getField('end') - $db->getField('start');
 	
-	$galaxies[$db->f('galaxy_id')] = array(
-		'name' => $db->f('galaxy_name'),
-		'start' => $db->f('start'),
-		'end' => $db->f('end'),
+	$galaxies[$db->getField('galaxy_id')] = array(
+		'name' => $db->getField('galaxy_name'),
+		'start' => $db->getField('start'),
+		'end' => $db->getField('end'),
 		'size' => sqrt($num_sectors) 
 	);
 	$total_sectors += $num_sectors;
@@ -67,12 +67,12 @@ $db->query(
 	'AND account_id = ' . $player->getAccountID() . ' ) '
 );
 
-while($db->next_record()) {
-	$sectors[$db->f('sector_id')] = array(
-		'up' => $db->f('link_up'),
-		'left' => $db->f('link_left'),
-		'right' => $db->f('link_right'),
-		'down' => $db->f('link_down')
+while($db->nextRecord()) {
+	$sectors[$db->getField('sector_id')] = array(
+		'up' => $db->getField('link_up'),
+		'left' => $db->getField('link_left'),
+		'right' => $db->getField('link_right'),
+		'down' => $db->getField('link_down')
 	);
 }
 
@@ -91,8 +91,8 @@ $db->query(
 );
 
 // Adjust the sectors array
-while($db->next_record()) {
-	$sectors[$db->f('sector_id')]['location'][] = $db->f('mgu_id');
+while($db->nextRecord()) {
+	$sectors[$db->getField('sector_id')]['location'][] = $db->getField('mgu_id');
 }
 
 // Warps
@@ -113,12 +113,12 @@ $db->query(
 );
 
 // Adjust the sectors array
-while($db->next_record()) {
-	if(isset($sectors[$db->f('sector_id_1')])) {
-		$sectors[$db->f('sector_id_1')]['warp'] = $db->f('sector_id_2');
+while($db->nextRecord()) {
+	if(isset($sectors[$db->getField('sector_id_1')])) {
+		$sectors[$db->getField('sector_id_1')]['warp'] = $db->getField('sector_id_2');
 	}
-	if(isset($sectors[$db->f('sector_id_2')])) {
-		$sectors[$db->f('sector_id_2')]['warp'] = $db->f('sector_id_1');
+	if(isset($sectors[$db->getField('sector_id_2')])) {
+		$sectors[$db->getField('sector_id_2')]['warp'] = $db->getField('sector_id_1');
 	}
 }
 
@@ -137,17 +137,17 @@ $db->query(
 );
 
 // Adjust the sectors array
-while($db->next_record()) {
+while($db->nextRecord()) {
 	// Adjust races for MGU
-	$race = $db->f('race_id');
+	$race = $db->getField('race_id');
 	if($race == 1) {
 		$race = 9;
 	}
 	else {
 		--$race;
 	}
-	$sectors[$db->f('sector_id')]['port'] = array(
-		'info' => $db->f('port_info'),
+	$sectors[$db->getField('sector_id')]['port'] = array(
+		'info' => $db->getField('port_info'),
 		'race' => $race
 	);
 }
@@ -181,8 +181,8 @@ $query .=
 $db->query($query);
 
 // Adjust the sectors array
-while($db->next_record()) {
-	$sectors[$db->f('sector_id')]['safe'] = true;
+while($db->nextRecord()) {
+	$sectors[$db->getField('sector_id')]['safe'] = true;
 }
 
 // Grab the planets
@@ -198,8 +198,8 @@ $db->query(
 ); 
 
 // Adjust the sectors array
-while($db->next_record()) {
-	$sectors[$db->f('sector_id')]['planet'] = true;
+while($db->nextRecord()) {
+	$sectors[$db->getField('sector_id')]['planet'] = true;
 }
 
 // Determine level of player/alliance owned planets
@@ -232,8 +232,8 @@ $query .= 'GROUP BY sector_id';
 $db->query($query);
 
 // Adjust the sectors array (The cast is important, we test against it later)
-while($db->next_record()) {
-	$sectors[$db->f('sector_id')]['planet'] = (int)$db->f('level');
+while($db->nextRecord()) {
+	$sectors[$db->getField('sector_id')]['planet'] = (int)$db->getField('level');
 }
 
 /*

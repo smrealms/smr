@@ -70,7 +70,7 @@ else
 	$container['sequence'] = 'DESC';
 
 // do we have any alliances?
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 {
 	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>';
 	$container['order'] = 'alliance_name';
@@ -88,19 +88,19 @@ if ($db->nf() > 0)
 	$PHP_OUTPUT.= '</tr>';
 
 
-	while ($db->next_record()) {
-		if ($db->f('alliance_id') != $player->getAllianceID())
+	while ($db->nextRecord()) {
+		if ($db->getField('alliance_id') != $player->getAllianceID())
 			$container['body'] = 'alliance_roster.php';
 		else
 			$container['body'] = 'alliance_mod.php';
-		$container['alliance_id'] = $db->f('alliance_id');
+		$container['alliance_id'] = $db->getField('alliance_id');
 
 		$PHP_OUTPUT.= '<tr><td>';
-		$PHP_OUTPUT.=create_link($container, stripslashes($db->f('alliance_name')));
+		$PHP_OUTPUT.=create_link($container, stripslashes($db->getField('alliance_name')));
 		$PHP_OUTPUT.= '</td>';
-		$PHP_OUTPUT.= '<td class="right">' .  $db->f('alliance_xp') . '</td>';
-		$PHP_OUTPUT.= '<td class="right">' . $db->f('alliance_avg') . '</td>';
-		$PHP_OUTPUT.= '<td class="right">' . $db->f('alliance_member_count') . '</td></tr>';
+		$PHP_OUTPUT.= '<td class="right">' .  $db->getField('alliance_xp') . '</td>';
+		$PHP_OUTPUT.= '<td class="right">' . $db->getField('alliance_avg') . '</td>';
+		$PHP_OUTPUT.= '<td class="right">' . $db->getField('alliance_member_count') . '</td></tr>';
 
 	}
 	$PHP_OUTPUT.= '</table><br />Click column table to reorder!';

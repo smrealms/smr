@@ -46,10 +46,10 @@ $goods = array();
 $curr_good_class = 0;
 
 $db->query('SELECT * FROM good ORDER BY good_class');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$good_class = $db->f('good_class');
-	$good_id = $db->f('good_id');
+	$good_class = $db->getField('good_class');
+	$good_id = $db->getField('good_id');
 
 	if($good_class != $curr_good_class) {
 
@@ -81,21 +81,21 @@ foreach($ports as $galaxy_id => $amount) {
 	$count = 0;
 
 	// we stop if we added all ports for his gal or if we don't have any free sectors
-	while ($count < $amount && $db->next_record()) {
+	while ($count < $amount && $db->nextRecord()) {
 
-		$sector_id = $db->f('sector_id');
+		$sector_id = $db->getField('sector_id');
 
 		// does this sector has a fed?
 		$db2->query('SELECT * FROM location ' .
 				'WHERE game_id = ' . $var['game_id'] . ' AND ' .
 				'sector_id = '.$sector_id.' AND ' .
 				'location_type_id = '.$FED);
-		if ($db2->nf() > 0) continue;
+		if ($db2->getNumRows() > 0) continue;
 
 
 		// does this sector already have a port?
 		$db2->query('SELECT sector_id FROM port WHERE game_id = ' . $var['game_id'] . ' AND sector_id = '.$sector_id);
-		if ($db2->nf() > 0) continue;
+		if ($db2->getNumRows() > 0) continue;
 		
 
 		// ok we did $count ports so far

@@ -157,8 +157,8 @@ class Distance_Plotter extends SmrMySqlDatabase{
 					 sector_id = ' .  $sector_id  .  ' AND
 					 game_id = '  .  $this->game_id  .  ' LIMIT 1');
 
-		if($this->next_record()) {
-			$galaxy_id = $this->f('galaxy_id');
+		if($this->nextRecord()) {
+			$galaxy_id = $this->getField('galaxy_id');
 		} else
 			create_error('The sector #' . $sector_id . ' doesn\'t exist');
 
@@ -167,13 +167,13 @@ class Distance_Plotter extends SmrMySqlDatabase{
 					 galaxy_id = '  .  $galaxy_id .  ' AND
 					 game_id = '  .  $this->game_id);
 
-		if ($this->next_record()) {
+		if ($this->nextRecord()) {
 
 			// Store an entry in the galaxies array
 			$galaxies[$galaxy_id] = array(
-				$this->f('MIN(sector_id)'),
-				$this->f('MAX(sector_id)'),
-				$this->f('MAX(sector_id)') - $this->f('MIN(sector_id)') + 1
+				$this->getField('MIN(sector_id)'),
+				$this->getField('MAX(sector_id)'),
+				$this->getField('MAX(sector_id)') - $this->getField('MIN(sector_id)') + 1
 			);
 
 		} else
@@ -196,12 +196,12 @@ class Distance_Plotter extends SmrMySqlDatabase{
 
 		// Array is like this. $galaxy_map[sector_id] = link_up, link_down, link_left, link_right, visitor
 		// Where visitor is 0:unvisited, 1: start group, 2: target group, 3:avoid
-		while ($this->next_record()) {
-			$galaxy_map[$this->f('sector_id')] = array(
-				$this->f('link_up'),
-				$this->f('link_down'),
-				$this->f('link_left'),
-				$this->f('link_right'),
+		while ($this->nextRecord()) {
+			$galaxy_map[$this->getField('sector_id')] = array(
+				$this->getField('link_up'),
+				$this->getField('link_down'),
+				$this->getField('link_left'),
+				$this->getField('link_right'),
 				0
 			);
 		}
@@ -244,12 +244,12 @@ class Distance_Plotter extends SmrMySqlDatabase{
 					 sector_id_2 = ' . $sector_id_2 . ' AND
 					 game_id = ' . $this->game_id . ' LIMIT 1');
 
-		if ($this->next_record()) {
+		if ($this->nextRecord()) {
 			// We found a cached entry
-			$links[$i][2] = $this->f('length');				// Store the length of the route
+			$links[$i][2] = $this->getField('length');				// Store the length of the route
 
 			// To optimise use of mysql's cache (Not the the plot_cache table) the timeout doesn't get updated on every access
-			if (time() -  $this->f('timeout') < TIMEOUT_TO_UPDATE) {
+			if (time() -  $this->getField('timeout') < TIMEOUT_TO_UPDATE) {
 				$this->cache_updated = true;
 				$this->query('UPDATE plot_cache SET timeout = ' . time() . ' WHERE
 							 sector_id_1 = ' . $sector_id_1 . ' AND
@@ -388,21 +388,21 @@ class Distance_Plotter extends SmrMySqlDatabase{
 		// Where visited is 0:unvisited 1:visited for every node
 
 		// Ok, now we build the warp -> warp CONNECTION routes
-        	while ($this->next_record()) {
+        	while ($this->nextRecord()) {
 			// We do two things here.
 			// 1. We create the CONNECTION route
 			// 2. We create a list of warp sectors and their galaxy ids
 
 			// Determine low/high sense of $start and $target
-			if ($this->f('sector_id_1') >  $this->f('sector_id_2')) {
+			if ($this->getField('sector_id_1') >  $this->getField('sector_id_2')) {
 
-				$sector_id_1 = $this->f('sector_id_2');
-				$sector_id_2 = $this->f('sector_id_1');
+				$sector_id_1 = $this->getField('sector_id_2');
+				$sector_id_2 = $this->getField('sector_id_1');
 
 			} else {
 
-				$sector_id_1 = $this->f('sector_id_1');
-				$sector_id_2 = $this->f('sector_id_2');
+				$sector_id_1 = $this->getField('sector_id_1');
+				$sector_id_2 = $this->getField('sector_id_2');
 
 			}
 

@@ -22,11 +22,11 @@ $PHP_OUTPUT.= '<br /><br /><h2>Gambling</h2><br />So you\'re not the drinking ty
 
 //check for winner
 $db->query('SELECT prize FROM player_has_ticket WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $player->getAccountID() . ' AND time = 0 LIMIT 1');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 	$PHP_OUTPUT.= 'Congratulations. You have a winning lotto ticket.<br /><br />';
 	$container['script'] = 'bar_lotto_claim.php';
 	$container['action'] = 'lotto_claim';
-	$PHP_OUTPUT.=create_button($container,'Claim Your Prize (' . number_format($db->f('prize')) . ' Cr)');
+	$PHP_OUTPUT.=create_button($container,'Claim Your Prize (' . number_format($db->getField('prize')) . ' Cr)');
 	$PHP_OUTPUT.= '<br /><br />';
 }
 

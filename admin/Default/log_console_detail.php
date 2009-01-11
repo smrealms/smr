@@ -98,18 +98,18 @@ if ($action == 'Delete') {
 	$PHP_OUTPUT.=('<br /><br />');
 
 	$db->query('SELECT * FROM log_type');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$PHP_OUTPUT.=('<input type="checkbox" name="log_type_ids[' . $db->f('log_type_id') . ']"');
-		if ($log_type_ids[$db->f('log_type_id')]) {
+		$PHP_OUTPUT.=('<input type="checkbox" name="log_type_ids[' . $db->getField('log_type_id') . ']"');
+		if ($log_type_ids[$db->getField('log_type_id')]) {
 
 			$PHP_OUTPUT.=(' checked');
 			if (!empty($log_type_id_list))
 				$log_type_id_list .= ',';
-			$log_type_id_list .= $db->f('log_type_id');
+			$log_type_id_list .= $db->getField('log_type_id');
 
 		}
-		$PHP_OUTPUT.=('>' . $db->f('log_type_entry') . '<br />');
+		$PHP_OUTPUT.=('>' . $db->getField('log_type_entry') . '<br />');
 
 	}
 	$PHP_OUTPUT.=('</form>');
@@ -142,8 +142,8 @@ if ($action == 'Delete') {
 
 	// get notes from db
 	$db->query('SELECT * FROM log_has_notes WHERE account_id IN '.$account_list);
-	while ($db->next_record())
-		$log_notes[] = $db->f('notes');
+	while ($db->nextRecord())
+		$log_notes[] = $db->getField('notes');
 
 	// get rid of double values
 	$log_notes = array_unique($log_notes);
@@ -174,8 +174,8 @@ if ($action == 'Delete') {
 	foreach ($colors as $id => $color) {
 
 		$db->query('SELECT login FROM account WHERE account_id = ' . $id);
-		if ($db->next_record())
-			$PHP_OUTPUT.=('<li style="color:'.$color.';">' . $db->f('login') . '</li>');
+		if ($db->nextRecord())
+			$PHP_OUTPUT.=('<li style="color:'.$color.';">' . $db->getField('login') . '</li>');
 
 	}
 	$PHP_OUTPUT.=('</ul>');
@@ -208,13 +208,13 @@ if ($action == 'Delete') {
 		$log_type_id_list = 0;
 
 	$db->query('SELECT * FROM account_has_logs WHERE account_id IN '.$account_list.' AND log_type_id IN ('.$log_type_id_list.') ORDER BY ' . $var['item'] . ' ' . $var['order']);
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$account_id		= $db->f('account_id');
-		$time			= $db->f('time');
-		$message		= stripslashes($db->f('message'));
-		$log_type_id	= $db->f('log_type_id');
-		$sector_id		= $db->f('sector_id');
+		$account_id		= $db->getField('account_id');
+		$time			= $db->getField('time');
+		$message		= stripslashes($db->getField('message'));
+		$log_type_id	= $db->getField('log_type_id');
+		$sector_id		= $db->getField('sector_id');
 
 		// generate style string
 		$style = ' style="color:' . $colors[$account_id] . ';"';
@@ -223,8 +223,8 @@ if ($action == 'Delete') {
 		$PHP_OUTPUT.=('<td$style>' . date('n/j/Y', $time) . '&nbsp;' . date('g:i:s', $time) . '&nbsp;' . date('A', $time) . '</td>');
 
 		$db2->query('SELECT * FROM log_type WHERE log_type_id = '.$log_type_id);
-		if ($db2->next_record())
-			$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db2->f('log_type_entry') . '</td>');
+		if ($db2->nextRecord())
+			$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db2->getField('log_type_entry') . '</td>');
 		else
 			$PHP_OUTPUT.=('<td align="center"'.$style.'>unknown</td>');
 

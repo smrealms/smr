@@ -27,14 +27,14 @@ else {
 	else
 		$db->query('SELECT * FROM bar_drink ORDER BY rand() LIMIT 1');
 
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$drink_name = $db->f('drink_name');
-		$drink_id = $db->f('drink_id');
+		$drink_name = $db->getField('drink_name');
+		$drink_id = $db->getField('drink_id');
 
         $db2->query('SELECT * FROM player_has_drinks WHERE game_id = '.$player->getGameID().' ORDER by drink_id DESC LIMIT 1');
-        if ($db2->next_record())
-        	$curr_drink_id = $db2->f('drink_id') + 1;
+        if ($db2->nextRecord())
+        	$curr_drink_id = $db2->getField('drink_id') + 1;
         else
         	$curr_drink_id = 1;
 
@@ -64,7 +64,7 @@ else {
 	}
 
 	$db->query('SELECT * FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
-	$num_drinks = $db->nf();
+	$num_drinks = $db->getNumRows();
 	//display woozy message
 	$PHP_OUTPUT.= '<br />You feel a little W';
 	for ($i = 1; $i <= $num_drinks; ++$i) $PHP_OUTPUT.= 'oO';

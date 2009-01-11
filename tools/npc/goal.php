@@ -12,8 +12,8 @@ function get_short_term_goal($account_id, $game_id) {
 				WHERE account_id = '.$account_id.' AND
 					  game_id = '.$game_id.'
 			   ');
-	if ($db->next_record())
-		return array('type' => $db->f('type'), 'task' => $db->f('task'));
+	if ($db->nextRecord())
+		return array('type' => $db->getField('type'), 'task' => $db->getField('task'));
 	else
 		return false;
 
@@ -53,8 +53,8 @@ function get_long_term_goal($account_id, $game_id) {
 				WHERE account_id = '.$account_id.' AND
 					  game_id = '.$game_id.'
 			   ');
-	if ($db->next_record())
-		return array('type' => $db->f('type'), 'task' => $db->f('task'));
+	if ($db->nextRecord())
+		return array('type' => $db->getField('type'), 'task' => $db->getField('task'));
 	else
 		return false;
 

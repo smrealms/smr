@@ -27,7 +27,7 @@ $smarty->assign('Topic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$gal
 // Sector links
 $db->query('SELECT sector_id,link_up,link_right,link_down,link_left FROM sector WHERE sector_id=' . $player->getSectorID() . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
-$db->next_record();
+$db->nextRecord();
 $links = array();
 $links['Up'] = array('ID'=>$sector->getLinkUp());
 $links['Right'] = array('ID'=>$sector->getLinkRight());
@@ -38,9 +38,9 @@ $links['Warp'] = array('ID'=>$sector->getLinkWarp());
 $unvisited = array();
 
 $db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeString($links,false) . ') AND account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id);
-while($db->next_record())
+while($db->nextRecord())
 {
-	$unvisited[$db->f('sector_id')] = TRUE;
+	$unvisited[$db->getField('sector_id')] = TRUE;
 }
 
 $container1 = array();
@@ -83,12 +83,12 @@ if($player->hasTickers())
 		//get recent news (5 mins)
 		
 		$db->query('SELECT time,news_message FROM news WHERE game_id = '.$player->getGameID().' AND time >= '.$max.' ORDER BY time DESC LIMIT 4');
-		if ($db->nf())
+		if ($db->getNumRows())
 		{
-			while($db->next_record())
+			while($db->nextRecord())
 			{
-				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->f('time')),
-								'Message'=>$db->f('news_message'));
+				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->getField('time')),
+								'Message'=>$db->getField('news_message'));
 			}
 		}
 	}
@@ -99,7 +99,7 @@ if($player->hasTickers())
 		$db->query('SELECT * FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > '. TIME .' AND game_id = ' . $player->getGameID());
 		$temp=array();
 		$temp[] = 0;
-		while ($db->next_record()) $temp[] = $db->f('account_id');
+		while ($db->nextRecord()) $temp[] = $db->getField('account_id');
 		$query = 'SELECT message_text,send_time FROM message
 					WHERE account_id=' . $player->getAccountID() . '
 					AND game_id=' . $player->getGameID() . '
@@ -110,12 +110,12 @@ if($player->hasTickers())
 					LIMIT 4';
 		$db->query($query);
 		unset($temp);
-		if ($db->nf())
+		if ($db->getNumRows())
 		{
-			while($db->next_record())
+			while($db->nextRecord())
 			{
-				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->f('send_time')),
-								'Message'=>$db->f('message_text'));
+				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->getField('send_time')),
+								'Message'=>$db->getField('message_text'));
 			}
 		}
 	}
@@ -156,16 +156,16 @@ $smarty->assign('ProtectionMessage',$protectionMessage);
 
 
 $db->query('SELECT * FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-if ($db->next_record())
+if ($db->nextRecord())
 {
-	$msg = $db->f('message');
+	$msg = $db->getField('message');
 	$db->query('DELETE FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 	if ($msg == '[Force Check]')
 	{
 		$forceRefreshMessage ='';
 		$db->query('SELECT * FROM force_refresh WHERE refresh_at >= ' . time() . ' AND sector_id  = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' ORDER BY refresh_at DESC LIMIT 1');
-		if ($db->next_record()) {
-			$remainingTime = $db->f('refresh_at') - time();
+		if ($db->nextRecord()) {
+			$remainingTime = $db->getField('refresh_at') - time();
 			$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
 			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
 		}
@@ -178,9 +178,9 @@ if (isset($var['msg']))
 	if ($msg == '[Force Check]')
 	{
 		$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
-		if ($db->next_record())
+		if ($db->nextRecord())
 		{
-			$remainingTime = $db->f('refresh_at') - TIME;
+			$remainingTime = $db->getField('refresh_at') - TIME;
 			$msg = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
 			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', '.$db->escapeString('[Force Check]').')');
 		} else $msg = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
@@ -192,7 +192,7 @@ if (isset($var['msg']))
 if ($player->getAccountID() == 2)
 {
 	$db->query('SELECT * FROM player WHERE account_id = 10106 AND game_id = 23 LIMIT 1');
-	if ($db->next_record()) $msg .= '<br />In Sector:'.$db->f('sector_id').'<br />';
+	if ($db->nextRecord()) $msg .= '<br />In Sector:'.$db->getField('sector_id').'<br />';
 }
 //error msgs take precedence
 if (isset($var['errorMsg'])) $smarty->assign('ErrorMessage', $var['errorMsg']);

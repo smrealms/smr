@@ -1,10 +1,10 @@
 <?
 
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
-$db->next_record();
+$db->nextRecord();
 $smarty->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->f('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
 
 $db->query('
 SELECT
@@ -21,7 +21,7 @@ ORDER BY last_cpl_action DESC
 
 $PHP_OUTPUT.= '<div align="center">';
 
-if ($db->nf() != 0) {
+if ($db->getNumRows() != 0) {
 
 	$container=array();
 	$container['url'] = 'alliance_remove_member_processing.php';
@@ -30,13 +30,13 @@ if ($db->nf() != 0) {
 	$PHP_OUTPUT.= $form['form'];
 	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><th>Trader Name</th><th>Last Online</th><th>Action</th>';
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
 		// we won't exile ourself!
 		if ($player->getAccountID() != $account_id) {
 
 			// get the amount of time since last_active
-			$diff = time() - $db->f('last_cpl_action');
+			$diff = time() - $db->getField('last_cpl_action');
 
 			if ($diff > 864000)
 				$diff = 864000;
@@ -68,16 +68,16 @@ if ($db->nf() != 0) {
 			}
 
 			$PHP_OUTPUT.= '<tr><td>';
-			$PHP_OUTPUT.= stripslashes($db->f('player_name'));
+			$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
 			$PHP_OUTPUT.= '(';
-			$PHP_OUTPUT.= $db->f('player_id');
+			$PHP_OUTPUT.= $db->getField('player_id');
 			$PHP_OUTPUT.= ')</td><td class="shrink nowrap center" style="color:' . $color;
 			$PHP_OUTPUT.= '">';
-			$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db->f('last_cpl_action'));
+			$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db->getField('last_cpl_action'));
 			$PHP_OUTPUT.= '</td><td class="shrink center">';
 
 			$PHP_OUTPUT.= '<input type="checkbox" name="account_id[]" value="';
-			$PHP_OUTPUT.= $db->f('account_id');
+			$PHP_OUTPUT.= $db->getField('account_id');
 			$PHP_OUTPUT.= '"></td></tr>';
 
 		}

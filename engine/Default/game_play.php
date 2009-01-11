@@ -15,14 +15,14 @@ $db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as format_end_date, end_d
 $games = array();
 $games['Play'] = array();
 $game_id_list ='';
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 {
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$game_id = $db->f('game_id');
-		$game_name = $db->f('game_name');
-		$end_date = $db->f('format_end_date');
-		$game_speed = $db->f('game_speed');
+		$game_id = $db->getField('game_id');
+		$game_name = $db->getField('game_name');
+		$end_date = $db->getField('format_end_date');
+		$game_speed = $db->getField('game_speed');
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $game_name;
 		$games['Play'][$game_id]['EndDate'] = $end_date;
@@ -48,8 +48,8 @@ if ($db->nf() > 0)
 		$db2->query('SELECT count(*) as num_playing FROM player ' .
 					'WHERE last_cpl_action >= ' . (time() - 600) . ' AND ' .
 						  'game_id = '.$game_id);
-		$db2->next_record();
-		$games['Play'][$game_id]['NumberPlaying'] = $db2->f('num_playing');
+		$db2->nextRecord();
+		$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
 
 		// create a container that will hold next url and additional variables.
 
@@ -81,21 +81,21 @@ else
 // ***************************************
 
 // are there any results?
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 {
 	$games['Join'] = array();
 	// iterate over the resultset
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		$game_id = $db->f('game_id');
+		$game_id = $db->getField('game_id');
 		$games['Join'][$game_id]['ID'] = $game_id;
-		$games['Join'][$game_id]['Name'] = $db->f('game_name');
-		$games['Join'][$game_id]['StartDate'] = $db->f('start_date');
-		$games['Join'][$game_id]['EndDate'] = $db->f('end_date');
-		$games['Join'][$game_id]['MaxPlayers'] = $db->f('max_players');
-		$games['Join'][$game_id]['Type'] = $db->f('max_players');
-		$games['Join'][$game_id]['Speed'] = $db->f('credits_needed');
-		$games['Join'][$game_id]['Credits'] = $db->f('credits_needed');
+		$games['Join'][$game_id]['Name'] = $db->getField('game_name');
+		$games['Join'][$game_id]['StartDate'] = $db->getField('start_date');
+		$games['Join'][$game_id]['EndDate'] = $db->getField('end_date');
+		$games['Join'][$game_id]['MaxPlayers'] = $db->getField('max_players');
+		$games['Join'][$game_id]['Type'] = $db->getField('max_players');
+		$games['Join'][$game_id]['Speed'] = $db->getField('credits_needed');
+		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
 		// create a container that will hold next url and additional variables.
 		$container = array();
 		$container['game_id'] = $game_id;
@@ -116,44 +116,44 @@ $historyDB = new SmrHistoryMySqlDatabase();
 $historyDB->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, ' .
 		   'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 		   'FROM game ORDER BY game_id');
-if ($historyDB->nf())
+if ($historyDB->getNumRows())
 {
 
 	$PHP_OUTPUT.=('<p>');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr><th align=center>Game Name</th><th align=center>Start Date</th><th align=center>End Date</th><th align=center>Speed</th><th align=center colspan=3>Options</th></tr>');
-	while ($historyDB->next_record()) {
+	while ($historyDB->nextRecord()) {
 
-		$id = $historyDB->f('game_id');
+		$id = $historyDB->getField('game_id');
 		$container = array();
 		$container['url'] = 'skeleton.php';
-		$container['game_id'] = $historyDB->f('game_id');
-		$container['game_name'] = $historyDB->f('game_name');
+		$container['game_id'] = $historyDB->getField('game_id');
+		$container['game_name'] = $historyDB->getField('game_name');
 		$container['body'] = 'games_previous.php';
-		$name = $historyDB->f('game_name');
+		$name = $historyDB->getField('game_name');
 		$PHP_OUTPUT.=('<tr><td>');
 		$PHP_OUTPUT.=create_link($container, '.$historyDB->escapeString($name ($id)');
 		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $historyDB->f('start_date') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $historyDB->f('end_date') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $historyDB->f('speed') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $historyDB->getField('start_date') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $historyDB->getField('end_date') . '</td>');
+		$PHP_OUTPUT.=('<td align=center>' . $historyDB->getField('speed') . '</td>');
 		$PHP_OUTPUT.=('<td align=center>');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'hall_of_fame_new.php';
-		$container['game_id'] = $historyDB->f('game_id');
+		$container['game_id'] = $historyDB->getField('game_id');
 		$PHP_OUTPUT.=create_link($container, 'Hall of Fame');
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align=center>');
 		$container['body'] = 'games_previous_news.php';
-		$container['game_id'] = $historyDB->f('game_id');
-		$container['game_name'] = $historyDB->f('game_name');
+		$container['game_id'] = $historyDB->getField('game_id');
+		$container['game_name'] = $historyDB->getField('game_name');
 		$PHP_OUTPUT.=create_link($container, 'Game News');
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align=center>');
 		$container['body'] = 'games_previous_detail.php';
-		$container['game_id'] = $historyDB->f('game_id');
-		$container['game_name'] = $historyDB->f('game_name');
+		$container['game_id'] = $historyDB->getField('game_id');
+		$container['game_name'] = $historyDB->getField('game_name');
 		$PHP_OUTPUT.=create_link($container, 'Game Stats');
 		$PHP_OUTPUT.=('</td>');
 
@@ -186,12 +186,12 @@ $smarty->assign('OldAnnouncementsLink',SmrSession::get_new_href($container));
 // ***************************************
 $db->query('SELECT * FROM account_has_permission NATURAL JOIN permission WHERE account_id = '.$account->account_id);
 
-if ($db->nf())
+if ($db->getNumRows())
 {
 	$adminPermissions = array();
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		$adminPermissions[] = array( 'PermissionLink' => SmrSession::get_new_href(create_container('skeleton.php',$db->f('link_to'))), 'Name' => $db->f('permission_name'));
+		$adminPermissions[] = array( 'PermissionLink' => SmrSession::get_new_href(create_container('skeleton.php',$db->getField('link_to'))), 'Name' => $db->getField('permission_name'));
 	}
 	$smarty->assign('AdminPermissions',$adminPermissions);
 }

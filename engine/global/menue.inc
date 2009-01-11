@@ -21,12 +21,12 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 					AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')
 					AND game_id = '.$player->getGameID().'
 					AND (mb_read = 1 OR mod_read = 1 OR planet_land = 1) AND official = \'TRUE\'');
-	if ($db2->next_record()) {
-		if ($db2->f('mb_read')) $mbRead = TRUE;
+	if ($db2->nextRecord()) {
+		if ($db2->getField('mb_read')) $mbRead = TRUE;
 		else $mbRead = FALSE;
-		if ($db2->f('mod_read')) $modRead = TRUE;
+		if ($db2->getField('mod_read')) $modRead = TRUE;
 		else $modRead = FALSE;
-		if ($db2->f('planet_land')) $planetLand = TRUE;
+		if ($db2->getField('planet_land')) $planetLand = TRUE;
 		else $planetLand = FALSE;
 	} else {
 		$mbRead = FALSE;
@@ -49,11 +49,11 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 		$container['alliance_id'] = $var['alliance_id'];
 	$menue_items[] = create_link($container, 'Roster');
 	$db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	if ($db2->next_record()) $role_id = $db2->f('role_id');
+	if ($db2->nextRecord()) $role_id = $db2->getField('role_id');
 	else $role_id = 0;
 	$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
-	$db2->next_record();
-	$send = $db2->f('send_alliance_msg') == 'TRUE';
+	$db2->nextRecord();
+	$send = $db2->getField('send_alliance_msg') == 'TRUE';
 	$container=array();
 	$container['url']='skeleton.php';
 	$container['alliance_id'] = $alliance_id;
@@ -105,9 +105,9 @@ function create_galactic_post_menue() {
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$position = $db->f('position');
+		$position = $db->getField('position');
 		if ($position == 'writer')
 			$allowed_write = 'yes';
 		else

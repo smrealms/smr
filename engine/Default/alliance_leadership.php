@@ -1,10 +1,10 @@
 <?
 
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
-$db->next_record();
+$db->nextRecord();
 $smarty->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->f('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
 
 $container = array();
 $container['url'] = 'alliance_leadership_processing.php';
@@ -23,13 +23,13 @@ AND alliance_id=' . $player->getAllianceID() . '
 LIMIT 30'
 );
 
-while ($db->next_record()) {
-	$PHP_OUTPUT.= '<option value="' . $db->f('account_id') . '"';
-	if ($db->f('account_id') == $player->getAccountID()) $PHP_OUTPUT.= ' selected="selected"';
+while ($db->nextRecord()) {
+	$PHP_OUTPUT.= '<option value="' . $db->getField('account_id') . '"';
+	if ($db->getField('account_id') == $player->getAccountID()) $PHP_OUTPUT.= ' selected="selected"';
 	$PHP_OUTPUT.= '>';
-	$PHP_OUTPUT.= stripslashes($db->f('player_name'));
+	$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
 	$PHP_OUTPUT.= ' (';
-	$PHP_OUTPUT.= $db->f('player_id');
+	$PHP_OUTPUT.= $db->getField('player_id');
 	$PHP_OUTPUT.= ')</option>';
 }
 

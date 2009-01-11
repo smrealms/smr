@@ -3,8 +3,8 @@
 $smarty->assign('PageTopic','FEATURE REQUEST');
 
 $db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
-if ($db->next_record())
-	$feature_vote = $db->f('feature_request_id');
+if ($db->nextRecord())
+	$feature_vote = $db->getField('feature_request_id');
 
 $db->query('SELECT f.feature_request_id AS feature_id, ' .
 				  'f.feature AS feature_msg, ' .
@@ -14,7 +14,7 @@ $db->query('SELECT f.feature_request_id AS feature_id, ' .
   				'GROUP BY feature_id, feature_msg ' .
   				'ORDER BY votes DESC, feature_id');
 
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
 	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote.php', ''));
 	$PHP_OUTPUT.=('<p><table cellspacing="0" cellpadding="3" border="0" class="standard" width="100%">');
@@ -24,12 +24,12 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.=('<th width="20">&nbsp;</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$feature_request_id = $db->f('feature_id');
-		$submitter_id = $db->f('submitter_id');
-		$message = stripslashes($db->f('feature_msg'));
-		$votes = $db->f('votes');
+		$feature_request_id = $db->getField('feature_id');
+		$submitter_id = $db->getField('submitter_id');
+		$message = stripslashes($db->getField('feature_msg'));
+		$votes = $db->getField('votes');
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td valign="top" align="center">'.$votes.'</td>');

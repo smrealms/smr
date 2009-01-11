@@ -27,15 +27,15 @@ else {
 				);
 }
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
 	$PHP_OUTPUT.= '<tr>';
 	$PHP_OUTPUT.= '<td class="shrink top nowrap">';
-	//$PHP_OUTPUT.=  $db->f('login');
+	//$PHP_OUTPUT.=  $db->getField('login');
 	//$PHP_OUTPUT.= '<br />';
-	$PHP_OUTPUT.= date('n/j/Y\<b\r /\>g:i:s A', $db->f('time'));
+	$PHP_OUTPUT.= date('n/j/Y\<b\r /\>g:i:s A', $db->getField('time'));
 	$PHP_OUTPUT.= '</td><td class="top">';
-	$PHP_OUTPUT.= $db->f('msg');
+	$PHP_OUTPUT.= $db->getField('msg');
 	$PHP_OUTPUT.= '</td></tr>';
 }
 

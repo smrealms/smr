@@ -31,12 +31,12 @@ function main_page() {
 				WHERE approved = \'YES\'
 				ORDER BY page_views DESC
 				LIMIT 5');
-	if ($db->nf()) {
+	if ($db->getNumRows()) {
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
-			$page_views = $db->f('page_views');
-			$nick = get_album_nick($db->f('account_id'));
+			$page_views = $db->getField('page_views');
+			$nick = get_album_nick($db->getField('account_id'));
 
 			echo('<a href="'.URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> ('.$page_views.')<br />');
 
@@ -51,12 +51,12 @@ function main_page() {
 				WHERE approved = \'YES\'
 				ORDER BY created DESC
 				LIMIT 5');
-	if ($db->nf()) {
+	if ($db->getNumRows()) {
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
-			$created = $db->f('created');
-			$nick = get_album_nick($db->f('account_id'));
+			$created = $db->getField('created');
+			$nick = get_album_nick($db->getField('account_id'));
 
 			echo('<span style="font-size:85%;"><b>[' . date('n/j/Y g:i A', $created) . ']</b> Picture of <a href="'.URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> added</span><br />');
 
@@ -87,17 +87,17 @@ function album_entry($album_id) {
 				FROM album
 				WHERE account_id = '.$album_id.' AND
 					  approved = \'YES\'');
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$location = stripslashes($db->f('location'));
-		$email = stripslashes($db->f('email'));
-		$website = stripslashes($db->f('website'));
-		$day = $db->f('day');
-		$month = $db->f('month');
-		$year = $db->f('year');
-		$other = nl2br(stripslashes($db->f('other')));
-		$page_views = $db->f('page_views');
-		$disabled = $db->f('disabled');
+		$location = stripslashes($db->getField('location'));
+		$email = stripslashes($db->getField('email'));
+		$website = stripslashes($db->getField('website'));
+		$day = $db->getField('day');
+		$month = $db->getField('month');
+		$year = $db->getField('year');
+		$other = nl2br(stripslashes($db->getField('other')));
+		$page_views = $db->getField('page_views');
+		$disabled = $db->getField('disabled');
 
 	} else {
 
@@ -123,9 +123,9 @@ function album_entry($album_id) {
 					  approved = \'YES\'
 				ORDER BY HoF_Name DESC
 				LIMIT 1');
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$priv_nick = $db->f('HoF_Name');
+		$priv_nick = $db->getField('HoF_Name');
 		echo('<td align="center" valign="middle"><a href="URL/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;</td>');
 
 	}
@@ -137,9 +137,9 @@ function album_entry($album_id) {
 					  approved = \'YES\'
 				ORDER BY HoF_Name
 				LIMIT 1');
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$next_nick = $db->f('HoF_Name');
+		$next_nick = $db->getField('HoF_Name');
 		echo('<td align="center" valign="middle">&nbsp;&nbsp;&nbsp;<a href="'.URL.'/album/?' . urlencode($next_nick) . '"><img src="'.URL.'/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a></td>');
 
 	}
@@ -203,11 +203,11 @@ function album_entry($album_id) {
 	$db->query('SELECT *
 				FROM album_has_comments
 				WHERE album_id = '.$album_id);
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$time	= $db->f('time');
-		$postee	= get_album_nick($db->f('post_id'));
-		$msg	= stripslashes($db->f('msg'));
+		$time	= $db->getField('time');
+		$postee	= get_album_nick($db->getField('post_id'));
+		$msg	= stripslashes($db->getField('msg'));
 
 		echo('<span style="font-size:85%;">[' . date('Y/n/j g:i A', $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span><br />');
 
@@ -226,7 +226,7 @@ function album_entry($album_id) {
 					FROM account_has_permission
 					WHERE account_id = '.SmrSession::$account_id.' AND
 						  permission_id = 20');
-		if ($db->next_record())
+		if ($db->nextRecord())
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" id="InputFields"></td>');
 
 		echo('</tr>');
@@ -317,8 +317,8 @@ function get_album_nick($album_id) {
 	$album->query('SELECT HoF_name
 				   FROM account_has_stats
 				   WHERE account_id = '.$album_id);
-	if ($album->next_record())
-		$nick = $album->f('HoF_name');
+	if ($album->nextRecord())
+		$nick = $album->getField('HoF_name');
 
 	// fall back to login name if it's empty or we havn't found one
 	if (empty($nick)) {
@@ -326,8 +326,8 @@ function get_album_nick($album_id) {
 		$album->query('SELECT login
 					   FROM account
 					   WHERE account_id = '.$album_id);
-		if ($album->next_record())
-			$nick = $album->f('login');
+		if ($album->nextRecord())
+			$nick = $album->getField('login');
 
 	}
 

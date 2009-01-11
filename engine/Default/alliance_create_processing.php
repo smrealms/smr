@@ -27,13 +27,13 @@ if ($name2 == 'none' || $name == '(none)' || $name == '( none )' || $name == 'no
 // check if the alliance name already exist
 $db->query('SELECT * FROM alliance WHERE alliance_name = ' . $db->escape_string($name, true) . ' AND ' .
 										'game_id = '.SmrSession::$game_id);
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 	create_error('That alliance name already exists!');
 
 // get the next alliance id
 $db->query('SELECT * FROM alliance WHERE game_id = '.SmrSession::$game_id.' AND (alliance_id < 302 OR alliance_id > 309) ORDER BY alliance_id DESC LIMIT 1');
-$db->next_record();
-$alliance_id = $db->f('alliance_id') + 1;
+$db->nextRecord();
+$alliance_id = $db->getField('alliance_id') + 1;
 
 // actually create the alliance here
 $db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, recruiting) ' .

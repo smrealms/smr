@@ -80,23 +80,23 @@ function getPlanetArray()
 	if (DEBUG) $PHP_OUTPUT.=('Entered planet array<br />');
 	global $db, $player, $account;
 	$db->query('SELECT  * FROM planet WHERE sector_id = ' . $player->getSectorID() . ' AND game_id = ' . $player->getGameID());
-	if ($db->next_record()) {
-		$planet = array($db->f('shields'),
-			$db->f('drones'),
-			0,0,0,0,array(),$db->f('owner_id'),$db->f('planet_name'));
+	if ($db->nextRecord()) {
+		$planet = array($db->getField('shields'),
+			$db->getField('drones'),
+			0,0,0,0,array(),$db->getField('owner_id'),$db->getField('planet_name'));
 		$db->query('SELECT * FROM planet_has_building WHERE sector_id = ' . $player->getSectorID() . ' AND game_id = ' . $player->getGameID());
-		while ($db->next_record())
+		while ($db->nextRecord())
 		{
-			switch($db->f('construction_id'))
+			switch($db->getField('construction_id'))
 			{
 				case 1:
-					$planet[GENERATORS] = $db->f('amount');
+					$planet[GENERATORS] = $db->getField('amount');
 					break;
 				case 2:
-					$planet[HANGARS] = $db->f('amount');
+					$planet[HANGARS] = $db->getField('amount');
 					break;
 				case 3:
-					$planet[TURRETS] = $db->f('amount');
+					$planet[TURRETS] = $db->getField('amount');
 					break;
 				default:
 					break;
@@ -123,17 +123,17 @@ function getPlayerArray()
 	//insert our trigger into the players array
 	$query = 'SELECT * FROM player WHERE account_id = ' . $player->getAccountID() . ' AND game_id = ' . $player->getGameID();
 	$db->query($query);
-	$db->next_record();
-	$players[$db->f('account_id')] = array(
-		(int)$db->f('player_id'),
-		get_colored_text($db->f('alignment'), stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')'),
-		(int)$db->f('alliance_id'),
-		(int)$db->f('race_id'),
-		(int)$db->f('credits'),
-		(int)$db->f('turns'),
-		(int)$db->f('alignment'),
-		(int)$db->f('ship_type_id'),
-		(int)$db->f('experience'),
+	$db->nextRecord();
+	$players[$db->getField('account_id')] = array(
+		(int)$db->getField('player_id'),
+		get_colored_text($db->getField('alignment'), stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')'),
+		(int)$db->getField('alliance_id'),
+		(int)$db->getField('race_id'),
+		(int)$db->getField('credits'),
+		(int)$db->getField('turns'),
+		(int)$db->getField('alignment'),
+		(int)$db->getField('ship_type_id'),
+		(int)$db->getField('experience'),
 		0,0,0,0,0,false,array(),array(),0,0,0
 	);
 	
@@ -145,8 +145,8 @@ function getPlayerArray()
 	AND game_id=' . SmrSession::$game_id . '
 	LIMIT 1');
 
-	$db->next_record();
-	if($db->f('galaxy_id') < 9) {
+	$db->nextRecord();
+	if($db->getField('galaxy_id') < 9) {
 		$protection = TRUE;
 	}
 	else {
@@ -158,9 +158,9 @@ function getPlayerArray()
 				WHERE game_id = '.$player->getGameID().'
 				AND (alliance_id_1 = '.$player->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')
 				AND raid_assist = 1 AND official = \'TRUE\'');
-	while ($db->next_record()) {
-		if ($db->f('alliance_id_1') == $player->getAllianceID()) $helperAlliances[] = $db->f('alliance_id_2');
-		else $helperAlliances[] = $db->f('alliance_id_1');
+	while ($db->nextRecord()) {
+		if ($db->getField('alliance_id_1') == $player->getAllianceID()) $helperAlliances[] = $db->getField('alliance_id_2');
+		else $helperAlliances[] = $db->getField('alliance_id_1');
 	}
 	if($player->getAllianceID()) {
 		$query = '
@@ -211,25 +211,25 @@ function getPlayerArray()
 
 		$db->query($query);
 
-		while($db->next_record()) {
-			$players[$db->f('account_id')] = array(
-				(int)$db->f('player_id'),
-				get_colored_text($db->f('alignment'),stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')'),
-				(int)$db->f('alliance_id'),
-				(int)$db->f('race_id'),
-				(int)$db->f('credits'),
-				(int)$db->f('turns'),
-				(int)$db->f('alignment'),
-				(int)$db->f('ship_type_id'),
-				(int)$db->f('experience'),
+		while($db->nextRecord()) {
+			$players[$db->getField('account_id')] = array(
+				(int)$db->getField('player_id'),
+				get_colored_text($db->getField('alignment'),stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')'),
+				(int)$db->getField('alliance_id'),
+				(int)$db->getField('race_id'),
+				(int)$db->getField('credits'),
+				(int)$db->getField('turns'),
+				(int)$db->getField('alignment'),
+				(int)$db->getField('ship_type_id'),
+				(int)$db->getField('experience'),
 				0,0,0,0,0,false,array(),array(),0,0,0
 			);
 		}
 	}
 	// Figure out everyone's level
 	$db->query('SELECT level_id,requirement FROM level ORDER BY requirement DESC');
-	while($db->next_record()) {
-		$levels[$db->f('level_id')] = $db->f('requirement');
+	while($db->nextRecord()) {
+		$levels[$db->getField('level_id')] = $db->getField('requirement');
 	}
 	
 	$num_players = count($players);
@@ -256,8 +256,8 @@ function build_ships($ship_ids) {
 	if (DEBUG) $PHP_OUTPUT.=('Build Ships<br />');
 	global $db;
 	$db->query('SELECT ship_type_id,cost,speed FROM ship_type WHERE ship_type_id IN (' . implode(',',$ship_ids) . ') LIMIT ' . count($ship_ids));
-	while($db->next_record()) {
-		$ships[$db->f('ship_type_id')] = array($db->f('cost'),$db->f('speed'));
+	while($db->nextRecord()) {
+		$ships[$db->getField('ship_type_id')] = array($db->getField('cost'),$db->getField('speed'));
 	}
 	return $ships;
 }
@@ -270,8 +270,8 @@ function build_hqs(&$races) {
 		$temp[] = $race_id + 101; 
 	}
 	$db->query('SELECT location_type_id,sector_id FROM location WHERE location_type_id IN (' . implode($temp,',') . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($temp));
-	while($db->next_record()) {
-		$hqs[$db->f('location_type_id') - 101] = $db->f('sector_id');
+	while($db->nextRecord()) {
+		$hqs[$db->getField('location_type_id') - 101] = $db->getField('sector_id');
 	}
 	return $hqs;
 }
@@ -283,33 +283,33 @@ function getHardware(&$players)
 	
 	$db->query('SELECT account_id,weapon_type_id FROM ship_has_weapon WHERE account_id IN (' . $players_in . ') AND game_id=' . SmrSession::$game_id . ' ORDER BY order_id ASC');
 	$weapons = array();
-	while($db->next_record()) {
-		$weapons[] = $db->f('weapon_type_id');
-		$players[$db->f('account_id')][WEAPONS][] = (int)$db->f('weapon_type_id');
+	while($db->nextRecord()) {
+		$weapons[] = $db->getField('weapon_type_id');
+		$players[$db->getField('account_id')][WEAPONS][] = (int)$db->getField('weapon_type_id');
 	}
 	
 	$db->query('SELECT hardware_type_id,account_id,amount FROM ship_has_hardware WHERE account_id IN (' . $players_in . ') AND (hardware_type_id=' . HARDWARE_SHIELDS . ' OR hardware_type_id=' . HARDWARE_ARMOR . ' OR hardware_type_id=' . HARDWARE_COMBAT . ' OR hardware_type_id=' . HARDWARE_DCS . ') AND game_id=' . SmrSession::$game_id);
 	
-	while($db->next_record()) {
-		switch($db->f('hardware_type_id')) {
+	while($db->nextRecord()) {
+		switch($db->getField('hardware_type_id')) {
 			case(HARDWARE_SHIELDS):
-				$players[$db->f('account_id')][SHIELDS] = (int)$db->f('amount');
+				$players[$db->getField('account_id')][SHIELDS] = (int)$db->getField('amount');
 				break;
 			case(HARDWARE_ARMOR):
-				$players[$db->f('account_id')][ARMOR] = (int)$db->f('amount');
+				$players[$db->getField('account_id')][ARMOR] = (int)$db->getField('amount');
 				break;
 			case(HARDWARE_COMBAT):
-				$players[$db->f('account_id')][DRONES] = (int)$db->f('amount');
+				$players[$db->getField('account_id')][DRONES] = (int)$db->getField('amount');
 				// They fire the same amount of drones they start the round with
-				$players[$db->f('account_id')][DRONES_ORIGINAL] = (int)$db->f('amount');
+				$players[$db->getField('account_id')][DRONES_ORIGINAL] = (int)$db->getField('amount');
 				// Drones count as a weapon. It's important they are last in the order
-				if($db->f('amount')) {
-					$players[$db->f('account_id')][WEAPONS][] = 0;
+				if($db->getField('amount')) {
+					$players[$db->getField('account_id')][WEAPONS][] = 0;
 				}
 				break;
 			case(HARDWARE_DCS):
-				if($db->f('amount')) {
-					$players[$db->f('account_id')][DCS] = TRUE;
+				if($db->getField('amount')) {
+					$players[$db->getField('account_id')][DCS] = TRUE;
 				}
 				break;
 		}
@@ -324,12 +324,12 @@ function getWeapons($weapon_ids)
 	if (!sizeof($weapon_ids)) return $weapons;
 	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armor_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
 	
-	while($db->next_record()) {
-		$weapons[$db->f('weapon_type_id')] = array(
-												$db->f('weapon_name'),
-												(int)round($db->f('shield_damage') / 5),
-												(int)round($db->f('armor_damage') / 5),
-												(int)$db->f('accuracy')
+	while($db->nextRecord()) {
+		$weapons[$db->getField('weapon_type_id')] = array(
+												$db->getField('weapon_name'),
+												(int)round($db->getField('shield_damage') / 5),
+												(int)round($db->getField('armor_damage') / 5),
+												(int)$db->getField('accuracy')
 												);
 	}	
 	return $weapons;
@@ -351,13 +351,13 @@ function getFleet(&$players,&$weapons) {
 	AND game_id=' . SmrSession::$game_id . '
 	LIMIT 1');
 
-	if($db->next_record()) {
+	if($db->nextRecord()) {
 		$have_beacon = TRUE;
 
 		$db->query('SELECT account_id FROM ship_has_cargo WHERE good_id IN (5,9,12) AND game_id=' . SmrSession::$game_id . ' AND account_id IN (' . implode(',',$player_ids) . ')');
 		
-		while($db->next_record()) {
-			$illegal_goods[$db->f('account_id')] = TRUE;
+		while($db->nextRecord()) {
+			$illegal_goods[$db->getField('account_id')] = TRUE;
 		}
 	}
 	else {
@@ -750,18 +750,18 @@ function processNews($fleet, $planet) {
 	if (DEBUG) $PHP_OUTPUT.=('News Process<br />');
 	global $db, $player;
 	$allowed = TIME - 600;
-	$db->f('SELECT * FROM news WHERE type = \'breaking\' AND game_id = '.$player->getGameID().' AND time > '.$allowed);
-	if (!$db->nf()) {
+	$db->getField('SELECT * FROM news WHERE type = \'breaking\' AND game_id = '.$player->getGameID().' AND time > '.$allowed);
+	if (!$db->getNumRows()) {
 		if (sizeof($fleet) >= 5) {
 			$db->query('SELECT  * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = ' . $planet[OWNER]);
-			$db->next_record();
+			$db->nextRecord();
 			$text = sizeof($fleet) . ' members of '.$player->getAllianceName().' have been spotted attacking ' .
 					$planet[PLANET_NAME] . ' in sector ' . $player->getSectorID() . '
-					.  The planet is owned by ' . stripslashes($db->f('player_name'));
-			if ($db->f('alliance_id') > 0) {
-				$db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->f('alliance_id') . ' AND game_id = '.$player->getGameID());
-				$db->next_record();
-				$text .= ', a member of ' . stripslashes($db->f('alliance_name'));
+					.  The planet is owned by ' . stripslashes($db->getField('player_name'));
+			if ($db->getField('alliance_id') > 0) {
+				$db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->getField('alliance_id') . ' AND game_id = '.$player->getGameID());
+				$db->nextRecord();
+				$text .= ', a member of ' . stripslashes($db->getField('alliance_name'));
 			}
 			$text .= '.';
 			$text = mysql_real_escape_string($text);
@@ -874,8 +874,8 @@ function processResults($players, $planet, $fleet, $weapons) {
 				$allowed = TIME - 60 * 60 * 3;
 				$db->query('SELECT * FROM player_attacks_planet WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND time > '.$allowed);
 				$temp = array();
-				while ($db->next_record()) {
-					$temp[$db->f('account_id')] = $db->f('level');
+				while ($db->nextRecord()) {
+					$temp[$db->getField('account_id')] = $db->getField('level');
 				}
 				foreach ($temp as $tempAcc => $level) {
 					$db->query('UPDATE player_has_stats SET planet_busts = planet_busts + 1, planet_bust_levels = planet_bust_levels + '.$level.' ' . 
@@ -952,7 +952,7 @@ function podPlayers($IDArray, $ships, $hqs, $planet, $players) {
 		$db->query('DELETE FROM ship_has_hardware WHERE hardware_type_id=4 AND account_id=' . $accId . ' AND game_id=' . $player->getGameID() . ' LIMIT 1');
 		$msg = $players[$accId][PLAYER_NAME];
 		$db->query('SELECT * FROM ship_has_name WHERE account_id = '.$accId.' AND game_id = '.$player->getGameID());
-		if ($db->next_record()) $ship_names[$accId] = $db->f('ship_name');
+		if ($db->nextRecord()) $ship_names[$accId] = $db->getField('ship_name');
 		if(isset($ship_names[$accId])) {
 			$msg .= ' flying ';
 			if(!stristr($ship_names[$accId],'<img')){
@@ -996,11 +996,11 @@ function sendReport($results, $planet) {
 	if (DEBUG) $PHP_OUTPUT.=('Sending Reports<br />');
 	global $player, $db;
 	$db->query('SELECT * FROM player WHERE account_id = ' . $planet[OWNER] . ' AND game_id = '.$player->getGameID().' LIMIT 1');
-	$db->next_record();
-	$ownerAlliance = $db->f('alliance_id');
+	$db->nextRecord();
+	$ownerAlliance = $db->getField('alliance_id');
 	$db->query('SELECT * FROM planet WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
-	$db->next_record();
-	$planetName = '<span style="color:yellow;font-variant:small-caps">' . stripslashes($db->f('planet_name')) . '</span>';
+	$db->nextRecord();
+	$planetName = '<span style="color:yellow;font-variant:small-caps">' . stripslashes($db->getField('planet_name')) . '</span>';
 	$mainText = 'From the reports we have been able to gather the following information:<br /><br />';
 	$mainText .= $results[PLANET_DISPLAY] . '<br />' . $results[PLAYER_DISPLAY];
 	if ($ownerAlliance > 0) {
@@ -1010,25 +1010,25 @@ function sendReport($results, $planet) {
 		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$ownerAlliance.' AND topic = '.$db->escapeString($topic).' LIMIT 1');
-		if ($db->next_record()) $thread_id = $db->f('thread_id');
+		if ($db->nextRecord()) $thread_id = $db->getField('thread_id');
 		if ($thread_id == 0)
 		{
 			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$ownerAlliance.' ORDER BY thread_id DESC LIMIT 1');
-			if ($db->next_record())
-				$thread_id = $db->f('thread_id') + 1;
+			if ($db->nextRecord())
+				$thread_id = $db->getField('thread_id') + 1;
 			else $thread_id = 1;
 			$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ' .
 						'('.$player->getGameID().', '.$ownerAlliance.', '.$thread_id.', '.$db->escapeString($topic).')');
 		}
 		$db->query('SELECT * FROM alliance_thread WHERE alliance_id = '.$ownerAlliance.' AND game_id = '.$player->getGameID().' AND ' .
 					'thread_id = '.$thread_id.' ORDER BY reply_id DESC LIMIT 1');
-		if ($db->next_record()) $reply_id = $db->f('reply_id') + 1;
+		if ($db->nextRecord()) $reply_id = $db->getField('reply_id') + 1;
 		else $reply_id = 1;
 		$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES ' .
 				'('.$player->getGameID().', '.$ownerAlliance.', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', 0, ' . TIME . ')');
 		$db->query('SELECT * FROM player WHERE alliance_id = '.$ownerAlliance.' AND game_id = '.$player->getGameID());
-		while ($db->next_record())
-			$temp[] = $db->f('account_id');
+		while ($db->nextRecord())
+			$temp[] = $db->getField('account_id');
 		foreach ($temp as $tempAccId) {
 			$db->query('INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ' .
 						'('.$tempAccId.', '.$player->getGameID().', 3)');
@@ -1048,19 +1048,19 @@ function sendReport($results, $planet) {
 		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' AND topic = '.$db->escapeString($topic).' LIMIT 1');
-		if ($db->next_record()) $thread_id = $db->f('thread_id');
+		if ($db->nextRecord()) $thread_id = $db->getField('thread_id');
 		if ($thread_id == 0)
 		{
 			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' ORDER BY thread_id DESC LIMIT 1');
-			if ($db->next_record())
-				$thread_id = $db->f('thread_id') + 1;
+			if ($db->nextRecord())
+				$thread_id = $db->getField('thread_id') + 1;
 			else $thread_id = 1;
 			$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ' .
 						'('.$player->getGameID().', '.$player->getAllianceID().', '.$thread_id.', '.$db->escapeString($topic).')');
 		}
 		$db->query('SELECT * FROM alliance_thread WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' .
 					'thread_id = '.$thread_id.' ORDER BY reply_id DESC LIMIT 1');
-		if ($db->next_record()) $reply_id = $db->f('reply_id') + 1;
+		if ($db->nextRecord()) $reply_id = $db->getField('reply_id') + 1;
 		else $reply_id = 1;
 		$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES ' .
 				'('.$player->getGameID().', '.$player->getAllianceID().', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', 0, ' . TIME . ')');
@@ -1171,8 +1171,8 @@ sendReport($results, $planet);
 doLog($results);
 //insert into combat logs
 $db->query('SELECT alliance_id FROM player WHERE account_id = ' . $planet[OWNER] . ' AND game_id = '.$player->getGameID().' LIMIT 1');
-$db->next_record();
-$ownerAlliance = $db->f('alliance_id');
+$db->nextRecord();
+$ownerAlliance = $db->getField('alliance_id');
 $finalResults = $results[0] . '<br /><img src="images/planetAttack.jpg" alt="Planet Attack" title="Planet Attack"><br />' . $results[1];
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PLANET\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',' . $planet[OWNER] . ',' . $ownerAlliance . ',' . $db->escape_string(gzcompress($finalResults)) . ', \'FALSE\')');
 if (DEBUG) $PHP_OUTPUT.=('Pre Forward/Display<br />');

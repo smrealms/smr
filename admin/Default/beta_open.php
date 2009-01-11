@@ -3,9 +3,9 @@
 $PHP_OUTPUT.=('<h1>OPEN/CLOSE BETA APPLICATION</h1>');
 
 $db->query('SELECT * FROM beta_test');
-$db->next_record();
+$db->nextRecord();
 
-$open = $db->f('open');
+$open = $db->getField('open');
 
 $container = array();
 $container['url'] = 'beta_open_processing.php';

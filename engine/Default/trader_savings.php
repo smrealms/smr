@@ -7,13 +7,13 @@ $PHP_OUTPUT.=create_trader_menue();
 
 $PHP_OUTPUT.=('<br /><br />');
 $db->query('SELECT * FROM anon_bank WHERE owner_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
     $PHP_OUTPUT.=('You own the following accounts<br /><br />');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$acc_id = $db->f('anon_id');
-    	$pass = $db->f('password');
+		$acc_id = $db->getField('anon_id');
+    	$pass = $db->getField('password');
 	    $PHP_OUTPUT.=('Account <font color=yellow>'.$acc_id.'</font> with password <font color=yellow>'.$pass.'</font><br />');
 
     }
@@ -22,13 +22,13 @@ if ($db->nf()) {
 	$PHP_OUTPUT.=('You own no anonymous accounts<br />');
 
 $time = time();
-$db->lock('player_has_ticket');
+$db->lockTable('player_has_ticket');
 $db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
 			'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
-$db->next_record();
-if ($db->f('num') > 0) {
-	$amount = ($db->f('num') * 1000000 * .9) + 1000000;
-	$first_buy = $db->f('time');
+$db->nextRecord();
+if ($db->getField('num') > 0) {
+	$amount = ($db->getField('num') * 1000000 * .9) + 1000000;
+	$first_buy = $db->getField('time');
 } else {
 	$amount = 1000000;
 	$first_buy = time();
@@ -41,14 +41,14 @@ if ($time_rem <= 0)
 {
 	//we need to pick a winner
 	$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand()');
-	if ($db->next_record()) {
-		$winner_id = $db->f('account_id');
-		$time = $db->f('time');
+	if ($db->nextRecord()) {
+		$winner_id = $db->getField('account_id');
+		$time = $db->getField('time');
 	}
 	$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 		
-		$amount += $db->f('prize');
+		$amount += $db->getField('prize');
 		$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
 		
 	}
@@ -86,10 +86,10 @@ $time_rem = '<b>'.$days.' Days, '.$hours.' Hours, '.$mins.' Minutes, and '.$secs
 	
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .
 			$player->getAccountID().' AND time > 0');
-$tickets = $db->nf();
+$tickets = $db->getNumRows();
 $PHP_OUTPUT.=('<br />You own <font color=yellow>'.$tickets.'</font> Lotto Tickets.<br />There are '.$time_rem.' remaining until the drawing.');
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND time > 0');
-$tickets_tot = $db->nf();
+$tickets_tot = $db->getNumRows();
 if ($tickets_tot > 0) {
 	
 	$chance = round(($tickets / $tickets_tot) * 100,2);
@@ -99,7 +99,7 @@ if ($tickets_tot > 0) {
 }
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .
 			$player->getAccountID().' AND time = 0');
-$tickets = $db->nf();
+$tickets = $db->getNumRows();
 if ($tickets > 0)
 $PHP_OUTPUT.=('You currently own '.$tickets.' winning tickets.  You should go to the bar to claim your prize.');
 ?>
