@@ -92,7 +92,7 @@ $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Image:</td>');
 $PHP_OUTPUT.=('<td>');
-if (is_readable($UPLOAD . SmrSession::$account_id))
+if (is_readable(UPLOAD . SmrSession::$account_id))
 	$PHP_OUTPUT.=('<img src="'.URL.'/upload/'.SmrSession::$account_id.'"><br />');
 $PHP_OUTPUT.=('<input type="file" name="photo" accept="image/jpeg" id="InputFields" style="width:303px;" ></td>');
 $PHP_OUTPUT.=('</tr>');

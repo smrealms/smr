@@ -9,9 +9,4 @@ define('UPLOAD', '/home/page/wwwWrite/upload/');
 define('ADMIN', ROOT . 'admin/');
 
 define('SMARTY_COMPILE_DIR','/home/page/wwwWrite/smarty/templates_c/');
-
-$ROOT		=	ROOT;
-
-$UPLOAD		=	UPLOAD;
-$ADMIN		=	ADMIN;
 ?>

@@ -27,7 +27,7 @@ $db->query('OPTIMIZE TABLE `account` , `account_donated` , `account_exceptions` 
 //
 ///////////////////////////////////////////
 
-$file_name = $ROOT . 'documentation/SmrMySqlDatabase_BACKUP_' . date('m-d') . '.sql';
+$file_name = ROOT . 'documentation/SmrMySqlDatabase_BACKUP_' . date('m-d') . '.sql';
 $db2 = new SmrMySqlDatabase();
 if (!file_exists($file_name)) {
 	

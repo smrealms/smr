@@ -14,7 +14,7 @@ function has_beta_privilege($priv = '', $acc = 0)
 {
 	//PAGE
 	return false;
-	global $ADMINS, $PRIVILEGES, $ACCOUNT_ID,$BETA_CONSTANTS,$USE_BETA_CONSTANTS;
+	global $PRIVILEGES, $ACCOUNT_ID,$BETA_CONSTANTS,$USE_BETA_CONSTANTS;
 	if($USE_BETA_CONSTANTS !== true)
 		return false;
 	if ($acc == 0) $acc = $ACCOUNT_ID;

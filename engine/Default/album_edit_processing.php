@@ -74,7 +74,7 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 	if ($size[1] > 500)
 		create_error('Image is higher than 500 pixels!');
 
-	move_uploaded_file($_FILES['photo']['tmp_name'], $UPLOAD.SmrSession::$account_id);
+	move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD.SmrSession::$account_id);
 
 } else
 	$no_picture = true;
