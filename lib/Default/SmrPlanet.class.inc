@@ -231,6 +231,7 @@ class SmrPlanet
 	{
 		if(!isset($this->currentlyBuilding))
 		{
+			$toBeUpdated = false;
 			$this->currentlyBuilding = array();
 			$this->db->query('SELECT * FROM planet_is_building ' .
 								 'WHERE game_id = '.$this->game_id.' AND ' .
@@ -239,13 +240,14 @@ class SmrPlanet
 			{
 				if($this->db->getField('time_complete') <= TIME)
 				{
-					$this->db->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
+					$db2 = new SmrMySqlDatabase();
+					$db2->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
 											 'sector_id = '.$this->getSectorID() . ' AND building_slot_id = ' . $this->db->getField('building_slot_id') . ' LIMIT 1');
 					if(isset($this->buildings[$this->db->getField('construction_id')]))
 						$this->buildings[$this->db->getField('construction_id')] += 1;
 					else
 						$this->buildings[$this->db->getField('construction_id')] = 1;
-					$this->update();
+					$toBeUpdated = true;
 				}
 				else
 				{
@@ -258,7 +260,10 @@ class SmrPlanet
 						);
 				}
 			}
+			if($toBeUpdated)
+				$this->update();
 		}
+		return $this->currentlyBuilding;
 	}
 		
 	public function getMaxBuildings()

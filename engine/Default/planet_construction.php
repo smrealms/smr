@@ -79,11 +79,6 @@ $PHP_OUTPUT.=('<th>Cost</th>');
 $PHP_OUTPUT.=('<th>Build</th>');
 $PHP_OUTPUT.=('</tr>');
 
-// get game speed
-$db->query('SELECT * FROM game WHERE game_id = '.$player->getGameID());
-if ($db->nextRecord())
-	$game_speed = $db->getField('game_speed');
-
 $db->query('SELECT * FROM planet_construction ORDER BY construction_id');
 while ($db->nextRecord())
 {
@@ -144,7 +139,7 @@ while ($db->nextRecord())
 
 	$db2->query('SELECT * FROM planet_cost_time WHERE construction_id = '.$construction_id);
 	if ($db2->nextRecord())
-		$PHP_OUTPUT.=(($db2->getField('amount') / 3600 / $game_speed) . '-hours');
+		$PHP_OUTPUT.=(($db2->getField('amount') / 3600 / Globals::getGameSpeed($player->getGameID())) . '-hours');
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
