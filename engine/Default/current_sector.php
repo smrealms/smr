@@ -160,31 +160,11 @@ if ($db->nextRecord())
 {
 	$msg = $db->getField('message');
 	$db->query('DELETE FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	if (preg_match('/\[Force Check\]/',$msg))
-	{
-		$forceRefreshMessage ='';
-		$db->query('SELECT * FROM force_refresh WHERE refresh_at >= ' . TIME . ' AND sector_id  = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' ORDER BY refresh_at DESC LIMIT 1');
-		if ($db->nextRecord()) {
-			$remainingTime = $db->getField('refresh_at') - TIME;
-			$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
-			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
-		}
-		else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
-		$smarty->assign('ForceRefreshMessage',$forceRefreshMessage);
-	}
+	checkForForceRefreshMessage($msg);
 }
 if (isset($var['msg']))
 {
-	if ($msg == '[Force Check]')
-	{
-		$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
-		if ($db->nextRecord())
-		{
-			$remainingTime = $db->getField('refresh_at') - TIME;
-			$msg = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
-			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', '.$db->escapeString('[Force Check]').')');
-		} else $msg = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
-	}
+	checkForForceRefreshMessage($var['msg']);
 	$smarty->assign('VarMessage',$var['msg']);
 }
 
@@ -249,5 +229,23 @@ if($sector->hasPort())
 	$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
 	$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
 	$smarty->assign('PortIsAtWar',$relations <= -300);
+}
+
+function checkForForceRefreshMessage(&$msg)
+{
+	global $db,$player,$smarty;
+	if (preg_match('/\[Force Check\]/',$msg))
+	{
+		$msg = preg_replace('/\[Force Check\]/','',$msg);
+		$forceRefreshMessage ='';
+		$db->query('SELECT * FROM force_refresh WHERE refresh_at >= ' . TIME . ' AND sector_id  = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' ORDER BY refresh_at DESC LIMIT 1');
+		if ($db->nextRecord()) {
+			$remainingTime = $db->getField('refresh_at') - TIME;
+			$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
+			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
+		}
+		else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
+		$smarty->assign('ForceRefreshMessage',$forceRefreshMessage);
+	}
 }
 ?>
