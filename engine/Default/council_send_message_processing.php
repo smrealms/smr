@@ -13,7 +13,7 @@ $db->query('SELECT * FROM player ' .
 		   'LIMIT ' . MAX_COUNCIL_MEMBERS);
 
 while ($db->nextRecord()) {
-	$player->sendMessage($db->getField('account_id'), $POLITICALMSG, $message);
+	$player->sendMessage($db->getField('account_id'), MSG_POLITICAL, $message);
 }
 
 $container = array();

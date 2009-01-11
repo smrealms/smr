@@ -313,10 +313,10 @@ function get_forces_query($galaxy_id) {
 }
 
 function send_scout_messages($scout_owners,$direction){
-	global $db,$player,$SCOUTMSG;
+	global $db,$player;
 	$scout_query = '';
 	$scout_query2 = '';
-	$helper_query = ',' . SmrSession::$game_id .',' . $SCOUTMSG . ',';
+	$helper_query = ',' . SmrSession::$game_id .',' . MSG_SCOUT . ',';
 	$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
 	if($direction) {
 		$message .= 'entering';
@@ -326,7 +326,7 @@ function send_scout_messages($scout_owners,$direction){
 	}
 	$message .= ' sector #<span class="yellow">' . $player->getSectorID() . '</span>';
 	$helper_query .= $db->escape_string($message,false) . ',' . $player->getAccountID() . ',' . time() . ',' . (time() + 259200) . ')'; 
-	$helper_query2 = '(' . SmrSession::$game_id . ',' . $SCOUTMSG . ',';
+	$helper_query2 = '(' . SmrSession::$game_id . ',' . MSG_SCOUT . ',';
 
 	foreach ($scout_owners as $account_id){
 		if(!empty($scout_query)){

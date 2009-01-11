@@ -205,7 +205,6 @@ class SmrSector
 	function entering_sector() {
 
 		global $player, $account;
-		global $SCOUTMSG;
 
 		// get our rank
 		$rank_id = $account->get_rank();
@@ -232,7 +231,7 @@ class SmrSector
 
 			// send scout messages to user
 			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->getSectorID();
-			$player->sendMessage($owner->getAccountID(), $SCOUTMSG, $this->db->escapeString($message, false));
+			$player->sendMessage($owner->getAccountID(), MSG_SCOUT, $this->db->escapeString($message, false));
 
 		}
 
@@ -271,7 +270,6 @@ class SmrSector
 
 	function died_here(AbstractSmrPlayer &$player)
 	{
-		global $SCOUTMSG;
 //		$account =& $player->getAccount();
 
 		// get our rank

@@ -114,6 +114,7 @@ abstract class MySqlDatabase implements Database
 			}
 			return substr($escapedString,0,-1);
 		}
+		$string = htmlentities($string);
 		if($quotes)
 			return '\'' . mysql_real_escape_string($string) . '\'';
 		return mysql_real_escape_string($string);
@@ -166,10 +167,10 @@ abstract class MySqlDatabase implements Database
 			return substr($escapedString,0,-1);
 		}
 		
-		if (!$transfer_html)
+//		if (!$transfer_html)
 			return '\'' . mysql_escape_string(htmlentities($string)) . '\'';
-		else
-			return '\'' . mysql_escape_string($string) . '\'';
+//		else
+//			return '\'' . mysql_escape_string($string) . '\'';
 	}
 }
 ?>

@@ -26,47 +26,47 @@ if($db->getNumRows()) {
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'message_view.php';
 
-	if(isset($messages[$GLOBALMSG])) {
-		$container['folder_id'] = $GLOBALMSG;
+	if(isset($messages[MSG_GLOBAL])) {
+		$container['folder_id'] = MSG_GLOBAL;
 		$PHP_OUTPUT.=create_link($container, '<img src="images/global_msg.gif" border="0" alt="Global Messages">');
-		echo '<small>' . $messages[$GLOBALMSG] . '</small>';
+		echo '<small>' . $messages[MSG_GLOBAL] . '</small>';
 	}
 
-	if(isset($messages[$PLAYERMSG])) {
-		$container['folder_id'] = $PLAYERMSG;
+	if(isset($messages[MSG_PLAYER])) {
+		$container['folder_id'] = MSG_PLAYER;
 		$PHP_OUTPUT.=create_link($container, '<img src="images/personal_msg.gif" border="0" alt="Personal Messages">');
-		echo '<small>' . $messages[$PLAYERMSG] . '</small>';
+		echo '<small>' . $messages[MSG_PLAYER] . '</small>';
 	}
 
-	if(isset($messages[$SCOUTMSG])) {
-		$container['folder_id'] = $SCOUTMSG;
+	if(isset($messages[MSG_SCOUT])) {
+		$container['folder_id'] = MSG_SCOUT;
 		$PHP_OUTPUT.=create_link($container, '<img src="images/scout_msg.gif" border="0" alt="Scout Messages">');
-		echo '<small>' . $messages[$SCOUTMSG] . '</small>';
+		echo '<small>' . $messages[MSG_SCOUT] . '</small>';
 	}
 
-	if(isset($messages[$POLITICALMSG])) {
-		$container['folder_id'] = $POLITICALMSG;
+	if(isset($messages[MSG_POLITICAL])) {
+		$container['folder_id'] = MSG_POLITICAL;
 		$PHP_OUTPUT.=create_link($container, '<img src="images/council_msg.gif" border="0" alt="Political Messages">');
-		echo '<small>' . $messages[$POLITICALMSG] . '</small>';
+		echo '<small>' . $messages[MSG_POLITICAL] . '</small>';
 	}
 
-	if(isset($messages[$ALLIANCEMSG])) {
-		$container['folder_id'] = $ALLIANCEMSG;
+	if(isset($messages[MSG_ALLIANCE])) {
+		$container['folder_id'] = MSG_ALLIANCE;
 		$PHP_OUTPUT.=create_link($container, '<img src="images/alliance_msg.gif" border="0" alt="Alliance Messages">');
-		echo '<small>' . $messages[$ALLIANCEMSG] . '</small>';
+		echo '<small>' . $messages[MSG_ALLIANCE] . '</small>';
 	}
 
-	if(isset($messages[$ADMINMSG])) {
-		$container['folder_id'] = $ADMINMSG;
+	if(isset($messages[MSG_ADMIN])) {
+		$container['folder_id'] = MSG_ADMIN;
 		$PHP_OUTPUT.=create_link($container, '<img src="images/admin_msg.gif" border="0" alt="Admin Messages">');
-		echo '<small>' . $messages[$ADMINMSG] . '</small>';
+		echo '<small>' . $messages[MSG_ADMIN] . '</small>';
 	}
 
-	if(isset($messages[$PLANETMSG])) {
+	if(isset($messages[MSG_PLANET])) {
 		$container = array();
 		$container['url'] = 'planet_msg_processing.php';
 		$PHP_OUTPUT.=create_link($container, '<img src="images/planet_msg.gif" border="0" alt="Planet Messages">');
-		echo '<small>' . $messages[$PLANETMSG] . '</small>';
+		echo '<small>' . $messages[MSG_PLANET] . '</small>';
 	}
 	echo '<br />';
 }
