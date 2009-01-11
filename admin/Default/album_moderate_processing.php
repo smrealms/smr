@@ -27,8 +27,6 @@ if ($var['task'] == 'reset_image') {
 
 	$db->query('UPDATE album SET disabled = \'TRUE\' WHERE account_id = '.$account_id);
 
-	$curr_time = time();
-
 	$db->lockTable('album_has_comments');
 	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$account_id);
 	if ($db->nextRecord())
@@ -38,7 +36,7 @@ if ($var['task'] == 'reset_image') {
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$account_id.', '.$comment_id.', '.$curr_time.', 0, '.$db->escape_string('<span style="color:lime;">*** Picture disabled by an admin</span>').')');
+				VALUES ('.$account_id.', '.$comment_id.', '.TIME.', 0, '.$db->escape_string('<span style="color:lime;">*** Picture disabled by an admin</span>').')');
 	$db->unlock();
 
 	// get his email address and send the mail

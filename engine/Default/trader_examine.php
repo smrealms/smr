@@ -153,7 +153,7 @@ if($player->getAllianceID() || $players[$var['target']][ALLIANCE_ID]) {
 		AND player.game_id=' . SmrSession::$game_id . ' 
 		AND player.land_on_planet=\'FALSE\' 
 		AND player.newbie_turns=0
-		AND player.last_cpl_action>' .  (time() - 259200);
+		AND player.last_cpl_action>' .  (TIME - 259200);
 
 	if($player->getAllianceID() && $players[$var['target']][ALLIANCE_ID]) {
 		$query .= ' AND (player.alliance_id IN (' . implode(',', $attackers) . ')';

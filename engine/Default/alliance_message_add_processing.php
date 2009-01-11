@@ -61,10 +61,9 @@ if ($reply_id == 1) {
 // and the body
 $db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) ' .
 								 'VALUES('.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.$reply_id.', '.$body.', '.$player->getAccountID().', ' . TIME . ')');
-$curr_time = time() + 2;
 $db->query('REPLACE INTO player_read_thread ' .
 		   '(account_id, game_id, alliance_id, thread_id, time)' .
-		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.$curr_time.')');
+		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.(TIME+2).')');
 
 $container = array();
 $container['url'] = 'skeleton.php';

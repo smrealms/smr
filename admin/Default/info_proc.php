@@ -34,7 +34,7 @@ if ($action == 'Reopen and Add Exception' || $action == 'Reopen without Exceptio
 	
 		$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$id.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+			   'VALUES('.$id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 	
 		$db->query('UPDATE player SET newbie_turns = 1 ' .
 			   'WHERE account_id = '.$id.' AND ' .

@@ -48,7 +48,8 @@
 					<tr>
 						<td colspan='2'>&nbsp;</td>
 					</tr>
-					<?php //BETA ?>
+					<?php //BETA
+					?>
 					<tr>
 						<td width='27%'>Beta Key:</td>
 						<td width='73%'><input type='text' name='beta_key' size='20' maxlength='50' id='InputFields'></td>
@@ -325,7 +326,7 @@
 						<td width='73%'>
 							<select name="timez" id="InputFields">
 								<?php
-								$time = time();
+								$time = TIME;
 									for ($i = -12; $i<= 11; $i++) echo('<option value='.$i.'>' . date('g:i:s A', $time + $i * 3600));
 								?>
 							</select>

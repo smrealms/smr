@@ -8,7 +8,7 @@ $container['breaking'] = 'yes';
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_news_menue();
-$var_del = time() - 86400;
+$var_del = TIME - 86400;
 $db->query('DELETE FROM news WHERE time < '.$var_del.' AND type = \'breaking\'');
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
 if ($db->nextRecord()) {

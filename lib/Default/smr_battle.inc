@@ -18,7 +18,7 @@ class SMR_BATTLE extends SmrMySqlDatabase {
 		$this->chosen = array();
 
 		// time to ignore players
-		$last_active = time() - 259200;
+		$last_active = TIME - 259200;
 
 		// create a account object from the given player
 		$initiator_account =& SmrAccount::getAccount($initiator_id);

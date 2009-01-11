@@ -39,7 +39,7 @@ foreach ($allForces as $forces)
 
 }
 
-$last_active = time() - 259200;
+$last_active = TIME - 259200;
 $db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND ' .
 									  'sector_id = ' . $var['target_sector'] . ' AND ' .
 									  'last_cpl_action > '.$last_active.' AND ' .

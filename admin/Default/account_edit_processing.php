@@ -3,7 +3,7 @@
 //we are gonna check for reducing points...
 $db2 = new SmrMySqlDatabase();
 $db->lockTable('account_has_points');
-$week = time() - (7 * 24 * 60 * 60);
+$week = TIME - (7 * 24 * 60 * 60);
 $db->query('SELECT * FROM account_has_points WHERE last_update < '.$week.' AND points > 0 AND points < 100');
 while ($db->nextRecord()) {
 
@@ -36,7 +36,7 @@ $msg = 'You ';
 if (!empty($donation)) {
 
 	// add entry to account donated table
-	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$account_id.', ' . time() . ' , '.$donation.')');
+	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$account_id.', ' . TIME . ' , '.$donation.')');
 
     // add the credits to the players account - if requested
     if (!empty($smr_credit)) {
@@ -105,7 +105,7 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	if ($expire_time > 0) {
 		$days = $expire_time / 60 / 60 / 24;
-		$expire_time += time();
+		$expire_time += TIME;
 		$expire_msg = 'for '.$days.' days';
 	} else $expire_msg = 'forever!';
 	$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$account_id);
@@ -117,7 +117,7 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 
 	$db->query('UPDATE player SET newbie_turns = 1 ' .
 			   'WHERE account_id = '.$account_id.' AND ' .
@@ -170,7 +170,7 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	if ($expire_time > 0) {
 		$days = $expire_time / 60 / 60 / 24;
-		$expire_time += time();
+		$expire_time += TIME;
 		$expire_msg = 'for '.$days.' days';
 	} else $expire_msg = 'forever!';
 	$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$account_id);
@@ -182,7 +182,7 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 
 	$db->query('UPDATE player SET newbie_turns = 1 ' .
 			   'WHERE account_id = '.$account_id.' AND ' .
@@ -212,7 +212,7 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . time() . ', '.SmrSession::$account_id.', \'Opened\')');
+			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Opened\')');
 
 	if (strlen($msg) > 9)
 		$msg .= 'and ';
@@ -258,7 +258,7 @@ if (!empty($names))
 	
 				$news = '<span class="blue">ADMIN</span> Please be advised that <span class="yellow">' . $old_name . '(' . $player_id . ')</span> has had their name changed to <span class="yellow">' . $new_name . '(' . $player_id . ')</span>';
 				
-				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . time() . ',' . $db->escape_string($news, FALSE) . ','.$game_id.')');
+				$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ','.$game_id.')');
 			}
 		}
 		

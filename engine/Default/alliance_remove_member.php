@@ -36,7 +36,7 @@ if ($db->getNumRows() != 0) {
 		if ($player->getAccountID() != $account_id) {
 
 			// get the amount of time since last_active
-			$diff = time() - $db->getField('last_cpl_action');
+			$diff = TIME - $db->getField('last_cpl_action');
 
 			if ($diff > 864000)
 				$diff = 864000;

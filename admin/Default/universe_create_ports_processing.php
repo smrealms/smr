@@ -37,9 +37,6 @@ if ($action == 'Skip >>') {
 
 }
 
-// initialize random generator.
-mt_srand((double)microtime()*1000000);
-
 $db2 = new SmrMySqlDatabase();
 
 $goods = array();

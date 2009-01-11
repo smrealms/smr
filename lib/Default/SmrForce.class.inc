@@ -89,7 +89,7 @@ class SmrForce
 		// let forces expire (simply let all expire) (update refreshing first)
 //		$db = new SmrMySqlDatabase();
 //		$db2 = new SmrMySqlDatabase();
-//		$time = time();
+//		$time = TIME;
 //		$db->query('SELECT * FROM force_refresh WHERE refresh_at <= '.$time);
 //		while ($db->nextRecord()) {
 //			

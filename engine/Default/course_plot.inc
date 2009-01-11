@@ -77,7 +77,7 @@ class Course_Plotter extends SmrMySqlDatabase{
 		if($this->cache_updated==true) {
 			// Clear any old plots from the cache table (To stop it getting too large).
 			// To avoid doing this every time we only delete if a cache entry was updated.
-			$this->query('DELETE FROM plot_cache WHERE timeout < '  . (time() - TIMEOUT_TO_DELETE));
+			$this->query('DELETE FROM plot_cache WHERE timeout < '  . (TIME - TIMEOUT_TO_DELETE));
 		}
 	}
 
@@ -92,7 +92,7 @@ class Course_Plotter extends SmrMySqlDatabase{
 		$this->network_map = array();
 		$this->plotted_course = array();
 		$this->cache_updated = false;
-		$this->current_time = time();
+		$this->current_time = TIME;
 	}
 
 	function plot() {

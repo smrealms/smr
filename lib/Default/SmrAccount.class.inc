@@ -131,7 +131,7 @@ class SmrAccount
 			$reason		 = $this->db->getField('reason');
 			
 			// are we over this time?
-			if ($expire_time > 0 && $expire_time < time()) {
+			if ($expire_time > 0 && $expire_time < TIME) {
 				
 				// get rid of the expire entry
 				$this->db->query('DELETE FROM account_is_closed WHERE account_id = '.$this->account_id);
@@ -139,7 +139,7 @@ class SmrAccount
 				// log the action
 				$this->db->query('INSERT INTO account_has_closing_history ' .
 					'(account_id, time, admin_id, action) ' .
-					'VALUES('.$this->account_id.', ' . time() . ', 0, \'Opened\')');
+					'VALUES('.$this->account_id.', ' . TIME . ', 0, \'Opened\')');
 				
 				return false;
 				
@@ -174,7 +174,7 @@ class SmrAccount
 		{
 		
 		// get time
-		$time = time();
+		$time = TIME;
 		
 		// try to get a real ip first
 		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
@@ -215,7 +215,7 @@ class SmrAccount
 	function update_last_login()
 		{
 		
-		$this->last_login = time();
+		$this->last_login = TIME;
 		$this->db->query('UPDATE account SET last_login = '.$this->last_login.' ' .
 			'WHERE account_id = '.$this->account_id);
 		
@@ -276,19 +276,19 @@ class SmrAccount
 				$sector_id = 0;
 			
 			//sleep if we already have an entry for this second..so we don't get errors.
-			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . time() . ' AND account_id = '.$this->account_id);
+			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . TIME . ' AND account_id = '.$this->account_id);
 			if ($this->db->nextRecord())
 				usleep(500000);
-			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . time() . ' AND account_id = '.$this->account_id);
+			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . TIME . ' AND account_id = '.$this->account_id);
 			if ($this->db->nextRecord())
 				usleep(250000);
-			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . time() . ' AND account_id = '.$this->account_id);
+			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . TIME . ' AND account_id = '.$this->account_id);
 			if ($this->db->nextRecord())
 				usleep(250000);
 			
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, time, log_type_id, message, sector_id) ' .
-				'VALUES('.$this->account_id.', '. time() . ', '.$log_type_id.', ' . $db->escapeString($msg) . ', '.$sector_id.')');
+				'VALUES('.$this->account_id.', '. TIME . ', '.$log_type_id.', ' . $db->escapeString($msg) . ', '.$sector_id.')');
 			
 		}
 		

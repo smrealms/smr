@@ -45,7 +45,7 @@ if ($planet->owner_id == $player->getAccountID()) $planetLand = TRUE;
 if ($planet->owner_id == 0) $planetLand = TRUE;
 if (!$planetLand)
 	$PHP_OUTPUT.=create_button(create_container('planet_attack_processing.php', ''), 'Attack Planet (3)');
-elseif ($planet->inhabitable_time < time())
+elseif ($planet->inhabitable_time < TIME)
 	$PHP_OUTPUT.=create_button(create_container('planet_land_processing.php', ''), 'Land on Planet (1)');
 else
 	$PHP_OUTPUT.=('The planet is <font color=red>uninhabitable</font> at this time.');

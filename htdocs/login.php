@@ -44,12 +44,12 @@ $loginNews = array();
 $db->query('SELECT * FROM game_news ORDER BY time DESC LIMIT 3');
 while ($db->nextRecord())
 {
-	$loginNews[] = array('Message' => $db->getField('message'),'AdminName' => $db->getField('admin_name'),'Time' => date('n/j/Y',$db->getField('time')), 'Recent' => (time() - $db->getField('time') < 24 * 3600));
+	$loginNews[] = array('Message' => $db->getField('message'),'AdminName' => $db->getField('admin_name'),'Time' => date('n/j/Y',$db->getField('time')), 'Recent' => (TIME - $db->getField('time') < 24 * 3600));
 }
 $smarty->assign('LoginNews',$loginNews);
 
 
-$db->query('SELECT count(*) AS num_on_cpl FROM player WHERE last_cpl_action > '.(time() - 3600));
+$db->query('SELECT count(*) AS num_on_cpl FROM player WHERE last_cpl_action > '.(TIME - 3600));
 $db->nextRecord();
 $smarty->assign('NumberOnCPL',$db->getField('num_on_cpl'));
 
@@ -94,7 +94,7 @@ $smarty->display('login.tpl');
 	?>
 	<?php
 	$launch = mktime(0,0,0,3,12,2008);
-	$now = time();
+	$now = TIME;
 	//if ($launch - $now > 0)
 		//echo 'SMR 1.5 Launch in <span class='red'>' . format_time($launch - $now) . '</span>!<br />';
 	?>

@@ -63,7 +63,7 @@ if ($time_since_start > 86400)
 	$time_since_start = 86400;
 
 // credit him this time
-$last_turn_update = time() - $time_since_start;
+$last_turn_update = TIME - $time_since_start;
 
 $db->lockTable('player');
 
@@ -84,7 +84,7 @@ else {
 }
 
 $db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, sector_id, last_turn_update, last_cpl_action, last_active, alliance_id) ' .
-						'VALUES(' . $_POST['admin_id'] . ', ' . $var['game_id'] . ', '.$player_id.', ' . $db->escape_string($_POST['player_name'], true) . ', ' . $_POST['race_id'] . ', '.$ship_id.', '.$home_sector_id.', '.$last_turn_update.', ' . time().', ' . time() . ','.$alliance_id.')');
+						'VALUES(' . $_POST['admin_id'] . ', ' . $var['game_id'] . ', '.$player_id.', ' . $db->escape_string($_POST['player_name'], true) . ', ' . $_POST['race_id'] . ', '.$ship_id.', '.$home_sector_id.', '.$last_turn_update.', ' . TIME.', ' . TIME . ','.$alliance_id.')');
 
 $db->unlock();
 

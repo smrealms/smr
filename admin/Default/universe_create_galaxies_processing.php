@@ -37,9 +37,6 @@ function test_connection($CArray) {
 
 }
 
-// Randomise the random number generator
-//mt_srand((double)microtime()*1000000);
-
 // Form some useful arrays for the large map array
 // Four possible exits north, east, south, west
 $exits=array(False, False, False, False);

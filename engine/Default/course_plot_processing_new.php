@@ -117,12 +117,12 @@ $distance = $routes['LEN'];
 if ($cached == True) {
 
 	// To optimise use of mysql's cache (Not the the plot_cache table) the timeout only gets updated every 5 minutes
-	if (time() - $cache_timeout < $timeout_to_update) {
+	if (TIME - $cache_timeout < $timeout_to_update) {
 
 		$db->query('UPDATE plot_cache
-					SET timeout = ' . time() . '
-					WHERE sector_id_1 = $sector_id_1 AND
-						  sector_id_2 = $sector_id_2 AND
+					SET timeout = ' . TIME . '
+					WHERE sector_id_1 = '.$sector_id_1.' AND
+						  sector_id_2 = '.$sector_id_2.' AND
 						  game_id = '.$player->getGameID());
 
 	}
@@ -134,7 +134,7 @@ if ($cached == True) {
 	// it can be safely ignored. The error will be for duplicate keys, the second insert will fail, which is ok.
 	$db->query('REPLACE INTO plot_cache
 				(game_id, sector_id_1, sector_id_2, length, timeout, route)
-				VALUES($player->getGameID(), $sector_id_1, $sector_id_2, $distance, ' . time() . ', ' . $db->escape_string($routes['RAW']) . ')');
+				VALUES('.$player->getGameID().', '.$sector_id_1.', '.$sector_id_2.', '.$distance.', ' . TIME . ', ' . $db->escape_string($routes['RAW']) . ')');
 
 }
 
@@ -142,7 +142,7 @@ if ($cached == True) {
 unset ($routes);
 
 // Clear any old plots from the cache table (To stop it getting too large), 10 minutes to timeout seems reasonable
-$db->query('DELETE FROM plot_cache WHERE timeout < ' . (time() - $timeout_to_delete));
+$db->query('DELETE FROM plot_cache WHERE timeout < ' . (TIME - $timeout_to_delete));
 
 $container = array();
 $container['url'] = 'skeleton.php';

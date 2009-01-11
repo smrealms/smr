@@ -21,7 +21,7 @@ if ($db->getNumRows()) {
 } else
 	$PHP_OUTPUT.=('You own no anonymous accounts<br />');
 
-$time = time();
+$time = TIME;
 $db->lockTable('player_has_ticket');
 $db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
 			'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
@@ -31,7 +31,7 @@ if ($db->getField('num') > 0) {
 	$first_buy = $db->getField('time');
 } else {
 	$amount = 1000000;
-	$first_buy = time();
+	$first_buy = TIME;
 }
 //find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
 
@@ -59,7 +59,7 @@ if ($time_rem <= 0)
 	$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$player->getGameID());
 	//get around locked table problem
 	$val = 1;
-	$first_buy =time();
+	$first_buy =TIME;
 	$time_rem = ($first_buy + (2 * 24 * 60 * 60)) - $time;
 }
 $db->unlock();

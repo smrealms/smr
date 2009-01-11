@@ -79,8 +79,6 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 } else
 	$no_picture = true;
 
-// get current time
-$curr_time = time();
 
 // check if we had a album entry so far
 $db->query('SELECT * FROM album WHERE account_id = '.SmrSession::$account_id);
@@ -98,7 +96,7 @@ if ($db->nextRecord()) {
 					month = '.$month.',
 					year = '.$year.',
 					other = '.$db->escapeString($other).',
-					last_changed = '.$curr_time.',
+					last_changed = '.TIME.',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
 				WHERE account_id = '.SmrSession::$account_id . ' LIMIT 1');
@@ -114,7 +112,7 @@ if ($db->nextRecord()) {
 
 	// add album entry
 	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved) ' .
-			   'VALUES('.SmrSession::$account_id.', '.$db->escapeString($location).', '.$db->escapeString($email).', '.$db->escapeString($website).', '.$day.', '.$month.', '.$year.', '.$db->escapeString($other).', '.$curr_time.', '.$curr_time.', \'TBC\')');
+			   'VALUES('.SmrSession::$account_id.', '.$db->escapeString($location).', '.$db->escapeString($email).', '.$db->escapeString($website).', '.$day.', '.$month.', '.$year.', '.$db->escapeString($other).', '.TIME.', '.TIME.', \'TBC\')');
 
 }
 
@@ -131,7 +129,7 @@ if ($comment) {
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$account->account_id.', '.$comment_id.', '.$curr_time.', 0, '.$db->escapeString($comment).')');
+				VALUES ('.$account->account_id.', '.$comment_id.', '.TIME.', 0, '.$db->escapeString($comment).')');
 	$db->unlock();
 
 }
