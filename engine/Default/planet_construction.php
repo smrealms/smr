@@ -139,7 +139,7 @@ while ($db->nextRecord())
 
 	$db2->query('SELECT * FROM planet_cost_time WHERE construction_id = '.$construction_id);
 	if ($db2->nextRecord())
-		$PHP_OUTPUT.=(($db2->getField('amount') / 3600 / Globals::getGameSpeed($player->getGameID())) . '-hours');
+		$PHP_OUTPUT.=(($db2->getField('amount') / 3600) / Globals::getGameSpeed($player->getGameID()) . '-hours');
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
