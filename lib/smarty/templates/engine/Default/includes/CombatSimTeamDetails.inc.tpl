@@ -13,7 +13,13 @@
 			</select><br />
 		</td>
 		<td style="vertical-align:top">
-			<u>Current Details</u>{if $Dummy}{assign var=Ship value=$Dummy->getShip()}{assign var=ShipWeapons value=$Ship->getWeapons()}<br />Level: {$Dummy->getLevelID()}<br />Ship: {$Ship->getName()}<br />DCS: {if $Ship->hasDCS()}Yes{else}No{/if}<br/>Weapons: {foreach from=$ShipWeapons item=ShipWeapon}* {$ShipWeapon->getName()}<br />{/foreach}{else}No Dummy{/if}
+			<u>Current Details</u>
+				{if $Dummy}{assign var=Ship value=$Dummy->getShip()}{assign var=ShipWeapons value=$Ship->getWeapons()}
+					<br />Level: {$Dummy->getLevelID()}<br />
+					Ship: {$Ship->getName()} ({$Ship->getAttackRating()}/{$Ship->getDefenseRating()}<br />
+					DCS: {if $Ship->hasDCS()}Yes{else}No{/if}<br/>
+					Weapons: {foreach from=$ShipWeapons item=ShipWeapon}* {$ShipWeapon->getName()}<br />{/foreach}
+				{else}No Dummy{/if}
 		</td>
 	</tr>
 	{/foreach}
