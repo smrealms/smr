@@ -6,6 +6,7 @@ class SmrForce
 {
 	protected static $CACHE_FORCES = array();
 	protected static $CACHE_SECTOR_FORCES = array();
+	protected static $TIDIED_UP = false;
 	
 	protected static $refreshAllHREF;
 	
@@ -61,11 +62,22 @@ class SmrForce
 	{
 		if($forceUpdate || !isset(self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID]))
 		{
+			self::tidyUpForces();
 			$p = new SmrForce($gameID,$sectorID,$ownerID);
 			return self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID] =& $p;
 		}
 		return self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID];
-		
+	}
+	
+	public static function tidyUpForces()
+	{
+		if(!self::$TIDIED_UP)
+		{
+			self::$TIDIED_UP = true;
+			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + (combat_drones+scout_drones+mines)*8640) WHERE refresh_at <= '.TIME.' AND refresher != 0');
+			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
+			$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+432000).' WHERE expire_time > '.(TIME+432000));
+		}
 	}
 	
 	protected function __construct($gameID,$sectorID, $ownerID)
