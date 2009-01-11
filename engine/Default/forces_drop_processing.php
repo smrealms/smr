@@ -206,7 +206,7 @@ if($forces->getCDs() == 0 && $forces->getMines() == 0 && $forces->getSDs() >= 1)
 	$days = 1*$forces->getSDs();
 }
 else {
-	$days = ceil(($forces->getCDs() + $forces->getSDs() + $forces->getMines()) / 10);
+	$days = ($forces->getCDs() + $forces->getSDs() + $forces->getMines()) / 10;
 }
 if ($days > 5) $days = 5;
 $forces->setExpire(TIME + ($days * 86400));
