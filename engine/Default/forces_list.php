@@ -66,7 +66,7 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.=('<td align="center">'.$force_cd.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$force_sd.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$force_mine.'</td>');
-		$PHP_OUTPUT.=('<td align="center">' . date('n/j/Y g:i:s A', $force_time) . '</td>');
+		$PHP_OUTPUT.=('<td align="center">' . date(DATE_FULL_SHORT, $force_time) . '</td>');
 		$PHP_OUTPUT.=('</tr>');
 
 	}

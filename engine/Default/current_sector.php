@@ -87,7 +87,7 @@ if($player->hasTickers())
 		{
 			while($db->nextRecord())
 			{
-				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->getField('time')),
+				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('time')),
 								'Message'=>$db->getField('news_message'));
 			}
 		}
@@ -114,7 +114,7 @@ if($player->hasTickers())
 		{
 			while($db->nextRecord())
 			{
-				$ticker[] = array('Time' => date('n/j/Y g:i:s A', $db->getField('send_time')),
+				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('send_time')),
 								'Message'=>$db->getField('message_text'));
 			}
 		}

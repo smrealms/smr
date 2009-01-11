@@ -17,7 +17,7 @@ if (SmrSession::$account_id > 0) {
 		$time = $db->getField('expires');
 	
 	$reason = $account->is_disabled();
-	if ($time > 0) $reason .= '  Your account is set to reopen ' . date('n/j/Y g:i:s A', $time) . '.';
+	if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DATE_FULL_SHORT, $time) . '.';
 	else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
 
 	SmrSession::destroy();

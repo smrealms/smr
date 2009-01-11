@@ -31,7 +31,7 @@
 							{if $SharedForceAlliance && $ThisShip->canAcceptSDs()&&$Force->hasSDs()}<a href="{$Force->getTakeSDHREF()}">[-]</a>{/if}{$Force->getSDs()}{if $SharedForceAlliance && $ThisShip->hasSDs()&&$Force->canAcceptSDs()}<a href="{$Force->getDropSDHREF()}">[+]</a>{/if}
 						</td>
 						<td class="shrink nowrap center">
-							<span class="green">{$Force->getExpire()|date:'j/n/Y g:i:s A'}</span>
+							<span class="green">{$Force->getExpire()|date:DATE_FULL_SHORT}</span>
 						</td>
 						<td>
 							<a href="{$Owner->getTraderSearchHREF()}">{$Owner->getDisplayName()}</a> ({if $Owner->hasAlliance()}<a href="{$Owner->getAllianceRosterHREF()}">{/if}{$Owner->getAllianceName()}{if $Owner->hasAlliance()}</a>{/if})

@@ -73,7 +73,7 @@ if ($db->getNumRows() != 0) {
 			$PHP_OUTPUT.= $db->getField('player_id');
 			$PHP_OUTPUT.= ')</td><td class="shrink nowrap center" style="color:' . $color;
 			$PHP_OUTPUT.= '">';
-			$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db->getField('last_cpl_action'));
+			$PHP_OUTPUT.= date(DATE_FULL_SHORT, $db->getField('last_cpl_action'));
 			$PHP_OUTPUT.= '</td><td class="shrink center">';
 
 			$PHP_OUTPUT.= '<input type="checkbox" name="account_id[]" value="';

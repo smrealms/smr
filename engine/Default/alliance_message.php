@@ -113,7 +113,7 @@ if ($db->getNumRows() > 0) {
 		$threads[$i]['tail'] .= $db->getField('num_replies');
 		$thread_replies[$i] = $db->getField('num_replies');
 		$threads[$i]['tail'] .= '</td><td class="shrink nowrap">';
-		$threads[$i]['tail'] .= date('n/j/Y g:i:s A', $db->getField('sendtime'));
+		$threads[$i]['tail'] .= date(DATE_FULL_SHORT, $db->getField('sendtime'));
 		$threads[$i]['tail'] .= '</td></tr>';
 		++$i;
 	}

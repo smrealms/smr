@@ -207,7 +207,7 @@ if ($curr_account->account_id != 0) {
 		$cont = 'yes';
 		$expireTime = $db->getField('expires');
 	}
-	if ($expireTime > 0) $PHP_OUTPUT.=('<p>The account is set to reopen at ' . date('n/j/Y g:i:s A', $time) . '.</p>');
+	if ($expireTime > 0) $PHP_OUTPUT.=('<p>The account is set to reopen at ' . date(DATE_FULL_SHORT, $time) . '.</p>');
 	elseif (isset($cont)) $PHP_OUTPUT.=('<p>The account is closed indefinitly (oooo a big word).</p>');
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('</tr>');
@@ -238,7 +238,7 @@ if ($curr_account->account_id != 0) {
 			} else
 				$admin = 'System';
 
-			$PHP_OUTPUT.=(date('n/j/Y g:i:s A', $curr_time) . ' - '.$action.' by '.$admin.'<br />');
+			$PHP_OUTPUT.=(date(DATE_FULL_SHORT, $curr_time) . ' - '.$action.' by '.$admin.'<br />');
 
 		}
 
@@ -315,7 +315,7 @@ if ($curr_account->account_id != 0) {
 		//$host = gethostbyaddr($curr_ip);
 		if ($host == $curr_ip)
 			$host = 'unknown';
-		$PHP_OUTPUT.=('<tr><td>' . date('n/j/Y g:i:s A', $curr_time) . '</td><td>&nbsp;</td><td>'.$curr_ip.'</td><td>&nbsp;</td><td>'.$host.'</td></tr>');
+		$PHP_OUTPUT.=('<tr><td>' . date(DATE_FULL_SHORT, $curr_time) . '</td><td>&nbsp;</td><td>'.$curr_ip.'</td><td>&nbsp;</td><td>'.$host.'</td></tr>');
 
 	}
 	$PHP_OUTPUT.=('</table>');

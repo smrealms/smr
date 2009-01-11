@@ -245,7 +245,7 @@ function displayGrouped($playerName, $player_id, $sender_id, $message_text, $fir
 	$container['player_id'] = $player_id;
 	$return.= create_link($container, $playerName);
 	$return.= ('</td>');
-	$return.= ('<td nowrap="nowrap" colspan="2">Date: ' . date('n/j/Y g:i:s A', $first) . ' - ' . date('n/j/Y g:i:s A', $last) . '</td></tr>');
+	$return.= ('<td nowrap="nowrap" colspan="2">Date: ' . date(DATE_FULL_SHORT, $first) . ' - ' . date(DATE_FULL_SHORT, $last) . '</td></tr>');
 	$return.= ('<tr>');
 	$return.= ('<td colspan="4">');
 	//insert link to expand them.
@@ -260,7 +260,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	foreach ($replace as $key => $timea) {
 		if (($final = strtotime($timea)) !== -1 && $timea != '') {
 			$final += $account->offset * 3600;
-			$message_text = str_replace('!$timea!', date('n/j/Y g:i:s A', $final), $message_text);
+			$message_text = str_replace('!$timea!', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
 	$replace = explode('?', $message_text);
@@ -268,7 +268,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 		if (($final = strtotime($timea)) !== -1 && $sender_id > 0 && $timea != '') {	
 			$send_acc =& SmrAccount::getAccount($sender_id);
 			$final += ($account->offset * 3600 - $send_acc->offset * 3600);
-			$message_text = str_replace('?$timea?', date('n/j/Y g:i:s A', $final), $message_text);
+			$message_text = str_replace('?$timea?', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
 	if (!empty($sender_id))
@@ -296,7 +296,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 		else $return.= ('Unknown');
 	}
 	$return.= ('</td>');
-	$return.= ('<td nowrap="nowrap">Date: ' . date('n/j/Y g:i:s A', $send_time) . '</td>');
+	$return.= ('<td nowrap="nowrap">Date: ' . date(DATE_FULL_SHORT, $send_time) . '</td>');
 	$return.= ('<td>');
 	$container = array();
 	$container['url'] = 'skeleton.php';

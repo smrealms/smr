@@ -94,7 +94,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.= stripslashes($db->getField('text'));
 	$PHP_OUTPUT.= '</td>';
 	$PHP_OUTPUT.= '<td class="shrink nowrap top">';
-	$PHP_OUTPUT.= date('n/j/Y g:i:s A', $db->getField('sendtime'));
+	$PHP_OUTPUT.= date(DATE_FULL_SHORT, $db->getField('sendtime'));
 	$PHP_OUTPUT.= '</td></tr>';
 }
 
