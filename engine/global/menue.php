@@ -1,5 +1,5 @@
 <?
-$PHP_OUTPUT.= '<span style="color:yellow">' . date('n/j/Y\<b\r /\>g:i:s A') . '</span><br /><br />';
+$PHP_OUTPUT.= '<span style="color:yellow">' . date(DATE_FULL_SHORT_SPLIT) . '</span><br /><br />';
 
 $container = array();
 $container['url'] = 'skeleton.php';

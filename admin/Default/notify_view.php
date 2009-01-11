@@ -45,9 +45,9 @@ if ($db->getNumRows()) {
 		if ($db2->nextRecord()) $db2->getField('game_name'); //$trader .= ' in ' . $db2->getField('game_name');
 		else $PHP_OUTPUT.=('Game no longer exists'); //$trader .= ' in a game that no longer exists.';
 		$PHP_OUTPUT.=('</td></tr><tr><td colspan="2">');
-		$PHP_OUTPUT.=('Sent at ' . date('n/j/Y\ g:i:s A', $db->getField('sent_time')));
+		$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('sent_time')));
 		$PHP_OUTPUT.=('</td><td colspan="2">');
-		$PHP_OUTPUT.=('Notified at ' . date('n/j/Y\ g:i:s A', $db->getField('notify_time')));
+		$PHP_OUTPUT.=('Notified at ' . date(DATE_FULL_SHORT, $db->getField('notify_time')));
 		//$PHP_OUTPUT.=create_link($container, $trader);
 		
 		$PHP_OUTPUT.=('</td>');

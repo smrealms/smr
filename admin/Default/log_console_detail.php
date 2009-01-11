@@ -220,7 +220,7 @@ if ($action == 'Delete') {
 		$style = ' style="color:' . $colors[$account_id] . ';"';
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td$style>' . date('n/j/Y', $time) . '&nbsp;' . date('g:i:s', $time) . '&nbsp;' . date('A', $time) . '</td>');
+		$PHP_OUTPUT.=('<td'.$style.'>' . date(DATE_FULL_SHORT, $time) . '</td>');
 
 		$db2->query('SELECT * FROM log_type WHERE log_type_id = '.$log_type_id);
 		if ($db2->nextRecord())

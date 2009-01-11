@@ -103,7 +103,7 @@ for ($i = -12; $i<= 11; $i++) {
 	
 	$PHP_OUTPUT.=('<option value='.$i);
 	if ($offset == $i) $PHP_OUTPUT.=(' selected');
-	$PHP_OUTPUT.=('>' . date('g:i:s A', $time + $i * 3600));
+	$PHP_OUTPUT.=('>' . date(DATE_TIME_SHORT, $time + $i * 3600));
 	
 }
 $PHP_OUTPUT.='</select>';

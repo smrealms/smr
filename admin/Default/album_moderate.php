@@ -189,7 +189,7 @@ if (empty($account_id)) {
 
 	$db->query('SELECT *
 				FROM album_has_comments
-				WHERE album_id = $account_id');
+				WHERE album_id = '.$account_id);
 	while ($db->nextRecord()) {
 
 		$comment_id	= $db->getField('comment_id');

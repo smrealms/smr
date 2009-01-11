@@ -150,7 +150,7 @@ if ($db->getNumRows() > 0) {
 		$no_votes = $db2->getNumRows();
 
 		$PHP_OUTPUT.=('<td align="center">'.$yes_votes.' / '.$no_votes.'</td>');
-		$PHP_OUTPUT.=('<td nowrap="nowrap"align="center">' . date('n/j/Y', $end_time) . '<br />' . date('g:i:s A', $end_time) . '</td>');
+		$PHP_OUTPUT.=('<td nowrap="nowrap"align="center">' . date(DATE_FULL_SHORT_SPLIT, $end_time) . '</td>');
 		$PHP_OUTPUT.=('</form>');
 		$PHP_OUTPUT.=('</tr>');
 

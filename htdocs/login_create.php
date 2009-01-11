@@ -327,7 +327,7 @@
 							<select name="timez" id="InputFields">
 								<?php
 								$time = TIME;
-									for ($i = -12; $i<= 11; $i++) echo('<option value='.$i.'>' . date('g:i:s A', $time + $i * 3600));
+									for ($i = -12; $i<= 11; $i++) echo('<option value='.$i.'>' . date(DATE_TIME_SHORT, $time + $i * 3600));
 								?>
 							</select>
 						</td>
