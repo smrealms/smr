@@ -220,9 +220,8 @@ if ($action == 'lotto') {
 	}
 	
 	function create_card($card, $show) {
-		global $URL;
 		//picture directory
-		$dir = $URL . '/images';
+		$dir = URL . '/images';
 		//only display what the card really is if they want to
 		$card_height = 100;
 		$card_width = 125;

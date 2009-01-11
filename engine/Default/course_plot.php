@@ -11,7 +11,7 @@ if(!$player->isLandedOnPlanet()) {
 	$container['body'] = 'map_local.php';
 	$menue_items[] = create_link($container, 'Local Map');
 }
-$menue_items[] = '<a href="' . $URL . '/map_galaxy.php" target="_blank">Galaxy Map</a>';
+$menue_items[] = '<a href="' . URL . '/map_galaxy.php" target="_blank">Galaxy Map</a>';
 
 // echo it
 $PHP_OUTPUT.=create_menue($menue_items);

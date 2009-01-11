@@ -11,7 +11,7 @@ $db = new SmrMySqlDatabase();
 // do we have a session?
 if (SmrSession::$account_id == 0) {
 
-	header('Location: '.$URL.'/login.php');
+	header('Location: '.URL.'/login.php');
 	exit;
 
 }
@@ -22,7 +22,7 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 if ($_POST['email'] != $_POST['email_verify']) {
 
 	$msg = 'The eMail addresses you entered do not match!';
-	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 
 }
@@ -30,7 +30,7 @@ if ($_POST['email'] != $_POST['email_verify']) {
 if ($_POST['email'] == $account->email) {
 
 	$msg = 'You have to use a different email than the registered one!';
-	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 
 }
@@ -42,7 +42,7 @@ list($user, $host) = explode('@', $_POST['email']);
 if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
 
 	$msg = 'This is not a valid email address!';
-	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 
 }
@@ -51,7 +51,7 @@ $db->query('SELECT * FROM account WHERE email = ' . $db->escape_string($_POST['e
 if ($db->nf() > 0) {
 
 	$msg = 'This eMail address is already registered.';
-	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 
 }
@@ -68,8 +68,8 @@ $db->query('REPLACE INTO notification (notification_type, account_id, time)
 mail($email, 'Your validation code!',
 	'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
 	'   Your new validation code is: '.$account->validation_code.EOL.EOL.
-	'The Space Merchant Realms server is on the web at '.$URL.'/.'.EOL.
-	'You\'ll find a quick how-to-play here '.$URL.'/manual.php'.EOL.
+	'The Space Merchant Realms server is on the web at '.URL.'/.'.EOL.
+	'You\'ll find a quick how-to-play here '.URL.'/manual.php'.EOL.
 	'Please verify within the next 7 days or your account will be automatically deleted.',
 	'From: support@smrealms.de');
 

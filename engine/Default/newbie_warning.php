@@ -25,6 +25,6 @@ $PHP_OUTPUT.=('</ol>');
 
 $PHP_OUTPUT.=('<p>Plan for your safety now. Remember to use federal Protection (Must have an attack rating of 3 or less), know where your alliances strongest planet\'s are, and watch out for the people looking for you.</p>');
 
-$PHP_OUTPUT.=('<p>For more information visit the <a href="'.$URL.'/manual.php">help files</a></p>');
+$PHP_OUTPUT.=('<p>For more information visit the <a href="'.URL.'/manual.php">help files</a></p>');
 
 ?>

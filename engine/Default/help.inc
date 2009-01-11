@@ -2,8 +2,6 @@
 
 function echo_nav($topic_id) {
 
-	global $URL;
-
 	// database object
 	$db = new SmrMySqlDatabase();
 	$db2 = new SmrMySqlDatabase();
@@ -34,10 +32,10 @@ function echo_nav($topic_id) {
 
 			$previous_topic_id = $db2->f('topic_id');
 			$previous_topic = stripslashes($db2->f('topic'));
-			echo ('<a href="'.$URL.'/manual.php?'.$previous_topic_id.'"><img src="'.$URL.'/images/help/previous.jpg" width="32" height="32" border="0"></a>');
+			echo ('<a href="'.URL.'/manual.php?'.$previous_topic_id.'"><img src="'.URL.'/images/help/previous.jpg" width="32" height="32" border="0"></a>');
 
 		} else
-			echo ('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
+			echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
 		echo ('</th>');
 
 		// **************************
@@ -49,10 +47,10 @@ function echo_nav($topic_id) {
 
 			$up_topic_id = $db2->f('topic_id');
 			$up_topic = stripslashes($db2->f('topic'));
-			echo ('<a href="'.$URL.'/manual.php?'.$up_topic_id.'"><img src="'.$URL.'/images/help/up.jpg" width="32" height="32" border="0"></a>');
+			echo ('<a href="'.URL.'/manual.php?'.$up_topic_id.'"><img src="'.URL.'/images/help/up.jpg" width="32" height="32" border="0"></a>');
 
 		} else
-			echo ('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
+			echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
 		echo ('</th>');
 
 		// **************************
@@ -80,25 +78,25 @@ function echo_nav($topic_id) {
 
 			$next_topic_id = $db2->f('topic_id');
 			$next_topic = stripslashes($db2->f('topic'));
-			echo ('<a href="'.$URL.'/manual.php?'.$next_topic_id.'"><img src="'.$URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
+			echo ('<a href="'.URL.'/manual.php?'.$next_topic_id.'"><img src="'.URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
 
 		} else
-			echo ('<img src="'.$URL.'/images/help/empty.jpg" width="32" height="32">');
+			echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
 		echo ('</th>');
 
 		echo ('<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">' . get_numbering($topic_id) . $topic.'</th>');
-		echo ('<th width="32"><a href="'.$URL.'/manual_toc.php"><img src="'.$URL.'/images/help/contents.jpg" width="32" height="32" border="0"></a></th>');
+		echo ('<th width="32"><a href="'.URL.'/manual_toc.php"><img src="'.URL.'/images/help/contents.jpg" width="32" height="32" border="0"></a></th>');
 
 		echo ('</tr>');
 
 		echo ('<tr>');
 		echo ('<td colspan="5">');
 		if ($previous_topic_id > 0)
-			echo ('<b>Previous:</b> <a href="'.$URL.'/manual.php?'.$previous_topic_id.'">' . get_numbering($previous_topic_id) . $previous_topic.'</a>&nbsp;&nbsp;&nbsp;');
+			echo ('<b>Previous:</b> <a href="'.URL.'/manual.php?'.$previous_topic_id.'">' . get_numbering($previous_topic_id) . $previous_topic.'</a>&nbsp;&nbsp;&nbsp;');
 		if ($up_topic_id > 0)
-			echo ('<b>Up:</b> <a href="'.$URL.'/manual.php?'.$up_topic_id.'">' . get_numbering($up_topic_id) . $up_topic.'</a>&nbsp;&nbsp;&nbsp;');
+			echo ('<b>Up:</b> <a href="'.URL.'/manual.php?'.$up_topic_id.'">' . get_numbering($up_topic_id) . $up_topic.'</a>&nbsp;&nbsp;&nbsp;');
 		if ($next_topic_id > 0)
-			echo ('<b>Next:</b> <a href="'.$URL.'/manual.php?'.$next_topic_id.'">' . get_numbering($next_topic_id) . $next_topic.'</a>');
+			echo ('<b>Next:</b> <a href="'.URL.'/manual.php?'.$next_topic_id.'">' . get_numbering($next_topic_id) . $next_topic.'</a>');
 		echo ('</tr>');
 
 		echo ('</table>');
@@ -152,9 +150,8 @@ function echo_subsection($topic_id) {
 	return $return;
 }
 
-function echo_menu($topic_id) {
-
-	global $URL;
+function echo_menu($topic_id)
+{
 	$return='';
 	// database object
 	$db = new SmrMySqlDatabase();
@@ -169,7 +166,7 @@ function echo_menu($topic_id) {
 			$order_id = $db->f('order_id');
 			$sub_topic = stripslashes($db->f('topic'));
 
-			$return.=('<li><a href="'.$URL.'/manual.php?'.$sub_topic_id.'">' . get_numbering($sub_topic_id) . $sub_topic.'</a></li>');
+			$return.=('<li><a href="'.URL.'/manual.php?'.$sub_topic_id.'">' . get_numbering($sub_topic_id) . $sub_topic.'</a></li>');
 			$return.=create_menu($sub_topic_id);
 
 		}

@@ -64,15 +64,15 @@ $PHP_OUTPUT.=('<div align="center">');
 if ($donations < $total_price) {
 
 	$PHP_OUTPUT.=('<span style="font-size:75%;">Current Progress:<br /></span>');
-	$PHP_OUTPUT.=('<img src="'.$URL.'/images/progress_bar/bar_green_start.jpg">');
+	$PHP_OUTPUT.=('<img src="'.URL.'/images/progress_bar/bar_green_start.jpg">');
 
 	for ($i = 0; $i < $current_length; $i++)
-		$PHP_OUTPUT.=('<img src="'.$URL.'/images/progress_bar/bar_green_mid.jpg">');
+		$PHP_OUTPUT.=('<img src="'.URL.'/images/progress_bar/bar_green_mid.jpg">');
 
 	for ($i = 0; $i < $total_length - $current_length; $i++)
-		$PHP_OUTPUT.=('<img src="'.$URL.'/images/progress_bar/bar_white_mid.jpg">');
+		$PHP_OUTPUT.=('<img src="'.URL.'/images/progress_bar/bar_white_mid.jpg">');
 
-	$PHP_OUTPUT.=('<img src="'.$URL.'/images/progress_bar/bar_white_end.jpg">');
+	$PHP_OUTPUT.=('<img src="'.URL.'/images/progress_bar/bar_white_end.jpg">');
 	$PHP_OUTPUT.=('<span style="font-size:60%;"><br />' . round(100 * $donations / $total_price) . ' %</span>');
 
 } else

@@ -11,7 +11,7 @@ if ($db->next_record()) {
 
 	$reason = stripslashes($db->f('reason'));
 
-} else header('Location: '.$URL);
+} else header('Location: '.URL);
 
 ?>
 

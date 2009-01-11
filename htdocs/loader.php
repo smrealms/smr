@@ -78,7 +78,7 @@ $db = new SmrMySqlDatabase();
 // do we have a session?
 if (SmrSession::$account_id == 0) {
 
-	header('Location: '.$URL.'/login.php');
+	header('Location: '.URL.'/login.php');
 	exit;
 
 }

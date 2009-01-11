@@ -85,8 +85,6 @@ abstract class MySqlDatabase implements Database
 	
 	protected function error($err)
 	{
-		global $URL;
-		
 		echo mysql_error();
 		throw new Exception($err);
 		if(!$this->debug)
@@ -94,7 +92,7 @@ abstract class MySqlDatabase implements Database
 			echo 'ERROR: db_mysql_inc - ' . $err;
 		} 
 		else {
-			header('location: ' . $URL . '/error.php?msg=Database Error');
+			header('location: ' . URL . '/error.php?msg=Database Error');
 		}
 		
 		exit;

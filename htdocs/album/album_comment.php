@@ -1,10 +1,7 @@
 <?
 
 function create_error_offline($msg) {
-
-	global $URL;
-
-	header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 
 }
@@ -65,7 +62,7 @@ $db->query('INSERT INTO album_has_comments
 			VALUES ('.$album_id.', '.$comment_id.', '.$curr_time.', '.SmrSession::$account_id.', '.$db->escapeString($comment).')');
 $db->unlock();
 
-header('Location: '.$URL.'/album/?' . get_album_nick($album_id));
+header('Location: '.URL.'/album/?' . get_album_nick($album_id));
 exit;
 
 ?>
