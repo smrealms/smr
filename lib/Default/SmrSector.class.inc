@@ -88,10 +88,10 @@ class SmrSector
 		// *
 		// *******************************************
 		
-		$this->db->query('UPDATE sector_has_forces SET expire_time = (refresh_at + (combat_drones+scout_drones+mines)*8640) WHERE sector_id = '.$sectorID .
+		$this->db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + (combat_drones+scout_drones+mines)*8640) WHERE sector_id = '.$sectorID .
 				' AND game_id = '.$gameID.' AND refresh_at <= '.TIME.' AND refresher = '.$accountID);
 		$this->db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+432000).' WHERE expire_time > '.(TIME+432000).' AND sector_id = '.$sectorID .
-				' AND game_id = '.$gameID.' AND refresh_at <= '.TIME.' AND refresher = '.$accountID);
+				' AND game_id = '.$gameID);
 		$this->db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 	}
 
