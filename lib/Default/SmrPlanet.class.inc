@@ -241,7 +241,10 @@ class SmrPlanet
 				{
 					$this->db->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
 											 'sector_id = '.$this->getSectorID() . ' AND building_slot_id = ' . $this->db->getField('building_slot_id') . ' LIMIT 1');
-					$this->getBuilding[$this->db->getField('construction_id')] += 1;
+					if(isset($this->buildings[$this->db->getField('construction_id')]))
+						$this->buildings[$this->db->getField('construction_id')] += 1;
+					else
+						$this->buildings[$this->db->getField('construction_id')] = 1;
 					$this->update();
 				}
 				else
