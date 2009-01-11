@@ -102,13 +102,13 @@ if (empty($account_id)) {
 
 	$default_email = 'Dear Photo Album User,'.EOL.EOL .
 					 'You have received this email as notification that the picture you submitted to the Space Merchant Realms Photo Album has been temporarily disabled due to a Photo Album Rules violation.'.EOL .
-					 'Please visit '.$URL.'/album.php or log into the SMR site to upload a new picture.'.EOL .
+					 'Please visit '.URL.'/album.php or log into the SMR site to upload a new picture.'.EOL .
 					 'Reply to this email when you have uploaded a new picture so we may re-enable your pic.'.EOL .
 					 'Note: Please allow up to 48 hours for changes to occur.'.EOL .
 					 'Thanks,'.EOL.EOL .
 					 'Admin Team';
 
-	$PHP_OUTPUT.=('<td colspan="2"><img src="'.$URL.'/upload/'.$account_id.'"></td>');
+	$PHP_OUTPUT.=('<td colspan="2"><img src="'.URL.'/upload/'.$account_id.'"></td>');
 	$PHP_OUTPUT.=('<td style="font-size:75%;">You can edit the text that will be sent<br />to that user as an email if you reset his picture!<br /><br />');
 	$PHP_OUTPUT.=('<textarea name="email_txt" id="InputFields" style="width:300;height:200;">'.$default_email.'</textarea></td>');
 	$PHP_OUTPUT.=('</form>');

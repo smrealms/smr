@@ -19,7 +19,7 @@ $email = $_REQUEST['email'];
 if ($account==null || $account->email != $email) {
 
 	// unknown user
-	header('Location: '.$URL.'/error.php?msg=' . rawurlencode('User does not exist'));
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode('User does not exist'));
 	exit;
 
 }
@@ -30,16 +30,16 @@ else
 
 $account->generatePasswordReset();
 
-$resetURL = $URL.'/reset_password.php?login='.$account->login.'&resetcode='.$account->getPasswordReset();
+$resetURL = URL.'/reset_password.php?login='.$account->login.'&resetcode='.$account->getPasswordReset();
 // send email with password to user
 mail($email, 'Space Merchant Realms Password',
 	 'A user from ' . $curr_ip . ' requested to reset your password!'.EOL.EOL.
 	 '   Your password reset code is: ' . $account->getPasswordReset().EOL.
 	 '   You can use this url: '.$resetURL .EOL.EOL.
-	 'The Space Merchant Realms server is on the web at '.$URL.'/',
+	 'The Space Merchant Realms server is on the web at '.URL.'/',
 	 'From: support@smrealms.de');
 
-header('Location: '.$URL.'/reset_password.php');
+header('Location: '.URL.'/reset_password.php');
 exit;
 
 ?>

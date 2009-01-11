@@ -31,7 +31,7 @@ if (SmrSession::$account_id == 0) {
 	if (empty($login) || empty($password)) {
 
 		$msg = 'Please enter login and password!';
-		header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 
@@ -46,7 +46,7 @@ if (SmrSession::$account_id == 0) {
 	} else {
 
 		$msg = 'Password is incorrect!';
-		header('Location: '.$URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 
 	}
@@ -68,7 +68,7 @@ if ($db->nf()) {
 	$db2->query('SELECT * FROM account_has_permission WHERE account_id = '.SmrSession::$account_id.' AND permission_id = 3');
 	if (!$db2->nf()) {
 
-		header('Location: '.$URL.'/offline.php');
+		header('Location: '.URL.'/offline.php');
 		exit;
 
 	}
@@ -93,12 +93,12 @@ if ($db->next_record()) {
 
 	if ($db->f('reason') == 'Invalid eMail') {
 
-		header('Location: '.$URL.'/email.php');
+		header('Location: '.URL.'/email.php');
 		exit;
 
 	} else {
 
-		header('Location: '.$URL.'/disabled.php');
+		header('Location: '.URL.'/disabled.php');
 		exit;
 
 	}
@@ -221,7 +221,7 @@ echo 'DAMN';
 
 }
 
-header('Location: '.$URL.'/loader.php?sn='.$sn);
+header('Location: '.URL.'/loader.php?sn='.$sn);
 exit;
 
 ?>

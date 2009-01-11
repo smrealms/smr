@@ -14,7 +14,7 @@ $db2 = new SmrMySqlDatabase();
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo $URL;?>/default.css">
+<link rel="stylesheet" type="text/css" href="<?php echo URL;?>/default.css">
 <title>Space Merchant Realms - Photo Album</title>
 <meta http-equiv="pragma" content="no-cache">
 </head>
@@ -115,7 +115,7 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 <table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
 <tr>
 <td valign="top" align="center">
-<form action="<?php echo $URL; ?>/album/search_processing.php">
+<form action="<?php echo URL; ?>/album/search_processing.php">
 Quick Search:<br />
 <input type="text" name="nick" size="10" id="InputFields"><br />
 <input type="submit" value="Search" id="InputFields">
@@ -140,7 +140,7 @@ Quick Search:<br />
 
 <tr>
 	<td align='right' style='font-size:65%;'>
-	    &copy; 2002-2007 by <a href="<?php echo $URL; ?>"><?php echo $URL; ?></a><br/>
+	    &copy; 2002-2007 by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br/>
 	    Hosted by <a href='http://www.fem.tu-ilmenau.de/index.php?id=93&L=1' target='fem'>FeM</a>
 	</td>
 

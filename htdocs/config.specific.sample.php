@@ -10,7 +10,6 @@ define('ADMIN', ROOT . 'admin/');
 
 define('SMARTY_COMPILE_DIR','/home/page/wwwWrite/smarty/templates_c/');
 
-$URL		=	URL;
 $ROOT		=	ROOT;
 
 $UPLOAD		=	UPLOAD;

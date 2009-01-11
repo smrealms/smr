@@ -33,7 +33,7 @@ header('Cache-Control: post-check=0, pre-check=0', FALSE);
 // do we have a session?
 if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {
 
-	header('Location: '.$URL.'/login.php');
+	header('Location: '.URL.'/login.php');
 	exit;
 
 }
@@ -92,7 +92,7 @@ if (!isset($galaxy_id)) {
 			$galaxy_name = '<b>' . $galaxy_name . '</b>';
 
 		echo('<li>');
-		echo('<a href="'.$URL.'/map_galaxy.php?galaxy_id='.$galaxy_id.'">'.$galaxy_name.'</a>');
+		echo('<a href="'.URL.'/map_galaxy.php?galaxy_id='.$galaxy_id.'">'.$galaxy_name.'</a>');
 		echo('</li>');
 
 	}

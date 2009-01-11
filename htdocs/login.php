@@ -33,7 +33,7 @@ if (SmrSession::$account_id > 0) {
 	$sn = SmrSession::get_new_sn($container);
 	SmrSession::update();
 
-	header('Location: '.$URL.'/loader.php?sn='.$sn);
+	header('Location: '.URL.'/loader.php?sn='.$sn);
 	exit;
 }
 

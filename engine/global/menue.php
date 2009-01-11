@@ -23,7 +23,7 @@ if (SmrSession::$game_id > 0) {
 	$container['body'] = 'course_plot.php';
 	$PHP_OUTPUT.=create_link($container, 'Plot a Course');
 	$PHP_OUTPUT.= '</b></big><br />';
-	$PHP_OUTPUT.= '<a href="' . $URL . '/map_galaxy.php" target="_blank">Galaxy Map</a><br /><br />';
+	$PHP_OUTPUT.= '<a href="' . URL . '/map_galaxy.php" target="_blank">Galaxy Map</a><br /><br />';
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'trader_status.php';
 	$PHP_OUTPUT.=create_link($container, 'Trader');
@@ -86,7 +86,7 @@ else {
 }
 
 $PHP_OUTPUT.= '<br /><br />';
-$PHP_OUTPUT.= '<a href="' . $URL . '/manual.php" target="_blank">Manual</a><br />';
+$PHP_OUTPUT.= '<a href="' . URL . '/manual.php" target="_blank">Manual</a><br />';
 $container['url'] = 'skeleton.php';
 $container['body'] = 'preferences.php';
 $PHP_OUTPUT.=create_link($container, 'Preferences');
@@ -103,7 +103,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'album_edit.php';
 $PHP_OUTPUT.=create_link($container, 'Edit Photo');
 $PHP_OUTPUT.= '<br />';
-$PHP_OUTPUT.= '<a href="' . $URL . '/album/" target="_blank">Album</a><br /><br />';
+$PHP_OUTPUT.= '<a href="' . URL . '/album/" target="_blank">Album</a><br /><br />';
 
 $container['body'] = 'bug_report.php';
 $PHP_OUTPUT.=create_link($container, 'Report a Bug');
