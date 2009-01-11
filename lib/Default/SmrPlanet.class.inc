@@ -382,7 +382,7 @@ class SmrPlanet
 
 	
 		// gets the time for the buildings
-		$time_complete = TIME + round($PLANET_BUILDINGS[$construction_id]['Build Time'] / Globals::getGameSpeed($this->getGameID()));
+		$time_complete = TIME + round($PLANET_BUILDINGS[$construction_id]['Build Time'] / Globals::getGameSpeed($this->getGamaeID()));
 
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
 													'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$construction_id.', '.$constructor_id.','.$time_complete.')');
