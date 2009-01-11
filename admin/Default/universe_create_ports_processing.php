@@ -89,7 +89,7 @@ foreach($ports as $galaxy_id => $amount) {
 		$db2->query('SELECT * FROM location ' .
 				'WHERE game_id = ' . $var['game_id'] . ' AND ' .
 				'sector_id = '.$sector_id.' AND ' .
-				'location_type_id = '.$FED);
+				'location_type_id = '.FED);
 		if ($db2->getNumRows() > 0) continue;
 
 

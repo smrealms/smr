@@ -93,8 +93,8 @@ $only = array();
 // get all available hq's
 $db->query('SELECT location_name, location.location_type_id as loc_id
 			FROM location NATURAL JOIN location_type
-			WHERE location.location_type_id > '.$UNDERGROUND.' AND
-				  location.location_type_id < '.$FED.' AND
+			WHERE location.location_type_id > '.UNDERGROUND.' AND
+				  location.location_type_id < '.FED.' AND
 				  game_id = ' . $var['game_id'] . '
 			ORDER BY location.location_type_id');
 $races = array();
