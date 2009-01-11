@@ -20,6 +20,7 @@ class SmrForce
 	protected $mines=0;
 	protected $expire=0;
 	
+	protected $isNew;
 	protected $hasChanged = false;
 	
 	protected $examineDropForcesHREF;
@@ -97,7 +98,10 @@ class SmrForce
 			$this->scoutDrones		= $this->db->getField('scout_drones');
 			$this->mines			= $this->db->getField('mines');
 			$this->expire			= $this->db->getField('expire_time');
+			$this->isNew = false;
 		}
+		else
+			$this->isNew = true;
 
 		// let forces expire (simply let all expire) (update refreshing first)
 //		$db = new SmrMySqlDatabase();
@@ -320,16 +324,24 @@ class SmrForce
 
 	public function update()
 	{
-		if ($this->mines == 0 && $this->combatDrones == 0 && $this->scoutDrones == 0)
+		if(!$this->isNew)
 		{
-			$this->db->query('DELETE FROM sector_has_forces ' .
-						 'WHERE game_id = '.$this->gameID.' AND ' .
-							   'sector_id = '.$this->sectorID.' AND ' .
-							   'owner_id = '.$this->ownerID);
+			if ($this->exists())
+			{
+				$this->db->query('DELETE FROM sector_has_forces ' .
+							 'WHERE game_id = '.$this->gameID.' AND ' .
+								   'sector_id = '.$this->sectorID.' AND ' .
+								   'owner_id = '.$this->ownerID);
+			}
+			else
+			{
+				$this->db->query('UPDATE sector_has_forces SET combat_drones = '.$this->combatDrones.', scout_drones = '.$this->scoutDrones.', mines = '.$this->mines.', expire_time = '.$this->expire .
+						' WHERE game_id = '.$this->gameID.' AND sector_id = '.$this->sectorID.' AND owner_id = '.$this->ownerID.' LIMIT 1 ');
+			}
 		}
-		else
+		else if($this->exists())
 		{
-			$this->db->query('REPLACE INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time) ' .
+			$this->db->query('INSERT INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time) ' .
 												  'VALUES('.$this->gameID.', '.$this->sectorID.', '.$this->ownerID.', '.$this->combatDrones.', '.$this->scoutDrones.', '.$this->mines.', '.$this->expire.')');
 		}
 	}
