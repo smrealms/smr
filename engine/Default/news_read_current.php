@@ -17,6 +17,7 @@ if ($db->f('num') > 0) {
 }
 //find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
 $time_rem = ($first_buy + (2 * 24 * 60 * 60)) - TIME;
+$val =0;
 if ($time_rem <= 0) {
 	//we need to pick a winner
 	$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand()');
