@@ -10,9 +10,9 @@ $smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$playe
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_planet_menue();
 
+$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 if ($planet->hasCurrentlyBuilding())
 {
-	$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 	$PHP_OUTPUT.=('<p>You are currently building:<br />');
 	$currentlyBuilding = $planet->getCurrentlyBuilding();
 	foreach($currentlyBuilding as $building)
@@ -79,17 +79,9 @@ $PHP_OUTPUT.=('<th>Cost</th>');
 $PHP_OUTPUT.=('<th>Build</th>');
 $PHP_OUTPUT.=('</tr>');
 
-$db->query('SELECT * FROM planet_construction ORDER BY construction_id');
-while ($db->nextRecord())
+$GOODS =& Globals::getGoods();
+foreach($PLANET_BUILDINGS as $planetBuilding)
 {
-	$construction_id			= $db->getField('construction_id');
-	$construction_name			= $db->getField('construction_name');
-	$construction_description	= $db->getField('construction_description');
-
-	$db2 = new SmrMySqlDatabase();
-	$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id = '.$construction_id);
-	if ($db2->nextRecord())
-		$cost = $db2->getField('amount');
 
 	/*$container = array();
 	$container['url'] = 'planet_construction_processing.php';
@@ -98,8 +90,8 @@ while ($db->nextRecord())
 
 	$PHP_OUTPUT.=create_echo_form($container);*/
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td>'.$construction_name.'</td>');
-	$PHP_OUTPUT.=('<td>'.$construction_description.'</td>');
+	$PHP_OUTPUT.=('<td>'.$planetBuilding['Name'].'</td>');
+	$PHP_OUTPUT.=('<td>'.$planetBuilding['Description'].'</td>');
 	$PHP_OUTPUT.=('<td align="center">');
 	$PHP_OUTPUT.=($planet->getBuilding($construction_id));
 	$PHP_OUTPUT.=('/');
@@ -107,48 +99,36 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
 	$missing_good = false;
-	$db2->query('SELECT * FROM planet_cost_good, good ' .
-						'WHERE planet_cost_good.good_id = good.good_id AND ' .
-							  'construction_id = '.$construction_id.' ' .
-						'ORDER BY good.good_id');
-	while ($db2->nextRecord())
+	foreach($planetBuilding['Goods'] as $goodID => $amount)
 	{
-		$good_id	= $db2->getField('good_id');
-		$good_name	= $db2->getField('good_name');
-		$amount		= $db2->getField('amount');
-
-		if ($planet->getStockpile($good_id) < $amount)
+		if ($planet->getStockpile($goodID) < $amount)
 		{
-			$PHP_OUTPUT.=('<span style="color:red;">'.$amount.'-'.$good_name.', </span>');
+			$PHP_OUTPUT.=('<span style="color:red;">'.$amount.'-'.$GOODS[$goodID]['Name'].', </span>');
 			$missing_good = true;
-
 		}
 		else
-			$PHP_OUTPUT.=($amount.'-'.$good_name.', ');
-
+			$PHP_OUTPUT.=($amount.'-'.$GOODS[$goodID]['Name'].', ');
 	}
 
 	$missing_credits = false;
-	if ($player->getCredits() < $cost)
+	if ($player->getCredits() < $planetBuilding['Credit Cost'])
 	{
-		$PHP_OUTPUT.=('<span style="color:red;">'.$cost.'-credits, </span>');
+		$PHP_OUTPUT.=('<span style="color:red;">'.$planetBuilding['Credit Cost'].'-credits, </span>');
 		$missing_credits = true;
 	}
 	else
-		$PHP_OUTPUT.=($cost.'-credits, ');
+		$PHP_OUTPUT.=($planetBuilding['Credit Cost'].'-credits, ');
 
-	$db2->query('SELECT * FROM planet_cost_time WHERE construction_id = '.$construction_id);
-	if ($db2->nextRecord())
-		$PHP_OUTPUT.=(($db2->getField('amount') / 3600) / Globals::getGameSpeed($player->getGameID()) . '-hours');
+	$PHP_OUTPUT.=(($planetBuilding['Build Time'] / 3600) / Globals::getGameSpeed($player->getGameID()) . '-hours');
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	if (!$missing_good && !$missing_credits && !$planet->hasCurrentlyBuilding() && $planet->getBuilding($construction_id) < $planet->max_construction[$construction_id])
+	if (!$missing_good && !$missing_credits && !$planet->hasCurrentlyBuilding() && $planet->getBuilding($planetBuilding['ConstructionID']) < $planet->max_construction[$planetBuilding['ConstructionID']])
 	{
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
-		$container['construction_id'] = $construction_id;
-		$container['cost'] = $cost;
+		$container['construction_id'] = $planetBuilding['ConstructionID'];
+		$container['cost'] = $planetBuilding['Credit Cost'];
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('Build');
 		$PHP_OUTPUT.=('</form>');
@@ -171,10 +151,7 @@ foreach ($planet->getStockpile() as $id => $amount)
 {
 	if ($amount > 0)
 	{
-
-		$db->query('SELECT * FROM good WHERE good_id = '.$id);
-		if ($db->nextRecord())
-			$PHP_OUTPUT.=('<li>' . $db->getField('good_name') . ': '.$amount.'</li>');
+		$PHP_OUTPUT.=('<li>' . $GOODS[$id]['Name'] . ': '.$amount.'</li>');
 
 	}
 }

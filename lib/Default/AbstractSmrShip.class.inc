@@ -184,12 +184,12 @@ abstract class AbstractSmrShip
 		return round((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
 	}
 	
-	function shield_low() { return floor($this->getShields() / 100) * 100; }
-	function shield_high() { return $this->shield_low() + 100; }
-	function armor_low() { return floor($this->getArmour() / 100) * 100; }
-	function armor_high() { return $this->armor_low() + 100; }
-	function combat_drones_low() { return floor($this->getCDs() / 100) * 100; }
-	function combat_drones_high() { return $this->combat_drones_low() + 100; }
+	public function shield_low() { return floor($this->getShields() / 100) * 100; }
+	public function shield_high() { return $this->shield_low() + 100; }
+	public function armor_low() { return floor($this->getArmour() / 100) * 100; }
+	public function armor_high() { return $this->armor_low() + 100; }
+	public function combat_drones_low() { return floor($this->getCDs() / 100) * 100; }
+	public function combat_drones_high() { return $this->combat_drones_low() + 100; }
 	
 	public function &addWeapon($weaponTypeID)
 	{
@@ -242,7 +242,7 @@ abstract class AbstractSmrShip
 		$this->hasChangedWeapons = true;
 	}
 	
-	function removeWeapon($orderID)
+	public function removeWeapon($orderID)
 	{
 		// Shift everything after the removed weapon up by one and put the selected weapon at the bottom
 		for($i=$orderID;$i<count($this->weapons);++$i)
@@ -252,19 +252,19 @@ abstract class AbstractSmrShip
 		$this->hasChangedWeapons = true;
 	}
 	
-	function removeAllWeapons()
+	public function removeAllWeapons()
 	{
 		$this->weapons = array();
 		$this->hasChangedWeapons = true;
 	}
 	
-	function removeAllCargo()
+	public function removeAllCargo()
 	{
 		$this->cargo = array();
 		$this->hasChangedCargo = true;
 	}
 	
-	function removeAllHardware() {
+	public function removeAllHardware() {
 		
 		$this->hardware = array();
 		$this->decloak();
@@ -272,7 +272,7 @@ abstract class AbstractSmrShip
 		$this->hasChangedHardware = true;
 	}
 	
-	function get_pod()
+	public function get_pod()
 	{
 		$this->removeAllWeapons();
 		$this->removeAllCargo();
@@ -360,21 +360,21 @@ abstract class AbstractSmrShip
 		return $this->getMaxHardware(HARDWARE_SCANNER);
 	}
 	
-	abstract function decloak();
+	abstract public function decloak();
 	
-	abstract function enableCloak();
+	abstract public function enableCloak();
 	
-	abstract function setIllusion($ship_id, $attack, $defense);
+	abstract public function setIllusion($ship_id, $attack, $defense);
 	
-	abstract function disableIllusion();
+	abstract public function disableIllusion();
 	
-	function getIllusionShipID()
+	public function getIllusionShipID()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['ID'];
 	}
 	
-	function getIllusionShipName()
+	public function getIllusionShipName()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['Name'];
@@ -382,13 +382,13 @@ abstract class AbstractSmrShip
 	
 	abstract public function getIllusionShip();
 	
-	function getIllusionAttack()
+	public function getIllusionAttack()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['Attack'];
 	}
 	
-	function getIllusionDefense()
+	public function getIllusionDefense()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['Defense'];

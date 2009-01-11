@@ -106,7 +106,7 @@ abstract class AbstractSmrPlayer
 		return $this->shipID;
 	}
 	
-	function setShipTypeID($shipID)
+	public function setShipTypeID($shipID)
 	{
 		if($this->shipID == $shipID)
 			return;
@@ -124,7 +124,7 @@ abstract class AbstractSmrPlayer
 		return $this->lastShieldUpdate;
 	}
 	
-	function setLastShieldUpdate($time)
+	public function setLastShieldUpdate($time)
 	{
 		if($this->lastShieldUpdate == $time)
 			return;
@@ -155,7 +155,7 @@ abstract class AbstractSmrPlayer
 		return $this->dead;
 	}
 	
-	function hasFederalProtection()
+	public function hasFederalProtection()
 	{
 		$sector =& SmrSector::getSector($this->getGameID(),$this->getSectorID(),$this->getAccountID());
 		if (!$sector->offersFederalProtection())
@@ -188,7 +188,7 @@ abstract class AbstractSmrPlayer
 		return $this->startDead;
 	}
 	
-	function setDead($bool)
+	public function setDead($bool)
 	{
 		if($this->dead == $bool)
 			return;
@@ -241,7 +241,7 @@ abstract class AbstractSmrPlayer
 		return $this->alignment;
 	}
 	
-	function increaseAlignment($align)
+	public function increaseAlignment($align)
 	{
 		if($align < 0)
 			throw new Exception('Trying to increase negative align.');
@@ -250,7 +250,7 @@ abstract class AbstractSmrPlayer
 		$align += $this->alignment;
 		$this->setAlignment($align);
 	}
-	function decreaseAlignment($align)
+	public function decreaseAlignment($align)
 	{
 		if($align < 0)
 			throw new Exception('Trying to decrease negative align.');
@@ -259,7 +259,7 @@ abstract class AbstractSmrPlayer
 		$align = $this->alignment - $align;
 		$this->setAlignment($align);
 	}
-	function setAlignment($align)
+	public function setAlignment($align)
 	{
 		if($this->alignment == $align)
 			return;
@@ -315,7 +315,7 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 
-	function increaseCredits($credits)
+	public function increaseCredits($credits)
 	{
 		if($credits < 0)
 			throw new Exception('Trying to increase negative credits.');
@@ -324,7 +324,7 @@ abstract class AbstractSmrPlayer
 		$credits += $this->credits;
 		$this->setCredits($credits);
 	}
-	function decreaseCredits($credits)
+	public function decreaseCredits($credits)
 	{
 		if($credits < 0)
 			throw new Exception('Trying to decrease negative credits.');
@@ -333,7 +333,7 @@ abstract class AbstractSmrPlayer
 		$credits = $this->credits - $credits;
 		$this->setCredits($credits);
 	}
-	function setCredits($credits)
+	public function setCredits($credits)
 	{
 		if($this->credits == $credits)
 			return;
@@ -347,7 +347,7 @@ abstract class AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET credits = '.$this->credits.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	function increaseExperience($experience,$type='Undefined')
+	public function increaseExperience($experience,$type='Undefined')
 	{
 		if($experience < 0)
 			throw new Exception('Trying to increase negative experience.');
@@ -357,7 +357,7 @@ abstract class AbstractSmrPlayer
 		$this->setExperience($newExperience);
 		$this->increaseHOF($experience,'Experience',$type);
 	}
-	function decreaseExperience($experience,$type='Undefined')
+	public function decreaseExperience($experience,$type='Undefined')
 	{
 		if($experience < 0)
 			throw new Exception('Trying to decrease negative experience.');
@@ -426,7 +426,7 @@ abstract class AbstractSmrPlayer
 		return $this->playerName;
 	}
 
-	function getDisplayName()
+	public function getDisplayName()
 	{
 //NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
 			return get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
@@ -856,17 +856,17 @@ abstract class AbstractSmrPlayer
 	abstract public function getHome();
 	
 	
-	function getTurns()
+	public function getTurns()
 	{
 		return $this->turns;
 	}
 	
-	function getMaxTurns()
+	public function getMaxTurns()
 	{
 		return $this->maxTurns;
 	}
 
-	function setTurns($maint,$newNoob = -1,$updateLastActive = false)
+	public function setTurns($maint,$newNoob = -1,$updateLastActive = false)
 	{
 		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)) && !$updateLastActive)
 			return;
@@ -896,7 +896,7 @@ abstract class AbstractSmrPlayer
 		}
 	}
 
-	function takeTurns($take, $noob = 0,$updateLastActive = true) // taking maint counts as activity by default
+	public function takeTurns($take, $noob = 0,$updateLastActive = true) // taking maint counts as activity by default
 	{
 		if($take < 0 || $noob < 0)
 			throw new Exception('Trying to take negative turns.');
@@ -906,7 +906,7 @@ abstract class AbstractSmrPlayer
 		if(!has_beta_privilege('No SC Loss'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
 	}
-	function giveTurns($give, $noob = 0,$updateLastActive = false)
+	public function giveTurns($give, $noob = 0,$updateLastActive = false)
 	{
 		if($give < 0 || $noob < 0)
 			throw new Exception('Trying to give negative turns.');
@@ -917,12 +917,12 @@ abstract class AbstractSmrPlayer
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
 	}
 	
-	function getLastCPLAction()
+	public function getLastCPLAction()
 	{
 		return $this->lastCPLAction;
 	}
 	
-	function setLastCPLAction($time)
+	public function setLastCPLAction($time)
 	{
 		if($this->lastCPLAction == $time)
 			return;
@@ -930,7 +930,7 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
-	function updateLastCPLAction()
+	public function updateLastCPLAction()
 	{
 		$this->setLastCPLAction(TIME);
 	}
