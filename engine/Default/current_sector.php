@@ -237,16 +237,19 @@ function checkForForceRefreshMessage(&$msg)
 	if(preg_match('/\[Force Check\]/',$msg))
 	{
 		$msg = preg_replace('/\[Force Check\]/','',$msg);
-		$forceRefreshMessage ='';
-		$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
-		if ($db->nextRecord())
+		if(!$smarty->get_template_vars('ForceRefreshMessage'))
 		{
-			$remainingTime = $db->getField('refresh_at') - TIME;
-			$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
-			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
+			$forceRefreshMessage ='';
+			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
+			if ($db->nextRecord())
+			{
+				$remainingTime = $db->getField('refresh_at') - TIME;
+				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
+				$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
+			}
+			else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
+			$smarty->assign('ForceRefreshMessage',$forceRefreshMessage);
 		}
-		else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
-		$smarty->assign('ForceRefreshMessage',$forceRefreshMessage);
 	}
 }
 ?>
