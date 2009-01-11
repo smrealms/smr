@@ -27,7 +27,6 @@ class SmrSession
 		}
 		else
 		{
-
 			// create a new session id
 			self::$session_id = md5 (uniqid (mt_rand()) );
 			setcookie('session_id', self::$session_id);
@@ -125,8 +124,11 @@ class SmrSession
 	{
 		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
 			return false;
-		if(isset(self::$var[$sn]['CommonID']))
-			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
+		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID']))
+		{
+			if(preg_match('/processing/',self::$var[$sn]['body']))
+				unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
+		}
 		
 		self::$var[$sn]['RemainingPageLoads'] = 1; // Allow refreshing
 		self::$var[$sn]['Expires'] = 0; // Allow refreshing forever
