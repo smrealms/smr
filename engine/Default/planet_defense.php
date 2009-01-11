@@ -49,7 +49,7 @@ $container['type_id'] = 4;
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Combat Drones</td>');
-$PHP_OUTPUT.=('<td align="center">' . $ship->getCargoHolds() . '</td>');
+$PHP_OUTPUT.=('<td align="center">' . $ship->getCDs() . '</td>');
 $PHP_OUTPUT.=('<td align="center">'.$planet->drones.'</td>');
 $PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="0" id="InputFields" size="4" style="text-align:center;"></td>');
 $PHP_OUTPUT.=('<td>');
