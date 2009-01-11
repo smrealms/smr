@@ -214,12 +214,12 @@ $db2->query('SELECT * FROM message WHERE account_id = '.$account->account_id.' A
 
 while ($db2->nextRecord())
 	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->getField('game_id') . ', '.$account->account_id.', ' . $db2->getField('message_type_id') . ')');
-if (!empty($_POST['return_page'])) {
-echo 'DAMN';
-	header('Location: ' . $_POST['return_page']);
-	exit;
-
-}
+//if (!empty($_POST['return_page'])) {
+//echo 'DAMN';
+//	header('Location: ' . $_POST['return_page']);
+//	exit;
+//
+//}
 
 header('Location: '.URL.'/loader.php?sn='.$sn);
 exit;
