@@ -10,7 +10,7 @@ if (1 == 1) {
 
     $ordered_ip = array();
     $db->query('SELECT * FROM account WHERE account_id > 0');
-    if ($db->nf()) {
+    if ($db->getNumRows()) {
 
         echo_table();
         $PHP_OUTPUT.=('<tr>');
@@ -19,9 +19,9 @@ if (1 == 1) {
         $PHP_OUTPUT.=('<th align=center>Match?</th>');
         $PHP_OUTPUT.=('<th align=center>Disable?</th>');
         $PHP_OUTPUT.=('</tr>');
-        while ($db->next_record()) {
+        while ($db->nextRecord()) {
 
-            $curr_account =& SmrAccount::getAccount($db->f('account_id'));
+            $curr_account =& SmrAccount::getAccount($db->getField('account_id'));
             if (is_array($curr_account->ip)) {
                 $new_ip = array();
                 foreach ($curr_account->ip as $ip) {
@@ -63,11 +63,11 @@ if (1 == 1) {
             $new_acc =& SmrAccount::getAccount($account_wanted);
             $last_acc =& SmrAccount::getAccount($last_acc_id);
             $db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$acc_id);
-            if ($db2->nf() && $db_ip != $last_ip) continue;
+            if ($db2->getNumRows() && $db_ip != $last_ip) continue;
             $PHP_OUTPUT.=('<tr>');
             $PHP_OUTPUT.=('<td align=center>'.$new_acc->login.' ('.$new_acc->account_id.')</td>');
             $PHP_OUTPUT.=('<td align=center>'.$ip_wanted.'</td>');
-            if ($ip_wanted == $last_ip && !$db2->next_record())
+            if ($ip_wanted == $last_ip && !$db2->nextRecord())
                $PHP_OUTPUT.=('<td align=center><font color=red>MATCH w/ '.$last_acc->login.'</font></td>');
             elseif ($ip_wanted == $last_ip)
                 $PHP_OUTPUT.=('<td align=center><font color=red>(Already disabled) MATCH w/ '.$last_acc->login.'</font></td>');

@@ -14,7 +14,7 @@ $db->query('SELECT
 	AND ship_type.ship_type_id = location_sells_ships.ship_type_id
 ');
 
-if ($db->nf() > 0 ) {
+if ($db->getNumRows() > 0 ) {
 
 	$PHP_OUTPUT.= '<table cellspacing="0" class="standard"><tr><th>Name</th><th>Cost</th><th>Action</th></tr>';
 
@@ -22,12 +22,12 @@ if ($db->nf() > 0 ) {
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'shop_ship.php';
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$ship_name = $db->f('ship_name');
-		$ship_type_id = $db->f('ship_type_id');
-		$cost = $db->f('cost');
-        $level_needed = $db->f('lvl_needed');
+		$ship_name = $db->getField('ship_name');
+		$ship_type_id = $db->getField('ship_type_id');
+		$cost = $db->getField('cost');
+        $level_needed = $db->getField('lvl_needed');
 
 		$container['ship_id'] = $ship_type_id;
         $container['level_needed'] = $level_needed;
@@ -44,33 +44,33 @@ if ($db->nf() > 0 ) {
 if (isset($var['ship_id'])) {
 
 	$db->query('SELECT * FROM ship_type WHERE ship_type_id = ' . $var['ship_id'] . ' LIMIT 1');
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$ship_name			= $db->f('ship_name');
-		$speed				= $db->f('speed');
-		$cost				= $db->f('cost');
-		$hardpoint 			= $db->f('hardpoint');
-		$race_id 			= $db->f('race_id');
-		$buyer_restriction	= $db->f('buyer_restriction');
-        $level_needed		= $db->f('lvl_needed');
+		$ship_name			= $db->getField('ship_name');
+		$speed				= $db->getField('speed');
+		$cost				= $db->getField('cost');
+		$hardpoint 			= $db->getField('hardpoint');
+		$race_id 			= $db->getField('race_id');
+		$buyer_restriction	= $db->getField('buyer_restriction');
+        $level_needed		= $db->getField('lvl_needed');
 
 	}
 	$db->query('SELECT game_speed FROM game WHERE game_id=' . $player->getGameID() . ' LIMIT 1');
-	$db->next_record();
-	$game_speed = $db->f('game_speed');
+	$db->nextRecord();
+	$game_speed = $db->getField('game_speed');
 	$dis_speed = $speed * $game_speed;
 	$max_hardware = array();
 
 	// get supported hardware from db
 	$db->query('SELECT * FROM ship_type_support_hardware NATURAL JOIN hardware_type WHERE ship_type_id=' . $var['ship_id']);
 
-	while ($db->next_record())
-	    $max_hardware[$db->f('hardware_type_id')] = $db->f('max_amount');
+	while ($db->nextRecord())
+	    $max_hardware[$db->getField('hardware_type_id')] = $db->getField('max_amount');
 
 	$db->query('SELECT * FROM hardware_type');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$hardware_type_id = $db->f('hardware_type_id');
+		$hardware_type_id = $db->getField('hardware_type_id');
 
 		// initialize empty hardware
 		if (empty($max_hardware[$hardware_type_id]))

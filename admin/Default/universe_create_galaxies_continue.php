@@ -6,7 +6,7 @@ $galaxy = $var['galaxy'];
 $galaxy_idx = $var['galaxy_idx'];
 
 $db->query('SELECT * FROM sector WHERE game_id = ' . $var['game_id'] . ' GROUP BY galaxy_id');
-$PHP_OUTPUT.=('<p>'.$galaxy_idx.' / ' . $db->nf() . ' done.</p>');
+$PHP_OUTPUT.=('<p>'.$galaxy_idx.' / ' . $db->getNumRows() . ' done.</p>');
 
 $container = array();
 transfer('game_id');

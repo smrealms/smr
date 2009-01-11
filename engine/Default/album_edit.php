@@ -11,17 +11,17 @@ $PHP_OUTPUT.=('<p style="font-size:150%;">');
 $PHP_OUTPUT.=('Status of your album entry: ');
 
 $db->query('SELECT * FROM album WHERE account_id = '.SmrSession::$account_id);
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$location = stripslashes($db->f('location'));
-	$email = stripslashes($db->f('email'));
-	$website = stripslashes($db->f('website'));
-	$day = $db->f('day');
-	$month = $db->f('month');
-	$year = $db->f('year');
-	$other = stripslashes($db->f('other'));
-	$approved = $db->f('approved');
-	$disabled = $db->f('disabled');
+	$location = stripslashes($db->getField('location'));
+	$email = stripslashes($db->getField('email'));
+	$website = stripslashes($db->getField('website'));
+	$day = $db->getField('day');
+	$month = $db->getField('month');
+	$year = $db->getField('year');
+	$other = stripslashes($db->getField('other'));
+	$approved = $db->getField('approved');
+	$disabled = $db->getField('disabled');
 
 	if ($approved == 'TBC')
 		$PHP_OUTPUT.=('<span style="color:orange;">Waiting approval</span>');

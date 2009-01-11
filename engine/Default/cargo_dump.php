@@ -8,7 +8,7 @@ $PHP_OUTPUT.=('Please keep in mind that you will lose experience and one turn!<b
 $db->query('SELECT * FROM ship_has_cargo NATURAL JOIN good ' .
 		   'WHERE account_id = '.$player->getAccountID().' AND ' .
 				 'game_id = '.$player->getGameID());
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
@@ -17,11 +17,11 @@ if ($db->nf()) {
 	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$good_id	= $db->f('good_id');
-		$good_name	= $db->f('good_name');
-		$amount		= $db->f('amount');
+		$good_id	= $db->getField('good_id');
+		$good_name	= $db->getField('good_name');
+		$amount		= $db->getField('amount');
 
 		$container = array();
 		$container['url'] = 'cargo_dump_processing.php';

@@ -48,8 +48,8 @@ if ($action == 'Buy') {
 	$ship->update_weapon();
 
 	$db->query('SELECT * FROM weapon_type WHERE weapon_type_id = ' . $var['weapon_type_id']);
-	$db->next_record();
-	$wep_name = $db->f('weapon_name');
+	$db->nextRecord();
+	$wep_name = $db->getField('weapon_name');
 	$account->log(10, 'Player Sells a '.$wep_name, $player->getSectorID());
 
 }

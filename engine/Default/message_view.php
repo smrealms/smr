@@ -22,7 +22,7 @@ if (!isset($var['folder_id'])) {
 	include(get_file_loc('council.inc'));
 
 	$db2->query('SELECT * FROM message WHERE account_id = '.$player->getAccountID().' AND message_type_id = '.$POLITICALMSG.' AND game_id = '.$player->getGameID());
-	if (onCouncil($player->getRaceID()) || $db2->nf())
+	if (onCouncil($player->getRaceID()) || $db2->getNumRows())
 		$db->query('SELECT * FROM message_type ' .
 				   'WHERE message_type_id < 8 ' .
 				   'ORDER BY message_type_id');
@@ -31,10 +31,10 @@ if (!isset($var['folder_id'])) {
 					'WHERE message_type_id != 5 ' .
 				   'ORDER BY message_type_id');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$message_type_id = $db->f('message_type_id');
-		$message_type_name = $db->f('message_type_name');
+		$message_type_id = $db->getField('message_type_id');
+		$message_type_name = $db->getField('message_type_name');
 
 		// do we have unread msges in that folder?
 		$db2->query('SELECT * FROM message ' .
@@ -42,15 +42,15 @@ if (!isset($var['folder_id'])) {
 							  'game_id = '.SmrSession::$game_id.' AND ' .
 							  'message_type_id = '.$message_type_id.' AND ' .
 							  'msg_read = \'FALSE\'');
-		$msg_read = $db2->nf();
+		$msg_read = $db2->getNumRows();
 
 		// get number of msges
 		$db2->query('SELECT count(message_id) as message_count FROM message ' .
 						'WHERE account_id = '.SmrSession::$account_id.' AND ' .
 							  'game_id = '.SmrSession::$game_id.' AND ' .
 							  'message_type_id = '.$message_type_id);
-		if ($db2->next_record())
-			$message_count = $db2->f('message_count');
+		if ($db2->nextRecord())
+			$message_count = $db2->getField('message_count');
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td');
@@ -94,13 +94,13 @@ if (!isset($var['folder_id'])) {
 							  'game_id = '.SmrSession::$game_id.' AND ' .
 							  'message_type_id = ' . $var['folder_id'] . ' AND ' .
 							  'msg_read = \'FALSE\'');
-	$unread_messages = $db->nf();
+	$unread_messages = $db->getNumRows();
 	// remove entry for this folder from unread msg table
 	$player->setMessagesRead($var['folder_id']);
 
 	$db->query('SELECT * FROM message_type WHERE message_type_id = ' . $var['folder_id']);
-	if ($db->next_record())
-		$smarty->assign('PageTopic','VIEW ' . $db->f('message_type_name'));
+	if ($db->nextRecord())
+		$smarty->assign('PageTopic','VIEW ' . $db->getField('message_type_name'));
 
 	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();
@@ -140,7 +140,7 @@ if (!isset($var['folder_id'])) {
 							  'game_id = '.$player->getGameID().' AND ' .
 							  'message_type_id = ' . $var['folder_id'] .
 						' ORDER BY send_time DESC');
-	$message_count = $db->nf();
+	$message_count = $db->getNumRows();
 
 	$PHP_OUTPUT.=('<p>You have <span style="color:yellow;">'.$message_count.'</span> message');
 	if ($message_count != 1)
@@ -170,11 +170,11 @@ if (!isset($var['folder_id'])) {
 					GROUP BY sender_id 
 					ORDER BY send_time DESC';
 			$db->query($query);
-			while ($db->next_record()) {
+			while ($db->nextRecord()) {
 				//display grouped stuff (allow for deletion)
-				$playerName = get_colored_text($db->f('alignment'), stripslashes($db->f('sender')) . ' (' . $db->f('player_id') . ')');
-				$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->f('number') . ' times.';
-				$PHP_OUTPUT.=displayGrouped($playerName, $db->f('player_id'), $db->f('sender_id'), $message, $db->f('first'), $db->f('last'), TRUE);
+				$playerName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
+				$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->getField('number') . ' times.';
+				$PHP_OUTPUT.=displayGrouped($playerName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), TRUE);
 			}
 		} else {
 			//not enough to group, display separatly
@@ -186,8 +186,8 @@ if (!isset($var['folder_id'])) {
 					AND msg_read = \'FALSE\' 
 					ORDER BY send_time DESC';
 			$db->query($query);
-			while ($db->next_record())
-				$PHP_OUTPUT.=displayMessage($db->f('message_id'), $db->f('sender_id'), stripslashes($db->f('message_text')), $db->f('send_time'), $db->f('msg_read'), $var['folder_id']);
+			while ($db->nextRecord())
+				$PHP_OUTPUT.=displayMessage($db->getField('message_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
 		}
 		if ($message_count - $unread_messages > 25) {
 			$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last 
@@ -201,10 +201,10 @@ if (!isset($var['folder_id'])) {
 					GROUP BY sender_id 
 					ORDER BY send_time DESC';
 			$db->query($query);
-			while ($db->next_record()) {
-				$playerName = get_colored_text($db->f('alignment'), stripslashes($db->f('sender')) . ' (' . $db->f('player_id') . ')');
-				$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->f('number') . ' times.';
-				$PHP_OUTPUT.=displayGrouped($playerName, $db->f('player_id'), $db->f('sender_id'), $message, $db->f('first'), $db->f('last'), FALSE);
+			while ($db->nextRecord()) {
+				$playerName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
+				$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->getField('number') . ' times.';
+				$PHP_OUTPUT.=displayGrouped($playerName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), FALSE);
 			}
 		} else {
 			$query = 'SELECT * FROM message 
@@ -214,17 +214,17 @@ if (!isset($var['folder_id'])) {
 					AND msg_read = \'TRUE\'
 					ORDER BY send_time DESC';
 			$db->query($query);
-			while ($db->next_record())
-				$PHP_OUTPUT.=displayMessage($db->f('message_id'), $db->f('sender_id'), stripslashes($db->f('message_text')), $db->f('send_time'), $db->f('msg_read'),$var['folder_id']);
+			while ($db->nextRecord())
+				$PHP_OUTPUT.=displayMessage($db->getField('message_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'),$var['folder_id']);
 		}
 		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.$SCOUTMSG.' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 	} else {
-		while ($db->next_record()) {
-			$message_id = $db->f('message_id');
-			$sender_id = $db->f('sender_id');
-			$message_text = stripslashes($db->f('message_text'));
-			$send_time = $db->f('send_time');
-			$msg_read = $db->f('msg_read');
+		while ($db->nextRecord()) {
+			$message_id = $db->getField('message_id');
+			$sender_id = $db->getField('sender_id');
+			$message_text = stripslashes($db->getField('message_text'));
+			$send_time = $db->getField('send_time');
+			$msg_read = $db->getField('msg_read');
 			$PHP_OUTPUT.=displayMessage($message_id, $sender_id, $message_text, $send_time, $msg_read, $var['folder_id']);
 		}
 		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.$var['folder_id'].' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());

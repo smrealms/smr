@@ -10,7 +10,7 @@ function player_joined_game($account_id, $game_id) {
 				FROM player
 				WHERE account_id = '.$account_id.' AND
 					  game_id = '.$game_id);
-	if ($db->nf())
+	if ($db->getNumRows())
 		return true;
 	else
 		return false;
@@ -41,7 +41,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 				WHERE game_id = '.$game_id.' AND
 					  player_name = '.$db->escapeString($player_name).'
 			   ');
-	if ($db->nf() > 0)
+	if ($db->getNumRows() > 0)
 		log_message('.$db->escapeString($player_name already joined that game.', ERROR);
 
 	// check if hof entry is there
@@ -49,7 +49,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 				FROM account_has_stats
 				WHERE account_id = '.$account->account_id.'
 			   ');
-	if (!$db->nf())
+	if (!$db->getNumRows())
 		$db->query('INSERT INTO account_has_stats
 					(account_id, HoF_name)
 					VALUES ($account->account_id, '.$db->escapeString($player_name).')
@@ -62,8 +62,8 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 				WHERE location.game_id = '.$game_id.' AND
 					  location_type_id = $hq_id
 			   ');
-	if ($db->next_record())
-		$home_sector_id = $db->f('sector_id');
+	if ($db->nextRecord())
+		$home_sector_id = $db->getField('sector_id');
 	else
 		$home_sector_id = 1;
 
@@ -90,8 +90,8 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 				FROM game
 				WHERE game_id = '.$game_id.'
 			   ');
-	if ($db->next_record())
-		$start_date	= $db->f('start_date');
+	if ($db->nextRecord())
+		$start_date	= $db->getField('start_date');
 	else
 		log_message($account_id, 'Game not found!', ERROR);
 
@@ -103,15 +103,15 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	// credit him this time
 	$last_turn_update = time() - $time_since_start;
 
-	$db->lock('player');
+	$db->lockTable('player');
 
 	// get last registered player id in that game and increase by one.
 	$db->query('SELECT MAX(player_id)
 				FROM player
 				WHERE game_id = '.$game_id.'
 			   ');
-	if ($db->next_record())
-		$player_id = $db->f('MAX(player_id)') + 1;
+	if ($db->nextRecord())
+		$player_id = $db->getField('MAX(player_id)') + 1;
 	else
 		$player_id = 1;
 
@@ -158,11 +158,11 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 				FROM sector
 				WHERE game_id = '.$game_id.'
 			   ');
-	if (!$db->next_record())
+	if (!$db->nextRecord())
 		log_message($account_id, 'This game doesn\'t have any sectors', ERROR);
 
-	$min_sector = $db->f('MIN(sector_id)');
-	$max_sector = $db->f('MAX(sector_id)');
+	$min_sector = $db->getField('MIN(sector_id)');
+	$max_sector = $db->getField('MAX(sector_id)');
 
 	for ($i = $min_sector; $i <= $max_sector; $i++)
 	{

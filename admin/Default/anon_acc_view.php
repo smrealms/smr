@@ -23,21 +23,21 @@ if (empty($_REQUEST['acct_game'])) {
 	//get account info
 	$query = 'SELECT * FROM anon_bank_transactions WHERE anon_id = '.$acc.' AND game_id = '.$game.' ORDER BY transaction_id';
 	$db->query($query);
-	if ($db->nf() > 0) {
+	if ($db->getNumRows() > 0) {
 		
 		$smarty->assign('PageTopic','ANON ACCOUNT '.$acc);
 		echo_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Player Name</th><th align=center>Type</th><th align=center>Amount</th></tr>');
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 			
-			$db2->query('SELECT * FROM player WHERE account_id = ' . $db->f('account_id'));
-			$db2->next_record();
+			$db2->query('SELECT * FROM player WHERE account_id = ' . $db->getField('account_id'));
+			$db2->nextRecord();
 			$PHP_OUTPUT.=('<tr><td align=center>');
-			$db2->p('player_name');
+			$db2->getField('player_name');
 			$PHP_OUTPUT.=('</td><td align=center>');
-			$db->p('transaction');
+			$db->getField('transaction');
 			$PHP_OUTPUT.=('</td><td align=center>');
-			$db->p('amount');
+			$db->getField('amount');
 			$PHP_OUTPUT.=('</td></tr>');
 			
 		}

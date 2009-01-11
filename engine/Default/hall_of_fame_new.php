@@ -44,9 +44,9 @@ if (empty($game_id)) {
 	
 	$base[] = 'Total';
 	$db->query('SELECT * FROM game WHERE game_id = '.$game_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 		
-		$name = $db->f('game_name');
+		$name = $db->getField('game_name');
 		$topic = $name.' Hall of Fame';
 		
 	} else $topic = 'Somegame Hall of Fame';

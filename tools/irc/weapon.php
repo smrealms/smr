@@ -64,20 +64,20 @@ function private_msg_weapon($fp, $rdata) {
 
 	}
 
-	if ($db->nf()) {
+	if ($db->getNumRows()) {
 
 		fputs($fp, 'PRIVMSG '.$name.' :Name | Cost | Shield Damage | Armor Damage | Accuracy | Race | Restriction'.EOL);
 		sleep(2);
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
-			$weapon_name	= $db->f('weapon_name');
-			$hardpoint	= $db->f('power_level');
-			$shield		= $db->f('shield_damage');
-			$armor		= $db->f('armor_damage');
-			$acc		= $db->f('accuracy');
-			$race		= $db->f('race_name');
-			$restrict	= $db->f('buyer_restriction');
-			$cost		= $db->f('cost');
+			$weapon_name	= $db->getField('weapon_name');
+			$hardpoint	= $db->getField('power_level');
+			$shield		= $db->getField('shield_damage');
+			$armor		= $db->getField('armor_damage');
+			$acc		= $db->getField('accuracy');
+			$race		= $db->getField('race_name');
+			$restrict	= $db->getField('buyer_restriction');
+			$cost		= $db->getField('cost');
 
 			$private_message = 'PRIVMSG '.$name.' :'.$weapon_name.' | '.$cost.' | '.$shield.' | '.$armor.' | '.$acc.' | '.$race.' | ';
 			if ($restrict == 1)

@@ -14,7 +14,7 @@ else
     $category = $var['category'];
 $db->query('SELECT * FROM sector_has_forces WHERE owner_id = '.$player->getAccountID().' AND game_id = '.SmrSession::$game_id.' ORDER BY '.$category.' '.$order);
 $db2 = new SmrMySqlDatabase();
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 	
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -47,19 +47,19 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.=('</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$force_sector	= $db->f('sector_id');
+		$force_sector	= $db->getField('sector_id');
 		$db2->query('SELECT * FROM sector WHERE sector_id = '.$force_sector.' AND game_id = '.$player->getGameID());
-		$db2->next_record();
-		$gal_id			= $db2->f('galaxy_id');
+		$db2->nextRecord();
+		$gal_id			= $db2->getField('galaxy_id');
 		$db2->query('SELECT * FROM galaxy WHERE galaxy_id = '.$gal_id);
-		$db2->next_record();
-		$galaxy_name = $db2->f('galaxy_name');
-		$force_sd		= $db->f('scout_drones');
-		$force_cd		= $db->f('combat_drones');
-		$force_mine		= $db->f('mines');
-		$force_time		= $db->f('expire_time');
+		$db2->nextRecord();
+		$galaxy_name = $db2->getField('galaxy_name');
+		$force_sd		= $db->getField('scout_drones');
+		$force_cd		= $db->getField('combat_drones');
+		$force_mine		= $db->getField('mines');
+		$force_time		= $db->getField('expire_time');
 		
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">'.$force_sector.' ('.$galaxy_name.')</td>');

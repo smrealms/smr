@@ -14,10 +14,10 @@ WHERE sector.sector_id=' . $player->getSectorID() . '
 AND game_id=' . SmrSession::$game_id . '
 AND galaxy.galaxy_id = sector.galaxy_id
 LIMIT 1');
-$db->next_record();
+$db->nextRecord();
 
-$galaxy_name = $db->f('galaxy_name');
-$galaxy_id = $db->f('galaxy_id');
+$galaxy_name = $db->getField('galaxy_name');
+$galaxy_id = $db->getField('galaxy_id');
 
 $smarty->assign('GalaxyName',$galaxy_name);
 
@@ -31,13 +31,13 @@ FROM sector
 WHERE galaxy_id=' . $galaxy_id . '
 AND game_id=' . SmrSession::$game_id);
 
-$db->next_record();
+$db->nextRecord();
 
 global $col,$rows,$size,$offset;
-$size = $db->f('COUNT(*)');
+$size = $db->getField('COUNT(*)');
 $col = $rows = sqrt($size);
-//echo $db->f('COUNT(*)');
-$top_left = $db->f('MIN(sector_id)');
+//echo $db->getField('COUNT(*)');
+$top_left = $db->getField('MIN(sector_id)');
 $offset = $top_left -1;
 //$current_y = floor(($player->getSectorID() - $start)/$width);
 //$current_x = ($player->getSectorID() - $start) % $width;

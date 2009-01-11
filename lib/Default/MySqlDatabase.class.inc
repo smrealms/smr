@@ -129,6 +129,16 @@ abstract class MySqlDatabase implements Database
 			throw new Exception('Not a boolean!'); //TEST
 	}
 	
+	public function escapeHTML($bool)
+	{
+		if($bool===true)
+			return $this->escapeString('TRUE');
+		else if($bool===false)
+			return $this->escapeString('FALSE');
+		else
+			throw new Exception('Not a boolean!'); //TEST
+	}
+	
 	
 	
 	
@@ -140,23 +150,6 @@ abstract class MySqlDatabase implements Database
 	
 	
 	//below this is purely for compatibility reasons
-	
-	function next_record() { return $this->nextRecord(); }
-	
-	
-	function f($name) { return $this->getField($name); }
-	
-	function fetch_row() { return $this->getRow(); }
-	
-	function lock($table) { $this->lockTable($table); }
-	
-	function nf() { return $this->getNumRows(); }
-	
-	function insert_id() { return $this->getInsertID(); }
-	
-	function p($name) { return $this->getField($name); }
-	
-	function np() { return $this->getNumRows(); }
 	
 	function free() { }
 	
@@ -173,7 +166,7 @@ abstract class MySqlDatabase implements Database
 			return substr($escapedString,0,-1);
 		}
 		
-		if ($transfer_html)
+		if (!$transfer_html)
 			return '\'' . mysql_escape_string(htmlentities($string)) . '\'';
 		else
 			return '\'' . mysql_escape_string($string) . '\'';

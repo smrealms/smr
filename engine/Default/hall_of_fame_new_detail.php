@@ -25,7 +25,7 @@ if (isset($game_id)) {
 	$db2 = new SmrHistoryMySqlDatabase();
 	$db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
 	//if next record we have an old game so we query the hist db
-	if ($db2->next_record()) {
+	if ($db2->nextRecord()) {
 
 		$db = new SmrHistoryMySqlDatabase();
 		$past = 'Yes';
@@ -53,10 +53,10 @@ if ($cat == '<b>Money Donated to SMR</b>')
 else
 	$db->query('SELECT account_id, '.$row.' as amount FROM '.$table.' '.$row.' > 0 ORDER BY amount DESC LIMIT 25');
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$db_acc =& SmrAccount::getAccount($db->f('account_id'));
-	if ($db->f('account_id') == SmrSession::$account_id) $bold = ' style="font-weight:bold;"';
+	$db_acc =& SmrAccount::getAccount($db->getField('account_id'));
+	if ($db->getField('account_id') == SmrSession::$account_id) $bold = ' style="font-weight:bold;"';
 	else $bold = '';
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align=center'.$bold.'>' . $rank++ . '</td>');
@@ -64,7 +64,7 @@ while ($db->next_record()) {
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'hall_of_fame_player_detail.php';
-	$container['acc_id'] = $db->f('account_id');
+	$container['acc_id'] = $db->getField('account_id');
 	
 	if (isset($game_id)) {
 		$container['game_id'] = $game_id;
@@ -77,8 +77,8 @@ while ($db->next_record()) {
 	$hof_name = stripslashes($db_acc->HoF_name);
 	$PHP_OUTPUT.=create_link($container, $hof_name);
 	$PHP_OUTPUT.=('</td>');
-	if($cat == 'Turns Since Last Death') $PHP_OUTPUT.=('<td align=center'.$bold.'>' . $db->f('amount') . '</td>');
-	else $PHP_OUTPUT.=('<td align=center'.$bold.'>' . $db->f('amount') . '</td>');
+	if($cat == 'Turns Since Last Death') $PHP_OUTPUT.=('<td align=center'.$bold.'>' . $db->getField('amount') . '</td>');
+	else $PHP_OUTPUT.=('<td align=center'.$bold.'>' . $db->getField('amount') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 }
@@ -91,9 +91,9 @@ if ($cat == '<b>Money Donated to SMR</b>')
 else
 	$db->query('SELECT account_id, '.$row.' as amount FROM '.$table.' ' .
 			$row.' > 0 AND account_id = '.SmrSession::$account_id.' ORDER BY amount DESC');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$my_stat = $db->f('amount');
+	$my_stat = $db->getField('amount');
 	if ($cat == '<b>Money Donated to SMR</b>')
 		$db->query('SELECT account_id, sum(amount) as amount FROM account_donated ' .
 				'WHERE amount > '.$my_stat.' GROUP BY account_id ORDER BY amount DESC');
@@ -101,7 +101,7 @@ if ($db->next_record()) {
 		$db->query('SELECT account_id, '.$row.' as amount FROM '.$table.' ' .
 				$row.' > '.$my_stat.' ORDER BY amount DESC');
 
-	$better = $db->nf();
+	$better = $db->getNumRows();
 
 } else {
 
@@ -112,7 +112,7 @@ if ($db->next_record()) {
 	else
 		$db->query('SELECT account_id, '.$row.' as amount FROM '.$table.' '.$row.' > 0 ORDER BY amount DESC');
 
-	$better = $db->nf();
+	$better = $db->getNumRows();
 
 }
 if ($better >= 25) {
@@ -125,7 +125,7 @@ if ($better >= 25) {
 	else {
 		$db->query('SELECT * FROM player_has_stats_cache WHERE '.$sql.' AND account_id = '.$account->account_id);
 	}
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align=center style="font-weight:bold;">' . ++$better . '</td>');

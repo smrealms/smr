@@ -47,8 +47,8 @@ function get_warp($account_id, $game_id, $sector_id) {
 				WHERE game_id = '.$game_id.' AND
 					  (sector_id_1 = $sector_id OR sector_id_2 = $sector_id)
 			   ');
-	if ($db->next_record())
-		$warp = ($db->f('sector_id_1') == $sector_id) ? $db->f('sector_id_2') : $db->f('sector_id_1');
+	if ($db->nextRecord())
+		$warp = ($db->getField('sector_id_1') == $sector_id) ? $db->getField('sector_id_2') : $db->getField('sector_id_1');
 	else
 		$warp = 0;
 
@@ -131,11 +131,11 @@ function load_sector($game_id, $sector_id, $distance) {
 				FROM sector
 				WHERE game_id = '.$game_id.' AND
 					  sector_id = '.$sector_id);
-	if (!$db->next_record())
+	if (!$db->nextRecord())
 		return false;
 
 	// the last entry is the distance to the start sector
-	return array($db->f('link_up'), $db->f('link_down'), $db->f('link_left'), $db->f('link_right'), $distance);
+	return array($db->getField('link_up'), $db->getField('link_down'), $db->getField('link_left'), $db->getField('link_right'), $distance);
 
 }
 
@@ -150,7 +150,7 @@ function sector_is_fed($sector_id, $game_id) {
 					  game_id = '.$game_id.'
 			   ');
 
-	return $db->nf();
+	return $db->getNumRows();
 
 }
 
@@ -166,7 +166,7 @@ function sector_visited($account_id, $game_id, $sector_id) {
 					  account_id = '.$account_id.'
 			   ');
 
-	return !$db->nf();
+	return !$db->getNumRows();
 
 }
 
@@ -181,7 +181,7 @@ function sector_has_port($game_id, $sector_id) {
 					  game_id = '.$game_id.'
 			   ');
 
-	return $db->nf();
+	return $db->getNumRows();
 
 }
 
@@ -200,8 +200,8 @@ function sector_set_visited($account_id, $game_id, $sector_id) {
 						  sector_id = '.$sector_id.'
 					ORDER BY good_id
 				   ');
-		while ($db->next_record())
-			$port_info[$db->f('good_id')] = $db->f('transaction');
+		while ($db->nextRecord())
+			$port_info[$db->getField('good_id')] = $db->getField('transaction');
 
 		$curr_time = time();
 		$port_info = $db->escape_string(serialize($port_info));

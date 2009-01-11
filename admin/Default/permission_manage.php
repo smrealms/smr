@@ -14,11 +14,11 @@ $container = create_container('skeleton.php', 'permission_manage.php');
 $db->query('SELECT account_has_permission.account_id as admin_id, login
 			FROM account_has_permission NATURAL JOIN account
 			GROUP BY account_has_permission.account_id');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$container['admin_id'] = $db->f('admin_id');
+	$container['admin_id'] = $db->getField('admin_id');
 	$PHP_OUTPUT.=('<li>');
-	$PHP_OUTPUT.=create_link($container, $db->f('login'));
+	$PHP_OUTPUT.=create_link($container, $db->getField('login'));
 	$PHP_OUTPUT.=('</li>');
 
 }
@@ -38,8 +38,8 @@ if (empty($admin_id)) {
 	$db->query('SELECT account_id, login
 				FROM account
 				ORDER BY login');
-	while ($db->next_record()) {
-		$PHP_OUTPUT.=('<option value="' . $db->f('account_id') . '">' . $db->f('login') . '</option>');
+	while ($db->nextRecord()) {
+		$PHP_OUTPUT.=('<option value="' . $db->getField('account_id') . '">' . $db->getField('login') . '</option>');
 	}
 	$PHP_OUTPUT.=('</select>');
 	$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;');
@@ -56,14 +56,14 @@ $PHP_OUTPUT.=('Change permissions for the Account of ');
 $db->query('SELECT login
 			FROM account
 			WHERE account_id = '.$admin_id);
-if (!$db->next_record()) {
+if (!$db->nextRecord()) {
 
 	$PHP_OUTPUT.=('<u>Unknown Account</u>!');
 	return;
 
 }
 
-$PHP_OUTPUT.=('<u>' . $db->f('login') . '</u>!<br /><br />');
+$PHP_OUTPUT.=('<u>' . $db->getField('login') . '</u>!<br /><br />');
 
 $container = create_container('permission_manage_processing.php', '');
 $container['admin_id'] = $admin_id;
@@ -76,20 +76,20 @@ $PHP_OUTPUT.=('<input type="hidden" name="admin_id" value="'.$admin_id.'">');
 $db->query('SELECT permission_id
 			FROM account_has_permission
 			WHERE account_id = '.$admin_id);
-while ($db->next_record())
-	$account_has_permissions[$db->f('permission_id')] = true;
+while ($db->nextRecord())
+	$account_has_permissions[$db->getField('permission_id')] = true;
 
 $db->query('SELECT permission_id, permission_name
 			FROM permission');
 
 $PHP_OUTPUT.=('<p style="padding-left:20px;">');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	if (isset($account_has_permissions[$db->f('permission_id')]))
+	if (isset($account_has_permissions[$db->getField('permission_id')]))
 		$checked = ' checked';
 	else
 		$checked = '';
-	$PHP_OUTPUT.=('<input type="checkbox" name="permission_ids[]" value="' . $db->f('permission_id') . '"'.$checked.'>' . $db->f('permission_name') . '<br />');
+	$PHP_OUTPUT.=('<input type="checkbox" name="permission_ids[]" value="' . $db->getField('permission_id') . '"'.$checked.'>' . $db->getField('permission_name') . '<br />');
 }
 $PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=create_submit('Change');

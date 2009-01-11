@@ -32,7 +32,7 @@ else {
 
 }
 
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
 	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="3" width="75%">');
 	$PHP_OUTPUT.=('<tr>');
@@ -45,9 +45,9 @@ if ($db->nf() > 0) {
 	$PHP_OUTPUT.=('<th>Option</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$curr_player =& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
+		$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 		$PHP_OUTPUT.=('<tr>');
 
 		$container = array();
@@ -60,10 +60,10 @@ if ($db->nf() > 0) {
 		$PHP_OUTPUT.=('<br />');
 		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 				'account_id = '.$curr_player->getAccountID());
-		if ($db2->next_record()) {
+		if ($db2->nextRecord()) {
 			
 			//they have a name so we echo it
-			$named_ship = stripslashes($db2->f('ship_name'));
+			$named_ship = stripslashes($db2->getField('ship_name'));
 			$PHP_OUTPUT.=($named_ship);
 			
 		}
@@ -138,7 +138,7 @@ if (empty($player_id)) {
 					 'player_name LIKE ' . $db->escape_string($player_name, true) . ' AND player_name != ' . $db->escape_string($real, true) . ' ' .
 			   'ORDER BY player_name LIMIT 5');
 			   
-	if ($db->nf() > 0) {
+	if ($db->getNumRows() > 0) {
 	
 		$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="3" width="75%">');
 		$PHP_OUTPUT.=('<tr>');
@@ -151,9 +151,9 @@ if (empty($player_id)) {
 		$PHP_OUTPUT.=('<th>Option</th>');
 		$PHP_OUTPUT.=('</tr>');
 	
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 	
-			$curr_player =& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
+			$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 			$PHP_OUTPUT.=('<tr>');
 	
@@ -167,10 +167,10 @@ if (empty($player_id)) {
 			$PHP_OUTPUT.=('<br />');
 			$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$curr_player->getAccountID());
-			if ($db2->next_record()) {
+			if ($db2->nextRecord()) {
 				
 				//they have a name so we echo it
-				$named_ship = stripslashes($db2->f('ship_name'));
+				$named_ship = stripslashes($db2->getField('ship_name'));
 				$PHP_OUTPUT.=($named_ship);
 				
 			}

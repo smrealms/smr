@@ -9,7 +9,7 @@ $db->query('SELECT * FROM location, location_sells_hardware, location_type, hard
 						  'location_sells_hardware.location_type_id = location_type.location_type_id AND ' .
 						  'location_sells_hardware.hardware_type_id = hardware_type.hardware_type_id');
 
-if ($db->nf() > 0 ) {
+if ($db->getNumRows() > 0 ) {
 
 	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
 	$PHP_OUTPUT.=('<tr>');
@@ -24,11 +24,11 @@ if ($db->nf() > 0 ) {
 
 	$form = 0;
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$hardware_name = $db->f('hardware_name');
-		$hardware_type_id = $db->f('hardware_type_id');
-		$cost = $db->f('cost');
+		$hardware_name = $db->getField('hardware_name');
+		$hardware_type_id = $db->getField('hardware_type_id');
+		$cost = $db->getField('cost');
 
 		$amount = $ship->getMaxHardware($hardware_type_id) - $ship->getHardware($hardware_type_id);
 

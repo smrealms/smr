@@ -2,7 +2,7 @@
 
 
 $db->query('SELECT * FROM beta_test');
-if (!$db->next_record() || $db->f('open') == 'FALSE') {
+if (!$db->nextRecord() || $db->getField('open') == 'FALSE') {
 	
 	create_error('Beta Applications are currently not being accepted.');
 	return;

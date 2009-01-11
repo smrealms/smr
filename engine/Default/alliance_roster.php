@@ -10,13 +10,13 @@ else
 }
 
 $db->query('SELECT alliance_name,leader_id,alliance_password FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->next_record();
-$smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $alliance_id . ')');
+$db->nextRecord();
+$smarty->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $alliance_id . ')');
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
-$leader_id = $db->f('leader_id');
-$password = $db->f('alliance_password');
+$leader_id = $db->getField('leader_id');
+$password = $db->getField('alliance_password');
 
 $db2 = new SmrMySqlDatabase();
 $varAction = isset($var['action']) ? $var['action'] : '';
@@ -32,7 +32,7 @@ if ($varAction == 'Show Alliance Roles') {
 				AND alliance_id=' .  $alliance_id . '
 				ORDER BY role_id'
 				);
-	while ($db->next_record()) $roles[$db->f('role_id')] = $db->f('role');
+	while ($db->nextRecord()) $roles[$db->getField('role_id')] = $db->getField('role');
 
 	$container=array();
 	$container['url'] = 'alliance_roles_save.php';
@@ -41,7 +41,7 @@ if ($varAction == 'Show Alliance Roles') {
 }
 
 $db->query('SELECT race_id, race_name FROM race');
-while ($db->next_record()) $races[$db->f('race_id')] = $db->f('race_name');
+while ($db->nextRecord()) $races[$db->getField('race_id')] = $db->getField('race_name');
 
 
 // If the alliance is the player's alliance they get live information
@@ -79,12 +79,12 @@ else {
 	);
 }
 
-$db->next_record();
+$db->nextRecord();
 
-$member_count = $db->f('alliance_member_count');
+$member_count = $db->getField('alliance_member_count');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<div align="center">';
-$PHP_OUTPUT.= $db->f('description');
+$PHP_OUTPUT.= $db->getField('description');
 $PHP_OUTPUT.= '<br /><br />';
 
 $PHP_OUTPUT.= '
@@ -97,19 +97,19 @@ $PHP_OUTPUT.= '
 	</tr>
 	<tr class="bold">
 		<td>';
-$PHP_OUTPUT.= stripslashes($db->f('alliance_name'));
+$PHP_OUTPUT.= stripslashes($db->getField('alliance_name'));
 $PHP_OUTPUT.= '
 		</td>
 		<td class="center shrink">';
-$PHP_OUTPUT.= $db->f('alliance_xp');
+$PHP_OUTPUT.= $db->getField('alliance_xp');
 $PHP_OUTPUT.= '
 		</td>
 		<td class="center shrink">';
-$PHP_OUTPUT.= $db->f('alliance_avg');
+$PHP_OUTPUT.= $db->getField('alliance_avg');
 $PHP_OUTPUT.= '
 		</td>
 		<td class="center shrink">';
-$PHP_OUTPUT.= $db->f('alliance_member_count');
+$PHP_OUTPUT.= $db->getField('alliance_member_count');
 $PHP_OUTPUT.= '
 		</td>';
 $PHP_OUTPUT.= '
@@ -165,14 +165,14 @@ $count = 1;
 $container=array();
 $container['url']= 'skeleton.php';
 $db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-if ($db2->next_record()) $my_role_id = $db2->f('role_id');
+if ($db2->nextRecord()) $my_role_id = $db2->getField('role_id');
 else $my_role_id = 0;
 $db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' . 
 					'role_id = '.$my_role_id.' AND change_roles = \'TRUE\'');
-if ($db2->next_record()) $allowed = TRUE;
-while ($db->next_record()) {
+if ($db2->nextRecord()) $allowed = TRUE;
+while ($db->nextRecord()) {
 	// check if this guy is the current guy
-	if ( $db->f('account_id') == SmrSession::$account_id)
+	if ( $db->getField('account_id') == SmrSession::$account_id)
 		$PHP_OUTPUT.= '<tr class="bold">';
 	else
 		$PHP_OUTPUT.= '<tr>';
@@ -180,36 +180,36 @@ while ($db->next_record()) {
 	$PHP_OUTPUT.= '<td class="center shrink">';
 
 	// counter
-	if ($db->f('account_id') == $leader_id) $PHP_OUTPUT.= '*';
+	if ($db->getField('account_id') == $leader_id) $PHP_OUTPUT.= '*';
 	$PHP_OUTPUT.= ($count++);
 	$PHP_OUTPUT.= '</td><td>';
 
 	// player name
 	$db2->query('SELECT level_name
 				FROM level
-				WHERE requirement<=' . $db->f('experience') . '
+				WHERE requirement<=' . $db->getField('experience') . '
 				ORDER BY requirement DESC LIMIT 1'
 				);
-	$db2->next_record();
+	$db2->nextRecord();
 
-	$PHP_OUTPUT.= $db2->f('level_name');
+	$PHP_OUTPUT.= $db2->getField('level_name');
 	$PHP_OUTPUT.= '&nbsp;';
 	$container['body'] = 'trader_search_result.php';
-	$container['player_id'] = $db->f('player_id');
-	$PHP_OUTPUT.=create_link($container, get_colored_text($db->f('alignment'),stripslashes($db->f('player_name')) . '&nbsp;(' . $db->f('player_id') . ')'));
+	$container['player_id'] = $db->getField('player_id');
+	$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('alignment'),stripslashes($db->getField('player_name')) . '&nbsp;(' . $db->getField('player_id') . ')'));
 	$PHP_OUTPUT.= '</td><td class="center shrink">';
 
 	// race name (colored)
 	$container['body'] = 'council_list.php';
-	$container['race_id']	= $db->f('race_id');
-	$container['race_name']	= $races[$db->f('race_id')];
+	$container['race_id']	= $db->getField('race_id');
+	$container['race_name']	= $races[$db->getField('race_id')];
 	unset($container['player_id']);
 
-	$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($db->f('race_id')));
+	$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($db->getField('race_id')));
 
 	// xp
 	$PHP_OUTPUT.= '</td><td class="shrink center">';
-	$PHP_OUTPUT.= $db->f('experience');
+	$PHP_OUTPUT.= $db->getField('experience');
 	$PHP_OUTPUT.= '</td>';
 
 	// Roles
@@ -220,22 +220,22 @@ while ($db->next_record()) {
 		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT role_id
 					FROM player_has_alliance_role
-					WHERE account_id=' . $db->f('account_id') .'
+					WHERE account_id=' . $db->getField('account_id') .'
 					AND game_id=' . SmrSession::$game_id . '
 					LIMIT 1'
 					);
 
-		if ($db2->next_record())
-			$role_id = $db2->f('role_id');
+		if ($db2->nextRecord())
+			$role_id = $db2->getField('role_id');
 		else
 			$role_id = 0;
 
-		if ($allowed && $db->f('account_id') != $leader_id) {
+		if ($allowed && $db->getField('account_id') != $leader_id) {
 		// ok do we display a select box or just a plain entry
-		/*if (SmrSession::$account_id == $db->f('account_id') ||
+		/*if (SmrSession::$account_id == $db->getField('account_id') ||
 			SmrSession::$account_id == $leader_id) {*/
 
-			$PHP_OUTPUT.= '<select name="role[' . $db->f('account_id') . ']" id="InputFields">';
+			$PHP_OUTPUT.= '<select name="role[' . $db->getField('account_id') . ']" id="InputFields">';
 			foreach ($roles as $curr_role_id => $role) {
 				$PHP_OUTPUT.= '<option value="' . $curr_role_id .'"';
 				if ($curr_role_id == $role_id) $PHP_OUTPUT.= ' selected';

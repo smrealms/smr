@@ -14,7 +14,7 @@ $PHP_OUTPUT.=create_ug_menue();
 
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'UG\' AND claimer_id = 0 ORDER BY amount DESC');
-if ($db->nf())
+if ($db->getNumRows())
 {
 	$PHP_OUTPUT.=('Most Wanted by the Underground<br /><br />');
 	$PHP_OUTPUT.=create_table();
@@ -23,14 +23,14 @@ if ($db->nf())
 	$PHP_OUTPUT.=('<th>Bounty Amount</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		$id = $db->f('account_id');
+		$id = $db->getField('account_id');
 		$db2->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = '.$id);
-		if ($db2->next_record())
+		if ($db2->nextRecord())
 		{
-			$name = stripslashes($db2->f('player_name'));
-			$amount = $db->f('amount');
+			$name = stripslashes($db2->getField('player_name'));
+			$amount = $db->getField('amount');
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align="center"><font color=yellow>'.$name.'</font></td>');
 			$PHP_OUTPUT.=('<td align="center"><font color=red> ' . number_format($amount) . ' </font></td>');
@@ -42,7 +42,7 @@ if ($db->nf())
 
 $db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'UG\' AND claimer_id = '.$player->getAccountID().' ORDER BY amount DESC');
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
-if ($db->nf())
+if ($db->getNumRows())
 {
 	$PHP_OUTPUT.=('<div align="center">Claimable Bounties</div><br />');
 	$PHP_OUTPUT.=create_table();
@@ -51,13 +51,13 @@ if ($db->nf())
 	$PHP_OUTPUT.=('<th>Bounty Amount</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		$id = $db->f('account_id');
+		$id = $db->getField('account_id');
 		$db2->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = '.$id);
-		if ($db2->next_record())
-			$name = stripslashes($db2->f('player_name'));
-		$amount = $db->f('amount');
+		if ($db2->nextRecord())
+			$name = stripslashes($db2->getField('player_name'));
+		$amount = $db->getField('amount');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center"><font color=yellow>'.$name.'</font></td>');
 		$PHP_OUTPUT.=('<td align="center"><font color=red> ' . number_format($amount) . ' </font></td>');

@@ -97,14 +97,14 @@ if (!isset($per) && isset($id)) {
         $db->query('SELECT * FROM '.$table.' WHERE '.$id.' > 0 AND account_id = '.$account->account_id);
     else
         $db->query('SELECT sum(amount), account_id FROM '.$table.' WHERE amount > 0 AND account_id = '.$player->getAccountID().' GROUP BY account_id');
-    if ($db->next_record() && $id != 'donation') {
+    if ($db->nextRecord() && $id != 'donation') {
         if ($action != 'Experience Gained')
-            $our_stat = $db->f($id);
+            $our_stat = $db->getField($id);
         else
-            $our_stat = $db->f($id) / 4;
+            $our_stat = $db->getField($id) / 4;
 
     } elseif ($id == 'donation')
-        $our_stat = $db->f('sum(amount)');
+        $our_stat = $db->getField('sum(amount)');
     else
         $our_stat = 0;
 
@@ -114,16 +114,16 @@ if (!isset($per) && isset($id)) {
             $db->query('SELECT * FROM '.$table.' WHERE '.$id.' > '.$our_stat);
         else
             $db->query('SELECT * FROM '.$table.' WHERE '.$id.' / 4 > '.$our_stat);
-        $rank = $db->nf() + 1;
+        $rank = $db->getNumRows() + 1;
 
     } else {
 
         $db->query('SELECT sum(amount), account_id FROM account_donated WHERE amount > 0 GROUP BY account_id ORDER BY \'sum(amount)\' DESC');
         $rank = 1;
         $continue = 1;
-        while ($db->next_record() && $continue) {
+        while ($db->nextRecord() && $continue) {
 
-            if ($player->getAccountID() == $db->f('account_id')) {
+            if ($player->getAccountID() == $db->getField('account_id')) {
 
                 $continue = 0;
                 continue;
@@ -138,7 +138,7 @@ if (!isset($per) && isset($id)) {
         $db->query('SELECT sum(amount), account_id FROM account_donated WHERE amount > 0 GROUP BY account_id ORDER BY \'sum(amount)\' DESC');
 
     $PHP_OUTPUT.=($first_display.'<br /><br />View your rank at the bottom of the screen<br /><br />');
-    if ($db->nf()) {
+    if ($db->getNumRows()) {
 
         //we have people who we can display
         $PHP_OUTPUT.=create_table();
@@ -148,20 +148,20 @@ if (!isset($per) && isset($id)) {
         $PHP_OUTPUT.=('<th align="center">'.$second_display.'</th>');
         $PHP_OUTPUT.=('</tr>');
         $count = 1;
-        while ($db->next_record()) {
+        while ($db->nextRecord()) {
 
             //get the account
-            $curr_account =& SmrAccount::getAccount($db->f('account_id'));
+            $curr_account =& SmrAccount::getAccount($db->getField('account_id'));
             $name = stripslashes($curr_account->HoF_name);
             $db2 = new SmrMySqlDatabase();
             if ($id == 'donation') {
 
                 $db2->query('SELECT sum(amount) FROM account_donated WHERE account_id = '.$curr_account->account_id);
-                $db2->next_record();
-                $stat = $db2->f('sum(amount)');
+                $db2->nextRecord();
+                $stat = $db2->getField('sum(amount)');
 
             } else
-                $stat = $db->f($id);
+                $stat = $db->getField($id);
             $PHP_OUTPUT.=('<tr>');
             $PHP_OUTPUT.=('<td align="center">'.$count.'</td>');
             $PHP_OUTPUT.=('<td align=center>'.$name.'</td>');
@@ -196,21 +196,21 @@ if (!isset($per) && isset($id)) {
 
     //we have a stat that contains a per
     $db->query('SELECT * FROM '.$table.' WHERE '.$id.' > 0 AND '.$per.' > 0 AND account_id = '.$account->account_id);
-    if ($db->next_record())
-        $our_stat = $db->f($id) / $db->f($per);
+    if ($db->nextRecord())
+        $our_stat = $db->getField($id) / $db->getField($per);
     else
         $our_stat = 0;
     $db->query('SELECT * FROM '.$table.' WHERE '.$id.' > 0 AND '.$per.' > 0');
     $rank = 1;
-    while ($db->next_record()) {
+    while ($db->nextRecord()) {
 
-        if ($db->f($id) / $db->f($per) > $our_stat)
+        if ($db->getField($id) / $db->getField($per) > $our_stat)
             $rank += 1;
 
     }
     $db->query('SELECT * FROM '.$table.' WHERE '.$id.' > 0 AND '.$per.' > 0 ORDER BY '.$id.' / '.$per.' DESC LIMIT '.$amount);
     $PHP_OUTPUT.=($first_display.'<br /><br />View your rank at the bottom of the screen<br /><br />');
-    if ($db->nf()) {
+    if ($db->getNumRows()) {
 
         //we have people who meet this category
         $PHP_OUTPUT.=create_table();
@@ -221,20 +221,20 @@ if (!isset($per) && isset($id)) {
         $PHP_OUTPUT.=('</tr>');
         $count = 1;
         $db4 = new SmrMySqlDatabase();
-        while ($db->next_record()) {
+        while ($db->nextRecord()) {
 
             //get the account
-            $acc_id= $db->f('account_id');
+            $acc_id= $db->getField('account_id');
             $db4->query('SELECT * FROM account WHERE account_id = '.$acc_id);
-            if (!$db4->next_record())
+            if (!$db4->nextRecord())
             	continue;
-            $curr_account =& SmrAccount::getAccount($db->f('account_id'));
+            $curr_account =& SmrAccount::getAccount($db->getField('account_id'));
             $name = stripslashes($curr_account->HoF_name);
             $PHP_OUTPUT.=('<tr>');
             $PHP_OUTPUT.=('<td align="center">'.$count.'</td>');
             $count ++;
             $PHP_OUTPUT.=('<td align=center>'.$name.'</td>');
-            $PHP_OUTPUT.=('<td align=center> ' . number_format($db->f($id) / $db->f($per), 2) . ' </td>');
+            $PHP_OUTPUT.=('<td align=center> ' . number_format($db->getField($id) / $db->getField($per), 2) . ' </td>');
             $PHP_OUTPUT.=('</tr>');
 
         }

@@ -40,10 +40,10 @@ if(isset($var['location_type_id']))
 	
 	$db->query('SELECT * FROM hardware_type');
 	$hardware = array();
-	while($db->next_record())
+	while($db->nextRecord())
 	{
-		$hardware[$db->f('hardware_type_id')] = array('ID' => $db->f('hardware_type_id'),
-														'Name' => $db->f('hardware_name'));
+		$hardware[$db->getField('hardware_type_id')] = array('ID' => $db->getField('hardware_type_id'),
+														'Name' => $db->getField('hardware_name'));
 	}
 	$smarty->assign_by_ref('AllHardware',$hardware);
 }
@@ -51,9 +51,9 @@ else
 {
 	$db->query('SELECT location_type_id FROM location_type');
 	$locations = array();
-	while($db->next_record())
+	while($db->nextRecord())
 	{
-		$locations[$db->f('location_type_id')] =& SmrLocation::getLocation($db->f('location_type_id'));
+		$locations[$db->getField('location_type_id')] =& SmrLocation::getLocation($db->getField('location_type_id'));
 	}
 	
 	$smarty->assign_by_ref('Locations',$locations);

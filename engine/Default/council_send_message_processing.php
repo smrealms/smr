@@ -12,8 +12,8 @@ $db->query('SELECT * FROM player ' .
 		   'ORDER by experience DESC ' .
 		   'LIMIT ' . MAX_COUNCIL_MEMBERS);
 
-while ($db->next_record()) {
-	$player->sendMessage($db->f('account_id'), $POLITICALMSG, $message);
+while ($db->nextRecord()) {
+	$player->sendMessage($db->getField('account_id'), $POLITICALMSG, $message);
 }
 
 $container = array();

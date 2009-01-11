@@ -2,13 +2,13 @@
 
 //we are gonna check for reducing points...
 $db2 = new SmrMySqlDatabase();
-$db->lock('account_has_points');
+$db->lockTable('account_has_points');
 $week = time() - (7 * 24 * 60 * 60);
 $db->query('SELECT * FROM account_has_points WHERE last_update < '.$week.' AND points > 0 AND points < 100');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$acc_id = $db->f('account_id');
-	$last_update = $db->f('last_update');
+	$acc_id = $db->getField('account_id');
+	$last_update = $db->getField('last_update');
 	$last_update += 7 * 24 * 60 * 60;
 	$db2->query('UPDATE account_has_points SET points = points - 1, last_update = '.$last_update.' WHERE account_id = '.$acc_id);
 
@@ -42,8 +42,8 @@ if (!empty($donation)) {
     if (!empty($smr_credit)) {
 
 	    $db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account_id);
-	    if ($db->next_record())
-	    	$amount_credits = $db->f('credits_left');
+	    if ($db->nextRecord())
+	    	$amount_credits = $db->getField('credits_left');
 	    else
 	    	$amount_credits = 0;
 	    $new_amount = $amount_credits + $donation;
@@ -57,8 +57,8 @@ if (!empty($donation)) {
 if(!empty($_REQUEST['grant_credits']))
 {
     $db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account_id);
-    if ($db->next_record())
-    	$amount_credits = $db->f('credits_left');
+    if ($db->nextRecord())
+    	$amount_credits = $db->getField('credits_left');
     else
     	$amount_credits = 0;
     $new_amount = $amount_credits + $_REQUEST['grant_credits'];
@@ -73,9 +73,9 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	//do we have points
 	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$account_id);
-	if ($db->next_record())	{
+	if ($db->nextRecord())	{
 
-		$now = $db->f('points');
+		$now = $db->getField('points');
 		$tot_points = $points + $now;
 		$db->query('UPDATE account_has_points SET points = '.$tot_points.', last_update = '.TIME.' WHERE account_id = '.$account_id);
 
@@ -123,7 +123,7 @@ if ($choise == 'pre_select' && $points > 0) {
 			   'WHERE account_id = '.$account_id.' AND ' .
 					 'newbie_turns = 0 AND ' .
 					 'land_on_planet = \'FALSE\'');
-	$db->lock('active_session');
+	$db->lockTable('active_session');
 	$db->query('DELETE FROM active_session ' .
 			   'WHERE account_id = '.$account_id);
 	$db->unlock();
@@ -134,13 +134,13 @@ if ($choise == 'pre_select' && $points > 0) {
 } elseif ($choise == 'individual' && $points > 0) {
 
 	$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
-	$reason_id = $db->insert_id();
+	$reason_id = $db->getInsertID();
 
 	//do we have points
 	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$account_id);
-	if ($db->next_record())	{
+	if ($db->nextRecord())	{
 
-		$now = $db->f('points');
+		$now = $db->getField('points');
 		$tot_points = $points + $now;
 		$db->query('UPDATE account_has_points SET points = '.$tot_points.', last_update = '.TIME.' WHERE account_id = '.$account_id);
 
@@ -188,7 +188,7 @@ if ($choise == 'pre_select' && $points > 0) {
 			   'WHERE account_id = '.$account_id.' AND ' .
 					 'newbie_turns = 0 AND ' .
 					 'land_on_planet = \'FALSE\'');
-	$db->lock('active_session');
+	$db->lockTable('active_session');
 	$db->query('DELETE FROM active_session ' .
 			   'WHERE account_id = '.$account_id);
 	$db->unlock();
@@ -200,9 +200,9 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	//do we have points
 	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$account_id);
-	if ($db->next_record())	{
+	if ($db->nextRecord())	{
 
-		$tot_points = $db->f('points') - $points;
+		$tot_points = $db->getField('points') - $points;
 		if ($tot_points < 0) $tot_points = 0;
 		$db->query('UPDATE account_has_points SET points = '.$tot_points.', last_update = '.TIME.' WHERE account_id = '.$account_id);
 
@@ -246,11 +246,11 @@ if (!empty($names))
 		if(!empty($new_name))
 		{
 			$db->query('SELECT * FROM player WHERE game_id = '.$game_id.' AND player_name = ' . $db->escape_string($new_name, FALSE));
-			if (!$db->next_record()) {
+			if (!$db->nextRecord()) {
 				$db->query('SELECT player_name, player_id FROM player WHERE game_id='.$game_id.' AND account_id = '.$account_id.' LIMIT 1');
-				$db->next_record();
-				$old_name = $db->f('player_name');
-				$player_id = $db->f('player_id');
+				$db->nextRecord();
+				$old_name = $db->getField('player_name');
+				$player_id = $db->getField('player_id');
 				
 				$db->query('UPDATE player SET player_name = ' . $db->escape_string($new_name, FALSE) . ' WHERE game_id = '.$game_id.' AND account_id = '.$account_id);
 				$msg .= 'changed players name to '.$new_name.' ';
@@ -269,14 +269,14 @@ if (!empty($delete)) {
 		if($value == 'TRUE') {
 			// Check for bank transactions into the alliance account
 			$db->query('SELECT * FROM alliance_bank_transactions WHERE payee_id=' . $account_id . ' AND game_id=' . $game_id . ' LIMIT 1');
-			if($db->nf() != 0){
+			if($db->getNumRows() != 0){
 				// Can't delete
 				$msg .= 'player has made alliance transaction ';
 				continue;
 			}
 			// Check anon accounts for transactions
 			$db->query('SELECT * FROM anon_bank_transactions WHERE account_id=' . $account_id . ' AND game_id=' . $game_id . ' LIMIT 1');
-			if($db->nf() != 0){
+			if($db->getNumRows() != 0){
 				// Can't delete
 				$msg .= 'player has made anonymous transaction ';
 				continue;
@@ -331,8 +331,8 @@ if (!empty($delete)) {
 
 //get his login name
 $db->query('SELECT * FROM account WHERE account_id = '.$account_id);
-if ($db->next_record())
-	$login = $db->f('login');
+if ($db->nextRecord())
+	$login = $db->getField('login');
 
 $container = create_container('skeleton.php', 'account_edit.php');
 $container['msg'] = $msg.' for the account of '.$login.' '.$expire_msg;

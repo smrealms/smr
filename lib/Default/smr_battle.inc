@@ -47,12 +47,12 @@ class SMR_BATTLE extends SmrMySqlDatabase {
 			if(!$nocap) $max_fleet_size = 10;
 			else $max_fleet_size = 30;
 
-			while ($this->next_record() && $this->get_fleet_size() <= $max_fleet_size) {
+			while ($this->nextRecord() && $this->get_fleet_size() <= $max_fleet_size) {
 
 //				// we may skip player if this is a protected gal.
 //				if ($sector->is_protected_gal()) {
 //
-//					$curr_account =& SmrAccount::getAccount($this->f('account_id'));
+//					$curr_account =& SmrAccount::getAccount($this->getField('account_id'));
 //
 //					// if one is vet and the other is newbie we skip it
 //					if (different_level($rank_id, $curr_account->get_rank(), $initiator_account->veteran, $curr_account->veteran))
@@ -60,12 +60,12 @@ class SMR_BATTLE extends SmrMySqlDatabase {
 //
 //				}
 
-				$curr_player =& SmrPlayer::getPlayer($this->f('account_id'), $game_id);
+				$curr_player =& SmrPlayer::getPlayer($this->getField('account_id'), $game_id);
 
 				if (!$curr_player->hasFederalProtection()) {
 
 					// add to fleet
-					$this->fleet[] = $this->f('account_id');
+					$this->fleet[] = $this->getField('account_id');
 
 				}
 

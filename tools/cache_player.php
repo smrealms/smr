@@ -26,11 +26,11 @@ $cache = new SmrMySqlDatabase();
 $news = new SmrMySqlDatabase();
 
 $player->query('SELECT account_id, game_id, experience FROM player');
-while ($player->next_record()) {
+while ($player->nextRecord()) {
 
 	$cache->query('REPLACE INTO player_cache
 				   (account_id, game_id, experience)
-				   VALUES(' . $player->f('account_id') . ', ' . $player->f('game_id') . ', ' . $player->f('experience') . ')
+				   VALUES(' . $player->getField('account_id') . ', ' . $player->getField('game_id') . ', ' . $player->getField('experience') . ')
 				  ');
 
 }
@@ -44,14 +44,14 @@ $cache->query('DELETE FROM locks_queue WHERE timestamp<' . (time() - 30));
 
 $news->query('SELECT * FROM news WHERE sent_irc = \'FALSE\'');
 $sent = array();
-while ($news->next_record()) {
-	$message = $news->f('news_message');
+while ($news->nextRecord()) {
+	$message = $news->getField('news_message');
 	$message = strip_tags($message);
 	$message = str_replace('&nbsp;',' ',$message);
 	$message = str_replace('&nbsp',' ',$message);
 	$message = str_replace('	','',$message);
 	$result = send_irc_message($message);
-	$sent[] = $news->f('news_id');
+	$sent[] = $news->getField('news_id');
 }
 $news->query('UPDATE news SET sent_irc = \'TRUE\'');
 */

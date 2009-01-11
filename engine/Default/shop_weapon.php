@@ -8,7 +8,7 @@ $db->query('SELECT * FROM location, location_sells_weapons, location_type, weapo
     					  'location_sells_weapons.location_type_id = location_type.location_type_id AND ' .
     					  'location_sells_weapons.weapon_type_id = weapon_type.weapon_type_id');
 
-if ($db->nf() > 0 ) {
+if ($db->getNumRows() > 0 ) {
 
 	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="1" border="0" class="standard">');
 	$PHP_OUTPUT.=('<tr>');
@@ -22,23 +22,23 @@ if ($db->nf() > 0 ) {
 	$PHP_OUTPUT.=('<th align="center">Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$weapon_name = $db->f('weapon_name');
-		$weapon_type_id = $db->f('weapon_type_id');
-		$shield_damage = $db->f('shield_damage');
-		$armor_damage  = $db->f('armor_damage');
-		$accuracy = $db->f('accuracy');
+		$weapon_name = $db->getField('weapon_name');
+		$weapon_type_id = $db->getField('weapon_type_id');
+		$shield_damage = $db->getField('shield_damage');
+		$armor_damage  = $db->getField('armor_damage');
+		$accuracy = $db->getField('accuracy');
         $db2->query('SELECT * FROM weapon_type WHERE weapon_type_id = '.$weapon_type_id);
-        $db2->next_record();
-        $race_id = $db2->f('race_id');
-		$power_level = $db->f('power_level');
-		$cost = $db->f('cost');
-		$buyer_restriction = $db->f('buyer_restriction');
+        $db2->nextRecord();
+        $race_id = $db2->getField('race_id');
+		$power_level = $db->getField('power_level');
+		$cost = $db->getField('cost');
+		$buyer_restriction = $db->getField('buyer_restriction');
 
         $db2->query('SELECT * FROM race WHERE race_id = '.$race_id);
-        $db2->next_record();
-        $weapon_race = $db2->f('race_name');
+        $db2->nextRecord();
+        $weapon_race = $db2->getField('race_name');
 
 		$container = array();
 		$container['url'] = 'shop_weapon_processing.php';

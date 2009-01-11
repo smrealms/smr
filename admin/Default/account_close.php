@@ -127,7 +127,7 @@ if (isset($disable_id)) {
 		if (empty($reason) || $reason == '')
 			$reason = $suspicion2[$id];
 	    $db->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
-	    if (!$db->nf())
+	    if (!$db->getNumRows())
 	        $amount += 1;
 
 		//never expire

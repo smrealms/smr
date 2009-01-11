@@ -31,7 +31,7 @@
   
   $db->query('SELECT player.player_name as player_name, message_blacklist.entry_id as entry_id FROM player, message_blacklist WHERE player.account_id = message_blacklist.blacklisted_id AND message_blacklist.account_id=' . SmrSession::$account_id . ' AND message_blacklist.game_id = player.game_id AND player.game_id = ' . SmrSession::$game_id);
   
-  if($db->nf()) {
+  if($db->getNumRows()) {
   	
 		$container = array();
 		$container['url'] = 'message_blacklist_del.php';
@@ -40,8 +40,8 @@
 	
 		$PHP_OUTPUT.= '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Option</th><th>Name</th>';
   	
-		while($db->next_record()) {
-			$row = $db->fetch_row();		
+		while($db->nextRecord()) {
+			$row = $db->getRow();		
 			$PHP_OUTPUT.= '<tr>';
 			$PHP_OUTPUT.= '<td class="center shrink"><input type="checkbox" name="entry_ids[]" value="' . $row['entry_id'] . '"></td>';
 			$PHP_OUTPUT.= '<td>' . $row['player_name'] . '</td>';

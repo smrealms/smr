@@ -53,11 +53,11 @@ if ($ship->hasIllusion())
 	$PHP_OUTPUT.= '<tr><td>Ship:</td><td><select name="ship_id" size="1" id="InputFields">';
 
 	$db->query('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$ship_type_id	= $db->f('ship_type_id');
-		$ship_name		= $db->f('ship_name');
-		$PHP_OUTPUT.= '<option value="' . $db->f('ship_type_id') . '"';
+		$ship_type_id	= $db->getField('ship_type_id');
+		$ship_name		= $db->getField('ship_name');
+		$PHP_OUTPUT.= '<option value="' . $db->getField('ship_type_id') . '"';
 		if ($ship_type_id == $default_id) $PHP_OUTPUT.= ' selected';
 		$PHP_OUTPUT.= '>' . $ship_name . '</option>';
 	}

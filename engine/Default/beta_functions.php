@@ -22,8 +22,8 @@ $container['func'] = 'Ship';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="ship_id">');
 $db->query('SELECT * FROM ship_type ORDER BY ship_type_id');
-while ($db->next_record())
-	$PHP_OUTPUT.=('<option value="' . $db->f('ship_type_id') . '">' . $db->f('ship_name') . '</option>');
+while ($db->nextRecord())
+	$PHP_OUTPUT.=('<option value="' . $db->getField('ship_type_id') . '">' . $db->getField('ship_name') . '</option>');
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Change Ship');
 $PHP_OUTPUT.=('</form>');
@@ -35,8 +35,8 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('Amount:&nbsp;&nbsp;<input type="text" name="amount" value="1"><br />');
 $PHP_OUTPUT.=('<select name="weapon_id">');
 $db->query('SELECT * FROM weapon_type ORDER BY weapon_type_id');
-while ($db->next_record())
-	$PHP_OUTPUT.=('<option value="' . $db->f('weapon_type_id') . '">' . $db->f('weapon_name') . '</option>');
+while ($db->nextRecord())
+	$PHP_OUTPUT.=('<option value="' . $db->getField('weapon_type_id') . '">' . $db->getField('weapon_name') . '</option>');
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Add Weapon(s)');
 $PHP_OUTPUT.=('</form>');
@@ -81,19 +81,19 @@ $PHP_OUTPUT.=('</form>');
 $db->query('SELECT kills, experience_traded
 			FROM account_has_stats
 			WHERE account_id = '.SmrSession::$account_id);
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
 	//Set kills
 	$container['func'] = 'Kills';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type="text" name="kills" value="' . $db->f('kills') . '">&nbsp;&nbsp;');
+	$PHP_OUTPUT.=('<input type="text" name="kills" value="' . $db->getField('kills') . '">&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Set Kills to Amount');
 	$PHP_OUTPUT.=('</form>');
 
 	//Set traded xp
 	$container['func'] = 'Traded_XP';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type=text name="traded_xp" value="' . $db->f('experience_traded') . '">&nbsp;&nbsp;');
+	$PHP_OUTPUT.=('<input type=text name="traded_xp" value="' . $db->getField('experience_traded') . '">&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Set Traded XP to Amount');
 	$PHP_OUTPUT.=('</form>');
 
@@ -106,9 +106,9 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<input type="text" name="amount_hard" value="0"><br />');
 $PHP_OUTPUT.=('<select name="type_hard">');
 $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-while ($db->next_record()) {
-	$id = $db->f('hardware_type_id');
-	$name = $db->f('hardware_name');
+while ($db->nextRecord()) {
+	$id = $db->getField('hardware_type_id');
+	$name = $db->getField('hardware_name');
 	$PHP_OUTPUT.=('<option value='.$id.'>'.$name.'</option>');
 }
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
@@ -121,8 +121,8 @@ $container['func'] = 'Relations';
 $db->query('SELECT * FROM race WHERE race_id > 1 ORDER BY race_id');
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name=race>');
-while ($db->next_record())
-	$PHP_OUTPUT.=('<option value="' . $db->f('race_id') . '">' . $db->f('race_name') . '</option>');
+while ($db->nextRecord())
+	$PHP_OUTPUT.=('<option value="' . $db->getField('race_id') . '">' . $db->getField('race_name') . '</option>');
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 $PHP_OUTPUT.=('<input name="amount" value="0">');
 $PHP_OUTPUT.=create_submit('Change Relations');
@@ -135,8 +135,8 @@ $container['func'] = 'Race_Relations';
 $db->query('SELECT * FROM race WHERE race_id > 1 ORDER BY race_id');
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="race">');
-while ($db->next_record())
-	$PHP_OUTPUT.=('<option value="' . $db->f('race_id') . '">' . $db->f('race_name') . '</option>');
+while ($db->nextRecord())
+	$PHP_OUTPUT.=('<option value="' . $db->getField('race_id') . '">' . $db->getField('race_name') . '</option>');
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 $PHP_OUTPUT.=('<input name="amount" value="0">');
 $PHP_OUTPUT.=create_submit('Change Relations');

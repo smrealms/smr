@@ -14,8 +14,8 @@ function get_galaxy_id($sector_id, $game_id) {
 						   game_id = '.$this->escapeString($game_id).'
 					 LIMIT 1');
 
-	if ($temp_db->next_record())
-		return $temp_db->f('galaxy_id');
+	if ($temp_db->nextRecord())
+		return $temp_db->getField('galaxy_id');
 	else
 		return false;
 
@@ -54,20 +54,20 @@ function get_plot(&$route_in, $game_id) {
 
 	// Array is like this. $galaxy_map[sector_id] = link_up, link_down, link_left, link_right, visitor
 	// Where visitor is 0:unvisited, 1: start group, 2: target group, 3:avoid, 4:unexplored
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 		
-		$sect = $db->f('sector_id');
+		$sect = $db->getField('sector_id');
 		//get warp
 		$db2->query('SELECT * FROM warp WHERE (sector_id_1 = '.$sect.' OR sector_id_2 = '.$sect.') AND game_id = '.$game_id);
-		if ($db2->next_record())
-			if ($sect == $db2->f('sector_id_1')) $warp = $db2->f('sector_id_2');
-			else $warp = $db2->f('sector_id_1');
+		if ($db2->nextRecord())
+			if ($sect == $db2->getField('sector_id_1')) $warp = $db2->getField('sector_id_2');
+			else $warp = $db2->getField('sector_id_1');
 		else
 			$warp = 0;
-		$galaxy_map[$db->f('sector_id')] = array(	$db->f('link_up'),
-								$db->f('link_down'),
-								$db->f('link_left'),
-								$db->f('link_right'),
+		$galaxy_map[$db->getField('sector_id')] = array(	$db->getField('link_up'),
+								$db->getField('link_down'),
+								$db->getField('link_left'),
+								$db->getField('link_right'),
 								$warp,
 								0);
 								
@@ -83,8 +83,8 @@ function get_plot(&$route_in, $game_id) {
 			WHERE account_id = '.$player->getAccountID().' ' .
 			AND game_id = ' .	$game_id);
 
-	while ($db->next_record()) {
-		$galaxy_map[$db->f('sector_id')][5] = 4;
+	while ($db->nextRecord()) {
+		$galaxy_map[$db->getField('sector_id')][5] = 4;
 	}
 
 	// Depending on how adventurous they are this can be quite big, release the memory

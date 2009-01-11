@@ -11,8 +11,8 @@ function get_album_nick($album_id) {
 	$album->query('SELECT HoF_name
 				   FROM account_has_stats
 				   WHERE account_id = '.$album_id);
-	if ($album->next_record())
-		$nick = $album->f('HoF_name');
+	if ($album->nextRecord())
+		$nick = $album->getField('HoF_name');
 
 	// fall back to login name if it's empty or we havn't found one
 	if (empty($nick)) {
@@ -20,8 +20,8 @@ function get_album_nick($album_id) {
 		$album->query('SELECT login
 					   FROM account
 					   WHERE account_id = '.$album_id);
-		if ($album->next_record())
-			$nick = $album->f('login');
+		if ($album->nextRecord())
+			$nick = $album->getField('login');
 
 	}
 
@@ -53,15 +53,15 @@ $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'album_moderate.php'),
 if ($account_id > 0) {
 
 	$db->query('SELECT * FROM album WHERE account_id = '.$account_id.' AND Approved = \'YES\'');
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$location = stripslashes($db->f('location'));
-		$email = stripslashes($db->f('email'));
-		$website = stripslashes($db->f('website'));
-		$day = $db->f('day');
-		$month = $db->f('month');
-		$year = $db->f('year');
-		$other = nl2br(stripslashes($db->f('other')));
+		$location = stripslashes($db->getField('location'));
+		$email = stripslashes($db->getField('email'));
+		$website = stripslashes($db->getField('website'));
+		$day = $db->getField('day');
+		$month = $db->getField('month');
+		$year = $db->getField('year');
+		$other = nl2br(stripslashes($db->getField('other')));
 
 	} else {
 
@@ -190,12 +190,12 @@ if (empty($account_id)) {
 	$db->query('SELECT *
 				FROM album_has_comments
 				WHERE album_id = $account_id');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$comment_id	= $db->f('comment_id');
-		$time		= $db->f('time');
-		$postee		= get_album_nick($db->f('post_id'));
-		$msg		= stripslashes($db->f('msg'));
+		$comment_id	= $db->getField('comment_id');
+		$time		= $db->getField('time');
+		$postee		= get_album_nick($db->getField('post_id'));
+		$msg		= stripslashes($db->getField('msg'));
 
 		$PHP_OUTPUT.=('<tr><td align="center"><input type="checkbox" name="comment_ids[]" value="'.$comment_id.'"></td><td colspan="3"><span style="font-size:85%;">[' . date('Y/n/j g:i A', $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span></td></tr>');
 

@@ -38,10 +38,10 @@ if (SmrSession::$account_id == 0) {
 	$db->query('SELECT * FROM account ' .
 			   'WHERE login = '.$db->escapeString($login).' AND ' .
 					 'password = '.$db->escape_string(md5($password)));
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
 		// register session
-		SmrSession::$account_id = $db->f('account_id');
+		SmrSession::$account_id = $db->getField('account_id');
 
 	} else {
 
@@ -60,13 +60,13 @@ if (SmrSession::$account_id == 0) {
 // ********************************
 
 $db->query('SELECT * FROM game_disable');
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	$db2 = new SmrMySqlDatabase();
 
 	// allow admins to access it
 	$db2->query('SELECT * FROM account_has_permission WHERE account_id = '.SmrSession::$account_id.' AND permission_id = 3');
-	if (!$db2->nf()) {
+	if (!$db2->getNumRows()) {
 
 		header('Location: '.URL.'/offline.php');
 		exit;
@@ -86,12 +86,12 @@ if ($db->nf()) {
 $db->query('SELECT reason
 			FROM account_is_closed NATURAL JOIN closing_reason
 			WHERE account_id = '.SmrSession::$account_id);
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
 	// save session (incase we forward)
 	SmrSession::update();
 
-	if ($db->f('reason') == 'Invalid eMail') {
+	if ($db->getField('reason') == 'Invalid eMail') {
 
 		header('Location: '.URL.'/email.php');
 		exit;
@@ -113,7 +113,7 @@ if ($db->next_record()) {
 // *********************************
 $db->query('SELECT * FROM active_session ' .
 		   'WHERE last_accessed > ' . (TIME - 1800));
-if ($db->nf() == 0)
+if ($db->getNumRows() == 0)
 	$db->query('UPDATE player SET newbie_turns = 1
 				WHERE newbie_turns = 0 AND
 					  land_on_planet = \'FALSE\'');
@@ -146,9 +146,9 @@ if (!isset($_COOKIE['Session_Info'])) {
 
 	//we get their info from db if they have any
 	$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->account_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 		//convert to array
-		$old = explode('-', $db->f('array'));
+		$old = explode('-', $db->getField('array'));
 		//get rid of old version cookie since it isn't optimal.
 		if ($old[0] != $cookieVersion) $old = array();
 	} else $old = array();
@@ -176,9 +176,9 @@ if (!isset($_COOKIE['Session_Info'])) {
 	if (!in_array($account->account_id, $cookie)) $cookie[] = $account->account_id;
 
 	$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->account_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 		//convert to array
-		$old = explode('-', $db->f('array'));
+		$old = explode('-', $db->getField('array'));
 		if ($old[0] != $cookieVersion) $old = array();
 	} else $old = array();
 	$old[0] = $cookieVersion;
@@ -212,8 +212,8 @@ $db2 = new SmrMySqlDatabase();
 $db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$account->account_id.' AND message_type_id != 3');
 $db2->query('SELECT * FROM message WHERE account_id = '.$account->account_id.' AND msg_read = \'FALSE\'');
 
-while ($db2->next_record())
-	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->f('game_id') . ', '.$account->account_id.', ' . $db2->f('message_type_id') . ')');
+while ($db2->nextRecord())
+	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->getField('game_id') . ', '.$account->account_id.', ' . $db2->getField('message_type_id') . ')');
 if (!empty($_POST['return_page'])) {
 echo 'DAMN';
 	header('Location: ' . $_POST['return_page']);

@@ -40,7 +40,7 @@ if ($action == 'Reopen and Add Exception' || $action == 'Reopen without Exceptio
 			   'WHERE account_id = '.$id.' AND ' .
 					 'newbie_turns = 0 AND ' .
 					 'land_on_planet = \'FALSE\'');
-		$db->lock('active_session');
+		$db->lockTable('active_session');
 		$db->query('DELETE FROM active_session ' .
 			   'WHERE account_id = '.$id);
 		$db->unlock();

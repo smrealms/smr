@@ -9,11 +9,11 @@ $PHP_OUTPUT.=create_ranking_menue(0, 1);
 $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' AND ' .
                                       '(kills > '.$player->getKills().' OR ' .
                                       '(kills = '.$player->getKills().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
-$our_rank = $db->nf();
+$our_rank = $db->getNumRows();
 
 // how many players are there?
 $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id);
-$total_player = $db->nf();
+$total_player = $db->getNumRows();
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of players by their kills</p>');
@@ -30,10 +30,10 @@ $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER BY kills DESC, player_name LIMIT 10');
 
 $rank = 0;
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
     // get current player
-    $curr_player =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
+    $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), SmrSession::$game_id);
 
     // increase rank counter
     $rank++;
@@ -128,10 +128,10 @@ $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER BY kills DESC, player_name LIMIT ' . ($min_rank - 1) . ', ' . ($max_rank - $min_rank + 1));
 
 $rank = $min_rank - 1;
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
     // get current player
-    $curr_player =& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
+    $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
     // increase rank counter
     $rank++;

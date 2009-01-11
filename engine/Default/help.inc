@@ -9,11 +9,11 @@ function echo_nav($topic_id) {
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$parent_topic_id = $db->f('parent_topic_id');
-		$order_id = $db->f('order_id');
-		$topic = stripslashes($db->f('topic'));
+		$parent_topic_id = $db->getField('parent_topic_id');
+		$order_id = $db->getField('order_id');
+		$topic = stripslashes($db->getField('topic'));
 
 		echo ('<table>');
 		echo ('<tr>');
@@ -24,14 +24,14 @@ function echo_nav($topic_id) {
 		$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$parent_topic_id.' AND order_id = '.$order_id.' - 1');
 
 		// no result?
-		if (!$db2->nf())
+		if (!$db2->getNumRows())
 			$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
 
 		echo ('<th width="32">');
-		if ($db2->next_record()) {
+		if ($db2->nextRecord()) {
 
-			$previous_topic_id = $db2->f('topic_id');
-			$previous_topic = stripslashes($db2->f('topic'));
+			$previous_topic_id = $db2->getField('topic_id');
+			$previous_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$previous_topic_id.'"><img src="'.URL.'/images/help/previous.jpg" width="32" height="32" border="0"></a>');
 
 		} else
@@ -43,10 +43,10 @@ function echo_nav($topic_id) {
 		// **************************
 		$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
 		echo ('<th width="32">');
-		if ($db2->next_record()) {
+		if ($db2->nextRecord()) {
 
-			$up_topic_id = $db2->f('topic_id');
-			$up_topic = stripslashes($db2->f('topic'));
+			$up_topic_id = $db2->getField('topic_id');
+			$up_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$up_topic_id.'"><img src="'.URL.'/images/help/up.jpg" width="32" height="32" border="0"></a>');
 
 		} else
@@ -58,26 +58,26 @@ function echo_nav($topic_id) {
 		// **************************
 		$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' AND order_id = 1');
 
-		if (!$db2->nf())
+		if (!$db2->getNumRows())
 			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$parent_topic_id.' AND order_id = '.$order_id.' + 1');
 
 		$curr_parent_topic_id = $parent_topic_id;
-		while (!$db2->nf() && $curr_parent_topic_id != 0) {
+		while (!$db2->getNumRows() && $curr_parent_topic_id != 0) {
 
 			$db3->query('SELECT * FROM manual WHERE topic_id = '.$curr_parent_topic_id);
-			$db3->next_record();
-			$curr_order_id = $db3->f('order_id');
-			$curr_parent_topic_id = $db3->f('parent_topic_id');
+			$db3->nextRecord();
+			$curr_order_id = $db3->getField('order_id');
+			$curr_parent_topic_id = $db3->getField('parent_topic_id');
 
 			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$curr_parent_topic_id.' AND order_id = '.$curr_order_id.' + 1');
 
 		}
 
 		echo ('<th width="32">');
-		if ($db2->next_record()) {
+		if ($db2->nextRecord()) {
 
-			$next_topic_id = $db2->f('topic_id');
-			$next_topic = stripslashes($db2->f('topic'));
+			$next_topic_id = $db2->getField('topic_id');
+			$next_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$next_topic_id.'"><img src="'.URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
 
 		} else
@@ -113,12 +113,12 @@ function echo_content($topic_id) {
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$parent_topic_id = $db->f('parent_topic_id');
-		$order_id = $db->f('order_id');
-		$topic = stripslashes($db->f('topic'));
-		$text = stripslashes($db->f('text'));
+		$parent_topic_id = $db->getField('parent_topic_id');
+		$order_id = $db->getField('order_id');
+		$topic = stripslashes($db->getField('topic'));
+		$text = stripslashes($db->getField('text'));
 
 		echo ('<div id="help_content">');
 		echo ('<h1>' . get_numbering($topic_id) . $topic.'</h1>');
@@ -137,7 +137,7 @@ function echo_subsection($topic_id) {
 	$return='';
 	// check if there are subsections
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' ORDER BY order_id');
-	if ($db->nf()) {
+	if ($db->getNumRows()) {
 
 		$return.=('<hr noshade width="75%" size="1" align="center"/>');
 		$return.=('<div id="help_menu">');
@@ -157,14 +157,14 @@ function echo_menu($topic_id)
 	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' ORDER BY order_id');
-	if ($db->nf()) {
+	if ($db->getNumRows()) {
 
 		$return.=('<ul type="disc">');
-		while($db->next_record()) {
+		while($db->nextRecord()) {
 
-			$sub_topic_id = $db->f('topic_id');
-			$order_id = $db->f('order_id');
-			$sub_topic = stripslashes($db->f('topic'));
+			$sub_topic_id = $db->getField('topic_id');
+			$order_id = $db->getField('order_id');
+			$sub_topic = stripslashes($db->getField('topic'));
 
 			$return.=('<li><a href="'.URL.'/manual.php?'.$sub_topic_id.'">' . get_numbering($sub_topic_id) . $sub_topic.'</a></li>');
 			$return.=create_menu($sub_topic_id);
@@ -181,10 +181,10 @@ function get_numbering($topic_id) {
 	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$up_topic_id = $db->f('parent_topic_id');
-		$order_id = $db->f('order_id');
+		$up_topic_id = $db->getField('parent_topic_id');
+		$order_id = $db->getField('order_id');
 
 		return get_numbering($up_topic_id) . $order_id . '. ';
 

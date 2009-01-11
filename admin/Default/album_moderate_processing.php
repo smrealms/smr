@@ -29,10 +29,10 @@ if ($var['task'] == 'reset_image') {
 
 	$curr_time = time();
 
-	$db->lock('album_has_comments');
+	$db->lockTable('album_has_comments');
 	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$account_id);
-	if ($db->next_record())
-		$comment_id = $db->f('MAX(comment_id)') + 1;
+	if ($db->nextRecord())
+		$comment_id = $db->getField('MAX(comment_id)') + 1;
 	else
 		$comment_id = 1;
 
@@ -43,8 +43,8 @@ if ($var['task'] == 'reset_image') {
 
 	// get his email address and send the mail
 	$db->query('SELECT email FROM account WHERE account_id = '.$account_id);
-	if ($db->next_record())
-		send_html_mail('SMR Photo Album', 'pics@smrealms.de', $db->f('email'), 'SMR Photo Album Notification', nl2br($email_txt));
+	if ($db->nextRecord())
+		send_html_mail('SMR Photo Album', 'pics@smrealms.de', $db->getField('email'), 'SMR Photo Album Notification', nl2br($email_txt));
 
 } else if ($var['task'] == 'reset_location')
 	$db->query('UPDATE album SET location = \'\' WHERE account_id = '.$account_id);

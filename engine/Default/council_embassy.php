@@ -18,17 +18,17 @@ $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM race ' .
 		   'WHERE race_id != '.$player->getRaceID().' AND ' .
 				 'race_id > 1');
-while($db->next_record())
+while($db->nextRecord())
 {
 
-	$race_id	= $db->f('race_id');
-	$race_name	= $db->f('race_name');
+	$race_id	= $db->getField('race_id');
+	$race_name	= $db->getField('race_name');
 
 	$db2->query('SELECT * FROM race_has_voting ' .
 				'WHERE game_id = '.$player->getGameID().' AND ' .
 					  'race_id_1 = '.$player->getRaceID().' AND ' .
 					  'race_id_2 = '.$race_id);
-	if ($db2->nf() > 0) continue;
+	if ($db2->getNumRows() > 0) continue;
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($race_id) . '</td>');

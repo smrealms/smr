@@ -23,11 +23,11 @@ $PHP_OUTPUT.=('<th>Transfer to</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $db->query('SELECT * FROM good ORDER BY good_id');
-while($db->next_record())
+while($db->nextRecord())
 {
 
-	$good_id	= $db->f('good_id');
-	$good_name	= $db->f('good_name');
+	$good_id	= $db->getField('good_id');
+	$good_name	= $db->getField('good_name');
 
 	if (!$ship->hasCargo($good_id) && !$planet->hasStockpile($good_id)) continue;
 

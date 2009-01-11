@@ -9,17 +9,17 @@ else {
 	//we are deleting an entire paper
     //make sure it isnt online
     $db->query('SELECT * FROM galactic_post_online WHERE game_id = '.$player->getGameID().' AND paper_id = '.$var['id']);
-    if ($db->nf())
+    if ($db->getNumRows())
     	create_error('You cant delete a paper that is online.  You must first replace the paper with another');
     else {
 
     	//its ok to delete this paper
         //find out which articles need to be deleted as well
         $db->query('SELECT * FROM galactic_post_paper_content WHERE game_id = '.$player->getGameID().' AND paper_id = '.$var['id']);
-        while($db->next_record()) {
+        while($db->nextRecord()) {
 
             //delete this article that is part of this paper
-            $db2->query('DELETE FROM galactic_post_article WHERE article_id = ' . $db->f('article_id') . ' AND game_id = '.$player->getGameID());
+            $db2->query('DELETE FROM galactic_post_article WHERE article_id = ' . $db->getField('article_id') . ' AND game_id = '.$player->getGameID());
 
         }
     }

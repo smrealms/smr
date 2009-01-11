@@ -9,8 +9,8 @@ help keep it alive. Every little donation can help me. Beside for the cost for t
 I invest most of my free time into this game to make it better. So if you are able
 to give me a financial aid I really would appreciate it.</p>');
 $db->query('SELECT SUM(amount) as total_donation FROM account_donated WHERE time > ' . time() . ' - (60 * 60 * 24 * 90)');
-if ($db->next_record())
-	$total_donation = $db->f('total_donation');
+if ($db->nextRecord())
+	$total_donation = $db->getField('total_donation');
 
 $PHP_OUTPUT.=('Current donation rate is: $' . number_format($total_donation / 12, 2) . ' per week (within last 3 months).');
 

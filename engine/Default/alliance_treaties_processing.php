@@ -14,8 +14,8 @@ if (isset($var['accept'])) {
 						FROM alliance_has_roles
 						WHERE game_id = '.$player->getGameID().' AND
 							  alliance_id = '.$alliance_id_1);
-			if ($db->next_record())
-				$role_id = $db->f('MAX(role_id)') + 1;
+			if ($db->nextRecord())
+				$role_id = $db->getField('MAX(role_id)') + 1;
 			else
 				$role_id = 1;
 			$allianceName = $var['alliance_name'];
@@ -26,8 +26,8 @@ if (isset($var['accept'])) {
 						FROM alliance_has_roles
 						WHERE game_id = '.$player->getGameID().' AND
 							  alliance_id = ' . $var['alliance_id_1']);
-			if ($db->next_record())
-				$role_id = $db->f('MAX(role_id)') + 1;
+			if ($db->nextRecord())
+				$role_id = $db->getField('MAX(role_id)') + 1;
 			else
 				$role_id = 1;
 			$allianceName = $player->getAllianceName();
@@ -45,7 +45,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	
 	$alliance_id_2 = $_REQUEST['proposedAlliance'];
 	$db->query('SELECT alliance_id_1, alliance_id_2, game_id FROM alliance_treaties WHERE (alliance_id_1 = '.$alliance_id_1.' OR alliance_id_1 = '.$alliance_id_2.') AND (alliance_id_2 = '.$alliance_id_1.' OR alliance_id_2 = '.$alliance_id_2.') AND game_id = '.$player->getGameID());
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 		$container=array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'alliance_treaties.php';
@@ -83,16 +83,16 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	if ($mbWrite) $mbRead = 1;
 	//get confirmation
 	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
-	$db->next_record();
-	$leader_id = $db->f('leader_id');
-	$smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->f('alliance_id') . ')');
+	$db->nextRecord();
+	$leader_id = $db->getField('leader_id');
+	$smarty->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 	include(ENGINE . 'global/menue.inc');
-	$PHP_OUTPUT.=create_alliance_menue($alliance_id_1,$db->f('leader_id'));
+	$PHP_OUTPUT.=create_alliance_menue($alliance_id_1,$db->getField('leader_id'));
 	$PHP_OUTPUT.=('<br /><br /');
 	$PHP_OUTPUT.=('<div align="center">Are you sure you want to offer a treaty to <span class="yellow">');
 	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
-	$db->next_record();
-	$PHP_OUTPUT.=(stripslashes($db->f('alliance_name')));
+	$db->nextRecord();
+	$PHP_OUTPUT.=(stripslashes($db->getField('alliance_name')));
 	$PHP_OUTPUT.=('</span> with the following conditions:<br /><ul>');
 	if ($traderAssist) $PHP_OUTPUT.=('<li>Assist - Trader Attacks</li>');
 	if ($traderDefend) $PHP_OUTPUT.=('<li>Defend - Trader Attacks</li>');
@@ -141,11 +141,11 @@ if (isset($_REQUEST['proposedAlliance'])) {
 				$var['forcesNAP'] . ', ' . $var['aaAccess'] . ', ' . $var['mbRead'] . ', ' . $var['mbWrite'] . ', ' . $var['modRead'] . ', \'FALSE\')');
 	//send a message to the leader letting them know the offer is waiting.
 	$db->query('SELECT alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
-	$db->next_record();
-	$alliance_name = stripslashes($db->f('alliance_name'));
+	$db->nextRecord();
+	$alliance_name = stripslashes($db->getField('alliance_name'));
 	$db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
-	$db->next_record();
-	$leader_2 = $db->f('leader_id');
+	$db->nextRecord();
+	$leader_2 = $db->getField('leader_id');
 	$message = 'An ambassador from <span class="yellow">' . $alliance_name . '</span> has arrived.';
 	$message = mysql_real_escape_string($message);
 	$msg = '(' . SmrSession::$game_id . ',' . $leader_2 . ',6,' . $db->escape_string($message) . ',0,' . TIME . ',\'FALSE\',' . MESSAGE_EXPIRES . ')';

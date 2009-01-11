@@ -84,7 +84,7 @@ $curr_time = time();
 
 // check if we had a album entry so far
 $db->query('SELECT * FROM album WHERE account_id = '.SmrSession::$account_id);
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
 	if ($no_picture == false)
 		$comment = '<span style="color:lime;">*** Picture changed</span>';
@@ -121,11 +121,11 @@ if ($db->next_record()) {
 if ($comment) {
 
 	// check if we have comments for this album already
-	$db->lock('album_has_comments');
+	$db->lockTable('album_has_comments');
 
 	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.SmrSession::$account_id);
-	if ($db->next_record())
-		$comment_id = $db->f('MAX(comment_id)') + 1;
+	if ($db->nextRecord())
+		$comment_id = $db->getField('MAX(comment_id)') + 1;
 	else
 		$comment_id = 1;
 

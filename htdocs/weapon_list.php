@@ -47,20 +47,20 @@ echo ('<th align="center"><a href="?order=accuracy&seq='.$seq.'"><span style=col
 echo ('<th align="center"><a href="?order=power_level&seq='.$seq.'"><span style=color:#80C870;>Power Level</span></a></th>');
 echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
 echo ('</tr>');
-while ($db->next_record())
+while ($db->nextRecord())
 {
 	//we need an array so we dont have 8 td rows
     $stat = array();
-    $stat[] = $db->f('weapon_name');
-    $stat[] = $db->f('race_name');
-    $stat[] = $db->f('cost');
-    $stat[] = $db->f('shield_damage');
-    $stat[] = $db->f('armor_damage');
-    $stat[] = $db->f('accuracy');
-    $stat[] = $db->f('power_level');
-	if ($db->f('buyer_restriction') == 1)
+    $stat[] = $db->getField('weapon_name');
+    $stat[] = $db->getField('race_name');
+    $stat[] = $db->getField('cost');
+    $stat[] = $db->getField('shield_damage');
+    $stat[] = $db->getField('armor_damage');
+    $stat[] = $db->getField('accuracy');
+    $stat[] = $db->getField('power_level');
+	if ($db->getField('buyer_restriction') == 1)
     	$restriction = '<font color=green>Good</font>';
-	elseif ($db->f('buyer_restriction') == 2)
+	elseif ($db->getField('buyer_restriction') == 2)
     	$restriction = '<font color=red>Evil</font>';
 	else
     	$restriction = '&nbsp;';

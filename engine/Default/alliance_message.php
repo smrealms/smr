@@ -3,10 +3,10 @@
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
 $db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->next_record();
-$smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->f('alliance_id') . ')');
+$db->nextRecord();
+$smarty->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 $mbWrite = TRUE;
 $in_alliance = TRUE;
 if ($alliance_id != $player->getAllianceID()) {
@@ -16,7 +16,7 @@ if ($alliance_id != $player->getAllianceID()) {
 					' AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')'.
 					' AND game_id = '.$player->getGameID().
 					' AND mb_write = 1 AND official = \'TRUE\'');
-	if ($db->next_record()) $mbWrite = TRUE;
+	if ($db->nextRecord()) $mbWrite = TRUE;
 	else $mbWrite = FALSE;
 }
 $query = 'SELECT 
@@ -35,7 +35,7 @@ AND alliance_thread.thread_id=alliance_thread_topic.thread_id';
 if (!$in_alliance) $query .= ' AND alliance_thread_topic.alliance_only = 0';
 $query .= ' GROUP BY alliance_thread.thread_id ORDER BY sendtime DESC';
 $db->query($query);
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.= '<div align="center">';
 	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Topic</th><th>Author</th><th>Replies</th><th>Last Reply</th></tr>';
 
@@ -49,30 +49,30 @@ if ($db->nf() > 0) {
 
 	$i=0;
 	$alliance_eyes = array();
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 		
 		$db2->query('SELECT time
 					FROM player_read_thread 
 					WHERE account_id=' . $player->getAccountID()  . '
 					AND game_id=' . $player->getGameID() . '
 					AND alliance_id =' . $alliance_id . '
-					AND thread_id=' . $db->f('thread') . ' 
-					AND time>' . $db->f('sendtime') . ' LIMIT 1
+					AND thread_id=' . $db->getField('thread') . ' 
+					AND time>' . $db->getField('sendtime') . ' LIMIT 1
 					');
-		if ($db->f('alliance_only')) $alliance_eyes[$i] = TRUE;
+		if ($db->getField('alliance_only')) $alliance_eyes[$i] = TRUE;
 		else $alliance_eyes[$i] = FALSE;
 		$threads[$i]['head'] =  '<tr><td>';
 		$threads[$i]['tail'] = '';
-		$threads[$i]['thread_id'] = $db->f('thread');
+		$threads[$i]['thread_id'] = $db->getField('thread');
 
-		$thread_ids[$i] = $db->f('thread');
-		$thread_topics[$i] = $db->f('topic');
+		$thread_ids[$i] = $db->getField('thread');
+		$thread_topics[$i] = $db->getField('topic');
 
-		if ($db2->nf() == 0) {
+		if ($db2->getNumRows() == 0) {
 			$threads[$i]['head'] .= '<b>';
 			$threads[$i]['tail'] .= '</b>';
 		}
-		if ($db->f('sender_id') > 0) {
+		if ($db->getField('sender_id') > 0) {
 			$db2->query('SELECT
 						player.player_name as player_name,
 						alliance_thread.sender_id as sender_id
@@ -80,16 +80,16 @@ if ($db->nf() > 0) {
 						WHERE player.game_id=' . $player->getGameID() . '
 						AND alliance_thread.game_id=' . $player->getGameID() . '
 						AND alliance_thread.alliance_id=' . $alliance_id . '
-						AND alliance_thread.thread_id=' . $db->f('thread') . '
+						AND alliance_thread.thread_id=' . $db->getField('thread') . '
 						AND alliance_thread.reply_id=1
 						AND player.account_id=alliance_thread.sender_id LIMIT 1
 						');
 	
-			$db2->next_record();
-			$playerName = stripslashes($db2->f('player_name'));
-			$sender_id = $db2->f('sender_id');
+			$db2->nextRecord();
+			$playerName = stripslashes($db2->getField('player_name'));
+			$sender_id = $db2->getField('sender_id');
 		} else {
-			$sender_id = $db->f('sender_id');
+			$sender_id = $db->getField('sender_id');
 			if ($sender_id == 0) $playerName = 'Planet Reporter';
 			if ($sender_id == -1) $playerName = 'Bank Reporter';
 			if ($sender_id == -2) $playerName = 'Forces Reporter';
@@ -99,21 +99,21 @@ if ($db->nf() > 0) {
 		$threads[$i]['tail'] .= '</td><td class="shrink nowrap">';
 		$threads[$i]['tail'] .= stripslashes($playerName);
 		$db3->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-		if ($db3->next_record()) $role_id = $db3->f('role_id');
+		if ($db3->nextRecord()) $role_id = $db3->getField('role_id');
 		else $role_id = 0;
 		$db3->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
-		$db3->next_record();
-		if ($player->getAccountID() == $sender_id || $db3->f('mb_messages') == 'TRUE') {
-			$container['thread_id'] = $db->f('thread');
+		$db3->nextRecord();
+		if ($player->getAccountID() == $sender_id || $db3->getField('mb_messages') == 'TRUE') {
+			$container['thread_id'] = $db->getField('thread');
 			$threads[$i]['tail'] .= '<br /><small>';
 			$threads[$i]['tail'] .= create_link($container, 'Delete Thread!');
 			$threads[$i]['tail'] .= '</small>';
 		}
 		$threads[$i]['tail'] .= '</td><td class="shrink center">';
-		$threads[$i]['tail'] .= $db->f('num_replies');
-		$thread_replies[$i] = $db->f('num_replies');
+		$threads[$i]['tail'] .= $db->getField('num_replies');
+		$thread_replies[$i] = $db->getField('num_replies');
 		$threads[$i]['tail'] .= '</td><td class="shrink nowrap">';
-		$threads[$i]['tail'] .= date('n/j/Y g:i:s A', $db->f('sendtime'));
+		$threads[$i]['tail'] .= date('n/j/Y g:i:s A', $db->getField('sendtime'));
 		$threads[$i]['tail'] .= '</td></tr>';
 		++$i;
 	}

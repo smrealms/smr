@@ -10,7 +10,7 @@ if ($action == 'YES') {
 										  'game_id = '.$player->getGameID());
 
 	// will this alliance be empty if we leave? (means one member right now)
-	if ($db->nf() == 1) {
+	if ($db->getNumRows() == 1) {
 
 		//$db->query('DELETE FROM alliance WHERE alliance_id = '.$player->getAllianceID().' AND ' .
 											  //'game_id = '.$player->getGameID());

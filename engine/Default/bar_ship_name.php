@@ -218,8 +218,8 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	$db->query('SELECT location_name FROM location_type NATURAL JOIN location WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND location_type.location_type_id > 800 AND location_type.location_type_id < 900');
 	
 	//next welcome them
-	if ($db->next_record()) $PHP_OUTPUT.=('<div align=center>So you want to name your ship?  Great!  ' .
-					'Anyone who knows anything will tell you ' . $db->f('location_name') . ' ' .
+	if ($db->nextRecord()) $PHP_OUTPUT.=('<div align=center>So you want to name your ship?  Great!  ' .
+					'Anyone who knows anything will tell you ' . $db->getField('location_name') . ' ' .
 					'is the place to get it done!<br /><br />');
 					
 	$PHP_OUTPUT.=('So...what do you want to name it? (max 48 text chars) (max 30 height by 200 width and 20k for logos)<br />');

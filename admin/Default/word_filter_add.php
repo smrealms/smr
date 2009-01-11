@@ -23,7 +23,7 @@ $db = new SmrMySqlDatabase();
 
 $db->query('SELECT word_id FROM word_filter WHERE word_value=\'' . $word . '\' LIMIT 1');
 
-if($db->next_record()) {
+if($db->nextRecord()) {
 	$container['error'] = 1;	
 	forward($container);
 	exit;

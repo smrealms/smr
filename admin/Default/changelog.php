@@ -9,11 +9,11 @@ $link_set_live = true;
 $db->query('SELECT *
 			FROM version
 			ORDER BY version_id DESC');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$version_id = $db->f('version_id');
-	$version = $db->f('major_version') . '.' . $db->f('minor_version') . '.' . $db->f('patch_level');
-	$went_live = $db->f('went_live');
+	$version_id = $db->getField('version_id');
+	$version = $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level');
+	$went_live = $db->getField('went_live');
 
 	if ($went_live > 0) {
 
@@ -49,11 +49,11 @@ while ($db->next_record()) {
 				FROM changelog
 				WHERE version_id = '.$version_id.'
 				ORDER BY changelog_id');
-	while ($db2->next_record()) {
+	while ($db2->nextRecord()) {
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td valign="top"><li></td>');
-		$PHP_OUTPUT.=('<td>' . stripslashes($db2->f('change_title')) . '<br /><small>' . stripslashes($db2->f('change_message')) . '</small></td>');
+		$PHP_OUTPUT.=('<td>' . stripslashes($db2->getField('change_title')) . '<br /><small>' . stripslashes($db2->getField('change_message')) . '</small></td>');
 		$PHP_OUTPUT.=('<td>&nbsp;</td>');
 		$PHP_OUTPUT.=('</tr>');
 

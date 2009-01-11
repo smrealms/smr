@@ -3,11 +3,11 @@ if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
 		require_once(get_file_loc('SmrPlanet.class.inc'));
 $db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->next_record();
-$smarty->assign('PageTopic',stripslashes($db->f('alliance_name')) . ' (' . $db->f('alliance_id') . ')');
+$db->nextRecord();
+$smarty->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 //$smarty->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
 include(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->f('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 // Ugly, but funtional
 $db->query('
@@ -29,10 +29,10 @@ ORDER BY planet.sector_id
 
 $PHP_OUTPUT.= '<div align="center">';
 
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
     $PHP_OUTPUT.= 'Your alliance currently has ';
-    $PHP_OUTPUT.= $db->nf();
+    $PHP_OUTPUT.= $db->getNumRows();
     $PHP_OUTPUT.= ' planets in the universe!<br /><br />';
 	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Name</th><th>Owner</th><th>Sector<th>G</th><th>H</th><th>T</th><th>Shields</th><th>Drones</th><th>Supplies</th><th>Build</th></tr>';
 
@@ -41,23 +41,23 @@ if ($db->nf() > 0) {
 	// Cache the good names
 	$goods_cache = array();
 	$db2->query('SELECT good_id,good_name FROM good');
-	while($db2->next_record()) {
-		$goods_cache[$db2->f('good_id')] = $db2->f('good_name');
-		if($db2->f('good_name') == 'Precious Metals') {
-			$goods_cache[$db2->f('good_id')] = 'PM';
+	while($db2->nextRecord()) {
+		$goods_cache[$db2->getField('good_id')] = $db2->getField('good_name');
+		if($db2->getField('good_name') == 'Precious Metals') {
+			$goods_cache[$db2->getField('good_id')] = 'PM';
 		}
 	}
 
-    while ($db->next_record()) {
-		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->f('sector_id'));
+    while ($db->nextRecord()) {
+		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= $planet->planet_name;
 		$PHP_OUTPUT.= '</td><td>';
-		$PHP_OUTPUT.= stripslashes($db->f('player_name'));
+		$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
 		$PHP_OUTPUT.= $planet->getSectorID();
 		$PHP_OUTPUT.= '&nbsp;(';
-		$PHP_OUTPUT.= $db->f('galaxy_name');
+		$PHP_OUTPUT.= $db->getField('galaxy_name');
 		$PHP_OUTPUT.= ')</td><td class="shrink center">';
 		$PHP_OUTPUT.= $planet->getBuilding(1);
 		$PHP_OUTPUT.= '</td><td class="shrink center">';

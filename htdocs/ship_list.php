@@ -38,8 +38,8 @@ elseif (isset($hardwarea)) {
                 'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND ' .
                 'ship_type_support_hardware.hardware_type_id = '.$hardwarea.' ' .
                 'ORDER BY max_amount '.$seq);
-    while ($db->next_record())
-    	$ship_array[] = $db->f('id');
+    while ($db->nextRecord())
+    	$ship_array[] = $db->getField('id');
 
 } else
 	$order_by = 'ship_type.ship_type_id';
@@ -86,41 +86,41 @@ if (is_array($ship_array))
                 'ship_type.ship_type_id = '.$db_id.' ' .
                 'ORDER BY ship_type_support_hardware.hardware_type_id');
 
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
 		    //we want to put them all in an array so we dont have to have 15 td rows
     		$stat = array();
-	    	$name = str_replace(' ','&nbsp;',$db->f('ship_name'));
+	    	$name = str_replace(' ','&nbsp;',$db->getField('ship_name'));
 	    	$stat[] = $name;
-			$race = str_replace(' ','&nbsp;',$db->f('race_name'));
+			$race = str_replace(' ','&nbsp;',$db->getField('race_name'));
     		$stat[] = $race;
-		    $cost = $db->f('cost');
+		    $cost = $db->getField('cost');
     		$stat[] = $cost;
-	    	$speed = $db->f('speed');
+	    	$speed = $db->getField('speed');
 	    	$stat[] = $speed;
-		    $hardpoints = $db->f('hardpoint');
+		    $hardpoints = $db->getField('hardpoint');
     		$stat[] = $hardpoints;
-		    if ($db->f('buyer_restriction') == 1)
+		    if ($db->getField('buyer_restriction') == 1)
     		    $restriction = '<font color=green>Good</font>';
-	    	elseif ($db->f('buyer_restriction') == 2)
+	    	elseif ($db->getField('buyer_restriction') == 2)
     	    	$restriction = '<font color=red>Evil</font>';
 		    else
     		    $restriction = '&nbsp;';
 	    	$stat[] = $restriction;
-            $level = $db->f('lvl_needed');
+            $level = $db->getField('lvl_needed');
             $stat[] = $level;
 	    	$hardware_dis = array();
-		    $hardware_dis[1] = $db->f('max_amount');
+		    $hardware_dis[1] = $db->getField('max_amount');
 		    $stat[] = $hardware_dis[1];
     		$hardware_id = 2;
 	    	//get our hardware
 	    	while ($hardware_id <= 11) {
 
-		        if($db->next_record()) {
+		        if($db->nextRecord()) {
 
 		        	if ($hardware_id < 7)
-    		        	$stat[] = $db->f('max_amount');
-        		    elseif ($db->f('max_amount') == 1)
+    		        	$stat[] = $db->getField('max_amount');
+        		    elseif ($db->getField('max_amount') == 1)
             			$stat[] = 'Yes';
 	            	else
     	        		$stat[] = '&nbsp;';
@@ -150,43 +150,43 @@ else
                 'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id ' .
                 'ORDER BY '.$order_by);
 
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
 
 		//we want to put them all in an array so we dont have to have 15 td rows
     	$stat = array();
-	   	$name = str_replace(' ','&nbsp;',$db->f('ship_name'));
+	   	$name = str_replace(' ','&nbsp;',$db->getField('ship_name'));
 	    $stat[] = $name;
-		$race = str_replace(' ','&nbsp;',$db->f('race_name'));
+		$race = str_replace(' ','&nbsp;',$db->getField('race_name'));
     	$stat[] = $race;
-		$cost = $db->f('cost');
+		$cost = $db->getField('cost');
     	$stat[] = $cost;
-	    $speed = $db->f('speed');
+	    $speed = $db->getField('speed');
 	    $stat[] = $speed;
-		$hardpoints = $db->f('hardpoint');
+		$hardpoints = $db->getField('hardpoint');
     	$stat[] = $hardpoints;
-		if ($db->f('buyer_restriction') == 1)
+		if ($db->getField('buyer_restriction') == 1)
     		$restriction = '<font color=green>Good</font>';
-	    elseif ($db->f('buyer_restriction') == 2)
+	    elseif ($db->getField('buyer_restriction') == 2)
     		$restriction = '<font color=red>Evil</font>';
 		else
     		$restriction = '&nbsp;';
 	    $stat[] = $restriction;
-		$level = $db->f('lvl_needed');
+		$level = $db->getField('lvl_needed');
         $stat[] = $level;
 	    $hardware_dis = array();
-		$hardware_dis[1] = $db->f('max_amount');
+		$hardware_dis[1] = $db->getField('max_amount');
 		$stat[] = $hardware_dis[1];
     	$hardware_id = 2;
 	    //get our hardware
 	    while ($hardware_id <= 11)
 	    {
-			if($db->next_record())
+			if($db->nextRecord())
 			{
 
 		    	if ($hardware_id < 7)
-    		    	$stat[] = $db->f('max_amount');
-        		elseif ($db->f('max_amount') == 1)
+    		    	$stat[] = $db->getField('max_amount');
+        		elseif ($db->getField('max_amount') == 1)
             		$stat[] = 'Yes';
 	            else
     	        	$stat[] = '&nbsp;';

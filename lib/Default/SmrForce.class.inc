@@ -91,15 +91,15 @@ class SmrForce
 //		$db2 = new SmrMySqlDatabase();
 //		$time = time();
 //		$db->query('SELECT * FROM force_refresh WHERE refresh_at <= '.$time);
-//		while ($db->next_record()) {
+//		while ($db->nextRecord()) {
 //			
-//			$total = $db->f('num_forces');
+//			$total = $db->getField('num_forces');
 //			$days = ceil($total / 10);
 //			if ($days > 5) $days = 5;
-//			$ex_time = $db->f('refresh_at') + ($days * 86400);
-//			$db2->query('UPDATE sector_has_forces SET expire_time = '.$ex_time.' WHERE game_id = '.$this->gameID.' AND sector_id = ' . $db->f('sector_id') . ' AND owner_id = ' . $db->f('owner_id'));
+//			$ex_time = $db->getField('refresh_at') + ($days * 86400);
+//			$db2->query('UPDATE sector_has_forces SET expire_time = '.$ex_time.' WHERE game_id = '.$this->gameID.' AND sector_id = ' . $db->getField('sector_id') . ' AND owner_id = ' . $db->getField('owner_id'));
 //			$db2->query('DELETE FROM force_refresh WHERE game_id = '.$this->gameID.' ' .
-//					'AND sector_id = ' . $db->f('sector_id') . ' AND owner_id = ' . $db->f('owner_id'));
+//					'AND sector_id = ' . $db->getField('sector_id') . ' AND owner_id = ' . $db->getField('owner_id'));
 //						
 //		}
 	}

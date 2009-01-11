@@ -5,8 +5,8 @@ if ($var['target_sector'] == $player->getSectorID())
 	forward(create_container('skeleton.php', $var['target_page']));
 
 $db->query('SELECT galaxy_id,sector_id FROM sector WHERE (sector_id=' . $player->getSectorID() . ' OR sector_id=' . $var['target_sector'] . ') AND game_id=' . SmrSession::$game_id . ' LIMIT 2' );
-while($db->next_record()){
-	$gal_ids[$db->f('sector_id')] = $db->f('galaxy_id');
+while($db->nextRecord()){
+	$gal_ids[$db->getField('sector_id')] = $db->getField('galaxy_id');
 }
 
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
@@ -25,9 +25,9 @@ if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 	
 	//update plot
 	$db->query('SELECT course, distance FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' LIMIT 1');
-	if ($db->next_record()) {
-	    $path_list	= unserialize($db->f('course'));
-	    $distance	= $db->f('distance');
+	if ($db->nextRecord()) {
+	    $path_list	= unserialize($db->getField('course'));
+	    $distance	= $db->getField('distance');
 	    if ($path_list[0] == $var['target_sector']) {
 	        array_shift($path_list);
 	        $distance -= $turns;
@@ -94,13 +94,13 @@ $db->query($query);
 $mine_owner_id = false;
 $scout_owners = array();
 
-while($db->next_record()) {
-	if($db->f('mines') && !$mine_owner_id) {
-		$mine_owner_id = $db->f('account_id');
-		$forces[$mine_owner_id][2] = $db->f('mines');
+while($db->nextRecord()) {
+	if($db->getField('mines') && !$mine_owner_id) {
+		$mine_owner_id = $db->getField('account_id');
+		$forces[$mine_owner_id][2] = $db->getField('mines');
 	}
-	if($db->f('scout_drones')) {
-		$scout_owners[] = $db->f('account_id');
+	if($db->getField('scout_drones')) {
+		$scout_owners[] = $db->getField('account_id');
 	}
 }
 
@@ -166,11 +166,11 @@ acquire_lock($var['target_sector']);
 
 // check if this came from a plotted course from db
 $db->query('SELECT course, distance FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' LIMIT 1');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
     // get the array back
-    $path_list	= unserialize($db->f('course'));
-    $distance	= $db->f('distance');
+    $path_list	= unserialize($db->getField('course'));
+    $distance	= $db->getField('distance');
 
     if ($path_list[0] == $var['target_sector']) {
 
@@ -204,13 +204,13 @@ $db->query(get_forces_query($gal_ids[$var['target_sector']]));
 $mine_owner_id = false;
 $scout_owners = array();
 
-while($db->next_record()) {
-	if($db->f('mines') && !$mine_owner_id) {
-		$mine_owner_id = $db->f('account_id');
-		$forces[$mine_owner_id][2] = $db->f('mines');
+while($db->nextRecord()) {
+	if($db->getField('mines') && !$mine_owner_id) {
+		$mine_owner_id = $db->getField('account_id');
+		$forces[$mine_owner_id][2] = $db->getField('mines');
 	}
-	if($db->f('scout_drones')) {
-		$scout_owners[] = $db->f('account_id');
+	if($db->getField('scout_drones')) {
+		$scout_owners[] = $db->getField('account_id');
 	}
 }
 
@@ -266,9 +266,9 @@ function get_forces_query($galaxy_id) {
 				AND official = \'TRUE\'
 				AND forces_nap = 1');
 	$allied[] = $player->getAllianceID();
-	while ($db->next_record()) {
-		if ($db->f('alliance_id_1') == $player->getAllianceID()) $allied[] = $db->f('alliance_id_2');
-		else $allied[] = $db->f('alliance_id_1');
+	while ($db->nextRecord()) {
+		if ($db->getField('alliance_id_1') == $player->getAllianceID()) $allied[] = $db->getField('alliance_id_2');
+		else $allied[] = $db->getField('alliance_id_1');
 	}
 	$query = '
 	SELECT

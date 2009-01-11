@@ -11,9 +11,9 @@ $PHP_OUTPUT.=create_news_menue();
 $var_del = time() - 86400;
 $db->query('DELETE FROM news WHERE time < '.$var_del.' AND type = \'breaking\'');
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$time = $db->f('time');
+	$time = $db->getField('time');
     $PHP_OUTPUT.=create_link($container, '<b>MAJOR NEWS! - ' . date('n/j/Y g:i:s A', $time) . '</b>');
 	$PHP_OUTPUT.=('<br /><br />');
 
@@ -21,8 +21,8 @@ if ($db->next_record()) {
 if (isset($var['breaking'])) {
 
 	$db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
-	$text = stripslashes($db->f('news_message'));
-	$time = $db->f('time');
+	$text = stripslashes($db->getField('news_message'));
+	$time = $db->getField('time');
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center"><span style="color:#80C870;">Time</span></th>');
@@ -59,7 +59,7 @@ elseif ($min_news > $max_news) {
 
 }
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type != \'breaking\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	$PHP_OUTPUT.=('<b><big><div align="center"><font color="blue">');
 	$PHP_OUTPUT.=('Viewing ' . ($max_news - $min_news + 1) . ' news entries.</font></div></big></b>');
@@ -69,10 +69,10 @@ if ($db->nf()) {
 	$PHP_OUTPUT.=('<th align="center">News</span>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$time = $db->f('time');
-		$news = stripslashes($db->f('news_message'));
+		$time = $db->getField('time');
+		$news = stripslashes($db->getField('news_message'));
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">' . date('n/j/Y g:i:s A', $time) . '</td>');

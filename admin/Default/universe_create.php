@@ -11,8 +11,8 @@ $smarty->assign('CreateUniverseFormAction','loader.php');
 
 $db->query('SELECT * FROM game ORDER BY game_id');
 $games = array();
-while ($db->next_record())
-	$games[] = array('ID'=>$db->f('game_id'), 'Name' => $db->f('game_name'));
+while ($db->nextRecord())
+	$games[] = array('ID'=>$db->getField('game_id'), 'Name' => $db->getField('game_name'));
 $smarty->assign('Games',$games);
 $smarty->assign('DefaultStartDate',date('Y/m/d',TIME));
 $smarty->assign('DefaultEndDate',date('Y/m/d',TIME + 5184000));
@@ -20,11 +20,11 @@ $smarty->assign('DefaultEndDate',date('Y/m/d',TIME + 5184000));
 $db->query('SELECT game_name
 			FROM game
 			WHERE enabled = \'FALSE\'');
-if ($db->nf())
+if ($db->getNumRows())
 {
 	$disabledGames=array();
-	while ($db->next_record())
-		$disabledGames[] = $db->f('game_name');
+	while ($db->nextRecord())
+		$disabledGames[] = $db->getField('game_name');
 	$smarty->assign('DisabledGames',$disabledGames);
 
 }

@@ -31,23 +31,23 @@ $db->query('SELECT ship_type.ship_name as ship_name,land_on_planet,newbie_turns,
 				FROM player, ship_type WHERE player.ship_type_id = ship_type.ship_type_id
 				AND account_id=' . $var['target'] . '
 				AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
-$db->next_record();
-if($db->f('dead') == 'TRUE') {
+$db->nextRecord();
+if($db->getField('dead') == 'TRUE') {
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'current_sector.php';
 	$container['msg'] = '<span class="red bold">ERROR:</span> Target already dead.';
 	forward($container);
 }
-$defenderNewb = ($db->f('newbie_turns'));
-$players[$db->f('account_id')] = array(
-	(int)$db->f('player_id'),
-	get_colored_text($db->f('alignment'), stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')'),
-	(int)$db->f('alliance_id'),
-	(int)$db->f('race_id'),
-	(int)$db->f('ship_type_id'),
-	(int)$db->f('experience'),
-	(int)$db->f('alignment'),0,0,0,0,array(),stripslashes($db->f('ship_name')),0,0,0,0
+$defenderNewb = ($db->getField('newbie_turns'));
+$players[$db->getField('account_id')] = array(
+	(int)$db->getField('player_id'),
+	get_colored_text($db->getField('alignment'), stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')'),
+	(int)$db->getField('alliance_id'),
+	(int)$db->getField('race_id'),
+	(int)$db->getField('ship_type_id'),
+	(int)$db->getField('experience'),
+	(int)$db->getField('alignment'),0,0,0,0,array(),stripslashes($db->getField('ship_name')),0,0,0,0
 );
 // Insert our own player into the players array
 $players[SmrSession::$account_id] = array(
@@ -71,8 +71,8 @@ $db->query('SELECT galaxy_id FROM sector
 				AND game_id=' . SmrSession::$game_id . '
 				LIMIT 1');
 
-$db->next_record();
-if($db->f('galaxy_id') < 9) {
+$db->nextRecord();
+if($db->getField('galaxy_id') < 9) {
 	$protection = TRUE;
 }
 else {
@@ -88,19 +88,19 @@ if($player->getAllianceID() || $players[$var['target']][ALLIANCE_ID]) {
 				OR alliance_id_2 = ' . $players[$var['target']][ALLIANCE_ID] . ' OR alliance_id_2 = '.$player->getAllianceID().')
 				AND (trader_assist = 1 OR trader_defend = 1)
 				AND official = \'TRUE\'');
-	while ($db->next_record()) {
-		if ($db->f('alliance_id_1') == $player->getAllianceID()) {
-			if ($db->f('trader_nap')) $treaties_attacker[NAP][$db->f('alliance_id_2')] = $db->f('alliance_id_2');
-			if ($db->f('trader_assist')) $treaties_attacker[ASSIST][$db->f('alliance_id_2')] = $db->f('alliance_id_2');
-		} elseif ($db->f('alliance_id_2') == $player->getAllianceID()) {
-			if ($db->f('trader_nap')) $treaties_attacker[NAP][$db->f('alliance_id_1')] = $db->f('alliance_id_1');
-			if ($db->f('trader_assist')) $treaties_attacker[ASSIST][$db->f('alliance_id_1')] = $db->f('alliance_id_1');
-		} elseif ($db->f('alliance_id_1') == $players[$var['target']][ALLIANCE_ID]) {
-			if ($db->f('trader_nap')) $treaties_defender[NAP][$db->f('alliance_id_2')] = $db->f('alliance_id_2');
-			if ($db->f('trader_defend')) $treaties_defender[DEFEND][$db->f('alliance_id_2')] = $db->f('alliance_id_2');
-		} elseif ($db->f('alliance_id_2') == $players[$var['target']][ALLIANCE_ID]) {
-			if ($db->f('trader_nap')) $treaties_defender[NAP][$db->f('alliance_id_1')] = $db->f('alliance_id_1');
-			if ($db->f('trader_defend')) $treaties_defender[DEFEND][$db->f('alliance_id_1')] = $db->f('alliance_id_1');
+	while ($db->nextRecord()) {
+		if ($db->getField('alliance_id_1') == $player->getAllianceID()) {
+			if ($db->getField('trader_nap')) $treaties_attacker[NAP][$db->getField('alliance_id_2')] = $db->getField('alliance_id_2');
+			if ($db->getField('trader_assist')) $treaties_attacker[ASSIST][$db->getField('alliance_id_2')] = $db->getField('alliance_id_2');
+		} elseif ($db->getField('alliance_id_2') == $player->getAllianceID()) {
+			if ($db->getField('trader_nap')) $treaties_attacker[NAP][$db->getField('alliance_id_1')] = $db->getField('alliance_id_1');
+			if ($db->getField('trader_assist')) $treaties_attacker[ASSIST][$db->getField('alliance_id_1')] = $db->getField('alliance_id_1');
+		} elseif ($db->getField('alliance_id_1') == $players[$var['target']][ALLIANCE_ID]) {
+			if ($db->getField('trader_nap')) $treaties_defender[NAP][$db->getField('alliance_id_2')] = $db->getField('alliance_id_2');
+			if ($db->getField('trader_defend')) $treaties_defender[DEFEND][$db->getField('alliance_id_2')] = $db->getField('alliance_id_2');
+		} elseif ($db->getField('alliance_id_2') == $players[$var['target']][ALLIANCE_ID]) {
+			if ($db->getField('trader_nap')) $treaties_defender[NAP][$db->getField('alliance_id_1')] = $db->getField('alliance_id_1');
+			if ($db->getField('trader_defend')) $treaties_defender[DEFEND][$db->getField('alliance_id_1')] = $db->getField('alliance_id_1');
 		}
 	}
 	foreach ($treaties_attacker[ASSIST] as $allID) {
@@ -167,34 +167,34 @@ if($player->getAllianceID() || $players[$var['target']][ALLIANCE_ID]) {
 
 	$db->query($query);
 
-	while($db->next_record()) {
-		$players[$db->f('account_id')] = array(
-			(int)$db->f('player_id'),
-			get_colored_text($db->f('alignment'),stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')'),
-			(int)$db->f('alliance_id'),
-			(int)$db->f('race_id'),
-			(int)$db->f('ship_type_id'),
-			(int)$db->f('experience'),
-			(int)$db->f('alignment'),0,0,0,0,array(),stripslashes($db->f('ship_name')),0,0,0,0
+	while($db->nextRecord()) {
+		$players[$db->getField('account_id')] = array(
+			(int)$db->getField('player_id'),
+			get_colored_text($db->getField('alignment'),stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')'),
+			(int)$db->getField('alliance_id'),
+			(int)$db->getField('race_id'),
+			(int)$db->getField('ship_type_id'),
+			(int)$db->getField('experience'),
+			(int)$db->getField('alignment'),0,0,0,0,array(),stripslashes($db->getField('ship_name')),0,0,0,0
 		);
 	}
 }
 
 // Figure out everyone's level
 $db->query('SELECT level_id,requirement,level_name FROM level ORDER BY requirement DESC');
-while($db->next_record()) {
-	$levels[$db->f('level_id')] = $db->f('requirement');
-	$levelNames[$db->f('level_id')] = $db->f('level_name');
+while($db->nextRecord()) {
+	$levels[$db->getField('level_id')] = $db->getField('requirement');
+	$levelNames[$db->getField('level_id')] = $db->getField('level_name');
 }
 
 $db->query('SELECT * FROM race');
-while ($db->next_record()) $races[$db->f('race_id')] = stripslashes($db->f('race_name'));
+while ($db->nextRecord()) $races[$db->getField('race_id')] = stripslashes($db->getField('race_name'));
 $num_players = count($players);
 $player_ids = array_keys($players);
 $num_levels = count($levels);
 $level_ids = array_keys($levels);
 $db->query('SELECT account_id, tag FROM cpl_tag WHERE account_id IN (' . implode(',',$player_ids) . ') AND custom = 1 LIMIT '.$num_players);
-while ($db->next_record()) $customTags[$db->f('account_id')] = $db->f('tag');
+while ($db->nextRecord()) $customTags[$db->getField('account_id')] = $db->getField('tag');
 for($i=0;$i<$num_players;++$i) {
 	for($j=0;$j<$num_levels;++$j) {
 		if($levels[$level_ids[$j]] <= $players[$player_ids[$i]][EXPERIENCE]) {
@@ -210,9 +210,9 @@ $db->query('SELECT account_id, ship_has_weapon.weapon_type_id as id, shield_dama
 			AND game_id = '.$player->getGameID().'
 			AND weapon_type.weapon_type_id = ship_has_weapon.weapon_type_id
 			ORDER BY account_id, order_id');
-while ($db->next_record()) {
-	$weapons[$db->f('id')] = array($db->f('shield_damage'), $db->f('armor_damage'));
-	$players[$db->f('account_id')][WEAPONS][] = $db->f('id');
+while ($db->nextRecord()) {
+	$weapons[$db->getField('id')] = array($db->getField('shield_damage'), $db->getField('armor_damage'));
+	$players[$db->getField('account_id')][WEAPONS][] = $db->getField('id');
 }
 //get hardware
 $hardwareWeCareAbout = '(1,2,4)';
@@ -220,16 +220,16 @@ $db->query('SELECT * FROM ship_has_hardware
 			WHERE hardware_type_id IN '.$hardwareWeCareAbout.'
 			AND account_id IN (' . implode(',',$player_ids) . ')
 			AND game_id = '.$player->getGameID());
-while ($db->next_record()) {
-	switch($db->f('hardware_type_id')) {
+while ($db->nextRecord()) {
+	switch($db->getField('hardware_type_id')) {
 		case (1):
-			$players[$db->f('account_id')][SHIELDS] = $db->f('amount');
+			$players[$db->getField('account_id')][SHIELDS] = $db->getField('amount');
 			break;
 		case (2):
-			$players[$db->f('account_id')][ARMOR] = $db->f('amount');
+			$players[$db->getField('account_id')][ARMOR] = $db->getField('amount');
 			break;
 		case (4):
-			$players[$db->f('account_id')][DRONES] = $db->f('amount');
+			$players[$db->getField('account_id')][DRONES] = $db->getField('amount');
 			break;
 		default:
 			break;
@@ -239,10 +239,10 @@ $db->query('SELECT ship_name, account_id, attack, defense FROM ship_has_illusion
 			WHERE game_id = '.$player->getGameID().'
 			AND account_id IN (' . implode(',',$player_ids) . ')
 			AND ship_type.ship_type_id = ship_has_illusion.ship_type_id');
-while ($db->next_record()) {
-	$players[$db->f('account_id')][SHIP_NAME] = stripslashes($db->f('ship_name'));
-	$players[$db->f('account_id')][ATT_RATING] = $db->f('attack');
-	$players[$db->f('account_id')][DEF_RATING] = $db->f('defense');
+while ($db->nextRecord()) {
+	$players[$db->getField('account_id')][SHIP_NAME] = stripslashes($db->getField('ship_name'));
+	$players[$db->getField('account_id')][ATT_RATING] = $db->getField('attack');
+	$players[$db->getField('account_id')][DEF_RATING] = $db->getField('defense');
 }
 $attSize = sizeof($attackers);
 $defSize = sizeof($defenders);
@@ -258,17 +258,17 @@ elseif ($defSize)
 else $query .= ' AND alliance_id = 0';
 $query .= ' LIMIT ' . $limit;
 $db->query($query);
-while ($db->next_record()) $alliances[$db->f('alliance_id')] = stripslashes($db->f('alliance_name'));
+while ($db->nextRecord()) $alliances[$db->getField('alliance_id')] = stripslashes($db->getField('alliance_name'));
 $db->query('SELECT * FROM location WHERE location_type_id = '.$FED.' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' LIMIT 1');
-if ($db->next_record()) $fedBeacon = TRUE;
+if ($db->nextRecord()) $fedBeacon = TRUE;
 else $fedBeacon = FALSE;
 $attackingFleet = array();
 $defendingFleet = array();
 if (!$attSize) $attackingFleet[] = $player->getAccountID();
 if (!$defSize) $defendingFleet[] = $var['target'];
 $db->query('SELECT account_id FROM ship_has_cargo WHERE good_id IN (5,9,12) AND game_id=' . SmrSession::$game_id . ' AND account_id IN (' . implode(',',$player_ids) . ') LIMIT ' . sizeof($player_ids));
-while ($db->next_record())
-	$players[$db->f('account_id')][ILLEGALS] = 1;
+while ($db->nextRecord())
+	$players[$db->getField('account_id')][ILLEGALS] = 1;
 foreach ($players as $accID => $playerArray) {
 	//get attack/def ratings
 	$playerDMG = 0;

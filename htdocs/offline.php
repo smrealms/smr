@@ -7,9 +7,9 @@ require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 $db = new SmrMySqlDatabase();
 
 $db->query('SELECT * FROM game_disable');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$reason = stripslashes($db->f('reason'));
+	$reason = stripslashes($db->getField('reason'));
 
 } else header('Location: '.URL);
 

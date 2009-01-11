@@ -1,7 +1,7 @@
 <?
 $action = $_REQUEST['action'];
 $db->query('SELECT * FROM sector WHERE game_id = ' . $var['game_id'] . ' GROUP BY galaxy_id');
-$num_gals = $db->nf();
+$num_gals = $db->getNumRows();
 if ($action == 'Skip >>' || $num_gals == 1) {
 
 	$container = array();
@@ -26,14 +26,14 @@ foreach($warp as $galaxy_id_1 => $temp_array) {
 			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $var['game_id'] . ' AND ' .
 														  'galaxy_id = '.$galaxy_id_1.' ' .
 													'ORDER BY rand()');
-			while (!isset($found) && $db->next_record()) {
+			while (!isset($found) && $db->nextRecord()) {
 
-				$sector_id_1 = $db->f('sector_id');
+				$sector_id_1 = $db->getField('sector_id');
 
 				// does this sector already has a warp?
 				$db2->query('SELECT * FROM warp WHERE game_id = ' . $var['game_id'] . ' AND ' .
 													 '(sector_id_1 = '.$sector_id_1.' OR sector_id_2 = '.$sector_id_1.')');
-				if ($db2->nf() > 0) continue;
+				if ($db2->getNumRows() > 0) continue;
 
 				// ok we found a sector
 				$found = true;
@@ -45,14 +45,14 @@ foreach($warp as $galaxy_id_1 => $temp_array) {
 			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $var['game_id'] . ' AND ' .
 														  'galaxy_id = '.$galaxy_id_2.' ' .
 													'ORDER BY rand()');
-			while (!isset($found) && $db->next_record()) {
+			while (!isset($found) && $db->nextRecord()) {
 
-				$sector_id_2 = $db->f('sector_id');
+				$sector_id_2 = $db->getField('sector_id');
 
 				// does this sector already has a warp?
 				$db2->query('SELECT * FROM warp WHERE game_id = ' . $var['game_id'] . ' AND ' .
 													 '(sector_id_1 = '.$sector_id_2.' OR sector_id_2 = '.$sector_id_2.')');
-				if ($db2->nf() > 0) continue;
+				if ($db2->getNumRows() > 0) continue;
 
 				// ok we found a sector
 				$found = true;

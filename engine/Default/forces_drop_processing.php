@@ -13,7 +13,7 @@ $db->query('SELECT *
 			FROM location
 			WHERE game_id = '.$player->getGameID().' AND
 				  sector_id = '.$player->getSectorID());
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 	create_error('You can\'t drop forces in a sector with a location!');
 
 if ($player->isLandedOnPlanet())

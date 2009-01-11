@@ -44,12 +44,12 @@ if ($sector->hasForces()) {
 					 'mines > 0 AND ' .
 					 'owner_id != '.$player->getAccountID().' AND ' .
 					 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0)');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
 //		// we may skip forces if this is a protected gal.
 //		if ($sector->is_protected_gal()) {
 //
-//			$forces_account =& SmrAccount::getAccount($db->f('owner_id'));
+//			$forces_account =& SmrAccount::getAccount($db->getField('owner_id'));
 //
 //			// if one is vet and the other is newbie we skip it
 //			if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
@@ -108,10 +108,10 @@ if ($sector->getGalaxyID() != $target_sector->getGalaxyID())
 {
 	//we need to see if they can jump this many gals
 	$db->query('SELECT * FROM warp WHERE game_id = '.$player->getGameID());
-	while($db->next_record())
+	while($db->nextRecord())
 	{
-		$warp_sector1 =& SmrSector::getSector(SmrSession::$game_id, $db->f('sector_id_1'), SmrSession::$account_id);
-		$warp_sector2 =& SmrSector::getSector(SmrSession::$game_id, $db->f('sector_id_2'), SmrSession::$account_id);
+		$warp_sector1 =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id_1'), SmrSession::$account_id);
+		$warp_sector2 =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id_2'), SmrSession::$account_id);
 
 		if ($warp_sector1->getGalaxyID() == $target_sector->getGalaxyID() && $warp_sector2->getGalaxyID() == $sector->getGalaxyID())
 			$allowed = true;
@@ -274,13 +274,13 @@ $db->query('SELECT * FROM sector_has_forces, player ' .
 				 'owner_id != '.$player->getAccountID().' AND ' .
 				 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0)');
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
 //	// we may skip forces if this is a protected gal.
 //	if ($sector->is_protected_gal())
 //	{
 //
-//		$forces_account =& SmrAccount::getAccount($db->f('owner_id'));
+//		$forces_account =& SmrAccount::getAccount($db->getField('owner_id'));
 //
 //		// if one is vet and the other is newbie we skip it
 //		if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
@@ -298,7 +298,7 @@ while ($db->next_record()) {
 
 	} else {
 
-    	$owner_id = $db->f('owner_id');
+    	$owner_id = $db->getField('owner_id');
     	include('forces_minefield_processing.php');
     	exit;
 

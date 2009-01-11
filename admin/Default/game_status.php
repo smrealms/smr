@@ -1,7 +1,7 @@
 <?
 
 $db->query('SELECT * FROM game_disable');
-if (!$db->nf()) {
+if (!$db->getNumRows()) {
 
 	$smarty->assign('PageTopic','CLOSE GAME');
 

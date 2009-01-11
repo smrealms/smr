@@ -12,8 +12,8 @@ if (empty($game_id)) {
 
 	$db->query('SELECT * FROM game ORDER BY game_id');
 
-	while ($db->next_record())
-		$PHP_OUTPUT.=('<option value="' . $db->f('game_id') . '">' . $db->f('game_name') . '</option>');
+	while ($db->nextRecord())
+		$PHP_OUTPUT.=('<option value="' . $db->getField('game_id') . '">' . $db->getField('game_name') . '</option>');
 
 	$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Select');
@@ -31,8 +31,8 @@ if (empty($game_id)) {
 
 	$db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY player_id');
 
-	while ($db->next_record())
-		$PHP_OUTPUT.=('<option value="' . $db->f('account_id') . '">' . stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')</option>');
+	while ($db->nextRecord())
+		$PHP_OUTPUT.=('<option value="' . $db->getField('account_id') . '">' . stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')</option>');
 
 	$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Reveal Map');

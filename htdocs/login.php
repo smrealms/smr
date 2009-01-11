@@ -42,22 +42,22 @@ $db = new SmrMySqlDatabase();
 
 $loginNews = array();
 $db->query('SELECT * FROM game_news ORDER BY time DESC LIMIT 3');
-while ($db->next_record())
+while ($db->nextRecord())
 {
-	$loginNews[] = array('Message' => $db->f('message'),'AdminName' => $db->f('admin_name'),'Time' => date('n/j/Y',$db->f('time')), 'Recent' => (time() - $db->f('time') < 24 * 3600));
+	$loginNews[] = array('Message' => $db->getField('message'),'AdminName' => $db->getField('admin_name'),'Time' => date('n/j/Y',$db->getField('time')), 'Recent' => (time() - $db->getField('time') < 24 * 3600));
 }
 $smarty->assign('LoginNews',$loginNews);
 
 
 $db->query('SELECT count(*) AS num_on_cpl FROM player WHERE last_cpl_action > '.(time() - 3600));
-$db->next_record();
-$smarty->assign('NumberOnCPL',$db->f('num_on_cpl'));
+$db->nextRecord();
+$smarty->assign('NumberOnCPL',$db->getField('num_on_cpl'));
 
 $gameNews = array();
 $db->query('SELECT * FROM news ORDER BY time DESC LIMIT 4');
-while ($db->next_record())
+while ($db->nextRecord())
 {
-	$gameNews[] = array('Date' => date('n/j/Y',$db->f('time')), 'Time' => date('g:i:s A',$db->f('time')), 'Message' => $db->f('news_message'));
+	$gameNews[] = array('Date' => date('n/j/Y',$db->getField('time')), 'Time' => date('g:i:s A',$db->getField('time')), 'Message' => $db->getField('news_message'));
 }
 $smarty->assign('GameNews',$gameNews);
 

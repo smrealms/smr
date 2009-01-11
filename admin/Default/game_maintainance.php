@@ -9,7 +9,7 @@
 ///////////////////////////////////////////
 
 $db->query('INSERT INTO game_disable (reason) VALUES (\'Daily Maintenance...check back in 10 minutes\')');
-$db->lock('active_session');
+$db->lockTable('active_session');
 $db->query('DELETE FROM active_session');
 $db->unlock();
 
@@ -44,16 +44,16 @@ if (!file_exists($file_name)) {
 		//we are good to add entries
 		$db->query('SHOW TABLES');
 		$db2 = new SmrMySqlDatabase();
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 			
-			$table = $db->f(0);
+			$table = $db->getField(0);
 			$db2->query('SHOW COLUMNS FROM '.$table);
 			$insert = 'INSERT INTO '.$table.' (';
-			$i = $db2->nf() - 1;
-			$cols = $db2->nf() -1;
-			while ($db2->next_record()) {
+			$i = $db2->getNumRows() - 1;
+			$cols = $db2->getNumRows() -1;
+			while ($db2->nextRecord()) {
 				
-				$field = $db2->f(0);
+				$field = $db2->getField(0);
 				$insert .= $field;
 				if ($i != 0) $insert .= ',';
 				$i--;
@@ -62,12 +62,12 @@ if (!file_exists($file_name)) {
 			$i = $cols;
 			$insert .= ') VALUES (';
 			$db2->query('SELECT * FROM '.$table);
-			while ($db2->next_record()) {
+			while ($db2->nextRecord()) {
 				
 				$db_ent = $insert;
 				for ($j=0; $j<=$cols; $j++) {
 					
-					$db_ent .= $db2->f($j);
+					$db_ent .= $db2->getField($j);
 					if ($i != 0) $db_ent .= ',';
 					$i--;
 				

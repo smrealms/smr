@@ -1453,14 +1453,14 @@ class SmrPlayer extends AbstractSmrPlayer
 		$db = new SmrMySqlDatabase();
 		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
 					'account_id = '.$this->getAccountID());
-		if ($db2->next_record())
+		if ($db2->nextRecord())
 		{
 			
 			//they have a name so we echo it
-			$db->query('SELECT ' . htmlentities($db2->f('ship_name')) . ' LIKE \'&lt;img%\'');
-			$named_ship = stripslashes($db2->f('ship_name'));
-			$named_ship = strip_tags($db2->f('ship_name'), '<font><span>');
-			if ($db->next_record() && $db->f(0) != 0) {
+			$db->query('SELECT ' . htmlentities($db2->getField('ship_name')) . ' LIKE \'&lt;img%\'');
+			$named_ship = stripslashes($db2->getField('ship_name'));
+			$named_ship = strip_tags($db2->getField('ship_name'), '<font><span>');
+			if ($db->nextRecord() && $db->getField(0) != 0) {
 				//nothing
 			} else
 				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';

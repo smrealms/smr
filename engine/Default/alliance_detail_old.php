@@ -6,19 +6,19 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'games_previous.php';
 $db = new SmrHistoryMySqlDatabase();
 $db->query('SELECT * FROM game WHERE game_id = '.$var[$game_id]);
-$db->next_record();
-$game_id = $db->f('game_id');
+$db->nextRecord();
+$game_id = $db->getField('game_id');
 $container['game_id'] = $game_id;
-$container['game_name'] = $db->f('game_name');
+$container['game_name'] = $db->getField('game_name');
 
 //get alliance members
 $id = $var['alliance_id'];
 $PHP_OUTPUT.=($game_id.','. $id);
 $db->query('SELECT * FROM alliance WHERE alliance_id = '.$id.' AND game_id = '.$game_id);
-$db->next_record();
+$db->nextRecord();
 $PHP_OUTPUT.=('<div align=center>');
 $PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
-$smarty->assign('PageTopic','Alliance Roster - ' . stripslashes($db->f('alliance_name')));
+$smarty->assign('PageTopic','Alliance Roster - ' . stripslashes($db->getField('alliance_name')));
 $db->query('SELECT * FROM player WHERE alliance_id = '.$id.' AND game_id = '.$game_id.' ORDER BY experience DESC');
 
 $PHP_OUTPUT.= '
@@ -34,16 +34,16 @@ $PHP_OUTPUT.= '
 	</tr>
 ';
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align=center>' . stripslashes($db->f('player_name')) . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('experience') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('alignment') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('race') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('kills') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('deaths') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->f('bounty') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . stripslashes($db->getField('player_name')) . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('experience') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('alignment') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('race') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('kills') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('deaths') . '</td>');
+	$PHP_OUTPUT.=('<td align=center>' . $db->getField('bounty') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 	
 }

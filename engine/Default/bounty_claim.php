@@ -16,20 +16,20 @@ if ($sector->has_hq()) {
 $db2 = new SmrMySqlDatabase();
 
 
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	$PHP_OUTPUT.=('You have claimed the following bounties<br /><br />');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
 		// get bounty id from db
-		$bounty_id = $db->f('bounty_id');
-		$acc_id = $db->f('account_id');
-		$amount = $db->f('amount');
+		$bounty_id = $db->getField('bounty_id');
+		$acc_id = $db->getField('account_id');
+		$amount = $db->getField('amount');
 		// no interest on bounties
 		// $time = TIME;
-		// $days = ($time - $db->f('time')) / 60 / 60 / 24;
-    	// $amount = round($db->f('amount') * pow(1.05,$days));
+		// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
+    	// $amount = round($db->getField('amount') * pow(1.05,$days));
 
 		// add bounty to our cash
 		$player->increaseCredits($amount);

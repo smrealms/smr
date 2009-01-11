@@ -2,10 +2,10 @@
 $db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' AND link_id=' . $var['link_id'] . ' LIMIT 1');
 
 // They get to vote once every 24 hours
-if(!$db->next_record()) {
+if(!$db->nextRecord()) {
 	$valid=true;
 }
-else if($db->f('timeout') < time() - 86400) {
+else if($db->getField('timeout') < time() - 86400) {
 	$valid = true;
 }
 else {

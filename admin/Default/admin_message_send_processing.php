@@ -22,12 +22,12 @@ if (!empty($account_id) || $game_id == 20000) {
 		//send to all players
 		$db2 = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM player');
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 			
 			$db2->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time, expire_time)' .
-					'VALUES(' . $db->f('account_id') . ', ' . $db->f('game_id') . ', '.$ADMINMSG.', '.$message.', 0, '.$current_time.', '.$expire.')');
+					'VALUES(' . $db->getField('account_id') . ', ' . $db->getField('game_id') . ', '.$ADMINMSG.', '.$message.', 0, '.$current_time.', '.$expire.')');
 			$db2->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES' .
-					'(' . $db->f('game_id') . ', ' . $db->f('account_id') . ', '.$ADMINMSG.')');
+					'(' . $db->getField('game_id') . ', ' . $db->getField('account_id') . ', '.$ADMINMSG.')');
 					
 		}
 		

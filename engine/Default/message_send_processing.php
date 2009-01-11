@@ -18,9 +18,9 @@ if (empty($var['receiver']))
 				  player.ignore_globals = \'FALSE\'');
 //	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
 
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		$player->sendMessage($db->f('account_id'), $GLOBALMSG, $message);
+		$player->sendMessage($db->getField('account_id'), $GLOBALMSG, $message);
 	}
 
 }

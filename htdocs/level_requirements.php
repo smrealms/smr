@@ -29,11 +29,11 @@ echo ('<th align="center" style="color:#80C870;">Rank Name</th>');
 echo ('<th align="center" style="color:#80C870;">Required Experience</th>');
 echo ('</tr>');
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$level = $db->f('level_id');
-	$name = $db->f('level_name');
-	$require = $db->f('requirement');
+	$level = $db->getField('level_id');
+	$name = $db->getField('level_name');
+	$require = $db->getField('requirement');
 
 	echo ('<tr>');
 	echo ('<td align="center">'.$level.'</td>');

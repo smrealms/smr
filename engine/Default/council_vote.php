@@ -13,10 +13,10 @@ $PHP_OUTPUT.=create_council_menue($player->getRaceID(), $president);
 $db->query('SELECT * FROM player_votes_relation ' .
 		   'WHERE account_id = '.$player->getAccountID().' AND ' .
 				 'game_id = '.$player->getGameID());
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$voted_for_race	= $db->f('race_id_2');
-	$voted_for		= $db->f('action');
+	$voted_for_race	= $db->getField('race_id_2');
+	$voted_for		= $db->getField('action');
 
 }
 
@@ -31,10 +31,10 @@ $db->query('SELECT * FROM race ' .
 		   'WHERE race_id != '.$player->getRaceID().' AND ' .
 				 'race_id > 1');
 $playerRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$player->getRaceID());
-while($db->next_record()) {
+while($db->nextRecord()) {
 
-	$race_id	= $db->f('race_id');
-	$race_name	= $db->f('race_name');
+	$race_id	= $db->getField('race_id');
+	$race_name	= $db->getField('race_name');
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($race_id) . '</td>');
@@ -76,7 +76,7 @@ $db->query('SELECT * FROM race_has_voting ' .
 		   'WHERE '.TIME.' < end_time AND ' .
 				 'game_id = '.$player->getGameID().' AND ' .
 				 'race_id_1 = '.$player->getRaceID());
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
 	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" align="center" width="65%">');
 	$PHP_OUTPUT.=('<tr>');
@@ -89,11 +89,11 @@ if ($db->nf() > 0) {
 
 	$db2 = new SmrMySqlDatabase();
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$race_id_2	= $db->f('race_id_2');
-		$type		= $db->f('type');
-		$end_time	= $db->f('end_time');
+		$race_id_2	= $db->getField('race_id_2');
+		$type		= $db->getField('type');
+		$end_time	= $db->getField('end_time');
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($race_id_2) . '</td>');
@@ -110,8 +110,8 @@ if ($db->nf() > 0) {
 						  'game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
 						  'race_id_2 = '.$race_id_2);
-		if ($db2->next_record())
-			$voted_for = $db2->f('vote');
+		if ($db2->nextRecord())
+			$voted_for = $db2->getField('vote');
 		else
 			$voted_for = '';
 
@@ -139,7 +139,7 @@ if ($db->nf() > 0) {
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
 						  'race_id_2 = '.$race_id_2.' AND ' .
 						  'vote = \'YES\'');
-		$yes_votes = $db2->nf();
+		$yes_votes = $db2->getNumRows();
 
 		// get 'no' votes
 		$db2->query('SELECT * FROM player_votes_pact ' .
@@ -147,7 +147,7 @@ if ($db->nf() > 0) {
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
 						  'race_id_2 = '.$race_id_2.' AND ' .
 						  'vote = \'NO\'');
-		$no_votes = $db2->nf();
+		$no_votes = $db2->getNumRows();
 
 		$PHP_OUTPUT.=('<td align="center">'.$yes_votes.' / '.$no_votes.'</td>');
 		$PHP_OUTPUT.=('<td nowrap="nowrap"align="center">' . date('n/j/Y', $end_time) . '<br />' . date('g:i:s A', $end_time) . '</td>');

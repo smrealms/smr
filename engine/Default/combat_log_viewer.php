@@ -11,11 +11,11 @@ if (isset($_REQUEST['action'])) {
 		$db->query('SELECT * FROM combat_logs WHERE log_id IN (' . implode(',', $log_ids) . ') LIMIT ' . count($log_ids));
 		$unsavedLogs = array();
 		$savedLogs = array();
-		while ($db->next_record()) {
-			if (!$db->f('saved'))
-				$unsavedLogs[] = $db->f('log_id');
+		while ($db->nextRecord()) {
+			if (!$db->getField('saved'))
+				$unsavedLogs[] = $db->getField('log_id');
 			else
-				$savedLogs[] = array($db->f('game_id'),$db->f('type'),$db->f('sector_id'),$db->f('timestamp'),$db->f('attacker_id'),$db->f('attacker_alliance_id'),$db->f('defender_id'),$db->f('defender_alliance_id'),$db->f('result'));
+				$savedLogs[] = array($db->getField('game_id'),$db->getField('type'),$db->getField('sector_id'),$db->getField('timestamp'),$db->getField('attacker_id'),$db->getField('attacker_alliance_id'),$db->getField('defender_id'),$db->getField('defender_alliance_id'),$db->getField('result'));
 		}
 		if (sizeof($unsavedLogs))
 			$db->query('UPDATE combat_logs SET saved = ' . $player->getAccountID() . ' WHERE log_id IN (' . implode(',', $unsavedLogs) . ') LIMIT ' . count($log_ids));
@@ -85,10 +85,10 @@ if($action == 5) {
 if(isset($display_id)){
 	$db->query('SELECT timestamp,sector_id,result FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
 
-	if($db->next_record()) {
-		$smarty->assign('CombatLogSector',$db->f('sector_id'));
-		$smarty->assign('CombatLogTimestamp',date('n/j/Y&'.EOL.'\b\s\p;g:i:s&'.EOL.'\b\s\p;&'.EOL.'\b\s\p;A',$db->f('timestamp')));
-		$results = unserialize(gzuncompress($db->f('result')));
+	if($db->nextRecord()) {
+		$smarty->assign('CombatLogSector',$db->getField('sector_id'));
+		$smarty->assign('CombatLogTimestamp',date('n/j/Y&'.EOL.'\b\s\p;g:i:s&'.EOL.'\b\s\p;&'.EOL.'\b\s\p;A',$db->getField('timestamp')));
+		$results = unserialize(gzuncompress($db->getField('result')));
 		$smarty->assign_by_ref('TraderCombatResults',$results);
 	}
 	else {
@@ -140,8 +140,8 @@ switch($action){
 
 if($action != 5) {
 	$PHP_OUTPUT.= '<div align="center">';
-	if($db->nf() > 0) {
-		$num = $db->nf();
+	if($db->getNumRows() > 0) {
+		$num = $db->getNumRows();
 		$PHP_OUTPUT.= 'There ';
 		if ($num > 1) $PHP_OUTPUT.= 'are ';
 		else $PHP_OUTPUT.= 'is ';
@@ -182,18 +182,18 @@ if($action != 5) {
 		$PHP_OUTPUT.= $form['submit']['Save'];
 		$PHP_OUTPUT.= '<br /><br /><table cellspacing="0" cellpadding="5" class="standard fullwidth">';
 		$PHP_OUTPUT.= '<tr><th>View</th><th>Date</th><th>Sector</th><th>Attacker</th><th>Defender</th></tr>';
-		while($db->next_record()) {
+		while($db->nextRecord()) {
 			//attacker_id,defender_id,timestamp,sector_id,log_id
-			$logs[$db->f('log_id')] = array($db->f('attacker_id'),$db->f('defender_id'),$db->f('timestamp'),$db->f('sector_id'));
-			$player_ids[] = $db->f('attacker_id');
-			$player_ids[] = $db->f('defender_id');
+			$logs[$db->getField('log_id')] = array($db->getField('attacker_id'),$db->getField('defender_id'),$db->getField('timestamp'),$db->getField('sector_id'));
+			$player_ids[] = $db->getField('attacker_id');
+			$player_ids[] = $db->getField('defender_id');
 		}
 		array_unique($player_ids);
 		$db->query('SELECT player_name, account_id FROM player
 					WHERE account_id IN (' . implode(',',$player_ids) . ')
 					AND game_id = '.SmrSession::$game_id.'
 					LIMIT ' . sizeof($player_ids));
-		while ($db->next_record()) $players[$db->f('account_id')] = stripslashes($db->f('player_name'));
+		while ($db->nextRecord()) $players[$db->getField('account_id')] = stripslashes($db->getField('player_name'));
 		foreach ($logs as $id => $info) {
 			$container['id'] = $id;
 			$PHP_OUTPUT.= '<tr>';

@@ -59,10 +59,10 @@ if (empty($action)) {
 		$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Sector ID</th><th align=center>'.$dis.'</th></tr>');
-		while ($db2->next_record()) {
+		while ($db2->nextRecord()) {
 	
-			$sector_id = $db2->f('sector_id');
-			$val = $db2->f('val');
+			$sector_id = $db2->getField('sector_id');
+			$val = $db2->getField('val');
 			$PHP_OUTPUT.=('<tr><td>'.$sector_id.'</td><td>'.$val.'</td></tr>');
 	
 		}
@@ -80,13 +80,13 @@ if (empty($action)) {
 		$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Alliance ID</th><th align=center>'.$dis.'</th></tr>');
-		while ($db2->next_record()) {
+		while ($db2->nextRecord()) {
 	
-			$alliance_id = $db2->f('alliance_id');
+			$alliance_id = $db2->getField('alliance_id');
 			$db->query('SELECT * FROM alliance WHERE alliance_id = '.$alliance_id.' AND game_id = '.$game_id);
-			$db->next_record();
-			$name = stripslashes($db->f('alliance_name'));
-			$val = $db2->f('val');
+			$db->nextRecord();
+			$name = stripslashes($db->getField('alliance_name'));
+			$val = $db2->getField('val');
 			$PHP_OUTPUT.=('<tr><td>');
 			$container = array();
 			$container['url'] = 'skeleton.php';

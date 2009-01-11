@@ -154,7 +154,7 @@ if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
 }
 
 $db->query('SELECT * FROM account WHERE login = '.$db->escapeString($login));
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
 	$msg = 'This user name is already registered.';
 	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -162,7 +162,7 @@ if ($db->nf() > 0) {
 }
 
 $db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
-if ($db->nf() > 0) {
+if ($db->getNumRows() > 0) {
 
 	$msg = 'This eMail address is already registered.';
 	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -174,7 +174,7 @@ if ($db->nf() > 0) {
 //BETA
 $betaKey = $_REQUEST['beta_key'];
 $db->query('SELECT used FROM beta_key WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
-if (!$db->next_record() || $db->f('used') == 'TRUE')
+if (!$db->nextRecord() || $db->getField('used') == 'TRUE')
 {
 	$msg = 'Invalid or used beta key.';
 	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));

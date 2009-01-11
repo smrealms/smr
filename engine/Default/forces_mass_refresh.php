@@ -7,9 +7,9 @@ $db->query('SELECT * FROM alliance_treaties WHERE (alliance_id_1 = '.$player->ge
 			AND game_id = '.$player->getGameID().'
 			AND forces_nap = 1 AND official = \'TRUE\'');
 $allied[] = $player->getAllianceID();
-while ($db->next_record()) {
-	if ($db->f('alliance_id_1') == $player->getAllianceID()) $allied[] = $db->f('alliance_id_2');
-	else $allied[] = $db->f('alliance_id_1');
+while ($db->nextRecord()) {
+	if ($db->getField('alliance_id_1') == $player->getAllianceID()) $allied[] = $db->getField('alliance_id_2');
+	else $allied[] = $db->getField('alliance_id_1');
 }
 //populate alliance list
 $db->query('SELECT account_id FROM player, sector_has_forces
@@ -20,10 +20,10 @@ $db->query('SELECT account_id FROM player, sector_has_forces
 		AND player.game_id = '.$player->getGameID());	
 $list = '(';
 $time = TIME;
-while ($db->next_record())
+while ($db->nextRecord())
 {
 	$db2->query('UPDATE sector_has_forces SET refresh_at='.$time.', refresher='.$player->getAccountID() .' WHERE game_id = '.$player->getGameID().' AND sector_id = ' .
-		$player->getSectorID().' AND owner_id='.$db->f('account_id').' LIMIT 1');
+		$player->getSectorID().' AND owner_id='.$db->getField('account_id').' LIMIT 1');
 	$time += 2;
 }
 $message = '[Force Check]'; //this notifies the CS to look for info.

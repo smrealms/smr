@@ -11,9 +11,9 @@ $db->query('SELECT player.alliance_id as alliance_id, sum( experience ) AS allia
 				GROUP BY player.alliance_id
 				ORDER BY alliance_exp DESC');
 $alliances = array();
-while ($db->next_record()) {
-	$alliances[$db->f('alliance_id')] = array(stripslashes($db->f('name')), $db->f('alliance_exp'), $db->f('members'));
-	if ($db->f('alliance_id') == $player->getAllianceID()) $ourRank = sizeof($alliances);
+while ($db->nextRecord()) {
+	$alliances[$db->getField('alliance_id')] = array(stripslashes($db->getField('name')), $db->getField('alliance_exp'), $db->getField('members'));
+	if ($db->getField('alliance_id') == $player->getAllianceID()) $ourRank = sizeof($alliances);
 }
 // how many alliances are there?
 $numAlliances = sizeof($alliances);

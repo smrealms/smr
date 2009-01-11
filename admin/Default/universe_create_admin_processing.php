@@ -23,7 +23,7 @@ $admin_account =& SmrAccount::getAccount($_POST['admin_id']);
 
 // check if hof entry is there
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.$admin_account->account_id);
-if (!$db->nf())
+if (!$db->getNumRows())
 	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$admin_account->account_id.', ' . $db->escape_string($admin_account->login, true) . ')');
 
 // give game stats entry
@@ -34,8 +34,8 @@ $hq_id = $_POST['race_id'] + 101;
 $db->query('SELECT * FROM location NATURAL JOIN sector ' .
 		   'WHERE location.game_id = ' . $var['game_id'] . ' AND ' .
 		   'location_type_id = '.$hq_id);
-if ($db->next_record())
-	$home_sector_id = $db->f('sector_id');
+if ($db->nextRecord())
+	$home_sector_id = $db->getField('sector_id');
 else
 	$home_sector_id = 1;
 
@@ -65,12 +65,12 @@ if ($time_since_start > 86400)
 // credit him this time
 $last_turn_update = time() - $time_since_start;
 
-$db->lock('player');
+$db->lockTable('player');
 
 // get last registered player id in that game and increase by one.
 $db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $var['game_id'] . ' ORDER BY player_id DESC LIMIT 1');
-if ($db->next_record())
-	$player_id = $db->f('MAX(player_id)') + 1;
+if ($db->nextRecord())
+	$player_id = $db->getField('MAX(player_id)') + 1;
 else
 	$player_id = 1;
 
@@ -108,11 +108,11 @@ $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE a
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
 			WHERE game_id = ' . $var['game_id']);
-if (!$db->next_record())
+if (!$db->nextRecord())
 	create_error('This game doesn\'t have any sectors');
 
-$min_sector = $db->f('MIN(sector_id)');
-$max_sector = $db->f('MAX(sector_id)');
+$min_sector = $db->getField('MIN(sector_id)');
+$max_sector = $db->getField('MAX(sector_id)');
 
 for ($i = $min_sector; $i <= $max_sector; $i++) {
 

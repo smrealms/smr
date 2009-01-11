@@ -39,10 +39,10 @@ AND race.race_id=player_has_relation.race_id
 ORDER BY race.race_id LIMIT 8');
 
 $PHP_OUTPUT.= '<br />';
-while($db->next_record()) {
-	$PHP_OUTPUT.= $db->f('race_name');
+while($db->nextRecord()) {
+	$PHP_OUTPUT.= $db->getField('race_name');
 	$PHP_OUTPUT.= ' : ';
-	$PHP_OUTPUT.= get_colored_text($db->f('relation'), $db->f('relation'));
+	$PHP_OUTPUT.= get_colored_text($db->getField('relation'), $db->getField('relation'));
 	$PHP_OUTPUT.= '<br />';
 }
 $PHP_OUTPUT.= '<br />';
@@ -84,12 +84,12 @@ $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Bounties</span>'
 $db->query('SELECT type,amount FROM bounty WHERE account_id=' . SmrSession::$account_id . ' AND claimer_id=0 AND game_id=' . SmrSession::$game_id . ' LIMIT 2');
 
 $bounty= array(0,0);
-while($db->next_record()) {
-	if($db->f('type') == 'HQ') {
-		$bounty[0] = $db->f('amount');
+while($db->nextRecord()) {
+	if($db->getField('type') == 'HQ') {
+		$bounty[0] = $db->getField('amount');
 	}
 	else {
-		$bounty[1] = $db->f('amount');
+		$bounty[1] = $db->getField('amount');
 	}
 }
 $PHP_OUTPUT.= '<br /><span class="green">Federal: </span>';
@@ -130,8 +130,8 @@ if (!$ship->canHaveScanner() &&
 
 $PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="_blank"><span class="yellow bold">Next Level</span></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
-$db->next_record();
-$PHP_OUTPUT.= $db->f('level_name') . ': ' . number_format($db->f('requirement')) . 'xp';
+$db->nextRecord();
+$PHP_OUTPUT.= $db->getField('level_name') . ': ' . number_format($db->getField('requirement')) . 'xp';
 
 $PHP_OUTPUT.= '<br /><br />';
 $container['body'] = 'rankings_view.php';
@@ -140,9 +140,9 @@ $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">User Ranking</sp
 $rank_id = $account->get_rank();
 
 $db->query('SELECT rankings_name FROM rankings WHERE rankings_id=' . $rank_id . ' LIMIT 1');
-$db->next_record();
+$db->nextRecord();
 $PHP_OUTPUT.= '<br />You are ranked as a <span class="green">';
-$PHP_OUTPUT.= $db->f('rankings_name');
+$PHP_OUTPUT.= $db->getField('rankings_name');
 $PHP_OUTPUT.= '</span> player.<br /><br />';
 $PHP_OUTPUT.= '</td></tr></table><br />';
 
@@ -153,11 +153,11 @@ $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard fullwidth"><tr><th colspan="2">Notes</th></tr>';
 
 $db->query('SELECT * FROM player_has_notes WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . SmrSession::$account_id . ' ORDER BY note_id desc');
-if($db->nf() > 0) {
-	while($db->next_record()) {
+if($db->getNumRows() > 0) {
+	while($db->nextRecord()) {
 		$PHP_OUTPUT.= '<tr>';
-		$PHP_OUTPUT.= '<td class="shrink"><input type="checkbox" name="note_id[]" value="' . $db->f('note_id') . '" /></td>';
-		$PHP_OUTPUT.= '<td>' . gzuncompress($db->f('note')) . '</td>';
+		$PHP_OUTPUT.= '<td class="shrink"><input type="checkbox" name="note_id[]" value="' . $db->getField('note_id') . '" /></td>';
+		$PHP_OUTPUT.= '<td>' . gzuncompress($db->getField('note')) . '</td>';
 		$PHP_OUTPUT.= '</tr>';
 	}
 }

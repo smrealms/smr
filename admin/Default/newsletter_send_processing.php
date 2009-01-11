@@ -14,10 +14,10 @@ $mail->SMTPKeepAlive    = true;
 $mail->AddReplyTo('support@smrealms.de', 'SMR Support');
 
 $db->query('SELECT newsletter_id, newsletter FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$mail->Subject  = 'Space Merchant Realms Newsletter #' . $db->f('newsletter_id');
-	$mail->Body     = $db->f('newsletter');
+	$mail->Subject  = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
+	$mail->Body     = $db->getField('newsletter');
 
 }
 

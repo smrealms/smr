@@ -19,10 +19,10 @@ $db2 = new SmrHistoryMySqlDatabase();
 $db2->query('SELECT * FROM news WHERE game_id = '.$game_id.' AND news_id >= '.$min.' AND news_id <= '.$max);
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.=('<tr><th align=center>Time</th><th align=center>News</th></tr>');
-while ($db2->next_record()) {
+while ($db2->nextRecord()) {
 
-	$time = $db2->f('time');
-	$news = $db2->f('message');
+	$time = $db2->getField('time');
+	$news = $db2->getField('message');
 	$PHP_OUTPUT.=('<tr><td>' . date('n/j/Y g:i:s A', $time) . '</td><td>'.$news.'</td></tr>');
 
 }

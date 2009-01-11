@@ -9,8 +9,8 @@ $PHP_OUTPUT.=create_bar_menue();
 
 $db = new SmrMySqlDatabase();
 $db->query('SELECT message_id FROM bar_wall WHERE sector_id = '.$sector->getSectorID().' AND game_id = '.SmrSession::$game_id.' ORDER BY message_id DESC');
-if ($db->next_record())
-	$amount = $db->f('message_id') + 1;
+if ($db->nextRecord())
+	$amount = $db->getField('message_id') + 1;
 else
 	$amount = 1;
 $time_now = TIME;
@@ -19,7 +19,7 @@ $wall = $_REQUEST['wall'];
 if (isset($wall))
 	$db2->query('INSERT INTO bar_wall (sector_id, game_id, message_id, message, time) VALUES ('.$sector->getSectorID().', '.SmrSession::$game_id.', '.$amount.',  ' . $db->escape_string($wall, true) . ' , '.$time_now.')');
 $db->query('SELECT * FROM bar_wall WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' ORDER BY time DESC');
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
 	$PHP_OUTPUT.=('<tr>');
@@ -27,10 +27,10 @@ if ($db->nf()) {
 	$PHP_OUTPUT.=('<th align="center">Message</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$time = $db->f('time');
-		$message_on_wall = stripslashes($db->f('message'));
+		$time = $db->getField('time');
+		$message_on_wall = stripslashes($db->getField('message'));
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center"><b> ' . date('n/j/Y g:i:s A', $time) . ' </b></td>');

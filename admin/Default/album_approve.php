@@ -11,8 +11,8 @@ function get_album_nick($album_id) {
 	$album->query('SELECT HoF_name
 				   FROM account_has_stats
 				   WHERE account_id = '.$album_id);
-	if ($album->next_record())
-		$nick = $album->f('HoF_name');
+	if ($album->nextRecord())
+		$nick = $album->getField('HoF_name');
 
 	// fall back to login name if it's empty or we havn't found one
 	if (empty($nick)) {
@@ -20,8 +20,8 @@ function get_album_nick($album_id) {
 		$album->query('SELECT login
 					   FROM account
 					   WHERE account_id = '.$album_id);
-		if ($album->next_record())
-			$nick = $album->f('login');
+		if ($album->nextRecord())
+			$nick = $album->getField('login');
 
 	}
 
@@ -38,25 +38,25 @@ $db->query('SELECT *
 			ORDER BY last_changed
 			LIMIT 1');
 
-if (!$db->nf()) {
+if (!$db->getNumRows()) {
 
 	$PHP_OUTPUT.=('Nothing to approve!');
 	return;
 
 }
 
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$album_id = $db->f('account_id');
-	$location = stripslashes($db->f('location'));
-	$email = stripslashes($db->f('email'));
-	$website = stripslashes($db->f('website'));
-	$day = $db->f('day');
-	$month = $db->f('month');
-	$year = $db->f('year');
-	$other = nl2br(stripslashes($db->f('other')));
-	$last_changed = $db->f('last_changed');
-	$disabled = $db->f('disabled');
+	$album_id = $db->getField('account_id');
+	$location = stripslashes($db->getField('location'));
+	$email = stripslashes($db->getField('email'));
+	$website = stripslashes($db->getField('website'));
+	$day = $db->getField('day');
+	$month = $db->getField('month');
+	$year = $db->getField('year');
+	$other = nl2br(stripslashes($db->getField('other')));
+	$last_changed = $db->getField('last_changed');
+	$disabled = $db->getField('disabled');
 
 	// get this user's nick
 	$nick = get_album_nick($album_id);

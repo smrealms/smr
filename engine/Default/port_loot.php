@@ -31,12 +31,12 @@ $db->query('SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_h
                                                    'ORDER BY good.good_id');
 
 
-while ($db->next_record())
+while ($db->nextRecord())
 {
 
-   $good_id = $db->f('good_id');
-   $good_name = $db->f('good_name');
-   $good_class = $db->f('good_class');
+   $good_id = $db->getField('good_id');
+   $good_name = $db->getField('good_name');
+   $good_class = $db->getField('good_class');
 	$portGood = $port->getGood($good_id);
    if ($portGood['BasePrice'] == 0) continue;
 	if ($player->getAlignment() > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;

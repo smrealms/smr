@@ -11,7 +11,7 @@ $db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware,
 				 'ship_has_hardware.hardware_type_id = hardware_type.hardware_type_id AND ' .
 				 'amount > max_amount');
 
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
 	echo_table();
 	$PHP_OUTPUT.=('<tr>');
@@ -22,18 +22,18 @@ if ($db->nf()) {
 	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$player_name = stripslashes($db->f('player_name'));
-		$type = $db->f('hardware_name');
-		$amount = $db->f('amount');
-		$max_amount = $db->f('max_amount');
+		$player_name = stripslashes($db->getField('player_name'));
+		$type = $db->getField('hardware_name');
+		$amount = $db->getField('amount');
+		$max_amount = $db->getField('max_amount');
 
 		$container = array();
 		$container['url'] = 'ship_check_processing.php';
-		$container['account_id'] = $db->f('account_id');
-		$container['hardware'] = $db->f('hardware_type_id');
-		$container['game_id'] = $db->f('game_id');
+		$container['account_id'] = $db->getField('account_id');
+		$container['hardware'] = $db->getField('hardware_type_id');
+		$container['game_id'] = $db->getField('game_id');
 		$container['max_amount'] = $max_amount;
 		$PHP_OUTPUT.=create_echo_form($container);
 

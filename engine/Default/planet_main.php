@@ -80,9 +80,9 @@ $db->query('SELECT * FROM player WHERE sector_id = '.$player->getSectorID().' AN
                                       'land_on_planet = \'TRUE\' ' .
                                 'ORDER BY last_cpl_action DESC');
 
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-    $planet_player =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
+    $planet_player =& SmrPlayer::getPlayer($db->getField('account_id'), SmrSession::$game_id);
 
     $container = array();
     $container['url']            = 'planet_kick_processing.php';
@@ -105,7 +105,7 @@ while ($db->next_record()) {
     $PHP_OUTPUT.=('</form>');
 
 }
-if($db->nf() > 0 ) $PHP_OUTPUT.=('<br />');
+if($db->getNumRows() > 0 ) $PHP_OUTPUT.=('<br />');
 
 $PHP_OUTPUT.=create_echo_form(create_container('planet_launch_processing.php', ''));
 $PHP_OUTPUT.=create_submit('Launch');

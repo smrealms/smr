@@ -26,7 +26,7 @@ if(isset($var['error'])) {
  	
 echo '<h2>Filtered Words</h2><br />';
  	
-if(!$db->nf()) {
+if(!$db->getNumRows()) {
 	
 	echo 'No words are currently being filtered.<br /><br />';
 		
@@ -40,8 +40,8 @@ else {
 	echo $form['form'];
 		
 	echo '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Option</th><th>Word</th><th>Replacement</th></tr>';
-	while($db->next_record()) {
-		$row = $db->fetch_row();
+	while($db->nextRecord()) {
+		$row = $db->getRow();
 		echo '<tr>';
 		echo '<td class="center shrink"><input type="checkbox" name="word_ids[]" value="' . $row['word_id'] . '"></td>';
 		echo '<td>' . $row['word_value'] . '</td>';

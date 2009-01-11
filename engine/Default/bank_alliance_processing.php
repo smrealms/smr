@@ -46,30 +46,30 @@ if ($action == 'Deposit') {
 		create_error('Your alliance isn\'t soo rich!');
 	if ($alliance_id == $player->getAllianceID()) {
 		$db->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-		if ($db->next_record()) $role_id = $db->f('role_id');
+		if ($db->nextRecord()) $role_id = $db->getField('role_id');
 		else $role_id = 0;
 		$query = 'role_id = '.$role_id;
 	} else {
 		$query = 'role = ' . $db->escape_string($player->getAllianceName());
 	}
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $alliance_id . ' AND game_id = ' . $player->getGameID() . ' AND ' . $query);
-	$db->next_record();
-	if ($db->f('with_per_day') == -1) {
+	$db->nextRecord();
+	if ($db->getField('with_per_day') == -1) {
 		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\'');
-		if ($db->next_record()) $playerWith = $db->f('total');
+		if ($db->nextRecord()) $playerWith = $db->getField('total');
 		else $playerWith = 0;
 		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Deposit\'');
-		if ($db->next_record()) $playerDep = $db->f('total');
+		if ($db->nextRecord()) $playerDep = $db->getField('total');
 		else $playerDep = 0;
 		$differential = $playerDep - $playerWith;
 		if ($differential - $amount < 0) create_error('Your alliance won\'t allow you to take so much with how little you\'ve given!');
-	} elseif ($db->f('with_per_day') >= 0) {
-		$max = $db->f('with_per_day');
+	} elseif ($db->getField('with_per_day') >= 0) {
+		$max = $db->getField('with_per_day');
 		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\' AND time > ' . (TIME - 24 * 60 * 60));
-		if ($db->next_record() && !is_null($db->f('total'))) $total = $db->f('total');
+		if ($db->nextRecord() && !is_null($db->getField('total'))) $total = $db->getField('total');
 		else $total = 0;
 		if ($total + $amount > $max) create_error('Your alliance doesn\'t allow you to take that much cash this often');
 	}
@@ -101,8 +101,8 @@ $alliance->update();
 $db->query('SELECT MAX(transaction_id) as next_id FROM alliance_bank_transactions ' .
 		   'WHERE alliance_id = '.$alliance_id.' AND ' .
 				 'game_id = '.$player->getGameID());
-if ($db->next_record())
-	$next_id = $db->f('next_id') + 1;
+if ($db->nextRecord())
+	$next_id = $db->getField('next_id') + 1;
 
 // save log
 if ($_REQUEST['requestExempt']) $requestExempt = 1;

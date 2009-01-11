@@ -15,16 +15,16 @@ if (empty($race_id) || $race_id == 1)
 	create_error('Please choose a race!');
 
 $db->query('SELECT * FROM player WHERE game_id = ' . $var['game_id'] . ' AND player_name = ' . $db->escape_string($player_name, true));
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 	create_error('The player name already exists.');
 
 // take the credits
 $db->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-	$credits	= $db->f('credits_needed');
-	$type		= $db->f('game_type');
-	$start_date	= $db->f('start_date');
+	$credits	= $db->getField('credits_needed');
+	$type		= $db->getField('game_type');
+	$start_date	= $db->getField('start_date');
 
 } else
 	create_error('Game not found!');
@@ -33,7 +33,7 @@ if ($db->next_record()) {
 if ($credits > 0) {
 
 	$db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id);
-	if ($db->next_record())
+	if ($db->nextRecord())
 		$db->query('UPDATE account_has_credits SET credits_left = credits_left - '.$credits.' WHERE account_id = '.$account->account_id);
 	//we dont need an else because they cant join the game if they dont have it and therefore is a free game
 
@@ -41,7 +41,7 @@ if ($credits > 0) {
 
 // check if hof entry is there
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.SmrSession::$account_id);
-if (!$db->nf())
+if (!$db->getNumRows())
 	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$account->account_id.', ' . $db->escape_string($account->login, true) . ')');
 
 // put him in a sector with a hq
@@ -49,8 +49,8 @@ $hq_id = $race_id + 101;
 $db->query('SELECT * FROM location NATURAL JOIN sector ' .
 		   'WHERE location.game_id = ' . $var['game_id'] . ' AND ' .
 		   'location_type_id = '.$hq_id);
-if ($db->next_record())
-	$home_sector_id = $db->f('sector_id');
+if ($db->nextRecord())
+	$home_sector_id = $db->getField('sector_id');
 else
 	$home_sector_id = 1;
 
@@ -86,12 +86,12 @@ $last_turn_update = time() - $time_since_start;
 //else
   $alliance_id = 0;
 
-$db->lock('player');
+$db->lockTable('player');
 
 // get last registered player id in that game and increase by one.
 $db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $var['game_id'] . ' ORDER BY player_id DESC LIMIT 1');
-if ($db->next_record())
-	$player_id = $db->f('MAX(player_id)') + 1;
+if ($db->nextRecord())
+	$player_id = $db->getField('MAX(player_id)') + 1;
 else
 	$player_id = 1;
 
@@ -119,8 +119,8 @@ $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE a
 
 // is this our first game?
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->account_id);
-$db->next_record();
-if ($db->f('games_joined') == 1) {
+$db->nextRecord();
+if ($db->getField('games_joined') == 1) {
 
 	//we are a newb set our alliance to be Newbie Help Allaince
 	$id = 302;
@@ -145,11 +145,11 @@ if ($db->f('games_joined') == 1) {
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
 			WHERE game_id = ' . $var['game_id']);
-if (!$db->next_record())
+if (!$db->nextRecord())
 	create_error('This game doesn\'t have any sectors');
 
-$min_sector = $db->f('MIN(sector_id)');
-$max_sector = $db->f('MAX(sector_id)');
+$min_sector = $db->getField('MIN(sector_id)');
+$max_sector = $db->getField('MAX(sector_id)');
 
 for ($i = $min_sector; $i <= $max_sector; $i++) {
 

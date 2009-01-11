@@ -2,17 +2,17 @@
 // TODO: Needs reworking with the new CSS
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 $game = array();
-if ($db->next_record())
+if ($db->nextRecord())
 {
-	$game['ID'] = $db->f('game_id');
-	$game['Name'] = $db->f('game_name');
-	$game['StartDate'] = $db->f('start_date');
-	$game['EndDate'] = $db->f('end_date');
-	$game['MaxPlayers'] = $db->f('max_players');
-	$game['Type'] = $db->f('max_players');
-	$game['Speed'] = $db->f('credits_needed');
-	$game['Credits'] = $db->f('credits_needed');
-	$game['Description'] = $db->f('game_description');
+	$game['ID'] = $db->getField('game_id');
+	$game['Name'] = $db->getField('game_name');
+	$game['StartDate'] = $db->getField('start_date');
+	$game['EndDate'] = $db->getField('end_date');
+	$game['MaxPlayers'] = $db->getField('max_players');
+	$game['Type'] = $db->getField('max_players');
+	$game['Speed'] = $db->getField('credits_needed');
+	$game['Credits'] = $db->getField('credits_needed');
+	$game['Description'] = $db->getField('game_description');
 }
 
 $smarty->assign('Game',$game);
@@ -23,8 +23,8 @@ if ($game['Credits'] > 0) {
 
 	// find how many credits they have.
 	$db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id);
-	if ($db->next_record())
-	    $have = $db->f('credits_left');
+	if ($db->nextRecord())
+	    $have = $db->getField('credits_left');
 	else
 	    $have = 0;
 
@@ -40,7 +40,7 @@ if ($game['Credits'] > 0) {
 
 // is the game already full?
 $db->query('SELECT * FROM player WHERE game_id = ' . $var['game_id']);
-if ($db->nf() >= $game['MaxPlayers']) {
+if ($db->getNumRows() >= $game['MaxPlayers']) {
 
     create_error('The maximum number of players in that game is reached!');
     return;
@@ -66,15 +66,15 @@ $smarty->assign('PageTopic', 'JOIN GAME');
 $db->query('SELECT * FROM race');
 $first = true;
 $raceDescriptions='';
-while ($db->next_record())
+while ($db->nextRecord())
     if ($first)
     {
-        $raceDescriptions.=('"' . $db->f('race_description') . '"');
+        $raceDescriptions.=('"' . $db->getField('race_description') . '"');
         $first = false;
 
     }
     else
-        $raceDescriptions.=(', "' . $db->f('race_description') . '"');
+        $raceDescriptions.=(', "' . $db->getField('race_description') . '"');
 $smarty->assign('RaceDescriptions',$raceDescriptions);
 
 
@@ -98,14 +98,14 @@ $db->query('SELECT location_name, location.location_type_id as loc_id
 				  game_id = ' . $var['game_id'] . '
 			ORDER BY location.location_type_id');
 $races = array();
-while ($db->next_record())
+while ($db->nextRecord())
 {
 
 	// get the name for this race
 	// HACK! cut ' HQ' from location name!
-	$race_name = substr(stripslashes($db->f('location_name')), 0, -3);
+	$race_name = substr(stripslashes($db->getField('location_name')), 0, -3);
 
-	$curr_race_id = $db->f('loc_id') - 101;
+	$curr_race_id = $db->getField('loc_id') - 101;
 	if (in_array($curr_race_id, $only)) continue;
 	$only[] = $curr_race_id;
 	// get number of traders in game
@@ -113,9 +113,9 @@ while ($db->next_record())
 
 	$races[$curr_race_id]['ID'] = $curr_race_id;
 	$races[$curr_race_id]['Name'] = $race_name;
-	$races[$curr_race_id]['NumberOfPlayers'] = $db2->f('number_of_race')>0?$db2->f('number_of_race'):0;
+	$races[$curr_race_id]['NumberOfPlayers'] = $db2->getField('number_of_race')>0?$db2->getField('number_of_race'):0;
 	
-	$race_name .= ' (' . $db2->nf() . ' Trader)';
+	$race_name .= ' (' . $db2->getNumRows() . ' Trader)';
 
 //    if ($race_id == $curr_race_id)
 //    	$PHP_OUTPUT.=(' selected');

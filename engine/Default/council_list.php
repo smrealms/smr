@@ -9,8 +9,8 @@ if (empty($race_id))
 
 $db->query('SELECT * FROM race ' .
 		   'WHERE race_id = '.$race_id);
-if ($db->next_record())
-	$smarty->assign('PageTopic','RULING COUNCIL OF ' . $db->f('race_name'));
+if ($db->nextRecord())
+	$smarty->assign('PageTopic','RULING COUNCIL OF ' . $db->getField('race_name'));
 
 $president = getPresident($race_id);
 
@@ -78,7 +78,7 @@ $db->query('SELECT * FROM player ' .
 		   'ORDER by experience DESC ' .
 		   'LIMIT ' . MAX_COUNCIL_MEMBERS);
 		   
-if ($db->nf() > 0)
+if ($db->getNumRows() > 0)
 {
 
 	$PHP_OUTPUT.=('<p><table border="0" class="standard" cellspacing="0" align="center" width="85%">');
@@ -91,9 +91,9 @@ if ($db->nf() > 0)
 	$PHP_OUTPUT.=('</tr>');
 
 	$count = 0;
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$council =& SmrPlayer::getPlayer($db->f('account_id'), $player->getGameID());
+		$council =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 		$count++;
 
 		$PHP_OUTPUT.=('<tr>');
@@ -159,10 +159,10 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
 $PHP_OUTPUT.=('<b>View Council</b><br />');
 $db->query('SELECT * FROM race WHERE race_id > 1');
-while($db->next_record()) {
+while($db->nextRecord()) {
 
-	$race_id	= $db->f('race_id');
-	$race_name	= $db->f('race_name');
+	$race_id	= $db->getField('race_id');
+	$race_name	= $db->getField('race_name');
 
 	$container = array();
 	$container['url']		= 'skeleton.php';

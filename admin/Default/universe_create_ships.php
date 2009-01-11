@@ -4,8 +4,8 @@ $smarty->assign('PageTopic','CREATE UNIVERSE - ADDING SHIPS (7/10)');
 
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
-if ($db->next_record())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->f('game_name') . '</dd>');
+if ($db->nextRecord())
+	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding shipdealers</d>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('Shipdealers sell ships. Each shop lists the type it sells. The values you provide here are absolut numbers per galaxies.</dd>');
@@ -18,8 +18,8 @@ $db->query('SELECT DISTINCT galaxy.galaxy_id as id, galaxy_name as name
 			WHERE game_id = ' . $var['game_id'] . ' AND
 				  sector.galaxy_id = galaxy.galaxy_id
 			ORDER BY galaxy.galaxy_id');
-while ($db->next_record())
-	$galaxies[$db->f('id')] = $db->f('name');
+while ($db->nextRecord())
+	$galaxies[$db->getField('id')] = $db->getField('name');
 
 $container = array();
 $container['url']		= 'universe_create_ships_processing.php';
@@ -39,10 +39,10 @@ $db2 = new SmrMySqlDatabase();
 $db->query('SELECT location_type_id, location_name FROM location_type ' .
 					'WHERE location_type_id > 500 AND location_type_id < 600 ' .
 					'ORDER BY location_name');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
-	$location_name		= $db->f('location_name');
-	$location_type_id	= $db->f('location_type_id');
+	$location_name		= $db->getField('location_name');
+	$location_type_id	= $db->getField('location_type_id');
 
 	// get all ships that are sold here
 	$db2->query('SELECT * FROM location_type, location_sells_ships, ship_type ' .
@@ -52,8 +52,8 @@ while ($db->next_record()) {
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b><br />');
-	while ($db2->next_record())
-		$PHP_OUTPUT.=('<span style="font-size:65%;">' . $db2->f('ship_name') . '</span><br />');
+	while ($db2->nextRecord())
+		$PHP_OUTPUT.=('<span style="font-size:65%;">' . $db2->getField('ship_name') . '</span><br />');
 	$PHP_OUTPUT.=('</td>');
 	foreach ($galaxies as $galaxy_id => $galaxy_name)
 		$PHP_OUTPUT.=('<td align="center"><input type="input" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" style="text-align:center;"></td>');

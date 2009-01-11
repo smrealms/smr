@@ -4,13 +4,13 @@ $smarty->assign('PageTopic','CURRENT NEWS');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_news_menue();
 //we we check for a lotto winner...
-$db->lock('player_has_ticket');
+$db->lockTable('player_has_ticket');
 $db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
 			'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
-$db->next_record();
-if ($db->f('num') > 0) {
-	$amount = ($db->f('num') * 1000000 * .9) + 1000000;
-	$first_buy = $db->f('time');
+$db->nextRecord();
+if ($db->getField('num') > 0) {
+	$amount = ($db->getField('num') * 1000000 * .9) + 1000000;
+	$first_buy = $db->getField('time');
 } else {
 	$amount = 1000000;
 	$first_buy = time();
@@ -21,14 +21,14 @@ $val =0;
 if ($time_rem <= 0) {
 	//we need to pick a winner
 	$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand()');
-	if ($db->next_record()) {
-		$winner_id = $db->f('account_id');
-		$time = $db->f('time');
+	if ($db->nextRecord()) {
+		$winner_id = $db->getField('account_id');
+		$time = $db->getField('time');
 	}
 	$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 		
-		$amount += $db->f('prize');
+		$amount += $db->getField('prize');
 		$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
 		
 	}
@@ -63,9 +63,9 @@ $container['breaking'] = 'yes';
 $var_del = time() - 86400;
 $db->query('DELETE FROM news WHERE time < '.$var_del.' AND type = \'breaking\'');
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
-if ($db->next_record()) {
+if ($db->nextRecord()) {
 
-    $time = $db->f('time');
+    $time = $db->getField('time');
     $PHP_OUTPUT.=create_link($container, '<b>MAJOR NEWS! - ' . date('n/j/Y g:i:s A', $time) . '</b>');
     $PHP_OUTPUT.=('<br /><br />');
 
@@ -73,8 +73,8 @@ if ($db->next_record()) {
 if (isset($var['breaking'])) {
 
     $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
-    $text = stripslashes($db->f('news_message'));
-    $time = $db->f('time');
+    $text = stripslashes($db->getField('news_message'));
+    $time = $db->getField('time');
     $PHP_OUTPUT.=create_table();
     $PHP_OUTPUT.=('<tr>');
     $PHP_OUTPUT.=('<th align="center"><span style="color:#80C870;">Time</span></th>');
@@ -90,14 +90,14 @@ if (isset($var['breaking'])) {
 }
 //display lottonews if we have it
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type = \'lotto\' ORDER BY time DESC');
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	$PHP_OUTPUT.=create_table();
     $PHP_OUTPUT.=('<tr>');
     $PHP_OUTPUT.=('<th align="center"><span style="color:#80C870;">Time</span></th>');
     $PHP_OUTPUT.=('<th align="center"><span style="color:#80C870;">Message</span></th>');
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('<tr>');
-    $time = $db->f('time');
+    $time = $db->getField('time');
     $PHP_OUTPUT.=('<td align="center"> ' . date('n/j/Y g:i:s A', $time) . ' </td>');
     $PHP_OUTPUT.=('<td align="left">' . $db->getField('news_message') . '</td>');
     $PHP_OUTPUT.=('</tr>');
@@ -108,19 +108,19 @@ $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND time
 $player->updateLastNewsUpdate();
 $player->update();
 
-if ($db->nf()) {
+if ($db->getNumRows()) {
 
-    $PHP_OUTPUT.=('<b><big><div align="center" style="color:blue;">You have ' . $db->nf() . ' news entries.</div></big></b>');
+    $PHP_OUTPUT.=('<b><big><div align="center" style="color:blue;">You have ' . $db->getNumRows() . ' news entries.</div></big></b>');
     $PHP_OUTPUT.=create_table();
     $PHP_OUTPUT.=('<tr>');
     $PHP_OUTPUT.=('<th align="center">Time</span>');
     $PHP_OUTPUT.=('<th align="center">News</span>');
     $PHP_OUTPUT.=('</tr>');
 
-    while ($db->next_record()) {
+    while ($db->nextRecord()) {
 
-        $time = $db->f('time');
-        $news = stripslashes($db->f('news_message'));
+        $time = $db->getField('time');
+        $news = stripslashes($db->getField('news_message'));
 
         $PHP_OUTPUT.=('<tr>');
         $PHP_OUTPUT.=('<td align="center">' . date('n/j/Y g:i:s A', $time) . '</td>');

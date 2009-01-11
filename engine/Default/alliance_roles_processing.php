@@ -8,15 +8,15 @@ if (!isset($var['role_id'])) {
 	if (empty($_POST['role']))
 		create_error('You must enter a role if you want to create a new one.');
 
-	$db->lock('alliance_has_roles');
+	$db->lockTable('alliance_has_roles');
 
 	// get last id
 	$db->query('SELECT MAX(role_id)
 				FROM alliance_has_roles
 				WHERE game_id = '.$player->getGameID().' AND
 					  alliance_id = '.$alliance_id);
-	if ($db->next_record())
-		$role_id = $db->f('MAX(role_id)') + 1;
+	if ($db->nextRecord())
+		$role_id = $db->getField('MAX(role_id)') + 1;
 	else
 		$role_id = 1;
 	if ($_REQUEST['unlimited']) $withPerDay = -2;

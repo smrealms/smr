@@ -5,7 +5,7 @@ $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . TIME);
 $db->query('SELECT * FROM active_session
 			WHERE last_accessed >= ' . (TIME - 600) . ' AND
 				  game_id = '.SmrSession::$game_id);
-$count_real_last_active = $db->nf();
+$count_real_last_active = $db->getNumRows();
 if (empty($var['sort'])) $sort = 'experience DESC, player_name';
 else $sort = $var['sort'];
 if (empty($var['seq'])) $seq = 'DESC';
@@ -15,9 +15,9 @@ $db->query('SELECT * FROM player ' .
 				 'game_id = '.SmrSession::$game_id.' ' .
 		   'ORDER BY '.$sort.' '.$seq);
 //$PHP_OUTPUT.=('.$db->escapeString($sort, $seq<br />');
-$count_last_active = $db->nf();
+$count_last_active = $db->getNumRows();
 $list = '(0';
-while ($db->next_record()) $list .= ',' . $db->f('account_id');
+while ($db->nextRecord()) $list .= ',' . $db->getField('account_id');
 $list .= ')';
 $db->query('SELECT * FROM player ' .
 		   'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
@@ -30,13 +30,13 @@ $db->query('SELECT * FROM player ' .
 if ($count_real_last_active < $count_last_active)
 	$count_real_last_active = $count_last_active;
 $exp = array();
-while ($db->next_record()) {
-	$accountID = $db->f('account_id');
+while ($db->nextRecord()) {
+	$accountID = $db->getField('account_id');
 	$curr_player =& SmrPlayer::getPlayer($accountID, SmrSession::$game_id);
 	if ($curr_player->getAllianceID() == $player->getAllianceID() && $player->getAllianceID() != 0)
-		$exp[$db->f('account_id')] = $curr_player->getExperience();
+		$exp[$db->getField('account_id')] = $curr_player->getExperience();
 	else
-		$exp[$db->f('account_id')] = $db->f('experience');
+		$exp[$db->getField('account_id')] = $db->getField('experience');
 
 }
 if ($sort == 'experience DESC, player_name' || ($sort == 'experience' && $seq == 'DESC'))
@@ -101,7 +101,7 @@ if ($count_last_active > 0) {
 	$PHP_OUTPUT.=('</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	//while ($db->next_record()) {
+	//while ($db->nextRecord()) {
 	foreach ($exp as $acc_id => $value) {
 
 		$curr_account =& SmrAccount::getAccount($acc_id);
@@ -127,12 +127,12 @@ if ($count_last_active > 0) {
 		//$name = $curr_player->getDisplayName();
 		$name = $rank . ' ' . $curr_player->getDisplayName();
 		$db->query('SELECT * FROM cpl_tag WHERE account_id = '.$curr_player->getAccountID().' ORDER BY custom DESC');
-		while ($db->next_record()) {
-			if ($db->f('custom')) {
-				$name = $db->f('tag') . ' ' . $curr_player->getDisplayName();
-				if ($db->f('custom_rank')) $name .= ' (' . $db->f('custom_rank') . ')';
+		while ($db->nextRecord()) {
+			if ($db->getField('custom')) {
+				$name = $db->getField('tag') . ' ' . $curr_player->getDisplayName();
+				if ($db->getField('custom_rank')) $name .= ' (' . $db->getField('custom_rank') . ')';
 				else $name .= ' (' . $rank . ')';
-			} else $name .= ' ' . $db->f('tag');
+			} else $name .= ' ' . $db->getField('tag');
 		}
 		//$name .= ' $add';
 		$PHP_OUTPUT.=create_link($container, $name);

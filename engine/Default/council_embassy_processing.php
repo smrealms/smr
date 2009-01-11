@@ -11,7 +11,7 @@ $time = TIME + $time;
 $db->query('SELECT * FROM race_has_voting ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
 				 'race_id_1 = '.$player->getRaceID());
-if ($db->nf() > 2)
+if ($db->getNumRows() > 2)
 	create_error('You can\'t initiate more than 3 votes at a time!');
 
 $db->query('REPLACE INTO race_has_voting ' .

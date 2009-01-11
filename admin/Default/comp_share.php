@@ -15,9 +15,9 @@ $container = array();
 $container['url'] = 'account_close.php';
 $smarty->assign('PageTopic','Computer Sharing');
 $PHP_OUTPUT.=create_echo_form($container);
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 	//get info about linked IDs
-	$associatedAccs = $db->f('array');
+	$associatedAccs = $db->getField('array');
 	//split it into individual IDs
 	$accountIDs = explode('-', $associatedAccs);
 	//make sure this is good data.
@@ -25,7 +25,7 @@ while ($db->next_record()) {
 	//how many are they linked to?
 	$rows = sizeof($accountIDs);
 	$echoMainAcc = TRUE;
-	$currTabAccId = $db->f('account_id');
+	$currTabAccId = $db->getField('account_id');
 	//if this account was listed with another we can skip it.
 	if (isset($used[$currTabAccId])) continue;
 	if ($rows > 1) {
@@ -33,9 +33,9 @@ while ($db->next_record()) {
 		if (!$skipClosedAccs)
 		{
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currTabAccId);
-			if ($db2->next_record()) {
+			if ($db2->nextRecord()) {
 				
-				if ($db2->f('reason_id') != 5) $PHP_OUTPUT.=('Closed: ' . $db2->f('suspicion') . '.<br />');
+				if ($db2->getField('reason_id') != 5) $PHP_OUTPUT.=('Closed: ' . $db2->getField('suspicion') . '.<br />');
 				else continue;
 				
 			}
@@ -43,31 +43,31 @@ while ($db->next_record()) {
 		if (!$skipExceptions)
 		{
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currTabAccId);
-			if ($db2->next_record()) $PHP_OUTPUT.=('Exception: ' . $db2->f('reason') . '.<br />');
+			if ($db2->nextRecord()) $PHP_OUTPUT.=('Exception: ' . $db2->getField('reason') . '.<br />');
 		} else continue;
 		echo_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Accounts</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
 		
 		$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currTabAccId);
-		if ($db2->next_record())
-			$currTabAccLogin = $db2->f('login');
+		if ($db2->nextRecord())
+			$currTabAccLogin = $db2->getField('login');
 		else $currTabAccLogin = '[Account no longer Exists]';
 		foreach ($accountIDs as $currLinkAccId) {
 			
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
 			$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currLinkAccId);
-			if ($db2->next_record())
-				$currLinkAccLogin = $db2->f('login');
+			if ($db2->nextRecord())
+				$currLinkAccLogin = $db2->getField('login');
 			else $currLinkAccLogin = '[Account no longer Exists]';
 			$PHP_OUTPUT.=('<tr>');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan=$rows align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.=('<td align=center>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td align=center>');
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
-			if ($db2->next_record()) $db2->p('reason');
+			if ($db2->nextRecord()) $db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td align=center>');
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
-			if ($db2->next_record()) $db2->p('suspicion');
+			if ($db2->nextRecord()) $db2->getField('suspicion');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td align=center><input type=checkbox name=close['.$currLinkAccId.'] value='.$associatedAccs.'>');
 			$PHP_OUTPUT.=('</td></tr>');

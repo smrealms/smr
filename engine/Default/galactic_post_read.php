@@ -5,43 +5,43 @@ $smarty->assign('PageTopic','GALACTIC POST');
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM galactic_post_online WHERE game_id = '.$player->getGameID());
-if ($db->nf()) {
-    $db->next_record();
-    $paper_id = $db->f('paper_id');
+if ($db->getNumRows()) {
+    $db->nextRecord();
+    $paper_id = $db->getField('paper_id');
     $db2->query('SELECT * FROM galactic_post_paper WHERE game_id = '.$player->getGameID().' AND paper_id = '.$paper_id);
-    $db2->next_record();
-    $paper_name = stripslashes($db2->f('title'));
+    $db2->nextRecord();
+    $paper_name = stripslashes($db2->getField('title'));
 
     $smarty->assign('PageTopic','READING <i>GALACTIC POST</i> EDITION : '.$paper_name);
 	include(ENGINE . 'global/menue.inc');
     $PHP_OUTPUT.=create_galactic_post_menue();
     $db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());
-    if (floor($db2->nf() / 2) == $db2->nf() / 2)
+    if (floor($db2->getNumRows() / 2) == $db2->getNumRows() / 2)
         $even = 'yes';
     else
         $even = 'no';
     $curr_position = 0;
     $PHP_OUTPUT.=('<table align="center" spacepadding="20" cellspacing="20">');
     if ($even == 'yes')
-        $amount = $db2->nf();
+        $amount = $db2->getNumRows();
     else
-        $amount = $db2->nf() + 1;
+        $amount = $db2->getNumRows() + 1;
     while ($curr_position + 1 <= $amount) {
 
     	$curr_position += 1;
-		if ($db2->nf() + 1 == $curr_position && $even != 'yes') {
+		if ($db2->getNumRows() + 1 == $curr_position && $even != 'yes') {
 
             $PHP_OUTPUT.=('<td>&nbsp;</td>');
             continue;
 
         }
-        $db2->next_record();
+        $db2->nextRecord();
         //now we have the articles in this paper.
-        $article_num = $db2->f('article_id');
+        $article_num = $db2->getField('article_id');
         $db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID().' AND article_id = '.$article_num);
-        $db3->next_record();
-        $article_title = stripslashes($db3->f('title'));
-        $article_text = stripslashes($db3->f('text'));
+        $db3->nextRecord();
+        $article_title = stripslashes($db3->getField('title'));
+        $article_text = stripslashes($db3->getField('text'));
 
         if (floor($curr_position / 2) != $curr_position / 2) {
 

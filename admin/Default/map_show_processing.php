@@ -16,9 +16,9 @@ if (!empty($account_id))
 
 	// add port infos
 	$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' ORDER BY sector_id');
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
-		SmrPort::getPort($game_id,$db->f('sector_id'))->cachePort($account_id);
+		SmrPort::getPort($game_id,$db->getField('sector_id'))->cachePort($account_id);
 	}
 
 }

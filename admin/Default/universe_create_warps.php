@@ -4,8 +4,8 @@ $smarty->assign('PageTopic','CREATE UNIVERSE - ADDING WARPS (3/10)');
 
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
-if ($db->next_record())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->f('game_name') . '</dd>');
+if ($db->nextRecord())
+	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding warps</d>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('Each galaxy must be connected to the outside world. Please add the warps between it to actually create the universe layout. There can only be one warp between two galaxies.</dd>');
@@ -19,8 +19,8 @@ $db->query('SELECT DISTINCT galaxy.galaxy_id as id, galaxy_name as name
 			WHERE game_id = ' . $var['game_id'] . ' AND
 				  sector.galaxy_id = galaxy.galaxy_id
 			ORDER BY galaxy.galaxy_id');
-while ($db->next_record())
-	$galaxies[$db->f('id')] = $db->f('name');
+while ($db->nextRecord())
+	$galaxies[$db->getField('id')] = $db->getField('name');
 
 $container = array();
 $container['url']		= 'universe_create_warps_processing.php';

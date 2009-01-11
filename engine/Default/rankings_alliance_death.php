@@ -6,9 +6,9 @@ $PHP_OUTPUT.=create_ranking_menue(1, 2);
 $db->query('SELECT alliance_id, alliance_name, alliance_deaths, leader_id FROM alliance
 			WHERE game_id = '.$player->getGameID().' ORDER BY alliance_deaths DESC, alliance_name');
 $alliances = array();
-while ($db->next_record()) {
-	$alliances[$db->f('alliance_id')] = array(stripslashes($db->f('alliance_name')), $db->f('alliance_deaths'), $db->f('leader_id'));
-	if ($db->f('alliance_id') == $player->getAllianceID()) $ourRank = sizeof($alliances);
+while ($db->nextRecord()) {
+	$alliances[$db->getField('alliance_id')] = array(stripslashes($db->getField('alliance_name')), $db->getField('alliance_deaths'), $db->getField('leader_id'));
+	if ($db->getField('alliance_id') == $player->getAllianceID()) $ourRank = sizeof($alliances);
 }
 
 // how many alliances are there?

@@ -4,7 +4,7 @@ foreach ($disable_account as $curr_account_id) {
 
 	// check if this one already has an entry
 	$db->query('SELECT * FROM account_is_closed WHERE account_id = '.$curr_account_id);
-	if ($db->nf() == 0) {
+	if ($db->getNumRows() == 0) {
 
 		$db->query('INSERT INTO account_is_closed (account_id, reason_id, suspicion) VALUES('.$curr_account_id.', 2, \'double password\')');
 		$db->query('INSERT INTO account_has_closing_history ' .

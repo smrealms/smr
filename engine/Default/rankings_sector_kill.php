@@ -17,10 +17,10 @@ $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM sector WHERE game_id = '.$player->getGameID().' ORDER BY battles DESC, sector_id LIMIT 10');
 
 $rank = 0;
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
 	// get current player
-	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->f('sector_id'), $player->getAccountID());
+	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->getField('sector_id'), $player->getAccountID());
 
 	// increase rank counter
 	$rank++;
@@ -69,8 +69,8 @@ if ($min_rank < 0) {
 
 // how many alliances are there?
 $db->query('SELECT max(sector_id) FROM sector WHERE game_id = '.$player->getGameID());
-if ($db->next_record())
-	$total_sector = $db->f('max(sector_id)');
+if ($db->nextRecord())
+	$total_sector = $db->getField('max(sector_id)');
 
 if ($max_rank > $total_sector)
 	$max_rank = $total_sector;
@@ -95,10 +95,10 @@ $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM sector WHERE game_id = '.$player->getGameID().' ORDER BY battles DESC, sector_id LIMIT ' . ($min_rank - 1) . ', ' . ($max_rank - $min_rank + 1));
 
 $rank = $min_rank - 1;
-while ($db->next_record()) {
+while ($db->nextRecord()) {
 
 	// get current player
-	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->f('sector_id'), $player->getAccountID());
+	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->getField('sector_id'), $player->getAccountID());
 
 	// increase rank counter
 	$rank++;

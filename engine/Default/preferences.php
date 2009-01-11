@@ -7,8 +7,8 @@ if (isset($var['reason']))
 
 //find how many credits they have
 $db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id);
-if ($db->next_record())
-	$have = $db->f('credits_left');
+if ($db->nextRecord())
+	$have = $db->getField('credits_left');
 else
 	$have = 0;
 
@@ -33,7 +33,7 @@ $PHP_OUTPUT.=('</tr>');
 
 //ban points go here
 $db->query('SELECT * FROM account_has_points WHERE account_id = '.SmrSession::$account_id);
-if ($db->next_record()) $points = $db->f('points');
+if ($db->nextRecord()) $points = $db->getField('points');
 else $points = 0;
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Ban Points:</td>');
@@ -96,8 +96,8 @@ $PHP_OUTPUT.=('<td>');
 $time = time();
 //get current offset
 $db->query('SELECT * FROM account WHERE account_id = '.SmrSession::$account_id);
-$db->next_record();
-$offset = $db->f('offset');
+$db->nextRecord();
+$offset = $db->getField('offset');
 $PHP_OUTPUT.=('<select name="timez" id="InputFields">');
 for ($i = -12; $i<= 11; $i++) {
 	
@@ -130,15 +130,15 @@ if (SmrSession::$game_id > 0) {
 
 	$PHP_OUTPUT.=('<select name="account_id" id="InputFields">');
 	$db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER BY player_name');
-	while ($db->next_record())
-		$PHP_OUTPUT.=('<option value="' . $db->f('account_id') . '">' . stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')</option>');
+	while ($db->nextRecord())
+		$PHP_OUTPUT.=('<option value="' . $db->getField('account_id') . '">' . stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')</option>');
 
 } else {
 
 	$PHP_OUTPUT.=('the&nbsp;account&nbsp;of&nbsp;<select name="account_id" id="InputFields">');
 	$db->query('SELECT * FROM account ORDER BY login');
-	while ($db->next_record())
-		$PHP_OUTPUT.=('<option value="' . $db->f('account_id') . '">' . $db->f('login') . '</option>');
+	while ($db->nextRecord())
+		$PHP_OUTPUT.=('<option value="' . $db->getField('account_id') . '">' . $db->getField('login') . '</option>');
 
 }
 
@@ -208,10 +208,10 @@ $PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.= '<h2>Account players</h2><br />';
 $db->query('select game.game_id as game_id, game.game_name as game_name, player.player_name as player_name, player.name_changed as name_changed from player natural join game where player.account_id=' . SmrSession::$account_id . ' and game.enabled=true and game.end_date>\'' . date('Y-m-d') . '\'');
-if($db->nf()) {
+if($db->getNumRows()) {
 	$PHP_OUTPUT.= '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Game</th><th>Name</th></tr>';
-	while($db->next_record()) {
-		$row = $db->fetch_row();
+	while($db->nextRecord()) {
+		$row = $db->getRow();
 
 		$PHP_OUTPUT.= '<tr><td>'.$row['game_name'].'</td><td>';
 		if($row['name_changed'] == 'false') {

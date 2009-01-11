@@ -18,13 +18,13 @@ if (!empty($player_name)) {
 
 	$db->query('SELECT * FROM player ' .
 			   'WHERE player_name = ' . $db->escape_string($player_name));
-	if ($db->next_record())
-		$account_id = $db->f('account_id');
+	if ($db->nextRecord())
+		$account_id = $db->getField('account_id');
 	else {
 		$db->query('SELECT * FROM player ' .
 				   'WHERE player_name LIKE ' . $db->escape_string($player_name));
-		if ($db->next_record())
-			$account_id = $db->f('account_id');
+		if ($db->nextRecord())
+			$account_id = $db->getField('account_id');
 	}
 }
 
@@ -33,8 +33,8 @@ $db->query('SELECT * FROM account WHERE account_id = '.$account_id.' OR ' .
 									   'login LIKE ' . $db->escape_string($login) . ' OR ' .
 									   'email LIKE ' . $db->escape_string($email) . ' OR ' .
 									   'validation_code LIKE ' . $db->escape_string($val_code));
-if ($db->next_record())
-	$curr_account =& SmrAccount::getAccount($db->f('account_id'));
+if ($db->nextRecord())
+	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 
 $container = array();
 
@@ -85,7 +85,7 @@ $PHP_OUTPUT.=('</tr>');
 if (!empty($curr_account->email)) {
 	//ban points go here
 	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$curr_account->account_id);
-	if ($db->next_record()) $points = $db->f('points');
+	if ($db->nextRecord()) $points = $db->getField('points');
 	else $points = 0;
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Points:</td>');
@@ -100,14 +100,14 @@ if ($curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Player:</td>');
 	$db->query('SELECT * FROM player WHERE account_id = '.$curr_account->account_id);
-	if ($db->nf()) {
+	if ($db->getNumRows()) {
 
 		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=('<table>');
-		while ($db->next_record()) {
+		while ($db->nextRecord()) {
 
-			$game_id = $db->f('game_id');
-			$curr_player =& SmrPlayer::getPlayer($db->f('account_id'), $game_id);
+			$game_id = $db->getField('game_id');
+			$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
 			$curr_ship =& $curr_player->getShip();
 			
 			$PHP_OUTPUT.=('<tr>');
@@ -179,14 +179,14 @@ if ($curr_account->account_id != 0) {
 
 	$db->query('SELECT * FROM account_is_closed ' .
 			   'WHERE account_id = '.$curr_account->account_id);
-	if ($db->next_record())
-		$curr_reason_id = $db->f('reason_id');
+	if ($db->nextRecord())
+		$curr_reason_id = $db->getField('reason_id');
 
 	$db->query('SELECT * FROM closing_reason');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
-		$reason_id	= $db->f('reason_id');
-		$reason		= $db->f('reason');
+		$reason_id	= $db->getField('reason_id');
+		$reason		= $db->getField('reason');
 		if (strlen($reason) > 50)
 			$reason = substr($reason, 0, 75) . '...';
 
@@ -203,9 +203,9 @@ if ($curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<p><input type=text name=suspicion id="InputFields" disabled=true style="width:400px;" value="For Multi Closings Only"></p>');
 	$PHP_OUTPUT.=('<p>Points: <input type="text" name="points" id="InputFields" style="width:30px;text-align:center;"> points</p>');
 	$db->query('SELECT * FROM account_is_closed WHERE account_id = '.$account_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 		$cont = 'yes';
-		$expireTime = $db->f('expires');
+		$expireTime = $db->getField('expires');
 	}
 	if ($expireTime > 0) $PHP_OUTPUT.=('<p>The account is set to reopen at ' . date('n/j/Y g:i:s A', $time) . '.</p>');
 	elseif (isset($cont)) $PHP_OUTPUT.=('<p>The account is closed indefinitly (oooo a big word).</p>');
@@ -218,15 +218,15 @@ if ($curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Closing History:</td>');
 	$PHP_OUTPUT.=('<td>');
 	$db->query('SELECT * FROM account_has_closing_history WHERE account_id = '.$curr_account->account_id.' ORDER BY time ASC');
-	if ($db->nf())
+	if ($db->getNumRows())
 	{
 
-		while ($db->next_record())
+		while ($db->nextRecord())
 		{
 
-			$curr_time	= $db->f('time');
-			$action		= $db->f('action');
-			$admin_id	= $db->f('admin_id');
+			$curr_time	= $db->getField('time');
+			$action		= $db->getField('action');
+			$admin_id	= $db->getField('admin_id');
 
 			// if an admin did it we get his/her name
 			if ($admin_id > 0) {
@@ -253,9 +253,9 @@ if ($curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Exception:</td>');
 	$db->query('SELECT * FROM account_exceptions WHERE account_id = '.$curr_account->account_id);
-	if ($db->next_record()) {
+	if ($db->nextRecord()) {
 
-		$reason_txt = $db->f('reason');
+		$reason_txt = $db->getField('reason');
 		$PHP_OUTPUT.=('<td>'.$reason_txt.'</td>');
 
 	} else
@@ -298,12 +298,12 @@ if ($curr_account->account_id != 0) {
 
 	$PHP_OUTPUT.=('<table>');
 	$db->query('SELECT ip, time, host FROM account_has_ip WHERE account_id = '.$curr_account->account_id.' ORDER BY time DESC');
-	while ($db->next_record())
+	while ($db->nextRecord())
 	{
 
-		$curr_ip	= $db->f('ip');
-		$curr_time	= $db->f('time');
-		$host		= $db->f('host');
+		$curr_ip	= $db->getField('ip');
+		$curr_time	= $db->getField('time');
+		$host		= $db->getField('host');
 		//this gets rid of the ips like '127.127.127.127, 1'
 		//making it 127.127.127.127 instead.  This removes errors in gethost
 		if ($curr_ip != 'unknown') {

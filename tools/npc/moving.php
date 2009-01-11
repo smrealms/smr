@@ -87,14 +87,14 @@ function leaving_sector($account_id, $game_id, $sector_id) {
 					  owner_id != $account_id AND
 					  scout_drones > 0
 			   ');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
 		// we can skip that whole thing if we are not in an alliance
 		// in that case everyone is our enemy
 		if ($alliance_id > 0) {
 
 			// skip scouts ffrom friends
-			if (get_player($db->f('owner_id'), $game_id, 'alliance_id') == $alliance_id)
+			if (get_player($db->getField('owner_id'), $game_id, 'alliance_id') == $alliance_id)
 				continue;
 
 		}
@@ -103,7 +103,7 @@ function leaving_sector($account_id, $game_id, $sector_id) {
 		if ($galaxy_id < 9) {
 
 			$curr_account = new SMR_ACCOUNT();
-			$curr_account->get_by_id($db->f('owner_id'));
+			$curr_account->get_by_id($db->getField('owner_id'));
 
 			// if one is vet and the other is newbie we skip it
 			if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
@@ -113,7 +113,7 @@ function leaving_sector($account_id, $game_id, $sector_id) {
 
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . get_colored_name($account_id, $game_id) . ' leaving sector #$sector_id';
-		send_message($account_id, $game_id, $db->f('owner_id'), SCOUTMSG, '.$db->escapeString($message');
+		send_message($account_id, $game_id, $db->getField('owner_id'), SCOUTMSG, '.$db->escapeString($message');
 
 	}
 
@@ -143,14 +143,14 @@ function entering_sector($account_id, $game_id, $sector_id) {
 					  owner_id != $account_id AND
 					  scout_drones > 0
 			   ');
-	while ($db->next_record()) {
+	while ($db->nextRecord()) {
 
 		// we can skip that whole thing if we are not in an alliance
 		// in that case everyone is our enemy
 		if ($alliance_id > 0) {
 
 			// skip scouts ffrom friends
-			if (get_player($db->f('owner_id'), $game_id, 'alliance_id') == $alliance_id)
+			if (get_player($db->getField('owner_id'), $game_id, 'alliance_id') == $alliance_id)
 				continue;
 
 		}
@@ -159,7 +159,7 @@ function entering_sector($account_id, $game_id, $sector_id) {
 		if ($galaxy_id < 9) {
 
 			$curr_account = new SMR_ACCOUNT();
-			$curr_account->get_by_id($db->f('owner_id'));
+			$curr_account->get_by_id($db->getField('owner_id'));
 
 			// if one is vet and the other is newbie we skip it
 			if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
@@ -169,7 +169,7 @@ function entering_sector($account_id, $game_id, $sector_id) {
 
 		// send scout messages to user
 		$message = 'Your forces have spotted ' . get_colored_name($account_id, $game_id) . ' entering sector #$sector_id';
-		send_message($account_id, $game_id, $db->f('owner_id'), SCOUTMSG, '.$db->escapeString($message');
+		send_message($account_id, $game_id, $db->getField('owner_id'), SCOUTMSG, '.$db->escapeString($message');
 
 	}
 
