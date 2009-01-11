@@ -14,7 +14,7 @@ if (empty($account_id))
 // create account object
 $curr_account = false;
 
-if (!empty($player_name)) {
+if (!empty($player_name) && !is_array($player_name)) {
 
 	$db->query('SELECT * FROM player ' .
 			   'WHERE player_name = ' . $db->escape_string($player_name));
