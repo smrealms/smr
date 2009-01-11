@@ -62,6 +62,29 @@ $smarty->assign('CombatSimHREF',SmrSession::get_new_href(create_container('skele
 
 if(isset($_REQUEST['run']))
 {
+	runAnAttack($realAttackers,$realDefenders);
+}
+if(isset($_REQUEST['death_run']))
+{
+	while(count($realAttackers)>0 && count($realDefenders)>0)
+	{
+		runAnAttack($realAttackers,$realDefenders);
+		foreach($realAttackers as $key => &$teamPlayer)
+		{
+			if($teamPlayer->isDead())
+				unset($realAttackers[$key]);
+		} unset($teamPlayer);
+		foreach($realDefenders as $key => &$teamPlayer)
+		{
+			if($teamPlayer->isDead())
+				unset($realDefenders[$key]);
+		} unset($teamPlayer);
+	}
+}
+
+function runAnAttack($realAttackers,$realDefenders)
+{
+	global $smarty;
 	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0), 
 					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
 	foreach($realAttackers as $accountID => &$teamPlayer)
