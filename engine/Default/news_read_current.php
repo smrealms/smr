@@ -49,7 +49,7 @@ if ($val == 1) {
 	$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$player->getGameID());
 	$db->query('INSERT INTO news ' .
 	'(game_id, time, news_message, type) ' .
-	'VALUES('.$player->getGameID().', ' . time() . ', ' . $db->escape_string($news_message, false) . ',\'lotto\')');
+	'VALUES('.$player->getGameID().', ' . TIME . ', ' . $db->escape_string($news_message, false) . ',\'lotto\')');
 	
 }
 $db->unlock();
@@ -98,9 +98,7 @@ while ($db->next_record()) {
     $PHP_OUTPUT.=('<tr>');
     $time = $db->f('time');
     $PHP_OUTPUT.=('<td align="center"> ' . date('n/j/Y g:i:s A', $time) . ' </td>');
-    $PHP_OUTPUT.=('<td align="left">');
-    $db->p('news_message');
-    $PHP_OUTPUT.=('</td>');
+    $PHP_OUTPUT.=('<td align="left">' . $db->getField('news_message') . '</td>');
     $PHP_OUTPUT.=('</tr>');
     $PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=('<br /><br />');
