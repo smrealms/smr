@@ -84,7 +84,6 @@ $db->query('SELECT * FROM game WHERE game_id = '.$player->getGameID());
 if ($db->nextRecord())
 	$game_speed = $db->getField('game_speed');
 
-$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM planet_construction ORDER BY construction_id');
 while ($db->nextRecord())
 {
@@ -92,6 +91,7 @@ while ($db->nextRecord())
 	$construction_name			= $db->getField('construction_name');
 	$construction_description	= $db->getField('construction_description');
 
+	$db2 = new SmrMySqlDatabase();
 	$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id = '.$construction_id);
 	if ($db2->nextRecord())
 		$cost = $db2->getField('amount');
