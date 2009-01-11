@@ -31,27 +31,27 @@ class Globals
 			$result = self::$db->query('SELECT * FROM planet_construction');
 			while(self::$db->nextRecord($result))
 			{
-				$buildingID = self::$db->getField('building_id');
+				$buildingID = self::$db->getField('construction_id');
 				$PLANET_BUILDINGS[$buildingID]['Name'] = self::$db->getField('construction_name');
 //				$PLANET_BUILDINGS[$buildingID]['Area'] = array(self::$db->getField('area'),self::$db->getField('metals'),self::$db->getField('energy'));
 				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = self::$db->getField('max_construction');
 				
 				$PLANET_BUILDINGS[$buildingID]['Build Time'] = 0;
-				$db2->query('SELECT * FROM planet_cost_credits WHERE building_id=' . $buildingID);
+				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
 					$PLANET_BUILDINGS[$buildingID]['Build Time'] += $db2->getField('amount');
 				}
 				
 				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = 0;
-				$db2->query('SELECT * FROM planet_cost_credits WHERE building_id=' . $buildingID);
+				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
 					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += $db2->getField('amount');
 				}
 				
 				$PLANET_BUILDINGS[$buildingID]['Goods'] = array();
-				$db2->query('SELECT * FROM planet_cost_good WHERE building_id=' . $buildingID);
+				$db2->query('SELECT * FROM planet_cost_good WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
 					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getField('good_id')] = $db2->getField('amount');
@@ -59,14 +59,14 @@ class Globals
 				
 //				global $PLANET_RESEARCH;
 //				$PLANET_BUILDINGS[$buildingID]['Research'] = array();
-//				$researchResult = query('SELECT * FROM planet_building_research_required WHERE building_id=' . $buildingID);
+//				$researchResult = query('SELECT * FROM planet_building_research_required WHERE construction_id=' . $buildingID);
 //				while($researchRow = next_record($researchResult))
 //				{
 //					$PLANET_BUILDINGS[$buildingID]['Research'][$PLANET_RESEARCH[$researchRow['research_id']]['Name']] = $researchRow['amount'];
 //				}
 				
 //				$PLANET_BUILDINGS[$buildingID]['Unlocks'] = array();
-//				$unlocksResult = query('SELECT * FROM planet_building_unlocks WHERE building_id=' . $buildingID);
+//				$unlocksResult = query('SELECT * FROM planet_building_unlocks WHERE construction_id=' . $buildingID);
 //				while($unlocksRow = next_record($unlocksResult))
 //				{
 //					$PLANET_BUILDINGS[$buildingID]['Unlocks'][$unlocksRow['unlock_id']] = $unlocksRow['amount'];
