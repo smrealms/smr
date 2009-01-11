@@ -37,7 +37,7 @@ if (SmrSession::$account_id == 0) {
 
 	$db->query('SELECT * FROM account ' .
 			   'WHERE login = '.$db->escapeString($login).' AND ' .
-					 'password = '.$db->escape_string(md5($password)));
+					 'password = '.$db->escapeString(md5($password)));
 	if ($db->nextRecord()) {
 
 		// register session
