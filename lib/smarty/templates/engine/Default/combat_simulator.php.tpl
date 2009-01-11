@@ -21,6 +21,7 @@
 				<br />All drones, shields, armour assumed full at the start of the simulation<br /><br />
 				<input type="submit" name="update" value="Update Details" />&nbsp;
 				<input type="submit" name="run" value="Run Simulation" />
+				<input type="submit" name="death_run" value="Run Simulation TO THE DEATH!!" />
 			</td>
 		</tr>
 	</table>
