@@ -21,7 +21,7 @@ if (!isset($var['folder_id'])) {
 	
 	include(get_file_loc('council.inc'));
 
-	$db2->query('SELECT * FROM message WHERE account_id = '.$player->getAccountID().' AND message_type_id = '.$POLITICALMSG.' AND game_id = '.$player->getGameID());
+	$db2->query('SELECT * FROM message WHERE account_id = '.$player->getAccountID().' AND message_type_id = '.MSG_POLITICAL.' AND game_id = '.$player->getGameID());
 	if (onCouncil($player->getRaceID()) || $db2->getNumRows())
 		$db->query('SELECT * FROM message_type ' .
 				   'WHERE message_type_id < 8 ' .
@@ -105,7 +105,7 @@ if (!isset($var['folder_id'])) {
 	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();
 
-	if ($var['folder_id'] == $GLOBALMSG) {
+	if ($var['folder_id'] == MSG_GLOBAL) {
 
 		$PHP_OUTPUT.=create_echo_form(create_container('message_global_ignore.php', ''));
 		$PHP_OUTPUT.=('<div align="center">Ignore global messages?&nbsp;&nbsp;');
@@ -147,11 +147,11 @@ if (!isset($var['folder_id'])) {
 		$PHP_OUTPUT.=('s');
 	$PHP_OUTPUT.=('.</p>');
 	$PHP_OUTPUT.=('<table width="100%" border="0" class="standard" cellspacing="0" cellpadding="1">');
-	if ($var['folder_id'] == $SCOUTMSG && !isset($var['show_all'])) {
+	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all'])) {
 		$dispContainer = array();
 		$dispContainer['url'] = 'skeleton.php';
 		$dispContainer['body'] = 'message_view.php';
-		$dispContainer['folder_id'] = $SCOUTMSG;
+		$dispContainer['folder_id'] = MSG_SCOUT;
 		$dispContainer['show_all'] = TRUE;
 		if ($unread_messages > 25 || $message_count - $unread_messages > 25) {
 			$PHP_OUTPUT.=create_button($dispContainer, 'Show all Messages');
@@ -217,7 +217,7 @@ if (!isset($var['folder_id'])) {
 			while ($db->nextRecord())
 				$PHP_OUTPUT.=displayMessage($db->getField('message_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'),$var['folder_id']);
 		}
-		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.$SCOUTMSG.' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.MSG_SCOUT.' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 	} else {
 		while ($db->nextRecord()) {
 			$message_id = $db->getField('message_id');

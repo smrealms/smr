@@ -11,7 +11,7 @@ $db->query('
 );
 
 while ($db->nextRecord()) {
-	$player->sendMessage($db->getField('account_id'), $ALLIANCEMSG, $message);
+	$player->sendMessage($db->getField('account_id'), MSG_ALLIANCE, $message);
 }
 $container=array();
 $container['url'] = 'skeleton.php';

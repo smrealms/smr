@@ -8,11 +8,11 @@ if (isset($offenderReply) && $offenderReply != '') {
 	$message = $db->escape_string($offenderReply, false);
 	
 	$db->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time) ' .
-	                             'VALUES('.$var['offender'].', '.$game_id.', '.$ADMINMSG.', '.$message.', 0, '.$currTime.')');
+	                             'VALUES('.$var['offender'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.$currTime.')');
 	
 	// give him the message icon
 	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-				('.$game_id.', '.$var['offender'].', '.$ADMINMSG.')');
+				('.$game_id.', '.$var['offender'].', '.MSG_ADMIN.')');
 	
 	//do we have points?
 	if ($_REQUEST['offenderBanPoints'])
@@ -80,11 +80,11 @@ if (isset($offendedReply) && $offendedReply != '') {
 	//next message
 	$message = $db->escape_string($offendedReply, false);
 	$db->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time) ' .
-	                             'VALUES('.$var['offended'].', '.$game_id.', '.$ADMINMSG.', '.$message.', 0, '.$currTime.')');
+	                             'VALUES('.$var['offended'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.$currTime.')');
 	
 	// give him the message icon
 	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-				('.$game_id.', '.$var['offended'].', '.$ADMINMSG.')');
+				('.$game_id.', '.$var['offended'].', '.MSG_ADMIN.')');
 	//do we have points?
 	if ($_REQUEST['offendedBanPoints'])
 	{

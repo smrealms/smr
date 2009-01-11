@@ -20,13 +20,6 @@
 	$TURRET			= 3;
 
 	// message types
-	$GLOBALMSG		= 1;
-	$PLAYERMSG		= 2;
-	$PLANETMSG		= 3;
-	$SCOUTMSG		= 4;
-	$POLITICALMSG	= 5;
-	$ALLIANCEMSG	= 6;
-	$ADMINMSG		= 7;
 
 	// locations
 	$GOVERNMENT		= 101;

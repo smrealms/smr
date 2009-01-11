@@ -20,13 +20,13 @@ if (empty($var['receiver']))
 
 	while ($db->nextRecord())
 	{
-		$player->sendMessage($db->getField('account_id'), $GLOBALMSG, $message);
+		$player->sendMessage($db->getField('account_id'), MSG_GLOBAL, $message);
 	}
 
 }
 else
 {
-	$player->sendMessage($var['receiver'], $PLAYERMSG, $message);
+	$player->sendMessage($var['receiver'], MSG_PLAYER, $message);
 }
 
 // get rid of all old scout messages (>24h)

@@ -143,19 +143,18 @@ function echo_message_menue() {
 function create_message_menue() {
 
 	global $var;
-	global $POLITICALMSG;
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'message_view.php'),
 												  'View Messages');
 
-	if (isset($var['folder_id']) && $var['folder_id'] == $POLITICALMSG) {
+	if (isset($var['folder_id']) && $var['folder_id'] == MSG_POLITICAL) {
 
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'council_send_message.php';
 		$container['race_id'] = $player->getRaceID();
-		$container['folder_id'] = $POLITICALMSG;
+		$container['folder_id'] = MSG_POLITICAL;
 		$menue_items[] = create_link($container, 'Send Council Message');
 
 	}
