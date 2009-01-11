@@ -30,7 +30,7 @@ if($player->hasAlliance())
 }
 else
 {
-	$db2->query('UPDATE sector_has_forces SET refresh_at='.(TIME+2).', refresher='.$player->getAccountID() .' WHERE game_id = '.$player->getGameID().' AND sector_id = ' .
+	$db->query('UPDATE sector_has_forces SET refresh_at='.(TIME+2).', refresher='.$player->getAccountID() .' WHERE game_id = '.$player->getGameID().' AND sector_id = ' .
 			$player->getSectorID().' AND owner_id='.$player->getAccountID().' LIMIT 1');
 }
 $message = '[Force Check]'; //this notifies the CS to look for info.
