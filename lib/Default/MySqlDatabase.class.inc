@@ -114,7 +114,7 @@ abstract class MySqlDatabase implements Database
 			}
 			return substr($escapedString,0,-1);
 		}
-		$string = htmlentities($string);
+//		$string = htmlentities($string);
 		if($quotes)
 			return '\'' . mysql_real_escape_string($string) . '\'';
 		return mysql_real_escape_string($string);

@@ -29,7 +29,7 @@ class SmrSession
 		{
 
 			// create a new session id
-			self::$session_id = md5 (uniqid (rand()) );
+			self::$session_id = md5 (uniqid (mt_rand()) );
 			setcookie('session_id', self::$session_id);
 		}
 
