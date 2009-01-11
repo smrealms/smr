@@ -18,7 +18,7 @@ $amount = $STAT_INCREASE_TYPES[$var['upgrade_id']]['Static'];
 if ($_REQUEST['submit'] == 'Remove')
 {
 	$remove_point_interval = 24 * 3600; //how long between downgrades
-	if ($last_mod > ($TIME - $remove_point_interval))
+	if ($last_mod > (TIME - $remove_point_interval))
 	{
 		$error .= '<span class="red">Error</span> : You can\'t remove more points yet.<br />';
 		return;
@@ -83,7 +83,7 @@ elseif ($_REQUEST['submit'] == 'Add')
 		return;
 	}
 	addBenefit($THIS_SHIP,$var['upgrade_id']);
-	query('INSERT INTO player_bought (time, game_id, account_id, type, type_id) VALUES ('.$TIME.','.$GAME_ID.','.$ACCOUNT_ID.',\'Upgrade\','.$var['upgrade_id'].')');
+	query('INSERT INTO player_bought (time, game_id, account_id, type, type_id) VALUES ('.TIME.','.$GAME_ID.','.$ACCOUNT_ID.',\'Upgrade\','.$var['upgrade_id'].')');
 }
 
 ?>

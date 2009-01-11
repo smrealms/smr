@@ -8,7 +8,7 @@ $PHP_OUTPUT.=('<p style="width:60%; text-align:justify;">Hello,<br /><br />If yo
 help keep it alive. Every little donation can help me. Beside for the cost for the server
 I invest most of my free time into this game to make it better. So if you are able
 to give me a financial aid I really would appreciate it.</p>');
-$db->query('SELECT SUM(amount) as total_donation FROM account_donated WHERE time > ' . time() . ' - (60 * 60 * 24 * 90)');
+$db->query('SELECT SUM(amount) as total_donation FROM account_donated WHERE time > ' . TIME . ' - (60 * 60 * 24 * 90)');
 if ($db->nextRecord())
 	$total_donation = $db->getField('total_donation');
 

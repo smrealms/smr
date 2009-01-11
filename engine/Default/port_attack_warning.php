@@ -4,7 +4,7 @@ $smarty->assign('PageTopic','PORT RAID');
 $PHP_OUTPUT.=('<font color=red>WARNING WARNING</font> port assault about to commence!!<br />');
 $PHP_OUTPUT.=('Are you sure you want to attack this port?<br /><br />');
 $port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
-$time = time();
+$time = TIME;
 
 //PAGE
 //if ($port->getReinforceTime() < $time) {

@@ -25,23 +25,6 @@ $time_start = microtime(true);
 // *
 // ********************************
 
-function getmicrotime() {
-
-	list($usec, $sec) = explode(' ', microtime());
-	return ((float)$usec + (float)$sec);
-
-}
-function echomicrotime($rt) {
-
-	$max = sizeof($rt) - 1;
-	for ($j = 0; $j < $max; $j++)
-	{
-		$step = $j + 1;
-		$runtime = number_format($rt[$step] - $rt[$j], 8);
-		$PHP_OUTPUT.=('Step '.$step.' executed in '.$runtime.' seconds<br />');
-	}
-	
-}
 // We want these to be already defined as globals
 $player=null;
 $ship=null;
@@ -625,7 +608,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	$smarty->assign('Version',$version);
 	$smarty->assign('CurrentYear',date('Y',TIME));
 //	$launch = mktime(0,0,0,3,12,2008);
-//	$now = time();
+//	$now = TIME;
 //	if ($launch - $now > 0)
 //		echo '<br />SMR 1.5 Launch in ' . format_time($launch - $now, TRUE) . '</span>!';
 }

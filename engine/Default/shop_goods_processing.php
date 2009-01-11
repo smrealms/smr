@@ -16,9 +16,6 @@ require_once(get_file_loc('SmrPort.class.inc'));
 //
 //global $good_id, $amount, $good_distance, $relations, $ideal_price, $offered_price, $ideal_price, $bargain_price, $amount;
 
-// initialize random generator.
-mt_srand((double)microtime()*1000000);
-
 require_once('shop_goods.inc');
 
 // creates needed objects

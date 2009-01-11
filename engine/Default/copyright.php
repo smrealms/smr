@@ -66,7 +66,7 @@ echo 'TELL PAGE THIS APPEARED (copyright.php) !!';
 //}
 //
 //$db_year = date('Y');
-//$time_elapsed = getmicrotime() - $time_start;
+//$time_elapsed = microtime(true) - $time_start;
 //$PHP_OUTPUT.=('<td align="right" width="100%" style="vertical-align:bottom"><span style="font-size:75%;">Space Merchant Realms<br />$version&nbsp;&nbsp;&nbsp;&copy; 2001-$db_year<br />hosted by <a href="http://www.fem.tu-ilmenau.de/fem_neu/scripts/index.php?fuseaction=page.content&id=1&menue_name=englisch" target="fem">FeM</a><br />Script runtime: ' . number_format($time_elapsed, 3) . ' sec</span></td>');
 //$PHP_OUTPUT.=('</tr>');
 //$PHP_OUTPUT.=('</table>');

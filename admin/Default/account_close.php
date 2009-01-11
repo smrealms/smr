@@ -16,7 +16,7 @@ if (isset($close)) {
 			   'VALUES('.$key.', 2, '.$expire_time.', '.$db->escapeString($val).')');
 		$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$key.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+			   'VALUES('.$key.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 
 		$db->query('UPDATE player SET newbie_turns = 1 ' .
 				   'WHERE account_id = '.$key.' AND ' .
@@ -49,7 +49,7 @@ if (isset($first)) {
 
 		$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 
 		$db->query('UPDATE player SET newbie_turns = 1 ' .
 			   'WHERE account_id = '.$account_id.' AND ' .
@@ -80,7 +80,7 @@ if (isset($second)) {
 
 	$db->query('INSERT INTO account_has_closing_history ' .
 		   '(account_id, time, admin_id, action) ' .
-		   'VALUES('.$second.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+		   'VALUES('.$second.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 
 	$db->query('UPDATE player SET newbie_turns = 1 ' .
 		   'WHERE account_id = '.$second.' AND ' .
@@ -138,7 +138,7 @@ if (isset($disable_id)) {
 
 		$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$id.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+			   'VALUES('.$id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 
 		$db->query('UPDATE player SET newbie_turns = 1 ' .
 			   'WHERE account_id = '.$id.' AND ' .

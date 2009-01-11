@@ -24,8 +24,6 @@ $from = $player->getSectorID();
 
 if (empty($to) || $to == '')
 	create_error('Where do you want to go today?');
-// initialize random generator.
-mt_srand((double)microtime()*1000000);
 
 // get our rank
 $rank_id = $account->get_rank();

@@ -46,7 +46,7 @@ else
 	$comment = mysql_escape_string($_GET['comment']);
 
 // get current time
-$curr_time = time();
+$curr_time = TIME;
 
 // check if we have comments for this album already
 $db->lockTable('album_has_comments');

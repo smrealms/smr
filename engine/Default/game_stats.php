@@ -18,7 +18,7 @@ $type = $db->getField('game_type');
 $creds = $db->getField('credits_needed');
 
 $db->query('SELECT * FROM player ' .
-			'WHERE last_cpl_action >= ' . (time() - 600) . ' AND ' .
+			'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
 				  'game_id = '.$game_id);
 $current = $db->getNumRows();
 $PHP_OUTPUT.=('<div align=center>');
@@ -115,12 +115,12 @@ $PHP_OUTPUT.='
 $smarty->assign('PageTopic','CURRENT PLAYERS');
 
 $db->query('SELECT * FROM active_session
-			WHERE last_accessed >= ' . (time() - 600) . ' AND
+			WHERE last_accessed >= ' . (TIME - 600) . ' AND
 				  game_id = '.$game_id);
 $count_real_last_active = $db->getNumRows();
 
 $db->query('SELECT * FROM player ' .
-		   'WHERE last_cpl_action >= ' . (time() - 600) . ' AND ' .
+		   'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
 				 'game_id = '.$game_id.' ' .
 		   'ORDER BY experience DESC, player_name');
 $count_last_active = $db->getNumRows();

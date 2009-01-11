@@ -13,7 +13,7 @@ $player->sendMessage($planet_player->getAccountID(), 2, $db->escape_string($mess
 
 $planet_player->setLandedOnPlanet(false);
 //update their last active time so that they are visable if kicked
-$worst = time() - 1500;
+$worst = TIME - 1500;
 if ($planet_player->getLastCPLAction() < $worst)
 	$planet_player->setLastCPLAction($worst);
 $planet_player->setKicked(true);

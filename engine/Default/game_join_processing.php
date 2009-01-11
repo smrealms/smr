@@ -73,12 +73,12 @@ if ($rank_id < 3 && $account->veteran == 'FALSE') {
 if ($type == 'Semi War') $ship_id = 34;
 
 // get the time since game start (but max 24h)
-$time_since_start = time() - strtotime($start_date);
+$time_since_start = TIME - strtotime($start_date);
 if ($time_since_start > 86400)
 	$time_since_start = 86400;
 
 // credit him this time
-$last_turn_update = time() - $time_since_start;
+$last_turn_update = TIME - $time_since_start;
 
 //// newbie leaders need to put into there alliances
 //if (SmrSession::$account_id >= 13 && SmrSession::$account_id <= 20)
@@ -127,7 +127,7 @@ if ($db->getField('games_joined') == 1) {
 	$db->query('UPDATE player SET alliance_id = '.$id.' WHERE account_id = '.$account->account_id.' AND game_id = '.$var['game_id']);
 	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id) VALUES ('.$var['game_id'].', '.$account->account_id.', 2)');
 	//we need to send them some messages
-	$time = time();
+	$time = TIME;
 	$message = 'Welcome to Space Merchant Realms, this message is to get you underway with information to start you off in the game. All newbie and beginner rated player are placed into a teaching alliance run by a Veteran player who is experienced enough to answer all your questions and give you a helping hand at learning the basics of the game.<br /><br/>
 	Apart from your leader (denoted with a star on your alliance roster) there are various other ways to get information and help. Newbie helpers are players in Blue marked on the Current Players List which you can view by clicking the link on the left-hand side of the screen that says "Current Players". Also you can visit the SMR Manual via a link on the left which gives detailed information on all aspects fo the game.<br /><br/>
 	SMR is a very community orientated game and as such there is an IRC Chat server setup for people to talk with each other and coordinate your alliances. There is a link on the left which will take you directly to the main SMR room where people come to hang out and chat. You can also get help in the game in the #smr-help room. You can access this by typing /join #smr-help in the server window. If you prefer to use a dedicated program to access IRC Chat rather than a browser you can goto http://www.mirc.com which is a good shareware program (asks to register the program after 30 days but you can still use it after 30 days so you won\'t get cut off from using it) or http://www.xchat.org which is a free alternative. In the options of either program you will need to enter the server information to access the server. Add a new server and enter the server address irc.vjtd3.com using port 6667. Once connected you can use the /join command to join #smr, #smr-help or any other room on the server as normal.<br /><br />

@@ -13,7 +13,7 @@ if ($db->getField('num') > 0) {
 	$first_buy = $db->getField('time');
 } else {
 	$amount = 1000000;
-	$first_buy = time();
+	$first_buy = TIME;
 }
 //find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
 $time_rem = ($first_buy + (2 * 24 * 60 * 60)) - TIME;
@@ -60,7 +60,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'news_read.php';
 $container['breaking'] = 'yes';
-$var_del = time() - 86400;
+$var_del = TIME - 86400;
 $db->query('DELETE FROM news WHERE time < '.$var_del.' AND type = \'breaking\'');
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
 if ($db->nextRecord()) {

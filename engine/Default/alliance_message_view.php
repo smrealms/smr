@@ -10,11 +10,9 @@ $smarty->assign('PageTopic',stripslashes($var['thread_topics'][$thread_index]));
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
-$curr_time = time() + 2;
-
 $db->query('REPLACE INTO player_read_thread ' .
 		   '(account_id, game_id, alliance_id, thread_id, time)' .
-		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.$curr_time.')');
+		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.(TIME+2).')');
 
 $mbWrite = TRUE;
 if ($alliance_id != $player->getAllianceID()) {

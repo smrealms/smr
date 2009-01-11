@@ -89,7 +89,7 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getExperience().'</td>');
-		if ($curr_player->getLastCPLAction() > time() - 600)
+		if ($curr_player->getLastCPLAction() > TIME - 600)
 			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" style="color:green;">YES</td>');
 		else
 			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" style="color:red;">NO</td>');

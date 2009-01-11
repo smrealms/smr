@@ -93,7 +93,7 @@ $PHP_OUTPUT.=('<tr><td colspan="2">&nbsp;</td></tr>');
 
 $PHP_OUTPUT.=('<tr><td>Timezone:</td>');
 $PHP_OUTPUT.=('<td>');
-$time = time();
+$time = TIME;
 //get current offset
 $db->query('SELECT * FROM account WHERE account_id = '.SmrSession::$account_id);
 $db->nextRecord();

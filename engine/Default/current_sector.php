@@ -160,12 +160,12 @@ if ($db->nextRecord())
 {
 	$msg = $db->getField('message');
 	$db->query('DELETE FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	if ($msg == '[Force Check]')
+	if (preg_match('/\[Force Check\]/',$msg))
 	{
 		$forceRefreshMessage ='';
-		$db->query('SELECT * FROM force_refresh WHERE refresh_at >= ' . time() . ' AND sector_id  = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' ORDER BY refresh_at DESC LIMIT 1');
+		$db->query('SELECT * FROM force_refresh WHERE refresh_at >= ' . TIME . ' AND sector_id  = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' ORDER BY refresh_at DESC LIMIT 1');
 		if ($db->nextRecord()) {
-			$remainingTime = $db->getField('refresh_at') - time();
+			$remainingTime = $db->getField('refresh_at') - TIME;
 			$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
 			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
 		}

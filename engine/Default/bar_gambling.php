@@ -3,7 +3,7 @@
 //bar gambling...
 //get action and vars
 $action = $var['action'];
-$time = time();
+$time = TIME;
 
 //do we need to process a ticket?
 if ($action == 'process') {

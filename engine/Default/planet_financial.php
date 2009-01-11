@@ -11,7 +11,7 @@ $smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$playe
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_planet_menue();
 
-$curr_time = time();
+$curr_time = TIME;
 
 $lvl = $planet->level();
 if ($lvl < 9)

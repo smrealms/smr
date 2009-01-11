@@ -2,13 +2,13 @@
 
 //first message
 if (isset($_REQUEST['offenderReply'])) $offenderReply = $_REQUEST['offenderReply'];
-$currTime = time();
+
 if (isset($offenderReply) && $offenderReply != '') {
 	$game_id = $var['game_id'];
 	$message = $db->escape_string($offenderReply, false);
 	
 	$db->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time) ' .
-	                             'VALUES('.$var['offender'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.$currTime.')');
+	                             'VALUES('.$var['offender'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.TIME.')');
 	
 	// give him the message icon
 	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
@@ -23,12 +23,12 @@ if (isset($offenderReply) && $offenderReply != '') {
 	
 			$currPoints = $db->getField('points');
 			$newPoints = $currPoints + $_REQUEST['offenderBanPoints'];
-			$db->query('UPDATE account_has_points SET points = '.$newPoints.', last_update = '.$currTime.' WHERE account_id = '.$var['offender']);
+			$db->query('UPDATE account_has_points SET points = '.$newPoints.', last_update = '.TIME.' WHERE account_id = '.$var['offender']);
 	
 		} else {
 	
 			$newPoints = $_REQUEST['offenderBanPoints'];
-			$db->query('REPLACE INTO account_has_points (account_id, points, last_update) VALUES ('.$var['offender'].', '.$newPoints.', '.$currTime.')');
+			$db->query('REPLACE INTO account_has_points (account_id, points, last_update) VALUES ('.$var['offender'].', '.$newPoints.', '.TIME.')');
 	
 		}
 	
@@ -50,7 +50,7 @@ if (isset($offenderReply) && $offenderReply != '') {
 		}
 	
 		if ($expire_time >= 0) {
-			if ($expire_time > 0) $expire_time += $currTime;
+			if ($expire_time > 0) $expire_time += TIME;
 			else $reasonID = 8;
 			$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$var['offender']);
 		
@@ -61,7 +61,7 @@ if (isset($offenderReply) && $offenderReply != '') {
 		
 			$db->query('INSERT INTO account_has_closing_history ' .
 					   '(account_id, time, admin_id, action) ' .
-					   'VALUES('.$var['offender'].', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+					   'VALUES('.$var['offender'].', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 		
 			$db->query('UPDATE player SET newbie_turns = 1 ' .
 					   'WHERE account_id = '.$var['offender'].' AND ' .
@@ -80,7 +80,7 @@ if (isset($offendedReply) && $offendedReply != '') {
 	//next message
 	$message = $db->escape_string($offendedReply, false);
 	$db->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time) ' .
-	                             'VALUES('.$var['offended'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.$currTime.')');
+	                             'VALUES('.$var['offended'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.TIME.')');
 	
 	// give him the message icon
 	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
@@ -94,12 +94,12 @@ if (isset($offendedReply) && $offendedReply != '') {
 	
 			$currPoints = $db->getField('points');
 			$newPoints = $currPoints + $_REQUEST['offendedBanPoints'];
-			$db->query('UPDATE account_has_points SET points = '.$newPoints.', last_update = '.$currTime.' WHERE account_id = '.$var['offended']);
+			$db->query('UPDATE account_has_points SET points = '.$newPoints.', last_update = '.TIME.' WHERE account_id = '.$var['offended']);
 	
 		} else {
 	
 			$newPoints = $_REQUEST['offendedBanPoints'];
-			$db->query('REPLACE INTO account_has_points (account_id, points, last_update) VALUES ('.$var['offended'].', '.$newPoints.', '.$currTime.')');
+			$db->query('REPLACE INTO account_has_points (account_id, points, last_update) VALUES ('.$var['offended'].', '.$newPoints.', '.TIME.')');
 	
 		}
 	
@@ -121,7 +121,7 @@ if (isset($offendedReply) && $offendedReply != '') {
 		}
 	
 		if ($expire_time >= 0) {
-			if ($expire_time > 0) $expire_time += $currTime;
+			if ($expire_time > 0) $expire_time += TIME;
 			else $reasonID = 8;
 			$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$var['offended']);
 		
@@ -132,7 +132,7 @@ if (isset($offendedReply) && $offendedReply != '') {
 		
 			$db->query('INSERT INTO account_has_closing_history ' .
 					   '(account_id, time, admin_id, action) ' .
-					   'VALUES('.$var['offended'].', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+					   'VALUES('.$var['offended'].', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 		
 			$db->query('UPDATE player SET newbie_turns = 1 ' .
 					   'WHERE account_id = '.$var['offended'].' AND ' .

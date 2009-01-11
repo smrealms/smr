@@ -191,7 +191,7 @@ $db->query('INSERT INTO account (login, password, email, first_name, last_name, 
 			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
 			$db->escape_string($first_name) . ', ' . $db->escape_string($last_name) . ', ' .
 			$db->escape_string($address) . ', ' . $db->escape_string($city) . ', ' . $db->escape_string($postal_code) . ', ' .
-			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($_REQUEST['icq'])) . ', ' . $db->escape_string($validation_code) . ',' . time() . ',' .$timez.')');
+			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($_REQUEST['icq'])) . ', ' . $db->escape_string($validation_code) . ',' . TIME . ',' .$timez.')');
 
 // creates a new user account object
 $account =& SmrAccount::getAccountByName($login);
@@ -210,7 +210,7 @@ mail($email, 'New Space Merchant Realms User',
 
 // remember when we sent validation code
 $db->query('INSERT INTO notification (notification_type, account_id, time) ' .
-							  'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . time() . ')');
+							  'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . TIME . ')');
 
 // insert into the account stats table
 $db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.SmrSession::$account_id.', ' . $db->escape_string($account->login) . ')');

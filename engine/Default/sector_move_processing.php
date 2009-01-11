@@ -325,7 +325,7 @@ function send_scout_messages($scout_owners,$direction){
 		$message .= 'leaving';
 	}
 	$message .= ' sector #<span class="yellow">' . $player->getSectorID() . '</span>';
-	$helper_query .= $db->escape_string($message,false) . ',' . $player->getAccountID() . ',' . time() . ',' . (time() + 259200) . ')'; 
+	$helper_query .= $db->escape_string($message,false) . ',' . $player->getAccountID() . ',' . TIME . ',' . (TIME + 259200) . ')'; 
 	$helper_query2 = '(' . SmrSession::$game_id . ',' . MSG_SCOUT . ',';
 
 	foreach ($scout_owners as $account_id){

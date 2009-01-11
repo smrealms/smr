@@ -46,7 +46,7 @@ if ($db->getNumRows() > 0)
 
 		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT count(*) as num_playing FROM player ' .
-					'WHERE last_cpl_action >= ' . (time() - 600) . ' AND ' .
+					'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
 						  'game_id = '.$game_id);
 		$db2->nextRecord();
 		$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
@@ -59,8 +59,8 @@ if ($db->getNumRows() > 0)
 		$container_game['game_id'] = $game_id;
 		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container_game);
 		$games['Play'][$game_id]['Maintenance'] = $curr_player->getTurns();
-		$games['Play'][$game_id]['LastActive'] = format_time($TIME-$curr_player->getLastCPLAction(),TRUE);
-		$games['Play'][$game_id]['LastMovement'] = format_time($TIME-$curr_player->getLastActive(),TRUE);
+		$games['Play'][$game_id]['LastActive'] = format_time(TIME-$curr_player->getLastCPLAction(),TRUE);
+		$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->getLastActive(),TRUE);
 
 	}
 }

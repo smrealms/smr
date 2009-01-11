@@ -9,7 +9,7 @@ foreach ($disable_account as $curr_account_id) {
 		$db->query('INSERT INTO account_is_closed (account_id, reason_id, suspicion) VALUES('.$curr_account_id.', 2, \'double password\')');
 		$db->query('INSERT INTO account_has_closing_history ' .
 			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$curr_account_id.', ' . time() . ', '.SmrSession::$account_id.', \'Closed\')');
+			   'VALUES('.$curr_account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
 
 		$db->query('UPDATE player SET newbie_turns = 1 ' .
 				   'WHERE account_id = '.$curr_account_id.' AND ' .

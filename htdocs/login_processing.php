@@ -162,7 +162,7 @@ if (!isset($_COOKIE['Session_Info'])) {
 		if (is_numeric($accID)) $new .= '-'.$accID;
 	$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->account_id.', '.$db->escapeString($new).', '.$db->escapeString($use).')');
 	//now we update their cookie with the newest info
-	setcookie('Session_Info', $new, time() + 157680000);
+	setcookie('Session_Info', $new, TIME + 157680000);
 
 } else {
 
@@ -194,7 +194,7 @@ if (!isset($_COOKIE['Session_Info'])) {
 		if (is_numeric($accID)) $new .= '-'.$accID;
 	$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->account_id.', '.$db->escapeString($new).', '.$db->escapeString($use).')');
 	//update newest cookie
-	setcookie('Session_Info', $new, time() + 157680000);
+	setcookie('Session_Info', $new, TIME + 157680000);
 
 }
 
@@ -205,7 +205,7 @@ $container['url'] = 'validate_check.php';
 $sn = SmrSession::get_new_sn($container);
 SmrSession::update();
 //get rid of expired messages
-$time = time();
+$time = TIME;
 $db2->query('DELETE FROM message WHERE expire_time < '.$time.' AND expire_time > 0');
 //check to see if we need to remove player_has_unread
 $db2 = new SmrMySqlDatabase();

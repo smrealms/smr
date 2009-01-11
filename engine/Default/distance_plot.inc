@@ -74,7 +74,7 @@ class Distance_Plotter extends SmrMySqlDatabase{
 		if($this->cache_updated==true) {
 			// Clear any old plots from the cache table (To stop it getting too large).
 			// To avoid doing this every time we only delete if a cache entry was updated.
-			$this->query('DELETE FROM plot_cache WHERE timeout < '  . (time() - TIMEOUT_TO_DELETE));
+			$this->query('DELETE FROM plot_cache WHERE timeout < '  . (TIME - TIMEOUT_TO_DELETE));
 		}
 	}
 
@@ -249,9 +249,9 @@ class Distance_Plotter extends SmrMySqlDatabase{
 			$links[$i][2] = $this->getField('length');				// Store the length of the route
 
 			// To optimise use of mysql's cache (Not the the plot_cache table) the timeout doesn't get updated on every access
-			if (time() -  $this->getField('timeout') < TIMEOUT_TO_UPDATE) {
+			if (TIME -  $this->getField('timeout') < TIMEOUT_TO_UPDATE) {
 				$this->cache_updated = true;
-				$this->query('UPDATE plot_cache SET timeout = ' . time() . ' WHERE
+				$this->query('UPDATE plot_cache SET timeout = ' . TIME . ' WHERE
 							 sector_id_1 = ' . $sector_id_1 . ' AND
 							 sector_id_2 = ' . $sector_id_2 . ' AND
 							 game_id = ' . $this->game_id . ' LIMIT 1');

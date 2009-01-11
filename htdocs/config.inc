@@ -3,9 +3,6 @@
 	
 	//num races
 	$NUM_RACES = 8;
-
-	$TIME = TIME;
-
 	
 
 	$STATS = array(

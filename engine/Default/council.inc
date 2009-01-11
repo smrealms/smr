@@ -125,11 +125,10 @@ function checkPacts($race_id_1) {
 
 	global $player, $db;
 
-	$endtime = time();
 	$db2 = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM race_has_voting ' .
-			   'WHERE end_time < '.$endtime.' AND ' .
+			   'WHERE end_time < '.TIME.' AND ' .
 					 'game_id = '.$player->getGameID().' AND ' .
 					 'race_id_1 = '.$race_id_1);
 	while ($db->nextRecord()) {

@@ -667,10 +667,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->pastMaintBought))
 		{
 			//get past maint
-			global $TIME;
-			$this->db->query('DELETE FROM player_repaired WHERE time < '.($TIME - 3600 * 20));
-			$sql = $this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE ' . $this->SQL . ' AND amount > 0 LIMIT 1');
-			if ($this->db->nextRecord($sql)) $this->pastMaintBought = $this->db->getField('sum');
+			$this->db->query('DELETE FROM player_repaired WHERE time < '.(TIME - 3600 * 20));
+			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE ' . $this->SQL . ' AND amount > 0 LIMIT 1');
+			if ($this->db->nextRecord()) $this->pastMaintBought = $this->db->getField('sum');
 			else $this->pastMaintBought = 0;
 		}
 		return $this->pastMaintBought;
@@ -681,8 +680,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->pastMaintCredit))
 		{
 			//get past maint
-			global $TIME;
-			$this->db->query('DELETE FROM player_repaired WHERE time < '.($TIME - 3600 * 20));
+			$this->db->query('DELETE FROM player_repaired WHERE time < '.(TIME - 3600 * 20));
 			$m_sql = $this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE '.$this->SQL.' AND amount < 0 LIMIT 1');
 			if ($this->db->nextRecord($m_sql)) $this->pastMaintCredit = $this->db->getField('sum');
 			else $this->pastMaintCredit = 0;
@@ -698,9 +696,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	function addPastMaintBought($amount,$type='Normal')
 	{
-		global $TIME;
 		$this->getPastMaintBought();
-		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->accountID . ',' . $this->gameID . ',' . $TIME . ',' . $amount . ','.$this->db->escapeString($type).')');
+		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->accountID . ',' . $this->gameID . ',' . TIME . ',' . $amount . ','.$this->db->escapeString($type).')');
 		$this->giveTurns($amount*10);
 		$this->pastMaintBought+=$amount;
 	}
@@ -1067,7 +1064,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	function addMission($missionID,$randomSector)
 	{
-		global $MISSIONS,$TIME;
+		global $MISSIONS;
 		$this->getMissions();
 
 		if(isset($this->missions[$missionID]))
@@ -1079,7 +1076,7 @@ class SmrPlayer extends AbstractSmrPlayer
 						'Total' => sizeof($mission['Steps']),
 						'Progress' => 0,
 						'Next Step' => 'TRUE',
-						'Expires' => ($TIME + 24 * 3600),
+						'Expires' => (TIME + 24 * 3600),
 						'Mission ID' => $missionID,
 						'Sector' => $randomSector,
 						'Starting Sector' => $this->getSectorID()
@@ -1469,7 +1466,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		// insert the news entry
 		$this->db->query('INSERT INTO news ' .
 					 '(game_id, time, news_message) ' .
-					 'VALUES('.$this->getGameID().', ' . time() . ', ' . $this->db->escapeString($news_message) . ')');
+					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ')');
 		
 		$percentage = 33;
 		if ($percentage > 0 )

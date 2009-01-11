@@ -75,7 +75,7 @@ else {
 	$perDay = $db->getField('with_per_day');
 	$PHP_OUTPUT.=('You can withdraw up to ' . number_format($db->getField('with_per_day')) . ' credits per 24 hours.<br />');
 	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
-			'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . (time() - 24 * 60 * 60));
+			'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . (TIME - 24 * 60 * 60));
 	$PHP_OUTPUT.=('So far you have withdrawn ');
 	$remaining = $perDay;
 	if ($db->nextRecord() && !is_null($db->getField('total'))) {

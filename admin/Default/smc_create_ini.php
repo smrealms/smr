@@ -25,7 +25,7 @@ while ($db->nextRecord()) {
 }
 
 // expire all forces first
-$db->query('DELETE FROM sector_has_forces WHERE expire_time < \'' . time() . '\'');
+$db->query('DELETE FROM sector_has_forces WHERE expire_time < \'' . TIME . '\'');
 
 $PHP_OUTPUT.=(EOL.'[Marks]'.EOL);
 $db->query('SELECT * FROM sector_has_forces WHERE game_id = '.$game_id.' GROUP BY sector_id ORDER BY sector_id');
