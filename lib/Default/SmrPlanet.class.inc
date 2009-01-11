@@ -411,8 +411,8 @@ class SmrPlanet
 		}
 		if($matchingBuilding)
 		{
+			$this->db->query('DELETE FROM planet_is_building WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID().' AND building_slot_id = ' . $matchingBuilding['BuildingSlotID'].' LIMIT 1');
 			unset($this->currentlyBuilding[$matchingBuilding['BuildingSlotID']]);
-			$this->db->query('DELETE FROM planet_is_building WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND building_slot_id = ' . $matchingBuilding['BuildingSlotID'].' LIMIT 1');
 			return true;
 		}
 		return false;
