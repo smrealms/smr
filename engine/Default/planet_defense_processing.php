@@ -46,12 +46,12 @@ if ($action == 'Ship') {
             create_error('You can\'t take more drones from planet than are on it!');
 
         // do we want to transfer more than we can carry?
-        if ($amount > $ship->getMaxCDs() - $ship->getCargoHolds())
+        if ($amount > $ship->getMaxCDs() - $ship->getCDs())
             create_error('You can\'t take more drones than you can carry!');
 
         // now transfer
         $planet->drones -= $amount;
-        $ship->increaseCargoHolds($amount);
+        $ship->increaseCDs($amount);
         $account->log(11, 'Player takes '.$amount.' drones from planet.', $player->getSectorID());
 
     }
@@ -78,7 +78,7 @@ if ($action == 'Ship') {
     } else if ($type_id == 4) {
 
         // do we want transfer more than we have?
-        if ($amount > $ship->getCargoHolds())
+        if ($amount > $ship->getCDs())
             create_error('You can\'t transfer more combat drones than you carry!');
 
         // do we want to transfer more than we can carry?
@@ -87,7 +87,7 @@ if ($action == 'Ship') {
 
         // now transfer
         $planet->drones += $amount;
-        $ship->decreaseCargoHolds($amount);
+        $ship->decreaseCDs($amount);
         $account->log(11, 'Player puts '.$amount.' drones on planet.', $player->getSectorID());
 
     }
