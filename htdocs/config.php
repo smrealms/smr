@@ -20,7 +20,7 @@ require_once('config.specific.php');
 define('DATE_FULL_SHORT','j/n/Y g:i:s A');
 define('DATE_DATE_SHORT','j/n/Y');
 define('DATE_TIME_SHORT','g:i:s A');
-define('DATE_FULL_SHORT_SPLIT','n/j/Y\<b\r /\>g:i:s A');
+define('DATE_FULL_SHORT_SPLIT','j/n/Y\<b\r /\>g:i:s A');
  
  
 /*
