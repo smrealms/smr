@@ -234,12 +234,13 @@ if($sector->hasPort())
 function checkForForceRefreshMessage(&$msg)
 {
 	global $db,$player,$smarty;
-	if (preg_match('/\[Force Check\]/',$msg))
+	if(preg_match('/\[Force Check\]/',$msg))
 	{
 		$msg = preg_replace('/\[Force Check\]/','',$msg);
 		$forceRefreshMessage ='';
-		$db->query('SELECT * FROM force_refresh WHERE refresh_at >= ' . TIME . ' AND sector_id  = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' ORDER BY refresh_at DESC LIMIT 1');
-		if ($db->nextRecord()) {
+		$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
+		if ($db->nextRecord())
+		{
 			$remainingTime = $db->getField('refresh_at') - TIME;
 			$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
 			$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
