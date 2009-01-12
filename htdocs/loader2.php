@@ -36,15 +36,15 @@ require_once("config.php");
 require_once(ENGINE . "Classic/smr.inc");
 
 // overwrite database class to use our db
-require_once(LIB . 'global/SmrMySqlDatabase.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 //include function
 $includes = new SmrMySqlDatabase();
 require_once(ENGINE . 'Default/SmrSession.class.inc');
 require_once(LIB . 'Classic/smr_account.inc');
-require_once(LIB . 'SmrMySqlDatabase/smr_player.inc');
-require_once(LIB . 'SmrMySqlDatabase/smr_ship.inc');
-require_once(LIB . 'SmrMySqlDatabase/smr_sector.inc');
+require_once(LIB . 'Default/smr_player.inc');
+require_once(LIB . 'Default/smr_ship.inc');
+require_once(LIB . 'Default/smr_sector.inc');
 
 // We want these to be already defined as globals
 $player=null;
