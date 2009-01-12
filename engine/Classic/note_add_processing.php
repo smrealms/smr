@@ -2,7 +2,7 @@
 
 /*
  * Script:
- * 		/engine/Old_School/note_add_processing.php
+ * 		/engine/Classic/note_add_processing.php
  * 
  * Changelog:
  * 		24/10/06 - Created (Curufir)
