@@ -30,7 +30,7 @@ if ($db->next_record()) {
 	elseif ($disabled == "TRUE")
 		print("<span style=\"color:red;\">Disabled</span>");
 	elseif ($approved == "YES")
-		print("<a href=\"URL/album/?$account->HoF_name\" style=\"color:green;\">Online</a>");
+		print("<a href=\"".URL."/album/?$account->HoF_name\" style=\"color:green;\">Online</a>");
 
 } else
 	print("<span style=\"color:orange;\">No entry</span>");
@@ -93,7 +93,7 @@ print("<tr>");
 print("<td align=\"right\" valign=\"top\" style=\"font-weight:bold;\">Image:</td>");
 print("<td>");
 if (is_readable(UPLOAD . $session->account_id))
-	print("<img src=\"URL/upload/$session->account_id\"><br />");
+	print("<img src=\"".URL."/upload/$session->account_id\"><br />");
 print("<input type=\"file\" name=\"photo\" accept=\"image/jpeg\" id=\"InputFields\" style=\"width:303px;\" ></td>");
 print("</tr>");
 

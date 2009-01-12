@@ -70,7 +70,7 @@ $session = new SmrSession();
 // do we have a session?
 if ($session->account_id == 0) {
 
-	header("Location: URL/login.php");
+	header("Location: ".URL."/login.php");
 	exit;
 
 }
