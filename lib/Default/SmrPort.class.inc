@@ -108,7 +108,7 @@ class SmrPort
 			
 			$this->lastUpdate += round($amt_to_add / $refresh_per_sec);
 				
-			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' LIMIT '.sizeof($GOODS));
+			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC LIMIT '.sizeof($GOODS));
 			
 			$this->goods['Sell'] = array();
 			$this->goods['Buy'] = array();
