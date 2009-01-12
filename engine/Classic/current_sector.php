@@ -32,7 +32,7 @@ $menue_items[] = create_link($container, 'Plot a Course');
 $container['body'] = 'map_local.php';
 $menue_items[] = create_link($container, 'Local Map');
 
-$menue_items[] = '<a href="' . $URL . '/map_galaxy.php" target="_blank">Galaxy Map</a>';
+$menue_items[] = '<a href="' . URL . '/map_galaxy.php" target="_blank">Galaxy Map</a>';
 
 // print it
 print_menue($menue_items);
@@ -374,7 +374,7 @@ if($player->ticker != "FALSE" && $player->ticker != "BLOCK") {
 		$query = 'SELECT message_text,send_time FROM message
 					WHERE account_id=' . $player->account_id . '
 					AND game_id=' . $player->game_id . '
-					AND message_type_id=' . $SCOUTMSG . '
+					AND message_type_id=' . MSG_SCOUT . '
 					AND send_time>=' . $max . '
 					AND sender_id NOT IN (' . implode(',', $temp) . ')
 					ORDER BY send_time DESC

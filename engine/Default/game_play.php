@@ -196,7 +196,7 @@ if ($db->getNumRows())
 	{
 		$adminPermissions[] = array( 'PermissionLink' => SmrSession::get_new_href(create_container('skeleton.php',$db->getField('link_to'))), 'Name' => $db->getField('permission_name'));
 	}
-	$smarty->assign('AdminPermissions',$adminPermissions);
+	$smarty->assign('$adminPermissions',$adminPermissions);
 }
 
 ?>

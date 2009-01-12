@@ -19,7 +19,7 @@ $player->delete_plotted_course();
 if ($forces->scout_drones > 0) {
 
 	$message = "Your forces in sector $forces->sector_id are being attacked by $player->player_name";
-	$player->send_message($forces->owner_id, $SCOUTMSG, format_string($message, false));
+	$player->send_message($forces->owner_id, MSG_SCOUT, format_string($message, false));
 	//insert into ticker
 	$time = time();
 	$db->query("SELECT * FROM player_has_ticker WHERE account_id = $owner_id AND game_id = $player->game_id AND type = 'scout'");

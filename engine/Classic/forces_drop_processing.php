@@ -178,7 +178,7 @@ if ($var["owner_id"] != $player->account_id) {
 
 	$message .= " from/to your stack in sector #$sector->sector_id.";
 
-	$player->send_message($forces_owner->account_id, $SCOUTMSG, format_string($message, true));
+	$player->send_message($forces_owner->account_id, MSG_SCOUT, format_string($message, true));
 
 }
 

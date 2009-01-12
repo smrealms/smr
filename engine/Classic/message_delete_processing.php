@@ -14,7 +14,7 @@ if ($action == "Marked Messages") {
 						AND send_time >= ' . $temp[1] . '
 						AND send_time <= ' . $temp[2] . '
 						AND account_id = ' . $player->account_id . '
-						AND message_type_id = ' . $SCOUTMSG;
+						AND message_type_id = ' . MSG_SCOUT;
 			$db->query($query);
 			while ($db->next_record()) {
 				$newId = $db->f("message_id");
@@ -29,7 +29,7 @@ if ($action == "Marked Messages") {
     $db->query("DELETE FROM message WHERE message_id IN ($message_id_list)");
 
 } else {
-    if ($var["folder_id"] == $SCOUTMSG) {
+    if ($var["folder_id"] == MSG_SCOUT) {
         $db->query("DELETE FROM message WHERE account_id = $player->account_id AND " .
                                             "message_type_id = $var[folder_id] AND " .
                                             "game_id = $player->game_id");

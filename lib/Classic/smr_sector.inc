@@ -1,8 +1,8 @@
 <?
 
 // include file with database class
-//require_once($LIB . "SmrMySqlDatabase.inc");
-require_once($LIB . "global/SmrMySqlDatabase.inc");
+//require_once(LIB . "SmrMySqlDatabase.inc");
+require_once(LIB . "global/SmrMySqlDatabase.inc");
 
 class SMR_SECTOR extends SmrMySqlDatabase {
 
@@ -279,7 +279,6 @@ class SMR_SECTOR extends SmrMySqlDatabase {
 	function entering_sector() {
 
 		global $player, $account;
-		global $SCOUTMSG;
 
 		// get our rank
 		$rank_id = $account->get_rank();
@@ -307,7 +306,7 @@ class SMR_SECTOR extends SmrMySqlDatabase {
 
 			// send scout messages to user
 			$message = "Your forces have spotted " . $player->get_colored_name() . " entering sector #$this->sector_id";
-			$player->send_message($owner->account_id, $SCOUTMSG, format_string($message, false));
+			$player->send_message($owner->account_id, MSG_SCOUT, format_string($message, false));
 			//insert into ticker
 			$db = new SmrMySqlDatabase();
 			$time = time();
@@ -326,7 +325,6 @@ class SMR_SECTOR extends SmrMySqlDatabase {
 	function leaving_sector() {
 
 		global $player, $account;
-		global $SCOUTMSG;
 
 		// get our rank
 		$rank_id = $account->get_rank();
@@ -353,7 +351,7 @@ class SMR_SECTOR extends SmrMySqlDatabase {
 
 			// send scout messages to user
 			$message = "Your forces have spotted " . $player->get_colored_name() . " leaving sector #$this->sector_id";
-			$player->send_message($owner->account_id, $SCOUTMSG, format_string($message, false));
+			$player->send_message($owner->account_id, MSG_SCOUT, format_string($message, false));
 			//insert into ticker
 			$db = new SmrMySqlDatabase();
 			$time = time();
@@ -372,7 +370,6 @@ class SMR_SECTOR extends SmrMySqlDatabase {
 	function died_here() {
 
 		global $player, $account;
-		global $SCOUTMSG;
 
 		// get our rank
 		$rank_id = $account->get_rank();
@@ -402,7 +399,7 @@ class SMR_SECTOR extends SmrMySqlDatabase {
 
 			// send scout messages to user
 			$message = "Your forces have spotted that " . $player->get_colored_name() . " has been <font color=red>DESTROYED</font> in sector #$this->sector_id";
-			$player->send_message($owner->account_id, $SCOUTMSG, format_string($message, false));
+			$player->send_message($owner->account_id, MSG_SCOUT, format_string($message, false));
 			//insert into ticker
 			$db = new SmrMySqlDatabase();
 			$time = time();

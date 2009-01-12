@@ -33,18 +33,18 @@ function printmicrotime($rt) {
 // config file
 require_once("config.inc");
 require_once("config.php");
-require_once($ENGINE . "Classic/smr.inc");
+require_once(ENGINE . "Classic/smr.inc");
 
 // overwrite database class to use our db
-require_once($LIB . 'global/SmrMySqlDatabase.inc');
+require_once(LIB . 'global/SmrMySqlDatabase.inc');
 
 //include function
 $includes = new SmrMySqlDatabase();
 require_once(ENGINE . 'Default/SmrSession.class.inc');
-require_once($LIB . 'Classic/smr_account.inc');
-require_once($LIB . 'SmrMySqlDatabase/smr_player.inc');
-require_once($LIB . 'SmrMySqlDatabase/smr_ship.inc');
-require_once($LIB . 'SmrMySqlDatabase/smr_sector.inc');
+require_once(LIB . 'Classic/smr_account.inc');
+require_once(LIB . 'SmrMySqlDatabase/smr_player.inc');
+require_once(LIB . 'SmrMySqlDatabase/smr_ship.inc');
+require_once(LIB . 'SmrMySqlDatabase/smr_sector.inc');
 
 // We want these to be already defined as globals
 $player=null;
@@ -70,7 +70,7 @@ $session = new SmrSession();
 // do we have a session?
 if ($session->account_id == 0) {
 
-	header("Location: $URL/login.php");
+	header("Location: URL/login.php");
 	exit;
 
 }

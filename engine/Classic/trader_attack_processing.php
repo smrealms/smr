@@ -264,12 +264,12 @@ while ($result) {
 
 	if ($debug) print("send message to attacker<br>");
 		// send dead msg
-		$killed->send_message($killer->account_id, $PLAYERMSG,
+		$killed->send_message($killer->account_id, MSG_PLAYER,
 							  format_string("You <span style=\"color:red;\">DESTROYED</span> $killed_name in Sector&nbsp<span style=\"color:blue;\">#$curr_sector</span>", false));
 
 	if ($debug) print("send message to defender<br>");
 		//send them a nice message
-		$killer->send_message($killed_id, $PLAYERMSG,
+		$killer->send_message($killed_id, MSG_PLAYER,
 							  format_string("You were <span style=\"color:red;\">DESTROYED</span> by $killer_name in Sector&nbsp<span style=\"color:blue;\">#$curr_sector</span>", false));
 
 	if ($debug) print("change alignment<br>");

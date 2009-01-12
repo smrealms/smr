@@ -320,10 +320,10 @@ function get_forces_query($galaxy_id) {
 }
 
 function send_scout_messages($scout_owners,$direction){
-	global $db,$player,$SCOUTMSG,$session;
+	global $db,$player,$session;
 	$scout_query = '';
 	$scout_query2 = '';
-	$helper_query = ',' . $session->game_id .',' . $SCOUTMSG . ',';
+	$helper_query = ',' . $session->game_id .',' . MSG_SCOUT . ',';
 	$message = 'Your forces have spotted ' . $player->get_colored_name() . ' ';
 	if($direction) {
 		$message .= 'entering';
@@ -333,7 +333,7 @@ function send_scout_messages($scout_owners,$direction){
 	}
 	$message .= ' sector #<span class="yellow">' . $player->sector_id . '</span>';
 	$helper_query .= format_string($message,false) . ',' . $player->account_id . ',' . time() . ',' . (time() + 259200) . ')'; 
-	$helper_query2 = '(' . $session->game_id . ',' . $SCOUTMSG . ',';
+	$helper_query2 = '(' . $session->game_id . ',' . MSG_SCOUT . ',';
 
 	foreach ($scout_owners as $account_id){
 		if(!empty($scout_query)){

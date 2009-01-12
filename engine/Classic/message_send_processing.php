@@ -12,11 +12,11 @@ if (empty($var["receiver"])) {
 	$db->query("SELECT * FROM player WHERE game_id = $player->game_id AND last_active >= $allowed AND ignore_global = 'NO'");
 
 	while ($db->next_record()) {
-		$player->send_message($db->f("account_id"), $GLOBALMSG, $message);
+		$player->send_message($db->f("account_id"), MSG_GLOBAL, $message);
 	}
 
 } else {
-	$player->send_message($var["receiver"], $PLAYERMSG, $message);
+	$player->send_message($var["receiver"], MSG_PLAYER, $message);
 }
 
 // get rid of all old scout messages (>24h)

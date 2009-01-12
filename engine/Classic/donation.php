@@ -51,10 +51,10 @@ print("<p><table width=\"100%\"><tr>");
 print("<tr><th>Component</th><th>Price</th></tr>");
 
 foreach ($components as $component => $price)
-	print("<tr><td>$component</td><td align=\"right\">" . number_format($price, 2) . " €</td></tr>");
+	print("<tr><td>$component</td><td align=\"right\">" . number_format($price, 2) . " ï¿½</td></tr>");
 
 print("<tr><td>&nbsp;</td><td align=\"right\"><hr noshade width=\"100%\"></td></tr>");
-print("<tr><td>&nbsp;</td><td align=\"right\">" . number_format($total_price, 2) . " €</td></tr>");
+print("<tr><td>&nbsp;</td><td align=\"right\">" . number_format($total_price, 2) . " ï¿½</td></tr>");
 
 print("</table></p>");
 
@@ -64,15 +64,15 @@ print("<div align=\"center\">");
 if ($donations < $total_price) {
 
 	print("<span style=\"font-size:75%;\">Current Progress:<br></span>");
-	print("<img src=\"$URL/images/progress_bar/bar_green_start.jpg\">");
+	print("<img src=\"URL/images/progress_bar/bar_green_start.jpg\">");
 
 	for ($i = 0; $i < $current_length; $i++)
-		print("<img src=\"$URL/images/progress_bar/bar_green_mid.jpg\">");
+		print("<img src=\"URL/images/progress_bar/bar_green_mid.jpg\">");
 
 	for ($i = 0; $i < $total_length - $current_length; $i++)
-		print("<img src=\"$URL/images/progress_bar/bar_white_mid.jpg\">");
+		print("<img src=\"URL/images/progress_bar/bar_white_mid.jpg\">");
 
-	print("<img src=\"$URL/images/progress_bar/bar_white_end.jpg\">");
+	print("<img src=\"URL/images/progress_bar/bar_white_end.jpg\">");
 	print("<span style=\"font-size:60%;\"><br>" . round(100 * $donations / $total_price) . " %</span>");
 
 } else

@@ -1,8 +1,8 @@
 <?
 // TODO: Plenty of room for improvement here
 // include file with database class
-//require_once($LIB . "SmrMySqlDatabase.inc");
-require_once($LIB . "global/SmrMySqlDatabase.inc");
+//require_once(LIB . "SmrMySqlDatabase.inc");
+require_once(LIB . "global/SmrMySqlDatabase.inc");
 
 class SMR_PLAYER extends SmrMySqlDatabase {
 
@@ -462,15 +462,15 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 	function died_by_planet($owner_id) {
 
 		// send the a msg to user
-		global $PLAYERMSG, $player, $sector;
+		global  $player, $sector;
 		
 		$planet = new SMR_PLANET($player->sector_id, $player->game_id);
 		
 		$sector->died_here();
 
 		$owner = new SMR_PLAYER($owner_id, $this->game_id);
-		$this->send_message($owner->account_id, $PLAYERMSG, format_string("Your planet <span style=\"color:red;\">DESTROYED</span> $this->player_name in sector $planet->sector_id", false));
-		$owner->send_message($this->account_id, $PLAYERMSG, format_string("You were <span style=\"color:red;\">DESTROYED</span> by Planetary defenses", false));
+		$this->send_message($owner->account_id, MSG_PLAYER, format_string("Your planet <span style=\"color:red;\">DESTROYED</span> $this->player_name in sector $planet->sector_id", false));
+		$owner->send_message($this->account_id, MSG_PLAYER, format_string("You were <span style=\"color:red;\">DESTROYED</span> by Planetary defenses", false));
 		
 		$news_message = $this->get_colored_name();
 		$db2 = new SmrMySqlDatabase();
@@ -512,11 +512,11 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 
 	function died_by_port() {
 
-		global $PLAYERMSG, $sector;
+		global  $sector;
 		$sector->died_here();
 
 		// send the a msg to user
-		$this->send_message($this->account_id, $PLAYERMSG, format_string("You were <span style=\"color:red;\">DESTROYED</span> by Port defenses", false));
+		$this->send_message($this->account_id, MSG_PLAYER, format_string("You were <span style=\"color:red;\">DESTROYED</span> by Port defenses", false));
 		usleep(1000000);
 		$news_message = $this->get_colored_name();
 		$db2 = new SmrMySqlDatabase();
@@ -555,13 +555,13 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 
 	function died_by_forces($owner_id) {
 
-		global $PLAYERMSG, $sector;
+		global  $sector;
 		$sector->died_here();
 
 		// send a message to the person who died
 		$owner = new SMR_PLAYER($owner_id, $this->game_id);
-		$this->send_message($owner->account_id, $PLAYERMSG, format_string("Your forces <span style=\"color:red;\">DESTROYED</span> $this->player_name in sector $this->sector_id", false));
-		$owner->send_message($this->account_id, $PLAYERMSG, format_string("You were <span style=\"color:red;\">DESTROYED</span> by forces in sector $this->sector_id", false));
+		$this->send_message($owner->account_id, MSG_PLAYER, format_string("Your forces <span style=\"color:red;\">DESTROYED</span> $this->player_name in sector $this->sector_id", false));
+		$owner->send_message($this->account_id, MSG_PLAYER, format_string("You were <span style=\"color:red;\">DESTROYED</span> by forces in sector $this->sector_id", false));
 
 		$news_message = $this->get_colored_name();
 		$db2 = new SmrMySqlDatabase();
@@ -599,9 +599,6 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 	}
 
 	function send_message($receiver_id, $message_type_id, $message) {
-
-		//get expire time
-		global $GLOBALMSG, $PLAYERMSG, $PLANETMSG, $SCOUTMSG, $POLITICALMSG, $ALLIANCEMSG, $ADMINMSG ;
 		
 		// Don't send messages to players ignoring us
 		$this->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiver_id . ' AND blacklisted_id=' . $this->account_id . ' AND game_id = ' . $this->game_id . ' LIMIT 1');
@@ -611,13 +608,13 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 		
 		$message = word_filter($message);
 		
-		if ($message_type_id == $GLOBALMSG) $expire = 3600;
-		elseif ($message_type_id == $PLAYERMSG) $expire = 3600 * 24 * 7;
-		elseif ($message_type_id == $PLANETMSG) $expire = 3600 * 24 * 3;
-		elseif ($message_type_id == $SCOUTMSG) $expire = 3600 * 24 * 3;
-		elseif ($message_type_id == $POLITICALMSG) $expire = 3600 * 24 * 2;
-		elseif ($message_type_id == $ALLIANCEMSG) $expire = 3600 * 24 * 2;
-		elseif ($message_type_id == $ADMINMSG) $expire = 3600 * 24 * 7;
+		if ($message_type_id == MSG_GLOBAL) $expire = 3600;
+		elseif ($message_type_id == MSG_PLAYER) $expire = 3600 * 24 * 7;
+		elseif ($message_type_id == MSG_PLANET) $expire = 3600 * 24 * 3;
+		elseif ($message_type_id == MSG_SCOUT) $expire = 3600 * 24 * 3;
+		elseif ($message_type_id == MSG_POLITICAL) $expire = 3600 * 24 * 2;
+		elseif ($message_type_id == MSG_ALLIANCE) $expire = 3600 * 24 * 2;
+		elseif ($message_type_id == MSG_ADMIN) $expire = 3600 * 24 * 7;
 		else $expire = 3600 * 24 * 2;
 		$expire += time();
 		// send him the message
