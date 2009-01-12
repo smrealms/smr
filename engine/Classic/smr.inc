@@ -101,15 +101,15 @@ function get_file_loc($file_name, $exists = 1) {
 			$includes->next_record();
 			$stored_dir = $includes->f("game_type") . "/";
 			$game_dir = $stored_dir;
-		} else $game_dir = "Old_School/";
+		} else $game_dir = "Classic/";
 	}
 
 	if (file_exists($ENGINE . $game_dir . $file_name)) return $ENGINE . $game_dir . $file_name;
-	elseif (file_exists($ENGINE . "Old_School/" . $file_name)) return $ENGINE . "Old_School/" . $file_name;
+	elseif (file_exists($ENGINE . "Classic/" . $file_name)) return $ENGINE . "Classic/" . $file_name;
 	elseif (file_exists($LIB . $game_dir . $file_name)) return $LIB . $game_dir . $file_name;
-	elseif (file_exists($LIB . "Old_School/" . $file_name)) return $LIB . "Old_School/" . $file_name;
+	elseif (file_exists($LIB . "Classic/" . $file_name)) return $LIB . "Classic/" . $file_name;
 	elseif (file_exists($ADMIN . $game_dir . $file_name)) return $ADMIN . $game_dir . $file_name;
-	elseif (file_exists($ADMIN . "Old_School/" . $file_name)) return $ADMIN . "Old_School/" . $file_name;
+	elseif (file_exists($ADMIN . "Classic/" . $file_name)) return $ADMIN . "Classic/" . $file_name;
 	elseif ($exists == 1) return $ENGINE . "empty.php";
 	else return $file_name;
 
