@@ -24,7 +24,7 @@ if ($needed > 0) {
 	// do we have enough
 	if ($have < $needed) {
 
-	    print_error("Sorry you dont have enough SMR Credits to play this game.<br>To get SMR credits you need to donate to SMR");
+	    create_error("Sorry you dont have enough SMR Credits to play this game.<br>To get SMR credits you need to donate to SMR");
 	    return;
 
 	}
@@ -35,21 +35,21 @@ if ($needed > 0) {
 $db->query("SELECT * FROM player WHERE game_id = " . $var["game_id"]);
 if ($db->nf() >= $max_players) {
 
-    print_error("The maximum number of players in that game is reached!");
+    create_error("The maximum number of players in that game is reached!");
     return;
 
 }
 
 if (date("Y-m-d") < $start_date) {
 
-    print_error("You want to join a game that hasn't started yet?");
+    create_error("You want to join a game that hasn't started yet?");
     return;
 
 }
 
 if (date("Y-m-d") > $end_date) {
 
-    print_error("You want to join a game that is already over?");
+    create_error("You want to join a game that is already over?");
     return;
 
 }
