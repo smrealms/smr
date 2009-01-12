@@ -2,7 +2,7 @@
 // TODO: Plenty of room for improvement here
 // include file with database class
 //require_once(LIB . "SmrMySqlDatabase.inc");
-require_once(LIB . "global/SmrMySqlDatabase.inc");
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 class SMR_PLAYER extends SmrMySqlDatabase {
 
