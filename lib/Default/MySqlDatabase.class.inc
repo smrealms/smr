@@ -172,5 +172,23 @@ abstract class MySqlDatabase implements Database
 		else
 			return '\'' . mysql_escape_string($string) . '\'';
 	}
+	
+	//below is for Classic compatibility
+	
+	function next_record() { return $this->nextRecord(); }
+	
+	function f($name) { return $this->getField($name); }
+	
+	function fetch_row() { return $this->getRow(); }
+	
+	function lock($table) { $this->lockTable($table); }
+	
+	function nf() { return $this->getNumRows(); }
+	
+	function insert_id() { return $this->getInsertID(); }
+	
+	function p($name) { return $this->getField($name); }
+	
+	function np() { return $this->getNumRows(); }
 }
 ?>

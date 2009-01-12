@@ -93,7 +93,7 @@ if ($db->getNumRows() > 0)
 		$games['Join'][$game_id]['StartDate'] = $db->getField('start_date');
 		$games['Join'][$game_id]['EndDate'] = $db->getField('end_date');
 		$games['Join'][$game_id]['MaxPlayers'] = $db->getField('max_players');
-		$games['Join'][$game_id]['Type'] = $db->getField('max_players');
+		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
 		$games['Join'][$game_id]['Speed'] = $db->getField('credits_needed');
 		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
 		// create a container that will hold next url and additional variables.
@@ -102,7 +102,10 @@ if ($db->getNumRows() > 0)
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'game_join.php';
 
-		$games['Join'][$game_id]['JoinGameLink'] = SmrSession::get_new_href($container);
+		if($games['Join'][$game_id]['Type'] == 'Default')
+			$games['Join'][$game_id]['JoinGameLink'] = SmrSession::get_new_href($container);
+		else
+			$games['Join'][$game_id]['JoinGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
 	}
 }
 
