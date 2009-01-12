@@ -60,12 +60,10 @@
 				<td align="right">Game Type:</td>
 				<td>
 					<select name="game_type" size="1" id="InputFields">
-						<option selected>Old_School</option>
+						<option selected>Default</option>
+						<option>Classic</option>
 						<option>Semi_Wars</option>
 						<option>Race_Wars</option>
-						<option>Tournament</option>
-						<option>Random Alliance</option>
-						<option>Blue_Sky</option>
 					</select>
 				</td>
 				<td>&nbsp;</td>
