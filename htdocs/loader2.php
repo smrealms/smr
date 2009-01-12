@@ -42,9 +42,9 @@ require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 $includes = new SmrMySqlDatabase();
 require_once(LIB . 'Default/SmrSession.class.inc');
 require_once(LIB . 'Classic/smr_account.inc');
-require_once(LIB . 'Default/smr_player.inc');
-require_once(LIB . 'Default/smr_ship.inc');
-require_once(LIB . 'Default/smr_sector.inc');
+require_once(LIB . 'Classic/smr_player.inc');
+require_once(LIB . 'Classic/smr_ship.inc');
+require_once(LIB . 'Classic/smr_sector.inc');
 
 // We want these to be already defined as globals
 $player=null;
