@@ -43,9 +43,6 @@ $ship->decloak();
 $ship->disableIllusion();
 $ship->setShipTypeID($var['ship_id']);
 
-// delete cargo
-$ship->removeAllCargo();
-
 
 // update again
 $ship->update();

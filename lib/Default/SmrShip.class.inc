@@ -66,18 +66,21 @@ class SmrShip extends AbstractSmrShip
 		$this->checkForExcessWeapons();
 	}
 	
-	function load_cargo() {
-		
-		// initialize cargo array
-		$this->cargo = array();
-		
-		// get cargo from db
-		$this->db->query('SELECT * FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID());
-		while ($this->db->nextRecord())
+	function load_cargo()
+	{
+		if(!isset($this->cargo))
 		{
-			// adding cargo and amount to array
-			$this->cargo[$this->db->getField('good_id')] = $this->db->getField('amount');
+			// initialize cargo array
+			$this->cargo = array();
+			
+			// get cargo from db
+			$this->db->query('SELECT * FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND ' .
+				'game_id = '.$this->getGameID());
+			while ($this->db->nextRecord())
+			{
+				// adding cargo and amount to array
+				$this->cargo[$this->db->getField('good_id')] = $this->db->getField('amount');
+			}
 		}
 	}
 	
