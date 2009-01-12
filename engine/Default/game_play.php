@@ -69,10 +69,10 @@ if ($db->getNumRows() > 0)
 $game_id_list = '('.$game_id_list.')';
 
 if ($game_id_list == '()')
-	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed ' .
+	$db->query('SELECT DATE_FORMAT(start_date, \'%e/%c/%Y\') as start_date, DATE_FORMAT(end_date, \'%e/%c/%Y\') as end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed ' .
 					'FROM game WHERE end_date >= \'' . date('Y-m-d') . '\' AND enabled = \'TRUE\'');
 else
-	$db->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed ' .
+	$db->query('SELECT DATE_FORMAT(start_date, \'%e/%c/%Y\') as start_date, DATE_FORMAT(end_date, \'%e/%c/%Y\') as end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed ' .
 					'FROM game WHERE game_id NOT IN '.$game_id_list.' AND ' .
 									'end_date >= \'' . date('Y-m-d') . '\' AND enabled = \'TRUE\'');
 
@@ -90,8 +90,8 @@ if ($db->getNumRows() > 0)
 		$game_id = $db->getField('game_id');
 		$games['Join'][$game_id]['ID'] = $game_id;
 		$games['Join'][$game_id]['Name'] = $db->getField('game_name');
-		$games['Join'][$game_id]['StartDate'] = date(DATE_DATE_SHORT,$db->getField('start_date'));
-		$games['Join'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$db->getField('end_date'));
+		$games['Join'][$game_id]['StartDate'] = $db->getField('start_date');
+		$games['Join'][$game_id]['EndDate'] = $db->getField('end_date');
 		$games['Join'][$game_id]['MaxPlayers'] = $db->getField('max_players');
 		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
 		$games['Join'][$game_id]['Speed'] = $db->getField('credits_needed');
