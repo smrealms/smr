@@ -92,9 +92,6 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 // *
 // ********************************
 $sn = $_REQUEST['sn'];
-
-// now get the container array for this sn object
-;
 	
 // check if we got a sn number with our url
 if (empty($sn))
@@ -112,22 +109,6 @@ else $g_id = 0;
 // check if the last script had a start time
 if (isset($var['time']))
 	$time_start = $var['time'];
-
-
-// now deny reload for processing scripts
-// it forwards the user to an error site
-// or do the same if we already on that site
-//if (empty($var['body']) ||
-//	$var['body'] == 'error.php' && $var['message'] == 'Please click the button only once!') {
-//
-//	$container = array();
-//	$container['url'] = 'skeleton.php';
-//	$container['body'] = 'error.php';
-//	$container['message'] = 'Please click the button only once!';
-//
-//	SmrSession::$var[$sn] = $container;
-//
-//}
 
 // update session
 SmrSession::update();
@@ -290,7 +271,7 @@ function release_lock()
 function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 {
 	$smarty->assign('fontSize',$account->fontsize);
-	$smarty->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
+	$smarty->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
 	
 	$container = array();
 	$container['url'] = 'skeleton.php';
