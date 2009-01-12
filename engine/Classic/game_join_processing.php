@@ -135,10 +135,10 @@ if ($db->f("games_joined") == 1) {
 	To get underway, click the alliance link on the left where you can get more information on 	how to get started on the alliance message board which will get you into your alliance chat 	on IRC so you can get started and have your questions answered.<br /><br />Depending on the size and resolution of your monitor the default font size may be too large or small. This can be changed using the preferences link on the left panel.";
 
 	$db->query("INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) " .
-	"VALUES ($var[game_id], $account->account_id, $PLAYERMSG, '$message', 0, $time, 'FALSE', 0)");
+	"VALUES ($var[game_id], $account->account_id, MSG_PLAYER, '$message', 0, $time, 'FALSE', 0)");
 
 	$db->query("REPLACE INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES " .
-				"($account->account_id, $var[game_id], $PLAYERMSG)");
+				"($account->account_id, $var[game_id], MSG_PLAYER)");
 
 }
 // insert the huge amount of sectors into the database :)

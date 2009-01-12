@@ -1,8 +1,8 @@
 <?
 
 // include file with database class
-//require_once($LIB . "SmrMySqlDatabase.inc");
-require_once($LIB . 'Default/SmrMySqlDatabase.class.inc');
+//require_once(LIB . "SmrMySqlDatabase.inc");
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 class SMR_FORCE extends SmrMySqlDatabase {
 

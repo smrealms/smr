@@ -1,8 +1,8 @@
 <?
 
 // include file with database class
-//require_once($LIB . "SmrMySqlDatabase.inc");
-require_once($LIB . "global/SmrMySqlDatabase.inc");
+//require_once(LIB . "SmrMySqlDatabase.inc");
+require_once(LIB . "global/SmrMySqlDatabase.inc");
 
 class SMR_SHIP extends SmrMySqlDatabase {
 

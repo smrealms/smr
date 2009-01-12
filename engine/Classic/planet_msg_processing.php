@@ -5,7 +5,7 @@ if ($player->alliance_id == 0) {
 	$container = array();
 	$container["url"] = "skeleton.php";
 	$container["body"] = "message_view.php";
-	$container["folder_id"] = $PLANETMSG;
+	$container["folder_id"] = MSG_PLANET;
 	forward($container);
 }
 $db2 = new SmrMySqlDatabase();

@@ -2,8 +2,6 @@
 
 function print_nav($topic_id) {
 
-	global $URL;
-
 	// database object
 	$db = new SmrMySqlDatabase();
 	$db2 = new SmrMySqlDatabase();
@@ -34,10 +32,10 @@ function print_nav($topic_id) {
 
 			$previous_topic_id = $db2->f("topic_id");
 			$previous_topic = stripslashes($db2->f("topic"));
-			print("<a href=\"$URL/manual.php?$previous_topic_id\"><img src=\"$URL/images/help/previous.jpg\" width=\"32\" height=\"32\" border=\"0\"></a>");
+			print("<a href=\"URL/manual.php?$previous_topic_id\"><img src=\"URL/images/help/previous.jpg\" width=\"32\" height=\"32\" border=\"0\"></a>");
 
 		} else
-			print("<img src=\"$URL/images/help/empty.jpg\" width=\"32\" height=\"32\">");
+			print("<img src=\"URL/images/help/empty.jpg\" width=\"32\" height=\"32\">");
 		print("</th>");
 
 		// **************************
@@ -49,10 +47,10 @@ function print_nav($topic_id) {
 
 			$up_topic_id = $db2->f("topic_id");
 			$up_topic = stripslashes($db2->f("topic"));
-			print("<a href=\"$URL/manual.php?$up_topic_id\"><img src=\"$URL/images/help/up.jpg\" width=\"32\" height=\"32\" border=\"0\"></a>");
+			print("<a href=\"URL/manual.php?$up_topic_id\"><img src=\"URL/images/help/up.jpg\" width=\"32\" height=\"32\" border=\"0\"></a>");
 
 		} else
-			print("<img src=\"$URL/images/help/empty.jpg\" width=\"32\" height=\"32\">");
+			print("<img src=\"URL/images/help/empty.jpg\" width=\"32\" height=\"32\">");
 		print("</th>");
 
 		// **************************
@@ -80,25 +78,25 @@ function print_nav($topic_id) {
 
 			$next_topic_id = $db2->f("topic_id");
 			$next_topic = stripslashes($db2->f("topic"));
-			print("<a href=\"$URL/manual.php?$next_topic_id\"><img src=\"$URL/images/help/next.jpg\" width=\"32\" height=\"32\" border=\"0\"></a>");
+			print("<a href=\"URL/manual.php?$next_topic_id\"><img src=\"URL/images/help/next.jpg\" width=\"32\" height=\"32\" border=\"0\"></a>");
 
 		} else
-			print("<img src=\"$URL/images/help/empty.jpg\" width=\"32\" height=\"32\">");
+			print("<img src=\"URL/images/help/empty.jpg\" width=\"32\" height=\"32\">");
 		print("</th>");
 
 		print("<th width=\"100%\" align=\"center\" validn=\"middle\" style=\"font-size:18pt;font-weight:bold;\">" . get_numbering($topic_id) . "$topic</th>");
-		print("<th width=\"32\"><a href=\"$URL/manual_toc.php\"><img src=\"$URL/images/help/contents.jpg\" width=\"32\" height=\"32\" border=\"0\"></a></th>");
+		print("<th width=\"32\"><a href=\"URL/manual_toc.php\"><img src=\"URL/images/help/contents.jpg\" width=\"32\" height=\"32\" border=\"0\"></a></th>");
 
 		print("</tr>");
 
 		print("<tr>");
 		print("<td colspan=\"5\">");
 		if ($previous_topic_id > 0)
-			print("<b>Previous:</b> <a href=\"$URL/manual.php?$previous_topic_id\">" . get_numbering($previous_topic_id) . "$previous_topic</a>&nbsp;&nbsp;&nbsp;");
+			print("<b>Previous:</b> <a href=\"URL/manual.php?$previous_topic_id\">" . get_numbering($previous_topic_id) . "$previous_topic</a>&nbsp;&nbsp;&nbsp;");
 		if ($up_topic_id > 0)
-			print("<b>Up:</b> <a href=\"$URL/manual.php?$up_topic_id\">" . get_numbering($up_topic_id) . "$up_topic</a>&nbsp;&nbsp;&nbsp;");
+			print("<b>Up:</b> <a href=\"URL/manual.php?$up_topic_id\">" . get_numbering($up_topic_id) . "$up_topic</a>&nbsp;&nbsp;&nbsp;");
 		if ($next_topic_id > 0)
-			print("<b>Next:</b> <a href=\"$URL/manual.php?$next_topic_id\">" . get_numbering($next_topic_id) . "$next_topic</a>");
+			print("<b>Next:</b> <a href=\"URL/manual.php?$next_topic_id\">" . get_numbering($next_topic_id) . "$next_topic</a>");
 		print("</tr>");
 
 		print("</table>");
@@ -154,7 +152,6 @@ function print_subsection($topic_id) {
 
 function print_menu($topic_id) {
 
-	global $URL;
 
 	// database object
 	$db = new SmrMySqlDatabase();
@@ -169,7 +166,7 @@ function print_menu($topic_id) {
 			$order_id = $db->f("order_id");
 			$sub_topic = stripslashes($db->f("topic"));
 
-			print("<li><a href=\"$URL/manual.php?$sub_topic_id\">" . get_numbering($sub_topic_id) . "$sub_topic</a></li>");
+			print("<li><a href=\"URL/manual.php?$sub_topic_id\">" . get_numbering($sub_topic_id) . "$sub_topic</a></li>");
 			print_menu($sub_topic_id);
 
 		}

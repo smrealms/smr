@@ -13,7 +13,7 @@ $db->query("SELECT * FROM player " .
 		   "LIMIT 20");
 
 while ($db->next_record()) {
-	$player->send_message($db->f("account_id"), $POLITICALMSG, $message);
+	$player->send_message($db->f("account_id"), MSG_POLITICAL, $message);
 }
 
 $container = array();

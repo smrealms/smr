@@ -88,7 +88,7 @@ function print_submit_style($value, $style) {
 
 function get_file_loc($file_name, $exists = 1) {
 
-	global $ENGINE, $LIB, $ADMIN, $session, $includes, $g_id;
+	global $session, $includes, $g_id;
 	static $stored_dir;
 	if(isset($stored_dir)) {
 		$game_dir = $stored_dir;
@@ -104,13 +104,13 @@ function get_file_loc($file_name, $exists = 1) {
 		} else $game_dir = "Classic/";
 	}
 
-	if (file_exists($ENGINE . $game_dir . $file_name)) return $ENGINE . $game_dir . $file_name;
-	elseif (file_exists($ENGINE . "Classic/" . $file_name)) return $ENGINE . "Classic/" . $file_name;
-	elseif (file_exists($LIB . $game_dir . $file_name)) return $LIB . $game_dir . $file_name;
-	elseif (file_exists($LIB . "Classic/" . $file_name)) return $LIB . "Classic/" . $file_name;
-	elseif (file_exists($ADMIN . $game_dir . $file_name)) return $ADMIN . $game_dir . $file_name;
-	elseif (file_exists($ADMIN . "Classic/" . $file_name)) return $ADMIN . "Classic/" . $file_name;
-	elseif ($exists == 1) return $ENGINE . "empty.php";
+	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
+	elseif (file_exists(ENGINE . "Classic/" . $file_name)) return ENGINE . "Classic/" . $file_name;
+	elseif (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
+	elseif (file_exists(LIB . "Classic/" . $file_name)) return LIB . "Classic/" . $file_name;
+	elseif (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
+	elseif (file_exists(ADMIN . "Classic/" . $file_name)) return ADMIN . "Classic/" . $file_name;
+	elseif ($exists == 1) return ENGINE . "empty.php";
 	else return $file_name;
 
 }
@@ -138,7 +138,7 @@ function create_error($message) {
 
 function forward($new_container) {
 
-	global $session, $URL, $time_start,$sn,$container,$var;
+	global $session, $time_start,$sn,$container,$var;
 
 	// add start time of that script to next page
 	$new_container['time'] = $time_start;
