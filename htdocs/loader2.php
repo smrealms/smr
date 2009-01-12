@@ -40,7 +40,7 @@ require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 //include function
 $includes = new SmrMySqlDatabase();
-require_once(ENGINE . 'Default/SmrSession.class.inc');
+require_once(LIB . 'Default/SmrSession.class.inc');
 require_once(LIB . 'Classic/smr_account.inc');
 require_once(LIB . 'Default/smr_player.inc');
 require_once(LIB . 'Default/smr_ship.inc');
