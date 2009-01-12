@@ -82,20 +82,13 @@ $PHP_OUTPUT.=('</tr>');
 $GOODS =& Globals::getGoods();
 foreach($PLANET_BUILDINGS as $planetBuilding)
 {
-
-	/*$container = array();
-	$container['url'] = 'planet_construction_processing.php';
-	$container['construction_id'] = $construction_id;
-	$container['cost'] = $cost;
-
-	$PHP_OUTPUT.=create_echo_form($container);*/
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td>'.$planetBuilding['Name'].'</td>');
 	$PHP_OUTPUT.=('<td>'.$planetBuilding['Description'].'</td>');
 	$PHP_OUTPUT.=('<td align="center">');
-	$PHP_OUTPUT.=($planet->getBuilding($construction_id));
+	$PHP_OUTPUT.=($planet->getBuilding($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('/');
-	$PHP_OUTPUT.=($planet->max_construction[$construction_id]);
+	$PHP_OUTPUT.=($planet->max_construction[$planetBuilding['ConstructionID']]);
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
 	$missing_good = false;
