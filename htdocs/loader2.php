@@ -81,7 +81,7 @@ if (SmrSession::$account_id == 0) {
 // ********************************
 
 $db->query("SELECT account_id FROM hidden_players");
-$HIDDEN_PLAYERS = array();
+$HIDDEN_PLAYERS = array(0);
 while ($db->next_record())
 	$HIDDEN_PLAYERS[] = $db->f("account_id");
 
