@@ -189,7 +189,7 @@ class SmrSession
 
 	public static function get_new_href($container)
 	{
-		return 'loader.php?sn=' . self::addLink($container);
+		return '/loader.php?sn=' . self::addLink($container);
 	}
 
 }
