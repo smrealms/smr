@@ -18,7 +18,7 @@ if($relations <= -300) {
 	create_error('We will not trade with our enemies!');
 }
 
-if($port->refresh_defense > time()) {
+if($port->reinforce_time > time()) {
 	create_error('We are still repairing damage caused during the last raid.');
 }
 
