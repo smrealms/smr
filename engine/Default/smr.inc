@@ -543,13 +543,16 @@ function release_lock()
 
 function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 {
+	if($account==null) // we aren't in a normal script - eg moderate from album page
+		return;
 	$smarty->assign('fontSize',$account->fontsize);
 	$smarty->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
 	
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	
-	if (SmrSession::$game_id > 0) {
+	if (SmrSession::$game_id > 0)
+	{
 		$smarty->assign('GameID',SmrSession::$game_id);
 	
 		if ($player->isLandedOnPlanet())
