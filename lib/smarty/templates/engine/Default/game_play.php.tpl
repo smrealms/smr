@@ -29,6 +29,7 @@
 				<td>{$Game.NumberPlaying}</td>
 				<td>{$Game.LastActive}</td>
 				<td>{$Game.LastMovement}</td>
+				<td>{$Game.EndDate}</td>
 				<td>{$Game.Type}</td>
 			</tr>
 		{/foreach}
