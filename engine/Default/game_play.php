@@ -20,14 +20,11 @@ if ($db->getNumRows() > 0)
 	while ($db->nextRecord()) {
 
 		$game_id = $db->getField('game_id');
-		$game_name = $db->getField('game_name');
-		$end_date = $db->getField('format_end_date');
-		$game_speed = $db->getField('game_speed');
 		$games['Play'][$game_id]['ID'] = $game_id;
-		$games['Play'][$game_id]['Name'] = $game_name;
+		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
-		$games['Play'][$game_id]['EndDate'] = $end_date;
-		$games['Play'][$game_id]['Speed'] = $game_speed;	
+		$games['Play'][$game_id]['EndDate'] = $db->getField('format_end_date');
+		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');	
 		
 		$container = array();
 		$container['game_id'] = $game_id;
@@ -98,7 +95,7 @@ if ($db->getNumRows() > 0)
 		$games['Join'][$game_id]['EndDate'] = $db->getField('end_date');
 		$games['Join'][$game_id]['MaxPlayers'] = $db->getField('max_players');
 		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
-		$games['Join'][$game_id]['Speed'] = $db->getField('credits_needed');
+		$games['Join'][$game_id]['Speed'] = $db->getField('speed');
 		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
 		// create a container that will hold next url and additional variables.
 		$container = array();
@@ -112,8 +109,6 @@ if ($db->getNumRows() > 0)
 			$games['Join'][$game_id]['JoinGameLink'] = SmrSession::get_new_href($container);
 	}
 }
-
-$smarty->assign('Games',$games);
 	
 // ***************************************
 // ** Previous Games
@@ -125,53 +120,36 @@ $historyDB->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, '
 		   'FROM game ORDER BY game_id');
 if ($historyDB->getNumRows())
 {
-
-	$PHP_OUTPUT.=('<p>');
-	$PHP_OUTPUT.=create_table();
-	$PHP_OUTPUT.=('<tr><th align=center>Game Name</th><th align=center>Start Date</th><th align=center>End Date</th><th align=center>Speed</th><th align=center colspan=3>Options</th></tr>');
-	while ($historyDB->nextRecord()) {
-
-		$id = $historyDB->getField('game_id');
+	$games['Previous'] = array();
+	while ($historyDB->nextRecord())
+	{
+		$game_id = $historyDB->getField('game_id');
+		$games['Previous'][$game_id]['ID'] = $game_id;
+		$games['Previous'][$game_id]['Name'] = $historyDB->getField('game_name');
+		$games['Previous'][$game_id]['StartDate'] = $historyDB->getField('start_date');
+		$games['Previous'][$game_id]['EndDate'] = $historyDB->getField('end_date');
+		$games['Previous'][$game_id]['Speed'] = $historyDB->getField('speed');
+		// create a container that will hold next url and additional variables.
 		$container = array();
+		$container['game_id'] = $game_id;
 		$container['url'] = 'skeleton.php';
-		$container['game_id'] = $historyDB->getField('game_id');
-		$container['game_name'] = $historyDB->getField('game_name');
+		$container['game_id'] = $game_id;
+		$container['game_name'] = $games['Previous'][$game_id]['Name'];
 		$container['body'] = 'games_previous.php';
-		$name = $historyDB->getField('game_name');
-		$PHP_OUTPUT.=('<tr><td>');
-		$PHP_OUTPUT.=create_link($container, '.$historyDB->escapeString($name ($id)');
-		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $historyDB->getField('start_date') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $historyDB->getField('end_date') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>' . $historyDB->getField('speed') . '</td>');
-		$PHP_OUTPUT.=('<td align=center>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
+
+		$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::get_new_href($container);
 		$container['body'] = 'hall_of_fame_new.php';
-		$container['game_id'] = $historyDB->getField('game_id');
-		$PHP_OUTPUT.=create_link($container, 'Hall of Fame');
-		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td align=center>');
+		$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
 		$container['body'] = 'games_previous_news.php';
-		$container['game_id'] = $historyDB->getField('game_id');
-		$container['game_name'] = $historyDB->getField('game_name');
-		$PHP_OUTPUT.=create_link($container, 'Game News');
-		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td align=center>');
+		$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
 		$container['body'] = 'games_previous_detail.php';
-		$container['game_id'] = $historyDB->getField('game_id');
-		$container['game_name'] = $historyDB->getField('game_name');
-		$PHP_OUTPUT.=create_link($container, 'Game Stats');
-		$PHP_OUTPUT.=('</td>');
-
+		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
 	}
-
-	$PHP_OUTPUT.=('</table>');
-	$PHP_OUTPUT.=('</p>');
-
 }
 
 $db = new SmrMySqlDatabase(); // restore database
+
+$smarty->assign('Games',$games);
 
 // ***************************************
 // ** Donation Link
