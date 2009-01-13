@@ -70,6 +70,33 @@
 <br />
 <br />
 <h1>Previous Games</h1>
+{if $Games.Previous}
+	<table class="standard" cellspacing="0">
+		<tr>
+			<th width="150">Game Name</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Game Speed</th>
+			<th colspan="3">Options</th>
+		</tr>
+		</tr>
+		{foreach from=$Games.Previous item=Game}
+			<tr>
+				<td width="40%"><a href="{$Game.PreviousGameLink}">{$Game.Name} ({$Game.ID})</a></td>
+				<td>{$Game.StartDate}</td>
+				<td>{$Game.EndDate}</td>
+				<td>{$Game.Speed}</td>
+				<td>{$Game.Credits}</td>
+				<td><a href="{$Game.PreviousGameHOFLink}">Hall Of Fame</a></td>
+				<td><a href="{$Game.PreviousGameNewsLink}">Game News</a></td>
+				<td><a href="{$Game.PreviousGameStatsLink}">Game Stats</a></td>
+			</tr>
+		{/foreach}
+	</table><br />
+	<br />
+{else}
+<p>There are no previous games.</p>
+{/if}
 <br />
 <br />
 <h1>Donate Money</h1>
