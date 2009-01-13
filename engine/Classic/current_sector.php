@@ -408,7 +408,7 @@ if ($player->turns < 50)
 	$msg = "<span class=\"red\">WARNING</span>: Low turns!";
 if ($player->newbie_turns)
 	$msg = "[Protection Check]";
-$db->query("SELECT * FROM location WHERE location_type_id = $FED AND sector_id = $player->sector_id AND game_id = $player->game_id LIMIT 1");
+$db->query("SELECT * FROM location WHERE location_type_id = ".FED." AND sector_id = $player->sector_id AND game_id = $player->game_id LIMIT 1");
 if ($db->next_record())
 	$msg = "[Protection Check]";
 	//$db->query("REPLACE INTO sector_message (game_id, account_id, message) VALUES ($player->game_id, $player->account_id, '[Protection Check]')");
