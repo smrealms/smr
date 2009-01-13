@@ -8,7 +8,7 @@ if (isset($var['msg']))
 $smarty->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
 $smarty->assign('UserRankName',$account->get_rank_name());
 
-$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as format_end_date, end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
+$db->query('SELECT DATE_FORMAT(end_date, \'%e/%c/%Y\') as format_end_date, end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
 					'WHERE game.game_id = player.game_id AND ' .
 						  'account_id = '.SmrSession::$account_id.' AND ' .
 						  'end_date >= \'' . date('Y-m-d') . '\'');
