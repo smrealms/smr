@@ -100,10 +100,10 @@ if (SmrSession::$game_id > 0) {
 if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
 	$container['body'] = '';
 	$container['url'] = 'game_play_preprocessing.php';
-	print_link($container, 'Play Game');
+	echo '<a href="loader.php?sn=' . SmrSession::addLink($container) . '">Play Game</a>';
 	echo '<br>';
 	$container['url'] = 'logoff_preprocessing.php';
-	print_link($container, 'Logoff');
+	echo '<a href="loader.php?sn=' . SmrSession::addLink($container) . '">Logoff</a>';
 }
 else {
 	echo '<a href="login.php">Login</a><br>';
