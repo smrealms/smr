@@ -852,7 +852,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 			$img = $vote_links[$i]['default_img'];
 		}
 	
-		$voteSite[$i] .= '><img class="vote_site" src="images/game_sites/' . $img . '" alt="' . $vote_links[$i]['name'] . '"></a>';
+		$voteSite[$i] .= '><img class="vote_site" src="/images/game_sites/' . $img . '" alt="' . $vote_links[$i]['name'] . '"></a>';
 	}
 	$smarty->assign('VoteSites',$voteSite);
 	
