@@ -102,19 +102,19 @@ function create_form_parameter($container, $param) {
 }
 
 function create_header_link($container, $text) {
-	return '<a class="header" href="loader.php?sn=' . SmrSession::get_new_sn($container) . '">' . $text . '</a>';
+	return '<a class="header" href="' . SmrSession::get_new_href($container) . '">' . $text . '</a>';
 }
 
 
 
 function create_button($container,$text) {
-	return '<div class="buttonA"><a class="buttonA" href="loader.php?sn=' . SmrSession::get_new_sn($container). '">&nbsp;' . $text . '&nbsp;</a></div>';
+	return '<div class="buttonA"><a class="buttonA" href="' . SmrSession::get_new_href($container). '">&nbsp;' . $text . '&nbsp;</a></div>';
 }
 
 function create_form($container,$actions) {
 	static $form_id = 0;
 	$form = array();
-	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="loader.php?sn=' . SmrSession::get_new_sn($container) . '">';
+	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="' . SmrSession::get_new_href($container) . '">';
 
 	if(!is_array($actions)) {
 		$form['submit'] =  '<input class="submit" type="submit" name="action" value="' . $actions . '">';
