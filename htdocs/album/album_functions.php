@@ -246,7 +246,7 @@ function search_result($album_ids)
 {
 
 	// list of all first letter nicks
-	echocreate_link_list();
+	create_link_list();
 
 	echo('<div align="center" style="font-size:125%;">Please make a selection!</div>');
 
