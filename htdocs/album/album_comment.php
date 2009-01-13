@@ -12,7 +12,7 @@ require_once(ENGINE . 'Default/smr.inc');
 require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
 
-require_once('album_functions.php');
+require_once(LIB . 'Album/album_functions.php');
 
 if (SmrSession::$account_id == 0)
 	$PHP_OUTPUT.=create_error_offline('You need to logged in to post comments!');
