@@ -143,10 +143,6 @@ if (!empty($boughtGoods))
 
 	foreach ($boughtGoods as $good)
 	{
-
-		// if we are good, skip evil stuff
-		if ($player->getAlignment() > -100 && ($good['ID'] == 5 || $good['ID'] == 9 || $good['ID'] == 12)) continue;
-
 		$container['good_id'] = $good['ID'];
 		$container['good_name'] = $good['Name'];
 		$container['good_class'] = $good['Class'];
@@ -202,9 +198,6 @@ if (!empty($soldGoods))
 
 	foreach ($soldGoods as $good)
 	{
-		// if we are good, skip evil stuff
-		if ($player->getAlignment() > -100 && ($good['ID'] == 5 || $good['ID'] == 9 || $good['ID'] == 12)) continue;
-
 		$container['good_id'] = $good['ID'];
 		$container['good_name'] = $good['Name'];
 		$container['good_class'] = $good['Class'];
