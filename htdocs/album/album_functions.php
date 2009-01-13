@@ -263,7 +263,7 @@ function search_result($album_ids)
 
 		echo('<a href="'.URL.'/album/?' . urlencode($nick) . '" style="font-size:80%;">'.$nick.'</a><br />');
 
-		if ($count % floor(sizeof($album_ids) / 4) == 0)
+		if (floor(sizeof($album_ids) / 4) > 0 && $count % floor(sizeof($album_ids) / 4) == 0)
 			echo('</td><td width="25%" valign="top">');
 
 	}
