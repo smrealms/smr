@@ -95,7 +95,7 @@ if ($db->getNumRows() > 0)
 		$games['Join'][$game_id]['EndDate'] = $db->getField('end_date');
 		$games['Join'][$game_id]['MaxPlayers'] = $db->getField('max_players');
 		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
-		$games['Join'][$game_id]['Speed'] = $db->getField('speed');
+		$games['Join'][$game_id]['Speed'] = $db->getField('game_speed');
 		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
 		// create a container that will hold next url and additional variables.
 		$container = array();
