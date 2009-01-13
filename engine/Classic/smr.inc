@@ -106,10 +106,13 @@ function get_file_loc($file_name, $exists = 1) {
 
 	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
 	elseif (file_exists(ENGINE . "Classic/" . $file_name)) return ENGINE . "Classic/" . $file_name;
+	elseif (file_exists(ENGINE . "Default/" . $file_name)) return ENGINE . "Default/" . $file_name;
 	elseif (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
 	elseif (file_exists(LIB . "Classic/" . $file_name)) return LIB . "Classic/" . $file_name;
+	elseif (file_exists(LIB . "Default/" . $file_name)) return LIB . "Default/" . $file_name;
 	elseif (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
 	elseif (file_exists(ADMIN . "Classic/" . $file_name)) return ADMIN . "Classic/" . $file_name;
+	elseif (file_exists(ADMIN . "Default/" . $file_name)) return ADMIN . "Default/" . $file_name;
 	elseif ($exists == 1) return ENGINE . "empty.php";
 	else return $file_name;
 
