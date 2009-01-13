@@ -85,7 +85,7 @@ function getPortArray()
 	$db->query("SELECT  * FROM port WHERE sector_id = " . $player->sector_id . " AND game_id = " . $player->game_id);
 	if ($db->next_record()) {
 		$started = $db->f("attack_started");
-		$refresh = $db->f("refresh_defense");
+		$refresh = $db->f("reinforce_time");
 		$level = $db->f("level");
 		if ($refresh < TIME) {
 			//add news message
@@ -1084,7 +1084,7 @@ function portDowngrade(&$results, &$port) {
 	   }	
 	}
     $db->query("UPDATE port SET shields = " . $port[PORT_SHIELDS] . ", armor = " . $port[PORT_ARMOR] . ", drones = " . $port[PORT_DRONES] .
-    			", level = " . $port[PORT_LEVEL] . ", credits = " . $port[PORT_CREDITS] . ", attack_started = " . $port[STARTED] . ", refresh_defense = " . $port[REFRESH] .
+    			", level = " . $port[PORT_LEVEL] . ", credits = " . $port[PORT_CREDITS] . ", attack_started = " . $port[STARTED] . ", reinforce_time = " . $port[REFRESH] .
     			" WHERE sector_id = $player->sector_id AND game_id = $player->game_id");
 }
 function doLog($results) {

@@ -536,7 +536,7 @@ while($db->next_record()) {
 	$goods[$db->f('good_id')] = $db->f('good_name');
 }
 
-$db->query('SELECT `race_id`,`attack_started`,`level`,`refresh_defense`,`credits`,`upgrade` FROM `port` WHERE `sector_id`=' . $player->sector_id . ' AND `game_id`=' . SmrSession::$game_id . ' LIMIT 1');
+$db->query('SELECT `race_id`,`attack_started`,`level`,`reinforce_time`,`credits`,`upgrade` FROM `port` WHERE `sector_id`=' . $player->sector_id . ' AND `game_id`=' . SmrSession::$game_id . ' LIMIT 1');
 
 if ($db->next_record()) {
 	$player->get_relations();
@@ -546,7 +546,7 @@ if ($db->next_record()) {
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'trader_relations.php';
 
-	$refresh_defense = $db->f('refresh_defense');
+	$reinforce_time = $db->f('reinforce_time');
 	$attack_started = $db->f('attack_started');
 	$credits = $db->f('credits');
 	$upgrade = $db->f('upgrade');
@@ -605,8 +605,8 @@ if ($db->next_record()) {
 	echo '<img style="height:' . $cash . 'px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/blue.gif" alt="Upgrade" title="Credits">';
 
 	$time = time();
-	if ($refresh_defense > $time) {
-		$defense_percentage = ceil(100 * ($refresh_defense - $time) / ($refresh_defense - $attack_started));
+	if ($reinforce_time > $time) {
+		$defense_percentage = ceil(100 * ($reinforce_time - $time) / ($reinforce_time - $attack_started));
 		if($defense_percentage > 100) $defense_percentage = 100;
 	}
 	else $defense_percentage = 1;
@@ -617,7 +617,7 @@ if ($db->next_record()) {
 
 	$container['body'] = 'shop_goods.php';
 
-	if ($refresh_defense > time()) {
+	if ($reinforce_time > time()) {
 		echo '<span class="red bold">ALERT!!</span>';
 	}
 	else if($relation <= -300){

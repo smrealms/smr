@@ -22,7 +22,7 @@ class SMR_PORT extends SmrMySqlDatabase {
     var $drones;
     var $credits;
     var $attack_started;
-    var $refresh_defense;
+    var $reinforce_time;
     var $upgrade;
 
     function SMR_PORT($sector_id, $game_id) {
@@ -45,7 +45,7 @@ class SMR_PORT extends SmrMySqlDatabase {
             $this->drones				= $this->f("drones");
             $this->credits				= $this->f("credits");
             $this->attack_started		= $this->f("attack_started");
-            $this->refresh_defense		= $this->f("refresh_defense");
+            $this->reinforce_time		= $this->f("reinforce_time");
             $this->upgrade				= $this->f("upgrade");
 
         }
@@ -87,7 +87,7 @@ class SMR_PORT extends SmrMySqlDatabase {
                                      "`level` = $this->level, " .
                                      "`credits` = $this->credits, " .
                                      "`upgrade` = $this->upgrade, " .
-                                     "`refresh_defense` = $this->refresh_defense, " .
+                                     "`reinforce_time` = $this->reinforce_time, " .
                                      "`attack_started` = $this->attack_started " .
                                  "WHERE `game_id` = $this->game_id AND " .
                                         "`sector_id` = $this->sector_id LIMIT 1");

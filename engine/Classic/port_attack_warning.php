@@ -5,12 +5,12 @@ print("<font color=red>WARNING WARNING</font> port assault about to commence!!<b
 print("Are you sure you want to attack this port?<br><br>");
 $port = new SMR_PORT($player->sector_id, $player->game_id);
 $time = time();
-if ($port->refresh_defense < $time) {
+if ($port->reinforce_time < $time) {
 
 	//defences restock (check for fed arrival)
 	$minsToStay = 30;
-	if ($port->refresh_defense + $minsToStay * 60 > $time)
-		$federal_mod = ($time - $port->refresh_defense - $minsToStay * 60) / (-6 * $minsToStay);
+	if ($port->reinforce_time + $minsToStay * 60 > $time)
+		$federal_mod = ($time - $port->reinforce_time - $minsToStay * 60) / (-6 * $minsToStay);
 	else $federal_mod = 0;
 	if ($federal_mod < 0) $federal_mod = 0;
 	if ($federal_mod > 0) print("Ships dispatched by the Federal Government have just arrived and are in a defensive position around the port.<br>");

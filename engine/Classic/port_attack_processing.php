@@ -69,7 +69,7 @@ $account->log(7, "Attacks a level $port->level port", $player->sector_id);
 //check to see if the player has been attacking to long.
 //find out how much time we have
 
-if ($port->refresh_defense < $time) {
+if ($port->reinforce_time < $time) {
 
 	//defences restock
 	$rich_mod = floor(($port->credits) * 1e-7);
@@ -80,7 +80,7 @@ if ($port->refresh_defense < $time) {
 	$port->drones = ($port->level * 100 + 100) + ($rich_mod * 50);
 
 	$port->attack_started = $time;
-	$port->refresh_defense = $time + ($port->level * 5 * 60);
+	$port->reinforce_time = $time + ($port->level * 5 * 60);
 	$db->query("DELETE FROM player_attacks_port WHERE game_id = ".SmrSession::$game_id." AND sector_id = $sector->sector_id");
 
 	//insert into the news that the port is being attacked.
@@ -656,7 +656,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 
 			//$damage_msg[] = "<br>Start<br>";
 			//itterate through since the last port reset
-			$db->query("SELECT * FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND time < $port->refresh_defense");
+			$db->query("SELECT * FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND time < $port->reinforce_time");
 			while ($db->next_record()) {
 				
 				$update_attacker = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
