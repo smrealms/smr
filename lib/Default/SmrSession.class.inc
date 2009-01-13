@@ -135,6 +135,19 @@ class SmrSession
 		return self::$var[$sn];
 	}
 	
+	public static function resetLink($container, $sn) //Do not allow sharing SN, useful for forwarding.
+	{
+		if(!isset($container['Expires']))
+			$container['Expires'] = 0; // Lasts forever
+		if(!isset($container['RemainingPageLoads']))
+			$container['RemainingPageLoads'] = 1; // One refresh to destroy the link
+			
+		
+		self::$var[$sn] = $container;
+		unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
+		return $sn;
+	}
+	
 	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
 	{
 		if(!isset($container['Expires']))

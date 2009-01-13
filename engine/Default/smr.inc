@@ -223,7 +223,7 @@ function resetContainer($new_container)
 	$new_container['time'] = $time_start;
 	// this sn identifies our container later
 
-	SmrSession::addLink($new_container,$sn);
+	SmrSession::resetLink($new_container,$sn);
 
 	$var = $new_container;
 	$container = $new_container;
