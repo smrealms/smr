@@ -4,7 +4,7 @@
 $planet = new SMR_PLANET($player->sector_id, $player->game_id);
 // owner of planet
 if ($planet->owner_id != 0) {
-	$planet_owner = new SMR_PLAYER($planet->owner_id, $session->game_id);
+	$planet_owner = new SMR_PLAYER($planet->owner_id, SmrSession::$game_id);
 	$ownerAllianceID = $planet_owner->alliance_id;
 } else $ownerAllianceID = 0;
 print_topic("Examine Planet");

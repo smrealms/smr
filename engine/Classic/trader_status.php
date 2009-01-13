@@ -33,8 +33,8 @@ $db->query('SELECT
 race.race_name as race_name,
 player_has_relation.relation as relation
 FROM player_has_relation,race
-WHERE player_has_relation.game_id=' . $session->game_id . ' 
-AND player_has_relation.account_id=' . $session->account_id . ' 
+WHERE player_has_relation.game_id=' . SmrSession::$game_id . ' 
+AND player_has_relation.account_id=' . SmrSession::$account_id . ' 
 AND race.race_id=player_has_relation.race_id
 ORDER BY race.race_id LIMIT 8');
 
@@ -81,7 +81,7 @@ $container['body'] = 'trader_bounties.php';
 print_link($container, '<span class="yellow bold">Bounties</span>');
 
 // There should only ever be two outstanding bounties on anyone
-$db->query('SELECT type,amount FROM bounty WHERE account_id=' . $session->account_id . ' AND claimer_id=0 AND game_id=' . $session->game_id . ' LIMIT 2');
+$db->query('SELECT type,amount FROM bounty WHERE account_id=' . SmrSession::$account_id . ' AND claimer_id=0 AND game_id=' . SmrSession::$game_id . ' LIMIT 2');
 
 $bounty= array(0,0);
 while($db->next_record()) {
@@ -152,7 +152,7 @@ $form = create_form($container,'Delete Selected');
 echo $form['form'];
 echo '<table cellspacing="0" cellpadding="0" class="standard fullwidth"><tr><th colspan="2">Notes</th></tr>';
 
-$db->query('SELECT * FROM player_has_notes WHERE game_id=' . $session->game_id . ' AND account_id=' . $session->account_id . ' ORDER BY note_id desc');
+$db->query('SELECT * FROM player_has_notes WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . SmrSession::$account_id . ' ORDER BY note_id desc');
 if($db->nf() > 0) {
 	while($db->next_record()) {
 		echo '<tr>';

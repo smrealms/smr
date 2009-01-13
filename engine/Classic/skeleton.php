@@ -28,7 +28,7 @@ echo '<span style="color:yellow">' . date('n/j/Y\<b\r /\>g:i:s A') . '</span><br
 $container = array();
 $container['url'] = 'skeleton.php';
 
-if ($session->game_id > 0) {
+if (SmrSession::$game_id > 0) {
 	echo '<big><b>';
 	if ($player->land_on_planet == 'FALSE') {
 		$container['body'] = 'current_sector.php';
@@ -97,7 +97,7 @@ if ($session->game_id > 0) {
 	echo '<br><br>';
 }
 
-if ($session->account_id > 0 && empty($var['logoff'])) {
+if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
 	$container['body'] = '';
 	$container['url'] = 'game_play_preprocessing.php';
 	print_link($container, 'Play Game');
@@ -121,7 +121,7 @@ $container['url'] = 'mgu_create.php';
 print_link($container, 'DL MGU Maps');
 echo '<br>';
 */
-if ($session->game_id > 0) {
+if (SmrSession::$game_id > 0) {
 	$container['body'] = '';
 	$container['url'] = 'mgu_create_new.php';
 	print_link($container, 'DL MGU Maps');
@@ -140,7 +140,7 @@ $container['body'] = 'contact.php';
 print_link($container, 'Contact Form');
 echo '<br><br><b>';
 
-if ($session->game_id > 0) {
+if (SmrSession::$game_id > 0) {
 	echo '<big>';
 	$container['body'] = 'chat_rules.php';
 	print_link($container, 'IRC Chat');
@@ -165,7 +165,7 @@ echo '
 </td>
 <td rowspan="2" class="r0"><div class="r1"><div class="r2">
 ';
-if ($session->game_id != 0){
+if (SmrSession::$game_id != 0){
 	$under_attack_shields = ($ship->old_hardware[HARDWARE_SHIELDS] != $ship->hardware[HARDWARE_SHIELDS]);
 	$under_attack_armor = ($ship->old_hardware[HARDWARE_ARMOR] != $ship->hardware[HARDWARE_ARMOR]);
 	$under_attack_drones = ($ship->old_hardware[HARDWARE_COMBAT] != $ship->hardware[HARDWARE_COMBAT]);
@@ -399,10 +399,10 @@ echo '
 $container=array();
 $container["url"] = "vote_link.php";
 
-$in_game = isset($session->game_id) && $session->game_id>0;
+$in_game = isset(SmrSession::$game_id) && SmrSession::$game_id>0;
 if($in_game) {
 
-	$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . $session->account_id . ' ORDER BY link_id LIMIT 3');
+	$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' ORDER BY link_id LIMIT 3');
 	while($db->next_record()){
 		if($db->f('timeout') < time() - 86400) {
 			$turns_for_votes[$db->f('link_id')] = 1;
@@ -424,7 +424,7 @@ for($i=1;$i<4;$i++){
 
 		$container['link_id'] = $i;
 		echo '\'javascript:VoteSite("' . $vote_links[$i]['location'] . '",';
-		echo '"' . $session->get_new_sn($container) . '")\'';
+		echo '"' . SmrSession::$get_new_sn($container) . '")\'';
 		$img = $vote_links[$i]['star_img'];
 	}
 	else {
@@ -466,6 +466,6 @@ echo '
 </html>
 ';
 
-$session->update();
+SmrSession::$update();
 
 ?>

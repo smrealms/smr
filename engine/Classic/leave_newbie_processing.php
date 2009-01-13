@@ -4,8 +4,8 @@ if ($action == 'Yes!') {
 
 	$db->query("UPDATE player SET newbie_turns = 0, " .
 								 "newbie_warning = 'FALSE' " .
-			   "WHERE account_id = $session->account_id AND " .
-					 "game_id = $session->game_id");
+			   "WHERE account_id = SmrSession::$account_id AND " .
+					 "game_id = SmrSession::$game_id");
 
 }
 if ($player->land_on_planet == "TRUE")

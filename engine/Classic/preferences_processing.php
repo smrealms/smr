@@ -2,7 +2,7 @@
 
 $container = array();
 $container["url"] = "skeleton.php";
-if ($session->game_id > 0)
+if (SmrSession::$game_id > 0)
   if ($player->land_on_planet == "TRUE") $container["body"] = "planet_main.php"; else $container["body"] = "current_sector.php";
 else
   $container["body"] = "game_play.php";
@@ -29,13 +29,13 @@ if ($action == "Save and resend validation code") {
     create_error("This eMail address is already registered.");
 
   $account->email = $email;
-  $account->validation_code = substr($session->session_id, 0, 10);
+  $account->validation_code = substr(SmrSession::$session_id, 0, 10);
   $account->validated = "FALSE";
   $account->update();
 
   // remember when we sent validation code
   $db->query("REPLACE INTO notification (notification_type, account_id, time) " .
-                   "VALUES('validation_code', $session->account_id, " . time() . ")");
+                   "VALUES('validation_code', SmrSession::$account_id, " . time() . ")");
 
   mail($email, "Your validation code!",
     "You changed your email address registered within SMR and need to revalidate now!\n\r\n\r" .
@@ -108,7 +108,7 @@ if ($action == "Save and resend validation code") {
   if (!is_numeric($timez))
   	create_error("Numbers only please");
 
-  $db->query("UPDATE account SET offset = $timez WHERE account_id = $session->account_id");
+  $db->query("UPDATE account SET offset = $timez WHERE account_id = SmrSession::$account_id");
 
 } elseif ($action == "Change") {
 
@@ -117,7 +117,7 @@ if ($action == "Save and resend validation code") {
 
 }
 else if ($action == "Change Size" && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] > 50) {
-	$db->query("UPDATE account SET fontsize=" . $_REQUEST['fontsize'] . " WHERE account_id = $session->account_id");
+	$db->query("UPDATE account SET fontsize=" . $_REQUEST['fontsize'] . " WHERE account_id = SmrSession::$account_id");
 	$account->fontsize = $_REQUEST['fontsize'];
 
 }
@@ -135,12 +135,12 @@ else if ($action == "Alter Player") {
 		create_error("You must enter a player name!");
 	
 	// Check if name is in use.
-	$db->query('SELECT account_id FROM player WHERE account_id!=' . $session->account_id . ' AND game_id=' . $var['game_id'] . ' AND player_name=\'' . $player_name . '\' LIMIT 1' );
+	$db->query('SELECT account_id FROM player WHERE account_id!=' . SmrSession::$account_id . ' AND game_id=' . $var['game_id'] . ' AND player_name=\'' . $player_name . '\' LIMIT 1' );
 	if($db->nf())	{
 		create_error("Name is already being used in this game!");
 	}
 	
-	$db->query('SELECT player_name,player_id,name_changed FROM player WHERE account_id=' . $session->account_id . ' AND game_id=' . $var['game_id'] . ' LIMIT 1');
+	$db->query('SELECT player_name,player_id,name_changed FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . $var['game_id'] . ' LIMIT 1');
 	$db->next_record();
 	$old_name = $db->f('player_name');
 	$player_id = $db->f('player_id');
@@ -153,7 +153,7 @@ else if ($action == "Alter Player") {
 		create_error("You have already changed your name once!");
 	}
 	
-	$db->query('UPDATE player SET player_name=\'' . $player_name . '\',name_changed=\'true\' WHERE account_id=' . $session->account_id . ' AND game_id=' . $var['game_id'] . ' LIMIT 1');
+	$db->query('UPDATE player SET player_name=\'' . $player_name . '\',name_changed=\'true\' WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . $var['game_id'] . ' LIMIT 1');
 
 	$news = '<span class="blue">ADMIN</span> Please be advised that <span class="yellow">' . $old_name . '(' . $player_id . ')</span> has changed their name to <span class="yellow">' . $player_name . '(' . $player_id . ')</span>';
 	$db->query("INSERT INTO news (time, news_message, game_id) VALUES (" . time() . "," . format_string($news, FALSE) . "," . $var['game_id'] . ")");

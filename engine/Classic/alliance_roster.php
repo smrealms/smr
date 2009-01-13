@@ -7,7 +7,7 @@ else {
 	$alliance_id=$player->alliance_id;
 }
 
-$db->query('SELECT alliance_name,leader_id,alliance_password FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
+$db->query('SELECT alliance_name,leader_id,alliance_password FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->next_record();
 print_topic(stripslashes($db->f('alliance_name')) . ' (' . $alliance_id . ')');
 include(get_file_loc('menue.inc'));
@@ -26,7 +26,7 @@ if ($var['action'] == 'Show Alliance Roles') {
 	// get all roles from db for faster access later
 	$db->query('SELECT role_id, role
 				FROM alliance_has_roles
-				WHERE game_id=' . $session->game_id . '
+				WHERE game_id=' . SmrSession::$game_id . '
 				AND alliance_id=' .  $alliance_id . '
 				ORDER BY role_id'
 				);
@@ -55,8 +55,8 @@ if($alliance_id == $player->alliance_id) {
 		FROM player, alliance
 		WHERE player.alliance_id=' . $alliance_id  . '
 		AND alliance.alliance_id=' . $alliance_id  . '
-		AND player.game_id = ' . $session->game_id . '
-		AND alliance.game_id = ' . $session->game_id . '
+		AND player.game_id = ' . SmrSession::$game_id . '
+		AND alliance.game_id = ' . SmrSession::$game_id . '
 		GROUP BY alliance.alliance_id'
 	);
 }
@@ -71,9 +71,9 @@ else {
 		FROM player,alliance,player_cache
 		WHERE player.alliance_id=' . $alliance_id  . '
 		AND alliance.alliance_id=' . $alliance_id  . '
-		AND player.game_id = ' . $session->game_id . '
-		AND alliance.game_id = ' . $session->game_id . '
-		AND player_cache.game_id = ' . $session->game_id . '
+		AND player.game_id = ' . SmrSession::$game_id . '
+		AND alliance.game_id = ' . SmrSession::$game_id . '
+		AND player_cache.game_id = ' . SmrSession::$game_id . '
 		AND player_cache.account_id = player.account_id
 		GROUP BY alliance.alliance_id'
 	);
@@ -140,7 +140,7 @@ if($alliance_id == $player->alliance_id) {
 	$db->query('
 	SELECT account_id,player_name,player_id,experience,alignment,race_id
 	FROM player
-	WHERE game_id = ' . $session->game_id . '
+	WHERE game_id = ' . SmrSession::$game_id . '
 	AND alliance_id=' . $alliance_id . '
 	ORDER BY experience DESC'
 	);
@@ -155,7 +155,7 @@ else {
 		'player.race_id as race_id ' .
 		'FROM player,player_cache ' .
 		'WHERE ' .
-		'player.game_id = ' . $session->game_id . ' ' .
+		'player.game_id = ' . SmrSession::$game_id . ' ' .
 		'AND player.game_id = player_cache.game_id ' .
 		'AND player.account_id = player_cache.account_id ' .
 		'AND alliance_id=' . $alliance_id . ' ' .
@@ -174,7 +174,7 @@ $db2->query("SELECT * FROM alliance_has_roles WHERE alliance_id = $player->allia
 if ($db2->next_record()) $allowed = TRUE;
 while ($db->next_record()) {
 	// check if this guy is the current guy
-	if ( $db->f("account_id") == $session->account_id)
+	if ( $db->f("account_id") == SmrSession::$account_id)
 		echo '<tr class="bold">';
 	else
 		echo '<tr>';
@@ -223,7 +223,7 @@ while ($db->next_record()) {
 		$db2->query('SELECT role_id
 					FROM player_has_alliance_role
 					WHERE account_id=' . $db->f('account_id') .'
-					AND game_id=' . $session->game_id . '
+					AND game_id=' . SmrSession::$game_id . '
 					LIMIT 1'
 					);
 
@@ -234,8 +234,8 @@ while ($db->next_record()) {
 
 		if ($allowed && $db->f("account_id") != $leader_id) {
 		// ok do we display a select box or just a plain entry
-		/*if ($session->account_id == $db->f('account_id') ||
-			$session->account_id == $leader_id) {*/
+		/*if (SmrSession::$account_id == $db->f('account_id') ||
+			SmrSession::$account_id == $leader_id) {*/
 
 			echo '<select name="role[' . $db->f('account_id') . ']" id="InputFields">';
 			foreach ($roles as $curr_role_id => $role) {

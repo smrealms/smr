@@ -2,7 +2,7 @@
 		require_once(get_file_loc("smr_planet.inc"));
 $planet = new SMR_PLANET($player->sector_id, $player->game_id);
 
-$planet_player = new SMR_PLAYER($var["account_id"], $session->game_id);
+$planet_player = new SMR_PLAYER($var["account_id"], SmrSession::$game_id);
 $owner = new SMR_PLAYER($planet->owner_id, $player->game_id);
 if ($owner->alliance_id != $player->alliance_id)
 	create_error("You can not kick someone off a planet your alliance does not own!");

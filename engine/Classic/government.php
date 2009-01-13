@@ -28,7 +28,7 @@ if (empty($race_id)) {
 }
 
 // are we at war?
-$db->query("SELECT * FROM race_has_relation WHERE game_id = $session->game_id AND race_id_1 = $race_id AND race_id_2 = $player->race_id");
+$db->query("SELECT * FROM race_has_relation WHERE game_id = SmrSession::$game_id AND race_id_1 = $race_id AND race_id_2 = $player->race_id");
 if ($db->next_record() && $db->f("relation") <= -300) {
 	print_error("We are at WAR with your race! Get outta here before I call the guards!");
 	return;

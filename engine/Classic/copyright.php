@@ -8,10 +8,10 @@ $container["url"] = "vote_link.php";
 
 print("<br><center><span style=\"font-size:75%;\">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</span></center>");
 
-$db->query("SELECT timeout FROM vote_links WHERE account_id=" . $session->account_id . " AND link_id=1 LIMIT 1");
-if(isset($session->game_id) && $session->game_id>0 && (!$db->next_record() || $db->f("timeout") < (time() - 86400)) && rand(0,100) < 80) {
+$db->query("SELECT timeout FROM vote_links WHERE account_id=" . SmrSession::$account_id . " AND link_id=1 LIMIT 1");
+if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->next_record() || $db->f("timeout") < (time() - 86400)) && rand(0,100) < 80) {
 $container["link_id"] = 1;
-	print"<a href='javascript:window.open(\"http://www.mpogd.com/gotm/vote.asp\");document.location=\"".URL."/loader2.php?sn=" . $session->get_new_sn($container) . "\"'><img border=\"0\" src=\"images/game_sites/mpogd_vote.gif\" width=\"98\" height=\"41\"></a>";
+	print"<a href='javascript:window.open(\"http://www.mpogd.com/gotm/vote.asp\");document.location=\"".URL."/loader2.php?sn=" . SmrSession::$get_new_sn($container) . "\"'><img border=\"0\" src=\"images/game_sites/mpogd_vote.gif\" width=\"98\" height=\"41\"></a>";
 }
 else {
 $container["link_id"] = 0;
@@ -19,10 +19,10 @@ $container["link_id"] = 0;
 }
 
 
-$db->query("SELECT timeout FROM vote_links WHERE account_id=" . $session->account_id . " AND link_id=2 LIMIT 1");
-if(isset($session->game_id) && $session->game_id>0 && (!$db->next_record() || $db->f("timeout") < (time() - 86400)) && rand(0,100) < 80) {
+$db->query("SELECT timeout FROM vote_links WHERE account_id=" . SmrSession::$account_id . " AND link_id=2 LIMIT 1");
+if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->next_record() || $db->f("timeout") < (time() - 86400)) && rand(0,100) < 80) {
 $container["link_id"] = 2;
-	print"<a href='javascript:window.open(\"http://www.topwebgames.com/in.asp?id=136\");document.location=\"".URL."/loader2.php?sn=" . $session->get_new_sn($container) . "\"'><img border=\"0\" src=\"images/game_sites/twg_vote.gif\" width=\"98\" height=\"41\"></a>";
+	print"<a href='javascript:window.open(\"http://www.topwebgames.com/in.asp?id=136\");document.location=\"".URL."/loader2.php?sn=" . SmrSession::$get_new_sn($container) . "\"'><img border=\"0\" src=\"images/game_sites/twg_vote.gif\" width=\"98\" height=\"41\"></a>";
 }
 else {
 $container["link_id"] = 0;
@@ -30,10 +30,10 @@ $container["link_id"] = 0;
 }
 
 
-$db->query("SELECT timeout FROM vote_links WHERE account_id=" . $session->account_id . " AND link_id=3 LIMIT 1");
-if(isset($session->game_id) && $session->game_id>0 && (!$db->next_record() || $db->f("timeout") < (time() - 86400)) && rand(0,100) < 80) {
+$db->query("SELECT timeout FROM vote_links WHERE account_id=" . SmrSession::$account_id . " AND link_id=3 LIMIT 1");
+if(isset(SmrSession::$game_id) && SmrSession::$game_id>0 && (!$db->next_record() || $db->f("timeout") < (time() - 86400)) && rand(0,100) < 80) {
 $container["link_id"] = 3;
-	print"<a href='javascript:window.open(\"http://www.omgn.com/topgames/vote.php?Game_ID=30\");document.location=\"".URL."/loader2.php?sn=" . $session->get_new_sn($container) . "\"'><img border=\"0\" src=\"images/game_sites/omgn_vote.jpg\" width=\"98\" height=\"41\"></a>";
+	print"<a href='javascript:window.open(\"http://www.omgn.com/topgames/vote.php?Game_ID=30\");document.location=\"".URL."/loader2.php?sn=" . SmrSession::$get_new_sn($container) . "\"'><img border=\"0\" src=\"images/game_sites/omgn_vote.jpg\" width=\"98\" height=\"41\"></a>";
 }
 else {
 $container["link_id"] = 0;

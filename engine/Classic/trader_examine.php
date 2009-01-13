@@ -30,7 +30,7 @@ else
 $db->query('SELECT ship_type.ship_name as ship_name,land_on_planet,newbie_turns,dead,sector_id,account_id,player_id,player_name,player.race_id as race_id,alignment,player.ship_type_id,experience,alliance_id,credits,turns
 				FROM player, ship_type WHERE player.ship_type_id = ship_type.ship_type_id
 				AND account_id=' . $var['target'] . '
-				AND game_id=' . $session->game_id . ' LIMIT 1');
+				AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 $db->next_record();
 if($db->f('dead') == 'TRUE') {
 	$container=array();
@@ -50,7 +50,7 @@ $players[$db->f('account_id')] = array(
 	(int)$db->f('alignment'),0,0,0,0,array(),stripslashes($db->f("ship_name")),0,0,0,0
 );
 // Insert our own player into the players array
-$players[$session->account_id] = array(
+$players[SmrSession::$account_id] = array(
 	(int)$player->player_id,
 	get_colored_text($player->alignment,$player->player_name . ' (' . $player->player_id . ')'),
 	(int)$player->alliance_id,
@@ -68,7 +68,7 @@ if ($players[$var['target']][ALLIANCE_ID])
 // Get the galaxy name and id
 $db->query('SELECT galaxy_id FROM sector
 				WHERE sector_id=' . $player->sector_id . '
-				AND game_id=' . $session->game_id . '
+				AND game_id=' . SmrSession::$game_id . '
 				LIMIT 1');
 
 $db->next_record();
@@ -148,9 +148,9 @@ if($player->alliance_id || $players[$var['target']][ALLIANCE_ID]) {
 	}
 
 	$query .= $query2 . 'player.sector_id=' . $player->sector_id . '
-		AND player.account_id!=' . $session->account_id . '
+		AND player.account_id!=' . SmrSession::$account_id . '
 		AND player.account_id!=' . $var['target'] . '
-		AND player.game_id=' . $session->game_id . ' 
+		AND player.game_id=' . SmrSession::$game_id . ' 
 		AND player.land_on_planet="FALSE" 
 		AND player.newbie_turns=0
 		AND player.last_active>' .  (time() - 259200);
@@ -266,7 +266,7 @@ $attackingFleet = array();
 $defendingFleet = array();
 if (!$attSize) $attackingFleet[] = $player->account_id;
 if (!$defSize) $defendingFleet[] = $var['target'];
-$db->query('SELECT account_id FROM ship_has_cargo WHERE good_id IN (5,9,12) AND game_id=' . $session->game_id . ' AND account_id IN (' . implode(',',$player_ids) . ') LIMIT ' . sizeof($player_ids));
+$db->query('SELECT account_id FROM ship_has_cargo WHERE good_id IN (5,9,12) AND game_id=' . SmrSession::$game_id . ' AND account_id IN (' . implode(',',$player_ids) . ') LIMIT ' . sizeof($player_ids));
 while ($db->next_record())
 	$players[$db->f('account_id')][ILLEGALS] = 1;
 foreach ($players as $accID => $playerArray) {

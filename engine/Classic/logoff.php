@@ -4,7 +4,7 @@ if($lock) {
 	release_lock();
 }
 $lock=false;
-$session->destroy();
+SmrSession::$destroy();
 
 ?>
 

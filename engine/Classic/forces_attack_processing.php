@@ -1,7 +1,7 @@
 <?
 
 require_once(get_file_loc('smr_sector.inc'));
-$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 
 		require_once(get_file_loc("smr_force.inc"));
@@ -75,8 +75,8 @@ if ($player->alliance_id != 0) {
 }
 if ($db->next_record()) {
 
-	$curr_attacker = new SMR_PLAYER($db->f("account_id"), $session->game_id);
-	$curr_attacker_ship = new SMR_SHIP($db->f("account_id"), $session->game_id);
+	$curr_attacker = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
+	$curr_attacker_ship = new SMR_SHIP($db->f("account_id"), SmrSession::$game_id);
 	
 	// disable cloak
 	$curr_attacker_ship->disable_cloak();
@@ -417,15 +417,15 @@ $db2 = new SmrMySqlDatabase();
 
 while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drones > 0 || $forces->mines > 0)) {
 
-	$curr_attacker = new SMR_PLAYER($db->f("account_id"), $session->game_id);
-	$curr_attacker_ship = new SMR_SHIP($db->f("account_id"), $session->game_id);
+	$curr_attacker = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
+	$curr_attacker_ship = new SMR_SHIP($db->f("account_id"), SmrSession::$game_id);
 
 	// disable cloak
 	$curr_attacker_ship->disable_cloak();
 
 	$db2->query("SELECT * FROM ship_has_weapon, weapon_type " .
 				"WHERE account_id = $curr_attacker->account_id AND " .
-					  "game_id = $session->game_id AND " .
+					  "game_id = SmrSession::$game_id AND " .
 					  "ship_has_weapon.weapon_type_id = weapon_type.weapon_type_id " .
 				"ORDER BY order_id");
 

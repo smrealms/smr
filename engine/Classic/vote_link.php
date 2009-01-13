@@ -1,5 +1,5 @@
 <?
-$db->query("SELECT timeout FROM vote_links WHERE account_id=" . $session->account_id . " AND link_id=" . $var["link_id"] . " LIMIT 1");
+$db->query("SELECT timeout FROM vote_links WHERE account_id=" . SmrSession::$account_id . " AND link_id=" . $var["link_id"] . " LIMIT 1");
 
 // They get to vote once every 24 hours
 if(!$db->next_record()) {
@@ -20,12 +20,12 @@ if($var["link_id"] > 3 || $var["link_id"] < 1 ) {
 
 if($valid == true) {
 	// Allow vote
-	$db->query("REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(" . $session->account_id . "," . $var["link_id"] . "," . time() . ")");
+	$db->query("REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(" . SmrSession::$account_id . "," . $var["link_id"] . "," . time() . ")");
 	// They get 1/3 of their hourly turns for a valid click (They CAN go above max turns for the game this way)
 	if(($player->turns + ($ship->speed*$player->game_speed/3)) < (400 * $player->game_speed))
-		$db->query("UPDATE player SET turns=turns+" . ($ship->speed*$player->game_speed/3) . " WHERE game_id=" . $session->game_id . " AND account_id=" . $session->account_id . " LIMIT 1");
+		$db->query("UPDATE player SET turns=turns+" . ($ship->speed*$player->game_speed/3) . " WHERE game_id=" . SmrSession::$game_id . " AND account_id=" . SmrSession::$account_id . " LIMIT 1");
 	else
-		$db->query("UPDATE player SET turns=" . (400 * $player->game_speed) . " WHERE game_id=" . $session->game_id . " AND account_id=" . $session->account_id . " LIMIT 1");
+		$db->query("UPDATE player SET turns=" . (400 * $player->game_speed) . " WHERE game_id=" . SmrSession::$game_id . " AND account_id=" . SmrSession::$account_id . " LIMIT 1");
 }
 
 $container = array();

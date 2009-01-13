@@ -98,10 +98,10 @@ if(isset($display_id)){
 
 switch($action){
 	case(0):
-		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs WHERE type="PLAYER" AND game_id=' . $session->game_id . ' AND (attacker_id=' . $player->account_id . ' OR defender_id=' . $player->account_id . ') ORDER BY log_id DESC,sector_id');
+		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs WHERE type="PLAYER" AND game_id=' . SmrSession::$game_id . ' AND (attacker_id=' . $player->account_id . ' OR defender_id=' . $player->account_id . ') ORDER BY log_id DESC,sector_id');
 		break;
 	case(1):
-		$query = 'FROM combat_logs WHERE type="PLAYER" AND game_id=' . $session->game_id;
+		$query = 'FROM combat_logs WHERE type="PLAYER" AND game_id=' . SmrSession::$game_id;
 		if($player->alliance_id != 0) {
 			$query .= ' AND (attacker_alliance_id=' . $player->alliance_id . ' OR defender_alliance_id=' . $player->alliance_id . ') ';
 		}
@@ -111,7 +111,7 @@ switch($action){
 		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id ' . $query . ' ORDER BY log_id DESC, sector_id');
 		break;
 	case(2):
-		$query = 'FROM combat_logs WHERE type="PORT" AND game_id=' . $session->game_id;
+		$query = 'FROM combat_logs WHERE type="PORT" AND game_id=' . SmrSession::$game_id;
 		if($player->alliance_id != 0) {
 			$query .= ' AND (attacker_alliance_id=' . $player->alliance_id . ' OR defender_alliance_id=' . $player->alliance_id . ') ';
 		}
@@ -121,7 +121,7 @@ switch($action){
 		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id ' . $query . ' ORDER BY log_id DESC, sector_id');
 		break;
 	case(3):
-		$query = 'FROM combat_logs WHERE type="PLANET" AND game_id=' . $session->game_id;
+		$query = 'FROM combat_logs WHERE type="PLANET" AND game_id=' . SmrSession::$game_id;
 		if($player->alliance_id != 0) {
 			$query .= ' AND (attacker_alliance_id=' . $player->alliance_id . ' OR defender_alliance_id=' . $player->alliance_id . ') ';
 		}
@@ -191,7 +191,7 @@ if($action != 5) {
 		array_unique($player_ids);
 		$db->query("SELECT player_name, account_id FROM player
 					WHERE account_id IN (" . implode(',',$player_ids) . ")
-					AND game_id = $session->game_id
+					AND game_id = SmrSession::$game_id
 					LIMIT " . sizeof($player_ids));
 		while ($db->next_record()) $players[$db->f("account_id")] = stripslashes($db->f('player_name'));
 		foreach ($logs as $id => $info) {

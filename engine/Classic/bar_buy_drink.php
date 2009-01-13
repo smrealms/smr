@@ -33,7 +33,7 @@ else {
 		$drink_name = $db->f("drink_name");
 		$drink_id = $db->f("drink_id");
 
-        $db2->query("SELECT * FROM player_has_drinks WHERE game_id = $session->game_id ORDER by drink_id DESC LIMIT 1");
+        $db2->query("SELECT * FROM player_has_drinks WHERE game_id = SmrSession::$game_id ORDER by drink_id DESC LIMIT 1");
         if ($db2->next_record())
         	$curr_drink_id = $db2->f("drink_id") + 1;
         else
@@ -42,7 +42,7 @@ else {
 		if ($drink_id != 11 && $drink_id !=1) {
 
 			print("You have bought a $drink_name for $10");
-			$db2->query("INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ($player->account_id, $session->game_id, $curr_drink_id, $time)");
+			$db2->query("INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ($player->account_id, SmrSession::$game_id, $curr_drink_id, $time)");
 
 		} else {
 
@@ -56,15 +56,15 @@ else {
 			if ($drink_id == 11) print("After drinking the $drink_name you feel like nothing can bring you down and like you are the best trader in the universe.<br>");
 
 			//has the power of 2 drinks
-			$db2->query("INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ($player->account_id, $session->game_id, $curr_drink_id, $time)");
+			$db2->query("INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ($player->account_id, SmrSession::$game_id, $curr_drink_id, $time)");
 			$curr_drink_id++;
-            $db2->query("INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ($player->account_id, $session->game_id, $curr_drink_id, $time)");
+            $db2->query("INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ($player->account_id, SmrSession::$game_id, $curr_drink_id, $time)");
 
 		}
 
 	}
 
-	$db->query('SELECT * FROM player_has_drinks WHERE game_id=' . $session->game_id . ' AND account_id=' . $player->account_id);
+	$db->query('SELECT * FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->account_id);
 	$num_drinks = $db->nf();
 	//display woozy message
 	echo '<br>You feel a little W';
@@ -83,7 +83,7 @@ if ($num_drinks > 15) {
 	$player->credits -= $lost_credits;
 	$player->update();
 
-	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $session->game_id . ' AND account_id=' . $player->account_id);
+	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->account_id);
 
 }
 $player->update_stat('drinks', 1);

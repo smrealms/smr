@@ -18,7 +18,7 @@ if ($account->validated != "TRUE")
 // *
 // ********************************
 
-$alliance = new SMR_ALLIANCE($var["alliance_id"], $session->game_id);
+$alliance = new SMR_ALLIANCE($var["alliance_id"], SmrSession::$game_id);
 $password = $_REQUEST['password'];
 
 if ($password != $alliance->password)

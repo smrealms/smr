@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 $alliance_ids = array();
 
@@ -28,7 +28,7 @@ if (empty($alliance_list))
 // get min and max sectors
 $db->query("SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
-			WHERE game_id = $session->game_id");
+			WHERE game_id = SmrSession::$game_id");
 if ($db->next_record()) {
 
 	$min_sector = $db->f("MIN(sector_id)");
@@ -41,8 +41,8 @@ $unvisitted_sectors = array();
 // get the sectors the user hasn't visited yet
 $db->query("SELECT sector_id
 			FROM player_visited_sector
-			WHERE game_id = $session->game_id AND
-				  account_id = $session->account_id");
+			WHERE game_id = SmrSession::$game_id AND
+				  account_id = SmrSession::$account_id");
 while ($db->next_record())
 	$unvisitted_sectors[$db->f("sector_id")] = true;
 
@@ -71,7 +71,7 @@ if ($visitted_sector_list) {
 	$db->query("DELETE
 				FROM player_visited_sector
 				WHERE account_id IN ($alliance_list) AND
-					  game_id = $session->game_id AND
+					  game_id = SmrSession::$game_id AND
 					  sector_id IN ($visitted_sector_list)");
 
 }
@@ -82,8 +82,8 @@ $port_info = array();
 // get a list of all visited ports
 $db->query("SELECT sector_id, visited, port_info
 			FROM player_visited_port
-			WHERE account_id = $session->account_id AND
-				  game_id = $session->game_id");
+			WHERE account_id = SmrSession::$account_id AND
+				  game_id = SmrSession::$game_id");
 while ($db->next_record()) {
 
 	$port_visitted[$db->f("sector_id")]	= $db->f("visited");
@@ -99,7 +99,7 @@ foreach ($port_visitted as $sector_id => $visitted) {
 		// ignore if it exists
 		$db->query("INSERT IGNORE INTO player_visited_port
 					(account_id, game_id, sector_id, visited, port_info)
-					VALUES ($id, $session->game_id, $sector_id, $visitted, '" . $port_info[$sector_id] . "')");
+					VALUES ($id, SmrSession::$game_id, $sector_id, $visitted, '" . $port_info[$sector_id] . "')");
 
 	}
 
@@ -107,7 +107,7 @@ foreach ($port_visitted as $sector_id => $visitted) {
 	$db->query("UPDATE player_visited_port
 				SET port_info = '" . $port_info[$sector_id] . "'
 				WHERE account_id IN ($alliance_list) AND
-					  game_id = $session->game_id AND
+					  game_id = SmrSession::$game_id AND
 					  sector_id = $sector_id AND
 					  visited < $visitted");
 

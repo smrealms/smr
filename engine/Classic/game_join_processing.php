@@ -40,7 +40,7 @@ if ($credits > 0) {
 }
 
 // check if hof entry is there
-$db->query("SELECT * FROM account_has_stats WHERE account_id = $session->account_id");
+$db->query("SELECT * FROM account_has_stats WHERE account_id = SmrSession::$account_id");
 if (!$db->nf())
 	$db->query("INSERT INTO account_has_stats (account_id, HoF_name) VALUES ($account->account_id, " . format_string($account->login, true) . ")");
 
@@ -81,7 +81,7 @@ if ($time_since_start > 86400)
 $last_turn_update = time() - $time_since_start;
 
 // newbie leaders need to put into there alliances
-if ($session->account_id >= 13 && $session->account_id <= 20)
+if (SmrSession::$account_id >= 13 && SmrSession::$account_id <= 20)
   $alliance_id = 302;
 else
   $alliance_id = 0;
@@ -97,22 +97,22 @@ else
 
 // insert into player table.
 $db->query("INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, alliance_id, sector_id, last_turn_update, last_active) " .
-						"VALUES($session->account_id, " . $var["game_id"] . ", $player_id, " . format_string($player_name, true) . ", $race_id, $ship_id, $alliance_id, $home_sector_id, $last_turn_update, " . time() . ")");
+						"VALUES(SmrSession::$account_id, " . $var["game_id"] . ", $player_id, " . format_string($player_name, true) . ", $race_id, $ship_id, $alliance_id, $home_sector_id, $last_turn_update, " . time() . ")");
 
 $db->unlock();
 
 // give the player shields
 $db->query("INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) " .
-								   "VALUES($session->account_id, " . $var["game_id"] . ", 1, $amount_shields, $amount_shields)");
+								   "VALUES(SmrSession::$account_id, " . $var["game_id"] . ", 1, $amount_shields, $amount_shields)");
 // give the player armor
 $db->query("INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) " .
-								   "VALUES($session->account_id, " . $var["game_id"] . ", 2, $amount_armor, $amount_armor)");
+								   "VALUES(SmrSession::$account_id, " . $var["game_id"] . ", 2, $amount_armor, $amount_armor)");
 // give the player cargo hold
 $db->query("INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) " .
-								   "VALUES($session->account_id, " . $var["game_id"] . ", 3, 40, 40)");
+								   "VALUES(SmrSession::$account_id, " . $var["game_id"] . ", 3, 40, 40)");
 // give the player weapons
 $db->query("INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) " .
-								 "VALUES($session->account_id, " . $var["game_id"] . ", 1, 46)");
+								 "VALUES(SmrSession::$account_id, " . $var["game_id"] . ", 1, 46)");
 
 // update stats
 $db->query("UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = $account->account_id");
@@ -157,10 +157,10 @@ for ($i = $min_sector; $i <= $max_sector; $i++) {
     if ($i == $home_sector_id)
         continue;
 
-    $db->query("INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ($session->account_id, " . $var["game_id"] . ", $i)");
+    $db->query("INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES (SmrSession::$account_id, " . $var["game_id"] . ", $i)");
 
 }
-$db->query("INSERT INTO player_has_stats (account_id, game_id) VALUES ($session->account_id, " . $var["game_id"] . ")");
+$db->query("INSERT INTO player_has_stats (account_id, game_id) VALUES (SmrSession::$account_id, " . $var["game_id"] . ")");
 forward(create_container("skeleton.php", "game_play.php"));
 
 ?>

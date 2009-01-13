@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 function shoot_trader($attacker_team, $defender_team) {
 
@@ -13,8 +13,8 @@ function shoot_trader($attacker_team, $defender_team) {
 
 		// get attacker
 		$curr_att_id = $attacker_team->next(true);
-		$curr_attacker = new SMR_PLAYER($curr_att_id, $session->game_id);
-		$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, $session->game_id);
+		$curr_attacker = new SMR_PLAYER($curr_att_id, SmrSession::$game_id);
+		$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, SmrSession::$game_id);
 		//used in kill table so we have a real sector id not an HQ
 		$this_sector = $sector_id;
 		// disable cloak

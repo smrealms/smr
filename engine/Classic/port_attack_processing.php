@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 		require_once(get_file_loc("smr_port.inc"));
 require_once(get_file_loc("smr_battle.inc"));
 
@@ -81,7 +81,7 @@ if ($port->refresh_defense < $time) {
 
 	$port->attack_started = $time;
 	$port->refresh_defense = $time + ($port->level * 5 * 60);
-	$db->query("DELETE FROM player_attacks_port WHERE game_id = $session->game_id AND sector_id = $sector->sector_id");
+	$db->query("DELETE FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id");
 
 	//insert into the news that the port is being attacked.
 	if ($player->alliance_id != 0)
@@ -91,7 +91,7 @@ if ($port->refresh_defense < $time) {
 	$news_message = "<span style=\"color:red;\">*MAYDAY* *MAYDAY*</span> The port in sector <span style=\"color:yellow;\">$sector->sector_id</span> is being attacked by $attack_news. Immediate backup requested!";
 	$db2->query("INSERT INTO news " .
 				"(game_id, time, news_message) " .
-				"VALUES($session->game_id, " . time() . ", " . format_string($news_message, false) . ")");
+				"VALUES(SmrSession::$game_id, " . time() . ", " . format_string($news_message, false) . ")");
 	//make sure this msg goes first
 	usleep(100000);
 
@@ -128,8 +128,8 @@ for ($i = 0; $i < 15; $i++) {
 
 	// get one attacker
 	$curr_att_id = $attacker_team->next(false);
-	$curr_attacker = new SMR_PLAYER($curr_att_id, $session->game_id);
-	$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, $session->game_id);
+	$curr_attacker = new SMR_PLAYER($curr_att_id, SmrSession::$game_id);
+	$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, SmrSession::$game_id);
 	if ($curr_attacker->dead == 'TRUE') {
 
 		$port_msg[] = "The port fires at the debris that used to be <span style=\"color:yellow;\">$curr_attacker->player_name</span>.";
@@ -224,8 +224,8 @@ if ($port->drones > 0) {
 
 	// get one to be shot by drones
 	$curr_att_id = $attacker_team->next(false);
-	$curr_attacker = new SMR_PLAYER($curr_att_id, $session->game_id);
-	$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, $session->game_id);
+	$curr_attacker = new SMR_PLAYER($curr_att_id, SmrSession::$game_id);
+	$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, SmrSession::$game_id);
 
 	// damage that these drones can do.
 	$damage = $port->drones;
@@ -382,14 +382,14 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 
 	// get attacker
 	$curr_att_id = $attacker_team->next(true);
-	$curr_attacker = new SMR_PLAYER($curr_att_id, $session->game_id);
-	$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, $session->game_id);
+	$curr_attacker = new SMR_PLAYER($curr_att_id, SmrSession::$game_id);
+	$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, SmrSession::$game_id);
 	
 	//this player has successfully shot the port.
-	$db->query("SELECT * FROM player_attacks_port WHERE game_id = $session->game_id AND sector_id = $sector->sector_id AND account_id = $curr_attacker->account_id");
+	$db->query("SELECT * FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND account_id = $curr_attacker->account_id");
 	//is he already recorded?  If so we don't want to lower the lvl of the port he is attacking.
 	if (!$db->next_record())
-		$db->query("REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ($session->game_id, $curr_attacker->account_id, $sector->sector_id, $time, $port->level)");
+		$db->query("REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES (SmrSession::$game_id, $curr_attacker->account_id, $sector->sector_id, $time, $port->level)");
 	$atts[] = $curr_att_id;
 	// reduce his relations
 	$curr_attacker->get_relations();
@@ -656,14 +656,14 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 
 			//$damage_msg[] = "<br>Start<br>";
 			//itterate through since the last port reset
-			$db->query("SELECT * FROM player_attacks_port WHERE game_id = $session->game_id AND sector_id = $sector->sector_id AND time < $port->refresh_defense");
+			$db->query("SELECT * FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND time < $port->refresh_defense");
 			while ($db->next_record()) {
 				
-				$update_attacker = new SMR_PLAYER($db->f("account_id"), $session->game_id);
+				$update_attacker = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
 				$update_attacker->update_stat("port_raids", 1);
 				$update_attacker->update_stat("port_raid_levels", $db->f("level"));
 				$port_original_level = $db->f("level");
-				$db2->query("DELETE FROM player_attacks_port WHERE game_id = $session->game_id AND sector_id = $sector->sector_id AND account_id = $update_attacker->account_id");
+				$db2->query("DELETE FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND account_id = $update_attacker->account_id");
 				
 			}
 			// Attacker gets the port's money
@@ -679,7 +679,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 			$news_message = "$attack_news successfully raided the port located in sector $player->sector_id";
 			$db->query("INSERT INTO news " .
 				"(game_id, time, news_message) " .
-				"VALUES($session->game_id, " . time() . ", " . format_string($news_message, false) . ")");
+				"VALUES(SmrSession::$game_id, " . time() . ", " . format_string($news_message, false) . ")");
 
 
 		}

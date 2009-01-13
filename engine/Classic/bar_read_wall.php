@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 print_topic("READING THE WALL");
 
@@ -8,7 +8,7 @@ include(get_file_loc('menue.inc'));
 print_bar_menue();
 
 $db = new SmrMySqlDatabase();
-$db->query("SELECT message_id FROM bar_wall WHERE sector_id = $sector->sector_id AND game_id = $session->game_id ORDER BY message_id DESC");
+$db->query("SELECT message_id FROM bar_wall WHERE sector_id = $sector->sector_id AND game_id = SmrSession::$game_id ORDER BY message_id DESC");
 if ($db->next_record())
 	$amount = $db->f("message_id") + 1;
 else
@@ -17,7 +17,7 @@ $time_now = time();
 $db2 = new SmrMySqlDatabase();
 $wall = $_REQUEST['wall'];
 if (isset($wall))
-	$db2->query("INSERT INTO bar_wall (sector_id, game_id, message_id, message, time) VALUES ($sector->sector_id, $session->game_id, $amount,  " . format_string($wall, true) . " , $time_now)");
+	$db2->query("INSERT INTO bar_wall (sector_id, game_id, message_id, message, time) VALUES ($sector->sector_id, SmrSession::$game_id, $amount,  " . format_string($wall, true) . " , $time_now)");
 $db->query("SELECT * FROM bar_wall WHERE game_id = $player->game_id AND sector_id = $player->sector_id ORDER BY time DESC");
 if ($db->nf()) {
 

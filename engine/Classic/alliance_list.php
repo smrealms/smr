@@ -27,9 +27,9 @@ player.alliance_id as alliance_id
 FROM player, player_cache, alliance 
 WHERE player.alliance_id = alliance.alliance_id 
 AND alliance.leader_id > 0
-AND player.game_id = ' . $session->game_id . '
-AND alliance.game_id = ' . $session->game_id . '
-AND player_cache.game_id = ' . $session->game_id . '
+AND player.game_id = ' . SmrSession::$game_id . '
+AND alliance.game_id = ' . SmrSession::$game_id . '
+AND player_cache.game_id = ' . SmrSession::$game_id . '
 AND player_cache.account_id = player.account_id
 GROUP BY alliance.alliance_id 
 ORDER BY ' . $var['order'] . ' ' . $var['sequence']

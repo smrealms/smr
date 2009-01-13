@@ -1,6 +1,6 @@
 <?php
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 // used further down
 define ('TIMEOUT_TO_UPDATE', 300);

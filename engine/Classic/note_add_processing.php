@@ -22,8 +22,8 @@ if(isset($_POST['note'])) {
 		$note = htmlentities($note,ENT_QUOTES);
 		$note = nl2br($note);
 		$db->query('INSERT INTO player_has_notes (account_id,game_id,note) VALUES(' .
-		$session->account_id . ',' .
-		$session->game_id . ',\'' .
+		SmrSession::$account_id . ',' .
+		SmrSession::$game_id . ',\'' .
 		mysql_escape_string(gzcompress($note)) . 
 		'\')');
 	}	

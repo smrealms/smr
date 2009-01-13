@@ -18,7 +18,7 @@ sector.galaxy_id as galaxy_id,
 galaxy.galaxy_name as galaxy_name
 FROM sector,galaxy
 WHERE sector.sector_id=' . $player->sector_id . '
-AND game_id=' . $session->game_id . '
+AND game_id=' . SmrSession::$game_id . '
 AND galaxy.galaxy_id = sector.galaxy_id
 LIMIT 1');
 
@@ -36,7 +36,7 @@ MIN(sector_id),
 COUNT(*)
 FROM sector
 WHERE galaxy_id=' . $galaxy_id . '
-AND game_id=' . $session->game_id);
+AND game_id=' . SmrSession::$game_id);
 
 $db->next_record();
 
@@ -132,7 +132,7 @@ echo $galaxy_name;
 echo '</big></b> galaxy<br><br>';
 
 // Grab all the locations info
-$db->query('SELECT sector_id,location_type_id FROM location WHERE sector_id IN (' . $sectors_in . ')  AND game_id=' . $session->game_id);
+$db->query('SELECT sector_id,location_type_id FROM location WHERE sector_id IN (' . $sectors_in . ')  AND game_id=' . SmrSession::$game_id);
 
 while($db->next_record()) {
 	$locations[$db->f('sector_id')][] = $db->f('location_type_id');
@@ -152,7 +152,7 @@ if(isset($locations)) {
 }
 
 // Grab any planets
-$db->query('SELECT sector_id FROM planet WHERE sector_id IN (' . $sectors_in . ')  AND game_id=' . $session->game_id);
+$db->query('SELECT sector_id FROM planet WHERE sector_id IN (' . $sectors_in . ')  AND game_id=' . SmrSession::$game_id);
 
 // Planets (This must go AFTER the locations stuff);
 while($db->next_record()) {
@@ -170,14 +170,14 @@ while($db->next_record()) {
 }
 
 // Grab all the port info in one go
-$db->query('SELECT sector_id,port_info FROM player_visited_port WHERE sector_id IN (' . $sectors_in . ') AND account_id=' . $session->account_id . ' AND game_id=' . $session->game_id . ' LIMIT 25');
+$db->query('SELECT sector_id,port_info FROM player_visited_port WHERE sector_id IN (' . $sectors_in . ') AND account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 25');
 while($db->next_record()) {
 	$ports[$db->f('sector_id')] = $db->f('port_info');
 
 }
 
 // Sector links
-$db->query('SELECT sector_id,link_up,link_right,link_down,link_left FROM sector WHERE sector_id IN (' . $sectors_in . ')  AND game_id=' . $session->game_id . ' LIMIT 25');
+$db->query('SELECT sector_id,link_up,link_right,link_down,link_left FROM sector WHERE sector_id IN (' . $sectors_in . ')  AND game_id=' . SmrSession::$game_id . ' LIMIT 25');
 
 while($db->next_record()) {
 	$sector_cache[$db->f('sector_id')] = array($db->f('link_up'),$db->f('link_right'),$db->f('link_down'),$db->f('link_left'));
@@ -226,7 +226,7 @@ else {
 	
 $query .= $query2 . '
 sector_has_forces.sector_id IN (' . $adjacent_in . ')
-AND sector_has_forces.game_id=' . $session->game_id . '
+AND sector_has_forces.game_id=' . SmrSession::$game_id . '
 GROUP BY sector_has_forces.sector_id LIMIT ' . count($adjacent);
 $db->query($query);
 
@@ -246,8 +246,8 @@ FROM player';
 }
 
 $query .= $query2 . 'player.sector_id IN (' . $adjacent_in . ')
-	AND player.account_id!=' . $session->account_id . ' 
-	AND player.game_id=' . $session->game_id . ' 
+	AND player.account_id!=' . SmrSession::$account_id . ' 
+	AND player.game_id=' . SmrSession::$game_id . ' 
 	AND player.land_on_planet="FALSE" 
 	AND player.account_id NOT IN (' . implode(',', $HIDDEN_PLAYERS) . ')
 	AND player.last_active>' .  (time() - 259200) . '
@@ -260,7 +260,7 @@ while($db->next_record()) {
 }
 
 // Warps
-$db->query('SELECT sector_id_1,sector_id_2 FROM warp WHERE (sector_id_1 IN (' . $sectors_in . ') OR sector_id_2 IN (' . $sectors_in . ')) AND game_id=' . $session->game_id);
+$db->query('SELECT sector_id_1,sector_id_2 FROM warp WHERE (sector_id_1 IN (' . $sectors_in . ') OR sector_id_2 IN (' . $sectors_in . ')) AND game_id=' . SmrSession::$game_id);
 
 while($db->next_record()) {
 	if(isset($sector_cache[$db->f('sector_id_1')])) {
@@ -272,7 +272,7 @@ while($db->next_record()) {
 }
 
 // Visited
-$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $sectors_in . ') AND account_id=' . $session->account_id . ' AND game_id=' . $session->game_id . ' LIMIT 25');
+$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $sectors_in . ') AND account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 25');
 
 while($db->next_record()) {
 	$sector_visited[$db->f('sector_id')] = TRUE;
@@ -323,7 +323,7 @@ foreach ($sectors as $sector_id) {
 		}
 		echo '" href="';
 		echo 'loader2.php?sn=';
-		echo $session->get_new_sn($container1);
+		echo SmrSession::$get_new_sn($container1);
 		echo '">#';
 		echo $sector_id;
 		echo '</a>';
@@ -335,7 +335,7 @@ foreach ($sectors as $sector_id) {
 		$container['body'] = 'current_sector.php';
 		echo '<a onfocus="blur()" class="lmsc" href="';
 		echo 'loader2.php?sn=';
-		echo $session->get_new_sn($container);
+		echo SmrSession::$get_new_sn($container);
 		echo '">#';
 		echo $sector_id;
 		echo '</a>';
@@ -374,7 +374,7 @@ foreach ($sectors as $sector_id) {
 			$container1['target_sector'] = $warps[$sector_id];
 			echo '<a href="';
 			echo 'loader2.php?sn=';
-			echo $session->get_new_sn($container1);
+			echo SmrSession::$get_new_sn($container1);
 			echo '">';
 		}
 		echo '<img src="images/warp.gif" alt="Warp to #';
@@ -433,7 +433,7 @@ foreach ($sectors as $sector_id) {
 			$container3['body'] = 'shop_goods.php';
 			echo '<a href="';
 			echo 'loader2.php?sn=';
-			echo $session->get_new_sn($container3);
+			echo SmrSession::$get_new_sn($container3);
 			echo '">';
 		}
 		echo '<img src="images/buy.gif" alt="Goods Sold" title="Goods Sold">';
@@ -475,7 +475,7 @@ foreach ($sectors as $sector_id) {
 				$container2["body"] = $location_cache[$location][1];
 				echo '<a href="';
 				echo 'loader2.php?sn=';
-				echo $session->get_new_sn($container2);
+				echo SmrSession::$get_new_sn($container2);
 				echo '">';
 			}
 			echo '<img src="';

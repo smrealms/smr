@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 require_once(get_file_loc("smr_battle.inc"));
 
@@ -30,11 +30,11 @@ $db2 = new SmrMySqlDatabase();
 mt_srand((double)microtime()*1000000);
 
 // creates a new player object for attacker and defender
-$attacker_id = $session->account_id;
+$attacker_id = SmrSession::$account_id;
 $defender_id = $var["target"];
 
-$attacker_team = new SMR_BATTLE($attacker_id, $session->game_id);
-$defender_team = new SMR_BATTLE($defender_id, $session->game_id);
+$attacker_team = new SMR_BATTLE($attacker_id, SmrSession::$game_id);
+$defender_team = new SMR_BATTLE($defender_id, SmrSession::$game_id);
 $sector_id = $player->sector_id;
 // is the defender on the planet?
 // or did he left the sector?
@@ -42,7 +42,7 @@ $sector_id = $player->sector_id;
 $db->query("SELECT * FROM player " .
 		   "WHERE account_id = $defender_id AND " .
 				 "dead = 'TRUE' AND " .
-				 "game_id = $session->game_id");
+				 "game_id = SmrSession::$game_id");
 if ($db->nf() == 1)
 	create_error("Your target is already dead!");
 
@@ -50,7 +50,7 @@ $db->query("SELECT * FROM player " .
 		   "WHERE sector_id = $player->sector_id AND " .
 				 "account_id = $defender_id AND " .
 				 "land_on_planet = 'FALSE' AND " .
-				 "game_id = $session->game_id");
+				 "game_id = SmrSession::$game_id");
 if ($db->nf() == 0)
 	create_error("Your target has left the sector!");
 
@@ -62,7 +62,7 @@ if ($player->get_info('turns') < 3)
 $player->take_turns(3);
 $player->update();
 
-$defender = new SMR_PLAYER($defender_id, $session->game_id);
+$defender = new SMR_PLAYER($defender_id, SmrSession::$game_id);
 
 // log action
 $account->log(8, "Attacks $defender->player_name", $player->sector_id);
@@ -137,8 +137,8 @@ while ($result) {
 		// create player object
 		// JUST FOR READING!!!
 		// DO NOT CHANGE SOMETHING IN THERE!
-		$killed = new SMR_PLAYER($killed_id, $session->game_id);
-		$killer = new SMR_PLAYER($killer_id, $session->game_id);
+		$killed = new SMR_PLAYER($killed_id, SmrSession::$game_id);
+		$killer = new SMR_PLAYER($killer_id, SmrSession::$game_id);
 
 		// is one of the dead guys the original attacker or defender?
 		if ($killed_id == $defender_id || $killed_id == $attacker_id)

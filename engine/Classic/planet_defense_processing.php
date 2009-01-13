@@ -12,7 +12,7 @@ if ($amount <= 0)
 if ($player->newbie_turns > 0)
 	create_error("You can't drop defenses under newbie protection!");
 // get a planet from the sector where the player is in
-$planet = new SMR_PLANET($player->sector_id, $session->game_id);
+$planet = new SMR_PLANET($player->sector_id, SmrSession::$game_id);
 
 $type_id = $var["type_id"];
 $action = $_REQUEST['action'];

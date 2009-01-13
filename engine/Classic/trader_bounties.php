@@ -13,7 +13,7 @@ $bounties['HQ'] = array();
 $bounties['UG'] = array();
 $ids=array();
 
-$db->query('SELECT amount,account_id,type FROM bounty WHERE claimer_id=' . $session->account_id . ' AND game_id=' . $session->game_id);
+$db->query('SELECT amount,account_id,type FROM bounty WHERE claimer_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id);
 
 while($db->next_record()) {
 	$bounties[$db->f('type')][] = array($db->f('account_id'),$db->f('amount'));
@@ -21,7 +21,7 @@ while($db->next_record()) {
 }
 
 if(count($ids)) {
-	$db->query('SELECT account_id,player_name,player_id,alignment FROM player WHERE account_id IN (' . implode(',',$ids) . ') AND game_id=' . $session->game_id . ' LIMIT ' . count($ids));
+	$db->query('SELECT account_id,player_name,player_id,alignment FROM player WHERE account_id IN (' . implode(',',$ids) . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($ids));
 
 	while($db->next_record()) {
 		$players[$db->f('account_id')] = get_colored_text($db->f('alignment'),stripslashes($db->f('player_name')) . ' (' . $db->f('player_id') . ')');

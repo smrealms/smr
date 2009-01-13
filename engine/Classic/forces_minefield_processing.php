@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 		require_once(get_file_loc("smr_force.inc"));
 if ($player->newbie_turns > 0)
 	create_error("You are under newbie protection!");
@@ -166,7 +166,7 @@ if ($player->turns < 3) {
 	
 	$db->query("SELECT * FROM ship_has_weapon, weapon_type " .
 		   "WHERE account_id = $player->account_id AND " .
-				 "game_id = $session->game_id AND " .
+				 "game_id = SmrSession::$game_id AND " .
 				 "ship_has_weapon.weapon_type_id = weapon_type.weapon_type_id " .
 		   "ORDER BY order_id");
 	// take the turns

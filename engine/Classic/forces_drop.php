@@ -3,7 +3,7 @@
 		require_once(get_file_loc("smr_force.inc"));
 if (isset($var["owner_id"])) {
 	
-	$owner = new SMR_PLAYER($var["owner_id"], $session->game_id);
+	$owner = new SMR_PLAYER($var["owner_id"], SmrSession::$game_id);
 	print_topic("CHANGE $owner->player_name's FORCES");
     $owner_id = $var["owner_id"];
 

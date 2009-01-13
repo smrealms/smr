@@ -5,7 +5,7 @@ $account->update_last_login();
 
 $container = array();
 $container["url"] = "skeleton.php";
-if ($session->game_id > 0) {
+if (SmrSession::$game_id > 0) {
 
 	if ($player->land_on_planet == "TRUE")
 		$container["body"] = "planet_main.php";

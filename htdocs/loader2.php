@@ -63,12 +63,10 @@ $db = new SmrMySqlDatabase();
 // *
 // ********************************
 
-// creates a new session object
-$session = new SmrSession();
 //echo "<pre>";print_r($session);echo'</pre>';
 //exit;
 // do we have a session?
-if ($session->account_id == 0) {
+if (SmrSession::$account_id == 0) {
 
 	header("Location: ".URL."/login.php");
 	exit;
@@ -96,7 +94,7 @@ while ($db->next_record())
 $account = new SMR_ACCOUNT();
 
 // get account from db
-$account->get_by_id($session->account_id);
+$account->get_by_id(SmrSession::$account_id);
 
 // ********************************
 // *
@@ -139,11 +137,11 @@ function do_voodoo() {
 	}
 
 	// initialize objects we usually need, like player, ship
-	if ($session->game_id > 0) {
+	if (SmrSession::$game_id > 0) {
 
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
-		$db->query('SELECT sector_id FROM player WHERE account_id=' . $session->account_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 		$db->next_record();
 		$sector_id=$db->f('sector_id');
 
@@ -154,7 +152,7 @@ function do_voodoo() {
 		}
 
 		// Now that they've acquire a lock we can move on
-		$player	= new SMR_PLAYER($session->account_id, $session->game_id);
+		$player	= new SMR_PLAYER(SmrSession::$account_id, SmrSession::$game_id);
 
 		if($player->dead == 'TRUE' && $var['body'] != 'death.php' && !isset($var['override_death'])) {
 				$container = array();
@@ -163,7 +161,7 @@ function do_voodoo() {
 				forward($container);
 		}
 
-		$ship	= new SMR_SHIP($session->account_id, $session->game_id);
+		$ship	= new SMR_SHIP(SmrSession::$account_id, SmrSession::$game_id);
 
 		// update turns on that player
 		$player->update_turns($ship->speed);
@@ -190,22 +188,22 @@ function do_voodoo() {
 
 // This is hackish, but without row level locking it's the best we can do
 function acquire_lock($sector) {
-	global $db, $lock,$session;
+	global $db, $lock;
 
 	// Insert ourselves into the queue.
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $session->game_id . ',' . $session->account_id . ',' . $sector . ',' . time() . ')');
+	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . time() . ')');
 			
 	$lock = $db->insert_id();
 
 	for($i=0;$i<200;++$i) {
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . $session->game_id . ' LIMIT 1');
+		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' LIMIT 1');
 		$db->next_record();
 		if($db->f('COUNT(*)')){
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $session->account_id . ' AND sector_id=' . $sector . ' LIMIT 1');
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' LIMIT 1');
 			if($db->next_record()) {
 				if($db->f('COUNT(*)') > 1) {
 					create_error("Multiple actions cannot be performed at the same time!");

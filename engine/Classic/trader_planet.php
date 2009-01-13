@@ -40,8 +40,8 @@ if ($db->nf() > 0) {
 
 	while ($db->next_record()) {
 
-		$planet = new SMR_PLANET($db->f("sector_id"), $session->game_id);
-		$planet_sector = new SMR_SECTOR($db->f("sector_id"), $session->game_id, $session->account_id);
+		$planet = new SMR_PLANET($db->f("sector_id"), SmrSession::$game_id);
+		$planet_sector = new SMR_SECTOR($db->f("sector_id"), SmrSession::$game_id, SmrSession::$account_id);
 		$planet_sec = $db->f("sector_id");
 		print("<tr>");
 		print("<td>$planet->planet_name</td>");
@@ -87,7 +87,7 @@ if ($db->nf() > 0) {
 	
 if ($player->alliance_id != 0) {
 	
-	$alliance = new SMR_ALLIANCE($player->alliance_id, $session->game_id);
+	$alliance = new SMR_ALLIANCE($player->alliance_id, SmrSession::$game_id);
 	
 	print_topic("PLANET LIST FOR $player->alliance_name ($player->alliance_id)");
 	
@@ -120,9 +120,9 @@ if ($player->alliance_id != 0) {
 	
 		while ($db->next_record()) {
 	
-			$planet = new SMR_PLANET($db->f("sector_id"), $session->game_id);
-			$planet_sector = new SMR_SECTOR($db->f("sector_id"), $session->game_id, $session->account_id);
-			$planet_owner = new SMR_PLAYER($planet->owner_id, $session->game_id);
+			$planet = new SMR_PLANET($db->f("sector_id"), SmrSession::$game_id);
+			$planet_sector = new SMR_SECTOR($db->f("sector_id"), SmrSession::$game_id, SmrSession::$account_id);
+			$planet_owner = new SMR_PLAYER($planet->owner_id, SmrSession::$game_id);
 			$planet->build();
 			print("<tr>");
 			print("<td>$planet->planet_name</td>");
