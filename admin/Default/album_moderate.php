@@ -1,34 +1,6 @@
 <?
 
-function get_album_nick($album_id) {
-
-	if ($album_id == 0)
-		return 'System';
-
-	$album = new SmrMySqlDatabase();
-
-	// get hof name
-	$album->query('SELECT HoF_name
-				   FROM account_has_stats
-				   WHERE account_id = '.$album_id);
-	if ($album->nextRecord())
-		$nick = $album->getField('HoF_name');
-
-	// fall back to login name if it's empty or we havn't found one
-	if (empty($nick)) {
-
-		$album->query('SELECT login
-					   FROM account
-					   WHERE account_id = '.$album_id);
-		if ($album->nextRecord())
-			$nick = $album->getField('login');
-
-	}
-
-
-	return $nick;
-
-}
+require_once(LIB . 'Album/album_functions.php');
 
 // try to get it from session first
 $account_id = $var['account_id'];
