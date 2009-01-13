@@ -442,6 +442,7 @@ echo '
 
 $db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 
+$version = 0;
 if ($db->next_record()) {
 
 	$version_id = $db->f('version_id');
