@@ -658,10 +658,8 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 
 	function get_home() {
 
-		global $GOVERNMENT;
-
 		// get his home sector
-		$hq_id = $GOVERNMENT + $this->race_id;
+		$hq_id = GOVERNMENT + $this->race_id;
 		$this->query("SELECT location.sector_id FROM location NATURAL JOIN sector " .
 					 "WHERE location.game_id = $this->game_id AND " .
 						   "location_type_id = $hq_id LIMIT 1");
