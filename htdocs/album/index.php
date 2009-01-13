@@ -5,7 +5,7 @@ require_once(ENGINE . 'Default/smr.inc');
 require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(get_file_loc('SmrSession.class.inc'));
 
-require_once('album_functions.php');
+require_once(LIB . 'Album/album_functions.php');
 
 // database object
 $db = new SmrMySqlDatabase();
