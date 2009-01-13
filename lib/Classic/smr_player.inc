@@ -87,7 +87,7 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 			$this->newbie_warning	= $row['newbie_warning'];
 			$this->kills			= $row['kills'];
 			$this->deaths			= $row['deaths'];
-			$this->ignore_global	= $row['ignore_global'];
+			$this->ignore_global	= $row['ignore_globals'];
 			$this->last_news_update = $row['last_news_update'];
 			$this->out_of_game		= $row['out_of_game'];
 			$this->last_ticker_update = $row['last_ticker_update'];
