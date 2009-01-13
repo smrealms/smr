@@ -21,7 +21,7 @@ if (!isset($var["folder_id"])) {
 	
 	include(get_file_loc("council.inc"));
 
-	$db2->query("SELECT * FROM message WHERE account_id = $player->account_id AND message_type_id = MSG_POLITICAL AND game_id = $player->game_id");
+	$db2->query("SELECT * FROM message WHERE account_id = $player->account_id AND message_type_id = ".MSG_POLITICAL." AND game_id = $player->game_id");
 	if (onCouncil($player->race_id) || $db2->nf())
 		$db->query("SELECT * FROM message_type " .
 				   "WHERE message_type_id < 8 " .
@@ -218,7 +218,7 @@ if (!isset($var["folder_id"])) {
 			while ($db->next_record())
 				displayMessage($db->f("message_id"), $db->f("sender_id"), stripslashes($db->f("message_text")), $db->f("send_time"), $db->f("msg_read"),$var['folder_id']);
 		}
-		$db->query("UPDATE message SET msg_read = 'TRUE' WHERE message_type_id = MSG_SCOUT AND game_id = $player->game_id AND account_id = $player->account_id");
+		$db->query("UPDATE message SET msg_read = 'TRUE' WHERE message_type_id = ".MSG_SCOUT." AND game_id = $player->game_id AND account_id = $player->account_id");
 	} else {
 		while ($db->next_record()) {
 			$message_id = $db->f("message_id");
