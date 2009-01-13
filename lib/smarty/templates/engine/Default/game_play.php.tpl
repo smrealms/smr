@@ -86,7 +86,6 @@
 				<td>{$Game.StartDate}</td>
 				<td>{$Game.EndDate}</td>
 				<td>{$Game.Speed}</td>
-				<td>{$Game.Credits}</td>
 				<td><a href="{$Game.PreviousGameHOFLink}">Hall Of Fame</a></td>
 				<td><a href="{$Game.PreviousGameNewsLink}">Game News</a></td>
 				<td><a href="{$Game.PreviousGameStatsLink}">Game Stats</a></td>
