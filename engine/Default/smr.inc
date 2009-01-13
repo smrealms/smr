@@ -153,8 +153,8 @@ function get_file_loc($file_name, $exists = 1)
 			$game_dir = $stored_dir;
 		} else $game_dir = 'Default/';
 	}
-	if($game_dir=='Classic')
-		$game_dir='Default';
+	if($game_dir=='Classic/')
+		$game_dir='Default/';
 
 	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
 	elseif (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
