@@ -55,7 +55,7 @@ class SMR_PLAYER extends SmrMySqlDatabase {
  
 	function SMR_PLAYER ($account_id, $game_id) {
 		global $session;
-        parent::DB_Sql();
+        parent::__construct();
 		$this->account_id = $account_id;
 		$this->game_id = $game_id;
 
