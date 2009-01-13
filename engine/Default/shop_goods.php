@@ -124,7 +124,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 //update controlled in db
 $player->controlled = $player->getSectorID();
 $player->update();
-$boughtGoods = $port->getGoodsBought();
+$boughtGoods = $port->getVisibleGoodsBought($player);
 if (!empty($boughtGoods))
 {
 	$PHP_OUTPUT.=('<h2>The port sells you the following:</h2>');
@@ -183,7 +183,7 @@ if (!empty($boughtGoods))
 
 }
 
-$soldGoods = $port->getGoodsSold();
+$soldGoods = $port->getVisibleGoodsSold($player);
 if (!empty($soldGoods))
 {
 	$PHP_OUTPUT.=('<h2>The port would buy the following:</h2>');
