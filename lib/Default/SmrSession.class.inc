@@ -144,7 +144,8 @@ class SmrSession
 			
 		
 		self::$var[$sn] = $container;
-		unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
+		if(isset(self::$var[$sn]['CommonID']))
+			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		return $sn;
 	}
 	
