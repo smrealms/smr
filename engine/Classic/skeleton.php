@@ -131,7 +131,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'album_edit.php';
 print_link($container, 'Edit Photo');
 echo '<br>';
-echo '<a href="' . URL . '/album/" target="_blank">Album</a><br><br>';
+echo '<a href="' . URL . '/album/" target="_blank">View Album</a><br><br>';
 
 $container['body'] = 'bug_report.php';
 print_link($container, 'Report a Bug');
