@@ -6,13 +6,13 @@ include(get_file_loc('menue.inc'));
 print_ranking_menue(0, 1);
 
 // what rank are we?
-$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id AND " .
+$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." AND " .
                                       "(kills > $player->kills OR " .
                                       "(kills = $player->kills AND player_name <= " . format_string("$player->player_name", true) . " ))");
 $our_rank = $db->nf();
 
 // how many players are there?
-$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id");
+$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id);
 $total_player = $db->nf();
 
 print("<div align=\"center\">");
@@ -27,7 +27,7 @@ print("<th>Alliance</th>");
 print("<th>Kills</th>");
 print("</tr>");
 
-$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id ORDER BY kills DESC, player_name LIMIT 10");
+$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." ORDER BY kills DESC, player_name LIMIT 10");
 
 $rank = 0;
 while ($db->next_record()) {
@@ -125,7 +125,7 @@ print("<th>Alliance</th>");
 print("<th>Kills</th>");
 print("</tr>");
 
-$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id ORDER BY kills DESC, player_name LIMIT " . ($min_rank - 1) . ", " . ($max_rank - $min_rank + 1));
+$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." ORDER BY kills DESC, player_name LIMIT " . ($min_rank - 1) . ", " . ($max_rank - $min_rank + 1));
 
 $rank = $min_rank - 1;
 while ($db->next_record()) {

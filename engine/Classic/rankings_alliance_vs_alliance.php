@@ -36,7 +36,7 @@ foreach ($alliance_vs as $key => $id) {
 	if ($id > 0) {
 		
 	    $curr_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
-		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = SmrSession::$game_id");
+		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = ".SmrSession::$game_id);
 		if ($db2->nf() == 0) $out = TRUE;
 		else $out = FALSE;
 		
@@ -78,7 +78,7 @@ foreach ($alliance_vs as $key => $id) {
 	if ($id > 0) {
 		
 		$curr_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
-		$db2->query("SELECT * FROM player WHERE alliance_id = $curr_id AND game_id = SmrSession::$game_id");
+		$db2->query("SELECT * FROM player WHERE alliance_id = $curr_id AND game_id = ".SmrSession::$game_id);
 		if ($db2->nf() == 0) $out = TRUE;
 		else $out = FALSE;
 		
@@ -110,7 +110,7 @@ foreach ($alliance_vs as $key => $id) {
 	
 	foreach ($alliance_vs as $key => $id) {
 		
-		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = SmrSession::$game_id");
+		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = ".SmrSession::$game_id);
 		if ($db2->nf() == 0) $out2 = TRUE;
 		else $out2 = FALSE;
 		$db2->query("SELECT * FROM alliance_vs_alliance WHERE alliance_id_2 = $curr_id AND " .

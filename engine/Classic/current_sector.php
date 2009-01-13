@@ -93,7 +93,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<div class="cssh">';
 	if($links[0]) {
 		$container2['target_sector'] = $links[0];
-		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">SCAN</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::get_new_sn($container2) . '">SCAN</a>';
 	}
 	else {
 		echo '&nbsp;';
@@ -112,7 +112,7 @@ else if($links[0]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::get_new_sn($container1) . '">';
 	echo $links[0];
 	echo '</a>';
 }
@@ -139,7 +139,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 		else {
 			echo ' dgreen';
 		}
-		echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
+		echo '" href="loader2.php?sn=' . SmrSession::get_new_sn($container1) . '">';
 		echo $links[0];
 		echo '</a>';
 	}
@@ -156,7 +156,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<td class="csr3c1"><div class="cssv">';
 	if($links[3]) {
 		$container2['target_sector'] = $links[3];
-		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
 	}
 	echo '</div></td>';
 }
@@ -178,7 +178,7 @@ if($links[3]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::get_new_sn($container1) . '">';
 	echo $links[3];
 	echo '</a>';
 }
@@ -190,7 +190,7 @@ echo '</div></td><td>';
 $container=array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'current_sector.php';
-echo '<div class="css"><a class="css dgreen" href="loader2.php?sn=' . SmrSession::$get_new_sn($container) . '">';
+echo '<div class="css"><a class="css dgreen" href="loader2.php?sn=' . SmrSession::get_new_sn($container) . '">';
 echo $player->sector_id;
 echo '</a></div></td><td ';
 if(empty($ship->hardware[HARDWARE_SCANNER])) {
@@ -209,7 +209,7 @@ if($links[1]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::get_new_sn($container1) . '">';
 	echo $links[1];
 	echo '</a>';
 }
@@ -222,7 +222,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<td class="csr3c5"><div class="cssv">';
 	if($links[1]) {
 		$container2['target_sector'] = $links[1];
-		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
 	}
 	echo '</div></td>';
 }
@@ -251,7 +251,7 @@ if($links[2]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::get_new_sn($container1) . '">';
 	echo $links[2];
 	echo '</a>';
 }
@@ -269,7 +269,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<tr><td class="csr5c1"><div class="cssh">';
 	if($links[2]) {
 		$container2['target_sector'] = $links[2];
-		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">SCAN</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::get_new_sn($container2) . '">SCAN</a>';
 	}
 	echo '</div></td></tr>';
 }
@@ -294,13 +294,13 @@ if(isset($links[4])) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::get_new_sn($container1) . '">';
 	echo $links[4];
 	echo '</a></div>';
 	if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 		$container2['target_sector'] = $links[4];
 		echo '</td><td>';
-		echo '<div class="cssv"><a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">S<br>C<br>A<br>N</a></div>';
+		echo '<div class="cssv"><a class="cssc" href="loader2.php?sn=' . SmrSession::get_new_sn($container2) . '">S<br>C<br>A<br>N</a></div>';
 	}
 	echo '</td></tr></table>';
 

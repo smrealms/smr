@@ -52,13 +52,13 @@ if ($action == "Paint a logo (3 SMR Credits)") {
 			
 		}
 		
-		$orig_name = "<img style=\"padding: 3px 3px 3px 3px;\" src=\"".URL."/upload/" . "SmrSession::$account_id" . "logo\"><br>";
+		$orig_name = "<img style=\"padding: 3px 3px 3px 3px;\" src=\"".URL."/upload/" . SmrSession::$account_id . "logo\"><br>";
 		$cred_cost = 3;
 		$account->set_credits($num_creds - $cred_cost);
 		$db->query("REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (" .
 				"$player->game_id, $player->account_id, " . format_string($orig_name, FALSE) . ")");
 		
-		move_uploaded_file($_FILES['photo']['tmp_name'], "UPLOAD" . "SmrSession::$account_id" . "logo");
+		move_uploaded_file($_FILES['photo']['tmp_name'], "UPLOAD" . SmrSession::$account_id . "logo");
 		print("<div align=center>Your logo was successfully painted!</div>");
 		include(get_file_loc("bar_opening.php"));
 		return;

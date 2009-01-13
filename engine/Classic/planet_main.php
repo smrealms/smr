@@ -78,8 +78,8 @@ print("</table>");
 print("<br />");
 
 $db->query("SELECT * FROM player WHERE sector_id = $player->sector_id AND " .
-                                      "game_id = SmrSession::$game_id AND " .
-                                      "account_id != SmrSession::$account_id AND " .
+                                      "game_id = ".SmrSession::$game_id." AND " .
+                                      "account_id != ".SmrSession::$account_id." AND " .
                                       "land_on_planet = 'TRUE' " .
                                 "ORDER BY last_active DESC");
 

@@ -323,7 +323,7 @@ foreach ($sectors as $sector_id) {
 		}
 		echo '" href="';
 		echo 'loader2.php?sn=';
-		echo SmrSession::$get_new_sn($container1);
+		echo SmrSession::get_new_sn($container1);
 		echo '">#';
 		echo $sector_id;
 		echo '</a>';
@@ -335,7 +335,7 @@ foreach ($sectors as $sector_id) {
 		$container['body'] = 'current_sector.php';
 		echo '<a onfocus="blur()" class="lmsc" href="';
 		echo 'loader2.php?sn=';
-		echo SmrSession::$get_new_sn($container);
+		echo SmrSession::get_new_sn($container);
 		echo '">#';
 		echo $sector_id;
 		echo '</a>';
@@ -374,7 +374,7 @@ foreach ($sectors as $sector_id) {
 			$container1['target_sector'] = $warps[$sector_id];
 			echo '<a href="';
 			echo 'loader2.php?sn=';
-			echo SmrSession::$get_new_sn($container1);
+			echo SmrSession::get_new_sn($container1);
 			echo '">';
 		}
 		echo '<img src="images/warp.gif" alt="Warp to #';
@@ -433,7 +433,7 @@ foreach ($sectors as $sector_id) {
 			$container3['body'] = 'shop_goods.php';
 			echo '<a href="';
 			echo 'loader2.php?sn=';
-			echo SmrSession::$get_new_sn($container3);
+			echo SmrSession::get_new_sn($container3);
 			echo '">';
 		}
 		echo '<img src="images/buy.gif" alt="Goods Sold" title="Goods Sold">';
@@ -475,7 +475,7 @@ foreach ($sectors as $sector_id) {
 				$container2["body"] = $location_cache[$location][1];
 				echo '<a href="';
 				echo 'loader2.php?sn=';
-				echo SmrSession::$get_new_sn($container2);
+				echo SmrSession::get_new_sn($container2);
 				echo '">';
 			}
 			echo '<img src="';

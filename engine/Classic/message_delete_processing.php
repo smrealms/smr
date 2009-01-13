@@ -34,8 +34,8 @@ if ($action == "Marked Messages") {
                                             "message_type_id = $var[folder_id] AND " .
                                             "game_id = $player->game_id");
     } else {
-        $db->query("DELETE FROM message WHERE account_id = SmrSession::$account_id AND " .
-                                           "game_id = SmrSession::$game_id AND " .
+        $db->query("DELETE FROM message WHERE account_id = ".SmrSession::$account_id." AND " .
+                                           "game_id = ".SmrSession::$game_id." AND " .
                                            "message_type_id = " . $var["folder_id"] . " AND " .
                                            "msg_read = 'TRUE'");
     }

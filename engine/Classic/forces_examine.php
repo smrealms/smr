@@ -60,7 +60,7 @@ print("<tr>");
 
 if ($attacker->alliance_id > 0) {
 
-	$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id AND " .
+	$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." AND " .
 													  "alliance_id = $attacker->alliance_id AND " .
 													  "sector_id = $attacker->sector_id AND " .
 													  "land_on_planet = 'FALSE' AND " .
@@ -97,7 +97,7 @@ if ($attacker_list == "()") {
 
 } else {
 
-	$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id AND " .
+	$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." AND " .
 													  "account_id IN $attacker_list");
 	while ($db->next_record()) {
 

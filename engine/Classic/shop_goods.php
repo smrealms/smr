@@ -125,7 +125,7 @@ $db->query("SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_h
 														  "port.sector_id = port_has_goods.sector_id AND " .
 														  "port_has_goods.good_id = good.good_id AND " .
 														  "port.sector_id = $sector->sector_id AND " .
-														  "port.game_id = SmrSession::$game_id AND " .
+														  "port.game_id = ".SmrSession::$game_id." AND " .
 														  "transaction = 'BUY' " .
 													"ORDER BY good.good_id");
 if ($db->nf()) {
@@ -193,7 +193,7 @@ $db->query("SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_h
 														  "port.sector_id = port_has_goods.sector_id AND " .
 														  "port_has_goods.good_id = good.good_id AND " .
 														  "port.sector_id = $sector->sector_id AND " .
-														  "port.game_id = SmrSession::$game_id AND " .
+														  "port.game_id = ".SmrSession::$game_id." AND " .
 														  "transaction = 'SELL' " .
 													"ORDER BY good.good_id");
 if ($db->nf()) {

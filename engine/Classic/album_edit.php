@@ -10,7 +10,7 @@ print("<b>Please Note:</b> Your entry needs to be approved by an admin before go
 print("<p style=\"font-size:150%;\">");
 print("Status of your album entry: ");
 
-$db->query("SELECT * FROM album WHERE account_id = SmrSession::$account_id");
+$db->query("SELECT * FROM album WHERE account_id = ".SmrSession::$account_id);
 if ($db->next_record()) {
 
 	$location = stripslashes($db->f("location"));
@@ -93,7 +93,7 @@ print("<tr>");
 print("<td align=\"right\" valign=\"top\" style=\"font-weight:bold;\">Image:</td>");
 print("<td>");
 if (is_readable(UPLOAD . SmrSession::$account_id))
-	print("<img src=\"".URL."/upload/SmrSession::$account_id\"><br />");
+	print("<img src=\"".URL."/upload/".SmrSession::$account_id."\"><br />");
 print("<input type=\"file\" name=\"photo\" accept=\"image/jpeg\" id=\"InputFields\" style=\"width:303px;\" ></td>");
 print("</tr>");
 
