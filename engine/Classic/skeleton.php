@@ -4,7 +4,7 @@ echo '
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="default.css">
+<link rel="stylesheet" type="text/css" href="classic.css">
 <title>Space Merchant Realms</title>
 <meta http-equiv="pragma" content="no-cache">
 <script type="text/javascript" src="js/smr.js"></script>
