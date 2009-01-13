@@ -42,7 +42,7 @@ $sector_id = $player->sector_id;
 $db->query("SELECT * FROM player " .
 		   "WHERE account_id = $defender_id AND " .
 				 "dead = 'TRUE' AND " .
-				 "game_id = SmrSession::$game_id");
+				 "game_id = ".SmrSession::$game_id);
 if ($db->nf() == 1)
 	create_error("Your target is already dead!");
 
@@ -50,7 +50,7 @@ $db->query("SELECT * FROM player " .
 		   "WHERE sector_id = $player->sector_id AND " .
 				 "account_id = $defender_id AND " .
 				 "land_on_planet = 'FALSE' AND " .
-				 "game_id = SmrSession::$game_id");
+				 "game_id = ".SmrSession::$game_id);
 if ($db->nf() == 0)
 	create_error("Your target has left the sector!");
 

@@ -425,7 +425,7 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 
 	$db2->query("SELECT * FROM ship_has_weapon, weapon_type " .
 				"WHERE account_id = $curr_attacker->account_id AND " .
-					  "game_id = SmrSession::$game_id AND " .
+					  "game_id = ".SmrSession::$game_id." AND " .
 					  "ship_has_weapon.weapon_type_id = weapon_type.weapon_type_id " .
 				"ORDER BY order_id");
 

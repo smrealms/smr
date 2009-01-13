@@ -10,7 +10,7 @@ if (!empty($_REQUEST['validation_code'])) {
 	$account->update();
 
 	// delete the notification (when send)
-	$db->query("DELETE FROM notification WHERE account_id = SmrSession::$account_id AND " .
+	$db->query("DELETE FROM notification WHERE account_id = ".SmrSession::$account_id." AND " .
 											  "notification_type = 'validation_code'");
 
 }

@@ -38,16 +38,16 @@ if (!isset($var["folder_id"])) {
 
 		// do we have unread msges in that folder?
 		$db2->query("SELECT * FROM message " .
-						"WHERE account_id = SmrSession::$account_id AND " .
-							  "game_id = SmrSession::$game_id AND " .
+						"WHERE account_id = ".SmrSession::$account_id." AND " .
+							  "game_id = ".SmrSession::$game_id." AND " .
 							  "message_type_id = $message_type_id AND " .
 							  "msg_read = 'FALSE'");
 		$msg_read = $db2->nf();
 
 		// get number of msges
 		$db2->query("SELECT count(message_id) as message_count FROM message " .
-						"WHERE account_id = SmrSession::$account_id AND " .
-							  "game_id = SmrSession::$game_id AND " .
+						"WHERE account_id = ".SmrSession::$account_id." AND " .
+							  "game_id = ".SmrSession::$game_id." AND " .
 							  "message_type_id = $message_type_id");
 		if ($db2->next_record())
 			$message_count = $db2->f("message_count");
@@ -91,8 +91,8 @@ if (!isset($var["folder_id"])) {
 } else {
 	
 	$db->query("SELECT * FROM message " .
-						"WHERE account_id = SmrSession::$account_id AND " .
-							  "game_id = SmrSession::$game_id AND " .
+						"WHERE account_id = ".SmrSession::$account_id." AND " .
+							  "game_id = ".SmrSession::$game_id." AND " .
 							  "message_type_id = " . $var["folder_id"] . " AND " .
 							  "msg_read = 'FALSE'");
 	$unread_messages = $db->nf();

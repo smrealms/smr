@@ -83,7 +83,7 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 	if ($size[1] > 500)
 		create_error("Image is higher than 500 pixels!");
 
-	move_uploaded_file($_FILES['photo']['tmp_name'], "UPLOADSmrSession::$account_id");
+	move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD.SmrSession::$account_id);
 
 } else
 	$no_picture = true;
@@ -92,7 +92,7 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 $curr_time = time();
 
 // check if we had a album entry so far
-$db->query("SELECT * FROM album WHERE account_id = SmrSession::$account_id");
+$db->query("SELECT * FROM album WHERE account_id = ".SmrSession::$account_id);
 if ($db->next_record()) {
 
 	if ($no_picture == false)
@@ -123,7 +123,7 @@ if ($db->next_record()) {
 
 	// add album entry
 	$db->query("INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved) " .
-			   "VALUES(SmrSession::$account_id, $location, $email, '$website', $day, $month, $year, $other, $curr_time, $curr_time, 'TBC')");
+			   "VALUES(".SmrSession::$account_id.", $location, $email, '$website', $day, $month, $year, $other, $curr_time, $curr_time, 'TBC')");
 
 }
 
@@ -132,7 +132,7 @@ if ($comment) {
 	// check if we have comments for this album already
 	$db->lock("album_has_comments");
 
-	$db->query("SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = SmrSession::$account_id");
+	$db->query("SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = ".SmrSession::$account_id);
 	if ($db->next_record())
 		$comment_id = $db->f("MAX(comment_id)") + 1;
 	else

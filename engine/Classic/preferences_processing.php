@@ -35,7 +35,7 @@ if ($action == "Save and resend validation code") {
 
   // remember when we sent validation code
   $db->query("REPLACE INTO notification (notification_type, account_id, time) " .
-                   "VALUES('validation_code', SmrSession::$account_id, " . time() . ")");
+                   "VALUES('validation_code', ".SmrSession::$account_id.", " . time() . ")");
 
   mail($email, "Your validation code!",
     "You changed your email address registered within SMR and need to revalidate now!\n\r\n\r" .
@@ -108,7 +108,7 @@ if ($action == "Save and resend validation code") {
   if (!is_numeric($timez))
   	create_error("Numbers only please");
 
-  $db->query("UPDATE account SET offset = $timez WHERE account_id = SmrSession::$account_id");
+  $db->query("UPDATE account SET offset = $timez WHERE account_id = ".SmrSession::$account_id);
 
 } elseif ($action == "Change") {
 
@@ -117,7 +117,7 @@ if ($action == "Save and resend validation code") {
 
 }
 else if ($action == "Change Size" && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] > 50) {
-	$db->query("UPDATE account SET fontsize=" . $_REQUEST['fontsize'] . " WHERE account_id = SmrSession::$account_id");
+	$db->query("UPDATE account SET fontsize=" . $_REQUEST['fontsize'] . " WHERE account_id = ".SmrSession::$account_id);
 	$account->fontsize = $_REQUEST['fontsize'];
 
 }

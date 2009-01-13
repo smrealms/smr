@@ -424,7 +424,7 @@ for($i=1;$i<4;$i++){
 
 		$container['link_id'] = $i;
 		echo '\'javascript:VoteSite("' . $vote_links[$i]['location'] . '",';
-		echo '"' . SmrSession::$get_new_sn($container) . '")\'';
+		echo '"' . SmrSession::get_new_sn($container) . '")\'';
 		$img = $vote_links[$i]['star_img'];
 	}
 	else {
@@ -466,6 +466,6 @@ echo '
 </html>
 ';
 
-SmrSession::$update();
+SmrSession::update();
 
 ?>

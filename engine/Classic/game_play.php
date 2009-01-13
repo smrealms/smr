@@ -14,7 +14,7 @@ print(" <span style=\"font-size:125%;color:greenyellow;\">" . $account->get_rank
 
 $db->query("SELECT DATE_FORMAT(end_date, '%c/%e/%Y') as format_end_date, end_date, game.game_id as game_id, game_name, game_speed FROM game, player " .
 					"WHERE game.game_id = player.game_id AND " .
-						  "account_id = SmrSession::$account_id AND " .
+						  "account_id = ".SmrSession::$account_id." AND " .
 						  "end_date >= '" . date("Y-m-d") . "'");
 if ($db->nf() > 0) {
 

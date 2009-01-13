@@ -2,7 +2,7 @@
 
 print_topic("FEATURE REQUEST");
 
-$db->query("SELECT * FROM account_votes_for_feature WHERE account_id = SmrSession::$account_id");
+$db->query("SELECT * FROM account_votes_for_feature WHERE account_id = ".SmrSession::$account_id);
 if ($db->next_record())
 	$feature_vote = $db->f("feature_request_id");
 

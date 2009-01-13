@@ -12,7 +12,7 @@ if (empty($var["seq"])) $seq = "DESC";
 else $seq = $var["seq"];
 $db->query("SELECT * FROM player " .
 		   "WHERE last_active >= " . (time() - 600) . " AND " .
-				 "game_id = SmrSession::$game_id " .
+				 "game_id = ".SmrSession::$game_id." " .
 		   "ORDER BY $sort $seq");
 //print("$sort, $seq<br>");
 $count_last_active = $db->nf();
@@ -21,7 +21,7 @@ while ($db->next_record()) $list .= "," . $db->f("account_id");
 $list .= ")";
 $db->query("SELECT * FROM player " .
 		   "WHERE last_active >= " . (time() - 600) . " AND " .
-				 "game_id = SmrSession::$game_id " .
+				 "game_id = ".SmrSession::$game_id." " .
 		   "ORDER BY $sort $seq");
 if ($sort == "experience DESC, player_name" || $sort == "experience")
 	$db->query("SELECT * FROM player_cache WHERE game_id = $player->game_id AND account_id IN $list ORDER BY experience $seq");

@@ -1005,7 +1005,7 @@ function podPlayers($IDArray, $ships, $hqs, $port, $players) {
 		$temp = mysql_real_escape_string('You were <span class="red">DESTROYED</span> by <span style="color:yellow;font-variant:small-caps">Port ' . $player->sector_id . '</span>\'s defenses.');
 		$msg = '(' . SmrSession::$game_id . ',' . $accId . ',2,"' . $temp . '",' . $killer_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
 		$db->query("INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES $msg");
-		$db->query("INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ($accId, SmrSession::$game_id, 2)");
+		$db->query("INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ($accId, ".SmrSession::$game_id.", 2)");
 		unset($temp);
 	}
 	//Deal with hardware, cloaks etc for podded players

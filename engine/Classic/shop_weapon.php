@@ -4,7 +4,7 @@ print_topic("WEAPON DEALER");
 $db2 = new SmrMySqlDatabase();
 $db->query("SELECT * FROM location, location_sells_weapons, location_type, weapon_type " .
 					"WHERE location.sector_id = $player->sector_id AND " .
-    					  "location.game_id = SmrSession::$game_id AND " .
+    					  "location.game_id = ".SmrSession::$game_id." AND " .
     					  "location.location_type_id = location_sells_weapons.location_type_id AND " .
     					  "location_sells_weapons.location_type_id = location_type.location_type_id AND " .
     					  "location_sells_weapons.weapon_type_id = weapon_type.weapon_type_id");

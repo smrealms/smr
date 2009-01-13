@@ -57,7 +57,7 @@ while ($db->next_record()) {
 
 	$this_acc = new SMR_ACCOUNT();
 	$this_acc->get_by_id($db->f("account_id"));
-	if ($db->f("account_id") == SmrSession::$account_id) $bold = " style=\"font-weight:bold;\"";
+	if ($db->f("account_id") == ".SmrSession::$account_id.") $bold = " style=\"font-weight:bold;\"";
 	else $bold = "";
 	print("<tr>");
 	print("<td align=center$bold>" . $rank++ . "</td>");
@@ -88,10 +88,10 @@ while ($db->next_record()) {
 if (isset($past)) $db = new SMR_HISTORY_DB();
 if ($cat == "<b>Money Donated to SMR</b>")
 	$db->query("SELECT account_id, sum(amount) as amount FROM account_donated " .
-			"WHERE account_id = SmrSession::$account_id GROUP BY account_id");
+			"WHERE account_id = ".SmrSession::$account_id." GROUP BY account_id");
 else
 	$db->query("SELECT account_id, $row as amount FROM $table " .
-			"$row > 0 AND account_id = SmrSession::$account_id ORDER BY amount DESC");
+			"$row > 0 AND account_id = ".SmrSession::$account_id." ORDER BY amount DESC");
 if ($db->next_record()) {
 
 	$my_stat = $db->f("amount");

@@ -5,7 +5,7 @@ require_once(get_file_loc('smr_sector.inc'));
 SmrSession::$game_id = $var["game_id"];
 
 // check if hof entry is there
-$db->query("SELECT * FROM account_has_stats WHERE account_id = SmrSession::$account_id");
+$db->query("SELECT * FROM account_has_stats WHERE account_id = ".SmrSession::$account_id);
 if (!$db->nf())
 	$db->query("INSERT INTO account_has_stats (account_id, HoF_name, games_joined) VALUES ($account->account_id, " . format_string($account->login, true) . ", 1)");
 
@@ -19,7 +19,7 @@ $player->update();
 $player->delete_plotted_course();
 
 // log
-$account->log(2, "Player entered game SmrSession::$game_id", $player->sector_id);
+$account->log(2, "Player entered game ".SmrSession::$game_id, $player->sector_id);
 
 $container = array();
 $container["url"] = "skeleton.php";

@@ -16,7 +16,7 @@ $kills = 0;
 $exp = 0;
 
 // get stats
-$db->query("SELECT * from account_has_stats WHERE account_id = SmrSession::$account_id");
+$db->query("SELECT * from account_has_stats WHERE account_id = ".SmrSession::$account_id);
 if ($db->next_record()) {
 
 	$kills = ($db->f("kills") > 0) ? $db->f("kills") : 0;

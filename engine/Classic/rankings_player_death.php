@@ -6,7 +6,7 @@ include(get_file_loc('menue.inc'));
 print_ranking_menue(0, 2);
 
 // what rank are we?
-$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id AND " .
+$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." AND " .
                                       "(deaths > $player->deaths OR " .
                                       "(deaths = $player->deaths AND player_name <= " . format_string("$player->player_name", true) . " ))");
 $our_rank = $db->nf();
@@ -125,7 +125,7 @@ print("<th>Alliance</th>");
 print("<th>Deaths</th>");
 print("</tr>");
 
-$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id ORDER BY deaths DESC, player_name LIMIT " . ($min_rank - 1) . ", " . ($max_rank - $min_rank + 1));
+$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." ORDER BY deaths DESC, player_name LIMIT " . ($min_rank - 1) . ", " . ($max_rank - $min_rank + 1));
 
 $rank = $min_rank - 1;
 while ($db->next_record()) {

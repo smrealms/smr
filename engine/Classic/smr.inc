@@ -39,29 +39,29 @@ function print_form_name($container, $name) {
 function print_form_parameter($container, $param) {
 	global $session;
 	print("<form $param method=\"POST\" action=\"loader2.php\">");
-	print("<input type=\"hidden\" name=\"sn\" value=\"" . SmrSession::$get_new_sn($container) . "\">");
+	print("<input type=\"hidden\" name=\"sn\" value=\"" . SmrSession::get_new_sn($container) . "\">");
 }
 
 function print_header_link($container, $text) {
 	global $session;
-	echo '<a class="header" href="loader2.php?sn=' . SmrSession::$get_new_sn($container) . '">' . $text . '</a>';
+	echo '<a class="header" href="loader2.php?sn=' . SmrSession::get_new_sn($container) . '">' . $text . '</a>';
 }
 
 function print_link($container, $text) {
 	global $session;
-	echo '<a href="loader2.php?sn=' . SmrSession::$get_new_sn($container) . '">' . $text . '</a>';
+	echo '<a href="loader2.php?sn=' . SmrSession::get_new_sn($container) . '">' . $text . '</a>';
 }
 
 function print_button($container,$text) {
 	global $session;
-	echo '<div class="buttonA"><a class="buttonA"href="loader2.php?sn=' . SmrSession::$get_new_sn($container). '">&nbsp;' . $text . '&nbsp;</a></div>';
+	echo '<div class="buttonA"><a class="buttonA"href="loader2.php?sn=' . SmrSession::get_new_sn($container). '">&nbsp;' . $text . '&nbsp;</a></div>';
 }
 
 function create_form($container,$actions) {
 	global $session;
 	static $form_id = 0;
 	$form = array();
-	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="loader2.php?sn=' . SmrSession::$get_new_sn($container) . '">';
+	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="loader2.php?sn=' . SmrSession::get_new_sn($container) . '">';
 
 	if(!is_array($actions)) {
 		$form['submit'] =  '<input class="submit" type="submit" name="action" value="' . $actions . '">';
@@ -184,7 +184,7 @@ function format_string($db_str, $transfer_html) {
 
 function create_link($container, $text) {
 	global $session;
-	return '<a href="loader2.php?sn=' . SmrSession::$get_new_sn($container) . '">' . $text . '</a>';
+	return '<a href="loader2.php?sn=' . SmrSession::get_new_sn($container) . '">' . $text . '</a>';
 }
 
 function get_colored_text($value, $text) {

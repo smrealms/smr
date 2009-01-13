@@ -5,13 +5,13 @@ if (empty($feature))
 
 // add this feature to db
 $db->query("INSERT INTO feature_request (feature, submitter_id) " .
-								 "VALUES(" . format_string($feature, true) . ", SmrSession::$account_id)");
+								 "VALUES(" . format_string($feature, true) . ", ".SmrSession::$account_id.")");
 
 // which number did it get?
 $vote_new_id = $db->insert_id();
 
 // for which feature we currently vote?
-$db->query("SELECT * FROM account_votes_for_feature WHERE account_id = SmrSession::$account_id");
+$db->query("SELECT * FROM account_votes_for_feature WHERE account_id = ".SmrSession::$account_id);
 if ($db->next_record()) {
 
 	$vote_old_id = $db->f("feature_request_id");
@@ -27,7 +27,7 @@ if ($db->next_record()) {
 }
 
 // vote for this feature
-$db->query("REPLACE INTO account_votes_for_feature VALUES(SmrSession::$account_id, $vote_new_id)");
+$db->query("REPLACE INTO account_votes_for_feature VALUES(".SmrSession::$account_id.", $vote_new_id)");
 
 forward(create_container("skeleton.php", "feature_request.php"));
 

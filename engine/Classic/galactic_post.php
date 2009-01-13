@@ -2,7 +2,7 @@
 
 print_topic("GALACTIC POST");
 $db2 = new SmrMySqlDatabase();
-$db->query("SELECT * FROM galactic_post_writer WHERE game_id = SmrSession::$game_id AND account_id = $player->account_id");
+$db->query("SELECT * FROM galactic_post_writer WHERE game_id = ".SmrSession::$game_id." AND account_id = $player->account_id");
 if ($db->next_record()) {
 
     $position = $db->f("position");

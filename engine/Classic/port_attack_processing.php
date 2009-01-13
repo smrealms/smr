@@ -81,7 +81,7 @@ if ($port->refresh_defense < $time) {
 
 	$port->attack_started = $time;
 	$port->refresh_defense = $time + ($port->level * 5 * 60);
-	$db->query("DELETE FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id");
+	$db->query("DELETE FROM player_attacks_port WHERE game_id = ".SmrSession::$game_id." AND sector_id = $sector->sector_id");
 
 	//insert into the news that the port is being attacked.
 	if ($player->alliance_id != 0)
@@ -91,7 +91,7 @@ if ($port->refresh_defense < $time) {
 	$news_message = "<span style=\"color:red;\">*MAYDAY* *MAYDAY*</span> The port in sector <span style=\"color:yellow;\">$sector->sector_id</span> is being attacked by $attack_news. Immediate backup requested!";
 	$db2->query("INSERT INTO news " .
 				"(game_id, time, news_message) " .
-				"VALUES(SmrSession::$game_id, " . time() . ", " . format_string($news_message, false) . ")");
+				"VALUES(".SmrSession::$game_id.", " . time() . ", " . format_string($news_message, false) . ")");
 	//make sure this msg goes first
 	usleep(100000);
 
@@ -386,10 +386,10 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 	$curr_attacker_ship = new SMR_SHIP($curr_attacker->account_id, SmrSession::$game_id);
 	
 	//this player has successfully shot the port.
-	$db->query("SELECT * FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND account_id = $curr_attacker->account_id");
+	$db->query("SELECT * FROM player_attacks_port WHERE game_id = ".SmrSession::$game_id." AND sector_id = $sector->sector_id AND account_id = $curr_attacker->account_id");
 	//is he already recorded?  If so we don't want to lower the lvl of the port he is attacking.
 	if (!$db->next_record())
-		$db->query("REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES (SmrSession::$game_id, $curr_attacker->account_id, $sector->sector_id, $time, $port->level)");
+		$db->query("REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES (".SmrSession::$game_id.", $curr_attacker->account_id, $sector->sector_id, $time, $port->level)");
 	$atts[] = $curr_att_id;
 	// reduce his relations
 	$curr_attacker->get_relations();
