@@ -1,6 +1,7 @@
 <?
 
 require_once(LIB . 'Album/album_functions.php');
+$db = new SmrMySqlDatabase(); // required when referred from album
 
 // try to get it from session first
 $account_id = $var['account_id'];
