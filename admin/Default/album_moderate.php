@@ -63,7 +63,7 @@ if (empty($account_id)) {
 	$PHP_OUTPUT.=('<table border="0" align="center" cellpadding="5" cellspacing="0">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center" colspan="3">');
-	$PHP_OUTPUT.=('<span style="font-size:150%;">'.$nick.'</span></td><td>&nbsp;</td>');
+	$PHP_OUTPUT.=('<span style="font-size:150%;">'.get_album_nick($account_id).'</span></td><td>&nbsp;</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('<tr>');
 
