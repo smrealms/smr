@@ -24,7 +24,8 @@ if ($db->getNumRows() > 0)
 		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
 		$games['Play'][$game_id]['EndDate'] = $db->getField('format_end_date');
-		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');	
+		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
+		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
 		
 		$container = array();
 		$container['game_id'] = $game_id;

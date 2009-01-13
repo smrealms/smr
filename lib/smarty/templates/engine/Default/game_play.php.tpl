@@ -14,6 +14,7 @@
 			<th align="center">Last Active</th>
 			<th align="center">Last Movement</th>
 			<th align="center">End Date</th>
+			<th align="center">Game Type</th>
 		</tr>
 		{foreach from=$Games.Play item=Game}
 			<tr>
@@ -28,7 +29,7 @@
 				<td>{$Game.NumberPlaying}</td>
 				<td>{$Game.LastActive}</td>
 				<td>{$Game.LastMovement}</td>
-				<td>{$Game.EndDate}</td>
+				<td>{$Game.Type}</td>
 			</tr>
 		{/foreach}
 	</table><br />
