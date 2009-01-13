@@ -79,15 +79,6 @@ while ($db->nextRecord())
 
 // ********************************
 // *
-// * A c c o u n t
-// *
-// ********************************
-
-// create account object
-$account =& SmrAccount::getAccount(SmrSession::$account_id);
-
-// ********************************
-// *
 // * g e t   S e s s i o n
 // *
 // ********************************

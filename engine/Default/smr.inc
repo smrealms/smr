@@ -399,6 +399,9 @@ function do_voodoo()
 	{
 	   	$$key = &$GLOBALS[$key];
 	}
+	// create account object
+	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	$GLOBALS['account'] =& $account;
 
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::$game_id > 0)
@@ -543,8 +546,6 @@ function release_lock()
 
 function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 {
-	if($account==null) // we aren't in a normal script - eg moderate from album page
-		return;
 	$smarty->assign('fontSize',$account->fontsize);
 	$smarty->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
 	
