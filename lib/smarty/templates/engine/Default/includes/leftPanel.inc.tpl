@@ -52,7 +52,7 @@
 	<a href="smr_file_download.php">Download Sectors File</a><br />
 {/if}
 <a href="{$EditPhotoLink}">Edit Photo</a><br />
-<a href="album/">Album</a><br /><br />
+<a href="album/" target="_blank">View Album</a><br /><br />
 <a href="{$ReportABugLink}">Report A Bug</a><br />
 <a href="{$ContactFormLink}">Contact Form</a><br />
 <br />
