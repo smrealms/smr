@@ -276,7 +276,7 @@ function create_container($file, $body) {
 //}
 
 function create_link($container, $text) {
-	return '<a href="loader.php?sn=' . SmrSession::get_new_sn($container) . '">' . $text . '</a>';
+	return '<a href="' . SmrSession::get_new_href($container) . '">' . $text . '</a>';
 }
 
 function get_colored_text($value, $text, $type='Game', $return_type = 'Normal')
