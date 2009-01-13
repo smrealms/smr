@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 		require_once(get_file_loc("smr_force.inc"));
 $forces_owner	= new SMR_PLAYER($var["owner_id"], $player->game_id);

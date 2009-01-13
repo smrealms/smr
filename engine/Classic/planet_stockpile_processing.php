@@ -10,7 +10,7 @@ if ($amount <= 0)
 	create_error("You must actually enter an ammount > 0!");
 
 // get a planet from the sector where the player is in
-$planet = new SMR_PLANET($player->sector_id, $session->game_id);
+$planet = new SMR_PLANET($player->sector_id, SmrSession::$game_id);
 $action = $_REQUEST['action'];
 // transfer to ship
 if ($action == "Ship") {

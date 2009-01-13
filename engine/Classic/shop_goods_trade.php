@@ -4,7 +4,7 @@ $player->get_relations();
 print_topic("NEGOTIATE PRICE");
 require_once("shop_goods.inc");
 // creates needed objects
-$port = new SMR_PORT($player->sector_id, $session->game_id);
+$port = new SMR_PORT($player->sector_id, SmrSession::$game_id);
 
 // get values from request
 $good_id = $var["good_id"];

@@ -16,7 +16,7 @@ print("<p><small><b>From:</b> $player->player_name ($player->player_id)<br>");
 
 if (!empty($var["receiver"])) {
 
-	$receiver = new SMR_PLAYER($var["receiver"], $session->game_id);
+	$receiver = new SMR_PLAYER($var["receiver"], SmrSession::$game_id);
 	print("<b>To:</b> $receiver->player_name ($receiver->player_id)</small></p>");
 
 } else print("<b>To:</b> All Online</small></p>");

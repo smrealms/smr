@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 		require_once(get_file_loc("smr_port.inc"));
 $player->get_relations();
 // Yay for another hack...
@@ -24,7 +24,7 @@ mt_srand((double)microtime()*1000000);
 require_once("shop_goods.inc");
 
 // creates needed objects
-$port = new SMR_PORT($player->sector_id, $session->game_id);
+$port = new SMR_PORT($player->sector_id, SmrSession::$game_id);
 
 $amount = get_amount();
 $bargain_price = get_bargain_price();

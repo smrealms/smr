@@ -32,7 +32,7 @@ print("<td>$have</td>");
 print("</tr>");
 
 //ban points go here
-$db->query("SELECT * FROM account_has_points WHERE account_id = $session->account_id");
+$db->query("SELECT * FROM account_has_points WHERE account_id = SmrSession::$account_id");
 if ($db->next_record()) $points = $db->f("points");
 else $points = 0;
 print("<tr>");
@@ -95,7 +95,7 @@ print("<tr><td>Timezone:</td>");
 print("<td>");
 $time = time();
 //get current offset
-$db->query("SELECT * FROM account WHERE account_id = $session->account_id");
+$db->query("SELECT * FROM account WHERE account_id = SmrSession::$account_id");
 $db->next_record();
 $offset = $db->f("offset");
 print("<select name=\"timez\" id=\"InputFields\">");
@@ -126,10 +126,10 @@ print("<tr>");
 print("<td>SMR Credits:</td>");
 print("<td><input type=\"text\" name=\"amount\" id=\"InputFields\" style=\"width:30px;text-align:center;\">&nbsp;credits&nbsp;to&nbsp;");
 
-if ($session->game_id > 0) {
+if (SmrSession::$game_id > 0) {
 
 	print("<select name=\"account_id\" id=\"InputFields\">");
-	$db->query("SELECT * FROM player WHERE game_id = $session->game_id ORDER BY player_name");
+	$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id ORDER BY player_name");
 	while ($db->next_record())
 		print("<option value=\"" . $db->f("account_id") . "\">" . stripslashes($db->f("player_name")) . " (" . $db->f("player_id") . ")</option>");
 
@@ -190,7 +190,7 @@ print("</table>");
 print("</p>");
 
 echo '<h2>Account players</h2><br>';
-$db->query('select game.game_id as game_id, game.game_name as game_name, player.player_name as player_name, player.name_changed as name_changed from player natural join game where player.account_id=' . $session->account_id . ' and game.enabled=true and game.end_date>\'' . date("Y-m-d") . '\'');
+$db->query('select game.game_id as game_id, game.game_name as game_name, player.player_name as player_name, player.name_changed as name_changed from player natural join game where player.account_id=' . SmrSession::$account_id . ' and game.enabled=true and game.end_date>\'' . date("Y-m-d") . '\'');
 if($db->nf()) {
 	echo '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Game</th><th>Name</th></tr>';
 	while($db->next_record()) {

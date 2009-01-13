@@ -54,7 +54,7 @@ $ship->remove_all_cargo();
 $ship->update();
 
 // get new ship object
-$ship = new SMR_SHIP($session->account_id, $session->game_id);
+$ship = new SMR_SHIP(SmrSession::$account_id, SmrSession::$game_id);
 
 // adapt hardware
 $db->query("SELECT * FROM hardware_type");

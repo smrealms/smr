@@ -82,7 +82,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	if ($planetLand) $planetNAP = 1;
 	if ($mbWrite) $mbRead = 1;
 	//get confirmation
-	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
+	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
 	$db->next_record();
 	$leader_id = $db->f("leader_id");
 	print_topic(stripslashes($db->f("alliance_name")) . ' (' . $db->f("alliance_id") . ')');
@@ -90,7 +90,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	print_alliance_menue($alliance_id_1,$db->f('leader_id'));
 	print("<br /><br /");
 	print("<div align=\"center\">Are you sure you want to offer a treaty to <span class=\"yellow\">");
-	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
+	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
 	$db->next_record();
 	print(stripslashes($db->f("alliance_name")));
 	print("</span> with the following conditions:<br /><ul>");
@@ -141,17 +141,17 @@ if (isset($_REQUEST['proposedAlliance'])) {
 				$var['traderDefend'] . ", " . $var['traderNAP'] . ", " . $var['raidAssist'] . ", " . $var['planetLand'] . ", " . $var['planetNAP'] . ", " .
 				$var['forcesNAP'] . ", " . $var['aaAccess'] . ", " . $var['mbRead'] . ", " . $var['mbWrite'] . ", " . $var['modRead'] . ", 'FALSE')");
 	//send a message to the leader letting them know the offer is waiting.
-	$db->query('SELECT alliance_name FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
+	$db->query('SELECT alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
 	$db->next_record();
 	$alliance_name = stripslashes($db->f("alliance_name"));
-	$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
+	$db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
 	$db->next_record();
 	$leader_2 = $db->f("leader_id");
 	$message = 'An ambassador from <span class="yellow">' . $alliance_name . '</span> has arrived.';
 	$message = mysql_real_escape_string($message);
-	$msg = '(' . $session->game_id . ',' . $leader_2 . ',6,"' . $message . '",0,' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
+	$msg = '(' . SmrSession::$game_id . ',' . $leader_2 . ',6,"' . $message . '",0,' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
 	$db->query("INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES $msg");
-	$db->query("INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ($leader_2, $session->game_id, 6)");
+	$db->query("INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ($leader_2, SmrSession::$game_id, 6)");
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'alliance_treaties.php';

@@ -5,7 +5,7 @@ sector.galaxy_id as galaxy_id,
 galaxy.galaxy_name as galaxy_name
 FROM sector,galaxy
 WHERE sector.sector_id=' . $player->sector_id . '
-AND game_id=' . $session->game_id . '
+AND game_id=' . SmrSession::$game_id . '
 AND galaxy.galaxy_id = sector.galaxy_id
 LIMIT 1');
 
@@ -46,12 +46,12 @@ echo '<table cellspacing="0" cellpadding="0" style="width:100%;border:none"><tr>
 // *******************************************
 
 // Sector links
-$db->query('SELECT sector_id,link_up,link_right,link_down,link_left FROM sector WHERE sector_id=' . $player->sector_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+$db->query('SELECT sector_id,link_up,link_right,link_down,link_left FROM sector WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
 $db->next_record();
 $links = array($db->f('link_up'),$db->f('link_right'),$db->f('link_down'),$db->f('link_left'));
 
-$db->query('SELECT sector_id_1,sector_id_2 FROM warp WHERE (sector_id_1=' . $player->sector_id . ' OR sector_id_2=' . $player->sector_id . ') AND game_id=' . $session->game_id);
+$db->query('SELECT sector_id_1,sector_id_2 FROM warp WHERE (sector_id_1=' . $player->sector_id . ' OR sector_id_2=' . $player->sector_id . ') AND game_id=' . SmrSession::$game_id);
 
 if($db->next_record()) {
 	if($db->f('sector_id_1') == $player->sector_id) {
@@ -64,7 +64,7 @@ if($db->next_record()) {
 
 $unvisited = array();
 
-$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . implode(',', $links) . ') AND account_id=' . $session->account_id . ' AND game_id=' . $session->game_id);
+$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . implode(',', $links) . ') AND account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id);
 
 while($db->next_record()) {
 	$unvisited[$db->f('sector_id')] = TRUE;
@@ -93,7 +93,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<div class="cssh">';
 	if($links[0]) {
 		$container2['target_sector'] = $links[0];
-		echo '<a class="cssc" href="loader2.php?sn=' . $session->get_new_sn($container2) . '">SCAN</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">SCAN</a>';
 	}
 	else {
 		echo '&nbsp;';
@@ -112,7 +112,7 @@ else if($links[0]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . $session->get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
 	echo $links[0];
 	echo '</a>';
 }
@@ -139,7 +139,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 		else {
 			echo ' dgreen';
 		}
-		echo '" href="loader2.php?sn=' . $session->get_new_sn($container1) . '">';
+		echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
 		echo $links[0];
 		echo '</a>';
 	}
@@ -156,7 +156,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<td class="csr3c1"><div class="cssv">';
 	if($links[3]) {
 		$container2['target_sector'] = $links[3];
-		echo '<a class="cssc" href="loader2.php?sn=' . $session->get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
 	}
 	echo '</div></td>';
 }
@@ -178,7 +178,7 @@ if($links[3]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . $session->get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
 	echo $links[3];
 	echo '</a>';
 }
@@ -190,7 +190,7 @@ echo '</div></td><td>';
 $container=array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'current_sector.php';
-echo '<div class="css"><a class="css dgreen" href="loader2.php?sn=' . $session->get_new_sn($container) . '">';
+echo '<div class="css"><a class="css dgreen" href="loader2.php?sn=' . SmrSession::$get_new_sn($container) . '">';
 echo $player->sector_id;
 echo '</a></div></td><td ';
 if(empty($ship->hardware[HARDWARE_SCANNER])) {
@@ -209,7 +209,7 @@ if($links[1]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . $session->get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
 	echo $links[1];
 	echo '</a>';
 }
@@ -222,7 +222,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<td class="csr3c5"><div class="cssv">';
 	if($links[1]) {
 		$container2['target_sector'] = $links[1];
-		echo '<a class="cssc" href="loader2.php?sn=' . $session->get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">S<br>C<br>A<br>N</a>';
 	}
 	echo '</div></td>';
 }
@@ -251,7 +251,7 @@ if($links[2]) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . $session->get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
 	echo $links[2];
 	echo '</a>';
 }
@@ -269,7 +269,7 @@ if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 	echo '<tr><td class="csr5c1"><div class="cssh">';
 	if($links[2]) {
 		$container2['target_sector'] = $links[2];
-		echo '<a class="cssc" href="loader2.php?sn=' . $session->get_new_sn($container2) . '">SCAN</a>';
+		echo '<a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">SCAN</a>';
 	}
 	echo '</div></td></tr>';
 }
@@ -294,13 +294,13 @@ if(isset($links[4])) {
 	else {
 		echo ' dgreen';
 	}
-	echo '" href="loader2.php?sn=' . $session->get_new_sn($container1) . '">';
+	echo '" href="loader2.php?sn=' . SmrSession::$get_new_sn($container1) . '">';
 	echo $links[4];
 	echo '</a></div>';
 	if(!empty($ship->hardware[HARDWARE_SCANNER])) {
 		$container2['target_sector'] = $links[4];
 		echo '</td><td>';
-		echo '<div class="cssv"><a class="cssc" href="loader2.php?sn=' . $session->get_new_sn($container2) . '">S<br>C<br>A<br>N</a></div>';
+		echo '<div class="cssv"><a class="cssc" href="loader2.php?sn=' . SmrSession::$get_new_sn($container2) . '">S<br>C<br>A<br>N</a></div>';
 	}
 	echo '</td></tr></table>';
 
@@ -491,7 +491,7 @@ echo '</td></tr></table>';
 // *
 // *******************************************
 
-$db->query('SELECT planet_name,inhabitable_time FROM planet WHERE sector_id=' . $player->sector_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+$db->query('SELECT planet_name,inhabitable_time FROM planet WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
 if ($db->next_record()) {
 
@@ -536,7 +536,7 @@ while($db->next_record()) {
 	$goods[$db->f('good_id')] = $db->f('good_name');
 }
 
-$db->query('SELECT `race_id`,`attack_started`,`level`,`refresh_defense`,`credits`,`upgrade` FROM `port` WHERE `sector_id`=' . $player->sector_id . ' AND `game_id`=' . $session->game_id . ' LIMIT 1');
+$db->query('SELECT `race_id`,`attack_started`,`level`,`refresh_defense`,`credits`,`upgrade` FROM `port` WHERE `sector_id`=' . $player->sector_id . ' AND `game_id`=' . SmrSession::$game_id . ' LIMIT 1');
 
 if ($db->next_record()) {
 	$player->get_relations();
@@ -564,7 +564,7 @@ if ($db->next_record()) {
 	echo ')<br />';
 
 	// Goods
-	$db->query('SELECT good_id,transaction FROM port_has_goods WHERE sector_id=' . $player->sector_id . ' AND game_id=' . $session->game_id);
+	$db->query('SELECT good_id,transaction FROM port_has_goods WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id);
 	$goods_bought = array();
 	$goods_sold = array();
 	while($db->next_record()) {
@@ -644,7 +644,7 @@ if ($db->next_record()) {
 // *
 // *******************************************
 
-$db->query('SELECT location_type_id FROM location WHERE sector_id=' . $player->sector_id . ' AND game_id=' . $session->game_id);
+$db->query('SELECT location_type_id FROM location WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id);
 
 while($db->next_record()) {
 	$locations[] = $db->f('location_type_id');
@@ -727,9 +727,9 @@ else {
 
 $query .= $query2 . '
 player.account_id=sector_has_forces.owner_id
-AND player.game_id=' . $session->game_id . '
+AND player.game_id=' . SmrSession::$game_id . '
 AND sector_has_forces.sector_id=' . $player->sector_id . '
-AND sector_has_forces.game_id=' . $session->game_id . '
+AND sector_has_forces.game_id=' . SmrSession::$game_id . '
 ORDER BY sector_has_forces.expire_time ASC';
 
 $db->query($query);
@@ -770,8 +770,8 @@ if ($galaxy_id < 9) {
 }
 //HIDEN_PLAYERS is defined in config.inc
 $query .= $query2 . 'player.sector_id=' . $player->sector_id . '
-	AND player.account_id!=' . $session->account_id . ' 
-	AND player.game_id=' . $session->game_id . ' 
+	AND player.account_id!=' . SmrSession::$account_id . ' 
+	AND player.game_id=' . SmrSession::$game_id . ' 
 	AND player.land_on_planet="FALSE" 
 	AND player.last_active>' .  (time() - 259200) . '
 	AND player.account_id NOT IN (' . implode(',', $HIDDEN_PLAYERS) . ')
@@ -821,7 +821,7 @@ if(isset($players)) {
 	}
 
 	// Remove any cloaked ships
-	$db->query('SELECT * FROM ship_is_cloaked WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . $session->game_id . ' LIMIT ' . count($players));
+	$db->query('SELECT * FROM ship_is_cloaked WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($players));
 
 	while($db->next_record() && !in_array($player->account_id, $HIDDEN_PLAYERS)) {
 		if($players[$db->f('account_id')][7] >= $player->level_id) {
@@ -840,7 +840,7 @@ if(isset($players)) {
 
 // Get any illusory ships
 if(isset($players)) {
-	$db->query('SELECT * FROM ship_has_illusion WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . $session->game_id . ' LIMIT ' . count($players));
+	$db->query('SELECT * FROM ship_has_illusion WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($players));
 
 	while($db->next_record()) {
 		$players[$db->f('account_id')][12] = array(
@@ -855,7 +855,7 @@ if(isset($players)) {
 
 // Named ships and ship images
 if(isset($players)) {
-	$db->query('SELECT * FROM ship_has_name WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . $session->game_id . ' LIMIT ' . count($players));
+	$db->query('SELECT * FROM ship_has_name WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($players));
 
 	while($db->next_record()) {
 		$players[$db->f('account_id')][13] = $db->f('ship_name');
@@ -873,7 +873,7 @@ if(isset($players)) {
 
 // Get everyone's ship hardware
 if(isset($players)) {
-	$db->query('SELECT * FROM ship_has_hardware WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND (hardware_type_id=1 OR hardware_type_id=2 OR hardware_type_id=4) AND game_id=' . $session->game_id);
+	$db->query('SELECT * FROM ship_has_hardware WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND (hardware_type_id=1 OR hardware_type_id=2 OR hardware_type_id=4) AND game_id=' . SmrSession::$game_id);
 
 	while($db->next_record()) {
 		switch($db->f('hardware_type_id')) {
@@ -892,7 +892,7 @@ if(isset($players)) {
 
 // Grab everyone's ship weapons
 if(isset($players)) {
-	$db->query('SELECT * FROM ship_has_weapon WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . $session->game_id);
+	$db->query('SELECT * FROM ship_has_weapon WHERE account_id IN (' . implode(',',array_keys($players)) . ') AND game_id=' . SmrSession::$game_id);
 
 	while($db->next_record()) {
 		$weapons[$db->f('weapon_type_id')] = TRUE;
@@ -912,7 +912,7 @@ if(isset($weapons)) {
 // Grab any alliance names we may need
 if(isset($alliances)) {
 
-	$db->query('SELECT alliance_id,alliance_name FROM alliance WHERE alliance_id IN (' . implode(',',array_keys($alliances)) . ') AND game_id=' . $session->game_id . ' LIMIT ' . count($alliances));
+	$db->query('SELECT alliance_id,alliance_name FROM alliance WHERE alliance_id IN (' . implode(',',array_keys($alliances)) . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($alliances));
 
 	while($db->next_record()) {
 		$alliances[$db->f('alliance_id')] = stripslashes($db->f('alliance_name'));

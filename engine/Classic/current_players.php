@@ -4,7 +4,7 @@ print_topic("CURRENT PLAYERS");
 $db->query("DELETE FROM cpl_tag WHERE expires > 0 AND expires < " . time());
 $db->query("SELECT * FROM active_session
 			WHERE last_accessed >= " . (time() - 600) . " AND
-				  game_id = $session->game_id");
+				  game_id = SmrSession::$game_id");
 $count_real_last_active = $db->nf();
 if (empty($var["sort"])) $sort = "experience DESC, player_name";
 else $sort = $var["sort"];
@@ -12,7 +12,7 @@ if (empty($var["seq"])) $seq = "DESC";
 else $seq = $var["seq"];
 $db->query("SELECT * FROM player " .
 		   "WHERE last_active >= " . (time() - 600) . " AND " .
-				 "game_id = $session->game_id " .
+				 "game_id = SmrSession::$game_id " .
 		   "ORDER BY $sort $seq");
 //print("$sort, $seq<br>");
 $count_last_active = $db->nf();
@@ -21,7 +21,7 @@ while ($db->next_record()) $list .= "," . $db->f("account_id");
 $list .= ")";
 $db->query("SELECT * FROM player " .
 		   "WHERE last_active >= " . (time() - 600) . " AND " .
-				 "game_id = $session->game_id " .
+				 "game_id = SmrSession::$game_id " .
 		   "ORDER BY $sort $seq");
 if ($sort == "experience DESC, player_name" || $sort == "experience")
 	$db->query("SELECT * FROM player_cache WHERE game_id = $player->game_id AND account_id IN $list ORDER BY experience $seq");
@@ -33,7 +33,7 @@ $exp = array();
 while ($db->next_record()) {
 
 
-	$curr_player = new SMR_PLAYER($db->f("account_id"), $session->game_id);
+	$curr_player = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
 	if ($curr_player->alliance_id == $player->alliance_id && $player->alliance_id != 0)
 		$exp[$db->f("account_id")] = $curr_player->experience;
 	else
@@ -109,7 +109,7 @@ if ($count_last_active > 0) {
 		$curr_account->get_by_id($acc_id);
 		//reset style
 		$style = "";
-		$curr_player = new SMR_PLAYER($acc_id, $session->game_id);
+		$curr_player = new SMR_PLAYER($acc_id, SmrSession::$game_id);
 		$curr_player->get_display_xp_lvl();
 		if ($curr_account->veteran == "FALSE" && $curr_account->get_rank() < FLEDGLING)
 			$style = "font-style:italic;";

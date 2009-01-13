@@ -14,7 +14,7 @@ print(" <span style=\"font-size:125%;color:greenyellow;\">" . $account->get_rank
 
 $db->query("SELECT DATE_FORMAT(end_date, '%c/%e/%Y') as format_end_date, end_date, game.game_id as game_id, game_name, game_speed FROM game, player " .
 					"WHERE game.game_id = player.game_id AND " .
-						  "account_id = $session->account_id AND " .
+						  "account_id = SmrSession::$account_id AND " .
 						  "end_date >= '" . date("Y-m-d") . "'");
 if ($db->nf() > 0) {
 
@@ -36,8 +36,8 @@ if ($db->nf() > 0) {
 		$game_speed = $db->f("game_speed");
 
 		// creates a new player object
-		$curr_player = new SMR_PLAYER($session->account_id, $game_id);
-		$curr_ship = new SMR_SHIP($session->account_id, $game_id);
+		$curr_player = new SMR_PLAYER(SmrSession::$account_id, $game_id);
+		$curr_ship = new SMR_SHIP(SmrSession::$account_id, $game_id);
 
 		// update turns for this game
 		$curr_player->update_turns($curr_ship->speed);

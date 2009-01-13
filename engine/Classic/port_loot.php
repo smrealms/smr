@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 		require_once(get_file_loc("smr_port.inc"));
 $player->get_relations();
 print_topic("LOOT");
@@ -17,7 +17,7 @@ print("<th align=\"center\">Action</th>");
 print("</tr>");
 
 // and a port object
-$port = new SMR_PORT($player->sector_id, $session->game_id);
+$port = new SMR_PORT($player->sector_id, SmrSession::$game_id);
 
 $relations = $player->relations[$port->race_id] + $player->relations_global[$port->race_id];
 if (empty($relations)) $relations = 0;
@@ -31,7 +31,7 @@ $db->query("SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_h
                                                          "port_has_goods.good_id = good.good_id AND " .
                                                          "port.sector_id = $sector->sector_id AND " .
                                                          "port_has_goods.transaction = " . format_string($want, true) . " AND " .
-                                                         "port.game_id = $session->game_id " .
+                                                         "port.game_id = SmrSession::$game_id " .
                                                    "ORDER BY good.good_id");
 
 

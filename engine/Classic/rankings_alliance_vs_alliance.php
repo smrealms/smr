@@ -35,8 +35,8 @@ foreach ($alliance_vs as $key => $id) {
 	$curr_alliance_id = $id;
 	if ($id > 0) {
 		
-	    $curr_alliance = new SMR_ALLIANCE($id, $session->game_id);
-		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = $session->game_id");
+	    $curr_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
+		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = SmrSession::$game_id");
 		if ($db2->nf() == 0) $out = TRUE;
 		else $out = FALSE;
 		
@@ -53,7 +53,7 @@ foreach ($alliance_vs as $key => $id) {
 		$db->query("SELECT * FROM alliance WHERE game_id = $player->game_id AND alliance_deaths > 0 OR alliance_kills > 0 ORDER BY alliance_name");
 		while ($db->next_record()) {
 			
-			$curr_alliance = new SMR_ALLIANCE($db->f("alliance_id"), $session->game_id);
+			$curr_alliance = new SMR_ALLIANCE($db->f("alliance_id"), SmrSession::$game_id);
 			print("<option value=" . $db->f("alliance_id"));
 			if ($id == $db->f("alliance_id"))
 				print(" selected");
@@ -77,8 +77,8 @@ foreach ($alliance_vs as $key => $id) {
 	$curr_id = $id;
 	if ($id > 0) {
 		
-		$curr_alliance = new SMR_ALLIANCE($id, $session->game_id);
-		$db2->query("SELECT * FROM player WHERE alliance_id = $curr_id AND game_id = $session->game_id");
+		$curr_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
+		$db2->query("SELECT * FROM player WHERE alliance_id = $curr_id AND game_id = SmrSession::$game_id");
 		if ($db2->nf() == 0) $out = TRUE;
 		else $out = FALSE;
 		
@@ -110,7 +110,7 @@ foreach ($alliance_vs as $key => $id) {
 	
 	foreach ($alliance_vs as $key => $id) {
 		
-		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = $session->game_id");
+		$db2->query("SELECT * FROM player WHERE alliance_id = $id AND game_id = SmrSession::$game_id");
 		if ($db2->nf() == 0) $out2 = TRUE;
 		else $out2 = FALSE;
 		$db2->query("SELECT * FROM alliance_vs_alliance WHERE alliance_id_2 = $curr_id AND " .
@@ -164,7 +164,7 @@ print("</div>");
 if (isset($var["alliance_id"])) {
 	
 	print("<table align=\"center\"><tr><td width=\"45%\" align=\"center\" valign=\"top\">");
-	$main_alliance = new SMR_ALLIANCE($var["alliance_id"], $session->game_id);
+	$main_alliance = new SMR_ALLIANCE($var["alliance_id"], SmrSession::$game_id);
 	$db->query("SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = $var[alliance_id] " .
 				"AND game_id = $player->game_id ORDER BY kills DESC");
 	if ($db->nf() > 0) {
@@ -178,7 +178,7 @@ if (isset($var["alliance_id"])) {
 			$id = $db->f("alliance_id_2");
 			if ($id > 0) {
 				
-				$killer_alliance = new SMR_ALLIANCE($id, $session->game_id);
+				$killer_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
 				$alliance_name = $killer_alliance->alliance_name;
 			
 			} elseif ($id == 0) $alliance_name = "<font color=\"blue\">No Alliance</font>";
@@ -206,7 +206,7 @@ if (isset($var["alliance_id"])) {
 			$id = $db->f("alliance_id_1");
 			if ($id > 0) {
 				
-				$killer_alliance = new SMR_ALLIANCE($id, $session->game_id);
+				$killer_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
 				$alliance_name = $killer_alliance->alliance_name;
 			
 			} elseif ($id == 0) $alliance_name = "<font color=\"blue\">No Alliance</font>";

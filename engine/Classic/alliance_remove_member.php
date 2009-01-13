@@ -1,6 +1,6 @@
 <?
 
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $player->alliance_id . ' LIMIT 1');
+$db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $player->alliance_id . ' LIMIT 1');
 $db->next_record();
 print_topic($player->alliance_name . ' (' . $player->alliance_id . ')');
 include(get_file_loc('menue.inc'));
@@ -13,9 +13,9 @@ player_id,
 player_name,
 last_active
 FROM player
-WHERE game_id=' . $session->game_id . '
+WHERE game_id=' . SmrSession::$game_id . '
 AND alliance_id=' . $player->alliance_id .'
-AND account_id<>' . $session->account_id . '
+AND account_id<>' . SmrSession::$account_id . '
 ORDER BY last_active DESC
 ');
 

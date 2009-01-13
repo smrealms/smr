@@ -4,9 +4,9 @@
 mt_srand((double)microtime()*1000000);
 
 // creates a new player object for attacker and defender
-$attacker		= new SMR_PLAYER($session->account_id, $session->game_id);
-$attacker_ship	= new SMR_SHIP($session->account_id, $session->game_id);
-$forces_owner	= new SMR_PLAYER($var["owner_id"], $session->game_id);
+$attacker		= new SMR_PLAYER(SmrSession::$account_id, SmrSession::$game_id);
+$attacker_ship	= new SMR_SHIP(SmrSession::$account_id, SmrSession::$game_id);
+$forces_owner	= new SMR_PLAYER($var["owner_id"], SmrSession::$game_id);
 $forces			= new SMR_FORCE($var["owner_id"], $attacker->sector_id, $attacker->game_id);
 
 // first check if both ship and forces are in same sector
@@ -60,7 +60,7 @@ print("<tr>");
 
 if ($attacker->alliance_id > 0) {
 
-	$db->query("SELECT * FROM player WHERE game_id = $session->game_id AND " .
+	$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id AND " .
 													  "alliance_id = $attacker->alliance_id AND " .
 													  "sector_id = $attacker->sector_id AND " .
 													  "land_on_planet = 'FALSE' AND " .
@@ -68,7 +68,7 @@ if ($attacker->alliance_id > 0) {
 
 	while ($db->next_record()) {
 
-		$curr_player = new SMR_PLAYER($db->f("account_id"), $session->game_id);
+		$curr_player = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
 
 		if (!$curr_player->is_fed_protected()) {
 
@@ -97,12 +97,12 @@ if ($attacker_list == "()") {
 
 } else {
 
-	$db->query("SELECT * FROM player WHERE game_id = $session->game_id AND " .
+	$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id AND " .
 													  "account_id IN $attacker_list");
 	while ($db->next_record()) {
 
-		 $curr_player = new SMR_PLAYER($db->f("account_id"), $session->game_id);
-		 $curr_ship = new SMR_SHIP($db->f("account_id"), $session->game_id);
+		 $curr_player = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
+		 $curr_ship = new SMR_SHIP($db->f("account_id"), SmrSession::$game_id);
 
 		 print("$player->level_name<br>");
 		 print("<span style=\"color:yellow;\">$curr_player->player_name ($curr_player->player_id)</span><br>");

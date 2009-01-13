@@ -1,7 +1,7 @@
 <?
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->alliance_id;
-$db->query('SELECT leader_id,img_src,alliance_password,alliance_description,`mod`,alliance_name,alliance_id FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
+$db->query('SELECT leader_id,img_src,alliance_password,alliance_description,`mod`,alliance_name,alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->next_record();
 $pw = $db->f('alliance_password');
 $desc = strip_tags($db->f('alliance_description'));

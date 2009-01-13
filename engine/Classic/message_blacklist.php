@@ -29,7 +29,7 @@
   
   $db = new SmrMySqlDatabase();
   
-  $db->query('SELECT player.player_name as player_name, message_blacklist.entry_id as entry_id FROM player, message_blacklist WHERE player.account_id = message_blacklist.blacklisted_id AND message_blacklist.account_id=' . $session->account_id . ' AND message_blacklist.game_id = player.game_id AND player.game_id = ' . $session->game_id);
+  $db->query('SELECT player.player_name as player_name, message_blacklist.entry_id as entry_id FROM player, message_blacklist WHERE player.account_id = message_blacklist.blacklisted_id AND message_blacklist.account_id=' . SmrSession::$account_id . ' AND message_blacklist.game_id = player.game_id AND player.game_id = ' . SmrSession::$game_id);
   
   if($db->nf()) {
   	

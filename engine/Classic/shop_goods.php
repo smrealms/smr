@@ -1,13 +1,13 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 		require_once(get_file_loc("smr_port.inc"));
 $player->get_relations();
 // include helper file
 require_once("shop_goods.inc");
 
 // create object from port we can work with
-$port = new SMR_PORT($player->sector_id, $session->game_id);
+$port = new SMR_PORT($player->sector_id, SmrSession::$game_id);
 
 // total relations with that race (personal + global)
 $relations = $player->relations[$port->race_id] + $player->relations_global_rev[$port->race_id];
@@ -125,7 +125,7 @@ $db->query("SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_h
 														  "port.sector_id = port_has_goods.sector_id AND " .
 														  "port_has_goods.good_id = good.good_id AND " .
 														  "port.sector_id = $sector->sector_id AND " .
-														  "port.game_id = $session->game_id AND " .
+														  "port.game_id = SmrSession::$game_id AND " .
 														  "transaction = 'BUY' " .
 													"ORDER BY good.good_id");
 if ($db->nf()) {
@@ -193,7 +193,7 @@ $db->query("SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_h
 														  "port.sector_id = port_has_goods.sector_id AND " .
 														  "port_has_goods.good_id = good.good_id AND " .
 														  "port.sector_id = $sector->sector_id AND " .
-														  "port.game_id = $session->game_id AND " .
+														  "port.game_id = SmrSession::$game_id AND " .
 														  "transaction = 'SELL' " .
 													"ORDER BY good.good_id");
 if ($db->nf()) {

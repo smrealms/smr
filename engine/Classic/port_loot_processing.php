@@ -1,6 +1,6 @@
 <?
 		require_once(get_file_loc("smr_port.inc"));
-$port = new SMR_PORT($player->sector_id, $session->game_id);
+$port = new SMR_PORT($player->sector_id, SmrSession::$game_id);
 
 // get good name, id, ...
 $good_id = $var["good_id"];

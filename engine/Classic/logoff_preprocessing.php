@@ -1,7 +1,7 @@
 <?
 
-$session->game_id = 0;
-$session->update();
+SmrSession::$game_id = 0;
+SmrSession::$update();
 
 // try to get a real ip first
 if (!empty($_SERVER["HTTP_X_FORWARDED_FOR"]))

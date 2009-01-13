@@ -2,14 +2,14 @@
 require_once(get_file_loc('smr_sector.inc'));
 
 // register game_id
-$session->game_id = $var["game_id"];
+SmrSession::$game_id = $var["game_id"];
 
 // check if hof entry is there
-$db->query("SELECT * FROM account_has_stats WHERE account_id = $session->account_id");
+$db->query("SELECT * FROM account_has_stats WHERE account_id = SmrSession::$account_id");
 if (!$db->nf())
 	$db->query("INSERT INTO account_has_stats (account_id, HoF_name, games_joined) VALUES ($account->account_id, " . format_string($account->login, true) . ", 1)");
 
-$player = new SMR_PLAYER($session->account_id, $var["game_id"]);
+$player = new SMR_PLAYER(SmrSession::$account_id, $var["game_id"]);
 include(get_file_loc('out_check.php'));
 $player->last_sector_id = 0;
 $player->last_active = time();
@@ -19,7 +19,7 @@ $player->update();
 $player->delete_plotted_course();
 
 // log
-$account->log(2, "Player entered game $session->game_id", $player->sector_id);
+$account->log(2, "Player entered game SmrSession::$game_id", $player->sector_id);
 
 $container = array();
 $container["url"] = "skeleton.php";
@@ -34,9 +34,9 @@ else
 	require_once(get_file_loc("smr_port.inc"));
 	require_once(get_file_loc('smr_sector.inc'));
 
-	$player	= new SMR_PLAYER($session->account_id, $session->game_id);
-	$ship	= new SMR_SHIP($session->account_id, $session->game_id);
-	$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+	$player	= new SMR_PLAYER(SmrSession::$account_id, SmrSession::$game_id);
+	$ship	= new SMR_SHIP(SmrSession::$account_id, SmrSession::$game_id);
+	$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 	// update turns on that player
 	$player->update_turns($ship->speed);

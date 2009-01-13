@@ -139,7 +139,7 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 		}
 
 
-		$this->game_type = $session->game_type;
+		$this->game_type = SmrSession::$game_type;
 		//we can't use session for game speed because the play game screen needs the speed and has no game id
 		$this->query("SELECT * FROM game WHERE game_id = $game_id LIMIT 1");
 		$this->next_record();
@@ -318,7 +318,7 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 		$attack_rating = round((($total_damage + $maxDrones * 2) / 40));
 
         // If the account matches the session then we have the correct ship in globals
-		if($this->account_id != $session->account_id) {
+		if($this->account_id != SmrSession::$account_id) {
           $ship = new SMR_SHIP($this->account_id, $this->game_id);
         }
         else {

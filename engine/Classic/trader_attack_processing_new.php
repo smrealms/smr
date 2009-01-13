@@ -277,7 +277,7 @@ function build_hqs(&$races) {
 		$temp[] = $race_id + 101; 
 	}
 
-	$db->query('SELECT location_type_id,sector_id FROM location WHERE location_type_id IN (' . implode($temp,',') . ') AND game_id=' . $session->game_id . ' LIMIT ' . count($temp));
+	$db->query('SELECT location_type_id,sector_id FROM location WHERE location_type_id IN (' . implode($temp,',') . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($temp));
 	while($db->next_record()) {
 		$hqs[$db->f('location_type_id') - 101] = $db->f('sector_id');
 	}
@@ -287,7 +287,7 @@ function build_hqs(&$races) {
 function build_relations(&$race_ids) {
 	global $db,$session;
 	$race_in = implode(',',$race_ids);
-	$db->query('SELECT race_id_1,race_id_2,relation FROM race_has_relation WHERE race_id_1 IN (' . $race_in . ') AND race_id_2 IN (' . $race_in . ') AND game_id=' . $session->game_id . ' LIMIT ' . (count($race_ids)*2));
+	$db->query('SELECT race_id_1,race_id_2,relation FROM race_has_relation WHERE race_id_1 IN (' . $race_in . ') AND race_id_2 IN (' . $race_in . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . (count($race_ids)*2));
 
 	while($db->next_record()) {
 		$relations[$db->f('race_id_1')][$db->f('race_id_2')] = $db->f('relation');	
@@ -301,7 +301,7 @@ function build_bounties(&$account_ids) {
 
 	$bounties = array();
 		
-	$db->query('SELECT bounty_id,account_id,amount,type FROM bounty WHERE account_id IN (' . implode(',',$account_ids) . ') AND claimer_id=0 AND game_id=' . $session->game_id);
+	$db->query('SELECT bounty_id,account_id,amount,type FROM bounty WHERE account_id IN (' . implode(',',$account_ids) . ') AND claimer_id=0 AND game_id=' . SmrSession::$game_id);
 
 	while($db->next_record()) {
 		if($db->f('type') == 'HQ') {
@@ -329,7 +329,7 @@ function build_ship_names($account_ids){
 	$ship_names = array();
 	
 	// Named ships and ship images
-	$db->query('SELECT account_id,ship_name FROM ship_has_name WHERE account_id IN (' . implode(',',$account_ids) . ') AND game_id=' . $session->game_id . ' LIMIT ' . count($account_ids));
+	$db->query('SELECT account_id,ship_name FROM ship_has_name WHERE account_id IN (' . implode(',',$account_ids) . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . count($account_ids));
 
 	while($db->next_record()) {
 			$ship_names[$db->f('account_id')] = $db->f('ship_name');
@@ -380,14 +380,14 @@ function players_build_hardware(&$players) {
 	
 	$players_in = implode(',',array_keys($players));
 	
-	$db->query('SELECT account_id,weapon_type_id FROM ship_has_weapon WHERE account_id IN (' . $players_in . ') AND game_id=' . $session->game_id . ' ORDER BY order_id ASC');
+	$db->query('SELECT account_id,weapon_type_id FROM ship_has_weapon WHERE account_id IN (' . $players_in . ') AND game_id=' . SmrSession::$game_id . ' ORDER BY order_id ASC');
 
 	while($db->next_record()) {
 		$weapon_ids[] = $db->f('weapon_type_id');
 		$players[$db->f('account_id')][WEAPONS][] = (int)$db->f('weapon_type_id');
 	}
 	
-	$db->query('SELECT hardware_type_id,account_id,amount FROM ship_has_hardware WHERE account_id IN (' . $players_in . ') AND (hardware_type_id=' . HARDWARE_SHIELDS . ' OR hardware_type_id=' . HARDWARE_ARMOR . ' OR hardware_type_id=' . HARDWARE_COMBAT . ' OR hardware_type_id=' . HARDWARE_DCS . ') AND game_id=' . $session->game_id);
+	$db->query('SELECT hardware_type_id,account_id,amount FROM ship_has_hardware WHERE account_id IN (' . $players_in . ') AND (hardware_type_id=' . HARDWARE_SHIELDS . ' OR hardware_type_id=' . HARDWARE_ARMOR . ' OR hardware_type_id=' . HARDWARE_COMBAT . ' OR hardware_type_id=' . HARDWARE_DCS . ') AND game_id=' . SmrSession::$game_id);
 	
 	while($db->next_record()) {
 		switch($db->f('hardware_type_id')) {
@@ -431,13 +431,13 @@ function build_fleets(&$players,&$weapons,$attackers,$defenders) {
 	location
 	WHERE location_type_id=201
 	AND sector_id=' . $player->sector_id . '
-	AND game_id=' . $session->game_id . '
+	AND game_id=' . SmrSession::$game_id . '
 	LIMIT 1');
 
 	if($db->next_record()) {
 		$have_beacon = TRUE;
 
-		$db->query('SELECT account_id FROM ship_has_cargo WHERE good_id IN (5,9,12) AND game_id=' . $session->game_id . ' AND account_id IN (' . implode(',',$player_ids) . ')');
+		$db->query('SELECT account_id FROM ship_has_cargo WHERE good_id IN (5,9,12) AND game_id=' . SmrSession::$game_id . ' AND account_id IN (' . implode(',',$player_ids) . ')');
 		
 		while($db->next_record()) {
 			$illegal_goods[$db->f('account_id')] = TRUE;
@@ -506,7 +506,7 @@ function build_fleets(&$players,&$weapons,$attackers,$defenders) {
 	}
 
 	// Add the inital combatants to their respective fleets
-	$fleets[0][] = (int)$session->account_id;
+	$fleets[0][] = (int)SmrSession::$account_id;
 	$fleets[1][] = (int)$var['target'];
 
 	// Shuffle for random firing order
@@ -520,7 +520,7 @@ function players_init(&$attackers, &$defenders) {
 	global $db, $session,$var, $player, $account;
 	
 	// Get the player we're attacking
-	$db->query('SELECT land_on_planet,newbie_turns,dead,sector_id,account_id,player_id,player_name,race_id,alignment,ship_type_id,experience,alliance_id,credits,turns FROM player WHERE account_id=' . $var['target'] . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+	$db->query('SELECT land_on_planet,newbie_turns,dead,sector_id,account_id,player_id,player_name,race_id,alignment,ship_type_id,experience,alliance_id,credits,turns FROM player WHERE account_id=' . $var['target'] . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
 	$db->next_record();
 
@@ -579,7 +579,7 @@ function players_init(&$attackers, &$defenders) {
 	);
 
 	// Insert our own player into the players array
-	$players[$session->account_id] = array(
+	$players[SmrSession::$account_id] = array(
 		(int)$player->player_id,
 		get_colored_text($player->alignment,$player->player_name . ' (' . $player->player_id . ')'),
 		(int)$player->alliance_id,
@@ -597,7 +597,7 @@ function players_init(&$attackers, &$defenders) {
 	galaxy_id
 	FROM sector
 	WHERE sector_id=' . $player->sector_id . '
-	AND game_id=' . $session->game_id . '
+	AND game_id=' . SmrSession::$game_id . '
 	LIMIT 1');
 
 	$db->next_record();
@@ -680,9 +680,9 @@ function players_init(&$attackers, &$defenders) {
 		}
 
 		$query .= $query2 . 'player.sector_id=' . $player->sector_id . '
-			AND player.account_id!=' . $session->account_id . '
+			AND player.account_id!=' . SmrSession::$account_id . '
 			AND player.account_id!=' . $var['target'] . '
-			AND player.game_id=' . $session->game_id . ' 
+			AND player.game_id=' . SmrSession::$game_id . ' 
 			AND player.land_on_planet="FALSE" 
 			AND player.newbie_turns=0
 			AND player.last_active>' .  (time() - 259200);
@@ -735,7 +735,7 @@ function players_init(&$attackers, &$defenders) {
 	}
 	
 	// Everyone involved gets decloaked if they fire or not
-	$db->query('DELETE FROM ship_is_cloaked WHERE account_id IN (' . implode(',',$player_ids) . ') AND game_id=' . $session->game_id);
+	$db->query('DELETE FROM ship_is_cloaked WHERE account_id IN (' . implode(',',$player_ids) . ') AND game_id=' . SmrSession::$game_id);
 		
 	return $players;
 }
@@ -905,7 +905,7 @@ function process_news(&$players,&$killed_id,&$ship_names) {
 	*/
  	$msg .= ' in Sector&nbsp#' . $player->sector_id;
 
-	return '(' . $session->game_id . ',' . TIME . ',"' . mysql_real_escape_string($msg) . '","regular")';
+	return '(' . SmrSession::$game_id . ',' . TIME . ',"' . mysql_real_escape_string($msg) . '","regular")';
 }
 
 function process_messages(&$players,$killed_id) {
@@ -915,9 +915,9 @@ function process_messages(&$players,$killed_id) {
 	$killer_id = $players[$killed_id][KILLER];
 	
 	$temp = mysql_real_escape_string('You were <span class="red">DESTROYED</span> by ' . $players[$killer_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->sector_id . '</span>');
-	$msg .= '(' . $session->game_id . ',' . $killed_id . ',2,"' . $temp . '",' . $killer_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
+	$msg .= '(' . SmrSession::$game_id . ',' . $killed_id . ',2,"' . $temp . '",' . $killer_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
 	$temp = mysql_real_escape_string('You <span class="red">DESTROYED</span> ' . $players[$killed_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->sector_id . '</span>');
-	$msg .= ',(' . $session->game_id . ',' . $killer_id . ',2,"' . $temp . '",' . $killed_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
+	$msg .= ',(' . SmrSession::$game_id . ',' . $killer_id . ',2,"' . $temp . '",' . $killed_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
 
 	return $msg;	
 }
@@ -1057,7 +1057,7 @@ function update_bounties(&$bounties) {
 				}
 				$bounties_in .= '(';
 				$bounties_in .=  $account_id . ',';
-				$bounties_in .= $session->game_id . ',';
+				$bounties_in .= SmrSession::$game_id . ',';
 				if($type == 0) {
 					$bounties_in .= '"HQ",';
 				}
@@ -1085,21 +1085,21 @@ function update_podded(&$killed_ids) {
 	if($num_podded) {
 		$podded_in = implode(',',$killed_ids);
 
-		$db->query('DELETE FROM ship_has_weapon WHERE account_id IN (' . $podded_in . ') AND game_id=' . $session->game_id);
+		$db->query('DELETE FROM ship_has_weapon WHERE account_id IN (' . $podded_in . ') AND game_id=' . SmrSession::$game_id);
 
-		$db->query('DELETE FROM ship_has_cargo WHERE account_id IN (' . $podded_in . ') AND game_id=' . $session->game_id);
+		$db->query('DELETE FROM ship_has_cargo WHERE account_id IN (' . $podded_in . ') AND game_id=' . SmrSession::$game_id);
 
-		$db->query('DELETE FROM ship_has_illusion WHERE account_id IN (' . $podded_in . ') AND game_id=' . $session->game_id);
+		$db->query('DELETE FROM ship_has_illusion WHERE account_id IN (' . $podded_in . ') AND game_id=' . SmrSession::$game_id);
 
-		$db->query('DELETE FROM ship_has_cargo WHERE account_id IN (' . $podded_in . ') AND game_id=' . $session->game_id);
+		$db->query('DELETE FROM ship_has_cargo WHERE account_id IN (' . $podded_in . ') AND game_id=' . SmrSession::$game_id);
 
-		$db->query('DELETE FROM player_plotted_course WHERE account_id IN (' . $podded_in . ') AND game_id=' . $session->game_id . ' LIMIT ' . $num_podded);
+		$db->query('DELETE FROM player_plotted_course WHERE account_id IN (' . $podded_in . ') AND game_id=' . SmrSession::$game_id . ' LIMIT ' . $num_podded);
 
-		$db->query('DELETE FROM ship_has_hardware WHERE account_id IN (' . $podded_in . ') AND hardware_type_id>4 AND game_id=' . $session->game_id);
+		$db->query('DELETE FROM ship_has_hardware WHERE account_id IN (' . $podded_in . ') AND hardware_type_id>4 AND game_id=' . SmrSession::$game_id);
 
-		$db->query('UPDATE ship_has_hardware SET amount=5 WHERE account_id IN (' . $podded_in . ') AND hardware_type_id=3  AND game_id=' . $session->game_id . ' LIMIT ' . $num_podded);
+		$db->query('UPDATE ship_has_hardware SET amount=5 WHERE account_id IN (' . $podded_in . ') AND hardware_type_id=3  AND game_id=' . SmrSession::$game_id . ' LIMIT ' . $num_podded);
 
-		$db->query('UPDATE ship_has_hardware SET old_amount=amount WHERE account_id IN (' . $podded_in . ') AND game_id=' . $session->game_id);
+		$db->query('UPDATE ship_has_hardware SET old_amount=amount WHERE account_id IN (' . $podded_in . ') AND game_id=' . SmrSession::$game_id);
 	}
 }
 
@@ -1130,11 +1130,11 @@ function update_player(&$players,$account_id,&$hqs,&$ships) {
 		$query .= ',military_payment=military_payment+' . $players[$account_id][MILITARY_GAINED];
 	}
 		
-	$db->query('UPDATE ship_has_hardware SET amount=' . $players[$account_id][SHIELDS] . ' WHERE hardware_type_id=1 AND account_id=' . $account_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
-	$db->query('UPDATE ship_has_hardware SET amount=' . $players[$account_id][ARMOR] . ' WHERE hardware_type_id=2 AND account_id=' . $account_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
-	$db->query('UPDATE ship_has_hardware SET amount=' . $players[$account_id][DRONES] . ' WHERE hardware_type_id=4 AND account_id=' . $account_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+	$db->query('UPDATE ship_has_hardware SET amount=' . $players[$account_id][SHIELDS] . ' WHERE hardware_type_id=1 AND account_id=' . $account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
+	$db->query('UPDATE ship_has_hardware SET amount=' . $players[$account_id][ARMOR] . ' WHERE hardware_type_id=2 AND account_id=' . $account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
+	$db->query('UPDATE ship_has_hardware SET amount=' . $players[$account_id][DRONES] . ' WHERE hardware_type_id=4 AND account_id=' . $account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 	
-	$db->query($query . ' WHERE account_id=' . $account_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+	$db->query($query . ' WHERE account_id=' . $account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 }
 
 function update_player_stats(&$players,$account_id,&$ships) {
@@ -1164,7 +1164,7 @@ function update_player_stats(&$players,$account_id,&$ships) {
 	 
 	}
 
-	$db->query('UPDATE player_has_stats SET ' . $query . ' WHERE account_id=' . $account_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+	$db->query('UPDATE player_has_stats SET ' . $query . ' WHERE account_id=' . $account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 	$db->query('UPDATE account_has_stats SET ' . $query . ' WHERE account_id=' . $account_id . ' LIMIT 1');
 
 }
@@ -1256,27 +1256,27 @@ if(count($killed_ids)) {
 	update_podded($killed_ids);
 	
 	if($player->alliance_id) {
-		$db->query('UPDATE alliance SET alliance_kills=alliance_kills+' . $fleets[0][0]. ',alliance_deaths=alliance_deaths+' .  $fleets[0][1] . ' WHERE alliance_id=' . $player->alliance_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+		$db->query('UPDATE alliance SET alliance_kills=alliance_kills+' . $fleets[0][0]. ',alliance_deaths=alliance_deaths+' .  $fleets[0][1] . ' WHERE alliance_id=' . $player->alliance_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 	}
 	if($players[$var['target']][ALLIANCE_ID]) {
-		$db->query('UPDATE alliance SET alliance_kills=alliance_kills+' . $fleets[1][0]. ',alliance_deaths=alliance_deaths+' .  $fleets[1][1] . ' WHERE alliance_id=' . $players[$var['target']][ALLIANCE_ID] . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+		$db->query('UPDATE alliance SET alliance_kills=alliance_kills+' . $fleets[1][0]. ',alliance_deaths=alliance_deaths+' .  $fleets[1][1] . ' WHERE alliance_id=' . $players[$var['target']][ALLIANCE_ID] . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 	}
 	
 	if($player->alliance_id && $players[$var['target']][ALLIANCE_ID]) {
-		$db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $player->alliance_id . ' AND alliance_id_2=' . $players[$var['target']][ALLIANCE_ID] . ' AND game_id=' . $session->game_id);
+		$db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $player->alliance_id . ' AND alliance_id_2=' . $players[$var['target']][ALLIANCE_ID] . ' AND game_id=' . SmrSession::$game_id);
 		if($db->next_record()) {
-			$db->query('UPDATE alliance_vs_alliance SET kills=kills+' . $fleets[0][0] . ' WHERE alliance_id_1=' . $player->alliance_id . ' AND alliance_id_2=' . $players[$var['target']][ALLIANCE_ID] . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+			$db->query('UPDATE alliance_vs_alliance SET kills=kills+' . $fleets[0][0] . ' WHERE alliance_id_1=' . $player->alliance_id . ' AND alliance_id_2=' . $players[$var['target']][ALLIANCE_ID] . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 		}
 		else {
-			$db->query('INSERT INTO alliance_vs_alliance VALUES (' . $session->game_id . ',' . $player->alliance_id . ',' . $players[$var['target']][ALLIANCE_ID] . ',' . $fleets[0][0] . ')');
+			$db->query('INSERT INTO alliance_vs_alliance VALUES (' . SmrSession::$game_id . ',' . $player->alliance_id . ',' . $players[$var['target']][ALLIANCE_ID] . ',' . $fleets[0][0] . ')');
 		}
 		
-		$db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $players[$var['target']][ALLIANCE_ID] . ' AND alliance_id_2=' . $player->alliance_id . ' AND game_id=' . $session->game_id);
+		$db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $players[$var['target']][ALLIANCE_ID] . ' AND alliance_id_2=' . $player->alliance_id . ' AND game_id=' . SmrSession::$game_id);
 		if($db->next_record()) {
-			$db->query('UPDATE alliance_vs_alliance SET kills=kills+' . $fleets[1][0] . ' WHERE alliance_id_1=' . $players[$var['target']][ALLIANCE_ID] . ' AND alliance_id_2=' . $player->alliance_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+			$db->query('UPDATE alliance_vs_alliance SET kills=kills+' . $fleets[1][0] . ' WHERE alliance_id_1=' . $players[$var['target']][ALLIANCE_ID] . ' AND alliance_id_2=' . $player->alliance_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 		}
 		else {
-			$db->query('INSERT INTO alliance_vs_alliance VALUES (' . $session->game_id . ',' . $players[$var['target']][ALLIANCE_ID] . ',' . $player->alliance_id . ',' . $fleets[1][0] . ')');
+			$db->query('INSERT INTO alliance_vs_alliance VALUES (' . SmrSession::$game_id . ',' . $players[$var['target']][ALLIANCE_ID] . ',' . $player->alliance_id . ',' . $fleets[1][0] . ')');
 		}
 	}
 }
@@ -1288,9 +1288,9 @@ foreach($account_ids as $account_id) {
 	update_player_stats($players,$account_id,$ships);
 }
 
-$db->query('UPDATE sector SET battles=battles+1 WHERE sector_id=' . $player->sector_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+$db->query('UPDATE sector SET battles=battles+1 WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
-$db->query('INSERT INTO combat_logs VALUES("",' . $session->game_id . ',"PLAYER",' . $player->sector_id . ',' . time() . ',' . $session->account_id . ',' . $player->alliance_id . ',' . $var['target'] . ',' . $players[$var['target']][ALLIANCE_ID] . ',"' . mysql_real_escape_string(gzcompress($results)) . '", "FALSE")');
+$db->query('INSERT INTO combat_logs VALUES("",' . SmrSession::$game_id . ',"PLAYER",' . $player->sector_id . ',' . time() . ',' . SmrSession::$account_id . ',' . $player->alliance_id . ',' . $var['target'] . ',' . $players[$var['target']][ALLIANCE_ID] . ',"' . mysql_real_escape_string(gzcompress($results)) . '", "FALSE")');
 
 $container = array();
 $container["url"] = "skeleton.php";

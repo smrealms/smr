@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-		$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 		require_once(get_file_loc("smr_force.inc"));
 print_topic("SECTOR SCAN");
 
@@ -97,7 +97,7 @@ print("</tr>");
 print("</table>");
 print("</p>");
 
-$target_sector = new SMR_SECTOR($var["target_sector"], $session->game_id, $session->account_id);
+$target_sector = new SMR_SECTOR($var["target_sector"], SmrSession::$game_id, SmrSession::$account_id);
 
 print("<p>");
 print("<table cellspacing=\"0\" cellpadding=\"3\" border=\"0\" class=\"standard\">");

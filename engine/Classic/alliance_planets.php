@@ -2,7 +2,7 @@
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->alliance_id;
 		require_once(get_file_loc("smr_planet.inc"));
-$db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . $session->game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
+$db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->next_record();
 print_topic(stripslashes($db->f("alliance_name")) . ' (' . $db->f("alliance_id") . ')');
 //print_topic($player->alliance_name . ' (' . $alliance_id . ')');
@@ -49,7 +49,7 @@ if ($db->nf() > 0) {
 	}
 
     while ($db->next_record()) {
-		$planet = new SMR_PLANET($db->f("sector_id"), $session->game_id);
+		$planet = new SMR_PLANET($db->f("sector_id"), SmrSession::$game_id);
 		$planet->build();
 		echo '<tr><td>';
 		echo $planet->planet_name;

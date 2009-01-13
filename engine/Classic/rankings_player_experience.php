@@ -8,13 +8,13 @@ print_ranking_menue(0, 0);
 $player->get_display_xp_lvl();
 
 // what rank are we?
-$db->query("SELECT * FROM player WHERE game_id = $session->game_id AND " .
+$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id AND " .
                                       "(experience > $player->display_experience OR " .
                                       "(experience = $player->display_experience AND player_name <= '" . addslashes(addslashes("$player->player_name")) . "' ))");
 $our_rank = $db->nf();
 
 // how many players are there?
-$db->query("SELECT * FROM player WHERE game_id = $session->game_id");
+$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id");
 $total_player = $db->nf();
 
 print("<div align=\"center\">");
@@ -29,13 +29,13 @@ print("<th>Alliance</th>");
 print("<th>Experience</th>");
 print("</tr>");
 
-$db->query("SELECT * FROM player WHERE game_id = $session->game_id ORDER BY experience DESC, player_name LIMIT 10");
+$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id ORDER BY experience DESC, player_name LIMIT 10");
 
 $rank = 0;
 while ($db->next_record()) {
 
     // get current player
-    $curr_player = new SMR_PLAYER($db->f("account_id"), $session->game_id);
+    $curr_player = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
 	$curr_player->get_display_xp_lvl();
     // increase rank counter
     $rank++;
@@ -127,7 +127,7 @@ print("<th>Alliance</th>");
 print("<th>Experience</th>");
 print("</tr>");
 
-$db->query("SELECT * FROM player WHERE game_id = $session->game_id ORDER BY experience DESC, player_name LIMIT " . ($min_rank - 1) . ", " . ($max_rank - $min_rank + 1));
+$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id ORDER BY experience DESC, player_name LIMIT " . ($min_rank - 1) . ", " . ($max_rank - $min_rank + 1));
 
 $rank = $min_rank - 1;
 while ($db->next_record()) {

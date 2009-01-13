@@ -12,7 +12,7 @@ if (!isset($var["category"]))
     $category = "sector_id";
 else
     $category = $var["category"];
-$db->query("SELECT * FROM sector_has_forces WHERE owner_id = $player->account_id AND game_id = $session->game_id ORDER BY $category $order");
+$db->query("SELECT * FROM sector_has_forces WHERE owner_id = $player->account_id AND game_id = SmrSession::$game_id ORDER BY $category $order");
 $db2 = new SmrMySqlDatabase();
 if ($db->nf() > 0) {
 	

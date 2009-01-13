@@ -81,12 +81,12 @@ if (isset($made)) {
         return;
     }
 
-	$db->query("SELECT MAX(anon_id) FROM anon_bank WHERE game_id = $session->game_id");
+	$db->query("SELECT MAX(anon_id) FROM anon_bank WHERE game_id = SmrSession::$game_id");
     if ($db->next_record())
 	    $new_acc = $db->f("MAX(anon_id)") + 1;
     else
     	$new_acc = 1;
-    $db->query("INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES ($session->game_id, $new_acc, $player->account_id, '$password', 0)");
+    $db->query("INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES (SmrSession::$game_id, $new_acc, $player->account_id, '$password', 0)");
     echo 'Account #';
 	echo $new_acc;
 	echo ' has been opened for you.<br><br>';

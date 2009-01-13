@@ -26,7 +26,7 @@ if ($player->credits < 5000)
 
 //$player->update();
 
-$db->query('UPDATE player SET dead="FALSE" WHERE account_id=' . $session->account_id . ' AND game_id=' . $session->game_id . ' LIMIT 1');
+$db->query('UPDATE player SET dead="FALSE" WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
 $account->log(8, "Player sees death screen", $player->sector_id);
 

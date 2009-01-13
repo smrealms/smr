@@ -1,7 +1,7 @@
 <?
 		require_once(get_file_loc("smr_planet.inc"));
 // get a planet from the sector where the player is in
-$planet = new SMR_PLANET($player->sector_id, $session->game_id);
+$planet = new SMR_PLANET($player->sector_id, SmrSession::$game_id);
 include(get_file_loc("planet_claim_disallow.php"));
 $action = $_REQUEST['action'];
 $password = $_REQUEST['password'];

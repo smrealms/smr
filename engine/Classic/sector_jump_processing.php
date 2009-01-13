@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('smr_sector.inc'));
-$sector = new SMR_SECTOR($player->sector_id, $session->game_id, $session->account_id);
+$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$account_id);
 if (isset($_POST["to"])) $to = $_POST["to"];
 else $to = $var['to'];
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
@@ -103,7 +103,7 @@ if ($action != "Yes") {
 }
 
 // create sector object for target sector
-$target_sector = new SMR_SECTOR($to, $session->game_id, $session->account_id);
+$target_sector = new SMR_SECTOR($to, SmrSession::$game_id, SmrSession::$account_id);
 
 // check if we would jump more than 1 warp
 if ($sector->galaxy_id != $target_sector->galaxy_id) {
@@ -112,8 +112,8 @@ if ($sector->galaxy_id != $target_sector->galaxy_id) {
 	$db->query("SELECT * FROM warp WHERE game_id = $player->game_id");
 	while($db->next_record()) {
 
-		$warp_sector1 = new SMR_SECTOR($db->f("sector_id_1"), $session->game_id, $session->account_id);
-		$warp_sector2 = new SMR_SECTOR($db->f("sector_id_2"), $session->game_id, $session->account_id);
+		$warp_sector1 = new SMR_SECTOR($db->f("sector_id_1"), SmrSession::$game_id, SmrSession::$account_id);
+		$warp_sector2 = new SMR_SECTOR($db->f("sector_id_2"), SmrSession::$game_id, SmrSession::$account_id);
 
 		if ($warp_sector1->galaxy_id == $target_sector->galaxy_id && $warp_sector2->galaxy_id == $sector->galaxy_id)
 			$allowed = true;
@@ -178,7 +178,7 @@ if (mt_rand(1, 100) <= $failure_chance) {
 		$distance = $sector_distance[$curr_sector_id];
 
 		// create a new sector object
-		$curr_sector = new SMR_SECTOR($curr_sector_id, $session->game_id, $session->account_id);
+		$curr_sector = new SMR_SECTOR($curr_sector_id, SmrSession::$game_id, SmrSession::$account_id);
 
 		// enqueue all neighbours
 		if ($curr_sector->link_up > 0 && (!isset($sector_distance[$curr_sector->link_up]) || $sector_distance[$curr_sector->link_up] > $distance + 1) && $failure_distance > $distance) {

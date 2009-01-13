@@ -78,14 +78,14 @@ print("</table>");
 print("<br />");
 
 $db->query("SELECT * FROM player WHERE sector_id = $player->sector_id AND " .
-                                      "game_id = $session->game_id AND " .
-                                      "account_id != $session->account_id AND " .
+                                      "game_id = SmrSession::$game_id AND " .
+                                      "account_id != SmrSession::$account_id AND " .
                                       "land_on_planet = 'TRUE' " .
                                 "ORDER BY last_active DESC");
 
 while ($db->next_record()) {
 
-    $planet_player = new SMR_PLAYER($db->f("account_id"), $session->game_id);
+    $planet_player = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
 
     $container = array();
     $container["url"]            = "planet_kick_processing.php";

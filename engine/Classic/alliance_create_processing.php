@@ -25,22 +25,22 @@ if ($name2 == "none" || $name == "(none)" || $name == "( none )" || $name == "no
 
 // check if the alliance name already exist
 $db->query("SELECT * FROM alliance WHERE alliance_name = " . format_string($name, true) . " AND " .
-										"game_id = $session->game_id");
+										"game_id = SmrSession::$game_id");
 if ($db->nf() > 0)
 	create_error("That alliance name already exists!");
 
 // get the next alliance id
-$db->query("SELECT * FROM alliance WHERE game_id = $session->game_id AND (alliance_id < 302 OR alliance_id > 309) ORDER BY alliance_id DESC LIMIT 1");
+$db->query("SELECT * FROM alliance WHERE game_id = SmrSession::$game_id AND (alliance_id < 302 OR alliance_id > 309) ORDER BY alliance_id DESC LIMIT 1");
 $db->next_record();
 $alliance_id = $db->f("alliance_id") + 1;
 
 // actually create the alliance here
 $db->query("INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, recruiting) " .
-						  "VALUES($alliance_id, $session->game_id, " . format_string($name, true) . ", " . format_string($description, false) . ", '$password', $session->account_id, '$recruit')");
+						  "VALUES($alliance_id, SmrSession::$game_id, " . format_string($name, true) . ", " . format_string($description, false) . ", '$password', SmrSession::$account_id, '$recruit')");
 
 // assign the player to the current alliance
-$db->query("UPDATE player SET alliance_id = $alliance_id WHERE account_id = $session->account_id AND " .
-															  "game_id = $session->game_id");
+$db->query("UPDATE player SET alliance_id = $alliance_id WHERE account_id = SmrSession::$account_id AND " .
+															  "game_id = SmrSession::$game_id");
 
 $withPerDay = -2;
 $removeMember = TRUE;
@@ -52,7 +52,7 @@ $exemptWith = TRUE;
 $mbMessages = TRUE;
 $sendAllMsg = TRUE;
 $db->query("INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg) " .
-			"VALUES ($alliance_id, $session->game_id, 1, 'Leader', $withPerDay, '$removeMember', '$changePass', '$changeMOD', '$changeRoles', '$planetAccess', '$exemptWith', '$mbMessages', '$sendAllMsg')");
+			"VALUES ($alliance_id, SmrSession::$game_id, 1, 'Leader', $withPerDay, '$removeMember', '$changePass', '$changeMOD', '$changeRoles', '$planetAccess', '$exemptWith', '$mbMessages', '$sendAllMsg')");
 switch ($perms) {
 	case 'full':
 		//do nothing, perms already set above.
@@ -83,7 +83,7 @@ switch ($perms) {
 		break;
 }
 $db->query("INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg) " .
-			"VALUES ($alliance_id, $session->game_id, 2, 'New Member', $withPerDay, '$removeMember', '$changePass', '$changeMOD', '$changeRoles', '$planetAccess', '$exemptWith', '$mbMessages', '$sendAllMsg')");
+			"VALUES ($alliance_id, SmrSession::$game_id, 2, 'New Member', $withPerDay, '$removeMember', '$changePass', '$changeMOD', '$changeRoles', '$planetAccess', '$exemptWith', '$mbMessages', '$sendAllMsg')");
 $db->query("INSERT INTO player_has_alliance_role (game_id, account_id, role_id) VALUES ($player->game_id, $player->account_id, 1)");
 forward(create_container("skeleton.php", "alliance_roster.php"));
 
