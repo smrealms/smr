@@ -8,7 +8,7 @@ if (isset($var['msg']))
 $smarty->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
 $smarty->assign('UserRankName',$account->get_rank_name());
 
-$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as format_end_date, end_date, game.game_id as game_id, game_name, game_speed FROM game, player ' .
+$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as format_end_date, end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
 					'WHERE game.game_id = player.game_id AND ' .
 						  'account_id = '.SmrSession::$account_id.' AND ' .
 						  'end_date >= \'' . date('Y-m-d') . '\'');
@@ -25,13 +25,17 @@ if ($db->getNumRows() > 0)
 		$game_speed = $db->getField('game_speed');
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $game_name;
+		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
 		$games['Play'][$game_id]['EndDate'] = $end_date;
 		$games['Play'][$game_id]['Speed'] = $game_speed;	
 		
 		$container = array();
 		$container['game_id'] = $game_id;
 		$container['url'] = 'game_play_processing.php';
-		$games['Play'][$game_id]['PlayGameLink'] = SmrSession::get_new_href($container);
+		if($games['Play'][$game_id]['Type'] == 'Classic')
+			$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
+		else
+			$games['Play'][$game_id]['PlayGameLink'] = SmrSession::get_new_href($container);
 
 		// creates a new player object
 		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
