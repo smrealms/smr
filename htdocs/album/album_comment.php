@@ -43,7 +43,7 @@ $db = new SmrMySqlDatabase();
 if (!isset($_GET['comment']) || empty($_GET['comment']))
 	$PHP_OUTPUT.=create_error_offline('Please enter a comment');
 else
-	$comment = mysql_escape_string($_GET['comment']);
+	$comment = $_GET['comment'];
 
 // get current time
 $curr_time = TIME;
