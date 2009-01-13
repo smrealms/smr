@@ -49,7 +49,7 @@ if (empty($action)) {
 	$db2 = new SmrHistoryMySqlDatabase();
 	if (empty($gr)) {
 		
-		$db2->query('SELECT $sql as val, sector_id FROM '.$from.' WHERE game_id = '.$game_id.' '.$gr.' ORDER BY '.$sql.' DESC LIMIT 30');
+		$db2->query('SELECT '.$sql.' as val, sector_id FROM '.$from.' WHERE game_id = '.$game_id.' '.$gr.' ORDER BY '.$sql.' DESC LIMIT 30');
 	
 		$container = array();
 		$container['url'] = 'skeleton.php';
