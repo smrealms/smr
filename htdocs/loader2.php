@@ -1,4 +1,5 @@
 <?
+error_reporting(E_ERROR | E_WARNING | E_PARSE); // turn off error reporting for clasic
 
 //xdebug_start_profiling();
 
