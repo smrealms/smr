@@ -28,15 +28,15 @@ $PHP_OUTPUT.='<tr><td align=center>General Info</td><td align=center>Other Info<
 <tr>
 <td valign=top align=center>
 <table class="nobord">
-<tr><td align=right>Name</td>           <td>&nbsp;</td><td align=left>$game_name</td></tr>
-<tr><td align=right>Description</td>    <td>&nbsp;</td><td align=left>$game_desc</td></tr>
-<tr><td align=right>Start Date</td>     <td>&nbsp;</td><td align=left>$start</td></tr>
-<tr><td align=right>End Date</td>       <td>&nbsp;</td><td align=left>$end</td></tr>
-<tr><td align=right>Current Players</td><td>&nbsp;</td><td align=left>$current</td></tr>
-<tr><td align=right>Max Players</td>    <td>&nbsp;</td><td align=left>$max</td></tr>
-<tr><td align=right>Game Type</td>      <td>&nbsp;</td><td align=left>$type</td></tr>
-<tr><td align=right>Game Speed</td>     <td>&nbsp;</td><td align=left>$speed</td></tr>
-<tr><td align=right>Credits Needed</td> <td>&nbsp;</td><td align=left>$creds</td></tr>
+<tr><td align=right>Name</td>           <td>&nbsp;</td><td align=left>'.$game_name.'</td></tr>
+<tr><td align=right>Description</td>    <td>&nbsp;</td><td align=left>'.$game_desc.'</td></tr>
+<tr><td align=right>Start Date</td>     <td>&nbsp;</td><td align=left>'.$start.'</td></tr>
+<tr><td align=right>End Date</td>       <td>&nbsp;</td><td align=left>'.$end.'</td></tr>
+<tr><td align=right>Current Players</td><td>&nbsp;</td><td align=left>'.$current.'</td></tr>
+<tr><td align=right>Max Players</td>    <td>&nbsp;</td><td align=left>'.$max.'</td></tr>
+<tr><td align=right>Game Type</td>      <td>&nbsp;</td><td align=left>'.$type.'</td></tr>
+<tr><td align=right>Game Speed</td>     <td>&nbsp;</td><td align=left>'.$speed.'</td></tr>
+<tr><td align=right>Credits Needed</td> <td>&nbsp;</td><td align=left>'.$creds.'</td></tr>
 </table>
 </td>';
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC');
@@ -59,12 +59,12 @@ if ($db->nextRecord()) $alliances = $db->getNumRows();
 $PHP_OUTPUT.='
 <td valign=top align=center>
 <table class="nobord">
-<tr><td align=right>Players</td>           <td>&nbsp;</td><td align=left>$players</td></tr>
-<tr><td align=right>Alliances</td>          <td>&nbsp;</td><td align=left>$alliances</td></tr>
-<tr><td align=right>Highest Experience</td><td>&nbsp;</td><td align=left>$max_exp</td></tr>
-<tr><td align=right>Highest Alignment</td> <td>&nbsp;</td><td align=left>$align</td></tr>
-<tr><td align=right>Lowest Alignment</td><td>&nbsp;</td><td align=left>$align_low</td></tr>
-<tr><td align=right>Highest Kills</td>     <td>&nbsp;</td><td align=left>$kills</td></tr>
+<tr><td align=right>Players</td>           <td>&nbsp;</td><td align=left>'.$players.'</td></tr>
+<tr><td align=right>Alliances</td>          <td>&nbsp;</td><td align=left>'.$alliances.'</td></tr>
+<tr><td align=right>Highest Experience</td><td>&nbsp;</td><td align=left>'.$max_exp.'</td></tr>
+<tr><td align=right>Highest Alignment</td> <td>&nbsp;</td><td align=left>'.$align.'</td></tr>
+<tr><td align=right>Lowest Alignment</td><td>&nbsp;</td><td align=left>'.$align_low.'</td></tr>
+<tr><td align=right>Highest Kills</td>     <td>&nbsp;</td><td align=left>'.$kills.'</td></tr>
 </table>
 </td>
 </tr>
