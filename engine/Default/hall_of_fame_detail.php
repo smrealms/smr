@@ -88,7 +88,7 @@ if (isset($var['table']))
 elseif ($id == 'donation')
     $table = 'account_donated';
 else
-    $table = 'account_has_stats_cache';
+    $table = 'account_has_stats';
 
 if (!isset($per) && isset($id)) {
 

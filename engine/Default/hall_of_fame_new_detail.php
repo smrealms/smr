@@ -20,7 +20,7 @@ if (is_array($mod))
 //for future when we have curr game stats
 if (isset($game_id)) {
 
-	$table = 'player_has_stats_cache WHERE game_id = '.$game_id.' AND';
+	$table = 'player_has_stats WHERE game_id = '.$game_id.' AND';
 
 	$db2 = new SmrHistoryMySqlDatabase();
 	$db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
@@ -34,7 +34,7 @@ if (isset($game_id)) {
 	} else $db = new SmrMySqlDatabase();
 
 }
-else $table = 'account_has_stats_cache WHERE';
+else $table = 'account_has_stats WHERE';
 $PHP_OUTPUT.=('<div align=center>');
 $smarty->assign('PageTopic','Hall of Fame - '.$cat.' '.$action);
 $container = array();
@@ -123,7 +123,7 @@ if ($better >= 25) {
 		$db->query('SELECT * FROM player_has_stats WHERE '.$sql.' AND account_id = '.$account->account_id);
 	}
 	else {
-		$db->query('SELECT * FROM player_has_stats_cache WHERE '.$sql.' AND account_id = '.$account->account_id);
+		$db->query('SELECT * FROM player_has_stats WHERE '.$sql.' AND account_id = '.$account->account_id);
 	}
 	if ($db->nextRecord()) {
 
