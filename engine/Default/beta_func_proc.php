@@ -3,9 +3,6 @@ require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('SmrPort.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 
-//get Spock's exp under me :)
-$db->query('UPDATE player SET experience = 0 WHERE account_id = 1 AND game_id = '.$player->getGameID());
-$db->query('UPDATE player SET experience = 50000000 WHERE player_name = \'Azool\' AND game_id = '.$player->getGameID());
 if ($var['func'] == 'Map') {
 
 	$account_id = $player->getAccountID();
