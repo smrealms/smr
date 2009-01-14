@@ -102,7 +102,7 @@ if ($db->getNumRows() > 0)
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'game_stats.php';
 		$container['game_id'] = $game_id;
-		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container);
+		$games['Join'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container);
 		// create a container that will hold next url and additional variables.
 		$container = array();
 		$container['game_id'] = $game_id;
