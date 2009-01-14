@@ -30,7 +30,7 @@ if ($var['sending_page'] == 'hof') {
 	$PHP_OUTPUT.=($hof_name.' is ranked as a <font size="4" color="greenyellow">'.$rank_name.'</font> player.<br /><br />');
 	
 	$db2 = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM account_has_stats_cache WHERE account_id = $db_acc->account_id');
+	$db->query('SELECT * FROM account_has_stats WHERE account_id = $db_acc->account_id');
 	if ($db->nextRecord()) {
 	
 		$PHP_OUTPUT.=('<b>Extended Stats</b><br />');
@@ -82,8 +82,9 @@ if ($var['sending_page'] == 'hof') {
 	if ($db->nextRecord()) $playerName = stripslashes($db->getField('player_name'));
 	else $playerName = 'Unknown Player';
 	$smarty->assign('PageTopic','Current Game Stats for '.$playerName);
-	$db->query('SELECT * FROM player_has_stats_cache WHERE account_id = '.$db_acc->account_id.' AND game_id = '.$game_id);
-	if ($db->nextRecord()) {
+	$db->query('SELECT * FROM player_has_stats WHERE account_id = '.$db_acc->account_id.' AND game_id = '.$game_id);
+	if ($db->nextRecord())
+	{
 		$PHP_OUTPUT.=($playerName.' is ranked as a <font size="4" color="greenyellow">'.$rank_name.'</font> player.<br /><br />');
 		$PHP_OUTPUT.=('<b>Current Game Extended Stats</b><br />');
 		$PHP_OUTPUT.=($playerName.' has killed ' . $db->getField('kills') . ' traders.<br />');
