@@ -98,11 +98,6 @@ if ($db->getNumRows() > 0)
 		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
 		$games['Join'][$game_id]['Speed'] = $db->getField('game_speed');
 		$games['Join'][$game_id]['Credits'] = $db->getField('credits_needed');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'game_stats.php';
-		$container['game_id'] = $game_id;
-		$games['Join'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container);
 		// create a container that will hold next url and additional variables.
 		$container = array();
 		$container['game_id'] = $game_id;
