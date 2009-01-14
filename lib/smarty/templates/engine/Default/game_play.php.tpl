@@ -55,7 +55,7 @@
 				<td>
 					<div class="buttonA"><a class="buttonA" href="{$Game.JoinGameLink}">&nbsp;Join Game&nbsp;</a></div>
 				</td>
-				<td width="40%">{$Game.Name} ({$Game.ID})</td>
+				<td width="35%"><a href="{$Game.GameStatsLink}">{$Game.Name} ({$Game.ID})</a></td>
 				<td>{$Game.StartDate}</td>
 				<td>{$Game.EndDate}</td>
 				<td>{$Game.MaxPlayers}</td>
@@ -84,7 +84,7 @@
 		</tr>
 		{foreach from=$Games.Previous item=Game}
 			<tr>
-				<td width="40%"><a href="{$Game.PreviousGameLink}">{$Game.Name} ({$Game.ID})</a></td>
+				<td width="35%"><a href="{$Game.PreviousGameLink}">{$Game.Name} ({$Game.ID})</a></td>
 				<td>{$Game.StartDate}</td>
 				<td>{$Game.EndDate}</td>
 				<td>{$Game.Speed}</td>
