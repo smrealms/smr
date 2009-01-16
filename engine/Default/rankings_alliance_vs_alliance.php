@@ -132,7 +132,7 @@ foreach ($alliance_vs as $key => $id) {
 				$PHP_OUTPUT.=(' style="color:red;"');
 			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' style="font-weight:bold;"');
 			$PHP_OUTPUT.=('>');
-			$db2->getField('kills');
+			$PHP_OUTPUT.= $db2->getField('kills');
 			
 		} else {
 			
