@@ -123,12 +123,13 @@ function album_entry($album_id) {
 					  approved = \'YES\'
 				ORDER BY HoF_Name DESC
 				LIMIT 1');
+	echo '<td style="text-align: center;" valign="middle">';
 	if ($db->nextRecord()) {
 
 		$priv_nick = $db->getField('HoF_Name');
-		echo('<td style="text-align: center;" valign="middle"><a href="URL/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;</td>');
-
+		echo '<a href="URL/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
+	echo '</td>';
 	echo('<td style="text-align: center;" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
 
 	$db->query('SELECT HoF_Name
@@ -137,12 +138,13 @@ function album_entry($album_id) {
 					  approved = \'YES\'
 				ORDER BY HoF_Name
 				LIMIT 1');
+	echo '<td align="center" valign="middle">';
 	if ($db->nextRecord()) {
 
 		$next_nick = $db->getField('HoF_Name');
-		echo('<td align="center" valign="middle">&nbsp;&nbsp;&nbsp;<a href="'.URL.'/album/?' . urlencode($next_nick) . '"><img src="'.URL.'/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a></td>');
-
+		echo '&nbsp;&nbsp;&nbsp;<a href="'.URL.'/album/?' . urlencode($next_nick) . '"><img src="'.URL.'/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a>';
 	}
+	echo '</td>';
 
 	echo('</tr>');
 	echo('</table>');
