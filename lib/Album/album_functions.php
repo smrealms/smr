@@ -123,7 +123,7 @@ function album_entry($album_id) {
 					  approved = \'YES\'
 				ORDER BY HoF_Name DESC
 				LIMIT 1');
-	echo '<td style="text-align: center;" valign="middle">';
+	echo '<td style="text-align: center; width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 
 		$priv_nick = $db->getField('HoF_Name');
@@ -138,7 +138,7 @@ function album_entry($album_id) {
 					  approved = \'YES\'
 				ORDER BY HoF_Name
 				LIMIT 1');
-	echo '<td align="center" valign="middle">';
+	echo '<td style="text-align: center; width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 
 		$next_nick = $db->getField('HoF_Name');
