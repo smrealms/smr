@@ -133,7 +133,7 @@ function album_entry($album_id) {
 
 	$db->query('SELECT HoF_Name
 				FROM album NATURAL JOIN account_has_stats
-				WHERE HoF_Name > ' . $db->escape_string('.$nick.') . ' AND
+				WHERE HoF_Name > ' . $db->escape_string($nick) . ' AND
 					  approved = \'YES\'
 				ORDER BY HoF_Name
 				LIMIT 1');
