@@ -112,9 +112,9 @@ function album_entry($album_id) {
 
 	echo('<table border="0" align="center" cellpadding="5" cellspacing="0">');
 	echo('<tr>');
-	echo('<td align="center" colspan="2">');
-
-	echo('<table>');
+	echo('<td style="text-align: center;" colspan="2">');
+	echo '<div style="margin-left: auto; margin-right: auto; width: 50%">';
+	echo('<table style="width: 100%">');
 	echo('<tr>');
 
 	$db->query('SELECT HoF_Name
@@ -126,10 +126,10 @@ function album_entry($album_id) {
 	if ($db->nextRecord()) {
 
 		$priv_nick = $db->getField('HoF_Name');
-		echo('<td align="center" valign="middle"><a href="URL/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;</td>');
+		echo('<td style="text-align: center;" valign="middle"><a href="URL/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;</td>');
 
 	}
-	echo('<td align="center" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
+	echo('<td style="text-align: center;" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
 
 	$db->query('SELECT HoF_Name
 				FROM album NATURAL JOIN account_has_stats
@@ -146,7 +146,7 @@ function album_entry($album_id) {
 
 	echo('</tr>');
 	echo('</table>');
-
+	echo '</div>';
 	echo('</td>');
 	echo('</tr>');
 	echo('<tr>');
