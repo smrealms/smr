@@ -8,7 +8,7 @@ $PHP_OUTPUT.=create_ranking_menue(0, 2);
 // what rank are we?
 $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' AND ' .
                                       '(deaths > '.$player->getDeaths().' OR ' .
-                                      '(deaths = '.$player->getDeaths().' AND player_name <= ' . $db->escape_string('.$db->escapeString($player->getPlayerName()', true) . ' ))');
+                                      '(deaths = '.$player->getDeaths().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
 $our_rank = $db->getNumRows();
 
 // how many players are there?

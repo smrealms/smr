@@ -49,9 +49,9 @@ $mail->WordWrap = 72;
 $i = 1;
 $total = 0;
 
-$db->query('SELECT account_id, login, email, first_name, last_name FROM account WHERE account_id >= $i AND validated = 'TRUE' ORDER BY account_id');
+$db->query('SELECT account_id, login, email, first_name, last_name FROM account WHERE account_id >= '.$i.' AND validated = 'TRUE' ORDER BY account_id');
 while ($db->nextRecord()) {
-//$db->query('SELECT account_id, login, email, first_name, last_name FROM account WHERE account_id >= $i AND validated = 'TRUE' AND account_id = 2');
+//$db->query('SELECT account_id, login, email, first_name, last_name FROM account WHERE account_id >= '.$i.' AND validated = 'TRUE' AND account_id = 2');
 //if ($db->nextRecord()) {
 
 	// get account data

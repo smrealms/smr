@@ -31,7 +31,7 @@ elseif ($type == 'list') {
 		$ip = $db->getField('ip');
 		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
-		//$PHP_OUTPUT.=('fi=$fi se=$se th=$th fo=$fo therefore->$ip');
+		//$PHP_OUTPUT.=('fi='.$fi.' se='.$se.' th='.$th.' fo='.$fo.' therefore->'.$ip);
 		
 		$total += 1;
 		if ($id == $last_id && $ip == $last)

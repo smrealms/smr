@@ -94,7 +94,7 @@ if (empty($action)) {
 			$container['game_id'] = $game_id;
 			$container['alliance_id'] = $alliance_id;
 			$PHP_OUTPUT.=create_link($container, $name);
-			$PHP_OUTPUT.=('</td><td>$val</td></tr>');
+			$PHP_OUTPUT.=('</td><td>'.$val.'</td></tr>');
 	
 		}
 		$PHP_OUTPUT.=('</table>');

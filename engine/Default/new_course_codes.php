@@ -24,7 +24,7 @@ while ($db->nextRecord()) {
 	$sector_links[2] = $db->getField('link_right');
 	$sector_links[3] = $db->getField('link_down');
 	$sector_links[4] = $db->getField('link_left');
-	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND (sector_id_1 = $sec_id OR sector_id_2 = $sec_id)');
+	$db2->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND (sector_id_1 = '.$sec_id.' OR sector_id_2 = '.$sec_id.')');
 	if ($db->nextRecord()) {
 			
 		if ($db2->getField('sector_id_1') == $sec_id)
@@ -37,7 +37,7 @@ while ($db->nextRecord()) {
 	
 }
 
-$db->query('INSERT INTO universe_array (game_id, array) VALUES ($game_id, $sector)');
+$db->query('INSERT INTO universe_array (game_id, array) VALUES ('.$game_id.', '.$sector.')');
 
 /////////////////////////////////////////////////
 //
@@ -55,7 +55,7 @@ while ($db->nextRecord()) {
 	$db2->query('SELECT * FROM player NATURAL JOIN player_visited_sector ' .
 						'WHERE game_id = '.$player->getGameID().' AND ' .
 						'alliance_id = '.$player->getAllianceID().' AND ' .
-						'sector_id = $sec_id');
+						'sector_id = '.$sec_id);
 						
 	$db3->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND ' .
 													  'alliance_id = '.$player->getAllianceID());
@@ -71,7 +71,7 @@ while ($db->nextRecord()) {
 	
 }
 $db->query('REPLACE INTO alliance_maps (game_id, alliance_id, maps) VALUES ' .
-				'($player->getGameID(), $player->getAllianceID(), $explored)');
+				'('.$player->getGameID().', '.$player->getAllianceID().', '.$explored.')');
 
 ///////////////////////////////////////////////////
 //
@@ -89,7 +89,7 @@ while ($db->nextRecord()) {
 	$sec_id = $db->getField('sector_id');
 	$db2->query('SELECT * FROM player NATURAL JOIN player_visited_sector ' .
 						'WHERE game_id = '.$player->getGameID().' AND ' .
-						'sector_id = $sec_id');
+						'sector_id = '.$sec_id);
 						
 	if (!$db2->nextRecord()) {
 			
@@ -100,7 +100,7 @@ while ($db->nextRecord()) {
 	
 }
 $db->query('REPLACE INTO player_has_maps (game_id, alliance_id, maps) VALUES ' .
-				'($player->getGameID(), $player->getAllianceID(), $explored)');
+				'('.$player->getGameID().', '.$player->getAllianceID().', '.$explored.')');
 
 ////////////////////////////////////
 //
@@ -122,7 +122,7 @@ $db->query('SELECT * FROM alliance_has_maps WHERE game_id = '.$player->getGameID
 				'alliance_id = '.$player->getAllianceID());
 $old_maps = $db->getField('maps');
 $db->query('REPLACE INTO player_has_maps (game_id, account_id, maps) VALUES ' .
-				'($player->getGameID(), $player->getAccountID(), $old_maps)');
+				'('.$player->getGameID().', '.$player->getAccountID().', '.$old_maps.')');
 
 //now run the rest of the leaving script
 
@@ -142,11 +142,11 @@ if (empty($to) || !is_numeric($to) || $to == $from) {
 
 }
 
-$db->query('SELECT * FROM sector WHERE sector_id = $to AND game_id = '.SmrSession::$game_id);
+$db->query('SELECT * FROM sector WHERE sector_id = '.$to.' AND game_id = '.SmrSession::$game_id);
 if ($db->getNumRows() == 0)
 	create_error('That sector doesn\'t exist. Try a new one.');
 
-$db->query('SELECT * FROM sector WHERE sector_id = $from AND game_id = '.SmrSession::$game_id);
+$db->query('SELECT * FROM sector WHERE sector_id = '.$from.' AND game_id = '.SmrSession::$game_id);
 if ($db->getNumRows() == 0)
 	create_error('That sector doesn\'t exist. Try a new one.');
 	

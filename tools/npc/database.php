@@ -12,7 +12,7 @@ function get_sector($account_id, $game_id, $column) {
 	if ($db->nextRecord())
 		return $db->getField($column);
 	else
-		log_message($account_id, 'Column $column for this sector not found', ERROR);
+		log_message($account_id, 'Column '.$column.' for this sector not found', ERROR);
 
 }
 
@@ -21,7 +21,7 @@ function get_player($account_id, $game_id, $column) {
 	// new db object
 	$db = new SmrMySqlDatabase();
 
-	$db->query('SELECT $column
+	$db->query('SELECT '.$column.'
 				FROM player
 				WHERE account_id = '.$account_id.' AND
 					  game_id = '.$game_id.'
@@ -30,7 +30,7 @@ function get_player($account_id, $game_id, $column) {
 	if ($db->nextRecord())
 		return $db->getField($column);
 	else
-		log_message($account_id, 'Column $column for this player not found', ERROR);
+		log_message($account_id, 'Column '.$column.' for this player not found', ERROR);
 
 }
 
@@ -40,7 +40,7 @@ function set_player($account_id, $game_id, $column, $value) {
 	$db = new SmrMySqlDatabase();
 
 	$db->query('UPDATE player
-				SET $column = '.$db->escapeString($value).'
+				SET '.$column.' = '.$db->escapeString($value).'
 				WHERE account_id = '.$account_id.' AND
 					  game_id = '.$game_id.'
 			   ');
@@ -52,7 +52,7 @@ function get_account($account_id, $column) {
 	// new db object
 	$db = new SmrMySqlDatabase();
 
-	$db->query('SELECT $column
+	$db->query('SELECT '.$column.'
 				FROM account
 				WHERE account_id = '.$account_id.'
 			   ');
@@ -60,7 +60,7 @@ function get_account($account_id, $column) {
 	if ($db->nextRecord())
 		return $db->getField($column);
 	else
-		log_message($account_id, 'Column $column for this account not found', ERROR);
+		log_message($account_id, 'Column '.$column.' for this account not found', ERROR);
 
 }
 
@@ -69,7 +69,7 @@ function get_ship($account_id, $game_id, $column) {
 	// new db object
 	$db = new SmrMySqlDatabase();
 
-	$db->query('SELECT $column
+	$db->query('SELECT '.$column.'
 				FROM player, ship_type
 				WHERE player.ship_type_id = ship_type.ship_type_id AND
 					  player.account_id = '.$account_id.' AND
@@ -79,7 +79,7 @@ function get_ship($account_id, $game_id, $column) {
 	if ($db->nextRecord())
 		return $db->getField($column);
 	else
-		log_message($account_id, 'Column $column for this ship not found', ERROR);
+		log_message($account_id, 'Column '.$column.' for this ship not found', ERROR);
 
 }
 
@@ -88,7 +88,7 @@ function get_game($game_id, $column) {
 	// new db object
 	$db = new SmrMySqlDatabase();
 
-	$db->query('SELECT $column
+	$db->query('SELECT '.$column.'
 				FROM game
 				WHERE game_id = '.$game_id.'
 			   ');
@@ -96,7 +96,7 @@ function get_game($game_id, $column) {
 	if ($db->nextRecord())
 		return $db->getField($column);
 	else
-		log_message($account_id, 'Column $column for this game not found', ERROR);
+		log_message($account_id, 'Column '.$column.' for this game not found', ERROR);
 
 }
 
@@ -106,7 +106,7 @@ function set_stats($account_id, $column, $value) {
 	$db = new SmrMySqlDatabase();
 
 	$db->query('UPDATE account_has_stats
-				SET $column = $column + '.$db->escapeString($value).'
+				SET '.$column.' = '.$column.' + '.$db->escapeString($value).'
 				WHERE account_id = '.$account_id.'
 			   ');
 

@@ -88,7 +88,7 @@ if (isset($second)) {
 				 'land_on_planet = \'FALSE\'');
 
 	$db->query('DELETE FROM active_session ' .
-		   'WHERE account_id = $second');
+		   'WHERE account_id = '.$second);
 
 	$curr_account =& SmrAccount::getAccount($second);
 	$admin_id = SmrSession::$account_id;

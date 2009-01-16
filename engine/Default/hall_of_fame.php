@@ -2,7 +2,7 @@
 
 $smarty->assign('PageTopic','HALL OF FAME');
 
-$PHP_OUTPUT.=('Welcome to the Hall of Fame $player->getPlayerName()!<br />The Hall of Fame is a comprehensive ');
+$PHP_OUTPUT.=('Welcome to the Hall of Fame '.$player->getPlayerName().'!<br />The Hall of Fame is a comprehensive ');
 $PHP_OUTPUT.=('list of player accomplishments. Here you can view how players rank in many different ');
 $PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />');
 $PHP_OUTPUT.=('The Hall of Fame is updated only once every 24 hours on midnight.<br />');

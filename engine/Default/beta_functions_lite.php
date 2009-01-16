@@ -105,7 +105,7 @@ $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 while ($db->nextRecord()) {
 	$id = $db->getField('hardware_type_id');
 	$name = $db->getField('hardware_name');
-	$PHP_OUTPUT.=('<option value=$id>$name</option>');
+	$PHP_OUTPUT.=('<option value='.$id.'>'.$name.'</option>');
 }
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set hardware');

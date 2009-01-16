@@ -118,7 +118,7 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	// insert into player table.
 	$db->query('INSERT INTO player
 				(account_id, game_id, player_id, player_name, race_id, ship_type_id, sector_id, last_turn_update, last_active)
-				VALUES($account->account_id, $game_id, $player_id, '.$db->escapeString($player_name).', $race_id, $ship_id, $home_sector_id, $last_turn_update, ' . time() . ')
+				VALUES('.$account->account_id.', '.$game_id.', '.$player_id.', '.$db->escapeString($player_name).', '.$race_id.', '.$ship_id.', '.$home_sector_id.', '.$last_turn_update.', ' . time() . ')
 			   ');
 
 	$db->unlock();
@@ -126,25 +126,25 @@ function join_game($account_id, $game_id, $player_name = '', $race_id = 0) {
 	// give the player shields
 	$db->query('INSERT INTO ship_has_hardware
 				(account_id, game_id, hardware_type_id, amount, old_amount)
-				VALUES($account->account_id, $game_id, 1, $amount_shields, $amount_shields)
+				VALUES('.$account->account_id.', '.$game_id.', 1, '.$amount_shields.', '.$amount_shields.')
 			   ');
 
 	// give the player armor
 	$db->query('INSERT INTO ship_has_hardware
 				(account_id, game_id, hardware_type_id, amount, old_amount)
-				VALUES($account->account_id, $game_id, 2, $amount_armor, $amount_armor)
+				VALUES('.$account->account_id.', '.$game_id.', 2, '.$amount_armor.', '.$amount_armor.')
 			   ');
 
 	// give the player cargo hold
 	$db->query('INSERT INTO ship_has_hardware
 				(account_id, game_id, hardware_type_id, amount, old_amount)
-				VALUES($account->account_id, $game_id, 3, 40, 40)
+				VALUES('.$account->account_id.', '.$game_id.', 3, 40, 40)
 			   ');
 
 	// give the player weapons
 	$db->query('INSERT INTO ship_has_weapon
 				(account_id, game_id, order_id, weapon_type_id)
-				VALUES($account->account_id, $game_id, 1, 46)
+				VALUES('.$account->account_id.', '.$game_id.', 1, 46)
 			   ');
 
 	// update stats
@@ -208,7 +208,7 @@ function get_colored_text($value, $text) {
 	else
 		$color = 'yellow';
 
-	return '<span style="color:$color;">'.$text.'</span>';
+	return '<span style="color:'.$color.';">'.$text.'</span>';
 
 }
 

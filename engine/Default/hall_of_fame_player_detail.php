@@ -30,7 +30,7 @@ if ($var['sending_page'] == 'hof') {
 	$PHP_OUTPUT.=($hof_name.' is ranked as a <font size="4" color="greenyellow">'.$rank_name.'</font> player.<br /><br />');
 	
 	$db2 = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM account_has_stats WHERE account_id = $db_acc->account_id');
+	$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$db_acc->account_id);
 	if ($db->nextRecord()) {
 	
 		$PHP_OUTPUT.=('<b>Extended Stats</b><br />');
@@ -44,7 +44,7 @@ if ($var['sending_page'] == 'hof') {
 		$PHP_OUTPUT.=($hof_name.' has explored ' . $db->getField('sectors_explored') . ' sectors.<br />');
 		$PHP_OUTPUT.=($hof_name.' has died ' . $db->getField('deaths') . ' times.<br />');
 		$PHP_OUTPUT.=($hof_name.' has traded ' . $db->getField('goods_traded') . ' goods.<br />');
-		$db2->query('SELECT sum(amount) as amount FROM account_donated WHERE account_id = $db_acc->account_id');
+		$db2->query('SELECT sum(amount) as amount FROM account_donated WHERE account_id = '.$db_acc->account_id);
 		if ($db2->nextRecord())
 		    $PHP_OUTPUT.=($hof_name.' has donated ' . $db2->getField('amount') . ' dollars to SMR.<br />');
 		$PHP_OUTPUT.=($hof_name.' has claimed ' . $db->getField('bounties_claimed') . ' bounties.<br />');
@@ -52,7 +52,7 @@ if ($var['sending_page'] == 'hof') {
 		$PHP_OUTPUT.=($hof_name.' has claimed ' . $db->getField('military_claimed') . ' credits from military payment.<br />');
 		$PHP_OUTPUT.=($hof_name.' has had a total of ' . $db->getField('bounty_amount_on') . ' credits bounty placed on him/her.<br />');
 		$PHP_OUTPUT.=($hof_name.' has done ' . $db->getField('player_damage') . ' damage to other ships.<br />');
-		$PHP_OUTPUT.=('The total experience of traders $db_acc->HoF_name has killed is ' . $db->getField('traders_killed_exp') . '.<br />');
+		$PHP_OUTPUT.=('The total experience of traders '.$db_acc->HoF_name.' has killed is ' . $db->getField('traders_killed_exp') . '.<br />');
 		$PHP_OUTPUT.=($hof_name.' has gained ' . $db->getField('kill_exp') . ' experience from killing other traders.<br />');
 		$PHP_OUTPUT.=($hof_name.' has approximately used ' . cust_round($db->getField('turns_used')) . ' turns since his/her last death.<br />');
 		$PHP_OUTPUT.=($hof_name.' has won ' . $db->getField('blackjack_win') . ' credits from Blackjack.<br />');

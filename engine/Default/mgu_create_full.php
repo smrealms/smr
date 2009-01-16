@@ -91,7 +91,7 @@ while ($db->nextRecord())
 		$CurrByte += 4;
 	}
 	//sector friendliness
-	$db2->query('SELECT * FROM sector_has_forces WHERE sector_id = '.$sector_id.' AND mines > 0 AND owner_id IN $alliance');
+	$db2->query('SELECT * FROM sector_has_forces WHERE sector_id = '.$sector_id.' AND mines > 0 AND owner_id IN '.$alliance);
 	if ($db2->getNumRows() > 0)
 	{
 		//we want a green 'friendly' sector

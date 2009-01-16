@@ -942,7 +942,7 @@ function podPlayers($IDArray, $ships, $hqs, $planet, $players) {
 		$sectorId = $hqs[$players[$accId][RACE_ID]];
 		$insurance = ceil($ships[$players[$accId][SHIP_ID]][0] * 0.25);
 		if($insurance < 5000) $insurance = 5000;
-		$db->query('UPDATE player SET ship_type_id = 69, turns = $turns, newbie_turns = 100, ' . 
+		$db->query('UPDATE player SET ship_type_id = 69, turns = '.$turns.', newbie_turns = 100, ' . 
 					'deaths = deaths + 1, dead = \'TRUE\', sector_id = '.$sectorId.', credits = '.$insurance.', experience = '.$newExp.' ' . 
 					'WHERE game_id = '.$player->getGameID().' AND account_id = '.$accId);
 		$db->query('UPDATE player_has_stats SET deaths=deaths+1 WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $accId . ' LIMIT 1');
@@ -1004,8 +1004,8 @@ function sendReport($results, $planet) {
 	$mainText = 'From the reports we have been able to gather the following information:<br /><br />';
 	$mainText .= $results[PLANET_DISPLAY] . '<br />' . $results[PLAYER_DISPLAY];
 	if ($ownerAlliance > 0) {
-		$topic = 'Planet Attack Report Sector $player->getSectorID()';
-		$text = 'Reports from the surface of $planetName confirm that it is under <span class="red">attack</span>!<br />';
+		$topic = 'Planet Attack Report Sector '.$player->getSectorID();
+		$text = 'Reports from the surface of '.$planetName.' confirm that it is under <span class="red">attack</span>!<br />';
 		$text .= $mainText;
 		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
@@ -1043,7 +1043,7 @@ function sendReport($results, $planet) {
 						'(' . $planet[OWNER] . ', '.$player->getGameID().', 3)');
 	} if ($player->getAllianceID() > 0) {
 		$topic = 'Planet Siege Report Sector '.$player->getSectorID();
-		$text = 'Reports have come in from the space above $planetName and have confirmed our <span class="red">siege</span>!<br />';
+		$text = 'Reports have come in from the space above '.$planetName.' and have confirmed our <span class="red">siege</span>!<br />';
 		$text .= $mainText;
 		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
