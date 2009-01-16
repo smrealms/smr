@@ -16,7 +16,7 @@ while ($db->nextRecord()) {
 	
 	$acc_id = $db->getField('account_id');
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align=center>$acc_id</td>');
+	$PHP_OUTPUT.=('<td align=center>'.$acc_id.'</td>');
 	$PHP_OUTPUT.=('<td align=center>' . $db->getField('login') . '</td>');
 	$PHP_OUTPUT.=('<td align=center>' . $db->getField('email') . '</td>');
 	$db2->query('SELECT * FROM account_has_ip WHERE account_id = '.$acc_id.' ORDER BY time DESC LIMIT 1');

@@ -24,7 +24,7 @@ if (empty($alliancer)) {
 	$alliance_vs = array();
 	$db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' ORDER BY alliance_kills DESC, alliance_name LIMIT 5');
 	while ($db->nextRecord()) $alliance_vs[] = $db->getField('alliance_id');
-	//$PHP_OUTPUT.=('emtpy $alliancer');
+	//$PHP_OUTPUT.=('empty '.$alliancer);
 	
 } else $alliance_vs = $alliancer;
 $alliance_vs[] = 0;

@@ -11,7 +11,7 @@ while($db->nextRecord()) {
 
 	$id = $db->getField('sec');
 	$name = $db->getField('game_name');
-	$PHP_OUTPUT.=('<option value="$id">$name</option>');
+	$PHP_OUTPUT.=('<option value="'.$id.'">'.$name.'</option>');
 
 }
 $PHP_OUTPUT.=('</select>');
@@ -28,7 +28,7 @@ while($db->nextRecord()) {
 
 	$id = $db->getField('sec');
 	$name = $db->getField('game_name');
-	$PHP_OUTPUT.=('<option value="$id">$name</option>');
+	$PHP_OUTPUT.=('<option value="'.$id.'">'.$name.'</option>');
 
 }
 $PHP_OUTPUT.=('</select>');
@@ -46,7 +46,7 @@ while($db->nextRecord()) {
 
 	$id = $db->getField('sec');
 	$name = $db->getField('game_name');
-	$PHP_OUTPUT.=('<option value="$id">$name</option>');
+	$PHP_OUTPUT.=('<option value="'.$id.'">'.$name.'</option>');
 
 }
 $PHP_OUTPUT.=('</select>');

@@ -73,7 +73,7 @@ while ($db->nextRecord()) {
 		$container['game_id'] = $player->getGameID();
 		$container['sending_page'] = 'hof';
 	}
-	$PHP_OUTPUT.=('<td align=center$bold>');
+	$PHP_OUTPUT.=('<td align=center'.$bold.'>');
 	$hof_name = stripslashes($db_acc->HoF_name);
 	$PHP_OUTPUT.=create_link($container, $hof_name);
 	$PHP_OUTPUT.=('</td>');

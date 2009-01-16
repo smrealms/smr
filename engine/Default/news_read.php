@@ -30,7 +30,7 @@ if (isset($var['breaking'])) {
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center"> ' . date(DATE_FULL_SHORT, $time) . ' </td>');
-	$PHP_OUTPUT.=('<td align="left">$text</td>');
+	$PHP_OUTPUT.=('<td align="left">'.$text.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=('<br /><br />');

@@ -37,7 +37,7 @@ $ship->decreaseCargo($good_id,$amount);
 $ship->update_cargo();
 
 // log action
-$account->log(6, 'Dumps $amount of '.$good_name.' and looses '.$lost_xp.' experience', $player->getSectorID());
+$account->log(6, 'Dumps '.$amount.' of '.$good_name.' and looses '.$lost_xp.' experience', $player->getSectorID());
 
 $container = array();
 $container['url'] = 'skeleton.php';

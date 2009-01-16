@@ -60,7 +60,7 @@ while ($db->nextRecord()) {
 				$currLinkAccLogin = $db2->getField('login');
 			else $currLinkAccLogin = '[Account no longer Exists]';
 			$PHP_OUTPUT.=('<tr>');
-			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan=$rows align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
+			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.=('<td align=center>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td align=center>');
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $db2->getField('reason');

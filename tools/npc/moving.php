@@ -112,8 +112,8 @@ function leaving_sector($account_id, $game_id, $sector_id) {
 		}
 
 		// send scout messages to user
-		$message = 'Your forces have spotted ' . get_colored_name($account_id, $game_id) . ' leaving sector #$sector_id';
-		send_message($account_id, $game_id, $db->getField('owner_id'), SCOUTMSG, '.$db->escapeString($message');
+		$message = 'Your forces have spotted ' . get_colored_name($account_id, $game_id) . ' leaving sector #'.$sector_id.'';
+		send_message($account_id, $game_id, $db->getField('owner_id'), SCOUTMSG, $message);
 
 	}
 
@@ -168,8 +168,8 @@ function entering_sector($account_id, $game_id, $sector_id) {
 		}
 
 		// send scout messages to user
-		$message = 'Your forces have spotted ' . get_colored_name($account_id, $game_id) . ' entering sector #$sector_id';
-		send_message($account_id, $game_id, $db->getField('owner_id'), SCOUTMSG, '.$db->escapeString($message');
+		$message = 'Your forces have spotted ' . get_colored_name($account_id, $game_id) . ' entering sector #'.$sector_id;
+		send_message($account_id, $game_id, $db->getField('owner_id'), SCOUTMSG, $message);
 
 	}
 

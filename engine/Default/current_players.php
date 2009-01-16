@@ -24,7 +24,7 @@ $db->query('SELECT * FROM player ' .
 				 'game_id = '.SmrSession::$game_id.' ' .
 		   'ORDER BY '.$sort.' '.$seq);
 //if ($sort == 'experience DESC, player_name' || $sort == 'experience')
-//	$db->query('SELECT * FROM player_cache WHERE game_id = '.$player->getGameID().' AND account_id IN $list ORDER BY experience $seq');
+//	$db->query('SELECT * FROM player_cache WHERE game_id = '.$player->getGameID().' AND account_id IN '.$list.' ORDER BY experience '.$seq);
 
 // fix it if some1 is using the logoff button
 if ($count_real_last_active < $count_last_active)
@@ -61,7 +61,7 @@ else {
 	else
 		$PHP_OUTPUT.=('A few of them ');
 
-	$PHP_OUTPUT.=('were moving so your ship computer was able to intercept $count_last_active transmission');
+	$PHP_OUTPUT.=('were moving so your ship computer was able to intercept '.$count_last_active.' transmission');
 
 	if ($count_last_active > 1)
 		$PHP_OUTPUT.=('s.<br />');
@@ -134,7 +134,7 @@ if ($count_last_active > 0) {
 				else $name .= ' (' . $rank . ')';
 			} else $name .= ' ' . $db->getField('tag');
 		}
-		//$name .= ' $add';
+		//$name .= $add;
 		$PHP_OUTPUT.=create_link($container, $name);
 		$PHP_OUTPUT.=('</td>');
 		$container = array();

@@ -260,7 +260,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	foreach ($replace as $key => $timea) {
 		if (($final = strtotime($timea)) !== -1 && $timea != '') {
 			$final += $account->offset * 3600;
-			$message_text = str_replace('!$timea!', date(DATE_FULL_SHORT, $final), $message_text);
+			$message_text = str_replace('!'.$timea.'!', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
 	$replace = explode('?', $message_text);
@@ -268,7 +268,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 		if (($final = strtotime($timea)) !== -1 && $sender_id > 0 && $timea != '') {	
 			$send_acc =& SmrAccount::getAccount($sender_id);
 			$final += ($account->offset * 3600 - $send_acc->offset * 3600);
-			$message_text = str_replace('?$timea?', date(DATE_FULL_SHORT, $final), $message_text);
+			$message_text = str_replace('?'.$timea.'?', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
 	if (!empty($sender_id))

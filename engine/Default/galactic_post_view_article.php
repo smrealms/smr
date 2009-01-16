@@ -8,7 +8,7 @@ if (isset($var['news'])) {
 
 $db3->query('INSERT INTO news ' .
                      '(game_id, time, news_message, type) ' .
-                     'VALUES($player->getGameID(), ' . TIME . ', ' . $db->escape_string($var['news'], false) . ', \'breaking\')');
+                     'VALUES('.$player->getGameID().', ' . TIME . ', ' . $db->escape_string($var['news'], false) . ', \'breaking\')');
 
 }
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID());

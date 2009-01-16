@@ -51,7 +51,7 @@ $PHP_OUTPUT.=('<p><table width="100%"><tr>');
 $PHP_OUTPUT.=('<tr><th>Component</th><th>Price</th></tr>');
 
 foreach ($components as $component => $price)
-	$PHP_OUTPUT.=('<tr><td>$component</td><td align="right">' . number_format($price, 2) . ' �</td></tr>');
+	$PHP_OUTPUT.=('<tr><td>'.$component.'</td><td align="right">' . number_format($price, 2) . ' �</td></tr>');
 
 $PHP_OUTPUT.=('<tr><td>&nbsp;</td><td align="right"><hr noshade width="100%"></td></tr>');
 $PHP_OUTPUT.=('<tr><td>&nbsp;</td><td align="right">' . number_format($total_price, 2) . ' �</td></tr>');

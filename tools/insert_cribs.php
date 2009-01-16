@@ -11,7 +11,7 @@ include(ENGINE . 'smr.inc');
 $db = new SmrMySqlDatabase();
 
 for ($i = 10; $i <= 1025; $i = $i + 10)
-	$db->query('INSERT into location VALUES(25, $i, 805)');
+	$db->query('INSERT into location VALUES(25, '.$i.', 805)');
 	
 ?>
 

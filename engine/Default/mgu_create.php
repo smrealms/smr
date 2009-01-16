@@ -77,16 +77,16 @@ while ($db->nextRecord())
 	{
 		$CurrByte = 3;
 		$up = $db->getField('link_up');
-		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = $up AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
+		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = '.$up.' AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
 		if ($db2->getNumRows() == 0 && $up != 0) $CurrByte += 128;
 		$right = $db->getField('link_right');
-		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = $right AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
+		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = '.$right.' AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
 		if ($db2->getNumRows() == 0 && $right != 0) $CurrByte += 64;
 		$down = $db->getField('link_down');
-		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = $down AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
+		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = '.$down.' AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
 		if ($db2->getNumRows() == 0 && $down != 0) $CurrByte += 32;
 		$left = $db->getField('link_left');
-		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = $left AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
+		$db2->query('SELECT * FROM player_visited_sector WHERE sector_id = '.$left.' AND game_id = '.$game_id.' AND account_id = '.$player->getAccountID().' LIMIT 1');
 		if ($db2->getNumRows() == 0 && $left != 0) $CurrByte += 16;
 		$file .= addbyte($CurrByte);
 		$file .= addbyte(0);
@@ -120,7 +120,7 @@ while ($db->nextRecord())
 		$CurrByte += 4;
 	}
 	//sector friendliness
-	$db2->query('SELECT * FROM sector_has_forces WHERE sector_id = '.$sector_id.' AND mines > 0 AND owner_id IN $alliance LIMIT 1');
+	$db2->query('SELECT * FROM sector_has_forces WHERE sector_id = '.$sector_id.' AND mines > 0 AND owner_id IN '.$alliance.' LIMIT 1');
 	if ($db2->getNumRows() > 0)
 	{
 		//we want a green 'friendly' sector
@@ -163,7 +163,7 @@ while ($db->nextRecord())
 	$db2->query('SELECT * FROM planet WHERE game_id = '.$game_id.' AND sector_id = '.$sector_id.' LIMIT 1');
 	if ($db2->nextRecord())
 	{
-		$db2->query('SELECT * FROM planet WHERE game_id = '.$game_id.' AND sector_id = '.$sector_id.' AND owner_id IN $alliance LIMIT 1');
+		$db2->query('SELECT * FROM planet WHERE game_id = '.$game_id.' AND sector_id = '.$sector_id.' AND owner_id IN '.$alliance.' LIMIT 1');
 		if ($db2->nextRecord())
 		{
 			//friendly planet
@@ -194,7 +194,7 @@ while ($db->nextRecord())
 		$file .= addbyte(($planet + $race));
 	if ($planet > 0)
 		$file .= addbyte($level);
-	$db3->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND (sector_id_1 = $sector_id OR sector_id_2 = $sector_id) LIMIT 1');
+	$db3->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND (sector_id_1 = '.$sector_id.' OR sector_id_2 = '.$sector_id.') LIMIT 1');
 	if ($db3->nextRecord())
 		$CurrByte = 128;
 	else $CurrByte = 0;
@@ -203,7 +203,7 @@ while ($db->nextRecord())
 	$CurrByte += $db2->getNumRows();
 	$file .= addbyte($CurrByte);
 	// warp
-	$db3->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND (sector_id_1 = $sector_id OR sector_id_2 = $sector_id) LIMIT 1');
+	$db3->query('SELECT * FROM warp WHERE game_id = '.$game_id.' AND (sector_id_1 = '.$sector_id.' OR sector_id_2 = '.$sector_id.') LIMIT 1');
 	if ($db3->nextRecord())
 	{
 		$warp_id = ($db3->getField('sector_id_1') == $sector_id) ? $db3->getField('sector_id_2') : $db3->getField('sector_id_1');
