@@ -165,21 +165,21 @@ function album_entry($album_id) {
 	if (empty($location))
 		$location = 'N/A';
 	echo('<tr>');
-	echo('<td align="right" width="10%" style="font-weight:bold;">Location :</td><td>'.$location.'</td>');
+	echo('<td align="right" width="10%" style="font-weight:bold;">Location:</td><td>'.$location.'</td>');
 	echo('</tr>');
 
 	if (empty($email))
 		$email = 'N/A';
 	echo('<tr>');
-	echo('<td align="right" width="10%" style="font-weight:bold;">eMail :</td><td>'.$email.'</td>');
+	echo('<td align="right" width="10%" style="font-weight:bold;">eMail:</td><td>'.$email.'</td>');
 	echo('</tr>');
 
 	if (empty($website))
 		$website = 'N/A';
 	else
-		$website = '<a href="$website" target="_new">'.$website.'</a>';
+		$website = '<a href="'.$website.'" target="_new">'.$website.'</a>';
 	echo('<tr>');
-	echo('<td align="right" width="10%" style="font-weight:bold;">Website :</td><td>'.$website.'</td>');
+	echo('<td align="right" width="10%" style="font-weight:bold;">Website:</td><td>'.$website.'</td>');
 	echo('</tr>');
 
 	echo('<tr>');
@@ -189,13 +189,13 @@ function album_entry($album_id) {
 		$birthdate = 'Year '.$year;
 	if (empty($birthdate))
 		$birthdate = 'N/A';
-	echo('<td align="right" width="10%" style="font-weight:bold;">Birthdate :</td><td>'.$birthdate.'</td>');
+	echo('<td align="right" width="10%" style="font-weight:bold;">Birthdate:</td><td>'.$birthdate.'</td>');
 	echo('</tr>');
 
 	if (empty($other))
 		$other = 'N/A';
 	echo('<tr>');
-	echo('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info :<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
+	echo('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info:<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
 	echo('</tr>');
 
 	echo('<tr>');
