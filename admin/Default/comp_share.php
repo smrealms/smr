@@ -45,7 +45,7 @@ while ($db->nextRecord()) {
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currTabAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=('Exception: ' . $db2->getField('reason') . '.<br />');
 		} else continue;
-		echo_table();
+		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Accounts</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
 		
 		$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currTabAccId);

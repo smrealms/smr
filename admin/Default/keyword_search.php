@@ -57,7 +57,7 @@ while ($db->nextRecord()) {
 		if ($count == 0) {
 			//start table
 			$PHP_OUTPUT.=('<a href=#button1>Goto Exception Button/Personal Messages Start</a>');
-			echo_table();
+			$PHP_OUTPUT.= create_table();
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<th align=center>Game ID</th>');
 			$PHP_OUTPUT.=('<th align=center>Alliance ID</th>');
@@ -143,7 +143,7 @@ while ($db->nextRecord()) {
 		if ($count == 0) {
 			//start table
 			$PHP_OUTPUT.=('<a href=#button2>Goto Exception Button</a>');
-			echo_table();
+			$PHP_OUTPUT.= create_table();
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<th align=center>Game ID</th>');
 			$PHP_OUTPUT.=('<th align=center>Sender ID</th>');
