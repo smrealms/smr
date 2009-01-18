@@ -36,7 +36,6 @@ if($cost>0)
 	$player->decreaseCredits($cost);
 else
 	$player->increaseCredits(-$cost);
-$player->update();
 
 // assign the new ship
 $ship->decloak();
@@ -45,8 +44,9 @@ $ship->setShipTypeID($var['ship_id']);
 
 
 // update again
-$ship->update();
 $ship->removeUnderAttack();
+$ship->update();
+$player->update();
 
 $account->log(10, 'Buys a '.$ship->getName().' for '.$cost.' credits', $player->getSectorID());
 
