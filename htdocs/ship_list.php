@@ -37,7 +37,7 @@ else
 	$order_by = 'ship_type.ship_type_id';
 
 
-$order_by .= ', ship_name ASC';
+$order_by .= ', ship_name ASC, ship_type_support_hardware.hardware_type_id ASC';
 
 
 if(!empty($hardwarea) && is_numeric($hardwarea) && $hardwarea >=1 && $hardwarea <= 11)
