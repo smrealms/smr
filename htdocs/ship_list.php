@@ -18,9 +18,9 @@ echo ('<link rel="stylesheet" type="text/css" href="default.css">');
 echo ('<title>Ship List</title>');
 echo ('<meta http-equiv="pragma" content="no-cache">');
 echo ('</head>');
-$seq = $_REQUEST['seq'];
-$order = $_REQUEST['order'];
-$hardwarea = $_REQUEST['hardwarea'];
+$seq = @$_REQUEST['seq'];
+$order = @$_REQUEST['order'];
+$hardwarea = @$_REQUEST['hardwarea'];
 echo ('<body>');
 if (empty($seq))
 	$seq = 'ASC';
@@ -28,9 +28,9 @@ elseif ($seq == 'ASC')
 	$seq = 'DESC';
 else
 	$seq = 'ASC';
-if (isset($order))
+if (!empty($order))
 	$order_by = $order .' '. $seq;
-elseif (isset($hardwarea)) {
+elseif (!empty($hardwarea)) {
 
     $ship_array = array();
     $db->query('SELECT ship_type.ship_type_id as id FROM ship_type, ship_type_support_hardware, race ' .
