@@ -35,9 +35,6 @@ function getPresident($race_id) {
 			$pres_xp = $president->getExperience(); //only want to set their exp if they are deputy
 	}
 		
-
-	if (empty($pres_xp))
-
 	// check if there is another player with a higher xp and deputy
 	$db->query('SELECT * FROM player ' .
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
