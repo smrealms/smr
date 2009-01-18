@@ -130,7 +130,11 @@ if (!$ship->canHaveScanner() &&
 
 $PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="_blank"><span class="yellow bold">Next Level</span></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
-$db->nextRecord();
+if(!$db->nextRecord())
+{
+	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
+	$db->nextRecord();
+}
 $PHP_OUTPUT.= $db->getField('level_name') . ': ' . number_format($db->getField('requirement')) . 'xp';
 
 $PHP_OUTPUT.= '<br /><br />';
