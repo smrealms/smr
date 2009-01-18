@@ -37,8 +37,8 @@ $db->query('SELECT race_name, race.race_id as race_id, relation FROM race_has_re
 				 'race_has_relation.race_id_1 != race_has_relation.race_id_2 AND ' .
 				 'race_has_relation.relation >= 300 AND ' .
 				 'race_has_relation.game_id = '.$player->getGameID());
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
@@ -46,7 +46,6 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<tr><td align="center">');
 	$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('relation'), $db->getField('race_name')));
 	$PHP_OUTPUT.=('</td></tr>');
-
 }
 
 $PHP_OUTPUT.=('</table>');
@@ -61,8 +60,8 @@ $db->query('SELECT race_name, race.race_id as race_id, relation FROM race_has_re
 				 'race_has_relation.race_id_1 != race_has_relation.race_id_2 AND ' .
 				 'race_has_relation.relation <= -300 AND ' .
 				 'race_has_relation.game_id = '.$player->getGameID());
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
@@ -70,7 +69,6 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<tr><td align="center">');
 	$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('relation'), $db->getField('race_name')));
 	$PHP_OUTPUT.=('</td></tr>');
-
 }
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</td>');
