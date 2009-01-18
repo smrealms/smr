@@ -234,9 +234,10 @@ if($sector->hasPort())
 function checkForForceRefreshMessage(&$msg)
 {
 	global $db,$player,$smarty;
-	if(preg_match('/\[Force Check\]/',$msg))
+	$contains = 0;
+	$msg = str_replace('[Force Check]','',$contains);
+	if($contains>0)
 	{
-		$msg = preg_replace('/\[Force Check\]/','',$msg);
 		if(!$smarty->get_template_vars('ForceRefreshMessage'))
 		{
 			$forceRefreshMessage ='';
