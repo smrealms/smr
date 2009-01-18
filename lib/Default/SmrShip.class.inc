@@ -44,8 +44,8 @@ class SmrShip extends AbstractSmrShip
 		$this->load_cargo();
 	}
 	
-	function load_weapon() {
-		
+	function load_weapon()
+	{
 		// determine weapon
 		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon WHERE ' .
 			'account_id = '.$this->getAccountID().' AND ' .
@@ -57,12 +57,9 @@ class SmrShip extends AbstractSmrShip
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord())
 		{
-			
 			$order_id		= $this->db->getField('order_id');
 			$this->weapons[$order_id] =& SmrWeapon::getWeapon($this->gameID,$this->db->getField('weapon_type_id'));
-			
 		}
-		
 		$this->checkForExcessWeapons();
 	}
 	
@@ -82,10 +79,11 @@ class SmrShip extends AbstractSmrShip
 				$this->cargo[$this->db->getField('good_id')] = $this->db->getField('amount');
 			}
 		}
+		$this->checkForExcessCargo();
 	}
 	
-	function load_hardware() {
-		
+	function load_hardware()
+	{
 		$this->hardware = array();
 		$this->oldHardware = array();
 		
@@ -93,17 +91,17 @@ class SmrShip extends AbstractSmrShip
 		$this->db->query('SELECT * FROM ship_has_hardware, hardware_type ' .
 			'WHERE account_id = '.$this->getAccountID().' AND ' .
 			'game_id = '.$this->getGameID().' AND ' .
-		'ship_has_hardware.hardware_type_id = hardware_type.hardware_type_id');
+			'ship_has_hardware.hardware_type_id = hardware_type.hardware_type_id');
 		
-		while ($this->db->nextRecord()) {
-			
+		while ($this->db->nextRecord())
+		{
 			$hardware_type_id = $this->db->getField('hardware_type_id');
 			
 			// adding hardware to array
 			$this->hardware[$hardware_type_id]		= $this->db->getField('amount');
 			$this->oldHardware[$hardware_type_id] = $this->db->getField('old_amount');
 		}
-		
+		$this->checkForExcessHardware();
 	}
 	
 	public function getAccountID()
@@ -111,8 +109,8 @@ class SmrShip extends AbstractSmrShip
 		return $this->getPlayer()->getAccountID();
 	}
 	
-	function update_cargo() {
-		
+	function update_cargo()
+	{
 		// write cargo info
 		foreach ($this->getCargo() as $id => $amount)
 		{
