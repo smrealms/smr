@@ -33,10 +33,8 @@ if (!empty($order))
 elseif (!empty($hardwarea)) {
 
     $ship_array = array();
-    $db->query('SELECT ship_type.ship_type_id as id FROM ship_type, ship_type_support_hardware, race ' .
-                'WHERE race.race_id = ship_type.race_id AND ' .
-                'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND ' .
-                'ship_type_support_hardware.hardware_type_id = '.$hardwarea.' ' .
+    $db->query('SELECT ship_type.ship_type_id as id FROM ship_type NATURAL JOIN ship_type_support_hardware ' .
+                'WHERE hardware_type_id = '.$hardwarea.' ' .
                 'ORDER BY max_amount '.$seq);
     while ($db->nextRecord())
     	$ship_array[] = $db->getField('id');
