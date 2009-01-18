@@ -2,7 +2,7 @@
 	{assign var=ShootingPlayer value=$TraderResults.Player}
 	{assign var=TotalDamage value=$TraderResults.TotalDamage}
 	{if $TraderResults.DeadBeforeShot}
-		{$ShootingPlayer->getName()} died before they were able to attack!<br />
+		{$ShootingPlayer->getDisplayName()} died before they were able to attack!<br />
 	{else}
 		{foreach from=$TraderResults.Weapons item=WeaponResults}
 			{assign var=ShootingWeapon value=$WeaponResults.Weapon}
@@ -15,7 +15,7 @@
 			{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			
-			{$ShootingPlayer->getName()} fires their {$ShootingWeapon->getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()}{*
+			{$ShootingPlayer->getDisplayName()} fires their {$ShootingWeapon->getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getDisplayName()}{*
 			*}{if !$ActualDamage.TargetAlreadyDead} {*
 				*}{if !$ShotHit}and misses{elseif $ActualDamage.TotalDamage == 0}{*
 					*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
@@ -38,7 +38,7 @@
 			{if $ActualDamage.Shield > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 			{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
-			{$ShootingPlayer->getName()} {if $WeaponDamage.Launched == 0}fails to launch their combat drones{else}launches <span class="yellow">{$WeaponDamage.Launched}</span> combat drones at{if $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()}{*
+			{$ShootingPlayer->getDisplayName()} {if $WeaponDamage.Launched == 0}fails to launch their combat drones{else}launches <span class="yellow">{$WeaponDamage.Launched}</span> combat drones at{if $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getDisplayName()}{*
 				*}{if !$ActualDamage.TargetAlreadyDead} {*
 					*}{if $ActualDamage.TotalDamage == 0}{*
 						*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which prove ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
@@ -55,7 +55,7 @@
 			{/if}
 		{/if}
 	{/if}
-	{$ShootingPlayer->getName()} {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round.{if !$TraderResults.DeadBeforeShot} Maybe they should go back to the academy{/if}{/if}.<br /><br />
+	{$ShootingPlayer->getDisplayName()} {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round.{if !$TraderResults.DeadBeforeShot} Maybe they should go back to the academy{/if}{/if}.<br /><br />
 {/foreach}
 {assign var=TotalDamage value=$TraderTeamCombatResults.TotalDamage}
 This fleet {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round. You call that a fleet? They need a better recruiter{/if}.
