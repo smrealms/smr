@@ -53,7 +53,8 @@ if(!empty($hardwarea) && is_numeric($hardwarea) && $hardwarea >=1 && $hardwarea 
 			'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND ' .
 			'ship_type.ship_type_id=' . $db->getField('ship_type_id') . ' ' .
 			'ORDER BY ship_type_support_hardware.hardware_type_id ASC');
-		$shipArray[] = buildShipStats($db2);
+		if($db2->nextRecord())
+			$shipArray[] = buildShipStats($db2);
 	}
 }
 else
@@ -128,9 +129,7 @@ function buildShipStats($db)
     $stat[] = $restriction;
 	$level = $db->getField('lvl_needed');
     $stat[] = $level;
-    $hardware_dis = array();
-	$hardware_dis[1] = $db->getField('max_amount');
-	$stat[] = $hardware_dis[1];
+	$stat[] = $db->getField('max_amount');
 	$hardware_id = 2;
     //get our hardware
     while ($hardware_id <= 11)
