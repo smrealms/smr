@@ -99,8 +99,8 @@ elseif ($var['func'] == 'Hard_add') {
 } elseif ($var['func'] == 'Race_Relations') {
 	$amount = $_REQUEST['amount'];
 	$race = $_REQUEST['race'];
-	$db->query('UPDATE race_has_relation SET relation = '.$db->escapeString($amount).' WHERE race_id_1 = '.$player->getRaceID().' AND race_id_2 = '.$race.' AND game_id = '.$player->getGameID());
-	$db->query('UPDATE race_has_relation SET relation = '.$db->escapeString($amount).' WHERE race_id_1 = '.$race.' AND race_id_2 = '.$player->getRaceID().' AND game_id = '.$player->getGameID());
+	$db->query('UPDATE race_has_relation SET relation = '.$amount.' WHERE race_id_1 = '.$player->getRaceID().' AND race_id_2 = '.$race.' AND game_id = '.$player->getGameID());
+	$db->query('UPDATE race_has_relation SET relation = '.$amount.' WHERE race_id_1 = '.$race.' AND race_id_2 = '.$player->getRaceID().' AND game_id = '.$player->getGameID());
 }
 $container['url'] = 'skeleton.php';
 $container['body'] = $var['body'];
