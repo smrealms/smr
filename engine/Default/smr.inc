@@ -97,7 +97,7 @@ function create_form_name($container, $name) {
 }
 
 function create_form_parameter($container, $param) {
-	return '<form '.$param.' method="POST" action="loader.php">' .
+	return '<form '.$param.' method="POST" action="/loader.php">' .
 		'<input type="hidden" name="sn" value="' . SmrSession::get_new_sn($container) . '">';
 }
 
