@@ -201,7 +201,12 @@ class SmrPort
 	public function &getGood($goodID)
 	{
 		$goods = $this->getGoods();
-		return $goods['All Goods'][$goodID];
+		return isset($goods['All Goods'][$goodID]) ? $goods['All Goods'][$goodID] : false;
+	}
+	
+	public function hasGood($goodID)
+	{
+		return $this->getGood($goodID)!==false;
 	}
 	
 	public function setGoodAmount($goodID,$amount)
@@ -288,20 +293,11 @@ class SmrPort
 			throw new Exception('Cannot upgrade a cached port!');
 		while($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9)
 		{
-			global $LEVEL_1_GOODS,$LEVEL_2_GOODS,$LEVEL_3_GOODS,$LEVEL_4_GOODS;
+			$GOODS = Globals::getGoods();
 			
 			$this->upgrade -= $this->getUpgradeRequirement();
 			$this->credits -= $this->getUpgradeRequirement();
-			
-			$level1_goods = $LEVEL_1_GOODS; //5 of these chosen for lvl 9 port
-			$level2_goods = $LEVEL_2_GOODS; //4 of these chosen for lvl 9 port
-			$level3_goods = $LEVEL_3_GOODS; //3 of these chosen for lvl 9 port
-			$level4_goods = $LEVEL_4_GOODS; //50% of one of these for lvl 9 port
-			//mix up goods
-				shuffle($level1_goods);
-			shuffle($level2_goods);
-			shuffle($level3_goods);
-			shuffle($level4_goods);
+			shuffle($GOODS);
 			
 			$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
 			switch($this->level)
@@ -311,18 +307,22 @@ class SmrPort
 					{
 						do
 						{
-							$newGood = array_shift($level1_goods);;
-						} while( isset($this->goods['All Goods'][$newGood]) );
-						$this->addPortGood($newGood,$type);
+							$newGood = array_shift($GOODS);
+						} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
+						if($count == 0)
+							break;
+						$this->addPortGood($newGood['ID'],$type);
 					}
 				break;
 				
 				case 1:
 					do
 					{
-						$newGood = array_shift($level1_goods);;
-					} while( isset($this->goods['All Goods'][$newGood]) );
-					$this->addPortGood($newGood,$type);
+						$newGood = array_shift($GOODS);
+					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
+					if($count == 0)
+						break;
+					$this->addPortGood($newGood['ID'],$type);
 				break;
 				
 				case 2:
@@ -331,33 +331,44 @@ class SmrPort
 				case 5:
 					do
 					{
-						$newGood = array_shift($level2_goods);;
-					} while( isset($this->goods['All Goods'][$newGood]) );
-					$this->addPortGood($newGood,$type);
+						$newGood = array_shift($GOODS);
+					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=2) && ($count = count($GOODS))!=0 );
+					if($count == 0)
+						break;
+					$this->addPortGood($newGood['ID'],$type);
 				break;
 				
 				case 6:
 				case 7:
 					do
 					{
-						$newGood = array_shift($level3_goods);;
-					} while( isset($this->goods['All Goods'][$newGood]) );
-					$this->addPortGood($newGood,$type);
+						$newGood = array_shift($GOODS);
+					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
+					if($count == 0)
+						break;
+					$this->addPortGood($newGood['ID'],$type);
 				break;
 	
 				case 8: // Add 1 level 3, and 50% chance of level 4
+					do
+					{
+						$newGood = array_shift($GOODS);;
+					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
+					if($count == 0)
+						break;
+					$this->addPortGood($newGood['ID'],$type);
+			
+					if (mt_rand(1,100) <= 50) //50% chance to get tier 4 when upgrading to level 9
+					{
+						$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
 						do
 						{
-							$newGood = array_shift($level3_goods);;
-						} while( isset($this->goods['All Goods'][$newGood]) );
-						$this->addPortGood($newGood,$type);
-				
-						if (mt_rand(1,100) <= 50) //50% chance to get tier 4 when upgrading to level 9
-						{
-							$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
-							$newGood = array_shift($level4_goods);
-							$this->addPortGood($newGood,$type);
-						}
+							$newGood = array_shift($GOODS);;
+						} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=4) && ($count = count($GOODS))!=0 );
+						if($count == 0)
+							break;
+						$this->addPortGood($newGood['ID'],$type);
+					}
 				break;
 				
 				default: // We don't want to add goods.
