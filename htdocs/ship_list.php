@@ -30,20 +30,68 @@ else
 	$seq = 'ASC';
 if (!empty($order))
 	$order_by = $order .' '. $seq;
-elseif (!empty($hardwarea)) {
-
-    $ship_array = array();
-    $db->query('SELECT ship_type.ship_type_id as id FROM ship_type NATURAL JOIN ship_type_support_hardware ' .
-                'WHERE hardware_type_id = '.$hardwarea.' ' .
-                'ORDER BY max_amount '.$seq);
-    while ($db->nextRecord())
-    	$ship_array[] = $db->getField('id');
-
-} else
+elseif (!empty($hardwarea))
+	$order_by = 'max_amount '. $seq;
+else
 	$order_by = 'ship_type.ship_type_id';
 
 
 $order_by .= ', ship_name ASC, ship_type_support_hardware.hardware_type_id ASC';
+
+
+$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
+			'WHERE race.race_id = ship_type.race_id AND ' .
+			'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id ' .
+			(!empty($hardwarea) ? 'AND hardware_type_id = '.$hardwarea.' ' : '') .
+			'ORDER BY '.$order_by);
+while ($db->nextRecord())
+{
+
+	//we want to put them all in an array so we dont have to have 15 td rows
+	$stat = array();
+   	$name = str_replace(' ','&nbsp;',$db->getField('ship_name'));
+    $stat[] = $name;
+	$race = str_replace(' ','&nbsp;',$db->getField('race_name'));
+	$stat[] = $race;
+	$cost = $db->getField('cost');
+	$stat[] = $cost;
+    $speed = $db->getField('speed');
+    $stat[] = $speed;
+	$hardpoints = $db->getField('hardpoint');
+	$stat[] = $hardpoints;
+	if ($db->getField('buyer_restriction') == 1)
+		$restriction = '<font color=green>Good</font>';
+    elseif ($db->getField('buyer_restriction') == 2)
+		$restriction = '<font color=red>Evil</font>';
+	else
+		$restriction = '&nbsp;';
+    $stat[] = $restriction;
+	$level = $db->getField('lvl_needed');
+    $stat[] = $level;
+    $hardware_dis = array();
+	$hardware_dis[1] = $db->getField('max_amount');
+	$stat[] = $hardware_dis[1];
+	$hardware_id = 2;
+    //get our hardware
+    while ($hardware_id <= 11)
+    {
+		if($db->nextRecord())
+		{
+
+	    	if ($hardware_id < 7)
+		    	$stat[] = $db->getField('max_amount');
+    		elseif ($db->getField('max_amount') == 1)
+        		$stat[] = 'Yes';
+            else
+	        	$stat[] = '&nbsp;';
+	    }
+        $hardware_id++;
+	}
+	$shipArray[] = $stat;
+}
+
+
+
 echo ('<form>');
 
 echo ('<table class="standard"  cellspacing="0">');
@@ -68,138 +116,14 @@ echo ('<th align="center"><a href="?hardwarea=10&seq='.$seq.'"><span style=color
 echo ('<th align="center"><a href="?hardwarea=11&seq='.$seq.'"><span style=color:#80C870;>Drone Scrambler</span></a></th>');
 echo ('</tr>');
 echo ('</form>');
-$loop = 1;
 
-if (is_array($ship_array))
+
+foreach($shipArray as $stat)
 {
-
-    while (sizeof($ship_array) > 0)
-    {
-
-		$db_id = array_shift ($ship_array);
-		//echo (sizeof($ship_array));
-		$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
-                'WHERE race.race_id = ship_type.race_id AND ' .
-                'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND ' .
-                'ship_type.ship_type_id = '.$db_id.' ' .
-                'ORDER BY ship_type_support_hardware.hardware_type_id');
-
-		while ($db->nextRecord()) {
-
-		    //we want to put them all in an array so we dont have to have 15 td rows
-    		$stat = array();
-	    	$name = str_replace(' ','&nbsp;',$db->getField('ship_name'));
-	    	$stat[] = $name;
-			$race = str_replace(' ','&nbsp;',$db->getField('race_name'));
-    		$stat[] = $race;
-		    $cost = $db->getField('cost');
-    		$stat[] = $cost;
-	    	$speed = $db->getField('speed');
-	    	$stat[] = $speed;
-		    $hardpoints = $db->getField('hardpoint');
-    		$stat[] = $hardpoints;
-		    if ($db->getField('buyer_restriction') == 1)
-    		    $restriction = '<font color=green>Good</font>';
-	    	elseif ($db->getField('buyer_restriction') == 2)
-    	    	$restriction = '<font color=red>Evil</font>';
-		    else
-    		    $restriction = '&nbsp;';
-	    	$stat[] = $restriction;
-            $level = $db->getField('lvl_needed');
-            $stat[] = $level;
-	    	$hardware_dis = array();
-		    $hardware_dis[1] = $db->getField('max_amount');
-		    $stat[] = $hardware_dis[1];
-    		$hardware_id = 2;
-	    	//get our hardware
-	    	while ($hardware_id <= 11) {
-
-		        if($db->nextRecord()) {
-
-		        	if ($hardware_id < 7)
-    		        	$stat[] = $db->getField('max_amount');
-        		    elseif ($db->getField('max_amount') == 1)
-            			$stat[] = 'Yes';
-	            	else
-    	        		$stat[] = '&nbsp;';
-	        		$hardware_id++;
-
-		        }
-
-		    }
-    		$loop++;
-	    	echo ('<tr>');
-
-		    foreach ($stat as $value)
-    		    echo ('<td align="center">'.$value.'</td>');
-
-		    echo ('</tr>');
-
-		}
-
-    }
-	echo ('</table>');
+    echo ('<tr>');
+	foreach ($stat as $value)
+		echo ('<td align="center">'.$value.'</td>');
+	echo ('</tr>');
 }
-else
-{
-
-	$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
-                'WHERE race.race_id = ship_type.race_id AND ' .
-                'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id ' .
-                'ORDER BY '.$order_by);
-
-	while ($db->nextRecord())
-	{
-
-		//we want to put them all in an array so we dont have to have 15 td rows
-    	$stat = array();
-	   	$name = str_replace(' ','&nbsp;',$db->getField('ship_name'));
-	    $stat[] = $name;
-		$race = str_replace(' ','&nbsp;',$db->getField('race_name'));
-    	$stat[] = $race;
-		$cost = $db->getField('cost');
-    	$stat[] = $cost;
-	    $speed = $db->getField('speed');
-	    $stat[] = $speed;
-		$hardpoints = $db->getField('hardpoint');
-    	$stat[] = $hardpoints;
-		if ($db->getField('buyer_restriction') == 1)
-    		$restriction = '<font color=green>Good</font>';
-	    elseif ($db->getField('buyer_restriction') == 2)
-    		$restriction = '<font color=red>Evil</font>';
-		else
-    		$restriction = '&nbsp;';
-	    $stat[] = $restriction;
-		$level = $db->getField('lvl_needed');
-        $stat[] = $level;
-	    $hardware_dis = array();
-		$hardware_dis[1] = $db->getField('max_amount');
-		$stat[] = $hardware_dis[1];
-    	$hardware_id = 2;
-	    //get our hardware
-	    while ($hardware_id <= 11)
-	    {
-			if($db->nextRecord())
-			{
-
-		    	if ($hardware_id < 7)
-    		    	$stat[] = $db->getField('max_amount');
-        		elseif ($db->getField('max_amount') == 1)
-            		$stat[] = 'Yes';
-	            else
-    	        	$stat[] = '&nbsp;';
-		    }
-	        $hardware_id++;
-		}
-    	$loop++;
-	    echo ('<tr>');
-
-		foreach ($stat as $value)
-    		echo ('<td align="center">'.$value.'</td>');
-
-		echo ('</tr>');
-
-	}
 echo ('</table>');
-}
 ?>
