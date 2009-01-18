@@ -179,6 +179,7 @@ class SmrSession
 	{
 		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
+		unset($commonContainer['CommonID']);
 		return md5(serialize($commonContainer));
 	}
 
