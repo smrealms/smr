@@ -27,7 +27,7 @@ if ($account_id > 0) {
 
 	$db->query('SELECT * FROM album WHERE account_id = '.$account_id.' AND Approved = \'YES\'');
 	if ($db->nextRecord()) {
-
+		$disabled = $db->getField('disabled') == 'TRUE';
 		$location = stripslashes($db->getField('location'));
 		$email = stripslashes($db->getField('email'));
 		$website = stripslashes($db->getField('website'));
@@ -70,7 +70,10 @@ if (empty($account_id)) {
 	$container['task'] = 'reset_image';
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('<td align="center">');
-	$PHP_OUTPUT.=create_submit('Disable');
+	if(!$disabled)
+		$PHP_OUTPUT.=create_submit('Disable');
+	else
+		$PHP_OUTPUT.= 'Already Disabled';
 	$PHP_OUTPUT.=('</td>');
 
 	$default_email = 'Dear Photo Album User,'.EOL.EOL .
