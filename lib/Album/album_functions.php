@@ -157,7 +157,7 @@ function album_entry($album_id) {
 	if ($disabled == 'FALSE')
 		echo('<img src="'.URL.'/upload/'.$album_id.'">');
 	else
-		echo('<img src="'.URL.'/album/disabled.jpg">');
+		echo('<img src="'.URL.'/images/album/disabled.jpg">');
 
 	echo('</td>');
 	echo('</tr>');
