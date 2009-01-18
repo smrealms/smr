@@ -97,7 +97,7 @@ function album_entry($album_id) {
 		$year = $db->getField('year');
 		$other = nl2br(stripslashes($db->getField('other')));
 		$page_views = $db->getField('page_views');
-		$disabled = $db->getField('disabled');
+		$disabled = $db->getField('disabled') == 'TRUE';
 
 	} else {
 
@@ -154,7 +154,7 @@ function album_entry($album_id) {
 	echo('<tr>');
 	echo('<td colspan="2" align="center" valign="middle">');
 
-	if ($disabled == 'FALSE')
+	if ($disabled == false)
 		echo('<img src="'.URL.'/upload/'.$album_id.'">');
 	else
 		echo('<img src="'.URL.'/images/album/disabled.jpg">');

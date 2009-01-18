@@ -24,8 +24,8 @@ $account_id = $var['account_id'];
 $email_txt = $_REQUEST['email_txt'];
 
 // check for each task
-if ($var['task'] == 'reset_image') {
-
+if ($var['task'] == 'reset_image')
+{
 	$db->query('UPDATE album SET disabled = \'TRUE\' WHERE account_id = '.$account_id);
 
 	$db->lockTable('album_has_comments');
