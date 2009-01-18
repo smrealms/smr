@@ -257,14 +257,23 @@ function displayGrouped($playerName, $player_id, $sender_id, $message_text, $fir
 function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg_read, $type) {
 	global $player, $account;
 	
-	$matches = array();
-	preg_match_all('/\[TIME\](.*?)\[\/TIME]/i', $matches, $msg,  PREG_SET_ORDER);
-	foreach ($matches as $match)
+	$replace = explode('!', $message_text);
+	foreach ($replace as $key => $timea)
 	{
-		if ($match[1] != '' && ($final = strtotime($match[1])) !== false) //WARNING: Expects PHP 5.1.0 or later
+		if ($timea != '' && ($final = strtotime($timea)) !== false) //WARNING: Expects PHP 5.1.0 or later
 		{
 			$final += $account->offset * 3600;
-			$message_text = str_replace($match[0], date(DATE_FULL_SHORT, $final), $message_text);
+			$message_text = str_replace('!$timea!', date(DATE_FULL_SHORT, $final), $message_text);
+		}
+	}
+	$replace = explode('?', $message_text);
+	foreach ($replace as $key => $timea)
+	{
+		if ($sender_id > 0 && $timea != '' && ($final = strtotime($timea)) !== false) //WARNING: Expects PHP 5.1.0 or later
+		{	
+			$send_acc =& SmrAccount::getAccount($sender_id);
+			$final += ($account->offset * 3600 - $send_acc->offset * 3600);
+			$message_text = str_replace('?$timea?', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
 	if (!empty($sender_id))

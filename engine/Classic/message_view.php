@@ -257,15 +257,19 @@ function displayGrouped($playerName, $player_id, $sender_id, $message_text, $fir
 function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg_read, $type) {
 	global $player, $account;
 	$replace = explode("!", $message_text);
-	foreach ($replace as $key => $timea) {
-		if (($final = strtotime($timea)) !== -1 && $timea != "") {
+	foreach ($replace as $key => $timea)
+	{
+		if (($final = strtotime($timea)) !== false && $timea != "") //WARNING: Expects PHP 5.1.0 or later
+		{
 			$final += $account->offset * 3600;
 			$message_text = str_replace("!$timea!", date("n/j/Y g:i:s A", $final), "$message_text");
 		}
 	}
 	$replace = explode("?", $message_text);
-	foreach ($replace as $key => $timea) {
-		if (($final = strtotime($timea)) !== -1 && $sender_id > 0 && $timea != "") {	
+	foreach ($replace as $key => $timea)
+	{
+		if (($final = strtotime($timea)) !== false && $sender_id > 0 && $timea != "") //WARNING: Expects PHP 5.1.0 or later
+		{	
 			$send_acc = new SMR_ACCOUNT();
 			$send_acc->get_by_id($sender_id);
 			$final += ($account->offset * 3600 - $send_acc->offset * 3600);
