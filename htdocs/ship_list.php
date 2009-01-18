@@ -52,7 +52,7 @@ if(!empty($hardwarea) && is_numeric($hardwarea) && $hardwarea >=1 && $hardwarea 
 			'WHERE race.race_id = ship_type.race_id AND ' .
 			'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND ' .
 			'ship_type.ship_type_id=' . $db->getField('ship_type_id') . ' ' .
-			'ORDER BY '.$order_by);
+			'ORDER BY ship_type_support_hardware.hardware_type_id ASC');
 		$shipArray[] = buildShipStats($db2);
 	}
 }
