@@ -21,6 +21,7 @@ function send_html_mail($from_name, $from_email, $to_email, $subject, $body) {
 
 // get account_id from session
 $account_id = $var['account_id'];
+$email_txt = $_REQUEST['email_txt'];
 
 // check for each task
 if ($var['task'] == 'reset_image') {
