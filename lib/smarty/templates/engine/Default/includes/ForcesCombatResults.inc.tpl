@@ -18,7 +18,7 @@
 		 scout drones kamikaze themselves against
 	{/if}
 	
-	{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getName()}{*
+	{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getDisplayName()}{*
 	*}{if !$ActualDamage.TargetAlreadyDead} {*
 		*}{if !$ShotHit} and misses{elseif $ActualDamage.TotalDamage == 0}{*
 			*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
