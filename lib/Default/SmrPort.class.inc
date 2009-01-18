@@ -116,7 +116,6 @@ class SmrPort
 			$db = new SmrMySqlDatabase();
 			while ($this->db->nextRecord())
 			{
-				
 				$good = $GOODS[$this->db->getField('good_id')];
 				$good['Amount'] = $this->db->getField('amount');
 				$good['TransactionType'] = $this->db->getField('transaction_type');
@@ -385,27 +384,29 @@ class SmrPort
 		return $this->getLevel() * 1000000;
 	}
 	
-	protected function addPortGood($good_id,$type)
+	protected function addPortGood($goodID,$type)
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		if(!is_numeric($good_id))
+		if(!is_numeric($goodID))
 			return false;
-		$amount = getGoodMax($good_id);
-		$this->goods['All Goods'][$good_id] = $amount;
-		$this->goods[$type][$good_id] = $amount;
-		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->gameID . ',' . $this->sectorID . ',' . $good_id . ',' . escape_string($type) . ',' . $amount . ')');
+		$newGood = Globals::getGood($goodID);
+		$newGood['Amount'] = $newGood['Max'];
+		$newGood['TransactionType'] = $type;
+		$this->goods['All Goods'][$goodID] =& $newGood;
+		$this->goods[$type][$type] =& $newGood;
+		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->getGameID() . ',' . $this->getSectorID() . ',' . $goodID . ',' . $this->db->escapeString($type) . ',' . $newGood['Amount'] . ')');
 	}
 	
-	protected function removePortGood($good_id)
+	protected function removePortGood($goodID)
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		unset($this->goods['All Goods'][$good_id]);
-		if(isset($this->goods['Sell'][$good_id])) unset($this->goods['Sell'][$good_id]);
-		elseif(isset($this->goods['Buy'][$good_id])) unset($this->goods['Buy'][$good_id]);
+		unset($this->goods['All Goods'][$goodID]);
+		if(isset($this->goods['Sell'][$goodID])) unset($this->goods['Sell'][$goodID]);
+		elseif(isset($this->goods['Buy'][$goodID])) unset($this->goods['Buy'][$goodID]);
 		
-		$this->db->query('DELETE FROM port WHERE '.$this->SQL.' AND `good_id`='.$good_id.';');
+		$this->db->query('DELETE FROM port WHERE '.$this->SQL.' AND `good_id`='.$goodID.';');
 	}
 	
 	public function checkForDowngrade($damageDone)
