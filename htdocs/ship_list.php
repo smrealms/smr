@@ -30,23 +30,80 @@ else
 	$seq = 'ASC';
 if (!empty($order))
 	$order_by = $order .' '. $seq;
-elseif (!empty($hardwarea))
-	$order_by = 'max_amount '. $seq;
 else
 	$order_by = 'ship_type.ship_type_id';
 
 
-$order_by .= ', ship_name ASC, ship_type_support_hardware.hardware_type_id ASC';
+$order_by .= ', ship_name ASC';
 
 
-$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
+if(!empty($hardwarea) && is_numeric($hardwarea))
+{
+	$db->query('SELECT ship_type_id FROM ship_type_support_hardware ' .
+			'WHERE hardware_type_id = '.$hardwarea.' ' .
+			'ORDER BY max_amount '.$seq);
+	$db2 = new SmrMySqlDatabase();
+	while ($db->nextRecord())
+	{
+		$db2->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
+			'WHERE race.race_id = ship_type.race_id AND ' .
+			'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND' .
+			'ship_type_id=' . $db->getField('ship_type_id') .
+			'ORDER BY '.$order_by);
+		$shipArray[] = buildShipStats($db2);
+	}
+}
+else
+{
+	$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
 			'WHERE race.race_id = ship_type.race_id AND ' .
 			'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id ' .
-			(!empty($hardwarea) ? 'AND hardware_type_id = '.$hardwarea.' ' : '') .
 			'ORDER BY '.$order_by);
-while ($db->nextRecord())
-{
+	while ($db->nextRecord())
+	{
+		$shipArray[] = buildShipStats($db);
+	}
+}
 
+
+
+echo ('<form>');
+
+echo ('<table class="standard"  cellspacing="0">');
+echo ('<tr>');
+echo ('<th align="left"><a href="?order=ship_name&seq='.$seq.'"><span style=color:#80C870;>Ship Name</span></a></th>');
+echo ('<th align="center"><a href="?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Ship Race</span></a></th>');
+echo ('<th align="center"><a href="?order=cost&seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
+echo ('<th align="center"><a href="?order=speed&seq='.$seq.'"><span style=color:#80C870;>Speed</span></a></th>');
+echo ('<th align="center"><a href="?order=hardpoint&seq='.$seq.'"><span style=color:#80C870;>Hardpoints</span></a></th>');
+echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
+echo ('<th align="center"><a href="?order=lvl_needed&seq='.$seq.'"><span style=color:#80C870;>Level Needed(Semi War)</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=1&seq='.$seq.'"><span style=color:#80C870;>Shields</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=2&seq='.$seq.'"><span style=color:#80C870;>Armor</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=3&seq='.$seq.'"><span style=color:#80C870;>Cargo</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=4&seq='.$seq.'"><span style=color:#80C870;>Combat Drones</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=5&seq='.$seq.'"><span style=color:#80C870;>Scout Drones</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=6&seq='.$seq.'"><span style=color:#80C870;>Mines</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=7&seq='.$seq.'"><span style=color:#80C870;>Scanner</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=8&seq='.$seq.'"><span style=color:#80C870;>Cloak</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=9&seq='.$seq.'"><span style=color:#80C870;>Illusion</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=10&seq='.$seq.'"><span style=color:#80C870;>Jump</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=11&seq='.$seq.'"><span style=color:#80C870;>Drone Scrambler</span></a></th>');
+echo ('</tr>');
+echo ('</form>');
+
+
+foreach($shipArray as $stat)
+{
+    echo ('<tr>');
+	foreach ($stat as $value)
+		echo ('<td align="center">'.$value.'</td>');
+	echo ('</tr>');
+}
+echo ('</table>');
+
+function buildShipStats($db)
+{
 	//we want to put them all in an array so we dont have to have 15 td rows
 	$stat = array();
    	$name = str_replace(' ','&nbsp;',$db->getField('ship_name'));
@@ -87,43 +144,6 @@ while ($db->nextRecord())
 	    }
         $hardware_id++;
 	}
-	$shipArray[] = $stat;
+	return $stat;
 }
-
-
-
-echo ('<form>');
-
-echo ('<table class="standard"  cellspacing="0">');
-echo ('<tr>');
-echo ('<th align="left"><a href="?order=ship_name&seq='.$seq.'"><span style=color:#80C870;>Ship Name</span></a></th>');
-echo ('<th align="center"><a href="?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Ship Race</span></a></th>');
-echo ('<th align="center"><a href="?order=cost&seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
-echo ('<th align="center"><a href="?order=speed&seq='.$seq.'"><span style=color:#80C870;>Speed</span></a></th>');
-echo ('<th align="center"><a href="?order=hardpoint&seq='.$seq.'"><span style=color:#80C870;>Hardpoints</span></a></th>');
-echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
-echo ('<th align="center"><a href="?order=lvl_needed&seq='.$seq.'"><span style=color:#80C870;>Level Needed(Semi War)</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=1&seq='.$seq.'"><span style=color:#80C870;>Shields</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=2&seq='.$seq.'"><span style=color:#80C870;>Armor</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=3&seq='.$seq.'"><span style=color:#80C870;>Cargo</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=4&seq='.$seq.'"><span style=color:#80C870;>Combat Drones</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=5&seq='.$seq.'"><span style=color:#80C870;>Scout Drones</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=6&seq='.$seq.'"><span style=color:#80C870;>Mines</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=7&seq='.$seq.'"><span style=color:#80C870;>Scanner</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=8&seq='.$seq.'"><span style=color:#80C870;>Cloak</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=9&seq='.$seq.'"><span style=color:#80C870;>Illusion</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=10&seq='.$seq.'"><span style=color:#80C870;>Jump</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=11&seq='.$seq.'"><span style=color:#80C870;>Drone Scrambler</span></a></th>');
-echo ('</tr>');
-echo ('</form>');
-
-
-foreach($shipArray as $stat)
-{
-    echo ('<tr>');
-	foreach ($stat as $value)
-		echo ('<td align="center">'.$value.'</td>');
-	echo ('</tr>');
-}
-echo ('</table>');
 ?>
