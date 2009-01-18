@@ -187,14 +187,14 @@ class Globals
 		if(!isset(self::$RACE_RELATIONS[$gameID][$raceID]))
 		{
 			//get relations
-			$RACES = Globals::getRaces();
+			$RACES =& Globals::getRaces();
 			self::$RACE_RELATIONS[$gameID][$raceID] = array();
-			foreach ($RACES as $otherRaceID => $race_name)
+			foreach ($RACES as $otherRaceID => $raceArray)
 			{
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
-			$r_sql = self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1='.$raceID.' LIMIT '.sizeof($RACES));
-			while (self::$db->nextRecord($r_sql))
+			self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1='.$raceID.' LIMIT '.count($RACES));
+			while (self::$db->nextRecord())
 			{
 				self::$RACE_RELATIONS[$gameID][$raceID][(int)self::$db->getField('race_id_2')] = (int)self::$db->getField('relation');
 			}
