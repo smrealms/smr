@@ -46,7 +46,7 @@ elseif ($type == 'list') {
 	if ($db->nextRecord())
 		$container['continue'] = 'Yes';
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
+	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align=center>Login_name</th>');
 	$PHP_OUTPUT.=('<th align=center>IP</th>');
@@ -172,11 +172,11 @@ elseif ($type == 'list') {
 	$container = array();
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
+	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr><th align=center>Account ID</th>');
 	$PHP_OUTPUT.=('<th align=center>Login</th>');
 	$PHP_OUTPUT.=('<th align=center>Time</th>');
-	echo'<th align=center>Disable?</th>
+	$PHP_OUTPUT.='<th align=center>Disable?</th>
 	<th align=center>Exception?</th>
 	<th align=center>Closed?</th></tr>';
 	while ($db->nextRecord()) {
@@ -231,7 +231,7 @@ elseif ($type == 'list') {
 	$container = array();
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
+	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr><th align=center>IP</th>');
 	$PHP_OUTPUT.=('<th align=center>Host</th><th align=center>Time</th></tr>');
 	$db->query('SELECT * FROM account_has_ip WHERE account_id = '.$variable.' ORDER BY time');
@@ -272,9 +272,9 @@ elseif ($type == 'list') {
 	$name = stripslashes($db2->getField('alliance_name'));
 	$PHP_OUTPUT.=('<center>Listing all IPs for alliance '.$name.' in game with ID '.$game.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
+	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr><th align=center>Account ID</th>');
-	echo'<th align=center>Login</th>
+	$PHP_OUTPUT.='<th align=center>Login</th>
 	<th align=center>Time</th>
 	<th align=center>IP</th>
 	<th align=cneter>Host</th>
@@ -340,9 +340,9 @@ elseif ($type == 'list') {
 		$container['url'] = 'account_close.php';
 		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
 		$PHP_OUTPUT.=create_echo_form($container);
-		echo_table();
+		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Account ID</th>');
-		echo'<th align=center>Login</th>
+		$PHP_OUTPUT.='<th align=center>Login</th>
 		<th align=center>Time</th>
 		<th align=center>IP</th>
 		<th align=center>Host</th>
@@ -410,9 +410,9 @@ elseif ($type == 'list') {
 		$container['url'] = 'account_close.php';
 		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
 		$PHP_OUTPUT.=create_echo_form($container);
-		echo_table();
+		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Account ID</th>');
-		echo'<th align=center>Login</th>
+		$PHP_OUTPUT.='<th align=center>Login</th>
 		<th align=center>Time</th>
 		<th align=center>IP</th>
 		<th align=center>Host</th>
@@ -449,7 +449,7 @@ elseif ($type == 'list') {
 			$a = 1;
 			foreach ($names as $echoed) {
 				if ($a > 1)
-					echo',';
+					$PHP_OUTPUT.=',';
 				$PHP_OUTPUT.=($echoed);
 				$a ++;
 			}
@@ -507,8 +507,8 @@ elseif ($type == 'list') {
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=('<center>Listing all IPs for ingame names '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
-	echo'<tr>
+	$PHP_OUTPUT.= create_table();
+	$PHP_OUTPUT.= '<tr>
 	<th align=center>Account ID</th>
 	<th align=center>Login</th>
 	<th align=center>Time</th>
@@ -546,7 +546,7 @@ elseif ($type == 'list') {
 		$a = 1;
 		foreach ($names as $echoed) {
 			if ($a > 1)
-				echo',';
+				$PHP_OUTPUT.=',';
 			$PHP_OUTPUT.=($echoed);
 			$a ++;
 		}
@@ -600,8 +600,8 @@ elseif ($type == 'list') {
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=('<center>Listing all IPs for logins '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
-	echo'<tr>
+	$PHP_OUTPUT.= create_table();
+	$PHP_OUTPUT.= '<tr>
 	<th align=center>Account ID</th>
 	<th align=center>Login</th>
 	<th align=center>Time</th>
@@ -636,7 +636,7 @@ elseif ($type == 'list') {
 		$a = 1;
 		foreach ($names as $echoed) {
 			if ($a > 1)
-				echo',';
+				$PHP_OUTPUT.=',';
 			$PHP_OUTPUT.=($echoed);
 			$a ++;
 		}
@@ -668,8 +668,8 @@ elseif ($type == 'list') {
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=('<center>Listing all IPs LIKE '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
-	echo'<tr>
+	$PHP_OUTPUT.= create_table();
+	$PHP_OUTPUT.='<tr>
 	<th align=center>Account ID</th>
 	<th align=center>Login</th>
 	<th align=center>Time</th>
@@ -704,7 +704,7 @@ elseif ($type == 'list') {
 		$a = 1;
 		foreach ($names as $echoed) {
 			if ($a > 1)
-				echo',';
+				$PHP_OUTPUT.=',';
 			$PHP_OUTPUT.=($echoed);
 			$a ++;
 		}
@@ -736,8 +736,8 @@ elseif ($type == 'list') {
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=('<center>Listing all hosts LIKE '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
-	echo_table();
-	echo'<tr>
+	$PHP_OUTPUT.= create_table();
+	$PHP_OUTPUT.='<tr>
 	<th align=center>Account ID</th>
 	<th align=center>Login</th>
 	<th align=center>Time</th>
@@ -772,7 +772,7 @@ elseif ($type == 'list') {
 		$a = 1;
 		foreach ($names as $echoed) {
 			if ($a > 1)
-				echo',';
+				$PHP_OUTPUT.=',';
 			$PHP_OUTPUT.=($echoed);
 			$a ++;
 		}

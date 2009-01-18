@@ -4,7 +4,7 @@ $db2 = new SmrMySqlDatabase();
 //split variable to get start and end
 list ($start, $end) = split (',', $variable);
 $db->query('SELECT * FROM account WHERE account_id >= '.$start.' AND account_id <= '.$end.' ORDER BY account_id');
-echo_table();
+$PHP_OUTPUT.= create_table();
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th align=center>Account_id</th>');
 $PHP_OUTPUT.=('<th align=center>Login</th>');

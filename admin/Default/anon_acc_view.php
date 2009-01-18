@@ -26,7 +26,7 @@ if (empty($_REQUEST['acct_game'])) {
 	if ($db->getNumRows() > 0) {
 		
 		$smarty->assign('PageTopic','ANON ACCOUNT '.$acc);
-		echo_table();
+		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Player Name</th><th align=center>Type</th><th align=center>Amount</th></tr>');
 		while ($db->nextRecord()) {
 			

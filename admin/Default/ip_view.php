@@ -58,7 +58,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'ip_view_results.php';
 $PHP_OUTPUT.=create_form_parameter($container, 'name="form_ip"');
-echo'<select name=type onchange=go() id="InputFields">
+$PHP_OUTPUT.='<select name=type onchange=go() id="InputFields">
 <option value="list">List all IPs</option>
 <option value="search">Search for a specific IP</option>
 <option value="account_ips">List all IPs for a specific account</option>

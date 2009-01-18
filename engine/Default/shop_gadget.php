@@ -19,7 +19,7 @@ $rev_gad = array();
 foreach ($GADGETS as $gad_name => $gad_arr) $rev_gad[$gad_arr['ID']] = $gad_name;
 
 print_title('Browsing Gadgets');
-echo '<br />';
+$PHP_OUTPUT.= '<br />';
 print_error($error);
 
 $this_shop_sells = $SHOP_SELLS_GADGET[$var['loc_id']];
@@ -38,12 +38,12 @@ else $special_stock = FALSE;
 
 if (sizeof($this_shop_sells) > 0)
 {
-	if ($special_stock) echo 'It looks like you have access to some of our special stock.<br />';
-	echo '<table class="standard"><tr><th>Name</th><th>Cost</th><th>Action</th></tr>';
+	if ($special_stock) $PHP_OUTPUT.= 'It looks like you have access to some of our special stock.<br />';
+	$PHP_OUTPUT.= '<table class="standard"><tr><th>Name</th><th>Cost</th><th>Action</th></tr>';
 	foreach ($this_shop_sells as $gad_id)
 	{
-		echo '<tr><td>'.$rev_gad[$gad_id].'</td><td>'.number_format($GADGETS[$rev_gad[$gad_id]]['Cost']).'</td><td>';
-		if ($THIS_PLAYER->getGadget($gad_id)!==false) echo 'Already Owned';
+		$PHP_OUTPUT.= '<tr><td>'.$rev_gad[$gad_id].'</td><td>'.number_format($GADGETS[$rev_gad[$gad_id]]['Cost']).'</td><td>';
+		if ($THIS_PLAYER->getGadget($gad_id)!==false) $PHP_OUTPUT.= 'Already Owned';
 		else
 		{
 			$link = array();
@@ -55,13 +55,13 @@ if (sizeof($this_shop_sells) > 0)
 			$link['gad_id'] = $gad_id;
 			create_button($link, $id);
 		}
-		echo '</td></tr>';
+		$PHP_OUTPUT.= '</td></tr>';
 	}
-	echo '</table>';
+	$PHP_OUTPUT.= '</table>';
 }
 else
 {
-	echo 'We\'ve got nothing for you here! Get outta here!<br />';
+	$PHP_OUTPUT.= 'We\'ve got nothing for you here! Get outta here!<br />';
 }
 
 ?>
