@@ -28,7 +28,10 @@ elseif ($seq == 'ASC')
 	$seq = 'DESC';
 else
 	$seq = 'ASC';
-if (!empty($order))
+	
+$allowedOrders = array('ship_name','race_name','cost','speed','hardpoint','buyer_restriction','lvl_needed');
+	
+if (!empty($order) && in_array($order,$allowedOrders))
 	$order_by = $order .' '. $seq;
 else
 	$order_by = 'ship_type.ship_type_id';
@@ -37,7 +40,7 @@ else
 $order_by .= ', ship_name ASC';
 
 
-if(!empty($hardwarea) && is_numeric($hardwarea))
+if(!empty($hardwarea) && is_numeric($hardwarea) && $hardwarea >=1 && $hardwarea <= 11)
 {
 	$db->query('SELECT ship_type_id FROM ship_type_support_hardware ' .
 			'WHERE hardware_type_id = '.$hardwarea.' ' .
