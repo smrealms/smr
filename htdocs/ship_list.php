@@ -36,7 +36,7 @@ else
 	$order_by = 'ship_type.ship_type_id';
 
 
-$order_by .= ', ship_name ASC';
+$order_by .= ', ship_name ASC, ship_type_support_hardware.hardware_type_id ASC';
 
 
 $db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
