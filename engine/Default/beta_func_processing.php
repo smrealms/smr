@@ -23,35 +23,14 @@ if ($var['func'] == 'Map') {
 elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68) {
 	$ship_id = $_REQUEST['ship_id'];
 	
+	$speed = $ship->getSpeed();
 	// assign the new ship
+	$ship->decloak();
+	$ship->disableIllusion();
 	$ship->setShipTypeID($ship_id);
-	// update
-	$ship->update();
-
-	$player->setShipTypeID($ship_id);
-	//check for more weapons than allowed
-	$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$ship_id);
-	$db->nextRecord();
-	$max_weps = $db->getField('hardpoint');
-	$speed = $db->getField('speed');
-	$db->query('SELECT * FROM ship_has_weapon WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	if ($db->getNumRows() > $max_weps) {
-		$extra = $db->getNumRows() - $max_weps;
-		for ($i=1; $i <= $extra; $i++) {
-			$db->query('SELECT * FROM ship_has_weapon WHERE account_id = '.$player->getAccountID().' ORDER BY order_id DESC');
-			$db->nextRecord();
-			$order_id = $db->getField('order_id');
-			$db->query('DELETE FROM ship_has_weapon WHERE account_id = '.$player->getAccountID().' AND order_id = '.$order_id);
-		}
-	}
+	
 	//now adapt turns
-	$turns = $player->getTurns() * ($speed / $ship->getSpeed());
-	if ($turns > $player->getMaxTurns()) $turns = $player->getMaxTurns();
-	$player->setTurns($turns);
-	$player->update();
-	//now make sure they don't have extra hardware
-	$db->query('DELETE FROM ship_is_cloaked WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	$db->query('DELETE FROM ship_has_illusion WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+	$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
 	doUNO($player,$ship);	
 	
 } elseif ($var['func'] == 'Weapon') {
