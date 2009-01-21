@@ -1,3 +1,5 @@
+<a href="{$CombatSimLink}">Combat Simulator</a><br /><br />
+
 <form action="{$EditDummysLink}" method="POST">
 	Edit Dummy:
 	<select name="dummy_name">
