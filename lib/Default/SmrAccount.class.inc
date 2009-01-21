@@ -45,7 +45,7 @@ class SmrAccount
 		if($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID]))
 		{
 			$a = new SmrAccount($accountID);
-			return self::$CACHE_ACCOUNTS[$a->getAccountID()] =& $a;
+			return self::$CACHE_ACCOUNTS[$accountID] =& $a;
 		}
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
