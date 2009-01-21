@@ -255,6 +255,15 @@ class Globals
 		}
 		return self::$BETA_FUNCTIONS_HREF;
 	}
+	
+	public static function &getWeaponReorderHREF($weaponOrderID, $direction)
+	{
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'weapon_reorder.php';
+		$container[$direction]	= $weaponOrderID;
+		return SmrSession::get_new_href($container);
+	}
 }
 
 
