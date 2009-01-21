@@ -60,25 +60,28 @@ $smarty->assign('Duplicates',$duplicates);
 
 $smarty->assign('CombatSimHREF',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
 
-if(isset($_REQUEST['run']))
+if(is_array($realAttackers) && is_array($realDefenders) && count($realAttackers)>0 && count($realDefenders)>0)
 {
-	runAnAttack($realAttackers,$realDefenders);
-}
-if(isset($_REQUEST['death_run']))
-{
-	while(count($realAttackers)>0 && count($realDefenders)>0)
+	if(isset($_REQUEST['run']))
 	{
 		runAnAttack($realAttackers,$realDefenders);
-		foreach($realAttackers as $key => &$teamPlayer)
+	}
+	if(isset($_REQUEST['death_run']))
+	{
+		while(count($realAttackers)>0 && count($realDefenders)>0)
 		{
-			if($teamPlayer->isDead())
-				unset($realAttackers[$key]);
-		} unset($teamPlayer);
-		foreach($realDefenders as $key => &$teamPlayer)
-		{
-			if($teamPlayer->isDead())
-				unset($realDefenders[$key]);
-		} unset($teamPlayer);
+			runAnAttack($realAttackers,$realDefenders);
+			foreach($realAttackers as $key => &$teamPlayer)
+			{
+				if($teamPlayer->isDead())
+					unset($realAttackers[$key]);
+			} unset($teamPlayer);
+			foreach($realDefenders as $key => &$teamPlayer)
+			{
+				if($teamPlayer->isDead())
+					unset($realDefenders[$key]);
+			} unset($teamPlayer);
+		}
 	}
 }
 
