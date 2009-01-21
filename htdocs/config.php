@@ -134,6 +134,7 @@ define('DEFAULT_CSS',URL.'/default.css');
 	$smarty->load_filter('output','pagetrimwhitespace');
 //	$smarty->assign('links',$db->_LINKS);
 //	$smarty->assign('javaScriptFiles',$db->_JS);
+	$smarty->assign('URL',URL);
 	$smarty->assign('CSSLink',DEFAULT_CSS);
 	$smarty->assign('Title','Space Merchant Realms 1.6:');
 	$smarty->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));
