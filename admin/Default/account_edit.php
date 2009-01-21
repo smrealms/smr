@@ -29,7 +29,7 @@ if (!empty($player_name) && !is_array($player_name)) {
 }
 
 // get account from db
-$db->query('SELECT * FROM account WHERE account_id = '.$account_id.' OR ' .
+$db->query('SELECT account_id FROM account WHERE account_id = '.$account_id.' OR ' .
 									   'login LIKE ' . $db->escape_string($login) . ' OR ' .
 									   'email LIKE ' . $db->escape_string($email) . ' OR ' .
 									   'validation_code LIKE ' . $db->escape_string($val_code));
@@ -95,7 +95,7 @@ if (!empty($curr_account->email)) {
 
 $PHP_OUTPUT.=('<tr><td colspan="2">&nbsp;</td></tr>');
 
-if ($curr_account->account_id != 0) {
+if ($curr_account && $curr_account->account_id != 0) {
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Player:</td>');
@@ -337,7 +337,7 @@ $PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.=( '<table>' );
 $PHP_OUTPUT.=( '<tr><td>' );
-if ($curr_account->account_id != 0)
+if ($curr_account && $curr_account->account_id != 0)
 	$PHP_OUTPUT.=create_submit('Edit Account');
 else
 	$PHP_OUTPUT.=create_submit('Search');
@@ -346,7 +346,7 @@ $PHP_OUTPUT.=( '</form>' );
 
 $container = array();
 
-if ($curr_account->account_id != 0) {
+if ($curr_account && $curr_account->account_id != 0) {
 
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'account_edit.php'));
 	$PHP_OUTPUT.=('<td>');
