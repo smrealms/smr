@@ -90,7 +90,9 @@ if(isset($display_id))
 	{
 		$smarty->assign('CombatLogSector',$db->getField('sector_id'));
 		$smarty->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
-		$results = unserialize(gzuncompress($db->getField('result')));
+		$results = gzuncompress($db->getField('result'));
+		if($db->getField('type')=='TRADER' || $db->getField('type') == 'FORCES')
+			$results = unserialize($results);
 		$smarty->assign_by_ref('CombatResultsType',$db->getField('type'));
 		$smarty->assign_by_ref('CombatResults',$results);
 	}
