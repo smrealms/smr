@@ -1,7 +1,7 @@
 {if $ThisShip->hasWeapons()}
 <div align="center">
 	<p>To reorder your weapons simply drag and drop them into the desired order.</p>
-	<noscript><p>It has been detected that your javascript is disabled, you will have to use the arrows to reorder your weapons</p></noscript>
+	<noscript><p>It has been detected that you do not have javascript or that it is disabled, you will have to use the arrows to reorder your weapons</p></noscript>
 	
 	<form method="POST" action="{$URL}/loader.php">
 		<input type="hidden" name="sn" value="{$Globals->getWeaponReorderHREF(0,'Form')}">
