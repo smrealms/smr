@@ -82,16 +82,20 @@ if($action == 5) {
 	}
 }
 
-if(isset($display_id)){
-	$db->query('SELECT timestamp,sector_id,result FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
+if(isset($display_id))
+{
+	$db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
 
-	if($db->nextRecord()) {
+	if($db->nextRecord())
+	{
 		$smarty->assign('CombatLogSector',$db->getField('sector_id'));
 		$smarty->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
 		$results = unserialize(gzuncompress($db->getField('result')));
-		$smarty->assign_by_ref('TraderCombatResults',$results);
+		$smarty->assign_by_ref('CombatResultsType',$db->getField('type'));
+		$smarty->assign_by_ref('CombatResults',$results);
 	}
-	else {
+	else
+	{
 		$PHP_OUTPUT.= '<span class="red bold">Error:</span> log not found';
 	}
 }
