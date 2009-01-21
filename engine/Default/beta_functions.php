@@ -142,6 +142,9 @@ $PHP_OUTPUT.=('<input name="amount" value="0">');
 $PHP_OUTPUT.=create_submit('Change Relations');
 $PHP_OUTPUT.=('</form>');
 
+
+$PHP_OUTPUT.=('<br />Modify Race<br />');
+
 //change race
 $container['func'] = 'Race';
 $db->query('SELECT * FROM race WHERE race_id > 1 ORDER BY race_id');
