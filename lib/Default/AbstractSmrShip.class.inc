@@ -194,7 +194,7 @@ abstract class AbstractSmrShip
 	public function &addWeapon($weaponTypeID)
 	{
 		$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
-		$this->weapons[count($this->weapons)+1] = $weapon;
+		$this->weapons[count($this->weapons)] = $weapon;
 		$this->hasChangedWeapons = true;
 		return $weapon;
 	}
@@ -206,7 +206,7 @@ abstract class AbstractSmrShip
 		{
 			// Shift everything up by one and put the selected weapon at the bottom
 			$temp =& $this->weapons[$orderID];
-			for($i=1;$i<count($this->weapons);++$i)
+			for($i=0;$i<count($this->weapons);++$i)
 			{
 				$this->weapons[$i] =& $this->weapons[$i+1];
 			}
@@ -228,16 +228,26 @@ abstract class AbstractSmrShip
 		{
 			// Shift everything down by one and put the selected weapon at the top
 			$temp =& $this->weapons[count($this->weapons)];
-			for($i=count($this->weapons);$i>1;--$i) {
+			for($i=count($this->weapons);$i>0;--$i) {
 				$this->weapons[$i] =& $this->weapons[$i-1];
 			}	
-			$this->weapons[1] =& $temp;
+			$this->weapons[0] =& $temp;
 		}
 		else
 		{
 			$temp =& $this->weapons[$replacement];
 			$this->weapons[$replacement] =& $this->weapons[$orderID];
 			$this->weapons[$orderID] =& $temp;
+		}
+		$this->hasChangedWeapons = true;
+	}
+	
+	public function setWeaponLocations(array $orderArray)
+	{
+		$weapons=$this->weapons;
+		foreach($orderArray as $newOrder => $oldOrder)
+		{
+			$this->weapons[$newOrder] =& $weapons[$oldOrder];
 		}
 		$this->hasChangedWeapons = true;
 	}

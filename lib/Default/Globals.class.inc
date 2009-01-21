@@ -262,6 +262,8 @@ class Globals
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'weapon_reorder.php';
 		$container[$direction]	= $weaponOrderID;
+		if($direction=='Form')
+			return SmrSession::get_new_sn($container);
 		return SmrSession::get_new_href($container);
 	}
 }
