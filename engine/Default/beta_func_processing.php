@@ -66,7 +66,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 	$traded_xp = $_REQUEST['traded_xp'];
 	$db->query('UPDATE account_has_stats SET experience_traded = '.$db->escapeString($traded_xp).' WHERE account_id = '.$player->getAccountID());
 } elseif ($var['func'] == 'RemWeapon')
-	$db->query('DELETE FROM ship_has_weapon WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+	$ship->removeAllWeapons();
 elseif ($var['func'] == 'Hard_add') {
 	$type_hard = $_REQUEST['type_hard'];
 	$amount_hard = $_REQUEST['amount_hard'];
