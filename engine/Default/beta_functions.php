@@ -142,4 +142,15 @@ $PHP_OUTPUT.=('<input name="amount" value="0">');
 $PHP_OUTPUT.=create_submit('Change Relations');
 $PHP_OUTPUT.=('</form>');
 
+//change race
+$container['func'] = 'Race';
+$db->query('SELECT * FROM race WHERE race_id > 1 ORDER BY race_id');
+$PHP_OUTPUT.=create_echo_form($container);
+$PHP_OUTPUT.=('<select name="race">');
+while ($db->nextRecord())
+	$PHP_OUTPUT.=('<option value="' . $db->getField('race_id') . '">' . $db->getField('race_name') . '</option>');
+$PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
+$PHP_OUTPUT.=create_submit('Change Race');
+$PHP_OUTPUT.=('</form>');
+
 ?>
