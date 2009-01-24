@@ -23,7 +23,7 @@
 				<td>{$Weapon->getBaseAccuracy()}</td>
 				<td><input type="hidden" name="weapon_reorder[]" value="{$OrderID}" />
 					<noscript><a href="{$Globals->getWeaponReorderHREF($OrderID,'Up')}"></noscript>
-						{if $OrderID > 1}
+						{if $OrderID > 0}
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up.gif" alt="Switch up" title="Switch up">
 						{else}
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up_push.gif" alt="Push up" title="Push up">
