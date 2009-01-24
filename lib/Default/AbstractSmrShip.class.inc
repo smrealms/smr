@@ -202,7 +202,7 @@ abstract class AbstractSmrShip
 	public function moveWeaponUp($orderID)
 	{
 		$replacement = $orderID - 1;
-		if($replacement < 1)
+		if($replacement < 0)
 		{
 			// Shift everything up by one and put the selected weapon at the bottom
 			$temp =& $this->weapons[$orderID];
@@ -224,7 +224,7 @@ abstract class AbstractSmrShip
 	public function moveWeaponDown($orderID)
 	{
 		$replacement = $orderID + 1;
-		if($replacement > count($this->weapons))
+		if($replacement >= count($this->weapons))
 		{
 			// Shift everything down by one and put the selected weapon at the top
 			$temp =& $this->weapons[count($this->weapons)];
