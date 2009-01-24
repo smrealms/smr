@@ -228,7 +228,7 @@ abstract class AbstractSmrShip
 		{
 			// Shift everything down by one and put the selected weapon at the top
 			$temp =& $this->weapons[count($this->weapons)];
-			for($i=count($this->weapons)-1;$i>=0;--$i)
+			for($i=count($this->weapons)-1;$i>0;--$i)
 			{
 				$this->weapons[$i] =& $this->weapons[$i-1];
 			}	
