@@ -30,7 +30,7 @@
 						{/if}
 					<noscript></a>
 					<a href="{$Globals->getWeaponReorderHREF($OrderID,'Down')}"></noscript>
-						{if $OrderID < $ThisShip->getNumWeapons()}
+						{if $OrderID < $ThisShip->getNumWeapons()-1}
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down.gif" alt="Switch down" title="Switch down">
 						{else}
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down_push.gif" alt="Push down" title="Push down">
