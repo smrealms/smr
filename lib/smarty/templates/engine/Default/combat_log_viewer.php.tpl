@@ -1,19 +1,19 @@
-{if $CombatResultsType=='TRADER'}
+{if $CombatResultsType=='PLAYER'}
 	Sector {$CombatLogSector}<br/>
 	{$CombatLogTimestamp}<br/>
 	<br/>
-							
-	{include_template template="includes/TraderFullCombatResults.inc" assign=Template TraderCombatResults=$CombatResults}{include file=$Template}
+
+	{include_template template="includes/TraderFullCombatResults.inc" assign=Template}{include file=$Template TraderCombatResults=$CombatResults}
 {elseif $CombatResultsType=='FORCE'}
 	Sector {$CombatLogSector}<br/>
 	{$CombatLogTimestamp}<br/>
 	<br/>
 							
-	{include_template template="includes/ForceFullCombatResults.inc" assign=Template FullForceCombatResults=$CombatResults}{include file=$Template}
+	{include_template template="includes/ForceFullCombatResults.inc" assign=Template}{include file=$Template FullForceCombatResults=$CombatResults}
 {elseif $CombatResultsType=='PORT'}
-	{$PHP_OUTPUT}
+	{$CombatResults}
 {elseif $CombatResultsType=='PLANET'}
-	{$PHP_OUTPUT}
+	{$CombatResults}
 {else}
 	{$PHP_OUTPUT}
 {/if}

@@ -66,9 +66,11 @@ if($action == 5) {
 			}
 		}
 		$display_id = $container['log_ids'][$container['current_log']];
-		if(count($container['log_ids']) > 1) {
+		if(count($container['log_ids']) > 1)
+		{
 			$PHP_OUTPUT.= '<div class="center">';
-			if($container['current_log']) {
+			if($container['current_log'])
+			{
 				$container['direction'] = 1;
 				$PHP_OUTPUT.=create_link($container, '<img src="images/album/rew.jpg" alt="Previous" title="Previous">');
 			}
@@ -91,9 +93,9 @@ if(isset($display_id))
 		$smarty->assign('CombatLogSector',$db->getField('sector_id'));
 		$smarty->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
 		$results = gzuncompress($db->getField('result'));
-		if($db->getField('type')=='TRADER' || $db->getField('type') == 'FORCES')
+		if($db->getField('type')=='PLAYER' || $db->getField('type') == 'FORCE')
 			$results = unserialize($results);
-		$smarty->assign_by_ref('CombatResultsType',$db->getField('type'));
+		$smarty->assign('CombatResultsType',$db->getField('type'));
 		$smarty->assign_by_ref('CombatResults',$results);
 	}
 	else
@@ -104,44 +106,35 @@ if(isset($display_id))
 
 switch($action){
 	case(0):
-		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs WHERE type=\'PLAYER\' AND game_id=' . SmrSession::$game_id . ' AND (attacker_id=' . $player->getAccountID() . ' OR defender_id=' . $player->getAccountID() . ') ORDER BY log_id DESC,sector_id');
-		break;
 	case(1):
-		$query = 'FROM combat_logs WHERE type=\'PLAYER\' AND game_id=' . SmrSession::$game_id;
-		if($player->getAllianceID() != 0) {
-			$query .= ' AND (attacker_alliance_id=' . $player->getAllianceID() . ' OR defender_alliance_id=' . $player->getAllianceID() . ') ';
-		}
-		else {
-			$query .= ' AND (attacker_id=' . $player->getAccountID() . ' OR defender_id=' . $player->getAccountID() . ') ';
-		}
-		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id ' . $query . ' ORDER BY log_id DESC, sector_id');
-		break;
+		$query = 'type=\'PLAYER\' AND game_id=' . SmrSession::$game_id;
+	break;
 	case(2):
-		$query = 'FROM combat_logs WHERE type=\'PORT\' AND game_id=' . SmrSession::$game_id;
-		if($player->getAllianceID() != 0) {
-			$query .= ' AND (attacker_alliance_id=' . $player->getAllianceID() . ' OR defender_alliance_id=' . $player->getAllianceID() . ') ';
-		}
-		else {
-			$query .= ' AND (attacker_id=' . $player->getAccountID() . ' OR defender_id=' . $player->getAccountID() . ') ';
-		}
-		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id ' . $query . ' ORDER BY log_id DESC, sector_id');
+		$query = 'type=\'PORT\' AND game_id=' . SmrSession::$game_id;
 		break;
 	case(3):
-		$query = 'FROM combat_logs WHERE type=\'PLANET\' AND game_id=' . SmrSession::$game_id;
-		if($player->getAllianceID() != 0) {
-			$query .= ' AND (attacker_alliance_id=' . $player->getAllianceID() . ' OR defender_alliance_id=' . $player->getAllianceID() . ') ';
-		}
-		else {
-			$query .= ' AND (attacker_id=' . $player->getAccountID() . ' OR defender_id=' . $player->getAccountID() . ') ';
-		}
-		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id ' . $query . ' ORDER BY log_id DESC, sector_id');
+		$query = 'type=\'PLANET\' AND game_id=' . SmrSession::$game_id;
 		break;
 	case(4):
-		$query = 'FROM combat_logs WHERE saved = ' . $player->getAccountID() . ' AND game_id = ' . $player->getGameID();
-		$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id ' . $query . ' ORDER BY timestamp DESC, sector_id');
+		$query = 'saved = ' . $player->getAccountID() . ' AND game_id = ' . $player->getGameID();
+		break;
+	case(6):
+		$query = 'type=\'FORCE\' AND game_id=' . SmrSession::$game_id;
 		break;
 	default:
-
+}
+if(isset($query) && $query)
+{
+	if($action != 0 //personal
+		&& $player->hasAlliance())
+	{
+		$query .= ' AND (attacker_alliance_id=' . $player->getAllianceID() . ' OR defender_alliance_id=' . $player->getAllianceID() . ') ';
+	}
+	else
+	{
+		$query .= ' AND (attacker_id=' . $player->getAccountID() . ' OR defender_id=' . $player->getAccountID() . ') ';
+	}
+	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs WHERE '.$query.' ORDER BY log_id DESC, sector_id');
 }
 
 if($action != 5) {
@@ -167,6 +160,8 @@ if($action != 5) {
 				break;
 			case(4):
 				$PHP_OUTPUT.= ' saved';
+			case(6):
+				$PHP_OUTPUT.= ' force';
 				break;
 		}
 		$PHP_OUTPUT.= ' log';
