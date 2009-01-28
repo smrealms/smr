@@ -206,11 +206,11 @@ abstract class AbstractSmrShip
 		{
 			// Shift everything up by one and put the selected weapon at the bottom
 			$temp =& $this->weapons[$orderID];
-			for($i=0;$i<count($this->weapons);++$i)
+			for($i=1;$i<count($this->weapons);++$i)
 			{
-				$this->weapons[$i] =& $this->weapons[$i+1];
+				$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref.  Hence $i-1 =& $i not $i =& $i+1
 			}
-			$this->weapon[count($this->weapons)] =& $temp;
+			$this->weapons[count($this->weapons)-1] =& $temp;
 		}
 		else
 		{
@@ -227,7 +227,7 @@ abstract class AbstractSmrShip
 		if($replacement >= count($this->weapons))
 		{
 			// Shift everything down by one and put the selected weapon at the top
-			$temp =& $this->weapons[count($this->weapons)];
+			$temp =& $this->weapons[count($this->weapons)-1];
 			for($i=count($this->weapons)-1;$i>0;--$i)
 			{
 				$this->weapons[$i] =& $this->weapons[$i-1];
