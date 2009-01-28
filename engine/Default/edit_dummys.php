@@ -5,7 +5,7 @@ require_once(get_file_loc('DummyPlayer.class.inc'));
 require_once(get_file_loc('DummyShip.class.inc'));
 require_once(get_file_loc('SmrWeapon.class.inc'));
 //TODO add game type id
-$smarty->assign_by_ref('CombatSimLink',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
+$smarty->assign('CombatSimLink',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
 $smarty->assign_by_ref('BaseShips',AbstractSmrShip::getAllBaseShips(0));
 $smarty->assign_by_ref('Weapons',SmrWeapon::getAllWeapons(0));
 
@@ -21,10 +21,11 @@ if(isset($_REQUEST['save_dummy']))
 	$dummyPlayer->setShipTypeID($_REQUEST['ship_id']);
 	$dummyShip->regenerate($dummyPlayer);
 	$dummyShip->removeAllWeapons();
-	foreach($_REQUEST['weapons'] as $weaponTypeID)
-	{
-		$dummyShip->addWeapon($weaponTypeID);
-	}
+	if(isset($_REQUEST['weapons']) && is_array($_REQUEST['weapons']))
+		foreach($_REQUEST['weapons'] as $weaponTypeID)
+		{
+			$dummyShip->addWeapon($weaponTypeID);
+		}
 	$dummyPlayer->cacheDummyPlayer();
 }
 
