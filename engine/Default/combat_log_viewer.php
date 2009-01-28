@@ -68,18 +68,17 @@ if($action == 5) {
 		$display_id = $container['log_ids'][$container['current_log']];
 		if(count($container['log_ids']) > 1)
 		{
-			$PHP_OUTPUT.= '<div class="center">';
 			if($container['current_log'])
 			{
 				$container['direction'] = 1;
-				$PHP_OUTPUT.=create_link($container, '<img src="images/album/rew.jpg" alt="Previous" title="Previous">');
+				$smarty->assign('PreviousLogHREF',SmrSession::get_new_href($container));
 			}
 			$PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;';
-			if($container['current_log'] < count($container['log_ids']) - 1) {
+			if($container['current_log'] < count($container['log_ids']) - 1)
+			{
 				$container['direction'] = 2;
-				$PHP_OUTPUT.=create_link($container, '<img src="images/album/fwd.jpg" alt="Next" title="Next">');
+				$smarty->assign('NextLogHREF',SmrSession::get_new_href($container));
 			}
-			$PHP_OUTPUT.= '</div>';
 		}
 	}
 }
