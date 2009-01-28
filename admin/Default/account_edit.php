@@ -304,15 +304,6 @@ if ($curr_account && $curr_account->account_id != 0) {
 		$curr_ip	= $db->getField('ip');
 		$curr_time	= $db->getField('time');
 		$host		= $db->getField('host');
-		//this gets rid of the ips like '127.127.127.127, 1'
-		//making it 127.127.127.127 instead.  This removes errors in gethost
-		if ($curr_ip != 'unknown') {
-			
-			list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $curr_ip, 5);
-			$curr_ip = $fi.$se.$th.$fo;
-			
-		}
-		//$host = gethostbyaddr($curr_ip);
 		if ($host == $curr_ip)
 			$host = 'unknown';
 		$PHP_OUTPUT.=('<tr><td>' . date(DATE_FULL_SHORT, $curr_time) . '</td><td>&nbsp;</td><td>'.$curr_ip.'</td><td>&nbsp;</td><td>'.$host.'</td></tr>');
