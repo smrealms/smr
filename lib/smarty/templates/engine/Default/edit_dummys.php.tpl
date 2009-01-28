@@ -9,7 +9,7 @@
 	</select><br />
 	<input type="submit" value="Select Dummy" />
 </form>
-
+{assign var=DummyShip value=$DummyPlayer->getShip()}
 <table>
 	<tr>
 		<td style="vertical-align:top">
@@ -27,21 +27,25 @@
 					{foreach from=$BaseShips item=BaseShip}
 						<option value="{$BaseShip.ShipTypeID}"{if $BaseShip.ShipTypeID==$DummyPlayer->getShipTypeID()} selected="selected"{/if}>{$BaseShip.Name}</option>
 					{/foreach}
-				</select>
+				</select><br />
 				
-				{foreach from=$ShipWeapons key=OrderID item=ShipWeapon}
+				{foreach from=$DummyShip->getWeapons() key=OrderID item=ShipWeapon}
 					Weapon: {$OrderID}
 					<select name="weapons[]">
 						{foreach from=$Weapons item=Weapon}
 							<option value="{$Weapon->getWeaponTypeID()}"{if $Weapon->getWeaponTypeID()==$ShipWeapon->getWeaponTypeID()} selected="selected"{/if}>{$Weapon->getName()} (dmg: {$Weapon->getShieldDamage()}/{$Weapon->getArmourDamage()} acc: {$Weapon->getBaseAccuracy()}% lvl:{$Weapon->getPowerLevel()})</option>
 						{/foreach}
 					</select><br />
-				{/foreach}<br />
+				{/foreach}
 				<input type="submit" name="save_dummy" value="Save Dummy" />
 			</form>
 		</td>
 		<td style="vertical-align:top">
-			<u>Current Details</u><br/><br/>Level: 0<br />Ship: Galactic Semi<br />DCS: false<br/>Weapons:<br/>Newbie Pulse Laser<br />
+			<u>Current Details</u>
+				<br />Level: {$DummyPlayer->getLevelID()}<br />
+				Ship: {$DummyShip->getName()} ({$DummyShip->getAttackRating()}/{$DummyShip->getDefenseRating()})<br />
+				DCS: {if $DummyShip->hasDCS()}Yes{else}No{/if}<br/>
+				Weapons: {foreach from=$DummyShip->getWeapons() item=ShipWeapon}* {$ShipWeapon->getName()}<br />{/foreach}
 		</td>
 	</tr>
 </table>

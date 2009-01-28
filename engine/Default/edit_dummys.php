@@ -20,12 +20,14 @@ if(isset($_REQUEST['save_dummy']))
 	$dummyPlayer->setExperience($_REQUEST['level']);
 	$dummyPlayer->setShipTypeID($_REQUEST['ship_id']);
 	$dummyShip->regenerate($dummyPlayer);
-	$dummyShip->removeAllWeapons();
 	if(isset($_REQUEST['weapons']) && is_array($_REQUEST['weapons']))
+	{
+		$dummyShip->removeAllWeapons();
 		foreach($_REQUEST['weapons'] as $weaponTypeID)
 		{
 			$dummyShip->addWeapon($weaponTypeID);
 		}
+	}
 	$dummyPlayer->cacheDummyPlayer();
 }
 
