@@ -46,13 +46,13 @@
 	<a href="login.php">Login</a><br />
 {/if}
 <a href="http://www.azool.us/baalz/" target="manual">Help Pages</a><br />
-<a href="manual.php">Manual</a><br />
+<a href="manual.php" target="manual">Manual</a><br />
 <a href="{$PreferencesLink}">Preferences</a><br />
 {if isset($GameID)}
 	<a href="smr_file_download.php">Download Sectors File</a><br />
 {/if}
 <a href="{$EditPhotoLink}">Edit Photo</a><br />
-<a href="album/" target="_blank">View Album</a><br /><br />
+<a href="album/" target="album">View Album</a><br /><br />
 <a href="{$ReportABugLink}">Report A Bug</a><br />
 <a href="{$ContactFormLink}">Contact Form</a><br />
 <br />

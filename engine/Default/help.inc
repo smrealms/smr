@@ -91,11 +91,11 @@ function echo_nav($topic_id) {
 
 		echo ('<tr>');
 		echo ('<td colspan="5">');
-		if ($previous_topic_id > 0)
+		if (isset($previous_topic_id) && $previous_topic_id > 0)
 			echo ('<b>Previous:</b> <a href="'.URL.'/manual.php?'.$previous_topic_id.'">' . get_numbering($previous_topic_id) . $previous_topic.'</a>&nbsp;&nbsp;&nbsp;');
-		if ($up_topic_id > 0)
+		if (isset($up_topic_id) && $up_topic_id > 0)
 			echo ('<b>Up:</b> <a href="'.URL.'/manual.php?'.$up_topic_id.'">' . get_numbering($up_topic_id) . $up_topic.'</a>&nbsp;&nbsp;&nbsp;');
-		if ($next_topic_id > 0)
+		if (isset($next_topic_id) && $next_topic_id > 0)
 			echo ('<b>Next:</b> <a href="'.URL.'/manual.php?'.$next_topic_id.'">' . get_numbering($next_topic_id) . $next_topic.'</a>');
 		echo ('</tr>');
 
@@ -139,13 +139,13 @@ function echo_subsection($topic_id) {
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' ORDER BY order_id');
 	if ($db->getNumRows()) {
 
-		$return.=('<hr noshade width="75%" size="1" align="center"/>');
-		$return.=('<div id="help_menu">');
-		$return.=('<h2>Subsections:</h2>');
+		echo ('<hr noshade width="75%" size="1" align="center"/>');
+		echo ('<div id="help_menu">');
+		echo ('<h2>Subsections:</h2>');
 
-		$return.=create_menu($topic_id);
+		echo_menu($topic_id);
 
-		$return.=('</div>');
+		echo ('</div>');
 	}
 	return $return;
 }
@@ -159,18 +159,18 @@ function echo_menu($topic_id)
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' ORDER BY order_id');
 	if ($db->getNumRows()) {
 
-		$return.=('<ul type="disc">');
+		echo ('<ul type="disc">');
 		while($db->nextRecord()) {
 
 			$sub_topic_id = $db->getField('topic_id');
 			$order_id = $db->getField('order_id');
 			$sub_topic = stripslashes($db->getField('topic'));
 
-			$return.=('<li><a href="'.URL.'/manual.php?'.$sub_topic_id.'">' . get_numbering($sub_topic_id) . $sub_topic.'</a></li>');
-			$return.=create_menu($sub_topic_id);
+			echo ('<li><a href="'.URL.'/manual.php?'.$sub_topic_id.'">' . get_numbering($sub_topic_id) . $sub_topic.'</a></li>');
+			echo_menu($sub_topic_id);
 
 		}
-		$return.=('</ul>');
+		echo ('</ul>');
 
 	}
 	return $return;
