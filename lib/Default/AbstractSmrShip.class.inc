@@ -101,7 +101,7 @@ abstract class AbstractSmrShip
 		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints()))
 		{
 			//erase the first weapon 1 at a time until we are okay
-			$this->removeWeapon(1);
+			$this->removeWeapon(0);
 		}
 	}
 	
@@ -164,6 +164,16 @@ abstract class AbstractSmrShip
 		return $power;
 	}
 	
+	public function getRemainingPower()
+	{
+		return $this->getMaxPower()-$this->getPowerUsed();
+	}
+	
+	public function hasRemainingPower()
+	{
+		return $this->getRemainingPower()>0;
+	}
+	
 	public function getMaxPower()
 	{
 		return 50;
@@ -191,12 +201,18 @@ abstract class AbstractSmrShip
 	public function combat_drones_low() { return floor($this->getCDs() / 100) * 100; }
 	public function combat_drones_high() { return $this->combat_drones_low() + 100; }
 	
+	
+	
 	public function &addWeapon($weaponTypeID)
 	{
-		$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
-		$this->weapons[count($this->weapons)] = $weapon;
-		$this->hasChangedWeapons = true;
-		return $weapon;
+		if($this->hasOpenWeaponSlots() && $this->hasRemainingPower())
+		{
+			$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
+			$this->weapons[count($this->weapons)] = $weapon;
+			$this->hasChangedWeapons = true;
+			return $weapon;
+		}
+		return @false;
 	}
 	
 	public function moveWeaponUp($orderID)
@@ -259,7 +275,7 @@ abstract class AbstractSmrShip
 		for($i=$orderID+1;$i<count($this->weapons);++$i)
 		{
 			$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref.  Hence $i-1 =& $i not $i =& $i+1
-		} unset($this->weapons[count($this->weapons)]);
+		} unset($this->weapons[count($this->weapons)-1]);
 		$this->hasChangedWeapons = true;
 	}
 	
@@ -818,6 +834,11 @@ abstract class AbstractSmrShip
 	public function getOpenWeaponSlots()
 	{
 		return $this->getHardpoints()-$this->getNumWeapons();
+	}
+	
+	public function hasOpenWeaponSlots()
+	{
+		return $this->getOpenWeaponSlots()>0;
 	}
 	
 	public function getHardpoints()

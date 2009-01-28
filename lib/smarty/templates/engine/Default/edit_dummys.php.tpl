@@ -36,7 +36,7 @@
 							<option value="{$Weapon->getWeaponTypeID()}"{if $Weapon->getWeaponTypeID()==$ShipWeapon->getWeaponTypeID()} selected="selected"{/if}>{$Weapon->getName()} (dmg: {$Weapon->getShieldDamage()}/{$Weapon->getArmourDamage()} acc: {$Weapon->getBaseAccuracy()}% lvl:{$Weapon->getPowerLevel()})</option>
 						{/foreach}
 					</select><br />
-				{/foreach}
+				{/foreach}<br />
 				<input type="submit" name="save_dummy" value="Save Dummy" />
 			</form>
 		</td>
