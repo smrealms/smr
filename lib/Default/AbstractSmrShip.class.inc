@@ -212,7 +212,8 @@ abstract class AbstractSmrShip
 			$this->hasChangedWeapons = true;
 			return $weapon;
 		}
-		return @false;
+		$return = false;
+		return $return;
 	}
 	
 	public function moveWeaponUp($orderID)
