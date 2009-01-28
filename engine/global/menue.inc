@@ -180,6 +180,8 @@ function create_combat_log_menue() {
 	$menue_items[] = create_link($container,'Personal');
 	$container['action'] = 1;
 	$menue_items[] = create_link($container,'Alliance');
+	$container['action'] = 6;
+	$menue_items[] = create_link($container,'Force');
 	$container['action'] = 2;
 	$menue_items[] = create_link($container,'Port');
 	$container['action'] = 3;
