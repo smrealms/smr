@@ -200,20 +200,9 @@ if ($var['owner_id'] != $player->getAccountID()) {
 
 $account->log(9, $change_combat_drones.' combat drones, '.$change_scout_drones.' scout drones, '.$change_mines.' mines', $player->getSectorID());
 
-// Changed (26/10/05) - scout drones count * 2
-if($forces->getCDs() == 0 && $forces->getMines() == 0 && $forces->getSDs() >= 1)
-{
-	$days = 1*$forces->getSDs();
-}
-else {
-	$days = ceil(($forces->getCDs() + $forces->getSDs() + $forces->getMines()) / 10);
-}
-if ($days > 5) $days = 5;
-$forces->setExpire(TIME + ($days * 86400));
-
-$ship->update_hardware();
+$forces->updateExpire();
+$forces->update(); // Needs to be in db to show up on CS instantly when querying sector forces
 $ship->removeUnderAttack();
-$forces->update();
 
 forward(create_container('skeleton.php', 'current_sector.php'));
 

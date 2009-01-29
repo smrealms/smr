@@ -8,6 +8,10 @@ class SmrForce
 	protected static $CACHE_SECTOR_FORCES = array();
 	protected static $TIDIED_UP = false;
 	
+	const MAX_EXPIRE_TIME = 432000;
+	const SCOUT_ONLY_FORCE_COUNT = 10;
+	const TIME_PER_FORCE_COUNT = 8640; // 10 = 1day
+	
 	protected static $refreshAllHREF;
 	
 	protected $db;
@@ -76,9 +80,9 @@ class SmrForce
 		{
 			self::$TIDIED_UP = true;
 			$db = new SmrMySqlDatabase();
-			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + CEIL((combat_drones+scout_drones+mines)/10)*86400) WHERE refresh_at <= '.TIME.' AND refresher != 0');
+			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + if(combat_drones+mines=0,scout_drones*'.(self::SCOUT_ONLY_FORCE_COUNT*self::TIME_PER_FORCE_COUNT).',(combat_drones+scout_drones+mines)*'.self::TIME_PER_FORCE_COUNT.')) WHERE refresh_at <= '.TIME.' AND refresher != 0');
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
-			$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+432000).' WHERE expire_time > '.(TIME+432000));
+			$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+self::MAX_EXPIRE_TIME).' WHERE expire_time > '.(TIME+432000));
 		}
 	}
 	
@@ -102,23 +106,6 @@ class SmrForce
 		}
 		else
 			$this->isNew = true;
-
-		// let forces expire (simply let all expire) (update refreshing first)
-//		$db = new SmrMySqlDatabase();
-//		$db2 = new SmrMySqlDatabase();
-//		$time = TIME;
-//		$db->query('SELECT * FROM force_refresh WHERE refresh_at <= '.$time);
-//		while ($db->nextRecord()) {
-//			
-//			$total = $db->getField('num_forces');
-//			$days = ceil($total / 10);
-//			if ($days > 5) $days = 5;
-//			$ex_time = $db->getField('refresh_at') + ($days * 86400);
-//			$db2->query('UPDATE sector_has_forces SET expire_time = '.$ex_time.' WHERE game_id = '.$this->gameID.' AND sector_id = ' . $db->getField('sector_id') . ' AND owner_id = ' . $db->getField('owner_id'));
-//			$db2->query('DELETE FROM force_refresh WHERE game_id = '.$this->gameID.' ' .
-//					'AND sector_id = ' . $db->getField('sector_id') . ' AND owner_id = ' . $db->getField('owner_id'));
-//						
-//		}
 	}
 	public function exists()
 	{
@@ -289,8 +276,23 @@ class SmrForce
 			throw new Exception('Cannot set negative expiry.');
 		if($time==$this->getExpire())
 			return;
+		if($time > TIME + self::MAX_EXPIRE_TIME)
+			$time = self::MAX_EXPIRE_TIME + TIME;
 		$this->hasChanged = true;
 		$this->expire = $time;
+	}
+	
+	public function updateExpire()
+	{
+		// Changed (26/10/05) - scout drones count * 2
+		if($this->getCDs() == 0 && $this->getMines() == 0 && $this->getSDs() >= 1)
+		{
+			$forceCount = self::SCOUT_ONLY_FORCE_COUNT*$this->getSDs();
+		}
+		else {
+			$forceCount = $this->getCDs() + $this->getSDs() + $this->getMines();
+		}
+		$this->setExpire(TIME + $forceCount*self::TIME_PER_FORCE_COUNT);
 	}
 	
 	public function getOwnerID()
