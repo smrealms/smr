@@ -9,7 +9,7 @@ class SmrForce
 	protected static $TIDIED_UP = false;
 	
 	const MAX_EXPIRE_TIME = 432000; // 5 days
-	const TIME_PER_SCOUT_ONLY = 8640; // 1 = 1 day
+	const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
 	const TIME_PER_SCOUT = 8640; // 10 = 1 day
 	const TIME_PER_COMBAT = 8640; // 10 = 1 day
 	const TIME_PER_MINE = 8640; // 10 = 1 day
