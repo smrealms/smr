@@ -8,9 +8,11 @@ class SmrForce
 	protected static $CACHE_SECTOR_FORCES = array();
 	protected static $TIDIED_UP = false;
 	
-	const MAX_EXPIRE_TIME = 432000;
-	const SCOUT_ONLY_FORCE_COUNT = 10;
-	const TIME_PER_FORCE_COUNT = 8640; // 10 = 1day
+	const MAX_EXPIRE_TIME = 432000; // 5 days
+	const TIME_PER_SCOUT_ONLY = 8640; // 1 = 1 day
+	const TIME_PER_SCOUT = 8640; // 10 = 1 day
+	const TIME_PER_COMBAT = 8640; // 10 = 1 day
+	const TIME_PER_MINE = 8640; // 10 = 1 day
 	
 	protected static $refreshAllHREF;
 	
@@ -80,7 +82,7 @@ class SmrForce
 		{
 			self::$TIDIED_UP = true;
 			$db = new SmrMySqlDatabase();
-			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + if(combat_drones+mines=0,scout_drones*'.(self::SCOUT_ONLY_FORCE_COUNT*self::TIME_PER_FORCE_COUNT).',(combat_drones+scout_drones+mines)*'.self::TIME_PER_FORCE_COUNT.')) WHERE refresh_at <= '.TIME.' AND refresher != 0');
+			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + if(combat_drones+mines=0,scout_drones*'.self::TIME_PER_SCOUT_ONLY.',combat_drones*'.self::TIME_PER_COMBAT.'+scout_drones*'.self::TIME_PER_SCOUT.'+mines*'.self::TIME_PER_MINE.')) WHERE refresh_at <= '.TIME.' AND refresher != 0');
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 			$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+self::MAX_EXPIRE_TIME).' WHERE expire_time > '.(TIME+432000));
 		}
@@ -287,12 +289,13 @@ class SmrForce
 		// Changed (26/10/05) - scout drones count * 2
 		if($this->getCDs() == 0 && $this->getMines() == 0 && $this->getSDs() >= 1)
 		{
-			$forceCount = self::SCOUT_ONLY_FORCE_COUNT*$this->getSDs();
+			$time = self::TIME_PER_SCOUT_ONLY*$this->getSDs();
 		}
-		else {
-			$forceCount = $this->getCDs() + $this->getSDs() + $this->getMines();
+		else
+		{
+			$time = $this->getCDs()*self::TIME_PER_COMBAT  + $this->getSDs()*self::TIME_PER_SCOUT + $this->getMines()*self::TIME_PER_MINE;
 		}
-		$this->setExpire(TIME + $forceCount*self::TIME_PER_FORCE_COUNT);
+		$this->setExpire(TIME + $time);
 	}
 	
 	public function getOwnerID()
