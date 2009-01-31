@@ -69,6 +69,8 @@ else
 	$show_price = $bargain_price - $show_price;
 //print("$show_price");
 print("<input type=\"text\" name=\"bargain_price\" value=\"$show_price\" id=\"InputFields\" style=\"width:75;text-align:center;vertical-align:middle;\">&nbsp;");
+print('<!-- here are all information that are needed to calculate the ideal price. if you know how feel free to create a trade calculator -->');
+print('<!--('.$var['amount'].':'.$port->base_price[$good_id].':'.$var['good_distance'].':'.$port->amount[$good_id].':'.$port->max_amount[$good_id].':'.$relations.':'.$port->level.')-->');
 print_submit("Bargain (1)");
 print("</form>");
 
