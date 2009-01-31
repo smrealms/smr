@@ -87,7 +87,7 @@ else
 //$PHP_OUTPUT.=('.$db->escapeString($show_price');
 $PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$show_price.'" id="InputFields" style="width:75;text-align:center;vertical-align:middle;">&nbsp;');
 $PHP_OUTPUT.=('<!-- here are all information that are needed to calculate the ideal price. if you know how feel free to create a trade calculator -->');
-$PHP_OUTPUT.=('<!--('.$var['amount'].':'.$port->base_price[$good_id].':'.$var['good_distance'].':'.$port->amount[$good_id].':'.$port->max_amount[$good_id].':'.$relations.':'.$port->level.')-->');
+$PHP_OUTPUT.=('<!--('.$var['amount'].':'.$portGood['BasePrice'].':'.$var['good_distance'].':'.$portGood['Amount'].':'.$portGood['Max'].':'.$relations.':'.$port->getLevel().')-->');
 $PHP_OUTPUT.=create_submit('Bargain (1)');
 $PHP_OUTPUT.=('</form>');
 
