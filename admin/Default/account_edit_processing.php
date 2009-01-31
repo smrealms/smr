@@ -86,9 +86,10 @@ if ($choise == 'pre_select' && $points > 0) {
 
 	}
 
+	$banned = true;
 	if ($tot_points < 9) {
 		//leave scripts its only a warning
-		break;
+		$banned = false;
 	} elseif ($tot_points < 19) {
 		$expire_time = 2 * 24 * 60 * 60;
 	} elseif ($tot_points < 29) {
@@ -102,35 +103,36 @@ if ($choise == 'pre_select' && $points > 0) {
 	} elseif ($tot_points >= 100) {
 		$expire_time = 0;
 	}
-
-	if ($expire_time > 0) {
-		$days = $expire_time / 60 / 60 / 24;
-		$expire_time += TIME;
-		$expire_msg = 'for '.$days.' days';
-	} else $expire_msg = 'forever!';
-	$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$account_id);
-
-	$suspicion = $_REQUEST['suspicion'];
-	$db->query('REPLACE INTO account_is_closed ' .
-			   '(account_id, reason_id, suspicion, expires) ' .
-			   'VALUES('.$account_id.', '.$reason_pre_select.', '.$db->escapeString($suspicion).', '.$expire_time.')');
-
-	$db->query('INSERT INTO account_has_closing_history ' .
-			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
-
-	$db->query('UPDATE player SET newbie_turns = 1 ' .
-			   'WHERE account_id = '.$account_id.' AND ' .
-					 'newbie_turns = 0 AND ' .
-					 'land_on_planet = \'FALSE\'');
-	$db->lockTable('active_session');
-	$db->query('DELETE FROM active_session ' .
-			   'WHERE account_id = '.$account_id);
-	$db->unlock();
-	if (strlen($msg) > 9)
-		$msg .= 'and ';
-	$msg .= 'closed ';
-
+	if($banned)
+	{
+		if ($expire_time > 0) {
+			$days = $expire_time / 60 / 60 / 24;
+			$expire_time += TIME;
+			$expire_msg = 'for '.$days.' days';
+		} else $expire_msg = 'forever!';
+		$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$account_id);
+	
+		$suspicion = $_REQUEST['suspicion'];
+		$db->query('REPLACE INTO account_is_closed ' .
+				   '(account_id, reason_id, suspicion, expires) ' .
+				   'VALUES('.$account_id.', '.$reason_pre_select.', '.$db->escapeString($suspicion).', '.$expire_time.')');
+	
+		$db->query('INSERT INTO account_has_closing_history ' .
+				   '(account_id, time, admin_id, action) ' .
+				   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
+	
+		$db->query('UPDATE player SET newbie_turns = 1 ' .
+				   'WHERE account_id = '.$account_id.' AND ' .
+						 'newbie_turns = 0 AND ' .
+						 'land_on_planet = \'FALSE\'');
+		$db->lockTable('active_session');
+		$db->query('DELETE FROM active_session ' .
+				   'WHERE account_id = '.$account_id);
+		$db->unlock();
+		if (strlen($msg) > 9)
+			$msg .= 'and ';
+		$msg .= 'closed ';
+	}
 } elseif ($choise == 'individual' && $points > 0) {
 
 	$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
