@@ -6,10 +6,11 @@ class SmrPort
 	protected static $CACHE_PORTS = array();
 	protected static $CACHE_CACHED_PORTS = array();
 	
-	protected $db;
+	const NUMBER_OF_PORT_WEAPONS = 10;
+	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 1000;
+	const CHANCE_TO_DOWNGRADE = 15;
 	
-	protected static $damageNeededForDowngradeChance = 1000;
-	protected static $chanceToDowngrade = 15;
+	protected $db;
 	
 	protected $gameID;
 	protected $sectorID;
@@ -416,9 +417,9 @@ class SmrPort
 	public function checkForDowngrade($damageDone)
 	{
 		$downgrades = 0;
-		for(;$damageDone>self::$damageNeededForDowngradeChance;$damageDone-=self::$damageNeededForDowngradeChance)
+		for(;$damageDone>self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE;$damageDone-=self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE)
 		{
-			if (mt_rand(1,100) <= self::$chanceToDowngrade && $this->level > 1)
+			if (mt_rand(1,100) <= self::CHANCE_TO_DOWNGRADE && $this->level > 1)
 			{
 				++$downgrades;
 				$this->doDowngrade();
@@ -745,7 +746,7 @@ class SmrPort
 	public function &getWeapons()
 	{
 		$weapons = array();
-		for($i=0;$i<$this->getLevel();++$i)
+		for($i=0;$i<self::NUMBER_OF_PORT_WEAPONS;++$i)
 			$weapons[$i] =& SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PORT_TURRET);
 		return $weapons;
 	}
