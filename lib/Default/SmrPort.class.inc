@@ -1033,7 +1033,7 @@ class SmrPort
 		$armourDamage = 0;
 		if(!$alreadyDead)
 		{
-			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Armour']));
+			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
 			$damage['MaxDamage'] -= $shieldDamage;
 			if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
 			{
