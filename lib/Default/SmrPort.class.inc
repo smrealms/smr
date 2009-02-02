@@ -541,7 +541,7 @@ class SmrPort
 			if($trigger->hasAlliance())
 				$newsMessage .= 'various bounties for the deaths of any raiding members of <span class="yellow">'.$trigger->getAllianceName().'</span>';
 			else
-				$newsMessage .= 'a bounty of ' . number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL)) . ' credits for the death of '.$player->getDisplayName();
+				$newsMessage .= 'a bounty of ' . number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL)) . ' credits for the death of '.$trigger->getDisplayName();
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
 			$this->db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$this->getGameID().','.TIME.','.$this->db->escapeString($newsMessage).',\'REGULAR\')');
@@ -770,7 +770,7 @@ class SmrPort
 	{
 		if(!$this->isUnderAttack())
 			return 0;
-		return max(1,$this->getReinforceTime() - TIME) / ($this->getReinforceTime() - $this->getAttackStarted());
+		return max(1,($this->getReinforceTime() - TIME) / ($this->getReinforceTime() - $this->getAttackStarted()));
 	}
 	
 	function getReinforceTime()
