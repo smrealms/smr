@@ -934,7 +934,7 @@ abstract class AbstractSmrShip
 			$results['Drones'] =& $thisCDs->shootPlayer($thisPlayer, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
+		$thisPlayer->increaseExperience(round($results['TotalDamage']/4)); // 1/4 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],'player_damage');
 		return $results;
 	}
@@ -961,7 +961,7 @@ abstract class AbstractSmrShip
 			$results['Drones'] =& $thisCDs->shootForces($thisPlayer, $forces);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
+		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],'force_damage');
 		return $results;
 	}
@@ -988,7 +988,7 @@ abstract class AbstractSmrShip
 			$results['Drones'] =& $thisCDs->shootPort($thisPlayer, $port);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience($results['TotalDamage']/20); // 1/20 weapon damage to exp.
+		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],'port_damage');
 		return $results;
 	}
