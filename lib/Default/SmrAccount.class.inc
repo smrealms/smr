@@ -288,7 +288,7 @@ class SmrAccount
 			
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, time, log_type_id, message, sector_id) ' .
-				'VALUES('.$this->account_id.', '. TIME . ', '.$log_type_id.', ' . $db->escapeString($msg) . ', '.$sector_id.')');
+				'VALUES('.$this->account_id.', '. TIME . ', '.$log_type_id.', ' . $this->db->escapeString($msg) . ', '.$sector_id.')');
 			
 		}
 		
