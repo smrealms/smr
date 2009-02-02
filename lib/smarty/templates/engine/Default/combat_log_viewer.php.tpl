@@ -3,7 +3,8 @@
 		<div class="center">
 			{if $PreviousLogHREF}
 				<a href="{$PreviousLogHREF}"><img title="Previous" alt="Previous" src="images/album/rew.jpg" /></a>
-			{elseif $NextLogHREF}
+			{/if}&nbsp;
+			{if $NextLogHREF}
 				<a href="{$NextLogHREF}"><img title="Next" alt="Next" src="images/album/fwd.jpg" /></a>
 			{/if}
 		</div>

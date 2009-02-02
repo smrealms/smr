@@ -38,42 +38,47 @@ else $action = $var['action'];
 
 if($action == 5) {
 
-	if(!isset($_POST['id']) && !isset($var['log_ids'])) {
+	if(!isset($_POST['id']) && !isset($var['log_ids']))
+	{
 		$action = $var['old_action'];
 	}
-	else {
+	else
+	{
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'combat_log_viewer.php';
-		if(!isset($var['log_ids'])) {
+		if(!isset($var['log_ids']))
+		{
 			$container['log_ids'] = array_keys($_POST['id']);
 			sort($container['log_ids']);
 			$container['current_log'] = 0;
 		}
-		else {
+		else
+		{
 			$container['log_ids'] = $var['log_ids'];
 			$container['current_log'] = $var['current_log'];
-		}	
-		
+		}
 		$container['action'] = 5;
 		
-		if($var['direction']) {
-			if($var['direction'] == 1) {
+		if($var['direction'])
+		{
+			if($var['direction'] == 1)
+			{
 				--$container['current_log'];
 			}
-			else {
+			else
+			{
 				++$container['current_log'];			
 			}
 		}
 		$display_id = $container['log_ids'][$container['current_log']];
 		if(count($container['log_ids']) > 1)
 		{
-			if($container['current_log'])
+			if($container['current_log'] > 0)
 			{
 				$container['direction'] = 1;
 				$smarty->assign('PreviousLogHREF',SmrSession::get_new_href($container));
 			}
-			$PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;';
 			if($container['current_log'] < count($container['log_ids']) - 1)
 			{
 				$container['direction'] = 2;
