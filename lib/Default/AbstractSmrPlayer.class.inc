@@ -598,6 +598,11 @@ abstract class AbstractSmrPlayer
 	
 	abstract public function &getShip();
 	
+	public function getDiminishingPortAttack()
+	{
+		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 450))));
+	}
+	
 	public function getDiminishingForceAttack()
 	{
 		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 900))));
@@ -616,6 +621,11 @@ abstract class AbstractSmrPlayer
 	public function &shootForces(SmrForce &$forces)
 	{
 		return $this->getShip()->shootForces($forces);
+	}
+	
+	public function &shootPort(SmrPort &$port)
+	{
+		return $this->getShip()->shootPort($port);
 	}
 	
 	public function &shootPlayers(array &$targetPlayers)
@@ -852,7 +862,8 @@ abstract class AbstractSmrPlayer
 	
 	abstract public function killPlayer($sectorID);
 	abstract public function &killPlayerByPlayer(AbstractSmrPlayer &$killer);
-	abstract public function killPlayerByForces(SmrForce &$forces);
+	abstract public function &killPlayerByForces(SmrForce &$forces);
+	abstract public function &killPlayerByPort(SmrPort &$port);
 	abstract public function getHome();
 	
 	
@@ -906,6 +917,7 @@ abstract class AbstractSmrPlayer
 		if(!has_beta_privilege('No SC Loss'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
 	}
+	
 	public function giveTurns($give, $noob = 0,$updateLastActive = false)
 	{
 		if($give < 0 || $noob < 0)
@@ -933,6 +945,60 @@ abstract class AbstractSmrPlayer
 	public function updateLastCPLAction()
 	{
 		$this->setLastCPLAction(TIME);
+	}
+	
+	public function sameAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->equals($otherPlayer) || ($this->getAllianceID()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
+	}
+	
+	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
+	}
+	
+	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderAttackPortAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function meetsAlignmentRestriction($restriction)
+	{
+		if($restriction<0)
+			return $this->getAlignment()<=$restriction;
+		if($restriction>0)
+			return $this->getAlignment()>=$restriction;
+		return true;
 	}
 }
 ?>

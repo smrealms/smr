@@ -491,7 +491,7 @@ class SmrForce
 		return self::$refreshAllHREF;
 	}
 	
-	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer,$justMines)
+	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer,$minesAreAttacker)
 	{
 		return $this->shootPlayers(array($targetPlayer),$justMines);
 	}

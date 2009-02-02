@@ -962,7 +962,34 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],'player_damage');
+		$thisPlayer->increaseHOF($results['TotalDamage'],'force_damage');
+		return $results;
+	}
+	
+	public function &shootPort(SmrPort &$port)
+	{
+		$thisPlayer =& $this->getPlayer();
+		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
+		if($thisPlayer->isDead())
+		{
+			$results['DeadBeforeShot'] = true;
+			return $results;
+		}
+		$results['DeadBeforeShot'] = false;
+		foreach($this->weapons as $orderID => &$weapon)
+		{
+			$results['Weapons'][$orderID] =& $weapon->shootPort($thisPlayer, $port);
+			if($results['Weapons'][$orderID]['Hit'])
+				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+		}
+		if($this->hasCDs())
+		{
+			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
+			$results['Drones'] =& $thisCDs->shootPort($thisPlayer, $port);
+			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+		}
+		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
+		$thisPlayer->increaseHOF($results['TotalDamage'],'port_damage');
 		return $results;
 	}
 	

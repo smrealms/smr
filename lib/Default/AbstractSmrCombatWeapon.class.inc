@@ -55,6 +55,11 @@ abstract class AbstractSmrCombatWeapon
 		return !$this->isRaidWeapon();
 	}
 	
+	public function canShootPorts()
+	{
+		return true;
+	}
+	
 	public function canShootTraders()
 	{
 		return !$this->isRaidWeapon();
@@ -66,6 +71,8 @@ abstract class AbstractSmrCombatWeapon
 	}
 	
 	abstract public function &getModifiedDamageAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces);
+	abstract public function &getModifiedDamageAgainstPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port);
+	abstract public function &getModifiedPortDamageAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer);
 	abstract public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer);
 	abstract public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer);
 	
@@ -85,6 +92,25 @@ abstract class AbstractSmrCombatWeapon
 
 		if($return['ActualDamage']['KillingShot'])
 			$return['KillResults'] =& $targetPlayer->killPlayerByPlayer($weaponPlayer);
+		return $return;
+	}
+	
+	protected function &doPlayerDamageToPort(array &$return, AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPort($weaponPlayer,$port);
+		$return['ActualDamage'] =& $port->doWeaponDamage($return['WeaponDamage']);
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $port->killPortByPlayer($weaponPlayer);
+		return $return;
+	}
+	
+	protected function &doPortDamageToPlayer(array &$return, SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedPortDamageAgainstPlayer($port,$targetPlayer);
+		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $targetPlayer->killPlayerByPort($port);
 		return $return;
 	}
 	

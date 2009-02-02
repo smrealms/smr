@@ -28,6 +28,9 @@
 				*}{if $ActualDamage.Armour > 0}<span class="red">{$ActualDamage.Armour|number_format}</span> plates of armour{/if}{*
 	*}{/if}{/if}.
 	<br />
+	{if $ActualDamage.KillingShot}
+		{include_template template="includes/TraderCombatKillMessage.inc" assign=Template}{include file=$Template KillResults=$Drones.KillResults}
+	{/if}
 {/foreach}
 {if $ForcesCombatResults.ForcesDestroyed}Forces are <span style="color:red;">DESTROYED!</span><br />{/if}
 

@@ -276,7 +276,11 @@ class DummyPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
-	public function killPlayerByForces(SmrForce &$forces)
+	public function &killPlayerByForces(SmrForce &$forces)
+	{
+	}
+	
+	public function &killPlayerByPort(SmrPort &$port)
 	{
 	}
 	
