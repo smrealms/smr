@@ -988,7 +988,7 @@ abstract class AbstractSmrShip
 			$results['Drones'] =& $thisCDs->shootPort($thisPlayer, $port);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
-		$thisPlayer->increaseExperience($results['TotalDamage']/4); // 1/4 weapon damage to exp.
+		$thisPlayer->increaseExperience($results['TotalDamage']/20); // 1/20 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],'port_damage');
 		return $results;
 	}
