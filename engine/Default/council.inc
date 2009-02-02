@@ -31,8 +31,8 @@ function getPresident($race_id) {
 	{
 		$accountID = $db->getField('account_id');
 		$president =& SmrPlayer::getPlayer($accountID, $player->getGameID());
-		if($president->getAlignment()>=150)
-			$pres_xp = $president->getExperience(); //only want to set their exp if they are deputy
+		if($president->getAlignment()>=150 && $president->getRaceID() == $race_id)
+			$pres_xp = $president->getExperience(); //only want to set their exp if they are deputy, and still the same race - race should never change in a normal game, but just in case.
 	}
 		
 	// check if there is another player with a higher xp and deputy
