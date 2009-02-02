@@ -198,7 +198,13 @@ class SmrPort
 	public function &getGood($goodID)
 	{
 		$goods = $this->getGoods();
-		return isset($goods['All Goods'][$goodID]) ? $goods['All Goods'][$goodID] : false;
+		if(isset($goods['All Goods'][$goodID]))
+			return $goods['All Goods'][$goodID];
+		else
+		{
+			$return = false;
+			return $return;
+		}
 	}
 	
 	public function hasGood($goodID)
@@ -371,8 +377,8 @@ class SmrPort
 				default: // We don't want to add goods.
 				break;
 			}
-			$this->level++;
-			$this->db->query('UPDATE `port` SET `level`=' . $this->level . ',`upgrade`='.$this->upgrade.',`credits`='.$this->credits.' WHERE '.$this->SQL.';');
+			$this->increaseLevel(1);
+			$this->db->query('UPDATE `port` SET `upgrade`='.$this->upgrade.',`credits`='.$this->credits.' WHERE '.$this->SQL.';');
 		}
 	}
 	
@@ -404,54 +410,54 @@ class SmrPort
 		if(isset($this->goods['Sell'][$goodID])) unset($this->goods['Sell'][$goodID]);
 		elseif(isset($this->goods['Buy'][$goodID])) unset($this->goods['Buy'][$goodID]);
 		
-		$this->db->query('DELETE FROM port WHERE '.$this->SQL.' AND `good_id`='.$goodID.';');
+		$this->db->query('DELETE FROM port_has_goods WHERE '.$this->SQL.' AND good_id='.$goodID.';');
 	}
 	
 	public function checkForDowngrade($damageDone)
 	{
+		$downgrades = 0;
 		for(;$damageDone>self::$damageNeededForDowngradeChance;$damageDone-=self::$damageNeededForDowngradeChance)
 		{
 			if (mt_rand(1,100) <= self::$chanceToDowngrade && $this->level > 1)
 			{
+				++$downgrades;
 				$this->doDowngrade();
 			}
 		}
+		return $downgrades;
 	}
 	
 	protected function doDowngrade()
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot downgrade a cached port!');
-		global $LEVEL_1_GOODS,$LEVEL_2_GOODS,$LEVEL_3_GOODS,$LEVEL_4_GOODS;
-		$level1_goods = $LEVEL_1_GOODS; //5 of these chosen for lvl 9 port
-		$level2_goods = $LEVEL_2_GOODS; //4 of these chosen for lvl 9 port
-		$level3_goods = $LEVEL_3_GOODS; //3 of these chosen for lvl 9 port
-		$level4_goods = $LEVEL_4_GOODS; //50% of one of these for lvl 9 port
-		//mix up goods
-		shuffle($level1_goods);
-		shuffle($level2_goods);
-		shuffle($level3_goods);
-		shuffle($level4_goods);
 		
+		$GOODS = Globals::getGoods();
+		shuffle($GOODS);
+		$count = count($GOODS);
 		switch($this->level)
 		{
-	//		case 1:
-	//			for($i=0;$i<3;$i++) // Add 3 goods for levels 1
-	//			{
-	//				do
-	//				{
-	//					$newGood = array_shift($level1_goods);;
-	//				} while( !isset($this->goods['All Goods'][$newGood]) && !empty($level1_goods) );
-	//				$this->removePortGood($newGood);
-	//			}
-	//		break;
+			case 1: // we don't want to downgrade a level 1 port
+//				for($i=0;$i<3;$i++) // Add 3 goods for upgrading to level 1
+//				{
+//					do
+//					{
+//						$newGood = array_shift($GOODS);
+//					} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
+//					if($count == 0)
+//						break;
+//					$this->removePortGood($newGood['ID'],);
+//				}
+			break;
 			
 			case 2:
 				do
 				{
-					$newGood = array_shift($level1_goods);;
-				} while( !isset($this->goods['All Goods'][$newGood]) && !empty($level1_goods) );
-				$this->removePortGood($newGood);
+					$newGood = array_shift($GOODS);
+				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->removePortGood($newGood['ID']);
 			break;
 			
 			case 3:
@@ -460,40 +466,50 @@ class SmrPort
 			case 6:
 				do
 				{
-					$newGood = array_shift($level2_goods);;
-				} while( !isset($this->goods['All Goods'][$newGood]) && !empty($level2_goods) );
-				$this->removePortGood($newGood);
+					$newGood = array_shift($GOODS);
+				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=2) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->removePortGood($newGood['ID']);
 			break;
 			
 			case 7:
 			case 8:
 				do
 				{
-					$newGood = array_shift($level3_goods);;
-				} while( !isset($this->goods['All Goods'][$newGood]) && !empty($level3_goods) );
-				$this->removePortGood($newGood);
+					$newGood = array_shift($GOODS);
+				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->removePortGood($newGood['ID']);
 			break;
-	
+
 			case 9: // Add 1 level 3, and 50% chance of level 4
 				do
 				{
-					$newGood = array_shift($level3_goods);;
-				} while( !isset($this->goods['All Goods'][$newGood]) && !empty($level3_goods) );
-				$this->removePortGood($newGood);
+					$newGood = array_shift($GOODS);;
+				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->removePortGood($newGood['ID']);
 		
-				
+				$GOODS = Globals::getGoods();
+				shuffle($GOODS);
+				$count = count($GOODS);
 				do
 				{
-					$newGood = array_shift($level4_goods);;
-				} while( !isset($this->goods['All Goods'][$newGood]) && !empty($level4_goods) );
-				$this->removePortGood($newGood);
+					$newGood = array_shift($GOODS);;
+				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=4) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->removePortGood($newGood['ID']);
 			break;
-	
-			default: // We don't want to remove goods.
+			
+			default: // We don't want to add goods.
 			break;
 		}
-		$this->level--;
-		$this->db->query('UPDATE `port` SET `level`=' . $this->level . ',`upgrade`=0 WHERE '.$this->SQL.';');
+		$this->decreaseLevel(1);
+		$this->db->query('UPDATE `port` SET `upgrade`=0 WHERE '.$this->SQL.' LIMIT 1;');
 	}
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
@@ -502,21 +518,34 @@ class SmrPort
 			throw new Exception('Cannot attack a cached port!');
 		if (!$this->isUnderAttack())
 		{
+			foreach ($attackers as $attacker)
+			{
+				$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ' .
+							'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
+			}
+	
 			//5 mins per port level
 			$nextReinforce = round(TIME + $this->getLevel() * 60 * 5);
 			
 			$this->db->query('UPDATE port SET reinforce_time = '.$nextReinforce.', attack_started = '.TIME.' WHERE '.$this->SQL.' LIMIT 1');
-	
 			//add news
-			$newsMessage = '<span class="red">*MAYDAY* *MAYDAY*</span> The port in sector #<span class="sectorColor">' . $this->sectorID . '</span> is under attack by ';
+			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector #<span class="sectorColor">' . $this->getSectorID() . '</span>. It is under attack by';
 			if($trigger->hasAlliance())
 				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceName().'</span>';
 			else
 				$newsMessage .= $trigger->getDisplayName();
 			
-			$newsMessage .= '! We request immediate backup!';
+			$newsMessage .= '. The Federal Government is offering ';
+			
+			if($trigger->hasAlliance())
+				$newsMessage .= 'various bounties for the deaths of any raiding members of <span class="yellow">'.$trigger->getAllianceName().'</span>';
+			else
+				$newsMessage .= 'a bounty of ' . number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL)) . ' credits for the death of '.$player->getDisplayName();
+			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
 			$this->db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$this->getGameID().','.TIME.','.$this->db->escapeString($newsMessage).',\'REGULAR\')');
+			
+			
 		}
 	}
 	
@@ -596,11 +625,28 @@ class SmrPort
 		$this->setUpgrade($this->getUpgrade()+$upgrade);
 	}
 	
-	public function increaseExperience($experience)
+	public function setLevel($level)
 	{
-		if($experience<0)
-			throw new Exception('Cannot increase negative experience.');
-		$this->setExperience($this->getExperience()+$experience);
+		if($this->isCachedVersion())
+			throw new Exception('Cannot update a cached port!');
+		if($this->level == $level)
+			return;
+		$this->level = $level;
+		$this->db->query('UPDATE port SET level = '.$this->level.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	public function increaseLevel($level)
+	{
+		if($level<0)
+			throw new Exception('Cannot increase negative level.');
+		$this->setLevel($this->getLevel()+$level);
+	}
+	
+	public function decreaseLevel($level)
+	{
+		if($level<0)
+			throw new Exception('Cannot increase negative level.');
+		$this->setLevel($this->getLevel()-$level);
 	}
 	
 	public function setExperience($experience)
@@ -611,6 +657,13 @@ class SmrPort
 			return;
 		$this->experience = $experience;
 		$this->db->query('UPDATE port SET experience = '.$this->experience.' WHERE '.$this->SQL.' LIMIT 1');
+	}
+	
+	public function increaseExperience($experience)
+	{
+		if($experience<0)
+			throw new Exception('Cannot increase negative experience.');
+		$this->setExperience($this->getExperience()+$experience);
 	}
 	
 	public function getGameID()
@@ -766,7 +819,7 @@ class SmrPort
 		$this->setShields($this->getShields() - $number);
 	}
 	
-	public function decreaseCombatDrones($number)
+	public function decreaseCDs($number)
 	{
 		$this->setCDs($this->getCDs() - $number);
 	}
@@ -857,8 +910,6 @@ class SmrPort
 	
 	public function getLootHREF()
 	{
-		if($this->isCachedVersion())
-			throw new Exception('Cannot raid a cached port!');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'port_loot.php';
