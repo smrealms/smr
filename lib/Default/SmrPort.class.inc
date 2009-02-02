@@ -91,7 +91,7 @@ class SmrPort
 			
 			//defences restock (check for fed arrival)
 			$federalMod = 0;
-			if(TIME < $this->getReinforceTime() + TIME_FEDS_STAY)
+			if(TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY)
 				$federalMod = (TIME - $this->getReinforceTime() - self::TIME_FEDS_STAY) / (-6 * self::TIME_FEDS_STAY);
 			if ($federalMod < 0) $federalMod = 0;
 			$this->setShields($this->getLevel() * 1000 + 1000 + round($richMod * $federalMod * 375));
