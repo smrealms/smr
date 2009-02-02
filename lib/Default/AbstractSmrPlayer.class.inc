@@ -114,11 +114,6 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
-	public function getLastActive()
-	{
-		return $this->lastActive;
-	}
-	
 	public function getLastShieldUpdate()
 	{
 		return $this->lastShieldUpdate;
@@ -927,6 +922,19 @@ abstract class AbstractSmrPlayer
 		
 		if(!has_beta_privilege('No SC Gain'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
+	}
+	
+	public function getLastActive()
+	{
+		return $this->lastActive;
+	}
+	
+	public function setLastActive($lastActive)
+	{
+		if($this->lastActive == $lastActive)
+			return;
+		$this->lastActive=$lastActive;
+		$this->hasChanged=true;
 	}
 	
 	public function getLastCPLAction()
