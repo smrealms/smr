@@ -35,6 +35,7 @@ define('WEAPON_PORT_TURRET',10000);
 
 define('PORT_ACCOUNT_ID',0);
 define('PORT_ALLIANCE_ID',0);
+define('DEFEND_PORT_BOUNTY_PER_LEVEL',400000);
 
 /*
  * Messaging system

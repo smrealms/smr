@@ -58,4 +58,5 @@
 	{$ShootingPlayer->getDisplayName()} {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round.{if !$TraderResults.DeadBeforeShot} Maybe they should go back to the academy{/if}{/if}.<br /><br />
 {/foreach}
 {assign var=TotalDamage value=$TraderTeamCombatResults.TotalDamage}
-This fleet {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round. You call that a fleet? They need a better recruiter{/if}.
+This fleet {if $TotalDamage > 0}hits for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round. You call that a fleet? They need a better recruiter{/if}.<br />
+{if $TraderTeamCombatResults.Downgrades !== 0}The port has lost {$TraderTeamCombatResults.Downgrades} levels.{/if}

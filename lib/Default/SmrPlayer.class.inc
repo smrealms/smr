@@ -1377,8 +1377,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			if ($this->db->getField('numAttacks'))
 			{
 				$numAttacks = $this->db->getField('numAttacks');
-				$multiplier = round(.4 * $this->getLevelID());
-				$this->increaseCurrentBountyAmount('HQ',$numAttacks * 1000000 * $multiplier);
+				$multiplier = round(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
+				$this->increaseCurrentBountyAmount('HQ',$numAttacks * $multiplier);
 			}
 		}
 	

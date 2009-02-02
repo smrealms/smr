@@ -17,8 +17,8 @@
 			{if $OverrideDeath}
 				<a href="{$Globals->getPodScreenHREF()}" class="buttonA">Let there be pod</a>
 			{else}
-				<a href="{$Globals->getCurrentSectorHREF()}" class="buttonA">Current Sector</a>
-				<a href="{$Port->getClaimHREF()}" class="buttonA">Claim this port for your race</a>
+				<a href="{$Globals->getCurrentSectorHREF()}" class="buttonA">Current Sector</a>&nbsp;
+				<a href="{$Port->getClaimHREF()}" class="buttonA">Claim this port for your race</a>&nbsp;
 				<a href="{$Port->getLootHREF()}" class="buttonA">Loot the port</a>
 			{/if}
 		</div>
