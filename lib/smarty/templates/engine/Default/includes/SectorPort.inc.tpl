@@ -14,7 +14,7 @@
 					</div>
 				</td>
 			<td style="padding-right:1px;border-left:none;vertical-align:bottom;text-align:right">
-				<img style="height:{$Port->getUpgradePercent() * 32}px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/green.gif" alt="Upgrade" title="Upgrade" /><img style="height:{$Port->getCreditsPercent() * 32}px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/blue.gif" alt="Credits" title="Credits" /><img style="height:{$Port->getReinforcePercent() * 32}px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/red.gif" alt="Defense" title="Defense" />
+				<img style="height:{$Port->getUpgradePercent()*32}px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/green.gif" alt="Upgrade" title="Upgrade" /><img style="height:{$Port->getCreditsPercent()*32}px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/blue.gif" alt="Credits" title="Credits" /><img style="height:{$Port->getReinforcePercent()*32}px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/red.gif" alt="Defense" title="Defense" />
 			</td>
 			<td class="center shrink nowrap">
 				<div class="buttonA">

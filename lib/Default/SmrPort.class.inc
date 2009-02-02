@@ -758,19 +758,19 @@ class SmrPort
 
 	function getUpgradePercent()
 	{
-		return min(1,$this->upgrade / $this->getUpgradeRequirement());
+		return min(1,max(0,$this->upgrade / $this->getUpgradeRequirement()));
 	}
 	
 	function getCreditsPercent()
 	{
-		return min(1,$this->credits / 3200000);
+		return min(1,max(0,$this->credits / 32000000));
 	}
 	
 	function getReinforcePercent()
 	{
 		if(!$this->isUnderAttack())
 			return 0;
-		return max(1,($this->getReinforceTime() - TIME) / ($this->getReinforceTime() - $this->getAttackStarted()));
+		return min(1,max(0,($this->getReinforceTime() - TIME) / ($this->getReinforceTime() - $this->getAttackStarted())));
 	}
 	
 	function getReinforceTime()
