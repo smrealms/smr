@@ -902,8 +902,8 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 		if($updateLastActive === true)
 		{
-			$this->setLastActive=TIME;
-			$this->setLastCPLAction=TIME;
+			$this->setLastActive(TIME);
+			$this->setLastCPLAction(TIME);
 		}
 	}
 
