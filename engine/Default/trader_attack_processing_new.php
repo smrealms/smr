@@ -1,79 +1,29 @@
 <?
+if($player->hasNewbieTurns())
+	create_error('You are under newbie protection.');
 if($player->hasFederalProtection())
-{
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'current_sector.php';
-	$container['msg'] = '<span class="red bold">ERROR:</span> You are under federal protection.';
-	forward($container);
-	exit;
-}
+	create_error('You are under federal protection.');
+if($player->isLandedOnPlanet())
+	create_error('You cannot attack whilst on a planet!');
 if($player->getTurns() < 3)
-{
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'current_sector.php';
-	$container['msg'] = '<span class="red bold">ERROR:</span> You have insufficient turns to perform that action.';
-	forward($container);
-	exit;
-}
+	create_error('You have insufficient turns to perform that action.');
+if(!$player->canFight())
+	create_error('You are not allowed to fight!');
 
 $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 
 	if($player->traderNAPAlliance($targetPlayer))
-	{
-		$container=array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'current_sector.php';
-		$container['msg'] = '<span class="red bold">ERROR:</span> Your alliance does not allow you to attack this trader.';
-		forward($container);
-		exit;
-	}
+		create_error('Your alliance does not allow you to attack this trader.');
 	else if($targetPlayer->isDead())
-	{
-		$container=array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'current_sector.php';
-		$container['msg'] = '<span class="red bold">ERROR:</span> Target is already dead.';
-		forward($container);
-		exit;
-	}
+		create_error('Target is already dead.');
 	else if($targetPlayer->getSectorID() != $player->getSectorID())
-	{
-		$container=array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'current_sector.php';
-		$container['msg'] = '<span class="red bold">ERROR:</span> Target is no longer in this sector.';
-		forward($container);
-		exit;
-	}
+		create_error('Target is no longer in this sector.');
 	else if($targetPlayer->hasNewbieTurns())
-	{
-		$container=array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'current_sector.php';
-		$container['msg'] = '<span class="red bold">ERROR:</span> Target is under newbie protection.';
-		forward($container);
-		exit;
-	}
+		create_error('Target is under newbie protection.');
 	else if($targetPlayer->isLandedOnPlanet())
-	{
-		$container=array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'current_sector.php';
-		$container['msg'] = '<span class="red bold">ERROR:</span> Target is protected by planetary shields.';
-		forward($container);
-		exit;
-	}
+		create_error('Target is protected by planetary shields.');
 	else if($targetPlayer->hasFederalProtection())
-	{
-		$container=array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'current_sector.php';
-		$container['msg'] = '<span class="red bold">ERROR:</span> Target is under federal protection.';
-		forward($container);
-		exit;
-	}
+		create_error('Target is under federal protection.');
 
 $sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID());
 $fightingPlayers =& $sector->getFightingTraders($player,$targetPlayer);

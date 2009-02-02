@@ -30,7 +30,11 @@ define('MAXIMUM_FLEET_SIZE', 10);
 define('MINE_ARMOUR', 20);
 define('CD_ARMOUR', 3);
 define('SD_ARMOUR', 20);
- 
+define('DCS_DAMAGE_DECIMAL_PERCENT', 0.75);
+define('WEAPON_PORT_TURRET',10000);
+
+define('PORT_ACCOUNT_ID',0);
+define('PORT_ALLIANCE_ID',0);
 
 /*
  * Messaging system

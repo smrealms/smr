@@ -10,7 +10,6 @@ class SmrPort
 	
 	protected static $damageNeededForDowngradeChance = 1000;
 	protected static $chanceToDowngrade = 15;
-	protected static $accuracyPerLevel = 15;
 	
 	protected $gameID;
 	protected $sectorID;
@@ -85,9 +84,8 @@ class SmrPort
 	{
 		if(!$this->isUnderAttack())
 		{
-			$rich_mod = floor($this->upgrade / $this->getUpgradeRequirement()); // be equal to port level for bonus
+			$rich_mod = floor($this->getUpgrade() / $this->getUpgradeRequirement()); // be equal to port level for bonus
 			if($rich_mod < 0) $rich_mod = 0;
-			
 			$this->setShields($this->getLevel() * 1000 + 1000 + round($rich_mod * 375));
 			$this->setArmour($this->getLevel() * 1000 + 1000 + round($rich_mod * 375));
 			$this->setCDs($this->getLevel() * 100 + 100 + round($rich_mod * 37.5));
@@ -498,26 +496,34 @@ class SmrPort
 		$this->db->query('UPDATE `port` SET `level`=' . $this->level . ',`upgrade`=0 WHERE '.$this->SQL.';');
 	}
 	
-	public function attackedBy($allianceName)
+	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot attack a cached port!');
 		if (!$this->isUnderAttack())
 		{
-			
 			//5 mins per port level
-			$next_reinforce = round(TIME + $this->getLevel() * 60 * 7);
+			$nextReinforce = round(TIME + $this->getLevel() * 60 * 5);
 			
-			$this->db->query('UPDATE port SET reinforce_time = '.$next_reinforce.', attack_started = '.TIME.' WHERE '.$this->SQL.' LIMIT 1');
+			$this->db->query('UPDATE port SET reinforce_time = '.$nextReinforce.', attack_started = '.TIME.' WHERE '.$this->SQL.' LIMIT 1');
 	
 			//add news
-			$news_message = '<span class="red">*MAYDAY* *MAYDAY*</span> The port in sector #<span class="sectorColor">' . $this->sectorID . '</span> is under attack by members of '.$allianceName.'! We request immediate backup!';
-			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
-			$this->db->query('INSERT INTO news (game_id, time, message, irc_message) VALUES ('.$this->gameID.','.TIME.','.escape_string($news_message).','.escape_string($irc_message).')');
+			$newsMessage = '<span class="red">*MAYDAY* *MAYDAY*</span> The port in sector #<span class="sectorColor">' . $this->sectorID . '</span> is under attack by ';
+			if($trigger->hasAlliance())
+				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceName().'</span>';
+			else
+				$newsMessage .= $trigger->getDisplayName();
+			
+			$newsMessage .= '! We request immediate backup!';
+//			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
+			$this->db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$this->getGameID().','.TIME.','.$this->db->escapeString($newsMessage).',\'REGULAR\')');
 		}
 	}
 	
-	
+	public function getDisplayName()
+	{
+		return '<span style="color:yellow;font-variant:small-caps">Port ' . $this->getSectorID() . '</span>';
+	}
 	
 	public function setShields($shields)
 	{
@@ -683,19 +689,12 @@ class SmrPort
 		return $this->upgrade;
 	}
 	
-	public function getTurrets()
+	public function &getWeapons()
 	{
-		return $this->turrets;
-	}
-	
-	public function getTurretDamage()
-	{
-		return $this->turretDamage;
-	}
-	
-	public function getBaseAccuracy()
-	{
-		return $this->level * self::$accuracyPerLevel;
+		$weapons = array();
+		for($i=0;$i<$this->getLevel();++$i)
+			$weapons[$i] =& SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PORT_TURRET);
+		return $weapons;
 	}
 	
 	public function getAccuracy($targetLevel)
@@ -737,7 +736,7 @@ class SmrPort
 	
 	public function isDestroyed()
 	{
-		return ($this->armour<1&&$this->reinforceTime>TIME);
+		return ($this->getArmour()<1&&$this->isUnderAttack());
 	}
 	
 	public function exists()
@@ -762,19 +761,19 @@ class SmrPort
 		$this->setExperience($this->experience + $exp);
 	}
 	
-	public function damageShields($damage)
+	public function decreaseShields($number)
 	{
-		$this->setShields($this->getShields() - $damage);
+		$this->setShields($this->getShields() - $number);
 	}
 	
-	public function damageCombatDrones($damage)
+	public function decreaseCombatDrones($number)
 	{
-		$this->setCDs($this->getCDs() - $damage/3);
+		$this->setCDs($this->getCDs() - $number);
 	}
 	
-	public function damageArmour($damage)
+	public function decreaseArmour($number)
 	{
-		$this->setArmour($this->getArmour() - $damage);
+		$this->setArmour($this->getArmour() - $number);
 	}
 	
 	function getIdealPrice($goodID, $dist, $transactionType, $numGoods, $relations)
@@ -817,8 +816,6 @@ class SmrPort
 	
 	public function getTradeHREF()
 	{
-		if($this->isCachedVersion())
-			throw new Exception('Cannot trade at a cached port!');
 		if(!isset($this->tradeHREF))
 		{
 			$container = array();
@@ -831,8 +828,6 @@ class SmrPort
 	
 	public function getRaidWarningHREF()
 	{
-		if($this->isCachedVersion())
-			throw new Exception('Cannot raid a cached port!');
 		if(!isset($this->raidWarningHREF))
 		{
 			$container = array();
@@ -841,6 +836,34 @@ class SmrPort
 			$this->raidWarningHREF = SmrSession::get_new_href($container);
 		}
 		return $this->raidWarningHREF;
+	}
+	
+	public function getAttackHREF()
+	{
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'port_attack_processing_new.php';
+		$container['port_id'] = $this->getSectorID();
+		return SmrSession::get_new_href($container);
+	}
+	
+	public function getClaimHREF()
+	{
+		$container = array();
+		$container['url'] = 'port_claim_processing.php';
+		$container['port_id'] = $this->getSectorID();
+		return SmrSession::get_new_href($container);
+	}
+	
+	public function getLootHREF()
+	{
+		if($this->isCachedVersion())
+			throw new Exception('Cannot raid a cached port!');
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'port_loot.php';
+		$container['port_id'] = $this->getSectorID();
+		return SmrSession::get_new_href($container);
 	}
 	public function isCachedVersion()
 	{
@@ -919,5 +942,149 @@ class SmrPort
                               'sector_id = '.$this->getSectorID().' AND ' .
                               'good_id = '.$good['ID'].' LIMIT 1');
     }
+	
+	
+	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->shootPlayers(array($targetPlayer));
+	}
+	
+	public function &shootPlayers(array &$targetPlayers)
+	{
+		$results = array('Port' => &$this, 'TotalDamage' => 0);
+		if($this->isDestroyed())
+		{
+			$results['DeadBeforeShot'] = true;
+			return $results;
+		}
+		$results['DeadBeforeShot'] = false;
+		$weapons =& $this->getWeapons();
+		foreach($weapons as $orderID => &$weapon)
+		{
+			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayers[array_rand($targetPlayers)]);
+			if($results['Weapons'][$orderID]['Hit'])
+				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+		}
+		if($this->hasCDs())
+		{
+			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
+			$results['Drones'] =& $thisCDs->shootPlayerAsPort($this, $targetPlayers[array_rand($targetPlayers)]);
+			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+		}
+		return $results;
+	}
+	
+	public function &doWeaponDamage(array $damage)
+	{
+		$alreadyDead = $this->isDestroyed();
+		$shieldDamage = 0;
+		$cdDamage = 0;
+		$armourDamage = 0;
+		if(!$alreadyDead)
+		{
+			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Armour']));
+			$damage['MaxDamage'] -= $shieldDamage;
+			if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+			{
+				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
+				$damage['Armour'] -= $cdDamage;
+				$damage['MaxDamage'] -= $cdDamage;
+				if(!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
+					$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']));
+			}
+		}
+
+		$return = array(
+						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
+						'TargetAlreadyDead' => $alreadyDead,
+						'Shield' => $shieldDamage,
+						'CDs' => $cdDamage,
+						'NumCDs' => $cdDamage/CD_ARMOUR,
+						'HasCDs' => $this->hasCDs(),
+						'Armour' => $armourDamage,
+						'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
+		);
+		return $return;
+	}
+	
+	protected function doShieldDamage($damage)
+	{
+		$actualDamage = min($this->getShields(),$damage);
+		$this->decreaseShields($actualDamage);
+		return $actualDamage;
+	}
+	
+	protected function doCDDamage($damage)
+	{
+		$actualDamage = min($this->getCDs(),floor($damage/CD_ARMOUR));
+		$this->decreaseCDs($actualDamage);
+		return $actualDamage*CD_ARMOUR;
+	}
+	
+	protected function doArmourDamage($damage)
+	{
+		$actualDamage = min($this->getArmour(),floor($damage));
+		$this->decreaseArmour($actualDamage);
+		return $actualDamage;
+	}
+	
+	protected function creditCurrentAttackersForKill()
+	{
+		//get all players involved for HoF
+		$allowed = TIME - 60 * 60 * 3;
+		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND time > '.$allowed);
+		$numToDelete = $this->db->getNumRows();
+		while ($this->db->nextRecord())
+		{
+			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
+			$currPlayer->increaseHOF('port_raid',$this->db->getField('level'),'raid_levels');
+			$currPlayer->increaseHOF('port_raid',1,'raids_completed');
+		}
+		$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID().' LIMIT '.$numToDelete);
+	}
+	
+	public function &killPortByPlayer(AbstractSmrPlayer &$killer)
+	{
+		$return = array();
+		$return['KillerCredits'] = $this->getCredits();
+		$killer->increaseCredits($return['KillerCredits']);
+		$killer->increaseHOF('port_raid',$return['KillerCredits'],'credits');
+		$this->setCredits(0);
+		
+		$this->creditCurrentAttackersForKill();
+		
+		// News Entry
+		$news = $this->getDisplayName() . ' has been successfully raided by ';
+		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceName() . '</span>';
+		else $news .= $killer->getDisplayName();
+		$this->db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$this->getGameID().', ' . TIME . ', '.$this->db->escapeString($news).', \'REGULAR\')');
+		// Trigger gets an alignment change and a bounty if port is taken
+		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
+		$killer->increaseCurrentBountyAmount('HQ',$return['KillerBounty']);
+		$killer->increaseHOF('port_raid',$return['KillerBounty'],'bounty_gain');
+		
+		if($this->getRaceID() > 1)
+		{
+			$return['KillerRelations'] = 45;
+			$killer->decreaseRelations($return['KillerRelations'],$this->getRaceID());
+			$killer->increaseHOF('port_raid',$return['KillerRelations'],'relation_loss');
+		}
+		// also we change alignment
+		$relations = Globals::getRaceRelations($killer->getGameID(),$killer->getRaceID());
+		if ($relations[$this->getRaceID()] < -299)
+		{
+			$return['KillerAlign'] = $this->getLevel() * 2;
+			$killer->increaseAlignment($return['KillerAlign']);
+			$killer->increaseHOF('port_raid',$return['KillerAlign'],'align_gain');
+		}
+		else
+		{
+			$return['KillerAlign'] = -$this->getLevel() * 2;
+			$killer->decreaseAlignment(-$return['KillerAlign']);
+			$killer->increaseHOF('port_raid',$return['KillerAlign'],'align_loss');
+		}
+		
+		return $return;
+	}
 }
 ?>

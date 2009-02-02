@@ -33,7 +33,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return $modifiedAccuracy;
 	}
 	
-	protected function getModifiedAccuracyAgainstForcesUsingRandom(AbstractSmrPlayer &$forces,SmrForce &$forces, $random)
+	protected function getModifiedAccuracyAgainstForcesUsingRandom(AbstractSmrPlayer &$weaponPlayer,SmrForce &$forces, $random)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy += $random;
@@ -47,6 +47,22 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	public function getModifiedAccuracyAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
 	{
 		return $this->getModifiedAccuracyAgainstForcesUsingRandom($weaponPlayer,$forces,mt_rand(3,self::MAX_CDS_RAND));
+	}
+	
+	protected function getModifiedAccuracyAgainstPortUsingRandom(AbstractSmrPlayer &$weaponPlayer,SmrPort &$port, $random)
+	{
+		$modifiedAccuracy = $this->getModifiedAccuracy();
+		$modifiedAccuracy += $random;
+	
+		return max(0,min(100,$modifiedAccuracy));
+	}
+	public function getMaxModifiedAccuracyAgainstPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		return $this->getModifiedAccuracyAgainstPortUsingRandom($weaponPlayer,$port,self::MAX_CDS_RAND);
+	}
+	public function getModifiedAccuracyAgainstPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		return $this->getModifiedAccuracyAgainstPortUsingRandom($weaponPlayer,$port,mt_rand(3,self::MAX_CDS_RAND));
 	}
 	
 	
@@ -87,9 +103,19 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return max(0,min(100,$modifiedAccuracy));
 	}
 	
+	protected function getModifiedPortAccuracyAgainstPlayer(SmrPort &$port,AbstractSmrPlayer &$targetPlayer)
+	{
+		return 100;
+	}
+	
 	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer)
 	{
 		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,self::MAX_CDS_RAND);
+	}
+	
+	public function getMaxModifiedPortAccuracyAgainstPlayer(SmrPort &$forces,AbstractSmrPlayer &$targetPlayer)
+	{
+		return 100;
 	}
 	
 	public function &getModifiedDamage()
@@ -127,6 +153,24 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return $damage;
 	}
 	
+	public function &getModifiedDamageAgainstPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		if(!$this->canShootForces()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		$damage =& $this->getModifiedDamage();
+		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPort($weaponPlayer,$port) / 100);
+		$damage['MaxDamage'] = $damage['Launched'] * $damage['MaxDamage'];
+		$damage['Shield'] = $damage['Launched'] * $damage['Shield'];
+		$damage['Armour'] = $damage['Launched'] * $damage['Armour'];
+		
+		$diminishing = $weaponPlayer->getDiminishingPortAttack();
+		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
+		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+			
+		return $damage;
+	}
+	
 	public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
@@ -139,6 +183,12 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+		if($targetPlayer->getShip()->hasDCS())
+		{
+			$damage['MaxDamage'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['MaxDamage'];
+			$damage['Shield'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Shield'];
+			$damage['Armour'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Armour'];
+		}
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
@@ -154,7 +204,37 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 			return $return;
 		}
 		$damage =& $this->getModifiedDamage();
+		
+		if($targetPlayer->getShip()->hasDCS())
+		{
+			$damage['MaxDamage'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['MaxDamage'];
+			$damage['Shield'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Shield'];
+			$damage['Armour'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Armour'];
+		}
+		
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces,$targetPlayer) / 100);
+		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
+		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
+		return $damage;
+	}
+	
+	public function &getModifiedPortDamageAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
+	{
+		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
+		{
+			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+			return $return;
+		}
+		$damage =& $this->getModifiedDamage();
+		
+		if($targetPlayer->getShip()->hasDCS())
+		{
+			$damage['MaxDamage'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['MaxDamage'];
+			$damage['Shield'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Shield'];
+			$damage['Armour'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Armour'];
+		}
+		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedPortAccuracyAgainstPlayer($port,$targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($damage['Launched'] * $damage['Shield']);
 		$damage['Armour'] = ceil($damage['Launched'] * $damage['Armour']);
@@ -172,6 +252,12 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return $return;
 	}
 	
+	public function &shootPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		$return = array('Weapon' => &$this, 'TargetPort' => &$port, 'Hit' => true);
+		return $this->doPlayerDamageToPort($return,$weaponPlayer, $port);
+	}
+	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
@@ -182,6 +268,12 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
 		return $this->doForceDamageToPlayer($return, $forces, $targetPlayer);
+	}
+	
+	public function &shootPlayerAsPort(SmrPort &$forces, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
+		return $this->doPortDamageToPlayer($return, $forces, $targetPlayer);
 	}
 }
 

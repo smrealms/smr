@@ -1,11 +1,16 @@
 <?
 
-if ($player->getNewbieTurns() > 0)
+if ($player->hasNewbieTurns())
 	create_error('You are under newbie protection!');
-
+if($player->hasFederalProtection())
+	create_error('You are under federal protection.');
+if($player->isLandedOnPlanet())
+	create_error('You cannot attack forces whilst on a planet!');
 if ($player->getTurns() < 3)
 	create_error('You do not have enough turns to attack these forces!');
-
+if(!$player->canFight())
+	create_error('You are not allowed to fight!');
+	
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
@@ -29,12 +34,6 @@ if ($forces->hasSDs())
 	$message = 'Your forces in sector '.$forces->getSectorID().' are being attacked by '.$player->getPlayerName();
 	$forces->ping($message, $player);
 }
-
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'forces_attack.php';
-$container['continue'] = 'yes';
-$container['forced'] = 'no';
 
 // ********************************
 // *
@@ -66,6 +65,7 @@ foreach($attackers as &$attacker)
 $results['Forces'] =& $forces->shootPlayers($attackers,false);
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
+$forces->updateExpire();
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $forceOwner->getAccountID() . ',' . $forceOwner->getAllianceID() . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');
@@ -90,18 +90,5 @@ if($player->isDead())
 
 $container['results'] = $serializedResults;
 forward($container);
-
-
-//
-//// recalc forces expiration date
-//if($forces->getCDs() == 0 && $forces->getMines() == 0 && $forces->getSDs() == 1) {
-//	$days = 2;
-//}
-//else {
-//	$days = ceil(($forces->getCDs() + $forces->getSDs() + $forces->getMines()) / 10);
-//}
-//if ($days > 5) $days = 5;
-//$forces->setExpire(TIME + ($days * 86400));
-//
 
 ?>

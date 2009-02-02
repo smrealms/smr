@@ -2,7 +2,7 @@
 	<h1>Force Results</h1><br />
 	{include_template template="includes/ForcesCombatResults.inc" assign=Template}{include file=$Template ForcesCombatResults=$FullForceCombatResults.Forces}
 {else}
-	<h1>Defender Results</h1><br />
+	<h1>Attacker Results</h1><br />
 	{include_template template="includes/ForceTraderTeamCombatResults.inc" assign=Template}{include file=$Template TraderTeamCombatResults=$FullForceCombatResults.Attackers}
 {/if}
 <br />

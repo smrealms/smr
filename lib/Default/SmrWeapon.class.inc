@@ -89,7 +89,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	{
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		$modifiedAccuracy += $this->getBaseAccuracy() * ($weaponPlayer->getStat('Accuracy') * ACCURACY_STAT_FACTOR)/100;
-		$modifiedAccuracy += $this->getBaseAccuracy() * ($weaponPlayer->getLevelID()*$weaponPlayer->getLevelID()*.008+.219*$weaponPlayer->getLevelID()+1.1694) / 2;
+		$modifiedAccuracy += $this->getBaseAccuracy() * (($weaponPlayer->getLevelID()*$weaponPlayer->getLevelID()*.008+.219*$weaponPlayer->getLevelID()+1.1694) / 2) / 100;
 		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
 			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR/100;
 		return $modifiedAccuracy;
@@ -101,10 +101,17 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $modifiedAccuracy;
 	}
 	
+	public function getModifiedAccuracyAgainstPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
+		$modifiedAccuracy -= $this->getBaseAccuracy() * $port->getLevel()/50;
+		return $modifiedAccuracy;
+	}
+	
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		$modifiedAccuracy -= $this->getBaseAccuracy() * ($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2;
+		$modifiedAccuracy -= $this->getBaseAccuracy() * (($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2) / 100;
 		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
 			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR/100;
 		
@@ -114,6 +121,20 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		if($mrDiff > 0)
 			$modifiedAccuracy -= $this->getBaseAccuracy() * ($mrDiff/MR_FACTOR)/100;
 	
+		return $modifiedAccuracy;
+	}
+	
+	public function getModifiedPortAccuracy(SmrPort &$port)
+	{
+		$modifiedAccuracy = $this->getBaseAccuracy();
+		$modifiedAccuracy *= $port->getLevel();
+		return $modifiedAccuracy;
+	}
+	
+	public function getModifiedPortAccuracyAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
+	{
+		$modifiedAccuracy = $this->getModifiedPortAccuracy($port);
+		$modifiedAccuracy -= $this->getBaseAccuracy() * (($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2) / 100;
 		return $modifiedAccuracy;
 	}
 	
@@ -147,6 +168,19 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $damage;
 	}
 	
+	public function &getModifiedDamageAgainstPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		if(!$this->canShootPorts()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		$damage =& $this->getModifiedDamage($weaponPlayer);
+		
+		$diminishing = $weaponPlayer->getDiminishingPortAttack();
+		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
+		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+		return $damage;
+	}
+	
 	public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
@@ -169,6 +203,17 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $damage;
 	}
 	
+	public function &getModifiedPortDamageAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
+	{
+		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
+		{
+			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+			return $return;
+		}
+		$damage = $this->getDamage();
+		return $damage;
+	}
+	
 	public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
 	{
 		$return = array('Weapon' => &$this, 'TargetForces' => &$forces);
@@ -179,6 +224,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		}
 		$return['Hit'] = true;
 		return $this->doPlayerDamageToForce($return,$weaponPlayer, $forces);
+	}
+	
+	public function &shootPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
+	{
+		$return = array('Weapon' => &$this, 'TargetPort' => &$port);
+		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPort($weaponPlayer,$port)) //Check if we miss
+		{
+			$return['Hit'] = false;
+			return $return;
+		}
+		$return['Hit'] = true;
+		return $this->doPlayerDamageToPort($return,$weaponPlayer, $port);
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
@@ -197,6 +254,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => false);
 		return $return;
+	}
+	
+	public function &shootPlayerAsPort(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
+		if(mt_rand(0,99)>=$this->getModifiedPortAccuracyAgainstPlayer($port,$targetPlayer)) //Check if we miss
+		{
+			$return['Hit'] = false;
+			return $return;
+		}
+		$return['Hit'] = true;
+		return $this->doPortDamageToPlayer($return,$port, $targetPlayer);
 	}
 	
 //private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null)

@@ -17,7 +17,7 @@
 	{elseif $CombatResultsType=='FORCE'}
 		{include_template template="includes/ForceFullCombatResults.inc" assign=Template}{include file=$Template FullForceCombatResults=$CombatResults}
 	{elseif $CombatResultsType=='PORT'}
-		{$CombatResults}
+		{include_template template="includes/PortFullCombatResults.inc" assign=Template}{include file=$Template FullPortCombatResults=$CombatResults}
 	{elseif $CombatResultsType=='PLANET'}
 		{$CombatResults}
 	{/if}

@@ -473,6 +473,21 @@ class SmrSector
 		return $fightingPlayers;
 	}
 
+	public function &getFightingTradersAgainstPort(AbstractSmrPlayer &$attackingPlayer, SmrPort &$defendingPort)
+	{
+		$fightingPlayers = array();
+		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		foreach($alliancePlayers as $accountID => $player)
+		{
+			if($player->canFight())
+			{
+				if($attackingPlayer->traderAttackPortAlliance($player))
+					$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+			}
+		}
+		return $fightingPlayers;
+	}
+
 	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer)
 	{
 		if($attackingPlayer->traderNAPAlliance($defendingPlayer))

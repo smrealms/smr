@@ -69,6 +69,12 @@ class SmrMines extends AbstractSmrCombatWeapon
 		return $return;
 	}
 	
+	public function &getModifiedPortDamageAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		return $return;
+	}
+	
 	public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
 	{
 		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.

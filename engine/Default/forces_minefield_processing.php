@@ -1,15 +1,17 @@
 <?
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
-if ($player->getNewbieTurns() > 0)
+if ($player->hasNewbieTurns())
 	create_error('You are under newbie protection!');
-	
-//turns are taken b4 player fires.
+if($player->hasFederalProtection())
+	create_error('You are under federal protection.');
+if($player->isLandedOnPlanet())
+	create_error('You cannot attack forces whilst on a planet!');
+if(!$player->canFight())
+	create_error('You are not allowed to fight!');
 
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
 
-if ($forces->getMines() == 0)
+if (!$forces->hasMines())
 	create_error('No mines in sector!');
 
 $forceOwner =& $forces->getOwner();
@@ -19,6 +21,9 @@ if($player->forceNAPAlliance($forceOwner))
 
 // delete plotted course
 $player->deletePlottedCourse();
+
+$player->take_turns(3);
+
 
 // send message if scouts are present
 if ($forces->hasSDs())

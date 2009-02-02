@@ -1435,9 +1435,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
-	public function killPlayerByForces(SmrForce &$forces)
+	public function &killPlayerByForces(SmrForce &$forces)
 	{
-		
+		$return = array();
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
 		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID(),false);
@@ -1445,24 +1445,22 @@ class SmrPlayer extends AbstractSmrPlayer
 
 		$news_message = $this->getDisplayName();
 		$db2 = new SmrMySqlDatabase();
-		$db = new SmrMySqlDatabase();
-		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
+		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
 					'account_id = '.$this->getAccountID());
-		if ($db2->nextRecord())
+		if ($this->db->nextRecord())
 		{
 			
 			//they have a name so we echo it
-			$db->query('SELECT ' . htmlentities($db2->getField('ship_name')) . ' LIKE \'&lt;img%\'');
-			$named_ship = stripslashes($db2->getField('ship_name'));
-			$named_ship = strip_tags($db2->getField('ship_name'), '<font><span>');
-			if ($db->nextRecord() && $db->getField(0) != 0) {
+			$db2->query('SELECT ' . htmlentities($this->db->getField('ship_name')) . ' LIKE \'&lt;img%\'');
+			$named_ship = stripslashes($this->db->getField('ship_name'));
+			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
+			if ($db2->nextRecord() && $db2->getField(0) != 0) {
 				//nothing
 			} else
 				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
 			
 		}
-		$news_message .= ' was destroyed ' .
-						'by forces in sector&nbsp#'.$forces->getSectorID();
+		$news_message .= ' was destroyed by forces in sector&nbsp#'.$forces->getSectorID();
 		// insert the news entry
 		$this->db->query('INSERT INTO news ' .
 					 '(game_id, time, news_message) ' .
@@ -1481,6 +1479,47 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		
 		$this->killPlayer($forces->getSectorID());
+		return $return;
+	}
+	
+	public function &killPlayerByPort(SmrPort &$port)
+	{
+		$return = array();
+		// send a message to the person who died
+		self::sendMessageFromPort($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$port->getDisplayName().'\'s defenses.');
+		$temp = 'You were <span class="red">DESTROYED</span> by '.$port->getDisplayName().'\'s defenses.';
+		
+		$news_message = $this->getDisplayName();
+		$db2 = new SmrMySqlDatabase();
+		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
+					'account_id = '.$this->getAccountID());
+		if ($this->db->nextRecord())
+		{
+			
+			//they have a name so we echo it
+			$db2->query('SELECT ' . $this->db->escapeString(htmlentities($this->db->getField('ship_name'))) . ' LIKE \'&lt;img%\'');
+			$named_ship = stripslashes($this->db->getField('ship_name'));
+			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
+			if ($db2->nextRecord())
+			{
+				//nothing
+			}
+			else
+				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			
+		}
+		$news_message .= ' was destroyed while invading '.$port->getDisplayName().'.';
+		// insert the news entry
+		$this->db->query('INSERT INTO news ' .
+					 '(game_id, time, news_message) ' .
+					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ')');
+		
+		$percentage = 33;
+		if ($percentage > 0 )
+			$this->decreaseExperience($this->getExperience() * $percentage / 100);
+		
+		$this->killPlayer($port->getSectorID());
+		return $return;
 	}
 	
 	function changeShip(SmrShip &$ship,$shipID)
@@ -1713,14 +1752,35 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->save();
 	}
 	
-	public function sendMessage($receiver_id, $message_type_id, $message, $canBeIgnored = true)
+	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires)
+	{
+		$db = new SmrMySqlDatabase();
+		// send him the message
+		$db->query('INSERT INTO message
+			(account_id,game_id,message_type_id,message_text,
+			sender_id,send_time,expire_time) VALUES(' . 
+			$receiverID . ',' .
+			$gameID . ',' .
+			$messageTypeID . ',' .
+			$db->escapeString($message,true) . ',' .
+			$senderID . ',' .
+			TIME . ',' .
+			$expires . ')'
+		);
+
+		// give him the message icon
+		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
+						'('.$gameID.', '.$receiverID.', '.$messageTypeID.')');
+	}
+	
+	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true)
 	{
 		//get expire time
 		
 		if($canBeIgnored)
 		{
 			// Don't send messages to players ignoring us
-			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiver_id . ' AND blacklisted_id=' . $this->accountID . ' AND game_id = ' . $this->gameID . ' LIMIT 1');
+			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiverID . ' AND blacklisted_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
 			if($this->db->nextRecord()) {
 				return;
 			}		
@@ -1728,54 +1788,47 @@ class SmrPlayer extends AbstractSmrPlayer
 				
 		$message = word_filter($message);
 		
-		switch ($message_type_id)
+		switch ($messageTypeID)
 		{
 			case MSG_GLOBAL:
-				$expire = 3600;
+				$expires = 3600;
 			break;
 			case MSG_PLAYER:
-				$expire = 3600 * 24 * 7;
+				$expires = 3600 * 24 * 7;
 			break;
 			case MSG_PLANET:
-				$expire = 3600 * 24 * 3;
+				$expires = 3600 * 24 * 3;
 			break;
 			case MSG_SCOUT:
-				$expire = 3600 * 24 * 3;
+				$expires = 3600 * 24 * 3;
 			break;
 			case MSG_POLITICAL:
-				$expire = 3600 * 24 * 2;
+				$expires = 3600 * 24 * 2;
 			break;
 			case MSG_ALLIANCE:
-				$expire = 3600 * 24 * 2;
+				$expires = 3600 * 24 * 2;
 			break;
 			case MSG_ADMIN:
-				$expire = 3600 * 24 * 7;
+				$expires = 3600 * 24 * 7;
 			break;
 			default:
-				$expire = 3600 * 24 * 2;
+				$expires = 3600 * 24 * 2;
 		}
-		$expire += TIME;
+		$expires += TIME;
 		// send him the message
-		$this->db->query('INSERT INTO message
-			(account_id,game_id,message_type_id,message_text,
-			sender_id,send_time,expire_time) VALUES(' . 
-			$receiver_id . ',' .
-			$this->getGameID() . ',' .
-			$message_type_id . ',' .
-			$this->db->escapeString($message,true) . ',' .
-			$this->getAccountID() . ',' .
-			TIME . ',' .
-			$expire . ')'
-		);
-
-		// give him the message icon
-		$this->db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
-						'('.$this->gameID.', '.$receiver_id.', '.$message_type_id.')');
+		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires);
+	}
+	
+	public static function sendMessageFromPort($gameID, $receiverID, $message)
+	{
+		//get expire time
+		$expires = TIME + 3600 * 24 * 7;
+		// send him the message
+		self::doMessageSending(PORT_ACCOUNT_ID,$receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 	
 	public function setMessagesRead($messageTypeID)
 	{
-
 		$this->db->query('DELETE FROM player_has_unread_messages WHERE '.$this->SQL.' AND ' .
 					'message_type_id = '.$messageTypeID);
 	}
@@ -1911,55 +1964,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function equals(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
-	}
-	
-	public function sameAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->equals($otherPlayer) || ($this->getAllianceID()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
-	}
-	
-	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->sameAlliance($otherPlayer);
-	}
-	
-	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->sameAlliance($otherPlayer);
-	}
-	
-	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->sameAlliance($otherPlayer);
-	}
-	
-	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
-	}
-	
-	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->sameAlliance($otherPlayer);
-	}
-	
-	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->sameAlliance($otherPlayer);
-	}
-	
-	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer)
-	{
-		return $this->sameAlliance($otherPlayer);
-	}
-	
-	public function meetsAlignmentRestriction($restriction)
-	{
-		if($restriction<0)
-			return $this->getAlignment()<=$restriction;
-		if($restriction>0)
-			return $this->getAlignment()>=$restriction;
-		return true;
 	}
 }
 ?>

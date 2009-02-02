@@ -133,7 +133,7 @@ if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id) {
 	if($player->getNewbieTurns() > 0) {
 		$container['msg'] .= ' to navigate the minefield safely';
         forward($container);
-	}       
+	}
 	else {
 		$owner_id = $mine_owner_id;
 		include('forces_minefield_processing.php');
