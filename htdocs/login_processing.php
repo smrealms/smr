@@ -83,15 +83,12 @@ if ($db->getNumRows()) {
 // ********************************
 
 // get reason for disabled user
-$db->query('SELECT reason
-			FROM account_is_closed NATURAL JOIN closing_reason
-			WHERE account_id = '.SmrSession::$account_id);
-if ($db->nextRecord()) {
-
+if(($reason = $account->is_disabled())!==false)
+{
 	// save session (incase we forward)
 	SmrSession::update();
 
-	if ($db->getField('reason') == 'Invalid eMail') {
+	if ($reason == 'Invalid eMail') {
 
 		header('Location: '.URL.'/email.php');
 		exit;
