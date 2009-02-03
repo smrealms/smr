@@ -82,6 +82,9 @@ if ($db->getNumRows()) {
 // *
 // ********************************
 
+// get this user from db
+$account =& SmrAccount::getAccount(SmrSession::$account_id);
+
 // get reason for disabled user
 if(($reason = $account->is_disabled())!==false)
 {
@@ -123,8 +126,6 @@ if ($db->getNumRows() == 0)
 
 $db->query('DELETE FROM player_has_ticker WHERE expires <= ' . TIME);
 $db->query('DELETE FROM cpl_tag WHERE expires <= ' . TIME . ' AND expires > 0');
-// get this user from db
-$account =& SmrAccount::getAccount(SmrSession::$account_id);
 
 // save ip
 $account->update_ip();
