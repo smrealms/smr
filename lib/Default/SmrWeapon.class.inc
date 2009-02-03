@@ -108,6 +108,13 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $modifiedAccuracy;
 	}
 	
+	public function getModifiedAccuracyAgainstPlanet(AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet)
+	{
+		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
+		$modifiedAccuracy -= $this->getBaseAccuracy() * $planet->getLevel()/350;
+		return $modifiedAccuracy;
+	}
+	
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
@@ -274,6 +281,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		}
 		$return['Hit'] = true;
 		return $this->doPlayerDamageToPort($return,$weaponPlayer, $port);
+	}
+	
+	public function &shootPlanet(AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlanet' => &$planet);
+		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPlanet($weaponPlayer,$planet)) //Check if we miss
+		{
+			$return['Hit'] = false;
+			return $return;
+		}
+		$return['Hit'] = true;
+		return $this->doPlayerDamageToPlanet($return,$weaponPlayer, $planet);
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)

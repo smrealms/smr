@@ -1245,9 +1245,9 @@ class SmrPlayer extends AbstractSmrPlayer
 						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
 
 		// record death stat
-		$this->increaseHOF(1,'deaths');
+		$this->increaseHOF(1,'dying','deaths');
 		//record cost of ship lost
-		$this->increaseHOF($this->getShip()->getCost(),'ship_cost_lost');
+		$this->increaseHOF($this->getShip()->getCost(),'dying','ship_cost_lost');
 		// reset turns since last death
 		$this->setHOF(0,'turns_used');
 
@@ -1321,8 +1321,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
-		$killer->increaseHOF($gainedExp,'kill_exp_gain');
-		$killer->increaseHOF($this->getExperience(),'traders_killed_exp');
+		$killer->increaseHOF($gainedExp,'killing','exp_gain');
+		$killer->increaseHOF($this->getExperience(),'killing','traders_killed_exp');
 		// Dead player loses experience
 		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
 		$return['DeadExp'] = 0;
@@ -1336,8 +1336,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$creditsGained = $this->getCredits();
 		$return['KillerCredits'] = $creditsGained;
 		$killer->increaseCredits($creditsGained);
-		$killer->increaseHOF($creditsGained,'kill_money_gain');
-		$killer->increaseHOF($this->getShip()->getCost(),'ships_killed_cost');
+		$killer->increaseHOF($creditsGained,'killing','money_gain');
+		$killer->increaseHOF($this->getShip()->getCost(),'killing','ships_killed_cost');
 
 		// The killer may change alignment
 		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
@@ -1406,7 +1406,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		
 		$killer->increaseKills(1);
-		$killer->increaseHOF(1,'kills');
+		$killer->increaseHOF(1,'killing','kills');
 
 		if($this->hasAlliance())
 		{

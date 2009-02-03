@@ -456,7 +456,7 @@ if ($action == 'lotto') {
 		
 		$PHP_OUTPUT.=('You have <font color=red><b>BUSTED</b></font>');
 		$bet = $var['bet'];
-		$player->increaseHOF($bet,'blackjack_lose');
+		$player->increaseHOF($bet,'blackjack','lose');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bar_main.php';
@@ -500,7 +500,7 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * 2.5);
 			$stat = ($bet * 2.5) - $bet;
 			$player->update();
-			$player->increaseHOF($stat, 'blackjack_win');
+			$player->increaseHOF($stat, 'blackjack','win');
 			$PHP_OUTPUT.=('You have won $' . number_format($bet * 2.5) . ' credits!');
 			
 		} elseif ($win == 'yes') {
@@ -508,17 +508,17 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * 2);
 			$stat = ($bet * 2) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,'blackjack_win');
+			$player->increaseHOF($stat,'blackjack','win');
 			$PHP_OUTPUT.=('You have won $' . number_format($bet * 2) . ' credits!');
 			
 		} elseif ($win == 'tie') {
 			
 			$player->increaseCredits($bet);
 			$player->update();
-			$player->increaseHOF(0,'blackjack_win');
+			$player->increaseHOF(0,'blackjack','win');
 			$PHP_OUTPUT.=('You have won back your $' . number_format($bet) . ' credits.');
 			
-		} else $player->increaseHOF($bet,'blackjack_lose');
+		} else $player->increaseHOF($bet,'blackjack','lose');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bar_main.php';
@@ -541,7 +541,7 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * $winnings);
 			$stat = ($bet * $winnings) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,'blackjack_win');
+			$player->increaseHOF($stat,'blackjack','win');
 			$PHP_OUTPUT.=('You have won $' . number_format($bet * $winnings) . ' credits!');
 
 		} elseif (sizeof($ai_card) > 2) {
@@ -551,14 +551,14 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * $winnings);
 			$stat = ($bet * $winnings) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,'blackjack_win');
+			$player->increaseHOF($stat,'blackjack','win');
 			$PHP_OUTPUT.=('You have won back your $' . number_format($bet * $winnings) . ' credits!');
 			
 		} else {
 			
 			//AI has BJ already...sorry
 			if (empty($bet)) $bet = $var['bet'];
-			$player->increaseHOF($bet,'blackjack_lose');
+			$player->increaseHOF($bet,'blackjack','lose');
 			
 		}
 		$container = array();

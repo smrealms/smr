@@ -935,7 +935,7 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/4)); // 1/4 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],'player_damage');
+		$thisPlayer->increaseHOF($results['TotalDamage'],'player_attack','damage_done');
 		return $results;
 	}
 	
@@ -962,7 +962,7 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],'force_damage');
+		$thisPlayer->increaseHOF($results['TotalDamage'],'force_attack','damage_done');
 		return $results;
 	}
 	
@@ -989,7 +989,7 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],'port_damage');
+		$thisPlayer->increaseHOF($results['TotalDamage'],'port_raid','damage_done');
 		return $results;
 	}
 	
@@ -1016,7 +1016,7 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],'planet_damage');
+		$thisPlayer->increaseHOF($results['TotalDamage'],'planet_raid','damage_done');
 		return $results;
 	}
 	

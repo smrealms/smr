@@ -591,6 +591,34 @@ class SmrPlanet
 	}
 	
 	
+	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
+	{
+		foreach ($attackers as $attacker)
+		{
+			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
+						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
+		}
+		
+		$allowed = TIME - 600;
+		$this->db->getField('SELECT * FROM news WHERE type = \'BREAKING\' AND game_id = '.$trigger->getGameID().' AND time > '.$allowed);
+		if ($this->db->getNumRows()==0)
+		{
+			if (count($attackers) >= 5)
+			{
+				$owner =& $this->getOwner();
+				$text = count($attackers) . ' members of '.$trigger->getAllianceName().' have been spotted attacking ' .
+						$this->getDisplayName() . ' in sector ' . $this->getSectorID() . '
+						.  The planet is owned by ' . $owner->getDisplayName();
+				if ($owner->hasAlliance())
+				{
+					$text .= ', a member of ' . $owner->getAllianceName();
+				}
+				$text .= '.';
+				$db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'BREAKING\')');
+			}
+		}
+	}
+	
 	public function &getWeapons()
 	{
 		$weapons = array();
@@ -699,13 +727,20 @@ class SmrPlanet
 		$armourDamage = 0;
 		if(!$alreadyDead)
 		{
-			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
-			$damage['MaxDamage'] -= $shieldDamage;
-			if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+			if($damage['Shield'])
 			{
-				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
-				$damage['Armour'] -= $cdDamage;
-				$damage['MaxDamage'] -= $cdDamage;
+				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
+				$damage['MaxDamage'] -= $shieldDamage;
+				if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+				{
+					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
+					$damage['Armour'] -= $cdDamage;
+					$damage['MaxDamage'] -= $cdDamage;
+				}
+			}
+			else //hit drones behind shields
+			{
+				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'],$damage['Armour'])*DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
 			}
 		}
 
@@ -713,6 +748,7 @@ class SmrPlanet
 						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
+						'HasShields' => $this->hasShields(),
 						'CDs' => $cdDamage,
 						'NumCDs' => $cdDamage/CD_ARMOUR,
 						'HasCDs' => $this->hasCDs(),
@@ -751,8 +787,8 @@ class SmrPlanet
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF('planet_raid',$this->db->getField('level'),'raid_levels');
-			$currPlayer->increaseHOF('planet_raid',1,'raids_completed');
+			$currPlayer->increaseHOF($this->db->getField('level'),'planet_raid','raid_levels');
+			$currPlayer->increaseHOF(1,'planet_raid','raids_completed');
 		}
 		$this->db->query('DELETE FROM player_attacks_planet WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID());
 	}

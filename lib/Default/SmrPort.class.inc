@@ -524,13 +524,14 @@ class SmrPort
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot attack a cached port!');
+			
+		foreach ($attackers as $attacker)
+		{
+			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ' .
+						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
+		}
 		if (!$this->isUnderAttack())
 		{
-			foreach ($attackers as $attacker)
-			{
-				$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ' .
-							'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
-			}
 	
 			//5 mins per port level
 			$nextReinforce = round(TIME + $this->getLevel() * 300);
@@ -1041,15 +1042,22 @@ class SmrPort
 		$armourDamage = 0;
 		if(!$alreadyDead)
 		{
-			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
-			$damage['MaxDamage'] -= $shieldDamage;
-			if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+			if($damage['Shield'])
 			{
-				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
-				$damage['Armour'] -= $cdDamage;
-				$damage['MaxDamage'] -= $cdDamage;
-				if(!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
-					$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']));
+				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
+				$damage['MaxDamage'] -= $shieldDamage;
+				if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+				{
+					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
+					$damage['Armour'] -= $cdDamage;
+					$damage['MaxDamage'] -= $cdDamage;
+					if(!$this->hasCDs() && ($cdDamage == 0 || $damage['Rollover']))
+						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']));
+				}
+			}
+			else //hit drones behind shields
+			{
+				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'],$damage['Armour'])*DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
 			}
 		}
 
@@ -1057,6 +1065,7 @@ class SmrPort
 						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
+						'HasShields' => $this->hasShields(),
 						'CDs' => $cdDamage,
 						'NumCDs' => $cdDamage/CD_ARMOUR,
 						'HasCDs' => $this->hasCDs(),
@@ -1107,7 +1116,7 @@ class SmrPort
 		$return = array();
 		$return['KillerCredits'] = $this->getCredits();
 		$killer->increaseCredits($return['KillerCredits']);
-		$killer->increaseHOF('port_raid',$return['KillerCredits'],'credits');
+		$killer->increaseHOF($return['KillerCredits'],'port_raid','credits');
 		$this->setCredits(0);
 		
 		$this->creditCurrentAttackersForKill();
@@ -1120,13 +1129,13 @@ class SmrPort
 		// Trigger gets an alignment change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ',$return['KillerBounty']);
-		$killer->increaseHOF('port_raid',$return['KillerBounty'],'bounty_gain');
+		$killer->increaseHOF($return['KillerBounty'],'port_raid','bounty_gain');
 		
 		if($this->getRaceID() > 1)
 		{
 			$return['KillerRelations'] = 45;
 			$killer->decreaseRelations($return['KillerRelations'],$this->getRaceID());
-			$killer->increaseHOF('port_raid',$return['KillerRelations'],'relation_loss');
+			$killer->increaseHOF($return['KillerRelations'],'port_raid','relation_loss');
 		}
 		// also we change alignment
 		$relations = Globals::getRaceRelations($killer->getGameID(),$killer->getRaceID());
@@ -1134,13 +1143,13 @@ class SmrPort
 		{
 			$return['KillerAlign'] = $this->getLevel() * 2;
 			$killer->increaseAlignment($return['KillerAlign']);
-			$killer->increaseHOF('port_raid',$return['KillerAlign'],'align_gain');
+			$killer->increaseHOF($return['KillerAlign'],'port_raid','align_gain');
 		}
 		else
 		{
 			$return['KillerAlign'] = -$this->getLevel() * 2;
 			$killer->decreaseAlignment(-$return['KillerAlign']);
-			$killer->increaseHOF('port_raid',$return['KillerAlign'],'align_loss');
+			$killer->increaseHOF($return['KillerAlign'],'port_raid','align_loss');
 		}
 		
 		return $return;
