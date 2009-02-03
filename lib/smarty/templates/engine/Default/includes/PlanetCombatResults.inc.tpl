@@ -1,5 +1,5 @@
-{assign var=CombatPort value=$PortCombatResults.Port}
-{foreach from=$PortCombatResults.Weapons item=WeaponResults}
+{assign var=CombatPlanet value=$PlanetCombatResults.Planet}
+{foreach from=$PlanetCombatResults.Weapons item=WeaponResults}
 	{assign var=ShootingWeapon value=$WeaponResults.Weapon}
 	{assign var=ShotHit value=$WeaponResults.Hit}
 	{assign var=ActualDamage value=$WeaponResults.ActualDamage}
@@ -10,7 +10,7 @@
 	{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 	{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 	
-	{$CombatPort->getDisplayName()} fires a {$ShootingWeapon->getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getDisplayName()}{*
+	{$CombatPlanet->getDisplayName()} fires a {$ShootingWeapon->getName()} at{if $ShotHit && $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getDisplayName()}{*
 	*}{if !$ActualDamage.TargetAlreadyDead} {*
 		*}{if !$ShotHit}and misses{elseif $ActualDamage.TotalDamage == 0}{*
 			*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which proves ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
@@ -25,8 +25,8 @@
 		{include_template template="includes/TraderCombatKillMessage.inc" assign=Template}{include file=$Template KillResults=$WeaponResults.KillResults}
 	{/if}
 {/foreach}
-{if isset($PortCombatResults.Drones)}
-	{assign var=Drones value=$PortCombatResults.Drones}
+{if isset($PlanetCombatResults.Drones)}
+	{assign var=Drones value=$PlanetCombatResults.Drones}
 	{assign var=WeaponDamage value=$Drones.WeaponDamage}
 	{assign var=ActualDamage value=$Drones.ActualDamage}
 	{assign var=TargetPlayer value=$Drones.TargetPlayer}
@@ -34,7 +34,7 @@
 	{if $ActualDamage.Shield > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 	{if $ActualDamage.NumCDs > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
 	{if $ActualDamage.Armour > 0}{assign var=DamageTypes value=$DamageTypes+1}{/if}
-	{$CombatPort->getDisplayName()} {if $WeaponDamage.Launched == 0}fails to launch it's combat drones{else}launches <span class="yellow">{$WeaponDamage.Launched}</span> combat drones at{if $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getDisplayName()}{*
+	{$CombatPlanet->getDisplayName()} {if $WeaponDamage.Launched == 0}fails to launch it's combat drones{else}launches <span class="yellow">{$WeaponDamage.Launched}</span> combat drones at{if $ActualDamage.TargetAlreadyDead} the debris that was once{/if} {$TargetPlayer->getDisplayName()}{*
 		*}{if !$ActualDamage.TargetAlreadyDead} {*
 			*}{if $ActualDamage.TotalDamage == 0}{*
 				*}{if $WeaponDamage.Shield > 0}{if $ActualDamage.HasCDs}which prove ineffective against their combat drones{else}which washes harmlessly over their hull{/if}{*
@@ -51,5 +51,5 @@
 	{/if}
 {/if}
 
-{assign var=TotalDamage value=$PortCombatResults.TotalDamage}
-{$CombatPort->getDisplayName()} {if $TotalDamage > 0}hit for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round{/if}.
+{assign var=TotalDamage value=$PlanetCombatResults.TotalDamage}
+{$CombatPlanet->getDisplayName()} {if $TotalDamage > 0}hit for a total of <span class="red">{$TotalDamage}</span> damage in this round of combat{else}does no damage this round. You call that a planet? It needs a better builder{/if}.

@@ -65,6 +65,7 @@ $results['Attackers']['Downgrades'] = $port->checkForDowngrade($results['Attacke
 $results['Port'] =& $port->shootPlayers($attackers);
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
+$port->update();
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PORT\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.PORT_ACCOUNT_ID.',' . PORT_ALLIANCE_ID . ',' . $db->escape_string(gzcompress($serializedResults)) . ', \'FALSE\')');

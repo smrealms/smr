@@ -13,7 +13,7 @@ $PHP_OUTPUT.=create_planet_menue();
 
 $curr_time = TIME;
 
-$lvl = $planet->level();
+$lvl = $planet->getLevel();
 if ($lvl < 9)
 	$base = 1.02;
 elseif ($lvl < 19)

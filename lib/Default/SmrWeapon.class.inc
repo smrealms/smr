@@ -138,6 +138,20 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $modifiedAccuracy;
 	}
 	
+	public function getModifiedPlanetAccuracy(SmrPlanet &$planet)
+	{
+		$modifiedAccuracy = $this->getBaseAccuracy();
+		$modifiedAccuracy += $planet->getLevel();
+		return $modifiedAccuracy;
+	}
+	
+	public function getModifiedPlanetAccuracyAgainstPlayer(SmrPlanet &$planet, AbstractSmrPlayer &$targetPlayer)
+	{
+		$modifiedAccuracy = $this->getModifiedPlanetAccuracy($planet);
+		$modifiedAccuracy -= $this->getBaseAccuracy() * (($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2) / 100;
+		return $modifiedAccuracy;
+	}
+	
 	public function &getModifiedDamage(AbstractSmrPlayer &$weaponPlayer)
 	{
 		$damage = $this->getDamage();
@@ -181,6 +195,19 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $damage;
 	}
 	
+	public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet)
+	{
+		if(!$this->canShootPlanets()) // If we can't shoot forces then just return a damageless array and don't waste resources calculated any damage mods.
+			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+		$damage =& $this->getModifiedDamage($weaponPlayer);
+		
+		$diminishing = $weaponPlayer->getDiminishingPlanetAttack();
+		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
+		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
+		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
+		return $damage;
+	}
+	
 	public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
@@ -204,6 +231,17 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	}
 	
 	public function &getModifiedPortDamageAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
+	{
+		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
+		{
+			$return = array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
+			return $return;
+		}
+		$damage = $this->getDamage();
+		return $damage;
+	}
+	
+	public function &getModifiedPlanetDamageAgainstPlayer(SmrPlanet &$planet, AbstractSmrPlayer &$targetPlayer)
 	{
 		if(!$this->canShootTraders()) // If we can't shoot traders then just return a damageless array and don't waste resources calculated any damage mods.
 		{
@@ -266,6 +304,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		}
 		$return['Hit'] = true;
 		return $this->doPortDamageToPlayer($return,$port, $targetPlayer);
+	}
+	
+	public function &shootPlayerAsPlanet(SmrPlanet &$planet, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
+		if(mt_rand(0,99)>=$this->getModifiedPlanetAccuracyAgainstPlayer($planet,$targetPlayer)) //Check if we miss
+		{
+			$return['Hit'] = false;
+			return $return;
+		}
+		$return['Hit'] = true;
+		return $this->doPlanetDamageToPlayer($return,$planet, $targetPlayer);
 	}
 	
 //private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null)

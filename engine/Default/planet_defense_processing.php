@@ -67,8 +67,8 @@ if ($action == 'Ship') {
             create_error('You can\'t transfer more shields than you carry!');
 
         // do we want to transfer more than the planet can hold?
-        if ($amount + $planet->shields > $planet->getBuilding(1) * 100)
-            create_error('The planet can\'t hold more than ' . ($planet->getBuilding(1) * 100) . ' shields!');
+        if ($amount + $planet->shields > $planet->getMaxShields())
+            create_error('The planet can\'t hold more than ' . $planet->getMaxShields() . ' shields!');
 
         // now transfer
         $planet->shields += $amount;
@@ -82,8 +82,8 @@ if ($action == 'Ship') {
             create_error('You can\'t transfer more combat drones than you carry!');
 
         // do we want to transfer more than we can carry?
-        if ($amount + $planet->drones > $planet->getBuilding(2) * 20)
-            create_error('The planet can\'t hold more than ' . ($planet->getBuilding(2) * 20) . ' drones!');
+        if ($amount + $planet->drones > $planet->getMaxCDs())
+            create_error('The planet can\'t hold more than ' . $planet->getMaxCDs() . ' drones!');
 
         // now transfer
         $planet->drones += $amount;

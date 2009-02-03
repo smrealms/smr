@@ -284,6 +284,10 @@ class DummyPlayer extends AbstractSmrPlayer
 	{
 	}
 	
+	public function &killPlayerByPlanet(SmrPort &$port)
+	{
+	}
+	
 	public function &getShip()
 	{
 		require_once(get_file_loc('DummyShip.class.inc'));

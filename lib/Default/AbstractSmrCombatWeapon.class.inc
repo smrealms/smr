@@ -60,6 +60,11 @@ abstract class AbstractSmrCombatWeapon
 		return true;
 	}
 	
+	public function canShootPlanets()
+	{
+		return true;
+	}
+	
 	public function canShootTraders()
 	{
 		return !$this->isRaidWeapon();
@@ -72,6 +77,7 @@ abstract class AbstractSmrCombatWeapon
 	
 	abstract public function &getModifiedDamageAgainstForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces);
 	abstract public function &getModifiedDamageAgainstPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port);
+	abstract public function &getModifiedDamageAgainstPlanet(AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet);
 	abstract public function &getModifiedPortDamageAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer);
 	abstract public function &getModifiedDamageAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer);
 	abstract public function &getModifiedForceDamageAgainstPlayer(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer);
@@ -104,6 +110,15 @@ abstract class AbstractSmrCombatWeapon
 		return $return;
 	}
 	
+	protected function &doPlayerDamageToPlanet(array &$return, AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedDamageAgainstPlanet($weaponPlayer,$planet);
+		$return['ActualDamage'] =& $planet->doWeaponDamage($return['WeaponDamage']);
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $planet->killPlanetByPlayer($weaponPlayer);
+		return $return;
+	}
+	
 	protected function &doPortDamageToPlayer(array &$return, SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return['WeaponDamage'] =& $this->getModifiedPortDamageAgainstPlayer($port,$targetPlayer);
@@ -111,6 +126,16 @@ abstract class AbstractSmrCombatWeapon
 
 		if($return['ActualDamage']['KillingShot'])
 			$return['KillResults'] =& $targetPlayer->killPlayerByPort($port);
+		return $return;
+	}
+	
+	protected function &doPlanetDamageToPlayer(array &$return, SmrPlanet &$planet, AbstractSmrPlayer &$targetPlayer)
+	{
+		$return['WeaponDamage'] =& $this->getModifiedPlanetDamageAgainstPlayer($planet,$targetPlayer);
+		$return['ActualDamage'] =& $targetPlayer->getShip()->doWeaponDamage($return['WeaponDamage']);
+
+		if($return['ActualDamage']['KillingShot'])
+			$return['KillResults'] =& $targetPlayer->killPlayerByPlanet($planet);
 		return $return;
 	}
 	

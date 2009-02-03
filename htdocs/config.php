@@ -32,10 +32,17 @@ define('CD_ARMOUR', 3);
 define('SD_ARMOUR', 20);
 define('DCS_DAMAGE_DECIMAL_PERCENT', 0.75);
 define('WEAPON_PORT_TURRET',10000);
+define('WEAPON_PLANET_TURRET',10001);
 
 define('PORT_ACCOUNT_ID',0);
 define('PORT_ALLIANCE_ID',0);
 define('DEFEND_PORT_BOUNTY_PER_LEVEL',400000);
+define('PLANET_GENERATOR',1);
+define('PLANET_HANGAR',2);
+define('PLANET_TURRET',3);
+define('PLANET_GENERATOR_SHIELDS',100);
+define('PLANET_HANGAR_DRONES',20);
+
 
 /*
  * Messaging system

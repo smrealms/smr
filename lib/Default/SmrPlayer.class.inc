@@ -1313,8 +1313,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
 		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg,true) . ',\'regular\')');
 		
-		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
-		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getPlayerName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getDisplayName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getDisplayName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		
 		// The person who got the kill gains experience
 		$gainedExp = ceil(0.75*((((($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID())) + 1) * 0.04 * $this->getExperience()) + (0.025 * $this->getExperience())));
@@ -1440,7 +1440,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return = array();
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
-		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID(),false);
+		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span style="color:red;">DESTROYED</span> '.$this->getDisplayName().' in sector '.$forces->getSectorID(),false);
 		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
 
 		$news_message = $this->getDisplayName();
@@ -1487,7 +1487,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return = array();
 		// send a message to the person who died
 		self::sendMessageFromPort($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$port->getDisplayName().'\'s defenses.');
-		$temp = 'You were <span class="red">DESTROYED</span> by '.$port->getDisplayName().'\'s defenses.';
 		
 		$news_message = $this->getDisplayName();
 		$db2 = new SmrMySqlDatabase();
@@ -1519,6 +1518,50 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->decreaseExperience($this->getExperience() * $percentage / 100);
 		
 		$this->killPlayer($port->getSectorID());
+		return $return;
+	}
+	
+	public function &killPlayerByPlanet(SmrPlanet &$planet)
+	{
+		$return = array();
+		// send a message to the person who died
+		$planetOwner =& $planet->getOwner();
+		$this->sendMessage($planetOwner->getAccountID(), MSG_PLAYER, 'Your planet <span style="color:red;">DESTROYED</span> '.$this->getDisplayName().' in sector '.$forces->getSectorID(),false);
+		$planetOwner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by '.$planet->getDisplayName().'\'s defenses.',false);
+		
+		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span style="color:red;">DESTROYED</span> '.$this->getPlayerName().' in sector '.$forces->getSectorID(),false);
+		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
+		
+		$news_message = $this->getDisplayName();
+		$db2 = new SmrMySqlDatabase();
+		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
+					'account_id = '.$this->getAccountID());
+		if ($this->db->nextRecord())
+		{
+			
+			//they have a name so we echo it
+			$db2->query('SELECT ' . $this->db->escapeString(htmlentities($this->db->getField('ship_name'))) . ' LIKE \'&lt;img%\'');
+			$named_ship = stripslashes($this->db->getField('ship_name'));
+			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
+			if ($db2->nextRecord())
+			{
+				//nothing
+			}
+			else
+				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			
+		}
+		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector&nbsp#'.$planet->getSectorID().'.';
+		// insert the news entry
+		$this->db->query('INSERT INTO news ' .
+					 '(game_id, time, news_message) ' .
+					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ')');
+		
+		$percentage = 33;
+		if ($percentage > 0 )
+			$this->decreaseExperience($this->getExperience() * $percentage / 100);
+		
+		$this->killPlayer($planet->getSectorID());
 		return $return;
 	}
 	

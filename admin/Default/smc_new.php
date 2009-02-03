@@ -295,7 +295,7 @@ while ($db->nextRecord()) {
 	$db2->query('SELECT * FROM planet WHERE game_id = '.$game_id.' AND sector_id = '.$id);
 	if ($db2->nextRecord()) {
 		$planet =& SmrPlanet::getPlanet($game_id,$id);
-		$level = $planet->level();
+		$level = $planet->getLevel();
 		$owner = $planet->owner_id;
 		$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' AND account_id = '.$owner);
 		$db2->nextRecord();

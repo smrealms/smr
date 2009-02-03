@@ -1,9 +1,13 @@
 <?
 require_once('SmrMySqlDatabase.class.inc');
 
+require_once(get_file_loc('SmrPlayer.class.inc'));
 class SmrPlanet
 {
 	protected static $CACHE_PLANETS = array();
+	
+	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 70;
+	const CHANCE_TO_DOWNGRADE = 15;
 	
 	protected $db;
 	
@@ -120,7 +124,7 @@ class SmrPlanet
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 			$this->getMaxBuildings();
-			$this->level = $this->level();
+			$this->level = $this->getLevel();
 		}
 	}
 	
@@ -137,6 +141,106 @@ class SmrPlanet
 	public function getOwnerID()
 	{
 		return $this->owner_id;
+	}
+	
+	public function setOwnerID($claimerID)
+	{
+		$this->owner_id=$claimerID;
+	}
+	
+	public function &getOwner()
+	{
+		return SmrPlayer::getPlayer($this->getOwnerID(),$this->getGameID());
+	}
+	
+	public function getPassword()
+	{
+		return $this->password;
+	}
+	
+	public function setPassword($password)
+	{
+		$this->password=$password;
+	}
+	
+	public function removePassword()
+	{
+		$this->setPassword('');
+	}
+	
+	public function checkForExcessDefense()
+	{
+		if ($this->getShields() > $this->getMaxShields())
+			$this->setShields($this->getMaxShields());
+		if ($this->getCDs() > $this->getMaxCDs())
+			$this->setCDs($this->getMaxCDs());
+	}
+	
+	public function getShields()
+	{
+		return $this->shields;
+	}
+	
+	public function hasShields()
+	{
+		return $this->getShields()>0;
+	}
+	
+	public function setShields($shields)
+	{
+		if($shields<0)
+			$shields=0;
+		if ($this->getShields() > $this->getMaxShields())
+			$this->setShields($this->getMaxShields());
+		if($this->shields == $shields)
+			return;
+		$this->shields=$shields;
+	}
+	
+	public function decreaseShields($number)
+	{
+		$this->setShields($this->getShields() - $number);
+	}
+	
+	public function getMaxShields()
+	{
+		return $this->getBuilding(PLANET_GENERATOR) * PLANET_GENERATOR_SHIELDS;
+	}
+	
+	public function getCDs()
+	{
+		return $this->drones;
+	}
+	
+	public function hasCDs()
+	{
+		return $this->getCDs()>0;
+	}
+	
+	public function setCDs($combatDrones)
+	{
+		if($combatDrones<0)
+			$combatDrones=0;
+		if ($this->getCDs() > $this->getMaxCDs())
+			$this->setCDs($this->getMaxCDs());
+		if($this->drones == $combatDrones)
+			return;
+		$this->drones=$combatDrones;
+	}
+	
+	public function decreaseCDs($number)
+	{
+		$this->setCDs($this->getCDs() - $number);
+	}
+	
+	public function getMaxCDs()
+	{
+		return $this->getBuilding(PLANET_HANGAR) * PLANET_HANGAR_DRONES;
+	}
+	
+	public function isDestroyed()
+	{
+		return !$this->hasCDs() && !$this->hasShields();
 	}
 	
 	public function exists()
@@ -215,6 +319,24 @@ class SmrPlanet
 		if(isset($buildings[$buildingTypeID]))
 			return $buildings[$buildingTypeID];
 		return 0;
+	}
+	
+	public function hasBuilding($buildingTypeID)
+	{
+		return $this->getBuilding($buildingTypeID)>0;
+	}
+	
+	public function setBuilding($buildingTypeID,$number)
+	{
+		$this->building[$buildingTypeID] = $number;
+	}
+	
+	public function destroyBuilding($buildingTypeID,$number)
+	{
+		if($this->hasBuilding($buildingTypeID))
+		{
+			$this->setBuilding($buildingTypeID,$this->getBuilding($buildingTypeID)-$number);
+		}
 	}
 	
 	public function getTotalBuildings()
@@ -302,7 +424,8 @@ class SmrPlanet
 //					}
 	}
 
-	function update() {
+	function update()
+	{
 
 		$this->db->query('UPDATE planet SET owner_id = '.$this->owner_id.', ' .
 										'password = '.$this->db->escapeString($this->password).', ' .
@@ -344,7 +467,7 @@ class SmrPlanet
 		}
 	}
 
-	function level()
+	function getLevel()
 	{
 		return number_format(($this->getBuilding(1) +
 							  $this->getBuilding(2) +
@@ -353,7 +476,12 @@ class SmrPlanet
 
 	function accuracy()
 	{
-		return round(25 + $this->level());
+		if($this->hasWeapons())
+		{
+			$weapons =& $this->getWeapons();
+			return $weapons[0]->getModifiedPlanetAccuracy($this);
+		}
+		return 0;
 	}
 
 	function stockpile_left($id)
@@ -423,6 +551,11 @@ class SmrPlanet
 		return $this->planet_name;
 	}
 	
+	public function getDisplayName()
+	{
+		return '<span style="color:yellow;font-variant:small-caps">' . $this->getName() . '</span>';;
+	}
+	
 	public function isInhabitable()
 	{
 		return $this->inhabitable_time<= TIME;
@@ -431,6 +564,11 @@ class SmrPlanet
 	public function isClaimed()
 	{
 		return $this->owner_id>0;
+	}
+	
+	public function removeClaimed()
+	{
+		$this->setOwnerID(0);
 	}
 	
 	public function getExamineHREF()
@@ -443,6 +581,192 @@ class SmrPlanet
 			$this->examineHREF = SmrSession::get_new_href($container);
 		}
 		return $this->examineHREF;
+	}
+	
+	public function getAttackHREF()
+	{
+		$container = array();
+		$container['url'] = 'planet_attack_processing.php';
+		return SmrSession::get_new_href($container);
+	}
+	
+	
+	public function &getWeapons()
+	{
+		$weapons = array();
+		for($i=0;$i<$this->getBuilding(PLANET_TURRET);++$i)
+			$weapons[$i] =& SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PLANET_TURRET);
+		return $weapons;
+	}
+	
+	public function hasWeapons()
+	{
+		return ($this->getWeapons())>0;
+	}
+	
+	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
+	{
+		return $this->shootPlayers(array($targetPlayer));
+	}
+	
+	public function &shootPlayers(array &$targetPlayers)
+	{
+		$results = array('Planet' => &$this, 'TotalDamage' => 0);
+		if($this->isDestroyed())
+		{
+			$results['DeadBeforeShot'] = true;
+			return $results;
+		}
+		$results['DeadBeforeShot'] = false;
+		$weapons =& $this->getWeapons();
+		foreach($weapons as $orderID => &$weapon)
+		{
+			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPlanet($this, $targetPlayers[array_rand($targetPlayers)]);
+			if($results['Weapons'][$orderID]['Hit'])
+				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+		}
+		if($this->hasCDs())
+		{
+			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
+			$results['Drones'] =& $thisCDs->shootPlayerAsPort($this, $targetPlayers[array_rand($targetPlayers)]);
+			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+		}
+		return $results;
+	}
+	
+	function &checkForDowngrade($damage)
+	{
+		$results = '';
+		// Chance of planetary structure damage = For every 70 damage there is a 15% chance of destroying a structure.
+		// Turrets have a 1 in 6 chance of being destroyed
+		// Hangers have a 2 in 6 chance of being destroyed
+		// Generators 3 in 6 chance of being destroyed
+		//iterate over all chances
+		for ($i = 0; $damage > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damage-=self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE)
+		{
+			//15% chance to destroy something
+			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE)
+			{
+				$rand = rand(1, 6);
+				switch ($rand) {
+					case 1:
+						//destroy a turret
+						if ($this->hasBuilding(PLANET_TURRET))
+						{
+							$results .= 'This team destroys <span style = "color:red;">1</span> turret.<br />';
+							$this->destroyBuilding(PLANET_TURRET, 1);
+							break;
+						}
+						//if no turrets we fall through
+					case 2:
+					case 3:
+						//destroy a hangar
+						if ($this->hasBuilding(PLANET_HANGAR))
+						{
+							$results .= 'This team destroys <span style ="color:red;">1</span> hangar.<br />';
+							$this->destroyBuilding(PLANET_HANGAR, 1);
+							$this->checkForExcessDefense();
+							break;
+						}
+						//if no hangars we fall through
+					case 4:
+					case 5:
+					case 6:	
+						//destroy a gen
+						if ($this->hasBuilding(PLANET_GENERATOR))
+						{
+							$results .= 'This team destroys <span style ="color:red;">1</span> generator.<br />';
+							$this->destroyBuilding(PLANET_GENERATOR, 1);
+							$this->checkForExcessDefense();
+							break;
+						}
+						//if no gens then we fall through
+					default:
+						//very rare that we will not have a gen to destroy.
+						$results .= 'A planetary structure barely survived the onslaught.<br />';
+						break;
+				}
+			}
+		}
+		return $results;
+	}
+	
+	public function &doWeaponDamage(array $damage)
+	{
+		$alreadyDead = $this->isDestroyed();
+		$shieldDamage = 0;
+		$cdDamage = 0;
+		$armourDamage = 0;
+		if(!$alreadyDead)
+		{
+			$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
+			$damage['MaxDamage'] -= $shieldDamage;
+			if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+			{
+				$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
+				$damage['Armour'] -= $cdDamage;
+				$damage['MaxDamage'] -= $cdDamage;
+			}
+		}
+
+		$return = array(
+						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
+						'TargetAlreadyDead' => $alreadyDead,
+						'Shield' => $shieldDamage,
+						'CDs' => $cdDamage,
+						'NumCDs' => $cdDamage/CD_ARMOUR,
+						'HasCDs' => $this->hasCDs(),
+						'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
+		);
+		return $return;
+	}
+	
+	protected function doShieldDamage($damage)
+	{
+		$actualDamage = min($this->getShields(),$damage);
+		$this->decreaseShields($actualDamage);
+		return $actualDamage;
+	}
+	
+	protected function doCDDamage($damage)
+	{
+		$actualDamage = min($this->getCDs(),floor($damage/CD_ARMOUR));
+		$this->decreaseCDs($actualDamage);
+		return $actualDamage*CD_ARMOUR;
+	}
+	
+	protected function doArmourDamage($damage)
+	{
+		$actualDamage = min($this->getArmour(),floor($damage));
+		$this->decreaseArmour($actualDamage);
+		return $actualDamage;
+	}
+	
+	public function creditCurrentAttackersForKill()
+	{
+		//get all players involved for HoF
+		$allowed = TIME - 60 * 60 * 3;
+		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND time > '.$allowed);
+		$temp = array();
+		while ($this->db->nextRecord())
+		{
+			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
+			$currPlayer->increaseHOF('planet_raid',$this->db->getField('level'),'raid_levels');
+			$currPlayer->increaseHOF('planet_raid',1,'raids_completed');
+		}
+		$this->db->query('DELETE FROM player_attacks_planet WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID());
+	}
+	
+	public function &killPlanetByPlayer(AbstractSmrPlayer &$killer)
+	{
+		$return = array();
+		$this->creditCurrentAttackersForKill();
+		
+		//kick everyone from planet
+		$this->db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID());
+		$this->removeClaimed();
+		$this->removePassword();
+		return $return;
 	}
 }
 

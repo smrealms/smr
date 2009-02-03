@@ -20,7 +20,7 @@
 	{elseif $CombatResultsType=='PORT'}
 		{include_template template="includes/PortFullCombatResults.inc" assign=Template}{include file=$Template FullPortCombatResults=$CombatResults}
 	{elseif $CombatResultsType=='PLANET'}
-		{$CombatResults}
+		{include_template template="includes/PlanetFullCombatResults.inc" assign=Template}{include file=$Template FullPlanetCombatResults=$CombatResults}
 	{/if}
 {else}
 	{$PHP_OUTPUT}

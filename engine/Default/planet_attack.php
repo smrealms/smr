@@ -1,23 +1,15 @@
 <?
-
-$results = $var['results'];
-$PHP_OUTPUT.= $results[0];
-$PHP_OUTPUT.= '<br /><img src="images/planetAttack.jpg" alt="Planet Attack" title="Planet Attack"><br />';
-$PHP_OUTPUT.= $results[1];
-$PHP_OUTPUT.= '<br />';
-if($var['continue'] && !isset($var['override_death'])) {
-	$container = array();
-	$container['url'] = 'planet_attack_processing.php';
-	$PHP_OUTPUT.= '<div align="center">';
-	$PHP_OUTPUT.=create_button($container, 'Continue Attack');
-	$PHP_OUTPUT.= '</div>';
-} else {
-	$PHP_OUTPUT.= '<div align="center"><h2>The battle has ended!</h2><br />';
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'current_sector.php';
-	$PHP_OUTPUT.=create_button($container, 'Current Sector');
-	$PHP_OUTPUT.= '</div>';
+require_once(get_file_loc('SmrPlanet.class.inc'));
+if(isset($var['results']))
+{
+	$results = unserialize($var['results']);
+	$smarty->assign_by_ref('FullPlanetCombatResults',$results);
 }
-
+else
+	$smarty->assign('AlreadyDestroyed',true);
+if(isset($var['override_death']))
+	$smarty->assign('OverrideDeath',true);
+else
+	$smarty->assign('OverrideDeath',false);
+$smarty->assign_by_ref('Planet',SmrPlanet::getPlanet($player->getGameID(),$var['sector_id']));
 ?>

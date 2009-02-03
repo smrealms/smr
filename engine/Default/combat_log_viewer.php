@@ -91,15 +91,14 @@ if($action == 5) {
 if(isset($display_id))
 {
 	require_once(get_file_loc('SmrPort.class.inc'));
+	require_once(get_file_loc('SmrPlanet.class.inc'));
 	$db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
 
 	if($db->nextRecord())
 	{
 		$smarty->assign('CombatLogSector',$db->getField('sector_id'));
 		$smarty->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
-		$results = gzuncompress($db->getField('result'));
-		if($db->getField('type')!='PLANET')
-			$results = unserialize($results);
+		$results = unserialize(gzuncompress($db->getField('result')));
 		$smarty->assign('CombatResultsType',$db->getField('type'));
 		$smarty->assign_by_ref('CombatResults',$results);
 	}
