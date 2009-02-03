@@ -8,6 +8,8 @@ abstract class AbstractSmrPlayer
 {
 	protected $db;
 	
+	const DEFAULT_MAX_TURNS = 600;
+	
 //	var $race_name;
 //	var $level_id;
 //	var $level_name;
@@ -62,7 +64,6 @@ abstract class AbstractSmrPlayer
 	protected $militaryPayment;
 	protected $bounties;
 	protected $turns;
-	protected $maxTurns = 1000;
 	protected $lastCPLAction;
 	
 	protected $HOF;
@@ -880,7 +881,7 @@ abstract class AbstractSmrPlayer
 	
 	public function getMaxTurns()
 	{
-		return $this->maxTurns;
+		return self::DEFAULT_MAX_TURNS * Globals::getGameSpeed($this->getGameID());
 	}
 
 	public function setTurns($maint,$newNoob = -1,$updateLastActive = false)

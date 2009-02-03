@@ -807,25 +807,12 @@ a.mp_as {
 #main_window {left: 195px; top: 125px; width: 772px; height: 588px;}
 
 /* wep drop down */
-div.wep_drop {
-	height: 1em;
-	cursor:pointer;
-}
-div.wep_drop div.wep {
-	position: relative;
-	top:0px;
-	left:0px;
-	background-color:#06240e;
-	color:#f6ff00;
-	display: none;
-}
 div.wep_drop1 {
 	cursor:pointer;
 }
 div.wep_drop1 div.wep1 {
 	background-color:#06240e;
 	color:#f6ff00;
-	display: none;
 }
 
 /* Gal Map */
