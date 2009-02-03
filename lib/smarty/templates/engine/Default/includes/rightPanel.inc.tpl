@@ -37,6 +37,7 @@
 {/if}
 <br />
 Race : {$ThisPlayer->getRaceName()}<br />
+Turns : <span id="condition"><span class="{if $ThisPlayer->getTurnsLevel() == 'LOW'}red{elseif $ThisPlayer->getTurnsLevel() == 'MEDIUM'}yellow{else}green{/if}">{$ThisPlayer->getTurns()}/{$ThisPlayer->getMaxTurns()}</span></span><br />
 {if $ThisPlayer->hasNewbieTurns()}
 	Newbie Turns : <span class="{$NewbieTurnsColour}">{$ThisPlayer->getNewbieTurns()}</span><br />
 {/if}
@@ -69,8 +70,7 @@ Armor : <span id="armor">{$ThisShip->getArmour()}/{$ThisShip->getMaxArmour()}</s
 	<span class="npcColor">{$ThisShip->getIllusionShipName()}</span><br />
 	IG Rating : {$ThisShip->getIllusionAttack()}/{$ThisShip->getIllusionDefense()}<br />
 	<br />
-{/if}		
-Ship Condition : <span id="condition"><span class="dgreen">{$ThisPlayer->getTurns()}/{$ThisPlayer->getMaxTurns()}</span></span><br />
+{/if}
 <br />
 <a href="{$ForceDropLink}"><span class="bold">Forces</span></a><br />
 {if isset($DropMineLink)}<a href="{$DropMineLink}"><span class="bold">[X]</span></a>{/if}Mines : {$ThisShip->getMines()}/{$ThisShip->getMaxMines()}<br />
@@ -84,12 +84,14 @@ Ship Condition : <span id="condition"><span class="dgreen">{$ThisPlayer->getTurn
 	{/foreach}
 {/if}
 Empty : {$ThisShip->getEmptyHolds()}<br /><br />
-<a  href="{$WeaponReorderLink}"><span class="bold">Weapons</span></a><br />
-<div class="wep_drop1" onclick="toggleWepD({$ThisShip->getNumWeapons()});">Show/Hide
-	{foreach from=$ThisShip->getWeapons() item=Weapon name=WeaponLoop}
-		<div class="wep1" id="wep_item{$smarty.foreach.WeaponLoop.iteration}">{$Weapon->getName()}</div>
-	{/foreach}
-</div>
+<a href="{$WeaponReorderLink}"><span class="bold">Weapons</span></a><br />
+{if $ThisShip->hasWeapons()}
+	<div class="wep_drop1" onclick="toggleWepD({$ThisShip->getNumWeapons()});">Show/Hide
+		{foreach from=$ThisShip->getWeapons() item=Weapon name=WeaponLoop}
+			<div class="wep1" {if !$ThisPlayer->isDisplayWeapons()}style="display: none;"{/if} id="wep_item{$smarty.foreach.WeaponLoop.iteration}">{$Weapon->getName()}</div>
+		{/foreach}
+	</div>
+{/if}
 Open : {$ThisShip->getOpenWeaponSlots()}<br />Total Damage: ({$ThisShip->getTotalShieldDamage()}/{$ThisShip->getTotalArmourDamage()})<br />
 Power Used: {$ThisShip->getPowerUsed()}/{$ThisShip->getMaxPower()}<br /><br />
 <a  href="main.php?action=53"><span class="bold">Gadget Slot</span></a><br />

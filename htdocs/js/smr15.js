@@ -563,10 +563,10 @@ function toggleWepD(amount)
 {
 	for(var i = 1; i <= amount; i++)
 	{
-		if (document.getElementById('wep_item' + i).style.display == 'block')
-			document.getElementById('wep_item' + i).style.display = 'none';
-		else
+		if (document.getElementById('wep_item' + i).style.display == 'none')
 			document.getElementById('wep_item' + i).style.display = 'block';
+		else
+			document.getElementById('wep_item' + i).style.display = 'none';
 	}
 }
 

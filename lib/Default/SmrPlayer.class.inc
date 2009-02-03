@@ -48,6 +48,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //	protected $chat;
 //	protected $chatPosition;
 	protected $displayMissions;
+	protected $displayWeapons;
 	protected $ignoreGlobals;
 //	protected $changedStats;
 	protected $completedMissions;
@@ -180,6 +181,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			$this->chat = $result['chat'];
 //			$this->chatPosition = $result['chat_position'];
 			$this->displayMissions				= $result['display_missions']=='TRUE';
+			$this->displayWeapons				= $result['display_weapons']=='TRUE';
 			$this->ignoreGlobals				= $result['ignore_globals']=='TRUE';
 			$this->newbieWarning				= $result['newbie_warning']=='TRUE';
 			$this->nameChanged					= $result['name_changed']=='TRUE';
@@ -284,8 +286,6 @@ class SmrPlayer extends AbstractSmrPlayer
 				return $this->displayMissions;
 			case 'Ignore Global':
 				return $this->ignoreGlobals;
-			case 'Max Maintenance':
-				return $this->getMaxTurns();
 			case 'Level ID':
 				return $this->getLevelID();
 			case 'Display Name':
@@ -619,9 +619,14 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET last_port = ' . $this->lastPort . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function getDisplayMissions()
+	function isDisplayMissions()
 	{
 		return $this->displayMissions;
+	}
+	
+	function isDisplayWeapons()
+	{
+		return $this->displayWeapons;
 	}
 	
 	function setDisplayMissions($bool)
