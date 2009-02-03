@@ -165,8 +165,8 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
-		$player->decreaseHOF($bargain_price,'trade_profit');
-		$player->increaseHOF($bargain_price,'trade_buys');
+		$player->decreaseHOF($bargain_price,'trade','money_profit');
+		$player->increaseHOF($bargain_price,'trade','money_buys');
 //
 //		$cap = $amount * 1000;
 //
@@ -186,8 +186,8 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
 		$player->increaseCredits($bargain_price);
-		$player->increaseHOF($bargain_price,'trade_profit');
-		$player->increaseHOF($bargain_price,'trade_sales');
+		$player->increaseHOF($bargain_price,'trade','money_profit');
+		$player->increaseHOF($bargain_price,'trade','money_sales');
 		$port->sellGoods($portGood,$amount,$credits_in,$gained_exp);
 	}
 
@@ -199,8 +199,8 @@ if (!empty($bargain_price) &&
 	$port->update();
 
 	$player->increaseExperience($gained_exp);
-	$player->increaseHOF($gained_exp,'experience_traded');
-	$player->increaseHOF($amount,'goods_traded');
+	$player->increaseHOF($gained_exp,'trade','experience_gain');
+	$player->increaseHOF($amount,'trade','goods');
 
 	// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
 	if ($port->getRaceID() > 1 || $player->getRaceID() == 2) {
