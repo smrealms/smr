@@ -86,7 +86,7 @@ Armor : <span id="armor">{$ThisShip->getArmour()}/{$ThisShip->getMaxArmour()}</s
 Empty : {$ThisShip->getEmptyHolds()}<br /><br />
 <a href="{$WeaponReorderLink}"><span class="bold">Weapons</span></a><br />
 {if $ThisShip->hasWeapons()}
-	<div class="wep_drop1" onclick="toggleWepD({$ThisShip->getNumWeapons()});">Show/Hide
+	<div class="wep_drop1" onclick="toggleWepD({$ThisShip->getNumWeapons()});">Show/Hide ({$ThisShip->getNumWeapons()})
 		{foreach from=$ThisShip->getWeapons() item=Weapon name=WeaponLoop}
 			<div class="wep1" {if !$ThisPlayer->isDisplayWeapons()}style="display: none;"{/if} id="wep_item{$smarty.foreach.WeaponLoop.iteration}">{$Weapon->getName()}</div>
 		{/foreach}
