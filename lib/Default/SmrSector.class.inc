@@ -462,14 +462,15 @@ class SmrSector
 			throw new Exception('The trader has a force NAP.');
 		$fightingPlayers = array();
 		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
-		foreach($alliancePlayers as $accountID => $player)
-		{
-			if($player->canFight())
+		if(count($alliancePlayers) > 0)
+			foreach($alliancePlayers as $accountID => $player)
 			{
-				if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
-					$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+				if($player->canFight())
+				{
+					if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
+						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+				}
 			}
-		}
 		return $fightingPlayers;
 	}
 
@@ -477,12 +478,32 @@ class SmrSector
 	{
 		$fightingPlayers = array();
 		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
-		foreach($alliancePlayers as $accountID => $player)
-		{
-			if($player->canFight())
+		if(count($alliancePlayers) > 0)
+			foreach($alliancePlayers as $accountID => $player)
 			{
-				if($attackingPlayer->traderAttackPortAlliance($player))
-					$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+				if($player->canFight())
+				{
+					if($attackingPlayer->traderAttackPortAlliance($player))
+						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+				}
+			}
+		return $fightingPlayers;
+	}
+
+	public function &getFightingTradersAgainstPlanet(AbstractSmrPlayer &$attackingPlayer, SmrPlanet &$defendingPlanet)
+	{
+		$fightingPlayers = array();
+		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		if(count($alliancePlayers) > 0)
+		{
+			$planetOwner =& $defendingPlanet->getOwner();
+			foreach($alliancePlayers as $accountID => $player)
+			{
+				if($player->canFight())
+				{
+					if($attackingPlayer->traderAttackPlanetAlliance($player) && !$planetOwner->planetNAPAlliance($player))
+						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+				}
 			}
 		}
 		return $fightingPlayers;
@@ -494,16 +515,17 @@ class SmrSector
 			throw new Exception('These traders are NAPed.');
 		$fightingPlayers = array('Attackers' => array(), 'Defenders' => array());
 		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
-		foreach($alliancePlayers as $accountID => $player)
-		{
-			if($player->canFight())
+		if(count($alliancePlayers) > 0)
+			foreach($alliancePlayers as $accountID => $player)
 			{
-				if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
-					$fightingPlayers['Attackers'][$accountID] =& $alliancePlayers[$accountID];
-				else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player))
-					$fightingPlayers['Defenders'][$accountID] =& $alliancePlayers[$accountID];
+				if($player->canFight())
+				{
+					if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
+						$fightingPlayers['Attackers'][$accountID] =& $alliancePlayers[$accountID];
+					else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player))
+						$fightingPlayers['Defenders'][$accountID] =& $alliancePlayers[$accountID];
+				}
 			}
-		}
 		return $fightingPlayers;
 	}
 

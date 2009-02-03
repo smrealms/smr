@@ -20,8 +20,8 @@ if ($action == 'Take Ownership') {
 							 		'game_id = '.$player->getGameID());
 
 	// set ownership
-	$planet->owner_id = $player->getAccountID();
-	$planet->password = '';
+	$planet->setOwnerID($player->getAccountID());
+	$planet->removePassword();
 	$planet->update();
 	$account->log(11, 'Player takes ownership of planet.', $player->getSectorID());
 
@@ -36,7 +36,7 @@ if ($action == 'Take Ownership') {
 } else if ($action == 'Set Password') {
 
 	// set password
-	$planet->password = $password;
+	$planet->setPassword($password);
 	$planet->update();
 	$account->log(11, 'Player sets planet password to '.$password, $player->getSectorID());
 

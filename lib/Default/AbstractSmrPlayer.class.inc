@@ -598,6 +598,11 @@ abstract class AbstractSmrPlayer
 		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 450))));
 	}
 	
+	public function getDiminishingPlanetAttack()
+	{
+		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 450))));
+	}
+	
 	public function getDiminishingForceAttack()
 	{
 		return max(0,min(1, 1 - ($this->getPastMaint() / ($this->getShip()->getSpeed() * 25 + 900))));
@@ -621,6 +626,11 @@ abstract class AbstractSmrPlayer
 	public function &shootPort(SmrPort &$port)
 	{
 		return $this->getShip()->shootPort($port);
+	}
+	
+	public function &shootPlanet(SmrPlanet &$planet)
+	{
+		return $this->getShip()->shootPlanet($planet);
 	}
 	
 	public function &shootPlayers(array &$targetPlayers)
@@ -859,6 +869,7 @@ abstract class AbstractSmrPlayer
 	abstract public function &killPlayerByPlayer(AbstractSmrPlayer &$killer);
 	abstract public function &killPlayerByForces(SmrForce &$forces);
 	abstract public function &killPlayerByPort(SmrPort &$port);
+	abstract public function &killPlayerByPlanet(SmrPlanet &$planet);
 	abstract public function getHome();
 	
 	
@@ -970,6 +981,11 @@ abstract class AbstractSmrPlayer
 		return $this->sameAlliance($otherPlayer);
 	}
 	
+	public function planetNAPAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
 	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
@@ -996,6 +1012,11 @@ abstract class AbstractSmrPlayer
 	}
 	
 	public function traderAttackPortAlliance(AbstractSmrPlayer $otherPlayer)
+	{
+		return $this->sameAlliance($otherPlayer);
+	}
+	
+	public function traderAttackPlanetAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}

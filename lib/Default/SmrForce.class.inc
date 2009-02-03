@@ -93,8 +93,8 @@ class SmrForce
 		$this->db = new SmrMySqlDatabase();
 		$this->db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 		$this->db->query('SELECT * FROM sector_has_forces WHERE game_id = '.$gameID.' AND ' .
-														   'sector_id = '.$sectorID.' AND ' .
-														   'owner_id = '.$ownerID.'  LIMIT 1');
+															'sector_id = '.$sectorID.' AND ' .
+															'owner_id = '.$ownerID.'  LIMIT 1');
 		$this->ownerID			= $ownerID;
 		$this->sectorID			= $sectorID;
 		$this->gameID			= $gameID;
@@ -335,8 +335,9 @@ class SmrForce
 			{
 				$this->db->query('DELETE FROM sector_has_forces ' .
 							 'WHERE game_id = '.$this->gameID.' AND ' .
-								   'sector_id = '.$this->sectorID.' AND ' .
-								   'owner_id = '.$this->ownerID);
+									'sector_id = '.$this->sectorID.' AND ' .
+									'owner_id = '.$this->ownerID);
+				$this->isNew=true;
 			}
 			else
 			{
@@ -348,6 +349,7 @@ class SmrForce
 		{
 			$this->db->query('INSERT INTO sector_has_forces (game_id, sector_id, owner_id, combat_drones, scout_drones, mines, expire_time) ' .
 												  'VALUES('.$this->gameID.', '.$this->sectorID.', '.$this->ownerID.', '.$this->combatDrones.', '.$this->scoutDrones.', '.$this->mines.', '.$this->expire.')');
+			$this->isNew=false;
 		}
 	}
 	
