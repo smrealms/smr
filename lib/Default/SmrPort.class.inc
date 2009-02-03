@@ -533,11 +533,11 @@ class SmrPort
 			}
 	
 			//5 mins per port level
-			$nextReinforce = round(TIME + $this->getLevel() * 60 * 5);
+			$nextReinforce = round(TIME + $this->getLevel() * 300);
 			
 			$this->db->query('UPDATE port SET reinforce_time = '.$nextReinforce.', attack_started = '.TIME.' WHERE '.$this->SQL.' LIMIT 1');
 			//add news
-			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector #<span class="sectorColor">' . $this->getSectorID() . '</span>. It is under attack by';
+			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector #<span class="sectorColor">' . $this->getSectorID() . '</span>. It is under attack by ';
 			if($trigger->hasAlliance())
 				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceName().'</span>';
 			else
