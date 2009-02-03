@@ -99,6 +99,45 @@ abstract class MySqlDatabase implements Database
 		
 	}
 	
+	public function escape($escape,$autoQuotes=true,$quotes=true)
+	{
+		if(is_bool($escape))
+		{
+			if($autoQuotes)
+				return $this->escapeBoolean($escape,$quotes);
+			else
+				return $this->escapeBoolean($escape);
+		}
+		if(is_numeric($escape))
+		{
+			if($autoQuotes)
+				return $this->escapeNumber($escape,$quotes);
+			else
+				return $this->escapeNumber($escape);
+		}
+		if(is_string($escape))
+		{
+			if($autoQuotes)
+				return $this->escapeString($escape,$quotes);
+			else
+				return $this->escapeString($escape);
+		}
+		if(is_array($escape))
+		{
+			if($autoQuotes)
+				return $this->escapeArray($escape,$quotes);
+			else
+				return $this->escapeArray($escape);
+		}
+		if(is_object($escape))
+		{
+			if($autoQuotes)
+				return $this->escapeArray($escape,$quotes);
+			else
+				return $this->escapeArray($escape);
+		}
+	}
+	
 	public function escapeString($string,$quotes=true)
 	{
 		if($string===true)
@@ -120,24 +159,59 @@ abstract class MySqlDatabase implements Database
 		return mysql_real_escape_string($string);
 	}
 	
-	public function escapeBoolean($bool)
+	public function escapeArray(array $array,$quotes=true,$implodeString=',',$escapeIndividually=true)
+	{
+		$string = '';
+		if($escapeIndividually)
+		{
+			foreach($array as $value)
+			{
+				if(is_array($value))
+					$string .= $this->escapeArray($value,$quotes,$implodeString,$escapeIndividually).$implodeString;
+				else
+					$string .= $this->escape($value, $quotes).$implodeString;
+			}
+			$string = substr($string,0,-1);
+		}
+		else
+		{
+			$string = implode($implodeString,$array);
+		}
+		if(!$escapeIndividually)
+		{
+			$string = mysql_real_escape_string($string);
+			if($quotes)
+				$string = '\'' . $string . '\'';
+		}
+		return $string;
+	}
+	
+	public function escapeNumber($bool,$quotes=false)
 	{
 		if($bool===true)
-			return $this->escapeString('TRUE');
+			return $this->escapeString('TRUE',$quotes);
 		else if($bool===false)
-			return $this->escapeString('FALSE');
+			return $this->escapeString('FALSE',$quotes);
 		else
 			throw new Exception('Not a boolean!'); //TEST
 	}
 	
-	public function escapeHTML($bool)
+	public function escapeBoolean($bool,$quotes=true)
 	{
 		if($bool===true)
-			return $this->escapeString('TRUE');
+			return $this->escapeString('TRUE',$quotes);
 		else if($bool===false)
-			return $this->escapeString('FALSE');
+			return $this->escapeString('FALSE',$quotes);
 		else
 			throw new Exception('Not a boolean!'); //TEST
+	}
+	
+	public function escapeObject($object,$quotes=true)
+	{
+		$string = mysql_real_escape_string(serialize($object));
+		if($quotes)
+			$string = '\'' . $string . '\'';
+		return $string;
 	}
 	
 	

@@ -32,7 +32,7 @@ $player->decreaseCredits($amount);
 
 $placed =& SmrPlayer::getPlayer($account_id, $player->getGameID());
 $placed->increaseCurrentBountyAmount($type,$amount);
-$placed->increaseHOF($amount,'bounties','amount_placed_on_player');
+$placed->increaseHOF($amount,array('bounties','placed','money'));
 
 forward($container);
 

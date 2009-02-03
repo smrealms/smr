@@ -787,8 +787,8 @@ class SmrPlanet
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF($this->db->getField('level'),'planet_raid','raid_levels');
-			$currPlayer->increaseHOF(1,'planet_raid','raids_completed');
+			$currPlayer->increaseHOF($this->db->getField('level'),array('combat','planet','levels'));
+			$currPlayer->increaseHOF(1,array('combat','planet','completed'));
 		}
 		$this->db->query('DELETE FROM player_attacks_planet WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID());
 	}

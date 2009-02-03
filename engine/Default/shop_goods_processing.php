@@ -139,19 +139,23 @@ if (!empty($bargain_price) &&
 	// if offered equals ideal we get a problem (division by zero)
 	if ($bargain_price != $ideal_price && $offered_price != $ideal_price) {
 		//$PHP_OUTPUT.=('.$db->escapeString($offered_price, $ideal_price, $bargain_price');
-		if ($portGood['TransactionType'] == 'Buy') {
+		if ($portGood['TransactionType'] == 'Buy')
+		{
 			if ($offered_price - $bargain_price < 0)
 				$val = 0;
 			else
 				$val = abs($offered_price - $bargain_price);
-		} else {
+		}
+		else
+		{
 			if ($offered_price - $bargain_price > 0)
 				$val = 0;
 			else
 				$val = abs($offered_price - $bargain_price);
 		}
 		$gained_exp = round($base_xp * $val / abs($offered_price - $ideal_price) * $amount / $ship->getCargoHolds());
-	} else
+	}
+	else
 		$gained_exp = round($base_xp * $amount / $ship->getCargoHolds());
 
 	//will use these variables in current sector and port after successful trade
@@ -165,17 +169,10 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
-		$player->decreaseHOF($bargain_price,'trade','money_profit');
-		$player->increaseHOF($bargain_price,'trade','money_buys');
-//
-//		$cap = $amount * 1000;
-//
-//		if($bargain_price > $cap) {
-//			$credits_in = $cap;
-//		}
-//		else {
-//			$credits_in = $bargain_price;
-//		}
+		$player->increaseHOF($amount,array('trade','goods','buys'));
+		$player->increaseHOF($gained_exp,'trade','experience','buys');
+		$player->decreaseHOF($bargain_price,array('trade','money','profit'));
+		$player->increaseHOF($bargain_price,array('trade','money','buys'));
 
 		$port->buyGoods($portGood,$amount,$bargain_price,$gained_exp);
 
@@ -186,10 +183,13 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
 		$player->increaseCredits($bargain_price);
-		$player->increaseHOF($bargain_price,'trade','money_profit');
-		$player->increaseHOF($bargain_price,'trade','money_sales');
+		$player->increaseHOF($amount,array('trade','goods','sales'));
+		$player->increaseHOF($gained_exp,'trade','experience','sales');
+		$player->increaseHOF($bargain_price,array('trade','money','profit'));
+		$player->increaseHOF($bargain_price,array('trade','money','sales'));
 		$port->sellGoods($portGood,$amount,$credits_in,$gained_exp);
 	}
+	$player->increaseHOF(1,array('trade','results','success'));
 
 	// log action
 	$account->log(6, $portGood['TransactionType'] . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());
@@ -199,8 +199,6 @@ if (!empty($bargain_price) &&
 	$port->update();
 
 	$player->increaseExperience($gained_exp);
-	$player->increaseHOF($gained_exp,'trade','experience_gain');
-	$player->increaseHOF($amount,'trade','goods');
 
 	// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
 	if ($port->getRaceID() > 1 || $player->getRaceID() == 2) {
@@ -214,9 +212,10 @@ if (!empty($bargain_price) &&
 	else
 		$container['body'] = 'shop_goods.php';
 
-} else {
-
-	// does the trader tries to outsmart us?
+}
+else
+{
+	// does the trader try to outsmart us?
 	check_bargain_number();
 
 	$container['url'] = 'skeleton.php';

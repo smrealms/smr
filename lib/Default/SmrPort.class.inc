@@ -1105,8 +1105,8 @@ class SmrPort
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF('port_raid',$this->db->getField('level'),'raid_levels');
-			$currPlayer->increaseHOF('port_raid',1,'raids_completed');
+			$currPlayer->increaseHOF($this->db->getField('level'),array('combat','port','levels'));
+			$currPlayer->increaseHOF(1,array('combat','port','completed'));
 		}
 		$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID().' LIMIT '.$numToDelete);
 	}
@@ -1116,7 +1116,7 @@ class SmrPort
 		$return = array();
 		$return['KillerCredits'] = $this->getCredits();
 		$killer->increaseCredits($return['KillerCredits']);
-		$killer->increaseHOF($return['KillerCredits'],'port_raid','credits');
+		$killer->increaseHOF($return['KillerCredits'],array('combat','port','money','gained'));
 		$this->setCredits(0);
 		
 		$this->creditCurrentAttackersForKill();
@@ -1129,13 +1129,13 @@ class SmrPort
 		// Trigger gets an alignment change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ',$return['KillerBounty']);
-		$killer->increaseHOF($return['KillerBounty'],'port_raid','bounty_gain');
+		$killer->increaseHOF($return['KillerBounty'],array('combat','port','bounties','gained'));
 		
 		if($this->getRaceID() > 1)
 		{
 			$return['KillerRelations'] = 45;
 			$killer->decreaseRelations($return['KillerRelations'],$this->getRaceID());
-			$killer->increaseHOF($return['KillerRelations'],'port_raid','relation_loss');
+			$killer->increaseHOF($return['KillerRelations'],array('combat','port','relation','loss'));
 		}
 		// also we change alignment
 		$relations = Globals::getRaceRelations($killer->getGameID(),$killer->getRaceID());
@@ -1143,13 +1143,13 @@ class SmrPort
 		{
 			$return['KillerAlign'] = $this->getLevel() * 2;
 			$killer->increaseAlignment($return['KillerAlign']);
-			$killer->increaseHOF($return['KillerAlign'],'port_raid','align_gain');
+			$killer->increaseHOF($return['KillerAlign'],array('combat','port','alignment','gain'));
 		}
 		else
 		{
 			$return['KillerAlign'] = -$this->getLevel() * 2;
 			$killer->decreaseAlignment(-$return['KillerAlign']);
-			$killer->increaseHOF($return['KillerAlign'],'port_raid','align_loss');
+			$killer->increaseHOF($return['KillerAlign'],array('combat','port','alignment','loss'));
 		}
 		
 		return $return;
