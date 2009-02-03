@@ -20,8 +20,8 @@ if ($db->getNumRows()) {
 
 	$PHP_OUTPUT.=('You have claimed the following bounties<br /><br />');
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		// get bounty id from db
 		$bounty_id = $db->getField('bounty_id');
 		$acc_id = $db->getField('account_id');
@@ -37,8 +37,8 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span><br />');
 
 		// add HoF stat
-		$player->increaseHOF(1,'bounties','claimed');
-		$player->increaseHOF($amount,'bounties','amount_claimed');
+		$player->increaseHOF(1,array('bounties','results','claimed'));
+		$player->increaseHOF($amount,array('bounties','money','claimed'));
 
 		// delete bounty
 		$db2->query('DELETE FROM bounty

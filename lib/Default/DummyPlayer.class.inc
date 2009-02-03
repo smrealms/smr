@@ -92,11 +92,11 @@ class DummyPlayer extends AbstractSmrPlayer
 //						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
 
 		// record death stat
-		$this->increaseHOF(1,'dying','deaths');
+//		$this->increaseHOF(1,'dying','deaths');
 		//record cost of ship lost
-		$this->increaseHOF($this->getShip()->getCost(),'dying','ship_cost_lost');
+//		$this->increaseHOF($this->getShip()->getCost(),'dying','ship_cost_lost');
 		// reset turns since last death
-		$this->setHOF(0,'turns_used');
+//		$this->setHOF(0,'turns_used');
 
 		// 1/4 of ship value -> insurance
 		$newCredits = round($this->getShip()->getCost() / 4);

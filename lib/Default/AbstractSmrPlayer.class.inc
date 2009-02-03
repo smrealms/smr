@@ -9,7 +9,8 @@ abstract class AbstractSmrPlayer
 	protected $db;
 	
 	const DEFAULT_MAX_TURNS = 600;
-	
+	const HOF_CHANGED = 1;
+	const HOF_NEW = 2;
 //	var $race_name;
 //	var $level_id;
 //	var $level_name;
@@ -69,6 +70,7 @@ abstract class AbstractSmrPlayer
 	protected $HOF;
 	
 	protected $hasChanged=false;
+	protected $hasHOFChanged=false;
 	protected $hasBountyChanged = array();
 	
 	protected function __construct()
@@ -343,7 +345,7 @@ abstract class AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET credits = '.$this->credits.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	public function increaseExperience($experience,$type='Undefined')
+	public function increaseExperience($experience)
 	{
 		if($experience < 0)
 			throw new Exception('Trying to increase negative experience.');
@@ -351,9 +353,9 @@ abstract class AbstractSmrPlayer
 			return;
 		$newExperience = $this->experience + $experience;
 		$this->setExperience($newExperience);
-		$this->increaseHOF($experience,'Experience',$type);
+		$this->increaseHOF($experience,array('experience','total','gain'));
 	}
-	public function decreaseExperience($experience,$type='Undefined')
+	public function decreaseExperience($experience)
 	{
 		if($experience < 0)
 			throw new Exception('Trying to decrease negative experience.');
@@ -361,7 +363,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$newExperience = $this->experience - $experience;
 		$this->setExperience($newExperience);
-		$this->decreaseHOF($experience,'Experience',$type);
+		$this->decreaseHOF($experience,array('experience','total','loss'));
 	}
 	
 	public function isLandedOnPlanet()
@@ -816,54 +818,71 @@ abstract class AbstractSmrPlayer
 	
 	abstract protected function getHOFData();
 	
-	public function getHOF()
+	public function getHOF(array $typeList = null)
 	{
 		$this->getHOFData();
-		return $this->HOF;
+		if($typeList==null)
+			return $this->HOF;
+		$hof=$this->HOF;
+		foreach($typeList as $type)
+		{
+			if(!isset($hof[$type]))
+				return 0;
+			$hof = $hof[$type];
+		}
+		return $hof;
 	}
 	
-	public function increaseHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
+	public function increaseHOF($amount,array $typeList) //TODO implement HOF and take away error suppression.
 	{
 		if($amount < 0)
-			throw new Exception('Trying to increase negative HOF: '.$type.'-'.$subtype);
+			throw new Exception('Trying to increase negative HOF: '.implode(':',$typeList));
 		if($amount == 0)
 			return;
-		$this->getHOF();
-		if($subtype===false)
-			$amount+=@$this->HOF[$type];
-		else
-			$amount+=@$this->HOF[$type][$subtype];
-		$this->setHOF($amount,$type,$subtype);
+		$this->setHOF($this->getHOF($typeList)+$amount,$typeList);
 	}
 	
-	public function decreaseHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
+	public function decreaseHOF($amount,array $typeList) //TODO implement HOF and take away error suppression.
 	{
 		if($amount < 0)
-			throw new Exception('Trying to decrease negative HOF: '.$type.'-'.$subtype);
+			throw new Exception('Trying to decrease negative HOF: '.implode(':',$typeList));
 		if($amount == 0)
 			return;
-		$this->getHOF();
-		if($subtype===false)
-			$amount=@$this->HOF[$type]-$amount;
-		else
-			$amount=@$this->HOF[$type][$subtype]-$amount;
-		$this->setHOF($amount,$type,$subtype);
+		$this->setHOF($this->getHOF($typeList)-$amount,$typeList);
 	}
 	
-	public function setHOF($amount,$type,$subtype=false) //TODO implement HOF and take away error suppression.
+	public function setHOF($amount,array $typeList) //TODO implement HOF and take away error suppression.
 	{
-		if(($subtype!==false && @$this->HOF[$type]==$amount)||@$this->HOF[$type][$subtype]==$amount)
+		if(is_array($this->getHOF($typeList)))
+			throw new Exception('Trying to overwrite a HOF type: '.implode(':',$typeList));
+		if($this->getHOF($typeList)==$amount)
 			return;
 		if($amount < 0)
 			$amount=0;
 		$this->getHOF();
-		if($subtype===false)
-			@$this->HOF[$type]=$amount;
-		else
-			@$this->HOF[$type][$subtype]=$amount;
-//PAGE
-//TODO: Add hof stuff.
-//		$result = $this->db->query('UPDATE player_hof SET `'.$type.($subtype!==false?'-'.$subtype:'').'`='.$amount.' WHERE ' . $this->SQL);
+		
+		$hof =& $this->HOF;
+		$hofChanged =& $this->hasHOFChanged;
+		$new = false;
+		foreach($typeList as $type)
+		{
+			if(!isset($hofChanged[$type]))
+				$hofChanged[$type] = array();
+			if(!isset($hof[$type]))
+			{
+				$hof[$type] = array();
+				$new = true;
+			}
+			$hof =& $hof[$type];
+			$hofChanged =& $hofChanged[$type];
+		}
+		if($hofChanged==null)
+		{
+			$hofChanged = self::HOF_CHANGED;
+			if($new)
+				$hofChanged = self::HOF_NEW;
+		}
+		$hof = $amount;
 	}
 	
 	abstract public function killPlayer($sectorID);
@@ -923,6 +942,8 @@ abstract class AbstractSmrPlayer
 		
 		if(!has_beta_privilege('No SC Loss'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
+		$this->increaseHOF($take,array('movement','turns_used','since_death'));
+		$this->increaseHOF($take,array('movement','turns_used','total'));
 	}
 	
 	public function giveTurns($give, $noob = 0,$updateLastActive = false)

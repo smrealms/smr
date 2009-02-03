@@ -199,8 +199,8 @@ function get_good_distance($good_id, $transaction)
 //
 //}
 
-function check_bargain_number() {
-
+function check_bargain_number()
+{
 	global $var, $container;
 	global $offered_price, $ideal_price, $bargain_price;
 	global $amount, $player;
@@ -209,17 +209,18 @@ function check_bargain_number() {
 	// increase current number of tries
 	$container['number_of_bargains'] = $var['number_of_bargains'] + 1;
 
-	if (isset($var['overall_number_of_bargains'])) {
-
+	$player->increaseHOF(1,array('trade','results','fail'));
+	if (isset($var['overall_number_of_bargains']))
+	{
 		// transfer values
 		transfer('overall_number_of_bargains');
 
 		// does we have enough of it?
-		if ($container['number_of_bargains'] > $container['overall_number_of_bargains']) {
-
+		if ($container['number_of_bargains'] > $container['overall_number_of_bargains'])
+		{
 			// change relation for non neutral ports
-			if ($port->getRaceID() > 1) {
-
+			if ($port->getRaceID() > 1)
+			{
 				$relation_modifier = round($amount / 30);
 				if ($relation_modifier > 10)
 					$relation_modifier = 10;
@@ -234,7 +235,7 @@ function check_bargain_number() {
 				$player->update();
 
 			}
-
+			$player->increaseHOF(1,array('trade','results','epic_fail'));
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 
 		}
@@ -261,7 +262,8 @@ function check_bargain_number() {
 
 		}
 
-	} else
+	}
+	else
 		$container['overall_number_of_bargains'] = mt_rand(2, 5);
 
 }

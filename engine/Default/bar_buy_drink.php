@@ -86,7 +86,7 @@ if ($num_drinks > 15)
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
 
 }
-$player->increaseHOF(1,'bar','drinks');
+$player->increaseHOF(1,array('bar','drinks'));
 $PHP_OUTPUT.= '</div>';
 
 //offer another drink and such

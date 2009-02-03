@@ -1250,11 +1250,11 @@ class SmrPlayer extends AbstractSmrPlayer
 						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
 
 		// record death stat
-		$this->increaseHOF(1,'dying','deaths');
+		$this->increaseHOF(1,array('dying','deaths'));
 		//record cost of ship lost
-		$this->increaseHOF($this->getShip()->getCost(),'dying','ship_cost_lost');
+		$this->increaseHOF($this->getShip()->getCost(),array('combat','dying','money','ship_cost'));
 		// reset turns since last death
-		$this->setHOF(0,'turns_used');
+		$this->setHOF(0,array('movement','turns_used','since_death'));
 
 		// 1/4 of ship value -> insurance
 		$newCredits = round($this->getShip()->getCost() / 4);
@@ -1326,8 +1326,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
-		$killer->increaseHOF($gainedExp,'killing','exp_gain');
-		$killer->increaseHOF($this->getExperience(),'killing','traders_killed_exp');
+		$killer->increaseHOF($gainedExp,array('combat','killing','experience','gain'));
+		$killer->increaseHOF($this->getExperience(),array('killing','experience','experience','traders_killed'));
 		// Dead player loses experience
 		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
 		$return['DeadExp'] = 0;
@@ -1341,8 +1341,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$creditsGained = $this->getCredits();
 		$return['KillerCredits'] = $creditsGained;
 		$killer->increaseCredits($creditsGained);
-		$killer->increaseHOF($creditsGained,'killing','money_gain');
-		$killer->increaseHOF($this->getShip()->getCost(),'killing','ships_killed_cost');
+		$killer->increaseHOF($creditsGained,array('combat','killing','money','gain'));
+		$killer->increaseHOF($this->getShip()->getCost(),array('killing','money','ships_killed'));
 
 		// The killer may change alignment
 		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
@@ -1411,7 +1411,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		
 		$killer->increaseKills(1);
-		$killer->increaseHOF(1,'killing','kills');
+		$killer->increaseHOF(1,array('combat','killing','kills'));
 
 		if($this->hasAlliance())
 		{
@@ -1653,6 +1653,45 @@ class SmrPlayer extends AbstractSmrPlayer
 				}
 			}
 		}
+		$this->saveHOF();
+	}
+	
+	public function saveHOF()
+	{
+		if($this->hasHOFChanged!==false)
+			$this->doHOFSave($this->hasHOFChanged);
+	}
+	protected function doHOFSave(array &$hasChangedList,array $typeList = array())
+	{
+		foreach($hasChangedList as $type => &$hofChanged)
+		{
+			$tempTypeList = $typeList;
+			$tempTypeList[] = $type;
+			if(is_array($hofChanged))
+			{
+				$this->doHOFSave($hofChanged,$tempTypeList);
+			}
+			else
+			{
+				$amount = $this->getHOF($tempTypeList);
+				if($hofChanged==self::HOF_NEW)
+				{
+					if($amount > 0)
+						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeArray($tempTypeList,true,':',false) . ',' . $amount.')');
+				}
+				else if($hofChanged==self::HOF_CHANGED)
+				{
+	//				if($amount > 0)
+						$this->db->query('UPDATE player_hof 
+							SET amount=' . $amount . '
+							WHERE account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = '.$this->db->escapeArray($tempTypeList,true,':',false).' LIMIT 1');
+	//				else
+	//					$this->db->query('DELETE FROM player_hof WHERE account_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = ' . $this->db->escapeArray($tempTypeList,true,':',false) . ' LIMIT 1');
+	//				}
+				}
+				$hofChanged = false;
+			}
+		}
 	}
 	
 	protected function getHOFData()
@@ -1660,24 +1699,21 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->HOF))
 		{
 			//Get Player HOF
-			$result = $this->db->query('SELECT * FROM player_hof WHERE ' . $this->SQL .' LIMIT 1');
+			$result = $this->db->query('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
 			$this->HOF = array();
-			if($this->db->nextRecord($result))
+			while($this->db->nextRecord($result))
 			{
-				foreach($this->db->getRow() as $key => $value)
+				$hof =& $this->HOF;
+				$typeList = explode(':',$this->db->getField('type'));
+				foreach($typeList as $type)
 				{
-					if($key == 'account_id' || $key == 'game_id')
-						continue;
-					if (strpos($key,'-'))
+					if(!isset($hof[$type]))
 					{
-						list($type,$subtype) = explode('-',$key);
-						$this->HOF[$type][$subtype] = $value;
+						$hof[$type] = array();
 					}
-					else
-					{
-						$this->HOF[$key] = $value;
-					}
+					$hof =& $hof[$type];
 				}
+				$hof = $this->db->getField('amount');
 			}
 		}
 	}
