@@ -31,7 +31,8 @@ $PHP_OUTPUT.=('list of player accomplishments.  Here you can view how players ra
 $PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br /><br />');
 
 $db->query('SELECT DISTINCT type FROM player_hof' . (isset($var['game_id']) ? ' WHERE game_id='.$var['game_id'] : '').' ORDER BY type');
-$hofTypes = array();
+$DONATION_NAME = 'Money Donated To SMR';
+$hofTypes = array($DONATION_NAME=>true);
 while($db->nextRecord())
 {
 	$hof =& $hofTypes;
@@ -146,25 +147,35 @@ else
 {
 	$PHP_OUTPUT.=('<tr><th align="center">Rank</th><th align="center">Player</th><th align="center">Total</th></tr>');
 	
-	$viewType = $var['type'];
-	$viewType[] = $var['view'];
-	
 	$rank=1;
 	$foundMe=false;
-	$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' ORDER BY amount DESC LIMIT 25');
+	$viewType = $var['type'];
+	$viewType[] = $var['view'];
+	if($var['view'] == $DONATION_NAME)
+		$db->query('SELECT account_id, sum(amount) as amount FROM account_donated ' .
+				'GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+	else
+		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
-//		if($db->getField('account_id') == $account->account_id)
-//			$foundMe = true;
+		if($db->getField('account_id') == $account->account_id)
+			$foundMe = true;
 		$PHP_OUTPUT .= displayHOFRow($rank++,$db->getField('account_id'),$db->getField('amount') );
 	}
 	if(!$foundMe)
 	{
-		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND account_id='.$account->account_id.' LIMIT 1');
+		if($var['view'] == $DONATION_NAME)
+			$db->query('SELECT account_id, sum(amount) as amount FROM account_donated WHERE account_id='.$account->account_id.' LIMIT 1');
+		else
+			$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND account_id='.$account->account_id.' LIMIT 1');
 		$amount = 0;
 		if($db->nextRecord())
 			$amount = $db->getField('amount');
-		$db->query('SELECT count(account_id) as rank FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND amount>'.$amount.' LIMIT 1');
+		if($var['view'] == $DONATION_NAME)
+			$db->query('SELECT count(account_id) as rank, sum(amount) AS amount FROM account_donated WHERE amount>' . $amount .
+					' GROUP BY account_id LIMIT 1');
+		else
+			$db->query('SELECT count(account_id) as rank FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND amount>'.$amount.' LIMIT 1');
 		$rank = 1;
 		if($db->nextRecord())
 			$rank = $db->getField('rank') + 1;
