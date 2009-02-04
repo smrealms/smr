@@ -48,6 +48,7 @@ elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_
 } elseif ($var['func'] == 'Warp') {
 	$sector_to = $_REQUEST['sector_to'];
 	$player->setSectorID($sector_to);
+	$player->setLandedOnPlanet(false);
 } elseif ($var['func'] == 'Turns') {
 	$player->setTurns($_REQUEST['turns']);
 } elseif ($var['func'] == 'Exp') {
