@@ -992,7 +992,7 @@ abstract class AbstractSmrShip
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Port','Damage Done'));
-		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots'));
+//		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
 		return $results;
 	}
 	
@@ -1020,7 +1020,7 @@ abstract class AbstractSmrShip
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Planet','Damage Done'));
-		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots'));
+//		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
 		return $results;
 	}
 	
