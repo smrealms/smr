@@ -28,7 +28,7 @@ while ($db->nextRecord()) {
 $db->query('SELECT * FROM anon_bank_transactions WHERE account_id IN ('.$account_list.') ORDER BY anon_id');
 if (!$db->getNumRows()) {
 
-	$PHP_OUTPUT.=create_error('None of the entries in all the logfiles contains anonymous bank transaction!');
+	$PHP_OUTPUT.=create_error('None of the entries in all the log files contains anonymous bank transaction!');
 	return;
 
 }
