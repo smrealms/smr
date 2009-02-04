@@ -1,10 +1,10 @@
 <?
 
 $under_attack_shields = ($ship->old_hardware[HARWDWARE_SHIELDS] != $ship->getShields());
-$under_attack_armor = ($ship->old_hardware[HARDWARE_ARMOR] != $ship->getArmour());
+$under_attack_armour = ($ship->old_hardware[HARDWARE_ARMOUR] != $ship->getArmour());
 $under_attack_drones = ($ship->old_hardware[HARDWARE_COMBAT] != $ship->getCDs());
 
-if ($under_attack_shields || $under_attack_armor || $under_attack_drones) {
+if ($under_attack_shields || $under_attack_armour || $under_attack_drones) {
 	$PHP_OUTPUT.= '
 		<div id="attack_warning" class="attack_warning"><nobr>You are under attack!</nobr></div>
 		<script type="text/javascript">
@@ -121,10 +121,10 @@ else
 	$PHP_OUTPUT.= $am;
 $PHP_OUTPUT.= '/' . $ship->getMaxShields() . '<br />';
 
-// ******* Armor *******
+// ******* Armour *******
 $am=$ship->getArmour();
-$PHP_OUTPUT.= 'Armor : ';
-if ($under_attack_armor)
+$PHP_OUTPUT.= 'Armour : ';
+if ($under_attack_armour)
 	$PHP_OUTPUT.= '<span style="color:red;">' . $am . '</span>';
 else
 	$PHP_OUTPUT.= $am;

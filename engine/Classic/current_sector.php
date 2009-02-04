@@ -902,10 +902,10 @@ if(isset($players)) {
 
 // Get the weapon stats
 if(isset($weapons)) {
-	$db->query('SELECT weapon_type_id,shield_damage,armor_damage FROM weapon_type WHERE weapon_type_id IN (' . implode(',',array_keys($weapons)) . ') LIMIT ' . count($weapons));
+	$db->query('SELECT weapon_type_id,shield_damage,armour_damage FROM weapon_type WHERE weapon_type_id IN (' . implode(',',array_keys($weapons)) . ') LIMIT ' . count($weapons));
 	
 	while($db->next_record()) {
-		$weapons[$db->f('weapon_type_id')] = $db->f('shield_damage') + $db->f('armor_damage');
+		$weapons[$db->f('weapon_type_id')] = $db->f('shield_damage') + $db->f('armour_damage');
 	}
 }
 

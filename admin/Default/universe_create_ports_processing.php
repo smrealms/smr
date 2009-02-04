@@ -122,13 +122,13 @@ foreach($ports as $galaxy_id => $amount) {
 
 		$credits = ($level - 1) * 3000000;
 		$shields = $level * 1000;
-		$armor = $level * 1000;
+		$armour = $level * 1000;
 		$drones = $level * 100;
 
 		// insert port into db
 		$db2->query('INSERT INTO port ' .
-					'(game_id, sector_id, level, credits, race_id, shields, armor, combat_drones) ' .
-					'VALUES (' . $var['game_id'] . ', '.$sector_id.', '.$level.', '.$credits.', '.$race_id.', '.$shields.', '.$armor.', '.$drones.')');
+					'(game_id, sector_id, level, credits, race_id, shields, armour, combat_drones) ' .
+					'VALUES (' . $var['game_id'] . ', '.$sector_id.', '.$level.', '.$credits.', '.$race_id.', '.$shields.', '.$armour.', '.$drones.')');
 
 		// get a temp of that array with all the good classes
 		// only working with that one!

@@ -683,7 +683,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 	if (SmrSession::$game_id != 0)
 	{
-	//	if ($under_attack_shields || $under_attack_armor || $under_attack_drones) {
+	//	if ($under_attack_shields || $under_attack_armour || $under_attack_drones) {
 	//		echo '
 	//			<div id="attack_warning" class="attack_warning"><nobr>You are under attack!</nobr></div>
 	//			<script type="text/javascript">

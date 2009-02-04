@@ -39,7 +39,7 @@ function shoot_trader($attacker_team, $defender_team) {
 			//vars
 			$weapon_name = $weapon->f("weapon_name");
 			$shield_damage = $weapon->f("shield_damage");
-			$armor_damage = $weapon->f("armor_damage");
+			$armour_damage = $weapon->f("armour_damage");
 			$accuracy = $weapon->f("accuracy");
 
 			// maybe defender is already dead?
@@ -104,47 +104,47 @@ function shoot_trader($attacker_team, $defender_team) {
 						// text
 						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> and destroys <span style=\"color:red;\">$shield_damage</span> shields.";
 
-					} elseif ($armor_damage > 0)
+					} elseif ($armour_damage > 0)
 						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> dispersing at the shields.";
 
 				// does the defender have drones?
 				} elseif ($curr_defender_ship->hardware[HARDWARE_COMBAT] > 0) {
 
-					if ($armor_damage > 0) {
+					if ($armour_damage > 0) {
 
-						// do we do more damage than armor left?
-						if ($armor_damage > $curr_defender_ship->hardware[HARDWARE_COMBAT] * 3)
-							$armor_damage = $curr_defender_ship->hardware[HARDWARE_COMBAT] * 3;
+						// do we do more damage than armour left?
+						if ($armour_damage > $curr_defender_ship->hardware[HARDWARE_COMBAT] * 3)
+							$armour_damage = $curr_defender_ship->hardware[HARDWARE_COMBAT] * 3;
 
 						// accumulate the attacker_damage
-						$attacker_damage += $armor_damage;
+						$attacker_damage += $armour_damage;
 
-						// subtract the armor damage
-						$curr_defender_ship->hardware[HARDWARE_COMBAT] -= round($armor_damage / 3);
+						// subtract the armour damage
+						$curr_defender_ship->hardware[HARDWARE_COMBAT] -= round($armour_damage / 3);
 
 						// print message
-						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> destroying <span style=\"color:red;\">" . round($armor_damage / 3) . "</span> drones.";
+						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> destroying <span style=\"color:red;\">" . round($armour_damage / 3) . "</span> drones.";
 
 					} elseif ($shield_damage > 0)
 						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> which proves to be ineffective against the drones.";
 
-				// does the defender has armor?
+				// does the defender has armour?
 				} elseif ($curr_defender_ship->hardware[HARDWARE_ARMOR] > 0) {
 
-					if ($armor_damage > 0) {
+					if ($armour_damage > 0) {
 
-						// do we do more damage than armor left?
-						if ($armor_damage > $curr_defender_ship->hardware[HARDWARE_ARMOR])
-							$armor_damage = $curr_defender_ship->hardware[HARDWARE_ARMOR];
+						// do we do more damage than armour left?
+						if ($armour_damage > $curr_defender_ship->hardware[HARDWARE_ARMOR])
+							$armour_damage = $curr_defender_ship->hardware[HARDWARE_ARMOR];
 
 						// accumulate the attacker_damage
-						$attacker_damage += $armor_damage;
+						$attacker_damage += $armour_damage;
 
-						// subtract the armor damage
-						$curr_defender_ship->hardware[HARDWARE_ARMOR] -= $armor_damage;
+						// subtract the armour damage
+						$curr_defender_ship->hardware[HARDWARE_ARMOR] -= $armour_damage;
 
 						// text
-						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> destroying <span style=\"color:red;\">$armor_damage</span> plates of armor.";
+						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> destroying <span style=\"color:red;\">$armour_damage</span> plates of armour.";
 
 					} elseif ($shield_damage > 0)
 						$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name at <span style=\"color:yellow;\">$curr_defender->player_name</span> which proves to be ineffective against the hull.";
@@ -307,32 +307,32 @@ function shoot_trader($attacker_team, $defender_team) {
 
 			}
 
-			// are there armor left?
+			// are there armour left?
 			if ($curr_defender_ship->hardware[HARDWARE_ARMOR] > 0 && $number_attacking > 0) {
 
-				// assume all drones are killing armor
-				$number_armor = $number_attacking;
+				// assume all drones are killing armour
+				$number_armour = $number_attacking;
 
-				// can we do more damage than armor left?
-				if ($number_armor * $drone_mod > $curr_defender_ship->hardware[HARDWARE_ARMOR])
-					$number_armor = ceil($curr_defender_ship->hardware[HARDWARE_ARMOR] / $drone_mod);
+				// can we do more damage than armour left?
+				if ($number_armour * $drone_mod > $curr_defender_ship->hardware[HARDWARE_ARMOR])
+					$number_armour = ceil($curr_defender_ship->hardware[HARDWARE_ARMOR] / $drone_mod);
 
-				// subtract the number of drones that hit for armor
+				// subtract the number of drones that hit for armour
 				// from the total number of attacking drones
-				$number_attacking -= $number_armor;
+				$number_attacking -= $number_armour;
 
-				// how many armor can we kill with that drones?
-				$killed_armor = ceil($number_armor * $drone_mod);
+				// how many armour can we kill with that drones?
+				$killed_armour = ceil($number_armour * $drone_mod);
 
 				// maybe have to correct this value?
-				if ($killed_armor > $curr_defender_ship->hardware[HARDWARE_ARMOR])
-					$killed_armor = $curr_defender_ship->hardware[HARDWARE_ARMOR];
+				if ($killed_armour > $curr_defender_ship->hardware[HARDWARE_ARMOR])
+					$killed_armour = $curr_defender_ship->hardware[HARDWARE_ARMOR];
 
-				// take armor
-				$curr_defender_ship->hardware[HARDWARE_ARMOR] -= $killed_armor;
+				// take armour
+				$curr_defender_ship->hardware[HARDWARE_ARMOR] -= $killed_armour;
 
 				// accumulate attacker damage
-				$attacker_damage += $killed_armor;
+				$attacker_damage += $killed_armour;
 
 			}
 
@@ -349,9 +349,9 @@ function shoot_trader($attacker_team, $defender_team) {
 				else
 					$msg .= "<span style=\"color:red;\">$killed_shields</span> shields";
 
-				if ($killed_drones > 0 && $killed_armor > 0)
+				if ($killed_drones > 0 && $killed_armour > 0)
 					$msg .= ", ";
-				elseif ($killed_drones > 0 || $killed_armor > 0)
+				elseif ($killed_drones > 0 || $killed_armour > 0)
 					$msg .= " and ";
 
 			}
@@ -363,17 +363,17 @@ function shoot_trader($attacker_team, $defender_team) {
 				else
 					$msg .= "<span style=\"color:red;\">$killed_drones</span> drones";
 
-				if ($killed_armor > 0)
+				if ($killed_armour > 0)
 					$msg .= " and ";
 
 			}
 
-			if ($killed_armor > 0) {
+			if ($killed_armour > 0) {
 
-				if ($killed_armor == 1)
-					$msg .= "<span style=\"color:red;\">1</span> plate of armor";
+				if ($killed_armour == 1)
+					$msg .= "<span style=\"color:red;\">1</span> plate of armour";
 				else
-					$msg .= "<span style=\"color:red;\">$killed_armor</span> plates of armor";
+					$msg .= "<span style=\"color:red;\">$killed_armour</span> plates of armour";
 
 			}
 

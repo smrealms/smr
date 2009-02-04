@@ -17,7 +17,7 @@ if ($port->reinforce_time < $time) {
 	$rich_mod = floor( $port->credits * 1e-7 );
 	if($rich_mod < 0) $rich_mod = 0;
 	$port->shields = round(($port->level * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
-	$port->armor = round(($port->level * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
+	$port->armour = round(($port->level * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
 	$port->drones = round(($port->level * 100 + 100) + ($rich_mod * 50) + ($federal_mod * 50));
     $port->update();
 
@@ -34,10 +34,10 @@ if ($ship->hardware[HARDWARE_SCANNER] == 1) {
    	print("1 combat drone, ");
    else
    	print("$port->drones combat drones, ");
-   if ($port->armor == 1)
-   	print("and 1 plate of armor.");
+   if ($port->armour == 1)
+   	print("and 1 plate of armour.");
    else
-   	print("and $port->armor plates of armor.");
+   	print("and $port->armour plates of armour.");
 
 }
 

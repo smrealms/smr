@@ -167,10 +167,10 @@ echo '
 ';
 if (SmrSession::$game_id != 0){
 	$under_attack_shields = ($ship->old_hardware[HARDWARE_SHIELDS] != $ship->hardware[HARDWARE_SHIELDS]);
-	$under_attack_armor = ($ship->old_hardware[HARDWARE_ARMOR] != $ship->hardware[HARDWARE_ARMOR]);
+	$under_attack_armour = ($ship->old_hardware[HARDWARE_ARMOR] != $ship->hardware[HARDWARE_ARMOR]);
 	$under_attack_drones = ($ship->old_hardware[HARDWARE_COMBAT] != $ship->hardware[HARDWARE_COMBAT]);
 
-	if ($under_attack_shields || $under_attack_armor || $under_attack_drones) {
+	if ($under_attack_shields || $under_attack_armour || $under_attack_drones) {
 		echo '
 			<div id="attack_warning" class="attack_warning"><nobr>You are under attack!</nobr></div>
 			<script type="text/javascript">
@@ -290,7 +290,7 @@ if (SmrSession::$game_id != 0){
 	// ******* Armor *******
 	!empty($ship->hardware[2]) ? $am=$ship->hardware[2] : $am=0;
 	echo 'Armor : ';
-	if ($under_attack_armor)
+	if ($under_attack_armour)
 		echo '<span style="color:red;">' . $am . '</span>';
 	else
 		echo $am;

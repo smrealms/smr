@@ -83,7 +83,7 @@ echo ('<th align="center"><a href="?order=hardpoint&seq='.$seq.'"><span style=co
 echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
 echo ('<th align="center"><a href="?order=lvl_needed&seq='.$seq.'"><span style=color:#80C870;>Level Needed(Semi War)</span></a></th>');
 echo ('<th align="center"><a href="?hardwarea=1&seq='.$seq.'"><span style=color:#80C870;>Shields</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=2&seq='.$seq.'"><span style=color:#80C870;>Armor</span></a></th>');
+echo ('<th align="center"><a href="?hardwarea=2&seq='.$seq.'"><span style=color:#80C870;>Armour</span></a></th>');
 echo ('<th align="center"><a href="?hardwarea=3&seq='.$seq.'"><span style=color:#80C870;>Cargo</span></a></th>');
 echo ('<th align="center"><a href="?hardwarea=4&seq='.$seq.'"><span style=color:#80C870;>Combat Drones</span></a></th>');
 echo ('<th align="center"><a href="?hardwarea=5&seq='.$seq.'"><span style=color:#80C870;>Scout Drones</span></a></th>');

@@ -28,7 +28,7 @@ function private_msg_weapon($fp, $rdata) {
 	$a[] = 'cost';
 	$a[] = 'weapon_name';
 	$a[] = 'shield_damage';
-	$a[] = 'armor_damage';
+	$a[] = 'armour_damage';
 	$a[] = 'accuracy';
 	$a[] = 'race_id';
 	$a[] = 'buyer_restriction';
@@ -66,20 +66,20 @@ function private_msg_weapon($fp, $rdata) {
 
 	if ($db->getNumRows()) {
 
-		fputs($fp, 'PRIVMSG '.$name.' :Name | Cost | Shield Damage | Armor Damage | Accuracy | Race | Restriction'.EOL);
+		fputs($fp, 'PRIVMSG '.$name.' :Name | Cost | Shield Damage | Armour Damage | Accuracy | Race | Restriction'.EOL);
 		sleep(2);
 		while ($db->nextRecord()) {
 
 			$weapon_name	= $db->getField('weapon_name');
 			$hardpoint	= $db->getField('power_level');
 			$shield		= $db->getField('shield_damage');
-			$armor		= $db->getField('armor_damage');
+			$armour		= $db->getField('armour_damage');
 			$acc		= $db->getField('accuracy');
 			$race		= $db->getField('race_name');
 			$restrict	= $db->getField('buyer_restriction');
 			$cost		= $db->getField('cost');
 
-			$private_message = 'PRIVMSG '.$name.' :'.$weapon_name.' | '.$cost.' | '.$shield.' | '.$armor.' | '.$acc.' | '.$race.' | ';
+			$private_message = 'PRIVMSG '.$name.' :'.$weapon_name.' | '.$cost.' | '.$shield.' | '.$armour.' | '.$acc.' | '.$race.' | ';
 			if ($restrict == 1)
 				$private_message .= 'Good';
 			elseif ($restrict == 2)

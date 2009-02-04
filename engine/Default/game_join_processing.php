@@ -57,17 +57,17 @@ else
 // get rank_id
 $rank_id = $account->get_rank();
 
-// for newbie and beginner another ship, more shields and armor
+// for newbie and beginner another ship, more shields and armour
 if ($rank_id < 3 && $account->veteran == 'FALSE') {
 	$ship_id = 28;
 	$amount_shields = 75;
-	$amount_armor = 150;
+	$amount_armour = 150;
 
 } else {
 
 	$ship_id = 1;
 	$amount_shields = 50;
-	$amount_armor = 50;
+	$amount_armour = 50;
 
 }
 if ($type == 'Semi War') $ship_id = 34;
@@ -104,9 +104,9 @@ $db->unlock();
 // give the player shields
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
 								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 1, '.$amount_shields.', '.$amount_shields.')');
-// give the player armor
+// give the player armour
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 2, '.$amount_armor.', '.$amount_armor.')');
+								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 2, '.$amount_armour.', '.$amount_armour.')');
 // give the player cargo hold
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
 								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 3, 40, 40)');

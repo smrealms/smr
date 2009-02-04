@@ -99,16 +99,16 @@ function getPortArray()
 			$rich_mod = floor( $db->f("credits") * 1e-7 );
 			if($rich_mod < 0) $rich_mod = 0;
 			$shields = round(($level * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
-			$armor = round(($level * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
+			$armour = round(($level * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
 			$drones = round(($level * 100 + 100) + ($rich_mod * 50) + ($federal_mod * 50));
 			$refresh = TIME + ($level * 5 * 60);
 			$started = TIME;
 		} else {
 			$shields = $db->f("shields");
-			$armor = $db->f("armor");
+			$armour = $db->f("armour");
 			$drones = $db->f("drones");
 		}
-		$port = array($shields,$drones,$armor,$started,$level,array(),$refresh,$db->f("race_id"));
+		$port = array($shields,$drones,$armour,$started,$level,array(),$refresh,$db->f("race_id"));
 		$port[PORT_CREDITS] = $db->f("credits");
 	} else {
 		create_error("Port does not exist");
@@ -326,13 +326,13 @@ function getWeapons($weapon_ids)
 	global $db,$session;
 	$weapons = array();
 	if (!sizeof($weapon_ids)) return $weapons;
-	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armor_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
+	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armour_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
 	
 	while($db->next_record()) {
 		$weapons[$db->f('weapon_type_id')] = array(
 												$db->f('weapon_name'),
 												(int)$db->f('shield_damage'),
-												(int)$db->f('armor_damage'),
+												(int)$db->f('armour_damage'),
 												(int)$db->f('accuracy')
 												);
 	}	
@@ -695,7 +695,7 @@ function playerFiresWeapon($weapon,$attacker,&$port,&$players,&$weapons)
 
 	// No shields left, try to hit their drones
 	if($port[PORT_DRONES] != 0 ) {
-		// Does the weapon do armor damage?
+		// Does the weapon do armour damage?
 		if($potential_damage) {
 			// Have we produced more damage than there are drones remaining?
 			if($potential_damage >= $port[PORT_DRONES] * 3)
@@ -725,11 +725,11 @@ function playerFiresWeapon($weapon,$attacker,&$port,&$players,&$weapons)
 	} else
 		$potential_damage = $weapons[$weapon][ARMOR_DAMAGE];
 		
-	//time for armor
+	//time for armour
 	if($port[PORT_ARMOR] != 0 ) {
-		// Does the weapon do armor damage?
+		// Does the weapon do armour damage?
 		if($potential_damage) {
-			// Have we produced more damage than there is armor remaining?
+			// Have we produced more damage than there is armour remaining?
 			if($potential_damage >= $port[PORT_ARMOR]) {
 				$result[ARMOR_DMG_DONE] =  $port[PORT_ARMOR];
 				$result[RESULT_OF_WEAPON] = FINAL_HIT;
@@ -802,7 +802,7 @@ function processResults(&$players, &$port, $fleet, $weapons) {
 			$portDisplay .= "</span> drones";
 		} if ($resultArray[ARMOR_DMG_DONE]) {
 			if ($resultArray[DRONE_DMG_DONE] || $resultArray[SHIELD_DMG_DONE]) $portDisplay .= " and ";
-			$portDisplay .= "<span class=\"red\">" . $resultArray[ARMOR_DMG_DONE] . "</span> armor";
+			$portDisplay .= "<span class=\"red\">" . $resultArray[ARMOR_DMG_DONE] . "</span> armour";
 		}
 		$portDisplay .= ".<br />";
 		if ($resultArray[RESULT_OF_WEAPON] == FINAL_HIT) {
@@ -840,7 +840,7 @@ function processResults(&$players, &$port, $fleet, $weapons) {
 			if($resultArray[RESULT_OF_WEAPON] == ARMOR_ON_SHIELD)
 				$traderDisplay .= " which is deflected by its shields.";
 			else if ($resultArray[RESULT_OF_WEAPON] == SHIELD_ON_ARMOR)
-				$traderDisplay .= " which proves ineffective against its armor.";
+				$traderDisplay .= " which proves ineffective against its armour.";
 			else if ($resultArray[RESULT_OF_WEAPON] == SHIELD_ON_DRONES)
 				$traderDisplay .= " which proves ineffective against its combat drones.";
 			else if ($resultArray[RESULT_OF_WEAPON] == WEAPON_MISS && $players[$accId][WEAPONS][$weapon])
@@ -864,7 +864,7 @@ function processResults(&$players, &$port, $fleet, $weapons) {
 				if ($resultArray[ARMOR_DMG_DONE]) {
 					if ($resultArray[SHIELD_DMG_DONE] || $resultArray[DRONE_DMG_DONE] || $resultArray[DRONES_HIT_BEHIND_SHIELDS])
 						$traderDisplay .= " and ";
-					$traderDisplay .= "<span class=\"red\">" . $resultArray[ARMOR_DMG_DONE] . "</span> armor";
+					$traderDisplay .= "<span class=\"red\">" . $resultArray[ARMOR_DMG_DONE] . "</span> armour";
 				}
 				$traderDisplay .= ".";
 			}
@@ -1083,7 +1083,7 @@ function portDowngrade(&$results, &$port) {
 			}
 	   }	
 	}
-    $db->query("UPDATE port SET shields = " . $port[PORT_SHIELDS] . ", armor = " . $port[PORT_ARMOR] . ", drones = " . $port[PORT_DRONES] .
+    $db->query("UPDATE port SET shields = " . $port[PORT_SHIELDS] . ", armour = " . $port[PORT_ARMOR] . ", drones = " . $port[PORT_DRONES] .
     			", level = " . $port[PORT_LEVEL] . ", credits = " . $port[PORT_CREDITS] . ", attack_started = " . $port[STARTED] . ", reinforce_time = " . $port[REFRESH] .
     			" WHERE sector_id = $player->sector_id AND game_id = $player->game_id");
 }

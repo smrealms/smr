@@ -28,7 +28,7 @@ if ($db->nf() > 0 ) {
 		$weapon_name = $db->f("weapon_name");
 		$weapon_type_id = $db->f("weapon_type_id");
 		$shield_damage = $db->f("shield_damage");
-		$armor_damage  = $db->f("armor_damage");
+		$armour_damage  = $db->f("armour_damage");
 		$accuracy = $db->f("accuracy");
         $db2->query("SELECT * FROM weapon_type WHERE weapon_type_id = $weapon_type_id");
         $db2->next_record();
@@ -59,7 +59,7 @@ if ($db->nf() > 0 ) {
 		print("<tr>");
 		print("<td align=\"center\">$weapon_name</td>");
 		print("<td align=\"center\">$shield_damage</td>");
-		print("<td align=\"center\">$armor_damage</td>");
+		print("<td align=\"center\">$armour_damage</td>");
 		print("<td align=\"center\">$accuracy</td>");
 		print("<td align=\"center\">$weapon_race</td>");
 		print("<td align=\"center\">$power_level</td>");

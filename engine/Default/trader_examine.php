@@ -13,7 +13,7 @@ define ('EXPERIENCE', 5);
 define ('ALIGNMENT',6);
 define ('LEVEL', 7);
 define ('SHIELDS', 8);
-define ('ARMOR', 9);
+define ('ARMOUR', 9);
 define ('DRONES', 10);
 define ('WEAPONS', 11);
 define ('SHIP_NAME',12);
@@ -204,14 +204,14 @@ for($i=0;$i<$num_players;++$i) {
 	}
 }
 //get weapons
-$db->query('SELECT account_id, ship_has_weapon.weapon_type_id as id, shield_damage, armor_damage
+$db->query('SELECT account_id, ship_has_weapon.weapon_type_id as id, shield_damage, armour_damage
 			FROM ship_has_weapon, weapon_type
 			WHERE account_id IN (' . implode(',',$player_ids) . ')
 			AND game_id = '.$player->getGameID().'
 			AND weapon_type.weapon_type_id = ship_has_weapon.weapon_type_id
 			ORDER BY account_id, order_id');
 while ($db->nextRecord()) {
-	$weapons[$db->getField('id')] = array($db->getField('shield_damage'), $db->getField('armor_damage'));
+	$weapons[$db->getField('id')] = array($db->getField('shield_damage'), $db->getField('armour_damage'));
 	$players[$db->getField('account_id')][WEAPONS][] = $db->getField('id');
 }
 //get hardware
@@ -226,7 +226,7 @@ while ($db->nextRecord()) {
 			$players[$db->getField('account_id')][SHIELDS] = $db->getField('amount');
 			break;
 		case (2):
-			$players[$db->getField('account_id')][ARMOR] = $db->getField('amount');
+			$players[$db->getField('account_id')][ARMOUR] = $db->getField('amount');
 			break;
 		case (4):
 			$players[$db->getField('account_id')][DRONES] = $db->getField('amount');
@@ -278,7 +278,7 @@ foreach ($players as $accID => $playerArray) {
 	$attack_rating = round((($playerDMG + $maxDrones * 2) / 40));
 	if (!$players[$accID][ATT_RATING]) $players[$accID][ATT_RATING] = $attack_rating;
 	$players[$accID][REAL_ATT] = $attack_rating;
-	if (!$players[$accID][DEF_RATING]) $players[$accID][DEF_RATING] = round( ($playerArray[SHIELDS] + $playerArray[ARMOR]) / 100 + $playerArray[DRONES] * 3 / 100 );
+	if (!$players[$accID][DEF_RATING]) $players[$accID][DEF_RATING] = round( ($playerArray[SHIELDS] + $playerArray[ARMOUR]) / 100 + $playerArray[DRONES] * 3 / 100 );
 	//get fleets
 	if (playerFedCheck($players[$accID], $fedBeacon) && $accID != $player->getAccountID()) continue;
 	if (in_array($playerArray[ALLIANCE_ID], $attackers)) $attackingFleet[] = $accID;
@@ -342,7 +342,7 @@ for ($i=0;$i<=1;$i++) {
 		$PHP_OUTPUT.=('Rating : ' . $players[$accID][ATT_RATING] . '/' . $players[$accID][DEF_RATING] . '<br />');
 		if (SCAN) {
 			$PHP_OUTPUT.=('Shields : ' . (floor($players[$accID][SHIELDS] / 100) * 100) . '-' . (floor($players[$accID][SHIELDS] / 100 + 1) * 100) . '<br />');
-			$PHP_OUTPUT.=('Armor : ' . (floor($players[$accID][ARMOR] / 100) * 100) . '-' . (floor($players[$accID][ARMOR] / 100 + 1) * 100) . '<br />');
+			$PHP_OUTPUT.=('Armour : ' . (floor($players[$accID][ARMOUR] / 100) * 100) . '-' . (floor($players[$accID][ARMOUR] / 100 + 1) * 100) . '<br />');
 			$PHP_OUTPUT.=('Hard Points: ' . sizeof($players[$accID][WEAPONS]) . '<br />');
 			$PHP_OUTPUT.=('Combat Drones: ' . (floor($players[$accID][DRONES] / 100) * 100) . '-' . (floor($players[$accID][DRONES] / 100 + 1) * 100) . '<br />');
 		}

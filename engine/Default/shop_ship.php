@@ -99,7 +99,7 @@ if (isset($var['ship_id'])) {
 	$PHP_OUTPUT.= $max_hardware[1];
 	$PHP_OUTPUT.= '</td></tr>';
 
-	$PHP_OUTPUT.= '<tr><td>Armor</td><td>';
+	$PHP_OUTPUT.= '<tr><td>Armour</td><td>';
 	$PHP_OUTPUT.= $ship->getMaxArmour();
 	$PHP_OUTPUT.= '</td><td>';
 	$PHP_OUTPUT.= $max_hardware[2];

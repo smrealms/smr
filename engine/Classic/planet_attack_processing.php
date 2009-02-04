@@ -323,13 +323,13 @@ function getWeapons($weapon_ids)
 	global $db,$session;
 	$weapons = array();
 	if (!sizeof($weapon_ids)) return $weapons;
-	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armor_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
+	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armour_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
 	
 	while($db->next_record()) {
 		$weapons[$db->f('weapon_type_id')] = array(
 												$db->f('weapon_name'),
 												(int)round($db->f('shield_damage') / 5),
-												(int)round($db->f('armor_damage') / 5),
+												(int)round($db->f('armour_damage') / 5),
 												(int)$db->f('accuracy')
 												);
 	}	
@@ -706,7 +706,7 @@ function playerFiresWeapon($weapon,$attacker,&$planet,&$players,&$weapons)
 
 	// No shields left, try to hit their drones
 	if($planet[PLANET_DRONES] != 0 ) {
-		// Does the weapon do armor damage?
+		// Does the weapon do armour damage?
 		if($potential_damage) {
 			// Have we produced more damage than there are drones remaining?
 			if($potential_damage >= $planet[PLANET_DRONES] * 3) {
@@ -810,7 +810,7 @@ function processResults($players, $planet, $fleet, $weapons) {
 			$planetDisplay .= "</span> drones";
 		} if ($resultArray[ARMOR_DMG_DONE]) {
 			if ($resultArray[DRONE_DMG_DONE] || $resultArray[SHIELD_DMG_DONE]) $planetDisplay .= " and ";
-			$planetDisplay .= "<span class=\"red\">" . $resultArray[ARMOR_DMG_DONE] . "</span> armor";
+			$planetDisplay .= "<span class=\"red\">" . $resultArray[ARMOR_DMG_DONE] . "</span> armour";
 		}
 		$planetDisplay .= ".<br />";
 		if ($resultArray[RESULT_OF_WEAPON] == FINAL_HIT) {

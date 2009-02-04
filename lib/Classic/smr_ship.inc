@@ -166,16 +166,16 @@ class SMR_SHIP extends SmrMySqlDatabase {
 	function attack_rating() {
 
 		// for rating
-		$this->query("SELECT sum(shield_damage), sum(armor_damage) FROM ship_has_weapon, weapon_type " .
+		$this->query("SELECT sum(shield_damage), sum(armour_damage) FROM ship_has_weapon, weapon_type " .
 																  "WHERE ship_has_weapon.weapon_type_id = weapon_type.weapon_type_id AND " .
 																		"account_id = $this->account_id AND " .
 																		"game_id = $this->game_id");
 		$this->next_record();
 		$sum_shield_damage = $this->f("sum(shield_damage)");
-		$sum_armor_damage = $this->f("sum(armor_damage)");
+		$sum_armour_damage = $this->f("sum(armour_damage)");
 		$maxDronesPercent = (35 + $this->player_level * .6 + ($this->player_level - 1) * .4 + 15) * .01;
 		$maxDrones = $maxDronesPercent * $this->hardware[4];
-		return round((($sum_shield_damage + $sum_armor_damage + $maxDrones * 2) / 40));
+		return round((($sum_shield_damage + $sum_armour_damage + $maxDrones * 2) / 40));
 	}
 
 	function defense_rating() {
@@ -258,8 +258,8 @@ class SMR_SHIP extends SmrMySqlDatabase {
 
 	function shield_low() { return floor($this->hardware[1] / 100) * 100; }
 	function shield_high() { return $this->shield_low() + 100; }
-	function armor_low() { return floor($this->hardware[2] / 100) * 100; }
-	function armor_high() { return $this->armor_low() + 100; }
+	function armour_low() { return floor($this->hardware[2] / 100) * 100; }
+	function armour_high() { return $this->armour_low() + 100; }
 	function combat_drones_low() { return floor($this->hardware[4] / 100) * 100; }
 	function combat_drones_high() { return $this->combat_drones_low() + 100; }
 

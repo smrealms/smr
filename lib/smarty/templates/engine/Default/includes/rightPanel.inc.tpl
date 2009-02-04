@@ -56,7 +56,7 @@ Alliance : {$ThisPlayer->getAllianceName()}{if $ThisPlayer->hasAlliance()} ({$Th
 {if $PlayerShipCustomName}{$PlayerShipCustomName}<br />{/if}
 Rating : <span id="offense">{$ThisShip->getAttackRating()|number_format}</span>/<span id="defense">{$ThisShip->getDefenseRating()|number_format}</span><br />
 Shields : <span id="shields">{$ThisShip->getShields()}/{$ThisShip->getMaxShields()}</span><br />
-Armor : <span id="armor">{$ThisShip->getArmour()}/{$ThisShip->getMaxArmour()}</span><br />
+Armour : <span id="armour">{$ThisShip->getArmour()}/{$ThisShip->getMaxArmour()}</span><br />
 <a href="{$HardwareLink}">CIJSD</a> : {if $ThisShip->hasCloak()}*{else}-{/if}{if $ThisShip->hasIllusion()}*{else}-{/if}{if $ThisShip->hasJump()}*{else}-{/if}{if $ThisShip->hasScanner()}*{else}-{/if}{if $ThisShip->hasDCS()}*{else}-{/if}<br />
 {if $ThisShip->hasCloak()}
 	{if $ThisShip->isCloaked()}

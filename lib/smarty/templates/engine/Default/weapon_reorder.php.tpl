@@ -9,7 +9,7 @@
 		<tr nodrag="true" nodrop="true">
 		<th align="center">Weapon Name</th>
 		<th align="center">Shield Damage</th>
-		<th align="center">Armor Damage</th>
+		<th align="center">Armour Damage</th>
 		<th align="center">Power Level</th>
 		<th align="center">Accuracy</th>
 		<th align="center">Action</th>

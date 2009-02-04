@@ -207,7 +207,7 @@ class DummyPlayer extends AbstractSmrPlayer
 //					FROM player_attacks_port, player, port
 //					WHERE player_attacks_port.game_id = port.game_id
 //					AND port.game_id = player.game_id
-//					AND armor > 0
+//					AND armour > 0
 //					AND player_attacks_port.sector_id = port.sector_id
 //					AND player.account_id = player_attacks_port.account_id
 //					AND player.account_id = ' . $this->getAccountID() . '

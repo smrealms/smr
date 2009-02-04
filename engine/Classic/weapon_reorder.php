@@ -60,12 +60,12 @@ if (count($ship->weapon) > 0) {
 		$db->query("SELECT * FROM weapon_type WHERE weapon_name = '$weapon_name'");
 		$db->next_record();
 		$shield_damage = $db->f("shield_damage");
-		$armor_damage = $db->f("armor_damage");
+		$armour_damage = $db->f("armour_damage");
 
 		print("<tr>");
 		print("<td>$weapon_name</td>");
 		print("<td align=\"center\">$shield_damage</td>");
-		print("<td align=\"center\">$armor_damage</td>");
+		print("<td align=\"center\">$armour_damage</td>");
 		echo '<td>';
 		echo $db->f('power_level');
 		echo '</td><td>';
