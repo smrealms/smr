@@ -114,7 +114,7 @@ if ($ship->hardware[HARDWARE_SHIELDS] > 0 && $number_hitting > 0) {
 
 } elseif ($ship->hardware[HARDWARE_ARMOR] > 0 && $number_hitting > 0) {
 
-	// do we make more damage than armor left?
+	// do we make more damage than armour left?
 	if ($damage > $ship->hardware[HARDWARE_ARMOR]) {
 
 		// reduce damage to number of drones left
@@ -132,7 +132,7 @@ if ($ship->hardware[HARDWARE_SHIELDS] > 0 && $number_hitting > 0) {
 	$force_damage += $damage;
 
 	// print message
-	$force_msg[] = "<span style=\"color:yellow;\">$number_hitting</span> mines kamikaze themselves against <span style=\"color:yellow;\">$player->player_name</span>'s ship destroying <span style=\"color:red;\">$damage</span> armor.";
+	$force_msg[] = "<span style=\"color:yellow;\">$number_hitting</span> mines kamikaze themselves against <span style=\"color:yellow;\">$player->player_name</span>'s ship destroying <span style=\"color:red;\">$damage</span> armour.";
 
 	//subtract mines that hit
 	$forces->mines -= $number_hitting;
@@ -184,15 +184,15 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 
 	$weapon_name = $db->f("weapon_name");
 	$shield_damage = $db->f("shield_damage");
-	$armor_damage = $db->f("armor_damage");
+	$armour_damage = $db->f("armour_damage");
 	$accuracy = $db->f("accuracy");
 
 	if ($forces->mines > 0) {
 
-		if ($armor_damage > 0) {
+		if ($armour_damage > 0) {
 
-			// mines take 20 armor damage each
-			$mines_dead = round($armor_damage / 20);
+			// mines take 20 armour damage each
+			$mines_dead = round($armour_damage / 20);
 
 			// more damage than mines?
 			if ($mines_dead > $forces->mines)
@@ -212,10 +212,10 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 
 	} elseif ($forces->combat_drones > 0) {
 
-		if ($armor_damage > 0 && $forces->combat_drones > 0) {
+		if ($armour_damage > 0 && $forces->combat_drones > 0) {
 
-			// combat drones take 3 armor damage each
-			$drones_dead = floor( $armor_damage / 3 );
+			// combat drones take 3 armour damage each
+			$drones_dead = floor( $armour_damage / 3 );
 
 			// more damage than combat drones?
 			if ($drones_dead > $forces->combat_drones)
@@ -230,15 +230,15 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 			// print message
 			$attacker_msg[] = "<span style=\"color:yellow;\">$player->player_name</span> fires a $weapon_name at the forces and destroys <span style=\"color:red;\">$drones_dead</span> combat drones.";
 
-		} elseif ($armor_damage == 0 && $shield_damage > 0)
-			$attacker_msg[] = "<span style=\"color:yellow;\">$player->player_name</span> fires a $weapon_name at the forces but it proves to be ineffective against the armor of the drones";
+		} elseif ($armour_damage == 0 && $shield_damage > 0)
+			$attacker_msg[] = "<span style=\"color:yellow;\">$player->player_name</span> fires a $weapon_name at the forces but it proves to be ineffective against the armour of the drones";
 
 	} elseif ($forces->scout_drones > 0) {
 
-		if ($armor_damage > 0) {
+		if ($armour_damage > 0) {
 
-			// scouts take 20 armor damage each
-			$scouts_dead = round($armor_damage / 20);
+			// scouts take 20 armour damage each
+			$scouts_dead = round($armour_damage / 20);
 
 			// more damage than scouts?
 			if ($scouts_dead > $forces->scout_drones)
@@ -254,7 +254,7 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 			$attacker_msg[] = "<span style=\"color:yellow;\">$player->player_name</span> fires a $weapon_name at the forces and destroys <font color=red>$scouts_dead</font> scout drones.";
 
 		} else
-			$attacker_msg[] = "<span style=\"color:yellow;\">$player->player_name</span> fires a $weapon_name at the forces but it proves to be ineffective against the armor of the drones";
+			$attacker_msg[] = "<span style=\"color:yellow;\">$player->player_name</span> fires a $weapon_name at the forces but it proves to be ineffective against the armour of the drones";
 
 	}
 

@@ -19,9 +19,9 @@ if ($ship->hasScanner() == 1)
    else
    	$PHP_OUTPUT.=($port->getCDs().' combat drones, ');
    if ($port->getArmour() == 1)
-   	$PHP_OUTPUT.=('and 1 plate of armor.');
+   	$PHP_OUTPUT.=('and 1 plate of armour.');
    else
-   	$PHP_OUTPUT.=('and '.$port->getArmour().' plates of armor.');
+   	$PHP_OUTPUT.=('and '.$port->getArmour().' plates of armour.');
 
 }
 

@@ -14,7 +14,7 @@ if ($db->getNumRows() > 0 ) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
 	$PHP_OUTPUT.=('<th align="center">Shield Damage</th>');
-	$PHP_OUTPUT.=('<th align="center">Armor Damage</th>');
+	$PHP_OUTPUT.=('<th align="center">Armour Damage</th>');
 	$PHP_OUTPUT.=('<th align="center">Accuracy</th>');
 	$PHP_OUTPUT.=('<th align="center">Race</th>');
 	$PHP_OUTPUT.=('<th align="center">Power Level</th>');
@@ -27,7 +27,7 @@ if ($db->getNumRows() > 0 ) {
 		$weapon_name = $db->getField('weapon_name');
 		$weapon_type_id = $db->getField('weapon_type_id');
 		$shield_damage = $db->getField('shield_damage');
-		$armor_damage  = $db->getField('armor_damage');
+		$armour_damage  = $db->getField('armour_damage');
 		$accuracy = $db->getField('accuracy');
         $db2->query('SELECT * FROM weapon_type WHERE weapon_type_id = '.$weapon_type_id);
         $db2->nextRecord();
@@ -58,7 +58,7 @@ if ($db->getNumRows() > 0 ) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">'.$weapon_name.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$shield_damage.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$armor_damage.'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$armour_damage.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$accuracy.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$weapon_race.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$power_level.'</td>');

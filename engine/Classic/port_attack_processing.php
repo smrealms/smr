@@ -76,7 +76,7 @@ if ($port->reinforce_time < $time) {
 	if($rich_mod < 0) $rich_mod = 0;
 
 	$port->shields = ($port->level * 1000 + 1000) + ($rich_mod * 500);
-	$port->armor = ($port->level * 1000 + 1000) + ($rich_mod * 500);
+	$port->armour = ($port->level * 1000 + 1000) + ($rich_mod * 500);
 	$port->drones = ($port->level * 100 + 100) + ($rich_mod * 50);
 
 	$port->attack_started = $time;
@@ -98,7 +98,7 @@ if ($port->reinforce_time < $time) {
 }
 
 //make sure there is something to shoot at on the port
-if ($port->shields == 0 && $port->drones == 0 && $port->armor == 0) {
+if ($port->shields == 0 && $port->drones == 0 && $port->armour == 0) {
 
 	//the port is dead send the user to the next page for diplaying
 	$container = array();
@@ -167,34 +167,34 @@ for ($i = 0; $i < 15; $i++) {
 			// adapt damage for drones
 			$damage = round ($damage / 3);
 
-			// do we do more damage than armor left?
+			// do we do more damage than armour left?
 			if ($damage > $curr_attacker_ship->hardware[HARDWARE_COMBAT])
 				$damage = $curr_attacker_ship->hardware[HARDWARE_COMBAT];
 
 			// accumulate the attacker_damage
 			$port_damage += $damage;
 
-			// subtract the armor damage
+			// subtract the armour damage
 			$curr_attacker_ship->hardware[HARDWARE_COMBAT] -= $damage;
 
 			// message
 			$port_msg[] = "The port fires a turret at <span style=\"color:yellow;\">$curr_attacker->player_name</span> and destroys <span style=\"color:red;\">$damage</span> drones";
 
-		// does the attacker has armor left?
+		// does the attacker has armour left?
 		} elseif ($curr_attacker_ship->hardware[HARDWARE_ARMOR] > 0) {
 
-			// do we do more damage than armor left?
+			// do we do more damage than armour left?
 			if ($damage > $curr_attacker_ship->hardware[HARDWARE_ARMOR])
 				$damage = $curr_attacker_ship->hardware[HARDWARE_ARMOR];
 
 			// accumulate the attacker_damage
 			$port_damage += $damage;
 
-			// subtract the armor damage
+			// subtract the armour damage
 			$curr_attacker_ship->hardware[HARDWARE_ARMOR] -= $damage;
 
 			// message
-			$port_msg[] =   "The port fires a turret at <span style=\"color:yellow;\">$curr_attacker->player_name</span> and destroys <span style=\"color:red;\">$damage</span> armor";
+			$port_msg[] =   "The port fires a turret at <span style=\"color:yellow;\">$curr_attacker->player_name</span> and destroys <span style=\"color:red;\">$damage</span> armour";
 
 		}
 
@@ -277,24 +277,24 @@ if ($port->drones > 0) {
 
 	}
 
-	// does the attacker has armor left?
+	// does the attacker has armour left?
 	if ($curr_attacker_ship->hardware[HARDWARE_ARMOR] > 0 && $damage > 0) {
 
-		// assume we use all the damage to kill his armor
-		$drones_to_armor = $damage;
+		// assume we use all the damage to kill his armour
+		$drones_to_armour = $damage;
 
-		// do we do more damage than armor left?
-		if ($drones_to_armor > $curr_attacker_ship->hardware[HARDWARE_ARMOR])
-			$drones_to_armor = $curr_attacker_ship->hardware[2];
+		// do we do more damage than armour left?
+		if ($drones_to_armour > $curr_attacker_ship->hardware[HARDWARE_ARMOR])
+			$drones_to_armour = $curr_attacker_ship->hardware[2];
 
 		// accumulate the attacker_damage
-		$port_damage += $drones_to_armor;
+		$port_damage += $drones_to_armour;
 
-		// subtract the armor damage
-		$curr_attacker_ship->hardware[HARDWARE_ARMOR] -= $drones_to_armor;
+		// subtract the armour damage
+		$curr_attacker_ship->hardware[HARDWARE_ARMOR] -= $drones_to_armour;
 
-		// subtract the actual damage we did to his armor
-		$damage -= $drones_to_armor;
+		// subtract the actual damage we did to his armour
+		$damage -= $drones_to_armour;
 
 	}
 
@@ -307,9 +307,9 @@ if ($port->drones > 0) {
 		else
 			$msg .= "and destroys <span style=\"color:red;\">$drones_to_shield</span> shields";
 
-		if ($drones_to_drones > 0 && $drones_to_armor > 0)
+		if ($drones_to_drones > 0 && $drones_to_armour > 0)
 			$msg .= ", ";
-		elseif ($drones_to_drones > 0 || $drones_to_armor > 0)
+		elseif ($drones_to_drones > 0 || $drones_to_armour > 0)
 			$msg .= " and ";
 
 	}
@@ -323,19 +323,19 @@ if ($port->drones > 0) {
 		else
 			$msg .= "<span style=\"color:red;\">" . floor($drones_to_drones / 3) . "</span> drones";
 
-		if ($drones_to_armor > 0)
+		if ($drones_to_armour > 0)
 			$msg .= " and ";
 
 	}
 
-	if ($drones_to_armor > 0) {
+	if ($drones_to_armour > 0) {
 
 		if ($drones_to_shield == 0 && $drones_to_drones == 0)
 			$msg .= "and destroys ";
-		if ($drones_to_armor == 1)
-			$msg .= "<span style=\"color:red;\">1</span> plate of armor";
+		if ($drones_to_armour == 1)
+			$msg .= "<span style=\"color:red;\">1</span> plate of armour";
 		else
-			$msg .= "<span style=\"color:red;\">$drones_to_armor</span> plates of armor";
+			$msg .= "<span style=\"color:red;\">$drones_to_armour</span> plates of armour";
 
 	}
 
@@ -421,7 +421,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 		//vars
 		$weapon_name = $weapon->f("weapon_name");
 		$shield_damage = $weapon->f("shield_damage");
-		$armor_damage = $weapon->f("armor_damage");
+		$armour_damage = $weapon->f("armour_damage");
 		$accuracy = $weapon->f("accuracy");
 
 		// calc accuracy for this weapon
@@ -448,10 +448,10 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 					// text
 					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name destroying <span style=\"color:red;\">$shield_damage</span> port shields.";
 
-				} elseif ($armor_damage > 0 && $port->drones > 0) {
+				} elseif ($armour_damage > 0 && $port->drones > 0) {
 
 					//the player has a chance at hitting some combat drones but not many due to strong shields
-					$drones_hit = floor ($armor_damage / 60);
+					$drones_hit = floor ($armour_damage / 60);
 
 					// accumulate the attacker_damage
 					$attacker_damage += $drones_hit * 3;
@@ -468,44 +468,44 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 			// does the port has drones?
 			} elseif ($port->drones > 0) {
 
-				if ($armor_damage > 0) {
+				if ($armour_damage > 0) {
 
-					// do we do more damage than armor left?
-					if ($armor_damage > $port->drones * 3)
-						$armor_damage = $port->drones * 3;
+					// do we do more damage than armour left?
+					if ($armour_damage > $port->drones * 3)
+						$armour_damage = $port->drones * 3;
 
 					// accumulate the attacker_damage
-					$attacker_damage += $armor_damage;
+					$attacker_damage += $armour_damage;
 
-					// subtract the armor damage
-					$port->drones -= round($armor_damage / 3);
+					// subtract the armour damage
+					$port->drones -= round($armour_damage / 3);
 
 					// print message
-					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name destroying <span style=\"color:red;\"> " . round ($armor_damage / 3) . " </span> port drones.";
+					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name destroying <span style=\"color:red;\"> " . round ($armour_damage / 3) . " </span> port drones.";
 
 				} elseif ($shield_damage > 0)
 					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name which proves to be ineffective against the port drones.";
 
-			// does the port has armor?
-			} elseif ($port->armor > 0) {
+			// does the port has armour?
+			} elseif ($port->armour > 0) {
 
-				if ($armor_damage > 0) {
+				if ($armour_damage > 0) {
 
-					// do we do more damage than armor left?
-					if ($armor_damage > $port->armor)
-						$armor_damage = $port->armor;
+					// do we do more damage than armour left?
+					if ($armour_damage > $port->armour)
+						$armour_damage = $port->armour;
 
 					// accumulate the attacker_damage
-					$attacker_damage += $armor_damage;
+					$attacker_damage += $armour_damage;
 
-					// subtract the armor damage
-					$port->armor -= $armor_damage;
+					// subtract the armour damage
+					$port->armour -= $armour_damage;
 
 					// text
-					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name destroying <span style=\"color:red;\">$armor_damage</span> plates of armor.";
+					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name destroying <span style=\"color:red;\">$armour_damage</span> plates of armour.";
 
 				} elseif ($shield_damage > 0)
-					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name which proves to be ineffective against the ports armor.";
+					$damage_msg[] = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> fires a $weapon_name which proves to be ineffective against the ports armour.";
 			}
 
 		} else
@@ -514,7 +514,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 	} // end of weapons
 
 	// do we have drones?
-	if ($curr_attacker_ship->hardware[HARDWARE_COMBAT] > 0 && ($port->shields > 0 || $port->drones > 0 || $port->armor > 0)) {
+	if ($curr_attacker_ship->hardware[HARDWARE_COMBAT] > 0 && ($port->shields > 0 || $port->drones > 0 || $port->armour > 0)) {
 
 		// Random(3 to 54) + Random(Attacker level/4 to Attacker level)
 		$percent_attacking = (mt_rand(3, 53) + mt_rand($curr_attacker->level_id / 4, $curr_attacker->level_id)) / 100;
@@ -530,7 +530,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 		//RESET VARS
 		$killed_shields = 0;
 		$killed_drones = 0;
-		$killed_armor = 0;
+		$killed_armour = 0;
 		// are there shields left?
 		if ($port->shields > 0) {
 
@@ -579,32 +579,32 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 
 		}
 
-		// are there armor left?
-		if ($port->armor > 0 && $number_attacking > 0) {
+		// are there armour left?
+		if ($port->armour > 0 && $number_attacking > 0) {
 
-			// can we do more damage than armor left?
-			if ($number_attacking * 2 > $port->armor) {
+			// can we do more damage than armour left?
+			if ($number_attacking * 2 > $port->armour) {
 
-				// destroy all armor that is left
-				$killed_armor = $port->armor;
+				// destroy all armour that is left
+				$killed_armour = $port->armour;
 
 			} else
-				$killed_armor = $number_attacking * 2;
+				$killed_armour = $number_attacking * 2;
 
-			// take armor
-			$port->armor -= $killed_armor;
+			// take armour
+			$port->armour -= $killed_armour;
 
 			// accumulate attacker damage
-			$attacker_damage += $killed_armor;
+			$attacker_damage += $killed_armour;
 
-			// subtract the number of drones that hit for armor
+			// subtract the number of drones that hit for armour
 			// from the total number of attacking drones
-			$number_attacking -= ceil($killed_armor / 2);
+			$number_attacking -= ceil($killed_armour / 2);
 
 		}
 
 		// build text
-		$msg = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> launches " . ceil($killed_shields / 2 + $killed_drones * 3 / 2 + $killed_armor / 2) . " drones hitting the port and destroying ";
+		$msg = "<span style=\"color:yellow;\">$curr_attacker->player_name</span> launches " . ceil($killed_shields / 2 + $killed_drones * 3 / 2 + $killed_armour / 2) . " drones hitting the port and destroying ";
 
 		if ($killed_shields > 0) {
 
@@ -613,9 +613,9 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 			else
 				$msg .= "<span style=\"color:red;\">$killed_shields</span> port shields";
 
-			if ($killed_drones > 0 && $killed_armor > 0)
+			if ($killed_drones > 0 && $killed_armour > 0)
 				$msg .= ", ";
-			elseif ($killed_drones > 0 || $killed_armor > 0)
+			elseif ($killed_drones > 0 || $killed_armour > 0)
 				$msg .= " and ";
 
 		}
@@ -627,17 +627,17 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 			else
 				$msg .= "<span style=\"color:red;\">$killed_drones</span> port drones";
 
-			if ($killed_armor > 0)
+			if ($killed_armour > 0)
 				$msg .= " and ";
 
 		}
 
-		if ($killed_armor > 0) {
+		if ($killed_armour > 0) {
 
-			if ($killed_armor == 1)
-				$msg .= "<span style=\"color:red;\">1</span> plate of port armor";
+			if ($killed_armour == 1)
+				$msg .= "<span style=\"color:red;\">1</span> plate of port armour";
 			else
-				$msg .= "<span style=\"color:red;\">$killed_armor</span> plates of port armor";
+				$msg .= "<span style=\"color:red;\">$killed_armour</span> plates of port armour";
 
 		}
 
@@ -650,7 +650,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 	if ($attacker_damage > 0) {
 
 		// is port taken?
-		if ($port->shields == 0 && $port->drones == 0 && $port->armor == 0) {
+		if ($port->shields == 0 && $port->drones == 0 && $port->armour == 0) {
 
 			$damage_msg[] = "Port defenses are <span style=\"color:red;\">DESTROYED!</span>";
 
@@ -749,7 +749,7 @@ $attacker[] = $damage_msg;
 // update port
 $port->update();
 
-if ($port->shields == 0 && $port->drones == 0 && $port->armor == 0) {
+if ($port->shields == 0 && $port->drones == 0 && $port->armour == 0) {
 
 	// Trigger gets an alignment change and a bounty if port is taken
 	$db->query("SELECT * FROM bounty WHERE game_id = $player->game_id AND account_id = $player->account_id " .

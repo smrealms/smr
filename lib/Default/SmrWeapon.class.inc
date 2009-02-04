@@ -52,7 +52,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		$this->gameTypeID = $gameTypeID;
 		$this->weaponTypeID = $weaponTypeID;
 			
-		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armor_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
+		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armour_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
 		
 		if(self::$db->nextRecord())
 		{
@@ -60,7 +60,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 			$this->raceID = (int)self::$db->getField('race_id');
 			$this->cost = (int)self::$db->getField('cost');
 			$this->shieldDamage = (int)self::$db->getField('shield_damage');
-			$this->armourDamage = (int)self::$db->getField('armor_damage');
+			$this->armourDamage = (int)self::$db->getField('armour_damage');
 			$this->accuracy = (int)self::$db->getField('accuracy');
 			$this->powerLevel = (int)self::$db->getField('power_level');
 			$this->buyerRestriction = (int)self::$db->getField('buyer_restriction');
@@ -360,13 +360,13 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 //	if (gadget_equipped($weaponPlayer,'Weapon Accelerator') && ($purpose == 'PortRaid' || $purpose == 'PlanetRaid'))
 //	{
 //		$this_weapon['Shield Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
-//		$this_weapon['Armor Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
+//		$this_weapon['Armour Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
 //	}
 //	//increase for raid damage stat if they are raiding
 //	if ($purpose == 'PortRaid' || $purpose == 'PlanetRaid')
 //	{
 //		$this_weapon['Shield Damage'] *= 1 + ($BOMBARDMENT_MOD * $weaponPlayer->getStat('Bombardment')) / 100;
-//		$this_weapon['Armor Damage'] *= 1 + ($BOMBARDMENT_MOD * $weaponPlayer->getStat('Bombardment')) / 100;
+//		$this_weapon['Armour Damage'] *= 1 + ($BOMBARDMENT_MOD * $weaponPlayer->getStat('Bombardment')) / 100;
 //	}
 //	//get diminishing returns for attacking
 //	$diminishing=1;
@@ -392,7 +392,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 //	}
 //	if ($diminishing <= 0) $diminishing = 0.00001;
 //	$this_weapon['Shield Damage'] = ceil($diminishing * $this_weapon['Shield Damage']);
-//	$this_weapon['Armor Damage'] = ceil($diminishing * $this_weapon['Armor Damage']);
+//	$this_weapon['Armour Damage'] = ceil($diminishing * $this_weapon['Armour Damage']);
 //	
 //	
 //	return $this_weapon;

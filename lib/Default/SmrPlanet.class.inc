@@ -731,7 +731,7 @@ class SmrPlanet
 		$armourDamage = 0;
 		if(!$alreadyDead)
 		{
-			if($damage['Shield'])
+			if($damage['Shield'] || !$this->hasShields())
 			{
 				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
 				$damage['MaxDamage'] -= $shieldDamage;

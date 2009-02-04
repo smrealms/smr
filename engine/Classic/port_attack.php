@@ -50,7 +50,7 @@ if (!isset($var["dead"])) {
 if ($sector->has_port()) {
 
 	$port = new SMR_PORT($player->sector_id, $player->game_id);
-	if ($port->shields > 0 || $port->drones > 0 || $port->armor > 0) {
+	if ($port->shields > 0 || $port->drones > 0 || $port->armour > 0) {
 
 		//we can fire again
 		print_form(create_container("port_attack_processing.php", ""));

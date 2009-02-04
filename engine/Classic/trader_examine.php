@@ -204,14 +204,14 @@ for($i=0;$i<$num_players;++$i) {
 	}
 }
 //get weapons
-$db->query("SELECT account_id, ship_has_weapon.weapon_type_id as id, shield_damage, armor_damage
+$db->query("SELECT account_id, ship_has_weapon.weapon_type_id as id, shield_damage, armour_damage
 			FROM ship_has_weapon, weapon_type
 			WHERE account_id IN (" . implode(',',$player_ids) . ")
 			AND game_id = $player->game_id
 			AND weapon_type.weapon_type_id = ship_has_weapon.weapon_type_id
 			ORDER BY account_id, order_id");
 while ($db->next_record()) {
-	$weapons[$db->f("id")] = array($db->f("shield_damage"), $db->f("armor_damage"));
+	$weapons[$db->f("id")] = array($db->f("shield_damage"), $db->f("armour_damage"));
 	$players[$db->f("account_id")][WEAPONS][] = $db->f("id");
 }
 //get hardware

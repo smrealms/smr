@@ -60,7 +60,7 @@ class SmrPort
 			$this->lastUpdate = $this->db->getField('last_update');
 			$this->shields = $this->db->getField('shields');
 			$this->combatDrones = $this->db->getField('combat_drones');
-			$this->armour = $this->db->getField('armor');
+			$this->armour = $this->db->getField('armour');
 			$this->reinforceTime = $this->db->getField('reinforce_time');
 			$this->attackStarted = $this->db->getField('attack_started');
 			$this->raceID = $this->db->getField('race_id');
@@ -590,7 +590,7 @@ class SmrPort
 		if($this->armour == $armour)
 			return;
 		$this->armour=$armour;
-		$this->db->query('UPDATE port SET armor = '.$this->armour.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->db->query('UPDATE port SET armour = '.$this->armour.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function setCDs($combatDrones)
@@ -1001,7 +1001,7 @@ class SmrPort
 		$this->db->query('UPDATE `port` SET `experience` = '.$this->getExperience().', ' .
 								'`last_update` = '.$this->getLastUpdate().', ' .
 								'`shields` = '.$this->getShields().', ' .
-								'`armor` = '.$this->getArmour().', ' .
+								'`armour` = '.$this->getArmour().', ' .
 								'`combat_drones` = '.$this->getCDs().', ' .
 								'`level` = '.$this->getLevel().', ' .
 								'`credits` = '.$this->getCredits().', ' .
@@ -1058,7 +1058,7 @@ class SmrPort
 		$armourDamage = 0;
 		if(!$alreadyDead)
 		{
-			if($damage['Shield'])
+			if($damage['Shield'] || !$this->hasShields())
 			{
 				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
 				$damage['MaxDamage'] -= $shieldDamage;

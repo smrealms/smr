@@ -34,7 +34,7 @@ function msg_help($fp, $rdata) {
 			fputs($fp, 'NOTICE '.$msg[1].' :Syntax !weapon level <level> <order>'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :Returns all weapons that are level <level> in order <order>'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :Example !weapon level 4 shield_damage would return the level 4 power weapons ordered by the amount of shield damage they do.'.EOL);
-			fputs($fp, 'NOTICE '.$msg[1].' :<order> options are cost, shield_damage, armor_damage, buyer_restriction, race_id, accuracy, and weapon_name'.EOL);
+			fputs($fp, 'NOTICE '.$msg[1].' :<order> options are cost, shield_damage, armour_damage, buyer_restriction, race_id, accuracy, and weapon_name'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :All "order" commands must be spelt correctly'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :See Azool for additional help on this topic'.EOL);
 
@@ -43,7 +43,7 @@ function msg_help($fp, $rdata) {
 			fputs($fp, 'NOTICE '.$msg[1].' :Syntax !weapon range <object> <cost1> <cost2> <order>'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :Returns all weapons that have <object> greater than <lower_limit> and less than <upper_limit> in the order <order>'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :Example !weapon range cost_range 100000 200000 shield_damage would return all weapons whose costs are between 100000 and 200000 ordered by the amount of shield damage they do.'.EOL);
-			fputs($fp, 'NOTICE '.$msg[1].' :<object> and <order> options are cost, shield_damage, armor_damage, buyer_restriction, race_id, accuracy, power_level, and weapon_name'.EOL);
+			fputs($fp, 'NOTICE '.$msg[1].' :<object> and <order> options are cost, shield_damage, armour_damage, buyer_restriction, race_id, accuracy, power_level, and weapon_name'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :All "order" and "object" commands must be spelt correctly'.EOL);
 			fputs($fp, 'NOTICE '.$msg[1].' :See Azool for additional help on this topic'.EOL);
 

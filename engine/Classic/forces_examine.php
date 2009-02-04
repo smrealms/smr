@@ -113,7 +113,7 @@ if ($attacker_list == "()") {
 		 print("$curr_ship->ship_name<br>");
 		 print("Rating : " . $curr_ship->attack_rating() . "/" . $curr_ship->defense_rating() . "<br>");
 		 print("Shields : " . $curr_ship->shield_low() . "-" . $curr_ship->shield_high() . "<br>");
-		 print("Armor : " . $curr_ship->armor_low() . "-" . $curr_ship->armor_high() . "<br>");
+		 print("Armor : " . $curr_ship->armour_low() . "-" . $curr_ship->armour_high() . "<br>");
 		 print("Hard Points: $curr_ship->weapon_used<br>");
 		 print("Combat Drones: " . $curr_ship->combat_drones_low() . "-" . $curr_ship->combat_drones_high());
 		 print("</small><br><br><br>");

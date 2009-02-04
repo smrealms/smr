@@ -177,7 +177,7 @@ function process_weapon($weapon,$attacker,$defender,&$players,&$weapons) {
 
 	// No shields left, try to hit their drones
 	if($players[$defender][DRONES] != 0 ) {
-		// Does the weapon do armor damage?
+		// Does the weapon do armour damage?
 		if($potential_damage) {
 			// Have we produced more damage than there are shields remaining?
 			if($potential_damage >= $players[$defender][DRONES] * 3) {
@@ -219,7 +219,7 @@ function process_weapon($weapon,$attacker,$defender,&$players,&$weapons) {
 
 	// No drones left, try to hit their armour
 	if($players[$defender][ARMOR] != 0 ) {
-		// Does the weapon do armor damage?
+		// Does the weapon do armour damage?
 		if($potential_damage) {
 			// Have we produced more damage than there are shields remaining?
 			if($potential_damage >= $players[$defender][ARMOR]) {
@@ -359,13 +359,13 @@ function build_weapons($weapon_ids) {
 		return $weapons;
 	}	
 	
-	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armor_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
+	$db->query('SELECT weapon_type_id,weapon_name,shield_damage,armour_damage,accuracy FROM weapon_type WHERE weapon_type_id IN (' . implode(',',$weapon_ids) . ') LIMIT ' . count($weapon_ids));
 	
 	while($db->next_record()) {
 		$weapons[$db->f('weapon_type_id')] = array(
 												$db->f('weapon_name'),
 												(int)$db->f('shield_damage'),
-												(int)$db->f('armor_damage'),
+												(int)$db->f('armour_damage'),
 												(int)$db->f('accuracy')
 												);
 	}	
@@ -980,7 +980,7 @@ function process_death(&$players,&$killed_id,&$ships,&$relations) {
 				FROM player_attacks_port, player, port
 				WHERE player_attacks_port.game_id = port.game_id
 				AND port.game_id = player.game_id
-				AND armor > 0
+				AND armour > 0
 				AND player_attacks_port.sector_id = port.sector_id
 				AND player.account_id = player_attacks_port.account_id
 				AND player.account_id = ' . $killed_id . '

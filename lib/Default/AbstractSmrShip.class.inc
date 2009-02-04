@@ -196,8 +196,8 @@ abstract class AbstractSmrShip
 	
 	public function shield_low() { return floor($this->getShields() / 100) * 100; }
 	public function shield_high() { return $this->shield_low() + 100; }
-	public function armor_low() { return floor($this->getArmour() / 100) * 100; }
-	public function armor_high() { return $this->armor_low() + 100; }
+	public function armour_low() { return floor($this->getArmour() / 100) * 100; }
+	public function armour_high() { return $this->armour_low() + 100; }
 	public function combat_drones_low() { return floor($this->getCDs() / 100) * 100; }
 	public function combat_drones_high() { return $this->combat_drones_low() + 100; }
 	

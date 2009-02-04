@@ -480,7 +480,7 @@ while ($result) {
 		$db->query("DELETE FROM ship_has_illusion WHERE account_id = $killed_id AND game_id = $player->game_id");
 		$db->query("DELETE FROM ship_is_cloaked WHERE account_id = $killed_id AND game_id = $player->game_id");
 
-	if ($debug) print("give shields, armor and cargo<br>");
+	if ($debug) print("give shields, armour and cargo<br>");
 		$db->query("INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) " .
 				   "VALUES($killed_id, $player->game_id, HARDWARE_SHIELDS, 50, 50)");
 		$db->query("INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) " .

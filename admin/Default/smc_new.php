@@ -87,7 +87,7 @@ while ($db->nextRecord()) {
 $PHP_OUTPUT.=('[SHIP PROPERTIES]'.EOL);
 $PHP_OUTPUT.=('SP1=Cost,integer'.EOL);
 $PHP_OUTPUT.=('SP2=Holds,potential'.EOL);
-$PHP_OUTPUT.=('SP3=Armor,integer'.EOL);
+$PHP_OUTPUT.=('SP3=Armour,integer'.EOL);
 $PHP_OUTPUT.=('SP4=Shields,integer'.EOL);
 $PHP_OUTPUT.=('SP5=Combat drones,potential'.EOL);
 $PHP_OUTPUT.=('SP6=Scout drones,potential'.EOL);
@@ -129,7 +129,7 @@ while ($db->nextRecord()) {
 			$props[$hard_id] = $db2->getField('max_amount');
 	}
 	$shields = $props[HARDWARE_SHIELDS];
-	$armor = $props[HARDWARE_ARMOR];
+	$armour = $props[HARDWARE_ARMOUR];
 	$cargo = $props[HARDWARE_CARGO];
 	$combat = $props[HARDWARE_COMBAT];
 	$scouts = $props[HARDWARE_SCOUT];
@@ -139,7 +139,7 @@ while ($db->nextRecord()) {
 	$illus = $props[HARDWARE_ILLUSION];
 	$jump = $props[HARDWARE_JUMP];
 	$dcs = $props[HARDWARE_DCS];
-	$PHP_OUTPUT.=('SHIP' . $id . '='.$name.','.$race_id.','.$align.','.$speed.','.$cost.','.$cargo.','.$armor.','.$shields.','.$combat.','.$scouts.','.$mines.','.$hard.','.$mr.','.$scanner.','.$illus.','.$cloak.','.$jump.','.$dcs.EOL);
+	$PHP_OUTPUT.=('SHIP' . $id . '='.$name.','.$race_id.','.$align.','.$speed.','.$cost.','.$cargo.','.$armour.','.$shields.','.$combat.','.$scouts.','.$mines.','.$hard.','.$mr.','.$scanner.','.$illus.','.$cloak.','.$jump.','.$dcs.EOL);
 	
 }
 
@@ -159,7 +159,7 @@ while ($db->nextRecord()) {
 	$race_id = 'R' . $db->getField('race_id');
 	$cost = $db->getField('cost');
 	$shi_dam = $db->getField('shield_damage');
-	$arm_dam = $db->getField('armor_damage');
+	$arm_dam = $db->getField('armour_damage');
 	$acc = $db->getField('accuracy');
 	$power = $db->getField('power_level');
 	$PHP_OUTPUT.=('WEP' . $id . '='.$name.','.$race_id.','.$align.','.$cost.','.$shi_dam.','.$arm_dam.','.$acc.','.$power.EOL);

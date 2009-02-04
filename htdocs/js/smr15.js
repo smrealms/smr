@@ -250,9 +250,9 @@ var intervalRP;
 var shields;
 var old_shields;
 var max_shields;
-var armor
-var old_armor;
-var max_armor;
+var armour
+var old_armour;
+var max_armour;
 var cd;
 var old_cd;
 var max_cd;
@@ -269,15 +269,15 @@ var dead;
 var gadget;
 var gad_str = '';
 
-function initRP(_shields,_oldShields,_maxShields,_armor,_oldArmor,_maxArmor,_cd,_oldCD,_maxCD,_maint,_maintColor)
+function initRP(_shields,_oldShields,_maxShields,_armour,_oldArmour,_maxAArmour_cd,_oldCD,_maxCD,_maint,_maintColor)
 {
 	shields=_shields;
 	old_shields=_oldShields;
 	max_shields=_maxShields;
 	
-	armor=_armor;
-	old_armor=_oldArmor;
-	max_armor=_maxArmor;
+	armour=_armour;
+	old_armour=_oldArmour;
+	max_armour=_maxArmour;
 	
 	cd=_cd;
 	old_cd=_oldCD;
@@ -356,15 +356,15 @@ function updateRPComp()
 		{
 			max_shields = xmlDoc.getElementsByTagName("max_shields")[0].childNodes[0].nodeValue;
 		}
-		if(xmlDoc.getElementsByTagName("armor")[0])
+		if(xmlDoc.getElementsByTagName("armour")[0])
 		{
-			armor = xmlDoc.getElementsByTagName("armor")[0].childNodes[0].nodeValue;
-			old_armor = armor;
+			armour = xmlDoc.getElementsByTagName("armour")[0].childNodes[0].nodeValue;
+			old_armour = armour;
 		}
-//		old_armor = xmlDoc.getElementsByTagName("old_armor")[0].childNodes[0].nodeValue;
-		if(xmlDoc.getElementsByTagName("max_armor")[0])
+//		old_armour = xmlDoc.getElementsByTagName("old_armour")[0].childNodes[0].nodeValue;
+		if(xmlDoc.getElementsByTagName("max_armour")[0])
 		{
-			max_armor = xmlDoc.getElementsByTagName("max_armor")[0].childNodes[0].nodeValue;
+			max_armour = xmlDoc.getElementsByTagName("max_armour")[0].childNodes[0].nodeValue;
 		}
 		if(xmlDoc.getElementsByTagName("combat_drones")[0])
 		{
@@ -437,14 +437,14 @@ function TriggerAttackBlink(colour)
 {
 	if (old_shields != shields) shi_hit = 1;
 	if (old_cd != cd) cd_hit = 1;
-	if (old_armor != armor) arm_hit = 1;
+	if (old_armour != armour) arm_hit = 1;
 	
 	if (shi_hit == 1)
 		document.getElementById("shields").innerHTML='<span class="red">' + shields + '/' + max_shields + '</span>';
 	if (cd_hit == 1)
 		document.getElementById("cds").innerHTML='<span class="red">' + cd + '/' + max_cd + '</span>';
 	if (arm_hit == 1)
-		document.getElementById("armor").innerHTML='<span class="red">' + armor + '/' + max_armor + '</span>';
+		document.getElementById("armour").innerHTML='<span class="red">' + armour + '/' + max_armour + '</span>';
 		
 	document.getElementById("attack_area").innerHTML= '<div class="attack_warning">You Are Under Attack!</div>';
 	color = xmlDoc.getElementsByTagName("attack")[0].childNodes[0].nodeValue;

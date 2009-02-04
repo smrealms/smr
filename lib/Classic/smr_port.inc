@@ -18,7 +18,7 @@ class SMR_PORT extends SmrMySqlDatabase {
     var $gained_experience;
     var $last_updated;
     var $shields;
-    var $armor;
+    var $armour;
     var $drones;
     var $credits;
     var $attack_started;
@@ -41,7 +41,7 @@ class SMR_PORT extends SmrMySqlDatabase {
             $this->gained_experience	= $this->f("gained_experience");
             $this->last_updated			= $this->f("last_updated");
             $this->shields				= $this->f("shields");
-            $this->armor				= $this->f("armor");
+            $this->armour				= $this->f("armour");
             $this->drones				= $this->f("drones");
             $this->credits				= $this->f("credits");
             $this->attack_started		= $this->f("attack_started");
@@ -82,7 +82,7 @@ class SMR_PORT extends SmrMySqlDatabase {
         $this->query("UPDATE `port` SET `gained_experience` = $this->gained_experience, " .
                                      "`last_updated` = $this->last_updated, " .
                                      "`shields` = $this->shields, " .
-                                     "`armor` = $this->armor, " .
+                                     "`armour` = $this->armour, " .
                                      "`drones` = $this->drones, " .
                                      "`level` = $this->level, " .
                                      "`credits` = $this->credits, " .
@@ -147,7 +147,7 @@ class SMR_PORT extends SmrMySqlDatabase {
 		if($rich_mod < 0) $rich_mod = 0;
 
 		$this->shields = ($this->level * 1000 + 1000) + ($rich_mod * 500);
-		$this->armor = ($this->level * 1000 + 1000) + ($rich_mod * 500);
+		$this->armour = ($this->level * 1000 + 1000) + ($rich_mod * 500);
 		$this->drones = ($this->level * 100 + 100) + ($rich_mod * 50);
 
 		$this->upgrade = 0;

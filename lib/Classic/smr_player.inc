@@ -296,13 +296,13 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 		}	
 			
 		// for rating
-		$this->query("SELECT sum(shield_damage), sum(armor_damage) FROM ship_has_weapon NATURAL JOIN weapon_type " .
+		$this->query("SELECT sum(shield_damage), sum(armour_damage) FROM ship_has_weapon NATURAL JOIN weapon_type " .
 					 "WHERE account_id = $this->account_id AND " .
 						   "game_id = $this->game_id");
 		if ($this->next_record()) {
 
 			$sum_shield_damage = $this->f("sum(shield_damage)");
-			$sum_armor_damage = $this->f("sum(armor_damage)");
+			$sum_armour_damage = $this->f("sum(armour_damage)");
 
 		}
 
@@ -312,7 +312,7 @@ class SMR_PLAYER extends SmrMySqlDatabase {
 						   "hardware_type_id = 4 LIMIT 1");
 		if ($this->next_record())
 			$combat_drones = $this->f("amount");
-		$total_damage = $sum_shield_damage + $sum_armor_damage;
+		$total_damage = $sum_shield_damage + $sum_armour_damage;
 		$maxDronesPercent = (35 + $this->level_id * .6 + ($this->level_id - 1) * .4 + 15) * .01;
 		$maxDrones = $maxDronesPercent * $combat_drones;
 		$attack_rating = round((($total_damage + $maxDrones * 2) / 40));
