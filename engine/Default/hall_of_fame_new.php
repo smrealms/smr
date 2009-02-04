@@ -30,7 +30,7 @@ $PHP_OUTPUT.=('Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) 
 $PHP_OUTPUT.=('list of player accomplishments.  Here you can view how players rank in many different ');
 $PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br /><br />');
 
-$db->query('SELECT DISTINCT type FROM player_hof');
+$db->query('SELECT DISTINCT type FROM player_hof' . (isset($var['game_id']) ? ' WHERE game_id='.$var['game_id'] : '').' ORDER BY type');
 $hofTypes = array();
 while($db->nextRecord())
 {
@@ -150,7 +150,7 @@ else
 	$viewType[] = $var['view'];
 	
 	$rank=1;
-	$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).' AND game_id=' . $var['game_id'] .' ORDER BY amount DESC LIMIT 25');
+	$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
 		$hofAccount =& SmrAccount::getAccount($db->getField('account_id'));
