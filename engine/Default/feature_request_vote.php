@@ -1,5 +1,6 @@
 <?
-
+if(empty($_REQUEST['vote']))
+	create_error('You have to select a feature to vote for');
 // for which feature we currently vote?
 $db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
 if ($db->nextRecord()) {
@@ -14,7 +15,7 @@ if ($db->nextRecord()) {
 
 }
 
-$db->query('REPLACE INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$vote.')');
+$db->query('REPLACE INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$_REQUEST['vote'].')');
 
 forward(create_container('skeleton.php', 'feature_request.php'));
 

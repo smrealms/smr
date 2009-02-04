@@ -9,6 +9,7 @@ class Globals
 	protected static $GOODS = null;
 	protected static $GAMES = array();
 	protected static $BETA_OPEN = null;
+	protected static $FEATURE_REQUEST_OPEN = null;
 	protected static $RACE_RELATIONS = array();
 	protected static $db = null;
 	
@@ -182,7 +183,8 @@ class Globals
 	{
 		if(self::$BETA_OPEN == null)
 		{
-			self::$db->query('SELECT * FROM beta_test');
+			self::initialiseDatabase();
+			self::$db->query('SELECT * FROM open_forms WHERE type=\'BETA\'');
 			self::$db->nextRecord();
 			
 			self::$BETA_OPEN = self::$db->getField('open') == 'TRUE';
@@ -194,6 +196,26 @@ class Globals
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'beta_apply.php';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function isFeatureRequestOpen()
+	{
+		if(self::$FEATURE_REQUEST_OPEN == null)
+		{
+			self::initialiseDatabase();
+			self::$db->query('SELECT * FROM open_forms WHERE type=\'FEATURE\'');
+			self::$db->nextRecord();
+			
+			self::$FEATURE_REQUEST_OPEN = self::$db->getField('open') == 'TRUE';
+		}
+		return self::$FEATURE_REQUEST_OPEN;
+	}
+	public static function &getFeatureRequestHREF()
+	{
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'feature_request.php';
 		return SmrSession::get_new_href($container);
 	}
 	
