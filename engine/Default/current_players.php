@@ -14,6 +14,18 @@ $db->query('SELECT * FROM player ' .
 		   'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
 				 'game_id = '.SmrSession::$game_id.' ' .
 		   'ORDER BY '.$sort.' '.$seq);
+//$PHP_OUTPUT.=('.$db->escapeString($sort, $seq<br />');
+$count_last_active = $db->getNumRows();
+$list = '(0';
+while ($db->nextRecord()) $list .= ',' . $db->getField('account_id');
+$list .= ')';
+$db->query('SELECT * FROM player ' .
+		   'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
+				 'game_id = '.SmrSession::$game_id.' ' .
+		   'ORDER BY '.$sort.' '.$seq);
+//if ($sort == 'experience DESC, player_name' || $sort == 'experience')
+//	$db->query('SELECT * FROM player_cache WHERE game_id = '.$player->getGameID().' AND account_id IN '.$list.' ORDER BY experience '.$seq);
+
 // fix it if some1 is using the logoff button
 if ($count_real_last_active < $count_last_active)
 	$count_real_last_active = $count_last_active;
