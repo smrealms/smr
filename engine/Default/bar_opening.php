@@ -14,9 +14,9 @@ $PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;&nbsp;';
 $container['action'] = 'water';
 $PHP_OUTPUT.=create_button($container,'Buy some water ($10)');
 
-$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_talk_bartender.php'));
-$PHP_OUTPUT.=create_submit('Talk to bartender');
-$PHP_OUTPUT.=('</form>');
+//$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_talk_bartender.php'));
+//$PHP_OUTPUT.=create_submit('Talk to bartender');
+//$PHP_OUTPUT.=('</form>');
 
 $PHP_OUTPUT.= '<br /><br /><h2>Gambling</h2><br />So you\'re not the drinking type huh? Well how about some good ole gambling?<br /><br />';
 
