@@ -13,6 +13,7 @@ $PHP_OUTPUT.=create_council_menue($player->getRaceID(), $president);
 $db->query('SELECT * FROM player_votes_relation ' .
 		   'WHERE account_id = '.$player->getAccountID().' AND ' .
 				 'game_id = '.$player->getGameID());
+$voted_for_race = -1;
 if ($db->nextRecord()) {
 
 	$voted_for_race	= $db->getField('race_id_2');
@@ -31,8 +32,8 @@ $db->query('SELECT * FROM race ' .
 		   'WHERE race_id != '.$player->getRaceID().' AND ' .
 				 'race_id > 1');
 $playerRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$player->getRaceID());
-while($db->nextRecord()) {
-
+while($db->nextRecord())
+{
 	$race_id	= $db->getField('race_id');
 	$race_name	= $db->getField('race_name');
 
@@ -65,7 +66,6 @@ while($db->nextRecord()) {
 	$PHP_OUTPUT.=('<td align="center">' . get_colored_text($relation, $relation) . '</td>');
 
 	$PHP_OUTPUT.=('</tr>');
-
 }
 
 $PHP_OUTPUT.=('</table>');
