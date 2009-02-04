@@ -14,6 +14,7 @@ if ($action == 'Build') {
 
 	// now start the construction
 	$planet->startBuilding($player->getAccountID(),$var['construction_id']);
+	$player->increaseHOF(1,array('Planet','Buildings','Started'));
 
 	$db->query('SELECT * FROM planet_construction WHERE construction_id = ' . $var['construction_id']);
 	$db->nextRecord();
@@ -24,6 +25,7 @@ if ($action == 'Build') {
 elseif ($action == 'Cancel')
 {
 	$planet->stopBuilding($var['construction_id']);
+	$player->increaseHOF(1,array('Planet','Buildings','Stopped'));
 	$account->log(11, 'Player cancels planet construction', $player->getSectorID());
 
 }

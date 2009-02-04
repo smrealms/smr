@@ -362,6 +362,8 @@ class SmrPlanet
 			{
 				if($this->db->getField('time_complete') <= TIME)
 				{
+					$player =& SmrPlayer::getPlayer($this->db->getField('constructor_id'),$this->getGameID());
+					$player->increaseHOF(1,array('Planet','Buildings','Built'));
 					$db2 = new SmrMySqlDatabase();
 					$db2->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
 											 'sector_id = '.$this->getSectorID() . ' AND building_slot_id = ' . $this->db->getField('building_slot_id') . ' LIMIT 1');
@@ -593,8 +595,10 @@ class SmrPlanet
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
 	{
+		$attacker->increaseHOF(1,'Combat','Planet','Number Of Triggers');
 		foreach ($attackers as $attacker)
 		{
+			$attacker->increaseHOF(1,'Combat','Planet','Number Of Attacks');
 			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
 						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
 		}

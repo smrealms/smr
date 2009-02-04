@@ -8,6 +8,7 @@ class Globals
 	protected static $RACES = null;
 	protected static $GOODS = null;
 	protected static $GAMES = array();
+	protected static $BETA_OPEN = null;
 	protected static $RACE_RELATIONS = array();
 	protected static $db = null;
 	
@@ -175,6 +176,25 @@ class Globals
 	{
 		$gameInfo =& self::getGameInfo($gameID);
 		return $gameInfo['GameType'];
+	}
+	
+	public static function isBetaOpen()
+	{
+		if(self::$BETA_OPEN == null)
+		{
+			self::$db->query('SELECT * FROM beta_test');
+			self::$db->nextRecord();
+			
+			self::$BETA_OPEN = self::$db->getField('open') == 'TRUE';
+		}
+		return self::$BETA_OPEN;
+	}
+	public static function &getBetaApplyHREF()
+	{
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'beta_apply.php';
+		return SmrSession::get_new_href($container);
 	}
 	
 	public static function &getRaceRelations($gameID,$raceID)

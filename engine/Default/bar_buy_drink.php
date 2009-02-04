@@ -12,14 +12,14 @@ if ($player->getCredits() < 10)
 $player->decreaseCredits(10);
 $player->update();
 
-if (isset($var['action']) && $var['action'] != 'drink') {
-
+if (isset($var['action']) && $var['action'] != 'drink')
+{
 	$PHP_OUTPUT.= 'You ask the bartender for some water and you quickly down it.<br />You dont feel quite so intoxicated anymore.<br />';
 	$db2->query('DELETE FROM player_has_drinks WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $player->getAccountID() . ' LIMIT 1');
-
+	$player->increaseHOF(1,array('Bar','Drinks', 'Water'));
 }
-else {
-
+else
+{
 	$random = mt_rand(1, 20);
     //only get Azool or Spock drink if they are very lucky
 	if ($random != 1)
@@ -27,8 +27,8 @@ else {
 	else
 		$db->query('SELECT * FROM bar_drink ORDER BY rand() LIMIT 1');
 
-	if ($db->nextRecord()) {
-
+	if ($db->nextRecord())
+	{
 		$drink_name = $db->getField('drink_name');
 		$drink_id = $db->getField('drink_id');
 
@@ -38,12 +38,14 @@ else {
         else
         	$curr_drink_id = 1;
 
-		if ($drink_id != 11 && $drink_id !=1) {
-
+		if ($drink_id != 11 && $drink_id !=1)
+		{
 			$PHP_OUTPUT.=('You have bought a '.$drink_name.' for $10');
 			$db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
-
-		} else {
+			$player->increaseHOF(1,array('Bar','Drinks', 'Alcoholic'));
+		}
+		else
+		{
 
 			$PHP_OUTPUT.=('The bartender says, Ive got something special for ya.<br />');
 			$PHP_OUTPUT.=('The bartender turns around for a minute and whips up a '.$drink_name.'.<br />');
@@ -58,11 +60,10 @@ else {
 			$db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
 			$curr_drink_id++;
             $db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
-
+			$player->increaseHOF(1,array('Bar','Drinks', 'Special'));
 		}
 
 	}
-
 	$db->query('SELECT * FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
 	$num_drinks = $db->getNumRows();
 	//display woozy message
@@ -74,19 +75,20 @@ else {
 //see if the player blacksout or not
 if ($num_drinks > 15)
 {
-
 	$percent = mt_rand(1,25);
-	$lost_credits = round($player->getCredits() * $percent / 100);
+	$lostCredits = round($player->getCredits() * $percent / 100);
 
 	$PHP_OUTPUT.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lost_credits) . ' credits</span><br />';
 
-	$player->decreaseCredits($lost_credits);
+	$player->decreaseCredits($lostCredits);
+	$player->increaseHOF(1,array('Bar','Robbed','Number Of Times'));
+	$player->increaseHOF($lostCredits,array('Bar','Robbed','Money Lost'));
 	$player->update();
 
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
 
 }
-$player->increaseHOF(1,array('Bar','Drinks'));
+$player->increaseHOF(1,array('Bar','Drinks', 'Total'));
 $PHP_OUTPUT.= '</div>';
 
 //offer another drink and such

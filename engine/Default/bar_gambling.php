@@ -6,17 +6,16 @@ $action = $var['action'];
 $time = TIME;
 
 //do we need to process a ticket?
-if ($action == 'process') {
-	
-	if ($player->getCredits() < 1000000) {
+if ($action == 'process')
+{
+	if ($player->getCredits() < 1000000)
+	{
 		create_error('There once was a man with less than $1,000,000...wait...thats you!');
 		return;
 	}
-	$player->decreaseCredits(1000000);
-	$player->update();
 	$go = TRUE;
-	while ($go) {
-		
+	while ($go)
+	{
 		//stop double entries...250,000 usecs at a time so as to not slow them down too much.
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID().' AND time = '.$time);
@@ -24,14 +23,15 @@ if ($action == 'process') {
 		
 			usleep(250000);
 			$time = time();
-		
 		} else $go = FALSE;
-		
 	}
 	
 	$time = time();
+	$player->decreaseCredits(1000000);
+	$player->increaseHOF(1000000,array('Bar','Lotto', 'Money', 'Spent'));
 	$db->query('INSERT INTO player_has_ticket (game_id, account_id, time) VALUES (' .
 				$player->getGameID().', '.$player->getAccountID().', '.$time.')');
+	$player->increaseHOF(1,array('Bar','Lotto', 'Tickets Bought'));
 	$db->query('SELECT count(*) as num FROM player_has_ticket WHERE game_id = '.$player->getGameID() .
 				' AND account_id = '.$player->getAccountID().' AND time > 0 GROUP BY account_id');
 	$db->nextRecord();
@@ -43,7 +43,8 @@ if ($action == 'process') {
 }
 	
 //are we playing lotto?
-if ($action == 'lotto') {
+if ($action == 'lotto')
+{
 	
 	//do we have a winner first...
 	$time = time();
@@ -132,8 +133,9 @@ if ($action == 'lotto') {
 	$container['action'] = 'process';
 	$PHP_OUTPUT.=create_button($container,'Buy a Ticket ($1,000,000)');
 	
-} elseif ($action == 'blackjack') {
-	
+}
+elseif ($action == 'blackjack')
+{
 	//num of decks and cards
 	$decks = 1;
 	$max_cards = 52 * $decks;

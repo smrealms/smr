@@ -1,9 +1,7 @@
 <?php
 
-
-$db->query('SELECT * FROM beta_test');
-if (!$db->nextRecord() || $db->getField('open') == 'FALSE') {
-	
+if (!Globals::isBetaOpen())
+{
 	create_error('Beta Applications are currently not being accepted.');
 	return;
 }
@@ -32,7 +30,6 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td style="font-weight:bold;">Account ID:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="account_id" value="'.$account->account_id.'">');
 $PHP_OUTPUT.=('<td>'.$account->account_id.'</td>');
 $PHP_OUTPUT.=('</tr>');
 

@@ -11,8 +11,8 @@ if ($num_creds < 2) {
 }
 
 //gal map buy
-if (isset($var['process'])) {
-	
+if (isset($var['process']))
+{
 	$gal_id = $_REQUEST['gal_id'];
 	if ($gal_id == 0) {
 		
@@ -20,6 +20,7 @@ if (isset($var['process'])) {
 		return;
 		
 	}
+	$player->increaseHOF(1,array('Bar','Maps Bought'));
 	//take money
 	$account->set_credits($num_creds - 2);
 	//now give maps

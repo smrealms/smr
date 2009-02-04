@@ -1,14 +1,18 @@
 <?php
-
+if(empty($_REQUEST['login'])||empty($_REQUEST['webboard'])||empty($_REQUEST['ircnick'])||empty($_REQUEST['started'])||empty($_REQUEST['reasons'])||empty($_REQUEST['time'])||empty($_REQUEST['online']))
+{
+	create_error('You must fill in all the fields');
+}
 $new_sub = 'Beta Application';
-$message = 'Login: '.$login.EOL.EOL.'-----------'.EOL.EOL.
-	 'Webboard Name: '.$webboard.EOL.EOL.'-----------'.EOL.EOL.
-	 'IRC Nick: '.$ircnick.EOL.EOL.'-----------'.EOL.EOL.
-	 'Account ID: '.$account_id.EOL.EOL.'-----------'.EOL.EOL.
-	 'Start Time: '.$started.EOL.EOL.'-----------'.EOL.EOL.
-	 'Reasons: '.$reasons.EOL.EOL.'-----------'.EOL.EOL.
-	 'Time spent on beta: '.$time.EOL.EOL.'-----------'.EOL.EOL.
-	 'Online time: '.$online;
+$message = 'Login: '.$_REQUEST['login'].EOL.EOL.'-----------'.EOL.EOL.
+	'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
+	'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL.
+	'Webboard Name: '.$_REQUEST['webboard'].EOL.EOL.'-----------'.EOL.EOL.
+	'IRC Nick: '.$_REQUEST['ircnick'].EOL.EOL.'-----------'.EOL.EOL.
+	'Start Time: '.$_REQUEST['started'].EOL.EOL.'-----------'.EOL.EOL.
+	'Reasons: '.$_REQUEST['reasons'].EOL.EOL.'-----------'.EOL.EOL.
+	'Time spent on beta: '.$_REQUEST['time'].EOL.EOL.'-----------'.EOL.EOL.
+	'Online time: '.$_REQUEST['online'];
 //mail('beta@smrealms.de',
 //	 $new_sub,
 //	 $message,
