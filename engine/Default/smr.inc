@@ -486,6 +486,7 @@ function do_voodoo()
 	
 	if($lock)
 	{ //only save if we have the lock.
+		SmrSector::saveSectors();
 		SmrShip::saveShips();
 		SmrPlayer::savePlayers();
 		SmrForce::saveForces();

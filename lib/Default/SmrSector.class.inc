@@ -28,6 +28,8 @@ class SmrSector
 	protected $localMapHREF;
 	protected $currentSectorHREF;
 	protected $scanSectorHREF;
+	
+	protected $hasChanged = false;
 
 	public static function &getSector($gameID,$sectorID,$accountID,$forceUpdate = false)
 	{
@@ -37,7 +39,14 @@ class SmrSector
 			return self::$CACHE_SECTORS[$s->getGameID() . ':' . $s->getSectorID() . ':' . $accountID] =& $s;
 		}
 		return self::$CACHE_SECTORS[$gameID. ':' .$sectorID . ':' . $accountID];
-		
+	}
+	
+	public static function saveSectors()
+	{
+		foreach(self::$CACHE_SECTORS as &$sector)
+		{
+			$sector->update();
+		}
 	}
 	
 	protected function __construct($gameID, $sectorID, $accountID)
@@ -89,11 +98,14 @@ class SmrSector
 		// *******************************************
 	}
 
-	function update() {
-
-		$this->db->query('UPDATE sector SET battles = '.$this->battles.' ' .
-								   'WHERE game_id = '.$this->gameID.' AND ' .
-										 'sector_id = '.$this->sectorID);
+	function update()
+	{
+		if($this->hasChanged)
+		{
+			$this->db->query('UPDATE sector SET battles = '.$this->getBattles().' ' .
+								   'WHERE game_id = '.$this->getGameID().' AND ' .
+										 'sector_id = '.$this->getSectorID() . ' LIMIT 1');
+		}
 	}
 
 	function mark_visited()
@@ -109,95 +121,106 @@ class SmrSector
 		$this->visited=true;
 	}
 
-	function has_good($good_id, $transaction) {
-
-		$this->db->query('SELECT * FROM port NATURAL JOIN port_has_goods ' .
-					 'WHERE port.sector_id = '.$this->sectorID.' AND ' .
-						   'port.game_id = '.$this->gameID.' AND ' .
-						   'good_id = '.$good_id.' AND ' .
-						   'transaction_type = '.$this->db->escapeString($transaction));
-		return $this->db->getNumRows();
-
+	function has_good($good_id, $transaction=false)
+	{
+		return $this->getPort()->hasGood($good_id,$transaction);
 	}
 
 	function has_weapon_shop()
 	{
-		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_sells_weapons ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isWeaponSold())
+				return true;
+		}
+		return false;
 	}
 
-	function has_hq() {
-
-		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_is_hq ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
-
+	function has_hq()
+	{
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isHQ())
+				return true;
+		}
+		return false;
 	}
 
-	function has_ug() {
-		// Pointless doing a natural join on a table with one entry
-		$this->db->query('SELECT sector_id FROM location ' .
-					 'WHERE location_type_id=102 AND sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
-
+	function has_ug()
+	{
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isUG())
+				return true;
+		}
+		return false;
 	}
 
-	function has_ship_shop() {
-
-		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_sells_ships ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
-
+	function has_ship_shop()
+	{
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isShipSold())
+				return true;
+		}
+		return false;
 	}
 
-	function has_fed_beacon() {
-		// Pointless doing a natural join on a table with one entry
-		$this->db->query('SELECT sector_id FROM location ' .
-					 'WHERE location_type_id=201 AND sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
-
+	function has_fed_beacon()
+	{
+		return $this->offersFederalProtection();
 	}
 
 	function offersFederalProtection()
 	{
-		return $this->has_fed_beacon();
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isFed())
+				return true;
+		}
+		return false;
 	}
 
-	function has_bar() {
-
-		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_is_bar ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
-
+	function has_bar()
+	{
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isBar())
+				return true;
+		}
+		return false;
 	}
 
-	function has_hardware_shop() {
-
-		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_sells_hardware ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
-
+	function has_hardware_shop()
+	{
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isHardwareSold())
+				return true;
+		}
+		return false;
 	}
 
-	function has_bank() {
-
-		$this->db->query('SELECT sector_id FROM location NATURAL JOIN location_is_bank ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' LIMIT 1');
-		return $this->db->getNumRows();
-
+	function has_bank()
+	{
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isBank())
+				return true;
+		}
+		return false;
 	}
 
-	function entering_sector() {
-
+	function entering_sector()
+	{
 		global $player, $account;
 
 		// get our rank
@@ -209,8 +232,8 @@ class SmrSector
 						   'game_id = '.$this->gameID.' AND ' .
 						   'owner_id != '.$this->accountID.' AND ' .
 						   'scout_drones > 0');
-		while ($this->db->nextRecord()) {
-
+		while ($this->db->nextRecord())
+		{
 			$owner =& SmrPlayer::getPlayer($this->db->getField('owner_id'), $this->gameID);
 			if ($owner->sameAlliance($player)) continue;
 
@@ -226,7 +249,6 @@ class SmrSector
 			// send scout messages to user
 			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->getSectorID();
 			$player->sendMessage($owner->getAccountID(), MSG_SCOUT, $this->db->escapeString($message, false));
-
 		}
 
 	}
@@ -242,15 +264,13 @@ class SmrSector
 			
 			switch($movementType)
 			{
-				case MOVEMENT_WALK:
-					$message .= 'leaving';
-				break;
 				case MOVEMENT_JUMP:
 					$message .= 'jumping from';
 				break;
 				case MOVEMENT_WARP:
 					$message .= 'warping from';
 				break;
+				case MOVEMENT_WALK:
 				default:
 					$message .= 'leaving';
 			}
@@ -270,8 +290,7 @@ class SmrSector
 //		$rank_id = $account->get_rank();
 
 		// the sector saw a battle now
-		$this->db->query('UPDATE sector SET battles = battles + 1 ' .
-					 'WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' LIMIT 1');
+		$this->increaseBattles(1);
 		
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
@@ -543,8 +562,10 @@ class SmrSector
 	
 	public function setBattles($amount)
 	{
+		if($this->battles = $amount)
+			return;
 		$this->battles = $amount;
-		$this->db->query('UPDATE sector SET '.$this->battles.' WHERE sector_id=' . $this->getSectorID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+		$this->hasChanged = true;
 	}
 	
 	public function decreaseBattles($amount)

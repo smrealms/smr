@@ -215,9 +215,14 @@ class SmrPort
 		}
 	}
 	
-	public function hasGood($goodID)
+	public function hasGood($goodID,$type=false)
 	{
-		return $this->getGood($goodID)!==false;
+		$good =& $this->getGood($goodID);
+		if($good===false)
+			return false;
+		if(!$type)
+			return true;
+		return $good['TransactionType'] == $type;
 	}
 	
 	public function setGoodAmount($goodID,$amount)
