@@ -530,10 +530,10 @@ class SmrPort
 		if($this->isCachedVersion())
 			throw new Exception('Cannot attack a cached port!');
 			
-		$trigger->increaseHOF(1,'Combat','Port','Number Of Triggers');
+		$trigger->increaseHOF(1,array('Combat','Port','Number Of Triggers'));
 		foreach ($attackers as &$attacker)
 		{
-			$attacker->increaseHOF(1,'Combat','Port','Number Of Attacks');
+			$attacker->increaseHOF(1,array('Combat','Port','Number Of Attacks'));
 			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ' .
 						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
 		} unset($attacker);
