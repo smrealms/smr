@@ -14,7 +14,9 @@ if ($_POST['action'] == 'Yes') {
 
 $container = array();
 $container['url'] = 'skeleton.php';
-if ($player->isLandedOnPlanet())
+if(!is_object($player))
+	$container['body'] = 'game_play.php';
+else if ($player->isLandedOnPlanet())
     $container['body'] = 'planet_main.php';
 else
     $container['body'] = 'current_sector.php';
