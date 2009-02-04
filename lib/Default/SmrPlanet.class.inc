@@ -595,10 +595,10 @@ class SmrPlanet
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
 	{
-		$trigger->increaseHOF(1,'Combat','Planet','Number Of Triggers');
+		$trigger->increaseHOF(1,array('Combat','Planet','Number Of Triggers'));
 		foreach ($attackers as $attacker)
 		{
-			$attacker->increaseHOF(1,'Combat','Planet','Number Of Attacks');
+			$attacker->increaseHOF(1,array('Combat','Planet','Number Of Attacks'));
 			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
 						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
 		}
