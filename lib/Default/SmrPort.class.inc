@@ -10,6 +10,7 @@ class SmrPort
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 1000;
 	const CHANCE_TO_DOWNGRADE = 15;
 	const TIME_FEDS_STAY = 1800;
+	const MAX_FEDS_BONUS = 4000;
 	
 	protected $db;
 	
@@ -92,11 +93,11 @@ class SmrPort
 			//defences restock (check for fed arrival)
 			$federalMod = 0;
 			if(TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY)
-				$federalMod = (TIME - $this->getReinforceTime() - self::TIME_FEDS_STAY) / (-6 * self::TIME_FEDS_STAY);
+				$federalMod = (TIME - $this->getReinforceTime() - self::TIME_FEDS_STAY) / (self::TIME_FEDS_STAY);
 			if ($federalMod < 0) $federalMod = 0;
-			$this->setShields($this->getLevel() * 1000 + 1000 + round($richMod * $federalMod * 375));
-			$this->setArmour($this->getLevel() * 1000 + 1000 + round($richMod * $federalMod * 375));
-			$this->setCDs($this->getLevel() * 100 + 100 + round($richMod * $federalMod * 37.5));
+			$this->setShields($this->getLevel() * 1000 + 1000 + round($richMod * 375) + round($federalMod * self::MAX_FEDS_BONUS));
+			$this->setArmour($this->getLevel() * 1000 + 1000 + round($richMod * 375) + round($federalMod * self::MAX_FEDS_BONUS));
+			$this->setCDs($this->getLevel() * 100 + 100 + round($richMod * 37.5) + round($federalMod * self::MAX_FEDS_BONUS/10));
 		}
 	}
 	
