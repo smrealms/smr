@@ -154,17 +154,21 @@ else
 	$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
-		if($db->getField('account_id') == $account->account_id)
-			$foundMe = true;
+//		if($db->getField('account_id') == $account->account_id)
+//			$foundMe = true;
 		$PHP_OUTPUT .= displayHOFRow($rank++,$db->getField('account_id'),$db->getField('amount') );
 	}
 	if(!$foundMe)
 	{
-		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND account_id='.$account->account_id.' ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND account_id='.$account->account_id.' LIMIT 1');
 		$amount = 0;
 		if($db->nextRecord())
 			$amount = $db->getField('amount');
-		$PHP_OUTPUT .= displayHOFRow('?',$account->account_id,$amount);
+		$db->query('SELECT count(account_id) as rank FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND amount>'.$amount.' LIMIT 1');
+		$rank = 1;
+		if($db->nextRecord())
+			$rank = $db->getField('rank') + 1;
+		$PHP_OUTPUT .= displayHOFRow($rank,$account->account_id,$amount);
 	}
 }
 
