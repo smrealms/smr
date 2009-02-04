@@ -1,36 +1,5 @@
 <?
 
-//function category($name, $options, $row,&$PHP_OUTPUT) {
-//
-//	global $var;
-//	$i = 0;
-//	//table name thing goes here
-//	$PHP_OUTPUT.=('<tr>');
-//	$PHP_OUTPUT.=('<td align=center>'.$name.'</td>');
-//	$container = array();
-//	$container['url'] = 'skeleton.php';
-//	$container['body'] = 'hall_of_fame_new_detail.php';
-//	$container['category'] = $name;
-//	$container['row'] = $row;
-//	if (isset($var['game_id']))
-//		$container['game_id'] = $var['game_id'];
-//	$PHP_OUTPUT.=create_echo_form($container);
-//	$PHP_OUTPUT.=('<td align=center valign=middle>');
-//	foreach($options as $echo) {
-//		
-//		$i++;
-//		@list($one, $two) = split (',', $echo);
-//		if (isset($two)) $PHP_OUTPUT.=('<input type=hidden name=mod[] value="'.$echo.'">');
-//		$PHP_OUTPUT.=create_submit($one);
-//		$PHP_OUTPUT.=('&nbsp;');
-//		if ($i % 3 == 0) $PHP_OUTPUT.=('<br />');
-//		//unset vars for next sub cat
-//		unset($one, $two);
-//		
-//	}
-//	$PHP_OUTPUT.=('</td></form></tr>');
-//
-//}
 if (isset($var['game_id'])) $game_id = $var['game_id'];
 $base = array();
 
@@ -59,7 +28,7 @@ $PHP_OUTPUT.=('<div align=center>');
 
 $PHP_OUTPUT.=('Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) . '!<br />The Hall of Fame is a comprehensive ');
 $PHP_OUTPUT.=('list of player accomplishments.  Here you can view how players rank in many different ');
-$PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />');
+$PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br /><br />');
 
 $db->query('SELECT DISTINCT type FROM player_hof');
 $hofTypes = array();
@@ -77,12 +46,14 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$viewing = false;
+$container = array();
+$container['url'] = 'skeleton.php';
+$container['body'] = 'hall_of_fame_new.php';
+if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
+$viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,isset($var['game_id'])?'Current HoF':'Global HoF');
 $typeList = array();
 if(isset($var['type']))
 {
-	$viewing= 'Currently viewing: ';
-	$first = true;
 	foreach($var['type'] as $type)
 	{
 		if(!is_array($hofTypes[$type]))
@@ -93,9 +64,7 @@ if(isset($var['type']))
 		}
 		else
 			$typeList[] = $type;
-		if(!$first)
-			$viewing .= ' -&gt; ';
-		$first = false;
+		$viewing .= ' -&gt; ';
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'hall_of_fame_new.php';
@@ -103,20 +72,16 @@ if(isset($var['type']))
 		if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
 		$viewing.= create_link($container,$type);
 		
-		if(!is_array($hofTypes[$type]))
-			break;
 		$hofTypes =& $hofTypes[$type];
 	}
 }
 if(isset($var['view']))
 {
-	if(!$viewing)
-		$viewing= 'Currently viewing: ';
-	else
-		$viewing .= ' -&gt; ';
+	$viewing .= ' -&gt; ';
 	if(is_array($hofTypes[$var['view']]))
 	{
 		$typeList[] = $var['view'];
+		$var['type'] = $typeList;
 	}
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -132,8 +97,7 @@ if(isset($var['view']))
 		unset($var['view']);
 	}
 }
-if($viewing)
-	$viewing.= '<br /><br />';
+$viewing.= '<br /><br />';
 
 $PHP_OUTPUT.= $viewing;
 $PHP_OUTPUT.= create_table();
