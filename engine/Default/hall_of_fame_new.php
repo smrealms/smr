@@ -150,37 +150,59 @@ else
 	$viewType[] = $var['view'];
 	
 	$rank=1;
+	$foundMe=false;
 	$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
-		$hofAccount =& SmrAccount::getAccount($db->getField('account_id'));
-		if ($hofAccount->account_id == $account->account_id) $bold = ' style="font-weight:bold;"';
-		else $bold = '';
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align=center'.$bold.'>' . $rank++ . '</td>');
-		
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'hall_of_fame_player_detail.php';
-		$container['acc_id'] = $db->getField('account_id');
-		
-		if (isset($game_id))
-		{
-			$container['game_id'] = $game_id;
-			$container['sending_page'] = 'current_hof';
-		}
-		else
-		{
-			$container['game_id'] = $player->getGameID();
-			$container['sending_page'] = 'hof';
-		}
-		$PHP_OUTPUT.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->HoF_name) .'</td>');
-		$PHP_OUTPUT.=('<td align=center'.$bold.'>' . $db->getField('amount') . '</td>');
-		$PHP_OUTPUT.=('</tr>');
+		if($db->getField('account_id') == $account->account_id)
+			$foundMe = true;
+		$PHP_OUTPUT .= displayHOFRow($rank++,$db->getField('account_id'),$db->getField('amount') );
+	}
+	if(!$foundMe)
+	{
+		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' ORDER BY amount DESC LIMIT 25');
+		$amount = 0;
+		if($db->nextRecord())
+			$amount = $db->getField('amount');
+		$PHP_OUTPUT .= displayHOFRow('?',$account->account_id,$amount);
 	}
 }
 
 $PHP_OUTPUT.=('</table></div>');
+
+function displayHOFRow($rank,$accountID,$amount)
+{
+	global $account,$player;
+	$hofAccount =& SmrAccount::getAccount($accountID);
+	if ($hofAccount->account_id == $account->account_id)
+	{
+		$foundMe = true;
+		$bold = ' style="font-weight:bold;"';
+	}
+	else $bold = '';
+	$return=('<tr>');
+	$return.=('<td align=center'.$bold.'>' . $rank . '</td>');
+	
+	$container = array();
+	$container['url'] = 'skeleton.php';
+	$container['body'] = 'hall_of_fame_player_detail.php';
+	$container['acc_id'] = $accountID;
+	
+	if (isset($game_id))
+	{
+		$container['game_id'] = $game_id;
+		$container['sending_page'] = 'current_hof';
+	}
+	else
+	{
+		$container['game_id'] = $player->getGameID();
+		$container['sending_page'] = 'hof';
+	}
+	$return.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->HoF_name) .'</td>');
+	$return.=('<td align=center'.$bold.'>' . $amount . '</td>');
+	$return.=('</tr>');
+	return $return;
+}
 
 //category(Display,Array containing subcategories (info after , is the info for sql),stat name in db)
 //if (empty($game_id))
