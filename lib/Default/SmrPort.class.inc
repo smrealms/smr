@@ -106,7 +106,7 @@ class SmrPort
 		{
 			$GOODS = Globals::getGoods();
 			
-			$refresh_per_hour = 250 * Globals::getGameSpeed($this->gameID);
+			$refresh_per_hour = 250 * Globals::getGameSpeed($this->getGameID());
 			$refresh_per_sec = $refresh_per_hour / 3600;
 			$seconds_since_refresh = TIME - $this->lastUpdate;
 			if ($seconds_since_refresh < 0) $seconds_since_refresh = 0;
