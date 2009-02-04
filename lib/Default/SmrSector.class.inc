@@ -123,6 +123,8 @@ class SmrSector
 
 	function has_good($good_id, $transaction=false)
 	{
+		if(!$this->hasPort())
+			return false;
 		return $this->getPort()->hasGood($good_id,$transaction);
 	}
 
@@ -399,7 +401,7 @@ class SmrSector
 	public function &getPort()
 	{
 		require_once(get_file_loc('SmrPort.class.inc'));
-		return SmrPort::getPort($this->gameID,$this->sectorID);
+		return SmrPort::getPort($this->getGameID(),$this->getSectorID());
 	}
 
 	public function hasCachedPort()
