@@ -150,7 +150,7 @@ else
 	$viewType[] = $var['view'];
 	
 	$rank=1;
-	$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).' AND game_id=' . $var['game_id'] .' LIMIT 25');
+	$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).' AND game_id=' . $var['game_id'] .' ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
 		$hofAccount =& SmrAccount::getAccount($db->getField('account_id'));
