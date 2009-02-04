@@ -343,7 +343,7 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		return $this->doPortDamageToPlayer($return, $forces, $targetPlayer);
 	}
 	
-	public function &shootPlayerAsPlanet(SmrPort &$forces, AbstractSmrPlayer &$targetPlayer)
+	public function &shootPlayerAsPlanet(SmrPlanet &$forces, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
 		return $this->doPlanetDamageToPlayer($return, $forces, $targetPlayer);
