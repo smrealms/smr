@@ -530,7 +530,7 @@ class SmrPort
 		if($this->isCachedVersion())
 			throw new Exception('Cannot attack a cached port!');
 			
-		$attacker->increaseHOF(1,'Combat','Port','Number Of Triggers');
+		$trigger->increaseHOF(1,'Combat','Port','Number Of Triggers');
 		foreach ($attackers as &$attacker)
 		{
 			$attacker->increaseHOF(1,'Combat','Port','Number Of Attacks');

@@ -595,7 +595,7 @@ class SmrPlanet
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
 	{
-		$attacker->increaseHOF(1,'Combat','Planet','Number Of Triggers');
+		$trigger->increaseHOF(1,'Combat','Planet','Number Of Triggers');
 		foreach ($attackers as $attacker)
 		{
 			$attacker->increaseHOF(1,'Combat','Planet','Number Of Attacks');
