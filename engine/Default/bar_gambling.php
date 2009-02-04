@@ -456,8 +456,8 @@ if ($action == 'lotto') {
 	{
 		$PHP_OUTPUT.=('You have <font color=red><b>BUSTED</b></font>');
 		$bet = $var['bet'];
-		$player->increaseHOF($bet,array('blackjack','money','lost'));
-		$player->increaseHOF(1,array('blackjack','results','lost'));
+		$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
+		$player->increaseHOF(1,array('Blackjack','Results','Lost'));
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bar_main.php';
@@ -502,8 +502,8 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * 2.5);
 			$stat = ($bet * 2.5) - $bet;
 			$player->update();
-			$player->increaseHOF($stat, array('blackjack','money','win'));
-			$player->increaseHOF(1, array('blackjack','results','win'));
+			$player->increaseHOF($stat, array('Blackjack','Money','Won'));
+			$player->increaseHOF(1, array('Blackjack','Results','Won'));
 			$PHP_OUTPUT.=('You have won $' . number_format($bet * 2.5) . ' credits!');
 		}
 		elseif ($win == 'yes')
@@ -511,22 +511,22 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * 2);
 			$stat = ($bet * 2) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,array('blackjack','money','win'));
-			$player->increaseHOF(1, array('blackjack','results','win'));
+			$player->increaseHOF($stat,array('Blackjack','Money','Won'));
+			$player->increaseHOF(1, array('Blackjack','Results','Won'));
 			$PHP_OUTPUT.=('You have won $' . number_format($bet * 2) . ' credits!');
 		}
 		elseif ($win == 'tie')
 		{
 			$player->increaseCredits($bet);
 			$player->update();
-			$player->increaseHOF(1, array('blackjack','results','draw'));
+			$player->increaseHOF(1, array('Blackjack','Results','Draw'));
 			$PHP_OUTPUT.=('You have won back your $' . number_format($bet) . ' credits.');
 			
 		}
 		else
 		{
-			$player->increaseHOF($bet,array('blackjack','money','lost'));
-			$player->increaseHOF(1,array('blackjack','results','lost'));
+			$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
+			$player->increaseHOF(1,array('Blackjack','Results','Lost'));
 		}
 		$container = array();
 		$container['url'] = 'skeleton.php';
@@ -552,8 +552,8 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * $winnings);
 			$stat = ($bet * $winnings) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,array('blackjack','money','win'));
-			$player->increaseHOF(1,array('blackjack','results','win'));
+			$player->increaseHOF($stat,array('Blackjack','Money','Win'));
+			$player->increaseHOF(1,array('Blackjack','Results','Win'));
 			$PHP_OUTPUT.=('You have won $' . number_format($bet * $winnings) . ' credits!');
 		}
 		else if(sizeof($ai_card) > 2)
@@ -563,16 +563,16 @@ if ($action == 'lotto') {
 			$player->increaseCredits($bet * $winnings);
 			$stat = ($bet * $winnings) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,array('blackjack','money','win'));
-			$player->increaseHOF(1,array('blackjack','results','win'));
+			$player->increaseHOF($stat,array('Blackjack','Money','Win'));
+			$player->increaseHOF(1,array('Blackjack','Results','Win'));
 			$PHP_OUTPUT.=('You have won back your $' . number_format($bet * $winnings) . ' credits!');
 		}
 		else
 		{
 			//AI has BJ already...sorry
 			if (empty($bet)) $bet = $var['bet'];
-			$player->increaseHOF($bet,array('blackjack','money','lost'));
-			$player->increaseHOF(1,array('blackjack','results','lost'));
+			$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
+			$player->increaseHOF(1,array('Blackjack','Results','Lost'));
 		}
 		$container = array();
 		$container['url'] = 'skeleton.php';

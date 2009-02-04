@@ -209,7 +209,7 @@ function check_bargain_number()
 	// increase current number of tries
 	$container['number_of_bargains'] = $var['number_of_bargains'] + 1;
 
-	$player->increaseHOF(1,array('trade','results','fail'));
+	$player->increaseHOF(1,array('Trade','Results','Fail'));
 	if (isset($var['overall_number_of_bargains']))
 	{
 		// transfer values
@@ -235,7 +235,7 @@ function check_bargain_number()
 				$player->update();
 
 			}
-			$player->increaseHOF(1,array('trade','results','epic_fail'));
+			$player->increaseHOF(1,array('Trade','Results','Epic Fail'));
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 
 		}

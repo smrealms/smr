@@ -134,8 +134,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			$result =& $accountIDOrResultArray;
 		else
 		{
-			$sql = $this->db->query('SELECT * FROM player WHERE account_id = '.$accountIDOrResultArray.' AND game_id = '.$gameID.' LIMIT 1');
-			$this->db->nextRecord($sql);
+			$this->db->query('SELECT * FROM player WHERE account_id = '.$accountIDOrResultArray.' AND game_id = '.$gameID.' LIMIT 1');
+			$this->db->nextRecord();
 			$result = $this->db->getRow();
 		}
 		if($result)
@@ -686,8 +686,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			//get past maint
 			$this->db->query('DELETE FROM player_repaired WHERE time < '.(TIME - 3600 * 20));
-			$m_sql = $this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE '.$this->SQL.' AND amount < 0 LIMIT 1');
-			if ($this->db->nextRecord($m_sql)) $this->pastMaintCredit = $this->db->getField('sum');
+			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE '.$this->SQL.' AND amount < 0 LIMIT 1');
+			if ($this->db->nextRecord()) $this->pastMaintCredit = $this->db->getField('sum');
 			else $this->pastMaintCredit = 0;
 		}
 		return $this->pastMaintCredit;
@@ -715,8 +715,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			global $STATS;
 			foreach ($STATS as $stat_name => $statArray)
 				$temp_stats[$statArray['ID']] = 0;
-			$sql = $this->db->query('SELECT stat_type_id, amount FROM player_has_special WHERE ' . $this->SQL . ' LIMIT ' . sizeof($STATS));
-			while ($this->db->nextRecord($sql))
+			$this->db->query('SELECT stat_type_id, amount FROM player_has_special WHERE ' . $this->SQL . ' LIMIT ' . sizeof($STATS));
+			while ($this->db->nextRecord())
 				$temp_stats[$this->db->getField('stat_type_id')] = $this->db->getField('amount');
 			//put stats in a more user friendly form
 			$this->stats = array();
@@ -743,8 +743,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			{
 				$this->pureRelations[$race_id] = 0;
 			}
-			$r_sql = $this->db->query('SELECT race_id,relation FROM player_has_relation WHERE '.$this->SQL.' LIMIT '.sizeof($RACES));
-			while ($this->db->nextRecord($r_sql))
+			$this->db->query('SELECT race_id,relation FROM player_has_relation WHERE '.$this->SQL.' LIMIT '.sizeof($RACES));
+			while ($this->db->nextRecord())
 			{
 				$this->pureRelations[$this->db->getField('race_id')] = $this->db->getField('relation');
 			}
@@ -817,8 +817,8 @@ class SmrPlayer extends AbstractSmrPlayer
 //				$this->goods[$good_id] = 0;
 //				$this->goodsExpGained[$good_id] = 0;
 //			}
-//			$result = $this->db->query('SELECT good_id,amount,exp_gained FROM player_has_goods WHERE ' . $this->SQL);
-//			while ($this->db->nextRecord($result))
+//			$this->db->query('SELECT good_id,amount,exp_gained FROM player_has_goods WHERE ' . $this->SQL);
+//			while ($this->db->nextRecord())
 //			{
 //				$this->goods[$this->db->getField('good_id')] = $this->db->getField('amount');
 //				$this->goodsExpGained[$this->db->getField('good_id')] = $this->db->getField('exp_gained');
@@ -858,9 +858,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->gadgets))
 		{
 			//Get Player Gadgets
-			$sql = $this->db->query('SELECT gadget_id,equipped,cooldown,lasts_until FROM player_has_gadget WHERE ' . $this->SQL);
+			$this->db->query('SELECT gadget_id,equipped,cooldown,lasts_until FROM player_has_gadget WHERE ' . $this->SQL);
 			$this->gadgets = array();
-			while ($this->db->nextRecord($sql))
+			while ($this->db->nextRecord())
 				$this->gadgets[$this->db->getField('gadget_id')] = array('Equipped' => $this->db->getField('equipped'), 'Cooldown' => $this->db->getField('cooldown'), 'Expires' => $this->db->getField('lasts_until'));
 		}
 	}
@@ -985,9 +985,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->completedMissions))
 		{
 			//Get Player missions
-			$sql = $this->db->query('SELECT mission_id FROM player_completed_mission WHERE ' . $this->SQL);
+			$this->db->query('SELECT mission_id FROM player_completed_mission WHERE ' . $this->SQL);
 			$this->completedMissions = array();
-			while ($this->db->nextRecord($sql))
+			while ($this->db->nextRecord())
 				$this->completedMissions[$this->db->getField('mission_id')] = $this->db->getField('mission_id');
 		}
 		return $this->completedMissions;
@@ -999,9 +999,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			//Get Player missions
 			global $MISSIONS;
-			$sql = $this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
+			$this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
 			$this->missions = array();
-			while ($this->db->nextRecord($sql))
+			while ($this->db->nextRecord())
 			{
 				$this->missions[$this->db->getField('mission_id')] = array(
 								'On Step' => $this->db->getField('on_step'),
@@ -1159,12 +1159,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			//Get Player Mining Info
 			$this->mining = array();
-			$sql = $this->db->query('SELECT sector_has_mining.mine_id as mine_id, level, type, started, amount, starting_amount' . 
+			$this->db->query('SELECT sector_has_mining.mine_id as mine_id, level, type, started, amount, starting_amount' . 
 							' FROM player_is_mining, sector_has_mining WHERE sector_id = ' . $this->sectorID . 
 							' AND sector_has_mining.game_id = player_is_mining.game_id' . 
 							' AND sector_has_mining.mine_id = player_is_mining.mine_id' . 
 							' AND account_id = ' . $this->accountID . ' AND sector_has_mining.game_id = ' . $this->gameID .' LIMIT 1');
-			while ($this->db->nextRecord($sql))
+			while ($this->db->nextRecord())
 			{
 				$this->mining[$this->db->getField('mine_id')] = array('Level' => $this->db->getField('level'),
 																	'Started' => $this->db->getField('started'),
@@ -1208,8 +1208,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->knowledge))
 		{
 			//get players faction knowledge
-			$sql = $this->db->query('SELECT * FROM player_knows_faction WHERE ' . $this->SQL . ' LIMIT 1');
-			if ($this->db->nextRecord($sql))
+			$this->db->query('SELECT * FROM player_knows_faction WHERE ' . $this->SQL . ' LIMIT 1');
+			if ($this->db->nextRecord())
 			{
 				$this->knowledge['Erebus'] = $this->db->getField('erebus');
 				$this->knowledge['Aether'] = $this->db->getField('aether');
@@ -1250,11 +1250,11 @@ class SmrPlayer extends AbstractSmrPlayer
 						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
 
 		// record death stat
-		$this->increaseHOF(1,array('dying','deaths'));
+		$this->increaseHOF(1,array('Dying','Deaths'));
 		//record cost of ship lost
-		$this->increaseHOF($this->getShip()->getCost(),array('combat','dying','money','ship_cost'));
+		$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Cost Of Ships Lost'));
 		// reset turns since last death
-		$this->setHOF(0,array('movement','turns_used','since_death'));
+		$this->setHOF(0,array('Movement','Turns Used','Since Last Death'));
 
 		// 1/4 of ship value -> insurance
 		$newCredits = round($this->getShip()->getCost() / 4);
@@ -1326,8 +1326,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
-		$killer->increaseHOF($gainedExp,array('combat','killing','experience','gain'));
-		$killer->increaseHOF($this->getExperience(),array('killing','experience','experience','traders_killed'));
+		$killer->increaseHOF($gainedExp,array('Killing','Experience','Gained'));
+		$killer->increaseHOF($this->getExperience(),array('Killing','Experience','Of Traders Killed'));
+		$this->increaseHOF($gainedExp,array('Dying','Experience','Gained By Killer'));
 		// Dead player loses experience
 		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
 		$return['DeadExp'] = 0;
@@ -1336,13 +1337,15 @@ class SmrPlayer extends AbstractSmrPlayer
 			$lostExp = floor($this->getExperience() * $expLossPercentage);
 			$return['DeadExp'] = $lostExp;
 			$this->decreaseExperience($lostExp);
+			$this->increaseHOF($return['DeadExp'],array('Dying','Experience','Lost'));
+			$killer->increaseHOF($return['DeadExp'],array('Killing','Experience','Lost By Traders Killed'));
 		}
 		
 		$creditsGained = $this->getCredits();
 		$return['KillerCredits'] = $creditsGained;
 		$killer->increaseCredits($creditsGained);
-		$killer->increaseHOF($creditsGained,array('combat','killing','money','gain'));
-		$killer->increaseHOF($this->getShip()->getCost(),array('killing','money','ships_killed'));
+		$killer->increaseHOF($creditsGained,array('Killing','Money','Gain'));
+		$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Cost Of Ships Killed'));
 
 		// The killer may change alignment
 		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
@@ -1355,9 +1358,15 @@ class SmrPlayer extends AbstractSmrPlayer
 		$alignChange = $relation * $alignChangePerRelation;
 		$return['KillerAlign'] = $alignChange;
 		if($alignChange>0)
+		{
 			$killer->increaseAlignment($alignChange);
+			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Alignment','Gain'));
+		}
 		else
+		{
 			$killer->decreaseAlignment(-$alignChange);
+			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Alignment','Loss'));
+		}
 		// War setting gives them military pay
 		if($relation <= -300)
 		{
@@ -1407,11 +1416,13 @@ class SmrPlayer extends AbstractSmrPlayer
 			if(isset($bounty_type))
 			{
 				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
+				$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Bounty Gained'));
+				$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Bounty Gained By Killer'));
 			}
 		}
 		
 		$killer->increaseKills(1);
-		$killer->increaseHOF(1,array('combat','killing','kills'));
+		$killer->increaseHOF(1,array('Killing','Kills'));
 
 		if($this->hasAlliance())
 		{
@@ -1699,9 +1710,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->HOF))
 		{
 			//Get Player HOF
-			$result = $this->db->query('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
+			$this->db->query('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
 			$this->HOF = array();
-			while($this->db->nextRecord($result))
+			while($this->db->nextRecord())
 			{
 				$hof =& $this->HOF;
 				$typeList = explode(':',$this->db->getField('type'));
@@ -1739,8 +1750,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	function isInCouncil()
 	{
 		$president = false;
-		$sql = $this->db->query('SELECT account_id,alignment FROM player WHERE game_id = '.$this->gameID.' AND race_id = '.$this->getRaceID().' AND experience > 0 ORDER BY experience DESC, player_name LIMIT 20');
-		while ($this->db->nextRecord($sql))
+		$this->db->query('SELECT account_id,alignment FROM player WHERE game_id = '.$this->gameID.' AND race_id = '.$this->getRaceID().' AND experience > 0 ORDER BY experience DESC, player_name LIMIT 20');
+		while ($this->db->nextRecord())
 		{
 			if ($this->db->getField('alignment') >= 150 && $president == false) $president = $this->db->getField('account_id');
 			if ($this->db->getField('account_id') == $this->accountID)

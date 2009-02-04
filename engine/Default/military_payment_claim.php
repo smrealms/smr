@@ -14,7 +14,7 @@ if ($player->hasMilitaryPayment())
 {
 	$PHP_OUTPUT.=('For your military help you have been paid <font color=yellow>'.$player->getMilitaryPayment().'</font> credits');
 
-	$player->increaseHOF($player->getMilitaryPayment(),array('military_payment','money','claimed'));
+	$player->increaseHOF($player->getMilitaryPayment(),array('Military Payment','Money','Claimed'));
 
 	// add to our cash
 	$player->increaseCredits($player->getMilitaryPayment());

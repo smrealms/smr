@@ -935,7 +935,8 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/4)); // 1/4 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('combat','player','damage_done'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Player','Damage Done'));
+		$thisPlayer->increaseHOF(1,array('Combat','Player','Shots'));
 		return $results;
 	}
 	
@@ -962,7 +963,8 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('combat','forces','damage_done'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Forces','Damage Done'));
+		$thisPlayer->increaseHOF(1,array('Combat','Forces','Shots'));
 		return $results;
 	}
 	
@@ -989,7 +991,8 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('combat','port','damage_done'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Port','Damage Done'));
+		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots'));
 		return $results;
 	}
 	
@@ -1016,7 +1019,8 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('combat','planet','damage_done'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Planet','Damage Done'));
+		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots'));
 		return $results;
 	}
 	

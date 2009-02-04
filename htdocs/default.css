@@ -48,7 +48,14 @@ TH {
 	border : 1px solid #80C870;
 	font-family: Arial;
 	font-size:inherit;
-
+}
+.submitStyle{
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+	font-family: Arial;
+	font-size:inherit;
+	padding: 0px 6px;
 }
 
 #InputFieldsText {

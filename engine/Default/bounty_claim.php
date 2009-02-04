@@ -37,8 +37,8 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span><br />');
 
 		// add HoF stat
-		$player->increaseHOF(1,array('bounties','results','claimed'));
-		$player->increaseHOF($amount,array('bounties','money','claimed'));
+		$player->increaseHOF(1,array('Bounties','Results','Claimed'));
+		$player->increaseHOF($amount,array('Bounties','Money','Claimed'));
 
 		// delete bounty
 		$db2->query('DELETE FROM bounty

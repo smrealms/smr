@@ -101,9 +101,6 @@ else $g_id = 0;
 if (isset($var['time']))
 	$time_start = $var['time'];
 
-// update session
-SmrSession::update();
-
 do_voodoo();
 
 ?>
