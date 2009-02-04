@@ -6,24 +6,6 @@ $PHP_OUTPUT.=('Are you sure you want to attack this port?<br /><br />');
 $port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 $time = TIME;
 
-//PAGE
-//if ($port->getReinforceTime() < $time) {
-//
-//	//defences restock (check for fed arrival)
-//	$minsToStay = 30;
-//	if ($port->getReinforceTime() + $minsToStay * 60 > $time)
-//		$federal_mod = ($time - $port->getReinforceTime() - $minsToStay * 60) / (-6 * $minsToStay);
-//	else $federal_mod = 0;
-//	if ($federal_mod < 0) $federal_mod = 0;
-//	if ($federal_mod > 0) $PHP_OUTPUT.=('Ships dispatched by the Federal Government have just arrived and are in a defensive position around the port.<br />');
-//	$rich_mod = floor( $port->getCredits() * 1e-7 );
-//	if($rich_mod < 0) $rich_mod = 0;
-//	$port->shields = round(($port->getLevel() * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
-//	$port->armor = round(($port->getLevel() * 1000 + 1000) + ($rich_mod * 500) + ($federal_mod * 500));
-//	$port->drones = round(($port->getLevel() * 100 + 100) + ($rich_mod * 50) + ($federal_mod * 50));
-//    $port->update();
-//	
-//}
 if ($ship->hasScanner() == 1)
 {
 	//they can scan the port
