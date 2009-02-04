@@ -84,7 +84,7 @@ class DummyShip extends AbstractSmrShip
 			$db->query('SELECT info FROM cached_dummys ' .
 							  'WHERE type = \'DummyShip\' AND ' .
 							  		'id = '.$db->escapeString($player->getPlayerName()).' LIMIT 1');
-			if($db->nextRecord($player))
+			if($db->nextRecord())
 			{
 				$return = unserialize($db->getField('info'));
 				$return->regenerate($player);

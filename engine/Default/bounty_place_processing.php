@@ -30,9 +30,13 @@ if ($amount < 0)
 // take the bounty from the cash
 $player->decreaseCredits($amount);
 
+$player->increaseHOF($amount,array('Bounties','Placed','Money'));
+$player->increaseHOF(1,array('Bounties','Placed','Number'));
+
 $placed =& SmrPlayer::getPlayer($account_id, $player->getGameID());
 $placed->increaseCurrentBountyAmount($type,$amount);
-$placed->increaseHOF($amount,array('bounties','placed','money'));
+$placed->increaseHOF($amount,array('Bounties','Received','Money'));
+$placed->increaseHOF(1,array('Bounties','Received','Number'));
 
 forward($container);
 

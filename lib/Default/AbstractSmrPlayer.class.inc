@@ -353,7 +353,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$newExperience = $this->experience + $experience;
 		$this->setExperience($newExperience);
-		$this->increaseHOF($experience,array('experience','total','gain'));
+		$this->increaseHOF($experience,array('Experience','Total','Gain'));
 	}
 	public function decreaseExperience($experience)
 	{
@@ -363,7 +363,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$newExperience = $this->experience - $experience;
 		$this->setExperience($newExperience);
-		$this->decreaseHOF($experience,array('experience','total','loss'));
+		$this->decreaseHOF($experience,array('Experience','Total','Loss'));
 	}
 	
 	public function isLandedOnPlanet()
@@ -483,8 +483,8 @@ abstract class AbstractSmrPlayer
 			//get alliance info
 			if ($this->allianceID > 0)
 			{
-				$sql = $this->db->query('SELECT alliance_name FROM alliance WHERE alliance_id = ' . $this->getAllianceID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
-				$this->db->nextRecord($sql);
+				$this->db->query('SELECT alliance_name FROM alliance WHERE alliance_id = ' . $this->getAllianceID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
+				$this->db->nextRecord();
 				$this->allianceName = stripslashes($this->db->getField('alliance_name'));
 			}
 			else $this->allianceName = 'No Alliance';
@@ -942,8 +942,8 @@ abstract class AbstractSmrPlayer
 		
 		if(!has_beta_privilege('No SC Loss'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
-		$this->increaseHOF($take,array('movement','turns_used','since_death'));
-		$this->increaseHOF($take,array('movement','turns_used','total'));
+		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'));
+		$this->increaseHOF($take,array('Movement','Turns Used','Total'));
 	}
 	
 	public function giveTurns($give, $noob = 0,$updateLastActive = false)

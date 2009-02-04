@@ -279,6 +279,11 @@ function create_link($container, $text) {
 	return '<a href="' . SmrSession::get_new_href($container) . '">' . $text . '</a>';
 }
 
+function create_submit_link($container, $text)
+{
+	return '<a href="' . SmrSession::get_new_href($container) . '" class="submitStyle">' . $text . '</a>';
+}
+
 function get_colored_text($value, $text, $type='Game', $return_type = 'Normal')
 {
 

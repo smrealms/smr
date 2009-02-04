@@ -18,15 +18,15 @@ if (is_array($mod))
 	}
 
 //for future when we have curr game stats
-if (isset($game_id)) {
-
+if (isset($game_id))
+{
 	$table = 'player_has_stats WHERE game_id = '.$game_id.' AND';
 
 	$db2 = new SmrHistoryMySqlDatabase();
 	$db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
 	//if next record we have an old game so we query the hist db
-	if ($db2->nextRecord()) {
-
+	if ($db2->nextRecord())
+	{
 		$db = new SmrHistoryMySqlDatabase();
 		$past = 'Yes';
 		$table = 'player_has_stats WHERE game_id = '.$game_id.' AND';

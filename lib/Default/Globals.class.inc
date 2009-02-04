@@ -28,8 +28,8 @@ class Globals
 			self::initialiseDatabase();
 			$db2 = new SmrMySqlDatabase();
 			$PLANET_BUILDINGS = array();
-			$result = self::$db->query('SELECT * FROM planet_construction');
-			while(self::$db->nextRecord($result))
+			self::$db->query('SELECT * FROM planet_construction');
+			while(self::$db->nextRecord())
 			{
 				$buildingID = self::$db->getField('construction_id');
 				$PLANET_BUILDINGS[$buildingID]['ConstructionID'] = $buildingID;

@@ -169,10 +169,10 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
-		$player->increaseHOF($amount,array('trade','goods','buys'));
-		$player->increaseHOF($gained_exp,'trade','experience','buys');
-		$player->decreaseHOF($bargain_price,array('trade','money','profit'));
-		$player->increaseHOF($bargain_price,array('trade','money','buys'));
+		$player->increaseHOF($amount,array('Trade','Goods','Bought'));
+		$player->increaseHOF($gained_exp,array('Trade','Experience','Buying'));
+		$player->decreaseHOF($bargain_price,array('Trade','Money','Profit'));
+		$player->increaseHOF($bargain_price,array('Trade','Money','Buying'));
 
 		$port->buyGoods($portGood,$amount,$bargain_price,$gained_exp);
 
@@ -183,13 +183,13 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
 		$player->increaseCredits($bargain_price);
-		$player->increaseHOF($amount,array('trade','goods','sales'));
-		$player->increaseHOF($gained_exp,'trade','experience','sales');
-		$player->increaseHOF($bargain_price,array('trade','money','profit'));
-		$player->increaseHOF($bargain_price,array('trade','money','sales'));
+		$player->increaseHOF($amount,array('Trade','Goods','Sold'));
+		$player->increaseHOF($gained_exp,array('Trade','Experience','Selling'));
+		$player->increaseHOF($bargain_price,array('Trade','Money','Profit'));
+		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'));
 		$port->sellGoods($portGood,$amount,$credits_in,$gained_exp);
 	}
-	$player->increaseHOF(1,array('trade','results','success'));
+	$player->increaseHOF(1,array('Trade','Results','Success'));
 
 	// log action
 	$account->log(6, $portGood['TransactionType'] . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());
