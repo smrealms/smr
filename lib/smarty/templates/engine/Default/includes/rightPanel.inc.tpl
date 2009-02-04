@@ -52,7 +52,7 @@ Next Level :<br />
 Alignment : {$ThisPlayer->getAlignment()|number_format}<br />
 Alliance : {$ThisPlayer->getAllianceName()}{if $ThisPlayer->hasAlliance()} ({$ThisPlayer->getAllianceID()|number_format}){/if}<br />
 <br />
-<span id="ship_name"><a  href="{$ThisShip->getUpgradeShipHREF()}"><span class="yellow bold">{$ThisShip->getName()}</span></a></span><br />
+<span id="ship_name">{*<a href="{$ThisShip->getUpgradeShipHREF()}">*}<span class="yellow bold">{$ThisShip->getName()}</span>{*</a>*}</span><br />
 {if $PlayerShipCustomName}{$PlayerShipCustomName}<br />{/if}
 Rating : <span id="offense">{$ThisShip->getAttackRating()|number_format}</span>/<span id="defense">{$ThisShip->getDefenseRating()|number_format}</span><br />
 Shields : <span id="shields">{$ThisShip->getShields()}/{$ThisShip->getMaxShields()}</span><br />
