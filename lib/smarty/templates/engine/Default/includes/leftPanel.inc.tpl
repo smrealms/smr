@@ -53,6 +53,7 @@
 {/if}
 <a href="{$EditPhotoLink}">Edit Photo</a><br />
 <a href="album/" target="album">View Album</a><br /><br />
+{if $Globals->isFeatureRequestOpen()}<a href="{$Globals->getFeatureRequestHREF()}">Request A Feature</a><br />{/if}
 {if $Globals->isBetaOpen()}<a href="{$Globals->getBetaApplyHREF()}">Apply For Beta</a><br />{/if}
 <a href="{$ReportABugLink}">Report A Bug</a><br />
 <a href="{$ContactFormLink}">Contact Form</a><br />

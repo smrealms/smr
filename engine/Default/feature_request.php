@@ -1,4 +1,9 @@
 <?
+if (!Globals::isFeatureRequestOpen())
+{
+	create_error('Feature requests are currently not being accepted.');
+	return;
+}
 
 $smarty->assign('PageTopic','FEATURE REQUEST');
 
@@ -14,8 +19,8 @@ $db->query('SELECT f.feature_request_id AS feature_id, ' .
   				'GROUP BY feature_id, feature_msg ' .
   				'ORDER BY votes DESC, feature_id');
 
-if ($db->getNumRows() > 0) {
-
+if ($db->getNumRows() > 0)
+{
 	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote.php', ''));
 	$PHP_OUTPUT.=('<p><table cellspacing="0" cellpadding="3" border="0" class="standard" width="100%">');
 	$PHP_OUTPUT.=('<tr>');
@@ -24,8 +29,8 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('<th width="20">&nbsp;</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$feature_request_id = $db->getField('feature_id');
 		$submitter_id = $db->getField('submitter_id');
 		$message = stripslashes($db->getField('feature_msg'));
@@ -38,7 +43,6 @@ if ($db->getNumRows() > 0) {
 		if ($feature_request_id == $feature_vote) $PHP_OUTPUT.=(' checked');
 		$PHP_OUTPUT.=('></td>');
 		$PHP_OUTPUT.=('</tr>');
-
 	}
 
 	$PHP_OUTPUT.=('</table></p>');
