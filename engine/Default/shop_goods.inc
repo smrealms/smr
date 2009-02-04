@@ -209,9 +209,9 @@ function check_bargain_number()
 	// increase current number of tries
 	$container['number_of_bargains'] = $var['number_of_bargains'] + 1;
 
-	$player->increaseHOF(1,array('Trade','Results','Fail'));
 	if (isset($var['overall_number_of_bargains']))
 	{
+		$player->increaseHOF(1,array('Trade','Results','Fail'));
 		// transfer values
 		transfer('overall_number_of_bargains');
 
