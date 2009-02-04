@@ -1166,7 +1166,7 @@ class SmrPort
 		{
 			$return['KillerAlign'] = -$this->getLevel() * 2;
 			$killer->decreaseAlignment(-$return['KillerAlign']);
-			$killer->increaseHOF($return['KillerAlign'],array('Combat','Port','Alignment','Loss'));
+			$killer->increaseHOF(-$return['KillerAlign'],array('Combat','Port','Alignment','Loss'));
 		}
 		
 		return $return;
