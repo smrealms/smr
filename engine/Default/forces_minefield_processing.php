@@ -22,7 +22,7 @@ if($player->forceNAPAlliance($forceOwner))
 // delete plotted course
 $player->deletePlottedCourse();
 
-$player->take_turns(3);
+$player->takeTurns(3);
 
 
 // send message if scouts are present
