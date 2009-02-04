@@ -17,7 +17,7 @@ header('Content-transfer-encoding: base64'.EOL);
 $PHP_OUTPUT.=('[GAME]'.EOL);
 $name = $db->getField('game_name');
 $id = $db->getField('game_id');
-$PHP_OUTPUT.=('.$db->escapeString($id=$name'.EOL);
+$PHP_OUTPUT.=($id.'='.$name.EOL);
 
 //get races
 $PHP_OUTPUT.=('[RACES]'.EOL);
@@ -171,7 +171,7 @@ $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 while ($db->nextRecord()) {
 	$name = $db->getField('hardware_name');
 	$id = $db->getField('hardware_type_id');
-	$PHP_OUTPUT.=('ITEM' . $id . '=$name'.EOL);
+	$PHP_OUTPUT.=('ITEM' . $id . '='.$name.EOL);
 }
 
 //locations & what they sell
