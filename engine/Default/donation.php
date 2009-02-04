@@ -4,10 +4,7 @@
 $total_length = 400;
 
 $smarty->assign('PageTopic','DONATIONS');
-$PHP_OUTPUT.=('<p style="width:60%; text-align:justify;">Hello,<br /><br />If you enjoy the game I\'d like to ask you to donate a few bucks to
-help keep it alive. Every little donation can help me. Beside for the cost for the server
-I invest most of my free time into this game to make it better. So if you are able
-to give me a financial aid I really would appreciate it.</p>');
+$PHP_OUTPUT.=('<p style="width:60%; text-align:justify;">Do you enjoy Space Merchant Realms? Would you like to see the game grow? If your answer is yes, then consider making a donation! Your donation will translate into SMR credits that you can use in game to get nifty items, and will also help the game improve.</p>');
 $db->query('SELECT SUM(amount) as total_donation FROM account_donated WHERE time > ' . TIME . ' - (60 * 60 * 24 * 90)');
 if ($db->nextRecord())
 	$total_donation = $db->getField('total_donation');
@@ -81,6 +78,6 @@ if ($donations < $total_price) {
 $PHP_OUTPUT.=('</div>');
 */
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
-$PHP_OUTPUT.=('<p>Thank you for your donation.<br /><b>Michael Kunze aka MrSpock</b></p>');
+$PHP_OUTPUT.=('<p>Thank you for your donation.<br /></p>');
 
 ?>
