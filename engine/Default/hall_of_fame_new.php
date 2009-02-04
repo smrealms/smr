@@ -160,7 +160,7 @@ else
 	}
 	if(!$foundMe)
 	{
-		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' WHERE account_id='.$account->account_id.' ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' AND account_id='.$account->account_id.' ORDER BY amount DESC LIMIT 25');
 		$amount = 0;
 		if($db->nextRecord())
 			$amount = $db->getField('amount');
