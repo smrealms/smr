@@ -25,8 +25,8 @@ if ($db->getNumRows()) {
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'notify_reply.php';
-		$container['offender'] = $sender->account_id;
-		$container['offended'] = $receiver->account_id;
+		$container['offender'] = $sender->getAccountID();
+		$container['offended'] = $receiver->getAccountID();
 		$container['game_id'] = $db->getField('game_id');
 		$PHP_OUTPUT.=('<td nowrap="nowrap">');
 		
