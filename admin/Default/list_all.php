@@ -2,7 +2,9 @@
 
 $db2 = new SmrMySqlDatabase();
 //split variable to get start and end
-list ($start, $end) = split (',', $variable);
+list ($start, $end) = split (',', $_REQUEST['variable']);
+if(empty($start) || empty($end) || !is_numeric($start) || !is_numeric($end))
+	create_error('Input was not in the correct format: "'.$_REQUEST['variable'].'"');
 $db->query('SELECT * FROM account WHERE account_id >= '.$start.' AND account_id <= '.$end.' ORDER BY account_id');
 $PHP_OUTPUT.= create_table();
 $PHP_OUTPUT.=('<tr>');
@@ -12,7 +14,8 @@ $PHP_OUTPUT.=('<th align=center>eMail</th>');
 $PHP_OUTPUT.=('<th align=center>Last IP</th>');
 $PHP_OUTPUT.=('<th align=center>Exception</th>');
 $PHP_OUTPUT.=('</tr>');
-while ($db->nextRecord()) {
+while ($db->nextRecord())
+{
 	
 	$acc_id = $db->getField('account_id');
 	$PHP_OUTPUT.=('<tr>');
