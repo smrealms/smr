@@ -73,7 +73,7 @@ $PHP_OUTPUT.='<select name=type onchange=go() id="InputFields">
 <option value="all_acc">List all Accounts</option>
 <option value="request">Want more? Request it from Azool</option>
 </select><br />';
-$PHP_OUTPUT.=('<input type=text size=64 value="Enter how many IPs per page" name=variable id="InputFields"><br />');
+$PHP_OUTPUT.=('<input type="text" size="64" value="Enter how many IPs per page" name="variable" id="InputFields"><br />');
 $PHP_OUTPUT.=create_submit('Continue');
 $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('<SCRIPT LANGUAGE="javascript">'.EOL);
