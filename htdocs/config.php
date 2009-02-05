@@ -108,6 +108,8 @@ define('BEGINNER', 2);
 define('FLEDGLING', 3);
 define('AVERAGE', 4);
 
+define('PERMISSION_GAME_OPEN_CLOSE', 3);
+
 define('NUM_RACES', 8);
 
 define('TIME', time());

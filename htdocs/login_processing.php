@@ -60,14 +60,14 @@ if (SmrSession::$account_id == 0) {
 // ********************************
 
 $db->query('SELECT * FROM game_disable');
-if ($db->getNumRows()) {
-
+if ($db->nextRecord())
+{
 	$db2 = new SmrMySqlDatabase();
 
 	// allow admins to access it
-	$db2->query('SELECT * FROM account_has_permission WHERE account_id = '.SmrSession::$account_id.' AND permission_id = 3');
-	if (!$db2->getNumRows()) {
-
+	$db2->query('SELECT account_id FROM account_has_permission WHERE account_id = '.SmrSession::$account_id.' AND permission_id = '.PERMISSION_GAME_OPEN_CLOSE.' LIMIT 1');
+	if (!$db2->nextRecord())
+	{
 		header('Location: '.URL.'/offline.php');
 		exit;
 
