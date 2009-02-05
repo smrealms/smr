@@ -48,7 +48,7 @@ if ($account_id > 0) {
 // if we don't have an account id yet, ask for it (and echo error message if invalid number was entered)
 if (empty($account_id)) {
 
-	$PHP_OUTPUT.=('Enter the account id of the entry you whish to edit:');
+	$PHP_OUTPUT.=('Enter the account id of the entry you wish to edit:');
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'album_moderate.php'));
 	$PHP_OUTPUT.=('<input type="text" name="account_id" size="5" id="InputFields" style="text-align:center;">&nbsp;');
 	$PHP_OUTPUT.=create_submit('Submit');
