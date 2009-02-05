@@ -1,7 +1,7 @@
 <?
 
 // mailer
-require(LIB . 'class.phpmailer.php');
+require(LIB . 'phpMailer/class.phpmailer.php');
 
 $mail = new PHPMailer();
 
