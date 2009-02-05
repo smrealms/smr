@@ -274,18 +274,6 @@ class SmrAccount
 			
 			if (empty($sector_id))
 				$sector_id = 0;
-			
-			//sleep if we already have an entry for this second..so we don't get errors.
-			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . TIME . ' AND account_id = '.$this->account_id);
-			if ($this->db->nextRecord())
-				usleep(500000);
-			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . TIME . ' AND account_id = '.$this->account_id);
-			if ($this->db->nextRecord())
-				usleep(250000);
-			$this->db->query('SELECT * FROM account_has_logs WHERE time = ' . TIME . ' AND account_id = '.$this->account_id);
-			if ($this->db->nextRecord())
-				usleep(250000);
-			
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, time, log_type_id, message, sector_id) ' .
 				'VALUES('.$this->account_id.', '. TIME . ', '.$log_type_id.', ' . $this->db->escapeString($msg) . ', '.$sector_id.')');
