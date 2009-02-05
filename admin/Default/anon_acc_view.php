@@ -3,7 +3,7 @@
 //view anon acct activity.
 $smarty->assign('PageTopic','VIEW ANON ACCOUNT INFO');
 //do we have an acct?
-if (empty($_REQUEST['acct_game'])) {
+if (empty($_REQUEST['anon_account'])||empty($_REQUEST['game_id'])) {
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
