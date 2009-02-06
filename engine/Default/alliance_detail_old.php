@@ -5,7 +5,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'games_previous.php';
 $db = new SmrHistoryMySqlDatabase();
-$db->query('SELECT * FROM game WHERE game_id = '.$var[$game_id]);
+$db->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
 $db->nextRecord();
 $game_id = $db->getField('game_id');
 $container['game_id'] = $game_id;
