@@ -177,8 +177,11 @@ $PHP_OUTPUT.=('</table></div>');
 function displayHOFRow($rank,$accountID,$amount)
 {
 	global $account,$player,$var;
-	$hofAccount =& SmrAccount::getAccount($accountID);
-	if ($hofAccount->account_id == $account->account_id)
+	if(isset($var['game_id']))
+		$hofPlayer =& SmrPlayer::getPlayer($accountID,$var['game_id']);
+	else
+		$hofAccount =& SmrAccount::getAccount($accountID);
+	if ($accountID == $account->account_id)
 	{
 		$foundMe = true;
 		$bold = ' style="font-weight:bold;"';
@@ -190,7 +193,7 @@ function displayHOFRow($rank,$accountID,$amount)
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'hall_of_fame_player_detail.php';
-	$container['acc_id'] = $accountID;
+	$container['account_id'] = $accountID;
 	
 	if (isset($var['game_id']))
 	{
@@ -202,7 +205,10 @@ function displayHOFRow($rank,$accountID,$amount)
 		$container['game_id'] = $player->getGameID();
 		$container['sending_page'] = 'hof';
 	}
-	$return.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->HoF_name) .'</td>');
+	if(isset($var['game_id']))
+		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
+	else
+		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->HoF_name) .'</td>');
 	$return.=('<td align=center'.$bold.'>' . $amount . '</td>');
 	$return.=('</tr>');
 	return $return;

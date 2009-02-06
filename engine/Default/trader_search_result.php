@@ -108,8 +108,8 @@ if ($db->getNumRows() > 0) {
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'hall_of_fame_player_detail.php';
-		$container['acc_id'] = $curr_player->getAccountID();
-		$container['game_id'] = $player->getGameID();
+		$container['account_id'] = $curr_player->getAccountID();
+		$container['game_id'] = $curr_player->getGameID();
 		$container['sending_page'] = 'search';
 		$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
 		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
@@ -215,8 +215,8 @@ if (empty($player_id)) {
 			$container = array();
 			$container['url'] = 'skeleton.php';
 			$container['body'] = 'hall_of_fame_player_detail.php';
-			$container['acc_id'] = $curr_player->getAccountID();
-			$container['game_id'] = $player->getGameID();
+			$container['account_id'] = $curr_player->getAccountID();
+			$container['game_id'] = $curr_player->getGameID();
 			$container['sending_page'] = 'search';
 			$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
 			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
