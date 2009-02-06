@@ -70,9 +70,7 @@ if ($db->nextRecord())
 	{
 		header('Location: '.URL.'/offline.php');
 		exit;
-
 	}
-
 }
 
 

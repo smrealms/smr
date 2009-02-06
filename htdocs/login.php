@@ -20,8 +20,8 @@ require_once(get_file_loc('SmrAccount.class.inc'));
 // ********************************
 
 
-if (SmrSession::$account_id > 0) {
-
+if (SmrSession::$account_id > 0)
+{
 	// creates a new user account object
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 
