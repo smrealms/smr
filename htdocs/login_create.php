@@ -49,11 +49,11 @@
 						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<?php //BETA
+//					<tr>
+//						<td width='27%'>Beta Key:</td>
+//						<td width='73%'><input type='text' name='beta_key' size='20' maxlength='50' id='InputFields'></td>
+//					</tr>
 					?>
-					<tr>
-						<td width='27%'>Beta Key:</td>
-						<td width='73%'><input type='text' name='beta_key' size='20' maxlength='50' id='InputFields'></td>
-					</tr>
 					<tr>
 						<td width='27%'>First Name:</td>
 						<td width='73%'><input type='text' name='first_name' size='20' maxlength='50' id='InputFields'></td>
