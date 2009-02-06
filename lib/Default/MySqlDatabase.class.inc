@@ -13,8 +13,7 @@ abstract class MySqlDatabase implements Database
 		if(!self::$dbConn)
 		{
 			if(!self::$dbConn = @mysql_connect($host, $user, $password)) {
-			echo 'ERROR: db_mysql_inc - Connection failed.';
-//				$this->error('Connection failed.');
+				$this->error('Connection failed.');
 			}
 		}
 		
@@ -22,8 +21,7 @@ abstract class MySqlDatabase implements Database
 			self::$currDbName = $databaseName;
 			if(!@mysql_select_db(self::$currDbName, self::$dbConn))
 			{
-			echo 'ERROR: db_mysql_inc - database selection failed.';
-//				$this->error('database selection failed.');
+				$this->error('database selection failed.');
 			}
 		}
 	}
@@ -85,13 +83,26 @@ abstract class MySqlDatabase implements Database
 	
 	protected function error($err)
 	{
-		echo mysql_error();
-		throw new Exception($err);
 		if(!$this->debug)
 		{
 			echo 'ERROR: db_mysql_inc - ' . $err;
 		} 
-		else {
+		else
+		{
+			global $account,$var,$player;
+			$exception = new Exception($err);
+			$message = 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
+				'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
+				'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL.
+				'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL.
+				'Trace MSG: '.$exception->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
+				'$var: '.var_export($var,true);
+			//mail('bugs@smrealms.de',
+			//	 $new_sub,
+			//	 $message,
+			//	 'From: '.$account->email);
+			if(is_object($player))
+				$player->sendMessage(ACCOUNT_PAGE, MSG_PLAYER, nl2br($message));
 			header('location: ' . URL . '/error.php?msg=Database Error');
 		}
 		
