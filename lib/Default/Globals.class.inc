@@ -163,6 +163,7 @@ class Globals
 			self::$GAMES[$gameID] = array();
 			self::$GAMES[$gameID]['Speed'] = (int)self::$db->getField('game_speed');
 			self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
+			self::$GAMES[$gameID]['GameName'] = (string)self::$db->getField('game_name');
 		}
 		return self::$GAMES[$gameID];
 	}
@@ -177,6 +178,12 @@ class Globals
 	{
 		$gameInfo =& self::getGameInfo($gameID);
 		return $gameInfo['GameType'];
+	}
+	
+	public static function &getGameName($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['GameName'];
 	}
 	
 	public static function isBetaOpen()
