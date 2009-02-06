@@ -4,7 +4,7 @@
 $action = $_REQUEST['action'];
 if ($action == 'Close') {
 
-	$db->query('REPLACE INTO game_disable (reason) VALUES (' . $db->escape_string($close_reason, true) . ')');
+	$db->query('REPLACE INTO game_disable (reason) VALUES (' . $db->escape_string($_REQUEST['close_reason'], true) . ')');
 	$db->query('DELETE FROM active_session');
 
 } elseif ($action == 'Open')
