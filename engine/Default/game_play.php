@@ -104,10 +104,7 @@ if ($db->getNumRows() > 0)
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'game_join.php';
 
-		if($games['Join'][$game_id]['Type'] == 'Classic')
-			$games['Join'][$game_id]['JoinGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
-		else
-			$games['Join'][$game_id]['JoinGameLink'] = SmrSession::get_new_href($container);
+		$games['Join'][$game_id]['JoinGameLink'] = SmrSession::get_new_href($container);
 	}
 }
 	
