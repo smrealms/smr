@@ -94,10 +94,10 @@ Empty : {$ThisShip->getEmptyHolds()}<br /><br />
 {/if}
 Open : {$ThisShip->getOpenWeaponSlots()}<br />Total Damage: ({$ThisShip->getTotalShieldDamage()}/{$ThisShip->getTotalArmourDamage()})<br />
 Power Used: {$ThisShip->getPowerUsed()}/{$ThisShip->getMaxPower()}<br /><br />
-<a  href="main.php?action=53"><span class="bold">Gadget Slot</span></a><br />
+{*<a  href="main.php?action=53"><span class="bold">Gadget Slot</span></a><br />
 <span id="gadgets">Empty<br /></span><br />
 <br />
 <a  href="main.php?action=78"><span class="bold">Track Damages</span></a><br />
-<br />
+<br />*}
 <a href="{$Globals->getBetaFunctionsHREF()}"><span class="bold">Beta Functions</span></a>
 <script type="text/javascript">initRP(450,150,450,175,175,450,0,0,15,100,'dgreen');startRP('slow');</script>
