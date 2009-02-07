@@ -115,37 +115,37 @@ abstract class MySqlDatabase implements Database
 		if(is_bool($escape))
 		{
 			if($autoQuotes)
-				return $this->escapeBoolean($escape,$quotes);
-			else
 				return $this->escapeBoolean($escape);
+			else
+				return $this->escapeBoolean($escape,$quotes);
 		}
 		if(is_numeric($escape))
 		{
 			if($autoQuotes)
-				return $this->escapeNumber($escape,$quotes);
-			else
 				return $this->escapeNumber($escape);
+			else
+				return $this->escapeNumber($escape,$quotes);
 		}
 		if(is_string($escape))
 		{
 			if($autoQuotes)
-				return $this->escapeString($escape,$quotes);
-			else
 				return $this->escapeString($escape);
+			else
+				return $this->escapeString($escape,$quotes);
 		}
 		if(is_array($escape))
 		{
 			if($autoQuotes)
-				return $this->escapeArray($escape,$quotes);
-			else
 				return $this->escapeArray($escape);
+			else
+				return $this->escapeArray($escape,$quotes);
 		}
 		if(is_object($escape))
 		{
 			if($autoQuotes)
-				return $this->escapeArray($escape,$quotes);
-			else
 				return $this->escapeArray($escape);
+			else
+				return $this->escapeArray($escape,$quotes);
 		}
 	}
 	
