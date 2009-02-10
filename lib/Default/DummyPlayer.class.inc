@@ -284,7 +284,7 @@ class DummyPlayer extends AbstractSmrPlayer
 	{
 	}
 	
-	public function &killPlayerByPlanet(SmrPort &$port)
+	public function &killPlayerByPlanet(SmrPlanet &$planet)
 	{
 	}
 	
