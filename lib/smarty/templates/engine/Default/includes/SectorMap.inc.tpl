@@ -43,7 +43,7 @@
 						{if $Sector->isVisited()}
 							{if $Sector->hasLocation() || $Sector->hasPlanet()}
 								<div class="center lmloc fullwidth">
-									{if $Sector->hasLocation()}{foreach from=$Sector->getLocations() item=Location}{if $isCurrentSector && $Location->hasAction()}<a href="{$Location->getExamineHREF()}">{/if}<img src="{$Location->getImage()}" alt="{$Location->getName()}" title="{$Location->getName()}" />{if $isCurrentSector}</a>{/if}{/foreach}{/if}{*
+									{if $Sector->hasLocation()}{foreach from=$Sector->getLocations() item=Location}{if $isCurrentSector && $Location->hasAction()}<a href="{$Location->getExamineHREF()}">{/if}<img src="{$Location->getImage()}" alt="{$Location->getName()}" title="{$Location->getName()}" />{if $isCurrentSector && $Location->hasAction()}</a>{/if}{/foreach}{/if}{*
 									*}{if $Sector->hasPlanet()}{if $isCurrentSector}<a href="{$Sector->getPlanet()->getExamineHREF()}">{/if}<img title="Planet" alt="Planet" src="images/planet.gif"/>{if $isCurrentSector}</a>{/if}{/if}
 								</div>
 							{/if}
@@ -53,7 +53,9 @@
 								{/if}
 							</div>
 						{/if}
-						<div class="lmsector center {if $Sector->isVisited()}dgreen{else}yellow{/if} fullwidth">{$Sector->getSectorID()}</div>
+						<div class="lmsector center {if $Sector->isVisited()}dgreen{else}yellow{/if} fullwidth">
+							{$Sector->getSectorID()}
+						</div>
 						{if $Sector->isVisited()}
 							<div class="right lmright">
 								{if $Sector->getLinkRight()}
