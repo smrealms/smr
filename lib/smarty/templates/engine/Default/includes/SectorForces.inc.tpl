@@ -1,4 +1,4 @@
-<span id="players_cs">
+<span id="sector_forces">
 	{if $ThisSector->hasForces()}
 		{assign var=Forces value=$ThisSector->getForces()}
 		{assign var=RefreshAny value=false}

@@ -9,9 +9,9 @@
 			{/if}
 		</div>
 	{/if}
-	Sector {$CombatLogSector}<br/>
-	{$CombatLogTimestamp}<br/>
-	<br/>
+	Sector {$CombatLogSector}<br />
+	{$CombatLogTimestamp}<br />
+	<br />
 
 	{if $CombatResultsType=='PLAYER'}
 		{include_template template="includes/TraderFullCombatResults.inc" assign=Template}{include file=$Template TraderCombatResults=$CombatResults}

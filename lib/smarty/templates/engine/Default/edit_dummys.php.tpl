@@ -13,7 +13,7 @@
 <table>
 	<tr>
 		<td style="vertical-align:top">
-			<u>{$DummyPlayer->getPlayerName()}</u><br/><br />
+			<u>{$DummyPlayer->getPlayerName()}</u><br /><br />
 			<form action="{$EditDummysLink}" method="POST">
 				<input type="text" name="dummy_name" value="{$DummyPlayer->getPlayerName()}" />
 				Level
@@ -44,7 +44,7 @@
 			<u>Current Details</u>
 				<br />Level: {$DummyPlayer->getLevelID()}<br />
 				Ship: {$DummyShip->getName()} ({$DummyShip->getAttackRating()}/{$DummyShip->getDefenseRating()})<br />
-				DCS: {if $DummyShip->hasDCS()}Yes{else}No{/if}<br/>
+				DCS: {if $DummyShip->hasDCS()}Yes{else}No{/if}<br />
 				Weapons: {foreach from=$DummyShip->getWeapons() item=ShipWeapon}* {$ShipWeapon->getName()}<br />{/foreach}
 		</td>
 	</tr>
