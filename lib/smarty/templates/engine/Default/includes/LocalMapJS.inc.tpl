@@ -1,4 +1,4 @@
-<script "text/javascript">
+<script type="text/javascript">
 /** This is high-level function.
  * It must react to delta being more/less than zero.
  */
