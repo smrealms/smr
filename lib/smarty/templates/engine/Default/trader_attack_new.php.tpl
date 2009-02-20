@@ -2,6 +2,7 @@
 <br />
 <div align="center">
 	{if isset($Target)}{assign_random var=RandomPosition min=0 max=2}
+	{$RandomPosition}
 		<div style="width:50%" align="{if $RandomPosition == 0}center{elseif $RandomPosition == 1}right{else}left{/if}">
 			<div class="buttonA">
 				<a href="{$Target->getAttackTraderHREF()}" class="buttonA">Continue Attack</a>
