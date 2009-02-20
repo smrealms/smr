@@ -16,6 +16,9 @@ $PHP_OUTPUT.=('<br />');
 $container['func'] = 'Money';
 $PHP_OUTPUT.=create_link($container,'Load up the $$!!');
 $PHP_OUTPUT.=('<br />');
+$container['func'] = 'PageNewb';
+$PHP_OUTPUT.=create_link($container,'Remove Page\'s newbie turns!!');
+$PHP_OUTPUT.=('<br />');
 
 //next time for ship
 $container['func'] = 'Ship';
