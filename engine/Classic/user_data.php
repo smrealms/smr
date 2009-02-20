@@ -155,7 +155,7 @@ if ($ship->get_illusion() > 0) {
 	$db->query('SELECT ship_name FROM ship_type WHERE ship_type_id = ' . $ship->get_illusion() . ' LIMIT 1');
 	$db->next_record();
 	$ship_name = $db->f('ship_name');
-	echo '<strong style="color:cyan;"> ' . $ship_name . '</strong><br/>IG Rating : (' . $ship->get_illusion_attack() . '/' . $ship->get_illusion_defense() . ')<br /><br />';
+	echo '<strong style="color:cyan;"> ' . $ship_name . '</strong><br />IG Rating : (' . $ship->get_illusion_attack() . '/' . $ship->get_illusion_defense() . ')<br /><br />';
 
 }
 
