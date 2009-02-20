@@ -21,7 +21,7 @@ abstract class MySqlDatabase implements Database
 			self::$currDbName = $databaseName;
 			if(!@mysql_select_db(self::$currDbName, self::$dbConn))
 			{
-				$this->error('database selection failed.');
+				$this->error('Database selection failed.');
 			}
 		}
 	}
@@ -59,7 +59,7 @@ abstract class MySqlDatabase implements Database
 	{
 		if(!@mysql_query('LOCK TABLES ' . $table . ' WRITE', self::$dbConn))
 		{
-			$this->error('Unable to lock table');
+			$this->error('Unable to lock table: '. $table);
 		}
 	}
 	
@@ -90,10 +90,11 @@ abstract class MySqlDatabase implements Database
 		else
 		{
 			global $account,$var,$player;
-			$exception = new Exception($err);
+			$exception = new Exception();
 			$message = 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
 				'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
 				'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL.
+				'Error Message: '.$err.EOL.EOL.'-----------'.EOL.EOL.
 				'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL.
 				'Trace MSG: '.$exception->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
 				'$var: '.var_export($var,true);
