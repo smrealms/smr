@@ -18,8 +18,14 @@ if ($var['func'] == 'Map') {
 		SmrPort::getPort($game_id,$db->getField('sector_id'))->addCachePort($account_id);
 	}
 
-} elseif ($var['func'] == 'Money')
+}
+elseif ($var['func'] == 'Money')
 	$player->setCredits(50000000);
+elseif ($var['func'] == 'PageNewb')
+{
+	$page =& SmrPlayer::getPlayer(ACCOUNT_PAGE,$player->getGameID());
+	$page->setNewbieTurns(0);
+}
 elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68) {
 	$ship_id = $_REQUEST['ship_id'];
 	
