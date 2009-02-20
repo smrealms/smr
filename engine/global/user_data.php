@@ -152,7 +152,7 @@ else if (!empty($ship->hardware[8])) $PHP_OUTPUT.= '<strong style="color:red;">*
 
 if ($ship->hasActiveIllusion())
 {
-	$PHP_OUTPUT.= '<strong style="color:cyan;"> ' . $ship->getIllusionShipName() . '</strong><br/>IG Rating : (' . $ship->getIllusionAttack() . '/' . $ship->getIllusionDefense() . ')<br /><br />';
+	$PHP_OUTPUT.= '<strong style="color:cyan;"> ' . $ship->getIllusionShipName() . '</strong><br />IG Rating : (' . $ship->getIllusionAttack() . '/' . $ship->getIllusionDefense() . ')<br /><br />';
 
 }
 

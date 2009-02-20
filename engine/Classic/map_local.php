@@ -448,7 +448,7 @@ foreach ($sectors as $sector_id) {
 			echo $goods[$good_id];
 			echo '">';
 		}
-		echo '<br/><img src="images/sell.gif" alt="Goods Bought" title="Goods Bought">';
+		echo '<br /><img src="images/sell.gif" alt="Goods Bought" title="Goods Bought">';
 		sort($goods_bought);
 		foreach($goods_bought as $good_id) {
 			if ($player->alignment > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
