@@ -38,7 +38,11 @@
 							{/if}
 						</td>
 						<td>
-							<a href="{$Owner->getTraderSearchHREF()}">{$Owner->getDisplayName()}</a> ({if $Owner->hasAlliance()}<a href="{$Owner->getAllianceRosterHREF()}">{/if}{$Owner->getAllianceName()}{if $Owner->hasAlliance()}</a>{/if})
+							{if $SharedForceAlliance}
+								<a href="{$Owner->getTraderSearchHREF()}">{$Owner->getDisplayName()}</a> ({if $Owner->hasAlliance()}<a href="{$Owner->getAllianceRosterHREF()}">{/if}{$Owner->getAllianceName()}{if $Owner->hasAlliance()}</a>{/if})
+							{else}
+								<span class="red">UNKNOWN</span>
+							{/if}
 						</td>
 						<td align="center" class="shrink center">
 							
