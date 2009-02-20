@@ -15,7 +15,8 @@ function smarty_function_assign_random($params, &$smarty)
 		$smarty->trigger_error("include_template: missing 'var' parameter");
 		return;
 	}
-
+	var_dump($params['min']);
+	var_dump($params['max']);
 	if (!isset($params['min']) && !isset($params['max']))
 		$smarty->assign($params['var'],mt_rand($params['min'],$params['max']));
 	else
