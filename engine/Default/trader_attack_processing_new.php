@@ -1,4 +1,5 @@
 <?
+$db->query('INSERT INTO debug VALUES (\'attack_speed\','.(microtime(true)-$var['time']).')');
 if($player->hasNewbieTurns())
 	create_error('You are under newbie protection.');
 if($player->hasFederalProtection())

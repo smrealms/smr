@@ -300,6 +300,7 @@ $smarty->assign('PageTopic','EXAMINE SHIP');
 if ($playerCanShoot && !$playerFed && !$defenderFed && !$playerNewb && !$defenderNewb && $allowedByAlliance && !$allied) {
 	$container = create_container('skeleton.php','trader_attack_processing_new.php');
 	transfer('target');
+	$container['time'] = microtime(true);
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=create_submit('Attack Trader (3)');
 	$PHP_OUTPUT.=('</form><br />');
