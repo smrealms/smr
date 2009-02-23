@@ -624,19 +624,25 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->displayMissions;
 	}
 	
-	function isDisplayWeapons()
-	{
-		return $this->displayWeapons;
-	}
-	
 	function setDisplayMissions($bool)
 	{
 		if($this->displayMissions == $bool)
 			return;
 		$this->displayMissions=$bool;
 		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET display_missions = '.$this->db->escapeBoolean($bool).' WHERE '.$this->SQL.' LIMIT 1');
+	}
 	
+	function isDisplayWeapons()
+	{
+		return $this->displayWeapons;
+	}
+	
+	function setDisplayWeapons($bool)
+	{
+		if($this->displayWeapons == $bool)
+			return;
+		$this->displayWeapons=$bool;
+		$this->hasChanged=true;
 	}
 	
 	function getLastMaintenanceUpdate()
@@ -1628,6 +1634,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //				', chat='.$this->db->escapeString($this->chat).
 //				', chat_position='.$this->db->escapeString($this->chatPosition).
 				', display_missions='.$this->db->escapeBoolean($this->displayMissions).
+				', display_weapons='.$this->db->escapeBoolean($this->displayWeapons).
 				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
 //				', changed_stats='.$this->db->escapeString($this->changedStats).
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).
@@ -2052,6 +2059,15 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->allianceRosterHREF = SmrSession::get_new_href($container);
 		}
 		return $this->allianceRosterHREF;
+	}
+	
+	public function getToggleWeaponHidingHREF()
+	{
+		$container = array();
+		$container['url']			= 'skeleton.php';
+		$container['body']			= 'toggle_weapon_hiding_processing.php';
+		$container['alliance_id']	= $this->getAllianceID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function equals(AbstractSmrPlayer $otherPlayer)

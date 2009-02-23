@@ -86,11 +86,13 @@ Armour : <span id="armour">{$ThisShip->getArmour()}/{$ThisShip->getMaxArmour()}<
 Empty : {$ThisShip->getEmptyHolds()}<br /><br />
 <a href="{$WeaponReorderLink}"><span class="bold">Weapons</span></a><br />
 {if $ThisShip->hasWeapons()}
-	<div class="wep_drop1" onclick="toggleWepD({$ThisShip->getNumWeapons()});">Show/Hide ({$ThisShip->getNumWeapons()})
-		{foreach from=$ThisShip->getWeapons() item=Weapon name=WeaponLoop}
-			<div class="wep1" {if !$ThisPlayer->isDisplayWeapons()}style="display: none;"{/if} id="wep_item{$smarty.foreach.WeaponLoop.iteration}">{$Weapon->getName()}</div>
-		{/foreach}
-	</div>
+	<noscript><a href="{$ThisPlayer->getToggleWeaponHidingHREF()}"></noscript>
+		<div class="wep_drop1" onclick="toggleWepD({$ThisShip->getNumWeapons()},'{$ThisPlayer->getToggleWeaponHidingHREF()}');">Show/Hide ({$ThisShip->getNumWeapons()})
+			{foreach from=$ThisShip->getWeapons() item=Weapon name=WeaponLoop}
+				<div class="wep1" {if !$ThisPlayer->isDisplayWeapons()}style="display: none;"{/if} id="wep_item{$smarty.foreach.WeaponLoop.iteration}">{$Weapon->getName()}</div>
+			{/foreach}
+		</div>
+	<noscript></a></noscript>
 {/if}
 Open : {$ThisShip->getOpenWeaponSlots()}<br />Total Damage: ({$ThisShip->getTotalShieldDamage()}/{$ThisShip->getTotalArmourDamage()})<br />
 Power Used: {$ThisShip->getPowerUsed()}/{$ThisShip->getMaxPower()}<br /><br />
