@@ -1,3 +1,43 @@
+var ajaxRunning = true;
+
+window.onunload = function()
+{
+    // Stop the Ajax updates
+	window.onfocus = function(){};
+    ajaxRunning = false;
+	xmlHttpRefresh.abort();
+};
+
+window.onblur = function()
+{
+    // Pause the Ajax updates
+    ajaxRunning = false;
+};
+window.onfocus = function()
+{
+    // Start the Ajax updates
+    ajaxRunning = true;
+};
+
+function stopAJAX()
+{
+	ajaxRunning = false;
+}
+
+//var onClickAdded = false;
+//function addOnClickToLinks()
+//{
+//	if(!onClickAdded)
+//	{
+//		onClickAdded = true;
+//		var aLinks = document.getElementsByTagName( 'a' );
+//		for( var i = 0; i < aLinks.length; i++ )
+//		{
+//			aLinks[i].onclick = stopAJAX;
+//		}
+//	}
+//}
+
 /*ajax*/
 function GetXmlHttpObject()
 {

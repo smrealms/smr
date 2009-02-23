@@ -7,42 +7,6 @@ function VoteSite(url,sn) {
 
 
 //smr15.js
-/*
-Wep Drag Adapted for SMR use by Azool.
-Original Source from http://www.cyberdummy.co.uk/test/dd.php
-*/
-
-var ajaxRunning = true;
-
-window.onblur = function()
-{
-    // Pause the Ajax updates
-    ajaxRunning = false;
-};
-window.onfocus = function()
-{
-    // Start the Ajax updates
-    ajaxRunning = true;
-};
-
-function stopAJAX()
-{
-	ajaxRunning = false;
-}
-
-//var onClickAdded = false;
-//function addOnClickToLinks()
-//{
-//	if(!onClickAdded)
-//	{
-//		onClickAdded = true;
-//		var aLinks = document.getElementsByTagName( 'a' );
-//		for( var i = 0; i < aLinks.length; i++ )
-//		{
-//			aLinks[i].onclick = stopAJAX;
-//		}
-//	}
-//}
 
 var currentlyFlashing=false;
 function TriggerAttackBlink(colour)
