@@ -87,22 +87,29 @@ if ($choise == 'pre_select' && $points > 0) {
 	}
 
 	$banned = true;
-	if ($tot_points < 9) {
-		//leave scripts its only a warning
-		$banned = false;
-	} elseif ($tot_points < 19) {
-		$expire_time = 2 * 24 * 60 * 60;
-	} elseif ($tot_points < 29) {
-		$expire_time = 4 * 24 * 60 * 60;
-	} elseif ($tot_points < 49) {
-		$expire_time = 7 * 24 * 60 * 60;
-	} elseif ($tot_points < 74) {
-		$expire_time = 14 * 24 * 60 * 60;
-	} elseif ($tot_points < 99) {
-		$expire_time = 31 * 24 * 60 * 60;
-	} elseif ($tot_points >= 100) {
-		$expire_time = 0;
-	}
+	if ($tot_points < 10)
+		$banned = false;//leave scripts its only a warning
+	elseif ($tot_points < 20)
+		$expire_time = 2 * 86400;
+	elseif ($tot_points < 30)
+		$expire_time = 4 * 86400;
+	elseif ($tot_points < 50)
+		$expire_time = 7 * 86400;
+	elseif ($tot_points < 75)
+		$expire_time = 15 * 86400;
+	elseif ($tot_points < 100)
+		$expire_time = 30 * 86400;
+	elseif ($tot_points < 125)
+		$expire_time = 60 * 86400;
+	elseif ($tot_points < 150)
+		$expire_time = 120 * 86400;
+	elseif ($tot_points < 175)
+		$expire_time = 240 * 86400;
+	elseif ($tot_points < 200)
+		$expire_time = 480 * 86400;
+	else
+		$expire_time = 0; //Forever/indefinite
+	
 	if($banned)
 	{
 		if ($expire_time > 0) {
