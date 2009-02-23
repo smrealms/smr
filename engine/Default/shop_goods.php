@@ -11,6 +11,8 @@ $port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
 if(!$port->exists())
 	create_error('There is no port in this sector!');
 
+$smarty->assign('ENABLE_AJAX_REFRESH',false);//Workaround a bug in firefox (and other browsers?) where forms inside tables display when loaded normally, but not when done with javascript.
+
 // total relations with that race (personal + global)
 $portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
 $relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
@@ -126,6 +128,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 	}
 
 }
+$player->setLastPort($player->getSectorID());
 //update controlled in db
 $player->controlled = $player->getSectorID();
 $player->update();
@@ -151,11 +154,10 @@ if (!empty($boughtGoods))
 		$container['good_id'] = $good['ID'];
 		$container['good_name'] = $good['Name'];
 		$container['good_class'] = $good['Class'];
-		$form = create_form($container, $good['TransactionType']);
-		//$PHP_OUTPUT.=create_echo_form($container);
-
+		
+		$PHP_OUTPUT.=create_echo_form($container);
+			
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.= $form['form'];
 		$PHP_OUTPUT.=('<td align="center">'.$good['Name'].'</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $good['Amount'] . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $good['BasePrice'] . '</td>');
@@ -169,11 +171,11 @@ if (!empty($boughtGoods))
 
 		$PHP_OUTPUT.=('" size="4" id="InputFields" style="text-align:center;"></td>');
 		$PHP_OUTPUT.=('<td align="center">');
-		//$PHP_OUTPUT.=create_submit($good['TransactionType']);
-		$PHP_OUTPUT.= $form['submit'];
+		$PHP_OUTPUT.=create_submit($good['TransactionType']);
 		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('</form>');
 		$PHP_OUTPUT.=('</tr>');
+		
+		$PHP_OUTPUT.=('</form>');
 
 
 	}
