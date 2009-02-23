@@ -5,7 +5,8 @@ window.onunload = function()
     // Stop the Ajax updates
 	window.onfocus = function(){};
     ajaxRunning = false;
-	xmlHttpRefresh.abort();
+	if(xmlHttpRefresh!=null)
+		xmlHttpRefresh.abort();
 };
 
 window.onblur = function()
