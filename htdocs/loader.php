@@ -101,6 +101,13 @@ else $g_id = 0;
 if (isset($var['time']))
 	$time_start = $var['time'];
 
+if(isset($_REQUEST['ajax']))
+	$ajax=true;
+else
+	$ajax=false;
+
+define('USING_AJAX',$ajax);
+
 do_voodoo();
 
 ?>

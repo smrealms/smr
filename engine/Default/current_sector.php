@@ -154,6 +154,7 @@ elseif($sector->offersFederalProtection())
 
 $smarty->assign('ProtectionMessage',$protectionMessage);
 
+enableProtectionDependantRefresh($smarty,$player);
 
 $db->query('SELECT * FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 if ($db->nextRecord())

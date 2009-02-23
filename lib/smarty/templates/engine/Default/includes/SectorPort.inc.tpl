@@ -25,7 +25,7 @@
 					{else}
 						<a class="buttonA" href="{$Port->getTradeHREF()}">&nbsp;Trade&nbsp;</a>
 					{/if}
-				</div>
+				</div>&nbsp;
 				<div class="buttonA">
 					<a class="buttonA" href="{$Port->getRaidWarningHREF()}">&nbsp;Raid&nbsp;</a>
 				</div>

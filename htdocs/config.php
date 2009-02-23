@@ -158,4 +158,5 @@ define('DEFAULT_CSS',URL.'/default.css');
 	$links = array('Register' => 'login_create.php',
 					'ResetPassword' => 'resend_password.php');
 	$smarty->assign('Links',$links);
+	$smarty->assign('ENABLE_AJAX_REFRESH',10000);
 ?>

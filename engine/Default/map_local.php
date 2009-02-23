@@ -6,6 +6,8 @@
 //
 ////////////////////////////////////////////////////////////
 
+enableProtectionDependantRefresh($smarty,$player);
+
 $db->query('SELECT
 sector.galaxy_id as galaxy_id,
 galaxy.galaxy_name as galaxy_name
