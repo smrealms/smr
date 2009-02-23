@@ -135,7 +135,7 @@ function stopRaceCalc(){
 }
 
 /* weapon toggle */
-function toggleWepD(amount)
+function toggleWepD(amount,link)
 {
 	for(var i = 1; i <= amount; i++)
 	{
@@ -144,6 +144,9 @@ function toggleWepD(amount)
 		else
 			document.getElementById('wep_item' + i).style.display = 'none';
 	}
+	var xmlHttp=GetXmlHttpObject();
+	xmlHttp.open("GET",link,true);
+	xmlHttp.send(null);
 }
 
 //startRP();
