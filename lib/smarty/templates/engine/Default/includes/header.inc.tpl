@@ -10,11 +10,12 @@
 	<![endif]-->
 	<!--<script type="text/javascript" src="js/smr.js"></script>-->
 	<script type="text/javascript" src="js/smr15.js"></script>
+	<script type="text/javascript" src="js/ajax.js"></script>
 	{if $js}
 		<script type="text/javascript" src="{$js}"></script>
 	{/if}
-	{if isset($CurrentSectorAJAX)}
-		<script type="text/javascript">startCS('{$CurrentSectorAJAX}');</script>
+	{if $ENABLE_AJAX_REFRESH}
+		<script type="text/javascript">startRefresh('{$ENABLE_AJAX_REFRESH}');</script>
 	{/if}
 	<style type="text/css">
 		body {ldelim}

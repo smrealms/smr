@@ -6,6 +6,16 @@ require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 
+function enableProtectionDependantRefresh(&$smarty,&$player)
+{
+	$ajaxRefresh = 1000;
+	if ($player->getNewbieTurns())
+		$ajaxRefresh=10000;
+	elseif ($player->hasFederalProtection())
+		$ajaxRefresh=6000;
+	$smarty->assign('ENABLE_AJAX_REFRESH',$ajaxRefresh);
+}
+
 function hardware_is_mining_drone($hardwareTypeID)
 {
 //	if ($hardware == 'Rundown Mining Drones' || $hardware == 'Simple Mining Drones' || $hardware == 'Basic Mining Drones' || $hardware == 'Advanced Mining Drones' || $hardware == 'Elite Mining Drones')
@@ -482,7 +492,16 @@ function do_voodoo()
 	doSkeletionAssigns($smarty,$player,$ship,$sector,$db,$account);
 	$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
-	$smarty->display(get_template_loc($var['url']));
+	if(USING_AJAX)
+	{
+		header('Content-Type: text/xml');
+		header('Cache-Control: no-cache, must-revalidate');
+		//A date in the past
+		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+		$smarty->display(get_template_loc('ajax_skeleton.php'));
+	}
+	else
+		$smarty->display(get_template_loc($var['url']));
 	
 	if($lock)
 	{ //only save if we have the lock.
@@ -858,7 +877,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 			$img = $vote_links[$i]['default_img'];
 		}
 	
-		$voteSite[$i] .= '><img class="vote_site" src="/images/game_sites/' . $img . '" alt="' . $vote_links[$i]['name'] . '"></a>';
+		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $vote_links[$i]['name'] . '"></a>';
 	}
 	$smarty->assign('VoteSites',$voteSite);
 	
