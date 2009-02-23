@@ -511,7 +511,9 @@ function do_voodoo()
 		SmrForce::saveForces();
 		release_lock($lock);
 	}
-	SmrSession::update();
+	
+	if(!USING_AJAX)
+		SmrSession::update();
 	exit;
 }
 
