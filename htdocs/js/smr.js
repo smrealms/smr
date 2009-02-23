@@ -31,20 +31,20 @@ function DoSubmit(action,form_id) {
 	form.submit();
 }
 
-function DoOnload() {
-return;
-	var buttons = document.getElementsByName('action');
-	//var num_buttons = buttons.length;
-	while(buttons.length) {
-		var text = document.createTextNode(buttons[0].value)
-		var button = document.createElement('div');
-		button.id = 'buttonA';
-		button.innerHTML = '<a href="javascript:DoSubmit('' + buttons[0].value + '','' + buttons[0].parentNode.id + '')">' + buttons[0].value + '</a>';
-		buttons[0].parentNode.insertBefore(button,buttons[0]);
-		buttons[0].parentNode.removeChild(buttons[0]);
+// function DoOnload() {
+// return;
+	// var buttons = document.getElementsByName('action');
+	// //var num_buttons = buttons.length;
+	// while(buttons.length) {
+		// var text = document.createTextNode(buttons[0].value)
+		// var button = document.createElement('div');
+		// button.id = 'buttonA';
+		// button.innerHTML = '<a href="javascript:DoSubmit('' + buttons[0].value + '','' + buttons[0].parentNode.id + '')">' + buttons[0].value + '</a>';
+		// buttons[0].parentNode.insertBefore(button,buttons[0]);
+		// buttons[0].parentNode.removeChild(buttons[0]);
 
-	}
-	document.cookie='Legit=0';
-}
+	// }
+	// document.cookie='Legit=0';
+// }
 
-window.onload = DoOnload;
+// window.onload = DoOnload;
