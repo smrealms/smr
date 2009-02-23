@@ -95,7 +95,7 @@ print("<tr><td>Timezone:</td>");
 print("<td>");
 $time = time();
 //get current offset
-$db->query("SELECT * FROM account WHERE account_id = SmrSession::$account_id");
+$db->query("SELECT * FROM account WHERE account_id = ".SmrSession::$account_id);
 $db->next_record();
 $offset = $db->f("offset");
 print("<select name=\"timez\" id=\"InputFields\">");
@@ -129,7 +129,7 @@ print("<td><input type=\"text\" name=\"amount\" id=\"InputFields\" style=\"width
 if (SmrSession::$game_id > 0) {
 
 	print("<select name=\"account_id\" id=\"InputFields\">");
-	$db->query("SELECT * FROM player WHERE game_id = SmrSession::$game_id ORDER BY player_name");
+	$db->query("SELECT * FROM player WHERE game_id = ".SmrSession::$game_id." ORDER BY player_name");
 	while ($db->next_record())
 		print("<option value=\"" . $db->f("account_id") . "\">" . stripslashes($db->f("player_name")) . " (" . $db->f("player_id") . ")</option>");
 
