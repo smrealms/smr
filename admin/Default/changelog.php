@@ -9,58 +9,50 @@ $link_set_live = true;
 $db->query('SELECT *
 			FROM version
 			ORDER BY version_id DESC');
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
 	$version_id = $db->getField('version_id');
 	$version = $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level');
 	$went_live = $db->getField('went_live');
-
-	if ($went_live > 0) {
-
+	if ($went_live > 0)
+	{
 		// from this point on we don't create links to set a version to live
 		$link_set_live = false;
 
 		// get human readable format for date
 		$went_live = date(DATE_FULL_SHORT, $went_live);
 
-	} else {
-
-		if ($link_set_live) {
-
-
+	}
+	else
+	{
+		if ($link_set_live)
+		{
 			$container = array('url' => 'changelog_set_live_processing.php',
 							   'version_id' => $version_id
 							  );
 			$went_live = create_link($container, 'never');
-
-
-		} else
+		}
+		else
 			$went_live = 'never';
-
 	}
-
 	$PHP_OUTPUT.=('<b><small>'.$version.' ('.$went_live.'):</small></b>');
-
 	$PHP_OUTPUT.=('<ul>');
-
 	$PHP_OUTPUT.=('<table border="0"">');
-
 	$db2->query('SELECT *
 				FROM changelog
 				WHERE version_id = '.$version_id.'
 				ORDER BY changelog_id');
-	while ($db2->nextRecord()) {
-
+	while ($db2->nextRecord())
+	{
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td valign="top"><li></td>');
 		$PHP_OUTPUT.=('<td>' . stripslashes($db2->getField('change_title')) . '<br /><small>' . stripslashes($db2->getField('change_message')) . '</small></td>');
 		$PHP_OUTPUT.=('<td>&nbsp;</td>');
 		$PHP_OUTPUT.=('</tr>');
-
 	}
 
-	if ($first_entry) {
-
+	if ($first_entry)
+	{
 		$first_entry = false;
 
 		$container = array('url' => 'changelog_add_processing.php',
@@ -94,7 +86,6 @@ while ($db->nextRecord()) {
 		$PHP_OUTPUT.=create_submit('Add');
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
-
 	}
 	$PHP_OUTPUT.=('</table>');
 
