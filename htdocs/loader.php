@@ -13,6 +13,17 @@ if (get_magic_quotes_gpc())
     $_REQUEST = stripslashes_array($_REQUEST);
 }
 
+header('Cache-Control: no-cache, must-revalidate');
+//A date in the past
+header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+
+if(isset($_REQUEST['ajax'])&&$_REQUEST['ajax']==1)
+	$ajax=true;
+else
+	$ajax=false;
+
+define('USING_AJAX',$ajax);
+
 //xdebug_start_profiling();
 
 //ob_start();
@@ -101,12 +112,6 @@ else $g_id = 0;
 if (isset($var['time']))
 	$time_start = $var['time'];
 
-if(isset($_REQUEST['ajax']))
-	$ajax=true;
-else
-	$ajax=false;
-
-define('USING_AJAX',$ajax);
 
 do_voodoo();
 

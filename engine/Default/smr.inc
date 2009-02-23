@@ -432,13 +432,14 @@ function do_voodoo()
 		$db->nextRecord();
 		$sector_id=$db->getField('sector_id');
 
-		if(!$lock && (!isset($var['body']) || $var['body'] != 'error.php') && !isset($var['ForwardError']))
-		{
-			if(!acquire_lock($sector_id))
+		if(!USING_AJAX) //AJAX should never do anything that requires a lock.
+			if(!$lock && (!isset($var['body']) || $var['body'] != 'error.php') && !isset($var['ForwardError']))
 			{
-				create_error('Failed to acquire sector lock');
+				if(!acquire_lock($sector_id))
+				{
+					create_error('Failed to acquire sector lock');
+				}
 			}
-		}
 
 		// Now that they've acquire a lock we can move on
 		$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
@@ -495,9 +496,6 @@ function do_voodoo()
 	if(USING_AJAX)
 	{
 		header('Content-Type: text/xml');
-		header('Cache-Control: no-cache, must-revalidate');
-		//A date in the past
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 		$smarty->display(get_template_loc('ajax_skeleton.php'));
 	}
 	else

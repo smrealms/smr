@@ -1,4 +1,5 @@
 <?
+$smarty->assign('ENABLE_AJAX_REFRESH',false);//Workaround a bug in firefox.
 require_once(get_file_loc('SmrPort.class.inc'));
 $smarty->assign('PageTopic','NEGOTIATE PRICE');
 require_once('shop_goods.inc');
