@@ -3,6 +3,7 @@ if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 require_once(get_file_loc('SmrPlanet.class.inc'));
 
+$smarty->assign('ENABLE_AJAX_REFRESH',false);//Workaround a bug in firefox (and other browsers?) where forms inside tables display when loaded normally, but not when done with javascript.
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 $smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$player->getSectorID().']');
