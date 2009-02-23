@@ -663,7 +663,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 				$update_attacker->update_stat("port_raids", 1);
 				$update_attacker->update_stat("port_raid_levels", $db->f("level"));
 				$port_original_level = $db->f("level");
-				$db2->query("DELETE FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND account_id = $update_attacker->account_id");
+				$db2->query("DELETE FROM player_attacks_port WHERE game_id = ".SmrSession::$game_id." AND sector_id = $sector->sector_id AND account_id = $update_attacker->account_id");
 				
 			}
 			// Attacker gets the port's money

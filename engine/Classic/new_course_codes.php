@@ -141,11 +141,11 @@ if (empty($to) || !is_numeric($to) || $to == $from) {
 
 }
 
-$db->query("SELECT * FROM sector WHERE sector_id = $to AND game_id = SmrSession::$game_id");
+$db->query("SELECT * FROM sector WHERE sector_id = $to AND game_id = ".SmrSession::$game_id);
 if ($db->nf() == 0)
 	create_error("That sector doesn't exist. Try a new one.");
 
-$db->query("SELECT * FROM sector WHERE sector_id = $from AND game_id = SmrSession::$game_id");
+$db->query("SELECT * FROM sector WHERE sector_id = $from AND game_id = ".SmrSession::$game_id);
 if ($db->nf() == 0)
 	create_error("That sector doesn't exist. Try a new one.");
 	
