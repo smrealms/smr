@@ -22,6 +22,12 @@ if (!isset($var['category']))
     $category = 'player_name';
 else
     $category = $var['category'];
+$categorySQL = $category.' '.$order;
+
+if (!isset($var['subcategory']))
+	$subcategory = 'expire_time ASC';
+else
+	$subcategory = $var['subcategory'];
     
 $db->query('
 SELECT 
@@ -57,7 +63,7 @@ AND sector_has_forces.owner_id=player.account_id
 AND sector.game_id=' . $player->getGameID() . '
 AND sector.sector_id=sector_has_forces.sector_id
 AND galaxy.galaxy_id=sector.galaxy_id
-ORDER BY ' . $category . ' ' . $order);
+ORDER BY ' . $categorySQL . ', ' . $subcategory);
 
 $PHP_OUTPUT.= '<div align="center">';
 
@@ -86,27 +92,27 @@ if ($db->getNumRows() > 0) {
     else
         $container['seq'] = 'ASC';
 
-    $container['category'] = 'player_name';
+	setCategories(&$container,'player_name',$category,$categorySQL,$subcategory);
     $PHP_OUTPUT.= '<th>';
     $PHP_OUTPUT.=create_header_link($container, 'Player Name');
     $PHP_OUTPUT.= '</th>';
-    $container['category'] = 'sector_has_forces.sector_id';
+	setCategories(&$container,'sector_has_forces.sector_id',$category,$categorySQL,$subcategory);
     $PHP_OUTPUT.= '<th>';
     $PHP_OUTPUT.=create_header_link($container, 'Sector ID');
     $PHP_OUTPUT.= '</th>';
-    $container['category'] = 'combat_drones';
+	setCategories(&$container,'combat_drones',$category,$categorySQL,$subcategory);
     $PHP_OUTPUT.= '<th>';
     $PHP_OUTPUT.=create_header_link($container, 'Combat Drones');
     $PHP_OUTPUT.= '</th>';
-    $container['category'] = 'scout_drones';
+	setCategories(&$container,'scout_drones',$category,$categorySQL,$subcategory);
     $PHP_OUTPUT.= '<th>';
     $PHP_OUTPUT.=create_header_link($container, 'Scout Drones');
     $PHP_OUTPUT.= '</th>';
-    $container['category'] = 'mines';
+	setCategories(&$container,'mines',$category,$categorySQL,$subcategory);
     $PHP_OUTPUT.= '<th>';
     $PHP_OUTPUT.=create_header_link($container, 'Mines');
     $PHP_OUTPUT.= '</th>';
-    $container['category'] = 'expire_time';
+	setCategories(&$container,'expire_time',$category,$categorySQL,$subcategory);
     $PHP_OUTPUT.= '<th>';
     $PHP_OUTPUT.=create_header_link($container, 'Expire time');
     $PHP_OUTPUT.= '</th>';
@@ -134,4 +140,13 @@ else {
 }
 
 $PHP_OUTPUT.= '</div>';
+
+function setCategories(&$container,$newCategory,$oldCategory,$oldCategorySQL,$subcategory)
+{
+    $container['category'] = $newCategory;
+    if($oldCategory==$container['category'])
+		$container['subcategory'] = $subcategory;
+    else
+		$container['subcategory'] = $oldCategorySQL;
+}
 ?>
