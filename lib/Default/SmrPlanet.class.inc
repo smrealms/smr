@@ -633,7 +633,7 @@ class SmrPlanet
 	
 	public function hasWeapons()
 	{
-		return ($this->getWeapons())>0;
+		return count($this->getWeapons())>0;
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
