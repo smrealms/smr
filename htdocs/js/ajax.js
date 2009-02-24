@@ -1,48 +1,51 @@
 var ajaxRunning = true;
 
-window.onunload = function()
-{
-    // Stop the Ajax updates
-	window.onfocus = function(){};
-    ajaxRunning = false;
-	if(xmlHttpRefresh!=null)
-		xmlHttpRefresh.abort();
-};
+window.onunload = stopAJAX;
+document.onblur = pauseAJAX;
+document.onfocus = startAJAX;
 
-window.onblur = function()
+var disableStartAJAX=false;
+function startAJAX()
+{
+	if(disableStartAJAX) return;
+    // Start the Ajax updates
+	ajaxRunning = true;
+}
+
+function pauseAJAX()
 {
     // Pause the Ajax updates
-    ajaxRunning = false;
-};
-window.onfocus = function()
-{
-    // Start the Ajax updates
-    ajaxRunning = true;
-};
-
-function stopAJAX()
-{
 	ajaxRunning = false;
 }
 
-//var onClickAdded = false;
-//function addOnClickToLinks()
-//{
-//	if(!onClickAdded)
-//	{
-//		onClickAdded = true;
-//		var aLinks = document.getElementsByTagName( 'a' );
-//		for( var i = 0; i < aLinks.length; i++ )
-//		{
-//			aLinks[i].onclick = stopAJAX;
-//		}
-//	}
-//}
+function stopAJAX()
+{
+    // Stop the Ajax updates
+	disableStartAJAX=true;
+	ajaxRunning = false;
+	if(xmlHttpRefresh!=null)
+		xmlHttpRefresh.abort();
+}
+
+var onClickAdded = false;
+function addOnClickToLinks()
+{
+	if(!onClickAdded)
+	{
+		onClickAdded = true;
+		var aLinks = document.getElementsByTagName('a');
+		for( var i = 0; i < aLinks.length; i++ )
+		{
+			aLinks[i].onmouseup = stopAJAX;
+			// aLinks[i].onmousedown = stopAJAX;
+		}
+	}
+}
 
 /*ajax*/
 function GetXmlHttpObject()
 {
-//	addOnClickToLinks();
+	addOnClickToLinks();
 	var xmlHttp=null;
 	try
 	{
@@ -121,12 +124,21 @@ function updateRefreshComp()
 	if (xmlHttpRefresh.readyState==4)
 	{
 		var xmlDoc=xmlHttpRefresh.responseXML;
+		if(!xmlDoc || !xmlDoc.getElementsByTagName("time"))
+		{
+			clearInterval(intervalRefresh);
+			return;
+		}
 		document.getElementById("tod").innerHTML=xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue;
 		document.getElementById("runtime").innerHTML=xmlDoc.getElementsByTagName("runtime")[0].childNodes[0].nodeValue;
 		var content='';
 		for(var i=0;i<xmlDoc.getElementsByTagName("htmlcontent")[0].childNodes.length;i++)
 			content+=xmlDoc.getElementsByTagName("htmlcontent")[0].childNodes[i].nodeValue;
 		document.getElementById("middle_panel").innerHTML=content;
+		var content='';
+		for(var i=0;i<xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes.length;i++)
+			content+=xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes[i].nodeValue;
+		document.getElementById("right_panel").innerHTML=content;
 		last_refresh_comp = true;
 	}
 }
