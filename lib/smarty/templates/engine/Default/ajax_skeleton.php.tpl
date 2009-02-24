@@ -14,4 +14,10 @@
 		{/capture}
 		{$HtmlContent|pagetrimwhitespace|escape}
 	</htmlcontent>
+	<rightpanelhtml>
+		{capture assign=HtmlContent}
+			{include_template template="includes/rightPanel.inc" assign=Template}{include file=$Template}
+		{/capture}
+		{$HtmlContent|pagetrimwhitespace|escape}
+	</rightpanelhtml>
 </pagecontent>

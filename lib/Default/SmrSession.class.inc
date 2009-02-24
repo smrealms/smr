@@ -12,7 +12,8 @@ class SmrSession
 	public static $var;
 	public static $commonIDs;
 	public static $generate;
-	
+	public static $SN;
+	public static $lastSN;
 	
 	public static $game_type;
 	public static $game_speed;
@@ -42,6 +43,7 @@ class SmrSession
 			self::$game_id			= self::$db->getField('game_id');
 			self::$last_accessed	= self::$db->getField('last_accessed');
 			self::$var = @unserialize(@gzuncompress(self::$db->getField('session_var')));
+			self::$lastSN = self::$db->getField('last_sn');
 			if(!is_array(self::$var))
 			{
 				self::$account_id	= 0;
@@ -103,7 +105,9 @@ class SmrSession
 		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate)
 		{
-			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . ',last_accessed=' . TIME . ',session_var=' . self::$db->escapeString($compressed)  . ' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . ',last_accessed=' . TIME . ',session_var=' . self::$db->escapeString($compressed)  . '' .
+					',last_sn='.self::$db->escapeString(self::$SN).'' .
+					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		}
 		else
 		{
@@ -122,6 +126,7 @@ class SmrSession
 	
 	public static function retrieveVar($sn)
 	{
+		self::$SN = $sn;
 		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
 			return false;
 		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID']))
@@ -137,6 +142,7 @@ class SmrSession
 	
 	public static function resetLink($container, $sn) //Do not allow sharing SN, useful for forwarding.
 	{
+		self::$SN = $sn;
 		if(!isset($container['Expires']))
 			$container['Expires'] = 0; // Lasts forever
 		if(!isset($container['RemainingPageLoads']))

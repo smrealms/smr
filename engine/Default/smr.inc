@@ -410,6 +410,8 @@ function word_filter($string) {
 // This function is a hack around the old style http forward mechanism
 function do_voodoo()
 {
+	if(USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
+		exit;
 //	ob_clean();
 
 	global $lock, $var,$smarty,$time_start,$db,$account;
@@ -567,8 +569,8 @@ function acquire_lock($sector)
 function release_lock()
 {
 	global $db, $lock;
-
-	$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - 15));
+	if($lock)
+		$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - 15));
 
 	$lock=false;
 }

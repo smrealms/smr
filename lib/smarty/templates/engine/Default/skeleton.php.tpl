@@ -21,7 +21,7 @@
 		</td>
 		<td class="r0">
 			<div class="r1">
-				<div class="r2">
+				<div class="r2" id="right_panel">
 					{if isset($GameID)}
 						{include_template template="includes/rightPanel.inc" assign=Template}{include file=$Template}
 					{/if}
