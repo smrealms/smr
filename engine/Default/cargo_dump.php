@@ -1,5 +1,4 @@
 <?
-$smarty->assign('DISABLE_AJAX_CONTENT_REFRESH',true);//Workaround a bug in firefox (and other browsers?) where forms inside tables display when loaded normally, but not when done with javascript.
 $smarty->assign('PageTopic','DUMP CARGO');
 
 $PHP_OUTPUT.=('Enter the amount of cargo you wish to jettison.<br />');

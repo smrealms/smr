@@ -1,5 +1,5 @@
 <?
-$smarty->assign('DISABLE_AJAX_CONTENT_REFRESH',true);//Stop new news being lost.
+$smarty->assign('AJAX_DISABLE_CONTENT_REFRESH',true);//Stop new news being lost.
 
 $smarty->assign('PageTopic','CURRENT NEWS');
 include(ENGINE . 'global/menue.inc');
