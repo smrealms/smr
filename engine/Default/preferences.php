@@ -1,4 +1,5 @@
 <?
+$smarty->assign('DISABLE_AJAX_CONTENT_REFRESH',true);//Stop form fields being overwritten.
 
 $smarty->assign('PageTopic','PREFERENCES');
 

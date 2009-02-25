@@ -3,6 +3,8 @@ if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 require_once(get_file_loc('SmrPlanet.class.inc'));
 
+$smarty->assign('DISABLE_AJAX_CONTENT_REFRESH',true);//Stop form fields being overwritten.
+
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 
