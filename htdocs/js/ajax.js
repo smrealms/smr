@@ -132,10 +132,13 @@ function updateRefreshComp()
 		document.getElementById("tod").innerHTML=xmlDoc.getElementsByTagName("time")[0].childNodes[0].nodeValue;
 		document.getElementById("runtime").innerHTML=xmlDoc.getElementsByTagName("runtime")[0].childNodes[0].nodeValue;
 		var content='';
-		for(var i=0;i<xmlDoc.getElementsByTagName("htmlcontent")[0].childNodes.length;i++)
-			content+=xmlDoc.getElementsByTagName("htmlcontent")[0].childNodes[i].nodeValue;
-		document.getElementById("middle_panel").innerHTML=content;
-		var content='';
+		if(xmlDoc.getElementsByTagName("htmlcontent"))
+		{
+			for(var i=0;i<xmlDoc.getElementsByTagName("htmlcontent")[0].childNodes.length;i++)
+				content+=xmlDoc.getElementsByTagName("htmlcontent")[0].childNodes[i].nodeValue;
+			document.getElementById("middle_panel").innerHTML=content;
+		}
+		content='';
 		for(var i=0;i<xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes.length;i++)
 			content+=xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes[i].nodeValue;
 		document.getElementById("right_panel").innerHTML=content;

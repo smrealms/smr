@@ -1,4 +1,5 @@
 <?
+$smarty->assign('DISABLE_AJAX_CONTENT_REFRESH',true);//Stop form fields being overwritten.
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 require_once(get_file_loc('SmrPort.class.inc'));
