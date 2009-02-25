@@ -6,15 +6,17 @@
 	<runtime>
 		{$ScriptRuntime|pagetrimwhitespace|escape}
 	</runtime>
-	{if !$DISABLE_AJAX_CONTENT_REFRESH}
-		<htmlcontent>
-			{capture assign=HtmlContent}
-				{if $PageTopic}<h1>{$PageTopic}</h1><br />{/if}
-				{if $MenuBar}{$MenuBar}{/if}
-				{include_template template=$TemplateBody assign=Template}{include file=$Template}
-			{/capture}
-			{$HtmlContent|pagetrimwhitespace|escape}
-		</htmlcontent>
+	{if !$AJAX_DISABLE_CONTENT_REFRESH}
+		{capture assign=HtmlContent}
+			{if $PageTopic}<h1>{$PageTopic}</h1><br />{/if}
+			{if $MenuBar}{$MenuBar}{/if}
+			{include_template template=$TemplateBody assign=Template}{include file=$Template}
+		{/capture}
+		{if !$HtmlContent|checkdisableajax}
+			<htmlcontent>
+				{$HtmlContent|pagetrimwhitespace|escape}
+			</htmlcontent>
+		{/if}
 	{/if}
 	<rightpanelhtml>
 		{capture assign=HtmlContent}

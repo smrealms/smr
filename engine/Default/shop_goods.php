@@ -11,8 +11,6 @@ $port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
 if(!$port->exists())
 	create_error('There is no port in this sector!');
 
-$smarty->assign('DISABLE_AJAX_CONTENT_REFRESH',true);//Workaround a bug in firefox (and other browsers?) where forms inside tables display when loaded normally, but not when done with javascript.
-
 // total relations with that race (personal + global)
 $portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
 $relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
