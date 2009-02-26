@@ -142,16 +142,15 @@ class SmrSession
 	
 	public static function resetLink($container, $sn) //Do not allow sharing SN, useful for forwarding.
 	{
+		if(isset(self::$var[$sn]['CommonID']))
+			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		self::$SN = $sn;
 		if(!isset($container['Expires']))
 			$container['Expires'] = 0; // Lasts forever
 		if(!isset($container['RemainingPageLoads']))
 			$container['RemainingPageLoads'] = 1; // One refresh to destroy the link
-			
-		
+
 		self::$var[$sn] = $container;
-		if(isset(self::$var[$sn]['CommonID']))
-			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		return $sn;
 	}
 	
