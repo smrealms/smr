@@ -49,6 +49,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //	protected $chatPosition;
 	protected $displayMissions;
 	protected $displayWeapons;
+	protected $useAJAX;
 	protected $ignoreGlobals;
 //	protected $changedStats;
 	protected $completedMissions;
@@ -182,6 +183,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			$this->chatPosition = $result['chat_position'];
 			$this->displayMissions				= $result['display_missions']=='TRUE';
 			$this->displayWeapons				= $result['display_weapons']=='TRUE';
+			$this->useAJAX						= $result['use_ajax']=='TRUE';
 			$this->ignoreGlobals				= $result['ignore_globals']=='TRUE';
 			$this->newbieWarning				= $result['newbie_warning']=='TRUE';
 			$this->nameChanged					= $result['name_changed']=='TRUE';
@@ -642,6 +644,19 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($this->displayWeapons == $bool)
 			return;
 		$this->displayWeapons=$bool;
+		$this->hasChanged=true;
+	}
+	
+	function isUseAJAX()
+	{
+		return $this->useAJAX;
+	}
+	
+	function setUseAJAX($bool)
+	{
+		if($this->useAJAX == $bool)
+			return;
+		$this->useAJAX=$bool;
 		$this->hasChanged=true;
 	}
 	
@@ -1635,6 +1650,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //				', chat_position='.$this->db->escapeString($this->chatPosition).
 				', display_missions='.$this->db->escapeBoolean($this->displayMissions).
 				', display_weapons='.$this->db->escapeBoolean($this->displayWeapons).
+				', use_ajax='.$this->db->escapeBoolean($this->useAJAX).
 				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
 //				', changed_stats='.$this->db->escapeString($this->changedStats).
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).
@@ -2065,7 +2081,18 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		$container = array();
 		$container['url']			= 'skeleton.php';
-		$container['body']			= 'toggle_weapon_hiding_processing.php';
+		$container['body']			= 'toggle_processing.php';
+		$container['toggle']		= 'WeaponHiding';
+		$container['alliance_id']	= $this->getAllianceID();
+		return SmrSession::get_new_href($container);
+	}
+	
+	public function getToggleAJAXHREF()
+	{
+		$container = array();
+		$container['url']			= 'skeleton.php';
+		$container['body']			= 'toggle_processing.php';
+		$container['toggle']		= 'AJAX';
 		$container['alliance_id']	= $this->getAllianceID();
 		return SmrSession::get_new_href($container);
 	}

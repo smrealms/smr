@@ -14,7 +14,7 @@
 	{if $js}
 		<script type="text/javascript" src="{$js}"></script>
 	{/if}
-	{if $ENABLE_AJAX_REFRESH}
+	{if $AJAX_ENABLE_REFRESH}
 		<script type="text/javascript">window.onload=function(){ldelim}startRefresh('{$ENABLE_AJAX_REFRESH}');{rdelim}</script>
 	{/if}
 	<style type="text/css">

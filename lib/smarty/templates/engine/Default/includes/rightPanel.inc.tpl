@@ -1,4 +1,5 @@
-<span id="attack_area">{if $ThisShip->removeUnderAttack()}<div class="attack_warning">You Are Under Attack!</div>{/if}</span>
+<span id="enable_ajax"><a href="{$ThisPlayer->getToggleAJAXHREF()}">{if $ThisPlayer->isUseAJAX()}Disable{else}Enable{/if} AJAX</a></span><br />
+<span id="attack_area">{assign var=UnderAttack val=$ThisShip->removeUnderAttack()}{if $UnderAttack}<div class="attack_warning">You Are Under Attack!</div>{/if}</span>{if $UnderAttack}<br />{/if}
 <span id="message_area">
 	{if isset($MessageGlobalLink)}
 		<a  href="{$MessageGlobalLink}"><img src="images/global_msg.gif" alt="Global Messages" /></a>
