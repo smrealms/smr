@@ -18,10 +18,12 @@
 			</htmlcontent>
 		{/if}
 	{/if}
-	<rightpanelhtml>
-		{capture assign=HtmlContent}
-			{include_template template="includes/rightPanel.inc" assign=Template}{include file=$Template}
-		{/capture}
-		{$HtmlContent|pagetrimwhitespace|escape}
-	</rightpanelhtml>
+	{if isset($GameID)}
+		<rightpanelhtml>
+			{capture assign=HtmlContent}
+				{include_template template="includes/rightPanel.inc" assign=Template}{include file=$Template}
+			{/capture}
+			{$HtmlContent|pagetrimwhitespace|escape}
+		</rightpanelhtml>
+	{/if}
 </pagecontent>
