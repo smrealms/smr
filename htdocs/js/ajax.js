@@ -98,6 +98,8 @@ var intervalRefresh;
 var sn;
 function startRefresh(refresh_speed)
 {
+	if(!refresh_speed)
+		return;
 	sn=getURLParameter('sn');
 	if(sn===false)
 		return;
@@ -138,10 +140,13 @@ function updateRefreshComp()
 				content+=xmlDoc.getElementsByTagName("htmlcontent")[0].childNodes[i].nodeValue;
 			document.getElementById("middle_panel").innerHTML=content;
 		}
-		content='';
-		for(var i=0;i<xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes.length;i++)
-			content+=xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes[i].nodeValue;
-		document.getElementById("right_panel").innerHTML=content;
+		if(xmlDoc.getElementsByTagName("rightpanelhtml").length>0)
+		{
+			content='';
+			for(var i=0;i<xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes.length;i++)
+				content+=xmlDoc.getElementsByTagName("rightpanelhtml")[0].childNodes[i].nodeValue;
+			document.getElementById("right_panel").innerHTML=content;
+		}
 		last_refresh_comp = true;
 	}
 }
