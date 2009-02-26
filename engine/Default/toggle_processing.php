@@ -1,5 +1,12 @@
 <?
-$player->setDisplayWeapons(!$player->isDisplayWeapons());
+if($var['toggle']=='WeaponHiding')
+{
+	$player->setDisplayWeapons(!$player->isDisplayWeapons());
+}
+else if($var['toggle']=='AJAX')
+{
+	$player->setUseAJAX(!$player->isUseAJAX());
+}
 if(!USING_AJAX)
 {
 	$container = array();

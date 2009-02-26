@@ -13,7 +13,7 @@ function enableProtectionDependantRefresh(&$smarty,&$player)
 		$ajaxRefresh=10000;
 	elseif ($player->hasFederalProtection())
 		$ajaxRefresh=6000;
-	$smarty->assign('ENABLE_AJAX_REFRESH',$ajaxRefresh);
+	$smarty->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
 
 function hardware_is_mining_drone($hardwareTypeID)
@@ -585,6 +585,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 	if (SmrSession::$game_id > 0)
 	{
+		$smarty->assign('AJAX_ENABLE_REFRESH',$player->isUseAJAX());
 		$smarty->assign('GameID',SmrSession::$game_id);
 	
 		if ($player->isLandedOnPlanet())
