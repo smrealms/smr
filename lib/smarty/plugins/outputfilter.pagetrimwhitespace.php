@@ -5,11 +5,11 @@
 function smarty_outputfilter_pagetrimwhitespace($source, &$smarty)
 {
     // Pull out the script blocks
-    preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
+/*    preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
     $_script_blocks = $match[0];
     $source = preg_replace("!<script[^>]*?>.*?</script>!is",
                            '@@@SMARTY:TRIM:SCRIPT@@@', $source);
-
+*/
     // Pull out the pre blocks
     preg_match_all("!<pre[^>]*?>.*?</pre>!is", $source, $match);
     $_pre_blocks = $match[0];
@@ -24,7 +24,7 @@ function smarty_outputfilter_pagetrimwhitespace($source, &$smarty)
 
     // remove all leading spaces, tabs and carriage returns NOT
     // preceeded by a php close tag.
-    $source = trim(preg_replace('/[\s]+/', ' ', $source));
+    $source = preg_replace('/[\s]+/', ' ', $source);
     $source = trim(preg_replace('/> </', '><', $source));
 
     // replace textarea blocks
