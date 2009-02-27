@@ -871,8 +871,8 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 		if($in_game && (!isset($turns_for_votes[$i]) || ($turns_for_votes[$i] && rand(0,100) < 80))) {
 	
 			$container['link_id'] = $i;
-			$voteSite[$i] .= '\'javascript:VoteSite("' . $vote_links[$i]['location'] . '",';
-			$voteSite[$i] .= '"' . SmrSession::get_new_sn($container) . '")\'';
+			$voteSite[$i] .= '\'javascript:voteSite("' . $vote_links[$i]['location'] . '",';
+			$voteSite[$i] .= '"' . SmrSession::get_new_href($container) . '")\'';
 			$img = $vote_links[$i]['star_img'];
 		}
 		else {
