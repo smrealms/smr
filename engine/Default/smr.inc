@@ -585,7 +585,8 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 	if (SmrSession::$game_id > 0)
 	{
-		$smarty->assign('AJAX_ENABLE_REFRESH',$player->isUseAJAX());
+		if(!$player->isUseAJAX())
+			$smarty->assign('AJAX_ENABLE_REFRESH',false);
 		$smarty->assign('GameID',SmrSession::$game_id);
 	
 		if ($player->isLandedOnPlanet())
