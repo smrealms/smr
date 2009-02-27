@@ -6,7 +6,6 @@
 //
 ////////////////////////////////////////////////////////////
 
-enableProtectionDependantRefresh($smarty,$player);
 
 $db->query('SELECT
 sector.galaxy_id as galaxy_id,
@@ -16,7 +15,10 @@ WHERE sector.sector_id=' . $player->getSectorID() . '
 AND game_id=' . SmrSession::$game_id . '
 AND galaxy.galaxy_id = sector.galaxy_id
 LIMIT 1');
-$db->nextRecord();
+if(!$db->nextRecord())
+	create_error('Could not find sector info');
+
+enableProtectionDependantRefresh($smarty,$player);
 
 $galaxy_name = $db->getField('galaxy_name');
 $galaxy_id = $db->getField('galaxy_id');
