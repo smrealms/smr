@@ -284,20 +284,29 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	if ($msg_read == 'FALSE') $return.= ('*');
 	$return.= ('</td>');
 	$return.= ('<td nowrap="nowrap" width="100%">From: ');
-	if (!empty($sender_id)) {
+	if($sender_id==PORT_ACCOUNT_ID)
+	{
+		$return.= ('<span class="yellow">Port Defenses</span>');
+	}
+	else if (!empty($sender_id))
+	{
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'trader_search_result.php';
 		$container['player_id'] = $sender->getPlayerID();
 		$return.= create_link($container, $sender->getDisplayName());
-	} else {
+	}
+	else
+	{
 		if ($type == 7)
 			$return.= ('<span style="font:small-caps bold;color:blue;">Administrator</span>');
-		elseif ($type == 6) {
+		elseif ($type == 6)
+		{
 			$return.= ('<span class="green">');
 			$return.= ('Alliance Ambassador');
 			$return.= ('</span>');
-		} elseif ($type == 2) $return.= ('<span class="yellow">Port Defenses</span>');
+		}
+		elseif ($type == 2) $return.= ('<span class="yellow">Port Defenses</span>');
 		else $return.= ('Unknown');
 	}
 	$return.= ('</td>');
