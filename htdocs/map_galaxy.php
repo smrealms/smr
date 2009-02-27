@@ -51,11 +51,11 @@ echo '
 
 echo('<html>');
 echo('<head>');
-echo('<link rel="stylesheet" type="text/css" href="default.css">');
+echo('<link rel="stylesheet" type="text/css" href="css/default.css">');
 echo('<title>Galaxy Map</title>');
 echo('<meta http-equiv="pragma" content="no-cache">');
 echo '<!--[if IE]>
-<link rel="stylesheet" type="text/css" href="ie_specific.css">
+<link rel="stylesheet" type="text/css" href="css/ie_specific.css">
 <![endif]-->
 <style type="text/css">
 	body {

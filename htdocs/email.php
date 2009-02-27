@@ -23,7 +23,7 @@ $account =& SmrAccount::getAccount(SmrSession::$account_id);
 
 <html>
 <head>
-	<link rel='stylesheet' type='text/css' href='default.css'>
+	<link rel='stylesheet' type='text/css' href='css/default.css'>
 	<title>Space Merchant Realms</title>
 	<meta http-equiv='pragma' content='no-cache'>
 </head>

@@ -47,7 +47,7 @@ require_once(LIB . 'Login/loginSmarty.php');
 <html>
 
 <head>
-	<link rel='stylesheet' type='text/css' href='default.css'>
+	<link rel='stylesheet' type='text/css' href='css/default.css'>
 	<meta http-equiv='Content-Type' content='text/html; charset=windows-1252'>
 	<meta http-equiv='Content-Language' content='en-us'>
 	<title>Space Merchant Realms</title>
