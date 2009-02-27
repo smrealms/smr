@@ -6,7 +6,7 @@
 
 <html>
 <head>
-	<link rel="stylesheet" type="text/css" href="default.css">
+	<link rel="stylesheet" type="text/css" href="css/default.css">
 	<title>Space Merchant Realms</title>
 </head>
 

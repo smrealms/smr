@@ -6,7 +6,7 @@
 	<meta http-equiv="pragma" content="no-cache">
 	<link rel="stylesheet" type="text/css" href="{$CSSLink}">
 	<!--[if IE]>
-		<link rel="stylesheet" type="text/css" href="ie_specific.css">
+		<link rel="stylesheet" type="text/css" href="css/ie_specific.css">
 	<![endif]-->
 	<!--<script type="text/javascript" src="js/smr.js"></script>-->
 	<style type="text/css">

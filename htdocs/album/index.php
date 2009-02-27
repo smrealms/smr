@@ -14,7 +14,7 @@ $db2 = new SmrMySqlDatabase();
 <!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="<?php echo URL;?>/classic.css">
+<link rel="stylesheet" type="text/css" href="<?php echo URL;?>/css/classic.css">
 <title>Space Merchant Realms - Photo Album</title>
 <meta http-equiv="pragma" content="no-cache">
 </head>

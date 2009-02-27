@@ -9,7 +9,7 @@ echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
 
 echo ('<html>');
 echo ('<head>');
-echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/default.css">');
+echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/default.css">');
 echo ('<title>Space Merchant Realms - Manual</title>');
 echo ('<meta http-equiv="pragma" content="no-cache">');
 echo ('</head>');
