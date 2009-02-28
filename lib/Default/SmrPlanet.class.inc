@@ -328,9 +328,7 @@ class SmrPlanet
 	
 	public function setBuilding($buildingTypeID,$number)
 	{
-		var_dump($buildingTypeID);
-		var_dump($number);
-		$this->building[$buildingTypeID] = $number;
+		$this->buildings[$buildingTypeID] = $number;
 	}
 	
 	public function destroyBuilding($buildingTypeID,$number)
@@ -458,7 +456,6 @@ class SmrPlanet
 		}
 
 		// write building info
-		var_dump($this->getBuildings());
 		foreach ($this->getBuildings() as $id => $amount)
 		{
 			if ($amount != 0)
