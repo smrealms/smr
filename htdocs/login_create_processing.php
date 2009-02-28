@@ -87,36 +87,36 @@ if (empty($last_name)) {
 }
 
 $address = $_REQUEST['address'];
-if (empty($address)) {
-
-	$msg = 'Address is missing!';
-	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	exit;
-}
+//if (empty($address)) {
+//
+//	$msg = 'Address is missing!';
+//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+//	exit;
+//}
 
 $city = $_REQUEST['city'];
-if (empty($city)) {
-
-	$msg = 'City is missing!';
-	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	exit;
-}
+//if (empty($city)) {
+//
+//	$msg = 'City is missing!';
+//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+//	exit;
+//}
 
 $postal_code = $_REQUEST['postal_code'];
-if (empty($postal_code)) {
-
-	$msg = 'Postal code is missing!';
-	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	exit;
-}
+//if (empty($postal_code)) {
+//
+//	$msg = 'Postal code is missing!';
+//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+//	exit;
+//}
 
 $country_code = $_REQUEST['country_code'];
-if (empty($country_code)) {
-
-	$msg = 'Please choose a country!';
-	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	exit;
-}
+//if (empty($country_code)) {
+//
+//	$msg = 'Please choose a country!';
+//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+//	exit;
+//}
 
 $pass_verify = $_REQUEST['pass_verify'];
 if ($password != $pass_verify) {
