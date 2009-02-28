@@ -43,7 +43,7 @@
 						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
-						<th colspan='2'>User Information</th>
+						<th colspan='2'>Game Information</th>
 					</tr>
 					<tr>
 						<td colspan='2'>&nbsp;</td>
@@ -54,6 +54,46 @@
 //						<td width='73%'><input type='text' name='beta_key' size='20' maxlength='50' id='InputFields'></td>
 //					</tr>
 					?>
+					<tr>
+						<td width='27%'>User name:</td>
+						<td width='73%'><input type='text' name='login' size='20' maxlength='32' id='InputFields'></td>
+					</tr>
+					<tr>
+						<td width='27%'>Password:</td>
+						<td width='73%'><input type='password' name='password' size='20' maxlength='32' id='InputFields'></td>
+					</tr>
+					<tr>
+						<td width='27%'>Verify:</td>
+						<td width='73%'><input type='password' name='pass_verify' size='20' maxlength='32' id='InputFields'></td>
+					</tr>
+					<tr>
+						<td width='27%'>E-Mail Address:</td>
+						<td width='73%'><input type='text' name='email' size='50' maxlength='128' id='InputFields'></td>
+					</tr>
+					<tr>
+						<td width='27%'>Verify E-Mail Address:</td>
+						<td width='73%'><input type='text' name='email_verify' size='50' maxlength='128' id='InputFields'></td>
+					</tr>
+					<tr>
+						<td width='27%'>Local Time:</td>
+						<td width='73%'>
+							<select name="timez" id="InputFields">
+								<?php
+								$time = TIME;
+									for ($i = -12; $i<= 11; $i++) echo('<option value='.$i.'>' . date(DATE_TIME_SHORT, $time + $i * 3600));
+								?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td colspan='2'>&nbsp;</td>
+					</tr>
+					<tr>
+						<th colspan='2'>User Information (Optional)</th>
+					</tr>
+					<tr>
+						<td colspan='2'>&nbsp;</td>
+					</tr>
 					<tr>
 						<td width='27%'>First Name:</td>
 						<td width='73%'><input type='text' name='first_name' size='20' maxlength='50' id='InputFields'></td>
@@ -322,50 +362,10 @@
 						</td>
 					</tr>
 					<tr>
-						<td width='27%'>Local Time:</td>
-						<td width='73%'>
-							<select name="timez" id="InputFields">
-								<?php
-								$time = TIME;
-									for ($i = -12; $i<= 11; $i++) echo('<option value='.$i.'>' . date(DATE_TIME_SHORT, $time + $i * 3600));
-								?>
-							</select>
-						</td>
-					</tr>
-					<tr>
 						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
-						<th colspan='2'>Game Information</th>
-					</tr>
-					<tr>
-						<td colspan='2'>&nbsp;</td>
-					</tr>
-					<tr>
-						<td width='27%'>User name:</td>
-						<td width='73%'><input type='text' name='login' size='20' maxlength='32' id='InputFields'></td>
-					</tr>
-					<tr>
-						<td width='27%'>Password:</td>
-						<td width='73%'><input type='password' name='password' size='20' maxlength='32' id='InputFields'></td>
-					</tr>
-					<tr>
-						<td width='27%'>Verify:</td>
-						<td width='73%'><input type='password' name='pass_verify' size='20' maxlength='32' id='InputFields'></td>
-					</tr>
-					<tr>
-						<td width='27%'>E-Mail Address:</td>
-						<td width='73%'><input type='text' name='email' size='50' maxlength='128' id='InputFields'></td>
-					</tr>
-					<tr>
-						<td width='27%'>Verify E-Mail Address:</td>
-						<td width='73%'><input type='text' name='email_verify' size='50' maxlength='128' id='InputFields'></td>
-					</tr>
-					<tr>
-						<td colspan='2'>&nbsp;</td>
-					</tr>
-					<tr>
-						<th colspan='2'>Various Information</th>
+						<th colspan='2'>Various Information (Optional)</th>
 					</tr>
 					<tr>
 						<td colspan='2'>&nbsp;</td>
