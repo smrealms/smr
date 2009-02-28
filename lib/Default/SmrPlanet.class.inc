@@ -328,6 +328,8 @@ class SmrPlanet
 	
 	public function setBuilding($buildingTypeID,$number)
 	{
+		var_dump($buildingTypeID);
+		var_dump($number);
 		$this->building[$buildingTypeID] = $number;
 	}
 	
