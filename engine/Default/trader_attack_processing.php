@@ -83,7 +83,7 @@ unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
 $container['url'] = 'skeleton.php';
-$container['body'] = 'trader_attack_new.php';
+$container['body'] = 'trader_attack.php';
 
 // If their target is dead there is no continue attack button
 if(!$targetPlayer->isDead())

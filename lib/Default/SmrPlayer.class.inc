@@ -2043,7 +2043,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			$container = array();
 			$container['url']		= 'skeleton.php';
-			$container['body']		= 'trader_attack_processing_new.php';
+			$container['body']		= 'trader_attack_processing.php';
 			$container['target']	= $this->getAccountID();
 			$container['time']		= microtime(true);
 			$this->attackTraderHREF = SmrSession::get_new_href($container);

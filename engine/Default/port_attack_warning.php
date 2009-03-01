@@ -26,7 +26,7 @@ if ($ship->hasScanner() == 1)
 }
 
 $container = array();
-$container['url'] = 'port_attack_processing_new.php';
+$container['url'] = 'port_attack_processing.php';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=create_submit('Yes');
 $PHP_OUTPUT.=('</form>');

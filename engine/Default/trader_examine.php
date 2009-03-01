@@ -298,7 +298,7 @@ $allowedByAlliance = (!$player->getAllianceID() || !$players[$var['target']][ALL
 $smarty->assign('PageTopic','EXAMINE SHIP');
 // should we display a attack button
 if ($playerCanShoot && !$playerFed && !$defenderFed && !$playerNewb && !$defenderNewb && $allowedByAlliance && !$allied) {
-	$container = create_container('skeleton.php','trader_attack_processing_new.php');
+	$container = create_container('skeleton.php','trader_attack_processing.php');
 	transfer('target');
 	$container['time'] = microtime(true);
 	$PHP_OUTPUT.=create_echo_form($container);

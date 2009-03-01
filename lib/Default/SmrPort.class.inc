@@ -921,7 +921,7 @@ class SmrPort
 	{
 		$container = array();
 		$container['url'] = 'skeleton.php';
-		$container['body'] = 'port_attack_processing_new.php';
+		$container['body'] = 'port_attack_processing.php';
 		$container['port_id'] = $this->getSectorID();
 		return SmrSession::get_new_href($container);
 	}
