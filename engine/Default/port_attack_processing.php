@@ -22,7 +22,7 @@ if(!$port->exists())
 	
 if ($port->isDestroyed())
 {
-	$container=create_container('skeleton.php','port_attack_new.php');
+	$container=create_container('skeleton.php','port_attack.php');
 	$container['sector_id'] = $port->getSectorID();
 	forward($container);
 }
@@ -72,8 +72,7 @@ $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'P
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'port_attack_new.php';
+$container=create_container('skeleton.php','port_attack.php');
 $container['sector_id'] = $port->getSectorID();
 
 // If they died on the shot they get to see the results
