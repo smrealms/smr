@@ -492,6 +492,7 @@ function do_voodoo()
 		$smarty->assign_by_ref('ThisPlayer',$player);
 		$smarty->assign_by_ref('ThisShip',$ship);
 	}
+	$smarty->assign_by_ref('ThisAccount',$account);
 	doSkeletionAssigns($smarty,$player,$ship,$sector,$db,$account);
 	$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
@@ -579,14 +580,14 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 {
 	$smarty->assign('fontSize',$account->fontsize);
 	$smarty->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
+	if(!$account->isUseAJAX())
+		$smarty->assign('AJAX_ENABLE_REFRESH',false);
 	
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	
 	if (SmrSession::$game_id > 0)
 	{
-		if(!$player->isUseAJAX())
-			$smarty->assign('AJAX_ENABLE_REFRESH',false);
 		$smarty->assign('GameID',SmrSession::$game_id);
 	
 		if ($player->isLandedOnPlanet())

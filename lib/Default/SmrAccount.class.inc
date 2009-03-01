@@ -39,6 +39,9 @@ class SmrAccount
 	var $rank;
 	var $rank_name;
 	protected $passwordReset;
+	protected $useAJAX;
+	
+	protected $hasChanged;
 	
 	public static function &getAccount($accountID,$forceUpdate = false)
 	{
@@ -85,6 +88,7 @@ class SmrAccount
 			$this->fontsize			= $row['fontsize'];
 			
 			$this->passwordReset	= $row['password_reset'];
+			$this->useAJAX			= $row['use_ajax']=='TRUE';
 			
 			$this->db->query('SELECT * FROM account_has_stats WHERE account_id = ' . $this->account_id . ' LIMIT 1');
 			
@@ -107,8 +111,6 @@ class SmrAccount
 				$this->bounty_amount_claimed = $row['bounty_amount_claimed'];
 				$this->military_claimed = $row['military_claimed'];
 				$this->bounty_amount_on = $row['bounty_amount_on'];
-				
-				
 			}
 		}
 		else
@@ -165,7 +167,8 @@ class SmrAccount
 			'validated = '.$this->db->escapeString($this->validated).', ' .
 			'password = '.$this->db->escapeString($this->password).', ' .
 			'`images` = '.$this->db->escapeString($this->images).', ' .
-			'`password_reset` = '.$this->db->escapeString($this->passwordReset).' ' .
+			'`password_reset` = '.$this->db->escapeString($this->passwordReset).', ' .
+			'use_ajax='.$this->db->escapeBoolean($this->useAJAX).
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
 		
 	}
@@ -339,6 +342,30 @@ class SmrAccount
 	{
 		$this->passwordReset=$passwordReset;
 		$this->update();
+	}
+	
+	public function isUseAJAX()
+	{
+		return $this->useAJAX;
+	}
+	
+	public function setUseAJAX($bool)
+	{
+		if($this->useAJAX == $bool)
+			return;
+		$this->useAJAX=$bool;
+		$this->hasChanged=true;
+	}
+	
+	public function getToggleAJAXHREF()
+	{
+		global $var;
+		$container = array();
+		$container['url']			= 'skeleton.php';
+		$container['body']			= 'toggle_processing.php';
+		$container['toggle']		= 'AJAX';
+		$container['referrer']		= $var['body'];
+		return SmrSession::get_new_href($container);
 	}
 }
 
