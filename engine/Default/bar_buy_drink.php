@@ -78,7 +78,7 @@ if ($num_drinks > 15)
 	$percent = mt_rand(1,25);
 	$lostCredits = round($player->getCredits() * $percent / 100);
 
-	$PHP_OUTPUT.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lost_credits) . ' credits</span><br />';
+	$PHP_OUTPUT.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
 
 	$player->decreaseCredits($lostCredits);
 	$player->increaseHOF(1,array('Bar','Robbed','Number Of Times'));
