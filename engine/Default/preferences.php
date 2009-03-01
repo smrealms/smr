@@ -12,9 +12,37 @@ if ($db->nextRecord())
 else
 	$have = 0;
 
+
+if(SmrSession::$game_id != 0)
+{
+	$PHP_OUTPUT.=('<p>');
+	$PHP_OUTPUT.=('<table cellpadding="5">');
+	$PHP_OUTPUT.=('<tr><th colspan="3">Player Preferences (For Current Game)</th></tr>');
+	$PHP_OUTPUT.=('<tr>');
+	
+	$container = array();
+	$container['url'] = 'preferences_processing.php';
+	$form = create_form($container, 'Change Kamikaze Setting');
+	
+	$PHP_OUTPUT.= $form['form'];
+	
+	$PHP_OUTPUT.= '<tr><td>Combat drones kamikaze on mines</td>';
+	$PHP_OUTPUT.=('<td>Yes: <input type="radio" name="kamikaze" id="InputFields" value="Yes"');
+	if ($player->isCombatDronesKamikazeOnMines()) $PHP_OUTPUT.=(' checked="checked"');
+	$PHP_OUTPUT.=('><br />No: <input type="radio" name="kamikaze" id="InputFields" value="No"');
+	if (!$player->isCombatDronesKamikazeOnMines()) $PHP_OUTPUT.=(' checked="checked"');
+	$PHP_OUTPUT.= '></td>';
+	$PHP_OUTPUT.= '<td>';
+	$PHP_OUTPUT.= $form['submit'];
+	$PHP_OUTPUT.= '</td></tr></table>';
+	$PHP_OUTPUT.=('</form>');
+	
+	$PHP_OUTPUT.=('</p><br />');
+}
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=create_echo_form(create_container('preferences_processing.php', ''));
 $PHP_OUTPUT.=('<table cellpadding="5">');
+$PHP_OUTPUT.=('<tr><th colspan="3">Account Preferences</th></tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Login:</td>');
@@ -186,26 +214,6 @@ $PHP_OUTPUT.= '<td>';
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '</td></tr>';
 $PHP_OUTPUT.=('</form>');
-
-if(SmrSession::$game_id != 0)
-{
-	$container = array();
-	$container['url'] = 'preferences_processing.php';
-	$form = create_form($container, 'Change Kamikaze Setting');
-	
-	$PHP_OUTPUT.= $form['form'];
-	
-	$PHP_OUTPUT.= '<tr><td>Combat drones kamikaze on mines</td>';
-	$PHP_OUTPUT.=('<td>Yes: <input type="radio" name="kamikaze" id="InputFields" value="Yes"');
-	if ($player->isCombatDronesKamikazeOnMines()) $PHP_OUTPUT.=(' checked="checked"');
-	$PHP_OUTPUT.=('><br />No: <input type="radio" name="kamikaze" id="InputFields" value="No"');
-	if (!$player->isCombatDronesKamikazeOnMines()) $PHP_OUTPUT.=(' checked="checked"');
-	$PHP_OUTPUT.= '></td>';
-	$PHP_OUTPUT.= '<td>';
-	$PHP_OUTPUT.= $form['submit'];
-	$PHP_OUTPUT.= '</td></tr>';
-	$PHP_OUTPUT.=('</form>');
-}
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</p>');
 
