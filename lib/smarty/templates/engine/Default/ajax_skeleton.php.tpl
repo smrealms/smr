@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <pagecontent>
-	<time>
+	<tod>
 		{$timeDisplay|pagetrimwhitespace|escape}
-	</time>
+	</tod>
 	<runtime>
 		{$ScriptRuntime|pagetrimwhitespace|escape}
 	</runtime>
@@ -13,15 +13,15 @@
 			{include_template template=$TemplateBody assign=Template}{include file=$Template}
 		{/capture}
 		{if !$HtmlContent|checkdisableajax}
-			<htmlcontent>
+			<middle_panel>
 				{$HtmlContent|pagetrimwhitespace|escape}
-			</htmlcontent>
+			</middle_panel>
 		{/if}
 	{/if}
-	<rightpanelhtml>
+	<right_panel>
 		{capture assign=HtmlContent}
 			{include_template template="includes/rightPanel.inc" assign=Template}{include file=$Template}
 		{/capture}
 		{$HtmlContent|pagetrimwhitespace|escape}
-	</rightpanelhtml>
+	</right_panel>
 </pagecontent>
