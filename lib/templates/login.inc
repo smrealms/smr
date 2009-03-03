@@ -77,7 +77,7 @@ span.small {
 	font-weight:bold;
 }
 </style>
-<!--[if(IE]>
+<!--[if IE]>
 <style>
 input.inputbox {
 	width:121px;
