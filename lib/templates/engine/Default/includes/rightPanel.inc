@@ -155,6 +155,7 @@ if(isset($GameID))
 			<span class="bold">[X]</span>
 		</a><?php
 	} ?>Scout : <?php echo $ThisShip->getSDs() ?>/<?php echo $ThisShip->getMaxSDs() ?><br />
+	<br />
 	<a href="<?php echo $CargoJettisonLink ?>"><span class="bold">Cargo Holds (<?php echo $ThisShip->getCargoHolds() ?>/<?php echo $ThisShip->getMaxCargoHolds() ?>)</span></a><br />
 	<?php
 	if($ThisShip->hasCargo())
