@@ -1,5 +1,5 @@
 <?
-		require_once(get_file_loc("smr_planet.inc"));
+require_once(get_file_loc("smr_planet.inc"));
 // get a planet from the sector where the player is in
 $planet = new SMR_PLANET($player->sector_id, $player->game_id);
 // owner of planet

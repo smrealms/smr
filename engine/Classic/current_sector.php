@@ -564,7 +564,7 @@ if ($db->next_record()) {
 	echo ')<br />';
 
 	// Goods
-	$db->query('SELECT good_id,transaction FROM port_has_goods WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id);
+	$db->query('SELECT good_id,transaction_type FROM port_has_goods WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id);
 	$goods_bought = array();
 	$goods_sold = array();
 	while($db->next_record()) {

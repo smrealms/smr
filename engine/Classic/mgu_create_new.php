@@ -205,15 +205,15 @@ while($db->next_record()) {
 // Determine level of player/alliance owned planets
 $query =
 		'SELECT ' .
-		'SUM(planet_has_construction.amount) as level,' .
-		'planet_has_construction.sector_id as sector_id ' .
-		'FROM planet_has_construction,planet,player ' .
+		'SUM(planet_has_building.amount) as level,' .
+		'planet_has_building.sector_id as sector_id ' .
+		'FROM planet_has_building,planet,player ' .
 		'WHERE planet.game_id=' . $player->game_id . ' ' .
-		'AND planet_has_construction.game_id=' . $player->game_id . ' ' .
+		'AND planet_has_building.game_id=' . $player->game_id . ' ' .
 		'AND player.game_id=' . $player->game_id . ' ' .
-		'AND planet_has_construction.sector_id = planet.sector_id ' .
+		'AND planet_has_building.sector_id = planet.sector_id ' .
 		'AND player.account_id = planet.owner_id ' .
-		'AND planet_has_construction.sector_id NOT IN ( ' .
+		'AND planet_has_building.sector_id NOT IN ( ' .
 		'SELECT sector_id FROM player_visited_sector ' .
 		'WHERE game_id = ' . $player->game_id . ' ' .
 		'AND account_id = ' . $player->account_id . ' ) ' .
