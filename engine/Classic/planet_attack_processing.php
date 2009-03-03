@@ -85,7 +85,7 @@ function getPlanetArray()
 		$planet = array($db->f("shields"),
 			$db->f("drones"),
 			0,0,0,0,array(),$db->f("owner_id"),$db->f("planet_name"));
-		$db->query("SELECT * FROM planet_has_construction WHERE sector_id = " . $player->sector_id . " AND game_id = " . $player->game_id);
+		$db->query("SELECT * FROM planet_has_building WHERE sector_id = " . $player->sector_id . " AND game_id = " . $player->game_id);
 		while ($db->next_record())
 		{
 			switch($db->f("construction_id"))
@@ -1121,11 +1121,11 @@ function planetDowngrade(&$results, &$planet) {
     }
     $db->query("UPDATE planet SET shields = " . $planet[PLANET_SHIELDS] . ", drones = " . $planet[PLANET_DRONES] .
     			" WHERE sector_id = $player->sector_id AND game_id = $player->game_id");
-	$db->query("UPDATE planet_has_construction SET amount = " . $planet[TURRETS] . " WHERE construction_id = 3 AND " . 
+	$db->query("UPDATE planet_has_building SET amount = " . $planet[TURRETS] . " WHERE construction_id = 3 AND " . 
 				"sector_id = $player->sector_id AND game_id = $player->game_id");
-	$db->query("UPDATE planet_has_construction SET amount = " . $planet[HANGARS] . " WHERE construction_id = 2 AND " . 
+	$db->query("UPDATE planet_has_building SET amount = " . $planet[HANGARS] . " WHERE construction_id = 2 AND " . 
 				"sector_id = $player->sector_id AND game_id = $player->game_id");
-	$db->query("UPDATE planet_has_construction SET amount = " . $planet[GENERATORS] . " WHERE construction_id = 1 AND " . 
+	$db->query("UPDATE planet_has_building SET amount = " . $planet[GENERATORS] . " WHERE construction_id = 1 AND " . 
 				"sector_id = $player->sector_id AND game_id = $player->game_id");
 }
 function doLog($results) {

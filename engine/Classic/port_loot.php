@@ -30,7 +30,7 @@ $db->query("SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_h
                                                          "port.sector_id = port_has_goods.sector_id AND " .
                                                          "port_has_goods.good_id = good.good_id AND " .
                                                          "port.sector_id = $sector->sector_id AND " .
-                                                         "port_has_goods.transaction = " . format_string($want, true) . " AND " .
+                                                         "port_has_goods.transaction_type = " . format_string($want, true) . " AND " .
                                                          "port.game_id = ".SmrSession::$game_id." " .
                                                    "ORDER BY good.good_id");
 
