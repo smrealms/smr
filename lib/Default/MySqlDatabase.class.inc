@@ -98,12 +98,14 @@ abstract class MySqlDatabase implements Database
 				'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL.
 				'Trace MSG: '.$exception->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
 				'$var: '.var_export($var,true);
-			//mail('bugs@smrealms.de',
-			//	 $new_sub,
-			//	 $message,
-			//	 'From: '.$account->email);
+
 			if(is_object($player))
 				$player->sendMessage(ACCOUNT_PAGE, MSG_PLAYER, nl2br($message));
+			else
+				mail('bugs@smrealms.de',
+				 'Automatic Bug Report',
+				 $message,
+				 'From: '.$account->email);
 			header('location: ' . URL . '/error.php?msg=Database Error');
 		}
 		
