@@ -1,5 +1,5 @@
 <?
-$smarty->assign('PageTopic','ALLIANCE DEATH RANKINGS');
+$template->assign('PageTopic','ALLIANCE DEATH RANKINGS');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_ranking_menue(1, 2);
 

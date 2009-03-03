@@ -1,7 +1,7 @@
 <?
 
 $PHP_OUTPUT.= '<div align=center>';
-$smarty->assign('PageTopic','DRINKING');
+$template->assign('PageTopic','DRINKING');
 
 $db2 = new SmrMySqlDatabase();
 if ($player->getCredits() < 10)

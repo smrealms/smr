@@ -13,9 +13,9 @@ else $script = 'bar_opening.php';
 $db->query('SELECT location_name FROM location_type NATURAL JOIN location WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND location_type.location_type_id > 800 AND location_type.location_type_id < 900');
 
 //next welcome them
-if ($db->nextRecord()) $smarty->assign('PageTopic','Welcome to ' . $db->getField('location_name') . '.');
+if ($db->nextRecord()) $template->assign('PageTopic','Welcome to ' . $db->getField('location_name') . '.');
 //in case for some reason there isn't a bar name found...should never happen but who knows
-else $smarty->assign('PageTopic','Welcome to this bar');
+else $template->assign('PageTopic','Welcome to this bar');
 
 //include menu (not menue ;) )
 include(ENGINE . 'global/menue.inc');

@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 $game_name = $var['game_name'];
 $game_id = $var['game_id'];
-$smarty->assign('PageTopic',$game_name.' - Extended Stats');
+$template->assign('PageTopic',$game_name.' - Extended Stats');
 
 if (isset($_REQUEST['action'])) $action = $_REQUEST['action'];
 $PHP_OUTPUT.=('<div align=center>');

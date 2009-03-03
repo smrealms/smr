@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','BOUNTIES');
+$template->assign('PageTopic','BOUNTIES');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();

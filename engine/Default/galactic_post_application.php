@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Galactic Post Application');
+$template->assign('PageTopic','Galactic Post Application');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $container = array();

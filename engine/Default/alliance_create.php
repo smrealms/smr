@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','CREATE ALLIANCE');
+$template->assign('PageTopic','CREATE ALLIANCE');
 
 $container = array();
 $container['url'] = 'alliance_create_processing.php';

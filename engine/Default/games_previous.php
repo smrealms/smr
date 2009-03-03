@@ -8,7 +8,7 @@ if (isset($var['game_name'])) $game_name = $var['game_name'];
 if (isset($var['game_id'])) $game_id = $var['game_id'];
 if (isset($game_name)) $topic = 'Game '.$var['game_name'];
 else $topic = 'Games';
-$smarty->assign('PageTopic','Viewing Old SMR '.$topic);
+$template->assign('PageTopic','Viewing Old SMR '.$topic);
 
 if (!isset($game_name)) {
 

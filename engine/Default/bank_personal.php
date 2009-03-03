@@ -12,7 +12,7 @@ if ($account->validated == 'FALSE') {
 	return;
 }
 
-$smarty->assign('PageTopic','bank');
+$template->assign('PageTopic','bank');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bank_menue();

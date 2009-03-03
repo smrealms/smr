@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','Log Console');
+$template->assign('PageTopic','Log Console');
 
 $PHP_OUTPUT.=('<p>Choose the log files you wish to view or delete!<br />Don\'t keep unnecessary data!</p>');
 

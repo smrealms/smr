@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Report a Bug');
+$template->assign('PageTopic','Report a Bug');
 
 $PHP_OUTPUT.=('<span style="font-size:75%;">All information you can see on this page will be sent via email to the developer team!<br />');
 $PHP_OUTPUT.=('Be as accurate as possible with your bug description.</span>');

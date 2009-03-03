@@ -131,33 +131,25 @@ define('MAX_MONEY',4294967296);
 
 define('EOL',"\n");
 
-define('SMARTY_LIBS_DIR',LIB.'/smarty/libs/');
-define('SMARTY_TEMPLATES_DIR',LIB . 'smarty/templates/');
-define('SMARTY_CONFIG_DIR',LIB . 'smarty/config/');
-define('SMARTY_PLUGINS_DIR',LIB . 'smarty/plugins/');
+define('TEMPLATES_DIR',LIB . 'templates/');
 
 define('DEFAULT_CSS',URL.'/css/default.css');
 
 	
-	require_once(SMARTY_LIBS_DIR . 'Smarty.class.php');
-	$smarty = new Smarty();
-	$GLOBALS['smarty'] =& $smarty;
-	$smarty->template_dir = SMARTY_TEMPLATES_DIR;
-	$smarty->compile_dir = SMARTY_COMPILE_DIR;
-	$smarty->config_dir = SMARTY_CONFIG_DIR;
-	$smarty->plugins_dir[] = SMARTY_PLUGINS_DIR;
-	$smarty->load_filter('output','pagetrimwhitespace');
-//	$smarty->assign('links',$db->_LINKS);
-//	$smarty->assign('javaScriptFiles',$db->_JS);
-	$smarty->assign('URL',URL);
-	$smarty->assign('CSSLink',DEFAULT_CSS);
-	$smarty->assign('Title','Space Merchant Realms 1.6:');
-	$smarty->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));
-	$smarty->assign('isAprilFools',(date('n') == 4 && date('j') == 1));
+	require_once(LIB . 'Default/Template.class.inc');
+	$template = new Template();
+	$GLOBALS['smarty'] =& $template;
+//	$template->assign('links',$db->_LINKS);
+//	$template->assign('javaScriptFiles',$db->_JS);
+	$template->assign('URL',URL);
+	$template->assign('CSSLink',DEFAULT_CSS);
+	$template->assign('Title','Space Merchant Realms 1.6:');
+	$template->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));
+	$template->assign('isAprilFools',(date('n') == 4 && date('j') == 1));
 	
 	$links = array('Register' => 'login_create.php',
 					'ResetPassword' => 'resend_password.php');
-	$smarty->assign('Links',$links);
-	$smarty->assign('AJAX_ENABLE_REFRESH',1000);//To help test.
-//	$smarty->assign('AJAX_ENABLE_REFRESH',10000);
+	$template->assign('Links',$links);
+	$template->assign('AJAX_ENABLE_REFRESH',1000);//To help test.
+//	$template->assign('AJAX_ENABLE_REFRESH',10000);
 ?>

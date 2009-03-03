@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','GALACTIC POST');
+$template->assign('PageTopic','GALACTIC POST');
 
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
@@ -12,7 +12,7 @@ if ($db->getNumRows()) {
     $db2->nextRecord();
     $paper_name = stripslashes($db2->getField('title'));
 
-    $smarty->assign('PageTopic','READING <i>GALACTIC POST</i> EDITION : '.$paper_name);
+    $template->assign('PageTopic','READING <i>GALACTIC POST</i> EDITION : '.$paper_name);
 	include(ENGINE . 'global/menue.inc');
     $PHP_OUTPUT.=create_galactic_post_menue();
     $db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());

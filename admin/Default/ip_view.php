@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','IP MENU');
+$template->assign('PageTopic','IP MENU');
 $db->query('SELECT * FROM account');
 $amount = $db->getNumRows();
 ?>

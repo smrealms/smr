@@ -3,7 +3,7 @@
 $player->setNewbieWarning(false);
 $player->update();
 
-$smarty->assign('PageTopic','WARNING!');
+$template->assign('PageTopic','WARNING!');
 
 $PHP_OUTPUT.=('<p>You have gotten this page because you are almost out of newbie turns.');
 $PHP_OUTPUT.=('What does this mean? You can now do many things that you couldn\'t do while in newbie turns.</p>');

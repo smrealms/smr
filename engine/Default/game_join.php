@@ -15,7 +15,7 @@ if ($db->nextRecord())
 	$game['Description'] = $db->getField('game_description');
 }
 
-$smarty->assign('Game',$game);
+$template->assign('Game',$game);
 
 
 // do we need credits for this game?
@@ -61,7 +61,7 @@ if (date('Y-m-d') > $game['EndDate']) {
 
 }
 
-$smarty->assign('PageTopic', 'JOIN GAME');
+$template->assign('PageTopic', 'JOIN GAME');
 
 $db->query('SELECT * FROM race');
 $first = true;
@@ -75,15 +75,15 @@ while ($db->nextRecord())
     }
     else
         $raceDescriptions.=(', "' . $db->getField('race_description') . '"');
-$smarty->assign('RaceDescriptions',$raceDescriptions);
+$template->assign('RaceDescriptions',$raceDescriptions);
 
 
 // create a container that will hold next url and additional variables.
 $container = array();
 $container['game_id'] = $var['game_id'];
 $container['url'] = 'game_join_processing.php';
-$smarty->assign('JoinGameFormLink','loader.php');
-$smarty->assign('JoinGameFormSN',SmrSession::get_new_sn($container));
+$template->assign('JoinGameFormLink','loader.php');
+$template->assign('JoinGameFormSN',SmrSession::get_new_sn($container));
 
 
 
@@ -121,6 +121,6 @@ while ($db->nextRecord())
 //    	$PHP_OUTPUT.=(' selected');
 
 }
-$smarty->assign('Races',$races);
+$template->assign('Races',$races);
 
 ?>

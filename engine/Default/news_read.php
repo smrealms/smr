@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','READING THE NEWS');
+$template->assign('PageTopic','READING THE NEWS');
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'news_read.php';

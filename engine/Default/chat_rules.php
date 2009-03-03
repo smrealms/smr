@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Space Merchant Realms Chat Room Rules');
+$template->assign('PageTopic','Space Merchant Realms Chat Room Rules');
 
 //$PHP_OUTPUT.=('<div align=center><br /><br /><br />VJ Has temporarly taken down the applet.  Please visit <a href="http://www.vjtd3.com/irc"><b>VJTD3's chat page</b></a> for a link to many applets.</div>');
 //include('http://irc.VJTD3.com/index.shtml?' . strtr($player->getPlayerName(), array(' ' => '+')));

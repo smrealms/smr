@@ -1,5 +1,5 @@
 <?
-$smarty->assign('PageTopic','TRADER STATUS');
+$template->assign('PageTopic','TRADER STATUS');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();

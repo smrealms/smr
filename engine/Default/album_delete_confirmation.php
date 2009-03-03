@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','Delete Album Entry - Confirmation');
+$template->assign('PageTopic','Delete Album Entry - Confirmation');
 
 $PHP_OUTPUT.=('Are you sure you want to delete your photo album entry and all comments added to it?<br />');
 $PHP_OUTPUT.=('This action can\'t be undone.');

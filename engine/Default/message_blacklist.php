@@ -1,6 +1,6 @@
 <?php
 
-	$smarty->assign('PageTopic','PlAYER BLACKLIST');
+	$template->assign('PageTopic','PlAYER BLACKLIST');
 
 	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();

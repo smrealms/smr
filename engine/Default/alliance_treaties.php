@@ -51,7 +51,7 @@ else $alliance_id = $player->getAllianceID();
 $db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $leader_id = $db->getField('leader_id');
-$smarty->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
+$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 $db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND alliance_id != '.$player->getAllianceID().' ORDER BY alliance_name');
@@ -61,7 +61,7 @@ if (isset($var['message'])) $PHP_OUTPUT.=($var['message'] . '<br />');
 $PHP_OUTPUT.=('<br /><br />');
 $db->query('SELECT * FROM alliance_treaties WHERE alliance_id_2 = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND official = \'FALSE\'');
 while ($db->nextRecord()) {
-	$smarty->assign('PageTopic','Treaty Offers');
+	$template->assign('PageTopic','Treaty Offers');
 	$PHP_OUTPUT.=('Treaty offer from <span class="yellow">');
 	$PHP_OUTPUT.=($temp[$db->getField('alliance_id_1')]);
 	$PHP_OUTPUT.=('</span>.  Terms as follows:<br /><ul>');
@@ -89,7 +89,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=create_button($container,'Reject');
 	$PHP_OUTPUT.=('<br /><br />');
 }
-$smarty->assign('PageTopic','Offer A Treaty');
+$template->assign('PageTopic','Offer A Treaty');
 $PHP_OUTPUT.=('Select the alliance you wish to offer a treaty.<br /><small>Note: Treaties require 24 hours to be canceled once in effect</small><br />');
 $container=array();
 $container['url'] = 'skeleton.php';

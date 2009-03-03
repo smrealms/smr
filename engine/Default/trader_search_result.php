@@ -10,7 +10,7 @@ if (!is_numeric($player_id) && !empty($player_id)) {
 
 }
 $count = 0;
-$smarty->assign('PageTopic','SEARCH TRADER RESULTS');
+$template->assign('PageTopic','SEARCH TRADER RESULTS');
 
 if (isset($var['player_id']))
 	$player_id = $var['player_id'];

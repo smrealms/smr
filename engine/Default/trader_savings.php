@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Anonymous accounts for '.$player->getPlayerName());
+$template->assign('PageTopic','Anonymous accounts for '.$player->getPlayerName());
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();
@@ -74,7 +74,7 @@ if ($val == 1) {
 	'VALUES('.$player->getGameID().', ' . TIME . ', ' . $db->escape_string($news_message, false) . ',\'lotto\')');
 	
 }
-$smarty->assign('PageTopic','Lotto Tickets for '.$player->getPlayerName());
+$template->assign('PageTopic','Lotto Tickets for '.$player->getPlayerName());
 $days = floor($time_rem / 60 / 60 / 24);
 $time_rem -= $days * 60 * 60 * 24;
 $hours = floor($time_rem / 60 / 60);

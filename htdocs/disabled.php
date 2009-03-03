@@ -24,6 +24,6 @@ if (SmrSession::$account_id > 0) {
 
 } else $reason = 'Accessing Account Information Failed.  Contact an admin if you have questions.';
 
-$smarty->assign('Message',$reason);
+$template->assign('Message',$reason);
 require_once(LIB . 'Login/loginSmarty.php');
 ?>

@@ -18,14 +18,14 @@ LIMIT 1');
 if(!$db->nextRecord())
 	create_error('Could not find sector info');
 
-enableProtectionDependantRefresh($smarty,$player);
+enableProtectionDependantRefresh($template,$player);
 
 $galaxy_name = $db->getField('galaxy_name');
 $galaxy_id = $db->getField('galaxy_id');
 
-$smarty->assign('GalaxyName',$galaxy_name);
+$template->assign('GalaxyName',$galaxy_name);
 
-$smarty->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
+$template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
 $db->query('
 SELECT
@@ -61,7 +61,7 @@ if(isset($var['Dir']))
 }
 $dist = $player->getZoom();
 
-$smarty->assign('isZoomOn',$zoomOn);
+$template->assign('isZoomOn',$zoomOn);
 
 $container = array();
 $container['url'] = 'skeleton.php';
@@ -69,10 +69,10 @@ $container['Dir'] = 'Down';
 $container['rid'] = 'zoom_down';
 $container['body'] = 'map_local.php';
 $container['valid_for'] = -5;
-$smarty->assign('ZoomDownLink',SmrSession::get_new_href($container));
+$template->assign('ZoomDownLink',SmrSession::get_new_href($container));
 $container['Dir'] = 'Up';
 $container['rid'] = 'zoom_up';
-$smarty->assign('ZoomUpLink',SmrSession::get_new_href($container));
+$template->assign('ZoomUpLink',SmrSession::get_new_href($container));
 
 $span = 1 + ($dist * 2);
 //echo $player->getZoom();
@@ -111,7 +111,7 @@ for ($i=1;$i<=$span&&$i<=$rows;$i++)
 		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec,SmrSession::$account_id);
 	}
 }
-$smarty->assign_by_ref('MapSectors',$mapSectors);
+$template->assignByRef('MapSectors',$mapSectors);
 
 function get_real_up($sector)
 {

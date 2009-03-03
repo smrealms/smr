@@ -36,9 +36,9 @@ if ($db->nextRecord() && $db->getField('relation') <= -300) {
 
 // topic
 if (isset($location_type_id))
-	$smarty->assign('PageTopic',$location_name);
+	$template->assign('PageTopic',$location_name);
 else
-	$smarty->assign('PageTopic','FEDERAL HQ');
+	$template->assign('PageTopic','FEDERAL HQ');
 
 // header menue
 include(ENGINE . 'global/menue.inc');

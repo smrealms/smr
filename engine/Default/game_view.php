@@ -1,5 +1,5 @@
 <?
 
-$smarty->assign('PageTopic','VIEW GAME');
+$template->assign('PageTopic','VIEW GAME');
 
 ?>

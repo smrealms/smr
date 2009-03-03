@@ -26,7 +26,7 @@ if($port->getReinforceTime() > TIME) {
 }
 
 // topic
-$smarty->assign('PageTopic','PORT IN SECTOR #'.$player->getSectorID());
+$template->assign('PageTopic','PORT IN SECTOR #'.$player->getSectorID());
 
 $container = array();
 $container['url'] = 'skeleton.php';

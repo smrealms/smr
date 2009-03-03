@@ -4,7 +4,7 @@ else $alliance_id = $player->getAllianceID();
 define('WITHDRAW',0);
 define('DEPOSIT',1);
 
-$smarty->assign('PageTopic','Alliance Bank Report');
+$template->assign('PageTopic','Alliance Bank Report');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bank_menue();

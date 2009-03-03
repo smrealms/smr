@@ -6,7 +6,7 @@ $thread_id = $var['thread_ids'][$thread_index];
 
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
-$smarty->assign('PageTopic',stripslashes($var['thread_topics'][$thread_index]));
+$template->assign('PageTopic',stripslashes($var['thread_topics'][$thread_index]));
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 

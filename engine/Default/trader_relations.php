@@ -1,5 +1,5 @@
 <?
-$smarty->assign('PageTopic','TRADER RELATIONS');
+$template->assign('PageTopic','TRADER RELATIONS');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_trader_menue();

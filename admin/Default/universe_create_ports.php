@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','CREATE UNIVERSE - ADDING PORTS (5/10)');
+$template->assign('PageTopic','CREATE UNIVERSE - ADDING PORTS (5/10)');
 
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);

@@ -12,7 +12,7 @@ if (!$player->isLandedOnPlanet()) {
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 
-$smarty->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$player->getSectorID().']');
+$template->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$player->getSectorID().']');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_planet_menue();

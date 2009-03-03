@@ -6,14 +6,14 @@ require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 
-function enableProtectionDependantRefresh(&$smarty,&$player)
+function enableProtectionDependantRefresh(&$template,&$player)
 {
 	$ajaxRefresh = 1000;
 	if ($player->getNewbieTurns())
 		$ajaxRefresh=10000;
 	elseif ($player->hasFederalProtection())
 		$ajaxRefresh=6000;
-	$smarty->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
+	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
 
 function hardware_is_mining_drone($hardwareTypeID)
@@ -179,32 +179,6 @@ function get_file_loc($file_name, $exists = 1)
 	elseif (file_exists(WWW . $file_name)) return WWW . $file_name;
 	elseif ($exists == 1) return ENGINE . 'empty.php';
 	else return $file_name;
-
-}
-
-function get_template_loc($file_name, $exists = 1) {
-
-	global $g_id;
-	static $stored_dir;
-	if(isset($stored_dir)) {
-		$game_dir = $stored_dir;
-	}
-	else {
-		if (SmrSession::$game_id > 0 || $g_id > 0) {
-			if ($g_id > 0) $game_id = $g_id;
-			else $g_id = SmrSession::$game_id;
-			$stored_dir = Globals::getGameType($g_id) . '/';
-			$game_dir = $stored_dir;
-		} else $game_dir = 'Default/';
-	}
-	$file_name .= '.tpl';
-	if (file_exists(SMARTY_TEMPLATES_DIR . 'engine/' . $game_dir . $file_name)) return SMARTY_TEMPLATES_DIR . 'engine/' . $game_dir . $file_name;
-	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'engine/' . 'Default/' . $file_name)) return SMARTY_TEMPLATES_DIR . 'engine/' . 'Default/' . $file_name;
-	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'admin/' . $game_dir . $file_name)) return SMARTY_TEMPLATES_DIR . 'admin/' . $game_dir . $file_name;
-	elseif (file_exists(SMARTY_TEMPLATES_DIR . 'admin/' . 'Default/' . $file_name)) return SMARTY_TEMPLATES_DIR . 'admin/' . 'Default/' . $file_name;
-	elseif (file_exists(SMARTY_TEMPLATES_DIR .  $file_name)) return SMARTY_TEMPLATES_DIR . $file_name;
-//	elseif ($exists == 1) return ENGINE . 'empty.php';
-	else return 'default.tpl';//return $file_name;
 
 }
 
@@ -414,7 +388,7 @@ function do_voodoo()
 		exit;
 //	ob_clean();
 
-	global $lock, $var,$smarty,$time_start,$db,$account;
+	global $lock, $var,$template,$time_start,$db,$account;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -481,28 +455,28 @@ function do_voodoo()
 			include_once(get_file_loc($var['body']));
 			
 		if($PHP_OUTPUT!='')
-			$smarty->assign('PHP_OUTPUT',$PHP_OUTPUT);
+			$template->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
 	
-	$smarty->assign('TemplateBody',$var['body']);
+	$template->assign('TemplateBody',$var['body']);
 	$time_elapsed = microtime(true) - $time_start;
 	if (SmrSession::$game_id > 0)
 	{
-		$smarty->assign_by_ref('ThisSector',$sector);
-		$smarty->assign_by_ref('ThisPlayer',$player);
-		$smarty->assign_by_ref('ThisShip',$ship);
+		$template->assignByRef('ThisSector',$sector);
+		$template->assignByRef('ThisPlayer',$player);
+		$template->assignByRef('ThisShip',$ship);
 	}
-	$smarty->assign_by_ref('ThisAccount',$account);
-	doSkeletionAssigns($smarty,$player,$ship,$sector,$db,$account);
-	$smarty->assign('ScriptRuntime',number_format($time_elapsed,4));
+	$template->assignByRef('ThisAccount',$account);
+	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
+	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
 	if(USING_AJAX)
 	{
 		header('Content-Type: text/xml');
-		$smarty->display(get_template_loc('ajax_skeleton.php'));
+		$template->display('ajax_skeleton.php');
 	}
 	else
-		$smarty->display(get_template_loc($var['url']));
+		$template->display($var['url']);
 	
 	if($lock)
 	{ //only save if we have the lock.
@@ -576,39 +550,39 @@ function release_lock()
 	$lock=false;
 }
 
-function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
+function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 {
-	$smarty->assign('fontSize',$account->fontsize);
-	$smarty->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
+	$template->assign('fontSize',$account->fontsize);
+	$template->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
 	if(!$account->isUseAJAX())
-		$smarty->assign('AJAX_ENABLE_REFRESH',false);
+		$template->assign('AJAX_ENABLE_REFRESH',false);
 	
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	
 	if (SmrSession::$game_id > 0)
 	{
-		$smarty->assign('GameID',SmrSession::$game_id);
+		$template->assign('GameID',SmrSession::$game_id);
 	
 		if ($player->isLandedOnPlanet())
 		{
 			$container['url'] = 'planet_main_processing.php';
 			$container['body'] = '';
-			$smarty->assign('PlanetMainLink',SmrSession::get_new_href($container));
+			$template->assign('PlanetMainLink',SmrSession::get_new_href($container));
 		}
 		else
 		{
 			$container['body'] = 'map_local.php';
-			$smarty->assign('LocalMapLink',SmrSession::get_new_href($container));
+			$template->assign('LocalMapLink',SmrSession::get_new_href($container));
 		}
 	
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'course_plot.php';
-		$smarty->assign('PlotCourseLink',SmrSession::get_new_href($container));
+		$template->assign('PlotCourseLink',SmrSession::get_new_href($container));
 		
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'trader_status.php';
-		$smarty->assign('TraderLink',SmrSession::get_new_href($container));
+		$template->assign('TraderLink',SmrSession::get_new_href($container));
 	
 		if ($player->getAllianceID() > 0)
 		{
@@ -619,58 +593,58 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 			$container['body'] = 'alliance_list.php';
 			$container['order'] = 'alliance_name';
 		}
-		$smarty->assign('AllianceLink',SmrSession::get_new_href($container));
+		$template->assign('AllianceLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'combat_log_viewer.php';
-		$smarty->assign('CombatLogsLink',SmrSession::get_new_href($container));
+		$template->assign('CombatLogsLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'trader_planet.php';
-		$smarty->assign('PlanetLink',SmrSession::get_new_href($container));
+		$template->assign('PlanetLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'forces_list.php';
-		$smarty->assign('ForcesLink',SmrSession::get_new_href($container));
+		$template->assign('ForcesLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'message_view.php';
-		$smarty->assign('MessagesLink',SmrSession::get_new_href($container));
+		$template->assign('MessagesLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'news_read_current.php';
-		$smarty->assign('ReadNewsLink',SmrSession::get_new_href($container));
+		$template->assign('ReadNewsLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'galactic_post_read.php';
-		$smarty->assign('GalacticPostLink',SmrSession::get_new_href($container));
+		$template->assign('GalacticPostLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'trader_search.php';
-		$smarty->assign('SearchForTraderLink',SmrSession::get_new_href($container));
+		$template->assign('SearchForTraderLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'current_players.php';
-		$smarty->assign('CurrentPlayersLink',SmrSession::get_new_href($container));
+		$template->assign('CurrentPlayersLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'rankings_player_experience.php';
-		$smarty->assign('RankingsLink',SmrSession::get_new_href($container));
+		$template->assign('RankingsLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'hall_of_fame_new.php';
-		$smarty->assign('HallOfFameLink',SmrSession::get_new_href($container));
+		$template->assign('HallOfFameLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'hall_of_fame_new.php';
 		$container['game_id'] = $player->getGameID();
-		$smarty->assign('CurrentHallOfFameLink',SmrSession::get_new_href($container));
+		$template->assign('CurrentHallOfFameLink',SmrSession::get_new_href($container));
 		unset($container['game_id']);
 	}
 	
 	if (SmrSession::$account_id > 0 && empty($var['logoff']))
 	{
-		$smarty->assign('AccountID',SmrSession::$account_id);
+		$template->assign('AccountID',SmrSession::$account_id);
 		$container['body'] = '';
 		$container['url'] = 'game_play_preprocessing.php';
-		$smarty->assign('PlayGameLink',SmrSession::get_new_href($container));
+		$template->assign('PlayGameLink',SmrSession::get_new_href($container));
 	
 		$container['url'] = 'logoff_preprocessing.php';
-		$smarty->assign('LogoutLink',SmrSession::get_new_href($container));
+		$template->assign('LogoutLink',SmrSession::get_new_href($container));
 	}
 	
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'preferences.php';
-	$smarty->assign('PreferencesLink',SmrSession::get_new_href($container));
+	$template->assign('PreferencesLink',SmrSession::get_new_href($container));
 	
 	/*
 	$container['body'] = '';
@@ -686,22 +660,22 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	//}
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'album_edit.php';
-	$smarty->assign('EditPhotoLink',SmrSession::get_new_href($container));
+	$template->assign('EditPhotoLink',SmrSession::get_new_href($container));
 	
 	$container['body'] = 'bug_report.php';
-	$smarty->assign('ReportABugLink',SmrSession::get_new_href($container));
+	$template->assign('ReportABugLink',SmrSession::get_new_href($container));
 	
 	$container['body'] = 'contact.php';
-	$smarty->assign('ContactFormLink',SmrSession::get_new_href($container));
+	$template->assign('ContactFormLink',SmrSession::get_new_href($container));
 	
 	if (SmrSession::$game_id > 0)
 	{
 		$container['body'] = 'chat_rules.php';
-		$smarty->assign('IRCLink',SmrSession::get_new_href($container));
+		$template->assign('IRCLink',SmrSession::get_new_href($container));
 	}
 	
 	$container['body'] = 'donation.php';
-	$smarty->assign('DonateLink',SmrSession::get_new_href($container));
+	$template->assign('DonateLink',SmrSession::get_new_href($container));
 	
 	
 	
@@ -731,45 +705,45 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 			if(isset($messages[MSG_GLOBAL])) {
 				$container['folder_id'] = MSG_GLOBAL;
-				$smarty->assign('MessageGlobalLink',SmrSession::get_new_href($container));
-				$smarty->assign('MessageGlobalNum',$messages[MSG_GLOBAL]);
+				$template->assign('MessageGlobalLink',SmrSession::get_new_href($container));
+				$template->assign('MessageGlobalNum',$messages[MSG_GLOBAL]);
 			}
 	
 			if(isset($messages[MSG_PLAYER])) {
 				$container['folder_id'] = MSG_PLAYER;
-				$smarty->assign('MessagePersonalLink',SmrSession::get_new_href($container));
-				$smarty->assign('MessagePersonalNum',$messages[MSG_PLAYER]);
+				$template->assign('MessagePersonalLink',SmrSession::get_new_href($container));
+				$template->assign('MessagePersonalNum',$messages[MSG_PLAYER]);
 			}
 	
 			if(isset($messages[MSG_SCOUT])) {
 				$container['folder_id'] = MSG_SCOUT;
-				$smarty->assign('MessageScoutLink',SmrSession::get_new_href($container));
-				$smarty->assign('MessageScoutNum',$messages[MSG_SCOUT]);
+				$template->assign('MessageScoutLink',SmrSession::get_new_href($container));
+				$template->assign('MessageScoutNum',$messages[MSG_SCOUT]);
 			}
 	
 			if(isset($messages[MSG_POLITICAL])) {
 				$container['folder_id'] = MSG_POLITICAL;
-				$smarty->assign('MessagePoliticalLink',SmrSession::get_new_href($container));
-				$smarty->assign('MessagePoliticalNum',$messages[MSG_POLITICAL]);
+				$template->assign('MessagePoliticalLink',SmrSession::get_new_href($container));
+				$template->assign('MessagePoliticalNum',$messages[MSG_POLITICAL]);
 			}
 	
 			if(isset($messages[MSG_ALLIANCE])) {
 				$container['folder_id'] = MSG_ALLIANCE;
-				$smarty->assign('MessageAllianceLink',SmrSession::get_new_href($container));
-				$smarty->assign('MessageAllianceNum',$messages[MSG_ALLIANCE]);
+				$template->assign('MessageAllianceLink',SmrSession::get_new_href($container));
+				$template->assign('MessageAllianceNum',$messages[MSG_ALLIANCE]);
 			}
 	
 			if(isset($messages[MSG_ADMIN])) {
 				$container['folder_id'] = MSG_ADMIN;
-				$smarty->assign('MessageAdminLink',SmrSession::get_new_href($container));
-				$smarty->assign('MessageAdminNum',$messages[MSG_ADMIN]);
+				$template->assign('MessageAdminLink',SmrSession::get_new_href($container));
+				$template->assign('MessageAdminNum',$messages[MSG_ADMIN]);
 			}
 	
 			if(isset($messages[MSG_PLANET])) {
 				$container = array();
 				$container['url'] = 'planet_msg_processing.php';
-				$smarty->assign('MessagePlanetLink',SmrSession::get_new_href($container));
-				$smarty->assign('MessagePlanetNum',$messages[MSG_PLANET]);
+				$template->assign('MessagePlanetLink',SmrSession::get_new_href($container));
+				$template->assign('MessagePlanetNum',$messages[MSG_PLANET]);
 			}
 		}
 	
@@ -777,22 +751,22 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'trader_search_result.php';
 		$container['player_id']	= $player->getPlayerID();
-		$smarty->assign('PlayerNameLink',SmrSession::get_new_href($container));
+		$template->assign('PlayerNameLink',SmrSession::get_new_href($container));
 		
 		global $HIDDEN_PLAYERS;
-		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $smarty->assign('PlayerInvisible',true);
+		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $template->assign('PlayerInvisible',true);
 	
 		if ($player->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT)
 			$colour = 'green';
 		else
 			$colour = 'red';
-		$smarty->assign('NewbieTurnsColour',$colour);
+		$template->assign('NewbieTurnsColour',$colour);
 	
 		$db->query('SELECT ship_name FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID().' LIMIT 1');
 		if ($db->nextRecord()) {
 			//they have a name so we echo it
-			$smarty->assign('PlayerShipCustomName',stripslashes($db->getField('ship_name')));
+			$template->assign('PlayerShipCustomName',stripslashes($db->getField('ship_name')));
 		}
 	
 		// ******* Hardware *******
@@ -800,10 +774,10 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'configure_hardware.php';
 	
-		$smarty->assign('HardwareLink',SmrSession::get_new_href($container));
+		$template->assign('HardwareLink',SmrSession::get_new_href($container));
 	
 		// ******* Forces *******
-		$smarty->assign('ForceDropLink',SmrSession::get_new_href(create_container('skeleton.php', 'forces_drop.php')));
+		$template->assign('ForceDropLink',SmrSession::get_new_href(create_container('skeleton.php', 'forces_drop.php')));
 	
 		if ($ship->hasMines())
 		{
@@ -812,7 +786,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 			$container['url'] = 'forces_drop_processing.php';
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
-			$smarty->assign('DropMineLink',SmrSession::get_new_href($container));
+			$template->assign('DropMineLink',SmrSession::get_new_href($container));
 		}
 		if ($ship->hasCDs()) 
 		{
@@ -821,7 +795,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 			$container['url'] = 'forces_drop_processing.php';
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
-			$smarty->assign('DropCDLink',SmrSession::get_new_href($container));
+			$template->assign('DropCDLink',SmrSession::get_new_href($container));
 	
 		}
 	
@@ -832,13 +806,13 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 			$container['url'] = 'forces_drop_processing.php';
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
-			$smarty->assign('DropSDLink',SmrSession::get_new_href($container));
+			$template->assign('DropSDLink',SmrSession::get_new_href($container));
 	
 		}
 	
-		$smarty->assign('CargoJettisonLink',SmrSession::get_new_href(create_container('skeleton.php', 'cargo_dump.php')));
+		$template->assign('CargoJettisonLink',SmrSession::get_new_href(create_container('skeleton.php', 'cargo_dump.php')));
 	
-		$smarty->assign('WeaponReorderLink',SmrSession::get_new_href(create_container('skeleton.php', 'weapon_reorder.php')));
+		$template->assign('WeaponReorderLink',SmrSession::get_new_href(create_container('skeleton.php', 'weapon_reorder.php')));
 	
 		
 	}
@@ -884,7 +858,7 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $vote_links[$i]['name'] . '"></a>';
 	}
-	$smarty->assign('VoteSites',$voteSite);
+	$template->assign('VoteSites',$voteSite);
 	
 	
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
@@ -897,8 +871,8 @@ function doSkeletionAssigns(&$smarty,&$player,&$ship,&$sector,&$db,&$account)
 	
 	}
 	
-	$smarty->assign('Version',$version);
-	$smarty->assign('CurrentYear',date('Y',TIME));
+	$template->assign('Version',$version);
+	$template->assign('CurrentYear',date('Y',TIME));
 //	$launch = mktime(0,0,0,3,12,2008);
 //	$now = TIME;
 //	if ($launch - $now > 0)

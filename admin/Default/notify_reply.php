@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','REPLY TO REPORTED MESSAGES');
+$template->assign('PageTopic','REPLY TO REPORTED MESSAGES');
 
 $container = array();
 $container['url']        = 'notify_reply_processing.php';

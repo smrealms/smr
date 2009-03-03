@@ -4,7 +4,7 @@ $admin_id = $_POST['admin_id'];
 if (!empty($var['admin_id']))
 	$admin_id = $var['admin_id'];
 
-$smarty->assign('PageTopic','Manage Admin Permissions');
+$template->assign('PageTopic','Manage Admin Permissions');
 
 $PHP_OUTPUT.=('List of Accounts with Permissions:<br /><small>Click for details</small>');
 $PHP_OUTPUT.=('<ul>');

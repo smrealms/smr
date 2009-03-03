@@ -22,7 +22,7 @@ $db->query('SELECT * FROM player ' .
 				  'game_id = '.$game_id);
 $current = $db->getNumRows();
 $PHP_OUTPUT.=('<div align=center>');
-$smarty->assign('PageTopic','Game Stats for '.$game_name);
+$template->assign('PageTopic','Game Stats for '.$game_name);
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.='<tr><td align=center>General Info</td><td align=center>Other Info</td></tr>
 <tr>
@@ -112,7 +112,7 @@ $PHP_OUTPUT.='
 </tr>
 </table>';
 
-$smarty->assign('PageTopic','CURRENT PLAYERS');
+$template->assign('PageTopic','CURRENT PLAYERS');
 
 $db->query('SELECT * FROM active_session
 			WHERE last_accessed >= ' . (TIME - 600) . ' AND

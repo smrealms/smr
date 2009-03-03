@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','LIST OF ALLIANCES');
+$template->assign('PageTopic','LIST OF ALLIANCES');
 
 $PHP_OUTPUT.= '<div align="center">';
 

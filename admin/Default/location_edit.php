@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('ViewAllLocationsLink',SmrSession::get_new_href(create_container('skeleton.php','location_edit.php')));
+$template->assign('ViewAllLocationsLink',SmrSession::get_new_href(create_container('skeleton.php','location_edit.php')));
 
 require_once(get_file_loc('SmrLocation.class.inc'));
 
@@ -33,9 +33,9 @@ if(isset($var['location_type_id']))
 	}
 	
 	
-	$smarty->assign_by_ref('Location',$location);
-	$smarty->assign_by_ref('Ships',AbstractSmrShip::getAllBaseShips($var['game_type_id']));
-	$smarty->assign_by_ref('Weapons',SmrWeapon::getAllWeapons($var['game_type_id']));
+	$template->assignByRef('Location',$location);
+	$template->assignByRef('Ships',AbstractSmrShip::getAllBaseShips($var['game_type_id']));
+	$template->assignByRef('Weapons',SmrWeapon::getAllWeapons($var['game_type_id']));
 	
 	
 	$db->query('SELECT * FROM hardware_type');
@@ -45,7 +45,7 @@ if(isset($var['location_type_id']))
 		$hardware[$db->getField('hardware_type_id')] = array('ID' => $db->getField('hardware_type_id'),
 														'Name' => $db->getField('hardware_name'));
 	}
-	$smarty->assign_by_ref('AllHardware',$hardware);
+	$template->assignByRef('AllHardware',$hardware);
 }
 else
 {
@@ -56,6 +56,6 @@ else
 		$locations[$db->getField('location_type_id')] =& SmrLocation::getLocation($db->getField('location_type_id'));
 	}
 	
-	$smarty->assign_by_ref('Locations',$locations);
+	$template->assignByRef('Locations',$locations);
 }
 ?>

@@ -7,7 +7,7 @@ if ($player->getAlignment() >= 100) {
 
 }
 
-$smarty->assign('PageTopic','Underground HQ');
+$template->assign('PageTopic','Underground HQ');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_ug_menue();

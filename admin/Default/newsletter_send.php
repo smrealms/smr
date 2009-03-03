@@ -1,7 +1,7 @@
 <?
 
 
-$smarty->assign('PageTopic','NEWSLETTER');
+$template->assign('PageTopic','NEWSLETTER');
 
 $PHP_OUTPUT.=('Please enter an eMail address where the newsletter should be sent:');
 $PHP_OUTPUT.=create_echo_form(create_container('newsletter_send_processing.php', ''));

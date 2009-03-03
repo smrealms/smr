@@ -1,11 +1,11 @@
 <?
 $results = unserialize($var['results']);
-$smarty->assign_by_ref('TraderCombatResults',$results);
+$template->assignByRef('TraderCombatResults',$results);
 if($var['target'])
-	$smarty->assign_by_ref('Target',SmrPlayer::getPlayer($var['target'],SmrSession::$game_id));
+	$template->assignByRef('Target',SmrPlayer::getPlayer($var['target'],SmrSession::$game_id));
 if(isset($var['override_death']))
-	$smarty->assign('OverrideDeath',true);
+	$template->assign('OverrideDeath',true);
 else
-	$smarty->assign('OverrideDeath',false);
+	$template->assign('OverrideDeath',false);
 
 ?>

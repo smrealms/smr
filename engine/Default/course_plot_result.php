@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 
-$smarty->assign('PageTopic','PLOT A COURSE');
+$template->assign('PageTopic','PLOT A COURSE');
 
 // create menu
 $container = array();

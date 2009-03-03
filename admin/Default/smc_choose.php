@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Generate SMC Files');
+$template->assign('PageTopic','Generate SMC Files');
 
 $container = array();
 $container['url'] = 'smc_new.php';

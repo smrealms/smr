@@ -18,7 +18,7 @@ $db->query('SELECT * FROM alliance WHERE alliance_id = '.$id.' AND game_id = '.$
 $db->nextRecord();
 $PHP_OUTPUT.=('<div align=center>');
 $PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
-$smarty->assign('PageTopic','Alliance Roster - ' . stripslashes($db->getField('alliance_name')));
+$template->assign('PageTopic','Alliance Roster - ' . stripslashes($db->getField('alliance_name')));
 
 $PHP_OUTPUT.= '
 <table cellspacing="0" cellpadding="0" class="standard">

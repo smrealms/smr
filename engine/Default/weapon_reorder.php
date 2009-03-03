@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','WEAPON REORDER');
+$template->assign('PageTopic','WEAPON REORDER');
 
 if (isset($var['Up']) && is_numeric($var['Up']))
 {

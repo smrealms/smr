@@ -22,11 +22,11 @@ $story_available = array(0,1,2,3,4,5,6,7);
 
 if (sizeof($story_available) > 0)
 {
-	$smartyStory = array();
+	$templateStory = array();
 	foreach ($story_available as $story_id)
 	{
-		$smartyStory[] = $story[$story_id];
+		$templateStory[] = $story[$story_id];
 	}
-	$smarty->assign('Story', $smartyStory);
+	$template->assign('Story', $templateStory);
 }
 ?>

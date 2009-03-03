@@ -5,7 +5,7 @@ if($player->isLandedOnPlanet())
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 
-$smarty->assign('ThisSector',$sector);
+$template->assign('ThisSector',$sector);
 
 // get our rank
 $rank_id = $account->get_rank();
@@ -16,7 +16,7 @@ if ($sector->getGalaxyID()<9 && $rank_id < FLEDGLING && $account->veteran == 'FA
 	$galaxyName .= ' - Newbie';
 }
 
-$smarty->assign('Topic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$galaxyName . ')');
+$template->assign('Topic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$galaxyName . ')');
 
 // *******************************************
 // *
@@ -69,7 +69,7 @@ foreach($links as $key => $linkArray)
 	}
 }
 
-$smarty->assign('Sectors',$links);
+$template->assign('Sectors',$links);
 
 
 //any ticker news?
@@ -119,7 +119,7 @@ if($player->hasTickers())
 			}
 		}
 	}
-	$smarty->assign('Ticker',$ticker);
+	$template->assign('Ticker',$ticker);
 }
 
 // *******************************************
@@ -133,7 +133,7 @@ if ($player->getTurnsLevel() == 'LOW')
 if ($player->getTurnsLevel() == 'MEDIUM')
 	$turnsMessage = '<span class="yellow">WARNING</span>: You are running out of maintenance!';
 
-$smarty->assign('TurnsMessage',$turnsMessage);
+$template->assign('TurnsMessage',$turnsMessage);
 
 $protectionMessage = '';
 if ($player->getNewbieTurns())
@@ -152,9 +152,9 @@ elseif ($player->hasFederalProtection())
 elseif($sector->offersFederalProtection())
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 
-$smarty->assign('ProtectionMessage',$protectionMessage);
+$template->assign('ProtectionMessage',$protectionMessage);
 
-enableProtectionDependantRefresh($smarty,$player);
+enableProtectionDependantRefresh($template,$player);
 
 $db->query('SELECT * FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 if ($db->nextRecord())
@@ -166,7 +166,7 @@ if ($db->nextRecord())
 if (isset($var['msg']))
 {
 	checkForForceRefreshMessage($var['msg']);
-	$smarty->assign('VarMessage',$var['msg']);
+	$template->assign('VarMessage',$var['msg']);
 }
 
 
@@ -176,7 +176,7 @@ if ($player->getAccountID() == 2)
 	if ($db->nextRecord()) $msg .= '<br />In Sector:'.$db->getField('sector_id').'<br />';
 }
 //error msgs take precedence
-if (isset($var['errorMsg'])) $smarty->assign('ErrorMessage', $var['errorMsg']);
+if (isset($var['errorMsg'])) $template->assign('ErrorMessage', $var['errorMsg']);
 
 // *******************************************
 // *
@@ -201,7 +201,7 @@ if (!empty($var['traded_xp']) ||
 
 	$tradeMessage .= '<br />';
 	
-	$smarty->assign('TradeMessage',$tradeMessage);
+	$template->assign('TradeMessage',$tradeMessage);
 }
 
 
@@ -223,23 +223,23 @@ if($sector->hasPort())
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'trader_relations.php';
-	$smarty->assign('TraderRelationsLink', SmrSession::get_new_href($container));
+	$template->assign('TraderRelationsLink', SmrSession::get_new_href($container));
 	
-	$smarty->assign('PortRaceName',get_colored_text($player->getRelation($port->getRaceID()), $RACES[$port->getRaceID()]['Race Name']));
+	$template->assign('PortRaceName',get_colored_text($player->getRelation($port->getRaceID()), $RACES[$port->getRaceID()]['Race Name']));
 	
 	$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
 	$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
-	$smarty->assign('PortIsAtWar',$relations <= -300);
+	$template->assign('PortIsAtWar',$relations <= -300);
 }
 
 function checkForForceRefreshMessage(&$msg)
 {
-	global $db,$player,$smarty;
+	global $db,$player,$template;
 	$contains = 0;
 	$msg = str_replace('[Force Check]','',$contains);
 	if($contains>0)
 	{
-		if(!$smarty->get_template_vars('ForceRefreshMessage'))
+		if(!$template->get_template_vars('ForceRefreshMessage'))
 		{
 			$forceRefreshMessage ='';
 			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' AND refresher = ' . $player->getAccountID() . ' ORDER BY refresh_at DESC LIMIT 1');
@@ -250,7 +250,7 @@ function checkForForceRefreshMessage(&$msg)
 				$db->query('REPLACE INTO sector_message (game_id, account_id, message) VALUES ('.$player->getGameID().', '.$player->getAccountID().', \'[Force Check]\')');
 			}
 			else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
-			$smarty->assign('ForceRefreshMessage',$forceRefreshMessage);
+			$template->assign('ForceRefreshMessage',$forceRefreshMessage);
 		}
 	}
 }

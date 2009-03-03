@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Beta LITE');
+$template->assign('PageTopic','Beta LITE');
 
 $PHP_OUTPUT.=('<b style="color:red;">This is the <i>LITE</i> version of the crib...imagine the power of the real one.</b><br /><br />');
 

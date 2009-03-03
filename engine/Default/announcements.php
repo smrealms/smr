@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','ANNOUNCEMENTS');
+$template->assign('PageTopic','ANNOUNCEMENTS');
 
 $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard fullwidth">';
 $PHP_OUTPUT.= '<tr><th>Time</th><th>Message</th></tr>';

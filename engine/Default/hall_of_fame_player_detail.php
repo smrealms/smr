@@ -8,7 +8,7 @@ else
 $base = array();
 
 $hofPlayer =& SmrPlayer::getPlayer($account_id,$var['game_id']);
-$smarty->assign('PageTopic',$hofPlayer->getPlayerName().'Time Hall of Fame');
+$template->assign('PageTopic',$hofPlayer->getPlayerName().'Time Hall of Fame');
 $PHP_OUTPUT.=('<div align=center>');
 
 $db->query('SELECT DISTINCT type FROM player_hof WHERE game_id='.$var['game_id'].' AND account_id='.$account_id.' ORDER BY type');

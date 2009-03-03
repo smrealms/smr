@@ -10,7 +10,7 @@ if (empty($race_id))
 $db->query('SELECT * FROM race ' .
 		   'WHERE race_id = '.$race_id);
 if ($db->nextRecord())
-	$smarty->assign('PageTopic','RULING COUNCIL OF ' . $db->getField('race_name'));
+	$template->assign('PageTopic','RULING COUNCIL OF ' . $db->getField('race_name'));
 
 $president = getPresident($race_id);
 

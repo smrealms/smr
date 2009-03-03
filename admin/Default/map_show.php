@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Show Map');
+$template->assign('PageTopic','Show Map');
 $game_id = $_REQUEST['game_id'];
 // check if we know the game yet
 if (empty($game_id)) {

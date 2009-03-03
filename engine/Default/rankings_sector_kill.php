@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
-$smarty->assign('PageTopic','SECTOR DEATH RANKINGS');
+$template->assign('PageTopic','SECTOR DEATH RANKINGS');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_ranking_menue(3,0);

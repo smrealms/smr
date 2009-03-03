@@ -2,7 +2,7 @@
 
 if (!isset($var['folder_id'])) {
 
-	$smarty->assign('PageTopic','VIEW MESSAGES');
+	$template->assign('PageTopic','VIEW MESSAGES');
 
 	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();
@@ -100,7 +100,7 @@ if (!isset($var['folder_id'])) {
 
 	$db->query('SELECT * FROM message_type WHERE message_type_id = ' . $var['folder_id']);
 	if ($db->nextRecord())
-		$smarty->assign('PageTopic','VIEW ' . $db->getField('message_type_name'));
+		$template->assign('PageTopic','VIEW ' . $db->getField('message_type_name'));
 
 	include(ENGINE . 'global/menue.inc');
 	$PHP_OUTPUT.=create_message_menue();

@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Send Message');
+$template->assign('PageTopic','Send Message');
 $game_id = $_REQUEST['game_id'];
 // check if we know the game yet
 if (empty($game_id)) {

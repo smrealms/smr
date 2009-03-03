@@ -13,7 +13,7 @@ if ($account->validated == 'FALSE') {
 }
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
-$smarty->assign('PageTopic','Bank');
+$template->assign('PageTopic','Bank');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bank_menue();

@@ -13,7 +13,7 @@ $cookieVersion = 'v2';
 $db->query('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
 $container = array();
 $container['url'] = 'account_close.php';
-$smarty->assign('PageTopic','Computer Sharing');
+$template->assign('PageTopic','Computer Sharing');
 $PHP_OUTPUT.=create_echo_form($container);
 while ($db->nextRecord()) {
 	//get info about linked IDs

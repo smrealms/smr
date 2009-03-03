@@ -2,7 +2,7 @@
 
 $rank_id = $account->get_rank();
 
-$smarty->assign('PageTopic','Extended User Rankings');
+$template->assign('PageTopic','Extended User Rankings');
 include(ENGINE . 'global/menue.inc');
 if (SmrSession::$game_id != 0)
 	$PHP_OUTPUT.=create_trader_menue();

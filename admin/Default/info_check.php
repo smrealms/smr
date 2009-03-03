@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','CHECKING INFO');
+$template->assign('PageTopic','CHECKING INFO');
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'info_check.php';

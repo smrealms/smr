@@ -6,7 +6,7 @@ if (!Globals::isBetaOpen())
 	return;
 }
 
-$smarty->assign('PageTopic','Apply for Beta');
+$template->assign('PageTopic','Apply for Beta');
 $PHP_OUTPUT.=('The information on this page will be used by the beta team leader in choosing applicants.<br />');
 $PHP_OUTPUT.=('You must fill in all fields for your application to be considered.');
 
