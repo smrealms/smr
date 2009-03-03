@@ -26,6 +26,7 @@ define('DATE_FULL_SHORT_SPLIT','j/n/Y\<b\r /\>g:i:s A');
 /*
  * Combat system
  */
+define('MIN_TIME_BETWEEN_SHOTS',0.5);
 define('MAXIMUM_FLEET_SIZE', 10);
 define('MINE_ARMOUR', 20);
 define('CD_ARMOUR', 3);

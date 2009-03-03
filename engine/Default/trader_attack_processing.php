@@ -1,5 +1,18 @@
 <?
-$db->query('INSERT INTO debug VALUES (\'attack_speed\','.$player->getAccountID().','.(microtime(true)-$var['time']).')');
+$timeBetweenAttacks = microtime(true)-$var['time'];
+if($timeBetweenShots<MIN_TIME_BETWEEN_SHOTS)
+{
+	$sleepTime = (MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks);
+//	echo '$sleepTime' . $sleepTime . ' ';
+	$sleepTimeMicro = $sleepTime - floor($sleepTime);
+	$sleepTimeSecs = $sleepTime - $sleepTimeMicro;
+	$sleepTimeNano = round($sleepTimeMicro*1000000000);
+//	echo 'Sleeping for: ' . $sleepTimeSecs . 's ' . round($sleepTimeMicro*1000000000) . 'ns' . ' ';
+	time_nanosleep($sleepTimeSecs, $sleepTimeNano);
+}
+$var['time']=microtime(true);
+$db->query('INSERT INTO debug VALUES (\'attack_speed\','.$player->getAccountID().','.($timeBetweenAttacks).')');
+
 if($player->hasNewbieTurns())
 	create_error('You are under newbie protection.');
 if($player->hasFederalProtection())
