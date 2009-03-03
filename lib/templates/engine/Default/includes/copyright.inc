@@ -4,7 +4,7 @@
 			if(!$isFirefox)
 			{ ?>
 				<a class="button" href="http://www.spreadfirefox.com/node&amp;id=216853&amp;t=219" target="firefox">
-					<img alt="Get Firefox!" title="Get Firefox!" src="images/firefoxSmall.gif">
+					<img alt="Get Firefox!" title="Get Firefox!" src="images/firefoxSmall.png">
 				</a>
 			<?php
 			}
