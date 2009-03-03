@@ -7,7 +7,7 @@
 			<?php
 			if($ThisSector->hasAnyLocationsWithAction())
 			{
-				echo '<th>Option</th>';
+				?><th>Option</th><?php
 			} ?>
 		</tr>
 		<?php

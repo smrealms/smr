@@ -135,7 +135,7 @@ div.attack_warning {
 	margin:0px;
 }
 
-/* */
+/***/
 
 table {
 	font-size:100%;
@@ -204,8 +204,8 @@ table.standard {
 }
 table.quote {
 	border:1px solid #0b8d35;
-	cellspacing:0px;
-	cellpadding:1px;
+	border-spacing:0px;
+	padding:1px;
 }
 th{
 	padding:3px;
@@ -418,7 +418,7 @@ div.lm {
 }
 
 div.lms {
-	background-color:#00000;
+	background-color:#000000;
 	height:120px;
 	width:120px;
 	line-height:120px;
@@ -1387,9 +1387,7 @@ a.csw:hover {
 	margin:0px;
 	padding:0px;
 }
-	
 
-}
 a.csw:hover {
 	background: #500000;
 }

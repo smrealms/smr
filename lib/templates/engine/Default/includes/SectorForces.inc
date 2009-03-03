@@ -1,4 +1,4 @@
-<span id="sector_forces">
+<div id="sector_forces">
 	<?php if($ThisSector->hasForces())
 	{
 		$Forces =& $ThisSector->getForces();
@@ -65,7 +65,7 @@
 						<td class="shrink nowrap center">
 							<?php if($SharedForceAlliance)
 							{
-								?><span class="green"><?php echo date(DATE_FULL_SHORT,$Force->getExpire());
+								?><span class="green"><?php echo date(DATE_FULL_SHORT,$Force->getExpire());?></span><?php
 							}
 							else
 							{
@@ -118,4 +118,4 @@
 			</tbody>
 		</table><?php
 	} ?>
-</span>
+</div>

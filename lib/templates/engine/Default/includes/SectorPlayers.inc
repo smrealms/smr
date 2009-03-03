@@ -1,4 +1,4 @@
-<span id="players_cs">
+<div id="players_cs">
 	<?php if($ThisSector->hasOtherTraders())
 	{
 		$Players =& $ThisSector->getOtherTraders();
@@ -69,4 +69,4 @@
 		<?php
 		}
 	} ?>
-</span>
+</div>

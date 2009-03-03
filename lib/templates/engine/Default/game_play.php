@@ -52,7 +52,6 @@ if($Games['Join'])
 			<th>Type</th>
 			<th>Game Speed</th>
 			<th>Credits Needed</th>
-		</tr>
 		</tr><?php
 		foreach($Games['Join'] as $Game)
 		{ ?>
@@ -88,7 +87,6 @@ if($Games['Previous'])
 			<th>End Date</th>
 			<th>Game Speed</th>
 			<th colspan="3">Options</th>
-		</tr>
 		</tr><?php
 		foreach($Games['Previous'] as $Game)
 		{ ?>
@@ -113,10 +111,10 @@ else
 <br />
 <h1>Donate Money</h1>
 <p>
-	<a href="<?php echo $DonateLink ?>"><img src="images/donation.jpg" border="0" /></a>
+	<a href="<?php echo $DonateLink ?>"><img src="images/donation.jpg" border="0" alt="donate" /></a>
 </p>
 <br />
-<a href="<?php echo $OldAnnouncementsLink ?>"><h1>View Old Announcements</h1></a>
+<h1><a href="<?php echo $OldAnnouncementsLink ?>">View Old Announcements</a></h1>
 <br />
 <br />
 
