@@ -289,7 +289,7 @@ abstract class AbstractSmrShip
 	public function removeAllCargo()
 	{
 		foreach($this->cargo as $goodID => $amount)
-			$this->setCargo($goodID,$amount);
+			$this->setCargo($goodID,0);
 	}
 	
 	public function removeAllHardware() {
