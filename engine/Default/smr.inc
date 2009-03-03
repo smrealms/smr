@@ -459,7 +459,6 @@ function do_voodoo()
 	}
 	
 	$template->assign('TemplateBody',$var['body']);
-	$time_elapsed = microtime(true) - $time_start;
 	if (SmrSession::$game_id > 0)
 	{
 		$template->assignByRef('ThisSector',$sector);
@@ -468,6 +467,7 @@ function do_voodoo()
 	}
 	$template->assignByRef('ThisAccount',$account);
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
+	$time_elapsed = microtime(true) - $time_start;
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
 	if(USING_AJAX)
