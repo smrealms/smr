@@ -23,7 +23,7 @@
 						$Ship =& $Player->getShip(); ?>
 						<tr>
 							<td>
-								<<?php echo $Player->getLinkedDisplayName() ?>
+								<?php echo $Player->getLinkedDisplayName() ?>
 							</td>
 							<td><?php if($Ship->hasActiveIllusion())
 							{
