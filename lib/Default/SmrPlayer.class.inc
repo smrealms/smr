@@ -2026,11 +2026,15 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		if(!isset($this->attackTraderHREF))
 		{
+			global $var;
 			$container = array();
 			$container['url']		= 'skeleton.php';
 			$container['body']		= 'trader_attack_processing.php';
 			$container['target']	= $this->getAccountID();
-			$container['time']		= microtime(true);
+			if(isset($var['time']))
+				$container['time']	= $var['time'];
+			else
+				$container['time']	= microtime(true);
 			$this->attackTraderHREF = SmrSession::get_new_href($container);
 		}
 		return $this->attackTraderHREF;
