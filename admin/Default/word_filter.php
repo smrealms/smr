@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','WORD FILTER');
+$template->assign('PageTopic','WORD FILTER');
 
 $db = new SmrMySqlDatabase();
 

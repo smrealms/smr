@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','VIEW FORCES');
+$template->assign('PageTopic','VIEW FORCES');
 
 //allow for ordering of forces
 if (!isset($var['seq']))

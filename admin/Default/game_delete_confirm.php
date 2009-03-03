@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Delete Game - Confirmation');
+$template->assign('PageTopic','Delete Game - Confirmation');
 $game_id = $_REQUEST['game_id'];
 $db->query('SELECT game_name, end_date
 			FROM game

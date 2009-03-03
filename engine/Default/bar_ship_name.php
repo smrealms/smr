@@ -212,7 +212,7 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	
 } else {
 		
-	$smarty->assign('PageTopic','Naming Your Ship');
+	$template->assign('PageTopic','Naming Your Ship');
 	$PHP_OUTPUT.=('<div align="center">');
 	//get bar name
 	$db->query('SELECT location_name FROM location_type NATURAL JOIN location WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND location_type.location_type_id > 800 AND location_type.location_type_id < 900');

@@ -4,7 +4,7 @@ $db->query('SELECT * FROM race WHERE race_id = ' . $var['race_id']);
 if ($db->nextRecord())
 	$race_name = $db->getField('race_name');
 
-$smarty->assign('PageTopic','Send message to ruling council of the '.$race_name);
+$template->assign('PageTopic','Send message to ruling council of the '.$race_name);
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_message_menue();

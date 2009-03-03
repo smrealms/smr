@@ -23,7 +23,7 @@ if ($amount > $account->get_credits()) {
 
 }
 
-$smarty->assign('PageTopic','Confirmation');
+$template->assign('PageTopic','Confirmation');
 
 $PHP_OUTPUT.=('Are you sure you want to transfer '.$amount.' credits to<br />');
 

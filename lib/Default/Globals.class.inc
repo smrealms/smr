@@ -318,5 +318,5 @@ class Globals
 }
 
 
-$smarty->assign('Globals',new Globals()); //Allow access to static globals in smarty
+$template->assign('Globals',new Globals()); //Allow access to static globals in smarty
 ?>

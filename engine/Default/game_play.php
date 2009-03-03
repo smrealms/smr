@@ -5,8 +5,8 @@ if(isset($var['errorMsg']))
 if (isset($var['msg']))
 	$PHP_OUTPUT.=($var['msg'].'<br />');
 
-$smarty->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
-$smarty->assign('UserRankName',$account->get_rank_name());
+$template->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
+$template->assign('UserRankName',$account->get_rank_name());
 
 $db->query('SELECT DATE_FORMAT(end_date, \'%e/%c/%Y\') as format_end_date, end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
 					'WHERE game.game_id = player.game_id AND ' .
@@ -147,13 +147,13 @@ if ($historyDB->getNumRows())
 
 $db = new SmrMySqlDatabase(); // restore database
 
-$smarty->assign('Games',$games);
+$template->assign('Games',$games);
 
 // ***************************************
 // ** Donation Link
 // ***************************************
 
-$smarty->assign('DonateLink', SmrSession::get_new_href(create_container('skeleton.php', 'donation.php')));
+$template->assign('DonateLink', SmrSession::get_new_href(create_container('skeleton.php', 'donation.php')));
 
 // ***************************************
 // ** Announcements View
@@ -162,7 +162,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'announcements.php';
 $container['view_all'] = 'yes';
-$smarty->assign('OldAnnouncementsLink',SmrSession::get_new_href($container));
+$template->assign('OldAnnouncementsLink',SmrSession::get_new_href($container));
 
 // ***************************************
 // ** Admin Functions
@@ -176,7 +176,7 @@ if ($db->getNumRows())
 	{
 		$adminPermissions[] = array( 'PermissionLink' => SmrSession::get_new_href(create_container('skeleton.php',$db->getField('link_to'))), 'Name' => $db->getField('permission_name'));
 	}
-	$smarty->assign('AdminPermissions',$adminPermissions);
+	$template->assign('AdminPermissions',$adminPermissions);
 }
 
 ?>

@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Warning');
+$template->assign('PageTopic','Warning');
 
 $PHP_OUTPUT.=('<p>As you approach the warp you notice a warning beacon nearby. The beacon sends an automated message to your ship.</p>');
 

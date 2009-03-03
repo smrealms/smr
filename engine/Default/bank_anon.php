@@ -31,7 +31,7 @@ if (!isset($account_num))
 	$topic = 'Anonymous Account';
 else
 	$topic = 'Anonymous Account #' . $account_num;
-$smarty->assign('PageTopic',$topic);
+$template->assign('PageTopic',$topic);
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bank_menue();

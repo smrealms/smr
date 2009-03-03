@@ -295,7 +295,7 @@ $playerCanShoot = (sizeof($players[$player->getAccountID()][WEAPONS]) > 0 || $pl
 $playerFed = playerFedCheck($players[$player->getAccountID()], $fedBeacon);
 $playerNewb = ($player->getNewbieTurns());
 $allowedByAlliance = (!$player->getAllianceID() || !$players[$var['target']][ALLIANCE_ID] || $players[$var['target']][ALLIANCE_ID] != $player->getAllianceID());
-$smarty->assign('PageTopic','EXAMINE SHIP');
+$template->assign('PageTopic','EXAMINE SHIP');
 // should we display a attack button
 if ($playerCanShoot && !$playerFed && !$defenderFed && !$playerNewb && !$defenderNewb && $allowedByAlliance && !$allied) {
 	$container = create_container('skeleton.php','trader_attack_processing.php');

@@ -3,7 +3,7 @@ include(get_file_loc('race_voting.php'));
 include(get_file_loc('council.inc'));
 include(ENGINE . 'global/menue.inc');
 
-$smarty->assign('PageTopic','RULING COUNCIL OF '.$player->getRaceName());
+$template->assign('PageTopic','RULING COUNCIL OF '.$player->getRaceName());
 
 $president = getPresident($player->getRaceID());
 

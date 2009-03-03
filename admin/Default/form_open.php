@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','Open/Close Forms');
+$template->assign('PageTopic','Open/Close Forms');
 
 
 $container = array();

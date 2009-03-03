@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','CONFIGURE HARDWARE');
+$template->assign('PageTopic','CONFIGURE HARDWARE');
 
 $PHP_OUTPUT.= '<small>';
 

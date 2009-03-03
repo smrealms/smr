@@ -7,7 +7,7 @@ if ($planet->owner_id != 0) {
 	$planet_owner =& SmrPlayer::getPlayer($planet->owner_id, SmrSession::$game_id);
 	$ownerAllianceID = $planet_owner->getAllianceID();
 } else $ownerAllianceID = 0;
-$smarty->assign('PageTopic','Examine Planet');
+$template->assign('PageTopic','Examine Planet');
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr><td><b>Planet Name:</b></td><td>'.$planet->planet_name.'</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Level:</b></td><td>' . $planet->getLevel() . '</td></tr>');

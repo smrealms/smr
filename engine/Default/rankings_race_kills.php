@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','Racial Standings');
+$template->assign('PageTopic','Racial Standings');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_ranking_menue(2, 1);

@@ -191,7 +191,7 @@ Table of Content
 
 	To echo topics on the pages always use (skeleton.php only)
 
-		$smarty->assign('PageTopic','My Topic');
+		$template->assign('PageTopic','My Topic');
 
 	To echo a form and link always use (skeleton.php only)
 

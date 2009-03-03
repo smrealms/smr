@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','PASSWORD CHECKER');
+$template->assign('PageTopic','PASSWORD CHECKER');
 
 // create account object
 $db2 = new SmrMySqlDatabase();

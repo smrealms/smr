@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','PREFERENCES');
+$template->assign('PageTopic','PREFERENCES');
 
 if (isset($var['reason']))
 	$PHP_OUTPUT.=('<p><big><b style="color:red;">' . $var['reason'] . '</b></big></p>');

@@ -30,7 +30,7 @@ function get_album_nick($album_id) {
 
 }
 
-$smarty->assign('PageTopic','Approve Album Entries');
+$template->assign('PageTopic','Approve Album Entries');
 
 $db->query('SELECT *
 			FROM album

@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','EDIT ACCOUNT');
+$template->assign('PageTopic','EDIT ACCOUNT');
 
 $account_id = $_REQUEST['account_id'];
 $login = $_REQUEST['login'];

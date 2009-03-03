@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','VIEWING REPORTED MESSAGES');
+$template->assign('PageTopic','VIEWING REPORTED MESSAGES');
 $db2 = new SmrMySqlDatabase();
 $db->query('DELETE FROM message_notify WHERE from_id = 0');
 $db->query('SELECT * FROM message_notify');

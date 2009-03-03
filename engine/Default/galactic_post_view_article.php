@@ -1,5 +1,5 @@
 <?
-$smarty->assign('PageTopic','VIEWING ARTICLES');
+$template->assign('PageTopic','VIEWING ARTICLES');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_galactic_post_menue();
 $db2 = new SmrMySqlDatabase();

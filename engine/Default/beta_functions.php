@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Beta things');
+$template->assign('PageTopic','Beta things');
 
 $PHP_OUTPUT.=('<b style="color:red;">BIG WARNING! Be reasonable with he things you load to your ship! NEVER, i repeat NEVER (and it means NEVER) load more on a ship than suppossed to be on. NEVER give you more relation than 500. NEVER put you in a sector that doesn\'t exist! Don\'t say you haven\'t been warned! I WILL NOT fix your trader if you did!</b><br /><br />');
 

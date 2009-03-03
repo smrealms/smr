@@ -5,7 +5,7 @@ else $alliance_id = $player->getAllianceID();
 $db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $leader_id = $db->getField('leader_id');
-$smarty->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
+$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 

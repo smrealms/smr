@@ -429,6 +429,22 @@ abstract class AbstractSmrPlayer
 //NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
 			return get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
 	}
+
+	public function getLinkedDisplayName()
+	{
+		$return = '<a href="'.$this->getTraderSearchHREF().'">'.$this->getDisplayName().'</a> (';
+		if($this->hasAlliance())
+		{
+			$return .= '<a href="'.$this->getAllianceRosterHREF().'">';
+		}
+		$return .= $this->getAllianceName();
+		if($this->hasAlliance())
+		{
+			$return.'</a>';
+		}
+		$return.= ')';
+		return $return;
+	}
 	
 	public function getRaceID()
 	{

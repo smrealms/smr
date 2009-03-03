@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','SEARCH TRADER');
+$template->assign('PageTopic','SEARCH TRADER');
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
 $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'trader_search_result.php'));

@@ -18,7 +18,7 @@ function build_list($array) {
 
 }
 
-$smarty->assign('PageTopic','Log Console - Detail');
+$template->assign('PageTopic','Log Console - Detail');
 
 // get the account_ids from last form
 if ($_POST['account_ids'])

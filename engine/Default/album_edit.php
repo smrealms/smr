@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Edit Photo');
+$template->assign('PageTopic','Edit Photo');
 
 $PHP_OUTPUT.=('<p><span style="font-size:80%;">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br />');
 $PHP_OUTPUT.=('We only accept jpg or gif images to a maximum of 500 x 500 in size.<br />');

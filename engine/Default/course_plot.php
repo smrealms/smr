@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','PLOT A COURSE');
+$template->assign('PageTopic','PLOT A COURSE');
 
 // create menu
 $container = array();

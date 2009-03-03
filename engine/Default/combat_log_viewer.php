@@ -1,8 +1,8 @@
 <?php
 
-$smarty->assign('PageTopic','Combat Logs');
+$template->assign('PageTopic','Combat Logs');
 include(ENGINE . 'global/menue.inc');
-$smarty->assign('MenuBar',create_combat_log_menue());
+$template->assign('MenuBar',create_combat_log_menue());
 if (isset($_REQUEST['action'])) {
 	$submitAction = $_REQUEST['action'];
 	if ($submitAction == 'Save' && isset($_POST['id'])) {
@@ -77,12 +77,12 @@ if($action == 5) {
 			if($container['current_log'] > 0)
 			{
 				$container['direction'] = 1;
-				$smarty->assign('PreviousLogHREF',SmrSession::get_new_href($container));
+				$template->assign('PreviousLogHREF',SmrSession::get_new_href($container));
 			}
 			if($container['current_log'] < count($container['log_ids']) - 1)
 			{
 				$container['direction'] = 2;
-				$smarty->assign('NextLogHREF',SmrSession::get_new_href($container));
+				$template->assign('NextLogHREF',SmrSession::get_new_href($container));
 			}
 		}
 	}
@@ -96,11 +96,11 @@ if(isset($display_id))
 
 	if($db->nextRecord())
 	{
-		$smarty->assign('CombatLogSector',$db->getField('sector_id'));
-		$smarty->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
+		$template->assign('CombatLogSector',$db->getField('sector_id'));
+		$template->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
 		$results = unserialize(gzuncompress($db->getField('result')));
-		$smarty->assign('CombatResultsType',$db->getField('type'));
-		$smarty->assign_by_ref('CombatResults',$results);
+		$template->assign('CombatResultsType',$db->getField('type'));
+		$template->assignByRef('CombatResults',$results);
 	}
 	else
 	{

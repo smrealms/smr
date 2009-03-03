@@ -1,6 +1,6 @@
 <?
 $db2 = new SmrMySqlDatabase();
-$smarty->assign('PageTopic','SHIP DEALER');
+$template->assign('PageTopic','SHIP DEALER');
 
 $db->query('SELECT 
 	ship_type.ship_name as ship_name,

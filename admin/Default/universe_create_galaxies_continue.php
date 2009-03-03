@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','CREATE UNIVERSE - ADDING GALAXIES (2/10)');
+$template->assign('PageTopic','CREATE UNIVERSE - ADDING GALAXIES (2/10)');
 
 $galaxy = $var['galaxy'];
 $galaxy_idx = $var['galaxy_idx'];

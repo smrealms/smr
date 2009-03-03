@@ -1,7 +1,7 @@
 <?
-$smarty->assign('AJAX_DISABLE_CONTENT_REFRESH',true);//Stop new news being lost.
+$template->assign('AJAX_DISABLE_CONTENT_REFRESH',true);//Stop new news being lost.
 
-$smarty->assign('PageTopic','CURRENT NEWS');
+$template->assign('PageTopic','CURRENT NEWS');
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_news_menue();
 //we we check for a lotto winner...

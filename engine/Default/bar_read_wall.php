@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
 
-$smarty->assign('PageTopic','READING THE WALL');
+$template->assign('PageTopic','READING THE WALL');
 
 include(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bar_menue();
@@ -40,7 +40,7 @@ if ($db->getNumRows()) {
 	}
     $PHP_OUTPUT.=('</table>');
 }
-$smarty->assign('PageTopic','Write on the wall');
+$template->assign('PageTopic','Write on the wall');
 
 $PHP_OUTPUT.=('<br />');
 

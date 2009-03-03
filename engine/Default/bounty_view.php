@@ -3,7 +3,7 @@
 $bounties = 0;
 $id = $var['id'];
 $curr_player =& SmrPlayer::getPlayer($id, $player->getGameID());
-$smarty->assign('PageTopic','Viewing '.$curr_player->getPlayerName());
+$template->assign('PageTopic','Viewing '.$curr_player->getPlayerName());
 
 if($curr_player->hasBounties())
 {

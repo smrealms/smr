@@ -1,10 +1,10 @@
 <?php
-$smarty->assign('PageTopic','Combat Simulator');
+$template->assign('PageTopic','Combat Simulator');
 
 require_once(get_file_loc('DummyPlayer.class.inc'));
 
-$smarty->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
-$smarty->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
+$template->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
+$template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $duplicates = false;
 $usedNames = array();
@@ -30,7 +30,7 @@ if(isset($_POST['attackers']))
 
 for(;$i<=10;++$i)
 	$attackers[$i] = null;
-$smarty->assign_by_ref('Attackers',$attackers);
+$template->assignByRef('Attackers',$attackers);
 
 $i=1;
 $realDefenders = array();
@@ -54,11 +54,11 @@ if(isset($_POST['defenders']))
 	
 for(;$i<=10;++$i)
 	$defenders[$i] = null;
-$smarty->assign_by_ref('Defenders',$defenders);
+$template->assignByRef('Defenders',$defenders);
 
-$smarty->assign('Duplicates',$duplicates);
+$template->assign('Duplicates',$duplicates);
 
-$smarty->assign('CombatSimHREF',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
+$template->assign('CombatSimHREF',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
 
 if(is_array($realAttackers) && is_array($realDefenders) && count($realAttackers)>0 && count($realDefenders)>0)
 {
@@ -87,7 +87,7 @@ if(is_array($realAttackers) && is_array($realDefenders) && count($realAttackers)
 
 function runAnAttack($realAttackers,$realDefenders)
 {
-	global $smarty;
+	global $template;
 	$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0), 
 					'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
 	foreach($realAttackers as $accountID => &$teamPlayer)
@@ -102,6 +102,6 @@ function runAnAttack($realAttackers,$realDefenders)
 		$results['Defenders']['Traders'][]  =& $playerResults;
 		$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
 	} unset($teamPlayer);
-	$smarty->assign_by_ref('TraderCombatResults',$results);
+	$template->assignByRef('TraderCombatResults',$results);
 }
 ?>

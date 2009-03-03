@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','Check Anonymous Accounts');
+$template->assign('PageTopic','Check Anonymous Accounts');
 
 // a second db object
 $db2 = new SmrMySqlDatabase();

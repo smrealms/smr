@@ -122,12 +122,12 @@ $db->nextRecord();
 $galaxy_name = $db->getField('galaxy_name');
 $galaxy_id = $db->getField('galaxy_id');
 
-$smarty->assign('GalaxyName',$galaxy_name);
+$template->assign('GalaxyName',$galaxy_name);
 
-$smarty->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
+$template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
-$smarty->assign('PlayerHasScanner',$ship->hasScanner());
-$smarty->assign_by_ref('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID()));
+$template->assign('PlayerHasScanner',$ship->hasScanner());
+$template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID()));
 
 $db->query('
 SELECT
@@ -184,10 +184,10 @@ for ($i=1;$i<=$span&&$i<=$rows;$i++)
 		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec,SmrSession::$account_id);
 	}
 }
-$smarty->assign_by_ref('MapSectors',$mapSectors);
-$smarty->assign_by_ref('ThisShip',$ship);
-$smarty->assign_by_ref('ThisPlayer',$player);
-$smarty->display(get_template_loc('GalaxyMap'));
+$template->assignByRef('MapSectors',$mapSectors);
+$template->assignByRef('ThisShip',$ship);
+$template->assignByRef('ThisPlayer',$player);
+$template->display('GalaxyMap.inc');
 
 function get_real_up($sector)
 {

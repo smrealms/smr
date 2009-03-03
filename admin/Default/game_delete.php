@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','DELETING A GAME');
+$template->assign('PageTopic','DELETING A GAME');
 
 $PHP_OUTPUT.=('What game do u want to delete');
 

@@ -1,5 +1,5 @@
 <?
-$smarty->assign('PageTopic','WEAPON DEALER');
+$template->assign('PageTopic','WEAPON DEALER');
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM location, location_sells_weapons, location_type, weapon_type ' .
 					'WHERE location.sector_id = '.$player->getSectorID().' AND ' .
@@ -78,7 +78,7 @@ if ($db->getNumRows() > 0 ) {
 if ($ship->hasWeapons())
 {
 
-	$smarty->assign('PageTopic','SELL WEAPONS');
+	$template->assign('PageTopic','SELL WEAPONS');
 
 	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="1" border="0" class="standard">');
 	$PHP_OUTPUT.=('<tr>');

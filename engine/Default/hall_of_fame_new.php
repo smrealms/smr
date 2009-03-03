@@ -12,7 +12,7 @@ else
 {
 	$topic = Globals::getGameName($game_id).' Hall of Fame';
 }
-$smarty->assign('PageTopic',$topic);
+$template->assign('PageTopic',$topic);
 $PHP_OUTPUT.=('<div align=center>');
 
 $PHP_OUTPUT.=('Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) . '!<br />The Hall of Fame is a comprehensive ');

@@ -38,7 +38,7 @@ if (SmrSession::$account_id > 0)
 }
 
 if(isset($_REQUEST['msg']))
-	$smarty->assign('Message',htmlentities(trim($_REQUEST['msg'])));
+	$template->assign('Message',htmlentities(trim($_REQUEST['msg'])));
 	
 require_once(LIB . 'Login/loginSmarty.php');
 /*
@@ -66,8 +66,6 @@ require_once(LIB . 'Login/loginSmarty.php');
 	<?php
 	if (!empty($_GET['return_page']))
 		$PHP_OUTPUT.=('<input type="hidden" name="return_page" value="' . $_GET['return_page'] . '">');
-	?>
-	<?php
 	$launch = mktime(0,0,0,3,12,2008);
 	$now = TIME;
 	//if ($launch - $now > 0)

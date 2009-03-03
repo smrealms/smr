@@ -5,7 +5,7 @@ if (!Globals::isFeatureRequestOpen())
 	return;
 }
 
-$smarty->assign('PageTopic','FEATURE REQUEST');
+$template->assign('PageTopic','FEATURE REQUEST');
 
 $db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
 if ($db->nextRecord())

@@ -1,6 +1,6 @@
 <?php
 
-$smarty->assign('PageTopic','Change Log');
+$template->assign('PageTopic','Change Log');
 
 $db2 = new SmrMySqlDatabase();
 $first_entry = true;

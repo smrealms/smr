@@ -39,7 +39,7 @@ if (empty($amount) || empty($account_id)) {
 
 }
 
-$smarty->assign('PageTopic','Placing a bounty');
+$template->assign('PageTopic','Placing a bounty');
 
 include(ENGINE . 'global/menue.inc');
 if ($sector->has_hq()) $PHP_OUTPUT.=create_hq_menue();

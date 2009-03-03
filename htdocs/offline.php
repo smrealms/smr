@@ -12,7 +12,7 @@ $db = new SmrMySqlDatabase();
 $db->query('SELECT * FROM game_disable');
 if ($db->nextRecord())
 {
-	$smarty->assign('Message','Space Merchant Realms is currently <strong>OFF-LINE</strong>.<br />'.$db->getField('reason'));
+	$template->assign('Message','Space Merchant Realms is currently <strong>OFF-LINE</strong>.<br />'.$db->getField('reason'));
 }
 else header('Location: '.URL);
 

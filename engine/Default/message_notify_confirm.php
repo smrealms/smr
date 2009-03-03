@@ -1,6 +1,6 @@
 <?
 
-$smarty->assign('PageTopic','Report a Message');
+$template->assign('PageTopic','Report a Message');
 
 if (empty($var['message_id']))
 	create_error('Please click the small yellow icon to report a message!');
