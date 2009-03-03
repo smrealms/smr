@@ -147,14 +147,14 @@ if(isset($GameID))
 		<a href="<?php echo $DropCDLink ?>">
 			<span class="bold">[X]</span>
 		</a><?php
-	} ?>Mines : <?php echo $ThisShip->getCDs() ?>/<?php echo $ThisShip->getMaxCDs() ?><br /><?php
+	} ?>Combat : <?php echo $ThisShip->getCDs() ?>/<?php echo $ThisShip->getMaxCDs() ?><br /><?php
 	
 	if(isset($DropSDLink))
 	{ ?>
 		<a href="<?php echo $DropSDLink ?>">
 			<span class="bold">[X]</span>
 		</a><?php
-	} ?>Mines : <?php echo $ThisShip->getSDs() ?>/<?php echo $ThisShip->getMaxSDs() ?><br />
+	} ?>Scout : <?php echo $ThisShip->getSDs() ?>/<?php echo $ThisShip->getMaxSDs() ?><br />
 	<a href="<?php echo $CargoJettisonLink ?>"><span class="bold">Cargo Holds (<?php echo $ThisShip->getCargoHolds() ?>/<?php echo $ThisShip->getMaxCargoHolds() ?>)</span></a><br />
 	<?php
 	if($ThisShip->hasCargo())
