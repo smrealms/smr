@@ -42,7 +42,7 @@ TH {
 	text-align:center;
 }
 
-#InputFields {
+#InputFields, .InputFields {
 	background : #06240E;
 	color : #FFFFFF;
 	border : 1px solid #80C870;
@@ -133,7 +133,7 @@ small {
 	font-size:75%;
 }
 
-div.attack_warning {
+.attack_warning {
 	text-align:center;
 	border:1px solid #bbbb00;
 	background-color:#550000;
@@ -817,7 +817,7 @@ a.mp_as {
 div.wep_drop1 {
 	cursor:pointer;
 }
-div.wep_drop1 div.wep1 {
+div.wep_drop1 .wep1 {
 	color:#f6ff00;
 }
 

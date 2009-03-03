@@ -1,5 +1,5 @@
 
-<script language="Javascript">
+<script type="text/javascript">
 	function go()
 	{
 		desc = new Array(<?php echo $RaceDescriptions ?>);
@@ -21,7 +21,6 @@
 			<th>Game Speed</th>
 			<th>Credits Needed</th>
 		</tr>
-		</tr>
 		<tr>
 			<td width="40%"><?php echo $Game['Name'] ?> (<?php echo $Game['ID'] ?>)</td>
 			<td><?php echo $Game['StartDate'] ?></td>
@@ -41,7 +40,7 @@
 		<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 			<tr>
 				<td>
-					<span>Each Space Merchant Realms game requires you to create a new Merchant. For this purpose you must choose a name and a race.<br />
+					<p>Each Space Merchant Realms game requires you to create a new Merchant. For this purpose you must choose a name and a race.<br />
 					To enhance the roleplaying atmosphere of the game, there are certain criteria your name must meet.<br />
 					The following names will not be accepted:
 					<ul>
@@ -51,13 +50,13 @@
 					<li>Names that make excessive use of special characters, eg. "~-=[Daron]=-~" should be "Daron" instead.</li>
 					<li>Names that look similar or identical to another player in an attempt to trick other players are prohibited.</li>
 					</ul>
-					If you disregard these rules, your player will be deleted, so choose your name wisely.</span><br />
+					If you disregard these rules, your player will be deleted, so choose your name wisely.</p><br />
 					<br />
 					<table border="0" cellpadding="3">
 						<tr>
 							<td align="right"><b>Name:</b></td>
-							<td><input type="text" name="player_name" maxlength="32" id="InputFields"></td>
-							<td rowspan="4" class="standard"><img name="race_image" src="images/race1.gif"></td>
+							<td><input type="text" name="player_name" maxlength="32" class="InputFields"></td>
+							<td rowspan="4" class="standard"><img name="race_image" src="images/race1.gif" alt="Please select a race."></td>
 						</tr>
 						<tr>
 							<td align="right"><b>Race:</b></td>
@@ -74,13 +73,13 @@
 						
 						<tr>
 							<td align="right">&nbsp;</td>
-							<td><input type="submit" name="action" value="Create Player" id="InputFields">
+							<td><input type="submit" name="action" value="Create Player" class="InputFields">
 							</td>
 						</tr>
 						
 						<tr>
 							<td colspan="2">
-								<textarea name="race_descr" id="InputFields" style="width:300px;height:275px;border:0;"></textarea>
+								<textarea name="race_descr" class="InputFields" style="width:300px;height:275px;border:0;"></textarea>
 							</td>
 						</tr>
 						
@@ -98,7 +97,7 @@
 							<td align=left>Combat<br />
 							Strength</td>
 							<td align=center colspan=2>
-								<img width="440" height="440" border="0" name="graph" id="graphframe" src="images/graph1.gif"/>
+								<img width="440" height="440" border="0" name="graph" id="graphframe" src="images/graph1.gif" alt="Race overview" />
 							</td>
 							<td align=right>Hunting</td>
 						</tr>

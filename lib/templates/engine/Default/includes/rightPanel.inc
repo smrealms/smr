@@ -4,11 +4,11 @@ if(isset($GameID))
 {
 	$UnderAttack = $ThisShip->removeUnderAttack();
 	?>
-	<span id="attack_area"><?php 
+	<div id="attack_area"><?php 
 		if($UnderAttack)
-		{ ?><div class="attack_warning">You Are Under Attack!</div><?php
+		{ ?><p class="attack_warning">You Are Under Attack!</p><?php
 		} ?>
-	</span><?php if($UnderAttack){ ?><br /><?php } ?>
+	</div><?php if($UnderAttack){ ?><br /><?php } ?>
 	<span id="message_area"><?php
 	if(isset($MessageGlobalLink))
 		{ ?>
@@ -169,17 +169,20 @@ if(isset($GameID))
 	<a href="<?php echo $WeaponReorderLink ?>"><span class="bold">Weapons</span></a><br /><?php
 	if($ThisShip->hasWeapons())
 	{ ?>
-		<noscript><a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF() ?>"></noscript>
-			<div class="wep_drop1" onclick="toggleWepD(<?php echo $ThisShip->getNumWeapons() ?>,'<?php echo $ThisPlayer->getToggleWeaponHidingHREF() ?>');">Show/Hide (<?php echo $ThisShip->getNumWeapons() ?>)
-				<?php
-				$i=0;
-				foreach($ThisShip->getWeapons() as $Weapon)
-				{
-					$i++; ?>
-					<div class="wep1" <?php	if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?> id="wep_item<?php echo $i ?>"><?php echo $Weapon->getName() ?></div><?php
-				} ?>
-			</div>
-		<noscript></a></noscript><?php
+		<div class="wep_drop1" onclick="toggleWepD(<?php echo $ThisShip->getNumWeapons() ?>,'<?php echo $ThisPlayer->getToggleWeaponHidingHREF() ?>');">
+			<noscript><a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF() ?>"></noscript>
+				Show/Hide (<?php echo $ThisShip->getNumWeapons() ?>)<br />
+					<?php
+					$i=0;
+					foreach($ThisShip->getWeapons() as $Weapon)
+					{
+						$i++; ?>
+						<span class="wep1" <?php
+							if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?> id="wep_item<?php echo $i ?>"><?php echo $Weapon->getName() ?><br />
+						</span><?php
+					} ?>
+			<noscript></a></noscript>
+		</div><?php
 	} ?>
 	Open : <?php echo $ThisShip->getOpenWeaponSlots() ?><br />Total Damage: (<?php echo $ThisShip->getTotalShieldDamage() ?>/<?php echo $ThisShip->getTotalArmourDamage() ?>)<br />
 	Power Used: <?php echo $ThisShip->getPowerUsed() ?>/<?php echo $ThisShip->getMaxPower() ?><br /><br />
