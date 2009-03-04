@@ -184,6 +184,22 @@ abstract class AbstractSmrShip
 		return $this->hasCargo(5) || $this->hasCargo(9) || $this->hasCargo(12);
 	}
 	
+	public function getDisplayAttackRating(AbstractSmrPlayer &$player)
+	{
+		if($this->hasActiveIllusion())
+			return $this->getIllusionAttack();
+		else
+			return $this->getAttackRating();
+	}
+	
+	public function getDisplayDefenseRating()
+	{
+		if($this->hasActiveIllusion())
+			return $this->getIllusionDefense();
+		else
+			return $this->getDefenseRating();
+	}
+	
 	public function getAttackRating()
 	{
 		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getCDs() * .7) / 40);
@@ -825,6 +841,11 @@ abstract class AbstractSmrShip
 	public function &getWeapons()
 	{
 		return $this->weapons;
+	}
+	
+	public function canAttack()
+	{
+		return $this->hasWeapons() || $this->hasCDs();
 	}
 	
 	public function getNumWeapons()

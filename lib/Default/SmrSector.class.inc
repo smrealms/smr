@@ -550,6 +550,22 @@ class SmrSector
 		return $fightingPlayers;
 	}
 
+	public function &getPotentialFightingTraders(AbstractSmrPlayer &$attackingPlayer)
+	{
+		$fightingPlayers = array();
+		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		if(count($alliancePlayers) > 0)
+			foreach($alliancePlayers as $accountID => &$player)
+			{
+				if($player->canFight())
+				{
+					if($attackingPlayer->traderAttackTraderAlliance($player))
+						$fightingPlayers['Attackers'][$accountID] =& $player;
+				}
+			} unset($player);
+		return $fightingPlayers;
+	}
+
 	public function &getOtherTraders()
 	{
 		$players = SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
