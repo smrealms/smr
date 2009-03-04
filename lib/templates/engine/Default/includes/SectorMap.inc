@@ -45,12 +45,12 @@
 							{ ?>
 								<div class="lmtf"><?php
 									if(($isCurrentSector && $Sector->hasOtherTraders()) || ($isLinkedSector && $Sector->hasTraders()))
-									{?>
-										<img title="Trader" alt="Trader" src="images/trader.jpg"/><?php
+									{
+										?><img title="Trader" alt="Trader" src="images/trader.jpg"/><?php
 									}
 									if($Sector->hasForces())
-									{ ?>
-										<img title="Forces" alt="Forces" src="images/forces.jpg"/><?php
+									{
+										?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php
 									} ?>
 								</div><?php
 							} ?>
@@ -65,8 +65,8 @@
 									foreach($Sector->getLocations() as $Location)
 									{
 										if($isCurrentSector && $Location->hasAction())
-										{ ?>
-											<a href="<?php echo $Location->getExamineHREF() ?>"><?php
+										{
+											?><a href="<?php echo $Location->getExamineHREF() ?>"><?php
 										} ?>
 											<img src="<?php echo $Location->getImage() ?>" alt="<?php echo $Location->getName() ?>" title="<?php echo $Location->getName() ?>" /><?php
 										if($isCurrentSector && $Location->hasAction()){ ?></a><?php }
@@ -75,8 +75,8 @@
 								if($Sector->hasPlanet())
 								{
 									if($isCurrentSector)
-									{ ?>
-										<a href="<?php echo $Sector->getPlanet()->getExamineHREF() ?>"><?php
+									{
+										?><a href="<?php echo $Sector->getPlanet()->getExamineHREF() ?>"><?php
 									} ?>
 										<img title="Planet" alt="Planet" src="images/planet.gif"/><?php
 									if($isCurrentSector){ ?></a><?php }
@@ -85,8 +85,8 @@
 							} ?>
 							<div class="left lmleft"><?php
 								if($Sector->getLinkLeft())
-								{ ?>
-									<img src="images/link_ver.gif" alt="Left" title="Left" /><?php
+								{
+									?><img src="images/link_ver.gif" alt="Left" title="Left" /><?php
 								} ?>
 							</div><?php
 						} ?>
@@ -97,8 +97,8 @@
 						{ ?>
 							<div class="right lmright"><?php
 								if($Sector->getLinkRight())
-								{ ?>
-									<img src="images/link_ver.gif" alt="Right" title="Right" /><?php
+								{
+									?><img src="images/link_ver.gif" alt="Right" title="Right" /><?php
 								} ?>
 							</div><?php
 							if(($isCurrentSector && $Sector->hasPort()) || $Sector->hasCachedPort())
@@ -113,8 +113,8 @@
 								} ?>
 								<div class="left lmport"><?php
 									if($isCurrentSector)
-									{ ?>
-										<a href="<?php echo $Port->getTradeHREF() ?>"><?php
+									{
+										?><a href="<?php echo $Port->getTradeHREF() ?>"><?php
 									} ?>
 										<img src="images/port/buy.gif" alt="Buy" title="Buy" /><?php
 											foreach($Port->getVisibleGoodsSold($ThisPlayer) as $Good)

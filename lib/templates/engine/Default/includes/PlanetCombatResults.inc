@@ -63,7 +63,7 @@ foreach($PlanetCombatResults['Weapons'] as $WeaponResults)
 	<br />
 	<?php if($ActualDamage['KillingShot'])
 	{
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults']));
+		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('TargetPlayer'=>&$TargetPlayer));
 	}
 }
 if(isset($PlanetCombatResults['Drones']))
@@ -131,7 +131,7 @@ if(isset($PlanetCombatResults['Drones']))
 	<br /><?php
 	if($ActualDamage['KillingShot'])
 	{
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$Drones['KillResults']));
+		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('TargetPlayer'=>&$TargetPlayer));
 	}
 }
 

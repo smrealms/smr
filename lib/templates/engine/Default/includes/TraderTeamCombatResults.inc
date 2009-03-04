@@ -78,7 +78,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 			<br /><?php
 			if($ActualDamage['KillingShot'])
 			{
-				$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults']));
+				$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>&$Drones['KillResults'],'TargetPlayer'=>&$TargetPlayer,'ShootingPlayer'=>&$ShootingPlayer));
 			}
 		}
 		if(isset($TraderResults['Drones']))
@@ -152,7 +152,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 			<br /><?php
 			if($ActualDamage['KillingShot'])
 			{
-				$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$Drones['KillResults']));
+				$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>&$Drones['KillResults'],'TargetPlayer'=>&$TargetPlayer,'ShootingPlayer'=>&$ShootingPlayer));
 			}
 		}
 	}

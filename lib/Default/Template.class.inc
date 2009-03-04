@@ -3,7 +3,11 @@
 class Template
 {
 	protected $data = array();
-	protected $outputBuffer='';
+	protected $ajax = array();
+	protected $currentAjaxID=false;
+	protected $captures=array();
+	protected $currentCaptureID=0;
+	
 	public function __construct()
 	{
 	}
@@ -23,8 +27,9 @@ class Template
 		ob_clean();
 		ob_start();
 		$this->includeTemplate($templateName);
-		$this->outputBuffer.=ob_get_clean();
-		echo $this->trimWhiteSpace($this->outputBuffer);
+		$this->captures[$this->currentCaptureID].=ob_get_clean();
+		foreach($this->captures as $captured)
+			echo $this->trimWhiteSpace($captured);
 	}
 	
 	
@@ -63,15 +68,45 @@ class Template
 	
 	protected function startCapture()
 	{
-		$this->outputBuffer.=ob_get_contents();
+		$this->captures[$this->currentCaptureID].=ob_get_contents();
 		ob_clean();
+		$this->currentCaptureID++;
 	}
 	
 	protected function &stopCapture()
 	{
-		$contents = ob_get_contents();
+		$captured =& $this->captures[$this->currentCaptureID];
+		unset($this->captures[$this->currentCaptureID]);
+		$captured .= ob_get_contents();
 		ob_clean();
-		return $contents;
+		$this->currentCaptureID--;
+		return $captured;
+	}
+	
+	protected function startAJAXCapture($id)
+	{
+		if($this->currentAjaxID!==false)
+			throw new Exception('Already capturing for AJAX');
+		$this->currentAjaxID=$id;
+		$this->startCapture();
+	}
+	
+	protected function &storeAJAXCapture()
+	{
+		if($this->currentAjaxID===false)
+			throw new Exception('Not capturing for AJAX');
+		$this->ajax[$this->currentAjaxID] = $this->stopCapture();
+		echo $this->ajax[$this->currentAjaxID];
+		$this->currentAjaxID=false;
+	}
+	
+	protected function echoAjaxXml()
+	{
+		foreach($this->ajax as $element => $content)
+		{
+			if(trim($content)!='')
+				echo '<'.$element.'>'.htmlentities($this->trimWhiteSpace($content)).'</'.$element.'>';
+		}
 	}
 	
 	protected function checkDisableAJAX(&$html)
