@@ -77,7 +77,7 @@ foreach($ForcesCombatResults['Results'] as $ForceType => $ForceResults)
 	<br /><?php
 	if($ActualDamage['KillingShot'])
 	{
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>$Drones['KillResults']));
+		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('TargetPlayer'=>&$TargetPlayer));
 	}
 }
 if($ForcesCombatResults['ForcesDestroyed'])

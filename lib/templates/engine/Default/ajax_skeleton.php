@@ -31,5 +31,7 @@
 		$this->includeTemplate('includes/rightPanel.inc');
 		$HtmlContent =& $this->stopCapture();
 		echo htmlentities($this->trimWhiteSpace($HtmlContent)); ?>
-	</right_panel>
+	</right_panel><?php
+	$this->echoAjaxXml();
+	?>
 </pagecontent>

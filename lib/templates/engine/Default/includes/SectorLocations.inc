@@ -14,7 +14,7 @@
 		foreach($Locations as $Location)
 		{ ?>
 			<tr>
-				<td<?php if(!$Location->hasAction() && $ThisSector->hasAnyLocationsWithAction()){?> colspan="2"<?php } ?>>
+				<td<?php if(!$Location->hasAction() && $ThisSector->hasAnyLocationsWithAction()){ ?> colspan="2"<?php } ?>>
 					<img align="left"src="<?php echo $Location->getImage() ?>" alt="<?php echo $Location->getName() ?>" title="<?php echo $Location->getName() ?>" /> <?php echo $Location->getName() ?>
 				</td>
 				<?php if($Location->hasAction())

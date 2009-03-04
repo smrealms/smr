@@ -31,7 +31,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 				{
 					if($WeaponDamage['Shield'] > 0)
 					{
-						?>which proves ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php}
+						?>which proves ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php }
 					}
 					else if($WeaponDamage['Armour'] > 0)
 					{

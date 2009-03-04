@@ -1,15 +1,18 @@
-<span id="enable_ajax"><a href="<?php $ThisAccount->getToggleAJAXHREF() ?>"><?php if($ThisAccount->isUseAJAX()){ ?>Disable<?php }else{ ?>Enable<?php } ?> AJAX</a></span><br />
+<span id="enable_ajax"><a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if($ThisAccount->isUseAJAX()){ ?>Disable<?php }else{ ?>Enable<?php } ?> AJAX</a></span><br />
 <?php
 if(isset($GameID))
 {
 	$UnderAttack = $ThisShip->removeUnderAttack();
 	?>
 	<div id="attack_area"><?php 
+		$this->startAJAXCapture('attack_area');
 		if($UnderAttack)
 		{ ?><p class="attack_warning">You Are Under Attack!</p><?php
-		} ?>
+		}
+		$this->storeAJAXCapture(); ?>
 	</div><?php if($UnderAttack){ ?><br /><?php } ?>
 	<span id="message_area"><?php
+	$this->startAJAXCapture('message_area');
 	if(isset($MessageGlobalLink))
 		{ ?>
 			<a  href="<?php echo $MessageGlobalLink ?>"><img src="images/global_msg.gif" alt="Global Messages" /></a>
@@ -44,13 +47,14 @@ if(isset($GameID))
 		{ ?>
 			<a  href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.gif" alt="Planet Messages" /></a>
 			<span class="small"><?php echo $MessagePlanetNum ?></span><?php
-		} ?>
+		} 
+		if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
+		{
+			?><br /><?php
+		}
+		$this->storeAJAXCapture(); ?>
 	</span>
 	<?php
-	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
-	{
-		echo '<br />';
-	}
 	echo $ThisPlayer->getLevelName() ?><br />
 	<a href="<?php echo $PlayerNameLink ?>"><?php echo $ThisPlayer->getDisplayName() ?></a><br /><?php
 	if(isset($PlayerInvisible))
@@ -59,7 +63,9 @@ if(isset($GameID))
 	} ?>
 	<br />
 	Race : <?php echo $ThisPlayer->getRaceName() ?><br />
-	Turns : <span id="condition"><span class="<?php
+	Turns : <span id="turns"><?php
+	$this->startAJAXCapture('turns'); ?>
+	<span class="<?php
 		if($ThisPlayer->getTurnsLevel() == 'LOW')
 		{
 			echo 'red';
@@ -72,11 +78,13 @@ if(isset($GameID))
 		{
 			echo 'green';
 		}
-		echo '">'.$ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns() ?></span></span><br /><?php
-		if($ThisPlayer->hasNewbieTurns())
-		{
-			echo 'Newbie Turns : <span class="'.$NewbieTurnsColour.'">'.$ThisPlayer->getNewbieTurns().'</span><br />';
-		} ?>
+		echo '">'.$ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns() ?></span><?php
+	$this->storeAJAXCapture(); ?>
+	</span><br /><?php
+	if($ThisPlayer->hasNewbieTurns())
+	{
+		echo 'Newbie Turns : <span class="'.$NewbieTurnsColour.'">'.$ThisPlayer->getNewbieTurns().'</span><br />';
+	} ?>
 	Credits : <?php echo number_format($ThisPlayer->getCredits()) ?><br />
 	Experience : <?php echo number_format($ThisPlayer->getExperience()) ?><br />
 	Level : <?php echo $ThisPlayer->getLevelID() ?><br />
@@ -118,12 +126,12 @@ if(isset($GameID))
 	if($ThisShip->hasCloak())
 	{
 		if($ThisShip->isCloaked())
-		{?>
-			<strong style="color:lime;">*** Cloak active ***</strong><?php
+		{
+			?><strong style="color:lime;">*** Cloak active ***</strong><?php
 		}
 		else
-		{?>
-			<strong style="color:red;">*** Cloak inactive ***</strong><?php
+		{
+			?><strong style="color:red;">*** Cloak inactive ***</strong><?php
 		} ?>
 		<br /><br /><?php
 	}

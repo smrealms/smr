@@ -10,7 +10,7 @@
 	</select><br />
 	<input type="submit" value="Select Dummy" />
 </form>
-<?php $DummyShip = $DummyPlayer->getShip() ?>
+<?php $DummyShip =& $DummyPlayer->getShip() ?>
 <table>
 	<tr>
 		<td style="vertical-align:top">
