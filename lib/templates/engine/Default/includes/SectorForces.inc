@@ -75,7 +75,7 @@
 						<td>
 							<?php if($SharedForceAlliance)
 							{
-								$Owner->getLinkedDisplayName();
+								echo $Owner->getLinkedDisplayName();
 							}
 							else
 							{
