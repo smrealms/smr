@@ -110,14 +110,15 @@ if ($count_last_active > 0) {
 		$curr_player =& SmrPlayer::getPlayer($acc_id, SmrSession::$game_id);
 		if ($curr_account->veteran == 'FALSE' && $curr_account->get_rank() < FLEDGLING)
 			$style = 'font-style:italic;';
-		if ($curr_player->getAccountID() == $player->getAccountID())
+		if ($player->equals($curr_player))
 			$style .= 'font-weight:bold;';
 
+		$fullStyle='';
 		if (!empty($style))
-			$style = ' style="'.$style.'"';
+			$fullStyle = ' style="'.$style.'"';
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td valign="top"'.$style.'>');
+		$PHP_OUTPUT.=('<td valign="top"'.$fullStyle.'>');
 		$rank = $curr_player->getLevelName();
 		//$PHP_OUTPUT.=('.$db->escapeString($curr_player->getLevelName() ');
 		$container = array();
@@ -141,13 +142,12 @@ if ($count_last_active > 0) {
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'council_list.php';
 		$container['race_id'] = $curr_player->getRaceID();
-		$PHP_OUTPUT.=('<td style="text-align:center" '.$style.'>');
+		$PHP_OUTPUT.=('<td style="text-align:center;'.$style.'">');
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td '.$style.'>');
-		if ($curr_player->getAllianceID() > 0) {
-
-
+		$PHP_OUTPUT.=('<td'.$fullStyle.'>');
+		if ($curr_player->hasAlliance())
+		{
 			$container = array();
 			$container['url'] 			= 'skeleton.php';
 			$container['body'] 			= 'alliance_roster.php';
@@ -155,27 +155,8 @@ if ($count_last_active > 0) {
 			$PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
 		} else
 			$PHP_OUTPUT.=('(none)');
-		$PHP_OUTPUT.=('</td><td style="text-align:right" '.$style.'>');
-
-		if($curr_player->getExperience() > $curr_player->getExperience()) {
-			$PHP_OUTPUT.=('<img src="images/cpl_up.gif" style="float:left;height:16px" />');
-		}
-		else if($curr_player->getExperience() < $curr_player->getExperience()) {
-			$PHP_OUTPUT.=('<img src="images/cpl_down.gif" style="float:left;height:16px" />');
-		}
-		else {
-			$PHP_OUTPUT.=('<img src="images/cpl_horizontal.gif" style="float:left;height:16px" />');
-		}
-
-		if ($curr_player->getAllianceID() == $player->getAllianceID() && $player->getAllianceID() != 0)
-		{
-			if ($curr_player->getAccountID() == 2) $PHP_OUTPUT.=('A lot');
-			else $PHP_OUTPUT.=(number_format($curr_player->getExperience()) . '</td>');
-		}
-		else {
-			if ($curr_player->getAccountID() == 2) $PHP_OUTPUT.=('A lot');
-			else $PHP_OUTPUT.=(number_format($curr_player->getExperience()) . '</td>');
-		}
+		$PHP_OUTPUT.= '</td><td style="text-align:right;'.$style.'">'.
+			number_format($curr_player->getExperience()) . '</td>';
 
 		
 		$PHP_OUTPUT.=('</tr>');

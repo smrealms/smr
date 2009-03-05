@@ -4,7 +4,7 @@ print_topic("CURRENT PLAYERS");
 $db->query("DELETE FROM cpl_tag WHERE expires > 0 AND expires < " . time());
 $db->query("SELECT * FROM active_session
 			WHERE last_accessed >= " . (time() - 600) . " AND
-				  game_id = SmrSession::$game_id");
+				  game_id = ".SmrSession::$game_id);
 $count_real_last_active = $db->nf();
 if (empty($var["sort"])) $sort = "experience DESC, player_name";
 else $sort = $var["sort"];
@@ -115,12 +115,12 @@ if ($count_last_active > 0) {
 			$style = "font-style:italic;";
 		if ($curr_player->account_id == $player->account_id)
 			$style .= "font-weight:bold;";
-
+		$fullStyle='';
 		if (!empty($style))
-			$style = " style=\"$style\"";
+			$fullStyle = " style=\"$style\"";
 
 		print("<tr>");
-		print("<td valign=\"top\"$style>");
+		print("<td valign=\"top\"$fullStyle>");
 		$rank = $curr_player->display_level_name;
 		//print("$curr_player->display_level_name ");
 		$container = array();
@@ -144,10 +144,10 @@ if ($count_last_active > 0) {
 		$container["url"] = "skeleton.php";
 		$container["body"] = "council_list.php";
 		$container["race_id"] = $curr_player->race_id;
-		print("<td style=\"text-align:center\" $style>");
+		print("<td style=\"text-align:center;$style\">");
 		print_link($container, $player->get_colored_race($curr_player->race_id));
 		print("</td>");
-		print("<td $style>");
+		print("<td$fullStyle>");
 		if ($curr_player->alliance_id > 0) {
 
 
@@ -158,7 +158,7 @@ if ($count_last_active > 0) {
 			print_link($container, "$curr_player->alliance_name");
 		} else
 			print("(none)");
-		print("</td><td style=\"text-align:right\" $style>");
+		print("</td><td style=\"text-align:right;$style\">");
 
 		if($curr_player->experience > $curr_player->display_experience) {
 			print('<img src="images/cpl_up.gif" style="float:left;height:16px" />');
