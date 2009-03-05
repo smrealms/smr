@@ -1,5 +1,9 @@
 <?
-$template->assign('AJAX_DISABLE_CONTENT_REFRESH',true);//Stop new news being lost.
+if(USING_AJAX)
+{
+	$template->ignoreMiddle();//Stop new news being lost.
+	return;
+}	
 
 $template->assign('PageTopic','CURRENT NEWS');
 include(ENGINE . 'global/menue.inc');
