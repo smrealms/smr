@@ -23,18 +23,18 @@ function compile_files($dir,$exts=array('*.php'))
 	
 	foreach($exts as $ext)
 	{
-		echo "'.EOL.EOL.'".'Compiling '.$ext."'.EOL.'";
+		echo "\n\n".'Compiling '.$ext."\n";
 		$files = glob($dir . DIRECTORY_SEPARATOR . $ext);
 		if (is_array($files) && count($files) > 0)
 		{
 			while(list(,$v) = each($files))
 			{
-				echo 'Compiling '.$v."'.EOL.'";
+				echo 'Compiling '.$v."\n";
 				apc_compile_file($v);
 			}
 		}
 	}
 }
  
-compile_files('/home/page/smr',array('*.inc','*.php'));
+compile_files('/home/page/SMR',array('*.inc','*.php'));
 ?>

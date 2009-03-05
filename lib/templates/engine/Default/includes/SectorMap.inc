@@ -7,7 +7,7 @@
 				$isCurrentSector = $ThisSector->equals($Sector);
 				$isLinkedSector = $ThisSector->isLinked($Sector); ?>
 				<td>
-					<div class="<?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited()){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
+					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited()){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
 						<div class="lmup"><?php
 							if($Sector->isVisited())
 							{ ?>
@@ -145,8 +145,8 @@
 							<a href="<?php echo Globals::getCurrentSectorHREF() ?>"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a><?php
 						} ?>
 					</div>
-				</td>
-			<?php } ?>
-		</tr>
-	<?php } ?>
+				</td><?php
+			} ?>
+		</tr><?php
+		} ?>
 </table>

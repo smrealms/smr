@@ -762,11 +762,11 @@ div.connectSeclm:hover{
 }
 div.currentSeclm {
 	/*background-color:#14642f;*/
-	background: url('images/currentsector.png');
+	background: url('../images/currentsector.png');
 }
 div.currentSeclm:hover{
 	/*background-color:#337873;*/
-	background: url('images/currentsector_hover.png');
+	background: url('../images/currentsector_hover.png');
 }
 div.normalSeclm {
 	background-color:#0b4c1c;
@@ -795,7 +795,7 @@ a.mp_as {
 
 #layout {
 	width: 1024px; height: 768px;
-	background: transparent url('images/smr_layout.png') no-repeat;
+	background: transparent url('../images/smr_layout.png') no-repeat;
 	margin: 10px auto; padding: 0;
 	position: relative;
 }
@@ -832,7 +832,7 @@ div.connectSecgm {
 }
 div.currentSecgm {
 	/*background-color:#14642f;*/
-	background: url('images/currentsector.png');
+	background: url('../images/currentsector.png');
 }
 .gpsubheader
 {

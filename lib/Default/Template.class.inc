@@ -22,14 +22,30 @@ class Template
 		$this->data[$var] =& $value;
 	}
 	
-	public function display($templateName)
+	public function display($templateName,$forAjax=false)
 	{
+		if($forAjax)
+			header('Content-Type: text/xml');
 		ob_clean();
 		ob_start();
 		$this->includeTemplate($templateName);
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
+		$output='';
 		foreach($this->captures as $captured)
-			echo $this->trimWhiteSpace($captured);
+		{
+			$output.=$captured;
+		}
+		$ajaxXml =& $this->convertHtmlToAjaxXml($output);
+		if($forAjax)
+		{
+			ob_start();
+			$this->startCapture();
+			$this->includeTemplate('ajax_skeleton.php',array('AjaxXML'=>&$ajaxXml));
+			echo $this->trimWhiteSpace($this->stopCapture());
+			ob_end_flush();
+		}
+		else
+			echo $this->trimWhiteSpace($output);
 		SmrSession::saveAjaxReturns();
 	}
 	
@@ -184,20 +200,26 @@ class Template
 			echo 'a';
 	}
 	
-	protected function echoHtmlForAjax(&$str)
+	protected function &convertHtmlToAjaxXml(&$str)
 	{
+		$xml='';
 		require_once(LIB.'simplehtmldom/simple_html_dom.php');
 		$str =& $this->trimWhiteSpace($str);
 		$html = new simple_html_dom();
 		$html->load($str);
-		$spans = $html->find('span[id]');
-		foreach($spans as $span)
+		$searches = array('span[id]','[class=ajax]');
+		foreach($searches as $search)
 		{
-			$id = $span->getAttribute('id');
-			$inner = $span->innertext();
-			if(!SmrSession::addAjaxReturns($id,$inner))
-				echo '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+			$spans = $html->find($search);
+			foreach($spans as $span)
+			{
+				$id = $span->getAttribute('id');
+				$inner = $span->innertext();
+				if(!SmrSession::addAjaxReturns($id,$inner))
+					$xml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+			}
 		}
+		return $xml;
 	}
 }
 ?>

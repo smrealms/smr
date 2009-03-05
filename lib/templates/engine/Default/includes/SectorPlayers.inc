@@ -1,4 +1,4 @@
-<div id="players_cs">
+<div id="players_cs" class="ajax">
 	<?php if($ThisSector->hasOtherTraders())
 	{
 		$Players =& $ThisSector->getOtherTraders();

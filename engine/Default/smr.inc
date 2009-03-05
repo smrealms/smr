@@ -470,13 +470,7 @@ function do_voodoo()
 	$time_elapsed = microtime(true) - $time_start;
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
-	if(USING_AJAX)
-	{
-		header('Content-Type: text/xml');
-		$template->display('ajax_skeleton.php');
-	}
-	else
-		$template->display($var['url']);
+	$template->display($var['url'],USING_AJAX);
 	
 	if($lock)
 	{ //only save if we have the lock.

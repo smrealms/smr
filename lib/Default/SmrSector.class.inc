@@ -53,30 +53,30 @@ class SmrSector
 	{
 		$this->db = new SmrMySqlDatabase();
 		
-		$this->sectorID = $sectorID;
-		$this->gameID = $gameID;
 		$this->accountID = $accountID;
 
 		$this->db->query('SELECT * FROM sector, galaxy WHERE sector.galaxy_id = galaxy.galaxy_id AND ' .
-														'sector.game_id = '.$this->gameID.' AND ' .
-														'sector_id = '.$this->sectorID.' LIMIT 1');
+														'sector.game_id = '.$gameID.' AND ' .
+														'sector_id = '.$sectorID.' LIMIT 1');
 		$this->db->nextRecord();
-		$this->galaxyID	= $this->db->getField('galaxy_id');
+		$this->sectorID		= (int)$this->db->getField('sector_id');
+		$this->gameID		= (int)$this->db->getField('game_id');
+		$this->galaxyID		= (int)$this->db->getField('galaxy_id');
 		$this->galaxyName	= $this->db->getField('galaxy_name');
-		$this->battles		= $this->db->getField('battles');
+		$this->battles		= (int)$this->db->getField('battles');
 		if (empty($this->battles)) $this->battles = 0;
 		
-		$this->link_up		= $this->db->getField('link_up');
-		$this->link_down	= $this->db->getField('link_down');
-		$this->link_left	= $this->db->getField('link_left');
-		$this->link_right	= $this->db->getField('link_right');
+		$this->link_up		= (int)$this->db->getField('link_up');
+		$this->link_down	= (int)$this->db->getField('link_down');
+		$this->link_left	= (int)$this->db->getField('link_left');
+		$this->link_right	= (int)$this->db->getField('link_right');
 
 
 		$this->db->query('SELECT * FROM warp WHERE game_id = '.$this->gameID.' AND ' .
 											  '(sector_id_1 = '.$this->sectorID.' OR ' .
 											   'sector_id_2 = '.$this->sectorID.')');
 		if ($this->db->nextRecord())
-			$this->warp = ($this->db->getField('sector_id_1') == $this->sectorID) ? $this->db->getField('sector_id_2') : $this->db->getField('sector_id_1');
+			$this->warp = ($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
 
 		$this->links = array();
 		if($this->link_up)
