@@ -30,6 +30,7 @@ class Template
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
 		foreach($this->captures as $captured)
 			echo $this->trimWhiteSpace($captured);
+		SmrSession::saveAjaxReturns();
 	}
 	
 	
@@ -181,6 +182,22 @@ class Template
 			echo 'an';
 		else
 			echo 'a';
+	}
+	
+	protected function echoHtmlForAjax(&$str)
+	{
+		require_once(LIB.'simplehtmldom/simple_html_dom.php');
+		$str =& $this->trimWhiteSpace($str);
+		$html = new simple_html_dom();
+		$html->load($str);
+		$spans = $html->find('span[id]');
+		foreach($spans as $span)
+		{
+			$id = $span->getAttribute('id');
+			$inner = $span->innertext();
+			if(!SmrSession::addAjaxReturns($id,$inner))
+				echo '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+		}
 	}
 }
 ?>

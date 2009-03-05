@@ -4,15 +4,9 @@ if(isset($GameID))
 {
 	$UnderAttack = $ThisShip->removeUnderAttack();
 	?>
-	<div id="attack_area"><?php 
-		$this->startAJAXCapture('attack_area');
-		if($UnderAttack)
-		{ ?><p class="attack_warning">You Are Under Attack!</p><?php
-		}
-		$this->storeAJAXCapture(); ?>
+	<div id="attack_area"><?php if($UnderAttack){ ?><p class="attack_warning">You Are Under Attack!</p><?php } ?>
 	</div><?php if($UnderAttack){ ?><br /><?php } ?>
 	<span id="message_area"><?php
-	$this->startAJAXCapture('message_area');
 	if(isset($MessageGlobalLink))
 		{ ?>
 			<a  href="<?php echo $MessageGlobalLink ?>"><img src="images/global_msg.gif" alt="Global Messages" /></a>
@@ -51,8 +45,7 @@ if(isset($GameID))
 		if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
 		{
 			?><br /><?php
-		}
-		$this->storeAJAXCapture(); ?>
+		} ?>
 	</span>
 	<?php
 	echo $ThisPlayer->getLevelName() ?><br />
@@ -63,28 +56,29 @@ if(isset($GameID))
 	} ?>
 	<br />
 	Race : <?php echo $ThisPlayer->getRaceName() ?><br />
-	Turns : <span id="turns"><?php
-	$this->startAJAXCapture('turns'); ?>
-	<span class="<?php
-		if($ThisPlayer->getTurnsLevel() == 'LOW')
+	Turns : <span id="turns">
+		<span class="<?php
+			if($ThisPlayer->getTurnsLevel() == 'LOW')
+			{
+				echo 'red';
+			}
+			else if($ThisPlayer->getTurnsLevel() == 'MEDIUM')
+			{
+				echo 'yellow';
+			}
+			else
+			{
+				echo 'green';
+			}
+			echo '">'.$ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns() ?>
+			</span>
+		</span><br />
+	<span id="newbieturns"><?php
+		if($ThisPlayer->hasNewbieTurns())
 		{
-			echo 'red';
-		}
-		else if($ThisPlayer->getTurnsLevel() == 'MEDIUM')
-		{
-			echo 'yellow';
-		}
-		else
-		{
-			echo 'green';
-		}
-		echo '">'.$ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns() ?></span><?php
-	$this->storeAJAXCapture(); ?>
-	</span><br /><?php
-	if($ThisPlayer->hasNewbieTurns())
-	{
-		echo 'Newbie Turns : <span class="'.$NewbieTurnsColour.'">'.$ThisPlayer->getNewbieTurns().'</span><br />';
-	} ?>
+			echo 'Newbie Turns : <span class="'.$NewbieTurnsColour.'">'.$ThisPlayer->getNewbieTurns().'</span><br />';
+		} ?>
+	</span>
 	Credits : <?php echo number_format($ThisPlayer->getCredits()) ?><br />
 	Experience : <?php echo number_format($ThisPlayer->getExperience()) ?><br />
 	Level : <?php echo $ThisPlayer->getLevelID() ?><br />

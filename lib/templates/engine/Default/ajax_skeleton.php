@@ -26,12 +26,10 @@
 			</middle_panel><?php
 		}
 	} ?>
-	<right_panel><?php 
+	<?php 
 		$this->startCapture();
 		$this->includeTemplate('includes/rightPanel.inc');
 		$HtmlContent =& $this->stopCapture();
-		echo htmlentities($this->trimWhiteSpace($HtmlContent)); ?>
-	</right_panel><?php
-	$this->echoAjaxXml();
+		$this->echoHtmlForAjax($HtmlContent);
 	?>
 </pagecontent>
