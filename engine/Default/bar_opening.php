@@ -1,5 +1,6 @@
 <?
-
+if(isset($var['message']))
+	$PHP_OUTPUT.=$var['message'];
 //now we offer them a drink
 $PHP_OUTPUT.= '<h2>Drinks</h2><br />
 Wanna buy a drink? I got some good stuff! Just what you need after a hard day\'s hunting.<br /><br />';

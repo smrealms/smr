@@ -449,7 +449,7 @@ function do_voodoo()
 	if($var['body'])
 	{
 		$PHP_OUTPUT = '';
-		if($var['body']=='error.php') // infinite includes for error page
+		if($var['body']=='error.php'||$var['body']=='bar_main.php') // infinite includes for error page
 			include(get_file_loc($var['body']));
 		else
 			include_once(get_file_loc($var['body']));

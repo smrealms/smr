@@ -1,5 +1,5 @@
 <?php
-
+require_once(LIB.'simplehtmldom/simple_html_dom.php');
 class Template
 {
 	protected $data = array();
@@ -7,6 +7,8 @@ class Template
 	protected $currentAjaxID=false;
 	protected $captures=array();
 	protected $currentCaptureID=0;
+	
+	protected $doAjaxMiddle=true;
 	
 	public function __construct()
 	{
@@ -40,13 +42,24 @@ class Template
 		{
 			ob_start();
 			$this->startCapture();
+			if($this->doAjaxMiddle)
+			{
+				$html = new simple_html_dom();
+				$html->load($output);
+				$mid=$html->find('div#middle_panel');
+				$mid=$mid[0];
+				$id = $mid->getAttribute('id');
+				$inner = $mid->innertext();
+				if(!SmrSession::addAjaxReturns($id,$inner))
+					$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+			}
 			$this->includeTemplate('ajax_skeleton.php',array('AjaxXML'=>&$ajaxXml));
 			echo $this->trimWhiteSpace($this->stopCapture());
 			ob_end_flush();
 		}
 		else
 			echo $this->trimWhiteSpace($output);
-		SmrSession::saveAjaxReturns();
+//		SmrSession::saveAjaxReturns();
 	}
 	
 	
@@ -203,7 +216,6 @@ class Template
 	protected function &convertHtmlToAjaxXml(&$str)
 	{
 		$xml='';
-		require_once(LIB.'simplehtmldom/simple_html_dom.php');
 		$str =& $this->trimWhiteSpace($str);
 		$html = new simple_html_dom();
 		$html->load($str);
@@ -220,6 +232,24 @@ class Template
 			}
 		}
 		return $xml;
+	}
+	protected function startMiddle()
+	{
+		$this->startCapture();
+	}
+	protected function endMiddle()
+	{
+		$middle=$this->stopCapture();
+		$this->captures[$this->currentCaptureID].=$middle;
+		$html =& new simple_html_dom();
+		$html->load($middle);
+		$searches = array('span[id]','[class=ajax]');
+		foreach($searches as $search)
+		{
+			$spans = $html->find($search);
+			if(!empty($spans))
+				$this->doAjaxMiddle=false;
+		}
 	}
 }
 ?>

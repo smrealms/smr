@@ -1,6 +1,6 @@
 <?
 
-$PHP_OUTPUT.= '<div align=center>';
+$message.= '<div align=center>';
 $template->assign('PageTopic','DRINKING');
 
 $db2 = new SmrMySqlDatabase();
@@ -14,7 +14,7 @@ $player->update();
 
 if (isset($var['action']) && $var['action'] != 'drink')
 {
-	$PHP_OUTPUT.= 'You ask the bartender for some water and you quickly down it.<br />You dont feel quite so intoxicated anymore.<br />';
+	$message.= 'You ask the bartender for some water and you quickly down it.<br />You dont feel quite so intoxicated anymore.<br />';
 	$db2->query('DELETE FROM player_has_drinks WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $player->getAccountID() . ' LIMIT 1');
 	$player->increaseHOF(1,array('Bar','Drinks', 'Water'));
 }
@@ -40,21 +40,21 @@ else
 
 		if ($drink_id != 11 && $drink_id !=1)
 		{
-			$PHP_OUTPUT.=('You have bought a '.$drink_name.' for $10');
+			$message.=('You have bought a '.$drink_name.' for $10');
 			$db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
 			$player->increaseHOF(1,array('Bar','Drinks', 'Alcoholic'));
 		}
 		else
 		{
 
-			$PHP_OUTPUT.=('The bartender says, Ive got something special for ya.<br />');
-			$PHP_OUTPUT.=('The bartender turns around for a minute and whips up a '.$drink_name.'.<br />');
+			$message.=('The bartender says, Ive got something special for ya.<br />');
+			$message.=('The bartender turns around for a minute and whips up a '.$drink_name.'.<br />');
 
-			if ($drink_id == 1) $PHP_OUTPUT.=('The bartender says that Spock himself gave him the directions to make this drink.<br />');
+			if ($drink_id == 1) $message.=('The bartender says that Spock himself gave him the directions to make this drink.<br />');
 
-			$PHP_OUTPUT.=('You drink the '.$drink_name.' and feel like like you have been drinking for hours.<br />');
+			$message.=('You drink the '.$drink_name.' and feel like like you have been drinking for hours.<br />');
 
-			if ($drink_id == 11) $PHP_OUTPUT.=('After drinking the '.$drink_name.' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
+			if ($drink_id == 11) $message.=('After drinking the '.$drink_name.' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
 
 			//has the power of 2 drinks
 			$db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
@@ -67,9 +67,9 @@ else
 	$db->query('SELECT * FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
 	$num_drinks = $db->getNumRows();
 	//display woozy message
-	$PHP_OUTPUT.= '<br />You feel a little W';
-	for ($i = 1; $i <= $num_drinks; ++$i) $PHP_OUTPUT.= 'oO';
-	$PHP_OUTPUT.= 'zy<br />';
+	$message.= '<br />You feel a little W';
+	for ($i = 1; $i <= $num_drinks; ++$i) $message.= 'oO';
+	$message.= 'zy<br />';
 }
 
 //see if the player blacksout or not
@@ -78,7 +78,7 @@ if ($num_drinks > 15)
 	$percent = mt_rand(1,25);
 	$lostCredits = round($player->getCredits() * $percent / 100);
 
-	$PHP_OUTPUT.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
+	$message.= '<span class="red">You decide you need to go to the restroom.  So you stand up and try to start walking but immediately collapse!<br />About 10 minutes later you wake up and find yourself missing ' . number_format($lostCredits) . ' credits</span><br />';
 
 	$player->decreaseCredits($lostCredits);
 	$player->increaseHOF(1,array('Bar','Robbed','Number Of Times'));
@@ -89,9 +89,11 @@ if ($num_drinks > 15)
 
 }
 $player->increaseHOF(1,array('Bar','Drinks', 'Total'));
-$PHP_OUTPUT.= '</div>';
+$message.= '</div>';
 
-//offer another drink and such
-include(get_file_loc('bar_opening.php'));
+$container=create_container('skeleton.php','bar_main.php');
+$container['script']='bar_opening.php';
+$container['message'] = $message;
+forward($container);
 
 ?>

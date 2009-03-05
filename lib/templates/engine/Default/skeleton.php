@@ -21,7 +21,9 @@
 							{
 								echo $MenuBar;
 							}
+							$this->startMiddle();
 							$this->includeTemplate($TemplateBody);
+							$this->endMiddle();
 						?>
 					</div>
 				</div>
