@@ -18,7 +18,7 @@ if ($db->nextRecord()) $template->assign('PageTopic','Welcome to ' . $db->getFie
 else $template->assign('PageTopic','Welcome to this bar');
 
 //include menu (not menue ;) )
-include(ENGINE . 'global/menue.inc');
+require_once(ENGINE . 'global/menue.inc');
 $PHP_OUTPUT.=create_bar_menue();
 
 //get rid of drinks older than 30 mins
@@ -26,6 +26,6 @@ $time = TIME - 1800;
 $db->query('DELETE FROM player_has_drinks WHERE time < '.$time);
 
 //include bar part
-include(get_file_loc($script));
+require(get_file_loc($script));
 
 ?>
