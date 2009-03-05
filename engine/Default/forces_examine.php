@@ -33,11 +33,11 @@ if (($ship->getAttackRating() > 0 || $ship->getCDs() > 0) &&
 
 } elseif ($player->hasFederalProtection())
 	$PHP_OUTPUT.=('<p><big style="color:#3333FF;">You are under federal protection! That wouldn\'t be fair.</big></p>');
-elseif ($player->getNewbieTurns() > 0)
+elseif ($player->hasNewbieTurns())
 	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">You are under newbie protection!</big></p>');
-elseif ($owner->getAllianceID() == $player->getAllianceID() && $player->getAllianceID() != 0)
+elseif ($player->sameAlliance($forces_owner))
 	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">These are your alliance\'s forces!</big></p>');
-elseif ($owner->getAccountID() == $player->getAccountID())
+elseif ($forces_owner->getAccountID() == $player->getAccountID())
 	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">These are your forces!</big></p>');
 
 $PHP_OUTPUT.=('<div align="center">');
