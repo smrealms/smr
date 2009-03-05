@@ -1,174 +1,180 @@
 <?php
-foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
+if(is_array($TraderTeamCombatResults['Traders']))
 {
-	$ShootingPlayer =& $TraderResults['Player'];
-	$TotalDamage =& $TraderResults['TotalDamage'];
-
-	if($TraderResults['DeadBeforeShot'])
+	foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 	{
-		echo $ShootingPlayer->getDisplayName() ?> died before they were able to attack!<br /><?php
-	}
-	else
-	{
-		foreach($TraderResults['Weapons'] as $WeaponResults)
+		$ShootingPlayer =& $TraderResults['Player'];
+		$TotalDamage =& $TraderResults['TotalDamage'];
+	
+		if($TraderResults['DeadBeforeShot'])
 		{
-			$ShootingWeapon =& $WeaponResults['Weapon'];
-			$ShotHit =& $WeaponResults['Hit'];
-			$ActualDamage =& $WeaponResults['ActualDamage'];
-			$WeaponDamage =& $WeaponResults['WeaponDamage'];
-			$TargetPlayer =& $WeaponResults['TargetPlayer'];
-			$DamageTypes = 0;
-			if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
-			
-			echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php
-			if($ShotHit && $ActualDamage['TargetAlreadyDead'])
-			{
-				?>the debris that was once <?php
-			}
-			echo $TargetPlayer->getDisplayName();
-			if(!$ActualDamage['TargetAlreadyDead'])
-			{
-				if(!$ShotHit)
-				{
-					?>and misses<?php
-				}
-				else if($ActualDamage['TotalDamage'] == 0)
-				{
-					if($WeaponDamage['Shield'] > 0)
-					{
-						if($ActualDamage['HasCDs'])
-						{
-							?>which proves ineffective against their combat drones<?php
-						}
-						else
-						{
-							?>which washes harmlessly over their hull<?php
-						}
-					}
-					else if($WeaponDamage['Armour'] > 0)
-					{
-						?>which is deflected by their shields<?php
-					}
-					else
-					{
-						?>but it cannot do any damage<?php
-					}
-				}
-				else
-				{
-					?>destroying <?php
-					if($ActualDamage['Shield'] > 0)
-					{
-						?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
-						$this->doDamageTypeReductionDisplay($damageResults);
-					}
-					if($ActualDamage['NumCDs'] > 0)
-					{
-						?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-						$this->doDamageTypeReductionDisplay($damageResults);
-					}
-					if($ActualDamage['Armour'] > 0)
-					{
-						?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
-					}
-				}
-			} ?>.
-			<br /><?php
-			if($ActualDamage['KillingShot'])
-			{
-				$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>&$Drones['KillResults'],'TargetPlayer'=>&$TargetPlayer,'ShootingPlayer'=>&$ShootingPlayer));
-			}
+			echo $ShootingPlayer->getDisplayName() ?> died before they were able to attack!<br /><?php
 		}
-		if(isset($TraderResults['Drones']))
+		else
 		{
-			$Drones =& $TraderResults['Drones'];
-			$ActualDamage =& $Drones['ActualDamage'];
-			$WeaponDamage =& $Drones['WeaponDamage'];
-			$TargetPlayer =& $Drones['TargetPlayer'];
-			$DamageTypes = 0;
-			if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-			if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
-
-			echo $ShootingPlayer->getDisplayName();
-			if($WeaponDamage['Launched'] == 0)
+			if(is_array($TraderResults['Weapons']))
 			{
-				?> fails to launch their combat drones<?php
-			}
-			else
-			{
-				?>launches <span class="yellow"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php
-				if($ActualDamage['TargetAlreadyDead'])
+				foreach($TraderResults['Weapons'] as $WeaponResults)
 				{
-					?>the debris that was once <?php
-				}
-				echo $TargetPlayer->getDisplayName();
-				if(!$ActualDamage['TargetAlreadyDead'])
-				{
-					if($ActualDamage['TotalDamage'] == 0)
+					$ShootingWeapon =& $WeaponResults['Weapon'];
+					$ShotHit =& $WeaponResults['Hit'];
+					$ActualDamage =& $WeaponResults['ActualDamage'];
+					$WeaponDamage =& $WeaponResults['WeaponDamage'];
+					$TargetPlayer =& $WeaponResults['TargetPlayer'];
+					$DamageTypes = 0;
+					if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+					if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+					if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+					
+					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at <?php
+					if($ShotHit && $ActualDamage['TargetAlreadyDead'])
 					{
-						if($WeaponDamage['Shield'] > 0)
+						?>the debris that was once <?php
+					}
+					echo $TargetPlayer->getDisplayName();
+					if(!$ActualDamage['TargetAlreadyDead'])
+					{
+						if(!$ShotHit)
 						{
-							if($ActualDamage['HasCDs'])
+							?>and misses<?php
+						}
+						else if($ActualDamage['TotalDamage'] == 0)
+						{
+							if($WeaponDamage['Shield'] > 0)
 							{
-								?>which prove ineffective against their combat drones<?php
+								if($ActualDamage['HasCDs'])
+								{
+									?>which proves ineffective against their combat drones<?php
+								}
+								else
+								{
+									?>which washes harmlessly over their hull<?php
+								}
+							}
+							else if($WeaponDamage['Armour'] > 0)
+							{
+								?>which is deflected by their shields<?php
 							}
 							else
 							{
-								?>which washes harmlessly over their hull<?php
+								?>but it cannot do any damage<?php
 							}
-						}
-						if($ActualDamage['Armour'] > 0)
-						{
-							?>which is deflected by their shields<?php
 						}
 						else
 						{
-							?>but they cannot do any damage<?php
+							?>destroying <?php
+							if($ActualDamage['Shield'] > 0)
+							{
+								?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+								$this->doDamageTypeReductionDisplay($damageResults);
+							}
+							if($ActualDamage['NumCDs'] > 0)
+							{
+								?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
+								$this->doDamageTypeReductionDisplay($damageResults);
+							}
+							if($ActualDamage['Armour'] > 0)
+							{
+								?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
+							}
 						}
-					}
-					else
+					} ?>.
+					<br /><?php
+					if($ActualDamage['KillingShot'])
 					{
-						?>destroying <?php
-						if($ActualDamage['Shield'] > 0)
-						{
-							?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
-							$this->doDamageTypeReductionDisplay($damageResults);
-						}
-						if($ActualDamage['NumCDs'] > 0)
-						{
-							?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-							$this->doDamageTypeReductionDisplay($damageResults);
-						}
-						if($ActualDamage['Armour'] > 0)
-						{
-							?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
-						}
+						$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>&$Drones['KillResults'],'TargetPlayer'=>&$TargetPlayer,'ShootingPlayer'=>&$ShootingPlayer));
 					}
 				}
-			} ?>.
-			<br /><?php
-			if($ActualDamage['KillingShot'])
+			}
+			if(isset($TraderResults['Drones']))
 			{
-				$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>&$Drones['KillResults'],'TargetPlayer'=>&$TargetPlayer,'ShootingPlayer'=>&$ShootingPlayer));
+				$Drones =& $TraderResults['Drones'];
+				$ActualDamage =& $Drones['ActualDamage'];
+				$WeaponDamage =& $Drones['WeaponDamage'];
+				$TargetPlayer =& $Drones['TargetPlayer'];
+				$DamageTypes = 0;
+				if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+				if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; }
+	
+				echo $ShootingPlayer->getDisplayName();
+				if($WeaponDamage['Launched'] == 0)
+				{
+					?> fails to launch their combat drones<?php
+				}
+				else
+				{
+					?>launches <span class="yellow"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php
+					if($ActualDamage['TargetAlreadyDead'])
+					{
+						?>the debris that was once <?php
+					}
+					echo $TargetPlayer->getDisplayName();
+					if(!$ActualDamage['TargetAlreadyDead'])
+					{
+						if($ActualDamage['TotalDamage'] == 0)
+						{
+							if($WeaponDamage['Shield'] > 0)
+							{
+								if($ActualDamage['HasCDs'])
+								{
+									?>which prove ineffective against their combat drones<?php
+								}
+								else
+								{
+									?>which washes harmlessly over their hull<?php
+								}
+							}
+							if($ActualDamage['Armour'] > 0)
+							{
+								?>which is deflected by their shields<?php
+							}
+							else
+							{
+								?>but they cannot do any damage<?php
+							}
+						}
+						else
+						{
+							?>destroying <?php
+							if($ActualDamage['Shield'] > 0)
+							{
+								?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+								$this->doDamageTypeReductionDisplay($damageResults);
+							}
+							if($ActualDamage['NumCDs'] > 0)
+							{
+								?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
+								$this->doDamageTypeReductionDisplay($damageResults);
+							}
+							if($ActualDamage['Armour'] > 0)
+							{
+								?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
+							}
+						}
+					}
+				} ?>.
+				<br /><?php
+				if($ActualDamage['KillingShot'])
+				{
+					$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('KillResults'=>&$Drones['KillResults'],'TargetPlayer'=>&$TargetPlayer,'ShootingPlayer'=>&$ShootingPlayer));
+				}
 			}
 		}
-	}
-	echo $ShootingPlayer->getDisplayName();
-	if($TotalDamage > 0)
-	{
-		?> hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
-	}
-	else
-	{
-		?> does no damage this round.<?php
-		if(!$TraderResults['DeadBeforeShot'])
+		echo $ShootingPlayer->getDisplayName();
+		if($TotalDamage > 0)
 		{
-			?> Maybe they should go back to the academy<?php
+			?> hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
 		}
-	} ?>.<br /><br /><?php
+		else
+		{
+			?> does no damage this round.<?php
+			if(!$TraderResults['DeadBeforeShot'])
+			{
+				?> Maybe they should go back to the academy<?php
+			}
+		} ?>.<br /><br /><?php
+	}
 }
 $TotalDamage = $TraderTeamCombatResults['TotalDamage']; ?>
 This fleet <?php if($TotalDamage > 0){ ?>hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php }else{ ?>does no damage this round. You call that a fleet? They need a better recruiter<?php } ?>.<br />
