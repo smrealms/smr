@@ -1,83 +1,86 @@
 <?php
-foreach($ForcesCombatResults['Results'] as $ForceType => $ForceResults)
+if(is_array($ForcesCombatResults['Results']))
 {
-	$ShootingWeapon =& $ForceResults['Weapon'];
-	$ShotHit =& $ForceResults['Hit'];
-	$ActualDamage =& $ForceResults['ActualDamage'];
-	$WeaponDamage =& $ForceResults['WeaponDamage'];
-	$TargetPlayer =& $ForceResults['TargetPlayer'];
-	$DamageTypes = 0;
-	if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
-	if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-	if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; } ?>
-	
-	<span style="color:yellow;"><?php echo $WeaponDamage['Launched'] ?></span><?php
-	if($ForceType == 'Mines')
-	{ ?>
-		 mines kamikaze themselves against <?php
-	}
-	else if($ForceType == 'Drones')
-	{ ?>
-		 combat drones launch at <?php
-	}
-	else if($ForceType == 'Scouts')
-	{ ?>
-		 scout drones kamikaze themselves against <?php
-	}
-	
-	if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php }
-	echo $TargetPlayer->getDisplayName();
-	if(!$ActualDamage['TargetAlreadyDead'])
+	foreach($ForcesCombatResults['Results'] as $ForceType => $ForceResults)
 	{
-		if(!$ShotHit)
-		{ 
-			?> and misses<?php
+		$ShootingWeapon =& $ForceResults['Weapon'];
+		$ShotHit =& $ForceResults['Hit'];
+		$ActualDamage =& $ForceResults['ActualDamage'];
+		$WeaponDamage =& $ForceResults['WeaponDamage'];
+		$TargetPlayer =& $ForceResults['TargetPlayer'];
+		$DamageTypes = 0;
+		if($ActualDamage['Shield'] > 0){ $DamageTypes = $DamageTypes+1; }
+		if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
+		if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; } ?>
+		
+		<span style="color:yellow;"><?php echo $WeaponDamage['Launched'] ?></span><?php
+		if($ForceType == 'Mines')
+		{ ?>
+			 mines kamikaze themselves against <?php
 		}
-		else if($ActualDamage['TotalDamage'] == 0)
+		else if($ForceType == 'Drones')
+		{ ?>
+			 combat drones launch at <?php
+		}
+		else if($ForceType == 'Scouts')
+		{ ?>
+			 scout drones kamikaze themselves against <?php
+		}
+		
+		if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php }
+		echo $TargetPlayer->getDisplayName();
+		if(!$ActualDamage['TargetAlreadyDead'])
 		{
-			if($WeaponDamage['Shield'] > 0)
+			if(!$ShotHit)
+			{ 
+				?> and misses<?php
+			}
+			else if($ActualDamage['TotalDamage'] == 0)
 			{
-				if($ActualDamage['HasCDs'])
+				if($WeaponDamage['Shield'] > 0)
 				{
-					?>which proves ineffective against their combat drones<?php
+					if($ActualDamage['HasCDs'])
+					{
+						?>which proves ineffective against their combat drones<?php
+					}
+					else
+					{
+						?>which washes harmlessly over their hull<?php
+					}
+				}
+				else if($WeaponDamage['Armour'] > 0)
+				{
+					?>which is deflected by their shields<?php
 				}
 				else
 				{
-					?>which washes harmlessly over their hull<?php
+					?>but it cannot do any damage<?php
 				}
-			}
-			else if($WeaponDamage['Armour'] > 0)
-			{
-				?>which is deflected by their shields<?php
 			}
 			else
 			{
-				?>but it cannot do any damage<?php
+				?>destroying <?php
 			}
-		}
-		else
+			if($ActualDamage['Shield'] > 0)
+			{
+				?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+				$this->doDamageTypeReductionDisplay($damageResults);
+			}
+			if($ActualDamage['NumCDs'] > 0)
+			{
+				?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> drones<?php
+				$this->doDamageTypeReductionDisplay($damageResults);
+			}
+			if($ActualDamage['Armour'] > 0)
+			{
+				?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
+			}
+		} ?>.
+		<br /><?php
+		if($ActualDamage['KillingShot'])
 		{
-			?>destroying <?php
+			$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('TargetPlayer'=>&$TargetPlayer));
 		}
-		if($ActualDamage['Shield'] > 0)
-		{
-			?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
-			$this->doDamageTypeReductionDisplay($damageResults);
-		}
-		if($ActualDamage['NumCDs'] > 0)
-		{
-			?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> drones<?php
-			$this->doDamageTypeReductionDisplay($damageResults);
-		}
-		if($ActualDamage['Armour'] > 0)
-		{
-			?><span class="red"><?php echo number_format($ActualDamage['Armour']) ?></span> plates of armour<?php
-		}
-	} ?>.
-	<br /><?php
-	if($ActualDamage['KillingShot'])
-	{
-		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('TargetPlayer'=>&$TargetPlayer));
 	}
 }
 if($ForcesCombatResults['ForcesDestroyed'])
