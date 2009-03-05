@@ -59,7 +59,7 @@ class Template
 		}
 		else
 			echo $this->trimWhiteSpace($output);
-//		SmrSession::saveAjaxReturns();
+		SmrSession::saveAjaxReturns();
 	}
 	
 	
