@@ -33,7 +33,7 @@ $PHP_OUTPUT.=('</form><br />');
 $PHP_OUTPUT.=('What else can I do for ya?');
 $PHP_OUTPUT.=('<br /><br />');
 
-$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_buy_drink.php'));
+$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_buy_drink_processing.php'));
 $PHP_OUTPUT.=create_submit('Buy a drink ($10)');
 $PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=create_submit('Buy some water ($10)');
