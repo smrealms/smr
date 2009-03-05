@@ -57,8 +57,9 @@ class Template
 						$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
 				}
 			}
-			$this->includeTemplate('ajax_skeleton.php',array('AjaxXML'=>&$ajaxXml));
-			echo $this->trimWhiteSpace($this->stopCapture());
+			/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
+			$ajaxXml='<all>'.$ajaxXml.'</all>';
+			echo $this->trimWhiteSpace($ajaxXml);
 			ob_end_flush();
 		}
 		else
