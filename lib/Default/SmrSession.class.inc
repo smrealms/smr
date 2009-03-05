@@ -15,6 +15,9 @@ class SmrSession
 	public static $SN;
 	public static $lastSN;
 	
+	protected static $previousAjaxReturns;
+	protected static $ajaxReturns=array();
+	
 	public static $game_type;
 	public static $game_speed;
 
@@ -44,6 +47,7 @@ class SmrSession
 			self::$last_accessed	= self::$db->getField('last_accessed');
 			self::$var = @unserialize(@gzuncompress(self::$db->getField('session_var')));
 			self::$lastSN = self::$db->getField('last_sn');
+			self::$previousAjaxReturns = @unserialize(@gzuncompress(self::$db->getField('ajax_returns')));
 			if(!is_array(self::$var))
 			{
 				self::$account_id	= 0;
@@ -197,7 +201,21 @@ class SmrSession
 	{
 		return URL.'/loader.php?sn=' . self::addLink($container);
 	}
-
+	
+	public static function addAjaxReturns($element,$contents)
+	{
+		self::$ajaxReturns[$element] = $contents;
+		return self::$previousAjaxReturns[$element]==$contents;
+	}
+	
+	public static function saveAjaxReturns()
+	{
+		if(empty(self::$ajaxReturns))
+			return;
+		$compressed = gzcompress(serialize(self::$ajaxReturns));
+		self::$db->query('UPDATE active_session SET ajax_returns=' . self::$db->escapeString($compressed) .
+				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+	}
 }
 
 SmrSession::init();
