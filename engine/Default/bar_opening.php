@@ -7,7 +7,7 @@ Wanna buy a drink? I got some good stuff! Just what you need after a hard day\'s
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'bar_main.php';
-$container['script'] = 'bar_buy_drink.php';
+$container['script'] = 'bar_buy_drink_processing.php';
 $container['action'] = 'drink';
 $PHP_OUTPUT.=create_button($container,'Buy a drink ($10)');
 $PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;&nbsp;';

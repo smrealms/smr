@@ -108,11 +108,6 @@ if (!($var = SmrSession::retrieveVar($sn)))
 if (isset($var['game_id'])) $g_id = $var['game_id'];
 else $g_id = 0;
 
-// check if the last script had a start time
-if (isset($var['time']))
-	$time_start = $var['time'];
-
-
 do_voodoo();
 
 ?>
