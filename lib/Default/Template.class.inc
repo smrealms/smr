@@ -7,6 +7,7 @@ class Template
 	protected $currentAjaxID=false;
 	protected $captures=array();
 	protected $currentCaptureID=0;
+	protected $ignoreMiddle=false;
 	
 	protected $doAjaxMiddle=true;
 	
@@ -42,16 +43,19 @@ class Template
 		{
 			ob_start();
 			$this->startCapture();
-			if($this->doAjaxMiddle)
+			if($this->doAjaxMiddle && !$this->ignoreMiddle)
 			{
 				$html = new simple_html_dom();
 				$html->load($output);
 				$mid=$html->find('div#middle_panel');
 				$mid=$mid[0];
-				$id = $mid->getAttribute('id');
 				$inner = $mid->innertext();
-				if(!SmrSession::addAjaxReturns($id,$inner))
-					$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+				if(!$this->checkDisableAJAX($inner))
+				{
+					$id = $mid->getAttribute('id');
+					if(!SmrSession::addAjaxReturns($id,$inner))
+						$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+				}
 			}
 			$this->includeTemplate('ajax_skeleton.php',array('AjaxXML'=>&$ajaxXml));
 			echo $this->trimWhiteSpace($this->stopCapture());
@@ -250,6 +254,11 @@ class Template
 			if(!empty($spans))
 				$this->doAjaxMiddle=false;
 		}
+	}
+	
+	public function ignoreMiddle()
+	{
+		$this->ignoreMiddle=true;
 	}
 }
 ?>
