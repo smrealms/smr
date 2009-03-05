@@ -1,4 +1,4 @@
-<div id="sector_forces">
+<div id="sector_forces" class="ajax">
 	<?php if($ThisSector->hasForces())
 	{
 		$Forces =& $ThisSector->getForces();

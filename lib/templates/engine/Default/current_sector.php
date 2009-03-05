@@ -10,32 +10,34 @@
 			<?php $this->includeTemplate('includes/SectorNavigation.inc'); ?>
 		</td>
 		<td style="padding:0px;vertical-align:top;width:32em;"><?php
-		$this->includeTemplate('includes/PlottedCourse.inc');
-		$this->includeTemplate('includes/Ticker.inc');
-		if($ErrorMessage)
-		{
-			echo $ErrorMessage ?><br /><?php
-		}
-		if($ProtectionMessage)
-		{
-			echo $ProtectionMessage ?><br /><?php
-		}
-		if($TurnsMessage)
-		{
-			echo $TurnsMessage ?><br /><?php
-		}
-		if($TradeMessage)
-		{
-			echo $TradeMessage ?><br /><?php
-		}
-		if($ForceRefreshMessage)
-		{
-			echo $ForceRefreshMessage ?><br /><?php
-		}
-		if($VarMessage)
-		{
-			echo $VarMessage ?><br /><?php
-		} ?>
+			$this->includeTemplate('includes/PlottedCourse.inc');
+			$this->includeTemplate('includes/Ticker.inc'); ?>
+			<span id="secmess"><?php
+				if($ErrorMessage)
+				{
+					echo $ErrorMessage ?><br /><?php
+				}
+				if($ProtectionMessage)
+				{
+					echo $ProtectionMessage ?><br /><?php
+				}
+				if($TurnsMessage)
+				{
+					echo $TurnsMessage ?><br /><?php
+				}
+				if($TradeMessage)
+				{
+					echo $TradeMessage ?><br /><?php
+				}
+				if($ForceRefreshMessage)
+				{
+					echo $ForceRefreshMessage ?><br /><?php
+				}
+				if($VarMessage)
+				{
+					echo $VarMessage ?><br /><?php
+				} ?>
+			</span>
 		</td>
 	</tr>
 </table><br /><?php
