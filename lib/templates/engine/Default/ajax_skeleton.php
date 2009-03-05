@@ -1,12 +1,9 @@
 <?php echo '<?xml version="1.0" encoding="ISO-8859-1"?>'; ?>
 <pagecontent>
-	<tod>
-		<?php echo htmlentities($this->trimWhiteSpace($timeDisplay)) ?>
-	</tod>
-	<runtime>
-		<?php echo htmlentities($this->trimWhiteSpace($ScriptRuntime)) ?>
-	</runtime><?php
-	if(!$AJAX_DISABLE_CONTENT_REFRESH)
+	<tod><?php echo htmlentities($this->trimWhiteSpace($timeDisplay)) ?></tod>
+	<runtime><?php echo htmlentities($this->trimWhiteSpace($ScriptRuntime)) ?></runtime><?php
+	echo $AjaxXML;
+/*	if(!$AJAX_DISABLE_CONTENT_REFRESH)
 	{
 		$this->startCapture();
 		if($PageTopic)
@@ -19,7 +16,7 @@
 		}
 		$this->includeTemplate($TemplateBody);
 		$HtmlContent =& $this->stopCapture();
-		if(!$this->checkDisableAJAX($HtmlContent))
+		if(!$this->checkDisableAJAX($HtmlContent)&&!$this->echoHtmlForAjax($HtmlContent))
 		{ ?>
 			<middle_panel>
 				<?php echo htmlentities($this->trimWhiteSpace($HtmlContent)) ?>
@@ -30,6 +27,6 @@
 		$this->startCapture();
 		$this->includeTemplate('includes/rightPanel.inc');
 		$HtmlContent =& $this->stopCapture();
-		$this->echoHtmlForAjax($HtmlContent);
+		$this->echoHtmlForAjax($HtmlContent);*/
 	?>
 </pagecontent>
