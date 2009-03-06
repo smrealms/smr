@@ -1,6 +1,6 @@
 <?
 $timeBetweenAttacks = microtime(true)-$var['time'];
-if($timeBetweenShots<MIN_TIME_BETWEEN_SHOTS)
+if($timeBetweenAttacks<MIN_TIME_BETWEEN_SHOTS)
 {
 	$sleepTime = (MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks);
 //	echo '$sleepTime' . $sleepTime . ' ';
