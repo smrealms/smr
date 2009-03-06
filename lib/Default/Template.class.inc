@@ -41,26 +41,9 @@ class Template
 		$ajaxXml =& $this->convertHtmlToAjaxXml($output);
 		if($forAjax)
 		{
-			ob_start();
-			$this->startCapture();
-			if($this->doAjaxMiddle && !$this->ignoreMiddle)
-			{
-				$html = new simple_html_dom();
-				$html->load($output);
-				$mid=$html->find('div#middle_panel');
-				$mid=$mid[0];
-				$inner = $mid->innertext();
-				if(!$this->checkDisableAJAX($inner))
-				{
-					$id = $mid->getAttribute('id');
-					if(!SmrSession::addAjaxReturns($id,$inner))
-						$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
-				}
-			}
 			/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 			$ajaxXml='<all>'.$ajaxXml.'</all>';
 			echo $this->trimWhiteSpace($ajaxXml);
-			ob_end_flush();
 		}
 		else
 			echo $this->trimWhiteSpace($output);
@@ -234,6 +217,21 @@ class Template
 				$inner = $span->innertext();
 				if(!SmrSession::addAjaxReturns($id,$inner))
 					$xml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+			}
+		}
+		if($this->doAjaxMiddle && !$this->ignoreMiddle)
+		{
+			$mid=$html->find('div#middle_panel');
+			if(!empty($mid))
+			{
+				$mid=$mid[0];
+				$inner = $mid->innertext();
+				if(!$this->checkDisableAJAX($inner))
+				{
+					$id = $mid->getAttribute('id');
+					if(!SmrSession::addAjaxReturns($id,$inner))
+						$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+				}
 			}
 		}
 		return $xml;
