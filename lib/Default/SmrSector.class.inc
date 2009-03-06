@@ -45,9 +45,12 @@ class SmrSector
 	{
 		foreach(self::$CACHE_SECTORS as &$gameSectors)
 		{
-			foreach($gameSectors as &$sector)
+			foreach($gameSectors as &$gameSectorSectors)
 			{
-				$sector->update();
+				foreach($gameSectorSectors as &$sector)
+				{
+					$sector->update();
+				}
 			}
 		}
 	}
