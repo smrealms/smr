@@ -8,7 +8,7 @@ abstract class AbstractSmrPlayer
 {
 	protected $db;
 	
-	const DEFAULT_MAX_TURNS = 600;
+	const DEFAULT_MAX_TURNS = 450;
 	const HOF_CHANGED = 1;
 	const HOF_NEW = 2;
 //	var $race_name;
