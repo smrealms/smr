@@ -33,19 +33,22 @@ class SmrSector
 
 	public static function &getSector($gameID,$sectorID,$accountID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_SECTORS[$gameID . ':' . $sectorID . ':' . $accountID]))
+		if($forceUpdate || !isset(self::$CACHE_SECTORS[$gameID][$sectorID][$accountID]))
 		{
 			$s = new SmrSector($gameID,$sectorID,$accountID);
-			return self::$CACHE_SECTORS[$s->getGameID() . ':' . $s->getSectorID() . ':' . $accountID] =& $s;
+			return self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()][$accountID] =& $s;
 		}
-		return self::$CACHE_SECTORS[$gameID. ':' .$sectorID . ':' . $accountID];
+		return self::$CACHE_SECTORS[$gameID][$sectorID][$accountID];
 	}
 	
 	public static function saveSectors()
 	{
-		foreach(self::$CACHE_SECTORS as &$sector)
+		foreach(self::$CACHE_SECTORS as &$gameSectors)
 		{
-			$sector->update();
+			foreach($gameSectors as &$sector)
+			{
+				$sector->update();
+			}
 		}
 	}
 	

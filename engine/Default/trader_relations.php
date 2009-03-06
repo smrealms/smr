@@ -14,16 +14,12 @@ $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td valign="top" width="50%">');
 
 $PHP_OUTPUT.=('<p>');
-$db->query('SELECT * FROM race');
-while ($db->nextRecord()) {
-
-	$race_id = $db->getField('race_id');
-
-	if ($race_id == 1) continue;
-
-	$race_name = $db->getField('race_name');
-	$otherRaceRelations = Globals::getRaceRelations(SmrSession::$game_id,$race_id);
-	$PHP_OUTPUT.=($race_name.' : ' . get_colored_text($otherRaceRelations[$player->getRaceID()], $otherRaceRelations[$player->getRaceID()]) . '<br />');
+$races =& Globals::getRaces();
+foreach($races as $race)
+{
+	if ($race['Race ID'] == 1) continue;
+	$otherRaceRelations = Globals::getRaceRelations(SmrSession::$game_id,$race['Race ID']);
+	$PHP_OUTPUT.=($race['Race Name'].' : ' . get_colored_text($otherRaceRelations[$player->getRaceID()], $otherRaceRelations[$player->getRaceID()]) . '<br />');
 
 }
 $PHP_OUTPUT.=('</p>');
@@ -33,14 +29,10 @@ $PHP_OUTPUT.=('<td valign="top">');
 
 $PHP_OUTPUT.=('<p>');
 $db->query('SELECT * FROM race');
-while ($db->nextRecord()) {
-
-	$race_id = $db->getField('race_id');
-
-	if ($race_id == 1) continue;
-
-	$race_name = $db->getField('race_name');
-	$PHP_OUTPUT.=($race_name.' : ' . get_colored_text($player->getRelation($race_id), $player->getRelation($race_id)) . '<br />');
+foreach($races as $race)
+{
+	if ($race['Race ID'] == 1) continue;
+	$PHP_OUTPUT.=($race['Race Name'].' : ' . get_colored_text($player->getRelation($race['Race ID']), $player->getRelation($race['Race ID'])) . '<br />');
 
 }
 $PHP_OUTPUT.=('</p>');

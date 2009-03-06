@@ -22,15 +22,15 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 
 	public static function &getWeapon($gameTypeID,$weaponTypeID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$gameTypeID . ':' . $weaponTypeID]))
+		if($forceUpdate || !isset(self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID]))
 		{
 			$w = new SmrWeapon($gameTypeID,$weaponTypeID);
 			if($w->getName()!='')
-				self::$CACHE_WEAPONS[$gameTypeID . ':' . $weaponTypeID] =& $w;
+				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] =& $w;
 			else
-				self::$CACHE_WEAPONS[$gameTypeID . ':' . $weaponTypeID] = false;
+				self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID] = false;
 		}
-		return self::$CACHE_WEAPONS[$gameTypeID . ':' . $weaponTypeID];
+		return self::$CACHE_WEAPONS[$gameTypeID][$weaponTypeID];
 	}
 
 	public static function &getAllWeapons($gameTypeID,$forceUpdate = false)

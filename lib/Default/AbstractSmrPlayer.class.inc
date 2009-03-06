@@ -430,19 +430,24 @@ abstract class AbstractSmrPlayer
 			return get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
 	}
 
-	public function getLinkedDisplayName()
+	public function getLinkedDisplayName($includeAlliance=true)
 	{
-		$return = '<a href="'.$this->getTraderSearchHREF().'">'.$this->getDisplayName().'</a> (';
-		if($this->hasAlliance())
+		$return = '<a href="'.$this->getTraderSearchHREF().'">'.$this->getDisplayName().'</a>';
+
+		if($includeAlliance)
 		{
-			$return .= '<a href="'.$this->getAllianceRosterHREF().'">';
+			$return.= ' (';
+			if($this->hasAlliance())
+			{
+				$return .= '<a href="'.$this->getAllianceRosterHREF().'">';
+			}
+			$return .= $this->getAllianceName();
+			if($this->hasAlliance())
+			{
+				$return.'</a>';
+			}
+			$return.= ')';
 		}
-		$return .= $this->getAllianceName();
-		if($this->hasAlliance())
-		{
-			$return.'</a>';
-		}
-		$return.= ')';
 		return $return;
 	}
 	

@@ -81,9 +81,12 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public static function savePlayers()
 	{
-		foreach(self::$CACHE_PLAYERS as &$player)
+		foreach(self::$CACHE_PLAYERS as &$gamePlayers)
 		{
-			$player->save();
+			foreach($gamePlayers as &$player)
+			{
+				$player->save();
+			}
 		}
 	}
 
@@ -100,7 +103,7 @@ class SmrPlayer extends AbstractSmrPlayer
 
 	public static function &getSectorPlayers($gameID,$sectorID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID]))
+		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(false));
@@ -108,21 +111,38 @@ class SmrPlayer extends AbstractSmrPlayer
 			while($db->nextRecord())
 			{
 				$accountID = $db->getField('account_id');
-				$players[$db->getField('account_id')] =& self::getPlayer($accountID,$gameID);
+				$players[$accountID] =& self::getPlayer($accountID,$gameID);
 			}
-			return self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID] =& $players;
+			return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
 		}
-		return self::$CACHE_SECTOR_PLAYERS[$gameID . ':' . $sectorID];
+		return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID];
+	}
+
+	public static function &getAlliancePlayers($gameID,$allianceID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$allianceID]))
+		{
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT account_id FROM player WHERE alliance_id = ' . $allianceID . ' AND game_id=' . $gameID .' ORDER BY experience DESC');
+			$players = array();
+			while($db->nextRecord())
+			{
+				$accountID = $db->getField('account_id');
+				$players[$accountID] =& self::getPlayer($accountID,$gameID);
+			}
+			return self::$CACHE_SECTOR_PLAYERS[$gameID][$allianceID] =& $players;
+		}
+		return self::$CACHE_SECTOR_PLAYERS[$gameID][$allianceID];
 	}
 
 	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false)
 	{
-		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID . ':' . $accountIDOrResultArray]))
+		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray]))
 		{
 			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
-			return self::$CACHE_PLAYERS[$gameID . ':' . $p->getAccountID()] =& $p;
+			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
 		}
-		return self::$CACHE_PLAYERS[$gameID. ':' .$accountIDOrResultArray];
+		return self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray];
 		
 	}
 	
