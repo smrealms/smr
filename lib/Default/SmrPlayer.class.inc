@@ -2034,7 +2034,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			if(isset($var['time']))
 				$container['time']	= $var['time'];
 			else
-				$container['time']	= microtime(true);
+				$container['time']	= 0;
 			$this->attackTraderHREF = SmrSession::get_new_href($container);
 		}
 		return $this->attackTraderHREF;
