@@ -15,7 +15,7 @@
 	{ ?>
 		<p>
 			<table cellpadding="5" border="0"><?php
-			for($i=0;$i<$NumberOfGalaxies;i++)
+			for($i=0;$i<$NumberOfGalaxies;$i++)
 			{ ?>
 				<tr>
 					<td align="right">Name:</td>
