@@ -44,9 +44,12 @@ class SmrForce
 	{
 		foreach(self::$CACHE_FORCES as &$gameForces)
 		{
-			foreach($gameForces as &$forces)
+			foreach($gameForces as &$gameSectorForces)
 			{
-				$forces->update();
+				foreach($gameSectorForces as &$forces)
+				{
+					$forces->update();
+				}
 			}
 		}
 	}
