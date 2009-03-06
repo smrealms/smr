@@ -42,12 +42,12 @@ class SmrPort
 
 	public static function &getPort($gameID,$sectorID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_PORTS[$gameID . ':' . $sectorID]))
+		if($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID]))
 		{
 			$p = new SmrPort($gameID,$sectorID);
-			return self::$CACHE_PORTS[$gameID . ':' . $sectorID] =& $p;
+			return self::$CACHE_PORTS[$gameID][$sectorID] =& $p;
 		}
-		return self::$CACHE_PORTS[$gameID . ':' . $sectorID];
+		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}
 	
 	protected function __construct($gameID,$sectorID)
@@ -968,7 +968,7 @@ class SmrPort
 	}
 	public static function &getCachedPort($gameID,$sectorID,$accountID,$forceUpdate=false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID . ':' . $sectorID . ':' . $accountID]))
+		if($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]))
 		{
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT port_info FROM player_visited_port ' .
@@ -978,12 +978,12 @@ class SmrPort
 							  		
 			if($db->nextRecord())
 			{
-				return self::$CACHE_CACHED_PORTS[$gameID . ':' . $sectorID . ':' . $accountID] = unserialize($db->getField('port_info'));
+				return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize($db->getField('port_info'));
 			}
 			else
-				return self::$CACHE_CACHED_PORTS[$gameID . ':' . $sectorID . ':' . $accountID] = false;
+				return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
 		}
-		return self::$CACHE_CACHED_PORTS[$gameID . ':' . $sectorID . ':' . $accountID];
+		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
 	
 	public function __sleep()

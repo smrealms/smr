@@ -42,15 +42,18 @@ class SmrForce
 	
 	public static function saveForces()
 	{
-		foreach(self::$CACHE_FORCES as &$forces)
+		foreach(self::$CACHE_FORCES as &$gameForces)
 		{
-			$forces->update();
+			foreach($gameForces as &$forces)
+			{
+				$forces->update();
+			}
 		}
 	}
 	
 	public static function &getSectorForces($gameID,$sectorID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID . ':' . $sectorID]))
+		if($forceUpdate || !isset(self::$CACHE_SECTOR_FORCES[$gameID][$sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
@@ -60,20 +63,20 @@ class SmrForce
 			{
 				$forces[$db->getField('owner_id')] =& self::getForce($gameID,$sectorID,$db->getField('owner_id'));
 			}
-			return self::$CACHE_SECTOR_FORCES[$gameID . ':' . $sectorID] =& $forces;
+			return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] =& $forces;
 		}
-		return self::$CACHE_SECTOR_FORCES[$gameID . ':' . $sectorID];
+		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
 	
 	public static function &getForce($gameID,$sectorID,$ownerID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID]))
+		if($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID]))
 		{
 			self::tidyUpForces();
 			$p = new SmrForce($gameID,$sectorID,$ownerID);
-			return self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID] =& $p;
+			return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID] =& $p;
 		}
-		return self::$CACHE_FORCES[$gameID . ':' . $sectorID . ':' . $ownerID];
+		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID];
 	}
 	
 	public static function tidyUpForces()

@@ -15,23 +15,26 @@ class SmrShip extends AbstractSmrShip
 	
 	public static function saveShips()
 	{
-		foreach(self::$CACHE_SHIPS as &$ship)
+		foreach(self::$CACHE_SHIPS as &$gameShips)
 		{
-			$ship->update_hardware();
-			$ship->update_weapon();
-			$ship->update_cargo();
-			$ship->update();
+			foreach($gameShips as &$ship)
+			{
+				$ship->update_hardware();
+				$ship->update_weapon();
+				$ship->update_cargo();
+				$ship->update();
+			}
 		}
 	}
 
 	public static function &getShip(AbstractSmrPlayer &$player,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID() . ':' . $player->getAccountID()]))
+		if($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()]))
 		{
 			$s = new SmrShip($player);
-			return self::$CACHE_SHIPS[$player->getGameID() . ':' . $s->getAccountID()] =& $s;
+			return self::$CACHE_SHIPS[$player->getGameID()][$s->getAccountID()] =& $s;
 		}
-		return self::$CACHE_SHIPS[$player->getGameID(). ':' .$player->getAccountID()];
+		return self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()];
 	}
 	
 	protected function __construct(AbstractSmrPlayer &$player)
