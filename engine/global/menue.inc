@@ -497,7 +497,7 @@ function create_bar_menue() {
 	$container['script'] = 'bar_opening.php';
 	$menue_items[] = create_link($container, 'Bar Main');
 
-	$container['script'] = 'bar_gambling.php';
+	$container['script'] = 'bar_gambling_lotto.php';
 	$container['action'] = 'lotto';
 	$menue_items[] = create_link($container, 'Lotto');
 	
