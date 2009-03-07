@@ -1,4 +1,9 @@
 <?
+if(isset($var['message']))
+{
+	$PHP_OUTPUT.=$var['message'];
+	return;
+}
 
 $PHP_OUTPUT.=('<div align=center>How much do you want to bet? ');
 if ($player->getNewbieTurns() > 0) {
@@ -16,7 +21,7 @@ if ($player->getNewbieTurns() > 0) {
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'bar_main.php';
-$container['script'] = 'bar_gambling.php';
+$container['script'] = 'bar_gambling_processing.php';
 $container['action'] = 'blackjack';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<input type="text" value="'.$value.'" name="bet" id="InputFields" style="width:100px; text-align:center;">&nbsp;&nbsp;&nbsp;');

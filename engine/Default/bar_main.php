@@ -5,6 +5,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 //first check if there is a bar here
 if (!$sector->has_bar()) create_error('So two guys walk into this bar...');
 
+
 //get script to include
 if (isset($var['script'])) $script = $var['script'];
 else $script = 'bar_opening.php';
@@ -19,13 +20,17 @@ else $template->assign('PageTopic','Welcome to this bar');
 
 //include menu (not menue ;) )
 require_once(ENGINE . 'global/menue.inc');
-$PHP_OUTPUT.=create_bar_menue();
-
+global $BAR_SCRIPTS_USED; // HACKY
+if(!is_array($BAR_SCRIPTS_USED)||!in_array($script,$BAR_SCRIPTS_USED))
+{
+	$PHP_OUTPUT.=create_bar_menue();
+	$BAR_SCRIPTS_USED[] = $script;
+}
 //get rid of drinks older than 30 mins
 $time = TIME - 1800;
 $db->query('DELETE FROM player_has_drinks WHERE time < '.$time);
 
 //include bar part
-require(get_file_loc($script));
+require_once(get_file_loc($script));
 
 ?>

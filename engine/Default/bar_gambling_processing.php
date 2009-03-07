@@ -13,129 +13,38 @@ if ($action == 'process')
 		create_error('There once was a man with less than $1,000,000...wait...thats you!');
 		return;
 	}
-	$go = TRUE;
-	while ($go)
+	while (true)
 	{
 		//stop double entries...250,000 usecs at a time so as to not slow them down too much.
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID().' AND time = '.$time);
-		if ($db->getNumRows()) {
-		
+		if ($db->getNumRows())
+		{
 			usleep(250000);
 			$time = time();
-		} else $go = FALSE;
+		} else break;
 	}
-	
-	$time = time();
-	$player->decreaseCredits(1000000);
-	$player->increaseHOF(1000000,array('Bar','Lotto', 'Money', 'Spent'));
 	$db->query('INSERT INTO player_has_ticket (game_id, account_id, time) VALUES (' .
 				$player->getGameID().', '.$player->getAccountID().', '.$time.')');
+	$player->decreaseCredits(1000000);
+	$player->increaseHOF(1000000,array('Bar','Lotto', 'Money', 'Spent'));
 	$player->increaseHOF(1,array('Bar','Lotto', 'Tickets Bought'));
 	$db->query('SELECT count(*) as num FROM player_has_ticket WHERE game_id = '.$player->getGameID() .
 				' AND account_id = '.$player->getAccountID().' AND time > 0 GROUP BY account_id');
 	$db->nextRecord();
 	$num = $db->getField('num');
-	$PHP_OUTPUT.=('<div align=center>Thanks for your purchase and good luck!!!  You currently');
-	$PHP_OUTPUT.=(' own '.$num.' tickets!</div><br />');
-	$action = 'Play the Galactic Lotto';
+	$message=('<div align=center>Thanks for your purchase and good luck!!!  You currently');
+	$message.=(' own '.$num.' tickets!</div><br />');
 	
-}
-	
-//are we playing lotto?
-if ($action == 'lotto')
-{
-	
-	//do we have a winner first...
-	$time = time();
-	$db->lockTable('player_has_ticket');
-	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
-			'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
-	$db->nextRecord();
-	if ($db->getField('num') > 0) {
-		$amount = ($db->getField('num') * 1000000 * .9) + 1000000;
-		$first_buy = $db->getField('time');
-	} else {
-		$amount = 1000000;
-		$first_buy = time();
-	}
-	//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-	$time_rem = ($first_buy + (2 * 24 * 60 * 60)) - $time;
-	if ($time_rem <= 0) {
-		
-		//we need to pick a winner
-		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand()');
-		if ($db->nextRecord()) {
-			$winner_id = $db->getField('account_id');
-			$time = $db->getField('time');
-		}
-		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
-		if ($db->nextRecord()) {
-		
-			$amount += $db->getField('prize');
-			$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
-			
-		}
-		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID().' AND account_id = '.$winner_id);
-		$db->query('UPDATE player_has_ticket SET time = 0, prize = '.$amount.' WHERE time = '.$time.' AND ' .
-					'account_id = '.$winner_id.' AND game_id = '.$player->getGameID());
-		//delete losers
-		$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$player->getGameID());
-		//get around locked table problem
-		$val = 1;
-
-	}
-	$db->unlock();
-	if ($val == 1) {
-		// create news msg
-		$winner =& SmrPlayer::getPlayer($winner_id, $player->getGameID());
-		$news_message = '<font color=yellow>'.$winner->getPlayerName().'</font> has won the lotto!  The jackpot was ' . number_format($amount) . '.  <font color=yellow>'.$winner->getPlayerName().'</font> can report to any bar to claim his prize!';
-		// insert the news entry delete old first
-		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$player->getGameID());
-		$db->query('INSERT INTO news ' .
-		'(game_id, time, news_message, type) ' .
-		'VALUES('.$player->getGameID().', ' . time() . ', ' . $db->escape_string($news_message, false) . ',\'lotto\')');
-		
-	}
-	//end do we have winner
-	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
-				'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
-	$db->nextRecord();
-	if ($db->getField('num') > 0) {
-		$amount = ($db->getField('num') * 1000000 * .9) + 1000000;
-		$first_buy = $db->getField('time');
-	} else {
-		$amount = 1000000;
-		$first_buy = time();
-	}
-	//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-	$time_rem = ($first_buy + (2 * 24 * 60 * 60)) - $time;
-	$days = floor($time_rem / 60 / 60 / 24);
-	$time_rem -= $days * 60 * 60 * 24;
-	$hours = floor($time_rem / 60 / 60);
-	$time_rem -= $hours * 60 * 60;
-	$mins = floor($time_rem / 60);
-	$time_rem -= $mins * 60;
-	$secs = $time_rem;
-	$time_rem = '<b>'.$days.' Days, '.$hours.' Hours, '.$mins.' Minutes, and '.$secs.' Seconds</b>';
-	$PHP_OUTPUT.=('<br /><div align=center>Currently '.$time_rem.' remain until the winning ticket');
-	$PHP_OUTPUT.=(' is drawn, and the prize is $' . number_format($amount) . '.</div><br />');
-	$PHP_OUTPUT.=('<div align=center>Ahhhh so your interested in the lotto huh?  ');
-	$PHP_OUTPUT.=('Well here is how it works.  First you will need to buy a ticket, ');
-	$PHP_OUTPUT.=('they cost $1,000,000 a piece.  Next you need to watch the news.  Once the winning ');
-	$PHP_OUTPUT.=('lotto ticket is drawn there will be a section in the news with the winner.');
-	$PHP_OUTPUT.=('  If you win you can come to any bar and claim your prize!');
-	$PHP_OUTPUT.=('</div><div align=center>');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'bar_main.php';
-	$container['script'] = 'bar_gambling.php';
-	$container['action'] = 'process';
-	$PHP_OUTPUT.=create_button($container,'Buy a Ticket ($1,000,000)');
+	$container=create_container('skeleton.php','bar_main.php');
+	$container['script']='bar_opening.php';
+	$container['message'] = $message;
+	forward($container);
 	
 }
 elseif ($action == 'blackjack')
 {
+	$message='';
 	//num of decks and cards
 	$decks = 1;
 	$max_cards = 52 * $decks;
@@ -348,15 +257,15 @@ elseif ($action == 'blackjack')
 		//heres the AIs cards
 		$i = 1;
 		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2)
-			$PHP_OUTPUT.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
-		$PHP_OUTPUT.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
+			$message.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
+		$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
 		foreach ($ai_card as $key => $value) {
 			
 			if ($key == 0) {
 				
 				//do we need a new row?
-				if ($i == 4 || $i == 7 || $i == 10) $PHP_OUTPUT.=('</tr><tr>');
-				$PHP_OUTPUT.=create_card($value, TRUE);
+				if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
+				$message.=create_card($value, TRUE);
 				$curr_ai_card = array();
 				$curr_ai_card[] = $value;
 				//get curr val of this card...for the at least part
@@ -367,23 +276,23 @@ elseif ($action == 'blackjack')
 			
 				//lets try and echo cards
 				//new row?			
-				if ($i == 4 || $i == 7 || $i == 10) $PHP_OUTPUT.=('</tr><tr>');
-				if (get_value($ai_card) == 21 || get_value($player_card) >= 21) $PHP_OUTPUT.=create_card($value, TRUE);
-				else $PHP_OUTPUT.=create_card($value, FALSE);
+				if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
+				if (get_value($ai_card) == 21 || get_value($player_card) >= 21) $message.=create_card($value, TRUE);
+				else $message.=create_card($value, FALSE);
 				$i++;
 												
 			}
 			
 		}
 
-		$PHP_OUTPUT.=('</td></tr></table>');
+		$message.=('</td></tr></table>');
 		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
 			
-			$PHP_OUTPUT.=('<div align=center>Bank has BLACKJACK!</div><br />');
+			$message.=('<div align=center>Bank has BLACKJACK!</div><br />');
 			$win = 'no';
 			
-		} elseif (get_value($player_card) >= 21) $PHP_OUTPUT.=('<div align=center>Bank has ' . get_value($ai_card) . '</div><br /><br />');
-		else $PHP_OUTPUT.=('<div align=center>Bank has at least '.$ai_val.'</div><br />');
+		} elseif (get_value($player_card) >= 21) $message.=('<div align=center>Bank has ' . get_value($ai_card) . '</div><br /><br />');
+		else $message.=('<div align=center>Bank has at least '.$ai_val.'</div><br />');
 		
 	}
 	
@@ -415,69 +324,69 @@ elseif ($action == 'blackjack')
 				
 			}
 		$win = check_for_win(get_value($ai_card), get_value($player_card));
-		if ($win == 'yes' || $win == 'bj') $PHP_OUTPUT.=('<div align=center><h1><font color=red>You Win</font></h1></div>');
-		elseif ($win == 'tie') $PHP_OUTPUT.=('<div align=center><h1><font color=red>TIE Game</font></h1></div>');
-		else $PHP_OUTPUT.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
-		$PHP_OUTPUT.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
+		if ($win == 'yes' || $win == 'bj') $message.=('<div align=center><h1><font color=red>You Win</font></h1></div>');
+		elseif ($win == 'tie') $message.=('<div align=center><h1><font color=red>TIE Game</font></h1></div>');
+		else $message.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
+		$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
 		foreach ($ai_card as $key => $value) {
 			
 			//now row?			
-			if ($i == 4 || $i == 7 || $i == 10) $PHP_OUTPUT.=('</tr><tr>');
-			$PHP_OUTPUT.=create_card($value, TRUE);
+			if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
+			$message.=create_card($value, TRUE);
 			$i++;
 			
 		}
-		$PHP_OUTPUT.=('</td></tr></table><div align=center>');
-		if (get_value($ai_card) > 21) $PHP_OUTPUT.=('Bank <font color=red><b>BUSTED</b></font><br /><br />');
-		else $PHP_OUTPUT.=('Bank has ' . get_value($ai_card) . '<br /><br />');
-		$PHP_OUTPUT.=('</div>');
+		$message.=('</td></tr></table><div align=center>');
+		if (get_value($ai_card) > 21) $message.=('Bank <font color=red><b>BUSTED</b></font><br /><br />');
+		else $message.=('Bank has ' . get_value($ai_card) . '<br /><br />');
+		$message.=('</div>');
 		
 	}
-	$PHP_OUTPUT.=('<hr style="border:1px solid green;width:50%" noshade>');
+	$message.=('<hr style="border:1px solid green;width:50%" noshade>');
 	$i = 1;
 
 	$val1 = get_value($player_card);
 
-	$PHP_OUTPUT.=('<div align=center>Your Cards are</div><br /><table align=center><tr>');
+	$message.=('<div align=center>Your Cards are</div><br /><table align=center><tr>');
 	foreach ($player_card as $key => $value)
 	{
-		if ($i == 4 || $i == 7 || $i == 10) $PHP_OUTPUT.=('</tr><tr>');
-		$PHP_OUTPUT.=create_card($value, TRUE);
+		if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
+		$message.=create_card($value, TRUE);
 		$i++;
 	}
-	$PHP_OUTPUT.=('</td></tr></table>');
+	$message.=('</td></tr></table>');
 
-	$PHP_OUTPUT.=('<div align=center>You have a total of ' . get_value($player_card) . ' </div><br />');
+	$message.=('<div align=center>You have a total of ' . get_value($player_card) . ' </div><br />');
 	//check for win
 	if ($do == 'STAY')
 	{
 		$win = check_for_win(get_value($ai_card), get_value($player_card));
 	}
-	$PHP_OUTPUT.=('<div align=center>');
+	$message.=('<div align=center>');
 	if (get_value($player_card) > 21)
 	{
-		$PHP_OUTPUT.=('You have <font color=red><b>BUSTED</b></font>');
+		$message.=('You have <font color=red><b>BUSTED</b></font>');
 		$bet = $var['bet'];
 		$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
 		$player->increaseHOF(1,array('Blackjack','Results','Lost'));
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bar_main.php';
-		$container['script'] = 'bar_gambling.php';
+		$container['script'] = 'bar_gambling_processing.php';
 		$container['cards'] = $cards;
 		$container['action'] = 'blackjack';
 		$container['bet'] = $bet;
-		$PHP_OUTPUT.=create_echo_form($container);
-		$PHP_OUTPUT.=create_submit('Play Some More ($'.$bet.')');
-		$PHP_OUTPUT.=('</form>');
-		$PHP_OUTPUT.=('</div>');
+		$message.=create_echo_form($container);
+		$message.=create_submit('Play Some More ($'.$bet.')');
+		$message.=('</form>');
+		$message.=('</div>');
 	}
 	else if(!isset($win) && get_value($player_card) < 21)
 	{
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bar_main.php';
-		$container['script'] = 'bar_gambling.php';
+		$container['script'] = 'bar_gambling_processing.php';
 		$container['cards'] = $cards;
 		$container['player_card'] = $player_card;
 		$container['action'] = 'blackjack';
@@ -486,13 +395,13 @@ elseif ($action == 'blackjack')
 		$container['ai_aces'] = $ai_aces;
 		$container['bet'] = $bet;
 		$container['player_val'] = $val1;
-		$PHP_OUTPUT.=create_echo_form($container);
-		$PHP_OUTPUT.=create_submit('HIT');
-		$PHP_OUTPUT.=('<br /><small><br /></small></form>');
+		$message.=create_echo_form($container);
+		$message.=create_submit('HIT');
+		$message.=('<br /><small><br /></small></form>');
 		$container['player_does'] = 'STAY';
-		$PHP_OUTPUT.=create_echo_form($container);
-		$PHP_OUTPUT.=create_submit('STAY');
-		$PHP_OUTPUT.=('</form></div>');
+		$message.=create_echo_form($container);
+		$message.=create_submit('STAY');
+		$message.=('</form></div>');
 		
 	}
 	else if(isset($win))
@@ -506,7 +415,7 @@ elseif ($action == 'blackjack')
 			$player->update();
 			$player->increaseHOF($stat, array('Blackjack','Money','Won'));
 			$player->increaseHOF(1, array('Blackjack','Results','Won'));
-			$PHP_OUTPUT.=('You have won $' . number_format($bet * 2.5) . ' credits!');
+			$message.=('You have won $' . number_format($bet * 2.5) . ' credits!');
 		}
 		elseif ($win == 'yes')
 		{
@@ -515,14 +424,14 @@ elseif ($action == 'blackjack')
 			$player->update();
 			$player->increaseHOF($stat,array('Blackjack','Money','Won'));
 			$player->increaseHOF(1, array('Blackjack','Results','Won'));
-			$PHP_OUTPUT.=('You have won $' . number_format($bet * 2) . ' credits!');
+			$message.=('You have won $' . number_format($bet * 2) . ' credits!');
 		}
 		elseif ($win == 'tie')
 		{
 			$player->increaseCredits($bet);
 			$player->update();
 			$player->increaseHOF(1, array('Blackjack','Results','Draw'));
-			$PHP_OUTPUT.=('You have won back your $' . number_format($bet) . ' credits.');
+			$message.=('You have won back your $' . number_format($bet) . ' credits.');
 			
 		}
 		else
@@ -533,14 +442,14 @@ elseif ($action == 'blackjack')
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bar_main.php';
-		$container['script'] = 'bar_gambling.php';
+		$container['script'] = 'bar_gambling_processing.php';
 		$container['action'] = 'blackjack';
 		$container['cards'] = $cards;
 		$container['bet'] = $bet;
-		$PHP_OUTPUT.=create_echo_form($container);
-		$PHP_OUTPUT.=create_submit('Play Some More ($'.$bet.')');
-		$PHP_OUTPUT.=('</form>');
-		$PHP_OUTPUT.=('</div>');
+		$message.=create_echo_form($container);
+		$message.=create_submit('Play Some More ($'.$bet.')');
+		$message.=('</form>');
+		$message.=('</div>');
 		
 	}
 	elseif ($val1 == 21)
@@ -556,7 +465,7 @@ elseif ($action == 'blackjack')
 			$player->update();
 			$player->increaseHOF($stat,array('Blackjack','Money','Win'));
 			$player->increaseHOF(1,array('Blackjack','Results','Win'));
-			$PHP_OUTPUT.=('You have won $' . number_format($bet * $winnings) . ' credits!');
+			$message.=('You have won $' . number_format($bet * $winnings) . ' credits!');
 		}
 		else if(sizeof($ai_card) > 2)
 		{
@@ -567,7 +476,7 @@ elseif ($action == 'blackjack')
 			$player->update();
 			$player->increaseHOF($stat,array('Blackjack','Money','Win'));
 			$player->increaseHOF(1,array('Blackjack','Results','Win'));
-			$PHP_OUTPUT.=('You have won back your $' . number_format($bet * $winnings) . ' credits!');
+			$message.=('You have won back your $' . number_format($bet * $winnings) . ' credits!');
 		}
 		else
 		{
@@ -579,17 +488,20 @@ elseif ($action == 'blackjack')
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bar_main.php';
-		$container['script'] = 'bar_gambling.php';
+		$container['script'] = 'bar_gambling_processing.php';
 		$container['action'] = 'blackjack';
 		$container['cards'] = $cards;
 		$container['bet'] = $bet;
-		$PHP_OUTPUT.=create_echo_form($container);
-		$PHP_OUTPUT.=create_submit('Play Some More ($'.$bet.')');
-		$PHP_OUTPUT.=('</form>');
-		$PHP_OUTPUT.=('</div>');
+		$message.=create_echo_form($container);
+		$message.=create_submit('Play Some More ($'.$bet.')');
+		$message.=('</form>');
+		$message.=('</div>');
 		
 	}
+	$container=create_container('skeleton.php','bar_main.php');
+	$container['script']='bar_gambling_bet.php';
+	$container['message'] = $message;
+	forward($container);
 	
 }
-
 ?>

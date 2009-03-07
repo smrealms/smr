@@ -31,7 +31,7 @@ if ($db->nextRecord()) {
 	$PHP_OUTPUT.= '<br /><br />';
 }
 
-$container['script'] = 'bar_gambling.php';
+$container['script'] = 'bar_gambling_lotto.php';
 $container['action'] = 'lotto';
 $PHP_OUTPUT.=create_button($container,'Play the Galactic Lotto');
 
