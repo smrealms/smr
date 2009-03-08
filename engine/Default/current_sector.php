@@ -16,7 +16,9 @@ if ($sector->getGalaxyID()<9 && $rank_id < FLEDGLING && $account->veteran == 'FA
 	$galaxyName .= ' - Newbie';
 }
 
-$template->assign('Topic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$galaxyName . ')');
+$template->assign('PageTopic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$galaxyName . ')');
+$template->unassign('Menu'); //Menu is in template
+
 
 // *******************************************
 // *
