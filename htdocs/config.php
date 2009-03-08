@@ -136,6 +136,8 @@ define('TEMPLATES_DIR',LIB . 'templates/');
 
 define('DEFAULT_CSS',URL.'/css/default.css');
 
+define('AJAX_DEFAULT_REFRESH_TIME',2000);
+define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 	
 	require_once(LIB . 'Default/Template.class.inc');
 	$template = new Template();
@@ -151,6 +153,5 @@ define('DEFAULT_CSS',URL.'/css/default.css');
 	$links = array('Register' => 'login_create.php',
 					'ResetPassword' => 'resend_password.php');
 	$template->assign('Links',$links);
-	$template->assign('AJAX_ENABLE_REFRESH',1000);//To help test.
-//	$template->assign('AJAX_ENABLE_REFRESH',10000);
+	$template->assign('AJAX_ENABLE_REFRESH',AJAX_DEFAULT_REFRESH_TIME);
 ?>
