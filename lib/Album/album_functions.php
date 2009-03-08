@@ -227,7 +227,7 @@ function album_entry($album_id) {
 		$db->query('SELECT *
 					FROM account_has_permission
 					WHERE account_id = '.SmrSession::$account_id.' AND
-						  permission_id = 20');
+						  permission_id = '.PERMISSION_MODERATE_PHOTO_ALBUM);
 		if ($db->nextRecord())
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" id="InputFields"></td>');
 
