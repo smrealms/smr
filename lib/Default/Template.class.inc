@@ -86,7 +86,7 @@ class Template
 				unset($value);
 			}
 		}
-		require_once($this->getTemplateLocation($templateName));
+		require($this->getTemplateLocation($templateName));
 	}
 	
 	protected function startCapture()
