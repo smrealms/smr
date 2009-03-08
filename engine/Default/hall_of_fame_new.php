@@ -1,4 +1,5 @@
 <?
+require_once(get_file_loc('hof.functions.inc'));
 
 if (isset($var['game_id'])) $game_id = $var['game_id'];
 $base = array();
@@ -15,9 +16,14 @@ else
 $template->assign('PageTopic',$topic);
 $PHP_OUTPUT.=('<div align=center>');
 
-$PHP_OUTPUT.=('Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) . '!<br />The Hall of Fame is a comprehensive ');
-$PHP_OUTPUT.=('list of player accomplishments.  Here you can view how players rank in many different ');
-$PHP_OUTPUT.=('aspects of the game rather than just kills, deaths, and experience with the rankings system.<br /><br />');
+$container = array();
+$container['url'] = 'skeleton.php';
+$container['body'] = 'hall_of_fame_player_detail.php';
+if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
+$PHP_OUTPUT.='Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) . '!<br />The Hall of Fame is a comprehensive '.
+			'list of player accomplishments.  Here you can view how players rank in many different '.
+			'aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />'.
+				create_link($container,'You can also view your Personal Hall of Fame here.').'<br /><br />';
 
 $db->query('SELECT DISTINCT type FROM player_hof' . (isset($var['game_id']) ? ' WHERE game_id='.$var['game_id'] : '').' ORDER BY type');
 $DONATION_NAME = 'Money Donated To SMR';
@@ -174,45 +180,5 @@ else
 }
 
 $PHP_OUTPUT.=('</table></div>');
-
-function displayHOFRow($rank,$accountID,$amount)
-{
-	global $account,$player,$var;
-	if(isset($var['game_id']))
-		$hofPlayer =& SmrPlayer::getPlayer($accountID,$var['game_id']);
-	else
-		$hofAccount =& SmrAccount::getAccount($accountID);
-	if ($accountID == $account->account_id)
-	{
-		$foundMe = true;
-		$bold = ' style="font-weight:bold;"';
-	}
-	else $bold = '';
-	$return=('<tr>');
-	$return.=('<td align=center'.$bold.'>' . $rank . '</td>');
-	
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'hall_of_fame_player_detail.php';
-	$container['account_id'] = $accountID;
-	
-	if (isset($var['game_id']))
-	{
-		$container['game_id'] = $var['game_id'];
-		$container['sending_page'] = 'current_hof';
-	}
-	else
-	{
-		$container['game_id'] = $player->getGameID();
-		$container['sending_page'] = 'hof';
-	}
-	if(isset($var['game_id']))
-		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
-	else
-		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->HoF_name) .'</td>');
-	$return.=('<td align=center'.$bold.'>' . $amount . '</td>');
-	$return.=('</tr>');
-	return $return;
-}
 
 ?>

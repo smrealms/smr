@@ -1,17 +1,24 @@
 <?
-if(empty($var['game_id']))
-	create_error('No game ID specified');
+require_once(get_file_loc('hof.functions.inc'));
+
 if (isset($var['account_id']))
 	$account_id = $var['account_id'];
 else 
-	$account_id = $account->account_id;
+	$account_id = $account->getAccountID();
 $base = array();
 
-$hofPlayer =& SmrPlayer::getPlayer($account_id,$var['game_id']);
-$template->assign('PageTopic',$hofPlayer->getPlayerName().'Time Hall of Fame');
+if(isset($var['game_id']))
+{
+	$hofPlayer =& SmrPlayer::getPlayer($account_id,$var['game_id']);
+	$template->assign('PageTopic',$hofPlayer->getPlayerName().'\'s Personal Hall of Fame For '.Globals::getGameName($var['game_id']));
+}
+else
+{
+	$template->assign('PageTopic',$account->getHofName().'\'s All Time Personal Hall of Fame');
+}
 $PHP_OUTPUT.=('<div align=center>');
 
-$db->query('SELECT DISTINCT type FROM player_hof WHERE game_id='.$var['game_id'].' AND account_id='.$account_id.' ORDER BY type');
+$db->query('SELECT DISTINCT type FROM player_hof WHERE account_id='.$account_id. (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
 $DONATION_NAME = 'Money Donated To SMR';
 $hofTypes = array($DONATION_NAME=>true);
 while($db->nextRecord())
@@ -148,7 +155,7 @@ else
 	if($db->nextRecord())
 		$hofRank = $db->getField('rank') + 1;
 	
-	if(!$player->equals($hofPlayer))
+	if($account->getAccountID() != $account_id)
 	{
 		//current player's score.
 		if($var['view'] == $DONATION_NAME)
@@ -170,36 +177,19 @@ else
 		
 		//display in order
 		if($playerRank>$hofRank)
-			$PHP_OUTPUT .= displayHOFRow($playerRank,$player,$playerAmount);
+			$PHP_OUTPUT .= displayHOFRow($playerRank,$account->getAccountID(),$playerAmount);
 		else
-			$PHP_OUTPUT .= displayHOFRow($hofRank,$hofPlayer,$hofAmount);
+			$PHP_OUTPUT .= displayHOFRow($hofRank,$account_id,$hofAmount);
 		
 		if($playerRank<$hofRank)
-			$PHP_OUTPUT .= displayHOFRow($playerRank,$player,$playerAmount);
+			$PHP_OUTPUT .= displayHOFRow($playerRank,$account->getAccountID(),$playerAmount);
 		else
-			$PHP_OUTPUT .= displayHOFRow($hofRank,$hofPlayer,$hofAmount);
+			$PHP_OUTPUT .= displayHOFRow($hofRank,$account_id,$hofAmount);
 	}
 	else
-		$PHP_OUTPUT .= displayHOFRow($hofRank,$hofPlayer,$hofAmount);
+		$PHP_OUTPUT .= displayHOFRow($hofRank,$account_id,$hofAmount);
 }
 
 $PHP_OUTPUT.=('</table></div>');
-
-function displayHOFRow($rank,$hofPlayer,$amount)
-{
-	global $account,$player,$var;
-	$return=('<tr>');
-	$return.=('<td align=center>' . $rank . '</td>');
-	
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'hall_of_fame_player_detail.php';
-	$container['account_id'] = $hofPlayer->getAccountID();
-	$container['game_id'] = $var['game_id'];
-	$return.=('<td align=center>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
-	$return.=('<td align=center>' . $amount . '</td>');
-	$return.=('</tr>');
-	return $return;
-}
 
 ?>

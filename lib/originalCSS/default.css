@@ -56,6 +56,7 @@ TH {
 	font-family: Arial;
 	font-size:inherit;
 	padding: 1px 8px;
+	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
 }
 
 #InputFieldsText {

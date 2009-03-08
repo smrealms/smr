@@ -7,7 +7,7 @@ class SmrAccount
 	
 	protected $db;
 	
-	var $accountID;
+	var $account_id;
 	var $login;
 	var $password;
 	var $email;
@@ -303,12 +303,17 @@ class SmrAccount
 	
 	public function getAccountID()
 	{
-		return $this->accountID;
+		return $this->account_id;
 	}
 	
 	public function getEmail()
 	{
 		return $this->email;
+	}
+	
+	public function getHofName()
+	{
+		return $this->HoF_name;
 	}
 	
 	protected function getPassword()
