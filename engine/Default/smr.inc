@@ -382,6 +382,8 @@ function word_filter($string) {
 // This function is a hack around the old style http forward mechanism
 function do_voodoo()
 {
+	if(!defined(USING_AJAX))
+		define('USING_AJAX',false);
 	if(USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
 		exit;
 //	ob_clean();
@@ -746,7 +748,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$template->assign('PlayerNameLink',SmrSession::get_new_href($container));
 		
 		global $HIDDEN_PLAYERS;
-		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $template->assign('PlayerInvisible',true);
+		if (is_array($HIDDEN_PLAYERS)&&in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $template->assign('PlayerInvisible',true);
 	
 		if ($player->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT)
 			$colour = 'green';

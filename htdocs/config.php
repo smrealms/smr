@@ -110,6 +110,8 @@ define('FLEDGLING', 3);
 define('AVERAGE', 4);
 
 define('PERMISSION_GAME_OPEN_CLOSE', 3);
+define('PERMISSION_MODERATE_PHOTO_ALBUM', 20);
+
 
 define('NUM_RACES', 8);
 

@@ -1,9 +1,9 @@
 <?
 
-function create_error_offline($msg) {
+function create_error_offline($msg)
+{
 	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
-
 }
 
 
@@ -15,21 +15,28 @@ require_once(get_file_loc('SmrSession.class.inc'));
 require_once(LIB . 'Album/album_functions.php');
 
 if (SmrSession::$account_id == 0)
-	$PHP_OUTPUT.=create_error_offline('You need to logged in to post comments!');
+	create_error_offline('You need to logged in to post comments!');
 
 if (!isset($_GET['album_id']) || empty($_GET['album_id']))
-	$PHP_OUTPUT.=create_error_offline('Which picture do you want comment?');
+	create_error_offline('Which picture do you want comment?');
 else
 	$album_id = $_GET['album_id'];
 
 if (!is_numeric($album_id))
-	$PHP_OUTPUT.=create_error_offline('Picture ID has to be numeric!');
+	create_error_offline('Picture ID has to be numeric!');
 
 if ($album_id < 1)
-	$PHP_OUTPUT.=create_error_offline('Picture ID has to be positive!');
+	create_error_offline('Picture ID has to be positive!');
 
-if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
-
+if (isset($_GET['action']) && $_GET['action'] == 'Moderate')
+{
+	$db = new SmrMySqlDatabase();
+	$db->query('SELECT *
+				FROM account_has_permission
+				WHERE account_id = '.SmrSession::$account_id.' AND
+					  permission_id = '.PERMISSION_MODERATE_PHOTO_ALBUM);
+	if(!$db->nextRecord())
+		create_error_offline('You do not have permission to do that!');
 	$container = create_container('skeleton.php', 'album_moderate.php');
 	$container['account_id'] = $album_id;
 
@@ -41,7 +48,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
 $db = new SmrMySqlDatabase();
 
 if (!isset($_GET['comment']) || empty($_GET['comment']))
-	$PHP_OUTPUT.=create_error_offline('Please enter a comment');
+	create_error_offline('Please enter a comment');
 else
 	$comment = $_GET['comment'];
 
