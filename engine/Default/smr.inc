@@ -8,11 +8,9 @@ require_once(get_file_loc('SmrSector.class.inc'));
 
 function enableProtectionDependantRefresh(&$template,&$player)
 {
-	$ajaxRefresh = 1000;
-	if ($player->getNewbieTurns())
-		$ajaxRefresh=10000;
-	elseif ($player->hasFederalProtection())
-		$ajaxRefresh=6000;
+	$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
+	if ($player->getNewbieTurns()||$player->hasFederalProtection())
+		$ajaxRefresh=AJAX_DEFAULT_REFRESH_TIME;
 	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
 
