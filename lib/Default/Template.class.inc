@@ -4,7 +4,7 @@ class Template
 {
 	protected $data = array();
 	protected $ajax = array();
-	protected $currentAjaxID=false;
+//	protected $currentAjaxID=false;
 	protected $captures=array();
 	protected $currentCaptureID=0;
 	protected $ignoreMiddle=false;
@@ -18,6 +18,11 @@ class Template
 	public function assign($var,$value)
 	{
 		$this->data[$var] =& $value;
+	}
+	
+	public function unassign($var)
+	{
+		unset($this->data[$var]);
 	}
 	
 	public function assignByRef($var,&$value)
@@ -101,22 +106,22 @@ class Template
 		return $captured;
 	}
 	
-	protected function startAJAXCapture($id)
-	{
-		if($this->currentAjaxID!==false)
-			throw new Exception('Already capturing for AJAX');
-		$this->currentAjaxID=$id;
-		$this->startCapture();
-	}
-	
-	protected function &storeAJAXCapture()
-	{
-		if($this->currentAjaxID===false)
-			throw new Exception('Not capturing for AJAX');
-		$this->ajax[$this->currentAjaxID] = $this->stopCapture();
-		echo $this->ajax[$this->currentAjaxID];
-		$this->currentAjaxID=false;
-	}
+//	protected function startAJAXCapture($id)
+//	{
+//		if($this->currentAjaxID!==false)
+//			throw new Exception('Already capturing for AJAX');
+//		$this->currentAjaxID=$id;
+//		$this->startCapture();
+//	}
+//	
+//	protected function &storeAJAXCapture()
+//	{
+//		if($this->currentAjaxID===false)
+//			throw new Exception('Not capturing for AJAX');
+//		$this->ajax[$this->currentAjaxID] = $this->stopCapture();
+//		echo $this->ajax[$this->currentAjaxID];
+//		$this->currentAjaxID=false;
+//	}
 	
 	protected function echoAjaxXml()
 	{

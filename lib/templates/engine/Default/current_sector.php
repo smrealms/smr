@@ -1,4 +1,3 @@
-<h1><?php echo $Topic ?></h1><br />
 <div class="bar1">
 	<div>
 		<span class="nowrap"><a href="<?php echo $PlotCourseLink ?>">Plot a Course</a></span> | <span class="nowrap"><a href="<?php echo $LocalMapLink ?>">Local Map</a></span> | <span class="nowrap"><a href="map_galaxy.php" target="_blank">Galaxy Map</a></span>
