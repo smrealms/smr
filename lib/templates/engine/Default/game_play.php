@@ -125,7 +125,17 @@ if($AdminPermissions)
 	<ul><?php
 	foreach($AdminPermissions as $Permission)
 	{ ?>
-		<li><a href="<?php echo $Permission['PermissionLink'] ?>"><?php echo $Permission['Name'] ?></a></li><?php
+		<li><?php
+			if($Permission['PermissionLink']!==false)
+			{
+				?><a href="<?php echo $Permission['PermissionLink'] ?>"><?php
+			}
+			echo $Permission['Name'];
+			if($Permission['PermissionLink']!==false)
+			{
+				?></a><?php
+			} ?>
+		</li><?php
 	} ?>
 	</ul><?php
 } ?>

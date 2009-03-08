@@ -21,7 +21,7 @@ $db->query('SELECT f.feature_request_id AS feature_id, ' .
 
 if ($db->getNumRows() > 0)
 {
-	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote.php', ''));
+	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote_processing.php', ''));
 	$PHP_OUTPUT.=('<p><table cellspacing="0" cellpadding="3" border="0" class="standard" width="100%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th width="30">Votes</th>');
@@ -46,7 +46,15 @@ if ($db->getNumRows() > 0)
 	}
 
 	$PHP_OUTPUT.=('</table></p>');
-	$PHP_OUTPUT.=('<div align="right"><input type="submit" value="Vote"></div>');
+	$PHP_OUTPUT.='<div align="right"><input type="submit" name="action" value="Vote">';
+	
+	$db->query('SELECT *
+				FROM account_has_permission
+				WHERE account_id = '.SmrSession::$account_id.' AND
+					  permission_id = '.PERMISSION_MODERATE_FEATURE_REQUEST);
+	if($db->nextRecord())
+		$PHP_OUTPUT.=('&nbsp;<input type="submit" name="action" value="Delete">');
+	$PHP_OUTPUT.='</div>';
 	$PHP_OUTPUT.=('</form>');
 
 }

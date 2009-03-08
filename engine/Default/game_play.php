@@ -174,7 +174,8 @@ if ($db->getNumRows())
 	$adminPermissions = array();
 	while ($db->nextRecord())
 	{
-		$adminPermissions[] = array( 'PermissionLink' => SmrSession::get_new_href(create_container('skeleton.php',$db->getField('link_to'))), 'Name' => $db->getField('permission_name'));
+		$adminPermissions[] = array( 'PermissionLink' => $db->getField('link_to')?SmrSession::get_new_href(create_container('skeleton.php',$db->getField('link_to'))):false,
+					'Name' => $db->getField('permission_name'));
 	}
 	$template->assign('AdminPermissions',$adminPermissions);
 }
