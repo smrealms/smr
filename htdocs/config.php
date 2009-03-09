@@ -60,6 +60,7 @@ define('MSG_ADMIN', 7);
 define('BOX_BUGS_AUTO', 1);
 define('BOX_BUGS_REPORTED', 2);
 define('BOX_GLOBALS', 3);
+define('BOX_ALLIANCE_DESCRIPTIONS', 4);
 
 
 /*

@@ -23,6 +23,9 @@ if (empty($name))
 $name2 = strtolower($name);
 if ($name2 == 'none' || $name == '(none)' || $name == '( none )' || $name == 'no alliance')
 	create_error('That is not a valid alliance name!');
+$filteredName = word_filter($name);
+if($name!=$filteredName)
+	create_error('The alliance name contains one or more filtered words, please reconsider the name');
 
 // check if the alliance name already exist
 $db->query('SELECT * FROM alliance WHERE alliance_name = ' . $db->escape_string($name, true) . ' AND ' .
@@ -35,12 +38,16 @@ $db->query('SELECT * FROM alliance WHERE game_id = '.SmrSession::$game_id.' AND 
 $db->nextRecord();
 $alliance_id = $db->getField('alliance_id') + 1;
 
+
+$description = word_filter($description);
+$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,'Alliance '.$name.'('.$alliance_id.') had their description changed to:<br /><br />'.$description);
 // actually create the alliance here
 $db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, recruiting) ' .
 						  'VALUES('.$alliance_id.', '.SmrSession::$game_id.', ' . $db->escape_string($name, true) . ', ' . $db->escape_string($description, false) . ', '.$db->escapeString($password).', '.SmrSession::$account_id.', '.$db->escapeString($recruit).')');
 
 // assign the player to the current alliance
 $player->setAllianceID($alliance_id);
+$player->update();
 
 $withPerDay = -2;
 $removeMember = TRUE;

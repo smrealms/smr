@@ -45,8 +45,31 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 		}
 
 	}
+	
+	public function getAllianceID()
+	{
+		return $this->alliance_id;
+	}
+	
+	public function getAllianceName()
+	{
+		return $this->alliance_name;
+	}
+	
+	public function setAllianceDescription($description)
+	{
+		$description = word_filter($description);
+		global $player,$account;
+		$boxDescription = 'Alliance '.$this->getAllianceName().'('.$this->getAllianceID().') had their description changed to:<br /><br />'.$description;
+		if(is_object($player))
+			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,$boxDescription);
+		else
+			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,$boxDescription);
+		$this->description=$description;
+	}
 
-	function update() {
+	function update()
+	{
 
 		$this->query('UPDATE alliance SET alliance_password = ' . $this->escape_string($this->password, false) . ', ' .
 										 'alliance_account = '.$this->account.', ' .
