@@ -58,7 +58,7 @@ else
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('game_name'); //$trader .= ' in ' . $db2->getField('game_name');
 			else $PHP_OUTPUT.=('Game no longer exists'); //$trader .= ' in a game that no longer exists.';
 			$PHP_OUTPUT.=('</td></tr><tr><td colspan="3">');
-			$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('sent_time')));
+			$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('send_time')));
 			$PHP_OUTPUT.='</td>';
 			$PHP_OUTPUT.=('</tr>');
 			$PHP_OUTPUT.=('<tr>');
