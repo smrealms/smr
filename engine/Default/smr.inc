@@ -481,8 +481,7 @@ function do_voodoo()
 		release_lock($lock);
 	}
 	
-	if(!USING_AJAX)
-		SmrSession::update();
+	SmrSession::update();
 	exit;
 }
 

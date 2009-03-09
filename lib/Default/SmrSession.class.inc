@@ -110,13 +110,28 @@ class SmrSession
 		if(!self::$generate)
 		{
 			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . ',last_accessed=' . TIME . ',session_var=' . self::$db->escapeString($compressed)  . '' .
-					',last_sn='.self::$db->escapeString(self::$SN).'' .
-					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+					',last_sn='.self::$db->escapeString(self::$SN).
+					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' AND last_sn='.self::$db->escapeString(self::$lastSN) . ' LIMIT 1');
 		}
 		else
 		{
 			self::$db->query('DELETE FROM active_session WHERE account_id=' . self::$account_id . ' LIMIT 1');
 			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$account_id . ',' . self::$game_id . ',' . TIME . ',' . self::$db->escapeString($compressed)  . ')');
+		}
+	}
+	
+	public static function updateSN()
+	{
+		self::$db->query('SELECT true FROM active_session'.
+				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' AND last_sn='.self::$db->escapeString(self::$lastSN).' LIMIT 1');
+		if(self::$db->getNumRows()==0)
+		{
+			create_error('Mismatching SN');
+		}
+		if(self::$SN!=self::$lastSN)
+		{
+			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
+					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' AND last_sn='.self::$db->escapeString(self::$lastSN).' LIMIT 1');
 		}
 	}
 
@@ -131,6 +146,7 @@ class SmrSession
 	public static function retrieveVar($sn)
 	{
 		self::$SN = $sn;
+		SmrSession::updateSN();
 		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
 			return false;
 		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID']))
