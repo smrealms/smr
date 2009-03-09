@@ -5,7 +5,7 @@ if (empty($_REQUEST['feature']))
 
 // add this feature to db
 $db->query('INSERT INTO feature_request (feature, submitter_id) ' .
-								 'VALUES(' . $db->escape_string($_REQUEST['feature'], true) . ', '.SmrSession::$account_id.')');
+								 'VALUES(' . $db->escape_string(word_filter($_REQUEST['feature']), true) . ', '.SmrSession::$account_id.')');
 
 // which number did it get?
 $vote_new_id = $db->getInsertID();
