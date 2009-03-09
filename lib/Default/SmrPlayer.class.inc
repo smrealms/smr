@@ -1899,6 +1899,25 @@ class SmrPlayer extends AbstractSmrPlayer
 		SmrAccount::doMessageSendingToBox($this->getAccountID(), $boxTypeID, $message, $this->getGameID());
 	}
 	
+	public function sendGlobalMessage($message, $canBeIgnored = true)
+	{
+		// send to all online player
+		$allowed = TIME - 600;
+		$this->db->query('SELECT active_session.account_id FROM active_session, player
+				WHERE active_session.last_accessed >= ' . $allowed . ' AND
+					  active_session.game_id = '.$this->getGameID() . ' AND
+					  active_session.account_id = player.account_id AND
+					  active_session.game_id = player.game_id AND 
+					  player.ignore_globals = \'FALSE\'');
+	//	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
+	
+		$this->sendMessageToBox(BOX_GLOBALS,$message);
+		while ($this->db->nextRecord())
+		{
+			$this->sendMessage($this->db->getField('account_id'), MSG_GLOBAL, $message);
+		}
+	}
+	
 	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true)
 	{
 		//get expire time
@@ -1915,8 +1934,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		switch ($messageTypeID)
 		{
-			case MSG_GLOBAL:
-				$this->sendMessageToBox(BOX_GLOBALS,$message);
+			case MSG_GLOBAL: //We don't send globals to the box here or it gets done loads of times.
 				$expires = 3600;
 			break;
 			case MSG_PLAYER:

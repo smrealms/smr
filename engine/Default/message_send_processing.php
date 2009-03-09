@@ -7,22 +7,7 @@ if (empty($message))
 
 if (empty($var['receiver']))
 {
-
-	// send to all online player
-	$allowed = TIME - 600;
-	$db->query('SELECT active_session.account_id FROM active_session, player
-			WHERE active_session.last_accessed >= ' . $allowed . ' AND
-				  active_session.game_id = '.SmrSession::$game_id . ' AND
-				  active_session.account_id = player.account_id AND
-				  active_session.game_id = player.game_id AND 
-				  player.ignore_globals = \'FALSE\'');
-//	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
-
-	while ($db->nextRecord())
-	{
-		$player->sendMessage($db->getField('account_id'), MSG_GLOBAL, $message);
-	}
-
+	$player->sendGlobalMessage($message);
 }
 else
 {
