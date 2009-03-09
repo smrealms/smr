@@ -3,16 +3,9 @@
 //first message
 if (isset($_REQUEST['offenderReply'])) $offenderReply = $_REQUEST['offenderReply'];
 
-if (isset($offenderReply) && $offenderReply != '') {
-	$game_id = $var['game_id'];
-	$message = $db->escape_string($offenderReply, false);
-	
-	$db->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time) ' .
-	                             'VALUES('.$var['offender'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.TIME.')');
-	
-	// give him the message icon
-	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-				('.$game_id.', '.$var['offender'].', '.MSG_ADMIN.')');
+if (isset($offenderReply) && $offenderReply != '')
+{
+	SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['offender'], $offenderReply);
 	
 	//do we have points?
 	if ($_REQUEST['offenderBanPoints'])
@@ -76,15 +69,11 @@ if (isset($offenderReply) && $offenderReply != '') {
 }
 if (isset($_REQUEST['offendedReply'])) $offendedReply = $_REQUEST['offendedReply'];
 
-if (isset($offendedReply) && $offendedReply != '') {
+if (isset($offendedReply) && $offendedReply != '')
+{
 	//next message
-	$message = $db->escape_string($offendedReply, false);
-	$db->query('INSERT INTO message (account_id, game_id, message_type_id, message_text, sender_id, send_time) ' .
-	                             'VALUES('.$var['offended'].', '.$game_id.', '.MSG_ADMIN.', '.$message.', 0, '.TIME.')');
-	
-	// give him the message icon
-	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-				('.$game_id.', '.$var['offended'].', '.MSG_ADMIN.')');
+	SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['offended'], $offendedReply);
+
 	//do we have points?
 	if ($_REQUEST['offendedBanPoints'])
 	{

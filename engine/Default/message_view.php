@@ -276,7 +276,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 			$message_text = str_replace('?$timea?', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
-	if (!empty($sender_id))
+	if (!empty($sender_id) && $sender_id!=ACCOUNT_ID_PORT&&$sender_id!=ACCOUNT_ID_ADMIN)
 		$sender =& SmrPlayer::getPlayer($sender_id, $player->getGameID());
 	$return= ('<tr>');
 	$return.= ('<td width="10"><input type="checkbox" name="message_id[]" value="'.$message_id.'">');
@@ -284,11 +284,15 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	if ($msg_read == 'FALSE') $return.= ('*');
 	$return.= ('</td>');
 	$return.= ('<td nowrap="nowrap" width="100%">From: ');
-	if($sender_id==PORT_ACCOUNT_ID)
+	if($sender_id==ACCOUNT_ID_PORT)
 	{
 		$return.= ('<span class="yellow">Port Defenses</span>');
 	}
-	else if (!empty($sender_id))
+	else if($sender_id==ACCOUNT_ID_ADMIN)
+	{
+		$return.= ('<span style="font:small-caps bold;color:blue;">Administrator</span>');
+	}
+	else if (is_object($sender))
 	{
 		$container = array();
 		$container['url']		= 'skeleton.php';
@@ -320,10 +324,9 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	$container['notified_time'] = TIME;
 	$return.= create_link($container, '<img src="images/notify.gif" border="0" align="right"title="Report this message to an admin">');
 	$return.= ('</td>');
-
-	$return.= ('<td>');
-	if (!empty($sender_id))
+	if (is_object($sender))
 	{
+		$return.= ('<td>');
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'message_send.php';

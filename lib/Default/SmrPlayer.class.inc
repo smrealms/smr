@@ -1893,10 +1893,15 @@ class SmrPlayer extends AbstractSmrPlayer
 						'('.$gameID.', '.$receiverID.', '.$messageTypeID.')');
 	}
 	
+	public function sendMessageToBox($boxTypeID, $message)
+	{
+		// send him the message
+		SmrAccount::doMessageSendingToBox($this->getAccountID(), $boxTypeID, $message, $this->getGameID());
+	}
+	
 	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true)
 	{
 		//get expire time
-		
 		if($canBeIgnored)
 		{
 			// Don't send messages to players ignoring us
@@ -1911,6 +1916,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		switch ($messageTypeID)
 		{
 			case MSG_GLOBAL:
+				$this->sendMessageToBox(BOX_GLOBALS,$message);
 				$expires = 3600;
 			break;
 			case MSG_PLAYER:
@@ -1944,7 +1950,15 @@ class SmrPlayer extends AbstractSmrPlayer
 		//get expire time
 		$expires = TIME + 3600 * 24 * 7;
 		// send him the message
-		self::doMessageSending(PORT_ACCOUNT_ID,$receiverID, $gameID, MSG_PLAYER, $message, $expires);
+		self::doMessageSending(ACCOUNT_ID_PORT,$receiverID, $gameID, MSG_PLAYER, $message, $expires);
+	}
+	
+	public static function sendMessageFromAdmin($gameID, $receiverID, $message)
+	{
+		//get expire time
+		$expires = TIME + 3600 * 24 * 7;
+		// send him the message
+		self::doMessageSending(ACCOUNT_ID_ADMIN,$receiverID, $gameID, MSG_ADMIN, $message, $expires);
 	}
 	
 	public function setMessagesRead($messageTypeID)
