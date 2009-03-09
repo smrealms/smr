@@ -24,7 +24,7 @@ $alliance = new SMR_ALLIANCE($alliance_id, $player->getGameID());
 if (isset($password))
 	$alliance->password = $password;
 if (isset($description))
-	$alliance->description = $description;
+	$alliance->setAllianceDescription($description);
 if (isset($mod))
 	$alliance->mod = $mod;
 if (isset($url))
