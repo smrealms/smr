@@ -21,12 +21,22 @@ $db->query('SELECT f.feature_request_id AS feature_id, ' .
 
 if ($db->getNumRows() > 0)
 {
+	$DELETE_ALLOWED=false;
+	$db2 = new SmrMySqlDatabase();
+	$db2->query('SELECT *
+				FROM account_has_permission
+				WHERE account_id = '.SmrSession::$account_id.' AND
+					  permission_id = '.PERMISSION_MODERATE_FEATURE_REQUEST);
+	if($db2->nextRecord())
+		$DELETE_ALLOWED=true;
 	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote_processing.php', ''));
 	$PHP_OUTPUT.=('<p><table cellspacing="0" cellpadding="3" border="0" class="standard" width="100%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th width="30">Votes</th>');
 	$PHP_OUTPUT.=('<th>Feature</th>');
 	$PHP_OUTPUT.=('<th width="20">&nbsp;</th>');
+	if($DELETE_ALLOWED)
+		$PHP_OUTPUT.=('<th width="20">&nbsp;</th>');
 	$PHP_OUTPUT.=('</tr>');
 
 	while ($db->nextRecord())
@@ -42,17 +52,15 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=('<td valign="middle" align="center"><input type="radio" name="vote" value="'.$feature_request_id.'"');
 		if ($feature_request_id == $feature_vote) $PHP_OUTPUT.=(' checked');
 		$PHP_OUTPUT.=('></td>');
+		if($DELETE_ALLOWED)
+			$PHP_OUTPUT.=('<td valign="middle" align="center"><input type="checkbox" name="delete[]" value="'.$feature_request_id.'"></td>');
 		$PHP_OUTPUT.=('</tr>');
 	}
 
 	$PHP_OUTPUT.=('</table></p>');
 	$PHP_OUTPUT.='<div align="right"><input type="submit" name="action" value="Vote">';
 	
-	$db->query('SELECT *
-				FROM account_has_permission
-				WHERE account_id = '.SmrSession::$account_id.' AND
-					  permission_id = '.PERMISSION_MODERATE_FEATURE_REQUEST);
-	if($db->nextRecord())
+	if($DELETE_ALLOWED)
 		$PHP_OUTPUT.=('&nbsp;<input type="submit" name="action" value="Delete">');
 	$PHP_OUTPUT.='</div>';
 	$PHP_OUTPUT.=('</form>');

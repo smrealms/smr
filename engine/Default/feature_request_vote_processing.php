@@ -1,9 +1,8 @@
 <?
-if(empty($_REQUEST['vote']))
-	create_error('You have to select a feature');
-
 if($_REQUEST['action']=='Vote')
 {
+	if(empty($_REQUEST['vote']))
+		create_error('You have to select a feature');
 	// for which feature we currently vote?
 	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
 	if ($db->nextRecord())
@@ -23,7 +22,8 @@ if($_REQUEST['action']=='Vote')
 }
 else if($_REQUEST['action']=='Delete')
 {
-	
+	if(empty($_REQUEST['delete']))
+		create_error('You have to select a feature');
 	$db->query('SELECT *
 				FROM account_has_permission
 				WHERE account_id = '.SmrSession::$account_id.' AND
@@ -31,7 +31,7 @@ else if($_REQUEST['action']=='Delete')
 	if(!$db->nextRecord())
 		create_error('You do not have permission to do that');
 		
-	$db->query('DELETE FROM feature_request WHERE feature_request_id = '.$_REQUEST['vote']);
+	$db->query('DELETE FROM feature_request WHERE feature_request_id IN ('.$db->escapeArray($_REQUEST['delete']).')');
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
 ?>

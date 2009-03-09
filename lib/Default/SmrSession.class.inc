@@ -111,7 +111,7 @@ class SmrSession
 		{
 			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . ',last_accessed=' . TIME . ',session_var=' . self::$db->escapeString($compressed)  . '' .
 					',last_sn='.self::$db->escapeString(self::$SN).
-					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' AND last_sn='.self::$db->escapeString(self::$lastSN) . ' LIMIT 1');
+					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
 		else
 		{
@@ -122,17 +122,8 @@ class SmrSession
 	
 	public static function updateSN()
 	{
-		self::$db->query('SELECT true FROM active_session'.
-				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' AND last_sn='.self::$db->escapeString(self::$lastSN).' LIMIT 1');
-		if(self::$db->getNumRows()==0)
-		{
-			create_error('Mismatching SN');
-		}
-		if(self::$SN!=self::$lastSN)
-		{
-			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
-					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' AND last_sn='.self::$db->escapeString(self::$lastSN).' LIMIT 1');
-		}
+		self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
+				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');		
 	}
 
 	public static function destroy() {
