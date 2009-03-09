@@ -23,10 +23,18 @@ else
 	$db->query('SELECT * FROM message_boxes WHERE box_type_id='.$var['box_type_id'].' ORDER BY send_time DESC');
 	$container = array();
 	$container['url'] = 'box_delete_processing.php';
+	$container['box_type_id'] = $var['box_type_id'];
 	if ($db->getNumRows())
 	{
 		$PHP_OUTPUT.=create_echo_form($container);
-		$PHP_OUTPUT.=('<br />');
+		$PHP_OUTPUT.=create_submit('Delete');
+		$PHP_OUTPUT.=('&nbsp;');
+		$PHP_OUTPUT.=('<select name="action" size="1" id="InputFields">');
+		$PHP_OUTPUT.=('<option>Marked Messages</option>');
+		$PHP_OUTPUT.=('<option>All Messages</option>');
+		$PHP_OUTPUT.=('</select>');
+	
+		$PHP_OUTPUT.=('<br /><br />');
 		$PHP_OUTPUT.=('Click the name to reply<br />');
 		$PHP_OUTPUT.=('<table width="100%" border="0" class="standard" cellspacing="0" cellpadding="1">');
 		
@@ -69,7 +77,6 @@ else
 		}
 		
 		$PHP_OUTPUT.=('</table>');
-		$PHP_OUTPUT.=create_submit('Delete');
 		$PHP_OUTPUT.=('</form>');
 		
 	} else
