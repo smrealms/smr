@@ -1903,7 +1903,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		// send to all online player
 		$allowed = TIME - 600;
-		$this->db->query('SELECT active_session.account_id FROM active_session, player
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT active_session.account_id FROM active_session, player
 				WHERE active_session.last_accessed >= ' . $allowed . ' AND
 					  active_session.game_id = '.$this->getGameID() . ' AND
 					  active_session.account_id = player.account_id AND
@@ -1912,9 +1913,9 @@ class SmrPlayer extends AbstractSmrPlayer
 	//	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
 	
 		$this->sendMessageToBox(BOX_GLOBALS,$message);
-		while ($this->db->nextRecord())
+		while ($db->nextRecord())
 		{
-			$this->sendMessage($this->db->getField('account_id'), MSG_GLOBAL, $message);
+			$this->sendMessage($db->getField('account_id'), MSG_GLOBAL, $message);
 		}
 	}
 	
