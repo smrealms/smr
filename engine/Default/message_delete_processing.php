@@ -1,7 +1,7 @@
 <?
 $action = $_REQUEST['action'];
-if ($action == 'Marked Messages') {
-
+if ($action == 'Marked Messages')
+{
     $message_id = $_REQUEST['message_id'];
     if (!isset($message_id))
         create_error('You must choose the messages you want to delete.');
@@ -28,7 +28,9 @@ if ($action == 'Marked Messages') {
     }
     $db->query('DELETE FROM message WHERE message_id IN ('.$message_id_list.')');
 
-} else {
+}
+else if ($action == 'All Messages')
+{
     if ($var['folder_id'] == MSG_SCOUT) {
         $db->query('DELETE FROM message WHERE account_id = '.$player->getAccountID().' AND ' .
                                             'message_type_id = '.$var['folder_id'].' AND ' .
