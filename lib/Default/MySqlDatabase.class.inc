@@ -99,13 +99,26 @@ abstract class MySqlDatabase implements Database
 				'Trace MSG: '.$exception->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
 				'$var: '.var_export($var,true);
 
-			if(is_object($player))
-				$player->sendMessage(ACCOUNT_PAGE, MSG_PLAYER, nl2br($message));
-			else
+			try
+			{
+				throw new Exception;
+				if(is_object($player))
+					$player->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
+				else if(is_object($account))
+					$account->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
+				else
+					mail('bugs@smrealms.de',
+					 'Automatic Bug Report',
+					 $message,
+					 'From: '.$account->email);
+			}
+			catch(Exception $e)
+			{
 				mail('bugs@smrealms.de',
 				 'Automatic Bug Report',
 				 $message,
 				 'From: '.$account->email);
+			}
 			header('location: ' . URL . '/error.php?msg=Database Error');
 		}
 		

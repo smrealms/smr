@@ -301,6 +301,31 @@ class SmrAccount
 		
 	}
 	
+	public function sendMessageToBox($boxTypeID, $message)
+	{
+		// send him the message
+		self::doMessageSendingToBox($this->getAccountID(), $boxTypeID, $message);
+	}
+	
+	public static function doMessageSendingToBox($senderID, $boxTypeID, $message, $gameID=0)
+	{
+		$db = new SmrMySqlDatabase();
+		// send him the message
+		$db->query('INSERT INTO message_boxes
+			(box_type_id,game_id,message_text,
+			sender_id,send_time) VALUES(' . 
+			$boxTypeID . ',' .
+			$gameID . ',' .
+			$db->escapeString($message,true) . ',' .
+			$senderID . ',' .
+			TIME . ')'
+		);
+
+//		// give him the message icon
+//		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
+//						'('.$gameID.', '.$receiverID.', '.$messageTypeID.')');
+	}
+	
 	public function getAccountID()
 	{
 		return $this->account_id;

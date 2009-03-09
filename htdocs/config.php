@@ -5,6 +5,8 @@
 //ini_set('display_startup_errors', TRUE);
 
 define('ACCOUNT_PAGE',1403); //BETA
+define('ACCOUNT_ID_PORT',65535);
+define('ACCOUNT_ID_ADMIN',65534);
 
 /*
  * FILE: /htdocs/config.php
@@ -36,7 +38,6 @@ define('WEAPON_PORT_TURRET',10000);
 define('WEAPON_PLANET_TURRET',10001);
 define('DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT',0.25);
 
-define('PORT_ACCOUNT_ID',65535);
 define('PORT_ALLIANCE_ID',0);
 define('DEFEND_PORT_BOUNTY_PER_LEVEL',400000);
 define('PLANET_GENERATOR',1);
@@ -56,6 +57,10 @@ define('MSG_SCOUT', 4);
 define('MSG_POLITICAL', 5);
 define('MSG_ALLIANCE', 6);
 define('MSG_ADMIN', 7);
+define('BOX_BUGS_AUTO', 1);
+define('BOX_BUGS_REPORTED', 2);
+define('BOX_GLOBALS', 3);
+
 
 /*
  * Movement types

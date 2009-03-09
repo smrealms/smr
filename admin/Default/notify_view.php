@@ -42,7 +42,7 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=create_link($container, $offended);
 		$PHP_OUTPUT.=('</td><td>');
 		$db2->query('SELECT * FROM game WHERE game_id = ' . $db->getField('game_id'));
-		if ($db2->nextRecord()) $db2->getField('game_name'); //$trader .= ' in ' . $db2->getField('game_name');
+		if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('game_name'); //$trader .= ' in ' . $db2->getField('game_name');
 		else $PHP_OUTPUT.=('Game no longer exists'); //$trader .= ' in a game that no longer exists.';
 		$PHP_OUTPUT.=('</td></tr><tr><td colspan="2">');
 		$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('sent_time')));
