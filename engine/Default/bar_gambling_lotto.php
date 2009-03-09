@@ -13,7 +13,7 @@ if ($db->getField('num') > 0) {
 	$first_buy = time();
 }
 //find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-$time_rem = ($first_buy + (2 * 24 * 60 * 60)) - $time;
+$time_rem = ($first_buy + (2 * 86400)) - $time;
 if ($time_rem <= 0) {
 	
 	//we need to pick a winner

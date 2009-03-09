@@ -35,12 +35,12 @@ if ($db->getField('num') > 0) {
 }
 //find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
 
-$time_rem = ($first_buy + (2 * 24 * 60 * 60)) - $time;
+$time_rem = ($first_buy + (2 * 86400)) - $time;
 
 if ($time_rem <= 0)
 {
 	//we need to pick a winner
-	$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand()');
+	$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand() LIMIT 1');
 	if ($db->nextRecord()) {
 		$winner_id = $db->getField('account_id');
 		$time = $db->getField('time');
@@ -60,7 +60,7 @@ if ($time_rem <= 0)
 	//get around locked table problem
 	$val = 1;
 	$first_buy =TIME;
-	$time_rem = ($first_buy + (2 * 24 * 60 * 60)) - $time;
+	$time_rem = ($first_buy + (2 * 86400)) - $time;
 }
 $db->unlock();
 if ($val == 1) {
