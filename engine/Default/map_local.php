@@ -18,7 +18,7 @@ LIMIT 1');
 if(!$db->nextRecord())
 	create_error('Could not find sector info');
 
-enableProtectionDependantRefresh($template,$player);
+//enableProtectionDependantRefresh($template,$player);
 
 $galaxy_name = $db->getField('galaxy_name');
 $galaxy_id = $db->getField('galaxy_id');

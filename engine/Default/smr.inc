@@ -9,7 +9,7 @@ require_once(get_file_loc('SmrSector.class.inc'));
 function enableProtectionDependantRefresh(&$template,&$player)
 {
 	$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
-	if ($player->getNewbieTurns()||$player->hasFederalProtection())
+	if ($player->hasNewbieTurns()||$player->isLandedOnPlanet()||$player->hasFederalProtection())
 		$ajaxRefresh=AJAX_DEFAULT_REFRESH_TIME;
 	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
@@ -401,7 +401,6 @@ function do_voodoo()
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::$game_id > 0)
 	{
-
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
 		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
@@ -428,6 +427,7 @@ function do_voodoo()
 				$container['body'] = 'death.php';
 				forward($container);
 		}
+		enableProtectionDependantRefresh($template,$player);
 
 		$ship	=& $player->getShip();
 		$GLOBALS['ship'] =& $ship;
@@ -836,7 +836,8 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	$vote_links[3] = array('default_img' => 'twg.gif', 'star_img' => 'twg_vote.gif', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
 	
 	$voteSite = array();
-	for($i=1;$i<4;$i++){
+	for($i=1;$i<4;$i++)
+	{
 		$voteSite[$i] = '<a href=';
 		if($in_game && (!isset($turns_for_votes[$i]) || ($turns_for_votes[$i] && rand(0,100) < 80))) {
 	
@@ -845,7 +846,8 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 			$voteSite[$i] .= '"' . SmrSession::get_new_href($container) . '")\'';
 			$img = $vote_links[$i]['star_img'];
 		}
-		else {
+		else
+		{
 			$voteSite[$i] .= '"' . $vote_links[$i]['location'] . '" target="_blank"';
 			$img = $vote_links[$i]['default_img'];
 		}

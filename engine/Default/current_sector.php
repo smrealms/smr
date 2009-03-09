@@ -156,7 +156,7 @@ elseif($sector->offersFederalProtection())
 
 $template->assign('ProtectionMessage',$protectionMessage);
 
-enableProtectionDependantRefresh($template,$player);
+//enableProtectionDependantRefresh($template,$player);
 
 $db->query('SELECT * FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 if ($db->nextRecord())
