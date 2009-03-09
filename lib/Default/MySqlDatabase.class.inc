@@ -213,14 +213,12 @@ abstract class MySqlDatabase implements Database
 		return $string;
 	}
 	
-	public function escapeNumber($bool,$quotes=false)
+	public function escapeNumber($num,$quotes=false)
 	{
-		if($bool===true)
-			return $this->escapeString('TRUE',$quotes);
-		else if($bool===false)
-			return $this->escapeString('FALSE',$quotes);
+		if(is_numeric($num))
+			return $this->escapeString($num,$quotes);
 		else
-			throw new Exception('Not a boolean!'); //TEST
+			throw new Exception('Not a number!'); //TEST
 	}
 	
 	public function escapeBoolean($bool,$quotes=true)
