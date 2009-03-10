@@ -62,6 +62,7 @@ define('BOX_BUGS_REPORTED', 2);
 define('BOX_GLOBALS', 3);
 define('BOX_ALLIANCE_DESCRIPTIONS', 4);
 define('BOX_BETA_APPLICATIONS', 5);
+define('BOX_ALBUM_COMMENTS', 6);
 
 
 /*

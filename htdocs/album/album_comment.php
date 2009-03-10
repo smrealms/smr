@@ -9,7 +9,7 @@ function create_error_offline($msg)
 
 require_once('../config.inc');
 require_once(ENGINE . 'Default/smr.inc');
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
 require_once(get_file_loc('SmrSession.class.inc'));
 
 require_once(LIB . 'Album/album_functions.php');
@@ -28,14 +28,12 @@ if (!is_numeric($album_id))
 if ($album_id < 1)
 	create_error_offline('Picture ID has to be positive!');
 
+require_once(get_file_loc('SmrAccount.class.inc'));
+$account =& SmrAccount::getAccount(SmrSession::$account_id);
+
 if (isset($_GET['action']) && $_GET['action'] == 'Moderate')
 {
-	$db = new SmrMySqlDatabase();
-	$db->query('SELECT *
-				FROM account_has_permission
-				WHERE account_id = '.SmrSession::$account_id.' AND
-					  permission_id = '.PERMISSION_MODERATE_PHOTO_ALBUM);
-	if(!$db->nextRecord())
+	if(!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM))
 		create_error_offline('You do not have permission to do that!');
 	$container = create_container('skeleton.php', 'album_moderate.php');
 	$container['account_id'] = $album_id;
@@ -54,6 +52,9 @@ else
 
 // get current time
 $curr_time = TIME;
+
+$comment = word_filter($comment);
+$account->sendMessageToBox(BOX_ALBUM_COMMENTS,$comment);
 
 // check if we have comments for this album already
 $db->lockTable('album_has_comments');
