@@ -14,7 +14,7 @@ if ($account->validated == 'FALSE') {
 
 $template->assign('PageTopic','bank');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bank_menue();
 
 $PHP_OUTPUT.= 'Hello ';

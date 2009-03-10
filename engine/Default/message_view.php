@@ -4,7 +4,7 @@ if (!isset($var['folder_id'])) {
 
 	$template->assign('PageTopic','VIEW MESSAGES');
 
-	include(ENGINE . 'global/menue.inc');
+	include(get_file_loc('menue.inc'));
 	$PHP_OUTPUT.=create_message_menue();
 
 	$PHP_OUTPUT.=('<p>Please choose your Message folder!</p>');
@@ -102,7 +102,7 @@ if (!isset($var['folder_id'])) {
 	if ($db->nextRecord())
 		$template->assign('PageTopic','VIEW ' . $db->getField('message_type_name'));
 
-	include(ENGINE . 'global/menue.inc');
+	include(get_file_loc('menue.inc'));
 	$PHP_OUTPUT.=create_message_menue();
 
 	if ($var['folder_id'] == MSG_GLOBAL) {

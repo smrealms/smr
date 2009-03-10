@@ -1,7 +1,7 @@
 <?
 
 include(get_file_loc('council.inc'));
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 
 // echo topic
 $race_id = $var['race_id'];

@@ -4,7 +4,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 
 $template->assign('PageTopic','READING THE WALL');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bar_menue();
 
 $db = new SmrMySqlDatabase();

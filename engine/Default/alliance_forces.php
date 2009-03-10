@@ -8,7 +8,7 @@ $db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE gam
 $db->nextRecord();
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 //$template->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 //get the sequence

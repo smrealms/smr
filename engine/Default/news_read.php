@@ -6,7 +6,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'news_read.php';
 $container['breaking'] = 'yes';
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_news_menue();
 $var_del = TIME - 86400;
 $db->query('DELETE FROM news WHERE time < '.$var_del.' AND type = \'breaking\'');

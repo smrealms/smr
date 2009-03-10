@@ -4,7 +4,7 @@ else $alliance_id = $player->getAllianceID();
 $db->query('SELECT leader_id,alliance_id,alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 $PHP_OUTPUT.= '<h2>Current Roles</h2><br />';

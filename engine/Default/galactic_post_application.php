@@ -1,7 +1,7 @@
 <?
 
 $template->assign('PageTopic','Galactic Post Application');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_galactic_post_menue();
 $container = array();
 $container['url'] = 'galactic_post_application_processing.php';

@@ -1,6 +1,6 @@
 <?
 $template->assign('PageTopic','ALLIANCE KILL RANKINGS');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(1, 1);
 
 $db->query('SELECT alliance_id, alliance_name, alliance_kills, leader_id FROM alliance

@@ -1,6 +1,6 @@
 <?
 $template->assign('PageTopic','ALLIANCE EXPERIENCE RANKINGS');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(1, 0);
 
 $db->query('SELECT player.alliance_id as alliance_id, sum( experience ) AS alliance_exp, count( * ) AS members, alliance_name AS name

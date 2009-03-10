@@ -2,7 +2,7 @@
 
 	$template->assign('PageTopic','PlAYER BLACKLIST');
 
-	include(ENGINE . 'global/menue.inc');
+	include(get_file_loc('menue.inc'));
 	$PHP_OUTPUT.=create_message_menue();
  
  	if(isset($var['error'])) {

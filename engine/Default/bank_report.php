@@ -6,7 +6,7 @@ define('DEPOSIT',1);
 
 $template->assign('PageTopic','Alliance Bank Report');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bank_menue();
 
 //get all transactions

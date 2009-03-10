@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $template->assign('PageTopic','SECTOR DEATH RANKINGS');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(3,0);
 
 $PHP_OUTPUT.=('<div align="center">');

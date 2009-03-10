@@ -41,7 +41,7 @@ else
 	$template->assign('PageTopic','FEDERAL HQ');
 
 // header menue
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_hq_menue();
 
 // secondary db object

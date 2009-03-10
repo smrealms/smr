@@ -1,6 +1,6 @@
 <?
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bar_menue();
 
 $db->query('SELECT message_id FROM bar_tender WHERE game_id = '.SmrSession::$game_id.' ORDER BY message_id DESC');

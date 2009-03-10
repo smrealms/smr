@@ -1,7 +1,7 @@
 <?
 
 $template->assign('PageTopic','VIEWING MEMBERS');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_galactic_post_menue();
 
 $container = array();

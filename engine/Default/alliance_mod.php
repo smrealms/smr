@@ -6,7 +6,7 @@ $db->nextRecord();
 $leader_id = $db->getField('leader_id');
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 //$template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 $PHP_OUTPUT.= '<div align="center">';

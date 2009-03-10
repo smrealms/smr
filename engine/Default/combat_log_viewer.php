@@ -1,7 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Combat Logs');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $template->assign('MenuBar',create_combat_log_menue());
 if (isset($_REQUEST['action'])) {
 	$submitAction = $_REQUEST['action'];

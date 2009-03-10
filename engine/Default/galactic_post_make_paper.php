@@ -1,7 +1,7 @@
 <?
 
 $template->assign('PageTopic','MAKING A PAPER');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_galactic_post_menue();
 $PHP_OUTPUT.=('What is the title of this edition?<br />');
 $container = array();

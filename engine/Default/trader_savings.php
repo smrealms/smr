@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Anonymous accounts for '.$player->getPlayerName());
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_trader_menue();
 
 $PHP_OUTPUT.=('<br /><br />');
