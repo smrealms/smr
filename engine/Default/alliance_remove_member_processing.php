@@ -1,5 +1,5 @@
 <?
-require_once(LIB . 'global/smr_alliance.inc');
+require_once(get_file_loc('smr_alliance.inc'));
 $alliance = new SMR_ALLIANCE($player->getAllianceID(), SmrSession::$game_id);
 $account_id = $_REQUEST['account_id'];
 foreach ($account_id as $id)

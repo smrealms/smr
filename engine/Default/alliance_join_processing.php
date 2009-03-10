@@ -1,6 +1,6 @@
 <?
 
-require_once(LIB . 'global/smr_alliance.inc');
+require_once(get_file_loc('smr_alliance.inc'));
 
 // ********************************
 // *

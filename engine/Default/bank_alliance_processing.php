@@ -1,7 +1,7 @@
 <?
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
-require_once(LIB . 'global/smr_alliance.inc');
+require_once(get_file_loc('smr_alliance.inc'));
 $amount = $_REQUEST['amount'];
 // check for numbers
 if (!is_numeric($amount))
