@@ -37,6 +37,7 @@ if ($varAction == 'Show Alliance Roles') {
 	$container=array();
 	$container['url'] = 'alliance_roles_save.php';
 	$container['body'] = '';
+	$container['alliance_id'] = $alliance_id;
 	$form = create_form($container, 'Save Alliance Roles');
 }
 
@@ -82,6 +83,15 @@ $member_count = $db->getField('alliance_member_count');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<div align="center">';
 $PHP_OUTPUT.= $db->getField('description');
+if($account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
+{
+	$PHP_OUTPUT.= '<br /><br />';
+	$container=array();
+	$container['url'] = 'skeleton.php';
+	$container['body'] = 'alliance_stat.php';
+	$container['alliance_id'] = $alliance_id;
+	$PHP_OUTPUT.=create_button($container,'Edit');
+}
 $PHP_OUTPUT.= '<br /><br />';
 
 $PHP_OUTPUT.= '
@@ -135,7 +145,7 @@ if($varAction == 'Show Alliance Roles') {
 $PHP_OUTPUT.= '</tr>';
 $count = 1;
 
-$db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+$db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id);
 if ($db2->nextRecord()) $my_role_id = $db2->getField('role_id');
 else $my_role_id = 0;
 $db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' . 

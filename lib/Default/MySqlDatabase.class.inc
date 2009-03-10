@@ -101,7 +101,6 @@ abstract class MySqlDatabase implements Database
 
 			try
 			{
-				throw new Exception;
 				if(is_object($player))
 					$player->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
 				else if(is_object($account))
