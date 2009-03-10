@@ -34,7 +34,7 @@ $mbMessages = FALSE;
 $sendAllMsg = FALSE;
 $db->query('REPLACE INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg) ' .
 			'VALUES (302, '.$game_id.', 2, \'New Member\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).')');
-$db->query('REPLACE INTO player_has_alliance_role (game_id, account_id, role_id) VALUES ('.$game_id.', 13, 1)');
+$db->query('REPLACE INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$game_id.', 13, 1,302)');
 
 // NHA default topics
 

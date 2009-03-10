@@ -27,7 +27,7 @@ if ($password != $alliance->password)
 // assign the player to the current alliance
 $player->setAllianceID($alliance->alliance_id);
 $player->update();
-$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id) VALUES ('.$player->getGameID().', '.$player->getAccountID().', 2)');
+$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$player->getGameID().', '.$player->getAccountID().', 2,'.$alliance->alliance_id.')');
 $account->log(3, 'joined alliance: '.$alliance->alliance_name, $player->getSectorID());
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));

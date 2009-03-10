@@ -48,7 +48,7 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 	if (isset($var['alliance_id']))
 		$container['alliance_id'] = $var['alliance_id'];
 	$menue_items[] = create_link($container, 'Roster');
-	$db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+	$db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$player->getAllianceID());
 	if ($db2->nextRecord()) $role_id = $db2->getField('role_id');
 	else $role_id = 0;
 	$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);

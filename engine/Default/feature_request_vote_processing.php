@@ -24,11 +24,7 @@ else if($_REQUEST['action']=='Delete')
 {
 	if(empty($_REQUEST['delete']))
 		create_error('You have to select a feature');
-	$db->query('SELECT *
-				FROM account_has_permission
-				WHERE account_id = '.SmrSession::$account_id.' AND
-					  permission_id = '.PERMISSION_MODERATE_FEATURE_REQUEST);
-	if(!$db->nextRecord())
+	if(!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST))
 		create_error('You do not have permission to do that');
 		
 	$db->query('DELETE FROM feature_request WHERE feature_request_id IN ('.$db->escapeArray($_REQUEST['delete']).')');

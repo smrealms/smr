@@ -387,6 +387,15 @@ class SmrAccount
 		$this->hasChanged=true;
 	}
 	
+	public function hasPermission($permissionID)
+	{
+		$this->db->query('SELECT *
+					FROM account_has_permission
+					WHERE account_id = '.$this->getAccountID().' AND
+						  permission_id = '.$permissionID.' LIMIT 1');
+		return $this->db->nextRecord();
+	}
+	
 	public function getToggleAJAXHREF()
 	{
 		global $var;

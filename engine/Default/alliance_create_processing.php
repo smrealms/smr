@@ -91,7 +91,7 @@ switch ($perms) {
 }
 $db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg) ' .
 			'VALUES ('.$alliance_id.', '.SmrSession::$game_id.', 2, \'New Member\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).')');
-$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id) VALUES ('.$player->getGameID().', '.$player->getAccountID().', 1)');
+$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$player->getGameID().', '.$player->getAccountID().', 1,'.$alliance_id.')');
 forward(create_container('skeleton.php', 'alliance_roster.php'));
 
 ?>
