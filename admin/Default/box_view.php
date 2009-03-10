@@ -80,6 +80,6 @@ else
 		$PHP_OUTPUT.=('</form>');
 		
 	} else
-		$PHP_OUTPUT.=('There are no reported Messages.');
+		$PHP_OUTPUT.=('There are currently no messages in this box.');
 }
 ?>
