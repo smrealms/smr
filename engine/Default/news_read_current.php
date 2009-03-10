@@ -6,7 +6,7 @@ if(USING_AJAX)
 }	
 
 $template->assign('PageTopic','CURRENT NEWS');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_news_menue();
 //we we check for a lotto winner...
 $db->lockTable('player_has_ticket');

@@ -12,7 +12,7 @@ else
 $db->query('SELECT alliance_name,leader_id,alliance_password FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $alliance_id . ')');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 $leader_id = $db->getField('leader_id');

@@ -4,7 +4,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 
 $template->assign('PageTopic','Bounty Payout');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 if ($sector->has_hq()) {
 	$PHP_OUTPUT.=create_hq_menue();
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'HQ\'');

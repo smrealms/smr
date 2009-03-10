@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Racial Standings');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(2, 1);
 
 $PHP_OUTPUT.=('<div align=center>');

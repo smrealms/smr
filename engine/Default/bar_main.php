@@ -19,7 +19,7 @@ if ($db->nextRecord()) $template->assign('PageTopic','Welcome to ' . $db->getFie
 else $template->assign('PageTopic','Welcome to this bar');
 
 //include menu (not menue ;) )
-require_once(ENGINE . 'global/menue.inc');
+require_once(get_file_loc('menue.inc'));
 global $BAR_SCRIPTS_USED; // HACKY
 if(!is_array($BAR_SCRIPTS_USED)||!in_array($script,$BAR_SCRIPTS_USED))
 {

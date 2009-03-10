@@ -9,7 +9,7 @@ if ($player->getAlignment() >= 100) {
 
 $template->assign('PageTopic','Underground HQ');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ug_menue();
 
 $db2 = new SmrMySqlDatabase();

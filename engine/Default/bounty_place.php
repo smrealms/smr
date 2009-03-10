@@ -4,7 +4,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), Sm
 
 $template->assign('PageTopic','Place a Bounty');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 if ($sector->has_hq())
 	$PHP_OUTPUT.=create_hq_menue();
 else

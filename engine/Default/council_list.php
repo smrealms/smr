@@ -1,7 +1,7 @@
 <?
 
 include(get_file_loc('council.inc'));
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 
 $race_id = $var['race_id'];
 if (empty($race_id))

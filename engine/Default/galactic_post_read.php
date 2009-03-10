@@ -13,7 +13,7 @@ if ($db->getNumRows()) {
     $paper_name = stripslashes($db2->getField('title'));
 
     $template->assign('PageTopic','READING <i>GALACTIC POST</i> EDITION : '.$paper_name);
-	include(ENGINE . 'global/menue.inc');
+	include(get_file_loc('menue.inc'));
     $PHP_OUTPUT.=create_galactic_post_menue();
     $db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());
     if (floor($db2->getNumRows() / 2) == $db2->getNumRows() / 2)
@@ -65,7 +65,7 @@ if ($db->getNumRows()) {
     $PHP_OUTPUT.=('</table>');
 } else {
 
-	include(ENGINE . 'global/menue.inc');
+	include(get_file_loc('menue.inc'));
     $PHP_OUTPUT.=create_galactic_post_menue();
     $PHP_OUTPUT.=('There is no current edition of the Galactic Post for this game.');
 

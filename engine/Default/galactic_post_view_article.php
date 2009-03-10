@@ -1,6 +1,6 @@
 <?
 $template->assign('PageTopic','VIEWING ARTICLES');
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_galactic_post_menue();
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();

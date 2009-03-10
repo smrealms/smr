@@ -8,7 +8,7 @@ $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 
 $template->assign('PageTopic','PLANET : '.$planet->planet_name.' [SECTOR #'.$player->getSectorID().']');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_planet_menue();
 
 $curr_time = TIME;

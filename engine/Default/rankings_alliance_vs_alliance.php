@@ -2,7 +2,7 @@
 require_once(get_file_loc('smr_alliance.inc'));
 $template->assign('PageTopic','ALLIANCE VS ALLIANCE RANKINGS');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(1, 3);
 $db2 = new SmrMySqlDatabase();
 $container = array();

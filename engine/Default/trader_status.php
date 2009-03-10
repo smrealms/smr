@@ -1,7 +1,7 @@
 <?
 $template->assign('PageTopic','TRADER STATUS');
 
-include(ENGINE . 'global/menue.inc');
+include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_trader_menue();
 
 $container=array();
