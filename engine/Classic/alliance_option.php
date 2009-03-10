@@ -22,7 +22,7 @@ $container['body'] = '';
 print_link($container,'Share Maps');
 echo '</big></b>';
 echo '<br>Share your knowledge of the universe with your alliance mates.';
-$db->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id");
+$db->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id AND alliance_id=$player->alliance_id");
 if ($db->next_record()) $role_id = $db->f("role_id");
 else $role_id = 0;
 $db->query("SELECT * FROM alliance_has_roles WHERE alliance_id = $player->alliance_id AND game_id = $player->game_id AND role_id = $role_id");

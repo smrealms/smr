@@ -45,7 +45,7 @@ if ($action == "Deposit") {
 	if ($alliance->account < $amount)
 		create_error("Your alliance isn't soo rich!");
 	if ($alliance_id == $player->alliance_id) {
-		$db->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id");
+		$db->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id AND alliance_id=$player->alliance_id");
 		if ($db->next_record()) $role_id = $db->f("role_id");
 		else $role_id = 0;
 		$query = "role_id = $role_id";
