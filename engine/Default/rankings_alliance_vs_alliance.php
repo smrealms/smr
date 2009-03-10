@@ -1,5 +1,5 @@
 <?
-require_once(LIB . 'global/smr_alliance.inc');
+require_once(get_file_loc('smr_alliance.inc'));
 $template->assign('PageTopic','ALLIANCE VS ALLIANCE RANKINGS');
 
 include(ENGINE . 'global/menue.inc');

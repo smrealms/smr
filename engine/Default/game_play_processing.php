@@ -27,7 +27,7 @@ if ($player->isLandedOnPlanet())
 else
     $container['body'] = 'current_sector.php';
 
-	require_once(LIB . 'global/smr_alliance.inc');
+	require_once(get_file_loc('smr_alliance.inc'));
 	require_once(get_file_loc('SmrPlanet.class.inc'));
 	require_once(get_file_loc('SmrSector.class.inc'));
 
