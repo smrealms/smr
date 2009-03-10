@@ -2,6 +2,7 @@
 require_once('Database.interface.inc');
 abstract class MySqlDatabase implements Database
 {
+	protected static $errorAlreadyTriggered=false;
 	protected static $dbConn;
 	protected static $currDbName;
 	protected $dbResult = null;
@@ -83,6 +84,11 @@ abstract class MySqlDatabase implements Database
 	
 	protected function error($err)
 	{
+		if(self::$errorAlreadyTriggered)
+		{
+			throw new Exception(); //Don't try and send error twice, just through an exception to go back to first.
+		}
+		self::$errorAlreadyTriggered=true;
 		if(!$this->debug)
 		{
 			echo 'ERROR: db_mysql_inc - ' . $err;
