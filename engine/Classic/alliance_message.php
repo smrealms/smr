@@ -98,7 +98,7 @@ if ($db->nf() > 0) {
 
 		$threads[$i]['tail'] .= '</td><td class="shrink nowrap">';
 		$threads[$i]['tail'] .= stripslashes($playerName);
-		$db3->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id");
+		$db3->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id AND alliance_id=$player->alliance_id");
 		if ($db3->next_record()) $role_id = $db3->f("role_id");
 		else $role_id = 0;
 		$db3->query("SELECT * FROM alliance_has_roles WHERE alliance_id = $alliance_id AND game_id = $player->game_id AND role_id = $role_id");

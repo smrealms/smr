@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (isset($var["alliance_id"])) {
 	$alliance_id=$var['alliance_id'];
@@ -35,6 +35,7 @@ if ($var['action'] == 'Show Alliance Roles') {
 	$container=array();
 	$container['url'] = 'alliance_roles_save.php';
 	$container['body'] = '';
+	$container['alliance_id'] = $alliance_id;
 	$form = create_form($container, 'Save Alliance Roles');
 }
 
@@ -166,7 +167,7 @@ $count = 1;
 
 $container=array();
 $container['url']= 'skeleton.php';
-$db2->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id");
+$db2->query("SELECT * FROM player_has_alliance_role WHERE account_id = $player->account_id AND game_id = $player->game_id AND alliance_id=$player->alliance_id");
 if ($db2->next_record()) $my_role_id = $db2->f("role_id");
 else $my_role_id = 0;
 $db2->query("SELECT * FROM alliance_has_roles WHERE alliance_id = $player->alliance_id AND game_id = $player->game_id AND " . 
@@ -223,7 +224,7 @@ while ($db->next_record()) {
 		$db2->query('SELECT role_id
 					FROM player_has_alliance_role
 					WHERE account_id=' . $db->f('account_id') .'
-					AND game_id=' . SmrSession::$game_id . '
+					AND game_id=' . SmrSession::$game_id . ' AND alliance_id='.$db->f('alliance_id').'
 					LIMIT 1'
 					);
 
