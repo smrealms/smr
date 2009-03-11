@@ -207,7 +207,10 @@ class SmrSession
 
 	public static function get_new_href($container)
 	{
-		return URL.'/loader.php?sn=' . self::addLink($container);
+		if(stripos($_SERVER['REQUEST_URI'],'loader.php')!==false)
+			return '?sn=' . self::addLink($container);
+		else
+			return URL.'/loader.php?sn=' . self::addLink($container);
 	}
 	
 	public static function addAjaxReturns($element,$contents)

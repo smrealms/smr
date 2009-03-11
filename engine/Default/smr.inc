@@ -388,7 +388,7 @@ function do_voodoo()
 		exit;
 //	ob_clean();
 
-	global $lock, $var,$template,$time_start,$db,$account;
+	global $lock, $var,$template,$time_start,$account;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -397,6 +397,9 @@ function do_voodoo()
 	// create account object
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	$GLOBALS['account'] =& $account;
+	
+	$db = new SmrMySqlDatabase();
+	$GLOBALS['db'] =& $db;
 
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::$game_id > 0)
