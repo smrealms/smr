@@ -424,48 +424,40 @@ a.buttonA:active {
 
 /***************************/
 table.m {
-	width:100%;
 	height:100%;
  	width:80em;
+	border-spacing:0px;
+	padding:0px;
 }
 td.l0 {
-	padding:0px;
+	padding:0px 10px 0px 0px;
 	vertical-align:top;
 }
 td.mb {
 	width:225px;
 }
 div.l1 {
-	padding-right:10px;
-}
-div.l2 {
 	text-align:right;
 	width:10em;
 }
 td.m0 {
-	padding:0px;
+	padding:10px;
 	border:1px solid #0b8d35;
 	background-color:#06240e;
 	border-bottom:none;
 	vertical-align:top;
 	width:100%;
 }
-div.m1 {
-	padding:10px;
-}
-div.m2 {
+div#middle_panel{
 	text-align:left;
 	width:100%;
 }
 td.r0 {
-	padding:0px;
+	padding:0px 0px 0px 10px;
 	vertical-align:top;
-}
-div.r1 {
-	padding-left:10px;
-}
-div.r1 {
 	text-align:left;
+}
+div#right_panel {
 	width:13em;
 }
 
