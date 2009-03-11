@@ -534,11 +534,11 @@ a.lmsc {
 	width:100%;
 	font-weight:bold;
 	cursor:pointer;
-	background: url('images/currentsector.png');
+	background: url('../images/currentsector.png');
 	color:#00ff00;
 }
 a.lmsc:HOVER {
-	background: url('images/currentsector_hover.png');
+	background: url('../images/currentsector_hover.png');
 }
 
 /***********************/
