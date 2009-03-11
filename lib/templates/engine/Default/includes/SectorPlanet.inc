@@ -2,7 +2,7 @@
 if($ThisSector->hasPlanet())
 {
 	$Planet =& $ThisSector->getPlanet(); ?>
-	<table cellspacing="0" cellpadding="0" class="standard csl">
+	<table class="standard csl">
 		<tr>
 			<th>Planet</th>
 			<th>Option</th>

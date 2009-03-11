@@ -3,7 +3,7 @@
 	{
 		$Forces =& $ThisSector->getForces();
 		$RefreshAny = false; ?>
-		<table cellspacing="0" class="standard fullwidth">
+		<table class="standard fullwidth">
 			<tbody>
 				<tr>
 					<th style="background: rgb(0, 0, 85) none repeat scroll 0% 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: rgb(128, 200, 112);" colspan="6">Forces (1)</th>

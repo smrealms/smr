@@ -185,7 +185,7 @@ if($action != 5) {
 		$PHP_OUTPUT.= $form['submit']['View'];
 		$PHP_OUTPUT.= '&nbsp';
 		$PHP_OUTPUT.= $form['submit']['Save'];
-		$PHP_OUTPUT.= '<br /><br /><table cellspacing="0" cellpadding="5" class="standard fullwidth">';
+		$PHP_OUTPUT.= '<br /><br /><table class="standard fullwidth">';
 		$PHP_OUTPUT.= '<tr><th>View</th><th>Date</th><th>Sector</th><th>Attacker</th><th>Defender</th></tr>';
 		while($db->nextRecord()) {
 			//attacker_id,defender_id,timestamp,sector_id,log_id

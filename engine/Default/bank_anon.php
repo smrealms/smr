@@ -128,7 +128,7 @@ if (!isset($account_num) && !isset($make)) {
 	if ($db->getNumRows()) {
 		$PHP_OUTPUT.= '<br /><h2>Your accounts</h2><br />';
 		$PHP_OUTPUT.= '<div align=center>';
-		$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset" ><tr><th>ID</th><th>Password</th><th>Last Transaction</th><th>Balance</th><th>Option</th></tr>';
+		$PHP_OUTPUT.= '<table class="standard inset" ><tr><th>ID</th><th>Password</th><th>Last Transaction</th><th>Balance</th><th>Option</th></tr>';
 	
 		$container = array();
 		$container['url'] = 'skeleton.php';
@@ -285,7 +285,7 @@ if (isset($account_num))
 		$PHP_OUTPUT.= '</td><td>';
 		$PHP_OUTPUT.= $form['submit'];
 		$PHP_OUTPUT.= '</td></tr></table></form>';
-		$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0"class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp</th></tr>';
+		$PHP_OUTPUT.= '<table class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp</th></tr>';
 
 		$container = array();
 		$container['url']		= 'skeleton.php';

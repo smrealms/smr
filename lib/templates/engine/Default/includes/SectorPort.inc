@@ -2,7 +2,7 @@
 	<?php if($ThisSector->hasPort())
 	{
 		$Port =& $ThisSector->getPort() ?>
-		<table cellspacing="0" cellpadding="0" class="standard csl">
+		<table class="standard csl">
 			<tr>
 				<th colspan="2">Port</th>
 				<th>Option</th>

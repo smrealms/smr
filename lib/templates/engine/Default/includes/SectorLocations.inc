@@ -1,7 +1,7 @@
 <?php if($ThisSector->hasLocation())
 {
 	$Locations =& $ThisSector->getLocations() ?>
-	<table cellspacing="0" cellpadding="0" class="standard csl">
+	<table class="standard csl">
 		<tr>
 			<th>Location</th>
 			<?php
