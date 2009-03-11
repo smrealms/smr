@@ -1,6 +1,8 @@
 <?
 error_reporting(0); // turn off error reporting for clasic
 
+define('USING_AJAX',false);
+
 //xdebug_start_profiling();
 
 ob_start();
