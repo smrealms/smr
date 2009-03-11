@@ -11,7 +11,7 @@ if ($db->getNumRows()) {
     $PHP_OUTPUT.=create_echo_form($container);
     $PHP_OUTPUT.=('<br />');
     $PHP_OUTPUT.=('Click either name to reply<br />');
-    $PHP_OUTPUT.=('<table width="100%" border="0" class="standard" cellspacing="0" cellpadding="1">');
+    $PHP_OUTPUT.=('<table width="100%" class="standard">');
 
     while($db->nextRecord()) {
 

@@ -10,7 +10,7 @@ if (!isset($var['folder_id'])) {
 	$PHP_OUTPUT.=('<p>Please choose your Message folder!</p>');
 
 	$PHP_OUTPUT.=('<p>');
-	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="3">');
+	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Folder</th>');
 	$PHP_OUTPUT.=('<th>Messages</th>');
@@ -146,7 +146,7 @@ if (!isset($var['folder_id'])) {
 	if ($message_count != 1)
 		$PHP_OUTPUT.=('s');
 	$PHP_OUTPUT.=('.</p>');
-	$PHP_OUTPUT.=('<table width="100%" border="0" class="standard" cellspacing="0" cellpadding="1">');
+	$PHP_OUTPUT.=('<table width="100%" class="standard">');
 	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all'])) {
 		$dispContainer = array();
 		$dispContainer['url'] = 'skeleton.php';

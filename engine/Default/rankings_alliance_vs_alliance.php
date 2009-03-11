@@ -16,7 +16,7 @@ $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of alliances vs other alliances<br />');
 $PHP_OUTPUT.=('Click on an alliances name for more detailed death stats.</p>');
 
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" class="standard" width="95%">');
+$PHP_OUTPUT.=('<table class="standard" width="95%">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th rowspan="9">Killed</th><th colspan="8">Killers</th></tr><tr><td>&nbsp</td>');
 if (empty($alliancer)) {
@@ -170,7 +170,7 @@ if (isset($var['alliance_id'])) {
 	if ($db->getNumRows() > 0) {
 		
 		$PHP_OUTPUT.=('<div align="center">Kills for '.$main_alliance->alliance_name);
-		$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard"><tr><th align=center>Alliance Name</th>');
+		$PHP_OUTPUT.=('<table class="standard"><tr><th align=center>Alliance Name</th>');
 		$PHP_OUTPUT.=('<th align="center">Amount</th></tr>');
 		while ($db->nextRecord()) {
 			
@@ -198,7 +198,7 @@ if (isset($var['alliance_id'])) {
 	if ($db->getNumRows() > 0) {
 		
 		$PHP_OUTPUT.=('<div align="center">Deaths for '.$main_alliance->alliance_name);
-		$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard"><tr><th align=center>Alliance Name</th>');
+		$PHP_OUTPUT.=('<table class="standard"><tr><th align=center>Alliance Name</th>');
 		$PHP_OUTPUT.=('<th align="center">Amount</th></tr>');
 		while ($db->nextRecord()) {
 			

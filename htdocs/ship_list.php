@@ -73,7 +73,7 @@ else
 
 echo ('<form>');
 
-echo ('<table class="standard"  cellspacing="0">');
+echo ('<table class="standard">');
 echo ('<tr>');
 echo ('<th align="left"><a href="?order=ship_name&seq='.$seq.'"><span style=color:#80C870;>Ship Name</span></a></th>');
 echo ('<th align="center"><a href="?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Ship Race</span></a></th>');

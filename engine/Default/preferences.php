@@ -220,7 +220,7 @@ $PHP_OUTPUT.=('</p>');
 $PHP_OUTPUT.= '<h2>Account players</h2><br />';
 $db->query('select game.game_id as game_id, game.game_name as game_name, player.player_name as player_name, player.name_changed as name_changed from player natural join game where player.account_id=' . SmrSession::$account_id . ' and game.enabled=true and game.end_date>\'' . date('Y-m-d') . '\'');
 if($db->getNumRows()) {
-	$PHP_OUTPUT.= '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Game</th><th>Name</th></tr>';
+	$PHP_OUTPUT.= '<table class="standard"><tr><th>Game</th><th>Name</th></tr>';
 	while($db->nextRecord()) {
 		$row = $db->getRow();
 

@@ -34,7 +34,7 @@ else {
 
 if ($db->getNumRows() > 0) {
 
-	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="3" width="75%">');
+	$PHP_OUTPUT.=('<table class="standard" width="75%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Name</th>');
 	$PHP_OUTPUT.=('<th>Alliance</th>');
@@ -140,7 +140,7 @@ if (empty($player_id)) {
 			   
 	if ($db->getNumRows() > 0) {
 	
-		$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="3" width="75%">');
+		$PHP_OUTPUT.=('<table class="standard" width="75%">');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<th>Name</th>');
 		$PHP_OUTPUT.=('<th>Alliance</th>');

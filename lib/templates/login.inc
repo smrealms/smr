@@ -170,7 +170,7 @@ if($Message)
 		<td width="470px"><?php
 		if($LoginNews)
 			{ ?>
-				<table border="0" class="standard" cellspacing="0" cellpadding="5">
+				<table class="standard">
 				<tr><th>Date</th><th>News</th></tr><?php
 				foreach($LoginNews as $News)
 				{ ?>

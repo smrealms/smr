@@ -9,7 +9,7 @@ if(!isset($var['box_type_id']))
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'box_view.php';
 
-	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="3">');
+	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Folder</th>');
 	$PHP_OUTPUT.=('<th>Messages</th>');
@@ -44,7 +44,7 @@ else
 	
 		$PHP_OUTPUT.=('<br /><br />');
 		$PHP_OUTPUT.=('Click the name to reply<br />');
-		$PHP_OUTPUT.=('<table width="100%" border="0" class="standard" cellspacing="0" cellpadding="1">');
+		$PHP_OUTPUT.=('<table width="100%" class="standard">');
 		
 		while($db->nextRecord())
 		{

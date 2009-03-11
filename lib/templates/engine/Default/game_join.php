@@ -11,7 +11,7 @@
 </script>
 
 <p>
-	<table class="standard" cellspacing="0">
+	<table class="standard">
 		<tr>
 			<th width="150">Game Name</th>
 			<th>Start Date</th>

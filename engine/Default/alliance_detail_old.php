@@ -21,7 +21,7 @@ $PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 $template->assign('PageTopic','Alliance Roster - ' . stripslashes($db->getField('alliance_name')));
 
 $PHP_OUTPUT.= '
-<table cellspacing="0" cellpadding="0" class="standard">
+<table class="standard">
 	<tr>
 		<th>Player Name</th>
 		<th>Experience</th>

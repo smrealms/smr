@@ -12,7 +12,7 @@ include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_planet_menue();
 
 $PHP_OUTPUT.=('<p>');
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
+$PHP_OUTPUT.=('<table class="standard">');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>Type</th>');

@@ -157,7 +157,7 @@ else {
 $player =& SmrPlayer::getPlayer($account->account_id, $game_id);
 if ($count_last_active > 0) {
 
-	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard" width="95%">');
+	$PHP_OUTPUT.=('<table class="standard" width="95%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Player</th>');
 	$PHP_OUTPUT.=('<th>Race</th>');

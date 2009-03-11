@@ -21,7 +21,7 @@ echo ('</head>');
 
 echo ('<body>');
 $db->query('SELECT * FROM level ORDER BY level_id');
-echo ('<table border="0" class="standard" cellspacing="0" cellpadding="5">');
+echo ('<table class="standard">');
 
 echo ('<tr>');
 echo ('<th align="center" style="color:#80C870;">Rank Level</th>');

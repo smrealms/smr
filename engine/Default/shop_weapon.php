@@ -10,7 +10,7 @@ $db->query('SELECT * FROM location, location_sells_weapons, location_type, weapo
 
 if ($db->getNumRows() > 0 ) {
 
-	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="1" border="0" class="standard">');
+	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
 	$PHP_OUTPUT.=('<th align="center">Shield Damage</th>');
@@ -80,7 +80,7 @@ if ($ship->hasWeapons())
 
 	$template->assign('PageTopic','SELL WEAPONS');
 
-	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="1" border="0" class="standard">');
+	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
 	$PHP_OUTPUT.=('<th align="center">Cash</th>');

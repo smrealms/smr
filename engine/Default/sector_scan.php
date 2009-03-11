@@ -71,7 +71,7 @@ while ($db->nextRecord())
 }
 
 $PHP_OUTPUT.=('<p>');
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
+$PHP_OUTPUT.=('<table class="standard">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>&nbsp;</th>');
 $PHP_OUTPUT.=('<th align="center">Scan Results</th>');
@@ -98,7 +98,7 @@ $PHP_OUTPUT.=('</p>');
 $target_sector =& SmrSector::getSector(SmrSession::$game_id, $var['target_sector'], SmrSession::$account_id);
 
 $PHP_OUTPUT.=('<p>');
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
+$PHP_OUTPUT.=('<table class="standard">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Planet</td>');
 $PHP_OUTPUT.=('<td>');

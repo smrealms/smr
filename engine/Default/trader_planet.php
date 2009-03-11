@@ -21,7 +21,7 @@ $template->assign('PageTopic','YOUR PLANET');
 if ($db->getNumRows() > 0) {
 
 	$PHP_OUTPUT.=('<div align="center">');
-	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard" width="95%">');
+	$PHP_OUTPUT.=('<table class="standard" width="95%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
 	$PHP_OUTPUT.=('<th align="center">Sector</th>');
@@ -104,7 +104,7 @@ if ($player->getAllianceID() != 0) {
 	if ($db->getNumRows() > 0) {
 	
 		$PHP_OUTPUT.=('<div align="center">');
-		$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard" width="95%">');
+		$PHP_OUTPUT.=('<table class="standard" width="95%">');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<th align="center">Name</th>');
 		$PHP_OUTPUT.=('<th align="center">Owner</th>');
