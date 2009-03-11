@@ -3,7 +3,7 @@ require_once(LIB.'simplehtmldom/simple_html_dom.php');
 class Template
 {
 	protected $data = array();
-	protected $ajax = array();
+//	protected $ajax = array();
 //	protected $currentAjaxID=false;
 	protected $captures=array();
 	protected $currentCaptureID=0;
@@ -120,15 +120,15 @@ class Template
 //		echo $this->ajax[$this->currentAjaxID];
 //		$this->currentAjaxID=false;
 //	}
-	
-	protected function echoAjaxXml()
-	{
-		foreach($this->ajax as $element => $content)
-		{
-			if(trim($content)!='')
-				echo '<'.$element.'>'.htmlentities($this->trimWhiteSpace($content)).'</'.$element.'>';
-		}
-	}
+//	
+//	protected function echoAjaxXml()
+//	{
+//		foreach($this->ajax as $element => $content)
+//		{
+//			if(trim($content)!='')
+//				echo '<'.$element.'>'.htmlentities($this->trimWhiteSpace($content)).'</'.$element.'>';
+//		}
+//	}
 	
 	protected function checkDisableAJAX(&$html)
 	{
@@ -208,8 +208,7 @@ class Template
 	{
 		$xml='';
 		$str =& $this->trimWhiteSpace($str);
-		$html = new simple_html_dom();
-		$html->load($str);
+		$html = new simple_html_dom($str);
 		$searches = array('span[id]','[class=ajax]');
 		foreach($searches as $search)
 		{
