@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 		require_once(get_file_loc('SmrPlanet.class.inc'));
 $template->assign('PageTopic','VIEWING PLANET DETAILS');
 $db2 = new SmrMySqlDatabase();

@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $forces_owner	=& SmrPlayer::getPlayer($var['owner_id'], $player->getGameID());
 require_once(get_file_loc('SmrForce.class.inc'));

@@ -108,7 +108,7 @@ for ($i=1;$i<=$span&&$i<=$rows;$i++)
 	{
 		//new sector
 		if ($j!=1) $this_sec = get_real_right($this_sec);
-		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec,SmrSession::$account_id);
+		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec);
 	}
 }
 $template->assignByRef('MapSectors',$mapSectors);

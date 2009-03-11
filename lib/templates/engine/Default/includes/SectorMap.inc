@@ -7,9 +7,9 @@
 				$isCurrentSector = $ThisSector->equals($Sector);
 				$isLinkedSector = $ThisSector->isLinked($Sector); ?>
 				<td>
-					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited()){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
+					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
 						<div class="lmup"><?php
-							if($Sector->isVisited())
+							if($Sector->isVisited($ThisPlayer))
 							{ ?>
 								<div class="center lmup"><?php
 									if($Sector->getLinkUp())
@@ -44,7 +44,7 @@
 							if((($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector) && ($Sector->hasForces() || $Sector->hasTraders()))
 							{ ?>
 								<div class="lmtf"><?php
-									if(($isCurrentSector && $Sector->hasOtherTraders()) || ($isLinkedSector && $Sector->hasTraders()))
+									if(($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($isLinkedSector && $Sector->hasTraders()))
 									{
 										?><img title="Trader" alt="Trader" src="images/trader.jpg"/><?php
 									}
@@ -55,7 +55,7 @@
 								</div><?php
 							} ?>
 						</div><?php
-						if($Sector->isVisited())
+						if($Sector->isVisited($ThisPlayer))
 						{
 							if($Sector->hasLocation() || $Sector->hasPlanet())
 							{ ?>
@@ -90,10 +90,10 @@
 								} ?>
 							</div><?php
 						} ?>
-						<div class="lmsector center <?php if($Sector->isVisited()){ ?>dgreen<?php }else{ ?>yellow<?php } ?> fullwidth">
+						<div class="lmsector center <?php if($Sector->isVisited($ThisPlayer)){ ?>dgreen<?php }else{ ?>yellow<?php } ?> fullwidth">
 							<?php echo $Sector->getSectorID() ?>
 						</div><?php
-						if($Sector->isVisited())
+						if($Sector->isVisited($ThisPlayer))
 						{ ?>
 							<div class="right lmright"><?php
 								if($Sector->getLinkRight())
@@ -101,15 +101,15 @@
 									?><img src="images/link_ver.gif" alt="Right" title="Right" /><?php
 								} ?>
 							</div><?php
-							if(($isCurrentSector && $Sector->hasPort()) || $Sector->hasCachedPort())
+							if(($isCurrentSector && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer))
 							{
 								if($isCurrentSector && $Sector->hasPort())
 								{
 									$Port =& $Sector->getPort();
 								}
-								else if($Sector->hasCachedPort())
+								else if($Sector->hasCachedPort($ThisPlayer))
 								{
-									$Port =& $Sector->getCachedPort();
+									$Port =& $Sector->getCachedPort($ThisPlayer);
 								} ?>
 								<div class="left lmport"><?php
 									if($isCurrentSector)

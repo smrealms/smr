@@ -1,6 +1,6 @@
 <?php
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 /**
  * Returns the galaxy id of a certain sector or 0 if it doesn't exist.

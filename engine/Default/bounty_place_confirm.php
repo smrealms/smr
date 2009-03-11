@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 // get request variables
 $amount = $_REQUEST['amount'];

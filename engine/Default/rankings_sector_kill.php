@@ -20,7 +20,7 @@ $rank = 0;
 while ($db->nextRecord()) {
 
 	// get current player
-	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->getField('sector_id'), $player->getAccountID());
+	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->getField('sector_id'));
 
 	// increase rank counter
 	$rank++;
@@ -98,7 +98,7 @@ $rank = $min_rank - 1;
 while ($db->nextRecord()) {
 
 	// get current player
-	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->getField('sector_id'), $player->getAccountID());
+	$curr_sector =& SmrSector::getSector($player->getGameID(), $db->getField('sector_id'));
 
 	// increase rank counter
 	$rank++;

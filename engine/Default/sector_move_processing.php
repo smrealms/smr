@@ -39,8 +39,8 @@ if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 	        $db->query('DELETE FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 	}
 	// get new sector object
-	$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID(), $player->getAccountID());
-	$sector->mark_visited();
+	$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
+	$sector->markVisited($player);
 	$container['url'] = 'skeleton.php';
 	$container['body'] = $var['target_page'];
 	forward($container);
@@ -189,14 +189,14 @@ if ($db->nextRecord()) {
 }
 
 // get new sector object
-$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID(), $player->getAccountID());
+$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 
 //add that the player explored here if it hasnt been explored...for HoF
-if (!$sector->isVisited()) {
+if (!$sector->isVisited($player)) {
 	$player->increaseHOF(1,array('Movement','Sectors Explored'));
 }
 // make current sector visible to him
-$sector->mark_visited();
+$sector->markVisited($player);
 
 // send scout msgs
 $db->query(get_forces_query($gal_ids[$var['target_sector']]));

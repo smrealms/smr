@@ -41,7 +41,7 @@ class SmrMines extends AbstractSmrCombatWeapon
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
 		if($minesAreAttacker)
-			$modifiedAccuracy /= SmrSector::getSector($forces->getGameID(),$forces->getSectorID(),$targetPlayer->getAccountID())->getNumberOfLinks();
+			$modifiedAccuracy /= SmrSector::getSector($forces->getGameID(),$forces->getSectorID())->getNumberOfLinks();
 		
 		return max(0,min(100,$modifiedAccuracy));
 	}
