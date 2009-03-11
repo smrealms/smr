@@ -4,15 +4,23 @@ $template->assign('PageTopic','VIEWING MESSAGE BOXES');
 
 if(!isset($var['box_type_id']))
 {
-	$db->query('SELECT * FROM message_box_types');
+	$db->query('SELECT count(message_id),box_type_name,box_type_id FROM message_box_types LEFT JOIN message_boxes USING(box_type_id) GROUP BY box_type_id');
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'box_view.php';
-	$PHP_OUTPUT.='<table>';
+
+	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="3">');
+	$PHP_OUTPUT.=('<tr>');
+	$PHP_OUTPUT.=('<th>Folder</th>');
+	$PHP_OUTPUT.=('<th>Messages</th>');
+	$PHP_OUTPUT.=('</tr>');
 	while($db->nextRecord())
 	{
 		$container['box_type_id'] = $db->getField('box_type_id');
-		$PHP_OUTPUT.='<tr><td><a href="'.SmrSession::get_new_href($container).'">'.$db->getField('box_type_name').'</a></td></tr>';
+		$PHP_OUTPUT.='<tr>
+						<td><a href="'.SmrSession::get_new_href($container).'">'.$db->getField('box_type_name').'</a></td>
+						<td>'.$db->getField('count(message_id)').'</a></td>
+					</tr>';
 	}
 	$PHP_OUTPUT.='</table>';
 }
