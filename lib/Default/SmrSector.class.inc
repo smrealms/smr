@@ -11,17 +11,11 @@ class SmrSector
 	
 
 	protected $gameID;
-	protected $sector_id;
-	protected $link_up;
-	protected $link_down;
-	protected $link_left;
-	protected $link_right;
-	protected $warp;
+	protected $sectorID;
 	protected $battles;
 	protected $galaxyID;
 	protected $galaxyName;
 	protected $visited = array();
-	protected $portInfo;
 	protected $links;
 	
 	protected $localMapHREF;
@@ -65,30 +59,26 @@ class SmrSector
 		$this->galaxyName	= $this->db->getField('galaxy_name');
 		$this->battles		= (int)$this->db->getField('battles');
 		if (empty($this->battles)) $this->battles = 0;
-		
-		$this->link_up		= (int)$this->db->getField('link_up');
-		$this->link_down	= (int)$this->db->getField('link_down');
-		$this->link_left	= (int)$this->db->getField('link_left');
-		$this->link_right	= (int)$this->db->getField('link_right');
 
+		$this->links = array();
+		if($this->db->getField('link_up'))
+			$this->links['Up']=(int)$this->db->getField('link_up');
+			
+		if($this->db->getField('link_down'))
+			$this->links['Down']=(int)$this->db->getField('link_down');
+			
+		if($this->db->getField('link_left'))
+			$this->links['Left']=(int)$this->db->getField('link_left');
+			
+		if($this->db->getField('link_right'))
+			$this->links['Right']=(int)$this->db->getField('link_right');
+			
 
 		$this->db->query('SELECT * FROM warp WHERE game_id = '.$this->gameID.' AND ' .
 											  '(sector_id_1 = '.$this->sectorID.' OR ' .
 											   'sector_id_2 = '.$this->sectorID.')');
 		if ($this->db->nextRecord())
-			$this->warp = ($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
-
-		$this->links = array();
-		if($this->link_up)
-			$this->links['Up']=$this->link_up;
-		if($this->link_down)
-			$this->links['Down']=$this->link_down;
-		if($this->link_left)
-			$this->links['Left']=$this->link_left;
-		if($this->link_right)
-			$this->links['Right']=$this->link_right;
-		if($this->warp)
-			$this->links['Warp']=$this->warp;
+			$this->links['Warp']=($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
 
 
 		// *******************************************
