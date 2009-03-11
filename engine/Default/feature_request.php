@@ -23,7 +23,7 @@ if ($db->getNumRows() > 0)
 {
 	$DELETE_ALLOWED=$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote_processing.php', ''));
-	$PHP_OUTPUT.=('<p><table cellspacing="0" cellpadding="3" border="0" class="standard" width="100%">');
+	$PHP_OUTPUT.=('<p><table class="standard" width="100%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th width="30">Votes</th>');
 	$PHP_OUTPUT.=('<th>Feature</th>');

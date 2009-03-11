@@ -39,7 +39,7 @@ else {
 	$form = create_form($container,'Remove Selected');
 	$PHP_OUTPUT.= $form['form'];
 		
-	$PHP_OUTPUT.= '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Option</th><th>Word</th><th>Replacement</th></tr>';
+	$PHP_OUTPUT.= '<table class="standard"><tr><th>Option</th><th>Word</th><th>Replacement</th></tr>';
 	while($db->nextRecord()) {
 		$row = $db->getRow();
 		$PHP_OUTPUT.= '<tr>';

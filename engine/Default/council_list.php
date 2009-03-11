@@ -26,7 +26,7 @@ $PHP_OUTPUT.=('<div align="center" style="font-weight:bold;">President</div>');
 if ($president!=null)
 {
 
-	$PHP_OUTPUT.=('<p><table border="0" class="standard" cellspacing="0" align="center" width="75%">');
+	$PHP_OUTPUT.=('<p><table class="standard" align="center" width="75%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Name</th>');
 	$PHP_OUTPUT.=('<th>Race</th>');
@@ -81,7 +81,7 @@ $db->query('SELECT * FROM player ' .
 if ($db->getNumRows() > 0)
 {
 
-	$PHP_OUTPUT.=('<p><table border="0" class="standard" cellspacing="0" align="center" width="85%">');
+	$PHP_OUTPUT.=('<p><table class="standard" align="center" width="85%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>&nbsp;</th>');
 	$PHP_OUTPUT.=('<th>Name</th>');

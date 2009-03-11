@@ -185,7 +185,7 @@ if ($action == 'Delete') {
 	// * L o g   T a b l e
 	// *
 	// *********************************
-	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="5" width="100%">');
+	$PHP_OUTPUT.=('<table class="standard" width="100%">');
 	$PHP_OUTPUT.=('<tr>');
 
 	$container = create_container('skeleton.php', 'log_console_detail.php');

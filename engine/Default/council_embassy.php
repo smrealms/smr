@@ -7,7 +7,7 @@ $template->assign('PageTopic','RULING COUNCIL OF '.$player->getRaceName());
 
 $PHP_OUTPUT.=create_council_menue($player->getRaceID(), getPresident($player->getRaceID()));
 
-$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" align="center" width="50%">');
+$PHP_OUTPUT.=('<table class="standard" align="center" width="50%">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>Race</th>');
 $PHP_OUTPUT.=('<th>Treaty</th>');

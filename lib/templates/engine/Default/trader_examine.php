@@ -40,7 +40,7 @@ else
 $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 ?>
 <div align="center">
-	<table cellspacing="0" cellpadding="5" border="0" class="standard" width="95%">
+	<table class="standard" width="95%">
 		<tr><th width="50%">Attacker</th><th width="50%">Defender</th></tr>
 		<tr><?php
 foreach ($fightingPlayers as $fleet)

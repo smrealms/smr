@@ -11,7 +11,7 @@ $db->query('SELECT * FROM location, location_sells_hardware, location_type, hard
 
 if ($db->getNumRows() > 0 ) {
 
-	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
+	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
 	$PHP_OUTPUT.=('<th align="center">Purchase Amount</th>');

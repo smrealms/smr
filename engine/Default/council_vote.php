@@ -21,7 +21,7 @@ if ($db->nextRecord()) {
 
 }
 
-$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" align="center" width="75%">');
+$PHP_OUTPUT.=('<table class="standard" align="center" width="75%">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>Race</th>');
 $PHP_OUTPUT.=('<th>Vote</th>');
@@ -78,7 +78,7 @@ $db->query('SELECT * FROM race_has_voting ' .
 				 'race_id_1 = '.$player->getRaceID());
 if ($db->getNumRows() > 0) {
 
-	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" align="center" width="65%">');
+	$PHP_OUTPUT.=('<table class="standard" align="center" width="65%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Race</th>');
 	$PHP_OUTPUT.=('<th>Treaty</th>');

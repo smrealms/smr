@@ -7,7 +7,7 @@ if($ThisShip->hasWeapons())
 		
 		<form method="POST" action="<?php echo URL ?>/loader.php">
 			<input type="hidden" name="sn" value="<?php echo Globals::getWeaponReorderHREF(0,'Form') ?>">
-			<table id="weapon_reorder" cellspacing="0" cellpadding="3" border="0" class="standard">
+			<table id="weapon_reorder" class="standard">
 			<tr nodrag="true" nodrop="true">
 			<th align="center">Weapon Name</th>
 			<th align="center">Shield Damage</th>

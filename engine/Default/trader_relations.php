@@ -5,7 +5,7 @@ include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_trader_menue();
 
 $PHP_OUTPUT.=('<p align="center">');
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" width="60%" border="0" class="standard">');
+$PHP_OUTPUT.=('<table width="60%" class="standard">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th valign="top" width="50%">Relations (Global)</th>');
 $PHP_OUTPUT.=('<th valign="top" width="50%">Relations (Personal)</th>');

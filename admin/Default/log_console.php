@@ -16,7 +16,7 @@ if ($db->getNumRows()) {
 
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'log_console_detail.php'));
 
-	$PHP_OUTPUT.=('<table border="0" class="standard" cellspacing="0" cellpadding="5">');
+	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Login</th>');
 	$PHP_OUTPUT.=('<th>Player Name</th>');

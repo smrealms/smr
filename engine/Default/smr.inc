@@ -93,7 +93,7 @@ function create_topic($topic) {
 }
 
 function create_table() {
- 	return '<table class="standard" cellspacing="0">';
+ 	return '<table class="standard">';
 }
 
 function create_echo_form($container) {

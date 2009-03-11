@@ -17,7 +17,7 @@ if (isset($var['msg']))
    $PHP_OUTPUT.=($var['msg'] . '<br />');
 
 
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
+$PHP_OUTPUT.=('<table class="standard">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th width="125">&nbsp;</th>');
 $PHP_OUTPUT.=('<th width="75">Current</th>');
@@ -52,7 +52,7 @@ $PHP_OUTPUT.=('</table>');
 
 $PHP_OUTPUT.=('<br />');
 
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
+$PHP_OUTPUT.=('<table class="standard">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th width="125">&nbsp;</th>');
 $PHP_OUTPUT.=('<th width="75">Amount</th>');

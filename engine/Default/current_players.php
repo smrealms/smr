@@ -74,7 +74,7 @@ else {
 
 if ($count_last_active > 0) {
 
-	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard" width="95%">');
+	$PHP_OUTPUT.=('<table class="standard" width="95%">');
 	$PHP_OUTPUT.=('<tr>');
 	$container = array();
 	$container['url'] = 'skeleton.php';

@@ -21,7 +21,7 @@ if (isset($wall))
 $db->query('SELECT * FROM bar_wall WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' ORDER BY time DESC');
 if ($db->getNumRows()) {
 
-	$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="3" border="0" class="standard">');
+	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Time written</th>');
 	$PHP_OUTPUT.=('<th align="center">Message</th>');

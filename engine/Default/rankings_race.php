@@ -7,7 +7,7 @@ $PHP_OUTPUT.=create_ranking_menue(2, 0);
 
 $PHP_OUTPUT.=('<div align=center>');
 $PHP_OUTPUT.=('<p>Here are the rankings of the races by their experience</p>');
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard" width="95%">');
+$PHP_OUTPUT.=('<table class="standard" width="95%">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>Rank</th>');
 $PHP_OUTPUT.=('<th>Race</th>');

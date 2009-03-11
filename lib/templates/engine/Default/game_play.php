@@ -7,7 +7,7 @@
 <?php
 if($Games['Play'])
 { ?>
-	<table class="standard" cellspacing="0">
+	<table class="standard">
 		<tr>
 			<th align="center">&nbsp;</th>
 			<th align="center">Game Name</th>
@@ -42,7 +42,7 @@ if($Games['Play'])
 <h1>Join Game</h1><?php
 if($Games['Join'])
 { ?>
-	<table class="standard" cellspacing="0">
+	<table class="standard">
 		<tr>
 			<th align="center">&nbsp;</th>
 			<th width="150">Game Name</th>
@@ -80,7 +80,7 @@ else
 <h1>Previous Games</h1><?php
 if($Games['Previous'])
 { ?>
-	<table class="standard" cellspacing="0">
+	<table class="standard">
 		<tr>
 			<th width="150">Game Name</th>
 			<th>Start Date</th>

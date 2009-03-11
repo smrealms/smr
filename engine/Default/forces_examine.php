@@ -41,7 +41,7 @@ elseif ($forces_owner->getAccountID() == $player->getAccountID())
 	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">These are your forces!</big></p>');
 
 $PHP_OUTPUT.=('<div align="center">');
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard" width="95%">');
+$PHP_OUTPUT.=('<table class="standard" width="95%">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th width="50%">Attacker</th>');
 $PHP_OUTPUT.=('<th width="50%">Forces</th>');

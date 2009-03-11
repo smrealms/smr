@@ -36,7 +36,7 @@ else
 	$order_by = 'weapon_type_id';
 
 $db->query('SELECT * FROM weapon_type, race WHERE weapon_type.race_id = race.race_id ORDER BY '.$order_by.' '.$seq);
-echo ('<table class="standard" cellspacing="0">');
+echo ('<table class="standard">');
 echo ('<tr>');
 echo ('<th align="center"><a href="?order=weapon_name&seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
 echo ('<th align="center"><a href="?order=race_name&seq='.$seq.'"><span style=color:#80C870;>Race</span></a></th>');

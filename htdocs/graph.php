@@ -32,7 +32,7 @@ echo ('Hunting - '.$hunt.'<br />');
 echo ('Utility - '.$util.'<br />');
 echo ('</font>');
 
-echo ('<table border="0" class="standard" cellspacing="0">');
+echo ('<table class="standard">');
 echo ('<tr><th align="center">Trait</th><th align="center">Rating</th></tr>');
 echo ('<tr><td align="center">Trade - '.$trade.'</td></tr>');
 echo ('<tr><td align="center">Combat Strength - '.$combat.'</td></tr>');

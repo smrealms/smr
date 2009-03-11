@@ -16,7 +16,7 @@ $db->query('SELECT
 
 if ($db->getNumRows() > 0 ) {
 
-	$PHP_OUTPUT.= '<table cellspacing="0" class="standard"><tr><th>Name</th><th>Cost</th><th>Action</th></tr>';
+	$PHP_OUTPUT.= '<table class="standard"><tr><th>Name</th><th>Cost</th><th>Action</th></tr>';
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -87,7 +87,7 @@ if (isset($var['ship_id'])) {
     $container['level_needed'] = $level_needed;
 	transfer('ship_id');
 
-	$PHP_OUTPUT.= '<table cellspacing="0"class="standard"><tr><th>&nbsp;</th><th>';
+	$PHP_OUTPUT.= '<table class="standard"><tr><th>&nbsp;</th><th>';
 	$PHP_OUTPUT.= $ship->getName();
 	$PHP_OUTPUT.= '</th><th>';
 	$PHP_OUTPUT.= $ship_name;

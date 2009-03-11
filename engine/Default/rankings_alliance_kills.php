@@ -19,7 +19,7 @@ $PHP_OUTPUT.=('<p>Here are the rankings of alliances by their kills.</p>');
 if ($player->getAllianceID() > 0)
     $PHP_OUTPUT.=('<p>Your alliance is ranked '.$ourRank.' out of '.$numAlliances.' alliances.</p>');
 
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard" width="95%">');
+$PHP_OUTPUT.=('<table class="standard" width="95%">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>Rank</th>');
 $PHP_OUTPUT.=('<th>Alliance</th>');
@@ -92,7 +92,7 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<p><input type="text" name="min_rank" value="'.$min_rank.'" size="3" id="InputFields" style="text-align:center;">&nbsp;-&nbsp;<input type="text" name="max_rank" value="'.$max_rank.'" size="3" id="InputFields" style="text-align:center;">&nbsp;');
 $PHP_OUTPUT.=create_submit('Show');
 $PHP_OUTPUT.=('</p></form>');
-$PHP_OUTPUT.=('<table cellspacing="0" cellpadding="5" border="0" class="standard" width="95%">');
+$PHP_OUTPUT.=('<table class="standard" width="95%">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<th>Rank</th>');
 $PHP_OUTPUT.=('<th>Alliance</th>');

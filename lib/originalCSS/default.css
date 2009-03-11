@@ -214,7 +214,7 @@ table.standardnobord {
 
 table.standard {
 	border:1px solid #0b8d35;
-	/*border-spacing: 0px;*/
+	border-spacing: 0px;
 }
 
 .standard td,th{

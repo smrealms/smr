@@ -38,7 +38,7 @@
 		$form = create_form($container,'Remove Selected');
 		$PHP_OUTPUT.= $form['form'];
 	
-		$PHP_OUTPUT.= '<table class="standard" cellspacing="0" cellpadding="0"><tr><th>Option</th><th>Name</th>';
+		$PHP_OUTPUT.= '<table class="standard"><tr><th>Option</th><th>Name</th>';
   	
 		while($db->nextRecord()) {
 			$row = $db->getRow();		
