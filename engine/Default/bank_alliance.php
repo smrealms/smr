@@ -164,7 +164,7 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.= '</td><td>';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</td></tr></table></form>';
-	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Reason for transfer</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp</th>';
+	$PHP_OUTPUT.= '<table class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Reason for transfer</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp</th>';
 	if ($exempt) $PHP_OUTPUT.=('<th>Make Exempt</th>');
 	$PHP_OUTPUT.= '</tr>';
 

@@ -4,7 +4,7 @@
 		$Players =& $ThisSector->getOtherTraders();
 		if($ThisPlayer->canSeeAny($Players))
 		{ ?>
-			<table cellspacing="0" class="standard fullwidth">
+			<table class="standard fullwidth">
 				<tr>
 					<th style="background: rgb(85, 0, 0) none repeat scroll 0% 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" colspan="5">Ships (<?php echo count($Players) ?>)</th>
 				</tr>

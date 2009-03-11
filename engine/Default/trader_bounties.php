@@ -7,7 +7,7 @@ $PHP_OUTPUT.=create_trader_menue();
 
 $PHP_OUTPUT.= 'Bounties awaiting collection.<br /><br />';
 
-$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard fullwidth"><tr><th>Federal</th><th>Underground</th></tr>';
+$PHP_OUTPUT.= '<table class="standard fullwidth"><tr><th>Federal</th><th>Underground</th></tr>';
 
 $bounties['HQ'] = array();
 $bounties['UG'] = array();

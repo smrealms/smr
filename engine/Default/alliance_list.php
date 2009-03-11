@@ -72,7 +72,7 @@ else
 // do we have any alliances?
 if ($db->getNumRows() > 0)
 {
-	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>';
+	$PHP_OUTPUT.= '<table class="standard inset"><tr><th>';
 	$container['order'] = 'alliance_name';
 	$PHP_OUTPUT.=create_header_link($container,'Alliance Name');
 	$PHP_OUTPUT.= '</th><th class="shrink">';

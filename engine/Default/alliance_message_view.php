@@ -63,7 +63,7 @@ if(
 
 $PHP_OUTPUT.= '<h2>Messages</h2><div align="center">';
 if (is_array($var['alliance_eyes']) && $var['alliance_eyes'][$thread_index]) $PHP_OUTPUT.= '<br />Note: This topic is for alliance eyes only.';
-$PHP_OUTPUT.= '<br /><table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Author</th><th>Message</th><th>Time</th></tr>';
+$PHP_OUTPUT.= '<br /><table class="standard inset"><tr><th>Author</th><th>Message</th><th>Time</th></tr>';
 //for report type (system sent) messages
 $players[0] = 'Planet Reporter';
 $players[-1] = 'Bank Reporter';

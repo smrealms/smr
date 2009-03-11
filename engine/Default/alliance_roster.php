@@ -95,7 +95,7 @@ if($account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
 $PHP_OUTPUT.= '<br /><br />';
 
 $PHP_OUTPUT.= '
-<table cellspacing="0" cellpadding="0" class="standard inset">
+<table class="standard inset">
 	<tr>
 		<th>Alliance Name</th>
 		<th>Total Experience</th>
@@ -130,7 +130,7 @@ $PHP_OUTPUT.= '<h2>Current Members</h2><br />';
 $PHP_OUTPUT.= '<div align="center">';
 
 $PHP_OUTPUT.= '
-<table cellspacing="0" cellpadding="0" class="standard fullwidth">
+<table class="standard fullwidth">
 	<tr>
 	<th>&nbsp;</th>
 	<th>Trader Name</th>

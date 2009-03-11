@@ -205,11 +205,11 @@ td.footer_right {
 }
 
 table.standardnobord {
-	border:0px;
+	border:none;
 }
 
-.standardnobord td,th{
-	border:0px;
+.standardnobord tr,.standardnobord td,.standardnobord th{
+	border:none;
 }
 
 table.standard {
@@ -217,7 +217,7 @@ table.standard {
 	border-spacing: 0px;
 }
 
-.standard td,th{
+table.standard td, table.standard th{
 	border:1px solid #0b8d35;
 }
 table.create {

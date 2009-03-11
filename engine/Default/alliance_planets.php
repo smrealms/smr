@@ -34,7 +34,7 @@ if ($db->getNumRows() > 0) {
     $PHP_OUTPUT.= 'Your alliance currently has ';
     $PHP_OUTPUT.= $db->getNumRows();
     $PHP_OUTPUT.= ' planets in the universe!<br /><br />';
-	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Name</th><th>Owner</th><th>Sector<th>G</th><th>H</th><th>T</th><th>Shields</th><th>Drones</th><th>Supplies</th><th>Build</th></tr>';
+	$PHP_OUTPUT.= '<table class="standard inset"><tr><th>Name</th><th>Owner</th><th>Sector<th>G</th><th>H</th><th>T</th><th>Shields</th><th>Drones</th><th>Supplies</th><th>Build</th></tr>';
 
 	$db2 = new SmrMySqlDatabase();
 

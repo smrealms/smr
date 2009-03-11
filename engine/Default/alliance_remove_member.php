@@ -28,7 +28,7 @@ if ($db->getNumRows() != 0) {
 	$container['body'] = '';
 	$form = create_form($container,'Banish \'em!');
 	$PHP_OUTPUT.= $form['form'];
-	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><th>Trader Name</th><th>Last Online</th><th>Action</th>';
+	$PHP_OUTPUT.= '<table class="standard inset"><th>Trader Name</th><th>Last Online</th><th>Action</th>';
 
 	while ($db->nextRecord()) {
 

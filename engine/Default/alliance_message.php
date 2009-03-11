@@ -37,7 +37,7 @@ $query .= ' GROUP BY alliance_thread.thread_id ORDER BY sendtime DESC';
 $db->query($query);
 if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.= '<div align="center">';
-	$PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="standard inset"><tr><th>Topic</th><th>Author</th><th>Replies</th><th>Last Reply</th></tr>';
+	$PHP_OUTPUT.= '<table class="standard inset"><tr><th>Topic</th><th>Author</th><th>Replies</th><th>Last Reply</th></tr>';
 
 	$db2 = new SmrMySqlDatabase();
 	$db3 = new SmrMySqlDatabase();
@@ -148,7 +148,7 @@ if ($mbWrite || in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 	$form = create_form($container,'New Thread');
 	$PHP_OUTPUT.= $form['form'];
 	$PHP_OUTPUT.= '
-	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
+	<table class="standardnobord nohpad">
 		<tr>
 			<td class="top">Topic:&nbsp;</td>
 			<td class="mb"><input type="text" name="topic" size="30"></td>

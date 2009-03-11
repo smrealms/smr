@@ -81,7 +81,7 @@ if ($db->getNumRows() > 0) {
     $PHP_OUTPUT.=('<tr><td><span class="yellow bold">' . array_sum($total) . '</span> forces</td><td><span class="yellow bold">' . number_format($total[MINES] * 10000 + $total[CDS] * 10000 + $total[SDS] * 5000) . '</span> credits</td></tr>');
     $PHP_OUTPUT.=('</table><br />');
 
-	$PHP_OUTPUT.= '<table cellspacing="0" class="standard inset"><tr>';
+	$PHP_OUTPUT.= '<table class="standard inset"><tr>';
 
     $container = array();
     $container['url'] = 'skeleton.php';
