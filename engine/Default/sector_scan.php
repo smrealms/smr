@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 $template->assign('PageTopic','SECTOR SCAN');
 
 // initialize vars
@@ -95,7 +95,7 @@ $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</p>');
 
-$target_sector =& SmrSector::getSector(SmrSession::$game_id, $var['target_sector'], SmrSession::$account_id);
+$target_sector =& SmrSector::getSector(SmrSession::$game_id, $var['target_sector']);
 
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=('<table class="standard">');

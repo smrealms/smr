@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 if (isset($_POST['to'])) $to = $_POST['to'];
 else $to = $var['to'];
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
@@ -8,7 +8,7 @@ if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 	$player->setLastSectorID($player->getSectorID());
 	$player->setSectorID($to);
 	$player->update();
-	$sector->mark_visited();
+	$sector->markVisited($player);
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'current_sector.php';
 	forward($container);
@@ -72,34 +72,8 @@ if (empty($to))
 if (!is_numeric($to))
 	create_error('Please enter only numbers!');
 
-//// ok we can only get the leave save heaven if we go through a warp
-//if ($action != 'Yes') {
-//
-//	// are we a noob
-//	if ($rank_id < FLEDGLING && $account->veteran == 'FALSE') {
-//
-//		// get new sector object
-//		$new_sector =& SmrSector::getSector($player->getGameID(), $to, $player->getAccountID());
-//
-//		// are we going to leave the save heaven?
-//		if ($sector->is_protected_gal() && !$new_sector->is_protected_gal()) {
-//
-//			$container = create_container('skeleton.php', 'leaving_newbie_galaxy.php');
-//			$container['target_sector'] = $to;
-//			$container['method'] = 'jump';
-//
-//			transfer('target_page');
-//
-//			forward($container);
-//
-//		}
-//
-//	}
-//
-//}
-
 // create sector object for target sector
-$target_sector =& SmrSector::getSector(SmrSession::$game_id, $to, SmrSession::$account_id);
+$target_sector =& SmrSector::getSector(SmrSession::$game_id, $to);
 
 // check if we would jump more than 1 warp
 if ($sector->getGalaxyID() != $target_sector->getGalaxyID())
@@ -108,8 +82,8 @@ if ($sector->getGalaxyID() != $target_sector->getGalaxyID())
 	$db->query('SELECT * FROM warp WHERE game_id = '.$player->getGameID());
 	while($db->nextRecord())
 	{
-		$warp_sector1 =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id_1'), SmrSession::$account_id);
-		$warp_sector2 =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id_2'), SmrSession::$account_id);
+		$warp_sector1 =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id_1'));
+		$warp_sector2 =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id_2'));
 
 		if ($warp_sector1->getGalaxyID() == $target_sector->getGalaxyID() && $warp_sector2->getGalaxyID() == $sector->getGalaxyID())
 			$allowed = true;
@@ -174,7 +148,7 @@ if (mt_rand(1, 100) <= $failure_chance) {
 		$distance = $sector_distance[$curr_sector_id];
 
 		// create a new sector object
-		$curr_sector =& SmrSector::getSector(SmrSession::$game_id, $curr_sector_id, SmrSession::$account_id);
+		$curr_sector =& SmrSector::getSector(SmrSession::$game_id, $curr_sector_id);
 
 		// enqueue all neighbours
 		if ($curr_sector->getLinkUp() > 0 && (!isset($sector_distance[$curr_sector->getLinkUp()]) || $sector_distance[$curr_sector->getLinkUp()] > $distance + 1) && $failure_distance > $distance) {
@@ -255,13 +229,13 @@ $db->query('DELETE FROM player_plotted_course ' .
 				 'game_id = '.$player->getGameID());
 
 // get new sector object
-$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID(), $player->getAccountID());
+$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 
 // make current sector visible to him
-$sector->mark_visited();
+$sector->markVisited($player);
 
 // send scout msg
-$sector->entering_sector();
+$sector->enteringSector($player);
 
 $db->query('SELECT * FROM sector_has_forces, player ' .
 		   'WHERE sector_has_forces.game_id = player.game_id AND ' .
@@ -272,20 +246,8 @@ $db->query('SELECT * FROM sector_has_forces, player ' .
 				 'owner_id != '.$player->getAccountID().' AND ' .
 				 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0)');
 
-while ($db->nextRecord()) {
-
-//	// we may skip forces if this is a protected gal.
-//	if ($sector->is_protected_gal())
-//	{
-//
-//		$forces_account =& SmrAccount::getAccount($db->getField('owner_id'));
-//
-//		// if one is vet and the other is newbie we skip it
-//		if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
-//			continue;
-//
-//	}
-
+while ($db->nextRecord())
+{
 	if ($player->getNewbieTurns() > 0) {
 
 		$container = array();
@@ -293,9 +255,9 @@ while ($db->nextRecord()) {
 		$container['body']		= 'current_sector.php';;
 		$container['msg']		= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.';
 		forward($container);
-
-	} else {
-
+	}
+	else
+	{
     	$owner_id = $db->getField('owner_id');
     	include('forces_minefield_processing.php');
     	exit;

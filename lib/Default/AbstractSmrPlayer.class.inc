@@ -155,7 +155,7 @@ abstract class AbstractSmrPlayer
 	
 	public function hasFederalProtection()
 	{
-		$sector =& SmrSector::getSector($this->getGameID(),$this->getSectorID(),$this->getAccountID());
+		$sector =& SmrSector::getSector($this->getGameID(),$this->getSectorID());
 		if (!$sector->offersFederalProtection())
 		{
 			return false;

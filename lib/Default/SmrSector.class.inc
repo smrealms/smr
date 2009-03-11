@@ -12,7 +12,6 @@ class SmrSector
 
 	protected $gameID;
 	protected $sector_id;
-	protected $accountID; //Should this REALLY be here?
 	protected $link_up;
 	protected $link_down;
 	protected $link_left;
@@ -21,7 +20,7 @@ class SmrSector
 	protected $battles;
 	protected $galaxyID;
 	protected $galaxyName;
-	protected $visited;
+	protected $visited = array();
 	protected $portInfo;
 	protected $links;
 	
@@ -31,35 +30,30 @@ class SmrSector
 	
 	protected $hasChanged = false;
 
-	public static function &getSector($gameID,$sectorID,$accountID,$forceUpdate = false)
+	public static function &getSector($gameID,$sectorID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_SECTORS[$gameID][$sectorID][$accountID]))
+		if($forceUpdate || !isset(self::$CACHE_SECTORS[$gameID][$sectorID]))
 		{
-			$s = new SmrSector($gameID,$sectorID,$accountID);
-			return self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()][$accountID] =& $s;
+			$s = new SmrSector($gameID,$sectorID);
+			return self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()] =& $s;
 		}
-		return self::$CACHE_SECTORS[$gameID][$sectorID][$accountID];
+		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
 	
 	public static function saveSectors()
 	{
 		foreach(self::$CACHE_SECTORS as &$gameSectors)
 		{
-			foreach($gameSectors as &$gameSectorSectors)
+			foreach($gameSectors as &$sector)
 			{
-				foreach($gameSectorSectors as &$sector)
-				{
-					$sector->update();
-				}
+				$sector->update();
 			}
 		}
 	}
 	
-	protected function __construct($gameID, $sectorID, $accountID)
+	protected function __construct($gameID, $sectorID)
 	{
 		$this->db = new SmrMySqlDatabase();
-		
-		$this->accountID = $accountID;
 
 		$this->db->query('SELECT * FROM sector, galaxy WHERE sector.galaxy_id = galaxy.galaxy_id AND ' .
 														'sector.game_id = '.$gameID.' AND ' .
@@ -114,17 +108,17 @@ class SmrSector
 		}
 	}
 
-	function mark_visited()
+	function markVisited(AbstractSmrPlayer &$player)
 	{
 		if($this->hasPort())
-			$this->getPort()->addCachePort($this->getAccountID());
+			$this->getPort()->addCachePort($player->getAccountID());
 
 		//now delete the entry from visited
-		if(!$this->isVisited())
+		if(!$this->isVisited($player))
 			$this->db->query('DELETE FROM player_visited_sector ' .
 					 'WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' .
-					 'account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->visited=true;
+					 'account_id = '.$player->getAccountID().' LIMIT 1');
+		$this->visited[$player->getAccountID()]=true;
 	}
 
 	function has_good($good_id, $transaction=false)
@@ -227,32 +221,18 @@ class SmrSector
 		return false;
 	}
 
-	function entering_sector()
+	function enteringSector(AbstractSmrPlayer &$player)
 	{
-		global $player, $account;
-
-		// get our rank
-		$rank_id = $account->get_rank();
-
 		// iterate over all scout drones in sector
 		$this->db->query('SELECT * FROM sector_has_forces ' .
 					 'WHERE sector_id = '.$this->sectorID.' AND ' .
 						   'game_id = '.$this->gameID.' AND ' .
-						   'owner_id != '.$this->accountID.' AND ' .
+						   'owner_id != '.$player->getAccountID().' AND ' .
 						   'scout_drones > 0');
 		while ($this->db->nextRecord())
 		{
 			$owner =& SmrPlayer::getPlayer($this->db->getField('owner_id'), $this->gameID);
 			if ($owner->sameAlliance($player)) continue;
-
-//			// we may skip player if this is a protected gal.
-//			if ($this->is_protected_gal()) {
-//
-//				$curr_account =& SmrAccount::getAccount($this->db->getField('owner_id'));
-//
-//				if (different_level($rank_id, $curr_account->get_rank(), $account->veteran, $curr_account->veteran))
-//				continue;
-//			}
 
 			// send scout messages to user
 			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->getSectorID();
@@ -287,7 +267,7 @@ class SmrSector
 
 		}
 		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' . 
-					'refresher = '.$this->getAccountID());
+					'refresher = '.$player->getAccountID());
 	}
 
 	function died_here(AbstractSmrPlayer &$player)
@@ -321,11 +301,6 @@ class SmrSector
 	public function getGameID()
 	{
 		return $this->gameID;
-	}
-	
-	public function getAccountID()
-	{
-		return $this->accountID;
 	}
 	
 	public function getSectorID()
@@ -385,7 +360,7 @@ class SmrSector
 	
 	public function &getLinkWarpSector()
 	{
-		return SmrSector::getSector($this->getGameID(),$this->getLinkWarp(),$this->getAccountID());
+		return SmrSector::getSector($this->getGameID(),$this->getLinkWarp());
 	}
 	
 	public function hasWarp()
@@ -410,15 +385,15 @@ class SmrSector
 		return SmrPort::getPort($this->getGameID(),$this->getSectorID());
 	}
 
-	public function hasCachedPort()
+	public function hasCachedPort(AbstractSmrPlayer &$player)
 	{
-		return $this->getCachedPort()!==false;
+		return $this->getCachedPort($player)!==false;
 	}
 
-	public function &getCachedPort()
+	public function &getCachedPort(AbstractSmrPlayer &$player)
 	{
 		require_once(get_file_loc('SmrPort.class.inc'));
-		return SmrPort::getCachedPort($this->getGameID(),$this->getSectorID(),$this->getAccountID());
+		return SmrPort::getCachedPort($this->getGameID(),$this->getSectorID(),$player->getAccountID());
 	}
 	
 	public function hasAnyLocationsWithAction()
@@ -472,9 +447,9 @@ class SmrSector
 		return count($this->getTraders()) > 0;
 	}
 
-	public function hasOtherTraders()
+	public function hasOtherTraders(AbstractSmrPlayer &$player)
 	{
-		return count($this->getOtherTraders()) > 0;
+		return count($this->getOtherTraders($player)) > 0;
 	}
 
 	public function &getTraders()
@@ -572,10 +547,10 @@ class SmrSector
 		return $fightingPlayers;
 	}
 
-	public function &getOtherTraders()
+	public function &getOtherTraders(AbstractSmrPlayer &$player)
 	{
 		$players = SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
-		unset($players[$this->accountID]);
+		unset($players[$player->getAccountID()]);
 		return $players;
 	}
 	
@@ -612,14 +587,14 @@ class SmrSector
 		return $otherSector->getGameID()==$this->getGameID()&&in_array($otherSector->getSectorID(),$this->getLinks());
 	}
 	
-	public function isVisited()
+	public function isVisited(AbstractSmrPlayer &$player)
 	{
-		if(!isset($this->visited))
+		if(!isset($this->visited[$player->getAccountID()]))
 		{
-			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id = ' . $this->getSectorID() . ' AND account_id=' . $this->getAccountID() . ' AND game_id=' . $this->getGameID() .' LIMIT 1');
-			$this->visited = !$this->db->nextRecord();
+			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id = ' . $this->getSectorID() . ' AND account_id=' . $player->getAccountID() . ' AND game_id=' . $this->getGameID() .' LIMIT 1');
+			$this->visited[$player->getAccountID()] = !$this->db->nextRecord();
 		}
-		return $this->visited;
+		return $this->visited[$player->getAccountID()];
 	}
 	
 	protected function getHREF($targetPage)

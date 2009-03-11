@@ -1,6 +1,6 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 function get_good_distance($good_id, $transaction)
 {
@@ -48,7 +48,7 @@ function get_good_distance($good_id, $transaction)
 		$distance = $sector_distance[$curr_sector_id];
 
 		// create a new sector object
-		$curr_sector =& SmrSector::getSector($player->getGameID(), $curr_sector_id, $player->getAccountID());
+		$curr_sector =& SmrSector::getSector($player->getGameID(), $curr_sector_id);
 
 		// does the current sector buy/sell the good we're looking for?
         if ($good_distance != 0) {

@@ -1,7 +1,7 @@
 <div id="players_cs" class="ajax">
-	<?php if($ThisSector->hasOtherTraders())
+	<?php if($ThisSector->hasOtherTraders($ThisPlayer))
 	{
-		$Players =& $ThisSector->getOtherTraders();
+		$Players =& $ThisSector->getOtherTraders($ThisPlayer);
 		if($ThisPlayer->canSeeAny($Players))
 		{ ?>
 			<table class="standard fullwidth">

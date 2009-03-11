@@ -52,7 +52,7 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forced' => true);
 
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 $attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
 
 //decloak all attackers

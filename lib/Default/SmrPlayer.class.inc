@@ -1264,7 +1264,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function killPlayer($sectorID)
 	{
-		$sector =& SmrSector::getSector($this->getGameID(),$sectorID,$this->getAccountID());
+		$sector =& SmrSector::getSector($this->getGameID(),$sectorID);
 		//msg taken care of in trader_att_proc.php
 		// forget plotted course
 		$this->deletePlottedCourse();

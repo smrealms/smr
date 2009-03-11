@@ -74,7 +74,7 @@ $galaxy_id = $_GET['galaxy_id'];
 if (!isset($galaxy_id)) {
 	$galaxy_id = (int)$galaxy_id;
 	
-	$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID(), SmrSession::$account_id);
+	$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 	echo('<p>Please choose a galaxy:</p>');
 	echo('<ul>');
@@ -127,7 +127,7 @@ $template->assign('GalaxyName',$galaxy_name);
 $template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
 $template->assign('PlayerHasScanner',$ship->hasScanner());
-$template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID(),$player->getAccountID()));
+$template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID()));
 
 $db->query('
 SELECT
@@ -181,7 +181,7 @@ for ($i=1;$i<=$span&&$i<=$rows;$i++)
 	{
 		//new sector
 		if ($j!=1) $this_sec = get_real_right($this_sec);
-		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec,SmrSession::$account_id);
+		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec);
 	}
 }
 $template->assignByRef('MapSectors',$mapSectors);

@@ -177,7 +177,6 @@ function get_file_loc($file_name, $exists = 1)
 	elseif (file_exists(WWW . $file_name)) return WWW . $file_name;
 	elseif ($exists == 1) return ENGINE . 'empty.php';
 	else return $file_name;
-
 }
 
 function create_error($message) {
@@ -435,7 +434,7 @@ function do_voodoo()
 		$ship	=& $player->getShip();
 		$GLOBALS['ship'] =& $ship;
 		
-		$sector	=& SmrSector::getSector(SmrSession::$game_id,$player->getSectorID(),SmrSession::$account_id);
+		$sector	=& SmrSector::getSector(SmrSession::$game_id,$player->getSectorID());
 		$GLOBALS['sector'] =& $sector;
 
 		// update turns on that player
