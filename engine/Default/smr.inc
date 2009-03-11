@@ -845,7 +845,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 			$container['link_id'] = $i;
 			$voteSite[$i] .= '\'javascript:voteSite("' . $vote_links[$i]['location'] . '",';
-			$voteSite[$i] .= '"' . SmrSession::get_new_href($container) . '")\'';
+			$voteSite[$i] .= '"' . SmrSession::get_new_href($container,true) . '")\'';
 			$img = $vote_links[$i]['star_img'];
 		}
 		else
