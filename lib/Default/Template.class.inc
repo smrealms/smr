@@ -9,8 +9,6 @@ class Template
 	protected $currentCaptureID=0;
 	protected $ignoreMiddle=false;
 	
-	protected $doAjaxMiddle=true;
-	
 	public function __construct()
 	{
 	}
@@ -224,40 +222,33 @@ class Template
 					$xml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
 			}
 		}
-		if($this->doAjaxMiddle && !$this->ignoreMiddle)
+		if(!$this->ignoreMiddle)
 		{
-			$mid=$html->find('div#middle_panel');
-			if(!empty($mid))
+			$doAjaxMiddle=true;
+			$searches = array('div#middle_panel span[id]','div#middle_panel [class=ajax]');
+			foreach($searches as $search)
 			{
-				$mid=$mid[0];
-				$inner = $mid->innertext();
-				if(!$this->checkDisableAJAX($inner))
+				$spans = $html->find($search);
+				if(!empty($spans))
+					$doAjaxMiddle=false;
+			}
+			if($doAjaxMiddle)
+			{
+				$mid=$html->find('div#middle_panel');
+				if(!empty($mid))
 				{
-					$id = $mid->getAttribute('id');
-					if(!SmrSession::addAjaxReturns($id,$inner))
-						$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+					$mid=$mid[0];
+					$inner = $mid->innertext();
+					if(!$this->checkDisableAJAX($inner))
+					{
+						$id = $mid->getAttribute('id');
+						if(!SmrSession::addAjaxReturns($id,$inner))
+							$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+					}
 				}
 			}
 		}
 		return $xml;
-	}
-	protected function startMiddle()
-	{
-		$this->startCapture();
-	}
-	protected function endMiddle()
-	{
-		$middle=$this->stopCapture();
-		$this->captures[$this->currentCaptureID].=$middle;
-		$html =& new simple_html_dom();
-		$html->load($middle);
-		$searches = array('span[id]','[class=ajax]');
-		foreach($searches as $search)
-		{
-			$spans = $html->find($search);
-			if(!empty($spans))
-				$this->doAjaxMiddle=false;
-		}
 	}
 	
 	public function ignoreMiddle()
