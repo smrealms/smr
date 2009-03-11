@@ -1,5 +1,5 @@
 <?php
-require_once(LIB.'simplehtmldom/simple_html_dom.php');
+require_once(LIB.'phpQuery/phpQuery.php');
 class Template
 {
 	protected $data = array();
@@ -208,16 +208,16 @@ class Template
 	{
 		$xml='';
 		$str =& $this->trimWhiteSpace($str);
-		$html = new simple_html_dom();
-		$html->load($str);
+		
+		phpQuery::newDocumentHTML($str);
 		$searches = array('span[id]','[class=ajax]');
 		foreach($searches as $search)
 		{
-			$spans = $html->find($search);
+			$spans = phpQuery::pq($search);
 			foreach($spans as $span)
 			{
 				$id = $span->getAttribute('id');
-				$inner = $span->innertext();
+				$inner = phpQuery::pq($span)->html();
 				if(!SmrSession::addAjaxReturns($id,$inner))
 					$xml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
 			}
@@ -228,17 +228,17 @@ class Template
 			$searches = array('div#middle_panel span[id]','div#middle_panel [class=ajax]');
 			foreach($searches as $search)
 			{
-				$spans = $html->find($search);
+				$spans = phpQuery::pq($search);
 				if(!empty($spans))
 					$doAjaxMiddle=false;
 			}
 			if($doAjaxMiddle)
 			{
-				$mid=$html->find('div#middle_panel');
+				$mid=phpQuery::pq('div#middle_panel');
 				if(!empty($mid))
 				{
 					$mid=$mid[0];
-					$inner = $mid->innertext();
+					$inner = phpQuery::pq($mid)->html();
 					if(!$this->checkDisableAJAX($inner))
 					{
 						$id = $mid->getAttribute('id');
