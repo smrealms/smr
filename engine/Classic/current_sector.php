@@ -576,13 +576,13 @@ if ($db->next_record()) {
 		}
 	}
 
-	echo '<img src="images/buy.gif" alt="Goods Sold" title="Goods Sold">';
+	echo '<img src="images/port/buy.gif" alt="Goods Sold" title="Goods Sold">';
 	sort($goods_sold);
 	foreach($goods_sold as $good_id) {
 		if ($player->alignment > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
 		echo '<img src="images/port/' . $good_id . '.gif" alt="' . $goods[$good_id] . '" title="' . $goods[$good_id] . '">';
 	}
-	echo '<br /><img src="images/sell.gif" alt="Goods Bought" title="Goods Bought">';
+	echo '<br /><img src="images/port/sell.gif" alt="Goods Bought" title="Goods Bought">';
 	sort($goods_bought);
 	foreach($goods_bought as $good_id) {
 		if ($player->alignment > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
