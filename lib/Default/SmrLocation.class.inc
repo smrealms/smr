@@ -3,6 +3,7 @@ require_once('SmrMySqlDatabase.class.inc');
 
 class SmrLocation
 {
+	protected static $CACHE_ALL_LOCATIONS;
 	protected static $CACHE_LOCATIONS = array();
 	protected static $CACHE_SECTOR_LOCATIONS = array();
 	
@@ -25,6 +26,22 @@ class SmrLocation
 	
 	protected $HREF;
 	protected $editHREF;
+	
+	public static function &getAllLocations($forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS))
+		{
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT location_type_id FROM location_type');
+			$locations = array();
+			while($db->nextRecord())
+			{
+				$locations[$db->getField('location_type_id')] =& SmrLocation::getLocation($db->getField('location_type_id'));
+			}
+			self::$CACHE_ALL_LOCATIONS =& $locations;
+		}
+		return self::$CACHE_ALL_LOCATIONS;
+	}
 	
 	public static function &getSectorLocations($gameID,$sectorID,$forceUpdate = false)
 	{
@@ -249,9 +266,11 @@ class SmrLocation
 		return $this->hardwareSold;
 	}
 	
-	public function isHardwareSold($hardwareTypeID)
+	public function isHardwareSold($hardwareTypeID=false)
 	{
 		$hardware = $this->getHardwareSold();
+		if($hardwareTypeID===false)
+			return count($hardware)!=0;
 		return isset($hardware[$hardwareTypeID]);
 	}
 	
@@ -287,9 +306,11 @@ class SmrLocation
 		return $this->shipsSold;
 	}
 	
-	public function isShipSold($shipTypeID)
+	public function isShipSold($shipTypeID=false)
 	{
 		$ships = $this->getShipsSold();
+		if($shipTypeID===false)
+			return count($ships)!=0;
 		return isset($ships[$shipTypeID]);
 	}
 	
@@ -309,7 +330,7 @@ class SmrLocation
 	{
 		if(!$this->isShipSold($shipTypeID))
 			return;
-		$this->db->query('DELETE FROM location_sells_hardware WHERE location_type_id = ' . $this->getTypeID() . ' AND hardware_type_id = ' . $shipTypeID . ' LIMIT 1');
+		$this->db->query('DELETE FROM location_sells_ships WHERE location_type_id = ' . $this->getTypeID() . ' AND ship_type_id = ' . $shipTypeID . ' LIMIT 1');
 		unset($this->shipsSold[$shipTypeID]);
 	}
 	
@@ -326,9 +347,11 @@ class SmrLocation
 		return $this->weaponsSold;
 	}
 	
-	public function isWeaponSold($weaponTypeID)
+	public function isWeaponSold($weaponTypeID=false)
 	{
 		$weapons = $this->getWeaponsSold();
+		if($weaponTypeID===false)
+			return count($weapons)!=0;
 		return isset($weapons[$weaponTypeID]);
 	}
 	
@@ -348,8 +371,27 @@ class SmrLocation
 	{
 		if(!$this->isWeaponSold($weaponTypeID))
 			return;
-		$this->db->query('DELETE FROM location_sells_hardware WHERE location_type_id = ' . $this->getTypeID() . ' AND hardware_type_id = ' . $weaponTypeID . ' LIMIT 1');
+		$this->db->query('DELETE FROM location_sells_weapons WHERE location_type_id = ' . $this->getTypeID() . ' AND weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
 		unset($this->weaponsSold[$weaponTypeID]);
+	}
+	
+	public function &getLinkedLocations()
+	{
+		$linkedLocations = array();
+		if($this->isHQ())
+		{
+			if($this->getTypeID()==LOCATION_TYPE_FEDERAL_HQ)
+			{
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_MINT);
+			}
+			else
+			{
+				$relativeID = $this->getTypeID()%100-2;
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS+$relativeID);
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS+$relativeID);
+			}
+		}
+		return $linkedLocations;
 	}
 	
 	public function getExamineHREF()
