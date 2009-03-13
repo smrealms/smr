@@ -419,5 +419,10 @@ class SmrLocation
 		}
 		return $this->editHREF;
 	}
+	
+	public function equals(SmrLocation &$otherLocation)
+	{
+		return $this->getTypeID()==$otherLocation->getTypeID();
+	}
 }
 ?>

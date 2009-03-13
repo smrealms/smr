@@ -4,14 +4,14 @@
 $game_id = $var['game_id'];
 //get name
 $db->query('SELECT game_description, credits_needed, game_name, game_speed, max_players, ' . 
-			'game_type, DATE_FORMAT(start_date, \'%c/%e/%Y\') as format_start_date, ' . 
-			'DATE_FORMAT(end_date, \'%c/%e/%Y\') as format_end_date FROM game ' . 
+			'game_type, start_date, ' . 
+			'end_date FROM game ' . 
 			'WHERE game_id = '.$game_id);
 $db->nextRecord();
 $game_name = $db->getField('game_name');
 $game_desc = $db->getField('game_description');
-$start = $db->getField('format_start_date');
-$end = $db->getField('format_end_date');
+$start = date(DATE_DATE_SHORT,$db->getField('start_date'));
+$end = date(DATE_DATE_SHORT,$db->getField('end_date'));
 $speed = $db->getField('game_speed');
 $max = $db->getField('max_players');
 $type = $db->getField('game_type');

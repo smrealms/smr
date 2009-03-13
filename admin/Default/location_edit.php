@@ -49,13 +49,6 @@ if(isset($var['location_type_id']))
 }
 else
 {
-	$db->query('SELECT location_type_id FROM location_type');
-	$locations = array();
-	while($db->nextRecord())
-	{
-		$locations[$db->getField('location_type_id')] =& SmrLocation::getLocation($db->getField('location_type_id'));
-	}
-	
-	$template->assignByRef('Locations',$locations);
+	$template->assignByRef('Locations',SmrLocation::getAllLocations());
 }
 ?>
