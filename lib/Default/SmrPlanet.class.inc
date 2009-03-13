@@ -29,6 +29,7 @@ class SmrPlanet
 	protected $currentlyBuilding;
 	
 	protected $hasChangedStockpile = false;
+	protected $isNew = false;
 	
 	protected $examineHREF;
 
@@ -41,8 +42,44 @@ class SmrPlanet
 		}
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
+	
+	public static function &createPlanet($gameID,$sectorID)
+	{
+		if(!self::getPlanet($gameID,$sectorID)->exists())
+		{
+			require_once(get_file_loc('SmrGame.class.inc'));
+			$inhabitableTime = SmrGame::getGame($gameID)->getStartDate() + pow(mt_rand(45, 85), 3);
+			
+			// insert planet into db
+			$db = new SmrMySqlDatabase();
+			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time) ' .
+				'VALUES (' . $gameID . ', '.$sectorID.', '.$inhabitableTime.')');
+		}
+		return self::getPlanet($gameID,$sectorID,true);
+//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID]))
+//		{
+//			$p = new SmrPlanet($gameID,$sectorID,true);
+//			self::$CACHE_PLANETS[$gameID][$sectorID] =& $p;
+//		}
+//		return self::$CACHE_PLANETS[$gameID][$sectorID];
+	}
 
-	protected function __construct($gameID,$sectorID)
+	public static function &removePlanet($gameID,$sectorID)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('DELETE FROM planet WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		$db->query('DELETE FROM planet_has_cargo WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		$db->query('DELETE FROM planet_has_building WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		$db->query('DELETE FROM planet_is_building WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
+		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
+	}
+
+	protected function __construct($gameID,$sectorID,$create=false)
 	{
 		$this->db = new SmrMySqlDatabase();
 		
@@ -126,6 +163,17 @@ class SmrPlanet
 			$this->getMaxBuildings();
 			$this->level = $this->getLevel();
 		}
+//		else if($create)
+//		{
+//			$this->gameID		= (int)$gameID;
+//			$this->sectorID		= (int)$sectorID;
+//			$this->isNew		= true;
+//			return;
+//		}
+//		else
+//		{
+//			throw new Exception('No such sector: '.$gameID.'-'.$sectorID);
+//		}
 	}
 	
 	public function getGameID()

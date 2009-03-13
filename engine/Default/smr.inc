@@ -480,6 +480,7 @@ function do_voodoo()
 		SmrShip::saveShips();
 		SmrPlayer::savePlayers();
 		SmrForce::saveForces();
+		SmrPort::savePorts();
 		release_lock($lock);
 	}
 	

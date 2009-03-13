@@ -49,13 +49,45 @@ TH {
 	font-family: Arial;
 	font-size:inherit;
 }
+.submitStyle:link{
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+	font-family: Arial;
+	font-size:inherit;
+	padding: 0px 8px;
+}
+.submitStyle:visited{
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+	font-family: Arial;
+	font-size:inherit;
+	padding: 0px 8px;
+}
+.submitStyle:hover{
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+	font-family: Arial;
+	font-size:inherit;
+	padding: 0px 8px;
+}
+.submitStyle:active{
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+	font-family: Arial;
+	font-size:inherit;
+	padding: 0px 8px;
+}
 .submitStyle{
 	background: #06240E;
 	color: #FFFFFF;
 	border: 1px solid #80C870;
 	font-family: Arial;
 	font-size:inherit;
-	padding: 1px 8px;
+	padding: 0px 8px;
 	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
 }
 

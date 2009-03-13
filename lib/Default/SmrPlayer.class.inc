@@ -111,7 +111,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			while($db->nextRecord())
 			{
 				$accountID = $db->getField('account_id');
-				$players[$accountID] =& self::getPlayer($accountID,$gameID);
+				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
 			}
 			return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
 		}

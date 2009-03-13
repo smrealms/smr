@@ -7,7 +7,7 @@ if ($db->nextRecord())
 	$game['ID'] = $db->getField('game_id');
 	$game['Name'] = $db->getField('game_name');
 	$game['StartDate'] = $db->getField('start_date');
-	$game['EndDate'] = $db->getField('end_date');
+	$game['EndDate'] = date(DATE_DATE_SHORT,$db->getField('end_date'));
 	$game['MaxPlayers'] = $db->getField('max_players');
 	$game['Type'] = $db->getField('max_players');
 	$game['Speed'] = $db->getField('credits_needed');

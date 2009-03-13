@@ -33,8 +33,8 @@ if (!isset($game_name)) {
 			$PHP_OUTPUT.=('<tr><td align=center>');
 			$PHP_OUTPUT.=create_link($container, $name.' ('.$id.')');
 			$PHP_OUTPUT.=('</td>');
-			$PHP_OUTPUT.=('<td align=center>' . $db2->getField('start_date') . '</td>');
-			$PHP_OUTPUT.=('<td align=center>' . $db2->getField('end_date') . '</td>');
+			$PHP_OUTPUT.=('<td align=center>' . date(DATE_DATE_SHORT,$db2->getField('start_date')) . '</td>');
+			$PHP_OUTPUT.=('<td align=center>' . date(DATE_DATE_SHORT,$db2->getField('end_date')) . '</td>');
 			$PHP_OUTPUT.=('<td align=center>' . $db2->getField('speed') . '</td>');
 			$PHP_OUTPUT.=('<td align=center>');
 			$container = array();
@@ -80,8 +80,8 @@ if (!isset($game_name)) {
 	<td valign=top align=center>
 	<table>
 	<tr><td align=right>Name</td>           <td>&nbsp;</td><td align=left>'.$game_name.'</td></tr>
-	<tr><td align=right>Start Date</td>     <td>&nbsp;</td><td align=left>'.$start.'</td></tr>
-	<tr><td align=right>End Date</td>       <td>&nbsp;</td><td align=left>'.$end.'</td></tr>
+	<tr><td align=right>Start Date</td>     <td>&nbsp;</td><td align=left>'.date(DATE_DATE_SHORT,$start).'</td></tr>
+	<tr><td align=right>End Date</td>       <td>&nbsp;</td><td align=left>'.date(DATE_DATE_SHORT,$end).'</td></tr>
 	<tr><td align=right>Game Type</td>      <td>&nbsp;</td><td align=left>'.$type.'</td></tr>
 	<tr><td align=right>Game Speed</td>     <td>&nbsp;</td><td align=left>'.$speed.'</td></tr>
 	</table>

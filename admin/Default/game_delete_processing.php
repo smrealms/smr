@@ -116,7 +116,7 @@ if ($action == 'Yes') {
 
 			// insert into history db
 			$history_db_sql[] = 'INSERT INTO game (game_id, end_date, start_date, game_name, speed, type) VALUES ' .
-								'('.$game_id.', '.$db->escapeString($end).', '.$db->escapeString($start).', ' . $db->escape_string($name,FALSE) . ', '.$speed.', '.$db->escapeString($type).')';
+								'('.$game_id.', '.$end.', '.$start.', ' . $db->escape_string($name,FALSE) . ', '.$speed.', '.$db->escapeString($type).')';
 
 		}
 

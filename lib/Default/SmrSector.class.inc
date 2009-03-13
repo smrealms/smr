@@ -2,10 +2,14 @@
 require_once('SmrMySqlDatabase.class.inc');
 
 require_once(get_file_loc('SmrPlayer.class.inc'));
+require_once(get_file_loc('SmrLocation.class.inc'));
+require_once(get_file_loc('SmrPlanet.class.inc'));
+require_once(get_file_loc('SmrPort.class.inc'));
 		
 class SmrSector
 {
 	protected static $CACHE_SECTORS = array();
+	protected static $CACHE_GALAXY_SECTORS = array();
 	
 	protected $db;
 	
@@ -18,11 +22,25 @@ class SmrSector
 	protected $visited = array();
 	protected $links;
 	
-	protected $localMapHREF;
-	protected $currentSectorHREF;
-	protected $scanSectorHREF;
-	
 	protected $hasChanged = false;
+	protected $isNew = false;
+
+	public static function &getGalaxySectors($gameID,$galaxyID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID]))
+		{
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $gameID .' AND galaxy_id='.$galaxyID);
+			$sectors = array();
+			while($db->nextRecord())
+			{
+				$sectorID = $db->getField('sector_id');
+				$sectors[$sectorID] =& self::getSector($gameID,$sectorID,$forceUpdate);
+			}
+			return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] =& $sectors;
+		}
+		return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID];
+	}
 
 	public static function &getSector($gameID,$sectorID,$forceUpdate = false)
 	{
@@ -45,56 +63,94 @@ class SmrSector
 		}
 	}
 	
-	protected function __construct($gameID, $sectorID)
+	public static function &createSector($gameID,$sectorID)
+	{
+		if(!isset(self::$CACHE_SECTORS[$gameID][$sectorID]))
+		{
+			$s = new SmrSector($gameID,$sectorID,true);
+			self::$CACHE_SECTORS[$gameID][$sectorID] =& $s;
+		}
+		return self::$CACHE_SECTORS[$gameID][$sectorID];
+	}
+	
+	protected function __construct($gameID, $sectorID,$create=false)
 	{
 		$this->db = new SmrMySqlDatabase();
 
 		$this->db->query('SELECT * FROM sector, galaxy WHERE sector.galaxy_id = galaxy.galaxy_id AND ' .
 														'sector.game_id = '.$gameID.' AND ' .
 														'sector_id = '.$sectorID.' LIMIT 1');
-		$this->db->nextRecord();
-		$this->sectorID		= (int)$this->db->getField('sector_id');
-		$this->gameID		= (int)$this->db->getField('game_id');
-		$this->galaxyID		= (int)$this->db->getField('galaxy_id');
-		$this->galaxyName	= $this->db->getField('galaxy_name');
-		$this->battles		= (int)$this->db->getField('battles');
-		if (empty($this->battles)) $this->battles = 0;
-
-		$this->links = array();
-		if($this->db->getField('link_up'))
-			$this->links['Up']=(int)$this->db->getField('link_up');
-			
-		if($this->db->getField('link_down'))
-			$this->links['Down']=(int)$this->db->getField('link_down');
-			
-		if($this->db->getField('link_left'))
-			$this->links['Left']=(int)$this->db->getField('link_left');
-			
-		if($this->db->getField('link_right'))
-			$this->links['Right']=(int)$this->db->getField('link_right');
-			
-
-		$this->db->query('SELECT * FROM warp WHERE game_id = '.$this->gameID.' AND ' .
-											  '(sector_id_1 = '.$this->sectorID.' OR ' .
-											   'sector_id_2 = '.$this->sectorID.')');
-		if ($this->db->nextRecord())
-			$this->links['Warp']=($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
-
-
-		// *******************************************
-		// *
-		// * Refresh Forces
-		// *
-		// *******************************************
+		if($this->db->nextRecord())
+		{
+			$this->sectorID		= (int)$this->db->getField('sector_id');
+			$this->gameID		= (int)$this->db->getField('game_id');
+			$this->galaxyID		= (int)$this->db->getField('galaxy_id');
+			$this->galaxyName	= $this->db->getField('galaxy_name');
+			$this->battles		= (int)$this->db->getField('battles');
+			if (empty($this->battles)) $this->battles = 0;
+	
+			$this->links = array();
+			if($this->db->getField('link_up'))
+				$this->links['Up']=(int)$this->db->getField('link_up');
+				
+			if($this->db->getField('link_down'))
+				$this->links['Down']=(int)$this->db->getField('link_down');
+				
+			if($this->db->getField('link_left'))
+				$this->links['Left']=(int)$this->db->getField('link_left');
+				
+			if($this->db->getField('link_right'))
+				$this->links['Right']=(int)$this->db->getField('link_right');
+				
+	
+			$this->db->query('SELECT * FROM warp WHERE game_id = '.$this->gameID.' AND ' .
+												  '(sector_id_1 = '.$this->sectorID.' OR ' .
+												   'sector_id_2 = '.$this->sectorID.')');
+			if ($this->db->nextRecord())
+				$this->links['Warp']=($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
+		}
+		else if($create)
+		{
+			$this->gameID		= (int)$gameID;
+			$this->sectorID		= (int)$sectorID;
+			$this->isNew		= true;
+			return;
+		}
+		else
+		{
+			throw new Exception('No such sector: '.$gameID.'-'.$sectorID);
+		}
 	}
 
 	function update()
 	{
 		if($this->hasChanged)
 		{
-			$this->db->query('UPDATE sector SET battles = '.$this->getBattles().' ' .
-								   'WHERE game_id = '.$this->getGameID().' AND ' .
+			if($this->isNew===false)
+			{
+				$this->db->query('UPDATE sector SET battles = '.$this->getBattles() .
+										', galaxy_id=' . $this->getGalaxyID().
+										', link_up=' . $this->getLinkUp().
+										', link_right=' . $this->getLinkRight().
+										', link_down=' . $this->getLinkDown().
+										', link_left=' . $this->getLinkLeft().
+								   ' WHERE game_id = '.$this->getGameID().' AND ' .
 										 'sector_id = '.$this->getSectorID() . ' LIMIT 1');
+			}
+			else
+			{
+				$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right)' .
+						'values' .
+						'(' . $this->getSectorID() .
+						',' . $this->getGameID() .
+						',' . $this->getGalaxyID() .
+						',' . $this->getLinkUp() .
+						',' . $this->getLinkDown() .
+						',' . $this->getLinkLeft() .
+						',' . $this->getLinkRight() .
+						')');
+				$this->isNew=false;
+			}
 		}
 	}
 
@@ -303,6 +359,14 @@ class SmrSector
 		return $this->galaxyID;
 	}
 	
+	public function setGalaxyID($galaxyID)
+	{
+		if($this->galaxyID==$galaxyID)
+			return;
+		$this->galaxyID=$galaxyID;
+		$this->hasChanged=true;
+	}
+	
 	public function getGalaxyName()
 	{
 		return $this->galaxyName;
@@ -310,7 +374,57 @@ class SmrSector
 	
 	public function getNumberOfLinks()
 	{
-		return count($this->getLinks());
+		$num=0;
+		if(!is_array($this->getLinks()))
+			return $num;
+		foreach($this->getLinks() as $link)
+			if($link!==0)
+				$num++;
+		return $num;
+	}
+	
+	public function &getGalaxy()
+	{
+		return SmrGalaxy::getGalaxy($this->getGameID(),$this->getGalaxyID());
+	}
+	
+	public function getNeighbourID($dir)
+	{
+		if($this->hasLink($dir))
+			return $this->getLink($dir);
+		$galaxy =& $this->getGalaxy();
+		$neighbour = $this->getSectorID();
+		switch($dir)
+		{
+			case 'Up':
+				$neighbour -= $galaxy->getWidth();
+				if($this->getSectorID()<$galaxy->getStartSector())
+					$neighbour+=$galaxy->getSize();
+			break;
+			case 'Down':
+				$neighbour += $galaxy->getWidth();
+				if($this->getSectorID()>$galaxy->getEndSector())
+					$neighbour-=$galaxy->getSize();
+			break;
+			case 'Left':
+				$neighbour += 1;
+				if(($this->getSectorID()-$galaxy->getStartSector())%$galaxy->getWidth()==0)
+					$neighbour-=$galaxy->getWidth();
+			break;
+			case 'Right':
+				$neighbour -= 1;
+				if((1+$this->getSectorID()-$galaxy->getStartSector())%$galaxy->getWidth()==0)
+					$neighbour+=$galaxy->getWidth();
+			break;
+			default:
+				throw new Exception($dir.': is not a valid direction');
+		}
+		return $neighbour;
+	}
+	
+	public function &getNeighbourSector($dir)
+	{
+		return SmrSector::getSector($this->getGameID(),$this->getNeighbourID($dir));
 	}
 	
 	public function getLinks()
@@ -323,9 +437,63 @@ class SmrSector
 		return isset($this->links[$name]) ? $this->links[$name] : 0;
 	}
 	
+	public function hasLink($name)
+	{
+		return $this->getLink($name)!=0;
+	}
+	
+	public function &getLinkSector($name)
+	{
+		if($this->hasLink($name))
+			return SmrSector::getSector($this->getGameID(),$this->getLink($name));
+		return false;
+	}
+	
+	/**
+	 * Cannot be used for Warps
+	 */
+	public function setLink($name,$linkID)
+	{
+		if($this->links[$name]==$linkID)
+			return;
+		$this->links[$name] = $linkID;
+		$this->hasChanged=true;
+	}
+	
+	/**
+	 * Cannot be used for Warps
+	 */
+	public function setLinkSector($name,SmrSector &$linkSector)
+	{
+		if($this->links[$name]==$linkSector->getSectorID()||$linkSector==$this->getSectorID())
+			return;
+		$this->setLink($name,$linkSector->getSectorID());
+		$linkSector->setLink($name,$this->getSectorID());
+		$this->hasChanged=true;
+	}
+	public function enableLink($dir)
+	{
+		$this->setLinkSector($dir,$this->getNeighbourSector($dir));
+	}
+	public function disableLink($dir)
+	{
+		$this->setLink($dir,0);
+		$this->getNeighbourSector($dir)->setLink($dir,0);
+	}
+	
 	public function getLinkUp()
 	{
 		return $this->getLink('Up');
+	}
+	
+	public function setLinkUp($linkID)
+	{
+		$this->setLink('Up',$linkID);
+	}
+	
+	public function hasLinkUp()
+	{
+		return $this->hasLink('Up');
 	}
 	
 	public function getLinkDown()
@@ -333,14 +501,44 @@ class SmrSector
 		return $this->getLink('Down');
 	}
 	
+	public function setLinkDown($linkID)
+	{
+		$this->setLink('Down',$linkID);
+	}
+	
+	public function hasLinkDown()
+	{
+		return $this->hasLink('Down');
+	}
+	
 	public function getLinkLeft()
 	{
 		return $this->getLink('Left');
 	}
 	
+	public function hasLinkLeft()
+	{
+		return $this->hasLink('Left');
+	}
+	
+	public function setLinkLeft($linkID)
+	{
+		$this->setLink('Left',$linkID);
+	}
+	
 	public function getLinkRight()
 	{
 		return $this->getLink('Right');
+	}
+	
+	public function hasLinkRight()
+	{
+		return $this->hasLink('Right');
+	}
+	
+	public function setLinkRight($linkID)
+	{
+		$this->setLink('Right',$linkID);
 	}
 	
 	public function getLinkWarp()
@@ -355,7 +553,44 @@ class SmrSector
 	
 	public function hasWarp()
 	{
-		return $this->getLinkWarp()>0;
+		return $this->hasLink('Warp');
+	}
+	
+	public function setWarp(SmrSector &$warp)
+	{
+		if($this->hasWarp())
+		{
+			//Update both possible combinations for the warp
+			$this->db->query('UPDATE warp SET sector_id_1 = '.$warp->getSectorID().' WHERE ' .
+											'game_id=' . $this->getGameID().' AND '.
+											'sector_id_1 = '.$this->getLinkWarp().' AND ' .
+											'sector_id_2 = '.$this->getSectorID().' LIMIT 1');
+			$this->db->query('UPDATE warp SET sector_id_2 = '.$warp->getSectorID().' WHERE ' .
+											'game_id=' . $this->getGameID().' AND '.
+											'sector_id_1 = '.$this->getSectorID().' AND ' .
+											'sector_id_2 = '.$this->getLinkWarp().' LIMIT 1');
+		}
+		else
+		{
+			//Only need to enter once
+			$this->db->query('INSERT INTO warp (game_id,sector_id_1,sector_id_2)values('.$this->getGameID().','.$this->getSectorID().','.$warp->getSectorID().')');
+		}
+		$this->links['Warp'] = $warp->getSectorID();
+		$warp->setLink('Warp',$this->getSectorID());
+	}
+	
+	public function removeWarp()
+	{
+		if($this->hasWarp())
+		{
+			//Update both possible combinations for the warp
+			$this->db->query('DELETE FROM warp WHERE ' .
+											  '(sector_id_1 = '.$this->getLinkWarp().' AND ' .
+											   'sector_id_2 = '.$this->getSectorID().') OR' .
+											  '(sector_id_1 = '.$this->getSectorID().' AND ' .
+											   'sector_id_2 = '.$this->getLinkWarp().') LIMIT 1');
+		}
+		unset($this->links['Warp']);
 	}
 	
 	public function hasMine()
@@ -371,8 +606,17 @@ class SmrSector
 
 	public function &getPort()
 	{
-		require_once(get_file_loc('SmrPort.class.inc'));
 		return SmrPort::getPort($this->getGameID(),$this->getSectorID());
+	}
+	
+	public function &createPort()
+	{
+		return SmrPort::createPort($this->getGameID(),$this->getSectorID());
+	}
+	
+	public function removePort()
+	{
+		SmrPort::removePort($this->getGameID(),$this->getSectorID());
 	}
 
 	public function hasCachedPort(AbstractSmrPlayer &$player)
@@ -382,13 +626,11 @@ class SmrSector
 
 	public function &getCachedPort(AbstractSmrPlayer &$player)
 	{
-		require_once(get_file_loc('SmrPort.class.inc'));
 		return SmrPort::getCachedPort($this->getGameID(),$this->getSectorID(),$player->getAccountID());
 	}
 	
 	public function hasAnyLocationsWithAction()
 	{
-		require_once(get_file_loc('SmrLocation.class.inc'));
 		$locations =& SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID());
 		$hasAction = false;
 		foreach($locations as $location)
@@ -399,15 +641,32 @@ class SmrSector
 		return $hasAction;
 	}
 	
-	public function hasLocation()
+	public function hasLocation($locationTypeID=false)
 	{
-		return count($this->getLocations()) > 0;
+		$locations =& $this->getLocations();
+		if($locationTypeID==false)
+			return count($locations) > 0;
+		foreach($locations as &$location)
+			if($location->getTypeID()==$locationTypeID)
+				return true;
+		return false;
 	}
 	
 	public function &getLocations()
 	{
-		require_once(get_file_loc('SmrLocation.class.inc'));
 		return SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID());
+	}
+	
+	public function addLocation(SmrLocation &$location)
+	{
+		$this->db->query('INSERT INTO location (game_id,sector_id,location_type_id)values('.$this->getGameID().','.$this->getSectorID().','.$location->getTypeID().')');
+		SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID(),true);
+	}
+	
+	public function removeAllLocations()
+	{
+		$this->db->query('DELETE FROM location WHERE game_id='.$this->getGameID().' AND sector_id='.$this->getSectorID());
+		SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID(),true);
 	}
 
 	public function hasPlanet()
@@ -417,8 +676,17 @@ class SmrSector
 	
 	public function &getPlanet()
 	{
-		require_once(get_file_loc('SmrPlanet.class.inc'));
 		return SmrPlanet::getPlanet($this->getGameID(),$this->getSectorID());
+	}
+	
+	public function &createPlanet()
+	{
+		return SmrPlanet::createPlanet($this->getGameID(),$this->getSectorID());
+	}
+	
+	public function removePlanet()
+	{
+		SmrPlanet::removePlanet($this->getGameID(),$this->getSectorID());
 	}
 
 	public function hasForces()
@@ -598,33 +866,21 @@ class SmrSector
 	
 	public function getLocalMapHREF()
 	{
-		if(!isset($this->localMapHREF))
-		{
-			$this->localMapHREF = $this->getHREF('map_local.php');
-		}
-		return $this->localMapHREF;
+		return $this->getHREF('map_local.php');
 	}
 	
 	public function getCurrentSectorHREF()
 	{
-		if(!isset($this->currentSectorHREF))
-		{
-			$this->currentSectorHREF = $this->getHREF('current_sector.php');
-		}
-		return $this->currentSectorHREF;
+		return $this->getHREF('current_sector.php');
 	}
 	
 	public function getScanSectorHREF()
 	{
-		if(!isset($this->scanSectorHREF))
-		{
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'sector_scan.php';
-			$container['target_sector'] = $this->getSectorID();
-			$this->scanSectorHREF = SmrSession::get_new_href($container);
-		}
-		return $this->scanSectorHREF;
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'sector_scan.php';
+		$container['target_sector'] = $this->getSectorID();
+		return SmrSession::get_new_href($container);
 	}
 }
 

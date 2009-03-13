@@ -39,6 +39,9 @@ class SmrPort
 	protected $cachedTime = TIME;
 	
 	protected $SQL;
+	
+	protected $hasChanged=false;
+	protected $isNew=false;
 
 	public static function &getPort($gameID,$sectorID,$forceUpdate = false)
 	{
@@ -49,8 +52,44 @@ class SmrPort
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}
+
+	public static function &removePort($gameID,$sectorID)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('DELETE FROM port WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		$db->query('DELETE FROM port_has_goods WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		$db->query('DELETE FROM player_visited_port WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		$db->query('DELETE FROM player_attacks_port WHERE game_id = '.$gameID.' AND ' .
+										'sector_id = '.$sectorID);
+		self::$CACHE_PORTS[$gameID][$sectorID] = null;
+		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
+	}
+
+	public static function &createPort($gameID,$sectorID)
+	{
+		if(!isset(self::$CACHE_PORTS[$gameID][$sectorID]))
+		{
+			$p = new SmrPort($gameID,$sectorID,true);
+			self::$CACHE_PORTS[$gameID][$sectorID] =& $p;
+		}
+		return self::$CACHE_PORTS[$gameID][$sectorID];
+	}
 	
-	protected function __construct($gameID,$sectorID)
+	public static function savePorts()
+	{
+		foreach(self::$CACHE_PORTS as &$gamePorts)
+		{
+			foreach($gamePorts as &$port)
+			{
+				$port->update();
+			}
+		}
+	}
+	
+	protected function __construct($gameID,$sectorID,$create=false)
 	{
 		$this->db = new SmrMySqlDatabase();
 		$this->db->query('SELECT * FROM port WHERE sector_id = '.$sectorID.' AND game_id = '.$gameID.' LIMIT 1');
@@ -70,8 +109,8 @@ class SmrPort
 			$this->upgrade = $this->db->getField('upgrade');
 			$this->experience = $this->db->getField('experience');
 			
-			
 			$this->SQL = 'sector_id = '.$this->sectorID.' AND game_id = '.$this->gameID;
+			
 			
 			$this->checkDefenses();
 			$this->getGoods();
@@ -79,7 +118,22 @@ class SmrPort
 		}
 		else
 		{
-			return;
+			$this->isNew = true;
+			$this->gameID = $gameID;
+			$this->sectorID = $sectorID;
+			$this->lastUpdate = 0;
+			$this->shields = 0;
+			$this->combatDrones = 0;
+			$this->armour = 0;
+			$this->reinforceTime = 0;
+			$this->attackStarted = 0;
+			$this->raceID = 0;
+			$this->level = 0;
+			$this->credits = 0;
+			$this->upgrade = 0;
+			$this->experience = 0;
+			
+			$this->SQL = 'sector_id = '.$this->sectorID.' AND game_id = '.$this->gameID;
 		}
 	}
 	
@@ -310,29 +364,34 @@ class SmrPort
 			throw new Exception('Cannot upgrade a cached port!');
 		while($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9)
 		{
-			$GOODS = Globals::getGoods();
-			
+			$this->doUpgrade();
 			$this->upgrade -= $this->getUpgradeRequirement();
 			$this->credits -= $this->getUpgradeRequirement();
-			shuffle($GOODS);
-			
-			$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
-			switch($this->level)
-			{
-				case 0:
-					for($i=0;$i<3;$i++) // Add 3 goods for upgrading to level 1
-					{
-						do
-						{
-							$newGood = array_shift($GOODS);
-						} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
-						if($count == 0)
-							break;
-						$this->addPortGood($newGood['ID'],$type);
-					}
-				break;
-				
-				case 1:
+			$this->db->query('UPDATE `port` SET `upgrade`='.$this->upgrade.',`credits`='.$this->credits.' WHERE '.$this->SQL.';');
+		}
+	}
+	
+	public function upgradeToLevel($level)
+	{
+		if($this->isCachedVersion())
+			throw new Exception('Cannot upgrade a cached port!');
+		while($this->level<$level)
+		{
+			$this->doUpgrade();
+		}
+	}
+	
+	protected function doUpgrade()
+	{
+		$GOODS = Globals::getGoods();
+		shuffle($GOODS);
+		
+		$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
+		switch($this->level)
+		{
+			case 0:
+				for($i=0;$i<3;$i++) // Add 3 goods for upgrading to level 1
+				{
 					do
 					{
 						$newGood = array_shift($GOODS);
@@ -340,60 +399,69 @@ class SmrPort
 					if($count == 0)
 						break;
 					$this->addPortGood($newGood['ID'],$type);
-				break;
-				
-				case 2:
-				case 3:
-				case 4:
-				case 5:
-					do
-					{
-						$newGood = array_shift($GOODS);
-					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=2) && ($count = count($GOODS))!=0 );
-					if($count == 0)
-						break;
-					$this->addPortGood($newGood['ID'],$type);
-				break;
-				
-				case 6:
-				case 7:
-					do
-					{
-						$newGood = array_shift($GOODS);
-					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
-					if($count == 0)
-						break;
-					$this->addPortGood($newGood['ID'],$type);
-				break;
-	
-				case 8: // Add 1 level 3, and 50% chance of level 4
+				}
+			break;
+			
+			case 1:
+				do
+				{
+					$newGood = array_shift($GOODS);
+				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->addPortGood($newGood['ID'],$type);
+			break;
+			
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+				do
+				{
+					$newGood = array_shift($GOODS);
+				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=2) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->addPortGood($newGood['ID'],$type);
+			break;
+			
+			case 6:
+			case 7:
+				do
+				{
+					$newGood = array_shift($GOODS);
+				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->addPortGood($newGood['ID'],$type);
+			break;
+
+			case 8: // Add 1 level 3, and 50% chance of level 4
+				do
+				{
+					$newGood = array_shift($GOODS);;
+				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
+				if($count == 0)
+					break;
+				$this->addPortGood($newGood['ID'],$type);
+		
+				if (mt_rand(1,100) <= 50) //50% chance to get tier 4 when upgrading to level 9
+				{
+					$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
 					do
 					{
 						$newGood = array_shift($GOODS);;
-					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
+					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=4) && ($count = count($GOODS))!=0 );
 					if($count == 0)
 						break;
 					$this->addPortGood($newGood['ID'],$type);
+				}
+			break;
 			
-					if (mt_rand(1,100) <= 50) //50% chance to get tier 4 when upgrading to level 9
-					{
-						$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
-						do
-						{
-							$newGood = array_shift($GOODS);;
-						} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=4) && ($count = count($GOODS))!=0 );
-						if($count == 0)
-							break;
-						$this->addPortGood($newGood['ID'],$type);
-					}
-				break;
-				
-				default: // We don't want to add goods.
-				break;
-			}
-			$this->increaseLevel(1);
-			$this->db->query('UPDATE `port` SET `upgrade`='.$this->upgrade.',`credits`='.$this->credits.' WHERE '.$this->SQL.';');
+			default: // We don't want to add goods.
+			break;
 		}
+		$this->increaseLevel(1);
 	}
 	
 	public function getUpgradeRequirement()
@@ -579,7 +647,7 @@ class SmrPort
 		if($this->shields == $shields)
 			return;
 		$this->shields=$shields;
-		$this->db->query('UPDATE port SET shields = '.$this->shields.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->hasChanged=true;
 	}
 	
 	public function setArmour($armour)
@@ -591,7 +659,7 @@ class SmrPort
 		if($this->armour == $armour)
 			return;
 		$this->armour=$armour;
-		$this->db->query('UPDATE port SET armour = '.$this->armour.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->hasChanged=true;
 	}
 	
 	public function setCDs($combatDrones)
@@ -603,7 +671,7 @@ class SmrPort
 		if($this->combatDrones == $combatDrones)
 			return;
 		$this->combatDrones=$combatDrones;
-		$this->db->query('UPDATE port SET combat_drones = '.$this->combatDrones.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->hasChanged=true;
 	}
 	
 	public function setCredits($credits)
@@ -613,7 +681,7 @@ class SmrPort
 		if($this->credits == $credits)
 			return;
 		$this->credits = $credits;
-		$this->db->query('UPDATE port SET credits = '.$this->credits.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->hasChanged=true;
 	}
 	
 	public function increaseCredits($credits)
@@ -630,7 +698,7 @@ class SmrPort
 		if($this->upgrade == $upgrade)
 			return;
 		$this->upgrade = $upgrade;
-		$this->db->query('UPDATE port SET upgrade = '.$this->upgrade.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->hasChanged=true;
 		$this->checkForUpgrade();
 	}
 	
@@ -648,7 +716,7 @@ class SmrPort
 		if($this->level == $level)
 			return;
 		$this->level = $level;
-		$this->db->query('UPDATE port SET level = '.$this->level.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->hasChanged=true;
 	}
 	
 	public function increaseLevel($level)
@@ -672,7 +740,7 @@ class SmrPort
 		if($this->experience == $experience)
 			return;
 		$this->experience = $experience;
-		$this->db->query('UPDATE port SET experience = '.$this->experience.' WHERE '.$this->SQL.' LIMIT 1');
+		$this->hasChanged=true;
 	}
 	
 	public function increaseExperience($experience)
@@ -695,6 +763,14 @@ class SmrPort
 	public function getRaceID()
 	{
 		return $this->raceID;
+	}
+	
+	public function setRaceID($raceID)
+	{
+		if($this->raceID == $raceID)
+			return;
+		$this->raceID = $raceID;
+		$this->hasChanged=true;
 	}
 	
 	public function getRaceName()
@@ -805,7 +881,15 @@ class SmrPort
 	
 	function updateAttackStarted()
 	{
+		$this->setAttackStarted(TIME);
+	}
+	
+	public function setAttackStarted($time)
+	{
+		if($this->attackStarted==$time)
+			return;
 		$this->attackStarted=TIME;
+		$this->hasChanged=true;
 	}
 	
 	public function isUnderAttack()
@@ -820,7 +904,7 @@ class SmrPort
 	
 	public function exists()
 	{
-		return $this->sectorID!=null;
+		return $this->isNew===false||$this->hasChanged===true;
 	}
 	
 	public function addCredits($credits,$portIsSelling=false)
@@ -999,19 +1083,47 @@ class SmrPort
 	
 	function update()
 	{
-		$this->db->query('UPDATE `port` SET `experience` = '.$this->getExperience().', ' .
-								'`last_update` = '.$this->getLastUpdate().', ' .
-								'`shields` = '.$this->getShields().', ' .
-								'`armour` = '.$this->getArmour().', ' .
-								'`combat_drones` = '.$this->getCDs().', ' .
-								'`level` = '.$this->getLevel().', ' .
-								'`credits` = '.$this->getCredits().', ' .
-								'`upgrade` = '.$this->getUpgrade().', ' .
-								'`reinforce_time` = '.$this->getReinforceTime().', ' .
-								'`attack_started` = '.$this->getAttackStarted().' ' .
-							'WHERE `game_id` = '.$this->getGameID().' AND ' .
-								'`sector_id` = '.$this->getSectorID().' LIMIT 1');
-
+		if(!$this->exists())
+			return;
+		if($this->hasChanged)
+		{
+			if($this->isNew===false)
+			{
+				$this->db->query('UPDATE port SET experience = '.$this->getExperience().', ' .
+								'last_update = '.$this->getLastUpdate().', ' .
+								'shields = '.$this->getShields().', ' .
+								'armour = '.$this->getArmour().', ' .
+								'combat_drones = '.$this->getCDs().', ' .
+								'level = '.$this->getLevel().', ' .
+								'credits = '.$this->getCredits().', ' .
+								'upgrade = '.$this->getUpgrade().', ' .
+								'reinforce_time = '.$this->getReinforceTime().', ' .
+								'attack_started = '.$this->getAttackStarted().' ' .
+								'race_id = '.$this->getRaceID().', ' .
+							'WHERE game_id = '.$this->getGameID().' AND ' .
+								'sector_id = '.$this->getSectorID().' LIMIT 1');
+			}
+			else
+			{
+				$this->db->query('INSERT INTO port (game_id,sector_id,experience,last_update,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)' .
+								'values' .
+								'('.$this->getGameID().
+								','.$this->getSectorID() .
+								','.$this->getExperience().
+								','.$this->getLastUpdate().
+								','.$this->getShields().
+								','.$this->getArmour().
+								','.$this->getCDs().
+								','.$this->getLevel().
+								','.$this->getCredits().
+								','.$this->getUpgrade().
+								','.$this->getReinforceTime().
+								','.$this->getAttackStarted().
+								','.$this->getRaceID().')');
+				$this->isNew=false;
+			}
+			$this->hasChanged=false;
+		}
 		if(isset($this->goods))
 			foreach ($this->goods['All Goods'] as $id => $good)
 				$this->db->query('UPDATE port_has_goods SET amount = '.$good['Amount'].' ' .

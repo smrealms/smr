@@ -11,7 +11,7 @@ if ($db->nextRecord()) {
 	$end_date	= $db->getField('end_date');
 
 	$PHP_OUTPUT.=('Are you sure you want to delete <i>'.$name.'?</i><br />');
-	if (date('Y-m-d') < $end_date)
+	if (TIME < $end_date)
 		$PHP_OUTPUT.=('<span style="color:red;"><b>WARNING!</b> This game hasn\'t ended yet!</span><br />');
 	$PHP_OUTPUT.=('<br />');
 

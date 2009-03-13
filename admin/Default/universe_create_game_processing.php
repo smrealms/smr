@@ -9,8 +9,10 @@ if ($action == 'Create >>') {
 	$game_description = $_REQUEST['game_description'];
 	if (strlen($game_description) > 255)
 		create_error('Not more than 255 characters in game description!');
-	$start_date = $_REQUEST['start_date'];
-	$end_date = $_REQUEST['end_date'];
+	list($day,$month,$year) = explode("/",$_POST['start_date']);
+	$start_date = mktime(0,0,0,$month,$day,$year);
+	list($day,$month,$year) = explode("/",$_POST['end_date']);
+	$end_date = mktime(0,0,0,$month,$day,$year);
 	$game_name = $_REQUEST['game_name'];
 	$max_player = $_REQUEST['max_player'];
 	$game_type = $_REQUEST['game_type'];
