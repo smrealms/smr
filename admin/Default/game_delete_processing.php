@@ -100,6 +100,7 @@ if ($action == 'Yes') {
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_paper WHERE game_id = '.$game_id;
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_paper_content WHERE game_id = '.$game_id;
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM galactic_post_writer WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'DELETE FROM game_galaxy WHERE game_id = '.$game_id;
 
 	if ($save) {
 
