@@ -409,14 +409,14 @@ class SmrSector
 					$neighbour-=$galaxy->getSize();
 			break;
 			case 'Left':
-				$neighbour += 1;
-				if(($neighbour-$galaxy->getStartSector())%$galaxy->getWidth()==0)
-					$neighbour-=$galaxy->getWidth();
-			break;
-			case 'Right':
 				$neighbour -= 1;
 				if((1+$neighbour-$galaxy->getStartSector())%$galaxy->getWidth()==0)
 					$neighbour+=$galaxy->getWidth();
+			break;
+			case 'Right':
+				$neighbour += 1;
+				if(($neighbour-$galaxy->getStartSector())%$galaxy->getWidth()==0)
+					$neighbour-=$galaxy->getWidth();
 			break;
 			default:
 				throw new Exception($dir.': is not a valid direction');
@@ -465,12 +465,12 @@ class SmrSector
 	/**
 	 * Cannot be used for Warps
 	 */
-	public function setLinkSector($name,SmrSector &$linkSector)
+	public function setLinkSector($dir,SmrSector &$linkSector)
 	{
-		if($this->links[$name]==$linkSector->getSectorID()||$linkSector->equals($this))
+		if($this->links[$dir]==$linkSector->getSectorID()||$linkSector->equals($this))
 			return;
-		$this->setLink($name,$linkSector->getSectorID());
-		$linkSector->setLink($name,$this->getSectorID());
+		$this->setLink($dir,$linkSector->getSectorID());
+		$linkSector->setLink(self::oppositeDir($dir),$this->getSectorID());
 		$this->hasChanged=true;
 	}
 	public function enableLink($dir)
@@ -480,7 +480,19 @@ class SmrSector
 	public function disableLink($dir)
 	{
 		$this->setLink($dir,0);
-		$this->getNeighbourSector($dir)->setLink($dir,0);
+		$this->getNeighbourSector($dir)->setLink(self::oppositeDir($dir),0);
+	}
+	
+	protected static function oppositeDir($dir)
+	{
+		switch($dir)
+		{
+			case 'Up': return 'Down';
+			case 'Down': return 'Up';
+			case 'Left': return 'Right';
+			case 'Right': return 'Left';
+			case 'Warp': return 'Warp';
+		}
 	}
 	
 	public function getLinkUp()
