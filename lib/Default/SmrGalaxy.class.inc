@@ -242,6 +242,7 @@ class SmrGalaxy
 		{
 			$sector =& SmrSector::createSector($this->gameID,$sectorID);
 			$sector->setGalaxyID($this->getGalaxyID());
+			$sector->update(); //Have to save sectors after creating them
 			$sectorID++;
 		}
 		
