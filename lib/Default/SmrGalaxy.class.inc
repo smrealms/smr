@@ -250,12 +250,6 @@ class SmrGalaxy
 		{
 			$problem = false;
 		
-			$galSectors =& SmrSector::getGalaxySectors($this->getGameID(),$this->getGalaxyID());
-			foreach($galSectors as &$galSector)
-			{
-				foreach($linkDirs as $linkDir)
-					$galSector->disableLink($linkDir);
-			} unset($galSector);
 			$sectorID = $this->getStartSector();
 			for ($row = 1; $row <= $this->getHeight(); $row++)
 			{
@@ -265,9 +259,9 @@ class SmrGalaxy
 					foreach($linkDirs as $linkDir)
 					{
 						if (mt_rand(1,100) <= $connectivity)
-						{
 							$sector->enableLink($linkDir);
-						}
+						else
+							$sector->disableLink($linkDir);
 					}
 					$sectorID++;
 				}
