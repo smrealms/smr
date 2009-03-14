@@ -30,7 +30,7 @@ create_echo_form($link);
 		<td class="left"><input type="text" size="32" name="game_end" value="<?php echo date(DATE_DATE_SHORT,$DefaultEnd) ?>"></td></tr>
 	<tr>
 		<td class="right">Credits Required</td>
-		<td class="left"><input type="text" size="5" name="creds_needed" value="12"></td>
+		<td class="left"><input type="text" size="5" name="creds_needed" value="0"></td>
 	</tr>
 	<tr>
 		<td class="right">Game Type</td>
