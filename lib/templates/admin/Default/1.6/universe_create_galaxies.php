@@ -26,7 +26,7 @@
 					} ?>
 					</select>
 				</td>
-				<td class="center"><input size="3" type="text" value="5" name="forces<?php echo $i; ?>"></td>
+				<td class="center"><input size="3" type="text" value="120" name="forces<?php echo $i; ?>"></td>
 			</tr><?php
 		} ?>
 		<tr><td class="center" colspan="5"><input type="submit" value="Save Galaxies" name="submit"></td>
