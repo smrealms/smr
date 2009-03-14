@@ -23,8 +23,8 @@
 		</tr>
 		<tr>
 			<td width="40%"><?php echo $Game['Name'] ?> (<?php echo $Game['ID'] ?>)</td>
-			<td><?php echo $Game['StartDate'] ?></td>
-			<td><?php echo $Game['EndDate'] ?></td>
+			<td><?php echo date(DATE_DATE_SHORT,$Game['StartDate']); ?></td>
+			<td><?php echo date(DATE_DATE_SHORT,$Game['EndDate']); ?></td>
 			<td><?php echo $Game['MaxPlayers'] ?></td>
 			<td><?php echo $Game['Type'] ?></td>
 			<td><?php echo $Game['Speed'] ?></td>

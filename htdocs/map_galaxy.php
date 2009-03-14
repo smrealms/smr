@@ -15,6 +15,7 @@ require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('SmrSession.class.inc'));
+require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 // avoid site caching
 header('Expires: Mon, 03 Nov 1976 16:10:00 GMT');
@@ -37,6 +38,20 @@ if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {
 	exit;
 
 }
+
+if(isset($_GET['galaxy_id']))
+{
+	try
+	{
+		$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$_GET['galaxy_id']);
+	}
+	catch(Exception $e)
+	{
+		header('location: ' . URL . '/error.php?msg=Invalid galaxy id');
+		exit;
+	}
+}
+
 $player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 
 // create account object
@@ -69,30 +84,28 @@ echo('<body>');
 
 echo('<h1>VIEW GALAXY</h1>');
 
-$galaxy_id = $_GET['galaxy_id'];
-
-if (!isset($galaxy_id)) {
-	$galaxy_id = (int)$galaxy_id;
+if (!isset($_GET['galaxy_id']))
+{
 	
 	$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 	echo('<p>Please choose a galaxy:</p>');
 	echo('<ul>');
-
+	
 	$db->query('SELECT * FROM sector NATURAL JOIN galaxy ' .
 			   'WHERE game_id = '.$player->getGameID().' ' .
 			   'GROUP BY sector.galaxy_id ' .
 			   'ORDER BY sector.sector_id');
 	while($db->nextRecord()) {
 
-		$galaxy_id		= $db->getField('galaxy_id');
+		$galaxyID		= $db->getField('galaxy_id');
 		$galaxy_name	= $db->getField('galaxy_name');
 
-		if ($galaxy_id == $sector->getGalaxyID())
+		if ($galaxyID == $sector->getGalaxyID())
 			$galaxy_name = '<b>' . $galaxy_name . '</b>';
 
 		echo('<li>');
-		echo('<a href="'.URL.'/map_galaxy.php?galaxy_id='.$galaxy_id.'">'.$galaxy_name.'</a>');
+		echo('<a href="'.URL.'/map_galaxy.php?galaxy_id='.$galaxyID.'">'.$galaxy_name.'</a>');
 		echo('</li>');
 
 	}
@@ -105,121 +118,47 @@ if (!isset($galaxy_id)) {
 
 }
 
-$galaxy_id = (int)$galaxy_id;
+$galaxyID = (int)$_GET['galaxy_id'];
+$ship =& $player->getShip();
 
-require_once(get_file_loc('SmrShip.class.inc'));
-$ship =& $player->getShip(SmrSession::$game_id,SmrSession::$account_id);
-
-$db->query('SELECT
-galaxy.galaxy_id as galaxy_id,
-galaxy.galaxy_name as galaxy_name
-FROM galaxy
-WHERE galaxy.galaxy_id = '.$galaxy_id.'
-LIMIT 1');
-
-$db->nextRecord();
-
-$galaxy_name = $db->getField('galaxy_name');
-$galaxy_id = $db->getField('galaxy_id');
-
-$template->assign('GalaxyName',$galaxy_name);
-
-$template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
-
-$template->assign('PlayerHasScanner',$ship->hasScanner());
 $template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID()));
 
-$db->query('
-SELECT
-MIN(sector_id),
-MAX(sector_id),
-COUNT(*)
-FROM sector
-WHERE galaxy_id=' . $galaxy_id . '
-AND game_id=' . SmrSession::$game_id);
 
-$db->nextRecord();
+$template->assign('GalaxyName',$galaxy->getName());
 
-global $col,$rows,$size,$offset;
-$size = $db->getField('COUNT(*)');
-$col = $rows = sqrt($size);
-$dist = $size; //Much bigger than actual map, so will show all
-$galaxy_top_left = $db->getField('MIN(sector_id)');
-$galaxy_bottom_right = $db->getField('MAX(sector_id)');
-$offset = $db->getField('MIN(sector_id)') -1;
+$topLeft =& $player->getSector();
 
-$span = 1 + ($dist * 2);
-//echo $player->getZoom();
-
-$upLeft = $dist;
-
-$top_left = $player->getSectorID();
-
-if($top_left>$galaxy_bottom_right || $top_left<$galaxy_top_left)
-	$top_left = $galaxy_top_left;
+if(!$galaxy->contains($topLeft->getSectorID()))
+	$topLeft =& SmrSector::getSector($player->getGameID(),$galaxy->getStartSector());
 else
 {
 	//go left then up
-	for ($i=1;$i<=$upLeft&&$i<=$col/2;$i++)
-		$top_left = get_real_left($top_left);
-	for ($i=1;$i<=$upLeft&&$i<=$rows/2;$i++)
-		$top_left = get_real_up($top_left);
+	for ($i=0;$i<$galaxy->getWidth()/2;$i++)
+		$topLeft =& $topLeft->getNeighbourSector('Left');
+	for ($i=0;$i<$galaxy->getHeight()/2;$i++)
+		$topLeft =& $topLeft->getNeighbourSector('Up');
 }
 
 $mapSectors = array();
-$leftMostSec = $top_left;
-for ($i=1;$i<=$span&&$i<=$rows;$i++)
+$leftMostSec =& $topLeft;
+for ($i=0;$i<$galaxy->getHeight();$i++)
 {
 	$mapSectors[$i] = array();
 	//new row
-	if ($i!=1) $leftMostSec = get_real_down($leftMostSec);
+	if ($i!=0) $leftMostSec =& $leftMostSec->getNeighbourSector('Down');
 	
 	//get left most sector for this row
-	$this_sec = $leftMostSec;
+	$thisSec =& $leftMostSec;
 	//iterate through the columns
-	for ($j=1;$j<=$span&&$j<=$col;$j++)
+	for ($j=0;$j<$galaxy->getWidth();$j++)
 	{
 		//new sector
-		if ($j!=1) $this_sec = get_real_right($this_sec);
-		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec);
+		if ($j!=0) $thisSec =& $thisSec->getNeighbourSector('Right');
+		$mapSectors[$i][$j] =& $thisSec;
 	}
 }
 $template->assignByRef('MapSectors',$mapSectors);
 $template->assignByRef('ThisShip',$ship);
 $template->assignByRef('ThisPlayer',$player);
 $template->display('GalaxyMap.inc');
-
-function get_real_up($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if ($sector_check <= $col) $up = $sector + $size - $col;
-	else $up = $sector - $col;
-	return $up;
-}
-function get_real_down($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if ($sector_check >= ($size - $col + 1)) $down = $sector - $size + $col;
-	else $down = $sector + $col;
-	return $down;
-}
-function get_real_left($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if (($sector_check - 1) % $col == 0) $left = $sector + $col - 1;
-	else $left = $sector - 1;
-	return $left;
-}
-function get_real_right($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if ($sector_check % $col == 0) $right = $sector - $col + 1;
-	else $right = $sector + 1;
-	return $right;
-}
-
 ?>

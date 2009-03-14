@@ -135,6 +135,11 @@ abstract class AbstractSmrPlayer
 		return $this->sectorID;
 	}
 	
+	public function &getSector()
+	{
+		return SmrSector::getSector($this->getGameID(),$this->getSectorID());
+	}
+	
 	public function setSectorID($sectorID)
 	{
 		$this->lastSectorID = $this->getSectorID();
