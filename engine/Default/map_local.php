@@ -37,15 +37,6 @@ AND game_id=' . SmrSession::$game_id);
 
 $db->nextRecord();
 
-global $col,$rows,$size,$offset;
-$size = $db->getField('COUNT(*)');
-$col = $rows = sqrt($size);
-//echo $db->getField('COUNT(*)');
-$top_left = $db->getField('MIN(sector_id)');
-$offset = $top_left -1;
-//$current_y = floor(($player->getSectorID() - $start)/$width);
-//$current_x = ($player->getSectorID() - $start) % $width;
-
 $zoomOn = false;
 if(isset($var['Dir']))
 {
@@ -75,74 +66,35 @@ $container['rid'] = 'zoom_up';
 $template->assign('ZoomUpLink',SmrSession::get_new_href($container));
 
 $span = 1 + ($dist * 2);
-//echo $player->getZoom();
 
-$upLeft = $dist;
+$topLeft =& $player->getSector();
+$galaxy =& $topLeft->getGalaxy();
 
 //figure out what should be the top left and bottom right
-//$col = $GAL_NAMES[$GAL_ID]['Length'];
-//$rows = $GAL_NAMES[$GAL_ID]['Height'];
-//$size = $col * $rows;
-//$sectorKeys=array_keys($SECTOR);
-//$first_sec = array_shift($sectorKeys);
-//$offset = $first_sec - 1;
-$top_left = $player->getSectorID();
 //go left then up
-for ($i=1;$i<=$upLeft&&$i<=$col/2;$i++)
-	$top_left = get_real_left($top_left);
-for ($i=1;$i<=$upLeft&&$i<=$rows/2;$i++)
-	$top_left = get_real_up($top_left);
+for ($i=0;$i<$dist&&$i<$galaxy->getWidth()/2;$i++)
+	$topLeft =& $topLeft->getNeighbourSector('Left');
+for ($i=0;$i<$dist&&$i<$galaxy->getHeight()/2;$i++)
+	$topLeft =& $topLeft->getNeighbourSector('Up');
 
 $mapSectors = array();
-$leftMostSec = $top_left;
-for ($i=1;$i<=$span&&$i<=$rows;$i++)
+$leftMostSec =& $topLeft;
+for ($i=0;$i<$span&&$i<$galaxy->getHeight();$i++)
 {
 	$mapSectors[$i] = array();
 	//new row
-	if ($i!=1) $leftMostSec = get_real_down($leftMostSec);
+	if ($i!=0) $leftMostSec =& $leftMostSec->getNeighbourSector('Down');
 	
 	//get left most sector for this row
-	$this_sec = $leftMostSec;
+	$thisSec =& $leftMostSec;
 	//iterate through the columns
-	for ($j=1;$j<=$span&&$j<=$col;$j++)
+	for ($j=0;$j<$span&&$j<$galaxy->getWidth();$j++)
 	{
 		//new sector
-		if ($j!=1) $this_sec = get_real_right($this_sec);
-		$mapSectors[$i][$j] =& SmrSector::getSector(SmrSession::$game_id,$this_sec);
+		if ($j!=0) $thisSec =& $thisSec->getNeighbourSector('Right');
+		$mapSectors[$i][$j] =& $thisSec;
 	}
 }
 $template->assignByRef('MapSectors',$mapSectors);
 
-function get_real_up($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if ($sector_check <= $col) $up = $sector + $size - $col;
-	else $up = $sector - $col;
-	return $up;
-}
-function get_real_down($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if ($sector_check >= ($size - $col + 1)) $down = $sector - $size + $col;
-	else $down = $sector + $col;
-	return $down;
-}
-function get_real_left($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if (($sector_check - 1) % $col == 0) $left = $sector + $col - 1;
-	else $left = $sector - 1;
-	return $left;
-}
-function get_real_right($sector)
-{
-	global $offset, $size, $col, $rows;
-	$sector_check = $sector - $offset;
-	if ($sector_check % $col == 0) $right = ($sector - $col) + 1;
-	else $right = $sector + 1;
-	return $right;
-}
 ?>
