@@ -31,7 +31,7 @@ class SmrSector
 		if($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $gameID .' AND galaxy_id='.$galaxyID);
+			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $gameID .' AND galaxy_id='.$galaxyID.' ORDER BY sector_id');
 			$sectors = array();
 			while($db->nextRecord())
 			{
