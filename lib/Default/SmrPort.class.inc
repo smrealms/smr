@@ -1099,8 +1099,8 @@ class SmrPort
 								'upgrade = '.$this->getUpgrade().', ' .
 								'reinforce_time = '.$this->getReinforceTime().', ' .
 								'attack_started = '.$this->getAttackStarted().', ' .
-								'race_id = '.$this->getRaceID().', ' .
-							'WHERE game_id = '.$this->getGameID().' AND ' .
+								'race_id = '.$this->getRaceID().
+							' WHERE game_id = '.$this->getGameID().' AND ' .
 								'sector_id = '.$this->getSectorID().' LIMIT 1');
 			}
 			else
