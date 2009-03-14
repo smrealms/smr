@@ -31,7 +31,7 @@ foreach ($galaxies as &$eachGalaxy)
 {
 	$PHP_OUTPUT.= '<tr><td class="right">' . $eachGalaxy->getName() . '</td><td class="left">';
 	$PHP_OUTPUT.= '<input type="text" value="';
-	if (isset($warps[$gal_id])) $PHP_OUTPUT.= $warps[$eachGalaxy->getGalaxyID()];
+	if (isset($warps[$eachGalaxy->getGalaxyID()])) $PHP_OUTPUT.= $warps[$eachGalaxy->getGalaxyID()];
 	else $PHP_OUTPUT.= '0';
 	$PHP_OUTPUT.= '" size="5" name="warp' . $eachGalaxy->getGalaxyID() . '"></td></tr>';
 }
