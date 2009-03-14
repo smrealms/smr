@@ -113,6 +113,8 @@ class SmrSector
 		{
 			$this->gameID		= (int)$gameID;
 			$this->sectorID		= (int)$sectorID;
+			$this->battles		= 0;
+			$this->links = array();
 			$this->isNew		= true;
 			return;
 		}
@@ -398,22 +400,22 @@ class SmrSector
 		{
 			case 'Up':
 				$neighbour -= $galaxy->getWidth();
-				if($this->getSectorID()<$galaxy->getStartSector())
+				if($neighbour<$galaxy->getStartSector())
 					$neighbour+=$galaxy->getSize();
 			break;
 			case 'Down':
 				$neighbour += $galaxy->getWidth();
-				if($this->getSectorID()>$galaxy->getEndSector())
+				if($neighbour>$galaxy->getEndSector())
 					$neighbour-=$galaxy->getSize();
 			break;
 			case 'Left':
 				$neighbour += 1;
-				if(($this->getSectorID()-$galaxy->getStartSector())%$galaxy->getWidth()==0)
+				if(($neighbour-$galaxy->getStartSector())%$galaxy->getWidth()==0)
 					$neighbour-=$galaxy->getWidth();
 			break;
 			case 'Right':
 				$neighbour -= 1;
-				if((1+$this->getSectorID()-$galaxy->getStartSector())%$galaxy->getWidth()==0)
+				if((1+$neighbour-$galaxy->getStartSector())%$galaxy->getWidth()==0)
 					$neighbour+=$galaxy->getWidth();
 			break;
 			default:
@@ -465,7 +467,7 @@ class SmrSector
 	 */
 	public function setLinkSector($name,SmrSector &$linkSector)
 	{
-		if($this->links[$name]==$linkSector->getSectorID()||$linkSector==$this->getSectorID())
+		if($this->links[$name]==$linkSector->getSectorID()||$linkSector->equals($this))
 			return;
 		$this->setLink($name,$linkSector->getSectorID());
 		$linkSector->setLink($name,$this->getSectorID());
