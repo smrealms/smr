@@ -5,7 +5,7 @@
 	$container=array();
 	$container['url'] = '1.6/universe_create_save_processing.php';
 	$container['body'] = '1.6/universe_create_sectors.php';
-	$container['num_gals'] = $_POST['num_gals'];
+	$container['num_gals'] = $var['num_gals'];
 	$container['game_id'] = $var['game_id'];
 	
 	$template->assign('CreateGalaxiesHREF',SmrSession::get_new_href($container));
@@ -13,7 +13,7 @@
 	//Galaxy Creation area
 	$defaultNames = array(0,'Alskant','Creonti','Human','Ik\'Thorne','Nijarin','Salvene','Thevian','WQ Human','Omar','Salzik','Manton','Livstar','Teryllia','Doriath','Anconus','Valheru','Sardine','Clacher','Tangeria');
 	$template->assign('DefaultNames',$defaultNames);
-	$template->assign('NumGals',$_POST['num_gals']);
+	$template->assign('NumGals',$var['num_gals']);
 	$template->assign('GalaxyTypes',array('Racial','Neutral','Planet'));
 //}
 //else
