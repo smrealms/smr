@@ -54,6 +54,18 @@ for ($i=0;$i < $row;$i++)
 		$this_sec = $col * $i + $j + $offset;
 		$title = '';
 		$PHP_OUTPUT.= '<td class="center';
+		if($galSector->getSectorID()==17||$galSector->getSectorID()==18)
+		{
+			var_dump($galSector->getLinks());
+			var_dump($galSector->getNeighbourID('Up'));
+		echo '<br />';
+			var_dump($galSector->getNeighbourID('Down'));
+		echo '<br />';
+			var_dump($galSector->getNeighbourID('Left'));
+		echo '<br />';
+			var_dump($galSector->getNeighbourID('Right'));
+		echo '<br />';
+		}
 		if (!$galSector->hasLinkLeft()) $PHP_OUTPUT.= ' border_left';
 		if (!$galSector->hasLinkDown()) $PHP_OUTPUT.= ' border_bottom';
 		if (!$galSector->hasLinkUp()) $PHP_OUTPUT.= ' border_top';
