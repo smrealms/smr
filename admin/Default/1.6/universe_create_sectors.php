@@ -149,13 +149,13 @@ if ($var['gal_on'] < count($galaxies))
 	$container['gal_on']++;
 	$PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Next Galaxy</a><br />';
 }
-else
-{
-	$warning = TRUE;
-	$PHP_OUTPUT.= '<input type="hidden" name="num_sectors" value="'.$this_sec.'">';
-	$PHP_OUTPUT.= '<input type="submit" name="submit" value="Create Universe"><br /><br />';
-	$PHP_OUTPUT.= '<input type="submit" name="submit" value="Create Admins and NPCs">';
-}
+//else
+//{
+//	$warning = TRUE;
+//	$PHP_OUTPUT.= '<input type="hidden" name="num_sectors" value="'.$this_sec.'">';
+//	$PHP_OUTPUT.= '<input type="submit" name="submit" value="Create Universe"><br /><br />';
+//	$PHP_OUTPUT.= '<input type="submit" name="submit" value="Create Admins and NPCs">';
+//}
 $PHP_OUTPUT.= '</td><td class="center vert_cent" width="33%">';
 $container = $var;
 $container['url'] = '1.6/universe_create_save_processing.php';
