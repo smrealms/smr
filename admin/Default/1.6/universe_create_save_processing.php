@@ -20,7 +20,7 @@ if ($_REQUEST['submit']=='Create Game')
 	$start = mktime(0,0,0,$month,$day,$year);
 	list($day,$month,$year) = explode("/",$_POST['game_end']);
 	$end = mktime(0,0,0,$month,$day,$year);
-	$db->query('INSERT INTO game (game_id, game_name, game_description, max_players, start_date, end_date) VALUES (' . $newID . ', ' . $db->escapeString($_POST['game_name']) . ', ' . $db->escapeString($_POST['desc']) . ', ' . $_POST['max_players'] . ', ' . $start . ', ' . $end . ')');
+	$db->query('INSERT INTO game (game_id, game_name, game_description, game_type, max_players, start_date, end_date) VALUES (' . $newID . ', ' . $db->escapeString($_POST['game_name']) . ', ' . $db->escapeString($_POST['desc']) . ', ' . $db->escapeString($_POST['game_type']) . ', ' . $_POST['max_players'] . ', ' . $start . ', ' . $end . ')');
 	$var['game_id']=$newID;
 	
 	//insert race relations
