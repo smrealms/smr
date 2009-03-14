@@ -5,6 +5,8 @@ require_once(get_file_loc('SmrLocation.class.inc'));
 if ($_REQUEST['submit']=='Create Game')
 {
 	$var['num_gals'] = $_POST['num_gals'];
+	if(!is_numeric($_POST['max_players']))
+		create_error('Max players must be a number.');
 	//first create the game
 	$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_POST['game_name']).' LIMIT 1');
 	if($db->nextRecord())
@@ -18,7 +20,7 @@ if ($_REQUEST['submit']=='Create Game')
 	$start = mktime(0,0,0,$month,$day,$year);
 	list($day,$month,$year) = explode("/",$_POST['game_end']);
 	$end = mktime(0,0,0,$month,$day,$year);
-	$db->query('INSERT INTO game (game_id, game_name, start_date, end_date) VALUES (' . $newID . ', ' . $db->escapeString($_POST['game_name']) . ', ' . $start . ', ' . $end . ')');
+	$db->query('INSERT INTO game (game_id, game_name, game_description, max_players, start_date, end_date) VALUES (' . $newID . ', ' . $db->escapeString($_POST['game_name']) . ', ' . $db->escapeString($_POST['desc']) . ', ' . $_POST['max_players'] . ', ' . $start . ', ' . $end . ')');
 	$var['game_id']=$newID;
 	
 	//insert race relations

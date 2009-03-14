@@ -18,6 +18,10 @@ create_echo_form($link);
 		<td class="left"><textarea size="6" name="desc" value=""></textarea></td>
 	</tr>
 	<tr>
+		<td class="right">Max Players</td>
+		<td class="left"><input type="text" size="6" name="max_players" value="5000"></textarea></td>
+	</tr>
+	<tr>
 		<td class="right">Number of Galaxies</td>
 		<td class="left"><input type="text" size="5" name="num_gals" value="12"></td>
 	</tr>
