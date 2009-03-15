@@ -6,6 +6,7 @@ $curr_account =& SmrAccount::getAccount($account_id);
 // request
 $donation = $_REQUEST['donation'];
 $smr_credit = $_REQUEST['smr_credit'];
+$reopenType = $_REQUEST['reopen_type'];
 $choise = $_REQUEST['choise'];
 $reason_pre_select = $_REQUEST['reason_pre_select'];
 $reason_msg = $_REQUEST['reason_msg'];
@@ -14,6 +15,7 @@ $logging_status = $_REQUEST['logging_status'];
 $except = $_REQUEST['exception_add'];
 $names = $_REQUEST['player_name'];
 $points = intval($_REQUEST['points']);
+$mailBan = intval($_REQUEST['mailban']);
 $delete = $_REQUEST['delete'];
 
 $msg = 'You ';
@@ -53,51 +55,62 @@ if(!empty($_REQUEST['grant_credits']))
 		$msg .= 'and ';
 	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
 }
-
-if ($choise == 'pre_select' && $points > 0)
+if ($choise == 'reopen')
 {
-	if(($bannedDays = $curr_account->addPoints($points,$account,$reason_pre_select,$_REQUEST['suspicion']))!==false)
+	if($reopenType=='account')
 	{
-		if ($bannedDays > 0)
-			$expire_msg = 'for '.$bannedDays.' days';
-		else
-			$expire_msg = 'forever!';
+		//do we have points
+		$curr_account->removePoints($points,TIME);
+		$db->query('DELETE FROM account_is_closed ' .
+				   'WHERE account_id = '.$account_id);
+	
+		$db->query('INSERT INTO account_has_closing_history ' .
+				   '(account_id, time, admin_id, action) ' .
+				   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Opened\')');
+	
 		if (strlen($msg) > 9)
 			$msg .= 'and ';
-		$msg .= 'closed ';
+		$msg .= 'reopened ';
+	}
+	else if($reopenType=='mail')
+	{
+		$account->setMailBanned(TIME);
+		if (strlen($msg) > 9)
+			$msg .= 'and ';
+		$msg .= 'removed mailban ';
 	}
 }
-elseif ($choise == 'individual' && $points > 0)
+else if ($points > 0 || $mailBan > 0)
 {
-	$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
-	$reason_id = $db->getInsertID();
+	if ($choise == 'individual')
+	{
+		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
+		$reason_id = $db->getInsertID();
+	}
+	else
+	{
+		$reason_id = $reason_pre_select;
+	}
+	$expire_msg='';
+	if($mailBan > 0)
+	{
+		$curr_account->setMailBanned(TIME+$mailBan*86400);
+		$expire_msg .= 'for '.$mailBan.' days (mail)';
+		if (strlen($msg) > 9)
+			$msg .= 'and ';
+		$msg .= 'mail banned ';
+	}
 	
-	if(($bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']))!==false)
+	if($points > 0 && ($bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']))!==false)
 	{
 		if ($bannedDays > 0)
-			$expire_msg = 'for '.$bannedDays.' days';
+			$expire_msg .= 'for '.$bannedDays.' days(account)';
 		else
-			$expire_msg = 'forever!';
+			$expire_msg .= 'forever!(account)';
 		if (strlen($msg) > 9)
 			$msg .= 'and ';
 		$msg .= 'closed ';
 	}
-
-} elseif ($choise == 'reopen') {
-
-	//do we have points
-	$curr_account->removePoints($points,TIME);
-	$db->query('DELETE FROM account_is_closed ' .
-			   'WHERE account_id = '.$account_id);
-
-	$db->query('INSERT INTO account_has_closing_history ' .
-			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Opened\')');
-
-	if (strlen($msg) > 9)
-		$msg .= 'and ';
-	$msg .= 'reopened ';
-
 }
 
 if ($veteran_status != $curr_account->veteran) {
@@ -210,13 +223,10 @@ if (!empty($delete)) {
 }
 
 //get his login name
-$db->query('SELECT * FROM account WHERE account_id = '.$account_id);
-if ($db->nextRecord())
-	$login = $db->getField('login');
-
 $container = create_container('skeleton.php', 'account_edit.php');
-$container['msg'] = $msg.' for the account of '.$login.' '.$expire_msg;
+$container['msg'] = $msg.' for the account of '.$curr_account->getLogin().' '.$expire_msg;
 
+$curr_account->update();
 forward($container);
 
 ?>
