@@ -9,8 +9,9 @@ $race_id	= $var["race_id"];
 //(22,25,23,75,43,55,61,24,21,38,67,33,49)
 // Top racials minus ATM + top UG/FED are restricted 
 
-if ($account->get_rank() < FLEDGLING && $account->veteran == "FALSE" && in_array($var["ship_id"], array(22,25,75,43,55,61,38,67,49)))
-	create_error("You can't buy that ship while still ranked as Newbie or Beginner!");
+// remove newbie gals
+//if ($account->get_rank() < FLEDGLING && $account->veteran == "FALSE" && in_array($var["ship_id"], array(22,25,75,43,55,61,38,67,49)))
+//	create_error("You can't buy that ship while still ranked as Newbie or Beginner!");
 
 if ($var["buyer_restriction"] == 2 && $player->alignment > -100)
 	create_error("You can't buy smuggler ships!");
