@@ -66,6 +66,7 @@ if ($action == 'Yes') {
 	// these table is nothing worth without the players
 	//$SmrMySqlDatabase_sql[] = 'DELETE FROM account_has_logs WHERE game_id = '.$game_id;
 
+	$SmrMySqlDatabase_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = '.$game_id;
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance WHERE game_id = '.$game_id;
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance_bank_transactions WHERE game_id = '.$game_id;
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM alliance_has_roles WHERE game_id = '.$game_id;
@@ -343,6 +344,7 @@ if ($action == 'Yes') {
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM ship_is_cloaked WHERE game_id = '.$game_id;
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM warp WHERE game_id = '.$game_id;
 	$SmrMySqlDatabase_sql[] = 'DELETE FROM game WHERE game_id = '.$game_id;
+	$SmrMySqlDatabase_sql[] = 'UPDATE active_session SET game_id = 0 WHERE game_id = '.$game_id;
 
 	// now do the sql stuff
 	foreach($SmrMySqlDatabase_sql as $sql) {
