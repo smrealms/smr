@@ -60,9 +60,7 @@ $PHP_OUTPUT.=('<td>'.$have.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 //ban points go here
-$db->query('SELECT * FROM account_has_points WHERE account_id = '.SmrSession::$account_id);
-if ($db->nextRecord()) $points = $db->getField('points');
-else $points = 0;
+$points = $account->getPoints();
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Ban Points:</td>');
 $PHP_OUTPUT.=('<td>'.$points.'</td>');
