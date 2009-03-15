@@ -1912,6 +1912,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function sendGlobalMessage($message, $canBeIgnored = true)
 	{
+		if($canBeIgnored)
+		{
+			if($this->getAccount()->isMailBanned())
+				create_error('You are currently banned from sending messages');
+		}
 		// send to all online player
 		$allowed = TIME - 600;
 		$db = new SmrMySqlDatabase();
@@ -1926,7 +1931,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->sendMessageToBox(BOX_GLOBALS,$message);
 		while ($db->nextRecord())
 		{
-			$this->sendMessage($db->getField('account_id'), MSG_GLOBAL, $message);
+			$this->sendMessage($db->getField('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
 		}
 	}
 	
@@ -1935,6 +1940,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		//get expire time
 		if($canBeIgnored)
 		{
+			if($this->getAccount()->isMailBanned())
+				create_error('You are currently banned from sending messages');
 			// Don't send messages to players ignoring us
 			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiverID . ' AND blacklisted_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
 			if($this->db->nextRecord()) {

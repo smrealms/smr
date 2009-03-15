@@ -41,6 +41,7 @@ class SmrAccount
 	protected $passwordReset;
 	protected $points;
 	protected $useAJAX;
+	protected $mailBanned;
 	
 	protected $hasChanged;
 	
@@ -90,6 +91,7 @@ class SmrAccount
 			
 			$this->passwordReset	= $row['password_reset'];
 			$this->useAJAX			= $row['use_ajax']=='TRUE';
+			$this->mailBanned		= $row['mail_banned']=='TRUE';
 			
 			$this->db->query('SELECT * FROM account_has_stats WHERE account_id = ' . $this->account_id . ' LIMIT 1');
 			
@@ -170,6 +172,7 @@ class SmrAccount
 			'`images` = '.$this->db->escapeString($this->images).', ' .
 			'`password_reset` = '.$this->db->escapeString($this->passwordReset).', ' .
 			'use_ajax='.$this->db->escapeBoolean($this->useAJAX).
+			'mail_banned='.$this->db->escapeBoolean($this->mailBanned).
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
 		
 	}
@@ -385,6 +388,19 @@ class SmrAccount
 		if($this->useAJAX == $bool)
 			return;
 		$this->useAJAX=$bool;
+		$this->hasChanged=true;
+	}
+	
+	public function isMailBanned()
+	{
+		return $this->mailBanned;
+	}
+	
+	public function setMailBanned($bool)
+	{
+		if($this->mailBanned == $bool)
+			return;
+		$this->mailBanned=$bool;
 		$this->hasChanged=true;
 	}
 	

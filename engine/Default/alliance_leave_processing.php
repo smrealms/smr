@@ -33,7 +33,7 @@ if ($action == 'YES') {
 		create_error('You are the leader! You must hand over leadership first!');
 
 	if ($alliance->leader_id != $player->getAccountID())
-		$player->sendMessage($alliance->leader_id, 2, $db->escape_string('I left your alliance!', false));
+		$player->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
 
 	$player->setAllianceID(0);
 	$player->update();

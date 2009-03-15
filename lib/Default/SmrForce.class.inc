@@ -131,7 +131,7 @@ class SmrForce
 	}
 	public function exists()
 	{
-		return ($this->hasCDs()>0||$this->hasSDs()||$this->hasMines())&&!$this->hasExpired();
+		return ($this->hasCDs()||$this->hasSDs()||$this->hasMines())&&!$this->hasExpired();
 	}
 	public function getTypeID()
 	{
@@ -338,7 +338,7 @@ class SmrForce
 		$owner =& $this->getOwner();
 		if(!$playerPinging->sameAlliance($owner))
 		{
-			$playerPinging->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage);
+			$playerPinging->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage,false);
 		}
 	}
 

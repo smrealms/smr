@@ -11,7 +11,7 @@ if ($player->getNewbieTurns() > 0)
 if ($player->getTurns() < 3)
 	create_error('You do not have enough turns to attack these forces!');
 
-$forces = new SMR_FORCE($var['owner_id'], $player->getSectorID(), $player->getGameID());
+$forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 // take the turns
 $player->takeTurns(3);
@@ -21,10 +21,10 @@ $player->update();
 $player->deletePlottedCourse();
 
 // send message if scouts are present
-if ($forces->scout_drones > 0) {
+if ($forces->hasSDs()) {
 
 	$message = 'Your forces in sector '.$forces->sector_id.' are being attacked by '.$player->getPlayerName();
-	$player->sendMessage($forces->owner_id, $SCOUTMSG, $db->escape_string($message, false));
+	$player->sendMessage($forces->owner_id, $SCOUTMSG, $message);
 	//insert into ticker
 	$owner_id = $var['owner_id'];
 	$time = time();
@@ -88,12 +88,12 @@ if ($db->next_record()) {
 		$forces_damage = 20;
 
 	// Mines attacking
-	if ($forces->mines > 0) {
+	if ($forces->hasMines()) {
 
 		//formula......100% - ((your level) + (rand(1,7)*rand(1,7))) mines will hit for 20 damage each.
 		$percent_hitting = 100 - (($curr_attacker->level_id) + (mt_rand(1,7) * mt_rand(1,7)));
 		//find out how many are going to attack you
-		$number_hitting = round($forces->mines * ($percent_hitting / 100));
+		$number_hitting = round($forces->getMines() * ($percent_hitting / 100));
 
 		// fed ships take half damage from mines
 		$damage = $number_hitting * $forces_damage;
@@ -122,7 +122,7 @@ if ($db->next_record()) {
 			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> mines kamikaze themselves against <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span>\'s ship for <span style="color:red;">'.$damage.'</span> shields.';
 
 			//subtract mines that hit
-			$forces->mines -= $number_hitting;
+			$forces->takeMines($number_hitting);
 
 		} elseif ($curr_attacker_ship->hardware[HARDWARE_ARMOUR] > 0 && $number_hitting > 0) {
 
@@ -147,7 +147,7 @@ if ($db->next_record()) {
 			$force_msg[] = '<span style="color:yellow;">'.$number_hitting.'</span> mines kamikaze themselves against <span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span>\'s ship destroying <span style="color:red;">'.$damage.'</span> armour.';
 
 			//subtract mines that hit
-			$forces->mines -= $number_hitting;
+			$forces->takeMines($number_hitting);
 
 		}
 
@@ -157,9 +157,9 @@ if ($db->next_record()) {
 	if ($curr_attacker_ship->hardware[HARDWARE_SHIELDS] == 0 && $curr_attacker_ship->hardware[HARDWARE_ARMOUR] == 0)
 		$curr_attacker->mark_dead();
 
-	if ($forces->scout_drones > 0 && !$curr_attacker->isDead()) {
+	if ($forces->hasSDs() && !$curr_attacker->isDead()) {
 
-		$number_hitting = $forces->scout_drones;
+		$number_hitting = $forces->getSDs();
 
 		// fed ships take half damage from drones
 		$damage = $number_hitting * $forces_damage;
@@ -179,7 +179,7 @@ if ($db->next_record()) {
 			}
 			
 			//scouts kamikaze
-			$forces->scout_drones -= $number_hitting;
+			$forces->takeSDs($number_hitting);
 			
 			// accumulate the force_damage
 			$force_damage += $damage;
@@ -205,7 +205,7 @@ if ($db->next_record()) {
 			}
 			
 			//scouts kamikaze
-			$forces->scout_drones -= $number_hitting;
+			$forces->takeSDs($number_hitting);
 
 			// add the force_damage
 			$force_damage += $damage;
@@ -231,7 +231,7 @@ if ($db->next_record()) {
 			}
 			
 			//scouts kamikaze
-			$forces->scout_drones -= $number_hitting;
+			$forces->takeSDs($number_hitting);
 
 			// add the force_damage
 			$force_damage += $damage;
@@ -250,10 +250,10 @@ if ($db->next_record()) {
 	if ($curr_attacker_ship->hardware[HARDWARE_SHIELDS] == 0 && $curr_attacker_ship->hardware[HARDWARE_ARMOUR] == 0)
 		$curr_attacker->mark_dead();
 
-	if ($forces->combat_drones > 0 && !$curr_attacker->isDead()) {
+	if ($forces->hasCDs() && !$curr_attacker->isDead()) {
 
 		//find out how many are going to attack you
-		$number_hitting = round($forces->combat_drones * mt_rand(3, 54) / 100);
+		$number_hitting = round($forces->getCDs() * mt_rand(3, 54) / 100);
 
 		// for drones we adept the force damage.
 		// mines and sd's doing 20 damage to normal ships
@@ -353,7 +353,7 @@ if ($db->next_record()) {
 		$force_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> is <span style="color:red;">DESTROYED!</span>';
 
 		// run through dead methods for player and ship
-		$curr_attacker->died_by_forces($forces->owner_id);
+		$curr_attacker->died_by_forces($forces->getOwnerID());
 		$curr_attacker_ship->get_pod();
 
 		// if we are the guy who's dead
@@ -371,7 +371,7 @@ if ($db->next_record()) {
 		$curr_attacker->update();
 
 	}
-	if ($forces->mines < 1 && $forces->combat_drones < 1 && $forces->scout_drones < 1) {
+	if (!$forces->exists()) {
 		$attacker_msg[] = 'Forces are <span style="color:red;">DESTROYED!</span>';
 		$container['continue'] = 'no';
 	}
@@ -415,7 +415,7 @@ if ($player->getAllianceID() != 0) {
 
 $db2 = new SMR_DB();
 
-while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drones > 0 || $forces->mines > 0)) {
+while ($db->next_record() && ($forces->hasCDs() || $forces->hasSDs() || $forces->hasMines())) {
 
 	$curr_attacker =& SmrPlayer::getPlayer($db->f('account_id'), SmrSession::$game_id);
 	$curr_attacker_ship = new SMR_SHIP($db->f('account_id'), SmrSession::$game_id);
@@ -430,14 +430,14 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 				'ORDER BY order_id');
 
 	// iterate over all existing weapons
-	while ($db2->next_record() && ($forces->combat_drones > 0 || $forces->scout_drones > 0 || $forces->mines > 0)) {
+	while ($db2->next_record() && ($forces->hasCDs() || $forces->hasSDs() || $forces->hasMines())) {
 
 		$weapon_name = $db2->f('weapon_name');
 		$shield_damage = $db2->f('shield_damage');
 		$armour_damage = $db2->f('armour_damage');
 		$accuracy = $db2->f('accuracy');
 
-		if ($forces->mines > 0) {
+		if ($forces->hasMines()) {
 
 			if ($armour_damage > 0) {
 
@@ -445,11 +445,11 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 				$mines_dead = round($armour_damage / 20);
 
 				// more damage than mines?
-				if ($mines_dead > $forces->mines)
-					$mines_dead = $forces->mines;
+				if ($mines_dead > $forces->getMines())
+					$mines_dead = $forces->getMines();
 
 				// subtract mines that died
-				$forces->mines -= $mines_dead;
+				$forces->takeMines($mines_dead);
 
 				// add damage we did
 				$attacker_damage += $mines_dead * 20;
@@ -460,19 +460,19 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 			} elseif ($shield_damage > 0)
 				$attacker_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> fires a '.$weapon_name.' at the forces but it proves to be ineffective against the mines.';
 
-		} elseif ($forces->combat_drones > 0) {
+		} elseif ($forces->hasCDs()) {
 
-			if ($armour_damage > 0 && $forces->combat_drones > 0) {
+			if ($armour_damage > 0 && $forces->hasCDs()) {
 
 				// combat drones take 3 armour damage each
 				$drones_dead = floor( $armour_damage / 3 );
 
 				// more damage than combat drones?
-				if ($drones_dead > $forces->combat_drones)
-					$drones_dead = $forces->combat_drones;
+				if ($drones_dead > $forces->getCDs())
+					$drones_dead = $forces->getCDs();
 
 				// subtract scouts that died
-				$forces->combat_drones -= $drones_dead;
+				$forces->takeCDs($drones_dead);
 
 				// add damage we did
 				$attacker_damage += $drones_dead * 3;
@@ -483,7 +483,7 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 			} elseif ($armour_damage == 0 && $shield_damage > 0)
 				$attacker_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> fires a '.$weapon_name.' at the forces but it proves to be ineffective against the armour of the drones';
 
-		} elseif ($forces->scout_drones > 0) {
+		} elseif ($forces->hasSDs()) {
 
 			if ($armour_damage > 0) {
 
@@ -491,11 +491,11 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 				$scouts_dead = round($armour_damage / 20);
 
 				// more damage than scouts?
-				if ($scouts_dead > $forces->scout_drones)
-					$scouts_dead = $forces->scout_drones;
+				if ($scouts_dead > $forces->getSDs())
+					$scouts_dead = $forces->getSDs();
 
 				// subtract scouts that died
-				$forces->scout_drones -= $scouts_dead;
+				$forces->takeSDs($scouts_dead);
 
 				// add damage we did
 				$attacker_damage += $scouts_dead * 20;
@@ -511,7 +511,7 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 	}
 
 	// do we have drones?
-	if ($curr_attacker_ship->hardware[HARDWARE_COMBAT] > 0 && ($forces->mines > 0 || $forces->combat_drones > 0 || $forces->scout_drones > 0)) {
+	if ($curr_attacker_ship->hardware[HARDWARE_COMBAT] > 0 && ($forces->hasMines() || $forces->hasCDs() || $forces->hasSDs())) {
 
 		// Random(3 to 54) + Random(Attacker level/4 to Attacker level)
 		$percent_attacking = (mt_rand(3, 53) + mt_rand($curr_attacker->level_id / 4, $curr_attacker->level_id)) / 100;
@@ -521,14 +521,14 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 		if ($number_attacking > $curr_attacker_ship->hardware[HARDWARE_COMBAT])
 			$number_attacking = $curr_attacker_ship->hardware[HARDWARE_COMBAT];
 
-		if ($forces->mines > 0) {
+		if ($forces->hasMines()) {
 
 			// can we do more damage than mines left?
-			if ($number_attacking > $forces->mines)
-				$number_attacking = $forces->mines;
+			if ($number_attacking > $forces->getMines())
+				$number_attacking = $forces->getMines();
 
 			// take mines
-			$forces->mines -= $number_attacking;
+			$forces->takeMines($number_attacking);
 			$curr_attacker_ship->hardware[HARDWARE_COMBAT] -= $number_attacking;
 
 			// accumulate attacker damage
@@ -538,17 +538,17 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 			$attacker_msg[] = '<span style="color:yellow;">'.$number_attacking.'</span> combat drones kamikaze themselves against the forces destroying <span style="color:red;">'.$number_attacking.'</span> mines.';
 
 		// are there drones left?
-		} elseif ($forces->combat_drones > 0) {
+		} elseif ($forces->hasCDs()) {
 
 			// can we do more damage than drones left?
-			if ($number_attacking * 2 > $forces->combat_drones * 3)
-				$number_attacking = ceil($forces->combat_drones * 3 / 2);
+			if ($number_attacking * 2 > $forces->getCDs() * 3)
+				$number_attacking = ceil($forces->getCDs() * 3 / 2);
 
 			// cd's doing 2 damage
 			$damage = $number_attacking * 2;
 
 			// cd's take 3 damage each
-			$forces->combat_drones -= floor($damage / 3);
+			$forces->takeCDs(floor($damage / 3));
 
 			// accumulate attacker damage
 			$attacker_damage += $damage;
@@ -557,17 +557,17 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 			$attacker_msg[] = '<span style="color:yellow;">'.$curr_attacker->getPlayerName().'</span> launches <span style="color:yellow;">'.$number_attacking.'</span> drones at the forces destroying <span style="color:red;">' . floor ($damage / 20) . '</span> combat drones.';
 
 		// are there scouts left?
-		} elseif ($forces->scout_drones > 0) {
+		} elseif ($forces->hasSDs()) {
 
 			// can we do more damage than scouts left?
-			if ($number_attacking > $forces->scout_drones * 10)
-				$number_attacking = $forces->scout_drones * 10;
+			if ($number_attacking > $forces->getSDs() * 10)
+				$number_attacking = $forces->getSDs() * 10;
 
 			// cd's doing 2 damage
 			$damage = $number_attacking * 2;
 
 			// scouts take 20 damage each
-			$forces->scout_drones -= floor($damage / 20);
+			$forces->takeSDs(floor($damage / 20));
 
 			// accumulate attacker damage
 			$attacker_damage += $damage;
@@ -580,7 +580,7 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 	} // end of 'do we have drones'
 
 	// are forces dead?
-	if ($forces->mines < 1 && $forces->combat_drones < 1 && $forces->scout_drones < 1) {
+	if (!$forces->exists()) {
 
 		$attacker_msg[] = 'Forces are <span style="color:red;">DESTROYED!</span>';
 		$container['continue'] = 'no';
@@ -611,15 +611,7 @@ while ($db->next_record() && ($forces->combat_drones > 0 || $forces->scout_drone
 }
 
 // recalc forces expiration date
-if($forces->combat_drones == 0 && $forces->mines == 0 && $forces->scout_drones == 1) {
-	$days = 2;
-}
-else {
-	$days = ceil(($forces->combat_drones + $forces->scout_drones + $forces->mines) / 10);
-}
-if ($days > 5) $days = 5;
-$forces->expire = TIME + ($days * 86400);
-
+$forces->updateExpire();
 // update forces
 $forces->update();
 
