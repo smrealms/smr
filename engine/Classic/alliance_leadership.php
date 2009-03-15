@@ -19,8 +19,7 @@ $db->query('
 SELECT account_id,player_id,player_name 
 FROM player 
 WHERE game_id=' . $player->game_id . '
-AND alliance_id=' . $player->alliance_id . '
-LIMIT 30'
+AND alliance_id=' . $player->alliance_id //No limit in case they are over limit - ie NHA
 );
 
 while ($db->next_record()) {
