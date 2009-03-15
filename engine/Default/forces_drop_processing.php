@@ -194,7 +194,7 @@ if ($var['owner_id'] != $player->getAccountID()) {
 
 	$message .= ' from/to your stack in sector #'.$sector->getSectorID();
 
-	$player->sendMessage($forces_owner->getAccountID(), MSG_SCOUT, $db->escape_string($message, true));
+	$player->sendMessage($forces_owner->getAccountID(), MSG_SCOUT, $message, false);
 
 }
 

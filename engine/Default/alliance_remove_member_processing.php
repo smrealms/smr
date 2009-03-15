@@ -11,7 +11,7 @@ foreach ($account_id as $id)
     if ($account_id_list) $account_id_list .= ',';
     $account_id_list .= $id;
 
-	$player->sendMessage($id, 2, $db->escape_string('You were kicked out of the alliance!', false));
+	$player->sendMessage($id, 2, 'You were kicked out of the alliance!', false);
 	$curr_acc =& SmrAccount::getAccount($id);
 	$curr_acc->log(3, 'kicked from alliance: '.$alliance->alliance_name.' by leader', 0);
 

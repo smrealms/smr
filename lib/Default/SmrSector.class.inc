@@ -285,7 +285,7 @@ class SmrSector
 
 			// send scout messages to user
 			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->getSectorID();
-			$player->sendMessage($owner->getAccountID(), MSG_SCOUT, $this->db->escapeString($message, false));
+			$player->sendMessage($owner->getAccountID(), MSG_SCOUT, $message, false);
 		}
 
 	}
