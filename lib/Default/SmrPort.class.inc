@@ -42,13 +42,23 @@ class SmrPort
 	
 	protected $hasChanged=false;
 	protected $isNew=false;
+	
+	public static function refreshCache()
+	{
+		foreach(self::$CACHE_PORTS as $gameID => &$gamePorts)
+		{
+			foreach($gamePorts as $sectorID => &$port)
+			{
+				$port = self::getPort($gameID,$sectorID,true);
+			}
+		}
+	}
 
 	public static function &getPort($gameID,$sectorID,$forceUpdate = false)
 	{
 		if($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID]))
 		{
-			$p = new SmrPort($gameID,$sectorID);
-			return self::$CACHE_PORTS[$gameID][$sectorID] =& $p;
+			return self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID,$sectorID);
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}

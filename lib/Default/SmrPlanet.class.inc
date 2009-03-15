@@ -32,6 +32,17 @@ class SmrPlanet
 	protected $isNew = false;
 	
 	protected $examineHREF;
+	
+	public static function refreshCache()
+	{
+		foreach(self::$CACHE_PLANETS as $gameID => &$gamePlanets)
+		{
+			foreach($gamePlanets as $sectorID => &$planets)
+			{
+				$planets = self::getPlanet($gameID,$sectorID,true);
+			}
+		}
+	}
 
 	public static function &getPlanet($gameID,$sectorID,$forceUpdate = false)
 	{
