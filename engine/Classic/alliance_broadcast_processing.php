@@ -5,10 +5,8 @@ if (strlen($_POST['message']) == 0)
 
 $message = nl2br(format_string($_POST['message'], true));
 
-$db->query('
-	SELECT account_id FROM player WHERE game_id=' . $player->game_id . 
-	' AND alliance_id=' . $var['alliance_id'] . ' LIMIT 30'
-);
+$db->query('SELECT account_id FROM player WHERE game_id=' . $player->getGameID() . 
+			' AND alliance_id=' . $var['alliance_id']);// Send to all players in alliance, even if more than 30 . ' LIMIT 30'
 
 while ($db->next_record()) {
 	$player->send_message($db->f('account_id'), MSG_ALLIANCE, $message);
