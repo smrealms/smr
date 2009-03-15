@@ -91,7 +91,7 @@ class SmrAccount
 			
 			$this->passwordReset	= $row['password_reset'];
 			$this->useAJAX			= $row['use_ajax']=='TRUE';
-			$this->mailBanned		= $row['mail_banned']=='TRUE';
+			$this->mailBanned		= (int)$row['mail_banned'];
 			
 			$this->db->query('SELECT * FROM account_has_stats WHERE account_id = ' . $this->account_id . ' LIMIT 1');
 			
@@ -169,11 +169,11 @@ class SmrAccount
 			'validation_code = '.$this->db->escapeString($this->validation_code).', ' .
 			'validated = '.$this->db->escapeString($this->validated).', ' .
 			'password = '.$this->db->escapeString($this->password).', ' .
-			'`images` = '.$this->db->escapeString($this->images).', ' .
-			'`password_reset` = '.$this->db->escapeString($this->passwordReset).', ' .
-			'use_ajax='.$this->db->escapeBoolean($this->useAJAX).
-			'mail_banned='.$this->db->escapeBoolean($this->mailBanned).
-			'WHERE account_id = '.$this->account_id.' LIMIT 1');
+			'images = '.$this->db->escapeString($this->images).', ' .
+			'password_reset = '.$this->db->escapeString($this->passwordReset).', ' .
+			'use_ajax='.$this->db->escapeBoolean($this->useAJAX).', ' .
+			'mail_banned='.$this->db->escapeNumber($this->mailBanned).
+			' WHERE account_id = '.$this->account_id.' LIMIT 1');
 		
 	}
 	
@@ -335,6 +335,11 @@ class SmrAccount
 		return $this->account_id;
 	}
 	
+	public function getLogin()
+	{
+		return $this->login;
+	}
+	
 	public function getEmail()
 	{
 		return $this->email;
@@ -391,17 +396,28 @@ class SmrAccount
 		$this->hasChanged=true;
 	}
 	
-	public function isMailBanned()
+	public function getMailBanned()
 	{
 		return $this->mailBanned;
 	}
 	
-	public function setMailBanned($bool)
+	public function isMailBanned()
 	{
-		if($this->mailBanned == $bool)
+		return $this->mailBanned>TIME;
+	}
+	
+	public function setMailBanned($time)
+	{
+		if($this->mailBanned == $time)
 			return;
-		$this->mailBanned=$bool;
+		$this->mailBanned=$time;
 		$this->hasChanged=true;
+	}
+	
+	public function increaseMailBanned($increaseTime)
+	{
+		$time = max(TIME,$this->getMailBanned());
+		$this->setMailBanned($time+$increaseTime);
 	}
 	
 	public function hasPermission($permissionID)

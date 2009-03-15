@@ -171,6 +171,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Close Reason:</td>');
 	$PHP_OUTPUT.=('<td>');
+	$PHP_OUTPUT.=('<p>Reopen type:<input type="radio" name="reopen_type" value="account">Account close <input type="radio" name="reopen_type" value="mail">Mail ban</p>');
 	$PHP_OUTPUT.=('<p><input type="radio" name="choise" value="pre_select">');
 	$PHP_OUTPUT.=('<select name="reason_pre_select" onchange=go()>');
 	$PHP_OUTPUT.=('<option value="0">[Please Select]</option>');
@@ -199,6 +200,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<input type="text" name="reason_msg" id="InputFields" style="width:400px;"></p>');
 	$PHP_OUTPUT.=('<p><input type="radio" name="choise" value="reopen">Reopen!</p>');
 	$PHP_OUTPUT.=('<p><input type=text name=suspicion id="InputFields" disabled=true style="width:400px;" value="For Multi Closings Only"></p>');
+	$PHP_OUTPUT.=('<p>Mail ban: <input type="text" name="mailban" id="InputFields" style="width:30px;text-align:center;"> days</p>');
 	$PHP_OUTPUT.=('<p>Points: <input type="text" name="points" id="InputFields" style="width:30px;text-align:center;"> points</p>');
 	$db->query('SELECT * FROM account_is_closed WHERE account_id = '.$account_id);
 	if ($db->nextRecord()) {
@@ -206,7 +208,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 		$expireTime = $db->getField('expires');
 	}
 	if ($expireTime > 0) $PHP_OUTPUT.=('<p>The account is set to reopen at ' . date(DATE_FULL_SHORT, $time) . '.</p>');
-	elseif (isset($cont)) $PHP_OUTPUT.=('<p>The account is closed indefinitly (oooo a big word).</p>');
+	elseif (isset($cont)) $PHP_OUTPUT.=('<p>The account is closed indefinitely (oooo a big word).</p>');
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('</tr>');
 

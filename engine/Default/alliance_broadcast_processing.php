@@ -9,7 +9,7 @@ $db->query('SELECT account_id FROM player WHERE game_id=' . $player->getGameID()
 			' AND alliance_id=' . $var['alliance_id']); //No limit in case they are over limit - ie NHA
 
 while ($db->nextRecord()) {
-	$player->sendMessage($db->getField('account_id'), MSG_ALLIANCE, $message);
+	$player->sendMessage($db->getField('account_id'), MSG_ALLIANCE, $message,false);
 }
 $container=array();
 $container['url'] = 'skeleton.php';
