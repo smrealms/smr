@@ -79,26 +79,27 @@ if (!is_numeric($to))
 // ok we can only get the leave save heaven if we go through a warp
 if ($action != "Yes") {
 
-	// are we a noob
-	if ($rank_id < FLEDGLING && $account->veteran == "FALSE") {
-
-		// get new sector object
-		$new_sector = new SMR_SECTOR($to, $player->game_id, $player->account_id);
-
-		// are we going to leave the save heaven?
-		if ($sector->is_protected_gal() && !$new_sector->is_protected_gal()) {
-
-			$container = create_container("skeleton.php", "leaving_newbie_galaxy.php");
-			$container["target_sector"] = $to;
-			$container["method"] = "jump";
-
-			transfer("target_page");
-
-			forward($container);
-
-		}
-
-	}
+// remove newbie gals
+//	// are we a noob
+//	if ($rank_id < FLEDGLING && $account->veteran == "FALSE") {
+//
+//		// get new sector object
+//		$new_sector = new SMR_SECTOR($to, $player->game_id, $player->account_id);
+//
+//		// are we going to leave the save heaven?
+//		if ($sector->is_protected_gal() && !$new_sector->is_protected_gal()) {
+//
+//			$container = create_container("skeleton.php", "leaving_newbie_galaxy.php");
+//			$container["target_sector"] = $to;
+//			$container["method"] = "jump";
+//
+//			transfer("target_page");
+//
+//			forward($container);
+//
+//		}
+//
+//	}
 
 }
 

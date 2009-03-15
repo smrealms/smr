@@ -73,19 +73,20 @@ if ($action != 'Yes' && $turns == 5 && $gal_ids[$player->sector_id] < 9) {
 	// get our rank
 	$rank_id = $account->get_rank();
 
-	// are we a noob
-	if ($rank_id < FLEDGLING && $account->veteran == 'FALSE') {
-
-
-		if($gal_ids[$player->sector_id] < 9 && $gal_ids[$var['target_sector']] > 8) {
-			$container = create_container('skeleton.php', 'leaving_newbie_galaxy.php');
-			$container['method'] = 'move';
-			transfer('target_page');
-			transfer('target_sector');
-			forward($container);
-
-		}
-	}
+// remove newbie gals
+//	// are we a noob
+//	if ($rank_id < FLEDGLING && $account->veteran == 'FALSE') {
+//
+//
+//		if($gal_ids[$player->sector_id] < 9 && $gal_ids[$var['target_sector']] > 8) {
+//			$container = create_container('skeleton.php', 'leaving_newbie_galaxy.php');
+//			$container['method'] = 'move';
+//			transfer('target_page');
+//			transfer('target_sector');
+//			forward($container);
+//
+//		}
+//	}
 }
 $query = get_forces_query($gal_ids[$player->sector_id]);
 $db->query($query);

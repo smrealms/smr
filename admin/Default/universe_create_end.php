@@ -126,9 +126,10 @@ $text = 'MGU, as everyone calls it, is an extremely valuable tool to use alongsi
 Basically, after you have installed MGU, you need to download your game maps using the link on the left side of the SMR page, and save them into your MGU directory. From MGU, you can then open the game maps and access the map information to do may useful things. MGU functions include things like finding traderoutes (listed by experience or cash), finding locations, plotting arming routes, finding safe course plots, etc.';
 $db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$game_id.', 302, 8, 1, '.$db->escapeString($text).', 13, '.TIME.')');
 	
-$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$game_id.', 302, 9, \'Racial galaxies\')');
-$text = ' 	As long as you are ranked newbie or beginner, players ranked fledgling or above cannot see you in the racial galaxies. This makes these galaxies considerably safer for you, and I recommend avoiding too much time spent outside them.';
-$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$game_id.', 302, 9, 1, '.$db->escapeString($text).', 13, '.TIME.')');
+// remove newbie gals
+//$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$game_id.', 302, 9, \'Racial galaxies\')');
+//$text = 'As long as you are ranked newbie or beginner, players ranked fledgling or above cannot see you in the racial galaxies. This makes these galaxies considerably safer for you, and I recommend avoiding too much time spent outside them.';
+//$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$game_id.', 302, 9, 1, '.$db->escapeString($text).', 13, '.TIME.')');
 
 $db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$game_id.', 302, 10, \'Respect for other players\')');
 $text = 'SMR has a very active and social player community, and one thing that will get noticed is how you treat your fellow players. If you send polite messages to other players asking for advice or just to make some contacts, they\'ll remember your name, maybe mention you to their teammates, and you have taken the first step to becoming a respected player. However, if you, for example, react to being killed (it happens to everyone, get used to it) by sending an abusive and angry message then you will quickly lose the respect of your fellow players.<br />
