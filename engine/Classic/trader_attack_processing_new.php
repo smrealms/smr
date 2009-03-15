@@ -592,21 +592,22 @@ function players_init(&$attackers, &$defenders) {
 		0,0,0,0,0,false,array(),array(),0,0,0,array(),0,0,0,0
 	);
 
-	// Get the galaxy name and id
-	$db->query('SELECT
-	galaxy_id
-	FROM sector
-	WHERE sector_id=' . $player->sector_id . '
-	AND game_id=' . SmrSession::$game_id . '
-	LIMIT 1');
-
-	$db->next_record();
-	if($db->f('galaxy_id') < 9) {
-		$protection = TRUE;
-	}
-	else {
+// remove newbie gals
+//	// Get the galaxy name and id
+//	$db->query('SELECT
+//	galaxy_id
+//	FROM sector
+//	WHERE sector_id=' . $player->sector_id . '
+//	AND game_id=' . SmrSession::$game_id . '
+//	LIMIT 1');
+//
+//	$db->next_record();
+//	if($db->f('galaxy_id') < 9) {
+//		$protection = TRUE;
+//	}
+//	else {
 		$protection = FALSE;
-	}
+//	}
 
 	if($player->alliance_id || $players[$var['target']][ALLIANCE_ID]) {
 		//get treaty info
