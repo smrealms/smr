@@ -39,6 +39,7 @@ class SmrAccount
 	var $rank;
 	var $rank_name;
 	protected $passwordReset;
+	protected $points;
 	protected $useAJAX;
 	
 	protected $hasChanged;
@@ -394,6 +395,104 @@ class SmrAccount
 					WHERE account_id = '.$this->getAccountID().' AND
 						  permission_id = '.$permissionID.' LIMIT 1');
 		return $this->db->nextRecord();
+	}
+	
+	public function getPoints()
+	{
+		if(!isset($this->points))
+		{
+			$this->points=0;
+			$this->db->lockTable('account_has_points');
+			$this->db->query('SELECT * FROM account_has_points WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+			if($this->db->nextRecord())
+			{
+				$this->points=$this->db->getField('points');
+				$lastUpdate = $this->db->getField('last_update');
+				//we are gonna check for reducing points...
+				if($this->points>0 && $lastUpdate < TIME - (7 * 86400))
+				{
+					$removePoints=0;
+					while($lastUpdate < TIME - (7 * 86400))
+					{
+						$removePoints++;
+						$lastUpdate += (7 * 86400);
+					}
+					$this->removePoints($removePoints,$lastUpdate);
+				}
+			}
+			$this->db->unlock();
+		}
+		return $this->points;
+	}
+	
+	public function setPoints($numPoints,$lastUpdate=false)
+	{
+		if($this->getPoints()==$numPoints)
+			return;
+		if ($this->points==0)
+			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES ('.$this->getAccountID().', '.$numPoints.', '.($lastUpdate?$lastUpdate:TIME).')');
+		else if($numPoints==0)
+			$this->db->query('DELETE FROM account_has_points WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		else
+			$this->db->query('UPDATE account_has_points SET points = '.$numPoints.($lastUpdate ? ', last_update = '.$lastUpdate : '').' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->points=$numPoints;
+	}
+	
+	public function removePoints($numPoints,$lastUpdate=false)
+	{
+		if($numPoints>0)
+			$this->setPoints($this->getPoints()-$numPoints,$lastUpdate);
+	}
+	
+	public function addPoints($numPoints,SmrAccount &$admin,$reasonID,$suspicion)
+	{
+		//do we have points
+		$this->setPoints($this->getPoints() + $numPoints);
+		$totalPoints = $this->getPoints();
+		if ($totalPoints < 10)
+			return false;//leave scripts its only a warning
+		elseif ($totalPoints < 20)
+			$days = 2;
+		elseif ($totalPoints < 30)
+			$days = 4;
+		elseif ($totalPoints < 50)
+			$days = 7;
+		elseif ($totalPoints < 75)
+			$days = 15 ;
+		elseif ($totalPoints < 100)
+			$days = 30;
+		elseif ($totalPoints < 125)
+			$days = 60;
+		elseif ($totalPoints < 150)
+			$days = 120;
+		elseif ($totalPoints < 175)
+			$days = 240;
+		elseif ($totalPoints < 200)
+			$days = 480;
+		else
+			$days = 0; //Forever/indefinite
+			
+		$expireTime = TIME + $days * 86400;
+		
+		$this->db->query('UPDATE account_has_points SET last_update = '.$expireTime.' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+	
+		$this->db->query('REPLACE INTO account_is_closed ' .
+				   '(account_id, reason_id, suspicion, expires) ' .
+				   'VALUES('.$this->getAccountID().', '.$reasonID.', '.$this->db->escapeString($suspicion).', '.$expireTime.')');
+	
+		$this->db->query('INSERT INTO account_has_closing_history ' .
+				   '(account_id, time, admin_id, action) ' .
+				   'VALUES('.$this->getAccountID().', ' . TIME . ', '.$admin->getAccountID().', \'Closed\')');
+	
+		$this->db->query('UPDATE player SET newbie_turns = 1 ' .
+				   'WHERE account_id = '.$this->getAccountID().' AND ' .
+						 'newbie_turns = 0 AND ' .
+						 'land_on_planet = \'FALSE\'');
+		$this->db->lockTable('active_session');
+		$this->db->query('DELETE FROM active_session ' .
+				   'WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->unlock();
+		return $days;
 	}
 	
 	public function getToggleAJAXHREF()

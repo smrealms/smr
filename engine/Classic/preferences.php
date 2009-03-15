@@ -32,9 +32,7 @@ print("<td>$have</td>");
 print("</tr>");
 
 //ban points go here
-$db->query("SELECT * FROM account_has_points WHERE account_id = ".SmrSession::$account_id);
-if ($db->next_record()) $points = $db->f("points");
-else $points = 0;
+$points = $account->getPoints();
 print("<tr>");
 print("<td>Ban Points:</td>");
 print("<td>$points</td>");

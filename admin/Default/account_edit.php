@@ -84,9 +84,7 @@ $PHP_OUTPUT.=('</tr>');
 
 if (!empty($curr_account->email)) {
 	//ban points go here
-	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$curr_account->account_id);
-	if ($db->nextRecord()) $points = $db->getField('points');
-	else $points = 0;
+	$points = $curr_account->getPoints();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Points:</td>');
 	$PHP_OUTPUT.=('<td>'.$points.'</td>');

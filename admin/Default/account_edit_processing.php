@@ -1,20 +1,5 @@
 <?
 
-//we are gonna check for reducing points...
-$db2 = new SmrMySqlDatabase();
-$db->lockTable('account_has_points');
-$week = TIME - (7 * 24 * 60 * 60);
-$db->query('SELECT * FROM account_has_points WHERE last_update < '.$week.' AND points > 0 AND points < 100');
-while ($db->nextRecord()) {
-
-	$acc_id = $db->getField('account_id');
-	$last_update = $db->getField('last_update');
-	$last_update += 7 * 24 * 60 * 60;
-	$db2->query('UPDATE account_has_points SET points = points - 1, last_update = '.$last_update.' WHERE account_id = '.$acc_id);
-
-}
-$db->unlock();
-
 $account_id = $var['account_id'];
 $curr_account =& SmrAccount::getAccount($account_id);
 
@@ -69,153 +54,39 @@ if(!empty($_REQUEST['grant_credits']))
 	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
 }
 
-if ($choise == 'pre_select' && $points > 0) {
-
-	//do we have points
-	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$account_id);
-	if ($db->nextRecord())	{
-
-		$now = $db->getField('points');
-		$tot_points = $points + $now;
-		$db->query('UPDATE account_has_points SET points = '.$tot_points.', last_update = '.TIME.' WHERE account_id = '.$account_id);
-
-	} else {
-
-		$tot_points = $points;
-		$db->query('REPLACE INTO account_has_points (account_id, points, last_update) VALUES ('.$account_id.', '.$points.', '.TIME.')');
-
-	}
-
-	$banned = true;
-	if ($tot_points < 10)
-		$banned = false;//leave scripts its only a warning
-	elseif ($tot_points < 20)
-		$expire_time = 2 * 86400;
-	elseif ($tot_points < 30)
-		$expire_time = 4 * 86400;
-	elseif ($tot_points < 50)
-		$expire_time = 7 * 86400;
-	elseif ($tot_points < 75)
-		$expire_time = 15 * 86400;
-	elseif ($tot_points < 100)
-		$expire_time = 30 * 86400;
-	elseif ($tot_points < 125)
-		$expire_time = 60 * 86400;
-	elseif ($tot_points < 150)
-		$expire_time = 120 * 86400;
-	elseif ($tot_points < 175)
-		$expire_time = 240 * 86400;
-	elseif ($tot_points < 200)
-		$expire_time = 480 * 86400;
-	else
-		$expire_time = 0; //Forever/indefinite
-	
-	if($banned)
+if ($choise == 'pre_select' && $points > 0)
+{
+	if(($bannedDays = $curr_account->addPoints($points,$account,$reason_pre_select,$_REQUEST['suspicion']))!==false)
 	{
-		if ($expire_time > 0) {
-			$days = $expire_time / 60 / 60 / 24;
-			$expire_time += TIME;
-			$expire_msg = 'for '.$days.' days';
-		} else $expire_msg = 'forever!';
-		$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$account_id);
-	
-		$suspicion = $_REQUEST['suspicion'];
-		$db->query('REPLACE INTO account_is_closed ' .
-				   '(account_id, reason_id, suspicion, expires) ' .
-				   'VALUES('.$account_id.', '.$reason_pre_select.', '.$db->escapeString($suspicion).', '.$expire_time.')');
-	
-		$db->query('INSERT INTO account_has_closing_history ' .
-				   '(account_id, time, admin_id, action) ' .
-				   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
-	
-		$db->query('UPDATE player SET newbie_turns = 1 ' .
-				   'WHERE account_id = '.$account_id.' AND ' .
-						 'newbie_turns = 0 AND ' .
-						 'land_on_planet = \'FALSE\'');
-		$db->lockTable('active_session');
-		$db->query('DELETE FROM active_session ' .
-				   'WHERE account_id = '.$account_id);
-		$db->unlock();
+		if ($bannedDays > 0)
+			$expire_msg = 'for '.$bannedDays.' days';
+		else
+			$expire_msg = 'forever!';
 		if (strlen($msg) > 9)
 			$msg .= 'and ';
 		$msg .= 'closed ';
 	}
-} elseif ($choise == 'individual' && $points > 0) {
-
+}
+elseif ($choise == 'individual' && $points > 0)
+{
 	$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
 	$reason_id = $db->getInsertID();
-
-	//do we have points
-	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$account_id);
-	if ($db->nextRecord())	{
-
-		$now = $db->getField('points');
-		$tot_points = $points + $now;
-		$db->query('UPDATE account_has_points SET points = '.$tot_points.', last_update = '.TIME.' WHERE account_id = '.$account_id);
-
-	} else {
-
-		$tot_points = $points;
-		$db->query('REPLACE INTO account_has_points (account_id, points, last_update) VALUES ('.$account_id.', '.$points.', '.TIME.')');
-
+	
+	if(($bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']))!==false)
+	{
+		if ($bannedDays > 0)
+			$expire_msg = 'for '.$bannedDays.' days';
+		else
+			$expire_msg = 'forever!';
+		if (strlen($msg) > 9)
+			$msg .= 'and ';
+		$msg .= 'closed ';
 	}
-
-	if ($tot_points < 9) {
-		//leave scripts its only a warning
-		break;
-	} elseif ($tot_points < 19) {
-		$expire_time = 2 * 24 * 60 * 60;
-	} elseif ($tot_points < 29) {
-		$expire_time = 4 * 24 * 60 * 60;
-	} elseif ($tot_points < 49) {
-		$expire_time = 7 * 24 * 60 * 60;
-	} elseif ($tot_points < 74) {
-		$expire_time = 14 * 24 * 60 * 60;
-	} elseif ($tot_points < 99) {
-		$expire_time = 31 * 24 * 60 * 60;
-	} elseif ($tot_points >= 100) {
-		$expire_time = 0;
-	}
-
-	if ($expire_time > 0) {
-		$days = $expire_time / 60 / 60 / 24;
-		$expire_time += TIME;
-		$expire_msg = 'for '.$days.' days';
-	} else $expire_msg = 'forever!';
-	$db->query('UPDATE account_has_points SET last_update = '.$expire_time.' WHERE account_id = '.$account_id);
-
-	$suspicion = $_REQUEST['suspicion'];
-	$db->query('REPLACE INTO account_is_closed ' .
-			   '(account_id, reason_id, suspicion, expires) ' .
-			   'VALUES('.$account_id.', '.$reason_id.', '.$db->escapeString($suspicion).', '.$expire_time.')');
-
-	$db->query('INSERT INTO account_has_closing_history ' .
-			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
-
-	$db->query('UPDATE player SET newbie_turns = 1 ' .
-			   'WHERE account_id = '.$account_id.' AND ' .
-					 'newbie_turns = 0 AND ' .
-					 'land_on_planet = \'FALSE\'');
-	$db->lockTable('active_session');
-	$db->query('DELETE FROM active_session ' .
-			   'WHERE account_id = '.$account_id);
-	$db->unlock();
-	if (strlen($msg) > 9)
-		$msg .= 'and ';
-	$msg .= 'closed ';
 
 } elseif ($choise == 'reopen') {
 
 	//do we have points
-	$db->query('SELECT * FROM account_has_points WHERE account_id = '.$account_id);
-	if ($db->nextRecord())	{
-
-		$tot_points = $db->getField('points') - $points;
-		if ($tot_points < 0) $tot_points = 0;
-		$db->query('UPDATE account_has_points SET points = '.$tot_points.', last_update = '.TIME.' WHERE account_id = '.$account_id);
-
-	}
+	$curr_account->removePoints($points,TIME);
 	$db->query('DELETE FROM account_is_closed ' .
 			   'WHERE account_id = '.$account_id);
 
