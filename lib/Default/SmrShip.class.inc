@@ -13,6 +13,17 @@ class SmrShip extends AbstractSmrShip
 	
 	protected $upgradeShipHREF;
 	
+	public static function refreshCache()
+	{
+		foreach(self::$CACHE_SHIPS as &$gameShips)
+		{
+			foreach($gameShips as &$ship)
+			{
+				$ship = self::getShip($ship->getPlayer(),true);
+			}
+		}
+	}
+	
 	public static function saveShips()
 	{
 		foreach(self::$CACHE_SHIPS as &$gameShips)
@@ -32,7 +43,7 @@ class SmrShip extends AbstractSmrShip
 		if($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()]))
 		{
 			$s = new SmrShip($player);
-			return self::$CACHE_SHIPS[$player->getGameID()][$s->getAccountID()] =& $s;
+			return self::$CACHE_SHIPS[$player->getGameID()][$s->getAccountID()] = $s;
 		}
 		return self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()];
 	}

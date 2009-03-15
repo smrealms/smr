@@ -95,8 +95,6 @@ abstract class MySqlDatabase implements Database
 		} 
 		else
 		{
-			global $account,$var,$player;
-			$exception = new Exception();
 			$message = 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
 				'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
 				'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL.
@@ -107,6 +105,8 @@ abstract class MySqlDatabase implements Database
 
 			try
 			{
+				var_dump($message);
+				exit;
 				if(is_object($player))
 					$player->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
 				else if(is_object($account))

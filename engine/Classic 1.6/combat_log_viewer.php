@@ -1,8 +1,8 @@
 <?php
 
 $template->assign('PageTopic','Combat Logs');
-include(get_file_loc('menue.inc'));
-$template->assign('MenuBar',create_combat_log_menue());
+require_once(get_file_loc('menue.inc'));
+$PHP_OUTPUT.=create_combat_log_menue();
 if (isset($_REQUEST['action'])) {
 	$submitAction = $_REQUEST['action'];
 	if ($submitAction == 'Save' && isset($_POST['id'])) {
@@ -11,11 +11,11 @@ if (isset($_REQUEST['action'])) {
 		$db->query('SELECT * FROM combat_logs WHERE log_id IN (' . implode(',', $log_ids) . ') LIMIT ' . count($log_ids));
 		$unsavedLogs = array();
 		$savedLogs = array();
-		while ($db->nextRecord()) {
-			if (!$db->getField('saved'))
-				$unsavedLogs[] = $db->getField('log_id');
+		while ($db->next_record()) {
+			if (!$db->f('saved'))
+				$unsavedLogs[] = $db->f('log_id');
 			else
-				$savedLogs[] = array($db->getField('game_id'),$db->getField('type'),$db->getField('sector_id'),$db->getField('timestamp'),$db->getField('attacker_id'),$db->getField('attacker_alliance_id'),$db->getField('defender_id'),$db->getField('defender_alliance_id'),$db->getField('result'));
+				$savedLogs[] = array($db->f('game_id'),$db->f('type'),$db->f('sector_id'),$db->f('timestamp'),$db->f('attacker_id'),$db->f('attacker_alliance_id'),$db->f('defender_id'),$db->f('defender_alliance_id'),$db->f('result'));
 		}
 		if (sizeof($unsavedLogs))
 			$db->query('UPDATE combat_logs SET saved = ' . $player->getAccountID() . ' WHERE log_id IN (' . implode(',', $unsavedLogs) . ') LIMIT ' . count($log_ids));
@@ -28,7 +28,7 @@ if (isset($_REQUEST['action'])) {
 						(game_id,type,sector_id,timestamp,attacker_id,attacker_alliance_id,defender_id,defender_alliance_id,result,saved)
 						VALUES ' . $query);
 		}
-		$PHP_OUTPUT.=('<div align="center">' . count($log_ids) . ' logs have been saved.<br />');
+		$PHP_OUTPUT.=('<div align="center">' . count($log_ids) . ' logs have been saved.<br>');
 		//back to viewing
 		$var['action'] = $var['old_action'];
 	} elseif (!isset($_POST['id'])) $var['action'] = $var['old_action'];
@@ -38,72 +38,60 @@ else $action = $var['action'];
 
 if($action == 5) {
 
-	if(!isset($_POST['id']) && !isset($var['log_ids']))
-	{
+	if(!isset($_POST['id']) && !isset($var['log_ids'])) {
 		$action = $var['old_action'];
 	}
-	else
-	{
+	else {
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'combat_log_viewer.php';
-		if(!isset($var['log_ids']))
-		{
+		if(!isset($var['log_ids'])) {
 			$container['log_ids'] = array_keys($_POST['id']);
 			sort($container['log_ids']);
 			$container['current_log'] = 0;
 		}
-		else
-		{
+		else {
 			$container['log_ids'] = $var['log_ids'];
 			$container['current_log'] = $var['current_log'];
-		}
+		}	
+		
 		$container['action'] = 5;
 		
-		if($var['direction'])
-		{
-			if($var['direction'] == 1)
-			{
+		if($var['direction']) {
+			if($var['direction'] == 1) {
 				--$container['current_log'];
 			}
-			else
-			{
+			else {
 				++$container['current_log'];			
 			}
 		}
 		$display_id = $container['log_ids'][$container['current_log']];
-		if(count($container['log_ids']) > 1)
-		{
-			if($container['current_log'] > 0)
-			{
+		if(count($container['log_ids']) > 1) {
+			$PHP_OUTPUT.= '<div class="center">';
+			if($container['current_log']) {
 				$container['direction'] = 1;
-				$template->assign('PreviousLogHREF',SmrSession::get_new_href($container));
+				$PHP_OUTPUT.=create_link($container, '<img src="images/album/rew.jpg" alt="Previous" title="Previous">');
 			}
-			if($container['current_log'] < count($container['log_ids']) - 1)
-			{
+			$PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;';
+			if($container['current_log'] < count($container['log_ids']) - 1) {
 				$container['direction'] = 2;
-				$template->assign('NextLogHREF',SmrSession::get_new_href($container));
+				$PHP_OUTPUT.=create_link($container, '<img src="images/album/fwd.jpg" alt="Next" title="Next">');
 			}
+			$PHP_OUTPUT.= '</div>';
 		}
 	}
 }
 
-if(isset($display_id))
-{
-	require_once(get_file_loc('SmrPort.class.inc'));
-	require_once(get_file_loc('SmrPlanet.class.inc'));
-	$db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
+if(isset($display_id)){
+	$db->query('SELECT timestamp,sector_id,result FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
 
-	if($db->nextRecord())
-	{
-		$template->assign('CombatLogSector',$db->getField('sector_id'));
-		$template->assign('CombatLogTimestamp',date(DATE_FULL_SHORT,$db->getField('timestamp')));
-		$results = unserialize(gzuncompress($db->getField('result')));
-		$template->assign('CombatResultsType',$db->getField('type'));
-		$template->assignByRef('CombatResults',$results);
+	if($db->next_record()) {
+		$PHP_OUTPUT.= 'Sector ' . $db->f('sector_id') . '<br />';
+		$PHP_OUTPUT.= date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$db->f('timestamp'));
+		$PHP_OUTPUT.= '<br><br>';
+		$PHP_OUTPUT.= gzuncompress($db->f('result'));
 	}
-	else
-	{
+	else {
 		$PHP_OUTPUT.= '<span class="red bold">Error:</span> log not found';
 	}
 }
@@ -144,8 +132,8 @@ if(isset($query) && $query)
 
 if($action != 5) {
 	$PHP_OUTPUT.= '<div align="center">';
-	if($db->getNumRows() > 0) {
-		$num = $db->getNumRows();
+	if($db->nf() > 0) {
+		$num = $db->nf();
 		$PHP_OUTPUT.= 'There ';
 		if ($num > 1) $PHP_OUTPUT.= 'are ';
 		else $PHP_OUTPUT.= 'is ';
@@ -187,20 +175,20 @@ if($action != 5) {
 		$PHP_OUTPUT.= $form['submit']['View'];
 		$PHP_OUTPUT.= '&nbsp';
 		$PHP_OUTPUT.= $form['submit']['Save'];
-		$PHP_OUTPUT.= '<br /><br /><table class="standard fullwidth">';
+		$PHP_OUTPUT.= '<br><br><table cellspacing="0" cellpadding="5" class="standard fullwidth">';
 		$PHP_OUTPUT.= '<tr><th>View</th><th>Date</th><th>Sector</th><th>Attacker</th><th>Defender</th></tr>';
-		while($db->nextRecord()) {
+		while($db->next_record()) {
 			//attacker_id,defender_id,timestamp,sector_id,log_id
-			$logs[$db->getField('log_id')] = array($db->getField('attacker_id'),$db->getField('defender_id'),$db->getField('timestamp'),$db->getField('sector_id'));
-			$player_ids[] = $db->getField('attacker_id');
-			$player_ids[] = $db->getField('defender_id');
+			$logs[$db->f('log_id')] = array($db->f('attacker_id'),$db->f('defender_id'),$db->f('timestamp'),$db->f('sector_id'));
+			$player_ids[] = $db->f('attacker_id');
+			$player_ids[] = $db->f('defender_id');
 		}
 		array_unique($player_ids);
 		$db->query('SELECT player_name, account_id FROM player
 					WHERE account_id IN (' . implode(',',$player_ids) . ')
 					AND game_id = '.SmrSession::$game_id.'
 					LIMIT ' . sizeof($player_ids));
-		while ($db->nextRecord()) $players[$db->getField('account_id')] = stripslashes($db->getField('player_name'));
+		while ($db->next_record()) $players[$db->f('account_id')] = stripslashes($db->f('player_name'));
 		foreach ($logs as $id => $info) {
 			$container['id'] = $id;
 			$PHP_OUTPUT.= '<tr>';
@@ -215,7 +203,7 @@ if($action != 5) {
 				$defender_name = $players[$info[1]];
 			else
 				$defender_name = 'Unknown Defender';
-			$PHP_OUTPUT.= '<td class="shrink nowrap">' . date(DATE_FULL_SHORT,$info[2]) . '</td>';
+			$PHP_OUTPUT.= '<td class="shrink nowrap">' . date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$info[2]) . '</td>';
 			$PHP_OUTPUT.= '<td class="center shrink">' . $info[3] . '</td>';
 			$PHP_OUTPUT.= '<td>' . $attacker_name . '</td>';
 			$PHP_OUTPUT.= '<td>' . $defender_name . '</td>';

@@ -79,6 +79,17 @@ class SmrPlayer extends AbstractSmrPlayer
 //		}
 //	}
 	
+	public static function refreshCache()
+	{
+		foreach(self::$CACHE_PLAYERS as $gameID => &$gamePlayers)
+		{
+			foreach($gamePlayers as $accountID => &$player)
+			{
+				$player = self::getPlayer($accountID,$gameID,true);
+			}
+		}
+	}
+	
 	public static function savePlayers()
 	{
 		foreach(self::$CACHE_PLAYERS as &$gamePlayers)
@@ -140,7 +151,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray]))
 		{
 			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
-			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
+			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] = $p;
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray];
 		

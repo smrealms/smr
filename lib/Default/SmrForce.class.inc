@@ -40,6 +40,20 @@ class SmrForce
 	protected $dropMineHREF;
 	protected $takeMineHREF;
 	
+	public static function refreshCache()
+	{
+		foreach(self::$CACHE_FORCES as $gameID => &$gameForces)
+		{
+			foreach($gameForces as $sectorID => &$gameSectorForces)
+			{
+				foreach($gameSectorForces as $ownerID => &$forces)
+				{
+					$forces = self::getForce($gameID,$sectorID,$ownerID,true);
+				}
+			}
+		}
+	}
+	
 	public static function saveForces()
 	{
 		foreach(self::$CACHE_FORCES as &$gameForces)

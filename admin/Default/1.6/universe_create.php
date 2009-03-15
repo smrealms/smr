@@ -3,7 +3,7 @@
 $defaultEnd = TIME + (3*31*86400); //3 months 
 $template->assign('DefaultEnd',$defaultEnd);
 
-$template->assign('GameTypes',array('Default','Classic','Semi_Wars','Race_Wars'));
+$template->assign('GameTypes',array('Default','Classic','Classic 1.6','Semi_Wars','Race_Wars'));
 
 //get information
 $container=array();
