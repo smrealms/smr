@@ -416,7 +416,8 @@ class SMR_SECTOR extends SmrMySqlDatabase {
 	}
 
 	function is_protected_gal() {
-
+// remove newbie gals
+	return false;
 		return $this->galaxy_id < 9;
 
 	}

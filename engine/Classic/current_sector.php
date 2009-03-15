@@ -17,10 +17,11 @@ $galaxy_id = $db->f('galaxy_id');
 // get our rank
 $rank_id = $account->get_rank();
 
+// remove newbie gals
 // add newbie to gal name?
-if ($galaxy_id<9 && $rank_id < FLEDGLING && $account->veteran == 'FALSE') {
-	$galaxy_name .= ' - Newbie';
-}
+//if ($galaxy_id<9 && $rank_id < FLEDGLING && $account->veteran == 'FALSE') {
+//	$galaxy_name .= ' - Newbie';
+//}
 
 print_topic('CURRENT SECTOR: ' . $player->sector_id . ' (' .$galaxy_name . ')');
 
@@ -701,29 +702,30 @@ player.alignment as alignment,
 player.player_name as player_name
 FROM sector_has_forces,player';
 
+// remove newbie gals
 // Vets don't see newbies in racials and vice versa
-if ($galaxy_id < 9) {
-	$query .= ',account_has_stats,account
-				WHERE account.account_id = sector_has_forces.owner_id
-				AND account_has_stats.account_id = sector_has_forces.owner_id';
-
-	if($account->get_rank() > BEGINNER || $account->veteran == 'TRUE') {
-		$query2 = ' AND (
-		(account_has_stats.kills >= 15 OR account_has_stats.experience_traded >= 60000) OR 
-		(account_has_stats.kills >= 10 AND account_has_stats.experience_traded >= 40000)
-		OR account.veteran="TRUE")';
-	}
-	else {
-		$query2 = ' AND (
-		(account_has_stats.kills < 15 AND account_has_stats.experience_traded < 60000) OR 
-		(account_has_stats.kills < 10 AND account_has_stats.experience_traded < 40000)
-		) AND account.veteran="FALSE"';
-	}
-	$query2 .= ' AND ';
-}
-else {
+//if ($galaxy_id < 9) {
+//	$query .= ',account_has_stats,account
+//				WHERE account.account_id = sector_has_forces.owner_id
+//				AND account_has_stats.account_id = sector_has_forces.owner_id';
+//
+//	if($account->get_rank() > BEGINNER || $account->veteran == 'TRUE') {
+//		$query2 = ' AND (
+//		(account_has_stats.kills >= 15 OR account_has_stats.experience_traded >= 60000) OR 
+//		(account_has_stats.kills >= 10 AND account_has_stats.experience_traded >= 40000)
+//		OR account.veteran="TRUE")';
+//	}
+//	else {
+//		$query2 = ' AND (
+//		(account_has_stats.kills < 15 AND account_has_stats.experience_traded < 60000) OR 
+//		(account_has_stats.kills < 10 AND account_has_stats.experience_traded < 40000)
+//		) AND account.veteran="FALSE"';
+//	}
+//	$query2 .= ' AND ';
+//}
+//else {
 	$query2 = ' WHERE ';
-}
+//}
 
 $query .= $query2 . '
 player.account_id=sector_has_forces.owner_id
@@ -763,11 +765,12 @@ player.ship_type_id as ship_type_id,
 player.experience as experience 
 FROM player';
 
-if ($galaxy_id < 9) {
-	$query .= ',account_has_stats,account	
-			WHERE account.account_id = player.account_id
-			AND account_has_stats.account_id = player.account_id';
-}
+// remove newbie gals
+//if ($galaxy_id < 9) {
+//	$query .= ',account_has_stats,account	
+//			WHERE account.account_id = player.account_id
+//			AND account_has_stats.account_id = player.account_id';
+//}
 //HIDEN_PLAYERS is defined in config.inc
 $query .= $query2 . 'player.sector_id=' . $player->sector_id . '
 	AND player.account_id!=' . SmrSession::$account_id . ' 

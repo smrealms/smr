@@ -236,7 +236,9 @@ function get_form_value($name) {
 }
 
 function different_level($rank1, $rank2, $forced_vet1, $forced_vet2) {
-
+// remove newbie gals
+	return false;
+	
 	// we are newbie, he vet
 	if ($rank1 < FLEDGLING && $rank2 > BEGINNER && $forced_vet1 == "FALSE")
 		return true;
