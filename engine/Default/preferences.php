@@ -5,14 +5,6 @@ $template->assign('PageTopic','PREFERENCES');
 if (isset($var['reason']))
 	$PHP_OUTPUT.=('<p><big><b style="color:red;">' . $var['reason'] . '</b></big></p>');
 
-//find how many credits they have
-$db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id);
-if ($db->nextRecord())
-	$have = $db->getField('credits_left');
-else
-	$have = 0;
-
-
 if(SmrSession::$game_id != 0)
 {
 	$PHP_OUTPUT.=('<p>');
@@ -46,17 +38,22 @@ $PHP_OUTPUT.=('<tr><th colspan="3">Account Preferences</th></tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Login:</td>');
-$PHP_OUTPUT.=('<td><b>'.$account->login.'</b></td>');
+$PHP_OUTPUT.=('<td><b>'.$account->getLogin().'</b></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>ID:</td>');
-$PHP_OUTPUT.=('<td>'.$account->account_id.'</td>');
+$PHP_OUTPUT.=('<td>'.$account->getAccountID().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>SMR&nbsp;Credits:</td>');
-$PHP_OUTPUT.=('<td>'.$have.'</td>');
+$PHP_OUTPUT.=('<td>'.$account->getCredits().'</td>');
+$PHP_OUTPUT.=('</tr>');
+
+$PHP_OUTPUT.=('<tr>');
+$PHP_OUTPUT.=('<td>SMR&nbsp;Reward&nbsp;Credits:</td>');
+$PHP_OUTPUT.=('<td>'.$account->getRewardCredits().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 //ban points go here

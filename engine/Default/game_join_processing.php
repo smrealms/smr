@@ -20,23 +20,22 @@ if ($db->getNumRows() > 0)
 
 // take the credits
 $db->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
-if ($db->nextRecord()) {
-
+if ($db->nextRecord())
+{
 	$credits	= $db->getField('credits_needed');
 	$type		= $db->getField('game_type');
 	$start_date	= $db->getField('start_date');
 
-} else
+}
+else
 	create_error('Game not found!');
 
 // does it cost something to join that game?
-if ($credits > 0) {
-
-	$db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id);
-	if ($db->nextRecord())
-		$db->query('UPDATE account_has_credits SET credits_left = credits_left - '.$credits.' WHERE account_id = '.$account->account_id);
-	//we dont need an else because they cant join the game if they dont have it and therefore is a free game
-
+if ($credits > 0)
+{
+	if($account->getTotalCredits()<$credits)
+		create_error('You do not have enough credits to join this game');
+	$account->decreaseTotalCredits($credits);
 }
 
 // check if hof entry is there
@@ -58,17 +57,17 @@ else
 $rank_id = $account->get_rank();
 
 // for newbie and beginner another ship, more shields and armour
-if ($rank_id < 3 && $account->veteran == 'FALSE') {
+if ($rank_id < 3 && $account->veteran == 'FALSE')
+{
 	$ship_id = 28;
 	$amount_shields = 75;
 	$amount_armour = 150;
-
-} else {
-
+}
+else
+{
 	$ship_id = 1;
 	$amount_shields = 50;
 	$amount_armour = 50;
-
 }
 if ($type == 'Semi War') $ship_id = 34;
 
