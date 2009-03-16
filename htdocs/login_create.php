@@ -36,7 +36,7 @@
 				</p>
 
 				<form action='login_create_processing.php' method='POST'>
-					<div align='center' style='color:red;'>*** Any personal info is confidential and will not be sold to third parties. ***</div>
+					<div align='center' style='color:red;'>*** Any personal information is confidential and will not be sold to third parties. ***</div>
 
 					<table border='0' cellspacing='0' cellpadding='1'>
 					<tr>
@@ -86,10 +86,14 @@
 						</td>
 					</tr>
 					<tr>
+						<td width='27%'>Referral ID (Optional):</td>
+						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' id='InputFields'<?php if(isset($_REQUEST['ref'])){ echo 'value="'.$_REQUEST['ref'].'"'; }?>></td>
+					</tr>
+					<tr>
 						<td colspan='2'>&nbsp;</td>
 					</tr>
 					<tr>
-						<th colspan='2'>User Information (Optional)</th>
+						<th colspan='2'>User Information (Address Optional)</th>
 					</tr>
 					<tr>
 						<td colspan='2'>&nbsp;</td>
