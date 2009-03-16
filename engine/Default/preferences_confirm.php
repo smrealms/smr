@@ -9,18 +9,16 @@ if (!is_numeric($amount)) {
 
 }
 $amount = round($amount);
-if ($amount <= 0) {
-
+if ($amount <= 0)
+{
 	create_error('You can only tranfer a positive amount');
 	return;
-
 }
 
-if ($amount > $account->get_credits()) {
-
+if ($amount > $account->getCredits())
+{
 	create_error('You can\'t transfer more than you have!');
 	return;
-
 }
 
 $template->assign('PageTopic','Confirmation');

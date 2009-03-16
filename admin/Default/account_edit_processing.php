@@ -20,37 +20,23 @@ $delete = $_REQUEST['delete'];
 
 $msg = 'You ';
 
-if (!empty($donation)) {
-
+if (!empty($donation))
+{
 	// add entry to account donated table
 	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$account_id.', ' . TIME . ' , '.$donation.')');
 
     // add the credits to the players account - if requested
-    if (!empty($smr_credit)) {
-
-	    $db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account_id);
-	    if ($db->nextRecord())
-	    	$amount_credits = $db->getField('credits_left');
-	    else
-	    	$amount_credits = 0;
-	    $new_amount = $amount_credits + $donation;
-	    $db->query('REPLACE INTO account_has_credits (account_id, credits_left) VALUES ('.$account_id.', '.$new_amount.')');
-
+    if (!empty($smr_credit))
+    {
+    	$curr_account->increaseCredits($donation);
 	}
 
 	$msg .= 'added $'.$donation;
 
 }
-if(!empty($_REQUEST['grant_credits']))
+if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits']))
 {
-    $db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account_id);
-    if ($db->nextRecord())
-    	$amount_credits = $db->getField('credits_left');
-    else
-    	$amount_credits = 0;
-    $new_amount = $amount_credits + $_REQUEST['grant_credits'];
-    $db->query('REPLACE INTO account_has_reward_credits (account_id, credits_left) VALUES ('.$account_id.', '.$new_amount.')');
-
+    $curr_account->increaseRewardCredits($_REQUEST['grant_credits']);
 	if (strlen($msg) > 9)
 		$msg .= 'and ';
 	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';

@@ -1,19 +1,20 @@
 <?
 
-$num_creds = $account->get_credits();
-
 if (isset($var['process']))
 {
-	if ($num_creds == 0) {
+	if ($account->getTotalCredits() == 0)
+	{
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 		return;
 	}
+	if(empty($_REQUEST['type']))
+		create_error('You have to choose the type of ticker to buy');
 	$type = $_REQUEST['type'];
 	$expires = TIME + (5*24*60*60);
 	//only scout OR news....but you can have both scout and block or news and block
 	$db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES ('.$player->getGameID().', '.$player->getAccountID().', '.$db->escapeString($type).', '.$expires.')');
 	//take money
-	$account->set_credits($num_creds - 1);
+	$account->decreaseTotalCredits(1);
 	//offer another drink and such
 	$PHP_OUTPUT.=('<div align=center>Your system has been added.  Enjoy!</div><br />');
 	include(get_file_loc('bar_opening.php'));

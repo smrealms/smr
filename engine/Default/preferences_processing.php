@@ -90,14 +90,13 @@ if ($action == 'Save and resend validation code') {
   $account_id = $var['account_id'];
   $amount = $var['amount'];
 
-  // take from us
-  $account->set_credits($account->get_credits() - $amount);
-
   // create his account
   $his_account =& SmrAccount::getAccount($account_id);
-
+  
+  // take from us
+  $account->decreaseCredits($amount);
   // add to him
-  $his_account->set_credits($his_account->get_credits() + $amount);
+  $his_account->increaseCredits($amount);
 
 } elseif ($action == 'Change Timezone') {
 

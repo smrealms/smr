@@ -19,23 +19,14 @@ $template->assign('Game',$game);
 
 
 // do we need credits for this game?
-if ($game['Credits'] > 0) {
-
-	// find how many credits they have.
-	$db->query('SELECT * FROM account_has_credits WHERE account_id = '.$account->account_id);
-	if ($db->nextRecord())
-	    $have = $db->getField('credits_left');
-	else
-	    $have = 0;
-
+if ($game['Credits'] > 0)
+{
 	// do we have enough
-	if ($have < $game['Credits']) {
-
+	if ($account->getTotalCredits() < $game['Credits'])
+	{
 	    create_error('Sorry you dont have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR');
 	    return;
-
 	}
-
 }
 
 // is the game already full?

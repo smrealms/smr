@@ -2,8 +2,7 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
-$num_creds = $account->get_credits();
-if ($num_creds < 2) {
+if ($account->getTotalCredits() < 2) {
 	
 	$PHP_OUTPUT.=create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 	return;
@@ -22,7 +21,7 @@ if (isset($var['process']))
 	}
 	$player->increaseHOF(1,array('Bar','Maps Bought'));
 	//take money
-	$account->set_credits($num_creds - 2);
+	$account->decreaseTotalCredits(2);
 	//now give maps
 	$account_id = $player->getAccountID();
 	$game_id = $player->getGameID();

@@ -84,7 +84,7 @@ class SmrAccount
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
 			$this->veteran			= $row['veteran'];
-			$this->logging			= $row['logging'];
+			$this->logging			= $row['logging']=='TRUE';
 			$this->offset			= $row['offset'];
 			$this->images			= $row['images'];
 			$this->fontsize			= $row['fontsize'];
@@ -275,34 +275,126 @@ class SmrAccount
 		
 	}
 	
-	function log($log_type_id, $msg, $sector_id = 0) {
-		
-		if ($this->logging == 'TRUE') {
-			
+	function log($log_type_id, $msg, $sector_id = 0)
+	{
+		if ($this->logging === true)
+		{
 			if (empty($sector_id))
 				$sector_id = 0;
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, time, log_type_id, message, sector_id) ' .
 				'VALUES('.$this->account_id.', '. TIME . ', '.$log_type_id.', ' . $this->db->escapeString($msg) . ', '.$sector_id.')');
-			
 		}
-		
 	}
 	
-	function get_credits() {
-		
-		$this->db->query('SELECT credits_left FROM account_has_credits WHERE account_id = '.$this->account_id.' LIMIT 1');
-		if ($this->db->nextRecord())
-			return $this->db->getField('credits_left');
+	protected function getCreditsData()
+	{
+		if(!isset($this->credits)||!isset($this->rewardCredits))
+		{
+			$this->credits = 0;
+			$this->rewardCredits = 0;
+			$this->db->query('SELECT * FROM account_has_credits WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+			if ($this->db->nextRecord())
+			{
+				$this->credits = $this->db->getField('credits_left');
+				$this->rewardCredits = $this->db->getField('reward_credits');
+			}
+		}
+	}
+	
+	public function getTotalCredits()
+	{
+		return $this->getCredits()+$this->getRewardCredits();
+	}
+	
+	public function decreaseTotalCredits($totalCredits)
+	{
+		if($totalCredits==0)
+			return;
+		if($totalCredits<0)
+			throw new Exception('You cannot use negative total credits');
+		if($totalCredits>$this->getTotalCredits())
+			throw new Exception('You do not have that many credits in total to use');
+			
+		if($this->getTotalCredits()==$totalCredits)
+			return;
+		$rewardCredits=$this->rewardCredits;
+		$credits=$this->credits;
+		$rewardCredits-=$totalCredits;
+		if($this->rewardCredits<0)
+		{
+			$credits+=$rewardCredits;
+			$rewardCredits=0;
+		}
+		if($this->credits==0&&$this->rewardCredits==0)
+			$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left, reward_credits) VALUES('.$this->getAccountID().', '.$credits.','.$rewardCredits.')');
 		else
-			return 0;
-		
+			$this->db->query('UPDATE account_has_credits SET credits_left='.$credits.', reward_credits='.$rewardCredits.' WHERE account_id='.$this->getAccountID().' LIMIT 1');
+		$this->credits=$credits;
+		$this->rewardCredits=$rewardCredits;
 	}
 	
-	function set_credits($credits) {
-		
-		$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left) VALUES('.$this->account_id.', '.$credits.')');
-		
+	public function getCredits()
+	{
+		$this->getCreditsData();
+		return $this->credits;
+	}
+	
+	public function getRewardCredits()
+	{
+		$this->getCreditsData();
+		return $this->rewardCredits;
+	}
+	
+	public function setCredits($credits)
+	{
+		if($this->getCredits()==$credits)
+			return;
+		if($this->credits==0&&$this->rewardCredits==0)
+			$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left) VALUES('.$this->getAccountID().', '.$credits.')');
+		else
+			$this->db->query('UPDATE account_has_credits SET credits_left='.$credits.' WHERE account_id='.$this->getAccountID().' LIMIT 1');
+		$this->credits=$credits;
+	}
+	
+	public function increaseCredits($credits)
+	{
+		if($credits==0)
+			return;
+		if($credits<0)
+			throw new Exception('You cannot gain negative credits');
+		$this->setCredits($this->getCredits()+$credits);
+	}
+	
+	public function decreaseCredits($credits)
+	{
+		if($credits==0)
+			return;
+		if($credits<0)
+			throw new Exception('You cannot use negative credits');
+		if($credits>$this->getCredits())
+			throw new Exception('You cannot use more credits than you have');
+		$this->setCredits($this->getCredits()-$credits);
+	}
+	
+	public function setRewardCredits($credits)
+	{
+		if($this->getRewardCredits()==$credits)
+			return;
+		if($this->credits==0&&$this->rewardCredits==0)
+			$this->db->query('REPLACE INTO account_has_credits (account_id, reward_credits) VALUES('.$this->getAccountID().', '.$credits.')');
+		else
+			$this->db->query('UPDATE account_has_credits SET reward_credits='.$credits.' WHERE account_id='.$this->getAccountID().' LIMIT 1');
+		$this->rewardCredits=$credits;
+	}
+	
+	public function increaseRewardCredits($credits)
+	{
+		if($credits==0)
+			return;
+		if($credits<0)
+			throw new Exception('You cannot gain negative reward credits');
+		$this->setRewardCredits($this->getRewardCredits()+$credits);
 	}
 	
 	public function sendMessageToBox($boxTypeID, $message)

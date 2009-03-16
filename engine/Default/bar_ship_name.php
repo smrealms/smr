@@ -1,8 +1,7 @@
 <?
 
-$num_creds = $account->get_credits();
-if ($num_creds == 0) {
-	
+if ($account->getTotalCredits() == 0)
+{
 	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 	return;
 	
@@ -15,46 +14,42 @@ elseif (isset($var['ship_name'])) $name = $var['ship_name'];
 $done = $var['done'];
 $continue = $_REQUEST['continue'];
 if (empty($html)) $continue = TRUE;
-if ($action == 'Paint a logo (3 SMR Credits)') {
-	
+if ($action == 'Paint a logo (3 SMR Credits)')
+{
 	// check if we have an image
-	if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
-	
+	if ($_FILES['photo']['error'] == UPLOAD_ERR_OK)
+	{
 		// get dimensions
 		$size = getimagesize($_FILES['photo']['tmp_name']);
 		// check if we really have a jpg
-		if ($size[2] < 1 || $size[2] > 3) {
-			
+		if ($size[2] < 1 || $size[2] > 3)
+		{
 			create_error('Only gif, jpg or png-image allowed! s = '.$size[2]);
 			return;
-			
 		}
 	
 		// check if width > 200
-		if ($size[0] > 200) {
-			
+		if ($size[0] > 200)
+		{
 			create_error('Image is wider than 200 pixels!');
 			return;
-			
 		}
 	
 		// check if height > 30
-		if ($size[1] > 30) {
-			
+		if ($size[1] > 30)
+		{
 			create_error('Image is higher than 30 pixels!');
 			return;
-		
 		}
-		if (filesize($_FILES['photo']['tmp_name']) > 20560 && SmrSession::$account_id >= 100) {
-			
+		if (filesize($_FILES['photo']['tmp_name']) > 20560 && SmrSession::$account_id >= 100)
+		{
 			create_error('Image is bigger than 20k');
 			return;
-			
 		}
 		
 		$orig_name = '<img style="padding: 3px 3px 3px 3px;" src="'.URL.'/upload/' . SmrSession::$account_id . 'logo"><br />';
 		$cred_cost = 3;
-		$account->set_credits($num_creds - $cred_cost);
+		$account->decreaseTotalCredits($cred_cost);
 		$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
 				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($orig_name, FALSE) . ')');
 		
@@ -62,18 +57,16 @@ if ($action == 'Paint a logo (3 SMR Credits)') {
 		$PHP_OUTPUT.=('<div align=center>Your logo was successfully painted!</div>');
 		include(get_file_loc('bar_opening.php'));
 		return;
-		
-	} else {
-		
+	}
+	else
+	{
 		create_error('Error while uploading');
 		return;
-		
 	}
-		
 }
 
-if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
-	
+if ($action == 'Include HTML (2 SMR Credits)' && !$done)
+{
 	$PHP_OUTPUT.=('<div align=center>If you ship is found to use HTML inappropriatly you may be banned.');
 	$PHP_OUTPUT.=('  Innappropriate HTML includes but is not limited to something that can either cause display errors or cause functionallity of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />');
 	$PHP_OUTPUT.=('Preview<br />' . stripslashes($name) . '<br /></div>');
@@ -90,128 +83,117 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	$PHP_OUTPUT.=('Yes:<input type=radio name=continue value=TRUE><br />No:<input type=radio name=continue value=FALSE><br />');
 	$PHP_OUTPUT.=create_submit('Continue');
 	$PHP_OUTPUT.=('</form>');
-	
-} elseif (isset($var['process']) && $continue == 'TRUE') {
-	
+}
+elseif (isset($var['process']) && $continue == 'TRUE')
+{
 	$orig_name = $name;
-	if ($html) {
-		
+	if ($html)
+	{
 		$cred_cost = 2;
 		$max_len = 128;
 		$name = $db->escape_string($name);
 		//check for some bad html
 		$bad = array('<form','<applet','<a ','<bgsound','<body','<meta','<dd','<dir','<dl','<!doctype','<dt','<embed','<frame','<head','<hr','<iframe','<ilayer','<img','<input','<isindex','<layer','<li','<link','<map','<menu','<nobr','<no','<object','<ol','<opt','<p','<script','<select','<sound','<td','<text','<t','<ul','<h','<br','</marquee><marquee','size','width','height','<div','width=','</marquee>%<marquee','</marquee>?');
-		foreach($bad as $check) {
-			
-			if (stristr($name, $check)) {
-			
+		foreach($bad as $check)
+		{
+			if (stristr($name, $check))
+			{
 				$check .= '*>';
 				if ($check != '<h*>' && $check != '</marquee>?*>') create_error(htmlentities($check, ENT_NOQUOTES) . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
 				elseif ($check == '</marquee>?*>') create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
 				else create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES) . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES) . ' tag which is not needed.');
 				return;
-		
 			}
-			
 		}
 		list ($first, $second) = split ('</marquee>', $name);
-		if ($second != '') {
-			
+		if ($second != '')
+		{
 			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
 			return;
 			
 		}
 		list ($first, $second) = split ('<marquee>', $name);
-		if ($first != '' && $second != '') {
-			
+		if ($first != '' && $second != '')
+		{
 			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES) . ' tag.');
 			return;
-			
 		}
 		//lets try to see if they closed all tages
 		$first = explode ('<', $name);
-		foreach ($first as $second) {
-			
+		foreach ($first as $second)
+		{
 			if ($second == '') continue;
 			// the / char will be 0 and evaluate to false unless we put something at the start
 			$second = '.' . $second;
-			if (strpos($second, '/')) {
-				
+			if (strpos($second, '/'))
+			{
 				$open -= 1;
 				$close += 1;
 				if ($open < 0) $ha = TRUE;
-				
 			}
-			else {
-				
+			else
+			{
 				$real_open += 1;
 				$open += 1;
-				
 			}
-			
 		}
-		if ($open > 0) {
-			
+		if ($open > 0)
+		{
 			create_error('You must close all HTML tags.  (i.e a &lt;font color=red&gt tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.');
 			return;
-			
 		}
-		if ($close > $real_open || $ha || $open < 0) {
-			
+		if ($close > $real_open || $ha || $open < 0)
+		{
 			create_error('You can not close tags that do not exist!<br /><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
 			return;
-			
 		}
-		
-	} else {
-		
+	}
+	else
+	{
 		$max_len = 48;
 		$cred_cost = 1;
 		$name = $db->escape_string(htmlentities($name, ENT_NOQUOTES));
-		
 	}
 	
 	//list of html tags that have an auto br
 	$word = array('</marquee>');
 	$done = FALSE;
-	foreach ($word as $bad) {
-		
+	foreach ($word as $bad)
+	{
 		if (stristr($name, $bad)) $done = TRUE;
-		
 	}
 	if (!$done)	$orig_name .= '<br />';
-	if (strlen($orig_name) > $max_len) {
-		
+	if (strlen($orig_name) > $max_len)
+	{
 		create_error('That won\'t fit on your ship!');
 		return;
 		
 	}
-	if ($num_creds < $cred_cost) {
-	
+	if ($account->getTotalCredits() < $cred_cost)
+	{
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 		return;
-		
 	}
 	// disallow certain ascii chars
 	for ($i = 0; $i < strlen($orig_name); $i++)
-		if (ord($orig_name[$i]) < 32 || ord($orig_name[$i]) > 127 || in_array(ord($orig_name[$i]), array(37,39,59,92,63,42))) {
-			
+		if (ord($orig_name[$i]) < 32 || ord($orig_name[$i]) > 127 || in_array(ord($orig_name[$i]), array(37,39,59,92,63,42)))
+		{
 			create_error('The ship name contains invalid characters! ' . chr(ord($orig_name[$i])));
 			return;
 			
 		}
 	$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
 				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($orig_name, FALSE) . ')');
-	$account->set_credits($num_creds - $cred_cost);
+	$account->decreaseTotalCredits($cred_cost);
 	
 	$PHP_OUTPUT.=('<div align=center>Thanks for your purchase! Your ship is ready!<br />');
 	if ($html) $PHP_OUTPUT.=('If you ship is found to use HTML inappropriatly you may be banned.  If your ship does contain inappropriate HTML talk to an admin ASAP.');
 	$PHP_OUTPUT.=('<br /></div>');
 	//offer another drink and such
 	include(get_file_loc('bar_opening.php'));
-	
-} else {
-		
+}
+else
+{
 	$template->assign('PageTopic','Naming Your Ship');
 	$PHP_OUTPUT.=('<div align="center">');
 	//get bar name
@@ -240,7 +222,6 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done) {
 	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Paint a logo (3 SMR Credits)');
 	$PHP_OUTPUT.=('</form></div>');
-
 }
 
 ?>
