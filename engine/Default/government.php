@@ -68,66 +68,16 @@ if (isset($location_type_id))
 
 }
 
-$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'HQ\' AND claimer_id = 0 ORDER BY amount DESC');
-$PHP_OUTPUT.=('<p>&nbsp;</p>');
-if ($db->getNumRows())
+require_once(get_file_loc('gov.functions.inc'));
+displayBountyList($PHP_OUTPUT,'HQ',0);
+displayBountyList($PHP_OUTPUT,'HQ',$player->getAccountID());
+
+
+if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100)
 {
-	$PHP_OUTPUT.=('<div align="center">Most Wanted by Federal Government</div><br />');
-	$PHP_OUTPUT.=create_table();
-	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<th>Player Name</th>');
-	$PHP_OUTPUT.=('<th>Bounty Amount</th>');
-	$PHP_OUTPUT.=('</tr>');
-
-	while ($db->nextRecord())
-	{
-		$id = $db->getField('account_id');
-		$db2->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = '.$id);
-		if ($db2->nextRecord())
-			$name = stripslashes($db2->getField('player_name'));
-		$amount = $db->getField('amount');
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center"><font color=yellow>'.$name.'</font></td>');
-		$PHP_OUTPUT.=('<td align="center"><font color=red> ' . number_format($amount) . ' </font></td>');
-		$PHP_OUTPUT.=('</tr>');
-
-	}
-	$PHP_OUTPUT.=('</table>');
-}
-
-$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND type = \'HQ\' AND claimer_id = '.$player->getAccountID().' ORDER BY amount DESC');
-$PHP_OUTPUT.=('<p>&nbsp;</p>');
-if ($db->getNumRows())
-{
-	$PHP_OUTPUT.=('<div align="center">Claimable Bounties</div><br />');
-	$PHP_OUTPUT.=create_table();
-	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<th>Player Name</th>');
-	$PHP_OUTPUT.=('<th>Bounty Amount</th>');
-	$PHP_OUTPUT.=('</tr>');
-
-	while ($db->nextRecord())
-	{
-		$id = $db->getField('account_id');
-		$db2->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = '.$id);
-		if ($db2->nextRecord())
-			$name = stripslashes($db2->getField('player_name'));
-		$amount = $db->getField('amount');
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center"><font color=yellow>'.$name.'</font></td>');
-		$PHP_OUTPUT.=('<td align="center"><font color=red> ' . number_format($amount) . ' </font></td>');
-		$PHP_OUTPUT.=('</tr>');
-
-	}
-	$PHP_OUTPUT.=('</table>');
-}
-
-if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100) {
-
 	$PHP_OUTPUT.=create_echo_form(create_container('government_processing.php', ''));
 	$PHP_OUTPUT.=create_submit('Become a deputy');
 	$PHP_OUTPUT.=('</form>');
-
 }
 
 ?>

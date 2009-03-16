@@ -53,12 +53,12 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>SMR&nbsp;Credits:</td>');
-$PHP_OUTPUT.=('<td>'.$account->getCredits().'</td>');
+$PHP_OUTPUT.=('<td>'.$account->getSmrCredits().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>SMR&nbsp;Reward&nbsp;Credits:</td>');
-$PHP_OUTPUT.=('<td>'.$account->getRewardCredits().'</td>');
+$PHP_OUTPUT.=('<td>'.$account->getSmrRewardCredits().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 //ban points go here

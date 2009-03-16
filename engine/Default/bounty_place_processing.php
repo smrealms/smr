@@ -22,19 +22,26 @@ if ($action != 'Yes')
 
 // get values from container
 $amount = $var['amount'];
+$smrCredits = $var['SmrCredits'];
 $account_id = $var['account_id'];
-if (!$amount)
+if (!$amount&&!$smrCredits)
 	create_error('You must enter an amount');
 if ($amount < 0)
 	create_error('You must enter a positive amount');
+if ($smrCredits < 0)
+	create_error('You must enter a positive credits amount');
 // take the bounty from the cash
 $player->decreaseCredits($amount);
+$account->decreaseSmrCredits($smrCredits);
 
+$player->increaseHOF($smrCredits,array('Bounties','Placed','SMR Credits'));
 $player->increaseHOF($amount,array('Bounties','Placed','Money'));
 $player->increaseHOF(1,array('Bounties','Placed','Number'));
 
 $placed =& SmrPlayer::getPlayer($account_id, $player->getGameID());
 $placed->increaseCurrentBountyAmount($type,$amount);
+$placed->increaseCurrentBountySmrCredits($type,$smrCredits);
+$placed->increaseHOF($smrCredits,array('Bounties','Received','SMR Credits'));
 $placed->increaseHOF($amount,array('Bounties','Received','Money'));
 $placed->increaseHOF(1,array('Bounties','Received','Number'));
 

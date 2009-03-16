@@ -1683,14 +1683,15 @@ class SmrPlayer extends AbstractSmrPlayer
 				$bounty = $this->getBounty($key);
 				if($bounty['New'] === true)
 				{
-					if($bounty['Amount'] > 0)
-						$this->db->query('INSERT INTO bounty (account_id,game_id,type,amount,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeString($bounty['Type']) . ',' . $bounty['Amount'] .',' . $bounty['Claimer'] . ',' . $bounty['Time'] .')');
+					if($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
+						$this->db->query('INSERT INTO bounty (account_id,game_id,type,amount,smr_credits,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeString($bounty['Type']) . ',' . $bounty['Amount'] .','.$bounty['SmrCredits'].',' . $bounty['Claimer'] . ',' . $bounty['Time'] .')');
 				}
 				else
 				{
-					if($bounty['Amount'] > 0)
+					if($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
 						$this->db->query('UPDATE bounty 
 							SET amount=' . $bounty['Amount'] . ',
+							smr_credits=' . $this->db->escapeString($bounty['SmrCredits']) . ',
 							type=' . $this->db->escapeString($bounty['Type']) . ',
 							claimer_id=' . $bounty['Claimer'] . ',
 							time=' . $bounty['Time'] . '
@@ -1773,7 +1774,9 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->db->query('SELECT bounty_id,claimer_id,amount,type,time FROM bounty WHERE account_id = ' . $this->getAccountID() . ' AND game_id=' . $this->getGameID());
 			while($this->db->nextRecord())
 			{
-				$this->bounties[$this->db->getField('bounty_id')] = array('Amount' => $this->db->getField('amount'),
+				$this->bounties[$this->db->getField('bounty_id')] = array(
+							'Amount' => $this->db->getField('amount'),
+							'SmrCredits' => $this->db->getField('smr_credits'),
 							'Type' => $this->db->getField('type'),
 							'Claimer' => $this->db->getField('claimer_id'),
 							'Time' => $this->db->getField('time'),

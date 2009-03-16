@@ -3,40 +3,42 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 // get request variables
-$amount = $_REQUEST['amount'];
+$amount = $_REQUEST['amount']?$_REQUEST['amount']:0;
+$smrCredits = $_REQUEST['smrcredits']?$_REQUEST['smrcredits']:0;
 $account_id = $_REQUEST['account_id'];
-if ($account_id == 0) {
-	
+if ($account_id == 0)
+{
 	create_error('Uhhh...who is [Please Select]?');
 	return;
-	
 }
-if (!is_numeric($amount)) {
-
+if (!is_numeric($amount)||!is_numeric($smrCredits)||!is_numeric($account_id))
+{
 	create_error('Numbers only please');
 	return;
-
 }
 $amount = round($amount);
-if ($player->getCredits() < $amount) {
-
+if ($player->getCredits() < $amount)
+{
 	create_error('You dont have that much money.');
 	return;
-
+}
+$smrCredits = round($smrCredits);
+if ($account->getSmrCredits() < $smrCredits)
+{
+	create_error('You dont have that many SMR credits.');
+	return;
 }
 
-if ($amount <= 0) {
-
+if ($amount <= 0 && $smrCredits <= 0)
+{
 	create_error('You must enter an amount greater than 0');
 	return;
-
 }
 
-if (empty($amount) || empty($account_id)) {
-
-	create_error('Dont you want to place bounty?');
+if ((empty($amount) && empty($smrCredits)) || empty($account_id))
+{
+	create_error('Don\'t you want to place bounty?');
 	return;
-
 }
 
 $template->assign('PageTopic','Placing a bounty');
@@ -49,12 +51,14 @@ else $PHP_OUTPUT.=create_ug_menue();
 $bounty_guy =& SmrPlayer::getPlayer($account_id, $player->getGameID());
 
 $PHP_OUTPUT.=('Are you sure you want to place a <span style="color:yellow;">' . number_format($amount) .
-	  '</span> bounty on <span style="color:yellow;">'.$bounty_guy->getPlayerName().'</span>?');
+	  '</span> credits and <span style="color:yellow;">' . number_format($smrCredits) .
+	  '</span> SMR credits bounty on <span style="color:yellow;">'.$bounty_guy->getPlayerName().'</span>?');
 
 $container = array();
 $container['url'] = 'bounty_place_processing.php';
 $container['account_id'] = $bounty_guy->getAccountID();
 $container['amount'] = $amount;
+$container['SmrCredits'] = $smrCredits;
 
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=create_submit('Yes');

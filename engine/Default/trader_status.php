@@ -80,32 +80,18 @@ $PHP_OUTPUT.= '</td><td class="top" style="width:50%">';
 $container['body'] = 'trader_bounties.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Bounties</span>');
 
-// There should only ever be two outstanding bounties on anyone
-$db->query('SELECT type,amount FROM bounty WHERE account_id=' . SmrSession::$account_id . ' AND claimer_id=0 AND game_id=' . SmrSession::$game_id . ' LIMIT 2');
-
-$bounty= array(0,0);
-while($db->nextRecord()) {
-	if($db->getField('type') == 'HQ') {
-		$bounty[0] = $db->getField('amount');
-	}
-	else {
-		$bounty[1] = $db->getField('amount');
-	}
-}
 $PHP_OUTPUT.= '<br /><span class="green">Federal: </span>';
-if($bounty[0]) {
-	$PHP_OUTPUT.= number_format($bounty[0]);
-}
-else {
+$bounty = $player->getCurrentBounty('HQ');
+if($bounty['Amount']>0||$bounty['SmrCredits']>0)
+	$PHP_OUTPUT.= number_format($bounty['Amount']).' credits and '.number_format($bounty['SmrCredits']).' SMR credits';
+else
 	$PHP_OUTPUT.= 'None';
-}
 $PHP_OUTPUT.= '<br /><span class="red">Underground: </span>';
-if($bounty[1]) {
-	$PHP_OUTPUT.= number_format($bounty[1]);
-}
-else {
+$bounty = $player->getCurrentBounty('UG');
+if($bounty['Amount']>0||$bounty['SmrCredits']>0)
+	$PHP_OUTPUT.= number_format($bounty['Amount']).' credits and '.number_format($bounty['SmrCredits']).' SMR credits';
+else
 	$PHP_OUTPUT.= 'None';
-}
 
 $PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><br />Name: ';
 

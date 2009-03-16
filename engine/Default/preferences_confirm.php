@@ -15,7 +15,7 @@ if ($amount <= 0)
 	return;
 }
 
-if ($amount > $account->getCredits())
+if ($amount > $account->getSmrCredits())
 {
 	create_error('You can\'t transfer more than you have!');
 	return;
