@@ -287,7 +287,7 @@ class SmrAccount
 		}
 	}
 	
-	protected function getCreditsData()
+	protected function getSmrCreditsData()
 	{
 		if(!isset($this->credits)||!isset($this->rewardCredits))
 		{
@@ -302,21 +302,21 @@ class SmrAccount
 		}
 	}
 	
-	public function getTotalCredits()
+	public function getTotalSmrCredits()
 	{
-		return $this->getCredits()+$this->getRewardCredits();
+		return $this->getSmrCredits()+$this->getSmrRewardCredits();
 	}
 	
-	public function decreaseTotalCredits($totalCredits)
+	public function decreaseTotalSmrCredits($totalCredits)
 	{
 		if($totalCredits==0)
 			return;
 		if($totalCredits<0)
 			throw new Exception('You cannot use negative total credits');
-		if($totalCredits>$this->getTotalCredits())
+		if($totalCredits>$this->getTotalSmrCredits())
 			throw new Exception('You do not have that many credits in total to use');
 			
-		if($this->getTotalCredits()==$totalCredits)
+		if($this->getTotalSmrCredits()==$totalCredits)
 			return;
 		$rewardCredits=$this->rewardCredits;
 		$credits=$this->credits;
@@ -334,21 +334,21 @@ class SmrAccount
 		$this->rewardCredits=$rewardCredits;
 	}
 	
-	public function getCredits()
+	public function getSmrCredits()
 	{
-		$this->getCreditsData();
+		$this->getSmrCreditsData();
 		return $this->credits;
 	}
 	
-	public function getRewardCredits()
+	public function getSmrRewardCredits()
 	{
-		$this->getCreditsData();
+		$this->getSmrCreditsData();
 		return $this->rewardCredits;
 	}
 	
-	public function setCredits($credits)
+	public function setSmrCredits($credits)
 	{
-		if($this->getCredits()==$credits)
+		if($this->getSmrCredits()==$credits)
 			return;
 		if($this->credits==0&&$this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, credits_left) VALUES('.$this->getAccountID().', '.$credits.')');
@@ -357,29 +357,29 @@ class SmrAccount
 		$this->credits=$credits;
 	}
 	
-	public function increaseCredits($credits)
+	public function increaseSmrCredits($credits)
 	{
 		if($credits==0)
 			return;
 		if($credits<0)
 			throw new Exception('You cannot gain negative credits');
-		$this->setCredits($this->getCredits()+$credits);
+		$this->setSmrCredits($this->getSmrCredits()+$credits);
 	}
 	
-	public function decreaseCredits($credits)
+	public function decreaseSmrCredits($credits)
 	{
 		if($credits==0)
 			return;
 		if($credits<0)
 			throw new Exception('You cannot use negative credits');
-		if($credits>$this->getCredits())
+		if($credits>$this->getSmrCredits())
 			throw new Exception('You cannot use more credits than you have');
-		$this->setCredits($this->getCredits()-$credits);
+		$this->setSmrCredits($this->getSmrCredits()-$credits);
 	}
 	
-	public function setRewardCredits($credits)
+	public function setSmrRewardCredits($credits)
 	{
-		if($this->getRewardCredits()==$credits)
+		if($this->getSmrRewardCredits()==$credits)
 			return;
 		if($this->credits==0&&$this->rewardCredits==0)
 			$this->db->query('REPLACE INTO account_has_credits (account_id, reward_credits) VALUES('.$this->getAccountID().', '.$credits.')');
@@ -388,13 +388,13 @@ class SmrAccount
 		$this->rewardCredits=$credits;
 	}
 	
-	public function increaseRewardCredits($credits)
+	public function increaseSmrRewardCredits($credits)
 	{
 		if($credits==0)
 			return;
 		if($credits<0)
 			throw new Exception('You cannot gain negative reward credits');
-		$this->setRewardCredits($this->getRewardCredits()+$credits);
+		$this->setSmrRewardCredits($this->getSmrRewardCredits()+$credits);
 	}
 	
 	public function sendMessageToBox($boxTypeID, $message)

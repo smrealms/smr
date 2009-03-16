@@ -94,9 +94,9 @@ if ($action == 'Save and resend validation code') {
   $his_account =& SmrAccount::getAccount($account_id);
   
   // take from us
-  $account->decreaseCredits($amount);
+  $account->decreaseSmrCredits($amount);
   // add to him
-  $his_account->increaseCredits($amount);
+  $his_account->increaseSmrCredits($amount);
 
 } elseif ($action == 'Change Timezone') {
 

@@ -28,7 +28,7 @@ if (!empty($donation))
     // add the credits to the players account - if requested
     if (!empty($smr_credit))
     {
-    	$curr_account->increaseCredits($donation);
+    	$curr_account->increaseSmrCredits($donation);
 	}
 
 	$msg .= 'added $'.$donation;
@@ -36,7 +36,7 @@ if (!empty($donation))
 }
 if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits']))
 {
-    $curr_account->increaseRewardCredits($_REQUEST['grant_credits']);
+    $curr_account->increaseSmrRewardCredits($_REQUEST['grant_credits']);
 	if (strlen($msg) > 9)
 		$msg .= 'and ';
 	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';

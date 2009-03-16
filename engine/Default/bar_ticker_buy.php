@@ -2,7 +2,7 @@
 
 if (isset($var['process']))
 {
-	if ($account->getTotalCredits() == 0)
+	if ($account->getTotalSmrCredits() == 0)
 	{
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 		return;
@@ -14,7 +14,7 @@ if (isset($var['process']))
 	//only scout OR news....but you can have both scout and block or news and block
 	$db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES ('.$player->getGameID().', '.$player->getAccountID().', '.$db->escapeString($type).', '.$expires.')');
 	//take money
-	$account->decreaseTotalCredits(1);
+	$account->decreaseTotalSmrCredits(1);
 	//offer another drink and such
 	$PHP_OUTPUT.=('<div align=center>Your system has been added.  Enjoy!</div><br />');
 	include(get_file_loc('bar_opening.php'));

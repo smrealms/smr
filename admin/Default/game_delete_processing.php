@@ -204,21 +204,23 @@ if ($action == 'Yes') {
 			$kills = $db->getField('kills');
 			$deaths = $db->getField('deaths');
 
-			$db2->query('SELECT sum(amount) as bounty_am FROM bounty WHERE game_id = '.$game_id.' AND account_id = '.$acc_id.' AND claimer_id = 0');
-			if ($db2->nextRecord()) {
-
+			$amount = 0;
+			$smrCredits = 0;
+			$db2->query('SELECT sum(amount) as bounty_am, sum(smr_credits) as bounty_cred FROM bounty WHERE game_id = '.$game_id.' AND account_id = '.$acc_id.' AND claimer_id = 0');
+			if ($db2->nextRecord())
+			{
 				if (is_int($db2->getField('bounty_am'))) $amount = $db2->getField('bounty_am');
-				else $amount = 0;
+				if (is_int($db2->getField('bounty_cred'))) $smrCredits = $db2->getField('bounty_cred');
 
-			} else $amount = 0;
+			}
 
 			$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$game_id.' AND account_id = '.$acc_id);
 			if ($db2->nextRecord()) $ship_name = $db2->getField('ship_name');
 			else $ship_name = 'None';
 
 			// insert into history db
-			$history_db_sql[] = 'INSERT INTO player (account_id, game_id, player_name, player_id, experience, ship, race, alignment, alliance_id, kills, deaths, bounty, ship_name) ' .
-								'VALUES ('.$acc_id.', '.$game_id.', ' . $db->escape_string($name,FALSE) . ', '.$id.', '.$exp.', '.$ship.', '.$race.', '.$align.', '.$alli.', '.$kills.', '.$deaths.', '.$amount.', ' . $db->escape_string($ship_name,FALSE) . ')';
+			$history_db_sql[] = 'INSERT INTO player (account_id, game_id, player_name, player_id, experience, ship, race, alignment, alliance_id, kills, deaths, bounty, bounty_cred, ship_name) ' .
+								'VALUES ('.$acc_id.', '.$game_id.', ' . $db->escape_string($name,FALSE) . ', '.$id.', '.$exp.', '.$ship.', '.$race.', '.$align.', '.$alli.', '.$kills.', '.$deaths.', '.$amount.','.$smrCredits.', ' . $db->escape_string($ship_name,FALSE) . ')';
 
 		}
 

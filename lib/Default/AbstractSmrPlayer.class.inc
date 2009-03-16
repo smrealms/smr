@@ -732,6 +732,7 @@ abstract class AbstractSmrPlayer
 	protected function createBounty($type)
 	{
 		$bounty = array('Amount' => 0,
+						'SmrCredits' => 0,
 						'Type' => $type,
 						'Claimer' => 0,
 						'Time' => TIME,
@@ -807,6 +808,8 @@ abstract class AbstractSmrPlayer
 	public function setCurrentBountyAmount($type, $amount)
 	{
 		$bounty = $this->getCurrentBounty($type);
+		if($bounty['Amount'] == $amount)
+			return;
 		$bounty['Amount'] = $amount;
 		$this->setBounty($bounty);
 	}
@@ -823,6 +826,35 @@ abstract class AbstractSmrPlayer
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative current bounty.');
 		$this->setCurrentBountyAmount($type,$this->getCurrentBountyAmount($type)-$amount);
+	}
+	
+	public function getCurrentBountySmrCredits($type)
+	{
+		$bounty = $this->getCurrentBounty($type);
+		return $bounty['SmrCredits'];
+	}
+	
+	public function setCurrentBountySmrCredits($type, $credits)
+	{
+		$bounty = $this->getCurrentBounty($type);
+		if($bounty['SmrCredits'] == $credits)
+			return;
+		$bounty['SmrCredits'] = $credits;
+		$this->setBounty($bounty);
+	}
+	
+	public function increaseCurrentBountySmrCredits($type,$credits)
+	{
+		if($credits<0)
+			throw new Exception('Trying to increase negative current bounty.');
+		$this->setCurrentBountySmrCredits($type,$this->getCurrentBountySmrCredits($type)+$credits);
+	}
+	
+	public function decreaseCurrentBountySmrCredits($type,$credits)
+	{
+		if($credits<0)
+			throw new Exception('Trying to decrease negative current bounty.');
+		$this->setCurrentBountySmrCredits($type,$this->getCurrentBountySmrCredits($type)-$credits);
 	}
 	
 	public function setBountiesClaimable(AbstractSmrPlayer $claimer)

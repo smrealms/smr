@@ -33,9 +33,9 @@ else
 // does it cost something to join that game?
 if ($credits > 0)
 {
-	if($account->getTotalCredits()<$credits)
+	if($account->getTotalSmrCredits()<$credits)
 		create_error('You do not have enough credits to join this game');
-	$account->decreaseTotalCredits($credits);
+	$account->decreaseTotalSmrCredits($credits);
 }
 
 // check if hof entry is there
