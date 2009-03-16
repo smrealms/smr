@@ -37,6 +37,11 @@ $PHP_OUTPUT.=('<table cellpadding="5">');
 $PHP_OUTPUT.=('<tr><th colspan="3">Account Preferences</th></tr>');
 
 $PHP_OUTPUT.=('<tr>');
+$PHP_OUTPUT.=('<td>Referral Link:</td>');
+$PHP_OUTPUT.=('<td><b>'.URL.'/login_create.php?ref='.$account->getAccountID().'</b></td>');
+$PHP_OUTPUT.=('</tr>');
+
+$PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Login:</td>');
 $PHP_OUTPUT.=('<td><b>'.$account->getLogin().'</b></td>');
 $PHP_OUTPUT.=('</tr>');

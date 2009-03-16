@@ -169,7 +169,14 @@ if ($db->getNumRows() > 0) {
 	exit;
 }
 
+$referral = isset($_REQUEST['referral_id']) ? $_REQUEST['referral_id'] : 0;
 
+if (!is_numeric($referral))
+{
+	$msg = 'Referral ID must be a number if entered!';
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+	exit;
+}
 
 //BETA
 //$betaKey = $_REQUEST['beta_key'];
@@ -187,11 +194,11 @@ $validation_code = substr(SmrSession::$session_id, 0, 10);
 
 // create account
 $timez = $_REQUEST['timez'];
-$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, last_login, offset) VALUES(' .
+$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, last_login, offset,referral_id) VALUES(' .
 			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
 			$db->escape_string($first_name) . ', ' . $db->escape_string($last_name) . ', ' .
 			$db->escape_string($address) . ', ' . $db->escape_string($city) . ', ' . $db->escape_string($postal_code) . ', ' .
-			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($_REQUEST['icq'])) . ', ' . $db->escape_string($validation_code) . ',' . TIME . ',' .$timez.')');
+			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($_REQUEST['icq'])) . ', ' . $db->escape_string($validation_code) . ',' . TIME . ',' .$db->escapeNumber($timez).','.$db->escapeNumber($referral).')');
 
 // creates a new user account object
 $account =& SmrAccount::getAccountByName($login);
