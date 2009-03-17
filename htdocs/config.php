@@ -7,6 +7,7 @@
 define('ACCOUNT_PAGE',1403); //BETA
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
+define('ACCOUNT_ID_PLANET',65533);
 
 /*
  * FILE: /htdocs/config.php
