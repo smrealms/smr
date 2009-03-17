@@ -276,7 +276,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 			$message_text = str_replace('?$timea?', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
-	if (!empty($sender_id) && $sender_id!=ACCOUNT_ID_PORT&&$sender_id!=ACCOUNT_ID_ADMIN)
+	if (!empty($sender_id) && $sender_id!=ACCOUNT_ID_PORT&&$sender_id!=ACCOUNT_ID_ADMIN&&$sender_id!=ACCOUNT_ID_PLANET)
 		$sender =& SmrPlayer::getPlayer($sender_id, $player->getGameID());
 	$return= ('<tr>');
 	$return.= ('<td width="10"><input type="checkbox" name="message_id[]" value="'.$message_id.'">');
@@ -286,11 +286,15 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	$return.= ('<td nowrap="nowrap" width="100%">From: ');
 	if($sender_id==ACCOUNT_ID_PORT)
 	{
-		$return.= ('<span class="yellow">Port Defenses</span>');
+		$return.= '<span class="yellow">Port Defenses</span>';
 	}
 	else if($sender_id==ACCOUNT_ID_ADMIN)
 	{
-		$return.= ('<span style="font:small-caps bold;color:blue;">Administrator</span>');
+		$return.= '<span style="font:small-caps bold;color:blue;">Administrator</span>';
+	}
+	else if($sender_id==ACCOUNT_ID_PLANET)
+	{
+		$return.= '<span class="yellow">Planetary Defenses</span>';
 	}
 	else if (is_object($sender))
 	{

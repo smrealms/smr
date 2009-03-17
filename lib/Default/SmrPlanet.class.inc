@@ -613,7 +613,7 @@ class SmrPlanet
 	
 	public function getDisplayName()
 	{
-		return '<span style="color:yellow;font-variant:small-caps">' . $this->getName() . '</span>';;
+		return '<span style="color:yellow;font-variant:small-caps">' . $this->getName() . '(#'.$this->getSectorID().')</span>';;
 	}
 	
 	public function isInhabitable()
