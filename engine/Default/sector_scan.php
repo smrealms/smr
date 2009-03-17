@@ -118,7 +118,7 @@ if ($target_sector->hasLocation()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No'
 $PHP_OUTPUT.=('</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</p>');
+$PHP_OUTPUT.=('</p><br />');
 
 // is it a warp or a normal move?
 if ($sector->getLinkWarp() == $var['target_sector'])
@@ -131,8 +131,8 @@ $container['url']			= 'sector_move_processing.php';
 $container['target_page']	= 'current_sector.php';
 transfer('target_sector');
 
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=create_submit('Enter ' . $var['target_sector'] . ' ('.$turns.')');
+$PHP_OUTPUT.= '<a href="'.$target_sector->getScanSectorHREF().'" class="submitStyle">Rescan ' . $target_sector->getSectorID() . '</a>&nbsp;';
+$PHP_OUTPUT.= '<a href="'.$target_sector->getCurrentSectorHREF().'" class="submitStyle">Enter ' . $target_sector->getSectorID() . ' ('.$turns.')</a>';
 $PHP_OUTPUT.=('</form></p>');
 
 ?>
