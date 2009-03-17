@@ -25,6 +25,8 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote_processing.php', ''));
 	$PHP_OUTPUT.=('<p><table class="standard" width="100%">');
 	$PHP_OUTPUT.=('<tr>');
+	if($DELETE_ALLOWED)
+		$PHP_OUTPUT.=('<th width="30">Requester</th>');
 	$PHP_OUTPUT.=('<th width="30">Votes</th>');
 	$PHP_OUTPUT.=('<th>Feature</th>');
 	$PHP_OUTPUT.=('<th width="20">&nbsp;</th>');
@@ -35,11 +37,13 @@ if ($db->getNumRows() > 0)
 	while ($db->nextRecord())
 	{
 		$feature_request_id = $db->getField('feature_id');
-		$submitter_id = $db->getField('submitter_id');
+		$requestAccount =& SmrAccount::getAccount($db->getField('submitter_id'));
 		$message = stripslashes($db->getField('feature_msg'));
 		$votes = $db->getField('votes');
 
 		$PHP_OUTPUT.=('<tr>');
+		if($DELETE_ALLOWED)
+			$PHP_OUTPUT.=('<td valign="top" align="center">'.$requestAccount->getLogin().'&nbsp;('.$requestAccount->getAccountID().')</td>');
 		$PHP_OUTPUT.=('<td valign="top" align="center">'.$votes.'</td>');
 		$PHP_OUTPUT.=('<td valign="top">'.$message.'</td>');
 		$PHP_OUTPUT.=('<td valign="middle" align="center"><input type="radio" name="vote" value="'.$feature_request_id.'"');
