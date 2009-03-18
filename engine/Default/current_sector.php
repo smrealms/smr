@@ -162,7 +162,6 @@ if (isset($var['msg']))
 	$template->assign('VarMessage',$var['msg']);
 }
 
-
 if ($player->getAccountID() == 2)
 {
 	$db->query('SELECT * FROM player WHERE account_id = 10106 AND game_id = 23 LIMIT 1');
@@ -229,7 +228,7 @@ function checkForForceRefreshMessage(&$msg)
 {
 	global $db,$player,$template;
 	$contains = 0;
-	$msg = str_replace('[Force Check]','',$contains);
+	$msg = str_replace('[Force Check]','',$msg,$contains);
 	if($contains>0)
 	{
 		if(!$template->get_template_vars('ForceRefreshMessage'))
