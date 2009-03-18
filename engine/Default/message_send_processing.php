@@ -24,7 +24,7 @@ if ($player->isLandedOnPlanet())
 	$container['body'] = 'planet_main.php';
 else
 	$container['body'] = 'current_sector.php';
-
+$container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
 forward($container);
 
 ?>
