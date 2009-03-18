@@ -31,7 +31,7 @@ class SmrAccount
 	var $bounty_amount_claimed;
 	var $military_claimed;
 	var $bounty_amount_on;
-	var $veteran;
+	protected $veteran;
 	var $logging;
 	var $offset;
 	var $images;
@@ -83,7 +83,7 @@ class SmrAccount
 			
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
-			$this->veteran			= $row['veteran'];
+			$this->veteran			= $row['veteran']=='TRUE';
 			$this->logging			= $row['logging']=='TRUE';
 			$this->offset			= $row['offset'];
 			$this->images			= $row['images'];
@@ -178,8 +178,7 @@ class SmrAccount
 	}
 	
 	function update_ip()
-		{
-		
+	{
 		// get time
 		$time = TIME;
 		
@@ -216,63 +215,70 @@ class SmrAccount
 		$this->db->query('SELECT * FROM account_has_ip WHERE account_id = '.$this->account_id.' AND time = '.$time);
 		if (!$this->db->getNumRows())
 			$this->db->query('INSERT INTO account_has_ip (account_id, time, ip, host) VALUES ('.$this->account_id.', '.$time.', '.$this->db->escapeString($curr_ip).', '.$this->db->escapeString($host).')');
-		
-		}
+	}
 	
 	function update_last_login()
-		{
-		
+	{
 		$this->last_login = TIME;
 		$this->db->query('UPDATE account SET last_login = '.$this->last_login.' ' .
 			'WHERE account_id = '.$this->account_id);
-		
-		}
-	
-	function is_veteran() {
-		
-		return $this->veteran;
-		
 	}
 	
-	function get_rank_name() {
-		
+	function isVeteranBumped()
+	{
+		return $this->veteran;
+	}
+	
+	function isVeteran()
+	{
+		return $this->veteran && $curr_account->get_rank() >= FLEDGLING;
+	}
+	
+	public function isNewbie()
+	{
+		return !$this->isVeteran();
+	}
+	
+	function get_rank_name()
+	{
 		if(!isset($this->rank)) $this->get_rank();
 		return $this->rank_name;  
-		
 	}
 	
-	function get_rank() {
-		
-		if(!isset($this->rank)) {
+	function get_rank()
+	{
+		if(!isset($this->rank))
+		{
 			$this->db->query('SELECT kills, experience_traded, rankings_id, rankings_name, kills_needed, experience_needed
 				FROM `rankings` , `account_has_stats`
 				WHERE (account_has_stats.kills >= kills_needed OR account_has_stats.experience_traded >= experience_needed)
 				AND account_has_stats.account_id = ' . $this->account_id . ' ORDER BY rankings_id DESC LIMIT 2');
 			
-			if($this->db->getNumRows() > 0) {
+			if($this->db->getNumRows() > 0)
+			{
 				$this->db->nextRecord();
 				$row = $this->db->getRow();
 				// If both rankings qualify they get the top row. If not they get the other row
-				if($row['kills_needed'] <= $row['kills'] && $row['experience_needed'] <= $row['experience_traded']) {
+				if($row['kills_needed'] <= $row['kills'] && $row['experience_needed'] <= $row['experience_traded'])
+				{
 					$this->rank = $row['rankings_id'];
 					$this->rank_name = $row['rankings_name'];
 				}
-				else {
+				else
+				{
 					$this->db->nextRecord();
 					$row = $this->db->getRow();
 					$this->rank = $row['rankings_id'];
 					$this->rank_name = $row['rankings_name'];
 				}
 			}
-			else {
+			else
+			{
 				$this->rank = 1;
 				$this->rank_name = 'Newbie';
 			}
-			
 		}
-		
 		return $this->rank;
-		
 	}
 	
 	function log($log_type_id, $msg, $sector_id = 0)

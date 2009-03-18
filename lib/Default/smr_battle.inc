@@ -3,13 +3,13 @@
 // include file with database class
 require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
-class SMR_BATTLE extends SmrMySqlDatabase {
-
+class SMR_BATTLE extends SmrMySqlDatabase
+{
 	var $fleet;
 	var $chosen;
 
-	function SMR_BATTLE($initiator_id, $game_id, $nocap = FALSE) {
-
+	function SMR_BATTLE($initiator_id, $game_id, $nocap = FALSE)
+	{
 		// make sector object global
 		global $sector;
 
@@ -33,8 +33,8 @@ class SMR_BATTLE extends SmrMySqlDatabase {
 		$this->fleet[] = $initiator_id;
 
 		// get a list of ppl who attack with us
-		if ($initiator->alliance_id > 0) {
-
+		if ($initiator->alliance_id > 0)
+		{
 			$this->query('SELECT * FROM player ' .
 						 'WHERE game_id = '.$game_id.' AND ' .
 							   'alliance_id = '.$initiator->alliance_id.' AND ' .
@@ -47,66 +47,48 @@ class SMR_BATTLE extends SmrMySqlDatabase {
 			if(!$nocap) $max_fleet_size = 10;
 			else $max_fleet_size = 30;
 
-			while ($this->nextRecord() && $this->get_fleet_size() <= $max_fleet_size) {
-
-//				// we may skip player if this is a protected gal.
-//				if ($sector->is_protected_gal()) {
-//
-//					$curr_account =& SmrAccount::getAccount($this->getField('account_id'));
-//
-//					// if one is vet and the other is newbie we skip it
-//					if (different_level($rank_id, $curr_account->get_rank(), $initiator_account->veteran, $curr_account->veteran))
-//						continue;
-//
-//				}
-
+			while ($this->nextRecord() && $this->get_fleet_size() <= $max_fleet_size)
+			{
 				$curr_player =& SmrPlayer::getPlayer($this->getField('account_id'), $game_id);
 
-				if (!$curr_player->hasFederalProtection()) {
-
+				if (!$curr_player->hasFederalProtection())
+				{
 					// add to fleet
 					$this->fleet[] = $this->getField('account_id');
-
 				}
-
 			}
-
 		}
-
 	}
 
-	function next($check) {
-
+	function next($check)
+	{
 		// we already got each id so we reset the whole thing
 		if (count($this->chosen) == count($this->fleet))
 			$this->chosen = array();
 
-		while (true) {
-
+		while (true)
+		{
 			// get the id of the next index
 			$index = mt_rand() % count($this->fleet);
 
 			// take this value either if we don't should check it or
 			// if this value wasn't chosen before.
-			if (!$check || !isset($this->chosen[$index])) {
-
+			if (!$check || !isset($this->chosen[$index]))
+			{
 				// mark this value as choosen
 				if ($check)
 					$this->chosen[$index] = true;
 
 				// return it
 				return $this->fleet[$index];
-
 			}
-
 		}
-
 	}
 
-	function get_fleet_size() {
+	function get_fleet_size()
+	{
 		return count($this->fleet);
 	}
-
 }
 
 ?>

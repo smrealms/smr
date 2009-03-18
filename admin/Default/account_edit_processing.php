@@ -10,7 +10,7 @@ $reopenType = $_REQUEST['reopen_type'];
 $choise = $_REQUEST['choise'];
 $reason_pre_select = $_REQUEST['reason_pre_select'];
 $reason_msg = $_REQUEST['reason_msg'];
-$veteran_status = $_REQUEST['veteran_status'];
+$veteran_status = $_REQUEST['veteran_status']=='TRUE';
 $logging_status = $_REQUEST['logging_status'];
 $except = $_REQUEST['exception_add'];
 $names = $_REQUEST['player_name'];
@@ -99,7 +99,7 @@ else if ($points > 0 || $mailBan > 0)
 	}
 }
 
-if ($veteran_status != $curr_account->veteran) {
+if ($veteran_status != $curr_account->isVeteranBumped()) {
 
 	$db->query('UPDATE account SET veteran = '.$db->escapeString($veteran_status).' WHERE account_id = '.$account_id);
 	$msg .= 'set the veteran status to '.$db->escapeString($veteran_status).' ';

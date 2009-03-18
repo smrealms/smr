@@ -268,11 +268,11 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Forced Veteran:</td>');
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=('<input type="radio" name="veteran_status" value="TRUE"');
-	if ($curr_account->veteran == 'TRUE')
+	if ($curr_account->isVeteranBumped())
 		$PHP_OUTPUT.=(' checked');
 	$PHP_OUTPUT.=('>Yes</td></tr><tr><td>&nbsp;</td><td>');
 	$PHP_OUTPUT.=('<input type="radio" name="veteran_status" value="FALSE"');
-	if ($curr_account->veteran == 'FALSE')
+	if (!$curr_account->isVeteranBumped())
 		$PHP_OUTPUT.=(' checked');
 	$PHP_OUTPUT.=('>No</td></tr>');
 

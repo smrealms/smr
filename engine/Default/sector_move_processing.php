@@ -67,27 +67,6 @@ if ($player->getTurns() < $turns)
     create_error('You don\'t have enough turns to move!');
 
 
-		
-//// ok we can only get the leave save heaven if we go through a warp
-//if ($action != 'Yes' && $turns == 5 && $gal_ids[$player->getSectorID()] < 9) {
-//
-//	// get our rank
-//	$rank_id = $account->get_rank();
-//
-//	// are we a noob
-//	if ($rank_id < FLEDGLING && $account->veteran == 'FALSE') {
-//
-//
-//		if($gal_ids[$player->getSectorID()] < 9 && $gal_ids[$var['target_sector']] > 8) {
-//			$container = create_container('skeleton.php', 'leaving_newbie_galaxy.php');
-//			$container['method'] = 'move';
-//			transfer('target_page');
-//			transfer('target_sector');
-//			forward($container);
-//
-//		}
-//	}
-//}
 $query = get_forces_query($gal_ids[$player->getSectorID()]);
 $db->query($query);
 
@@ -275,33 +254,7 @@ function get_forces_query($galaxy_id) {
 	sector_has_forces.owner_id as account_id,
 	sector_has_forces.scout_drones as scout_drones,
 	sector_has_forces.mines as mines
-	FROM sector_has_forces,player';
-
-//	// Vets don't see newbies in racials and vice versa
-//	if ($galaxy_id < 9) {
-//		$query .= ',account_has_stats,account
-//					WHERE account.account_id = sector_has_forces.owner_id
-//					AND account_has_stats.account_id = sector_has_forces.owner_id';
-//
-//		if($account->get_rank() > BEGINNER || $account->veteran == 'TRUE') {
-//			$query2 = ' AND (
-//			(account_has_stats.kills >= 15 OR account_has_stats.experience_traded >= 60000) OR 
-//			(account_has_stats.kills >= 10 AND account_has_stats.experience_traded >= 40000)
-//			OR account.veteran=\'TRUE\')';
-//		}
-//		else {
-//			$query2 = ' AND (
-//			(account_has_stats.kills < 15 AND account_has_stats.experience_traded < 60000) OR 
-//			(account_has_stats.kills < 10 AND account_has_stats.experience_traded < 40000)
-//			) AND account.veteran=\'FALSE\'';
-//		}
-//		$query2 .= ' AND ';
-//	}
-//	else {
-		$query2 = ' WHERE ';
-//	}
-
-	$query .= $query2 . '
+	FROM sector_has_forces,player WHERE
 	player.account_id=sector_has_forces.owner_id
 	AND player.account_id!=' . SmrSession::$account_id . '
 	AND (player.alliance_id=0 OR player.alliance_id NOT IN (' . implode(',',$allied) . '))

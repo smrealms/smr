@@ -7,16 +7,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $template->assign('ThisSector',$sector);
 
-// get our rank
-$rank_id = $account->get_rank();
-
-// add newbie to gal name?
-$galaxyName = $sector->getGalaxyName();
-if ($sector->getGalaxyID()<9 && $rank_id < FLEDGLING && $account->veteran == 'FALSE') {
-	$galaxyName .= ' - Newbie';
-}
-
-$template->assign('PageTopic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$galaxyName . ')');
+$template->assign('PageTopic','CURRENT SECTOR: ' . $player->getSectorID() . ' (' .$sector->getGalaxyName() . ')');
 $template->unassign('Menu'); //Menu is in template
 
 
