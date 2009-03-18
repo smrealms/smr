@@ -41,24 +41,11 @@ if ($sector->hasForces()) {
 					 'sector_has_forces.sector_id = '.$player->getSectorID().' AND ' .
 					 'mines > 0 AND ' .
 					 'owner_id != '.$player->getAccountID().' AND ' .
-					 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0)');
-	while ($db->nextRecord()) {
-
-//		// we may skip forces if this is a protected gal.
-//		if ($sector->is_protected_gal()) {
-//
-//			$forces_account =& SmrAccount::getAccount($db->getField('owner_id'));
-//
-//			// if one is vet and the other is newbie we skip it
-//			if (different_level($rank_id, $forces_account->get_rank(), $account->veteran, $forces_account->veteran))
-//				continue;
-//
-//		}
-
+					 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0) LIMIT 1');
+	if($db->nextRecord())
+	{
 		create_error('You cant jump when there are unfriendly forces in the sector!');
-
 	}
-
 }
 
 // check for turns

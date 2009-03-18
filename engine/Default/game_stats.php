@@ -172,7 +172,7 @@ if ($count_last_active > 0) {
 		$style = '';
 		$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
 
-		if ($curr_account->veteran == 'FALSE' && $curr_account->get_rank() < FLEDGLING)
+		if ($curr_account->isNewbie())
 			$style = 'font-style:italic;';
 		if ($curr_player->getAccountID() == $account->account_id)
 			$style .= 'font-weight:bold;';

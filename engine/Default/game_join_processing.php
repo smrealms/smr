@@ -57,7 +57,7 @@ else
 $rank_id = $account->get_rank();
 
 // for newbie and beginner another ship, more shields and armour
-if ($rank_id < 3 && $account->veteran == 'FALSE')
+if ($account->isNewbie())
 {
 	$ship_id = 28;
 	$amount_shields = 75;
