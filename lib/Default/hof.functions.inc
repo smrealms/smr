@@ -35,7 +35,7 @@ function displayHOFRow($rank,$accountID,$amount)
 	if(isset($var['game_id']))
 		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
 	else
-		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->HoF_name) .'</td>');
+		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->getHofName()) .'</td>');
 	$return.=('<td align=center'.$bold.'>' . $amount . '</td>');
 	$return.=('</tr>');
 	return $return;

@@ -11,28 +11,13 @@ class SmrAccount
 	var $login;
 	var $password;
 	var $email;
-	var $kills;
-	var $experience_traded;
 	var $first_name;
 	var $validated;
 	var $validation_code;
 	var $last_login;
-	var $games_joined;
-	var $planet_busts;
-	var $planet_bust_levels;
-	var $port_raids;
-	var $port_raid_levels;
-	var $sectors_explored;
-	var $deaths;
-	var $goods_traded;
-	var $HoF_name;
-//    var $donation;
-	var $bounties_claimed;
-	var $bounty_amount_claimed;
-	var $military_claimed;
-	var $bounty_amount_on;
+	protected $hofName;
 	protected $veteran;
-	var $logging;
+	protected $logging;
 	var $offset;
 	var $images;
 	var $fontsize;
@@ -42,6 +27,7 @@ class SmrAccount
 	protected $points;
 	protected $useAJAX;
 	protected $mailBanned;
+	protected $HOF;
 	
 	protected $hasChanged;
 	
@@ -93,28 +79,9 @@ class SmrAccount
 			$this->useAJAX			= $row['use_ajax']=='TRUE';
 			$this->mailBanned		= (int)$row['mail_banned'];
 			
-			$this->db->query('SELECT * FROM account_has_stats WHERE account_id = ' . $this->account_id . ' LIMIT 1');
-			
-			if ($this->db->nextRecord())
-			{
-				$row = $this->db->getRow();
-				$this->kills			= $row['kills'];
-				$this->experience_traded= $row['experience_traded'];
-				$this->games_joined		= $row['games_joined'];
-				$this->planet_busts		= $row['planet_busts'];
-				$this->planet_bust_levels = $row['planet_bust_levels'];
-				$this->port_raids		= $row['port_raids'];
-				$this->port_raid_levels = $row['port_raid_levels'];
-				$this->sectors_explored = $row['sectors_explored'];
-				$this->deaths			= $row['deaths'];
-				$this->goods_traded		= $row['goods_traded'];
-				$this->HoF_name			= $row['HoF_name'];
-				//                $this->donation			= $row['donation'];
-				$this->bounties_claimed = $row['bounties_claimed'];
-				$this->bounty_amount_claimed = $row['bounty_amount_claimed'];
-				$this->military_claimed = $row['military_claimed'];
-				$this->bounty_amount_on = $row['bounty_amount_on'];
-			}
+			$this->hofName			= $row['hof_name'];
+			if(empty($this->hofName))
+				$this->hofName=$this->login;
 		}
 		else
 		{
@@ -217,26 +184,78 @@ class SmrAccount
 			$this->db->query('INSERT INTO account_has_ip (account_id, time, ip, host) VALUES ('.$this->account_id.', '.$time.', '.$this->db->escapeString($curr_ip).', '.$this->db->escapeString($host).')');
 	}
 	
-	function update_last_login()
+	public function update_last_login()
 	{
 		$this->last_login = TIME;
 		$this->db->query('UPDATE account SET last_login = '.$this->last_login.' ' .
 			'WHERE account_id = '.$this->account_id);
 	}
 	
-	function isVeteranBumped()
+	public function setLoggingEnabled($bool)
+	{
+		if($this->logging==$bool)
+			return;
+		$db->query('UPDATE account SET logging = '.$db->escapeBoolean($bool).' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->logging=$bool;
+	}
+	
+	public function isLoggingEnabled()
+	{
+		return $this->logging;
+	}
+	
+	public function isVeteranBumped()
 	{
 		return $this->veteran;
 	}
 	
-	function isVeteran()
+	public function isVeteran()
 	{
-		return $this->veteran && $curr_account->get_rank() >= FLEDGLING;
+		return $this->veteran && $this->get_rank() >= FLEDGLING;
 	}
 	
 	public function isNewbie()
 	{
 		return !$this->isVeteran();
+	}
+	
+	protected function getHOFData()
+	{
+		if(!isset($this->HOF))
+		{
+			//Get Player HOF
+			$this->db->query('SELECT type,sum(amount) FROM player_hof WHERE account_id=' . $this->getAccountID().' GROUP BY type');
+			$this->HOF = array();
+			while($this->db->nextRecord())
+			{
+				$hof =& $this->HOF;
+				$typeList = explode(':',$this->db->getField('type'));
+				foreach($typeList as $type)
+				{
+					if(!isset($hof[$type]))
+					{
+						$hof[$type] = array();
+					}
+					$hof =& $hof[$type];
+				}
+				$hof = $this->db->getField('amount');
+			}
+		}
+	}
+	
+	public function getHOF(array $typeList = null)
+	{
+		$this->getHOFData();
+		if($typeList==null)
+			return $this->HOF;
+		$hof=$this->HOF;
+		foreach($typeList as $type)
+		{
+			if(!isset($hof[$type]))
+				return 0;
+			$hof = $hof[$type];
+		}
+		return $hof;
 	}
 	
 	function get_rank_name()
@@ -247,6 +266,7 @@ class SmrAccount
 	
 	function get_rank()
 	{
+		
 		if(!isset($this->rank))
 		{
 			$this->db->query('SELECT kills, experience_traded, rankings_id, rankings_name, kills_needed, experience_needed
@@ -283,7 +303,7 @@ class SmrAccount
 	
 	function log($log_type_id, $msg, $sector_id = 0)
 	{
-		if ($this->logging === true)
+		if ($this->isLoggingEnabled())
 		{
 			if (empty($sector_id))
 				$sector_id = 0;
@@ -445,7 +465,15 @@ class SmrAccount
 	
 	public function getHofName()
 	{
-		return $this->HoF_name;
+		return $this->hofName;
+	}
+	
+	public function setHofName($name)
+	{
+		if($this->hofName==$name)
+			return;
+		$db->query('UPDATE account SET hof_name = ' . $db->escapeString($name) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->hofName=$name;
 	}
 	
 	protected function getPassword()

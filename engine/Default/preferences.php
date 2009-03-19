@@ -107,7 +107,7 @@ $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr><td colspan="2">&nbsp;</td></tr>');
 
 $PHP_OUTPUT.=('<tr><td>Hall of Fame Name:</td>');
-$PHP_OUTPUT.=('<td><input type="text" name="HoF_name" value="'.$account->HoF_name.'" id="InputFields" size="50"></td>');
+$PHP_OUTPUT.=('<td><input type="text" name="HoF_name" value="'.$account->getHofName().'" id="InputFields" size="50"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');

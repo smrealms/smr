@@ -41,29 +41,29 @@ $db2 = new SmrMySqlDatabase();
 <tr>
 <td valign="top">
 <?php
-if (!empty($_SERVER['QUERY_STRING'])) {
-
+if (!empty($_SERVER['QUERY_STRING']))
+{
 	// query string should be a nick or some letters of a nick
 	$query = mysql_escape_string(urldecode($_SERVER['QUERY_STRING']));
 
 	$db->query('SELECT album.account_id as album_id
-				FROM album NATURAL JOIN account_has_stats
-				WHERE HoF_name LIKE '.$db->escapeString($query.'%').' AND
+				FROM album NATURAL JOIN account
+				WHERE hof_name LIKE '.$db->escapeString($query.'%').' AND
 					  approved = \'YES\'
-				ORDER BY HoF_name');
+				ORDER BY hof_name');
 
-	if ($db->getNumRows() > 1) {
-
+	if ($db->getNumRows() > 1)
+	{
 		$db2->query('SELECT album.account_id as album_id
-				FROM album NATURAL JOIN account_has_stats
-				WHERE HoF_name = '.$db->escapeString($query).' AND
+				FROM album NATURAL JOIN account
+				WHERE hof_name = '.$db->escapeString($query).' AND
 					  approved = \'YES\'
-				ORDER BY HoF_name');
+				ORDER BY hof_name');
 		
 		if ($db2->nextRecord())
 			album_entry($db2->getField('album_id'));
-		else {
-			
+		else
+		{
 			// get all id's and build array
 			$album_ids = array();
 	
@@ -77,17 +77,18 @@ if (!empty($_SERVER['QUERY_STRING'])) {
 				main_page();
 		}
 
-	} elseif ($db->getNumRows() == 1) {
-
+	}
+	elseif ($db->getNumRows() == 1)
+	{
 		if ($db->nextRecord())
 			album_entry($db->getField('album_id'));
 		else
 			main_page();
-
-	} else
+	}
+	else
 		main_page();
-
-} else
+}
+else
 	main_page();
 ?>
 </td>

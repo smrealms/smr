@@ -194,11 +194,11 @@ $validation_code = substr(SmrSession::$session_id, 0, 10);
 
 // create account
 $timez = $_REQUEST['timez'];
-$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, last_login, offset,referral_id) VALUES(' .
+$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
 			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
 			$db->escape_string($first_name) . ', ' . $db->escape_string($last_name) . ', ' .
 			$db->escape_string($address) . ', ' . $db->escape_string($city) . ', ' . $db->escape_string($postal_code) . ', ' .
-			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($_REQUEST['icq'])) . ', ' . $db->escape_string($validation_code) . ',' . TIME . ',' .$db->escapeNumber($timez).','.$db->escapeNumber($referral).')');
+			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($_REQUEST['icq'])) . ', ' . $db->escape_string($validation_code) . ',' . TIME . ',' .$db->escapeNumber($timez).','.$db->escapeNumber($referral).','.$db->escapeString($login).')');
 
 // creates a new user account object
 $account =& SmrAccount::getAccountByName($login);

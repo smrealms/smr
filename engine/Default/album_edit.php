@@ -1,5 +1,7 @@
 <?
 
+require_once(LIB.'/Album/album_functions.php');
+
 $template->assign('PageTopic','Edit Photo');
 
 $PHP_OUTPUT.=('<p><span style="font-size:80%;">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br />');
@@ -30,7 +32,7 @@ if ($db->nextRecord()) {
 	elseif ($disabled == 'TRUE')
 		$PHP_OUTPUT.=('<span style="color:red;">Disabled</span>');
 	elseif ($approved == 'YES')
-		$PHP_OUTPUT.=('<a href="'.URL.'/album/?'.$account->HoF_name.'" style="color:green;">Online</a>');
+		$PHP_OUTPUT.=('<a href="'.URL.'/album/?'.$account->getHofName().'" style="color:green;">Online</a>');
 
 } else
 	$PHP_OUTPUT.=('<span style="color:orange;">No entry</span>');
@@ -59,7 +61,7 @@ $PHP_OUTPUT.=('<table>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Nick:</td>');
-$PHP_OUTPUT.=('<td>'.$account->HoF_name.'</td>');
+$PHP_OUTPUT.=('<td>'.$account->getHofName().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
