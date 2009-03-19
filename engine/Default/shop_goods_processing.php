@@ -189,6 +189,7 @@ if (!empty($bargain_price) &&
 		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'));
 		$port->sellGoods($portGood,$amount,$credits_in,$gained_exp);
 	}
+	$player->increaseHOF($gained_exp,array('Trade','Experience','Total'));
 	$player->increaseHOF(1,array('Trade','Results','Success'));
 
 	// log action
