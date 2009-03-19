@@ -11,6 +11,7 @@ class Globals
 	protected static $BETA_OPEN = null;
 	protected static $FEATURE_REQUEST_OPEN = null;
 	protected static $RACE_RELATIONS = array();
+	protected static $USER_RANKINGS = null;
 	protected static $db = null;
 	
 	public function __construct() //required public for smarty
@@ -235,6 +236,7 @@ class Globals
 		
 		if(!isset(self::$RACE_RELATIONS[$gameID][$raceID]))
 		{
+			self::initialiseDatabase();
 			//get relations
 			$RACES =& Globals::getRaces();
 			self::$RACE_RELATIONS[$gameID][$raceID] = array();
@@ -249,6 +251,21 @@ class Globals
 			}
 		}
 		return self::$RACE_RELATIONS[$gameID][$raceID];
+	}
+	
+	public static function getUserRanking()
+	{
+		if(!isset(self::$USER_RANKINGS))
+		{
+			self::initialiseDatabase();
+			self::$USER_RANKINGS = array();
+			self::$db->query('SELECT * FROM user_rankings ORDER BY rank');
+			while (self::$db->nextRecord())
+			{
+				self::$USER_RANKINGS[(int)self::$db->getField('rank')] = self::$db->getField('rank_name');
+			}
+		}
+		return self::$USER_RANKINGS;
 	}
 	
 	

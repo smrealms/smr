@@ -3,6 +3,22 @@ require_once('SmrMySqlDatabase.class.inc');
 
 class SmrAccount
 {
+	const USER_RANKINGS_EACH_STAT_POW = 0.9;
+	const USER_RANKINGS_TOTAL_SCORE_POW = 0.6;
+	const USER_RANKINGS_RANK_BOUNDARY = 100;
+	protected static $USER_RANKINGS_SCORE = array(
+		array(array('Trade','Experience','Total'),.1),
+		array(array('Killing','Kills'),1000)
+//		array(array('','',''),),
+//		array(array('','',''),),
+//		array(array('','',''),),
+//		array(array('','',''),),
+//		array(array('','',''),),
+//		array(array('','',''),),
+//		array(array('','',''),),
+//		array(array('','',''),),
+		);
+	
 	protected static $CACHE_ACCOUNTS = array();
 	
 	protected $db;
@@ -28,6 +44,8 @@ class SmrAccount
 	protected $useAJAX;
 	protected $mailBanned;
 	protected $HOF;
+	protected $individualScores;
+	protected $score;
 	
 	protected $hasChanged;
 	
@@ -82,6 +100,7 @@ class SmrAccount
 			$this->hofName			= $row['hof_name'];
 			if(empty($this->hofName))
 				$this->hofName=$this->login;
+$this->get_rank();
 		}
 		else
 		{
@@ -224,7 +243,7 @@ class SmrAccount
 		if(!isset($this->HOF))
 		{
 			//Get Player HOF
-			$this->db->query('SELECT type,sum(amount) FROM player_hof WHERE account_id=' . $this->getAccountID().' GROUP BY type');
+			$this->db->query('SELECT type,sum(amount) as amount FROM player_hof WHERE account_id=' . $this->getAccountID().' GROUP BY type');
 			$this->HOF = array();
 			while($this->db->nextRecord())
 			{
@@ -260,45 +279,79 @@ class SmrAccount
 	
 	function get_rank_name()
 	{
-		if(!isset($this->rank)) $this->get_rank();
-		return $this->rank_name;  
+		$rankings = GLOBALS::getUserRanking();
+		if(isset($rankings[$this->get_rank()]))
+			return $rankings[$this->get_rank()];
+		else
+			return end($rankings);
+	}
+	
+	public function getScore()
+	{
+		if(!isset($this->score))
+		{
+			$score=0;
+			foreach($this->getIndividualScores() as $each)
+			{
+				$score+=$each['Score'];
+			}
+			$score = pow($score,self::USER_RANKINGS_TOTAL_SCORE_POW);
+			$this->score=round($score);
+		}
+		return $this->score;
+	}
+	
+	public function &getIndividualScores(SmrPlayer &$player = null)
+	{
+		$gameID=0;
+		if($player!=null)
+			$gameID = $player->getGameID();
+		if(!isset($this->individualScores[$gameID]))
+		{
+			$this->individualScores[$gameID] = array();
+			foreach(self::$USER_RANKINGS_SCORE as $statScore)
+			{
+				if($player==null)
+					$stat = $this->getHOF($statScore[0]);
+				else
+					$stat = $player->getHOF($statScore[0]);
+				$this->individualScores[$gameID][]=array('Stat'=>$statScore[0],'Score'=>pow($stat*$statScore[1],self::USER_RANKINGS_EACH_STAT_POW));
+			}
+		}
+		return $this->individualScores[$gameID];
 	}
 	
 	function get_rank()
 	{
-		
-		if(!isset($this->rank))
-		{
-			$this->db->query('SELECT kills, experience_traded, rankings_id, rankings_name, kills_needed, experience_needed
-				FROM `rankings` , `account_has_stats`
-				WHERE (account_has_stats.kills >= kills_needed OR account_has_stats.experience_traded >= experience_needed)
-				AND account_has_stats.account_id = ' . $this->account_id . ' ORDER BY rankings_id DESC LIMIT 2');
-			
-			if($this->db->getNumRows() > 0)
-			{
-				$this->db->nextRecord();
-				$row = $this->db->getRow();
-				// If both rankings qualify they get the top row. If not they get the other row
-				if($row['kills_needed'] <= $row['kills'] && $row['experience_needed'] <= $row['experience_traded'])
-				{
-					$this->rank = $row['rankings_id'];
-					$this->rank_name = $row['rankings_name'];
-				}
-				else
-				{
-					$this->db->nextRecord();
-					$row = $this->db->getRow();
-					$this->rank = $row['rankings_id'];
-					$this->rank_name = $row['rankings_name'];
-				}
-			}
-			else
-			{
-				$this->rank = 1;
-				$this->rank_name = 'Newbie';
-			}
-		}
-		return $this->rank;
+		return ceil($this->getScore()/self::USER_RANKINGS_RANK_BOUNDARY);
+//			$this->db->query('SELECT kills, experience_traded, rankings_id, rankings_name, kills_needed, experience_needed
+//				FROM `rankings` , `account_has_stats`
+//				WHERE (account_has_stats.kills >= kills_needed OR account_has_stats.experience_traded >= experience_needed)
+//				AND account_has_stats.account_id = ' . $this->account_id . ' ORDER BY rankings_id DESC LIMIT 2');
+//			
+//			if($this->db->getNumRows() > 0)
+//			{
+//				$this->db->nextRecord();
+//				$row = $this->db->getRow();
+//				// If both rankings qualify they get the top row. If not they get the other row
+//				if($row['kills_needed'] <= $row['kills'] && $row['experience_needed'] <= $row['experience_traded'])
+//				{
+//					$this->rank = $row['rankings_id'];
+//					$this->rank_name = $row['rankings_name'];
+//				}
+//				else
+//				{
+//					$this->db->nextRecord();
+//					$row = $this->db->getRow();
+//					$this->rank = $row['rankings_id'];
+//					$this->rank_name = $row['rankings_name'];
+//				}
+//			}
+//			else
+//			{
+//				$this->rank = 1;
+//				$this->rank_name = 'Newbie';
+//			}
 	}
 	
 	function log($log_type_id, $msg, $sector_id = 0)

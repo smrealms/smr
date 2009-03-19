@@ -127,12 +127,8 @@ $PHP_OUTPUT.= '<br /><br />';
 $container['body'] = 'rankings_view.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">User Ranking</span>');
 
-$rank_id = $account->get_rank();
-
-$db->query('SELECT rankings_name FROM rankings WHERE rankings_id=' . $rank_id . ' LIMIT 1');
-$db->nextRecord();
 $PHP_OUTPUT.= '<br />You are ranked as a <span class="green">';
-$PHP_OUTPUT.= $db->getField('rankings_name');
+$PHP_OUTPUT.= $account->get_rank_name();
 $PHP_OUTPUT.= '</span> player.<br /><br />';
 $PHP_OUTPUT.= '</td></tr></table><br />';
 
