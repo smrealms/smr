@@ -79,11 +79,11 @@ if ($action == 'Save and resend validation code') {
   if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
 
   //no duplicates
-  $db->query('SELECT * FROM account_has_stats WHERE HoF_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id <> '.$account->account_id);
+  $db->query('SELECT * FROM account WHERE hof_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id != '.$account->getAccountID().' LIMIT 1');
   if ($db->nextRecord()) create_error('Someone is already using that name!');
 
   // set the HoF name in account stat
-  $db->query('UPDATE account_has_stats SET HoF_name = ' . $db->escape_string($HoF_name, true) . ' WHERE account_id = '.$account->account_id);
+  $account->setHofName($HoF_name);
 
 } elseif ($action == 'Yes')  {
 

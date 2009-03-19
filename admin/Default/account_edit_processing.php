@@ -11,7 +11,7 @@ $choise = $_REQUEST['choise'];
 $reason_pre_select = $_REQUEST['reason_pre_select'];
 $reason_msg = $_REQUEST['reason_msg'];
 $veteran_status = $_REQUEST['veteran_status']=='TRUE';
-$logging_status = $_REQUEST['logging_status'];
+$logging_status = $_REQUEST['logging_status']=='TRUE';
 $except = $_REQUEST['exception_add'];
 $names = $_REQUEST['player_name'];
 $points = intval($_REQUEST['points']);
@@ -106,11 +106,10 @@ if ($veteran_status != $curr_account->isVeteranBumped()) {
 
 }
 
-if ($logging_status != $curr_account->logging) {
-
-	$db->query('UPDATE account SET logging = '.$db->escapeString($logging_status).' WHERE account_id = '.$account_id);
-	$msg .= 'set the logging status to '.$db->escapeString($logging_status).' ';
-
+if ($logging_status != $curr_account->isLoggingEnabled())
+{
+	$curr_account->setLoggingEnabled($logging_status);
+	$msg .= 'set the logging status to '.$logging_status.' ';
 }
 if ($except != 'Add An Exception' && $except != '') {
 

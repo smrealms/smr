@@ -20,7 +20,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'hall_of_fame_player_detail.php';
 if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
-$PHP_OUTPUT.='Welcome to the Hall of Fame ' . stripslashes($account->HoF_name) . '!<br />The Hall of Fame is a comprehensive '.
+$PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />The Hall of Fame is a comprehensive '.
 			'list of player accomplishments.  Here you can view how players rank in many different '.
 			'aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />'.
 				create_link($container,'You can also view your Personal Hall of Fame here.').'<br /><br />';

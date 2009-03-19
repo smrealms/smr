@@ -1,6 +1,7 @@
 <?php
 
-function main_page() {
+function main_page()
+{
 	// database object
 	$db = new SmrMySqlDatabase();
 
@@ -117,31 +118,31 @@ function album_entry($album_id) {
 	echo('<table style="width: 100%">');
 	echo('<tr>');
 
-	$db->query('SELECT HoF_Name
-				FROM album NATURAL JOIN account_has_stats
-				WHERE HoF_Name < ' . $db->escape_string($nick) . ' AND
+	$db->query('SELECT hof_name
+				FROM album NATURAL JOIN account
+				WHERE hof_name < ' . $db->escapeString($nick) . ' AND
 					  approved = \'YES\'
-				ORDER BY HoF_Name DESC
+				ORDER BY hof_name DESC
 				LIMIT 1');
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 
-		$priv_nick = $db->getField('HoF_Name');
+		$priv_nick = $db->getField('hof_name');
 		echo '<a href="URL/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
 	echo '</td>';
 	echo('<td style="text-align: center;" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
 
-	$db->query('SELECT HoF_Name
-				FROM album NATURAL JOIN account_has_stats
-				WHERE HoF_Name > ' . $db->escape_string($nick) . ' AND
+	$db->query('SELECT hof_name
+				FROM album NATURAL JOIN account
+				WHERE hof_name > ' . $db->escapeString($nick) . ' AND
 					  approved = \'YES\'
-				ORDER BY HoF_Name
+				ORDER BY hof_name
 				LIMIT 1');
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 
-		$next_nick = $db->getField('HoF_Name');
+		$next_nick = $db->getField('hof_name');
 		echo '&nbsp;&nbsp;&nbsp;<a href="'.URL.'/album/?' . urlencode($next_nick) . '"><img src="'.URL.'/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a>';
 	}
 	echo '</td>';
@@ -308,34 +309,17 @@ function create_link_list() {
 
 }
 
-function get_album_nick($album_id) {
 
+
+function get_album_nick($album_id)
+{
 	if ($album_id == 0)
 		return 'System';
 
 	$album = new SmrMySqlDatabase();
 
-	// get hof name
-	$album->query('SELECT HoF_name
-				   FROM account_has_stats
-				   WHERE account_id = '.$album_id);
-	if ($album->nextRecord())
-		$nick = $album->getField('HoF_name');
-
-	// fall back to login name if it's empty or we havn't found one
-	if (empty($nick)) {
-
-		$album->query('SELECT login
-					   FROM account
-					   WHERE account_id = '.$album_id);
-		if ($album->nextRecord())
-			$nick = $album->getField('login');
-
-	}
-
-
-	return $nick;
-
+	$account =& SmrAccount::getAccount($album_id);
+	return $account->getHofName();
 }
 
 /*
