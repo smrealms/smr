@@ -7,8 +7,9 @@ class SmrAccount
 	const USER_RANKINGS_TOTAL_SCORE_POW = 0.6;
 	const USER_RANKINGS_RANK_BOUNDARY = 100;
 	protected static $USER_RANKINGS_SCORE = array(
-		array(array('Trade','Experience','Total'),.1),
-		array(array('Killing','Kills'),1000)
+		array(array('Trade','Experience','Total'),.1,0.5),
+		array(array('Trade','Money','Profit'),0.00005,0.5),
+		array(array('Killing','Kills'),1000,1)
 //		array(array('','',''),),
 //		array(array('','',''),),
 //		array(array('','',''),),
@@ -315,7 +316,7 @@ $this->get_rank();
 					$stat = $this->getHOF($statScore[0]);
 				else
 					$stat = $player->getHOF($statScore[0]);
-				$this->individualScores[$gameID][]=array('Stat'=>$statScore[0],'Score'=>pow($stat*$statScore[1],self::USER_RANKINGS_EACH_STAT_POW));
+				$this->individualScores[$gameID][]=array('Stat'=>$statScore[0],'Score'=>pow($stat*$statScore[1],self::USER_RANKINGS_EACH_STAT_POW)*$statScore[2]);
 			}
 		}
 		return $this->individualScores[$gameID];
