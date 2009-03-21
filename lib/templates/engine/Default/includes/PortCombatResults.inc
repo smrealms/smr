@@ -1,5 +1,5 @@
 <?php
-$CombatPort = $PlanetCombatResults['Port'];
+$CombatPort =& $PortCombatResults['Port'];
 if(is_array($PortCombatResults['Weapons']))
 {
 	foreach($PortCombatResults['Weapons'] as $WeaponResults)
