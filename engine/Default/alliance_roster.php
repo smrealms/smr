@@ -198,7 +198,7 @@ foreach($alliancePlayers as &$alliancePlayer)
 					FROM player_has_alliance_role
 					WHERE account_id=' . $alliancePlayer->getAccountID() .'
 					AND game_id=' . SmrSession::$game_id . '
-					AND alliance_id='.$alliancePlayer->getAlliance().'
+					AND alliance_id='.$alliancePlayer->getAllianceID().'
 					LIMIT 1'
 					);
 
