@@ -98,6 +98,9 @@ abstract class AbstractSmrShip
 	
 	public function checkForExcessWeapons()
 	{
+		var_dump($this->hasWeapons());
+		var_dump($this->getPowerUsed() > $this->getMaxPower());
+		var_dump($this->getNumWeapons() > $this->getHardpoints());
 		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints()))
 		{
 			//erase the first weapon 1 at a time until we are okay
@@ -159,8 +162,9 @@ abstract class AbstractSmrShip
 	public function getPowerUsed()
 	{
 		$power = 0;
-		foreach ($this->weapons as &$weapon)
-			$power += $weapon->getPowerLevel();
+		if($this->getNumWeapons()>0)
+			foreach ($this->weapons as &$weapon)
+				$power += $weapon->getPowerLevel();
 		return $power;
 	}
 	
@@ -224,7 +228,7 @@ abstract class AbstractSmrShip
 		if($this->hasOpenWeaponSlots() && $this->hasRemainingPower())
 		{
 			$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
-			$this->weapons[count($this->weapons)] = $weapon;
+			$this->weapons[count($this->weapons)] =& $weapon;
 			$this->hasChangedWeapons = true;
 			return $weapon;
 		}
