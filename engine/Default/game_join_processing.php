@@ -111,7 +111,7 @@ $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id
 								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 3, 40, 40)');
 // give the player weapons
 $db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-								 'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 1, 46)');
+								 'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 0, 46)');
 
 // update stats
 $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$account->account_id);

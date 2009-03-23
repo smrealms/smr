@@ -102,7 +102,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 				{
 					?>the debris that was once <?php
 				}
-				echo $TargetPlanet->getDisplayName();
+				echo $TargetPort->getDisplayName();
 				
 				if(!$ActualDamage['TargetAlreadyDead'])
 				{
