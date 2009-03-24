@@ -37,7 +37,7 @@ if ($_REQUEST['submit']=='Create Game')
 	}
 	createGame($newID); //do the alliances/message stuff
 }
-else if ($_REQUEST['submit']=='Save Galaxies')
+else if ($_REQUEST['submit']=='Create Galaxies')
 {
 	for ($i=1;$i<=$var['num_gals'];$i++)
 	{
