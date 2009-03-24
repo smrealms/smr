@@ -206,15 +206,6 @@ class SmrShip extends AbstractSmrShip
 		return 1;
 	}
 	
-	function removeUnderAttack() {
-		foreach ($this->hardware as $hardware_type_id => $amount) {
-			$this->db->query('UPDATE ship_has_hardware SET old_amount = '.$amount.' ' .
-				'WHERE account_id = '.$this->getAccountID().' AND ' .
-				'game_id = '.$this->getGameID().' AND ' .
-				'hardware_type_id = '.$hardware_type_id.' LIMIT 1');
-		}
-	}
-	
 	public function isCloaked()
 	{
 		if(!$this->hasCloak())

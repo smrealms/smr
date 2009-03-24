@@ -827,10 +827,17 @@ abstract class AbstractSmrShip
 	
 	public function removeUnderAttack()
 	{
+		global $var;
 		$underAttack = $this->isUnderAttack();
 		$this->setOldShields($this->getShields());
 		$this->setOldCDs($this->getCDs());
 		$this->setOldArmour($this->getArmour());
+		if(isset($var['UnderAttack']))
+			return $var['UnderAttack'];
+		if($underAttack && !USING_AJAX)
+		{
+			SmrSession::updateVar('UnderAttack',$underAttack); //Remember we are under attack for AJAX
+		}
 		return $underAttack;
 	}
 	
