@@ -385,7 +385,7 @@ class SmrPort
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot upgrade a cached port!');
-		while($this->level<$level)
+		while($this->getLevel()<$level)
 		{
 			$this->doUpgrade();
 		}
@@ -397,11 +397,12 @@ class SmrPort
 		shuffle($GOODS);
 		
 		$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
-		switch($this->level)
+		switch($this->getLevel())
 		{
 			case 0:
 				for($i=0;$i<3;$i++) // Add 3 goods for upgrading to level 1
 				{
+					$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell'; //Regenerate type for each good.
 					do
 					{
 						$newGood = array_shift($GOODS);
