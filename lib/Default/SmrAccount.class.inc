@@ -324,7 +324,10 @@ $this->get_rank();
 	
 	function get_rank()
 	{
-		return ceil($this->getScore()/self::USER_RANKINGS_RANK_BOUNDARY);
+		$rank = ceil($this->getScore()/self::USER_RANKINGS_RANK_BOUNDARY);
+		if($rank<1)
+			$rank=1;
+		return $rank;
 //			$this->db->query('SELECT kills, experience_traded, rankings_id, rankings_name, kills_needed, experience_needed
 //				FROM `rankings` , `account_has_stats`
 //				WHERE (account_has_stats.kills >= kills_needed OR account_has_stats.experience_traded >= experience_needed)
@@ -715,6 +718,15 @@ $this->get_rank();
 		$container['body']			= 'toggle_processing.php';
 		$container['toggle']		= 'AJAX';
 		$container['referrer']		= $var['body'];
+		return SmrSession::get_new_href($container);
+	}
+	
+	public function getUserRankingHREF()
+	{
+		global $var;
+		$container = array();
+		$container['url']			= 'skeleton.php';
+		$container['body']			= 'rankings_view.php';
 		return SmrSession::get_new_href($container);
 	}
 }

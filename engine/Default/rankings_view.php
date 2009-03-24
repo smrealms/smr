@@ -54,22 +54,24 @@ foreach($individualScores as $statScore)
 	$PHP_OUTPUT.=(', has a stat of '.$account->getHOF($statScore['Stat']).' and a score of ' . number_format(round(pow($statScore['Score'],SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW))).' (roughly)<br />');
 }
 
-//current game stats
-$PHP_OUTPUT.=('<br /><br />');
-$PHP_OUTPUT.=('<b>Current Game Extended Stats</b><br />');
-$individualScores =& $account->getIndividualScores($player);
-foreach($individualScores as $statScore)
+if (SmrSession::$game_id != 0)
 {
-	$first=true;
-	foreach($statScore['Stat'] as $stat)
+	//current game stats
+	$PHP_OUTPUT.=('<br /><br />');
+	$PHP_OUTPUT.=('<b>Current Game Extended Stats</b><br />');
+	$individualScores =& $account->getIndividualScores($player);
+	foreach($individualScores as $statScore)
 	{
-		if($first)
-			$first=false;
-		else
-			$PHP_OUTPUT.=' - ';
-		$PHP_OUTPUT.=$stat;
+		$first=true;
+		foreach($statScore['Stat'] as $stat)
+		{
+			if($first)
+				$first=false;
+			else
+				$PHP_OUTPUT.=' - ';
+			$PHP_OUTPUT.=$stat;
+		}
+		$PHP_OUTPUT.=(', has a stat of '.$player->getHOF($statScore['Stat']).' and a score of ' . number_format(round(pow($statScore['Score'],SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW))).' (roughly)<br />');
 	}
-	$PHP_OUTPUT.=(', has a stat of '.$player->getHOF($statScore['Stat']).' and a score of ' . number_format(round(pow($statScore['Score'],SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW))).' (roughly)<br />');
 }
-
 ?>

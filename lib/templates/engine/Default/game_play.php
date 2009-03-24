@@ -1,7 +1,7 @@
 <h1>Play Game</h1>
 
-<a href="<?php echo $UserRankName ?>"><b style="color:yellow;">Rankings</b></a>
-<br />You are ranked as <?php $this->doAn($UserRankName) ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<p><br /><br />
+<a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b style="color:yellow;">Rankings</b></a>
+<br />You are ranked as <?php $this->doAn($ThisAccount->get_rank_name()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<p><br /><br />
 
 
 <?php
