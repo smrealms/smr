@@ -29,7 +29,7 @@
 				<td class="center"><input size="3" type="text" value="120" name="forces<?php echo $i; ?>"></td>
 			</tr><?php
 		} ?>
-		<tr><td class="center" colspan="5"><input type="submit" value="Save Galaxies" name="submit"></td>
+		<tr><td class="center" colspan="5"><input type="submit" value="Create Galaxies" name="submit"></td>
 		<td class="center"><input type="submit" value="Next" name="Next"></td>
 	</table>
 </form>
