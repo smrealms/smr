@@ -116,6 +116,7 @@ abstract class MySqlDatabase implements Database
 					 'Automatic Bug Report',
 					 $message,
 					 'From: '.$account->email);
+				release_lock(); //Try to release lock so they can carry on normally
 			}
 			catch(Exception $e)
 			{

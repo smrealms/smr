@@ -130,7 +130,6 @@ else
 	echo $am;
 echo '/' . $ship->max_hardware[HARDWARE_ARMOR] . '<br>';
 
-var_dump($ship);
 // ******* Hardware *******
 $container = array();
 $container['url'] = 'skeleton.php';
