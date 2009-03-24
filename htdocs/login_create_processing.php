@@ -169,7 +169,7 @@ if ($db->getNumRows() > 0) {
 	exit;
 }
 
-$referral = isset($_REQUEST['referral_id']) ? $_REQUEST['referral_id'] : 0;
+$referral = !empty($_REQUEST['referral_id']) ? $_REQUEST['referral_id'] : 0;
 
 if (!is_numeric($referral))
 {
