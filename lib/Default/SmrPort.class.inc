@@ -397,6 +397,7 @@ class SmrPort
 		shuffle($GOODS);
 		
 		$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
+		$count = count($GOODS);
 		switch($this->getLevel())
 		{
 			case 0:
