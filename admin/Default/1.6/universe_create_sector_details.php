@@ -28,7 +28,7 @@ $PHP_OUTPUT.= '<option value="0">No Port</option>';
 for ($i=1;$i<=9;$i++)
 {
 	$PHP_OUTPUT.= '<option value="' . $i . '"';
-	if ($sector->hasPort() && $sector->getPort()->getLevelID() == $i) $PHP_OUTPUT.= 'selected';
+	if ($sector->hasPort() && $sector->getPort()->getLevel() == $i) $PHP_OUTPUT.= 'selected';
 	$PHP_OUTPUT.= '>Level ' . $i . '</option>';
 }
 $PHP_OUTPUT.= '</select>';
@@ -51,10 +51,9 @@ for ($i=0;$i<=3;$i++)
 	foreach ($locations as &$location)
 	{
 		$PHP_OUTPUT.= '<option value="' . $location->getTypeID() . '"';
-		if ($sector->hasLocation())
+		if ($sector->hasLocation($location->getTypeID()))
 		{
-			$sectorLocations =& $sector->getLocations();
-			if(isset($sectorLocations[$i]) && $sectorLocations[$i]->equals($location)) $PHP_OUTPUT.= 'selected';
+			$PHP_OUTPUT.= 'selected';
 		}
 		$PHP_OUTPUT.= '>' . $location->getName() . '</option>';
 	} unset($location);
