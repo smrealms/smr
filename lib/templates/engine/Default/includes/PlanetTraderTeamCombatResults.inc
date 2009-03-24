@@ -75,7 +75,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 				<br /><?php
 				if($ActualDamage['KillingShot'])
 				{
-					$this->includeTemplate('includes/PlanetKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlanet'=>&$targetPlanet));
+					$this->includeTemplate('includes/PlanetKillMessage.inc',array('KillResults'=>$WeaponResults['KillResults'],'TargetPlanet'=>&$TargetPlanet));
 				}
 			}
 		}
@@ -150,7 +150,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 			<br /><?php
 			if($ActualDamage['KillingShot'])
 			{
-				$this->includeTemplate('includes/PlanetKillMessage.inc',array('KillResults'=>$Drones['KillResults'],'TargetPlanet'=>&$targetPlanet));
+				$this->includeTemplate('includes/PlanetKillMessage.inc',array('KillResults'=>$Drones['KillResults'],'TargetPlanet'=>&$TargetPlanet));
 			}
 		}
 	}
