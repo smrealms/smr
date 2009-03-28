@@ -85,11 +85,16 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $this->powerLevel;
 	}
 	
+	public function getPlayerLevelAccuracyMod(AbstractSmrPlayer &$player)
+	{
+		return (($player->getLevelID()*$player->getLevelID()*.008+.219*$player->getLevelID()+1.1694)/2) / 100;
+	}
+	
 	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
 	{
 		$modifiedAccuracy = $this->getBaseAccuracy();
 		$modifiedAccuracy += $this->getBaseAccuracy() * ($weaponPlayer->getStat('Accuracy') * ACCURACY_STAT_FACTOR)/100;
-		$modifiedAccuracy += $this->getBaseAccuracy() * (($weaponPlayer->getLevelID()*$weaponPlayer->getLevelID()*.008+.219*$weaponPlayer->getLevelID()+1.1694) / 2) / 100;
+		$modifiedAccuracy += $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($weaponPlayer);
 		if ($weaponPlayer->isGadgetEquipped('Increased Accuracy'))
 			$modifiedAccuracy += $this->getBaseAccuracy() * INCREASED_ACC_GADGET_FACTOR/100;
 		return $modifiedAccuracy;
@@ -118,7 +123,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		$modifiedAccuracy -= $this->getBaseAccuracy() * (($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2) / 100;
+		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer);
 		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
 			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR/100;
 		
@@ -141,7 +146,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function getModifiedPortAccuracyAgainstPlayer(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
 	{
 		$modifiedAccuracy = $this->getModifiedPortAccuracy($port);
-		$modifiedAccuracy -= $this->getBaseAccuracy() * (($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2) / 100;
+		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer);
 		return $modifiedAccuracy;
 	}
 	
@@ -155,7 +160,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function getModifiedPlanetAccuracyAgainstPlayer(SmrPlanet &$planet, AbstractSmrPlayer &$targetPlayer)
 	{
 		$modifiedAccuracy = $this->getModifiedPlanetAccuracy($planet);
-		$modifiedAccuracy -= $this->getBaseAccuracy() * (($targetPlayer->getLevelID()*$targetPlayer->getLevelID()*.008+.219*$targetPlayer->getLevelID()+1.1694) / 2) / 100;
+		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer);
 		return $modifiedAccuracy;
 	}
 	

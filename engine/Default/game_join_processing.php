@@ -59,13 +59,13 @@ $rank_id = $account->get_rank();
 // for newbie and beginner another ship, more shields and armour
 if ($account->isNewbie())
 {
-	$ship_id = 28;
+	$ship_id = SHIP_TYPE_NEWBIE_MERCHANT_VESSEL;
 	$amount_shields = 75;
 	$amount_armour = 150;
 }
 else
 {
-	$ship_id = 1;
+	$ship_id = SHIP_TYPE_GALACTIC_SEMI;
 	$amount_shields = 50;
 	$amount_armour = 50;
 }
