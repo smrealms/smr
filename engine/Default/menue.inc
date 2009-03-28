@@ -1,8 +1,5 @@
 <?
 
-function echo_alliance_menue() {
-	echo create_alliance_menue();
-}
 function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE) {
 
 	global $player, $var, $alliance, $HIDDEN_PLAYERS;
@@ -93,9 +90,6 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 
 }
 
-function echo_galactic_post_menue() {
-	echo create_galactic_post_menue();
-}
 function create_galactic_post_menue() {
 
 	global $player;
@@ -137,9 +131,6 @@ function create_galactic_post_menue() {
 
 }
 
-function echo_message_menue() {
-	echo create_message_menue();
-}
 function create_message_menue() {
 
 	global $var;
@@ -169,9 +160,6 @@ function create_message_menue() {
 
 }
 
-function echo_combat_log_menue() {
-	echo create_combat_log_menue();
-}
 function create_combat_log_menue() {
 
 	global $player;
@@ -196,9 +184,6 @@ function create_combat_log_menue() {
 
 }
 
-function echo_trader_menue() {
-	echo create_trader_menue();
-}
 function create_trader_menue() {
 
 	global $player;
@@ -228,9 +213,6 @@ function create_trader_menue() {
 
 }
 
-function echo_planet_menue() {
-	echo create_planet_menue();
-}
 function create_planet_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'planet_main.php'),
@@ -259,9 +241,6 @@ function create_planet_menue() {
  * $active_level1 - the id of the active menu on the first level
  * $active_level1 - the id of the active menu on the second level
  */
-function echo_ranking_menue() {
-	echo create_ranking_menue();
-}
 function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 	$menu = array();
@@ -314,9 +293,6 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 }
 
-function echo_sub_menu() {
-	echo create_sub_menu();
-}
 function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return = ('<p>');
 	$return .= ('<table border="0" cellpadding="0" cellspacing="1" width="100%">');
@@ -401,11 +377,6 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 
 }
 
-function echo_bank_menue()
-{
-	echo create_bank_menue();
-}
-
 function create_bank_menue() {
 
 	global $player;
@@ -423,9 +394,6 @@ function create_bank_menue() {
 
 }
 
-function echo_hq_menue() {
-	echo create_hq_menue();
-}
 function create_hq_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'government.php'),
@@ -444,9 +412,6 @@ function create_hq_menue() {
 
 }
 
-function echo_ug_menue() {
-	echo create_ug_menue();
-}
 function create_ug_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'underground.php'),
@@ -461,9 +426,6 @@ function create_ug_menue() {
 	return create_menue($menue_items);
 }
 
-function echo_council_menue() {
-	echo create_council_menue();
-}
 function create_council_menue($race_id, $president) {
 
 	global $player;
@@ -489,9 +451,6 @@ function create_council_menue($race_id, $president) {
 
 }
 
-function echo_bar_menue() {
-	echo create_bar_menue();
-}
 function create_bar_menue() {
 
 	$container = array();
@@ -512,9 +471,6 @@ function create_bar_menue() {
 
 }
 
-function echo_news_menue() {
-	echo create_news_menue();
-}
 function create_news_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'news_read_current.php'),
@@ -526,9 +482,6 @@ function create_news_menue() {
 
 }
 
-function echo_hof_menue() {
-	echo create_hof_menue();
-}
 function create_hof_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'hall_of_fame.php'),
