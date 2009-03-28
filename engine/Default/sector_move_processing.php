@@ -1,6 +1,5 @@
 <?
 
-// TODO: Sectors explored, sector visited (Possibly put in current sector)
 if ($var['target_sector'] == $player->getSectorID())
 	forward(create_container('skeleton.php', $var['target_page']));
 

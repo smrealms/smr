@@ -2,20 +2,6 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 require_once(get_file_loc('SmrPort.class.inc'));
-// Yay for another hack...
-//$GLOBALS['good_id'] = null;
-//$GLOBALS['amount'] = null;
-//$GLOBALS['good_distance'] = null;
-//$GLOBALS['relations'] = null;
-//$GLOBALS['ideal_price'] = null;
-//$GLOBALS['offered_price'] = null;
-//$GLOBALS['ideal_price'] = null;
-//$GLOBALS['bargain_price'] = null;
-//$GLOBALS['port'] = null;
-//$GLOBALS['amount'] = null;
-//
-//global $good_id, $amount, $good_distance, $relations, $ideal_price, $offered_price, $ideal_price, $bargain_price, $amount;
-
 require_once('shop_goods.inc');
 
 // creates needed objects

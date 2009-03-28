@@ -193,6 +193,10 @@ if(isset($GameID))
 	<span id="gadgets">Empty<br /></span><br />
 	<br />
 	<a  href="main.php?action=78"><span class="bold">Track Damages</span></a><br />
-	<br />*/ ?>
-	<a href="<?php echo Globals::getBetaFunctionsHREF() ?>"><span class="bold">Beta Functions</span></a>
-<?php } ?>
+	<br />*/
+	
+	if(ENABLE_BETA)
+	{ ?>
+	<a href="<?php echo Globals::getBetaFunctionsHREF() ?>"><span class="bold">Beta Functions</span></a><?php
+	}
+} ?>
