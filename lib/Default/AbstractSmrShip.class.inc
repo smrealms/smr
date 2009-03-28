@@ -101,7 +101,7 @@ abstract class AbstractSmrShip
 		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints()))
 		{
 			//erase the first weapon 1 at a time until we are okay
-			$this->removeWeapon(0);
+			$this->removeLastWeapon();
 		}
 	}
 	
@@ -253,9 +253,12 @@ abstract class AbstractSmrShip
 		if($this->hasOpenWeaponSlots() && $this->hasRemainingPower())
 		{
 			$weapon =& SmrWeapon::getWeapon($this->getGameID(),$weaponTypeID);
-			$this->weapons[count($this->weapons)] =& $weapon;
-			$this->hasChangedWeapons = true;
-			return $weapon;
+			if($this->getRemainingPower()>=$weapon->getPowerLevel())
+			{
+				$this->weapons[count($this->weapons)] =& $weapon;
+				$this->hasChangedWeapons = true;
+				return $weapon;
+			}
 		}
 		$return = false;
 		return $return;
@@ -313,6 +316,11 @@ abstract class AbstractSmrShip
 			$this->weapons[$newOrder] =& $weapons[$oldOrder];
 		}
 		$this->hasChangedWeapons = true;
+	}
+	
+	public function removeLastWeapon()
+	{
+		$this->removeWeapon($this->getNumWeapons()-1);
 	}
 	
 	public function removeWeapon($orderID)
