@@ -20,8 +20,8 @@
 				{
 					if($ThisPlayer->canSee($Player))
 					{
-						$Ship =& $Player->getShip(); ?>
-						<tr>
+						$Ship =& $Player->getShip();?>
+						<tr<?php if($Player->getAccount()->isNewbie()) { ?> class="newbie"<?php } ?>>
 							<td>
 								<?php echo $Player->getLinkedDisplayName() ?>
 							</td>
