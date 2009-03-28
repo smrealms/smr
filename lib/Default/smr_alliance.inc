@@ -1,10 +1,15 @@
 <?
 
 // include file with database class
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once('SmrMySqlDatabase.class.inc');
 
-class SMR_ALLIANCE extends SmrMySqlDatabase {
+require_once('SmrAccount.class.inc');
+require_once('SmrPlayer.class.inc');
 
+class SMR_ALLIANCE extends SmrMySqlDatabase
+{
+	const MAX_VETS = 18;
+	const MAX_PLAYERS = 25;
 	var $game_id;
 	var $alliance_id;
 	var $alliance_name;
@@ -16,14 +21,16 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 	var $deaths;
 	var $mod;
 	var $img_src;
+	
+	protected $memberList;
 
-	function SMR_ALLIANCE($alliance_id, $game_id) {
-
+	function SMR_ALLIANCE($alliance_id, $game_id)
+	{
 		$this->alliance_id = $alliance_id;
 		$this->game_id = $game_id;
 
-		if ($alliance_id != 0) {
-
+		if ($alliance_id != 0)
+		{
 			$this->query('SELECT * FROM alliance WHERE game_id = '.$this->game_id.' AND ' .
 													  'alliance_id = '.$this->alliance_id);
 			$this->nextRecord();
@@ -41,9 +48,7 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 				$this->kills = 0;
 			if (empty($this->deaths))
 				$this->deaths = 0;
-
 		}
-
 	}
 	
 	public function getAllianceID()
@@ -56,6 +61,21 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 		return $this->alliance_name;
 	}
 	
+	public function getLeaderID()
+	{
+		return $this->leader_id;
+	}
+	
+	public function getDescription()
+	{
+		return $this->description;
+	}
+	
+	public function getPassword()
+	{
+		return $this->password;
+	}
+	
 	public function setAllianceDescription($description)
 	{
 		$description = word_filter($description);
@@ -66,6 +86,43 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 		else
 			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,$boxDescription);
 		$this->description=$description;
+	}
+	
+	public function canJoinAlliance(SmrPlayer &$player)
+	{
+		if($player->hasAlliance())
+			return false;
+		if($this->getPassword()=='*')
+			return false;
+		if($player->getAccount()->isVeteran())
+		{
+			if($this->getNumMembers()<self::MAX_VETS)
+				return true;
+			if($this->getNumMembers()<self::MAX_PLAYERS && $this->getNumVeterans() < self::MAX_VETS)
+				return true;
+		}
+		else
+		{
+			if($this->getNumMembers()<self::MAX_PLAYERS)
+				return true;
+		}
+		return false;
+	}
+	
+	public function getNumVeterans()
+	{
+		$numVeterans=0;
+		foreach($this->return_member_ids() as $memberID)
+		{
+			if(SmrAccount::getAccount($memberID)->isVeteran())
+				$numVeterans++;
+		}
+		return $numVeterans;
+	}
+	
+	public function getNumMembers()
+	{
+		return count($this->return_member_ids());
 	}
 
 	function update()
@@ -83,19 +140,19 @@ class SMR_ALLIANCE extends SmrMySqlDatabase {
 									 	   'game_id = '.$this->game_id);
 	}
 
-	function return_member_ids() {
-
-		$this->query('SELECT * FROM player WHERE alliance_id = '.$this->alliance_id.' AND game_id = '.$this->game_id);
-
-		//we have the list of players put them in an array now
-		$member_list = array();
-		while ($this->nextRecord())
-			$member_list[] = $this->getField('account_id');
-
-		return $member_list;
-
+	function return_member_ids()
+	{
+		if(!isset($this->memberList))
+		{
+			$this->query('SELECT * FROM player WHERE alliance_id = '.$this->alliance_id.' AND game_id = '.$this->game_id);
+	
+			//we have the list of players put them in an array now
+			$this->memberList = array();
+			while ($this->nextRecord())
+				$this->memberList[] = $this->getField('account_id');
+		}
+		return $this->memberList;
 	}
-
 }
 
 ?>
