@@ -1459,8 +1459,15 @@ class SmrPlayer extends AbstractSmrPlayer
 			}
 		}
 		
-		$killer->increaseKills(1);
-		$killer->increaseHOF(1,array('Killing','Kills'));
+		if($this->getAccount()->isNewbie()&&$killer->getAccount()->isVeteran()) //Newbie kill
+		{
+			$killer->increaseHOF(1,array('Killing','Newbie Kills'));
+		}
+		else
+		{
+			$killer->increaseKills(1);
+			$killer->increaseHOF(1,array('Killing','Kills'));
+		}
 
 		if($this->hasAlliance())
 		{
