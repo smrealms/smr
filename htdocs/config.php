@@ -4,15 +4,10 @@
 //ini_set('display_errors', TRUE);
 //ini_set('display_startup_errors', TRUE);
 
-define('ACCOUNT_PAGE',1403); //BETA
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
 define('ACCOUNT_ID_PLANET',65533);
 
-/*
- * FILE: /htdocs/config.php
- * TODO: Transfer all globals into defines in this file
- */
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 
 require_once('config.specific.php');

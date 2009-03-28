@@ -891,7 +891,7 @@ abstract class AbstractSmrPlayer
 		return $hof;
 	}
 	
-	public function increaseHOF($amount,array $typeList) //TODO implement HOF and take away error suppression.
+	public function increaseHOF($amount,array $typeList)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to increase negative HOF: '.implode(':',$typeList));
@@ -900,7 +900,7 @@ abstract class AbstractSmrPlayer
 		$this->setHOF($this->getHOF($typeList)+$amount,$typeList);
 	}
 	
-	public function decreaseHOF($amount,array $typeList) //TODO implement HOF and take away error suppression.
+	public function decreaseHOF($amount,array $typeList)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative HOF: '.implode(':',$typeList));
@@ -909,7 +909,7 @@ abstract class AbstractSmrPlayer
 		$this->setHOF($this->getHOF($typeList)-$amount,$typeList);
 	}
 	
-	public function setHOF($amount,array $typeList) //TODO implement HOF and take away error suppression.
+	public function setHOF($amount,array $typeList)
 	{
 		if(is_array($this->getHOF($typeList)))
 			throw new Exception('Trying to overwrite a HOF type: '.implode(':',$typeList));
