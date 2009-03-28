@@ -1786,16 +1786,16 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	function isInCouncil()
+	function isOnCouncil()
 	{
 		$president = false;
 		$this->db->query('SELECT account_id,alignment FROM player WHERE game_id = '.$this->gameID.' AND race_id = '.$this->getRaceID().' AND experience > 0 ORDER BY experience DESC, player_name LIMIT 20');
 		while ($this->db->nextRecord())
 		{
 			if ($this->db->getField('alignment') >= 150 && $president == false) $president = $this->db->getField('account_id');
-			if ($this->db->getField('account_id') == $this->accountID)
+			if ($this->db->getField('account_id') == $this->getAccountID())
 			{
-				if ($president == $this->accountID) return 'President';
+				if ($president == $this->getAccountID()) return 'President';
 				else return 'Member';
 			}
 		}

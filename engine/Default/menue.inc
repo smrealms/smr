@@ -148,7 +148,8 @@ function create_message_menue() {
 	$menue_items[] = create_link(create_container('skeleton.php', 'message_view.php'),
 												  'View Messages');
 
-	if (isset($var['folder_id']) && $var['folder_id'] == MSG_POLITICAL) {
+	if ($player->isOnCouncil())
+	{
 
 		$container = array();
 		$container['url'] = 'skeleton.php';
@@ -156,12 +157,14 @@ function create_message_menue() {
 		$container['race_id'] = $player->getRaceID();
 		$container['folder_id'] = MSG_POLITICAL;
 		$menue_items[] = create_link($container, 'Send Council Message');
-
 	}
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'message_send.php'),
 												  'Send Global Message');
 
+	$menue_items[] = create_link(create_container('skeleton.php', 'message_blacklist.php'),
+												  'Manage Blacklist');
+	
 	return create_menue($menue_items);
 
 }
