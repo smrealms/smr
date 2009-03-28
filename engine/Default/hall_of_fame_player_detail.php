@@ -176,12 +176,12 @@ else
 			$playerRank = $db->getField('rank') + 1;
 		
 		//display in order
-		if($playerRank>$hofRank)
+		if($playerRank<$hofRank)
 			$PHP_OUTPUT .= displayHOFRow($playerRank,$account->getAccountID(),$playerAmount);
 		else
 			$PHP_OUTPUT .= displayHOFRow($hofRank,$account_id,$hofAmount);
 		
-		if($playerRank<$hofRank)
+		if($playerRank>$hofRank)
 			$PHP_OUTPUT .= displayHOFRow($playerRank,$account->getAccountID(),$playerAmount);
 		else
 			$PHP_OUTPUT .= displayHOFRow($hofRank,$account_id,$hofAmount);
