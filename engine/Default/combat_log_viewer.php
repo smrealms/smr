@@ -3,15 +3,18 @@
 $template->assign('PageTopic','Combat Logs');
 include(get_file_loc('menue.inc'));
 $template->assign('MenuBar',create_combat_log_menue());
-if (isset($_REQUEST['action'])) {
+if (isset($_REQUEST['action']))
+{
 	$submitAction = $_REQUEST['action'];
-	if ($submitAction == 'Save' && isset($_POST['id'])) {
+	if ($submitAction == 'Save' && isset($_REQUEST['id']))
+	{
 		//save the logs we checked
-		$log_ids = array_keys($_POST['id']);
+		$log_ids = array_keys($_REQUEST['id']);
 		$db->query('SELECT * FROM combat_logs WHERE log_id IN (' . implode(',', $log_ids) . ') LIMIT ' . count($log_ids));
 		$unsavedLogs = array();
 		$savedLogs = array();
-		while ($db->nextRecord()) {
+		while ($db->nextRecord())
+		{
 			if (!$db->getField('saved'))
 				$unsavedLogs[] = $db->getField('log_id');
 			else
@@ -31,14 +34,14 @@ if (isset($_REQUEST['action'])) {
 		$PHP_OUTPUT.=('<div align="center">' . count($log_ids) . ' logs have been saved.<br />');
 		//back to viewing
 		$var['action'] = $var['old_action'];
-	} elseif (!isset($_POST['id'])) $var['action'] = $var['old_action'];
+	} elseif (!isset($_REQUEST['id'])) $var['action'] = $var['old_action'];
 }
 if(!isset($var['action'])) $action = 0;
 else $action = $var['action'];
 
-if($action == 5) {
-
-	if(!isset($_POST['id']) && !isset($var['log_ids']))
+if($action == 5)
+{
+	if(!isset($_REQUEST['id']) && !isset($var['log_ids']))
 	{
 		$action = $var['old_action'];
 	}
@@ -49,9 +52,11 @@ if($action == 5) {
 		$container['body'] = 'combat_log_viewer.php';
 		if(!isset($var['log_ids']))
 		{
-			$container['log_ids'] = array_keys($_POST['id']);
+			$container['log_ids'] = array_keys($_REQUEST['id']);
 			sort($container['log_ids']);
 			$container['current_log'] = 0;
+			SmrSession::updateVar('log_ids',$container['log_ids']);
+			SmrSession::updateVar('current_log',0);
 		}
 		else
 		{
