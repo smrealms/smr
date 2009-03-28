@@ -1,5 +1,7 @@
 <?
 
+require_once(get_file_loc('smr_alliance.inc'));
+
 if (isset($var['alliance_id']))
 {
 	$alliance_id=$var['alliance_id'];
@@ -8,15 +10,14 @@ else
 {
 	$alliance_id=$player->getAllianceID();
 }
+$alliance = new SMR_ALLIANCE($alliance_id,SmrSession::$game_id);
 
-$db->query('SELECT alliance_name,leader_id,alliance_password FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $alliance_id . ')');
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance_id . ')');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
-$leader_id = $db->getField('leader_id');
-$password = $db->getField('alliance_password');
+$leader_id = $alliance->getLeaderID();
+$password = $alliance->getPassword();
 
 $db2 = new SmrMySqlDatabase();
 $varAction = isset($var['action']) ? $var['action'] : '';
@@ -44,45 +45,20 @@ if ($varAction == 'Show Alliance Roles') {
 
 // If the alliance is the player's alliance they get live information
 // Otherwise it comes from the cache.
-if($alliance_id == $player->getAllianceID()) {
-	$db->query('SELECT 
-		alliance.alliance_description as description,
-		count(player_name) as alliance_member_count,
-		sum(player.experience) as alliance_xp,
-		floor(avg(player.experience)) as alliance_avg,
-		alliance.alliance_name as alliance_name,
-		player.alliance_id as alliance_id 
-		FROM player, alliance
-		WHERE player.alliance_id=' . $alliance_id  . '
-		AND alliance.alliance_id=' . $alliance_id  . '
-		AND player.game_id = ' . SmrSession::$game_id . '
-		AND alliance.game_id = ' . SmrSession::$game_id . '
-		GROUP BY alliance.alliance_id'
-	);
-}
-else {
-	$db->query('SELECT 
-		alliance.alliance_description as description,
-		count(player_name) as alliance_member_count,
-		sum(player.experience) as alliance_xp,
-		floor(avg(player.experience)) as alliance_avg,
-		alliance.alliance_name as alliance_name,
-		player.alliance_id as alliance_id 
-		FROM player,alliance
-		WHERE player.alliance_id=' . $alliance_id  . '
-		AND alliance.alliance_id=' . $alliance_id  . '
-		AND player.game_id = ' . SmrSession::$game_id . '
-		AND alliance.game_id = ' . SmrSession::$game_id . '
-		GROUP BY alliance.alliance_id'
-	);
-}
+$db->query('SELECT 
+	sum(experience) as alliance_xp,
+	floor(avg(experience)) as alliance_avg
+	FROM player
+	WHERE alliance_id=' . $alliance_id  . '
+	AND game_id = ' . SmrSession::$game_id . '
+	GROUP BY alliance_id'
+);
 
 $db->nextRecord();
 
-$member_count = $db->getField('alliance_member_count');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<div align="center">';
-$PHP_OUTPUT.= $db->getField('description');
+$PHP_OUTPUT.= $alliance->getDescription();
 if($account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
 {
 	$PHP_OUTPUT.= '<br /><br />';
@@ -104,7 +80,7 @@ $PHP_OUTPUT.= '
 	</tr>
 	<tr class="bold">
 		<td>';
-$PHP_OUTPUT.= stripslashes($db->getField('alliance_name'));
+$PHP_OUTPUT.= $alliance->getAllianceName();
 $PHP_OUTPUT.= '
 		</td>
 		<td class="center shrink">';
@@ -116,7 +92,7 @@ $PHP_OUTPUT.= $db->getField('alliance_avg');
 $PHP_OUTPUT.= '
 		</td>
 		<td class="center shrink">';
-$PHP_OUTPUT.= $db->getField('alliance_member_count');
+$PHP_OUTPUT.= $alliance->getNumMembers();
 $PHP_OUTPUT.= '
 		</td>';
 $PHP_OUTPUT.= '
@@ -155,11 +131,15 @@ if ($db2->nextRecord()) $allowed = TRUE;
 $alliancePlayers =& SmrPlayer::getAlliancePlayers(SmrSession::$game_id,$alliance_id);
 foreach($alliancePlayers as &$alliancePlayer)
 {
+	$class='';
 	// check if this guy is the current guy
 	if ($player->equals($alliancePlayer))
-		$PHP_OUTPUT.= '<tr class="bold">';
-	else
-		$PHP_OUTPUT.= '<tr>';
+		$class .= 'bold';
+	if($alliancePlayer->getAccount()->isNewbie())
+		$class.= ' newbie';
+	if($class!='')
+		$class = ' class="'.trim($class).'"';
+	$PHP_OUTPUT.= '<tr'.$class.'>';
 
 	$PHP_OUTPUT.= '<td class="center shrink">';
 
@@ -234,22 +214,18 @@ foreach($alliancePlayers as &$alliancePlayer)
 $PHP_OUTPUT.= '</table>';
 $PHP_OUTPUT.= '</div>';
 
-if (!$player->hasAlliance())
+if ($alliance->canJoinAlliance($player))
 {
-	// Newbie alliance is unlimited members, * means no new members allowed
-	if (($member_count < 30 || $alliance_id==302) && $password != '*') {
-		$PHP_OUTPUT.= '<br />';
-		$container = array();
-		$container['url'] = 'alliance_join_processing.php';
-		$container['alliance_id'] = $alliance_id;
-		$form = create_form($container, 'Join');
-		$PHP_OUTPUT.= $form['form'];
-		$PHP_OUTPUT.= 'Enter password to join alliance<br /><br />';
-		$PHP_OUTPUT.= '<input type="password" name="password" size="30">&nbsp;';
-		$PHP_OUTPUT.= $form['submit'];
-		$PHP_OUTPUT.= '</form>';
-	}
-
+	$PHP_OUTPUT.= '<br />';
+	$container = array();
+	$container['url'] = 'alliance_join_processing.php';
+	$container['alliance_id'] = $alliance_id;
+	$form = create_form($container, 'Join');
+	$PHP_OUTPUT.= $form['form'];
+	$PHP_OUTPUT.= 'Enter password to join alliance<br /><br />';
+	$PHP_OUTPUT.= '<input type="password" name="password" size="30">&nbsp;';
+	$PHP_OUTPUT.= $form['submit'];
+	$PHP_OUTPUT.= '</form>';
 }
 
 if ($alliance_id == $player->getAllianceID())

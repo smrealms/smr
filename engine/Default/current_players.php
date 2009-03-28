@@ -85,19 +85,16 @@ if ($count_last_active > 0) {
 		$accountID = $db->getField('account_id');
 		$curr_player =& SmrPlayer::getPlayer($accountID, SmrSession::$game_id);
 		$curr_account =& SmrAccount::getAccount($accountID);
-		//reset style
-		$style = '';
-		if ($curr_account->isNewbie())
-			$style .= 'font-style:italic;';
+
 		if ($player->equals($curr_player))
-			$style .= 'font-weight:bold;';
-
-		$fullStyle='';
-		if (!empty($style))
-			$fullStyle = ' style="'.$style.'"';
-
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td valign="top"'.$fullStyle.'>');
+			$class .= 'bold';
+		if($curr_account->isNewbie())
+			$class.= ' newbie';
+		if($class!='')
+			$class = ' class="'.trim($class).'"';
+		$PHP_OUTPUT.= '<tr'.$class.'>';
+	
+		$PHP_OUTPUT.=('<td valign="top">');
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'trader_search_result.php';
@@ -119,10 +116,10 @@ if ($count_last_active > 0) {
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'council_list.php';
 		$container['race_id'] = $curr_player->getRaceID();
-		$PHP_OUTPUT.=('<td style="text-align:center;'.$style.'">');
+		$PHP_OUTPUT.=('<td class="center">');
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td'.$fullStyle.'>');
+		$PHP_OUTPUT.=('<td>');
 		if ($curr_player->hasAlliance())
 		{
 			$container = array();
@@ -132,7 +129,7 @@ if ($count_last_active > 0) {
 			$PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
 		} else
 			$PHP_OUTPUT.=('(none)');
-		$PHP_OUTPUT.= '</td><td style="text-align:right;'.$style.'">'.
+		$PHP_OUTPUT.= '</td><td class="right">'.
 			number_format($curr_player->getExperience()) . '</td>';
 
 		

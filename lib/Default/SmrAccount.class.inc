@@ -231,7 +231,7 @@ $this->get_rank();
 	
 	public function isVeteran()
 	{
-		return $this->veteran && $this->get_rank() >= FLEDGLING;
+		return $this->veteran || $this->get_rank() >= FLEDGLING;
 	}
 	
 	public function isNewbie()
