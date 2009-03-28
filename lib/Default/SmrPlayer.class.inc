@@ -1771,7 +1771,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->bounties))
 		{
 			$this->bounties = array();
-			$this->db->query('SELECT bounty_id,claimer_id,amount,type,time FROM bounty WHERE account_id = ' . $this->getAccountID() . ' AND game_id=' . $this->getGameID());
+			$this->db->query('SELECT * FROM bounty WHERE account_id = ' . $this->getAccountID() . ' AND game_id=' . $this->getGameID());
 			while($this->db->nextRecord())
 			{
 				$this->bounties[$this->db->getField('bounty_id')] = array(
@@ -1920,6 +1920,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			if($this->getAccount()->isMailBanned())
 				create_error('You are currently banned from sending messages');
 		}
+		$this->sendMessageToBox(BOX_GLOBALS,$message);
+		
 		// send to all online player
 		$allowed = TIME - 600;
 		$db = new SmrMySqlDatabase();
@@ -1931,7 +1933,6 @@ class SmrPlayer extends AbstractSmrPlayer
 					  player.ignore_globals = \'FALSE\'');
 	//	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
 	
-		$this->sendMessageToBox(BOX_GLOBALS,$message);
 		while ($db->nextRecord())
 		{
 			$this->sendMessage($db->getField('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
