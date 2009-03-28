@@ -318,7 +318,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 		else $return.= ('Unknown');
 	}
 	$return.= ('</td>');
-	$return.= ('<td nowrap="nowrap">Date: ' . date(DATE_FULL_SHORT, $send_time) . '</td>');
+	$return.= ('<td nowrap="nowrap"'.(!is_object($sender)?' colspan="3"':'').'>Date: ' . date(DATE_FULL_SHORT, $send_time) . '</td>');
 	$return.= ('<td>');
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -332,6 +332,13 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	{
 		$return.= ('<td>');
 		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'message_blacklist_add.php';
+		$container['account_id'] = $sender_id;
+		$return.= create_link($container, 'Blacklist Player');
+		$return.= ('</td>');	
+		$return.= ('<td>');
+		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'message_send.php';
 		$container['receiver']	= $sender->getAccountID();
@@ -341,7 +348,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	
 	$return.= ('</tr>');
 	$return.= ('<tr>');
-	$return.= ('<td colspan="5">'.$message_text.'</td>');
+	$return.= ('<td colspan="6">'.$message_text.'</td>');
 	$return.= ('</tr>');
 	return $return;
 }
