@@ -87,7 +87,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	
 	public function getPlayerLevelAccuracyMod(AbstractSmrPlayer &$player)
 	{
-		return (($player->getLevelID()*$player->getLevelID()*.008+.219*$player->getLevelID()+1.1694)/2) / 100;
+		return ($player->getLevelID()*$player->getLevelID()*.006+.5*$player->getLevelID()+2) / 100;
 	}
 	
 	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
