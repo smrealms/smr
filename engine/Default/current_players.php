@@ -86,6 +86,7 @@ if ($count_last_active > 0) {
 		$curr_player =& SmrPlayer::getPlayer($accountID, SmrSession::$game_id);
 		$curr_account =& SmrAccount::getAccount($accountID);
 
+		$class='';
 		if ($player->equals($curr_player))
 			$class .= 'bold';
 		if($curr_account->isNewbie())
