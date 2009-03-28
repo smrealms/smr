@@ -89,7 +89,7 @@ input.inputbox {
 
 <body>
 <div align="center">
-<img src="images/login/smr_banner_res.gif" alt=""><br />
+<img src="images/login/smr_banner_16.gif" alt=""><br />
 <img src="images/login/bottom_left.gif" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.gif" alt="Home"></a><img src="images/login/site_map.gif" alt="Site Map"><img src="images/login/contact.gif" alt="Contact"><img src="images/login/bottom_right.gif" alt=""><br />
 <a href="http://video.smrealms.de/" target="gw"><img src="images/login/video.gif" alt="Video Tutorials"></a><a href="http://www.azool.us/baalz/" target="alb"><img src="images/login/sml.gif" alt="Merchant Library"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.gif" alt="Web Board"></a><a href="http://bobby.fem.tu-ilmenau.de/cgi-bin/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.gif" alt="Site Statistics"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.gif" alt="Manual"></a><br />
 
