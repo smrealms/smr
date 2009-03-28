@@ -177,7 +177,35 @@ abstract class AbstractSmrShip
 	
 	public function getMaxPower()
 	{
-		return 50;
+		$totalPower = 0;
+		switch($this->getHardpoints())
+		{
+			default:
+				$totalPower+=1*$this->getHardpoints()-10;
+			case 10:
+				$totalPower+=2;
+			case 9:
+				$totalPower+=2;
+			case 8:
+				$totalPower+=2;
+			case 7:
+				$totalPower+=2;
+			case 6:
+				$totalPower+=3;
+			case 5:
+				$totalPower+=3;
+			case 4:
+				$totalPower+=3;
+			case 3:
+				$totalPower+=4;
+			case 2:
+				$totalPower+=4;
+			case 1:
+				$totalPower+=5;
+			case 0:
+				$totalPower+=0;
+		}
+		return $totalPower;
 	}
 	
 	public function hasIllegalGoods()
@@ -317,17 +345,26 @@ abstract class AbstractSmrShip
 		$this->hasChangedHardware = true;
 	}
 	
-	public function get_pod()
+	public function get_pod($isNewbie = false)
 	{
 		$this->removeAllWeapons();
 		$this->removeAllCargo();
 		$this->removeAllHardware();
 		
-		$this->hardware[1] = 50;
-		$this->hardware[2] = 50;
-		$this->hardware[3] = 5;
-		
-		$this->setShipTypeID(69);
+		if($isNewbie)
+		{
+			$this->setShields(75,true);
+			$this->setArmour(150,true);
+			$this->setCargoHolds(40);
+			$this->setShipTypeID(SHIP_TYPE_NEWBIE_MERCHANT_VESSEL);
+		}
+		else
+		{
+			$this->setShields(50,true);
+			$this->setArmour(50,true);
+			$this->setCargoHolds(5);
+			$this->setShipTypeID(SHIP_TYPE_ESCAPE_POD);
+		}
 		
 		$this->removeUnderAttack();
 	}
@@ -741,6 +778,11 @@ abstract class AbstractSmrShip
 	public function getCargoHolds()
 	{
 		return $this->getHardware(HARDWARE_CARGO);
+	}
+	
+	public function setCargoHolds($amount)
+	{
+		$this->setHardware(HARDWARE_CARGO,$amount);
 	}
 	
 	public function &getCargo($goodID=false)

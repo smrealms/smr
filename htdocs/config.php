@@ -20,7 +20,14 @@ define('DATE_DATE_SHORT','j/n/Y');
 define('DATE_TIME_SHORT','g:i:s A');
 define('DATE_FULL_SHORT_SPLIT','j/n/Y\<b\r /\>g:i:s A');
  
- 
+/*
+ * Ship types
+ */
+
+define('SHIP_TYPE_ESCAPE_POD',69);
+define('SHIP_TYPE_NEWBIE_MERCHANT_VESSEL',28);
+define('SHIP_TYPE_GALACTIC_SEMI',1);
+
 /*
  * Combat system
  */
