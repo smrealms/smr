@@ -310,6 +310,7 @@ elseif ($_REQUEST['submit'] == 'Edit Sector')
 		$port =& $sector->createPort();
 		$port->setRaceID($_POST['port_race']);
 		$port->upgradeToLevel($_POST['port_level']);
+		$port->update();
 	} else $sector->removePort();
 	//update locations
 	
