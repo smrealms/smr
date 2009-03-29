@@ -44,6 +44,7 @@ $PHP_OUTPUT.= '</select>';
 //goods determined randomly to sway admin abuse
 $PHP_OUTPUT.= '<br /><br />';
 $locations =& SmrLocation::getAllLocations();
+$sectorLocations =& $sector->getLocations();
 for ($i=0;$i<=3;$i++)
 {
 	$PHP_OUTPUT.= 'Location ' . ($i + 1) . ': <select name="loc_type' . $i . '">';
@@ -51,7 +52,7 @@ for ($i=0;$i<=3;$i++)
 	foreach ($locations as &$location)
 	{
 		$PHP_OUTPUT.= '<option value="' . $location->getTypeID() . '"';
-		if ($sector->hasLocation($location->getTypeID()))
+		if (isset($sectorLocations[$i]) && $sectorLocations[$i]->equals($location->getTypeID()))
 		{
 			$PHP_OUTPUT.= 'selected';
 		}
