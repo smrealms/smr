@@ -52,7 +52,7 @@ for ($i=0;$i<=3;$i++)
 	foreach ($locations as &$location)
 	{
 		$PHP_OUTPUT.= '<option value="' . $location->getTypeID() . '"';
-		if (isset($sectorLocations[$i]) && $sectorLocations[$i]->equals($location->getTypeID()))
+		if (isset($sectorLocations[$i]) && $sectorLocations[$i]->equals($location))
 		{
 			$PHP_OUTPUT.= 'selected';
 		}
