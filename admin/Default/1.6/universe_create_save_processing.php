@@ -315,6 +315,7 @@ elseif ($_REQUEST['submit'] == 'Edit Sector')
 	
 	
 	$GAL_LOCATIONS[$this_sec] = array();
+	$sector->removeAllLocations();
 	for($x=0;$x<4;$x++)
 	{
 		if ($_POST['loc_type'.$x] != 0)
