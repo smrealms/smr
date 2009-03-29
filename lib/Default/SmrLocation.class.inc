@@ -50,9 +50,11 @@ class SmrLocation
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT location_type_id FROM location WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID);
 			$locations = array();
+			$i=0;
 			while($db->nextRecord())
 			{
-				$locations[$db->getField('location_type_id')] =& self::getLocation($db->getField('location_type_id'));
+				$locations[$i] =& self::getLocation($db->getField('location_type_id'));
+				$i++;
 			}
 			return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] =& $locations;
 		}
