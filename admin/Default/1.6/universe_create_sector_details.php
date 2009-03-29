@@ -37,7 +37,7 @@ $races =& Globals::getRaces();
 foreach ($races as &$race)
 {
 	$PHP_OUTPUT.= '<option value="' . $race['Race ID'] . '"';
-	if ($sector->hasPort() && $sector->getPort()->getRaceID() == $race_id) $PHP_OUTPUT.= 'selected';
+	if ($sector->hasPort() && $sector->getPort()->getRaceID() == $race['Race ID']) $PHP_OUTPUT.= 'selected';
 	$PHP_OUTPUT.= '>' . $race['Race Name'] . '</option>';
 } unset($race);
 $PHP_OUTPUT.= '</select>';
