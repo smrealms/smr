@@ -3,20 +3,19 @@
 if ($var['target_sector'] == $player->getSectorID())
 	forward(create_container('skeleton.php', $var['target_page']));
 
-$db->query('SELECT galaxy_id,sector_id FROM sector WHERE (sector_id=' . $player->getSectorID() . ' OR sector_id=' . $var['target_sector'] . ') AND game_id=' . SmrSession::$game_id . ' LIMIT 2' );
-while($db->nextRecord()){
-	$gal_ids[$db->getField('sector_id')] = $db->getField('galaxy_id');
-}
+$db->query('SELECT galaxy_id FROM sector WHERE sector_id=' . $var['target_sector'] . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
+$db->nextRecord();
+$targetGalaxyID = $db->getField('galaxy_id');
 
+if($sector->getLinkWarp() == $var['target_sector'])
+	$turns = 5;
+else
+	$turns = 1;
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 {
 	//for plotted course
 	$player->setLastSectorID($player->getSectorID());
-	if($gal_ids[$player->getSectorID()] != $gal_ids[$var['target_sector']])
-		$turns = 5;
-	else
-		$turns = 1;
 	//make them pop on CPL
 	$player->updateLastCPLAction();
 	$player->setSectorID($var['target_sector']);
@@ -56,17 +55,11 @@ if(isset($_REQUEST['action']))
 if ($player->isLandedOnPlanet())
     create_error('You can\'t activate your engine while you are on a planet!');
 
-if($gal_ids[$player->getSectorID()] != $gal_ids[$var['target_sector']]) {
-    $turns = 5;
-}
-else {
-    $turns = 1;
-}
 if ($player->getTurns() < $turns)
     create_error('You don\'t have enough turns to move!');
 
 
-$query = get_forces_query($gal_ids[$player->getSectorID()]);
+$query = get_forces_query($sector->getGalaxyID());
 $db->query($query);
 
 $mine_owner_id = false;
@@ -177,7 +170,7 @@ if (!$sector->isVisited($player)) {
 $sector->markVisited($player);
 
 // send scout msgs
-$db->query(get_forces_query($gal_ids[$var['target_sector']]));
+$db->query(get_forces_query($targetGalaxyID));
 
 $mine_owner_id = false;
 $scout_owners = array();
