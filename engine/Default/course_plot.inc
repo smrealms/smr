@@ -237,17 +237,17 @@ class Course_Plotter extends SmrMySqlDatabase{
 		$i = count($links);
 
 		// Determine low/high sense of $start and $target
-		if ($start > $target) {
+//		if ($start > $target) {
 
 			$sector_id_1 = $target;
 			$sector_id_2 = $start;
 
-		} else {
-
-			$sector_id_1 = $start;
-			$sector_id_2 = $target;
-
-		}
+//		} else {
+//
+//			$sector_id_1 = $start;
+//			$sector_id_2 = $target;
+//
+//		}
 
 		// Build our single route
 		$links[$i] = array( $sector_id_1,$sector_id_2,0,array());
@@ -275,7 +275,8 @@ class Course_Plotter extends SmrMySqlDatabase{
 			}
 
 		}
-		else {
+		else
+		{
 			// We only want to build a galaxy map if it hasn't already been stored
 			if($galaxy_id != $this->galaxy_map_id) {
 				// Build the galaxy map
@@ -325,7 +326,7 @@ class Course_Plotter extends SmrMySqlDatabase{
 		// The algorithm now has 2 wavefronts, not 1
 		$runners = array();
 
-		$runners[0][$links[$link_id][0]] = array();
+		$runners[0]/*[$links[$link_id][0]]*/ = array();
 		$runners[1][$links[$link_id][1]] = array();
 
 		// Now set the start and target sectors as having been visited
@@ -344,13 +345,13 @@ class Course_Plotter extends SmrMySqlDatabase{
 			$new_runners = array();
 
 			// Remember: k = runner group (start/target), i = runner id(sector)
-			for ($k = 0; $k<2; $k++) {
+			for ($k = 0; $k<2; $k++) { //2 for the optimised 2 wave style plot course, but it won't work properly with 1 way sectors.
 				// Here to prevent recalculating on every iteration
 				$total_runners = sizeof($runners[$k]);
 
 				// Keys are non-sequential, a foreach loop would make a copy of the array which would be BAD
 				// Therefore the simplest thing to do here is just pull out the keys from runners into a separate array
-				$runners_keys = array_keys($runners[$k]);
+				$runners_keys = @array_keys($runners[$k]);
 
 				// Ok, let the runner run
 				for ($i = 0; $i < $total_runners; $i++) {
@@ -363,7 +364,6 @@ class Course_Plotter extends SmrMySqlDatabase{
 
 						// The sector being moved to
 						$sector_id = $galaxy_map[$runner_sector][$j];
-
 						if ($sector_id > 0 && $galaxy_map[$sector_id][4] == 0) {
 						
 							$new_runners[$k][$sector_id] = $runners[$k][$runner_sector];
@@ -384,8 +384,9 @@ class Course_Plotter extends SmrMySqlDatabase{
 								$links[$link_id][2] = $length*2 - 1;
 							}
 							else {
+								$new_runners[0][$sector_id]=array();
 								$links[$link_id][3] = array_merge ($new_runners[0][$sector_id],array_reverse($runners[1][$runner_sector]));
-								$links[$link_id][2] = $length*2;
+								$links[$link_id][2] = count($links[$link_id][3])+1;
 							}
 
 							unset ($runners, $new_runners, $runners_keys);
@@ -397,7 +398,7 @@ class Course_Plotter extends SmrMySqlDatabase{
 
 			// The course hasn't been found.
 			// No new runners means we've failed
-			if(!isset($new_runners[0]) || !isset($new_runners[1])) 
+			if(!isset($new_runners[0]) && !isset($new_runners[1])) 
 				create_error('Link processing failure!');
 
 			// Setup for the next iteration.
