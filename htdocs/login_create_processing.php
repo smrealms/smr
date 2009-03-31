@@ -202,6 +202,7 @@ $db->query('INSERT INTO account (login, password, email, first_name, last_name, 
 
 // creates a new user account object
 $account =& SmrAccount::getAccountByName($login);
+$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
 
 // register session
 SmrSession::$account_id = $account->account_id;
