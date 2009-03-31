@@ -444,11 +444,12 @@ header('Expires: 0');
 header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
 header('Cache-Control: private',false);
 header('Content-Type: application/force-download');
-header('Content-Disposition: attachment; filename="$game_name.cmf"');
+header('Content-Disposition: attachment; filename="'.$game_name.'.cmf"');
 header('Content-Transfer-Encoding: binary');
 header('Content-Length: '.$size);
 
 echo $file;
+exit;
 //var_dump($sectors);
 
 ?>

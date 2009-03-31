@@ -63,7 +63,8 @@
 	<?php
 	if(isset($GameID))
 	{
-		?><a href="smr_file_download.php">Download Sectors File</a><br /><?php
+		/* ?><a href="smr_file_download.php">Download Sectors File</a><br /><?php */
+		?><a href="<?php echo $MGULink ?>">DL MGU Maps</a><br /><?php
 	}
 	?>
 	<a href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
