@@ -625,6 +625,10 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink',SmrSession::get_new_href($container));
 		unset($container['game_id']);
+		
+		$container['body'] = '';
+		$container['url'] = 'mgu_create_new.php';
+		$template->assign('MGULink',SmrSession::get_new_href($container));
 	}
 	
 	if (SmrSession::$account_id > 0 && empty($var['logoff']))
