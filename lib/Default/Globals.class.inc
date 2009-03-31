@@ -163,7 +163,7 @@ class Globals
 			self::$db->query('SELECT * FROM game WHERE game_id = '.$gameID.' LIMIT 1');
 			self::$db->nextRecord();
 			self::$GAMES[$gameID] = array();
-			self::$GAMES[$gameID]['Speed'] = (int)self::$db->getField('game_speed');
+			self::$GAMES[$gameID]['Speed'] = (float)self::$db->getField('game_speed');
 			self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
 			self::$GAMES[$gameID]['GameName'] = (string)self::$db->getField('game_name');
 		}
