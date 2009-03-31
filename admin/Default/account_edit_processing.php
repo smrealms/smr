@@ -201,6 +201,8 @@ if (!empty($delete)) {
 
 			$db->query('UPDATE account_has_stats SET games_joined=games_joined-1 WHERE account_id=' . $account_id);
 
+			$db->query('UPDATE active_session SET game_id=0 WHERE account_id=' . $account_id . ' AND game_id=' . $game_id .' LIMIT 1');
+
 			$msg .= 'deleted player from game '.$game_id.' ';
 		}
 	}
