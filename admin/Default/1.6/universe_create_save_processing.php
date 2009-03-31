@@ -32,7 +32,7 @@ if ($_REQUEST['submit']=='Create Game')
 		foreach ($races as &$race2)
 		{
 			if ($race['Race ID'] == $race2['Race ID']) $amount = 500;
-			elseif ($race['Race ID'] == 0 || $race2['Race ID'] == 0) $amount = 0; //0 relats with neutral
+			elseif ($race['Race ID'] == 1 || $race2['Race ID'] == 1) $amount = 0; //0 relats with neutral
 			else $amount = -500;
 			$db->query('REPLACE INTO race_has_relation (game_id, race_id_1, race_id_2, relation) VALUES ('.$var['game_id'].','.$race['Race ID'].','.$race2['Race ID'].','.$amount.')');
 		}
