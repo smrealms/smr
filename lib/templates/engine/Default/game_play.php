@@ -11,7 +11,7 @@ if($Games['Play'])
 		<tr>
 			<th align="center">&nbsp;</th>
 			<th align="center">Game Name</th>
-			<th align="center">Ship Condition</th>
+			<th align="center">Turns</th>
 			<th align="center">Playing</th>
 			<th align="center">Last Active</th>
 			<th align="center">Last Movement</th>
