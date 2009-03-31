@@ -166,6 +166,7 @@ class Globals
 			self::$GAMES[$gameID]['Speed'] = (float)self::$db->getField('game_speed');
 			self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
 			self::$GAMES[$gameID]['GameName'] = (string)self::$db->getField('game_name');
+			self::$GAMES[$gameID]['StartDate'] = (string)self::$db->getField('start_date');
 		}
 		return self::$GAMES[$gameID];
 	}

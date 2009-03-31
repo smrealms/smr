@@ -2,11 +2,14 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
+$gameInfo =& Globals::getGameInfo($player->getGameID());
+if($gameInfo['StartDate']+86400*3 > TIME)
+	create_error('You cannot buy maps within the first 3 days');
+
 if ($account->getTotalSmrCredits() < 2) {
 	
-	$PHP_OUTPUT.=create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 	return;
-	
 }
 
 //gal map buy
