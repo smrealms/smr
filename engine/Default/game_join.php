@@ -53,18 +53,20 @@ if (TIME > $game['EndDate']) {
 
 $template->assign('PageTopic', 'JOIN GAME');
 
-$db->query('SELECT * FROM race');
-$first = true;
+$raceInfo =& Globals::getRaces();
 $raceDescriptions='';
-while ($db->nextRecord())
+$first = true;
+foreach($raceInfo as $race)
+{
     if ($first)
     {
-        $raceDescriptions.=('"' . $db->getField('race_description') . '"');
+        $raceDescriptions.=('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
         $first = false;
 
     }
     else
-        $raceDescriptions.=(', "' . $db->getField('race_description') . '"');
+        $raceDescriptions.=(', \'' . str_replace('\'','\\\'',$race['Description']) . '\'');
+}
 $template->assign('RaceDescriptions',$raceDescriptions);
 
 
@@ -101,15 +103,12 @@ while ($db->nextRecord())
 	// get number of traders in game
 	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = '.$curr_race_id.' AND game_id = ' . $var['game_id']);
 	$db2->nextRecord();
+	$race_name .= ' (' . $db2->getNumRows() . ' Trader)';
+	
 	$races[$curr_race_id]['ID'] = $curr_race_id;
 	$races[$curr_race_id]['Name'] = $race_name;
 	$races[$curr_race_id]['NumberOfPlayers'] = $db2->getField('number_of_race')>0?$db2->getField('number_of_race'):0;
 	
-	$race_name .= ' (' . $db2->getNumRows() . ' Trader)';
-
-//    if ($race_id == $curr_race_id)
-//    	$PHP_OUTPUT.=(' selected');
-
 }
 $template->assign('Races',$races);
 

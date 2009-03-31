@@ -1,15 +1,3 @@
-
-<script type="text/javascript">
-	function go()
-	{
-		desc = new Array(<?php echo $RaceDescriptions ?>);
-		var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;
-		document.race_image.src value="images/race" + race_id + ".gif";
-		document.getElementById('graphframe').src value="images/graph" + race_id + ".gif";
-		document.FORM.race_descr.value = desc[race_id - 1];
-	}
-</script>
-
 <p>
 	<table class="standard">
 		<tr>
@@ -108,5 +96,16 @@
 				</td>
 			</tr>
 		</table>
-	</p>	
+	</p>
 </form>
+
+<script type="text/javascript">
+var	desc = new Array(<?php echo $RaceDescriptions; ?>);
+function go()
+{
+	var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;
+	document.race_image.src = "images/race" + race_id + ".gif";
+	document.getElementById('graphframe').src = "images/graph" + race_id + ".gif";
+	document.FORM.race_descr.value = desc[race_id - 1];
+}
+</script>

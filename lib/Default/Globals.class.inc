@@ -112,12 +112,13 @@ class Globals
 			$RACES = array();
 			
 			// determine user level
-			self::$db->query('SELECT race_id,race_name FROM race');
+			self::$db->query('SELECT race_id,race_name,race_description FROM race');
 			while(self::$db->nextRecord())
 			{
 				$RACES[self::$db->getField('race_id')] = array();
 				$RACES[self::$db->getField('race_id')]['Race ID'] = (int)self::$db->getField('race_id');
 				$RACES[self::$db->getField('race_id')]['Race Name'] = self::$db->getField('race_name');
+				$RACES[self::$db->getField('race_id')]['Description'] = self::$db->getField('race_description');
 			}
 			self::$RACES =& $RACES;
 		}
