@@ -44,7 +44,7 @@ $db2 = new SmrMySqlDatabase();
 if (!empty($_SERVER['QUERY_STRING']))
 {
 	// query string should be a nick or some letters of a nick
-	$query = mysql_escape_string(urldecode($_SERVER['QUERY_STRING']));
+	$query = urldecode($_SERVER['QUERY_STRING']);
 
 	$db->query('SELECT album.account_id as album_id
 				FROM album NATURAL JOIN account
