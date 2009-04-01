@@ -103,7 +103,6 @@ while ($db->nextRecord())
 	// get number of traders in game
 	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = '.$curr_race_id.' AND game_id = ' . $var['game_id']);
 	$db2->nextRecord();
-	$race_name .= ' (' . $db2->getNumRows() . ' Trader)';
 	
 	$races[$curr_race_id]['ID'] = $curr_race_id;
 	$races[$curr_race_id]['Name'] = $race_name;
