@@ -24,7 +24,7 @@ if(isset($_POST['note'])) {
 		$db->query('INSERT INTO player_has_notes (account_id,game_id,note) VALUES(' .
 		SmrSession::$account_id . ',' .
 		SmrSession::$game_id . ',\'' .
-		mysql_escape_string(gzcompress($note)) . 
+		$db->escapeString(gzcompress($note)) . 
 		'\')');
 	}	
 }

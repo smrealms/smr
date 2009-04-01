@@ -14,9 +14,9 @@ if ($db->nextRecord())
 else
 	$changelog_id = 1;
 
-$change_title	= mysql_escape_string($_POST['change_title']);
-$change_message	= mysql_escape_string(nl2br($_POST['change_message']));
-$affected_db	= mysql_escape_string(nl2br($_POST['affected_db']));
+$change_title	= $_POST['change_title'];
+$change_message	= nl2br($_POST['change_message']);
+$affected_db	= nl2br($_POST['affected_db']);
 
 $db->query('INSERT INTO changelog
 			(version_id, changelog_id, change_title, change_message, affected_db)

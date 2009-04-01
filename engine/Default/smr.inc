@@ -247,15 +247,6 @@ function create_container($file, $body) {
 
 }
 
-//function format_string($db_str, $transfer_html=false) {
-//
-//	if ($transfer_html)
-//		return '\'' . mysql_escape_string(htmlentities($db_str)) . '\'';
-//	else
-//		return '\'' . mysql_escape_string($db_str) . '\'';
-//
-//}
-
 function create_link($container, $text) {
 	return '<a href="' . SmrSession::get_new_href($container) . '">' . $text . '</a>';
 }
