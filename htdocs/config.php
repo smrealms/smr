@@ -7,6 +7,7 @@
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
 define('ACCOUNT_ID_PLANET',65533);
+define('ACCOUNT_ID_NHL',65532);
 
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 

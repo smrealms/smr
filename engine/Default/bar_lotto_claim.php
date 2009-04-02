@@ -8,8 +8,7 @@ while ($db->nextRecord())
 {
 	$prize = $db->getField('prize');
 	$NHLAmount = ($prize - 1000000) / 9;
-	$NHLAccount = 13;
-	$db->query('UPDATE player SET bank = bank + '.$NHLAmount.' WHERE account_id = '.$NHLAccount.' AND game_id = '.$player->getGameID());
+	$db->query('UPDATE player SET bank = bank + '.$NHLAmount.' WHERE account_id = '.ACCOUNT_ID_NHL.' AND game_id = '.$player->getGameID());
 	$player->increaseCredits($prize);
 	$player->update();
 	$player->increaseHOF($prize,array('Bar','Lotto','Money','Winnings'));

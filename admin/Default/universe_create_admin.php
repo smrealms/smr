@@ -9,7 +9,7 @@ if ($db->nextRecord())
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding admins</d>');
 $PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('The universe is up and running so far. Here you have the chance to put all important people in the order you want! MrSpock has to be always the first tho. *fg*</dd>');
-$PHP_OUTPUT.=('<dd>**DO NOT FORGET TO ADD ACCOUNT #13 (Newbie Help Leader)**</dd>');
+$PHP_OUTPUT.=('<dd>**DO NOT FORGET TO ADD ACCOUNT #'.ACCOUNT_ID_NHL.' (Newbie Help Leader)**</dd>');
 $PHP_OUTPUT.=('</dl>');
 
 $container = array();

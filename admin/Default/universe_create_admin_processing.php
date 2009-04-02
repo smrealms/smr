@@ -75,8 +75,8 @@ else
 	$player_id = 1;
 
 // insert into player table.
-// Newbie Help Leader (#13) goes into Newbie Help alliance (#302)
-if($_POST['admin_id'] != 13) {
+// Newbie Help Leader goes into Newbie Help alliance (#302)
+if($_POST['admin_id'] != ACCOUNT_ID_NHL) {
 	$alliance_id = 1;
 }
 else {
