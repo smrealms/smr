@@ -132,12 +132,12 @@ class Course_Plotter extends SmrMySqlDatabase{
 
 			$plotted_course[1][0] = $start;
 
-			if($start>$target){
+//			if($start>$target){
 				$plotted_course[1] = array_merge($plotted_course[1], array_reverse($this->links[0][3]));
-			}
-			else	{
-				$plotted_course[1] = array_merge($plotted_course[1], $this->links[0][3]);
-			}
+//			}
+//			else	{
+//				$plotted_course[1] = array_merge($plotted_course[1], $this->links[0][3]);
+//			}
 			$plotted_course[1][] = $target;
 			$plotted_course[0] = $this->links[0][2];
 		}
