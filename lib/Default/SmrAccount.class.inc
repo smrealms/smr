@@ -492,7 +492,7 @@ $this->get_rank();
 		// send him the message
 		$db->query('INSERT INTO message_boxes
 			(box_type_id,game_id,message_text,
-			sender_id,send_time) VALUES(' . 
+			sender_id,send_time) VALUES (' . 
 			$boxTypeID . ',' .
 			$gameID . ',' .
 			$db->escapeString($message,true) . ',' .
