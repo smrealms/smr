@@ -87,23 +87,14 @@ $db->query('SELECT sector_id,visited,port_info
 				  game_id = '.SmrSession::$game_id);
 while ($db->nextRecord())
 {
-	$cachedPort =& SmrPort::getPort(SmrSession::$game_id,$db->getField('sector_id'));
+	$cachedPort =& SmrPort::getCachedPort(SmrSession::$game_id,$db->getField('sector_id'),SmrSession::$account_id);
 	$visited	= $db->getField('visited');
-	$port_info[$db->getField('sector_id')]		= $db->getField('port_info');
 	foreach ($alliance_ids as $id)
 	{
 		// need to insert this entry first
 		// ignore if it exists
 		$cachedPort->addCachePort($id,false);
 	}
-	
-	// update all port infos
-	$db->query('UPDATE player_visited_port
-				SET port_info = ' . $db->escape_string(serialize($cachedPort)) . '
-				WHERE account_id IN ('.$alliance_list.') AND
-					  game_id = '.SmrSession::$game_id.' AND
-					  sector_id = '.$sector_id.' AND
-					  visited < '.$visited);
 }
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));
