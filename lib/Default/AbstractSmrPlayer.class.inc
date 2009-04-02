@@ -530,7 +530,10 @@ abstract class AbstractSmrPlayer
 	
 	public function setCombatDronesKamikazeOnMines($bool)
 	{
+		if($this->combatDronesKamikazeOnMines == $bool)
+			return;
 		$this->combatDronesKamikazeOnMines = $bool;
+		$this->hasChanged=true;
 	}
 	
 	public abstract function getPastMaintBought();
