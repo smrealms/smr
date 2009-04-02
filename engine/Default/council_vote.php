@@ -125,8 +125,8 @@ if ($db->getNumRows() > 0) {
 			$PHP_OUTPUT.=create_submit_style('No', 'background-color:green;');
 		else
 			$PHP_OUTPUT.=create_submit('No');
-		if ($president->getAccountID() == $player->getAccountID()) {
-
+		if ($player->equals($president))
+		{
 			$PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=create_submit('Veto');
 

@@ -2167,7 +2167,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function equals(AbstractSmrPlayer $otherPlayer)
 	{
-		return $this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
+		return $otherPlayer!==null&&$this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
 	}
 }
 ?>
