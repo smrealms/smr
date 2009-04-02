@@ -79,6 +79,8 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	public function setAllianceDescription($description)
 	{
 		$description = word_filter($description);
+		if($description==$this->description)
+			return;
 		global $player,$account;
 		$boxDescription = 'Alliance '.$this->getAllianceName().'('.$this->getAllianceID().') had their description changed to:<br /><br />'.$description;
 		if(is_object($player))
