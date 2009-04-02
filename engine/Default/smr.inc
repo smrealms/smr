@@ -540,7 +540,7 @@ function release_lock()
 function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 {
 	$template->assign('fontSize',$account->fontsize);
-	$template->assign('timeDisplay',date('n/j/Y\<b\r /\>g:i:s A',TIME));
+	$template->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
 	if(!$account->isUseAJAX())
 		$template->assign('AJAX_ENABLE_REFRESH',false);
 	

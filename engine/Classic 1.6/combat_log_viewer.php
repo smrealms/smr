@@ -87,7 +87,7 @@ if(isset($display_id)){
 
 	if($db->next_record()) {
 		$PHP_OUTPUT.= 'Sector ' . $db->f('sector_id') . '<br />';
-		$PHP_OUTPUT.= date('n/j/Y&\n\b\s\p;g:i:s&\n\b\s\p;&\n\b\s\p;A',$db->f('timestamp'));
+		$PHP_OUTPUT.= date(DATE_FULL_SHORT,$db->f('timestamp'));
 		$PHP_OUTPUT.= '<br><br>';
 		$PHP_OUTPUT.= gzuncompress($db->f('result'));
 	}
