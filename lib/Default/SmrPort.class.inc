@@ -1050,6 +1050,7 @@ class SmrPort
 	{
 		if ($this->exists())
 		{
+			$cachedVersion = $this->cachedVersion;
 			$cache = serialize(&$this);
 			//give them the port info
 			$command = 'REPLACE';
@@ -1058,7 +1059,9 @@ class SmrPort
 			$this->db->query($command.' INTO player_visited_port ' .
 						'(account_id, game_id, sector_id, visited, port_info) ' .
 						'VALUES ('.$accountID.', '.$this->getGameID().', '.$this->getSectorID().', '.$this->getCachedTime().', '.$this->db->escapeString($cache).')');	
-			$this->cachedVersion = false; //Serializing this would have designated it as cached, this version isn't.
+			if(!$forceUpdate)
+				$this->db->query('UPDATE player_visited_port SET port_info='.$this->db->escapeString($cache).', visited='.$this->getCachedTime().' WHERE visited<'.$this->getCachedTime().' LIMIT 1');
+			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version isn't.
 			unserialize(&$cache);
 		}
 	}
@@ -1074,10 +1077,10 @@ class SmrPort
 							  		
 			if($db->nextRecord())
 			{
-				return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize($db->getField('port_info'));
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize($db->getField('port_info'));
 			}
 			else
-				return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
 		}
 		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
@@ -1091,6 +1094,7 @@ class SmrPort
 	
 	public function __wakeup()
 	{
+		$this->db = new SmrMySqlDatabase();
 	}
 	
 	function update()
