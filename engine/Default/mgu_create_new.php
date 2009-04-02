@@ -35,13 +35,16 @@ $total_sectors = 0;
 // Build the galaxy array.
 $db->query(
 	'SELECT ' .
-	'galaxy.galaxy_id as galaxy_id,' .
-	'galaxy.galaxy_name as galaxy_name,' .
+	'game_galaxy.galaxy_id as galaxy_id,' .
+	'game_galaxy.galaxy_name as galaxy_name,' .
+	'game_galaxy.width,' .
+	'game_galaxy.height,' .
 	'MIN(sector.sector_id) as start,' .
 	'MAX(sector.sector_id) as end ' . 
-	'FROM sector,galaxy WHERE ' .
+	'FROM sector,game_galaxy WHERE ' .
 	'sector.game_id=' . $game_id . ' ' .
-	'AND galaxy.galaxy_id = sector.galaxy_id ' .
+	'AND game_galaxy.galaxy_id = sector.galaxy_id ' .
+	'AND game_galaxy.game_id = sector.game_id ' .
 	'GROUP BY galaxy_id ORDER BY start'
 );
 
@@ -50,9 +53,10 @@ while($db->nextRecord()) {
 	
 	$galaxies[$db->getField('galaxy_id')] = array(
 		'name' => $db->getField('galaxy_name'),
-		'start' => $db->getField('start'),
-		'end' => $db->getField('end'),
-		'size' => sqrt($num_sectors) 
+		'start' => (int)$db->getField('start'),
+		'end' => (int)$db->getField('end'),
+		'width' => (int)$db->getField('width'),
+		'height' => (int)$db->getField('height')
 	);
 	$total_sectors += $num_sectors;
 }
@@ -258,8 +262,8 @@ foreach($galaxies as $galaxy_id => $galaxy) {
 		$file .= pack('C', 9);
 	}
 	// Height/Width
-	$file .= pack('C', $galaxy['size']);
-	$file .= pack('C', $galaxy['size']);
+	$file .= pack('C', $galaxy['width']);
+	$file .= pack('C', $galaxy['height']);
 }
 
 $file .= pack('C', 2);
@@ -317,9 +321,8 @@ for($i=1;$i<$max;++$i) {
 				$byte = 0;
 				for($k=0;$k<4;++$k) {
 					$good_id = (4 * $j) + $k + 1;
-					
 					if($info->hasGood($good_id)) {
-						$good =& $info->getGood($good_id);
+						$good = $info->getGood($good_id);
 						if ($good['TransactionType'] == 'Sell') {
 							$byte |= 1 << (2*(4 - $k) - 1);
 						}
@@ -381,15 +384,15 @@ for($i=1;$i<$max;++$i) {
 		// Ok, first we want to know where we are.
 		// Find X and Y inside the universe.
 		$base = $i - $galaxies[$current_galaxy]['start'];
-		$y = floor($base/$galaxies[$current_galaxy]['size']);
-		$x = $base % $galaxies[$current_galaxy]['size'];
+		$y = floor($base/$galaxies[$current_galaxy]['width']);
+		$x = $base % $galaxies[$current_galaxy]['width'];
 		
 		// Check for a visited sector up.
 		$check_x = $x;
 		$check_y = $y - 1;
-		if($check_y < 0) $check_y += $galaxies[$current_galaxy]['size'];
+		if($check_y < 0) $check_y += $galaxies[$current_galaxy]['height'];
 		$check_sector =
-			$check_x + ($check_y * $galaxies[$current_galaxy]['size']) +
+			$check_x + ($check_y * $galaxies[$current_galaxy]['width']) +
 			$galaxies[$current_galaxy]['start'];
 
 		if(isset($sectors[$check_sector]) && $sectors[$check_sector]['down']) {
@@ -399,9 +402,9 @@ for($i=1;$i<$max;++$i) {
 		// Check for a visited sector right.
 		$check_x = $x + 1;
 		$check_y = $y;
-		if($check_x >= $galaxies[$current_galaxy]['size']) $check_x = 0;
+		if($check_x >= $galaxies[$current_galaxy]['width']) $check_x = 0;
 		$check_sector =
-			$check_x + ($check_y * $galaxies[$current_galaxy]['size']) +
+			$check_x + ($check_y * $galaxies[$current_galaxy]['width']) +
 			$galaxies[$current_galaxy]['start'];
 
 		if(isset($sectors[$check_sector]) && $sectors[$check_sector]['left']) {
@@ -411,9 +414,9 @@ for($i=1;$i<$max;++$i) {
 		// Check for a visited sector down.
 		$check_x = $x;
 		$check_y = $y + 1;
-		if($check_y >= $galaxies[$current_galaxy]['size']) $check_y = 0;
+		if($check_y >= $galaxies[$current_galaxy]['height']) $check_y = 0;
 		$check_sector =
-			$check_x + ($check_y * $galaxies[$current_galaxy]['size']) +
+			$check_x + ($check_y * $galaxies[$current_galaxy]['width']) +
 			$galaxies[$current_galaxy]['start'];
 
 		if(isset($sectors[$check_sector]) && $sectors[$check_sector]['up']) {
@@ -423,9 +426,9 @@ for($i=1;$i<$max;++$i) {
 		// Check for a visited sector left.
 		$check_x = $x - 1;
 		$check_y = $y;
-		if($check_x < 0) $check_x += $galaxies[$current_galaxy]['size'];
+		if($check_x < 0) $check_x += $galaxies[$current_galaxy]['width'];
 		$check_sector =
-			$check_x + ($check_y * $galaxies[$current_galaxy]['size']) +
+			$check_x + ($check_y * $galaxies[$current_galaxy]['width']) +
 			$galaxies[$current_galaxy]['start'];
 
 		if(isset($sectors[$check_sector]) && $sectors[$check_sector]['right']) {
