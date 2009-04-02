@@ -317,8 +317,10 @@ for($i=1;$i<$max;++$i) {
 				$byte = 0;
 				for($k=0;$k<4;++$k) {
 					$good_id = (4 * $j) + $k + 1;
-					if(isset($info[$good_id])) {
-						if ($info[$good_id] == 'Sell') {
+					
+					if($info->hasGood($good_id)) {
+						$good =& $info->getGood($good_id);
+						if ($good['TransactionType'] == 'Sell') {
 							$byte |= 1 << (2*(4 - $k) - 1);
 						}
 						else {
