@@ -93,7 +93,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 				if ($fine > 0)
 				{
 					// because credits is 0 it will take money from bank
-					$player->decreaseBank($fine);
+					$player->decreaseBank(max($fine,$player->getBank()));
 					// leave insurance
 					if ($player->getBank < 5000)
 						$player->setBank(5000);
