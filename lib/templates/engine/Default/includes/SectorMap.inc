@@ -17,29 +17,29 @@
 										<img src="images/link_hor.gif" alt="Up" title="Up" /><?php
 									} ?>
 								</div><?php
-								if($Sector->hasWarp() || $Sector->hasMine() || $ThisPlayer->isPartOfCourse($Sector))
-								{ ?>
-									<div class="lmp"><?php
-										if($ThisPlayer->isPartOfCourse($Sector))
-										{ ?>
-											<img title="Course" alt="Course" src="images/plot_icon.gif"/><?php
-										}
-										if($Sector->hasWarp())
+							}
+							if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || $ThisPlayer->isPartOfCourse($Sector))
+							{ ?>
+								<div class="lmp"><?php
+									if($ThisPlayer->isPartOfCourse($Sector))
+									{ ?>
+										<img title="Course" alt="Course" src="images/plot_icon.gif"/><?php
+									}
+									if($Sector->isVisited($ThisPlayer) && $Sector->hasWarp())
+									{
+										if($isCurrentSector)
 										{
-											if($isCurrentSector)
-											{
-												$WarpSector = $Sector->getLinkWarpSector(); ?>
-												<a href="<?php echo $WarpSector->getLocalMapHREF() ?>"><?php
-											} ?>
-												<img title="Warp to #<?php echo $Sector->getLinkWarp() ?>" alt="Warp to #<?php echo $Sector->getLinkWarp() ?>" src="images/warp.gif" /><?php
-											if($isCurrentSector){ ?></a><?php }
-										}
-										if($Sector->hasMine())
-										{ ?>
-											<img src="images/asteroid.gif" alt="Mining Available Here" title="Mining Available Here" /><?php
+											$WarpSector = $Sector->getLinkWarpSector(); ?>
+											<a href="<?php echo $WarpSector->getLocalMapHREF() ?>"><?php
 										} ?>
-									</div><?php
-								}
+											<img title="Warp to #<?php echo $Sector->getLinkWarp() ?>" alt="Warp to #<?php echo $Sector->getLinkWarp() ?>" src="images/warp.gif" /><?php
+										if($isCurrentSector){ ?></a><?php }
+									}
+									if($Sector->isVisited($ThisPlayer) && $Sector->hasMine())
+									{ ?>
+										<img src="images/asteroid.gif" alt="Mining Available Here" title="Mining Available Here" /><?php
+									} ?>
+								</div><?php
 							}
 							if((($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector) && ($Sector->hasForces() || $Sector->hasTraders()))
 							{ ?>
