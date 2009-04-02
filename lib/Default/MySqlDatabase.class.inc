@@ -39,7 +39,7 @@ abstract class MySqlDatabase implements Database
 		if(!$this->dbResult)
 			$this->error('No resource to get record from.');
 		
-		if($this->dbRecord = mysql_fetch_assoc($this->dbResult))
+		if($this->dbRecord = @mysql_fetch_assoc($this->dbResult))
 			return true;
 		return false;
 	}
