@@ -81,7 +81,7 @@ $port_visitted = array();
 $port_info = array();
 
 // get a list of all visited ports
-$db->query('SELECT sector_id,visited
+$db->query('SELECT sector_id,visited,port_info
 			FROM player_visited_port
 			WHERE account_id = '.SmrSession::$account_id.' AND
 				  game_id = '.SmrSession::$game_id);
