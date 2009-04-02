@@ -29,7 +29,7 @@ if ($action == 'Marked Messages')
     $db->query('DELETE FROM message WHERE message_id IN ('.$message_id_list.')');
 
 }
-else if ($action == 'All Messages')
+else
 {
     if ($var['folder_id'] == MSG_SCOUT) {
         $db->query('DELETE FROM message WHERE account_id = '.$player->getAccountID().' AND ' .
