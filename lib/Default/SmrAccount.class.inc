@@ -529,7 +529,7 @@ $this->get_rank();
 	{
 		if($this->hofName==$name)
 			return;
-		$db->query('UPDATE account SET hof_name = ' . $db->escapeString($name) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->query('UPDATE account SET hof_name = ' . $this->db->escapeString($name) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->hofName=$name;
 	}
 	
