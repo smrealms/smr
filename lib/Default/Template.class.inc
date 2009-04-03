@@ -5,7 +5,7 @@ class Template
 	protected $data = array();
 //	protected $ajax = array();
 //	protected $currentAjaxID=false;
-	protected $captures=array();
+	protected $captures=array('');
 	protected $currentCaptureID=0;
 	protected $ignoreMiddle=false;
 	
@@ -32,7 +32,7 @@ class Template
 	{
 		if($forAjax)
 			header('Content-Type: text/xml');
-		ob_clean();
+		@ob_clean();
 		ob_start();
 		$this->includeTemplate($templateName);
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
@@ -242,7 +242,7 @@ class Template
 					{
 						$id = $mid->getAttribute('id');
 						if(!SmrSession::addAjaxReturns($id,$inner))
-							$ajaxXml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+							$xml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
 					}
 				}
 			}

@@ -549,7 +549,7 @@ abstract class AbstractSmrShip
 	
 	public function setOldHardware($hardwareTypeID,$amount)
 	{
-		if($this->oldHardware[$hardwareTypeID] == $amount)
+		if($this->getOldHardware($hardwareTypeID) == $amount)
 			return;
 		$this->oldHardware[$hardwareTypeID] = $amount;
 		$this->hasChangedHardware = true;

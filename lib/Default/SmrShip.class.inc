@@ -43,7 +43,7 @@ class SmrShip extends AbstractSmrShip
 		if($forceUpdate || !isset(self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()]))
 		{
 			$s = new SmrShip($player);
-			return self::$CACHE_SHIPS[$player->getGameID()][$s->getAccountID()] = $s;
+			return self::$CACHE_SHIPS[$player->getGameID()][$s->getAccountID()] =& $s;
 		}
 		return self::$CACHE_SHIPS[$player->getGameID()][$player->getAccountID()];
 	}

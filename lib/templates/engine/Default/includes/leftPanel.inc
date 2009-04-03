@@ -29,7 +29,7 @@
 		<a href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a>
 		<br />
 		<br />
-		<a href="<?php echo $TradingLink; ?>">Trading</a><br />
+		<?php /* <a href="<?php echo $TradingLink; ?>">Trading</a><br /> */ ?>
 		<a href="<?php echo $PlanetLink; ?>">Planet</a><br />
 		<a href="<?php echo $ForcesLink; ?>">Forces</a><br />
 		<br />

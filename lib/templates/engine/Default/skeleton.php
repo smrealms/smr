@@ -9,11 +9,11 @@
 		<td class="m0" colspan="2">
 			<div id="middle_panel">
 				<?php
-					if($PageTopic)
+					if(isset($PageTopic))
 					{
 						?><h1><?php echo $PageTopic ?></h1><br /><?php
 					}
-					if($MenuBar)
+					if(isset($MenuBar))
 					{
 						echo $MenuBar;
 					}

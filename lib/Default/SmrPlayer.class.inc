@@ -151,7 +151,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray]))
 		{
 			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
-			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] = $p;
+			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray];
 		

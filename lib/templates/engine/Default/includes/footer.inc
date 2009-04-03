@@ -1,7 +1,7 @@
 		<script type="text/javascript" src="js/smr15.js"></script>
 		<script type="text/javascript" src="js/ajax.js"></script>
 		<?php
-		if($js)
+		if(!empty($js))
 		{ ?>
 			<script type="text/javascript" src="<?php echo $js ?>"></script><?php
 		} 

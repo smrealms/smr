@@ -11,13 +11,13 @@ else
 	$alliance_id=$player->getAllianceID();
 }
 $alliance = new SMR_ALLIANCE($alliance_id,SmrSession::$game_id);
+$leader_id = $alliance->getLeaderID();
+$password = $alliance->getPassword();
 
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance_id . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
+$PHP_OUTPUT.=create_alliance_menue($alliance_id,$leader_id);
 
-$leader_id = $alliance->getLeaderID();
-$password = $alliance->getPassword();
 
 $db2 = new SmrMySqlDatabase();
 $varAction = isset($var['action']) ? $var['action'] : '';

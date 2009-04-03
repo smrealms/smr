@@ -12,27 +12,27 @@
 			$this->includeTemplate('includes/PlottedCourse.inc');
 			$this->includeTemplate('includes/Ticker.inc'); ?>
 			<span id="secmess"><?php
-				if($ErrorMessage)
+				if(isset($ErrorMessage))
 				{
 					echo $ErrorMessage ?><br /><?php
 				}
-				if($ProtectionMessage)
+				if(isset($ProtectionMessage))
 				{
 					echo $ProtectionMessage ?><br /><?php
 				}
-				if($TurnsMessage)
+				if(isset($TurnsMessage))
 				{
 					echo $TurnsMessage ?><br /><?php
 				}
-				if($TradeMessage)
+				if(isset($TradeMessage))
 				{
 					echo $TradeMessage ?><br /><?php
 				}
-				if($ForceRefreshMessage)
+				if(isset($ForceRefreshMessage))
 				{
 					echo $ForceRefreshMessage ?><br /><?php
 				}
-				if($VarMessage)
+				if(isset($VarMessage))
 				{
 					echo $VarMessage ?><br /><?php
 				} ?>

@@ -201,7 +201,7 @@ class Globals
 		}
 		return self::$BETA_OPEN;
 	}
-	public static function &getBetaApplyHREF()
+	public static function getBetaApplyHREF()
 	{
 		$container = array();
 		$container['url']		= 'skeleton.php';
@@ -221,7 +221,7 @@ class Globals
 		}
 		return self::$FEATURE_REQUEST_OPEN;
 	}
-	public static function &getFeatureRequestHREF()
+	public static function getFeatureRequestHREF()
 	{
 		$container = array();
 		$container['url']		= 'skeleton.php';
