@@ -20,12 +20,15 @@ if ($var['bargain_price'] > 0) {
 	$PHP_OUTPUT.=('.</p>');
 
 	// lose relations for bad bargain
-	$relation_modifier = round($var['amount'] / 30);
-	if ($relation_modifier > 10)
-		$relation_modifier = 10;
-
-	$player->decreaseRelations($relation_modifier,$port->getRaceID());
-	$player->update();
+	if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
+	{
+		$relation_modifier = round($var['amount'] / 30);
+		if ($relation_modifier > 10)
+			$relation_modifier = 10;
+	
+		$player->decreaseRelations($relation_modifier,$port->getRaceID());
+		$player->update();
+	}
 
 } else
 	$bargain_price = $var['offered_price'];

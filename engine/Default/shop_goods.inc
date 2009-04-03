@@ -219,13 +219,13 @@ function check_bargain_number()
 		if ($container['number_of_bargains'] > $container['overall_number_of_bargains'])
 		{
 			// change relation for non neutral ports
-			if ($port->getRaceID() > 1)
+			if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
 			{
 				$relation_modifier = round($amount / 30);
 				if ($relation_modifier > 10)
 					$relation_modifier = 10;
 
-				$player->decreaseRelations($port->getRaceID(),$relation_modifier);
+				$player->decreaseRelations($relation_modifier,$port->getRaceID());
 
 				/*what the hell is this doing here Spock??? ;)
 				//any player can just go to a port and make their - 500 personal align go to 0
