@@ -116,12 +116,12 @@
 									{
 										?><a href="<?php echo $Port->getTradeHREF() ?>"><?php
 									} ?>
-										<img src="images/port/buy.gif" alt="Buy" title="Buy" /><?php
+										<img src="images/port/buy.gif" alt="Buy (<?php echo $Port->getRaceName(); ?>)" title="Buy (<?php echo $Port->getRaceName(); ?>)" /><?php
 											foreach($Port->getVisibleGoodsSold($ThisPlayer) as $Good)
 											{ ?>
 												<img src="<?php echo $Good['ImageLink'] ?>" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name'] ?>" /><?php
 											} ?><br />
-										<img src="images/port/sell.gif" alt="Sell" title="Sell" /><?php
+										<img src="images/port/sell.gif" alt="Sell (<?php echo $Port->getRaceName(); ?>)" title="Sell (<?php echo $Port->getRaceName(); ?>)" /><?php
 											foreach($Port->getVisibleGoodsBought($ThisPlayer) as $Good)
 											{ ?>
 												<img src="<?php echo $Good['ImageLink'] ?>" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name'] ?>" /><?php
