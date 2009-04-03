@@ -89,17 +89,17 @@ else
 	$show_price = $bargain_price - $show_price;
 //$PHP_OUTPUT.=('.$db->escapeString($show_price');
 $PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$show_price.'" id="InputFields" style="width:75;text-align:center;vertical-align:middle;">&nbsp;');
-$PHP_OUTPUT.=('<!-- here are all information that are needed to calculate the ideal price. if you know how feel free to create a trade calculator -->');
-$PHP_OUTPUT.=('<!--('.$var['amount'].':'.$portGood['BasePrice'].':'.$var['good_distance'].':'.$portGood['Amount'].':'.$portGood['Max'].':'.$relations.':'.$port->getLevel().')-->');
+//$PHP_OUTPUT.=('<!-- here are all information that are needed to calculate the ideal price. if you know how feel free to create a trade calculator -->');
+//$PHP_OUTPUT.=('<!--('.$var['amount'].':'.$portGood['BasePrice'].':'.$var['good_distance'].':'.$portGood['Amount'].':'.$portGood['Max'].':'.$relations.':'.$port->getLevel().')-->');
 $PHP_OUTPUT.=create_submit('Bargain (1)');
 $PHP_OUTPUT.=('</form>');
 
-$PHP_OUTPUT.=('<SCRIPT LANGUAGE="javascript">'.EOL);
+$PHP_OUTPUT.=('<script type="text/javascript">'.EOL);
 $PHP_OUTPUT.=('window.document.FORM.bargain_price.select();'.EOL);
 $PHP_OUTPUT.=('window.document.FORM.bargain_price.focus();'.EOL);
-$PHP_OUTPUT.=('</SCRIPT>'.EOL);
+$PHP_OUTPUT.=('</script>'.EOL);
 
-$PHP_OUTPUT.=('<p>&nbsp;</p>');
+$PHP_OUTPUT.=('<p>Distance Index: '.$var['good_distance'] .'</p>');
 
 $PHP_OUTPUT.=('<h2>Or do you want:</h2>');
 
