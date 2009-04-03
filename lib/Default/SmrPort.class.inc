@@ -58,7 +58,7 @@ class SmrPort
 	{
 		if($forceUpdate || !isset(self::$CACHE_PORTS[$gameID][$sectorID]))
 		{
-			return self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID,$sectorID);
+			self::$CACHE_PORTS[$gameID][$sectorID] = new SmrPort($gameID,$sectorID);
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
 	}

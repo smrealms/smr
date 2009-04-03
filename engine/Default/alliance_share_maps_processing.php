@@ -4,6 +4,7 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $alliance_ids = array();
+$alliance_list = '';
 
 // get a list of alliance member
 $db->query('SELECT * FROM player
@@ -46,6 +47,8 @@ $db->query('SELECT sector_id
 				  account_id = '.SmrSession::$account_id);
 while ($db->nextRecord())
 	$unvisitted_sectors[$db->getField('sector_id')] = true;
+
+$visitted_sector_list = '';
 
 // invert it and get a list of visited sectors
 for ($i = $min_sector; $i <= $max_sector; $i++) {

@@ -99,7 +99,7 @@ if(isset($GameID))
 	<br />
 	<span id="ship_name"><?php /*<a href="<?php echo $ThisShip->getUpgradeShipHREF() ?>">*/ ?><span class="yellow bold"><?php echo $ThisShip->getName() ?></span><?php /*</a>*/ ?></span><br />
 	<?php
-	if($PlayerShipCustomName)
+	if(!empty($PlayerShipCustomName))
 	{
 		echo $PlayerShipCustomName.'<br />';
 	} ?>

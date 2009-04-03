@@ -372,7 +372,7 @@ function word_filter($string) {
 // This function is a hack around the old style http forward mechanism
 function do_voodoo()
 {
-	if(!defined(USING_AJAX))
+	if(!defined('USING_AJAX'))
 		define('USING_AJAX',false);
 	if(USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
 		exit;
@@ -539,7 +539,7 @@ function release_lock()
 
 function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 {
-	$template->assign('fontSize',$account->fontsize);
+	$template->assign('FontSize',$account->fontsize);
 	$template->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
 	if(!$account->isUseAJAX())
 		$template->assign('AJAX_ENABLE_REFRESH',false);
@@ -549,6 +549,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 	if (SmrSession::$game_id > 0)
 	{
+		$template->assign('GameName',Globals::getGameName(SmrSession::$game_id));
 		$template->assign('GameID',SmrSession::$game_id);
 	
 		if ($player->isLandedOnPlanet())

@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><?php echo $Title.' '.$GameName; ?></title>
+		<title><?php echo $Title ?> <?php if(isset($GameName)) echo $GameName; ?></title>
 		<meta http-equiv="pragma" content="no-cache">
 		<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
 		<!--[if IE]>
@@ -11,7 +11,7 @@
 		<!--<script type="text/javascript" src="js/smr.js"></script>-->
 		<style type="text/css">
 			body {
-				font-size:<?php echo $fontSize; ?>%;
+				font-size:<?php echo $FontSize; ?>%;
 			}
 		</style>
 		<?php
@@ -21,4 +21,4 @@
 			}
 		?>
 	</head>
-	<body <?php echo $bodyTag; ?>>
+	<body>

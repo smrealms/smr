@@ -223,7 +223,7 @@ class SmrSession
 	public static function addAjaxReturns($element,$contents)
 	{
 		self::$ajaxReturns[$element] = $contents;
-		return self::$previousAjaxReturns[$element]==$contents;
+		return isset(self::$previousAjaxReturns[$element])&&self::$previousAjaxReturns[$element]==$contents;
 	}
 	
 	public static function saveAjaxReturns()
