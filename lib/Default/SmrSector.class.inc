@@ -10,6 +10,7 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 class SmrSector
 {
 	protected static $CACHE_SECTORS = array();
+	protected static $CACHE_ALL_SECTORS = array();
 	protected static $CACHE_GALAXY_SECTORS = array();
 	
 	protected $db;
@@ -19,7 +20,6 @@ class SmrSector
 	protected $sectorID;
 	protected $battles;
 	protected $galaxyID;
-	protected $galaxyName;
 	protected $visited = array();
 	protected $links;
 	
@@ -31,7 +31,7 @@ class SmrSector
 		if($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $gameID .' AND galaxy_id='.$galaxyID.' ORDER BY sector_id');
+			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $gameID .' AND galaxy_id='.$galaxyID.' ORDER BY sector_id ASC');
 			$sectors = array();
 			while($db->nextRecord())
 			{
@@ -78,15 +78,13 @@ class SmrSector
 	{
 		$this->db = new SmrMySqlDatabase();
 
-		$this->db->query('SELECT * FROM sector, galaxy WHERE sector.galaxy_id = galaxy.galaxy_id AND ' .
-														'sector.game_id = '.$gameID.' AND ' .
+		$this->db->query('SELECT * FROM sector WHERE game_id = '.$gameID.' AND ' .
 														'sector_id = '.$sectorID.' LIMIT 1');
 		if($this->db->nextRecord())
 		{
 			$this->sectorID		= (int)$this->db->getField('sector_id');
 			$this->gameID		= (int)$this->db->getField('game_id');
 			$this->galaxyID		= (int)$this->db->getField('galaxy_id');
-			$this->galaxyName	= $this->db->getField('galaxy_name');
 			$this->battles		= (int)$this->db->getField('battles');
 			if (empty($this->battles)) $this->battles = 0;
 	
@@ -340,12 +338,6 @@ class SmrSector
 		}unset($force);
 
 	}
-
-//	function is_protected_gal() {
-//
-//		return $this->galaxyID < 9;
-//
-//	}
 	
 	public function getGameID()
 	{
@@ -372,7 +364,7 @@ class SmrSector
 	
 	public function getGalaxyName()
 	{
-		return $this->galaxyName;
+		return $this->getGalaxy()->getName();
 	}
 	
 	public function getNumberOfLinks()
@@ -442,6 +434,7 @@ class SmrSector
 	
 	public function hasLink($name)
 	{
+		
 		return $this->getLink($name)!=0;
 	}
 	
@@ -459,7 +452,10 @@ class SmrSector
 	{
 		if($this->links[$name]==$linkID)
 			return;
-		$this->links[$name] = $linkID;
+		if($linkID==0)
+			unset($this->links[$name]);
+		else
+			$this->links[$name] = $linkID;
 		$this->hasChanged=true;
 	}
 	

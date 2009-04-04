@@ -96,6 +96,15 @@ class SmrLocation
 		return $this->name;
 	}
 	
+	public function setName($name)
+	{
+		$name = htmlentities($name);
+		if($this->name==$name)
+			return;
+		$this->name = $name;
+		$this->db->query('UPDATE location_type SET location_name='.$db->escapeString($this->name).' WHERE location_type_id=' . $this->getTypeID() . ' LIMIT 1');
+	}
+	
 	public function hasAction()
 	{
 		return $this->processor!=null;
