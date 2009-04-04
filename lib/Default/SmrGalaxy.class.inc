@@ -24,7 +24,7 @@ class SmrGalaxy
 		if($forceUpdate || !isset(self::$CACHE_GAME_GALAXIES[$gameID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT galaxy_id FROM game_galaxy WHERE game_id = ' . $gameID);
+			$db->query('SELECT galaxy_id FROM game_galaxy WHERE game_id = ' . $gameID .' ORDER BY galaxy_id ASC');
 			$galaxies = array();
 			while($db->nextRecord())
 			{
@@ -143,6 +143,7 @@ class SmrGalaxy
 	
 	public function setName($name)
 	{
+		$name = htmlentities($name);
 		if($this->name==$name)
 			return;
 		$this->name=$name;

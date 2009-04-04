@@ -201,13 +201,6 @@ class Globals
 		}
 		return self::$BETA_OPEN;
 	}
-	public static function getBetaApplyHREF()
-	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'beta_apply.php';
-		return SmrSession::get_new_href($container);
-	}
 	
 	public static function isFeatureRequestOpen()
 	{
@@ -220,13 +213,6 @@ class Globals
 			self::$FEATURE_REQUEST_OPEN = self::$db->getField('open') == 'TRUE';
 		}
 		return self::$FEATURE_REQUEST_OPEN;
-	}
-	public static function getFeatureRequestHREF()
-	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'feature_request.php';
-		return SmrSession::get_new_href($container);
 	}
 	
 	public static function &getRaceRelations($gameID,$raceID)
@@ -270,61 +256,55 @@ class Globals
 		return self::$USER_RANKINGS;
 	}
 	
-	
-	protected static $CURRENT_SECTOR_HREF;
-	protected static $LOCAL_MAP_HREF;
-	protected static $POD_SCREEN_HREF;
-	protected static $BETA_FUNCTIONS_HREF;
-	
-	public static function &getCurrentSectorHREF()
+	public static function getBetaApplyHREF()
 	{
-		if(!isset(self::$CURRENT_SECTOR_HREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'current_sector.php';
-			self::$CURRENT_SECTOR_HREF = SmrSession::get_new_href($container);
-		}
-		return self::$CURRENT_SECTOR_HREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'beta_apply.php';
+		return SmrSession::get_new_href($container);
 	}
 	
-	public static function &getLocalMapHREF()
+	public static function getFeatureRequestHREF()
 	{
-		if(!isset(self::$LOCAL_MAP_HREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'map_local.php';
-			self::$LOCAL_MAP_HREF = SmrSession::get_new_href($container);
-		}
-		return self::$LOCAL_MAP_HREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'feature_request.php';
+		return SmrSession::get_new_href($container);
 	}
 	
-	public static function &getPodScreenHREF()
+	public static function getCurrentSectorHREF()
 	{
-		if(!isset(self::$POD_SCREEN_HREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'death.php';
-			self::$POD_SCREEN_HREF = SmrSession::get_new_href($container);
-		}
-		return self::$POD_SCREEN_HREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'current_sector.php';
+		return SmrSession::get_new_href($container);
 	}
 	
-	public static function &getBetaFunctionsHREF() //BETA
+	public static function getLocalMapHREF()
 	{
-		if(!isset(self::$BETA_FUNCTIONS_HREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'beta_functions.php';
-			self::$BETA_FUNCTIONS_HREF = SmrSession::get_new_href($container);
-		}
-		return self::$BETA_FUNCTIONS_HREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'map_local.php';
+		return SmrSession::get_new_href($container);
 	}
 	
-	public static function &getWeaponReorderHREF($weaponOrderID, $direction)
+	public static function getPodScreenHREF()
+	{
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'death.php';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBetaFunctionsHREF() //BETA
+	{
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'beta_functions.php';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getWeaponReorderHREF($weaponOrderID, $direction)
 	{
 		$container = array();
 		$container['url']		= 'skeleton.php';
@@ -334,8 +314,13 @@ class Globals
 			return SmrSession::get_new_sn($container);
 		return SmrSession::get_new_href($container);
 	}
+	
+	public static function getSmrFileCreateHREF()
+	{
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'smr_file_create.php';
+		return SmrSession::get_new_href($container);
+	}
 }
-
-
-$template->assign('Globals',new Globals()); //Allow access to static globals in smarty
 ?>
