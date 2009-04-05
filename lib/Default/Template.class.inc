@@ -13,6 +13,11 @@ class Template
 	{
 	}
 	
+	public function hasTemplateVar($var)
+	{
+		return isset($this->data[$var]);
+	}
+	
 	public function assign($var,$value)
 	{
 		$this->data[$var] =& $value;
