@@ -2,6 +2,7 @@
 require_once('SmrMySqlDatabase.class.inc');
 class SmrSession
 {
+	const TIME_BEFORE_EXPIRY = 3600;
 	protected static $db;
 
 	public static $session_id;
@@ -37,6 +38,7 @@ class SmrSession
 		}
 
 		// try to get current session
+		self::$db->query('DELETE FROM active_session WHERE last_accessed < '.(TIME-self::TIME_BEFORE_EXPIRY));
 		self::$db->query('SELECT * FROM active_session WHERE session_id = '.self::$db->escapeString(self::$session_id).' LIMIT 1');
 		if (self::$db->nextRecord())
 		{
