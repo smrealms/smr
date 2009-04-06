@@ -7,11 +7,9 @@ if ($player->getAlignment() <= -100) {
 }
 
 // get the name of this facility
-$db->query('SELECT * FROM location NATURAL JOIN location_type ' .
+$db->query('SELECT * FROM location NATURAL JOIN location_type NATURAL JOIN location_is_hq ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
-		   'sector_id = '.$player->getSectorID().' AND ' .
-		   'location.location_type_id >= 103 AND ' .
-		   'location.location_type_id <= 110');
+		   'sector_id = '.$player->getSectorID());
 if ($db->nextRecord()) {
 
 	$location_type_id = $db->getField('location_type_id');
@@ -22,7 +20,7 @@ if ($db->nextRecord()) {
 }
 
 // did we get a result
-if (empty($race_id)) {
+if (!isset($race_id)) {
   create_error('There is no headquarter. Obviously.');
   return;
 }
@@ -45,27 +43,22 @@ include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_hq_menue();
 
 // secondary db object
-$db2 = new SmrMySqlDatabase();
-
+$races =& Globals::getRaces();
+$PHP_OUTPUT.='<div align="center">';
 if (isset($location_type_id))
 {
-	$PHP_OUTPUT.=('<div align="center">We are at WAR with<br /><br />');
 	$db->query('SELECT * FROM race_has_relation WHERE game_id = '.$player->getGameID().' AND race_id_1 = '.$race_id);
-	while($db->nextRecord())
+	if($db->getNumRows()>0)
 	{
-		$relation = $db->getField('relation');
-		$race_2 = $db->getField('race_id_2');
-
-		$db2->query('SELECT * FROM race WHERE race_id = '.$race_2);
-		$db2->nextRecord();
-		$race_name = $db2->getField('race_name');
-		if ($relation <= -300)
-			$PHP_OUTPUT.=('<span style="color:red;">The '.$race_name.'<br /></span>');
-
+		$PHP_OUTPUT.=('We are at WAR with<br /><br />');
+		while($db->nextRecord())
+		{
+			if ($db->getField('relation') <= -300)
+				$PHP_OUTPUT.=('<span style="color:red;">The '.$races[$db->getField('race_id_2')]['Race Name'].'<br /></span>');
+	
+		}
+		$PHP_OUTPUT.=('<br />The government will PAY for the destruction of their ships!');
 	}
-
-	$PHP_OUTPUT.=('<br />The government will PAY for the destruction of their ships!');
-
 }
 
 require_once(get_file_loc('gov.functions.inc'));
@@ -79,5 +72,5 @@ if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100)
 	$PHP_OUTPUT.=create_submit('Become a deputy');
 	$PHP_OUTPUT.=('</form>');
 }
-
+$PHP_OUTPUT.='</div>';
 ?>

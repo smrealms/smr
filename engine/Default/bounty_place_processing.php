@@ -45,6 +45,10 @@ $placed->increaseHOF($smrCredits,array('Bounties','Received','SMR Credits'));
 $placed->increaseHOF($amount,array('Bounties','Received','Money'));
 $placed->increaseHOF(1,array('Bounties','Received','Number'));
 
+//Update for top bounties list
+$player->update();
+$account->update();
+$placed->update();
 forward($container);
 
 ?>

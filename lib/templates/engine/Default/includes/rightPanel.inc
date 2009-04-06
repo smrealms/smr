@@ -58,20 +58,21 @@ if(isset($GameID))
 	Race : <?php echo $ThisPlayer->getRaceName() ?><br />
 	Turns : <span id="turns">
 		<span class="<?php
-			if($ThisPlayer->getTurnsLevel() == 'LOW')
+			switch($ThisPlayer->getTurnsLevel())
 			{
-				echo 'red';
+				case 'NONE':
+				case 'LOW':
+					echo 'red';
+				break;
+				case 'MEDIUM':
+					echo 'yellow';
+				break;
+				default:
+					echo 'green';
 			}
-			else if($ThisPlayer->getTurnsLevel() == 'MEDIUM')
-			{
-				echo 'yellow';
-			}
-			else
-			{
-				echo 'green';
-			}
-			echo '">'.$ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns() ?>
-			</span>
+			?>"><?php
+				echo $ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns()
+			?></span>
 		</span><br />
 	<span id="newbieturns"><?php
 		if($ThisPlayer->hasNewbieTurns())
