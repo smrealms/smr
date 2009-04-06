@@ -121,10 +121,18 @@ if($player->hasTickers())
 // *
 // *******************************************
 $turnsMessage = '';
-if ($player->getTurnsLevel() == 'LOW')
-	$turnsMessage = '<span class="red">WARNING</span>: You are almost out of turns!';
-if ($player->getTurnsLevel() == 'MEDIUM')
-	$turnsMessage = '<span class="yellow">WARNING</span>: You are running out of turns!';
+switch($player->getTurnsLevel())
+{
+	case 'NONE':
+		$turnsMessage = '<span class="red">WARNING</span>: You have run out of turns!';
+	break;
+	case 'LOW':
+		$turnsMessage = '<span class="red">WARNING</span>: You are almost out of turns!';
+	break;
+	case 'MEDIUM':
+		$turnsMessage = '<span class="yellow">WARNING</span>: You are running out of turns!';
+	break;
+}
 
 $template->assign('TurnsMessage',$turnsMessage);
 
