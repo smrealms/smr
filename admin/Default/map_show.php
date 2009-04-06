@@ -28,6 +28,7 @@ if (empty($game_id)) {
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('<select name="account_id" size="1" id="InputFields">');
 	$PHP_OUTPUT.=('<option value="0">[Please Select]</option>');
+	$PHP_OUTPUT.=('<option value="all">All Players</option>');
 
 	$db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY player_id');
 

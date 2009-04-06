@@ -9,7 +9,6 @@ if ($var['func'] == 'Map') {
 	$game_id = $player->getGameID();
 	// delete all entries from the player_visited_sector/port table
 	$db->query('DELETE FROM player_visited_sector WHERE account_id = '.$account_id.' AND game_id = '.$game_id);
-	$db->query('DELETE FROM player_visited_port WHERE account_id = '.$account_id.' AND game_id = '.$game_id);
 
 	// add port infos
 	$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' ORDER BY sector_id');

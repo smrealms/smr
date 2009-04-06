@@ -46,7 +46,6 @@ if (isset($var['process']))
 	
 	// delete all entries from the player_visited_sector/port table
 	$db->query('DELETE FROM player_visited_sector WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id);
-	$db->query('DELETE FROM player_visited_port WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id);
 	//start section
 	
 	require_once(get_file_loc('SmrPort.class.inc'));

@@ -213,6 +213,8 @@ class Template
 	{
 		$xml='';
 		$str =& $this->trimWhiteSpace($str);
+		if(empty($str))
+			return '';
 		$html = new simple_html_dom($str);
 		$searches = array('span[id]','[class=ajax]');
 		foreach($searches as $search)

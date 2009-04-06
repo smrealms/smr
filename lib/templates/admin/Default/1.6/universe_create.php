@@ -19,7 +19,7 @@ create_echo_form($link);
 	</tr>
 	<tr>
 		<td class="right">Game Speed</td>
-		<td class="left"><input type="text" size="6" name="max_players" value="1.25"></td>
+		<td class="left"><input type="text" size="6" name="game_speed" value="1.25"></td>
 	</tr>
 	<tr>
 		<td class="right">Max Players</td>

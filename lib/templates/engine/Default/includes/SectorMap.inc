@@ -1,8 +1,8 @@
 <table class="lmt"><?php
-	foreach($MapSectors as $MapSector)
+	foreach($MapSectors as &$MapSector)
 	{ ?>
 		<tr><?php
-			foreach($MapSector as $Sector)
+			foreach($MapSector as &$Sector)
 			{
 				$isCurrentSector = $ThisSector->equals($Sector);
 				$isLinkedSector = $ThisSector->isLinked($Sector); ?>
@@ -146,7 +146,7 @@
 						} ?>
 					</div>
 				</td><?php
-			} ?>
+			} unset($Sector); ?>
 		</tr><?php
-		} ?>
+		} unset($MapSector); ?>
 </table>

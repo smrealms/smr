@@ -1085,7 +1085,7 @@ sendReport($results, $port);
 doLog($results);
 //insert into combat logs
 $finalResults = $results[0] . '<br /><img src="images/portAttack.jpg" width="480px" height="330px" alt="Port Attack" title="Port Attack"><br />' . $results[1];
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PORT\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',0,0,' . $db->escape_string(gzcompress($finalResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PORT\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',0,0,' . $db->escapeBinary(gzcompress($finalResults)) . ', \'FALSE\')');
 if (DEBUG) $PHP_OUTPUT.=('Pre Forward/Display<br>');
 $container=array();
 $container['url'] = 'skeleton.php';

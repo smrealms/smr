@@ -188,8 +188,13 @@ abstract class MySqlDatabase implements Database
 		}
 //		$string = htmlentities($string);
 		if($quotes)
-			return '\'' . mysql_real_escape_string($string) . '\'';
-		return mysql_real_escape_string($string);
+			return '\'' . mysql_real_escape_string($string,self::$dbConn) . '\'';
+		return mysql_real_escape_string($string,self::$dbConn);
+	}
+	
+	public function escapeBinary($binary)
+	{
+		return '0x'.bin2hex($binary);
 	}
 	
 	public function escapeArray(array $array,$quotes=true,$implodeString=',',$escapeIndividually=true)
