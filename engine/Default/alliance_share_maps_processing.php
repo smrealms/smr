@@ -81,20 +81,14 @@ if ($visitted_sector_list) {
 }
 
 // get a list of all visited ports
-$db->query('SELECT sector_id,visited
+$db->query('SELECT sector_id
 			FROM player_visited_port
 			WHERE account_id = '.SmrSession::$account_id.' AND
 				  game_id = '.SmrSession::$game_id);
 while ($db->nextRecord())
 {
 	$cachedPort =& SmrPort::getCachedPort(SmrSession::$game_id,$db->getField('sector_id'),SmrSession::$account_id);
-	$visited	= $db->getField('visited');
-	foreach ($alliance_ids as $id)
-	{
-		// need to insert this entry first
-		// ignore if it exists
-		$cachedPort->addCachePort($id,false);
-	}
+	$cachedPort->addCachePorts($alliance_ids);
 }
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));

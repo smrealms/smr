@@ -535,7 +535,7 @@ function createGame($gameID)
 	The two things that can prevent you from having federal protection are carrying illegal goods (slaves, weapons or narcotics) or having an attack rating that is too high. At neutral alignment, that is +/-149, you can park safely with an attack rating of 3 or less. The attack rating you can park with increases with increasing alignment and decreases with decreasing alignment.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 7, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
-	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 8, \'Merchant\'s Guide to the Universe\')');
+	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 8, \'Merchant\\\'s Guide to the Universe\')');
 	$text = 'MGU, as everyone calls it, is an extremely valuable tool to use alongside SMR. Details on how to get the software (as well as instructions and discussions) can be found on the SMR Webboard at http://smrcnn.smrealms.de/viewforum.php?f=32<br />
 	<br />
 	Basically, after you have installed MGU, you need to download your game maps using the link on the left side of the SMR page, and save them into your MGU directory. From MGU, you can then open the game maps and access the map information to do may useful things. MGU functions include things like finding traderoutes (listed by experience or cash), finding locations, plotting arming routes, finding safe course plots, etc.';
@@ -547,7 +547,7 @@ function createGame($gameID)
 //	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 9, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 10, \'Respect for other players\')');
-	$text = 'SMR has a very active and social player community, and one thing that will get noticed is how you treat your fellow players. If you send polite messages to other players asking for advice or just to make some contacts, they\'ll remember your name, maybe mention you to their teammates, and you have taken the first step to becoming a respected player. However, if you, for example, react to being killed (it happens to everyone, get used to it) by sending an abusive and angry message then you will quickly lose the respect of your fellow players.<br />
+	$text = 'SMR has a very active and social player community, and one thing that will get noticed is how you treat your fellow players. If you send polite messages to other players asking for advice or just to make some contacts, they\\\'ll remember your name, maybe mention you to their teammates, and you have taken the first step to becoming a respected player. However, if you, for example, react to being killed (it happens to everyone, get used to it) by sending an abusive and angry message then you will quickly lose the respect of your fellow players.<br />
 	<br />
 	If you do get killed, it can be useful to politely message your killer and ask what you did wrong - most veteran players will be more than happy to advise you on how to avoid the same thing happening again, plus it shows them that you want to learn how to improve at the game. If you get a kill, it is considered impolite to send messages gloating over the fact, although some veteran players will sometimes message newbies they have killed with offers of cash to get them back on their feet or advice on how to avoid the same thing happening again.<br />
 	<br />
@@ -557,7 +557,7 @@ function createGame($gameID)
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 11, \'Talk to the players\')');
 	$text = 'SMR has a very active community, and it is always a good idea to talk to the other players. You can do this in the #smr chatroom, or by messaging them ingame. Most players will be happy to talk to you or help you if you send them polite messages.<br />
 	<br />
-	It is also a good idea to talk to veteran players, especially alliance leaders, about their alliances and what they look for in their team members. You probably won\'t be asked to join a major alliance right away, but many of them have training alliances and they are always looking for active players who are willing to learn and contribute to an alliance.';
+	It is also a good idea to talk to veteran players, especially alliance leaders, about their alliances and what they look for in their team members. You probably won\\\'t be asked to join a major alliance right away, but many of them have training alliances and they are always looking for active players who are willing to learn and contribute to an alliance.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 11, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 12, \'The Webboard\')');
@@ -572,7 +572,7 @@ function createGame($gameID)
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, '.ACCOUNT_ID_NHL.', \'Alignment\')');
 	$text = ' 	Alignment has a couple of functions, the main ones being for trading purposes and determining which restricted ships and weapons you can buy.<br />
 	<br />
-	If you are evil (alignment -100 or lower) you can trade evil goods, buy underground ships (Thief, Assasin, Death Cruiser which are all cloaked) and buy the underground level 5 weapon (nuke). If you are neutral (between -99 and 99 alignment) you can become evil by signing up as a gang member at Underground HQ. Evil players cannot enter federal (racial) HQ\'s.<br />
+	If you are evil (alignment -100 or lower) you can trade evil goods, buy underground ships (Thief, Assasin, Death Cruiser which are all cloaked) and buy the underground level 5 weapon (nuke). If you are neutral (between -99 and 99 alignment) you can become evil by signing up as a gang member at Underground HQ. Evil players cannot enter federal (racial) HQ\\\'s.<br />
 	<br />
 	If you are good (alignment 100 or higher) you can buy federal ships (Federal Discovery, Warrant and Ultimatum which all have jump drive and take half damage from forces) and buy the federal level 5 weapon (holy hand grenade). If you are neutral (between -99 and 99 alignment) you can become good by deputizing at any racial HQ. Good players cannot enter the underground HQ.<br />
 	<br />
@@ -582,7 +582,7 @@ function createGame($gameID)
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 14, \'Watching the news and CPL\')');
 	$text = 'Whether you are a trader or a hunter, it is very valuable to know as much as possible about who is currently active in the game, and where they might be. Two of the resources you need to learn to use, but also know the limitations of, are the news and the current player list (CPL).<br />
 	<br />
-	Reading the news before you trade can be vlauable in letting you know which hunters are currently active in the game, even if they don\'t show on the CPL. If there has been a recent kill near your traderoute, or a hunter that knows where you like to trade has recen tly been active, it is often a good idea to wait and trade another time.<br />
+	Reading the news before you trade can be vlauable in letting you know which hunters are currently active in the game, even if they don\\\'t show on the CPL. If there has been a recent kill near your traderoute, or a hunter that knows where you like to trade has recen tly been active, it is often a good idea to wait and trade another time.<br />
 	<br />
 	The CPL will let you know who has recently accessed the database, and also how many players are "lurking" (logged into the game, but not moving). It is a good idea to check the CPL for hunters you believe are a threat to you before you trade, and also every so often while you trade (especially if you are trading over a scout drone).';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 14, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
@@ -608,15 +608,15 @@ function createGame($gameID)
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 16, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 17, \'Port raiding\')');
-	$text = 'It\'s simple - don\'t do it! Raiding small ports will gain you nothing and will often get you killed, and raiding big ports is impossible without a well-armed fleet of warships.';
+	$text = 'It\\\'s simple - don\\\'t do it! Raiding small ports will gain you nothing and will often get you killed, and raiding big ports is impossible without a well-armed fleet of warships.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 17, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 18, \'Operations guide\')');
 	$text = ' 	http://smrcnn.smrealms.de/viewtopic.php?t=3922<br />
 	<br />
-	Once you graduate to alliances that are more active in the bigger picture of a game, you will want to take part in alliance operations. SMR op\'s come in all kinds of shapes &amp; sizes and flavours, and involve things like territory wars, planet busts, port raids and fleet battles.<br />
+	Once you graduate to alliances that are more active in the bigger picture of a game, you will want to take part in alliance operations. SMR op\\\'s come in all kinds of shapes &amp; sizes and flavours, and involve things like territory wars, planet busts, port raids and fleet battles.<br />
 	<br />
-	The link I posted here is a rough guide to what you might expect, and what will be expected of you, in alliance op\'s.';
+	The link I posted here is a rough guide to what you might expect, and what will be expected of you, in alliance op\\\'s.';
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 18, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 19, \'Multiple accounts\')');
@@ -626,7 +626,7 @@ function createGame($gameID)
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 19, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 20, \'Moving on to a new alliance\')');
-	$text = 'When you feel you are ready to move on from this alliance to a new one, it is a good idea to take the time to talk to the alliance leaders out there, When you do, don\'t be afraid to talk to the major alliances as well as the small ones - they probably won\'t offer you a spot right away, but they can give good advive and it also puts your name on their radar for future games.<br />
+	$text = 'When you feel you are ready to move on from this alliance to a new one, it is a good idea to take the time to talk to the alliance leaders out there, When you do, don\\\'t be afraid to talk to the major alliances as well as the small ones - they probably won\\\'t offer you a spot right away, but they can give good advive and it also puts your name on their radar for future games.<br />
 	<br />
 	There are a number of things it is a good idea to ask alliance leaders about, to give you an idea what they look for in a member and (more importantly) to help you decide what kind of alliance you want to join.<br />
 	<br />

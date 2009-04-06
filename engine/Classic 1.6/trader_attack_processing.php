@@ -1252,7 +1252,7 @@ foreach($account_ids as $account_id) {
 
 $db->query('UPDATE sector SET battles=battles+1 WHERE sector_id=' . $player->getSectorID() . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $players[$var['target']][ALLIANCE_ID] . ',' . $db->escape_string(gzcompress($results)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $players[$var['target']][ALLIANCE_ID] . ',' . $db->escapeBinary(gzcompress($results)) . ', \'FALSE\')');
 
 $container = array();
 $container['url'] = 'skeleton.php';

@@ -109,14 +109,14 @@ class SmrSession
 		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate)
 		{
-			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeString($compressed)  . '' .
+			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
 					',last_sn='.self::$db->escapeString(self::$SN).
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
 		else
 		{
 			self::$db->query('DELETE FROM active_session WHERE account_id=' . self::$account_id . ' LIMIT 1');
-			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$account_id . ',' . self::$game_id . ',' . TIME . ',' . self::$db->escapeString($compressed)  . ')');
+			self::$db->query('INSERT INTO active_session (session_id, account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$account_id . ',' . self::$game_id . ',' . TIME . ',' . self::$db->escapeBinary($compressed)  . ')');
 		}
 	}
 	
@@ -231,7 +231,7 @@ class SmrSession
 		if(empty(self::$ajaxReturns))
 			return;
 		$compressed = gzcompress(serialize(self::$ajaxReturns));
-		self::$db->query('UPDATE active_session SET ajax_returns=' . self::$db->escapeString($compressed) .
+		self::$db->query('UPDATE active_session SET ajax_returns=' . self::$db->escapeBinary($compressed) .
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 	}
 }

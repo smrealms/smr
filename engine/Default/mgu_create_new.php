@@ -316,7 +316,7 @@ for($i=1;$i<$max;++$i) {
 		$byte = 0;
 		
 		if(isset($sectors[$i]['port'])) {
-			$info = unserialize($sectors[$i]['port']['info']);
+			$info = unserialize(gzuncompress($sectors[$i]['port']['info']));
 			for($j=0;$j<3;++$j) {
 				$byte = 0;
 				for($k=0;$k<4;++$k) {

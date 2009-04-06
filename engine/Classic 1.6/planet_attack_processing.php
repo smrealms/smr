@@ -1134,7 +1134,7 @@ $db->query('SELECT alliance_id FROM player WHERE account_id = ' . $planet[OWNER]
 $db->next_record();
 $ownerAlliance = $db->f('alliance_id');
 $finalResults = $results[0] . '<br /><img src="images/planetAttack.jpg" alt="Planet Attack" title="Planet Attack"><br />' . $results[1];
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PLANET\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',' . $planet[OWNER] . ',' . $ownerAlliance . ',' . $db->escape_string(gzcompress($finalResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . SmrSession::$game_id . ',\'PLANET\',' . $player->getSectorID() . ',' . TIME . ',' . SmrSession::$account_id . ',' . $player->getAllianceID() . ',' . $planet[OWNER] . ',' . $ownerAlliance . ',' . $db->escapeBinary(gzcompress($finalResults)) . ', \'FALSE\')');
 if (DEBUG) $PHP_OUTPUT.=('Pre Forward/Display<br>');
 $container=array();
 $container['url'] = 'skeleton.php';

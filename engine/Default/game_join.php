@@ -94,8 +94,8 @@ while ($db->nextRecord())
 {
 
 	// get the name for this race
-	// HACK! cut ' HQ' from location name!
-	$race_name = substr(stripslashes($db->getField('location_name')), 0, -3);
+	// HACK! cut ' Headquarters' from location name!
+	$race_name = substr(stripslashes($db->getField('location_name')), 0, -13);
 
 	$curr_race_id = $db->getField('loc_id') - 101;
 	if (in_array($curr_race_id, $only)) continue;
