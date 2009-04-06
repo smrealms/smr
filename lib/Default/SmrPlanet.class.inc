@@ -31,8 +31,6 @@ class SmrPlanet
 	protected $hasChangedStockpile = false;
 	protected $isNew = false;
 	
-	protected $examineHREF;
-	
 	public static function refreshCache()
 	{
 		foreach(self::$CACHE_PLANETS as $gameID => &$gamePlanets)
@@ -200,6 +198,11 @@ class SmrPlanet
 	public function getOwnerID()
 	{
 		return $this->owner_id;
+	}
+	
+	public function hasOwner()
+	{
+		return $this->owner_id!=0;
 	}
 	
 	public function setOwnerID($claimerID)
@@ -633,14 +636,17 @@ class SmrPlanet
 	
 	public function getExamineHREF()
 	{
-		if(!isset($this->examineHREF))
-		{
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'planet_examine.php';
-			$this->examineHREF = SmrSession::get_new_href($container);
-		}
-		return $this->examineHREF;
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'planet_examine.php';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public function getLandHREF()
+	{
+		$container = array();
+		$container['url'] = 'planet_land_processing.php';
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getAttackHREF()

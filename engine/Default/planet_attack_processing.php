@@ -30,6 +30,7 @@ if ($planet->isDestroyed())
 	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
 	$planet->removeClaimed();
 	$planet->removePassword();
+	$planet->update();
 	$container=create_container('skeleton.php','planet_attack.php');
 	$container['sector_id'] = $planet->getSectorID();
 	forward($container);

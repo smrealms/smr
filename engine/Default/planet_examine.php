@@ -3,8 +3,9 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 // get a planet from the sector where the player is in
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 // owner of planet
-if ($planet->owner_id != 0) {
-	$planet_owner =& SmrPlayer::getPlayer($planet->owner_id, SmrSession::$game_id);
+if ($planet->hasOwner())
+{
+	$planet_owner =& $planet->getOwner();
 	$ownerAllianceID = $planet_owner->getAllianceID();
 } else $ownerAllianceID = 0;
 $template->assign('PageTopic','Examine Planet');
@@ -45,7 +46,7 @@ if ($planet->owner_id == $player->getAccountID()) $planetLand = TRUE;
 if ($planet->owner_id == 0) $planetLand = TRUE;
 if (!$planetLand)
 	$PHP_OUTPUT.=create_button(create_container('planet_attack_processing.php', ''), 'Attack Planet (3)');
-elseif ($planet->inhabitable_time < TIME)
+elseif ($planet->isInhabitable())
 	$PHP_OUTPUT.=create_button(create_container('planet_land_processing.php', ''), 'Land on Planet (1)');
 else
 	$PHP_OUTPUT.=('The planet is <font color=red>uninhabitable</font> at this time.');

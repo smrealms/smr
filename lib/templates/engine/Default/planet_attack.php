@@ -27,7 +27,8 @@ else
 		}
 		else
 		{ ?>
-			<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Current Sector</a><?php
+			<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Current Sector</a>&nbsp;
+			<a href="<?php echo $Planet->getLandHREF(); ?>" class="buttonA">Land on Planet (1)</a><?php
 		} ?>
 		</div><?php
 	} ?>
