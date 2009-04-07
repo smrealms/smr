@@ -2,8 +2,7 @@
 <br />
 <div align="center"><?php
 	if(isset($Target))
-	{
-		$RandomPosition = mt_rand(0,2); ?>
+	{ ?>
 		<div style="width:50%" align="<?php if($RandomPosition == 0){ ?>center<?php }else if($RandomPosition == 1){ ?>right<?php }else{ ?>left<?php } ?>">
 			<div class="buttonA">
 				<a href="<?php echo $Target->getAttackTraderHREF() ?>" class="buttonA">Continue Attack</a>
