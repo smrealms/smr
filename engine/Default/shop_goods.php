@@ -99,6 +99,10 @@ elseif ($player->getLastPort() != $player->getSectorID())
 						$player->setBank(5000);
 				}
 			}
+			else
+			{
+				$player->decreaseCredits($fine);
+			}
 
 			$PHP_OUTPUT.=('<span style="color:red;">The Federation searched your ship and illegal goods were found!</span><br />');
 			$PHP_OUTPUT.=('<span style="color:red;">All illegal goods have been removed from your ship and you have been fined ' . number_format($fine) . ' credits</span>');
