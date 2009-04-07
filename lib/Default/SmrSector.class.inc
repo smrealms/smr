@@ -323,9 +323,6 @@ class SmrSector
 
 		// get our rank
 //		$rank_id = $account->get_rank();
-
-		// the sector saw a battle now
-		$this->increaseBattles(1);
 		
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
@@ -830,7 +827,7 @@ class SmrSector
 	
 	public function setBattles($amount)
 	{
-		if($this->battles = $amount)
+		if($this->battles == $amount)
 			return;
 		$this->battles = $amount;
 		$this->hasChanged = true;
