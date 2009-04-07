@@ -1068,7 +1068,7 @@ class SmrPort
 			}
 			$query = substr($query,0,-1);
 			$this->db->query($query);
-			$this->db->query('UPDATE player_visited_port SET port_info='.$cache.', visited='.$this->getCachedTime().' WHERE visited<'.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') LIMIT '.count($accountIDs));
+			$this->db->query('UPDATE player_visited_port SET port_info='.$cache.', visited='.$this->getCachedTime().' WHERE visited<'.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' LIMIT '.count($accountIDs));
 			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
 			unset($cache);
 		}
