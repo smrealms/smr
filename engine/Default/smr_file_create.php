@@ -27,9 +27,9 @@ foreach ($galaxies as &$galaxy)
 		{
 			$file .= $linkName.'='.$link . EOL;
 		}
-		if($sector->hasPort())
+		if($sector->hasCachedPort($player))
 		{
-			$port =& $sector->getPort();
+			$port =& $sector->getCachedPort($player);
 			$file .= 'Port Level='.$port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
 			$portGoods =& $port->getGoods();
