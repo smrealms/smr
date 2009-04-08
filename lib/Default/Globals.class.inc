@@ -7,6 +7,7 @@ class Globals
 	protected static $LEVEL_REQUIREMENTS = null;
 	protected static $RACES = null;
 	protected static $GOODS = null;
+	protected static $HARDWARE_TYPES = null;
 	protected static $GAMES = array();
 	protected static $BETA_OPEN = null;
 	protected static $FEATURE_REQUEST_OPEN = null;
@@ -112,7 +113,7 @@ class Globals
 			$RACES = array();
 			
 			// determine user level
-			self::$db->query('SELECT race_id,race_name,race_description FROM race');
+			self::$db->query('SELECT race_id,race_name,race_description FROM race ORDER BY race_id');
 			while(self::$db->nextRecord())
 			{
 				$RACES[self::$db->getField('race_id')] = array();
@@ -125,6 +126,12 @@ class Globals
 		return self::$RACES;
 	}
 	
+	public static function &getRaceName($raceID)
+	{
+		$races = Globals::getRaces();
+		return $races[$raceID]['Race Name'];
+	}
+	
 	public static function &getGoods()
 	{
 		if(self::$GOODS==null) //use cached if available
@@ -133,7 +140,7 @@ class Globals
 			$GOODS = array();
 			
 			// determine user level
-			self::$db->query('SELECT * FROM good');
+			self::$db->query('SELECT * FROM good ORDER BY good_id');
 			while(self::$db->nextRecord())
 			{
 				$GOODS[self::$db->getField('good_id')] = array();
@@ -153,6 +160,27 @@ class Globals
 	{
 		$goods =& self::getGoods();
 		return $goods[$goodID];
+	}
+	
+	public static function &getHardwareTypes()
+	{
+		if(self::$HARDWARE_TYPES==null) //use cached if available
+		{
+			self::initialiseDatabase();
+			$HARDWARE_TYPES = array();
+			
+			// determine user level
+			self::$db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
+			while(self::$db->nextRecord())
+			{
+				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')] = array();
+				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['ID'] = (int)self::$db->getField('hardware_type_id');
+				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Name'] = self::$db->getField('hardware_name');
+				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Cost'] = (int)self::$db->getField('cost');
+			}
+			self::$HARDWARE_TYPES =& $HARDWARE_TYPES;
+		}
+		return self::$HARDWARE_TYPES;
 	}
 	
 	public static function &getGameInfo($gameID)

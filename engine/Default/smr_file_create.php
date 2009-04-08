@@ -1,8 +1,124 @@
 <?php
 $gameID = $player->getGameID();
 
-$file = ';SMR1.6 Sectors File v 1.01
-[Game]
+$file = ';SMR1.6 Sectors File v 1.02
+[Races]
+Name = ID' . EOL;
+$races =& Globals::getRaces();
+foreach($races as &$race)
+{
+	$file.=inify($race['Race Name']).'='.$race['Race ID'] . EOL;
+} unset($race);
+
+$file.='[Goods]
+ID = Name, BasePrice' . EOL;
+$goods =& Globals::getGoods();
+foreach($goods as &$good)
+{
+	$file.=$good['ID'].'='.inify($good['Name']).','.$good['BasePrice'] . EOL;
+} unset($good);
+
+$file.='[Weapons]
+; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,EMP (%),Align Restriction,Attack Restriction
+; Align: 0=none, 1=good, 2=evil
+; Attack: 0=none, 1=raid' . EOL;
+$weapons =& SmrWeapon::getAllWeapons(Globals::getGameType($gameID));
+foreach($weapons as &$weapon)
+{
+	$file.=inify($weapon->getName()).'='.inify($weapon->getRaceName()).','.$weapon->getCost().','.$weapon->getShieldDamage().','.$weapon->getArmourDamage().','.$weapon->getBaseAccuracy().','.$weapon->getPowerLevel().','.$weapon->getEmpDamage().','.$weapon->getBuyerRestriction().','.($weapon->isRaidWeapon()?'1':'0') . EOL;
+} unset($weapon);
+
+$file.='[ShipEquipment]
+Name = Cost' . EOL;
+$hardwares =& Globals::getHardwareTypes();
+foreach($hardwares as &$hardware)
+{
+	$file.=inify($hardware['Name']).'='.$hardware['Cost'] . EOL;
+} unset($hardware);
+
+$file.='[Ships]
+; Name = Race,Cost,TPH,Hardpoints,Power,+Equipment (Optional),+Restrictions(Optional)
+; Restrictions:Align(Integer)' . EOL;
+$ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType($gameID));
+foreach($ships as &$ship)
+{
+	$file.=inify($ship['Name']).'='.Globals::getRaceName($ship['RaceID']).','.$ship['Cost'].','.$ship['Speed'].','.$ship['Hardpoint'].','.$ship['MaxPower'];
+	if($ship['MaxHardware']>0)
+	{
+		$shipEquip=',ShipEquipment=';
+		foreach($ship['MaxHardware'] as $hardwareID => $maxHardware)
+		{
+			$shipEquip.=$hardwares[$hardwareID]['Name'].'='.$maxHardware.';';
+		}
+		$file .= substr($shipEquip,0,-1);
+		$file.=',Restrictions='.$ship['AlignRestriction'];
+	}
+	$file.= EOL;
+} unset($ship);
+
+$file.='[Locations]
+; Name = +Sells' . EOL;
+$locations =& SmrLocation::getAllLocations();
+foreach($locations as &$location)
+{
+	$file.=inify($location->getName()).'=';
+	$locSells='';
+	if($location->isWeaponSold())
+	{
+		$locWeapons =& $location->getWeaponsSold();
+		$locSells.='Weapons=';
+		foreach($locWeapons as &$locWeapon)
+		{
+			$locSells.=$locWeapon->getName().';';
+		} unset($locWeapon);
+		$locSells = substr($locSells,0,-1).',';
+	}
+	if($location->isHardwareSold())
+	{
+		$locHardwares =& $location->getHardwareSold();
+		$locSells.='ShipEquipment=';
+		foreach($locHardwares as $locHardware)
+		{
+			$locSells.=$locHardware.';';
+		}
+		$locSells = substr($locSells,0,-1).',';
+	}
+	if($location->isShipSold())
+	{
+		$locShips =& $location->getShipsSold();
+		$locSells.='Ships=';
+		foreach($locShips as &$locShip)
+		{
+			$locSells.=$locShip['Name'].';';
+		} unset($locShip);
+		$locSells = substr($locSells,0,-1).',';
+	}
+	if($location->isBank())
+	{
+		$locSells.='Bank,';
+	}
+	if($location->isBar())
+	{
+		$locSells.='Bar,';
+	}
+	if($location->isHQ())
+	{
+		$locSells.='HQ,';
+	}
+	if($location->isUG())
+	{
+		$locSells.='UG,';
+	}
+	if($location->isFed())
+	{
+		$locSells.='FED,';
+	}
+	if($locSells!='')
+		$file .= substr($locSells,0,-1);
+	$file.= EOL;
+} unset($location);
+
+$file.='[Game]
 Name='.inify(Globals::getGameName($gameID)).'
 [Galaxies]
 ';

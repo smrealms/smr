@@ -85,6 +85,11 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $this->powerLevel;
 	}
 	
+	public function getBuyerRestriction()
+	{
+		return $this->buyerRestriction;
+	}
+	
 	public function getPlayerLevelAccuracyMod(AbstractSmrPlayer &$player)
 	{
 		return ($player->getLevelID()*$player->getLevelID()*.006+.5*$player->getLevelID()+2) / 100;

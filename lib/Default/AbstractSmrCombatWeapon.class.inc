@@ -11,6 +11,7 @@ abstract class AbstractSmrCombatWeapon
 	protected $maxDamage;
 	protected $shieldDamage;
 	protected $armourDamage;
+	protected $empDamage=0;
 	protected $accuracy;
 	protected $damageRollover;
 	protected $raidWeapon;
@@ -23,6 +24,16 @@ abstract class AbstractSmrCombatWeapon
 	public function getName()
 	{
 		return $this->name;
+	}
+	
+	public function getRaceID()
+	{
+		return $this->raceID;
+	}
+	
+	public function getRaceName()
+	{
+		return Globals::getRaceName($this->getRaceID());
 	}
 	
 	public function getMaxDamage()
@@ -38,6 +49,11 @@ abstract class AbstractSmrCombatWeapon
 	public function getArmourDamage()
 	{
 		return $this->armourDamage;
+	}
+	
+	public function getEmpDamage()
+	{
+		return $this->empDamage;
 	}
 	
 	public function isDamageRollover()

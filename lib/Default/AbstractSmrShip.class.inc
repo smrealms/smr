@@ -45,16 +45,49 @@ abstract class AbstractSmrShip
 	protected static function &buildBaseShip(Database &$db)
 	{
 		$ship = array();
-		$ship['Name']		= $db->getField('ship_name');
-		$ship['ShipTypeID']	= $db->getField('ship_type_id');
-		$ship['Hardpoint']	= $db->getField('hardpoint');
-		$ship['Speed']		= $db->getField('speed');
-		$ship['Cost']		= $db->getField('cost');
+		$ship['Name']				= $db->getField('ship_name');
+		$ship['ShipTypeID']			= $db->getField('ship_type_id');
+		$ship['RaceID']				= $db->getField('race_id');
+		$ship['Hardpoint']			= $db->getField('hardpoint');
+		$ship['Speed']				= $db->getField('speed');
+		$ship['Cost']				= $db->getField('cost');
+		$ship['AlignRestriction']	= $db->getField('buyer_restriction');
+		
+		$maxPower = 0;
+		switch($this->getHardpoints())
+		{
+			default:
+				$maxPower+=1*$ship['Hardpoint']-10;
+			case 10:
+				$maxPower+=2;
+			case 9:
+				$maxPower+=2;
+			case 8:
+				$maxPower+=2;
+			case 7:
+				$maxPower+=2;
+			case 6:
+				$maxPower+=3;
+			case 5:
+				$maxPower+=3;
+			case 4:
+				$maxPower+=3;
+			case 3:
+				$maxPower+=4;
+			case 2:
+				$maxPower+=4;
+			case 1:
+				$maxPower+=5;
+			case 0:
+				$maxPower+=0;
+		}
+		$ship['MaxPower'] = $maxPower;
+		
 		
 		// get supported hardware from db
 		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
-			'WHERE ship_type_id = '.$ship['ShipTypeID']);
+			'WHERE ship_type_id = '.$ship['ShipTypeID'].' ORDER BY hardware_type_id');
 		
 		while ($db2->nextRecord())
 		{
@@ -177,35 +210,7 @@ abstract class AbstractSmrShip
 	
 	public function getMaxPower()
 	{
-		$totalPower = 0;
-		switch($this->getHardpoints())
-		{
-			default:
-				$totalPower+=1*$this->getHardpoints()-10;
-			case 10:
-				$totalPower+=2;
-			case 9:
-				$totalPower+=2;
-			case 8:
-				$totalPower+=2;
-			case 7:
-				$totalPower+=2;
-			case 6:
-				$totalPower+=3;
-			case 5:
-				$totalPower+=3;
-			case 4:
-				$totalPower+=3;
-			case 3:
-				$totalPower+=4;
-			case 2:
-				$totalPower+=4;
-			case 1:
-				$totalPower+=5;
-			case 0:
-				$totalPower+=0;
-		}
-		return $totalPower;
+		$this->baseShip['MaxPower'];
 	}
 	
 	public function hasIllegalGoods()
