@@ -463,8 +463,7 @@ abstract class AbstractSmrPlayer
 	
 	public function getRaceName()
 	{
-		$races = Globals::getRaces();
-		return $races[$this->getRaceID()]['Race Name'];
+		return Globals::getRaceName($this->getRaceID());
 	}
 	
 	public function getColouredRaceName($otherRaceID)

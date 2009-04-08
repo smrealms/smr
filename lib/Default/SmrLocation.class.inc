@@ -32,7 +32,7 @@ class SmrLocation
 		if($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT location_type_id FROM location_type');
+			$db->query('SELECT location_type_id FROM location_type ORDER BY location_type_id');
 			$locations = array();
 			while($db->nextRecord())
 			{
@@ -265,7 +265,7 @@ class SmrLocation
 		}
 	}
 	
-	public function getHardwareSold()
+	public function &getHardwareSold()
 	{
 		if(!isset($this->hardwareSold))
 		{
@@ -304,7 +304,7 @@ class SmrLocation
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 	
-	public function getShipsSold()
+	public function &getShipsSold()
 	{
 		if(!isset($this->shipsSold))
 		{
@@ -345,7 +345,7 @@ class SmrLocation
 		unset($this->shipsSold[$shipTypeID]);
 	}
 	
-	public function getWeaponsSold()
+	public function &getWeaponsSold()
 	{
 		if(!isset($this->weaponsSold))
 		{

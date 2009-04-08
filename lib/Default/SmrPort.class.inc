@@ -787,8 +787,7 @@ class SmrPort
 	
 	public function getRaceName()
 	{
-		$races = Globals::getRaces();
-		return $races[$this->getRaceID()]['Race Name'];
+		return Globals::getRaceName($this->getRaceID());
 	}
 	
 	public function getLevel()
@@ -1097,7 +1096,7 @@ class SmrPort
 	{
 		$this->getGoods(); //have to make sure goods have been loaded
 		$this->cachedVersion = true;
-        return array('gameID', 'sectorID', 'raceID', 'cachedVersion', 'cachedTime', 'goods');
+        return array('gameID', 'sectorID', 'raceID', 'level', 'cachedVersion', 'cachedTime', 'goods');
 	}
 	
 	public function __wakeup()
