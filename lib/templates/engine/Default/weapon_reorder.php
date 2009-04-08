@@ -54,15 +54,9 @@ if($ThisShip->hasWeapons())
 		</form>
 	</div>
 	<script type="text/javascript">
-	/* WWW: http://www.isocra.com/ */
-	
-	/** Keep hold of the current table being dragged */
+	<?php /* WWW: http://www.isocra.com/ */ ?>
 	var currenttable = null;
 	
-	/** Capture the onmousemove so that we can see if a row from the current
-	 *  table if any is being dragged.
-	 * @param ev the event (for Firefox and Safari, otherwise we use window.event for IE)
-	 */
 	 document.onmousemove = function(ev)
 	 {
 		if (currenttable && currenttable.dragObject)
@@ -71,7 +65,6 @@ if($ThisShip->hasWeapons())
 	 		var mousePos = currenttable.mouseCoords(ev);
 			var y = mousePos.y - currenttable.mouseOffset.y;
 	
-			/*auto scroll the window*/
 			var yOffset = window.pageYOffset;
 			var currentY = mousePos.y;
 			if (document.all)
@@ -97,7 +90,7 @@ if($ThisShip->hasWeapons())
 			{
 				var movingDown = y > currenttable.oldY;
 				currenttable.oldY = y;
-				currenttable.dragObject.style.backgroundColor value="#aaa";
+				currenttable.dragObject.style.backgroundColor.value="#aaa";
 				var currentRow = currenttable.findDropTargetRow(y);
 				if (currentRow)
 				{
@@ -114,7 +107,7 @@ if($ThisShip->hasWeapons())
 	
 			return false;
 		}
-	}
+	};
 	
 	document.onmouseup   = function(ev){
 		if (currenttable && currenttable.dragObject) {
@@ -124,11 +117,8 @@ if($ThisShip->hasWeapons())
 			currenttable.onDrop(currenttable.table, droppedRow);
 			currenttable = null;
 		}
-	}
+	};
 	
-	
-	/** get the source element from an event in a way that works for IE and Firefox and Safari
-	 * @param evt the source event for Firefox (but not IE--IE uses window.event) */
 	function getEventSource(evt) {
 		if (window.event) {
 			evt = window.event;
@@ -138,42 +128,30 @@ if($ThisShip->hasWeapons())
 		}
 	}
 	
-	/**
-	 * Encapsulate table Drag and Drop in a class. We'll have this as a Singleton
-	 * so we don't get scoping problems.
-	 */
 	function TableDnD()
 	{
-		/** Keep hold of the current drag object if any */
 		this.dragObject = null;
-		/** The current mouse offset */
 		this.mouseOffset = null;
-		/** The current table */
 		this.table = null;
-		/** Remember the old value of Y so that we don't do too much processing */
 		this.oldY = 0;
 	
-		/** Initialise the drag and drop by capturing mouse move events */
 		this.init = function(table) {
 			this.table = table;
 			var rows = table.tBodies[0].rows;
 			for (var i=0; i<rows.length; i++)
 			{
-				var nodrag = rows[i].getAttribute("NoDrag")
+				var nodrag = rows[i].getAttribute("NoDrag");
 				if (nodrag == null || nodrag == "undefined")
 				{
 					this.makeDraggable(rows[i]);
 				}
 			}
-		}
+		};
 	
-		/** This function is called when you drop a row, so redefine it in your code
-			to do whatever you want, for example use Ajax to update the server */
 		this.onDrop = function(table, droppedRow)
 		{
-		}
-	
-		/** Get the position of an element by going up the DOM tree and adding up all the offsets */
+		};
+		
 		this.getPosition = function(e)
 		{
 			var left = 0;
@@ -191,7 +169,7 @@ if($ThisShip->hasWeapons())
 			left += e.offsetLeft;
 			top += e.offsetTop;
 			return {x:left, y:top};
-		}
+		};
 		this.mouseCoords = function(ev)
 		{
 			if(ev.pageX || ev.pageY)
@@ -199,14 +177,14 @@ if($ThisShip->hasWeapons())
 				return {x:ev.pageX, y:ev.pageY};
 			}
 			return {x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,y:ev.clientY + document.body.scrollTop - document.body.clientTop};
-		}
+		};
 		this.getMouseOffset = function(target, ev)
 		{
 			ev = ev || window.event;
 			var docPos = this.getPosition(target);
 			var mousePos = this.mouseCoords(ev);
 			return {x:mousePos.x - docPos.x, y:mousePos.y - docPos.y};
-		}
+		};
 		this.makeDraggable = function(item)
 		{
 			if(!item) return;
@@ -219,9 +197,9 @@ if($ThisShip->hasWeapons())
 				self.dragObject = this;
 				self.mouseOffset = self.getMouseOffset(this, ev);
 				return false;
-			}
-			item.style.cursor value="move";
-		}
+			};
+			item.style.cursor="move";
+		};
 		this.findDropTargetRow = function(y)
 		{
 			var rows = this.table.tBodies[0].rows;
@@ -244,7 +222,7 @@ if($ThisShip->hasWeapons())
 				}
 			}
 			return null;
-		}
+		};
 	}
 	var table = document.getElementById('weapon_reorder');
 	var tableDnD = new TableDnD();
@@ -270,7 +248,7 @@ if($ThisShip->hasWeapons())
 		
 		currentRow.parentNode.insertBefore(currentRow, rows[newRowID]);
 
-	}
+	};
 		
 	function doSubmit() {
 		var rows = document.getElementById('weapon_reorder').rows;
