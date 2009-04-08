@@ -210,7 +210,7 @@ abstract class AbstractSmrShip
 	
 	public function getMaxPower()
 	{
-		$this->baseShip['MaxPower'];
+		return $this->baseShip['MaxPower'];
 	}
 	
 	public function hasIllegalGoods()
