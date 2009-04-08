@@ -54,7 +54,7 @@ abstract class AbstractSmrShip
 		$ship['AlignRestriction']	= $db->getField('buyer_restriction');
 		
 		$maxPower = 0;
-		switch($this->getHardpoints())
+		switch($ship['Hardpoint'])
 		{
 			default:
 				$maxPower+=1*$ship['Hardpoint']-10;
