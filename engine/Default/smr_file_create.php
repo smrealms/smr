@@ -3,7 +3,7 @@ $gameID = $player->getGameID();
 
 $file = ';SMR1.6 Sectors File v 1.02
 [Races]
-Name = ID' . EOL;
+; Name = ID' . EOL;
 $races =& Globals::getRaces();
 foreach($races as &$race)
 {
@@ -11,7 +11,7 @@ foreach($races as &$race)
 } unset($race);
 
 $file.='[Goods]
-ID = Name, BasePrice' . EOL;
+; ID = Name, BasePrice' . EOL;
 $goods =& Globals::getGoods();
 foreach($goods as &$good)
 {
@@ -29,7 +29,7 @@ foreach($weapons as &$weapon)
 } unset($weapon);
 
 $file.='[ShipEquipment]
-Name = Cost' . EOL;
+; Name = Cost' . EOL;
 $hardwares =& Globals::getHardwareTypes();
 foreach($hardwares as &$hardware)
 {
