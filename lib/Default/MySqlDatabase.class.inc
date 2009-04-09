@@ -84,52 +84,7 @@ abstract class MySqlDatabase implements Database
 	
 	protected function error($err)
 	{
-		if(self::$errorAlreadyTriggered)
-		{
-			throw new Exception(); //Don't try and send error twice, just through an exception to go back to first.
-		}
-		self::$errorAlreadyTriggered=true;
-		if(!$this->debug)
-		{
-			echo 'ERROR: db_mysql_inc - ' . $err;
-		} 
-		else
-		{
-			global $account,$var,$player;
-			$exception = new Exception();
-			$message = 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
-				'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
-				'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL.
-				'Error Message: '.$err.EOL.EOL.'-----------'.EOL.EOL.
-				'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL.
-				'Trace MSG: '.$exception->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
-				'$var: '.var_export($var,true);
-
-			try
-			{
-				if(is_object($player))
-					$player->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
-				else if(is_object($account))
-					$account->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
-				else
-					mail('bugs@smrealms.de',
-					 'Automatic Bug Report',
-					 $message,
-					 'From: '.$account->email);
-				release_lock(); //Try to release lock so they can carry on normally
-			}
-			catch(Exception $e)
-			{
-				mail('bugs@smrealms.de',
-				 'Automatic Bug Report',
-				 $message,
-				 'From: '.$account->email);
-			}
-			header('location: ' . URL . '/error.php?msg=Database Error');
-		}
-		
-		exit;
-		
+		throw new Exception($err);
 	}
 	
 	public function escape($escape,$autoQuotes=true,$quotes=true)
