@@ -11,19 +11,8 @@ if (isset($close)) {
 		
 		$val = 'Match list:';
 		$val .= $value;
-		$db->query('REPLACE INTO account_is_closed ' .
-			   '(account_id, reason_id, expires, suspicion) ' .
-			   'VALUES('.$key.', 2, '.$expire_time.', '.$db->escapeString($val).')');
-		$db->query('INSERT INTO account_has_closing_history ' .
-			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$key.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
-
-		$db->query('UPDATE player SET newbie_turns = 1 ' .
-				   'WHERE account_id = '.$key.' AND ' .
-						 'newbie_turns = 0 AND ' .
-						 'land_on_planet = \'FALSE\'');
-	
-		$db->query('DELETE FROM active_session WHERE account_id = '.$key);
+		$bannedAccount =& SmrAccount::getAccount($key);
+		$bannedAccount->banAccount($expire_time,$account,2,$val);
 		$amount++;
 	}
 	
@@ -42,27 +31,8 @@ if (isset($first)) {
 	}
 	foreach ($same_ip as $account_id) {
 		//never expire
-		$expire_time = 0;
-		$db->query('REPLACE INTO account_is_closed ' .
-			   '(account_id, reason_id, expires, suspicion) ' .
-			   'VALUES('.$account_id.', 2, '.$expire_time.', '.$db->escapeString($val).')');
-
-		$db->query('INSERT INTO account_has_closing_history ' .
-			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
-
-		$db->query('UPDATE player SET newbie_turns = 1 ' .
-			   'WHERE account_id = '.$account_id.' AND ' .
-					 'newbie_turns = 0 AND ' .
-					 'land_on_planet = \'FALSE\'');
-
-		$db->query('DELETE FROM active_session ' .
-			   'WHERE account_id = '.$account_id);
-
-		$curr_account =& SmrAccount::getAccount($account_id);
-		$admin_id = SmrSession::$account_id;
-		$admin_account =& SmrAccount::getAccount($admin_id);;
-		$curr_account->log(13, 'Account closed by ' . $admin_account->login . '.');
+		$bannedAccount =& SmrAccount::getAccount($account_id);
+		$bannedAccount->banAccount(0,$account,2,$val);
 	}
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -73,28 +43,8 @@ if (isset($first)) {
 $second = $_REQUEST['second'];
 if (isset($second)) {
 	//never expire
-	$expire_time = 0;
-	$db->query('REPLACE INTO account_is_closed ' .
-		   '(account_id, reason_id, expires, suspicion) ' .
-		   'VALUES('.$second.', 2, '.$expire_time.', \'Auto:By Admin\')');
-
-	$db->query('INSERT INTO account_has_closing_history ' .
-		   '(account_id, time, admin_id, action) ' .
-		   'VALUES('.$second.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
-
-	$db->query('UPDATE player SET newbie_turns = 1 ' .
-		   'WHERE account_id = '.$second.' AND ' .
-				 'newbie_turns = 0 AND ' .
-				 'land_on_planet = \'FALSE\'');
-
-	$db->query('DELETE FROM active_session ' .
-		   'WHERE account_id = '.$second);
-
-	$curr_account =& SmrAccount::getAccount($second);
-	$admin_id = SmrSession::$account_id;
-	$admin_account =& SmrAccount::getAccount($admin_id);;
-	$curr_account->log(13, 'Account closed by ' . $admin_account->login . '.');
-
+	$bannedAccount =& SmrAccount::getAccount($second);
+	$bannedAccount->banAccount(0,$account,2,'Auto:By Admin');
 }
 $action = $_REQUEST['action'];
 if($action == 'Next Page No Disable') {
@@ -131,27 +81,8 @@ if (isset($disable_id)) {
 	        $amount += 1;
 
 		//never expire
-		$expire_time = 0;
-		$db->query('REPLACE INTO account_is_closed ' .
-			   '(account_id, reason_id, expires, suspicion) ' .
-			   'VALUES('.$id.', 2, '.$expire_time.', '.$db->escapeString($reason).')');
-
-		$db->query('INSERT INTO account_has_closing_history ' .
-			   '(account_id, time, admin_id, action) ' .
-			   'VALUES('.$id.', ' . TIME . ', '.SmrSession::$account_id.', \'Closed\')');
-
-		$db->query('UPDATE player SET newbie_turns = 1 ' .
-			   'WHERE account_id = '.$id.' AND ' .
-					 'newbie_turns = 0 AND ' .
-					 'land_on_planet = \'FALSE\'');
-
-		$db->query('DELETE FROM active_session ' .
-			   'WHERE account_id = '.$id);
-		$curr_account =& SmrAccount::getAccount($id);
-		$admin_id = SmrSession::$account_id;
-		$admin_account =& SmrAccount::getAccount($admin_id);
-		$curr_account->log(13, 'Account closed by ' . $admin_account->login . '.');
-
+		$bannedAccount =& SmrAccount::getAccount($id);
+		$bannedAccount->banAccount(0,$account,2,$reason);
 	}
 }
 if (isset($_REQUEST['amount'])) $amount = $_REQUEST['amount'];
