@@ -610,13 +610,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		$time_diff = TIME - $this->getLastTurnUpdate();
 		
 		// how many turns would he get right now?
-		$extraTurns = floor($time_diff * $ship->getSpeed() * Globals::getGameSpeed($this->gameID) / 3600);
+		$extraTurns = floor($time_diff * $ship->getRealSpeed() / 3600);
 		
 		// do we have at least one turn to give?
 		if ($extraTurns > 0)
 		{
 			// recalc the time to avoid errors
-			$this->setLastTurnUpdate($this->getLastTurnUpdate() + ceil($extraTurns * 3600 / ($ship->getSpeed() * Globals::getGameSpeed($this->getGameID()))));
+			$this->setLastTurnUpdate($this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed()));
 			
 			$this->giveTurns($extraTurns);	
 		}

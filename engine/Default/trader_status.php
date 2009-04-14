@@ -97,7 +97,7 @@ $PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><br />Name: ';
 
 $PHP_OUTPUT.= $ship->getName();
 $PHP_OUTPUT.= '<br />Speed: ';
-$PHP_OUTPUT.= ($ship->getSpeed() * Globals::getGameSpeed($player->getGameID()));
+$PHP_OUTPUT.= $ship->getRealSpeed();
 $PHP_OUTPUT.= ' turns/hour<br />Max: ';
 $PHP_OUTPUT.= $player->getMaxTurns();
 $PHP_OUTPUT.= ' turns<br /><br /><span class="yellow bold">Supported Hardware</span><br />';
