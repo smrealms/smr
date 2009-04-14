@@ -29,17 +29,17 @@ abstract class AbstractSmrShip
 
 	public static function &getBaseShip($gameTypeID,$shipTypeID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID]))
+		if($forceUpdate || !isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID]))
 		{
 			// determine ship
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$shipTypeID.' LIMIT 1'); //TODO add game type id
 			if($db->nextRecord())
-				self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] =& self::buildBaseShip($db);
+				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] =& self::buildBaseShip($db);
 			else
-				self::$CACHE_BASE_SHIPS[$gameTypeID . ':' . $shipTypeID] = false;
+				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] = false;
 		}
-		return self::$CACHE_BASE_SHIPS[$gameTypeID. ':' .$shipTypeID];
+		return self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID];
 	}
 	
 	protected static function &buildBaseShip(Database &$db)
@@ -52,6 +52,7 @@ abstract class AbstractSmrShip
 		$ship['Speed']				= $db->getField('speed');
 		$ship['Cost']				= $db->getField('cost');
 		$ship['AlignRestriction']	= $db->getField('buyer_restriction');
+		$ship['Level']				= $db->getField('lvl_needed');
 		
 		$maxPower = 0;
 		switch($ship['Hardpoint'])
@@ -523,6 +524,11 @@ abstract class AbstractSmrShip
 	public function getSpeed()
 	{
 		return $this->baseShip['Speed'];
+	}
+	
+	public function getRealSpeed()
+	{
+		return $this->baseShip['Speed'] * Globals::getGameSpeed($this->getGameID());
 	}
 	
 	public function getHardware($hardwareTypeID = false)

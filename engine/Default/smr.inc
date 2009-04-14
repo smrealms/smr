@@ -973,4 +973,24 @@ function format_time($seconds, $short=FALSE)
 	}
 	return $string;
 }
+
+function number_colour_format($number,$justSign = false)
+{
+	$formatted = '<span';
+	if($number > 0)
+		$formatted .= ' class="green">+';
+	else if($number < 0)
+		$formatted .= ' class="red">-';
+	else
+		$formatted .= '>';
+	if($justSign===false)
+	{
+		$decimalPlaces = 0;
+		if(($pos = strpos($number,'.'))!==false)
+			$decimalPlaces = strlen(substr($number,$pos+1));
+		$formatted .= number_format(abs($number),$decimalPlaces);
+	}
+	$formatted .= '</span>';
+	return $formatted;
+}
 ?>
