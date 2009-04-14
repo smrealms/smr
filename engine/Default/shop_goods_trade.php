@@ -22,11 +22,7 @@ if ($var['bargain_price'] > 0) {
 	// lose relations for bad bargain
 	if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
 	{
-		$relation_modifier = round($var['amount'] / 30);
-		if ($relation_modifier > 10)
-			$relation_modifier = 10;
-	
-		$player->decreaseRelations($relation_modifier,$port->getRaceID());
+		$player->decreaseRelationsByTrade($var['amount'],$port->getRaceID());
 		$player->update();
 	}
 
