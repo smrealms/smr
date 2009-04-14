@@ -312,7 +312,7 @@ class SmrPort
 	
 	public function getGoodAmount($goodID)
 	{
-		$good = $this->getGood($goodID);
+		$good =& $this->getGood($goodID);
 		return $good['Amount'];
 	}
 	
@@ -321,7 +321,6 @@ class SmrPort
 		$this->setGoodAmount($good['ID'],$this->getGoodAmount($good['ID']) - $amount);
 		if($doRefresh===true)
 		{
-			global $LEVEL_1_GOODS, $LEVEL_2_GOODS, $LEVEL_3_GOODS, $LEVEL_4_GOODS;
 			//get id of goods to replenish
 			$this->refreshGoods($good['Class'],$amount);
 		}
@@ -342,7 +341,7 @@ class SmrPort
 		$refreshAmount = $amountTraded / 8;
 		//refresh goods that need it
 		$portGoods =& $this->getGoodsAll();
-		$refreshClass = $classTraded-1;
+		$refreshClass = $classTraded+1;
 		foreach ($portGoods as &$good)
 		{
 			if($good['Class']==$refreshClass)
