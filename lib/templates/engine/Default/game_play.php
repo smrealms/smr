@@ -1,7 +1,7 @@
 <h1>Play Game</h1>
 
 <a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b style="color:yellow;">Rankings</b></a>
-<br />You are ranked as <?php $this->doAn($ThisAccount->get_rank_name()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<p><br /><br />
+<br />You are ranked as <?php $this->doAn($ThisAccount->get_rank_name()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
 
 
 <?php
@@ -73,10 +73,8 @@ if($Games['Join'])
 }
 else
 {
-	?><p>You have joined all open games.</p><?php
+	?><p>You have joined all open games.</p><br /><?php
 } ?>
-<br />
-<br />
 <h1>Previous Games</h1><?php
 if($Games['Previous'])
 { ?>
@@ -105,7 +103,24 @@ if($Games['Previous'])
 }
 else
 {
-	?><p>There are no previous games.</p><?php
+	?><p>There are no previous games.</p><br /><?php
+}
+
+if ($Voting)
+{
+	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
+	foreach($Voting as $Vote)
+	{
+		?><br /><br />
+		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
+			<span class="bold"><?php echo $Vote['Question']; ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
+			foreach($Vote['Options'] as $VoteOption)
+			{ ?>
+				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo $VoteOption['Text']; ?><br /><?php
+			} ?>
+			<input type="submit" name="submit" value="Vote!">
+		</form><?php
+	}
 } ?>
 <br />
 <br />
