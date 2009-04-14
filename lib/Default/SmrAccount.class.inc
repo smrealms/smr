@@ -641,7 +641,7 @@ $this->get_rank();
 		else if($numPoints<=0)
 			$this->db->query('DELETE FROM account_has_points WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		else
-			$this->db->query('UPDATE account_has_points SET points = '.$numPoints.($lastUpdate ? ', last_update = '.$lastUpdate : '').' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+			$this->db->query('UPDATE account_has_points SET points = '.$numPoints.($lastUpdate ? ', last_update = '.TIME : '').' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->points=$numPoints;
 	}
 	
@@ -690,6 +690,11 @@ $this->get_rank();
 		$this->db->query('REPLACE INTO account_is_closed ' .
 				   '(account_id, reason_id, suspicion, expires) ' .
 				   'VALUES('.$this->getAccountID().', '.$reasonID.', '.$this->db->escapeString($suspicion).', '.$expireTime.')');
+		$this->db->lockTable('active_session');
+		$this->db->query('DELETE FROM active_session ' .
+				   'WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->unlock();
+		
 		$this->db->query('INSERT INTO account_has_closing_history ' .
 				   '(account_id, time, admin_id, action) ' .
 				   'VALUES('.$this->getAccountID().', ' . TIME . ', '.$admin->getAccountID().', \'Closed\')');
@@ -697,10 +702,17 @@ $this->get_rank();
 				   'WHERE account_id = '.$this->getAccountID().' AND ' .
 						 'newbie_turns = 0 AND ' .
 						 'land_on_planet = \'FALSE\'');
-		$this->db->lockTable('active_session');
-		$this->db->query('DELETE FROM active_session ' .
-				   'WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->db->unlock();
+		
+		$this->db->query('SELECT game.game_id as game_id FROM game, player ' .
+					'WHERE game.game_id = player.game_id AND ' .
+						  'account_id = '.$this->getAccountID().' AND ' .
+						  'end_date >= ' . TIME);
+		while ($this->db->nextRecord())
+		{
+			$player =& SmrPlayer::getPlayer($this->getAccountID(), $this->db->getField('game_id'));
+			$player->updateTurns();
+			$player->update();
+		}
 		$this->log(13, 'Account closed by ' . $admin->getLogin() . '.');
 		if($removeExceptions!==false)
 			$this->db->query('DELETE FROM account_exceptions WHERE account_id = '.$this->getAccountID());
