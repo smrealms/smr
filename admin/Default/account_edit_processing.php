@@ -47,13 +47,7 @@ if ($choise == 'reopen')
 	{
 		//do we have points
 		$curr_account->removePoints($points,TIME);
-		$db->query('DELETE FROM account_is_closed ' .
-				   'WHERE account_id = '.$account_id);
-	
-		$db->query('INSERT INTO account_has_closing_history ' .
-				   '(account_id, time, admin_id, action) ' .
-				   'VALUES('.$account_id.', ' . TIME . ', '.SmrSession::$account_id.', \'Opened\')');
-	
+		$curr_account->unbanAccount($account);
 		if (strlen($msg) > 9)
 			$msg .= 'and ';
 		$msg .= 'reopened ';

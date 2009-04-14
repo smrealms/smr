@@ -112,40 +112,32 @@ $this->get_rank();
 		}
 	}
 	
-	function is_disabled() {
-		
+	function is_disabled()
+	{
 		$this->db->query('SELECT * FROM account_is_closed NATURAL JOIN closing_reason ' .
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
-		if ($this->db->nextRecord()) {
-			
+		if ($this->db->nextRecord())
+		{
 			// get the expire time
 			$expire_time = $this->db->getField('expires');
 			$reason		 = $this->db->getField('reason');
 			
 			// are we over this time?
-			if ($expire_time > 0 && $expire_time < TIME) {
-				
+			if ($expire_time > 0 && $expire_time < TIME)
+			{
 				// get rid of the expire entry
-				$this->db->query('DELETE FROM account_is_closed WHERE account_id = '.$this->account_id);
-				
-				// log the action
-				$this->db->query('INSERT INTO account_has_closing_history ' .
-					'(account_id, time, admin_id, action) ' .
-					'VALUES('.$this->account_id.', ' . TIME . ', 0, \'Opened\')');
-				
+				$this->unbanAccount(null);
 				return false;
-				
 			}
-			
 			return $reason;
-			
-		} else
+		}
+		else
 			return false;
 		
 	}
 	
-	function is_allowed($permission) {
-		
+	function is_allowed($permission)
+	{
 		$this->db->query('SELECT account_id FROM account WHERE account_id = '.$this->account_id.' AND permission LIKE \'%'.$permission.'%\' LIMIT 1');
 		return $this->db->getNumRows();
 	}
@@ -646,7 +638,7 @@ $this->get_rank();
 			return;
 		if ($this->points==0)
 			$this->db->query('INSERT INTO account_has_points (account_id, points, last_update) VALUES ('.$this->getAccountID().', '.$numPoints.', '.($lastUpdate?$lastUpdate:TIME).')');
-		else if($numPoints==0)
+		else if($numPoints<=0)
 			$this->db->query('DELETE FROM account_has_points WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		else
 			$this->db->query('UPDATE account_has_points SET points = '.$numPoints.($lastUpdate ? ', last_update = '.$lastUpdate : '').' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
@@ -662,7 +654,7 @@ $this->get_rank();
 	public function addPoints($numPoints,SmrAccount &$admin,$reasonID,$suspicion)
 	{
 		//do we have points
-		$this->setPoints($this->getPoints() + $numPoints);
+		$this->setPoints($this->getPoints() + $numPoints,true);
 		$totalPoints = $this->getPoints();
 		if ($totalPoints < 10)
 			return false;//leave scripts its only a warning
@@ -688,17 +680,19 @@ $this->get_rank();
 			$days = 0; //Forever/indefinite
 			
 		$expireTime = TIME + $days * 86400;
-		
-		$this->db->query('UPDATE account_has_points SET last_update = '.$expireTime.' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->banAccount($expireTime,$admin,$reasonID,$suspicion);
 	
+		return $days;
+	}
+	
+	public function banAccount($expireTime,SmrAccount &$admin,$reasonID,$suspicion,$removeExceptions = false)
+	{
 		$this->db->query('REPLACE INTO account_is_closed ' .
 				   '(account_id, reason_id, suspicion, expires) ' .
 				   'VALUES('.$this->getAccountID().', '.$reasonID.', '.$this->db->escapeString($suspicion).', '.$expireTime.')');
-	
 		$this->db->query('INSERT INTO account_has_closing_history ' .
 				   '(account_id, time, admin_id, action) ' .
 				   'VALUES('.$this->getAccountID().', ' . TIME . ', '.$admin->getAccountID().', \'Closed\')');
-	
 		$this->db->query('UPDATE player SET newbie_turns = 1 ' .
 				   'WHERE account_id = '.$this->getAccountID().' AND ' .
 						 'newbie_turns = 0 AND ' .
@@ -707,7 +701,30 @@ $this->get_rank();
 		$this->db->query('DELETE FROM active_session ' .
 				   'WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->db->unlock();
-		return $days;
+		$this->log(13, 'Account closed by ' . $admin->getLogin() . '.');
+		if($removeExceptions!==false)
+			$this->db->query('DELETE FROM account_exceptions WHERE account_id = '.$this->getAccountID());
+	}
+	
+	public function unbanAccount(SmrAccount &$admin,$currException=false)
+	{
+		$adminID = 0;
+		if($admin!==null)
+			$adminID = $admin->getAccountID();
+		$this->db->query('DELETE FROM account_is_closed ' .
+				   'WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->query('INSERT INTO account_has_closing_history ' .
+				   '(account_id, time, admin_id, action) ' .
+				   'VALUES('.$this->getAccountID().', ' . TIME . ', '.$adminID.', \'Opened\')');
+   		$this->db->query('UPDATE player SET last_turn_update = ' . TIME .
+				   ' WHERE account_id = '.$this->getAccountID());
+		if($admin!==null)
+			$this->log(13, 'Account reopened by ' . $admin->getLogin() . '.');
+		else
+			$this->log(13, 'Account automatically reopened.');
+		if($currException!==false)
+	        $this->db->query('REPLACE INTO account_exceptions (account_id, reason) ' .
+                        'VALUES ('.$this->getAccountID().', '.$this->db->escapeString($currException).')');
 	}
 	
 	public function getToggleAJAXHREF()

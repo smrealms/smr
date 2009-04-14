@@ -31,7 +31,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //    var $safe_exit;
 //    var $detected;
 	protected $originalMaintenance;
-	protected $lastMaintenanceUpdate;
+	protected $lastTurnUpdate;
 	protected $lastShipMod;
 	protected $lastNewsUpdate;
 	protected $stunned;
@@ -180,7 +180,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->lastSectorID					= (int) $result['last_sector_id'];
 			$this->turns						= (int) $result['turns'];
 			$this->originalMaintenance			= $this->turns;
-			$this->lastMaintenanceUpdate		= (int) $result['last_turn_update'];
+			$this->lastTurnUpdate		= (int) $result['last_turn_update'];
 			$this->newbieTurns					= (int) $result['newbie_turns'];
 			$this->lastShipMod					= (int) $result['last_ship_mod'];
 			$this->lastNewsUpdate				= (int) $result['last_news_update'];
@@ -297,7 +297,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			case 'Turns':
 				return $this->turns;
 			case 'Last Maintenance Update':
-				return $this->lastMaintenanceUpdate;
+			case 'Last Turn Update':
+				return $this->lastTurnUpdate;
 			case 'Last Active':
 				return $this->lastActive;
 			case 'Last CPL Action':
@@ -606,18 +607,18 @@ class SmrPlayer extends AbstractSmrPlayer
 		$ship =& $this->getShip();
 		
 		// update turns?
-		$time_diff = TIME - $this->getLastMaintenanceUpdate();
+		$time_diff = TIME - $this->getLastTurnUpdate();
 		
 		// how many turns would he get right now?
-		$extraMaint = floor($time_diff * $ship->getSpeed() * Globals::getGameSpeed($this->gameID) / 3600);
+		$extraTurns = floor($time_diff * $ship->getSpeed() * Globals::getGameSpeed($this->gameID) / 3600);
 		
 		// do we have at least one turn to give?
-		if ($extraMaint > 0)
+		if ($extraTurns > 0)
 		{
 			// recalc the time to avoid errors
-			$this->setLastMaintenanceUpdate($this->getLastMaintenanceUpdate() + ceil($extraMaint * 3600 / ($ship->getSpeed() * Globals::getGameSpeed($this->getGameID()))));
+			$this->setLastTurnUpdate($this->getLastTurnUpdate() + ceil($extraTurns * 3600 / ($ship->getSpeed() * Globals::getGameSpeed($this->getGameID()))));
 			
-			$this->giveTurns($extraMaint);	
+			$this->giveTurns($extraTurns);	
 		}
 	}
 		
@@ -677,18 +678,18 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
-	function getLastMaintenanceUpdate()
+	function getLastTurnUpdate()
 	{
-		return $this->lastMaintenanceUpdate;
+		return $this->lastTurnUpdate;
 	}
 	
-	function setLastMaintenanceUpdate($time)
+	function setLastTurnUpdate($time)
 	{
-		if($this->lastMaintenanceUpdate == $time)
+		if($this->lastTurnUpdate == $time)
 			return;
-		$this->lastMaintenanceUpdate=$time;
+		$this->lastTurnUpdate=$time;
 		$this->hasChanged=true;
-//		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastMaintenanceUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
+//		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastTurnUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
 	}
 	
 	function getLastShipMod()
@@ -1655,7 +1656,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				', sector_id='.$this->db->escapeString($this->sectorID).
 				', last_sector_id='.$this->db->escapeString($this->lastSectorID).
 				', turns='.$this->db->escapeString($this->turns).
-				', last_turn_update='.$this->db->escapeString($this->lastMaintenanceUpdate).
+				', last_turn_update='.$this->db->escapeString($this->lastTurnUpdate).
 				', newbie_turns='.$this->db->escapeString($this->newbieTurns).
 				', last_ship_mod='.$this->db->escapeString($this->lastShipMod).
 				', last_news_update='.$this->db->escapeString($this->lastNewsUpdate).
