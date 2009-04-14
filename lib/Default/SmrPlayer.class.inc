@@ -789,14 +789,26 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 
+	function increaseRelationsByTrade($numGoods,$raceID)
+	{
+		$relations = ceil(min($numGoods,300)/30);
+		if($this->getPureRelation($raceID) >= 500)
+			$relations=1;
+		$this->increaseRelations($relations,$raceID);
+	}
+
+	function decreaseRelationsByTrade($numGoods,$raceID)
+	{
+		$relations = ceil(min($numGoods,300)/30);
+		$this->decreaseRelations($relations,$raceID);
+	}
+
 	function increaseRelations($relations,$raceID)
 	{
 		if($relations < 0)
 			throw new Exception('Trying to increase negative relations.');
 		if($relations == 0)
 			return;
-		if($relations > 10)
-			$relations=10;
 		$relations += $this->getPureRelation($raceID);
 		$this->setRelations($relations,$raceID);
 	}
