@@ -53,7 +53,8 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
+//$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
+$attackers = array(&$player); //When hitting mines by bumping only the current player attacks/gets hit.
 
 //decloak all attackers
 foreach($attackers as &$attacker)
