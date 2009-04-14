@@ -150,6 +150,40 @@ $db = new SmrMySqlDatabase(); // restore database
 $template->assign('Games',$games);
 
 // ***************************************
+// ** Voting
+// ***************************************
+
+$results=array();
+$db->query('SELECT * FROM voting_results WHERE account_id = ' . $account->getAccountID());
+while ($db->nextRecord())
+{
+	$results[$db->getField('vote_id')] = $db->getField('option_id');
+}
+$voting = array();
+$db->query('SELECT * FROM voting WHERE end > ' . TIME);
+while ($db->nextRecord())
+{
+	$voteID = $db->getField('vote_id');
+	$voting[$voteID]['ID'] = $voteID;
+	$container = array();
+	$container['body'] = 'game_play.php';
+	$container['url'] = 'vote_processing.php';
+	$container['vote_id'] = $voteID;
+	$voting[$voteID]['HREF'] = SmrSession::get_new_href($container);
+	$voting[$voteID]['Question'] = $db->getField('question');
+	$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);
+	$voting[$voteID]['Options'] = array();
+	$db2->query('SELECT * FROM voting_options WHERE vote_id = ' . $db->getField('vote_id'));
+	while ($db2->nextRecord())
+	{
+		$voting[$voteID]['Options'][$db2->getField('option_id')]['ID'] = $db2->getField('option_id');
+		$voting[$voteID]['Options'][$db2->getField('option_id')]['Text'] = $db2->getField('text');
+		$voting[$voteID]['Options'][$db2->getField('option_id')]['Chosen'] = isset($results[$db->getField('vote_id')]) && $results[$voteID] == $db2->getField('option_id');
+	}
+}
+$template->assign('Voting',$voting);
+
+// ***************************************
 // ** Donation Link
 // ***************************************
 
