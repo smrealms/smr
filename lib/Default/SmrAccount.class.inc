@@ -215,7 +215,7 @@ $this->get_rank();
 	{
 		if($this->logging==$bool)
 			return;
-		$db->query('UPDATE account SET logging = '.$db->escapeBoolean($bool).' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->query('UPDATE account SET logging = '.$this->db->escapeBoolean($bool).' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->logging=$bool;
 	}
 	
