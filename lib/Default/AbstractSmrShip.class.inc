@@ -106,7 +106,7 @@ abstract class AbstractSmrShip
 		while($db->nextRecord())
 			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')]))
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')] =& self::buildBaseShip($db);
-		return self::$CACHE_BASE_SHIPS;
+		return self::$CACHE_BASE_SHIPS[$gameTypeID];
 	}
 	
 	protected function __construct(AbstractSmrPlayer &$player)
