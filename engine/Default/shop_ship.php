@@ -39,7 +39,7 @@ if (isset($var['ship_id']))
 	$container['buyer_restriction']	= $buyer_restriction;
     $container['level_needed'] = $level_needed;
 	transfer('ship_id');
-	$compareShip['BuyHREF'] *= SmrSession::get_new_href($container);
+	$compareShip['BuyHREF'] = SmrSession::get_new_href($container);
 	
 	$template->assign('CompareShip',$compareShip);
 }
