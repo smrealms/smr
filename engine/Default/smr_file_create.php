@@ -95,23 +95,23 @@ foreach($locations as &$location)
 	}
 	if($location->isBank())
 	{
-		$locSells.='Bank,';
+		$locSells.='Bank=,';
 	}
 	if($location->isBar())
 	{
-		$locSells.='Bar,';
+		$locSells.='Bar=,';
 	}
 	if($location->isHQ())
 	{
-		$locSells.='HQ,';
+		$locSells.='HQ=,';
 	}
 	if($location->isUG())
 	{
-		$locSells.='UG,';
+		$locSells.='UG=,';
 	}
 	if($location->isFed())
 	{
-		$locSells.='FED,';
+		$locSells.='Fed=,';
 	}
 	if($locSells!='')
 		$file .= substr($locSells,0,-1);
