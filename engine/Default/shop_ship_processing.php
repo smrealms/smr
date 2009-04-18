@@ -1,21 +1,21 @@
 <?
 
-$speed		= $var['speed'];
-$cost		= $var['cost'] - $ship->getCost() / 2;
-$race_id	= $var['race_id'];
+$shipID = $var['ship_id'];
+$newShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipID);
+$cost		= $newShip['Cost'] - $ship->getCost() / 2;
 
 // trade master 33
 // trip maker 30
 //(22,25,23,75,43,55,61,24,21,38,67,33,49)
 // Top racials minus ATM + top UG/FED are restricted 
 
-if ($var['buyer_restriction'] == 2 && $player->getAlignment() > -100)
+if ($newShip['AlignRestriction'] == 2 && $player->getAlignment() > -100)
 	create_error('You can\'t buy smuggler ships!');
 
-if ($var['buyer_restriction'] == 1 && $player->getAlignment() < 100)
+if ($newShip['AlignRestriction'] == 1 && $player->getAlignment() < 100)
 	create_error('You can\'t buy federal ships!');
 
-if ($race_id != 1 && $player->getRaceID() != $race_id)
+if ($newShip['RaceID'] != 1 && $player->getRaceID() != $newShip['RaceID'])
 	create_error('You can\'t buy other race\'s ships!');
 
 /*if ($player->getAccountID() == 101)
@@ -26,7 +26,7 @@ if ($player->getCredits() < $cost)
 	create_error('You do not have enough cash to purchase this ship!');
 
 // adapt turns
-$player->setTurns(round($player->getTurns() * $speed / $ship->getSpeed()));
+$player->setTurns(round($player->getTurns() * $newShip['Speed'] * Globals::getGameSpeed($player->getGameID()) / $ship->getSpeed()));
 
 // take the money from the user
 if($cost>0)
@@ -37,7 +37,7 @@ else
 // assign the new ship
 $ship->decloak();
 $ship->disableIllusion();
-$ship->setShipTypeID($var['ship_id']);
+$ship->setShipTypeID($shipID);
 
 
 // update again
