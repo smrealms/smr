@@ -145,8 +145,9 @@ class SmrSession
 			return false;
 		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID']))
 		{
-			if(preg_match('/processing/',self::$var[$sn]['body']))
-				unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
+//			if(preg_match('/processing/',self::$var[$sn]['body']))
+			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
+			unset(self::$var[$sn]['CommonID']);
 		}
 		
 		self::$var[$sn]['RemainingPageLoads'] = 1; // Allow refreshing
