@@ -33,11 +33,6 @@ if (isset($var['ship_id']))
 	
 	$container = array();
 	$container['url']		= 'shop_ship_processing.php';
-	$container['speed']		= $speed;
-	$container['cost']		= $cost;
-	$container['race_id']	= $race_id;
-	$container['buyer_restriction']	= $buyer_restriction;
-    $container['level_needed'] = $level_needed;
 	transfer('ship_id');
 	$compareShip['BuyHREF'] = SmrSession::get_new_href($container);
 	
