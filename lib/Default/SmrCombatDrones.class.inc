@@ -8,15 +8,24 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 	const MAX_CDS_RAND = 54;
 	protected $numberOfCDs;
 	
-	public function __construct($gameTypeID,$numberOfCDs)
+	public function __construct($gameTypeID,$numberOfCDs,$portPlanetDrones = false)
 	{
 		$this->gameTypeID = $gameTypeID;
 		$this->numberOfCDs = $numberOfCDs;
 		$this->name = 'Combat Drones';
 		$this->raceID = 0;
-		$this->maxDamage = 2;
-		$this->shieldDamage = 2;
-		$this->armourDamage = 2;
+		if($portPlanetDrones===false)
+		{
+			$this->maxDamage = 2;
+			$this->shieldDamage = 2;
+			$this->armourDamage = 2;
+		}
+		else
+		{
+			$this->maxDamage = 1;
+			$this->shieldDamage = 1;
+			$this->armourDamage = 1;
+		}
 		$this->accuracy = 3;
 		$this->damageRollover = true;
 		$this->raidWeapon = false;
