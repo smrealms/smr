@@ -139,7 +139,7 @@ if (!empty($bargain_price) &&
 			$expPercent=1;
 		elseif($expPercent<0)
 			$expPercent=0;
-		$gained_exp = round($base_xp * $expPercent * $amount / $THIS_SHIP['Cargo Holds']);
+		$gained_exp = round($base_xp * $expPercent * $amount / $ship->getCargoHolds());
 
 //		//$PHP_OUTPUT.=('.$db->escapeString($offered_price, $ideal_price, $bargain_price');
 //		if ($portGood['TransactionType'] == 'Buy')
