@@ -81,7 +81,7 @@ elseif ($var['func'] == 'Hard_add') {
 } elseif ($var['func'] == 'Relations') {
 	$amount = $_REQUEST['amount'];
 	$race = $_REQUEST['race'];
-	$db->query('UPDATE player_has_relation SET relation = '.$db->escapeString($amount).' WHERE race_id = '.$race.' AND account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+	$player->setRelations($amount,$race);
 } elseif ($var['func'] == 'Race_Relations') {
 	$amount = $_REQUEST['amount'];
 	$race = $_REQUEST['race'];
