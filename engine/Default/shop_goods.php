@@ -73,7 +73,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 	$rand = mt_rand(1, 100);
 	if ($rand <= $base_chance)
 	{
-		$player->increaseHOF(1,array('Trade','Search','Caught','Times'));
+		$player->increaseHOF(1,array('Trade','Search','Total'));
 		if ($ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12))
 		{
 			$player->increaseHOF(1,array('Trade','Search','Caught','Number Of Times'));
