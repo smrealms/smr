@@ -151,9 +151,8 @@ class SmrPort
 	{
 		if(!$this->isUnderAttack())
 		{
-			$richMod = floor($this->getUpgrade() / $this->getUpgradeRequirement()); // be equal to port level for bonus
+			$richMod = $this->getUpgrade() / $this->getUpgradeRequirement(); // be equal to port level for bonus
 			if($richMod < 0) $richMod = 0;
-			
 			//defences restock (check for fed arrival)
 			$federalMod = 0;
 			if(TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY)
