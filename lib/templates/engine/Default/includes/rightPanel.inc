@@ -49,7 +49,7 @@ if(isset($GameID))
 	</span>
 	<?php
 	echo $ThisPlayer->getLevelName() ?><br />
-	<a href="<?php echo $PlayerNameLink ?>"><?php echo $ThisPlayer->getDisplayName() ?></a><br /><?php
+	<big><a href="<?php echo $PlayerNameLink ?>"><?php echo $ThisPlayer->getDisplayName() ?></a></big><br /><?php
 	if(isset($PlayerInvisible))
 	{ ?>
 		<span class="smallFont smallCaps red">INVISIBLE</span><br /><?php
@@ -77,7 +77,8 @@ if(isset($GameID))
 	<span id="newbieturns"><?php
 		if($ThisPlayer->hasNewbieTurns())
 		{
-			echo 'Newbie Turns : <span class="'.$NewbieTurnsColour.'">'.$ThisPlayer->getNewbieTurns().'</span><br />';
+			?>Newbie Turns : <span class="<?php
+			if ($ThisPlayer->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT) { ?>green<?php } else { ?>red<?php } ?>"><?php echo $ThisPlayer->getNewbieTurns(); ?></span><br /><?php
 		} ?>
 	</span>
 	Credits : <?php echo number_format($ThisPlayer->getCredits()) ?><br />
@@ -90,7 +91,7 @@ if(isset($GameID))
 	<img src="images/blue.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentAcquired() ?>px;height:10px;" title="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" alt="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" />
 	<img src="images/bar_border.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentRemaining() ?>px;height:10px;" title="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" alt="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" />
 	<img src="images/bar_right.gif" title="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" alt="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" /><br />
-	Alignment : <?php echo number_format($ThisPlayer->getAlignment()) ?><br />
+	Alignment : <?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?><br />
 	Alliance : <?php
 		echo $ThisPlayer->getAllianceName();
 		if($ThisPlayer->hasAlliance())

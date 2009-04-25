@@ -748,12 +748,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		global $HIDDEN_PLAYERS;
 		if (is_array($HIDDEN_PLAYERS)&&in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $template->assign('PlayerInvisible',true);
 	
-		if ($player->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT)
-			$colour = 'green';
-		else
-			$colour = 'red';
-		$template->assign('NewbieTurnsColour',$colour);
-	
 		$db->query('SELECT ship_name FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID().' LIMIT 1');
 		if ($db->nextRecord()) {

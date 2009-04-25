@@ -5,6 +5,7 @@
 <?php
 	if(isset($GameID))
 	{
+		?><big><?php
 		if(!$ThisPlayer->isLandedOnPlanet())
 		{
 			?><a class="bold" href="<?php echo Globals::getCurrentSectorHREF()  ?>">Current Sector</a><br /><?php
@@ -21,7 +22,7 @@
 		{
 			?><a class="bold" href="<?php echo $PlotCourseLink ?>">Plot A Course</a><br /><?php
 		}
-		?>
+		?></big>
 		<a href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
 		<br />
 		<a href="<?php echo $TraderLink; ?>">Trader</a><br />
