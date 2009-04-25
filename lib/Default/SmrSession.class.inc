@@ -111,7 +111,7 @@ class SmrSession
 		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate)
 		{
-			self::$db->query('UPDATE active_session SET game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
+			self::$db->query('UPDATE active_session SET account_id='.self::$account_id.',game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
 					',last_sn='.self::$db->escapeString(self::$SN).
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
@@ -129,9 +129,9 @@ class SmrSession
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');		
 	}
 
-	public static function destroy() {
-
-		self::$db->query('DELETE FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+	public static function destroy()
+	{
+		self::$db->query('UPDATE active_session SET account_id=0,game_id=0,session_var=\'\',ajax_returns=\'\' WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		self::$session_id = '';
 		self::$account_id = 0;
 		self::$game_id = 0;
