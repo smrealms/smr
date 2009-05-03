@@ -11,8 +11,6 @@ class SmrShip extends AbstractSmrShip
 	
 	protected $db;
 	
-	protected $upgradeShipHREF;
-	
 	public static function refreshCache()
 	{
 		foreach(self::$CACHE_SHIPS as &$gameShips)
@@ -345,14 +343,10 @@ class SmrShip extends AbstractSmrShip
 	
 	public function getUpgradeShipHREF()
 	{
-		if(!isset($this->upgradeShipHREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'ship_upgrade.php';
-			$this->upgradeShipHREF = SmrSession::get_new_href($container);
-		}
-		return $this->upgradeShipHREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'ship_upgrade.php';
+		return SmrSession::get_new_href($container);
 	}
 }
 

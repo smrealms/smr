@@ -59,11 +59,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $nameChanged;
 	protected $combatDronesKamikazeOnMines;
 	
-	protected $examineTraderHREF;
-	protected $attackTraderHREF;
-	protected $traderSearchHREF;
-	protected $allianceRosterHREF;
-	
 	protected $SQL;
 	
 //	public static function getPlayers($gameAccountIDArray,$forceUpdate = false)
@@ -2116,59 +2111,43 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function getExamineTraderHREF()
 	{
-		if(!isset($this->examineTraderHREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'trader_examine.php';
-			$container['target']	= $this->getAccountID();
-			$this->examineTraderHREF = SmrSession::get_new_href($container);
-		}
-		return $this->examineTraderHREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'trader_examine.php';
+		$container['target']	= $this->getAccountID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getAttackTraderHREF()
 	{
-		if(!isset($this->attackTraderHREF))
-		{
-			global $var;
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'trader_attack_processing.php';
-			$container['target']	= $this->getAccountID();
-			if(isset($var['time']))
-				$container['time']	= $var['time'];
-			else
-				$container['time']	= 0;
-			$this->attackTraderHREF = SmrSession::get_new_href($container);
-		}
-		return $this->attackTraderHREF;
+		global $var;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'trader_attack_processing.php';
+		$container['target']	= $this->getAccountID();
+		if(isset($var['time']))
+			$container['time']	= $var['time'];
+		else
+			$container['time']	= 0;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getTraderSearchHREF()
 	{
-		if(!isset($this->traderSearchHREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'trader_search_result.php';
-			$container['player_id']	= $this->getPlayerID();
-			$this->traderSearchHREF = SmrSession::get_new_href($container);
-		}
-		return $this->traderSearchHREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'trader_search_result.php';
+		$container['player_id']	= $this->getPlayerID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getAllianceRosterHREF()
 	{
-		if(!isset($this->allianceRosterHREF))
-		{
-			$container = array();
-			$container['url']			= 'skeleton.php';
-			$container['body']			= 'alliance_roster.php';
-			$container['alliance_id']	= $this->getAllianceID();
-			$this->allianceRosterHREF = SmrSession::get_new_href($container);
-		}
-		return $this->allianceRosterHREF;
+		$container = array();
+		$container['url']			= 'skeleton.php';
+		$container['body']			= 'alliance_roster.php';
+		$container['alliance_id']	= $this->getAllianceID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getToggleWeaponHidingHREF()

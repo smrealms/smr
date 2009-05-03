@@ -11,13 +11,6 @@ class SmrAccount
 		array(array('Trade','Money','Profit'),0.00005,0.5),
 		array(array('Killing','Kills'),1000,1)
 //		array(array('','',''),),
-//		array(array('','',''),),
-//		array(array('','',''),),
-//		array(array('','',''),),
-//		array(array('','',''),),
-//		array(array('','',''),),
-//		array(array('','',''),),
-//		array(array('','',''),),
 		);
 	
 	protected static $CACHE_ACCOUNTS = array();
