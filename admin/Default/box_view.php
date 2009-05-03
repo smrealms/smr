@@ -27,7 +27,6 @@ if(!isset($var['box_type_id']))
 else
 {
 	$PHP_OUTPUT.=create_link(create_container('skeleton.php','box_view.php'),'Back<br />');
-	$db2 = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM message_boxes WHERE box_type_id='.$var['box_type_id'].' ORDER BY send_time DESC');
 	$container = array();
 	$container['url'] = 'box_delete_processing.php';
@@ -70,9 +69,8 @@ else
 				$PHP_OUTPUT.=$sender;
 			$PHP_OUTPUT.='</td>';
 			$PHP_OUTPUT.='<td>';
-			$db2->query('SELECT * FROM game WHERE game_id = ' . $db->getField('game_id'));
-			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('game_name'); //$trader .= ' in ' . $db2->getField('game_name');
-			else $PHP_OUTPUT.=('Game no longer exists'); //$trader .= ' in a game that no longer exists.';
+			if (Globals::getGameInfo($gameID)===false) $PHP_OUTPUT.=('Game no longer exists');
+			else $PHP_OUTPUT.=Globals::getGameName($gameID);
 			$PHP_OUTPUT.=('</td></tr><tr><td colspan="3">');
 			$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('send_time')));
 			$PHP_OUTPUT.='</td>';
