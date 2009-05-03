@@ -170,14 +170,12 @@ abstract class AbstractSmrPlayer
         $attackRating = $ship->getAttackRating();
 		if ($attackRating > 8)
 			return false;
-		if ($attackRating == 0)
-			return true;
-		if ($this->getAlignment() >= 0 && $this->getAlignment() >= ($attackRating - 3) * 150)
-			return true;
-		if ($this->getAlignment() < 0 && $this->getAlignment() > ($attackRating - 4) * 150)
-			return true;
 		if ($ship->hasIllegalGoods())
 			return false;
+		if ($attackRating == 0)
+			return true;
+		if ($this->getAlignment() > ($attackRating - 4) * 150)
+			return true;
 		return false;
 	}
 	
