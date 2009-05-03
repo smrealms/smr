@@ -2,58 +2,10 @@
 $template->assign('PageTopic','CURRENT NEWS');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_news_menue();
-//we we check for a lotto winner...
-$db->lockTable('player_has_ticket');
-$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
-			'game_id = '.$player->getGameID().' AND time > 0 GROUP BY game_id ORDER BY time DESC');
-$db->nextRecord();
-if ($db->getField('num') > 0) {
-	$amount = ($db->getField('num') * 1000000 * .9) + 1000000;
-	$first_buy = $db->getField('time');
-} else {
-	$amount = 1000000;
-	$first_buy = TIME;
-}
-//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
-$time_rem = ($first_buy + (2 * 24 * 60 * 60)) - TIME;
-$val =0;
-if ($time_rem <= 0) {
-	//we need to pick a winner
-	$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' ORDER BY rand()');
-	if ($db->nextRecord()) {
-		$winner_id = $db->getField('account_id');
-		$time = $db->getField('time');
-	}
-	$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
-	if ($db->nextRecord()) {
-		
-		$amount += $db->getField('prize');
-		$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID());
-		
-	}
-	$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$player->getGameID().' AND account_id = '.$winner_id);
-	$db->query('UPDATE player_has_ticket SET time = 0, prize = '.$amount.' WHERE time = '.TIME.' AND ' .
-					'account_id = '.$winner_id.' AND game_id = '.$player->getGameID());
-	//delete losers
-	$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$player->getGameID());
-	//get around locked table problem
-	$val = 1;
 
-}
-$db->unlock();
-if ($val == 1) {
-	// create news msg
-	$winner =& SmrPlayer::getPlayer($winner_id, $player->getGameID());
-	$news_message = '<font color=yellow>'.$winner->getPlayerName().'</font> has won the lotto!  The jackpot was ' . number_format($amount) . '.  <font color=yellow>'.$winner->getPlayerName().'</font> can report to any bar to claim their prize!';
-	// insert the news entry
-	$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$player->getGameID());
-	$db->query('INSERT INTO news ' .
-	'(game_id, time, news_message, type) ' .
-	'VALUES('.$player->getGameID().', ' . TIME . ', ' . $db->escape_string($news_message, false) . ',\'lotto\')');
-	
-}
-$db->unlock();
-//end lotto check
+require_once(get_file_loc('bar.functions.inc'));
+checkForLottoWinner($player->getGameID());
+
 if(!isset($var['LastNewsUpdate']))
 	SmrSession::updateVar('LastNewsUpdate',$player->getLastNewsUpdate());
 $container = array();

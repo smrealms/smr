@@ -1,0 +1,65 @@
+<?php
+
+function checkForLottoWinner($gameID)
+{
+	global $db;
+	//we we check for a lotto winner...
+	$db->lockTable('player_has_ticket');
+	$lottoInfo = getLottoInfo($gameID);
+	$val =0;
+	if ($lottoInfo['TimeRemaining'] <= 0)
+	{
+		//we need to pick a winner
+		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$gameID.' ORDER BY rand()');
+		if ($db->nextRecord())
+		{
+			$winner_id = $db->getField('account_id');
+			$time = $db->getField('time');
+		}
+		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$gameID);
+		if ($db->nextRecord())
+		{
+			$lottoInfo['Prize'] += $db->getField('prize');
+			$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$gameID);
+			
+		}
+		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$gameID.' AND account_id = '.$winner_id);
+		$db->query('UPDATE player_has_ticket SET time = 0, prize = '.$lottoInfo['Prize'].' WHERE time = '.$time.' AND ' .
+						'account_id = '.$winner_id.' AND game_id = '.$gameID);
+		//delete losers
+		$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$gameID);
+		//get around locked table problem
+		$val = 1;
+	}
+	$db->unlock();
+	if ($val == 1)
+	{
+		// create news msg
+		$winner =& SmrPlayer::getPlayer($winner_id, $gameID);
+		$news_message = '<font color=yellow>'.$winner->getPlayerName().'</font> has won the lotto!  The jackpot was ' . number_format($lottoInfo['Prize']) . '.  <font color=yellow>'.$winner->getPlayerName().'</font> can report to any bar to claim their prize!';
+		// insert the news entry
+		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$gameID);
+		$db->query('INSERT INTO news ' .
+		'(game_id, time, news_message, type) ' .
+		'VALUES('.$gameID.', ' . TIME . ', ' . $db->escape_string($news_message, false) . ',\'lotto\')');
+	}
+}
+
+function getLottoInfo($gameID)
+{
+	global $db;
+	$amount = 1000000;
+		$firstBuy = TIME;
+	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
+				'game_id = '.$gameID.' AND time > 0 GROUP BY game_id ORDER BY time DESC');
+	$db->nextRecord();
+	if ($db->getField('num') > 0)
+	{
+		$amount += ($db->getField('num') * 1000000 * .9);
+		$firstBuy = $db->getField('time');
+	}
+	//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
+	return array('Prize' => $amount, 'TimeRemaining' => $firstBuy + 2 * 86400 - TIME);
+}
+
+?>
