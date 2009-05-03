@@ -107,7 +107,7 @@ if(($reason = $account->is_disabled())!==false)
 // *
 // *********************************
 $db->query('SELECT * FROM active_session ' .
-		   'WHERE last_accessed > ' . (TIME - 3600));
+		   'WHERE last_accessed > ' . (TIME - TIME_BEFORE_NEWBIE_TIME));
 if ($db->getNumRows() == 0)
 	$db->query('UPDATE player SET newbie_turns = 1
 				WHERE newbie_turns = 0 AND
