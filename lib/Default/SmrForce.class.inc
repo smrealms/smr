@@ -29,17 +29,6 @@ class SmrForce
 	protected $isNew;
 	protected $hasChanged = false;
 	
-	protected $examineDropForcesHREF;
-	protected $examineAttackForcesHREF;
-	protected $attackForcesHREF;
-	protected $refreshHREF;
-	protected $dropSDHREF;
-	protected $takeSDHREF;
-	protected $dropCDHREF;
-	protected $takeCDHREF;
-	protected $dropMineHREF;
-	protected $takeMineHREF;
-	
 	public static function refreshCache()
 	{
 		foreach(self::$CACHE_FORCES as $gameID => &$gameForces)
@@ -375,147 +364,96 @@ class SmrForce
 	
 	public function getExamineDropForcesHREF()
 	{
-		if(!isset($this->examineDropForcesHREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'forces_drop.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$this->examineDropForcesHREF = SmrSession::get_new_href($container);
-		}
-		return $this->examineDropForcesHREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'forces_drop.php';
+		$container['owner_id']	= $this->getOwnerID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getExamineAttackForcesHREF()
 	{
-		if(!isset($this->examineAttackForcesHREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'forces_examine.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$this->examineAttackForcesHREF = SmrSession::get_new_href($container);
-		}
-		return $this->examineAttackForcesHREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'forces_examine.php';
+		$container['owner_id']	= $this->getOwnerID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getAttackForcesHREF()
 	{
-		if(!isset($this->attackForcesHREF))
-		{
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'forces_attack_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$this->attackForcesHREF = SmrSession::get_new_href($container);
-		}
-		return $this->attackForcesHREF;
+		$container = array();
+		$container['url']		= 'skeleton.php';
+		$container['body']		= 'forces_attack_processing.php';
+		$container['owner_id']	= $this->getOwnerID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getRefreshHREF()
 	{
-		if(!isset($this->refreshHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_refresh_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$this->refreshHREF = SmrSession::get_new_href($container);
-		}
-		return $this->refreshHREF;
+		$container = array();
+		$container['url']		= 'forces_refresh_processing.php';
+		$container['owner_id']	= $this->getOwnerID();
+		return SmrSession::get_new_href($container);
+	}
+	
+	protected function getDropContainer()
+	{
+		return array('url' => 'forces_drop_processing.php', 'owner_id' => $this->getOwnerID());
 	}
 	
 	public function getDropSDHREF()
 	{
-		if(!isset($this->dropSDHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_drop_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$container['drop_scout_drones']	= 1;
-			$this->dropSDHREF = SmrSession::get_new_href($container);
-		}
-		return $this->dropSDHREF;
+		$container = $this->getDropContainer();
+		$container['drop_scout_drones']	= 1;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getTakeSDHREF()
 	{
-		if(!isset($this->takeSDHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_drop_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$container['take_scout_drones']	= 1;
-			$this->takeSDHREF = SmrSession::get_new_href($container);
-		}
-		return $this->takeSDHREF;
+		$container = $this->getDropContainer();
+		$container['take_scout_drones']	= 1;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getDropCDHREF()
 	{
-		if(!isset($this->dropCDHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_drop_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$container['drop_combat_drones']	= 1;
-			$this->dropCDHREF = SmrSession::get_new_href($container);
-		}
-		return $this->dropCDHREF;
+		$container = $this->getDropContainer();
+		$container['drop_combat_drones']	= 1;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getTakeCDHREF()
 	{
-		if(!isset($this->takeCDHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_drop_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$container['take_combat_drones']	= 1;
-			$this->takeCDHREF = SmrSession::get_new_href($container);
-		}
-		return $this->takeCDHREF;
+		$container = $this->getDropContainer();
+		$container['take_combat_drones']	= 1;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getDropMineHREF()
 	{
-		if(!isset($this->dropMineHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_drop_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$container['drop_mines']	= 1;
-			$this->dropMineHREF = SmrSession::get_new_href($container);
-		}
-		return $this->dropMineHREF;
+		$container = $this->getDropContainer();
+		$container['drop_mines']	= 1;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getTakeMineHREF()
 	{
-		if(!isset($this->takeMineHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_drop_processing.php';
-			$container['owner_id']	= $this->getOwnerID();
-			$container['take_mines']	= 1;
-			$this->takeMineHREF = SmrSession::get_new_href($container);
-		}
-		return $this->takeMineHREF;
+		$container = $this->getDropContainer();
+		$container['take_mines']	= 1;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public static function getRefreshAllHREF()
 	{
-		if(!isset(self::$refreshAllHREF))
-		{
-			$container = array();
-			$container['url']		= 'forces_mass_refresh.php';
-			self::$refreshAllHREF	= SmrSession::get_new_href($container);
-		}
-		return self::$refreshAllHREF;
+		$container = array();
+		$container['url']		= 'forces_mass_refresh.php';
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer,$minesAreAttacker)
 	{
-		return $this->shootPlayers(array($targetPlayer),$justMines);
+		return $this->shootPlayers(array($targetPlayer),$minesAreAttacker);
 	}
 	
 	public function &shootPlayers(array &$targetPlayers,$minesAreAttacker)

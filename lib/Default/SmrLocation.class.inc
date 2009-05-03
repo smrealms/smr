@@ -24,9 +24,6 @@ class SmrLocation
 	protected $shipsSold;
 	protected $weaponsSold;
 	
-	protected $HREF;
-	protected $editHREF;
-	
 	public static function &getAllLocations($forceUpdate = false)
 	{
 		if($forceUpdate || !isset(self::$CACHE_ALL_LOCATIONS))
@@ -407,28 +404,20 @@ class SmrLocation
 	
 	public function getExamineHREF()
 	{
-		if(!isset($this->HREF))
-		{
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = $this->getAction();
-			$this->HREF = SmrSession::get_new_href($container);
-		}
-		return $this->HREF;
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = $this->getAction();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getEditHREF()
 	{
-		if(!isset($this->editHREF))
-		{
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'location_edit.php';
-			$container['game_type_id'] = 0; //TODO add game type id
-			$container['location_type_id'] = $this->getTypeID();
-			$this->editHREF = SmrSession::get_new_href($container);
-		}
-		return $this->editHREF;
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'location_edit.php';
+		$container['game_type_id'] = 0; //TODO add game type id
+		$container['location_type_id'] = $this->getTypeID();
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function equals(SmrLocation &$otherLocation)

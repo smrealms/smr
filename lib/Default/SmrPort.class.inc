@@ -33,9 +33,6 @@ class SmrPort
 	protected $turrets = 20;
 	protected $turretDamage = 250;
 	
-	protected $tradeHREF;
-	protected $raidWarningHREF;
-	
 	protected $cachedVersion = false;
 	protected $cachedTime = TIME;
 	
@@ -1017,26 +1014,18 @@ class SmrPort
 	
 	public function getTradeHREF()
 	{
-		if(!isset($this->tradeHREF))
-		{
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'shop_goods.php';
-			$this->tradeHREF = SmrSession::get_new_href($container);
-		}
-		return $this->tradeHREF;
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'shop_goods.php';
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getRaidWarningHREF()
 	{
-		if(!isset($this->raidWarningHREF))
-		{
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'port_attack_warning.php';
-			$this->raidWarningHREF = SmrSession::get_new_href($container);
-		}
-		return $this->raidWarningHREF;
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'port_attack_warning.php';
+		return SmrSession::get_new_href($container);
 	}
 	
 	public function getAttackHREF()
