@@ -1407,7 +1407,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($relation >= 300 || $relation <= -300)
 			$alignChangePerRelation = 0.04;
 
-		$alignChange = $relation * $alignChangePerRelation;
+		$alignChange = -$relation * $alignChangePerRelation; //Lose relations when killing a peaceful race
 		$return['KillerAlign'] = $alignChange;
 		if($alignChange>0)
 		{
