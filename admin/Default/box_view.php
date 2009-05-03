@@ -62,7 +62,7 @@ else
 			
 			$sender = 'From: '.$sender_acc->login.' ('.$sender_acc->account_id.')';
 			if (is_object($senderPlayer)&&$sender_acc->login != $senderPlayer->getPlayerName())
-				$sender .= ' a.k.a '.$sender->getPlayerName();
+				$sender .= ' a.k.a '.$senderPlayer->getPlayerName();
 			if($gameID!==false)
 				$PHP_OUTPUT.=create_link($container, $sender);
 			else
