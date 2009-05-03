@@ -1,17 +1,21 @@
 <?
-$timeBetweenAttacks = microtime(true)-$var['time'];
-if($timeBetweenAttacks<MIN_TIME_BETWEEN_SHOTS)
+$timeBetweenAttacks = 0;
+if($var['time'])
 {
-	$sleepTime = (MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks);
-//	echo '$sleepTime' . $sleepTime . ' ';
-	$sleepTimeMicro = $sleepTime - floor($sleepTime);
-	$sleepTimeSecs = $sleepTime - $sleepTimeMicro;
-	$sleepTimeNano = round($sleepTimeMicro*1000000000);
-//	echo 'Sleeping for: ' . $sleepTimeSecs . 's ' . round($sleepTimeMicro*1000000000) . 'ns' . ' ';
-	time_nanosleep($sleepTimeSecs, $sleepTimeNano);
+	$timeBetweenAttacks = microtime(true)-$var['time'];
+	if($timeBetweenAttacks<MIN_TIME_BETWEEN_SHOTS)
+	{
+		$sleepTime = (MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks);
+	//	echo '$sleepTime' . $sleepTime . ' ';
+		$sleepTimeMicro = $sleepTime - floor($sleepTime);
+		$sleepTimeSecs = $sleepTime - $sleepTimeMicro;
+		$sleepTimeNano = round($sleepTimeMicro*1000000000);
+	//	echo 'Sleeping for: ' . $sleepTimeSecs . 's ' . round($sleepTimeMicro*1000000000) . 'ns' . ' ';
+		time_nanosleep($sleepTimeSecs, $sleepTimeNano);
+	}
+	$var['time']=microtime(true);
+	$db->query('INSERT INTO debug VALUES (\'attack_speed\','.$player->getAccountID().','.($timeBetweenAttacks).')');
 }
-$var['time']=microtime(true);
-$db->query('INSERT INTO debug VALUES (\'attack_speed\','.$player->getAccountID().','.($timeBetweenAttacks).')');
 
 if($player->hasNewbieTurns())
 	create_error('You are under newbie protection.');
@@ -90,8 +94,10 @@ foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer)
 } unset($teamPlayer);
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
+$account->log(7, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'].' with '.$timeBetweenAttacks.'s between script loads', $sector->getSectorID());
+
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $sector->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
