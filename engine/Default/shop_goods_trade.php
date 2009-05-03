@@ -54,7 +54,6 @@ transfer('overall_number_of_bargains');
 $PHP_OUTPUT.=create_echo_form($container);
 $portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
 $relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
-$value = round(pow( ($relations / 1000),10 ) );
 //gives value 0-1
 if (isset($var['ideal_price']))
 {
@@ -72,19 +71,9 @@ if (isset($var['offered_price'])) {
 
 	// return this value
 	$offered_price = $var['offered_price'];
-
 }
-//$PHP_OUTPUT.=('.$db->escapeString($ideal_price, $offered_price,');
-$show_price = abs($offered_price - $ideal_price);
-//$PHP_OUTPUT.=('.$db->escapeString($show_price,');
-$show_price = $show_price * $value;
-//$PHP_OUTPUT.=('.$db->escapeString($show_price,');
-if ($portGood['TransactionType'] == 'Sell')
-	$show_price = $bargain_price + $show_price;
-else
-	$show_price = $bargain_price - $show_price;
-//$PHP_OUTPUT.=('.$db->escapeString($show_price');
-$PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$show_price.'" id="InputFields" style="width:75;text-align:center;vertical-align:middle;">&nbsp;');
+
+$PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$bargain_price.'" id="InputFields" style="width:75;text-align:center;vertical-align:middle;">&nbsp;');
 //$PHP_OUTPUT.=('<!-- here are all information that are needed to calculate the ideal price. if you know how feel free to create a trade calculator -->');
 //$PHP_OUTPUT.=('<!--('.$var['amount'].':'.$portGood['BasePrice'].':'.$var['good_distance'].':'.$portGood['Amount'].':'.$portGood['Max'].':'.$relations.':'.$port->getLevel().')-->');
 $PHP_OUTPUT.=create_submit('Bargain (1)');

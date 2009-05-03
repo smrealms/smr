@@ -123,43 +123,7 @@ if (!empty($bargain_price) &&
 	$base_xp = (round($ship->getCargoHolds() / 30) + 1) * 2 * $good_distance;
 
 	// if offered equals ideal we get a problem (division by zero)
-	if ($bargain_price != $ideal_price)// && $offered_price != $ideal_price)
-	{
-		$val = ($bargain_price - $ideal_price)/$ideal_price;
-		if ($var['trans_type'] == 'Sell' && $val<0)
-			$val=1;
-		elseif($var['trans_type'] == 'Buy' && $val>0)
-			$val=1;
-		$val=abs($val);
-		if($val>1)
-			$val=1;
-		
-		$expPercent = pow(1-$val,150);
-		if($expPercent>1)
-			$expPercent=1;
-		elseif($expPercent<0)
-			$expPercent=0;
-		$gained_exp = round($base_xp * $expPercent * $amount / $ship->getCargoHolds());
-
-//		//$PHP_OUTPUT.=('.$db->escapeString($offered_price, $ideal_price, $bargain_price');
-//		if ($portGood['TransactionType'] == 'Buy')
-//		{
-//			if ($offered_price - $bargain_price < 0)
-//				$val = 0;
-//			else
-//				$val = abs($offered_price - $bargain_price);
-//		}
-//		else
-//		{
-//			if ($offered_price - $bargain_price > 0)
-//				$val = 0;
-//			else
-//				$val = abs($offered_price - $bargain_price);
-//		}
-//		$gained_exp = round($base_xp * $val / abs($offered_price - $ideal_price) * $amount / $ship->getCargoHolds());
-	}
-	else
-		$gained_exp = round($base_xp * $amount / $ship->getCargoHolds());
+	$gained_exp = round($port->calculateExperiencePercent($ideal_price,$offered_price,$bargain_price,$portGood['TransactionType']) * $base_xp * $amount / $ship->getCargoHolds());
 
 	//will use these variables in current sector and port after successful trade
 	$container['traded_xp'] = $gained_exp;
