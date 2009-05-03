@@ -11,6 +11,7 @@ class SmrPort
 	const CHANCE_TO_DOWNGRADE = 15;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
+	const BARGAIN_LENIENCY_PERCENT = 0.01;
 	
 	protected $db;
 	
@@ -948,7 +949,7 @@ class SmrPort
 		$this->setArmour($this->getArmour() - $number);
 	}
 	
-	function getIdealPrice($goodID, $dist, $transactionType, $numGoods, $relations)
+	public function getIdealPrice($goodID, $dist, $transactionType, $numGoods, $relations)
 	{
 //		echo 'Good:'.$goodID.',Dist::'.$dist.',Type:'.$transactionType.',NumGoods:'.$numGoods.',Relations:'.$relations.',';
 		if($relations>1000)
@@ -968,7 +969,7 @@ class SmrPort
 		return $idealPrice;
 	}
 	
-	function getOfferPrice($idealPrice, $relations, $transactionType)
+	public function getOfferPrice($idealPrice, $relations, $transactionType)
 	{
 		$relations=max(0,min(1000,$relations));
 		$relationsEffect = pow(1+($relations-1000)/10000,1.2-$relations/1000);
@@ -984,6 +985,33 @@ class SmrPort
 //		else if($transactionType == 'Sell')
 //			$offeredPrice = round( $idealPrice * (($relations - 1500) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 2450) + .35) );
 //		return $offeredPrice;
+	}
+	
+	public function calculateExperiencePercent($idealPrice,$offerPrice,$bargainPrice,$transactionType)
+	{
+		if(($transactionType == 'Sell' && $bargainPrice < $offerPrice) || ($transactionType == 'Buy' && $bargainPrice > $offerPrice))
+			return 0;
+		if ($bargainPrice == $idealPrice)
+			return 1;
+		$bargainLeniency = min(($idealPrice)*self::BARGAIN_LENIENCY_PERCENT,abs($idealPrice-$bargainPrice));
+		if ($transactionType == 'Sell')
+			$bargainLeniency = -$bargainLeniency;
+		$bargainPrice -= $bargainLeniency;
+		
+		$val = ($idealPrice-$bargainPrice)/($idealPrice-$this->getOfferPrice($idealPrice,0,$transactionType));
+//			if ($transactionType == 'Sell' && $val>0)
+//				$val=1;
+//			else if($transactionType == 'Buy' && $val<0)
+//				$val=1;
+		$val=abs($val);
+		if($val>1)
+			$val=1;
+		$expPercent = pow(1-$val,15);
+		if($expPercent>1)
+			$expPercent=1;
+		else if($expPercent<0)
+			$expPercent=0;
+		return $expPercent;
 	}
 	
 	public function getTradeHREF()
