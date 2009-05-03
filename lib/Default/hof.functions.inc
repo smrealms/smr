@@ -1,10 +1,9 @@
 <?php
 
-
 function displayHOFRow($rank,$accountID,$amount)
 {
 	global $account,$player,$var;
-	if(isset($var['game_id']))
+	if(isset($var['game_id']) && Globals::getGameInfo($var['game_id'])!==false)
 		$hofPlayer =& SmrPlayer::getPlayer($accountID,$var['game_id']);
 	else
 		$hofAccount =& SmrAccount::getAccount($accountID);
