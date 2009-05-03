@@ -9,6 +9,8 @@ define('ACCOUNT_ID_ADMIN',65534);
 define('ACCOUNT_ID_PLANET',65533);
 define('ACCOUNT_ID_NHL',36);
 
+define('TIME_BEFORE_NEWBIE_TIME',7200); //2 hours, longer than I'd want, but needed whilst on new.smrealms.de
+
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 
 require_once('config.specific.php');
