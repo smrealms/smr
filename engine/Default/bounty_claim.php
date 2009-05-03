@@ -16,44 +16,49 @@ else
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'UG\'');
 }
 
-$db2 = new SmrMySqlDatabase();
+$claimText='';
 
-
-if ($db->getNumRows())
+if(!isset($var['ClaimText']))
 {
-	$PHP_OUTPUT.=('You have claimed the following bounties<br /><br />');
-
-	while ($db->nextRecord())
+	if ($db->getNumRows())
 	{
-		// get bounty id from db
-		$bounty_id = $db->getField('bounty_id');
-		$acc_id = $db->getField('account_id');
-		$amount = $db->getField('amount');
-		$smrCredits = $db->getField('smr_credits');
-		// no interest on bounties
-		// $time = TIME;
-		// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
-    	// $amount = round($db->getField('amount') * pow(1.05,$days));
-
-		// add bounty to our cash
-		$player->increaseCredits($amount);
-		$account->increaseSmrCredits($smrCredits);
-		$name =& SmrPlayer::getPlayer($acc_id, $player->getGameID());
-		$PHP_OUTPUT.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span> credits and <span style="color:red;">' . number_format($smrCredits) . '</span> SMR credits<br />');
-
-		// add HoF stat
-		$player->increaseHOF(1,array('Bounties','Claimed','Results'));
-		$player->increaseHOF($amount,array('Bounties','Claimed','Money'));
-		$player->increaseHOF($smrCredits,array('Bounties','Claimed','SMR Credits'));
-
-		// delete bounty
-		$db2->query('DELETE FROM bounty
-					 WHERE game_id = '.$player->getGameID().' AND
-					 	   claimer_id = '.$player->getAccountID().' AND
-					 	   bounty_id = '.$bounty_id);
+		$claimText.=('You have claimed the following bounties<br /><br />');
+		$db2 = new SmrMySqlDatabase();
+	
+		while ($db->nextRecord())
+		{
+			// get bounty id from db
+			$bounty_id = $db->getField('bounty_id');
+			$acc_id = $db->getField('account_id');
+			$amount = $db->getField('amount');
+			$smrCredits = $db->getField('smr_credits');
+			// no interest on bounties
+			// $time = TIME;
+			// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
+	    	// $amount = round($db->getField('amount') * pow(1.05,$days));
+	
+			// add bounty to our cash
+			$player->increaseCredits($amount);
+			$account->increaseSmrCredits($smrCredits);
+			$name =& SmrPlayer::getPlayer($acc_id, $player->getGameID());
+			$claimText.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span> credits and <span style="color:red;">' . number_format($smrCredits) . '</span> SMR credits<br />');
+	
+			// add HoF stat
+			$player->increaseHOF(1,array('Bounties','Claimed','Results'));
+			$player->increaseHOF($amount,array('Bounties','Claimed','Money'));
+			$player->increaseHOF($smrCredits,array('Bounties','Claimed','SMR Credits'));
+	
+			// delete bounty
+			$db2->query('DELETE FROM bounty
+						 WHERE game_id = '.$player->getGameID().' AND
+						 	   claimer_id = '.$player->getAccountID().' AND
+						 	   bounty_id = '.$bounty_id);
+		}
 	}
+	else
+		$claimText.=('You have no claimable bounties<br /><br />');
+	
+	SmrSession::updateVar('ClaimText',$claimText);
 }
-else
-	$PHP_OUTPUT.=('You have no claimable bounties<br /><br />');
-
+$PHP_OUTPUT.=$var['ClaimText'];
 ?>
