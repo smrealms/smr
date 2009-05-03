@@ -27,7 +27,7 @@ if($player->forceNAPAlliance($planetOwner))
 	
 if ($planet->isDestroyed())
 {
-	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
+	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$planet->getSectorID().' AND game_id = '.$player->getGameID());
 	$planet->removeClaimed();
 	$planet->removePassword();
 	$planet->update();
@@ -42,7 +42,7 @@ $player->takeTurns(3,0);
 
 // ********************************
 // *
-// * P o r t   a t t a c k
+// * P l a n e t   a t t a c k
 // *
 // ********************************
 
@@ -51,7 +51,7 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forced' => false);
 
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
+$sector =& SmrSector::getSector(SmrSession::$game_id, $planet->getSectorID());
 $attackers =& $sector->getFightingTradersAgainstPlanet($player, $planet);
 
 $planet->attackedBy($player,$attackers);
@@ -68,10 +68,10 @@ foreach($attackers as &$attacker)
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($attacker);
-$account->log(7, 'Player attacks planet their team does ' . $results['Attackers']['TotalDamage'], $planet->getSectorID());
 $results['Attackers']['Downgrades'] = $planet->checkForDowngrade($results['Attackers']['TotalDamage']);
-
 $results['Planet'] =& $planet->shootPlayers($attackers);
+
+$account->log(7, 'Player attacks planet, the planet does '.$results['Planet']['TotalDamage'].', their team does ' . $results['Attackers']['TotalDamage'].' and downgrades: '.var_export($results['Attackers']['Downgrades'],true), $planet->getSectorID());
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
@@ -89,7 +89,7 @@ else
 $planet->update();
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLANET\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();

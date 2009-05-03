@@ -59,16 +59,16 @@ foreach($attackers as &$attacker)
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($attacker);
-$account->log(7, 'Player attacks port their team does ' . $results['Attackers']['TotalDamage'], $port->getSectorID());
 $results['Attackers']['Downgrades'] = $port->checkForDowngrade($results['Attackers']['TotalDamage']);
-
 $results['Port'] =& $port->shootPlayers($attackers);
+
+$account->log(7, 'Player attacks port, the port does '.$results['Port']['TotalDamage'].', their team does ' . $results['Attackers']['TotalDamage'] .' and downgrades '.$results['Attackers']['Downgrades'].' levels.', $port->getSectorID());
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $port->update();
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PORT\',' . $player->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.ACCOUNT_ID_PORT.',' . PORT_ALLIANCE_ID . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PORT\',' . $port->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.ACCOUNT_ID_PORT.',' . PORT_ALLIANCE_ID . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
