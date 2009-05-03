@@ -973,6 +973,7 @@ class SmrPort
 	{
 		$relations=max(0,min(1000,$relations));
 		$relationsEffect = pow(1+($relations-1000)/10000,1.2-$relations/1000);
+		$relationsEffect -= self::BARGAIN_LENIENCY_PERCENT;
 		 
 		 if($transactionType == 'Buy')
 			$relationsEffect = 2-$relationsEffect;
