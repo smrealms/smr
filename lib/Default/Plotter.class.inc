@@ -21,9 +21,8 @@ class Plotter
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if($checkSector->hasWarp())
 		{
-			$nextSector = $checkSector->getWarp();
 			$d = new Distance($checkSector->getSectorID());
-			$d->addWarpToPath($nextSector);
+			$d->addWarpToPath($checkSector->getWarp());
 			$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $d;
 		}
 		foreach ($checkSector->getLinks() as $nextSector)
@@ -44,12 +43,13 @@ class Plotter
 			$distanceQ[] = array();
 			while (($distance = array_shift($q))!==null)
 			{
-				$visitedSectors[$distance->getEndSectorId()] = true; // This is here for warps, because they are delayed visits if we set this before the actual visit we'll get sectors marked as visited long before they are actually visited - causes problems when it's quicker to walk to the warp exit than to warp there.
+				$checkSectorID = $distance->getEndSectorId();
+				$visitedSectors[$checkSectorID] = true; // This is here for warps, because they are delayed visits if we set this before the actual visit we'll get sectors marked as visited long before they are actually visited - causes problems when it's quicker to walk to the warp exit than to warp there.
 																// We still need to mark walked sectors as visited before we go to each one otherwise we get a huge number of paths being checked twice (up then left, left then up are essentially the same but if we set up-left as visited only when we actually check it then it gets queued up twice - nasty)
-				$checkSector =& SmrSector::getSector($gameID,$distance->getEndSectorId());
-				if ($checkSector->getSectorID() >= $lowLimit
-						&& $checkSector->getSectorID() <= $highLimit)
+				if ($checkSectorID >= $lowLimit
+						&& $checkSectorID <= $highLimit)
 				{
+					$checkSector =& SmrSector::getSector($gameID,$checkSectorID);
 					if ($checkSector->hasX($x))
 					{
 						if($useFirst)
@@ -59,12 +59,12 @@ class Plotter
 					//Warps first as a slight optimisation due to how visitedSectors is set.
 					if($checkSector->hasWarp())
 					{
-						if ($visitedSectors[$checkSector->getWarp()])
-							continue;
-
-						$cloneDistance = clone($distance);
-						$cloneDistance->addWarpToPath($checkSector->getWarp());
-						$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $cloneDistance;
+						if (!$visitedSectors[$checkSector->getWarp()])
+						{
+							$cloneDistance = clone($distance);
+							$cloneDistance->addWarpToPath($checkSector->getWarp());
+							$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $cloneDistance;
+						}
 					}
 					foreach ($checkSector->getLinks() as $nextSector)
 					{

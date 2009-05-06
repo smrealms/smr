@@ -46,7 +46,7 @@ class SmrSector
 
 	public static function &getSector($gameID,$sectorID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_SECTORS[$gameID][$sectorID]))
+		if(!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate)
 		{
 			$s = new SmrSector($gameID,$sectorID);
 			return self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()] =& $s;
@@ -856,7 +856,7 @@ class SmrSector
 	
 	function equals(SmrSector $otherSector)
 	{
-		return $otherSector->getGameID()==$this->getGameID()&&$otherSector->getSectorID()==$this->getSectorID();
+		return $otherSector->getSectorID()==$this->getSectorID()&&$otherSector->getGameID()==$this->getGameID();
 	}
 	
 	function isLinked(SmrSector $otherSector)
@@ -904,6 +904,10 @@ class SmrSector
 	
 	public function hasX(/*Object*/ &$x)
 	{
+		if($x instanceof SmrSector)
+		{
+			return $this->equals($x);
+		}
 		if ($x == 'Port')
 		{
 			return $this->hasPort();
@@ -911,10 +915,6 @@ class SmrSector
 		if ($x == 'Location')
 		{
 			return $this->hasLocation();
-		}
-		if($x instanceof SmrSector)
-		{
-			return $this->equals($x);
 		}
 		if ($x instanceof Location)
 		{

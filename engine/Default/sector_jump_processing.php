@@ -13,8 +13,6 @@ if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 	$container['body'] = 'current_sector.php';
 	forward($container);
 }
-// include helper funtions
-include('course_plot.inc');
 $action = $_REQUEST['action'];
 if ($action == 'No')
 	forward(create_container('skeleton.php', $var['target_page']));
@@ -58,6 +56,9 @@ if (empty($to))
 
 if (!is_numeric($to))
 	create_error('Please enter only numbers!');
+	
+if ($player->getSectorID() == $to)
+	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $to . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
 
 // create sector object for target sector
 $target_sector =& SmrSector::getSector(SmrSession::$game_id, $to);
@@ -76,37 +77,37 @@ if ($sector->getGalaxyID() != $target_sector->getGalaxyID())
 			$allowed = true;
 		if ($warp_sector1->getGalaxyID() == $sector->getGalaxyID() && $warp_sector2->getGalaxyID() == $target_sector->getGalaxyID())
 			$allowed = true;
-
 	}
-
-} else
+}
+else
 	$allowed = true;
 
 if (!$allowed)
 	create_error('You can not jump that many galaxies away');
 
 // for ingal jumps we use different algorithm
-if ($sector->getGalaxyID() == $target_sector->getGalaxyID()) {
-
-	//FIXME: We should use the distance plotter here, but the course plotter is better tested
-	$plotter = new Course_Plotter();
-	$plotter->set_course($from,$to,$player->getGameID());
-	$plotter->plot();
-	$distance=$plotter->plotted_course[0];
+if ($sector->getGalaxyID() == $target_sector->getGalaxyID())
+{
+// include helper funtions
+	require_once(get_file_loc('Plotter.class.inc'));
+	$path =& Plotter::findDistanceToX(SmrSector::getSector($player->getGameID(),$to), $player->getSector(), true);
+	
+	if($path===false)
+		create_error('Unable to plot from '.$start.' to '.$target.'.');
 
 	// calculate the number of free sectors per jump
 	$free_sector = 15 + floor($player->getLevelID() / 10);
 
 	// the rest gets a 10% failure per sector
 	if ($distance > $free_sector)
-		$failure_chance = 10 * ($distance - $free_sector);
+		$failure_chance = 10 * ($path->getRelativeDistance() - $free_sector);
 	else
 		$failure_chance = 0;
 
 	$failure_distance = round($failure_chance / 10);
-
-} else {
-
+}
+else
+{
 	$failure_chance = 75;
 	$failure_distance = round(0.1 * mt_rand(10, 30 + (50 - $player->getLevelID())));
 
