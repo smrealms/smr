@@ -1,4 +1,5 @@
 <?php
+throw new Exception('Used');
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 

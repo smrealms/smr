@@ -211,9 +211,7 @@ acquire_lock($player->getSectorID());
 
 
 // delete plotted course
-$db->query('DELETE FROM player_plotted_course ' .
-		   'WHERE account_id = '.$player->getAccountID().' AND ' .
-				 'game_id = '.$player->getGameID());
+$player->deletePlottedCourse();
 
 // get new sector object
 $sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());

@@ -2033,12 +2033,13 @@ class SmrPlayer extends AbstractSmrPlayer
 					'message_type_id = '.$messageTypeID);
 	}
 	
-	public function getPlottedCourse()
+	public function &getPlottedCourse()
 	{
 		if(!isset($this->plottedCourse))
 		{
+			require_once(get_file_loc('Plotter.class.inc'));
 			// check if we have a course plotted
-			$this->db->query('SELECT course,distance FROM player_plotted_course 
+			$this->db->query('SELECT course FROM player_plotted_course 
 			WHERE account_id=' . $this->getAccountID() . '
 			AND game_id=' . $this->getGameID() . '
 			LIMIT 1'
@@ -2046,35 +2047,28 @@ class SmrPlayer extends AbstractSmrPlayer
 			
 			if ($this->db->nextRecord())
 			{
-				// get the array back
-				$course	= unserialize($this->db->getField('course'));
-			
-			
-				$this->plottedCourse = array('Course' => $course,
-							'Length' => $this->db->getField('distance'));
-			
-				// get the first sector in that list
-				$this->plottedCourse['NextSector'] = current($this->plottedCourse['Course']);
-
-				$plottedCourse = $this->getPlottedCourse();
-				$sectors = '';
-				$first=true;
-				foreach($this->plottedCourse['Course'] as $nextSec)
-				{
-					if($first)
-					{
-						$sectors .= $nextSec;
-						$first=false;
-					}
-					else
-						$sectors .= ' - '.$nextSec;
-				}
-				$this->plottedCourse['CourseString'] = $sectors;
+				// get the course back
+				$this->plottedCourse = unserialize($this->db->getField('course'));
 			}
 			else
-				return false;
+				$this->plottedCourse = false;
 		}
 		return $this->plottedCourse;
+	}
+	
+	public function setPlottedCourse(Distance &$plottedCourse)
+	{
+		$hadPlottedCourse = $this->hasPlottedCourse();
+		$this->plottedCourse =& $plottedCourse;
+		if ($this->plottedCourse->getTotalSectors()>0)
+			$this->db->query('REPLACE INTO player_plotted_course
+				(account_id, game_id, course)
+				VALUES('.$this->getAccountID().', '.$this->getGameID().', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
+		else if($hadPlottedCourse)
+		{
+			$this->plottedCourse = false;
+			$this->db->query('DELETE FROM player_plotted_course WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID());
+		}
 	}
 	
 	public function hasPlottedCourse()
@@ -2082,29 +2076,20 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->getPlottedCourse()!==false;
 	}
 	
-	function isPartOfCourse($sectorOrSectorID)
+	public function isPartOfCourse($sectorOrSectorID)
 	{
 		if(!$this->hasPlottedCourse())
 			return false;
 		if($sectorOrSectorID instanceof SmrSector )
-		{
 			$sectorID = $sectorOrSectorID->getSectorID();
-		}
 		else
-		{
 			$sectorID = $sectorOrSectorID;
-		}
-		$course = $this->getPlottedCourse();
-		foreach($course['Course'] as $plotSector)
-		{
-			if($plotSector == $sectorID)
-				return true;
-		}
-		return false;
+		return $this->getPlottedCourse()->isInPath($sectorID);
 	}
 	
-	function deletePlottedCourse()
+	public function deletePlottedCourse()
 	{
+		$this->plottedCourse = false;
 		$this->db->query('DELETE FROM player_plotted_course ' .
 					 'WHERE '.$this->SQL.' LIMIT 1');
 	}

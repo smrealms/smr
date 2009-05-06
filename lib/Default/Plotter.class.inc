@@ -6,7 +6,7 @@ class Plotter
 	{
 	}
 
-	public static function &findDistanceToX($x, SmrSector &$sector, $lowLimit, $highLimit, $distanceLimit, $useFirst)
+	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
 	{
 		$checkSector =& $sector;
 		$gameID = $sector->getGameID();
@@ -128,6 +128,11 @@ class Distance
 		return $this->distance;
 	}
 
+	public function getTotalSectors()
+	{
+		return $this->getDistance()+$this->getNumWarps();
+	}
+
 	public function getNumWarps()
 	{
 		return $this->numWarps;
@@ -141,6 +146,11 @@ class Distance
 	public function getTurns()
 	{
 		return $this->distance * TURNS_PER_SECTOR + $this->numWarps * TURNS_PER_WARP;
+	}
+
+	public function getRelativeDistance()
+	{
+		return $this->distance + $this->numWarps * TURNS_WARP_SECTOR_EQUIVALENCE;
 	}
 
 	/**
@@ -190,6 +200,29 @@ class Distance
 	{
 		$this->incrementNumWarps();
 		$this->path[] = $nextSector;
+	}
+	
+	public function getNextOnPath()
+	{
+		return $this->path[0];
+	}
+	
+	public function followPath($isWarp=false)
+	{
+		$this->distance--;
+		if($isWarp!==false)
+			$this->numWarps--;
+		return array_shift($this->path);
+	}
+	
+	public function removeStart()
+	{
+		return array_shift($this->path);
+	}
+	
+	public function isInPath($sectorID)
+	{
+		return in_array($sectorID,$this->getPath());
 	}
 }
 //$d = new Distance(1);

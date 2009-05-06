@@ -24,9 +24,9 @@ function get_good_distance(SmrSector &$sector, $goodID, $transaction)
 		case 'Sell':
 			$x['TransactionType'] = 'Buy';
 	}
-	$di = Plotter::findDistanceToX($x, $sector, 0, 10000, 10000, true);
+	$di = Plotter::findDistanceToX($x, $sector, true);
 	if(is_object($di))
-		$di = $di->getDistance();
+		$di = $di->getRelativeDistance();
 	$container['good_distance'] = $di;
 	return $di;
 //
