@@ -22,20 +22,18 @@ if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 	$player->update();
 	
 	//update plot
-	$db->query('SELECT course, distance FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' LIMIT 1');
-	if ($db->nextRecord()) {
-	    $path_list	= unserialize($db->getField('course'));
-	    $distance	= $db->getField('distance');
-	    if ($path_list[0] == $var['target_sector']) {
-	        array_shift($path_list);
-	        $distance -= $turns;
-	        if (!empty($path_list))
-	            $db->query('UPDATE player_plotted_course SET distance = '.$distance.', course = ' . $db->escape_string(serialize($path_list)) . ' WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' LIMIT 1');
-	        else
-	            $db->query('DELETE FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	    } else
-	        $db->query('DELETE FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+	if ($player->hasPlottedCourse())
+	{
+		$path =& $player->getPlottedCourse();
+		if ($path->getNextOnPath() == $var['target_sector'])
+		{
+			$path->followPath($sector->getWarp() == $var['target_sector']);
+			$player->setPlottedCourse($path);
+		}
+		else
+			$player->deletePlottedCourse();
 	}
+					
 	// get new sector object
 	$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 	$sector->markVisited($player);
@@ -53,10 +51,10 @@ if(isset($_REQUEST['action']))
 
 // you can't move while on planet
 if ($player->isLandedOnPlanet())
-    create_error('You can\'t activate your engine while you are on a planet!');
+	create_error('You can\'t activate your engine while you are on a planet!');
 
 if ($player->getTurns() < $turns)
-    create_error('You don\'t have enough turns to move!');
+	create_error('You don\'t have enough turns to move!');
 
 
 $query = get_forces_query($sector->getGalaxyID());
@@ -76,17 +74,17 @@ while($db->nextRecord()) {
 }
 
 if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id) {
-
+	
 	// set last sector
 	$player->setLastSectorID($var['target_sector']);
-
+	
 	if ($player->getNewbieTurns() > 0) {
-
+		
 		$container['url']	= 'skeleton.php';
-        $container['body']	= 'current_sector.php';
-        $container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
+		$container['body']	= 'current_sector.php';
+		$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
 		if($forces[$mine_owner_id][2] < 10) {
-       	    $player->takeTurns(1,1);
+			$player->takeTurns(1,1);
 			$container['msg'] .= '1 turn';
 		}
 		else if($forces[$mine_owner_id][2] >= 10 && $forces[$mine_owner_id][2] < 25) {
@@ -103,7 +101,7 @@ if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id) {
 	
 	if($player->getNewbieTurns() > 0) {
 		$container['msg'] .= ' to navigate the minefield safely';
-        forward($container);
+		forward($container);
 	}
 	else {
 		$owner_id = $mine_owner_id;
@@ -136,27 +134,16 @@ release_lock();
 acquire_lock($var['target_sector']);
 
 // check if this came from a plotted course from db
-$db->query('SELECT course, distance FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' LIMIT 1');
-if ($db->nextRecord()) {
-
-    // get the array back
-    $path_list	= unserialize($db->getField('course'));
-    $distance	= $db->getField('distance');
-
-    if ($path_list[0] == $var['target_sector']) {
-
-        array_shift($path_list);
-        $distance -= $turns;
-
-        // write back to db
-        if (!empty($path_list))
-            $db->query('UPDATE player_plotted_course SET distance = '.$distance.', course = ' . $db->escape_string(serialize($path_list)) . ' WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' LIMIT 1');
-        else
-            $db->query('DELETE FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-
-    } else
-        $db->query('DELETE FROM player_plotted_course WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-
+if ($player->hasPlottedCourse())
+{
+	$path =& $player->getPlottedCourse();
+	if ($path->getNextOnPath() == $var['target_sector'])
+	{
+		$path->followPath($sector->getWarp() == $var['target_sector']);
+		$player->setPlottedCourse($path);
+	}
+	else
+		$player->deletePlottedCourse();
 }
 
 // get new sector object
@@ -185,27 +172,31 @@ while($db->nextRecord()) {
 	}
 }
 
-if(count($scout_owners)) {
+if(count($scout_owners))
+{
 	send_scout_messages($scout_owners,true);
 }
 
-if ($mine_owner_id) {
-
-	if ($player->getNewbieTurns() > 0) {
-
+if ($mine_owner_id)
+{
+	if ($player->getNewbieTurns() > 0)
+	{
 		$container['url']	= 'skeleton.php';
-        $container['body']	= 'current_sector.php';
-        $container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
-
-		if($forces[$mine_owner_id][2] < 10) {
-       	    $player->takeTurns(1,1);
+		$container['body']	= 'current_sector.php';
+		$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
+		
+		if($forces[$mine_owner_id][2] < 10)
+		{
+			$player->takeTurns(1,1);
 			$container['msg'] .= '1 turn';
 		}
-		else if($forces[$mine_owner_id][2] >= 10 && $forces[$mine_owner_id][2] < 25) {
+		else if($forces[$mine_owner_id][2] >= 10 && $forces[$mine_owner_id][2] < 25)
+		{
 			$player->takeTurns(2,1);
 			$container['msg'] .= '2 turns';
 		}
-		else if($forces[$mine_owner_id][2] >= 25) {
+		else if($forces[$mine_owner_id][2] >= 25)
+		{
 			$player ->takeTurns(3,1);
 			$container['msg'] .= '3 turns';
 		}
@@ -213,11 +204,13 @@ if ($mine_owner_id) {
 	
 	$player->update();
 	
-	if($player->getNewbieTurns() > 0) {
+	if($player->getNewbieTurns() > 0)
+	{
 		$container['msg'] .= ' to navigate the minefield safely';
-        forward($container);
+		forward($container);
 	}       
-	else {
+	else
+	{
 		$owner_id = $mine_owner_id;
 		include('forces_minefield_processing.php');
 		return;
@@ -230,51 +223,58 @@ $container['body'] = $var['target_page'];
 forward($container);
 
 
-function get_forces_query($galaxy_id) {
+function get_forces_query($galaxy_id)
+{
 	global $account,$player,$db;
 	$db->query('SELECT * FROM alliance_treaties WHERE (alliance_id_1 = '.$player->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')
-				AND game_id = '.$player->getGameID().'
-				AND official = \'TRUE\'
-				AND forces_nap = 1');
+		AND game_id = '.$player->getGameID().'
+		AND official = \'TRUE\'
+	AND forces_nap = 1');
 	$allied[] = $player->getAllianceID();
-	while ($db->nextRecord()) {
+	while ($db->nextRecord())
+	{
 		if ($db->getField('alliance_id_1') == $player->getAllianceID()) $allied[] = $db->getField('alliance_id_2');
 		else $allied[] = $db->getField('alliance_id_1');
 	}
 	$query = '
-	SELECT
-	sector_has_forces.owner_id as account_id,
-	sector_has_forces.scout_drones as scout_drones,
-	sector_has_forces.mines as mines
-	FROM sector_has_forces,player WHERE
-	player.account_id=sector_has_forces.owner_id
-	AND player.account_id!=' . SmrSession::$account_id . '
-	AND (player.alliance_id=0 OR player.alliance_id NOT IN (' . implode(',',$allied) . '))
-	AND player.game_id=' . SmrSession::$game_id . '
-	AND sector_has_forces.game_id=' . SmrSession::$game_id . '
-	AND sector_has_forces.sector_id=' . $player->getSectorID() . ' ORDER BY sector_has_forces.mines DESC';
+		SELECT
+		sector_has_forces.owner_id as account_id,
+		sector_has_forces.scout_drones as scout_drones,
+		sector_has_forces.mines as mines
+		FROM sector_has_forces,player WHERE
+		player.account_id=sector_has_forces.owner_id
+		AND player.account_id!=' . SmrSession::$account_id . '
+		AND (player.alliance_id=0 OR player.alliance_id NOT IN (' . implode(',',$allied) . '))
+		AND player.game_id=' . SmrSession::$game_id . '
+		AND sector_has_forces.game_id=' . SmrSession::$game_id . '
+		AND sector_has_forces.sector_id=' . $player->getSectorID() . ' ORDER BY sector_has_forces.mines DESC';
 	
 	return $query;
 }
 
-function send_scout_messages($scout_owners,$direction){
+function send_scout_messages($scout_owners,$direction)
+{
 	global $db,$player;
 	$scout_query = '';
 	$scout_query2 = '';
 	$helper_query = ',' . SmrSession::$game_id .',' . MSG_SCOUT . ',';
 	$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
-	if($direction) {
+	if($direction)
+	{
 		$message .= 'entering';
 	}
-	else {
+	else
+	{
 		$message .= 'leaving';
 	}
 	$message .= ' sector #<span class="yellow">' . $player->getSectorID() . '</span>';
 	$helper_query .= $db->escape_string($message,false) . ',' . $player->getAccountID() . ',' . TIME . ',' . (TIME + 259200) . ')'; 
 	$helper_query2 = '(' . SmrSession::$game_id . ',' . MSG_SCOUT . ',';
-
-	foreach ($scout_owners as $account_id){
-		if(!empty($scout_query)){
+	
+	foreach ($scout_owners as $account_id)
+	{
+		if(!empty($scout_query))
+		{
 			$scout_query .= ',';
 			$scout_query2 .= ',';
 		}	

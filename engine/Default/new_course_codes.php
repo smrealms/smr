@@ -1,4 +1,5 @@
 <?php
+throw new Exception('Used');
 /////////////////////////////////////////////////
 //
 // NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE NOTE

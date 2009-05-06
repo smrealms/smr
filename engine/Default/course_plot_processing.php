@@ -1,15 +1,12 @@
 <?
 // include helper funtions
-include('course_plot.inc');
+require_once(get_file_loc('Plotter.class.inc'));
+//include('course_plot.inc');
 
 if (isset($var['from'])) $start = $var['from'];
 else $start = $_POST['from'];
 if (isset($var['to'])) $target = $var['to'];
 else $target = $_POST['to'];
-
-$plotter = new Course_Plotter();
-$plotter->set_course($start,$target,$player->getGameID());
-$plotter->plot();
 
 $account->log(5, 'Player plots to '.$target.'.', $player->getSectorID());
 
@@ -17,11 +14,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'course_plot_result.php';
 
-$container['plotted_course'] = serialize($plotter->plotted_course[1]);
-$container['distance'] = $plotter->plotted_course[0];
-
-$plotter->Course_Plotter_Destructor();
-unset($plotter);
+$container['Distance'] = serialize(Plotter::findDistanceToX(SmrSector::getSector($player->getGameID(),$target), SmrSector::getSector($player->getGameID(),$start), true));
 
 forward($container);
 
