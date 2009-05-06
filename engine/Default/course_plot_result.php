@@ -38,7 +38,7 @@ if ($next_sector == $sector->getLinkUp() ||
 	$next_sector == $sector->getLinkDown() ||
 	$next_sector == $sector->getLinkLeft() ||
 	$next_sector == $sector->getLinkRight() ||
-	$next_sector == $sector->getLinkWarp()) {
+	$next_sector == $sector->getWarp()) {
 
 	// save this to db (if we still have something
 	if (!empty($route)) {

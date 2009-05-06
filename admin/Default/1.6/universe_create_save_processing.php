@@ -324,9 +324,9 @@ elseif ($_REQUEST['submit'] == 'Edit Sector')
 			addLocationToSector(SmrLocation::getLocation($_POST['loc_type'.$x]),$sector);
 		}
 	}
-	if($sector->hasWarp() && $sector->getLinkWarp()!=$_POST['warp'])
+	if($sector->hasWarp() && $sector->getWarp()!=$_POST['warp'])
 	{
-		$sector->getLinkWarp()->getLinkWarpSector()->removeWarp();
+		$sector->getWarpSector()->removeWarp();
 		$sector->removeWarp();
 	}
 	if ($_POST['warp'] > 0)

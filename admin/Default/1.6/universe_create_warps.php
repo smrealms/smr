@@ -12,7 +12,7 @@ foreach ($galSectors as &$galSector)
 {
 	if($galSector->hasWarp())
 	{
-		$otherGalaxyID = $galSector->getLinkWarpSector()->getGalaxyID();
+		$otherGalaxyID = $galSector->getWarpSector()->getGalaxyID();
 		if($otherGalaxyID==$galaxy->getGalaxyID())
 			$warps[$otherGalaxyID]+=0.5;
 		else

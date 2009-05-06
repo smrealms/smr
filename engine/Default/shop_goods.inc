@@ -1,109 +1,121 @@
 <?
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
+require_once(get_file_loc('Plotter.class.inc'));
+//$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
-function get_good_distance($good_id, $transaction)
+function get_good_distance(SmrSector &$sector, $goodID, $transaction)
 {
-
 	global $var, $container;
 
 	// check if we already did this
-	if (isset($var['good_distance'])) {
-
+	if (isset($var['good_distance']))
+	{
 		// transfer this value
 		transfer('good_distance');
 
 		// return this value
 		return $var['good_distance'];
-
 	}
-
-	global $player;
-
-	// if we buy a good we're looking for the nearest sector that sells that good
-	if ($transaction == 'Buy')
-		$neg_transaction = 'Sell';
-	elseif ($transaction == 'Sell')
-		$neg_transaction = 'Buy';
-
-	// initialize the queue. all sectors we have to visit are in here
-	$sector_queue = array();
-
-	// keeps the distance to the start sector
-	$sector_distance = array();
-
-	// putting start sector in queue
-	array_push($sector_queue, $player->getSectorID());
-
-	// it has a null distance
-	$sector_distance[$player->getSectorID()] = 0;
-
-	$good_distance = 0;
-	while (sizeof($sector_queue) > 0) {
-
-		// get current sector and
-		$curr_sector_id = array_shift($sector_queue);
-
-		// get the distance for this sector from the start sector
-		$distance = $sector_distance[$curr_sector_id];
-
-		// create a new sector object
-		$curr_sector =& SmrSector::getSector($player->getGameID(), $curr_sector_id);
-
-		// does the current sector buy/sell the good we're looking for?
-        if ($good_distance != 0) {
-			if ($curr_sector->has_good($good_id, $neg_transaction) && $distance < $good_distance)
-				$good_distance = $distance;
-        } else {
-			if ($curr_sector->has_good($good_id, $neg_transaction))
-				$good_distance = $distance;
-        }
-
-		// if we already found a port that buy or sell our product we don't need
-		// to go further than this one.
-		if ($good_distance != 0 && $good_distance <= $distance) continue;
-
-		// enqueue all neighbours
-		if ($curr_sector->getLinkUp() > 0 && (!isset($sector_distance[$curr_sector->getLinkUp()]) || $sector_distance[$curr_sector->getLinkUp()] > $distance + 1)) {
-
-			array_push($sector_queue, $curr_sector->getLinkUp());
-			$sector_distance[$curr_sector->getLinkUp()] = $distance + 1;
-
-		}
-
-		if ($curr_sector->getLinkDown() > 0 && (!isset($sector_distance[$curr_sector->getLinkDown()]) || $sector_distance[$curr_sector->getLinkDown()] > $distance + 1)) {
-
-			array_push($sector_queue, $curr_sector->getLinkDown());
-			$sector_distance[$curr_sector->getLinkDown()] = $distance + 1;
-
-		}
-
-		if ($curr_sector->getLinkLeft() > 0 && (!isset($sector_distance[$curr_sector->getLinkLeft()]) || $sector_distance[$curr_sector->getLinkLeft()] > $distance + 1)) {
-
-			array_push($sector_queue, $curr_sector->getLinkLeft());
-			$sector_distance[$curr_sector->getLinkLeft()] = $distance + 1;
-
-		}
-
-		if ($curr_sector->getLinkRight() > 0 && (!isset($sector_distance[$curr_sector->getLinkRight()]) || $sector_distance[$curr_sector->getLinkRight()] > $distance + 1)) {
-
-			array_push($sector_queue, $curr_sector->getLinkRight());
-			$sector_distance[$curr_sector->getLinkRight()] = $distance + 1;
-
-		}
-
-		if ($curr_sector->getLinkWarp() > 0 && (!isset($sector_distance[$curr_sector->getLinkWarp()]) || $sector_distance[$curr_sector->getLinkWarp()] > $distance + 5)) {
-
-			array_push($sector_queue, $curr_sector->getLinkWarp());
-			$sector_distance[$curr_sector->getLinkWarp()] = $distance + 5;
-
-		}
-
+	$x = Globals::getGood($goodID);
+	switch($transaction)
+	{
+		case 'Buy':
+			$x['TransactionType'] = 'Sell';
+		break;
+		case 'Sell':
+			$x['TransactionType'] = 'Buy';
 	}
-
-	$container['good_distance'] = $good_distance;
-
-	return $good_distance;
+	$di = Plotter::findDistanceToX($x, $sector, 0, 10000, 10000, true);
+	if(is_object($di))
+		$di = $di->getDistance();
+	$container['good_distance'] = $di;
+	return $di;
+//
+//	global $player;
+//
+//	// if we buy a good we're looking for the nearest sector that sells that good
+//	if ($transaction == 'Buy')
+//		$neg_transaction = 'Sell';
+//	elseif ($transaction == 'Sell')
+//		$neg_transaction = 'Buy';
+//
+//	// initialize the queue. all sectors we have to visit are in here
+//	$sector_queue = array();
+//
+//	// keeps the distance to the start sector
+//	$sector_distance = array();
+//
+//	// putting start sector in queue
+//	array_push($sector_queue, $player->getSectorID());
+//
+//	// it has a null distance
+//	$sector_distance[$player->getSectorID()] = 0;
+//
+//	$good_distance = 0;
+//	while (sizeof($sector_queue) > 0) {
+//
+//		// get current sector and
+//		$curr_sector_id = array_shift($sector_queue);
+//
+//		// get the distance for this sector from the start sector
+//		$distance = $sector_distance[$curr_sector_id];
+//
+//		// create a new sector object
+//		$curr_sector =& SmrSector::getSector($player->getGameID(), $curr_sector_id);
+//
+//		// does the current sector buy/sell the good we're looking for?
+//        if ($good_distance != 0) {
+//			if ($curr_sector->has_good($goodID, $neg_transaction) && $distance < $good_distance)
+//				$good_distance = $distance;
+//        } else {
+//			if ($curr_sector->has_good($goodID, $neg_transaction))
+//				$good_distance = $distance;
+//        }
+//
+//		// if we already found a port that buy or sell our product we don't need
+//		// to go further than this one.
+//		if ($good_distance != 0 && $good_distance <= $distance) continue;
+//
+//		// enqueue all neighbours
+//		if ($curr_sector->getLinkUp() > 0 && (!isset($sector_distance[$curr_sector->getLinkUp()]) || $sector_distance[$curr_sector->getLinkUp()] > $distance + 1)) {
+//
+//			array_push($sector_queue, $curr_sector->getLinkUp());
+//			$sector_distance[$curr_sector->getLinkUp()] = $distance + 1;
+//
+//		}
+//
+//		if ($curr_sector->getLinkDown() > 0 && (!isset($sector_distance[$curr_sector->getLinkDown()]) || $sector_distance[$curr_sector->getLinkDown()] > $distance + 1)) {
+//
+//			array_push($sector_queue, $curr_sector->getLinkDown());
+//			$sector_distance[$curr_sector->getLinkDown()] = $distance + 1;
+//
+//		}
+//
+//		if ($curr_sector->getLinkLeft() > 0 && (!isset($sector_distance[$curr_sector->getLinkLeft()]) || $sector_distance[$curr_sector->getLinkLeft()] > $distance + 1)) {
+//
+//			array_push($sector_queue, $curr_sector->getLinkLeft());
+//			$sector_distance[$curr_sector->getLinkLeft()] = $distance + 1;
+//
+//		}
+//
+//		if ($curr_sector->getLinkRight() > 0 && (!isset($sector_distance[$curr_sector->getLinkRight()]) || $sector_distance[$curr_sector->getLinkRight()] > $distance + 1)) {
+//
+//			array_push($sector_queue, $curr_sector->getLinkRight());
+//			$sector_distance[$curr_sector->getLinkRight()] = $distance + 1;
+//
+//		}
+//
+//		if ($curr_sector->getWarp() > 0 && (!isset($sector_distance[$curr_sector->getWarp()]) || $sector_distance[$curr_sector->getWarp()] > $distance + 5)) {
+//
+//			array_push($sector_queue, $curr_sector->getWarp());
+//			$sector_distance[$curr_sector->getWarp()] = $distance + 5;
+//
+//		}
+//
+//	}
+//
+//	$container['good_distance'] = $good_distance;
+//
+//	return $good_distance;
 }
 
 //function get_ideal_price() {
@@ -121,11 +133,11 @@ function get_good_distance($good_id, $transaction)
 //
 //	}
 
-//	global $port, $good_id, $amount, $good_distance, $relations, $offered_price;
+//	global $port, $goodID, $amount, $good_distance, $relations, $offered_price;
 //
-//	$base		= $port->base_price[$good_id];
-//	$supply		= $port->amount[$good_id];
-//	$max_supply	= $port->max_amount[$good_id];
+//	$base		= $port->base_price[$goodID];
+//	$supply		= $port->amount[$goodID];
+//	$max_supply	= $port->max_amount[$goodID];
 //	$holds		= $amount;
 //	$dist		= $good_distance;
 //	$port_lvl	= $port->getLevel();
@@ -133,12 +145,12 @@ function get_good_distance($good_id, $transaction)
 //	$relations_factor_buy = 2-(($relations + 500) / 1500);
 //	$relations_factor_sell = ($relations + 500) / 1500;
 //
-//	if ($port->transaction[$good_id] == 'Sell') {
+//	if ($port->transaction[$goodID] == 'Sell') {
 //
 //		//$ideal_price = round( $holds * $base * 0.65 * (pow($dist + 0.5, 2)) * (2.5-($supply / $max_supply)) * (($relations + 350) / 1650) / 5.1);
 //		$ideal_price = round( ($holds * $base * 0.65 * (pow($dist + 0.5, 2)) * (2.5-($supply / $max_supply)) * (($relations + 350) / 1650) / 5.1)*.65);
 //
-//	} elseif ($port->transaction[$good_id] == 'Buy') {
+//	} elseif ($port->transaction[$goodID] == 'Buy') {
 //
 //		//$ideal_price = round( $holds * $base * 0.65 * $dist * $dist * (2.5-($supply / $max_supply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 8 / 4.82 * (1 + (10 - $port->getLevel()) / 50));
 //		$ideal_price = round( ($holds * $base * 0.65 * $dist * $dist * (2.5-($supply / $max_supply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 8 / 4.82 * (1 + (10 - $port->getLevel()) / 50))*.65);
@@ -167,11 +179,11 @@ function get_good_distance($good_id, $transaction)
 //
 //	}
 //
-//	global $port, $good_id, $amount, $good_distance, $relations, $ideal_price;
+//	global $port, $goodID, $amount, $good_distance, $relations, $ideal_price;
 //
-//	$base		= $port->base_price[$good_id];
-//	$supply		= $port->amount[$good_id];
-//	$max_supply	= $port->max_amount[$good_id];
+//	$base		= $port->base_price[$goodID];
+//	$supply		= $port->amount[$goodID];
+//	$max_supply	= $port->max_amount[$goodID];
 //	$holds		= $amount;
 //	$dist		= $good_distance;
 //	$port_lvl	= $port->getLevel();
@@ -181,11 +193,11 @@ function get_good_distance($good_id, $transaction)
 //	$range = .11 - .09;
 //	$rand = .09 + $range * mt_rand(0, 32767)/32767;
 //
-//	if ($port->transaction[$good_id] == 'Sell') {
+//	if ($port->transaction[$goodID] == 'Sell') {
 //
 //		$offered_price = round( $ideal_price * (($relations - 1250) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 9500)) );
 //
-//	} elseif ($port->transaction[$good_id] == 'Buy') {
+//	} elseif ($port->transaction[$goodID] == 'Buy') {
 //
 //		$offered_price = round( $ideal_price * (($relations - 1250) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 2500) + .35) );
 //

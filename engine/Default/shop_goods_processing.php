@@ -55,7 +55,7 @@ $relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->
 
 $container = array();
 
-$good_distance = get_good_distance($good_id, $portGood['TransactionType']);
+$good_distance = get_good_distance($sector,$good_id, $portGood['TransactionType']);
 global $ideal_price;
 if (isset($var['ideal_price']))
 {

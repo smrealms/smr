@@ -22,6 +22,7 @@ class SmrSector
 	protected $galaxyID;
 	protected $visited = array();
 	protected $links;
+	protected $warp;
 	
 	protected $hasChanged = false;
 	protected $isNew = false;
@@ -106,7 +107,9 @@ class SmrSector
 												  '(sector_id_1 = '.$this->sectorID.' OR ' .
 												   'sector_id_2 = '.$this->sectorID.')');
 			if ($this->db->nextRecord())
-				$this->links['Warp']=($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
+				$this->warp=($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
+			else
+				$this->warp=0;
 		}
 		else if($create)
 		{
@@ -375,6 +378,14 @@ class SmrSector
 		return $num;
 	}
 	
+	public function getNumberOfConnections()
+	{
+		$links = $this->getNumberOfLinks();
+		if($this->hasWarp())
+			$links++;
+		return $links;
+	}
+	
 	public function &getGalaxy()
 	{
 		return SmrGalaxy::getGalaxy($this->getGameID(),$this->getGalaxyID());
@@ -549,19 +560,19 @@ class SmrSector
 		$this->setLink('Right',$linkID);
 	}
 	
-	public function getLinkWarp()
+	public function getWarp()
 	{
-		return $this->getLink('Warp');
+		return $this->warp;
 	}
 	
-	public function &getLinkWarpSector()
+	public function &getWarpSector()
 	{
-		return SmrSector::getSector($this->getGameID(),$this->getLinkWarp());
+		return SmrSector::getSector($this->getGameID(),$this->getWarp());
 	}
 	
 	public function hasWarp()
 	{
-		return $this->hasLink('Warp');
+		return $this->getWarp()!=0;
 	}
 	
 	public function setWarp(SmrSector &$warp)
@@ -571,12 +582,12 @@ class SmrSector
 			//Update both possible combinations for the warp
 			$this->db->query('UPDATE warp SET sector_id_1 = '.$warp->getSectorID().' WHERE ' .
 											'game_id=' . $this->getGameID().' AND '.
-											'sector_id_1 = '.$this->getLinkWarp().' AND ' .
+											'sector_id_1 = '.$this->getWarp().' AND ' .
 											'sector_id_2 = '.$this->getSectorID().' LIMIT 1');
 			$this->db->query('UPDATE warp SET sector_id_2 = '.$warp->getSectorID().' WHERE ' .
 											'game_id=' . $this->getGameID().' AND '.
 											'sector_id_1 = '.$this->getSectorID().' AND ' .
-											'sector_id_2 = '.$this->getLinkWarp().' LIMIT 1');
+											'sector_id_2 = '.$this->getWarp().' LIMIT 1');
 		}
 		else
 		{
@@ -593,10 +604,10 @@ class SmrSector
 		{
 			//Update both possible combinations for the warp
 			$this->db->query('DELETE FROM warp WHERE ' .
-											  '(sector_id_1 = '.$this->getLinkWarp().' AND ' .
+											  '(sector_id_1 = '.$this->getWarp().' AND ' .
 											   'sector_id_2 = '.$this->getSectorID().') OR' .
 											  '(sector_id_1 = '.$this->getSectorID().' AND ' .
-											   'sector_id_2 = '.$this->getLinkWarp().') LIMIT 1');
+											   'sector_id_2 = '.$this->getWarp().') LIMIT 1');
 		}
 		unset($this->links['Warp']);
 	}
@@ -843,14 +854,14 @@ class SmrSector
 		$this->setBattles($this->battles+$amount);
 	}
 	
-	function equals($otherSector)
+	function equals(SmrSector $otherSector)
 	{
 		return $otherSector->getGameID()==$this->getGameID()&&$otherSector->getSectorID()==$this->getSectorID();
 	}
 	
-	function isLinked($otherSector)
+	function isLinked(SmrSector $otherSector)
 	{
-		return $otherSector->getGameID()==$this->getGameID()&&in_array($otherSector->getSectorID(),$this->getLinks());
+		return $otherSector->getGameID()==$this->getGameID()&&($otherSector->getSectorID()==$this->getWarp()||in_array($otherSector->getSectorID(),$this->getLinks()));
 	}
 	
 	public function isVisited(AbstractSmrPlayer &$player)
@@ -889,6 +900,43 @@ class SmrSector
 		$container['body'] = 'sector_scan.php';
 		$container['target_sector'] = $this->getSectorID();
 		return SmrSession::get_new_href($container);
+	}
+	
+	public function hasX(/*Object*/ &$x)
+	{
+		if ($x == 'Port')
+		{
+			return $this->hasPort();
+		}
+		if ($x == 'Location')
+		{
+			return $this->hasLocation();
+		}
+		if($x instanceof SmrSector)
+		{
+			return $this->equals($x);
+		}
+		if ($x instanceof Location)
+		{
+			if (!$this->hasLocation())
+				return false;
+			return $this->hasLocation($x->getTypeID());
+		}
+
+		if ($this->hasPort())
+			if ($this->getPort()->hasX($x))
+				return true;
+
+		if ($this->hasLocation())
+		{
+			$locations =& $this->getLocations();
+			foreach ($locations as &$l)
+			{
+				if ($l->hasX($x))
+					return true;
+			}
+		}
+		return false;
 	}
 }
 

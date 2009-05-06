@@ -89,7 +89,7 @@ for ($i=0;$i < $row;$i++)
 		if ($galSector->hasWarp())
 		{
 			if ($title != '') $title .= ', ';
-			$title .= 'Warp to ' . $galSector->getLinkWarp();
+			$title .= 'Warp to ' . $galSector->getWarp();
 		}
 		if($galSector->hasLocation())
 		{

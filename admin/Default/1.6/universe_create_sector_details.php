@@ -69,7 +69,7 @@ if ($sector->hasLinkDown()) $PHP_OUTPUT.= ' checked';
 $PHP_OUTPUT.= '></td><td width="5%" class="center">Warp:<br /><input size="5" type="text" name="warp" value="';
 if ($sector->hasWarp())
 {
-	$warpSector=& $sector->getLinkWarpSector();
+	$warpSector=& $sector->getWarpSector();
 	$PHP_OUTPUT.= $warpSector->getSectorID();
 	$warpGal = $warpSector->getGalaxyName();
 }

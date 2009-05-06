@@ -276,7 +276,7 @@ class SmrGalaxy
 			if($this->getSize()>1) //1 sector gal will have no connections but that's not a problem.
 				for ($i = 0; $i < $this->getSize(); $i++)
 				{
-					if(SmrSector::getSector($this->getGameID(),$sectorID)->getNumberOfLinks()==0)
+					if(SmrSector::getSector($this->getGameID(),$sectorID)->getNumberOfConnections()==0)
 					{
 						$problem=true;
 						break;

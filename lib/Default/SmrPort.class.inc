@@ -1322,5 +1322,15 @@ class SmrPort
 		
 		return $return;
 	}
+
+	public function hasX(/*Object*/ &$x)
+	{
+		if (is_array($x)) // instanceof Good) - No Good class yet, so array is best we can do
+		{
+			if(isset($x['ID']))
+				return $this->hasGood($x['ID'],isset($x['TransactionType'])?$x['TransactionType']:false);
+		}
+		return false;
+	}
 }
 ?>

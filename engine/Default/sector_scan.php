@@ -97,7 +97,7 @@ $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</p><br />');
 
 // is it a warp or a normal move?
-if ($sector->getLinkWarp() == $var['target_sector'])
+if ($sector->getWarp() == $var['target_sector'])
 	$turns = 5;
 else
 	$turns = 1;

@@ -424,5 +424,23 @@ class SmrLocation
 	{
 		return $this->getTypeID()==$otherLocation->getTypeID();
 	}
+
+	public function hasX(/*Object*/ &$x)
+	{
+		if ($x instanceof Weapon)
+		{
+			return $this->isWeaponSold($x->getWeaponTypeID());
+		}
+		if (is_array($x))// instanceof Ship)
+		{
+			if(isset($x['ShipTypeID']))
+				return $this->isShipSold($x['ShipTypeID']);
+		}
+		if (is_numeric($x))// instanceof ShipEquipment)
+		{
+			return $this->isHardwareSold($x);
+		}
+		return false;
+	}
 }
 ?>
