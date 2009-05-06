@@ -54,7 +54,7 @@ class Plotter
 					{
 						if($useFirst)
 							return $distance;
-						$distances[$checkSector->getSectorID()] =& $distance;
+						$distances[$checkSector->getSectorID()] = $distance;
 					}
 					//Warps first as a slight optimisation due to how visitedSectors is set.
 					if($checkSector->hasWarp())

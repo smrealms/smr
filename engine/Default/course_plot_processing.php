@@ -17,6 +17,20 @@ if (!is_numeric($start) || !is_numeric($target))
 if ($start == $target)
 	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
 
+$startExists = false;
+$targetExists = false;
+$galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
+foreach($galaxies as &$galaxy)
+{
+	if($galaxy->contains($start))
+		$startExists = true;
+	if($galaxy->contains($start))
+		$targetExists = true;
+} unset($galaxy);
+
+if($startExists===false || $targetExists===false)
+	create_error('The sectors have to exist!');
+
 $account->log(5, 'Player plots to '.$target.'.', $player->getSectorID());
 
 $container = array();
