@@ -29,10 +29,10 @@
 									{
 										if($isCurrentSector)
 										{
-											$WarpSector = $Sector->getLinkWarpSector(); ?>
+											$WarpSector = $Sector->getWarpSector(); ?>
 											<a href="<?php echo $WarpSector->getLocalMapHREF() ?>"><?php
 										} ?>
-											<img title="Warp to #<?php echo $Sector->getLinkWarp() ?>" alt="Warp to #<?php echo $Sector->getLinkWarp() ?>" src="images/warp.gif" /><?php
+											<img title="Warp to #<?php echo $Sector->getWarp() ?>" alt="Warp to #<?php echo $Sector->getWarp() ?>" src="images/warp.gif" /><?php
 										if($isCurrentSector){ ?></a><?php }
 									}
 									if($Sector->isVisited($ThisPlayer) && $Sector->hasMine())

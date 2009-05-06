@@ -143,6 +143,8 @@ foreach ($galaxies as &$galaxy)
 		{
 			$file .= $linkName.'='.$link . EOL;
 		}
+		if($sector->hasWarp())
+			$file .= 'Warp='.$sector->getWarp() . EOL;
 		if($sector->hasCachedPort($player))
 		{
 			$port =& $sector->getCachedPort($player);

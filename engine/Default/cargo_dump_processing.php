@@ -24,7 +24,7 @@ if ($player->getTurns() < 1)
 require_once('shop_goods.inc');
 
 // get the distance
-$good_distance = get_good_distance($good_id, 'Buy');
+$good_distance = get_good_distance($sector, $good_id, 'Buy');
 
 $lost_xp = (round($amount / 30) + 1) * 2 * $good_distance;
 $player->decreaseExperience($lost_xp);

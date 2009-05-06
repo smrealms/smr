@@ -26,7 +26,7 @@ $links['Up'] = array('ID'=>$sector->getLinkUp());
 $links['Right'] = array('ID'=>$sector->getLinkRight());
 $links['Down'] = array('ID'=>$sector->getLinkDown());
 $links['Left'] = array('ID'=>$sector->getLinkLeft());
-$links['Warp'] = array('ID'=>$sector->getLinkWarp());
+$links['Warp'] = array('ID'=>$sector->getWarp());
 
 $unvisited = array();
 

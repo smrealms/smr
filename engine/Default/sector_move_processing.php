@@ -7,10 +7,10 @@ $db->query('SELECT galaxy_id FROM sector WHERE sector_id=' . $var['target_sector
 $db->nextRecord();
 $targetGalaxyID = $db->getField('galaxy_id');
 
-if($sector->getLinkWarp() == $var['target_sector'])
-	$turns = 5;
+if($sector->getWarp() == $var['target_sector'])
+	$turns = TURNS_PER_WARP;
 else
-	$turns = 1;
+	$turns = TURNS_PER_SECTOR;
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 {
