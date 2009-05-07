@@ -24,7 +24,7 @@ foreach($galaxies as &$galaxy)
 {
 	if($galaxy->contains($start))
 		$startExists = true;
-	if($galaxy->contains($start))
+	if($galaxy->contains($target))
 		$targetExists = true;
 } unset($galaxy);
 
