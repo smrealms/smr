@@ -298,7 +298,7 @@ class SmrGalaxy
 	
 	function equals(SmrGalaxy $otherGalaxy)
 	{
-		return $otherGalaxy->getGameID()==$this->getGameID()&&$otherGalaxy->getGalaxyID()==$this->getGalaxyID();
+		return $otherGalaxy->getGalaxyID()==$this->getGalaxyID()&&$otherGalaxy->getGameID()==$this->getGameID();
 	}
 }
 

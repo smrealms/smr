@@ -29,6 +29,20 @@ $rank_id = $account->get_rank();
 // you can't move while on planet
 if ($player->isLandedOnPlanet())
 	create_error('You are on a planet! You must launch first!');
+
+// check for turns
+if ($player->getTurns() < 15)
+	create_error('You don\'t have enough turns for that jump!');
+
+// if no 'to' is given we forward to plot
+if (empty($to))
+	create_error('Where do you want to go today?');
+
+if (!is_numeric($to))
+	create_error('Please enter only numbers!');
+	
+if ($player->getSectorID() == $to)
+	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $to . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
 	
 if ($sector->hasForces()) {
 
@@ -46,19 +60,15 @@ if ($sector->hasForces()) {
 	}
 }
 
-// check for turns
-if ($player->getTurns() < 15)
-	create_error('You don\'t have enough turns for that jump!');
-
-// if no 'to' is given we forward to plot
-if (empty($to))
-	create_error('Where do you want to go today?');
-
-if (!is_numeric($to))
-	create_error('Please enter only numbers!');
-	
-if ($player->getSectorID() == $to)
-	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $to . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
+$targetExists = false;
+$galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
+foreach($galaxies as &$galaxy)
+{
+	if($galaxy->contains($target))
+		$targetExists = true;
+} unset($galaxy);
+if($targetExists===false)
+	create_error('The target sector doesn\'t exist!');
 
 // create sector object for target sector
 $target_sector =& SmrSector::getSector(SmrSession::$game_id, $to);
