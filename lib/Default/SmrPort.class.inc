@@ -970,11 +970,15 @@ class SmrPort
 	{
 		$relations=max(0,min(1000,$relations));
 		$relationsEffect = pow(1+($relations-1000)/10000,1.2-$relations/1000);
-		$relationsEffect -= self::BARGAIN_LENIENCY_PERCENT;
+		$relationsEffect -= max(0,min(self::BARGAIN_LENIENCY_PERCENT,self::BARGAIN_LENIENCY_PERCENT*(2000-$relations)/1000)); //Gradual increase getting closer and closer to actual ideal price as relations increase to 2000 (will only be an increase of self::BARGAIN_LENIENCY_PERCENT percent extra cash)
 		 
 		 if($transactionType == 'Buy')
+		 {
 			$relationsEffect = 2-$relationsEffect;
-		return round($idealPrice * $relationsEffect);
+			return floor($idealPrice * $relationsEffect);
+		 }
+		 else
+			return ceil($idealPrice * $relationsEffect);
 //		$range = .11 - .095;
 //		$rand = .095 + $range * mt_rand(0, 32767)/32767;
 //		
@@ -991,7 +995,7 @@ class SmrPort
 			return 0;
 		if ($bargainPrice == $idealPrice)
 			return 1;
-		$bargainLeniency = min(($idealPrice)*self::BARGAIN_LENIENCY_PERCENT,abs($idealPrice-$bargainPrice));
+		$bargainLeniency = min($idealPrice*self::BARGAIN_LENIENCY_PERCENT,abs($idealPrice-$bargainPrice));
 		if ($transactionType == 'Sell')
 			$bargainLeniency = -$bargainLeniency;
 		$bargainPrice -= $bargainLeniency;
