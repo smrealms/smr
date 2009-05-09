@@ -94,14 +94,11 @@ class SmrAccount
 			$this->hofName			= $row['hof_name'];
 			if(empty($this->hofName))
 				$this->hofName=$this->login;
-$this->get_rank();
+			$this->get_rank();
 		}
 		else
 		{
-			
-			echo('This account does not exist!');
-			exit;
-			
+			throw new Exception('This account does not exist!');
 		}
 	}
 	

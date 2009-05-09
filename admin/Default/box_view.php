@@ -69,7 +69,7 @@ else
 				$PHP_OUTPUT.=$sender;
 			$PHP_OUTPUT.='</td>';
 			$PHP_OUTPUT.='<td>';
-			if (Globals::getGameInfo($gameID)===false) $PHP_OUTPUT.=('Game no longer exists');
+			if ($gameID===false || Globals::getGameInfo($gameID)===false) $PHP_OUTPUT.=('Game no longer exists');
 			else $PHP_OUTPUT.=Globals::getGameName($gameID);
 			$PHP_OUTPUT.=('</td></tr><tr><td colspan="3">');
 			$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('send_time')));
@@ -77,7 +77,7 @@ else
 			$PHP_OUTPUT.=('</tr>');
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td width="100%" colspan="3">');
-			$PHP_OUTPUT.= $db->getField('message_text');
+			$PHP_OUTPUT.= htmliseMessage($db->getField('message_text'));
 			$PHP_OUTPUT.=('</td></tr>');
 			
 		}
