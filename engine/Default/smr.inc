@@ -6,6 +6,13 @@ require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 
+function htmliseMessage($message)
+{
+	$message = htmlentities($message);
+	$message = str_replace('&lt;br /&gt;','<br />',$message);
+	return $message;
+}
+
 function enableProtectionDependantRefresh(&$template,&$player)
 {
 	$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
