@@ -38,6 +38,24 @@ if($Games['Play'])
 		} ?>
 	</table><br />
 	<br /><?php
+}
+
+if ($Voting)
+{
+	?><h1>Voting</h1>
+	Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
+	foreach($Voting as $Vote)
+	{
+		?><br /><br />
+		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
+			<span class="bold"><?php echo $Vote['Question']; ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
+			foreach($Vote['Options'] as $VoteOption)
+			{ ?>
+				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo $VoteOption['Text']; ?><br /><?php
+			} ?>
+			<input type="submit" name="submit" value="Vote!"><br />
+		</form><?php
+	} ?><br /><br /><?php
 } ?>
 <h1>Join Game</h1><?php
 if($Games['Join'])
@@ -104,23 +122,6 @@ if($Games['Previous'])
 else
 {
 	?><p>There are no previous games.</p><br /><?php
-}
-
-if ($Voting)
-{
-	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
-	foreach($Voting as $Vote)
-	{
-		?><br /><br />
-		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
-			<span class="bold"><?php echo $Vote['Question']; ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
-			foreach($Vote['Options'] as $VoteOption)
-			{ ?>
-				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo $VoteOption['Text']; ?><br /><?php
-			} ?>
-			<input type="submit" name="submit" value="Vote!">
-		</form><?php
-	}
 } ?>
 <br />
 <br />

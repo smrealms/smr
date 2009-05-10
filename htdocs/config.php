@@ -168,7 +168,7 @@ define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 	
 	require_once(LIB . 'Default/Template.class.inc');
 	$template = new Template();
-	$GLOBALS['smarty'] =& $template;
+	$GLOBALS['template'] =& $template;
 //	$template->assign('links',$db->_LINKS);
 //	$template->assign('javaScriptFiles',$db->_JS);
 	$template->assign('URL',URL);
