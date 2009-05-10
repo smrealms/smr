@@ -51,7 +51,7 @@ if ($Voting)
 			<span class="bold"><?php echo $Vote['Question']; ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
 			foreach($Vote['Options'] as $VoteOption)
 			{ ?>
-				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo $VoteOption['Text']; ?><br /><?php
+				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo $VoteOption['Text']; ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
 			} ?>
 			<input type="submit" name="submit" value="Vote!"><br />
 		</form><?php
