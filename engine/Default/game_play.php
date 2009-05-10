@@ -153,11 +153,17 @@ $template->assign('Games',$games);
 // ** Voting
 // ***************************************
 
-$results=array();
+$votedFor=array();
 $db->query('SELECT * FROM voting_results WHERE account_id = ' . $account->getAccountID());
 while ($db->nextRecord())
 {
-	$results[$db->getField('vote_id')] = $db->getField('option_id');
+	$votedFor[$db->getField('vote_id')] = $db->getField('option_id');
+}
+$results=array();
+$db->query('SELECT count(*) as votes, vote_id, option_id FROM voting_results GROUP BY vote_id, option_id');
+while ($db->nextRecord())
+{
+	$results[$db->getField('vote_id')][$db->getField('option_id')] = $db->getField('votes');
 }
 $voting = array();
 $db->query('SELECT * FROM voting WHERE end > ' . TIME);
@@ -178,7 +184,8 @@ while ($db->nextRecord())
 	{
 		$voting[$voteID]['Options'][$db2->getField('option_id')]['ID'] = $db2->getField('option_id');
 		$voting[$voteID]['Options'][$db2->getField('option_id')]['Text'] = $db2->getField('text');
-		$voting[$voteID]['Options'][$db2->getField('option_id')]['Chosen'] = isset($results[$db->getField('vote_id')]) && $results[$voteID] == $db2->getField('option_id');
+		$voting[$voteID]['Options'][$db2->getField('option_id')]['Chosen'] = isset($votedFor[$db->getField('vote_id')]) && $votedFor[$voteID] == $db2->getField('option_id');
+		$voting[$voteID]['Options'][$db2->getField('option_id')]['Votes'] = isset($results[$db->getField('vote_id')][$db2->getField('option_id')])?$results[$db->getField('vote_id')][$db2->getField('option_id')]:0;
 	}
 }
 $template->assign('Voting',$voting);
