@@ -184,7 +184,7 @@ abstract class MySqlDatabase implements Database
 		if(is_numeric($num))
 			return $this->escapeString($num,$quotes);
 		else
-			throw new Exception('Not a number!'); //TEST
+			throw new Exception('Not a number! ('.$num.')');
 	}
 	
 	public function escapeBoolean($bool,$quotes=true)
