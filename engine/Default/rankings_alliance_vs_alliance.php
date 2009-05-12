@@ -166,7 +166,7 @@ if (isset($var['alliance_id'])) {
 	$PHP_OUTPUT.=('<table align="center"><tr><td width="45%" align="center" valign="top">');
 	$main_alliance = new SMR_ALLIANCE($var['alliance_id'], SmrSession::$game_id);
 	$db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = '.$var['alliance_id'] .
-				'AND game_id = '.$player->getGameID().' ORDER BY kills DESC');
+				' AND game_id = '.$player->getGameID().' ORDER BY kills DESC');
 	if ($db->getNumRows() > 0) {
 		
 		$PHP_OUTPUT.=('<div align="center">Kills for '.$main_alliance->alliance_name);
@@ -194,7 +194,7 @@ if (isset($var['alliance_id'])) {
 	} else $PHP_OUTPUT.=($main_alliance->alliance_name.' has no kills!');
 	$PHP_OUTPUT.=('</td><td width="10%">&nbsp;</td><td width="45%" align="center" valign="top">');
 	$db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_2 = '.$var['alliance_id'] .
-				'AND game_id = '.$player->getGameID().' ORDER BY kills DESC');
+				' AND game_id = '.$player->getGameID().' ORDER BY kills DESC');
 	if ($db->getNumRows() > 0) {
 		
 		$PHP_OUTPUT.=('<div align="center">Deaths for '.$main_alliance->alliance_name);
