@@ -307,6 +307,18 @@ class SmrForce
 		$this->setExpire(TIME + $time);
 	}
 	
+	public function getBumpTurnCost()
+	{
+		$mines = $this->getMines();
+		if($mines <= 1)
+			return 0;
+		if($mines < 10)
+			return 1;
+		if($mines < 25)
+			return 2;
+		return 3;
+	}
+	
 	public function getOwnerID()
 	{
 		return $this->ownerID;
