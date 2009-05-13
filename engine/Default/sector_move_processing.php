@@ -56,54 +56,43 @@ if ($player->isLandedOnPlanet())
 if ($player->getTurns() < $turns)
 	create_error('You don\'t have enough turns to move!');
 
-
-$query = get_forces_query($sector->getGalaxyID());
-$db->query($query);
+$sectorForces =& $sector->getForces();
 
 $mine_owner_id = false;
 $scout_owners = array();
 
-while($db->nextRecord()) {
-	if($db->getField('mines') && !$mine_owner_id) {
-		$mine_owner_id = $db->getField('account_id');
-		$forces[$mine_owner_id][2] = $db->getField('mines');
+foreach($sectorForces as &$forces)
+{
+	if($forces->hasMines() && !$mine_owner_id)
+	{
+		$mine_owner_id = $force->getOwnerID();
 	}
-	if($db->getField('scout_drones')) {
-		$scout_owners[] = $db->getField('account_id');
+	if($forces->hasSDs())
+	{
+		$scout_owners[] = $forces->getOwnerID();
 	}
-}
+} unset($forces);
 
-if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id) {
-	
+if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id)
+{
 	// set last sector
 	$player->setLastSectorID($var['target_sector']);
 	
-	if ($player->getNewbieTurns() > 0) {
-		
+	if ($player->getNewbieTurns() > 0)
+	{
 		$container['url']	= 'skeleton.php';
 		$container['body']	= 'current_sector.php';
 		$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
-		if($forces[$mine_owner_id][2] < 10) {
-			$player->takeTurns(1,1);
-			$container['msg'] .= '1 turn';
-		}
-		else if($forces[$mine_owner_id][2] >= 10 && $forces[$mine_owner_id][2] < 25) {
-			$player->takeTurns(2,1);
-			$container['msg'] .= '2 turns';
-		}
-		else if($forces[$mine_owner_id][2] >= 25) {
-			$player ->takeTurns(3,1);
-			$container['msg'] .= '3 turns';
-		}
-	}
-	
-	$player->update();
-	
-	if($player->getNewbieTurns() > 0) {
+		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
+		$container['msg'] .= $turns.' turn'.($turns==1?'':'s');
+		
+		$player->takeTurns($turns,1);
+		
 		$container['msg'] .= ' to navigate the minefield safely';
 		forward($container);
 	}
-	else {
+	else
+	{
 		$owner_id = $mine_owner_id;
 		include('forces_minefield_processing.php');
 		exit;
