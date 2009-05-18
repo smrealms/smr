@@ -6,36 +6,7 @@
 //
 ////////////////////////////////////////////////////////////
 
-
-$db->query('SELECT
-sector.galaxy_id as galaxy_id,
-galaxy.galaxy_name as galaxy_name
-FROM sector,galaxy
-WHERE sector.sector_id=' . $player->getSectorID() . '
-AND game_id=' . SmrSession::$game_id . '
-AND galaxy.galaxy_id = sector.galaxy_id
-LIMIT 1');
-if(!$db->nextRecord())
-	create_error('Could not find sector info');
-
-//enableProtectionDependantRefresh($template,$player);
-
-$galaxy_name = $db->getField('galaxy_name');
-$galaxy_id = $db->getField('galaxy_id');
-
-$template->assign('GalaxyName',$galaxy_name);
-
 $template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
-
-$db->query('
-SELECT
-MIN(sector_id),
-COUNT(*)
-FROM sector
-WHERE galaxy_id=' . $galaxy_id . '
-AND game_id=' . SmrSession::$game_id);
-
-$db->nextRecord();
 
 $zoomOn = false;
 if(isset($var['Dir']))
@@ -69,6 +40,8 @@ $span = 1 + ($dist * 2);
 
 $topLeft =& $player->getSector();
 $galaxy =& $topLeft->getGalaxy();
+
+$template->assign('GalaxyName',$galaxy->getName());
 
 //figure out what should be the top left and bottom right
 //go left then up

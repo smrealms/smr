@@ -9,7 +9,6 @@ $random_salt = mt_rand();
 // ********************************
 
 require_once('config.inc');
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(ENGINE . 'Default/smr.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
@@ -57,8 +56,6 @@ $player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 // create account object
 $account =& SmrAccount::getAccount(SmrSession::$account_id);
 
-$db = new SmrMySqlDatabase();
-
 echo '
 <!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
@@ -92,23 +89,19 @@ if (!isset($_GET['galaxy_id']))
 	echo('<p>Please choose a galaxy:</p>');
 	echo('<ul>');
 	
-	$db->query('SELECT * FROM sector NATURAL JOIN galaxy ' .
-			   'WHERE game_id = '.$player->getGameID().' ' .
-			   'GROUP BY sector.galaxy_id ' .
-			   'ORDER BY sector.sector_id');
-	while($db->nextRecord()) {
+	$gameGals =& SmrGalaxy::getGameGalaxies($player->getGameID());
+	foreach($gameGals as &$galaxy)
+	{
+		$galaxyID		= $galaxy->getGalaxyID();
+		$galaxy_name	= $galaxy->getName();
 
-		$galaxyID		= $db->getField('galaxy_id');
-		$galaxy_name	= $db->getField('galaxy_name');
-
-		if ($galaxyID == $sector->getGalaxyID())
+		if ($galaxy->contains($sector))
 			$galaxy_name = '<b>' . $galaxy_name . '</b>';
 
 		echo('<li>');
 		echo('<a href="'.URL.'/map_galaxy.php?galaxy_id='.$galaxyID.'">'.$galaxy_name.'</a>');
 		echo('</li>');
-
-	}
+	} unset($galaxy);
 
 	echo('</ul>');
 	echo('</body>');
