@@ -293,6 +293,8 @@ class SmrGalaxy
 	
 	public function contains($sectorID)
 	{
+		if($sectorID instanceof SmrSector)
+			return $sectorID->getGalaxyID()==$this->getGalaxyID();
 		return $sectorID>=$this->getStartSector() && $sectorID<=$this->getEndSector();
 	}
 	
