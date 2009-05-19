@@ -151,24 +151,24 @@ foreach ($galaxies as &$galaxy)
 			$file .= 'Port Level='.$port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
 			$portGoods =& $port->getGoods();
-			if(count($portGoods['Buy'])>0)
-			{
-				$buyString = 'Buys=';
-				foreach($portGoods['Buy'] as $goodID => $amount)
-				{
-					$buyString .= $goodID .',';
-				}
-				$file .= substr($buyString,0,-1) . EOL;
-			}
-			
 			if(count($portGoods['Sell'])>0)
 			{
-				$sellString = 'Sells=';
+				$buyString = 'Buys=';
 				foreach($portGoods['Sell'] as $goodID => $amount)
 				{
 					$sellString .= $goodID .',';
 				}
 				$file .= substr($sellString,0,-1) . EOL;
+			}
+			
+			if(count($portGoods['Buy'])>0)
+			{
+				$sellString = 'Sells=';
+				foreach($portGoods['Buy'] as $goodID => $amount)
+				{
+					$buyString .= $goodID .',';
+				}
+				$file .= substr($buyString,0,-1) . EOL;
 			}
 			unset($portGoods);
 			unset($port);
