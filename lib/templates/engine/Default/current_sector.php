@@ -1,8 +1,7 @@
-<div class="bar1">
-	<div>
-		<span class="nowrap"><a href="<?php echo $PlotCourseLink ?>">Plot a Course</a></span> | <span class="nowrap"><a href="<?php echo $LocalMapLink ?>">Local Map</a></span> | <span class="nowrap"><a href="map_galaxy.php" target="_blank">Galaxy Map</a></span>
-	</div>
-</div><br />
+<?php $this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
+					array('Link'=>$PlotCourseLink,'Text'=>'Plot a Course'),
+					array('Link'=>$LocalMapLink,'Text'=>'Local Map'),
+					array('Link'=>'map_galaxy.php" target="_blank','Text'=>'Galaxy Map')))); ?>
 <table cellspacing="0" cellpadding="0" style="width:100%;border:none">
 	<tr>
 		<td style="padding:0px;vertical-align:top">

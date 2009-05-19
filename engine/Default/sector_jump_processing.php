@@ -1,12 +1,12 @@
 <?
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-if (isset($_POST['to'])) $to = $_POST['to'];
-else $to = $var['to'];
+if (isset($_POST['target'])) $target = $_POST['target'];
+else $target = $var['target'];
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
 	$player->setLastSectorID($player->getSectorID());
-	$player->setSectorID($to);
+	$player->setSectorID($target);
 	$player->update();
 	$sector->markVisited($player);
 	$container['url'] = 'skeleton.php';
@@ -20,7 +20,7 @@ if ($action == 'No')
 // get from and to sectors
 $from = $player->getSectorID();
 
-if (empty($to) || $to == '')
+if (empty($target) || $target == '')
 	create_error('Where do you want to go today?');
 
 // get our rank
@@ -34,15 +34,15 @@ if ($player->isLandedOnPlanet())
 if ($player->getTurns() < 15)
 	create_error('You don\'t have enough turns for that jump!');
 
-// if no 'to' is given we forward to plot
-if (empty($to))
+// if no 'target' is given we forward to plot
+if (empty($target))
 	create_error('Where do you want to go today?');
 
-if (!is_numeric($to))
+if (!is_numeric($target))
 	create_error('Please enter only numbers!');
 	
-if ($player->getSectorID() == $to)
-	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $to . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
+if ($player->getSectorID() == $target)
+	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
 	
 if ($sector->hasForces()) {
 
@@ -65,13 +65,16 @@ $galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
 foreach($galaxies as &$galaxy)
 {
 	if($galaxy->contains($target))
+	{
 		$targetExists = true;
+		break;
+	}
 } unset($galaxy);
 if($targetExists===false)
 	create_error('The target sector doesn\'t exist!');
 
 // create sector object for target sector
-$target_sector =& SmrSector::getSector(SmrSession::$game_id, $to);
+$target_sector =& SmrSector::getSector(SmrSession::$game_id, $target);
 
 // check if we would jump more than 1 warp
 if ($sector->getGalaxyID() != $target_sector->getGalaxyID())
@@ -100,7 +103,7 @@ if ($sector->getGalaxyID() == $target_sector->getGalaxyID())
 {
 // include helper funtions
 	require_once(get_file_loc('Plotter.class.inc'));
-	$path =& Plotter::findDistanceToX(SmrSector::getSector($player->getGameID(),$to), $player->getSector(), true);
+	$path =& Plotter::findDistanceToX(SmrSector::getSector($player->getGameID(),$target), $player->getSector(), true);
 	
 	if($path===false)
 		create_error('Unable to plot from '.$start.' to '.$target.'.');
@@ -199,7 +202,7 @@ if (mt_rand(1, 100) <= $failure_chance) {
 }
 
 // log action
-$account->log(5, 'Jumps to sector: '.$to.' but hits: '.$player->getSectorID(), $sector->getSectorID());
+$account->log(5, 'Jumps to sector: '.$target.' but hits: '.$player->getSectorID(), $sector->getSectorID());
 
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_JUMP);
