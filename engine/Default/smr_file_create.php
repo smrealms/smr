@@ -156,9 +156,9 @@ foreach ($galaxies as &$galaxy)
 				$buyString = 'Buys=';
 				foreach($portGoods['Sell'] as $goodID => $amount)
 				{
-					$sellString .= $goodID .',';
+					$buyString .= $goodID .',';
 				}
-				$file .= substr($sellString,0,-1) . EOL;
+				$file .= substr($buyString,0,-1) . EOL;
 			}
 			
 			if(count($portGoods['Buy'])>0)
@@ -166,9 +166,9 @@ foreach ($galaxies as &$galaxy)
 				$sellString = 'Sells=';
 				foreach($portGoods['Buy'] as $goodID => $amount)
 				{
-					$buyString .= $goodID .',';
+					$sellString .= $goodID .',';
 				}
-				$file .= substr($buyString,0,-1) . EOL;
+				$file .= substr($sellString,0,-1) . EOL;
 			}
 			unset($portGoods);
 			unset($port);
