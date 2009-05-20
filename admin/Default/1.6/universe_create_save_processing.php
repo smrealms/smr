@@ -2,7 +2,8 @@
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('SmrLocation.class.inc'));
-if ($_REQUEST['submit']=='Create Game')
+$submit = isset($_REQUEST['submit'])?$_REQUEST['submit']:'';
+if ($submit=='Create Game')
 {
 	$var['num_gals'] = $_POST['num_gals'];
 	if(!is_numeric($_POST['game_speed']))
@@ -39,7 +40,7 @@ if ($_REQUEST['submit']=='Create Game')
 	}
 	createGame($newID); //do the alliances/message stuff
 }
-else if ($_REQUEST['submit']=='Create Galaxies')
+else if ($submit=='Create Galaxies')
 {
 	for ($i=1;$i<=$var['num_gals'];$i++)
 	{
@@ -58,17 +59,17 @@ else if ($_REQUEST['submit']=='Create Galaxies')
 	} unset($galaxy);
 	SmrSector::saveSectors();
 }
-else if ($_REQUEST['submit']=='Redo Connections')
+else if ($submit=='Redo Connections')
 {
 	$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 	$galaxy->generateSectors($_REQUEST['connect']);
 	SmrSector::saveSectors();
 }
-elseif ($_REQUEST['submit'] == 'Jump To Galaxy')
+elseif ($submit == 'Jump To Galaxy')
 {
 	$var['gal_on'] = $_REQUEST['jumpgal'];
 }
-elseif ($_REQUEST['submit'] == 'Modify Sector')
+elseif ($submit == 'Modify Sector')
 {
 	if(!empty($_POST['sector_edit']))
 	{
@@ -82,7 +83,7 @@ elseif ($_REQUEST['submit'] == 'Modify Sector')
 			$var['msg'] = '<span class="red">Error</span> : That sector does not exist in this galaxy.';
 	}
 }
-elseif ($_REQUEST['submit'] == 'Create Locations')
+elseif ($submit == 'Create Locations')
 {
 	$locations =& SmrLocation::getAllLocations();
 	$galSectors =& SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
@@ -110,7 +111,7 @@ elseif ($_REQUEST['submit'] == 'Create Locations')
 	}
 	
 }
-elseif ($_REQUEST['submit'] == 'Create Warps')
+elseif ($submit == 'Create Warps')
 {
 	//get all warp info from all gals, some need to be removed, some need to be added
 	$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
@@ -146,7 +147,7 @@ elseif ($_REQUEST['submit'] == 'Create Warps')
 		}
 	} unset($eachGalaxy);
 }
-elseif ($_REQUEST['submit'] == 'Create Planets')
+elseif ($submit == 'Create Planets')
 {
 	$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 	$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
@@ -189,7 +190,7 @@ elseif ($_REQUEST['submit'] == 'Create Planets')
 //		$updatePlan[$sector]['Owner Type'] = 'NPC';
 //	}
 }
-elseif ($_REQUEST['submit'] == 'Create Ports and Mines')
+elseif ($submit == 'Create Ports and Mines')
 {
 	$totalPorts=0;
 	for ($i=1;$i<=9;$i++)
@@ -271,7 +272,7 @@ elseif ($_REQUEST['submit'] == 'Create Ports and Mines')
 		$var['message'] = '<span class="red">Error: Your port race distribution must equal 100!</span>';
 	}
 }
-elseif ($_REQUEST['submit'] == 'Edit Sector')
+elseif ($submit == 'Edit Sector')
 {
 	$sector =& SmrSector::getSector($var['game_id'],$var['sector_id']);
 

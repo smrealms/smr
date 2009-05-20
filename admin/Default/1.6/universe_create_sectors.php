@@ -21,7 +21,8 @@ elseif (isset($var['conn']))
 else
 	$connectivity = 100;
 
-$PHP_OUTPUT.=$var['message'].'<br />';
+if(isset($var['message']))
+	$PHP_OUTPUT.=$var['message'].'<br />';
 unset($var['message']); // Only show message once
 $PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')<br />';
 $PHP_OUTPUT.= 'Hover over a sector to get details about that sector.<br />';
