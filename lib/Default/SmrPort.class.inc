@@ -1077,6 +1077,8 @@ class SmrPort
 				throw new Exception('Cannot add cached port for no accounts');
 			$cachedVersion = $this->cachedVersion;
 			$cache = $this->db->escapeBinary(gzcompress(serialize($this)));
+			var_dump($this->getSectorID());
+			var_dump($cache);
 			//give them the port info
 			$query = 'INSERT IGNORE INTO player_visited_port ' .
 						'(account_id, game_id, sector_id, visited, port_info) ' .
@@ -1087,7 +1089,7 @@ class SmrPort
 			}
 			$query = substr($query,0,-1);
 			$this->db->query($query);
-			$this->db->query('UPDATE player_visited_port SET port_info='.$cache.', visited='.$this->getCachedTime().' WHERE visited<'.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' LIMIT '.count($accountIDs));
+			$this->db->query('UPDATE player_visited_port SET port_info='.$cache.', visited='.$this->getCachedTime().' WHERE visited<'.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' AND game_id='.$this->getGameID().' LIMIT '.count($accountIDs));
 			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
 			unset($cache);
 		}
