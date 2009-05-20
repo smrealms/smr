@@ -5,7 +5,7 @@
 
 
 <?php
-if($Games['Play'])
+if(isset($Games['Play']))
 { ?>
 	<table class="standard">
 		<tr>
@@ -40,7 +40,7 @@ if($Games['Play'])
 	<br /><?php
 }
 
-if ($Voting)
+if (isset($Voting))
 {
 	?><h1>Voting</h1>
 	Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
@@ -58,7 +58,7 @@ if ($Voting)
 	} ?><br /><?php
 } ?>
 <h1>Join Game</h1><?php
-if($Games['Join'])
+if(isset($Games['Join']))
 { ?>
 	<table class="standard">
 		<tr>
@@ -94,7 +94,7 @@ else
 	?><p>You have joined all open games.</p><br /><?php
 } ?>
 <h1>Previous Games</h1><?php
-if($Games['Previous'])
+if(isset($Games['Previous']))
 { ?>
 	<table class="standard">
 		<tr>
@@ -135,7 +135,7 @@ else
 <br />
 
 <?php
-if($AdminPermissions)
+if(isset($AdminPermissions))
 { ?>
 	<h1>Admin Privileges</h1><br />
 	<ul><?php
