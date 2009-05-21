@@ -1,5 +1,7 @@
 <?
 require_once('SmrMySqlDatabase.class.inc');
+if(!defined('USING_AJAX'))
+	define('USING_AJAX',false);
 class SmrSession
 {
 	const TIME_BEFORE_EXPIRY = 3600;

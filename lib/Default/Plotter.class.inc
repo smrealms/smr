@@ -59,7 +59,7 @@ class Plotter
 					//Warps first as a slight optimisation due to how visitedSectors is set.
 					if($checkSector->hasWarp())
 					{
-						if (!$visitedSectors[$checkSector->getWarp()])
+						if (!isset($visitedSectors[$checkSector->getWarp()]))
 						{
 							$cloneDistance = clone($distance);
 							$cloneDistance->addWarpToPath($checkSector->getWarp());
@@ -68,19 +68,23 @@ class Plotter
 					}
 					foreach ($checkSector->getLinks() as $nextSector)
 					{
-						if ($visitedSectors[$nextSector])
-							continue;
-						$visitedSectors[$nextSector] = true;
-
-						$cloneDistance = clone($distance);
-						$cloneDistance->addToPath($nextSector);
-						$distanceQ[0][] = $cloneDistance;
+						if (!isset($visitedSectors[$nextSector]))
+						{
+							$visitedSectors[$nextSector] = true;
+	
+							$cloneDistance = clone($distance);
+							$cloneDistance->addToPath($nextSector);
+							$distanceQ[0][] = $cloneDistance;
+						}
 					}
 				}
 			}
 		}
 		if($useFirst)
-			return false;
+		{
+			$return = false;
+			return $return;
+		}
 		return $distances;
 	}
 }

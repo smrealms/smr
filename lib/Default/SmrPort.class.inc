@@ -1077,8 +1077,6 @@ class SmrPort
 				throw new Exception('Cannot add cached port for no accounts');
 			$cachedVersion = $this->cachedVersion;
 			$cache = $this->db->escapeBinary(gzcompress(serialize($this)));
-			var_dump($this->getSectorID());
-			var_dump($cache);
 			//give them the port info
 			$query = 'INSERT IGNORE INTO player_visited_port ' .
 						'(account_id, game_id, sector_id, visited, port_info) ' .
@@ -1331,7 +1329,7 @@ class SmrPort
 
 	public function hasX(/*Object*/ &$x)
 	{
-		if (is_array($x)) // instanceof Good) - No Good class yet, so array is best we can do
+		if (is_array($x) && $x['Type']=='Good') // instanceof Good) - No Good class yet, so array is best we can do
 		{
 			if(isset($x['ID']))
 				return $this->hasGood($x['ID'],isset($x['TransactionType'])?$x['TransactionType']:false);

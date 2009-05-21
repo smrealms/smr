@@ -663,8 +663,10 @@ class SmrSector
 	public function hasLocation($locationTypeID=false)
 	{
 		$locations =& $this->getLocations();
+		if(count($locations) == 0)
+			return false;
 		if($locationTypeID==false)
-			return count($locations) > 0;
+			return true;
 		foreach($locations as &$location)
 			if($location->getTypeID()==$locationTypeID)
 				return true;
@@ -918,8 +920,6 @@ class SmrSector
 		}
 		if ($x instanceof Location)
 		{
-			if (!$this->hasLocation())
-				return false;
 			return $this->hasLocation($x->getTypeID());
 		}
 

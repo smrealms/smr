@@ -144,6 +144,7 @@ class Globals
 			while(self::$db->nextRecord())
 			{
 				$GOODS[self::$db->getField('good_id')] = array();
+				$GOODS[self::$db->getField('good_id')]['Type'] = 'Good';
 				$GOODS[self::$db->getField('good_id')]['ID'] = (int)self::$db->getField('good_id');
 				$GOODS[self::$db->getField('good_id')]['Name'] = self::$db->getField('good_name');
 				$GOODS[self::$db->getField('good_id')]['Max'] = (int)self::$db->getField('max_amount');
@@ -162,7 +163,7 @@ class Globals
 		return $goods[$goodID];
 	}
 	
-	public static function &getHardwareTypes()
+	public static function &getHardwareTypes($hardwareTypeID=false)
 	{
 		if(self::$HARDWARE_TYPES==null) //use cached if available
 		{
@@ -174,13 +175,16 @@ class Globals
 			while(self::$db->nextRecord())
 			{
 				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')] = array();
+				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Type'] = 'Hardware';
 				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['ID'] = (int)self::$db->getField('hardware_type_id');
 				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Name'] = self::$db->getField('hardware_name');
 				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Cost'] = (int)self::$db->getField('cost');
 			}
 			self::$HARDWARE_TYPES =& $HARDWARE_TYPES;
 		}
-		return self::$HARDWARE_TYPES;
+		if($hardwareTypeID===false)
+			return self::$HARDWARE_TYPES;
+		return self::$HARDWARE_TYPES[$hardwareTypeID];
 	}
 	
 	public static function &getGameInfo($gameID)
