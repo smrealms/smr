@@ -6,7 +6,7 @@ class Plotter
 	{
 	}
 
-	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
+	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst,AbstractSmrPlayer $needsToHaveBeenExploredBy=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
 	{
 		$checkSector =& $sector;
 		$gameID = $sector->getGameID();
@@ -50,7 +50,7 @@ class Plotter
 						&& $checkSectorID <= $highLimit)
 				{
 					$checkSector =& SmrSector::getSector($gameID,$checkSectorID);
-					if ($checkSector->hasX($x))
+					if ($checkSector->isVisited($needsToHaveBeenExploredBy)&&$checkSector->hasX($x))
 					{
 						if($useFirst)
 							return $distance;

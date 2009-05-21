@@ -33,7 +33,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'course_plot_result.php';
 
 require_once(get_file_loc('Plotter.class.inc'));
-$path =& Plotter::findDistanceToX($realX, SmrSector::getSector($player->getGameID(),$player->getSectorID()), true);
+$path =& Plotter::findDistanceToX($realX, SmrSector::getSector($player->getGameID(),$player->getSectorID()), true, $player);
 if($path===false)
 	create_error('Unable to find the nearest X');
 $container['Distance'] = serialize($path);
