@@ -17,8 +17,8 @@ $games['Play'] = array();
 $game_id_list ='';
 if ($db->getNumRows() > 0)
 {
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$game_id = $db->getField('game_id');
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
@@ -153,42 +153,40 @@ $template->assign('Games',$games);
 // ** Voting
 // ***************************************
 
-$votedFor=array();
-$db->query('SELECT * FROM voting_results WHERE account_id = ' . $account->getAccountID());
-while ($db->nextRecord())
-{
-	$votedFor[$db->getField('vote_id')] = $db->getField('option_id');
-}
-$results=array();
-$db->query('SELECT count(*) as votes, vote_id, option_id FROM voting_results GROUP BY vote_id, option_id');
-while ($db->nextRecord())
-{
-	$results[$db->getField('vote_id')][$db->getField('option_id')] = $db->getField('votes');
-}
-$voting = array();
 $db->query('SELECT * FROM voting WHERE end > ' . TIME);
-while ($db->nextRecord())
+if($db->getNumRows()>0)
 {
-	$voteID = $db->getField('vote_id');
-	$voting[$voteID]['ID'] = $voteID;
-	$container = array();
-	$container['body'] = 'game_play.php';
-	$container['url'] = 'vote_processing.php';
-	$container['vote_id'] = $voteID;
-	$voting[$voteID]['HREF'] = SmrSession::get_new_href($container);
-	$voting[$voteID]['Question'] = $db->getField('question');
-	$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);
-	$voting[$voteID]['Options'] = array();
-	$db2->query('SELECT * FROM voting_options WHERE vote_id = ' . $db->getField('vote_id'));
+	$db2 = new SmrMySqlDatabase();
+	$votedFor=array();
+	$db2->query('SELECT * FROM voting_results WHERE account_id = ' . $account->getAccountID());
 	while ($db2->nextRecord())
 	{
-		$voting[$voteID]['Options'][$db2->getField('option_id')]['ID'] = $db2->getField('option_id');
-		$voting[$voteID]['Options'][$db2->getField('option_id')]['Text'] = $db2->getField('text');
-		$voting[$voteID]['Options'][$db2->getField('option_id')]['Chosen'] = isset($votedFor[$db->getField('vote_id')]) && $votedFor[$voteID] == $db2->getField('option_id');
-		$voting[$voteID]['Options'][$db2->getField('option_id')]['Votes'] = isset($results[$db->getField('vote_id')][$db2->getField('option_id')])?$results[$db->getField('vote_id')][$db2->getField('option_id')]:0;
+		$votedFor[$db2->getField('vote_id')] = $db2->getField('option_id');
 	}
+	$voting = array();
+	while ($db->nextRecord())
+	{
+		$voteID = $db->getField('vote_id');
+		$voting[$voteID]['ID'] = $voteID;
+		$container = array();
+		$container['body'] = 'game_play.php';
+		$container['url'] = 'vote_processing.php';
+		$container['vote_id'] = $voteID;
+		$voting[$voteID]['HREF'] = SmrSession::get_new_href($container);
+		$voting[$voteID]['Question'] = $db->getField('question');
+		$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);
+		$voting[$voteID]['Options'] = array();
+		$db2->query('SELECT option_id,text,count(account_id) FROM voting_options LEFT OUTER JOIN voting_results USING(vote_id,option_id) WHERE vote_id = ' . $db->getField('vote_id').' GROUP BY option_id');
+		while ($db2->nextRecord())
+		{
+			$voting[$voteID]['Options'][$db2->getField('option_id')]['ID'] = $db2->getField('option_id');
+			$voting[$voteID]['Options'][$db2->getField('option_id')]['Text'] = $db2->getField('text');
+			$voting[$voteID]['Options'][$db2->getField('option_id')]['Chosen'] = isset($votedFor[$db->getField('vote_id')]) && $votedFor[$voteID] == $db2->getField('option_id');
+			$voting[$voteID]['Options'][$db2->getField('option_id')]['Votes'] = $db2->getField('count(account_id)');
+		}
+	}
+	$template->assign('Voting',$voting);
 }
-$template->assign('Voting',$voting);
 
 // ***************************************
 // ** Donation Link

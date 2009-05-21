@@ -1,6 +1,4 @@
 <?
-// include helper funtions
-require_once(get_file_loc('Plotter.class.inc'));
 
 if (isset($var['from'])) $start = $var['from'];
 else $start = $_POST['from'];
@@ -15,7 +13,7 @@ if (!is_numeric($start) || !is_numeric($target))
 	create_error('Please enter only numbers!');
 
 if ($start == $target)
-	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
+	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*your real smart*cough*');
 
 $startExists = false;
 $targetExists = false;
@@ -37,6 +35,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'course_plot_result.php';
 
+require_once(get_file_loc('Plotter.class.inc'));
 $path =& Plotter::findDistanceToX(SmrSector::getSector($player->getGameID(),$target), SmrSector::getSector($player->getGameID(),$start), true);
 if($path===false)
 	create_error('Unable to plot from '.$start.' to '.$target.'.');

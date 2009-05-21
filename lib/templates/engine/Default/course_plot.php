@@ -32,3 +32,63 @@ if ($ThisShip->hasJump())
 		</table>
 	</form><?php
 } ?>
+<br />
+<h2>Plot To Nearest</h2><br />
+<form class="standard" id="SelectXTypeForm" method="POST" action="">
+	<select name="xtype"><?php
+	foreach($AllXTypes as $EachXType)
+	{
+		?><option value="<?php echo $EachXType; ?>"<?php if(isset($XType)&&$EachXType==$XType){ ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
+	} ?>
+	</select>&nbsp;
+	<input type="submit" value="Select" />
+</form><?php
+if(isset($XType))
+{ ?>
+	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
+		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br /><br />
+		<select name="X"><?php
+			switch($XType)
+			{
+				case 'Technology':
+					$Hardwares =& Globals::getHardwareTypes();
+					foreach($Hardwares as &$Hardware)
+					{
+						?><option value="<?php echo $Hardware['ID']; ?>"><?php echo $Hardware['Name']; ?></option><?php
+					} unset($Hardware);
+				break;
+				case 'Ships':
+					$Ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType(SmrSession::$game_id));
+					foreach($Ships as &$Ship)
+					{
+						?><option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
+					} unset($Ship);
+				break;
+				case 'Weapons':
+					$Weapons =& SmrWeapon::getAllWeapons(Globals::getGameType(SmrSession::$game_id));
+					foreach($Weapons as &$Weapon)
+					{
+						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
+					} unset($Weapon);
+				break;
+				case 'Locations':
+					$Locations =& SmrLocation::getAllLocations();
+					foreach($Locations as &$Location)
+					{
+						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
+					} unset($Location);
+				break;
+				case 'Goods': 
+					$Goods =& Globals::getGoods();
+					foreach($Goods as &$Good)
+					{
+						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
+					} unset($Good);
+				break;
+				default:
+			} ?>
+		</select>&nbsp;
+		<input type="submit" value="Go" />
+	</form><?php
+} ?>
+</form>

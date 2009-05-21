@@ -45,6 +45,7 @@ abstract class AbstractSmrShip
 	protected static function &buildBaseShip(Database &$db)
 	{
 		$ship = array();
+		$ship['Type']				= 'Ship';
 		$ship['Name']				= $db->getField('ship_name');
 		$ship['ShipTypeID']			= $db->getField('ship_type_id');
 		$ship['RaceID']				= $db->getField('race_id');
