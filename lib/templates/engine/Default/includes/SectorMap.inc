@@ -18,12 +18,12 @@
 									} ?>
 								</div><?php
 							}
-							if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || $ThisPlayer->isPartOfCourse($Sector))
+							if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || $ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector))
 							{ ?>
 								<div class="lmp"><?php
 									if($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector))
-									{ ?>
-										<img title="Course" alt="Course" src="images/plot_icon.gif"/><?php
+									{
+										?><img title="Course" alt="Course" src="images/plot_icon.gif"/><?php
 									}
 									if($Sector->isVisited($ThisPlayer) && $Sector->hasWarp())
 									{
