@@ -866,7 +866,7 @@ class SmrSector
 		return $otherSector->getGameID()==$this->getGameID()&&($otherSector->getSectorID()==$this->getWarp()||in_array($otherSector->getSectorID(),$this->getLinks()));
 	}
 	
-	public function isVisited(AbstractSmrPlayer &$player)
+	public function isVisited(AbstractSmrPlayer &$player=null)
 	{
 		if($player===null)
 			return true;
