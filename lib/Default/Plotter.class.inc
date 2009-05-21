@@ -213,8 +213,9 @@ class Distance
 	
 	public function followPath($isWarp=false)
 	{
-		$this->distance--;
-		if($isWarp!==false)
+		if($isWarp===false)
+			$this->distance--;
+		else
 			$this->numWarps--;
 		return array_shift($this->path);
 	}
