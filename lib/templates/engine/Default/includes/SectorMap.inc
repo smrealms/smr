@@ -21,7 +21,7 @@
 							if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || $ThisPlayer->isPartOfCourse($Sector))
 							{ ?>
 								<div class="lmp"><?php
-									if($ThisPlayer->isPartOfCourse($Sector))
+									if($ThisPlayer->isPartOfCourse($Sector) || ($Sector->hasWarp() && $ThisPlayer->isPartOfCourse($Sector->getWarpSector())))
 									{ ?>
 										<img title="Course" alt="Course" src="images/plot_icon.gif"/><?php
 									}
