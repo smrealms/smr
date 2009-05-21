@@ -67,6 +67,8 @@ abstract class AbstractSmrPlayer
 	protected $turns;
 	protected $lastCPLAction;
 	
+	protected $visitedSectors;
+	
 	protected $HOF;
 	
 	protected $hasChanged=false;
@@ -1114,6 +1116,21 @@ abstract class AbstractSmrPlayer
 		if($restriction>0)
 			return $this->getAlignment()>=$restriction;
 		return true;
+	}
+	
+	/**
+	 * Will retrieve all visited sectors, use only when you are likely to check a large number of these
+	 */
+	public function hasVisitedSector($sectorID)
+	{
+		if(!isset($this->visitedSectors))
+		{
+			$this->visitedSectors = array();
+			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE account_id=' . $this->getAccountID() . ' AND game_id=' . $this->getGameID());
+			while($this->db->nextRecord())
+				$this->visitedSectors[$this->db->getField('sector_id')] = false;
+		}
+		return !isset($this->visitedSectors[$sectorID]);
 	}
 }
 ?>
