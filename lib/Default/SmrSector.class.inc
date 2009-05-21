@@ -868,6 +868,8 @@ class SmrSector
 	
 	public function isVisited(AbstractSmrPlayer &$player)
 	{
+		if($player===null)
+			return true;
 		if(!isset($this->visited[$player->getAccountID()]))
 		{
 			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id = ' . $this->getSectorID() . ' AND account_id=' . $player->getAccountID() . ' AND game_id=' . $this->getGameID() .' LIMIT 1');
