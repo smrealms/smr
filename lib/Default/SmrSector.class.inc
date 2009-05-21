@@ -925,19 +925,21 @@ class SmrSector
 			return $this->hasLocation($x->getTypeID());
 		}
 
-		if ($this->hasPort())
-			if ($this->getPort()->hasX($x))
-				return true;
-
-		if ($this->hasLocation())
-		{
-			$locations =& $this->getLocations();
-			foreach ($locations as &$l)
-			{
-				if ($l->hasX($x))
+		if(is_array($x) && $x['Type']=='Good') //Check if it's possible for port to have X, hacky but nice performance gains
+			if ($this->hasPort())
+				if ($this->getPort()->hasX($x))
 					return true;
+
+		if($x instanceof Weapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware'))) //Check if it's possible for location to have X, hacky but nice performance gains
+			if ($this->hasLocation())
+			{
+				$locations =& $this->getLocations();
+				foreach ($locations as &$l)
+				{
+					if ($l->hasX($x))
+						return true;
+				}
 			}
-		}
 		return false;
 	}
 }
