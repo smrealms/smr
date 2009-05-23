@@ -32,8 +32,12 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'course_plot_result.php';
 
+$sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID());
+if($sector->hasX($realX))
+	create_error('Current sector has what you\'re looking for');
+
 require_once(get_file_loc('Plotter.class.inc'));
-$path =& Plotter::findDistanceToX($realX, SmrSector::getSector($player->getGameID(),$player->getSectorID()), true, $player);
+$path =& Plotter::findDistanceToX($realX, $sector, true, $player);
 if($path===false)
 	create_error('Unable to find the nearest X');
 $container['Distance'] = serialize($path);

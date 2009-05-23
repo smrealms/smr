@@ -478,10 +478,16 @@ class SmrSector
 		$linkSector->setLink(self::oppositeDir($dir),$this->getSectorID());
 		$this->hasChanged=true;
 	}
+	/**
+	 * Cannot be used for Warps
+	 */
 	public function enableLink($dir)
 	{
 		$this->setLinkSector($dir,$this->getNeighbourSector($dir));
 	}
+	/**
+	 * Cannot be used for Warps
+	 */
 	public function disableLink($dir)
 	{
 		$this->setLink($dir,0);
@@ -575,27 +581,30 @@ class SmrSector
 		return $this->getWarp()!=0;
 	}
 	
-	public function setWarp(SmrSector &$warp)
+	public function setWarp(SmrSector &$warp,$justThisObjectData=false)
 	{
-		if($this->hasWarp())
+		if($justThisObjectData===false)
 		{
-			//Update both possible combinations for the warp
-			$this->db->query('UPDATE warp SET sector_id_1 = '.$warp->getSectorID().' WHERE ' .
-											'game_id=' . $this->getGameID().' AND '.
-											'sector_id_1 = '.$this->getWarp().' AND ' .
-											'sector_id_2 = '.$this->getSectorID().' LIMIT 1');
-			$this->db->query('UPDATE warp SET sector_id_2 = '.$warp->getSectorID().' WHERE ' .
-											'game_id=' . $this->getGameID().' AND '.
-											'sector_id_1 = '.$this->getSectorID().' AND ' .
-											'sector_id_2 = '.$this->getWarp().' LIMIT 1');
+			if($this->hasWarp())
+			{
+				//Update both possible combinations for the warp
+				$this->db->query('UPDATE warp SET sector_id_1 = '.$warp->getSectorID().' WHERE ' .
+												'game_id=' . $this->getGameID().' AND '.
+												'sector_id_1 = '.$this->getWarp().' AND ' .
+												'sector_id_2 = '.$this->getSectorID().' LIMIT 1');
+				$this->db->query('UPDATE warp SET sector_id_2 = '.$warp->getSectorID().' WHERE ' .
+												'game_id=' . $this->getGameID().' AND '.
+												'sector_id_1 = '.$this->getSectorID().' AND ' .
+												'sector_id_2 = '.$this->getWarp().' LIMIT 1');
+			}
+			else
+			{
+				//Only need to enter once
+				$this->db->query('INSERT INTO warp (game_id,sector_id_1,sector_id_2)values('.$this->getGameID().','.$this->getSectorID().','.$warp->getSectorID().')');
+			}
+			$warp->setWarp($this,true);
 		}
-		else
-		{
-			//Only need to enter once
-			$this->db->query('INSERT INTO warp (game_id,sector_id_1,sector_id_2)values('.$this->getGameID().','.$this->getSectorID().','.$warp->getSectorID().')');
-		}
-		$this->links['Warp'] = $warp->getSectorID();
-		$warp->setLink('Warp',$this->getSectorID());
+		$this->warp = $warp->getSectorID();
 	}
 	
 	public function removeWarp()
@@ -609,7 +618,7 @@ class SmrSector
 											  '(sector_id_1 = '.$this->getSectorID().' AND ' .
 											   'sector_id_2 = '.$this->getWarp().') LIMIT 1');
 		}
-		unset($this->links['Warp']);
+		unset($this->warp);
 	}
 	
 	public function hasMine()
@@ -668,8 +677,10 @@ class SmrSector
 		if($locationTypeID==false)
 			return true;
 		foreach($locations as &$location)
+		{
 			if($location->getTypeID()==$locationTypeID)
 				return true;
+		}
 		return false;
 	}
 	
@@ -920,7 +931,7 @@ class SmrSector
 		{
 			return $this->hasLocation();
 		}
-		if ($x instanceof Location)
+		if ($x instanceof SmrLocation)
 		{
 			return $this->hasLocation($x->getTypeID());
 		}
@@ -930,7 +941,7 @@ class SmrSector
 				if ($this->getPort()->hasX($x))
 					return true;
 
-		if($x instanceof Weapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware'))) //Check if it's possible for location to have X, hacky but nice performance gains
+		if($x instanceof SmrWeapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware'))) //Check if it's possible for location to have X, hacky but nice performance gains
 			if ($this->hasLocation())
 			{
 				$locations =& $this->getLocations();
