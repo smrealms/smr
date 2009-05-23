@@ -38,14 +38,16 @@ class Plotter
 		$maybeWarps=0;
 		while ($maybeWarps<TURNS_WARP_SECTOR_EQUIVALENCE)
 		{
-			if(count($q = array_shift($distanceQ))>0)
-				$maybeWarps=0;
-			else
-				$maybeWarps++;
 			$sectorsTravelled++;
 			if ($sectorsTravelled > $distanceLimit)
 				return $distances;
 			$distanceQ[] = array();
+			if(count($q = array_shift($distanceQ))==0)
+			{
+				$maybeWarps++;
+				continue;
+			}
+			$maybeWarps=0;
 			while (($distance = array_shift($q))!==null)
 			{
 				$checkSectorID = $distance->getEndSectorId();
