@@ -427,7 +427,7 @@ class SmrLocation
 
 	public function hasX(/*Object*/ &$x)
 	{
-		if ($x instanceof Weapon)
+		if ($x instanceof SmrWeapon)
 		{
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}

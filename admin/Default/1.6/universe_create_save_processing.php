@@ -315,8 +315,6 @@ elseif ($submit == 'Edit Sector')
 	} else $sector->removePort();
 	//update locations
 	
-	
-	$GAL_LOCATIONS[$this_sec] = array();
 	$sector->removeAllLocations();
 	for($x=0;$x<4;$x++)
 	{
@@ -335,7 +333,7 @@ elseif ($submit == 'Edit Sector')
 		//add warp to other side
 		$sector->setWarp(SmrSector::getSector($var['game_id'],$_POST['warp']));
 	}
-	$sector->update();
+	SmrSector::saveSectors();
 }
 
 $container = $var;
