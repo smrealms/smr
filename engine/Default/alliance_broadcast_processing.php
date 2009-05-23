@@ -3,7 +3,7 @@
 if (strlen($_POST['message']) == 0)
 	create_error('You have to enter a text to send!');
 
-$message = nl2br($db->escape_string($_POST['message'], true));
+$message = nl2br($_POST['message']);
 
 $db->query('SELECT account_id FROM player WHERE game_id=' . $player->getGameID() . 
 			' AND alliance_id=' . $var['alliance_id']); //No limit in case they are over limit - ie NHA
