@@ -458,7 +458,7 @@ class SmrSector
 	 */
 	public function setLink($name,$linkID)
 	{
-		if($this->links[$name]==$linkID)
+		if($this->getLink($name)==$linkID)
 			return;
 		if($linkID==0)
 			unset($this->links[$name]);
@@ -472,7 +472,7 @@ class SmrSector
 	 */
 	public function setLinkSector($dir,SmrSector &$linkSector)
 	{
-		if($this->links[$dir]==$linkSector->getSectorID()||$linkSector->equals($this))
+		if($this->getLink($dir)==$linkSector->getSectorID()||$linkSector->equals($this))
 			return;
 		$this->setLink($dir,$linkSector->getSectorID());
 		$linkSector->setLink(self::oppositeDir($dir),$this->getSectorID());

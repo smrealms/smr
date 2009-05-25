@@ -73,7 +73,7 @@ class SmrPlanet
 //		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
-	public static function &removePlanet($gameID,$sectorID)
+	public static function removePlanet($gameID,$sectorID)
 	{
 		$db = new SmrMySqlDatabase();
 		$db->query('DELETE FROM planet WHERE game_id = '.$gameID.' AND ' .
