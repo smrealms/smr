@@ -13,7 +13,7 @@ if (isset($_REQUEST['mod']))
 	$mod = trim($_REQUEST['mod']);	
 }
 if (isset($_REQUEST['url']))
-	$url = $_REQUEST['url'];
+	$url = trim($_REQUEST['url']);
 if (isset($password) && $password == '')
 	create_error('You cannot set an empty password!');
 
