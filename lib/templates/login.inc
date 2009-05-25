@@ -110,7 +110,7 @@ if(!$isFirefox)
 	Please <a href="http://www.smrealms.de/merge.php">click here</a> for more details.<?php
 } */
 
-if($Message)
+if(isset($Message))
 { ?>
 	<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
 } ?>
@@ -168,7 +168,7 @@ if($Message)
 			</form>
 		</td>
 		<td width="470px"><?php
-		if($LoginNews)
+		if(isset($LoginNews))
 			{ ?>
 				<table class="standard">
 				<tr><th>Date</th><th>News</th></tr><?php
@@ -194,14 +194,17 @@ if($Message)
 			</td></tr>
 			
 			<tr><td align="center" colspan="2">
-			Players Online Now: <?php echo $NumberOnCPL ?><br /><br />
-			Recent News<br />
-			<table class="standard" width="100%"><tr><th align="center">Time</th><th align="center">News</th></tr><?php
-			foreach($GameNews as $News)
+			Players Online Now: <?php echo $NumberOnCPL; ?><br /><br /><?php
+			if(isset($GameNews))
 			{ ?>
-				<tr><td><?php echo $News['Date'] ?><br /><?php echo $News['Time'] ?></td><td><?php echo $News['Message'] ?></td></tr><?php
+				Recent News<br />
+				<table class="standard" width="100%"><tr><th align="center">Time</th><th align="center">News</th></tr><?php
+				foreach($GameNews as $News)
+				{ ?>
+					<tr><td><?php echo $News['Date'] ?><br /><?php echo $News['Time'] ?></td><td><?php echo $News['Message'] ?></td></tr><?php
+				} ?>
+				</table><?php
 			} ?>
-			</table>
 		</td>
 	</tr>
 </table>
@@ -209,7 +212,7 @@ if($Message)
 <br />
 
 <?php
-if($Story)
+if(isset($Story))
 { ?>
 	<table border="0" width="640px;"><tr><td colspan="2"><?php
 	foreach($Story as $StoryPart)

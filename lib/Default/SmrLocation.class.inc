@@ -74,13 +74,15 @@ class SmrLocation
 		$this->db = new SmrMySqlDatabase();
 		$this->db->query('SELECT location_type_id,location_name,location_processor,location_image FROM location_type WHERE location_type_id = ' . $locationTypeID . ' LIMIT 1');
 		
-		while($this->db->nextRecord())
+		if($this->db->nextRecord())
 		{
 			$this->typeID = $this->db->getField('location_type_id');
 			$this->name = $this->db->getField('location_name');
 			$this->processor = $this->db->getField('location_processor');
 			$this->image = $this->db->getField('location_image');
 		}
+		else
+			throw new Exception('Cannot find location: '.$locationTypeID);
 	}
 	
 	public function getTypeID()

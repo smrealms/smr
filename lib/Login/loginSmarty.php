@@ -8,7 +8,8 @@ while ($db->nextRecord())
 {
 	$loginNews[] = array('Message' => $db->getField('message'),'AdminName' => $db->getField('admin_name'),'Time' => date(DATE_DATE_SHORT,$db->getField('time')), 'Recent' => (TIME - $db->getField('time') < 24 * 3600));
 }
-$template->assign('LoginNews',$loginNews);
+if(count($loginNews)>0)
+	$template->assign('LoginNews',$loginNews);
 
 
 $db->query('SELECT count(*) AS num_on_cpl FROM player WHERE last_cpl_action > '.(TIME - 3600));
@@ -21,7 +22,8 @@ while ($db->nextRecord())
 {
 	$gameNews[] = array('Date' => date(DATE_DATE_SHORT,$db->getField('time')), 'Time' => date(DATE_TIME_SHORT,$db->getField('time')), 'Message' => $db->getField('news_message'));
 }
-$template->assign('GameNews',$gameNews);
+if(count($gameNews)>0)
+	$template->assign('GameNews',$gameNews);
 
 include_once('story.php');
 
