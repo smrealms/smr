@@ -1,22 +1,20 @@
 <?
 if($_REQUEST['action']=='Vote')
 {
-	if(empty($_REQUEST['vote']))
+	if(empty($_REQUEST['favourite']))
 		create_error('You have to select a feature');
-	// for which feature we currently vote?
-	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
-	if ($db->nextRecord())
+	
+	$db->query('DELETE FROM account_votes_for_feature WHERE account_id='.SmrSession::$account_id);
+	if(is_array($_REQUEST['vote']))
 	{
-		$vote_for_id = $db->getField('feature_request_id');
-	
-		// are there more than one vote for this feature?
-		$db->query('SELECT * FROM account_votes_for_feature ' .
-							'WHERE feature_request_id = '.$vote_for_id);
-//		if ($db->getNumRows() == 1)
-//			$db->query('DELETE FROM feature_request WHERE feature_request_id = '.$vote_for_id);
+		$query = 'INSERT INTO account_votes_for_feature VALUES ';
+		foreach($_REQUEST['vote'] as $requestID => $vote)
+		{
+			$query.='('.SmrSession::$account_id.', '.$db->escapeNumber($requestID).','.$db->escapeString($vote).'),';
+		}
+		$db->query(substr($query,0,-1));
 	}
-	
-	$db->query('REPLACE INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$_REQUEST['vote'].')');
+	$db->query('REPLACE INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$db->escapeNumber($_REQUEST['favourite']).',\'FAVOURITE\')');
 	
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
