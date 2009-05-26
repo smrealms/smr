@@ -43,21 +43,17 @@ if (!is_numeric($target))
 	
 if ($player->getSectorID() == $target)
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
-	
-if ($sector->hasForces()) {
 
-	$db->query('SELECT * FROM sector_has_forces, player ' .
-			   'WHERE sector_has_forces.game_id = player.game_id AND ' .
-					 'sector_has_forces.owner_id = player.account_id AND ' .
-					 'sector_has_forces.game_id = '.$player->getGameID().' AND ' .
-					 'sector_has_forces.sector_id = '.$player->getSectorID().' AND ' .
-					 'mines > 0 AND ' .
-					 'owner_id != '.$player->getAccountID().' AND ' .
-					 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0) LIMIT 1');
-	if($db->nextRecord())
+if ($sector->hasForces())
+{
+	$sectorForces =& $sector->getForces();
+	foreach($sectorForces as &$forces)
 	{
-		create_error('You cant jump when there are unfriendly forces in the sector!');
-	}
+		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
+		{
+			create_error('You cant jump when there are unfriendly forces in the sector!');
+		}
+	} unset($forces);
 }
 
 $targetExists = false;
@@ -123,11 +119,10 @@ else
 {
 	$failure_chance = 75;
 	$failure_distance = round(0.1 * mt_rand(10, 30 + (50 - $player->getLevelID())));
-
 }
 
-if (mt_rand(1, 100) <= $failure_chance) {
-
+if (mt_rand(1, 100) <= $failure_chance)
+{
 	// we missed the sector
 
 	// initialize the queue. all sectors are queued here during the iterations
@@ -140,65 +135,59 @@ if (mt_rand(1, 100) <= $failure_chance) {
 	array_push($sector_queue, $target_sector->getSectorID());
 	$sector_distance[$target_sector->getSectorID()] = 0;
 
-	while (sizeof($sector_queue) > 0) {
-
+	while (sizeof($sector_queue) > 0)
+	{
 		// get current sector and
 		$curr_sector_id = array_shift($sector_queue);
 
 		// get the distance for this sector from the source
 		$distance = $sector_distance[$curr_sector_id];
-
+		if($failure_distance <= $distance) continue;
+		
 		// create a new sector object
 		$curr_sector =& SmrSector::getSector(SmrSession::$game_id, $curr_sector_id);
 
 		// enqueue all neighbours
-		if ($curr_sector->getLinkUp() > 0 && (!isset($sector_distance[$curr_sector->getLinkUp()]) || $sector_distance[$curr_sector->getLinkUp()] > $distance + 1) && $failure_distance > $distance) {
-
+		if ($curr_sector->hasLinkUp() && !isset($sector_distance[$curr_sector->getLinkUp()]))
+		{
 			array_push($sector_queue, $curr_sector->getLinkUp());
 			$sector_distance[$curr_sector->getLinkUp()] = $distance + 1;
-
 		}
 
-		if ($curr_sector->getLinkDown() > 0 && (!isset($sector_distance[$curr_sector->getLinkDown()]) || $sector_distance[$curr_sector->getLinkDown()] > $distance + 1) && $failure_distance > $distance) {
-
+		if ($curr_sector->hasLinkDown() && !isset($sector_distance[$curr_sector->getLinkDown()]))
+		{
 			array_push($sector_queue, $curr_sector->getLinkDown());
 			$sector_distance[$curr_sector->getLinkDown()] = $distance + 1;
-
 		}
 
-		if ($curr_sector->getLinkLeft() > 0 && (!isset($sector_distance[$curr_sector->getLinkLeft()]) || $sector_distance[$curr_sector->getLinkLeft()] > $distance + 1) && $failure_distance > $distance) {
-
+		if ($curr_sector->hasLinkLeft() && !isset($sector_distance[$curr_sector->getLinkLeft()]))
+		{
 			array_push($sector_queue, $curr_sector->getLinkLeft());
 			$sector_distance[$curr_sector->getLinkLeft()] = $distance + 1;
-
 		}
 
-		if ($curr_sector->getLinkRight() > 0 && (!isset($sector_distance[$curr_sector->getLinkRight()]) || $sector_distance[$curr_sector->getLinkRight()] > $distance + 1) && $failure_distance > $distance) {
-
+		if ($curr_sector->hasLinkRight() && !isset($sector_distance[$curr_sector->getLinkRight()]))
+		{
 			array_push($sector_queue, $curr_sector->getLinkRight());
 			$sector_distance[$curr_sector->getLinkRight()] = $distance + 1;
-
 		}
-
 	}
 
 	// returns an array that only contain the failure distance
-	while (empty($temp_array)) {
-		
+	while (empty($temp_array))
+	{
 		$temp_array = array_keys($sector_distance, $failure_distance);
 		//gal isn't big enough for that big of a misjump...take 1 of the failure
 		$failure_distance -= 1;
 		
 	}
-
     // get one element
 	$player->setSectorID($temp_array[ array_rand($temp_array) ]);
-
-} else {
-
+}
+else
+{
 	// we hit it. exactly
 	$player->setSectorID($target_sector->getSectorID());
-
 }
 
 // log action
@@ -222,8 +211,6 @@ release_lock();
 // We need a lock on the new sector so that more than one person isn't hitting the same mines
 acquire_lock($player->getSectorID());
 
-
-
 // delete plotted course
 $player->deletePlottedCourse();
 
@@ -234,21 +221,22 @@ $sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 $sector->markVisited($player);
 
 // send scout msg
-$sector->enteringSector($player);
+$sector->enteringSector($player,MOVEMENT_JUMP);
 
-$db->query('SELECT * FROM sector_has_forces, player ' .
-		   'WHERE sector_has_forces.game_id = player.game_id AND ' .
-				 'sector_has_forces.owner_id = player.account_id AND ' .
-				 'sector_has_forces.game_id = '.$player->getGameID().' AND ' .
-				 'sector_has_forces.sector_id = '.$player->getSectorID().' AND ' .
-				 'mines > 0 AND ' .
-				 'owner_id != '.$player->getAccountID().' AND ' .
-				 '(alliance_id != '.$player->getAllianceID().' OR alliance_id = 0)');
-
-while ($db->nextRecord())
+$sectorForces =& $sector->getForces();
+$mineOwnerID = false;
+foreach($sectorForces as &$forces)
 {
-	if ($player->getNewbieTurns() > 0) {
-
+	if(!$mineOwnerID && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
+	{
+		$mineOwnerID = $forces->getOwnerID();
+		break;
+	}
+} unset($forces);
+if($mineOwnerID)
+{
+	if ($player->hasNewbieTurns() > 0)
+	{
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'current_sector.php';;
@@ -257,14 +245,11 @@ while ($db->nextRecord())
 	}
 	else
 	{
-    	$owner_id = $db->getField('owner_id');
+    	$owner_id = $mineOwnerID;
     	include('forces_minefield_processing.php');
     	exit;
-
 	}
-
 }
 
 forward(create_container('skeleton.php', $var['target_page']));
-
 ?>
