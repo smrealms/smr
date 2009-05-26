@@ -1,6 +1,6 @@
 <?php
 
-if(is_array($TraderTeamCombatResults['Results']))
+if(is_array($TraderTeamCombatResults['Traders']))
 {
 	foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 	{
