@@ -77,7 +77,7 @@ $container['body'] = 'forces_attack.php';
 
 // If their target is dead there is no continue attack button
 if($forces->exists())
-	$container['owner_id'] = $var['owner_id'];
+	$container['owner_id'] = $forces->getOwnerID();
 else
 	$container['owner_id'] = 0;
 
