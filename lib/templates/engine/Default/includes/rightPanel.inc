@@ -118,7 +118,8 @@ if(isset($GameID))
 	if($ThisShip->hasScanner()) echo '*';
 	else echo '-';
 	if($ThisShip->hasDCS()) echo '*';
-	echo '<br />';
+	else echo '-';
+	?><br /><?php
 	if($ThisShip->hasCloak())
 	{
 		if($ThisShip->isCloaked())
@@ -198,7 +199,7 @@ if(isset($GameID))
 	<br />*/
 	
 	if(ENABLE_BETA)
-	{ ?>
-	<a href="<?php echo Globals::getBetaFunctionsHREF() ?>"><span class="bold">Beta Functions</span></a><?php
+	{
+		?><a href="<?php echo Globals::getBetaFunctionsHREF() ?>"><span class="bold">Beta Functions</span></a><?php
 	}
 } ?>
