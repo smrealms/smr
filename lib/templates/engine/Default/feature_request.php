@@ -9,7 +9,7 @@ if(isset($FeatureRequests))
 					{
 						?><th width="30">Requester</th><?php
 					} ?>
-					<th width="30">Votes (Favourite/Yes/No)</th>
+					<th width="30">Votes (Fav/Yes/No)</th>
 					<th>Feature</th>
 					<th width="20">Favourite</th>
 					<th width="20">Yes</th>
