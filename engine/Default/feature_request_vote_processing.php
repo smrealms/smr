@@ -11,7 +11,8 @@ if($_REQUEST['action']=='Vote')
 		}
 		$db->query(substr($query,0,-1));
 	}
-	$db->query('REPLACE INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$db->escapeNumber($_REQUEST['favourite']).',\'FAVOURITE\')');
+	if(!empty($_REQUEST['favourite']) && is_numeric($_REQUEST['favourite']))
+		$db->query('REPLACE INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$db->escapeNumber($_REQUEST['favourite']).',\'FAVOURITE\')');
 	
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
