@@ -21,64 +21,25 @@ $db->query('SELECT f.feature_request_id AS feature_id, ' .
 
 if ($db->getNumRows() > 0)
 {
-	$DELETE_ALLOWED=$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
-	$PHP_OUTPUT.=create_echo_form(create_container('feature_request_vote_processing.php', ''));
-	$PHP_OUTPUT.=('<p><table class="standard" width="100%">');
-	$PHP_OUTPUT.=('<tr>');
-	if($DELETE_ALLOWED)
-		$PHP_OUTPUT.=('<th width="30">Requester</th>');
-	$PHP_OUTPUT.=('<th width="30">Votes</th>');
-	$PHP_OUTPUT.=('<th>Feature</th>');
-	$PHP_OUTPUT.=('<th width="20">&nbsp;</th>');
-	if($DELETE_ALLOWED)
-		$PHP_OUTPUT.=('<th width="20">&nbsp;</th>');
-	$PHP_OUTPUT.=('</tr>');
+	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
+	$template->assign('FeatureModerator',$featureModerator);
+	$template->assign('FeatureRequestVoteFormHREF',SmrSession::get_new_href(create_container('feature_request_vote_processing.php', '')));
 
+	$featureRequests = array();
 	while ($db->nextRecord())
 	{
-		$feature_request_id = $db->getField('feature_id');
-		$requestAccount =& SmrAccount::getAccount($db->getField('submitter_id'));
-		$message = stripslashes($db->getField('feature_msg'));
-		$votes = $db->getField('votes');
-
-		$PHP_OUTPUT.=('<tr>');
-		if($DELETE_ALLOWED)
-			$PHP_OUTPUT.=('<td valign="top" align="center">'.$requestAccount->getLogin().'&nbsp;('.$requestAccount->getAccountID().')</td>');
-		$PHP_OUTPUT.=('<td valign="top" align="center">'.$votes.'</td>');
-		$PHP_OUTPUT.=('<td valign="top">'.$message.'</td>');
-		$PHP_OUTPUT.=('<td valign="middle" align="center"><input type="radio" name="vote" value="'.$feature_request_id.'"');
-		if ($feature_request_id == $feature_vote) $PHP_OUTPUT.=(' checked');
-		$PHP_OUTPUT.=('></td>');
-		if($DELETE_ALLOWED)
-			$PHP_OUTPUT.=('<td valign="middle" align="center"><input type="checkbox" name="delete[]" value="'.$feature_request_id.'"></td>');
-		$PHP_OUTPUT.=('</tr>');
+		$featureRequestID = $db->getField('feature_id');
+		$featureRequests[$featureRequestID] = array(
+								'RequestID' => $featureRequestID,
+								'Message' => $db->getField('feature_msg'),
+								'Votes' => $db->getField('votes'),
+								'VotedFor' => $featureRequestID == $feature_vote
+		);
+		if($featureModerator)
+			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getField('submitter_id'));
 	}
-
-	$PHP_OUTPUT.=('</table></p>');
-	$PHP_OUTPUT.='<div align="right"><input type="submit" name="action" value="Vote">';
-	
-	if($DELETE_ALLOWED)
-		$PHP_OUTPUT.=('&nbsp;<input type="submit" name="action" value="Delete">');
-	$PHP_OUTPUT.='</div>';
-	$PHP_OUTPUT.=('</form>');
-
+	$template->assignByRef('FeatureRequests',$featureRequests);
 }
 
-$PHP_OUTPUT.=('<p>');
-$PHP_OUTPUT.=create_echo_form(create_container('feature_request_processing.php', ''));
-$PHP_OUTPUT.=('<table border="0" cellpadding="5">');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="center">Please describe the feature here:</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="center"><textarea name="feature" id="InputFields" style="width:350px;height:100px;"></textarea></td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="center">');
-$PHP_OUTPUT.=create_submit('Submit New Feature');
-$PHP_OUTPUT.=('</td>');
-$PHP_OUTPUT.=('</tr>');
-$PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</form></p>');
-
+$template->assign('FeatureRequestFormHREF',SmrSession::get_new_href(create_container('feature_request_processing.php', '')));
 ?>
