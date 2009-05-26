@@ -1,9 +1,6 @@
 <?
 if($_REQUEST['action']=='Vote')
 {
-	if(empty($_REQUEST['favourite']))
-		create_error('You have to select a feature');
-	
 	$db->query('DELETE FROM account_votes_for_feature WHERE account_id='.SmrSession::$account_id);
 	if(is_array($_REQUEST['vote']))
 	{
