@@ -57,19 +57,13 @@ if ($player->getTurns() < $turns)
 	create_error('You don\'t have enough turns to move!');
 
 $sectorForces =& $sector->getForces();
-
 $mine_owner_id = false;
-$scout_owners = array();
-
 foreach($sectorForces as &$forces)
 {
-	if($forces->hasMines() && !$mine_owner_id)
+	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
 	{
-		$mine_owner_id = $force->getOwnerID();
-	}
-	if($forces->hasSDs())
-	{
-		$scout_owners[] = $forces->getOwnerID();
+		$mine_owner_id = $forces->getOwnerID();
+		break;
 	}
 } unset($forces);
 
@@ -78,7 +72,7 @@ if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id)
 	// set last sector
 	$player->setLastSectorID($var['target_sector']);
 	
-	if ($player->getNewbieTurns() > 0)
+	if ($player->hasNewbieTurns())
 	{
 		$container['url']	= 'skeleton.php';
 		$container['body']	= 'current_sector.php';
@@ -106,9 +100,7 @@ $player->setLastSectorID($player->getSectorID());
 $account->log(5, 'Moves to sector: ' . $var['target_sector'], $player->getSectorID());
 
 // send scout msg
-if(count($scout_owners)) {
-	send_scout_messages($scout_owners,false);
-}
+$sector->leavingSector($player,MOVEMENT_WALK);
 
 // Move the user around (Must be done while holding both sector locks)
 $player->setSectorID($var['target_sector']);
@@ -139,56 +131,41 @@ if ($player->hasPlottedCourse())
 $sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 
 //add that the player explored here if it hasnt been explored...for HoF
-if (!$sector->isVisited($player)) {
+if (!$sector->isVisited($player))
+{
 	$player->increaseHOF(1,array('Movement','Sectors Explored'));
 }
 // make current sector visible to him
 $sector->markVisited($player);
 
 // send scout msgs
-$db->query(get_forces_query($targetGalaxyID));
-
+$sectorForces =& $sector->getForces();
 $mine_owner_id = false;
-$scout_owners = array();
-
-while($db->nextRecord()) {
-	if($db->getField('mines') && !$mine_owner_id) {
-		$mine_owner_id = $db->getField('account_id');
-		$forces[$mine_owner_id][2] = $db->getField('mines');
-	}
-	if($db->getField('scout_drones')) {
-		$scout_owners[] = $db->getField('account_id');
-	}
-}
-
-if(count($scout_owners))
+foreach($sectorForces as &$forces)
 {
-	send_scout_messages($scout_owners,true);
-}
+	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
+	{
+		$mine_owner_id = $forces->getOwnerID();
+		break;
+	}
+} unset($forces);
+
+$sector->enteringSector($player,MOVEMENT_WALK);
 
 if ($mine_owner_id)
 {
-	if ($player->getNewbieTurns() > 0)
+	if ($player->hasNewbieTurns())
 	{
 		$container['url']	= 'skeleton.php';
 		$container['body']	= 'current_sector.php';
 		$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
+		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
+		$container['msg'] .= $turns.' turn'.($turns==1?'':'s');
 		
-		if($forces[$mine_owner_id][2] < 10)
-		{
-			$player->takeTurns(1,1);
-			$container['msg'] .= '1 turn';
-		}
-		else if($forces[$mine_owner_id][2] >= 10 && $forces[$mine_owner_id][2] < 25)
-		{
-			$player->takeTurns(2,1);
-			$container['msg'] .= '2 turns';
-		}
-		else if($forces[$mine_owner_id][2] >= 25)
-		{
-			$player ->takeTurns(3,1);
-			$container['msg'] .= '3 turns';
-		}
+		$player->takeTurns($turns,1);
+		
+		$container['msg'] .= ' to navigate the minefield safely';
+		forward($container);
 	}
 	
 	$player->update();
@@ -210,67 +187,4 @@ if ($mine_owner_id)
 $container['url'] = 'skeleton.php';
 $container['body'] = $var['target_page'];
 forward($container);
-
-
-function get_forces_query($galaxy_id)
-{
-	global $account,$player,$db;
-	$db->query('SELECT * FROM alliance_treaties WHERE (alliance_id_1 = '.$player->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')
-		AND game_id = '.$player->getGameID().'
-		AND official = \'TRUE\'
-	AND forces_nap = 1');
-	$allied[] = $player->getAllianceID();
-	while ($db->nextRecord())
-	{
-		if ($db->getField('alliance_id_1') == $player->getAllianceID()) $allied[] = $db->getField('alliance_id_2');
-		else $allied[] = $db->getField('alliance_id_1');
-	}
-	$query = '
-		SELECT
-		sector_has_forces.owner_id as account_id,
-		sector_has_forces.scout_drones as scout_drones,
-		sector_has_forces.mines as mines
-		FROM sector_has_forces,player WHERE
-		player.account_id=sector_has_forces.owner_id
-		AND player.account_id!=' . SmrSession::$account_id . '
-		AND (player.alliance_id=0 OR player.alliance_id NOT IN (' . implode(',',$allied) . '))
-		AND player.game_id=' . SmrSession::$game_id . '
-		AND sector_has_forces.game_id=' . SmrSession::$game_id . '
-		AND sector_has_forces.sector_id=' . $player->getSectorID() . ' ORDER BY sector_has_forces.mines DESC';
-	
-	return $query;
-}
-
-function send_scout_messages($scout_owners,$direction)
-{
-	global $db,$player;
-	$scout_query = '';
-	$scout_query2 = '';
-	$helper_query = ',' . SmrSession::$game_id .',' . MSG_SCOUT . ',';
-	$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
-	if($direction)
-	{
-		$message .= 'entering';
-	}
-	else
-	{
-		$message .= 'leaving';
-	}
-	$message .= ' sector #<span class="yellow">' . $player->getSectorID() . '</span>';
-	$helper_query .= $db->escape_string($message,false) . ',' . $player->getAccountID() . ',' . TIME . ',' . (TIME + 259200) . ')'; 
-	$helper_query2 = '(' . SmrSession::$game_id . ',' . MSG_SCOUT . ',';
-	
-	foreach ($scout_owners as $account_id)
-	{
-		if(!empty($scout_query))
-		{
-			$scout_query .= ',';
-			$scout_query2 .= ',';
-		}	
-		$scout_query .= '(' . $account_id . $helper_query;
-		$scout_query2 .= $helper_query2 . $account_id . ')';
-	}
-	$db->query('INSERT INTO message (account_id,game_id,message_type_id,message_text,sender_id,send_time,expire_time) VALUES ' . $scout_query);
-	$db->query('REPLACE INTO player_has_unread_messages (game_id,message_type_id,account_id) VALUES ' . $scout_query2);
-}
 ?>

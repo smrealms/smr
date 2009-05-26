@@ -271,62 +271,61 @@ class SmrSector
 		return false;
 	}
 
-	function enteringSector(AbstractSmrPlayer &$player)
+	function enteringSector(AbstractSmrPlayer &$player, $movementType)
 	{
-		// iterate over all scout drones in sector
-		$this->db->query('SELECT * FROM sector_has_forces ' .
-					 'WHERE sector_id = '.$this->sectorID.' AND ' .
-						   'game_id = '.$this->gameID.' AND ' .
-						   'owner_id != '.$player->getAccountID().' AND ' .
-						   'scout_drones > 0');
-		while ($this->db->nextRecord())
+		// send scout messages to user
+		$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
+		switch($movementType)
 		{
-			$owner =& SmrPlayer::getPlayer($this->db->getField('owner_id'), $this->gameID);
-			if ($owner->sameAlliance($player)) continue;
-
-			// send scout messages to user
-			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' entering sector #'.$this->getSectorID();
-			$player->sendMessage($owner->getAccountID(), MSG_SCOUT, $message, false);
+			case MOVEMENT_JUMP:
+				$message .= 'jumping into';
+			break;
+			case MOVEMENT_WARP:
+				$message .= 'warping into';
+			break;
+			case MOVEMENT_WALK:
+			default:
+				$message .= 'entering';
 		}
-
+		$message .= ' sector #'.$this->getSectorID();
+		
+		$forces =& $this->getForces();
+		foreach($forces as &$force)
+		{
+			$force->ping($message,$player);
+		} unset($force);
 	}
 
 	function leavingSector(AbstractSmrPlayer &$player, $movementType)
 	{
+		// send scout messages to user
+		$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
+		switch($movementType)
+		{
+			case MOVEMENT_JUMP:
+				$message .= 'jumping from';
+			break;
+			case MOVEMENT_WARP:
+				$message .= 'warping from';
+			break;
+			case MOVEMENT_WALK:
+			default:
+				$message .= 'leaving';
+		}
+		$message .= ' sector #'.$this->getSectorID();
+			
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
-		foreach($forces as $force)
+		foreach($forces as &$force)
 		{
-			// send scout messages to user
-			$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
-			
-			switch($movementType)
-			{
-				case MOVEMENT_JUMP:
-					$message .= 'jumping from';
-				break;
-				case MOVEMENT_WARP:
-					$message .= 'warping from';
-				break;
-				case MOVEMENT_WALK:
-				default:
-					$message .= 'leaving';
-			}
-			$message .= ' sector #'.$this->getSectorID();
 			$force->ping($message,$player);
-
-		}
+		} unset($force);
 		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' . 
 					'refresher = '.$player->getAccountID());
 	}
 
 	function died_here(AbstractSmrPlayer &$player)
 	{
-//		$account =& $player->getAccount();
-
-		// get our rank
-//		$rank_id = $account->get_rank();
-		
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
 		foreach($forces as &$force)
@@ -334,9 +333,7 @@ class SmrSector
 			// send scout messages to user
 			$message = 'Your forces have spotted that ' . $player->getDisplayName() . ' has been <font color=red>DESTROYED</font> in sector #'.$this->sectorID;
 			$force->ping($message,$player);
-
-		}unset($force);
-
+		} unset($force);
 	}
 	
 	public function getGameID()

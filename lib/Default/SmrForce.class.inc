@@ -336,6 +336,8 @@ class SmrForce
 	
 	public function ping($pingMessage, AbstractSmrPlayer &$playerPinging)
 	{
+		if(!$this->hasSDs())
+			return;
 		$owner =& $this->getOwner();
 		if(!$playerPinging->sameAlliance($owner))
 		{
