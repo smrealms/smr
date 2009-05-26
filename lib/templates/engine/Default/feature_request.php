@@ -9,9 +9,11 @@ if(isset($FeatureRequests))
 					{
 						?><th width="30">Requester</th><?php
 					} ?>
-					<th width="30">Votes</th>
+					<th width="30">Votes (Favourite/Yes/No)</th>
 					<th>Feature</th>
-					<th width="20">&nbsp;</th><?php
+					<th width="20">Favourite</th>
+					<th width="20">Yes</th>
+					<th width="20">No</th><?php
 					if($FeatureModerator)
 					{
 						?><th width="20">&nbsp;</th><?php
@@ -19,14 +21,16 @@ if(isset($FeatureRequests))
 				</tr><?php
 				foreach($FeatureRequests as &$FeatureRequest)
 				{ ?>
-					<tr><?php
+					<tr style="text-align:center;"><?php
 						if($FeatureModerator)
 						{
-							?><td valign="top" align="center"><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php
+							?><td><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php
 						} ?>
-						<td valign="top" align="center"><?php echo $FeatureRequest['Votes']; ?></td>
-						<td valign="top"><?php echo $FeatureRequest['Message']; ?></td>
-						<td valign="middle" align="center"><input type="radio" name="vote" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if($FeatureRequest['VotedFor']) { ?> checked="checked"<?php } ?>></td><?php
+						<td><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?> / <?php echo $FeatureRequest['Votes']['YES']; ?> / <?php echo $FeatureRequest['Votes']['NO']; ?></td>
+						<td style="text-align:left;"><?php echo $FeatureRequest['Message']; ?></td>
+						<td><input type="radio" name="favourite" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if($FeatureRequest['VotedFor'] == 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
+						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="YES"<?php if($FeatureRequest['VotedFor'] == 'YES') { ?> checked="checked"<?php } ?>></td>
+						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if($FeatureRequest['VotedFor'] == 'NO') { ?> checked="checked"<?php } ?>></td><?php
 						if($FeatureModerator)
 						{
 							?><td valign="middle" align="center"><input type="checkbox" name="delete[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php

@@ -7,36 +7,43 @@ if (!Globals::isFeatureRequestOpen())
 
 $template->assign('PageTopic','FEATURE REQUEST');
 
+$featureVotes = array();
 $db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
-if ($db->nextRecord())
-	$feature_vote = $db->getField('feature_request_id');
+while($db->nextRecord())
+	$featureVotes[$db->getField('feature_request_id')] = $db->getField('vote_type');
 
-$db->query('SELECT f.feature_request_id AS feature_id, ' .
-				  'f.feature AS feature_msg, ' .
-				  'f.submitter_id AS submitter_id, ' .
-				  'COUNT(v.feature_request_id) AS votes ' .
-  				'FROM feature_request f LEFT OUTER JOIN account_votes_for_feature v ON f.feature_request_id = v.feature_request_id ' .
-  				'GROUP BY feature_id, feature_msg ' .
-  				'ORDER BY votes DESC, feature_id');
-
+$db->query('SELECT * ' .
+			'FROM feature_request ' .
+			'ORDER BY feature_request_id');
 if ($db->getNumRows() > 0)
 {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator',$featureModerator);
 	$template->assign('FeatureRequestVoteFormHREF',SmrSession::get_new_href(create_container('feature_request_vote_processing.php', '')));
 
+	$db2 = new SmrMySqlDatabase();
 	$featureRequests = array();
 	while ($db->nextRecord())
 	{
-		$featureRequestID = $db->getField('feature_id');
+		$featureRequestID = $db->getField('feature_request_id');
 		$featureRequests[$featureRequestID] = array(
 								'RequestID' => $featureRequestID,
-								'Message' => $db->getField('feature_msg'),
-								'Votes' => $db->getField('votes'),
-								'VotedFor' => $featureRequestID == $feature_vote
+								'Message' => $db->getField('feature'),
+								'Votes' => array('FAVOURITE'=>0,'YES'=>0,'NO'=>0),
+								'VotedFor' => isset($featureVotes[$featureRequestID]) ? $featureVotes[$featureRequestID] : false
 		);
 		if($featureModerator)
 			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getField('submitter_id'));
+		
+		$db2->query('SELECT COUNT(*), vote_type ' .
+					  'FROM account_votes_for_feature ' .
+					  'WHERE feature_request_id='.$featureRequestID .
+					  ' GROUP BY vote_type');
+		while($db2->nextRecord())
+		{
+			
+			$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getField('COUNT(*)');
+		}
 	}
 	$template->assignByRef('FeatureRequests',$featureRequests);
 }
