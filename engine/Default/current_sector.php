@@ -153,7 +153,8 @@ elseif ($player->hasFederalProtection())
 elseif($sector->offersFederalProtection())
 	$protectionMessage = '<span class="blue">PROTECTION</span>: You are <span class="red">NOT</span> under protection.';
 
-$template->assign('ProtectionMessage',$protectionMessage);
+if(!empty($protectionMessage))
+	$template->assign('ProtectionMessage',$protectionMessage);
 
 //enableProtectionDependantRefresh($template,$player);
 
