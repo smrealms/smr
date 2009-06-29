@@ -838,7 +838,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	for($i=1;$i<4;$i++)
 	{
 		$voteSite[$i] = '<a href=';
-		if($in_game && (!isset($turns_for_votes[$i]) || ($turns_for_votes[$i] && rand(0,100) < 80))) {
+		if($in_game && (!isset($turns_for_votes[$i]) || ($turns_for_votes[$i] && mt_rand(0,100) < 80))) {
 	
 			$container['link_id'] = $i;
 			$voteSite[$i] .= '\'javascript:voteSite("' . $vote_links[$i]['location'] . '",';

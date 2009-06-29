@@ -743,7 +743,7 @@ class SmrPlanet
 			//15% chance to destroy something
 			if (mt_rand(1, 100) <= self::CHANCE_TO_DOWNGRADE)
 			{
-				$rand = rand(1, 6);
+				$rand = mt_rand(1, 6);
 				switch ($rand) {
 					case 1:
 						//destroy a turret

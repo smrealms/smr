@@ -57,7 +57,7 @@ function private_msg_weapon($fp, $rdata) {
 		elseif (in_array($msg_3[4], $a))
 			$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE '.$msg_3[4].' > '.$msg_3[5].' AND '.$msg_3[4].' < '.$msg_3[6]);
 		else {
-			$rand = rand(0,7);
+			$rand = mt_rand(0,7);
 			$object = $a[$rand];
 			$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE '.$object.' > '.$msg_3[5].' AND '.$object.' < '.$msg_3[6]);
 		}
