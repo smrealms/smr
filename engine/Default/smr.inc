@@ -830,9 +830,9 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	}
 	
 	$vote_links = array();
-	$vote_links[1] = array('default_img' => 'mpogd.gif', 'star_img' => 'mpogd_vote.gif', 'location' => 'http://www.mpogd.com/gotm/vote.asp', 'name' => 'MPOGD');
+	$vote_links[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'location' => 'http://www.mpogd.com/gotm/vote.asp', 'name' => 'MPOGD');
 	$vote_links[2] = array('default_img' => 'omgn.jpg', 'star_img' => 'omgn_vote.jpg', 'location' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30', 'name' => 'OMGN');
-	$vote_links[3] = array('default_img' => 'twg.gif', 'star_img' => 'twg_vote.gif', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
+	$vote_links[3] = array('default_img' => 'twg.png', 'star_img' => 'twg_vote.png', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
 	
 	$voteSite = array();
 	for($i=1;$i<4;$i++)
