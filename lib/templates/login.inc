@@ -89,9 +89,9 @@ input.inputbox {
 
 <body>
 <div align="center">
-<img src="images/login/smr_banner_16.gif" alt=""><br />
-<img src="images/login/bottom_left.gif" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.gif" alt="Home"></a><img src="images/login/site_map.gif" alt="Site Map"><img src="images/login/contact.gif" alt="Contact"><img src="images/login/bottom_right.gif" alt=""><br />
-<a href="http://video.smrealms.de/" target="gw"><img src="images/login/video.gif" alt="Video Tutorials"></a><a href="http://www.azool.us/baalz/" target="alb"><img src="images/login/sml.gif" alt="Merchant Library"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.gif" alt="Web Board"></a><a href="http://bobby.fem.tu-ilmenau.de/cgi-bin/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.gif" alt="Site Statistics"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.gif" alt="Manual"></a><br />
+<img src="images/login/smr_banner_16.png" alt=""><br />
+<img src="images/login/bottom_left.gif" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.png" alt="Home"></a><img src="images/login/site_map.png" alt="Site Map"><img src="images/login/contact.png" alt="Contact"><img src="images/login/bottom_right.png" alt=""><br />
+<a href="http://video.smrealms.de/" target="gw"><img src="images/login/video.png" alt="Video Tutorials"></a><a href="http://www.azool.us/baalz/" target="alb"><img src="images/login/sml.png" alt="Merchant Library"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" alt="Web Board"></a><a href="http://bobby.fem.tu-ilmenau.de/cgi-bin/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" alt="Site Statistics"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.png" alt="Manual"></a><br />
 
 <?php
 if(!$isFirefox)
@@ -122,46 +122,46 @@ if(isset($Message))
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td colspan="3">
-							<img src="images/login/login_top.gif" alt="">
+							<img src="images/login/login_top.png" alt="">
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<img src="images/login/loginPw.gif" alt="Login/Password" />
+							<img src="images/login/loginPw.png" alt="Login/Password" />
 						</td>
 						<td>
 							<input class="InputFields inputbox" type="text" name="login"><br />
 							<input class="InputFields inputbox" type="password" name="password">
 						</td>
 						<td>
-							<img src="images/login/loginPwRight.gif" alt="">
+							<img src="images/login/loginPwRight.png" alt="">
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3">
-							<img src="images/login/loginPwMid.gif" alt="">
+							<img src="images/login/loginPwMid.png" alt="">
 						</td>
 					</tr>
 				</table>
 				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
 						<td>
-							<img src="images/login/regLeft.gif" alt=""><a href="<?php echo $Links['Register'] ?>"><img src="images/login/register.gif" alt="Register"></a><a href="resend_password.php"><img src="images/login/pw_reset.gif" alt="Reset Password"></a><img src="images/login/regRight.gif" alt="">
+							<img src="images/login/regLeft.png" alt=""><a href="<?php echo $Links['Register'] ?>"><img src="images/login/register.png" alt="Register"></a><a href="resend_password.php"><img src="images/login/pw_reset.png" alt="Reset Password"></a><img src="images/login/regRight.png" alt="">
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<img src="images/login/loginMid.gif" alt="">
+							<img src="images/login/loginMid.png" alt="">
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<img src="images/login/enter_left.gif" alt=""><input type="image" src="images/login/enter.gif" alt="Enter"><img src="images/login/enter_right.gif" alt="">
+							<img src="images/login/enter_left.png" alt=""><input type="image" src="images/login/enter.png" alt="Enter"><img src="images/login/enter_right.png" alt="">
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<img src="images/login/enter_bottom.gif" alt="">
+							<img src="images/login/enter_bottom.png" alt="">
 						</td>
 					</tr>
 				</table>
