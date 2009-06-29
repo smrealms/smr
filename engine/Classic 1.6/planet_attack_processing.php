@@ -1038,7 +1038,7 @@ function planetDowngrade(&$results, &$planet) {
     for ($i = 0; $i < $numberOfChances; $i++) {
         //15% chance to destroy something
         if (mt_rand(1, 100) <= 15) {
-            $rand = rand(1, 6);
+            $rand = mt_rand(1, 6);
 			switch ($rand) {
 				case 1:
 					//destroy a turret
