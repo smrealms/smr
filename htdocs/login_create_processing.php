@@ -23,8 +23,8 @@ if (SmrSession::$account_id > 0)
 
 // db object
 $db = new SmrMySqlDatabase();
-$login = $_REQUEST['login'];
-$password = $_REQUEST['password'];
+$login = trim($_REQUEST['login']);
+$password = trim($_REQUEST['password']);
 if (strstr($login, '\'') || strstr($password, '\'')) {
 
 	$msg = 'Illegal character in login or password detected! Don\'t use the apostrophe.';
@@ -54,7 +54,7 @@ if (empty($password)) {
 	exit;
 }
 
-$email = $_REQUEST['email'];
+$email = trim($_REQUEST['email']);
 if (empty($email)) {
 
 	$msg = 'Email address is missing!';
