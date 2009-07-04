@@ -94,7 +94,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.= $players[$db->getField('sender_id')];
 	$PHP_OUTPUT.= '</td>';
 	$PHP_OUTPUT.= '<td>';
-	$PHP_OUTPUT.= stripslashes($db->getField('text'));
+	$PHP_OUTPUT.= bbifyMessage($db->getField('text'));
 	$PHP_OUTPUT.= '</td>';
 	$PHP_OUTPUT.= '<td class="shrink nowrap top">';
 	$PHP_OUTPUT.= date(DATE_FULL_SHORT, $db->getField('sendtime'));

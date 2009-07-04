@@ -150,9 +150,9 @@ catch(Exception $e)
 	try
 	{
 		if(is_object($player))
-			$player->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
+			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
 		else if(is_object($account))
-			$account->sendMessageToBox(BOX_BUGS_AUTO, nl2br($message));
+			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
 		else
 			mail('bugs@smrealms.de',
 			 'Automatic Bug Report',

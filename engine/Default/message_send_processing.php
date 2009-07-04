@@ -1,6 +1,6 @@
 <?
 
-$message = nl2br($_POST['message']);
+$message = htmlentities(trim($_POST['message']));
 
 if (empty($message))
 	create_error('You have to enter a text to send!');

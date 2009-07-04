@@ -2,7 +2,7 @@
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
 // transform line breaks to <br />
-$body = nl2br($db->escape_string($_POST['body'], true));
+$body = trim(htmlentities($_POST['body']));
 $topic = $_REQUEST['topic'];
 if (isset($_REQUEST['allEyesOnly'])) $allEyesOnly = TRUE;
 else $allEyesOnly = FALSE;
@@ -60,7 +60,7 @@ if ($reply_id == 1) {
 
 // and the body
 $db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) ' .
-								 'VALUES('.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.$reply_id.', '.$body.', '.$player->getAccountID().', ' . TIME . ')');
+								 'VALUES('.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.$reply_id.', '.$db->escapeString($body).', '.$player->getAccountID().', ' . TIME . ')');
 $db->query('REPLACE INTO player_read_thread ' .
 		   '(account_id, game_id, alliance_id, thread_id, time)' .
 		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.(TIME+2).')');

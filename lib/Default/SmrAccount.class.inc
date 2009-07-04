@@ -480,7 +480,7 @@ class SmrAccount
 			sender_id,send_time) VALUES (' . 
 			$boxTypeID . ',' .
 			$gameID . ',' .
-			$db->escapeString($message,true) . ',' .
+			$db->escapeString($message) . ',' .
 			$senderID . ',' .
 			TIME . ')'
 		);

@@ -1,6 +1,6 @@
 <?
 
-$message = nl2br($db->escape_string($_POST['message'], true));
+$message = htmlentities(trim($_POST['message']));
 
 if (empty($message))
 	create_error('You have to enter a text to send!');

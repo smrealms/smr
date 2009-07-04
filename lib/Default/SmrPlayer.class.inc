@@ -1905,6 +1905,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires)
 	{
+		$message = trim($message);
 		$db = new SmrMySqlDatabase();
 		// send him the message
 		$db->query('INSERT INTO message
@@ -1913,7 +1914,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$receiverID . ',' .
 			$gameID . ',' .
 			$messageTypeID . ',' .
-			$db->escapeString($message,true) . ',' .
+			$db->escapeString($message) . ',' .
 			$senderID . ',' .
 			TIME . ',' .
 			$expires . ')'

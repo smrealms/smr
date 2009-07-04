@@ -143,7 +143,6 @@ abstract class MySqlDatabase implements Database
 			}
 			return substr($escapedString,0,-1);
 		}
-//		$string = htmlentities($string);
 		if($quotes)
 			return '\'' . mysql_real_escape_string($string,self::$dbConn) . '\'';
 		return mysql_real_escape_string($string,self::$dbConn);
