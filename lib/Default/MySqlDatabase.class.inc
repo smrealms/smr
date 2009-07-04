@@ -126,8 +126,10 @@ abstract class MySqlDatabase implements Database
 		}
 	}
 	
-	public function escapeString($string,$quotes=true)
+	public function escapeString($string,$quotes=true,$nullable=false)
 	{
+		if($nullable===true && ($string===null || $string===''))
+			return 'NULL';
 		if($string===true)
 			$string = 'TRUE';
 		else if($string===false)

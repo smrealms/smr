@@ -19,7 +19,7 @@ interface Database
 	
 	//  function free();
 	
-	public function escapeString($string,$quotes=true);
+	public function escapeString($string,$quotes=true,$nullable=false);
 	
 	public function escapeBoolean($bool);
 }

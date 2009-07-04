@@ -112,10 +112,13 @@ if ($action == 'Save and resend validation code') {
   $account->update();
 
 }
-else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50) {
-	$db->query('UPDATE account SET fontsize=' . $_REQUEST['fontsize'] . ' WHERE account_id = '.SmrSession::$account_id);
-	$account->fontsize = $_REQUEST['fontsize'];
-
+else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50)
+{
+	$account->setFontSize($_REQUEST['fontsize']);
+}
+else if ($action == 'Change CSS Link')
+{
+	$account->setCssLink($_REQUEST['csslink']);
 }
 else if ($action == 'Change Kamikaze Setting')
 {
