@@ -348,7 +348,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	
 	$return.= ('</tr>');
 	$return.= ('<tr>');
-	$return.= ('<td colspan="6">'.$message_text.'</td>');
+	$return.= ('<td colspan="6">'.bbifyMessage($message_text).'</td>');
 	$return.= ('</tr>');
 	return $return;
 }

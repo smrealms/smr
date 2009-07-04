@@ -18,9 +18,9 @@ $message = 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
 //	 'From: '.$account->email);
 
 if(is_object($player))
-	$player->sendMessageToBox(BOX_BUGS_REPORTED, nl2br($message));
+	$player->sendMessageToBox(BOX_BUGS_REPORTED, $message);
 else
-	$account->sendMessageToBox(BOX_BUGS_REPORTED, nl2br($message));
+	$account->sendMessageToBox(BOX_BUGS_REPORTED, $message);
 
 $container = array();
 $container['url'] = 'skeleton.php';

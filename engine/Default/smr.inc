@@ -13,6 +13,20 @@ function htmliseMessage($message)
 	return $message;
 }
 
+function bbifyMessage($message)
+{
+    static $bbParser;
+    if(!isset($bbParser))
+    {
+		require_once(LIB.'BBCode/nbbc.php');
+		$bbParser = new BBCode();
+		$bbParser->SetEnableSmileys(false);
+    }
+	$message = $bbParser->parse($message);
+	$message = str_replace('&lt;br /&gt;','<br />',$message);
+	return $message;
+}
+
 function enableProtectionDependantRefresh(&$template,&$player)
 {
 	$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
