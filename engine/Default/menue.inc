@@ -213,28 +213,37 @@ function create_trader_menue() {
 
 }
 
-function create_planet_menue() {
+function create_planet_menue()
+{
+	global $template;
+	
+	$menue_items[] = create_link(create_container('skeleton.php', 'planet_main.php'),'Planet Main'); //Always set in template
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'planet_main.php'),
-												  'Planet Main');
+	$container = create_container('skeleton.php', 'planet_construction.php');
+	$template->assign('PlanetConstructionLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'Construction');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'planet_construction.php'),
-												  'Construction');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'planet_defense.php'),
-												  'Defenses');
+	$container = create_container('skeleton.php', 'planet_defense.php');
+	$template->assign('PlanetDefensesLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'Defenses');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'planet_ownership.php'),
-												  'Ownership');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'planet_stockpile.php'),
-												  'Stockpile');
+	$container = create_container('skeleton.php', 'planet_ownership.php');
+	$template->assign('PlanetOwnershipLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'Ownership');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'planet_financial.php'),
-												  'Financial');
+
+	$container = create_container('skeleton.php', 'planet_stockpile.php');
+	$template->assign('PlanetStockpileLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'Stockpile');
+
+
+	$container = create_container('skeleton.php', 'planet_financial.php');
+	$template->assign('PlanetFinancialLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'Financial');
 
 	return create_menue($menue_items);
-
 }
 
 /*

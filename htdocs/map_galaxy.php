@@ -71,7 +71,7 @@ echo '<!--[if IE]>
 <![endif]-->
 <style type="text/css">
 	body {
-		font-size:' . $account->fontsize . '%;
+		font-size:' . $account->getFontSize() . '%;
 	}
 </style>
 ';

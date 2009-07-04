@@ -452,7 +452,7 @@ class SmrPlanet
 		return $this->currentlyBuilding;
 	}
 		
-	public function getMaxBuildings()
+	public function getMaxBuildings($buildingTypeID=false)
 	{
 		if(!isset($this->max_construction))
 		{
@@ -470,7 +470,9 @@ class SmrPlanet
 				$this->max_construction[$construction_id] = $max_construction;
 			}
 		}
-		return $this->max_construction;
+		if($buildingTypeID===false)
+			return $this->max_construction;
+		return $this->max_construction[$buildingTypeID];
 //				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
 //					$planet['Defined'] = TRUE;
 //				
