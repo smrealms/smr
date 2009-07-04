@@ -208,12 +208,27 @@ $form = create_form($container, 'Change Size');
 $PHP_OUTPUT.= $form['form'];
 
 $PHP_OUTPUT.= '<tr><td>Font size</td><td>';
-$PHP_OUTPUT.= '<input type="text" size="4" name="fontsize" value="' . $account->fontsize . '">';
+$PHP_OUTPUT.= '<input type="text" size="4" name="fontsize" value="' . $account->getFontSize() . '">';
 $PHP_OUTPUT.= ' Minimum font size is 50%</td><tr><td>&nbsp;</td>';
 $PHP_OUTPUT.= '<td>';
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '</td></tr>';
 $PHP_OUTPUT.=('</form>');
+
+$container = array();
+$container['url'] = 'preferences_processing.php';
+$form = create_form($container, 'Change CSS Link');
+
+$PHP_OUTPUT.= $form['form'];
+
+$PHP_OUTPUT.= '<tr><td>Change CSS Link</td><td>';
+$PHP_OUTPUT.= '<input type="text" size="50" name="csslink" value="' . $account->getCssLink() . '">';
+$PHP_OUTPUT.= '<br />You should only change this if you know what you\'re doing.<br /> Clearing will reset to the default of "<a href="'.DEFAULT_CSS.'">'.DEFAULT_CSS.'</a></td><tr><td>&nbsp;</td>';
+$PHP_OUTPUT.= '<td>';
+$PHP_OUTPUT.= $form['submit'];
+$PHP_OUTPUT.= '</td></tr>';
+$PHP_OUTPUT.=('</form>');
+
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</p>');
 

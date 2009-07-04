@@ -466,6 +466,8 @@ function do_voodoo()
 		$template->assignByRef('ThisShip',$ship);
 	}
 	$template->assignByRef('ThisAccount',$account);
+	if($account->getCssLink()!=null)
+		$template->assign('CSSLink',$account->getCssLink());
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
 	$time_elapsed = microtime(true) - $time_start;
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
@@ -546,7 +548,7 @@ function release_lock()
 
 function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 {
-	$template->assign('FontSize',$account->fontsize);
+	$template->assign('FontSize',$account->getFontSize());
 	$template->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
 	if(!$account->isUseAJAX())
 		$template->assign('AJAX_ENABLE_REFRESH',false);

@@ -30,7 +30,7 @@ class SmrAccount
 	protected $logging;
 	var $offset;
 	var $images;
-	var $fontsize;
+	var $fontSize;
 	var $rank;
 	var $rank_name;
 	protected $passwordReset;
@@ -40,6 +40,7 @@ class SmrAccount
 	protected $HOF;
 	protected $individualScores;
 	protected $score;
+	protected $cssLink;
 	
 	protected $hasChanged;
 	
@@ -85,11 +86,13 @@ class SmrAccount
 			$this->logging			= $row['logging']=='TRUE';
 			$this->offset			= $row['offset'];
 			$this->images			= $row['images'];
-			$this->fontsize			= $row['fontsize'];
+			$this->fontSize			= $row['fontsize'];
 			
 			$this->passwordReset	= $row['password_reset'];
 			$this->useAJAX			= $row['use_ajax']=='TRUE';
 			$this->mailBanned		= (int)$row['mail_banned'];
+			
+			$this->cssLink			= $row['css_link'];
 			
 			$this->hofName			= $row['hof_name'];
 			if(empty($this->hofName))
@@ -500,6 +503,32 @@ class SmrAccount
 	public function getEmail()
 	{
 		return $this->email;
+	}
+	
+	public function getFontSize()
+	{
+		return $this->fontSize;
+	}
+	
+	public function setFontSize($size)
+	{
+		if($this->fontSize==$size)
+			return;
+		$this->db->query('UPDATE account SET fontsize = ' . $this->db->escapeNumber($size) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->fontSize=$size;
+	}
+	
+	public function getCssLink()
+	{
+		return $this->cssLink;
+	}
+	
+	public function setCssLink($link)
+	{
+		if($this->cssLink==$link)
+			return;
+		$this->db->query('UPDATE account SET css_link = ' . $this->db->escapeString($link,true,true) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->cssLink=$link;
 	}
 	
 	public function getHofName()
