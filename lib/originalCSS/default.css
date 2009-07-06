@@ -12,7 +12,7 @@ body {
 	color:#ffffff;
 }
 
-H1 {
+h1 {
 	color : #80C870;
 	font-size : 125%;
 	font-family: Arial, sans-serif;
@@ -21,7 +21,7 @@ H1 {
 	margin:0px;
 }
 
-H2 {
+h2 {
 	color : #80C870;
 	font-size : 110%;
 	font-family: Arial, sans-serif;
@@ -30,13 +30,13 @@ H2 {
 	margin:0px;
 }
 
-H3 {
+h3 {
 	color : Fuchsia;
 	padding:0px;
 	margin:0px;
 }
 
-TH {
+th {
 	background : #0A4E1D;
 	color : #80C870;
 	text-align:center;
@@ -130,7 +130,7 @@ a.scan_btn {
 	position:relative;
 	top:-1.6em;
 }
-a.scan_btn:HOVER {
+a.scan_btn:hover {
 	background : #060e88;
 	color:#ffffff;
 }
