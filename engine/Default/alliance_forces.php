@@ -48,21 +48,18 @@ if ($db->nextRecord()) {
 // Ugly, but funtional
 $db->query('
 SELECT 
-galaxy.galaxy_name as galaxy_name,
 player.player_name as player_name,
-sector_has_forces.sector_id AS sector,
+sector_has_forces.sector_id AS sector_id,
+sector_has_forces.game_id AS game_id,
 sector_has_forces.mines as mines,
 sector_has_forces.combat_drones as combat_drones,
 sector_has_forces.scout_drones as scout_drones,
 sector_has_forces.expire_time as expire_time
-FROM sector_has_forces,player,sector,galaxy
+FROM sector_has_forces,player
 WHERE player.game_id=' . $player->getGameID() . '
 AND sector_has_forces.game_id=' . $player->getGameID() . '
 AND player.alliance_id=' . $alliance_id . '
 AND sector_has_forces.owner_id=player.account_id
-AND sector.game_id=' . $player->getGameID() . '
-AND sector.sector_id=sector_has_forces.sector_id
-AND galaxy.galaxy_id=sector.galaxy_id
 ORDER BY ' . $categorySQL . ', ' . $subcategory);
 
 $PHP_OUTPUT.= '<div align="center">';
@@ -118,11 +115,13 @@ if ($db->getNumRows() > 0) {
     $PHP_OUTPUT.= '</th>';
     $PHP_OUTPUT.= '</tr>';
 
-    while ($db->nextRecord()) {
+    while ($db->nextRecord())
+    {
+		$forceGalaxy =& SmrGalaxy::getGalaxyContaining($db->getField('game_id'),$db->getField('sector_id'));
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
-        $PHP_OUTPUT.= $db->getField('sector') . ' (' . $db->getField('galaxy_name');
+        $PHP_OUTPUT.= $db->getField('sector_id') . ' (' . ($forceGalaxy===null?'None':$forceGalaxy->getName());
 		$PHP_OUTPUT.= ')</td><td class="shrink center">';
         $PHP_OUTPUT.= $db->getField('combat_drones');
         $PHP_OUTPUT.= '</td><td class="shrink center">';
