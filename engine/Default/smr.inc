@@ -21,6 +21,8 @@ function bbifyMessage($message)
 		require_once(LIB.'BBCode/nbbc.php');
 		$bbParser = new BBCode();
 		$bbParser->SetEnableSmileys(false);
+		$bbParser->RemoveRule('wiki');
+		$bbParser->RemoveRule('img');
     }
 	$message = $bbParser->parse($message);
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
