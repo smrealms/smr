@@ -58,20 +58,16 @@ if ($db->getNumRows() > 0) {
 	
 	while ($db->nextRecord())
 	{
+		$forceGalaxy =& SmrGalaxy::getGalaxyContaining($db->getField('game_id'),$db->getField('sector_id'));
+		
 		$force_sector	= $db->getField('sector_id');
-		$db2->query('SELECT * FROM sector WHERE sector_id = '.$force_sector.' AND game_id = '.$player->getGameID());
-		$db2->nextRecord();
-		$gal_id			= $db2->getField('galaxy_id');
-		$db2->query('SELECT * FROM galaxy WHERE galaxy_id = '.$gal_id);
-		$db2->nextRecord();
-		$galaxy_name = $db2->getField('galaxy_name');
 		$force_sd		= $db->getField('scout_drones');
 		$force_cd		= $db->getField('combat_drones');
 		$force_mine		= $db->getField('mines');
 		$force_time		= $db->getField('expire_time');
 		
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center">'.$force_sector.' ('.$galaxy_name.')</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$force_sector.' ('.($forceGalaxy===null?'None':$forceGalaxy->getName()).')</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$force_cd.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$force_sd.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$force_mine.'</td>');

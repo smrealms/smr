@@ -20,7 +20,7 @@
 				foreach($Forces as $Force)
 				{
 					$Owner =& $Force->getOwner();
-					$SharedForceAlliance =& $Owner->sharedForceAlliance($ThisPlayer);
+					$SharedForceAlliance = $Owner->sharedForceAlliance($ThisPlayer);
 					if($SharedForceAlliance)
 					{
 						$RefreshAny = true;

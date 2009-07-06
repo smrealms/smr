@@ -77,7 +77,7 @@ else
 			$PHP_OUTPUT.=('</tr>');
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td width="100%" colspan="3">');
-			$PHP_OUTPUT.= htmliseMessage($db->getField('message_text'));
+			$PHP_OUTPUT.= bbifyMessage(htmliseMessage($db->getField('message_text')));
 			$PHP_OUTPUT.=('</td></tr>');
 			
 		}
