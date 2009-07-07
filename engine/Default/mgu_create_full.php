@@ -32,30 +32,27 @@ if ($db->nextRecord())
 
 $file .= 'CMF by ^V^ Productions ©2004 ';
 //get number of galaxies
-$db->query('SELECT  sector.galaxy_id, count(*) as num_sec, galaxy_name ' .
-			'FROM sector NATURAL JOIN galaxy ' .
-			'WHERE game_id = '.$game_id.' ' .
-			'GROUP BY sector.galaxy_id');
-$file .= addbyte($db->getNumRows());
+$galaxies =& SmrGalaxy::getGameGalaxies($game_id);
+$file .= addbyte(count($galaxies));
 //get galaxy name length
-while ($db->nextRecord())
+foreach ($galaxies as &$galaxy)
 {
 	//gal name
-	$file .= addbyte(strlen($db->getField('galaxy_name')));
-	$file .= $db->getField('galaxy_name');
+	$file .= addbyte(strlen($galaxy->getName()));
+	$file .= $galaxy->getName();
 	//gal owner
 	$file .= addbyte(0);
 	//$file .= addbyte(33);
 	//$file .= 'Not Supported By SMR Download Yet';
 	//default port owner
 	if ($db->getField('galaxy_id') <= 8)
-		$file .= addbyte($db->getField('galaxy_id'));
+		$file .= addbyte($galaxy->getGalaxyID());
 	else
 		$file .= addbyte(9);
 	//gal size
-	$file .= addbyte(sqrt($db->getField('num_sec')));
-	$file .= addbyte(sqrt($db->getField('num_sec')));
-}
+	$file .= addbyte($galaxy->getWidth());
+	$file .= addbyte($galaxy->getHeight());
+} unset($galaxy);
 //planet definitions (num of, [size of name, name])
 $file .= addbyte(2);
 $file .= addbyte(8);

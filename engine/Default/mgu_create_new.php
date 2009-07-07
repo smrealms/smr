@@ -33,33 +33,11 @@ $game_name = $db->getField('game_name');
 $total_sectors = 0;
 
 // Build the galaxy array.
-$db->query(
-	'SELECT ' .
-	'game_galaxy.galaxy_id as galaxy_id,' .
-	'game_galaxy.galaxy_name as galaxy_name,' .
-	'game_galaxy.width,' .
-	'game_galaxy.height,' .
-	'MIN(sector.sector_id) as start,' .
-	'MAX(sector.sector_id) as end ' . 
-	'FROM sector,game_galaxy WHERE ' .
-	'sector.game_id=' . $game_id . ' ' .
-	'AND game_galaxy.galaxy_id = sector.galaxy_id ' .
-	'AND game_galaxy.game_id = sector.game_id ' .
-	'GROUP BY galaxy_id ORDER BY start'
-);
-
-while($db->nextRecord()) {
-	$num_sectors = 1 + $db->getField('end') - $db->getField('start');
-	
-	$galaxies[$db->getField('galaxy_id')] = array(
-		'name' => $db->getField('galaxy_name'),
-		'start' => (int)$db->getField('start'),
-		'end' => (int)$db->getField('end'),
-		'width' => (int)$db->getField('width'),
-		'height' => (int)$db->getField('height')
-	);
-	$total_sectors += $num_sectors;
-}
+$galaxies =& SmrGalaxy::getGameGalaxies($game_id);
+foreach ($galaxies as &$galaxy)
+{
+	$total_sectors += $galaxy->getSize();
+} unset($galaxy);
 
 // Fill the sectors array with visited sectors
 $db->query(

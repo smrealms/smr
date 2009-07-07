@@ -13,17 +13,13 @@ $PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
 $db->query('
 SELECT
 planet.sector_id as sector_id,
-galaxy.galaxy_name as galaxy_name,
 player.player_name as player_name
-FROM player,planet,sector,galaxy
+FROM player,planet
 WHERE player.game_id=planet.game_id
 AND planet.owner_id=player.account_id
 AND player.game_id=' . $player->getGameID() . '
 AND planet.game_id=' . $player->getGameID() . '
 AND player.alliance_id=' . $alliance_id . '
-AND sector.game_id=' . $player->getGameID() . '
-AND sector.sector_id=planet.sector_id
-AND galaxy.galaxy_id=sector.galaxy_id
 ORDER BY planet.sector_id
 ');
 
@@ -48,7 +44,9 @@ if ($db->getNumRows() > 0) {
 		}
 	}
 
-    while ($db->nextRecord()) {
+    while ($db->nextRecord())
+    {
+		$forceGalaxy =& SmrGalaxy::getGalaxyContaining($db->getField('game_id'),$db->getField('sector_id'));
 		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= $planet->planet_name;
@@ -57,7 +55,7 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
 		$PHP_OUTPUT.= $planet->getSectorID();
 		$PHP_OUTPUT.= '&nbsp;(';
-		$PHP_OUTPUT.= $db->getField('galaxy_name');
+		$PHP_OUTPUT.= ($forceGalaxy===null?'None':$forceGalaxy->getName());
 		$PHP_OUTPUT.= ')</td><td class="shrink center">';
 		$PHP_OUTPUT.= $planet->getBuilding(1);
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
