@@ -223,7 +223,7 @@ $PHP_OUTPUT.= $form['form'];
 
 $PHP_OUTPUT.= '<tr><td>Change CSS Link</td><td>';
 $PHP_OUTPUT.= '<input type="text" size="50" name="csslink" value="' . $account->getCssLink() . '">';
-$PHP_OUTPUT.= '<br />You should only change this if you know what you\'re doing.<br /> Clearing will reset to the default of "<a href="'.DEFAULT_CSS.'">'.DEFAULT_CSS.'</a></td><tr><td>&nbsp;</td>';
+$PHP_OUTPUT.= '<br />You should only change this if you know what you\'re doing.<br /> Clearing will reset to the default of "<a href="'.DEFAULT_CSS.'">'.DEFAULT_CSS.'</a><br />If trying to link to a local file you may have to change your browser\'s security settings.</td><tr><td>&nbsp;</td>';
 $PHP_OUTPUT.= '<td>';
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '</td></tr>';
