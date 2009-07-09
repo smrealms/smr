@@ -116,50 +116,51 @@ else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQU
 {
 	$account->setFontSize($_REQUEST['fontsize']);
 }
-else if ($action == 'Change CSS Link')
+else if ($action == 'Change CSS Options')
 {
 	$account->setCssLink($_REQUEST['csslink']);
+	$account->setDefaultCSSEnabled($_REQUEST['defaultcss']!=='Yes');
 }
 else if ($action == 'Change Kamikaze Setting')
 {
 	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze']=='Yes');
 }
-else if ($action == 'Alter Player') {
-	
-	// disallow certain ascii chars
-	for ($i = 0; $i < strlen($_POST['PlayerName']); $i++)
-		if (ord($_POST['PlayerName'][$i]) < 32 || ord($_POST['PlayerName'][$i]) > 127)
-			create_error('The player name contains invalid characters!');
-
+else if ($action == 'Alter Player')
+{
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
+	
+	// disallow certain ascii chars
+	for ($i = 0; $i < strlen($player_name); $i++)
+		if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127)
+			create_error('The player name contains invalid characters!');
 
 	if (empty($player_name))
 		create_error('You must enter a player name!');
 	
 	// Check if name is in use.
-	$db->query('SELECT account_id FROM player WHERE account_id!=' . SmrSession::$account_id . ' AND game_id=' . $var['game_id'] . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
-	if($db->getNumRows())	{
+	$db->query('SELECT account_id FROM player WHERE account_id!=' . SmrSession::$account_id . ' AND game_id=' .SmrSession::$game_id . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
+	if($db->getNumRows())
+	{
 		create_error('Name is already being used in this game!');
 	}
 	
-	$changePlayer =& SmrPlayer::getPlayer(SmrSession::$account_id,$var['game_id']);
-	$old_name = $changePlayer->getDisplayName();
+	$old_name = $player->getDisplayName();
 	
 	if($old_name == $player_name)
 	{
 		create_error('Your player already has that name!');
 	}
 	
-	if($changePlayer->isNameChanged())
+	if($player->isNameChanged())
 	{
 		create_error('You have already changed your name once!');
 	}
 	
-	$changePlayer->setPlayerName($player_name);
+	$player->setPlayerName($player_name);
 
-	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $changePlayer->getDisplayName() . '</span>';
-	$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . $var['game_id'] . ')');
+	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getDisplayName() . '</span>';
+	$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . SmrSession::$game_id . ')');
 }
 
 forward($container);
