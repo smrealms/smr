@@ -192,7 +192,6 @@ if(isset($GameID))
 			<td>
 				<input type="text" size="50" name="csslink" value="<?php echo $ThisAccount->getCssLink(); ?>"><br />
 				You should only change this if you know what you\'re doing.<br />
-				Clearing will reset to the default of "<a href="<?php echo DEFAULT_CSS; ?>"><?php echo DEFAULT_CSS; ?></a><br />
 				If trying to link to a local file you may have to change your browser's security settings.
 			</td>
 		</tr>
@@ -202,6 +201,7 @@ if(isset($GameID))
 			<td>
 				Yes: <input type="radio" name="defaultcss" id="InputFields" value="Yes"<?php if($ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
 				No: <input type="radio" name="defaultcss" id="InputFields" value="No"<?php if(!$ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
+				This specifies whether the default stylesheet (<a href="<?php echo DEFAULT_CSS; ?>"><?php echo DEFAULT_CSS; ?></a>) should be loaded.<br />
 			</td>
 		</tr>
 
