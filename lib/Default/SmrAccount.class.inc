@@ -609,7 +609,7 @@ class SmrAccount
 	
 	public function isDefaultCSSEnabled()
 	{
-		return $this->useAJAX;
+		return $this->defaultCSSEnabled;
 	}
 	
 	public function setDefaultCSSEnabled($bool)
