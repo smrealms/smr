@@ -119,7 +119,7 @@ else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQU
 else if ($action == 'Change CSS Options')
 {
 	$account->setCssLink($_REQUEST['csslink']);
-	$account->setDefaultCSSEnabled($_REQUEST['defaultcss']!=='Yes');
+	$account->setDefaultCSSEnabled($_REQUEST['defaultcss']!=='No');
 }
 else if ($action == 'Change Kamikaze Setting')
 {
