@@ -617,7 +617,7 @@ class SmrAccount
 		if($this->defaultCSSEnabled == $bool)
 			return;
 		$this->defaultCSSEnabled=$bool;
-		$this->db->query('UPDATE account SET css_link = ' . $this->db->escapeBoolean($bool) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->query('UPDATE account SET default_css_enabled = ' . $this->db->escapeBoolean($bool) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->hasChanged=true;
 	}
 	
