@@ -41,6 +41,7 @@ class SmrAccount
 	protected $individualScores;
 	protected $score;
 	protected $cssLink;
+	protected $defaultCSSEnabled;
 	
 	protected $hasChanged;
 	
@@ -93,6 +94,7 @@ class SmrAccount
 			$this->mailBanned		= (int)$row['mail_banned'];
 			
 			$this->cssLink			= $row['css_link'];
+			$this->defaultCSSEnabled	= $row['default_css_enabled']=='TRUE';
 			
 			$this->hofName			= $row['hof_name'];
 			if(empty($this->hofName))
@@ -505,6 +507,11 @@ class SmrAccount
 		return $this->email;
 	}
 	
+	public function getOffset()
+	{
+		return $this->offset;
+	}
+	
 	public function getFontSize()
 	{
 		return $this->fontSize;
@@ -544,6 +551,11 @@ class SmrAccount
 		$this->hofName=$name;
 	}
 	
+	public function getReferralLink()
+	{
+		return URL . '/login_create.php?ref='.$this->getAccountID();
+	}
+	
 	protected function getPassword()
 	{
 		return $this->password;
@@ -577,6 +589,11 @@ class SmrAccount
 		$this->update();
 	}
 	
+	public function isDisplayShipImages()
+	{
+		return $this->images == 'Yes';
+	}
+	
 	public function isUseAJAX()
 	{
 		return $this->useAJAX;
@@ -587,6 +604,20 @@ class SmrAccount
 		if($this->useAJAX == $bool)
 			return;
 		$this->useAJAX=$bool;
+		$this->hasChanged=true;
+	}
+	
+	public function isDefaultCSSEnabled()
+	{
+		return $this->useAJAX;
+	}
+	
+	public function setDefaultCSSEnabled($bool)
+	{
+		if($this->defaultCSSEnabled == $bool)
+			return;
+		$this->defaultCSSEnabled=$bool;
+		$this->db->query('UPDATE account SET css_link = ' . $this->db->escapeBoolean($bool) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->hasChanged=true;
 	}
 	

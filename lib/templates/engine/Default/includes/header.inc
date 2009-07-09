@@ -4,7 +4,8 @@
 	<head>
 		<title><?php echo $Title ?> <?php if(isset($GameName)) echo $GameName; ?></title>
 		<meta http-equiv="pragma" content="no-cache">
-		<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
+		<?php if(is_object($ThisAccount) && $ThisAccount->isDefaultCSSEnabled()){ ?><link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>"><?php } ?>
+		<?php if(isset($ExtraCSSLink)){ ?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>"><?php } ?>
 		<!--[if IE]>
 			<link rel="stylesheet" type="text/css" href="css/ie_specific.css">
 		<![endif]-->

@@ -163,7 +163,7 @@ function create_form($container,$actions) {
 }
 
 function create_submit($value) {
-	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields">');
+	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" />');
 }
 
 function create_submit_style($value, $style) {
@@ -483,7 +483,7 @@ function do_voodoo()
 	}
 	$template->assignByRef('ThisAccount',$account);
 	if($account->getCssLink()!=null)
-		$template->assign('CSSLink',$account->getCssLink());
+		$template->assign('ExtraCSSLink',$account->getCssLink());
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
 	$time_elapsed = microtime(true) - $time_start;
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
