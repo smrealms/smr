@@ -1,20 +1,7 @@
-<?
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-
-$forces_owner	=& SmrPlayer::getPlayer($var['owner_id'], $player->getGameID());
-require_once(get_file_loc('SmrForce.class.inc'));
-$forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+<?php
 
 if ($player->getNewbieTurns() > 0)
 	create_error('You can\'t take/drop forces under newbie protection!');
-
-$db->query('SELECT *
-			FROM location
-			WHERE game_id = '.$player->getGameID().' AND
-				  sector_id = '.$player->getSectorID());
-if ($db->getNumRows() > 0)
-	create_error('You can\'t drop forces in a sector with a location!');
 
 if ($player->isLandedOnPlanet())
 	create_error('You must first launch to drop forces');
@@ -54,6 +41,16 @@ $change_mines = $drop_mines - $take_mines;
 $change_combat_drones = $drop_combat_drones - $take_combat_drones;
 $change_scout_drones = $drop_scout_drones - $take_scout_drones;
 
+// do we have any action at all?
+if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 0)
+	create_error('You want to add/remove 0 forces?');
+
+if ($sector->hasLocation())
+	create_error('You can\'t drop forces in a sector with a location!');
+	
+require_once(get_file_loc('SmrForce.class.inc'));
+$forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
+
 include(get_file_loc('mine_change.php'));
 // check max on that stack
 if ($forces->getMines() + $change_mines > 50)
@@ -64,10 +61,6 @@ if ($forces->getCDs() + $change_combat_drones > 50)
 
 if ($forces->getSDs() + $change_scout_drones > 5)
 	create_error('This stack can only take up to 5 scout drones!');
-
-// do we have any action at all?
-if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 0)
-	create_error('You want to add/remove 0 forces?');
 
 // combat drones
 if ($change_combat_drones != 0) {
@@ -192,9 +185,16 @@ if ($var['owner_id'] != $player->getAccountID()) {
 	elseif (!isset($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message))
 		$message .= $scout_drones_message;
 
-	$message .= ' from/to your stack in sector #'.$sector->getSectorID();
+	if($change_mines >= $combat_drones_message >= 0 && $change_scout_drones >= 0)
+		$message .= ' to';
+	elseif($change_mines <= $combat_drones_message <= 0 && $change_scout_drones <= 0)
+		$message .= ' from';
+	else
+		$message .= ' from/to';
+		
+	$message .= ' your stack in sector #'.$forces->getSectorID();
 
-	$player->sendMessage($forces_owner->getAccountID(), MSG_SCOUT, $message, false);
+	$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
 
 }
 

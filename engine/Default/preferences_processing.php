@@ -3,127 +3,136 @@
 $container = array();
 $container['url'] = 'skeleton.php';
 if (SmrSession::$game_id > 0)
-  if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php'; else $container['body'] = 'current_sector.php';
+	if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php'; else $container['body'] = 'current_sector.php';
 else
-  $container['body'] = 'game_play.php';
+	$container['body'] = 'game_play.php';
 $action = $_REQUEST['action'];
 $email = $_REQUEST['email'];
 $new_password = $_REQUEST['new_password'];
 $old_password = $_REQUEST['old_password'];
 $retype_password = $_REQUEST['retype_password'];
 $HoF_name = $_REQUEST['HoF_name'];
-if ($action == 'Save and resend validation code') {
+if ($action == 'Save and resend validation code')
+{
+	// get user and host for the provided address
+	list($user, $host) = explode('@', $email);
 
-  // get user and host for the provided address
-  list($user, $host) = explode('@', $email);
+	// check if the host got a MX or at least an A entry
+	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A'))
+		create_error('This is not a valid email address! The domain '.$db->escapeString($host).' does not exist.');
 
-  // check if the host got a MX or at least an A entry
-  if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A'))
-    create_error('This is not a valid email address! The domain '.$db->escapeString($host).' does not exist.');
+	if (strstr($email, ' '))
+		create_error('The eMail is invalid! It cannot contain any spaces.');
+	
+	$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $account->account_id);
+	if ($db->getNumRows() > 0)
+		create_error('This eMail address is already registered.');
 
-  if (strstr($email, ' '))
-    create_error('The eMail is invalid! It cannot contain any spaces.');
-  
-  $db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $account->account_id);
-  if ($db->getNumRows() > 0)
-    create_error('This eMail address is already registered.');
+	$account->email = $email;
+	$account->validation_code = substr(SmrSession::$session_id, 0, 10);
+	$account->validated = 'FALSE';
+	$account->update();
 
-  $account->email = $email;
-  $account->validation_code = substr(SmrSession::$session_id, 0, 10);
-  $account->validated = 'FALSE';
-  $account->update();
+	// remember when we sent validation code
+	$db->query('REPLACE INTO notification (notification_type, account_id, time) ' .
+									 'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . TIME . ')');
 
-  // remember when we sent validation code
-  $db->query('REPLACE INTO notification (notification_type, account_id, time) ' .
-                   'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . TIME . ')');
+	mail($email, 'Your validation code!',
+		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
+		'   Your new validation code is: '.$account->validation_code.EOL.EOL.
+		'The Space Merchant Realms server is on the web at '.URL.'/.'.EOL.
+		'You\'ll find a quick how-to-play here '.URL.'/manual.php'.EOL.
+		'Please verify within the next 7 days or your account will be automatically deleted.',
+		'From: support@smrealms.de');
 
-  mail($email, 'Your validation code!',
-    'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
-    '   Your new validation code is: '.$account->validation_code.EOL.EOL.
-    'The Space Merchant Realms server is on the web at '.URL.'/.'.EOL.
-    'You\'ll find a quick how-to-play here '.URL.'/manual.php'.EOL.
-    'Please verify within the next 7 days or your account will be automatically deleted.',
-    'From: support@smrealms.de');
+	// get rid of that email permission
+	$db->query('DELETE FROM account_is_closed ' .
+						'WHERE account_id = '.$account->account_id.' AND ' .
+								'reason_id = 1');
 
-  // get rid of that email permission
-  $db->query('DELETE FROM account_is_closed ' .
-            'WHERE account_id = '.$account->account_id.' AND ' .
-                'reason_id = 1');
+	// overwrite container
+	$container['body'] = 'validate.php';
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your email address, you will now need to revalidate with the code sent to the new email address.';
+}
+elseif ($action == 'Change Password')
+{
+	if (empty($new_password))
+		create_error('You must enter a non empty password!');
 
-  // overwrite container
-  $container['body'] = 'validate.php';
+	if ($account->checkPassword($old_password))
+		create_error('Your current password is wrong!');
 
-} elseif ($action == 'Change Password') {
+	if ($new_password != $retype_password)
+		create_error('The passwords you entered don\'t match!');
 
-  if (empty($new_password))
-    create_error('You must enter a non empty password!');
+	if ($new_password == $account->login)
+		create_error('Your chosen password is invalid!');
 
-  if ($account->checkPassword($old_password))
-    create_error('Your current password is wrong!');
+	$account->setPassword($new_password);
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your password.';
+}
+elseif ($action == 'Change Name')
+{
+	// disallow certain ascii chars
+	for ($i = 0; $i < strlen($HoF_name); $i++)
+		if (ord($HoF_name[$i]) < 32 || ord($HoF_name[$i]) > 127)
+			create_error('Your Hall Of Fame name contains invalid characters!');
 
-  if ($new_password != $retype_password)
-    create_error('The passwords you entered don\'t match!');
+	//disallow blank names
+	if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
 
-  if ($new_password == $account->login)
-    create_error('Your chosen password is invalid!');
+	//no duplicates
+	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id != '.$account->getAccountID().' LIMIT 1');
+	if ($db->nextRecord()) create_error('Someone is already using that name!');
 
-  $account->setPassword($new_password);
-} elseif ($action == 'Change Name') {
+	// set the HoF name in account stat
+	$account->setHofName($HoF_name);
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your hall of fame name.';
+}
+elseif ($action == 'Yes')
+{
+	$account_id = $var['account_id'];
+	$amount = $var['amount'];
 
-  // disallow certain ascii chars
-  for ($i = 0; $i < strlen($HoF_name); $i++)
-    if (ord($HoF_name[$i]) < 32 || ord($HoF_name[$i]) > 127)
-      create_error('Your Hall Of Fame name contains invalid characters!');
+	// create his account
+	$his_account =& SmrAccount::getAccount($account_id);
+	
+	// take from us
+	$account->decreaseSmrCredits($amount);
+	// add to him
+	$his_account->increaseSmrCredits($amount);
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have sent SMR credits.';
+}
+elseif ($action == 'Change Timezone')
+{
+	$timez = $_REQUEST['timez'];
+	if (!is_numeric($timez))
+		create_error('Numbers only please');
 
-  //disallow blank names
-  if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
-
-  //no duplicates
-  $db->query('SELECT * FROM account WHERE hof_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id != '.$account->getAccountID().' LIMIT 1');
-  if ($db->nextRecord()) create_error('Someone is already using that name!');
-
-  // set the HoF name in account stat
-  $account->setHofName($HoF_name);
-
-} elseif ($action == 'Yes')  {
-
-  $account_id = $var['account_id'];
-  $amount = $var['amount'];
-
-  // create his account
-  $his_account =& SmrAccount::getAccount($account_id);
-  
-  // take from us
-  $account->decreaseSmrCredits($amount);
-  // add to him
-  $his_account->increaseSmrCredits($amount);
-
-} elseif ($action == 'Change Timezone') {
-
-  $timez = $_REQUEST['timez'];
-  if (!is_numeric($timez))
-  	create_error('Numbers only please');
-
-  $db->query('UPDATE account SET offset = '.$timez.' WHERE account_id = '.SmrSession::$account_id);
-
-} elseif ($action == 'Change') {
-
-  $account->images = $_REQUEST['images'];
-  $account->update();
-
+	$db->query('UPDATE account SET offset = '.$timez.' WHERE account_id = '.SmrSession::$account_id);
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
+}
+elseif ($action == 'Change')
+{
+	$account->images = $_REQUEST['images'];
+	$account->update();
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed yourship images preferences.';
 }
 else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50)
 {
 	$account->setFontSize($_REQUEST['fontsize']);
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your font size.';
 }
 else if ($action == 'Change CSS Options')
 {
 	$account->setCssLink($_REQUEST['csslink']);
 	$account->setDefaultCSSEnabled($_REQUEST['defaultcss']!='No');
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 }
 else if ($action == 'Change Kamikaze Setting')
 {
 	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze']=='Yes');
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 }
 else if ($action == 'Alter Player')
 {
@@ -161,6 +170,7 @@ else if ($action == 'Alter Player')
 
 	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getDisplayName() . '</span>';
 	$db->query('INSERT INTO news (time, news_message, game_id) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . SmrSession::$game_id . ')');
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }
 
 forward($container);

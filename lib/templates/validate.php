@@ -3,6 +3,12 @@
 <form name="FORM" method="POST" action="<?php echo $ValidationFormAction ?>">
 <input type="hidden" name="sn" value="<?php echo $ValidateFormSN ?>">
 
+<?php
+if(isset($Message))
+{
+	echo $Message; ?><br /><?php
+} ?>
+
 <p>Welcome <?php echo $FirstName ?></p>
 <p>
 	Thank you for trying out Space Merchant Realms! We hope that you are enjoying the game. However,
