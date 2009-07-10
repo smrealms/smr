@@ -50,6 +50,7 @@
 	if(isset($AccountID))
 	{
 		?><a href="<?php echo $PlayGameLink ?>">Play Game</a><br />
+			<a href="<?php echo $PreferencesLink; ?>">Preferences</a><br />
 			<a href="<?php echo $LogoutLink ?>">Logout</a><br />
 		<br /><?php
 	}
@@ -57,10 +58,9 @@
 	{
 		?><a href="login.php">Login</a><br /><?php
 	}
+	//<a href="http://www.azool.us/baalz/" target="manual">Help Pages</a><br />
 	?>
-	<a href="http://www.azool.us/baalz/" target="manual">Help Pages</a><br />
 	<a href="manual.php" target="manual">Manual</a><br />
-	<a href="<?php echo $PreferencesLink; ?>">Preferences</a><br />
 	<?php
 	if(isset($GameID))
 	{
