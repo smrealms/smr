@@ -34,7 +34,7 @@ if(isset($GameID))
 				<td><?php
 					if(!$ThisPlayer->isNameChanged())
 					{
-						?><input type="text" maxlength="32" name="PlayerName" value="<?php echo $ThisPlayer->getPlayerName(); ?>" size="32"><?php
+						?><input type="text" maxlength="32" name="PlayerName" value="<?php echo $ThisPlayer->getPlayerName(); ?>" size="32"> (You can only change your name once)<?php
 					}
 					else
 					{
