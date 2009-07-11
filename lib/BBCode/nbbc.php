@@ -1165,10 +1165,11 @@ $/Dx", $string);
 }
 function HTMLEncode($string) {
 	return $string;
-if (!$this->allow_ampersand)
-return htmlspecialchars($string);
-else return str_replace(Array('<', '>', '"'),
-Array('&lt;', '&gt;', '&quot;'), $string);
+//Page
+//if (!$this->allow_ampersand)
+//return htmlspecialchars($string);
+//else return str_replace(Array('<', '>', '"'),
+//Array('&lt;', '&gt;', '&quot;'), $string);
 }
 function FixupOutput($string) {
 if (!$this->detect_urls) {
