@@ -8,11 +8,10 @@ class SmrForce
 	protected static $CACHE_SECTOR_FORCES = array();
 	protected static $TIDIED_UP = false;
 	
-	const MAX_EXPIRE_TIME = 432000; // 5 days
 	const TIME_PER_SCOUT_ONLY = 86400; // 1 = 1 day
-	const TIME_PER_SCOUT = 8640; // 10 = 1 day
-	const TIME_PER_COMBAT = 8640; // 10 = 1 day
-	const TIME_PER_MINE = 8640; // 10 = 1 day
+	const TIME_PERCENT_PER_SCOUT = 0.02; // 1/50th
+	const TIME_PERCENT_PER_COMBAT = 0.02; // 1/50th
+	const TIME_PERCENT_PER_MINE = 0.02; // 1/50th
 	
 	protected static $refreshAllHREF;
 	
@@ -91,9 +90,9 @@ class SmrForce
 		{
 			self::$TIDIED_UP = true;
 			$db = new SmrMySqlDatabase();
-			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + if(combat_drones+mines=0,scout_drones*'.self::TIME_PER_SCOUT_ONLY.',combat_drones*'.self::TIME_PER_COMBAT.'+scout_drones*'.self::TIME_PER_SCOUT.'+mines*'.self::TIME_PER_MINE.')) WHERE refresh_at <= '.TIME.' AND refresher != 0');
+			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + if(combat_drones+mines=0,scout_drones*'.self::TIME_PER_SCOUT_ONLY.',combat_drones*'.($this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_COMBAT).'+scout_drones*'.($this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_SCOUT).'+mines*'.($this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_MINE).')) WHERE sector_id <= '.$this->getGalaxy()->getStartSector().' AND sector_id >= '.$this->getGalaxy()->getEndSector().' AND refresher != 0 AND refresh_at <= '.TIME);
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
-			$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+self::MAX_EXPIRE_TIME).' WHERE expire_time > '.(TIME+432000));
+			$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+$this->getMaxGalaxyExpireTime()).' WHERE sector_id <= '.$this->getGalaxy()->getStartSector().' AND sector_id >= '.$this->getGalaxy()->getEndSector().' AND expire_time > '.(TIME+$this->getMaxGalaxyExpireTime().' AND (combat_drones > 0 OR mines > 0)'));
 		}
 	}
 	
@@ -287,8 +286,8 @@ class SmrForce
 			throw new Exception('Cannot set negative expiry.');
 		if($time==$this->getExpire())
 			return;
-		if($time > TIME + self::MAX_EXPIRE_TIME)
-			$time = self::MAX_EXPIRE_TIME + TIME;
+		if($time > TIME + $this->getMaxGalaxyExpireTime())
+			$time = TIME + $this->getMaxGalaxyExpireTime();
 		$this->hasChanged = true;
 		$this->expire = $time;
 	}
@@ -302,9 +301,14 @@ class SmrForce
 		}
 		else
 		{
-			$time = $this->getCDs()*self::TIME_PER_COMBAT  + $this->getSDs()*self::TIME_PER_SCOUT + $this->getMines()*self::TIME_PER_MINE;
+			$time = $this->getCDs()*$this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_COMBAT  + $this->getSDs()*$this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_SCOUT + $this->getMines()*$this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_MINE;
 		}
 		$this->setExpire(TIME + $time);
+	}
+	
+	public function getMaxGalaxyExpireTime()
+	{
+		return $this->getGalaxy()->getMaxForceTime();
 	}
 	
 	public function getBumpTurnCost()
@@ -343,6 +347,11 @@ class SmrForce
 		{
 			$playerPinging->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage,false);
 		}
+	}
+
+	function &getGalaxy()
+	{
+		return SmrGalaxy::getGalaxyContaining($this->getGameID(),$this->getSectorID());
 	}
 
 	function &getOwner()
