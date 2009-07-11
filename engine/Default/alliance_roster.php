@@ -58,7 +58,7 @@ $db->nextRecord();
 
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<div align="center">';
-$PHP_OUTPUT.= $alliance->getDescription();
+$PHP_OUTPUT.= bbifyMessage($alliance->getDescription());
 if($account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
 {
 	$PHP_OUTPUT.= '<br /><br />';
