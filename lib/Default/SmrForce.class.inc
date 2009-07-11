@@ -87,9 +87,9 @@ class SmrForce
 	
 	public static function tidyUpForces(SmrGalaxy &$galaxyToTidy)
 	{
-		if(!isset(self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getSectorID()]))
+		if(!isset(self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()]))
 		{
-			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getSectorID()] = true;
+			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()] = true;
 			$db = new SmrMySqlDatabase();
 			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + if(combat_drones+mines=0,scout_drones*'.self::TIME_PER_SCOUT_ONLY.',combat_drones*'.($galaxyToTidy->getMaxForceTime()*self::TIME_PERCENT_PER_COMBAT).'+scout_drones*'.($galaxyToTidy->getMaxForceTime()*self::TIME_PERCENT_PER_SCOUT).'+mines*'.($galaxyToTidy->getMaxForceTime()*self::TIME_PERCENT_PER_MINE).')) WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id <= '.$galaxyToTidy->getStartSector().' AND sector_id >= '.$galaxyToTidy->getEndSector().' AND refresher != 0 AND refresh_at <= '.TIME);
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
@@ -310,12 +310,11 @@ class SmrForce
 	
 	public function getMaxExpireTime()
 	{
-		if(!$this->exists())
-			return 0;
-		if($this->getCDs() == 0 && $this->getMines() == 0 && $this->getSDs() > 0)
-			return self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY;
-		else
+		if($this->hasCDs()||$this->hasSDs()||$this->hasMines())
 			return $this->getMaxGalaxyExpireTime();
+		if(!$this->hasCDs() && !$this-hasMines() && $this->hasSDs())
+			return self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY;
+		return 0;
 	}
 	
 	public function getMaxGalaxyExpireTime()
