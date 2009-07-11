@@ -185,9 +185,9 @@ if ($var['owner_id'] != $player->getAccountID()) {
 	elseif (!isset($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message))
 		$message .= $scout_drones_message;
 
-	if($change_mines >= $combat_drones_message >= 0 && $change_scout_drones >= 0)
+	if($change_mines >= 0 && $combat_drones_message >= 0 && $change_scout_drones >= 0)
 		$message .= ' to';
-	elseif($change_mines <= $combat_drones_message <= 0 && $change_scout_drones <= 0)
+	elseif($change_mines <= 0 && $combat_drones_message <= 0 && $change_scout_drones <= 0)
 		$message .= ' from';
 	else
 		$message .= ' from/to';
