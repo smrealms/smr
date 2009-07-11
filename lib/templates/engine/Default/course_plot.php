@@ -91,4 +91,3 @@ if(isset($XType))
 		<input type="submit" value="Go" />
 	</form><?php
 } ?>
-</form>

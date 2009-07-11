@@ -15,7 +15,7 @@ create_echo_form($link);
 	</tr>
 	<tr>
 		<td class="right">Game Description</td>
-		<td class="left"><textarea size="6" name="desc" value=""></textarea></td>
+		<td class="left"><textarea name="desc" value=""></textarea></td>
 	</tr>
 	<tr>
 		<td class="right">Game Speed</td>
