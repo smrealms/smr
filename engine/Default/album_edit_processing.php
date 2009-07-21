@@ -10,8 +10,8 @@ $location = $_POST['location'];
 $email = $_POST['email'];
 
 // get website (and validate it)
-if ($_POST['website'] != 'http://') {
-
+if ($_POST['website'] != 'http://')
+{
 	// add http:// if missing
 	if (!preg_match('=://=', $_POST['website']))
 		$website = 'http://' . $_POST['website'];
@@ -24,7 +24,8 @@ if ($_POST['website'] != 'http://') {
 	if ($status != 2 && $status != 3)
 		create_error('The website you entered is invalid!');
 
-} else
+}
+else
 	$website = '';
 
 // get 'other' info
@@ -57,8 +58,8 @@ if (!is_numeric($year))
 	create_error('The year has to be a number!');
 
 // check if we have an image
-if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
-
+if ($_FILES['photo']['error'] == UPLOAD_ERR_OK)
+{
 	// get dimensions
 	$size = getimagesize($_FILES['photo']['tmp_name']);
 
@@ -76,14 +77,15 @@ if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 
 	move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD.SmrSession::$account_id);
 
-} else
+}
+else
 	$no_picture = true;
 
 
 // check if we had a album entry so far
 $db->query('SELECT * FROM album WHERE account_id = '.SmrSession::$account_id);
-if ($db->nextRecord()) {
-
+if ($db->nextRecord())
+{
 	if ($no_picture == false)
 		$comment = '<span style="color:lime;">*** Picture changed</span>';
 
@@ -101,8 +103,9 @@ if ($db->nextRecord()) {
 					disabled = \'FALSE\'
 				WHERE account_id = '.SmrSession::$account_id . ' LIMIT 1');
 
-} else {
-
+}
+else
+{
 	// if he didn't upload a picture before
 	// we kick him out here
 	if ($no_picture)
@@ -116,8 +119,8 @@ if ($db->nextRecord()) {
 
 }
 
-if ($comment) {
-
+if ($comment)
+{
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
@@ -131,7 +134,6 @@ if ($comment) {
 				(album_id, comment_id, time, post_id, msg)
 				VALUES ('.$account->account_id.', '.$comment_id.', '.TIME.', 0, '.$db->escapeString($comment).')');
 	$db->unlock();
-
 }
 
 $container = array();
