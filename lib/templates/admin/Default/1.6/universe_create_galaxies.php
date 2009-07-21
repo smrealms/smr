@@ -30,6 +30,6 @@
 			</tr><?php
 		} ?>
 		<tr><td class="center" colspan="5"><input type="submit" value="Create Galaxies" name="submit"></td>
-		<td class="center"><input type="submit" value="Next" name="Next"></td>
+		<td class="center"><!--input type="submit" value="Next" name="Next"--></td>
 	</table>
 </form>

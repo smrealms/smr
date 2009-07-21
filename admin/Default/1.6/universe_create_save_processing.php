@@ -3,6 +3,7 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('SmrLocation.class.inc'));
 $submit = isset($_REQUEST['submit'])?$_REQUEST['submit']:'';
+
 if ($submit=='Create Game')
 {
 	$var['num_gals'] = $_POST['num_gals'];
@@ -39,6 +40,7 @@ if ($submit=='Create Game')
 		}
 	}
 	createGame($newID); //do the alliances/message stuff
+	$var['message'] = '<span class="green">Success</span> : Succefully created game.';
 }
 else if ($submit=='Create Galaxies')
 {
@@ -58,11 +60,15 @@ else if ($submit=='Create Galaxies')
 		$galaxy->generateSectors();
 	} unset($galaxy);
 	SmrSector::saveSectors();
+	$var['message'] = '<span class="green">Success</span> : Succefully created galaxies.';
 }
 else if ($submit=='Redo Connections')
 {
 	$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
-	$galaxy->generateSectors($_REQUEST['connect']);
+	if(!$galaxy->generateSectors($_REQUEST['connect']))
+		$var['message'] = '<span class="red">Error</span> : Regenerating connections failed.';
+	else
+		$var['message'] = '<span class="green">Success</span> : Regenerated connections.';
 	SmrSector::saveSectors();
 }
 elseif ($submit == 'Jump To Galaxy')
@@ -80,7 +86,7 @@ elseif ($submit == 'Modify Sector')
 			$var['body'] = '1.6/universe_create_sector_details.php';
 		}
 		else
-			$var['msg'] = '<span class="red">Error</span> : That sector does not exist in this galaxy.';
+			$var['message'] = '<span class="red">Error</span> : That sector does not exist in this galaxy.';
 	}
 }
 elseif ($submit == 'Create Locations')
@@ -109,7 +115,7 @@ elseif ($submit == 'Create Locations')
 			}
 		}
 	}
-	
+	$var['message'] = '<span class="green">Success</span> : Succefully added locations.';
 }
 elseif ($submit == 'Create Warps')
 {
@@ -146,6 +152,7 @@ elseif ($submit == 'Create Warps')
 			}
 		}
 	} unset($eachGalaxy);
+	$var['message'] = '<span class="green">Success</span> : Succefully added warps.';
 }
 elseif ($submit == 'Create Planets')
 {
@@ -189,6 +196,7 @@ elseif ($submit == 'Create Planets')
 //		$updatePlan[$sector]['Owner'] = 0; //owning NPC to be determined in the create script
 //		$updatePlan[$sector]['Owner Type'] = 'NPC';
 //	}
+	$var['message'] = '<span class="green">Success</span> : Succefully added planets.';
 }
 elseif ($submit == 'Create Ports and Mines')
 {
@@ -249,6 +257,7 @@ elseif ($submit == 'Create Ports and Mines')
 			}
 		}
 		SmrPort::savePorts();
+		$var['message'] = '<span class="green">Success</span> : Succefully added ports.';
 //		//iterate through levels 1-20 for mines
 //		for ($i=1;$i<=20;$i++)
 //		{
@@ -333,6 +342,7 @@ elseif ($submit == 'Edit Sector')
 		//add warp to other side
 		$sector->setWarp(SmrSector::getSector($var['game_id'],$_POST['warp']));
 	}
+	$var['message'] = '<span class="green">Success</span> : Succefully edited sector.';
 	SmrSector::saveSectors();
 }
 
