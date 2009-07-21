@@ -172,7 +172,7 @@ td.footer_left
 td.footer_right {
 	padding: 10px;
 	border: solid #0B8D35;
-	border-width: 0px 0px 1px 1px;
+	border-width: 0px 1px 0px 1px;
 	background-color: #06240E;
 	vertical-align: bottom;
 	text-align: right;
@@ -196,14 +196,14 @@ table.standard td, table.standard th
 {
 	border: 1px solid #0B8D35;
 }
-table.create {
-	border: 0px solid #0B8D35;
-}
 /* =.create td child, th also on line 110 */
 .create td, th
 {
 	padding: 3px;
-	border: 0px;
+	border: 0px solid #0b8d35;
+}
+table.create {
+	border: 0px solid #0B8D35;
 }
 td.border_left
 {

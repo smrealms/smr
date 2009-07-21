@@ -439,7 +439,6 @@ class SmrSector
 	
 	public function hasLink($name)
 	{
-		
 		return $this->getLink($name)!=0;
 	}
 	
