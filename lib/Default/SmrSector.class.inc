@@ -803,17 +803,29 @@ class SmrSector
 			throw new Exception('These traders are NAPed.');
 		$fightingPlayers = array('Attackers' => array(), 'Defenders' => array());
 		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID(), $defendingPlayer->getAllianceID()));
+		$attackers = array();
+		$defenders = array();
 		if(count($alliancePlayers) > 0)
 			foreach($alliancePlayers as $accountID => $player)
 			{
 				if($player->canFight())
 				{
 					if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
-						$fightingPlayers['Attackers'][$accountID] =& $alliancePlayers[$accountID];
+						$attackers[] =& $alliancePlayers[$accountID];
 					else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player))
-						$fightingPlayers['Defenders'][$accountID] =& $alliancePlayers[$accountID];
+						$defenders =& $alliancePlayers[$accountID];
 				}
 			}
+		shuffle($attackers);
+		foreach($attackers as &$attacker)
+		{
+			$fightingPlayers['Attackers'][$attacker->getAccountID()] =& $attacker;
+		}
+		shuffle($defenders);
+		foreach($defenders as &$defender)
+		{
+			$fightingPlayers['Defenders'][$defender->getAccountID()] =& $defender;
+		}
 		return $fightingPlayers;
 	}
 

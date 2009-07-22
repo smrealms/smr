@@ -79,12 +79,12 @@ class DummyPlayer extends AbstractSmrPlayer
 	
 	public function killPlayer($sectorID)
 	{
-		$sector =& SmrSector::getSector($this->getGameID(),$sectorID);
+//		$sector =& SmrSector::getSector($this->getGameID(),$sectorID);
 		//msg taken care of in trader_att_proc.php
 		// forget plotted course
 //		$this->deletePlottedCourse();
 
-		$sector->died_here($this);
+//		$sector->died_here($this);
 		
 		// if we are in an alliance we increase their deaths
 //		if ($this->hasAlliance())
