@@ -1366,7 +1366,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg,true) . ',\'regular\','.$killer->getAccountID().','.$killer->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
 		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getDisplayName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
-		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getDisplayName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span>&nbsp;' . $this->getDisplayName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		
 		// The person who got the kill gains experience
 		$gainedExp = ceil(0.75*((((($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID())) + 1) * 0.04 * $this->getExperience()) + (0.025 * $this->getExperience())));
