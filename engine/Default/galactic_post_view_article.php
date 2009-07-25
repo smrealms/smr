@@ -6,8 +6,7 @@ $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
 if (isset($var['news'])) {
 
-$db3->query('INSERT INTO news ' .
-                     '(game_id, time, news_message, type) ' .
+$db3->query('INSERT INTO news (game_id, time, news_message, type) ' .
                      'VALUES('.$player->getGameID().', ' . TIME . ', ' . $db->escape_string($var['news'], false) . ', \'breaking\')');
 
 }

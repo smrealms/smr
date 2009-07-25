@@ -4,9 +4,8 @@ $this->includeTemplate('includes/CommonNews.inc');
 if(isset($NewsItems) && count($NewsItems) > 0)
 { ?>
 	<div align="center">
-		<b><big><font color="blue">You have <?php echo count($NewsItems); ?> news entries.</font></big></b>
+		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div>
-	
 	<table class="standard">
 		<tr>
 			<th align="center">Time</span>

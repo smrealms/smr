@@ -683,7 +683,7 @@ class SmrPlanet
 					$text .= ', a member of ' . $owner->getAllianceName();
 				}
 				$text .= '.';
-				$this->db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$this->getGameID().', ' . TIME . ', '.$this->db->escapeString($text).', \'BREAKING\')');
+				$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$this->getGameID().', ' . TIME . ', '.$this->db->escapeString($text).', \'BREAKING\','.$trigger->getAccountID().','.$trigger->getAllianceID().','.$owner->getAccountID().','.$owner->getAllianceID().')');
 			}
 		}
 	}

@@ -4,7 +4,7 @@ function print_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE)
 
 	global $player, $var, $alliance, $HIDDEN_PLAYERS;
 
-	$db2 = new SMR_DB();
+	$db2 = new SmrMySqlDatabase();
 	if($alliance_id) {
 		$in_alliance = ($alliance_id == $player->alliance_id);
 	}
@@ -95,7 +95,7 @@ function print_galactic_post_menue() {
 												  "Current Edition");
 
 	//find out the user's privligages
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 	$db->query("SELECT * FROM galactic_post_writer WHERE game_id = $session->game_id AND account_id = $player->account_id");
 	if ($db->next_record()) {
 

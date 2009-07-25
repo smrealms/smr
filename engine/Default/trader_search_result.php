@@ -1,14 +1,11 @@
 <?
 
 $db2 = new SmrMySqlDatabase();
-$player_id = $_REQUEST['player_id'];
-$player_name = $_REQUEST['player_name'];
-if (!is_numeric($player_id) && !empty($player_id)) {
-
+$player_id = isset($_REQUEST['player_id'])?$_REQUEST['player_id']:null;
+$player_name = isset($_REQUEST['player_name'])?$_REQUEST['player_name']:null;
+if (!is_numeric($player_id) && !empty($player_id))
 	create_error('Please enter only numbers!');
-	return;
 
-}
 $count = 0;
 $template->assign('PageTopic','SEARCH TRADER RESULTS');
 
@@ -112,7 +109,15 @@ if ($db->getNumRows() > 0) {
 		$container['game_id'] = $curr_player->getGameID();
 		$container['sending_page'] = 'search';
 		$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
-		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
+		$container = array();
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'news_read_advanced.php';
+		$container['submit'] = 'Search For Player';
+		$container['playerName'] = $curr_player->getPlayerName();
+		$PHP_OUTPUT.=create_link($container, '<font color=yellow>View News</font>');
+		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+		{
+			$PHP_OUTPUT.= '<br />';
 			$container=array();
 			$container['url'] = 'sector_jump_processing.php';
 			$container['to'] = $curr_player->getSectorID();
@@ -121,12 +126,11 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.=('</td></tr>');
 
 	}
-
 	$PHP_OUTPUT.=('</table>');
 	$count++;
-
 } 
-if (empty($player_id)) {
+if (empty($player_id))
+{
 	$real = $player_name;
 	if (!empty($player_name))
 		$player_name = '%' . $player_name . '%';
@@ -138,8 +142,8 @@ if (empty($player_id)) {
 					 'player_name LIKE ' . $db->escape_string($player_name, true) . ' AND player_name != ' . $db->escape_string($real, true) . ' ' .
 			   'ORDER BY player_name LIMIT 5');
 			   
-	if ($db->getNumRows() > 0) {
-	
+	if ($db->getNumRows() > 0)
+	{
 		$PHP_OUTPUT.=('<table class="standard" width="75%">');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<th>Name</th>');
@@ -151,8 +155,8 @@ if (empty($player_id)) {
 		$PHP_OUTPUT.=('<th>Option</th>');
 		$PHP_OUTPUT.=('</tr>');
 	
-		while ($db->nextRecord()) {
-	
+		while ($db->nextRecord())
+		{
 			$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 			$PHP_OUTPUT.=('<tr>');
@@ -167,24 +171,24 @@ if (empty($player_id)) {
 			$PHP_OUTPUT.=('<br />');
 			$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$curr_player->getAccountID());
-			if ($db2->nextRecord()) {
-				
+			if ($db2->nextRecord())
+			{				
 				//they have a name so we echo it
 				$named_ship = stripslashes($db2->getField('ship_name'));
 				$PHP_OUTPUT.=($named_ship);
-				
 			}
 			$PHP_OUTPUT.=('</td>');
 	
 			$PHP_OUTPUT.=('<td>');
-			if ($curr_player->getAllianceID() > 0) {
-	
+			if ($curr_player->getAllianceID() > 0)
+			{
 				$container = array();
 				$container['url']			= 'skeleton.php';
 				$container['body']			= 'alliance_roster.php';
 				$container['alliance_id']	= $curr_player->getAllianceID();
 				$PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
-			} else
+			}
+			else
 				$PHP_OUTPUT.=('(none)');
 			$PHP_OUTPUT.=('</td>');
 			$container = array();
@@ -219,19 +223,17 @@ if (empty($player_id)) {
 			$container['game_id'] = $curr_player->getGameID();
 			$container['sending_page'] = 'search';
 			$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
-			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
+			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+			{
 				$container=array();
 				$container['url'] = 'sector_jump_processing.php';
 				$container['to'] = $curr_player->getSectorID();
 				$PHP_OUTPUT.=create_link($container, '<span class="yellow">Jump to Sector</span>');
 			}
 			$PHP_OUTPUT.=('</td></tr>');
-	
 		}
-	
 		$PHP_OUTPUT.=('</table>');
 		$count++;
-	
 	}
 }
 if ($count == 0)

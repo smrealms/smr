@@ -40,8 +40,8 @@ function checkForLottoWinner($gameID)
 		// insert the news entry
 		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$gameID);
 		$db->query('INSERT INTO news ' .
-		'(game_id, time, news_message, type) ' .
-		'VALUES('.$gameID.', ' . TIME . ', ' . $db->escape_string($news_message, false) . ',\'lotto\')');
+		'(game_id, time, news_message, type, dead_id, dead_alliance) ' .
+		'VALUES('.$gameID.', ' . TIME . ', ' . $db->escape_string($news_message, false) . ',\'lotto\','.$winner->getAccountID().','.$winner->getAllianceID().')');
 	}
 }
 

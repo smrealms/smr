@@ -1,4 +1,4 @@
-<?
+<?php
 if (isset($_REQUEST['min_news'])) $min_news = $_REQUEST['min_news'];
 if (isset($_REQUEST['max_news'])) $max_news = $_REQUEST['max_news'];
 if (empty($min_news) || empty($max_news))

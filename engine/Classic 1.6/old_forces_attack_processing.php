@@ -413,7 +413,7 @@ if ($player->getAllianceID() != 0) {
 
 }
 
-$db2 = new SMR_DB();
+$db2 = new SmrMySqlDatabase();
 
 while ($db->next_record() && ($forces->hasCDs() || $forces->hasSDs() || $forces->hasMines())) {
 

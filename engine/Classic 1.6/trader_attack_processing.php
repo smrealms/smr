@@ -863,8 +863,10 @@ function process_news(&$players,&$killed_id,&$ship_names) {
 	}
 	*/
  	$msg .= ' in Sector&nbsp#' . $player->getSectorID();
-	$db = new SMR_DB();
-	return '(' . SmrSession::$game_id . ',' . TIME . ',' . $db->escape_string($msg) . ',\'regular\')';
+	$killer =& SmrPlayer::getPlayer($killer_id,SmrSession::$game_id,true);
+	$killed =& SmrPlayer::getPlayer($killed_id,SmrSession::$game_id,true);
+	$db = new SmrMySqlDatabase();
+	return '(' . SmrSession::$game_id . ',' . TIME . ',' . $db->escape_string($msg) . ',\'regular\','.$killer->getAccountID().','.$killer->getAllianceID().','.$killed->getAccountID().','.$killed->getAllianceID().')';
 }
 
 function process_messages(&$players,$killed_id) {
@@ -873,7 +875,7 @@ function process_messages(&$players,$killed_id) {
 	
 	$killer_id = $players[$killed_id][KILLER];
 	
-	$db = new SMR_DB();
+	$db = new SmrMySqlDatabase();
 	$temp = 'You were <span class="red">DESTROYED</span> by ' . $players[$killer_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->getSectorID() . '</span>';
 	$msg .= '(' . SmrSession::$game_id . ',' . $killed_id . ',2,' . $db->escape_string($temp) . ',' . $killer_id . ',' . TIME . ',\'FALSE\',' . MESSAGE_EXPIRES . ')';
 	$temp = 'You <span class="red">DESTROYED</span> ' . $players[$killed_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->getSectorID() . '</span>';
@@ -1209,7 +1211,7 @@ if(count($killed_ids)) {
 	if(!empty($messages)) {
 		$db->query('INSERT INTO player_has_unread_messages VALUES ' . $unread_messages);
 		$db->query('INSERT INTO message (game_id,account_id,message_type_id,message_text,sender_id,send_time,msg_read,expire_time) VALUES ' . $messages);
-		$db->query('INSERT INTO news (game_id,time,news_message,type) VALUES ' . $news);
+		$db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ' . $news);
 	}
 
 	unset($messages,$news,$unread_messages);
