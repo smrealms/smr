@@ -21,14 +21,14 @@ if(isset($Message))
 </p>
 <p>
 	The following restrictions are placed on users who have not validated their account:
-	<ul>
-		<li>No additional turns are granted to your traders while you are not validated.</li>
-		<li>Bank access is denied.</li>
-		<li>You will be unable to land on a planet.</li>
-		<li>You will be unable to access alliances.</li>
-		<li>You will be unable to vote in the daily politics of the universe.</li>
-	</ul>
 </p>
+<ul>
+	<li>No additional turns are granted to your traders while you are not validated.</li>
+	<li>Bank access is denied.</li>
+	<li>You will be unable to land on a planet.</li>
+	<li>You will be unable to access alliances.</li>
+	<li>You will be unable to vote in the daily politics of the universe.</li>
+</ul>
 <p>
 	Enter validation code:&nbsp;&nbsp;
 	<input type="text" name="validation_code" maxlength="10" size="10" class="InputFields" style="text-align:center;">
