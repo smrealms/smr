@@ -713,20 +713,22 @@ function processNews($fleet, $planet) {
 	$allowed = TIME - 600;
 	$db->f('SELECT * FROM news WHERE type = \'breaking\' AND game_id = '.$player->getGameID().' AND time > '.$allowed);
 	if (!$db->nf()) {
+		$allianceID = 0;
 		if (sizeof($fleet) >= 5) {
 			$db->query('SELECT  * FROM player WHERE game_id = '.$player->getGameID().' AND account_id = ' . $planet[OWNER]);
 			$db->next_record();
 			$text = sizeof($fleet) . ' members of '.$player->getAllianceName().' have been spotted attacking ' .
 					$planet[PLANET_NAME] . ' in sector ' . $player->getSectorID() . '
 					.  The planet is owned by ' . stripslashes($db->f('player_name'));
-			if ($db->f('alliance_id') > 0) {
+			$allianceID = $db->f('alliance_id');
+			if ($allianceID > 0) {
 				$db->query('SELECT * FROM alliance WHERE alliance_id = ' . $db->f('alliance_id') . ' AND game_id = '.$player->getGameID());
 				$db->next_record();
 				$text .= ', a member of ' . stripslashes($db->f('alliance_name'));
 			}
 			$text .= '.';
 			$text = mysql_real_escape_string($text);
-			$db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'breaking\')');
+			$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'breaking\','.$player->getAccountID().','.$player->getAllianceID().','.$planet[OWNER].','.$allianceID.')');
 		}
 	}
 	
@@ -925,7 +927,7 @@ function podPlayers($IDArray, $ships, $hqs, $planet, $players) {
 		$msg .= '<span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s planetary defenses';
 	 	$msg .= ' in Sector&nbsp#' . $player->getSectorID();
 		$msg = mysql_real_escape_string($msg);
-		$db->query('INSERT INTO news (game_id, time, news_message) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($msg).')');
+		$db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($msg).','.$currPlayer->getAccountID().','.$currPlayer->getAllianceID().')');
 		
 		$killer_id = $planet[OWNER];
 		

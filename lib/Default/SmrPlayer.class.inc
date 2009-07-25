@@ -1363,7 +1363,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //		}
 		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
 		$this->getSector()->increaseBattles(1);
-		$this->db->query('INSERT INTO news (game_id,time,news_message,type) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg,true) . ',\'regular\')');
+		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg,true) . ',\'regular\','.$killer->getAccountID().','.$killer->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
 		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getDisplayName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span> ' . $this->getDisplayName() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
@@ -1532,9 +1532,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed by forces in sector&nbsp#'.$forces->getSectorID();
 		// insert the news entry
-		$this->db->query('INSERT INTO news ' .
-					 '(game_id, time, news_message) ' .
-					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
+					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$owner->getAccountID().','.$owner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
 		$percentage = 33;
 		if ($percentage > 0 )
@@ -1579,9 +1578,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed while invading '.$port->getDisplayName().'.';
 		// insert the news entry
-		$this->db->query('INSERT INTO news ' .
-					 '(game_id, time, news_message) ' .
-					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
+					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message).','.ACCOUNT_ID_PORT.',0,'.$this->getAccountID().','.$this->getAllianceID().')');
 		
 		$percentage = 33;
 		if ($percentage > 0 )
@@ -1620,9 +1618,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector&nbsp#'.$planet->getSectorID().'.';
 		// insert the news entry
-		$this->db->query('INSERT INTO news ' .
-					 '(game_id, time, news_message) ' .
-					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
+					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$planetOwner->getAccountID().','.$planetOwner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
 		$percentage = 33;
 		if ($percentage > 0 )

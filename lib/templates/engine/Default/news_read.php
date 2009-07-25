@@ -11,10 +11,10 @@
 <?php
 if(isset($NewsItems) && count($NewsItems) > 0)
 { ?>
+	<br />
 	<div align="center">
-		<b><big><font color="blue">Viewing <?php echo count($NewsItems); ?> news entries.</font></big></b>
+		Showing <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div>
-	
 	<table class="standard">
 		<tr>
 			<th align="center">Time</span>
@@ -32,5 +32,5 @@ if(isset($NewsItems) && count($NewsItems) > 0)
 }
 else
 {
-	?>There is no news.<?php
+	?>No news to read.<?php
 } ?>

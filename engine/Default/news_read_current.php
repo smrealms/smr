@@ -1,5 +1,5 @@
-<?
-$template->assign('PageTopic','CURRENT NEWS');
+<?php
+$template->assign('PageTopic','Current News');
 require_once(get_file_loc('menue.inc'));
 $template->unassign('MenuBar');
 create_news_menue($template);

@@ -1,6 +1,7 @@
 <?php $this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
 					array('Link'=>$CurrentNewsLink,'Text'=>'Read Current News'),
-					array('Link'=>$LatestNewsLink,'Text'=>'Read Latest News'))));
+					array('Link'=>$LatestNewsLink,'Text'=>'Read Latest News'),
+					array('Link'=>$AdvancedNewsLink,'Text'=>'Advanced News'))));
 
 if(isset($BreakingNews))
 {

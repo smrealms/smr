@@ -86,6 +86,13 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 	$container['order'] = 'alliance_name';
 	$menue_items[] = create_link($container, 'List Alliances');
 
+	$container = array();
+	$container['url'] = 'skeleton.php';
+	$container['body'] = 'news_read_advanced.php';
+	$container['submit'] = 'Search For Alliance';
+	$container['AllianceID'] = $alliance_id;
+	$menue_items[] = create_link($container, 'View News');
+
 	return create_menue($menue_items);
 
 }
@@ -484,6 +491,7 @@ function create_news_menue(&$template)
 {
 	$template->assign('CurrentNewsLink',SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php')));
 	$template->assign('LatestNewsLink',SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php')));
+	$template->assign('AdvancedNewsLink',SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php')));
 }
 
 function create_hof_menue() {
