@@ -23,6 +23,8 @@ function bbifyMessage($message)
 		$bbParser->SetEnableSmileys(false);
 		$bbParser->RemoveRule('wiki');
 		$bbParser->RemoveRule('img');
+		$bbParser->SetURLTarget('_blank');
+		$bbParser->SetURLTargetable('override');
     }
 	$message = $bbParser->parse($message);
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
