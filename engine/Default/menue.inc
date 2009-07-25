@@ -480,15 +480,10 @@ function create_bar_menue() {
 
 }
 
-function create_news_menue() {
-
-	$menue_items[] = create_link(create_container('skeleton.php', 'news_read_current.php'),
-													'Read current news');
-	$menue_items[] = create_link(create_container('skeleton.php', 'news_read.php'),
-													'Read Latest News');
-
-	return create_menue($menue_items);
-
+function create_news_menue(&$template)
+{
+	$template->assign('CurrentNewsLink',SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php')));
+	$template->assign('LatestNewsLink',SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php')));
 }
 
 function create_hof_menue() {

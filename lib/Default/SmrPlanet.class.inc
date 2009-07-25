@@ -677,14 +677,13 @@ class SmrPlanet
 			{
 				$owner =& $this->getOwner();
 				$text = count($attackers) . ' members of '.$trigger->getAllianceName().' have been spotted attacking ' .
-						$this->getDisplayName() . ' in sector ' . $this->getSectorID() . '
-						.  The planet is owned by ' . $owner->getDisplayName();
+						$this->getDisplayName() . ' in sector #' . $this->getSectorID() . '.  The planet is owned by ' . $owner->getDisplayName();
 				if ($owner->hasAlliance())
 				{
 					$text .= ', a member of ' . $owner->getAllianceName();
 				}
 				$text .= '.';
-				$db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'BREAKING\')');
+				$this->db->query('INSERT INTO news (game_id, time, news_message, type) VALUES ('.$this->getGameID().', ' . TIME . ', '.$this->db->escapeString($text).', \'BREAKING\')');
 			}
 		}
 	}
