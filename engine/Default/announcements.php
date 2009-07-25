@@ -35,7 +35,7 @@ while ($db->nextRecord()) {
 	//$PHP_OUTPUT.= '<br />';
 	$PHP_OUTPUT.= date(DATE_FULL_SHORT_SPLIT, $db->getField('time'));
 	$PHP_OUTPUT.= '</td><td class="top">';
-	$PHP_OUTPUT.= $db->getField('msg');
+	$PHP_OUTPUT.= bbifyMessage($db->getField('msg'));
 	$PHP_OUTPUT.= '</td></tr>';
 }
 
