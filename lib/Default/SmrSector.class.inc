@@ -813,7 +813,7 @@ class SmrSector
 					if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
 						$attackers[] =& $alliancePlayers[$accountID];
 					else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player))
-						$defenders =& $alliancePlayers[$accountID];
+						$defenders[] =& $alliancePlayers[$accountID];
 				}
 			}
 		shuffle($attackers);
