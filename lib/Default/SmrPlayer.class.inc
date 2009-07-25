@@ -1578,8 +1578,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed while invading '.$port->getDisplayName().'.';
 		// insert the news entry
-		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
-					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message).','.ACCOUNT_ID_PORT.',0,'.$this->getAccountID().','.$this->getAllianceID().')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance) ' .
+					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message).','.ACCOUNT_ID_PORT.','.$this->getAccountID().','.$this->getAllianceID().')');
 		
 		$percentage = 33;
 		if ($percentage > 0 )

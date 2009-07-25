@@ -720,7 +720,7 @@ function processNews() {
 	}
 	$text .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 	$text = mysql_real_escape_string($text);
-	$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'regular\','.$player->getAccountID().','.$player->getAllianceID().','.ACCOUNT_ID_PORT.',0)');
+	$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'regular\','.$player->getAccountID().','.$player->getAllianceID().','.ACCOUNT_ID_PORT.')');
 }
 function hofTracker($players, $port) {
 	if (DEBUG) $PHP_OUTPUT.=('Tracking HoF<br>');
@@ -850,7 +850,7 @@ function processResults(&$players, &$port, $fleet, $weapons) {
 				if ($player->getAllianceID()) $news .= 'the members of <span class="yellow">' . $player->getAllianceName() . '</span>';
 				else $news .= '<span class="yellow">' . $player->getPlayerName() . '</span>';
 				$news = mysql_real_escape_string($news);
-				$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($news).', \'regular\','.$player->getAccountID().','.$player->getAllianceID().','.ACCOUNT_ID_PORT.',0)');
+				$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($news).', \'regular\','.$player->getAccountID().','.$player->getAllianceID().','.ACCOUNT_ID_PORT.')');
 				// Trigger gets an alignment change and a bounty if port is taken
 				$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID().' ' .
 					'AND claimer_id = 0 AND type = \'HQ\'');
@@ -955,7 +955,7 @@ function podPlayers($IDArray, $ships, $hqs, $port, $players) {
 		$msg .= ' was destroyed while invading ';
 		$msg .= '<span style="color:yellow;font-variant:small-caps">Port ' . $player->getSectorID() . '</span>.';
 		$msg = mysql_real_escape_string($msg);
-		$db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($msg).','.ACCOUNT_ID_PORT.',0,'.$currPlayer->getAccountID().','.$currPlayer->getAllianceID().')');
+		$db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($msg).','.ACCOUNT_ID_PORT.','.$currPlayer->getAccountID().','.$currPlayer->getAllianceID().')');
 		
 		$killer_id = 0;
 		
