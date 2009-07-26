@@ -1,14 +1,17 @@
 <?php
 $body = trim(htmlentities($_POST['body']));
-$topic = $_REQUEST['topic'];
+$topic = isset($_REQUEST['topic'])?$_REQUEST['topic']:'';
 if (isset($_REQUEST['allEyesOnly'])) $allEyesOnly = TRUE;
 else $allEyesOnly = FALSE;
 
-if($_REQUEST['action'] == 'Preview Thread')
+if($_REQUEST['action'] == 'Preview Thread' || $_REQUEST['action'] == 'Preview Reply')
 {
-	$container = create_container('skeleton.php');
+	$container = $var;
+	$container['url'] = 'skeleton.php';
 	if(!isset($var['thread_index']))
 		$container['body'] = 'alliance_message.php';
+	else
+		$container['body'] = 'alliance_message_view.php';
 	$container['preview'] = $body;
 	$container['topic'] = $topic;
 	$container['AllianceEyesOnly'] = $allEyesOnly;
