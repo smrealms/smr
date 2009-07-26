@@ -4,31 +4,45 @@ $message = htmlentities(trim($_POST['message']));
 
 if($_REQUEST['action'] == 'Preview message')
 {
-	$container = create_container('skeleton.php','message_send.php');
+	$container = create_container('skeleton.php');
+	if(isset($var['alliance_id']))
+		$container['body'] = 'alliance_broadcast.php';
+	else
+		$container['body'] = 'message_send.php';
 	transfer('receiver');
+	transfer('alliance_id');
 	$container['preview'] = $message;
 	forward($container);
 }
 
 if (empty($message))
-	create_error('You have to enter a text to send!');
+	create_error('You have to enter a message to send!');
 
 if (empty($var['receiver']))
 {
 	$player->sendGlobalMessage($message);
+}
+else if(isset($var['alliance_id']))
+{
+	$db->query('SELECT account_id FROM player WHERE game_id=' . $player->getGameID() . 
+				' AND alliance_id=' . $var['alliance_id']); //No limit in case they are over limit - ie NHA
+	while ($db->nextRecord())
+	{
+		$player->sendMessage($db->getField('account_id'), MSG_ALLIANCE, $message,false);
+	}
 }
 else
 {
 	$player->sendMessage($var['receiver'], MSG_PLAYER, $message);
 }
 
-// get rid of all old scout messages (>24h)
-$old = TIME - 86400;
-$db->query('DELETE FROM message WHERE send_time < '.$old.' AND message_type_id = 4');
-
-$container = array();
-$container['url'] = 'skeleton.php';
-if ($player->isLandedOnPlanet())
+$container=create_container('skeleton.php');
+if(isset($var['alliance_id']))
+{
+	$container['body'] = 'alliance_roster.php';
+	transfer('alliance_id');
+}
+else if ($player->isLandedOnPlanet())
 	$container['body'] = 'planet_main.php';
 else
 	$container['body'] = 'current_sector.php';
