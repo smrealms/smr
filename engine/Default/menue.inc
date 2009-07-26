@@ -138,33 +138,34 @@ function create_galactic_post_menue() {
 
 }
 
-function create_message_menue() {
-
+function create_message_menue()
+{
 	global $var;
 	global $player;
+	global $template;
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'message_view.php'),
-												  'View Messages');
+	$container = create_container('skeleton.php', 'message_view.php');
+	$template->assign('ViewMessagesLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'View Messages');
 
 	if ($player->isOnCouncil())
 	{
-
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'council_send_message.php';
+		$container = create_container('skeleton.php', 'council_send_message.php');
 		$container['race_id'] = $player->getRaceID();
 		$container['folder_id'] = MSG_POLITICAL;
+		$template->assign('SendCouncilMessageLink',SmrSession::get_new_href($container));
 		$menue_items[] = create_link($container, 'Send Council Message');
 	}
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'message_send.php'),
-												  'Send Global Message');
+	$container = create_container('skeleton.php', 'message_send.php');
+	$template->assign('SendGlobalMessageLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'Send Global Message');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'message_blacklist.php'),
-												  'Manage Blacklist');
+	$container = create_container('skeleton.php', 'message_blacklist.php');
+	$template->assign('ManageBlacklistLink',SmrSession::get_new_href($container));
+	$menue_items[] = create_link($container,'Manage Blacklist');
 	
 	return create_menue($menue_items);
-
 }
 
 function create_combat_log_menue() {

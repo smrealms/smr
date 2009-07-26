@@ -13,7 +13,8 @@ if (!$db->nextRecord())
 	create_error('Could not find the message you selected!');
 
 $PHP_OUTPUT.=('You have selected the following message:<br /><br />');
-$PHP_OUTPUT.=('<textarea id="InputFields" style="width:400px;height:300px;">' . stripslashes($db->getField('message_text')) . '</textarea>');
+//$PHP_OUTPUT.=('<textarea disabled="disabled" id="InputFields" style="width:400px;height:300px;">' . bbifyMessage($db->getField('message_text')) . '</textarea>');
+$PHP_OUTPUT.=('<table class="standard"><tr><td>' . bbifyMessage($db->getField('message_text')) . '</td></tr></table>');
 
 $PHP_OUTPUT.=('<p>Are you sure you want to notify this message to the admins?<br />');
 $PHP_OUTPUT.=('<small><b>Please note:</b> Abuse of this system could end in disablement<br />Therefore, please only notify if the message is inappropriate</small></p>');

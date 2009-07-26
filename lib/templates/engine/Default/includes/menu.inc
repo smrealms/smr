@@ -6,11 +6,14 @@ if(isset($MenuItems))
 			<span class="nowrap"><?php
 				foreach($MenuItems as $number => $MenuItem)
 				{
-					if ($number > 0)
+					if(isset($MenuItem['Link']))
 					{
-						?></span> | <span class="nowrap"><?php
+						if ($number > 0)
+						{
+							?></span> | <span class="nowrap"><?php
+						}
+						?><a href="<?php echo $MenuItem['Link']; ?>"><?php echo $MenuItem['Text']; ?></a><?php
 					}
-					?><a href="<?php echo $MenuItem['Link']; ?>"><?php echo $MenuItem['Text']; ?></a><?php
 				}?>
 			</span>
 		</div>

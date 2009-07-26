@@ -1,6 +1,14 @@
-<?
+<?php
 
 $message = htmlentities(trim($_POST['message']));
+
+if($_REQUEST['action'] == 'Preview message')
+{
+	$container = create_container('skeleton.php','message_send.php');
+	transfer('receiver');
+	$container['preview'] = $message;
+	forward($container);
+}
 
 if (empty($message))
 	create_error('You have to enter a text to send!');

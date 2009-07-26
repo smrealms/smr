@@ -253,16 +253,17 @@ function forwardURL($new_container)
 
 }
 
-function transfer($what) {
-
+function transfer($what)
+{
 	global $var, $container;
 
 	// transfer this value to next container
-	$container[$what] = $var[$what];
+	if(isset($var[$what]))
+		$container[$what] = $var[$what];
 
 }
 
-function create_container($file, $body) {
+function create_container($file, $body = '') {
 
 	$container = array();
 	$container['url'] = $file;

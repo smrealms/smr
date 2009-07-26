@@ -46,15 +46,15 @@ class Template
 		{
 			$output.=$captured;
 		}
-		$ajaxXml =& $this->convertHtmlToAjaxXml($output);
+		$ajaxXml =& $this->convertHtmlToAjaxXml($this->trimWhiteSpace($output));
 		if($forAjax)
 		{
 			/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 			$ajaxXml='<all>'.$ajaxXml.'</all>';
-			echo $this->trimWhiteSpace($ajaxXml);
+			echo $ajaxXml;
 		}
 		else
-			echo $this->trimWhiteSpace($output);
+			echo $output;
 		SmrSession::saveAjaxReturns();
 	}
 	
@@ -151,13 +151,13 @@ class Template
 		// Pull out the pre blocks
 		preg_match_all("!<pre[^>]*?>.*?</pre>!is", $html, $match);
 		$_pre_blocks = $match[0];
-		$source = preg_replace("!<pre[^>]*?>.*?</pre>!is",
+		$html = preg_replace("!<pre[^>]*?>.*?</pre>!is",
 			'@@@SMARTY:TRIM:PRE@@@', $html);
 		
 		// Pull out the textarea blocks
 		preg_match_all("!<textarea[^>]*?>.*?</textarea>!is", $html, $match);
 		$_textarea_blocks = $match[0];
-		$source = preg_replace("!<textarea[^>]*?>.*?</textarea>!is",
+		$html = preg_replace("!<textarea[^>]*?>.*?</textarea>!is",
 			'@@@SMARTY:TRIM:TEXTAREA@@@', $html);
 		
 		// remove all leading spaces, tabs and carriage returns NOT
@@ -212,7 +212,7 @@ class Template
 	protected function &convertHtmlToAjaxXml(&$str)
 	{
 		$xml='';
-		$str =& $this->trimWhiteSpace($str);
+//		$str =& $this->trimWhiteSpace($str);
 		if(empty($str))
 			return '';
 		$html = new simple_html_dom($str);
