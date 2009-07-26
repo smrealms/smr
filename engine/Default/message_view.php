@@ -147,7 +147,12 @@ if (!isset($var['folder_id'])) {
 		$PHP_OUTPUT.=('s');
 	$PHP_OUTPUT.=('.</p>');
 	$PHP_OUTPUT.=('<table width="100%" class="standard">');
-	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all'])) {
+	if ($var['folder_id'] == MSG_SCOUT && !isset($var['show_all']))
+	{
+		// get rid of all old scout messages (>48h)
+		$db2 = new SmrMySqlDatabase();
+		$db2->query('DELETE FROM message WHERE send_time < '.(TIME - 172800).' AND message_type_id = '.MSG_SCOUT);
+		
 		$dispContainer = array();
 		$dispContainer['url'] = 'skeleton.php';
 		$dispContainer['body'] = 'message_view.php';

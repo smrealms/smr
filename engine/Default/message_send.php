@@ -11,6 +11,8 @@ $template->assign('MessageSendFormHref',SmrSession::get_new_href($container));
 
 if (!empty($var['receiver']))
 	$template->assignByRef('Reciever', SmrPlayer::getPlayer($var['receiver'], SmrSession::$game_id));
+else
+	$template->assign('Reciever', 'All Online');
 if(isset($var['preview']))
 	$template->assign('Preview', $var['preview']);
 ?>
