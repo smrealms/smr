@@ -6,6 +6,5 @@
 	</p>
 	<textarea name="message" id="InputFields" cols="20" rows="30"><?php if(isset($Preview)) { echo $Preview; } ?></textarea><br />
 	<br />
-	<input type="submit" name="action" value="Send message" id="InputFields" />&nbsp;
-	<input type="submit" name="action" value="Preview message" id="InputFields" />
+	<input type="submit" name="action" value="Send message" id="InputFields" />&nbsp;<input type="submit" name="action" value="Preview message" id="InputFields" />
 </form>
