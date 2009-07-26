@@ -18,20 +18,23 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 					AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')
 					AND game_id = '.$player->getGameID().'
 					AND (mb_read = 1 OR mod_read = 1 OR planet_land = 1) AND official = \'TRUE\'');
-	if ($db2->nextRecord()) {
+	if ($db2->nextRecord())
+	{
 		if ($db2->getField('mb_read')) $mbRead = TRUE;
 		else $mbRead = FALSE;
 		if ($db2->getField('mod_read')) $modRead = TRUE;
 		else $modRead = FALSE;
 		if ($db2->getField('planet_land')) $planetLand = TRUE;
 		else $planetLand = FALSE;
-	} else {
+	}
+	else
+	{
 		$mbRead = FALSE;
 		$modRead = FALSE;
 		$planetLand = FALSE;
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $modRead) {
-
+	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $modRead)
+	{
 		$container = create_container('skeleton.php', 'alliance_mod.php');
 		if (isset($var['alliance_id']))
 			$container['alliance_id'] = $var['alliance_id'];
@@ -40,8 +43,7 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 			
 		$template->assign('MotdLink',SmrSession::get_new_href($container));
 		$menue_items[] = create_link($container, 'Message of Day');
-
-	};
+	}
 
 	$container = create_container('skeleton.php', 'alliance_roster.php');
 	if (isset($var['alliance_id']))
@@ -57,15 +59,19 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 	$container=array();
 	$container['url']='skeleton.php';
 	$container['alliance_id'] = $alliance_id;
-//	if ($player->getAccountID() == $alliance_leader_id) {
+//	if ($player->getAccountID() == $alliance_leader_id)
+//	{
 		//$container['body']='alliance_treaties.php';
 		//$menue_items[] = create_link($container,'Treaties');	
 	//}
-	if (($send && $in_alliance) || in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
+	if (($send && $in_alliance) || in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+	{
 		$container['body']='alliance_broadcast.php';
 		$template->assign('AllianceMessageLink',SmrSession::get_new_href($container));
 		$menue_items[] = create_link($container,'Send Message');
-	} if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS)){
+	}
+	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+	{
 		$container['body'] = 'alliance_message.php';
 		$template->assign('MessageBoardLink',SmrSession::get_new_href($container));
 		$menue_items[] = create_link($container, 'Message Board');
@@ -78,12 +84,17 @@ function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE
 		$container['body'] = 'alliance_option.php';
 		$template->assign('AllianceOptionsLink',SmrSession::get_new_href($container));
 		$menue_items[] = create_link($container, 'Options');
-	} if (!$in_alliance) {
-		if ($mbRead) {
+	}
+	if (!$in_alliance)
+	{
+		if ($mbRead)
+		{
 			$container['body'] = 'alliance_message.php';
 			$template->assign('MessageBoardLink',SmrSession::get_new_href($container));
 			$menue_items[] = create_link($container, 'Message Board');
-		} if ($planetLand) {
+		}
+		if ($planetLand)
+		{
 			$container['body'] = 'alliance_planets.php';
 			$template->assign('AlliancePlanetsLink',SmrSession::get_new_href($container));
 			$menue_items[] = create_link($container, 'Planets');

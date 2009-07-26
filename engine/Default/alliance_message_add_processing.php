@@ -1,11 +1,23 @@
-<?
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
-// transform line breaks to <br />
+<?php
 $body = trim(htmlentities($_POST['body']));
 $topic = $_REQUEST['topic'];
 if (isset($_REQUEST['allEyesOnly'])) $allEyesOnly = TRUE;
 else $allEyesOnly = FALSE;
+
+if($_REQUEST['action'] == 'Preview Thread')
+{
+	$container = create_container('skeleton.php');
+	if(!isset($var['thread_index']))
+		$container['body'] = 'alliance_message.php';
+	$container['preview'] = $body;
+	$container['topic'] = $topic;
+	$container['AllianceEyesOnly'] = $allEyesOnly;
+	forward($container);
+}
+
+if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
+else $alliance_id = $player->getAllianceID();
+
 // it could be we got kicked during writing the msg
 if ($player->getAllianceID() == 0)
 	create_error('You are not in an alliance anymore');
@@ -14,8 +26,8 @@ if (empty($body))
 	create_error('You must enter text!');
 
 // if we don't have a thread id
-if (!isset($var['thread_index'])) {
-
+if (!isset($var['thread_index']))
+{
 	// get one
 	$db->query('SELECT max(thread_id) FROM alliance_thread ' .
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
@@ -23,7 +35,9 @@ if (!isset($var['thread_index'])) {
 	if ($db->nextRecord())
 		$thread_id = intval($db->getField('max(thread_id)')) + 1;
 
-} else {
+}
+else
+{
 	$thread_index = $var['thread_index'];
 	$thread_id = $var['thread_ids'][$thread_index];
 }
@@ -69,7 +83,8 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['alliance_id'] = $alliance_id;
 if (isset($var['alliance_eyes'])) $container['alliance_eyes'] = $var['alliance_eyes'];
-if(isset($var['thread_index'])) {
+if(isset($var['thread_index']))
+{
 	$container['body'] = 'alliance_message_view.php';
 	$container['thread_index'] = $thread_index;
 	$container['thread_ids'] = $var['thread_ids'];
@@ -77,7 +92,8 @@ if(isset($var['thread_index'])) {
 	++$var['thread_replies'][$thread_index];
 	$container['thread_replies'] = $var['thread_replies'];
 }
-else {
+else
+{
 	$container['body'] = 'alliance_message.php';
 }
 
