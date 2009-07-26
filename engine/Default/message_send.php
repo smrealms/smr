@@ -1,29 +1,16 @@
 <?
 
-$template->assign('PageTopic','SEND MESSAGE');
+$template->assign('PageTopic','Send Message');
 
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_message_menue();
+create_message_menue();
 
-$PHP_OUTPUT.=('<p>');
-
-$container = array();
-$container['url'] = 'message_send_processing.php';
+$container = create_container('message_send_processing.php');
 transfer('receiver');
+$template->assign('MessageSendFormHref',SmrSession::get_new_href($container));
 
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<p><small><b>From:</b> '.$player->getPlayerName().' ('.$player->getPlayerID().')<br />');
-
-if (!empty($var['receiver'])) {
-
-	$receiver =& SmrPlayer::getPlayer($var['receiver'], SmrSession::$game_id);
-	$PHP_OUTPUT.=('<b>To:</b> '.$receiver->getPlayerName().' ('.$receiver->getPlayerID().')</small></p>');
-
-} else $PHP_OUTPUT.=('<b>To:</b> All Online</small></p>');
-
-$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br /><br />');
-$PHP_OUTPUT.=create_submit('Send message');
-$PHP_OUTPUT.=('</form>');
-$PHP_OUTPUT.=('</p>');
-
+if (!empty($var['receiver']))
+	$template->assignByRef('Reciever', SmrPlayer::getPlayer($var['receiver'], SmrSession::$game_id));
+if(isset($var['preview']))
+	$template->assign('Preview', $var['preview']);
 ?>

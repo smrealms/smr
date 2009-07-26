@@ -239,9 +239,7 @@ function displayGrouped($playerName, $player_id, $sender_id, $message_text, $fir
 	if ($star) $return.= ('*');
 	$return.= ('</td>');
 	$return.= ('<td nowrap="nowrap" width="100%">From: ');
-	$container = array();
-	$container['url']		= 'skeleton.php';
-	$container['body']		= 'trader_search_result.php';
+	$container = create_container('skeleton.php','trader_search_result.php');
 	$container['player_id'] = $player_id;
 	$return.= create_link($container, $playerName);
 	$return.= ('</td>');
@@ -298,9 +296,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	}
 	else if (is_object($sender))
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_search_result.php';
+		$container = create_container('skeleton.php','trader_search_result.php');
 		$container['player_id'] = $sender->getPlayerID();
 		$return.= create_link($container, $sender->getDisplayName());
 	}
@@ -320,9 +316,7 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	$return.= ('</td>');
 	$return.= ('<td nowrap="nowrap"'.(!is_object($sender)?' colspan="3"':'').'>Date: ' . date(DATE_FULL_SHORT, $send_time) . '</td>');
 	$return.= ('<td>');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'message_notify_confirm.php';
+	$container = create_container('skeleton.php','message_notify_confirm.php');
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
 	$container['notified_time'] = TIME;
@@ -331,16 +325,12 @@ function displayMessage($message_id, $sender_id, $message_text, $send_time, $msg
 	if (is_object($sender))
 	{
 		$return.= ('<td>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'message_blacklist_add.php';
+		$container = create_container('skeleton.php','message_blacklist_add.php');
 		$container['account_id'] = $sender_id;
 		$return.= create_link($container, 'Blacklist Player');
 		$return.= ('</td>');	
 		$return.= ('<td>');
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'message_send.php';
+		$container = create_container('skeleton.php','message_send.php');
 		$container['receiver']	= $sender->getAccountID();
 		$return.=create_link($container, 'Reply');
 		$return.= ('</td>');
