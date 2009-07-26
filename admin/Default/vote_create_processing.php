@@ -1,8 +1,23 @@
 <?
-
-if($_REQUEST['action'] == 'Create')
+$question = trim($_REQUEST['question']);
+if($_REQUEST['action'] == 'Preview Vote')
 {
-	$question = $_REQUEST['question'];
+	$container = create_container('skeleton.php','vote_create.php');
+	$container['PreviewVote'] = $question;
+	$container['Days'] = $_REQUEST['days'];
+	forward($container);
+}
+$option = trim($_REQUEST['option']);
+if($_REQUEST['action'] == 'Preview Option')
+{
+	$container = create_container('skeleton.php','vote_create.php');
+	$container['PreviewOption'] = $option;
+	$container['VoteID'] = $_REQUEST['vote'];
+	forward($container);
+}
+
+if($_REQUEST['action'] == 'Create Vote')
+{
 	$end = TIME+86400*$_REQUEST['days'];
 	
 	// put the msg into the database
@@ -10,7 +25,6 @@ if($_REQUEST['action'] == 'Create')
 }
 else if($_REQUEST['action'] == 'Add Option')
 {
-	$option = $_REQUEST['option'];
 	$voteID = $_REQUEST['vote'];
 	
 	// put the msg into the database
