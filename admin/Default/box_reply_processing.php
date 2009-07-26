@@ -7,7 +7,7 @@ if($_REQUEST['action'] == 'Preview message')
 	$container['BanPoints'] = $_REQUEST['BanPoints'];
 	transfer('game_id');
 	transfer('sender_id');
-	$container['preview'] = $message;
+	$container['Preview'] = $message;
 	forward($container);
 }
 
