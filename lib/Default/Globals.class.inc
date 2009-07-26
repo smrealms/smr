@@ -187,15 +187,33 @@ class Globals
 		return self::$HARDWARE_TYPES[$hardwareTypeID];
 	}
 	
-	public static function &getGameInfo($gameID)
+	public static function &getGameInfo($gameID = false)
 	{
+		if($gameID===false)
+		{
+			self::initialiseDatabase();
+			self::$db->query('SELECT * FROM game');
+			while(self::$db->nextRecord())
+			{
+				$gameID = (int)self::$db->getField('game_id');
+				self::$GAMES[$gameID] = array();
+				self::$GAMES[$gameID]['ID'] = $gameID;
+				self::$GAMES[$gameID]['Speed'] = (float)self::$db->getField('game_speed');
+				self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
+				self::$GAMES[$gameID]['GameName'] = (string)self::$db->getField('game_name');
+				self::$GAMES[$gameID]['StartDate'] = (string)self::$db->getField('start_date');
+			}
+			return self::$GAMES;
+		}
 		if(!isset(self::$GAMES[$gameID]))
 		{
 			self::initialiseDatabase();
 			self::$db->query('SELECT * FROM game WHERE game_id = '.$gameID.' LIMIT 1');
 			if(self::$db->nextRecord())
 			{
+				$gameID = (int)$gameID;
 				self::$GAMES[$gameID] = array();
+				self::$GAMES[$gameID]['ID'] = $gameID;
 				self::$GAMES[$gameID]['Speed'] = (float)self::$db->getField('game_speed');
 				self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
 				self::$GAMES[$gameID]['GameName'] = (string)self::$db->getField('game_name');
