@@ -15,11 +15,11 @@ $offenderAcc =& SmrAccount::getAccount($var['offender']);
 $offendedAcc =& SmrAccount::getAccount($var['offended']);
 $PHP_OUTPUT.=('To : '.$offender->getPlayerName().' a.k.a '.$offenderAcc->login.' (Offender)');
 $PHP_OUTPUT.=('<br /><input type="text" value="0" name="offenderBanPoints" size="4" /> Points<br />');
-$PHP_OUTPUT.=('<textarea name="offenderReply" id="InputFields" style="width:350px;height:100px;"></textarea><br /><br />');
+$PHP_OUTPUT.=('<textarea name="offenderReply" id="InputFields" cols="20" rows="30"></textarea><br /><br />');
 
 $PHP_OUTPUT.=('To : '.$offended->getPlayerName().' a.k.a '.$offendedAcc->login.' (Offended)');
 $PHP_OUTPUT.=('<br /><input type="text" value="0" name="offendedBanPoints" size="4" /> Points<br />');
-$PHP_OUTPUT.=('<textarea name="offendedReply" id="InputFields" style="width:350px;height:100px;"></textarea><br /><br />');
+$PHP_OUTPUT.=('<textarea name="offendedReply" id="InputFields" cols="20" rows="30"></textarea><br /><br />');
 
 $PHP_OUTPUT.=create_submit('Send messages');
 $PHP_OUTPUT.=('</form>');
