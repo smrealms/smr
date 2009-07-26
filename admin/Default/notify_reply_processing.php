@@ -1,7 +1,23 @@
 <?
+$offenderReply = trim($_REQUEST['offenderReply']);
+$offendedReply = trim($_REQUEST['offendedReply']);
+if($_REQUEST['action'] == 'Preview messages')
+{
+	$container = create_container('skeleton.php','notify_reply.php');
+	transfer('offender');
+	transfer('offended');
+	transfer('game_id');
+	transfer('sender_id');
+	if(!empty($offenderReply))
+		$container['PreviewOffender'] = $offenderReply;
+	$container['OffenderBanPoints'] = $_REQUEST['offenderBanPoints'];
+	
+	if(!empty($offendedReply))
+		$container['PreviewOffended'] = $offendedReply;
+	$container['OffendedBanPoints'] = $_REQUEST['offendedBanPoints'];
+	forward($container);
+}
 
-//first message
-if (isset($_REQUEST['offenderReply'])) $offenderReply = $_REQUEST['offenderReply'];
 
 if (isset($offenderReply) && $offenderReply != '')
 {
