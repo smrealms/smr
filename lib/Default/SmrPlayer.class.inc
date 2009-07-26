@@ -2017,10 +2017,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::doMessageSending(ACCOUNT_ID_PORT,$receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 	
-	public static function sendMessageFromAdmin($gameID, $receiverID, $message)
+	public static function sendMessageFromAdmin($gameID, $receiverID, $message, $expires = false)
 	{
 		//get expire time
-		$expires = TIME + 3600 * 24 * 7;
+		if($expires===false)
+			$expires = TIME + 3600 * 24 * 7;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_ADMIN,$receiverID, $gameID, MSG_ADMIN, $message, $expires);
 	}

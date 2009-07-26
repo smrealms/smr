@@ -1,6 +1,6 @@
 <?php
 
-$message = htmlentities(trim($_POST['message']));
+$message = htmlentities(trim($_REQUEST['message']));
 
 if($_REQUEST['action'] == 'Preview message')
 {
