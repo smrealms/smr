@@ -52,7 +52,7 @@ if(isset($FeatureRequests))
 				<td align="center">Please describe the feature here:</td>
 			</tr>
 			<tr>
-				<td align="center"><textarea name="feature" id="InputFields" style="width:350px;height:100px;"></textarea></td>
+				<td align="center"><textarea name="feature" id="InputFields" cols="20" rows="30"></textarea></td>
 			</tr>
 			<tr>
 				<td align="center"><input type="submit" name="action" value="Submit New Feature" id="InputFields"></td>
