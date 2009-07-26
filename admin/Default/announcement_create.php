@@ -1,10 +1,6 @@
-<?
-
+<?php
 $template->assign('PageTopic','Create Announcement');
-
-$PHP_OUTPUT.=create_echo_form(create_container('announcement_create_processing.php', ''));
-$PHP_OUTPUT.=('<textarea name="message" id="InputFields" style="width:350px;height:100px;"></textarea><br />');
-$PHP_OUTPUT.=create_submit('Create');
-$PHP_OUTPUT.=('</form>');
-
+$template->assign('AnnouncementCreateFormHref',SmrSession::get_new_href(create_container('announcement_create_processing.php')));
+if(isset($var['preview']))
+	$template->assign('Preview', $var['preview']);
 ?>
