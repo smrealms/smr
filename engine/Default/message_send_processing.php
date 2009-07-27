@@ -18,11 +18,7 @@ if($_REQUEST['action'] == 'Preview message')
 if (empty($message))
 	create_error('You have to enter a message to send!');
 
-if (empty($var['receiver']))
-{
-	$player->sendGlobalMessage($message);
-}
-else if(isset($var['alliance_id']))
+if(isset($var['alliance_id']))
 {
 	$db->query('SELECT account_id FROM player WHERE game_id=' . $player->getGameID() . 
 				' AND alliance_id=' . $var['alliance_id']); //No limit in case they are over limit - ie NHA
@@ -31,9 +27,13 @@ else if(isset($var['alliance_id']))
 		$player->sendMessage($db->getField('account_id'), MSG_ALLIANCE, $message,false);
 	}
 }
-else
+else if (!empty($var['receiver']))
 {
 	$player->sendMessage($var['receiver'], MSG_PLAYER, $message);
+}
+else
+{
+	$player->sendGlobalMessage($message);
 }
 
 $container=create_container('skeleton.php');
