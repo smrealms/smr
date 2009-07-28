@@ -9,18 +9,21 @@
 		<th>Credits Needed</th>
 	</tr>
 	<tr>
-		<td width="40%"><?php echo $Game['Name'] ?> (<?php echo $Game['ID'] ?>)</td>
+		<td width="40%"><?php echo $Game['Name'] ?> (<?php echo $Game['ID']; ?>)</td>
 		<td><?php echo date(DATE_DATE_SHORT,$Game['StartDate']); ?></td>
 		<td><?php echo date(DATE_DATE_SHORT,$Game['EndDate']); ?></td>
-		<td><?php echo $Game['MaxPlayers'] ?></td>
-		<td><?php echo $Game['Type'] ?></td>
-		<td><?php echo $Game['Speed'] ?></td>
-		<td><?php echo $Game['Credits'] ?></td>
+		<td><?php echo $Game['MaxPlayers']; ?></td>
+		<td><?php echo $Game['Type']; ?></td>
+		<td><?php echo $Game['Speed']; ?></td>
+		<td><?php echo $Game['Credits']; ?></td>
 	</tr>
-</table><br />
-<p><?php echo $Game['Description'] ?></p>
-<form name="FORM" method="POST" action="<?php echo $JoinGameFormLink ?>">
-	<input type="hidden" name="sn" value="<?php echo $JoinGameFormSN ?>">
+</table><br /><?php
+if($Game['Description'])
+{ ?>
+	<h1>Description</h1>
+	<p><?php echo bbifyMessage($Game['Description']); ?></p><?php
+} ?>
+<form name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>">
 	<h1>Create Merchant</h1><br />
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
@@ -50,7 +53,7 @@
 							<option value="1">[please select]</option><?php
 							foreach($Races as $Race)
 							{
-								?><option value="<?php echo $Race['ID'] ?>"><?php echo $Race['Name'] ?> (<?php echo $Race['NumberOfPlayers'] ?> Traders)<?php
+								?><option value="<?php echo $Race['ID']; ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
 							} ?>
 						</select>
 						</td>

@@ -74,8 +74,7 @@ $template->assign('RaceDescriptions',$raceDescriptions);
 $container = array();
 $container['game_id'] = $var['game_id'];
 $container['url'] = 'game_join_processing.php';
-$template->assign('JoinGameFormLink','loader.php');
-$template->assign('JoinGameFormSN',SmrSession::get_new_sn($container));
+$template->assign('JoinGameFormHref',SmrSession::get_new_href($container));
 
 
 
