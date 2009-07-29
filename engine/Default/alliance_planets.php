@@ -46,7 +46,7 @@ if ($db->getNumRows() > 0) {
 
     while ($db->nextRecord())
     {
-		$forceGalaxy =& SmrGalaxy::getGalaxyContaining($db->getField('game_id'),$db->getField('sector_id'));
+		$forceGalaxy =& SmrGalaxy::getGalaxyContaining($player->getGameID(),$db->getField('sector_id'));
 		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= $planet->planet_name;
