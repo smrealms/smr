@@ -157,6 +157,17 @@ if(isset($GameID))
 		</tr>
 		
 		<tr>
+			<td>Use AJAX (Auto&nbsp;Refresh):</td>
+			<td>
+				<a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if($ThisAccount->isUseAJAX()){ ?>Disable AJAX (Currently Enabled)<?php }else{ ?>Enable AJAX (Currently Disabled)<?php } ?></a><br />				
+			</td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		
+		<tr>
 			<td>Display Ship Images:</td>
 			<td>
 				Yes: <input type="radio" name="images" id="InputFields" value="Yes"<?php if($ThisAccount->isDisplayShipImages()){ ?> checked="checked"<?php } ?> /><br />
