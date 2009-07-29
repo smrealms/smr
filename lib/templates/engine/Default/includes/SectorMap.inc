@@ -1,4 +1,4 @@
-<table class="lmt"><?php
+<table class="lmt" style="margin: auto;"><?php
 	foreach($MapSectors as &$MapSector)
 	{ ?>
 		<tr><?php
