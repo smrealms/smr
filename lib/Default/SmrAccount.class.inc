@@ -283,7 +283,7 @@ class SmrAccount
 			{
 				$score+=$each['Score'];
 			}
-			$score = pow($score,self::USER_RANKINGS_TOTAL_SCORE_POW);
+			$score = $score;
 			$this->score=round($score);
 		}
 		return $this->score;
@@ -311,7 +311,7 @@ class SmrAccount
 	
 	function get_rank()
 	{
-		$rank = ceil($this->getScore()/self::USER_RANKINGS_RANK_BOUNDARY);
+		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY);
 		if($rank<1)
 			$rank=1;
 		return $rank;

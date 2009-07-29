@@ -33,7 +33,7 @@ while ($db->nextRecord())
     if ($i > 0)
     	$PHP_OUTPUT.=('<br />');
     $PHP_OUTPUT.= $db->getField('rank_name') . ' - ';
-    $PHP_OUTPUT.= $db->getField('rank')*SmrAccount::USER_RANKINGS_RANK_BOUNDARY . ' points.';
+    $PHP_OUTPUT.= ceil(pow($db->getField('rank'),1/SmrAccount::USER_RANKINGS_TOTAL_SCORE_POW)*SmrAccount::USER_RANKINGS_RANK_BOUNDARY) . ' points.';
 	$i++;
 }
 $db2 = new SmrMySqlDatabase();
