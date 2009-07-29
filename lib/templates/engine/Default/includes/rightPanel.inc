@@ -1,4 +1,3 @@
-<span id="enable_ajax"><a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if($ThisAccount->isUseAJAX()){ ?>Disable<?php }else{ ?>Enable<?php } ?> AJAX</a></span><br />
 <?php
 if(isset($GameID))
 {
