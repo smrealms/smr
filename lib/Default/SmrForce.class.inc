@@ -310,10 +310,10 @@ class SmrForce
 	
 	public function getMaxExpireTime()
 	{
-		if($this->hasCDs()||$this->hasSDs()||$this->hasMines())
+		if($this->hasCDs()||$this->hasMines())
 			return $this->getMaxGalaxyExpireTime();
 		if(!$this->hasCDs() && !$this->hasMines() && $this->hasSDs())
-			return self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY;
+			return max(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY,$this->getMaxGalaxyExpireTime());
 		return 0;
 	}
 	
