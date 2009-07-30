@@ -59,6 +59,7 @@ if(isset($XType))
 				break;
 				case 'Ships':
 					$Ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType(SmrSession::$game_id));
+					uasort($Ships,array('AbstractSmrShip','CompareName'));
 					foreach($Ships as &$Ship)
 					{
 						?><option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
@@ -66,6 +67,7 @@ if(isset($XType))
 				break;
 				case 'Weapons':
 					$Weapons =& SmrWeapon::getAllWeapons(Globals::getGameType(SmrSession::$game_id));
+					uasort($Weapons,array('SmrWeapon','CompareName'));
 					foreach($Weapons as &$Weapon)
 					{
 						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
@@ -73,6 +75,7 @@ if(isset($XType))
 				break;
 				case 'Locations':
 					$Locations =& SmrLocation::getAllLocations();
+					uasort($Locations,array('SmrLocation','CompareName'));
 					foreach($Locations as &$Location)
 					{
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php

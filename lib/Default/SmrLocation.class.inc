@@ -66,7 +66,15 @@ class SmrLocation
 			return self::$CACHE_LOCATIONS[$locationTypeID] =& $p;
 		}
 		return self::$CACHE_LOCATIONS[$locationTypeID];
-		
+	}
+	
+	public static function compareName($a,$b)
+	{
+		$aName = $a->getName();
+		$bName = $b->getName();
+	    if ($aName == $bName)
+	        return 0;
+	    return $aName < $bName ? -1 : 1;
 	}
 	
 	protected function __construct($locationTypeID)
