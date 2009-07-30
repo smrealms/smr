@@ -46,16 +46,16 @@ if (!empty($_SERVER['QUERY_STRING']))
 	// query string should be a nick or some letters of a nick
 	$query = urldecode($_SERVER['QUERY_STRING']);
 
-	$db->query('SELECT album.account_id as album_id
-				FROM album NATURAL JOIN account
+	$db->query('SELECT account_id as album_id
+				FROM album JOIN account USING(account_id)
 				WHERE hof_name LIKE '.$db->escapeString($query.'%').' AND
 					  approved = \'YES\'
 				ORDER BY hof_name');
 
 	if ($db->getNumRows() > 1)
 	{
-		$db2->query('SELECT album.account_id as album_id
-				FROM album NATURAL JOIN account
+		$db2->query('SELECT account_id as album_id
+				FROM album JOIN account USING(account_id)
 				WHERE hof_name = '.$db->escapeString($query).' AND
 					  approved = \'YES\'
 				ORDER BY hof_name');
