@@ -278,7 +278,7 @@ function search_result($album_ids)
 function create_link_list() {
 
 	echo('<div align="center" style="font-size:80%;">[ ');
-	echo('<a href="'.URL.'/album/?%">All</a> | ');
+	echo('<a href="'.URL.'/album/">All</a> | ');
 	echo('<a href="'.URL.'/album/?A">A</a> | ');
 	echo('<a href="'.URL.'/album/?B">B</a> | ');
 	echo('<a href="'.URL.'/album/?C">C</a> | ');
