@@ -45,6 +45,15 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $weapons;
 	}
 	
+	public static function compareName($a,$b)
+	{
+		$aName = $a->getName();
+		$bName = $b->getName();
+	    if ($aName == $bName)
+	        return 0;
+	    return $aName < $bName ? -1 : 1;
+	}
+	
 	protected function __construct($gameTypeID,$weaponTypeID)
 	{
 		self::initialiseDatabase();

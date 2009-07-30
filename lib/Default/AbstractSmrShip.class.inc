@@ -110,6 +110,15 @@ abstract class AbstractSmrShip
 		return self::$CACHE_BASE_SHIPS[$gameTypeID];
 	}
 	
+	public static function compareName($a,$b)
+	{
+		$aName = $a['Name'];
+		$bName = $b['Name'];
+	    if ($aName == $bName)
+	        return 0;
+	    return $aName < $bName ? -1 : 1;
+	}
+	
 	protected function __construct(AbstractSmrPlayer &$player)
 	{
 		$this->player = $player;
