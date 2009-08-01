@@ -199,7 +199,7 @@ $sn = SmrSession::get_new_sn($container);
 SmrSession::update();
 //get rid of expired messages
 $time = TIME;
-$db2->query('DELETE FROM message WHERE expire_time < '.$time.' AND expire_time > 0');
+$db2->query('UPDATE message SET reciever_delete = \'TRUE\', sender_delete = \'TRUE\' WHERE (reciever_delete = \'FALSE\' OR sender_delete = \'FALSE\') AND expire_time < '.$time.' AND expire_time > 0');
 //check to see if we need to remove player_has_unread
 $db2 = new SmrMySqlDatabase();
 $db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$account->account_id.' AND message_type_id != 3');
