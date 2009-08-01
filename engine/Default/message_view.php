@@ -46,18 +46,36 @@ if (!isset($var['folder_id']))
 		if ($db2->nextRecord())
 			$messageBox['MessageCount'] = $db2->getField('message_count');
 
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'message_view.php';
+		$container = create_container('skeleton.php','message_view.php');
 		$container['folder_id'] = $message_type_id;
 		$messageBox['ViewHref'] = SmrSession::get_new_href($container);
 		
-		$container = array();
-		$container['url'] = 'message_delete_processing.php';
+		$container = create_container('message_delete_processing.php');
 		$container['folder_id'] = $message_type_id;
 		$messageBox['DeleteHref'] = SmrSession::get_new_href($container);
 		$messageBoxes[] = $messageBox;
 	}
+	
+	$messageBox = array();
+	$messageBox['MessageCount'] = 0;
+	$db->query('SELECT count(message_id) as count FROM message ' .
+						'WHERE sender_id = '.SmrSession::$account_id.' AND ' .
+							  'game_id = '.SmrSession::$game_id.' AND ' .
+							  'message_type_id = ' . MSG_PLAYER.' AND ' .
+							  'sender_delete = \'FALSE\'');
+	if ($db->nextRecord())
+		$messageBox['MessageCount'] = $db->getField('count');
+	$messageBox['Name'] = 'Sent Messages';
+	$messageBox['HasUnread'] = false;
+	$container = create_container('skeleton.php','message_view.php');
+	$container['folder_id'] = MSG_SENT;
+	$messageBox['ViewHref'] = SmrSession::get_new_href($container);
+	
+	$container = create_container('message_delete_processing.php');
+	$container['folder_id'] = MSG_SENT;
+	$messageBox['DeleteHref'] = SmrSession::get_new_href($container);
+	$messageBoxes[] = $messageBox;
+			
 	$template->assignByRef('MessageBoxes',$messageBoxes);
 }
 else
@@ -73,9 +91,14 @@ else
 	// remove entry for this folder from unread msg table
 	$player->setMessagesRead($messageBox['Type']);
 
-	$db->query('SELECT * FROM message_type WHERE message_type_id = ' . $var['folder_id']);
-	if ($db->nextRecord())
-		$messageBox['Name'] = $db->getField('message_type_name');
+	if($var['folder_id'] == MSG_SENT)
+		$messageBox['Name'] = 'Sent Messages';
+	else
+	{
+		$db->query('SELECT * FROM message_type WHERE message_type_id = ' . $var['folder_id']);
+		if ($db->nextRecord())
+			$messageBox['Name'] = $db->getField('message_type_name');
+	}
 	$template->assign('PageTopic','Viewing ' . $messageBox['Name']);
 
 	if ($messageBox['Type'] == MSG_GLOBAL)
@@ -87,11 +110,20 @@ else
 	transfer('folder_id');
 	$messageBox['DeleteFormHref'] = SmrSession::get_new_href($container);
 	
-	$db->query('SELECT * FROM message ' .
+	if($var['folder_id'] == MSG_SENT)
+		$db->query('SELECT * FROM message ' .
+						'WHERE sender_id = '.$player->getAccountID().' AND ' .
+							  'game_id = '.$player->getGameID().' AND ' .
+							  'message_type_id = ' . MSG_PLAYER.' AND ' .
+							  'sender_delete = \'FALSE\'' .
+						' ORDER BY send_time DESC');
+	else
+		$db->query('SELECT * FROM message ' .
 						'WHERE account_id = '.$player->getAccountID().' AND ' .
 							  'game_id = '.$player->getGameID().' AND ' .
 							  'message_type_id = ' . $var['folder_id'].' AND reciever_delete = \'FALSE\'' .
 						' ORDER BY send_time DESC');
+
 	$messageBox['NumberMessages'] = $db->getNumRows();
 	$messageBox['Messages'] = array();
 
@@ -150,12 +182,7 @@ else
 	{
 		while ($db->nextRecord())
 		{
-			$message_id = $db->getField('message_id');
-			$sender_id = $db->getField('sender_id');
-			$message_text = stripslashes($db->getField('message_text'));
-			$send_time = $db->getField('send_time');
-			$msg_read = $db->getField('msg_read');
-			displayMessage($messageBox,$message_id, $sender_id, $message_text, $send_time, $msg_read, $var['folder_id']);
+			displayMessage($messageBox,$db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id'], $var['folder_id']==0);
 		}
 		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.$var['folder_id'].' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 	}
@@ -176,7 +203,7 @@ function displayGrouped(&$messageBox,$playerName, $player_id, $sender_id, $messa
 	$message['Text'] = $message_text;
 	$messageBox['GroupedMessages'][] = $message;
 }
-function displayMessage(&$messageBox,$message_id, $sender_id, $message_text, $send_time, $msg_read, $type)
+function displayMessage(&$messageBox,$message_id, $reciever_id, $sender_id, $message_text, $send_time, $msg_read, $type,$sentMessage = false)
 {
 	global $player, $account;
 	
@@ -256,6 +283,15 @@ function displayMessage(&$messageBox,$message_id, $sender_id, $message_text, $se
 	$message['SenderDisplayName'] = $senderName;
 	if(is_object($sender))
 		$message['Sender'] =& $sender;
+		
+	$reciever =& SmrPlayer::getPlayer($reciever_id, $player->getGameID());
+	if($sentMessage && is_object($reciever))
+	{
+		$container = create_container('skeleton.php','trader_search_result.php');
+		$container['player_id'] = $reciever->getPlayerID();
+		$message['RecieverDisplayName'] = create_link($container, $reciever->getDisplayName());
+	}
+	
 	$message['Unread'] = $msg_read == 'FALSE';
 	$message['SendTime'] = $send_time;
 	$messageBox['Messages'][] =& $message;

@@ -1900,21 +1900,22 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->save();
 	}
 	
-	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires)
+	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires, $senderDelete = false)
 	{
 		$message = trim($message);
 		$db = new SmrMySqlDatabase();
 		// send him the message
 		$db->query('INSERT INTO message
 			(account_id,game_id,message_type_id,message_text,
-			sender_id,send_time,expire_time) VALUES(' . 
+			sender_id,send_time,expire_time,sender_delete) VALUES(' . 
 			$receiverID . ',' .
 			$gameID . ',' .
 			$messageTypeID . ',' .
 			$db->escapeString($message) . ',' .
 			$senderID . ',' .
 			TIME . ',' .
-			$expires . ')'
+			$expires . ',' .
+			$db->escapeBoolean($senderDelete) . ')'
 		);
 
 		// give him the message icon
@@ -1998,7 +1999,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$expires += TIME;
 		// send him the message
-		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires);
+		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $messageTypeID == MSG_SCOUT);
 	}
 	
 	public static function sendMessageFromPlanet($gameID, $receiverID, $message)

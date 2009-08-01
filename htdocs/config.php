@@ -56,6 +56,7 @@ define('PLANET_HANGAR_DRONES',20);
 /*
  * Messaging system
  */
+define('MSG_SENT', 0);
 define('MSG_GLOBAL', 1);
 define('MSG_PLAYER', 2);
 define('MSG_PLANET', 3);
