@@ -21,7 +21,7 @@ if (!isset($var['folder_id'])) {
 	
 	include(get_file_loc('council.inc'));
 
-	$db2->query('SELECT * FROM message WHERE account_id = '.$player->getAccountID().' AND message_type_id = '.MSG_POLITICAL.' AND game_id = '.$player->getGameID());
+	$db2->query('SELECT * FROM message WHERE account_id = '.$player->getAccountID().' AND message_type_id = '.MSG_POLITICAL.' AND game_id = '.$player->getGameID().' AND reciever_delete = \'FALSE\' AND reciever_delete = \'FALSE\'');
 	if (onCouncil($player->getRaceID()) || $db2->getNumRows())
 		$db->query('SELECT * FROM message_type ' .
 				   'WHERE message_type_id < 8 ' .
@@ -31,8 +31,8 @@ if (!isset($var['folder_id'])) {
 					'WHERE message_type_id != 5 ' .
 				   'ORDER BY message_type_id');
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$message_type_id = $db->getField('message_type_id');
 		$message_type_name = $db->getField('message_type_name');
 
@@ -41,14 +41,16 @@ if (!isset($var['folder_id'])) {
 						'WHERE account_id = '.SmrSession::$account_id.' AND ' .
 							  'game_id = '.SmrSession::$game_id.' AND ' .
 							  'message_type_id = '.$message_type_id.' AND ' .
-							  'msg_read = \'FALSE\'');
+							  'msg_read = \'FALSE\' AND ' .
+							  'reciever_delete = \'FALSE\''
+					);
 		$msg_read = $db2->getNumRows();
 
 		// get number of msges
 		$db2->query('SELECT count(message_id) as message_count FROM message ' .
 						'WHERE account_id = '.SmrSession::$account_id.' AND ' .
 							  'game_id = '.SmrSession::$game_id.' AND ' .
-							  'message_type_id = '.$message_type_id);
+							  'message_type_id = '.$message_type_id.' AND reciever_delete = \'FALSE\'');
 		if ($db2->nextRecord())
 			$message_count = $db2->getField('message_count');
 
@@ -93,7 +95,7 @@ if (!isset($var['folder_id'])) {
 						'WHERE account_id = '.SmrSession::$account_id.' AND ' .
 							  'game_id = '.SmrSession::$game_id.' AND ' .
 							  'message_type_id = ' . $var['folder_id'] . ' AND ' .
-							  'msg_read = \'FALSE\'');
+							  'msg_read = \'FALSE\' AND reciever_delete = \'FALSE\'');
 	$unread_messages = $db->getNumRows();
 	// remove entry for this folder from unread msg table
 	$player->setMessagesRead($var['folder_id']);
@@ -138,7 +140,7 @@ if (!isset($var['folder_id'])) {
 	$db->query('SELECT * FROM message ' .
 						'WHERE account_id = '.$player->getAccountID().' AND ' .
 							  'game_id = '.$player->getGameID().' AND ' .
-							  'message_type_id = ' . $var['folder_id'] .
+							  'message_type_id = ' . $var['folder_id'].' AND reciever_delete = \'FALSE\'' .
 						' ORDER BY send_time DESC');
 	$message_count = $db->getNumRows();
 
@@ -171,7 +173,7 @@ if (!isset($var['folder_id'])) {
 					AND message.game_id = ' . $player->getGameID()  . '
 					AND player.game_id = ' . $player->getGameID() . '
 					AND message_type_id = ' . $var['folder_id'] . '
-					AND msg_read = \'FALSE\' 
+					AND msg_read = \'FALSE\'  AND reciever_delete = \'FALSE\'
 					GROUP BY sender_id 
 					ORDER BY send_time DESC';
 			$db->query($query);
@@ -188,7 +190,7 @@ if (!isset($var['folder_id'])) {
 					WHERE account_id = ' . $player->getAccountID() . '
 					AND game_id = ' . $player->getGameID() . '
 					AND message_type_id = ' . $var['folder_id'] . '
-					AND msg_read = \'FALSE\' 
+					AND msg_read = \'FALSE\'  AND reciever_delete = \'FALSE\'
 					ORDER BY send_time DESC';
 			$db->query($query);
 			while ($db->nextRecord())
@@ -202,7 +204,7 @@ if (!isset($var['folder_id'])) {
 					AND message.game_id = ' . $player->getGameID() . '
 					AND player.game_id = ' . $player->getGameID() . '
 					AND message_type_id = ' . $var['folder_id'] . '
-					AND msg_read = \'TRUE\' 
+					AND msg_read = \'TRUE\'  AND reciever_delete = \'FALSE\'
 					GROUP BY sender_id 
 					ORDER BY send_time DESC';
 			$db->query($query);
@@ -216,7 +218,7 @@ if (!isset($var['folder_id'])) {
 					WHERE account_id = ' . $player->getAccountID() . ' AND
 					game_id = ' . $player->getGameID() . '
 					AND message_type_id = ' . $var['folder_id'] . '
-					AND msg_read = \'TRUE\'
+					AND msg_read = \'TRUE\' AND reciever_delete = \'FALSE\'
 					ORDER BY send_time DESC';
 			$db->query($query);
 			while ($db->nextRecord())

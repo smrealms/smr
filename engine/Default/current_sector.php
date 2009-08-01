@@ -98,7 +98,7 @@ if($player->hasTickers())
 					AND game_id=' . $player->getGameID() . '
 					AND message_type_id=' . MSG_SCOUT . '
 					AND send_time>=' . $max . '
-					AND sender_id NOT IN (' . implode(',', $temp) . ')
+					AND sender_id NOT IN (' . implode(',', $temp) . ') AND reciever_delete = \'FALSE\'
 					ORDER BY send_time DESC
 					LIMIT 4';
 		$db->query($query);
