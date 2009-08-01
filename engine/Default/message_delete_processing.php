@@ -14,7 +14,7 @@ if ($action == 'Marked Messages')
 						AND send_time >= ' . $temp[1] . '
 						AND send_time <= ' . $temp[2] . '
 						AND account_id = ' . $player->getAccountID() . '
-						AND message_type_id = ' . MSG_SCOUT;
+						AND message_type_id = ' . MSG_SCOUT.' AND reciever_delete = \'FALSE\'';
 			$db->query($query);
 			while ($db->nextRecord()) {
 				$newId = $db->getField('message_id');
@@ -26,17 +26,17 @@ if ($action == 'Marked Messages')
 	        $message_id_list .= $id;
 	    }
     }
-    $db->query('DELETE FROM message WHERE message_id IN ('.$message_id_list.')');
+    $db->query('UPDATE message SET reciever_delete = \'TRUE\' WHERE message_id IN ('.$message_id_list.')');
 
 }
 else
 {
     if ($var['folder_id'] == MSG_SCOUT) {
-        $db->query('DELETE FROM message WHERE account_id = '.$player->getAccountID().' AND ' .
+        $db->query('UPDATE message SET reciever_delete = \'TRUE\' WHERE account_id = '.$player->getAccountID().' AND ' .
                                             'message_type_id = '.$var['folder_id'].' AND ' .
                                             'game_id = '.$player->getGameID());
     } else {
-        $db->query('DELETE FROM message WHERE account_id = '.SmrSession::$account_id.' AND ' .
+        $db->query('UPDATE message SET reciever_delete = \'TRUE\' WHERE account_id = '.SmrSession::$account_id.' AND ' .
                                            'game_id = '.SmrSession::$game_id.' AND ' .
                                            'message_type_id = ' . $var['folder_id'] . ' AND ' .
                                            'msg_read = \'TRUE\'');

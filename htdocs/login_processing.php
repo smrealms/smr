@@ -203,7 +203,7 @@ $db2->query('DELETE FROM message WHERE expire_time < '.$time.' AND expire_time >
 //check to see if we need to remove player_has_unread
 $db2 = new SmrMySqlDatabase();
 $db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$account->account_id.' AND message_type_id != 3');
-$db2->query('SELECT * FROM message WHERE account_id = '.$account->account_id.' AND msg_read = \'FALSE\'');
+$db2->query('SELECT * FROM message WHERE account_id = '.$account->account_id.' AND msg_read = \'FALSE\' AND reciever_delete = \'FALSE\'');
 
 while ($db2->nextRecord())
 	$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->getField('game_id') . ', '.$account->account_id.', ' . $db2->getField('message_type_id') . ')');
