@@ -1974,28 +1974,28 @@ class SmrPlayer extends AbstractSmrPlayer
 		switch ($messageTypeID)
 		{
 			case MSG_GLOBAL: //We don't send globals to the box here or it gets done loads of times.
-				$expires = 3600;
+				$expires = 3600; // 1h
 			break;
 			case MSG_PLAYER:
-				$expires = 3600 * 24 * 7;
+				$expires = 86400 * 7;
 			break;
 			case MSG_PLANET:
-				$expires = 3600 * 24 * 3;
+				$expires = 86400 * 3;
 			break;
 			case MSG_SCOUT:
-				$expires = 3600 * 24 * 3;
+				$expires = 86400 * 3;
 			break;
 			case MSG_POLITICAL:
-				$expires = 3600 * 24 * 2;
+				$expires = 86400 * 3;
 			break;
 			case MSG_ALLIANCE:
-				$expires = 3600 * 24 * 2;
+				$expires = 86400 * 7;
 			break;
 			case MSG_ADMIN:
-				$expires = 3600 * 24 * 7;
+				$expires = 86400 * 7;
 			break;
 			default:
-				$expires = 3600 * 24 * 2;
+				$expires = 86400 * 3;
 		}
 		$expires += TIME;
 		// send him the message
