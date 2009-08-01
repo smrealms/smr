@@ -17,11 +17,8 @@ else
 
 	if ($gameID != 20000)
 	{
-		$PHP_OUTPUT.=('<select name="account_id" size="1" id="InputFields">');
-		$PHP_OUTPUT.=('<option value="0">[Please Select]</option>');
-	
 		$gamePlayers = array();
-		$db->query('SELECT * FROM player WHERE game_id = '.$gameID.' ORDER BY player_id');
+		$db->query('SELECT account_id,player_id,player_name FROM player WHERE game_id = '.$gameID.' ORDER BY player_name');
 		while ($db->nextRecord())
 			$gamePlayers[]= array('AccountID' => $db->getField('account_id'), 'PlayerID' => $db->getField('player_id'), 'Name' => $db->getField('player_name'));
 		$template->assignByRef('GamePlayers',$gamePlayers);
