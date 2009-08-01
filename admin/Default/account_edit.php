@@ -6,6 +6,7 @@ $account_id = $_REQUEST['account_id'];
 $login = $_REQUEST['login'];
 $val_code = $_REQUEST['val_code'];
 $email = $_REQUEST['email'];
+$hofName = $_REQUEST['hofname'];
 $player_name = $_REQUEST['player_name'];
 
 if (empty($account_id))
@@ -32,6 +33,7 @@ if (!empty($player_name) && !is_array($player_name)) {
 $db->query('SELECT account_id FROM account WHERE account_id = '.$account_id.' OR ' .
 									   'login LIKE ' . $db->escape_string($login) . ' OR ' .
 									   'email LIKE ' . $db->escape_string($email) . ' OR ' .
+									   'hof_name LIKE ' . $db->escapeString($hofName) . ' OR ' .
 									   'validation_code LIKE ' . $db->escape_string($val_code));
 if ($db->nextRecord())
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
@@ -80,6 +82,13 @@ if (!empty($curr_account->email))
 	$PHP_OUTPUT.=('<td>'.$curr_account->email.'</td>');
 else
 	$PHP_OUTPUT.=('<td><input type="text" name="email" id="InputFields" size="20"></td>');
+$PHP_OUTPUT.=('</tr>');
+$PHP_OUTPUT.=('<tr>');
+$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">HoF Name:</td>');
+if (!empty($curr_account) && $curr_account->getHofName())
+	$PHP_OUTPUT.=('<td>'.$curr_account->getHofName().'</td>');
+else
+	$PHP_OUTPUT.=('<td><input type="text" name="hofname" id="InputFields" size="20"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 if (!empty($curr_account->email)) {
