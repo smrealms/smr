@@ -5,8 +5,7 @@ if($ThisShip->hasWeapons())
 		<p>To reorder your weapons simply drag and drop them into the desired order.</p>
 		<noscript><p>It has been detected that you do not have javascript or that it is disabled, you will have to use the arrows to reorder your weapons</p></noscript>
 		
-		<form method="POST" action="<?php echo URL ?>/loader.php">
-			<input type="hidden" name="sn" value="<?php echo Globals::getWeaponReorderHREF(0,'Form') ?>">
+		<form method="POST" action="<?php echo Globals::getWeaponReorderHREF(0,'Form'); ?>">
 			<table id="weapon_reorder" class="standard">
 			<tr nodrag="true" nodrop="true">
 			<th align="center">Weapon Name</th>

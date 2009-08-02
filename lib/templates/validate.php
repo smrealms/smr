@@ -1,7 +1,6 @@
 <h1>VALIDATION REMINDER</h1><br />
 
-<form name="FORM" method="POST" action="<?php echo $ValidationFormAction ?>">
-<input type="hidden" name="sn" value="<?php echo $ValidateFormSN ?>">
+<form name="FORM" method="POST" action="<?php echo $ValidateFormHref ?>">
 
 <?php
 if(isset($Message))

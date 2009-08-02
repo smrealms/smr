@@ -1,5 +1,4 @@
-<form name="FORM" method="POST" action="<?php echo $CreateUniverseFormAction ?>">
-	<input type="hidden" name="sn" value="<?php echo $CreateUniverseFormSN ?>">
+<form name="FORM" method="POST" action="<?php echo $CreateUniverseFormHref ?>">
 	<p>
 		<table border="0" cellpadding="3">
 			<tr>

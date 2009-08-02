@@ -22,16 +22,14 @@ if (empty($galaxy_count))
 	$container['body']		= 'universe_create_galaxies.php';
 	$container['game_id']	= $var['game_id'];
 	$template->assign('ChooseNumberOfGalaxies',true);
-	$template->assign('CreateGalaxiesFormAction','loader.php');
-	$template->assign('CreateGalaxiesFormSN',SmrSession::get_new_sn($container));
+	$template->assign('CreateGalaxiesFormHref',SmrSession::get_new_href($container));
 }
 else
 {
 	$container = array();
 	$container['url']			= 'universe_create_galaxies_processing.php';
 	$container['game_id']		= $var['game_id'];
-	$template->assign('CreateGalaxiesFormAction','loader.php');
-	$template->assign('CreateGalaxiesFormSN',SmrSession::get_new_sn($container));
+	$template->assign('CreateGalaxiesFormHref',SmrSession::get_new_href($container));
 
 	$template->assign('NumberOfGalaxies',$galaxy_count);
 	
