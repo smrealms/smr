@@ -1,6 +1,7 @@
 <?php
-require_once(LIB . '/Default/SmrSession.class.inc');
+
 require_once(LIB . '/Default/Globals.class.inc');
+require_once(LIB . '/Default/SmrSession.class.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
@@ -548,8 +549,7 @@ function acquire_lock($sector)
 
 	if($lock)
 		return true;
-	if(!$sector)
-		return false;
+
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 			

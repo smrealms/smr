@@ -371,7 +371,7 @@ if (SmrSession::$game_id != 0){
 
 			$db->query('SELECT good_name FROM good WHERE good_id=' .  $id);
 			if ($db->next_record())
-				echo '<img src="images/port/' . $id . '.gif" alt="' . $db->f("good_name") . '">&nbsp;:&nbsp;' . $amount . '<br>';
+				echo '<img src="images/port/' . $id . '.png" alt="' . $db->f("good_name") . '">&nbsp;:&nbsp;' . $amount . '<br>';
 
 		}
 

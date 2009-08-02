@@ -78,8 +78,8 @@ if(USE_COMPATIBILITY)
 				  'end_date >= \'' . TIME . '\'');
 	if ($db->getNumRows() > 0)
 	{
-		require_once(get_file_loc('smr_player.inc'));
-		require_once(get_file_loc('smr_ship.inc'));
+		require_once(get_file_loc('smr_player.inc',1,'1.2/'));
+		require_once(get_file_loc('smr_ship.inc',1,'1.2/'));
 		while ($db->nextRecord())
 		{
 			$game_id = $db->getField('game_id');
