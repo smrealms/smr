@@ -12,7 +12,24 @@ $new_password = $_REQUEST['new_password'];
 $old_password = $_REQUEST['old_password'];
 $retype_password = $_REQUEST['retype_password'];
 $HoF_name = $_REQUEST['HoF_name'];
-if ($action == 'Save and resend validation code')
+
+if (USE_COMPATIBILITY && $action == 'Link Account')
+{
+	require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
+	$db = new Smr12MySqlDatabase();
+	$db->query('SELECT account_id FROM account ' .
+			   'WHERE login = '.$db->escapeString($_REQUEST['oldAccountLogin']).' AND ' .
+					 'password = '.$db->escapeString($_REQUEST['oldAccountPassword']));
+	if ($db->nextRecord())
+	{
+		$account->setOldAccountID($db->getField('account_id'));	
+	}
+	else
+		create_error('There is no old account with that username/password.');
+	$db = new SmrMySqlDatabase();
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have linked your old account.';
+}
+else if ($action == 'Save and resend validation code')
 {
 	// get user and host for the provided address
 	list($user, $host) = explode('@', $email);

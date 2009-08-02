@@ -42,6 +42,7 @@ class SmrAccount
 	protected $score;
 	protected $cssLink;
 	protected $defaultCSSEnabled;
+	protected $oldAccountID;
 	
 	protected $hasChanged;
 	
@@ -95,6 +96,7 @@ class SmrAccount
 			
 			$this->cssLink			= $row['css_link'];
 			$this->defaultCSSEnabled	= $row['default_css_enabled']=='TRUE';
+			$this->oldAccountID		= $row['old_account_id'];
 			
 			$this->hofName			= $row['hof_name'];
 			if(empty($this->hofName))
@@ -109,7 +111,7 @@ class SmrAccount
 	
 	function is_disabled()
 	{
-		$this->db->query('SELECT * FROM account_is_closed NATURAL JOIN closing_reason ' .
+		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
 		if ($this->db->nextRecord())
 		{
@@ -128,7 +130,6 @@ class SmrAccount
 		}
 		else
 			return false;
-		
 	}
 	
 	function is_allowed($permission)
@@ -495,6 +496,50 @@ class SmrAccount
 	public function getAccountID()
 	{
 		return $this->account_id;
+	}
+	
+	public function getOldAccountID()
+	{
+		return $this->oldAccountID;
+	}
+	
+	public function hasOldAccountID()
+	{
+		return $this->getOldAccountID()!=0;
+	}
+	
+	public function setOldAccountID($accountID)
+	{
+		if(USE_COMPATIBILITY)
+		{
+			$credits = 0;
+			require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
+			$db = new Smr12MySqlDatabase();
+			$db->query('SELECT credits_left FROM account_has_credits ' .
+					'WHERE account_id = '.$db->escapeNumber($accountID));
+			if($db->nextRecord())
+			{
+				$credits = $db->getField('credits_left');
+			}
+			
+			$db->query('SELECT time, amount FROM account_donated ' .
+					'WHERE account_id = '.$db->escapeNumber($accountID));
+			$db2 = new SmrMySqlDatabase();
+			while($db->nextRecord())
+				$db2->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$this->getAccountID().', ' . $db->getField('time') . ' , '.$db->getField('amount').')');
+			
+			
+			$db = new Smr12MySqlDatabase();
+			$db->query('SELECT permission_id FROM account_has_permission ' .
+					'WHERE account_id = '.$db->escapeNumber($accountID));
+			$db2 = new SmrMySqlDatabase();
+			while($db->nextRecord())
+				$db2->query('INSERT IGNORE INTO account_has_permission (account_id, permission_id) VALUES ('.$this->getAccountID().', ' . $db->getField('permission_id').')');
+			
+			$this->db->query('UPDATE account SET old_account_id = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+			$this->increaseSmrCredits($credits);
+			$this->oldAccountID = $accountID;
+		}
 	}
 	
 	public function getLogin()

@@ -3,12 +3,12 @@
 $container = array();
 
 // is account validated?
-if ($account->validated == 'FALSE') {
-
+if ($account->validated == 'FALSE')
+{
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'validate.php';
-
-} else
+}
+else
 	$container['url'] = 'announcements_check.php';
 
 forward($container);

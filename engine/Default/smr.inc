@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(LIB . '/Default/SmrSession.class.inc');
 require_once(LIB . '/Default/Globals.class.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));
@@ -171,7 +171,7 @@ function create_submit_style($value, $style) {
 	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" style="'.$style.'" />');
 }
 
-function get_file_loc($file_name, $exists = 1)
+function get_file_loc($file_name, $exists = 1, $overrideGameDir = false)
 {
 	global $g_id;
 	static $stored_dir;
@@ -189,18 +189,20 @@ function get_file_loc($file_name, $exists = 1)
 			$game_dir = $stored_dir;
 		} else $game_dir = 'Default/';
 	}
-	if($game_dir=='Classic/')
+	if($game_dir=='1.2/')
 		$game_dir='Default/';
-
+	if ($overrideGameDir !== false && file_exists(ENGINE . $overrideGameDir . $file_name)) return ENGINE . $overrideGameDir . $file_name;
 	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
-	elseif (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
-	elseif (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
-	elseif (file_exists(LIB . 'Default/' . $file_name)) return LIB . 'Default/' . $file_name;
-	elseif (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
-	elseif (file_exists(ADMIN . 'Default/' . $file_name)) return ADMIN . 'Default/' . $file_name;
-	elseif (file_exists(WWW . $file_name)) return WWW . $file_name;
-	elseif ($exists == 1) return ENGINE . 'empty.php';
-	else return $file_name;
+	if (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
+	if ($overrideGameDir !== false && file_exists(LIB . $overrideGameDir . $file_name)) return LIB . $overrideGameDir . $file_name;
+	if (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
+	if (file_exists(LIB . 'Default/' . $file_name)) return LIB . 'Default/' . $file_name;
+	if ($overrideGameDir !== false && file_exists(ADMIN . $overrideGameDir . $file_name)) return ADMIN . $overrideGameDir . $file_name;
+	if (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
+	if (file_exists(ADMIN . 'Default/' . $file_name)) return ADMIN . 'Default/' . $file_name;
+	if (file_exists(WWW . $file_name)) return WWW . $file_name;
+	if ($exists == 1) return ENGINE . 'empty.php';
+	return $file_name;
 }
 
 function create_error($message) {
@@ -415,6 +417,37 @@ function do_voodoo()
 	
 	$db = new SmrMySqlDatabase();
 	$GLOBALS['db'] =& $db;
+	
+	if($var['url'] == 'game_play_preprocessing.php') // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
+	{
+		if (SmrSession::$game_id > 0)
+			$account->log(2, 'Player left game '.SmrSession::$game_id);
+		
+		// reset game id
+		SmrSession::$game_id = 0;
+		SmrSession::update();
+		
+		forward(create_container('skeleton.php', 'game_play.php'));
+	}
+	else if($var['url'] == 'logoff_preprocessing.php')
+	{
+		SmrSession::$game_id = 0;
+		SmrSession::update();
+		
+		// try to get a real ip first
+		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+			$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		else
+			$curr_ip = $_SERVER['REMOTE_ADDR'];
+		
+		// log?
+		$account->log(1, 'logged off from '.$curr_ip);
+		$container = array();
+		$container['body'] ='logoff.php';
+		$container['url'] = 'skeleton.php';
+		$container['logoff'] = 'yes';
+		forward($container);
+	}
 
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::$game_id > 0)
@@ -515,7 +548,8 @@ function acquire_lock($sector)
 
 	if($lock)
 		return true;
-		
+	if(!$sector)
+		return false;
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 			

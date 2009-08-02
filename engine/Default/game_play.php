@@ -8,13 +8,13 @@ if (isset($var['msg']))
 $template->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
 $template->assign('UserRankName',$account->get_rank_name());
 
-$db->query('SELECT end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
-					'WHERE game.game_id = player.game_id AND ' .
-						  'account_id = '.SmrSession::$account_id.' AND ' .
-						  'end_date >= \'' . TIME . '\'');
 $games = array();
 $games['Play'] = array();
 $game_id_list ='';
+$db->query('SELECT end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
+		'WHERE game.game_id = player.game_id AND ' .
+			  'account_id = '.SmrSession::$account_id.' AND ' .
+			  'end_date >= \'' . TIME . '\'');
 if ($db->getNumRows() > 0)
 {
 	while ($db->nextRecord())
@@ -30,7 +30,7 @@ if ($db->getNumRows() > 0)
 		$container = array();
 		$container['game_id'] = $game_id;
 		$container['url'] = 'game_play_processing.php';
-		if($games['Play'][$game_id]['Type'] == 'Classic')
+		if($games['Play'][$game_id]['Type'] == '1.2')
 			$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
 		else
 			$games['Play'][$game_id]['PlayGameLink'] = SmrSession::get_new_href($container);
@@ -66,6 +66,71 @@ if ($db->getNumRows() > 0)
 
 	}
 }
+
+// CLASSIC COMPATIBILITY
+if(USE_COMPATIBILITY)
+{
+	require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
+	$db = new Smr12MySqlDatabase();
+	$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
+			'WHERE game.game_id = player.game_id AND ' .
+				  'account_id = '.SmrSession::$old_account_id.' AND ' .
+				  'end_date >= \'' . TIME . '\'');
+	if ($db->getNumRows() > 0)
+	{
+		require_once(get_file_loc('smr_player.inc'));
+		require_once(get_file_loc('smr_ship.inc'));
+		while ($db->nextRecord())
+		{
+			$game_id = $db->getField('game_id');
+			$games['Play'][$game_id]['ID'] = $game_id;
+			$games['Play'][$game_id]['Name'] = $db->getField('game_name');
+			$games['Play'][$game_id]['Type'] = $db->getField('game_type');
+			$games['Play'][$game_id]['EndDate'] = $db->getField('end_date');
+			$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
+			$games['Play'][$game_id]['Type'] = $db->getField('game_type');
+			
+			$container = array();
+			$container['game_id'] = $game_id;
+			$container['url'] = 'game_play_processing.php';
+			$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
+	
+			// creates a new player object
+			$curr_player = new SMR_PLAYER(SmrSession::$old_account_id, $game_id);
+			$curr_ship = new SMR_SHIP(SmrSession::$old_account_id, $game_id);
+	
+			// update turns for this game
+			$curr_player->update_turns($curr_ship->speed);
+	
+			// generate list of game_id that this player is joined
+			if (strlen($game_id_list)>0) $game_id_list .= ',';
+			$game_id_list .= $game_id;
+	
+			$db2 = new Smr12MySqlDatabase();
+			$db2->query('SELECT count(*) as num_playing FROM player ' .
+						'WHERE last_active >= ' . (TIME - 600) . ' AND ' .
+							  'game_id = '.$game_id);
+			$db2->nextRecord();
+			$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
+	
+			// create a container that will hold next url and additional variables.
+	
+			$container_game = array();
+			$container_game['url'] = 'skeleton.php';
+			$container_game['body'] = 'game_stats.php';
+			$container_game['game_id'] = $game_id;
+			$games['Play'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container_game);
+			$games['Play'][$game_id]['Maintenance'] = $curr_player->turns;
+			$games['Play'][$game_id]['LastActive'] = format_time(TIME-$curr_player->last_active,TRUE);
+			$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->last_active,TRUE);
+	
+		}
+	}
+	$db = new SmrMySqlDatabase();
+}
+if(empty($games['Play']))
+	unset($games['Play']);
+//End Compat
 
 // put parenthesis around the list
 $game_id_list = '('.$game_id_list.')';
