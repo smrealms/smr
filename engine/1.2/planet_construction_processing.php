@@ -20,7 +20,7 @@ if ($action == "Build") {
 
 } elseif ($action == "Cancel") {
 
-	$db->query("DELETE FROM planet_is_building WHERE sector_id = $player->sector_id AND game_id = $player->game_id");
+	$db->query("DELETE FROM planet_build_construction WHERE sector_id = $player->sector_id AND game_id = $player->game_id");
 	$account->log(11, "Player cancels planet construction", $player->sector_id);
 
 }

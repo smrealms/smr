@@ -111,10 +111,10 @@ else {
 
 echo '<br><br>';
 echo '<a href="' . URL . '/manual.php" target="_blank">Manual</a><br>';
-$container['url'] = 'skeleton.php';
-$container['body'] = 'preferences.php';
-print_link($container, 'Preferences');
-echo '<br>';
+//$container['url'] = 'skeleton.php';
+//$container['body'] = 'preferences.php';
+//print_link($container, 'Preferences');
+//echo '<br>';
 /*
 $container['body'] = '';
 $container['url'] = 'mgu_create.php';
@@ -128,9 +128,9 @@ if (SmrSession::$game_id > 0) {
 	echo '<br>';
 }
 $container['url'] = 'skeleton.php';
-$container['body'] = 'album_edit.php';
-print_link($container, 'Edit Photo');
-echo '<br>';
+//$container['body'] = 'album_edit.php';
+//print_link($container, 'Edit Photo');
+//echo '<br>';
 echo '<a href="' . URL . '/album/" target="_blank">View Album</a><br><br>';
 
 $container['body'] = 'bug_report.php';

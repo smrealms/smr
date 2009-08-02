@@ -147,25 +147,10 @@ catch(Exception $e)
 		}
 		$message .= 'Trace: ' . $ee->getTraceAsString();
 	}
-	try
-	{
-		if(is_object($player))
-			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else if(is_object($account))
-			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else
-			mail('bugs@smrealms.de',
-			 'Automatic Bug Report',
-			 $message,
-			 'From: bugs@smrealms.de');
-	}
-	catch(Exception $e)
-	{
-		mail('bugs@smrealms.de',
+	mail('bugs@smrealms.de',
 		 'Automatic Bug Report',
 		 $message,
 		 'From: bugs@smrealms.de');
-	}
 	header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
 }
 

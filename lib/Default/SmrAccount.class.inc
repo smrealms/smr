@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('SmrMySqlDatabase.class.inc');
 
 class SmrAccount
@@ -512,6 +512,9 @@ class SmrAccount
 	{
 		if(USE_COMPATIBILITY)
 		{
+			$this->db->query('SELECT account_id FROM account WHERE old_account_id = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+			if($db->nextRecord())
+				create_error('Only 1 account can link to a given old account.');
 			$credits = 0;
 			require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
 			$db = new Smr12MySqlDatabase();

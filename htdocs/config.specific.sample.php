@@ -1,4 +1,5 @@
 <?php
+define('USE_COMPATIBILITY',true);
 
 define('URL', 'http://localhost/smr1');
 define('ROOT','/home/page/smr/'); 
