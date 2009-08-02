@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($_POST["action"] == "Delete Entry")
 	forward(create_container("skeleton.php", "album_delete_confirmation.php"));
@@ -110,7 +110,7 @@ if ($db->next_record()) {
 					last_changed = $curr_time,
 					approved = 'TBC',
 					disabled = 'FALSE'
-				WHERE account_id = SmrSession::$old_account_id");
+				WHERE account_id = ".SmrSession::$old_account_id);
 
 } else {
 

@@ -4,11 +4,11 @@ if ($_POST["action"] == "Yes") {
 
 	$db->query("DELETE
 				FROM album
-				WHERE account_id = SmrSession::$old_account_id");
+				WHERE account_id = " . SmrSession::$old_account_id);
 
 	$db->query("DELETE
 				FROM album_has_comments
-				WHERE album_id = SmrSession::$old_account_id");
+				WHERE album_id = ". SmrSession::$old_account_id);
 
 }
 
