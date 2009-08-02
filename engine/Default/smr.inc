@@ -130,8 +130,7 @@ function create_form_name($container, $name) {
 }
 
 function create_form_parameter($container, $param) {
-	return '<form '.$param.' method="POST" action="'.URL.'/loader.php">' .
-		'<input type="hidden" name="sn" value="' . SmrSession::get_new_sn($container) . '">';
+	return '<form '.$param.' method="POST" action="'.SmrSession::get_new_href($container).'">';
 }
 
 function create_header_link($container, $text) {

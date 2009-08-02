@@ -360,12 +360,8 @@ class Globals
 	
 	public static function getWeaponReorderHREF($weaponOrderID, $direction)
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'weapon_reorder.php';
+		$container = create_container('skeleton.php','weapon_reorder.php');
 		$container[$direction]	= $weaponOrderID;
-		if($direction=='Form')
-			return SmrSession::get_new_sn($container);
 		return SmrSession::get_new_href($container);
 	}
 	

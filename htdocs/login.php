@@ -30,10 +30,10 @@ if (SmrSession::$account_id > 0)
 
 	$container = array();
 	$container['url'] = 'validate_check.php';
-	$sn = SmrSession::get_new_sn($container);
+	$href = SmrSession::get_new_href($container,true);
 	SmrSession::update();
 
-	header('Location: '.URL.'/loader.php?sn='.$sn);
+	header('Location: '.$href);
 	exit;
 }
 

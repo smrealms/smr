@@ -6,8 +6,7 @@ $template->assign('PageTopic','CREATE UNIVERSE - CREATE GAME (1/10)');
 $container = array();
 $container['url'] = 'universe_create_game_processing.php';
 
-$template->assign('CreateUniverseFormSN',SmrSession::get_new_sn($container));
-$template->assign('CreateUniverseFormAction','loader.php');
+$template->assign('CreateUniverseFormHref',SmrSession::get_new_href($container));
 
 $db->query('SELECT * FROM game ORDER BY game_id');
 $games = array();

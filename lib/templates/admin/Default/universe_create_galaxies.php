@@ -4,8 +4,7 @@
 	<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">Each galaxy has a name and a size. Please select the name from the drop down box and the size. All galaxies are quadratic
 </dl>
 
-<form name="FORM" method="POST" action="<?php echo $CreateGalaxiesFormAction ?>">
-	<input type="hidden" name="sn" value="<?php echo $CreateGalaxiesFormSN ?>"><?php
+<form name="FORM" method="POST" action="<?php echo $CreateGalaxiesFormHref ?>"><?php
 	if($ChooseNumberOfGalaxies)
 	{ ?>
 			<p>Select number of galaxies<br />you want create!</p>

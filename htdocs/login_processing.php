@@ -195,7 +195,7 @@ $container = array();
 $container['url'] = 'validate_check.php';
 
 // this sn identifies our container later
-$sn = SmrSession::get_new_sn($container);
+$href = SmrSession::get_new_href($container,true);
 SmrSession::update();
 //get rid of expired messages
 $time = TIME;
@@ -214,7 +214,7 @@ while ($db2->nextRecord())
 //
 //}
 
-header('Location: '.URL.'/loader.php?sn='.$sn);
+header('Location: '.$href);
 exit;
 
 ?>
