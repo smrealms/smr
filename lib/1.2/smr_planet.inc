@@ -78,7 +78,7 @@ class SMR_PLANET extends SmrMySqlDatabase {
 		$this->construction = array();
 
 		// get constructions from db
-		$this->query("SELECT * FROM planet_has_building WHERE game_id = $this->game_id AND " .
+		$this->query("SELECT * FROM planet_has_construction WHERE game_id = $this->game_id AND " .
 																 "sector_id = $this->sector_id");
 		// adding building and amount to array
 		while ($this->next_record())
@@ -132,10 +132,10 @@ class SMR_PLANET extends SmrMySqlDatabase {
 		foreach ($this->construction as $id => $amount) {
 
 			if ($amount != 0)
-				$this->query("REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) " .
+				$this->query("REPLACE INTO planet_has_construction (game_id, sector_id, construction_id, amount) " .
 															"VALUES($this->game_id, $this->sector_id, $id, $amount)");
 			else
-				$this->query("DELETE FROM planet_has_building WHERE game_id = $this->game_id AND " .
+				$this->query("DELETE FROM planet_has_construction WHERE game_id = $this->game_id AND " .
 																	   "sector_id = $this->sector_id AND " .
 																	   "construction_id = $id");
 		}
@@ -166,8 +166,8 @@ class SMR_PLANET extends SmrMySqlDatabase {
 	 */
 	function build() {
 
-		$this->query("SELECT * FROM planet_is_building, planet_construction " .
-							 "WHERE planet_is_building.construction_id = planet_construction.construction_id AND " .
+		$this->query("SELECT * FROM planet_build_construction, planet_construction " .
+							 "WHERE planet_build_construction.construction_id = planet_construction.construction_id AND " .
 							 	   "game_id = $this->game_id AND " .
 								   "sector_id = $this->sector_id");
 		if ($this->next_record()) {
@@ -179,7 +179,7 @@ class SMR_PLANET extends SmrMySqlDatabase {
 			// is the construction ready
 			if ($this->time_left < 0) {
 
-				$this->query("DELETE FROM planet_is_building WHERE game_id = $this->game_id AND " .
+				$this->query("DELETE FROM planet_build_construction WHERE game_id = $this->game_id AND " .
 																		 "sector_id = $this->sector_id");
 				$this->construction[$this->current_building_id] += 1;
 				$this->update();
@@ -221,7 +221,7 @@ class SMR_PLANET extends SmrMySqlDatabase {
 		if ($this->next_record())
 			$time_complete = time() + round($this->f("amount") / $game_speed);
 
-		$this->query("INSERT INTO planet_is_building (game_id, sector_id, construction_id, time_complete) " .
+		$this->query("INSERT INTO planet_build_construction (game_id, sector_id, construction_id, time_complete) " .
 													"VALUES ($this->game_id, $this->sector_id, $construction_id, $time_complete)");
 
 	}

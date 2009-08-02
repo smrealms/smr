@@ -17,7 +17,7 @@ print_planet_menue();
 
 if ($planet->build()) {
 
-	$db->query("SELECT * FROM planet_is_building NATURAL JOIN planet_construction " .
+	$db->query("SELECT * FROM planet_build_construction NATURAL JOIN planet_construction " .
 						"WHERE game_id = $player->game_id AND " .
 							  "sector_id = $player->sector_id");
 	if ($db->next_record()) {
