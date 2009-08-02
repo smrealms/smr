@@ -149,7 +149,6 @@ catch(Exception $e)
 	}
 	try
 	{
-		var_dump($message);var_dump($e->getTraceAsString());exit;
 		if(is_object($player))
 			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
 		else if(is_object($account))
