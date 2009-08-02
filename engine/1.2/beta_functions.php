@@ -73,7 +73,7 @@ print("</form>");
 
 $db->query("SELECT kills, experience_traded
 			FROM account_has_stats
-			WHERE account_id = SmrSession::$old_account_id");
+			WHERE account_id = ".SmrSession::$old_account_id);
 if ($db->next_record()) {
 
 	//Set kills

@@ -191,7 +191,7 @@ if($action != 5) {
 		array_unique($player_ids);
 		$db->query("SELECT player_name, account_id FROM player
 					WHERE account_id IN (" . implode(',',$player_ids) . ")
-					AND game_id = SmrSession::$game_id
+					AND game_id = ".SmrSession::$game_id."
 					LIMIT " . sizeof($player_ids));
 		while ($db->next_record()) $players[$db->f("account_id")] = stripslashes($db->f('player_name'));
 		foreach ($logs as $id => $info) {

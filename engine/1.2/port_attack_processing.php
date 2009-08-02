@@ -656,7 +656,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 
 			//$damage_msg[] = "<br>Start<br>";
 			//itterate through since the last port reset
-			$db->query("SELECT * FROM player_attacks_port WHERE game_id = SmrSession::$game_id AND sector_id = $sector->sector_id AND time < $port->refresh_defense");
+			$db->query("SELECT * FROM player_attacks_port WHERE game_id = ".SmrSession::$game_id." AND sector_id = $sector->sector_id AND time < $port->refresh_defense");
 			while ($db->next_record()) {
 				
 				$update_attacker = new SMR_PLAYER($db->f("account_id"), SmrSession::$game_id);
@@ -679,7 +679,7 @@ for ($i = 0; $i < $attacker_team->get_fleet_size(); $i++) {
 			$news_message = "$attack_news successfully raided the port located in sector $player->sector_id";
 			$db->query("INSERT INTO news " .
 				"(game_id, time, news_message) " .
-				"VALUES(SmrSession::$game_id, " . time() . ", " . format_string($news_message, false) . ")");
+				"VALUES(".SmrSession::$game_id.", " . time() . ", " . format_string($news_message, false) . ")");
 
 
 		}

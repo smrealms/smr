@@ -1,5 +1,7 @@
 <?
 
+create_error('Please use main album edit.');
+
 print_topic("Edit Photo");
 
 print("<p><span style=\"font-size:80%;\">Here you have a chance to add an entry to the Space Merchant Realms - The Photo Album!<br>");
