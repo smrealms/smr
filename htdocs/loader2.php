@@ -222,7 +222,8 @@ function do_voodoo() {
 	
 	SmrSession::update();
 
-	if($lock) {
+	if($lock)
+	{
 		release_lock($lock);
 	}
 
@@ -235,6 +236,8 @@ function do_voodoo() {
 function acquire_lock($sector) {
 	global $db, $lock;
 
+	if($lock)
+		return true;
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$old_account_id . ',' . $sector . ',' . time() . ')');
 			
@@ -271,7 +274,6 @@ function acquire_lock($sector) {
 
 function release_lock() {
 	global $db, $lock;
-
 	$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (time() - 15));
 
 	$lock=false;

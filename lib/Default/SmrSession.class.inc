@@ -102,6 +102,8 @@ class SmrSession
 				self::$game_speed = self::$db->getField('game_speed');
 			}
 		}
+		require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
+		$db = new SmrMySqlDatabase();
 	}
 	
 	public static function update()
@@ -127,6 +129,7 @@ class SmrSession
 			self::$db->query('DELETE FROM active_session WHERE account_id=' . self::$account_id . ' LIMIT 1');
 			self::$db->query('INSERT INTO active_session (session_id, account_id, old_account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$account_id . ',' . self::$old_account_id . ',' . self::$game_id . ',' . TIME . ',' . self::$db->escapeBinary($compressed)  . ')');
 		}
+		$db = new SmrMySqlDatabase();
 	}
 	
 	public static function updateSN()
@@ -134,7 +137,8 @@ class SmrSession
 		self::$db= new SmrSessionMySqlDatabase();
 		if(!USING_AJAX)
 			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
-				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');		
+				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
+		new SmrMySqlDatabase();	
 	}
 
 	public static function destroy()
@@ -145,6 +149,7 @@ class SmrSession
 		self::$account_id = 0;
 		self::$old_account_id = 0;
 		self::$game_id = 0;
+		$db = new SmrMySqlDatabase();
 	}
 	
 	public static function retrieveVar($sn)

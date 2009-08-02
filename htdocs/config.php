@@ -4,7 +4,7 @@
 //ini_set('display_errors', TRUE);
 //ini_set('display_startup_errors', TRUE);
 
-define('USE_COMPATIBILITY',false);
+define('USE_COMPATIBILITY',true);
 
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);

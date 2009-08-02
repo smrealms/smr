@@ -565,7 +565,7 @@ if ($db->next_record()) {
 	echo ')<br />';
 
 	// Goods
-	$db->query('SELECT good_id,transaction_type FROM port_has_goods WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id);
+	$db->query('SELECT good_id,transaction FROM port_has_goods WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id);
 	$goods_bought = array();
 	$goods_sold = array();
 	while($db->next_record()) {
@@ -581,13 +581,13 @@ if ($db->next_record()) {
 	sort($goods_sold);
 	foreach($goods_sold as $good_id) {
 		if ($player->alignment > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
-		echo '<img src="images/port/' . $good_id . '.gif" alt="' . $goods[$good_id] . '" title="' . $goods[$good_id] . '">';
+		echo '<img src="images/port/' . $good_id . '.png" alt="' . $goods[$good_id] . '" title="' . $goods[$good_id] . '">';
 	}
 	echo '<br /><img src="images/port/sell.gif" alt="Goods Bought" title="Goods Bought">';
 	sort($goods_bought);
 	foreach($goods_bought as $good_id) {
 		if ($player->alignment > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
-		echo '<img src="images/port/' . $good_id . '.gif" alt="' . $goods[$good_id] . '" title="' . $goods[$good_id] . '">';
+		echo '<img src="images/port/' . $good_id . '.png" alt="' . $goods[$good_id] . '" title="' . $goods[$good_id] . '">';
 	}
 
 	// Graph

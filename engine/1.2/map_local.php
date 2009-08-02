@@ -444,7 +444,7 @@ foreach ($sectors as $sector_id) {
 			if ($player->alignment > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
 			echo '<img src="images/port/';
 			echo $good_id;
-			echo '.gif" alt="';
+			echo '.png" alt="';
 			echo $goods[$good_id];
 			echo '" title="';
 			echo $goods[$good_id];
@@ -456,7 +456,7 @@ foreach ($sectors as $sector_id) {
 			if ($player->alignment > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
 			echo '<img src="images/port/';
 			echo $good_id;
-			echo '.gif" alt="';
+			echo '.png" alt="';
 			echo $goods[$good_id];
 			echo '" title="';
 			echo $goods[$good_id];

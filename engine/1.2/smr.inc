@@ -1,4 +1,4 @@
-<?
+<?php
 
 function print_error($message) {
 
