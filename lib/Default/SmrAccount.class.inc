@@ -512,7 +512,7 @@ class SmrAccount
 	{
 		if(USE_COMPATIBILITY)
 		{
-			$this->db->query('SELECT account_id FROM account WHERE old_account_id = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+			$this->db->query('SELECT account_id FROM account WHERE account_id = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 			if($db->nextRecord())
 				create_error('Only 1 account can link to a given old account.');
 			$credits = 0;
