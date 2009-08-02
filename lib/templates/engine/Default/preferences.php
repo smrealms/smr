@@ -1,7 +1,33 @@
-<?
+<?php
 if (isset($Reason))
 {
 	?><p><big><b style="color:red;"><?php echo $Reason; ?></b></big></p><?php
+}
+
+if(USE_COMPATIBILITY && !$ThisAccount->hasOldAccountID())
+{ ?>
+	<form id="LinkOldAccountForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
+		<table cellpadding="5">
+			<tr>
+				<th colspan="2">Link Old Account</th>
+			</tr>
+			
+			<tr>
+				<td>Login:</td>
+				<td><input type="text" name="oldAccountLogin"/></td>
+			</tr>
+			
+			<tr>
+				<td>Password:</td>
+				<td><input type="password" name="oldAccountPassword"/></td>
+			</tr>
+			
+			<tr>
+				<td></td>
+				<td><input type="submit" name="action" value="Link Account" id="InputFields" /></td>
+			</tr>
+		</table>
+	</form><?php
 }
 
 if(isset($GameID))
@@ -186,7 +212,7 @@ if(isset($GameID))
 
 		<tr>
 			<td>Font size</td>
-			<td><input type="text" size="4" name="fontsize" value="<?php echo $ThisAccount->getFontSize(); ?>"> Minimum font size is 50%</td>
+			<td><input type="text" size="4" name="fontsize" value="<?php echo $ThisAccount->getFontSize(); ?>" /> Minimum font size is 50%</td>
 		</tr>
 	
 		<tr>

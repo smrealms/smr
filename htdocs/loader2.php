@@ -1,4 +1,6 @@
 <?
+try
+{
 error_reporting(0); // turn off error reporting for clasic
 
 define('USING_AJAX',false);
@@ -15,39 +17,22 @@ $time_start = getmicrotime();
 // *
 // ********************************
 
-function getmicrotime() {
-
-	list($usec, $sec) = explode(" ", microtime());
-	return ((float)$usec + (float)$sec);
-
-}
-function printmicrotime($rt) {
-
-	$max = sizeof($rt) - 1;
-	for ($j = 0; $j < $max; $j++)
-	{
-		$step = $j + 1;
-		$runtime = number_format($rt[$step] - $rt[$j], 8);
-		print("Step $step executed in $runtime seconds<br />");
-	}
-	
-}
 
 // config file
 require_once("config.inc");
 require_once("config.php");
-require_once(ENGINE . "Classic/smr.inc");
+require_once(ENGINE . "1.2/smr.inc");
 
 // overwrite database class to use our db
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
 
 //include function
 $includes = new SmrMySqlDatabase();
-require_once(LIB . 'Default/SmrSession.class.inc');
-require_once(LIB . 'Classic/smr_account.inc');
-require_once(LIB . 'Classic/smr_player.inc');
-require_once(LIB . 'Classic/smr_ship.inc');
-require_once(LIB . 'Classic/smr_sector.inc');
+require_once(get_file_loc('SmrSession.class.inc'));
+require_once(get_file_loc('smr_account.inc'));
+require_once(get_file_loc('smr_player.inc'));
+require_once(get_file_loc('smr_ship.inc'));
+require_once(get_file_loc('smr_sector.inc'));
 
 // We want these to be already defined as globals
 $player=null;
@@ -69,7 +54,7 @@ $db = new SmrMySqlDatabase();
 //echo "<pre>";print_r($session);echo'</pre>';
 //exit;
 // do we have a session?
-if (SmrSession::$account_id == 0) {
+if (SmrSession::$old_account_id == 0) {
 
 	header("Location: ".URL."/login.php");
 	exit;
@@ -97,7 +82,7 @@ while ($db->next_record())
 $account = new SMR_ACCOUNT();
 
 // get account from db
-$account->get_by_id(SmrSession::$account_id);
+$account->get_by_id(SmrSession::$old_account_id);
 
 // ********************************
 // *
@@ -125,8 +110,65 @@ if (isset($var['time']))
 
 // update session
 SmrSession::update();
-
-do_voodoo();
+	do_voodoo();
+}
+catch(Exception $e)
+{
+	global $account,$var,$player;
+	$errorType = 'Error';
+	$message='';
+	$currMySQLError='';
+	if(is_object($account))
+	{
+		$message .= 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
+			'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
+			'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL;
+	}
+	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
+	if($currMySQLError = mysql_error())
+	{
+		$errorType = 'Database Error';
+		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
+	}
+	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
+		'$var: '.var_export($var,true);
+	try
+	{
+		release_lock(); //Try to release lock so they can carry on normally
+	}
+	catch(Exception $ee)
+	{
+		$message .= EOL.EOL.'-----------'.EOL.EOL.
+					'Releasing Lock Failed' .EOL.
+					'Message: ' . $ee->getMessage() .EOL.EOL;
+		if($currMySQLError!=mysql_error())
+		{
+			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
+		}
+		$message .= 'Trace: ' . $ee->getTraceAsString();
+	}
+	try
+	{
+		var_dump($message);var_dump($e->getTraceAsString());exit;
+		if(is_object($player))
+			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
+		else if(is_object($account))
+			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
+		else
+			mail('bugs@smrealms.de',
+			 'Automatic Bug Report',
+			 $message,
+			 'From: bugs@smrealms.de');
+	}
+	catch(Exception $e)
+	{
+		mail('bugs@smrealms.de',
+		 'Automatic Bug Report',
+		 $message,
+		 'From: bugs@smrealms.de');
+	}
+	header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
+}
 
 // This function is a hack around the old style http forward mechanism
 function do_voodoo() {
@@ -141,10 +183,10 @@ function do_voodoo() {
 
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::$game_id > 0) {
-
+		$db = new SmrMySqlDatabase();
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
-		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
+		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$old_account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 		$db->next_record();
 		$sector_id=$db->f('sector_id');
 
@@ -155,7 +197,7 @@ function do_voodoo() {
 		}
 
 		// Now that they've acquire a lock we can move on
-		$player	= new SMR_PLAYER(SmrSession::$account_id, SmrSession::$game_id);
+		$player	= new SMR_PLAYER(SmrSession::$old_account_id, SmrSession::$game_id);
 
 		if($player->dead == 'TRUE' && $var['body'] != 'death.php' && !isset($var['override_death'])) {
 				$container = array();
@@ -164,7 +206,7 @@ function do_voodoo() {
 				forward($container);
 		}
 
-		$ship	= new SMR_SHIP(SmrSession::$account_id, SmrSession::$game_id);
+		$ship	= new SMR_SHIP(SmrSession::$old_account_id, SmrSession::$game_id);
 
 		// update turns on that player
 		$player->update_turns($ship->speed);
@@ -194,7 +236,7 @@ function acquire_lock($sector) {
 	global $db, $lock;
 
 	// Insert ourselves into the queue.
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . time() . ')');
+	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$old_account_id . ',' . $sector . ',' . time() . ')');
 			
 	$lock = $db->insert_id();
 
@@ -206,7 +248,7 @@ function acquire_lock($sector) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' LIMIT 1');
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$old_account_id . ' AND sector_id=' . $sector . ' LIMIT 1');
 			if($db->next_record()) {
 				if($db->f('COUNT(*)') > 1) {
 					create_error("Multiple actions cannot be performed at the same time!");
@@ -329,5 +371,24 @@ function format_time($seconds, $short=FALSE)
 		}
 	}
 	return $string;
+}
+
+
+function getmicrotime() {
+
+	list($usec, $sec) = explode(" ", microtime());
+	return ((float)$usec + (float)$sec);
+
+}
+function printmicrotime($rt) {
+
+	$max = sizeof($rt) - 1;
+	for ($j = 0; $j < $max; $j++)
+	{
+		$step = $j + 1;
+		$runtime = number_format($rt[$step] - $rt[$j], 8);
+		print("Step $step executed in $runtime seconds<br />");
+	}
+	
 }
 ?>

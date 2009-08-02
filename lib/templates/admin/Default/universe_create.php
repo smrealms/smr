@@ -61,7 +61,7 @@
 				<td>
 					<select name="game_type" size="1" id="InputFields">
 						<option selected>Default</option>
-						<option>Classic</option>
+						<option>1.2</option>
 						<option>Semi_Wars</option>
 						<option>Race_Wars</option>
 					</select>
