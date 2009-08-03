@@ -10,10 +10,22 @@ if (isset($var['process']))
 	if(empty($_REQUEST['type']))
 		create_error('You have to choose the type of ticker to buy');
 	$type = $_REQUEST['type'];
-	$expires = TIME + (5*24*60*60);
-	//only scout OR news....but you can have both scout and block or news and block
+	switch($type)
+	{
+		case 'NEWS':
+		case 'SCOUT':
+		case 'BLOCK':
+		break;
+		default:
+			create_error('The ticker you chose does not exist.');
+	}
+	$expires = TIME;
+	$ticker = $player->getTicker($type);
+	if($ticker !== false)
+		$expires = $ticker['Expires'];
+	$expires += 5*86400;
 	$db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES ('.$player->getGameID().', '.$player->getAccountID().', '.$db->escapeString($type).', '.$expires.')');
-	//take money
+	//take credits
 	$account->decreaseTotalSmrCredits(1);
 	//offer another drink and such
 	$PHP_OUTPUT.=('<div align=center>Your system has been added.  Enjoy!</div><br />');
@@ -50,9 +62,9 @@ else
 	$container['script'] = 'bar_ticker_buy.php';
 	$container['process'] = 'yes';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type=radio name=type value=scout>Send Scout Messages<br />');
-	$PHP_OUTPUT.=('<input type=radio name=type value=news>Send Recent News<br />');
-	$PHP_OUTPUT.=('<input type=radio name=type value=block>Block Scout Message Tickers<br /><small>This will only block messages to tickers, it will not completely block scout messages</small><br />');
+	$PHP_OUTPUT.=('<input type="radio" name="type" value="SCOUT"">Send Scout Messages<br />');
+	$PHP_OUTPUT.=('<input type="radio" name="type" value="NEWS"">Send Recent News<br />');
+	$PHP_OUTPUT.=('<input type="radio" name="type" value="BLOCK"">Block Scout Message Tickers<br /><small>This will only block messages to tickers, it will not completely block scout messages</small><br />');
 	$PHP_OUTPUT.=create_submit('Continue');
 	$PHP_OUTPUT.=('</form>');
 }
