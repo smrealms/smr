@@ -578,7 +578,7 @@ function createGame($gameID)
 	
 	
 		
-	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, '.ACCOUNT_ID_NHL.', \'Alignment\')');
+	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 13, \'Alignment\')');
 	$text = ' 	Alignment has a couple of functions, the main ones being for trading purposes and determining which restricted ships and weapons you can buy.<br />
 	<br />
 	If you are evil (alignment -100 or lower) you can trade evil goods, buy underground ships (Thief, Assasin, Death Cruiser which are all cloaked) and buy the underground level 5 weapon (nuke). If you are neutral (between -99 and 99 alignment) you can become evil by signing up as a gang member at Underground HQ. Evil players cannot enter federal (racial) HQ\\\'s.<br />
@@ -586,7 +586,7 @@ function createGame($gameID)
 	If you are good (alignment 100 or higher) you can buy federal ships (Federal Discovery, Warrant and Ultimatum which all have jump drive and take half damage from forces) and buy the federal level 5 weapon (holy hand grenade). If you are neutral (between -99 and 99 alignment) you can become good by deputizing at any racial HQ. Good players cannot enter the underground HQ.<br />
 	<br />
 	Alignment also affects the attack ratings you can have and still be federally protected in fed space. At neutral alignment you can park with an attack rating of 3, and the protected rating goes up 1 for every +150 alignment and down 1 for every -150 alignment. You are always protected with an attack rating of zero.';
-	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, '.ACCOUNT_ID_NHL.', 1, '.$db->escapeString($text).', 13, '.TIME.')');
+	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', 302, 13, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', 302, 14, \'Watching the news and CPL\')');
 	$text = 'Whether you are a trader or a hunter, it is very valuable to know as much as possible about who is currently active in the game, and where they might be. Two of the resources you need to learn to use, but also know the limitations of, are the news and the current player list (CPL).<br />
