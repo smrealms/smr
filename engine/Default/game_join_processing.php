@@ -72,7 +72,7 @@ else
 if ($type == 'Semi War') $ship_id = 34;
 
 // get the time since game start (but max 24h)
-$time_since_start = TIME - strtotime($start_date);
+$time_since_start = TIME - $start_date;
 if ($time_since_start > 86400)
 	$time_since_start = 86400;
 
