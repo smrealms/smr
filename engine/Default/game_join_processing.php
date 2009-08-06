@@ -71,6 +71,7 @@ else
 }
 if ($type == 'Semi War') $ship_id = 34;
 
+/*
 // get the time since game start (but max 24h)
 $time_since_start = TIME - $start_date;
 if ($time_since_start > 86400)
@@ -78,6 +79,8 @@ if ($time_since_start > 86400)
 
 // credit him this time
 $last_turn_update = TIME - $time_since_start;
+*/
+$last_turn_update = $start_date;
 
 //// newbie leaders need to put into there alliances
 //if (SmrSession::$account_id >= 13 && SmrSession::$account_id <= 20)
