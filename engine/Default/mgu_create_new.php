@@ -229,8 +229,8 @@ $file .= pack('C',count($galaxies));
 // Galaxies
 foreach($galaxies as $galaxy_id => $galaxy) {
 	// Names
-	$file .= pack('C',strlen($galaxy['name']));
-	$file .= $galaxy['name'];
+	$file .= pack('C',strlen($galaxy->getName()));
+	$file .= $galaxy->getName();
 	$file .= pack('C', 0);
 	// Race
 	if($galaxy_id < 9) {
@@ -240,8 +240,8 @@ foreach($galaxies as $galaxy_id => $galaxy) {
 		$file .= pack('C', 9);
 	}
 	// Height/Width
-	$file .= pack('C', $galaxy['width']);
-	$file .= pack('C', $galaxy['height']);
+	$file .= pack('C', $galaxy->getWidth());
+	$file .= pack('C', $galaxy->getHeight());
 }
 
 $file .= pack('C', 2);
