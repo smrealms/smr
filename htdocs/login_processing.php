@@ -111,13 +111,13 @@ if (SmrSession::$account_id == 0) {
 			}
 			else
 			{
-				$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, veteran, last_login, logging, offset,images,fontsize,referral_id,hof_name) VALUES(' .
+				$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, veteran, last_login, logging, offset,images,fontsize,referral_id,hof_name,validated) VALUES(' .
 							$db->escape_string($db2->getField('login')) . ', ' . $db->escape_string(md5($db2->getField('password'))) . ', ' . $db->escape_string($db2->getField('email')) . ', ' .
 							$db->escape_string($db2->getField('first_name')) . ', ' . $db->escape_string($db2->getField('last_name')) . ', ' .
 							$db->escape_string($db2->getField('address')) . ', ' . $db->escape_string($db2->getField('city')) . ', ' . $db->escape_string($db2->getField('postal_code')) . ', ' .
 							$db->escape_string($db2->getField('country_code')) . ', ' . $db->escape_string($db2->getField('icq')) . ', ' . $db->escape_string($db2->getField('validation_code')) . ',' .
 							$db->escape_string($db2->getField('veteran')) . ',' . $db->escape_string($db2->getField('logging')) . ',' . TIME . ',' .$db->escapeNumber($db2->getField('offset')).',' .
-							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).')');
+							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
 				
 				// creates a new user account object
 				$account =& SmrAccount::getAccountByName($db2->getField('login'));
