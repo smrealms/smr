@@ -1,10 +1,10 @@
-<?
+<?php
 
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
 // overwrite database class to use our db
-include( LIB . 'Default/SmrMySqlDatabase.class.inc' );
+include( LIB . '1.2/SmrMySqlDatabase.class.inc' );
 
 // new db object
 $db = new SmrMySqlDatabase();
