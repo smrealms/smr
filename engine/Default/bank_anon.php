@@ -16,7 +16,8 @@ if ($account->validated == 'FALSE') {
 }
 $account_num = $_REQUEST['account_num'];
 $make = $var['make'];
-$made = $var['made'];
+if (isset($var['made']))
+	$made = $var['made'];
 
 if (isset($var['account_num']))
 	$account_num = $var['account_num'];
@@ -36,8 +37,8 @@ $template->assign('PageTopic',$topic);
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bank_menue();
 
-if (isset($make)) {
-
+if (isset($make))
+{
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
 	$PHP_OUTPUT.= '<br /><br />';
@@ -62,24 +63,25 @@ if (isset($make)) {
 			<td><input type="password" name="verify_pass" size="30"></td>
 		</tr>
 	</table>
-	<br />
-	';
+	<br />';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';
 }
 
-if (isset($made)) {
+if (isset($made) && !USING_AJAX)
+{
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
 	$PHP_OUTPUT.= '<br /><br />';
 
-	$password = $_REQUEST['password'];
-	$verify_pass = $_REQUEST['verify_pass'];
+	$password = trim($_REQUEST['password']);
+	$verify_pass = trim($_REQUEST['verify_pass']);
 
-    if ($password != $verify_pass) {
+    if ($password != $verify_pass)
     	create_error('The passwords do NOT match');
-        return;
-    }
+
+    if (empty($password))
+    	create_error('You cannot use a blank password');
 
 	$db->query('SELECT MAX(anon_id) FROM anon_bank WHERE game_id = '.SmrSession::$game_id);
     if ($db->nextRecord())
@@ -87,11 +89,7 @@ if (isset($made)) {
     else
     	$new_acc = 1;
     $db->query('INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES ('.SmrSession::$game_id.', '.$new_acc.', '.$player->getAccountID().', '.$db->escapeString($password).', 0)');
-    $PHP_OUTPUT.= 'Account #';
-	$PHP_OUTPUT.= $new_acc;
-	$PHP_OUTPUT.= ' has been opened for you.<br /><br />';
-
-
+    $PHP_OUTPUT.= 'Account #'.$new_acc.' has been opened for you.<br /><br />';
 }
 
 $container = array();

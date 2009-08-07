@@ -206,8 +206,10 @@ function get_file_loc($file_name, $exists = 1, $overrideGameDir = false)
 	return $file_name;
 }
 
-function create_error($message) {
-
+function create_error($message)
+{
+	if(USING_AJAX)
+		throw new Exception('No errors should be created when using AJAX as nothing should have changed from the last time the page loaded: ' . $message);
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'error.php';
