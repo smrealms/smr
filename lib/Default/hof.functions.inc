@@ -25,7 +25,16 @@ function displayHOFRow($rank,$accountID,$amount)
 {
 	global $account,$player,$var;
 	if(isset($var['game_id']) && Globals::getGameInfo($var['game_id'])!==false)
-		$hofPlayer =& SmrPlayer::getPlayer($accountID,$var['game_id']);
+	{
+		try
+		{
+			$hofPlayer =& SmrPlayer::getPlayer($accountID,$var['game_id']);
+		}
+		catch(Exception $e)
+		{
+			$hofAccount =& SmrAccount::getAccount($accountID);
+		}
+	}
 	else
 		$hofAccount =& SmrAccount::getAccount($accountID);
 	if ($accountID == $account->account_id)
