@@ -66,7 +66,7 @@ create_echo_form($link);
 				<?php
 				foreach($EditGames as $Game)
 				{
-					?><option value="<?php echo $Game['GameID'] ?>"><?php echo $Game['GameName'] ?></option><?php
+					?><option value="<?php echo $Game['GameID']; ?>"><?php echo $Game['GameName']; ?></option><?php
 				} ?>
 				</select>
 			</td>
