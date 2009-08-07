@@ -51,11 +51,11 @@ function getLottoInfo($gameID)
 	$amount = 1000000;
 		$firstBuy = TIME;
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket WHERE ' . 
-				'game_id = '.$gameID.' AND time > 0 GROUP BY game_id ORDER BY time DESC');
+				'game_id = '.$gameID.' AND time > 0');
 	$db->nextRecord();
 	if ($db->getField('num') > 0)
 	{
-		$amount += ($db->getField('num') * 1000000 * .9);
+		$amount += $db->getField('num') * 1000000 * .9;
 		$firstBuy = $db->getField('time');
 	}
 	//find the time remaining in this jackpot. (which is 2 days from the first purchased ticket)
