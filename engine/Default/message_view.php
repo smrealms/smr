@@ -174,7 +174,7 @@ else
 					ORDER BY send_time DESC';
 			$db->query($query);
 			while ($db->nextRecord())
-				displayMessage($messageBox,$db->getField('message_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
+				displayMessage($messageBox,$db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
 		}
 		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.MSG_SCOUT.' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 	}
