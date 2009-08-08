@@ -1,4 +1,4 @@
-<?
+<?php
 $container = array();
 $container['url'] = 'validate_processing.php';
 

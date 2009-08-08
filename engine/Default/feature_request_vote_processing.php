@@ -1,4 +1,4 @@
-<?
+<?php
 if($_REQUEST['action']=='Vote')
 {
 	$db->query('DELETE FROM account_votes_for_feature WHERE account_id='.SmrSession::$account_id);

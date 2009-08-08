@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','EDITING AN ARTICLE');
 include(get_file_loc('menue.inc'));

@@ -1,4 +1,4 @@
-<?
+<?php
 
 //view anon acct activity.
 $template->assign('PageTopic','VIEW ANON ACCOUNT INFO');

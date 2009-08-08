@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','CREATE UNIVERSE - ADDING ADMIN (9/10)');
 

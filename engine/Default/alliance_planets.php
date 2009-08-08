@@ -1,4 +1,4 @@
-<?
+<?php
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
 		require_once(get_file_loc('SmrPlanet.class.inc'));

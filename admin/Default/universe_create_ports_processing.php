@@ -1,4 +1,4 @@
-<?
+<?php
 function draw_rand_array($array, $draws) {
 
 	$lastIndex = count($array) - 1;

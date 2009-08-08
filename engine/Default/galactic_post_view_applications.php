@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','VIEWING APPLICATIONS');
 include(get_file_loc('menue.inc'));

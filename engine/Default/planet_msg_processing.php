@@ -1,4 +1,4 @@
-<?
+<?php
 
 //if we dont have an alliance we forward to message box
 //if ($player->getAllianceID() == 0) { //All planet messages are currently as messages

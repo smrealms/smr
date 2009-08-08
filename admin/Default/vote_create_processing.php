@@ -1,4 +1,4 @@
-<?
+<?php
 $question = trim($_REQUEST['question']);
 if($_REQUEST['action'] == 'Preview Vote')
 {

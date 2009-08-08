@@ -1,4 +1,4 @@
-<?
+<?php
 
 //we are closing
 $action = $_REQUEST['action'];

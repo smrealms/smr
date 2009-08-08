@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 $PHP_OUTPUT.=('<div align=center>');

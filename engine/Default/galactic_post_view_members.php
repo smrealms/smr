@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','VIEWING MEMBERS');
 include(get_file_loc('menue.inc'));

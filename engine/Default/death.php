@@ -1,4 +1,4 @@
-<?
+<?php
 $template->assign('PageTopic','DEATH');
 
 $PHP_OUTPUT.=('<p>As the hull of your ship collapses, you quickly launch out in your escape pod. ');

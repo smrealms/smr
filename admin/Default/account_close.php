@@ -1,4 +1,4 @@
-<?
+<?php
 $close = $_REQUEST['close'];
 if (isset($close)) {
 	

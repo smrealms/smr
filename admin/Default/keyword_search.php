@@ -1,4 +1,4 @@
-<?
+<?php
 
 //script to search alliance message boards and personal messages for cheats/loopholes
 //first get our keywords

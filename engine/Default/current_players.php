@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','CURRENT PLAYERS');
 $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . TIME);

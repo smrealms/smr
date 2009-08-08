@@ -1,4 +1,4 @@
-<?
+<?php
 require_once('SmrSessionMySqlDatabase.class.inc');
 if(!defined('USING_AJAX'))
 	define('USING_AJAX',false);

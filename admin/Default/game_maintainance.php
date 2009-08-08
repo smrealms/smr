@@ -1,4 +1,4 @@
-<?
+<?php
 
 //script to do all the cleanup maintainance stuff...
 		

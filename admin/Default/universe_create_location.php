@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','CREATE UNIVERSE - ADDING SPECIAL LOCATIONS (4/10)');
 

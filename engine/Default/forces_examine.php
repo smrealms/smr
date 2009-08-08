@@ -1,4 +1,4 @@
-<?
+<?php
 
 // creates a new player object for attacker and defender
 $forces_owner	=& SmrPlayer::getPlayer($var['owner_id'], SmrSession::$game_id);

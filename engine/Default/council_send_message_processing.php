@@ -1,4 +1,4 @@
-<?
+<?php
 
 $message = htmlentities(trim($_POST['message']));
 

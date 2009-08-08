@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','VIEWING IPs');
 $db2 = new SmrMySqlDatabase();

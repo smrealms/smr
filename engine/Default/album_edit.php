@@ -1,4 +1,4 @@
-<?
+<?php
 $template->assign('PageTopic','Edit Photo');
 
 $db->query('SELECT * FROM album WHERE account_id = '.SmrSession::$account_id);

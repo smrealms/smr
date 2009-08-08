@@ -1,4 +1,4 @@
-<?
+<?php
 $db = new SmrMySqlDatabase();
 $db->query('SELECT * FROM account, announcement ' .
 		   'WHERE account_id = '.SmrSession::$account_id.' AND ' .

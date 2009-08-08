@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($_POST['action'] == 'Delete Entry')
 	forward(create_container('skeleton.php', 'album_delete_confirmation.php'));

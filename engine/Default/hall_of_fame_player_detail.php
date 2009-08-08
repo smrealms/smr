@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('hof.functions.inc'));
 
 if (isset($var['account_id']))

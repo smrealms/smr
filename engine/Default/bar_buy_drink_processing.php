@@ -1,4 +1,4 @@
-<?
+<?php
 
 $message.= '<div align=center>';
 $template->assign('PageTopic','DRINKING');

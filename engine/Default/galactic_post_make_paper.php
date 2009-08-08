@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','MAKING A PAPER');
 include(get_file_loc('menue.inc'));

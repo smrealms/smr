@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (isset($var['from'])) $start = $var['from'];
 else $start = $_POST['from'];

@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('SmrSector.class.inc'));
 $template->assign('PageTopic','SECTOR DEATH RANKINGS');
 

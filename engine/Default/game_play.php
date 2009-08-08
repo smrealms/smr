@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 if(isset($var['errorMsg']))
 	$PHP_OUTPUT.=($var['errorMsg'].'<br />');

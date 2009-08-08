@@ -1,4 +1,4 @@
-<?
+<?php
 
 //variables
 if($player->hasAlliance())

@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('SmrPlanet.class.inc'));
 if(isset($var['results']))
 {

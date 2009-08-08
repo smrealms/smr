@@ -1,4 +1,4 @@
-<?
+<?php
 $disable_account = $_REQUEST['disable_account'];
 foreach ($disable_account as $curr_account_id)
 {

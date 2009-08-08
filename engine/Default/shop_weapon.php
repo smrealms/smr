@@ -1,4 +1,4 @@
-<?
+<?php
 $template->assign('PageTopic','WEAPON DEALER');
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM location, location_sells_weapons, location_type, weapon_type ' .

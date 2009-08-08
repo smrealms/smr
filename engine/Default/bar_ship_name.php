@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($account->getTotalSmrCredits() == 0)
 {

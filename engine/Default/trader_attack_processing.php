@@ -1,4 +1,4 @@
-<?
+<?php
 $timeBetweenAttacks = 0;
 if($var['time'])
 {

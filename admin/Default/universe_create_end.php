@@ -1,4 +1,4 @@
-	<?
+	<?php
 
 $PHP_OUTPUT.=('<h1>CREATE UNIVERSE - FINISH</h1>');
 

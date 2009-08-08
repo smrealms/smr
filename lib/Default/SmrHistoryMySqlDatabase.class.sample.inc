@@ -1,4 +1,4 @@
-<?
+<?php
 
 // include database class for mysql
 require_once('MySqlDatabase.class.inc');

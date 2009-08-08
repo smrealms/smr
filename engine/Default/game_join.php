@@ -1,4 +1,4 @@
-<?
+<?php
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 $game = array();
 if ($db->nextRecord())

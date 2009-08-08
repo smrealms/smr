@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','Space Merchant Realms Chat Room Rules');
 

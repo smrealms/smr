@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','SEARCH TRADER');
 $PHP_OUTPUT.=('<p>&nbsp;</p>');

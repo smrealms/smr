@@ -1,4 +1,4 @@
-<?
+<?php
 $template->assign('PageTopic','DUMP CARGO');
 
 $PHP_OUTPUT.=('Enter the amount of cargo you wish to jettison.<br />');

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $player->setNewbieWarning(false);
 $player->update();

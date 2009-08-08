@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','Show Map');
 $game_id = $_REQUEST['game_id'];

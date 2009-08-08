@@ -1,4 +1,4 @@
-<?
+<?php
 
 $shipID = $var['ship_id'];
 $newShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipID);
