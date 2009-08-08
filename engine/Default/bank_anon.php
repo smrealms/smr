@@ -8,22 +8,22 @@
 // ********************************
 
 // is account validated?
-if ($account->validated == 'FALSE') {
-
+if ($account->validated == 'FALSE')
 	create_error('You are not validated so you cannot use banks.');
-	return;
 
-}
-$account_num = $_REQUEST['account_num'];
+if(isset($_REQUEST['account_num']))
+	SmrSession::updateVar('AccountNumber',$_REQUEST['account_num']);
+$account_num = $var['AccountNumber'];
+if(isset($_REQUEST['pass']))
+	SmrSession::updateVar('Password',$_REQUEST['pass']);
+if(isset($_REQUEST['maxValue']))
+	SmrSession::updateVar('MaxValue',$_REQUEST['maxValue']);
+if(isset($_REQUEST['minValue']))
+	SmrSession::updateVar('MinValue',$_REQUEST['minValue']);
+
 $make = $var['make'];
 if (isset($var['made']))
 	$made = $var['made'];
-
-if (isset($var['account_num']))
-	$account_num = $var['account_num'];
-
-if (isset($var['password']))
-	$pass = $var['password'];
 
 if (isset($var['amount']))
 	$amount = $var['amount'];
@@ -95,7 +95,8 @@ if (isset($made) && !USING_AJAX)
 $container = array();
 $container['url'] = 'skeleton.php';
 
-if (!isset($account_num) && !isset($make)) {
+if (!isset($account_num) && !isset($make))
+{
 	$PHP_OUTPUT.= 'Hello ';
 	$PHP_OUTPUT.= $player->getPlayerName();
 	$PHP_OUTPUT.= '<br /><br />';
@@ -153,8 +154,8 @@ if (!isset($account_num) && !isset($make)) {
 			$PHP_OUTPUT.= '</td><td class="right shrink">';
 			$PHP_OUTPUT.= $db->getField('amount');
 			$PHP_OUTPUT.= '</td><td class="button">';
-        	$container['account_num'] = $db->getField('anon_id');
-        	$container['password'] = $db->getField('password');
+        	$container['AccountNumber'] = $db->getField('anon_id');
+        	$container['Password'] = $db->getField('password');
         	$PHP_OUTPUT.=create_button($container, 'Access Account');
 			$PHP_OUTPUT.= '</td></tr>';
     	}
@@ -181,20 +182,15 @@ if (isset($account_num))
 	{
 		if ($var['allowed'] != 'yes')
 		{
-    		if (isset($_REQUEST['pass'])) $pass = $_REQUEST['pass'];
-    		else $pass = $var['password'];
-
-			if ($db->getField('password') != $pass)
+			if ($db->getField('password') != $var['Password'])
 			{
-				$PHP_OUTPUT.=create_error('Invalid password');
-				return;
+				create_error('Invalid password');
 			}
 		}
 	}
 	else
 	{
-		$PHP_OUTPUT.=create_error('This account does not exist');
-       	return;
+		create_error('This account does not exist');
 	}
 
 	$balance = $db->getField('amount');
@@ -204,11 +200,11 @@ if (isset($account_num))
 	$PHP_OUTPUT.= $player->getPlayerName();
 	$PHP_OUTPUT.= '<br />';
 
-	if (isset($_REQUEST['maxValue'])
-		&& is_numeric($_REQUEST['maxValue'])
-		&& $_REQUEST['maxValue'] > 0
+	if (isset($var['MaxValue'])
+		&& is_numeric($var['MaxValue'])
+		&& $var['MaxValue'] > 0
 	) {
-		$maxValue = $_REQUEST['maxValue'];
+		$maxValue = $var['MaxValue'];
 	}
 	else {
 		$db->query('SELECT MAX(transaction_id) FROM anon_bank_transactions
@@ -228,12 +224,12 @@ if (isset($account_num))
 		}
 	}
 
-	if(isset($_REQUEST['minValue'])
-		&& $_REQUEST['minValue'] <= $maxValue
-		&& $_REQUEST['minValue'] > 0
-		&& is_numeric($_REQUEST['maxValue'])
+	if(isset($var['MinValue'])
+		&& $var['MinValue'] <= $maxValue
+		&& $var['MinValue'] > 0
+		&& is_numeric($var['MinValue'])
 	) {
-		$minValue = $_REQUEST['minValue'];
+		$minValue = $var['MinValue'];
 	}
 
 	$query = '
@@ -273,7 +269,7 @@ if (isset($account_num))
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bank_anon.php';
 		$container['allowed'] = 'yes';
-		$container['account_num'] = $account_num;
+		$container['AccountNumber'] = $account_num;
 		$form = create_form($container,'Show');
 		$PHP_OUTPUT.= $form['form'];
 		$PHP_OUTPUT.= '<table cellspacing="5" cellpadding="0" class="nobord"><tr><td>';
@@ -319,8 +315,8 @@ if (isset($account_num))
 	$PHP_OUTPUT.= '<h2>Make transaction</h2><br />';
 	$container=array();
 	$container['url'] = 'bank_anon_processing.php';
-    $container['password'] = $password;
-    $container['account_num'] = $account_num;
+    $container['Password'] = $password;
+    $container['AccountNumber'] = $account_num;
 	$actions = array();
 	$actions[] = array('Deposit','Deposit');
 	$actions[] = array('Withdraw','Withdraw');
