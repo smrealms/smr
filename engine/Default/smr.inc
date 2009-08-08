@@ -526,6 +526,9 @@ function do_voodoo()
 	$time_elapsed = microtime(true) - $time_start;
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
+	if(isset($var['DisableAjax']) && $var['DisableAjax']===true)
+		$template->assign('AJAX_ENABLE_REFRESH',false);
+	
 	$template->display($var['url'],USING_AJAX);
 	
 	if($lock)
