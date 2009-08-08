@@ -69,7 +69,7 @@ if ($db->getNumRows())
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td width="100%" colspan="4">');
 		$message = $db->getField('text');
-		$PHP_OUTPUT.=($message);
+		$PHP_OUTPUT.=bbifyMessage($message);
 		$PHP_OUTPUT.=('</td></tr>');
 
     }
