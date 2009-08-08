@@ -12,10 +12,10 @@ echo ('ID=' . $game_id . EOL.EOL);
 
 echo ('[Galaxy]'.EOL);
 $gameGals =& SmrGalaxy::getGameGalaxies($game_id);
-foreach($gameGals as & $gameGal)
+foreach($gameGals as &$gameGal)
 {
 	echo ($gameGal->getName().'='.$gameGal->getWidth().';'.$gameGal->getHeight().EOL);
-}
+} unset($gameGal);
 
 // expire all forces first
 $db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
