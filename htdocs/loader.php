@@ -131,7 +131,8 @@ catch(Exception $e)
 		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
 	}
 	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
-		'$var: '.var_export($var,true);
+		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
+		'USING_AJAX: '.var_export(USING_AJAX,true);
 	try
 	{
 		release_lock(); //Try to release lock so they can carry on normally

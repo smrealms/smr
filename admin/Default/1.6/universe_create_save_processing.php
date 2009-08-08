@@ -40,7 +40,7 @@ if ($submit=='Create Game')
 		}
 	}
 	createGame($newID); //do the alliances/message stuff
-	$var['message'] = '<span class="green">Success</span> : Succefully created game.';
+	$var['message'] = '<span class="green">Success</span> : Succesfully created game.';
 }
 else if ($submit=='Create Galaxies')
 {
@@ -60,7 +60,7 @@ else if ($submit=='Create Galaxies')
 		$galaxy->generateSectors();
 	} unset($galaxy);
 	SmrSector::saveSectors();
-	$var['message'] = '<span class="green">Success</span> : Succefully created galaxies.';
+	$var['message'] = '<span class="green">Success</span> : Succesfully created galaxies.';
 }
 else if ($submit=='Redo Connections')
 {
@@ -115,7 +115,7 @@ elseif ($submit == 'Create Locations')
 			}
 		}
 	}
-	$var['message'] = '<span class="green">Success</span> : Succefully added locations.';
+	$var['message'] = '<span class="green">Success</span> : Succesfully added locations.';
 }
 elseif ($submit == 'Create Warps')
 {
@@ -152,7 +152,7 @@ elseif ($submit == 'Create Warps')
 			}
 		}
 	} unset($eachGalaxy);
-	$var['message'] = '<span class="green">Success</span> : Succefully added warps.';
+	$var['message'] = '<span class="green">Success</span> : Succesfully added warps.';
 }
 elseif ($submit == 'Create Planets')
 {
@@ -196,7 +196,7 @@ elseif ($submit == 'Create Planets')
 //		$updatePlan[$sector]['Owner'] = 0; //owning NPC to be determined in the create script
 //		$updatePlan[$sector]['Owner Type'] = 'NPC';
 //	}
-	$var['message'] = '<span class="green">Success</span> : Succefully added planets.';
+	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 }
 elseif ($submit == 'Create Ports and Mines')
 {
@@ -257,7 +257,7 @@ elseif ($submit == 'Create Ports and Mines')
 			}
 		}
 		SmrPort::savePorts();
-		$var['message'] = '<span class="green">Success</span> : Succefully added ports.';
+		$var['message'] = '<span class="green">Success</span> : Succesfully added ports.';
 //		//iterate through levels 1-20 for mines
 //		for ($i=1;$i<=20;$i++)
 //		{
@@ -342,7 +342,7 @@ elseif ($submit == 'Edit Sector')
 		//add warp to other side
 		$sector->setWarp(SmrSector::getSector($var['game_id'],$_POST['warp']));
 	}
-	$var['message'] = '<span class="green">Success</span> : Succefully edited sector.';
+	$var['message'] = '<span class="green">Success</span> : Succesfully edited sector.';
 	SmrSector::saveSectors();
 }
 
