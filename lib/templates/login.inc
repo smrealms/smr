@@ -182,7 +182,7 @@ if(isset($Message))
 							</span>
 						</td>
 						<td>
-							<span class="small"><?php echo $News['Message'];
+							<span class="small"><?php echo bbifyMessage($News['Message']);
 								if($News['AdminName'])
 								{ ?>
 									<br /><br />- <?php echo $News['AdminName'];
