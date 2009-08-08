@@ -1,4 +1,4 @@
-<?
+<?php
 
 //bar gambling...
 //get action and vars
@@ -55,8 +55,8 @@ elseif ($action == 'blackjack')
 		//get real values of $curr_cards (1-52)
 		$real_cards = array();
 		//find the values of the currently used cards of the deck
-		foreach ($curr_cards as $key => $value) {
-			
+		foreach ($curr_cards as $key => $value)
+		{
 			list($first, $second, $third) = split ('-', $value);
 			if ($first == 'A') $first = 1;
 			elseif ($first == 'J') $first = 11;
@@ -68,7 +68,6 @@ elseif ($action == 'blackjack')
 			elseif ($second == 'spades') $second = 4;
 			if (empty($third)) $third = 1;
 			$real_cards[] = ($first + (13 * ($second - 1))) * $third;
-			
 		}
 				
 		$max = 52 * $decks;
@@ -78,7 +77,8 @@ elseif ($action == 'blackjack')
 		//no cards twice
 		while (in_array($result, $real_cards)) $result = mt_rand(1,$max);
 		$down = 1;
-		while ($result > 52) {
+		while ($result > 52)
+		{
 			$result -= 52;
 			$down += 1;
 		}
@@ -105,32 +105,30 @@ elseif ($action == 'blackjack')
 		if (!is_array($deck)) $deck = array($deck);
 		$curr_aces = 0;
 		$return_val = 0;
-		foreach ($deck as $key => $card_val) {
-			
+		foreach ($deck as $key => $card_val)
+		{
 			//get total value of cards
 			list($first, $second) = split ('-', $card_val);
-			if ($first == 'A') {
+			if ($first == 'A')
+			{
 				$first = 11;
 				$curr_aces += 1;
 			} elseif ($first == 'J') $first = 10;
 			elseif ($first == 'Q') $first = 10;
 			elseif ($first == 'K') $first = 10;
 			$return_val += $first;
-			
 		}
-		while ($return_val > 21 && $curr_aces > 0) {
-			
+		while ($return_val > 21 && $curr_aces > 0)
+		{
 			//if we have aces and > 21 score we subtract to make it a 1 instead of 11
 			$return_val -= 10;
 			$curr_aces -= 1;
-			
 		}
-			
 		return $return_val;
-	
 	}
 	
-	function create_card($card, $show) {
+	function create_card($card, $show)
+	{
 		//picture directory
 		$dir = URL . '/images';
 		//only display what the card really is if they want to
@@ -149,7 +147,8 @@ elseif ($action == 'blackjack')
 		return $return;
 	}
 	
-	function check_for_win($comp, $play) {
+	function check_for_win($comp, $play)
+	{
 		//TODO: Hack to prevent an error, fix it
 		global $player_card; 
 		//does the player win
@@ -158,53 +157,28 @@ elseif ($action == 'blackjack')
 		elseif ($play == $comp && $comp <= 21) return 'tie';
 		elseif ($comp > 21) return 'yes';
 		else return 'no';
-		
 	}
 
 	if (isset($var['player_does'])) $do = $var['player_does'];
 	else $do = 'nothing';
 	//new game if $do == nothing
-	if ($do == 'nothing') {
-		
+	if ($do == 'nothing')
+	{
 		if (isset($var['bet'])) $bet = $var['bet'];	
 		else $bet = $_REQUEST['bet'];
-		if (!is_numeric($bet)) {
-			
+		if (!is_numeric($bet))
 			create_error('Only Numbers Please');
-			return;
-			
-		}
 		$bet = round($bet);
-		if ($player->getCredits() < $bet) {
-			
+		if ($player->getCredits() < $bet)
 			create_error('Not even enough to play BlackJack...you need to trade!');
-			return;
-			
-		}
-		if ($bet == 0) {
-			
+		if ($bet == 0)
 			create_error('We don\'t want you here if you don\'t want to play with cash!');
-			return;
-			
-		}
-		if ($bet > 100 && $player->getNewbieTurns() > 0) {
-			
+		if ($bet > 100 && $player->getNewbieTurns() > 0)
 			create_error('Sorry.  According to Galactic Laws we can only play with up to 100 credits while under newbie protection.');
-			return;
-			
-		}
-		if ($bet > 10000) {
-			
+		if ($bet > 10000)
 			create_error('Sorry.  According to Galactic Laws we can only play with up to 10,000 credits');
-			return;
-			
-		}
-		if ($bet < 0) {
-			
+		if ($bet < 0)
 			create_error('Yeah...we are gonna give you money to play us! GREAT IDEA!!');
-			return;
-		
-		}
 		$player->decreaseCredits($bet);
 		$player->update();
 		
@@ -230,39 +204,36 @@ elseif ($action == 'blackjack')
 		if (sizeof($cards) >= $max_cards) $cards = array();
 		//find a play_val variable in case they get bj first hand...lucky
 		$play_val = get_value($player_card);
-		
 	}
 	if (isset($var['cards']) && !isset($cards)) $cards = $var['cards'];
 	if (isset($var['bet'])) $bet = $var['bet'];
-	if (isset($var['player_card'])) {
-		
+	if (isset($var['player_card']))
+	{
 		$player_card = $var['player_card'];
 		$ai_card = $var['ai_card'];
 		$play_val = $var['player_val'];
-			
 	}
-	if ($do == 'HIT') {
-		
+	if ($do == 'HIT')
+	{
 		$player_curr_card = draw_card($decks,$cards);
 		$player_card[] = $player_curr_card;
 		$cards[] = $player_curr_card;
 		if (sizeof($cards) >= $max_cards) $cards = array();
 		$play_val = get_value($player_card);
-		
 	}
 	
 	//only display if we wont display later..
-	if ($do != 'STAY' && get_value($player_card) != 21) {
-
+	if ($do != 'STAY' && get_value($player_card) != 21)
+	{
 		//heres the AIs cards
 		$i = 1;
 		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2)
 			$message.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
 		$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
-		foreach ($ai_card as $key => $value) {
-			
-			if ($key == 0) {
-				
+		foreach ($ai_card as $key => $value)
+		{
+			if ($key == 0)
+			{
 				//do we need a new row?
 				if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
 				$message.=create_card($value, TRUE);
@@ -271,52 +242,43 @@ elseif ($action == 'blackjack')
 				//get curr val of this card...for the at least part
 				$ai_val = get_value($curr_ai_card);
 				$i++;
-				
-			} else {
-			
+			}
+			else
+			{
 				//lets try and echo cards
 				//new row?			
 				if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
 				if (get_value($ai_card) == 21 || get_value($player_card) >= 21) $message.=create_card($value, TRUE);
 				else $message.=create_card($value, FALSE);
-				$i++;
-												
+				$i++;						
 			}
-			
 		}
 
 		$message.=('</td></tr></table>');
-		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2) {
-			
+		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2)
+		{
 			$message.=('<div align=center>Bank has BLACKJACK!</div><br />');
 			$win = 'no';
-			
-		} elseif (get_value($player_card) >= 21) $message.=('<div align=center>Bank has ' . get_value($ai_card) . '</div><br /><br />');
+		}
+		elseif (get_value($player_card) >= 21) $message.=('<div align=center>Bank has ' . get_value($ai_card) . '</div><br /><br />');
 		else $message.=('<div align=center>Bank has at least '.$ai_val.'</div><br />');
-		
 	}
 	
-	if ($do == 'STAY' || get_value($player_card) == 21) {
-
+	if ($do == 'STAY' || get_value($player_card) == 21)
+	{
 		$db->query('SELECT * FROM blackjack WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID());
 		if ($db->nextRecord()) $old_card = unserialize($db->getField('last_hand'));
-		if ($old_card == $player_card) {
-			
+		if ($old_card == $player_card)
 			create_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');
-			return;
-			
-		}
 		$db->query('REPLACE INTO blackjack (game_id, account_id, last_hand) VALUES ' .
 					'('.$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string(serialize($player_card)) . ')');
 		//heres the Banks cards
 		$i = 1;
 
-		if (sizeof($player_card) == 2 && get_value($player_card) == 21){
-			//do nothing
-		} else
-			while (get_value($ai_card) < 17) {
-			
+		if (!(sizeof($player_card) == 2 && get_value($player_card) == 21))
+			while (get_value($ai_card) < 17)
+			{
 				$ai_curr_card = draw_card($decks,$cards);
 				$ai_card[] = $ai_curr_card;
 				$cards[] = $ai_curr_card;
@@ -328,19 +290,17 @@ elseif ($action == 'blackjack')
 		elseif ($win == 'tie') $message.=('<div align=center><h1><font color=red>TIE Game</font></h1></div>');
 		else $message.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
 		$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
-		foreach ($ai_card as $key => $value) {
-			
+		foreach ($ai_card as $key => $value)
+		{
 			//now row?			
 			if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
 			$message.=create_card($value, TRUE);
 			$i++;
-			
 		}
 		$message.=('</td></tr></table><div align=center>');
 		if (get_value($ai_card) > 21) $message.=('Bank <font color=red><b>BUSTED</b></font><br /><br />');
 		else $message.=('Bank has ' . get_value($ai_card) . '<br /><br />');
 		$message.=('</div>');
-		
 	}
 	$message.=('<hr style="border:1px solid green;width:50%" noshade>');
 	$i = 1;
@@ -369,9 +329,7 @@ elseif ($action == 'blackjack')
 		$bet = $var['bet'];
 		$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
 		$player->increaseHOF(1,array('Blackjack','Results','Lost'));
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'bar_main.php';
+		$container = create_container('skeleton.php','bar_main.php');
 		$container['script'] = 'bar_gambling_processing.php';
 		$container['cards'] = $cards;
 		$container['action'] = 'blackjack';
@@ -383,9 +341,7 @@ elseif ($action == 'blackjack')
 	}
 	else if(!isset($win) && get_value($player_card) < 21)
 	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'bar_main.php';
+		$container = create_container('skeleton.php','bar_main.php');
 		$container['script'] = 'bar_gambling_processing.php';
 		$container['cards'] = $cards;
 		$container['player_card'] = $player_card;
@@ -402,7 +358,6 @@ elseif ($action == 'blackjack')
 		$message.=create_echo_form($container);
 		$message.=create_submit('STAY');
 		$message.=('</form></div>');
-		
 	}
 	else if(isset($win))
 	{
@@ -432,16 +387,13 @@ elseif ($action == 'blackjack')
 			$player->update();
 			$player->increaseHOF(1, array('Blackjack','Results','Draw'));
 			$message.=('You have won back your $' . number_format($bet) . ' credits.');
-			
 		}
 		else
 		{
 			$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
 			$player->increaseHOF(1,array('Blackjack','Results','Lost'));
 		}
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'bar_main.php';
+		$container = create_container('skeleton.php','bar_main.php');
 		$container['script'] = 'bar_gambling_processing.php';
 		$container['action'] = 'blackjack';
 		$container['cards'] = $cards;
@@ -450,13 +402,11 @@ elseif ($action == 'blackjack')
 		$message.=create_submit('Play Some More ($'.$bet.')');
 		$message.=('</form>');
 		$message.=('</div>');
-		
 	}
 	elseif ($val1 == 21)
 	{
-		
-		if (get_value($ai_card) != 21) {
-			
+		if (get_value($ai_card) != 21)
+		{
 			if (sizeof($player_card) == 2) $winnings = 2.5;
 			else $winnings = 2;
 			if (empty($bet)) $bet = $var['bet'];
@@ -485,9 +435,7 @@ elseif ($action == 'blackjack')
 			$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
 			$player->increaseHOF(1,array('Blackjack','Results','Lost'));
 		}
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'bar_main.php';
+		$container = create_container('skeleton.php','bar_main.php');
 		$container['script'] = 'bar_gambling_processing.php';
 		$container['action'] = 'blackjack';
 		$container['cards'] = $cards;
@@ -496,12 +444,11 @@ elseif ($action == 'blackjack')
 		$message.=create_submit('Play Some More ($'.$bet.')');
 		$message.=('</form>');
 		$message.=('</div>');
-		
 	}
 	$container=create_container('skeleton.php','bar_main.php');
 	$container['script']='bar_gambling_bet.php';
 	$container['message'] = $message;
+	$container['DisableAjax'] = true;
 	forward($container);
-	
 }
 ?>
