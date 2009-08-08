@@ -88,6 +88,7 @@ class SmrGalaxy
 			$this->gameID		= (int)$gameID;
 			$this->galaxyID		= (int)$galaxyID;
 			$this->isNew		= true;
+			$this->maxForceTime	= 0;
 			return;
 		}
 		else
