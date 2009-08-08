@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','CHECKING INFO');
 $container = array();

@@ -1,4 +1,4 @@
-<?
+<?php
 $exp = $_REQUEST['exp'];
 $message = $_REQUEST['message'];
 $amount = $_REQUEST['amount'];

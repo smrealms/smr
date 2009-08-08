@@ -1,4 +1,4 @@
-<?		
+<?php		
 require_once(get_file_loc('smr_alliance.inc'));
 require_once(get_file_loc('SmrPlanet.class.inc'));
 function echo_time($sek) {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','IP MENU');
 $db->query('SELECT * FROM account');

@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($player->getAlignment() >= 100) {
 

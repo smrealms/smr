@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($_POST['action'] == 'Approve')
 	$approved = 'YES';

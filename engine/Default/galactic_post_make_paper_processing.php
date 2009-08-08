@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.$player->getGameID().' ORDER BY paper_id DESC');
 if ($db->nextRecord())

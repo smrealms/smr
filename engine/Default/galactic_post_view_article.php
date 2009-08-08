@@ -1,4 +1,4 @@
-<?
+<?php
 $template->assign('PageTopic','VIEWING ARTICLES');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_galactic_post_menue();

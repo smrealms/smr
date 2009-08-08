@@ -1,4 +1,4 @@
-<?
+<?php
 
 //future features
 $skipClosedAccs = FALSE;

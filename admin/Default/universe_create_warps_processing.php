@@ -1,4 +1,4 @@
-<?
+<?php
 $action = $_REQUEST['action'];
 $db->query('SELECT * FROM sector WHERE game_id = ' . $var['game_id'] . ' GROUP BY galaxy_id');
 $num_gals = $db->getNumRows();

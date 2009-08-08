@@ -1,4 +1,4 @@
-<?
+<?php
 
 function send_html_mail($from_name, $from_email, $to_email, $subject, $body) {
 

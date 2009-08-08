@@ -1,4 +1,4 @@
-<?
+<?php
 
 // mailer
 require(LIB . 'phpMailer/class.phpmailer.php');

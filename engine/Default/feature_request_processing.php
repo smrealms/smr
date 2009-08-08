@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (empty($_REQUEST['feature']))
 	create_error('We need at least a feature desciption!');

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','PLOT A COURSE');
 

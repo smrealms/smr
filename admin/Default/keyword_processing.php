@@ -1,4 +1,4 @@
-<?
+<?php
 
 $type = $var['type'];
 if ($type == 'alliance')

@@ -1,4 +1,4 @@
-<?
+<?php
 $variable = $_REQUEST['variable'];
 $type = $_REQUEST['type'];
 $db2 = new SmrMySqlDatabase();

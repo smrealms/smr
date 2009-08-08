@@ -1,4 +1,4 @@
-<?
+<?php
 
 // register game_id
 SmrSession::$game_id = $var['game_id'];

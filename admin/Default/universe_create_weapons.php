@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','CREATE UNIVERSE - ADDING WEAPONS (8/10)');
 

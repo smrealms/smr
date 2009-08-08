@@ -9,12 +9,11 @@
 			<th>Max Hours Before<br />
 				Forces Expire<br />
 				(Decimals Allowed)</th>
-			</tr>
-		<?
-		for ($i=1;$i<=$NumGals;$i++)
+			</tr><?php
+		for ($i=1;$i<=$NumGals;++$i)
 		{
 			?><tr>
-				<td class="center"><? echo $i; ?></td>
+				<td class="center"><?php echo $i; ?></td>
 				<td class="center"><input type="text" value="<?php echo $DefaultNames[$i] ?>" name="gal<?php echo $i; ?>"></td>
 				<td class="center"><input size="3" type="text" value="15" name="width<?php echo $i; ?>"></td>
 				<td class="center"><input size="3" type="text" value="15" name="height<?php echo $i; ?>"></td>

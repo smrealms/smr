@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','GALACTIC POST');
 $db2 = new SmrMySqlDatabase();

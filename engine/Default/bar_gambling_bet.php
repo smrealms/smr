@@ -1,4 +1,4 @@
-<?
+<?php
 if(isset($var['message']))
 {
 	$PHP_OUTPUT.=$var['message'];

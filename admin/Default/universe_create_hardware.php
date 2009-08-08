@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','CREATE UNIVERSE - ADDING HARDWARE (9/10)');
 

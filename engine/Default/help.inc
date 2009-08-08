@@ -1,4 +1,4 @@
-<?
+<?php
 
 function echo_nav($topic_id) {
 

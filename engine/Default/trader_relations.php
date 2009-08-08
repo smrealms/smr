@@ -1,4 +1,4 @@
-<?
+<?php
 $template->assign('PageTopic','TRADER RELATIONS');
 
 include(get_file_loc('menue.inc'));

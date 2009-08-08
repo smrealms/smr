@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','Create Vote');
 

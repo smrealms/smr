@@ -1,4 +1,4 @@
-<?
+<?php
 
 function echo_galactic_post_header() {
 

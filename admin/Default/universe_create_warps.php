@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','CREATE UNIVERSE - ADDING WARPS (3/10)');
 

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','Galactic Post Application');
 include(get_file_loc('menue.inc'));

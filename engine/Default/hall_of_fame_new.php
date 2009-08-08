@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('hof.functions.inc'));
 $game_id =null;
 if (isset($var['game_id'])) $game_id = $var['game_id'];

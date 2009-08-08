@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($player->hasNewbieTurns())
 	create_error('You are under newbie protection!');

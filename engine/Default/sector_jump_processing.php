@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 if (isset($_POST['target'])) $target = $_POST['target'];

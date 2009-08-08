@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db->query('SELECT * FROM player_has_stats WHERE game_id > 6');
 $db2 = new SmrMySqlDatabase();

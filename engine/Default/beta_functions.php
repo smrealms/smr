@@ -1,4 +1,4 @@
-<?
+<?php
 if(!ENABLE_BETA)
 	create_error('Beta functions are disabled');
 

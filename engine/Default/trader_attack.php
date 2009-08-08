@@ -1,4 +1,4 @@
-<?
+<?php
 $results = unserialize($var['results']);
 $template->assignByRef('TraderCombatResults',$results);
 if($var['target'])

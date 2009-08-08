@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db->query('SELECT * FROM game_disable');
 if (!$db->getNumRows()) {

@@ -1,4 +1,4 @@
-<?
+<?php
 $account_id = $_REQUEST['account_id'];
 $exception = $_REQUEST['exception'];
 if (!is_array($account_id))

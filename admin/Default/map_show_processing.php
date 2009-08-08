@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db2 = new SmrMySqlDatabase();
 $account_id = $_REQUEST['account_id'];

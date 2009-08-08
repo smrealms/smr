@@ -1,4 +1,4 @@
-<?
+<?php
 $gameInfo =& Globals::getGameInfo($player->getGameID());
 if($gameInfo['StartDate']+86400*3 > TIME)
 	create_error('You cannot buy maps within the first 3 days');

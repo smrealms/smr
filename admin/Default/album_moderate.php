@@ -1,4 +1,4 @@
-<?
+<?php
 
 require_once(LIB . 'Album/album_functions.php');
 $db = new SmrMySqlDatabase(); // required when referred from album

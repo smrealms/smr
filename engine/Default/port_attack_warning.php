@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('SmrPort.class.inc'));
 $template->assign('PageTopic','PORT RAID');
 $PHP_OUTPUT.=('<font color=red>WARNING WARNING</font> port assault about to commence!!<br />');

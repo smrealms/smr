@@ -1,4 +1,4 @@
-<?
+<?php
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bar_menue();

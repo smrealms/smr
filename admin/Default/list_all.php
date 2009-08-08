@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db2 = new SmrMySqlDatabase();
 //split variable to get start and end

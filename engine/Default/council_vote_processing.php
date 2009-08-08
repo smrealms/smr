@@ -1,4 +1,4 @@
-<?
+<?php
 
 include(get_file_loc('race_voting.php'));
 $action = $_REQUEST['action'];

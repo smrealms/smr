@@ -1,4 +1,4 @@
-<?
+<?php
 if($var['toggle']=='WeaponHiding')
 {
 	$player->setDisplayWeapons(!$player->isDisplayWeapons());

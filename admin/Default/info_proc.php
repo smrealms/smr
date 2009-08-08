@@ -1,4 +1,4 @@
-<?
+<?php
 
 $action = $_REQUEST['action'];
 if ($action == 'Reopen and Add Exception' || $action == 'Reopen without Exception')

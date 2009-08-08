@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($player->getGameID() == 0)
 	return;

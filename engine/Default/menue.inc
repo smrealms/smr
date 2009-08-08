@@ -1,4 +1,4 @@
-<?
+<?php
 
 function create_alliance_menue($alliance_id = FALSE, $alliance_leader_id = FALSE)
 {

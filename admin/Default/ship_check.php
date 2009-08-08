@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','SHIP INTEGRITY CHECK');
 

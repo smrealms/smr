@@ -1,4 +1,4 @@
-<?
+<?php
 
 //get our variables
 $game_id = $var['game_id'];

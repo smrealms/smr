@@ -1,4 +1,4 @@
-<?
+<?php
 
 $template->assign('PageTopic','Delete Game - Confirmation');
 $game_id = $_REQUEST['game_id'];
