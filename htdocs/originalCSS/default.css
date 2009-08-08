@@ -497,8 +497,9 @@ a.buttonA:hover
 a.buttonA:active
 {
 	background-color: #0B8D35;
-	border-color: #A3CCA3 #2A6E2A #2A6E2A #A3CCA3;
+	border-color: #2A6E2A #A3CCA3 #A3CCA3 #2A6E2A;
 }
+
 div#middle_panel
 {
 	text-align: left;
