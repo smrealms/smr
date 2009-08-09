@@ -30,8 +30,8 @@ $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' ORDER BY deaths DESC, player_name LIMIT 10');
 
 $rank = 0;
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
     // get current player
     $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), SmrSession::$game_id);
 
@@ -64,14 +64,15 @@ while ($db->nextRecord()) {
     if ($player->getAccountID() == $curr_player->getAccountID())
         $PHP_OUTPUT.=(' style="font-weight:bold;"');
     $PHP_OUTPUT.=('>');
-    if ($curr_player->getAllianceID() > 0) {
-
+    if ($curr_player->getAllianceID() > 0)
+    {
         $container = array();
         $container['url']             = 'skeleton.php';
         $container['body']             = 'alliance_roster.php';
         $container['alliance_id']    = $curr_player->getAllianceID();
         $PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
-    } else
+    }
+    else
         $PHP_OUTPUT.=('(none)');
     $PHP_OUTPUT.=('</td>');
     $PHP_OUTPUT.=('<td valign="top" align="right"');
@@ -79,28 +80,25 @@ while ($db->nextRecord()) {
         $PHP_OUTPUT.=(' style="font-weight:bold;"');
     $PHP_OUTPUT.=('>' . number_format($curr_player->getDeaths()) . '</td>');
     $PHP_OUTPUT.=('</tr>');
-
 }
 
 $PHP_OUTPUT.=('</table>');
 $action = $_REQUEST['action'];
-if ($action == 'Show') {
-
-    $min_rank = $_POST['min_rank'];
-    $max_rank = $_POST['max_rank'];
-
-} else {
-
+if ($action == 'Show')
+{
+    $min_rank = min($_POST['min_rank'], $_POST['max_rank']);
+    $max_rank = max($_POST['min_rank'], $_POST['max_rank']);
+}
+else
+{
     $min_rank = $our_rank - 5;
     $max_rank = $our_rank + 5;
-
 }
 
-if ($min_rank <= 0) {
-
+if ($min_rank <= 0)
+{
     $min_rank = 1;
     $max_rank = 10;
-
 }
 
 if ($max_rank > $total_player)
@@ -128,8 +126,8 @@ $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER BY deaths DESC, player_name LIMIT ' . ($min_rank - 1) . ', ' . ($max_rank - $min_rank + 1));
 
 $rank = $min_rank - 1;
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
     // get current player
     $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
@@ -162,14 +160,15 @@ while ($db->nextRecord()) {
     if ($player->getAccountID() == $curr_player->getAccountID())
         $PHP_OUTPUT.=(' style="font-weight:bold;"');
     $PHP_OUTPUT.=('>');
-    if ($curr_player->getAllianceID() > 0) {
-
+    if ($curr_player->getAllianceID() > 0)
+    {
         $container = array();
         $container['url']             = 'skeleton.php';
         $container['body']             = 'alliance_roster.php';
         $container['alliance_id']    = $curr_player->getAllianceID();
         $PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
-    } else
+    }
+    else
         $PHP_OUTPUT.=('(none)');
     $PHP_OUTPUT.=('</td>');
     $PHP_OUTPUT.=('<td valign="top" align="right"');
@@ -177,7 +176,6 @@ while ($db->nextRecord()) {
         $PHP_OUTPUT.=(' style="font-weight:bold;"');
     $PHP_OUTPUT.=('>' . number_format($curr_player->getDeaths()) . '</td>');
     $PHP_OUTPUT.=('</tr>');
-
 }
 
 $PHP_OUTPUT.=('</table>');

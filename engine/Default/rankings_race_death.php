@@ -17,8 +17,8 @@ $PHP_OUTPUT.=('</tr>');
 $rank = 0;
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT race.race_id as race_id, race_name, sum(deaths) as death_sum, count(account_id) FROM player NATURAL JOIN race WHERE game_id = '.$player->getGameID().' GROUP BY player.race_id ORDER BY death_sum DESC');
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
 	$rank++;
 	$race_id = $db->getField('race_id');
 	$db2->query('SELECT * FROM player WHERE race_id = '.$race_id.' AND game_id = '.$player->getGameID().' AND out_of_game = \'TRUE\'');
