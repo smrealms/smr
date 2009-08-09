@@ -3,7 +3,7 @@ if(isset($GameID))
 {
 	$UnderAttack = $ThisShip->removeUnderAttack();
 	?>
-	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><?php } ?><script type="text/javascript">TriggerAttackBlink('3B1111');</script></span>
+	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script type="text/javascript">TriggerAttackBlink('3B1111');</script><?php } ?></span>
 	<span id="message_area"><?php
 	if(isset($MessageGlobalLink))
 		{ ?>
