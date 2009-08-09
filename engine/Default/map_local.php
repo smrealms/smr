@@ -45,9 +45,9 @@ $template->assign('GalaxyName',$galaxy->getName());
 
 //figure out what should be the top left and bottom right
 //go left then up
-for ($i=0;$i<$dist&&$i<$galaxy->getWidth()/2;$i++)
+for ($i=0;$i<$dist&&$i<(int)($galaxy->getWidth()/2);$i++)
 	$topLeft =& $topLeft->getNeighbourSector('Left');
-for ($i=0;$i<$dist&&$i<$galaxy->getHeight()/2;$i++)
+for ($i=0;$i<$dist&&$i<(int)($galaxy->getHeight()/2);$i++)
 	$topLeft =& $topLeft->getNeighbourSector('Up');
 
 $mapSectors = array();
