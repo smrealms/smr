@@ -46,16 +46,21 @@ class Template
 		{
 			$output.=$captured;
 		}
-		$ajaxXml =& $this->convertHtmlToAjaxXml($this->trimWhiteSpace($output));
-		if($forAjax)
+		if($this->data['AJAX_ENABLE_REFRESH'])
 		{
-			/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
-			$ajaxXml='<all>'.$ajaxXml.'</all>';
-			echo $ajaxXml;
+			$ajaxXml =& $this->convertHtmlToAjaxXml($this->trimWhiteSpace($output));
+			if($forAjax)
+			{
+				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
+				$ajaxXml='<all>'.$ajaxXml.'</all>';
+				echo $ajaxXml;
+			}
+			else
+				echo $output;
+			SmrSession::saveAjaxReturns();
 		}
 		else
 			echo $output;
-		SmrSession::saveAjaxReturns();
 	}
 	
 	

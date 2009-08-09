@@ -110,25 +110,25 @@ class Globals
 		if(self::$RACES==null) //use cached if available
 		{
 			self::initialiseDatabase();
-			$RACES = array();
+			self::$RACES = array();
 			
 			// determine user level
 			self::$db->query('SELECT race_id,race_name,race_description FROM race ORDER BY race_id');
 			while(self::$db->nextRecord())
 			{
-				$RACES[self::$db->getField('race_id')] = array();
-				$RACES[self::$db->getField('race_id')]['Race ID'] = (int)self::$db->getField('race_id');
-				$RACES[self::$db->getField('race_id')]['Race Name'] = self::$db->getField('race_name');
-				$RACES[self::$db->getField('race_id')]['Description'] = self::$db->getField('race_description');
+				self::$RACES[self::$db->getField('race_id')] = array(
+																'Race ID' => (int)self::$db->getField('race_id'),
+																'Race Name' => self::$db->getField('race_name'),
+																'Description' => self::$db->getField('race_description'),
+																);
 			}
-			self::$RACES =& $RACES;
 		}
 		return self::$RACES;
 	}
 	
-	public static function &getRaceName($raceID)
+	public static function getRaceName($raceID)
 	{
-		$races = Globals::getRaces();
+		$races =& Globals::getRaces();
 		return $races[$raceID]['Race Name'];
 	}
 	
@@ -137,23 +137,23 @@ class Globals
 		if(self::$GOODS==null) //use cached if available
 		{
 			self::initialiseDatabase();
-			$GOODS = array();
+			self::$GOODS = array();
 			
 			// determine user level
 			self::$db->query('SELECT * FROM good ORDER BY good_id');
 			while(self::$db->nextRecord())
 			{
-				$GOODS[self::$db->getField('good_id')] = array();
-				$GOODS[self::$db->getField('good_id')]['Type'] = 'Good';
-				$GOODS[self::$db->getField('good_id')]['ID'] = (int)self::$db->getField('good_id');
-				$GOODS[self::$db->getField('good_id')]['Name'] = self::$db->getField('good_name');
-				$GOODS[self::$db->getField('good_id')]['Max'] = (int)self::$db->getField('max_amount');
-				$GOODS[self::$db->getField('good_id')]['BasePrice'] = (int)self::$db->getField('base_price');
-				$GOODS[self::$db->getField('good_id')]['Class'] = (int)self::$db->getField('good_class');
-				$GOODS[self::$db->getField('good_id')]['ImageLink'] = 'images/port/' . self::$db->getField('good_id') . '.png';
-				$GOODS[self::$db->getField('good_id')]['AlignRestriction'] = (int)self::$db->getField('align_restriction');
+				self::$GOODS[self::$db->getField('good_id')] = array(
+																'Type' => 'Good',
+																'ID' => (int)self::$db->getField('good_id'),
+																'Name' => self::$db->getField('good_name'),
+																'Max' => (int)self::$db->getField('max_amount'),
+																'BasePrice' => (int)self::$db->getField('base_price'),
+																'Class' => (int)self::$db->getField('good_class'),
+																'ImageLink' => 'images/port/' . self::$db->getField('good_id') . '.png',
+																'AlignRestriction' => (int)self::$db->getField('align_restriction')
+															);
 			}
-			self::$GOODS =& $GOODS;
 		}
 		return self::$GOODS;
 	}
@@ -168,19 +168,19 @@ class Globals
 		if(self::$HARDWARE_TYPES==null) //use cached if available
 		{
 			self::initialiseDatabase();
-			$HARDWARE_TYPES = array();
+			self::$HARDWARE_TYPES = array();
 			
 			// determine user level
 			self::$db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 			while(self::$db->nextRecord())
 			{
-				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')] = array();
-				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Type'] = 'Hardware';
-				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['ID'] = (int)self::$db->getField('hardware_type_id');
-				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Name'] = self::$db->getField('hardware_name');
-				$HARDWARE_TYPES[self::$db->getField('hardware_type_id')]['Cost'] = (int)self::$db->getField('cost');
+				self::$HARDWARE_TYPES[self::$db->getField('hardware_type_id')] = array(
+																			'Type' => 'Hardware',
+																			'ID' => (int)self::$db->getField('hardware_type_id'),
+																			'Name' => self::$db->getField('hardware_name'),
+																			'Cost' => (int)self::$db->getField('cost')
+																			);
 			}
-			self::$HARDWARE_TYPES =& $HARDWARE_TYPES;
 		}
 		if($hardwareTypeID===false)
 			return self::$HARDWARE_TYPES;
@@ -195,29 +195,30 @@ class Globals
 			self::$db->query('SELECT * FROM game');
 			while(self::$db->nextRecord())
 			{
-				$gameID = (int)self::$db->getField('game_id');
-				self::$GAMES[$gameID] = array();
-				self::$GAMES[$gameID]['ID'] = $gameID;
-				self::$GAMES[$gameID]['Speed'] = (float)self::$db->getField('game_speed');
-				self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
-				self::$GAMES[$gameID]['GameName'] = (string)self::$db->getField('game_name');
-				self::$GAMES[$gameID]['StartDate'] = (string)self::$db->getField('start_date');
+				self::$GAMES[(int)self::$db->getField('game_id')] = array(
+											'ID' => (int)self::$db->getField('game_id'),
+											'Speed' => (float)self::$db->getField('game_speed'),
+											'GameType' => (string)self::$db->getField('game_type'),
+											'GameName' => (string)self::$db->getField('game_name'),
+											'StartDate' => (string)self::$db->getField('start_date')
+											);
 			}
 			return self::$GAMES;
 		}
 		if(!isset(self::$GAMES[$gameID]))
 		{
 			self::initialiseDatabase();
+			$gameID = (int)$gameID;
 			self::$db->query('SELECT * FROM game WHERE game_id = '.$gameID.' LIMIT 1');
 			if(self::$db->nextRecord())
 			{
-				$gameID = (int)$gameID;
-				self::$GAMES[$gameID] = array();
-				self::$GAMES[$gameID]['ID'] = $gameID;
-				self::$GAMES[$gameID]['Speed'] = (float)self::$db->getField('game_speed');
-				self::$GAMES[$gameID]['GameType'] = (string)self::$db->getField('game_type');
-				self::$GAMES[$gameID]['GameName'] = (string)self::$db->getField('game_name');
-				self::$GAMES[$gameID]['StartDate'] = (string)self::$db->getField('start_date');
+				self::$GAMES[$gameID] = array(
+											'ID' => $gameID,
+											'Speed' => (float)self::$db->getField('game_speed'),
+											'GameType' => (string)self::$db->getField('game_type'),
+											'GameName' => (string)self::$db->getField('game_name'),
+											'StartDate' => (string)self::$db->getField('start_date')
+											);
 			}
 			else
 				self::$GAMES[$gameID] = false;
