@@ -89,18 +89,18 @@ class Globals
 		if(self::$LEVEL_REQUIREMENTS==null) //use cached if available
 		{
 			self::initialiseDatabase();
-			$LEVEL_REQUIREMENTS = array();
+			self::$LEVEL_REQUIREMENTS = array();
 			
 			// determine user level
 			self::$db->query('SELECT * FROM level ORDER BY level_id ASC');
 			while (self::$db->nextRecord())
 			{
-				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')] = array();
-				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')]['ID'] = (int)self::$db->getField('level_id');
-				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')]['Name'] = self::$db->getField('level_name');
-				$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')]['Requirement'] = (int)self::$db->getField('requirement');
+				self::$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')] = array(
+																				'ID' => (int)self::$db->getField('level_id'),
+																				'Name' => self::$db->getField('level_name'),
+																				'Requirement' => (int)self::$db->getField('requirement')
+																				);
 			}
-			self::$LEVEL_REQUIREMENTS =& $LEVEL_REQUIREMENTS;
 		}
 		return self::$LEVEL_REQUIREMENTS;
 	}
