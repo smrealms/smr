@@ -335,7 +335,7 @@ class SmrPort
 	
 	protected function refreshGoods($classTraded,$amountTraded)
 	{
-		$refreshAmount = $amountTraded / 4;
+		$refreshAmount = round($amountTraded / 4);
 		//refresh goods that need it
 		$portGoods =& $this->getGoodsAll();
 		$refreshClass = $classTraded+1;
