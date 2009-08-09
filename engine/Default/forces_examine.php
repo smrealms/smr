@@ -13,7 +13,7 @@ if ($player->getSectorID() != $forces->getSectorID()) {
 
 }
 
-$PHP_OUTPUT.=('<h1>EXAMINE FORCES</h1>');
+$template->assign('PageTopic','Examine Forces');
 
 // should we display an attack button
 if (($ship->getAttackRating() > 0 || $ship->getCDs() > 0) &&
@@ -29,7 +29,7 @@ if (($ship->getAttackRating() > 0 || $ship->getCDs() > 0) &&
 	transfer('owner_id');
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=create_submit('Attack Forces (3)');
-	$PHP_OUTPUT.=('</form>');
+	$PHP_OUTPUT.=('</form><br />');
 
 } elseif ($player->hasFederalProtection())
 	$PHP_OUTPUT.=('<p><big style="color:#3333FF;">You are under federal protection! That wouldn\'t be fair.</big></p>');
@@ -88,27 +88,21 @@ $PHP_OUTPUT.=('<td valign="top">');
 // *
 // ********************************
 
-if ($player->forceNAPAlliance($forces_owner)) {
-
+if ($player->forceNAPAlliance($forces_owner))
+{
 	// you can't attack ur own alliance forces.
-
-	$PHP_OUTPUT.=('&nbsp;</td>');
-	$PHP_OUTPUT.=(' </tr>');
-	$PHP_OUTPUT.=(' </table>');
-	$PHP_OUTPUT.=('</div>');
-	return;
-
+	$PHP_OUTPUT.='&nbsp;';
+}
+else
+{
+	$PHP_OUTPUT.=('Mines: '.$forces->getMines().'<br />');
+	$PHP_OUTPUT.=('Combat Drones: '.$forces->getCDs().'<br />');
+	$PHP_OUTPUT.=('Scouts: '.$forces->getSDs().'<br /><br />');
 }
 
-$PHP_OUTPUT.=('Mines: '.$forces->getMines().'<br />');
-$PHP_OUTPUT.=('Combat Drones: '.$forces->getCDs().'<br />');
-$PHP_OUTPUT.=('Scouts: '.$forces->getSDs().'<br />');
-$PHP_OUTPUT.=('Alliance: '.$forces_owner->getAllianceName().'<br /><br />');
-
-
 $PHP_OUTPUT.=('</td>');
-$PHP_OUTPUT.=('	 </tr>');
-$PHP_OUTPUT.=('	 </table>');
+$PHP_OUTPUT.=('</tr>');
+$PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</div>');
 
 ?>
