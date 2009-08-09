@@ -11,7 +11,8 @@ $db->query('SELECT player.alliance_id as alliance_id, sum( experience ) AS allia
 				GROUP BY player.alliance_id
 				ORDER BY alliance_exp DESC');
 $alliances = array();
-while ($db->nextRecord()) {
+while ($db->nextRecord())
+{
 	$alliances[$db->getField('alliance_id')] = array(stripslashes($db->getField('name')), $db->getField('alliance_exp'), $db->getField('members'));
 	if ($db->getField('alliance_id') == $player->getAllianceID()) $ourRank = sizeof($alliances);
 }
@@ -33,7 +34,8 @@ $PHP_OUTPUT.=('<th>Total Traders</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
-foreach ($alliances as $id => $infoArray) {
+foreach ($alliances as $id => $infoArray)
+{
 	$rank++;
 	$currAllianceName = $infoArray[0];
 	$totalExp = $infoArray[1];
@@ -62,14 +64,18 @@ foreach ($alliances as $id => $infoArray) {
 $PHP_OUTPUT.=('</table>');
 
 $action = $_REQUEST['action'];
-if ($action == 'Show') {
-    $min_rank = $_POST['min_rank'];
-    $max_rank = $_POST['max_rank'];
-} else {
+if ($action == 'Show')
+{
+    $min_rank = min($_POST['min_rank'], $_POST['max_rank']);
+    $max_rank = max($_POST['min_rank'], $_POST['max_rank']);
+}
+else
+{
     $min_rank = $ourRank - 5;
     $max_rank = $ourRank + 5;
 }
-if ($min_rank <= 0) {
+if ($min_rank <= 0)
+{
     $min_rank = 1;
     $max_rank = 10;
 }
@@ -95,7 +101,8 @@ $PHP_OUTPUT.=('<th>Total Traders</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
-foreach ($alliances as $id => $infoArray) {
+foreach ($alliances as $id => $infoArray)
+{
 	$rank++;
 	if ($rank < $min_rank) continue;
 	elseif ($rank > $max_rank) break;

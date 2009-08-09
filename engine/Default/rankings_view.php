@@ -17,11 +17,10 @@ $exp = 0;
 
 // get stats
 $db->query('SELECT * from account_has_stats WHERE account_id = '.SmrSession::$account_id);
-if ($db->nextRecord()) {
-
+if ($db->nextRecord())
+{
 	$kills = ($db->getField('kills') > 0) ? $db->getField('kills') : 0;
 	$exp = ($db->getField('experience_traded') > 0) ? $db->getField('experience_traded') : 0;
-
 }
 
 $PHP_OUTPUT.=('You have a score of <font color="red">'.number_format($account->getScore()).'</font>.<br /><br />');

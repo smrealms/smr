@@ -19,8 +19,8 @@ $PHP_OUTPUT.=('</tr>');
 $rank = 0;
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT player.race_id as race_id, race_name, sum(player.experience) as experience_sum, count(player.account_id) as members FROM player NATURAL JOIN race WHERE race.race_id = player.race_id AND player.game_id = '.$player->getGameID().' GROUP BY player.race_id ORDER BY experience_sum DESC');
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
 	$rank++;
 	$race_id = $db->getField('race_id');
 	$db2->query('SELECT * FROM player WHERE race_id = '.$race_id.' AND game_id = '.$player->getGameID().' AND out_of_game = \'TRUE\'');
@@ -36,7 +36,6 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . round($db->getField('experience_sum') / $db->getField('members')) . '</td>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('members') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
-
 }
 
 $PHP_OUTPUT.=('</table>');

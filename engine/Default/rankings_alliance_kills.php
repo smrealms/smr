@@ -6,7 +6,8 @@ $PHP_OUTPUT.=create_ranking_menue(1, 1);
 $db->query('SELECT alliance_id, alliance_name, alliance_kills, leader_id FROM alliance
 			WHERE game_id = '.$player->getGameID().' ORDER BY alliance_kills DESC, alliance_name');
 $alliances = array();
-while ($db->nextRecord()) {
+while ($db->nextRecord())
+{
 	$alliances[$db->getField('alliance_id')] = array(stripslashes($db->getField('alliance_name')), $db->getField('alliance_kills'), $db->getField('leader_id'));
 	if ($db->getField('alliance_id') == $player->getAllianceID()) $ourRank = sizeof($alliances);
 }
@@ -27,8 +28,8 @@ $PHP_OUTPUT.=('<th>Kills</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
-foreach($alliances as $id => $infoArray) {
-
+foreach($alliances as $id => $infoArray)
+{
     // get current alliance
     $currAllianceName = $infoArray[0];
     $numKills = $infoArray[1];
@@ -70,14 +71,18 @@ foreach($alliances as $id => $infoArray) {
 $PHP_OUTPUT.=('</table>');
 
 $action = $_REQUEST['action'];
-if ($action == 'Show') {
-    $min_rank = $_POST['min_rank'];
-    $max_rank = $_POST['max_rank'];
-} else {
+if ($action == 'Show')
+{
+    $min_rank = min($_POST['min_rank'], $_POST['max_rank']);
+    $max_rank = max($_POST['min_rank'], $_POST['max_rank']);
+}
+else
+{
     $min_rank = $ourRank - 5;
     $max_rank = $ourRank + 5;
 }
-if ($min_rank <= 0) {
+if ($min_rank <= 0)
+{
     $min_rank = 1;
     $max_rank = 10;
 }
@@ -100,7 +105,8 @@ $PHP_OUTPUT.=('<th>Kills</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $rank=0;
-foreach ($alliances as $id => $infoArray) {
+foreach ($alliances as $id => $infoArray)
+{
 	$rank++;
 	if ($rank < $min_rank) continue;
 	elseif ($rank > $max_rank) break;
