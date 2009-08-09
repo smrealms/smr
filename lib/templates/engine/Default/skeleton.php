@@ -9,7 +9,6 @@
 		<!--[if IE]>
 			<link rel="stylesheet" type="text/css" href="css/ie_specific.css">
 		<![endif]-->
-		<!--<script type="text/javascript" src="js/smr.js"></script>-->
 		<style type="text/css">
 			body {
 				font-size:<?php echo $FontSize; ?>%;
@@ -21,6 +20,7 @@
 				$this->includeTemplate($HeaderTemplateInclude);
 			}
 		?>
+		<script type="text/javascript" src="js/smr15.js"></script>
 	</head>
 	<body>
 
@@ -70,7 +70,6 @@
 
 
 
-		<script type="text/javascript" src="js/smr15.js"></script>
 		<script type="text/javascript" src="js/ajax.js"></script>
 		<?php
 		if(!empty($js))

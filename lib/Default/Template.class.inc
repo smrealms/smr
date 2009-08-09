@@ -46,9 +46,10 @@ class Template
 		{
 			$output.=$captured;
 		}
+		$this->trimWhiteSpace($output);
 		if($this->data['AJAX_ENABLE_REFRESH'])
 		{
-			$ajaxXml =& $this->convertHtmlToAjaxXml($this->trimWhiteSpace($output));
+			$ajaxXml =& $this->convertHtmlToAjaxXml($output);
 			if($forAjax)
 			{
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
@@ -145,7 +146,7 @@ class Template
 		return preg_match('/<input'.'[^>]*'.'[^(submit)(hidden)(image)]'.'[^>]*'.'>/i', $html)!=0;
 	}
 	
-	protected function &trimWhiteSpace(&$html)
+	protected function trimWhiteSpace(&$html)
 	{
 		// Pull out the script blocks
 		/*    preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
@@ -178,8 +179,6 @@ class Template
 		
 		// replace script blocks
 //		$this->replaceTrimHolder("@@@SMARTY:TRIM:SCRIPT@@@",$_script_blocks, $html);
-		
-		return $html;
 	}
 	protected function replaceTrimHolder($search_str, $replace, &$subject)
 	{

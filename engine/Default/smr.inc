@@ -625,8 +625,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 		if ($player->isLandedOnPlanet())
 		{
-			$container['url'] = 'planet_main_processing.php';
-			$container['body'] = '';
+			$container['body'] = 'planet_main.php';
 			$template->assign('PlanetMainLink',SmrSession::get_new_href($container));
 		}
 		else
@@ -634,12 +633,10 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 			$container['body'] = 'map_local.php';
 			$template->assign('LocalMapLink',SmrSession::get_new_href($container));
 		}
-	
-		$container['url'] = 'skeleton.php';
+
 		$container['body'] = 'course_plot.php';
 		$template->assign('PlotCourseLink',SmrSession::get_new_href($container));
 		
-		$container['url'] = 'skeleton.php';
 		$container['body'] = 'trader_status.php';
 		$template->assign('TraderLink',SmrSession::get_new_href($container));
 	
@@ -689,7 +686,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$template->assign('CurrentHallOfFameLink',SmrSession::get_new_href($container));
 		unset($container['game_id']);
 		
-		$container['body'] = '';
+		unset($container['body']);
 		$container['url'] = 'mgu_create_new.php';
 		$template->assign('MGULink',SmrSession::get_new_href($container));
 	}
@@ -697,7 +694,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	if (SmrSession::$account_id > 0 && empty($var['logoff']))
 	{
 		$template->assign('AccountID',SmrSession::$account_id);
-		$container['body'] = '';
+		unset($container['body']);
 		$container['url'] = 'game_play_preprocessing.php';
 		$template->assign('PlayGameLink',SmrSession::get_new_href($container));
 	
@@ -709,19 +706,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	$container['body'] = 'preferences.php';
 	$template->assign('PreferencesLink',SmrSession::get_new_href($container));
 	
-	/*
-	$container['body'] = '';
-	$container['url'] = 'mgu_create.php';
-	$PHP_OUTPUT.=create_link($container, 'DL MGU Maps');
-	echo '<br />';
-	*/
-	//if (SmrSession::$game_id > 0) {
-	//	$container['body'] = '';
-	//	$container['url'] = 'mgu_create_new.php';
-	//	$PHP_OUTPUT.=create_link($container, 'DL MGU Maps');
-	//	echo '<br />';
-	//}
-	$container['url'] = 'skeleton.php';
 	$container['body'] = 'album_edit.php';
 	$template->assign('EditPhotoLink',SmrSession::get_new_href($container));
 	
