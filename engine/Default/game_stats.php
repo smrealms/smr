@@ -29,7 +29,7 @@ $PHP_OUTPUT.='<tr><td align=center>General Info</td><td align=center>Other Info<
 <td valign=top align=center>
 <table class="nobord">
 <tr><td align=right>Name</td>           <td>&nbsp;</td><td align=left>'.$game_name.'</td></tr>
-<tr><td align=right>Description</td>    <td>&nbsp;</td><td align=left>'.$game_desc.'</td></tr>
+<tr><td align=right>Description</td>    <td>&nbsp;</td><td align=left>'.bbifyMessage($game_desc).'</td></tr>
 <tr><td align=right>Start Date</td>     <td>&nbsp;</td><td align=left>'.$start.'</td></tr>
 <tr><td align=right>End Date</td>       <td>&nbsp;</td><td align=left>'.$end.'</td></tr>
 <tr><td align=right>Current Players</td><td>&nbsp;</td><td align=left>'.$current.'</td></tr>
@@ -112,7 +112,7 @@ $PHP_OUTPUT.='
 </tr>
 </table>';
 
-$template->assign('PageTopic','CURRENT PLAYERS');
+$PHP_OUTPUT .='<h1>Current Players</h1>';
 
 $db->query('SELECT * FROM active_session
 			WHERE last_accessed >= ' . (TIME - 600) . ' AND
