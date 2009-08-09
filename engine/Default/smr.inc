@@ -192,15 +192,20 @@ function get_file_loc($file_name, $exists = 1, $overrideGameDir = false)
 	}
 	if($game_dir=='1.2/')
 		$game_dir='Default/';
-	if ($overrideGameDir !== false && file_exists(ENGINE . $overrideGameDir . $file_name)) return ENGINE . $overrideGameDir . $file_name;
-	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
-	if (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
-	if ($overrideGameDir !== false && file_exists(LIB . $overrideGameDir . $file_name)) return LIB . $overrideGameDir . $file_name;
+	if ($overrideGameDir !== false)
+	{
+		if(file_exists(ENGINE . $overrideGameDir . $file_name)) return ENGINE . $overrideGameDir . $file_name;
+		if(file_exists(LIB . $overrideGameDir . $file_name)) return LIB . $overrideGameDir . $file_name;
+		if(file_exists(ADMIN . $overrideGameDir . $file_name)) return ADMIN . $overrideGameDir . $file_name;
+	}
 	if (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
-	if (file_exists(LIB . 'Default/' . $file_name)) return LIB . 'Default/' . $file_name;
-	if ($overrideGameDir !== false && file_exists(ADMIN . $overrideGameDir . $file_name)) return ADMIN . $overrideGameDir . $file_name;
+	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
 	if (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
+	
+	if (file_exists(LIB . 'Default/' . $file_name)) return LIB . 'Default/' . $file_name;
+	if (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
 	if (file_exists(ADMIN . 'Default/' . $file_name)) return ADMIN . 'Default/' . $file_name;
+	
 	if (file_exists(WWW . $file_name)) return WWW . $file_name;
 	if ($exists == 1) return ENGINE . 'empty.php';
 	return $file_name;
