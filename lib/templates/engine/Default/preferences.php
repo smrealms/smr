@@ -64,14 +64,14 @@ if(isset($GameID))
 					}
 					else
 					{
-						echo $ThisPlayer->getPlayerName();
+						echo $ThisPlayer->getPlayerName(); ?> (You have already changed your name)<?php
 					} ?>
 				</td>
 			</tr>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><input type="submit" name="action" value="Alter Player" id="InputFields" /></td>
+				<td><?php if(!$ThisPlayer->isNameChanged()) { ?><input type="submit" name="action" value="Alter Player" id="InputFields" /><?php } ?></td>
 			</tr>
 		</table>
 	</form>
