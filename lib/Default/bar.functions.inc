@@ -23,7 +23,6 @@ function checkForLottoWinner($gameID)
 			$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$gameID);
 			
 		}
-		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$gameID.' AND account_id = '.$winner_id);
 		$db->query('UPDATE player_has_ticket SET time = 0, prize = '.$lottoInfo['Prize'].' WHERE time = '.$time.' AND ' .
 						'account_id = '.$winner_id.' AND game_id = '.$gameID);
 		//delete losers
