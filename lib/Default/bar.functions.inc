@@ -29,6 +29,8 @@ function checkForLottoWinner($gameID)
 		$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$gameID);
 		//get around locked table problem
 		$val = 1;
+		$player->increaseHOF($lottoInfo['Prize'],array('Bar','Lotto','Money','Winnings'));
+		$player->increaseHOF(1,array('Bar','Lotto','Results','Wins'));
 	}
 	$db->unlock();
 	if ($val == 1)
