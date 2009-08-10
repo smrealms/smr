@@ -10,8 +10,8 @@ while ($db->nextRecord())
 	$db->query('UPDATE player SET bank = bank + '.$NHLAmount.' WHERE account_id = '.ACCOUNT_ID_NHL.' AND game_id = '.$player->getGameID());
 	$player->increaseCredits($prize);
 	$player->update();
-	$player->increaseHOF($prize,array('Bar','Lotto','Money','Winnings'));
-	$player->increaseHOF(1,array('Bar','Lotto','Results','Wins'));
+	$player->increaseHOF($prize,array('Bar','Lotto','Money','Claimed'));
+	$player->increaseHOF(1,array('Bar','Lotto','Results','Claims'));
 	SmrSession::updateVar('message','<div align=center>You have claimed <font color=red>$' . number_format($prize) . '</font>!<br /></div><br />');
 	$db->query('DELETE FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND ' . 
 			'account_id = '.$player->getAccountID().' AND prize = '.$prize.' AND time = 0 LIMIT 1');
