@@ -83,9 +83,9 @@ $last_turn_update = TIME - $time_since_start;
 $last_turn_update = $start_date;
 
 //// newbie leaders need to put into there alliances
-//if (SmrSession::$account_id >= 13 && SmrSession::$account_id <= 20)
-//  $alliance_id = 302;
-//else
+if (SmrSession::$account_id == ACCOUNT_ID_NHL)
+  $alliance_id = 302;
+else
   $alliance_id = 0;
 
 $db->lockTable('player');
