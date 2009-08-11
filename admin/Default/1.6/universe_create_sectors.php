@@ -136,6 +136,7 @@ $container['body'] = '1.6/universe_create_ports.php';
 $PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Modify Ports</a><br /><br />';
 $container['body'] = '1.6/universe_create_warps.php';
 $PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Modify Warps</a><br /><br />';
+$PHP_OUTPUT.= '<a href="'.Globals::getSmrFileCreateHREF($var['game_id']).'" class="submitStyle">Modify Warps</a><br /><br />';
 $PHP_OUTPUT.= '<br />';
 $warning = FALSE;
 if ($var['gal_on'] > 1)

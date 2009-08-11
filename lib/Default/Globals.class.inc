@@ -366,11 +366,12 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getSmrFileCreateHREF()
+	public static function getSmrFileCreateHREF($adminCreateGameID = false)
 	{
 		$container = array();
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'smr_file_create.php';
+		$container['AdminCreateGameID'] = $adminCreateGameID;
 		return SmrSession::get_new_href($container);
 	}
 }

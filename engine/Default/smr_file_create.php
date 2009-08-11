@@ -1,5 +1,13 @@
 <?php
+if(isset($var['AdminCreateGameID']))
+	$gameID = $var['AdminCreateGameID'];
+else
 $gameID = $player->getGameID();
+
+if(isset($var['AdminCreateGameID']))
+	$adminCreate = true;
+else
+	$adminCreate = false;
 
 $file = ';SMR1.6 Sectors File v 1.02
 [Races]
@@ -136,7 +144,7 @@ foreach ($galaxies as &$galaxy)
 	{
 		$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
 		
-		if(!$sector->isVisited($player))
+		if(!$sector->isVisited($player) && !$adminCreate)
 			continue;
 		
 		foreach($sector->getLinks() as $linkName => $link)
@@ -145,9 +153,12 @@ foreach ($galaxies as &$galaxy)
 		}
 		if($sector->hasWarp())
 			$file .= 'Warp='.$sector->getWarp() . EOL;
-		if($sector->hasCachedPort($player))
+		if($sector->hasCachedPort($player) || $adminCreate)
 		{
-			$port =& $sector->getCachedPort($player);
+			if($adminCreate)
+				$port =& $sector->getPort($player);
+			else
+				$port =& $sector->getCachedPort($player);
 			$file .= 'Port Level='.$port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
 			$portGoods =& $port->getGoods();
