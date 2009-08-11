@@ -144,7 +144,7 @@ foreach ($galaxies as &$galaxy)
 	{
 		$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
 		
-		if(!$sector->isVisited($player) && !$adminCreate)
+		if(!$sector->isVisited($player) && $adminCreate === false)
 			continue;
 		
 		foreach($sector->getLinks() as $linkName => $link)
@@ -153,10 +153,10 @@ foreach ($galaxies as &$galaxy)
 		}
 		if($sector->hasWarp())
 			$file .= 'Warp='.$sector->getWarp() . EOL;
-		if($sector->hasCachedPort($player) || $adminCreate)
+		if($sector->hasCachedPort($player) || $adminCreate !== false)
 		{
-			if($adminCreate)
-				$port =& $sector->getPort($player);
+			if($adminCreate !== false)
+				$port =& $sector->getPort();
 			else
 				$port =& $sector->getCachedPort($player);
 			$file .= 'Port Level='.$port->getLevel() . EOL;
