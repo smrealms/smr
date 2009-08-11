@@ -137,7 +137,7 @@ elseif ($action == 'Change Images')
 }
 elseif ($action == 'Change Centering')
 {
-	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap']);
+	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap']=='Yes');
 	$account->update();
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
 }
