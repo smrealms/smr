@@ -17,23 +17,25 @@ if(isset($Games['Play']))
 			<th align="center">Last Movement</th>
 			<th align="center">End Date</th>
 			<th align="center">Game Type</th>
+			<th align="center">Game Speed</th>
 		</tr><?php
 		foreach($Games['Play'] as $Game)
 		{ ?>
 			<tr>
 				<td>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $Game['PlayGameLink'] ?>">&nbsp;Play Game&nbsp;</a>
+						<a class="buttonA" href="<?php echo $Game['PlayGameLink']; ?>">&nbsp;Play Game&nbsp;</a>
 					</div>
 				</td>
-				<td width="35%"><a href="<?php echo $Game['GameStatsLink'] ?>"><?php echo $Game['Name'] ?> (<?php echo $Game['ID'] ?>)</a></td>
+				<td width="35%"><a href="<?php echo $Game['GameStatsLink']; ?>"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</a></td>
 				
-				<td><?php echo $Game['Maintenance'] ?></td>
-				<td><?php echo $Game['NumberPlaying'] ?></td>
-				<td><?php echo $Game['LastActive'] ?></td>
-				<td><?php echo $Game['LastMovement'] ?></td>
-				<td><?php echo $Game['EndDate'] ?></td>
-				<td><?php echo $Game['Type'] ?></td>
+				<td><?php echo $Game['Maintenance']; ?></td>
+				<td><?php echo $Game['NumberPlaying']; ?></td>
+				<td><?php echo $Game['LastActive']; ?></td>
+				<td><?php echo $Game['LastMovement']; ?></td>
+				<td><?php echo $Game['EndDate']; ?></td>
+				<td><?php echo $Game['Type']; ?></td>
+				<td><?php echo $Game['Speed']; ?></td>
 			</tr><?php
 		} ?>
 	</table><br />
@@ -75,15 +77,15 @@ if(isset($Games['Join']))
 		{ ?>
 			<tr>
 				<td>
-					<div class="buttonA"><a class="buttonA" href="<?php echo $Game['JoinGameLink'] ?>">&nbsp;Join Game&nbsp;</a></div>
+					<div class="buttonA"><a class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>">&nbsp;Join Game&nbsp;</a></div>
 				</td>
-				<td width="35%"><?php echo $Game['Name'] ?> (<?php echo $Game['ID'] ?>)</td>
-				<td><?php echo $Game['StartDate'] ?></td>
-				<td><?php echo $Game['EndDate'] ?></td>
-				<td><?php echo $Game['MaxPlayers'] ?></td>
-				<td><?php echo $Game['Type'] ?></td>
-				<td><?php echo $Game['Speed'] ?></td>
-				<td><?php echo $Game['Credits'] ?></td>
+				<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
+				<td><?php echo $Game['StartDate']; ?></td>
+				<td><?php echo $Game['EndDate']; ?></td>
+				<td><?php echo $Game['MaxPlayers']; ?></td>
+				<td><?php echo $Game['Type']; ?></td>
+				<td><?php echo $Game['Speed']; ?></td>
+				<td><?php echo $Game['Credits']; ?></td>
 			</tr>
 		<?php } ?>
 	</table><br />
