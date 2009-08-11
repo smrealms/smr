@@ -128,9 +128,9 @@ if($account->isCenterGalaxyMapOnPlayer())
 	else
 	{
 		//go left then up
-		for ($i=0;$i<$galaxy->getWidth()/2;$i++)
+		for ($i=0;$i<floor($galaxy->getWidth()/2);$i++)
 			$topLeft =& $topLeft->getNeighbourSector('Left');
-		for ($i=0;$i<$galaxy->getHeight()/2;$i++)
+		for ($i=0;$i<floor($galaxy->getHeight()/2);$i++)
 			$topLeft =& $topLeft->getNeighbourSector('Up');
 	}
 }
