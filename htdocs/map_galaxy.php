@@ -119,18 +119,23 @@ $template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$p
 
 $template->assign('GalaxyName',$galaxy->getName());
 
-$topLeft =& $player->getSector();
-
-if(!$galaxy->contains($topLeft->getSectorID()))
-	$topLeft =& SmrSector::getSector($player->getGameID(),$galaxy->getStartSector());
-else
+if($account->isCenterGalaxyMapOnPlayer())
 {
-	//go left then up
-	for ($i=0;$i<$galaxy->getWidth()/2;$i++)
-		$topLeft =& $topLeft->getNeighbourSector('Left');
-	for ($i=0;$i<$galaxy->getHeight()/2;$i++)
-		$topLeft =& $topLeft->getNeighbourSector('Up');
+	$topLeft =& $player->getSector();
+	
+	if(!$galaxy->contains($topLeft->getSectorID()))
+		$topLeft =& SmrSector::getSector($player->getGameID(),$galaxy->getStartSector());
+	else
+	{
+		//go left then up
+		for ($i=0;$i<$galaxy->getWidth()/2;$i++)
+			$topLeft =& $topLeft->getNeighbourSector('Left');
+		for ($i=0;$i<$galaxy->getHeight()/2;$i++)
+			$topLeft =& $topLeft->getNeighbourSector('Up');
+	}
 }
+else
+	$topLeft =& SmrSector::getSector($player->getGameID(), $galaxy->getStartSector());	
 
 $mapSectors = array();
 $leftMostSec =& $topLeft;

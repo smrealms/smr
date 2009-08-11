@@ -203,7 +203,24 @@ if(isset($GameID))
 	
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change Images" id="InputFields" /></td>
+		</tr>
+		
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+		
+		<tr>
+			<td>Center Galaxy Map On Player:</td>
+			<td>
+				Yes: <input type="radio" name="centergalmap" id="InputFields" value="Yes"<?php if($ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
+				No: <input type="radio" name="centergalmap" id="InputFields" value="No"<?php if(!$ThisAccount->isCenterGalaxyMapOnPlayer()){ ?> checked="checked"<?php } ?> /><br />
+			</td>
+		</tr>
+	
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Change Centering" id="InputFields" /></td>
 		</tr>
 	
 		<tr>

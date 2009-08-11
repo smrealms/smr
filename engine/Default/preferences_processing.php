@@ -129,11 +129,17 @@ elseif ($action == 'Change Timezone')
 	$db->query('UPDATE account SET offset = '.$timez.' WHERE account_id = '.SmrSession::$account_id);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 }
-elseif ($action == 'Change')
+elseif ($action == 'Change Images')
 {
 	$account->images = $_REQUEST['images'];
 	$account->update();
-	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed yourship images preferences.';
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
+}
+elseif ($action == 'Change Centering')
+{
+	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap']);
+	$account->update();
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
 }
 else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50)
 {

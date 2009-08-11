@@ -42,6 +42,7 @@ class SmrAccount
 	protected $score;
 	protected $cssLink;
 	protected $defaultCSSEnabled;
+	protected $centerGalaxyMapOnPlayer;
 	protected $oldAccountID;
 	
 	protected $hasChanged;
@@ -96,6 +97,7 @@ class SmrAccount
 			
 			$this->cssLink			= $row['css_link'];
 			$this->defaultCSSEnabled	= $row['default_css_enabled']=='TRUE';
+			$this->centerGalaxyMapOnPlayer	= $row['center_galaxy_map_on_player']=='TRUE';
 			$this->oldAccountID		= $row['old_account_id'];
 			
 			$this->hofName			= $row['hof_name'];
@@ -667,6 +669,20 @@ class SmrAccount
 			return;
 		$this->defaultCSSEnabled=$bool;
 		$this->db->query('UPDATE account SET default_css_enabled = ' . $this->db->escapeBoolean($bool) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->hasChanged=true;
+	}
+	
+	public function isCenterGalaxyMapOnPlayer()
+	{
+		return $this->centerGalaxyMapOnPlayer;
+	}
+	
+	public function setCenterGalaxyMapOnPlayer($bool)
+	{
+		if($this->centerGalaxyMapOnPlayer == $bool)
+			return;
+		$this->centerGalaxyMapOnPlayer=$bool;
+		$this->db->query('UPDATE account SET center_galaxy_map_on_player = ' . $this->db->escapeBoolean($bool) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->hasChanged=true;
 	}
 	
