@@ -103,7 +103,12 @@ try
 	
 	// do we have such a container object in the db?
 	if (!($var = SmrSession::retrieveVar($sn)))
-		create_error('Please avoid using the back button!');
+	{
+		if(!USING_AJAX)
+			create_error('Please avoid using the back button!');
+		else
+			exit;
+	}
 	
 	
 	//used for include if we need a spec game script outside of the game
