@@ -83,11 +83,18 @@ while ($db->nextRecord())
 }
 
 $PHP_OUTPUT.=('</table>');
-$action = $_REQUEST['action'];
+$action = $var['Action'];
 if ($action == 'Show')
 {
     $min_rank = min($_POST['min_rank'], $_POST['max_rank']);
     $max_rank = max($_POST['min_rank'], $_POST['max_rank']);
+	SmrSession::updateVar('MinRank',$min_rank);
+	SmrSession::updateVar('MaxRank',$max_rank);
+}
+elseif(isset($var['MinRank'])&&isset($var['MaxRank']))
+{
+    $min_rank = $var['MinRank'];
+    $max_rank = $var['MaxRank'];
 }
 else
 {
