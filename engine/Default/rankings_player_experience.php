@@ -83,7 +83,7 @@ while ($db->nextRecord())
 }
 
 $PHP_OUTPUT.=('</table>');
-$action = $var['Action'];
+$action = $_REQUEST['action'];
 if ($action == 'Show')
 {
     $min_rank = min($_POST['min_rank'], $_POST['max_rank']);
