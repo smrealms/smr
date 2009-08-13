@@ -50,6 +50,7 @@ else
 			$gameID = $db->getField('game_id')>0?$db->getField('game_id'):false;
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td><input type="checkbox" name="message_id[]" value="'.$db->getField('message_id').'"></td>');
+			$senderPlayer = false;
 			if($gameID!==false && Globals::getGameInfo($gameID)!==false)
 				$senderPlayer =& SmrPlayer::getPlayer($db->getField('sender_id'), $db->getField('game_id'));
 			$sender_acc =& SmrAccount::getAccount($db->getField('sender_id'));
@@ -61,7 +62,7 @@ else
 			$PHP_OUTPUT.=('<td nowrap="nowrap">');
 			
 			$sender = 'From: '.$sender_acc->login.' ('.$sender_acc->account_id.')';
-			if (isset($senderPlayer)&&is_object($senderPlayer)&&$sender_acc->login != $senderPlayer->getPlayerName())
+			if ($senderPlayer!==false&&$sender_acc->login != $senderPlayer->getPlayerName())
 				$sender .= ' a.k.a '.$senderPlayer->getPlayerName();
 			if($gameID!==false)
 				$PHP_OUTPUT.=create_link($container, $sender);
