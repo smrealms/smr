@@ -44,6 +44,8 @@ $PHP_OUTPUT.='</select>';
 
 $PHP_OUTPUT.='<input type="submit" name="submit" value="Jump To Galaxy"></form></div><br />';
 $PHP_OUTPUT.= '<table class="create">';
+$container = $var;
+$container['body'] = '1.6/universe_create_sector_details.php';
 $galSectors =& SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
 reset($galSectors);
 for ($i=0;$i < $row;$i++)
@@ -111,7 +113,10 @@ for ($i=0;$i < $row;$i++)
 		$PHP_OUTPUT.= '>';
 		if ($galSector->hasLocation()) $PHP_OUTPUT.= '<span class="red">';
 		else $PHP_OUTPUT.= '<span>';
-		$PHP_OUTPUT.= $galSector->getSectorID();
+		
+		$container['sector_id'] = $galSector->getSectorID();
+		
+		$PHP_OUTPUT.=  '<a href="' . SmrSession::get_new_href($container) . '">' . $galSector->getSectorID() . '</a>';
 		if ($galSector->hasWarp()) $PHP_OUTPUT.= '*';
 		//$link['text'] = $this_sec;
 		//create_link($link, $id);
