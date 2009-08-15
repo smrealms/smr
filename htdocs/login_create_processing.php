@@ -18,7 +18,6 @@ if (SmrSession::$account_id > 0)
 	$msg = 'You already logged in! Creating multis is against the rules!';
 	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
-
 }
 
 // db object
@@ -189,30 +188,23 @@ if (!is_numeric($referral))
 //}
 //$db->query('UPDATE beta_key SET used = '.$db->escapeString('TRUE').' WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
 
-// create validation code
-$validation_code = substr(SmrSession::$session_id, 0, 10);
-
+$icq = $_REQUEST['icq'];
 // create account
 $timez = $_REQUEST['timez'];
-$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
-			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
-			$db->escape_string($first_name) . ', ' . $db->escape_string($last_name) . ', ' .
-			$db->escape_string($address) . ', ' . $db->escape_string($city) . ', ' . $db->escape_string($postal_code) . ', ' .
-			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($_REQUEST['icq'])) . ', ' . $db->escape_string($validation_code) . ',' . TIME . ',' .$db->escapeNumber($timez).','.$db->escapeNumber($referral).','.$db->escapeString($login).')');
 
 // creates a new user account object
-$account =& SmrAccount::getAccountByName($login);
+$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral);
 $account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
 
 // register session
-SmrSession::$account_id = $account->account_id;
+SmrSession::$account_id = $account->getAccountID();
 
 // save ip
 $account->update_ip();
 
 // send email with validation code to user
 mail($email, 'New Space Merchant Realms User',
-			 'Your validation code is: '.$validation_code.EOL.'The Space Merchant Realms server is on the web at '.URL.'/'.EOL .
+			 'Your validation code is: '.$account->getValidationCode().EOL.'The Space Merchant Realms server is on the web at '.URL.'/'.EOL .
 			 'Please verify within the next 7 days or your account will be automatically deleted.',
 			 'From: support@smrealms.de');
 
