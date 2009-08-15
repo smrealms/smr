@@ -67,6 +67,17 @@ class SmrAccount
 		return $return;
 	}
 	
+	public static function &createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
+			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
+			$db->escape_string($first_name) . ', ' . $db->escape_string($last_name) . ', ' .
+			$db->escape_string($address) . ', ' . $db->escape_string($city) . ', ' . $db->escape_string($postal_code) . ', ' .
+			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($icq)) . ', ' . $db->escape_string(substr(SmrSession::$session_id, 0, 10)) . ',' . TIME . ',' .$db->escapeNumber($timez).','.$db->escapeNumber($referral).','.$db->escapeString($login).')');
+		return self::getAccountByName($login);
+	}
+	
 	function __construct($accountID)
 	{
 		$this->db = new SmrMySqlDatabase();
@@ -604,6 +615,11 @@ class SmrAccount
 	public function getReferralLink()
 	{
 		return URL . '/login_create.php?ref='.$this->getAccountID();
+	}
+	
+	public function getValidationCode()
+	{
+		return $this->validation_code;
 	}
 	
 	protected function getPassword()
