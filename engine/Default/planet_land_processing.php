@@ -25,7 +25,6 @@ if ($player->hasAlliance())
 }
 $player->setLandedOnPlanet(true);
 $player->takeTurns(1,1);
-$player->update();
 $account->log(11, 'Player lands at planet', $player->getSectorID());
 forward(create_container('skeleton.php', 'planet_main.php'));
 

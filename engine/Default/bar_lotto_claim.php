@@ -9,7 +9,6 @@ while ($db->nextRecord())
 	$NHLAmount = ($prize - 1000000) / 9;
 	$db->query('UPDATE player SET bank = bank + '.$NHLAmount.' WHERE account_id = '.ACCOUNT_ID_NHL.' AND game_id = '.$player->getGameID());
 	$player->increaseCredits($prize);
-	$player->update();
 	$player->increaseHOF($prize,array('Bar','Lotto','Money','Claimed'));
 	$player->increaseHOF(1,array('Bar','Lotto','Results','Claims'));
 	SmrSession::updateVar('message','<div align=center>You have claimed <font color=red>$' . number_format($prize) . '</font>!<br /></div><br />');

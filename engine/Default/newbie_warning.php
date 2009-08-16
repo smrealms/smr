@@ -1,7 +1,6 @@
 <?php
 
 $player->setNewbieWarning(false);
-$player->update();
 
 $template->assign('PageTopic','WARNING!');
 
