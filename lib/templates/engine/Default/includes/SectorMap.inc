@@ -27,13 +27,13 @@
 									}
 									if($Sector->isVisited($ThisPlayer) && $Sector->hasWarp())
 									{
-										if($isCurrentSector)
+										if($isCurrentSector && !$GalaxyMap)
 										{
 											$WarpSector = $Sector->getWarpSector(); ?>
 											<a href="<?php echo $WarpSector->getLocalMapHREF() ?>"><?php
 										} ?>
 											<img title="Warp to #<?php echo $Sector->getWarp() ?>" alt="Warp to #<?php echo $Sector->getWarp() ?>" src="images/warp.gif" /><?php
-										if($isCurrentSector){ ?></a><?php }
+										if($isCurrentSector && !$GalaxyMap){ ?></a><?php }
 									}
 									if($Sector->isVisited($ThisPlayer) && $Sector->hasMine())
 									{ ?>
@@ -64,22 +64,22 @@
 								{
 									foreach($Sector->getLocations() as $Location)
 									{
-										if($isCurrentSector && $Location->hasAction())
+										if($isCurrentSector && $Location->hasAction() && !$GalaxyMap)
 										{
 											?><a href="<?php echo $Location->getExamineHREF() ?>"><?php
 										} ?>
 											<img src="<?php echo $Location->getImage() ?>" alt="<?php echo $Location->getName() ?>" title="<?php echo $Location->getName() ?>" /><?php
-										if($isCurrentSector && $Location->hasAction()){ ?></a><?php }
+										if($isCurrentSector && $Location->hasAction() && !$GalaxyMap){ ?></a><?php }
 									}
 								}
 								if($Sector->hasPlanet())
 								{
-									if($isCurrentSector)
+									if($isCurrentSector && !$GalaxyMap)
 									{
 										?><a href="<?php echo $Sector->getPlanet()->getExamineHREF() ?>"><?php
 									} ?>
 										<img title="Planet" alt="Planet" src="images/planet.gif"/><?php
-									if($isCurrentSector){ ?></a><?php }
+									if($isCurrentSector && !$GalaxyMap){ ?></a><?php }
 								} ?>
 								</div><?php
 							} ?>
@@ -112,7 +112,7 @@
 									$Port =& $Sector->getCachedPort($ThisPlayer);
 								} ?>
 								<div class="left lmport"><?php
-									if($isCurrentSector)
+									if($isCurrentSector && !$GalaxyMap)
 									{
 										?><a href="<?php echo $Port->getTradeHREF() ?>"><?php
 									} ?>
@@ -126,7 +126,7 @@
 											{ ?>
 												<img src="<?php echo $Good['ImageLink'] ?>" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name'] ?>" /><?php
 											}
-									if($isCurrentSector){ ?></a><?php } ?>
+									if($isCurrentSector && !$GalaxyMap){ ?></a><?php } ?>
 								</div><?php
 								} ?>
 							<div class="center lmdown fullwidth"><?php
@@ -136,7 +136,11 @@
 							</div>
 						<?php
 						}
-						if($isLinkedSector)
+						if($GalaxyMap)
+						{ ?>
+							<a href="<?php echo $Sector->getGalaxyMapHREF() ?>"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a><?php
+						}
+						else if($isLinkedSector)
 						{ ?>
 							<a href="<?php echo $Sector->getLocalMapHREF() ?>"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a><?php
 						}

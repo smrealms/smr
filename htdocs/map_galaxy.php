@@ -38,11 +38,23 @@ if (SmrSession::$account_id == 0 || SmrSession::$game_id == 0) {
 
 }
 
-if(isset($_GET['galaxy_id']))
+if(isset($_REQUEST['sector_id']))
 {
 	try
 	{
-		$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$_GET['galaxy_id']);
+		$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$_REQUEST['sector_id']);
+	}
+	catch(Exception $e)
+	{
+		header('location: ' . URL . '/error.php?msg=Invalid galaxy id');
+		exit;
+	}
+}
+else if(isset($_REQUEST['galaxy_id']))
+{
+	try
+	{
+		$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$_REQUEST['galaxy_id']);
 	}
 	catch(Exception $e)
 	{
@@ -81,9 +93,8 @@ echo('<body>');
 
 echo('<h1>VIEW GALAXY</h1>');
 
-if (!isset($_GET['galaxy_id']))
+if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id']))
 {
-	
 	$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 	echo('<p>Please choose a galaxy:</p>');
@@ -108,10 +119,9 @@ if (!isset($_GET['galaxy_id']))
 	echo('</html>');
 
 	exit;
-
 }
 
-$galaxyID = (int)$_GET['galaxy_id'];
+$galaxyID = $galaxy->getGalaxyID();
 $ship =& $player->getShip();
 
 $template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID()));
@@ -119,9 +129,12 @@ $template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$p
 
 $template->assign('GalaxyName',$galaxy->getName());
 
-if($account->isCenterGalaxyMapOnPlayer())
+if($account->isCenterGalaxyMapOnPlayer() || isset($_REQUEST['sector_id']))
 {
-	$topLeft =& $player->getSector();
+	if(isset($_REQUEST['sector_id']))
+		$topLeft =& SmrSector::getSector(SmrSession::$game_id,$_REQUEST['sector_id']);
+	else
+		$topLeft =& $player->getSector();
 	
 	if(!$galaxy->contains($topLeft->getSectorID()))
 		$topLeft =& SmrSector::getSector($player->getGameID(),$galaxy->getStartSector());
