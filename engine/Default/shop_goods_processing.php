@@ -183,7 +183,7 @@ if (!empty($bargain_price) &&
 else
 {
 	// does the trader try to outsmart us?
-	check_bargain_number();
+	check_bargain_number($amount);
 
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'shop_goods_trade.php';

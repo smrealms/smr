@@ -8,8 +8,8 @@ $port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
 $good_id = $var['good_id'];
 $portGood = $port->getGood($good_id);
 
-if ($var['bargain_price'] > 0) {
-
+if ($var['bargain_price'] > 0)
+{
 	$bargain_price = $var['bargain_price'];
 
 	$PHP_OUTPUT.=('<p>I can\'t accept your offer. It\'s still too ');
@@ -26,7 +26,8 @@ if ($var['bargain_price'] > 0) {
 		$player->update();
 	}
 
-} else
+}
+else
 	$bargain_price = $var['offered_price'];
 
 $PHP_OUTPUT.=('<p>I would ');
@@ -62,10 +63,9 @@ if (isset($var['ideal_price']))
 
 	// return this value
 	$ideal_price = $var['ideal_price'];
-
 }
-if (isset($var['offered_price'])) {
-
+if (isset($var['offered_price']))
+{
 	// transfer this value
 	transfer('offered_price');
 

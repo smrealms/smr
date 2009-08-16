@@ -30,11 +30,11 @@ function get_good_distance(SmrSector &$sector, $goodID, $transaction)
 	$container['good_distance'] = $di;
 	return $di;
 }
-function check_bargain_number()
+function check_bargain_number($amount)
 {
 	global $var, $container;
 	global $offered_price, $ideal_price, $bargain_price;
-	global $amount, $player;
+	global $player;
 
 	$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 	// increase current number of tries
@@ -76,8 +76,8 @@ function check_bargain_number()
 		$trader_off_rel = 100 - $trader_off;
 
 		// only do something, if we are more off than the trader
-		if (abs($port_off_rel) > abs($trader_off_rel)) {
-
+		if (abs($port_off_rel) > abs($trader_off_rel))
+		{
 			// get a random number between
 			// (port_off) and (100 +/- $trader_off_rel)
 			if (100 + $trader_off_rel < $port_off)
@@ -86,22 +86,19 @@ function check_bargain_number()
 				$offer_modifier = mt_rand($port_off, 100 + $trader_off_rel);
 
 			$container['offered_price'] = round($container['ideal_price'] * $offer_modifier / 100);
-
 		}
-
 	}
 	else
 		$container['overall_number_of_bargains'] = mt_rand(2, 5);
-
 }
 
-function get_amount() {
-
+function get_amount()
+{
 	global $var, $_POST;
 
 	// retrieve amount
-	if (!isset($var['amount'])) {
-
+	if (!isset($var['amount']))
+	{
 		// we get it from form
 		if (isset($_POST['amount']))
 			$amount = $_POST['amount'];
@@ -118,8 +115,8 @@ function get_amount() {
 		// no negative amounts are allowed
 		if ($amount <= 0)
 			create_error('You must actually enter an amount > 0!');
-
-	} else
+	}
+	else
 		// we get it from session
 		$amount = $var['amount'];
 
@@ -127,8 +124,8 @@ function get_amount() {
 
 }
 
-function get_bargain_price() {
-
+function get_bargain_price()
+{
 	global $_POST;
 
 	// we get it from form
