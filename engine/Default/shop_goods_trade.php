@@ -18,12 +18,6 @@ if ($var['bargain_price'] > 0)
 	elseif ($portGood['TransactionType'] == 'Buy')
 		$PHP_OUTPUT.=('low');
 	$PHP_OUTPUT.=('.</p>');
-
-	// lose relations for bad bargain
-	if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
-	{
-		$player->decreaseRelationsByTrade($var['amount'],$port->getRaceID());
-	}
 }
 else
 	$bargain_price = $var['offered_price'];
