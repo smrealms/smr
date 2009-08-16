@@ -131,8 +131,8 @@ if (!empty($bargain_price) &&
 	$container['traded_good'] = $good_name;
 	$container['traded_credits'] = $bargain_price;
 
-	if ($portGood['TransactionType'] == 'Buy') {
-
+	if ($portGood['TransactionType'] == 'Buy')
+	{
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);

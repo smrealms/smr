@@ -30,13 +30,19 @@ function get_good_distance(SmrSector &$sector, $goodID, $transaction)
 	$container['good_distance'] = $di;
 	return $di;
 }
-function check_bargain_number($amount)
+function check_bargain_number($amount) //ONLY FOR WHEN THEY HAVE FAILED BARGAIN
 {
 	global $var, $container;
 	global $offered_price, $ideal_price, $bargain_price;
 	global $player;
 
 	$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
+	// lose relations for bad bargain
+	if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
+	{
+		$player->decreaseRelationsByTrade($amount,$port->getRaceID());
+	}
+	
 	// increase current number of tries
 	$container['number_of_bargains'] = $var['number_of_bargains'] + 1;
 
@@ -63,7 +69,6 @@ function check_bargain_number($amount)
 			}
 			$player->increaseHOF(1,array('Trade','Results','Epic Fail'));
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
-
 		}
 
 		$port_off = round($offered_price * 100 / $ideal_price);
