@@ -10,7 +10,6 @@ if ($player->getCredits() < 10)
 	return;
 }
 $player->decreaseCredits(10);
-$player->update();
 
 if (isset($var['action']) && $var['action'] != 'drink')
 {
@@ -83,7 +82,6 @@ if ($num_drinks > 15)
 	$player->decreaseCredits($lostCredits);
 	$player->increaseHOF(1,array('Bar','Robbed','Number Of Times'));
 	$player->increaseHOF($lostCredits,array('Bar','Robbed','Money Lost'));
-	$player->update();
 
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
 

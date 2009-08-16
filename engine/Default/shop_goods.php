@@ -124,16 +124,11 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			$player->increaseAlignment(1);
 			$account->log(6, 'Player gains alignment at port', $player->getSectorID());
 		}
-
-		$player->update();
-
 	}
-
 }
 $player->setLastPort($player->getSectorID());
 //update controlled in db
 $player->controlled = $player->getSectorID();
-$player->update();
 $boughtGoods = $port->getVisibleGoodsBought($player);
 if (!empty($boughtGoods))
 {

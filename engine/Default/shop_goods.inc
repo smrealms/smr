@@ -59,7 +59,6 @@ function check_bargain_number($amount)
 				if ($player->relations[$port->getRaceID()] < 0)
 					$player->relations[$port->getRaceID()] = 0;
 				*/
-				$player->update();
 
 			}
 			$player->increaseHOF(1,array('Trade','Results','Epic Fail'));

@@ -14,7 +14,6 @@ if(!isset($var['LastNewsUpdate']))
 
 $db->query('SELECT * FROM news WHERE game_id = '.$player->getGameID().' AND time > '.$var['LastNewsUpdate'].' AND type = \'regular\' ORDER BY news_id DESC');
 $player->updateLastNewsUpdate();
-$player->update();
 
 if ($db->getNumRows())
 {

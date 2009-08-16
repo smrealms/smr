@@ -23,9 +23,7 @@ if ($var['bargain_price'] > 0)
 	if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
 	{
 		$player->decreaseRelationsByTrade($var['amount'],$port->getRaceID());
-		$player->update();
 	}
-
 }
 else
 	$bargain_price = $var['offered_price'];
