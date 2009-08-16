@@ -916,6 +916,11 @@ class SmrSector
 		return $this->getHREF('current_sector.php');
 	}
 	
+	public function getGalaxyMapHREF()
+	{
+		return '?sector_id='.$this->getSectorID();
+	}
+	
 	public function getScanSectorHREF()
 	{
 		$container = array();
