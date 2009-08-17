@@ -164,8 +164,8 @@ else
 		}
 		else
 		{
-			//not enough to group, display separatly
-			$query = 'SELECT message_id, sender_id, message_text, send_time, msg_read
+			//not enough to group, display separately
+			$query = 'SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
 					FROM message
 					WHERE account_id = ' . $player->getAccountID() . '
 					AND game_id = ' . $player->getGameID() . '
