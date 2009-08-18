@@ -2,12 +2,25 @@
 
 $template->assign('PageTopic','EDIT ACCOUNT');
 
-$account_id = $_REQUEST['account_id'];
-$login = $_REQUEST['login'];
-$val_code = $_REQUEST['val_code'];
-$email = $_REQUEST['email'];
-$hofName = $_REQUEST['hofname'];
-$player_name = $_REQUEST['player_name'];
+if(isset($_REQUEST['account_id']))
+	SmrSession::updateVar('account_id',$_REQUEST['account_id']);
+if(isset($_REQUEST['login']))
+	SmrSession::updateVar('login',$_REQUEST['login']);
+if(isset($_REQUEST['val_code']))
+	SmrSession::updateVar('val_code',$_REQUEST['val_code']);
+if(isset($_REQUEST['email']))
+	SmrSession::updateVar('email',$_REQUEST['email']);
+if(isset($_REQUEST['hofname']))
+	SmrSession::updateVar('hofname',$_REQUEST['hofname']);
+if(isset($_REQUEST['player_name']))
+	SmrSession::updateVar('player_name',$_REQUEST['player_name']);
+
+$account_id = $var['account_id'];
+$login = $var['login'];
+$val_code = $var['val_code'];
+$email = $var['email'];
+$hofName = $var['hofname'];
+$player_name = $var['player_name'];
 
 if (empty($account_id))
 	$account_id = 0;
