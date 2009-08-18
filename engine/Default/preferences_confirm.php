@@ -1,25 +1,19 @@
 <?php
 $db2 = new SmrMySqlDatabase();
-$amount = $_REQUEST['amount'];
-$account_id = $_REQUEST['account_id'];
-if (!is_numeric($amount)) {
-
+if(isset($_REQUEST['amount']))
+	SmrSession::updateVar('amount',$_REQUEST['amount']);
+if(isset($_REQUEST['account_id']))
+	SmrSession::updateVar('account_id',$_REQUEST['account_id']);
+$amount = $var['amount'];
+$account_id = $var['account_id'];
+if (!is_numeric($amount))
 	create_error('Numbers only please');
-	return;
-
-}
 $amount = round($amount);
 if ($amount <= 0)
-{
 	create_error('You can only tranfer a positive amount');
-	return;
-}
 
 if ($amount > $account->getSmrCredits())
-{
 	create_error('You can\'t transfer more than you have!');
-	return;
-}
 
 $template->assign('PageTopic','Confirmation');
 
@@ -30,10 +24,10 @@ if ($db->nextRecord())
 	$login = $db->getField('login');
 
 $db->query('SELECT * FROM player WHERE account_id = '.$account_id);
-if ($db->getNumRows()) {
-
-	while ($db->nextRecord()) {
-
+if ($db->getNumRows())
+{
+	while ($db->nextRecord())
+	{
 	    $player_name = stripslashes($db->getField('player_name'));
     	$game_id = $db->getField('game_id');
 
@@ -42,10 +36,9 @@ if ($db->getNumRows()) {
 			$game_name = $db2->getField('game_name');
 
 		$PHP_OUTPUT.=($player_name.' in game '.$game_name.'('.$game_id.')<br />');
-
 	}
-
-} else
+}
+else
 	$PHP_OUTPUT.=('Player with login name '.$login.'?<br />');
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
