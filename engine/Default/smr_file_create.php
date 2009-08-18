@@ -1,8 +1,8 @@
 <?php
-if(isset($var['AdminCreateGameID']))
+if(isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false)
 	$gameID = $var['AdminCreateGameID'];
 else
-$gameID = $player->getGameID();
+	$gameID = $player->getGameID();
 
 if(isset($var['AdminCreateGameID']))
 	$adminCreate = true;
