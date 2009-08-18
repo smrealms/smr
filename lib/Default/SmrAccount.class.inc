@@ -399,12 +399,10 @@ class SmrAccount
 		if($totalCredits>$this->getTotalSmrCredits())
 			throw new Exception('You do not have that many credits in total to use');
 			
-		if($this->getTotalSmrCredits()==$totalCredits)
-			return;
 		$rewardCredits=$this->rewardCredits;
 		$credits=$this->credits;
 		$rewardCredits-=$totalCredits;
-		if($this->rewardCredits<0)
+		if($rewardCredits<0)
 		{
 			$credits+=$rewardCredits;
 			$rewardCredits=0;
