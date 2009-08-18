@@ -5,7 +5,7 @@ if (!isset($action) || ($action != 'Deposit' && $action != 'Withdraw'))
 $amount = $_REQUEST['amount'];
 // only whole numbers allowed
 $amount = floor($amount);
-$account_num = $var['account_num'];
+$account_num = $var['AccountNumber'];
 // no negative amounts are allowed
 if ($amount <= 0)
     create_error('You must actually enter an amount > 0!');
