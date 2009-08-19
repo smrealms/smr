@@ -1,8 +1,21 @@
 <?php
 $canAttack=false;
-if($ThisPlayer->sameAlliance($TargetPlayer))
+
+if($ThisPlayer->hasNewbieTurns())
+{
+	?><p><big class="green">You are under newbie protection!</big></p><?php
+}
+else if($TargetPlayer->hasNewbieTurns())
+{
+	?><p><big class="green">Your target is under newbie protection!</big></p><?php
+}
+else if($ThisPlayer->sameAlliance($TargetPlayer))
 {
 	?><p><big class="blue">This is your alliancemate.</big></p><?php
+}
+else if(!$ThisShip->canAttack())
+{
+	?><p><big class="red">You ready your weapons, you take aim, you...realise you have no weapons.</big></p><?php
 }
 else if($ThisPlayer->traderNAPAlliance($TargetPlayer))
 {
@@ -15,18 +28,6 @@ else if($ThisPlayer->hasFederalProtection())
 else if($TargetPlayer->hasFederalProtection())
 {
 	?><p><big class="blue">Your target is under federal protection!</big></p><?php
-}
-else if($ThisPlayer->hasNewbieTurns())
-{
-	?><p><big class="green">You are under newbie protection!</big></p><?php
-}
-else if($TargetPlayer->hasNewbieTurns())
-{
-	?><p><big class="green">Your target is under newbie protection!</big></p><?php
-}
-else if(!$ThisShip->canAttack())
-{
-	?><p><big class="red">You ready your weapons, you take aim, you...realize you have no weapons.</big></p><?php
 }
 else
 {
