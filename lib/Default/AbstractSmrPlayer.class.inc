@@ -1056,7 +1056,7 @@ abstract class AbstractSmrPlayer
 	
 	public function sameAlliance(AbstractSmrPlayer $otherPlayer)
 	{
-		return $this->equals($otherPlayer) || ($this->getAllianceID()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
+		return $this->equals($otherPlayer) || ($this->hasAlliance()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
 	}
 	
 	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer)
