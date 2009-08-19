@@ -7,50 +7,46 @@ if ($account->getTotalSmrCredits() < 2)
 	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 
 //gal map buy
-if (isset($var['process']))
+if (isset($var['process'])) //processing
 {
-	if(isset($_REQUEST['gal_id']))
-		SmrSession::updateVar('gal_id',$_REQUEST['gal_id']);
-	$gal_id = $var['gal_id'];
-	if ($gal_id == 0)
+	$galaxyID = trim($_REQUEST['gal_id']);
+	if (!is_numeric($galaxyID) || $galaxyID == 0)
 		create_error('You must select a galaxy to buy the map of!');
 	
-	if($var['process']===true)
-	{
-		SmrSession::updateVar('process',false);
-		$game_id = $player->getGameID();
-		//get start sector
-		$galaxy =& SmrGalaxy::getGalaxy($game_id,$gal_id);
-		$low = $galaxy->getStartSector();
-		//get end sector
-		$high = $galaxy->getEndSector();
+	$game_id = $player->getGameID();
+	//get start sector
+	$galaxy =& SmrGalaxy::getGalaxy($game_id,$galaxyID);
+	$low = $galaxy->getStartSector();
+	//get end sector
+	$high = $galaxy->getEndSector();
+	$account_id = $player->getAccountID();
+
+	// Have they already got this map? (Are there any unexplored sectors?
+	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id.' LIMIT 1');
+	if(!$db->nextRecord())
+		create_error('You already have maps of this galaxy!');
 	
-		// Have they already got this map? (Are there any unexplored sectors?
-//		$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id.' LIMIT 1');
-//		if(!$db->nextRecord())
-//			create_error('You already have maps of this galaxy!');
-		
-		$player->increaseHOF(1,array('Bar','Maps Bought'));
-		//take money
-		$account->decreaseTotalSmrCredits(2);
-		//now give maps
-		$account_id = $player->getAccountID();
-		
-		// delete all entries from the player_visited_sector/port table
-		$db->query('DELETE FROM player_visited_sector WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id);
-		//start section
-		
-		require_once(get_file_loc('SmrPort.class.inc'));
-		// add port infos
-		$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' AND sector_id <= '.$high.' AND sector_id >= '.$low.' ORDER BY sector_id');
-		while ($db->nextRecord())
-		{
-			SmrPort::getPort($game_id,$db->getField('sector_id'))->addCachePort($account_id);
-		}
+	$player->increaseHOF(1,array('Bar','Maps Bought'));
+	//take money
+	$account->decreaseTotalSmrCredits(2);
+	//now give maps
+	
+	// delete all entries from the player_visited_sector/port table
+	$db->query('DELETE FROM player_visited_sector WHERE sector_id >= '.$low.' AND sector_id <= '.$high.' AND account_id = '.$account_id.' AND game_id = '.$game_id);
+	//start section
+	
+	require_once(get_file_loc('SmrPort.class.inc'));
+	// add port infos
+	$db->query('SELECT sector_id FROM port WHERE game_id = '.$game_id.' AND sector_id <= '.$high.' AND sector_id >= '.$low.' ORDER BY sector_id');
+	while ($db->nextRecord())
+	{
+		SmrPort::getPort($game_id,$db->getField('sector_id'))->addCachePort($account_id);
 	}
-	//offer another drink and such
-	$PHP_OUTPUT.=('<div align=center>Galaxy Info has been added.  Enjoy!</div><br />');
-	include(get_file_loc('bar_opening.php'));
+	
+	$container=create_container('skeleton.php','bar_main.php');
+	$container['script']='bar_opening.php';
+	$container['message'] = '<div align=center>Galaxy Info has been added.  Enjoy!</div><br />';
+	forward($container);
 }
 else
 {
