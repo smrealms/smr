@@ -74,6 +74,14 @@ if(isset($XType))
 					} unset($Weapon);
 				break;
 				case 'Locations':
+					?><option value="Bank">Any Bank</option>
+					<option value="Bar">Any Bar</option>
+					<option value="Fed">Any Fed</option>
+					<option value="HQ">Any Headquarters</option>
+					<option value="UG">Any Underground</option>
+					<option value="Hardware">Any Hardware Shop</option>
+					<option value="Ship">Any Ship Shop</option>
+					<option value="Weapon">Any Weapon Shop</option><?php
 					$Locations =& SmrLocation::getAllLocations();
 					uasort($Locations,array('SmrLocation','CompareName'));
 					foreach($Locations as &$Location)
