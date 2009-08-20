@@ -158,7 +158,7 @@ else
 		$db->query('SELECT account_id, sum(amount) as amount FROM account_donated ' .
 				'GROUP BY account_id ORDER BY amount DESC LIMIT 25');
 	else
-		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY type') .' ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY account_id') .' ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
 		if($db->getField('account_id') == $account->account_id)
