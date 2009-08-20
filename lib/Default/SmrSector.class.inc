@@ -954,7 +954,7 @@ class SmrSector
 				if ($this->getPort()->hasX($x))
 					return true;
 
-		if($x instanceof SmrWeapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware'))) //Check if it's possible for location to have X, hacky but nice performance gains
+		if($x instanceof SmrWeapon || (is_array($x) && ($x['Type']=='Ship'||$x['Type']=='Hardware')) || (is_string($x) && ($x=='Bank'||$x=='Bar'||$x=='Fed'||$x=='HQ'||$x=='UG'||$x=='Hardware'||$x=='Ship'||$x=='Weapon'))) //Check if it's possible for location to have X, hacky but nice performance gains
 			if ($this->hasLocation())
 			{
 				$locations =& $this->getLocations();

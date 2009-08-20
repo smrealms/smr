@@ -17,7 +17,10 @@ switch($xType)
 		$realX =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$X);
 	break;
 	case 'Locations':
-		$realX =& SmrLocation::getLocation($X);
+		if(is_numeric($X))
+			$realX =& SmrLocation::getLocation($X);
+		else
+			$realX = $X;
 	break;
 	case 'Goods': 
 		$realX =& Globals::getGood($X);

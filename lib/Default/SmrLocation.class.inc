@@ -441,14 +441,51 @@ class SmrLocation
 		{
 			return $this->isWeaponSold($x->getWeaponTypeID());
 		}
-		if (is_array($x) && $x['Type']=='Ship')// instanceof Ship)
+		if (is_array($x))
 		{
-			if(isset($x['ShipTypeID']))
+			if($x['Type']=='Ship')// instanceof Ship)
+			{
 				return $this->isShipSold($x['ShipTypeID']);
+			}
+			if ($x['Type']=='Hardware')// instanceof ShipEquipment)
+			{
+				return $this->isHardwareSold($x['ID']);
+			}
 		}
-		else if (is_array($x) && $x['Type']=='Hardware')// instanceof ShipEquipment)
+		if(is_string($x))
 		{
-			return $this->isHardwareSold($x['ID']);
+			if ($x=='Bank')
+			{
+				return $this->isBank();
+			}
+			if ($x=='Bar')
+			{
+				return $this->isBar();
+			}
+			if ($x=='Fed')
+			{
+				return $this->isFed();
+			}
+			if ($x=='HQ')
+			{
+				return $this->isHQ();
+			}
+			if ($x=='UG')
+			{
+				return $this->isUG();
+			}
+			if ($x=='Hardware')
+			{
+				return $this->isHardwareSold();
+			}
+			if ($x=='Ship')
+			{
+				return $this->isShipSold();
+			}
+			if ($x=='Weapon')
+			{
+				return $this->isWeaponSold();
+			}
 		}
 		return false;
 	}
