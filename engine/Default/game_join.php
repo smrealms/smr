@@ -51,7 +51,7 @@ if (TIME > $game['EndDate']) {
 
 }
 
-$template->assign('PageTopic', 'JOIN GAME');
+$template->assign('PageTopic', 'Join Game');
 
 $raceInfo =& Globals::getRaces();
 $raceDescriptions='';

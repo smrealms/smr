@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CREATE UNIVERSE - ADDING SPECIAL LOCATIONS (4/10)');
+$template->assign('PageTopic','Create Universe - Adding Special Locations (4/10)');
 
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);

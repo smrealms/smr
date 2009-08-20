@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CONFIGURE HARDWARE');
+$template->assign('PageTopic','Configure Hardware');
 
 $PHP_OUTPUT.= '<small>';
 

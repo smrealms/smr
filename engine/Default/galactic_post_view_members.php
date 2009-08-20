@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','VIEWING MEMBERS');
+$template->assign('PageTopic','Viewing Members');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_galactic_post_menue();
 

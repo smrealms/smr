@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','REPLY TO REPORTED MESSAGES');
+$template->assign('PageTopic','Reply To Reported Messages');
 
 $container = create_container('box_reply_processing.php');
 transfer('game_id');

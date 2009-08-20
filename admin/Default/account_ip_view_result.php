@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','VIEWING IPs');
+$template->assign('PageTopic','Viewing IPs');
 $db2 = new SmrMySqlDatabase();
 //this used to come from another page and im am WAY to lazy to unindent it all :)
 $container = array();

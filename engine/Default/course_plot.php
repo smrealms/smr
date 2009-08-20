@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','PLOT A COURSE');
+$template->assign('PageTopic','Plot A Course');
 
 $container=array();
 $container['url'] = 'course_plot_processing.php';

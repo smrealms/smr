@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','PREFERENCES');
+$template->assign('PageTopic','Preferences');
 
 if (isset($var['reason']))
 	$template->assign('Reason',$var['reason']);

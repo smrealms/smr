@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CREATE ALLIANCE');
+$template->assign('PageTopic','Create Alliance');
 
 $container = array();
 $container['url'] = 'alliance_create_processing.php';

@@ -1,6 +1,6 @@
 <?php
 
-	$template->assign('PageTopic','PlAYER BLACKLIST');
+	$template->assign('PageTopic','Player Blacklist');
 
 	include(get_file_loc('menue.inc'));
 	$PHP_OUTPUT.=create_message_menue();

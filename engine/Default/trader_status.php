@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','TRADER STATUS');
+$template->assign('PageTopic','Trader Status');
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_trader_menue();

@@ -7,7 +7,7 @@ if ($player->getAlignment() >= 100) {
 
 }
 
-$template->assign('PageTopic','Underground HQ');
+$template->assign('PageTopic','Underground Headquarters');
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ug_menue();

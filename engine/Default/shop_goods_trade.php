@@ -1,6 +1,6 @@
 <?php
 require_once(get_file_loc('SmrPort.class.inc'));
-$template->assign('PageTopic','NEGOTIATE PRICE');
+$template->assign('PageTopic','Negotiate Price');
 require_once('shop_goods.inc');
 // creates needed objects
 $port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());

@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CREATE UNIVERSE - ADDING GALAXIES (2/10)');
+$template->assign('PageTopic','Create Universe - Adding Galaxies (2/10)');
 
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 if ($db->nextRecord())

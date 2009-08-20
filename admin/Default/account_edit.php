@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','EDIT ACCOUNT');
+$template->assign('PageTopic','Edit Account');
 
 if(isset($_REQUEST['account_id']))
 	SmrSession::updateVar('account_id',$_REQUEST['account_id']);

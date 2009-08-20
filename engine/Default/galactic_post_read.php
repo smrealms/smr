@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','GALACTIC POST');
+$template->assign('PageTopic','Galactic Post');
 
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
@@ -12,7 +12,7 @@ if ($db->getNumRows()) {
     $db2->nextRecord();
     $paper_name = stripslashes($db2->getField('title'));
 
-    $template->assign('PageTopic','READING <i>GALACTIC POST</i> EDITION : '.$paper_name);
+    $template->assign('PageTopic','Reading <i>Galactic Post</i> Edition : '.$paper_name);
 	include(get_file_loc('menue.inc'));
     $PHP_OUTPUT.=create_galactic_post_menue();
     $db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());

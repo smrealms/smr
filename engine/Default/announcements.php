@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','ANNOUNCEMENTS');
+$template->assign('PageTopic','Announcements');
 
 $PHP_OUTPUT.= '<table class="standard fullwidth">';
 $PHP_OUTPUT.= '<tr><th>Time</th><th>Message</th></tr>';

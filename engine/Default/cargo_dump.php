@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','DUMP CARGO');
+$template->assign('PageTopic','Dump Cargo');
 
 $PHP_OUTPUT.=('Enter the amount of cargo you wish to jettison.<br />');
 $PHP_OUTPUT.=('Please keep in mind that you will lose experience and one turn!<br /><br />');

@@ -1,6 +1,6 @@
 <?php
 $db2 = new SmrMySqlDatabase();
-$template->assign('PageTopic','SHIP DEALER');
+$template->assign('PageTopic','Ship Dealer');
 
 $db->query('SELECT ship_type_id
 	FROM location, location_sells_ships

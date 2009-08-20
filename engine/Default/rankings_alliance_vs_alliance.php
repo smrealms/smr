@@ -1,6 +1,6 @@
 <?php
 require_once(get_file_loc('smr_alliance.inc'));
-$template->assign('PageTopic','ALLIANCE VS ALLIANCE RANKINGS');
+$template->assign('PageTopic','Alliance VS Alliance Rankings');
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(1, 3);

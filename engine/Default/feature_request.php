@@ -5,7 +5,7 @@ if (!Globals::isFeatureRequestOpen())
 	return;
 }
 
-$template->assign('PageTopic','FEATURE REQUEST');
+$template->assign('PageTopic','Feature Request');
 
 $featureVotes = array();
 $db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);

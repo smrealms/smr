@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','PASSWORD CHECKER');
+$template->assign('PageTopic','Password Checker');
 
 // create account object
 $db2 = new SmrMySqlDatabase();

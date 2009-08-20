@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CREATE UNIVERSE - CREATE GAME (1/10)');
+$template->assign('PageTopic','Create Universe - Create Game (1/10)');
 
 // create a container that will hold next url and additional variables.
 $container = array();

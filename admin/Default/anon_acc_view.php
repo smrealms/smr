@@ -1,7 +1,7 @@
 <?php
 
 //view anon acct activity.
-$template->assign('PageTopic','VIEW ANON ACCOUNT INFO');
+$template->assign('PageTopic','View Anonymous Account Info');
 //do we have an acct?
 if (empty($_REQUEST['anon_account'])||empty($_REQUEST['game_id'])) {
 
@@ -28,7 +28,7 @@ else
 	$db->query($query);
 	if ($db->getNumRows() > 0)
 	{
-		$template->assign('PageTopic','ANON ACCOUNT '.$acc);
+		$template->assign('PageTopic','Anonymous Account '.$acc);
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Player Name</th><th align=center>Type</th><th align=center>Amount</th></tr>');
 		while ($db->nextRecord())

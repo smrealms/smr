@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','WEAPON REORDER');
+$template->assign('PageTopic','Weapon Reorder');
 
 if (isset($var['Up']) && is_numeric($var['Up']))
 {

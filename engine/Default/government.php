@@ -36,7 +36,7 @@ if ($db->nextRecord() && $db->getField('relation') <= -300) {
 if (isset($location_type_id))
 	$template->assign('PageTopic',$location_name);
 else
-	$template->assign('PageTopic','FEDERAL HQ');
+	$template->assign('PageTopic','Federal Headquarters');
 
 // header menue
 include(get_file_loc('menue.inc'));

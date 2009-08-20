@@ -9,7 +9,7 @@ if (empty($min_news) || empty($max_news))
 elseif ($min_news > $max_news)
 		create_error('The first number must be lower than the second number!');
 
-$template->assign('PageTopic','READING THE NEWS');
+$template->assign('PageTopic','Reading The News');
 
 require_once(get_file_loc('menue.inc'));
 $template->unassign('MenuBar');
