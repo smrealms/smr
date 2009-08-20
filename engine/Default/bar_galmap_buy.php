@@ -45,7 +45,7 @@ if (isset($var['process'])) //processing
 	
 	$container=create_container('skeleton.php','bar_main.php');
 	$container['script']='bar_opening.php';
-	$container['message'] = '<div align=center>Galaxy Info has been added.  Enjoy!</div><br />';
+	$container['message'] = '<div align="center">Galaxy Info has been added.  Enjoy!</div><br />';
 	forward($container);
 }
 else
