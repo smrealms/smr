@@ -13,7 +13,7 @@ if($targetPlayer->isDead())
 }
 
 
-$template->assign('PageTopic','EXAMINE SHIP');
+$template->assign('PageTopic','Examine Ship');
 // should we display a attack button
 $template->assignByRef('TargetPlayer',$targetPlayer);
 ?>

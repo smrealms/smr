@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','DELETING A GAME');
+$template->assign('PageTopic','Deleting A Game');
 
 $PHP_OUTPUT.=('What game do u want to delete');
 

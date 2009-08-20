@@ -1,7 +1,7 @@
 <?php
 
 $message.= '<div align=center>';
-$template->assign('PageTopic','DRINKING');
+$template->assign('PageTopic','Drinking');
 
 $db2 = new SmrMySqlDatabase();
 if ($player->getCredits() < 10)

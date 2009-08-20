@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','LIST OF ALLIANCES');
+$template->assign('PageTopic','List Of Alliances');
 
 $PHP_OUTPUT.= '<div align="center">';
 

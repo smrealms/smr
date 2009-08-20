@@ -3,7 +3,7 @@ include(get_file_loc('race_voting.php'));
 include(get_file_loc('council.inc'));
 include(get_file_loc('menue.inc'));
 
-$template->assign('PageTopic','RULING COUNCIL OF '.$player->getRaceName());
+$template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
 
 $president = getPresident($player->getRaceID());
 

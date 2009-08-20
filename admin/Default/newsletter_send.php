@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','NEWSLETTER');
+$template->assign('PageTopic','Newsletter');
 
 $PHP_OUTPUT.=('This uses the last newsletter to be added to the DB!<br />Please enter an eMail address where the newsletter should be sent (* for all):');
 $PHP_OUTPUT.=create_echo_form(create_container('newsletter_send_processing.php', ''));

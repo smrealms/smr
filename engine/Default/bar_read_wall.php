@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
-$template->assign('PageTopic','READING THE WALL');
+$template->assign('PageTopic','Reading The Wall');
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bar_menue();

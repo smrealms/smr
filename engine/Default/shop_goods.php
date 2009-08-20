@@ -26,7 +26,7 @@ if($port->getReinforceTime() > TIME) {
 }
 
 // topic
-$template->assign('PageTopic','PORT IN SECTOR #'.$player->getSectorID());
+$template->assign('PageTopic','Port In Sector #'.$player->getSectorID());
 
 $container = array();
 $container['url'] = 'skeleton.php';

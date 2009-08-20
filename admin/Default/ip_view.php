@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','IP MENU');
+$template->assign('PageTopic','IP Menu');
 $db->query('SELECT * FROM account');
 $amount = $db->getNumRows();
 ?>

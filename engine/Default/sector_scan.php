@@ -1,7 +1,7 @@
 <?php
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-$template->assign('PageTopic','SECTOR SCAN');
+$template->assign('PageTopic','Sector Scan');
 
 // initialize vars
 $friendly_forces = 0;

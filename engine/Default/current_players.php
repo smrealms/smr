@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CURRENT PLAYERS');
+$template->assign('PageTopic','Current Players');
 $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . TIME);
 $db->query('SELECT count(*) FROM active_session
 			WHERE last_accessed >= ' . (TIME - 600) . ' AND

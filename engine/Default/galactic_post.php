@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','GALACTIC POST');
+$template->assign('PageTopic','Galactic Post');
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
 if ($db->nextRecord()) {

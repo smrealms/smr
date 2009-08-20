@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','HARDWARE SHOP');
+$template->assign('PageTopic','Hardware Shop');
 
 $db->query('SELECT * FROM location, location_sells_hardware, location_type, hardware_type ' .
 					'WHERE location.sector_id = '.$player->getSectorID().' AND ' .

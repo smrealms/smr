@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','EXPERIENCE RANKINGS');
+$template->assign('PageTopic','Experience Rankings');
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(0, 0);

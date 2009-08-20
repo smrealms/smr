@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','KILL RANKINGS');
+$template->assign('PageTopic','Kill Rankings');
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(0, 1);

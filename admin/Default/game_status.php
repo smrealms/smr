@@ -3,7 +3,7 @@
 $db->query('SELECT * FROM game_disable');
 if (!$db->getNumRows()) {
 
-	$template->assign('PageTopic','CLOSE GAME');
+	$template->assign('PageTopic','Close Game');
 
 	$container = array();
 	$container['url'] = 'game_status_processing.php';
@@ -15,7 +15,7 @@ if (!$db->getNumRows()) {
 
 } else {
 
-	$template->assign('PageTopic','OPEN GAME');
+	$template->assign('PageTopic','Open Game');
 
 	$container = array();
 	$container['url'] = 'game_status_processing.php';

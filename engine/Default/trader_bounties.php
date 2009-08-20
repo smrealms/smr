@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','BOUNTIES');
+$template->assign('PageTopic','Bounties');
 
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_trader_menue();

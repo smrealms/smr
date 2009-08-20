@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','SHIP INTEGRITY CHECK');
+$template->assign('PageTopic','Ship Integrity Check');
 
 $PHP_OUTPUT.=('<p>');
 $db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware, hardware_type ' .

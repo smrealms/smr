@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CREATE UNIVERSE - ADDING WEAPONS (8/10)');
+$template->assign('PageTopic','Create Universe - Adding Weapons (8/10)');
 
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);

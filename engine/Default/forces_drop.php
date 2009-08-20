@@ -3,12 +3,12 @@
 if (isset($var['owner_id'])) {
 	
 	$owner =& SmrPlayer::getPlayer($var['owner_id'], SmrSession::$game_id);
-	$template->assign('PageTopic','CHANGE '.$owner->getPlayerName().'\'s FORCES');
+	$template->assign('PageTopic','Change '.$owner->getPlayerName().'\'s Forces');
     $owner_id = $var['owner_id'];
 
 } else {
 
-	$template->assign('PageTopic','DROP FORCES');
+	$template->assign('PageTopic','Drop Forces');
     $owner_id = $player->getAccountID();
 
 }

@@ -3,7 +3,7 @@
 // defines the pixel length of bar
 $total_length = 400;
 
-$template->assign('PageTopic','DONATIONS');
+$template->assign('PageTopic','Donations');
 $PHP_OUTPUT.=('<p style="width:60%; text-align:justify;">Do you enjoy Space Merchant Realms? Would you like to see the game grow? If your answer is yes, then consider making a donation! Your donation will translate into SMR credits that you can use in game to get nifty items, and will also help the game improve.</p>');
 $db->query('SELECT SUM(amount) as total_donation FROM account_donated WHERE time > ' . TIME . ' - (60 * 60 * 24 * 90)');
 if ($db->nextRecord())

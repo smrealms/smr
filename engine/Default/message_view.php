@@ -5,7 +5,7 @@ create_message_menue();
 
 if (!isset($var['folder_id']))
 {
-	$template->assign('PageTopic','VIEW MESSAGES');
+	$template->assign('PageTopic','View Messages');
 
 
 	$db2 = new SmrMySqlDatabase();

@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','CHECKING INFO');
+$template->assign('PageTopic','Checking Info');
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'info_check.php';

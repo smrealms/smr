@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','WORD FILTER');
+$template->assign('PageTopic','Word Filter');
 
 $db = new SmrMySqlDatabase();
 

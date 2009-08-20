@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','VIEWING MESSAGE BOXES');
+$template->assign('PageTopic','Viewing Message Boxes');
 
 if(!isset($var['box_type_id']))
 {

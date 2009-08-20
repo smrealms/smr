@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','VIEW FORCES');
+$template->assign('PageTopic','View Forces');
 
 //allow for ordering of forces
 if (!isset($var['seq']))

@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 require_once(get_file_loc('SmrPort.class.inc'));
-$template->assign('PageTopic','LOOT');
+$template->assign('PageTopic','Looting The Port');
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=create_table();

@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','WEAPON DEALER');
+$template->assign('PageTopic','Weapon Dealer');
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM location, location_sells_weapons, location_type, weapon_type ' .
 					'WHERE location.sector_id = '.$player->getSectorID().' AND ' .
@@ -78,7 +78,7 @@ if ($db->getNumRows() > 0 ) {
 if ($ship->hasWeapons())
 {
 
-	$template->assign('PageTopic','SELL WEAPONS');
+	$template->assign('PageTopic','Sell Weapons');
 
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');

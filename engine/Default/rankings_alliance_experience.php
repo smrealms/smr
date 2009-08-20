@@ -1,5 +1,5 @@
 <?php
-$template->assign('PageTopic','ALLIANCE EXPERIENCE RANKINGS');
+$template->assign('PageTopic','Alliance Experience Rankings');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(1, 0);
 

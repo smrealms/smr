@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','VIEWING APPLICATIONS');
+$template->assign('PageTopic','Viewing Applications');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_galactic_post_menue();
 $db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->getGameID());

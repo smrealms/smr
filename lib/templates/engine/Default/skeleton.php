@@ -38,7 +38,7 @@
 						<?php
 							if(isset($PageTopic))
 							{
-								?><h1><?php echo ucwords(strtolower($PageTopic)); ?></h1><br /><?php
+								?><h1><?php echo $PageTopic; ?></h1><br /><?php
 							}
 							if(isset($MenuBar))
 							{

@@ -7,7 +7,7 @@ if (!is_numeric($player_id) && !empty($player_id))
 	create_error('Please enter only numbers!');
 
 $count = 0;
-$template->assign('PageTopic','SEARCH TRADER RESULTS');
+$template->assign('PageTopic','Search Trader Results');
 
 if (isset($var['player_id']))
 	$player_id = $var['player_id'];
