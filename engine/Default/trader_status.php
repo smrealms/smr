@@ -143,7 +143,7 @@ if($db->getNumRows() > 0) {
 	while($db->nextRecord()) {
 		$PHP_OUTPUT.= '<tr>';
 		$PHP_OUTPUT.= '<td class="shrink"><input type="checkbox" name="note_id[]" value="' . $db->getField('note_id') . '" /></td>';
-		$PHP_OUTPUT.= '<td>' . gzuncompress($db->getField('note')) . '</td>';
+		$PHP_OUTPUT.= '<td>' . bbifyMessage(gzuncompress($db->getField('note'))) . '</td>';
 		$PHP_OUTPUT.= '</tr>';
 	}
 }
