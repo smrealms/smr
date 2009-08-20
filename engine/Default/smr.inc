@@ -619,6 +619,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	
+	
 	if (SmrSession::$game_id > 0)
 	{
 		$template->assign('GameName',Globals::getGameName(SmrSession::$game_id));
@@ -680,9 +681,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$template->assign('RankingsLink',SmrSession::get_new_href($container));
 	
 		$container['body'] = 'hall_of_fame_new.php';
-		$template->assign('HallOfFameLink',SmrSession::get_new_href($container));
-	
-		$container['body'] = 'hall_of_fame_new.php';
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink',SmrSession::get_new_href($container));
 		unset($container['game_id']);
@@ -694,6 +692,10 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 	if (SmrSession::$account_id > 0 && empty($var['logoff']))
 	{
+		$container['url'] = 'skeleton.php';
+		$container['body'] = 'hall_of_fame_new.php';
+		$template->assign('HallOfFameLink',SmrSession::get_new_href($container));
+		
 		$template->assign('AccountID',SmrSession::$account_id);
 		unset($container['body']);
 		$container['url'] = 'game_play_preprocessing.php';
