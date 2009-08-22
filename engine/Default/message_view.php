@@ -131,7 +131,7 @@ else
 	{
 		// get rid of all old scout messages (>48h)
 		$db2 = new SmrMySqlDatabase();
-		$db2->query('DELETE FROM message WHERE send_time < '.(TIME - 172800).' AND message_type_id = '.MSG_SCOUT);
+		$db2->query('DELETE FROM message WHERE expire_time < '.TIME.' AND message_type_id = '.MSG_SCOUT);
 		
 		if ($messageBox['UnreadMessages'] > 25 || $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > 25)
 		{
@@ -140,43 +140,8 @@ else
 			$dispContainer['show_all'] = true;
 			$messageBox['ShowAllHref'] = SmrSession::get_new_href($dispContainer);
 		}
-		if ($messageBox['UnreadMessages'] > 25 || $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > 25)
-		{
-			//here we group new messages
-			$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, msg_read
-					FROM message, player 
-					WHERE player.account_id = message.sender_id 
-					AND message.account_id = ' . $player->getAccountID() . '
-					AND message.game_id = ' . $player->getGameID()  . '
-					AND player.game_id = ' . $player->getGameID() . '
-					AND message_type_id = ' . $var['folder_id'] . '
-					AND reciever_delete = \'FALSE\'
-					GROUP BY sender_id, msg_read
-					ORDER BY send_time DESC';
-			$db->query($query);
-			while ($db->nextRecord())
-			{
-				//display grouped stuff (allow for deletion)
-				$playerName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
-				$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->getField('number') . ' times.';
-				displayGrouped($messageBox,$playerName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), $db->getField('msg_read') == 'FALSE');
-			}
-		}
-		else
-		{
-			//not enough to group, display separately
-			$query = 'SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
-					FROM message
-					WHERE account_id = ' . $player->getAccountID() . '
-					AND game_id = ' . $player->getGameID() . '
-					AND message_type_id = ' . $var['folder_id'] . '
-					AND reciever_delete = \'FALSE\'
-					ORDER BY send_time DESC';
-			$db->query($query);
-			while ($db->nextRecord())
-				displayMessage($messageBox,$db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id']);
-		}
-		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.MSG_SCOUT.' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+		displayScouts($messageBox,$player,false,$messageBox['UnreadMessages'] > 25);
+		displayScouts($messageBox,$player,true,$messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > 25);
 	}
 	else
 	{
@@ -184,10 +149,56 @@ else
 		{
 			displayMessage($messageBox,$db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id'], $var['folder_id']==0);
 		}
-		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.$var['folder_id'].' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 	}
+	if(!USING_AJAX)
+		$db->query('UPDATE message SET msg_read = \'TRUE\' WHERE message_type_id = '.$var['folder_id'].' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 	$template->assignByRef('MessageBox',$messageBox);
 }
+
+function displayScouts(&$messageBox, &$player, $read, $group)
+{
+	global $db;
+	if ($group)
+	{
+		//here we group new messages
+		$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, msg_read
+				FROM message, player 
+				WHERE player.account_id = message.sender_id 
+				AND message.account_id = ' . $player->getAccountID() . '
+				AND message.game_id = ' . $player->getGameID()  . '
+				AND player.game_id = ' . $player->getGameID() . '
+				AND message_type_id = ' . MSG_SCOUT . '
+				AND reciever_delete = \'FALSE\'
+				AND msg_read = '.$db->escapeBoolean($read).'
+				GROUP BY sender_id, msg_read
+				ORDER BY send_time DESC';
+
+		$db->query($query);
+		while ($db->nextRecord())
+		{
+			//display grouped stuff (allow for deletion)
+			$playerName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
+			$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->getField('number') . ' times.';
+			displayGrouped($messageBox,$playerName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), $db->getField('msg_read') == 'FALSE');
+		}
+	}
+	else
+	{
+		//not enough to group, display separately
+		$query = 'SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
+				FROM message
+				WHERE account_id = ' . $player->getAccountID() . '
+				AND game_id = ' . $player->getGameID() . '
+				AND message_type_id = ' . MSG_SCOUT . '
+				AND reciever_delete = \'FALSE\'
+				AND msg_read = '.$db->escapeBoolean($read).'
+				ORDER BY send_time DESC';
+		$db->query($query);
+		while ($db->nextRecord())
+			displayMessage($messageBox,$db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), MSG_SCOUT);
+	}
+}
+
 function displayGrouped(&$messageBox,$playerName, $player_id, $sender_id, $message_text, $first, $last, $star)
 {
 	$array = array($sender_id, $first, $last);

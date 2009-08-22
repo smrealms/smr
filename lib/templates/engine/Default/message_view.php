@@ -91,10 +91,10 @@ else
 					<tr>
 						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID'] ?>" /><?php if($Message['Unread']) { ?>*<?php } ?></td>
 						<td nowrap="nowrap" width="100%">From: <?php echo $Message['SenderDisplayName']; ?></td>
-						<td nowrap="nowrap">Date: <?php echo date(DATE_FULL_SHORT, $Message['FirstSendTime']); ?> - <?php echo date(DATE_FULL_SHORT, $Message['LastSendTime']); ?></td>
+						<td nowrap="nowrap" colspan="4">Date: <?php echo date(DATE_FULL_SHORT, $Message['FirstSendTime']); ?> - <?php echo date(DATE_FULL_SHORT, $Message['LastSendTime']); ?></td>
 					</tr>
 					<tr>
-						<td colspan="4"><?php echo bbifyMessage($Message['Text']); ?></td>
+						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
 					</tr>
 					<?php
 				} unset($Message);

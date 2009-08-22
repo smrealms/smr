@@ -467,7 +467,7 @@ function do_voodoo()
 		$sector_id=$db->getField('sector_id');
 
 		if(!USING_AJAX) //AJAX should never do anything that requires a lock.
-			if(!$lock && (!isset($var['body']) || $var['body'] != 'error.php') && !isset($var['ForwardError']))
+			if(!$lock && (!isset($var['body']) || $var['body'] != 'error.php'))
 			{
 				if(!acquire_lock($sector_id))
 				{
