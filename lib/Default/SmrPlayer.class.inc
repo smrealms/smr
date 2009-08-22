@@ -1963,9 +1963,8 @@ class SmrPlayer extends AbstractSmrPlayer
 				create_error('You are currently banned from sending messages');
 			// Don't send messages to players ignoring us
 			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiverID . ' AND blacklisted_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
-			if($this->db->nextRecord()) {
+			if($this->db->nextRecord())
 				return;
-			}		
 		}
 				
 		$message = word_filter($message);

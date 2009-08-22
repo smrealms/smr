@@ -10,16 +10,19 @@ $container['url'] = 'skeleton.php';
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><td style="width:50%" class="top">';
 
 $PHP_OUTPUT.= '<span class="yellow bold">Protection</span><br />';
-if($player->getNewbieTurns()) {
+if($player->getNewbieTurns())
+{
 	$PHP_OUTPUT.= 'You are under <span class="green">NEWBIE</span> protection.<br /><br />';
 
 	$container['body'] = 'leave_newbie.php';
 	$PHP_OUTPUT.=create_button($container, 'Leave Newbie Protection');
 }
-else if($player->hasFederalProtection()) {
+else if($player->hasFederalProtection())
+{
 	$PHP_OUTPUT.= 'You are under <span class="blue">FEDERAL</span> protection.';
 }
-else {
+else
+{
 	$PHP_OUTPUT.= 'You are <span class="red">NOT</span> under protection.';
 }
 
@@ -39,7 +42,8 @@ AND race.race_id=player_has_relation.race_id
 ORDER BY race.race_id LIMIT 8');
 
 $PHP_OUTPUT.= '<br />';
-while($db->nextRecord()) {
+while($db->nextRecord())
+{
 	$PHP_OUTPUT.= $db->getField('race_name');
 	$PHP_OUTPUT.= ' : ';
 	$PHP_OUTPUT.= get_colored_text($db->getField('relation'), $db->getField('relation'));
@@ -53,16 +57,20 @@ $PHP_OUTPUT.= '<br />';
 
 include(get_file_loc('council.inc'));
 
-if(onCouncil($player->getRaceID())) {
+if(onCouncil($player->getRaceID()))
+{
 	$president = getPresident($player->getRaceID());
-	if($president && $president->getAccountID() == $player->getAccountID()) {
+	if($president && $president->getAccountID() == $player->getAccountID())
+	{
 		$PHP_OUTPUT.= 'You are the <span class="red">President</span> of the ruling council.';
 	}
-	else{
+	else
+	{
 		$PHP_OUTPUT.= 'You are a <span class="blue">member</span> of the ruling council.';
 	}
 }
-else {
+else
+{
 	$PHP_OUTPUT.= 'You are <span class="red">NOT</span> a member of the ruling council.';
 }
 
@@ -102,17 +110,19 @@ $PHP_OUTPUT.= ' turns/hour<br />Max: ';
 $PHP_OUTPUT.= $player->getMaxTurns();
 $PHP_OUTPUT.= ' turns<br /><br /><span class="yellow bold">Supported Hardware</span><br />';
 
-if ($ship->canHaveScanner()) $PHP_OUTPUT.= 'Scanner<br />';
-if ($ship->canHaveIllusion()) $PHP_OUTPUT.= 'Illusion Generator<br />';
-if ($ship->canHaveCloak()) $PHP_OUTPUT.= 'Cloaking Device<br />';
-if ($ship->canHaveJump()) $PHP_OUTPUT.= 'Jump Drive<br />';
-if ($ship->canHaveDCS()) $PHP_OUTPUT.= 'Drone Scrambler<br />';
-
 if (!$ship->canHaveScanner() &&
-    !$ship->canHaveIllusion() &&
-    !$ship->canHaveCloak() &&
-    !$ship->canHaveJump() &&
-    !$ship->canHaveDCS()) $PHP_OUTPUT.= 'none<br />';
+	!$ship->canHaveIllusion() &&
+	!$ship->canHaveCloak() &&
+	!$ship->canHaveJump() &&
+	!$ship->canHaveDCS()) $PHP_OUTPUT.= 'none<br />';
+else
+{
+	if ($ship->canHaveScanner()) $PHP_OUTPUT.= 'Scanner<br />';
+	if ($ship->canHaveIllusion()) $PHP_OUTPUT.= 'Illusion Generator<br />';
+	if ($ship->canHaveCloak()) $PHP_OUTPUT.= 'Cloaking Device<br />';
+	if ($ship->canHaveJump()) $PHP_OUTPUT.= 'Jump Drive<br />';
+	if ($ship->canHaveDCS()) $PHP_OUTPUT.= 'Drone Scrambler<br />';
+}
 
 $PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="_blank"><span class="yellow bold">Next Level</span></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
@@ -139,8 +149,10 @@ $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><th colspan="2">Notes</th></tr>';
 
 $db->query('SELECT * FROM player_has_notes WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . SmrSession::$account_id . ' ORDER BY note_id desc');
-if($db->getNumRows() > 0) {
-	while($db->nextRecord()) {
+if($db->getNumRows() > 0)
+{
+	while($db->nextRecord())
+	{
 		$PHP_OUTPUT.= '<tr>';
 		$PHP_OUTPUT.= '<td class="shrink"><input type="checkbox" name="note_id[]" value="' . $db->getField('note_id') . '" /></td>';
 		$PHP_OUTPUT.= '<td>' . bbifyMessage(gzuncompress($db->getField('note'))) . '</td>';
@@ -164,7 +176,5 @@ $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 </table><br />';
 $PHP_OUTPUT.= $form['submit'];
 $PHP_OUTPUT.= '<small>&nbsp;&nbsp;&nbsp;Maximum note length is 1000 characters</small><br /></form>';
-
-
 
 ?>
