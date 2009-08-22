@@ -12,7 +12,14 @@ $base = array();
 
 if(isset($var['game_id']))
 {
-	$hofPlayer =& SmrPlayer::getPlayer($account_id,$var['game_id']);
+	try
+	{
+		$hofPlayer =& SmrPlayer::getPlayer($account_id,$var['game_id']);
+	}
+	catch(Exception $e)
+	{
+		create_error('That player has not yet joined this game.');
+	}
 	$template->assign('PageTopic',$hofPlayer->getPlayerName().'\'s Personal Hall of Fame For '.Globals::getGameName($var['game_id']));
 }
 else
