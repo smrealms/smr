@@ -36,7 +36,7 @@ class Plotter
 			}
 		}
 		$maybeWarps=0;
-		while ($maybeWarps<TURNS_WARP_SECTOR_EQUIVALENCE)
+		while ($maybeWarps<=TURNS_WARP_SECTOR_EQUIVALENCE)
 		{
 			$sectorsTravelled++;
 			if ($sectorsTravelled > $distanceLimit)
