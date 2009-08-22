@@ -2,7 +2,8 @@
 
 if (empty($var['message']) || $var['message'] == '') $var['message'] = 'File not found';
 
-if (SmrSession::$game_id > 0) {
+if (SmrSession::$game_id > 0 && is_object($player) && $lock)
+{
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php';
@@ -10,7 +11,9 @@ if (SmrSession::$game_id > 0) {
 	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'] . '!';
 	$container['errorMsg'] = $errorMsg;
 	forward($container);
-} else {
+}
+else
+{
 	$PHP_OUTPUT.=('<h1>ERROR</h1>');
 	$PHP_OUTPUT.=('<p><b><big>' . $var['message'] . '</big></b></p>');
 	$PHP_OUTPUT.=('<br /><br /><br />');
