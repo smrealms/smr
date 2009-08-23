@@ -3,30 +3,24 @@
 require_once(LIB . 'Album/album_functions.php');
 $db = new SmrMySqlDatabase(); // required when referred from album
 
-// try to get it from session first
+if(isset($_POST['account_id']))
+	SmrSession::updateVar('account_id',$_POST['account_id']);
 $account_id = $var['account_id'];
 
-// if it's emtpy try to get from form
-if (empty($account_id))
-	$account_id = get_form_value('account_id');
-
 // check if input is numeric
-if (!is_numeric($account_id)) {
-
+if (!is_numeric($account_id))
 	create_error('Please enter an account ID, which has to be numeric!');
-	return;
-
-}
 
 // echo green topic
 $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'album_moderate.php'),
 		   '<h1>MODERATE PHOTO ALBUM</h1>');
 
 // check if the givin account really has an entry
-if ($account_id > 0) {
-
+if ($account_id > 0)
+{
 	$db->query('SELECT * FROM album WHERE account_id = '.$account_id.' AND Approved = \'YES\'');
-	if ($db->nextRecord()) {
+	if ($db->nextRecord())
+	{
 		$disabled = $db->getField('disabled') == 'TRUE';
 		$location = stripslashes($db->getField('location'));
 		$email = stripslashes($db->getField('email'));
@@ -35,28 +29,26 @@ if ($account_id > 0) {
 		$month = $db->getField('month');
 		$year = $db->getField('year');
 		$other = nl2br(stripslashes($db->getField('other')));
-
-	} else {
-
+	}
+	else
+	{
 		$account_id = 0;
 		$error_msg = '<div align="center" style="color:red;font-weight:bold;">This User doesn\'t have an album entry or it needs to be approved first!</div>';
-
 	}
-
 }
 
 // if we don't have an account id yet, ask for it (and echo error message if invalid number was entered)
-if (empty($account_id)) {
-
+if (empty($account_id))
+{
 	$PHP_OUTPUT.=('Enter the account id of the entry you wish to edit:');
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'album_moderate.php'));
 	$PHP_OUTPUT.=('<input type="text" name="account_id" size="5" id="InputFields" style="text-align:center;">&nbsp;');
 	$PHP_OUTPUT.=create_submit('Submit');
 	$PHP_OUTPUT.=('</form>');
 	$PHP_OUTPUT.=($error_msg);
-
-} else {
-
+}
+else
+{
 	$container = create_container('album_moderate_processing.php', '');
 	$container['account_id'] = $account_id;
 
@@ -166,15 +158,14 @@ if (empty($account_id)) {
 	$db->query('SELECT *
 				FROM album_has_comments
 				WHERE album_id = '.$account_id);
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$comment_id	= $db->getField('comment_id');
 		$time		= $db->getField('time');
 		$postee		= get_album_nick($db->getField('post_id'));
 		$msg		= stripslashes($db->getField('msg'));
 
 		$PHP_OUTPUT.=('<tr><td align="center"><input type="checkbox" name="comment_ids[]" value="'.$comment_id.'"></td><td colspan="3"><span style="font-size:85%;">[' . date('Y/n/j g:i A', $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span></td></tr>');
-
 	}
 
 	$PHP_OUTPUT.=('<tr><td align="center">');
@@ -184,7 +175,6 @@ if (empty($account_id)) {
 	$PHP_OUTPUT.=('</form>');
 
 	$PHP_OUTPUT.=('</table>');
-
 }
 
 ?>
