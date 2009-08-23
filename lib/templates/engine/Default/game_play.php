@@ -1,8 +1,15 @@
-<h1>Play Game</h1>
+<?php
+if(isset($ErrorMessage))
+{
+	echo $ErrorMessage; ?><br /><br /><?php
+}
+if(isset($Message))
+{
+	echo $Message; ?><br /><br /><?php
+} ?>
 
 <a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b style="color:yellow;">Rankings</b></a>
 <br />You are ranked as <?php $this->doAn($ThisAccount->get_rank_name()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
-
 
 <?php
 if(isset($Games['Play']))

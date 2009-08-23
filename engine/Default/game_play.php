@@ -1,9 +1,12 @@
 <?php
 require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
+
+$template->assign('PageTopic','Play Game');
+
 if(isset($var['errorMsg']))
-	$PHP_OUTPUT.=($var['errorMsg'].'<br />');
+	$template->assign('ErrorMessage',$var['errorMsg']);
 if (isset($var['msg']))
-	$PHP_OUTPUT.=($var['msg'].'<br />');
+	$template->assign('Message',$var['msg']);
 
 $template->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
 $template->assign('UserRankName',$account->get_rank_name());
