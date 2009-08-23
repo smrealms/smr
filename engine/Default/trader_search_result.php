@@ -1,8 +1,13 @@
 <?php
 
 $db2 = new SmrMySqlDatabase();
-$player_id = isset($_REQUEST['player_id'])?$_REQUEST['player_id']:null;
-$player_name = isset($_REQUEST['player_name'])?$_REQUEST['player_name']:null;
+
+if(isset($_REQUEST['player_id']))
+	SmrSession::updateVar('PlayerID',$_REQUEST['player_id']);
+$player_id = $var['PlayerID'];
+if(isset($_REQUEST['player_id']))
+	SmrSession::updateVar('PlayerName',$_REQUEST['player_name']);
+$player_name = $var['PlayerName'];
 if (!is_numeric($player_id) && !empty($player_id))
 	create_error('Please enter only numbers!');
 
@@ -16,9 +21,8 @@ if (!empty($player_id))
 	$db->query('SELECT * FROM player ' .
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
 			   'player_id = '.$player_id.' LIMIT 5');
-
-else {
-
+else
+{
 	if (empty($player_name))
 		$player_name = '%';
 
@@ -26,11 +30,10 @@ else {
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
 					 'player_name = ' . $db->escape_string($player_name, true) . ' ' .
 			   'ORDER BY player_name LIMIT 5');
-
 }
 
-if ($db->getNumRows() > 0) {
-
+if ($db->getNumRows() > 0)
+{
 	$PHP_OUTPUT.=('<table class="standard" width="75%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Name</th>');
@@ -42,8 +45,8 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('<th>Option</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 		$PHP_OUTPUT.=('<tr>');
 
@@ -57,24 +60,24 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.=('<br />');
 		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
 				'account_id = '.$curr_player->getAccountID());
-		if ($db2->nextRecord()) {
-			
+		if ($db2->nextRecord())
+		{
 			//they have a name so we echo it
 			$named_ship = stripslashes($db2->getField('ship_name'));
 			$PHP_OUTPUT.=($named_ship);
-			
 		}
 		$PHP_OUTPUT.=('</td>');
 
 		$PHP_OUTPUT.=('<td>');
-		if ($curr_player->getAllianceID() > 0) {
-
+		if ($curr_player->getAllianceID() > 0)
+		{
 			$container = array();
 			$container['url']			= 'skeleton.php';
 			$container['body']			= 'alliance_roster.php';
 			$container['alliance_id']	= $curr_player->getAllianceID();
 			$PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
-		} else
+		}
+		else
 			$PHP_OUTPUT.=('(none)');
 		$PHP_OUTPUT.=('</td>');
 		$container = array();
