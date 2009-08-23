@@ -11,7 +11,7 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'games_previous_news.php';
 $container['game_id'] = $game_id;
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<div align=center>Show News<br />Min:<input id=Inputfields type=text value='.$min.' name=min size=5> - Max:<input id=Inputfields type=text value='.$max.' name=max size=5><br />');
+$PHP_OUTPUT.=('<div align=center>Show News<br />Min:<input id="Inputfields" type="text" value="'.$min.'" name="min" size="5"> - Max:<input id="Inputfields" type="text" value="'.$max.'" name="max" size="5"><br />');
 $PHP_OUTPUT.=create_submit('Show');
 $PHP_OUTPUT.=('</form>');
 
