@@ -1,36 +1,32 @@
 <?php
 
-function build_list($array) {
-
+function build_list($array)
+{
 	$list = '';
 	if (!is_array($array))
 		return false;
 
-	foreach ($array as $element) {
-
+	foreach ($array as $element)
+	{
 		if (!empty($list))
 			$list .= ', ';
 		$list .= $element;
-
 	}
-
+	
 	return '(' . $list . ')';
-
 }
 
 $template->assign('PageTopic','Log Console - Detail');
 
 // get the account_ids from last form
-if ($_POST['account_ids'])
-	$account_ids = $_POST['account_ids'];
-elseif ($var['account_ids'])
-	$account_ids = $var['account_ids'];
+if (isset($_POST['account_ids']))
+	SmrSession::updateVar('account_ids',$_POST['account_ids']);
+$account_ids = $var['account_ids'];
 
 // get the account_ids from last form
-if ($_POST['log_type_ids'])
-	$log_type_ids = $_POST['log_type_ids'];
-elseif ($var['log_type_ids'])
-	$log_type_ids = $var['log_type_ids'];
+if (isset($_POST['log_type_ids']))
+	SmrSession::updateVar('log_type_ids',$_POST['log_type_ids']);
+$log_type_ids = $var['log_type_ids'];
 
 // build a list of it like: (id1, id2, id3)
 $account_list = build_list($account_ids);
@@ -42,15 +38,12 @@ if (!isset($var['order']))
 	$var['order'] = 'ASC';
 
 // nothing marked?
-if (!$account_list) {
-
+if (!$account_list)
 	$PHP_OUTPUT.=create_error('You have to select the log files you want to view/delete!');
-	return;
 
-}
 $action = $_REQUEST['action'];
-if ($action == 'Delete') {
-
+if ($action == 'Delete')
+{
 	$account_list = build_list($account_ids);
 
 	// get rid of all entries
@@ -58,9 +51,9 @@ if ($action == 'Delete') {
 	$db->query('DELETE FROM log_has_notes WHERE account_id IN '.$account_list);
 
 	$PHP_OUTPUT.=('Operation was completed successfully!');
-
-} else {
-
+}
+else
+{
 	// a second db object
 	$db2 = new SmrMySqlDatabase();
 
@@ -68,14 +61,13 @@ if ($action == 'Delete') {
 	$avail_colors = array('#FFFFFF', '#FF0000', '#00FF00', '#0000FF');
 
 	// now assign each account id a color
-	for ($i = 0; $i < count($account_ids); $i++) {
-
+	for ($i = 0; $i < count($account_ids); $i++)
+	{
 		// get current id
 		$curr_account_id = $account_ids[$i];
 
 		// assign it a color
 		$colors[$curr_account_id] = $avail_colors[$i % count($avail_colors)];
-
 	}
 
 	$PHP_OUTPUT.=('<table>');
@@ -98,11 +90,11 @@ if ($action == 'Delete') {
 	$PHP_OUTPUT.=('<br /><br />');
 
 	$db->query('SELECT * FROM log_type');
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$PHP_OUTPUT.=('<input type="checkbox" name="log_type_ids[' . $db->getField('log_type_id') . ']"');
-		if ($log_type_ids[$db->getField('log_type_id')]) {
-
+		if ($log_type_ids[$db->getField('log_type_id')])
+		{
 			$PHP_OUTPUT.=(' checked');
 			if (!empty($log_type_id_list))
 				$log_type_id_list .= ',';
@@ -110,7 +102,6 @@ if ($action == 'Delete') {
 
 		}
 		$PHP_OUTPUT.=('>' . $db->getField('log_type_entry') . '<br />');
-
 	}
 	$PHP_OUTPUT.=('</form>');
 
@@ -149,12 +140,11 @@ if ($action == 'Delete') {
 	$log_notes = array_unique($log_notes);
 
 	// flattens array
-	foreach ($log_notes as $note) {
-
+	foreach ($log_notes as $note)
+	{
 		if ($flat_notes)
 			$flat_notes .= EOL;
 		$flat_notes .= $note;
-
 	}
 
 	$PHP_OUTPUT.=('<textarea name="notes" style="width:300px; height:200px;" id="InputFields">'.$flat_notes.'</textarea>');
@@ -171,12 +161,11 @@ if ($action == 'Delete') {
 	// *********************************
 	$PHP_OUTPUT.=('Following colors will be used:');
 	$PHP_OUTPUT.=('<ul>');
-	foreach ($colors as $id => $color) {
-
+	foreach ($colors as $id => $color)
+	{
 		$db->query('SELECT login FROM account WHERE account_id = ' . $id);
 		if ($db->nextRecord())
 			$PHP_OUTPUT.=('<li style="color:'.$color.';">' . $db->getField('login') . '</li>');
-
 	}
 	$PHP_OUTPUT.=('</ul>');
 
@@ -208,8 +197,8 @@ if ($action == 'Delete') {
 		$log_type_id_list = 0;
 
 	$db->query('SELECT * FROM account_has_logs WHERE account_id IN '.$account_list.' AND log_type_id IN ('.$log_type_id_list.') ORDER BY ' . $var['item'] . ' ' . $var['order']);
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$account_id		= $db->getField('account_id');
 		$time			= $db->getField('time');
 		$message		= stripslashes($db->getField('message'));
@@ -231,11 +220,8 @@ if ($action == 'Delete') {
 		$PHP_OUTPUT.=('<td align="center"'.$style.'>'.$sector_id.'</td>');
 		$PHP_OUTPUT.=('<td'.$style.'>'.$message.'</td>');
 		$PHP_OUTPUT.=('</tr>');
-
 	}
-
 	$PHP_OUTPUT.=('</table>');
-
 }
 
 $PHP_OUTPUT.=('<p>');
