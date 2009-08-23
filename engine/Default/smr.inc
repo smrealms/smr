@@ -338,17 +338,6 @@ function makeBold($value) {
 
 }
 
-function get_form_value($name) {
-
-	global $_POST;
-
-	if (!empty($_POST[$name]))
-		return $_POST[$name];
-	else
-		return 0;
-
-}
-
 //function different_level($rank1, $rank2, $forced_vet1, $forced_vet2) {
 //
 //	return false;
