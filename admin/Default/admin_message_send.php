@@ -1,7 +1,9 @@
 <?php
 
 $template->assign('PageTopic','Send Message');
-$gameID = isset($_REQUEST['game_id'])?$_REQUEST['game_id'] : (isset($var['game_id']) ? $var['game_id'] : null);
+if(isset($_REQUEST['game_id']))
+	SmrSession::updateVar('GameID',$_REQUEST['game_id']);
+$gameID = $var['GameID'];
 // check if we know the game yet
 if (empty($gameID))
 {
