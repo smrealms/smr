@@ -11,7 +11,10 @@ $container['body'] = 'rankings_alliance_vs_alliance.php';
 
 $PHP_OUTPUT.=create_echo_form($container);
 
-if (isset($_POST['alliancer'])) $alliancer = $_POST['alliancer'];
+if (isset($_REQUEST['alliancer']))
+	SmrSession::updateVar('alliancer',$_REQUEST['alliancer']);
+$alliancer = $var['alliancer'];
+
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of alliances vs other alliances<br />');
 $PHP_OUTPUT.=('Click on an alliances name for more detailed death stats.</p>');

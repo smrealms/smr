@@ -3,8 +3,8 @@
 require_once(LIB . 'Album/album_functions.php');
 $db = new SmrMySqlDatabase(); // required when referred from album
 
-if(isset($_POST['account_id']))
-	SmrSession::updateVar('account_id',$_POST['account_id']);
+if(isset($_REQUEST['account_id']))
+	SmrSession::updateVar('account_id',$_REQUEST['account_id']);
 $account_id = $var['account_id'];
 
 // check if input is numeric

@@ -1,7 +1,7 @@
 <?php
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-if (isset($_POST['target'])) $target = $_POST['target'];
+if (isset($_REQUEST['target'])) $target = $_REQUEST['target'];
 else $target = $var['target'];
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
