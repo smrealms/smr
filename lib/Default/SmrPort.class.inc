@@ -968,9 +968,10 @@ class SmrPort
 	
 	public function getOfferPrice($idealPrice, $relations, $transactionType)
 	{
-		$relations=max(0,min(1000,$relations));
-		$relationsEffect = pow(1+($relations-1000)/10000,1.2-$relations/1000);
-		$relationsEffect -= max(0,min(self::BARGAIN_LENIENCY_PERCENT,self::BARGAIN_LENIENCY_PERCENT*(2000-$relations)/1000)); //Gradual increase getting closer and closer to actual ideal price as relations increase to 2000 (will only be an increase of self::BARGAIN_LENIENCY_PERCENT percent extra cash)
+		$moneyRelations=max(0,min(2000,$relations));
+		$expRelations=max(0,min(1000,$relations));
+		$relationsEffect = pow(1+($expRelations-1000)/10000,1.2-$expRelations/1000);
+		$relationsEffect -= max(0,min(self::BARGAIN_LENIENCY_PERCENT,self::BARGAIN_LENIENCY_PERCENT*(2000-$moneyRelations)/1000)); //Gradual increase getting closer and closer to actual ideal price as relations increase to 2000 (will only be an increase of self::BARGAIN_LENIENCY_PERCENT percent extra cash)
 		 
 		 if($transactionType == 'Buy')
 		 {
