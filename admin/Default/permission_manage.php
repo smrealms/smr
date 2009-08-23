@@ -1,8 +1,8 @@
 <?php
 
-$admin_id = $_POST['admin_id'];
-if (!empty($var['admin_id']))
-	$admin_id = $var['admin_id'];
+if(isset($_POST['admin_id']))
+	SmrSession::updateVar('admin_id',$_POST['admin_id']);
+$admin_id = $var['admin_id'];
 
 $template->assign('PageTopic','Manage Admin Permissions');
 
