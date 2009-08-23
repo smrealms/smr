@@ -4,13 +4,13 @@ $message = trim($_REQUEST['message']);
 if($_REQUEST['action'] == 'Preview message')
 {
 	$container = create_container('skeleton.php','admin_message_send.php');
-	transfer('game_id');
+	transfer('GameID');
 	$container['preview'] = $message;
 	forward($container);
 }
 
 $account_id = $_REQUEST['account_id'];
-$game_id = $var['game_id'];
+$game_id = $var['GameID'];
 if (!empty($account_id) || $game_id == 20000)
 {
 	$expire = $_REQUEST['expire'];
@@ -29,7 +29,8 @@ if (!empty($account_id) || $game_id == 20000)
 		}
 	}
 }
-
-forward(create_container('skeleton.php', 'game_play.php'))
+$container = create_container('skeleton.php', 'game_play.php');
+$container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
+forward($container)
 
 ?>
