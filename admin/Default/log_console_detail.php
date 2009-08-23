@@ -19,13 +19,13 @@ function build_list($array)
 $template->assign('PageTopic','Log Console - Detail');
 
 // get the account_ids from last form
-if (isset($_POST['account_ids']))
-	SmrSession::updateVar('account_ids',$_POST['account_ids']);
+if (isset($_REQUEST['account_ids']))
+	SmrSession::updateVar('account_ids',$_REQUEST['account_ids']);
 $account_ids = $var['account_ids'];
 
 // get the account_ids from last form
-if (isset($_POST['log_type_ids']))
-	SmrSession::updateVar('log_type_ids',$_POST['log_type_ids']);
+if (isset($_REQUEST['log_type_ids']))
+	SmrSession::updateVar('log_type_ids',$_REQUEST['log_type_ids']);
 $log_type_ids = $var['log_type_ids'];
 
 // build a list of it like: (id1, id2, id3)
