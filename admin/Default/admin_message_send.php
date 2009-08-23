@@ -13,7 +13,7 @@ if (empty($gameID))
 else
 {
 	$container =create_container('admin_message_send_processing.php');
-	$container['game_id']	= $gameID;
+	$container['GameID']	= $gameID;
 	$template->assign('AdminMessageSendFormHref',SmrSession::get_new_href($container));
 	$template->assign('MessageGameID',$gameID);
 
