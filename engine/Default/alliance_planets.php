@@ -25,8 +25,8 @@ ORDER BY planet.sector_id
 
 $PHP_OUTPUT.= '<div align="center">';
 
-if ($db->getNumRows() > 0) {
-
+if ($db->getNumRows() > 0)
+{
     $PHP_OUTPUT.= 'Your alliance currently has ';
     $PHP_OUTPUT.= $db->getNumRows();
     $PHP_OUTPUT.= ' planets in the universe!<br /><br />';
@@ -37,9 +37,11 @@ if ($db->getNumRows() > 0) {
 	// Cache the good names
 	$goods_cache = array();
 	$db2->query('SELECT good_id,good_name FROM good');
-	while($db2->nextRecord()) {
+	while($db2->nextRecord())
+	{
 		$goods_cache[$db2->getField('good_id')] = $db2->getField('good_name');
-		if($db2->getField('good_name') == 'Precious Metals') {
+		if($db2->getField('good_name') == 'Precious Metals')
+		{
 			$goods_cache[$db2->getField('good_id')] = 'PM';
 		}
 	}
@@ -70,8 +72,10 @@ if ($db->getNumRows() > 0) {
 
 		$supply = false;
 
-		foreach ($planet->getStockpile() as $id => $amount) {
-			if ($amount > 0) {
+		foreach ($planet->getStockpile() as $id => $amount)
+		{
+			if ($amount > 0)
+			{
 				$PHP_OUTPUT.= '<span class="nowrap">' . $goods_cache[$id] . '</span>: ';
 				$PHP_OUTPUT.= $amount;
 				$PHP_OUTPUT.= '<br />';
@@ -79,7 +83,8 @@ if ($db->getNumRows() > 0) {
 			}
 		}
 
-		if (!$supply) {
+		if (!$supply)
+		{
 			$PHP_OUTPUT.=('none');
 		}
 
@@ -89,19 +94,21 @@ if ($db->getNumRows() > 0) {
 			$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 			foreach($planet->getCurrentlyBuilding() as $building)
 			{
-				$PHP_OUTPUT.= $PLANET_BUILDINGS[$building['BuildingID']]['Name'];
+				$PHP_OUTPUT.= $PLANET_BUILDINGS[$building['ConstructionID']]['Name'];
 				
 				$PHP_OUTPUT.= '<br />'.($building['TimeRemaining'] / 3600 % 24).':'.($building['TimeRemaining'] / 60 % 60).':'.($building['TimeRemaining'] % 60).' ';
 			}
 		}
-		else {
+		else
+		{
 			$PHP_OUTPUT.= 'Nothing';
 		}
 		$PHP_OUTPUT.= '</td></tr>';
     }
 	$PHP_OUTPUT.= '</table>';
 }
-else {
+else
+{
 	$PHP_OUTPUT.= 'Your alliance has no claimed planets';
 }
 
