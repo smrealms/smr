@@ -1,8 +1,8 @@
 <?php		
 require_once(get_file_loc('smr_alliance.inc'));
 require_once(get_file_loc('SmrPlanet.class.inc'));
-function echo_time($sek) {
-
+function echo_time($sek)
+{
 	$i = ($sek / 3600 % 24).':'.($sek / 60 % 60).':'.($sek % 60);
 	return $i;
 }
@@ -18,8 +18,8 @@ $db->query('SELECT * FROM player, planet WHERE player.account_id = planet.owner_
 											  'planet.game_id = '.$player->getGameID().' AND ' .
 											  'player.account_id = '.$player->getAccountID());
 $template->assign('PageTopic','Your Planet');
-if ($db->getNumRows() > 0) {
-
+if ($db->getNumRows() > 0)
+{
 	$PHP_OUTPUT.=('<div align="center">');
 	$PHP_OUTPUT.=('<table class="standard" width="95%">');
 	$PHP_OUTPUT.=('<tr>');
@@ -35,8 +35,8 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('<th align="center">Supplies</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
 		$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id'));
 		$planet_sec = $db->getField('sector_id');
@@ -54,7 +54,7 @@ if ($db->getNumRows() > 0) {
 			$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 			foreach($planet->getCurrentlyBuilding() as $building)
 			{
-				$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['BuildingID']]['Name'].'<br />';
+				$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['ConstructionID']]['Name'].'<br />';
 				$PHP_OUTPUT.=(echo_time($building['TimeRemaining']));
 			}
 		}
@@ -66,9 +66,8 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.=('<td align="center">'.$planet->drones.'</td>');
 		$PHP_OUTPUT.=('<td align="left">');
 		foreach ($planet->getStockpile() as $id => $amount)
-
-			if ($amount > 0) {
-
+			if ($amount > 0)
+			{
 				$db2->query('SELECT * FROM good WHERE good_id = '.$id);
 				if ($db2->nextRecord())
 					$PHP_OUTPUT.=($db2->getField('good_name') . ': '.$amount.'<br />');
@@ -83,11 +82,12 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=('</div>');
 
-} else
+}
+else
 	$PHP_OUTPUT.=('You don\'t have a planet claimed!<br /><br />');
 	
-if ($player->getAllianceID() != 0) {
-	
+if ($player->getAllianceID() != 0)
+{
 	$alliance = new SMR_ALLIANCE($player->getAllianceID(), SmrSession::$game_id);
 	
 	$template->assign('PageTopic','Planet List For '.$player->getAllianceName().' ('.$player->getAllianceID().')');
@@ -101,8 +101,8 @@ if ($player->getAllianceID() != 0) {
 												  'planet.sector_id != '.$planet_sec.' AND ' .
 												  'alliance_id = '.$player->getAllianceID().' ' .
 											'ORDER BY planet.sector_id');
-	if ($db->getNumRows() > 0) {
-	
+	if ($db->getNumRows() > 0)
+	{
 		$PHP_OUTPUT.=('<div align="center">');
 		$PHP_OUTPUT.=('<table class="standard" width="95%">');
 		$PHP_OUTPUT.=('<tr>');
@@ -119,8 +119,8 @@ if ($player->getAllianceID() != 0) {
 		$PHP_OUTPUT.=('<th align="center">Supplies</th>');
 		$PHP_OUTPUT.=('</tr>');
 	
-		while ($db->nextRecord()) {
-	
+		while ($db->nextRecord())
+		{
 			$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
 			$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id'));
 			$planet_owner =& SmrPlayer::getPlayer($planet->owner_id, SmrSession::$game_id);
@@ -152,9 +152,8 @@ if ($player->getAllianceID() != 0) {
 			$PHP_OUTPUT.=('<td align="left">');
 			$supply = false;
 			foreach ($planet->getStockpile() as $id => $amount)
-	
-				if ($amount > 0) {
-	
+				if ($amount > 0)
+				{
 					$db2->query('SELECT * FROM good WHERE good_id = '.$id);
 					if ($db2->nextRecord())
 						$PHP_OUTPUT.=($db2->getField('good_name') . ': '.$amount.'<br />');
@@ -169,11 +168,11 @@ if ($player->getAllianceID() != 0) {
 		$PHP_OUTPUT.=('</table>');
 		$PHP_OUTPUT.=('</div>');
 	
-	} elseif ($planet_sec == 0)
+	}
+	elseif ($planet_sec == 0)
 		$PHP_OUTPUT.=('Your alliance has no claimed planets!');
 	else
 		$PHP_OUTPUT.=('Your planet is the only planet in the alliance!');
-
 }
 
 ?>
