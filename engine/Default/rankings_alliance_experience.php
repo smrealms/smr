@@ -3,12 +3,11 @@ $template->assign('PageTopic','Alliance Experience Rankings');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(1, 0);
 
-$db->query('SELECT player.alliance_id as alliance_id, sum( experience ) AS alliance_exp, count( * ) AS members, alliance_name AS name
-				FROM player, alliance
-				WHERE player.game_id = ' . $player->getGameID() . ' 
-				AND player.game_id = alliance.game_id
-				AND alliance.alliance_id = player.alliance_id
-				GROUP BY player.alliance_id
+$db->query('SELECT alliance_id, sum( experience ) AS alliance_exp, count( account_id ) AS members, alliance_name AS name
+				FROM alliance
+				LEFT JOIN player USING (game_id,alliance_id)
+				WHERE alliance.game_id = ' . $player->getGameID() . ' 
+				GROUP BY alliance_id
 				ORDER BY alliance_exp DESC');
 $alliances = array();
 while ($db->nextRecord())
@@ -46,6 +45,8 @@ foreach ($alliances as $id => $infoArray)
 	$style2 = '';
 	if($player->getAllianceID() == $id)
 		$style2 .= 'font-weight:bold;';
+	elseif (!$members)
+		$style2.=('color:red;');
 	$style .= $style2 . '"';
 
 	$PHP_OUTPUT.=('<td '.$style.'>'.$rank.'</td>');
@@ -53,11 +54,14 @@ foreach ($alliances as $id => $infoArray)
 	$PHP_OUTPUT.= '<td style="vertical-align:top;' . $style2 . '">';
 	$container = create_container('skeleton.php','alliance_roster.php');
 	$container['alliance_id']	= $id;
-	$PHP_OUTPUT.=create_link($container, $currAllianceName);
+	if ($members)
+		$PHP_OUTPUT.=create_link($container, $currAllianceName);
+	else
+		$PHP_OUTPUT.= $currAllianceName;
 	$PHP_OUTPUT.=('</td>');
 
 	$PHP_OUTPUT.=('<td '.$style.'>' . number_format($totalExp) . '</td>');
-	$PHP_OUTPUT.=('<td '.$style.'>' . number_format(round($totalExp / $members)) . '</td>');
+	$PHP_OUTPUT.=('<td '.$style.'>' . number_format(round($totalExp / max($members,1))) . '</td>');
 	$PHP_OUTPUT.=('<td '.$style.'>' . $members . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 }
@@ -122,6 +126,8 @@ foreach ($alliances as $id => $infoArray)
 	$style2 = '';
 	if($player->getAllianceID() == $id)
 		$style2 .= 'font-weight:bold;';
+	else if (!$members)
+		$style2.=('color:red;');
 	$style .= $style2 . '"';
 
 	$PHP_OUTPUT.=('<td '.$style.'>'.$rank.'</td>');
@@ -129,11 +135,14 @@ foreach ($alliances as $id => $infoArray)
 	$PHP_OUTPUT.= '<td style="vertical-align:top;' . $style2 . '">';
 	$container = create_container('skeleton.php','alliance_roster.php');
 	$container['alliance_id']	= $id;
-	$PHP_OUTPUT.=create_link($container, $currAllianceName);
+	if ($members)
+		$PHP_OUTPUT.=create_link($container, $currAllianceName);
+	else
+		$PHP_OUTPUT.= $currAllianceName;
 	$PHP_OUTPUT.=('</td>');
 
 	$PHP_OUTPUT.=('<td '.$style.'>' . number_format($totalExp) . '</td>');
-	$PHP_OUTPUT.=('<td '.$style.'>' . number_format(round($totalExp / $members)) . '</td>');
+	$PHP_OUTPUT.=('<td '.$style.'>' . number_format(round($totalExp / max($members,1))) . '</td>');
 	$PHP_OUTPUT.=('<td '.$style.'>' . $members . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 
