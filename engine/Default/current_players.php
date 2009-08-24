@@ -32,8 +32,8 @@ $PHP_OUTPUT.=('accessed the server in the last 10 minutes.<br />');
 
 if ($count_last_active == 0)
 	$PHP_OUTPUT.=('No one was moving so your ship computer can\'t intercept any transmissions.<br />');
-else {
-
+else
+{
 	if ($count_last_active == $count_real_last_active)
 		$PHP_OUTPUT.=('All of them ');
 	else
@@ -46,12 +46,11 @@ else {
 	else
 		$PHP_OUTPUT.=('.<br />');
 }
-	$PHP_OUTPUT.=('The traders listed in <span style="font-style:italic;">italics</span> are still ranked as Newbie or Beginner.</p>');
 
-	$PHP_OUTPUT.=('<p><u>Note:</u> Experience values are updated every 2 minutes.</p>');
+$PHP_OUTPUT.=('The traders listed in <span style="font-style:italic;">italics</span> are still ranked as Newbie or Beginner.</p>');
 
-if ($count_last_active > 0) {
-
+if ($count_last_active > 0)
+{
 	$PHP_OUTPUT.=('<table class="standard" width="95%">');
 	$PHP_OUTPUT.=('<tr>');
 	$container = array();
@@ -109,7 +108,8 @@ if ($count_last_active > 0) {
 				$name = $db2->getField('tag') . ' ' . $curr_player->getDisplayName();
 				if ($db2->getField('custom_rank')) $name .= ' (' . $db2->getField('custom_rank') . ')';
 				else $name .= ' (' . $curr_player->getLevelName() . ')';
-			} else $name .= ' ' . $db2->getField('tag');
+			}
+			else $name .= ' ' . $db2->getField('tag');
 		}
 		$PHP_OUTPUT.=create_link($container, $name);
 		$PHP_OUTPUT.=('</td>');
@@ -128,18 +128,13 @@ if ($count_last_active > 0) {
 			$container['body'] 			= 'alliance_roster.php';
 			$container['alliance_id']	= $curr_player->getAllianceID();
 			$PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
-		} else
+		}
+		else
 			$PHP_OUTPUT.=('(none)');
-		$PHP_OUTPUT.= '</td><td class="right">'.
-			number_format($curr_player->getExperience()) . '</td>';
-
-		
+		$PHP_OUTPUT.= '</td><td class="right">'. number_format($curr_player->getExperience()) . '</td>';
 		$PHP_OUTPUT.=('</tr>');
-
 	}
-
 	$PHP_OUTPUT.=('	</table>');
-
 }
 
 $PHP_OUTPUT.=('</div>');
