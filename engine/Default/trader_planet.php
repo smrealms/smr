@@ -44,9 +44,9 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
 		$PHP_OUTPUT.=('<td align="right">'.$planet->sector_id.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$planet_sector->getGalaxyName().'</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(1) . '</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(2) . '</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
+		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_GENERATOR) . '</td>');
+		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_HANGAR) . '</td>');
+		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_TURRET) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 
 		if ($planet->hasCurrentlyBuilding())
@@ -129,9 +129,9 @@ if ($player->getAllianceID() != 0)
 			$PHP_OUTPUT.=('<td>'.$planet_owner->getPlayerName().'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$planet->sector_id.'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$planet_sector->getGalaxyName().'</td>');
-			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(1) . '</td>');
-			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(2) . '</td>');
-			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(3) . '</td>');
+			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_GENERATOR) . '</td>');
+			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_HANGAR) . '</td>');
+			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_TURRET) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">');
 	
 			if ($planet->hasCurrentlyBuilding())
@@ -139,7 +139,7 @@ if ($player->getAllianceID() != 0)
 				$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 				foreach($planet->getCurrentlyBuilding() as $building)
 				{
-					$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['BuildingID']]['Name'].'<br />';
+					$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['ConstructionID']]['Name'].'<br />';
 					$PHP_OUTPUT.=(echo_time($building['TimeRemaining']));
 				}
 			}
