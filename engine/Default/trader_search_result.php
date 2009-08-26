@@ -28,7 +28,7 @@ else
 
 	$db->query('SELECT * FROM player ' .
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'player_name = ' . $db->escape_string($player_name, true) . ' ' .
+					 'player_name = ' . $db->escapeString($player_name) . ' ' .
 			   'ORDER BY player_name LIMIT 5');
 }
 
