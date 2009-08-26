@@ -71,6 +71,8 @@ define('BOX_ALLIANCE_DESCRIPTIONS', 4);
 define('BOX_BETA_APPLICATIONS', 5);
 define('BOX_ALBUM_COMMENTS', 6);
 
+define('MESSAGE_SCOUT_GROUP_LIMIT',30);
+
 
 /*
  * Movement types

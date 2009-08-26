@@ -133,15 +133,15 @@ else
 		$db2 = new SmrMySqlDatabase();
 		$db2->query('DELETE FROM message WHERE expire_time < '.TIME.' AND message_type_id = '.MSG_SCOUT);
 		
-		if ($messageBox['UnreadMessages'] > 25 || $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > 25)
+		if ($messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT || $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT)
 		{
 			$dispContainer = create_container('skeleton.php','message_view.php');
 			$dispContainer['folder_id'] = MSG_SCOUT;
 			$dispContainer['show_all'] = true;
 			$messageBox['ShowAllHref'] = SmrSession::get_new_href($dispContainer);
 		}
-		displayScouts($messageBox,$player,false,$messageBox['UnreadMessages'] > 25);
-		displayScouts($messageBox,$player,true,$messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > 25);
+		displayScouts($messageBox,$player,false,$messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
+		displayScouts($messageBox,$player,true,$messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
 	}
 	else
 	{
