@@ -234,9 +234,9 @@ abstract class MySqlDatabase implements Database
 		}
 		
 		if ($transfer_html)
-			return '\'' . mysql_escape_string(htmlentities($string)) . '\'';
+			return '\'' . mysql_real_escape_string(htmlentities($string),self::$dbConn) . '\'';
 		else
-			return '\'' . mysql_escape_string($string) . '\'';
+			return '\'' . mysql_real_escape_string($string,self::$dbConn) . '\'';
 	}
 	
 	//below is for Classic compatibility
