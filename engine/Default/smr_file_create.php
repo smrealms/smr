@@ -159,29 +159,32 @@ foreach ($galaxies as &$galaxy)
 				$port =& $sector->getPort();
 			else
 				$port =& $sector->getCachedPort($player);
-			$file .= 'Port Level='.$port->getLevel() . EOL;
-			$file .= 'Port Race=' . $port->getRaceID() . EOL;
-			$portGoods =& $port->getGoods();
-			if(count($portGoods['Sell'])>0)
+			if($port->exists())
 			{
-				$buyString = 'Buys=';
-				foreach($portGoods['Sell'] as $goodID => $amount)
+				$file .= 'Port Level='.$port->getLevel() . EOL;
+				$file .= 'Port Race=' . $port->getRaceID() . EOL;
+				$portGoods =& $port->getGoods();
+				if(count($portGoods['Sell'])>0)
 				{
-					$buyString .= $goodID .',';
+					$buyString = 'Buys=';
+					foreach($portGoods['Sell'] as $goodID => $amount)
+					{
+						$buyString .= $goodID .',';
+					}
+					$file .= substr($buyString,0,-1) . EOL;
 				}
-				$file .= substr($buyString,0,-1) . EOL;
-			}
-			
-			if(count($portGoods['Buy'])>0)
-			{
-				$sellString = 'Sells=';
-				foreach($portGoods['Buy'] as $goodID => $amount)
+				
+				if(count($portGoods['Buy'])>0)
 				{
-					$sellString .= $goodID .',';
+					$sellString = 'Sells=';
+					foreach($portGoods['Buy'] as $goodID => $amount)
+					{
+						$sellString .= $goodID .',';
+					}
+					$file .= substr($sellString,0,-1) . EOL;
 				}
-				$file .= substr($sellString,0,-1) . EOL;
+				unset($portGoods);
 			}
-			unset($portGoods);
 			unset($port);
 		}
 		if($sector->hasPlanet())
