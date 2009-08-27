@@ -7,9 +7,11 @@ if (isset($var['process']))
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 		return;
 	}
-	if(empty($_REQUEST['type']))
+	if(isset($_REQUEST['type']))
+		SmrSession::updateVar('type',$_REQUEST['type']);
+	$type = $var['type'];
+	if(empty($type))
 		create_error('You have to choose the type of ticker to buy');
-	$type = $_REQUEST['type'];
 	switch($type)
 	{
 		case 'NEWS':
