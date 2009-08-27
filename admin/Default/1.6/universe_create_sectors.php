@@ -15,11 +15,10 @@ $size = $galaxy->getSize();
 $offset = $galaxy->getStartSector()-1;
 
 if (isset($_REQUEST['connect']) && $_REQUEST['connect'] > 0)
-	$connectivity = $_REQUEST['connect'];
-elseif (isset($var['conn']))
-	$connectivity = $var['conn'];
-else
-	$connectivity = 100;
+	SmrSession::updateVar('conn',$_REQUEST['connect']);
+else if (!isset($var['conn']))
+	SmrSession::updateVar('conn',100);
+$connectivity = $var['conn'];
 
 if(isset($var['message']))
 	$PHP_OUTPUT.=$var['message'].'<br /><br />';
