@@ -1477,10 +1477,6 @@ class SmrPlayer extends AbstractSmrPlayer
 			$killer->increaseHOF(1,array('Killing','Kills'));
 		}
 
-		if($this->hasAlliance())
-		{
-			$this->db->query('UPDATE alliance SET alliance_deaths=alliance_deaths+1 WHERE alliance_id=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
-		}
 		if($killer->hasAlliance())
 		{
 			$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $killer->getAllianceID() . ' AND game_id=' . $killer->getGameID() . ' LIMIT 1');
