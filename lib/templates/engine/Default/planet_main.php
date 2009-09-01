@@ -100,5 +100,5 @@ if (isset($Msg))
 	</tr>
 </table>
 <form name="LaunchForm" method="POST" action="<?php echo $LaunchFormLink; ?>">
-	<input type="submit" name="action" value="Launch" id="InputFields">
+	<input type="submit" name="action" value="Launch" id="InputFields"/>
 </form>
