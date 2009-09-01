@@ -172,7 +172,7 @@ if ($var['owner_id'] != $player->getAccountID()) {
 	$message = $player->getPlayerName().' has ' . $mines_message;
 
 	if (isset($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message))
-		$message .= $combat_drones_message;
+		$message .= ' and '.$combat_drones_message;
 	elseif (isset($mines_message) && isset($combat_drones_message))
 		$message .= ', '.$combat_drones_message;
 	elseif (!isset($mines_message) && isset($combat_drones_message))
