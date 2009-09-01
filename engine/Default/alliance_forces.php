@@ -64,18 +64,20 @@ ORDER BY ' . $categorySQL . ', ' . $subcategory);
 
 $PHP_OUTPUT.= '<div align="center">';
 
-if ($db->getNumRows() > 0) {
-
+if ($db->getNumRows() > 0)
+{
     $PHP_OUTPUT.= 'Your alliance currently has ';
     $PHP_OUTPUT.= $db->getNumRows();
     $PHP_OUTPUT.= ' stacks of forces in the universe!<br />';
     
+    $hardwareTypes =& Globals::getHardwareTypes();
+    
     $PHP_OUTPUT.=create_table();
     $PHP_OUTPUT.=('<th>Number of Force</th><th>Value</th></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[MINES] . '</span> mines</td><td><span class="yellow">' . number_format($total[MINES] * 10000) . '</span> credits</td></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[CDS] . '</span> combat drones</td><td><span class="yellow">' . number_format($total[CDS] * 10000) . '</span> credits</td></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[SDS] . '</span> scout drones</td><td><span class="yellow">' . number_format($total[SDS] * 5000) . '</span> credits</td></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow bold">' . array_sum($total) . '</span> forces</td><td><span class="yellow bold">' . number_format($total[MINES] * 10000 + $total[CDS] * 10000 + $total[SDS] * 5000) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[MINES] . '</span> mines</td><td><span class="yellow">' . number_format($total[MINES] * $hardwareTypes[MINES]['Cost']) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[CDS] . '</span> combat drones</td><td><span class="yellow">' . number_format($total[CDS] * $hardwareTypes[CDS]['Cost']) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[SDS] . '</span> scout drones</td><td><span class="yellow">' . number_format($total[SDS] * $hardwareTypes[SDS]['Cost']) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow bold">' . array_sum($total) . '</span> forces</td><td><span class="yellow bold">' . number_format($total[MINES] * $hardwareTypes[MINES]['Cost'] + $total[CDS] * $hardwareTypes[CDS]['Cost'] + $total[SDS] * $hardwareTypes[SDS]['Cost']) . '</span> credits</td></tr>');
     $PHP_OUTPUT.=('</table><br />');
 
 	$PHP_OUTPUT.= '<table class="standard inset"><tr>';

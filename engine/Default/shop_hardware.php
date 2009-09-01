@@ -9,8 +9,8 @@ $db->query('SELECT * FROM location, location_sells_hardware, location_type, hard
 						  'location_sells_hardware.location_type_id = location_type.location_type_id AND ' .
 						  'location_sells_hardware.hardware_type_id = hardware_type.hardware_type_id');
 
-if ($db->getNumRows() > 0 ) {
-
+if ($db->getNumRows() > 0 )
+{
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
@@ -24,8 +24,8 @@ if ($db->getNumRows() > 0 ) {
 
 	$form = 0;
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$hardware_name = $db->getField('hardware_name');
 		$hardware_type_id = $db->getField('hardware_type_id');
 		$cost = $db->getField('cost');
@@ -60,11 +60,11 @@ if ($db->getNumRows() > 0 ) {
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
 		$PHP_OUTPUT.=('</form>');
-
 	}
 
 	$PHP_OUTPUT.=('</table>');
 
-} else $PHP_OUTPUT.=('I have nothing to sell to you. Get out of here!');
+}
+else $PHP_OUTPUT.=('I have nothing to sell to you. Get out of here!');
 
 ?>
