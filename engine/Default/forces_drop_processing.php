@@ -153,17 +153,27 @@ if ($var['owner_id'] != $player->getAccountID()) {
 		$mines_message .= 's';
 
 	if ($change_combat_drones > 0)
-		$combat_drones_message = 'added ' . ($drop_combat_drones - $take_combat_drones) . ' combat drone';
+		$combat_drones_message = ($change_mines < 0 ?'added ':'') . ($drop_combat_drones - $take_combat_drones) . ' combat drone';
 	elseif ($change_combat_drones < 0)
-		$combat_drones_message = 'removed ' . abs($drop_combat_drones - $take_combat_drones) . ' combat drone';
+		$combat_drones_message = ($change_mines > 0 ?'removed ':'') . abs($drop_combat_drones - $take_combat_drones) . ' combat drone';
 	//add s to drone if necesary
 	if (abs($change_combat_drones) > 1)
 		$combat_drones_message .= 's';
 
 	if ($change_scout_drones > 0)
-		$scout_drones_message = 'added ' . ($drop_scout_drones - $take_scout_drones) . ' scout drone';
+	{
+		$scout_drones_message='';
+		if((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines < 0))
+			$scout_drones_message = 'added ';
+		$scout_drones_message .= ($drop_scout_drones - $take_scout_drones) . ' scout drone';
+	}
 	elseif ($change_scout_drones < 0)
-		$scout_drones_message = 'removed ' . abs($drop_scout_drones - $take_scout_drones) . ' scout drone';
+	{
+		$scout_drones_message='';
+		if((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines > 0))
+			$scout_drones_message = 'removed ';
+		$scout_drones_message .= abs($drop_scout_drones - $take_scout_drones) . ' scout drone';
+	}
 	//add s to drone if necesary
 	if (abs($change_scout_drones) > 1)
 		$scout_drones_message .= 's';
