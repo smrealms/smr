@@ -569,7 +569,7 @@ function acquire_lock($sector)
 			{
 				if($db->getField('COUNT(*)') > 1)
 				{
-					release_lock($lock);
+					release_lock();
 					create_error('Multiple actions cannot be performed at the same time!');
 					exit;
 				}
@@ -584,7 +584,7 @@ function acquire_lock($sector)
 		}
 	}
 
-	release_lock($lock);
+	release_lock();
 	return false;
 }
 
