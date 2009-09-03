@@ -25,31 +25,31 @@ if(is_array($TraderTeamCombatResults['Traders']))
 					if($ActualDamage['NumMines'] > 0){ $DamageTypes = $DamageTypes+1; }
 					if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 					if($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at<?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php } ?> the forces <?php 
+					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at<?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php } ?> the forces<?php 
 					if(!$ActualDamage['TargetAlreadyDead'])
 					{
 						if(!$ShotHit)
 						{
-							?>and misses<?php
+							?> and misses<?php
 						}
 						else if($ActualDamage['TotalDamage'] == 0)
 						{
 							if($WeaponDamage['Shield'] > 0)
 							{
-								?>which proves ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php }
+								?> which proves ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php }
 							}
 							else if($WeaponDamage['Armour'] > 0)
 							{
-								?>which is deflected by the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php } ?> shields<?php
+								?> which is deflected by the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php } ?> shields<?php
 							}
 							else
 							{
-								?>but it cannot do any damage<?php
+								?> but it cannot do any damage<?php
 							}
 						}
 						else
 						{
-							?>destroying <?php
+							?> destroying <?php
 							if($ActualDamage['NumMines'] > 0)
 							{
 								?><span class="red"><?php echo number_format($ActualDamage['NumMines']) ?></span> mines<?php
@@ -90,37 +90,37 @@ if(is_array($TraderTeamCombatResults['Traders']))
 				}
 				else
 				{
-					?> launches <span class="yellow"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at<?php if($ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } ?> the forces <?php
+					?> launches <span class="yellow"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at<?php if($ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } ?> the forces<?php
 					if(!$ActualDamage['TargetAlreadyDead'])
 					{
 						if($ActualDamage['TotalDamage'] == 0)
 						{
 							if($WeaponDamage['Shield'] > 0)
 							{
-								?>which prove ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php }
+								?> which prove ineffective against the <?php if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php }
 							}
 							else if($WeaponDamage['Armour'] > 0)
 							{
-								?>which is deflected by the <?php
+								?> which is deflected by the <?php
 								if($ActualDamage['HasMines']){ ?>mines<?php }else if($ActualDamage['HasCDs']){ ?>combat drones<?php }else{ ?>scout drones<?php } ?> shields<?php
 							}
 							else
 							{
-								?>but they cannot do any damage<?php
+								?> but they cannot do any damage<?php
 							}
 						}
 						else
 						{
 							if($WeaponDamage['Kamikaze'] == 0)
 							{
-								?>destroying <?php
+								?> destroying <?php
 							}
 							else
 							{
-								?>of which <span class="yellow"><?php echo $WeaponDamage['Kamikaze'] ?></span> kamikaze against <span class="red"><?php echo $WeaponDamage['Kamikaze'] ?></span> mines<?php
+								?> of which <span class="yellow"><?php echo $WeaponDamage['Kamikaze'] ?></span> kamikaze against <span class="red"><?php echo $WeaponDamage['Kamikaze'] ?></span> mines<?php
 								if($WeaponDamage['Kamikaze'] != $ActualDamage['NumMines'])
 								{
-									?> whilst the others destroy<?php
+									?> whilst the others destroy <?php
 								}
 							}
 							if($WeaponDamage['Kamikaze'] != $ActualDamage['NumMines'] && $ActualDamage['NumMines'] > 0)
