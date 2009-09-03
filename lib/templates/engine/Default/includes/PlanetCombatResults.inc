@@ -20,7 +20,7 @@ if(is_array($PlanetCombatResults['Weapons']))
 		{
 			if(!$ShotHit)
 			{
-				?>and misses<?php
+				?> and misses<?php
 			}
 			else if($ActualDamage['TotalDamage'] == 0)
 			{
@@ -28,25 +28,25 @@ if(is_array($PlanetCombatResults['Weapons']))
 				{
 					if($ActualDamage['HasCDs'])
 					{
-						?>which proves ineffective against their combat drones<?php
+						?> which proves ineffective against their combat drones<?php
 					}
 					else
 					{
-						?>which washes harmlessly over their hull<?php
+						?> which washes harmlessly over their hull<?php
 					}
 				}
 				else if($WeaponDamage['Armour'] > 0)
 				{
-					?>which is deflected by their shields<?php
+					?> which is deflected by their shields<?php
 				}
 				else
 				{
-					?>but it cannot do any damage<?php
+					?> but it cannot do any damage<?php
 				}
 			}
 			else
 			{
-				?>destroying <?php
+				?> destroying <?php
 				if($ActualDamage['Shield'] > 0)
 				{
 					?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php

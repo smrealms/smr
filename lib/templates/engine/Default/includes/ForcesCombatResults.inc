@@ -15,16 +15,16 @@ if(is_array($ForcesCombatResults['Results']))
 		
 		<span style="color:yellow;"><?php echo $WeaponDamage['Launched'] ?></span><?php
 		if($ForceType == 'Mines')
-		{ ?>
-			 mines kamikaze themselves against <?php
+		{
+			?> mines kamikaze themselves against <?php
 		}
 		else if($ForceType == 'Drones')
-		{ ?>
-			 combat drones launch at <?php
+		{
+			?> combat drones launch at <?php
 		}
 		else if($ForceType == 'Scouts')
-		{ ?>
-			 scout drones kamikaze themselves against <?php
+		{
+			?> scout drones kamikaze themselves against <?php
 		}
 		
 		if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php }
