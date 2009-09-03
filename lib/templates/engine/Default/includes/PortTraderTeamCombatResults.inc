@@ -3,6 +3,19 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 {
 	$ShootingPlayer =& $TraderResults['Player'];
 	$TotalDamage =& $TraderResults['TotalDamage'];
+	if($MinimalDisplay && !$ThisPlayer->equals($ShootingPlayer))
+	{
+		echo $ShootingPlayer->getDisplayName();
+		if($TotalDamage > 0)
+		{
+			?> hits for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
+		}
+		else
+		{
+			?> does no damage this round.<?php
+		} ?>.<br /><br /><?php
+		continue;
+	}
 
 	if($TraderResults['DeadBeforeShot'])
 	{
