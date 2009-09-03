@@ -28,14 +28,14 @@ function checkForLottoWinner($gameID)
 		$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$gameID);
 		//get around locked table problem
 		$lottoWon = true;
-		$player->increaseHOF($lottoInfo['Prize'],array('Bar','Lotto','Money','Winnings'));
-		$player->increaseHOF(1,array('Bar','Lotto','Results','Wins'));
 	}
 	$db->unlock();
 	if ($lottoWon === true)
 	{
 		// create news msg
 		$winner =& SmrPlayer::getPlayer($winner_id, $gameID);
+		$winner->increaseHOF($lottoInfo['Prize'],array('Bar','Lotto','Money','Winnings'));
+		$winner->increaseHOF(1,array('Bar','Lotto','Results','Wins'));
 		$news_message = '<font color=yellow>'.$winner->getPlayerName().'</font> has won the lotto!  The jackpot was ' . number_format($lottoInfo['Prize']) . '.  <font color=yellow>'.$winner->getPlayerName().'</font> can report to any bar to claim their prize!';
 		// insert the news entry
 		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$gameID);
