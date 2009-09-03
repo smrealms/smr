@@ -162,8 +162,9 @@ $db->query('SELECT * FROM sector_message WHERE account_id = '.$player->getAccoun
 if ($db->nextRecord())
 {
 	$msg = $db->getField('message');
-	$db->query('DELETE FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+//	$db->query('DELETE FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 	checkForForceRefreshMessage($msg);
+	checkForAttackMessage($msg);
 }
 if (isset($var['msg']))
 {
@@ -252,6 +253,29 @@ function checkForForceRefreshMessage(&$msg)
 			}
 			else $forceRefreshMessage = '<span class="green">REFRESH</span>: All forces have finished refreshing.';
 			$template->assign('ForceRefreshMessage',$forceRefreshMessage);
+		}
+	}
+}
+
+function checkForAttackMessage(&$msg)
+{
+	global $db,$player,$template;
+	$contains = 0;
+	$msg = str_replace('[ATTACK_RESULTS]','',$msg,$contains);
+	if($contains>0)
+	{
+		if(!$template->hasTemplateVar('AttackResults'))
+		{
+			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');
+			if($db->nextRecord())
+			{
+				if($player->getSectorID()==$db->getField('sector_id'))
+				{
+					$results = unserialize(gzuncompress($db->getField('result')));
+					$template->assign('AttackResultsType',$db->getField('type'));
+					$template->assignByRef('AttackResults',$results);
+				}
+			}
 		}
 	}
 }
