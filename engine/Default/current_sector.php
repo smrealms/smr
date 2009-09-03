@@ -162,7 +162,7 @@ $db->query('SELECT * FROM sector_message WHERE account_id = '.$player->getAccoun
 if ($db->nextRecord())
 {
 	$msg = $db->getField('message');
-//	$db->query('DELETE FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+	$db->query('DELETE FROM sector_message WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 	checkForForceRefreshMessage($msg);
 	checkForAttackMessage($msg);
 }
