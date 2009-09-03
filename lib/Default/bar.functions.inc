@@ -6,11 +6,11 @@ function checkForLottoWinner($gameID)
 	//we we check for a lotto winner...
 	$db->lockTable('player_has_ticket');
 	$lottoInfo = getLottoInfo($gameID);
-	$val =0;
+	$lottoWon = false;
 	if ($lottoInfo['TimeRemaining'] <= 0)
 	{
 		//we need to pick a winner
-		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$gameID.' ORDER BY rand()');
+		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$gameID.' AND time > 0 ORDER BY rand() LIMIT 1');
 		if ($db->nextRecord())
 		{
 			$winner_id = $db->getField('account_id');
@@ -21,19 +21,18 @@ function checkForLottoWinner($gameID)
 		{
 			$lottoInfo['Prize'] += $db->getField('prize');
 			$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$gameID);
-			
 		}
 		$db->query('UPDATE player_has_ticket SET time = 0, prize = '.$lottoInfo['Prize'].' WHERE time = '.$time.' AND ' .
 						'account_id = '.$winner_id.' AND game_id = '.$gameID);
 		//delete losers
 		$db->query('DELETE FROM player_has_ticket WHERE time > 0 AND game_id = '.$gameID);
 		//get around locked table problem
-		$val = 1;
+		$lottoWon = true;
 		$player->increaseHOF($lottoInfo['Prize'],array('Bar','Lotto','Money','Winnings'));
 		$player->increaseHOF(1,array('Bar','Lotto','Results','Wins'));
 	}
 	$db->unlock();
-	if ($val == 1)
+	if ($lottoWon === true)
 	{
 		// create news msg
 		$winner =& SmrPlayer::getPlayer($winner_id, $gameID);
