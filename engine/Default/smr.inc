@@ -569,8 +569,7 @@ function acquire_lock($sector)
 			{
 				if($db->getField('COUNT(*)') > 1)
 				{
-					$db->query('DELETE FROM locks_queue WHERE lock_id=' . $lock);
-					$lock = false;
+					release_lock($lock);
 					create_error('Multiple actions cannot be performed at the same time!');
 					exit;
 				}
