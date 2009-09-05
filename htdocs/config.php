@@ -18,10 +18,11 @@ require_once('config.specific.php');
 /*
  * Localisations
  */
-define('DATE_FULL_SHORT','j/n/Y g:i:s A');
-define('DATE_DATE_SHORT','j/n/Y');
-define('DATE_TIME_SHORT','g:i:s A');
-define('DATE_FULL_SHORT_SPLIT','j/n/Y\<b\r /\>g:i:s A');
+	define('DEFAULT_DATE_DATE_SHORT','j/n/Y');
+	define('DEFAULT_DATE_TIME_SHORT','g:i:s A');
+	define('DEFAULT_DATE_FULL_SHORT',DEFAULT_DATE_DATE_SHORT.' '.DEFAULT_DATE_TIME_SHORT);
+	define('DEFAULT_DATE_FULL_SHORT_SPLIT',DEFAULT_DATE_DATE_SHORT.'\<b\r /\>'.DEFAULT_DATE_TIME_SHORT);
+	define('DEFAULT_DATE_FULL_LONG','l jS F '.DEFAULT_DATE_TIME_SHORT);
  
 /*
  * Ship types

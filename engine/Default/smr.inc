@@ -412,6 +412,12 @@ function do_voodoo()
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	$GLOBALS['account'] =& $account;
 	
+	define('DATE_DATE_SHORT',$account->getShortDateFormat());
+	define('DATE_TIME_SHORT',$account->getShortTimeFormat());
+	define('DATE_FULL_SHORT',DATE_DATE_SHORT.' '.DATE_TIME_SHORT);
+	define('DATE_FULL_SHORT_SPLIT',DATE_DATE_SHORT.'\<b\r /\>'.DATE_TIME_SHORT);
+	
+	
 	$db = new SmrMySqlDatabase();
 	$GLOBALS['db'] =& $db;
 	

@@ -160,6 +160,10 @@ if(isset($GameID))
 		</tr>
 	
 		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+	
+		<tr>
 			<td>Timezone:</td>
 			<td>
 				<select name="timez" id="InputFields"><?php
@@ -176,6 +180,25 @@ if(isset($GameID))
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change Timezone" id="InputFields" /></td>
+		</tr>
+	
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+	
+		<tr>
+			<td>Date Format:</td>
+			<td><input type="text" name="dateformat" value="<?php echo $ThisAccount->getShortDateFormat(); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
+		</tr>
+	
+		<tr>
+			<td>Time Format:</td>
+			<td><input type="text" name="timeformat" value="<?php echo $ThisAccount->getShortTimeFormat(); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
+		</tr>
+	
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Change Date Formats" id="InputFields" /></td>
 		</tr>
 	
 		<tr>
@@ -245,7 +268,7 @@ if(isset($GameID))
 			<td>Change CSS Link</td>
 			<td>
 				<input type="text" size="50" name="csslink" value="<?php echo $ThisAccount->getCssLink(); ?>"><br />
-				You should only change this if you know what you\'re doing.<br />
+				You should only change this if you know what you're doing.<br />
 				If trying to link to a local file you may have to change your browser's security settings.
 			</td>
 		</tr>
