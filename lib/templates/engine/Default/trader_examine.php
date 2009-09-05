@@ -32,11 +32,17 @@ else if($TargetPlayer->hasFederalProtection())
 else
 {
 	$canAttack=true;
-	?><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (3)</a><br /><br /><?php
+	$fightingPlayers =& $ThisSector->getFightingTraders($ThisPlayer,$TargetPlayer, true);
+	if(count($fightingPlayers['Defenders'])>0)
+	{
+		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (3)</a></p><?php
+	}
+	else
+	{
+		?><p><big class="red">You have no targets!</big></p><?php
+	}
 }
-if($canAttack)
-	$fightingPlayers =& $ThisSector->getFightingTraders($ThisPlayer,$TargetPlayer);
-else
+if(!$canAttack)
 	$fightingPlayers =& $ThisSector->getPotentialFightingTraders($ThisPlayer);
 $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 ?>
@@ -44,39 +50,41 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 	<table class="standard" width="95%">
 		<tr><th width="50%">Attacker</th><th width="50%">Defender</th></tr>
 		<tr><?php
-foreach ($fightingPlayers as $fleet)
-{
-	?><td style="vertical-align:top;"><?php
-	if (is_array($fleet))
-	{
-		foreach ($fleet as &$fleetPlayer)
-		{
-			$fleetShip =& $fleetPlayer->getShip();
-			echo $fleetPlayer->getLevelName(); ?><br /><?php
-			echo $fleetPlayer->getDisplayName() ?><br />
-			Race: <?php echo $fleetPlayer->getRaceName() ?><br />
-			Level: <?php echo $fleetPlayer->getLevelName() ?><br />
-			Alliance: <?php echo $fleetPlayer->getAllianceName() ?><br /><br />
-			<small><?php echo $fleetShip->getName() ?><br />
-			Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) .'/'. $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
-			if ($ThisShip->hasScanner())
+			foreach ($fightingPlayers as $fleet)
 			{
-				?>Shields : <?php echo $fleetShip->shield_low() . '-' . $fleetShip->shield_high() ?><br />
-				Armour : <?php echo $fleetShip->armour_low() . '-' . $fleetShip->armour_high() ?><br />
-				Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
-				Combat Drones: <?php echo $fleetShip->combat_drones_low() . '-' . $fleetShip->combat_drones_high() ?><br /><?php
+				?><td style="vertical-align:top;"><?php
+				if (is_array($fleet))
+				{
+					foreach ($fleet as &$fleetPlayer)
+					{
+						$fleetShip =& $fleetPlayer->getShip();
+						echo $fleetPlayer->getLevelName(); ?><br /><?php
+						echo $fleetPlayer->getDisplayName() ?><br />
+						Race: <?php echo $fleetPlayer->getRaceName() ?><br />
+						Level: <?php echo $fleetPlayer->getLevelName() ?><br />
+						Alliance: <?php echo $fleetPlayer->getAllianceName() ?><br /><br />
+						<small><?php echo $fleetShip->getName() ?><br />
+						Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) .'/'. $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
+						if ($ThisShip->hasScanner())
+						{
+							?>Shields : <?php echo $fleetShip->shield_low() . '-' . $fleetShip->shield_high() ?><br />
+							Armour : <?php echo $fleetShip->armour_low() . '-' . $fleetShip->armour_high() ?><br />
+							Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
+							Combat Drones: <?php echo $fleetShip->combat_drones_low() . '-' . $fleetShip->combat_drones_high() ?><br /><?php
+						} ?>
+						</small><br /><br /><?php
+					}
+				}
+				else
+				{
+					?>&nbsp;<?php
+				} ?>
+				</td><?php
+			}
+			if(!$canAttack)
+			{
+				?><td>&nbsp;</td><?php
 			} ?>
-			</small><br /><br /><?php
-		}
-	}
-	else
-	{
-		?>&nbsp;<?php
-	} ?>
-	</td><?php
-}
-if(!$canAttack)
-{
-	?><td>&nbsp;</td><?php
-} ?>
-</tr></table></div>
+		</tr>
+	</table>
+</div>

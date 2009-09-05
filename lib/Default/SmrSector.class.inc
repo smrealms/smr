@@ -797,7 +797,7 @@ class SmrSector
 		return $fightingPlayers;
 	}
 
-	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer)
+	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer, $checkForCloak=false)
 	{
 		if($attackingPlayer->traderNAPAlliance($defendingPlayer))
 			throw new Exception('These traders are NAPed.');
@@ -812,7 +812,7 @@ class SmrSector
 				{
 					if($attackingPlayer->traderAttackTraderAlliance($player) && !$defendingPlayer->traderDefendTraderAlliance($player) && !$defendingPlayer->traderNAPAlliance($player))
 						$attackers[] =& $alliancePlayers[$accountID];
-					else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player))
+					else if($defendingPlayer->traderDefendTraderAlliance($player) && !$attackingPlayer->traderAttackTraderAlliance($player) && !$attackingPlayer->traderNAPAlliance($player) && ($checkForCloak===false || $attackingPlayer->canSee($player)))
 						$defenders[] =& $alliancePlayers[$accountID];
 				}
 			}
