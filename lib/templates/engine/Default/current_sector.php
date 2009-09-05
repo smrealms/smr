@@ -35,11 +35,11 @@
 				{
 					if($AttackResultsType=='PLAYER')
 					{
-						$this->includeTemplate('includes/TraderFullCombatResults.inc',array('TraderCombatResults'=>$AttackResults));
+						$this->includeTemplate('includes/TraderFullCombatResults.inc',array('TraderCombatResults'=>$AttackResults,'MinimalDisplay'=>true));
 					}
 					else if($AttackResultsType=='FORCE')
 					{
-						$this->includeTemplate('includes/ForceFullCombatResults.inc',array('FullForceCombatResults'=>$AttackResults));
+						$this->includeTemplate('includes/ForceFullCombatResults.inc',array('FullForceCombatResults'=>$AttackResults,'MinimalDisplay'=>true));
 					}
 					else if($AttackResultsType=='PORT')
 					{
@@ -47,7 +47,7 @@
 					}
 					else if($AttackResultsType=='PLANET')
 					{
-						$this->includeTemplate('includes/PlanetFullCombatResults.inc',array('FullPlanetCombatResults'=>$AttackResults));
+						$this->includeTemplate('includes/PlanetFullCombatResults.inc',array('FullPlanetCombatResults'=>$AttackResults,'MinimalDisplay'=>true));
 					}
 				}
 				if(isset($VarMessage))
