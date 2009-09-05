@@ -1865,9 +1865,9 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function getTurnsLevel()
 	{
 		if (!$this->hasTurns()) return 'NONE';
-		if ($this->getTurns() <= $this->getMaxTurns() / 10 ) return 'LOW';
-		else if ($this->getTurns() <= $this->getMaxTurns() / 6 ) return 'MEDIUM';
-		else return 'HIGH';
+		if ($this->getTurns() <= 25 ) return 'LOW';
+		if ($this->getTurns() <= 75 ) return 'MEDIUM';
+		return 'HIGH';
 	}
 	
 	public function canSeeAny(array $otherPlayerArray)
