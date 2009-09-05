@@ -96,25 +96,25 @@ if(isset($PlanetCombatResults['Drones']))
 				{
 					if($ActualDamage['HasCDs'])
 					{
-						?>which prove ineffective against their combat drones<?php
+						?> which prove ineffective against their combat drones<?php
 					}
 					else
 					{
-						?>which washes harmlessly over their hull<?php
+						?> which washes harmlessly over their hull<?php
 					}
 				}
 				else if($WeaponDamage['Armour'] > 0)
 				{
-					?>which is deflected by their shields<?php
+					?> which is deflected by their shields<?php
 				}
 				else
 				{
-					?>but they cannot do any damage<?php
+					?> but they cannot do any damage<?php
 				}
 			}
 			else
 			{
-				?>destroying <?php
+				?> destroying <?php
 				if($ActualDamage['Shield'] > 0)
 				{
 					?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
