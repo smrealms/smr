@@ -1,1 +1,0 @@
-ALTER TABLE `feature_request` ADD `implemented` ENUM( 'TRUE', 'FALSE' ) NOT NULL DEFAULT 'FALSE'

@@ -73,11 +73,11 @@
 	<?php
 	if(Globals::isFeatureRequestOpen())
 	{
-		?><a href="<?php echo Globals::getFeatureRequestHREF() ?>">Request A Feature</a><br /><?php
+		?><a href="<?php echo Globals::getFeatureRequestHREF(); ?>">Request A Feature</a><br /><?php
 	}
 	if(isset($GameID) && Globals::isBetaOpen())
 	{
-		?><a href="<?php echo Globals::getBetaApplyHREF() ?>">Apply For Beta</a><br /><?php
+		?><a href="<?php echo Globals::getBetaApplyHREF(); ?>">Apply For Beta</a><br /><?php
 	}
 	?>
 	<a href="<?php echo $ReportABugLink; ?>">Report A Bug</a><br />
