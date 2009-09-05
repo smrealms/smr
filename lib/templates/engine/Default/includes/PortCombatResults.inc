@@ -1,5 +1,19 @@
 <?php
 $CombatPort =& $PortCombatResults['Port'];
+$TotalDamage = $PortCombatResults['TotalDamage'];
+if($MinimalDisplay)
+{
+	echo $CombatPort->getDisplayName();
+	if($TotalDamage > 0)
+	{
+		?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat of which <span class="red"><?php echo $PortCombatResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()]; ?></span> was done to you<?php
+	}
+	else
+	{
+		?> does no damage this round<?php
+	} ?>.<?php
+	return;
+}
 if(is_array($PortCombatResults['Weapons']))
 {
 	foreach($PortCombatResults['Weapons'] as $WeaponResults)
@@ -139,7 +153,6 @@ if(isset($PortCombatResults['Drones']))
 	}
 }
 
-$TotalDamage = $PortCombatResults['TotalDamage'];
 echo $CombatPort->getDisplayName();
 	if($TotalDamage > 0)
 	{

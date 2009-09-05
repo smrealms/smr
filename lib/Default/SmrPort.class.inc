@@ -1184,7 +1184,11 @@ class SmrPort
 	
 	public function &shootPlayers(array &$targetPlayers)
 	{
-		$results = array('Port' => &$this, 'TotalDamage' => 0);
+		$results = array('Port' => &$this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
+		foreach($targetPlayers as &$targetPlayer)
+		{
+			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
+		} unset($targetPlayer);
 		if($this->isDestroyed())
 		{
 			$results['DeadBeforeShot'] = true;
@@ -1196,7 +1200,10 @@ class SmrPort
 		{
 			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayers[array_rand($targetPlayers)]);
 			if($results['Weapons'][$orderID]['Hit'])
+			{
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+			}
 		}
 		if($this->hasCDs())
 		{

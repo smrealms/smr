@@ -166,6 +166,10 @@ if ($db->nextRecord())
 	checkForForceRefreshMessage($msg);
 	checkForAttackMessage($msg);
 }
+if (isset($var['AttackMessage']))
+{
+	checkForAttackMessage($var['AttackMessage']);
+}
 if (isset($var['msg']))
 {
 	checkForForceRefreshMessage($var['msg']);
@@ -264,6 +268,7 @@ function checkForAttackMessage(&$msg)
 	$msg = str_replace('[ATTACK_RESULTS]','',$msg,$contains);
 	if($contains>0)
 	{
+		SmrSession::updateVar('AttackMessage','[ATTACK_RESULTS]'.$msg);
 		if(!$template->hasTemplateVar('AttackResults'))
 		{
 			$db->query('SELECT sector_id,result,type FROM combat_logs WHERE log_id=' . $db->escapeNumber($msg) . ' LIMIT 1');

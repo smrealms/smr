@@ -2,7 +2,7 @@
 foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 {
 	$ShootingPlayer =& $TraderResults['Player'];
-	$TotalDamage =& $TraderResults['TotalDamage'];
+	$TotalDamage =& $TraderResults['TotalDamagePerTargetPlayer'];
 	if($MinimalDisplay && !$ThisPlayer->equals($ShootingPlayer))
 	{
 		echo $ShootingPlayer->getDisplayName();
@@ -12,7 +12,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 		}
 		else
 		{
-			?> does no damage this round.<?php
+			?> does no damage this round<?php
 		} ?>.<br /><br /><?php
 		continue;
 	}
@@ -42,7 +42,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 				{
 					if(!$ShotHit)
 					{
-						?>and misses every critical system<?php
+						?> and misses every critical system<?php
 					}
 					else if($ActualDamage['TotalDamage'] == 0)
 					{
@@ -50,25 +50,25 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 						{
 							if($ActualDamage['HasCDs'])
 							{
-								?>which proves ineffective against their combat drones<?php
+								?> which proves ineffective against their combat drones<?php
 							}
 							else
 							{
-								?>which proves ineffective against it's armour<?php
+								?> which proves ineffective against it's armour<?php
 							}
 						}
 						else if($WeaponDamage['Armour'] > 0)
 						{
-							?>which is deflected by their shields<?php
+							?> which is deflected by their shields<?php
 						}
 						else
 						{
-							?>but it cannot do any damage<?php
+							?> but it cannot do any damage<?php
 						}
 					}
 					else
 					{
-						?>destroying <?php
+						?> destroying <?php
 						if($ActualDamage['Shield'] > 0)
 						{
 							?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
@@ -175,10 +175,10 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 	}
 	else
 	{
-		?> does no damage this round.<?php
+		?> does no damage this round<?php
 		if(!$TraderResults['DeadBeforeShot'])
 		{
-			?> Maybe they should go back to the academy<?php
+			?>. Maybe they should go back to the academy<?php
 		}
 	} ?>.<br /><br /><?php
 }
