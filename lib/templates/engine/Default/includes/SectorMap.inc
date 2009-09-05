@@ -50,7 +50,15 @@
 									}
 									if($Sector->hasForces())
 									{
-										?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php
+										if($Sector->hasEnemyForces($ThisPlayer))
+										{
+											?><img title="Enemy Forces" alt="Enemy Forces" src="images/enemyForces.png"/><?php
+										}
+										if($Sector->hasFriendlyForces($ThisPlayer))
+										{
+											?><img title="Friendly Forces" alt="Friendly Forces" src="images/friendlyForces.png"/><?php
+										}
+										/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
 									} ?>
 								</div><?php
 							} ?>
