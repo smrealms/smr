@@ -3,43 +3,35 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 // get request variables
-$amount = $_REQUEST['amount']?$_REQUEST['amount']:0;
-$smrCredits = $_REQUEST['smrcredits']?$_REQUEST['smrcredits']:0;
-$account_id = $_REQUEST['account_id'];
+if(isset($_REQUEST['amount']))
+	SmrSession::updateVar('BountyAmount',$_REQUEST['amount']);
+if(isset($_REQUEST['smrcredits']))
+	SmrSession::updateVar('BountySmrCredits',$_REQUEST['smrcredits']);
+if(isset($_REQUEST['account_id']))
+	SmrSession::updateVar('BountyAccountID',$_REQUEST['account_id']);
+$amount = $var['BountyAmount'];
+$smrCredits = $var['BountySmrCredits'];
+$account_id = $var['BountyAccountID'];
+
 if ($account_id == 0)
-{
 	create_error('Uhhh...who is [Please Select]?');
-	return;
-}
+
 if (!is_numeric($amount)||!is_numeric($smrCredits)||!is_numeric($account_id))
-{
 	create_error('Numbers only please');
-	return;
-}
+
 $amount = round($amount);
 if ($player->getCredits() < $amount)
-{
 	create_error('You dont have that much money.');
-	return;
-}
+
 $smrCredits = round($smrCredits);
 if ($account->getSmrCredits() < $smrCredits)
-{
 	create_error('You dont have that many SMR credits.');
-	return;
-}
 
 if ($amount <= 0 && $smrCredits <= 0)
-{
 	create_error('You must enter an amount greater than 0');
-	return;
-}
 
 if ((empty($amount) && empty($smrCredits)) || empty($account_id))
-{
 	create_error('Don\'t you want to place bounty?');
-	return;
-}
 
 $template->assign('PageTopic','Placing a bounty');
 
