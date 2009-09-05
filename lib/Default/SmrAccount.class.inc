@@ -44,6 +44,8 @@ class SmrAccount
 	protected $defaultCSSEnabled;
 	protected $centerGalaxyMapOnPlayer;
 	protected $oldAccountID;
+	protected $dateShort;
+	protected $timeShort;
 	
 	protected $hasChanged;
 	
@@ -112,6 +114,9 @@ class SmrAccount
 			$this->oldAccountID		= $row['old_account_id'];
 			
 			$this->hofName			= $row['hof_name'];
+			
+			$this->dateShort		= $row['date_short'];
+			$this->timeShort		= $row['time_short'];
 			if(empty($this->hofName))
 				$this->hofName=$this->login;
 			$this->get_rank();
@@ -613,6 +618,32 @@ class SmrAccount
 	public function getReferralLink()
 	{
 		return URL . '/login_create.php?ref='.$this->getAccountID();
+	}
+	
+	public function getShortDateFormat()
+	{
+		return $this->dateShort;
+	}
+	
+	public function setShortDateFormat($format)
+	{
+		if($this->dateShort==$format)
+			return;
+		$this->db->query('UPDATE account SET date_short = ' . $this->db->escapeString($format) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->dateShort=$format;
+	}
+	
+	public function getShortTimeFormat()
+	{
+		return $this->timeShort;
+	}
+	
+	public function setShortTimeFormat($format)
+	{
+		if($this->timeShort==$format)
+			return;
+		$this->db->query('UPDATE account SET time_short = ' . $this->db->escapeString($format) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->timeShort=$format;
 	}
 	
 	public function getValidationCode()

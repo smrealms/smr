@@ -14,13 +14,15 @@ if (SmrSession::$account_id > 0)
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	$db->query('SELECT * FROM account_is_closed WHERE account_id = '.SmrSession::$account_id);
 	if ($db->nextRecord())
+	{
 		$time = $db->getField('expires');
 	
-	$reason = $account->is_disabled();
-	if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DATE_FULL_SHORT, $time) . '.';
-	else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
+		$reason = $account->is_disabled();
+		if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $time) . '.';
+		else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
+	}
 
-	SmrSession::destroy();
+//	SmrSession::destroy();
 }
 else if(USE_COMPATIBILITY && SmrSession::$old_account_id > 0)
 {
@@ -31,12 +33,11 @@ else if(USE_COMPATIBILITY && SmrSession::$old_account_id > 0)
 	{
 		$time = $db->getField('expires');
 		$reason = $db->getField('reason');
-	}
 	
-	if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DATE_FULL_SHORT, $time) . '.';
-	else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
-
-	SmrSession::destroy();
+		if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $time) . '.';
+		else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
+	}
+//	SmrSession::destroy();
 }
  else $reason = 'Accessing Account Information Failed.  Contact an admin if you have questions.';
 

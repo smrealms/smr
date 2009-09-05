@@ -129,6 +129,12 @@ elseif ($action == 'Change Timezone')
 	$db->query('UPDATE account SET offset = '.$timez.' WHERE account_id = '.SmrSession::$account_id);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 }
+elseif ($action == 'Change Date Formats')
+{
+	$account->setShortDateFormat($_REQUEST['dateformat']);
+	$account->setShortTimeFormat($_REQUEST['timeformat']);
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your date formats.';
+}
 elseif ($action == 'Change Images')
 {
 	$account->images = $_REQUEST['images'];

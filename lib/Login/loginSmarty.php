@@ -6,7 +6,7 @@ $loginNews = array();
 $db->query('SELECT * FROM game_news ORDER BY time DESC LIMIT 3');
 while ($db->nextRecord())
 {
-	$loginNews[] = array('Message' => $db->getField('message'),'AdminName' => $db->getField('admin_name'),'Time' => date(DATE_DATE_SHORT,$db->getField('time')), 'Recent' => (TIME - $db->getField('time') < 24 * 3600));
+	$loginNews[] = array('Message' => $db->getField('message'),'AdminName' => $db->getField('admin_name'),'Time' => date(DEFAULT_DATE_DATE_SHORT,$db->getField('time')), 'Recent' => (TIME - $db->getField('time') < 24 * 3600));
 }
 if(count($loginNews)>0)
 	$template->assign('LoginNews',$loginNews);
@@ -20,7 +20,7 @@ $gameNews = array();
 $db->query('SELECT * FROM news ORDER BY time DESC LIMIT 4');
 while ($db->nextRecord())
 {
-	$gameNews[] = array('Date' => date(DATE_DATE_SHORT,$db->getField('time')), 'Time' => date(DATE_TIME_SHORT,$db->getField('time')), 'Message' => $db->getField('news_message'));
+	$gameNews[] = array('Date' => date(DEFAULT_DATE_DATE_SHORT,$db->getField('time')), 'Time' => date(DEFAULT_DATE_TIME_SHORT,$db->getField('time')), 'Message' => $db->getField('news_message'));
 }
 if(count($gameNews)>0)
 	$template->assign('GameNews',$gameNews);
