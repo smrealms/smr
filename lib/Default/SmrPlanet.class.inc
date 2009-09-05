@@ -708,7 +708,11 @@ class SmrPlanet
 	
 	public function &shootPlayers(array &$targetPlayers)
 	{
-		$results = array('Planet' => &$this, 'TotalDamage' => 0);
+		$results = array('Planet' => &$this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
+		foreach($targetPlayers as &$targetPlayer)
+		{
+			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
+		} unset($targetPlayer);
 		if($this->isDestroyed())
 		{
 			$results['DeadBeforeShot'] = true;
@@ -720,13 +724,17 @@ class SmrPlanet
 		{
 			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPlanet($this, $targetPlayers[array_rand($targetPlayers)]);
 			if($results['Weapons'][$orderID]['Hit'])
+			{
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+			}
 		}
 		if($this->hasCDs())
 		{
 			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs(),true);
 			$results['Drones'] =& $thisCDs->shootPlayerAsPlanet($this, $targetPlayers[array_rand($targetPlayers)]);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
+			$results['TotalDamagePerTargetPlayer'][$results['Drones']['TargetPlayer']->getAccountID()] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		return $results;
 	}

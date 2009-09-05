@@ -2,7 +2,7 @@
 foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 {
 	$ShootingPlayer =& $TraderResults['Player'];
-	$TotalDamage =& $TraderResults['TotalDamagePerTargetPlayer'];
+	$TotalDamage =& $TraderResults['TotalDamage'];
 	if($MinimalDisplay && !$ThisPlayer->equals($ShootingPlayer))
 	{
 		echo $ShootingPlayer->getDisplayName();

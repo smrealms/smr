@@ -146,19 +146,19 @@ if(isset($PortCombatResults['Drones']))
 			}
 		}
 	} ?>.
-	<br />
-	<?php if($ActualDamage['KillingShot'])
+	<br /><?php
+	if($ActualDamage['KillingShot'])
 	{
 		$this->includeTemplate('includes/TraderCombatKillMessage.inc',array('TargetPlayer'=>&$TargetPlayer));
 	}
 }
 
 echo $CombatPort->getDisplayName();
-	if($TotalDamage > 0)
-	{
-		?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
-	}
-	else
-	{
-		?> does no damage this round<?php
-	} ?>.
+if($TotalDamage > 0)
+{
+	?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat<?php
+}
+else
+{
+	?> does no damage this round<?php
+} ?>.
