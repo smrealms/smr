@@ -94,6 +94,7 @@ input.inputbox {
 <a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" alt="Video Tutorials"></a><a href="http://manual.smrealms.de" target="ml"><img src="images/login/sml.png" alt="Merchant Library"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.png" alt="Manual"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" alt="Web Board"></a><a href="http://www.smrealms.de/cgi-bin/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" alt="Site Statistics"></a><br />
 
 <?php
+/*
 if(!$isFirefox)
 { ?>
 	<br />
