@@ -1099,7 +1099,7 @@ abstract class AbstractSmrShip
 		return $results;
 	}
 	
-	public function &shootPlanet(SmrPlanet &$planet)
+	public function &shootPlanet(SmrPlanet &$planet, $delayed)
 	{
 		$thisPlayer =& $this->getPlayer();
 		$results = array('Player' => &$thisPlayer, 'TotalDamage' => 0);
@@ -1111,14 +1111,14 @@ abstract class AbstractSmrShip
 		$results['DeadBeforeShot'] = false;
 		foreach($this->weapons as $orderID => &$weapon)
 		{
-			$results['Weapons'][$orderID] =& $weapon->shootPlanet($thisPlayer, $planet);
+			$results['Weapons'][$orderID] =& $weapon->shootPlanet($thisPlayer, $planet, $delayed);
 			if($results['Weapons'][$orderID]['Hit'])
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 		}
 		if($this->hasCDs())
 		{
 			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
-			$results['Drones'] =& $thisCDs->shootPlanet($thisPlayer, $planet);
+			$results['Drones'] =& $thisCDs->shootPlanet($thisPlayer, $planet, $delayed);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.

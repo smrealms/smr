@@ -31,6 +31,9 @@ class SmrPlanet
 	protected $hasChangedStockpile = false;
 	protected $isNew = false;
 	
+	protected $delayedShieldDelta = 0;
+	protected $delayedCDsDelta = 0;
+	
 	public static function refreshCache()
 	{
 		foreach(self::$CACHE_PLANETS as $gameID => &$gamePlanets)
@@ -238,30 +241,33 @@ class SmrPlanet
 			$this->setCDs($this->getMaxCDs());
 	}
 	
-	public function getShields()
+	public function getShields($delayed = false)
 	{
-		return $this->shields;
+		return $this->shields + ($delayed?$this->delayedShieldsDelta:0);
 	}
 	
-	public function hasShields()
+	public function hasShields($delayed = false)
 	{
-		return $this->getShields()>0;
+		return $this->getShields($delayed)>0;
 	}
 	
 	public function setShields($shields)
 	{
 		if($shields<0)
 			$shields=0;
-		if ($this->getShields() > $this->getMaxShields())
-			$this->setShields($this->getMaxShields());
+		if ($shields > $this->getMaxShields())
+			$shields = $this->getMaxShields();
 		if($this->shields == $shields)
 			return;
 		$this->shields=$shields;
 	}
 	
-	public function decreaseShields($number)
+	public function decreaseShields($number, $delayed = false)
 	{
-		$this->setShields($this->getShields() - $number);
+		if($delayed===false)
+			$this->setShields($this->getShields() - $number);
+		else
+			$this->delayedShieldDelta -= $number;
 	}
 	
 	public function getMaxShields()
@@ -269,30 +275,33 @@ class SmrPlanet
 		return $this->getBuilding(PLANET_GENERATOR) * PLANET_GENERATOR_SHIELDS;
 	}
 	
-	public function getCDs()
+	public function getCDs($delayed = false)
 	{
-		return $this->drones;
+		return $this->drones + ($delayed?$this->delayedCDsDelta:0);
 	}
 	
-	public function hasCDs()
+	public function hasCDs($delayed = false)
 	{
-		return $this->getCDs()>0;
+		return $this->getCDs($delayed)>0;
 	}
 	
 	public function setCDs($combatDrones)
 	{
 		if($combatDrones<0)
 			$combatDrones=0;
-		if ($this->getCDs() > $this->getMaxCDs())
-			$this->setCDs($this->getMaxCDs());
+		if ($combatDrones > $this->getMaxCDs())
+			$combatDrones = $this->getMaxCDs();
 		if($this->drones == $combatDrones)
 			return;
 		$this->drones=$combatDrones;
 	}
 	
-	public function decreaseCDs($number)
+	public function decreaseCDs($number, $delayed = false)
 	{
-		$this->setCDs($this->getCDs() - $number);
+		if($delayed===false)
+			$this->setCDs($this->getCDs() - $number);
+		else
+			$this->delayedCDsDelta -= $number;
 	}
 	
 	public function getMaxCDs()
@@ -300,9 +309,9 @@ class SmrPlanet
 		return $this->getBuilding(PLANET_HANGAR) * PLANET_HANGAR_DRONES;
 	}
 	
-	public function isDestroyed()
+	public function isDestroyed($delayed = false)
 	{
-		return !$this->hasCDs() && !$this->hasShields();
+		return !$this->hasCDs($delayed) && !$this->hasShields($delayed);
 	}
 	
 	public function exists()
@@ -489,10 +498,18 @@ class SmrPlanet
 //						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
 //					}
 	}
-
-	function update()
+	
+	public function doDelayedUpdates()
 	{
+		$this->setShields($this->getShields(true));
+		$this->delayedShieldsDelta = 0;
+		$this->setCDs($this->getCDs(true));
+		$this->delayedCDsDelta = 0;
+	}
 
+	public function update()
+	{
+		$this->doDelayedUpdates();
 		$this->db->query('UPDATE planet SET owner_id = '.$this->owner_id.', ' .
 										'password = '.$this->db->escapeString($this->password).', ' .
 										'planet_name = ' . $this->db->escapeString($this->planet_name) . ', ' .
@@ -796,63 +813,56 @@ class SmrPlanet
 		return $results;
 	}
 	
-	public function &doWeaponDamage(array $damage)
+	public function &doWeaponDamage(array $damage, $delayed)
 	{
-		$alreadyDead = $this->isDestroyed();
+		$alreadyDead = $this->isDestroyed(true);
 		$shieldDamage = 0;
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if(!$alreadyDead)
 		{
-			if($damage['Shield'] || !$this->hasShields())
+			if($damage['Shield'] || !$this->hasShields(true))
 			{
-				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']));
+				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']),$delayed);
 				$damage['MaxDamage'] -= $shieldDamage;
-				if(!$this->hasShields() && ($shieldDamage == 0 || $damage['Rollover']))
+				if(!$this->hasShields(true) && ($shieldDamage == 0 || $damage['Rollover']))
 				{
-					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']));
+					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
 					$damage['Armour'] -= $cdDamage;
 					$damage['MaxDamage'] -= $cdDamage;
 				}
 			}
 			else //hit drones behind shields
 			{
-				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'],$damage['Armour'])*DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT));
+				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'],$damage['Armour'])*DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT),$delayed);
 			}
 		}
 
 		$return = array(
-						'KillingShot' => !$alreadyDead && $this->isDestroyed(),
+						'KillingShot' => !$alreadyDead && $this->isDestroyed(true),
 						'TargetAlreadyDead' => $alreadyDead,
 						'Shield' => $shieldDamage,
-						'HasShields' => $this->hasShields(),
+						'HasShields' => $this->hasShields(true),
 						'CDs' => $cdDamage,
 						'NumCDs' => $cdDamage/CD_ARMOUR,
-						'HasCDs' => $this->hasCDs(),
+						'HasCDs' => $this->hasCDs(true),
 						'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
 		);
 		return $return;
 	}
 	
-	protected function doShieldDamage($damage)
+	protected function doShieldDamage($damage, $delayed)
 	{
-		$actualDamage = min($this->getShields(),$damage);
-		$this->decreaseShields($actualDamage);
+		$actualDamage = min($this->getShields(true),$damage);
+		$this->decreaseShields($actualDamage, $delayed);
 		return $actualDamage;
 	}
 	
-	protected function doCDDamage($damage)
+	protected function doCDDamage($damage, $delayed)
 	{
-		$actualDamage = min($this->getCDs(),floor($damage/CD_ARMOUR));
-		$this->decreaseCDs($actualDamage);
+		$actualDamage = min($this->getCDs(true),floor($damage/CD_ARMOUR));
+		$this->decreaseCDs($actualDamage, $delayed);
 		return $actualDamage*CD_ARMOUR;
-	}
-	
-	protected function doArmourDamage($damage)
-	{
-		$actualDamage = min($this->getArmour(),floor($damage));
-		$this->decreaseArmour($actualDamage);
-		return $actualDamage;
 	}
 	
 	public function creditCurrentAttackersForKill()
