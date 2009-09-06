@@ -361,9 +361,12 @@ abstract class AbstractSmrShip
 			$this->setCargo($goodID,0);
 	}
 	
-	public function removeAllHardware() {
-		
-		$this->hardware = array();
+	public function removeAllHardware()
+	{
+		foreach($this->hardware as &$hardware)
+		{
+			$hardware = 0;
+		}
 		$this->decloak();
 		$this->disableIllusion();
 		$this->hasChangedHardware = true;
