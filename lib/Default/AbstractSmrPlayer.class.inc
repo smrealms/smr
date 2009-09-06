@@ -659,9 +659,9 @@ abstract class AbstractSmrPlayer
 		return $this->getShip()->shootPort($port);
 	}
 	
-	public function &shootPlanet(SmrPlanet &$planet)
+	public function &shootPlanet(SmrPlanet &$planet, $delayed)
 	{
-		return $this->getShip()->shootPlanet($planet);
+		return $this->getShip()->shootPlanet($planet, $delayed);
 	}
 	
 	public function &shootPlayers(array &$targetPlayers)

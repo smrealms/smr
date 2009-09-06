@@ -302,7 +302,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $this->doPlayerDamageToPort($return,$weaponPlayer, $port);
 	}
 	
-	public function &shootPlanet(AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet)
+	public function &shootPlanet(AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet, $delayed)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlanet' => &$planet);
 		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPlanet($weaponPlayer,$planet)) //Check if we miss
@@ -311,7 +311,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 			return $return;
 		}
 		$return['Hit'] = true;
-		return $this->doPlayerDamageToPlanet($return,$weaponPlayer, $planet);
+		return $this->doPlayerDamageToPlanet($return,$weaponPlayer, $planet, $delayed);
 	}
 	
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
