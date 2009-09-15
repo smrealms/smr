@@ -227,6 +227,10 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 			return array('MaxDamage' => 0, 'Shield' => 0, 'Armour' => 0, 'Rollover' => $this->isDamageRollover());
 		$damage =& $this->getModifiedDamage($weaponPlayer);
 		
+		$damage['MaxDamage'] /= 5;
+		$damage['Shield'] /= 5;
+		$damage['Armour'] /= 5;
+		
 		$diminishing = $weaponPlayer->getDiminishingPlanetAttack();
 		$damage['MaxDamage'] = ceil($diminishing * $damage['MaxDamage']);
 		$damage['Shield'] = ceil($diminishing * $damage['Shield']);
