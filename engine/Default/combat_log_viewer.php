@@ -190,16 +190,6 @@ if($action != 5)
 		if ($totalLogs > 1) $PHP_OUTPUT.= ' are';
 		else $PHP_OUTPUT.= ' is';
 		$PHP_OUTPUT.=' being shown.<br /><br />';
-		$container = $var;
-		$container['page'] = $page-1;
-		$PHP_OUTPUT.='<table style="width: 100%"><tr><td style="text-align: center; width: 30%" valign="middle">';
-		if($page>0)
-			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/rew.jpg" alt="Previous Page" border="0"></a>';
-		$PHP_OUTPUT.='</td><td/><td style="text-align: center; width: 30%" valign="middle">';
-		$container['page'] = $page+1;
-		if(($page+1)*COMBAT_LOGS_PER_PAGE<$totalLogs)
-			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/fwd.jpg" alt="Next Page" border="0"></a>';
-		$PHP_OUTPUT.='</td></tr></table>';
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'combat_log_viewer.php';
@@ -211,9 +201,20 @@ if($action != 5)
 		$actions[] = array('Save','Save');
 		$form = create_form($container,$actions);
 		$PHP_OUTPUT.= $form['form'];
+		$container = $var;
+		$container['page'] = $page-1;
+		$PHP_OUTPUT.='<table style="width: 100%"><tr><td style="text-align: center; width: 30%" valign="middle">';
+		if($page>0)
+			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/rew.jpg" alt="Previous Page" border="0"></a>';
+		$PHP_OUTPUT.='</td><td>';
 		$PHP_OUTPUT.= $form['submit']['View'];
 		$PHP_OUTPUT.= '&nbsp';
 		$PHP_OUTPUT.= $form['submit']['Save'];
+		$PHP_OUTPUT.='<td style="text-align: center; width: 30%" valign="middle">';
+		$container['page'] = $page+1;
+		if(($page+1)*COMBAT_LOGS_PER_PAGE<$totalLogs)
+			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/fwd.jpg" alt="Next Page" border="0"></a>';
+		$PHP_OUTPUT.='</td></tr></table>';
 		$PHP_OUTPUT.= '<br /><br /><table class="standard fullwidth">';
 		$PHP_OUTPUT.= '<tr><th>View</th><th>Date</th><th>Sector</th><th>Attacker</th><th>Defender</th></tr>';
 		while($db->nextRecord())
