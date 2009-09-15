@@ -144,18 +144,27 @@ if(isset($query) && $query)
 	{
 		$query .= ' AND (attacker_id=' . $player->getAccountID() . ' OR defender_id=' . $player->getAccountID() . ') ';
 	}
-	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs WHERE '.$query.' ORDER BY log_id DESC, sector_id');
+	$page = 0;
+	if(isset($var['page']))
+		$page = $var['page'];
+	$db->query('SELECT count(*) as count FROM combat_logs WHERE '.$query.' LIMIT 1');
+	if($db->nextRecord())
+		$totalLogs = $db->getField('count');
+	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs WHERE '.$query.' ORDER BY log_id DESC, sector_id LIMIT '.($page*50).', 50');
 }
 
-if($action != 5) {
+if($action != 5)
+{
 	$PHP_OUTPUT.= '<div align="center">';
-	if($db->getNumRows() > 0) {
+	if($db->getNumRows() > 0)
+	{
 		$num = $db->getNumRows();
 		$PHP_OUTPUT.= 'There ';
-		if ($num > 1) $PHP_OUTPUT.= 'are ';
+		if ($totalLogs > 1) $PHP_OUTPUT.= 'are ';
 		else $PHP_OUTPUT.= 'is ';
-		$PHP_OUTPUT.= $num;
-		switch($action){
+		$PHP_OUTPUT.= $totalLogs;
+		switch($action)
+		{
 			case(0):
 				$PHP_OUTPUT.= ' personal';
 			break;
@@ -177,7 +186,7 @@ if($action != 5) {
 		}
 		$PHP_OUTPUT.= ' log';
 		if ($num > 1) $PHP_OUTPUT.= 's';
-		$PHP_OUTPUT.= ' available for viewing.<br /><br />';
+		$PHP_OUTPUT.= ' available for viewing  of which '.$num.' are being shown.<br /><br />';
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'combat_log_viewer.php';
@@ -194,7 +203,8 @@ if($action != 5) {
 		$PHP_OUTPUT.= $form['submit']['Save'];
 		$PHP_OUTPUT.= '<br /><br /><table class="standard fullwidth">';
 		$PHP_OUTPUT.= '<tr><th>View</th><th>Date</th><th>Sector</th><th>Attacker</th><th>Defender</th></tr>';
-		while($db->nextRecord()) {
+		while($db->nextRecord())
+		{
 			//attacker_id,defender_id,timestamp,sector_id,log_id
 			$logs[$db->getField('log_id')] = array($db->getField('attacker_id'),$db->getField('defender_id'),$db->getField('timestamp'),$db->getField('sector_id'));
 			$player_ids[] = $db->getField('attacker_id');
@@ -206,7 +216,8 @@ if($action != 5) {
 					AND game_id = '.SmrSession::$game_id.'
 					LIMIT ' . sizeof($player_ids));
 		while ($db->nextRecord()) $players[$db->getField('account_id')] = stripslashes($db->getField('player_name'));
-		foreach ($logs as $id => $info) {
+		foreach ($logs as $id => $info)
+		{
 			$container['id'] = $id;
 			$PHP_OUTPUT.= '<tr>';
 			$PHP_OUTPUT.= '<td class="center shrink">';
@@ -228,7 +239,8 @@ if($action != 5) {
 		$PHP_OUTPUT.= '</table>';
 		$PHP_OUTPUT.= '</form>';
 	}
-	else {
+	else
+	{
 		$PHP_OUTPUT.= 'No combat logs found';
 	}
 	$PHP_OUTPUT.= '</div>';
