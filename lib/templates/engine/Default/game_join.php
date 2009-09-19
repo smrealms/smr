@@ -22,8 +22,11 @@ if($Game['Description'])
 { ?>
 	<h1>Description</h1>
 	<p><?php echo bbifyMessage($Game['Description']); ?></p><?php
+}
+if(isset($JoinGameFormHref))
+{
+	?><form name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>"><?php
 } ?>
-<form name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>">
 	<h1>Create Merchant</h1><br />
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
@@ -43,7 +46,7 @@ if($Game['Description'])
 				<table border="0" cellpadding="3">
 					<tr>
 						<td align="right"><b>Name:</b></td>
-						<td><input type="text" name="player_name" maxlength="32" class="InputFields"></td>
+						<td><input type="text" name="player_name" maxlength="32" class="InputFields"<?php if(!isset($JoinGameFormHref)){ ?>disabled="disabled"<?php } ?>></td>
 						<td rowspan="4" class="standard"><img name="race_image" src="images/race1.gif" alt="Please select a race."></td>
 					</tr>
 					<tr>
@@ -61,7 +64,15 @@ if($Game['Description'])
 					
 					<tr>
 						<td align="right">&nbsp;</td>
-						<td><input type="submit" name="action" value="Create Player" class="InputFields">
+						<td><?php
+						if(isset($JoinGameFormHref))
+						{
+							?><input type="submit" name="action" value="Create Player" class="InputFields"><?php
+						}
+						else
+						{
+							?>This game has not started yet.<?php
+						} ?>
 						</td>
 					</tr>
 					
@@ -95,8 +106,11 @@ if($Game['Description'])
 				</table>
 			</td>
 		</tr>
-	</table>
-</form>
+	</table><?php
+if(isset($JoinGameFormHref))
+{
+	?></form><?php
+} ?>
 
 <script type="text/javascript">
 var	desc = new Array(<?php echo $RaceDescriptions; ?>);
