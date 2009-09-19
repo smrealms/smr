@@ -50,7 +50,7 @@ foreach($individualScores as $statScore)
 			$PHP_OUTPUT.=' - ';
 		$PHP_OUTPUT.=$stat;
 	}
-	$PHP_OUTPUT.=(', has a stat of '.$account->getHOF($statScore['Stat']).' and a score of ' . number_format(round($statScore['Score'])).' (roughly)<br />');
+	$PHP_OUTPUT.=(', has a stat of '.number_format($account->getHOF($statScore['Stat'])).' and a score of ' . number_format(round($statScore['Score'])).' (roughly)<br />');
 }
 
 if (SmrSession::$game_id != 0)
@@ -70,7 +70,7 @@ if (SmrSession::$game_id != 0)
 				$PHP_OUTPUT.=' - ';
 			$PHP_OUTPUT.=$stat;
 		}
-		$PHP_OUTPUT.=(', has a stat of '.$player->getHOF($statScore['Stat']).' and a score of ' . number_format(round($statScore['Score'])).' (roughly)<br />');
+		$PHP_OUTPUT.=(', has a stat of '.number_format($player->getHOF($statScore['Stat'])).' and a score of ' . number_format(round($statScore['Score'])).' (roughly)<br />');
 	}
 }
 $PHP_OUTPUT.='<br /><br />Note: The total score will be lower than the sum of the individual scores as the points you get for each action is reduced as you do it more (people who are good at all parts of the game get more points than someone who is only good at one part).';
