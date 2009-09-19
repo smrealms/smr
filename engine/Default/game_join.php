@@ -22,34 +22,19 @@ if ($game['Credits'] > 0)
 {
 	// do we have enough
 	if ($account->getTotalSmrCredits() < $game['Credits'])
-	{
 	    create_error('Sorry you dont have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR');
-	    return;
-	}
 }
 
 // is the game already full?
 $db->query('SELECT * FROM player WHERE game_id = ' . $var['game_id']);
-if ($db->getNumRows() >= $game['MaxPlayers']) {
-
+if ($db->getNumRows() >= $game['MaxPlayers'])
     create_error('The maximum number of players in that game is reached!');
-    return;
 
-}
+//if (TIME < $game['StartDate'])
+//    create_error('You want to join a game that hasn\'t started yet?');
 
-if (TIME < $game['StartDate']) {
-
-    create_error('You want to join a game that hasn\'t started yet?');
-    return;
-
-}
-
-if (TIME > $game['EndDate']) {
-
+if (TIME > $game['EndDate'])
     create_error('You want to join a game that is already over?');
-    return;
-
-}
 
 $template->assign('PageTopic', 'Join Game');
 
@@ -74,9 +59,8 @@ $template->assign('RaceDescriptions',$raceDescriptions);
 $container = array();
 $container['game_id'] = $var['game_id'];
 $container['url'] = 'game_join_processing.php';
-$template->assign('JoinGameFormHref',SmrSession::get_new_href($container));
-
-
+if (TIME >= $game['StartDate'])
+	$template->assign('JoinGameFormHref',SmrSession::get_new_href($container));
 
 $db2 = new SmrMySqlDatabase();
 //this prevents multiple races appearing when there is more than 1 game
@@ -91,7 +75,6 @@ $db->query('SELECT location_name, location.location_type_id as loc_id
 $races = array();
 while ($db->nextRecord())
 {
-
 	// get the name for this race
 	// HACK! cut ' Headquarters' from location name!
 	$race_name = substr(stripslashes($db->getField('location_name')), 0, -13);
