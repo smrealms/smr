@@ -71,7 +71,7 @@ if(isset($JoinGameFormHref))
 						}
 						else
 						{
-							?>This game has not started yet.<?php
+							?><b>This game has not started yet.</b><?php
 						} ?>
 						</td>
 					</tr>
