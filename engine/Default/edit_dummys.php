@@ -25,7 +25,10 @@ if(isset($_REQUEST['save_dummy']))
 		$dummyShip->removeAllWeapons();
 		foreach($_REQUEST['weapons'] as $weaponTypeID)
 		{
-			$dummyShip->addWeapon($weaponTypeID);
+			if($weaponTypeID!=0)
+			{
+				$dummyShip->addWeapon($weaponTypeID);
+			}
 		}
 	}
 	$dummyPlayer->cacheDummyPlayer();
