@@ -44,7 +44,7 @@
 						} ?>
 					</select><br /><?php
 				}
-				for(;$OrderID<$DummyShip->getHardpoints();$OrderID++)
+				for($OrderID++;$OrderID<$DummyShip->getHardpoints();$OrderID++)
 				{ ?>
 					Weapon: <?php echo $OrderID+1; ?>
 					<select name="weapons[]">
