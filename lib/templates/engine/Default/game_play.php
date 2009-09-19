@@ -84,7 +84,7 @@ if(isset($Games['Join']))
 		{ ?>
 			<tr>
 				<td>
-					<div class="buttonA"><a class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if(TIME < $game['StartDate']) {?>&nbsp;View Info&nbsp;<?php }else{ ?>&nbsp;Join Game&nbsp;<?php } ?></a></div>
+					<div class="buttonA"><a class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>"><?php if(TIME < $Game['StartDate']) {?>&nbsp;View Info&nbsp;<?php }else{ ?>&nbsp;Join Game&nbsp;<?php } ?></a></div>
 				</td>
 				<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
 				<td><?php echo $Game['StartDate']; ?></td>
