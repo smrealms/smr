@@ -25,7 +25,7 @@ if(!$onlyImplemented)
 $db->query('SELECT * ' .
 			'FROM feature_request ' .
 			'WHERE implemented = ' . $db->escapeBoolean($onlyImplemented) .
-			'ORDER BY feature_request_id');
+			'ORDER BY feature_request_id DESC');
 if ($db->getNumRows() > 0)
 {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
