@@ -51,23 +51,27 @@ if ($next_sector == $sector->getLinkUp() ||
 	//$PHP_OUTPUT.=create_echo_form($container);
 	if (!$player->isLandedOnPlanet())
 	{
-		$container = array();
-		$container['url'] = 'sector_move_processing.php';
-		$container['target_page'] = 'current_sector.php';
-		$container['target_sector'] = $next_sector;
-
-		$PHP_OUTPUT.=create_button($container, 'Follow plotted course - ' .  $next_sector . ' (' . $path->getTotalSectors() . ')');
+		$nextSector =& SmrSector::getSector($player->getGameID(),$path->getNextOnPath(),$player->getAccountID());
 	
-		if ($ship->hasScanner()) {
-	
-			$PHP_OUTPUT.=('&nbsp;&nbsp;&nbsp;');
-			$container = array();
-			$container['url']			= 'skeleton.php';
-			$container['body']			= 'sector_scan.php';
-			$container['target_sector'] = $next_sector;
-			$PHP_OUTPUT.=create_button($container, 'Scan');
-	
+		$PHP_OUTPUT.='<table class="nobord" width="100%">
+			<tr>
+				<td class="top right">
+					<div class="buttonA">
+						<a class="buttonA" href="'.$nextSector->getCurrentSectorHREF().'">&nbsp; Follow Course ('.$path->getNextOnPath().') &nbsp;</a>
+					</div>
+				</td>
+			</tr>';
+		if($ship->hasScanner())
+		{
+			$PHP_OUTPUT.='<tr>
+				<td class="top right">
+					<div class="buttonA">
+						<a class="buttonA" href="'.$nextSector->getScanSectorHREF().'">&nbsp; Scan Course ('.$path->getNextOnPath().') &nbsp;</a>
+					</div>
+				</td>
+			</tr>';
 		}
+		$PHP_OUTPUT.='</table>';
 	}
 }
 
