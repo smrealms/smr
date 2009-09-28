@@ -3,9 +3,15 @@
 <html>
 	<head>
 		<title><?php echo $Title ?> <?php if(isset($GameName)) echo $GameName; ?></title>
-		<meta http-equiv="pragma" content="no-cache">
-		<?php if(is_object($ThisAccount) && $ThisAccount->isDefaultCSSEnabled()){ ?><link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>"><?php } ?>
-		<?php if(isset($ExtraCSSLink)){ ?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>"><?php } ?>
+		<meta http-equiv="pragma" content="no-cache"><?php
+		if(is_object($ThisAccount) && $ThisAccount->isDefaultCSSEnabled())
+		{
+			?><link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>"><?php
+		}
+		if(isset($ExtraCSSLink))
+		{
+			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>"><?php
+		} ?>
 		<!--[if IE]>
 			<link rel="stylesheet" type="text/css" href="css/ie_specific.css">
 		<![endif]-->
@@ -13,13 +19,11 @@
 			body {
 				font-size:<?php echo $FontSize; ?>%;
 			}
-		</style>
-		<?php
-			if(isset($HeaderTemplateInclude))
-			{
-				$this->includeTemplate($HeaderTemplateInclude);
-			}
-		?>
+		</style><?php
+		if(isset($HeaderTemplateInclude))
+		{
+			$this->includeTemplate($HeaderTemplateInclude);
+		} ?>
 		<script type="text/javascript" src="js/smr15.js"></script>
 	</head>
 	<body>
@@ -34,18 +38,16 @@
 					</div>
 				</td>
 				<td class="m0" colspan="2">
-					<div id="middle_panel">
-						<?php
-							if(isset($PageTopic))
-							{
-								?><h1><?php echo $PageTopic; ?></h1><br /><?php
-							}
-							if(isset($MenuBar))
-							{
-								echo $MenuBar;
-							}
-							$this->includeTemplate($TemplateBody);
-						?>
+					<div id="middle_panel"><?php
+						if(isset($PageTopic))
+						{
+							?><h1><?php echo $PageTopic; ?></h1><br /><?php
+						}
+						if(isset($MenuBar))
+						{
+							echo $MenuBar;
+						}
+						$this->includeTemplate($TemplateBody); ?>
 					</div>
 				</td>
 				<td class="r0">
@@ -56,11 +58,11 @@
 			</tr>
 			<tr>
 				<td class="footer_left">
-					<div style="width:294px;text-align:center">Get <b><u>FREE TURNS</u></b> for voting if(you see the star.</div>
-					<?php
+					<div style="width:294px;text-align:center">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</div><?php
 						foreach($VoteSites as $VoteSite)
+						{
 							echo $VoteSite;
-						?>
+						} ?>
 				</td>
 				<td class="footer_right">
 					<?php $this->includeTemplate('includes/copyright.inc'); ?>
@@ -70,15 +72,14 @@
 
 
 
-		<script type="text/javascript" src="js/ajax.js"></script>
-		<?php
+		<script type="text/javascript" src="js/ajax.js"></script><?php
 		if(!empty($js))
-		{ ?>
-			<script type="text/javascript" src="<?php echo $js ?>"></script><?php
+		{
+			?><script type="text/javascript" src="<?php echo $js ?>"></script><?php
 		} 
 		if($AJAX_ENABLE_REFRESH)
-		{ ?>
-			<script type="text/javascript">window.onload=function(){startRefresh('<?php echo $AJAX_ENABLE_REFRESH ?>');}</script><?php
+		{
+			?><script type="text/javascript">window.onload=function(){startRefresh('<?php echo $AJAX_ENABLE_REFRESH ?>');}</script><?php
 		} ?>
 	</body>
 </html>
