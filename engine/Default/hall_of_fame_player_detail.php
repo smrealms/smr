@@ -45,10 +45,8 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'hall_of_fame_player_detail.php';
-if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
+$container = $var;
+unset($container['type']);
 $viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,'Personal HoF');
 $typeList = array();
 if(isset($var['type']))
@@ -64,11 +62,8 @@ if(isset($var['type']))
 		else
 			$typeList[] = $type;
 		$viewing .= ' -&gt; ';
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'hall_of_fame_player_detail.php';
+		$container = $var;
 		$container['type'] = $typeList;
-		if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
 		$viewing.= create_link($container,$type);
 		
 		$hofTypes =& $hofTypes[$type];
@@ -82,13 +77,7 @@ if(isset($var['view']))
 		$typeList[] = $var['view'];
 		$var['type'] = $typeList;
 	}
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'hall_of_fame_player_detail.php';
-	$container['type'] = $typeList;
-	if(isset($var['view'])) $container['view'] = $var['view'];
-	if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
-	$viewing .= create_link($container,$var['view']);
+	$viewing .= create_link($var,$var['view']);
 	
 	if(is_array($hofTypes[$var['view']]))
 	{
@@ -104,23 +93,17 @@ $PHP_OUTPUT.= create_table();
 
 if(!isset($var['view']))
 {
-	$PHP_OUTPUT.=('<tr><th align=center>Category</th><th align=center width=60%>Subcategory</th></tr>');
+	$PHP_OUTPUT.=('<tr><th align=center>Category</th><th align="center" width="60%">Subcategory</th></tr>');
 	
 	foreach($hofTypes as $type => $value)
 	{
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align=center>'.$type.'</td>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'hall_of_fame_player_detail.php';
-		if (isset($var['type']))
-			$container['type'] = $var['type'];
-		else
+		$container = $var;
+		if (!isset($var['type']))
 			$container['type'] = array();
 		$container['type'][] = $type;
-		$container['game_id'] = $var['game_id'];
-		$container['account_id'] = $account_id;
-		$PHP_OUTPUT.=('<td align=center valign=middle>');
+		$PHP_OUTPUT.=('<td align="center" valign="middle">');
 		$i=0;
 		if(is_array($value))
 		{
