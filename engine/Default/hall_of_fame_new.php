@@ -100,7 +100,7 @@ $PHP_OUTPUT.= '<table class="standard" align="center">';
 
 if(!isset($var['view']))
 {
-	$PHP_OUTPUT.=('<tr><th>Category</th><th width=60%>Subcategory</th></tr>');
+	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');
 	
 	foreach($hofTypes as $type => $value)
 	{
@@ -116,7 +116,7 @@ if(!isset($var['view']))
 		$container['type'][] = $type;
 		if (isset($var['game_id']))
 			$container['game_id'] = $var['game_id'];
-		$PHP_OUTPUT.=('<td valign=middle>');
+		$PHP_OUTPUT.=('<td valign="middle">');
 		$i=0;
 		if(is_array($value))
 		{

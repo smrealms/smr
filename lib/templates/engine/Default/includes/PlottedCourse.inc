@@ -1,4 +1,5 @@
-<?php if($ThisPlayer->hasPlottedCourse())
+<?php
+if($ThisPlayer->hasPlottedCourse())
 {
 	$PlottedCourse =& $ThisPlayer->getPlottedCourse();
 	$NextSector =& SmrSector::getSector($ThisPlayer->getGameID(),$PlottedCourse->getNextOnPath(),$ThisPlayer->getAccountID()); ?>
