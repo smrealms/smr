@@ -14,6 +14,8 @@ if ($account->validated == 'FALSE')
 if(isset($_REQUEST['account_num']))
 	SmrSession::updateVar('AccountNumber',$_REQUEST['account_num']);
 $account_num = $var['AccountNumber'];
+if(isset($account_num) && !is_numeric($account_num))
+	create_error('Account number must be a number!');
 if(isset($_REQUEST['pass']))
 	SmrSession::updateVar('Password',$_REQUEST['pass']);
 if(isset($_REQUEST['maxValue']))
@@ -174,7 +176,7 @@ if (isset($account_num))
 	//they didnt come from the creation screen so we need to check if the pw is correct
     $db->query('SELECT *
 				FROM anon_bank
-				WHERE anon_id=' . $account_num . '
+				WHERE anon_id=' . $db->escapeNumber($account_num) . '
 				AND game_id=' . $player->getGameID() . ' LIMIT 1'
 				);
 
@@ -209,7 +211,7 @@ if (isset($account_num))
 	else {
 		$db->query('SELECT MAX(transaction_id) FROM anon_bank_transactions
 					WHERE game_id=' . $player->getGameID() . '
-					AND anon_id=' . $account_num
+					AND anon_id=' . $db->escapeNumber($account_num)
 					);
 		if($db->nextRecord()) {
 			$maxValue = $db->getField('MAX(transaction_id)');
@@ -244,7 +246,7 @@ if (isset($account_num))
 	FROM anon_bank_transactions,player
 	WHERE anon_bank_transactions.game_id=' . $player->getGameID() . '
 	AND player.game_id=' . $player->getGameID() . '
-	AND anon_bank_transactions.anon_id=' . $account_num . '
+	AND anon_bank_transactions.anon_id=' . $db->escapeNumber($account_num) . '
 	AND player.account_id = anon_bank_transactions.account_id';
 
 
