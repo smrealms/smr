@@ -23,9 +23,9 @@ abstract class AbstractSmrShip
 	
 	protected $illusionShip;
 	
-	protected $hasChangedWeapons;
-	protected $hasChangedCargo;
-	protected $hasChangedHardware;
+	protected $hasChangedWeapons = false;
+	protected $hasChangedCargo = false;
+	protected $hasChangedHardware = false;
 
 	public static function &getBaseShip($gameTypeID,$shipTypeID,$forceUpdate = false)
 	{
