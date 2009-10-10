@@ -65,12 +65,10 @@ class SmrShip extends AbstractSmrShip
 		' ORDER BY order_id LIMIT ' . $this->getHardpoints());
 		
 		$this->weapons = array();
-		
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord())
 		{
-			$order_id		= $this->db->getField('order_id');
-			$this->weapons[$order_id] =& SmrWeapon::getWeapon($this->gameID,$this->db->getField('weapon_type_id'));
+			$this->weapons[$this->db->getField('order_id')] =& SmrWeapon::getWeapon($this->gameID,$this->db->getField('weapon_type_id'));
 		}
 		$this->checkForExcessWeapons();
 	}
@@ -158,16 +156,20 @@ class SmrShip extends AbstractSmrShip
 		$this->db->unlock();
 	}
 	
-	function update_weapon() {
-		
-		// write weapon info
-		$this->db->query('DELETE FROM ship_has_weapon ' .
-			'WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID());
-		foreach ($this->weapons as $order_id => &$weapon)
+	function update_weapon()
+	{
+		if($this->hasChangedWeapons === true)
 		{
-			$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-				'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$order_id.', '.$weapon->getWeaponTypeID().')');
+			// write weapon info
+			$this->db->query('DELETE FROM ship_has_weapon ' .
+				'WHERE account_id = '.$this->getAccountID().' AND ' .
+				'game_id = '.$this->getGameID());
+			foreach ($this->weapons as $order_id => &$weapon)
+			{
+				$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
+					'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$order_id.', '.$weapon->getWeaponTypeID().')');
+			}
+			$this->hasChangedWeapons = false;
 		}
 	}
 	
