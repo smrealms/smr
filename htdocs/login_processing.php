@@ -136,6 +136,12 @@ if (SmrSession::$account_id == 0) {
 			exit;
 		}
 	}
+	else
+	{
+		$msg = 'Password is incorrect!';
+		header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
+	}
 }
 
 // ********************************
