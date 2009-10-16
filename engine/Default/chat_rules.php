@@ -75,14 +75,14 @@ B. Disciplinary actions.
 <br />
 <br />
 <br />";
+$PHP_OUTPUT .= '<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=%23SMR&autoConnect=true&nick='.urlencode('SMR-'.str_replace(' ','_',$player->getPlayerName())).'" target="_chat" class="submitStyle">Chat</a></center>';
+//$PHP_OUTPUT .= '<center><form method="POST" action="http://chat.vjtd3.com/sjc.php?Nickname='. urlencode('SMR-'.strtr($player->getPlayerName(), array(' ' => '_'))) .'&Channel=%23smr" name="loginform" onsubmit="setjs();return true;" id="ietest" target="_chat">
 
-$PHP_OUTPUT .= '<center><form method="POST" action="http://chat.vjtd3.com/sjc.php?Nickname='. urlencode('SMR-'.strtr($player->getPlayerName(), array(' ' => '_'))) .'&Channel=%23smr" name="loginform" onsubmit="setjs();return true;" id="ietest" target="_chat">
-
-<input type="hidden" name="interface" value="nonjs">';
+//<input type="hidden" name="interface" value="nonjs">';
  
 //$PHP_OUTPUT.=('<input type="hidden" name="Nickname" value="' . strtr($player->getPlayerName(), array(' ' => '_')) . '">');
 //<input type='hidden' name='Channel' value='#SMR'>
-$PHP_OUTPUT .= "<input type='submit' name='action' value='Chat' id='InputFields'></form></center>
-<br /><font size='2'><i>This Page Was Last Updated: Tuesday, 30-Mar-2004 21:41:44 EST</i></font>";
+//$PHP_OUTPUT .= "<input type='submit' name='action' value='Chat' id='InputFields'></form></center>
+//<br /><font size='2'><i>This Page Was Last Updated: Tuesday, 30-Mar-2004 21:41:44 EST</i></font>";
 
 ?>
