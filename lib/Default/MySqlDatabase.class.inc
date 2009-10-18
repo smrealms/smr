@@ -51,6 +51,15 @@ abstract class MySqlDatabase implements Database
 		return $this->dbRecord[$name];
 	}
 	
+	public function getBoolean($name)
+	{
+		if($this->dbRecord[$name] == 'TRUE')
+			return true;
+		if($this->dbRecord[$name] == 'FALSE')
+			return false;
+		throw new Exception('Field is not a boolean');
+	}
+	
 	public function getRow()
 	{
 		return $this->dbRecord;
@@ -120,9 +129,9 @@ abstract class MySqlDatabase implements Database
 		if(is_object($escape))
 		{
 			if($autoQuotes)
-				return $this->escapeArray($escape);
+				return $this->escapeObject($escape);
 			else
-				return $this->escapeArray($escape,$quotes);
+				return $this->escapeObject($escape,$quotes);
 		}
 	}
 	
@@ -198,12 +207,9 @@ abstract class MySqlDatabase implements Database
 			throw new Exception('Not a boolean!'); //TEST
 	}
 	
-	public function escapeObject($object,$quotes=true)
+	public function escapeObject($object)
 	{
-		$string = mysql_real_escape_string(serialize($object));
-		if($quotes)
-			$string = '\'' . $string . '\'';
-		return $string;
+		return $this->escapeBinary(serialize($object));
 	}
 	
 	

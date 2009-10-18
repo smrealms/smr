@@ -17,7 +17,8 @@ if(isset($FeatureRequests))
 					?><th width="30">Requester</th><?php
 				} ?>
 				<th width="30">Votes (Fav/Yes/No)</th>
-				<th>Feature</th><?php
+				<th>Feature</th>
+				<th>Comments</th><?php
 				if(!$OnlyImplemented)
 				{ ?>
 					<th width="20">Favourite</th>
@@ -37,7 +38,8 @@ if(isset($FeatureRequests))
 						?><td><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php
 					} ?>
 					<td><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?> / <?php echo $FeatureRequest['Votes']['YES']; ?> / <?php echo $FeatureRequest['Votes']['NO']; ?></td>
-					<td style="text-align:left;"><?php echo $FeatureRequest['Message']; ?></td><?php
+					<td style="text-align:left;"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
+					<td class="shrink nowrap top"><a href="<?php echo $FeatureRequest['CommentsHREF']; ?>">View (<?php echo $FeatureRequest['Comments']; ?>)</a></td><?php
 					if(!$OnlyImplemented)
 					{ ?>
 						<td><input type="radio" name="favourite" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if($FeatureRequest['VotedFor'] == 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
@@ -70,6 +72,9 @@ if(isset($FeatureRequests))
 			</tr>
 			<tr>
 				<td align="center"><textarea name="feature" id="InputFields" cols="20" rows="30"></textarea></td>
+			</tr>
+			<tr>
+				<td align="center">Anonymous: <input name="anon" id="InputFields" type="checkbox" checked="checked"/></td>
 			</tr>
 			<tr>
 				<td align="center"><input type="submit" name="action" value="Submit New Feature" id="InputFields"></td>
