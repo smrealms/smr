@@ -79,7 +79,7 @@
 		} 
 		if($AJAX_ENABLE_REFRESH)
 		{
-			?><script type="text/javascript">window.onload=function(){startRefresh('<?php echo $AJAX_ENABLE_REFRESH ?>');}</script><?php
+			?><script type="text/javascript">window.onload=function(){startRefresh('<?php echo $AJAX_ENABLE_REFRESH; ?>');}</script><?php
 		} ?>
 	</body>
 </html>

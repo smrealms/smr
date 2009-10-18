@@ -272,14 +272,13 @@ function transfer($what)
 
 }
 
-function create_container($file, $body = '') {
-
+function create_container($file, $body = '')
+{
 	$container = array();
 	$container['url'] = $file;
 	$container['body'] = $body;
 
 	return $container;
-
 }
 
 function create_link($container, $text) {
