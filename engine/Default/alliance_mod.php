@@ -27,9 +27,7 @@ $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getA
 $db->nextRecord();
 if ($db->getField('change_mod') == 'TRUE' || $db->getField('change_pass') == 'TRUE') {
 	$PHP_OUTPUT.= '<br /><br />';
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'alliance_stat.php';
+	$container=create_container('skeleton.php','alliance_stat.php');
 	$container['alliance_id'] = $alliance_id;
 	$PHP_OUTPUT.=create_button($container,'Edit');
 }
