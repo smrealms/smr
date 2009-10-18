@@ -46,8 +46,8 @@ else if($_REQUEST['action']=='Implemented')
 			' WHERE feature_request_id IN ('.$db->escapeArray($_REQUEST['delete']).')');
 	foreach($_REQUEST['delete'] as $featureID)
 	{
-		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, text) ' .
-				 	'VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeString('Implemented').')');
+		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text) ' .
+				 	'VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString('Implemented').')');
 	}
 			
 	forward(create_container('skeleton.php', 'feature_request.php'));
