@@ -1,9 +1,6 @@
 <?php
 if (!Globals::isFeatureRequestOpen())
-{
 	create_error('Feature requests are currently not being accepted.');
-	return;
-}
 
 $template->assign('PageTopic','Feature Request');
 
@@ -24,7 +21,9 @@ if(!$onlyImplemented)
 
 $db->query('SELECT * ' .
 			'FROM feature_request ' .
-			'WHERE implemented = ' . $db->escapeBoolean($onlyImplemented) .
+			'JOIN feature_request_comments USING(feature_request_id)' .
+			'WHERE comment_id = 1 ' .
+			'AND implemented = ' . $db->escapeBoolean($onlyImplemented) .
 			'ORDER BY feature_request_id DESC');
 if ($db->getNumRows() > 0)
 {
@@ -32,6 +31,8 @@ if ($db->getNumRows() > 0)
 	$template->assign('FeatureModerator',$featureModerator);
 	$template->assign('FeatureRequestVoteFormHREF',SmrSession::get_new_href(create_container('feature_request_vote_processing.php', '')));
 
+	$commentsContainer = $var;
+	$commentsContainer['body'] = 'feature_request_comments.php';
 	$db2 = new SmrMySqlDatabase();
 	$featureRequests = array();
 	while ($db->nextRecord())
@@ -39,12 +40,12 @@ if ($db->getNumRows() > 0)
 		$featureRequestID = $db->getField('feature_request_id');
 		$featureRequests[$featureRequestID] = array(
 								'RequestID' => $featureRequestID,
-								'Message' => $db->getField('feature'),
+								'Message' => $db->getField('text'),
 								'Votes' => array('FAVOURITE'=>$db->getField('fav'),'YES'=>$db->getField('yes'),'NO'=>$db->getField('no')),
 								'VotedFor' => isset($featureVotes[$featureRequestID]) ? $featureVotes[$featureRequestID] : false
 		);
 		if($featureModerator)
-			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getField('submitter_id'));
+			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getField('poster_id'));
 		
 		if(!$onlyImplemented)
 		{
@@ -57,6 +58,15 @@ if ($db->getNumRows() > 0)
 				$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getField('COUNT(*)');
 			}
 		}
+		$db2->query('SELECT COUNT(*) ' .
+					  'FROM feature_request_comments ' .
+					  'WHERE feature_request_id='.$featureRequestID);
+		while($db2->nextRecord())
+		{
+			$featureRequests[$featureRequestID]['Comments'] = $db2->getField('COUNT(*)');
+		}
+		$commentsContainer['RequestID'] = $featureRequestID;
+		$featureRequests[$featureRequestID]['CommentsHREF'] = SmrSession::get_new_href($commentsContainer);
 	}
 	$template->assignByRef('FeatureRequests',$featureRequests);
 }
