@@ -91,35 +91,23 @@ echo('</head>');
 
 echo('<body>');
 
-echo('<h1>VIEW GALAXY</h1>');
+echo('<h1>View Galaxy</h1>');
 
 if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id']))
 {
-	$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-
-	echo('<p>Please choose a galaxy:</p>');
-	echo('<ul>');
-	
-	$gameGals =& SmrGalaxy::getGameGalaxies($player->getGameID());
-	foreach($gameGals as &$galaxy)
-	{
-		$galaxyID		= $galaxy->getGalaxyID();
-		$galaxy_name	= $galaxy->getName();
-
-		if ($galaxy->contains($sector))
-			$galaxy_name = '<b>' . $galaxy_name . '</b>';
-
-		echo('<li>');
-		echo('<a href="'.URL.'/map_galaxy.php?galaxy_id='.$galaxyID.'">'.$galaxy_name.'</a>');
-		echo('</li>');
-	} unset($galaxy);
-
-	echo('</ul>');
-	echo('</body>');
-	echo('</html>');
-
-	exit;
+	$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
 }
+$gameGals =& SmrGalaxy::getGameGalaxies($player->getGameID());
+echo '<br/><form name="GalaxyMapForm" method="GET"><select name="galaxy_id">';
+foreach($gameGals as &$gameGalaxy)
+{
+	$galaxyID		= $gameGalaxy->getGalaxyID();
+
+	echo('<option value="'.$galaxyID.'"'.($galaxy->equals($gameGalaxy)?' selected="selected"':'').'>');
+	echo('<a href="'.URL.'/map_galaxy.php?galaxy_id='.$galaxyID.'">'.$gameGalaxy->getName().'</a>');
+	echo('</option>');
+} unset($gameGalaxy);
+echo '</select> <input type="submit" value="View"/></form>';
 
 $galaxyID = $galaxy->getGalaxyID();
 $ship =& $player->getShip();
