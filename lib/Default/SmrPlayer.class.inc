@@ -1510,20 +1510,14 @@ class SmrPlayer extends AbstractSmrPlayer
 
 		$news_message = $this->getDisplayName();
 		$db2 = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
-					'account_id = '.$this->getAccountID());
+		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().
+					' AND account_id = '.$this->getAccountID().
+					' AND ship_name NOT LIKE \'<img>\'');
 		if ($this->db->nextRecord())
 		{
-			
 			//they have a name so we echo it
-			$db2->query('SELECT ' . htmlentities($this->db->getField('ship_name')) . ' LIKE \'&lt;img%\'');
-			$named_ship = stripslashes($this->db->getField('ship_name'));
 			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
-			if ($db2->nextRecord() && $db2->getField(0) != 0) {
-				//nothing
-			} else
-				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
-			
+			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
 		}
 		$news_message .= ' was destroyed by forces in sector&nbsp#'.$forces->getSectorID();
 		// insert the news entry
@@ -1554,22 +1548,14 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$news_message = $this->getDisplayName();
 		$db2 = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
-					'account_id = '.$this->getAccountID());
+		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().
+					' AND account_id = '.$this->getAccountID().
+					' AND ship_name NOT LIKE \'<img>\'');
 		if ($this->db->nextRecord())
 		{
-			
 			//they have a name so we echo it
-			$db2->query('SELECT ' . $this->db->escapeString(htmlentities($this->db->getField('ship_name'))) . ' LIKE \'&lt;img%\'');
-			$named_ship = stripslashes($this->db->getField('ship_name'));
 			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
-			if ($db2->nextRecord())
-			{
-				//nothing
-			}
-			else
-				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
-			
+			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
 		}
 		$news_message .= ' was destroyed while invading '.$port->getDisplayName().'.';
 		// insert the news entry
@@ -1594,22 +1580,14 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$news_message = $this->getDisplayName();
 		$db2 = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND ' .
-					'account_id = '.$this->getAccountID());
+		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().
+					' AND account_id = '.$this->getAccountID().
+					' AND ship_name NOT LIKE \'<img>\'');
 		if ($this->db->nextRecord())
 		{
-			
 			//they have a name so we echo it
-			$db2->query('SELECT ' . $this->db->escapeString(htmlentities($this->db->getField('ship_name'))) . ' LIKE \'&lt;img%\'');
-			$named_ship = stripslashes($this->db->getField('ship_name'));
 			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
-			if ($db2->nextRecord())
-			{
-				//nothing
-			}
-			else
-				$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
-			
+			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
 		}
 		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector&nbsp#'.$planet->getSectorID().'.';
 		// insert the news entry
