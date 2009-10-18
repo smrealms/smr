@@ -1,4 +1,4 @@
-CREATE TABLE smr_new.feature_request_comments (
+CREATE TABLE feature_request_comments (
 feature_request_id INT UNSIGNED NOT NULL ,
 comment_id INT UNSIGNED NOT NULL AUTO_INCREMENT ,
 poster_id INT UNSIGNED NOT NULL ,
