@@ -9,7 +9,16 @@ else
 }
 if(isset($FeatureRequests))
 { ?>
-	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>">
+	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>"><?php
+		if(!$OnlyImplemented)
+		{ ?>
+			<div align="right"><input type="submit" name="action" value="Vote"><?php
+				if($FeatureModerator)
+				{
+					?>&nbsp;<input type="submit" name="action" value="Implemented">&nbsp;<input type="submit" name="action" value="Delete"><?php
+				} ?>
+			</div><br /><?php
+		} ?>
 		<table class="standard" width="100%">
 			<tr><?php
 				if($FeatureModerator)
@@ -55,6 +64,7 @@ if(isset($FeatureRequests))
 		</table><?php
 		if(!$OnlyImplemented)
 		{ ?>
+			<br />
 			<div align="right"><input type="submit" name="action" value="Vote"><?php
 				if($FeatureModerator)
 				{
