@@ -3,9 +3,10 @@ require_once('SmrMySqlDatabase.class.inc');
 
 class SmrAccount
 {
-	const USER_RANKINGS_EACH_STAT_POW = 0.9;
-	const USER_RANKINGS_TOTAL_SCORE_POW = 0.6;
-	const USER_RANKINGS_RANK_BOUNDARY = 100;
+	const USER_RANKINGS_EACH_STAT_POW = .9;
+	const USER_RANKINGS_TOTAL_SCORE_POW = .6;
+	const USER_RANKINGS_RANK_BOUNDARY = 65;
+	const USER_RANKINGS_RANK_MODIFIER = .5;
 	protected static $USER_RANKINGS_SCORE = array(
 		array(array('Trade','Experience','Total'),.1,0.5),
 		array(array('Trade','Money','Profit'),0.00005,0.5),
@@ -329,7 +330,7 @@ class SmrAccount
 	
 	function get_rank()
 	{
-		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY);
+		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY+self::USER_RANKINGS_RANK_MODIFIER);
 		if($rank<1)
 			$rank=1;
 		return $rank;
