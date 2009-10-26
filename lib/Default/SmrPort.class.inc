@@ -371,9 +371,8 @@ class SmrPort
 		while($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9)
 		{
 			$this->doUpgrade();
-			$this->upgrade -= $this->getUpgradeRequirement();
-			$this->credits -= $this->getUpgradeRequirement();
-			$this->db->query('UPDATE `port` SET `upgrade`='.$this->upgrade.',`credits`='.$this->credits.' WHERE '.$this->SQL.';');
+			$this->decreaseUpgrade($this->getUpgradeRequirement());
+			$this->decreaseCredits($this->getUpgradeRequirement());
 		}
 	}
 	
@@ -692,6 +691,13 @@ class SmrPort
 		$this->hasChanged=true;
 	}
 	
+	public function decreaseCredits($credits)
+	{
+		if($credits<0)
+			throw new Exception('Cannot decrease negative credits.');
+		$this->setCredits($this->getCredits()-$credits);
+	}
+	
 	public function increaseCredits($credits)
 	{
 		if($credits<0)
@@ -708,6 +714,13 @@ class SmrPort
 		$this->upgrade = $upgrade;
 		$this->hasChanged=true;
 		$this->checkForUpgrade();
+	}
+	
+	public function decreaseUpgrade($upgrade)
+	{
+		if($upgrade<0)
+			throw new Exception('Cannot decrease negative upgrade.');
+		$this->setUpgrade($this->getUpgrade()-$upgrade);
 	}
 	
 	public function increaseUpgrade($upgrade)
