@@ -599,7 +599,7 @@ class SmrPort
 			break;
 		}
 		$this->decreaseLevel(1);
-		$this->db->query('UPDATE `port` SET `upgrade`=0 WHERE '.$this->SQL.' LIMIT 1;');
+		$this->setUpgrade(0);
 	}
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
