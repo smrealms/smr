@@ -84,7 +84,7 @@ while ($db->nextRecord())
 
 $PHP_OUTPUT.=('</table>');
 $action = $_REQUEST['action'];
-if ($action == 'Show')
+if ($action == 'Show' && is_numeric($_REQUEST['min_rank'])&&is_numeric($_REQUEST['max_rank']))
 {
     $min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
     $max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
