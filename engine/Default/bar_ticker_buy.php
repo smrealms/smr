@@ -3,10 +3,7 @@
 if (isset($var['process']))
 {
 	if ($account->getTotalSmrCredits() == 0)
-	{
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
-		return;
-	}
 	if(isset($_REQUEST['type']))
 		SmrSession::updateVar('type',$_REQUEST['type']);
 	$type = $var['type'];
@@ -30,9 +27,10 @@ if (isset($var['process']))
 	//take credits
 	$account->decreaseTotalSmrCredits(1);
 	//offer another drink and such
-	$PHP_OUTPUT.=('<div align=center>Your system has been added.  Enjoy!</div><br />');
-	include(get_file_loc('bar_opening.php'));
-
+	$container=create_container('skeleton.php','bar_main.php');
+	$container['script']='bar_opening.php';
+	$container['message'] = '<div align="center">Your system has been added.  Enjoy!</div><br />';
+	forward($container);
 }
 else
 {
