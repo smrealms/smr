@@ -38,11 +38,30 @@ else
 	} ?>
 	<br />
 	<form name="MessageDeleteForm" method="POST" action="<?php echo $MessageBox['DeleteFormHref']; ?>">
-		<input type="submit" name="action" value="Delete" id="InputFields" />&nbsp;<select name="action" size="1" id="InputFields">
+		<table style="width: 100%">
+			<tr>
+				<td style="text-align: center; width: 30%" valign="middle"><?php
+					if(isset($PreviousPageHREF))
+					{
+						?><a href="<?php echo $PreviousPageHREF; ?>"><img src="<?php echo URL; ?>/images/album/rew.jpg" alt="Previous Page" border="0"></a><?php
+					} ?>
+				</td>
+				<td style="text-align: center;">
+					<input type="submit" name="action" value="Delete" id="InputFields" />&nbsp;<select name="action" size="1" id="InputFields">
 																						<option>Marked Messages</option>
 																						<option>All Messages</option>
 																					</select>
-		<p>You have <span style="color:yellow;"><?php echo $MessageBox['NumberMessages']; ?></span> message<?php if($MessageBox['NumberMessages']!=1) { ?>s<?php } ?>.</p><?php
+					<p>You have <span style="color:yellow;"><?php echo $MessageBox['TotalMessages']; ?></span> message<?php if($MessageBox['TotalMessages']!=1) { ?>s<?php } if($MessageBox['TotalMessages']!=$MessageBox['NumberMessages']){ ?> of which <span style="color:yellow;"><?php echo $MessageBox['NumberMessages']; ?></span> <?php if($MessageBox['NumberMessages'] == 1){ ?>is<?php }else{ ?>are<?php } ?> being displayed<?php } ?>.</p>
+				</td>
+				<td style="text-align: center; width: 30%" valign="middle"><?php
+					if(isset($NextPageHREF))
+					{
+						?><a href="<?php echo $NextPageHREF; ?>"><img src="<?php echo URL; ?>/images/album/fwd.jpg" alt="Next Page" border="0"></a><?php
+					} ?>
+				</td>
+			</tr>
+		</table><?php
+		
 		if (isset($MessageBox['ShowAllHref']))
 		{
 			?><div class="buttonA"><a class="buttonA" href="<?php echo $MessageBox['ShowAllHref'] ?>">&nbsp;Show all Messages&nbsp;</a></div><br /><br /><?php

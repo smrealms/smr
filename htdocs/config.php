@@ -75,6 +75,7 @@ define('BOX_ALBUM_COMMENTS', 6);
 define('MESSAGE_SCOUT_GROUP_LIMIT',30);
 
 define('COMBAT_LOGS_PER_PAGE',50);
+define('MESSAGES_PER_PAGE',50);
 
 
 /*
