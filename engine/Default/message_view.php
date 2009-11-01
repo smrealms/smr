@@ -80,16 +80,46 @@ if (!isset($var['folder_id']))
 }
 else
 {
+	$whereClause = 'WHERE game_id = '.$player->getGameID();
+	if($var['folder_id'] == MSG_SENT)
+		$whereClause .= ' AND sender_id = '.$player->getAccountID().
+						' AND message_type_id = ' . MSG_PLAYER.
+						' AND sender_delete = '.$db->escapeBoolean(false);
+	else
+		$whereClause .= ' AND account_id = '.$player->getAccountID().
+						' AND message_type_id = ' . $var['folder_id'].
+						' AND reciever_delete = '.$db->escapeBoolean(false);
+	
+	if($var['folder_id'] == MSG_SENT)
+		$messageBox['UnreadMessages'] = 0;
+	else
+	{
+		$db->query('SELECT count(*) as count FROM message ' .
+						$whereClause . ' AND msg_read = '.$db->escapeBoolean(false));
+		$db->nextRecord();
+		$messageBox['UnreadMessages'] = $db->getField('count');
+	}
 	$db->query('SELECT count(*) as count FROM message ' .
-						'WHERE account_id = '.SmrSession::$account_id.' AND ' .
-							  'game_id = '.SmrSession::$game_id.' AND ' .
-							  'message_type_id = ' . $var['folder_id'] . ' AND ' .
-							  'msg_read = \'FALSE\' AND reciever_delete = \'FALSE\'');
+					$whereClause);
 	$db->nextRecord();
-	$messageBox['UnreadMessages'] = $db->getField('count');
+	$messageBox['TotalMessages'] = $db->getField('count');
 	$messageBox['Type'] = $var['folder_id'];
+	
+	$page = 0;
+	if(isset($var['page']))
+		$page = $var['page'];
+	
+	$container = $var;
+	$container['page'] = $page-1;
+	if($page>0)
+		$template->assign('PreviousPageHREF',SmrSession::get_new_href($container));
+	$container['page'] = $page+1;
+	if(($page+1)*MESSAGES_PER_PAGE<$messageBox['TotalMessages'])
+		$template->assign('NextPageHREF',SmrSession::get_new_href($container));
+	
 	// remove entry for this folder from unread msg table
-	$player->setMessagesRead($messageBox['Type']);
+	if($page==0)
+		$player->setMessagesRead($messageBox['Type']);
 
 	if($var['folder_id'] == MSG_SENT)
 		$messageBox['Name'] = 'Sent Messages';
@@ -110,19 +140,10 @@ else
 	transfer('folder_id');
 	$messageBox['DeleteFormHref'] = SmrSession::get_new_href($container);
 	
-	if($var['folder_id'] == MSG_SENT)
-		$db->query('SELECT * FROM message ' .
-						'WHERE sender_id = '.$player->getAccountID().' AND ' .
-							  'game_id = '.$player->getGameID().' AND ' .
-							  'message_type_id = ' . MSG_PLAYER.' AND ' .
-							  'sender_delete = \'FALSE\'' .
-						' ORDER BY send_time DESC');
-	else
-		$db->query('SELECT * FROM message ' .
-						'WHERE account_id = '.$player->getAccountID().' AND ' .
-							  'game_id = '.$player->getGameID().' AND ' .
-							  'message_type_id = ' . $var['folder_id'].' AND reciever_delete = \'FALSE\'' .
-						' ORDER BY send_time DESC');
+	$db->query('SELECT * FROM message ' .
+					$whereClause .
+					' ORDER BY send_time DESC' .
+					' LIMIT '.($page*MESSAGES_PER_PAGE).', '.MESSAGES_PER_PAGE);
 
 	$messageBox['NumberMessages'] = $db->getNumRows();
 	$messageBox['Messages'] = array();
