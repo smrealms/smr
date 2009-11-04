@@ -968,7 +968,7 @@ abstract class AbstractSmrPlayer
 		return round(self::DEFAULT_MAX_TURNS * Globals::getGameSpeed($this->getGameID()));
 	}
 
-	public function setTurns($maint,$newNoob = -1,$updateLastActive = false)
+	public function setTurns($maint,$newNoob = false,$updateLastActive = false)
 	{
 		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)) && !$updateLastActive)
 			return;
@@ -982,7 +982,7 @@ abstract class AbstractSmrPlayer
 				$this->turns = $this->getMaxTurns();
 		}
 		
-		if($newNoob != -1)
+		if($newNoob !== false)
 			$this->newbieTurns = $newNoob;
 		if ($this->newbieTurns < 0)
 			$this->newbieTurns = 0;
