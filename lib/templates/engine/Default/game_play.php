@@ -48,11 +48,10 @@ if(isset($Games['Play']))
 	</table><br />
 	<br /><?php
 }
-
+?><h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1><?php
 if (isset($Voting))
 {
-	?><h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1>
-	Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
+	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
 	foreach($Voting as $Vote)
 	{
 		?><br /><br />
