@@ -8,7 +8,7 @@ require_once('SmrPlayer.class.inc');
 
 class SMR_ALLIANCE extends SmrMySqlDatabase
 {
-	const MAX_VETS = 18;
+	const MAX_VETS = 15;
 	const MAX_PLAYERS = 25;
 	var $game_id;
 	var $alliance_id;
