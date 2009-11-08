@@ -63,8 +63,8 @@ if (isset($Voting))
 			} ?>
 			<input type="submit" name="submit" value="Vote!"><br /><br />
 		</form><?php
-	} ?><br /><?php
-} ?>
+	}
+} ?><br />
 <h1>Join Game</h1><?php
 if(isset($Games['Join']))
 { ?>
