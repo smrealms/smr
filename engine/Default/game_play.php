@@ -220,8 +220,10 @@ $template->assign('Games',$games);
 // ***************************************
 // ** Voting
 // ***************************************
+$container = create_container('skeleton.php','vote.php');
+$template->assign('VotingHref',SmrSession::get_new_href($container));
 
-$db->query('SELECT * FROM voting WHERE end > ' . TIME);
+$db->query('SELECT * FROM voting WHERE end > ' . TIME . ' ORDER BY end DESC');
 if($db->getNumRows()>0)
 {
 	$db2 = new SmrMySqlDatabase();

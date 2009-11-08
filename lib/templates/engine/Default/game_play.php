@@ -51,7 +51,7 @@ if(isset($Games['Play']))
 
 if (isset($Voting))
 {
-	?><h1>Voting</h1>
+	?><h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1>
 	Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
 	foreach($Voting as $Vote)
 	{
