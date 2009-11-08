@@ -4,9 +4,8 @@ require_once('SmrMySqlDatabase.class.inc');
 class SmrAccount
 {
 	const USER_RANKINGS_EACH_STAT_POW = .9;
-	const USER_RANKINGS_TOTAL_SCORE_POW = .6;
-	const USER_RANKINGS_RANK_BOUNDARY = 65;
-	const USER_RANKINGS_RANK_MODIFIER = .5;
+	const USER_RANKINGS_TOTAL_SCORE_POW = .3;
+	const USER_RANKINGS_RANK_BOUNDARY = 5.2;
 	protected static $USER_RANKINGS_SCORE = array(
 		array(array('Trade','Experience','Total'),.1,0.5),
 		array(array('Trade','Money','Profit'),0.00005,0.5),
@@ -79,6 +78,20 @@ class SmrAccount
 			$db->escape_string($address) . ', ' . $db->escape_string($city) . ', ' . $db->escape_string($postal_code) . ', ' .
 			$db->escape_string($country_code) . ', ' . $db->escape_string(trim($icq)) . ', ' . $db->escape_string(substr(SmrSession::$session_id, 0, 10)) . ',' . TIME . ',' .$db->escapeNumber($timez).','.$db->escapeNumber($referral).','.$db->escapeString($login).')');
 		return self::getAccountByName($login);
+	}
+	
+	public static function getUserScoreCaseStatement(&$db)
+	{
+		$userRankingTypes = array();
+		$case = 'FLOOR(SUM(CASE type ';
+		foreach(self::$USER_RANKINGS_SCORE as $userRankingScore)
+		{
+			$userRankingType = $db->escapeArray($userRankingScore[0],false,':',false);
+			$userRankingTypes[] = $userRankingType;
+			$case.= ' WHEN '.$db->escapeString($userRankingType).' THEN POW(amount*'.$userRankingScore[1].','.SmrAccount::USER_RANKINGS_EACH_STAT_POW.')*'.$userRankingScore[2];
+		}
+		$case .= ' END))';
+		return array('CASE'=>$case,'IN'=>$db->escapeArray($userRankingTypes));
 	}
 	
 	function __construct($accountID)
@@ -330,7 +343,7 @@ class SmrAccount
 	
 	function get_rank()
 	{
-		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY+self::USER_RANKINGS_RANK_MODIFIER);
+		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY);
 		if($rank<1)
 			$rank=1;
 		return $rank;
