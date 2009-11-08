@@ -11,6 +11,13 @@ $template->assign('ViewImplementedFeaturesHref',SmrSession::get_new_href($contai
 $onlyImplemented = isset($var['implemented'])?$var['implemented']===true:false;
 $template->assign('OnlyImplemented',$onlyImplemented);
 
+$container = $var;
+$container['ShowOld'] = true;
+$template->assign('ShowOldFeaturesHref',SmrSession::get_new_href($container));
+
+$showOld = isset($var['ShowOld'])?$var['ShowOld']===true:false;
+$template->assign('ShowOld',$showOld);
+
 if(!$onlyImplemented)
 {
 	$featureVotes = array();
@@ -18,13 +25,13 @@ if(!$onlyImplemented)
 	while($db->nextRecord())
 		$featureVotes[$db->getField('feature_request_id')] = $db->getField('vote_type');
 }
-
 $db->query('SELECT * ' .
 			'FROM feature_request ' .
-			'JOIN feature_request_comments USING(feature_request_id)' .
+			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
 			'AND implemented = ' . $db->escapeBoolean($onlyImplemented) .
-			'ORDER BY feature_request_id DESC');
+			(!$showOld&&!$onlyImplemented?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-7*86400) .')':'') .
+			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 if ($db->getNumRows() > 0)
 {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
