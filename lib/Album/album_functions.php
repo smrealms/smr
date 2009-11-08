@@ -123,7 +123,7 @@ function album_entry($album_id)
 	if ($db->nextRecord())
 	{
 		$priv_nick = $db->getField('hof_name');
-		echo '<a href="URL/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="'.URL.'/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
 	echo '</td>';
 	echo('<td style="text-align: center;" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
