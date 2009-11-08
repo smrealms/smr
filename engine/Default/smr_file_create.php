@@ -153,7 +153,7 @@ foreach ($galaxies as &$galaxy)
 		}
 		if($sector->hasWarp())
 			$file .= 'Warp='.$sector->getWarp() . EOL;
-		if(($adminCreate !== false && $sector->hasPort()) || $sector->hasCachedPort($player))
+		if(($adminCreate !== false && $sector->hasPort()) || is_object($player) && $sector->hasCachedPort($player))
 		{
 			if($adminCreate !== false)
 				$port =& $sector->getPort();
