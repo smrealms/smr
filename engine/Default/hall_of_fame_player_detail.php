@@ -30,7 +30,8 @@ $PHP_OUTPUT.=('<div align=center>');
 
 $db->query('SELECT DISTINCT type FROM player_hof WHERE account_id='.$account_id. (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
-$hofTypes = array(DONATION_NAME=>true);
+define('USER_SCORE_NAME','User Score');
+$hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
 while($db->nextRecord())
 {
 	$hof =& $hofTypes;
@@ -45,12 +46,20 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$container = $var;
-unset($container['type']);
+$container = create_container('skeleton.php','hall_of_fame_new.php');
+if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
 $viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,'Personal HoF');
 $typeList = array();
 if(isset($var['type']))
 {
+	foreach($var['type'] as $type)
+	{
+		$container = $var;
+		$container['type'] = $typeList;
+		$viewing.= create_link($container,$type);
+		
+		$hofTypes =& $hofTypes[$type];
+	}
 	foreach($var['type'] as $type)
 	{
 		if(!is_array($hofTypes[$type]))
@@ -64,6 +73,7 @@ if(isset($var['type']))
 		$viewing .= ' -&gt; ';
 		$container = $var;
 		$container['type'] = $typeList;
+		unset($container['view']);
 		$viewing.= create_link($container,$type);
 		
 		$hofTypes =& $hofTypes[$type];
@@ -77,7 +87,9 @@ if(isset($var['view']))
 		$typeList[] = $var['view'];
 		$var['type'] = $typeList;
 	}
-	$viewing .= create_link($var,$var['view']);
+	$container = $var;
+	$container['type'] = $typeList;
+	$viewing .= create_link($container,$var['view']);
 	
 	if(is_array($hofTypes[$var['view']]))
 	{

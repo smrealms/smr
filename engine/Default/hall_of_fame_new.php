@@ -26,7 +26,8 @@ $PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />T
 
 $db->query('SELECT DISTINCT type FROM player_hof' . (isset($var['game_id']) ? ' WHERE game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
-$hofTypes = array(DONATION_NAME=>true);
+define('USER_SCORE_NAME','User Score');
+$hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
 while($db->nextRecord())
 {
 	$hof =& $hofTypes;
@@ -41,9 +42,7 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'hall_of_fame_new.php';
+$container = create_container('skeleton.php','hall_of_fame_new.php');
 if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
 $viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,isset($var['game_id'])?'Current HoF':'Global HoF');
 $typeList = array();
@@ -60,11 +59,9 @@ if(isset($var['type']))
 		else
 			$typeList[] = $type;
 		$viewing .= ' -&gt; ';
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'hall_of_fame_new.php';
+		$container = $var;
 		$container['type'] = $typeList;
-		if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
+		unset($container['view']);
 		$viewing.= create_link($container,$type);
 		
 		$hofTypes =& $hofTypes[$type];
@@ -78,12 +75,7 @@ if(isset($var['view']))
 		$typeList[] = $var['view'];
 		$var['type'] = $typeList;
 	}
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'hall_of_fame_new.php';
-	$container['type'] = $typeList;
-	if(isset($var['view'])) $container['view'] = $var['view'];
-	if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
+	$container = $var;
 	$viewing .= create_link($container,$var['view']);
 	
 	if(is_array($hofTypes[$var['view']]))
@@ -155,10 +147,16 @@ else
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
 	if($var['view'] == DONATION_NAME)
-		$db->query('SELECT account_id, sum(amount) as amount FROM account_donated ' .
+		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated ' .
 				'GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+	else if($var['view'] == USER_SCORE_NAME)
+	{
+		$statements = SmrAccount::getUserScoreCaseStatement($db);
+		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : '') .' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
+		$db->query($query);
+	}
 	else
-		$db->query('SELECT account_id,amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : ' GROUP BY account_id') .' ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : '') .' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
 		if($db->getField('account_id') == $account->account_id)
@@ -167,8 +165,8 @@ else
 	}
 	if(!$foundMe)
 	{
-		$rank = getHofRank($var['view'],$viewType,$account->account_id,$var['game_id'],$db);
-		$PHP_OUTPUT .= displayHOFRow($rank['Rank'],$account->account_id,$rank['Amount']);
+		$rank = getHofRank($var['view'],$viewType,$account->getAccountID(),$var['game_id'],$db);
+		$PHP_OUTPUT .= displayHOFRow($rank['Rank'],$account->getAccountID(),$rank['Amount']);
 	}
 }
 
