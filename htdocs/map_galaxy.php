@@ -9,7 +9,9 @@ $random_salt = mt_rand();
 // ********************************
 
 require_once('config.inc');
-require_once(ENGINE . 'Default/smr.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once(LIB . 'Default/Globals.class.inc');
+require_once(get_file_loc('smr.inc'));
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
