@@ -1,7 +1,5 @@
 <?php
 require_once('AbstractSmrPlayer.class.inc');
-require_once('SmrMySqlDatabase.class.inc');
-
 class SmrPlayer extends AbstractSmrPlayer
 {
 	protected static $CACHE_SECTOR_PLAYERS = array();

@@ -1,6 +1,4 @@
 <?php
-require_once('SmrMySqlDatabase.class.inc');
-
 require_once('AbstractSmrPlayer.class.inc');
 require_once('SmrWeapon.class.inc');
 require_once('SmrCombatDrones.class.inc');

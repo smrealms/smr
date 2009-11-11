@@ -1,6 +1,4 @@
 <?php
-require_once('SmrMySqlDatabase.class.inc');
-require_once('Globals.class.inc');
 class SmrPort
 {
 	protected static $CACHE_PORTS = array();

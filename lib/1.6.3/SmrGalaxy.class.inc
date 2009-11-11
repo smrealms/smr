@@ -1,5 +1,4 @@
 <?php
-require_once('SmrMySqlDatabase.class.inc');
 
 class SmrGalaxy
 {

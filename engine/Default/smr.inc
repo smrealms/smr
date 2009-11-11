@@ -1,7 +1,6 @@
 <?php
 
 require_once(LIB . '/Default/Globals.class.inc');
-require_once(LIB . '/Default/SmrSession.class.inc');
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
@@ -170,45 +169,6 @@ function create_submit($value) {
 
 function create_submit_style($value, $style) {
 	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" style="'.$style.'" />');
-}
-
-function get_file_loc($file_name, $exists = 1, $overrideGameDir = false)
-{
-	global $g_id;
-	static $stored_dir;
-	if(isset($stored_dir))
-	{
-		$game_dir = $stored_dir;
-	}
-	else
-	{
-		if (SmrSession::$game_id > 0 || $g_id > 0)
-		{
-			if ($g_id > 0) $game_id = $g_id;
-			else $g_id = SmrSession::$game_id;
-			$stored_dir = Globals::getGameType($g_id) . '/';
-			$game_dir = $stored_dir;
-		} else $game_dir = 'Default/';
-	}
-	if($game_dir=='1.2/')
-		$game_dir='Default/';
-	if ($overrideGameDir !== false)
-	{
-		if(file_exists(ENGINE . $overrideGameDir . $file_name)) return ENGINE . $overrideGameDir . $file_name;
-		if(file_exists(LIB . $overrideGameDir . $file_name)) return LIB . $overrideGameDir . $file_name;
-		if(file_exists(ADMIN . $overrideGameDir . $file_name)) return ADMIN . $overrideGameDir . $file_name;
-	}
-	if (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
-	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
-	if (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
-	
-	if (file_exists(LIB . 'Default/' . $file_name)) return LIB . 'Default/' . $file_name;
-	if (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
-	if (file_exists(ADMIN . 'Default/' . $file_name)) return ADMIN . 'Default/' . $file_name;
-	
-	if (file_exists(WWW . $file_name)) return WWW . $file_name;
-	if ($exists == 1) return ENGINE . 'empty.php';
-	return $file_name;
 }
 
 function create_error($message)

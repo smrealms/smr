@@ -1,5 +1,4 @@
 <?php
-require_once('SmrMySqlDatabase.class.inc');
 
 require_once('AbstractSmrPlayer.class.inc');
 require_once('SmrForce.class.inc');

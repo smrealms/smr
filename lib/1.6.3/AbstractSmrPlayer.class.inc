@@ -1,6 +1,4 @@
 <?php
-require_once('Globals.class.inc');
-
 require_once('SmrShip.class.inc');
 require_once('SmrForce.class.inc');
 

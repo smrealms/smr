@@ -1,8 +1,4 @@
 <?php
-
-// include file with database class
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-
 class SMR_BATTLE extends SmrMySqlDatabase
 {
 	var $fleet;

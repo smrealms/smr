@@ -1,6 +1,4 @@
 <?php
-require_once('SmrMySqlDatabase.class.inc');
-
 class SmrGalaxy
 {
 	protected static $CACHE_GALAXIES = array();
