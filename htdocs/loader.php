@@ -72,7 +72,6 @@ try
 		header('Location: '.URL.'/login.php');
 		exit;
 	}
-	require_once(get_file_loc('smr.inc'));
 	
 	// ********************************
 	// *
@@ -100,7 +99,10 @@ try
 	if (!($var = SmrSession::retrieveVar($sn)))
 	{
 		if(!USING_AJAX)
+		{
+			require_once(get_file_loc('smr.inc'));
 			create_error('Please avoid using the back button!');
+		}
 		else
 			exit;
 	}
@@ -110,6 +112,7 @@ try
 	if (isset($var['game_id'])) $g_id = $var['game_id'];
 	else $g_id = 0;
 
+	require_once(get_file_loc('smr.inc'));
 	do_voodoo();
 }
 catch(Exception $e)
