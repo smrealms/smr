@@ -102,7 +102,8 @@ class SmrSession
 				self::$game_speed = self::$db->getField('game_speed');
 			}
 		}
-		$db = new SmrMySqlDatabase();
+		if(class_exists('SmrMySqlDatabase',false))
+			$db = new SmrMySqlDatabase();
 	}
 	
 	public static function update()
