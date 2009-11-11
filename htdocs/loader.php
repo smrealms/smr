@@ -71,8 +71,8 @@ try
 	{
 		header('Location: '.URL.'/login.php');
 		exit;
-	
 	}
+	require_once(get_file_loc('smr.inc'));
 	
 	// ********************************
 	// *
@@ -110,7 +110,6 @@ try
 	if (isset($var['game_id'])) $g_id = $var['game_id'];
 	else $g_id = 0;
 
-	require_once(get_file_loc('smr.inc'));
 	do_voodoo();
 }
 catch(Exception $e)
