@@ -27,13 +27,8 @@ if ($player->isLandedOnPlanet())
 else
     $container['body'] = 'current_sector.php';
 
-	require_once(get_file_loc('smr_alliance.inc'));
-	require_once(get_file_loc('SmrPlanet.class.inc'));
-	require_once(get_file_loc('SmrSector.class.inc'));
-
 	$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 	$ship	=& $player->getShip();
-	$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 	// update turns on that player
 	$player->updateTurns();

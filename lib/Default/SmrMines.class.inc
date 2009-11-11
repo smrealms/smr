@@ -1,7 +1,5 @@
 <?php
 require_once('AbstractSmrCombatWeapon.class.inc');
-require_once('SmrMySqlDatabase.class.inc');
-
 class SmrMines extends AbstractSmrCombatWeapon
 {
 	protected $numberOfMines;

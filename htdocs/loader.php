@@ -49,15 +49,10 @@ try
 	// config file
 	require_once('config.inc');
 	require_once('config.php');
-	require_once(ENGINE . 'Default/smr.inc');
 	
 	// overwrite database class to use our db
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-	
-	require_once(get_file_loc('SmrAccount.class.inc'));
-	require_once(get_file_loc('SmrPlayer.class.inc'));
-	require_once(get_file_loc('SmrShip.class.inc'));
-	require_once(get_file_loc('SmrSector.class.inc'));
+	require_once(LIB . 'Default/Globals.class.inc');
 
 	
 	// new db object
@@ -115,6 +110,7 @@ try
 	if (isset($var['game_id'])) $g_id = $var['game_id'];
 	else $g_id = 0;
 
+	require_once(get_file_loc('smr.inc'));
 	do_voodoo();
 }
 catch(Exception $e)
@@ -172,6 +168,8 @@ catch(Exception $e)
 		 $message,
 		 'From: bugs@smrealms.de');
 	}
+	var_dump($message);
+	exit;
 	if(!USING_AJAX)
 		header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
 	exit;

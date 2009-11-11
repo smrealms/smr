@@ -1,6 +1,4 @@
 <?php
-require_once('SmrMySqlDatabase.class.inc');
-
 class SmrLocation
 {
 	protected static $CACHE_ALL_LOCATIONS;

@@ -1,6 +1,4 @@
 <?php
-require_once('SmrMySqlDatabase.class.inc');
-
 class SmrAccount
 {
 	const USER_RANKINGS_EACH_STAT_POW = .9;

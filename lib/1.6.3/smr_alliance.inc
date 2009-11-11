@@ -1,7 +1,6 @@
 <?php
 
 // include file with database class
-require_once('SmrMySqlDatabase.class.inc');
 
 require_once('SmrAccount.class.inc');
 require_once('SmrPlayer.class.inc');

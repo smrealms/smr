@@ -102,7 +102,6 @@ class SmrSession
 				self::$game_speed = self::$db->getField('game_speed');
 			}
 		}
-		require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
 		$db = new SmrMySqlDatabase();
 	}
 	
