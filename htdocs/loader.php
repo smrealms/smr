@@ -170,8 +170,6 @@ catch(Exception $e)
 		 $message,
 		 'From: bugs@smrealms.de');
 	}
-	var_dump($message);
-	exit;
 	if(!USING_AJAX)
 		header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
 	exit;
