@@ -8,7 +8,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 	else if($view == USER_SCORE_NAME)
 	{
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$accountID.(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : '') .' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
+		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$accountID.(isset($gameID) ? ' AND game_id=' . $gameID : '') .' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
 		$db->query($query);
 	}
 	else
@@ -25,7 +25,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $rank['Amount'] . ') x');
 	else if($view == USER_SCORE_NAME)
 	{
-		$query = 'SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type IN ('.$statements['IN'].')'.(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : '') .' GROUP BY account_id HAVING '.$statements['CASE'].'>' . $rank['Amount'] . ') x';
+		$query = 'SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type IN ('.$statements['IN'].')'.(isset($gameID) ? ' AND game_id=' . $gameID : '') .' GROUP BY account_id HAVING '.$statements['CASE'].'>' . $rank['Amount'] . ') x';
 		$db->query($query);
 	}
 	else
