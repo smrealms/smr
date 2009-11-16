@@ -1,5 +1,6 @@
 <?php
 require_once('SmrSession.class.inc');
+require_once('SmrMySqlDatabase.class.inc');
 class Globals
 {
 	protected static $PLANET_BUILDINGS = null;
