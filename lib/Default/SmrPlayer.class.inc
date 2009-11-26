@@ -1418,7 +1418,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		
 		//check for federal bounty being offered for current port raiders
-		$allowed = TIME - 60 * 60 * 3;
+		$allowed = TIME - 3600 * 3;
 		$this->db->query('DELETE FROM player_attacks_port WHERE time < '.$allowed);
 		$query = 'SELECT count(*) as numAttacks
 					FROM player_attacks_port, player, port
