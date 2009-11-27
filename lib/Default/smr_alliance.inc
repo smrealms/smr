@@ -92,17 +92,18 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 			return false;
 		if($this->getPassword()=='*')
 			return false;
-		if($player->getAccount()->isVeteran())
+		if($this->getNumMembers()<self::MAX_PLAYERS)
 		{
+			if(!$player->getAccount()->isVeteran())
+				return true;
 			if($this->getNumMembers()<self::MAX_VETS)
 				return true;
-			if($this->getNumMembers()<self::MAX_PLAYERS && $this->getNumVeterans() < self::MAX_VETS)
+			$this->query('SELECT account_id FROM player_joined_alliance WHERE account_id='.$this->escapeNumber($player->getAccountID()).' AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()).' AND status='.$this->escapeString('NEWBIE'));
+			if($this->nextRecord())
 				return true;
-		}
-		else
-		{
-			if($this->getNumMembers()<self::MAX_PLAYERS)
+			if($this->getNumVeterans() < self::MAX_VETS)
 				return true;
+			
 		}
 		return false;
 	}
