@@ -497,7 +497,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$this->allianceID=$ID;
 		$this->db->query('INSERT IGNORE INTO player_joined_alliance (account_id,game_id,alliance_id,status) ' .
-			'VALUES ('.$this->db->escapeNumber($player->getAccountID()).','.$this->db->escapeNumber($player->getGameID()).','.$this->db->escapeNumber($this->getAllianceID()).','.$this->db->escapeString($this->getAccount()->isVeteran()?'VETERAN':'NEWBIE').')');
+			'VALUES ('.$this->db->escapeNumber($this->getAccountID()).','.$this->db->escapeNumber($this->getGameID()).','.$this->db->escapeNumber($this->getAllianceID()).','.$this->db->escapeString($this->getAccount()->isVeteran()?'VETERAN':'NEWBIE').')');
 		$this->hasChanged=true;
 	}
 	
