@@ -1,6 +1,10 @@
 <?php
-$variable = $_REQUEST['variable'];
-$type = $_REQUEST['type'];
+if (isset($_REQUEST['variable']))
+	SmrSession::updateVar('Variable',$_REQUEST['variable']);
+$variable = $var['Variable'];
+if (isset($_REQUEST['type']))
+	SmrSession::updateVar('Type',$_REQUEST['type']);
+$type = $var['Type'];
 $db2 = new SmrMySqlDatabase();
 //used to make sure we don't display deleted accounts
 $del_num = 5;
