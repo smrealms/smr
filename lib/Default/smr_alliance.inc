@@ -98,9 +98,18 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 				return true;
 			if($this->getNumMembers()<self::MAX_VETS)
 				return true;
-			$this->query('SELECT account_id FROM player_joined_alliance WHERE account_id='.$this->escapeNumber($player->getAccountID()).' AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()).' AND status='.$this->escapeString('NEWBIE'));
+			$this->query('SELECT status FROM player_joined_alliance WHERE account_id='.$this->escapeNumber($player->getAccountID()).' AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
 			if($this->nextRecord())
-				return true;
+			{
+				if($this->getField('status')=='NEWBIE')
+					return true;
+				else
+				{
+					$this->query('SELECT SUM(account_id) AS num_orig_vets FROM player_joined_alliance WHERE account_id IN (SELECT account_id FROM player WHERE alliance_id = '.$this->escapeNumber($this->getAllianceID()) .') AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
+					if($this->nextRecord() && $this->getField('num_orig_vets') < self::MAX_VETS)
+						return true;
+				}
+			}
 			if($this->getNumVeterans() < self::MAX_VETS)
 				return true;
 			
