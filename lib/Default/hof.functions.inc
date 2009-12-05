@@ -4,11 +4,11 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 {
 	$rank = array('Amount'=>0,'Rank'=>0);
 	if($view == DONATION_NAME)
-		$db->query('SELECT account_id, sum(amount) as amount FROM account_donated WHERE account_id='.$accountID.' GROUP BY account_id LIMIT 1');
+		$db->query('SELECT SUM(amount) as amount FROM account_donated WHERE account_id='.$accountID.' GROUP BY account_id LIMIT 1');
 	else if($view == USER_SCORE_NAME)
 	{
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$accountID.(isset($gameID) ? ' AND game_id=' . $gameID : '') .' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
+		$query = 'SELECT '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$accountID.(isset($gameID) ? ' AND game_id=' . $gameID : '') .' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
 		$db->query($query);
 	}
 	else
@@ -16,7 +16,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		$db->query('SELECT type FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).' LIMIT 1');
 		if(!$db->nextRecord())
 			return $rank;
-		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false) .' AND account_id='.$accountID.(isset($gameID) ? ' AND game_id=' . $gameID : '').' GROUP BY account_id LIMIT 1');
+		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false) .' AND account_id='.$accountID.(isset($gameID) ? ' AND game_id=' . $gameID : '').' GROUP BY account_id LIMIT 1');
 	}
 	if($db->nextRecord())
 		if($db->getField('amount')!=null)
@@ -84,5 +84,54 @@ function displayHOFRow($rank,$accountID,$amount)
 	$return.=('<td align=center'.$bold.'>' . $amount . '</td>');
 	$return.=('</tr>');
 	return $return;
+}
+
+function buildBreadcrumb(&$var,&$hofTypes,$hofName)
+{
+	$container = $var;
+	unset($container['type']);
+	unset($container['view']);
+	$viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,$hofName);
+	$typeList = array();
+	if(isset($var['type']))
+	{
+		foreach($var['type'] as $type)
+		{
+			if(!is_array($hofTypes[$type]))
+			{
+				$var['type'] = $typeList;
+				$var['view'] = $type;
+				break;
+			}
+			else
+				$typeList[] = $type;
+			$viewing .= ' -&gt; ';
+			$container = $var;
+			$container['type'] = $typeList;
+			unset($container['view']);
+			$viewing.= create_link($container,$type);
+			
+			$hofTypes = $hofTypes[$type];
+		}
+	}
+	if(isset($var['view']))
+	{
+		$viewing .= ' -&gt; ';
+		if(is_array($hofTypes[$var['view']]))
+		{
+			$typeList[] = $var['view'];
+			$var['type'] = $typeList;
+		}
+		$container = $var;
+		$viewing .= create_link($container,$var['view']);
+		
+		if(is_array($hofTypes[$var['view']]))
+		{
+			$hofTypes = $hofTypes[$var['view']];
+			unset($var['view']);
+		}
+	}
+	$viewing.= '<br /><br />';
+	return $viewing;
 }
 ?>
