@@ -6,6 +6,7 @@ $db->query('SELECT ship_type_id
 	FROM location, location_sells_ships
 	WHERE location.sector_id=' . $player->getSectorID() . '
 	AND location.game_id=' . $player->getGameID() . '
+    AND location.location_type_id = '.$var['LocationID'].' 
 	AND location_sells_ships.location_type_id = location.location_type_id');
 $shipsSold = array();
 if ($db->getNumRows() > 0 )
