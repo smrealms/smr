@@ -297,7 +297,6 @@ function displayMessage(&$messageBox,$message_id, $reciever_id, $sender_id, $mes
 	$container = create_container('skeleton.php','message_notify_confirm.php');
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
-	$container['notified_time'] = TIME;
 	$message['ReportHref'] = SmrSession::get_new_href($container);
 	if (is_object($sender))
 	{
