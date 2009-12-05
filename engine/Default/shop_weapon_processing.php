@@ -53,7 +53,8 @@ if ($action == 'Buy') {
 	$account->log(10, 'Player Sells a '.$wep_name, $player->getSectorID());
 
 }
-
-forward(create_container('skeleton.php', 'shop_weapon.php'));
+$container = create_container('skeleton.php', 'shop_weapon.php');
+transfer('LocationID');
+forward($container);
 
 ?>

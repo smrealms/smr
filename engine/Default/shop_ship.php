@@ -11,9 +11,8 @@ $db->query('SELECT ship_type_id
 $shipsSold = array();
 if ($db->getNumRows() > 0 )
 {
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'shop_ship.php';
+	$container = create_container('skeleton.php','shop_ship.php');
+	transfer('LocationID');
 
 	while ($db->nextRecord())
 	{
@@ -32,8 +31,8 @@ if (isset($var['ship_id']))
 	$compareShip = AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$var['ship_id']);
 	$compareShip['Speed'] *= Globals::getGameSpeed($player->getGameID());
 	
-	$container = array();
-	$container['url']		= 'shop_ship_processing.php';
+	$container = create_container('shop_ship_processing.php');
+	transfer('LocationID');
 	transfer('ship_id');
 	$compareShip['BuyHREF'] = SmrSession::get_new_href($container);
 	

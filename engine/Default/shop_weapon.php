@@ -41,8 +41,8 @@ if ($db->getNumRows() > 0 ) {
         $db2->nextRecord();
         $weapon_race = $db2->getField('race_name');
 
-		$container = array();
-		$container['url'] = 'shop_weapon_processing.php';
+		$container = create_container('shop_weapon_processing.php');
+		transfer('LocationID');
         if ($race_id !=1) {
 			$weaponRelations = Globals::getRaceRelations(SmrSession::$game_id,$race_id);
         	if ($weaponRelations[$player->getRaceID()] + $player->getRelation($race_id) < 300)
@@ -93,8 +93,8 @@ if ($ship->hasWeapons())
 	{
 			$cost = $weapon->getCost() / 2;
 
-			$container = array();
-			$container['url'] = 'shop_weapon_processing.php';
+			$container = create_container('shop_weapon_processing.php');
+			transfer('LocationID');
 			$container['order_id'] = $order_id;
 			$container['cash_back'] = $cost;
 			$container['weapon_type_id'] = $weapon->getWeaponTypeID();
