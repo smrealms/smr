@@ -415,6 +415,7 @@ class SmrLocation
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = $this->getAction();
+		$container['LocationID'] = $this->getTypeID();
 		return SmrSession::get_new_href($container);
 	}
 	
