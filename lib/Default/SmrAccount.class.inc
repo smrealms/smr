@@ -805,6 +805,7 @@ class SmrAccount
 	
 	public function setPoints($numPoints,$lastUpdate=false)
 	{
+		$numPoints = max($numPoints,0);
 		if($this->getPoints()==$numPoints)
 			return;
 		if ($this->points==0)
