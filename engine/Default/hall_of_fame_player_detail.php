@@ -7,7 +7,6 @@ else
 	$account_id = $account->getAccountID();
 $game_id =null;
 if (isset($var['game_id'])) $game_id = $var['game_id'];
-
 $base = array();
 
 if(isset($var['game_id']))
@@ -26,7 +25,7 @@ else
 {
 	$template->assign('PageTopic',$account->getHofName().'\'s All Time Personal Hall of Fame');
 }
-$PHP_OUTPUT.=('<div align=center>');
+$PHP_OUTPUT.=('<div class="center">');
 
 $db->query('SELECT DISTINCT type FROM player_hof WHERE account_id='.$account_id. (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
@@ -46,76 +45,22 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$container = create_container('skeleton.php','hall_of_fame_new.php');
-if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
-$viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,'Personal HoF');
-$typeList = array();
-if(isset($var['type']))
-{
-	foreach($var['type'] as $type)
-	{
-		$container = $var;
-		$container['type'] = $typeList;
-		$viewing.= create_link($container,$type);
-		
-		$hofTypes =& $hofTypes[$type];
-	}
-	foreach($var['type'] as $type)
-	{
-		if(!is_array($hofTypes[$type]))
-		{
-			$var['type'] = $typeList;
-			$var['view'] = $type;
-			break;
-		}
-		else
-			$typeList[] = $type;
-		$viewing .= ' -&gt; ';
-		$container = $var;
-		$container['type'] = $typeList;
-		unset($container['view']);
-		$viewing.= create_link($container,$type);
-		
-		$hofTypes =& $hofTypes[$type];
-	}
-}
-if(isset($var['view']))
-{
-	$viewing .= ' -&gt; ';
-	if(is_array($hofTypes[$var['view']]))
-	{
-		$typeList[] = $var['view'];
-		$var['type'] = $typeList;
-	}
-	$container = $var;
-	$container['type'] = $typeList;
-	$viewing .= create_link($container,$var['view']);
-	
-	if(is_array($hofTypes[$var['view']]))
-	{
-		$hofTypes =& $hofTypes[$var['view']];
-		unset($var['view']);
-	}
-}
-$viewing.= '<br /><br />';
-
-$PHP_OUTPUT.= $viewing;
-$PHP_OUTPUT.= create_table();
-
+$PHP_OUTPUT .= buildBreadcrumb(&$var,$hofTypes,'Personal HoF');
+$PHP_OUTPUT.= '<table class="standard" align="center">';
 
 if(!isset($var['view']))
 {
-	$PHP_OUTPUT.=('<tr><th align=center>Category</th><th align="center" width="60%">Subcategory</th></tr>');
+	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');
 	
 	foreach($hofTypes as $type => $value)
 	{
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align=center>'.$type.'</td>');
+		$PHP_OUTPUT.=('<td>'.$type.'</td>');
 		$container = $var;
 		if (!isset($var['type']))
 			$container['type'] = array();
 		$container['type'][] = $type;
-		$PHP_OUTPUT.=('<td align="center" valign="middle">');
+		$PHP_OUTPUT.=('<td valign="middle">');
 		$i=0;
 		if(is_array($value))
 		{
@@ -147,7 +92,7 @@ if(!isset($var['view']))
 }
 else
 {
-	$PHP_OUTPUT.=('<tr><th align="center">Rank</th><th align="center">Player</th><th align="center">Total</th></tr>');
+	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
 	
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];

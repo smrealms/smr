@@ -42,53 +42,8 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$container = create_container('skeleton.php','hall_of_fame_new.php');
-if (isset($var['game_id'])) $container['game_id'] = $var['game_id'];
-$viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,isset($var['game_id'])?'Current HoF':'Global HoF');
-$typeList = array();
-if(isset($var['type']))
-{
-	foreach($var['type'] as $type)
-	{
-		if(!is_array($hofTypes[$type]))
-		{
-			$var['type'] = $typeList;
-			$var['view'] = $type;
-			break;
-		}
-		else
-			$typeList[] = $type;
-		$viewing .= ' -&gt; ';
-		$container = $var;
-		$container['type'] = $typeList;
-		unset($container['view']);
-		$viewing.= create_link($container,$type);
-		
-		$hofTypes =& $hofTypes[$type];
-	}
-}
-if(isset($var['view']))
-{
-	$viewing .= ' -&gt; ';
-	if(is_array($hofTypes[$var['view']]))
-	{
-		$typeList[] = $var['view'];
-		$var['type'] = $typeList;
-	}
-	$container = $var;
-	$viewing .= create_link($container,$var['view']);
-	
-	if(is_array($hofTypes[$var['view']]))
-	{
-		$hofTypes =& $hofTypes[$var['view']];
-		unset($var['view']);
-	}
-}
-$viewing.= '<br /><br />';
-
-$PHP_OUTPUT.= $viewing;
+$PHP_OUTPUT .= buildBreadcrumb(&$var,$hofTypes,isset($var['game_id'])?'Current HoF':'Global HoF');
 $PHP_OUTPUT.= '<table class="standard" align="center">';
-
 
 if(!isset($var['view']))
 {
@@ -98,16 +53,10 @@ if(!isset($var['view']))
 	{
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$type.'</td>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'hall_of_fame_new.php';
-		if (isset($var['type']))
-			$container['type'] = $var['type'];
-		else
+		$container = $var;
+		if (!isset($var['type']))
 			$container['type'] = array();
 		$container['type'][] = $type;
-		if (isset($var['game_id']))
-			$container['game_id'] = $var['game_id'];
 		$PHP_OUTPUT.=('<td valign="middle">');
 		$i=0;
 		if(is_array($value))
