@@ -39,6 +39,8 @@ if ($hardware_id == 6) $player->increaseHOF($amount,array('Forces','Bought','Min
 
 $account->log(10, 'Player Buys '.$amount.' '.$hardware_name, $player->getSectorID());
 
-forward(create_container('skeleton.php', 'shop_hardware.php'));
+$container = create_container('skeleton.php', 'shop_hardware.php');
+transfer('LocationID');
+forward($container);
 
 ?>

@@ -42,8 +42,8 @@ if ($db->getNumRows() > 0 )
 
 		$form++;
 
-		$container = array();
-		$container['url'] = 'shop_hardware_processing.php';
+		$container = create_container('shop_hardware_processing.php');
+		transfer('LocationID');
 		$container['hardware_id'] = $hardware_type_id;
 		$container['hardware_name'] = $hardware_name;
 		$container['cost'] = $cost;
