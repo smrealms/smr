@@ -225,7 +225,7 @@ else
 // log?
 $account->log(1, 'logged in from '.$curr_ip);
 //now we set a cookie that we can use for mult checking
-$cookieVersion = 'v2';
+$cookieVersion = 'v3';
 if (!isset($_COOKIE['Session_Info'])) {
 
 	//we get their info from db if they have any
