@@ -175,23 +175,9 @@ function create_error($message)
 {
 	if(USING_AJAX)
 		throw new Exception('No errors should be created when using AJAX as nothing should have changed from the last time the page loaded: ' . $message);
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'error.php';
+	$container = create_container('skeleton.php','error.php');
 	$container['message'] = $message;
 	forward($container);
-	
-	/*
-	global $player;
-	if (empty($message) || $message = '') $message = 'File not found';
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php';
-	else $container['body'] = 'current_sector.php';
-	$errorMsg = '<span class="red bold">ERROR:</span> ' . $message . '!';
-	$container['errorMsg'] = '.$this->escapeString($errorMsg';
-	forward($container);*/
-
 }
 
 function resetContainer($new_container)
@@ -420,8 +406,9 @@ function do_voodoo()
 		$db->nextRecord();
 		$sector_id=$db->getField('sector_id');
 
+		global $locksFailed;
 		if(!USING_AJAX) //AJAX should never do anything that requires a lock.
-			if(!$lock && (!isset($var['body']) || $var['body'] != 'error.php'))
+			if(!$lock && !$locksFailed[$sector_id])
 			{
 				if(!acquire_lock($sector_id))
 				{
@@ -509,14 +496,14 @@ function do_voodoo()
 // This is hackish, but without row level locking it's the best we can do
 function acquire_lock($sector)
 {
-	global $db, $lock;
+	global $db, $lock, $locksFailed;
 
 	if($lock)
 		return true;
 
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
-			
+	
 	$lock = $db->getInsertID();
 
 	for($i=0;$i<100;++$i)
@@ -550,6 +537,7 @@ function acquire_lock($sector)
 	}
 
 	release_lock();
+	$locksFailed[$sector] = true;
 	return false;
 }
 
