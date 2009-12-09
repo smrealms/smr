@@ -12,17 +12,18 @@ define('ACCOUNT_ID_NHL',36);
 define('TIME_BEFORE_NEWBIE_TIME',604800); //7 days, ie disable automatic newbie turn, at least whilst still on new.smrealms.de
 
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
+define('MULTI_CHECKING_COOKIE_VERSION','v3');
 
 require_once('config.specific.php');
 
 /*
  * Localisations
  */
-	define('DEFAULT_DATE_DATE_SHORT','j/n/Y');
-	define('DEFAULT_DATE_TIME_SHORT','g:i:s A');
-	define('DEFAULT_DATE_FULL_SHORT',DEFAULT_DATE_DATE_SHORT.' '.DEFAULT_DATE_TIME_SHORT);
-	define('DEFAULT_DATE_FULL_SHORT_SPLIT',DEFAULT_DATE_DATE_SHORT.'\<b\r /\>'.DEFAULT_DATE_TIME_SHORT);
-	define('DEFAULT_DATE_FULL_LONG','l jS F '.DEFAULT_DATE_TIME_SHORT);
+define('DEFAULT_DATE_DATE_SHORT','j/n/Y');
+define('DEFAULT_DATE_TIME_SHORT','g:i:s A');
+define('DEFAULT_DATE_FULL_SHORT',DEFAULT_DATE_DATE_SHORT.' '.DEFAULT_DATE_TIME_SHORT);
+define('DEFAULT_DATE_FULL_SHORT_SPLIT',DEFAULT_DATE_DATE_SHORT.'\<b\r /\>'.DEFAULT_DATE_TIME_SHORT);
+define('DEFAULT_DATE_FULL_LONG','l jS F '.DEFAULT_DATE_TIME_SHORT);
  
 /*
  * Ship types

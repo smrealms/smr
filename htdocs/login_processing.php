@@ -225,7 +225,6 @@ else
 // log?
 $account->log(1, 'logged in from '.$curr_ip);
 //now we set a cookie that we can use for mult checking
-$cookieVersion = 'v3';
 if (!isset($_COOKIE['Session_Info'])) {
 
 	//we get their info from db if they have any
@@ -234,14 +233,14 @@ if (!isset($_COOKIE['Session_Info'])) {
 		//convert to array
 		$old = explode('-', $db->getField('array'));
 		//get rid of old version cookie since it isn't optimal.
-		if ($old[0] != $cookieVersion) $old = array();
+		if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) $old = array();
 	} else $old = array();
-	$old[0] = $cookieVersion;
+	$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 	if (!in_array($account->account_id, $old)) $old[] = $account->account_id;
 	if (sizeof($old) <= 2) $use = 'FALSE';
 	else $use = 'TRUE';
 	//check that each value is legit and add it to db string
-	$new = $cookieVersion;
+	$new = MULTI_CHECKING_COOKIE_VERSION;
 	foreach ($old as $accID)
 		if (is_numeric($accID)) $new .= '-'.$accID;
 	$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->account_id.', '.$db->escapeString($new).', '.$db->escapeString($use).')');
@@ -254,8 +253,8 @@ if (!isset($_COOKIE['Session_Info'])) {
 	//break cookie into array
 	$cookie = explode('-', $_COOKIE['Session_Info']);
 	//check for current version
-	if ($cookie[0] != $cookieVersion) $cookie = array();
-	$cookie[0] = $cookieVersion;
+	if ($cookie[0] != MULTI_CHECKING_COOKIE_VERSION) $cookie = array();
+	$cookie[0] = MULTI_CHECKING_COOKIE_VERSION;
 	//add this acc to the cookie if it isn't there
 	if (!in_array($account->account_id, $cookie)) $cookie[] = $account->account_id;
 
@@ -263,9 +262,9 @@ if (!isset($_COOKIE['Session_Info'])) {
 	if ($db->nextRecord()) {
 		//convert to array
 		$old = explode('-', $db->getField('array'));
-		if ($old[0] != $cookieVersion) $old = array();
+		if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) $old = array();
 	} else $old = array();
-	$old[0] = $cookieVersion;
+	$old[0] = MULTI_CHECKING_COOKIE_VERSION;
 	//merge arrays...but keys are all different so we go through each value
 	foreach ($cookie as $value)
 		if (!in_array($value,$old)) $old[] = $value;
@@ -273,7 +272,7 @@ if (!isset($_COOKIE['Session_Info'])) {
 	if (sizeof($old) <= 2) $use = 'FALSE';
 	else $use = 'TRUE';
 	//check that each value is legit and add it to db string
-	$new = $cookieVersion;
+	$new = MULTI_CHECKING_COOKIE_VERSION;
 	foreach ($old as $accID)
 		if (is_numeric($accID)) $new .= '-'.$accID;
 	$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->account_id.', '.$db->escapeString($new).', '.$db->escapeString($use).')');

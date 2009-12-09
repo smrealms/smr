@@ -7,7 +7,6 @@ $skipExceptions = FALSE;
 //extra db object and other vars
 $db2 = new SmrMySqlDatabase();
 $used = array();
-$cookieVersion = 'v2';
 
 //check the db and get the info we need
 $db->query('SELECT * FROM multi_checking_cookie WHERE `use` = \'TRUE\'');
@@ -22,7 +21,7 @@ while ($db->nextRecord())
 	//split it into individual IDs
 	$accountIDs = explode('-', $associatedAccs);
 	//make sure this is good data.
-	if ($accountIDs[0] != $cookieVersion) continue;
+	if ($accountIDs[0] != MULTI_CHECKING_COOKIE_VERSION) continue;
 	//how many are they linked to?
 	$rows = sizeof($accountIDs);
 	$echoMainAcc = TRUE;
