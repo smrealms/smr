@@ -3,7 +3,7 @@ $CombatPlanet = $PlanetCombatResults['Planet'];
 $TotalDamage = $PlanetCombatResults['TotalDamage'];
 if($MinimalDisplay)
 {
-	echo $CombatPort->getDisplayName();
+	echo $CombatPlanet->getDisplayName();
 	if($TotalDamage > 0)
 	{
 		?> hit for a total of <span class="red"><?php echo $TotalDamage ?></span> damage in this round of combat of which <span class="red"><?php echo $PortCombatResults['TotalDamagePerTargetPlayer'][$ThisPlayer->getAccountID()]; ?></span> was done to you<?php
