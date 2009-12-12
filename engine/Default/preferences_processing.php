@@ -144,7 +144,6 @@ elseif ($action == 'Change Images')
 elseif ($action == 'Change Centering')
 {
 	$account->setCenterGalaxyMapOnPlayer($_REQUEST['centergalmap']=='Yes');
-	$account->update();
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your centering galaxy map preferences.';
 }
 else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQUEST['fontsize'] >= 50)

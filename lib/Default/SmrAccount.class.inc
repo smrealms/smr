@@ -17,7 +17,7 @@ class SmrAccount
 	
 	var $account_id;
 	var $login;
-	var $password;
+	protected $password;
 	var $email;
 	var $first_name;
 	var $validated;
@@ -28,9 +28,7 @@ class SmrAccount
 	protected $logging;
 	var $offset;
 	var $images;
-	var $fontSize;
-	var $rank;
-	var $rank_name;
+	protected $fontSize;
 	protected $passwordReset;
 	protected $points;
 	protected $useAJAX;
@@ -42,6 +40,8 @@ class SmrAccount
 	protected $defaultCSSEnabled;
 	protected $centerGalaxyMapOnPlayer;
 	protected $oldAccountID;
+	protected $maxRankAchieved;
+	protected $referrerID;
 	protected $dateShort;
 	protected $timeShort;
 	
@@ -110,20 +110,23 @@ class SmrAccount
 			
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
-			$this->veteran			= $row['veteran']=='TRUE';
-			$this->logging			= $row['logging']=='TRUE';
+			$this->veteran			= $this->db->getBoolean('veteran');
+			$this->logging			= $this->db->getBoolean('logging');
 			$this->offset			= $row['offset'];
 			$this->images			= $row['images'];
 			$this->fontSize			= $row['fontsize'];
 			
 			$this->passwordReset	= $row['password_reset'];
-			$this->useAJAX			= $row['use_ajax']=='TRUE';
+			$this->useAJAX			= $this->db->getBoolean('use_ajax');
 			$this->mailBanned		= (int)$row['mail_banned'];
 			
 			$this->cssLink			= $row['css_link'];
-			$this->defaultCSSEnabled	= $row['default_css_enabled']=='TRUE';
-			$this->centerGalaxyMapOnPlayer	= $row['center_galaxy_map_on_player']=='TRUE';
+			$this->defaultCSSEnabled	= $this->db->getBoolean('default_css_enabled');
+			$this->centerGalaxyMapOnPlayer	= $this->db->getBoolean('center_galaxy_map_on_player');
 			$this->oldAccountID		= $row['old_account_id'];
+			
+			$this->referrerID		= $row['referral_id'];
+			$this->maxRankAchieved	= $row['max_rank_achieved'];
 			
 			$this->hofName			= $row['hof_name'];
 			
@@ -131,7 +134,6 @@ class SmrAccount
 			$this->timeShort		= $row['time_short'];
 			if(empty($this->hofName))
 				$this->hofName=$this->login;
-			$this->get_rank();
 		}
 		else
 		{
@@ -139,7 +141,7 @@ class SmrAccount
 		}
 	}
 	
-	function is_disabled()
+	public function is_disabled()
 	{
 		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
@@ -177,7 +179,10 @@ class SmrAccount
 			'images = '.$this->db->escapeString($this->images).', ' .
 			'password_reset = '.$this->db->escapeString($this->passwordReset).', ' .
 			'use_ajax='.$this->db->escapeBoolean($this->useAJAX).', ' .
-			'mail_banned='.$this->db->escapeNumber($this->mailBanned).
+			'mail_banned='.$this->db->escapeNumber($this->mailBanned).', ' .
+			'max_rank_achieved='.$this->db->escapeNumber($this->maxRankAchieved).', ' .
+			'default_css_enabled='.$this->db->escapeBoolean($this->defaultCSSEnabled).', ' .
+			'center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).
 			' WHERE account_id = '.$this->account_id.' LIMIT 1');
 		
 	}
@@ -339,40 +344,35 @@ class SmrAccount
 		return $this->individualScores[$gameID];
 	}
 	
-	function get_rank()
+	public function get_rank()
 	{
 		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY);
 		if($rank<1)
 			$rank=1;
+		if($rank > $this->maxRankAchieved)
+			$this->updateMaxRankAchieved($rank);
 		return $rank;
-//			$this->db->query('SELECT kills, experience_traded, rankings_id, rankings_name, kills_needed, experience_needed
-//				FROM `rankings` , `account_has_stats`
-//				WHERE (account_has_stats.kills >= kills_needed OR account_has_stats.experience_traded >= experience_needed)
-//				AND account_has_stats.account_id = ' . $this->account_id . ' ORDER BY rankings_id DESC LIMIT 2');
-//			
-//			if($this->db->getNumRows() > 0)
-//			{
-//				$this->db->nextRecord();
-//				$row = $this->db->getRow();
-//				// If both rankings qualify they get the top row. If not they get the other row
-//				if($row['kills_needed'] <= $row['kills'] && $row['experience_needed'] <= $row['experience_traded'])
-//				{
-//					$this->rank = $row['rankings_id'];
-//					$this->rank_name = $row['rankings_name'];
-//				}
-//				else
-//				{
-//					$this->db->nextRecord();
-//					$row = $this->db->getRow();
-//					$this->rank = $row['rankings_id'];
-//					$this->rank_name = $row['rankings_name'];
-//				}
-//			}
-//			else
-//			{
-//				$this->rank = 1;
-//				$this->rank_name = 'Newbie';
-//			}
+	}
+	
+	protected function updateMaxRankAchieved($rank)
+	{
+		if($rank <= $this->maxRankAchieved)
+			throw new Exception('Trying to set max rank achieved to a lower value: ' . $rank);
+		$delta = $rank-$this->maxRankAchieved;
+		$this->getReferrer()->increaseSmrRewardCredits($delta);
+		$this->maxRankAchieved+=$delta;
+		$this->hasChanged=true;
+		$this->update();
+	}
+	
+	public function getReferrerID()
+	{
+		return $this->referrerID;
+	}
+	
+	public function &getReferrer()
+	{
+		return SmrAccount::getAccount($this->getReferrerID());
 	}
 	
 	function log($log_type_id, $msg, $sector_id = 0)
@@ -712,6 +712,7 @@ class SmrAccount
 			return;
 		$this->useAJAX=$bool;
 		$this->hasChanged=true;
+		$this->update();
 	}
 	
 	public function isDefaultCSSEnabled()
@@ -724,8 +725,8 @@ class SmrAccount
 		if($this->defaultCSSEnabled == $bool)
 			return;
 		$this->defaultCSSEnabled=$bool;
-		$this->db->query('UPDATE account SET default_css_enabled = ' . $this->db->escapeBoolean($bool) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->hasChanged=true;
+		$this->update();
 	}
 	
 	public function isCenterGalaxyMapOnPlayer()
@@ -738,8 +739,8 @@ class SmrAccount
 		if($this->centerGalaxyMapOnPlayer == $bool)
 			return;
 		$this->centerGalaxyMapOnPlayer=$bool;
-		$this->db->query('UPDATE account SET center_galaxy_map_on_player = ' . $this->db->escapeBoolean($bool) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->hasChanged=true;
+		$this->update();
 	}
 	
 	public function getMailBanned()
