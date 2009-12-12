@@ -18,7 +18,7 @@ class SmrAccount
 	
 	var $account_id;
 	var $login;
-	var $password;
+	protected $password;
 	var $email;
 	var $first_name;
 	var $validated;
@@ -29,9 +29,7 @@ class SmrAccount
 	protected $logging;
 	var $offset;
 	var $images;
-	var $fontSize;
-	var $rank;
-	var $rank_name;
+	protected $fontSize;
 	protected $passwordReset;
 	protected $points;
 	protected $useAJAX;
@@ -341,34 +339,6 @@ class SmrAccount
 		if($rank<1)
 			$rank=1;
 		return $rank;
-//			$this->db->query('SELECT kills, experience_traded, rankings_id, rankings_name, kills_needed, experience_needed
-//				FROM `rankings` , `account_has_stats`
-//				WHERE (account_has_stats.kills >= kills_needed OR account_has_stats.experience_traded >= experience_needed)
-//				AND account_has_stats.account_id = ' . $this->account_id . ' ORDER BY rankings_id DESC LIMIT 2');
-//			
-//			if($this->db->getNumRows() > 0)
-//			{
-//				$this->db->nextRecord();
-//				$row = $this->db->getRow();
-//				// If both rankings qualify they get the top row. If not they get the other row
-//				if($row['kills_needed'] <= $row['kills'] && $row['experience_needed'] <= $row['experience_traded'])
-//				{
-//					$this->rank = $row['rankings_id'];
-//					$this->rank_name = $row['rankings_name'];
-//				}
-//				else
-//				{
-//					$this->db->nextRecord();
-//					$row = $this->db->getRow();
-//					$this->rank = $row['rankings_id'];
-//					$this->rank_name = $row['rankings_name'];
-//				}
-//			}
-//			else
-//			{
-//				$this->rank = 1;
-//				$this->rank_name = 'Newbie';
-//			}
 	}
 	
 	function log($log_type_id, $msg, $sector_id = 0)
