@@ -1072,14 +1072,16 @@ abstract class AbstractSmrShip
 		{
 			$results['Weapons'][$orderID] =& $weapon->shootForces($thisPlayer, $forces);
 			if($results['Weapons'][$orderID]['Hit'])
+			{
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-			$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'],array('Combat','Forces','Mines','Killed'));
-			$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['Mines'],array('Combat','Forces','Mines','Damage Done'));
-			$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumCDs'],array('Combat','Forces','Combat Drones','Killed'));
-			$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['CDs'],array('Combat','Forces','Combat Drones','Damage Done'));
-			$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumSDs'],array('Combat','Forces','Scout Drones','Killed'));
-			$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'));
-			$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines']+$results['ActualDamage']['NumCDs']+$results['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'],array('Combat','Forces','Mines','Killed'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['Mines'],array('Combat','Forces','Mines','Damage Done'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumCDs'],array('Combat','Forces','Combat Drones','Killed'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['CDs'],array('Combat','Forces','Combat Drones','Damage Done'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumSDs'],array('Combat','Forces','Scout Drones','Killed'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines']+$results['Weapons'][$orderID]['ActualDamage']['NumCDs']+$results['Weapons'][$orderID]['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'));
+			}
 		}
 		if($this->hasCDs())
 		{
@@ -1092,7 +1094,7 @@ abstract class AbstractSmrShip
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['CDs'],array('Combat','Forces','Combat Drones','Damage Done'));
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumSDs'],array('Combat','Forces','Scout Drones','Killed'));
 			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'));
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines']+$results['ActualDamage']['NumCDs']+$results['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'));
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines']+$results['Drones']['ActualDamage']['NumCDs']+$results['Drones']['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'));
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
 		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Forces','Damage Done'));

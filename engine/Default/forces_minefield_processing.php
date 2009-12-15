@@ -32,8 +32,6 @@ if ($forces->hasSDs())
 	$forces->ping($message, $player);
 }
 
-$force_msg = array();
-
 
 $container = array();
 $container['url'] = 'skeleton.php';

@@ -29,22 +29,21 @@ class SmrMines extends AbstractSmrCombatWeapon
 		return $modifiedAccuracy;
 	}
 	
-	public function getModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
+	public function getModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer,$minesAreAttacker)
 	{
 		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,mt_rand(1,7) * mt_rand(1,7),$minesAreAttacker);
 	}
 	
-	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer, $random,$minesAreAttacker=false)
+	protected function getModifiedForceAccuracyAgainstPlayerUsingRandom(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer, $random,$minesAreAttacker)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
 		if($minesAreAttacker)
 			$modifiedAccuracy /= SmrSector::getSector($forces->getGameID(),$forces->getSectorID())->getNumberOfConnections();
-		
 		return max(0,min(100,$modifiedAccuracy));
 	}
 	
-	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
+	public function getMaxModifiedForceAccuracyAgainstPlayer(SmrForce &$forces,AbstractSmrPlayer &$targetPlayer,$minesAreAttacker)
 	{
 		return $this->getModifiedForceAccuracyAgainstPlayerUsingRandom($forces,$targetPlayer,49,$minesAreAttacker);
 	}
@@ -127,7 +126,7 @@ class SmrMines extends AbstractSmrCombatWeapon
 	public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
-		$this->doForceDamageToPlayer($return, $forces, $targetPlayer);
+		$this->doForceDamageToPlayer($return, $forces, $targetPlayer,$minesAreAttacker);
 		$forces->takeMines($return['WeaponDamage']['Launched']);
 		return $return;
 	}
