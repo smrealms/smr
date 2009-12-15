@@ -100,7 +100,7 @@ if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id']))
 	$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
 }
 $gameGals =& SmrGalaxy::getGameGalaxies($player->getGameID());
-echo '<br/><form name="GalaxyMapForm" method="GET"><select name="galaxy_id">';
+echo '<br/><form name="GalaxyMapForm" method="GET"><select name="galaxy_id" onchange="this.form.submit()">';
 foreach($gameGals as &$gameGalaxy)
 {
 	$galaxyID		= $gameGalaxy->getGalaxyID();
