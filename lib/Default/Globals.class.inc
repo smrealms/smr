@@ -46,21 +46,21 @@ class Globals
 				$db2->query('SELECT * FROM planet_cost_time WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$buildingID]['Build Time'] += $db2->getField('amount');
+					$PLANET_BUILDINGS[$buildingID]['Build Time'] += (int)$db2->getField('amount');
 				}
 				
 				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = 0;
 				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += $db2->getField('amount');
+					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += (int)$db2->getField('amount');
 				}
 				
 				$PLANET_BUILDINGS[$buildingID]['Goods'] = array();
 				$db2->query('SELECT * FROM planet_cost_good WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getField('good_id')] = $db2->getField('amount');
+					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getField('good_id')] = (int)$db2->getField('amount');
 				}
 				
 //				global $PLANET_RESEARCH;
