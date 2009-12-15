@@ -193,7 +193,15 @@ $icq = $_REQUEST['icq'];
 $timez = $_REQUEST['timez'];
 
 // creates a new user account object
-$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral);
+try
+{
+	$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral);
+}
+catch(Exception $e)
+{
+	$msg = 'Invalid referral id!';
+	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+}
 $account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
 
 // register session
