@@ -69,6 +69,17 @@ class SmrAccount
 	
 	public static function &createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral)
 	{
+		if($referral!=0)
+		{
+			try
+			{
+				SmrAccount::getAccount($referral);
+			}
+			catch(Exception $e)
+			{
+				throw new Exception('Referral account does not exist: '.$e->getMessage());
+			}
+		}
 		$db = new SmrMySqlDatabase();
 		$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
 			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
@@ -359,7 +370,10 @@ class SmrAccount
 		if($rank <= $this->maxRankAchieved)
 			throw new Exception('Trying to set max rank achieved to a lower value: ' . $rank);
 		$delta = $rank-$this->maxRankAchieved;
-		$this->getReferrer()->increaseSmrRewardCredits($delta);
+		if($this->hasReferrer())
+		{
+			$this->getReferrer()->increaseSmrRewardCredits($delta);
+		}
 		$this->maxRankAchieved+=$delta;
 		$this->hasChanged=true;
 		$this->update();
@@ -368,6 +382,11 @@ class SmrAccount
 	public function getReferrerID()
 	{
 		return $this->referrerID;
+	}
+	
+	public function hasReferrer()
+	{
+		return $this->referrerID>0;
 	}
 	
 	public function &getReferrer()
