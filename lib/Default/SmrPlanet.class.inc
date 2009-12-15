@@ -29,7 +29,7 @@ class SmrPlanet
 	protected $hasChangedStockpile = false;
 	protected $isNew = false;
 	
-	protected $delayedShieldDelta = 0;
+	protected $delayedShieldsDelta = 0;
 	protected $delayedCDsDelta = 0;
 	
 	public static function refreshCache()
@@ -265,7 +265,7 @@ class SmrPlanet
 		if($delayed===false)
 			$this->setShields($this->getShields() - $number);
 		else
-			$this->delayedShieldDelta -= $number;
+			$this->delayedShieldsDelta -= $number;
 	}
 	
 	public function getMaxShields()
