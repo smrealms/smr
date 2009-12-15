@@ -7,8 +7,7 @@
 // ********************************
 
 require_once('config.inc');
-require_once(ENGINE.'Default/smr.inc');
-require_once(get_file_loc('Default/AbstractSmrShip.class.inc'));
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 $db = new SmrMySqlDatabase();
 
@@ -94,7 +93,6 @@ echo ('<th align="center"><a href="?hardwarea=8&seq='.$seq.'"><span style=color:
 echo ('<th align="center"><a href="?hardwarea=9&seq='.$seq.'"><span style=color:#80C870;>Illusion</span></a></th>');
 echo ('<th align="center"><a href="?hardwarea=10&seq='.$seq.'"><span style=color:#80C870;>Jump</span></a></th>');
 echo ('<th align="center"><a href="?hardwarea=11&seq='.$seq.'"><span style=color:#80C870;>Drone Scrambler</span></a></th>');
-echo ('<th align="center"><a href="?hardwarea=12&seq='.$seq.'"><span style=color:#80C870;>MR</span></a></th>');
 echo ('</tr>');
 echo ('</form>');
 
@@ -148,8 +146,6 @@ function buildShipStats($db)
 	    }
         $hardware_id++;
 	}
-	$ship =& AbstractSmrShip::getBaseShip(0,$db->getField('ship_type_id'));
-	$stat[] = $ship['BaseMR'];
 	return $stat;
 }
 ?>
