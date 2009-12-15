@@ -1,4 +1,5 @@
 <table class="lmt" style="margin: auto;"><?php
+	$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
 	foreach($MapSectors as &$MapSector)
 	{ ?>
 		<tr><?php
