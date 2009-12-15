@@ -17,44 +17,9 @@ if ($planet->hasCurrentlyBuilding())
 	$currentlyBuilding = $planet->getCurrentlyBuilding();
 	foreach($currentlyBuilding as $building)
 	{
-		$hours = floor($building['TimeRemaining'] / 3600);
-		$minutes = floor(($building['TimeRemaining'] - $hours * 3600) / 60);
-		$seconds = $building['TimeRemaining'] - $hours * 3600 - $minutes * 60;
-	
 		$PHP_OUTPUT.=($PLANET_BUILDINGS[$building['ConstructionID']]['Name'].' which will finish in ');
 	
-		if ($hours > 0)
-		{
-			if ($hours == 1)
-				$PHP_OUTPUT.=($hours.' hour');
-			else
-				$PHP_OUTPUT.=($hours.' hours');
-	
-			if ($minutes > 0 && $seconds > 0)
-				$PHP_OUTPUT.=(', ');
-			elseif
-				($minutes > 0 || $seconds > 0) $PHP_OUTPUT.=(' and ');
-			else
-				$PHP_OUTPUT.=('.');
-		}
-		if ($minutes > 0)
-		{
-			if ($minutes == 1)
-				$PHP_OUTPUT.=($minutes.' minute');
-			else
-				$PHP_OUTPUT.=($minutes.' minutes');
-			if ($seconds > 0)
-				$PHP_OUTPUT.=(' and ');
-		}
-		if ($seconds > 0)
-			if ($seconds == 1)
-				$PHP_OUTPUT.=($seconds.' second');
-			else
-				$PHP_OUTPUT.=($seconds.' seconds');
-	
-		// esp. if no time left...
-		if ($hours == 0 && $minutes == 0 && $seconds == 0)
-			$PHP_OUTPUT.=('0 seconds');
+		$PHP_OUTPUT.=format_time($building['TimeRemaining']);
 	
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
@@ -112,7 +77,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 	else
 		$PHP_OUTPUT.=($planetBuilding['Credit Cost'].'-credits, ');
 
-	$PHP_OUTPUT.=(($planetBuilding['Build Time'] / 3600) / Globals::getGameSpeed($player->getGameID()) . '-hours');
+	$PHP_OUTPUT.= format_time(($planetBuilding['Build Time']) / Globals::getGameSpeed($player->getGameID()));
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
