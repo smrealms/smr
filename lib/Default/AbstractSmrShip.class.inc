@@ -94,6 +94,23 @@ abstract class AbstractSmrShip
 			// adding hardware to array
 			$ship['MaxHardware'][$db2->getField('hardware_type_id')] = $db2->getField('max_amount');
 		}
+		
+		$ship['BaseMR'] = 	round(
+								700 - 
+								(
+									(
+										$ship['MaxHardware'][HARDWARE_SHIELDS]
+										+$ship['MaxHardware'][HARDWARE_ARMOUR]
+										+$ship['MaxHardware'][HARDWARE_COMBAT]*3
+									)/25
+									+(
+										$ship['MaxHardware'][HARDWARE_CARGO]/100
+										-$ship['Speed']*5
+										+$ship['Hardpoint']*5
+										+$ship['MaxHardware'][HARDWARE_COMBAT]/5
+									)
+								)
+							);
 		return $ship;
 	}
 

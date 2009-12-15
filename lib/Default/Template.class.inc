@@ -8,6 +8,7 @@ class Template
 	protected $captures=array('');
 	protected $currentCaptureID=0;
 	protected $ignoreMiddle=false;
+	protected $nestedIncludes = 0;
 	
 	public function __construct()
 	{
@@ -82,6 +83,8 @@ class Template
 	
 	protected function includeTemplate($templateName, array $assignVars = null)
 	{
+		if($this->nestedIncludes > 15)
+			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		foreach($this->data as $key => $value)
 		{
 			$$key=&$value;
@@ -95,7 +98,9 @@ class Template
 				unset($value);
 			}
 		}
+		$this->nestedIncludes++;
 		require($this->getTemplateLocation($templateName));
+		$this->nestedIncludes--;
 	}
 	
 	protected function startCapture()
