@@ -89,7 +89,7 @@ if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id)
 	{
 		$owner_id = $mine_owner_id;
 		include('forces_minefield_processing.php');
-		exit;
+		return;
 	}
 }
 
