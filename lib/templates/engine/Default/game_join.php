@@ -4,24 +4,28 @@
 		<th>Start Date</th>
 		<th>End Date</th>
 		<th>Max Players</th>
+		<th>Alliance Max Players</th>
+		<th>Alliance Max Vets</th>
 		<th>Type</th>
 		<th>Game Speed</th>
 		<th>Credits Needed</th>
 	</tr>
 	<tr>
-		<td width="40%"><?php echo $Game['Name'] ?> (<?php echo $Game['ID']; ?>)</td>
+		<td width="40%"><?php echo $Game['GameName'] ?> (<?php echo $Game['ID']; ?>)</td>
 		<td><?php echo date(DATE_DATE_SHORT,$Game['StartDate']); ?></td>
 		<td><?php echo date(DATE_DATE_SHORT,$Game['EndDate']); ?></td>
-		<td><?php echo $Game['MaxPlayers']; ?></td>
-		<td><?php echo $Game['Type']; ?></td>
+		<td><?php echo $Game['GameMaxPlayers']; ?></td>
+		<td><?php echo $Game['AllianceMaxPlayers']; ?></td>
+		<td><?php echo $Game['AllianceMaxVets']; ?></td>
+		<td><?php echo $Game['GameType']; ?></td>
 		<td><?php echo $Game['Speed']; ?></td>
-		<td><?php echo $Game['Credits']; ?></td>
+		<td><?php echo $Game['GameCreditsRequired']; ?></td>
 	</tr>
 </table><br /><?php
-if($Game['Description'])
+if($Game['GameDescription'])
 { ?>
 	<h1>Description</h1>
-	<p><?php echo bbifyMessage($Game['Description']); ?></p><?php
+	<p><?php echo bbifyMessage($Game['GameDescription']); ?></p><?php
 }
 if(isset($JoinGameFormHref))
 {

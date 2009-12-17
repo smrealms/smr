@@ -217,13 +217,25 @@ class Globals
 											'Speed' => (float)self::$db->getField('game_speed'),
 											'GameType' => (string)self::$db->getField('game_type'),
 											'GameName' => (string)self::$db->getField('game_name'),
-											'StartDate' => (string)self::$db->getField('start_date')
+											'GameDescription' => (string)self::$db->getField('game_description'),
+											'StartDate' => (string)self::$db->getField('start_date'),
+											'EndDate' => (string)self::$db->getField('end_date'),
+											'GameMaxPlayers' => (int)self::$db->getField('max_players'),
+											'GameCreditsRequired' => (int)self::$db->getField('credits_needed'),
+											'AllianceMaxPlayers' => (int)self::$db->getField('alliance_max_players'),
+											'AllianceMaxVets' => (int)self::$db->getField('alliance_max_vets')
 											);
 			}
 			else
 				self::$GAMES[$gameID] = false;
 		}
 		return self::$GAMES[$gameID];
+	}
+	
+	public static function getGameDescription($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['GameDescription'];
 	}
 	
 	public static function &getGameSpeed($gameID)
@@ -242,6 +254,42 @@ class Globals
 	{
 		$gameInfo =& self::getGameInfo($gameID);
 		return $gameInfo['GameName'];
+	}
+	
+	public static function &getGameStartDate($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['StartDate'];
+	}
+	
+	public static function &getGameEndDate($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['EndDate'];
+	}
+	
+	public static function &getGameMaxPlayers($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['GameMaxPlayers'];
+	}
+	
+	public static function &getGameCreditsRequired($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['GameCreditsRequired'];
+	}
+	
+	public static function &getAllianceMaxPlayers($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['AllianceMaxPlayers'];
+	}
+	
+	public static function &getAllianceMaxVets($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['AllianceMaxVets'];
 	}
 	
 	public static function isBetaOpen()
