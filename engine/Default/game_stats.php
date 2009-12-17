@@ -2,41 +2,29 @@
 
 //get game id
 $game_id = $var['game_id'];
-//get name
-$db->query('SELECT game_description, credits_needed, game_name, game_speed, max_players, ' . 
-			'game_type, start_date, ' . 
-			'end_date FROM game ' . 
-			'WHERE game_id = '.$game_id);
-$db->nextRecord();
-$game_name = $db->getField('game_name');
-$game_desc = $db->getField('game_description');
-$start = date(DATE_DATE_SHORT,$db->getField('start_date'));
-$end = date(DATE_DATE_SHORT,$db->getField('end_date'));
-$speed = $db->getField('game_speed');
-$max = $db->getField('max_players');
-$type = $db->getField('game_type');
-$creds = $db->getField('credits_needed');
 
 $db->query('SELECT * FROM player ' .
 			'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
 				  'game_id = '.$game_id);
 $current = $db->getNumRows();
-$PHP_OUTPUT.=('<div align=center>');
-$template->assign('PageTopic','Game Stats for '.$game_name);
+$PHP_OUTPUT.=('<div align="center">');
+$template->assign('PageTopic','Game Stats for '.Globals::getGameName($game_id));
 $PHP_OUTPUT.=create_table();
-$PHP_OUTPUT.='<tr><td align=center>General Info</td><td align=center>Other Info</td></tr>
+$PHP_OUTPUT.='<tr><td align="center">General Info</td><td align="center">Other Info</td></tr>
 <tr>
-<td valign=top align=center>
+<td valign="top" align="center">
 <table class="nobord">
-<tr><td align=right>Name</td>           <td>&nbsp;</td><td align=left>'.$game_name.'</td></tr>
-<tr><td align=right>Description</td>    <td>&nbsp;</td><td align=left>'.bbifyMessage($game_desc).'</td></tr>
-<tr><td align=right>Start Date</td>     <td>&nbsp;</td><td align=left>'.$start.'</td></tr>
-<tr><td align=right>End Date</td>       <td>&nbsp;</td><td align=left>'.$end.'</td></tr>
-<tr><td align=right>Current Players</td><td>&nbsp;</td><td align=left>'.$current.'</td></tr>
-<tr><td align=right>Max Players</td>    <td>&nbsp;</td><td align=left>'.$max.'</td></tr>
-<tr><td align=right>Game Type</td>      <td>&nbsp;</td><td align=left>'.$type.'</td></tr>
-<tr><td align=right>Game Speed</td>     <td>&nbsp;</td><td align=left>'.$speed.'</td></tr>
-<tr><td align=right>Credits Needed</td> <td>&nbsp;</td><td align=left>'.$creds.'</td></tr>
+<tr><td align="right">Name</td>					<td>&nbsp;</td><td align="left">'.Globals::getGameName($game_id).'</td></tr>
+<tr><td align="right">Description</td>			<td>&nbsp;</td><td align="left">'.bbifyMessage(Globals::getGameDescription($game_id)).'</td></tr>
+<tr><td align="right">Start Date</td>			<td>&nbsp;</td><td align="left">'.date(DATE_DATE_SHORT,Globals::getGameStartDate($game_id)).'</td></tr>
+<tr><td align="right">End Date</td>				<td>&nbsp;</td><td align="left">'.date(DATE_DATE_SHORT,Globals::getGameEndDate($game_id)).'</td></tr>
+<tr><td align="right">Current Players</td>		<td>&nbsp;</td><td align="left">'.$current.'</td></tr>
+<tr><td align="right">Max Players</td>			<td>&nbsp;</td><td align="left">'.Globals::getGameMaxPlayers($game_id).'</td></tr>
+<tr><td align="right">Alliance Max Players</td>	<td>&nbsp;</td><td align="left">'.Globals::getAllianceMaxPlayers($game_id).'</td></tr>
+<tr><td align="right">Alliance Max Vets</td>	<td>&nbsp;</td><td align="left">'.Globals::getAllianceMaxVets($game_id).'</td></tr>
+<tr><td align="right">Game Type</td>			<td>&nbsp;</td><td align="left">'.Globals::getGameType($game_id).'</td></tr>
+<tr><td align="right">Game Speed</td>			<td>&nbsp;</td><td align="left">'.Globals::getGameSpeed($game_id).'</td></tr>
+<tr><td align="right">Credits Needed</td>		<td>&nbsp;</td><td align="left">'.Globals::getGameCreditsRequired($game_id).'</td></tr>
 </table>
 </td>';
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC');
@@ -57,14 +45,14 @@ if ($db->nextRecord()) $kills = $db->getField('kills');
 $db->query('SELECT * FROM alliance WHERE game_id = '.$game_id);
 if ($db->nextRecord()) $alliances = $db->getNumRows();
 $PHP_OUTPUT.='
-<td valign=top align=center>
+<td valign="top" align="center">
 <table class="nobord">
-<tr><td align=right>Players</td>           <td>&nbsp;</td><td align=left>'.$players.'</td></tr>
-<tr><td align=right>Alliances</td>          <td>&nbsp;</td><td align=left>'.$alliances.'</td></tr>
-<tr><td align=right>Highest Experience</td><td>&nbsp;</td><td align=left>'.$max_exp.'</td></tr>
-<tr><td align=right>Highest Alignment</td> <td>&nbsp;</td><td align=left>'.$align.'</td></tr>
-<tr><td align=right>Lowest Alignment</td><td>&nbsp;</td><td align=left>'.$align_low.'</td></tr>
-<tr><td align=right>Highest Kills</td>     <td>&nbsp;</td><td align=left>'.$kills.'</td></tr>
+<tr><td align="right">Players</td>           <td>&nbsp;</td><td align="left">'.$players.'</td></tr>
+<tr><td align="right">Alliances</td>          <td>&nbsp;</td><td align="left">'.$alliances.'</td></tr>
+<tr><td align="right">Highest Experience</td><td>&nbsp;</td><td align="left">'.$max_exp.'</td></tr>
+<tr><td align="right">Highest Alignment</td> <td>&nbsp;</td><td align="left">'.$align.'</td></tr>
+<tr><td align="right">Lowest Alignment</td><td>&nbsp;</td><td align="left">'.$align_low.'</td></tr>
+<tr><td align="right">Highest Kills</td>     <td>&nbsp;</td><td align="left">'.$kills.'</td></tr>
 </table>
 </td>
 </tr>
@@ -72,36 +60,36 @@ $PHP_OUTPUT.='
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.='
 <tr>
-<td align=center>Top 10 Players in Experience</td>
-<td align=center>Top 10 Players in Kills</td>
+<td align="center">Top 10 Players in Experience</td>
+<td align="center">Top 10 Players in Kills</td>
 </tr>
 <tr>
-<td align=center style="border:none">';
+<td align="center" style="border:none">';
 $rank = 0;
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC LIMIT 10');
 if ($db->getNumRows() > 0) {
-	$PHP_OUTPUT.=('<table class="nobord"><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Experience</th></tr>');
+	$PHP_OUTPUT.=('<table class="nobord"><tr><th align="center">Rank</th><th align="center">Player</th><th align="center">Experience</th></tr>');
 	while ($db->nextRecord()) {
 		
 		$exp = $db->getField('experience');
 		$db_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
-		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->getPlayerName().'</td><td align=center>'.$exp.'</td></tr>');
+		$PHP_OUTPUT.=('<tr><td align="center">' . ++$rank . '</td><td align="center">'.$db_player->getPlayerName().'</td><td align="center">'.$exp.'</td></tr>');
 		
 	}
 	$PHP_OUTPUT.=('</table>');
 	
 }
 $PHP_OUTPUT.='
-</td><td align=center>';
+</td><td align="center">';
 $rank = 0;
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY kills DESC LIMIT 10');
 if ($db->getNumRows() > 0) {
-	$PHP_OUTPUT.=('<table class="nobord"><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Kills</th></tr>');
+	$PHP_OUTPUT.=('<table class="nobord"><tr><th align="center">Rank</th><th align="center">Player</th><th align="center">Kills</th></tr>');
 	while ($db->nextRecord()) {
 		
 		$kills = $db->getField('kills');
 		$db_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
-		$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$db_player->getPlayerName().'</td><td align=center>'.$kills.'</td></tr>');
+		$PHP_OUTPUT.=('<tr><td align="center">' . ++$rank . '</td><td align="center">'.$db_player->getPlayerName().'</td><td align="center">'.$kills.'</td></tr>');
 		
 	}
 	$PHP_OUTPUT.=('</table>');

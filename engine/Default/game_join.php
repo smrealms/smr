@@ -1,33 +1,20 @@
 <?php
-$db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
-$game = array();
-if ($db->nextRecord())
-{
-	$game['ID'] = $db->getField('game_id');
-	$game['Name'] = $db->getField('game_name');
-	$game['StartDate'] = $db->getField('start_date');
-	$game['EndDate'] = $db->getField('end_date');
-	$game['MaxPlayers'] = $db->getField('max_players');
-	$game['Type'] = $db->getField('max_players');
-	$game['Speed'] = $db->getField('credits_needed');
-	$game['Credits'] = $db->getField('credits_needed');
-	$game['Description'] = $db->getField('game_description');
-}
 
-$template->assign('Game',$game);
+$game =& Globals::getGameInfo($var['game_id']);
 
+$template->assignByRef('Game',$game);
 
 // do we need credits for this game?
-if ($game['Credits'] > 0)
+if ($game['GameCreditsRequired'] > 0)
 {
 	// do we have enough
-	if ($account->getTotalSmrCredits() < $game['Credits'])
+	if ($account->getTotalSmrCredits() < $game['GameCreditsRequired'])
 	    create_error('Sorry you dont have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR');
 }
 
 // is the game already full?
 $db->query('SELECT * FROM player WHERE game_id = ' . $var['game_id']);
-if ($db->getNumRows() >= $game['MaxPlayers'])
+if ($db->getNumRows() >= $game['GameMaxPlayers'])
     create_error('The maximum number of players in that game is reached!');
 
 //if (TIME < $game['StartDate'])

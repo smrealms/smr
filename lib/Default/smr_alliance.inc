@@ -4,8 +4,6 @@ require_once('SmrPlayer.class.inc');
 
 class SMR_ALLIANCE extends SmrMySqlDatabase
 {
-	const MAX_VETS = 15;
-	const MAX_PLAYERS = 25;
 	var $game_id;
 	var $alliance_id;
 	var $alliance_name;
@@ -57,6 +55,11 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 		return $this->alliance_name;
 	}
 	
+	public function getGameID()
+	{
+		return $this->game_id;
+	}
+	
 	public function getLeaderID()
 	{
 		return $this->leader_id;
@@ -92,11 +95,12 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 			return false;
 		if($this->getPassword()=='*')
 			return false;
-		if($this->getNumMembers()<self::MAX_PLAYERS)
+		if($this->getNumMembers()<Globals::getAllianceMaxPlayers($this->getGameID()))
 		{
+			$maxVets = Globals::getAllianceMaxVets($this->getGameID());
 			if(!$player->getAccount()->isVeteran())
 				return true;
-			if($this->getNumMembers()<self::MAX_VETS)
+			if($this->getNumMembers()<$maxVets)
 				return true;
 			$this->query('SELECT status FROM player_joined_alliance WHERE account_id='.$this->escapeNumber($player->getAccountID()).' AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
 			if($this->nextRecord())
@@ -106,11 +110,11 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 				else
 				{
 					$this->query('SELECT SUM(account_id) AS num_orig_vets FROM player_joined_alliance WHERE account_id IN (SELECT account_id FROM player WHERE alliance_id = '.$this->escapeNumber($this->getAllianceID()) .') AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
-					if($this->nextRecord() && $this->getField('num_orig_vets') < self::MAX_VETS)
+					if($this->nextRecord() && $this->getField('num_orig_vets') < $maxVets)
 						return true;
 				}
 			}
-			if($this->getNumVeterans() < self::MAX_VETS)
+			if($this->getNumVeterans() < $maxVets)
 				return true;
 			
 		}

@@ -52,6 +52,14 @@ create_echo_form($link);
 		</td>
 	</tr>
 	<tr>
+		<td class="right">Alliance Max Players</td>
+		<td class="left"><input type="text" size="6" name="alliance_max_players" value="25"></td>
+	</tr>
+	<tr>
+		<td class="right">Alliance Max Vets</td>
+		<td class="left"><input type="text" size="6" name="alliance_max_vets" value="15"></td>
+	</tr>
+	<tr>
 		<td class="center" colspan="2"><input type="submit" value="Create Game" name="submit"></td>
 	</tr>
 	</table>
