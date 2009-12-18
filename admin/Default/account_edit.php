@@ -43,7 +43,7 @@ if (!empty($player_name) && !is_array($player_name)) {
 }
 
 // get account from db
-$db->query('SELECT account_id FROM account WHERE account_id = '.$account_id.' OR ' .
+$db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumber($account_id).' OR ' .
 									   'login LIKE ' . $db->escape_string($login) . ' OR ' .
 									   'email LIKE ' . $db->escape_string($email) . ' OR ' .
 									   'hof_name LIKE ' . $db->escapeString($hofName) . ' OR ' .
