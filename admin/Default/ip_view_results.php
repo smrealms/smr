@@ -485,7 +485,7 @@ elseif ($type == 'list') {
 	
 	$p = preg_split ('/[,]+[\s]/', $variable);
 
-	$list = '(';
+	$list = '(0,';
 	$a = 1;
 	foreach ($p as $val) {
 		if ($a > 1)
@@ -496,7 +496,7 @@ elseif ($type == 'list') {
 	$list .= ')';
 	
 	$db->query('SELECT * FROM player WHERE player_name IN '.$list);
-	$list = '(';
+	$list = '(0,';
 	$a = 1;
 	while ($db->nextRecord()) {
 		$id = $db->getField('account_id');
