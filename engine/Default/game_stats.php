@@ -25,6 +25,7 @@ $PHP_OUTPUT.='<tr><td align="center">General Info</td><td align="center">Other I
 <tr><td align="right">Game Type</td>			<td>&nbsp;</td><td align="left">'.Globals::getGameType($game_id).'</td></tr>
 <tr><td align="right">Game Speed</td>			<td>&nbsp;</td><td align="left">'.Globals::getGameSpeed($game_id).'</td></tr>
 <tr><td align="right">Credits Needed</td>		<td>&nbsp;</td><td align="left">'.Globals::getGameCreditsRequired($game_id).'</td></tr>
+<tr><td align="right">Stats Ignored</td>		<td>&nbsp;</td><td align="left">'.(Globals::getGameIgnoreStats($game_id)?'Yes':'No').'</td></tr>
 </table>
 </td>';
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC');

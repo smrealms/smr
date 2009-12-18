@@ -8,7 +8,7 @@
 		<th>Alliance Max Vets</th>
 		<th>Type</th>
 		<th>Game Speed</th>
-		<th>Credits Needed</th>
+		<th>Stats Ignored</th>
 	</tr>
 	<tr>
 		<td width="40%"><?php echo $Game['GameName'] ?> (<?php echo $Game['ID']; ?>)</td>
@@ -20,6 +20,7 @@
 		<td><?php echo $Game['GameType']; ?></td>
 		<td><?php echo $Game['Speed']; ?></td>
 		<td><?php echo $Game['GameCreditsRequired']; ?></td>
+		<td><?php echo $Game['IgnoreStats']?'Yes':'No'; ?></td>
 	</tr>
 </table><br /><?php
 if($Game['GameDescription'])
