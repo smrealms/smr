@@ -223,7 +223,8 @@ class Globals
 											'GameMaxPlayers' => (int)self::$db->getField('max_players'),
 											'GameCreditsRequired' => (int)self::$db->getField('credits_needed'),
 											'AllianceMaxPlayers' => (int)self::$db->getField('alliance_max_players'),
-											'AllianceMaxVets' => (int)self::$db->getField('alliance_max_vets')
+											'AllianceMaxVets' => (int)self::$db->getField('alliance_max_vets'),
+											'IgnoreStats' => self::$db->getBoolean('ignore_stats')
 											);
 			}
 			else
@@ -278,6 +279,12 @@ class Globals
 	{
 		$gameInfo =& self::getGameInfo($gameID);
 		return $gameInfo['GameCreditsRequired'];
+	}
+	
+	public static function &getGameIgnoreStats($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['IgnoreStats'];
 	}
 	
 	public static function &getAllianceMaxPlayers($gameID)

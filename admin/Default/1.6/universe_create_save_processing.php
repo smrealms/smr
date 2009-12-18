@@ -28,7 +28,7 @@ if ($submit=='Create Game')
 	$start = mktime(0,0,0,$month,$day,$year);
 	list($day,$month,$year) = explode("/",$_POST['game_end']);
 	$end = mktime(0,0,0,$month,$day,$year);
-	$db->query('INSERT INTO game (game_id, game_name, game_description, game_type, max_players, alliance_max_players, alliance_max_vets start_date, end_date,game_speed) VALUES (' . $newID . ', ' . $db->escapeString($_POST['game_name']) . ', ' . $db->escapeString($_POST['desc']) . ', ' . $db->escapeString($_POST['game_type']) . ', ' . $db->escapeNumber($_POST['max_players']) . ', ' . $db->escapeNumber($_POST['alliance_max_players']) . ', ' . $db->escapeNumber($_POST['alliance_max_vets']) . ', ' . $start . ', ' . $end . ','.$db->escapeNumber($_REQUEST['game_speed']).')');
+	$db->query('INSERT INTO game (game_id, game_name, game_description, game_type, max_players, alliance_max_players, alliance_max_vets start_date, end_date,game_speed,ignore_stats) VALUES (' . $db->escapeNumber($newID) . ', ' . $db->escapeString($_POST['game_name']) . ', ' . $db->escapeString($_POST['desc']) . ', ' . $db->escapeString($_POST['game_type']) . ', ' . $db->escapeNumber($_POST['max_players']) . ', ' . $db->escapeNumber($_POST['alliance_max_players']) . ', ' . $db->escapeNumber($_POST['alliance_max_vets']) . ', ' . $db->escapeNumber($start) . ', ' . $db->escapeNumber($end) . ','.$db->escapeNumber($_REQUEST['game_speed']) . ','.$db->escapeBoolean($_REQUEST['ignore_stats']=='Yes').')');
 	$var['game_id']=$newID;
 	
 	//insert race relations
