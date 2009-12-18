@@ -122,7 +122,7 @@ class SmrPort
 			$this->getGoods();
 			$this->checkForUpgrade();
 		}
-		else
+		else if($create)
 		{
 			$this->isNew = true;
 			$this->gameID = $gameID;
@@ -141,6 +141,8 @@ class SmrPort
 			
 			$this->SQL = 'sector_id = '.$this->sectorID.' AND game_id = '.$this->gameID;
 		}
+		else
+			throw new Exception('No such port: '.$gameID.'-'.$sectorID);
 	}
 	
 	public function checkDefenses()

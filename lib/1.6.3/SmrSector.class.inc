@@ -117,12 +117,9 @@ class SmrSector
 			$this->battles		= 0;
 			$this->links = array();
 			$this->isNew		= true;
-			return;
 		}
 		else
-		{
 			throw new Exception('No such sector: '.$gameID.'-'.$sectorID);
-		}
 	}
 
 	function update()
