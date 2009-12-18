@@ -328,13 +328,27 @@ elseif ($submit == 'Edit Sector')
 	} else $sector->removePort();
 	//update locations
 	
-	$sector->removeAllLocations();
+	$locationsToAdd = array();
+	$locationsToKeep = array();
 	for($x=0;$x<4;$x++)
 	{
 		if ($_POST['loc_type'.$x] != 0)
 		{
-			addLocationToSector(SmrLocation::getLocation($_POST['loc_type'.$x]),$sector);
+			$locationToAdd =& SmrLocation::getLocation($_POST['loc_type'.$x]);
+			if(!$sector->hasLocation($locationToAdd))
+				$locationsToAdd[] =& $locationToAdd;
+			else
+				$locationsToKeep[] =& $locationToAdd;
 		}
+	}
+	$sector->removeAllLocations();
+	foreach($locationsToKeep as &$locationToAdd)
+	{
+		$sector->addLocation($locationToAdd);
+	}
+	foreach($locationsToAdd as &$locationToAdd)
+	{
+		addLocationToSector($locationToAdd,$sector);
 	}
 	if($sector->hasWarp() && $sector->getWarp()!=$_POST['warp'])
 	{
