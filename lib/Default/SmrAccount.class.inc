@@ -278,7 +278,7 @@ class SmrAccount
 		if(!isset($this->HOF))
 		{
 			//Get Player HOF
-			$this->db->query('SELECT type,sum(amount) as amount FROM player_hof WHERE account_id=' . $this->getAccountID().' GROUP BY type');
+			$this->db->query('SELECT type,sum(amount) as amount FROM player_hof WHERE account_id=' . $this->getAccountID().' AND game_id IN (SELECT game_id FROM game WHERE ignore_stats = '.$this->db->escapeBoolean(false).') GROUP BY type');
 			$this->HOF = array();
 			while($this->db->nextRecord())
 			{
