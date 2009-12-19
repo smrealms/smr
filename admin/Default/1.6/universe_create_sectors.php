@@ -110,16 +110,17 @@ for ($i=0;$i < $row;$i++)
 		$PHP_OUTPUT.= ' style="background-color:' . $color . ';"';
 		if ($title != '') $PHP_OUTPUT.= ' title="' . $title . '"';
 		$PHP_OUTPUT.= '>';
-		if ($galSector->hasLocation()) $PHP_OUTPUT.= '<span class="red">';
-		else $PHP_OUTPUT.= '<span>';
 		
 		$container['sector_id'] = $galSector->getSectorID();
 		
-		$PHP_OUTPUT.=  '<a href="' . SmrSession::get_new_href($container) . '">' . $galSector->getSectorID() . '</a>';
-		if ($galSector->hasWarp()) $PHP_OUTPUT.= '*';
+		$PHP_OUTPUT.=  '<a href="' . SmrSession::get_new_href($container) . '">';
+		if ($galSector->hasLocation()) $PHP_OUTPUT.= '<span class="red">';
+		else $PHP_OUTPUT.= '<span>';
+		$PHP_OUTPUT .= $galSector->getSectorID() . '</span></a>';
+		if ($galSector->hasWarp()) $PHP_OUTPUT.= '<span style="color: #00FF00">*</span>';
 		//$link['text'] = $this_sec;
 		//create_link($link, $id);
-		$PHP_OUTPUT.= '</span></td>';
+		$PHP_OUTPUT.= '</td>';
 	}
 	$PHP_OUTPUT.= '</tr>';
 }
