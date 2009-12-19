@@ -335,10 +335,10 @@ elseif ($submit == 'Edit Sector')
 		if ($_POST['loc_type'.$x] != 0)
 		{
 			$locationToAdd =& SmrLocation::getLocation($_POST['loc_type'.$x]);
-			if(!$sector->hasLocation($locationToAdd))
-				$locationsToAdd[] =& $locationToAdd;
-			else
+			if($sector->hasLocation($locationToAdd->getTypeID()))
 				$locationsToKeep[] =& $locationToAdd;
+			else
+				$locationsToAdd[] =& $locationToAdd;
 		}
 	}
 	$sector->removeAllLocations();
