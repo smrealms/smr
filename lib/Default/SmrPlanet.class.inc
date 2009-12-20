@@ -549,9 +549,9 @@ class SmrPlanet
 
 	function getLevel()
 	{
-		return number_format(($this->getBuilding(1) +
+		return ($this->getBuilding(1) +
 							  $this->getBuilding(2) +
-							  $this->getBuilding(3)) / 3, 2);
+							  $this->getBuilding(3)) / 3;
 	}
 
 	function accuracy()
