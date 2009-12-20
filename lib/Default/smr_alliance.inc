@@ -1,6 +1,6 @@
 <?php
-require_once('SmrAccount.class.inc');
-require_once('SmrPlayer.class.inc');
+require_once(get_file_loc('SmrAccount.class.inc'));
+require_once(get_file_loc('SmrPlayer.class.inc'));
 
 class SMR_ALLIANCE extends SmrMySqlDatabase
 {
