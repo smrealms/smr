@@ -31,6 +31,10 @@ if($Game['GameDescription'])
 if(isset($JoinGameFormHref))
 {
 	?><form name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>"><?php
+}
+else
+{
+	?><form><?php //Dummy form
 } ?>
 	<h1>Create Merchant</h1><br />
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
@@ -72,7 +76,7 @@ if(isset($JoinGameFormHref))
 						<td><?php
 						if(isset($JoinGameFormHref))
 						{
-							?><input type="submit" name="action" value="Create Player" class="InputFields"><?php
+							?><input type="submit" name="action" value="Create Player" class="InputFields" /><?php
 						}
 						else
 						{
@@ -111,11 +115,8 @@ if(isset($JoinGameFormHref))
 				</table>
 			</td>
 		</tr>
-	</table><?php
-if(isset($JoinGameFormHref))
-{
-	?></form><?php
-} ?>
+	</table>
+</form>
 
 <script type="text/javascript">
 var	desc = new Array(<?php echo $RaceDescriptions; ?>);
