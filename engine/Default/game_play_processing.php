@@ -27,50 +27,43 @@ if ($player->isLandedOnPlanet())
 else
     $container['body'] = 'current_sector.php';
 
-	$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
-	$ship	=& $player->getShip();
+$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
+$ship	=& $player->getShip();
 
-	// update turns on that player
-	$player->updateTurns();
+// update turns on that player
+$player->updateTurns();
 
-	// we cant move if we are dead
-	//check if we are in kill db...if we are we don't do anything
-	$db->query('SELECT * FROM kills WHERE dead_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-	if (!$db->nextRecord()) {
+// we cant move if we are dead
+//check if we are in kill db...if we are we don't do anything
+$db->query('SELECT * FROM kills WHERE dead_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
+if (!$db->nextRecord()) {
 
-		if ($ship->isDead() && ($var['body'] != 'trader_attack.php' && $var['url'] != 'trader_attack_processing.php' && $var['body'] != 'port_attack.php' && $var['url'] != 'port_attack_processing.php'&& $var['body'] != 'planet_attack.php' && $var['url'] != 'planet_attack_processing.php'))
-		{
-
-			$player->setSectorID($player->getHome());
-			$player->setNewbieTurns(100);
-			$player->update();
-			$ship->get_pod();
-			//$PHP_OUTPUT.=('.$db->escapeString($var[body], $var[url]');
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'current_sector.php';
-			forward($container);
-
-		}
-	} elseif (!isset($var['ahhh'])) {
-
-		$db->query('SELECT * FROM kills WHERE dead_id = '.$player->getAccountID().' AND processed = \'TRUE\' AND game_id = '.$player->getGameID());
-		if ($db->nextRecord() && $var['body'] != 'trader_attack.php') {
-
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'death.php';
-			$container['ahhh'] = 'Yes';
-			forward($container);
-
-		}
+	if ($ship->isDead() && ($var['body'] != 'trader_attack.php' && $var['url'] != 'trader_attack_processing.php' && $var['body'] != 'port_attack.php' && $var['url'] != 'port_attack_processing.php'&& $var['body'] != 'planet_attack.php' && $var['url'] != 'planet_attack_processing.php'))
+	{
+		$player->setSectorID($player->getHome());
+		$player->setNewbieTurns(100);
+		$player->update();
+		$ship->get_pod();
+		//$PHP_OUTPUT.=('.$db->escapeString($var[body], $var[url]');
+		$container = create_container('skeleton.php','current_sector.php');
 	}
+} elseif (!isset($var['ahhh'])) {
 
-	if ($player->getNewbieTurns() <= 20 &&
-		$player->getNewbieWarning() &&
-		$var['body'] != 'newbie_warning.php')
-		forward(create_container('skeleton.php', 'newbie_warning.php'));
+	$db->query('SELECT * FROM kills WHERE dead_id = '.$player->getAccountID().' AND processed = \'TRUE\' AND game_id = '.$player->getGameID());
+	if ($db->nextRecord() && $var['body'] != 'trader_attack.php') {
+		$container = create_container('skeleton.php','death.php');
+		$container['ahhh'] = 'Yes';
+	}
+}
 
-forward($container);
+if ($player->getNewbieTurns() <= 20 &&
+	$player->getNewbieWarning() &&
+	$var['body'] != 'newbie_warning.php')
+	$container = create_container('skeleton.php', 'newbie_warning.php');
+
+$url = SmrSession::get_new_href($container);
+SmrSession::update();
+header('Location: '.$url);
+exit;
 
 ?>
