@@ -343,7 +343,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function &getAccount()
 	{
-		require_once('SmrAccount.class.inc');
+		require_once(get_file_loc('SmrAccount.class.inc'));
 		return SmrAccount::getAccount($this->getAccountID());
 	}
 	

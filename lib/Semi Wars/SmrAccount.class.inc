@@ -121,7 +121,7 @@ class SmrAccount
 			
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
-			$this->veteran			= $this->db->getBoolean('veteran');
+			$this->veteran			= true;
 			$this->logging			= $this->db->getBoolean('logging');
 			$this->offset			= $row['offset'];
 			$this->images			= $row['images'];
