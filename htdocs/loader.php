@@ -73,6 +73,23 @@ try
 		exit;
 	}
 	
+	// get reason for disabled user
+	if(($reason = $account->is_disabled())!==false)
+	{
+		// save session (incase we forward)
+		SmrSession::update();
+		if ($reason == 'Invalid eMail')
+		{
+			header('Location: '.URL.'/email.php');
+			exit;
+		}
+		else
+		{
+			header('Location: '.URL.'/disabled.php');
+			exit;
+		}
+	}
+	
 	// ********************************
 	// *
 	// * Get Hidden Admins
