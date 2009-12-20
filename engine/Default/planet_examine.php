@@ -11,7 +11,7 @@ if ($planet->hasOwner())
 $template->assign('PageTopic','Examine Planet');
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr><td><b>Planet Name:</b></td><td>'.$planet->planet_name.'</td></tr>');
-$PHP_OUTPUT.=('<tr><td><b>Level:</b></td><td>' . $planet->getLevel() . '</td></tr>');
+$PHP_OUTPUT.=('<tr><td><b>Level:</b></td><td>' . number_format($planet->getLevel(),2) . '</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Owner:</b></td><td>');
 if ($planet->owner_id != 0)
 	$PHP_OUTPUT.=($planet_owner->getPlayerName());
