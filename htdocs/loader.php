@@ -73,6 +73,7 @@ try
 		exit;
 	}
 	
+	require_once(get_file_loc('SmrAccount.class.inc'));
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	// get reason for disabled user
 	if(($reason = $account->is_disabled())!==false)
