@@ -45,7 +45,7 @@ $PHP_OUTPUT.= '</select>';
 $PHP_OUTPUT.= '<br /><br />';
 $locations =& SmrLocation::getAllLocations();
 $sectorLocations =& $sector->getLocations();
-for ($i=0;$i<=3;$i++)
+for ($i=0;$i<UNI_GEN_LOCATION_SLOTS;$i++)
 {
 	$PHP_OUTPUT.= 'Location ' . ($i + 1) . ': <select name="loc_type' . $i . '">';
 	$PHP_OUTPUT.= '<option value="0">No Location</option>';

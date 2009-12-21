@@ -330,7 +330,7 @@ elseif ($submit == 'Edit Sector')
 	
 	$locationsToAdd = array();
 	$locationsToKeep = array();
-	for($x=0;$x<4;$x++)
+	for($x=0;$x<UNI_GEN_LOCATION_SLOTS;$x++)
 	{
 		if ($_POST['loc_type'.$x] != 0)
 		{
