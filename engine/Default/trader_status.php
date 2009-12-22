@@ -124,7 +124,7 @@ else
 	if ($ship->canHaveDCS()) $PHP_OUTPUT.= 'Drone Scrambler<br />';
 }
 
-$PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="_blank"><span class="yellow bold">Next Level</span></a><br />';
+$PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="levelRequirements"><span class="yellow bold">Next Level</span></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
 if(!$db->nextRecord())
 {

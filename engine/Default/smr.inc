@@ -506,7 +506,7 @@ function acquire_lock($sector)
 	
 	$lock = $db->getInsertID();
 
-	for($i=0;$i<100;++$i)
+	for($i=0;$i<10;++$i)
 	{
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' LIMIT 1');
