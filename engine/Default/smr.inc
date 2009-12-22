@@ -2,6 +2,7 @@
 
 require_once(LIB . '/Default/Globals.class.inc');
 require_once(get_file_loc('SmrPlayer.class.inc'));
+require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 
