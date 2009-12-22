@@ -73,25 +73,6 @@ try
 		exit;
 	}
 	
-	require_once(get_file_loc('SmrAccount.class.inc'));
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
-	// get reason for disabled user
-	if(($reason = $account->is_disabled())!==false)
-	{
-		// save session (incase we forward)
-		SmrSession::update();
-		if ($reason == 'Invalid eMail')
-		{
-			header('Location: '.URL.'/email.php');
-			exit;
-		}
-		else
-		{
-			header('Location: '.URL.'/disabled.php');
-			exit;
-		}
-	}
-	
 	// ********************************
 	// *
 	// * Get Hidden Admins
@@ -129,8 +110,29 @@ try
 	
 	//used for include if we need a spec game script outside of the game
 	if (isset($var['game_id'])) $g_id = $var['game_id'];
+	else if (isset($var['GameID'])) $g_id = $var['GameID'];
 	else $g_id = 0;
 
+	
+	require_once(get_file_loc('SmrAccount.class.inc'));
+	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	// get reason for disabled user
+	if(($reason = $account->is_disabled())!==false)
+	{
+		// save session (incase we forward)
+		SmrSession::update();
+		if ($reason == 'Invalid eMail')
+		{
+			header('Location: '.URL.'/email.php');
+			exit;
+		}
+		else
+		{
+			header('Location: '.URL.'/disabled.php');
+			exit;
+		}
+	}
+	
 	require_once(get_file_loc('smr.inc'));
 	do_voodoo();
 }
