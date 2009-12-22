@@ -2,7 +2,7 @@
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 if (!isset($var['game_id'])) SmrSession::updateVar('game_id', $_REQUEST['game_id']);
-if (!isset($var['gal_on'])) $var['gal_on'] = 1;
+if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);
 $new_gen = FALSE;
 //create universe stuff if its not in the DB.
 
