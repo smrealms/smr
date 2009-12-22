@@ -81,7 +81,7 @@ if(isset($GameID))
 	</span>
 	Credits : <?php echo number_format($ThisPlayer->getCredits()) ?><br />
 	Experience : <?php echo number_format($ThisPlayer->getExperience()) ?><br />
-	Level : <?php echo $ThisPlayer->getLevelID() ?><br />
+	Level : <a href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><?php echo $ThisPlayer->getLevelID() ?></a><br />
 	Next Level :<br /><?php
 	$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
 	$Experience = number_format($ThisPlayer->getExperience());?>
@@ -90,14 +90,14 @@ if(isset($GameID))
 	<img src="images/bar_border.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentRemaining() ?>px;height:10px;" title="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" alt="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" />
 	<img src="images/bar_right.gif" title="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" alt="<?php echo $Experience ?>/<?php echo $NextLevelExperience ?>" /><br />
 	Alignment : <?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?><br />
-	Alliance : <?php
+	Alliance : <a href="<?php echo $AllianceLink; ?>"><?php
 		echo $ThisPlayer->getAllianceName();
 		if($ThisPlayer->hasAlliance())
 		{
 			echo '('.number_format($ThisPlayer->getAllianceID()).')';
-		} ?><br />
+		} ?></a><br />
 	<br />
-	<span id="ship_name"><?php /*<a href="<?php echo $ThisShip->getUpgradeShipHREF() ?>">*/ ?><span class="yellow bold"><?php echo $ThisShip->getName() ?></span><?php /*</a>*/ ?></span><br />
+	<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php /*<a href="<?php echo $ThisShip->getUpgradeShipHREF() ?>">*/ ?><span class="yellow bold"><?php echo $ThisShip->getName() ?></span><?php /*</a>*/ ?></span></a><br />
 	<?php
 	if(!empty($PlayerShipCustomName))
 	{
