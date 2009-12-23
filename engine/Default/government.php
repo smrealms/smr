@@ -7,30 +7,30 @@ if ($player->getAlignment() <= -100) {
 }
 
 // get the name of this facility
-$db->query('SELECT * FROM location NATURAL JOIN location_type NATURAL JOIN location_is_hq ' .
-		   'WHERE game_id = '.$player->getGameID().' AND ' .
-		   'sector_id = '.$player->getSectorID());
-if ($db->nextRecord()) {
-
+$db->query('SELECT * FROM location JOIN location_type USING(location_type_id) JOIN location_is_hq USING(location_type_id) ' .
+			'WHERE game_id = '.$player->getGameID().' AND ' .
+			'sector_id = '.$player->getSectorID().' AND ' .
+			'location.location_type_id = '.$var['LocationID']);
+if ($db->nextRecord())
+{
 	$location_type_id = $db->getField('location_type_id');
 	$location_name = $db->getField('location_name');
 
 	$race_id = $location_type_id - 101;
-
+}
+else
+{
+	throw new Exception('Unable to find that hq.');
 }
 
 // did we get a result
-if (!isset($race_id)) {
-  create_error('There is no headquarter. Obviously.');
-  return;
-}
+if (!isset($race_id))
+	create_error('There is no headquarter. Obviously.');
 
 // are we at war?
 $db->query('SELECT * FROM race_has_relation WHERE game_id = '.SmrSession::$game_id.' AND race_id_1 = '.$race_id.' AND race_id_2 = '.$player->getRaceID());
-if ($db->nextRecord() && $db->getField('relation') <= -300) {
+if ($db->nextRecord() && $db->getField('relation') <= -300)
 	create_error('We are at WAR with your race! Get outta here before I call the guards!');
-	return;
-}
 
 // topic
 if (isset($location_type_id))
@@ -68,7 +68,9 @@ displayBountyList($PHP_OUTPUT,'HQ',$player->getAccountID());
 
 if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100)
 {
-	$PHP_OUTPUT.=create_echo_form(create_container('government_processing.php', ''));
+	$container = create_container('government_processing.php');
+	transfer('LocationID');
+	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=create_submit('Become a deputy');
 	$PHP_OUTPUT.=('</form>');
 }
