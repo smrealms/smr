@@ -1,10 +1,10 @@
 <?php
 if($_REQUEST['action']=='Vote')
 {
-	$db->query('DELETE FROM account_votes_for_feature WHERE account_id='.SmrSession::$account_id);
+//	$db->query('DELETE FROM account_votes_for_feature WHERE account_id='.SmrSession::$account_id);
 	if(is_array($_REQUEST['vote']))
 	{
-		$query = 'INSERT INTO account_votes_for_feature VALUES ';
+		$query = 'REPLACE INTO account_votes_for_feature VALUES ';
 		foreach($_REQUEST['vote'] as $requestID => $vote)
 		{
 			$query.='('.SmrSession::$account_id.', '.$db->escapeNumber($requestID).','.$db->escapeString($vote).'),';
