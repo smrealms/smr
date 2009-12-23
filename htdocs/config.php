@@ -36,6 +36,7 @@ define('SHIP_TYPE_GALACTIC_SEMI',1);
 /*
  * Combat system
  */
+define('MAX_ATTACK_RATING_NEWBIE',4);
 define('MIN_TIME_BETWEEN_SHOTS',0.5);
 define('MAXIMUM_FLEET_SIZE', 10);
 define('MINE_ARMOUR', 20);
