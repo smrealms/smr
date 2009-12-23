@@ -411,20 +411,6 @@ abstract class AbstractSmrShip
 		$this->removeUnderAttack();
 	}
 	
-	public function isCloaked()
-	{
-		if(!$this->hasCloak())
-			return false;
-		if(!isset($this->isCloaked))
-		{
-			$this->db->query('SELECT * FROM ship_is_cloaked ' .
-				'WHERE account_id = '.$this->getAccountID().' AND ' .
-				'game_id = '.$this->getGameID().' LIMIT 1');
-			$this->isCloaked = $this->db->getNumRows()>0;
-		}
-		return $this->isCloaked;
-	}
-	
 	public function hasCloak()
 	{
 		return $this->getHardware(HARDWARE_CLOAK);

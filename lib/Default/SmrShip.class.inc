@@ -55,7 +55,7 @@ class SmrShip extends AbstractSmrShip
 		$this->load_cargo();
 	}
 	
-	function load_weapon()
+	protected function load_weapon()
 	{
 		// determine weapon
 		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon WHERE ' .
@@ -72,7 +72,7 @@ class SmrShip extends AbstractSmrShip
 		$this->checkForExcessWeapons();
 	}
 	
-	function load_cargo()
+	protected function load_cargo()
 	{
 		if(!isset($this->cargo))
 		{
@@ -91,7 +91,7 @@ class SmrShip extends AbstractSmrShip
 		$this->checkForExcessCargo();
 	}
 	
-	function load_hardware()
+	protected function load_hardware()
 	{
 		$this->hardware = array();
 		$this->oldHardware = array();
@@ -120,39 +120,46 @@ class SmrShip extends AbstractSmrShip
 	
 	function update_cargo()
 	{
-		// write cargo info
-		foreach ($this->getCargo() as $id => $amount)
+		if($this->hasChangedCargo === true)
 		{
-			if ($amount > 0)
-				$this->db->query('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$id.', '.$amount.')');
-			else
-				$this->db->query('DELETE FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND good_id = '.$id.' LIMIT 1');
+			// write cargo info
+			foreach ($this->getCargo() as $id => $amount)
+			{
+				if ($amount > 0)
+					$this->db->query('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$id.', '.$amount.')');
+				else
+					$this->db->query('DELETE FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND good_id = '.$id.' LIMIT 1');
+			}
 		}
 	}
 	
 	function update_hardware()
 	{
-		$this->db->lockTable('ship_has_hardware');
-		
-		// write hardware info
-		foreach ($this->hardware as $hardware_type_id => $amount)
+		if($this->hasChangedHardware === true)
 		{
-			if ($amount > 0)
+			$this->db->lockTable('ship_has_hardware');
+			
+			// write hardware info
+			foreach ($this->hardware as $hardware_type_id => $amount)
 			{
-				$this->db->query('SELECT * FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
-				if ($this->db->nextRecord())
+				if ($amount > 0)
 				{
-					$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->getOldHardware($hardware_type_id).' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);	
+					$this->db->query('SELECT * FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
+					if ($this->db->nextRecord())
+					{
+						$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->getOldHardware($hardware_type_id).' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);	
+					}
+					else
+					{	
+						$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$this->getOldHardware($hardware_type_id).')');
+					}
 				}
 				else
-				{	
-					$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$this->getOldHardware($hardware_type_id).')');
-				}
+					$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND hardware_type_id = '.$hardware_type_id);
 			}
-			else
-				$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND hardware_type_id = '.$hardware_type_id);
+			$this->db->unlock();
+			$this->hasChangedWeapons = false;
 		}
-		$this->db->unlock();
 	}
 	
 	function update_weapon()
@@ -219,65 +226,6 @@ class SmrShip extends AbstractSmrShip
 		return $this->isCloaked;
 	}
 	
-	public function hasCloak()
-	{
-		return $this->getHardware(HARDWARE_CLOAK);
-	}
-	
-	public function canHaveCloak()
-	{
-		return $this->getMaxHardware(HARDWARE_CLOAK);
-	}
-	
-	
-	public function hasActiveIllusion()
-	{
-		if(!$this->hasIllusion())
-			return false;
-		return $this->getIllusionShip()!==false;
-		
-	}
-	
-	public function hasIllusion()
-	{
-		return $this->getHardware(HARDWARE_ILLUSION);
-	}
-	
-	public function canHaveIllusion()
-	{
-		return $this->getMaxHardware(HARDWARE_ILLUSION);
-	}
-	
-	public function hasJump()
-	{
-		return $this->getHardware(HARDWARE_JUMP);
-	}
-	
-	public function canHaveJump()
-	{
-		return $this->getMaxHardware(HARDWARE_JUMP);
-	}
-	
-	public function hasDCS()
-	{
-		return $this->getHardware(HARDWARE_DCS);
-	}
-	
-	public function canHaveDCS()
-	{
-		return $this->getMaxHardware(HARDWARE_DCS);
-	}
-	
-	public function hasScanner()
-	{
-		return $this->getHardware(HARDWARE_SCANNER);
-	}
-	
-	public function canHaveScanner()
-	{
-		return $this->getMaxHardware(HARDWARE_SCANNER);
-	}
-	
 	function decloak()
 	{
 		$this->isCloaked = false;
@@ -305,7 +253,7 @@ class SmrShip extends AbstractSmrShip
 				'limit 1'
 			);
 			$this->decloak();
-			$this->hardware[8] = 0;
+			$this->setHardware(HARDWARE_CLOAK,0);
 			return true;
 		}	
 		
