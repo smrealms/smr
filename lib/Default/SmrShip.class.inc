@@ -130,6 +130,7 @@ class SmrShip extends AbstractSmrShip
 				else
 					$this->db->query('DELETE FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND good_id = '.$id.' LIMIT 1');
 			}
+			$this->hasChangedCargo = false;
 		}
 	}
 	
@@ -158,7 +159,7 @@ class SmrShip extends AbstractSmrShip
 					$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND hardware_type_id = '.$hardware_type_id);
 			}
 			$this->db->unlock();
-			$this->hasChangedWeapons = false;
+			$this->hasChangedHardware = false;
 		}
 	}
 	
