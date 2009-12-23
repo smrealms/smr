@@ -2,7 +2,7 @@
 
 function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 {
-  $gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $gameID : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$this->db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $gameID : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$rank = array('Amount'=>0,'Rank'=>0);
 	if($view == DONATION_NAME)
