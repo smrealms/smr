@@ -2,7 +2,7 @@
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))
 	create_error('Numbers only please');
-    
+
 // only whole numbers allowed
 $amount = floor($amount);
 
