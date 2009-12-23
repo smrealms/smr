@@ -2,13 +2,15 @@
 
 function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 {
+  $gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $gameID : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$this->db->escapeBoolean(false).')');
+
 	$rank = array('Amount'=>0,'Rank'=>0);
 	if($view == DONATION_NAME)
 		$db->query('SELECT SUM(amount) as amount FROM account_donated WHERE account_id='.$accountID.' GROUP BY account_id LIMIT 1');
 	else if($view == USER_SCORE_NAME)
 	{
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$accountID.(isset($gameID) ? ' AND game_id=' . $gameID : '') .' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
+		$query = 'SELECT '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
 		$db->query($query);
 	}
 	else
@@ -16,7 +18,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		$db->query('SELECT type FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).' LIMIT 1');
 		if(!$db->nextRecord())
 			return $rank;
-		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false) .' AND account_id='.$accountID.(isset($gameID) ? ' AND game_id=' . $gameID : '').' GROUP BY account_id LIMIT 1');
+		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
 	}
 	if($db->nextRecord())
 		if($db->getField('amount')!=null)
@@ -25,11 +27,11 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $rank['Amount'] . ') x');
 	else if($view == USER_SCORE_NAME)
 	{
-		$query = 'SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type IN ('.$statements['IN'].')'.(isset($gameID) ? ' AND game_id=' . $gameID : '') .' GROUP BY account_id HAVING '.$statements['CASE'].'>' . $rank['Amount'] . ') x';
+		$query = 'SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id HAVING '.$statements['CASE'].'>' . $rank['Amount'] . ') x';
 		$db->query($query);
 	}
 	else
-		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false) .(isset($gameID) ? ' AND game_id=' . $gameID : '').' GROUP BY account_id HAVING SUM(amount)>'.$rank['Amount'].') x');
+		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).$gameIDSql.' GROUP BY account_id HAVING SUM(amount)>'.$rank['Amount'].') x');
 	if($db->nextRecord())
 		$rank['Rank'] = $db->getField('rank') + 1;
 	return $rank;
