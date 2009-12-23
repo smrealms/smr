@@ -8,6 +8,7 @@
 		<th>Alliance Max Vets</th>
 		<th>Type</th>
 		<th>Game Speed</th>
+		<th>Credits Required</th>
 		<th>Stats Ignored</th>
 	</tr>
 	<tr>
