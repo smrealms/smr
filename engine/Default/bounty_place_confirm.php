@@ -9,6 +9,11 @@ if(isset($_REQUEST['smrcredits']))
 	SmrSession::updateVar('BountySmrCredits',$_REQUEST['smrcredits']);
 if(isset($_REQUEST['account_id']))
 	SmrSession::updateVar('BountyAccountID',$_REQUEST['account_id']);
+if(!isset($var['BountySmrCredits']))
+	SmrSession::updateVar('BountySmrCredits',0);
+if(!isset($var['BountyAmount']))
+	SmrSession::updateVar('BountyAmount',0);
+
 $amount = $var['BountyAmount'];
 $smrCredits = $var['BountySmrCredits'];
 $account_id = $var['BountyAccountID'];
