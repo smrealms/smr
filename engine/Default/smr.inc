@@ -506,12 +506,11 @@ function acquire_lock($sector)
 	
 	$lock = $db->getInsertID();
 
-	for($i=0;$i<10;++$i)
+	for($i=0;$i<100;++$i)
 	{
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' LIMIT 1');
-		$db->nextRecord();
-		if($db->getField('COUNT(*)'))
+		if($db->nextRecord() && $db->getField('COUNT(*)'))
 		{
 			//usleep(100000 + mt_rand(0,50000));
 
@@ -522,11 +521,12 @@ function acquire_lock($sector)
 				if($db->getField('COUNT(*)') > 1)
 				{
 					release_lock();
+					$locksFailed[$sector] = true;
 					create_error('Multiple actions cannot be performed at the same time!');
 					exit;
 				}
 			}
-			
+
 			usleep(25000 * $db->getField('COUNT(*)'));
 			continue;
 		}
