@@ -102,7 +102,6 @@ function album_entry($album_id)
 		echo('<h1>Error</h1>');
 		echo('This user doesn\'t have an entry in our album!');
 		return;
-
 	}
 
 	// get this user's nick
@@ -131,7 +130,7 @@ function album_entry($album_id)
 	echo('<td style="text-align: center;" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
 
 	$db->query('SELECT hof_name
-				FROM album NATURAL JOIN account
+				FROM album JOIN account USING(account_id)
 				WHERE hof_name > ' . $db->escapeString($nick) . ' AND
 					  approved = \'YES\'
 				ORDER BY hof_name
@@ -272,7 +271,7 @@ function search_result($album_ids)
 function create_link_list()
 {
 	echo('<div align="center" style="font-size:80%;">[ ');
-	echo('<a href="'.URL.'/album/">All</a> | ');
+	echo('<a href="'.URL.'/album/?%">All</a> | ');
 	echo('<a href="'.URL.'/album/?A">A</a> | ');
 	echo('<a href="'.URL.'/album/?B">B</a> | ');
 	echo('<a href="'.URL.'/album/?C">C</a> | ');
