@@ -92,7 +92,7 @@ else
 	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
 	
 	
-	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $gameID : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id '.(isset($var['game_id']) ? '= ' . $var['game_id'] : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 	
 	$rank=1;
 	$foundMe=false;
