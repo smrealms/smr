@@ -91,6 +91,9 @@ else
 {
 	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
 	
+	
+	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $gameID : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+	
 	$rank=1;
 	$foundMe=false;
 	$viewType = $var['type'];
@@ -101,11 +104,11 @@ else
 	else if($var['view'] == USER_SCORE_NAME)
 	{
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : '') .' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
+		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
 		$db->query($query);
 	}
 	else
-		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).(isset($var['game_id']) ? ' AND game_id=' . $var['game_id'] : '') .' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
 		if($db->getField('account_id') == $account->account_id)
