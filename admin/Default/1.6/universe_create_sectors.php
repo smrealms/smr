@@ -3,10 +3,7 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 if (!isset($var['game_id'])) SmrSession::updateVar('game_id', $_REQUEST['game_id']);
 if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);
-$new_gen = FALSE;
-//create universe stuff if its not in the DB.
 
-if (isset($var['redo'])) $new_gen = TRUE;
 //generate sector array
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $row = $galaxy->getHeight();
@@ -22,7 +19,8 @@ $connectivity = $var['conn'];
 
 if(isset($var['message']))
 	$PHP_OUTPUT.=$var['message'].'<br /><br />';
-unset($var['message']); // Only show message once
+SmrSession::updateVar('message',null); // Only show message once
+
 $PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')<br />';
 $PHP_OUTPUT.= 'Hover over a sector to get details about that sector.<br />';
 $PHP_OUTPUT.= '<table><tr><td colspan="3">';
@@ -170,16 +168,16 @@ $container['body'] = '1.6/universe_create_sectors.php';
 $PHP_OUTPUT.= create_echo_form($container);
 $PHP_OUTPUT.= 'Sector ID<br /><input type="text" size="5" name="sector_edit"><br /><input type="submit" value="Modify Sector" name="submit">';
 $PHP_OUTPUT.= '</form></td></tr><tr><td class="center" colspan="3">';
-if ($warning)
-{
-	$PHP_OUTPUT.= '<span class="small">Note: When you press "Create Universe" ALL universe data will be erased and rewritten.<br />';
-	$PHP_OUTPUT.= 'If you modified ports, goods will be changed at ports in that galaxy (unless you used edit sector)<br />';
-	$PHP_OUTPUT.= 'If you modified planet, NPC planet levels will be reset, player planets will lose their owners (unless you used edit sector)<br />';
-	$PHP_OUTPUT.= 'If you modified ports, mines will be re-inserted.<br />';
-	$PHP_OUTPUT.= 'Use with caution.</span>';
-}
-else
-	$PHP_OUTPUT.= '&nbsp;';
+//if ($warning)
+//{
+//	$PHP_OUTPUT.= '<span class="small">Note: When you press "Create Universe" ALL universe data will be erased and rewritten.<br />';
+//	$PHP_OUTPUT.= 'If you modified ports, goods will be changed at ports in that galaxy (unless you used edit sector)<br />';
+//	$PHP_OUTPUT.= 'If you modified planet, NPC planet levels will be reset, player planets will lose their owners (unless you used edit sector)<br />';
+//	$PHP_OUTPUT.= 'If you modified ports, mines will be re-inserted.<br />';
+//	$PHP_OUTPUT.= 'Use with caution.</span>';
+//}
+//else
+//	$PHP_OUTPUT.= '&nbsp;';
 $PHP_OUTPUT.= '</td></tr></table><br /><br />';
 $PHP_OUTPUT.= '</form>';
 
