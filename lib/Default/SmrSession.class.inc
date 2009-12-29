@@ -187,7 +187,7 @@ class SmrSession
 	public static function updateVar($key,$value)
 	{
 		global $var;
-		if($value==null)
+		if($value===null)
 		{
 			unset($var[$key]);
 			unset(self::$var[self::$SN][$key]);

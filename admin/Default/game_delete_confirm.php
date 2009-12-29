@@ -1,7 +1,13 @@
 <?php
 
 $template->assign('PageTopic','Delete Game - Confirmation');
-$game_id = $_REQUEST['game_id'];
+if(isset($_REQUEST['game_id']))
+{
+	if(!is_numeric($_REQUEST['game_id']))
+		create_error('Invalid game id: '.$_REQUEST['game_id']);
+	SmrSession::updateVar('game_id',$_REQUEST['game_id']);
+}
+$game_id = $var['game_id'];
 $db->query('SELECT game_name, end_date
 			FROM game
 			WHERE game_id = '.$game_id);
