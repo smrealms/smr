@@ -1,10 +1,13 @@
 <?php
 
 $db2 = new SmrMySqlDatabase();
+
+if(isset($_REQUEST['variable'])) SmrSession::updateVar('variable',$_REQUEST['variable']);
+
 //split variable to get start and end
-list ($start, $end) = split (',', $_REQUEST['variable']);
+list ($start, $end) = split (',', $var['variable']);
 if(empty($start) || empty($end) || !is_numeric($start) || !is_numeric($end))
-	create_error('Input was not in the correct format: "'.$_REQUEST['variable'].'"');
+	create_error('Input was not in the correct format: "'.$var['variable'].'"');
 $db->query('SELECT * FROM account WHERE account_id >= '.$start.' AND account_id <= '.$end.' ORDER BY account_id');
 $PHP_OUTPUT.= create_table();
 $PHP_OUTPUT.=('<tr>');
