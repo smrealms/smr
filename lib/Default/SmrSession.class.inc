@@ -187,8 +187,16 @@ class SmrSession
 	public static function updateVar($key,$value)
 	{
 		global $var;
-		$var[$key] =& $value;
-		self::$var[self::$SN][$key] =& $value;
+		if($value==null)
+		{
+			unset($var[$key]);
+			unset(self::$var[self::$SN][$key]);
+		}
+		else
+		{
+			$var[$key] = $value;
+			self::$var[self::$SN][$key] = $value;
+		}
 	}
 	
 	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
