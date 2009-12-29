@@ -100,7 +100,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	
 	public static function getPlayerLevelAccuracyMod(AbstractSmrPlayer &$player)
 	{
-		return ($player->getLevelID()*$player->getLevelID()*.006+.5*$player->getLevelID()+2) / 100;
+		return ($player->getLevelID()*$player->getLevelID()/100+$player->getLevelID()/2+2) / 100;
 	}
 	
 	public function getModifiedAccuracy(AbstractSmrPlayer &$weaponPlayer)
@@ -136,7 +136,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function getModifiedAccuracyAgainstPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$modifiedAccuracy = $this->getModifiedAccuracy($weaponPlayer);
-		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer);
+		$modifiedAccuracy -= $this->getBaseAccuracy() * self::getPlayerLevelAccuracyMod($targetPlayer) / 2;
 		if ($targetPlayer->isGadgetEquipped('Increased Maneuverability'))
 			$modifiedAccuracy -= $this->getBaseAccuracy() * INCREASED_MAN_GADGET_FACTOR/100;
 		
