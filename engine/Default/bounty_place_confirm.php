@@ -4,15 +4,11 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 // get request variables
 if(isset($_REQUEST['amount']))
-	SmrSession::updateVar('BountyAmount',$_REQUEST['amount']);
+	SmrSession::updateVar('BountyAmount',empty($_REQUEST['amount'])?0:$_REQUEST['amount']);
 if(isset($_REQUEST['smrcredits']))
-	SmrSession::updateVar('BountySmrCredits',$_REQUEST['smrcredits']);
+	SmrSession::updateVar('BountySmrCredits',empty($_REQUEST['smrcredits'])?0:$_REQUEST['smrcredits']);
 if(isset($_REQUEST['account_id']))
 	SmrSession::updateVar('BountyAccountID',$_REQUEST['account_id']);
-if(!isset($var['BountySmrCredits']))
-	SmrSession::updateVar('BountySmrCredits',0);
-if(!isset($var['BountyAmount']))
-	SmrSession::updateVar('BountyAmount',0);
 
 $amount = $var['BountyAmount'];
 $smrCredits = $var['BountySmrCredits'];
@@ -20,8 +16,10 @@ $account_id = $var['BountyAccountID'];
 
 if ($account_id == 0)
 	create_error('Uhhh...who is [Please Select]?');
+if (!is_numeric($account_id))
+	create_error('Please select a player');
 
-if (!is_numeric($amount)||!is_numeric($smrCredits)||!is_numeric($account_id))
+if (!is_numeric($amount)||!is_numeric($smrCredits))
 	create_error('Numbers only please');
 
 $amount = round($amount);
@@ -56,6 +54,7 @@ $container['url'] = 'bounty_place_processing.php';
 $container['account_id'] = $bounty_guy->getAccountID();
 $container['amount'] = $amount;
 $container['SmrCredits'] = $smrCredits;
+transfer('LocationID');
 
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=create_submit('Yes');

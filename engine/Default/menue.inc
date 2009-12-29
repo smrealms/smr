@@ -429,22 +429,25 @@ function create_bank_menue() {
 
 }
 
-function create_hq_menue() {
+function create_hq_menue()
+{
+	global $var;
+	$container = create_container('skeleton.php');
+	$container['LocationID'] = $var['LocationID'];
+	
+	$container['body'] = 'government.php';
+	$menue_items[] = create_link($container, 'Government');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'government.php'),
-												  'Government');
+	$container['body'] = 'military_payment_claim.php';
+	$menue_items[] = create_link($container, 'Claim Military Payment');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'military_payment_claim.php'),
-												  'Claim Military Payment');
+	$container['body'] = 'bounty_claim.php';
+	$menue_items[] = create_link($container, 'Claim Bounty');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_claim.php'),
-												  'Claim Bounty');
-
-	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_place.php'),
-												  'Place a Bounty');
+	$container['body'] = 'bounty_place.php';
+	$menue_items[] = create_link($container, 'Place a Bounty');
 
 	return create_menue($menue_items);
-
 }
 
 function create_ug_menue() {
