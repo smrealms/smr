@@ -10,9 +10,8 @@ if ($sector->has_hq())
 else
 	$PHP_OUTPUT.=create_ug_menue();
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'bounty_place_confirm.php';
+$container = create_container('skeleton.php','bounty_place_confirm.php');
+transfer('LocationID');
 $PHP_OUTPUT.=create_echo_form($container);
 
 $PHP_OUTPUT.=('Select the player you want to add the bounty to<br />');

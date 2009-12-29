@@ -4,16 +4,16 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $container = array();
 $container['url'] = 'skeleton.php';
-if ($sector->has_hq()) {
-
+transfer('LocationID');
+if ($sector->has_hq())
+{
 	$container['body'] = 'government.php';
 	$type = 'HQ';
-
-} else {
-
+}
+else
+{
 	$container['body'] = 'underground.php';
 	$type = 'UG';
-
 }
 $action = $_REQUEST['action'];
 // if we don't have a yes we leave immediatly

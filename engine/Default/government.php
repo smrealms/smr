@@ -1,10 +1,8 @@
 <?php
 
 // check if our alignment is high enough
-if ($player->getAlignment() <= -100) {
+if ($player->getAlignment() <= -100)
 	create_error('You are not allowed to enter our Government HQ!');
-	return;
-}
 
 // get the name of this facility
 $db->query('SELECT * FROM location JOIN location_type USING(location_type_id) JOIN location_is_hq USING(location_type_id) ' .
