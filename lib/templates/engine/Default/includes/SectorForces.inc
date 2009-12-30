@@ -93,7 +93,7 @@
 									else
 									{
 										echo $Force->getExamineAttackForcesHREF();
-									} ?>" class="buttonA"> Examine </a>
+									} ?>" class="buttonA<?php if(!$SharedForceAlliance){ ?> enemyExamine<?php } ?>"> Examine </a>
 							</div><?php
 							if($SharedForceAlliance)
 							{ ?>

@@ -54,7 +54,7 @@
 							<td class="shrink center nowrap"><?php echo $Player->getLevelID() ?></td>
 							<td class="shrink center nowrap">
 								<div class="buttonA">
-									<a href="<?php echo $Player->getExamineTraderHREF() ?>" class="buttonA"> Examine </a>
+									<a href="<?php echo $Player->getExamineTraderHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Examine </a>
 								</div>
 							</td>
 						</tr>
