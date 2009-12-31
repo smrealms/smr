@@ -168,7 +168,8 @@ if ($db->nextRecord())
 }
 if (isset($var['AttackMessage']))
 {
-	checkForAttackMessage($var['AttackMessage']);
+  $msg = $var['AttackMessage'];
+	checkForAttackMessage($msg);
 }
 if (isset($var['msg']))
 {
@@ -176,11 +177,6 @@ if (isset($var['msg']))
 	$template->assign('VarMessage',$var['msg']);
 }
 
-if ($player->getAccountID() == 2)
-{
-	$db->query('SELECT * FROM player WHERE account_id = 10106 AND game_id = 23 LIMIT 1');
-	if ($db->nextRecord()) $msg .= '<br />In Sector:'.$db->getField('sector_id').'<br />';
-}
 //error msgs take precedence
 if (isset($var['errorMsg'])) $template->assign('ErrorMessage', $var['errorMsg']);
 

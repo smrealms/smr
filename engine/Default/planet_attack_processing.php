@@ -91,11 +91,11 @@ $planet->update();
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
-$logId = $db->getInsertID();
+$logId = $db->escapeString('[ATTACK_RESULTS]'.$db->getInsertID());
 foreach($attackers as &$attacker)
 {
 	if(!$player->equals($attacker))
-		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',\'[ATTACK_RESULTS]'.$logId.'\')');
+		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ','.$logId.')');
 } unset($attacker);
 
 $container = array();
