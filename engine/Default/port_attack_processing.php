@@ -70,11 +70,11 @@ $port->update();
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PORT\',' . $port->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.ACCOUNT_ID_PORT.',' . PORT_ALLIANCE_ID . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
-$logId = $db->getInsertID();
+$logId = $db->escapeString('[ATTACK_RESULTS]'.$db->getInsertID());
 foreach($attackers as &$attacker)
 {
 	if(!$player->equals($attacker))
-		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',\'[ATTACK_RESULTS]'.$logId.'\')');
+		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ','.$logId.')');
 } unset($attacker);
 
 $container = array();
