@@ -10,6 +10,7 @@
 		<th>Game Speed</th>
 		<th>Credits Required</th>
 		<th>Stats Ignored</th>
+		<th>Starting Credits</th>
 	</tr>
 	<tr>
 		<td width="40%"><?php echo $Game['GameName'] ?> (<?php echo $Game['ID']; ?>)</td>
@@ -22,6 +23,7 @@
 		<td><?php echo $Game['Speed']; ?></td>
 		<td><?php echo $Game['GameCreditsRequired']; ?></td>
 		<td><?php echo $Game['IgnoreStats']?'Yes':'No'; ?></td>
+		<td><?php echo number_format($Game['StartingCredits']); ?></td>
 	</tr>
 </table><br /><?php
 if($Game['GameDescription'])

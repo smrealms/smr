@@ -200,7 +200,15 @@ class Globals
 											'Speed' => (float)self::$db->getField('game_speed'),
 											'GameType' => (string)self::$db->getField('game_type'),
 											'GameName' => (string)self::$db->getField('game_name'),
-											'StartDate' => (string)self::$db->getField('start_date')
+											'GameDescription' => (string)self::$db->getField('game_description'),
+											'StartDate' => (string)self::$db->getField('start_date'),
+											'EndDate' => (string)self::$db->getField('end_date'),
+											'GameMaxPlayers' => (int)self::$db->getField('max_players'),
+											'GameCreditsRequired' => (int)self::$db->getField('credits_needed'),
+											'AllianceMaxPlayers' => (int)self::$db->getField('alliance_max_players'),
+											'AllianceMaxVets' => (int)self::$db->getField('alliance_max_vets'),
+											'IgnoreStats' => self::$db->getBoolean('ignore_stats'),
+											'StartingCredits' => (int)self::$db->getField('starting_credits')
 											);
 			}
 			return self::$GAMES;
@@ -213,7 +221,7 @@ class Globals
 			if(self::$db->nextRecord())
 			{
 				self::$GAMES[$gameID] = array(
-											'ID' => $gameID,
+											'ID' => (int)self::$db->getField('game_id'),
 											'Speed' => (float)self::$db->getField('game_speed'),
 											'GameType' => (string)self::$db->getField('game_type'),
 											'GameName' => (string)self::$db->getField('game_name'),
@@ -224,7 +232,8 @@ class Globals
 											'GameCreditsRequired' => (int)self::$db->getField('credits_needed'),
 											'AllianceMaxPlayers' => (int)self::$db->getField('alliance_max_players'),
 											'AllianceMaxVets' => (int)self::$db->getField('alliance_max_vets'),
-											'IgnoreStats' => self::$db->getBoolean('ignore_stats')
+											'IgnoreStats' => self::$db->getBoolean('ignore_stats'),
+											'StartingCredits' => (int)self::$db->getField('starting_credits')
 											);
 			}
 			else
@@ -297,6 +306,12 @@ class Globals
 	{
 		$gameInfo =& self::getGameInfo($gameID);
 		return $gameInfo['AllianceMaxVets'];
+	}
+	
+	public static function &getStartingCredits($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['StartingCredits'];
 	}
 	
 	public static function isBetaOpen()
