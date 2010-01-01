@@ -60,6 +60,10 @@ create_echo_form($link);
 		<td class="left"><input type="text" size="6" name="alliance_max_vets" value="15"></td>
 	</tr>
 	<tr>
+		<td class="right">Starting Credits</td>
+		<td class="left"><input type="text" size="6" name="starting_credits" value="100000"></td>
+	</tr>
+	<tr>
 		<td class="center" colspan="2"><input type="submit" value="Create Game" name="submit"></td>
 	</tr>
 	</table>

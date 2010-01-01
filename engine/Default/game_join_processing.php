@@ -13,24 +13,20 @@ if (empty($player_name))
 $race_id = $_REQUEST['race_id'];
 if (empty($race_id) || $race_id == 1)
 	create_error('Please choose a race!');
+if(!is_numeric($var['game_id']))
+	create_error('Game ID is not numeric');
 
-$db->query('SELECT * FROM player WHERE game_id = ' . $var['game_id'] . ' AND player_name = ' . $db->escape_string($player_name, true));
+$gameID = $var['game_id'];
+
+$db->query('SELECT * FROM player WHERE game_id = ' . $gameID . ' AND player_name = ' . $db->escape_string($player_name, true));
 if ($db->getNumRows() > 0)
 	create_error('The player name already exists.');
 
-// take the credits
-$db->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
-if ($db->nextRecord())
-{
-	$credits	= $db->getField('credits_needed');
-	$type		= $db->getField('game_type');
-	$start_date	= $db->getField('start_date');
-
-}
-else
+if (Globals::getGameInfo($gameID)===false)
 	create_error('Game not found!');
 
 // does it cost something to join that game?
+$credits	= Globals::getGameCreditsRequired($gameID);
 if ($credits > 0)
 {
 	if($account->getTotalSmrCredits()<$credits)
@@ -46,7 +42,7 @@ if (!$db->getNumRows())
 // put him in a sector with a hq
 $hq_id = $race_id + 101;
 $db->query('SELECT * FROM location NATURAL JOIN sector ' .
-		   'WHERE location.game_id = ' . $var['game_id'] . ' AND ' .
+		   'WHERE location.game_id = ' . $gameID . ' AND ' .
 		   'location_type_id = '.$hq_id);
 if ($db->nextRecord())
 	$home_sector_id = $db->getField('sector_id');
@@ -69,18 +65,8 @@ else
 	$amount_shields = 50;
 	$amount_armour = 50;
 }
-if ($type == 'Semi War') $ship_id = 34;
 
-/*
-// get the time since game start (but max 24h)
-$time_since_start = TIME - $start_date;
-if ($time_since_start > 86400)
-	$time_since_start = 86400;
-
-// credit him this time
-$last_turn_update = TIME - $time_since_start;
-*/
-$last_turn_update = $start_date;
+$last_turn_update = Globals::getGameStartDate($gameID);
 
 //// newbie leaders need to put into there alliances
 if (SmrSession::$account_id == ACCOUNT_ID_NHL)
@@ -91,30 +77,30 @@ else
 $db->lockTable('player');
 
 // get last registered player id in that game and increase by one.
-$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $var['game_id'] . ' ORDER BY player_id DESC LIMIT 1');
+$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $gameID . ' ORDER BY player_id DESC LIMIT 1');
 if ($db->nextRecord())
 	$player_id = $db->getField('MAX(player_id)') + 1;
 else
 	$player_id = 1;
 
 // insert into player table.
-$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, alliance_id, sector_id, last_turn_update, last_cpl_action,last_active) ' .
-						'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', '.$player_id.', ' . $db->escape_string($player_name, true) . ', '.$race_id.', '.$ship_id.', '.$alliance_id.', '.$home_sector_id.', '.$last_turn_update.', ' . TIME . ', ' . TIME . ')');
+$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action,last_active) ' .
+						'VALUES('.SmrSession::$account_id.', ' . $gameID . ', '.$player_id.', ' . $db->escape_string($player_name, true) . ', '.$race_id.', '.$ship_id.', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$alliance_id.', '.$home_sector_id.', '.$last_turn_update.', ' . TIME . ', ' . TIME . ')');
 
 $db->unlock();
 
 // give the player shields
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 1, '.$amount_shields.', '.$amount_shields.')');
+								   'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 1, '.$amount_shields.', '.$amount_shields.')');
 // give the player armour
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 2, '.$amount_armour.', '.$amount_armour.')');
+								   'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 2, '.$amount_armour.', '.$amount_armour.')');
 // give the player cargo hold
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								   'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 3, 40, 40)');
+								   'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 3, 40, 40)');
 // give the player weapons
 $db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-								 'VALUES('.SmrSession::$account_id.', ' . $var['game_id'] . ', 0, 46)');
+								 'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 0, 46)');
 
 // update stats
 $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$account->account_id);
@@ -126,8 +112,8 @@ if ($db->getField('games_joined') == 1) {
 
 	//we are a newb set our alliance to be Newbie Help Allaince
 	$id = 302;
-	$db->query('UPDATE player SET alliance_id = '.$id.' WHERE account_id = '.$account->account_id.' AND game_id = '.$var['game_id']);
-	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$var['game_id'].', '.$account->account_id.', 2,'.$id.')');
+	$db->query('UPDATE player SET alliance_id = '.$id.' WHERE account_id = '.$account->account_id.' AND game_id = '.$gameID);
+	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$gameID.', '.$account->account_id.', 2,'.$id.')');
 	//we need to send them some messages
 	$time = TIME;
 	$message = 'Welcome to Space Merchant Realms, this message is to get you underway with information to start you off in the game. All newbie and beginner rated player are placed into a teaching alliance run by a Veteran player who is experienced enough to answer all your questions and give you a helping hand at learning the basics of the game.<br /><br />
@@ -137,16 +123,16 @@ if ($db->getField('games_joined') == 1) {
 	To get underway, click the alliance link on the left where you can get more information on 	how to get started on the alliance message board which will get you into your alliance chat 	on IRC so you can get started and have your questions answered.<br /><br />Depending on the size and resolution of your monitor the default font size may be too large or small. This can be changed using the preferences link on the left panel.';
 
 	$db->query('INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) ' .
-	'VALUES ('.$var['game_id'].', '.$account->account_id.', '.MSG_ADMIN.', '.$db->escapeString($message).', 0, '.$time.', \'FALSE\', 0)');
+	'VALUES ('.$gameID.', '.$account->account_id.', '.MSG_ADMIN.', '.$db->escapeString($message).', 0, '.$time.', \'FALSE\', 0)');
 
 	$db->query('REPLACE INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ' .
-				'('.$account->account_id.', '.$var['game_id'].', '.MSG_ADMIN.')');
+				'('.$account->account_id.', '.$gameID.', '.MSG_ADMIN.')');
 
 }
 // insert the huge amount of sectors into the database :)
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
-			WHERE game_id = ' . $var['game_id']);
+			WHERE game_id = ' . $gameID);
 if (!$db->nextRecord())
 	create_error('This game doesn\'t have any sectors');
 
@@ -159,10 +145,10 @@ for ($i = $min_sector; $i <= $max_sector; $i++) {
     if ($i == $home_sector_id)
         continue;
 
-    $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.SmrSession::$account_id.', ' . $var['game_id'] . ', '.$i.')');
+    $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ', '.$i.')');
 
 }
-$db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.SmrSession::$account_id.', ' . $var['game_id'] . ')');
+$db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ')');
 forward(create_container('skeleton.php', 'game_play.php'));
 
 ?>
