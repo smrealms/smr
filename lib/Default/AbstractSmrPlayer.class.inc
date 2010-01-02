@@ -395,13 +395,14 @@ abstract class AbstractSmrPlayer
 	
 	public function getLevelName()
 	{
+		if($this->isPresident())
+			return Globals::getRaceName($this->getRaceID()) . ' President';
 		$LEVEL_REQUIREMENTS = Globals::getLevelRequirements();
-		$RACES = Globals::getRaces();
 		if ($this->getAlignment() > 150) $a_name = 'Federation';
 		elseif ($this->getAlignment() < -150) $a_name = 'Underground';
 		else $a_name = 'Sector';
 		$level_name = $LEVEL_REQUIREMENTS[$this->getLevelID()]['Name'];
-		$level_name = str_replace('Race',$RACES[$this->raceID]['Race Name'],$level_name);
+		$level_name = str_replace('Race',Globals::getRaceName($this->getRaceID()),$level_name);
 		$level_name = str_replace('Alignment',$a_name,$level_name);
 		return $level_name;
 	}

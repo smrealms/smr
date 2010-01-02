@@ -1,5 +1,6 @@
 <?php
-require_once('AbstractSmrPlayer.class.inc');
+require_once(get_file_loc('AbstractSmrPlayer.class.inc'));
+require_once(get_file_loc('council.inc'));
 class SmrPlayer extends AbstractSmrPlayer
 {
 	protected static $CACHE_SECTOR_PLAYERS = array();
@@ -1770,23 +1771,16 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	function isOnCouncil()
+	public function isPresident()
 	{
-		$president = false;
-		$this->db->query('SELECT account_id,alignment FROM player WHERE game_id = '.$this->gameID.' AND race_id = '.$this->getRaceID().' AND experience > 0 ORDER BY experience DESC, player_name LIMIT 20');
-		while ($this->db->nextRecord())
-		{
-			if ($this->db->getField('alignment') >= 150 && $president == false) $president = $this->db->getField('account_id');
-			if ($this->db->getField('account_id') == $this->getAccountID())
-			{
-				if ($president == $this->getAccountID()) return 'President';
-				else return 'Member';
-			}
-		}
-		return false;
+		$president =& Council::getPresident($this->getGameID(),$this->getRaceID());
+		return is_object($president)&&$this->equals($president);
 	}
 	
-	
+	public function isOnCouncil()
+	{
+		return Council::isOnCouncil($this->getGameID(),$this->getRaceID(),$this->getAccountID());
+	}
 	
 	public function isValidated()
 	{

@@ -1,11 +1,11 @@
 <?php
 
-include(get_file_loc('council.inc'));
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('council.inc'));
+require_once(get_file_loc('menue.inc'));
 
 $template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
 
-$PHP_OUTPUT.=create_council_menue($player->getRaceID(), getPresident($player->getRaceID()));
+$PHP_OUTPUT.=create_council_menue($player->getRaceID());
 
 $PHP_OUTPUT.=('<table class="standard" align="center" width="50%">');
 $PHP_OUTPUT.=('<tr>');

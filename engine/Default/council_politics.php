@@ -1,7 +1,7 @@
 <?php
 
-include(get_file_loc('council.inc'));
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('council.inc'));
+require_once(get_file_loc('menue.inc'));
 
 // echo topic
 $race_id = $var['race_id'];
@@ -13,9 +13,8 @@ $db->query('SELECT * FROM race ' .
 if ($db->nextRecord())
 	$template->assign('PageTopic','Ruling Council Of ' . $db->getField('race_name'));
 
-// get president and echo menue
-$president = getPresident($race_id);
-$PHP_OUTPUT.=create_council_menue($race_id, $president);
+// echo menue
+$PHP_OUTPUT.=create_council_menue($race_id);
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>We are at War/Peace<br />with the following races:</p>');

@@ -464,8 +464,8 @@ function create_ug_menue() {
 	return create_menue($menue_items);
 }
 
-function create_council_menue($race_id, $president) {
-
+function create_council_menue($race_id)
+{
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
@@ -483,10 +483,17 @@ function create_council_menue($race_id, $president) {
 	$container['race_id'] = $race_id;
 	$menue_items[] = create_link($container, 'Send Message');
 
-	include(get_file_loc('council_menue.inc'));
+	if($player->getRaceID()==$race_id)
+	{
+		if ($player->isOnCouncil())
+			$menue_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
+														  'Voting Center');
+		if ($player->isPresident())
+			$menue_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
+														  'Embassy');
+	}
 
 	return create_menue($menue_items);
-
 }
 
 function create_bar_menue() {

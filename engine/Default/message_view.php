@@ -1,5 +1,5 @@
 <?php
-require_once (get_file_loc('menue.inc'));
+require_once(get_file_loc('menue.inc'));
 create_message_menue();
 
 if (!isset ($var['folder_id']))
@@ -8,10 +8,10 @@ if (!isset ($var['folder_id']))
 
 	$db2 = new SmrMySqlDatabase();
 
-	include (get_file_loc('council.inc'));
+	require_once(get_file_loc('council.inc'));
 
 	$db2->query('SELECT * FROM message WHERE account_id = ' . $player->getAccountID() . ' AND message_type_id = ' . MSG_POLITICAL . ' AND game_id = ' . $player->getGameID() . ' AND reciever_delete = \'FALSE\' AND reciever_delete = \'FALSE\'');
-	if (onCouncil($player->getRaceID()) || $db2->getNumRows())
+	if ($player->isOnCouncil() || $db2->getNumRows())
 		$db->query('SELECT * FROM message_type ' .
 		'WHERE message_type_id < 8 ' .
 		'ORDER BY message_type_id');

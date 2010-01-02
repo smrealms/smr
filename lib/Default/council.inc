@@ -1,71 +1,66 @@
 <?php
-
-// determine if we are on this council
-function onCouncil($race_id) {
-
-	global $player, $db;
-
-	$db->query('SELECT * FROM player ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'race_id = '.$race_id.' ' .
-			   'ORDER by experience DESC ' .
-			   'LIMIT '.MAX_COUNCIL_MEMBERS);
-	while ($db->nextRecord())
-		if ($db->getField('account_id') == $player->getAccountID())
-			return 1;
-
-	return 0;
-
-}
-
-function getPresident($race_id) {
-
-	global $player, $db;
-
-	$president = false;
-	$db->query('SELECT * FROM player_is_president ' .
-		   'WHERE game_id = '.$player->getGameID().' AND ' .
-				 'race_id = '.$race_id);
-	$pres_xp = 0;
-	if ($db->nextRecord())
+require_once(get_file_loc('SmrPlayer.class.inc'));
+class Council
+{
+	protected static $RACE_COUNCIL = array();
+	protected static $RACE_PRESIDENTS = array();
+	protected static $db = null;
+	
+	private function __construct()
 	{
-		$accountID = $db->getField('account_id');
-		$president =& SmrPlayer::getPlayer($accountID, $player->getGameID());
-		if($president->getAlignment()>=150 && $president->getRaceID() == $race_id)
-			$pres_xp = $president->getExperience(); //only want to set their exp if they are deputy, and still the same race - race should never change in a normal game, but just in case.
 	}
+	
+	protected static function initialiseDatabase()
+	{
+		if(self::$db==null)
+			self::$db = new SmrMySqlDatabase();
+	}
+	
+	protected static function &getRaceCouncil($gameID,$raceID)
+	{
+		if(!isset(self::$RACE_COUNCIL[$gameID]))
+		{
+			self::$RACE_COUNCIL[$gameID] = array();
+			self::$RACE_PRESIDENTS[$gameID] = array();
+		}
 		
-	// check if there is another player with a higher xp and deputy
-	$db->query('SELECT * FROM player ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'race_id = '.$race_id.' AND ' .
-					 'experience > '.$pres_xp.' AND ' .
-					 'alignment >= 150 ' .
-			   'ORDER by experience DESC ' .
-			   'LIMIT 1');
-
-	if ($db->nextRecord())
-	{
-		$accountID = $db->getField('account_id');
-		$president =& SmrPlayer::getPlayer($accountID, $player->getGameID());
-
-		$db->query('REPLACE INTO player_is_president ' .
-				   '(account_id, game_id, race_id) ' .
-				   'VALUES('.$president->getAccountID().', '.$player->getGameID().', '.$race_id.')');
-
+		if(!isset(self::$RACE_COUNCIL[$gameID][$raceID]))
+		{
+			self::initialiseDatabase();
+			self::$RACE_COUNCIL[$gameID][$raceID] = array();
+			self::$RACE_PRESIDENTS[$gameID] = false;
+			
+			$i=0;
+			self::$db->query('SELECT account_id,alignment FROM player ' .
+						'WHERE game_id = '.$gameID.' AND ' .
+							'race_id = '.$raceID.' ' .
+						'ORDER by experience DESC ' .
+						'LIMIT '.MAX_COUNCIL_MEMBERS);
+			while(self::$db->nextRecord())
+			{
+				self::$RACE_COUNCIL[$gameID][$raceID][$i] = self::$db->getField('account_id');
+				if(self::$RACE_PRESIDENTS[$gameID][$raceID]==false&&self::$db->getField('alignment')>=150)
+					self::$RACE_PRESIDENTS[$gameID][$raceID] = self::$db->getField('account_id');
+				$i++;
+			}
+		}
+		return self::$RACE_COUNCIL[$gameID][$raceID];
 	}
-
-	// de elect evil presidents
-	if ($president&&$president->getAccountID() > 0 && $president->getAlignment() < 150)
+	
+	public static function &getPresident($gameID,$raceID)
 	{
-		$db->query('DELETE FROM player_is_president ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'race_id = '.$race_id);
-		unset($president);
+		self::getRaceCouncil($gameID,$raceID);
+		if(self::$RACE_PRESIDENTS[$gameID][$raceID]!==false&&is_numeric(self::$RACE_PRESIDENTS[$gameID][$raceID]))
+		{
+			self::$RACE_PRESIDENTS[$gameID][$raceID] =& SmrPlayer::getPlayer(self::$RACE_PRESIDENTS[$gameID][$raceID],$gameID);
+		}
+		return self::$RACE_PRESIDENTS[$gameID][$raceID];
 	}
-
-	return $president;
-
+	
+	public static function isOnCouncil($gameID,$raceID,$accountID)
+	{
+		return in_array($accountID,self::getRaceCouncil($gameID,$raceID));
+	}
 }
 
 function modifyRelations($race_id_1) {

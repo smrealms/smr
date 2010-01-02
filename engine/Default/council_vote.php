@@ -1,24 +1,22 @@
 <?php
 include(get_file_loc('race_voting.php'));
-include(get_file_loc('council.inc'));
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('council.inc'));
+require_once(get_file_loc('menue.inc'));
 
 $template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
 
-$president = getPresident($player->getRaceID());
 
-$PHP_OUTPUT.=create_council_menue($player->getRaceID(), $president);
+$PHP_OUTPUT.=create_council_menue($player->getRaceID());
 
 // determine for what we voted
 $db->query('SELECT * FROM player_votes_relation ' .
 		   'WHERE account_id = '.$player->getAccountID().' AND ' .
 				 'game_id = '.$player->getGameID());
 $voted_for_race = -1;
-if ($db->nextRecord()) {
-
+if ($db->nextRecord())
+{
 	$voted_for_race	= $db->getField('race_id_2');
 	$voted_for		= $db->getField('action');
-
 }
 
 $PHP_OUTPUT.=('<table class="standard" align="center" width="75%">');
@@ -76,8 +74,8 @@ $db->query('SELECT * FROM race_has_voting ' .
 		   'WHERE '.TIME.' < end_time AND ' .
 				 'game_id = '.$player->getGameID().' AND ' .
 				 'race_id_1 = '.$player->getRaceID());
-if ($db->getNumRows() > 0) {
-
+if ($db->getNumRows() > 0)
+{
 	$PHP_OUTPUT.=('<table class="standard" align="center" width="65%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Race</th>');
@@ -89,8 +87,9 @@ if ($db->getNumRows() > 0) {
 
 	$db2 = new SmrMySqlDatabase();
 
-	while ($db->nextRecord()) {
-
+	$president =& Council::getPresident($player->getGameID(),$player->getRaceID());
+	while ($db->nextRecord())
+	{
 		$race_id_2	= $db->getField('race_id_2');
 		$type		= $db->getField('type');
 		$end_time	= $db->getField('end_time');
@@ -125,11 +124,10 @@ if ($db->getNumRows() > 0) {
 			$PHP_OUTPUT.=create_submit_style('No', 'background-color:green;');
 		else
 			$PHP_OUTPUT.=create_submit('No');
-		if ($president !== false && $player->equals($president))
+		if (is_object($president) && $player->equals($president))
 		{
 			$PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=create_submit('Veto');
-
 		}
 		$PHP_OUTPUT.=('</td>');
 
@@ -153,11 +151,9 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.=('<td nowrap="nowrap"align="center">' . date(DATE_FULL_SHORT_SPLIT, $end_time) . '</td>');
 		$PHP_OUTPUT.=('</form>');
 		$PHP_OUTPUT.=('</tr>');
-
 	}
 
 	$PHP_OUTPUT.=('</table>');
-
 }
 
 ?>

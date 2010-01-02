@@ -1,20 +1,19 @@
 <?php
 
-include(get_file_loc('council.inc'));
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('council.inc'));
+require_once(get_file_loc('menue.inc'));
 
+if (!isset($var['race_id']))
+	SmrSession::updateVar('race_id',$player->getRaceID());
 $race_id = $var['race_id'];
-if (empty($race_id))
-	$race_id = $player->getRaceID();
 
 $db->query('SELECT * FROM race ' .
 		   'WHERE race_id = '.$race_id);
 if ($db->nextRecord())
 	$template->assign('PageTopic','Ruling Council Of ' . $db->getField('race_name'));
 
-$president = getPresident($race_id);
 
-$PHP_OUTPUT.=create_council_menue($race_id, $president);
+$PHP_OUTPUT.=create_council_menue($race_id);
 
 // check for relations here
 modifyRelations($race_id);
@@ -23,7 +22,8 @@ checkPacts($race_id);
 
 $PHP_OUTPUT.=('<div align="center" style="font-weight:bold;">President</div>');
 
-if ($president!=null)
+$president =& Council::getPresident($player->getGameID(),$race_id);
+if (is_object($president))
 {
 
 	$PHP_OUTPUT.=('<p><table class="standard" align="center" width="75%">');
