@@ -19,13 +19,17 @@ if(isset($FeatureRequests))
 		{ ?>
 			<tr style="text-align:center;">
 				<td class="shrink nowrap top"><?php
-				if($FeatureModerator || !$FeatureRequest['Anonymous'])
+				if($FeatureRequest['Anonymous'])
 				{
-					echo $FeatureRequest['PosterAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['PosterAccount']->getAccountID(); ?>)</td><?php
+					?>Anonymous<?php
 				}
 				else
 				{
-					?>Anonymous<?php
+					echo $FeatureRequest['PosterAccount']->getHofName();
+				}
+				if($FeatureModerator)
+				{
+					?> - <?php echo $FeatureRequest['PosterAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['PosterAccount']->getAccountID(); ?>)</td><?php
 				} ?>
 				<td style="text-align:left;"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
 				<td class="shrink nowrap top"><?php echo $FeatureRequest['Time']; ?></td>
