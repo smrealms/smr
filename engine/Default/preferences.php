@@ -19,10 +19,10 @@ if(SmrSession::$game_id>0)
 }
 else
 {
-	$db->query('SELECT * FROM account ORDER BY login');
+	$db->query('SELECT * FROM account ORDER BY hof_name');
 	while ($db->nextRecord())
 	{
-		$transferAccounts[$db->getField('account_id')] = $db->getField('login');
+		$transferAccounts[$db->getField('account_id')] = $db->getField('hof_name');
 	}
 }
 $template->assignByRef('TransferAccounts',$transferAccounts);

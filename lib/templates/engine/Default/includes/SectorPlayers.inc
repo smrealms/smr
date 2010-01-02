@@ -25,14 +25,20 @@
 							<td>
 								<?php echo $Player->getLinkedDisplayName() ?>
 							</td>
-							<td><?php if($Ship->hasActiveIllusion())
-							{
-								echo $Ship->getIllusionShipName();
-							}
-							else
-							{
-								echo $Ship->getName();
-							} ?></td>
+							<td><?php
+								if($Player->hasCustomShipName()&&($ThisAccount->isDisplayShipImages()||stripos($Player->getCustomShipName(),'<img')===false))
+								{
+									echo $Player->getCustomShipName();
+								}
+								if($Ship->hasActiveIllusion())
+								{
+									echo $Ship->getIllusionShipName();
+								}
+								else
+								{
+									echo $Ship->getName();
+								} ?>
+							</td>
 							<td class="shrink center nowrap"><?php
 								if($Ship->hasActiveIllusion())
 								{
