@@ -30,7 +30,7 @@ $db->query('SELECT * ' .
 			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
 			'AND implemented = ' . $db->escapeBoolean($onlyImplemented) .
-			(!$showOld&&!$onlyImplemented?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-7*86400) .')':'') .
+			(!$showOld&&!$onlyImplemented?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-14*86400) .')':'') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 if ($db->getNumRows() > 0)
 {
