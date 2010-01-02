@@ -57,21 +57,12 @@
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
-				<td align="right">Ignore Stats:</td>
-				<td>
-					Yes: <input type="radio" name="ignore_stats" id="InputFields" value="Yes" /><br />
-					No: <input type="radio" name="ignore_stats" id="InputFields" value="No" checked="checked" /><br />
-				</td>
-				<td>&nbsp;</td>
-				<td>&nbsp;</td>
-			</tr>
-			<tr>
 				<td align="right">Game Type:</td>
 				<td>
 					<select name="game_type" size="1" id="InputFields">
 						<option selected>Default</option>
 						<option>1.2</option>
-						<option>Semi_Wars</option>
+						<option>Semi Wars</option>
 						<option>Race_Wars</option>
 					</select>
 				</td>
