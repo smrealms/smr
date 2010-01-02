@@ -58,13 +58,9 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 		$PHP_OUTPUT.=('<br />');
-		$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
-				'account_id = '.$curr_player->getAccountID());
-		if ($db2->nextRecord())
+		if ($curr_player->hasCustomShipName())
 		{
-			//they have a name so we echo it
-			$named_ship = stripslashes($db2->getField('ship_name'));
-			$PHP_OUTPUT.=($named_ship);
+			$PHP_OUTPUT.= $curr_player->getCustomShipName();
 		}
 		$PHP_OUTPUT.=('</td>');
 
@@ -172,13 +168,9 @@ if (empty($player_id))
 			$PHP_OUTPUT.=('<td>');
 			$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 			$PHP_OUTPUT.=('<br />');
-			$db2->query('SELECT * FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
-					'account_id = '.$curr_player->getAccountID());
-			if ($db2->nextRecord())
-			{				
-				//they have a name so we echo it
-				$named_ship = stripslashes($db2->getField('ship_name'));
-				$PHP_OUTPUT.=($named_ship);
+			if ($curr_player->hasCustomShipName())
+			{
+				$PHP_OUTPUT.= $curr_player->getCustomShipName();
 			}
 			$PHP_OUTPUT.=('</td>');
 	
