@@ -15,7 +15,7 @@ class Globals
 	protected static $USER_RANKINGS = null;
 	protected static $db = null;
 	
-	public function __construct() //required public for smarty
+	private function __construct()
 	{
 	}
 	

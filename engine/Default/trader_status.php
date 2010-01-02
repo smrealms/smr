@@ -1,7 +1,7 @@
 <?php
 $template->assign('PageTopic','Trader Status');
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_trader_menue();
 
 $container=array();
@@ -55,12 +55,11 @@ $container['body'] = 'council_list.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Politics</span>');
 $PHP_OUTPUT.= '<br />';
 
-include(get_file_loc('council.inc'));
+require_once(get_file_loc('council.inc'));
 
-if(onCouncil($player->getRaceID()))
+if($player->isOnCouncil())
 {
-	$president = getPresident($player->getRaceID());
-	if($president && $president->getAccountID() == $player->getAccountID())
+	if($player->isPresident())
 	{
 		$PHP_OUTPUT.= 'You are the <span class="red">President</span> of the ruling council.';
 	}
