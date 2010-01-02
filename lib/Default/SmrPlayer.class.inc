@@ -57,7 +57,9 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $plottedCourse;
 	protected $nameChanged;
 	protected $combatDronesKamikazeOnMines;
-	
+
+	protected $customShipName;
+
 	protected $SQL;
 	
 //	public static function getPlayers($gameAccountIDArray,$forceUpdate = false)
@@ -847,6 +849,24 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
+	public function hasCustomShipName()
+	{
+		return $this->getCustomShipName()!==false;
+	}
+	
+	public function getCustomShipName()
+	{
+		if(!isset($this->customShipName))
+		{
+			$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND account_id = '.$this->getAccountID().' LIMIT 1');
+			if ($this->db->nextRecord())
+				$this->customShipName = $this->db->getField('ship_name');
+			else
+				$this->customShipName = false;
+		}
+		return $this->customShipName;
+	}
+	
 //	protected function getGoodsInfo()
 //	{
 //		
@@ -1340,25 +1360,17 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return = array();
 		$msg = $this->getDisplayName();
 	
-//		if(isset($ship_names[$killed_id])) {
-//			$msg .= ' flying ';
-//			if(!stristr($ship_names[$killed_id],'<img')){
-//				if(stristr($ship_names[$killed_id],'<mar')) $msg .= '<span class="yellow">' . strip_tags($ship_names[$killed_id]) . '</span>';
-//				else {
-//					$msg .= $ship_names[$killed_id];
-//				}
-//			} else $msg .= strip_tags($ship_names[$killed_id], '<img>');
-//		}
+		if ($this->hasCustomShipName())
+		{
+			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
+			$msg .= ' flying <font color="yellow">'.$named_ship.'</font>';
+		}
 		$msg .= ' was destroyed by ' . $killer->getDisplayName();
-//		if(isset($ship_names[$killer_id])) {
-//			$msg .= ' flying ';
-//			if(!stristr($ship_names[$killer_id],'<img')){
-//				if(stristr($ship_names[$killer_id],'<mar')) $msg .= '<span class="yellow">' . strip_tags($ship_names[$killer_id]) . '</span>';
-//				else {
-//					$msg .= $ship_names[$killer_id];
-//				}
-//			} else $msg .= strip_tags($ship_names[$killer_id], '<img>');
-//		}
+		if ($killer->hasCustomShipName())
+		{
+			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
+			$msg .= ' flying <font color="yellow">'.$named_ship.'</font>';
+		}
 		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
 		$this->getSector()->increaseBattles(1);
 		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg,true) . ',\'regular\','.$killer->getAccountID().','.$killer->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
@@ -1508,14 +1520,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
 
 		$news_message = $this->getDisplayName();
-		$db2 = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().
-					' AND account_id = '.$this->getAccountID().
-					' AND ship_name NOT LIKE \'<img>\'');
-		if ($this->db->nextRecord())
+		if ($this->hasCustomShipName())
 		{
-			//they have a name so we echo it
-			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
+			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
 		}
 		$news_message .= ' was destroyed by forces in sector&nbsp#'.$forces->getSectorID();
@@ -1546,14 +1553,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::sendMessageFromPort($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$port->getDisplayName().'\'s defenses.');
 		
 		$news_message = $this->getDisplayName();
-		$db2 = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().
-					' AND account_id = '.$this->getAccountID().
-					' AND ship_name NOT LIKE \'<img>\'');
-		if ($this->db->nextRecord())
+		if ($this->hasCustomShipName())
 		{
-			//they have a name so we echo it
-			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
+			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
 		}
 		$news_message .= ' was destroyed while invading '.$port->getDisplayName().'.';
@@ -1578,14 +1580,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		$planetOwner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by '.$planet->getDisplayName().'\'s defenses.',false);
 		
 		$news_message = $this->getDisplayName();
-		$db2 = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().
-					' AND account_id = '.$this->getAccountID().
-					' AND ship_name NOT LIKE \'<img>\'');
-		if ($this->db->nextRecord())
+		if ($this->hasCustomShipName())
 		{
-			//they have a name so we echo it
-			$named_ship = strip_tags($this->db->getField('ship_name'), '<font><span>');
+			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
 		}
 		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector&nbsp#'.$planet->getSectorID().'.';

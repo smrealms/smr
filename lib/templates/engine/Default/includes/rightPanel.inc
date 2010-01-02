@@ -99,9 +99,9 @@ if(isset($GameID))
 	<br />
 	<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php /*<a href="<?php echo $ThisShip->getUpgradeShipHREF() ?>">*/ ?><span class="yellow bold"><?php echo $ThisShip->getName() ?></span><?php /*</a>*/ ?></span></a><br />
 	<?php
-	if(!empty($PlayerShipCustomName))
+	if($ThisPlayer->hasCustomShipName())
 	{
-		echo $PlayerShipCustomName.'<br />';
+		echo $ThisPlayer->getCustomShipName(); ?><br /><?php
 	} ?>
 	Rating : <span id="offense"><?php echo number_format($ThisShip->getAttackRating()) ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()) ?></span><br />
 	Shields : <span id="shields"><?php echo $ThisShip->getShields() ?>/<?php echo $ThisShip->getMaxShields() ?></span><br />

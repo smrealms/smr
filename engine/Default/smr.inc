@@ -747,13 +747,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		global $HIDDEN_PLAYERS;
 		if (is_array($HIDDEN_PLAYERS)&&in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $template->assign('PlayerInvisible',true);
 	
-		$db->query('SELECT ship_name FROM ship_has_name WHERE game_id = '.$player->getGameID().' AND ' .
-					'account_id = '.$player->getAccountID().' LIMIT 1');
-		if ($db->nextRecord()) {
-			//they have a name so we echo it
-			$template->assign('PlayerShipCustomName',stripslashes($db->getField('ship_name')));
-		}
-	
 		// ******* Hardware *******
 		$container = array();
 		$container['url'] = 'skeleton.php';
