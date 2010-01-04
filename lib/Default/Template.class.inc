@@ -174,7 +174,17 @@ class Template
 		// remove all leading spaces, tabs and carriage returns NOT
 		// preceeded by a php close tag.
 		$html = preg_replace('/[\s]+/', ' ', $html);
+		
+		// Pull out the span> <span blocks
+		preg_match_all("!</span> <span>!is", $html, $match);
+		$_span_blocks = $match[0];
+		$html = preg_replace("!</span> <span>!is",
+			'@@@SMARTY:TRIM:SPAN@@@', $html);
+		
 		$html = trim(preg_replace('/> </', '><', $html));
+		
+		// replace span blocks
+		$this->replaceTrimHolder("@@@SMARTY:TRIM:SPAN@@@",$_span_blocks, $html);
 		
 		// replace textarea blocks
 		$this->replaceTrimHolder("@@@SMARTY:TRIM:TEXTAREA@@@",$_textarea_blocks, $html);
