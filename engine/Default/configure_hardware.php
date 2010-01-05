@@ -2,29 +2,28 @@
 
 $template->assign('PageTopic','Configure Hardware');
 
-$PHP_OUTPUT.= '<small>';
-
 if (!$ship->hasCloak() && !$ship->hasIllusion())
 {
 	$PHP_OUTPUT.= 'You have no configurable hardware!';
 	return;
-
 }
+
+$PHP_OUTPUT.= '<small>';
 
 if ($ship->hasCloak()) 
 {
 
-	$container = array();
-	$container['url'] = 'configure_hardware_processing.php';
-	$container['body'] = '';
+	$container = create_container('configure_hardware_processing.php');
 
 	$PHP_OUTPUT.= '<b>Cloaking Device:</b>&nbsp;&nbsp;&nbsp;&nbsp;';
 
-	if (!$ship->isCloaked()) {
+	if (!$ship->isCloaked())
+	{
 		$container['action'] = 'Enable';
 		$PHP_OUTPUT.= create_button($container,'Enable');
 	}
-	else {
+	else
+	{
 		$container['action'] = 'Disable';
 		$PHP_OUTPUT.= create_button($container,'Disable');
 	}
@@ -35,7 +34,6 @@ $PHP_OUTPUT.= '</small>';
 
 if ($ship->hasIllusion())
 {
-
 	if ($ship->hasActiveIllusion())
 		$default_id = $ship->getIllusionShipID();
 	else
@@ -60,7 +58,6 @@ if ($ship->hasIllusion())
 	}
 
 	$PHP_OUTPUT.= '</select></td></tr>';
-
 
 	$attack = 0;
 	$defense = 0;
