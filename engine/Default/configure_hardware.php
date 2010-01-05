@@ -18,8 +18,6 @@ if ($ship->hasCloak())
 	$container['url'] = 'configure_hardware_processing.php';
 	$container['body'] = '';
 
-	$PHP_OUTPUT.=create_echo_form(create_container('configure_hardware_processing.php', ''));
-
 	$PHP_OUTPUT.= '<b>Cloaking Device:</b>&nbsp;&nbsp;&nbsp;&nbsp;';
 
 	if (!$ship->isCloaked()) {
@@ -38,7 +36,7 @@ $PHP_OUTPUT.= '</small>';
 if ($ship->hasIllusion())
 {
 
-	if ($ship->hasIllusion())
+	if ($ship->hasActiveIllusion())
 		$default_id = $ship->getIllusionShipID();
 	else
 		$default_id = $ship->getShipTypeID();
@@ -53,24 +51,24 @@ if ($ship->hasIllusion())
 	$PHP_OUTPUT.= '<tr><td>Ship:</td><td><select name="ship_id" size="1" id="InputFields">';
 
 	$db->query('SELECT ship_type_id,ship_name FROM ship_type ORDER BY ship_name');
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$ship_type_id	= $db->getField('ship_type_id');
-		$ship_name		= $db->getField('ship_name');
-		$PHP_OUTPUT.= '<option value="' . $db->getField('ship_type_id') . '"';
+		$PHP_OUTPUT.= '<option value="' . $ship_type_id . '"';
 		if ($ship_type_id == $default_id) $PHP_OUTPUT.= ' selected';
-		$PHP_OUTPUT.= '>' . $ship_name . '</option>';
+		$PHP_OUTPUT.= '>' . $db->getField('ship_name') . '</option>';
 	}
 
 	$PHP_OUTPUT.= '</select></td></tr>';
 
 
+	$attack = 0;
+	$defense = 0;
+	if ($ship->hasActiveIllusion())
+	{
 	$attack = $ship->getIllusionAttack();
-	if (empty($attack))
-		$attack = 0;
 	$defense = $ship->getIllusionDefense();
-	if (empty($defense))
-		$defense = 0;
+	}
 
 	$PHP_OUTPUT.= '<tr><td>Attack/Defense</td>';
 	$PHP_OUTPUT.= '<td><input type="text" id="InputFields" name="attack" value="';
