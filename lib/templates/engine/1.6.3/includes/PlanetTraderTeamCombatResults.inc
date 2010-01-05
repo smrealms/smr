@@ -59,12 +59,12 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 						if($ActualDamage['Shield'] > 0)
 						{
 							?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
-							$this->doDamageTypeReductionDisplay($damageResults);
+							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['NumCDs'] > 0)
 						{
 							?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-							$this->doDamageTypeReductionDisplay($damageResults);
+							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['Armour'] > 0)
 						{
@@ -133,12 +133,12 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 						if($ActualDamage['Shield'] > 0)
 						{
 							?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
-							$this->doDamageTypeReductionDisplay($damageResults);
+							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['NumCDs'] > 0)
 						{
 							?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
-							$this->doDamageTypeReductionDisplay($damageResults);
+							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['Armour'] > 0)
 						{
