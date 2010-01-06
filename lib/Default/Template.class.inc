@@ -178,7 +178,7 @@ class Template
 		// Pull out the span> <span blocks
 		preg_match_all("!</span> <span>!is", $html, $match);
 		$_span_blocks = $match[0];
-		$html = preg_replace("!</span> <span>!is",
+		$html = preg_replace("!</span> <span!is",
 			'@@@SMARTY:TRIM:SPAN@@@', $html);
 		
 		$html = trim(preg_replace('/> </', '><', $html));
