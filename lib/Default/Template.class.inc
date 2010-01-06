@@ -206,7 +206,7 @@ class Template
 	            break;
 	}
 	
-	protected function doDamageTypeReductionDisplay($damageTypes)
+	protected function doDamageTypeReductionDisplay(&$damageTypes)
 	{
 		if($damageTypes == 3)
 		{
