@@ -268,6 +268,7 @@ if(isset($GameID))
 			<td>Change CSS Link</td>
 			<td>
 				<input type="text" size="50" name="csslink" value="<?php echo $ThisAccount->getCssLink(); ?>"><br />
+        For a (somewhat) commented css file to work from look at: <a href="<?php echo URL; ?>/originalCSS/default.css"><?php echo URL; ?>/originalCSS/default.css</a><br />
 				You should only change this if you know what you're doing.<br />
 				If trying to link to a local file you may have to change your browser's security settings.
 			</td>
@@ -278,7 +279,7 @@ if(isset($GameID))
 			<td>
 				Yes: <input type="radio" name="defaultcss" id="InputFields" value="Yes"<?php if($ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
 				No: <input type="radio" name="defaultcss" id="InputFields" value="No"<?php if(!$ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
-				This specifies whether the default stylesheet (<a href="<?php echo DEFAULT_CSS; ?>"><?php echo DEFAULT_CSS; ?></a>) should be loaded.<br />
+				This specifies whether the default stylesheet (Currently: <a href="<?php echo DEFAULT_CSS; ?>"><?php echo DEFAULT_CSS; ?></a>) should be loaded.<br />
 			</td>
 		</tr>
 
