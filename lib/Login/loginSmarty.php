@@ -12,9 +12,9 @@ if(count($loginNews)>0)
 	$template->assign('LoginNews',$loginNews);
 
 
-$db->query('SELECT count(*) AS num_on_cpl FROM player WHERE last_cpl_action > '.(TIME - 3600));
+$db->query('SELECT count(*) AS active_sessions FROM active_session WHERE last_accessed > '.(TIME - SmrSession::TIME_BEFORE_EXPIRY));
 $db->nextRecord();
-$template->assign('NumberOnCPL',$db->getField('num_on_cpl'));
+$template->assign('ActiveSessions',$db->getField('active_sessions'));
 
 $gameNews = array();
 $db->query('SELECT * FROM news ORDER BY time DESC LIMIT 4');

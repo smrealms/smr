@@ -195,7 +195,7 @@ if(isset($Message))
 			</td></tr>
 			
 			<tr><td align="center" colspan="2">
-			Players Online Now: <?php echo $NumberOnCPL; ?><br /><br /><?php
+			Players Online Now: <?php echo $ActiveSessions; ?><br /><br /><?php
 			if(isset($GameNews))
 			{ ?>
 				Recent News<br />
