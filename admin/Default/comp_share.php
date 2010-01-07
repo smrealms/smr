@@ -66,11 +66,11 @@ while ($db->nextRecord())
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.=('<td align=center>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td align=center>');
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
-			if ($db2->nextRecord()) $db2->getField('reason');
+			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td align=center>');
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
-			if ($db2->nextRecord()) $db2->getField('suspicion');
+			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('suspicion');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td align=center><input type=checkbox name=close['.$currLinkAccId.'] value='.$associatedAccs.'>');
 			$PHP_OUTPUT.=('</td></tr>');
