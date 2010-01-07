@@ -176,7 +176,7 @@ class Template
 		$html = preg_replace('/[\s]+/', ' ', $html);
 		
 		// Pull out the span> <span blocks
-		preg_match_all("!</span> <span>!is", $html, $match);
+		preg_match_all("!</span> <span!is", $html, $match);
 		$_span_blocks = $match[0];
 		$html = preg_replace("!</span> <span!is",
 			'@@@SMARTY:TRIM:SPAN@@@', $html);
