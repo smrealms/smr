@@ -229,7 +229,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 		$cont = 'yes';
 		$expireTime = $db->getField('expires');
 	}
-	if ($expireTime > 0) $PHP_OUTPUT.=('<p>The account is set to reopen at ' . date(DATE_FULL_SHORT, $time) . '.</p>');
+	if ($expireTime > 0) $PHP_OUTPUT.=('<p>The account is set to reopen at ' . date(DATE_FULL_SHORT, $expireTime) . '.</p>');
 	elseif (isset($cont)) $PHP_OUTPUT.=('<p>The account is closed indefinitely (oooo a big word).</p>');
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('</tr>');
