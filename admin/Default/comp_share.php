@@ -47,7 +47,7 @@ while ($db->nextRecord())
 		}
 		else continue;
 		$PHP_OUTPUT.= create_table();
-		$PHP_OUTPUT.=('<tr><th align=center>Accounts</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
+		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
 		
 		$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currTabAccId);
 		if ($db2->nextRecord())
@@ -57,21 +57,22 @@ while ($db->nextRecord())
 		foreach ($accountIDs as $currLinkAccId)
     {
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
-			$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currLinkAccId);
+			$db2->query('SELECT account_id, login, email FROM account WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord())
 				$currLinkAccLogin = $db2->getField('login');
 			else $currLinkAccLogin = '[Account no longer Exists]';
-			$PHP_OUTPUT.=('<tr>');
+			$PHP_OUTPUT.=('<tr align="center">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
-			$PHP_OUTPUT.=('<td align=center>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td align=center>');
+			$PHP_OUTPUT.=('<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td>');
+			$PHP_OUTPUT.=('<td>'.$db2->getField('email').'</td><td>');
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
-			$PHP_OUTPUT.=('</td><td align=center>');
+			$PHP_OUTPUT.=('</td><td>');
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('suspicion');
 			else $PHP_OUTPUT.=('&nbsp;');
-			$PHP_OUTPUT.=('</td><td align=center><input type=checkbox name=close['.$currLinkAccId.'] value='.$associatedAccs.'>');
+			$PHP_OUTPUT.=('</td><td><input type="checkbox" name="close['.$currLinkAccId.']" value="'.$associatedAccs.'">');
 			$PHP_OUTPUT.=('</td></tr>');
 			$echoMainAcc = FALSE;
 			$used[$currLinkAccId] = TRUE;
