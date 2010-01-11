@@ -49,7 +49,7 @@ while ($db->nextRecord())
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
 		
-		$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currTabAccId);
+		$db2->query('SELECT account_id, login, email FROM account WHERE account_id = '.$currTabAccId);
 		if ($db2->nextRecord())
 			$currTabAccLogin = $db2->getField('login');
 		else
