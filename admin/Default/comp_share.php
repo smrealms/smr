@@ -37,7 +37,6 @@ while ($db->nextRecord())
 			{
 				if ($db2->getField('reason_id') != 5) $PHP_OUTPUT.=('Closed: ' . $db2->getField('suspicion') . '.<br />');
 				else continue;
-				
 			}
 		}
 		else continue;
