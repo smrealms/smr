@@ -10,8 +10,8 @@ $db->query('SELECT count(password) as pwd_count, password FROM account ' .
 		   'GROUP BY password ' .
 		   'HAVING pwd_count > 1 ' .
 		   'ORDER BY pwd_count DESC');
-if ($db->getNumRows() > 0) {
-
+if ($db->getNumRows() > 0)
+{
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'password_check.php'));
 	$PHP_OUTPUT.=create_submit('Select All');
 	$PHP_OUTPUT.=('</form>');
@@ -19,21 +19,25 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=create_echo_form(create_container('password_check_processing.php', ''));
 	$PHP_OUTPUT.=('<table>');
 	$PHP_OUTPUT.=('<tr>');
+	$PHP_OUTPUT.=('<th>ID</th>');
 	$PHP_OUTPUT.=('<th>Login</th>');
 	$PHP_OUTPUT.=('<th>eMail</th>');
+	$PHP_OUTPUT.=('<th>Validated</th>');
 	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+  {
 		$db2->query('SELECT * FROM account WHERE password = ' . $db->escape_string($db->getField('password')));
-		while ($db2->nextRecord()) {
-
+		while ($db2->nextRecord())
+    {
 			$curr_account_id = $db2->getField('account_id');
 
 			$PHP_OUTPUT.=('<tr>');
+			$PHP_OUTPUT.=('<td>' . $db2->getField('account_id') . '</td>');
 			$PHP_OUTPUT.=('<td>' . $db2->getField('login') . '</td>');
 			$PHP_OUTPUT.=('<td>' . $db2->getField('email') . '</td>');
+			$PHP_OUTPUT.=('<td>' . $db2->getField('validated') . '</td>');
 			$PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="disable_account[]" value="'.$curr_account_id.'"');
 
 			// check if this guy is maybe already disabled
@@ -47,13 +51,10 @@ if ($db->getNumRows() > 0) {
 
 			$PHP_OUTPUT.=('></td>');
 			$PHP_OUTPUT.=('</tr>');
-
 		}
-
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td colspan="3">&nbsp;</td>');
 		$PHP_OUTPUT.=('</tr>');
-
 	}
 
 	$PHP_OUTPUT.=('<tr>');
@@ -64,8 +65,8 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=('</form>');
-
-} else
+}
+else
 	$PHP_OUTPUT.=('No double passwords!');
 
 ?>
