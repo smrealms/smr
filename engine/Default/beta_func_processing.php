@@ -25,7 +25,7 @@ elseif ($var['func'] == 'PageNewb')
 	$page =& SmrPlayer::getPlayer(ACCOUNT_PAGE,$player->getGameID());
 	$page->setNewbieTurns(0);
 }
-elseif ($var['func'] == 'Ship' && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68)
+elseif ($var['func'] == 'Ship')// && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68)
 {
 	$ship_id = $_REQUEST['ship_id'];
 	

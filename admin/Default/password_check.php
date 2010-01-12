@@ -7,9 +7,9 @@ $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
 
 $db->query('SELECT count(password) as pwd_count, password FROM account ' .
-		   'GROUP BY password ' .
-		   'HAVING pwd_count > 1 ' .
-		   'ORDER BY pwd_count DESC');
+			'GROUP BY password ' .
+			'HAVING pwd_count > 1 ' .
+			'ORDER BY pwd_count DESC');
 if ($db->getNumRows() > 0)
 {
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'password_check.php'));
@@ -27,10 +27,10 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=('</tr>');
 
 	while ($db->nextRecord())
-  {
+	{
 		$db2->query('SELECT * FROM account WHERE password = ' . $db->escape_string($db->getField('password')));
 		while ($db2->nextRecord())
-    {
+		{
 			$curr_account_id = $db2->getField('account_id');
 
 			$PHP_OUTPUT.=('<tr>');

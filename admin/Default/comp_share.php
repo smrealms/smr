@@ -49,13 +49,13 @@ while ($db->nextRecord())
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
 		
-		$db2->query('SELECT account_id, login, email FROM account WHERE account_id = '.$currTabAccId);
+		$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currTabAccId);
 		if ($db2->nextRecord())
 			$currTabAccLogin = $db2->getField('login');
 		else
 			$currTabAccLogin = '[Account no longer Exists]';
 		foreach ($accountIDs as $currLinkAccId)
-    {
+		{
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
 			$db2->query('SELECT account_id, login, email FROM account WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord())
@@ -64,7 +64,8 @@ while ($db->nextRecord())
 			$PHP_OUTPUT.=('<tr align="center">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.=('<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td>');
-			$PHP_OUTPUT.=('<td>'.$db2->getField('email').'</td><td>');
+			$PHP_OUTPUT.=($db2->getField('email').'</td><td>');
+			var_dump($db2->getField('email'));
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
