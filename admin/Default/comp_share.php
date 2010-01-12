@@ -65,7 +65,6 @@ while ($db->nextRecord())
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.=('<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td>');
 			$PHP_OUTPUT.=($db2->getField('email').'</td><td>');
-			var_dump($db2->getField('email'));
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
