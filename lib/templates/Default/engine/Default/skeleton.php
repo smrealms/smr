@@ -34,7 +34,7 @@
 			<tr>
 				<td class="l0" rowspan="2">
 					<div class="l1">
-						<?php $this->includeTemplate('includes/leftPanel.inc'); ?>
+						<?php $this->includeTemplate('includes/LeftPanel.inc'); ?>
 					</div>
 				</td>
 				<td class="m0" colspan="2">
@@ -52,7 +52,7 @@
 				</td>
 				<td class="r0">
 					<div id="right_panel">
-						<?php $this->includeTemplate('includes/rightPanel.inc'); ?>
+						<?php $this->includeTemplate('includes/RightPanel.inc'); ?>
 					</div>
 				</td>
 			</tr>
