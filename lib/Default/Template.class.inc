@@ -68,17 +68,25 @@ class Template
 	
 	protected function getTemplateLocation($templateName)
 	{
-		if (SmrSession::$game_id > 0)
-		{
-			$stored_dir = Globals::getGameType(SmrSession::$game_id) . '/';
-			$gameDir = $stored_dir;
-		} else $gameDir = 'Default/';
-		if (file_exists(TEMPLATES_DIR . 'engine/' . $gameDir . $templateName)) return TEMPLATES_DIR . 'engine/' . $gameDir . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'engine/' . 'Default/' . $templateName)) return TEMPLATES_DIR . 'engine/' . 'Default/' . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'admin/' . $gameDir . $templateName)) return TEMPLATES_DIR . 'admin/' . $gameDir . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'admin/' . 'Default/' . $templateName)) return TEMPLATES_DIR . 'admin/' . 'Default/' . $templateName;
-		elseif (file_exists(TEMPLATES_DIR .  $templateName)) return TEMPLATES_DIR . $templateName;
-		else return TEMPLATES_DIR.'default.inc';//return $file_name;
+		$templateDir = TEMPLATES_DIR;
+		if (isset($this->data['ThisAccount'])&&is_object($this->data['ThisAccount'])&&$this->data['ThisAccount'] instanceof SmrAccount) $templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
+		else $templateDir .= 'Default/';
+
+		if (SmrSession::$game_id > 0) $gameDir = Globals::getGameType(SmrSession::$game_id) . '/';
+		else $gameDir = 'Default/';
+
+		if (file_exists($templateDir . 'engine/' . $gameDir . $templateName)) return $templateDir . 'engine/' . $gameDir . $templateName;
+		elseif (file_exists($templateDir . 'engine/Default/' . $templateName)) return $templateDir . 'engine/Default/' . $templateName;
+		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName)) return TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName;
+		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/Default/' . $templateName)) return TEMPLATES_DIR . 'Default/engine/Default/' . $templateName;
+		elseif (file_exists($templateDir . 'admin/' . $gameDir . $templateName)) return $templateDir . 'admin/' . $gameDir . $templateName;
+		elseif (file_exists($templateDir . 'admin/Default/' . $templateName)) return $templateDir . 'admin/Default/' . $templateName;
+		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName)) return TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName;
+		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/Default/' . $templateName)) return TEMPLATES_DIR . 'Default/admin/Default/' . $templateName;
+		elseif (file_exists($templateDir .  $templateName)) return $templateDir . $templateName;
+		elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) return TEMPLATES_DIR . 'Default/' . $templateName;
+		elseif (file_exists($templateDir .  'default.inc')) return $templateDir.'default.inc';
+		else return TEMPLATES_DIR.'Default/default.inc';//return $file_name;
 	}
 	
 	protected function includeTemplate($templateName, array $assignVars = null)

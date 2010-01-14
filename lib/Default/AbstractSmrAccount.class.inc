@@ -44,6 +44,7 @@ abstract class AbstractSmrAccount
 	protected $referrerID;
 	protected $dateShort;
 	protected $timeShort;
+	protected $template;
 	
 	protected $hasChanged;
 	
@@ -143,6 +144,9 @@ abstract class AbstractSmrAccount
 			
 			$this->dateShort		= $row['date_short'];
 			$this->timeShort		= $row['time_short'];
+			
+			$this->template			= $row['template'];
+			
 			if(empty($this->hofName))
 				$this->hofName=$this->login;
 		}
@@ -631,6 +635,11 @@ abstract class AbstractSmrAccount
 			return;
 		$this->db->query('UPDATE account SET css_link = ' . $this->db->escapeString($link,true,true) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->cssLink=$link;
+	}
+	
+	public function getTemplate()
+	{
+		return $this->template;
 	}
 	
 	public function getHofName()
