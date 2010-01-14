@@ -117,12 +117,21 @@
 		</table>
 		</div>
 
-			<script type="text/javascript">
-				$(".TopInfor").corner().parent().corner();
-				$(".LeftOne").corner().parent().corner();
-				$(".LeftTwo").corner().parent().corner();
-				$(".RightInfor").corner().parent().corner();
-				$(".MainContentArea").corner().parent().parent().corner();
-			</script>
+		<script type="text/javascript">
+			$(".TopInfor").corner().parent().corner();
+			$(".LeftOne").corner().parent().corner();
+			$(".LeftTwo").corner().parent().corner();
+			$(".RightInfor").corner().parent().corner();
+			$(".MainContentArea").corner().parent().parent().corner();
+		</script>
+		<script type="text/javascript" src="js/ajax.js"></script><?php
+		if(!empty($js))
+		{
+			?><script type="text/javascript" src="<?php echo $js ?>"></script><?php
+		} 
+		if($AJAX_ENABLE_REFRESH)
+		{
+			?><script type="text/javascript">window.onload=function(){startRefresh('<?php echo $AJAX_ENABLE_REFRESH; ?>');}</script><?php
+		} ?>
 	</body>
 </html>
