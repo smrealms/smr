@@ -4,14 +4,12 @@
 
 		<script type="text/javascript" src="http://video.smrealms.de/testSite/Jscript/jquery-1.3.2.min.js"></script>
 		<script type="text/javascript" src="http://video.smrealms.de/testSite/Jscript/jquery.corner.js"></script>
-		<script type="text/javascript" src="http://video.smrealms.de/testSite/Jscript/time.js"></script>
-
 
 		<link href="http://video.smrealms.de/testSite/JQueryCSS.css" rel="stylesheet" type="text/css" />
 
 		<title>SMR Rounded Corners</title>
 	</head>
-	<body onload="startClock();">
+	<body>
 		<div id="Container">
 		<table class="tableHeight">
 			<tr>
@@ -89,7 +87,7 @@
 
 					<div class="MainContentBorder">
 					<div class="ContentWraper">
-						<div class="MainContentArea"><?php
+						<div id="middle_panel" class="MainContentArea"><?php
 							if(isset($PageTopic))
 							{
 								?><h1><?php echo $PageTopic; ?></h1><br /><?php
