@@ -22,7 +22,6 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=('<th>ID</th>');
 	$PHP_OUTPUT.=('<th>Login</th>');
 	$PHP_OUTPUT.=('<th>eMail</th>');
-	$PHP_OUTPUT.=('<th>Validated</th>');
 	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
@@ -36,8 +35,7 @@ if ($db->getNumRows() > 0)
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td>' . $db2->getField('account_id') . '</td>');
 			$PHP_OUTPUT.=('<td>' . $db2->getField('login') . '</td>');
-			$PHP_OUTPUT.=('<td>' . $db2->getField('email') . '</td>');
-			$PHP_OUTPUT.=('<td>' . $db2->getField('validated') . '</td>');
+			$PHP_OUTPUT.=('<td'.($db2->getBoolean('validated')?'':'style="text-decoration:line-through;"').'>' . $db2->getField('email') . ' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td>');
 			$PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="disable_account[]" value="'.$curr_account_id.'"');
 
 			// check if this guy is maybe already disabled
