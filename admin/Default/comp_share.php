@@ -57,14 +57,14 @@ while ($db->nextRecord())
 		foreach ($accountIDs as $currLinkAccId)
 		{
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
-			$db2->query('SELECT account_id, login, email FROM account WHERE account_id = '.$currLinkAccId);
+			$db2->query('SELECT account_id, login, email, validated FROM account WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord())
 				$currLinkAccLogin = $db2->getField('login');
 			else $currLinkAccLogin = '[Account no longer Exists]';
 			$PHP_OUTPUT.=('<tr align="center">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
-			$PHP_OUTPUT.=('<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td><td>');
-			$PHP_OUTPUT.=($db2->getField('email').'</td><td>');
+			$PHP_OUTPUT.=('<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td>';
+			$PHP_OUTPUT.='<td'.($db2->getBoolean('validated')?'':'style="text-decoration:line-through;"').'').$db2->getField('email').' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td><td>';
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
