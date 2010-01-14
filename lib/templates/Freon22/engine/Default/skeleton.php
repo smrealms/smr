@@ -18,8 +18,7 @@
 				<td class="topleftCell">
 					<b><span style="font-size: 72px;">smr</span></b>
 					<br />
-
-					<span id="lblTime" style="font-size: 14px;"></span>
+					<span id="tod"><?php echo $timeDisplay; ?></span>
 				</td>
 				<td class="topcenterCell">
 					<div class="TopInforBorder">
