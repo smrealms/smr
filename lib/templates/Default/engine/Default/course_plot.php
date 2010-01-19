@@ -35,7 +35,7 @@ if ($ThisShip->hasJump())
 <br />
 <h2>Plot To Nearest</h2><br />
 <form class="standard" id="SelectXTypeForm" method="POST" action="">
-	<select name="xtype"><?php
+	<select name="xtype" onchange="this.form.submit()"><?php
 	foreach($AllXTypes as $EachXType)
 	{
 		?><option value="<?php echo $EachXType; ?>"<?php if(isset($XType)&&$EachXType==$XType){ ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
@@ -47,7 +47,7 @@ if(isset($XType))
 { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
 		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br /><br />
-		<select name="X"><?php
+		<select name="X" onchange="this.form.submit()"><?php
 			switch($XType)
 			{
 				case 'Technology':
