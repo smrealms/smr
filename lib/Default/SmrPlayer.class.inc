@@ -746,17 +746,17 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		if(!isset($this->stats))
 		{
-			//initialize stats
-			global $STATS;
-			foreach ($STATS as $stat_name => $statArray)
-				$temp_stats[$statArray['ID']] = 0;
-			$this->db->query('SELECT stat_type_id, amount FROM player_has_special WHERE ' . $this->SQL . ' LIMIT ' . sizeof($STATS));
-			while ($this->db->nextRecord())
-				$temp_stats[$this->db->getField('stat_type_id')] = $this->db->getField('amount');
+//			//initialize stats
+//			global $STATS;
+//			foreach ($STATS as $stat_name => $statArray)
+//				$temp_stats[$statArray['ID']] = 0;
+//			$this->db->query('SELECT stat_type_id, amount FROM player_has_special WHERE ' . $this->SQL . ' LIMIT ' . sizeof($STATS));
+//			while ($this->db->nextRecord())
+//				$temp_stats[$this->db->getField('stat_type_id')] = $this->db->getField('amount');
 			//put stats in a more user friendly form
 			$this->stats = array();
-			foreach ($STATS as $stat_name => $statArray)
-				$this->stats[$stat_name] = $temp_stats[$statArray['ID']];
+//			foreach ($STATS as $stat_name => $statArray)
+//				$this->stats[$stat_name] = $temp_stats[$statArray['ID']];
 		}
 	}
 	
