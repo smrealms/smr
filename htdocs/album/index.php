@@ -1,96 +1,102 @@
-<?
-
-require_once('../config.inc');
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-require_once(LIB . 'Default/Globals.class.inc');
-require_once(ENGINE . 'Default/smr.inc');
-require_once(get_file_loc('SmrSession.class.inc'));
-
-require_once(LIB . 'Album/album_functions.php');
-
-// database object
-$db = new SmrMySqlDatabase();
-$db2 = new SmrMySqlDatabase();
-?>
-<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
-<html>
-<head>
-<link rel="stylesheet" type="text/css" href="<?php echo URL;?>/css/classic.css">
-<title>Space Merchant Realms - Photo Album</title>
-<meta http-equiv="pragma" content="no-cache">
-</head>
-<body>
-
-<table width="850" border="0" align="center" cellpadding="0" cellspacing="0" >
-<tr>
-<td align="center" colspan="2"><h1>Space Merchant Realms - Photo Album</h1></td>
-</tr>
-<tr>
-<td>
-<table width="750" border="0" cellspacing="0" cellpadding="0">
-<tr>
-<td>
-
-<table cellspacing="0" cellpadding="0" border="0" width="700">
-<tr>
-<td colspan="3" height="1" bgcolor="#0B8D35"></td>
-</tr>
-<tr>
-<td width="1" bgcolor="#0B8D35"></td>
-<td align="left" valign="top" bgcolor="#06240E">
-<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
-<tr>
-<td valign="top">
 <?php
-if (!empty($_SERVER['QUERY_STRING']))
+try
 {
-	// query string should be a nick or some letters of a nick
-	$query = urldecode($_SERVER['QUERY_STRING']);
-
-	$db->query('SELECT account_id as album_id
-				FROM album JOIN account USING(account_id)
-				WHERE hof_name LIKE '.$db->escapeString($query.'%').' AND
-					  approved = \'YES\'
-				ORDER BY hof_name');
-
-	if ($db->getNumRows() > 1)
+	require_once('../config.inc');
+	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+	require_once(LIB . 'Default/Globals.class.inc');
+	require_once(ENGINE . 'Default/smr.inc');
+	require_once(get_file_loc('SmrSession.class.inc'));
+	
+	require_once(LIB . 'Album/album_functions.php');
+	
+	// database object
+	$db = new SmrMySqlDatabase();
+	$db2 = new SmrMySqlDatabase();
+	?>
+	<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+	<html>
+	<head>
+	<link rel="stylesheet" type="text/css" href="<?php echo URL;?>/css/classic.css">
+	<title>Space Merchant Realms - Photo Album</title>
+	<meta http-equiv="pragma" content="no-cache">
+	</head>
+	<body>
+	
+	<table width="850" border="0" align="center" cellpadding="0" cellspacing="0" >
+	<tr>
+	<td align="center" colspan="2"><h1>Space Merchant Realms - Photo Album</h1></td>
+	</tr>
+	<tr>
+	<td>
+	<table width="750" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+	<td>
+	
+	<table cellspacing="0" cellpadding="0" border="0" width="700">
+	<tr>
+	<td colspan="3" height="1" bgcolor="#0B8D35"></td>
+	</tr>
+	<tr>
+	<td width="1" bgcolor="#0B8D35"></td>
+	<td align="left" valign="top" bgcolor="#06240E">
+	<table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
+	<tr>
+	<td valign="top">
+	<?php
+	if (!empty($_SERVER['QUERY_STRING']))
 	{
-		$db2->query('SELECT account_id as album_id
-				FROM album JOIN account USING(account_id)
-				WHERE hof_name = '.$db->escapeString($query).' AND
-					  approved = \'YES\'
-				ORDER BY hof_name');
-		
-		if ($db2->nextRecord())
-			album_entry($db2->getField('album_id'));
-		else
+		// query string should be a nick or some letters of a nick
+		$query = urldecode($_SERVER['QUERY_STRING']);
+	
+		$db->query('SELECT account_id as album_id
+					FROM album JOIN account USING(account_id)
+					WHERE hof_name LIKE '.$db->escapeString($query.'%').' AND
+						  approved = \'YES\'
+					ORDER BY hof_name');
+	
+		if ($db->getNumRows() > 1)
 		{
-			// get all id's and build array
-			$album_ids = array();
+			$db2->query('SELECT account_id as album_id
+					FROM album JOIN account USING(account_id)
+					WHERE hof_name = '.$db->escapeString($query).' AND
+						  approved = \'YES\'
+					ORDER BY hof_name');
+			
+			if ($db2->nextRecord())
+				album_entry($db2->getField('album_id'));
+			else
+			{
+				// get all id's and build array
+				$album_ids = array();
+		
+				while ($db->nextRecord())
+					$album_ids[] = $db->getField('album_id');
+		
+				// double check if we have id's
+				if (count($album_ids) > 0)
+					search_result($album_ids);
+				else
+					main_page();
+			}
 	
-			while ($db->nextRecord())
-				$album_ids[] = $db->getField('album_id');
-	
-			// double check if we have id's
-			if (count($album_ids) > 0)
-				search_result($album_ids);
+		}
+		elseif ($db->getNumRows() == 1)
+		{
+			if ($db->nextRecord())
+				album_entry($db->getField('album_id'));
 			else
 				main_page();
 		}
-
-	}
-	elseif ($db->getNumRows() == 1)
-	{
-		if ($db->nextRecord())
-			album_entry($db->getField('album_id'));
 		else
 			main_page();
 	}
 	else
 		main_page();
 }
-else
-	main_page();
+catch(Exception $e)
+{
+	handleException($e);
+}
 ?>
 </td>
 </tr>

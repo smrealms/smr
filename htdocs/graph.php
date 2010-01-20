@@ -1,4 +1,4 @@
-<?
+<?php
 
 $val = $_REQUEST['val'];
 if (empty($val) || $val == '') $val = 3;
