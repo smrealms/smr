@@ -1,35 +1,38 @@
-<?
-if (get_magic_quotes_gpc())
-{
-    function stripslashes_array($array)
-    {
-        return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
-    }
-
-    $_COOKIE = stripslashes_array($_COOKIE);
-    $_FILES = stripslashes_array($_FILES);
-    $_GET = stripslashes_array($_GET);
-    $_POST = stripslashes_array($_POST);
-    $_REQUEST = stripslashes_array($_REQUEST);
-}
-
-header('Cache-Control: no-cache, must-revalidate');
-//A date in the past
-header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-
-if(isset($_REQUEST['ajax'])&&$_REQUEST['ajax']==1)
-	$ajax=true;
-else
-	$ajax=false;
-
-define('USING_AJAX',$ajax);
-
-//xdebug_start_profiling();
-
-//ob_start();
-
+<?php
 try
 {
+	require_once('config.inc');
+	
+	
+	if (get_magic_quotes_gpc())
+	{
+	    function stripslashes_array($array)
+	    {
+	        return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
+	    }
+	
+	    $_COOKIE = stripslashes_array($_COOKIE);
+	    $_FILES = stripslashes_array($_FILES);
+	    $_GET = stripslashes_array($_GET);
+	    $_POST = stripslashes_array($_POST);
+	    $_REQUEST = stripslashes_array($_REQUEST);
+	}
+	
+	header('Cache-Control: no-cache, must-revalidate');
+	//A date in the past
+	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
+	
+	if(isset($_REQUEST['ajax'])&&$_REQUEST['ajax']==1)
+		$ajax=true;
+	else
+		$ajax=false;
+	
+	define('USING_AJAX',$ajax);
+	
+	//xdebug_start_profiling();
+	
+	//ob_start();
+
 	$time_start = microtime(true);
 	
 	// ********************************
@@ -45,10 +48,6 @@ try
 	$container=null;
 	$var=null;
 	$lock=false;
-
-	// config file
-	require_once('config.inc');
-	require_once('config.php');
 	
 	// overwrite database class to use our db
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
@@ -141,61 +140,6 @@ try
 }
 catch(Exception $e)
 {
-	global $account,$var,$player;
-	$errorType = 'Error';
-	$message='';
-	$currMySQLError='';
-	if(is_object($account))
-	{
-		$message .= 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
-			'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
-			'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL;
-	}
-	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
-	if($currMySQLError = mysql_error())
-	{
-		$errorType = 'Database Error';
-		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
-	}
-	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
-		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
-		'USING_AJAX: '.var_export(USING_AJAX,true);
-	try
-	{
-		release_lock(); //Try to release lock so they can carry on normally
-	}
-	catch(Exception $ee)
-	{
-		$message .= EOL.EOL.'-----------'.EOL.EOL.
-					'Releasing Lock Failed' .EOL.
-					'Message: ' . $ee->getMessage() .EOL.EOL;
-		if($currMySQLError!=mysql_error())
-		{
-			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
-		}
-		$message .= 'Trace: ' . $ee->getTraceAsString();
-	}
-	try
-	{
-		if(is_object($player))
-			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else if(is_object($account))
-			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else
-			mail('bugs@smrealms.de',
-			 'Automatic Bug Report',
-			 $message,
-			 'From: bugs@smrealms.de');
-	}
-	catch(Exception $e)
-	{
-		mail('bugs@smrealms.de',
-		 'Automatic Bug Report',
-		 $message,
-		 'From: bugs@smrealms.de');
-	}
-	if(!USING_AJAX)
-		header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
-	exit;
+	handleException($e);
 }
 ?>

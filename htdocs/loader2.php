@@ -114,44 +114,7 @@ SmrSession::update();
 }
 catch(Exception $e)
 {
-	global $account,$var,$player;
-	$errorType = 'Error';
-	$message='';
-	$currMySQLError='';
-	if(is_object($account))
-	{
-		$message .= 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
-			'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
-			'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL;
-	}
-	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
-	if($currMySQLError = mysql_error())
-	{
-		$errorType = 'Database Error';
-		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
-	}
-	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
-		'$var: '.var_export($var,true);
-	try
-	{
-		release_lock(); //Try to release lock so they can carry on normally
-	}
-	catch(Exception $ee)
-	{
-		$message .= EOL.EOL.'-----------'.EOL.EOL.
-					'Releasing Lock Failed' .EOL.
-					'Message: ' . $ee->getMessage() .EOL.EOL;
-		if($currMySQLError!=mysql_error())
-		{
-			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
-		}
-		$message .= 'Trace: ' . $ee->getTraceAsString();
-	}
-	mail('bugs@smrealms.de',
-		 'Automatic Bug Report',
-		 $message,
-		 'From: bugs@smrealms.de');
-	header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
+	handleException($e);
 }
 
 // This function is a hack around the old style http forward mechanism
