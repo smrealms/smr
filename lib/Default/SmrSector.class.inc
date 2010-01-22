@@ -764,7 +764,7 @@ class SmrSector
 
 	public function hasEnemyTraders(AbstractSmrPlayer &$player)
 	{
-		if(!$this->hasOtherTraders())
+		if(!$this->hasOtherTraders($player))
 			return false;
 		$otherPlayers =& $this->getOtherTraders($player);
 		foreach($otherPlayers as &$otherPlayer)
@@ -777,7 +777,7 @@ class SmrSector
 
 	public function hasFriendlyTraders(AbstractSmrPlayer &$player)
 	{
-		if(!$this->hasOtherTraders())
+		if(!$this->hasOtherTraders($player))
 			return false;
 		$otherPlayers =& $this->getOtherTraders($player);
 		foreach($otherPlayers as &$otherPlayer)
