@@ -47,7 +47,14 @@
 								<div class="lmtf"><?php
 									if(($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($isLinkedSector && $Sector->hasTraders()))
 									{
-										?><img title="Trader" alt="Trader" src="images/trader.jpg"/><?php
+										if($Sector->hasEnemyPlayers($ThisPlayer))
+										{
+											?><img title="Enemy Trader" alt="Enemy Trader" src="images/enemyTrader.png"/><?php
+										}
+										if($Sector->hasFriendlyPlayers($ThisPlayer))
+										{
+											?><img title="Friendly Trader" alt="Friendly Trader" src="images/friendlyTrader.png"/><?php
+										}
 									}
 									if($Sector->hasForces())
 									{

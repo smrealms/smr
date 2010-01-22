@@ -725,7 +725,7 @@ class SmrSector
 		if(!$this->hasForces())
 			return false;
 		$forces =& $this->getForces();
-		foreach($forces as $force)
+		foreach($forces as &$force)
 		{
 			if(!$player->forceNAPAlliance($force->getOwner()))
 				return true;
@@ -738,7 +738,7 @@ class SmrSector
 		if(!$this->hasForces())
 			return false;
 		$forces =& $this->getForces();
-		foreach($forces as $force)
+		foreach($forces as &$force)
 		{
 			if($player->forceNAPAlliance($force->getOwner()))
 				return true;
@@ -760,6 +760,32 @@ class SmrSector
 	public function hasOtherTraders(AbstractSmrPlayer &$player)
 	{
 		return count($this->getOtherTraders($player)) > 0;
+	}
+
+	public function hasEnemyTraders(AbstractSmrPlayer &$player)
+	{
+		if(!$this->hasOtherTraders())
+			return false;
+		$otherPlayers =& $this->getOtherTraders($player);
+		foreach($otherPlayers as &$otherPlayer)
+		{
+			if(!$player->traderNAPAlliance($otherPlayer))
+				return true;
+		} unset($otherPlayer);
+		return false;
+	}
+
+	public function hasFriendlyTraders(AbstractSmrPlayer &$player)
+	{
+		if(!$this->hasOtherTraders())
+			return false;
+		$otherPlayers =& $this->getOtherTraders($player);
+		foreach($otherPlayers as &$otherPlayer)
+		{
+			if($player->traderNAPAlliance($otherPlayer))
+				return true;
+		} unset($otherPlayer);
+		return false;
 	}
 
 	public function &getTraders()
