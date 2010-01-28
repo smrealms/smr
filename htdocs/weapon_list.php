@@ -30,7 +30,8 @@ try
 	else
 		$seq = 'ASC';
 	
-	if (isset($_REQUEST['order']))
+	$columnNames = array('weapon_name','race_name','cost','shield_damage','armour_damage','accuracy','power_level','buyer_restriction');
+	if (isset($_REQUEST['order'])&&in_array($_REQUEST['order'],$columnNames))
 		$order_by = $_REQUEST['order'];
 	else
 		$order_by = 'weapon_type_id';
