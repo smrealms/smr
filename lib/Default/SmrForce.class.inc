@@ -94,11 +94,11 @@ class SmrForce
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 			if($galaxyToTidy->getMaxForceTime()<self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY)
 			{
-				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+$galaxyToTidy->getMaxForceTime()).' WHERE sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+$galaxyToTidy->getMaxForceTime().' AND (combat_drones > 0 OR mines > 0)'));
-				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY).' WHERE sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY.' AND combat_drones = 0 AND mines = 0'));
+				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+$galaxyToTidy->getMaxForceTime()).' WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+$galaxyToTidy->getMaxForceTime().' AND (combat_drones > 0 OR mines > 0)'));
+				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY).' WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY.' AND combat_drones = 0 AND mines = 0'));
 			}
 			else
-				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+$galaxyToTidy->getMaxForceTime()).' WHERE sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+$galaxyToTidy->getMaxForceTime()));
+				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+$galaxyToTidy->getMaxForceTime()).' WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+$galaxyToTidy->getMaxForceTime()));
 		}
 	}
 	
