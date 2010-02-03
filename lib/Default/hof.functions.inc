@@ -15,10 +15,10 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 	}
 	else
 	{
-		$db->query('SELECT type FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).' LIMIT 1');
+		$db->query('SELECT type FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).' LIMIT 1');
 		if(!$db->nextRecord())
 			return $rank;
-		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
+		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
 	}
 	if($db->nextRecord())
 		if($db->getField('amount')!=null)
@@ -31,7 +31,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		$db->query($query);
 	}
 	else
-		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).$gameIDSql.' GROUP BY account_id HAVING SUM(amount)>'.$rank['Amount'].') x');
+		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id HAVING SUM(amount)>'.$rank['Amount'].') x');
 	if($db->nextRecord())
 		$rank['Rank'] = $db->getField('rank') + 1;
 	return $rank;

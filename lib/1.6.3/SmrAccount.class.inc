@@ -81,7 +81,7 @@ class SmrAccount
 		$case = 'FLOOR(SUM(CASE type ';
 		foreach(self::$USER_RANKINGS_SCORE as $userRankingScore)
 		{
-			$userRankingType = $db->escapeArray($userRankingScore[0],false,':',false);
+			$userRankingType = $db->escapeArray($userRankingScore[0],false,false,':',false);
 			$userRankingTypes[] = $userRankingType;
 			$case.= ' WHEN '.$db->escapeString($userRankingType).' THEN POW(amount*'.$userRankingScore[1].','.SmrAccount::USER_RANKINGS_EACH_STAT_POW.')*'.$userRankingScore[2];
 		}

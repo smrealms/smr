@@ -108,7 +108,7 @@ else
 		$db->query($query);
 	}
 	else
-		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
 	while($db->nextRecord())
 	{
 		if($db->getField('account_id') == $account->account_id)

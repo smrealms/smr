@@ -1710,16 +1710,16 @@ class SmrPlayer extends AbstractSmrPlayer
 				if($hofChanged==self::HOF_NEW)
 				{
 					if($amount > 0)
-						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeArray($tempTypeList,true,':',false) . ',' . $amount.')');
+						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeArray($tempTypeList,false,true,':',false) . ',' . $amount.')');
 				}
 				else if($hofChanged==self::HOF_CHANGED)
 				{
 	//				if($amount > 0)
 						$this->db->query('UPDATE player_hof 
 							SET amount=' . $amount . '
-							WHERE account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = '.$this->db->escapeArray($tempTypeList,true,':',false).' LIMIT 1');
+							WHERE account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = '.$this->db->escapeArray($tempTypeList,false,true,':',false).' LIMIT 1');
 	//				else
-	//					$this->db->query('DELETE FROM player_hof WHERE account_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = ' . $this->db->escapeArray($tempTypeList,true,':',false) . ' LIMIT 1');
+	//					$this->db->query('DELETE FROM player_hof WHERE account_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = ' . $this->db->escapeArray($tempTypeList,false,true,':',false) . ' LIMIT 1');
 	//				}
 				}
 				$hofChanged = false;
