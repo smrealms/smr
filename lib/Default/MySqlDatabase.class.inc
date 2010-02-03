@@ -121,10 +121,7 @@ abstract class MySqlDatabase implements Database
 		}
 		if(is_array($escape))
 		{
-			if($autoQuotes)
-				return $this->escapeArray($escape);
-			else
-				return $this->escapeArray($escape,$quotes);
+			return $this->escapeArray($escape,$autoQuotes,$quotes);
 		}
 		if(is_object($escape))
 		{
@@ -162,7 +159,7 @@ abstract class MySqlDatabase implements Database
 		return '0x'.bin2hex($binary);
 	}
 	
-	public function escapeArray(array $array,$quotes=true,$implodeString=',',$escapeIndividually=true)
+	public function escapeArray(array $array,$autoQuotes=true,$quotes=true,$implodeString=',',$escapeIndividually=true)
 	{
 		$string = '';
 		if($escapeIndividually)
@@ -170,21 +167,15 @@ abstract class MySqlDatabase implements Database
 			foreach($array as $value)
 			{
 				if(is_array($value))
-					$string .= $this->escapeArray($value,$quotes,$implodeString,$escapeIndividually).$implodeString;
+					$string .= $this->escapeArray($value,$autoQuotes,$quotes,$implodeString,$escapeIndividually).$implodeString;
 				else
-					$string .= $this->escape($value, $quotes).$implodeString;
+					$string .= $this->escape($value, $autoQuotes, $quotes).$implodeString;
 			}
 			$string = substr($string,0,-1);
 		}
 		else
 		{
-			$string = implode($implodeString,$array);
-		}
-		if(!$escapeIndividually)
-		{
-			$string = mysql_real_escape_string($string);
-			if($quotes)
-				$string = '\'' . $string . '\'';
+			$string = $this->escape(implode($implodeString,$array), $autoQuotes, $quotes);
 		}
 		return $string;
 	}
