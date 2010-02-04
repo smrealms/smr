@@ -11,7 +11,7 @@ if(isset($GameID))
 	}
 	if(isset($MessagePersonalLink))
 	{ ?>
-		<a href="<?php echo $MessagePersonalLink; ?>"><img src="images/personal_msg.gif" alt="Personal Messages" /></a>
+		<a href="<?php echo $MessagePersonalLink; ?>"><img src="images/personal_msg.png" alt="Personal Messages" /></a>
 		<span class="small"><?php echo $MessagePersonalNum; ?></span><?php
 	}
 	if(isset($MessageScoutLink))
@@ -186,7 +186,8 @@ if(isset($GameID))
 			<noscript></a></noscript>
 		</div><?php
 	} ?>
-	Open : <?php echo $ThisShip->getOpenWeaponSlots(); ?><br />Total Damage: (<?php echo $ThisShip->getTotalShieldDamage(); ?>/<?php echo $ThisShip->getTotalArmourDamage(); ?>)<br />
+	Open : <?php echo $ThisShip->getOpenWeaponSlots(); ?><br />
+	Total Damage: (<?php echo $ThisShip->getTotalShieldDamage(); ?>/<?php echo $ThisShip->getTotalArmourDamage(); ?>)<br />
 	Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower(); ?><br /><br /><?php 
 	if(ENABLE_BETA)
 	{

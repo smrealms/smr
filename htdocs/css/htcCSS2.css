@@ -1,0 +1,457 @@
+﻿html, body {
+    font-family: Arial, sans-serif; /* Default font stlye, you can change this */
+    font-size: 14px;
+    text-align: center;
+    background-color: #000000; /* The main background color, you can change this */
+    width: 100%;
+    height: 100%;    
+    margin: 0px;
+    padding: 0px;
+}
+#Container {
+     width: 100%;
+     height: 100%;     
+}
+.tableHeight {
+     width: 95%;
+     height: 95%;     
+     color: White;        
+}
+.topleftCell {
+     font-family: 'Bookman Old Style', serif; 
+     color: #f2a648; /* font color for left cell, you can change this */
+     width: 20%;
+     text-align: right;
+     vertical-align: top;
+     padding: 0px;
+     margin: 0px;    
+}
+.topcenterCell {
+     color: #000000; /* font color for center TopInfor area, you can change this */
+     text-align: center;
+     vertical-align: top;     
+     width: 60%;    
+     padding: 0px;
+     margin: 0px;        
+}
+.rightCell {
+     color: #000000; /* font color for right cell, you can change this  */
+     width: 20%;    
+     text-align: left;
+     vertical-align: top;
+     padding: 0px;
+     margin: 0px;     
+}
+.leftCell { /* Class for table left nav area one */
+     color: #f2a648; /* font color for left cell, you can change this */
+     width: 20%;   
+     text-align: right;    
+     vertical-align: top;
+     padding: 0px;
+     margin: 0px;           
+}
+.centerContent { /* Class for the table Main Content Area */
+     width: 60%; 
+     text-align: center;
+     vertical-align: top;
+     padding: 0px;
+     margin: 0px;     
+}
+/* This starts the borders for the top center Infor */
+.TopInfor {
+     background-color: #7b5121; /* Background color, you can change this */
+     border: 4px solid #a3692d; /* Border size stlye and color, you can change this */
+     -moz-border-radius: 6px; /* Firefox */
+     -webkit-border-radius: 6px; /* Safari and chrome */
+     -khtml-border-radius: 6px; /* Linux browsers */
+     border-radius: 6px; /* CSS3 */
+     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */ 
+     text-align: left;
+     padding: 10px 10px 5px 10px;
+     margin: 10px 50px 10px 50px;     
+}
+.name {
+     float: left;
+     width: 30%;
+     margin-left: 10px;    
+     font-size: 1.25em;
+     font-weight: bold;
+}
+.topcenterOne {  
+     float: left;
+     width: 30%;
+     margin-right: 10px;
+     font-size: 1em;
+     font-weight: bold;
+}
+.topcenterTwo {
+     float: left;
+     width: 30%;        
+     font-size: 1em;
+     font-weight: bold;     
+}
+.bar1 {     
+     text-align: center;
+     font-size: 1em;
+     font-weight: bold;
+     padding: 5px 10px 0px 10px;
+     margin: 0px auto 0px auto;
+     width: 100%;
+}
+/*  This starts the borders for the left nav area one */ 
+.LeftNavOne {
+     background-color: #140f0b; /* Background color for the left Box 1, you can change this */
+     border: 4px solid #a3692d; /* Border size stlye and color, you can change this */
+     -moz-border-radius: 4px; /* Firefox */
+     -webkit-border-radius: 4px; /* Safari and chrome */
+     -khtml-border-radius: 4px; /* Linux browsers */
+     border-radius: 4px; /* CSS3 */
+     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */      
+     text-align: right;
+     padding: 10px;
+     margin: 5px 8px 10px 50px;
+     
+}
+/*  This starts the borders for the left nav area two  */
+.LeftNavTwo {
+     background-color: #140f0b; /* Background color for the left Box 2, you can change this */ 
+     border: 4px solid #a3692d; /* Border size stlye and color */
+     -moz-border-radius: 4px; /* Firefox */
+     -webkit-border-radius: 4px; /* Safari and chrome */
+     -khtml-border-radius: 4px; /* Linux browsers */
+     border-radius: 4px; /* CSS3 */
+     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */    
+     text-align: right;
+     padding: 10px;
+     margin: 5px 8px 5px 50px;     
+}
+/*  This starts the borders for the main content area along with other rules  */
+.cSector {
+     color: #f2a648; /* font color, you can change this  */
+     font-size: 1.5em;
+     margin: 5px 5px 10px 5px;
+}
+.Clear {
+     clear: both; /* don't change clear is required to end floats */
+}
+.MainContentArea {
+     background-color: #000000;
+     background-image: url(../images/MainBackground.gif);
+     border: 6px solid #a3692d;     
+     -moz-border-radius: 6px; /* Firefox */
+     -webkit-border-radius: 6px; /* Safari and chrome */
+     -khtml-border-radius: 6px; /* Linux browsers */
+     border-radius: 6px; /* CSS3 */
+     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */                  
+     min-height: 500px;
+     min-width: 400px;
+     text-align: left;
+     padding: 10px;
+     margin: 0px 0px 10px 0px;     
+}
+.Box1 {     
+     float: left;
+     width: 220px;
+     height: 180px;
+     margin-left: auto;    
+}
+.rownb {
+     float: left;
+     width: 52px;
+     height: 52px;
+}
+.noLink {
+     background-color: #7b5121;
+     filter: alpha(opacity = 40);
+     opacity: 0.4; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 52px;
+     height: 52px;
+     line-height: 52px;
+}
+a.rowtb {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 50px;
+     height: 50px;
+     line-height: 50px;
+     border-left: solid 2px #a3692d;
+     border-top: solid 2px #a3692d;
+     border-right: solid 2px #a3692d;
+     text-align: center;
+     margin: 0px;
+}
+.rowtb a:hover  {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 100);
+     -moz-opacity: 1;
+     opacity: 1; /* firefox, opera, safari, chrome */
+}
+a.rowbb {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 50px;
+     height: 50px;
+     line-height: 50px;
+     border-left: solid 2px #a3692d;
+     border-bottom: solid 2px #a3692d;
+     border-right: solid 2px #a3692d;
+     text-align: center;
+     margin: 0px;
+}
+.rowbb a:hover  {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 100);
+     -moz-opacity: 1;
+     opacity: 1; /* firefox, opera, safari, chrome */
+}
+a.rowcb {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 50px;
+     height: 50px;
+     line-height: 50px;
+     border: solid 2px #a3692d;
+     text-align: center;
+     margin: 0px;
+}
+.rowcb a:hover  {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 100);
+     -moz-opacity: 1;
+     opacity: 1; /* firefox, opera, safari, chrome */
+}
+a.rowrb {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 50px;
+     height: 50px;
+     line-height: 50px;
+     border-right: solid 2px #a3692d;
+     border-top: solid 2px #a3692d;
+     border-bottom: solid 2px #a3692d;
+     text-align: center;
+     margin: 0px;
+}
+.rowrb a:hover {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 100);
+     -moz-opacity: 1;
+     opacity: 1; /* firefox, opera, safari, chrome */
+}
+a.rowlb {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 50px;
+     height: 50px;
+     line-height: 50px;
+     border-left: solid 2px #a3692d;
+     border-top: solid 2px #a3692d;
+     border-bottom: solid 2px #a3692d;
+     text-align: center;
+     margin: 0px;
+}
+.rowlb a:hover  {
+     background-color: #7b5121;
+     color: #000000; /*#ba8f25;*/
+     font-weight: bold;
+     font-size: 1.15em;
+     filter: alpha(opacity = 100);
+     -moz-opacity: 1;
+     opacity: 1; /* firefox, opera, safari, chrome */
+}
+.SectorBox {
+     
+     border: solid 2px red;     
+}
+
+.Box2 {
+     float: left;
+     /*width: 50%;*/
+     margin-right: auto;    
+     font-size: 1em;
+     /*font-weight: bold;*/
+}
+
+/* **************************************************** 
+    This starts the borders for the right infor area
+   **************************************************** 
+*/
+.RightInfor {
+     font-weight: bold;
+     font-size: 1em;
+     background-color: #7b5121;
+     border: 4px solid #a3692d;
+     -moz-border-radius: 6px; /* Firefox */
+     -webkit-border-radius: 6px; /* Safari and chrome */
+     -khtml-border-radius: 6px; /* Linux browsers */
+     border-radius: 6px; /* CSS3 */
+     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */
+     min-height: 600px;
+     text-align: left;
+     padding: 10px;
+     margin: 10px 50px 10px 10px;     
+}
+.RightInforShip {     
+     font-family: 'Bookman Old Style', serif;
+     font-weight: bold;
+     font-size: 1.15em;     
+}
+
+/* **************************************************** 
+    End of all Borders
+   **************************************************** 
+*/
+.loct {
+     font-size: 1em;
+     line-height: 1.6em;
+     border: solid 2px #a3692d;
+     width: 40%;
+     margin: 0px 0px 10px 0px;
+}
+.loctSingleHead {
+     background-color: #7b5121;
+     /*color: #000000; /*#ba8f25;*/
+     font-weight: bold;                   
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 100%;     
+     border-bottom: solid 2px #a3692d;     
+     text-align: center;
+     margin: 0px;
+}
+.loctHead1 {
+     background-color: #7b5121;
+     /*color: #000000; /*#ba8f25;*/
+     font-weight: bold;     
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 69%;     
+     border-bottom: solid 2px #a3692d;      
+     text-align: center;
+     margin: 0px;
+}
+.loctHead2 {
+     background-color: #7b5121;
+     /*color: #000000; /*#ba8f25;*/
+     font-weight: bold;     
+     /*border-left: solid  2px #a3692d;*/
+     filter: alpha(opacity = 50);
+     opacity: 0.5; /* firefox, opera, safari, chrome */
+     float: left;
+     width: 30%;     
+     border-left: solid 2px #a3692d;
+     border-bottom: solid 2px #a3692d;      
+     text-align: center;
+     margin: 0px;
+}
+.loctSingleName {     
+     float: left;
+     width: 100%;
+     border-bottom: solid 1px #a3692d;    
+     margin: 0px;
+}
+.loctName {     
+     float: left;
+     width: 69%;
+     border-bottom: solid 1px #a3692d;    
+     margin: 0px;
+}
+.loctOption {     
+     text-align: center;
+     float: left;
+     width: 30%;
+     border-left: solid 2px #a3692d;
+     border-bottom: solid 1px #a3692d;    
+     margin: 0px;
+}
+.noWrap {
+     white-space: nowrap;
+}
+.big {
+     font-size: 1.25em;
+}
+.wep1 {
+     color: #ba8f25;/*#956d0b;#755a16;#a78c4b;#d8a21d; #f6ff00;*/
+}
+.copyright {
+     text-align: right;
+     font-size: xx-small;
+     padding: 10px;
+}
+.messages {
+     font-size: .6em;
+     color: White;
+}
+a.message img {     
+     border: none;
+}
+a.white {
+     color: #ffffff;
+}
+a {
+   color: #f2a648; /*#cc9933;*/
+   text-decoration: none;
+   padding: 0px;
+   margin: 0px;
+}
+a:hover {
+   background: #5a4b38; /*#d7a970; #c39c4d;*/
+}
+a.leftNav {
+   color: #f2a648; /*#cc9933;*/
+   text-decoration: none;
+   padding: 0px;
+   margin: 0px;
+}
+a:hover.leftNav {
+   background: #5a4b38; /*#d7a970; #c39c4d;*/
+}
+a.Nav {
+   color: #000000;
+   text-decoration: none;
+   padding: 0px;
+   margin: 0px;
+}
+a:hover.Nav {
+     background: #cc9933;
+}
