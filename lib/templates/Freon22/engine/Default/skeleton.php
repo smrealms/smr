@@ -77,16 +77,16 @@
 								<div class="topcenterTwo">
 									Level: <a class="Nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><?php echo $ThisPlayer->getLevelID(); ?></a>
 									<br />
-									Next Level: <br /><?php
+									Next Level: <?php
 										$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
 										$Experience = number_format($ThisPlayer->getExperience()); ?>
 										<img src="images/bar_left.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
 										<img src="images/blue.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentAcquired(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
 										<img src="images/bar_border.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentRemaining(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
 										<img src="images/bar_right.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
-									<br />
-									Alignment: <?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?>
-									<br />
+									
+									Alignment: <?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?><br />
+									
 									Alliance: <a href="<?php echo $AllianceLink; ?>"><?php
 										echo $ThisPlayer->getAllianceName();
 										if($ThisPlayer->hasAlliance())
@@ -159,7 +159,7 @@
 											echo $ThisPlayer->getCustomShipName(); ?><br /><?php
 										} ?>
 										Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
-									</div>
+									</div><br />
 									
 									Shields: <span id="shields"><?php echo $ThisShip->getShields(); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
 			
