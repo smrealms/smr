@@ -256,7 +256,7 @@
 								Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower();
 								if(ENABLE_BETA)
 								{
-									?><br /><br /><a href="<?php echo Globals::getBetaFunctionsHREF(); ?>"><span class="bold">Beta Functions</span></a><?php
+									?><br /><br /><a class="Nav" href="<?php echo Globals::getBetaFunctionsHREF(); ?>">Beta Functions</a><?php
 								} ?>
 							</div><?php
 							} ?>
