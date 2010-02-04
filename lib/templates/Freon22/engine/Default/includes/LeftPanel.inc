@@ -1,7 +1,7 @@
-<div class="LeftNavOne"><?php
-	if(isset($GameID))
-	{
-		?><big><?php
+<?php
+if(isset($GameID))
+{ ?>
+	<div class="LeftNavOne"><?php
 		if(!$ThisPlayer->isLandedOnPlanet())
 		{
 			?><a class="leftNav" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br /><?php
@@ -17,8 +17,7 @@
 		if(isset($PlotCourseLink))
 		{
 			?><a class="leftNav" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
-		}
-		?></big>
+		} ?>
 		<a class="leftNav" href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
 		<br />
 		<a class="leftNav" href="<?php echo $TraderLink; ?>">Trader</a><br />
@@ -39,9 +38,9 @@
 		<br />
 		<a class="leftNav" href="<?php echo $RankingsLink; ?>">Rankings</a><br />
 		<a class="leftNav" href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
-		<a class="leftNav" href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a><?php
-	} ?>
-</div>
+		<a class="leftNav" href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a>
+</div><?php
+} ?>
 
 <div class="LeftNavTwo"><?php
 	if(isset($AccountID))
