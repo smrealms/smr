@@ -65,7 +65,7 @@
      -webkit-border-radius: 6px; /* Safari and chrome */
      -khtml-border-radius: 6px; /* Linux browsers */
      border-radius: 6px; /* CSS3 */
-     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */ 
+     behavior: url(ie-css3.htc); /* IE */ 
      text-align: left;
      padding: 10px 10px 5px 10px;
      margin: 10px 50px 10px 50px;     
@@ -106,7 +106,7 @@
      -webkit-border-radius: 4px; /* Safari and chrome */
      -khtml-border-radius: 4px; /* Linux browsers */
      border-radius: 4px; /* CSS3 */
-     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */      
+     behavior: url(ie-css3.htc); /* IE */      
      text-align: right;
      padding: 10px;
      margin: 5px 8px 10px 50px;
@@ -120,7 +120,7 @@
      -webkit-border-radius: 4px; /* Safari and chrome */
      -khtml-border-radius: 4px; /* Linux browsers */
      border-radius: 4px; /* CSS3 */
-     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */    
+     behavior: url(ie-css3.htc); /* IE */    
      text-align: right;
      padding: 10px;
      margin: 5px 8px 5px 50px;     
@@ -142,7 +142,7 @@
      -webkit-border-radius: 6px; /* Safari and chrome */
      -khtml-border-radius: 6px; /* Linux browsers */
      border-radius: 6px; /* CSS3 */
-     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */                  
+     behavior: url(ie-css3.htc); /* IE */                  
      min-height: 500px;
      min-width: 400px;
      text-align: left;
@@ -323,7 +323,7 @@ a.rowlb {
      -webkit-border-radius: 6px; /* Safari and chrome */
      -khtml-border-radius: 6px; /* Linux browsers */
      border-radius: 6px; /* CSS3 */
-     behavior: url(CSS/border-radius.nf.noabsolute.htc); /* IE */
+     behavior: url(ie-css3.htc); /* IE */
      min-height: 600px;
      text-align: left;
      padding: 10px;
