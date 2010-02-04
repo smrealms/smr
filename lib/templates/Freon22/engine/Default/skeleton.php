@@ -153,17 +153,17 @@
 									</div>
 							
 									<div class="RightInforShip">
-									<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php echo $ThisShip->getName(); ?></span></a><br /><?php
-									if($ThisPlayer->hasCustomShipName())
-									{
-										echo $ThisPlayer->getCustomShipName(); ?><br /><?php
-									} ?>
-									Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
-			
+										<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php echo $ThisShip->getName(); ?></span></a><br /><?php
+										if($ThisPlayer->hasCustomShipName())
+										{
+											echo $ThisPlayer->getCustomShipName(); ?><br /><?php
+										} ?>
+										Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
+									</div>
+									
 									Shields: <span id="shields"><?php echo $ThisShip->getShields(); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
 			
 									Armor: <span id="armour"><?php echo $ThisShip->getArmour(); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
-									<br />
 									<a class="Nav" href="<?php echo $HardwareLink; ?>">CIJSD: <?php
 										if($ThisShip->hasCloak()) echo '*';
 										else echo '-';
@@ -175,7 +175,7 @@
 										else echo '-';
 										if($ThisShip->hasDCS()) echo '*';
 										else echo '-';
-									?></a><br /><?php
+									?></a><br /><br /><?php
 									if($ThisShip->hasCloak())
 									{
 										if($ThisShip->isCloaked())
@@ -192,9 +192,9 @@
 									{ ?>
 										<span class="npcColor"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
 										IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?><br />
-										<br /><?php
+										<br /><br /><?php
 									} ?>
-									<br /><br />
+									
 									<a class="Nav big" href="<?php echo $ForceDropLink; ?>">Forces</a><br /><?php
 									
 									if(isset($DropMineLink))
