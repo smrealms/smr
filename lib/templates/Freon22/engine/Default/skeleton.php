@@ -63,7 +63,12 @@
 										?></span>
 									</span><br />
 								
-								Newbie Turns: <span style="color: #<?php if ($ThisPlayer->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT) { ?>387C44<?php } else { ?>F00<?php } ?>;"><?php echo $ThisPlayer->getNewbieTurns(); ?></span><br />
+								<span id="newbieturns"><?php
+									if($ThisPlayer->hasNewbieTurns())
+									{
+										?>Newbie Turns: <span style="color: #<?php if ($ThisPlayer->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT) { ?>387C44<?php } else { ?>F00<?php } ?>;"><?php echo $ThisPlayer->getNewbieTurns(); ?></span><br /><?php
+									} ?>
+								</span>
 								
 								Credits: <?php echo number_format($ThisPlayer->getCredits()); ?><br />
 								
