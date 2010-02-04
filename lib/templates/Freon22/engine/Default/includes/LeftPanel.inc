@@ -1,88 +1,84 @@
-<div class="LeftOneBorder">
-	<div class="LeftOne"><?php
-		if(isset($GameID))
+<div class="LeftNavOne"><?php
+	if(isset($GameID))
+	{
+		?><big><?php
+		if(!$ThisPlayer->isLandedOnPlanet())
 		{
-			?><big><?php
-			if(!$ThisPlayer->isLandedOnPlanet())
-			{
-				?><a class="leftNav" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br /><?php
-			 }
-			if(isset($PlanetMainLink))
-			{
-				?><a class="leftNav" href="<?php echo $PlanetMainLink; ?>">Planet Main</a><br /><?php
-			 }
-			if(isset($LocalMapLink))
-			{
-				?><a class="leftNav" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
-			}
-			if(isset($PlotCourseLink))
-			{
-				?><a class="leftNav" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
-			}
-			?></big>
-			<a class="leftNav" href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
-			<br />
-			<a class="leftNav" href="<?php echo $TraderLink; ?>">Trader</a><br />
-			<a class="leftNav" href="<?php echo $AllianceLink; ?>">Alliance</a><br />
-			<a class="leftNav" href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a>
-			<br />
-			<br />
-			<?php /* <a class="leftNav" href="<?php echo $TradingLink; ?>">Trading</a><br /> */ ?>
-			<a class="leftNav" href="<?php echo $PlanetLink; ?>">Planet</a><br />
-			<a class="leftNav" href="<?php echo $ForcesLink; ?>">Forces</a><br />
-			<br />
-			<a class="leftNav" href="<?php echo $MessagesLink; ?>">Messages</a><br />
-			<a class="leftNav" href="<?php echo $ReadNewsLink; ?>">Read News</a><br />
-			<a class="leftNav" href="<?php echo $GalacticPostLink; ?>">Galactic Post</a><br />
-			<br />
-			<a class="leftNav" href="<?php echo $SearchForTraderLink; ?>">Search For Trader</a><br />
-			<a class="leftNav" href="<?php echo $CurrentPlayersLink; ?>">Current Players</a><br />
-			<br />
-			<a class="leftNav" href="<?php echo $RankingsLink; ?>">Rankings</a><br />
-			<a class="leftNav" href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
-			<a class="leftNav" href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a><?php
-		} ?>
-	</div>
+			?><a class="leftNav" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br /><?php
+		 }
+		if(isset($PlanetMainLink))
+		{
+			?><a class="leftNav" href="<?php echo $PlanetMainLink; ?>">Planet Main</a><br /><?php
+		 }
+		if(isset($LocalMapLink))
+		{
+			?><a class="leftNav" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
+		}
+		if(isset($PlotCourseLink))
+		{
+			?><a class="leftNav" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
+		}
+		?></big>
+		<a class="leftNav" href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
+		<br />
+		<a class="leftNav" href="<?php echo $TraderLink; ?>">Trader</a><br />
+		<a class="leftNav" href="<?php echo $AllianceLink; ?>">Alliance</a><br />
+		<a class="leftNav" href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a>
+		<br />
+		<br />
+		<?php /* <a class="leftNav" href="<?php echo $TradingLink; ?>">Trading</a><br /> */ ?>
+		<a class="leftNav" href="<?php echo $PlanetLink; ?>">Planet</a><br />
+		<a class="leftNav" href="<?php echo $ForcesLink; ?>">Forces</a><br />
+		<br />
+		<a class="leftNav" href="<?php echo $MessagesLink; ?>">Messages</a><br />
+		<a class="leftNav" href="<?php echo $ReadNewsLink; ?>">Read News</a><br />
+		<a class="leftNav" href="<?php echo $GalacticPostLink; ?>">Galactic Post</a><br />
+		<br />
+		<a class="leftNav" href="<?php echo $SearchForTraderLink; ?>">Search For Trader</a><br />
+		<a class="leftNav" href="<?php echo $CurrentPlayersLink; ?>">Current Players</a><br />
+		<br />
+		<a class="leftNav" href="<?php echo $RankingsLink; ?>">Rankings</a><br />
+		<a class="leftNav" href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />
+		<a class="leftNav" href="<?php echo $CurrentHallOfFameLink; ?>">Current HoF</a><?php
+	} ?>
 </div>
 
-<div class="LeftTwoBorder">
-	<div class="LeftTwo"><?php
-		if(isset($AccountID))
-		{
-			?><a class="leftNav" href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
-				<a class="leftNav" href="<?php echo $PreferencesLink; ?>">Preferences</a><br />
-				<a class="leftNav" href="<?php echo $LogoutLink; ?>">Logout</a><br />
-			<br /><?php
-		}
-		else
-		{
-			?><a class="leftNav" href="login.php">Login</a><br /><?php
-		} ?>
-		<a class="leftNav" href="manual.php" target="manual">Manual</a><br /><?php
-		if(isset($GameID))
-		{
-			?><a class="leftNav" href="<?php echo Globals::getSmrFileCreateHREF(); ?>">DL Sectors File</a><br /><?php
-			/* ?><a class="leftNav" href="<?php echo $MGULink ?>">DL MGU Maps</a><br /><?php */
-		} ?>
-		<a class="leftNav" href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
-		<a class="leftNav" href="album/" target="album">View Album</a><br /><br /><?php
-		if(Globals::isFeatureRequestOpen())
-		{
-			?><a class="leftNav" href="<?php echo Globals::getFeatureRequestHREF(); ?>">Request A Feature</a><br /><?php
-		}
-		if(isset($GameID) && Globals::isBetaOpen())
-		{
-			?><a class="leftNav" href="<?php echo Globals::getBetaApplyHREF(); ?>">Apply For Beta</a><br /><?php
-		} ?>
-		<a class="leftNav" href="<?php echo $ReportABugLink; ?>">Report A Bug</a><br />
-		<a class="leftNav" href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
+<div class="LeftNavTwo"><?php
+	if(isset($AccountID))
+	{
+		?><a class="leftNav" href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
+			<a class="leftNav" href="<?php echo $PreferencesLink; ?>">Preferences</a><br />
+			<a class="leftNav" href="<?php echo $LogoutLink; ?>">Logout</a><br />
 		<br /><?php
-		if(isset($GameID))
-		{
-			?><a class="leftNav" href="<?php echo $IRCLink; ?>">IRC Chat</a><br /><?php
-		} ?>
-		<a class="leftNav" href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
-		<a class="leftNav" href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
-		<a class="leftNav" href="<?php echo $DonateLink; ?>">Donate</a>
-    </div>
+	}
+	else
+	{
+		?><a class="leftNav" href="login.php">Login</a><br /><?php
+	} ?>
+	<a class="leftNav" href="manual.php" target="manual">Manual</a><br /><?php
+	if(isset($GameID))
+	{
+		?><a class="leftNav" href="<?php echo Globals::getSmrFileCreateHREF(); ?>">DL Sectors File</a><br /><?php
+		/* ?><a class="leftNav" href="<?php echo $MGULink ?>">DL MGU Maps</a><br /><?php */
+	} ?>
+	<a class="leftNav" href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
+	<a class="leftNav" href="album/" target="album">View Album</a><br /><br /><?php
+	if(Globals::isFeatureRequestOpen())
+	{
+		?><a class="leftNav" href="<?php echo Globals::getFeatureRequestHREF(); ?>">Request A Feature</a><br /><?php
+	}
+	if(isset($GameID) && Globals::isBetaOpen())
+	{
+		?><a class="leftNav" href="<?php echo Globals::getBetaApplyHREF(); ?>">Apply For Beta</a><br /><?php
+	} ?>
+	<a class="leftNav" href="<?php echo $ReportABugLink; ?>">Report A Bug</a><br />
+	<a class="leftNav" href="<?php echo $ContactFormLink; ?>">Contact Form</a><br />
+	<br /><?php
+	if(isset($GameID))
+	{
+		?><a class="leftNav" href="<?php echo $IRCLink; ?>">IRC Chat</a><br /><?php
+	} ?>
+	<a class="leftNav" href="http://smrcnn.smrealms.de/viewtopic.php?f=1&amp;t=9705" target="policy">User Policy</a><br />
+	<a class="leftNav" href="http://smrcnn.smrealms.de/" target="webboard">Webboard</a><br />
+	<a class="leftNav" href="<?php echo $DonateLink; ?>">Donate</a>
 </div>

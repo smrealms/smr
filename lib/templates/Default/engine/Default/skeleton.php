@@ -2,7 +2,7 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title><?php echo $Title ?> <?php if(isset($GameName)) echo $GameName; ?></title>
+		<title><?php echo $Title; ?> <?php if(isset($GameName)) echo $GameName; ?></title>
 		<meta http-equiv="pragma" content="no-cache"><?php
 		if(is_object($ThisAccount) && $ThisAccount->isDefaultCSSEnabled())
 		{
