@@ -282,15 +282,14 @@
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
 						<div class="copyright">
-	
-							SMR v1.6.4©2007-2010 Page and SMR
+							SMR <?php echo $Version; ?>&copy;2007-<?php echo $CurrentYear; ?> Page and SMR
 							<br />
 							Kindly Hosted by FeM
 							<br />
-							Script runtime: 0.0446 seconds
+							Script runtime: <span id="rt"><?php echo $ScriptRuntime; ?></span> seconds
 							<br />
-							[Imprint]
-						</div>  
+							<a href="imprint.html">[Imprint]</a>
+						</div>
 					</td>
 				</tr>
 			</table>
@@ -298,7 +297,7 @@
 		<script type="text/javascript" src="js/ajax.js"></script><?php
 		if(!empty($js))
 		{
-			?><script type="text/javascript" src="<?php echo $js ?>"></script><?php
+			?><script type="text/javascript" src="<?php echo $js; ?>"></script><?php
 		} 
 		if($AJAX_ENABLE_REFRESH)
 		{
