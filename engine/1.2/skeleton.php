@@ -194,44 +194,44 @@ if (SmrSession::$game_id != 0){
 
 		if(isset($messages[MSG_GLOBAL])) {
 			$container['folder_id'] = MSG_GLOBAL;
-			print_link($container, '<img src="images/global_msg.gif" border="0" alt="Global Messages">');
+			print_link($container, '<img src="images/global_msg.png" border="0" alt="Global Messages">');
 			echo '<small>' . $messages[MSG_GLOBAL] . '</small>';
 		}
 
 		if(isset($messages[MSG_PLAYER])) {
 			$container['folder_id'] = MSG_PLAYER;
-			print_link($container, '<img src="images/personal_msg.gif" border="0" alt="Personal Messages">');
+			print_link($container, '<img src="images/personal_msg.png" border="0" alt="Personal Messages">');
 			echo '<small>' . $messages[MSG_PLAYER] . '</small>';
 		}
 
 		if(isset($messages[MSG_SCOUT])) {
 			$container['folder_id'] = MSG_SCOUT;
-			print_link($container, '<img src="images/scout_msg.gif" border="0" alt="Scout Messages">');
+			print_link($container, '<img src="images/scout_msg.png" border="0" alt="Scout Messages">');
 			echo '<small>' . $messages[MSG_SCOUT] . '</small>';
 		}
 
 		if(isset($messages[MSG_POLITICAL])) {
 			$container['folder_id'] = MSG_POLITICAL;
-			print_link($container, '<img src="images/council_msg.gif" border="0" alt="Political Messages">');
+			print_link($container, '<img src="images/council_msg.png" border="0" alt="Political Messages">');
 			echo '<small>' . $messages[MSG_POLITICAL] . '</small>';
 		}
 
 		if(isset($messages[MSG_ALLIANCE])) {
 			$container['folder_id'] = MSG_ALLIANCE;
-			print_link($container, '<img src="images/alliance_msg.gif" border="0" alt="Alliance Messages">');
+			print_link($container, '<img src="images/alliance_msg.png" border="0" alt="Alliance Messages">');
 			echo '<small>' . $messages[MSG_ALLIANCE] . '</small>';
 		}
 
 		if(isset($messages[MSG_ADMIN])) {
 			$container['folder_id'] = MSG_ADMIN;
-			print_link($container, '<img src="images/admin_msg.gif" border="0" alt="Admin Messages">');
+			print_link($container, '<img src="images/admin_msg.png" border="0" alt="Admin Messages">');
 			echo '<small>' . $messages[MSG_ADMIN] . '</small>';
 		}
 
 		if(isset($messages[MSG_PLANET])) {
 			$container = array();
 			$container['url'] = 'planet_msg_processing.php';
-			print_link($container, '<img src="images/planet_msg.gif" border="0" alt="Planet Messages">');
+			print_link($container, '<img src="images/planet_msg.png" border="0" alt="Planet Messages">');
 			echo '<small>' . $messages[MSG_PLANET] . '</small>';
 		}
 		echo '<br>';

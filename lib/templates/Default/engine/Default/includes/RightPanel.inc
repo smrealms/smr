@@ -6,7 +6,7 @@ if(isset($GameID))
 	<span id="message_area"><?php
 	if(isset($MessageGlobalLink))
 	{ ?>
-		<a href="<?php echo $MessageGlobalLink; ?>"><img src="images/global_msg.gif" alt="Global Messages" /></a>
+		<a href="<?php echo $MessageGlobalLink; ?>"><img src="images/global_msg.png" alt="Global Messages" /></a>
 		<span class="small"><?php echo $MessageGlobalNum; ?></span><?php
 	}
 	if(isset($MessagePersonalLink))
@@ -16,27 +16,27 @@ if(isset($GameID))
 	}
 	if(isset($MessageScoutLink))
 	{ ?>
-		<a href="<?php echo $MessageScoutLink; ?>"><img src="images/scout_msg.gif" alt="Scout Messages" /></a>
+		<a href="<?php echo $MessageScoutLink; ?>"><img src="images/scout_msg.png" alt="Scout Messages" /></a>
 		<span class="small"><?php echo $MessageScoutNum; ?></span><?php
 	}
 	if(isset($MessagePoliticalLink))
 	{ ?>
-		<a href="<?php echo $MessagePoliticalLink; ?>"><img src="images/council_msg.gif" alt="Political Messages" /></a>
+		<a href="<?php echo $MessagePoliticalLink; ?>"><img src="images/council_msg.png" alt="Political Messages" /></a>
 		<span class="small"><?php echo $MessagePoliticalNum; ?></span><?php
 	}
 	if(isset($MessageAllianceLink))
 	{ ?>
-		<a href="<?php echo $MessageAllianceLink; ?>"><img src="images/alliance_msg.gif" alt="Alliance Messages" /></a>
+		<a href="<?php echo $MessageAllianceLink; ?>"><img src="images/alliance_msg.png" alt="Alliance Messages" /></a>
 		<span class="small"><?php echo $MessageAllianceNum; ?></span><?php
 	}
 	if(isset($MessageAdminLink))
 	{ ?>
-		<a href="<?php echo $MessageAdminLink; ?>"><img src="images/admin_msg.gif" alt="Admin Messages" /></a>
+		<a href="<?php echo $MessageAdminLink; ?>"><img src="images/admin_msg.png" alt="Admin Messages" /></a>
 		<span class="small"><?php echo $MessageAdminNum; ?></span><?php
 	}
 	if(isset($MessagePlanetLink))
 	{ ?>
-		<a href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.gif" alt="Planet Messages" /></a>
+		<a href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.png" alt="Planet Messages" /></a>
 		<span class="small"><?php echo $MessagePlanetNum; ?></span><?php
 	} 
 	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
