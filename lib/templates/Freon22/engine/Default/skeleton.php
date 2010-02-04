@@ -270,19 +270,16 @@
 				</td>
 				
 				<td class="centerContent">
-					<div class="MainContentArea">
-						<div id="middle_panel" class="MainContentArea"><?php
-							if(isset($PageTopic))
-							{
-								?><h1><?php echo $PageTopic; ?></h1><br /><?php
-							}
-							if(isset($MenuBar))
-							{
-								echo $MenuBar;
-							}
-							$this->includeTemplate($TemplateBody); ?>
-						</div>
-					</div>
+					<div id="middle_panel" class="MainContentArea"><?php
+						if(isset($PageTopic))
+						{
+							?><h1><?php echo $PageTopic; ?></h1><br /><?php
+						}
+						if(isset($MenuBar))
+						{
+							echo $MenuBar;
+						}
+						$this->includeTemplate($TemplateBody); ?>
 					</div>
 					<div class="copyright">
 
