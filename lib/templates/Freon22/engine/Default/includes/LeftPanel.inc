@@ -1,7 +1,7 @@
 <?php
 if(isset($GameID))
 { ?>
-	<div class="LeftNavOne"><?php
+	<div class="LeftNavOne noWrap"><?php
 		if(!$ThisPlayer->isLandedOnPlanet())
 		{
 			?><a class="leftNav" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br /><?php
@@ -42,7 +42,7 @@ if(isset($GameID))
 </div><?php
 } ?>
 
-<div class="LeftNavTwo"><?php
+<div class="LeftNavTwo noWrap"><?php
 	if(isset($AccountID))
 	{
 		?><a class="leftNav" href="<?php echo $PlayGameLink; ?>">Play Game</a><br />

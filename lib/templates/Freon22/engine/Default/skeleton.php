@@ -33,7 +33,7 @@
 					<td class="topcenterCell"><?php
 						if(isset($ThisPlayer))
 						{ ?>
-							<div class="TopInfor">
+							<div class="TopInfor noWrap">
 								<div class="name">
 									<?php echo $ThisPlayer->getLevelName(); ?>
 									<br />
@@ -107,7 +107,7 @@
 					<td rowspan="2" class="rightCell"><?php
 						if(isset($ThisPlayer))
 						{ ?>
-							<div class="RightInfor">
+							<div class="RightInfor noWrap">
 								<div class="messages">
 									<span id="message_area"><?php
 										if(isset($MessageGlobalLink))
