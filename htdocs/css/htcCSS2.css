@@ -457,3 +457,22 @@ a.Nav {
 a:hover.Nav {
 	background: #cc9933;
 }
+
+
+table.standard
+{
+	border: 1px solid #7B5121;
+	border-spacing: 0px;
+}
+table.standard td, table.standard th
+{
+	border: 1px solid #7B5121;
+	padding:2px;
+}
+table.standard th
+{
+	text-align:center;
+	color:#808080;
+	background-color:#3E2911;
+	font-weight:bold;
+}
