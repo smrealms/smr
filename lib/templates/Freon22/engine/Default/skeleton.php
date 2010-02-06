@@ -34,7 +34,7 @@
 						if(isset($ThisPlayer))
 						{ ?>
 							<div class="TopInfor">
-								<table>
+								<table style="width:100%">
 									<tr>
 										<td>
 											<div class="name noWrap">
