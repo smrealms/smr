@@ -1,14 +1,4 @@
-<?php $this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
-					array('Link'=>@$MotdLink,'Text'=>'Message of Day'),
-					array('Link'=>$RosterLink,'Text'=>'Roster'),
-					array('Link'=>@$AllianceMessageLink,'Text'=>'Send Message'),
-					array('Link'=>@$MessageBoardLink,'Text'=>'Message Board'),
-					array('Link'=>@$AlliancePlanetsLink,'Text'=>'Planets'),
-					array('Link'=>@$AllianceForcesLink,'Text'=>'Forces'),
-					array('Link'=>@$AllianceOptionsLink,'Text'=>'Options'),
-					array('Link'=>$ListAlliancesLink,'Text'=>'List Alliances'),
-					array('Link'=>$ViewAllianceNewsLink,'Text'=>'View News'))));
-
+<?php
 if(	isset($PrevThread) || isset($NextThread) )
 { ?>
 	<h2>Switch Topic</h2><br />
@@ -54,9 +44,9 @@ if(	isset($PrevThread) || isset($NextThread) )
 		foreach($Thread['Replies'] as &$Reply)
 		{ ?>
 			<tr>
-				<td class="shrink nowrap top"><?php echo $Reply['Sender']; ?></td>
+				<td class="shrink noWrap top"><?php echo $Reply['Sender']; ?></td>
 				<td><?php echo bbifyMessage($Reply['Message']); ?></td>
-				<td class="shrink nowrap top"><?php echo date(DATE_FULL_SHORT,$Reply['SendTime']); ?></td>
+				<td class="shrink noWrap top"><?php echo date(DATE_FULL_SHORT,$Reply['SendTime']); ?></td>
 			</tr><?php
 		} unset($Reply); ?>
 	</table>

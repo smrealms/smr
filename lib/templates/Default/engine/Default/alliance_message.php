@@ -1,13 +1,4 @@
-<?php $this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
-					array('Link'=>@$MotdLink,'Text'=>'Message of Day'),
-					array('Link'=>$RosterLink,'Text'=>'Roster'),
-					array('Link'=>@$AllianceMessageLink,'Text'=>'Send Message'),
-					array('Link'=>@$MessageBoardLink,'Text'=>'Message Board'),
-					array('Link'=>@$AlliancePlanetsLink,'Text'=>'Planets'),
-					array('Link'=>@$AllianceForcesLink,'Text'=>'Forces'),
-					array('Link'=>@$AllianceOptionsLink,'Text'=>'Options'),
-					array('Link'=>$ListAlliancesLink,'Text'=>'List Alliances'),
-					array('Link'=>$ViewAllianceNewsLink,'Text'=>'View News'))));
+<?php
 if (count($Threads) > 0)
 { ?>
 	<div align="center">
@@ -32,7 +23,7 @@ if (count($Threads) > 0)
 						?></b><?php
 					} ?>
 				</td>
-				<td class="shrink nowrap"><?php
+				<td class="shrink noWrap"><?php
 					echo $Thread['Sender'];
 					if($Thread['CanDelete'])
 					{
@@ -40,7 +31,7 @@ if (count($Threads) > 0)
 					} ?>
 				</td>
 				<td class="shrink center"><?php echo $Thread['Replies']; ?></td>
-				<td class="shrink nowrap"><?php echo date(DATE_FULL_SHORT, $Thread['SendTime']); ?>
+				<td class="shrink noWrap"><?php echo date(DATE_FULL_SHORT, $Thread['SendTime']); ?>
 				</td>
 			</tr><?php
 		} ?>

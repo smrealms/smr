@@ -18,7 +18,7 @@ if(isset($FeatureRequests))
 		foreach($FeatureRequests as &$FeatureRequest)
 		{ ?>
 			<tr style="text-align:center;">
-				<td class="shrink nowrap top"><?php
+				<td class="shrink noWrap top"><?php
 				if($FeatureRequest['Anonymous'])
 				{
 					?>Anonymous<?php
@@ -32,7 +32,7 @@ if(isset($FeatureRequests))
 					?> - <?php echo $FeatureRequest['PosterAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['PosterAccount']->getAccountID(); ?>)</td><?php
 				} ?>
 				<td style="text-align:left;"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
-				<td class="shrink nowrap top"><?php echo $FeatureRequest['Time']; ?></td>
+				<td class="shrink noWrap top"><?php echo $FeatureRequest['Time']; ?></td>
 			</tr><?php
 		} unset($FeatureRequest); ?>
 	</table><?php

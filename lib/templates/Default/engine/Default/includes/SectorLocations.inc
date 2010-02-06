@@ -19,7 +19,7 @@
 				</td>
 				<?php if($Location->hasAction())
 				{ ?> 
-					<td class="shrink nowrap">
+					<td class="shrink noWrap">
 						<div class="buttonA"><a class="buttonA" href="<?php echo $Location->getExamineHREF() ?>">&nbsp;Examine&nbsp;</a></div>
 					</td>
 				<?php

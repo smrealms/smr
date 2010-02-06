@@ -50,7 +50,7 @@ class Council
 	public static function &getPresident($gameID,$raceID)
 	{
 		self::getRaceCouncil($gameID,$raceID);
-		if(self::$RACE_PRESIDENTS[$gameID][$raceID]!==false&&is_numeric(self::$RACE_PRESIDENTS[$gameID][$raceID]))
+		if(isset(self::$RACE_PRESIDENTS[$gameID][$raceID])&&self::$RACE_PRESIDENTS[$gameID][$raceID]!==false&&is_numeric(self::$RACE_PRESIDENTS[$gameID][$raceID]))
 		{
 			self::$RACE_PRESIDENTS[$gameID][$raceID] =& SmrPlayer::getPlayer(self::$RACE_PRESIDENTS[$gameID][$raceID],$gameID);
 		}

@@ -114,7 +114,7 @@ if ($db->getNumRows() > 0)
 		else
 			$voted_for = '';
 
-		$PHP_OUTPUT.=('<td nowrap="nowrap" align="center">');
+		$PHP_OUTPUT.=('<td class="noWrap" align="center">');
 		if ($voted_for == 'YES')
 			$PHP_OUTPUT.=create_submit_style('Yes', 'background-color:green;');
 		else
@@ -148,7 +148,7 @@ if ($db->getNumRows() > 0)
 		$no_votes = $db2->getNumRows();
 
 		$PHP_OUTPUT.=('<td align="center">'.$yes_votes.' / '.$no_votes.'</td>');
-		$PHP_OUTPUT.=('<td nowrap="nowrap"align="center">' . date(DATE_FULL_SHORT_SPLIT, $end_time) . '</td>');
+		$PHP_OUTPUT.=('<td class="noWrap" align="center">' . date(DATE_FULL_SHORT_SPLIT, $end_time) . '</td>');
 		$PHP_OUTPUT.=('</form>');
 		$PHP_OUTPUT.=('</tr>');
 	}

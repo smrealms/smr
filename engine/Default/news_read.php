@@ -12,7 +12,6 @@ elseif ($min_news > $max_news)
 $template->assign('PageTopic','Reading The News');
 
 require_once(get_file_loc('menue.inc'));
-$template->unassign('MenuBar');
 create_news_menue($template);
 
 require_once(get_file_loc('news.functions.inc'));

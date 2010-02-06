@@ -17,7 +17,7 @@
 		<![endif]-->
 		<style type="text/css">
 			body {
-				font-size:<?php echo $FontSize; ?>%;
+				font-size:<?php echo $FontSize-20; ?>%;
 			}
 		</style><?php
 		if(isset($HeaderTemplateInclude))
@@ -43,9 +43,24 @@
 						{
 							?><h1><?php echo $PageTopic; ?></h1><br /><?php
 						}
-						if(isset($MenuBar))
+						if(isset($MenuItems)||isset($MenuBar))
+						{ ?>
+							<div class="bar1">
+								<div><?php
+									if(isset($MenuItems))
+									{
+										$this->includeTemplate('includes/menu.inc');
+									}
+									else if(isset($MenuBar))
+									{
+										echo $MenuBar;
+									} ?>
+								</div>
+							</div><br /><?php
+						}
+						else if(isset($SubMenuBar))
 						{
-							echo $MenuBar;
+							echo $SubMenuBar;
 						}
 						$this->includeTemplate($TemplateBody); ?>
 					</div>

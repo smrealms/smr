@@ -1,7 +1,3 @@
-<?php $this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
-					array('Link'=>$PlotCourseLink,'Text'=>'Plot a Course'),
-					array('Link'=>$LocalMapLink,'Text'=>'Local Map'),
-					array('Link'=>'map_galaxy.php" target="_blank','Text'=>'Galaxy Map')))); ?>
 <table cellspacing="0" cellpadding="0" style="width:100%;border:none">
 	<tr>
 		<td style="padding:0px;vertical-align:top">

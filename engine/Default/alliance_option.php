@@ -7,7 +7,7 @@ $db->nextRecord();
 $leader_id = $db->getField('leader_id');
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 $container=array();
 $container['url'] = 'skeleton.php';

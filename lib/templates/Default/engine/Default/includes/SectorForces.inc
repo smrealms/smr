@@ -27,7 +27,7 @@
 					} ?>
 				
 					<tr>
-						<td class="center shrink nowrap"><?php
+						<td class="center shrink noWrap"><?php
 							if($SharedForceAlliance && $ThisShip->canAcceptMines()&&$Force->hasMines())
 							{
 								?><a href="<?php echo $Force->getTakeMineHREF() ?>">[-]</a><?php
@@ -38,7 +38,7 @@
 								?><a href="<?php echo $Force->getDropMineHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
-						<td class="center shrink nowrap">
+						<td class="center shrink noWrap">
 							<?php
 							if($SharedForceAlliance && $ThisShip->canAcceptCDs()&&$Force->hasCDs())
 							{
@@ -50,7 +50,7 @@
 								?><a href="<?php echo $Force->getDropCDHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
-						<td class="center shrink nowrap">
+						<td class="center shrink noWrap">
 							<?php
 							if($SharedForceAlliance && $ThisShip->canAcceptSDs()&&$Force->hasSDs())
 							{
@@ -62,7 +62,7 @@
 								?><a href="<?php echo $Force->getDropSDHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
-						<td class="shrink nowrap center">
+						<td class="shrink noWrap center">
 							<?php if($SharedForceAlliance)
 							{
 								?><span class="green"><?php echo date(DATE_FULL_SHORT,$Force->getExpire());?></span><?php

@@ -1,7 +1,3 @@
-<?php $this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
-					array('Link'=>$CurrentNewsLink,'Text'=>'Read Current News'),
-					array('Link'=>$LatestNewsLink,'Text'=>'Read Latest News'),
-					array('Link'=>$AdvancedNewsLink,'Text'=>'Advanced News')))); ?>
 <div align="center">
 	<form name="AdvancedNewsForm" method="POST" action="<?php echo $AdvancedNewsFormHref; ?>">
 		<table class="standardnobord nobord" width="100%"><tr>

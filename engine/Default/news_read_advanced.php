@@ -1,7 +1,6 @@
 <?php
 $template->assign('PageTopic','Advanced News');
 require_once(get_file_loc('menue.inc'));
-$template->unassign('MenuBar');
 create_news_menue($template);
 
 //$db->query('

@@ -16,7 +16,7 @@ $password = $alliance->getPassword();
 
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance_id . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$leader_id);
+create_alliance_menue($alliance_id,$leader_id);
 
 
 $db2 = new SmrMySqlDatabase();

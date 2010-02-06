@@ -341,7 +341,7 @@ small, .small
 	margin: 0px;
 	padding: 0px;
 }
-.nowrap
+.noWrap
 {
 	white-space: nowrap;
 }

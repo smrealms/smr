@@ -39,7 +39,7 @@
 									echo $Ship->getName();
 								} ?>
 							</td>
-							<td class="shrink center nowrap"><?php
+							<td class="shrink center noWrap"><?php
 								if($Ship->hasActiveIllusion())
 								{
 									echo $Ship->getIllusionAttack();
@@ -57,8 +57,8 @@
 								{
 									echo $Ship->getDefenseRating();
 								} ?></td>
-							<td class="shrink center nowrap"><?php echo $Player->getLevelID() ?></td>
-							<td class="shrink center nowrap">
+							<td class="shrink center noWrap"><?php echo $Player->getLevelID() ?></td>
+							<td class="shrink center noWrap">
 								<div class="buttonA">
 									<a href="<?php echo $Player->getExamineTraderHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Examine </a>
 								</div>

@@ -40,13 +40,13 @@ if (!isset($number) && !isset($var['number'])) {
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>Name</th>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>First and Last Name</th>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>City</th>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>Email</th>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>Disabled Info</th>');
-	$PHP_OUTPUT.=('<th algin="center" nowrap>Exception Reason</th>');
-	$PHP_OUTPUT.=('<th align="center" nowarp>Options Box</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">Name</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">First and Last Name</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">City</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">Email</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">Disabled Info</th>');
+	$PHP_OUTPUT.=('<th algin="center noWrap">Exception Reason</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">Options Box</th>');
 	$PHP_OUTPUT.=('</tr>');
 	foreach ($login as $name) {
 
@@ -77,7 +77,7 @@ if (!isset($number) && !isset($var['number'])) {
 			$stop = '';
 			$next_arr = array();
 			if ($continue)
-				$PHP_OUTPUT.=('<td align="center" nowrap>');
+				$PHP_OUTPUT.=('<td align="center noWrap">');
 			else
 				$PHP_OUTPUT.=('<td align="center">&nbsp;</td>');
 			while ($continue) {

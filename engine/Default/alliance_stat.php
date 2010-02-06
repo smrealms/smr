@@ -10,7 +10,7 @@ $img = $db->getField('img_src');
 $mod = strip_tags($db->getField('mod'));
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 $container=array();
 $container['url'] = 'alliance_stat_processing.php';

@@ -1,12 +1,4 @@
 <?php
-$this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
-					array('Link'=>$PlanetMainLink,'Text'=>'Planet Main'),
-					array('Link'=>$PlanetConstructionLink,'Text'=>'Construction'),
-					array('Link'=>$PlanetDefensesLink,'Text'=>'Defenses'),
-					array('Link'=>$PlanetOwnershipLink,'Text'=>'Ownership'),
-					array('Link'=>$PlanetStockpileLink,'Text'=>'Stockpile'),
-					array('Link'=>$PlanetFinancialLink,'Text'=>'Financial'))));
-
 if (isset($ErrorMsg))
 {
 	echo $ErrorMsg; ?><br /><?php

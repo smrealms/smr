@@ -33,74 +33,94 @@
 					<td class="topcenterCell"><?php
 						if(isset($ThisPlayer))
 						{ ?>
-							<div class="TopInfor noWrap">
-								<div class="name">
-									<?php echo $ThisPlayer->getLevelName(); ?>
-									<br />
-									<a class="Nav" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a>
-								</div>
-		
-								<div class="topcenterOne">
-									Race: <?php echo $ThisPlayer->getRaceName(); ?><br />
-									
-									Turns : <span id="turns">
-										<span class="<?php
-											switch($ThisPlayer->getTurnsLevel())
-											{
-												case 'NONE':
-												case 'LOW':
-													echo 'red';
-												break;
-												case 'MEDIUM':
-													echo 'yellow';
-												break;
-												default:
-													echo 'green';
-											}
-											?>"><?php
-												echo $ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns();
-											?></span>
-										</span><br />
-									
-									<span id="newbieturns"><?php
-										if($ThisPlayer->hasNewbieTurns())
+							<div class="TopInfor">
+								<table>
+									<tr>
+										<td>
+											<div class="name noWrap">
+												<?php echo $ThisPlayer->getLevelName(); ?>
+												<br />
+												<a class="Nav" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a>
+											</div>
+										</td>
+										<td>
+											<div class="topcenterOne noWrap">
+												Race: <?php echo $ThisPlayer->getRaceName(); ?><br />
+												
+												Turns : <span id="turns">
+													<span class="<?php
+														switch($ThisPlayer->getTurnsLevel())
+														{
+															case 'NONE':
+															case 'LOW':
+																echo 'red';
+															break;
+															case 'MEDIUM':
+																echo 'yellow';
+															break;
+															default:
+																echo 'green';
+														}
+														?>"><?php
+															echo $ThisPlayer->getTurns() .'/'.$ThisPlayer->getMaxTurns();
+														?></span>
+													</span><br />
+												
+												<span id="newbieturns"><?php
+													if($ThisPlayer->hasNewbieTurns())
+													{
+														?>Newbie Turns: <span style="color: #<?php if ($ThisPlayer->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT) { ?>387C44<?php } else { ?>F00<?php } ?>;"><?php echo $ThisPlayer->getNewbieTurns(); ?></span><br /><?php
+													} ?>
+												</span>
+												
+												Credits: <?php echo number_format($ThisPlayer->getCredits()); ?><br />
+												
+												Experience: <?php echo number_format($ThisPlayer->getExperience()); ?>
+											</div>
+										</td>
+										<td>
+											<div class="topcenterTwo noWrap">
+												Level: <a class="Nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><?php echo $ThisPlayer->getLevelID(); ?></a>
+												<br />
+												Next Level: <?php
+													$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
+													$Experience = number_format($ThisPlayer->getExperience()); ?>
+													<img src="images/bar_left.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
+													<img src="images/blue.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentAcquired(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
+													<img src="images/bar_border.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentRemaining(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
+													<img src="images/bar_right.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
+												
+												Alignment: <?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?><br />
+												
+												Alliance: <a href="<?php echo $AllianceLink; ?>"><?php
+													echo $ThisPlayer->getAllianceName();
+													if($ThisPlayer->hasAlliance())
+													{
+														echo '('.number_format($ThisPlayer->getAllianceID()).')';
+													} ?></a>
+											</div>
+										</td>
+									</tr>
+								</table>
+								<div style="clear:left;"></div><?php
+								if(isset($MenuItems)||isset($MenuBar))
+								{ ?>
+									<div style="border-top: 2px solid #a3692d; margin-top: 5px;"></div>
+									<div class="bar1"><?php
+										if(isset($MenuItems))
 										{
-											?>Newbie Turns: <span style="color: #<?php if ($ThisPlayer->getNewbieTurns() > NEWBIE_TURNS_WARNING_LIMIT) { ?>387C44<?php } else { ?>F00<?php } ?>;"><?php echo $ThisPlayer->getNewbieTurns(); ?></span><br /><?php
+											$this->includeTemplate('includes/menu.inc');
+										}
+										else if(isset($MenuBar))
+										{
+											echo $MenuBar;
 										} ?>
-									</span>
-									
-									Credits: <?php echo number_format($ThisPlayer->getCredits()); ?><br />
-									
-									Experience: <?php echo number_format($ThisPlayer->getExperience()); ?>
-								</div>
-		
-								<div class="topcenterTwo">
-									Level: <a class="Nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><?php echo $ThisPlayer->getLevelID(); ?></a>
-									<br />
-									Next Level: <?php
-										$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
-										$Experience = number_format($ThisPlayer->getExperience()); ?>
-										<img src="images/bar_left.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
-										<img src="images/blue.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentAcquired(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
-										<img src="images/bar_border.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentRemaining(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
-										<img src="images/bar_right.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
-									
-									Alignment: <?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?><br />
-									
-									Alliance: <a href="<?php echo $AllianceLink; ?>"><?php
-										echo $ThisPlayer->getAllianceName();
-										if($ThisPlayer->hasAlliance())
-										{
-											echo '('.number_format($ThisPlayer->getAllianceID()).')';
-										} ?></a>
-								</div>
-								<div style="clear:left;"/>
-								<!--div style="border-top: 2px solid #a3692d; margin-top: 5px;"></div>
-								<div class="bar1">
-									<a class="Nav" href="htcRound.htm">Plot A Cource</a> | 
-									<a class="Nav" href="htcRound.htm">Local Map</a> | 
-									<a class="Nav" href="htcRound.htm">Galaxy Map</a>
-								</div-->
+									</div><?php
+								}
+								else if(isset($SubMenuBar))
+								{
+									echo $SubMenuBar;
+								} ?>
 							</div><?php
 						} ?>
 					</td>
@@ -272,10 +292,6 @@
 							if(isset($PageTopic))
 							{
 								?><h1><?php echo $PageTopic; ?></h1><br /><?php
-							}
-							if(isset($MenuBar))
-							{
-								echo $MenuBar;
 							}
 							$this->includeTemplate($TemplateBody); ?>
 						</div>

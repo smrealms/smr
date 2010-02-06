@@ -59,7 +59,7 @@ else
 			$container['body'] = 'box_reply.php';
 			$container['sender_id'] = $sender_acc->getAccountID();
 			$container['game_id'] = $gameID;
-			$PHP_OUTPUT.=('<td nowrap="nowrap">');
+			$PHP_OUTPUT.=('<td class="noWrap">');
 			
 			$sender = 'From: '.$sender_acc->login.' ('.$sender_acc->account_id.')';
 			if ($senderPlayer!==false&&$sender_acc->login != $senderPlayer->getPlayerName())

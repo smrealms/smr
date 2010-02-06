@@ -7,7 +7,7 @@ $db->nextRecord();
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 //$template->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 // Ugly, but funtional
 $db->query('
@@ -54,7 +54,7 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.= $planet->planet_name;
 		$PHP_OUTPUT.= '</td><td>';
 		$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
-		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
+		$PHP_OUTPUT.= '</td><td class="shrink noWrap">';
 		$PHP_OUTPUT.= $planet->getSectorID();
 		$PHP_OUTPUT.= '&nbsp;(';
 		$PHP_OUTPUT.= ($forceGalaxy===null?'None':$forceGalaxy->getName());
@@ -68,7 +68,7 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.= $planet->shields;
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
 		$PHP_OUTPUT.= $planet->drones;
-		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
+		$PHP_OUTPUT.= '</td><td class="shrink noWrap">';
 
 		$supply = false;
 
@@ -76,7 +76,7 @@ if ($db->getNumRows() > 0)
 		{
 			if ($amount > 0)
 			{
-				$PHP_OUTPUT.= '<span class="nowrap">' . $goods_cache[$id] . '</span>: ';
+				$PHP_OUTPUT.= '<span class="noWrap">' . $goods_cache[$id] . '</span>: ';
 				$PHP_OUTPUT.= $amount;
 				$PHP_OUTPUT.= '<br />';
 				$supply = true;
@@ -88,7 +88,7 @@ if ($db->getNumRows() > 0)
 			$PHP_OUTPUT.=('none');
 		}
 
-		$PHP_OUTPUT.= '</td><td class="shrink nowrap center">';
+		$PHP_OUTPUT.= '</td><td class="shrink noWrap center">';
 		if ($planet->hasCurrentlyBuilding())
 		{
 			$PLANET_BUILDINGS =& Globals::getPlanetBuildings();

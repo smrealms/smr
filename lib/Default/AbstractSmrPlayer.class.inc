@@ -608,11 +608,11 @@ abstract class AbstractSmrPlayer
 			//get relations
 			$RACES = Globals::getRaces();
 			$pureRels = $this->getPureRelations(); // make sure they're initialised.
-			$stats = $this->getStats(); // make sure they're initialised.
+//			$stats = $this->getStats(); // make sure they're initialised.
 			$this->relations = array();
 			foreach ($RACES as $race_id => $race_name)
 			{
-				$this->relations[$race_id] = round($pureRels[$race_id] + $stats['Relations'] / 2);
+				$this->relations[$race_id] = round($pureRels[$race_id]);// + $stats['Relations'] / 2);
 			}
 		}
 		return $this->relations;
