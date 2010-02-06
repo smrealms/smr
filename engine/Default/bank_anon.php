@@ -144,7 +144,7 @@ if (!isset($account_num) && !isset($make))
 			$PHP_OUTPUT.= $db->getField('anon_id');
 			$PHP_OUTPUT.= '</td><td>';
 			$PHP_OUTPUT.= $db->getField('password');
-			$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
+			$PHP_OUTPUT.= '</td><td class="shrink noWrap">';
 
 			if($db2->nextRecord() && $db2->getField('MAX(time)')) {
 				$PHP_OUTPUT.= date(DATE_FULL_SHORT, $db2->getField('MAX(time)'));
@@ -290,7 +290,7 @@ if (isset($account_num))
 		while ($db->nextRecord()) {
 			$PHP_OUTPUT.= '<tr><td class="shrink center">';
 			$PHP_OUTPUT.= $db->getField('transaction_id');
-			$PHP_OUTPUT.= '</td><td class="shrink center nowrap">';
+			$PHP_OUTPUT.= '</td><td class="shrink center noWrap">';
 			$PHP_OUTPUT.= date(DATE_FULL_SHORT_SPLIT, $db->getField('time'));
 			$PHP_OUTPUT.= '</td><td>';
 			$container['player_id']	= $db->getField('player_id');

@@ -4,7 +4,7 @@ $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_i
 $db->nextRecord();
 $template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
+create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
 
 $PHP_OUTPUT.= '<h2>Exemption Requests</h2><br />';
 $PHP_OUTPUT.=('Selecting a box will authorize it, leaving a box unselected will make it unauthorized after you submit.<br />');

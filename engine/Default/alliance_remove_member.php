@@ -4,7 +4,7 @@ $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_i
 $db->nextRecord();
 $template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
+create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
 
 $db->query('
 SELECT
@@ -71,7 +71,7 @@ if ($db->getNumRows() != 0) {
 			$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
 			$PHP_OUTPUT.= '(';
 			$PHP_OUTPUT.= $db->getField('player_id');
-			$PHP_OUTPUT.= ')</td><td class="shrink nowrap center" style="color:' . $color;
+			$PHP_OUTPUT.= ')</td><td class="shrink noWrap center" style="color:' . $color;
 			$PHP_OUTPUT.= '">';
 			$PHP_OUTPUT.= date(DATE_FULL_SHORT, $db->getField('last_cpl_action'));
 			$PHP_OUTPUT.= '</td><td class="shrink center">';

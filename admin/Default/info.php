@@ -45,11 +45,11 @@ if (!isset($number) && !isset($var['number'])) {
 	$PHP_OUTPUT.=('<input type=hidden value=0 name=buttons2>');
 	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>Name</th>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>City & Email</th>');
-	$PHP_OUTPUT.=('<th align="center" nowrap>Disabled Info</th>');
-	$PHP_OUTPUT.=('<th algin="center" nowrap>Exception</th>');
-	$PHP_OUTPUT.=('<th algin="center" nowrap>Ban</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">Name</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">City & Email</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">Disabled Info</th>');
+	$PHP_OUTPUT.=('<th algin="center noWrap">Exception</th>');
+	$PHP_OUTPUT.=('<th algin="center noWrap">Ban</th>');
 	$PHP_OUTPUT.=('</tr>');
 	foreach ($login as $name) {
 

@@ -31,7 +31,7 @@ if ($db->getNumRows())
 		$container['offender'] = $db->getField('from_id');
 		$container['offended'] = $db->getField('to_id');
 		$container['game_id'] = $gameID;
-		$PHP_OUTPUT.=('<td nowrap="nowrap">');
+		$PHP_OUTPUT.=('<td class="noWrap">');
 		
 		$offender = 'From: ';
 		if(is_object($sender))
@@ -43,7 +43,7 @@ if ($db->getNumRows())
 		else
 			$offender .= $sender;
 		$PHP_OUTPUT.=create_link($container, $offender);
-		$PHP_OUTPUT.=('</td><td nowrap="nowrap">');
+		$PHP_OUTPUT.=('</td><td class="noWrap">');
 		//To: $receiver_acc->login ($receiver_acc->account_id)');
 		$offended = 'To: ';
 		if(is_object($receiver))

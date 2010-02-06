@@ -30,7 +30,7 @@ else {
 while ($db->nextRecord()) {
 
 	$PHP_OUTPUT.= '<tr>';
-	$PHP_OUTPUT.= '<td class="shrink top nowrap">';
+	$PHP_OUTPUT.= '<td class="shrink top noWrap">';
 	//$PHP_OUTPUT.=  $db->getField('login');
 	//$PHP_OUTPUT.= '<br />';
 	$PHP_OUTPUT.= date(DATE_FULL_SHORT_SPLIT, $db->getField('time'));

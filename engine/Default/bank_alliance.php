@@ -181,7 +181,7 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$PHP_OUTPUT.= '<tr><td class="center shrink">';
 		$PHP_OUTPUT.= $db->getField('transaction_id');
-		$PHP_OUTPUT.= '</td><td class="shrink center nowrap">';
+		$PHP_OUTPUT.= '</td><td class="shrink center noWrap">';
 		$PHP_OUTPUT.= date(DATE_FULL_SHORT_SPLIT, $db->getField('time'));
 		$PHP_OUTPUT.= '</td><td>';
 		if ($db->getField('exempt')) $PHP_OUTPUT.= 'Alliance Funds c/o<br />';

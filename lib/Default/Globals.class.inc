@@ -407,18 +407,12 @@ class Globals
 	
 	public static function getLocalMapHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'map_local.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php','map_local.php'));
 	}
 	
 	public static function getPodScreenHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'death.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php','death.php'));
 	}
 	
 	public static function getBetaFunctionsHREF() //BETA
@@ -438,11 +432,166 @@ class Globals
 	
 	public static function getSmrFileCreateHREF($adminCreateGameID = false)
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'smr_file_create.php';
+		$container = create_container('skeleton.php','smr_file_create.php');
 		$container['AdminCreateGameID'] = $adminCreateGameID;
 		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getPlotCourseHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php','course_plot.php'));
+	}
+	
+	public static function getPlanetMainHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php','planet_main.php'));
+	}
+	
+	public static function getPlanetConstructionHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php','planet_construction.php'));
+	}
+	
+	public static function getPlanetDefensesHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php','planet_defense.php'));
+	}
+	
+	public static function getPlanetOwnershipHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php','planet_ownership.php'));
+	}
+	
+	public static function getPlanetStockpileHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php','planet_stockpile.php'));
+	}
+	
+	public static function getPlanetFinancesHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php','planet_financial.php'));
+	}
+	
+	public static function getAllianceHREF($allianceID = null)
+	{
+		if ($allianceID > 0)
+			return self::getAllianceRosterHREF($allianceID);
+		else
+			return self::getAllianceListHREF();
+	}
+	
+	public static function getAllianceRosterHREF($allianceID = null)
+	{
+		$container = create_container('skeleton.php', 'alliance_roster.php');
+		if ($allianceID!=null)
+			$container['alliance_id'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAllianceListHREF()
+	{
+		$container = create_container('skeleton.php','alliance_list.php');
+		$container['order'] = 'alliance_name';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAllianceNewsHREF($allianceID = null)
+	{
+		$container = create_container('skeleton.php','news_read_advanced.php');
+		$container['submit'] = 'Search For Alliance';
+		if ($allianceID!=null)
+			$container['AllianceID'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAllianceMotdHREF($allianceID)
+	{
+		$container = create_container('skeleton.php', 'alliance_mod.php');
+		$container['alliance_id'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAllianceMessageHREF($allianceID)
+	{
+		$container = create_container('skeleton.php', 'alliance_broadcast.php');
+		$container['alliance_id'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAllianceMessageBoardHREF($allianceID)
+	{
+		$container = create_container('skeleton.php', 'alliance_message.php');
+		$container['alliance_id'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAlliancePlanetsHREF($allianceID)
+	{
+		$container = create_container('skeleton.php', 'alliance_planets.php');
+		$container['alliance_id'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAllianceForcesHREF($allianceID)
+	{
+		$container = create_container('skeleton.php', 'alliance_forces.php');
+		$container['alliance_id'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getAllianceOptionsHREF($allianceID)
+	{
+		$container = create_container('skeleton.php', 'alliance_option.php');
+		$container['alliance_id'] = $allianceID;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getViewMessagesHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'message_view.php'));
+	}
+	
+	public static function getSendGlobalMessageHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'message_send.php'));
+	}
+	
+	public static function getManageBlacklistHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'message_blacklist.php'));
+	}
+	
+	public static function getSendCouncilMessageHREF($raceID)
+	{
+		$container = create_container('skeleton.php', 'council_send_message.php');
+		$container['race_id'] = $raceID;
+		$container['folder_id'] = MSG_POLITICAL;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getTraderStatusHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_status.php'));
+	}
+	
+	public static function getTraderPlanetHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_status.php'));
+	}
+	
+	public static function getCouncilHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'council_list.php'));
+	}
+	
+	public static function getTraderRelationsHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_relations.php'));
+	}
+	
+	public static function getTraderBountiesHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_bounties.php'));
 	}
 }
 

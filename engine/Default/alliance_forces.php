@@ -9,7 +9,7 @@ $db->nextRecord();
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 //$template->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
 include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
 //get the sequence
 if (!isset($var['seq']))
@@ -122,7 +122,7 @@ if ($db->getNumRows() > 0)
 		$forceGalaxy =& SmrGalaxy::getGalaxyContaining($db->getField('game_id'),$db->getField('sector_id'));
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
-		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
+		$PHP_OUTPUT.= '</td><td class="shrink noWrap">';
         $PHP_OUTPUT.= $db->getField('sector_id') . ' (' . ($forceGalaxy===null?'None':$forceGalaxy->getName());
 		$PHP_OUTPUT.= ')</td><td class="shrink center">';
         $PHP_OUTPUT.= $db->getField('combat_drones');
@@ -130,7 +130,7 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.= $db->getField('scout_drones');
 		$PHP_OUTPUT.= '</td><td class="shrink center">';
 		$PHP_OUTPUT.= $db->getField('mines');
-		$PHP_OUTPUT.= '</td><td class="shrink nowrap">';
+		$PHP_OUTPUT.= '</td><td class="shrink noWrap">';
         $PHP_OUTPUT.= date(DATE_FULL_SHORT, $db->getField('expire_time'));
         $PHP_OUTPUT.= '</td></tr>';
     }

@@ -102,15 +102,17 @@ function create_echo_error($message) {
 	$return.=('<p><small>If the error was unrecognizable, please notify the administrators.</small></p>');
 }
 
-function create_menue($menue) {
-
-	$return = '<div class="bar1"><div><span class="nowrap">';
+function create_menue($menue)
+{
+	global $template;
+	$return = '<span class="noWrap">';
 	foreach ($menue as $number => $entry) {
-		if ($number > 0) $return .= '</span> | <span class="nowrap">';
+		if ($number > 0) $return .= '</span> | <span class="noWrap">';
 		$return .= $entry;
 	}
-	$return .= '</span></div></div><br />';
-	return $return;
+	$return .= '</span>';
+	$template->unassign('MenuItems');
+	$template->assign('MenuBar',$return);
 }
 
 function create_topic($topic) {
@@ -568,31 +570,20 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 		if ($player->isLandedOnPlanet())
 		{
-			$container['body'] = 'planet_main.php';
-			$template->assign('PlanetMainLink',SmrSession::get_new_href($container));
+			$template->assign('PlanetMainLink',Globals::getPlanetMainHREF());
 		}
 		else
 		{
-			$container['body'] = 'map_local.php';
-			$template->assign('LocalMapLink',SmrSession::get_new_href($container));
+			$template->assign('LocalMapLink',Globals::getLocalMapHREF());
 		}
 
 		$container['body'] = 'course_plot.php';
-		$template->assign('PlotCourseLink',SmrSession::get_new_href($container));
+		$template->assign('PlotCourseLink',Globals::getPlotCourseHREF());
 		
 		$container['body'] = 'trader_status.php';
 		$template->assign('TraderLink',SmrSession::get_new_href($container));
 	
-		if ($player->getAllianceID() > 0)
-		{
-			$container['body'] = 'alliance_mod.php';
-		}
-		else
-		{
-			$container['body'] = 'alliance_list.php';
-			$container['order'] = 'alliance_name';
-		}
-		$template->assign('AllianceLink',SmrSession::get_new_href($container));
+		$template->assign('AllianceLink',Globals::getAllianceHREF($player->getAllianceID()));
 	
 		$container['body'] = 'combat_log_viewer.php';
 		$template->assign('CombatLogsLink',SmrSession::get_new_href($container));

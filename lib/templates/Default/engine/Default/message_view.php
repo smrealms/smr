@@ -1,8 +1,4 @@
-<?php $this->includeTemplate('includes/menu.inc',array('MenuItems' => array(
-					array('Link'=>$ViewMessagesLink,'Text'=>'View Messages'),
-					array('Link'=>$SendCouncilMessageLink,'Text'=>'Send Council Message'),
-					array('Link'=>$SendGlobalMessageLink,'Text'=>'Send Global Message'),
-					array('Link'=>$ManageBlacklistLink,'Text'=>'Manage Blacklist'))));
+<?php
 if (isset($MessageBoxes))
 { ?>
 	<p>Please choose your Message folder!</p>
@@ -73,7 +69,7 @@ else
 				{ ?>
 					<tr>
 						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if($Message['Unread']) { ?>*<?php } ?></td>
-						<td nowrap="nowrap" width="100%"><?php
+						<td class="noWrap" width="100%"><?php
 							if(isset($Message['RecieverDisplayName']))
 							{
 								?>To: <?php echo $Message['RecieverDisplayName'];
@@ -83,7 +79,7 @@ else
 								?>From: <?php echo $Message['SenderDisplayName'];
 							} ?>
 						</td>
-						<td nowrap="nowrap"<?php if(!isset($Message['Sender'])) { ?> colspan="3"<?php } ?>>Date: <?php echo date(DATE_FULL_SHORT, $Message['SendTime']); ?></td>
+						<td class="noWrap"<?php if(!isset($Message['Sender'])) { ?> colspan="3"<?php } ?>>Date: <?php echo date(DATE_FULL_SHORT, $Message['SendTime']); ?></td>
 						<td>
 							<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/notify.gif" border="0" align="right"title="Report this message to an admin"</a>
 						</td><?php
@@ -109,8 +105,8 @@ else
 				{ ?>
 					<tr>
 						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID'] ?>" /><?php if($Message['Unread']) { ?>*<?php } ?></td>
-						<td nowrap="nowrap" width="100%">From: <?php echo $Message['SenderDisplayName']; ?></td>
-						<td nowrap="nowrap" colspan="4">Date: <?php echo date(DATE_FULL_SHORT, $Message['FirstSendTime']); ?> - <?php echo date(DATE_FULL_SHORT, $Message['LastSendTime']); ?></td>
+						<td class="noWrap" width="100%">From: <?php echo $Message['SenderDisplayName']; ?></td>
+						<td class="noWrap" colspan="4">Date: <?php echo date(DATE_FULL_SHORT, $Message['FirstSendTime']); ?> - <?php echo date(DATE_FULL_SHORT, $Message['LastSendTime']); ?></td>
 					</tr>
 					<tr>
 						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>

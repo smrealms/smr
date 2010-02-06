@@ -126,7 +126,7 @@ elseif ($type == 'list') {
 				$PHP_OUTPUT.=('<td><input type=text name="suspicion['.$account_id.']" value="DB Exception - '.$ex.'" id="InputFields"></td>');
 			else
 				$PHP_OUTPUT.=('<td><input type=text name="suspicion['.$account_id.']" value="'.$reason.'" id="InputFields"></td>');
-			$PHP_OUTPUT.=('<td nowrap>'.$close_reason.'</td>');
+			$PHP_OUTPUT.=('<td class="noWrap">'.$close_reason.'</td>');
 		} else {
 			$PHP_OUTPUT.=('<td>&nbsp;</td>');
 			$PHP_OUTPUT.=('<td>');
@@ -138,7 +138,7 @@ elseif ($type == 'list') {
 			$db2->query('SELECT * FROM account_is_closed NATURAL JOIN closing_reason WHERE account_id = '.$account_id);
 			//$PHP_OUTPUT.=('SELECT * FROM account_is_closed NATURAL JOIN closing_reason WHERE account_id = '.$account_id);
 			if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
-			$PHP_OUTPUT.=('<td nowrap>'.$close_reason.'</td>');
+			$PHP_OUTPUT.=('<td class="noWrap">'.$close_reason.'</td>');
 		}
 		$PHP_OUTPUT.=('</tr>');
 		
@@ -208,7 +208,7 @@ elseif ($type == 'list') {
 		$db2->query('SELECT * FROM account_is_closed NATURAL JOIN closing_reason WHERE account_id = '.$id);
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 		else $close_reason = '&nbsp;';
-		$PHP_OUTPUT.=('<td nowrap>'.$close_reason.'</td>');
+		$PHP_OUTPUT.=('<td class="noWrap">'.$close_reason.'</td>');
 		$PHP_OUTPUT.=('</tr>');
 		$close_reason = '&nbsp;';
 		$last = $id;
@@ -315,7 +315,7 @@ elseif ($type == 'list') {
 		$PHP_OUTPUT.=('</td>');
 		$db2->query('SELECT * FROM account_is_closed NATURAL JOIN closing_reason WHERE account_id = '.$id);
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
-		$PHP_OUTPUT.=('<td nowrap>'.$close_reason.'</td>');
+		$PHP_OUTPUT.=('<td class="noWrap">'.$close_reason.'</td>');
 		$PHP_OUTPUT.=('</tr>');
 		$close_reason = '';
 		$last_ip = $ip;

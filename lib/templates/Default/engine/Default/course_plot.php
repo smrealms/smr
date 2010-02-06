@@ -1,11 +1,3 @@
-<?php
-$MenuItems = array(array('Link'=>$PlotCourseLink,'Text'=>'Plot a Course'));
-if(!$ThisPlayer->isLandedOnPlanet())
-	$MenuItems[] = array('Link'=>$LocalMapLink,'Text'=>'Local Map');
-$MenuItems[] = array('Link'=>'map_galaxy.php" target="_blank','Text'=>'Galaxy Map');
-$this->includeTemplate('includes/menu.inc',array('MenuItems' => $MenuItems)); ?>
-
-
 <form class="standard" id="PlotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">
 	<h2>Conventional</h2><br />
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">

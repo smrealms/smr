@@ -2,7 +2,7 @@
 $template->assign('PageTopic','Trader Status');
 
 require_once(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_trader_menue();
+create_trader_menue();
 
 $container=array();
 $container['url'] = 'skeleton.php';

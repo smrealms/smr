@@ -8,7 +8,9 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 $template->assign('ThisSector',$sector);
 
 $template->assign('PageTopic','Current Sector: ' . $player->getSectorID() . ' (' .$sector->getGalaxyName() . ')');
-$template->unassign('MenuBar'); //Menu is in template
+
+require_once(get_file_loc('menue.inc'));
+create_nav_menue($template,$player);
 
 
 // *******************************************

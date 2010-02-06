@@ -2,6 +2,9 @@
 
 $template->assign('PageTopic','Plot A Course');
 
+require_once(get_file_loc('menue.inc'));
+create_nav_menue($template,$player);
+
 $container=array();
 $container['url'] = 'course_plot_processing.php';
 $container['body'] = '';

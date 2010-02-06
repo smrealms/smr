@@ -5,7 +5,7 @@ $rank_id = $account->get_rank();
 $template->assign('PageTopic','Extended User Rankings');
 include(get_file_loc('menue.inc'));
 if (SmrSession::$game_id != 0)
-	$PHP_OUTPUT.=create_trader_menue();
+	create_trader_menue();
 
 $db->query('SELECT * FROM rankings WHERE rankings_id = '.$rank_id);
 if ($db->nextRecord())

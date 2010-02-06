@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Combat Logs');
 include(get_file_loc('menue.inc'));
-$template->assign('MenuBar',create_combat_log_menue());
+create_combat_log_menue();
 if (isset($_REQUEST['action']))
 {
 	$submitAction = $_REQUEST['action'];
@@ -245,7 +245,7 @@ if($action != 5)
 				$defender_name = $players[$info[1]];
 			else
 				$defender_name = 'Unknown Defender';
-			$PHP_OUTPUT.= '<td class="shrink nowrap">' . date(DATE_FULL_SHORT,$info[2]) . '</td>';
+			$PHP_OUTPUT.= '<td class="shrink noWrap">' . date(DATE_FULL_SHORT,$info[2]) . '</td>';
 			$PHP_OUTPUT.= '<td class="center shrink">' . $info[3] . '</td>';
 			$PHP_OUTPUT.= '<td>' . $attacker_name . '</td>';
 			$PHP_OUTPUT.= '<td>' . $defender_name . '</td>';
