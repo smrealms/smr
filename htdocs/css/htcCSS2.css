@@ -349,6 +349,7 @@ a.rowlb {
 	font-size: 1.25em;
 }
 .wep1 {
+	white-space:normal;
 	color: #ba8f25;/*#956d0b;#755a16;#a78c4b;#d8a21d; #f6ff00;*/
 }
 .copyright {
