@@ -30,8 +30,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-define("BBCODE_VERSION", "1.4.2");
-define("BBCODE_RELEASE", "2009-06-21");
+define("BBCODE_VERSION", "1.4.3");
+define("BBCODE_RELEASE", "2009-10-10");
 define("BBCODE_VERBATIM", 2);
 define("BBCODE_REQUIRED", 1);
 define("BBCODE_OPTIONAL", 0);
@@ -1164,7 +1164,7 @@ $/Dx", $string);
 */
 }
 function HTMLEncode($string) {
-	return $string;
+return $string;
 //Page
 //if (!$this->allow_ampersand)
 //return htmlspecialchars($string);
@@ -1665,7 +1665,7 @@ $link = $possible_content = "";
 foreach ($tag_rule['plain_link'] as $possible_content) {
 if ($possible_content == '_content'
 && strlen($contents) > 0) {
-$link = $this->unhtmlentities(strip_tags($contents));
+$link = $this->UnHTMLEncode(strip_tags($contents));
 break;
 }
 if (isset($params[$possible_content])
