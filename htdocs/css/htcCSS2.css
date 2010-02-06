@@ -141,6 +141,7 @@ html, body {
 }
 .MainContentArea {
 	background-color: #000000;
+	color: #FFFFFF;
 	border: 6px solid #a3692d;
 	-moz-border-radius: 6px; /* Firefox */
 	-webkit-border-radius: 6px; /* Safari and chrome */
@@ -341,71 +342,6 @@ a.rowlb {
 /* ****************************************************
  End of all Borders
  *****************************************************/
-.loct {
-	font-size: 1em;
-	line-height: 1.6em;
-	border: solid 2px #a3692d;
-	width: 40%;
-	margin: 0px 0px 10px 0px;
-}
-.loctSingleHead {
-	background-color: #7b5121;
-	/*color: #000000; /*#ba8f25;*/
-	font-weight: bold;
-	filter: alpha(opacity = 50);
-	opacity: 0.5; /* firefox, opera, safari, chrome */
-	float: left;
-	width: 100%;
-	border-bottom: solid 2px #a3692d;
-	text-align: center;
-	margin: 0px;
-}
-.loctHead1 {
-	background-color: #7b5121;
-	/*color: #000000; /*#ba8f25;*/
-	font-weight: bold;
-	filter: alpha(opacity = 50);
-	opacity: 0.5; /* firefox, opera, safari, chrome */
-	float: left;
-	width: 69%;
-	border-bottom: solid 2px #a3692d;
-	text-align: center;
-	margin: 0px;
-}
-.loctHead2 {
-	background-color: #7b5121;
-	/*color: #000000; /*#ba8f25;*/
-	font-weight: bold;
-	/*border-left: solid 2px #a3692d;*/
-	filter: alpha(opacity = 50);
-	opacity: 0.5; /* firefox, opera, safari, chrome */
-	float: left;
-	width: 30%;
-	border-left: solid 2px #a3692d;
-	border-bottom: solid 2px #a3692d;
-	text-align: center;
-	margin: 0px;
-}
-.loctSingleName {
-	float: left;
-	width: 100%;
-	border-bottom: solid 1px #a3692d;
-	margin: 0px;
-}
-.loctName {
-	float: left;
-	width: 69%;
-	border-bottom: solid 1px #a3692d;
-	margin: 0px;
-}
-.loctOption {
-	text-align: center;
-	float: left;
-	width: 30%;
-	border-left: solid 2px #a3692d;
-	border-bottom: solid 1px #a3692d;
-	margin: 0px;
-}
 .noWrap {
 	white-space: nowrap;
 }
@@ -458,19 +394,16 @@ a:hover.Nav {
 	background: #cc9933;
 }
 
-
-table.standard
-{
+table.standard {
+	color: #FFFFFF;
 	border: 1px solid #7B5121;
 	border-spacing: 0px;
 }
-table.standard td, table.standard th
-{
+table.standard td, table.standard th {
 	border: 1px solid #7B5121;
 	padding:2px;
 }
-table.standard th
-{
+table.standard th {
 	text-align:center;
 	color:#808080;
 	background-color:#3E2911;
