@@ -135,7 +135,7 @@ else
 <br />
 <h1>Donate Money</h1>
 <p>
-	<a href="<?php echo $DonateLink ?>"><img src="images/donation.jpg" border="0" alt="donate" /></a>
+	<a href="<?php echo $DonateLink ?>"><img src="images/donation.png" border="0" alt="donate" /></a>
 </p>
 <br />
 <h1><a href="<?php echo $OldAnnouncementsLink ?>">View Old Announcements</a></h1>
