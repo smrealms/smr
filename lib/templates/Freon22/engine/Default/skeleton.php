@@ -172,7 +172,7 @@
 										</span>
 									</div>
 							
-									<div class="rightInforShi">
+									<div class="rightInfoShip">
 										<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php echo $ThisShip->getName(); ?></span></a><br /><?php
 										if($ThisPlayer->hasCustomShipName())
 										{
