@@ -193,10 +193,19 @@ h3 {
 	padding: 10px;
 	margin: 10px 50px 10px 10px;
 }
-.rightInfoShip {
+div.rightInfoShip {
 	font-family: 'Bookman Old Style', serif;
 	font-weight: bold;
 	font-size: 1.15em;
+}
+div.rightInfoShip a {     
+     color: #000000;
+     font-family: 'Bookman Old Style', serif;
+     font-weight: bold;
+     font-size: 1.15em;     
+}
+div.rightInfoShip a:hover {
+     background: #cc9933;
 }
 
 /* ****************************************************
