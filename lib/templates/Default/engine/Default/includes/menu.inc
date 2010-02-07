@@ -10,7 +10,7 @@ if(isset($MenuItems))
 				{
 					?></span> | <span class="noWrap"><?php
 				}
-				?><a class="Nav" href="<?php echo $MenuItem['Link']; ?>"><?php echo $MenuItem['Text']; ?></a><?php
+				?><a class="nav" href="<?php echo $MenuItem['Link']; ?>"><?php echo $MenuItem['Text']; ?></a><?php
 			}
 		}?>
 	</span><?php
