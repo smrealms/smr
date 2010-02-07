@@ -40,7 +40,7 @@
 											<div class="name noWrap">
 												<?php echo $ThisPlayer->getLevelName(); ?>
 												<br />
-												<a class="Nav" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a>
+												<a class="nav" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a>
 											</div>
 										</td>
 										<td>
@@ -80,7 +80,7 @@
 										</td>
 										<td>
 											<div class="topcenterTwo noWrap">
-												Level: <a class="Nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><?php echo $ThisPlayer->getLevelID(); ?></a>
+												Level: <a class="nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><?php echo $ThisPlayer->getLevelID(); ?></a>
 												<br />
 												Next Level: <?php
 													$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
@@ -102,7 +102,7 @@
 										</td>
 									</tr>
 								</table>
-								<div style="clear:left;"></div><?php
+								<div class="clear"></div><?php
 								if(isset($MenuItems)||isset($MenuBar))
 								{ ?>
 									<div style="border-top: 2px solid #a3692d; margin-top: 5px;"></div>
@@ -127,7 +127,7 @@
 					<td rowspan="2" class="rightCell"><?php
 						if(isset($ThisPlayer))
 						{ ?>
-							<div class="RightInfor noWrap">
+							<div class="rightInfo noWrap">
 								<div class="messages">
 									<span id="message_area"><?php
 										if(isset($MessageGlobalLink))
@@ -172,7 +172,7 @@
 										</span>
 									</div>
 							
-									<div class="RightInforShip">
+									<div class="rightInforShi">
 										<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php echo $ThisShip->getName(); ?></span></a><br /><?php
 										if($ThisPlayer->hasCustomShipName())
 										{
@@ -184,7 +184,7 @@
 									Shields: <span id="shields"><?php echo $ThisShip->getShields(); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
 			
 									Armor: <span id="armour"><?php echo $ThisShip->getArmour(); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
-									<a class="Nav" href="<?php echo $HardwareLink; ?>">CIJSD: <?php
+									<a class="nav" href="<?php echo $HardwareLink; ?>">CIJSD: <?php
 										if($ThisShip->hasCloak()) echo '*';
 										else echo '-';
 										if($ThisShip->hasIllusion()) echo '*';
@@ -215,31 +215,31 @@
 										<br /><br /><?php
 									} ?>
 									
-									<a class="Nav big" href="<?php echo $ForceDropLink; ?>">Forces</a><br /><?php
+									<a class="nav big" href="<?php echo $ForceDropLink; ?>">Forces</a><br /><?php
 									
 									if(isset($DropMineLink))
 									{ ?>
-										<a class="Nav" href="<?php echo $DropMineLink; ?>">
+										<a class="nav" href="<?php echo $DropMineLink; ?>">
 											<span class="bold">[X]</span>
 										</a><?php
 									} ?>Mines : <?php echo $ThisShip->getMines(); ?>/<?php echo $ThisShip->getMaxMines(); ?><br /><?php
 				
 									if(isset($DropCDLink))
 									{ ?>
-										<a class="Nav" href="<?php echo $DropCDLink; ?>">
+										<a class="nav" href="<?php echo $DropCDLink; ?>">
 											<span class="bold">[X]</span>
 										</a><?php
 									} ?>Combat : <?php echo $ThisShip->getCDs(); ?>/<?php echo $ThisShip->getMaxCDs(); ?><br /><?php
 				
 									if(isset($DropSDLink))
 									{ ?>
-										<a class="Nav" href="<?php echo $DropSDLink; ?>">
+										<a class="nav" href="<?php echo $DropSDLink; ?>">
 											<span class="bold">[X]</span>
 										</a><?php
 									} ?>Scout : <?php echo $ThisShip->getSDs(); ?>/<?php echo $ThisShip->getMaxSDs(); ?><br />
 									<br />
 									
-									<a class="Nav" href="<?php echo $CargoJettisonLink; ?>">Cargo Holds (<?php echo $ThisShip->getCargoHolds(); ?>/<?php echo $ThisShip->getMaxCargoHolds(); ?>)</a><br /><?php
+									<a class="nav" href="<?php echo $CargoJettisonLink; ?>">Cargo Holds (<?php echo $ThisShip->getCargoHolds(); ?>/<?php echo $ThisShip->getMaxCargoHolds(); ?>)</a><br /><?php
 									
 									if($ThisShip->hasCargo())
 									{
@@ -252,7 +252,7 @@
 									
 									Empty : <?php echo $ThisShip->getEmptyHolds(); ?><br />
 									<br />
-									<a class="Nav big" href="<?php echo $WeaponReorderLink; ?>">Weapons</a><br /><?php
+									<a class="nav big" href="<?php echo $WeaponReorderLink; ?>">Weapons</a><br /><?php
 									if($ThisShip->hasWeapons())
 									{ ?>
 										<div class="wep_drop1" id="hide-show" onclick="toggleWepD(<?php echo $ThisShip->getNumWeapons(); ?>,'<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>');">
@@ -275,7 +275,7 @@
 									Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower();
 									if(ENABLE_BETA)
 									{
-										?><br /><br /><a class="Nav" href="<?php echo Globals::getBetaFunctionsHREF(); ?>">Beta Functions</a><?php
+										?><br /><br /><a class="nav" href="<?php echo Globals::getBetaFunctionsHREF(); ?>">Beta Functions</a><?php
 									} ?>
 								</div>
 							</div><?php
