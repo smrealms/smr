@@ -40,6 +40,7 @@ if ($varAction == 'Show Alliance Roles') {
 	$container['body'] = '';
 	$container['alliance_id'] = $alliance_id;
 	$form = create_form($container, 'Save Alliance Roles');
+	$PHP_OUTPUT.= $form['form'];
 }
 
 
@@ -56,7 +57,6 @@ $db->query('SELECT
 
 $db->nextRecord();
 
-$PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<div align="center">';
 $PHP_OUTPUT.= bbifyMessage($alliance->getDescription());
 if($account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
@@ -214,20 +214,6 @@ foreach($alliancePlayers as &$alliancePlayer)
 $PHP_OUTPUT.= '</table>';
 $PHP_OUTPUT.= '</div>';
 
-if ($alliance->canJoinAlliance($player))
-{
-	$PHP_OUTPUT.= '<br />';
-	$container = array();
-	$container['url'] = 'alliance_join_processing.php';
-	$container['alliance_id'] = $alliance_id;
-	$form = create_form($container, 'Join');
-	$PHP_OUTPUT.= $form['form'];
-	$PHP_OUTPUT.= 'Enter password to join alliance<br /><br />';
-	$PHP_OUTPUT.= '<input type="password" name="password" size="30">&nbsp;';
-	$PHP_OUTPUT.= $form['submit'];
-	$PHP_OUTPUT.= '</form>';
-}
-
 if ($alliance_id == $player->getAllianceID())
 {
 	$PHP_OUTPUT.= '<br /><h2>Options</h2><br />';
@@ -247,6 +233,20 @@ if ($alliance_id == $player->getAllianceID())
 		$PHP_OUTPUT.=create_button($container,'Hide Alliance Roles');
 		$PHP_OUTPUT.= '</form>';
 	}
+}
+
+if ($alliance->canJoinAlliance($player))
+{
+	$PHP_OUTPUT.= '<br />';
+	$container = array();
+	$container['url'] = 'alliance_join_processing.php';
+	$container['alliance_id'] = $alliance_id;
+	$form = create_form($container, 'Join');
+	$PHP_OUTPUT.= $form['form'];
+	$PHP_OUTPUT.= 'Enter password to join alliance<br /><br />';
+	$PHP_OUTPUT.= '<input type="password" name="password" size="30">&nbsp;';
+	$PHP_OUTPUT.= $form['submit'];
+	$PHP_OUTPUT.= '</form>';
 }
 
 ?>

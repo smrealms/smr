@@ -593,6 +593,29 @@ class Globals
 	{
 		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_bounties.php'));
 	}
+	
+	public static function getBarMainHREF($raceID)
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_opening.php';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getLottoHREF($raceID)
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_gambling_lotto.php';
+		$container['action'] = 'lotto';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBlackjackHREF($raceID)
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_gambling_bet.php';
+		$container['action'] = 'blackjack';
+		return SmrSession::get_new_href($container);
+	}
 }
 
 

@@ -1,5 +1,5 @@
 <?php
-if($CombatResultsType)
+if(isset($CombatResultsType)&&$CombatResultsType)
 {
 	if($PreviousLogHREF || $NextLogHREF)
 	{ ?>

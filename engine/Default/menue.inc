@@ -77,11 +77,11 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_galactic_post_menue() {
-
-	global $player;
-	$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_read.php'),
-												  'Current Edition');
+function create_galactic_post_menue()
+{
+	global $template, $player;
+	$menuItems = array();
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
 
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
@@ -102,20 +102,18 @@ function create_galactic_post_menue() {
 
 	}
 	if ($allowed_write == 'no' && $allowed_edit == 'no')
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_application.php'), 'Apply as writer!');
-	if ($allowed_edit == 'yes') {
-
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_view_applications.php'), 'View the applications');
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_view_article.php'), 'View the articles');
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post.php'), 'Editor Options');
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_make_paper.php'), 'Make a paper');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
+	if ($allowed_edit == 'yes')
+	{
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_applications.php')),'Text'=>'View the applications');
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_article.php')),'Text'=>'View the articles');
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
 
 	}
 	if ($allowed_edit == 'yes' || $allowed_write == 'yes')
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_write_article.php'), 'Write an article');
-
-	create_menue($menue_items);
-
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
+	$template->assign('MenuItems', $menuItems);
 }
 
 function create_message_menue()
@@ -133,28 +131,27 @@ function create_message_menue()
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_combat_log_menue() {
+function create_combat_log_menue()
+{
+	global $template;
 
-	global $player;
-
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'combat_log_viewer.php';
+	$container = create_container('skeleton.php','combat_log_viewer.php');
+	$menuItems = array();
+	
 	$container['action'] = 0;
-	$menue_items[] = create_link($container,'Personal');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Personal');
 	$container['action'] = 1;
-	$menue_items[] = create_link($container,'Alliance');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Alliance');
 	$container['action'] = 6;
-	$menue_items[] = create_link($container,'Force');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Force');
 	$container['action'] = 2;
-	$menue_items[] = create_link($container,'Port');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Port');
 	$container['action'] = 3;
-	$menue_items[] = create_link($container,'Planet');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Planet');
 	$container['action'] = 4;
-	$menue_items[] = create_link($container,'Saved');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Saved');
 
-	create_menue($menue_items);
-
+	$template->assign('MenuItems',$menuItems);
 }
 
 function create_trader_menue()
@@ -407,24 +404,13 @@ function create_council_menue($race_id)
 	create_menue($menue_items);
 }
 
-function create_bar_menue() {
-
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'bar_main.php';
-	$container['script'] = 'bar_opening.php';
-	$menue_items[] = create_link($container, 'Bar Main');
-
-	$container['script'] = 'bar_gambling_lotto.php';
-	$container['action'] = 'lotto';
-	$menue_items[] = create_link($container, 'Lotto');
-	
-	$container['script'] = 'bar_gambling_bet.php';
-	$container['action'] = 'blackjack';
-	$menue_items[] = create_link($container, 'BlackJack');
-
-	create_menue($menue_items);
-
+function create_bar_menue()
+{
+	global $template;
+	$template->assign('MenuItems', array(
+					array('Link'=>Globals::getBarMainHREF(),'Text'=>'Bar Main'),
+					array('Link'=>Globals::getLottoHREF(),'Text'=>'Lotto'),
+					array('Link'=>Globals::getBlackjackHREF(),'Text'=>'BlackJack')));
 }
 
 function create_news_menue(&$template)
