@@ -1,3 +1,5 @@
+@import url('shared.css');
+
 html, body
 {
 	height: 100%;
@@ -180,14 +182,6 @@ td.footer_right
 	font: 75% Arial, Sans-Serif;
 	white-space: nowrap;
 }
-table.standardnobord
-{
-	border: 0px;
-}
-.standardnobord tr,.standardnobord td,.standardnobord th
-{
-	border: 0px;
-}
 table.standard
 {
 	border: 1px solid #0B8D35;
@@ -323,48 +317,6 @@ small, .small
 	padding: 0px;
 	margin: 0px;
 }
-/* */
-.auto
-{
-	width: auto;
-}
-.shrink
-{
-	width: 1%;
-}
-.top
-{
-	vertical-align: top;
-}
-.blank
-{
-	margin: 0px;
-	padding: 0px;
-}
-.noWrap
-{
-	white-space: nowrap;
-}
-.inset
-{
-	width: 95%;
-}
-.fullwidth
-{
-	width: 100%;
-}
-.fullheight
-{
-	height: 100%;
-}
-.right
-{
-	text-align: right;
-}
-.center
-{
-	text-align: center;
-}
 div.bar1
 {
 	border: 1px solid #0B8D35;
@@ -407,88 +359,17 @@ a.header
 {
 	color: #80C870;
 }
-/* =Colors */
-.yellow
-{
-	color: #FFFF00;
-}
-.red
-{
-	color: #FF0000;
-}
-.green
-{
-	color: #00FF00;
-}
-.dgreen
-{
-	color: #00AA00;
-}
-.cyan
-{
-	color: #00FFFF;
-}
-.blue
-{
-	color:#0000FF;
-}
-.purple
-{
-	color: #7F00FF;
-}
-.npcColor
-{
-	color: #66CCFF;
-}
-.sectorColor
-{
-	color: #00FFFF;
-}
-/* end colors */
-.bold
-{
-	font-weight: bold;
-}
-.italic
-{
-	font-style: italic;
-}
-.underline
-{
-	text-decoration: underline;
-}
-.smallCaps
-{
-	font-variant: small-caps;
-}
-.smallFont
-{
-	font-size: 75%;
-}
+
 hr
 {
 	color: #80C870;
 	background-color: #A0F890;
 	height: 2px;
 }
-div.buttonA
-{
-	margin: 0px;
-	font-size: 100%;
-	height: 1.0em;
-	display: inline;
-}
 a.buttonA 
 {
-	font-size: inherit;
-	text-decoration: none;
-	height: 1.0em;
-	display: inline;
-	border: 2px solid;
 	border-color: #A3CCA3 #2A6E2A #2A6E2A #A3CCA3;
 	background-color: #0B8D35;
-	color: #FFFFFF;
-	white-space: nowrap;
 }
 a.buttonA:hover
 {
@@ -524,168 +405,7 @@ div#right_panel
 {
 	width: 13em;
 }
-/*** CS Stuff ***/
-div.cs_box
-{
-	position: relative;
-}
-div.cs_box div.scan
-{
-	position: relative;
-	width: 250px;
-	height: 250px;
-}
-div.cs_box div.no_scan
-{
-	position: relative;
-	width: 210px;
-	height: 210px;
-	top: -20px;
-	left: -20px;
-}
-div.cs_box div.scan_up
-{
-	position: absolute;
-	top: 0px;
-	left: 84px;
-	width: 60px;
-	height: 20px;
-	color: #BBBBBB;
-	border: 2px solid #0B8D35;
-	background-color: #060E88; /* scan blue */
-}
-div.cs_box div.move_up
-{
-	position: absolute;
-	top: 22px;
-	left: 84px;
-	width: 60px;
-	height: 60px;
-	border: 2px solid #0B8D35;
-}
-div.cs_box div.scan_left
-{
-	position: absolute;
-	top: 84px;
-	left: 0px;
-	width: 20px;
-	height: 60px;
-	color: #BBBBBB;
-	border: 2px solid #0B8D35;
-	background-color: #060E88;
-}
-div.cs_box div.move_left
-{
-	position: absolute;
-	top: 84px;
-	left: 22px;
-	width: 60px;
-	height: 60px;
-	border: 2px solid #0B8D35;
-}
-div.cs_box div.cs_mid
-{
-	position: absolute;
-	top: 84px;
-	left: 84px;
-	width: 60px;
-	height: 60px;
-	border: 2px solid #0B8D35;
-}
-div.cs_box div.scan_right
-{
-	position: absolute;
-	top: 84px;
-	left: 208px;
-	width: 20px;
-	height: 60px;
-	color: #BBBBBB;
-	border: 2px solid #0B8D35;
-	background-color: #060E88;
-}
-div.cs_box div.move_right
-{
-	position: absolute;
-	top: 84px;
-	left: 146px;
-	width: 60px;
-	height: 60px;
-	border: 2px solid #0B8D35;
-}
-div.cs_box div.scan_down
-{
-	position: absolute;
-	top: 208px;
-	left: 84px;
-	width: 60px;
-	height: 20px;
-	color: #BBBBBB;
-	border: 2px solid #0B8D35;
-	background-color: #060E88;
-}
-div.cs_box div.move_down
-{
-	position: absolute;
-	top: 146px;
-	left: 84px;
-	width: 60px;
-	height: 60px;
-	border: 2px solid #0B8D35;
-}
-div.cs_box div.scan_warp
-{
-	position: absolute;
-	top: 161px;
-	left: 221px;
-	width: 20px;
-	height: 60px;
-	color: #BBBBBB;
-	border: 2px solid #0B8D35;
-	background-color: #060E88;
-}
-div.cs_box div.move_warp
-{
-	position: absolute;
-	top: 161px;
-	left: 159px;
-	width: 60px;
-	height: 60px;
-	border: 2px solid #0B8D35;
-}
-div.cs_box div.move_warp:hover
-{
-	background: #500000; /* hover red bg */
-}
-div.cs_box div.move_hover:hover
-{
-	background: #005000; /* hover green bg */
-}
-div.cs_box div.scan_hover:hover
-{
-	color: #FFFFFF; /* hover white text */
-}
-.scan_text_vert
-{
-	font-size: 90%;
-	text-align: center;
-	line-height: 15px;
-}
-.scan_text_hor
-{
-	font-size: 90%;
-	text-align: center;
-	line-height: 20px;
-}
-.move_text
-{
-	line-height: 60px;
-	font-weight: bold;
-	text-align: center;
-}
-a.warp_link:hover
-{
-	background: #500000; /* hover red bg */
-}
+
 .nopad
 {
 	margin: 0px;
@@ -943,26 +663,35 @@ div.currentSecgm
 	/*background-color:#14642F;*/
 	background: url('../images/currentsector.png');
 }
-.gpsubheader
+
+/* Current Sector Navigation Box Colours */
+div.secNavBox div div
 {
-	font-style: italic;
-	margin-top: 0px;
-	margin-bottom: 0px;
+	border: 2px solid #0B8D35;
 }
-.gpeditornote
+div.secNavBox a:hover
 {
-	font-size: smaller;
+	font-size: 115%;
+	font-weight: bold;
 }
-.gpcolumn
+.move_hover a:hover
 {
-	width: 50%;
-	vertical-align: top;
+	background: #005000; /* hover green bg */
 }
-.shiplistdescription
+.scan_hover
 {
-	white-space: nowrap;
+	background-color: #060E88;
 }
-.newbie
+.scan_hover a
 {
-	font-style: italic;
+	background-color: #060E88;
+}
+.scan_hover a:hover
+{
+	background-color: #060E88;
+	color: #FFFFFF; /* hover white text */
+}
+.move_warp a:hover
+{
+	background: #500000; /* hover red bg */
 }
