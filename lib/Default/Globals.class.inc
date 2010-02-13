@@ -475,7 +475,7 @@ class Globals
 	public static function getAllianceHREF($allianceID = null)
 	{
 		if ($allianceID > 0)
-			return self::getAllianceRosterHREF($allianceID);
+			return self::getAllianceMotdHREF($allianceID);
 		else
 			return self::getAllianceListHREF();
 	}

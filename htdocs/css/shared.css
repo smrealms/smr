@@ -277,6 +277,14 @@ table.standardnobord
 	border: 0px;
 }
 
+table.standard td, table.standard th {
+	padding:2px;
+}
+
+td, th {
+	padding:3px;
+}
+
 textarea {
 	font: 100% Arial;
 	width: 30em;
