@@ -176,10 +176,10 @@ if (isset($var['alliance_id']))
 				$killer_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
 				$alliance_name = $killer_alliance->alliance_name;
 			}
-			elseif ($id == 0) $alliance_name = '<font color="blue">No Alliance</font>';
-			elseif ($id == -1) $alliance_name = '<font color="blue">Forces</font>';
-			elseif ($id == -2) $alliance_name = '<font color="blue">Planets</font>';
-			elseif ($id == -3) $alliance_name = '<font color="blue">Ports</font>';
+			elseif ($id == 0) $alliance_name = '<span class="blue">No Alliance</span>';
+			elseif ($id == -1) $alliance_name = '<span class="blue">Forces</span>';
+			elseif ($id == -2) $alliance_name = '<span class="blue">Planets</span>';
+			elseif ($id == -3) $alliance_name = '<span class="blue">Ports</span>';
 			
 			$PHP_OUTPUT.=('<tr><td align="center">'.$alliance_name.'</td><td align="center">'.$kills.'</td></tr>');
 		}
@@ -203,10 +203,10 @@ if (isset($var['alliance_id']))
 				$killer_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
 				$alliance_name = $killer_alliance->alliance_name;
 			}
-			elseif ($id == 0) $alliance_name = '<font color="blue">No Alliance</font>';
-			elseif ($id == -1) $alliance_name = '<font color="blue">Forces</font>';
-			elseif ($id == -2) $alliance_name = '<font color="blue">Planets</font>';
-			elseif ($id == -3) $alliance_name = '<font color="blue">Ports</font>';
+			elseif ($id == 0) $alliance_name = '<span class="blue">No Alliance</span>';
+			elseif ($id == -1) $alliance_name = '<span class="blue">Forces</span>';
+			elseif ($id == -2) $alliance_name = '<span class="blue">Planets</span>';
+			elseif ($id == -3) $alliance_name = '<span class="blue">Ports</span>';
 			
 			$PHP_OUTPUT.=('<tr><td align="center">'.$alliance_name.'</td><td align="center">'.$kills.'</td></tr>');
 		}

@@ -67,7 +67,7 @@ if ($allowed_edit == 'yes') {
 
     }
     $PHP_OUTPUT.=('<br />');
-    $PHP_OUTPUT.=('<font color=blue>If you wish to edit an article you must first view it.</font>');
+    $PHP_OUTPUT.=('<span class="blue">If you wish to edit an article you must first view it.</span>');
     $PHP_OUTPUT.=('<br /><br />');
 
 }
