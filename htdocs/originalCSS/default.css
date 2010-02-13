@@ -436,101 +436,6 @@ ul.boxy li
 	 margin-left: 5px;
 }
 /* LM */
-table.lmt
-{
-	border-collapse: collapse;
-	border-spacing: 1px;
-}
-/*Local up link Icon*/
-div.lm_sector div.lmup
-{
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	height: 10px;
-	width: 120px;
-}
-/*Local Plot/Warp Area*/
-div.lm_sector div.lmp
-{
-	position: absolute;
-	top: 10px;
-	left: 0px;
-	height: 18px;
-	z-index: 2;
-}
-/*Local trader and forces*/
-div.lm_sector div.lmtf
-{
-	position: absolute;
-	top: 10px;
-	right: 0px;
-	height: 18px;
-	text-align:right;
-	z-index: 2;
-}
-/*Local locations*/
-div.lm_sector div.lmloc
-{
-	position: absolute;
-	top: 28px;
-	left: 0px;
-	height: 18px;
-	z-index: 2;
-}
-/*Local left link Icon*/
-div.lm_sector div.lmleft
-{
-	position: absolute;
-	top: 46px;
-	left: 0px;
-	height: 20px;
-	width: 20px;
-}
-/*Local sector number*/
-div.lm_sector div.lmsector
-{
-	position: absolute;
-	top: 46px;
-	left: 20px;
-	height: 20px;
-	text-align: center;
-	width: 80px;
-}
-/*Local right link Icon*/
-div.lm_sector div.lmright
-{
-	position: absolute;
-	top: 46px;
-	left: 100px;
-	height: 20px;
-	text-align: right;
-	width: 20px;
-}
-/*Local port section*/
-div.lm_sector div.lmport
-{
-	position: absolute;
-	top: 66px;
-	left: 0px;
-	height: 44px;
-	z-index: 2;
-	/*width: 120px;*/
-}
-/*Local down link Icon*/
-div.lmdown
-{
-	position: absolute;
-	top: 110px;
-	left: 0px;
-	height: 10px;
-}
-div.lm_sector
-{
-	position: relative;
-	width: 120px;
-	height: 120px;
-}
 div.connectSeclm
 {
 	background-color: #33784B;
@@ -541,13 +446,16 @@ div.connectSeclm:hover
 }
 div.currentSeclm
 {
-	/*background-color:#14642F;*/
+	background-color:#33784B;
+}
+div.currentSeclm2
+{
 	background: url('../images/currentsector.png');
+	_background: none; /* Disable transparent image for IE6 as it can't handle it */
 }
 div.currentSeclm:hover
 {
-	/*background-color:#337873;*/
-	background: url('../images/currentsector_hover.png');
+	background-color:#337975;
 }
 div.normalSeclm
 {
@@ -556,24 +464,6 @@ div.normalSeclm
 div.normalSeclmu
 {
 	background-color: #000000;
-}
-div.lm_sector img.move_hack
-{
-	height: 120px;
-	width: 120px;
-	position: absolute;
-	top: 0px;
-	left: 0px;
-	z-index: 1;
-}
-a.mp_as
-{
-	display: block;
-	height: 120px;
-	width: 120px;
-	text-decoration: none;
-	background-color: transparent;
-	color: inherit;
 }
 /* Layout Sprite Map */
 #layout
