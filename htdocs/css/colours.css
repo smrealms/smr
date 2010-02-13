@@ -22,7 +22,7 @@ h1, h2, h3, h4, h5, h6 {
 input  {
 	background: #111;
 	color: #FFF;
-	border: 1px solid #7B5121;
+	border: 2px solid #7B5121;
 }
 
 input.submit  {
@@ -32,6 +32,16 @@ input.submit:hover  {
 	cursor: pointer;
 }
 input.submit:active {
+	border: 2px inset #7B5121;
+}
+/* We repeat with a selector because not all submits are guaranteed to have the submit class, but selector's don't work in IE6 (and others?) */
+input[type="submit"]  {
+	border: 2px outset #7B5121;
+}
+input[type="submit"]:hover  {
+	cursor: pointer;
+}
+input[type="submit"]:active {
 	border: 2px inset #7B5121;
 }
 
