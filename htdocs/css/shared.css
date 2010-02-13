@@ -277,6 +277,12 @@ table.standardnobord
 	border: 0px;
 }
 
+textarea {
+	font: 100% Arial;
+	width: 30em;
+	height: 15em;
+}
+
 div.buttonA
 {
 	margin: 0px;

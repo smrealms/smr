@@ -20,7 +20,7 @@ $PHP_OUTPUT.=('<p><small><b>From:</b> '.$player->getPlayerName().' ('.$player->g
 
 $PHP_OUTPUT.=('<b>To:</b> Ruling Council of '.$race_name.'</small></p>');
 
-$PHP_OUTPUT.=('<textarea name="message" id="InputFields" cols="20" rows="30"></textarea><br /><br />');
+$PHP_OUTPUT.=('<textarea name="message" id="InputFields"></textarea><br /><br />');
 $PHP_OUTPUT.=create_submit('Send message');
 $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('</p>');

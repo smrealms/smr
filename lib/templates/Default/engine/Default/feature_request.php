@@ -89,7 +89,7 @@ if(isset($FeatureRequests))
 				<td align="center">Please describe the feature here:</td>
 			</tr>
 			<tr>
-				<td align="center"><textarea name="feature" id="InputFields" cols="20" rows="30"></textarea></td>
+				<td align="center"><textarea name="feature" id="InputFields"></textarea></td>
 			</tr>
 			<tr>
 				<td align="center">Anonymous: <input name="anon" id="InputFields" type="checkbox" checked="checked"/></td>
