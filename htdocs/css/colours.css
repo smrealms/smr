@@ -19,11 +19,22 @@ h1, h2, h3, h4, h5, h6 {
 	color: #f2a648;
 }
 
-input {
+input  {
 	background: #111;
 	color: #FFF;
 	border: 1px solid #7B5121;
 }
+
+input.submit  {
+	border: 2px outset #7B5121;
+}
+input.submit:hover  {
+	cursor: pointer;
+}
+input.submit:active {
+	border: 2px inset #7B5121;
+}
+
 textarea {
 	background: #111;
 	color: #FFF;
