@@ -1,0 +1,67 @@
+/* Standard table styling */
+table.standard {
+	color: #FFFFFF;
+	border: 1px solid #7B5121;
+	border-spacing: 0px;
+}
+table.standard td, table.standard th {
+	border: 1px solid #7B5121;
+	padding:2px;
+}
+table.standard th {
+	text-align:center;
+	color:#808080;
+	background-color:#3E2911;
+	font-weight:bold;
+}
+
+/* Current Sector Navigation Box Colours */
+div.secNavBox div div {
+	border: 2px solid #7B5121;
+}
+div.secNavBox a:hover {
+	font-size: 115%;
+	font-weight: bold;
+}
+.move_hover a:hover {
+	background-color: #222;
+}
+.scan_hover {
+	background-color: #3E2911;
+}
+.scan_hover a {
+	background-color: #3E2911;
+	color: #000;
+}
+.scan_hover a:hover {
+	background-color: #3E2911;
+}
+.move_warp a:hover {
+	background-color: #500000;
+}
+
+.lastVisited {
+   color: #C27618;
+}
+.visited, .currentSector {
+   color: #F2A648;
+}
+.unvisited {
+   color: #FFFF00;
+}
+
+/*Used for CS */
+table.csShips th.header {
+	background: #500;
+}
+table.csForces th.header {
+	background: #005;
+}
+
+/* Used for planets */
+.uninhab {
+   color: #FF0000;
+}
+.inhab {
+   color: #00FF00;
+}

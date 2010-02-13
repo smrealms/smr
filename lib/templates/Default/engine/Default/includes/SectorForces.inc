@@ -3,10 +3,10 @@
 	{
 		$Forces =& $ThisSector->getForces();
 		$RefreshAny = false; ?>
-		<table class="standard fullwidth">
+		<table class="standard fullwidth csForces">
 			<tbody>
 				<tr>
-					<th style="background: rgb(0, 0, 85) none repeat scroll 0% 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial; color: rgb(128, 200, 112);" colspan="6">Forces (<?php echo count($Forces); ?>)</th>
+					<th class="header" colspan="6">Forces (<?php echo count($Forces); ?>)</th>
 				</tr>
 				<tr>
 					<th>Mines</th>

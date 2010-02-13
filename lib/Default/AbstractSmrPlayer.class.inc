@@ -448,7 +448,7 @@ abstract class AbstractSmrPlayer
 			$return .= $this->getAllianceName();
 			if($this->hasAlliance())
 			{
-				$return.'</a>';
+				$return.='</a>';
 			}
 			$return.= ')';
 		}

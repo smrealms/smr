@@ -1,4 +1,6 @@
-﻿@import url('shared.css');
+﻿@import url('reset-min.css');
+@import url('shared.css');
+@import url('colours.css');
 
 html {
 	background-color: #000000; /* The main background color, you can change this */
@@ -258,52 +260,6 @@ a:hover.nav {
 }
 
 
-/* Current Sector Navigation Box Colours */
-table.standard {
-	color: #FFFFFF;
-	border: 1px solid #7B5121;
-	border-spacing: 0px;
-}
-table.standard td, table.standard th {
-	border: 1px solid #7B5121;
-	padding:2px;
-}
-table.standard th {
-	text-align:center;
-	color:#808080;
-	background-color:#3E2911;
-	font-weight:bold;
-}
-div.secNavBox div div
-{
-	border: 2px solid #7B5121;
-}
-div.secNavBox a:hover
-{
-	font-size: 115%;
-	font-weight: bold;
-}
-.move_hover a:hover
-{
-	background-color: #222;
-}
-.scan_hover
-{
-	background-color: #3E2911;
-}
-.scan_hover a
-{
-	background-color: #3E2911;
-	color: #000;
-}
-.scan_hover a:hover
-{
-	background-color: #3E2911;
-}
-.move_warp a:hover
-{
-	background-color: #500000;
-}
 
 /* STYLES FROM SMR default.css */
 .attack_warning
@@ -320,21 +276,6 @@ div.secNavBox a:hover
 
 
 
-table.standard {
-	color: #FFFFFF;
-	border: 1px solid #7B5121;
-	border-spacing: 0px;
-}
-table.standard td, table.standard th {
-	border: 1px solid #7B5121;
-	padding:2px;
-}
-table.standard th {
-	text-align:center;
-	color:#808080;
-	background-color:#3E2911;
-	font-weight:bold;
-}
 a.buttonA 
 {
 	border-color: #9B7141 #5B3100 #5B3100 #9B7141;

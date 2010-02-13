@@ -695,3 +695,31 @@ div.secNavBox a:hover
 {
 	background: #500000; /* hover red bg */
 }
+.lastVisited
+{
+   color: #00FF00;
+}
+.visited, .currentSector
+{
+   color: #00AA00;
+}
+.unvisited
+{
+   color: #FFFF00;
+}
+
+table.csShips th.header {
+	background: #500;
+}
+table.csForces th.header {
+	background: #005;
+}
+
+.uninhab
+{
+   color: #FF0000;
+}
+.inhab
+{
+   color: #00FF00;
+}

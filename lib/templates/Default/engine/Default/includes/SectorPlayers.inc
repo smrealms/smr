@@ -1,12 +1,12 @@
-<div id="players_cs" class="ajax">
-	<?php if($ThisSector->hasOtherTraders($ThisPlayer))
+<div id="players_cs" class="ajax"><?php
+	if($ThisSector->hasOtherTraders($ThisPlayer))
 	{
 		$Players =& $ThisSector->getOtherTraders($ThisPlayer);
 		if($ThisPlayer->canSeeAny($Players))
 		{ ?>
-			<table class="standard fullwidth">
+			<table class="standard fullwidth csShips">
 				<tr>
-					<th style="background: rgb(85, 0, 0) none repeat scroll 0% 0%; -moz-background-clip: -moz-initial; -moz-background-origin: -moz-initial; -moz-background-inline-policy: -moz-initial;" colspan="5">Ships (<?php echo count($Players) ?>)</th>
+					<th class="header" colspan="5">Ships (<?php echo count($Players) ?>)</th>
 				</tr>
 				<tr>
 					<th>Trader</th>
@@ -23,7 +23,7 @@
 						$Ship =& $Player->getShip();?>
 						<tr<?php if($Player->getAccount()->isNewbie()) { ?> class="newbie"<?php } ?>>
 							<td>
-								<?php echo $Player->getLinkedDisplayName() ?>
+								<?php echo $Player->getLinkedDisplayName(); ?>
 							</td>
 							<td><?php
 								if($Player->hasCustomShipName()&&($ThisAccount->isDisplayShipImages()||stripos($Player->getCustomShipName(),'<img')===false))
@@ -63,16 +63,14 @@
 									<a href="<?php echo $Player->getExamineTraderHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Examine </a>
 								</div>
 							</td>
-						</tr>
-					<?php } 
+						</tr><?php
+					} 
 				} ?>
-			</table>
-		<?php
+			</table><?php
 		}
 		else
-		{ ?>
-			<span class="red bold">WARNING:</span> Sensors have detected the presence of cloaked vessels in this sector<br /><br />
-		<?php
+		{
+			?><span class="red bold">WARNING:</span> Sensors have detected the presence of cloaked vessels in this sector<?php
 		}
 	} ?>
 </div><br />
