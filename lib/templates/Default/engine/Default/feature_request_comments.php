@@ -17,7 +17,7 @@ if(isset($FeatureRequests))
 		</tr><?php
 		foreach($FeatureRequests as &$FeatureRequest)
 		{ ?>
-			<tr style="text-align:center;">
+			<tr class="center">
 				<td class="shrink noWrap top"><?php
 				if($FeatureRequest['Anonymous'])
 				{

@@ -24,7 +24,7 @@ $container['body'] = 'bar_main.php';
 $container['script'] = 'bar_gambling_processing.php';
 $container['action'] = 'blackjack';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" value="'.$value.'" name="bet" id="InputFields" style="width:100px; text-align:center;">&nbsp;&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="text" value="'.$value.'" name="bet" id="InputFields" style="width:100px;" class="center">&nbsp;&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Play the Game');
 $PHP_OUTPUT.=('</form></div>');
 $PHP_OUTPUT.=('<br /><br />');

@@ -46,8 +46,8 @@ foreach ($alliances as $id => $infoArray)
 	if($player->getAllianceID() == $id)
 		$style2 .= ' class="bold"';
 	elseif (!$members)
-		$style2.=(' class="red"');
-	$style .= $style2 . '"';
+		$style2.=' class="red"';
+	$style .= $style2;
 
 	$PHP_OUTPUT.=('<td '.$style.'>'.$rank.'</td>');
 

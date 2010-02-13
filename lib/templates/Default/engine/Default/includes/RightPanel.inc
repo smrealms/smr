@@ -120,11 +120,11 @@ if(isset($GameID))
 	{
 		if($ThisShip->isCloaked())
 		{
-			?><strong style="color:lime;">*** Cloak active ***</strong><?php
+			?><strong class="green">*** Cloak active ***</strong><?php
 		}
 		else
 		{
-			?><strong style="color:red;">*** Cloak inactive ***</strong><?php
+			?><strong class="red">*** Cloak inactive ***</strong><?php
 		} ?>
 		<br /><br /><?php
 	}

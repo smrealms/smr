@@ -34,7 +34,7 @@
 						if(isset($ThisPlayer))
 						{ ?>
 							<div class="TopInfor">
-								<table style="width:100%">
+								<table class="fullwidth">
 									<tr>
 										<td>
 											<div class="name noWrap">
@@ -200,11 +200,11 @@
 								{
 									if($ThisShip->isCloaked())
 									{
-										?><strong style="color:lime;">*** Cloak active ***</strong><?php
+										?><strong class="green">*** Cloak active ***</strong><?php
 									}
 									else
 									{
-										?><strong style="color:red;">*** Cloak inactive ***</strong><?php
+										?><strong class="red">*** Cloak inactive ***</strong><?php
 									} ?>
 									<br /><br /><?php
 								}

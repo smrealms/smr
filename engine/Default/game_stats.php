@@ -66,7 +66,7 @@ $PHP_OUTPUT.='
 <td align="center">Top 10 Players in Kills</td>
 </tr>
 <tr>
-<td align="center" style="border:none">';
+<td class="center" style="border:none">';
 $rank = 0;
 $db->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC LIMIT 10');
 if ($db->getNumRows() > 0) {
@@ -163,12 +163,12 @@ if ($count_last_active > 0) {
 		$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
 
 		if ($curr_account->isNewbie())
-			$style = 'font-style:italic;';
+			$style = 'italic';
 		if ($curr_player->getAccountID() == $account->account_id)
-			$style .= 'font-weight:bold;';
+			$style .= ' bold';
 
 		if (!empty($style))
-			$style = ' style="'.$style.'"';
+			$style = ' class="'.$style.'"';
 
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td valign="top"'.$style.'>'.$curr_player->getLevelName().' ');

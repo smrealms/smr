@@ -35,7 +35,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 foreach ($galaxies as $galaxy_id => $galaxy_name)
-	$PHP_OUTPUT.=('<td align="center"><input type="input" name="planet['.$galaxy_id.']" size="3" id="InputFields" value="0" style="text-align:center;"></td>');
+	$PHP_OUTPUT.=('<td align="center"><input type="input" name="planet['.$galaxy_id.']" size="3" id="InputFields" value="0" class="center"></td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('</table></p>');
 

@@ -12,7 +12,7 @@ $container['url'] = 'galactic_post_edit_article_processing.php';
 transfer('id');
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('What is the title?<br />');
-$PHP_OUTPUT.=('<input type="text" name="title" align="center" value="'.$title.'" id="InputFields" style="text-align:center;width:525;"><br /><br />');
+$PHP_OUTPUT.=('<input type="text" name="title" value="'.$title.'" id="InputFields" class="center" style="width:525;"><br /><br />');
 $PHP_OUTPUT.=('<br />Write what you want to write here!<br />');
 $PHP_OUTPUT.=('<textarea name="text" wrap="soft" id="InputFieldsText">'.$text.'</textarea><br /><br />');
 $PHP_OUTPUT.=create_submit('Enter the article');

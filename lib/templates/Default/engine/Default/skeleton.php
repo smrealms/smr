@@ -73,7 +73,7 @@
 			</tr>
 			<tr>
 				<td class="footer_left">
-					<div style="width:294px;text-align:center">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</div><?php
+					<div style="width:294px;" class="center">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</div><?php
 						foreach($VoteSites as $VoteSite)
 						{
 							echo $VoteSite;

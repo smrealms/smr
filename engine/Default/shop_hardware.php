@@ -51,11 +51,11 @@ if ($db->getNumRows() > 0 )
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">'.$hardware_name.'</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="'.$amount.'" size="5" onKeyUp="recalc_' . $hardware_type_id . '_onkeyup()" id="InputFields" style="text-align:center;"></td>');
+		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="'.$amount.'" size="5" onKeyUp="recalc_' . $hardware_type_id . '_onkeyup()" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td>*</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$cost.'</td>');
 		$PHP_OUTPUT.=('<td>=</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="text" name="total" value="' . ($amount * $cost) . '" size="7" id="InputFields" style="text-align:center;"></td>');
+		$PHP_OUTPUT.=('<td align="center"><input type="text" name="total" value="' . ($amount * $cost) . '" size="7" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit('Buy');
 		$PHP_OUTPUT.=('</td>');

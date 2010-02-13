@@ -264,7 +264,7 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 	else
 		if ($sender_id == ACCOUNT_ID_ADMIN)
 		{
-			$senderName .= '<span style="font:small-caps bold;color:blue;">Administrator</span>';
+			$senderName .= '<span class="admin">Administrator</span>';
 		}
 		else
 			if ($sender_id == ACCOUNT_ID_PLANET)
@@ -291,7 +291,7 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 				else
 				{
 					if ($type == 7)
-						$senderName .= ('<span style="font:small-caps bold;color:blue;">Administrator</span>');
+						$senderName .= ('<span class="admin">Administrator</span>');
 					elseif ($type == 6)
 					{
 						$senderName .= ('<span class="green">Alliance Ambassador</span>');

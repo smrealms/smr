@@ -1,7 +1,7 @@
 <?php
 if (isset($Reason))
 {
-	?><p><big><b style="color:red;"><?php echo $Reason; ?></b></big></p><?php
+	?><p><big><span class="bold red"><?php echo $Reason; ?></span></big></p><?php
 }
 
 if(USE_COMPATIBILITY && !$ThisAccount->hasOldAccountID())

@@ -203,14 +203,14 @@ if($action != 5)
 		$PHP_OUTPUT.= $form['form'];
 		$container = $var;
 		$container['page'] = $page-1;
-		$PHP_OUTPUT.='<table style="width: 100%"><tr><td style="text-align: center; width: 30%" valign="middle">';
+		$PHP_OUTPUT.='<table class="fullwidth center"><tr><td style="width: 30%" valign="middle">';
 		if($page>0)
 			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/rew.jpg" alt="Previous Page" border="0"></a>';
-		$PHP_OUTPUT.='</td><td style="text-align: center;">';
+		$PHP_OUTPUT.='</td><td>';
 		$PHP_OUTPUT.= $form['submit']['View'];
 		$PHP_OUTPUT.= '&nbsp';
 		$PHP_OUTPUT.= $form['submit']['Save'];
-		$PHP_OUTPUT.='</td><td style="text-align: center; width: 30%" valign="middle">';
+		$PHP_OUTPUT.='</td><td style="width: 30%" valign="middle">';
 		$container['page'] = $page+1;
 		if(($page+1)*COMBAT_LOGS_PER_PAGE<$totalLogs)
 			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/fwd.jpg" alt="Next Page" border="0"></a>';

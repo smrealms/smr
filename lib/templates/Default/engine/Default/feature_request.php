@@ -49,7 +49,7 @@ if(isset($FeatureRequests))
 			</tr><?php
 			foreach($FeatureRequests as &$FeatureRequest)
 			{ ?>
-				<tr style="text-align:center;"><?php
+				<tr class="center"><?php
 					if($FeatureModerator)
 					{
 						?><td><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php

@@ -52,7 +52,7 @@ foreach ($alliance_vs as $key => $id)
 		$container['body']             = 'alliance_roster.php';
 		$container['alliance_id']    = $curr_alliance_id;
 		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->alliance_name');*/
-		$PHP_OUTPUT.=('<select name="alliancer[]" style=width:105>');
+		$PHP_OUTPUT.=('<select name="alliancer[]" style="width:105">');
 		$db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND alliance_deaths > 0 OR alliance_kills > 0 ORDER BY alliance_name');
 		while ($db->nextRecord())
 		{

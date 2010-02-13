@@ -4,7 +4,7 @@ if(!ENABLE_BETA)
 
 $template->assign('PageTopic','Beta LITE');
 
-$PHP_OUTPUT.=('<b style="color:red;">This is the <i>LITE</i> version of the crib...imagine the power of the real one.</b><br /><br />');
+$PHP_OUTPUT.=('<span style="bold red">This is the <i>LITE</i> version of the crib...imagine the power of the real one.</span><br /><br />');
 
 // container for all links
 $container = create_container('beta_func_processing.php', 'beta_functions_lite.php');

@@ -20,7 +20,7 @@ if ($db->nextRecord())
 	elseif ($db->getField('disabled') == 'TRUE')
 		$albumEntry['Status']=('<span class="red">Disabled</span>');
 	elseif ($approved == 'YES')
-		$albumEntry['Status']=('<a href="'.URL.'/album/?'.$account->getHofName().'" style="color:green;">Online</a>');
+		$albumEntry['Status']=('<a href="'.URL.'/album/?'.$account->getHofName().'" class="dgreen">Online</a>');
 		
 	if(is_readable(UPLOAD . SmrSession::$account_id))
 		$albumEntry['Image'] = URL.'/upload/'.SmrSession::$account_id;
