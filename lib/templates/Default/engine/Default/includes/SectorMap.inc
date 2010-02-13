@@ -8,7 +8,8 @@
 				$isCurrentSector = $ThisSector->equals($Sector);
 				$isLinkedSector = $ThisSector->isLinked($Sector); ?>
 				<td>
-					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
+					<?php if($isCurrentSector){ ?><div class="currentSeclm"><?php } ?>
+					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm2<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
 						<div class="lmup"><?php
 							if($Sector->isVisited($ThisPlayer))
 							{ ?>
@@ -165,6 +166,7 @@
 							<a href="<?php echo Globals::getCurrentSectorHREF(); ?>"><img title="" alt="" class="move_hack" src="images/blank.gif"/></a><?php
 						} ?>
 					</div>
+					<?php if($isCurrentSector){ ?></div><?php } ?>
 				</td><?php
 			} unset($Sector); ?>
 		</tr><?php

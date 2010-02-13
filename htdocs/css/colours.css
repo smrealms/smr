@@ -91,3 +91,28 @@ table.csForces th.header {
 .inhab {
    color: #00FF00;
 }
+
+/* LM */
+div.connectSeclm {
+	background-color: #7B5121;
+}
+div.connectSeclm:hover {
+	background-color: #6B6131;
+}
+div.currentSeclm {
+	background-color:#7B5121;
+}
+div.currentSeclm2 {
+	background: url('../images/currentsector.png');
+	_background: none; /* Disable transparent image for IE6 as it can't handle it */
+}
+div.currentSeclm:hover {
+	background-color: #8B7131;
+}
+
+div.normalSeclm {
+	background-color: #3E2911;
+}
+div.normalSeclmu {
+	background-color: #000;
+}
