@@ -209,7 +209,7 @@ function checkPacts($race_id_1) {
 					$their_race = $db2->getField('race_name');
 
 				//get news message
-				$news = 'The '.$our_race.' have signed a <span class="green">PEACE</span> treaty with the '.$their_race;
+				$news = 'The '.$our_race.' have signed a <span class="dgreen">PEACE</span> treaty with the '.$their_race;
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
 							'('.$player->getGameID().', '.TIME.', ' . $db->escape_string($news, false) . ')');
 
