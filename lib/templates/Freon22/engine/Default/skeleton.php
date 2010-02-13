@@ -33,7 +33,7 @@
 					<td class="topcenterCell"><?php
 						if(isset($ThisPlayer))
 						{ ?>
-							<div class="TopInfor">
+							<div class="TopInfo">
 								<table class="fullwidth">
 									<tr>
 										<td>
