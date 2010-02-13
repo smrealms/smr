@@ -115,7 +115,7 @@ for ($i=0;$i < $row;$i++)
 		if ($galSector->hasLocation()) $PHP_OUTPUT.= '<span class="red">';
 		else $PHP_OUTPUT.= '<span>';
 		$PHP_OUTPUT .= $galSector->getSectorID() . '</span></a>';
-		if ($galSector->hasWarp()) $PHP_OUTPUT.= '<span style="color: #00FF00">*</span>';
+		if ($galSector->hasWarp()) $PHP_OUTPUT.= '<span class="green">*</span>';
 		//$link['text'] = $this_sec;
 		//create_link($link, $id);
 		$PHP_OUTPUT.= '</td>';

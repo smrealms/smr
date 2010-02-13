@@ -33,7 +33,7 @@ if ($account_id > 0)
 	else
 	{
 		$account_id = 0;
-		$error_msg = '<div align="center" style="color:red;font-weight:bold;">This User doesn\'t have an album entry or it needs to be approved first!</div>';
+		$error_msg = '<div align="center" class="red bold">This User doesn\'t have an album entry or it needs to be approved first!</div>';
 	}
 }
 

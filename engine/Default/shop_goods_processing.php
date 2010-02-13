@@ -30,7 +30,7 @@ if (!$sector->hasPort())
 // check if the player has the right relations to trade at the current port
 $portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
 if ($portRelations[$player->getRaceID()] + $player->getRelation($port->getRaceID()) < -300)
-	create_error('This port refuses to trade with you because you are at <big><b style="color:red;">WAR!</b></big>');
+	create_error('This port refuses to trade with you because you are at <big><span class="bold red">WAR!</span></big>');
 
 $portGood = $port->getGood($good_id);
 // check if there are enough left at port

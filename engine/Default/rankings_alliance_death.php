@@ -41,14 +41,14 @@ foreach($alliances as $id => $infoArray)
 	if ($player->getAllianceID() == $id)
 	    $PHP_OUTPUT.=(' class="bold"');
 	elseif ($out)
-		$PHP_OUTPUT.=(' style="color:red;"');
+		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>'.$rank.'</td>');
 	
 	$PHP_OUTPUT.=('<td valign="top"');
 	if ($player->getAllianceID() == $id)
 	    $PHP_OUTPUT.=(' class="bold"');
 	elseif ($out)
-		$PHP_OUTPUT.=(' style="color:red;"');
+		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>');
 	$container = create_container('skeleton.php','alliance_roster.php');
 	$container['alliance_id']    = $id;
@@ -62,7 +62,7 @@ foreach($alliances as $id => $infoArray)
 	if ($player->getAllianceID() == $id)
 	    $PHP_OUTPUT.=(' class="bold"');
 	if ($out)
-		$PHP_OUTPUT.=(' style="color:red;"');
+		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>' . number_format($numDeaths) . '</td>');
 	
 	$PHP_OUTPUT.=('</tr>');
@@ -127,14 +127,14 @@ foreach ($alliances as $id => $infoArray)
 	if ($player->getAllianceID() == $id)
 		$PHP_OUTPUT.=(' class="bold"');
 	elseif ($out)
-		$PHP_OUTPUT.=(' style="color:red;"');
+		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>'.$rank.'</td>');
 
 	$PHP_OUTPUT.=('<td valign="top"');
 	if ($player->getAllianceID() == $id)
 		$PHP_OUTPUT.=(' class="bold"');
 	elseif ($out)
-		$PHP_OUTPUT.=(' style="color:red;"');
+		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>');
 	$container = create_container('skeleton.php','alliance_roster.php');
 	$container['alliance_id']    = $id;
@@ -148,7 +148,7 @@ foreach ($alliances as $id => $infoArray)
 	if ($player->getAllianceID() == $id)
 		$PHP_OUTPUT.=(' class="bold"');
 	if ($out)
-		$PHP_OUTPUT.=(' style="color:red;"');
+		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>' . number_format($numDeaths) . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 }
