@@ -155,6 +155,8 @@ else if ($action == 'Change CSS Options')
 {
 	$account->setCssLink($_REQUEST['csslink']);
 	$account->setDefaultCSSEnabled($_REQUEST['defaultcss']!='No');
+	if(isset($_REQUEST['template']))
+		$account->setTemplate($_REQUEST['template']);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 }
 else if ($action == 'Change Kamikaze Setting')

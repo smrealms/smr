@@ -642,6 +642,16 @@ abstract class AbstractSmrAccount
 		return $this->template;
 	}
 	
+	public function setTemplate($template)
+	{
+		if($this->hofName==$template)
+			return;
+		if(!in_array($template,Globals::getAvailableTemplates()))
+			throw new Exception('Template not allowed: '.$template);
+		$this->db->query('UPDATE account SET template = ' . $this->db->escapeString($template) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->template = $template;
+	}
+	
 	public function getHofName()
 	{
 		return $this->hofName;
