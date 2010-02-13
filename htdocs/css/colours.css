@@ -6,7 +6,6 @@ table.standard {
 }
 table.standard td, table.standard th {
 	border: 1px solid #7B5121;
-	padding:2px;
 }
 table.standard th {
 	text-align:center;
@@ -15,6 +14,16 @@ table.standard th {
 	font-weight:bold;
 }
 
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	color: #f2a648;
+}
+
+input {
+	background: #111;
+	color: #FFF;
+	border: 1px solid #7B5121;
+}
 textarea {
 	background: #111;
 	color: #FFF;

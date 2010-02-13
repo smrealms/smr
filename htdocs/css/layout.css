@@ -1,0 +1,303 @@
+
+html {
+	background-color: #000000; /* The main background color, you can change this */
+}
+html, body {
+	font-family: Arial, sans-serif; /* Default font stlye, you can change this */
+	font-size: 14px;
+	text-align: center;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+/* ----- All Heading styles ----- */
+/* =h1,h2 default style for h tags */
+h1 {
+	font-size: 1.5em;
+	font-weight: bold;
+	margin: 0px;
+}
+h2 {
+	font-size: 1.5em;
+}
+/* =h2 default font-size for h2 tags */
+h2 {
+	font-size: 1.25em;
+}
+/* =h3 default color h3 tags */
+h3 {
+	font-size: 1.15em;
+}
+/* ----- End Heading styles ----- */
+#Container {
+	width: 100%;
+	height: 100%;
+}
+.tableHeight {
+	width: 95%;
+	height: 95%;
+	color: White;
+}
+.topleftCell {
+	font-family: 'Bookman Old Style', serif;
+	color: #f2a648; /* font color for left cell, you can change this */
+	width: 20%;
+	text-align: right;
+	vertical-align: top;
+	padding: 0px;
+	margin: 0px;
+}
+.topcenterCell {
+	color: #000000; /* font color for center TopInfor area, you can change this */
+	text-align: center;
+	vertical-align: top;
+	width: 60%;
+	padding: 0px;
+	margin: 0px;
+}
+.rightCell {
+	color: #000000; /* font color for right cell, you can change this */
+	width: 20%;
+	text-align: left;
+	vertical-align: top;
+	padding: 0px;
+	margin: 0px;
+}
+.leftCell { /* Class for table left nav area one */
+	color: #f2a648; /* font color for left cell, you can change this */
+	width: 20%;
+	text-align: right;
+	vertical-align: top;
+	padding: 0px;
+	margin: 0px;
+}
+.centerContent { /* Class for the table Main Content Area */
+	width: 60%;
+	text-align: center;
+	vertical-align: top;
+	padding: 0px;
+	margin: 0px;
+}
+/* This starts the borders for the top center Infor */
+.TopInfor {
+	background-color: #7b5121; /* Background color, you can change this */
+	border: 4px solid #a3692d; /* Border size stlye and color, you can change this */
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+	text-align: left;
+	padding: 10px;
+	margin: 10px 50px 10px 50px;
+}
+.name {
+	float: left;
+	width: 30%;
+	margin-left: 10px;
+	font-size: 1.25em;
+	font-weight: bold;
+}
+.topcenterOne {
+	float: left;
+	width: 30%;
+	margin-right: 10px;
+	font-size: 1em;
+	font-weight: bold;
+}
+.topcenterTwo {
+	float: left;
+	width: 30%;
+	font-size: 1em;
+	font-weight: bold;
+}
+.bar1 {
+	text-align: center;
+	font-size: 1em;
+	font-weight: bold;
+	padding: 5px 10px 0px 10px;
+	margin: 0px auto 0px auto;
+	width: 100%;
+}
+/* This starts the borders for the left nav area one */
+.LeftNavOne {
+	background-color: #140f0b; /* Background color for the left Box 1, you can change this */
+	border: 4px solid #a3692d; /* Border size stlye and color, you can change this */
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+	text-align: right;
+	padding: 10px;
+	margin: 5px 8px 10px 50px;
+
+}
+/* This starts the borders for the left nav area two */
+.LeftNavTwo {
+	background-color: #140f0b; /* Background color for the left Box 2, you can change this */
+	border: 4px solid #a3692d; /* Border size stlye and color */
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+	text-align: right;
+	padding: 10px;
+	margin: 5px 8px 5px 50px;
+}
+/* This starts the borders for the main content area along with other rules */
+.cSector {
+	color: #f2a648; /* font color, you can change this */
+	font-size: 1.5em;
+	margin: 5px 5px 10px 5px;
+}
+.MainContentArea {
+	background-color: #000000;
+	color: #FFFFFF;
+	border: 6px solid #a3692d;
+	-moz-border-radius: 6px; /* Firefox */
+	-webkit-border-radius: 6px; /* Safari and chrome */
+	-khtml-border-radius: 6px; /* Linux browsers */
+	border-radius: 6px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+	min-height: 500px;
+	min-width: 400px;
+	text-align: left;
+	padding: 5px;
+	margin: 0px 0px 10px 0px;
+}
+
+/* ****************************************************
+ This starts the borders for the right infor area
+ *****************************************************/
+.rightInfo {
+	font-weight: bold;
+	font-size: 1em;
+	background-color: #7b5121;
+	border: 4px solid #a3692d;
+	-moz-border-radius: 6px; /* Firefox */
+	-webkit-border-radius: 6px; /* Safari and chrome */
+	-khtml-border-radius: 6px; /* Linux browsers */
+	border-radius: 6px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+	min-height: 600px;
+	text-align: left;
+	padding: 10px;
+	margin: 10px 50px 10px 10px;
+}
+div.rightInfoShip {
+	font-family: 'Bookman Old Style', serif;
+	font-weight: bold;
+	font-size: 1.15em;
+}
+div.rightInfoShip a {	
+	color: #000000;
+	font-family: 'Bookman Old Style', serif;
+	font-weight: bold;
+	font-size: 1.15em;	
+}
+div.rightInfoShip a:hover {
+	background: #cc9933;
+}
+
+/* ****************************************************
+ End of all Borders
+ *****************************************************/
+.big {
+	font-size: 1.25em;
+}
+.wep1 {
+	white-space:normal;
+	color: #ba8f25;/*#956d0b;#755a16;#a78c4b;#d8a21d; #f6ff00;*/
+}
+.copyright {
+	text-align: right;
+	font-size: xx-small;
+	padding: 10px;
+}
+.messages {
+	font-size: .6em;
+	color: White;
+}
+a.message img {
+	border: none;
+}
+a.white {
+	color: #ffffff;
+}
+a {
+	color: #f2a648; /*#cc9933;*/
+	text-decoration: none;
+	padding: 0px;
+	margin: 0px;
+}
+a:hover {
+	background: #5a4b38; /*#d7a970; #c39c4d;*/
+}
+a.leftNav {
+	color: #f2a648; /*#cc9933;*/
+	text-decoration: none;
+	padding: 0px;
+	margin: 0px;
+}
+a:hover.leftNav {
+	background: #5a4b38; /*#d7a970; #c39c4d;*/
+}
+a.nav {
+	color: #000000;
+	text-decoration: none;
+	padding: 0px;
+	margin: 0px;
+}
+a:hover.nav {
+	background: #cc9933;
+}
+
+
+/* STYLES FROM SMR default.css */
+.attack_warning
+{
+	text-align: center;
+	border: 1px solid #BBBB00;
+	background-color: #550000;
+	font-weight: bold;
+	color: #FF0000;
+	padding: 0px;
+	margin: 0px;
+}
+
+
+
+
+a.buttonA
+{
+	border-color: #9B7141 #5B3100 #5B3100 #9B7141;
+	background-color: #7B5121;
+}
+a.buttonA:hover
+{
+	background-color: #7B5121;
+}
+a.buttonA:active
+{
+	background-color: #7B5121;
+	border-color: #5B3100 #9B7141 #9B7141 #5B3100;
+}
+
+a.enemyExamine
+{
+	background-color:#C00;
+	border-color:#CCA3A3 #6E2A2A #6E2A2A #CCA3A3;
+}
+a.enemyExamine:hover
+{
+	background-color:#C00;
+}
+a.enemyExamine:active
+{
+	background-color:#C00;
+	border-color:#6E2A2A #CCA3A3 #CCA3A3 #6E2A2A;
+}
+/* END STYLES FROM SMR */
