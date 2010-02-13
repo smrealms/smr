@@ -138,6 +138,12 @@ div.secNavBox div.move_warp
 
 
 /* General */
+.attack_warning {
+	text-align: center;
+	font-weight: bold;
+	padding: 0px;
+	margin: 0px;
+}
 .admin {
 	font:small-caps bold;
 	color:blue;

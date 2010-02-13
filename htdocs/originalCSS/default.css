@@ -304,13 +304,9 @@ small, .small
 }
 .attack_warning
 {
-	text-align: center;
-	border: 1px solid #BBBB00;
-	background-color: #550000;
-	font-weight: bold;
-	color: #FF0000;
-	padding: 0px;
-	margin: 0px;
+	border: 1px solid #BB0;
+	background-color: #500;
+	color: #F00;
 }
 div.bar1
 {

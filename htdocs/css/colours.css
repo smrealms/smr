@@ -1,6 +1,144 @@
+html {
+	background-color: #000; /* The main background color, you can change this */
+}
+.tableHeight {
+	color: #FFF;
+}
+.topleftCell {
+	color: #F2A648;
+}
+.topcenterCell {
+	color: #000;
+}
+.rightCell {
+	color: #000;
+}
+.leftCell {
+	color: #F2A648;
+}
+.TopInfo {
+	background-color: #7B5121;
+	border: 4px solid #A3692D;
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.LeftNavOne {
+	background-color: #140F0B;
+	border: 4px solid #A3692D;
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.LeftNavTwo {
+	background-color: #140F0B;
+	border: 4px solid #A3692D;
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.MainContentArea {
+	background-color: #000;
+	color: #FFF;
+	border: 6px solid #A3692D;
+	-moz-border-radius: 6px; /* Firefox */
+	-webkit-border-radius: 6px; /* Safari and chrome */
+	-khtml-border-radius: 6px; /* Linux browsers */
+	border-radius: 6px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.rightInfo {
+	background-color: #7B5121;
+	border: 4px solid #A3692D;
+	-moz-border-radius: 6px; /* Firefox */
+	-webkit-border-radius: 6px; /* Safari and chrome */
+	-khtml-border-radius: 6px; /* Linux browsers */
+	border-radius: 6px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+div.rightInfoShip a {	
+	color: #000;
+}
+div.rightInfoShip a:hover {
+	background: #CC9933;
+}
+.wep1 {
+	color: #BA8F25;/*#956D0B;#755A16;#A78C4B;#D8A21D; #F6FF00;*/
+}
+.messages {
+	color: #FFF;
+}
+a.message img {
+	border: none;
+}
+a.white {
+	color: #FFF;
+}
+a {
+	color: #F2A648; /*#CC9933;*/
+	text-decoration: none;
+	padding: 0px;
+	margin: 0px;
+}
+a:hover {
+	background: #5A4B38; /*#D7A970; #C39C4D;*/
+}
+a.leftNav {
+	color: #F2A648; /*#CC9933;*/
+}
+a:hover.leftNav {
+	background: #5A4B38; /*#D7A970; #C39C4D;*/
+}
+a.nav {
+	color: #000;
+}
+a:hover.nav {
+	background: #C93;
+}
+
+
+.attack_warning {
+	border: 1px solid #BB0;
+	background-color: #500;
+	color: #F00;
+}
+
+a.buttonA {
+	border-color: #9B7141 #5B3100 #5B3100 #9B7141;
+	background-color: #7B5121;
+}
+a.buttonA:hover {
+	background-color: #7B5121;
+}
+a.buttonA:active {
+	background-color: #7B5121;
+	border-color: #5B3100 #9B7141 #9B7141 #5B3100;
+}
+
+a.enemyExamine
+{
+	background-color:#C00;
+	border-color:#CCA3A3 #6E2A2A #6E2A2A #CCA3A3;
+}
+a.enemyExamine:hover
+{
+	background-color:#C00;
+}
+a.enemyExamine:active
+{
+	background-color:#C00;
+	border-color:#6E2A2A #CCA3A3 #CCA3A3 #6E2A2A;
+}
+
 /* Standard table styling */
 table.standard {
-	color: #FFFFFF;
+	color: #FFF;
 	border: 1px solid #7B5121;
 	border-spacing: 0px;
 }
@@ -83,7 +221,7 @@ div.secNavBox a:hover {
    color: #F2A648;
 }
 .unvisited {
-   color: #FFFF00;
+   color: #FF0;
 }
 
 /*Used for CS */
@@ -96,10 +234,10 @@ table.csForces th.header {
 
 /* Used for planets */
 .uninhab {
-   color: #FF0000;
+   color: #F00;
 }
 .inhab {
-   color: #00FF00;
+   color: #0F0;
 }
 
 /* LM */
