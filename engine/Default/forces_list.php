@@ -36,23 +36,23 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('<tr>');
 	setCategories(&$container,'sector_id',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.=('<th align="center">');
-	$PHP_OUTPUT.=create_link($container, '<span style="color:#80C870;">Sector ID</span>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Sector ID</span>');
 	$PHP_OUTPUT.=('</th>');
 	setCategories(&$container,'combat_drones',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.=('<th align="center">');
-	$PHP_OUTPUT.=create_link($container, '<span style="color:#80C870;">Combat Drones</span>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Combat Drones</span>');
 	$PHP_OUTPUT.=('</th>');
 	setCategories(&$container,'scout_drones',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.=('<th align="center">');
-	$PHP_OUTPUT.=create_link($container, '<span style="color:#80C870;">Scout Drones</span>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Scout Drones</span>');
 	$PHP_OUTPUT.=('</th>');
 	setCategories(&$container,'mines',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.=('<th align="center">');
-	$PHP_OUTPUT.=create_link($container, '<span style="color:#80C870;">Mines</span>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Mines</span>');
 	$PHP_OUTPUT.=('</th>');
 	setCategories(&$container,'expire_time',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.=('<th align="center">');
-	$PHP_OUTPUT.=create_link($container, '<span style="color:#80C870;">Expire time</span>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Expire time</span>');
 	$PHP_OUTPUT.=('</th>');
 	$PHP_OUTPUT.=('</tr>');
 	

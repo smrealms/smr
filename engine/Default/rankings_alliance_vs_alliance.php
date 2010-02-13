@@ -52,7 +52,7 @@ foreach ($alliance_vs as $key => $id)
 		$container['body']             = 'alliance_roster.php';
 		$container['alliance_id']    = $curr_alliance_id;
 		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->alliance_name');*/
-		$PHP_OUTPUT.=('<select name=alliancer[] style=width:105>');
+		$PHP_OUTPUT.=('<select name="alliancer[]" style=width:105>');
 		$db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND alliance_deaths > 0 OR alliance_kills > 0 ORDER BY alliance_name');
 		while ($db->nextRecord())
 		{
@@ -86,7 +86,7 @@ foreach ($alliance_vs as $key => $id)
 		if ($player->getAllianceID() == $curr_alliance->alliance_id)
 			$PHP_OUTPUT.=(' class="bold"');
 		if ($out)
-			$PHP_OUTPUT.=(' style="color:red;"');
+			$PHP_OUTPUT.=(' class="red"');
 		$PHP_OUTPUT.=('>');
 		$container1 = array();
 		$container1['url']            = 'skeleton.php';
@@ -117,7 +117,7 @@ foreach ($alliance_vs as $key => $id)
 		if ($curr_id == $id && $id != 0)
 		{
 			if (($out || $out2))
-				$PHP_OUTPUT.=('<td style="color:red;">-');
+				$PHP_OUTPUT.=('<td class="red">-');
 			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID())
 				$PHP_OUTPUT.=('<td class="bold">-');
 			else $PHP_OUTPUT.=('<td>-');
@@ -137,9 +137,9 @@ foreach ($alliance_vs as $key => $id)
 		{
 			$PHP_OUTPUT.=('<td');
 			if (($out || $out2) && ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()))
-				$PHP_OUTPUT.=(' style="font-weight:bold;color:red;"');
+				$PHP_OUTPUT.=(' class="bold red"');
 			elseif ($out || $out2)
-				$PHP_OUTPUT.=(' style="color:red;"');
+				$PHP_OUTPUT.=(' class="red"');
 			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' class="bold"');
 			$PHP_OUTPUT.=('>');
 			$PHP_OUTPUT.=('0');
