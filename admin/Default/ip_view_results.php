@@ -105,7 +105,7 @@ elseif ($type == 'list') {
 			if ($db2->nextRecord())
 			 	$ex = $db2->getField('reason');
 			
-			$PHP_OUTPUT.=('<td><font color=red>Yes</font></td>');
+			$PHP_OUTPUT.=('<td><span class="red">Yes</span></td>');
 			$PHP_OUTPUT.=('<td>');
 			$PHP_OUTPUT.=('<input type=checkbox');
 			$PHP_OUTPUT.=(' name="disable_id[]"');

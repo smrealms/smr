@@ -74,10 +74,10 @@ if ($db->getNumRows() > 0)
     
     $PHP_OUTPUT.=create_table();
     $PHP_OUTPUT.=('<th>Number of Force</th><th>Value</th></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[MINES] . '</span> mines</td><td><span class="yellow">' . number_format($total[MINES] * $hardwareTypes[HARDWARE_MINE]['Cost']) . '</span> credits</td></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[CDS] . '</span> combat drones</td><td><span class="yellow">' . number_format($total[CDS] * $hardwareTypes[HARDWARE_COMBAT]['Cost']) . '</span> credits</td></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[SDS] . '</span> scout drones</td><td><span class="yellow">' . number_format($total[SDS] * $hardwareTypes[HARDWARE_SCOUT]['Cost']) . '</span> credits</td></tr>');
-    $PHP_OUTPUT.=('<tr><td><span class="yellow bold">' . array_sum($total) . '</span> forces</td><td><span class="yellow bold">' . number_format($total[MINES] * $hardwareTypes[HARDWARE_MINE]['Cost'] + $total[CDS] * $hardwareTypes[HARDWARE_COMBAT]['Cost'] + $total[SDS] * $hardwareTypes[HARDWARE_SCOUT]['Cost']) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[MINES] . '</span> mines</td><td><span class="creds">' . number_format($total[MINES] * $hardwareTypes[HARDWARE_MINE]['Cost']) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[CDS] . '</span> combat drones</td><td><span class="creds">' . number_format($total[CDS] * $hardwareTypes[HARDWARE_COMBAT]['Cost']) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow">' . $total[SDS] . '</span> scout drones</td><td><span class="creds">' . number_format($total[SDS] * $hardwareTypes[HARDWARE_SCOUT]['Cost']) . '</span> credits</td></tr>');
+    $PHP_OUTPUT.=('<tr><td><span class="yellow bold">' . array_sum($total) . '</span> forces</td><td><span class="creds bold">' . number_format($total[MINES] * $hardwareTypes[HARDWARE_MINE]['Cost'] + $total[CDS] * $hardwareTypes[HARDWARE_COMBAT]['Cost'] + $total[SDS] * $hardwareTypes[HARDWARE_SCOUT]['Cost']) . '</span> credits</td></tr>');
     $PHP_OUTPUT.=('</table><br />');
 
 	$PHP_OUTPUT.= '<table class="standard inset"><tr>';

@@ -56,11 +56,11 @@ function displayHOFRow($rank,$accountID,$amount)
 	if ($accountID == $account->account_id)
 	{
 		$foundMe = true;
-		$bold = ' style="font-weight:bold;"';
+		$bold = ' class="bold"';
 	}
 	else $bold = '';
 	$return=('<tr>');
-	$return.=('<td align=center'.$bold.'>' . $rank . '</td>');
+	$return.=('<td align="center"'.$bold.'>' . $rank . '</td>');
 	
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -78,12 +78,12 @@ function displayHOFRow($rank,$accountID,$amount)
 		$container['sending_page'] = 'personal_hof';
 	}
 	if(is_object($hofPlayer))
-		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
+		$return.=('<td align="center"'.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
 	else if(is_object($hofAccount))
-		$return.=('<td align=center'.$bold.'>'.create_link($container, $hofAccount->getHofName()) .'</td>');
+		$return.=('<td align="center"'.$bold.'>'.create_link($container, $hofAccount->getHofName()) .'</td>');
 	else
-		$return.=('<td align=center'.$bold.'>Unknown</td>');
-	$return.=('<td align=center'.$bold.'>' . $amount . '</td>');
+		$return.=('<td align="center"'.$bold.'>Unknown</td>');
+	$return.=('<td align="center"'.$bold.'>' . $amount . '</td>');
 	$return.=('</tr>');
 	return $return;
 }
@@ -93,7 +93,7 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName)
 	$container = $var;
 	unset($container['type']);
 	unset($container['view']);
-	$viewing= '<span style="font-weight:bold;">Currently viewing: </span>'.create_link($container,$hofName);
+	$viewing= '<span class="bold">Currently viewing: </span>'.create_link($container,$hofName);
 	$typeList = array();
 	if(isset($var['type']))
 	{

@@ -329,7 +329,7 @@ class SmrSector
 		foreach($forces as &$force)
 		{
 			// send scout messages to user
-			$message = 'Your forces have spotted that ' . $player->getDisplayName() . ' has been <font color=red>DESTROYED</font> in sector #'.$this->sectorID;
+			$message = 'Your forces have spotted that ' . $player->getDisplayName() . ' has been <span class="red">DESTROYED</span> in sector #'.$this->sectorID;
 			$force->ping($message,$player);
 		} unset($force);
 	}

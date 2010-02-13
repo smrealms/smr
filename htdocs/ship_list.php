@@ -127,9 +127,9 @@ function buildShipStats($db)
 	$hardpoints = $db->getField('hardpoint');
 	$stat[] = $hardpoints;
 	if ($db->getField('buyer_restriction') == 1)
-		$restriction = '<font color=green>Good</font>';
+		$restriction = '<font color="green">Good</font>';
     elseif ($db->getField('buyer_restriction') == 2)
-		$restriction = '<font color=red>Evil</font>';
+		$restriction = '<font color="red">Evil</font>';
 	else
 		$restriction = '&nbsp;';
     $stat[] = $restriction;

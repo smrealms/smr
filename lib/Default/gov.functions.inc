@@ -21,8 +21,8 @@ function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy)
 			$bountyPlayer =& SmrPlayer::getPlayer($db->getField('account_id'),SmrSession::$game_id);
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align="center">'.$bountyPlayer->getLinkedDisplayName().'</td>');
-			$PHP_OUTPUT.=('<td align="center"><font color=red> ' . number_format($db->getField('amount')) . ' </font></td>');
-			$PHP_OUTPUT.=('<td align="center"><font color=red> ' . number_format($db->getField('smr_credits')) . ' </font></td>');
+			$PHP_OUTPUT.=('<td align="center"><span class="creds"> ' . number_format($db->getField('amount')) . ' </span></td>');
+			$PHP_OUTPUT.=('<td align="center"><span class="red"> ' . number_format($db->getField('smr_credits')) . ' </span></td>');
 			$PHP_OUTPUT.=('</tr>');
 	
 		}

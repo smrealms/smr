@@ -11,11 +11,11 @@ if (isset($MessageBoxes))
 		</tr><?php
 		foreach ($MessageBoxes as $MessageBox)
 		{ ?>
-			<tr<?php if($MessageBox['HasUnread']) { ?>  style="font-weight:bold;"<?php } ?>>
+			<tr<?php if($MessageBox['HasUnread']) { ?>  class="bold"<?php } ?>>
 				<td>
 					<a href="<?php echo $MessageBox['ViewHref']; ?>"><?php echo $MessageBox['Name']; ?></a>
 				</td>
-				<td align="center" style="color:yellow;"><?php echo $MessageBox['MessageCount']; ?></td>
+				<td align="center" class="yellow"><?php echo $MessageBox['MessageCount']; ?></td>
 				<td><a href="<?php echo $MessageBox['DeleteHref']; ?>">Empty</a></td>
 			</tr><?php
 		} ?>
@@ -47,7 +47,7 @@ else
 																						<option>Marked Messages</option>
 																						<option>All Messages</option>
 																					</select>
-					<p>You have <span style="color:yellow;"><?php echo $MessageBox['TotalMessages']; ?></span> message<?php if($MessageBox['TotalMessages']!=1) { ?>s<?php } if($MessageBox['TotalMessages']!=$MessageBox['NumberMessages']){ ?> of which <span style="color:yellow;"><?php echo $MessageBox['NumberMessages']; ?></span> <?php if($MessageBox['NumberMessages'] == 1){ ?>is<?php }else{ ?>are<?php } ?> being displayed<?php } ?>.</p>
+					<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> message<?php if($MessageBox['TotalMessages']!=1) { ?>s<?php } if($MessageBox['TotalMessages']!=$MessageBox['NumberMessages']){ ?> of which <span class="yellow"><?php echo $MessageBox['NumberMessages']; ?></span> <?php if($MessageBox['NumberMessages'] == 1){ ?>is<?php }else{ ?>are<?php } ?> being displayed<?php } ?>.</p>
 				</td>
 				<td style="text-align: center; width: 30%" valign="middle"><?php
 					if(isset($NextPageHREF))

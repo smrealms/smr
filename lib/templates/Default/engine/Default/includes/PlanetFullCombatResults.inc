@@ -9,7 +9,7 @@ if(!$AlreadyDestroyed)
 }
 else if(!$MinimalDisplay)
 {
-	?><span style="font-weight:bold;">The planet is already destroyed.</span><?php
+	?><span class="bold">The planet is already destroyed.</span><?php
 }
 ?><br /><?php
 if(!$MinimalDisplay)

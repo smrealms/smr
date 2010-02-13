@@ -5,9 +5,9 @@ $template->assign('PageTopic','Create Universe - Adding Special Locations (4/10)
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 if ($db->nextRecord())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game:<dt><dd>' . $db->getField('game_name') . '</dd>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding special Location</d>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">Here you can add special locations, like Race Headquarters, Underground HQ, Bars and Banks. ');
+	$PHP_OUTPUT.=('<dt class="bold">Game:<dt><dd>' . $db->getField('game_name') . '</dd>');
+$PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding special Location</d>');
+$PHP_OUTPUT.=('<dt class="bold">Description:<dt><dd style="width:50%;">Here you can add special locations, like Race Headquarters, Underground HQ, Bars and Banks. ');
 $PHP_OUTPUT.=('Each Headquarter should be only once in the game. The numbers provided are absolut numbers per galaxy.<br />');
 $PHP_OUTPUT.=('PLEASE NOTE: Galaxies with a Racial Headquarter DON\'T need additional FED Space, it will generated automatically for these!</dd>');
 $PHP_OUTPUT.=('</dl>');

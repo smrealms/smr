@@ -5,9 +5,9 @@ $template->assign('PageTopic','Create Universe - Adding Ports (5/10)');
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 if ($db->nextRecord())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding ports</d>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
+	$PHP_OUTPUT.=('<dt class="bold">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
+$PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding ports</d>');
+$PHP_OUTPUT.=('<dt class="bold">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('Without ports there is no trading and it\'s called Space <i>Merchant</i> Realms! First you have to enter the total number of ports per galaxy. ');
 $PHP_OUTPUT.=('In the next step you need to specify which type of port levels will be created.<br />PLEASE NOTE: The percentages of different port levels must add up to exactly 100! ');
 $PHP_OUTPUT.=('You can see this in the <i>sum</i> column.</dd>');

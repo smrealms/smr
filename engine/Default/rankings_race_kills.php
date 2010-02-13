@@ -22,8 +22,8 @@ while ($db->nextRecord())
 	$rank++;
 	$race_id = $db->getField('race_id');
 	$db2->query('SELECT * FROM player WHERE race_id = '.$race_id.' AND game_id = '.$player->getGameID().' AND out_of_game = \'TRUE\'');
-	if ($player->getRaceID() == $race_id) $style = ' style="font-weight:bold;"';
-	elseif ($db2->nextRecord()) $style = ' style="color:red;"';
+	if ($player->getRaceID() == $race_id) $style = ' class="bold"';
+	elseif ($db2->nextRecord()) $style = ' class="red"';
 	else $style = '';
 
 	$PHP_OUTPUT.=('<tr>');

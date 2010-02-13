@@ -1363,13 +1363,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		if ($this->hasCustomShipName())
 		{
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
-			$msg .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			$msg .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
 		$msg .= ' was destroyed by ' . $killer->getDisplayName();
 		if ($killer->hasCustomShipName())
 		{
 			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
-			$msg .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			$msg .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
 		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
 		$this->getSector()->increaseBattles(1);
@@ -1523,7 +1523,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if ($this->hasCustomShipName())
 		{
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
-			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
 		$news_message .= ' was destroyed by forces in sector&nbsp#'.$forces->getSectorID();
 		// insert the news entry
@@ -1556,7 +1556,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if ($this->hasCustomShipName())
 		{
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
-			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
 		$news_message .= ' was destroyed while invading '.$port->getDisplayName().'.';
 		// insert the news entry
@@ -1583,7 +1583,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if ($this->hasCustomShipName())
 		{
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
-			$news_message .= ' flying <font color="yellow">'.$named_ship.'</font>';
+			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
 		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector&nbsp#'.$planet->getSectorID().'.';
 		// insert the news entry

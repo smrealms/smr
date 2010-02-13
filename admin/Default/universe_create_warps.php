@@ -5,9 +5,9 @@ $template->assign('PageTopic','Create Universe - Adding Warps (3/10)');
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 if ($db->nextRecord())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding warps</d>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
+	$PHP_OUTPUT.=('<dt class="bold">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
+$PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding warps</d>');
+$PHP_OUTPUT.=('<dt class="bold">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('Each galaxy must be connected to the outside world. Please add the warps between it to actually create the universe layout. There can only be one warp between two galaxies.</dd>');
 $PHP_OUTPUT.=('</dl>');
 

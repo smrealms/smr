@@ -36,7 +36,7 @@ function checkForLottoWinner($gameID)
 		$winner =& SmrPlayer::getPlayer($winner_id, $gameID);
 		$winner->increaseHOF($lottoInfo['Prize'],array('Bar','Lotto','Money','Winnings'));
 		$winner->increaseHOF(1,array('Bar','Lotto','Results','Wins'));
-		$news_message = '<font color=yellow>'.$winner->getPlayerName().'</font> has won the lotto!  The jackpot was ' . number_format($lottoInfo['Prize']) . '.  <font color=yellow>'.$winner->getPlayerName().'</font> can report to any bar to claim their prize!';
+		$news_message = '<span class="yellow">'.$winner->getPlayerName().'</span> has won the lotto!  The jackpot was ' . number_format($lottoInfo['Prize']) . '.  <span class="yellow">'.$winner->getPlayerName().'</span> can report to any bar to claim their prize!';
 		// insert the news entry
 		$db->query('DELETE FROM news WHERE type = \'lotto\' AND game_id = '.$gameID);
 		$db->query('INSERT INTO news ' .

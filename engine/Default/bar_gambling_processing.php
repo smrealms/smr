@@ -228,8 +228,8 @@ elseif ($action == 'blackjack')
 		//heres the AIs cards
 		$i = 1;
 		if (get_value($ai_card) == 21 && sizeof($ai_card) == 2)
-			$message.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
-		$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
+			$message.=('<div align="center"><h1><span class="red">Bank Wins</span></h1></div>');
+		$message.=('<div align="center">Bank\'s Cards are</div><br /><table align="center"><tr>');
 		foreach ($ai_card as $key => $value)
 		{
 			if ($key == 0)
@@ -286,9 +286,9 @@ elseif ($action == 'blackjack')
 				
 			}
 		$win = check_for_win(get_value($ai_card), get_value($player_card));
-		if ($win == 'yes' || $win == 'bj') $message.=('<div align=center><h1><font color=red>You Win</font></h1></div>');
-		elseif ($win == 'tie') $message.=('<div align=center><h1><font color=red>TIE Game</font></h1></div>');
-		else $message.=('<div align=center><h1><font color=red>Bank Wins</font></h1></div>');
+		if ($win == 'yes' || $win == 'bj') $message.=('<div align=center><h1><span class="red">You Win</span></h1></div>');
+		elseif ($win == 'tie') $message.=('<div align=center><h1><span class="red">TIE Game</span></h1></div>');
+		else $message.=('<div align=center><h1><span class="red">Bank Wins</span></h1></div>');
 		$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
 		foreach ($ai_card as $key => $value)
 		{
@@ -298,7 +298,7 @@ elseif ($action == 'blackjack')
 			$i++;
 		}
 		$message.=('</td></tr></table><div align=center>');
-		if (get_value($ai_card) > 21) $message.=('Bank <font color=red><b>BUSTED</b></font><br /><br />');
+		if (get_value($ai_card) > 21) $message.=('Bank <span class="red"><b>BUSTED</b></span><br /><br />');
 		else $message.=('Bank has ' . get_value($ai_card) . '<br /><br />');
 		$message.=('</div>');
 	}
@@ -325,7 +325,7 @@ elseif ($action == 'blackjack')
 	$message.=('<div align=center>');
 	if (get_value($player_card) > 21)
 	{
-		$message.=('You have <font color=red><b>BUSTED</b></font>');
+		$message.=('You have <span class="red"><b>BUSTED</b></span>');
 		$bet = $var['bet'];
 		$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
 		$player->increaseHOF(1,array('Blackjack','Results','Lost'));

@@ -42,9 +42,9 @@ $account->log(6, 'Dumps '.$amount.' of '.$good_name.' and looses '.$lost_xp.' ex
 $container = array();
 $container['url'] = 'skeleton.php';
 if ($amount > 1)
-	$container['msg'] = 'You have jettisoned <font color=yellow>'.$amount.'</font> units of '.$good_name.' and have lost <font color=yellow>'.$lost_xp.'</font> experience.';
+	$container['msg'] = 'You have jettisoned <span class="yellow">'.$amount.'</span> units of '.$good_name.' and have lost <span class="exp">'.$lost_xp.'</span> experience.';
 else
-	$container['msg'] = 'You have jettisoned <font color=yellow>'.$amount.'</font> unit of '.$good_name.' and have lost <font color=yellow>'.$lost_xp.'</font> experience.';
+	$container['msg'] = 'You have jettisoned <span class="yellow">'.$amount.'</span> unit of '.$good_name.' and have lost <span class="exp">'.$lost_xp.'</span> experience.';
 
 if ($player->isLandedOnPlanet())
 	$container['body'] = 'planet_main.php';

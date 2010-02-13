@@ -80,7 +80,7 @@ if (isset($Msg))
 					{
 						?><form name="KickPlayerForm" method="POST" action="<?php echo $PlanetPlayer['KickFormLink']; ?>"><?php
 					} ?>
-					<a href="<?php echo $PlanetPlayer['SearchLink']; ?>"><span style="color:yellow;"><?php echo $PlanetPlayer['Player']->getPlayerName(); ?></span></a><br /><?php
+					<a href="<?php echo $PlanetPlayer['SearchLink']; ?>"><span class="yellow"><?php echo $PlanetPlayer['Player']->getPlayerName(); ?></span></a><br /><?php
 					if(isset($PlanetPlayer['KickFormLink']))
 					{
 						?><input type="submit" name="action" value="Kick" id="InputFields">

@@ -41,17 +41,17 @@ foreach ($alliances as $id => $infoArray)
 	$members = $infoArray[2];
 	if ($rank > 10) break;
 	$PHP_OUTPUT.=('<tr>');
-	$style = 'style="vertical-align:top;text-align:center;';
+	$style = 'style="vertical-align:top;text-align:center;"';
 	$style2 = '';
 	if($player->getAllianceID() == $id)
-		$style2 .= 'font-weight:bold;';
+		$style2 .= ' class="bold"';
 	elseif (!$members)
-		$style2.=('color:red;');
+		$style2.=(' class="red"');
 	$style .= $style2 . '"';
 
 	$PHP_OUTPUT.=('<td '.$style.'>'.$rank.'</td>');
 
-	$PHP_OUTPUT.= '<td style="vertical-align:top;' . $style2 . '">';
+	$PHP_OUTPUT.= '<td style="vertical-align:top;"' . $style2 . '>';
 	$container = create_container('skeleton.php','alliance_roster.php');
 	$container['alliance_id']	= $id;
 	if ($members)
@@ -122,17 +122,17 @@ foreach ($alliances as $id => $infoArray)
 	$members = $infoArray[2];
 	
 	$PHP_OUTPUT.=('<tr>');
-	$style = 'style="vertical-align:top;text-align:center;';
+	$style = 'style="vertical-align:top;text-align:center;"';
 	$style2 = '';
 	if($player->getAllianceID() == $id)
-		$style2 .= 'font-weight:bold;';
+		$style2 .= ' class="bold"';
 	else if (!$members)
-		$style2.=('color:red;');
-	$style .= $style2 . '"';
+		$style2.=(' class="red"');
+	$style .= $style2;
 
 	$PHP_OUTPUT.=('<td '.$style.'>'.$rank.'</td>');
 
-	$PHP_OUTPUT.= '<td style="vertical-align:top;' . $style2 . '">';
+	$PHP_OUTPUT.= '<td style="vertical-align:top;"' . $style2 . '>';
 	$container = create_container('skeleton.php','alliance_roster.php');
 	$container['alliance_id']	= $id;
 	if ($members)

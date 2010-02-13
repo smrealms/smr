@@ -1,7 +1,7 @@
 <dl>
-	<dt style="font-weight:bold;">Game:<dt><dd><?php echo $GameName ?></dd>
-	<dt style="font-weight:bold;">Task:<dt><dd>Adding galaxies</dd>
-	<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">Each galaxy has a name and a size. Please select the name from the drop down box and the size. All galaxies are quadratic
+	<dt class="bold">Game:<dt><dd><?php echo $GameName ?></dd>
+	<dt class="bold">Task:<dt><dd>Adding galaxies</dd>
+	<dt class="bold">Description:<dt><dd style="width:50%;">Each galaxy has a name and a size. Please select the name from the drop down box and the size. All galaxies are quadratic
 </dl>
 
 <form name="FORM" method="POST" action="<?php echo $CreateGalaxiesFormHref ?>"><?php

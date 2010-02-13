@@ -23,7 +23,7 @@ if ($db->nextRecord())
 	$exp = ($db->getField('experience_traded') > 0) ? $db->getField('experience_traded') : 0;
 }
 
-$PHP_OUTPUT.=('You have a score of <font color="red">'.number_format($account->getScore()).'</font>.<br /><br />');
+$PHP_OUTPUT.=('You have a score of <span class="red">'.number_format($account->getScore()).'</span>.<br /><br />');
 $PHP_OUTPUT.=('You are ranked as a <font size="4" color="greenyellow">'.$account->get_rank_name().'</font> player.<p><br />');
 $db->query('SELECT * FROM user_rankings ORDER BY rank');
 $i = 0;

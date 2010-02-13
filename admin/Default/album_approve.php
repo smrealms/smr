@@ -62,19 +62,19 @@ if ($db->nextRecord()) {
 	if (empty($location))
 		$location = 'N/A';
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">Location :</td><td>'.$location.'</td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Location :</td><td>'.$location.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	if (empty($email))
 		$email = 'N/A';
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">eMail :</td><td>'.$email.'</td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">eMail :</td><td>'.$email.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	if (empty($website))
 		$website = 'N/A';
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">Website :</td><td><a href="'.$webpage.'">'.$webpage.'</a></td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Website :</td><td><a href="'.$webpage.'">'.$webpage.'</a></td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr>');
@@ -84,13 +84,13 @@ if ($db->nextRecord()) {
 		$birthdate = 'Year '.$year;
 	if (empty($birthdate))
 		$birthdate = 'N/A';
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">Birthdate :</td><td>'.$birthdate.'</td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Birthdate :</td><td>'.$birthdate.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	if (empty($other))
 		$other = 'N/A';
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info :<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" width="10%" class="bold">Other&nbsp;Info :<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td>'.$other.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('</table>');
 

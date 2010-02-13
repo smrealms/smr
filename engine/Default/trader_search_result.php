@@ -96,25 +96,25 @@ if ($db->getNumRows() > 0)
 		$container['url']		= 'skeleton.php';
 		$container['body']		= 'message_send.php';
 		$container['receiver']	= $curr_player->getAccountID();
-		$PHP_OUTPUT.=create_link($container, '<span style="color:yellow;">Send Message</span>');
+		$PHP_OUTPUT.=create_link($container, '<span class="yellow">Send Message</span>');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'bounty_view.php';
 		$container['id'] = $curr_player->getAccountID();
-		$PHP_OUTPUT.=create_link($container, '<br /><font color=yellow>View Bounty</font><br />');
+		$PHP_OUTPUT.=create_link($container, '<br /><span class="yellow">View Bounty</span><br />');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'hall_of_fame_player_detail.php';
 		$container['account_id'] = $curr_player->getAccountID();
 		$container['game_id'] = $curr_player->getGameID();
 		$container['sending_page'] = 'search';
-		$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
+		$PHP_OUTPUT.=create_link($container, '<span class="yellow">View Stats</span><br />');
 		$container = array();
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'news_read_advanced.php';
 		$container['submit'] = 'Search For Player';
 		$container['playerName'] = $curr_player->getPlayerName();
-		$PHP_OUTPUT.=create_link($container, '<font color=yellow>View News</font>');
+		$PHP_OUTPUT.=create_link($container, '<span class="yellow">View News</span>');
 		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 		{
 			$PHP_OUTPUT.= '<br />';
@@ -206,19 +206,19 @@ if (empty($player_id))
 			$container['url']		= 'skeleton.php';
 			$container['body']		= 'message_send.php';
 			$container['receiver']	= $curr_player->getAccountID();
-			$PHP_OUTPUT.=create_link($container, '<span style="color:yellow;">Send Message</span>');
+			$PHP_OUTPUT.=create_link($container, '<span class="yellow">Send Message</span>');
 			$container = array();
 			$container['url'] = 'skeleton.php';
 			$container['body'] = 'bounty_view.php';
 			$container['id'] = $curr_player->getAccountID();
-			$PHP_OUTPUT.=create_link($container, '<br /><font color=yellow>View Bounty</font><br />');
+			$PHP_OUTPUT.=create_link($container, '<br /><span class="yellow">View Bounty</span><br />');
 			$container = array();
 			$container['url'] = 'skeleton.php';
 			$container['body'] = 'hall_of_fame_player_detail.php';
 			$container['account_id'] = $curr_player->getAccountID();
 			$container['game_id'] = $curr_player->getGameID();
 			$container['sending_page'] = 'search';
-			$PHP_OUTPUT.=create_link($container, '<font color=yellow>View Stats</font><br />');
+			$PHP_OUTPUT.=create_link($container, '<span class="yellow">View Stats</span><br />');
 			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
 			{
 				$container=array();

@@ -91,7 +91,7 @@ else
 	$PHP_OUTPUT.=('</form>');
 	if (empty($location))
 		$location = 'N/A';
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">Location :</td><td colspan="2">'.$location.'</td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Location :</td><td colspan="2">'.$location.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr>');
@@ -103,7 +103,7 @@ else
 	$PHP_OUTPUT.=('</form>');
 	if (empty($email))
 		$email = 'N/A';
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">eMail :</td><td colspan="2">'.$email.'</td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">eMail :</td><td colspan="2">'.$email.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr>');
@@ -117,7 +117,7 @@ else
 		$website = 'N/A';
 	else
 		$website = '<a href="'.$website.'" target="_new">'.$website.'</a>';
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">Website :</td><td>'.$website.'</td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Website :</td><td>'.$website.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr>');
@@ -135,7 +135,7 @@ else
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('</form>');
 
-	$PHP_OUTPUT.=('<td align="right" width="10%" style="font-weight:bold;">Birthdate :</td><td colspan="2">'.$birthdate.'</td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Birthdate :</td><td colspan="2">'.$birthdate.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr>');
@@ -147,7 +147,7 @@ else
 	$PHP_OUTPUT.=('</form>');
 	if (empty($other))
 		$other = 'N/A';
-	$PHP_OUTPUT.=('<td align="right" valign="top" width="10%" style="font-weight:bold;">Other&nbsp;Info :<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td colspan="2">'.$other.'</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" width="10%" class="bold">Other&nbsp;Info :<br /><small>(AIM/ICQ)&nbsp;&nbsp;</small></td><td colspan="2">'.$other.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$container['task'] = 'delete_comment';

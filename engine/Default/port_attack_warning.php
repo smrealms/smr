@@ -1,7 +1,7 @@
 <?php
 require_once(get_file_loc('SmrPort.class.inc'));
 $template->assign('PageTopic','Port Raid');
-$PHP_OUTPUT.=('<font color=red>WARNING WARNING</font> port assault about to commence!!<br />');
+$PHP_OUTPUT.=('<span class="red">WARNING WARNING</span> port assault about to commence!!<br />');
 $PHP_OUTPUT.=('Are you sure you want to attack this port?<br /><br />');
 $port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 $time = TIME;

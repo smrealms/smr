@@ -69,35 +69,35 @@ $PHP_OUTPUT.=create_form_parameter($container, 'name="form_acc"');
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=('<table cellpadding="3" border="0">');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Account ID:</td>');
+$PHP_OUTPUT.=('<td align="right" class="bold">Account ID:</td>');
 if (!empty($curr_account->account_id))
 	$PHP_OUTPUT.=('<td>'.$curr_account->account_id.'</td>');
 else
 	$PHP_OUTPUT.=('<td><input type="text" name="account_id" id="InputFields" size="5"></td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Login:</td>');
+$PHP_OUTPUT.=('<td align="right" class="bold">Login:</td>');
 if (!empty($curr_account->login))
 	$PHP_OUTPUT.=('<td>'.$curr_account->login.'</td>');
 else
 	$PHP_OUTPUT.=('<td><input type="text" name="login" id="InputFields" size="20"></td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Validation Code:</td>');
+$PHP_OUTPUT.=('<td align="right" class="bold">Validation Code:</td>');
 if (!empty($curr_account->validation_code))
 	$PHP_OUTPUT.=('<td>'.$curr_account->validation_code.'</td>');
 else
 	$PHP_OUTPUT.=('<td><input type="text" name="val_code" id="InputFields" size="20"></td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Email:</td>');
+$PHP_OUTPUT.=('<td align="right" class="bold">Email:</td>');
 if (!empty($curr_account->email))
 	$PHP_OUTPUT.=('<td>'.$curr_account->email.'</td>');
 else
 	$PHP_OUTPUT.=('<td><input type="text" name="email" id="InputFields" size="20"></td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">HoF Name:</td>');
+$PHP_OUTPUT.=('<td align="right" class="bold">HoF Name:</td>');
 if (!empty($curr_account) && $curr_account->getHofName())
 	$PHP_OUTPUT.=('<td>'.$curr_account->getHofName().'</td>');
 else
@@ -108,7 +108,7 @@ if (!empty($curr_account->email)) {
 	//ban points go here
 	$points = $curr_account->getPoints();
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Points:</td>');
+	$PHP_OUTPUT.=('<td align="right" class="bold">Points:</td>');
 	$PHP_OUTPUT.=('<td>'.$points.'</td>');
 	$PHP_OUTPUT.=('</tr>');
 }
@@ -118,7 +118,7 @@ $PHP_OUTPUT.=('<tr><td colspan="2">&nbsp;</td></tr>');
 if ($curr_account && $curr_account->account_id != 0) {
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Player:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Player:</td>');
 	$db->query('SELECT * FROM player WHERE account_id = '.$curr_account->account_id);
 	if ($db->getNumRows()) {
 
@@ -157,7 +157,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Donation:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Donation:</td>');
 	$PHP_OUTPUT.=('<td><input type="text" name="donation" size="5" id="InputFields" style="text-align:center;">$</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('<tr>');
@@ -166,7 +166,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('</tr>');
 	
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Grant Reward SMR Credits:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Grant Reward SMR Credits:</td>');
 	$PHP_OUTPUT.=('<td><input type="text" name="grant_credits" size="5" id="InputFields" style="text-align:center;"> Credits</td>');
 	$PHP_OUTPUT.=('</tr>');
 
@@ -187,11 +187,9 @@ if ($curr_account && $curr_account->account_id != 0) {
 			window.document.form_acc.suspicion.value = \'For Multi Closings Only\';
 			window.document.form_acc.suspicion.disabled=true;
 		}
-		window.document.form_acc.choise[0].checked=true;
-		
-	}</script>';
+		window.document.form_acc.choise[0class="bold"ript>';
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Close Reason:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Close Reason:</td>');
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=('<p>Reopen type:<input type="radio" name="reopen_type" value="account">Account close <input type="radio" name="reopen_type" value="mail">Mail ban</p>');
 	$PHP_OUTPUT.=('<p><input type="radio" name="choise" value="pre_select">');
@@ -237,7 +235,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Closing History:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Closing History:</td>');
 	$PHP_OUTPUT.=('<td>');
 	$db->query('SELECT * FROM account_has_closing_history WHERE account_id = '.$curr_account->account_id.' ORDER BY time ASC');
 	if ($db->getNumRows())
@@ -273,7 +271,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Exception:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Exception:</td>');
 	$db->query('SELECT * FROM account_exceptions WHERE account_id = '.$curr_account->account_id);
 	if ($db->nextRecord()) {
 
@@ -287,7 +285,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Forced Veteran:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Forced Veteran:</td>');
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=('<input type="radio" name="veteran_status" value="TRUE"');
 	if ($curr_account->isVeteranBumped())
@@ -301,7 +299,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Logging:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Logging:</td>');
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=('<input type="radio" name="logging_status" value="TRUE"');
 	if ($curr_account->isLoggingEnabled())
@@ -315,7 +313,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" valign="top" style="font-weight:bold;">Last IP\'s:</td>');
+	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Last IP\'s:</td>');
 	$PHP_OUTPUT.=('<td>');
 
 	$PHP_OUTPUT.=('<table>');
@@ -339,7 +337,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 } else {
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" style="font-weight:bold;">Player Name:</td>');
+	$PHP_OUTPUT.=('<td align="right" class="bold">Player Name:</td>');
 	$PHP_OUTPUT.=('<td><input type="text" name="player_name" id="InputFields" size="20"></td>');
 	$PHP_OUTPUT.=('</tr>');
 

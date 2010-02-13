@@ -19,7 +19,7 @@ while ($db->nextRecord()) {
     $container['url'] = 'skeleton.php';
     $container['body'] = 'galactic_post_view_applications.php';
     $container['id'] = $appliee->getAccountID();
-    $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$appliee->getPlayerName().'</font>');
+    $PHP_OUTPUT.=create_link($container, '<span class="yellow">'.$appliee->getPlayerName().'</span>');
     $PHP_OUTPUT.=(' who has ');
     if ($db->getField('written_before') == 'YES')
         $PHP_OUTPUT.=('written for some kind of a newspaper before.');

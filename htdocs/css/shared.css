@@ -212,31 +212,34 @@ div.secNavBox div.move_warp
 
 /* Colours */
 .yellow {
-   color: #FFFF00;
+   color: #FF0;
 }
 .red {
-   color: #FF0000;
+   color: #F00;
 }
 .green {
-   color: #00FF00;
-}
-.dgreen {
-   color: #00AA00;
-}
-.cyan {
-   color: #00FFFF;
+   color: #0F0;
 }
 .blue {
-   color:#0000FF;
-}
-.purple {
-   color: #7F00FF;
+   color:#00F;
 }
 .npcColor {
-   color: #66CCFF;
+   color: #6CF;
 }
 .sectorColor {
-   color: #00FFFF;
+   color: #0FF;
+}
+.creds {
+   color: #FF0;
+}
+.exp {
+   color:#00F;
+}
+.shields {
+   color: #0FF;
+}
+.cds {
+   color: #FF0;
 }
 
 /* GP */

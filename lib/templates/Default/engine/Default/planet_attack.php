@@ -13,11 +13,11 @@ else
 {
 	if($OverrideDeath)
 	{
-		?><span style="color;red;">You have been destroyed.</span><?php
+		?><span class="red">You have been destroyed.</span><?php
 	}
 	else
 	{
-		?><span style="color;yellow;">You have destroyed the planet.</span><?php
+		?><span class="yellow">You have destroyed the planet.</span><?php
 	} ?>
 		<br />
 		<div class="buttonA"><?php

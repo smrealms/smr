@@ -194,13 +194,13 @@ if (!empty($var['traded_xp']) ||
 	!empty($var['traded_good']) ||
 	!empty($var['traded_credits'])) {
 
-	$tradeMessage = 'You have just ' . $var['traded_transaction'] . ' <span style="color:yellow;">' .
-		$var['traded_amount'] . '</span> units of <span style="color:yellow;">' . $var['traded_good'] .
-		'</span> for <span style="color:yellow;">' . $var['traded_credits'] . '</span> credits.<br />';
+	$tradeMessage = 'You have just ' . $var['traded_transaction'] . ' <span class="yellow">' .
+		$var['traded_amount'] . '</span> units of <span class="yellow">' . $var['traded_good'] .
+		'</span> for <span class="creds">' . $var['traded_credits'] . '</span> credits.<br />';
 
 	if ($var['traded_xp'] > 0)
 	{
-		$tradeMessage .= 'Your excellent trading skills have gained you <font color="blue">' . $var['traded_xp'] . ' </font>experience points!<br />';
+		$tradeMessage .= 'Your excellent trading skills have gained you <span class="exp">' . $var['traded_xp'] . ' </span> experience points!<br />';
 	}
 
 	$tradeMessage .= '<br />';

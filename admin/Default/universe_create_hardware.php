@@ -5,9 +5,9 @@ $template->assign('PageTopic','Create Universe - Adding Hardware (9/10)');
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 if ($db->nextRecord())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding hardware shops</d>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
+	$PHP_OUTPUT.=('<dt class="bold">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
+$PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding hardware shops</d>');
+$PHP_OUTPUT.=('<dt class="bold">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('Hardware shops carry different things, like Scanner, Jump Drive or Forces. Each shop lists the type it sells. The values you provide here are absolute numbers per galaxies.</dd>');
 $PHP_OUTPUT.=('</dl>');
 
