@@ -28,7 +28,7 @@ while ($db->nextRecord())
         $container['url'] = 'skeleton.php';
         $container['body'] = 'galactic_post_view_article.php';
         $container['id'] = $db->getField('article_id');
-        $PHP_OUTPUT.=create_link($container, '<font color=yellow>'.$title.'</font> written by '.$writter->getPlayerName());
+        $PHP_OUTPUT.=create_link($container, '<span class="yellow">'.$title.'</span> written by '.$writter->getPlayerName());
         $PHP_OUTPUT.=('<br />');
     }
 }

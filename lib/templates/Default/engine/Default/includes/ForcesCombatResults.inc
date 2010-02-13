@@ -13,7 +13,7 @@ if(is_array($ForcesCombatResults['Results']))
 		if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 		if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; } ?>
 		
-		<span style="color:yellow;"><?php echo $WeaponDamage['Launched'] ?></span><?php
+		<span class="cds"><?php echo $WeaponDamage['Launched'] ?></span><?php
 		if($ForceType == 'Mines')
 		{
 			?> mines kamikaze themselves against <?php
@@ -63,12 +63,12 @@ if(is_array($ForcesCombatResults['Results']))
 			}
 			if($ActualDamage['Shield'] > 0)
 			{
-				?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+				?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 				$this->doDamageTypeReductionDisplay($DamageTypes);
 			}
 			if($ActualDamage['NumCDs'] > 0)
 			{
-				?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> drones<?php
+				?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> drones<?php
 				$this->doDamageTypeReductionDisplay($DamageTypes);
 			}
 			if($ActualDamage['Armour'] > 0)

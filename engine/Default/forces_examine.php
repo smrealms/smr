@@ -65,7 +65,7 @@ foreach($attackers as &$attacker)
 	 $attackerShip =& $attacker->getShip();
 
 	 $PHP_OUTPUT.=($attacker->getLevelName().'<br />');
-	 $PHP_OUTPUT.=('<span style="color:yellow;">'.$attacker->getPlayerName().' ('.$attacker->getPlayerID().')</span><br />');
+	 $PHP_OUTPUT.=('<span class="yellow">'.$attacker->getPlayerName().' ('.$attacker->getPlayerID().')</span><br />');
 	 $PHP_OUTPUT.=('Race: '.$attacker->getRaceName().'<br />');
 	 $PHP_OUTPUT.=('Level: '.$attacker->getLevelID().'<br />');
 	 $PHP_OUTPUT.=('Alliance: '.$attacker->getAllianceName().'<br /><br />');

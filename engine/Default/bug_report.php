@@ -10,37 +10,37 @@ $PHP_OUTPUT.=create_echo_form(create_container('bug_report_processing.php', ''))
 $PHP_OUTPUT.=('<table>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;">Login:</td>');
+$PHP_OUTPUT.=('<td class="bold">Login:</td>');
 $PHP_OUTPUT.=('<td>'.$account->login.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;">eMail:</td>');
+$PHP_OUTPUT.=('<td class="bold">eMail:</td>');
 $PHP_OUTPUT.=('<td>'.$account->email.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;">Account ID:</td>');
+$PHP_OUTPUT.=('<td class="bold">Account ID:</td>');
 $PHP_OUTPUT.=('<td>'.$account->account_id.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;">Subject:</td>');
+$PHP_OUTPUT.=('<td class="bold">Subject:</td>');
 $PHP_OUTPUT.=('<td><input type="text" name="subject" id="InputFields" style="width:300px;"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;" valign="top">Description:</td>');
+$PHP_OUTPUT.=('<td class="bold" valign="top">Description:</td>');
 $PHP_OUTPUT.=('<td><textarea id="InputFields" name="description" style="width:300px;height:100px;"></textarea></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;" valign="top">Steps to repeat:</td>');
+$PHP_OUTPUT.=('<td class="bold" valign="top">Steps to repeat:</td>');
 $PHP_OUTPUT.=('<td><textarea id="InputFields" name="steps" style="width:300px;height:100px;"></textarea></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;" valign="top">Error Message:</td>');
+$PHP_OUTPUT.=('<td class="bold" valign="top">Error Message:</td>');
 $PHP_OUTPUT.=('<td><textarea id="InputFields" name="error_msg" style="width:300px;height:100px;"></textarea></td>');
 $PHP_OUTPUT.=('</tr>');
 

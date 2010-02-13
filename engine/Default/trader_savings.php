@@ -14,7 +14,7 @@ if ($db->getNumRows()) {
 	{
 		$acc_id = $db->getField('anon_id');
     	$pass = $db->getField('password');
-	    $PHP_OUTPUT.=('Account <font color=yellow>'.$acc_id.'</font> with password <font color=yellow>'.$pass.'</font><br />');
+	    $PHP_OUTPUT.=('Account <span class="yellow">'.$acc_id.'</span> with password <span class="yellow">'.$pass.'</span><br />');
     }
 
 } else
@@ -37,7 +37,7 @@ $lottoInfo['TimeRemaining'] = '<b>'.$days.' Days, '.$hours.' Hours, '.$mins.' Mi
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .
 			$player->getAccountID().' AND time > 0');
 $tickets = $db->getNumRows();
-$PHP_OUTPUT.=('<br />You own <font color=yellow>'.$tickets.'</font> Lotto Tickets.<br />There are '.$lottoInfo['TimeRemaining'].' remaining until the drawing.');
+$PHP_OUTPUT.=('<br />You own <span class="yellow">'.$tickets.'</span> Lotto Tickets.<br />There are '.$lottoInfo['TimeRemaining'].' remaining until the drawing.');
 $db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND time > 0');
 $tickets_tot = $db->getNumRows();
 if ($tickets_tot > 0)

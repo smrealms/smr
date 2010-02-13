@@ -71,12 +71,12 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 						?> destroying <?php
 						if($ActualDamage['Shield'] > 0)
 						{
-							?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['NumCDs'] > 0)
 						{
-							?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
+							?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['Armour'] > 0)
@@ -110,7 +110,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 			}
 			else
 			{
-				?> launches <span class="yellow"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php
+				?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php
 				if($ActualDamage['TargetAlreadyDead'])
 				{
 					?>the debris that was once <?php
@@ -145,12 +145,12 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 						?> destroying <?php
 						if($ActualDamage['Shield'] > 0)
 						{
-							?><span class="cyan"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
+							?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['NumCDs'] > 0)
 						{
-							?><span class="yellow"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
+							?><span class="cds"><?php echo number_format($ActualDamage['NumCDs']) ?></span> combat drones<?php
 							$this->doDamageTypeReductionDisplay($DamageTypes);
 						}
 						if($ActualDamage['Armour'] > 0)

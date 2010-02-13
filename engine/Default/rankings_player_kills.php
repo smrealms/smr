@@ -41,11 +41,11 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=('<tr>');
     $PHP_OUTPUT.=('<td valign="top" align="center"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>'.$rank.'</td>');
     $PHP_OUTPUT.=('<td valign="top"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>'.$curr_player->getLevelName().' ');
 
     $container = array();
@@ -57,12 +57,12 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=('</td>');
     $PHP_OUTPUT.=('<td valign="top"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>'.$curr_player->getRaceName().'</td>');
 
     $PHP_OUTPUT.=('<td valign="top"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>');
     if ($curr_player->getAllianceID() > 0)
     {
@@ -77,7 +77,7 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=('</td>');
     $PHP_OUTPUT.=('<td valign="top" align="right"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>' . number_format($curr_player->getKills()) . '</td>');
     $PHP_OUTPUT.=('</tr>');
 
@@ -145,11 +145,11 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=('<tr>');
     $PHP_OUTPUT.=('<td valign="top" align="center"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>'.$rank.'</td>');
     $PHP_OUTPUT.=('<td valign="top"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>'.$curr_player->getLevelName().' ');
 
     $container = array();
@@ -161,12 +161,12 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=('</td>');
     $PHP_OUTPUT.=('<td valign="top"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>'.$curr_player->getRaceName().'</td>');
 
     $PHP_OUTPUT.=('<td valign="top"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>');
     if ($curr_player->getAllianceID() > 0)
     {
@@ -181,7 +181,7 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=('</td>');
     $PHP_OUTPUT.=('<td valign="top" align="right"');
     if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' style="font-weight:bold;"');
+        $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>' . number_format($curr_player->getKills()) . '</td>');
     $PHP_OUTPUT.=('</tr>');
 }

@@ -20,7 +20,7 @@ modifyRelations($race_id);
 
 checkPacts($race_id);
 
-$PHP_OUTPUT.=('<div align="center" style="font-weight:bold;">President</div>');
+$PHP_OUTPUT.=('<div align="center" class="bold">President</div>');
 
 $president =& Council::getPresident($player->getGameID(),$race_id);
 if (is_object($president))
@@ -70,7 +70,7 @@ if (is_object($president))
 } else
 	$PHP_OUTPUT.=('<div align="center">This council doesn\'t have a president!</div>');
 
-$PHP_OUTPUT.=('<br /><br /><div align="center" style="font-weight:bold;">Member</div>');
+$PHP_OUTPUT.=('<br /><br /><div align="center" class="bold">Member</div>');
 
 $db->query('SELECT * FROM player ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
@@ -100,12 +100,12 @@ if ($db->getNumRows() > 0)
 
 		$PHP_OUTPUT.=('<td align="center"');
 		if ($council->getAccountID() == $player->getAccountID())
-			$PHP_OUTPUT.=(' style="font-weight:bold;"');
+			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>'.$count.'.</td>');
 
 		$PHP_OUTPUT.=('<td valign="middle"');
 		if ($council->getAccountID() == $player->getAccountID())
-			$PHP_OUTPUT.=(' style="font-weight:bold;"');
+			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>'.$council->getLevelName().' ');
 		$container = array();
 		$container['url']		= 'skeleton.php';
@@ -116,7 +116,7 @@ if ($db->getNumRows() > 0)
 
 		$PHP_OUTPUT.=('<td align="center"');
 		if ($council->getAccountID() == $player->getAccountID())
-			$PHP_OUTPUT.=(' style="font-weight:bold;"');
+			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
 		$container = array();
 		$container['url'] = 'skeleton.php';
@@ -127,7 +127,7 @@ if ($db->getNumRows() > 0)
 
 		$PHP_OUTPUT.=('<td');
 		if ($council->getAccountID() == $player->getAccountID())
-			$PHP_OUTPUT.=(' style="font-weight:bold;"');
+			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
 		if ($council->hasAlliance()) {
 
@@ -142,7 +142,7 @@ if ($db->getNumRows() > 0)
 
 		$PHP_OUTPUT.=('<td align="right"');
 		if ($council->getAccountID() == $player->getAccountID())
-			$PHP_OUTPUT.=(' style="font-weight:bold;"');
+			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>'.$council->getExperience().'</td>');
 
 		$PHP_OUTPUT.=('</tr>');

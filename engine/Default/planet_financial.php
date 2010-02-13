@@ -55,7 +55,7 @@ while ($planet->maturity < $curr_time && $planet->maturity > 0) {
 
 $PHP_OUTPUT.=('<p>Balance: <b>' . number_format($planet->credits) . '</b></p>');
 if (!empty($interest))
-	$PHP_OUTPUT.=('<span style="font-size:75%">Since your last visit<br />you got <b>' . number_format(round($interest)) . '</b> credits interest!</span>');
+	$PHP_OUTPUT.=('<span style="font-size:75%">Since your last visit<br />you got <span class="creds bold">' . number_format(round($interest)) . '</span> credits interest!</span>');
 
 
 $PHP_OUTPUT.=create_echo_form(create_container('planet_financial_processing.php', ''));

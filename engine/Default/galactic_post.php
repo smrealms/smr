@@ -39,9 +39,9 @@ if ($allowed_edit == 'yes') {
 
         $paper_name = $db->getField('title');
         $paper_id = $db->getField('paper_id');
-        $PHP_OUTPUT.=('<font color=red>***</font><i>'.$paper_name.'</i>');
+        $PHP_OUTPUT.=('<span class="red">***</span><i>'.$paper_name.'</i>');
         $db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());
-        $PHP_OUTPUT.=(' which contains <font color=red> ' . $db2->getNumRows() . ' </font>articles. ');
+        $PHP_OUTPUT.=(' which contains <span class="red"> ' . $db2->getNumRows() . ' </span>articles. ');
         if ($db2->getNumRows() > 2 && $db2->getNumRows() < 9) {
 
             $container = array();

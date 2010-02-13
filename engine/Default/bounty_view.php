@@ -13,7 +13,7 @@ if($curr_player->hasBounties())
 	{
 		 if($bounty['Type'] == 'HQ')
 		 {
-		 	$PHP_OUTPUT.=('The <font color=green>Federal Government</font> is offering a bounty on '.$curr_player->getPlayerName().' worth <font color=yellow>'.$bounty['Amount'].'</font> credits and <font color=yellow>'.$bounty['SmrCredits'].'</font> SMR credits.<br />');
+		 	$PHP_OUTPUT.=('The <span class="green">Federal Government</span> is offering a bounty on '.$curr_player->getPlayerName().' worth <span class="creds">'.$bounty['Amount'].'</span> credits and <span class="yellow">'.$bounty['SmrCredits'].'</span> SMR credits.<br />');
 		 	if ($bounty['Claimer'] != 0)
 		 	{
 			 	$claiming_player =& SmrPlayer::getPlayer($bounty['Claimer'], $player->getGameID());
@@ -28,7 +28,7 @@ if($curr_player->hasBounties())
 	{
 		 if($bounty['Type'] == 'UG')
 		 {
-			$PHP_OUTPUT.=('The <font color=red>Underground</font> is offering a bounty on '.$curr_player->getPlayerName().' worth <font color=yellow>'.$bounty['Amount'].'</font> credits and <font color=yellow>'.$bounty['SmrCredits'].'</font> SMR credits.<br />');
+			$PHP_OUTPUT.=('The <span class="red">Underground</span> is offering a bounty on '.$curr_player->getPlayerName().' worth <span class="creds">'.$bounty['Amount'].'</span> credits and <span class="yellow">'.$bounty['SmrCredits'].'</span> SMR credits.<br />');
 		 	if ($bounty['Claimer'] != 0)
 		 	{
 			 	$claiming_player =& SmrPlayer::getPlayer($bounty['Claimer'], $player->getGameID());

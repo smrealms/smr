@@ -8,7 +8,7 @@ if(isset($Message))
 	echo $Message; ?><br /><br /><?php
 } ?>
 
-<a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b style="color:yellow;">Rankings</b></a>
+<a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b class="yellow">Rankings</b></a>
 <br />You are ranked as <?php $this->doAn($ThisAccount->get_rank_name()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
 
 <?php

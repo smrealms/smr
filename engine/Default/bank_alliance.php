@@ -50,7 +50,7 @@ if (sizeof($tempAllIDs)) {
 		foreach ($temp as $alliedID => $myID) {
 			$container['alliance_id'] = $alliedID;
 			$PHP_OUTPUT.=('<li>');
-			$PHP_OUTPUT.=create_link($container,'<span style="font-weight:bold;">' . $alliances[$alliedID] . '\'s Account</span>');
+			$PHP_OUTPUT.=create_link($container,'<span class="bold">' . $alliances[$alliedID] . '\'s Account</span>');
 			$PHP_OUTPUT.=('</li>');
 		}
 		$PHP_OUTPUT.=('</ul><br />');

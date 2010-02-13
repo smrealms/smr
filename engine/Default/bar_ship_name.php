@@ -113,7 +113,7 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 			}
 		}
 		if ($open > 0)
-			create_error('You must close all HTML tags.  (i.e a &lt;font color=red&gt tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.');
+			create_error('You must close all HTML tags.  (i.e a &lt;font color="red"&gt tag must have a &lt;/font&gt; tag somewhere after it).<br /><small>If you think you received this message in error please contact an admin.');
 		if ($close > $real_open || $ha || $open < 0)
 			create_error('You can not close tags that do not exist!<br /><small>This could be an attempt at hacking if this action is seen again it will be logged</small>');
 	}

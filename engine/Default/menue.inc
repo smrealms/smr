@@ -257,7 +257,7 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 
 		// if this is the active entry we mark it
 		if ($number == $active_level1)
-			$active = ' style="font-weight:bold;"';
+			$active = ' class="bold"';
 		else
 			$active = '';
 

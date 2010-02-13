@@ -10,12 +10,12 @@ $PHP_OUTPUT.=create_echo_form(create_container('contact_processing.php', ''));
 $PHP_OUTPUT.=('<table>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;">From:</td>');
+$PHP_OUTPUT.=('<td class="bold">From:</td>');
 $PHP_OUTPUT.=('<td>'.$account->login.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;">To:</td>');
+$PHP_OUTPUT.=('<td class="bold">To:</td>');
 $PHP_OUTPUT.=('<td>');
 $PHP_OUTPUT.=('<select name="receiver">');
 $PHP_OUTPUT.=('<option default>support@smrealms.de</option>');
@@ -27,12 +27,12 @@ $PHP_OUTPUT.=('</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;">Subject:</td>');
+$PHP_OUTPUT.=('<td class="bold">Subject:</td>');
 $PHP_OUTPUT.=('<td><input type="text" name="subject" id="InputFields" style="width:500px;"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td style="font-weight:bold;" valign="top">Message:</td>');
+$PHP_OUTPUT.=('<td class="bold" valign="top">Message:</td>');
 $PHP_OUTPUT.=('<td><textarea id="InputFields" name="msg" style="width:500px;height:400px;"></textarea></td>');
 $PHP_OUTPUT.=('</tr>');
 

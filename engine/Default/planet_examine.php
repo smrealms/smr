@@ -49,7 +49,7 @@ if (!$planetLand)
 elseif ($planet->isInhabitable())
 	$PHP_OUTPUT.=create_button(create_container('planet_land_processing.php', ''), 'Land on Planet (1)');
 else
-	$PHP_OUTPUT.=('The planet is <font color=red>uninhabitable</font> at this time.');
+	$PHP_OUTPUT.=('The planet is <span class"uninhab">uninhabitable</span> at this time.');
 $PHP_OUTPUT.=('</form>');
 $PHP_OUTPUT.=('</div>');
 

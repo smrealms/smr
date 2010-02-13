@@ -41,7 +41,7 @@ if(!isset($var['ClaimText']))
 			$player->increaseCredits($amount);
 			$account->increaseSmrCredits($smrCredits);
 			$name =& SmrPlayer::getPlayer($acc_id, $player->getGameID());
-			$claimText.=('<span style="color:yellow;">'.$name->getPlayerName().'</span> : <span style="color:red;">' . number_format($amount) . '</span> credits and <span style="color:red;">' . number_format($smrCredits) . '</span> SMR credits<br />');
+			$claimText.=('<span class="yellow">'.$name->getPlayerName().'</span> : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
 	
 			// add HoF stat
 			$player->increaseHOF(1,array('Bounties','Claimed','Results'));

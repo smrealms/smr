@@ -5,9 +5,9 @@ $template->assign('PageTopic','Create Universe - Adding Ships (7/10)');
 $PHP_OUTPUT.=('<dl>');
 $db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
 if ($db->nextRecord())
-	$PHP_OUTPUT.=('<dt style="font-weight:bold;">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Task:<dt><dd>Adding shipdealers</d>');
-$PHP_OUTPUT.=('<dt style="font-weight:bold;">Description:<dt><dd style="width:50%;">');
+	$PHP_OUTPUT.=('<dt class="bold">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
+$PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding shipdealers</d>');
+$PHP_OUTPUT.=('<dt class="bold">Description:<dt><dd style="width:50%;">');
 $PHP_OUTPUT.=('Shipdealers sell ships. Each shop lists the type it sells. The values you provide here are absolut numbers per galaxies.</dd>');
 $PHP_OUTPUT.=('</dl>');
 

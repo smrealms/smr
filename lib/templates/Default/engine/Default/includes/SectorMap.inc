@@ -106,7 +106,7 @@
 								} ?>
 							</div><?php
 						} ?>
-						<div class="lmsector center <?php if($Sector->isVisited($ThisPlayer)){ ?>dgreen<?php }else{ ?>yellow<?php } ?> fullwidth">
+						<div class="lmsector center <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?> fullwidth">
 							<?php echo $Sector->getSectorID(); ?>
 						</div><?php
 						if($Sector->isVisited($ThisPlayer))

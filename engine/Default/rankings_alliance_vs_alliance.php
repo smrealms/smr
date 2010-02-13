@@ -45,7 +45,7 @@ foreach ($alliance_vs as $key => $id)
 		
 		$PHP_OUTPUT.=('<td width=15% valign="top"');
 		if ($player->getAllianceID() == $curr_alliance_id)
-		$PHP_OUTPUT.=(' style="font-weight:bold;"');
+		$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
 		/*$container = array();
 		$container['url']             = 'skeleton.php';
@@ -84,7 +84,7 @@ foreach ($alliance_vs as $key => $id)
 		
 		$PHP_OUTPUT.=('<td width=10% valign="top"');
 		if ($player->getAllianceID() == $curr_alliance->alliance_id)
-			$PHP_OUTPUT.=(' style="font-weight:bold;"');
+			$PHP_OUTPUT.=(' class="bold"');
 		if ($out)
 			$PHP_OUTPUT.=(' style="color:red;"');
 		$PHP_OUTPUT.=('>');
@@ -119,17 +119,17 @@ foreach ($alliance_vs as $key => $id)
 			if (($out || $out2))
 				$PHP_OUTPUT.=('<td style="color:red;">-');
 			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID())
-				$PHP_OUTPUT.=('<td style="font-weight:bold;">-');
+				$PHP_OUTPUT.=('<td class="bold">-');
 			else $PHP_OUTPUT.=('<td>-');
 		}
 		elseif ($db2->nextRecord())
 		{
 			$PHP_OUTPUT.=('<td');
 			if (($out || $out2) && ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()))
-				$PHP_OUTPUT.=(' style="font-weight:bold;color:red;"');
+				$PHP_OUTPUT.=(' class="bold red"');
 			elseif ($out || $out2)
-				$PHP_OUTPUT.=(' style="color:red;"');
-			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' style="font-weight:bold;"');
+				$PHP_OUTPUT.=(' class="red"');
+			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' class="bold"');
 			$PHP_OUTPUT.=('>');
 			$PHP_OUTPUT.= $db2->getField('kills');
 		}
@@ -140,7 +140,7 @@ foreach ($alliance_vs as $key => $id)
 				$PHP_OUTPUT.=(' style="font-weight:bold;color:red;"');
 			elseif ($out || $out2)
 				$PHP_OUTPUT.=(' style="color:red;"');
-			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' style="font-weight:bold;"');
+			elseif ($id == $player->getAllianceID() || $curr_id == $player->getAllianceID()) $PHP_OUTPUT.=(' class="bold"');
 			$PHP_OUTPUT.=('>');
 			$PHP_OUTPUT.=('0');
 		}

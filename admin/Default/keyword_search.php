@@ -80,7 +80,7 @@ while ($db->nextRecord()) {
 		$array[] = ucfirst($word);
 		$array[] = strtoupper($word);
 		$array[] = strtolower($word);
-		$bad = str_replace($array, '<b><font color=red>'.$word.'</font></b>', $db->escapeString($bad));
+		$bad = str_replace($array, '<b><span class="red">'.$word.'</span></b>', $db->escapeString($bad));
 		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('sender_id') . '</td>');
 		$PHP_OUTPUT.=('<td align=center>'.$bad.'</td>');
 		$PHP_OUTPUT.=('<td align=center><input type=checkbox name=alliance[] value='.$array_filler.'></td>');
@@ -160,7 +160,7 @@ while ($db->nextRecord()) {
 		$array[] = ucfirst($word);
 		$array[] = strtoupper($word);
 		$array[] = strtolower($word);
-		$bad = str_replace($array, '<b><font color=red>'.$word.'</font></b>', $db->escapeString($bad));
+		$bad = str_replace($array, '<b><span class="red">'.$word.'</span></b>', $db->escapeString($bad));
 		$PHP_OUTPUT.=('<td align=center>'.$bad.'</td>');
 		$PHP_OUTPUT.=('<td align=center><input type=checkbox name=personal[] value='.$msg_id.'></td>');
 		$PHP_OUTPUT.=('</tr>');

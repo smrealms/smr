@@ -10,6 +10,6 @@ else
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'keyword_search.php';
-$container['msg'] = '<div align=center><font color=red><b>Added Exceptions</b></font></div>';
+$container['msg'] = '<div align=center><span class="red"><b>Added Exceptions</b></span></div>';
 forward($container);
 ?>

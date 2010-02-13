@@ -90,7 +90,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 				}
 				else
 				{
-					?> launches <span class="yellow"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at<?php if($ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } ?> the forces<?php
+					?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at<?php if($ActualDamage['TargetAlreadyDead']){ ?> the debris that was once <?php } ?> the forces<?php
 					if(!$ActualDamage['TargetAlreadyDead'])
 					{
 						if($ActualDamage['TotalDamage'] == 0)
@@ -117,7 +117,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 							}
 							else
 							{
-								?> of which <span class="yellow"><?php echo $WeaponDamage['Kamikaze'] ?></span> kamikaze against <span class="red"><?php echo $WeaponDamage['Kamikaze'] ?></span> mines<?php
+								?> of which <span class="cds"><?php echo $WeaponDamage['Kamikaze'] ?></span> kamikaze against <span class="red"><?php echo $WeaponDamage['Kamikaze'] ?></span> mines<?php
 								if($WeaponDamage['Kamikaze'] != $ActualDamage['NumMines'])
 								{
 									?> whilst the others destroy <?php
