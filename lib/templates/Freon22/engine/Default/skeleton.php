@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title><?php echo $Title; ?> <?php if(isset($GameName)) echo $GameName; ?></title>
-		<meta http-equiv="pragma" content="no-cache"><?php
+		<meta http-equiv="pragma" content="no-cache" /><?php
 		if(is_object($ThisAccount) && $ThisAccount->isDefaultCSSEnabled())
 		{
-			?><link rel="stylesheet" type="text/css" href="<?php echo URL; ?>/css/htcCSS2.css"><?php // echo $CSSLink;
+			?><link rel="stylesheet" type="text/css" href="<?php echo URL; ?>/css/htcCSS2.css" /><?php // echo $CSSLink;
 		}
 		if(isset($ExtraCSSLink))
 		{
-			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>"><?php
+			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
 		} ?>
 		<style type="text/css">
 			body {
@@ -169,115 +169,114 @@
 										{
 											?><br /><?php
 										} ?>
-										</span>
-									</div>
-							
-									<div class="rightInfoShip">
-										<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php echo $ThisShip->getName(); ?></span></a><br /><?php
-										if($ThisPlayer->hasCustomShipName())
-										{
-											echo $ThisPlayer->getCustomShipName(); ?><br /><?php
-										} ?>
-										Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
-									</div><br />
-									
-									Shields: <span id="shields"><?php echo $ThisShip->getShields(); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
-			
-									Armor: <span id="armour"><?php echo $ThisShip->getArmour(); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
-									<a class="nav" href="<?php echo $HardwareLink; ?>">CIJSD: <?php
-										if($ThisShip->hasCloak()) echo '*';
-										else echo '-';
-										if($ThisShip->hasIllusion()) echo '*';
-										else echo '-';
-										if($ThisShip->hasJump()) echo '*';
-										else echo '-';
-										if($ThisShip->hasScanner()) echo '*';
-										else echo '-';
-										if($ThisShip->hasDCS()) echo '*';
-										else echo '-';
-									?></a><br /><br /><?php
-									if($ThisShip->hasCloak())
-									{
-										if($ThisShip->isCloaked())
-										{
-											?><strong style="color:lime;">*** Cloak active ***</strong><?php
-										}
-										else
-										{
-											?><strong style="color:red;">*** Cloak inactive ***</strong><?php
-										} ?>
-										<br /><br /><?php
-									}
-									if($ThisShip->hasActiveIllusion())
-									{ ?>
-										<span class="npcColor"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
-										IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?><br />
-										<br /><br /><?php
-									} ?>
-									
-									<a class="nav big" href="<?php echo $ForceDropLink; ?>">Forces</a><br /><?php
-									
-									if(isset($DropMineLink))
-									{ ?>
-										<a class="nav" href="<?php echo $DropMineLink; ?>">
-											<span class="bold">[X]</span>
-										</a><?php
-									} ?>Mines : <?php echo $ThisShip->getMines(); ?>/<?php echo $ThisShip->getMaxMines(); ?><br /><?php
-				
-									if(isset($DropCDLink))
-									{ ?>
-										<a class="nav" href="<?php echo $DropCDLink; ?>">
-											<span class="bold">[X]</span>
-										</a><?php
-									} ?>Combat : <?php echo $ThisShip->getCDs(); ?>/<?php echo $ThisShip->getMaxCDs(); ?><br /><?php
-				
-									if(isset($DropSDLink))
-									{ ?>
-										<a class="nav" href="<?php echo $DropSDLink; ?>">
-											<span class="bold">[X]</span>
-										</a><?php
-									} ?>Scout : <?php echo $ThisShip->getSDs(); ?>/<?php echo $ThisShip->getMaxSDs(); ?><br />
-									<br />
-									
-									<a class="nav" href="<?php echo $CargoJettisonLink; ?>">Cargo Holds (<?php echo $ThisShip->getCargoHolds(); ?>/<?php echo $ThisShip->getMaxCargoHolds(); ?>)</a><br /><?php
-									
-									if($ThisShip->hasCargo())
-									{
-										foreach($ThisShip->getCargo() as $GoodID => $GoodAmount)
-										{
-											$Good =& Globals::getGood($GoodID); ?>
-											<img src="<?php echo $Good['ImageLink']; ?>" alt="<?php echo $Good['Name']; ?>"> : <?php echo $GoodAmount; ?><br /><?php
-										}
-									} ?>
-									
-									Empty : <?php echo $ThisShip->getEmptyHolds(); ?><br />
-									<br />
-									<a class="nav big" href="<?php echo $WeaponReorderLink; ?>">Weapons</a><br /><?php
-									if($ThisShip->hasWeapons())
-									{ ?>
-										<div class="wep_drop1" id="hide-show" onclick="toggleWepD(<?php echo $ThisShip->getNumWeapons(); ?>,'<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>');">
-											<noscript><a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>"></noscript>
-												Show/Hide (<?php echo $ThisShip->getNumWeapons(); ?>)<br /><?php
-													$i=0;
-													$Weapons =& $ThisShip->getWeapons();
-													foreach($Weapons as &$Weapon)
-													{
-														$i++; ?>
-														<span class="wep1" <?php
-															if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?> id="wep_item<?php echo $i; ?>"><?php echo $Weapon->getName(); ?><br />
-														</span><?php
-													} unset($Weapon); unset($Weapons); ?>
-											<noscript></a></noscript>
-										</div><?php
-									} ?>
-									Open : <?php echo $ThisShip->getOpenWeaponSlots(); ?><br />
-									<span class="noWrap">Total Damage: (<?php echo $ThisShip->getTotalShieldDamage(); ?>/<?php echo $ThisShip->getTotalArmourDamage(); ?>)</span><br />
-									Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower();
-									if(ENABLE_BETA)
-									{
-										?><br /><br /><a class="nav" href="<?php echo Globals::getBetaFunctionsHREF(); ?>">Beta Functions</a><?php
-									} ?>
+									</span>
 								</div>
+
+								<div class="rightInfoShip">
+									<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php echo $ThisShip->getName(); ?></span></a><br /><?php
+									if($ThisPlayer->hasCustomShipName())
+									{
+										echo $ThisPlayer->getCustomShipName(); ?><br /><?php
+									} ?>
+									Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
+								</div><br />
+								
+								Shields: <span id="shields"><?php echo $ThisShip->getShields(); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
+		
+								Armor: <span id="armour"><?php echo $ThisShip->getArmour(); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
+								<a class="nav" href="<?php echo $HardwareLink; ?>">CIJSD: <?php
+									if($ThisShip->hasCloak()) echo '*';
+									else echo '-';
+									if($ThisShip->hasIllusion()) echo '*';
+									else echo '-';
+									if($ThisShip->hasJump()) echo '*';
+									else echo '-';
+									if($ThisShip->hasScanner()) echo '*';
+									else echo '-';
+									if($ThisShip->hasDCS()) echo '*';
+									else echo '-';
+								?></a><br /><br /><?php
+								if($ThisShip->hasCloak())
+								{
+									if($ThisShip->isCloaked())
+									{
+										?><strong style="color:lime;">*** Cloak active ***</strong><?php
+									}
+									else
+									{
+										?><strong style="color:red;">*** Cloak inactive ***</strong><?php
+									} ?>
+									<br /><br /><?php
+								}
+								if($ThisShip->hasActiveIllusion())
+								{ ?>
+									<span class="npcColor"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
+									IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?><br />
+									<br /><?php
+								} ?>
+								
+								<a class="nav big" href="<?php echo $ForceDropLink; ?>">Forces</a><br /><?php
+								
+								if(isset($DropMineLink))
+								{ ?>
+									<a class="nav" href="<?php echo $DropMineLink; ?>">
+										<span class="bold">[X]</span>
+									</a><?php
+								} ?>Mines : <?php echo $ThisShip->getMines(); ?>/<?php echo $ThisShip->getMaxMines(); ?><br /><?php
+			
+								if(isset($DropCDLink))
+								{ ?>
+									<a class="nav" href="<?php echo $DropCDLink; ?>">
+										<span class="bold">[X]</span>
+									</a><?php
+								} ?>Combat : <?php echo $ThisShip->getCDs(); ?>/<?php echo $ThisShip->getMaxCDs(); ?><br /><?php
+			
+								if(isset($DropSDLink))
+								{ ?>
+									<a class="nav" href="<?php echo $DropSDLink; ?>">
+										<span class="bold">[X]</span>
+									</a><?php
+								} ?>Scout : <?php echo $ThisShip->getSDs(); ?>/<?php echo $ThisShip->getMaxSDs(); ?><br />
+								<br />
+								
+								<a class="nav" href="<?php echo $CargoJettisonLink; ?>">Cargo Holds (<?php echo $ThisShip->getCargoHolds(); ?>/<?php echo $ThisShip->getMaxCargoHolds(); ?>)</a><br /><?php
+								
+								if($ThisShip->hasCargo())
+								{
+									foreach($ThisShip->getCargo() as $GoodID => $GoodAmount)
+									{
+										$Good =& Globals::getGood($GoodID); ?>
+										<img src="<?php echo $Good['ImageLink']; ?>" alt="<?php echo $Good['Name']; ?>"> : <?php echo $GoodAmount; ?><br /><?php
+									}
+								} ?>
+								
+								Empty : <?php echo $ThisShip->getEmptyHolds(); ?><br />
+								<br />
+								<a class="nav big" href="<?php echo $WeaponReorderLink; ?>">Weapons</a><br /><?php
+								if($ThisShip->hasWeapons())
+								{ ?>
+									<div class="wep_drop1" id="hide-show" onclick="toggleWepD(<?php echo $ThisShip->getNumWeapons(); ?>,'<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>');">
+										<noscript><a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>"></noscript>
+											Show/Hide (<?php echo $ThisShip->getNumWeapons(); ?>)<br /><?php
+												$i=0;
+												$Weapons =& $ThisShip->getWeapons();
+												foreach($Weapons as &$Weapon)
+												{
+													$i++; ?>
+													<span class="wep1" <?php
+														if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?> id="wep_item<?php echo $i; ?>"><?php echo $Weapon->getName(); ?><br />
+													</span><?php
+												} unset($Weapon); unset($Weapons); ?>
+										<noscript></a></noscript>
+									</div><?php
+								} ?>
+								Open : <?php echo $ThisShip->getOpenWeaponSlots(); ?><br />
+								<span class="noWrap">Total Damage: (<?php echo $ThisShip->getTotalShieldDamage(); ?>/<?php echo $ThisShip->getTotalArmourDamage(); ?>)</span><br />
+								Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower();
+								if(ENABLE_BETA)
+								{
+									?><br /><br /><a class="nav" href="<?php echo Globals::getBetaFunctionsHREF(); ?>">Beta Functions</a><?php
+								} ?>
 							</div><?php
 						} ?>
 					</td>

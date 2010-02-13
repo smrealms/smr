@@ -56,7 +56,7 @@
 			
 			
 			<div class="cs_mid move_text move_hover">
-				<a href="<?php echo $ThisSector->getCurrentSectorHREF(); ?>" class="dgreen">
+				<a href="<?php echo $ThisSector->getCurrentSectorHREF(); ?>" class="currentSector">
 					<?php echo $ThisSector->getSectorID(); ?>
 				</a>
 			</div>

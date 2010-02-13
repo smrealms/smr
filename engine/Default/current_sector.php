@@ -54,9 +54,9 @@ foreach($links as $key => $linkArray)
 		$container2['target_sector'] = $linkArray['ID'];
 		
 		$links[$key]['MoveLink']=SmrSession::get_new_href($container1);
-		if ($player->getLastSectorID() == $linkArray['ID']) $class = 'green';
-		else if(isset($unvisited[$linkArray['ID']])) $class = 'yellow';
-		else $class = 'dgreen';
+		if ($player->getLastSectorID() == $linkArray['ID']) $class = 'lastVisited';
+		else if(isset($unvisited[$linkArray['ID']])) $class = 'unvisited';
+		else $class = 'visited';
 		$links[$key]['Class']=$class;
 		
 		if($ship->hasScanner())

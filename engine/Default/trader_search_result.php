@@ -4,18 +4,19 @@ $db2 = new SmrMySqlDatabase();
 
 if(isset($_REQUEST['player_id']))
 	SmrSession::updateVar('PlayerID',$_REQUEST['player_id']);
-$player_id = $var['PlayerID'];
+if (isset($var['player_id']))
+	SmrSession::updateVar('PlayerID',$var['player_id']);
+if (isset($var['PlayerID']))
+	$player_id = $var['PlayerID'];
 if(isset($_REQUEST['player_id']))
 	SmrSession::updateVar('PlayerName',$_REQUEST['player_name']);
-$player_name = $var['PlayerName'];
+if (isset($var['PlayerName']))
+	$player_name = $var['PlayerName'];
 if (!is_numeric($player_id) && !empty($player_id))
 	create_error('Please enter only numbers!');
 
 $count = 0;
 $template->assign('PageTopic','Search Trader Results');
-
-if (isset($var['player_id']))
-	$player_id = $var['player_id'];
 
 if (!empty($player_id))
 	$db->query('SELECT * FROM player ' .
