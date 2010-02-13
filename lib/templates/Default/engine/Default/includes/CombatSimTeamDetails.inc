@@ -1,11 +1,11 @@
 <table><?php
 	foreach($Team as $OrderID => $Dummy)
 	{ ?>
-	<tr>
-		<td style="vertical-align:top">
+	<tr class="top">
+		<td>
 			<u><?php echo $MemberDescription .' '. $OrderID ?></u><br /><br />
 		</td>
-		<td style="vertical-align:top">
+		<td>
 			<select name="<?php echo $MemberInputName ?>[]">
 				<option value="none">None</option><?php
 				foreach($DummyNames as $DummyName)
@@ -14,7 +14,7 @@
 				} ?>
 			</select><br />
 		</td>
-		<td style="vertical-align:top">
+		<td>
 			<u>Current Details</u><?php
 				if($Dummy)
 				{

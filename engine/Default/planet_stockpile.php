@@ -41,7 +41,7 @@ while($db->nextRecord())
 	$PHP_OUTPUT.=('<td>'.$good_name.'</td>');
 	$PHP_OUTPUT.=('<td align="center">' . $ship->getCargo($good_id) . '</td>');
 	$PHP_OUTPUT.=('<td align="center">' . $planet->getStockpile($good_id) . '</td>');
-	$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="' . $ship->getCargo($good_id) . '" id="InputFields" size="4" style="text-align:center;"/></td>');
+	$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="' . $ship->getCargo($good_id) . '" id="InputFields" size="4" class="center"/></td>');
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=create_submit('Ship');
 	$PHP_OUTPUT.=('&nbsp;');

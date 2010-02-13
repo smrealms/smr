@@ -17,7 +17,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td colspan="2" style="text-align:center">
+			<td colspan="2" class="center">
 				<br />All drones, shields, armour assumed full at the start of the simulation<br /><br />
 				<input type="submit" name="update" value="Update Details" />&nbsp;
 				<input type="submit" name="run" value="Run Simulation" />&nbsp;

@@ -30,7 +30,7 @@ if(isset($Message))
 </ul>
 <p>
 	Enter validation code:&nbsp;&nbsp;
-	<input type="text" name="validation_code" maxlength="10" size="10" class="InputFields" style="text-align:center;">
+	<input type="text" name="validation_code" maxlength="10" size="10" class="InputFields center">
 </p>
 <p align="center">
 	<input type="submit" name="action" value="Validate me now!" class="InputFields">

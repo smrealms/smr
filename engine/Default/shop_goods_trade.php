@@ -65,7 +65,7 @@ if (isset($var['offered_price']))
 	$offered_price = $var['offered_price'];
 }
 
-$PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$bargain_price.'" id="InputFields" style="width:75;text-align:center;vertical-align:middle;">&nbsp;');
+$PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$bargain_price.'" id="InputFields" class="center" style="width:75;vertical-align:middle;">&nbsp;');
 //$PHP_OUTPUT.=('<!-- here are all information that are needed to calculate the ideal price. if you know how feel free to create a trade calculator -->');
 //$PHP_OUTPUT.=('<!--('.$var['amount'].':'.$portGood['BasePrice'].':'.$var['good_distance'].':'.$portGood['Amount'].':'.$portGood['Max'].':'.$relations.':'.$port->getLevel().')-->');
 $PHP_OUTPUT.=create_submit('Bargain (1)');

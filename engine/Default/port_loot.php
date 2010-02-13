@@ -68,7 +68,7 @@ while ($db->nextRecord())
 
    }
 
-   $PHP_OUTPUT.=('" size="4" id="InputFields" style="text-align:center;"></td>');
+   $PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
    $PHP_OUTPUT.=('<td align="center">');
    $PHP_OUTPUT.=create_submit('Loot');
    $PHP_OUTPUT.=('</td>');

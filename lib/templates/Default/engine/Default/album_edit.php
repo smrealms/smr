@@ -31,9 +31,9 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 		
 		<tr>
 			<td align="right" class="bold">Birthdate:</td>
-			<td>Month:&nbsp;<input type="text" name="day" id="InputFields" value="<?php if(isset($AlbumEntry)){ echo $AlbumEntry['Day']; } else { ?>N/A<?php } ?>" size="3" maxlength="2" style="text-align:center;" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">&nbsp;&nbsp;&nbsp;
-				Day:&nbsp;<input type="text" name="month" id="InputFields" value="<?php if(isset($AlbumEntry)){ echo $AlbumEntry['Month']; } else { ?>N/A<?php } ?>" size="3" maxlength="2" style="text-align:center;" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">&nbsp;&nbsp;&nbsp;
-				Year:&nbsp;<input type="text" name="year" id="InputFields" value="<?php if(isset($AlbumEntry)){ echo $AlbumEntry['Year']; } else { ?>N/A<?php } ?>" size="3" maxlength="4" style="text-align:center;" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">
+			<td>Month:&nbsp;<input type="text" name="day" id="InputFields" value="<?php if(isset($AlbumEntry)){ echo $AlbumEntry['Day']; } else { ?>N/A<?php } ?>" size="3" maxlength="2" class="center" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">&nbsp;&nbsp;&nbsp;
+				Day:&nbsp;<input type="text" name="month" id="InputFields" value="<?php if(isset($AlbumEntry)){ echo $AlbumEntry['Month']; } else { ?>N/A<?php } ?>" size="3" maxlength="2" class="center" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">&nbsp;&nbsp;&nbsp;
+				Year:&nbsp;<input type="text" name="year" id="InputFields" value="<?php if(isset($AlbumEntry)){ echo $AlbumEntry['Year']; } else { ?>N/A<?php } ?>" size="3" maxlength="4" class="center" onFocus="javascript:if (this.value == 'N/A') {this.value = '';}" onBlur="javascript:if (this.value == '') {this.value = 'N/A';}">
 			</td>
 		</tr>
 		

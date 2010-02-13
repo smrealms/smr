@@ -87,7 +87,7 @@ $db->query('SELECT * FROM album WHERE account_id = '.SmrSession::$account_id);
 if ($db->nextRecord())
 {
 	if ($no_picture == false)
-		$comment = '<span style="color:lime;">*** Picture changed</span>';
+		$comment = '<span class="green">*** Picture changed</span>';
 
 	// change album entry
 	$db->query('UPDATE album
@@ -111,7 +111,7 @@ else
 	if ($no_picture)
 		create_error('What is it worth if you don\'t upload an image?');
 
-	$comment = '<span style="color:lime;">*** Picture added</span>';
+	$comment = '<span class="green">*** Picture added</span>';
 
 	// add album entry
 	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved) ' .

@@ -166,7 +166,7 @@ if (!empty($boughtGoods))
 		else
 			$PHP_OUTPUT.=($ship->getEmptyHolds());
 
-		$PHP_OUTPUT.=('" size="4" id="InputFields" style="text-align:center;"></td>');
+		$PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit($good['TransactionType']);
 		$PHP_OUTPUT.=('</td>');
@@ -219,7 +219,7 @@ if (!empty($soldGoods))
 		else
 			$PHP_OUTPUT.=$ship->getCargo($good['ID']);
 
-		$PHP_OUTPUT.=('" size="4" id="InputFields" style="text-align:center;"></td>');
+		$PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit($good['TransactionType']);
 		$PHP_OUTPUT.=('</td>');

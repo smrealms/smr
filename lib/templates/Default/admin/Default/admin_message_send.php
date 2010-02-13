@@ -18,7 +18,7 @@ else
 	if(isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
 	<form name="AdminMessageSendForm" method="POST" action="<?php echo $AdminMessageSendFormHref; ?>">
 		<p>
-		<b>From: </b><span style="font:small-caps bold;color:blue;">Administrator</span><br />
+		<b>From: </b><span class="admin">Administrator</span><br />
 		<b>To: </b><?php
 			if ($MessageGameID != 20000)
 			{ ?>

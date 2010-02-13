@@ -42,7 +42,7 @@ if (empty($account_id))
 {
 	$PHP_OUTPUT.=('Enter the account id of the entry you wish to edit:');
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'album_moderate.php'));
-	$PHP_OUTPUT.=('<input type="text" name="account_id" size="5" id="InputFields" style="text-align:center;">&nbsp;');
+	$PHP_OUTPUT.=('<input type="text" name="account_id" size="5" id="InputFields" class="center">&nbsp;');
 	$PHP_OUTPUT.=create_submit('Submit');
 	$PHP_OUTPUT.=('</form>');
 	$PHP_OUTPUT.=($error_msg);

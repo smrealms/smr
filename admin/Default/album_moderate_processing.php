@@ -37,7 +37,7 @@ if ($var['task'] == 'reset_image')
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$account_id.', '.$comment_id.', '.TIME.', 0, '.$db->escape_string('<span style="color:lime;">*** Picture disabled by an admin</span>').')');
+				VALUES ('.$account_id.', '.$comment_id.', '.TIME.', 0, '.$db->escape_string('<span class="green">*** Picture disabled by an admin</span>').')');
 	$db->unlock();
 
 	// get his email address and send the mail

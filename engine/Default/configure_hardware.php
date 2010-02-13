@@ -70,9 +70,9 @@ if ($ship->hasIllusion())
 	$PHP_OUTPUT.= '<tr><td>Attack/Defense</td>';
 	$PHP_OUTPUT.= '<td><input type="text" id="InputFields" name="attack" value="';
 	$PHP_OUTPUT.= $attack;
-	$PHP_OUTPUT.= '" size="4" style="text-align:center;">&nbsp;/&nbsp;<input type="text" id="InputFields" name="defense" value="';
+	$PHP_OUTPUT.= '" size="4" class="center">&nbsp;/&nbsp;<input type="text" id="InputFields" name="defense" value="';
 	$PHP_OUTPUT.= $defense;
-	$PHP_OUTPUT.= '" size="4" style="text-align:center;"></td>';
+	$PHP_OUTPUT.= '" size="4" class="center"></td>';
 	$PHP_OUTPUT.= '</tr><tr><td>&nbsp;</td><td>';
 	$PHP_OUTPUT.=create_submit('Set Illusion');
 	$PHP_OUTPUT.= '&nbsp;&nbsp;&nbsp;&nbsp;';

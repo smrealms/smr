@@ -197,7 +197,7 @@ if ($db->getNumRows() > 0) {
 		else $PHP_OUTPUT.= '&nbsp;';
 		$PHP_OUTPUT.= '</td>';
 		if ($exempt) {
-			$PHP_OUTPUT.=('<td style="text-align:center;"><input type="checkbox" name="exempt[' . $db->getField('transaction_id') . '] value="true"');
+			$PHP_OUTPUT.=('<td class="center"><input type="checkbox" name="exempt[' . $db->getField('transaction_id') . '] value="true"');
 			if ($db->getField('exempt')) $PHP_OUTPUT.=(' checked');
 			$PHP_OUTPUT.=('></td>');
 		}

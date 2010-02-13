@@ -119,7 +119,7 @@ $container['min_rank']	= $min_rank;
 $container['max_rank']	= $max_rank;
 
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<p><input type="text" name="min_rank" value="'.$min_rank.'" size="3" id="InputFields" style="text-align:center;">&nbsp;-&nbsp;<input type="text" name="max_rank" value="'.$max_rank.'" size="3" id="InputFields" style="text-align:center;">&nbsp;');
+$PHP_OUTPUT.=('<p><input type="text" name="min_rank" value="'.$min_rank.'" size="3" id="InputFields" class="center">&nbsp;-&nbsp;<input type="text" name="max_rank" value="'.$max_rank.'" size="3" id="InputFields" class="center">&nbsp;');
 $PHP_OUTPUT.=create_submit('Show');
 $PHP_OUTPUT.=('</p></form>');
 $PHP_OUTPUT.=('<table class="standard" width="95%">');

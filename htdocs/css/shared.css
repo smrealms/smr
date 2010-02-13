@@ -138,6 +138,10 @@ div.secNavBox div.move_warp
 
 
 /* General */
+.admin {
+	font:small-caps bold;
+	color:blue;
+}
 .bold
 {
 	font-weight: bold;

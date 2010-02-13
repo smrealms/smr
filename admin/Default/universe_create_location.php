@@ -91,7 +91,7 @@ while ($db->nextRecord()) {
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b></td>');
-	foreach ($galaxies as $galaxy_id => $galaxy_name) $PHP_OUTPUT.=('<td align="center"><input type="input" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" style="text-align:center;"></td>');
+	foreach ($galaxies as $galaxy_id => $galaxy_name) $PHP_OUTPUT.=('<td align="center"><input type="input" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" class="center"></td>');
 	$PHP_OUTPUT.=('</tr>');
 }
 
@@ -108,7 +108,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b></td>');
 	foreach ($galaxies as $galaxy_id => $galaxy_name)
-		$PHP_OUTPUT.=('<td align="center"><input type="input" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" style="text-align:center;"></td>');
+		$PHP_OUTPUT.=('<td align="center"><input type="input" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" class="center"></td>');
 	$PHP_OUTPUT.=('</tr>');
 
 }

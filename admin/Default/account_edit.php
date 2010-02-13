@@ -158,7 +158,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Donation:</td>');
-	$PHP_OUTPUT.=('<td><input type="text" name="donation" size="5" id="InputFields" style="text-align:center;">$</td>');
+	$PHP_OUTPUT.=('<td><input type="text" name="donation" size="5" id="InputFields" class="center">$</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td>&nbsp;</td>');
@@ -167,7 +167,7 @@ if ($curr_account && $curr_account->account_id != 0) {
 	
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Grant Reward SMR Credits:</td>');
-	$PHP_OUTPUT.=('<td><input type="text" name="grant_credits" size="5" id="InputFields" style="text-align:center;"> Credits</td>');
+	$PHP_OUTPUT.=('<td><input type="text" name="grant_credits" size="5" id="InputFields" class="center"> Credits</td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr><td>&nbsp;</td><td><hr noshade style="height:1px; border:1px solid white;"></td></tr>');
@@ -220,8 +220,8 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<input type="text" name="reason_msg" id="InputFields" style="width:400px;"></p>');
 	$PHP_OUTPUT.=('<p><input type="radio" name="choise" value="reopen">Reopen!</p>');
 	$PHP_OUTPUT.=('<p><input type=text name=suspicion id="InputFields" disabled=true style="width:400px;" value="For Multi Closings Only"></p>');
-	$PHP_OUTPUT.=('<p>Mail ban: <input type="text" name="mailban" id="InputFields" style="width:30px;text-align:center;"> days</p>');
-	$PHP_OUTPUT.=('<p>Points: <input type="text" name="points" id="InputFields" style="width:30px;text-align:center;"> points</p>');
+	$PHP_OUTPUT.=('<p>Mail ban: <input type="text" name="mailban" id="InputFields" class="center" style="width:30px;"> days</p>');
+	$PHP_OUTPUT.=('<p>Points: <input type="text" name="points" id="InputFields" class="center" style="width:30px;"> points</p>');
 	$db->query('SELECT * FROM account_is_closed WHERE account_id = '.$account_id);
 	if ($db->nextRecord()) {
 		$cont = 'yes';

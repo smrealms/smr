@@ -34,22 +34,22 @@ else
 	} ?>
 	<br />
 	<form name="MessageDeleteForm" method="POST" action="<?php echo $MessageBox['DeleteFormHref']; ?>">
-		<table style="width: 100%">
+		<table class="fullwidth center">
 			<tr>
-				<td style="text-align: center; width: 30%" valign="middle"><?php
+				<td style="width: 30%" valign="middle"><?php
 					if(isset($PreviousPageHREF))
 					{
 						?><a href="<?php echo $PreviousPageHREF; ?>"><img src="<?php echo URL; ?>/images/album/rew.jpg" alt="Previous Page" border="0"></a><?php
 					} ?>
 				</td>
-				<td style="text-align: center;">
+				<td>
 					<input type="submit" name="action" value="Delete" id="InputFields" />&nbsp;<select name="action" size="1" id="InputFields">
 																						<option>Marked Messages</option>
 																						<option>All Messages</option>
 																					</select>
 					<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> message<?php if($MessageBox['TotalMessages']!=1) { ?>s<?php } if($MessageBox['TotalMessages']!=$MessageBox['NumberMessages']){ ?> of which <span class="yellow"><?php echo $MessageBox['NumberMessages']; ?></span> <?php if($MessageBox['NumberMessages'] == 1){ ?>is<?php }else{ ?>are<?php } ?> being displayed<?php } ?>.</p>
 				</td>
-				<td style="text-align: center; width: 30%" valign="middle"><?php
+				<td style="width: 30%" valign="middle"><?php
 					if(isset($NextPageHREF))
 					{
 						?><a href="<?php echo $NextPageHREF; ?>"><img src="<?php echo URL; ?>/images/album/fwd.jpg" alt="Next Page" border="0"></a><?php

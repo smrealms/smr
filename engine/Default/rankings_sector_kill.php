@@ -27,20 +27,20 @@ while ($db->nextRecord())
 
 	$PHP_OUTPUT.=('<tr>');
 
-	$PHP_OUTPUT.=('<td valign="top" align="center"');
+	$PHP_OUTPUT.=('<td valign="top" class="center');
 	if ($player->getSectorID() == $curr_sector->getSectorID())
-		$PHP_OUTPUT.=(' style="font-weight:bold;"');
-	$PHP_OUTPUT.=('>'.$rank.'</td>');
+		$PHP_OUTPUT.=(' bold');
+	$PHP_OUTPUT.=('">'.$rank.'</td>');
 
-	$PHP_OUTPUT.=('<td valign="top" align="center"');
+	$PHP_OUTPUT.=('<td valign="top" class="center');
 	if ($player->getSectorID() == $curr_sector->getSectorID())
-		$PHP_OUTPUT.=(' style="font-weight:bold;"');
-	$PHP_OUTPUT.=('>'.$curr_sector->getSectorID().'</td>');
+		$PHP_OUTPUT.=(' bold');
+	$PHP_OUTPUT.=('">'.$curr_sector->getSectorID().'</td>');
 
-	$PHP_OUTPUT.=('<td valign="top" align="center"');
+	$PHP_OUTPUT.=('<td valign="top" class="center');
 	if ($player->getSectorID() == $curr_sector->getSectorID())
-		$PHP_OUTPUT.=(' style="font-weight:bold;"');
-	$PHP_OUTPUT.=('>' . number_format($curr_sector->getBattles()) . '</td>');
+		$PHP_OUTPUT.=(' bold');
+	$PHP_OUTPUT.=('">' . number_format($curr_sector->getBattles()) . '</td>');
 
 	$PHP_OUTPUT.=('</tr>');
 }
@@ -79,7 +79,7 @@ $container['min_rank']	= $min_rank;
 $container['max_rank']	= $max_rank;
 
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<p><input type="text" name="min_rank" value="'.$min_rank.'" size="3" id="InputFields" style="text-align:center;">&nbsp;-&nbsp;<input type="text" name="max_rank" value="'.$max_rank.'" size="3" id="InputFields" style="text-align:center;">&nbsp;');
+$PHP_OUTPUT.=('<p><input type="text" name="min_rank" value="'.$min_rank.'" size="3" id="InputFields" class="center">&nbsp;-&nbsp;<input type="text" name="max_rank" value="'.$max_rank.'" size="3" id="InputFields" class="center">&nbsp;');
 $PHP_OUTPUT.=create_submit('Show');
 $PHP_OUTPUT.=('</p></form>');
 $PHP_OUTPUT.=('<table class="standard" width="95%">');
@@ -102,20 +102,20 @@ while ($db->nextRecord())
 
 	$PHP_OUTPUT.=('<tr>');
 
-	$PHP_OUTPUT.=('<td valign="top" align="center"');
+	$PHP_OUTPUT.=('<td valign="top" class="center');
 	if ($player->getSectorID() == $curr_sector->getSectorID())
-		$PHP_OUTPUT.=(' style="font-weight:bold;"');
-	$PHP_OUTPUT.=('>'.$rank.'</td>');
+		$PHP_OUTPUT.=(' bold');
+	$PHP_OUTPUT.=('">'.$rank.'</td>');
 
-	$PHP_OUTPUT.=('<td valign="top" align="center"');
+	$PHP_OUTPUT.=('<td valign="top" class="center');
 	if ($player->getSectorID() == $curr_sector->getSectorID())
-		$PHP_OUTPUT.=(' style="font-weight:bold;"');
-	$PHP_OUTPUT.=('>'.$curr_sector->getSectorID().'</td>');
+		$PHP_OUTPUT.=(' bold');
+	$PHP_OUTPUT.=('">'.$curr_sector->getSectorID().'</td>');
 
-	$PHP_OUTPUT.=('<td valign="top" align="center"');
+	$PHP_OUTPUT.=('<td valign="top" class="center');
 	if ($player->getSectorID() == $curr_sector->getSectorID())
-		$PHP_OUTPUT.=(' style="font-weight:bold;"');
-	$PHP_OUTPUT.=('>' . number_format($curr_sector->getBattles()) . '</td>');
+		$PHP_OUTPUT.=(' bold');
+	$PHP_OUTPUT.=('">' . number_format($curr_sector->getBattles()) . '</td>');
 
 	$PHP_OUTPUT.=('</tr>');
 }

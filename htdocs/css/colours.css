@@ -31,8 +31,6 @@ input  {
 
 input.submit  {
 	border: 2px outset #7B5121;
-}
-input.submit:hover  {
 	cursor: pointer;
 }
 input.submit:active {
@@ -41,8 +39,6 @@ input.submit:active {
 /* We repeat with a selector because not all submits are guaranteed to have the submit class, but selector's don't work in IE6 (and others?) */
 input[type="submit"]  {
 	border: 2px outset #7B5121;
-}
-input[type="submit"]:hover  {
 	cursor: pointer;
 }
 input[type="submit"]:active {
