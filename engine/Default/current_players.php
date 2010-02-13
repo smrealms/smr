@@ -62,19 +62,19 @@ if ($count_last_active > 0)
 		$container['seq'] = 'DESC';
 	$container['sort'] = 'player_name';
 	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<font color=#80c870>Player</font>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Player</span>');
 	$PHP_OUTPUT.=('</th>');
 	$container['sort'] = 'race_id';
 	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<font color=#80c870>Race</font>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Race</span>');
 	$PHP_OUTPUT.=('</th>');
 	$container['sort'] = 'alliance_id';
 	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<font color=#80c870>Alliance</font>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Alliance</span>');
 	$PHP_OUTPUT.=('</th>');
 	$container['sort'] = 'experience';
 	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<font color=#80c870>Experience</font>');
+	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Experience</span>');
 	$PHP_OUTPUT.=('</th>');
 	$PHP_OUTPUT.=('</tr>');
 
