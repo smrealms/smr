@@ -268,9 +268,15 @@ if(isset($GameID))
 			<td>Change CSS Link</td>
 			<td>
 				<input type="text" size="50" name="csslink" value="<?php echo $ThisAccount->getCssLink(); ?>"><br />
-        For a (somewhat) commented css file to work from look at: <a href="<?php echo URL; ?>/originalCSS/default.css"><?php echo URL; ?>/originalCSS/default.css</a><br />
+        		</td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td>
 				You should only change this if you know what you're doing.<br />
 				If trying to link to a local file you may have to change your browser's security settings.
+				For a (somewhat) commented css file to work from look at: <a href="<?php echo URL; ?>/originalCSS/default.css"><?php echo URL; ?>/originalCSS/default.css</a><br />
 			</td>
 		</tr>
 

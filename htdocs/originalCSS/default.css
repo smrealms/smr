@@ -135,20 +135,15 @@ table
 /* =th default style for th tags */
 th
 {
-	background: #0A4E1D;
+	background-color: #0A4E1D;
 	color: #80C870;
-	font-size: 110%;
-	text-align: center;
-	padding: 3px;
 }
 /* =td default style for td tags */
 td
 {
-	padding: 3px;
 	color: #FFFFFF;
 	font-variant: normal;
 	font-family: Arial, Sans-Serif;
-	vertical-align: middle;
 }
 /* =td.sector */
 td.sector
