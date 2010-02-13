@@ -69,7 +69,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 					<br />
 					<?php if($ActualDamage['KillingShot'])
 					{
-						?>Forces are <span style="color:red;">DESTROYED!</span><br /><?php
+						?>Forces are <span class="red">DESTROYED!</span><br /><?php
 					}
 				}
 			}
@@ -152,7 +152,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 				<br />
 				<?php if($ActualDamage['KillingShot'])
 				{
-					?>Forces are <span style="color:red;">DESTROYED!</span><br /><?php
+					?>Forces are <span class="red">DESTROYED!</span><br /><?php
 				}
 			}
 		}

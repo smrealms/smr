@@ -85,7 +85,7 @@ if(is_array($ForcesCombatResults['Results']))
 }
 if($ForcesCombatResults['ForcesDestroyed'])
 {
-	?>Forces are <span style="color:red;">DESTROYED!</span><br /><?php
+	?>Forces are <span class="red">DESTROYED!</span><br /><?php
 }
 
 $TotalDamage =& $ForcesCombatResults['TotalDamage'] ?>

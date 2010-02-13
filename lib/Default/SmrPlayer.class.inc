@@ -1516,8 +1516,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return = array();
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
-		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span style="color:red;">DESTROYED</span> '.$this->getDisplayName().' in sector '.$forces->getSectorID(),false);
-		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span style="color:red;">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
+		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span class="red">DESTROYED</span> '.$this->getDisplayName().' in sector '.$forces->getSectorID(),false);
+		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
 
 		$news_message = $this->getDisplayName();
 		if ($this->hasCustomShipName())
@@ -1576,7 +1576,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return = array();
 		// send a message to the person who died
 		$planetOwner =& $planet->getOwner();
-		$this->sendMessage($planetOwner->getAccountID(), MSG_PLAYER, 'Your planet <span style="color:red;">DESTROYED</span> '.$this->getDisplayName().' in sector '.$planet->getSectorID(),false);
+		$this->sendMessage($planetOwner->getAccountID(), MSG_PLAYER, 'Your planet <span class="red">DESTROYED</span> '.$this->getDisplayName().' in sector '.$planet->getSectorID(),false);
 		$planetOwner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by '.$planet->getDisplayName().'\'s defenses.',false);
 		
 		$news_message = $this->getDisplayName();

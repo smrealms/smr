@@ -47,7 +47,7 @@ else
 		$PHP_OUTPUT.=('.<br />');
 }
 
-$PHP_OUTPUT.=('The traders listed in <span style="font-style:italic;">italics</span> are still ranked as Newbie or Beginner.</p>');
+$PHP_OUTPUT.=('The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p>');
 
 if ($count_last_active > 0)
 {

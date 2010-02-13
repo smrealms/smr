@@ -61,7 +61,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 	{
 		if ($planet->getStockpile($goodID) < $amount)
 		{
-			$PHP_OUTPUT.=('<span style="color:red;">'.$amount.'-'.$GOODS[$goodID]['Name'].', </span>');
+			$PHP_OUTPUT.=('<span class="red">'.$amount.'-'.$GOODS[$goodID]['Name'].', </span>');
 			$missing_good = true;
 		}
 		else
@@ -71,7 +71,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 	$missing_credits = false;
 	if ($player->getCredits() < $planetBuilding['Credit Cost'])
 	{
-		$PHP_OUTPUT.=('<span style="color:red;">'.$planetBuilding['Credit Cost'].'-credits, </span>');
+		$PHP_OUTPUT.=('<span class="red">'.$planetBuilding['Credit Cost'].'-credits, </span>');
 		$missing_credits = true;
 	}
 	else
