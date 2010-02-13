@@ -13,6 +13,10 @@ table.standard th {
 	background-color:#3E2911;
 	font-weight:bold;
 }
+th {
+	background-color: #3E2911;
+	color: #F2A648;
+}
 
 /* Headers */
 h1, h2, h3, h4, h5, h6 {
