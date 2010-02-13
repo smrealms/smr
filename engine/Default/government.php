@@ -52,7 +52,7 @@ if (isset($location_type_id))
 		while($db->nextRecord())
 		{
 			if ($db->getField('relation') <= -300)
-				$PHP_OUTPUT.=('<span style="color:red;">The '.$races[$db->getField('race_id_2')]['Race Name'].'<br /></span>');
+				$PHP_OUTPUT.=('<span class="red">The '.$races[$db->getField('race_id_2')]['Race Name'].'<br /></span>');
 	
 		}
 		$PHP_OUTPUT.=('<br />The government will PAY for the destruction of their ships!');

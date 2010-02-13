@@ -16,9 +16,9 @@ if ($db->nextRecord())
 	if ($approved == 'TBC')
 		$albumEntry['Status']=('<span style="color:orange;">Waiting approval</span>');
 	elseif ($approved == 'NO')
-		$albumEntry['Status']=('<span style="color:red;">Approval denied</span>');
+		$albumEntry['Status']=('<span class="red">Approval denied</span>');
 	elseif ($db->getField('disabled') == 'TRUE')
-		$albumEntry['Status']=('<span style="color:red;">Disabled</span>');
+		$albumEntry['Status']=('<span class="red">Disabled</span>');
 	elseif ($approved == 'YES')
 		$albumEntry['Status']=('<a href="'.URL.'/album/?'.$account->getHofName().'" style="color:green;">Online</a>');
 		

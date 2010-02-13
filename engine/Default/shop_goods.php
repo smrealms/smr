@@ -104,8 +104,8 @@ elseif ($player->getLastPort() != $player->getSectorID())
 				$player->decreaseCredits($fine);
 			}
 
-			$PHP_OUTPUT.=('<span style="color:red;">The Federation searched your ship and illegal goods were found!</span><br />');
-			$PHP_OUTPUT.=('<span style="color:red;">All illegal goods have been removed from your ship and you have been fined ' . number_format($fine) . ' credits</span>');
+			$PHP_OUTPUT.=('<span class="red">The Federation searched your ship and illegal goods were found!</span><br />');
+			$PHP_OUTPUT.=('<span class="red">All illegal goods have been removed from your ship and you have been fined ' . number_format($fine) . ' credits</span>');
 
 			//lose align and the good your carrying along with money
 			$player->decreaseAlignment(5);
