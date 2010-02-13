@@ -87,9 +87,9 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getExperience().'</td>');
 		if ($curr_player->getLastCPLAction() > TIME - 600)
-			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="green">YES</td>');
+			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
 		else
-			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" clas="red">NO</td>');
+			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="red">NO</td>');
 		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getSectorID().'</td>');
 		$PHP_OUTPUT.=('<td style="font-size:75%;" width="10%" align="center">');
 		$container = array();
@@ -197,7 +197,7 @@ if (empty($player_id))
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getExperience().'</td>');
 			if ($curr_player->getLastCPLAction() > TIME - 600)
-				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="green">YES</td>');
+				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
 			else
 				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="red">NO</td>');
 			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->sector_id.'</td>');
