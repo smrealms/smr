@@ -281,8 +281,23 @@ if(isset($GameID))
 				No: <input type="radio" name="defaultcss" id="InputFields" value="No"<?php if(!$ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
 				This specifies whether the default stylesheet (Currently: <a href="<?php echo DEFAULT_CSS; ?>"><?php echo DEFAULT_CSS; ?></a>) should be loaded.<br />
 			</td>
-		</tr>
-
+		</tr><?php
+		
+		if(ENABLE_BETA)
+		{ ?>
+			<tr>
+				<td>Template</td>
+				<td>
+					<select name="template" id="InputFields"><?php
+						foreach(Globals::getAvailableTemplates() as $AvailableTemplate)
+						{
+							?><option value="<?php echo $AvailableTemplate; ?>"<?php if($ThisAccount->getTemplate()==$AvailableTemplate){ ?>selected="selected"<?php } ?>><?php echo $AvailableTemplate; ?></option><?php
+						} ?>
+					</select>
+				</td>
+			</tr><?php
+		} ?>
+		
 		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Change CSS Options" id="InputFields" /></td>

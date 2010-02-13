@@ -616,6 +616,11 @@ class Globals
 		$container['action'] = 'blackjack';
 		return SmrSession::get_new_href($container);
 	}
+	
+	public static function getAvailableTemplates()
+	{
+		return array('Default','Freon22');
+	}
 }
 
 
