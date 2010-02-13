@@ -14,7 +14,7 @@ $PHP_OUTPUT.=('How many articles would you write per week if you were selected?<
 $PHP_OUTPUT.=('<input type="text" name="amount" value="0" id="InputFields" style="text-align:right;width:25;">');
 $PHP_OUTPUT.=('<br />');
 $PHP_OUTPUT.=('In 255 characters or less please describe why you should be accepted<br />');
-$PHP_OUTPUT.=('<textarea name="message" id="InputFields" cols="20" rows="30"></textarea>');
+$PHP_OUTPUT.=('<textarea name="message" id="InputFields"></textarea>');
 $PHP_OUTPUT.=('<br /><br />');
 $PHP_OUTPUT.=create_submit('Apply');
 $PHP_OUTPUT.=('</form>');

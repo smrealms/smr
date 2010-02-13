@@ -15,6 +15,12 @@ table.standard th {
 	font-weight:bold;
 }
 
+textarea {
+	background: #111;
+	color: #FFF;
+	border: 2px solid #7B5121;
+}
+
 /* Current Sector Navigation Box Colours */
 div.secNavBox div div {
 	border: 2px solid #7B5121;
