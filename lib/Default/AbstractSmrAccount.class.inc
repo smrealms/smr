@@ -199,7 +199,7 @@ abstract class AbstractSmrAccount
 			'default_css_enabled='.$this->db->escapeBoolean($this->defaultCSSEnabled).', ' .
 			'center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).
 			' WHERE account_id = '.$this->account_id.' LIMIT 1');
-		
+		$this->hasChanged = false;
 	}
 	
 	function update_ip()
@@ -644,7 +644,7 @@ abstract class AbstractSmrAccount
 	
 	public function setTemplate($template)
 	{
-		if($this->hofName==$template)
+		if($this->template==$template)
 			return;
 		if(!in_array($template,Globals::getAvailableTemplates()))
 			throw new Exception('Template not allowed: '.$template);
