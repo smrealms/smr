@@ -71,6 +71,8 @@ class Template
 		$templateDir = TEMPLATES_DIR;
 		if (isset($this->data['ThisAccount'])&&is_object($this->data['ThisAccount'])&&$this->data['ThisAccount'] instanceof SmrAccount) $templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
 		else $templateDir .= 'Default/';
+		
+//		$templateDir = TEMPLATES_DIR. 'Default/';
 
 		if (SmrSession::$game_id > 0) $gameDir = Globals::getGameType(SmrSession::$game_id) . '/';
 		else $gameDir = 'Default/';
