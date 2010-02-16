@@ -1,6 +1,9 @@
 html {
 	background-color: #000; /* The main background color, you can change this */
 }
+.bar1Separator {
+	border-top: 2px solid #A3692D;
+}
 .tableHeight {
 	color: #FFF;
 }
