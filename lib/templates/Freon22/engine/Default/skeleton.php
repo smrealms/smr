@@ -106,7 +106,7 @@
 								<div class="clear"></div><?php
 								if(isset($MenuItems)||isset($MenuBar))
 								{ ?>
-									<div style="border-top: 2px solid #a3692d; margin-top: 5px;"></div>
+									<div class="bar1Separator"></div>
 									<div class="bar1"><?php
 										if(isset($MenuItems))
 										{

@@ -620,7 +620,7 @@ class Globals
 	public static function getAvailableTemplates()
 	{
 		return array('Default' => array('Default'),
-			'Freon22' => array('Default'));
+			'Freon22' => array('Default','ClassicGreen'));
 	}
 	
 	public static function getAvailableColourSchemes($templateName)

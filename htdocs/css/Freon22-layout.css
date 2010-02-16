@@ -93,6 +93,9 @@ h3 {
 	font-size: 1em;
 	font-weight: bold;
 }
+.bar1Separator {
+	margin-top: 5px;
+}
 .bar1 {
 	text-align: center;
 	font-size: 1em;
