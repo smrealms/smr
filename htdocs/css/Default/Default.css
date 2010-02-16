@@ -1,0 +1,250 @@
+body {
+	background: #0B2121;
+	color: #FFFFFF;
+}
+h1, h2 {
+	color: #80C870;
+}
+h3 {
+	color: #FF00FF; /*Fuchsia*/
+}
+#InputFields, .InputFields {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+.submitStyle:link {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+.submitStyle:visited {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+.submitStyle:hover {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+.submitStyle:active {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+.submitStyle {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+#InputFieldsText {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+a.scan_btn {
+	background: #060E88;
+	color: #BBBBBB;
+	border: 1px solid #8070C8;
+}
+a.scan_btn:hover {
+	background: #060E88;
+	color: #FFFFFF;
+}
+th {
+	background-color: #0A4E1D;
+	color: #80C870;
+}
+td {
+	color: #FFFFFF;
+}
+td.footer_left {
+	border: solid #0B8D35;
+	border-width: 0px 0px 1px 1px;
+	background-color: #06240E;
+}
+td.footer_right {
+	border: solid #0B8D35;
+	border-width: 0px 1px 1px 0px;
+	background-color: #06240E;
+}
+table.standard {
+	border: 1px solid #0B8D35;
+	border-spacing: 0px;
+}
+table.standard td, table.standard th {
+	border: 1px solid #0B8D35;
+}
+.create td, th {
+	border: 0px solid #0b8d35;
+}
+table.create {
+	border: 0px solid #0B8D35;
+}
+td.border_left {
+	border-left-width: 3px;
+}
+td.border_right {
+	border-right-width: 3px;
+}
+td.border_bottom {
+	border-bottom-width: 3px;
+}
+td.border_top {
+	border-top-width: 3px;
+}
+td.has_port {
+	background-color: gray;
+}
+table.nobord td {
+	border: none;
+}
+td.m0 {
+	border: solid #0B8D35;
+	border-width: 1px 1px 0px 1px;
+	background-color: #06240E;
+}
+.attack_warning {
+	border: 1px solid #BB0;
+	background-color: #500;
+	color: #F00;
+}
+div.bar1 {
+	border: 1px solid #0B8D35;
+}
+div.bar1 div {
+	background-color: #0B8D35;
+}
+input {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+textarea {
+	background: #06240E;
+	color: #FFFFFF;
+	border: 1px solid #80C870;
+}
+a {
+	color: #FFFFFF;
+}
+a:hover {
+	background: #0A4E1D;
+}
+a.header {
+	color: #80C870;
+}
+
+hr {
+	color: #80C870;
+	background-color: #A0F890;
+	height: 2px;
+}
+a.buttonA  {
+	border-color: #A3CCA3 #2A6E2A #2A6E2A #A3CCA3;
+	background-color: #0B8D35;
+}
+a.buttonA:hover {
+	background-color: #0B8D35;
+}
+a.buttonA:active {
+	background-color: #0B8D35;
+	border-color: #2A6E2A #A3CCA3 #A3CCA3 #2A6E2A;
+}
+
+a.enemyExamine {
+	background-color:#C00;
+	border-color:#CCA3A3 #6E2A2A #6E2A2A #CCA3A3;
+}
+a.enemyExamine:hover {
+	background-color:#C00;
+}
+a.enemyExamine:active {
+	background-color:#C00;
+	border-color:#6E2A2A #CCA3A3 #CCA3A3 #6E2A2A;
+}
+
+ul.boxy {
+	font: 13px Arial, Sans-Serif;
+	border: 1px solid #0B8D35;
+}
+ul.boxy li {
+	border: 1px solid #0B8D35;
+}
+
+/* LM */
+div.connectSeclm {
+	background-color: #33784B;
+}
+div.connectSeclm:hover {
+	background-color: #14645F;
+}
+div.currentSeclm {
+	background-color:#33784B;
+}
+div.currentSeclm2 {
+	background: url('../../images/currentsector.png');
+	_background: none; /* Disable transparent image for IE6 as it can't handle it */
+}
+div.currentSeclm:hover {
+	background-color:#337975;
+}
+div.normalSeclm {
+	background-color: #0B4C1C;
+}
+div.normalSeclmu {
+	background-color: #000000;
+}
+
+/* wep drop down */
+div.wep_drop1 .wep1 {
+	color: #F6FF00;
+}
+
+/* Current Sector Navigation Box Colours */
+div.secNavBox div div {
+	border: 2px solid #0B8D35;
+}
+.move_hover a:hover {
+	background: #005000; /* hover green bg */
+}
+.scan_hover {
+	background-color: #060E88;
+}
+.scan_hover a {
+	background-color: #060E88;
+}
+.scan_hover a:hover {
+	background-color: #060E88;
+	color: #FFFFFF; /* hover white text */
+}
+.move_warp a:hover {
+	background: #500000; /* hover red bg */
+}
+.lastVisited {
+   color: #00FF00;
+}
+.visited, .currentSector {
+   color: #00AA00;
+}
+.unvisited {
+   color: #FFFF00;
+}
+
+/* CS */
+table.csShips th.header {
+	background: #500;
+}
+table.csForces th.header {
+	background: #005;
+}
+
+/* Planets */
+
+.uninhab {
+   color: #FF0000;
+}
+.inhab {
+   color: #00FF00;
+}

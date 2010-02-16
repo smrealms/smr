@@ -1,240 +1,124 @@
 @import url('shared.css');
 
-html, body
-{
+html, body {
 	height: 100%;
 }
-body
-{
-	background: #0B2121;
+body {
 	font-family: Arial, Sans-Serif;
 	font-variant: normal;
 	margin: 10px 0px 0px 0px;
 	padding: 0px;
-	color: #FFFFFF;
 }
 /* ----- All Heading styles ----- */
-/* =h1,h2 default style for h tags */
 h1, h2 {
-	color: #80C870;
 	font: bold 125% Arial, sans-serif;
 	padding: 0px;
 	margin: 0px;
 }
-/* =h2 default font-size for h2 tags */
-h2
-{
+h2 {
 	font-size: 110%;
 }
-/* =h3 default color h3 tags */
-h3
-{
-	color: #FF00FF; /*Fuchsia*/
+h3 {
 	padding: 0px;
 	margin: 0px;
 }
 /* ----- End Heading styles ----- */
 /* ---------------------------- */
-#InputFields, .InputFields
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+#InputFields, .InputFields {
 	font: inherit;
 	font-family: Arial;
 }
-.submitStyle:link
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+.submitStyle:link {
 	font: inherit;
 	font-family: Arial;
 	padding: 0px 8px;
 }
-.submitStyle:visited
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+.submitStyle:visited {
 	font: inherit;
 	font-family: Arial;
 	padding: 0px 8px;
 }
-.submitStyle:hover
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+.submitStyle:hover {
 	font: inherit;
 	font-family: Arial;
 	padding: 0px 8px;
 }
-.submitStyle:active
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+.submitStyle:active {
 	font: inherit;
 	font-family: Arial;
 	padding: 0px 8px;
 }
-.submitStyle
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+.submitStyle {
 	font: inherit;
 	font-family: Arial;
 	padding: 0px 8px;
 	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
 }
-#InputFieldsText
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+#InputFieldsText {
 	font: inherit;
 	font-family: Arial;
 }
 /* ------------------------------------ */
-#help_content
-{
+#help_content {
 	margin: 10px 20px 50px 20px;
 }
-#help_menu
-{
+#help_menu {
 	margin: 10px;
 }
-form
-{
+form {
 	margin: 0px;
 }
-a.scan_btn
-{
-	background: #060E88;
-	border: 1px solid #8070C8;
+a.scan_btn {
 	font: 80% bold;
 	padding: 0.1em 0.5em 0.1em 0.5em;
 	text-align: center;
-	color: #BBBBBB;
 	position: relative;
 	top: -1.6em;
 }
-a.scan_btn:hover
-{
-	background: #060E88;
-	color: #FFFFFF;
-}
 /* -------- Table rules --------- */
-/* =table default font size */
-table
-{
+table {
 	font-size: 100%;
 }
-/* =th default style for th tags */
-th
-{
-	background-color: #0A4E1D;
-	color: #80C870;
-}
-/* =td default style for td tags */
-td
-{
-	color: #FFFFFF;
+td {
 	font-variant: normal;
 	font-family: Arial, Sans-Serif;
 }
-/* =td.sector */
-td.sector
-{
+td.sector {
 	padding: 0px;
 	height: 3.5em;
 	width: 4.5em;
 	text-align: center;
 }
-/* =td.footer_left */
-td.footer_left
-{
+td.footer_left {
 	padding: 10px;
-	border: solid #0B8D35;
-	border-width: 0px 0px 1px 1px;
-	background-color: #06240E;
 	vertical-align: bottom;
 	text-align: left;
 	font-size: 75%;
 	white-space: nowrap;
 }
-/* =td.footer_right */
-td.footer_right
-{
+td.footer_right {
 	padding: 10px;
-	border: solid #0B8D35;
-	border-width: 0px 1px 1px 0px;
-	background-color: #06240E;
 	vertical-align: bottom;
 	text-align: right;
 	font: 75% Arial, Sans-Serif;
 	white-space: nowrap;
 }
-table.standard
-{
-	border: 1px solid #0B8D35;
-	border-spacing: 0px;
-}
-table.standard td, table.standard th
-{
-	border: 1px solid #0B8D35;
-}
 /* =.create td child, th also on line 110 */
-.create td, th
-{
+.create td, th {
 	padding: 3px;
-	border: 0px solid #0b8d35;
 }
-table.create {
-	border: 0px solid #0B8D35;
-}
-td.border_left
-{
-	border-left-width: 3px;
-}
-td.border_right
-{
-	border-right-width: 3px;
-}
-td.border_bottom
-{
-	border-bottom-width: 3px;
-}
-td.border_top
-{
-	border-top-width: 3px;
-}
-td.has_port
-{
-	background-color: gray;
-}
-td.vert_cent
-{
+td.vert_cent {
 	vertical-align: middle;
 }
-table.quote
-{
+table.quote {
 	border: 1px solid #0B8D35;
 }
-table.nobord td
-{
-	border: none;
-}
-table.nohpad td
-{
+table.nohpad td {
 	padding-left: 0px;
 	padding-right: 0px;
 	margin: 0px;
 }
-td.button
-{
+td.button {
 	padding: 0px;
 	text-align: center;
 	width: 1%;
@@ -242,223 +126,101 @@ td.button
 	vertical-align: middle;
 }
 /***************************/
-table.m
-{
+table.m {
 	height: 100%;
 	width: 80em;
 	border-spacing: 0px;
 	padding: 0px;
 }
-td.l0
-{
+td.l0 {
 	padding: 0px 10px 0px 0px;
 	vertical-align: top;
 }
-td.mb
-{
+td.mb {
 	width: 225px;
 }
-div.l1
-{
+div.l1 {
 	text-align: right;
 	width: 10em;
 }
-td.m0
-{
+td.m0 {
 	padding: 10px;
-	border: solid #0B8D35;
-	border-width: 1px 1px 0px 1px;
-	background-color: #06240E;
 	vertical-align: top;
 	width: 100%;
 }
-td.r0
-{
+td.r0 {
 	padding: 0px 0px 0px 10px;
 	vertical-align: top;
 	text-align: left;
 }
-table.csl
-{
+table.csl {
 	width: 27em;
 }
 /* --------- End of table rules ------- */
-img
-{
+img {
 	border: none;
 }
-img.vote_site
-{
+img.vote_site {
 	width: 98px;
 	height: 41px;
 }
-/* =big, =.big */
-big, .big
-{
+big, .big {
 	font-size: 125%;
 }
-/* =small, .small */
-small, .small
-{
+small, .small {
 	font-size: 75%;
 }
-.attack_warning
-{
-	border: 1px solid #BB0;
-	background-color: #500;
-	color: #F00;
-}
-div.bar1
-{
-	border: 1px solid #0B8D35;
+div.bar1 {
 	padding: 5px;
 }
-div.bar1 div
-{
+div.bar1 div {
 	padding: 2px;
-	background-color: #0B8D35;
 	text-align: center;
 }
-input
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
+input {
 	font: 100% Arial;
 }
-textarea
-{
-	background: #06240E;
-	color: #FFFFFF;
-	border: 1px solid #80C870;
-}
-a
-{
-	color: #FFFFFF;
+a {
 	text-decoration: none;
 	padding: 0px;
 	margin: 0px;
 }
-a:hover
-{
-	background: #0A4E1D;
-}
-a.header
-{
-	color: #80C870;
-}
 
-hr
-{
-	color: #80C870;
-	background-color: #A0F890;
-	height: 2px;
-}
-a.buttonA 
-{
-	border-color: #A3CCA3 #2A6E2A #2A6E2A #A3CCA3;
-	background-color: #0B8D35;
-}
-a.buttonA:hover
-{
-	background-color: #0B8D35;
-}
-a.buttonA:active
-{
-	background-color: #0B8D35;
-	border-color: #2A6E2A #A3CCA3 #A3CCA3 #2A6E2A;
-}
-
-a.enemyExamine
-{
-	background-color:#C00;
-	border-color:#CCA3A3 #6E2A2A #6E2A2A #CCA3A3;
-}
-a.enemyExamine:hover
-{
-	background-color:#C00;
-}
-a.enemyExamine:active
-{
-	background-color:#C00;
-	border-color:#6E2A2A #CCA3A3 #CCA3A3 #6E2A2A;
-}
-	
-div#middle_panel
-{
+div#middle_panel {
 	text-align: left;
 	width: 100%;
 }
-div#right_panel
-{
+div#right_panel {
 	width: 13em;
 }
 
-.nopad
-{
+.nopad {
 	margin: 0px;
 	padding: 0px;
 }
 /* Weapon Drag Drop */
-ul.sortable li
-{
+ul.sortable li {
 	position: relative;
 }
-ul.boxy
-{
+ul.boxy {
 	list-style-type: none;
 	padding: 4px 4px 0 4px;
 	margin: 0px;
 	width: 10em;
 	font: 13px Arial, Sans-Serif;
-	border: 1px solid #0B8D35;
 }
-ul.boxy li
-{
+ul.boxy li {
 	cursor: move;
 	margin-bottom: 4px;
 	padding: 2px 2px;
-	border: 1px solid #0B8D35;
 }
-#left_col
-{
+#left_col {
 	 width: 500px;
 	 float: left;
 	 margin-left: 5px;
 }
-/* LM */
-div.connectSeclm
-{
-	background-color: #33784B;
-}
-div.connectSeclm:hover
-{
-	background-color: #14645F;
-}
-div.currentSeclm
-{
-	background-color:#33784B;
-}
-div.currentSeclm2
-{
-	background: url('../images/currentsector.png');
-	_background: none; /* Disable transparent image for IE6 as it can't handle it */
-}
-div.currentSeclm:hover
-{
-	background-color:#337975;
-}
-div.normalSeclm
-{
-	background-color: #0B4C1C;
-}
-div.normalSeclmu
-{
-	background-color: #000000;
-}
 /* Layout Sprite Map */
-#layout
-{
+#layout {
 	width: 1024px;
 	height: 768px;
 	background: transparent url('../images/smr_layout.png') no-repeat;
@@ -466,46 +228,39 @@ div.normalSeclmu
 	padding: 0;
 	position: relative;
 }
-#layout li
-{
+#layout li {
 	margin: 0;
 	padding: 0;
 	list-style: none;
 	position: absolute;
 }
-#layout li
-{
+#layout li {
 	display: block;
 }
-#smr_logo, #smr_logo a
-{
+#smr_logo, #smr_logo a {
 	left: 0;
 	width: 185px;
 	height: 100px;
 }
-#player_name, #player_name a
-{
+#player_name, #player_name a {
 	left: 190px;
 	top: 30px;
 	width: 120px;
 	height: 50px;
 }
-#player_info, #player_info a
-{
+#player_info, #player_info a {
 	left: 316px;
 	top: 16px;
 	width: 318px;
 	height: 70px;
 }
-#ship_name, #ship_name a
-{
+#ship_name, #ship_name a {
 	left: 662px;
 	top: 29px;
 	width: 110px;
 	height: 53px;
 }
-#ship_info, #ship_info a
-{
+#ship_info, #ship_info a {
 	left: 785px;
 	top: 14px;
 	width: 219px;
@@ -518,86 +273,17 @@ div.normalSeclmu
 	height: 588px;
 }
 /* wep drop down */
-div.wep_drop1
-{
+div.wep_drop1 {
 	cursor: pointer;
 }
-div.wep_drop1 .wep1
-{
-	color: #F6FF00;
-}
 /* Gal Map */
-li.gal
-{
+li.gal {
 	font-size: 95%;
 	height: 1.5em;
 }
-div.connectSecgm
-{
-	background-color: #33784B;
-}
-div.currentSecgm
-{
-	/*background-color:#14642F;*/
-	background: url('../images/currentsector.png');
-}
 
 /* Current Sector Navigation Box Colours */
-div.secNavBox div div
-{
-	border: 2px solid #0B8D35;
-}
-div.secNavBox a:hover
-{
+div.secNavBox a:hover {
 	font-size: 115%;
 	font-weight: bold;
-}
-.move_hover a:hover
-{
-	background: #005000; /* hover green bg */
-}
-.scan_hover
-{
-	background-color: #060E88;
-}
-.scan_hover a
-{
-	background-color: #060E88;
-}
-.scan_hover a:hover
-{
-	background-color: #060E88;
-	color: #FFFFFF; /* hover white text */
-}
-.move_warp a:hover
-{
-	background: #500000; /* hover red bg */
-}
-.lastVisited
-{
-   color: #00FF00;
-}
-.visited, .currentSector
-{
-   color: #00AA00;
-}
-.unvisited
-{
-   color: #FFFF00;
-}
-
-table.csShips th.header {
-	background: #500;
-}
-table.csForces th.header {
-	background: #005;
-}
-
-.uninhab
-{
-   color: #FF0000;
-}
-.inhab
-{
-   color: #00FF00;
 }

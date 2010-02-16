@@ -619,7 +619,14 @@ class Globals
 	
 	public static function getAvailableTemplates()
 	{
-		return array('Default','Freon22');
+		return array('Default' => array('Default'),
+			'Freon22' => array('Default'));
+	}
+	
+	public static function getAvailableColourSchemes($templateName)
+	{
+		$templates = self::getAvailableTemplates();
+		return $templates[$templateName];
 	}
 }
 

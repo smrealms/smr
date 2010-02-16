@@ -146,6 +146,7 @@ abstract class AbstractSmrAccount
 			$this->timeShort		= $row['time_short'];
 			
 			$this->template			= $row['template'];
+			$this->colourScheme		= $row['colour_scheme'];
 			
 			if(empty($this->hofName))
 				$this->hofName=$this->login;
@@ -646,10 +647,27 @@ abstract class AbstractSmrAccount
 	{
 		if($this->template==$template)
 			return;
-		if(!in_array($template,Globals::getAvailableTemplates()))
+		if(!in_array($template,array_keys(Globals::getAvailableTemplates())))
 			throw new Exception('Template not allowed: '.$template);
 		$this->db->query('UPDATE account SET template = ' . $this->db->escapeString($template) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->template = $template;
+		$colourSchemes = Globals::getAvailableColourSchemes($template);
+		$this->setColourScheme($colourSchemes[0]);
+	}
+	
+	public function getColourScheme()
+	{
+		return $this->colourScheme;
+	}
+	
+	public function setColourScheme($colourScheme)
+	{
+		if($this->colourScheme==$colourScheme)
+			return;
+		if(!in_array($colourScheme,array_keys(Globals::getAvailableColourSchemes($this->getTemplate()))))
+			throw new Exception('Colour scheme not allowed: '.$colourScheme);
+		$this->db->query('UPDATE account SET colour_scheme = ' . $this->db->escapeString($colourScheme) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->colourScheme = $colourScheme;
 	}
 	
 	public function getHofName()

@@ -251,7 +251,7 @@ div.currentSeclm {
 	background-color:#7B5121;
 }
 div.currentSeclm2 {
-	background: url('../images/currentsector.png');
+	background: url('../../images/currentsector.png');
 	_background: none; /* Disable transparent image for IE6 as it can't handle it */
 }
 div.currentSeclm:hover {
