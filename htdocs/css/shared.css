@@ -7,6 +7,10 @@ td {
 	padding: 3px;
 	vertical-align: middle;
 }
+/* wep drop down */
+div.wep_drop1 {
+	cursor: pointer;
+}
 
 /*** CS Stuff ***/
 div.secNavBox
