@@ -267,3 +267,8 @@ div.normalSeclm {
 div.normalSeclmu {
 	background-color: #000;
 }
+
+/* Starry background */
+.stars {
+	background-image: url(../../images/stars2.png);
+}
