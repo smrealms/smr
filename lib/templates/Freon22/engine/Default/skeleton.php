@@ -23,7 +23,7 @@
 		} ?>
 	</head>
 	<body>
-		<div id="Container">
+		<div id="Container<?php if(isset($SpaceView)&&$SpaceView){ ?> stars<?php } ?>">
 			<table class="tableHeight">
 				<tr>
 					<td class="topleftCell">

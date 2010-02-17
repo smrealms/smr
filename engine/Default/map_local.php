@@ -6,6 +6,7 @@
 //
 ////////////////////////////////////////////////////////////
 
+$template->assign('SpaceView',true);
 $template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
 $zoomOn = false;
