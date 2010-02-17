@@ -23,7 +23,7 @@
 		} ?>
 	</head>
 	<body>
-		<div id="Container<?php if(isset($SpaceView)&&$SpaceView){ ?> stars<?php } ?>">
+		<div id="Container">
 			<table class="tableHeight">
 				<tr>
 					<td class="topleftCell">
@@ -288,7 +288,7 @@
 					</td>
 					
 					<td class="centerContent">
-						<div id="middle_panel" class="MainContentArea"><?php
+						<div id="middle_panel" class="MainContentArea<?php if(isset($SpaceView)&&$SpaceView){ ?> stars<?php } ?>"><?php
 							if(isset($PageTopic))
 							{
 								?><h1><?php echo $PageTopic; ?></h1><br /><?php
