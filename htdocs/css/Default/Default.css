@@ -248,3 +248,8 @@ table.csForces th.header {
 .inhab {
    color: #00FF00;
 }
+
+/* Starry background */
+.stars {
+	background-image: url(../../images/stars2.png);
+}
