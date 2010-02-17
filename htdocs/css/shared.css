@@ -229,9 +229,6 @@ div.secNavBox div.move_warp
 .clear {
 	clear: both; /* don't change clear is required to end floats */
 }
-.stars {
-	background-image: url(../images/MainBackground.gif);
-}
 
 /* Colours */
 .yellow {
