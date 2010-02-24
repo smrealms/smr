@@ -55,9 +55,9 @@ abstract class MySqlDatabase implements Database
 	{
 		if($this->dbRecord[$name] == 'TRUE')
 			return true;
-		if($this->dbRecord[$name] == 'FALSE')
-			return false;
-		throw new Exception('Field is not a boolean');
+//		if($this->dbRecord[$name] == 'FALSE')
+		return false;
+//		throw new Exception('Field is not a boolean');
 	}
 	
 	public function getRow()
