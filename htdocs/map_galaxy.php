@@ -77,6 +77,7 @@ try
 	echo('<html>');
 	echo('<head>');
 	echo('<link rel="stylesheet" type="text/css" href="css/default.css">');
+	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/Default/Default.css">');
 	echo('<title>Galaxy Map</title>');
 	echo('<meta http-equiv="pragma" content="no-cache">');
 	echo '<!--[if IE]>
