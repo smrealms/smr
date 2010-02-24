@@ -15,6 +15,7 @@ try
 	echo ('<html>');
 	echo ('<head>');
 	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/default.css">');
+	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/Default/Default.css">');
 	echo ('<title>Space Merchant Realms - Manual</title>');
 	echo ('<meta http-equiv="pragma" content="no-cache">');
 	echo ('</head>');

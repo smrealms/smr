@@ -10,25 +10,26 @@ try
 	require_once('config.inc');
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	
-	$db = new SmrMySqlDatabase();
+	$db = new SmrMySqlDatabase(); ?>
 	
-	echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
-	echo ('<html>');
-	echo ('<head>');
-	echo ('<link rel="stylesheet" type="text/css" href="css/default.css">');
-	echo ('<title>Level Requirements</title>');
-	echo ('<meta http-equiv="pragma" content="no-cache">');
-	echo ('</head>');
+	<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+	<html>
+	<head>
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+	<link rel="stylesheet" type="text/css" href="css/Default/Default.css">
+	<title>Level Requirements</title>
+	<meta http-equiv="pragma" content="no-cache">
+	</head>
 	
-	echo ('<body>');
-	$db->query('SELECT * FROM level ORDER BY level_id');
-	echo ('<table class="standard">');
+	<body><?php
+	$db->query('SELECT * FROM level ORDER BY level_id'); ?>
+	<table class="standard">
 	
-	echo ('<tr>');
-	echo ('<th align="center" style="color:#80C870;">Rank Level</th>');
-	echo ('<th align="center" style="color:#80C870;">Rank Name</th>');
-	echo ('<th align="center" style="color:#80C870;">Required Experience</th>');
-	echo ('</tr>');
+	<tr>
+	<th align="center" style="color:#80C870;">Rank Level</th>
+	<th align="center" style="color:#80C870;">Rank Name</th>
+	<th align="center" style="color:#80C870;">Required Experience</th>
+	</tr><?php
 	
 	while ($db->nextRecord()) {
 	
