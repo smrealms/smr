@@ -13,9 +13,6 @@
 		{
 			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>"><?php
 		} ?>
-		<!--[if IE]>
-			<link rel="stylesheet" type="text/css" href="css/ie_specific.css">
-		<![endif]-->
 		<style type="text/css">
 			body {
 				font-size:<?php echo $FontSize-20; ?>%;
