@@ -58,11 +58,11 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageHREF($alliance_id),'Text'=>'Send Message');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS || $mbRead))
+	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $mbRead)
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageBoardHREF($alliance_id),'Text'=>'Message Board');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS || $planetLand))
+	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $planetLand)
 	{
 		$menuItems[] = array('Link'=>Globals::getAlliancePlanetsHREF($alliance_id),'Text'=>'Planets');
 	}
