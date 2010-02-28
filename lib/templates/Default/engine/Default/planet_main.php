@@ -20,7 +20,7 @@ if (isset($Msg))
 				
 				<tr>
 					<td>Planet Level</td>
-					<td align="center"><?php echo $ThisPlanet->getLevel(); ?></td>
+					<td align="center"><?php echo number_format($ThisPlanet->getLevel(),2); ?></td>
 					<td align="center">70.00</td>
 				</tr>
 			</table>
