@@ -57,11 +57,16 @@ while ($db->nextRecord())
 		foreach ($accountIDs as $currLinkAccId)
 		{
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
+			
+			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
+			if($isDisabled = $db2->nextRecord())
+				$suspicion = $db2->getField('suspicion');
+			
 			$db2->query('SELECT account_id, login, email, validated FROM account WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord())
 				$currLinkAccLogin = $db2->getField('login');
 			else $currLinkAccLogin = '[Account no longer Exists]';
-			$PHP_OUTPUT.=('<tr align="center">');
+			$PHP_OUTPUT.=('<tr class="center'.($isDisabled?' red':'').'">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.='<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td>';
 			$PHP_OUTPUT.='<td'.($db2->getBoolean('validated')?'':' style="text-decoration:line-through;"').'>'.$db2->getField('email').' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td><td>';
@@ -69,8 +74,7 @@ while ($db->nextRecord())
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td>');
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
-			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('suspicion');
+			if ($isDisabled) $PHP_OUTPUT.=$suspicion;
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td><input type="checkbox" name="close['.$currLinkAccId.']" value="'.$associatedAccs.'">');
 			$PHP_OUTPUT.=('</td></tr>');

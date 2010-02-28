@@ -31,8 +31,11 @@ if ($db->getNumRows() > 0)
 		while ($db2->nextRecord())
 		{
 			$curr_account_id = $db2->getField('account_id');
+			
+			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$curr_account_id.' LIMIT 1');
+			$isDisabled = $db3->getNumRows() > 0;
 
-			$PHP_OUTPUT.=('<tr>');
+			$PHP_OUTPUT.=('<tr'.($isDisabled?' class="red"':'').'>');
 			$PHP_OUTPUT.=('<td>' . $db2->getField('account_id') . '</td>');
 			$PHP_OUTPUT.=('<td>' . $db2->getField('login') . '</td>');
 			$PHP_OUTPUT.=('<td'.($db2->getBoolean('validated')?'':' style="text-decoration:line-through;"').'>' . $db2->getField('email') . ' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td>');
@@ -40,7 +43,7 @@ if ($db->getNumRows() > 0)
 
 			// check if this guy is maybe already disabled
 			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$curr_account_id);
-			if ($db3->getNumRows())
+			if ($isDisabled)
 				$PHP_OUTPUT.=(' checked');
 
 			// but maybe it is preselected through this script?
