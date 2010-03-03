@@ -287,33 +287,30 @@ if(isset($GameID))
 				No: <input type="radio" name="defaultcss" id="InputFields" value="No"<?php if(!$ThisAccount->isDefaultCSSEnabled()){ ?> checked="checked"<?php } ?> /><br />
 				This specifies whether the default stylesheet (Currently: <a href="<?php echo DEFAULT_CSS; ?>"><?php echo DEFAULT_CSS; ?></a>) should be loaded.<br />
 			</td>
-		</tr><?php
+		</tr>
 		
-		if(ENABLE_BETA)
-		{ ?>
-			<tr>
-				<td>Template</td>
-				<td>
-					<select name="template" id="InputFields"><?php
-						foreach(Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes)
-						{
-							?><option value="<?php echo $AvailableTemplate; ?>"<?php if($ThisAccount->getTemplate()==$AvailableTemplate){ ?>selected="selected"<?php } ?>><?php echo $AvailableTemplate; ?></option><?php
-						} ?>
-					</select>
-				</td>
-			</tr>
-			<tr>
-				<td>Colour Scheme</td>
-				<td>
-					<select name="colour_scheme" id="InputFields"><?php
-						foreach(Globals::getAvailableColourSchemes($ThisAccount->getTemplate()) as $ColourScheme)
-						{
-							?><option value="<?php echo $ColourScheme; ?>"<?php if($ThisAccount->getColourScheme()==$ColourScheme){ ?>selected="selected"<?php } ?>><?php echo $ColourScheme; ?></option><?php
-						} ?>
-					</select>
-				</td>
-			</tr><?php
-		} ?>
+		<tr>
+			<td>Template</td>
+			<td>
+				<select name="template" id="InputFields"><?php
+					foreach(Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes)
+					{
+						?><option value="<?php echo $AvailableTemplate; ?>"<?php if($ThisAccount->getTemplate()==$AvailableTemplate){ ?>selected="selected"<?php } ?>><?php echo $AvailableTemplate; ?></option><?php
+					} ?>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Colour Scheme</td>
+			<td>
+				<select name="colour_scheme" id="InputFields"><?php
+					foreach(Globals::getAvailableColourSchemes($ThisAccount->getTemplate()) as $ColourScheme)
+					{
+						?><option value="<?php echo $ColourScheme; ?>"<?php if($ThisAccount->getColourScheme()==$ColourScheme){ ?>selected="selected"<?php } ?>><?php echo $ColourScheme; ?></option><?php
+					} ?>
+				</select>
+			</td>
+		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
