@@ -301,6 +301,15 @@ table.standard td, table.standard th {
 	padding:2px;
 }
 
+table.bar1, table.bar1 table {
+	width: 100%;
+}
+
+table.bar1 table table, table.bar1 table table td{
+	width: auto;
+	padding: 0px;
+}
+
 td, th {
 	padding:3px;
 }

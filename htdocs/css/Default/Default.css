@@ -113,6 +113,12 @@ div.bar1 {
 div.bar1 div {
 	background-color: #0B8D35;
 }
+table.bar1 td, table.bar1 th {
+	border: 1px solid #0B8D35;
+}
+tr.bar1 {
+	background-color: #0B8D35;
+}
 input {
 	background: #06240E;
 	color: #FFFFFF;
