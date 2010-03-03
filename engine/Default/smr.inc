@@ -229,8 +229,8 @@ function create_container($file, $body = '')
 	return $container;
 }
 
-function create_link($container, $text) {
-	return '<a href="' . SmrSession::get_new_href($container) . '">' . $text . '</a>';
+function create_link($container, $text, $class=null) {
+	return '<a'.($class==null?'':' class="'.$class.'"').' href="' . SmrSession::get_new_href($container) . '">' . $text . '</a>';
 }
 
 function create_submit_link($container, $text)

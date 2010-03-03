@@ -188,12 +188,12 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 	// player rankings
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings','nav');
 
 	$menu_subitem = array();
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Experience');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_kills.php'), 'Kills');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_death.php'), 'Death');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Experience','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_kills.php'), 'Kills','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_death.php'), 'Death','nav');
 
 	$menu_item['submenu'] = $menu_subitem;
 
@@ -201,13 +201,13 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Alliance Rankings');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Alliance Rankings','nav');
 
 	$menu_subitem = array();
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Experience');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_kills.php'), 'Kills');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_death.php'), 'Death');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_vs_alliance.php'), 'Versus');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Experience','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_kills.php'), 'Kills','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_death.php'), 'Death','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_vs_alliance.php'), 'Versus','nav');
 
 	$menu_item['submenu'] = $menu_subitem;
 
@@ -215,19 +215,19 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Racial Standings');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Racial Standings','nav');
 	
 	$menu_subitem = array();
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Experience');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_kills.php'), 'Kills');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_death.php'), 'Death');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Experience','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_kills.php'), 'Kills','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_death.php'), 'Death','nav');
 
 	$menu_item['submenu'] = $menu_subitem;
 
 	$menu[] = $menu_item;
 	
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_sector_kill.php'), 'Sector Kills');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_sector_kill.php'), 'Sector Kills','nav');
 	$menu[] = $menu_item;
 
 	create_sub_menu($menu, $active_level1, $active_level2);
@@ -237,17 +237,14 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 function create_sub_menu($menu, $active_level1, $active_level2) {
 	global $template;
 	$return = ('<p>');
-	$return .= ('<table border="0" cellpadding="0" cellspacing="1" width="100%">');
+	$return .= ('<table class="bar1">');
 	$return .= ('<tr>');
-	$return .= ('<td bgcolor="#0B8D35">');
-	$return .= ('<table border="0" cellpadding="3" cellspacing="1" width="100%">');
-	$return .= ('<tr bgcolor="#0B2121">');
 	$return .= ('<td>');
-	$return .= ('<table border="0" cellpadding="3" cellspacing="2" width="100%">');
-	$return .= ('<tr bgcolor="#0B8D35">');
+	$return .= ('<table class="fullwidth">');
+	$return .= ('<tr class="bar1">');
 	$return .= ('<td align="center">');
 
-	$return .= ('<table cellpadding="0" cellspacing="0">');
+	$return .= ('<table>');
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 
@@ -280,7 +277,7 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 					$return .= (' | ');
 
 				if ($sub_number == $active_level2)
-					$return .= ('<b>'.$sub_entry.'</b>');
+					$return .= ('<span class="bold">'.$sub_entry.'</span>');
 				else
 					$return .= ($sub_entry);
 
@@ -305,9 +302,6 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 
 	$return .= ('</table>');
 
-	$return .= ('</td>');
-	$return .= ('</tr>');
-	$return .= ('</table>');
 	$return .= ('</td>');
 	$return .= ('</tr>');
 	$return .= ('</table>');
