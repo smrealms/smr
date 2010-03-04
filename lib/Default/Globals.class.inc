@@ -594,14 +594,14 @@ class Globals
 		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_bounties.php'));
 	}
 	
-	public static function getBarMainHREF($raceID)
+	public static function getBarMainHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_opening.php';
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getLottoHREF($raceID)
+	public static function getLottoHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_gambling_lotto.php';
@@ -609,7 +609,7 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getBlackjackHREF($raceID)
+	public static function getBlackjackHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_gambling_bet.php';
