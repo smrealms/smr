@@ -72,7 +72,7 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 		$menuItems[] = array('Link'=>Globals::getAllianceOptionsHREF($alliance_id),'Text'=>'Options');
 	}
 	$menuItems[] = array('Link'=>Globals::getAllianceListHREF(),'Text'=>'List Alliances');
-	$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF(),'Text'=>'View News');
+	$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id?$alliance_id:$player->getAllianceID(),'Text'=>'View News');
 
 	$template->assign('MenuItems',$menuItems);
 }
@@ -319,14 +319,14 @@ function create_bank_menue() {
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
-												  'Personal Account','nav');
+													'Personal Account','nav');
 
 	if ($player->getAllianceID() != 0)
 		$menue_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
-													  'Alliance Account','nav');
+														'Alliance Account','nav');
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
-												  'Anonymous Account','nav');
+													'Anonymous Account','nav');
 	create_menue($menue_items);
 
 }
@@ -355,13 +355,13 @@ function create_hq_menue()
 function create_ug_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'underground.php'),
-												  'Underground','nav');
+													'Underground','nav');
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_claim.php'),
-												  'Claim Bounty','nav');
+													'Claim Bounty','nav');
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_place.php'),
-												  'Place a Bounty','nav');
+													'Place a Bounty','nav');
 
 	create_menue($menue_items);
 }
@@ -371,7 +371,7 @@ function create_council_menue($race_id)
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
-												  'View Council','nav');
+													'View Council','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -389,10 +389,10 @@ function create_council_menue($race_id)
 	{
 		if ($player->isOnCouncil())
 			$menue_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
-														  'Voting Center','nav');
+															'Voting Center','nav');
 		if ($player->isPresident())
 			$menue_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
-														  'Embassy','nav');
+															'Embassy','nav');
 	}
 
 	create_menue($menue_items);

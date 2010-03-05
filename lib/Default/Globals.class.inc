@@ -495,12 +495,11 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getAllianceNewsHREF($allianceID = null)
+	public static function getAllianceNewsHREF($allianceID)
 	{
 		$container = create_container('skeleton.php','news_read_advanced.php');
 		$container['submit'] = 'Search For Alliance';
-		if ($allianceID!=null)
-			$container['AllianceID'] = $allianceID;
+		$container['AllianceID'] = $allianceID;
 		return SmrSession::get_new_href($container);
 	}
 	
