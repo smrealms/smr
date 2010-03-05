@@ -46,7 +46,7 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 //	if ($player->getAccountID() == $alliance_leader_id)
 //	{
 		//$container['body']='alliance_treaties.php';
-		//$menue_items[] = create_link($container,'Treaties');	
+		//$menue_items[] = create_link($container,'Treaties','nav');	
 	//}
 	$menuItems = array();
 	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $modRead)
@@ -58,11 +58,11 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageHREF($alliance_id),'Text'=>'Send Message');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS || $mbRead))
+	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $mbRead)
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageBoardHREF($alliance_id),'Text'=>'Message Board');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS || $planetLand))
+	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $planetLand)
 	{
 		$menuItems[] = array('Link'=>Globals::getAlliancePlanetsHREF($alliance_id),'Text'=>'Planets');
 	}
@@ -72,16 +72,16 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 		$menuItems[] = array('Link'=>Globals::getAllianceOptionsHREF($alliance_id),'Text'=>'Options');
 	}
 	$menuItems[] = array('Link'=>Globals::getAllianceListHREF(),'Text'=>'List Alliances');
-	$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF(),'Text'=>'View News');
+	$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id?$alliance_id:$player->getAllianceID()),'Text'=>'View News');
 
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_galactic_post_menue() {
-
-	global $player;
-	$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_read.php'),
-												  'Current Edition');
+function create_galactic_post_menue()
+{
+	global $template, $player;
+	$menuItems = array();
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
 
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
@@ -102,20 +102,18 @@ function create_galactic_post_menue() {
 
 	}
 	if ($allowed_write == 'no' && $allowed_edit == 'no')
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_application.php'), 'Apply as writer!');
-	if ($allowed_edit == 'yes') {
-
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_view_applications.php'), 'View the applications');
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_view_article.php'), 'View the articles');
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post.php'), 'Editor Options');
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_make_paper.php'), 'Make a paper');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
+	if ($allowed_edit == 'yes')
+	{
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_applications.php')),'Text'=>'View the applications');
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_article.php')),'Text'=>'View the articles');
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
 
 	}
 	if ($allowed_edit == 'yes' || $allowed_write == 'yes')
-		$menue_items[] = create_link(create_container('skeleton.php', 'galactic_post_write_article.php'), 'Write an article');
-
-	create_menue($menue_items);
-
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
+	$template->assign('MenuItems', $menuItems);
 }
 
 function create_message_menue()
@@ -133,28 +131,27 @@ function create_message_menue()
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_combat_log_menue() {
+function create_combat_log_menue()
+{
+	global $template;
 
-	global $player;
+	$container = create_container('skeleton.php','combat_log_viewer.php');
+	$menuItems = array();
 
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'combat_log_viewer.php';
 	$container['action'] = 0;
-	$menue_items[] = create_link($container,'Personal');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Personal');
 	$container['action'] = 1;
-	$menue_items[] = create_link($container,'Alliance');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Alliance');
 	$container['action'] = 6;
-	$menue_items[] = create_link($container,'Force');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Force');
 	$container['action'] = 2;
-	$menue_items[] = create_link($container,'Port');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Port');
 	$container['action'] = 3;
-	$menue_items[] = create_link($container,'Planet');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Planet');
 	$container['action'] = 4;
-	$menue_items[] = create_link($container,'Saved');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Saved');
 
-	create_menue($menue_items);
-
+	$template->assign('MenuItems',$menuItems);
 }
 
 function create_trader_menue()
@@ -165,7 +162,8 @@ function create_trader_menue()
 						array('Link'=>Globals::getTraderPlanetHREF(),'Text'=>'Planet'),
 						array('Link'=>Globals::getAllianceHREF($player->getAllianceID()),'Text'=>'Alliance'),
 						array('Link'=>Globals::getCouncilHREF(),'Text'=>'Politics'),
-						array('Link'=>Globals::getTraderRelationsHREF(),'Text'=>'Relations')));
+						array('Link'=>Globals::getTraderRelationsHREF(),'Text'=>'Relations'),
+						array('Link'=>Globals::getTraderBountiesHREF(),'Text'=>'Bounties')));
 }
 
 function create_planet_menue()
@@ -190,12 +188,12 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 	// player rankings
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings','nav');
 
 	$menu_subitem = array();
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Experience');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_kills.php'), 'Kills');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_death.php'), 'Death');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Experience','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_kills.php'), 'Kills','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_death.php'), 'Death','nav');
 
 	$menu_item['submenu'] = $menu_subitem;
 
@@ -203,13 +201,13 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Alliance Rankings');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Alliance Rankings','nav');
 
 	$menu_subitem = array();
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Experience');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_kills.php'), 'Kills');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_death.php'), 'Death');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_vs_alliance.php'), 'Versus');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_experience.php'), 'Experience','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_kills.php'), 'Kills','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_death.php'), 'Death','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_vs_alliance.php'), 'Versus','nav');
 
 	$menu_item['submenu'] = $menu_subitem;
 
@@ -217,19 +215,19 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Racial Standings');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Racial Standings','nav');
 	
 	$menu_subitem = array();
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Experience');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_kills.php'), 'Kills');
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_death.php'), 'Death');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Experience','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_kills.php'), 'Kills','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_death.php'), 'Death','nav');
 
 	$menu_item['submenu'] = $menu_subitem;
 
 	$menu[] = $menu_item;
 	
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_sector_kill.php'), 'Sector Kills');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_sector_kill.php'), 'Sector Kills','nav');
 	$menu[] = $menu_item;
 
 	create_sub_menu($menu, $active_level1, $active_level2);
@@ -239,17 +237,14 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 function create_sub_menu($menu, $active_level1, $active_level2) {
 	global $template;
 	$return = ('<p>');
-	$return .= ('<table border="0" cellpadding="0" cellspacing="1" width="100%">');
+	$return .= ('<table class="bar1">');
 	$return .= ('<tr>');
-	$return .= ('<td bgcolor="#0B8D35">');
-	$return .= ('<table border="0" cellpadding="3" cellspacing="1" width="100%">');
-	$return .= ('<tr bgcolor="#0B2121">');
 	$return .= ('<td>');
-	$return .= ('<table border="0" cellpadding="3" cellspacing="2" width="100%">');
-	$return .= ('<tr bgcolor="#0B8D35">');
+	$return .= ('<table class="fullwidth">');
+	$return .= ('<tr class="bar1">');
 	$return .= ('<td align="center">');
 
-	$return .= ('<table cellpadding="0" cellspacing="0">');
+	$return .= ('<table>');
 	$return .= ('<tr>');
 	foreach ($menu as $number => $entry) {
 
@@ -259,7 +254,7 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 
 		// if this is the active entry we mark it
 		if ($number == $active_level1)
-			$active = ' style="font-weight:bold;"';
+			$active = ' class="bold"';
 		else
 			$active = '';
 
@@ -282,7 +277,7 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 					$return .= (' | ');
 
 				if ($sub_number == $active_level2)
-					$return .= ('<b>'.$sub_entry.'</b>');
+					$return .= ('<span class="bold">'.$sub_entry.'</span>');
 				else
 					$return .= ($sub_entry);
 
@@ -313,9 +308,6 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return .= ('</td>');
 	$return .= ('</tr>');
 	$return .= ('</table>');
-	$return .= ('</td>');
-	$return .= ('</tr>');
-	$return .= ('</table>');
 	$return .= ('</p>');
 	$template->unassign('MenuItems');
 	$template->unassign('MenuBar');
@@ -327,14 +319,14 @@ function create_bank_menue() {
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
-												  'Personal Account');
+													'Personal Account','nav');
 
 	if ($player->getAllianceID() != 0)
 		$menue_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
-													  'Alliance Account');
+														'Alliance Account','nav');
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
-												  'Anonymous Account');
+													'Anonymous Account','nav');
 	create_menue($menue_items);
 
 }
@@ -346,10 +338,10 @@ function create_hq_menue()
 	$container['LocationID'] = $var['LocationID'];
 	
 	$container['body'] = 'government.php';
-	$menue_items[] = create_link($container, 'Government');
+	$menue_items[] = create_link($container, 'Government','nav');
 
 	$container['body'] = 'military_payment_claim.php';
-	$menue_items[] = create_link($container, 'Claim Military Payment');
+	$menue_items[] = create_link($container, 'Claim Military Payment','nav');
 
 	create_menue($menue_items);
 }
@@ -357,7 +349,7 @@ function create_hq_menue()
 function create_ug_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'underground.php'),
-												  'Underground');
+													'Underground','nav');
 
 	create_menue($menue_items);
 }
@@ -367,51 +359,40 @@ function create_council_menue($race_id)
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
-												  'View Council');
+													'View Council','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_politics.php';
 	$container['race_id'] = $race_id;
-	$menue_items[] = create_link($container, 'Political Status');
+	$menue_items[] = create_link($container, 'Political Status','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
 	$container['race_id'] = $race_id;
-	$menue_items[] = create_link($container, 'Send Message');
+	$menue_items[] = create_link($container, 'Send Message','nav');
 
 	if($player->getRaceID()==$race_id)
 	{
 		if ($player->isOnCouncil())
 			$menue_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
-														  'Voting Center');
+															'Voting Center','nav');
 		if ($player->isPresident())
 			$menue_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
-														  'Embassy');
+															'Embassy','nav');
 	}
 
 	create_menue($menue_items);
 }
 
-function create_bar_menue() {
-
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'bar_main.php';
-	$container['script'] = 'bar_opening.php';
-	$menue_items[] = create_link($container, 'Bar Main');
-
-	$container['script'] = 'bar_gambling_lotto.php';
-	$container['action'] = 'lotto';
-	$menue_items[] = create_link($container, 'Lotto');
-	
-	$container['script'] = 'bar_gambling_bet.php';
-	$container['action'] = 'blackjack';
-	$menue_items[] = create_link($container, 'BlackJack');
-
-	create_menue($menue_items);
-
+function create_bar_menue()
+{
+	global $template;
+	$template->assign('MenuItems', array(
+					array('Link'=>Globals::getBarMainHREF(),'Text'=>'Bar Main'),
+					array('Link'=>Globals::getLottoHREF(),'Text'=>'Lotto'),
+					array('Link'=>Globals::getBlackjackHREF(),'Text'=>'BlackJack')));
 }
 
 function create_news_menue(&$template)
@@ -435,18 +416,18 @@ function create_nav_menue(&$template, &$player)
 function create_hof_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'hall_of_fame.php'),
-													'Hall of Fame Main');
+													'Hall of Fame Main','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'hall_of_fame.php';
 
 	$container['type'] = 'Newbie';
-	$menue_items[] = create_link($container, 'Newbie Stats');
+	$menue_items[] = create_link($container, 'Newbie Stats','nav');
 	$container['type'] = 'Veteran';
-	$menue_items[] = create_link($container, 'Veteran Stats');
+	$menue_items[] = create_link($container, 'Veteran Stats','nav');
 	$container['type'] = 'Semi War';
-	$menue_items[] = create_link($container, 'Special Game Stats');
+	$menue_items[] = create_link($container, 'Special Game Stats','nav');
 
 	create_menue($menue_items);
 
