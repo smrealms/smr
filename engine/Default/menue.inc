@@ -72,7 +72,7 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 		$menuItems[] = array('Link'=>Globals::getAllianceOptionsHREF($alliance_id),'Text'=>'Options');
 	}
 	$menuItems[] = array('Link'=>Globals::getAllianceListHREF(),'Text'=>'List Alliances');
-	$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id?$alliance_id:$player->getAllianceID(),'Text'=>'View News');
+	$menuItems[] = array('Link'=>Globals::getAllianceNewsHREF($alliance_id?$alliance_id:$player->getAllianceID()),'Text'=>'View News');
 
 	$template->assign('MenuItems',$menuItems);
 }
