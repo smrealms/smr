@@ -46,7 +46,7 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 //	if ($player->getAccountID() == $alliance_leader_id)
 //	{
 		//$container['body']='alliance_treaties.php';
-		//$menue_items[] = create_link($container,'Treaties');	
+		//$menue_items[] = create_link($container,'Treaties','nav');	
 	//}
 	$menuItems = array();
 	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $modRead)
@@ -319,14 +319,14 @@ function create_bank_menue() {
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
-												  'Personal Account');
+												  'Personal Account','nav');
 
 	if ($player->getAllianceID() != 0)
 		$menue_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
-													  'Alliance Account');
+													  'Alliance Account','nav');
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
-												  'Anonymous Account');
+												  'Anonymous Account','nav');
 	create_menue($menue_items);
 
 }
@@ -338,16 +338,16 @@ function create_hq_menue()
 	$container['LocationID'] = $var['LocationID'];
 	
 	$container['body'] = 'government.php';
-	$menue_items[] = create_link($container, 'Government');
+	$menue_items[] = create_link($container, 'Government','nav');
 
 	$container['body'] = 'military_payment_claim.php';
-	$menue_items[] = create_link($container, 'Claim Military Payment');
+	$menue_items[] = create_link($container, 'Claim Military Payment','nav');
 
 	$container['body'] = 'bounty_claim.php';
-	$menue_items[] = create_link($container, 'Claim Bounty');
+	$menue_items[] = create_link($container, 'Claim Bounty','nav');
 
 	$container['body'] = 'bounty_place.php';
-	$menue_items[] = create_link($container, 'Place a Bounty');
+	$menue_items[] = create_link($container, 'Place a Bounty','nav');
 
 	create_menue($menue_items);
 }
@@ -355,13 +355,13 @@ function create_hq_menue()
 function create_ug_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'underground.php'),
-												  'Underground');
+												  'Underground','nav');
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_claim.php'),
-												  'Claim Bounty');
+												  'Claim Bounty','nav');
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_place.php'),
-												  'Place a Bounty');
+												  'Place a Bounty','nav');
 
 	create_menue($menue_items);
 }
@@ -371,28 +371,28 @@ function create_council_menue($race_id)
 	global $player;
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
-												  'View Council');
+												  'View Council','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_politics.php';
 	$container['race_id'] = $race_id;
-	$menue_items[] = create_link($container, 'Political Status');
+	$menue_items[] = create_link($container, 'Political Status','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
 	$container['race_id'] = $race_id;
-	$menue_items[] = create_link($container, 'Send Message');
+	$menue_items[] = create_link($container, 'Send Message','nav');
 
 	if($player->getRaceID()==$race_id)
 	{
 		if ($player->isOnCouncil())
 			$menue_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
-														  'Voting Center');
+														  'Voting Center','nav');
 		if ($player->isPresident())
 			$menue_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
-														  'Embassy');
+														  'Embassy','nav');
 	}
 
 	create_menue($menue_items);
@@ -428,18 +428,18 @@ function create_nav_menue(&$template, &$player)
 function create_hof_menue() {
 
 	$menue_items[] = create_link(create_container('skeleton.php', 'hall_of_fame.php'),
-													'Hall of Fame Main');
+													'Hall of Fame Main','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'hall_of_fame.php';
 
 	$container['type'] = 'Newbie';
-	$menue_items[] = create_link($container, 'Newbie Stats');
+	$menue_items[] = create_link($container, 'Newbie Stats','nav');
 	$container['type'] = 'Veteran';
-	$menue_items[] = create_link($container, 'Veteran Stats');
+	$menue_items[] = create_link($container, 'Veteran Stats','nav');
 	$container['type'] = 'Semi War';
-	$menue_items[] = create_link($container, 'Special Game Stats');
+	$menue_items[] = create_link($container, 'Special Game Stats','nav');
 
 	create_menue($menue_items);
 
