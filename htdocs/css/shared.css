@@ -309,6 +309,9 @@ table.bar1 table table, table.bar1 table table td{
 	width: auto;
 	padding: 0px;
 }
+table.csl {
+	width: 27em;
+}
 
 td, th {
 	padding:3px;
