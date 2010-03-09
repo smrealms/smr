@@ -5,6 +5,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $template->assign('PageTopic','Plot A Course');
 
+require_once(get_file_loc('menue.inc'));
 create_nav_menue($template, $player);
 
 $path = unserialize($var['Distance']);
