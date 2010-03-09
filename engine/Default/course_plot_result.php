@@ -5,19 +5,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $template->assign('PageTopic','Plot A Course');
 
-// create menu
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'course_plot.php';
-$menue_items[] = create_link($container, 'Plot a Course');
-if(!$player->isLandedOnPlanet()) {
-	$container['body'] = 'map_local.php';
-	$menue_items[] = create_link($container, 'Local Map');
-}
-$menue_items[] = '<a href="' . URL . '/map_galaxy.php" target="_blank">Galaxy Map</a>';
-
-// echo it
-$PHP_OUTPUT.= create_menue($menue_items);
+create_nav_menue($template, $player);
 
 $path = unserialize($var['Distance']);
 

@@ -28,8 +28,9 @@ h3 {
 	height: 100%;
 }
 .tableHeight {
-	width: 95%;
 	height: 95%;
+	margin-right: auto;
+	margin-left: auto;
 }
 .topleftCell {
 	font-family: 'Bookman Old Style', serif;
