@@ -308,7 +308,7 @@ if(isset($GameID))
 					{
 						?><option value="<?php echo $ColourScheme; ?>"<?php if($ThisAccount->getColourScheme()==$ColourScheme){ ?>selected="selected"<?php } ?>><?php echo $ColourScheme; ?></option><?php
 					} ?>
-				</select>
+				</select> - This only shows colour schemes available for the current template, if you are changing templates then save the change first to see the colour schemes for the new template.
 			</td>
 		</tr>
 		
