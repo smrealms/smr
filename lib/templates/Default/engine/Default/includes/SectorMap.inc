@@ -43,10 +43,11 @@
 									} ?>
 								</div><?php
 							}
-							if((($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector) && ($Sector->hasForces() || $Sector->hasTraders()))
+							$CanScanSector = ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
+							if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasTraders()) ) || $Sector->hasFriendlyForces($ThisPlayer))
 							{ ?>
 								<div class="lmtf"><?php
-									if(($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($isLinkedSector && $Sector->hasTraders()))
+									if(($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasTraders()))
 									{
 										if($Sector->hasEnemyTraders($ThisPlayer))
 										{
@@ -59,7 +60,7 @@
 									}
 									if($Sector->hasForces())
 									{
-										if($Sector->hasEnemyForces($ThisPlayer))
+										if($CanScanSector && $Sector->hasEnemyForces($ThisPlayer))
 										{
 											?><img title="Enemy Forces" alt="Enemy Forces" src="images/enemyForces.png"/><?php
 										}
