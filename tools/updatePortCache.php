@@ -1,5 +1,5 @@
 <?php
-require_once('/home/page/SMR/htdocs/config.inc');
+require_once('../htdocs/config.inc');
 require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(LIB . 'Default/Globals.class.inc');
 require_once(LIB . 'Default/SmrPort.class.inc');
