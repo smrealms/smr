@@ -1121,7 +1121,7 @@ class SmrPort
 		if($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT visited, port_info FROM player_visited_port ' .
+			$db->query('SELECT visited, port_info FROM player_visited_port JOIN port_info_cache USING (game_id,sector_id,port_info_hash) ' .
 							  'WHERE account_id = '.$accountID.' AND ' .
 							  		'game_id = '.$gameID.' AND ' .
 							  		'sector_id = '.$sectorID.' LIMIT 1');
