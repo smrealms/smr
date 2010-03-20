@@ -1077,6 +1077,10 @@ class SmrPort
 	{
 		return $this->cachedTime;
 	}
+	protected function setCachedTime($cachedTime)
+	{
+		return $this->cachedTime=$cachedTime;
+	}
 	public function addCachePort($accountID)
 	{
 		$this->addCachePorts(array($accountID));
@@ -1088,10 +1092,12 @@ class SmrPort
 			if(count($accountIDs)==0)
 				throw new Exception('Cannot add cached port for no accounts');
 			$cachedVersion = $this->cachedVersion;
+			$goods = $this->goods;
 			$cache = $this->db->escapeBinary(gzcompress(serialize($this)));
+			$cacheHash = $this->db->escapeString(md5($cache));
 			//give them the port info
 			$query = 'INSERT IGNORE INTO player_visited_port ' .
-						'(account_id, game_id, sector_id, visited, port_info) ' .
+						'(account_id, game_id, sector_id, visited, port_info_hash) ' .
 						'VALUES ';
 			foreach($accountIDs as $accountID)
 			{
@@ -1099,8 +1105,14 @@ class SmrPort
 			}
 			$query = substr($query,0,-1);
 			$this->db->query($query);
-			$this->db->query('UPDATE player_visited_port SET port_info='.$cache.', visited='.$this->getCachedTime().' WHERE visited<'.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' AND game_id='.$this->getGameID().' LIMIT '.count($accountIDs));
+			
+			$this->db->query('INSERT IGNORE INTO port_info_cache ' .
+						'(game_id, sector_id, port_info_hash, port_info) ' .
+						'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$cacheHash.', '.$cache.')');
+						var_dump(md5($cache));
+			$this->db->query('UPDATE player_visited_port SET visited='.$this->getCachedTime().', port_info_hash='.$cacheHash.' WHERE visited<='.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' AND game_id='.$this->getGameID().' LIMIT '.count($accountIDs));
 			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
+			$this->goods = $goods; //Serializing this would have screwed up stock counts
 			unset($cache);
 		}
 	}
@@ -1109,14 +1121,15 @@ class SmrPort
 		if($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT port_info FROM player_visited_port ' .
+			$db->query('SELECT visited, port_info FROM player_visited_port JOIN port_info_cache USING (game_id,sector_id,port_info_hash) ' .
 							  'WHERE account_id = '.$accountID.' AND ' .
 							  		'game_id = '.$gameID.' AND ' .
 							  		'sector_id = '.$sectorID.' LIMIT 1');
-							  		
+			
 			if($db->nextRecord())
 			{
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize(gzuncompress($db->getField('port_info')));
+				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]->setCachedTime($db->getInt('visited'));
 			}
 			else
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = false;
@@ -1124,11 +1137,20 @@ class SmrPort
 		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
 	
+	public static function clearCache()
+	{
+		self::$CACHE_CACHED_PORTS = array();
+	}
+	
 	public function __sleep()
 	{
 		$this->getGoods(); //have to make sure goods have been loaded
+		foreach($this->goods['All Goods'] as &$good)
+		{
+			$good['Amount'] = 1;
+		} unset($good);
 		$this->cachedVersion = true;
-        return array('gameID', 'sectorID', 'raceID', 'level', 'cachedVersion', 'cachedTime', 'goods');
+        return array('gameID', 'sectorID', 'raceID', 'level', 'cachedVersion', 'goods');
 	}
 	
 	public function __wakeup()
