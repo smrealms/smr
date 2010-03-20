@@ -1109,7 +1109,7 @@ class SmrPort
 			$this->db->query('INSERT IGNORE INTO port_info_cache ' .
 						'(game_id, sector_id, port_info_hash, port_info) ' .
 						'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$cacheHash.', '.$cache.')');
-						var_dump(md5($cache));
+
 			$this->db->query('UPDATE player_visited_port SET visited='.$this->getCachedTime().', port_info_hash='.$cacheHash.' WHERE visited<='.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' AND game_id='.$this->getGameID().' LIMIT '.count($accountIDs));
 			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
 			$this->goods = $goods; //Serializing this would have screwed up stock counts
