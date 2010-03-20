@@ -60,6 +60,11 @@ abstract class MySqlDatabase implements Database
 //		throw new Exception('Field is not a boolean');
 	}
 	
+	public function getInt($name)
+	{
+		return (int)$this->dbRecord[$name];
+	}
+	
 	public function getRow()
 	{
 		return $this->dbRecord;
