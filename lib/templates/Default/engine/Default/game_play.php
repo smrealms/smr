@@ -115,13 +115,13 @@ if(isset($Games['Previous']))
 		foreach($Games['Previous'] as $Game)
 		{ ?>
 			<tr>
-				<td width="35%"><a href="<?php echo $Game['PreviousGameLink'] ?>"><?php echo $Game['Name'] ?> (<?php echo $Game['ID'] ?>)</a></td>
+				<td width="35%"><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameStatsLink'])){ ?></a><?php } ?></td>
 				<td><?php echo $Game['StartDate'] ?></td>
 				<td><?php echo $Game['EndDate'] ?></td>
 				<td><?php echo $Game['Speed'] ?></td>
-				<td><a href="<?php echo $Game['PreviousGameHOFLink'] ?>">Hall Of Fame</a></td>
-				<td><a href="<?php echo $Game['PreviousGameNewsLink'] ?>">Game News</a></td>
-				<td><a href="<?php echo $Game['PreviousGameStatsLink'] ?>">Game Stats</a></td>
+				<td><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
+				<td><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
+				<td><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
 			</tr>
 		<?php } ?>
 	</table><br />
@@ -135,10 +135,10 @@ else
 <br />
 <h1>Donate Money</h1>
 <p>
-	<a href="<?php echo $DonateLink ?>"><img src="images/donation.png" border="0" alt="donate" /></a>
+	<a href="<?php echo $DonateLink; ?>"><img src="images/donation.png" border="0" alt="donate" /></a>
 </p>
 <br />
-<h1><a href="<?php echo $OldAnnouncementsLink ?>">View Old Announcements</a></h1>
+<h1><a href="<?php echo $OldAnnouncementsLink; ?>">View Old Announcements</a></h1>
 <br />
 <br />
 
@@ -152,7 +152,7 @@ if(isset($AdminPermissions))
 		<li><?php
 			if($Permission['PermissionLink']!==false)
 			{
-				?><a href="<?php echo $Permission['PermissionLink'] ?>"><?php
+				?><a href="<?php echo $Permission['PermissionLink']; ?>"><?php
 			}
 			echo $Permission['Name'];
 			if($Permission['PermissionLink']!==false)
