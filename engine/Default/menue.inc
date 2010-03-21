@@ -409,10 +409,14 @@ function create_bar_menue()
 
 function create_news_menue(&$template)
 {
-	$template->assign('MenuItems', array(
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php')),'Text'=>'Read Current News'),
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php')),'Text'=>'Read Latest News'),
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php')),'Text'=>'Advanced News')));
+	global $var;
+	$menuItems = array();
+	if(SmrSession::$game_id==$var['GameID'])
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Current News');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Latest News');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$var['GameID']))),'Text'=>'Advanced News');
+					
+	$template->assign('MenuItems', $menuItems);
 }
 
 function create_nav_menue(&$template, &$player)

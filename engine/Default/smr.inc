@@ -220,9 +220,9 @@ function transfer($what)
 
 }
 
-function create_container($file, $body = '')
+function create_container($file, $body = '', array $extra = array())
 {
-	$container = array();
+	$container = $extra;
 	$container['url'] = $file;
 	$container['body'] = $body;
 

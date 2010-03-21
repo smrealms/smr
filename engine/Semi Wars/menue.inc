@@ -395,12 +395,12 @@ function create_bar_menue()
 					array('Link'=>Globals::getBlackjackHREF(),'Text'=>'BlackJack')));
 }
 
-function create_news_menue(&$template)
+function create_news_menue(&$template,$gameID)
 {
 	$template->assign('MenuItems', array(
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php')),'Text'=>'Read Current News'),
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php')),'Text'=>'Read Latest News'),
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php')),'Text'=>'Advanced News')));
+					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$gameID))),'Text'=>'Read Current News'),
+					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php',array('GameID'=>$gameID))),'Text'=>'Read Latest News'),
+					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$gameID))),'Text'=>'Advanced News')));
 }
 
 function create_nav_menue(&$template, &$player)

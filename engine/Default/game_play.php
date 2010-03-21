@@ -180,13 +180,44 @@ if ($db->getNumRows() > 0)
 // ** Previous Games
 // ***************************************
 
+$games['Previous'] = array();
+
+//New previous games
+$db->query('SELECT start_date, end_date, game_name, game_speed, game_id ' .
+		   'FROM game WHERE end_date < '.TIME.' ORDER BY game_id DESC');
+if ($db->getNumRows())
+{
+	while ($db->nextRecord())
+	{
+		$game_id = $db->getField('game_id');
+		$games['Previous'][$game_id]['ID'] = $game_id;
+		$games['Previous'][$game_id]['Name'] = $db->getField('game_name');
+		$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT,$db->getField('start_date'));
+		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$db->getField('end_date'));
+		$games['Previous'][$game_id]['Speed'] = $db->getField('game_speed');
+		// create a container that will hold next url and additional variables.
+		$container = array();
+		$container['game_id'] = $container['GameID'] = $game_id;
+		$container['url'] = 'skeleton.php';
+		$container['game_name'] = $games['Previous'][$game_id]['Name'];
+		$container['body'] = 'games_previous.php';
+
+//		$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::get_new_href($container);
+		$container['body'] = 'hall_of_fame_new.php';
+		$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
+		$container['body'] = 'news_read.php';
+		$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
+		$container['body'] = 'games_previous_detail.php';
+//		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
+	}
+}
+
+//Old previous games
 $historyDB = new SmrHistoryMySqlDatabase();
-$historyDB->query('SELECT start_date, ' .
-		   'end_date, game_name, speed, game_id ' .
-		   'FROM game ORDER BY game_id');
+$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id ' .
+		   'FROM game ORDER BY game_id DESC');
 if ($historyDB->getNumRows())
 {
-	$games['Previous'] = array();
 	while ($historyDB->nextRecord())
 	{
 		$game_id = $historyDB->getField('game_id');
@@ -199,7 +230,6 @@ if ($historyDB->getNumRows())
 		$container = array();
 		$container['game_id'] = $game_id;
 		$container['url'] = 'skeleton.php';
-		$container['game_id'] = $game_id;
 		$container['game_name'] = $games['Previous'][$game_id]['Name'];
 		$container['body'] = 'games_previous.php';
 
