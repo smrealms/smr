@@ -65,10 +65,10 @@ else
 						<td align="right"><b>Race:</b></td>
 						<td>
 						<select name="race_id" size="1" style="border-width:0px;width:150px;" OnChange="go();">
-							<option value="1">[please select]</option><?php
+							<?php /*<option value="1">[please select]</option> */
 							foreach($Races as $Race)
 							{
-								?><option value="<?php echo $Race['ID']; ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
+								?><option value="<?php echo $Race['ID']; if($Race['Selected']){ ?>" selected="selected<?php } ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
 							} ?>
 						</select>
 						</td>
