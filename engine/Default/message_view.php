@@ -27,8 +27,8 @@ if (!isset ($var['folder_id']))
 
 		// do we have unread msges in that folder?
 		$db2->query('SELECT message_id FROM message ' .
-		'WHERE account_id = ' . SmrSession :: $account_id . ' AND ' .
-		'game_id = ' . SmrSession :: $game_id . ' AND ' .
+		'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
+		'game_id = ' . SmrSession::$game_id . ' AND ' .
 		'message_type_id = ' . $message_type_id . ' AND ' .
 		'msg_read = \'FALSE\' AND ' .
 		'reciever_delete = \'FALSE\' LIMIT 1');
@@ -37,27 +37,27 @@ if (!isset ($var['folder_id']))
 		$messageBox['MessageCount'] = 0;
 		// get number of msges
 		$db2->query('SELECT count(message_id) as message_count FROM message ' .
-		'WHERE account_id = ' . SmrSession :: $account_id . ' AND ' .
-		'game_id = ' . SmrSession :: $game_id . ' AND ' .
+		'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
+		'game_id = ' . SmrSession::$game_id . ' AND ' .
 		'message_type_id = ' . $message_type_id . ' AND reciever_delete = \'FALSE\'');
 		if ($db2->nextRecord())
 			$messageBox['MessageCount'] = $db2->getField('message_count');
 
 		$container = create_container('skeleton.php', 'message_view.php');
 		$container['folder_id'] = $message_type_id;
-		$messageBox['ViewHref'] = SmrSession :: get_new_href($container);
+		$messageBox['ViewHref'] = SmrSession::get_new_href($container);
 
 		$container = create_container('message_delete_processing.php');
 		$container['folder_id'] = $message_type_id;
-		$messageBox['DeleteHref'] = SmrSession :: get_new_href($container);
+		$messageBox['DeleteHref'] = SmrSession::get_new_href($container);
 		$messageBoxes[] = $messageBox;
 	}
 
 	$messageBox = array ();
 	$messageBox['MessageCount'] = 0;
 	$db->query('SELECT count(message_id) as count FROM message ' .
-	'WHERE sender_id = ' . SmrSession :: $account_id . ' AND ' .
-	'game_id = ' . SmrSession :: $game_id . ' AND ' .
+	'WHERE sender_id = ' . SmrSession::$account_id . ' AND ' .
+	'game_id = ' . SmrSession::$game_id . ' AND ' .
 	'message_type_id = ' . MSG_PLAYER . ' AND ' .
 	'sender_delete = \'FALSE\'');
 	if ($db->nextRecord())
@@ -66,14 +66,18 @@ if (!isset ($var['folder_id']))
 	$messageBox['HasUnread'] = false;
 	$container = create_container('skeleton.php', 'message_view.php');
 	$container['folder_id'] = MSG_SENT;
-	$messageBox['ViewHref'] = SmrSession :: get_new_href($container);
+	$messageBox['ViewHref'] = SmrSession::get_new_href($container);
 
 	$container = create_container('message_delete_processing.php');
 	$container['folder_id'] = MSG_SENT;
-	$messageBox['DeleteHref'] = SmrSession :: get_new_href($container);
+	$messageBox['DeleteHref'] = SmrSession::get_new_href($container);
 	$messageBoxes[] = $messageBox;
 
 	$template->assignByRef('MessageBoxes', $messageBoxes);
+	
+	$container = create_container('skeleton.php','message_blacklist.php');
+	$container['folder_id'] = $message_type_id;
+	$template->assignByRef('ManageBlacklistLink', SmrSession::get_new_href($container));
 }
 else
 {
@@ -109,10 +113,10 @@ else
 	$container = $var;
 	$container['page'] = $page -1;
 	if ($page > 0)
-		$template->assign('PreviousPageHREF', SmrSession :: get_new_href($container));
+		$template->assign('PreviousPageHREF', SmrSession::get_new_href($container));
 	$container['page'] = $page +1;
 	if (($page +1) * MESSAGES_PER_PAGE < $messageBox['TotalMessages'])
-		$template->assign('NextPageHREF', SmrSession :: get_new_href($container));
+		$template->assign('NextPageHREF', SmrSession::get_new_href($container));
 
 	// remove entry for this folder from unread msg table
 	if ($page == 0)
@@ -130,12 +134,12 @@ else
 
 	if ($messageBox['Type'] == MSG_GLOBAL)
 	{
-		$template->assign('IgnoreGlobalsFormHref', SmrSession :: get_new_href(create_container('message_global_ignore.php')));
+		$template->assign('IgnoreGlobalsFormHref', SmrSession::get_new_href(create_container('message_global_ignore.php')));
 	}
 
 	$container = create_container('message_delete_processing.php');
 	transfer('folder_id');
-	$messageBox['DeleteFormHref'] = SmrSession :: get_new_href($container);
+	$messageBox['DeleteFormHref'] = SmrSession::get_new_href($container);
 
 	$db->query('SELECT * FROM message ' .
 	$whereClause .
@@ -156,7 +160,7 @@ else
 			$dispContainer = create_container('skeleton.php', 'message_view.php');
 			$dispContainer['folder_id'] = MSG_SCOUT;
 			$dispContainer['show_all'] = true;
-			$messageBox['ShowAllHref'] = SmrSession :: get_new_href($dispContainer);
+			$messageBox['ShowAllHref'] = SmrSession::get_new_href($dispContainer);
 		}
 		displayScouts($messageBox, $player, false, $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
 		displayScouts($messageBox, $player, true, $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
@@ -254,7 +258,7 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 	}
 	$sender = false;
 	if (!empty ($sender_id) && $sender_id != ACCOUNT_ID_PORT && $sender_id != ACCOUNT_ID_ADMIN && $sender_id != ACCOUNT_ID_PLANET)
-		$sender = & SmrPlayer :: getPlayer($sender_id, $player->getGameID());
+		$sender = & SmrPlayer::getPlayer($sender_id, $player->getGameID());
 
 	$senderName = '';
 	if ($sender_id == ACCOUNT_ID_PORT)
@@ -303,16 +307,16 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 	$container = create_container('skeleton.php', 'message_notify_confirm.php');
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
-	$message['ReportHref'] = SmrSession :: get_new_href($container);
+	$message['ReportHref'] = SmrSession::get_new_href($container);
 	if (is_object($sender))
 	{
 		$container = create_container('skeleton.php', 'message_blacklist_add.php');
 		$container['account_id'] = $sender_id;
-		$message['BlacklistHref'] = SmrSession :: get_new_href($container);
+		$message['BlacklistHref'] = SmrSession::get_new_href($container);
 
 		$container = create_container('skeleton.php', 'message_send.php');
 		$container['receiver'] = $sender->getAccountID();
-		$message['ReplyHref'] = SmrSession :: get_new_href($container);
+		$message['ReplyHref'] = SmrSession::get_new_href($container);
 	}
 
 	$message['ID'] = $message_id;
@@ -321,7 +325,7 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 	if (is_object($sender))
 		$message['Sender'] = & $sender;
 
-	$reciever = & SmrPlayer :: getPlayer($reciever_id, $player->getGameID());
+	$reciever = & SmrPlayer::getPlayer($reciever_id, $player->getGameID());
 	if ($sentMessage && is_object($reciever))
 	{
 		$container = create_container('skeleton.php', 'trader_search_result.php');
