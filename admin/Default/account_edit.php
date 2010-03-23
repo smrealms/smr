@@ -187,7 +187,9 @@ if ($curr_account && $curr_account->account_id != 0) {
 			window.document.form_acc.suspicion.value = \'For Multi Closings Only\';
 			window.document.form_acc.suspicion.disabled=true;
 		}
-		window.document.form_acc.choise[0class="bold"ript>';
+		window.document.form_acc.choise[0].checked=true;
+	}
+	</script>';
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Close Reason:</td>');
 	$PHP_OUTPUT.=('<td>');
