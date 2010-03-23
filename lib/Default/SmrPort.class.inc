@@ -1092,7 +1092,12 @@ class SmrPort
 			if(count($accountIDs)==0)
 				throw new Exception('Cannot add cached port for no accounts');
 			$cachedVersion = $this->cachedVersion;
-			$goods = $this->goods;
+			$this->getGoods();
+			$goods = array();
+			foreach($this->goods['All Goods'] as $key => &$good)
+			{
+				$goods[$key] = $good;
+			} unset($good);
 			$cache = $this->db->escapeBinary(gzcompress(serialize($this)));
 			$cacheHash = $this->db->escapeString(md5($cache));
 			//give them the port info
@@ -1112,6 +1117,11 @@ class SmrPort
 
 			$this->db->query('UPDATE player_visited_port SET visited='.$this->getCachedTime().', port_info_hash='.$cacheHash.' WHERE visited<='.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' AND game_id='.$this->getGameID().' LIMIT '.count($accountIDs));
 			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
+			$goods = array();
+			foreach($goods as $key => &$good)
+			{
+				$this->goods[$key] =& $goods;
+			} unset($good);
 			$this->goods = $goods; //Serializing this would have screwed up stock counts
 			unset($cache);
 		}
