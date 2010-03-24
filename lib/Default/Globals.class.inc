@@ -575,7 +575,7 @@ class Globals
 	
 	public static function getTraderPlanetHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_status.php'));
+		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_planet.php'));
 	}
 	
 	public static function getCouncilHREF()
