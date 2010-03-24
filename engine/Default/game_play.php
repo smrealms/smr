@@ -17,7 +17,8 @@ $game_id_list ='';
 $db->query('SELECT end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
 		'WHERE game.game_id = player.game_id AND ' .
 			  'account_id = '.SmrSession::$account_id.' AND ' .
-			  'end_date >= \'' . TIME . '\'');
+			  'end_date >= \'' . TIME . '\' ' .
+		'ORDER BY start_date DESC');
 if ($db->getNumRows() > 0)
 {
 	while ($db->nextRecord())
@@ -78,7 +79,8 @@ if(USE_COMPATIBILITY)
 	$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
 			'WHERE game.game_id = player.game_id AND ' .
 				  'account_id = '.SmrSession::$old_account_id.' AND ' .
-				  'end_date >= \'' . TIME . '\'');
+				  'end_date >= \'' . TIME . '\' ' .
+		'ORDER BY start_date DESC');
 	if ($db->getNumRows() > 0)
 	{
 		require_once(get_file_loc('smr_player.inc',1,'1.2/'));
@@ -140,11 +142,15 @@ $game_id_list = '('.$game_id_list.')';
 
 if ($game_id_list == '()')
 	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed ' .
-					'FROM game WHERE end_date >= \'' . TIME . '\' AND enabled = \'TRUE\'');
+					'FROM game ' .
+					'WHERE end_date >= \'' . TIME . '\' AND enabled = \'TRUE\' ' .
+					'ORDER BY start_date DESC');
 else
 	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed ' .
-					'FROM game WHERE game_id NOT IN '.$game_id_list.' AND ' .
-									'end_date >= \'' . TIME . '\' AND enabled = \'TRUE\'');
+					'FROM game ' .
+					'WHERE game_id NOT IN '.$game_id_list.' AND ' .
+									'end_date >= \'' . TIME . '\' AND enabled = \'TRUE\' ' .
+					'ORDER BY start_date DESC');
 
 // ***************************************
 // ** Join Games
