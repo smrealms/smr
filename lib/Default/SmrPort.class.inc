@@ -1120,7 +1120,7 @@ class SmrPort
 
 			foreach($goods as $key => &$good)
 			{
-				$this->goods['All Goods'][$key] =& $goods;
+				$this->goods['All Goods'][$key] =& $good;
 			} unset($good); //Serializing this would have screwed up stock counts
 			unset($cache);
 		}
