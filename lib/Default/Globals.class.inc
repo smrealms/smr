@@ -15,8 +15,7 @@ class Globals
 	protected static $USER_RANKINGS = null;
 	protected static $db = null;
 	
-	private static $compatibilityDatabases = array('Game' => array('Smr12MySqlDatabase'=>array('GameType'=>'1.2','Column'=>'old_account_id')),
-					'History' => array('SmrHistoryMySqlDatabase'=>array('GameType'=>'1.2')));
+	private static $compatibilityDatabases;
 	
 	private function __construct()
 	{
@@ -633,6 +632,11 @@ class Globals
 	
 	public static function getCompatibilityDatabases($dbType = false)
 	{
+		if(!isset(self::$compatibilityDatabases))
+		{
+			global $COMPATIBILITY_DATABASES;
+			self::$compatibilityDatabases = $COMPATIBILITY_DATABASES;
+		}
 		if($dbType===false)
 			return self::$compatibilityDatabases;
 		return self::$compatibilityDatabases[$dbType];

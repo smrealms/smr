@@ -44,12 +44,6 @@ try
 			// register session
 			SmrSession::$account_id = $db->getField('account_id');
 			SmrSession::$old_account_id = $db->getField('old_account_id');
-			if(USE_COMPATIBILITY)
-				if(SmrSession::$old_account_id==0)
-				{
-					$account =& SmrAccount::getAccount(SmrSession::$account_id);
-					$account->linkAccount($login,$password);
-				}
 		}
 		else if(USE_COMPATIBILITY)
 		{

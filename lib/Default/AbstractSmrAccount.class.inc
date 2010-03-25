@@ -628,7 +628,6 @@ abstract class AbstractSmrAccount
 			}
 		}
 		$db = new SmrMySqlDatabase();
-		release_lock();exit;
 		return $result;
 	}
 	
@@ -657,12 +656,13 @@ abstract class AbstractSmrAccount
 		
 				$db3 = new $databaseClassName();
 				$db3->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
-					'WHERE account_id = '.$db->getField('account_id').' LIMIT 1');
+					'WHERE account_id = '.$db2->getField('account_id').' LIMIT 1');
 				if ($db3->nextRecord())
 				{
 					$expire_time = $db3->getField('expires');
 					if(!($expire_time > 0 && $expire_time < TIME))
 					{
+						SmrSession::$old_account_id = $db2->getField('account_id');
 						// save session (incase we forward)
 						SmrSession::update();
 						if ($db3->getField('reason') == 'Invalid eMail')
@@ -685,7 +685,7 @@ abstract class AbstractSmrAccount
 							$db->escape_string($db2->getField('address')) . ', ' . $db->escape_string($db2->getField('city')) . ', ' . $db->escape_string($db2->getField('postal_code')) . ', ' .
 							$db->escape_string($db2->getField('country_code')) . ', ' . $db->escape_string($db2->getField('icq')) . ', ' . $db->escape_string($db2->getField('validation_code')) . ',' .
 							$db->escape_string($db2->getField('veteran')) . ',' . $db->escape_string($db2->getField('logging')) . ',' . TIME . ',' .$db->escapeNumber($db2->getField('offset')).',' .
-							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
+							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')+20).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
 				
 				// creates a new user account object
 				$account =& SmrAccount::getAccountByName($db2->getField('login'));
@@ -693,7 +693,7 @@ abstract class AbstractSmrAccount
 				// insert into the account stats table
 				$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.$account->getAccountID().', ' . $db->escape_string($account->login) . ')');
 				SmrSession::$account_id = $account->getAccountID();
-				
+
 				$account->linkAccount($login,$pass);
 				$db = new SmrMySqlDatabase();
 				return true;
