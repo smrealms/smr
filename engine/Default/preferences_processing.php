@@ -15,18 +15,8 @@ $HoF_name = $_REQUEST['HoF_name'];
 
 if (USE_COMPATIBILITY && $action == 'Link Account')
 {
-	require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
-	$db = new Smr12MySqlDatabase();
-	$db->query('SELECT account_id FROM account ' .
-			   'WHERE login = '.$db->escapeString($_REQUEST['oldAccountLogin']).' AND ' .
-					 'password = '.$db->escapeString($_REQUEST['oldAccountPassword']));
-	if ($db->nextRecord())
-	{
-		$account->setOldAccountID($db->getField('account_id'));	
-	}
-	else
+	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword']))
 		create_error('There is no old account with that username/password.');
-	$db = new SmrMySqlDatabase();
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have linked your old account.';
 }
 else if ($action == 'Save and resend validation code')

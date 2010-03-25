@@ -74,61 +74,64 @@ if ($db->getNumRows() > 0)
 // CLASSIC COMPATIBILITY
 if(USE_COMPATIBILITY)
 {
-	require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
-	$db = new Smr12MySqlDatabase();
-	$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
-			'WHERE game.game_id = player.game_id AND ' .
-				  'account_id = '.SmrSession::$old_account_id.' AND ' .
-				  'end_date >= \'' . TIME . '\' ' .
-		'ORDER BY start_date DESC');
-	if ($db->getNumRows() > 0)
+	foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $databaseInfo)
 	{
-		require_once(get_file_loc('smr_player.inc',1,'1.2/'));
-		require_once(get_file_loc('smr_ship.inc',1,'1.2/'));
-		while ($db->nextRecord())
+		require_once(get_file_loc($databaseClassName.'.class.inc'));
+		$db = new $databaseClassName();
+		$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
+				'WHERE game.game_id = player.game_id AND ' .
+					  'account_id = '.SmrSession::$old_account_id.' AND ' .
+					  'end_date >= \'' . TIME . '\' ' .
+			'ORDER BY start_date DESC');
+		if ($db->getNumRows() > 0)
 		{
-			$game_id = $db->getField('game_id');
-			$games['Play'][$game_id]['ID'] = $game_id;
-			$games['Play'][$game_id]['Name'] = $db->getField('game_name');
-			$games['Play'][$game_id]['Type'] = $db->getField('game_type');
-			$games['Play'][$game_id]['EndDate'] = $db->getField('end_date');
-			$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
-			$games['Play'][$game_id]['Type'] = $db->getField('game_type');
-			
-			$container = array();
-			$container['game_id'] = $game_id;
-			$container['url'] = 'game_play_processing.php';
-			$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
-	
-			// creates a new player object
-			$curr_player = new SMR_PLAYER(SmrSession::$old_account_id, $game_id);
-			$curr_ship = new SMR_SHIP(SmrSession::$old_account_id, $game_id);
-	
-			// update turns for this game
-			$curr_player->update_turns($curr_ship->speed);
-	
-			// generate list of game_id that this player is joined
-			if (strlen($game_id_list)>0) $game_id_list .= ',';
-			$game_id_list .= $game_id;
-	
-			$db2 = new Smr12MySqlDatabase();
-			$db2->query('SELECT count(*) as num_playing FROM player ' .
-						'WHERE last_active >= ' . (TIME - 600) . ' AND ' .
-							  'game_id = '.$game_id);
-			$db2->nextRecord();
-			$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
-	
-			// create a container that will hold next url and additional variables.
-	
-			$container_game = array();
-			$container_game['url'] = 'skeleton.php';
-			$container_game['body'] = 'game_stats.php';
-			$container_game['game_id'] = $game_id;
-			$games['Play'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container_game);
-			$games['Play'][$game_id]['Maintenance'] = $curr_player->turns;
-			$games['Play'][$game_id]['LastActive'] = format_time(TIME-$curr_player->last_active,TRUE);
-			$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->last_active,TRUE);
-	
+			require_once(get_file_loc('smr_player.inc',1,$databaseInfo['GameType']));
+			require_once(get_file_loc('smr_ship.inc',1,$databaseInfo['GameType']));
+			while ($db->nextRecord())
+			{
+				$game_id = $db->getField('game_id');
+				$games['Play'][$game_id]['ID'] = $game_id;
+				$games['Play'][$game_id]['Name'] = $db->getField('game_name');
+				$games['Play'][$game_id]['Type'] = $db->getField('game_type');
+				$games['Play'][$game_id]['EndDate'] = $db->getField('end_date');
+				$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
+				$games['Play'][$game_id]['Type'] = $db->getField('game_type');
+				
+				$container = array();
+				$container['game_id'] = $game_id;
+				$container['url'] = 'game_play_processing.php';
+				$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
+		
+				// creates a new player object
+				$curr_player = new SMR_PLAYER(SmrSession::$old_account_id, $game_id);
+				$curr_ship = new SMR_SHIP(SmrSession::$old_account_id, $game_id);
+		
+				// update turns for this game
+				$curr_player->update_turns($curr_ship->speed);
+		
+				// generate list of game_id that this player is joined
+				if (strlen($game_id_list)>0) $game_id_list .= ',';
+				$game_id_list .= $game_id;
+		
+				$db2 = new $databaseClassName();
+				$db2->query('SELECT count(*) as num_playing FROM player ' .
+							'WHERE last_active >= ' . (TIME - 600) . ' AND ' .
+								  'game_id = '.$game_id);
+				$db2->nextRecord();
+				$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
+		
+				// create a container that will hold next url and additional variables.
+		
+				$container_game = array();
+				$container_game['url'] = 'skeleton.php';
+				$container_game['body'] = 'game_stats.php';
+				$container_game['game_id'] = $game_id;
+				$games['Play'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container_game);
+				$games['Play'][$game_id]['Maintenance'] = $curr_player->turns;
+				$games['Play'][$game_id]['LastActive'] = format_time(TIME-$curr_player->last_active,TRUE);
+				$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->last_active,TRUE);
+		
+			}
 		}
 	}
 	$db = new SmrMySqlDatabase();
@@ -218,38 +221,43 @@ if ($db->getNumRows())
 	}
 }
 
-//Old previous games
-$historyDB = new SmrHistoryMySqlDatabase();
-$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id ' .
-		   'FROM game ORDER BY game_id DESC');
-if ($historyDB->getNumRows())
+if(USE_COMPATIBILITY)
 {
-	while ($historyDB->nextRecord())
+	foreach(Globals::getCompatibilityDatabases('History') as $databaseClassName => $databaseInfo)
 	{
-		$game_id = $historyDB->getField('game_id');
-		$games['Previous'][$game_id]['ID'] = $game_id;
-		$games['Previous'][$game_id]['Name'] = $historyDB->getField('game_name');
-		$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT,$historyDB->getField('start_date'));
-		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
-		$games['Previous'][$game_id]['Speed'] = $historyDB->getField('speed');
-		// create a container that will hold next url and additional variables.
-		$container = array();
-		$container['game_id'] = $game_id;
-		$container['url'] = 'skeleton.php';
-		$container['game_name'] = $games['Previous'][$game_id]['Name'];
-		$container['body'] = 'games_previous.php';
-
-		$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::get_new_href($container);
-		$container['body'] = 'hall_of_fame_new.php';
-		$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
-		$container['body'] = 'games_previous_news.php';
-		$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
-		$container['body'] = 'games_previous_detail.php';
-		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
+		//Old previous games
+		$historyDB = new $databaseClassName();
+		$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id ' .
+				   'FROM game ORDER BY game_id DESC');
+		if ($historyDB->getNumRows())
+		{
+			while ($historyDB->nextRecord())
+			{
+				$game_id = $historyDB->getField('game_id');
+				$games['Previous'][$game_id]['ID'] = $game_id;
+				$games['Previous'][$game_id]['Name'] = $historyDB->getField('game_name');
+				$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT,$historyDB->getField('start_date'));
+				$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
+				$games['Previous'][$game_id]['Speed'] = $historyDB->getField('speed');
+				// create a container that will hold next url and additional variables.
+				$container = array();
+				$container['game_id'] = $game_id;
+				$container['url'] = 'skeleton.php';
+				$container['game_name'] = $games['Previous'][$game_id]['Name'];
+				$container['body'] = 'games_previous.php';
+		
+				$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::get_new_href($container);
+				$container['body'] = 'hall_of_fame_new.php';
+				$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
+				$container['body'] = 'games_previous_news.php';
+				$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
+				$container['body'] = 'games_previous_detail.php';
+				$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
+			}
+		}
 	}
+	$db = new SmrMySqlDatabase(); // restore database
 }
-
-$db = new SmrMySqlDatabase(); // restore database
 
 $template->assign('Games',$games);
 
