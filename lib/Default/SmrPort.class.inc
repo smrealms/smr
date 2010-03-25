@@ -1117,12 +1117,11 @@ class SmrPort
 
 			$this->db->query('UPDATE player_visited_port SET visited='.$this->getCachedTime().', port_info_hash='.$cacheHash.' WHERE visited<='.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' AND game_id='.$this->getGameID().' LIMIT '.count($accountIDs));
 			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
-			$goods = array();
+
 			foreach($goods as $key => &$good)
 			{
 				$this->goods['All Goods'][$key] =& $goods;
-			} unset($good);
-			$this->goods = $goods; //Serializing this would have screwed up stock counts
+			} unset($good); //Serializing this would have screwed up stock counts
 			unset($cache);
 		}
 	}
