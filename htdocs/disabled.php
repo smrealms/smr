@@ -27,16 +27,19 @@ try
 	}
 	else if(USE_COMPATIBILITY && SmrSession::$old_account_id > 0)
 	{
-		require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
-		$db = new Smr12MySqlDatabase();
-		$db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.SmrSession::$old_account_id);
-		if ($db->nextRecord())
+		foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $gameType)
 		{
-			$time = $db->getField('expires');
-			$reason = $db->getField('reason');
-		
-			if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $time) . '.';
-			else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
+			require_once(get_file_loc($databaseClassName.'.class.inc'));
+			$db = new $databaseClassName();
+			$db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.SmrSession::$old_account_id);
+			if ($db->nextRecord())
+			{
+				$time = $db->getField('expires');
+				$reason = $db->getField('reason');
+			
+				if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $time) . '.';
+				else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
+			}
 		}
 	//	SmrSession::destroy();
 	}

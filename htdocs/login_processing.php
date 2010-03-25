@@ -38,7 +38,7 @@ try
 	
 		$db->query('SELECT account_id,old_account_id FROM account ' .
 				   'WHERE login = '.$db->escapeString($login).' AND ' .
-						 'password = '.$db->escapeString(md5($password)));
+						 'password = '.$db->escapeString(md5($password)).' LIMIT 1');
 		if ($db->nextRecord())
 		{
 			// register session
@@ -48,89 +48,12 @@ try
 				if(SmrSession::$old_account_id==0)
 				{
 					$account =& SmrAccount::getAccount(SmrSession::$account_id);
-					require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
-					$db2 = new Smr12MySqlDatabase();
-					$db2->query('SELECT account_id FROM account ' .
-							   'WHERE login = '.$db->escapeString($login).' AND ' .
-									 'password = '.$db->escapeString($password));
-					if ($db2->nextRecord())
-					{
-						$account->setOldAccountID($db2->getField('account_id'));
-						SmrSession::$old_account_id = $db2->getField('account_id');
-					}
-					$db = new SmrMySqlDatabase();
+					$account->linkAccount($login,$password);
 				}
 		}
 		else if(USE_COMPATIBILITY)
 		{
-			require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
-			$db2 = new Smr12MySqlDatabase();
-			$db2->query('SELECT * FROM account ' .
-					   'WHERE login = '.$db->escapeString($login).' AND ' .
-							 'password = '.$db->escapeString($password));
-			if ($db2->nextRecord())
-			{
-				// register session
-				SmrSession::$old_account_id = $db2->getField('account_id');
-			
-				$db3 = new Smr12MySqlDatabase();
-				$db3->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
-					'WHERE account_id = '.SmrSession::$old_account_id.' LIMIT 1');
-				if ($db3->nextRecord())
-				{
-					$expire_time = $db3->getField('expires');
-					if(!($expire_time > 0 && $expire_time < TIME))
-					{
-						// save session (incase we forward)
-						SmrSession::update();
-						if ($db3->getField('reason') == 'Invalid eMail')
-						{
-							header('Location: '.URL.'/email.php');
-							exit;
-						}
-						else
-						{
-							header('Location: '.URL.'/disabled.php');
-							exit;
-						}
-					}
-				}
-				
-				$db = new SmrMySqlDatabase();
-				$db->query('SELECT account_id FROM account ' .
-				   'WHERE login = '.$db->escapeString($login));
-				if($db->nextRecord())
-				{
-					$msg = 'Your account could not be automatically upgraded as the login is already taken, please login to your 1.6 account and enter the details for your old account under preferences.';
-					header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-					exit;
-				}
-				$db->query('SELECT account_id FROM account WHERE old_account_id='.SmrSession::$old_account_id);
-				if($db->nextRecord())
-				{
-					SmrSession::$account_id = $db->getField('account_id');
-				}
-				else
-				{
-					$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, veteran, last_login, logging, offset,images,fontsize,referral_id,hof_name,validated) VALUES(' .
-								$db->escape_string($db2->getField('login')) . ', ' . $db->escape_string(md5($db2->getField('password'))) . ', ' . $db->escape_string($db2->getField('email')) . ', ' .
-								$db->escape_string($db2->getField('first_name')) . ', ' . $db->escape_string($db2->getField('last_name')) . ', ' .
-								$db->escape_string($db2->getField('address')) . ', ' . $db->escape_string($db2->getField('city')) . ', ' . $db->escape_string($db2->getField('postal_code')) . ', ' .
-								$db->escape_string($db2->getField('country_code')) . ', ' . $db->escape_string($db2->getField('icq')) . ', ' . $db->escape_string($db2->getField('validation_code')) . ',' .
-								$db->escape_string($db2->getField('veteran')) . ',' . $db->escape_string($db2->getField('logging')) . ',' . TIME . ',' .$db->escapeNumber($db2->getField('offset')).',' .
-								$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
-					
-					// creates a new user account object
-					$account =& SmrAccount::getAccountByName($db2->getField('login'));
-					$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
-					$account->setOldAccountID(SmrSession::$old_account_id);
-									
-					// insert into the account stats table
-					$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.$account->getAccountID().', ' . $db->escape_string($account->login) . ')');
-					SmrSession::$account_id = $account->getAccountID();
-				}
-			}
-			else
+			if(!SmrAccount::upgradeAccount($login,$password))
 			{
 				$msg = 'Password is incorrect!';
 				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));

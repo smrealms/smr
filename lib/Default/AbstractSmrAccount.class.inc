@@ -39,7 +39,7 @@ abstract class AbstractSmrAccount
 	protected $cssLink;
 	protected $defaultCSSEnabled;
 	protected $centerGalaxyMapOnPlayer;
-	protected $oldAccountID;
+	protected $oldAccountIDs = array();
 	protected $maxRankAchieved;
 	protected $referrerID;
 	protected $dateShort;
@@ -135,7 +135,11 @@ abstract class AbstractSmrAccount
 			$this->cssLink			= $row['css_link'];
 			$this->defaultCSSEnabled	= $this->db->getBoolean('default_css_enabled');
 			$this->centerGalaxyMapOnPlayer	= $this->db->getBoolean('center_galaxy_map_on_player');
-			$this->oldAccountID		= $row['old_account_id'];
+			
+			foreach(Globals::getCompatibilityDatabases('Game') as $databaseName => $databaseInfo)
+			{
+				$this->oldAccountIDs[$databaseName] = $row[$databaseInfo['Column']];
+			}
 			
 			$this->referrerID		= $row['referral_id'];
 			$this->maxRankAchieved	= $row['max_rank_achieved'];
@@ -549,52 +553,154 @@ abstract class AbstractSmrAccount
 		return $this->account_id;
 	}
 	
-	public function getOldAccountID()
+	public function getOldAccountIDs()
 	{
-		return $this->oldAccountID;
+		return $this->oldAccountIDs;
 	}
 	
-	public function hasOldAccountID()
+	public function getOldAccountID($dbName)
 	{
-		return $this->getOldAccountID()!=0;
+		return isset($this->oldAccountIDs[$dbName])?$this->oldAccountIDs[$dbName]:0;
 	}
 	
-	public function setOldAccountID($accountID)
+	public function hasOldAccountID($dbName=false)
 	{
-		if(USE_COMPATIBILITY)
+		if($dbName===false)
+			return count($this->getOldAccountIDs())!=0;
+		return $this->getOldAccountID($dbName)!=0;
+	}
+	
+	public function hasAllOldAccountIDs()
+	{
+		return count($this->getOldAccountIDs())==count(Globals::getCompatibilityDatabases('Game'));
+	}
+	
+	public function linkAccount($login,$pass)
+	{
+		$result = false;
+		foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $databaseInfo)
 		{
-			$this->db = new SmrMySqlDatabase();
-			$this->db->query('SELECT account_id FROM account WHERE old_account_id = ' . $this->db->escapeNumber($accountID) . ' AND account_id = '.$this->getAccountID().' LIMIT 1');
-			if($this->db->nextRecord())
-				create_error('Only 1 account can link to a given old account.');
-			$credits = 0;
-			require_once(get_file_loc('Smr12MySqlDatabase.class.inc'));
-			$db = new Smr12MySqlDatabase();
-			$db->query('SELECT credits_left FROM account_has_credits ' .
-					'WHERE account_id = '.$db->escapeNumber($accountID));
-			if($db->nextRecord())
+			if($this->hasOldAccountID($databaseClassName))
+				continue;
+			require_once(get_file_loc($databaseClassName.'.class.inc'));
+			$db = new $databaseClassName();
+			$db->query('SELECT account_id FROM account ' .
+					   'WHERE login = '.$db->escapeString($login).' AND ' .
+							 'password = '.$db->escapeString($pass));
+			if ($db->nextRecord())
 			{
-				$credits = $db->getField('credits_left');
+				$accountID = $db->getField('account_id');
+				$this->db = new SmrMySqlDatabase();
+				$this->db->query('SELECT account_id FROM account WHERE '.$databaseInfo['Column'].' = ' . $this->db->escapeNumber($accountID) . ' LIMIT 1');
+				if($this->db->nextRecord())
+					create_error('Only 1 account can link to a given old account.');
+				$credits = 0;
+				$db = new $databaseClassName();
+				$db->query('SELECT credits_left FROM account_has_credits ' .
+						'WHERE account_id = '.$db->escapeNumber($accountID));
+				if($db->nextRecord())
+				{
+					$credits = $db->getField('credits_left');
+				}
+				
+				$db->query('SELECT time, amount FROM account_donated ' .
+						'WHERE account_id = '.$db->escapeNumber($accountID));
+				$db2 = new SmrMySqlDatabase();
+				while($db->nextRecord())
+					$db2->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$this->getAccountID().', ' . $db->getField('time') . ' , '.$db->getField('amount').')');
+				
+				
+				$db = new $databaseClassName();
+				$db->query('SELECT permission_id FROM account_has_permission ' .
+						'WHERE account_id = '.$db->escapeNumber($accountID));
+				$db2 = new SmrMySqlDatabase();
+				while($db->nextRecord())
+					$db2->query('INSERT IGNORE INTO account_has_permission (account_id, permission_id) VALUES ('.$this->getAccountID().', ' . $db->getField('permission_id').')');
+				
+				$this->db->query('UPDATE account SET '.$databaseInfo['Column'].' = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+				$this->increaseSmrCredits($credits);
+				$this->oldAccountIDs[$databaseClassName] = $accountID;
+				
+				// register session
+				SmrSession::$old_account_id = $db->getField('account_id');
+				
+				$result = true;
 			}
-			
-			$db->query('SELECT time, amount FROM account_donated ' .
-					'WHERE account_id = '.$db->escapeNumber($accountID));
-			$db2 = new SmrMySqlDatabase();
-			while($db->nextRecord())
-				$db2->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$this->getAccountID().', ' . $db->getField('time') . ' , '.$db->getField('amount').')');
-			
-			
-			$db = new Smr12MySqlDatabase();
-			$db->query('SELECT permission_id FROM account_has_permission ' .
-					'WHERE account_id = '.$db->escapeNumber($accountID));
-			$db2 = new SmrMySqlDatabase();
-			while($db->nextRecord())
-				$db2->query('INSERT IGNORE INTO account_has_permission (account_id, permission_id) VALUES ('.$this->getAccountID().', ' . $db->getField('permission_id').')');
-			
-			$this->db->query('UPDATE account SET old_account_id = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-			$this->increaseSmrCredits($credits);
-			$this->oldAccountID = $accountID;
 		}
+		$db = new SmrMySqlDatabase();
+		release_lock();exit;
+		return $result;
+	}
+	
+	public static function upgradeAccount($login,$pass)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT * FROM account WHERE login = '.$db->escapeString($login).' LIMIT 1');
+		if($db->nextRecord())
+			return false;
+		foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $databaseInfo)
+		{
+			require_once(get_file_loc($databaseClassName.'.class.inc'));
+			$db2 = new $databaseClassName();
+			$db2->query('SELECT * FROM account ' .
+					   'WHERE login = '.$db->escapeString($login).' AND ' .
+							 'password = '.$db->escapeString($pass));
+			if ($db2->nextRecord())
+			{
+				$db = new SmrMySqlDatabase();
+				$db->query('SELECT * FROM account WHERE '.$databaseInfo['Column'].' = '.$db->escapeString($db2->getField('account_id')).' LIMIT 1');
+				if($db->nextRecord())
+				{
+					$msg = 'The specified old account is already linked to a 1.6 account.';
+					header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+				}
+		
+				$db3 = new $databaseClassName();
+				$db3->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
+					'WHERE account_id = '.$db->getField('account_id').' LIMIT 1');
+				if ($db3->nextRecord())
+				{
+					$expire_time = $db3->getField('expires');
+					if(!($expire_time > 0 && $expire_time < TIME))
+					{
+						// save session (incase we forward)
+						SmrSession::update();
+						if ($db3->getField('reason') == 'Invalid eMail')
+						{
+							header('Location: '.URL.'/email.php');
+							exit;
+						}
+						else
+						{
+							header('Location: '.URL.'/disabled.php');
+							exit;
+						}
+					}
+				}
+
+				$db = new SmrMySqlDatabase();
+				$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, icq, validation_code, veteran, last_login, logging, offset,images,fontsize,referral_id,hof_name,validated) VALUES(' .
+							$db->escape_string($db2->getField('login')) . ', ' . $db->escape_string(md5($db2->getField('password'))) . ', ' . $db->escape_string($db2->getField('email')) . ', ' .
+							$db->escape_string($db2->getField('first_name')) . ', ' . $db->escape_string($db2->getField('last_name')) . ', ' .
+							$db->escape_string($db2->getField('address')) . ', ' . $db->escape_string($db2->getField('city')) . ', ' . $db->escape_string($db2->getField('postal_code')) . ', ' .
+							$db->escape_string($db2->getField('country_code')) . ', ' . $db->escape_string($db2->getField('icq')) . ', ' . $db->escape_string($db2->getField('validation_code')) . ',' .
+							$db->escape_string($db2->getField('veteran')) . ',' . $db->escape_string($db2->getField('logging')) . ',' . TIME . ',' .$db->escapeNumber($db2->getField('offset')).',' .
+							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
+				
+				// creates a new user account object
+				$account =& SmrAccount::getAccountByName($db2->getField('login'));
+				$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
+				// insert into the account stats table
+				$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.$account->getAccountID().', ' . $db->escape_string($account->login) . ')');
+				SmrSession::$account_id = $account->getAccountID();
+				
+				$account->linkAccount($login,$pass);
+				$db = new SmrMySqlDatabase();
+				return true;
+			}
+		}
+		$db = new SmrMySqlDatabase();
+		return false;
 	}
 	
 	public function getLogin()

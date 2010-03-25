@@ -21,6 +21,7 @@ function handleException(Exception $e)
 	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
 		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
 		'USING_AJAX: '.(defined('USING_AJAX')?var_export(USING_AJAX,true):'undefined');
+		
 	try
 	{
 		if(function_exists('release_lock'))
