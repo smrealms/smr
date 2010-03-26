@@ -136,9 +136,12 @@ abstract class AbstractSmrAccount
 			$this->defaultCSSEnabled	= $this->db->getBoolean('default_css_enabled');
 			$this->centerGalaxyMapOnPlayer	= $this->db->getBoolean('center_galaxy_map_on_player');
 			
-			foreach(Globals::getCompatibilityDatabases('Game') as $databaseName => $databaseInfo)
+			if(USE_COMPATIBILITY)
 			{
-				$this->oldAccountIDs[$databaseName] = $row[$databaseInfo['Column']];
+				foreach(Globals::getCompatibilityDatabases('Game') as $databaseName => $databaseInfo)
+				{
+					$this->oldAccountIDs[$databaseName] = $row[$databaseInfo['Column']];
+				}
 			}
 			
 			$this->referrerID		= $row['referral_id'];
