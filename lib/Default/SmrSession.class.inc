@@ -120,7 +120,7 @@ class SmrSession
 		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate)
 		{
-			self::$db->query('UPDATE active_session SET account_id='.self::$account_id.',old_account_id='.self::$old_account_id.',game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
+			self::$db->query('UPDATE active_session SET account_id='.self::$account_id.',old_account_id='.(is_numeric(self::$old_account_id)?self::$old_account_id:0).',game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
 					',last_sn='.self::$db->escapeString(self::$SN).
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
