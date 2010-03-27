@@ -90,17 +90,18 @@ if(USE_COMPATIBILITY)
 			while ($db->nextRecord())
 			{
 				$game_id = $db->getField('game_id');
-				$games['Play'][$game_id]['ID'] = $game_id;
-				$games['Play'][$game_id]['Name'] = $db->getField('game_name');
-				$games['Play'][$game_id]['Type'] = $db->getField('game_type');
-				$games['Play'][$game_id]['EndDate'] = $db->getField('end_date');
-				$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
-				$games['Play'][$game_id]['Type'] = $db->getField('game_type');
+				$index = $databaseClassName.$game_id;
+				$games['Play'][$index]['ID'] = $game_id;
+				$games['Play'][$index]['Name'] = $db->getField('game_name');
+				$games['Play'][$index]['Type'] = $db->getField('game_type');
+				$games['Play'][$index]['EndDate'] = $db->getField('end_date');
+				$games['Play'][$index]['Speed'] = $db->getField('game_speed');
+				$games['Play'][$index]['Type'] = $db->getField('game_type');
 				
 				$container = array();
 				$container['game_id'] = $game_id;
 				$container['url'] = 'game_play_processing.php';
-				$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
+				$games['Play'][$index]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
 		
 				// creates a new player object
 				$curr_player = new SMR_PLAYER(SmrSession::$old_account_id, $game_id);
@@ -118,7 +119,7 @@ if(USE_COMPATIBILITY)
 							'WHERE last_active >= ' . (TIME - 600) . ' AND ' .
 								  'game_id = '.$game_id);
 				$db2->nextRecord();
-				$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
+				$games['Play'][$index]['NumberPlaying'] = $db2->getField('num_playing');
 		
 				// create a container that will hold next url and additional variables.
 		
@@ -126,10 +127,10 @@ if(USE_COMPATIBILITY)
 				$container_game['url'] = 'skeleton.php';
 				$container_game['body'] = 'game_stats.php';
 				$container_game['game_id'] = $game_id;
-				$games['Play'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container_game);
-				$games['Play'][$game_id]['Maintenance'] = $curr_player->turns;
-				$games['Play'][$game_id]['LastActive'] = format_time(TIME-$curr_player->last_active,TRUE);
-				$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->last_active,TRUE);
+				$games['Play'][$index]['GameStatsLink'] = SmrSession::get_new_href($container_game);
+				$games['Play'][$index]['Maintenance'] = $curr_player->turns;
+				$games['Play'][$index]['LastActive'] = format_time(TIME-$curr_player->last_active,TRUE);
+				$games['Play'][$index]['LastMovement'] = format_time(TIME-$curr_player->last_active,TRUE);
 		
 			}
 		}
@@ -225,6 +226,7 @@ if(USE_COMPATIBILITY)
 {
 	foreach(Globals::getCompatibilityDatabases('History') as $databaseClassName => $databaseInfo)
 	{
+		require_once(get_file_loc($databaseClassName.'.class.inc'));
 		//Old previous games
 		$historyDB = new $databaseClassName();
 		$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id ' .
@@ -234,25 +236,26 @@ if(USE_COMPATIBILITY)
 			while ($historyDB->nextRecord())
 			{
 				$game_id = $historyDB->getField('game_id');
-				$games['Previous'][$game_id]['ID'] = $game_id;
-				$games['Previous'][$game_id]['Name'] = $historyDB->getField('game_name');
-				$games['Previous'][$game_id]['StartDate'] = date(DATE_DATE_SHORT,$historyDB->getField('start_date'));
-				$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
-				$games['Previous'][$game_id]['Speed'] = $historyDB->getField('speed');
+				$index = $databaseClassName.$game_id;
+				$games['Previous'][$index]['ID'] = $game_id;
+				$games['Previous'][$index]['Name'] = $historyDB->getField('game_name');
+				$games['Previous'][$index]['StartDate'] = date(DATE_DATE_SHORT,$historyDB->getField('start_date'));
+				$games['Previous'][$index]['EndDate'] = date(DATE_DATE_SHORT,$historyDB->getField('end_date'));
+				$games['Previous'][$index]['Speed'] = $historyDB->getField('speed');
 				// create a container that will hold next url and additional variables.
 				$container = array();
 				$container['game_id'] = $game_id;
 				$container['url'] = 'skeleton.php';
-				$container['game_name'] = $games['Previous'][$game_id]['Name'];
+				$container['game_name'] = $games['Previous'][$index]['Name'];
 				$container['body'] = 'games_previous.php';
 		
-				$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameLink'] = SmrSession::get_new_href($container);
 				$container['body'] = 'hall_of_fame_new.php';
-				$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
 				$container['body'] = 'games_previous_news.php';
-				$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
 				$container['body'] = 'games_previous_detail.php';
-				$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
 			}
 		}
 	}
