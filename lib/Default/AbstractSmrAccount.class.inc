@@ -618,12 +618,12 @@ abstract class AbstractSmrAccount
 					$db2->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$this->getAccountID().', ' . $db->getField('time') . ' , '.$db->getField('amount').')');
 				
 				
-				$db = new $databaseClassName();
-				$db->query('SELECT permission_id FROM account_has_permission ' .
-						'WHERE account_id = '.$db->escapeNumber($accountID));
-				$db2 = new SmrMySqlDatabase();
-				while($db->nextRecord())
-					$db2->query('INSERT IGNORE INTO account_has_permission (account_id, permission_id) VALUES ('.$this->getAccountID().', ' . $db->getField('permission_id').')');
+//				$db = new $databaseClassName();
+//				$db->query('SELECT permission_id FROM account_has_permission ' .
+//						'WHERE account_id = '.$db->escapeNumber($accountID));
+//				$db2 = new SmrMySqlDatabase();
+//				while($db->nextRecord())
+//					$db2->query('INSERT IGNORE INTO account_has_permission (account_id, permission_id) VALUES ('.$this->getAccountID().', ' . $db->getField('permission_id').')');
 				
 				$this->db->query('UPDATE account SET '.$databaseInfo['Column'].' = ' . $this->db->escapeNumber($accountID) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 				$this->increaseSmrCredits($credits);
@@ -692,7 +692,7 @@ abstract class AbstractSmrAccount
 							$db->escape_string($db2->getField('first_name')) . ', ' . $db->escape_string($db2->getField('last_name')) . ', ' .
 							$db->escape_string($db2->getField('address')) . ', ' . $db->escape_string($db2->getField('city')) . ', ' . $db->escape_string($db2->getField('postal_code')) . ', ' .
 							$db->escape_string($db2->getField('country_code')) . ', ' . $db->escape_string($db2->getField('icq')) . ', ' . $db->escape_string($db2->getField('validation_code')) . ',' .
-							$db->escape_string($db2->getField('veteran')) . ',' . $db->escape_string($db2->getField('logging')) . ',' . TIME . ',' .$db->escapeNumber($db2->getField('offset')).',' .
+							$db->escape_string($db2->getField('veteran')) . ',' . $db->escapeString($db2->getField('logging')) . ',' . TIME . ',' .$db->escapeNumber($db2->getField('offset')).',' .
 							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')+20).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
 				
 				// creates a new user account object
