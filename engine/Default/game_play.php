@@ -72,7 +72,7 @@ if ($db->getNumRows() > 0)
 }
 
 // CLASSIC COMPATIBILITY
-if(USE_COMPATIBILITY)
+if(false&&USE_COMPATIBILITY)
 {
 	foreach(Globals::getCompatibilityDatabases('Game') as $databaseClassName => $databaseInfo)
 	{
