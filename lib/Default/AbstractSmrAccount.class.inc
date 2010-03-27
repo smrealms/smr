@@ -630,7 +630,7 @@ abstract class AbstractSmrAccount
 				$this->oldAccountIDs[$databaseClassName] = $accountID;
 				
 				// register session
-				SmrSession::$old_account_id = $db->getField('account_id');
+				SmrSession::$old_account_id = $accountID;
 				
 				$result = true;
 			}
