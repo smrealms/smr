@@ -137,7 +137,7 @@ function create_combat_log_menue()
 
 	$container = create_container('skeleton.php','combat_log_viewer.php');
 	$menuItems = array();
-
+	
 	$container['action'] = 0;
 	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Personal');
 	$container['action'] = 1;
@@ -395,12 +395,16 @@ function create_bar_menue()
 					array('Link'=>Globals::getBlackjackHREF(),'Text'=>'BlackJack')));
 }
 
-function create_news_menue(&$template,$gameID)
+function create_news_menue(&$template)
 {
-	$template->assign('MenuItems', array(
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$gameID))),'Text'=>'Read Current News'),
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php',array('GameID'=>$gameID))),'Text'=>'Read Latest News'),
-					array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$gameID))),'Text'=>'Advanced News')));
+	global $var;
+	$menuItems = array();
+	if(SmrSession::$game_id==$var['GameID'])
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Current News');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Latest News');
+	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$var['GameID']))),'Text'=>'Advanced News');
+					
+	$template->assign('MenuItems', $menuItems);
 }
 
 function create_nav_menue(&$template, &$player)
