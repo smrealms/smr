@@ -21,14 +21,13 @@ if($_REQUEST['to_email']=='*')
 	$mail->AddReplyTo('newsletter@smrealms.de', 'SMR Support');
 	
 	$db->query('SELECT newsletter_id, newsletter FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-	if ($db->nextRecord()) {
-	
+	if ($db->nextRecord())
+	{
 		$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
 		$mail->Body    = $db->getField('newsletter');
 	
 		// attach footer
 		$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
-	
 	}
 	
 	$mail->WordWrap = 72;
@@ -37,45 +36,40 @@ if($_REQUEST['to_email']=='*')
 	$i = 1;
 	$total = 0;
 	
-	$db->query('SELECT account_id, login, email, first_name, last_name FROM account WHERE account_id >= '.$i.' AND validated = \'TRUE\' ORDER BY account_id');
+	$db->query('SELECT account_id, email, first_name, last_name FROM newsletter_accounts WHERE account_id >= '.$i.' ORDER BY account_id');
 	while ($db->nextRecord())
 	{
-//	$db->query('SELECT account_id, login, email, first_name, last_name FROM account WHERE account_id >= '.$i.' AND validated = \'TRUE\' AND account_id = 2');
-//	if ($db->nextRecord())
-//	{
 		// get account data
 		$account_id	= $db->getField('account_id');
 		$to_email	= $db->getField('email');
 		$to_name	= $db->getField('first_name') . ' ' . $db->getField('last_name');
 	
 		// debug output
-		$PHP_OUTPUT.=($account_id.'. Preparing mail for '.$to_name.' <'.$to_email.'>... ');
+		echo $account_id.'. Preparing mail for '.$to_name.' <'.$to_email.'>... ';
 	
 		// skip newsletter if account is closed.
 		$db2->query('SELECT account_id FROM account_is_closed WHERE account_id = '.$account_id);
 		if ($db2->getNumRows() > 0)
 		{
-	
 			// debug output
-			$PHP_OUTPUT.=('skipped.'.EOL);
+			echo 'skipped.'.EOL;
 	
 			// go on with next account
 			continue;
-	
 		}
 	
 		// set a bounce address we can process later
 		$mail->From = 'bounce_' . $account_id . '@smrealms.de';
 		$mail->AddAddress($to_email, $to_name);
 	
-		if(!$mail->Send()) {
-	
-			$PHP_OUTPUT.=('error.'.EOL . $mail->ErrorInfo);
+		if(!$mail->Send())
+		{
+			echo 'error.'.EOL . $mail->ErrorInfo;
 			$mail->SmtpClose();
 			exit;
-	
-		} else
-			$PHP_OUTPUT.=('sent.'.EOL);
+		}
+		else
+			echo 'sent.'.EOL;
 	
 		$total++;
 	
@@ -88,8 +82,7 @@ if($_REQUEST['to_email']=='*')
 	
 	$mail->SmtpClose();
 	
-	$PHP_OUTPUT.=('Total '.$total.' mails sent.'.EOL);
-	echo $PHP_OUTPUT;
+	echo 'Total '.$total.' mails sent.'.EOL;
 	release_lock();
 	exit();
 }
@@ -103,12 +96,12 @@ else
 	
 	$mail->AddReplyTo('support@smrealms.de', 'SMR Support');
 	
+	$db= new SmrMySqlDatabase();
 	$db->query('SELECT newsletter_id, newsletter FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-	if ($db->nextRecord()) {
-	
+	if ($db->nextRecord())
+	{
 		$mail->Subject  = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
 		$mail->Body     = $db->getField('newsletter');
-	
 	}
 	
 	$mail->WordWrap = 72;
@@ -117,6 +110,6 @@ else
 	$mail->SmtpClose();
 }
 
-forward(create_container('skeleton.php', 'game_play.php'))
+forward(create_container('skeleton.php', 'newsletter_send.php'))
 
 ?>
