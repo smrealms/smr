@@ -575,7 +575,12 @@ abstract class AbstractSmrAccount
 	
 	public function hasAllOldAccountIDs()
 	{
-		return count($this->getOldAccountIDs())==count(Globals::getCompatibilityDatabases('Game'));
+		foreach($this->getOldAccountIDs() as $oldAccountID)
+		{
+			if($oldAccountID==0)
+				return false;
+		}
+		return true;
 	}
 	
 	public function linkAccount($login,$pass)
