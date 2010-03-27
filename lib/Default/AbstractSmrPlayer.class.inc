@@ -1006,13 +1006,14 @@ abstract class AbstractSmrPlayer
 			throw new Exception('Trying to take negative turns.');
 		$take = ceil($take);
 		$new_maint = $this->getTurns() - $take;
+		$newbiesTaken = min($this->getNewbieTurns(),$noob);
 		$new_noob = $this->getNewbieTurns() - $noob;
 		
 		if(!has_beta_privilege('No SC Loss'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
 		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'));
 		$this->increaseHOF($take,array('Movement','Turns Used','Total'));
-		$this->increaseHOF($noob,array('Movement','Turns Used','Newbie'));
+		$this->increaseHOF($newbiesTaken,array('Movement','Turns Used','Newbie'));
 	}
 	
 	public function giveTurns($give, $noob = 0,$updateLastActive = false)
