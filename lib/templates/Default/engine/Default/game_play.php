@@ -40,7 +40,7 @@ if(isset($Games['Play']))
 				<td><?php echo $Game['NumberPlaying']; ?></td>
 				<td><?php echo $Game['LastActive']; ?></td>
 				<td><?php echo $Game['LastMovement']; ?></td>
-				<td><?php echo $Game['EndDate']; ?></td>
+				<td class="noWrap"><?php echo $Game['EndDate']; ?></td>
 				<td><?php echo $Game['Type']; ?></td>
 				<td><?php echo $Game['Speed']; ?></td>
 			</tr><?php
@@ -86,8 +86,8 @@ if(isset($Games['Join']))
 					<div class="buttonA"><a class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>">&nbsp;<?php if(TIME < $Game['StartDate']) {?>View Info<?php }else{ ?>Join Game<?php } ?>&nbsp;</a></div>
 				</td>
 				<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
-				<td><?php echo $Game['StartDate']; ?></td>
-				<td><?php echo $Game['EndDate']; ?></td>
+				<td class="noWrap"><?php echo $Game['StartDate']; ?></td>
+				<td class="noWrap"><?php echo $Game['EndDate']; ?></td>
 				<td><?php echo $Game['MaxPlayers']; ?></td>
 				<td><?php echo $Game['Type']; ?></td>
 				<td><?php echo $Game['Speed']; ?></td>

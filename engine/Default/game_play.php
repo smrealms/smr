@@ -1,6 +1,4 @@
 <?php
-require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
-
 $template->assign('PageTopic','Play Game');
 
 if(isset($var['errorMsg']))
@@ -27,7 +25,7 @@ if ($db->getNumRows() > 0)
 		$games['Play'][$game_id]['ID'] = $game_id;
 		$games['Play'][$game_id]['Name'] = $db->getField('game_name');
 		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
-		$games['Play'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$db->getField('end_date'));
+		$games['Play'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('end_date'));
 		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
 		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
 		
@@ -170,8 +168,8 @@ if ($db->getNumRows() > 0)
 		$game_id = $db->getField('game_id');
 		$games['Join'][$game_id]['ID'] = $game_id;
 		$games['Join'][$game_id]['Name'] = $db->getField('game_name');
-		$games['Join'][$game_id]['StartDate'] = date(DATE_DATE_SHORT,$db->getField('start_date'));
-		$games['Join'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$db->getField('end_date'));
+		$games['Join'][$game_id]['StartDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('start_date'));
+		$games['Join'][$game_id]['EndDate'] = date(DATE_FULL_SHORT_SPLIT,$db->getField('end_date'));
 		$games['Join'][$game_id]['MaxPlayers'] = $db->getField('max_players');
 		$games['Join'][$game_id]['Type'] = $db->getField('game_type');
 		$games['Join'][$game_id]['Speed'] = $db->getField('game_speed');
