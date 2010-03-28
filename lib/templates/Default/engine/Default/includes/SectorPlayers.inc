@@ -37,6 +37,10 @@
 								else
 								{
 									echo $Ship->getName();
+								}
+								if($Ship->isCloaked())
+								{
+									?> <span class="red">[Cloaked]</span><?php
 								} ?>
 							</td>
 							<td class="shrink center noWrap"><?php

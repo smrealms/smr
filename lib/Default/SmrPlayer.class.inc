@@ -1837,26 +1837,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		return 'HIGH';
 	}
 	
-	public function canSeeAny(array $otherPlayerArray)
-	{
-		$canSee=false;
-		foreach($otherPlayerArray as $otherPlayer)
-		{
-			if($this->canSee($otherPlayer))
-				$canSee = true;
-		}
-		return $canSee;
-	}
-	
-	public function canSee(AbstractSmrPlayer $otherPlayer)
-	{
-		if($this->getLevelID()>$otherPlayer->getLevelID())
-			return true;
-		if($otherPlayer->getShip()->isCloaked())
-			return false;
-		return true;
-	}
-	
 	public function update()
 	{
 		$this->save();

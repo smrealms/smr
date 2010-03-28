@@ -1057,6 +1057,28 @@ abstract class AbstractSmrPlayer
 		$this->setLastCPLAction(TIME);
 	}
 	
+	public function canSeeAny(array $otherPlayerArray)
+	{
+		$canSee=false;
+		foreach($otherPlayerArray as $otherPlayer)
+		{
+			if($this->canSee($otherPlayer))
+				$canSee = true;
+		}
+		return $canSee;
+	}
+	
+	public function canSee(AbstractSmrPlayer $otherPlayer)
+	{
+		if($this->sameAlliance($otherPlayer))
+			return true;
+		if($this->getLevelID()>$otherPlayer->getLevelID())
+			return true;
+		if($otherPlayer->getShip()->isCloaked())
+			return false;
+		return true;
+	}
+	
 	public function sameAlliance(AbstractSmrPlayer $otherPlayer)
 	{
 		return $this->equals($otherPlayer) || ($this->hasAlliance()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
