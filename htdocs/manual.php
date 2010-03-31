@@ -7,7 +7,7 @@ try
 	require_once(ENGINE . 'Default/help.inc');
 	
 	$topic_id = $_SERVER['QUERY_STRING'];
-	if (empty($topic_id))
+	if (empty($topic_id)||!is_numeric($topic_id))
 		$topic_id = 1;
 	
 	echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
