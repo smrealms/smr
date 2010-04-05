@@ -2085,7 +2085,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return SmrSession::get_new_href($container);
 	}
 	
-	public function equals(AbstractSmrPlayer $otherPlayer)
+	public function equals(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $otherPlayer!==null&&$this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
 	}

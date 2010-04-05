@@ -28,7 +28,7 @@ class Council
 		{
 			self::initialiseDatabase();
 			self::$RACE_COUNCIL[$gameID][$raceID] = array();
-			self::$RACE_PRESIDENTS[$gameID] = false;
+			self::$RACE_PRESIDENTS[$gameID][$raceID] = false;
 			
 			$i=0;
 			self::$db->query('SELECT account_id,alignment FROM player ' .
