@@ -133,7 +133,7 @@ class SmrPort
 			$this->armour = 0;
 			$this->reinforceTime = 0;
 			$this->attackStarted = 0;
-			$this->raceID = 0;
+			$this->raceID = 1;
 			$this->level = 0;
 			$this->credits = 0;
 			$this->upgrade = 0;
