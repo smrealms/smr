@@ -3,11 +3,12 @@
 if ($account->getTotalSmrCredits() == 0)
 	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 
-if (isset($_REQUEST['action'])) $action = $_REQUEST['action'];
+if (isset($_REQUEST['action'])) SmrSession::updateVar('action',$_REQUEST['action']);
+$action = $var['action'];
 if ($action == 'Include HTML (2 SMR Credits)') $html = TRUE;
 elseif (isset($var['html'])) $html = $var['html'];
-if (isset($_REQUEST['ship_name'])) $name = $_REQUEST['ship_name'];
-elseif (isset($var['ship_name'])) $name = $var['ship_name'];
+if (isset($_REQUEST['ship_name'])) SmrSession::updateVar('ship_name',$_REQUEST['ship_name']);
+$name = $var['ship_name'];
 $done = $var['done'];
 $continue = $_REQUEST['continue'];
 if (empty($html)) $continue = TRUE;
@@ -49,9 +50,9 @@ if ($action == 'Paint a logo (3 SMR Credits)')
 
 if ($action == 'Include HTML (2 SMR Credits)' && !$done)
 {
-	$PHP_OUTPUT.=('<div align=center>If you ship is found to use HTML inappropriatly you may be banned.');
-	$PHP_OUTPUT.=('  Innappropriate HTML includes but is not limited to something that can either cause display errors or cause functionallity of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />');
-	$PHP_OUTPUT.=('Preview<br />' . stripslashes($name) . '<br /></div>');
+	$PHP_OUTPUT.=('<div align=center>If you ship is found to use HTML inappropriately you may be banned.');
+	$PHP_OUTPUT.=('  Inappropriate HTML includes but is not limited to something that can either cause display errors or cause functionallity of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />');
+	$PHP_OUTPUT.=('Preview:<br />' . stripslashes($name) . '<br /></div>');
 	$PHP_OUTPUT.=('Are you sure you want to continue?<br />');
 	$container = array();
 	$container['url'] = 'skeleton.php';
@@ -62,7 +63,7 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done)
 	$container['done'] = TRUE;
 	$container['ship_name'] = stripslashes($name);
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('Yes:<input type="radio" name="continue" value="TRUE"><br />No:<input type=radio name=continue value=FALSE><br />');
+	$PHP_OUTPUT.=('Yes:<input type="radio" name="continue" value="TRUE"><br />No:<input type="radio" name="continue" value="FALSE"><br />');
 	$PHP_OUTPUT.=create_submit('Continue');
 	$PHP_OUTPUT.=('</form>');
 }
