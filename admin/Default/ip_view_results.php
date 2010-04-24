@@ -33,7 +33,7 @@ elseif ($type == 'list') {
 		if ($db2->nextRecord())
 			continue;
 		$ip = $db->getField('ip');
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		//$PHP_OUTPUT.=('fi='.$fi.' se='.$se.' th='.$th.' fo='.$fo.' therefore->'.$ip);
 		
@@ -72,7 +72,7 @@ elseif ($type == 'list') {
 	while ($i <= $count) {
 	//for ($i=1;$i <= $count;$i++)
 		$db_ent = array_shift($ip_array);
-		list ($db_ip, $db_id) = split ('[/]', $db_ent);
+		list ($db_ip, $db_id) = preg_split('/[\/]/', $db_ent);
 		$account_id = $db_id;
 		/*if ($last_acc == $account_id && $db_ip == $last_ip) {
 			array_unshift($ip_array, $db_ip);
@@ -84,7 +84,7 @@ elseif ($type == 'list') {
 		if (sizeof($ip_array) > 0) {
 			//get next
 			$next_ent = array_shift($ip_array);
-			list ($next_ip, $next_id) = split ('[/]', $next_ent);
+			list ($next_ip, $next_id) = preg_split('/[\/]/', $next_ent);
 			//put it back
 			array_unshift($ip_array, $next_ent);
 		} else {
@@ -241,7 +241,7 @@ elseif ($type == 'list') {
 	$db->query('SELECT * FROM account_has_ip WHERE account_id = '.$variable.' ORDER BY time');
 	while ($db->nextRecord()) {
 		$ip = $db->getField('ip');
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		$time = $db->getField('time');
 		$host = gethostbyaddr($ip);
@@ -256,7 +256,7 @@ elseif ($type == 'list') {
 	
 } elseif ($type == 'alliance_ips') {
 	
-	list ($alliance, $game) = split ('[/]', $variable);
+	list ($alliance, $game) = preg_split('/[\/]/', $variable);
 	$db->query('SELECT * FROM player WHERE game_id = '.$game.' AND alliance_id = '.$alliance);
 	$list = '(';
 	$a = 1;
@@ -290,7 +290,7 @@ elseif ($type == 'list') {
 		$id = $db->getField('account_id');
 		$time = $db->getField('time');
 		$ip = $db->getField('ip');
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		$host = gethostbyaddr($ip);
 		
@@ -358,7 +358,7 @@ elseif ($type == 'list') {
 			$id = $db->getField('account_id');
 			$time = $db->getField('time');
 			$ip = $db->getField('ip');
-			list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+			list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 			$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 			$host = gethostbyaddr($ip);
 		
@@ -429,7 +429,7 @@ elseif ($type == 'list') {
 			$id = $db->getField('account_id');
 			$time = $db->getField('time');
 			$ip = $db->getField('ip');
-			list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+			list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 			$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 			$host = gethostbyaddr($ip);
 		
@@ -483,7 +483,7 @@ elseif ($type == 'list') {
 		
 } elseif ($type == 'compare') {
 	
-	$p = preg_split ('/[,]+[\s]/', $variable);
+	$p = preg_split('/[,]+[\s]/', $variable);
 
 	$list = '(0,';
 	$a = 1;
@@ -527,7 +527,7 @@ elseif ($type == 'list') {
 		$id = $db->getField('account_id');
 		$time = $db->getField('time');
 		$ip = $db->getField('ip');
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		$host = gethostbyaddr($ip);
 	
@@ -576,7 +576,7 @@ elseif ($type == 'list') {
 	
 } elseif ($type == 'compare_log') {
 	
-	$p = preg_split ('/[,]+[\s]/', $variable);
+	$p = preg_split('/[,]+[\s]/', $variable);
 
 	$list = '(';
 	$a = 1;
@@ -620,7 +620,7 @@ elseif ($type == 'list') {
 		$id = $db->getField('account_id');
 		$time = $db->getField('time');
 		$ip = $db->getField('ip');
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		if ($id == $last_id && $ip == $last_ip)
 			continue;
@@ -688,7 +688,7 @@ elseif ($type == 'list') {
 		$id = $db->getField('account_id');
 		$time = $db->getField('time');
 		$ip = $db->getField('ip');
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		if ($id == $last_id && $ip == $last_ip)
 			continue;
@@ -756,7 +756,7 @@ elseif ($type == 'list') {
 		$id = $db->getField('account_id');
 		$time = $db->getField('time');
 		$ip = $db->getField('ip');
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		if ($id == $last_id && $ip == $last_ip)
 			continue;

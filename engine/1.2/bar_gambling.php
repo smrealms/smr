@@ -145,7 +145,7 @@ if ($action == "lotto") {
 		//find the values of the currently used cards of the deck
 		foreach ($curr_cards as $key => $value) {
 			
-			list($first, $second, $third) = split ("-", $value);
+			list($first, $second, $third) = explode("-", $value);
 			if ($first == "A") $first = 1;
 			elseif ($first == "J") $first = 11;
 			elseif ($first == "Q") $first = 12;
@@ -196,7 +196,7 @@ if ($action == "lotto") {
 		foreach ($deck as $key => $card_val) {
 			
 			//get total value of cards
-			list($first, $second) = split ("-", $card_val);
+			list($first, $second) = explode("-", $card_val);
 			if ($first == "A") {
 				$first = 11;
 				$curr_aces += 1;
@@ -224,7 +224,7 @@ if ($action == "lotto") {
 		//only display what the card really is if they want to
 		$card_height = 100;
 		$card_width = 125;
-		list($first, $second) = split ("-", $card);
+		list($first, $second) = explode("-", $card);
 		print("<td>");
 		//lets try and print cards
 		print("<table style=\"border:1px solid green\"><tr><td><table><tr><td valign=top align=left height=$card_height width=$card_width>");

@@ -114,14 +114,14 @@ if ($action == "Include HTML (2 SMR Credits)" && !$done) {
 			}
 			
 		}
-		list ($first, $second) = split ('</marquee>', $name);
+		list ($first, $second) = explode('</marquee>', $name);
 		if ($second != "") {
 			
 			print_error("Sorry no text is allowed to follow a " . htmlentities("</marquee>", ENT_NOQUOTES) . " tag.");
 			return;
 			
 		}
-		list ($first, $second) = split ('<marquee>', $name);
+		list ($first, $second) = explode('<marquee>', $name);
 		if ($first != "" && $second != "") {
 			
 			print_error("Sorry no text is allowed to come before a " . htmlentities("<marquee>", ENT_NOQUOTES) . " tag.");

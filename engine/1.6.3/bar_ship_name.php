@@ -87,11 +87,11 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 				else create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES) . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES) . ' tag which is not needed.');
 			}
 		}
-		list ($first, $second) = split ('</marquee>', $name);
+		list ($first, $second) = explode('</marquee>', $name);
 		if ($second != '')
 			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
 		
-		list ($first, $second) = split ('<marquee>', $name);
+		list ($first, $second) = explode('<marquee>', $name);
 		if ($first != '' && $second != '')
 			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES) . ' tag.');
 		//lets try to see if they closed all tages

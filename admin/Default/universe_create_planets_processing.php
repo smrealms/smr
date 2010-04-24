@@ -17,7 +17,7 @@ $db2 = new SmrMySqlDatabase();
 $db2->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
 $db2->nextRecord();
 $date = $db2->getField('start_date');
-list ($year, $month, $day) = split('-', $date);
+list ($year, $month, $day) = explode('-', $date);
 // adjust the time so it is game start time
 $time = mktime(0,0,0,$month,$day,$year);
 reset($planet);

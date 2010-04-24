@@ -174,7 +174,7 @@ class SMR_ACCOUNT extends SmrMySqlDatabase {
 
 		}
 
-		list($fi,$se,$th,$fo,$crap) = split ('[.\s,]', $curr_ip, 5);
+		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $curr_ip, 5);
 		if ($curr_ip != "unknown" && $curr_ip != "unknown..." && $curr_ip != "unknown, unknown") {
 			$curr_ip = "$fi.$se.$th.$fo";
 			$host = gethostbyaddr($curr_ip);

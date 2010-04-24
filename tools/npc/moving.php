@@ -3,11 +3,11 @@
 function follow_course($account_id, $game_id, $course) {
 
 	// example for the course: 50-49-48-33-18-17-16-1
-	$sectors = preg_split ('/-/', $course);
+	$sectors = explode('-', $course);
 
 	// get first sector from the list
 	$target_sector = array_shift($sectors);
-	log_message($account_id, 'I follow a course. Next sector: $target_sector');
+	log_message($account_id, 'I follow a course. Next sector: '.$target_sector);
 
 	// and move there
 	if (move_to_sector($account_id, $game_id, $target_sector)) {

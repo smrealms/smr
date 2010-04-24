@@ -19,7 +19,7 @@ function category($name, $options, $row) {
 	foreach($options as $print) {
 		
 		$i++;
-		list($one, $two) = split (",", $print);
+		list($one, $two) = explode(",", $print);
 		if (isset($two)) print("<input type=hidden name=mod[] value=\"$print\">");
 		print_submit($one);
 		print("&nbsp;");

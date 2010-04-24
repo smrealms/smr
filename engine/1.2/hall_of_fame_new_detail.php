@@ -12,7 +12,7 @@ if (is_array($mod))
 	foreach($mod as $mod1) {
 
 		if (!stristr($mod1,$action)) continue;
-		list($one, $two) = split (",", $mod1);
+		list($one, $two) = explode(",", $mod1);
 		$row .= $two;
 		break;
 	}

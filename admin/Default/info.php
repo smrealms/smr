@@ -70,7 +70,7 @@ if (!isset($number) && !isset($var['number'])) {
 			//check who they match...first find out the method.
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
 			if ($db2->nextRecord()) $reason = $db2->getField('suspicion');
-			list ($method, $info) = split (':', $reason);
+			list ($method, $info) = explode(':', $reason);
 			if ($method == 'Match') {
 				
 				//this stops loops evetually
@@ -121,7 +121,7 @@ if (!isset($number) && !isset($var['number'])) {
 						$listed[] = $db2->getField('account_id');
 						//get this accs match
 						$reason = $db2->getField('suspicion');
-						list ($method, $info_2) = split (':', $reason);
+						list ($method, $info_2) = explode(':', $reason);
 						if ($method == 'Match') $search[] = $info_2;
 						
 					}

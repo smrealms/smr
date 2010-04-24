@@ -203,7 +203,7 @@ class SmrAccount
 				ip = '.$this->db->escapeString($delete_ip));
 			
 		}
-		list($fi,$se,$th,$fo) = split ('[.\s,]', $curr_ip, 4);
+		list($fi,$se,$th,$fo) = preg_split('/[.\s,]/', $curr_ip, 4);
 		if ($curr_ip != 'unknown' && $curr_ip != 'unknown...' && $curr_ip != 'unknown, unknown')
 		{
 			$curr_ip = $fi.'.'.$se.'.'.$th.'.'.$fo;

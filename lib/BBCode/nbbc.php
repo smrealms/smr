@@ -1335,7 +1335,7 @@ if (isset($insert_array[$matches[1]]))
 $value = @$insert_array[$matches[1]];
 else $value = @$default_array[$matches[1]];
 if (strlen(@$matches[2])) {
-foreach (split(".", substr($matches[2], 1)) as $index) {
+foreach (preg_split("/./", substr($matches[2], 1)) as $index) {
 if (is_array($value))
 $value = @$value[$index];
 else if (is_object($value)) {
