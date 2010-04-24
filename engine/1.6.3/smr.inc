@@ -344,12 +344,12 @@ function word_filter($string) {
 		$words = array();
 		while($db->nextRecord()) {
 			$row = $db->getRow();
-			$words[] = array('word_value' => $row['word_value'],'word_replacement'=> $row['word_replacement']);
+			$words[] = array('word_value' => '/'.str_replace('/','\/',$row['word_value']).'/i','word_replacement'=> $row['word_replacement']);
 		}
 	}
 	
 	foreach ($words as $word) {
-		$string = eregi_replace($word['word_value'],$word['word_replacement'],$string);
+		$string = preg_replace($word['word_value'],$word['word_replacement'],$string);
 
 	}
 
