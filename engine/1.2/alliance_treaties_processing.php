@@ -1,4 +1,4 @@
-<?
+<?php
 
 //get the alliances
 if (isset($var['alliance_id'])) $alliance_id_1 = $var['alliance_id'];

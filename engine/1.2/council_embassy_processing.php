@@ -1,4 +1,4 @@
-<?
+<?php
 $action = $_REQUEST['action'];
 $race_id = $var["race_id"];
 $type = strtoupper($action);

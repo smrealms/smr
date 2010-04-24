@@ -1,4 +1,4 @@
-<?
+<?php
 
 // defines the pixel length of bar
 $total_length = 400;

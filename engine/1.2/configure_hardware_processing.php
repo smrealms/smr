@@ -1,4 +1,4 @@
-<?
+<?php
 // Why is this here? Is there a reason?
 // sleep(1);
 if ($var['action'] == 'Enable') {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 include(get_file_loc("council.inc"));
 include(get_file_loc('menue.inc'));

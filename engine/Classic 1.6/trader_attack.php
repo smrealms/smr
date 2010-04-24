@@ -1,4 +1,4 @@
-<?
+<?php
 
 $PHP_OUTPUT.= $var['results'];
 

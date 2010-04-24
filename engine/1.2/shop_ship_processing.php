@@ -1,4 +1,4 @@
-<?
+<?php
 
 $speed		= $var["speed"];
 $cost		= $var["cost"] - $ship->cost / 2;

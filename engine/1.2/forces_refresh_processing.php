@@ -1,4 +1,4 @@
-<?
+<?php
 		require_once(get_file_loc("smr_force.inc"));
 $forces	= new SMR_FORCE($var["owner_id"], $player->sector_id, $player->game_id);
 

@@ -1,4 +1,4 @@
-<?
+<?php
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->alliance_id;
 $thread_index = $var['thread_index'];

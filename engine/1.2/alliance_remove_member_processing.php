@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('smr_alliance.inc'));
 $alliance = new SMR_ALLIANCE($player->alliance_id, SmrSession::$game_id);
 $account_id = $_REQUEST['account_id'];

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $player->alliance_id . ' LIMIT 1');
 $db->next_record();

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $PHP_OUTPUT.=('<p><big><b>Force Results</b></big></p>');
 

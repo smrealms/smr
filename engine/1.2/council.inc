@@ -1,4 +1,4 @@
-<?
+<?php
 
 // determine if we are on this council
 function onCouncil($race_id) {

@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc("smr_history_db.inc"));
 $game_name = $var['game_name'];
 $game_id = $var['game_id'];

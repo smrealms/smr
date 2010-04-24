@@ -1,4 +1,4 @@
-<?
+<?php
 
 $container = array();
 $container["url"] = "skeleton.php";

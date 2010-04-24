@@ -1,4 +1,4 @@
-<?
+<?php
 
 // TODO: Sectors explored, sector visited (Possibly put in current sector)
 if ($var['target_sector'] == $player->sector_id)

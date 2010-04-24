@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($player->alignment >= 100) {
 

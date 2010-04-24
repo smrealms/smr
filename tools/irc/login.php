@@ -1,4 +1,4 @@
-<?
+<?php
 
 function private_msg_login($fp, $rdata) {
 

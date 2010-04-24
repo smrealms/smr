@@ -1,4 +1,4 @@
-<?
+<?php
 
 $receiver = $_REQUEST['receiver'];
 $subject = $_REQUEST['subject'];

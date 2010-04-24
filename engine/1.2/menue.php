@@ -1,4 +1,4 @@
-<?
+<?php
 echo '<span style="color:yellow">' . date('n/j/Y\<b\r /\>g:i:s A') . '</span><br><br>';
 
 $container = array();

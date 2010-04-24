@@ -1,4 +1,4 @@
-<?
+<?php
 
 echo '<div align=center>';
 print_topic('DRINKING');

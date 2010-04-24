@@ -1,4 +1,4 @@
-<?
+<?php
 $db2 = new SmrMySqlDatabase();
 if (isset($var["article"]))
 	$db->query("DELETE FROM galactic_post_article WHERE game_id = $player->game_id AND article_id = $var[id]");

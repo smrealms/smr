@@ -1,4 +1,4 @@
-<?
+<?php
 
 //planet_defender_check.php
 $container = array();

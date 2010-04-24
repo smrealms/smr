@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("READING THE NEWS");
 $container = array();

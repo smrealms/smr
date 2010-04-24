@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("VIEWING APPLICATIONS");
 include(get_file_loc('menue.inc'));

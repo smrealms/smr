@@ -1,4 +1,4 @@
-<?
+<?php
 		require_once(get_file_loc("smr_port.inc"));
 print_topic("PORT RAID");
 print("<font color=red>WARNING WARNING</font> port assault about to commence!!<br>");

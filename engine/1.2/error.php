@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (empty($var["message"]) || $var["message"] == "") $var["message"] = "File not found";
 

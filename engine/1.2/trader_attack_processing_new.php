@@ -1,4 +1,4 @@
-<?
+<?php
 
 // TODO: Cleanup and finalise
 define ('MAX_TURNS', ($player->game_speed * 400));

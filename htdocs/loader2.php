@@ -1,4 +1,4 @@
-<?
+<?php
 try
 {
 error_reporting(0); // turn off error reporting for clasic

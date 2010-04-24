@@ -1,5 +1,5 @@
 #!/usr/bin/php -q
-<?
+<?php
 
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');

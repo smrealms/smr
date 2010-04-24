@@ -1,4 +1,4 @@
-<?
+<?php
 
 //limit 4 per paper...make sure we arent over that
 $db->query("SELECT * FROM galactic_post_paper_content WHERE game_id = $player->game_id AND paper_id = $var[paper_id]");

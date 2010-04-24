@@ -1,4 +1,4 @@
-<?
+<?php
 
 function channel_join($fp, $rdata) {
 

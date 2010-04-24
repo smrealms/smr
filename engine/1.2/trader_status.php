@@ -1,4 +1,4 @@
-<?
+<?php
 print_topic("TRADER STATUS");
 
 include(get_file_loc('menue.inc'));

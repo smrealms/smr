@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("Space Merchant Realms Chat Room Rules");
 

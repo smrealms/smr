@@ -1,4 +1,4 @@
-<?
+<?php
 
 function ctcp_version($fp, $rdata) {
 

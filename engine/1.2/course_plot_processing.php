@@ -1,4 +1,4 @@
-<?
+<?php
 
 // include helper funtions
 include("course_plot.inc");

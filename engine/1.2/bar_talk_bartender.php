@@ -1,4 +1,4 @@
-<?
+<?php
 
 include(get_file_loc('menue.inc'));
 print_bar_menue();

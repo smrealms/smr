@@ -1,4 +1,4 @@
-<?
+<?php
 
 // check if our alignment is high enough
 if ($player->alignment <= -100) {

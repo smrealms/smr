@@ -1,4 +1,4 @@
-<?
+<?php
 
 //if we dont have an alliance we forward to message box
 if ($player->alliance_id == 0) {

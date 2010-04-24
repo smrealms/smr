@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('smr_alliance.inc'));
 print_topic("ALLIANCE VS ALLIANCE RANKINGS");
 

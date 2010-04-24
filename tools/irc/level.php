@@ -1,4 +1,4 @@
-<?
+<?php
 
 function channel_msg_level($fp, $rdata) {
 

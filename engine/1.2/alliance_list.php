@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic('LIST OF ALLIANCES');
 

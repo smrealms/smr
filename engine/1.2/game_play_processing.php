@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('smr_sector.inc'));
 
 // register game_id

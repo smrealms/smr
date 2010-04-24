@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("VIEW FORCES");
 

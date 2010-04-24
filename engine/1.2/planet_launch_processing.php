@@ -1,4 +1,4 @@
-<?
+<?php
 
 $player->land_on_planet = "FALSE";
 $player->update();

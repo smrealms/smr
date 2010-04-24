@@ -1,4 +1,4 @@
-<?
+<?php
 
 		require_once(get_file_loc("smr_force.inc"));
 if (isset($var["owner_id"])) {

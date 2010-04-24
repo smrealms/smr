@@ -1,4 +1,4 @@
-<?
+<?php
 //treaty info
 $types = array	(
 				"assistTrader" => array	(

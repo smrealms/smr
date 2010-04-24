@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (!empty($_REQUEST['validation_code'])) {
 

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $value = strtoupper($_POST["action"]);
 

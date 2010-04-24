@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("SEND MESSAGE");
 
