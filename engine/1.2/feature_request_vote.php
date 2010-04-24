@@ -1,4 +1,4 @@
-<?
+<?php
 
 // for which feature we currently vote?
 $db->query("SELECT * FROM account_votes_for_feature WHERE account_id = ".SmrSession::$old_account_id);

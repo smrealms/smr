@@ -1,4 +1,4 @@
-<?
+<?php
 
 //we need to see if they are actually still on the planet.
 if ($player->land_on_planet == 'FALSE')

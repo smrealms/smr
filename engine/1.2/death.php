@@ -1,4 +1,4 @@
-<?
+<?php
 
 // delete their entry in kills table
 //$db->query("DELETE FROM kills WHERE dead_id = $player->account_id AND game_id = $player->game_id");

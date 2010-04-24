@@ -1,4 +1,4 @@
-<?
+<?php
 
 //variables
 $db2 = new SmrMySqlDatabase();

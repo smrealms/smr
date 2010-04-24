@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db2 = new SmrMySqlDatabase();
 $db->query("SELECT * FROM galactic_post_paper WHERE paper_id = $var[id] AND game_id = $player->game_id");

@@ -1,4 +1,4 @@
-<?
+<?php
 
 // is account validated?
 if ($account->validated == "FALSE")

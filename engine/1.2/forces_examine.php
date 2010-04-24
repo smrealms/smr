@@ -1,4 +1,4 @@
-<?
+<?php
 		require_once(get_file_loc("smr_force.inc"));
 // initialize random generator.
 mt_srand((double)microtime()*1000000);

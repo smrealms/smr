@@ -1,4 +1,4 @@
-<?
+<?php
 
 //now we offer them a drink
 echo '<h2>Drinks</h2><br>

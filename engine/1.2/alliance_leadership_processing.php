@@ -1,4 +1,4 @@
-<?
+<?php
 $leader_id = $_REQUEST['leader_id'];
 $db->query("UPDATE alliance SET leader_id = $leader_id " .
 							"WHERE alliance_id = $player->alliance_id AND " .

@@ -1,4 +1,4 @@
-<?
+<?php
 
 function msg_help($fp, $rdata) {
 

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $rank_id = $account->get_rank();
 

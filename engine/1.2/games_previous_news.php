@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc("smr_history_db.inc"));
 //games_previous_news.php
 if (isset($_REQUEST['min'])) $min = $_REQUEST['min'];

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $under_attack_shields = ($ship->old_hardware[HARWDWARE_SHIELDS] != $ship->hardware[HARDWARE_SHIELDS]);
 $under_attack_armor = ($ship->old_hardware[HARDWARE_ARMOR] != $ship->hardware[HARDWARE_ARMOR]);

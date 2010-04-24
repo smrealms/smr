@@ -1,4 +1,4 @@
-<?
+<?php
 
 print("<p><big><b>Force Results</b></big></p>");
 

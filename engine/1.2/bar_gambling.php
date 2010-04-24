@@ -1,4 +1,4 @@
-<?
+<?php
 
 //bar gambling...
 //get action and vars

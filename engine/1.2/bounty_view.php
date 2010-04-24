@@ -1,4 +1,4 @@
-<?
+<?php
 
 $bounties = 0;
 $id = $var["id"];

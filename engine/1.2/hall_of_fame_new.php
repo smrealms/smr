@@ -1,4 +1,4 @@
-<?
+<?php
 
 function category($name, $options, $row) {
 

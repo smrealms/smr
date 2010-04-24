@@ -1,4 +1,4 @@
-<?
+<?php
 
 print("<div align=center>How much do you want to bet? ");
 if ($player->newbie_turns > 0) {

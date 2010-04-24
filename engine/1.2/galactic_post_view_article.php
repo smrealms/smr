@@ -1,4 +1,4 @@
-<?
+<?php
 print_topic("VIEWING ARTICLES");
 include(get_file_loc('menue.inc'));
 print_galactic_post_menue();

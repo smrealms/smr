@@ -1,4 +1,4 @@
-<?
+<?php
 $db2 = new SmrMySqlDatabase();
 print_topic('SHIP DEALER');
 

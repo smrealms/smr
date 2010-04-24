@@ -1,4 +1,4 @@
-<?
+<?php
 
 function channel_msg_rank($fp, $rdata) {
 

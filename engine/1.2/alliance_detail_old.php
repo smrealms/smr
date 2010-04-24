@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc("smr_history_db.inc"));
 //offer a back button
 $container = array();

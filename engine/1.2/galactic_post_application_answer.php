@@ -1,4 +1,4 @@
-<?
+<?php
 $id = $var["id"];
 $action = $_REQUEST['action'];
 if ($action == "Accept") {

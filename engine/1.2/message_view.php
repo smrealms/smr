@@ -1,4 +1,4 @@
-<?
+<?php
 
 if (!isset($var["folder_id"])) {
 

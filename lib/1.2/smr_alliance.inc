@@ -1,4 +1,4 @@
-<?
+<?php
 
 // include file with database class
 require_once(get_file_loc('SmrMySqlDatabase.class.inc'));

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $num_creds = $account->get_credits();
 

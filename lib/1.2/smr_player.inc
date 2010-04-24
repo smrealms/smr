@@ -1,4 +1,4 @@
-<?
+<?php
 // TODO: Plenty of room for improvement here
 // include file with database class
 //require_once(LIB . "Smr12MySqlDatabase.inc");

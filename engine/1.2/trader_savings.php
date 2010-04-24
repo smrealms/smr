@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("Anonymous accounts for $player->player_name");
 

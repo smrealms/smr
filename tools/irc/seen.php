@@ -1,4 +1,4 @@
-<?
+<?php
 
 function format_time($time) {
 

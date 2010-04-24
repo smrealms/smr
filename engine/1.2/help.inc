@@ -1,4 +1,4 @@
-<?
+<?php
 
 function print_nav($topic_id) {
 

@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("MAKING A PAPER");
 include(get_file_loc('menue.inc'));

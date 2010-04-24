@@ -1,4 +1,4 @@
-<?
+<?php
 $db->query("SELECT timeout FROM vote_links WHERE account_id=" . SmrSession::$old_account_id . " AND link_id=" . $var["link_id"] . " LIMIT 1");
 
 // They get to vote once every 24 hours

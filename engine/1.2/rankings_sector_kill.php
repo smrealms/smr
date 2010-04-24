@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('smr_sector.inc'));
 print_topic("SECTOR DEATH RANKINGS");
 

@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc('smr_sector.inc'));
 		$sector = new SMR_SECTOR($player->sector_id, SmrSession::$game_id, SmrSession::$old_account_id);
 		require_once(get_file_loc("smr_planet.inc"));

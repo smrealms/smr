@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("SEARCH TRADER");
 print("<p>&nbsp;</p>");

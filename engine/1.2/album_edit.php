@@ -1,4 +1,4 @@
-<?
+<?php
 
 create_error('Please use main album edit.');
 

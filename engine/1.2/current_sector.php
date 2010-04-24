@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db->query('SELECT
 sector.galaxy_id as galaxy_id,

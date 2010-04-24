@@ -1,4 +1,4 @@
-<?
+<?php
 
 // check if we have a course plotted
 $db->query('

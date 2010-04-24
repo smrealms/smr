@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($_REQUEST['action'] == "Become a deputy") {
 

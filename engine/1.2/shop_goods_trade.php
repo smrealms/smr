@@ -1,4 +1,4 @@
-<?
+<?php
 		require_once(get_file_loc("smr_port.inc"));
 $player->get_relations();
 print_topic("NEGOTIATE PRICE");

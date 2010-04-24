@@ -1,4 +1,4 @@
-<?
+<?php
 		require_once(get_file_loc("smr_port.inc"));
 $port = new SMR_PORT($player->sector_id, SmrSession::$game_id);
 

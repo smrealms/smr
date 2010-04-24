@@ -1,4 +1,4 @@
-<?
+<?php
 require_once(get_file_loc("smr_history_db.inc"));
 function cust_round($x) {
 	return round($x/10)*10;

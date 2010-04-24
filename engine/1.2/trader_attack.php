@@ -1,4 +1,4 @@
-<?
+<?php
 
 //macro prevent
 print '<script language="javascript">

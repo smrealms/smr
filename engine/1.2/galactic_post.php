@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("GALACTIC POST");
 $db2 = new SmrMySqlDatabase();

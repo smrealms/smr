@@ -1,4 +1,4 @@
-<?
+<?php
 
 //council_menue.inc
 if (onCouncil($race_id))

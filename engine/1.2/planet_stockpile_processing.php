@@ -1,4 +1,4 @@
-<?
+<?php
 		require_once(get_file_loc("smr_planet.inc"));
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))

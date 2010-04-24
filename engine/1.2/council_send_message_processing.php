@@ -1,4 +1,4 @@
-<?
+<?php
 
 $message = nl2br(format_string($_POST["message"], true));
 

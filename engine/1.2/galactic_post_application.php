@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("Galactic Post Application");
 include(get_file_loc('menue.inc'));

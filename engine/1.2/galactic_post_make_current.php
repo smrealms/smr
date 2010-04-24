@@ -1,4 +1,4 @@
-<?
+<?php
 
 //check to see if there is a paper already online
 $db->query("SELECT * FROM galactic_post_online WHERE game_id = $player->game_id");

@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("CURRENT NEWS");
 include(get_file_loc('menue.inc'));

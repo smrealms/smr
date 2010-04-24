@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db2 = new SmrMySqlDatabase();
 $player_id = $_REQUEST['player_id'];

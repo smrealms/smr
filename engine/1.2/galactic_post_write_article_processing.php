@@ -1,4 +1,4 @@
-<?
+<?php
 $title = $_REQUEST['title'];
 $message = $_REQUEST['message'];
 if (empty($title) || empty($message))

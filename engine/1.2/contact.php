@@ -1,4 +1,4 @@
-<?
+<?php
 
 print_topic("Report a Bug");
 

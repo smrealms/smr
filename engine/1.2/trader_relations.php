@@ -1,4 +1,4 @@
-<?
+<?php
 $player->get_relations();
 print_topic("TRADER RELATIONS");
 

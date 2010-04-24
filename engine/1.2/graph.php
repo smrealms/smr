@@ -1,4 +1,4 @@
-<?
+<?php
 
 $val = $_REQUEST['id'];
 

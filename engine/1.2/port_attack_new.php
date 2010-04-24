@@ -1,4 +1,4 @@
-<?
+<?php
 
 $results = $var["results"];
 echo $results[0];

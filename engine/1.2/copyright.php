@@ -1,4 +1,4 @@
-<?
+<?php
 
 print("<table border=\"0\" width=\"100%\">");
 print("<tr>");

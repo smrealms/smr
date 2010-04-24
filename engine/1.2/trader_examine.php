@@ -1,4 +1,4 @@
-<?
+<?php
 
 define('NAP',0);
 define('ASSIST',1);

@@ -1,4 +1,4 @@
-<?
+<?php
 
 //check if we really are a winner
 $db->query("SELECT * FROM player_has_ticket WHERE game_id = $player->game_id AND " . 

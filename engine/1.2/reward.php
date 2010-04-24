@@ -1,4 +1,4 @@
-<?
+<?php
 
 if ($player->game_id == 0)
 	return;

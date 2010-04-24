@@ -1,4 +1,4 @@
-<?
+<?php
 
 $steps = $_REQUEST['steps'];
 $subject = $_REQUEST['subject'];

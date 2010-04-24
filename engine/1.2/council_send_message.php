@@ -1,4 +1,4 @@
-<?
+<?php
 
 $db->query("SELECT * FROM race WHERE race_id = " . $var["race_id"]);
 if ($db->next_record())

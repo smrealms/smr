@@ -1,4 +1,4 @@
-<?
+<?php
 print_topic("ALLIANCE KILL RANKINGS");
 include(get_file_loc('menue.inc'));
 print_ranking_menue(1, 1);

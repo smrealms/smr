@@ -1,4 +1,4 @@
-<?
+<?php
 		require_once(get_file_loc("smr_planet.inc"));
 $planet = new SMR_PLANET($player->sector_id, $player->game_id);
 $action = $_REQUEST['action'];

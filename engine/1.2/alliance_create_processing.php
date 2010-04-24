@@ -1,4 +1,4 @@
-<?
+<?php
 
 // disallow certain ascii chars
 for ($i = 0; $i < strlen($_POST["name"]); $i++)
