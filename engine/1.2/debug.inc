@@ -5,7 +5,7 @@ function print_a( $array, $mode = 0, $show_object_vars = FALSE, $limit = FALSE )
 	$output = '';
 
 	if( is_array( $array ) or is_object( $array ) ) {
-		$pa = &new Print_a_class;
+		$pa = new Print_a_class;
 		$show_object_vars and $pa->show_object_vars = TRUE;
 		if( $limit ) {
 			$pa->limit = $limit;
