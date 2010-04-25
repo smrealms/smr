@@ -7,8 +7,8 @@ $PHP_OUTPUT.=('Please keep in mind that you will lose experience and one turn!<b
 $db->query('SELECT * FROM ship_has_cargo NATURAL JOIN good ' .
 		   'WHERE account_id = '.$player->getAccountID().' AND ' .
 				 'game_id = '.$player->getGameID());
-if ($db->getNumRows()) {
-
+if ($db->getNumRows())
+{
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Good</th>');
@@ -16,8 +16,8 @@ if ($db->getNumRows()) {
 	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$good_id	= $db->getField('good_id');
 		$good_name	= $db->getField('good_name');
 		$amount		= $db->getField('amount');
@@ -25,7 +25,6 @@ if ($db->getNumRows()) {
 		$container = array();
 		$container['url'] = 'cargo_dump_processing.php';
 		$container['good_id'] = $good_id;
-		$container['good_name'] = $good_name;
 
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=('<tr>');
@@ -36,12 +35,10 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
 		$PHP_OUTPUT.=('</form>');
-
 	}
-
 	$PHP_OUTPUT.=('</table>');
-
-} else
+}
+else
 	$PHP_OUTPUT.=('You have no cargo to dump!');
 
 ?>

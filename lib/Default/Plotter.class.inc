@@ -6,7 +6,7 @@ class Plotter
 	{
 	}
 
-	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst,AbstractSmrPlayer $needsToHaveBeenExploredBy=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
+	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
 	{
 		$checkSector =& $sector;
 		$gameID = $sector->getGameID();
@@ -19,7 +19,7 @@ class Plotter
 		for($i=0;$i<=TURNS_WARP_SECTOR_EQUIVALENCE;$i++)
 			$distanceQ[] = array();
 		//Warps first as a slight optimisation due to how visitedSectors is set.
-		if($checkSector->hasWarp())
+		if($checkSector->hasWarp()===true)
 		{
 			$d = new Distance($checkSector->getSectorID());
 			$d->addWarpToPath($checkSector->getWarp());
@@ -27,7 +27,7 @@ class Plotter
 		}
 		foreach ($checkSector->getLinks() as $nextSector)
 		{
-			if($nextSector!=0)
+			if($nextSector!==0)
 			{
 				$visitedSectors[$nextSector] = true;
 				$d = new Distance($checkSector->getSectorID());
@@ -42,7 +42,7 @@ class Plotter
 			if ($sectorsTravelled > $distanceLimit)
 				return $distances;
 			$distanceQ[] = array();
-			if(count($q = array_shift($distanceQ))==0)
+			if(count($q = array_shift($distanceQ))===0)
 			{
 				$maybeWarps++;
 				continue;
@@ -53,18 +53,17 @@ class Plotter
 				$checkSectorID = $distance->getEndSectorId();
 				$visitedSectors[$checkSectorID] = true; // This is here for warps, because they are delayed visits if we set this before the actual visit we'll get sectors marked as visited long before they are actually visited - causes problems when it's quicker to walk to the warp exit than to warp there.
 																// We still need to mark walked sectors as visited before we go to each one otherwise we get a huge number of paths being checked twice (up then left, left then up are essentially the same but if we set up-left as visited only when we actually check it then it gets queued up twice - nasty)
-				if ($checkSectorID >= $lowLimit
-						&& $checkSectorID <= $highLimit)
+				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit)
 				{
 					$checkSector =& SmrSector::getSector($gameID,$checkSectorID);
-					if (($needsToHaveBeenExploredBy===null||$needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID()))&&$checkSector->hasX($x))
+					if (($needsToHaveBeenExploredBy===null||$needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID()))===true&&$checkSector->hasX($x)===true)
 					{
-						if($useFirst)
+						if($useFirst===true)
 							return $distance;
 						$distances[$checkSector->getSectorID()] = $distance;
 					}
 					//Warps first as a slight optimisation due to how visitedSectors is set.
-					if($checkSector->hasWarp())
+					if($checkSector->hasWarp()===true)
 					{
 						if (!isset($visitedSectors[$checkSector->getWarp()]))
 						{
@@ -87,12 +86,36 @@ class Plotter
 				}
 			}
 		}
-		if($useFirst)
+		if($useFirst===true)
 		{
 			$return = false;
 			return $return;
 		}
 		return $distances;
+	}
+	
+	public static function &calculatePortToPortDistances(array &$sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000)
+	{
+		$distances = array();
+		foreach($sectors as &$sec)
+		{
+			if ($sec !== null)
+			{
+				if ($sec->getSectorID() >= $lowLimit && $sec->getSectorID() <= $highLimit)
+				{
+					if ($sec->hasPort()===true)
+					{
+						$distances[$sec->getSectorID()] =& self::findDistanceToOtherPorts($sec, $distanceLimit, $lowLimit, $highLimit);
+					}
+				}
+			}
+		} unset($sec);
+		return $distances;
+	}
+
+	public static function &findDistanceToOtherPorts(SmrSector &$sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000)
+	{
+		return self::findDistanceToX('Port', $sector, false, null, $distanceLimit, $lowLimit, $highLimit, $distanceLimit);
 	}
 }
 
@@ -180,9 +203,9 @@ class Distance
 		return $this->path[0];
 	}
 
-	public function compareTo(Distance $d)
+	public function compareTo(Distance &$d)
 	{
-		if ($this->equals($d))
+		if ($this->equals($d)===true)
 			return 0;
 		else if ($d->getTurns() > $this->getTurns())
 			return -1;

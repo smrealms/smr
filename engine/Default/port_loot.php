@@ -36,13 +36,10 @@ while ($db->nextRecord())
 
    $good_id = $db->getField('good_id');
    $good_name = $db->getField('good_name');
-   $good_class = $db->getField('good_class');
 	$portGood = $port->getGood($good_id);
    if ($portGood['BasePrice'] == 0) continue;
 	if ($player->getAlignment() > -100 && ($good_id == 5 || $good_id == 9 || $good_id == 12)) continue;
    $container['good_id'] = $good_id;
-   $container['good_name'] = $good_name;
-   $container['good_class'] = $good_class;
    $PHP_OUTPUT.=create_echo_form($container);
 
    $PHP_OUTPUT.=('<tr>');

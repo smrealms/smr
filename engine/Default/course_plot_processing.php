@@ -41,6 +41,8 @@ if($path===false)
 	create_error('Unable to plot from '.$start.' to '.$target.'.');
 $container['Distance'] = serialize($path);
 
+$path->removeStart();
+$player->setPlottedCourse($path);
 forward($container);
 
 ?>

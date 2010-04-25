@@ -8,7 +8,6 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 class SmrSector
 {
 	protected static $CACHE_SECTORS = array();
-	protected static $CACHE_ALL_SECTORS = array();
 	protected static $CACHE_GALAXY_SECTORS = array();
 	
 	protected $db;
@@ -50,6 +49,12 @@ class SmrSector
 			return self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()] =& $s;
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
+	}
+	
+	public static function clearCache()
+	{
+		self::$CACHE_GALAXY_SECTORS = array();
+		self::$CACHE_SECTORS = array();
 	}
 	
 	public static function saveSectors()

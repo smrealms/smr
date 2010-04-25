@@ -4,8 +4,7 @@ $port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
 
 // get good name, id, ...
 $good_id = $var['good_id'];
-$good_name = $var['good_name'];
-$good_class = $var['good_class'];
+$good_name = Globals::getGoodName($good_id);
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))
 	create_error('Numbers only please');
