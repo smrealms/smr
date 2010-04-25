@@ -841,7 +841,7 @@ abstract class AbstractSmrShip
 	
 	public function setCargo($goodID,$amount)
 	{
-		if($this->cargo[$goodID] == $amount)
+		if($this->getCargo($goodID) == $amount)
 			return;
 		$this->cargo[$goodID] = $amount;
 		$this->hasChangedCargo = true;

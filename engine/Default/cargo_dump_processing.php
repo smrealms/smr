@@ -3,8 +3,9 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $good_id = $var['good_id'];
-$good_name = $var['good_name'];
-$amount = $_REQUEST['amount'];
+$good_name = Globals::getGoodName($good_id);
+if(isset($_REQUEST['amount'])) SmrSession::updateVar('amount',$_REQUEST['amount']);
+$amount = $var['amount'];
 if (!is_numeric($amount))
 	create_error('Numbers only please');
 
@@ -24,7 +25,12 @@ if ($player->getTurns() < 1)
 require_once('shop_goods.inc');
 
 // get the distance
-$good_distance = get_good_distance($sector, $good_id, 'Buy');
+$x = Globals::getGood($good_id);
+$x['TransactionType'] = 'Sell';
+$good_distance = Plotter::findDistanceToX($x, $sector, true);
+if(is_object($good_distance))
+	$good_distance = $good_distance->getRelativeDistance();
+$good_distance = max(1,$good_distance);
 
 $lost_xp = (round($amount / 30) + 1) * 2 * $good_distance;
 $player->decreaseExperience($lost_xp);

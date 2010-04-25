@@ -164,6 +164,13 @@ class Globals
 		$goods =& self::getGoods();
 		return $goods[$goodID];
 	}
+	public static function getGoodName($goodID)
+	{
+		if($goodID==GOOD_NOTHING)
+			return 'Nothing';
+		$goods =& self::getGoods();
+		return $goods[$goodID]['Name'];
+	}
 	
 	public static function &getHardwareTypes($hardwareTypeID=false)
 	{
