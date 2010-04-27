@@ -16,8 +16,7 @@ if (!is_numeric($bargain_price))
 	create_error('Numbers only please');
 // get good name, id, ...
 $good_id = $var['good_id'];
-$good_name = $var['good_name'];
-$good_class = $var['good_class'];
+$good_name = Globals::getGoodName($good_id);
 
 // do we have enough turns?
 if ($player->getTurns() == 0)
@@ -43,48 +42,25 @@ if ($portGood['TransactionType'] == 'Sell' && $amount > $ship->getCargo($good_id
 
 // check if we have enough room for the thing we are going to buy
 if ($portGood['TransactionType'] == 'Buy' && $amount > $ship->getEmptyHolds())
-	create_error('Scanning your ships indicates you don\'t have enough free cargo bay!');
+	create_error('Scanning your ships indicates you don\'t have enough free cargo bays!');
 
 // check if the guy has enough money
 if ($portGood['TransactionType'] == 'Buy' && $player->getCredits() < $bargain_price)
 	create_error('You don\'t have enough credits!');
 
 // get relations for us (global + personal)
-$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
+$portRelations = Globals::getRaceRelations($player->getGameID(),$port->getRaceID());
 $relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
 
 $container = array();
 
-$good_distance = max(1,get_good_distance($sector,$good_id, $portGood['TransactionType']));
-global $ideal_price;
-if (isset($var['ideal_price']))
-{
-	// transfer this value
-	transfer('ideal_price');
+if (!isset($var['ideal_price'])) SmrSession::updateVar('ideal_price',$port->getIdealPrice($good_id, $portGood['TransactionType'], $amount, $relations));
+transfer('ideal_price');
+$ideal_price = $var['ideal_price'];
 
-	// return this value
-	$ideal_price = $var['ideal_price'];
-
-}
-else
-{
-	$ideal_price = $port->getIdealPrice($good_id, $good_distance, $portGood['TransactionType'], $amount, $relations);
-	$container['ideal_price'] = $ideal_price;
-}
-if (isset($var['offered_price'])) {
-
-	// transfer this value
-	transfer('offered_price');
-
-	// return this value
-	$offered_price = $var['offered_price'];
-
-}
-else
-{
-	$offered_price = $port->getOfferPrice($ideal_price, $relations, $portGood['TransactionType']);
-	$container['offered_price'] = $offered_price;
-}
+if (!isset($var['offered_price'])) SmrSession::updateVar('offered_price',$port->getOfferPrice($ideal_price, $relations, $portGood['TransactionType']));
+transfer('offered_price');
+$offered_price = $var['offered_price'];
 
 // nothing should happen here but just to avoid / by 0
 if ($ideal_price == 0 || $offered_price == 0)
@@ -99,28 +75,9 @@ if (!empty($bargain_price) &&
 	// the url we going to
 	$container['url'] = 'skeleton.php';
 
-	/*
-	$first = pow($relations, 6);
-	$second = pow(1000, 6) + .01;
-
-	$factor = ($bargain_price - $offered_price) / (($ideal_price - $offered_price) + .01) + ($first / $second);
-	if ($factor > 1)
-		$factor = 1;
-	elseif ($factor < 0)
-		$factor = 0;
-	$gained_exp = round( ((((floor($amount / 30)) + 1) * 2) * $factor) * $good_distance);
-	*/
-
-	// what does this trader archieved
-	/*if ($port->transaction[$good_id] == 'Buy')
-		$gained_exp = round($base_xp * ($offered_price - $bargain_price) / ($offered_price - $ideal_price) * ($amount / $ship->getCargoHolds()));
-	elseif ($port->transaction[$good_id] == 'Sell')
-		$gained_exp = round($base_xp * ($bargain_price - $offered_price) / ($ideal_price - $offered_price) * ($amount / $ship->getCargoHolds()));
-	*/
-
 	// base xp is the amount you would get for a perfect trade.
 	// this is the absolut max. the real xp can only be smaller.
-	$base_xp = (round($ship->getCargoHolds() / 30) + 1) * 2 * $good_distance;
+	$base_xp = (round($ship->getCargoHolds() / 30) + 1) * 2 * $port->getGoodDistance($good_id);
 
 	// if offered equals ideal we get a problem (division by zero)
 	$gained_exp = round($port->calculateExperiencePercent($ideal_price,$offered_price,$bargain_price,$portGood['TransactionType']) * $base_xp * $amount / $ship->getCargoHolds());
@@ -154,7 +111,7 @@ if (!empty($bargain_price) &&
 		$player->increaseHOF($gained_exp,array('Trade','Experience','Selling'));
 		$player->increaseHOF($bargain_price,array('Trade','Money','Profit'));
 		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'));
-		$port->sellGoods($portGood,$amount,$credits_in,$gained_exp);
+		$port->sellGoods($portGood,$amount,$bargain_price,$gained_exp);
 	}
 	$player->increaseHOF($gained_exp,array('Trade','Experience','Total'));
 	$player->increaseHOF(1,array('Trade','Results','Success'));
@@ -183,24 +140,21 @@ if (!empty($bargain_price) &&
 else
 {
 	// does the trader try to outsmart us?
-	check_bargain_number($amount);
+	check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price);
 
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'shop_goods_trade.php';
 
 	// transfer values to next page
 	transfer('good_id');
-	transfer('good_name');
-	transfer('good_class');
 
 	$container['amount'] = $amount;
 	$container['bargain_price'] = $bargain_price;
-
 }
 
 // only take turns if they bargained
-if ($container['number_of_bargains'] != 1)
-	$player->takeTurns(1,1);
+if (!isset($container['number_of_bargains'])||$container['number_of_bargains'] != 1)
+	$player->takeTurns(TURNS_PER_TRADE,TURNS_PER_TRADE);
 
 $player->update();
 
