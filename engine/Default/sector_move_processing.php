@@ -56,7 +56,9 @@ if ($player->isLandedOnPlanet())
 if ($player->getTurns() < $turns)
 	create_error('You don\'t have enough turns to move!');
 
+require_once(get_file_loc('Sorter.class.inc'));
 $sectorForces =& $sector->getForces();
+Sorter::sortByNumMethod($sectorForces,'getMines');
 $mine_owner_id = false;
 foreach($sectorForces as &$forces)
 {
@@ -141,6 +143,7 @@ $sector->markVisited($player);
 // send scout msgs
 $sectorForces =& $sector->getForces();
 $mine_owner_id = false;
+Sorter::sortByNumMethod($sectorForces,'getMines');
 foreach($sectorForces as &$forces)
 {
 	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
@@ -174,7 +177,7 @@ if ($mine_owner_id)
 	{
 		$container['msg'] .= ' to navigate the minefield safely';
 		forward($container);
-	}       
+	}
 	else
 	{
 		$owner_id = $mine_owner_id;
