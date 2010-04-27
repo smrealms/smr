@@ -5,13 +5,7 @@ class Sorter
 
 		private static function cmpStrProp($a, $b)
 		{
-				return strcasecmp($a->{self::$sortKey}, $b->{self::$sortKey});
-		}
-
-		public static function sortByStrProp(array &$array, $property)
-		{
-				self::$sortKey = $property;
-				usort($array, array(__CLASS__, 'cmpStrProp'));
+				return (self::$reverseOrder?-1:1)*strcasecmp($a->{self::$sortKey}, $b->{self::$sortKey});
 		}
 
 		private static function cmpNumProp($a, $b)
@@ -27,18 +21,27 @@ class Sorter
 		public static function cmpNum($a, $b)
 		{
 			if($a == $b) return 0;
-			return $a < $b ? -1 : 1;
+			return (self::$reverseOrder?-1:1)*($a < $b ? -1 : 1);
 		}
 
-		public static function sortByNumProp(array &$array, $property)
+		public static function sortByStrProp(array &$array, $property, $reverseOrder = false)
 		{
 				self::$sortKey = $property;
+        self::$reverseOrder = $reverseOrder;
+				usort($array, array(__CLASS__, 'cmpStrProp'));
+		}
+
+		public static function sortByNumProp(array &$array, $property, $reverseOrder = false)
+		{
+				self::$sortKey = $property;
+        self::$reverseOrder = $reverseOrder;
 				uasort($array, array(__CLASS__, 'cmpNumProp'));
 		}
 
-		public static function sortByNumMethod(array &$array, $method)
+		public static function sortByNumMethod(array &$array, $method, $reverseOrder = false)
 		{
 				self::$sortKey = $method;
+        self::$reverseOrder = $reverseOrder;
 				uasort($array, array(__CLASS__, 'cmpNumMethod'));
 		}
 }

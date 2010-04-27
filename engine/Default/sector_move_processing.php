@@ -58,7 +58,7 @@ if ($player->getTurns() < $turns)
 
 require_once(get_file_loc('Sorter.class.inc'));
 $sectorForces =& $sector->getForces();
-Sorter::sortByNumMethod($sectorForces,'getMines');
+Sorter::sortByNumMethod($sectorForces,'getMines',true);
 $mine_owner_id = false;
 foreach($sectorForces as &$forces)
 {
@@ -143,7 +143,7 @@ $sector->markVisited($player);
 // send scout msgs
 $sectorForces =& $sector->getForces();
 $mine_owner_id = false;
-Sorter::sortByNumMethod($sectorForces,'getMines');
+Sorter::sortByNumMethod($sectorForces,'getMines',true);
 foreach($sectorForces as &$forces)
 {
 	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
