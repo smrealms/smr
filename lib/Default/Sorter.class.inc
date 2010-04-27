@@ -2,6 +2,7 @@
 class Sorter
 {
 		private static $sortKey;
+		private static $reverseOrder;
 
 		private static function cmpStrProp($a, $b)
 		{
