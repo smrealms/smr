@@ -1,3 +1,4 @@
+<?php
 class Sorter
 {
 		private static $sortKey;
@@ -41,3 +42,4 @@ class Sorter
 				usort($array, array(__CLASS__, 'cmpNumMethod'));
 		}
 }
+?>
