@@ -1,39 +1,33 @@
 <?php
 require_once(get_file_loc('Plotter.class.inc'));
-//$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
-function get_good_distance(SmrSector &$sector, $goodID, $transaction)
+function checkPortTradeable(&$port,&$player)
 {
-	global $var, $container;
-
-	// check if we already did this
-	if (isset($var['good_distance']))
-	{
-		// transfer this value
-		transfer('good_distance');
-
-		// return this value
-		return $var['good_distance'];
-	}
-	$x = Globals::getGood($goodID);
-	switch($transaction)
-	{
-		case 'Buy':
-			$x['TransactionType'] = 'Sell';
-		break;
-		case 'Sell':
-			$x['TransactionType'] = 'Buy';
-	}
-	$di = Plotter::findDistanceToX($x, $sector, true);
-	if(is_object($di))
-		$di = $di->getRelativeDistance();
-	$container['good_distance'] = $di;
-	return $di;
+	if($port->getSectorID()!=$player->getSectorID())
+		return 'That port is not in this sector!';
+	
+	if(!$port->exists())
+		return 'There is no port in this sector!';
+	
+	// total relations with that race (personal + global)
+	$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
+	$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
+	if (empty($relations))
+		$relations = 0;
+	
+	if($relations <= -300)
+		return 'We will not trade with our enemies!';
+	
+	if($port->getReinforceTime() > TIME)
+		return 'We are still repairing damage caused during the last raid.';
+	
+	
+	return true;
 }
-function check_bargain_number($amount)
+
+function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price)
 {
 	global $var, $container;
-	global $offered_price, $ideal_price, $bargain_price;
 	global $player;
 
 	$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
@@ -98,43 +92,39 @@ function check_bargain_number($amount)
 
 function get_amount()
 {
-	global $var, $_POST;
+	global $var, $_REQUEST;
 
 	// retrieve amount
-	if (!isset($var['amount']))
-	{
-		// we get it from form
-		if (isset($_POST['amount']))
-			$amount = $_POST['amount'];
-		else
-			$amount = 0;
-
-		// only numbers
-		if (!is_numeric($amount))
-			create_error('You must actually enter a number!');
-
-		// we take as it is but round it
-		$amount = floor($amount);
-
-		// no negative amounts are allowed
-		if ($amount <= 0)
-			create_error('You must actually enter an amount > 0!');
-	}
-	else
-		// we get it from session
+	if (isset($var['amount']))
 		$amount = $var['amount'];
+	else if (isset($_REQUEST['amount']))
+		$amount = $_REQUEST['amount'];
+	else
+		$amount = 0;
+
+	// only numbers
+	if (!is_numeric($amount))
+		create_error('You must actually enter a number!');
+
+	// we take as it is but round it
+	$amount = floor($amount);
+
+	// no negative amounts are allowed
+	if ($amount <= 0)
+		create_error('You must actually enter an amount > 0!');
 
 	return $amount;
-
 }
 
 function get_bargain_price()
 {
-	global $_POST;
+	global $_REQUEST,$var;
 
 	// we get it from form
-	if (isset($_POST['bargain_price']))
-		$price = $_POST['bargain_price'];
+	if (isset($_REQUEST['bargain_price']))
+		$price = $_REQUEST['bargain_price'];
+	else if (isset($var['bargain_price']))
+		$price = $var['bargain_price'];
 	else
 		$price = 0;
 
@@ -150,7 +140,6 @@ function get_bargain_price()
 		create_error('No negative prices are allowed!');
 
 	return $price;
-
 }
 
 ?>

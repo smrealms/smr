@@ -86,6 +86,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
+	public static function clearCache()
+	{
+		self::$CACHE_PLAYERS = array();
+		self::$CACHE_SECTOR_PLAYERS = array();
+	}
+	
 	public static function savePlayers()
 	{
 		foreach(self::$CACHE_PLAYERS as &$gamePlayers)

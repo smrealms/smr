@@ -29,16 +29,13 @@ if ($portGood['TransactionType'] == 'Sell')
 elseif ($portGood['TransactionType'] == 'Buy')
 	$PHP_OUTPUT.=('offer you ');
 $PHP_OUTPUT.=($var['amount'] . ' pcs. of ' . $var['good_name'] . ' for ' . $var['offered_price'] . ' credits!<br />');
-$PHP_OUTPUT.=('Note: In order to maximize your experience you have to bargain with the port owner, unless you have maxmium relations (1000) with that race, which gives full experience without the need to bargain.</p>');
+$PHP_OUTPUT.=('Note: In order to maximize your experience you have to bargain with the port owner, unless you have maximum relations (1000) with that race, which gives full experience without the need to bargain.</p>');
 
 $container = array();
 $container['url'] = 'shop_goods_processing.php';
 
 transfer('amount');
 transfer('good_id');
-transfer('good_name');
-transfer('good_class');
-transfer('good_distance');
 transfer('offered_price');
 transfer('ideal_price');
 transfer('number_of_bargains');
@@ -67,7 +64,6 @@ if (isset($var['offered_price']))
 
 $PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$bargain_price.'" id="InputFields" class="center" style="width:75;vertical-align:middle;">&nbsp;');
 //$PHP_OUTPUT.=('<!-- here are all information that are needed to calculate the ideal price. if you know how feel free to create a trade calculator -->');
-//$PHP_OUTPUT.=('<!--('.$var['amount'].':'.$portGood['BasePrice'].':'.$var['good_distance'].':'.$portGood['Amount'].':'.$portGood['Max'].':'.$relations.':'.$port->getLevel().')-->');
 $PHP_OUTPUT.=create_submit('Bargain (1)');
 $PHP_OUTPUT.=('</form>');
 
@@ -76,7 +72,7 @@ $PHP_OUTPUT.=('window.document.FORM.bargain_price.select();'.EOL);
 $PHP_OUTPUT.=('window.document.FORM.bargain_price.focus();'.EOL);
 $PHP_OUTPUT.=('</script>'.EOL);
 
-$PHP_OUTPUT.=('<p>Distance Index: '.$var['good_distance'] .'</p>');
+$PHP_OUTPUT.=('<p>Distance Index: '. $port->getGoodDistance($good_id) .'</p>');
 
 $PHP_OUTPUT.=('<h2>Or do you want:</h2>');
 

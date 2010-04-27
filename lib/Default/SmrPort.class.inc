@@ -49,6 +49,12 @@ class SmrPort
 			}
 		}
 	}
+	
+	public static function clearCache()
+	{
+		self::$CACHE_PORTS = array();
+		self::$CACHE_CACHED_PORTS = array();
+	}
 
 	public static function &getPort($gameID,$sectorID,$forceUpdate = false)
 	{
@@ -273,6 +279,27 @@ class SmrPort
 			$return = false;
 			return $return;
 		}
+	}
+	
+	public function getGoodDistance($goodID)
+	{
+		$good =& $this->getGood($goodID);
+		if(!isset($good['Distance']))
+		{
+			$x = Globals::getGood($goodID);
+			$x['TransactionType'] = $good['TransactionType'];
+			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
+			if(is_object($di))
+				$di = $di->getRelativeDistance();
+			$good['Distance'] = max(1,$di);
+		}
+		return $good['Distance'];
+	}
+	
+	public function getGoodStatus($goodID)
+	{
+		$good =& $this->getGood($goodID);
+		return $good['TransactionType'];
 	}
 	
 	public function hasGood($goodID,$type=false)
@@ -779,6 +806,11 @@ class SmrPort
 		return $this->sectorID;
 	}
 	
+	public function &getSector()
+	{
+		return SmrSector::getSector($this->getGameID(),$this->getSectorID());
+	}
+	
 	public function getRaceID()
 	{
 		return $this->raceID;
@@ -957,7 +989,7 @@ class SmrPort
 		$this->setArmour($this->getArmour() - $number);
 	}
 	
-	public function getIdealPrice($goodID, $dist, $transactionType, $numGoods, $relations)
+	public function getIdealPrice($goodID, $transactionType, $numGoods, $relations)
 	{
 //		echo 'Good:'.$goodID.',Dist::'.$dist.',Type:'.$transactionType.',NumGoods:'.$numGoods.',Relations:'.$relations.',';
 		if($relations>1000)
@@ -967,6 +999,7 @@ class SmrPort
 		$base = $good['BasePrice'];
 		$maxSupply = $good['Max'];
 		$supply = $good['Amount'];
+		$dist = $this->getGoodDistance($goodID);
 	
 //		$relations_factor_buy = 2-(($relations + 500) / 1500);
 //		$relations_factor_sell = ($relations + 500) / 1500;
@@ -1146,17 +1179,13 @@ class SmrPort
 		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
 	
-	public static function clearCache()
-	{
-		self::$CACHE_CACHED_PORTS = array();
-	}
-	
 	public function __sleep()
 	{
 		$this->getGoods(); //have to make sure goods have been loaded
 		foreach($this->goods['All Goods'] as &$good)
 		{
 			$good['Amount'] = 1;
+			unset($good['Distance']);
 		} unset($good);
 		$this->cachedVersion = true;
         return array('gameID', 'sectorID', 'raceID', 'level', 'cachedVersion', 'goods');

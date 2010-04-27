@@ -41,6 +41,12 @@ class SmrForce
 		}
 	}
 	
+	public static function clearCache()
+	{
+		self::$CACHE_FORCES = array();
+		self::$CACHE_SECTOR_FORCES = array();
+	}
+	
 	public static function saveForces()
 	{
 		foreach(self::$CACHE_FORCES as &$gameForces)

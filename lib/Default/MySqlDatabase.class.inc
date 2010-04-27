@@ -203,9 +203,11 @@ abstract class MySqlDatabase implements Database
 			throw new Exception('Not a boolean!'); //TEST
 	}
 	
-	public function escapeObject($object)
+	public function escapeObject($object,$compress=false,$quotes=true,$nullable=false)
 	{
-		return $this->escapeBinary(serialize($object));
+		if($compress===true)
+			return $this->escapeBinary(gzcompress(serialize($object)));
+		return $this->escapeString(serialize($object),$quotes,$nullable);
 	}
 	
 	

@@ -8,22 +8,14 @@ require_once('shop_goods.inc');
 // create object from port we can work with
 $port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
 
-if(!$port->exists())
-	create_error('There is no port in this sector!');
+$tradeable = checkPortTradeable($port,$player);
+if($tradeable!==true)
+	create_error($tradeable);
 
-// total relations with that race (personal + global)
 $portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
 $relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
 if (empty($relations))
 	$relations = 0;
-
-if($relations <= -300) {
-	create_error('We will not trade with our enemies!');
-}
-
-if($port->getReinforceTime() > TIME) {
-	create_error('We are still repairing damage caused during the last raid.');
-}
 
 // topic
 $template->assign('PageTopic','Port In Sector #'.$player->getSectorID());
@@ -149,8 +141,6 @@ if (!empty($boughtGoods))
 	foreach ($boughtGoods as $good)
 	{
 		$container['good_id'] = $good['ID'];
-		$container['good_name'] = $good['Name'];
-		$container['good_class'] = $good['Class'];
 		
 		$PHP_OUTPUT.=create_echo_form($container);
 			
@@ -203,8 +193,6 @@ if (!empty($soldGoods))
 	foreach ($soldGoods as $good)
 	{
 		$container['good_id'] = $good['ID'];
-		$container['good_name'] = $good['Name'];
-		$container['good_class'] = $good['Class'];
 		$PHP_OUTPUT.=create_echo_form($container);
 
 		$PHP_OUTPUT.=('<tr>');
