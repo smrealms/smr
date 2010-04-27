@@ -46,24 +46,6 @@ $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 $sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID());
 $fightingPlayers =& $sector->getFightingTraders($player,$targetPlayer);
 
-
-// Cap fleets to the required size
-foreach($fightingPlayers as $team => &$teamPlayers)
-{
-	$fleet_size = count($teamPlayers);
-	if($fleet_size > MAXIMUM_FLEET_SIZE)
-	{
-		// We use random key to stop the same people being capped all the time
-		for($j=0;$j<$fleet_size-MAXIMUM_FLEET_SIZE;++$j)
-		{
-			do
-			{
-				$key = array_rand($teamPlayers);
-			} while($player->equals($teamPlayers[$key]) || $targetPlayer->equals($teamPlayers[$key]));
-			unset($teamPlayers[$key]);
-		}
-	}
-} unset($teamPlayers);
 	
 //decloak all fighters
 foreach($fightingPlayers as &$teamPlayers)
