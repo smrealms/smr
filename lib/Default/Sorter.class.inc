@@ -33,13 +33,13 @@ class Sorter
 		public static function sortByNumProp(array &$array, $property)
 		{
 				self::$sortKey = $property;
-				usort($array, array(__CLASS__, 'cmpNumProp'));
+				uasort($array, array(__CLASS__, 'cmpNumProp'));
 		}
 
 		public static function sortByNumMethod(array &$array, $method)
 		{
 				self::$sortKey = $method;
-				usort($array, array(__CLASS__, 'cmpNumMethod'));
+				uasort($array, array(__CLASS__, 'cmpNumMethod'));
 		}
 }
 ?>
