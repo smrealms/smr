@@ -16,12 +16,12 @@ class Sorter
 
 		private static function cmpNumProp($a, $b)
 		{
-			return cmpNum($a->{self::$sortKey}, $b->{self::$sortKey});
+			return self::cmpNum($a->{self::$sortKey}, $b->{self::$sortKey});
 		}
 
 		private static function cmpNumMethod($a, $b)
 		{
-			return cmpNum($a->{self::$sortKey}(), $b->{self::$sortKey}());
+			return self::cmpNum($a->{self::$sortKey}(), $b->{self::$sortKey}());
 		}
 
 		public static function cmpNum($a, $b)
