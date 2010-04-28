@@ -814,7 +814,7 @@ class SmrSector
 						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
 				}
 			}
-		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,$defendingPlayer);
+		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,null);
 	}
 
 	public function &getFightingTradersAgainstPort(AbstractSmrPlayer &$attackingPlayer, SmrPort &$defendingPort)
@@ -830,7 +830,7 @@ class SmrSector
 						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
 				}
 			}
-		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,$defendingPlayer);
+		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,null);
 	}
 
 	public function &getFightingTradersAgainstPlanet(AbstractSmrPlayer &$attackingPlayer, SmrPlanet &$defendingPlanet)
@@ -849,7 +849,7 @@ class SmrSector
 				}
 			}
 		}
-		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,$defendingPlayer);
+		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,null);
 	}
 
 	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer, $checkForCloak=false)
@@ -898,7 +898,7 @@ class SmrSector
 					do
 					{
 						$key = array_rand($teamPlayers);
-					} while($attackingPlayer->equals($teamPlayers[$key]) || $defendingPlayer->equals($teamPlayers[$key]));
+					} while($attackingPlayer->equals($teamPlayers[$key]) || ($defendingPlayer!==null && $defendingPlayer->equals($teamPlayers[$key])));
 					unset($teamPlayers[$key]);
 				}
 			}
