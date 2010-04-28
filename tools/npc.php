@@ -1,87 +1,365 @@
-#!/usr/bin/php -q
 <?php
+echo '<pre>';
+require_once('config.inc');
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once(LIB . 'Default/Globals.class.inc');
 
-mt_srand((double)microtime()*1000000);
+$forwardedCount = 0;
+function overrideForward($container)
+{
+	if($container['body']=='error.php') //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
+		throw new Exception($container['message']);
+	throw new Exception('Forward'); //We catch and check for exceptions with the message "Forward" in NPCStuff, very hacky but works - need to extend Exception for a less over-arching catch.
+										//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
+}
+define('OVERRIDE_FORWARD',true);
 
-// config file
-include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
+//define('NPC_LOGIN','NPCTest');
+define('NPC_LOGIN','Page'); //Using my account as NPC so I can follow what's going on more easily. Requires hacking locks away in smr.inc however :(
+//The plan is later to query this from a database table that lists a bunch of NPCs, and also lists when they last acted etc.
 
-include(LIB . 'Default/SmrMySqlDatabase.class.inc');
-include(LIB . 'smr_account.inc');
+define('NPC_GAME_ID',108);
 
-include('npc/logger.php');
-include('npc/game_handling.php');
-include('npc/scout.php');
-include('npc/player.php');
-include('npc/goal.php');
-include('npc/moving.php');
-include('npc/database.php');
+$HIDDEN_PLAYERS = array();
 
-// new db object
-$db = new SmrMySqlDatabase();
+require_once(get_file_loc('smr.inc'));
 
-while (true) {
 
-	$db->query('SELECT account_id, game_id
-				FROM npc
-				WHERE next_active < ' . time() . ' AND
-					  active = \'TRUE\'
-				ORDER BY next_active
-				LIMIT 1
-			   ');
-	if (!$db->nextRecord()) {
+require_once(get_file_loc('SmrAccount.class.inc'));
 
-		sleep(1);
-		continue;
+if(SmrAccount::getAccountByName(NPC_LOGIN)==null)
+{
+	SmrAccount::createAccount(NPC_LOGIN,'21sdgasdg,s..,23','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
+} //TODO: Auto-create player as well.
 
-	}
+$account =& SmrAccount::getAccountByName(NPC_LOGIN);
 
-	// the game we going to play
-	$account_id	= $db->getField('account_id');
-	$game_id	= $db->getField('game_id');
+SmrSession::$account_id = $account->getAccountID();
+SmrSession::$game_id = NPC_GAME_ID;
 
-	// check if the player joined that game.
-	if (!player_joined_game($account_id, $game_id))
-		join_game($account_id, $game_id);
+require_once(get_file_loc('Plotter.class.inc'));
+require_once(get_file_loc('RouteGenerator.class.inc'));
+require_once(get_file_loc('shop_goods.inc'));
 
-	// refresh this users turns
-	updateTurns($account_id, $game_id);
-
-	// no turns? wait a minute for new
-	if (get_player($account_id, $game_id, 'turns') == 0) {
-
-		log_message($account_id, 'I\'m low on turns. waiting for new one.');
-
-		set_npc_sleep($account_id, $game_id, 60);
-		continue;
-
-	}
-
-	if ($short_term_goal = get_short_term_goal($account_id, $game_id)) {
-
-		if ($short_term_goal['type'] == 'follow_course') {
-
-			$new_course = follow_course($account_id, $game_id, $short_term_goal['task']);
-
-			if (!empty($new_course))
-				set_short_term_goal($account_id, $game_id, 'follow_course', $new_course);
+NPCStuff();
+		
+function NPCStuff()
+{
+	global $account;
+	
+	for($i=0;$i<40;$i++)
+	{  //We have to reload player on each loop
+		$player	=& SmrPlayer::getPlayer($account->getAccountID(), SmrSession::$game_id);
+		$GLOBALS['player'] =& $player;
+		$TRADE_ROUTES =& findRoutes();
+		if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
+			$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
+		try
+		{
+			if($player->getShip()->isUnderAttack()===true&&($player->hasPlottedCourse()===false||SmrSector::getSector($player->getGameID(),$player->getPlottedCourse()->getEndSectorId())->offersFederalProtection()===false))
+			{ //We're under attack and need to plot course to fed.
+				debug('Under Attack');
+				processContainer(plotToFed());
+			}
+			else if($player->hasPlottedCourse()===true)
+			{ //We have a route to follow, figure it's probably a sensible thing to follow.
+				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
+				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
+			}
+			else if($player->getTurns()<100)
+			{ //We're low on turns and need to plot course to fed
+				debug('Low Turns');
+				processContainer(plotToFed());
+			}
+			else if($TRADE_ROUTE instanceof Route)
+			{
+//				var_dump($TRADE_ROUTE);
+				debug('Trade Route');
+				$forwardRoute =& $TRADE_ROUTE->getForwardRoute();
+				$returnRoute =& $TRADE_ROUTE->getReturnRoute();
+				if($forwardRoute->getBuySectorId()==$player->getSectorID()||$returnRoute->getBuySectorId()==$player->getSectorID())
+				{
+					if($forwardRoute->getBuySectorId()==$player->getSectorID())
+					{
+						$buyRoute =& $forwardRoute;
+						$sellRoute =& $returnRoute;
+					}
+					else if($returnRoute->getBuySectorId()==$player->getSectorID())
+					{
+						$buyRoute =& $returnRoute;
+						$sellRoute =& $forwardRoute;
+					}
+					
+					$ship =& $player->getShip();
+					if($ship->getUsedHolds()>0)
+					{
+						if($ship->hasCargo($sellRoute->getGoodID()))
+						{ //Sell goods
+							$goodID = $sellRoute->getGoodID();
+							
+							$port =& $player->getSector()->getPort();
+							$tradeable = checkPortTradeable($port,$player);
+							
+							if($tradeable===true && $port->getGoodAmount($goodID)>=$ship->getCargo($sellRoute->getGoodID())) //TODO: Sell what we can rather than forcing sell all at once?
+							{ //Sell goods
+								debug('Sell Goods');
+								processContainer(tradeGoods($goodID,$player,$port));
+							}
+							else
+							{
+								//Move to next route or fed.
+								if(($TRADE_ROUTE =& changeRoute($TRADE_ROUTES))===false)
+								{
+//									var_dump($TRADE_ROUTES);
+									debug('Changing Route Failed');
+									processContainer(plotToFed());
+								}
+								else
+								{
+									debug('Route Changed');
+									continue;
+								}
+							}
+						}
+						else if($ship->hasCargo($buyRoute->getGoodID())===true)
+						{ //We've bought goods, plot to sell
+							debug('Plot To Sell: '.$buyRoute->getSellSectorId());
+							processContainer(plotToSector($buyRoute->getSellSectorId()));
+						}
+						else
+						{
+							//Dump goods
+							debug('Dump Goods');
+							processContainer(dumpCargo());
+						}
+					}
+					else
+					{ //Buy goods
+						$goodID = $buyRoute->getGoodID();
+						
+						$port =& $player->getSector()->getPort();
+						$tradeable = checkPortTradeable($port,$player);
+		
+						if($tradeable===true && $port->getGoodAmount($goodID)>=$ship->getEmptyHolds())
+						{ //Buy goods
+							debug('Buy Goods');
+							processContainer(tradeGoods($goodID,$player,$port));
+						}
+						else
+						{
+							//Move to next route or fed.
+							if(($TRADE_ROUTE =& changeRoute($TRADE_ROUTES))===false)
+							{
+//								var_dump($TRADE_ROUTES);
+								debug('Changing Route Failed');
+								processContainer(plotToFed());
+							}
+							else
+							{
+								debug('Route Changed');
+								continue;
+							}
+						}
+					}
+				}
+				else
+				{
+					debug('Plot To Buy: '.$forwardRoute->getBuySectorId());
+					processContainer(plotToSector($forwardRoute->getBuySectorId()));
+				}
+			}
 			else
-				delete_short_term_goal($account_id, $game_id);
-
+			{ //Otherwise let's run around at random.
+				$links = $player->getSector()->getLinks();
+				$moveTo = $links[array_rand($links)];
+				debug('Random Wanderings: '.$moveTo);
+				processContainer(moveToSector($moveTo));
+			}
 		}
-
-	} elseif ($long_term_goal = get_long_term_goal($account_id, $game_id)) {
-
-		if ($long_term_goal['type'] == 'scout') {
-
-			scout($account_id, $game_id);
-
+		catch(Exception $e)
+		{
+			if($e->getMessage()!='Forward')
+				throw $e;
+			global $lock;
+			if($lock)
+			{ //only save if we have the lock.
+				SmrSector::saveSectors();
+				SmrShip::saveShips();
+				SmrPlayer::savePlayers();
+				SmrForce::saveForces();
+				SmrPort::savePorts();
+				release_lock();
+				//Clean up the caches as the data may get changed by other players
+				SmrSector::clearCache();
+				SmrPlayer::clearCache();
+				SmrForce::clearCache();
+				SmrPort::clearCache();
+				//Have a sleep between actions
+				sleepNPC();
+			}
 		}
-
 	}
-
-	set_npc_sleep($account_id, $game_id, 3);
-
+	release_lock(); //Release any lock we may have before exiting.
+	exit;
 }
 
+function debug($message)
+{
+	echo $message.EOL;
+}
+
+function processContainer($container)
+{
+	resetContainer($container);
+	do_voodoo();
+}
+
+function sleepNPC()
+{
+	sleep(mt_rand(10,15)/10); //Sleep for a random time between 1-1.5s
+}
+
+function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port)
+{
+	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
+	$ship =& $player->getShip();
+	$portRelations = Globals::getRaceRelations($player->getGameID(),$port->getRaceID());
+	$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
+
+	$portGood = $port->getGood($goodID);
+	
+	if($portGood['TransactionType'] == 'Buy')
+		$amount = $ship->getEmptyHolds();
+	else
+		$amount = $ship->getCargo($goodID);
+
+	$idealPrice = $port->getIdealPrice($goodID, $portGood['TransactionType'], $amount, $relations);
+	$offeredPrice = $port->getOfferPrice($idealPrice, $relations, $portGood['TransactionType']);
+	
+	return create_container('shop_goods_processing.php','',array('offered_price'=>$offeredPrice,'ideal_price'=>$idealPrice,'amount'=>$amount,'good_id'=>$goodID,'bargain_price'=>$offeredPrice));
+}
+function dumpCargo()
+{
+	global $player;
+	$ship =& $player->getShip();
+	$cargo =& $ship->getCargo();
+	foreach($cargo as $goodID => $amount)
+	{
+		if($amount > 0)
+		{
+			return create_container('cargo_dump_processing.php','',array('good_id'=>$goodID,'amount'=>$amount));
+		}
+	}
+}
+function plotToSector($sectorID)
+{
+	global $player;
+	return create_container('course_plot_processing.php','',array('from'=>$player->getSectorID(),'to'=>$sectorID));
+}
+
+function plotToFed()
+{
+	global $player;
+	
+	if($player->getSector()->offersFederalProtection())
+	{
+		sleep(60); //TODO: sleep for longer/exit script because we want to stay at fed and build turns
+		forward(array());
+	}
+	
+	$_REQUEST['xtype'] = 'Locations';
+	$_REQUEST['X'] = 'Fed';
+	
+	return create_container('course_plot_nearest_processing.php');
+}
+function moveToSector($targetSector)
+{
+	return create_container('sector_move_processing.php','',array('target_sector'=>$targetSector,'target_page'=>''));
+}
+
+function &changeRoute(array &$tradeRoutes)
+{
+	$false = false;
+	if(count($tradeRoutes)==0)
+		return $false;
+	$routeKey = array_rand($tradeRoutes);
+	$tradeRoute =& $tradeRoutes[$routeKey];
+	unset($tradeRoutes[$routeKey]);
+	return $tradeRoute;
+}
+
+function &findRoutes()
+{
+	global $player;
+	
+	$galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
+	
+	$tradeGoods = array(GOOD_NOTHING => false);
+	$goods =& Globals::getGoods();
+	foreach($goods as $goodID => &$good)
+	{
+		if($player->meetsAlignmentRestriction($good['AlignRestriction']))
+			$tradeGoods[$goodID] = true;
+		else
+			$tradeGoods[$goodID] = false;
+	} unset($good);
+	$tradeRaces = array();
+	$races =& Globals::getRaces();
+	foreach($races as $raceID => &$race)
+	{
+		$tradeRaces[$raceID] = false;
+	} unset($race);
+	$tradeRaces[$player->getRaceID()] = true;
+	
+	$galaxy =& $player->getSector()->getGalaxy();
+	
+	$maxNumberOfPorts = 2;
+	$routesForPort=-1;
+	$numberOfRoutes=1000;
+	$maxDistance=15;
+	
+	$startSectorID=$galaxy->getStartSector();
+	$endSectorID=$galaxy->getEndSector();
+	
+	$db = new SmrMySqlDatabase();
+	$db->query('SELECT routes FROM route_cache WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND max_ports='.$db->escapeNumber($maxNumberOfPorts).' AND goods_allowed='.$db->escapeObject($tradeGoods).' AND races_allowed='.$db->escapeObject($tradeRaces).' AND start_sector_id='.$db->escapeNumber($startSectorID).' AND end_sector_id='.$db->escapeNumber($endSectorID).' AND max_distance='.$db->escapeNumber($maxDistance));
+	if($db->nextRecord())
+	{
+		$routes = unserialize(gzuncompress($db->getField('routes')));
+		return $routes;
+	}
+	else
+	{
+		$allSectors = array();
+		foreach($galaxies as &$galaxy)
+		{
+			$allSectors += $galaxy->getSectors(); //Merge arrays
+		} unset($galaxy);
+		
+		$distances =& Plotter::calculatePortToPortDistances($allSectors,$maxDistance,$startSectorID,$endSectorID);
+		
+		
+		if ($maxNumberOfPorts == 1)
+			$allRoutes = RouteGenerator::generateOneWayRoutes($allSectors, $distances, $tradeGoods, $tradeRaces, $routesForPort);
+		else
+			$allRoutes = RouteGenerator::generateMultiPortRoutes($maxNumberOfPorts, $allSectors, $tradeGoods, $tradeRaces, $distances, $routesForPort, $numberOfRoutes);
+		
+		unset($distances);
+		
+		$allRoutes =& $allRoutes[RouteGenerator::EXP_ROUTE];
+		$routesMerged = array();
+		foreach($allRoutes as $multi => &$routesByMulti)
+		{
+			$routesMerged += $routesByMulti; //Merge arrays
+		} unset($routesByMulti);
+		
+		unset($allSectors);
+		SmrPort::clearCache();
+		SmrSector::clearCache();
+		$db->query('INSERT INTO route_cache ' .
+				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, max_distance, routes)' .
+				' VALUES ('.$db->escapeNumber($player->getGameID()).', '.$db->escapeNumber($maxNumberOfPorts).', '.$db->escapeObject($tradeGoods).', '.$db->escapeObject($tradeRaces).', '.$db->escapeNumber($startSectorID).', '.$db->escapeNumber($endSectorID).', '.$db->escapeNumber($maxDistance).', '.$db->escapeObject($routesMerged,true).')');
+		return $routesMerged;
+	}
+}
 ?>
