@@ -1,6 +1,6 @@
 <?php
 echo '<pre>';
-require_once('config.inc');
+require_once('../htdocs/config.inc');
 require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 require_once(LIB . 'Default/Globals.class.inc');
 
