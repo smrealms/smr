@@ -487,7 +487,7 @@ function do_voodoo()
 		SmrPlayer::savePlayers();
 		SmrForce::saveForces();
 		SmrPort::savePorts();
-		release_lock($lock);
+		release_lock();
 	}
 	
 	SmrSession::update();
