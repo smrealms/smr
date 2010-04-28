@@ -1,9 +1,4 @@
 <?php
-$string = 'Fuck 123453124';
-var_dump($string);
-	$string = preg_replace('/FUCK/i',':)',$string);
-	var_dump($string);
-
 /*
 class X{}
 
@@ -13,13 +8,13 @@ for($i=0;$i<100000;$i++)
 	$arr[] = new X();
 
 var_dump(number_format(memory_get_usage()));
-/*
+/**/
 require_once('../htdocs/config.inc');
 require_once(LIB . 'Default/Globals.class.inc');
 require_once(get_file_loc('RouteGenerator.class.inc'));
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 
-$gameID = 2;
+$gameID = 108;
 
 $galaxies =& SmrGalaxy::getGameGalaxies($gameID);
 $allSectors = array();
@@ -32,8 +27,8 @@ $maxNumberOfPorts = 2;
 $goods = array(true,true,true,true,false,false,false,false,false,false,false,false,false);
 $races = array(true,true,true,true,false,false,false,false,false,false,false,false,false,false);
 
-$distances =& Plotter::calculatePortToPortDistances($allSectors,10,0,1440);
-//$distances =& Plotter::calculatePortToPortDistances($allSectors,10,0,15);
+//$distances =& Plotter::calculatePortToPortDistances($allSectors,10,0,1440);
+$distances =& Plotter::calculatePortToPortDistances($allSectors,10,0,14);
 //var_dump($distances);
 
 $routesForPort=-1;
