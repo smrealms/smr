@@ -69,31 +69,26 @@ try
 	// create account object
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	
-	echo '
-	<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN"
-	"http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
-	';
+?>
+<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
+
+<html>
+	<head>
+    <link rel="stylesheet" type="text/css" href="css/default.css">
+    <link rel="stylesheet" type="text/css" href="css/Default/Default.css">
+    <title>Galaxy Map</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <style type="text/css">
+      body {
+        font-size:<?php echo $account->getFontSize(); ?>%;
+      }
+    </style>
+    </head>
 	
-	echo('<html>');
-	echo('<head>');
-	echo('<link rel="stylesheet" type="text/css" href="css/default.css">');
-	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/Default/Default.css">');
-	echo('<title>Galaxy Map</title>');
-	echo('<meta http-equiv="pragma" content="no-cache">');
-	echo '<!--[if IE]>
-	<link rel="stylesheet" type="text/css" href="css/ie_specific.css">
-	<![endif]-->
-	<style type="text/css">
-		body {
-			font-size:' . $account->getFontSize() . '%;
-		}
-	</style>
-	';
-	echo('</head>');
+	<body>
 	
-	echo('<body>');
-	
-	echo('<h1>View Galaxy</h1>');
+	<h1>View Galaxy</h1><?php
 	
 	if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id']))
 	{
