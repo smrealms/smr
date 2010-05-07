@@ -9,14 +9,18 @@ Changes by Nick Fetchak:
 - Added partial support for 'box-shadow' style
 - Checks for VML support before doing anything
 - Updates VML element size and position via timer and also via window resize event
-Published date : 2009/11/19
+- lots of other small things
+Published date : 2010/03/14
 http://fetchak.com/ie-css3
 
+Thanks to TheBrightLines.com (http://www.thebrightlines.com/2009/12/03/using-ies-filter-in-a-cross-browser-way) for enlightening me about the DropShadow filter
 
-<public:attach event="oncontentready" onevent="oncontentready('v08vnSVo78t4JfjH')" />
+<public:attach event="ondocumentready" onevent="ondocumentready('v08vnSVo78t4JfjH')" />
 <script type="text/javascript">
 
 timer_length = 200; // Milliseconds
+border_opacity = false; // Use opacity on borders of rounded-corner elements? Note: This causes antialiasing issues
+
 
 // supportsVml() borrowed from http://stackoverflow.com/questions/654112/how-do-you-detect-support-for-vml-or-svg-in-a-browser
 function supportsVml() {
@@ -49,8 +53,8 @@ function findPos(obj) {
 	});
 }
 
-function createShadow(element, vml_parent) {
-	var style = element.currentStyle['-moz-box-shadow'] || element.currentStyle['-webkit-box-shadow'] || element.currentStyle['box-shadow'] || '';
+function createBoxShadow(element, vml_parent) {
+	var style = element.currentStyle['iecss3-box-shadow'] || element.currentStyle['-moz-box-shadow'] || element.currentStyle['-webkit-box-shadow'] || element.currentStyle['box-shadow'] || '';
 	var match = style.match(/^(\d+)px (\d+)px (\d+)px/);
 	if (!match) { return(false); }
 
@@ -79,7 +83,7 @@ function createShadow(element, vml_parent) {
 	shadow.style.antialias = true;
 	shadow.className = 'vml_box_shadow';
 	shadow.style.zIndex = element.zIndex - 1;
-	shadow.style.filter = 'progid:DXImageTransform.Microsoft.Blur(pixelRadius='+ shadow.userAttrs.radius +',makeShadow=true,shadowOpacity=1)';
+	shadow.style.filter = 'progid:DXImageTransform.Microsoft.Blur(pixelRadius='+ shadow.userAttrs.radius +',makeShadow=true,shadowOpacity='+ element.opacity +')';
 
 	element.parentNode.appendChild(shadow);
 	//element.parentNode.insertBefore(shadow, element.element);
@@ -102,11 +106,11 @@ function createBorderRect(element, vml_parent) {
 		'x': (0.5 * element.strokeWeight) - vml_parent.pos_ieCSS3.x
 	};
 	rect.size_offset = {
-		'width': 1 - element.strokeWeight,
-		'height': 1 - element.strokeWeight
+		'width': 0 - element.strokeWeight,
+		'height': 0 - element.strokeWeight
 	};
 	rect.arcsize = element.arcSize +'px';
-	rect.strokecolor = element.strokeColor;
+	rect.strokeColor = element.strokeColor;
 	rect.strokeWeight = element.strokeWeight +'px';
 	rect.stroked = element.stroked;
 	rect.className = 'vml_border_radius';
@@ -119,18 +123,23 @@ function createBorderRect(element, vml_parent) {
 	rect.style.antialias = true;
 	rect.style.zIndex = element.zIndex - 1;
 
+	if (border_opacity && (element.opacity < 1)) {
+		rect.style.filter = 'progid:DXImageTransform.Microsoft.Alpha(Opacity='+ parseFloat(element.opacity * 100) +')';
+	}
+
 	var fill = document.createElement('v:fill');
 	fill.color = element.fillColor;
 	fill.src = element.fillSrc;
 	fill.className = 'vml_border_radius_fill';
 	fill.type = 'tile';
+	fill.opacity = element.opacity;
 
 	// Hack: IE6 doesn't support transparent borders, use padding to offset original element
 	isIE6 = /msie|MSIE 6/.test(navigator.userAgent);
 	if (isIE6 && (element.strokeWeight > 0)) {
-		this.style.borderStyle = 'none';
-		this.style.paddingTop = parseInt(this.currentStyle.paddingTop || 0) + element.strokeWeight;
-		this.style.paddingBottom = parseInt(this.currentStyle.paddingBottom || 0) + element.strokeWeight;
+		element.style.borderStyle = 'none';
+		element.style.paddingTop = parseInt(element.currentStyle.paddingTop || 0) + element.strokeWeight;
+		element.style.paddingBottom = parseInt(element.currentStyle.paddingBottom || 0) + element.strokeWeight;
 	}
 
 	rect.appendChild(fill);
@@ -143,7 +152,73 @@ function createBorderRect(element, vml_parent) {
 	return(true);
 }
 
-function oncontentready(classID) {
+function createTextShadow(element, vml_parent) {
+	if (!element.textShadow) { return(false); }
+
+	var match = element.textShadow.match(/^(\d+)px (\d+)px (\d+)px (#?\w+)/);
+	if (!match) { return(false); }
+
+
+	//var shadow = document.createElement('span');
+	var shadow = element.cloneNode(true);
+	var radius = parseInt(RegExp.$3 || 0);
+	shadow.userAttrs = {
+		'x': parseInt(RegExp.$1 || 0) - (radius),
+		'y': parseInt(RegExp.$2 || 0) - (radius),
+		'radius': radius / 2,
+		'color': (RegExp.$4 || '#000')
+	};
+	shadow.position_offset = {
+		'y': (0 - vml_parent.pos_ieCSS3.y + shadow.userAttrs.y),
+		'x': (0 - vml_parent.pos_ieCSS3.x + shadow.userAttrs.x)
+	};
+	shadow.size_offset = {
+		'width': 0,
+		'height': 0
+	};
+	shadow.style.color = shadow.userAttrs.color;
+	shadow.style.position = 'absolute';
+	shadow.style.top = (element.pos_ieCSS3.y + shadow.position_offset.y) +'px';
+	shadow.style.left = (element.pos_ieCSS3.x + shadow.position_offset.x) +'px';
+	shadow.style.antialias = true;
+	shadow.style.behavior = null;
+	shadow.className = 'ieCSS3_text_shadow';
+	shadow.innerHTML = element.innerHTML;
+	// For some reason it only looks right with opacity at 75%
+	shadow.style.filter = '\
+		progid:DXImageTransform.Microsoft.Alpha(Opacity=75)\
+		progid:DXImageTransform.Microsoft.Blur(pixelRadius='+ shadow.userAttrs.radius +',makeShadow=false,shadowOpacity=100)\
+	';
+
+	var clone = element.cloneNode(true);
+	clone.position_offset = {
+		'y': (0 - vml_parent.pos_ieCSS3.y),
+		'x': (0 - vml_parent.pos_ieCSS3.x)
+	};
+	clone.size_offset = {
+		'width': 0,
+		'height': 0
+	};
+	clone.style.behavior = null;
+	clone.style.position = 'absolute';
+	clone.style.top = (element.pos_ieCSS3.y + clone.position_offset.y) +'px';
+	clone.style.left = (element.pos_ieCSS3.x + clone.position_offset.x) +'px';
+	clone.className = 'ieCSS3_text_shadow';
+
+
+	element.parentNode.appendChild(shadow);
+	element.parentNode.appendChild(clone);
+
+	element.style.visibility = 'hidden';
+
+	// For window resizing
+	element.vml.push(clone);
+	element.vml.push(shadow);
+
+	return(true);
+}
+
+function ondocumentready(classID) {
 	if (!supportsVml()) { return(false); }
 
   if (this.className.match(classID)) { return(false); }
@@ -168,7 +243,8 @@ function oncontentready(classID) {
 
 
 	// These attrs are for the script and have no meaning to the browser:
-	this.borderRadius = parseInt(this.currentStyle['-moz-border-radius'] ||
+	this.borderRadius = parseInt(this.currentStyle['iecss3-border-radius'] ||
+	                             this.currentStyle['-moz-border-radius'] ||
 	                             this.currentStyle['-webkit-border-radius'] ||
 	                             this.currentStyle['border-radius'] ||
 	                             this.currentStyle['-khtml-border-radius']);
@@ -178,11 +254,13 @@ function oncontentready(classID) {
 	this.strokeColor = this.currentStyle.borderColor;
 	this.strokeWeight = parseInt(this.currentStyle.borderWidth);
 	this.stroked = 'true';
-	if (isNaN(this.strokeWeight)) {
+	if (isNaN(this.strokeWeight) || (this.strokeWeight == 0)) {
 		this.strokeWeight = 0;
 		this.strokeColor = fillColor;
 		this.stroked = 'false';
 	}
+	this.opacity = parseFloat(this.currentStyle.opacity || 1);
+	this.textShadow = this.currentStyle['text-shadow'];
 
 	this.element.vml = new Array();
 	this.zIndex = parseInt(this.currentStyle.zIndex);
@@ -200,15 +278,17 @@ function oncontentready(classID) {
 	vml_parent.pos_ieCSS3 = findPos(vml_parent);
 	this.pos_ieCSS3 = findPos(this);
 
-	var rv1 = createShadow(this, vml_parent);
+	var rv1 = createBoxShadow(this, vml_parent);
 	var rv2 = createBorderRect(this, vml_parent);
-
-	if (rv1 || rv2) { window.ieCSS3.vmlified_elements.push(this.element); }
+	var rv3 = createTextShadow(this, vml_parent);
+	if (rv1 || rv2 || rv3) { window.ieCSS3.vmlified_elements.push(this.element); }
 
 	if (typeof(vml_parent.document.ieCSS3_stylesheet) == 'undefined') {
 		vml_parent.document.ieCSS3_stylesheet = vml_parent.document.createStyleSheet();
 		vml_parent.document.ieCSS3_stylesheet.addRule("v\\:roundrect", "behavior: url(#default#VML)");
 		vml_parent.document.ieCSS3_stylesheet.addRule("v\\:fill", "behavior: url(#default#VML)");
+		// Compatibility with IE7.js
+		vml_parent.document.ieCSS3_stylesheet.ie7 = true;
 	}
 }
 
@@ -240,4 +320,3 @@ function updatePositionAndSize() {
 	if (event && (event.type == 'resize') && typeof(window.ieCSS3.previous_onresize) == 'function') { window.ieCSS3.previous_onresize(); }
 }
 </script>
-
