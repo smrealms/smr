@@ -105,7 +105,7 @@ a:hover.nav {
 	color: #CC3300;
 }
 a.buttonA {
-	border-color: #1154A6 #0A2D58 #0A2D58 #1154A6;
+    border-color: #1154A6 #0A2D58 #0A2D58 #1154A6;
 	background-color: #00006C;
 }
 a.buttonA:hover {
@@ -121,18 +121,6 @@ a.buttonA:active {
 	border: 1px solid #BB0;
 	background-color: #500;
 	color: #F00;
-}
-
-a.buttonA {
-	border-color: #9B7141 #5B3100 #5B3100 #9B7141;
-	background-color: #7B5121;
-}
-a.buttonA:hover {
-	background-color: #7B5121;
-}
-a.buttonA:active {
-	background-color: #7B5121;
-	border-color: #5B3100 #9B7141 #9B7141 #5B3100;
 }
 
 a.enemyExamine
