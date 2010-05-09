@@ -1,0 +1,302 @@
+html {
+	background-color: #00001C;
+}
+.bar1Separator {
+	border-top: 2px solid #000099;
+}
+.tableHeight {
+	color: #FFF;
+}
+.topleftCell {
+	color: #98C1F4;
+}
+.topcenterCell {
+	color: #9DCEFF;
+}
+.rightCell {
+	color: #9DCEFF;
+}
+.leftCell {
+	color: #9DCEFF;
+}
+.TopInfo {
+	background-color: #00002D;
+	border: 4px solid #1154A6;
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.LeftNavOne {
+	background-color: #00002D;
+	border: 4px solid #1154A6;
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.LeftNavTwo {
+	background-color: #00002D;
+	border: 4px solid #1154A6;
+	-moz-border-radius: 4px; /* Firefox */
+	-webkit-border-radius: 4px; /* Safari and chrome */
+	-khtml-border-radius: 4px; /* Linux browsers */
+	border-radius: 4px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.MainContentArea {
+	background-color: #000;
+	color: #FFF;
+	border: 6px solid #1154A6;
+	-moz-border-radius: 6px; /* Firefox */
+	-webkit-border-radius: 6px; /* Safari and chrome */
+	-khtml-border-radius: 6px; /* Linux browsers */
+	border-radius: 6px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+.rightInfo {
+	background-color: #00002D;
+	border: 4px solid #1154A6;
+	-moz-border-radius: 6px; /* Firefox */
+	-webkit-border-radius: 6px; /* Safari and chrome */
+	-khtml-border-radius: 6px; /* Linux browsers */
+	border-radius: 6px; /* CSS3 */
+	behavior: url(css/ie-css3.htc); /* IE */
+}
+div.rightInfoShip a {	
+	color: #39F;
+}
+div.rightInfoShip a:hover {
+	color: #CC3300;
+}
+.wep1 {
+	color: #39F;
+}
+.messages {
+	color: #FFF;
+}
+a.message img {
+	border: none;
+}
+a.white {
+	color: #FFF;
+}
+a {
+	color: #9DCEFF;
+	text-decoration: none;
+	padding: 0px;
+	margin: 0px;
+}
+a:hover {
+	color: #CC3300;
+}
+a.leftNav {
+	color: #9DCEFF;
+}
+a:hover.leftNav {
+	color: #CC3300;
+}
+a.nav {
+	color: #6699FF;
+}
+a:hover.nav {
+	color: #CC3300;
+}
+a.buttonA {
+	border-color: #1154A6 #0A2D58 #0A2D58 #1154A6;
+	background-color: #00006C;
+}
+a.buttonA:hover {
+	background-color: #00003C;
+}
+a.buttonA:active {
+	background-color: #40F;
+	border-color: #5B3100 #9B7141 #9B7141 #5B3100;
+}
+
+
+.attack_warning {
+	border: 1px solid #BB0;
+	background-color: #500;
+	color: #F00;
+}
+
+a.buttonA {
+	border-color: #9B7141 #5B3100 #5B3100 #9B7141;
+	background-color: #7B5121;
+}
+a.buttonA:hover {
+	background-color: #7B5121;
+}
+a.buttonA:active {
+	background-color: #7B5121;
+	border-color: #5B3100 #9B7141 #9B7141 #5B3100;
+}
+
+a.enemyExamine
+{
+	background-color:#C00;
+	border-color:#CCA3A3 #6E2A2A #6E2A2A #CCA3A3;
+}
+a.enemyExamine:hover
+{
+	background-color:#C00;
+}
+a.enemyExamine:active
+{
+	background-color:#C00;
+	border-color:#6E2A2A #CCA3A3 #CCA3A3 #6E2A2A;
+}
+
+/* Standard table styling */
+table.standard {
+	color: #FFF;
+	border: 1px solid #7B5121;
+	border-spacing: 0px;
+}
+table.standard td, table.standard th {
+	border: 1px solid #1154A6;
+}
+table.standard th {
+	text-align:center;
+	color:#6B6699;
+	background-color:#002346;
+	font-weight:bold;
+}
+th {
+	background-color: #002346;
+	color: #39F;
+}
+
+.name {
+	color: #98C1F4;
+}
+
+/* Headers */
+h1, h2, h3, h4, h5, h6 {
+	color: #6699FF;
+}
+
+input  {
+	background: #111;
+	color: #FFF;
+	border: 2px solid #1154A6;
+}
+
+input.submit  {
+	border: 2px outset #1154A6;
+	cursor: pointer;
+}
+input.submit:active {
+	border: 2px inset #1154A6;
+}
+
+/* We repeat with a selector because not all submits are guaranteed to have the submit class, but selector's don't work in IE6 (and others?) */
+input[type="submit"]  {
+	border: 2px outset #1154A6;
+	cursor: pointer;
+}
+input[type="submit"]:active {
+	border: 2px inset #1154A6;
+}
+
+textarea {
+	background: #111;
+	color: #FFF;
+	border: 2px solid #1154A6;
+}
+
+
+/* Current Sector Navigation Box Colours */
+div.secNavBox div div {
+	border: 2px solid #1154A6;
+}
+div.secNavBox a:hover {
+	font-size: 115%;
+	font-weight: bold;
+}
+.move_hover a:hover {
+	background-color: #222;
+}
+.scan_hover {
+	background-color: #6699FF;
+}
+.scan_hover a {
+	background-color: #6699FF;
+	color: #000;
+}
+.scan_hover a:hover {
+	background-color: #6699FF;
+}
+.move_warp a:hover {
+	background-color: #500000;
+}
+
+.lastVisited {
+	color: #66FFCC;
+}
+.visited, .currentSector {
+	color: #6699FF;
+}
+.unvisited {
+   color: #FF0;
+}
+
+/*Used for CS */
+table.csShips th.header {
+	background: #500;
+}
+table.csForces th.header {
+	background: #005;
+}
+
+/* Used for planets */
+.uninhab {
+   color: #F00;
+}
+.inhab {
+   color: #0F0;
+}
+
+/* LM */
+div.connectSeclm {
+	background-color: #1154A6;
+	/* for IE */
+	filter: alpha(opacity=70);
+	/* CSS3 standard */
+	opacity: 0.7;
+}
+div.connectSeclm:hover {
+	background-color: #1138A6;
+}
+div.currentSeclm {
+	background-color: #1154A6;
+}
+div.currentSeclm:hover {
+	background-color: #1138A6;
+}
+div.currentSeclm2 {
+	background: url('../../images/currentsector.png');
+	_background: none; /* Disable transparent image for IE6 as it can't handle it */
+}
+div.currentSeclm:hover {
+	background-color: #8B7131;
+}
+
+div.normalSeclm {
+	background-color: #000048;
+	 /* for IE */
+	filter: alpha(opacity=70);
+	/* CSS3 standard */
+	opacity: 0.7;
+}
+div.normalSeclmu {
+	background-color: #000;
+}
+
+/* Starry background */
+.stars {
+	background-image: url(../../images/stars2.png);
+}
