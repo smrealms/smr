@@ -104,9 +104,7 @@
 								} ?>
 							</div><?php
 						} ?>
-						<div class="lmsector center <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?> fullwidth">
-							<?php echo $Sector->getSectorID(); ?>
-						</div><?php
+						<div class="lmsector center <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?> fullwidth"><?php echo $Sector->getSectorID(); ?></div><?php
 						if($Sector->isVisited($ThisPlayer))
 						{
 							?><div class="right lmright"><?php

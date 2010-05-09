@@ -176,6 +176,7 @@ define('EOL',"\n");
 define('TEMPLATES_DIR',LIB . 'templates/');
 
 define('DEFAULT_CSS',URL.'/css/default.css');
+define('DEFAULT_CSS_COLOUR',URL.'/css/Default/Default.css');
 
 define('AJAX_DEFAULT_REFRESH_TIME',2000);
 define('AJAX_UNPROTECTED_REFRESH_TIME',800);
@@ -187,6 +188,7 @@ define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 //	$template->assign('javaScriptFiles',$db->_JS);
 	$template->assign('URL',URL);
 	$template->assign('CSSLink',DEFAULT_CSS);
+	$template->assign('CSSColourLink',DEFAULT_CSS);
 	$template->assign('Title','Space Merchant Realms 1.6:');
 	$template->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));
 	$template->assign('isAprilFools',(date('n') == 4 && date('j') == 1));
