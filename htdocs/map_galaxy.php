@@ -69,47 +69,10 @@ try
 	// create account object
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	
-?>
-<!DOCTYPE HTML PUBliC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
-
-<html>
-	<head>
-    <link rel="stylesheet" type="text/css" href="css/default.css">
-    <link rel="stylesheet" type="text/css" href="css/Default/Default.css">
-    <title>Galaxy Map</title>
-    <meta http-equiv="pragma" content="no-cache">
-    <style type="text/css">
-      body {
-        font-size:<?php echo $account->getFontSize(); ?>%;
-      }
-    </style>
-    </head>
-	
-	<body>
-	
-	<h1>View Galaxy</h1><?php
-	
 	if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id']))
 	{
 		$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
 	}
-	$gameGals =& SmrGalaxy::getGameGalaxies($player->getGameID());
-	echo '<br/><form name="GalaxyMapForm" method="GET"><select name="galaxy_id" onchange="this.form.submit()">';
-	foreach($gameGals as &$gameGalaxy)
-	{
-		$galaxyID		= $gameGalaxy->getGalaxyID();
-	
-		echo('<option value="'.$galaxyID.'"'.($galaxy->equals($gameGalaxy)?' selected="selected"':'').'>');
-		echo('<a href="'.URL.'/map_galaxy.php?galaxy_id='.$galaxyID.'">'.$gameGalaxy->getName().'</a>');
-		echo('</option>');
-	} unset($gameGalaxy);
-	echo '</select> <input type="submit" value="View"/></form>';
-	
-	$galaxyID = $galaxy->getGalaxyID();
-	$ship =& $player->getShip();
-	
-	$template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID()));
 	
 	
 	$template->assign('GalaxyName',$galaxy->getName());
@@ -153,8 +116,13 @@ try
 			$mapSectors[$i][$j] =& $thisSec;
 		}
 	}
+	
+	$template->assignByRef('ThisGalaxy',$galaxy);
+	$template->assignByRef('ThisAccount',$account);
+	$template->assignByRef('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
+	$template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID()));
 	$template->assignByRef('MapSectors',$mapSectors);
-	$template->assignByRef('ThisShip',$ship);
+	$template->assignByRef('ThisShip',$player->getShip());
 	$template->assignByRef('ThisPlayer',$player);
 	$template->display('GalaxyMap.inc');
 }

@@ -9,6 +9,11 @@
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
 			<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>/css/<?php echo $ThisAccount->getTemplate(); ?>/<?php echo $ThisAccount->getColourScheme();?>.css" /><?php
 		}
+		else if(!is_object($ThisAccount))
+		{ ?>
+			<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
+			<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>"><?php
+		}
 		if(isset($ExtraCSSLink))
 		{
 			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>"><?php
