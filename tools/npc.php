@@ -93,7 +93,9 @@ function NPCStuff()
 	global $account;
 	
 	for($i=0;$i<40;$i++)
-	{  //We have to reload player on each loop
+	{
+		debug('Action #'.$i);
+		//We have to reload player on each loop
 		$player	=& SmrPlayer::getPlayer($account->getAccountID(), SmrSession::$game_id);
 		$GLOBALS['player'] =& $player;
 		$TRADE_ROUTES =& findRoutes();
@@ -244,6 +246,7 @@ function NPCStuff()
 			}
 		}
 	}
+	debug('Actions Finished.');
 	release_lock(); //Release any lock we may have before exiting.
 	exit;
 }
