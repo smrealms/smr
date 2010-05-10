@@ -15,9 +15,30 @@ try
 											//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
 	}
 	define('OVERRIDE_FORWARD',true);
+	
+	define('NPCScript',true);
 
+	
+	$db = new SmrMySqlDatabase();
+	$db2 = new SmrMySqlDatabase();
+	$db->query('SELECT login FROM npc_logins WHERE working='.$db->escapeBoolean(false));
+	while($db->nextRecord())
+	{
+		$db2->query('UPDATE npc_logins SET working='.$db2->escapeBoolean(true).' WHERE login='.$db2->escapeString($db->getField('login')).' AND working='.$db2->escapeBoolean(false));
+		if($db2->getChangedRows()>0)
+		{
+			define('NPC_LOGIN',$db->getField('login'));
+			break;
+		}
+	}
+
+	if(!defined('NPC_LOGIN'))
+	{
+		debug('No free NPCs');
+		exit;
+	}
+	
 	//define('NPC_LOGIN','NPCTest');
-	define('NPC_LOGIN','NPC');
 //	define('NPC_LOGIN','Page'); //Using my account as NPC so I can follow what's going on more easily. Requires hacking locks away in smr.inc however :(
 	//The plan is later to query this from a database table that lists a bunch of NPCs, and also lists when they last acted etc.
 
@@ -32,13 +53,16 @@ try
 
 	if(SmrAccount::getAccountByName(NPC_LOGIN)==null)
 	{
-		SmrAccount::createAccount(NPC_LOGIN,'21sdgasdg,s..,23','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
-	} //TODO: Auto-create player as well.
-
-	$account =& SmrAccount::getAccountByName(NPC_LOGIN);
+		$account =& SmrAccount::createAccount(NPC_LOGIN,'21sdgasdg,s..,23','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
+		$account->validated = 'TRUE';
+		$account->update();
+	}
+	else
+	{
+		$account =& SmrAccount::getAccountByName(NPC_LOGIN);
+	}
 
 	SmrSession::$account_id = $account->getAccountID();
-	SmrSession::$game_id = NPC_GAME_ID;
 
 	require_once(get_file_loc('Plotter.class.inc'));
 	require_once(get_file_loc('RouteGenerator.class.inc'));
@@ -84,6 +108,28 @@ catch(Exception $e)
 		}
 		$message .= 'Trace: ' . $ee->getTraceAsString();
 	}
+		
+	try
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString(NPC_LOGIN));
+		if($db->getChangedRows()>0)
+			debug('Unlocked NPC: '.NPC_LOGIN);
+		else
+			debug('Failed to unlock NPC: '.NPC_LOGIN);
+	}
+	catch(Exception $ee)
+	{
+		$message .= EOL.EOL.'-----------'.EOL.EOL.
+					'Releasing NPC Failed' .EOL.
+					'Message: ' . $ee->getMessage() .EOL.EOL;
+		if($currMySQLError!=mysql_error())
+		{
+			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
+		}
+		$message .= 'Trace: ' . $ee->getTraceAsString();
+	}
+	
 	var_dump($message);
 	exit;
 }
@@ -94,15 +140,26 @@ function NPCStuff()
 	
 	for($i=0;$i<40;$i++)
 	{
-		debug('Action #'.$i);
-		//We have to reload player on each loop
-		$player	=& SmrPlayer::getPlayer($account->getAccountID(), SmrSession::$game_id);
-		$GLOBALS['player'] =& $player;
-		$TRADE_ROUTES =& findRoutes();
-		if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
-			$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
 		try
 		{
+			debug('Action #'.$i);
+			
+			if($i==0)
+			{ //Auto-create player if need be.
+				$db = new SmrMySqlDatabase();
+				$db->query('SELECT * FROM player WHERE account_id = '.$account->getAccountID().' AND game_id = '.NPC_GAME_ID.' LIMIT 1');
+				if(!$db->nextRecord())
+					processContainer(joinGame(SmrSession::$game_id,$account->getLogin()));
+			}
+			SmrSession::$game_id = NPC_GAME_ID;
+			
+			//We have to reload player on each loop
+			$player	=& SmrPlayer::getPlayer($account->getAccountID(), SmrSession::$game_id);
+			$GLOBALS['player'] =& $player;
+			$TRADE_ROUTES =& findRoutes();
+			if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
+				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
+			
 			if($player->getShip()->isUnderAttack()===true&&($player->hasPlottedCourse()===false||SmrSector::getSector($player->getGameID(),$player->getPlottedCourse()->getEndSectorId())->offersFederalProtection()===false))
 			{ //We're under attack and need to plot course to fed.
 				debug('Under Attack');
@@ -247,6 +304,12 @@ function NPCStuff()
 		}
 	}
 	debug('Actions Finished.');
+	$db = new SmrMySqlDatabase();
+	$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString(NPC_LOGIN));
+	if($db->getChangedRows()>0)
+		debug('Unlocked NPC: '.NPC_LOGIN);
+	else
+		debug('Failed to unlock NPC: '.NPC_LOGIN);
 	release_lock(); //Release any lock we may have before exiting.
 	exit;
 }
@@ -335,6 +398,13 @@ function &changeRoute(array &$tradeRoutes)
 	$tradeRoute =& $tradeRoutes[$routeKey];
 	unset($tradeRoutes[$routeKey]);
 	return $tradeRoute;
+}
+
+function joinGame($gameID,$playerName)
+{
+	$_REQUEST['player_name'] = $playerName;
+	$_REQUEST['race_id'] = 2;
+	return create_container('game_join_processing.php','',array('game_id'=>NPC_GAME_ID));
 }
 
 function &findRoutes()
