@@ -9,5 +9,5 @@ CREATE TABLE `smr_new`.`route_cache`
 ,	`routes_for_port` INT NOT NULL
 ,	`max_distance` INT NOT NULL
 ,	`routes` BLOB NOT NULL
-,	PRIMARY KEY (`game_id`, `max_ports`, `goods_allowed`, `races_allowed`, `start_sector_id`, `end_sector_id`, `routes_for_port`)
+,	PRIMARY KEY (`game_id`, `max_ports`, `goods_allowed`, `races_allowed`, `start_sector_id`, `end_sector_id`, `routes_for_port`, `max_distance`)
 ) ENGINE = MyISAM;
