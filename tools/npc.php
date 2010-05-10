@@ -255,6 +255,7 @@ function debug($message)
 
 function processContainer($container)
 {
+	var_dump($container);
 	resetContainer($container);
 	do_voodoo();
 }
