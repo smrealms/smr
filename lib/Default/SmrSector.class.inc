@@ -884,7 +884,7 @@ class SmrSector
 		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,$defendingPlayer);
 	}
 	
-	public static function limitFightingTraders(array &$fightingPlayers, AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer $defendingPlayer)
+	public static function limitFightingTraders(array &$fightingPlayers, AbstractSmrPlayer &$attackingPlayer, $defendingPlayer)
 	{
 		// Cap fleets to the required size
 		foreach($fightingPlayers as $team => &$teamPlayers)
