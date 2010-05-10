@@ -1,47 +1,91 @@
 <?php
-echo '<pre>';
-require_once('../htdocs/config.inc');
-require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
-require_once(LIB . 'Default/Globals.class.inc');
-
-$forwardedCount = 0;
-function overrideForward($container)
+try
 {
-	if($container['body']=='error.php') //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
-		throw new Exception($container['message']);
-	throw new Exception('Forward'); //We catch and check for exceptions with the message "Forward" in NPCStuff, very hacky but works - need to extend Exception for a less over-arching catch.
-										//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
+	echo '<pre>';
+	require_once('../htdocs/config.inc');
+	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+	require_once(LIB . 'Default/Globals.class.inc');
+
+	$forwardedCount = 0;
+	function overrideForward($container)
+	{
+		if($container['body']=='error.php') //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
+			throw new Exception($container['message']);
+		throw new Exception('Forward'); //We catch and check for exceptions with the message "Forward" in NPCStuff, very hacky but works - need to extend Exception for a less over-arching catch.
+											//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
+	}
+	define('OVERRIDE_FORWARD',true);
+
+	//define('NPC_LOGIN','NPCTest');
+	define('NPC_LOGIN','Page'); //Using my account as NPC so I can follow what's going on more easily. Requires hacking locks away in smr.inc however :(
+	//The plan is later to query this from a database table that lists a bunch of NPCs, and also lists when they last acted etc.
+
+	define('NPC_GAME_ID',108);
+
+	$HIDDEN_PLAYERS = array();
+
+	require_once(get_file_loc('smr.inc'));
+
+
+	require_once(get_file_loc('SmrAccount.class.inc'));
+
+	if(SmrAccount::getAccountByName(NPC_LOGIN)==null)
+	{
+		SmrAccount::createAccount(NPC_LOGIN,'21sdgasdg,s..,23','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
+	} //TODO: Auto-create player as well.
+
+	$account =& SmrAccount::getAccountByName(NPC_LOGIN);
+
+	SmrSession::$account_id = $account->getAccountID();
+	SmrSession::$game_id = NPC_GAME_ID;
+
+	require_once(get_file_loc('Plotter.class.inc'));
+	require_once(get_file_loc('RouteGenerator.class.inc'));
+	require_once(get_file_loc('shop_goods.inc'));
+
+	NPCStuff();
 }
-define('OVERRIDE_FORWARD',true);
-
-//define('NPC_LOGIN','NPCTest');
-define('NPC_LOGIN','Page'); //Using my account as NPC so I can follow what's going on more easily. Requires hacking locks away in smr.inc however :(
-//The plan is later to query this from a database table that lists a bunch of NPCs, and also lists when they last acted etc.
-
-define('NPC_GAME_ID',108);
-
-$HIDDEN_PLAYERS = array();
-
-require_once(get_file_loc('smr.inc'));
-
-
-require_once(get_file_loc('SmrAccount.class.inc'));
-
-if(SmrAccount::getAccountByName(NPC_LOGIN)==null)
+catch(Exception $e)
 {
-	SmrAccount::createAccount(NPC_LOGIN,'21sdgasdg,s..,23','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
-} //TODO: Auto-create player as well.
-
-$account =& SmrAccount::getAccountByName(NPC_LOGIN);
-
-SmrSession::$account_id = $account->getAccountID();
-SmrSession::$game_id = NPC_GAME_ID;
-
-require_once(get_file_loc('Plotter.class.inc'));
-require_once(get_file_loc('RouteGenerator.class.inc'));
-require_once(get_file_loc('shop_goods.inc'));
-
-NPCStuff();
+	global $account,$var,$player;
+	$errorType = 'Error';
+	$message='';
+	$currMySQLError='';
+	if(is_object($account))
+	{
+		$message .= 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
+			'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
+			'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL;
+	}
+	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
+	if($currMySQLError = mysql_error())
+	{
+		$errorType = 'Database Error';
+		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
+	}
+	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
+		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
+		'USING_AJAX: '.(defined('USING_AJAX')?var_export(USING_AJAX,true):'undefined');
+		
+	try
+	{
+		if(function_exists('release_lock'))
+			release_lock(); //Try to release lock so they can carry on normally
+	}
+	catch(Exception $ee)
+	{
+		$message .= EOL.EOL.'-----------'.EOL.EOL.
+					'Releasing Lock Failed' .EOL.
+					'Message: ' . $ee->getMessage() .EOL.EOL;
+		if($currMySQLError!=mysql_error())
+		{
+			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
+		}
+		$message .= 'Trace: ' . $ee->getTraceAsString();
+	}
+	var_dump($message);
+	exit;
+}
 		
 function NPCStuff()
 {
