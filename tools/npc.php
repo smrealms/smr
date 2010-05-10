@@ -17,7 +17,8 @@ try
 	define('OVERRIDE_FORWARD',true);
 
 	//define('NPC_LOGIN','NPCTest');
-	define('NPC_LOGIN','Page'); //Using my account as NPC so I can follow what's going on more easily. Requires hacking locks away in smr.inc however :(
+	define('NPC_LOGIN','NPC');
+//	define('NPC_LOGIN','Page'); //Using my account as NPC so I can follow what's going on more easily. Requires hacking locks away in smr.inc however :(
 	//The plan is later to query this from a database table that lists a bunch of NPCs, and also lists when they last acted etc.
 
 	define('NPC_GAME_ID',108);
