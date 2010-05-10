@@ -26,12 +26,17 @@ try
 	$db = new SmrMySqlDatabase();
 	$login = trim($_REQUEST['login']);
 	$password = trim($_REQUEST['password']);
-	if (strstr($login, '\'') || strstr($password, '\'')) {
-	
+	if (strstr($login, '\'') || strstr($password, '\''))
+	{
 		$msg = 'Illegal character in login or password detected! Don\'t use the apostrophe.';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
-	
+	}
+	if(strpos($login,'NPC')===0)
+	{
+		$msg = 'Login names cannot begin with "NPC".';
+		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
 	}
 	if (isset($_REQUEST['agreement']) && empty($_REQUEST['agreement'])) {
 	

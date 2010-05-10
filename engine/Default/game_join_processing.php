@@ -1,12 +1,16 @@
 <?php
 
+// trim input now
+$player_name = trim($_REQUEST['player_name']);
+
+if(!defined('NPCScript')&&strpos($player_name,'NPC')===0)
+	create_error('Player names cannot begin with "NPC".');
+
 // disallow certain ascii chars
-for ($i = 0; $i < strlen($_POST['player_name']); $i++)
-	if (ord($_POST['player_name'][$i]) < 32 || ord($_POST['player_name'][$i]) > 127)
+for ($i = 0; $i < strlen($player_name); $i++)
+	if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127)
 		create_error('The player name contains invalid characters!');
 
-// trim input now
-$player_name = trim($_POST['player_name']);
 
 if (empty($player_name))
 	create_error('You must enter a player name!');
