@@ -250,7 +250,7 @@ function NPCStuff()
 
 function debug($message)
 {
-	echo $message.EOL;
+	echo date('Y-m-d H:i:s').$message.EOL;
 }
 
 function processContainer($container)
