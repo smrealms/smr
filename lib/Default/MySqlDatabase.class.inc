@@ -91,6 +91,11 @@ abstract class MySqlDatabase implements Database
 		return @mysql_num_rows($this->dbResult);
 	}
 	
+	public function getChangedRows()
+	{
+		return @mysql_affected_rows(self::$dbConn);
+	}
+	
 	public function getInsertID()
 	{
 		return @mysql_insert_id(self::$dbConn);

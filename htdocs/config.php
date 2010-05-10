@@ -190,8 +190,8 @@ define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 	$template->assign('CSSLink',DEFAULT_CSS);
 	$template->assign('CSSColourLink',DEFAULT_CSS_COLOUR);
 	$template->assign('Title','Space Merchant Realms 1.6:');
-	$template->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));
-	$template->assign('isAprilFools',(date('n') == 4 && date('j') == 1));
+//	$template->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));
+//	$template->assign('isAprilFools',(date('n') == 4 && date('j') == 1));
 	
 	$links = array('Register' => 'login_create.php',
 					'ResetPassword' => 'resend_password.php');
