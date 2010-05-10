@@ -555,6 +555,9 @@ function release_lock()
 
 function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 {
+	$template->assign('CSSLink',URL.'/'.$account->getTemplate().'.css');
+	$template->assign('CSSColourLink',URL.'/'.$account->getTemplate().'/'.$account->getColourScheme().'.css');
+
 	$template->assign('FontSize',$account->getFontSize());
 	$template->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
 	if(!$account->isUseAJAX())

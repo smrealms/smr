@@ -175,7 +175,7 @@ define('EOL',"\n");
 
 define('TEMPLATES_DIR',LIB . 'templates/');
 
-define('DEFAULT_CSS',URL.'/css/default.css');
+define('DEFAULT_CSS',URL.'/css/Default.css');
 define('DEFAULT_CSS_COLOUR',URL.'/css/Default/Default.css');
 
 define('AJAX_DEFAULT_REFRESH_TIME',2000);

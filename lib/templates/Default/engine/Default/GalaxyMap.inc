@@ -2,10 +2,10 @@
 "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 	<head><?php
-		if(is_object($ThisAccount) && $ThisAccount->isDefaultCSSEnabled())
+		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled())
 		{ ?>
-			<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>/css/Freon22.css" />
-			<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>/css/<?php echo $ThisAccount->getTemplate(); ?>/<?php echo $ThisAccount->getColourScheme(); ?>.css" /><?php // echo $CSSLink;
+			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
+			<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
 		}
 		if(isset($ExtraCSSLink))
 		{

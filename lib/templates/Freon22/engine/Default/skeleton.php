@@ -3,10 +3,10 @@
 	<head>
 		<title><?php echo $Title; ?> <?php if(isset($GameName)) echo $GameName; ?></title>
 		<meta http-equiv="pragma" content="no-cache" /><?php
-		if(is_object($ThisAccount) && $ThisAccount->isDefaultCSSEnabled())
+		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled())
 		{ ?>
-			<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>/css/Freon22.css" />
-			<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>/css/<?php echo $ThisAccount->getTemplate(); ?>/<?php echo $ThisAccount->getColourScheme(); ?>.css" /><?php // echo $CSSLink;
+			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>" />
+			<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
 		}
 		if(isset($ExtraCSSLink))
 		{
