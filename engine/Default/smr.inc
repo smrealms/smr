@@ -448,7 +448,7 @@ function do_voodoo()
 
 	}
 
-	require_once(get_file_loc($var['url']));
+	require(get_file_loc($var['url']));
 	if($var['body'])
 	{
 		$PHP_OUTPUT = '';
