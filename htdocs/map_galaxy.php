@@ -117,6 +117,8 @@ try
 		}
 	}
 	
+	$template->assign('CSSLink',URL.'/css/'.$account->getTemplate().'.css');
+	$template->assign('CSSColourLink',URL.'/css/'.$account->getTemplate().'/'.$account->getColourScheme().'.css');
 	$template->assignByRef('ThisGalaxy',$galaxy);
 	$template->assignByRef('ThisAccount',$account);
 	$template->assignByRef('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
