@@ -2,7 +2,7 @@ CREATE TABLE `smr_new`.`route_cache`
 (
 	`game_id` INT UNSIGNED NOT NULL
 ,	`max_ports` INT NOT NULL
-,	`goods_allowed` VARCHAR(100) NOT NULL
+,	`goods_allowed` VARCHAR(150) NOT NULL
 ,	`races_allowed` VARCHAR(100) NOT NULL
 ,	`start_sector_id` INT UNSIGNED NOT NULL
 ,	`end_sector_id` INT UNSIGNED NOT NULL
