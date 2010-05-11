@@ -24,7 +24,7 @@ class SmrPort
 	protected $attackStarted;
 	protected $level;
 	protected $credits;
-	protected $upgradeCredits;
+	protected $upgrade;
 	protected $experience;
 	protected $goods;
 	
@@ -395,9 +395,9 @@ class SmrPort
 			throw new Exception('Cannot upgrade a cached port!');
 		while($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9)
 		{
-			$this->doUpgrade();
 			$this->decreaseUpgrade($this->getUpgradeRequirement());
 			$this->decreaseCredits($this->getUpgradeRequirement());
+			$this->doUpgrade();
 		}
 	}
 	
