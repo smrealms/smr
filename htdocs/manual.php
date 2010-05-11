@@ -5,54 +5,52 @@ try
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(ENGINE . 'Default/smr.inc');
 	require_once(ENGINE . 'Default/help.inc');
-	
+
 	$topic_id = $_SERVER['QUERY_STRING'];
 	if (empty($topic_id)||!is_numeric($topic_id))
 		$topic_id = 1;
-	
-	echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
-	
-	echo ('<html>');
-	echo ('<head>');
-	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/default.css">');
-	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/Default/Default.css">');
-	echo ('<title>Space Merchant Realms - Manual</title>');
-	echo ('<meta http-equiv="pragma" content="no-cache">');
-	echo ('</head>');
-	
-	echo ('<body>');
-	
-	echo ('<table width="100%" border="0">');
-	
-	echo ('<tr>');
-	echo ('<td>');
-	echo_nav($topic_id);
-	echo ('</td>');
-	echo ('</tr>');
-	
-	echo ('<tr>');
-	echo ('<td>');
-	echo_content($topic_id);
-	echo ('</td>');
-	echo ('</tr>');
-	
-	echo ('<tr>');
-	echo ('<td>');
-	echo_subsection($topic_id);
-	echo ('</td>');
-	echo ('</tr>');
-	
-	echo ('<tr>');
-	echo ('<td>');
-	echo_nav($topic_id);
-	echo ('</td>');
-	echo ('</tr>');
-	
-	echo ('</table>');
-	
-	echo ('</body>');
-	echo ('</html>');
+	?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+            "http://www.w3.org/TR/html4/loose.dtd">
 
+<html>
+	<head>
+		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
+		<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
+		<title>Space Merchant Realms - Manual</title>
+		<meta http-equiv="pragma" content="no-cache">
+	</head>
+
+	<body>
+
+		<table width="100%" border="0">
+			<tr>
+				<td>
+					<?php echo_nav($topic_id); ?>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<?php echo_content($topic_id); ?>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<?php echo_subsection($topic_id); ?>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<?php echo_nav($topic_id); ?>
+				</td>
+			</tr>
+
+		</table>
+
+	</body>
+	</html><?php
 }
 catch(Exception $e)
 {

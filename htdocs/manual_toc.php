@@ -5,74 +5,72 @@ try
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(ENGINE . 'Default/smr.inc');
 	require_once(ENGINE . 'Default/help.inc');
-	
-	echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
-	
-	echo ('<html>');
-	echo ('<head>');
-	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/default.css">');
-	echo ('<link rel="stylesheet" type="text/css" href="'.URL.'/css/Default/Default.css">');
-	echo ('<title>Space Merchant Realms - Manual</title>');
-	echo ('<meta http-equiv="pragma" content="no-cache">');
-	echo ('</head>');
-	
-	echo ('<body>');
-	
-	echo ('<table width="100%" border="0">');
-	
-	echo ('<tr>');
-	echo ('<td>');
-	echo ('<table>');
-	echo ('<tr>');
-	echo ('<th width="32">');
-	echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
-	echo ('</th>');
-	echo ('<th width="32">');
-	echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
-	echo ('</th>');
-	echo ('<th width="32">');
-	echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
-	echo ('</th>');
-	echo ('<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>');
-	echo ('<th width="32"><a href="'.URL.'/manual_toc.php"><img src="'.URL.'/images/help/contents.jpg" width="32" height="32" border="0"></a></th>');
-	echo ('</tr>');
-	echo ('</table>');
-	echo ('</td>');
-	echo ('</tr>');
-	
-	echo ('<tr>');
-	echo ('<td>');
-	
-	echo_menu(0);
-	
-	echo ('</td>');
-	echo ('</tr>');
-	
-	echo ('<tr>');
-	echo ('<td>');
-	echo ('<table>');
-	echo ('<tr>');
-	echo ('<th width="32">');
-	echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
-	echo ('</th>');
-	echo ('<th width="32">');
-	echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
-	echo ('</th>');
-	echo ('<th width="32">');
-	echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
-	echo ('</th>');
-	echo ('<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>');
-	echo ('<th width="32"><a href="'.URL.'/manual_toc.php"><img src="'.URL.'/images/help/contents.jpg" width="32" height="32" border="0"></a></th>');
-	echo ('</tr>');
-	echo ('</table>');
-	echo ('</td>');
-	echo ('</tr>');
-	
-	echo ('</table>');
-	
-	echo ('</body>');
-	echo ('</html>');
+	?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+            "http://www.w3.org/TR/html4/loose.dtd">
 
+<html>
+	<head>
+	<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
+	<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
+		<title>Space Merchant Realms - Manual</title>
+		<meta http-equiv="pragma" content="no-cache">
+	</head>
+
+	<body>
+
+		<table width="100%" border="0">
+
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<th width="32">
+								<img src="<?php echo URL; ?>/images/help/empty.jpg" width="32" height="32">
+							</th>
+							<th width="32">
+								<img src="<?php echo URL; ?>/images/help/empty.jpg" width="32" height="32">
+							</th>
+							<th width="32">
+								<img src="<?php echo URL; ?>/images/help/empty.jpg" width="32" height="32">
+							</th>
+							<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>
+							<th width="32"><a href="<?php echo URL; ?>/manual_toc.php"><img src="<?php echo URL; ?>/images/help/contents.jpg" width="32" height="32" border="0"></a></th>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+				<?php echo_menu(0); ?>
+				</td>
+			</tr>
+
+			<tr>
+				<td>
+					<table>
+						<tr>
+							<th width="32">
+								<img src="<?php echo URL; ?>/images/help/empty.jpg" width="32" height="32">
+							</th>
+							<th width="32">
+								<img src="<?php echo URL; ?>/images/help/empty.jpg" width="32" height="32">
+							</th>
+							<th width="32">
+								<img src="<?php echo URL; ?>/images/help/empty.jpg" width="32" height="32">
+							</th>
+							<th width="100%" align="center" valign="middle" style="font-size:18pt;font-weight:bold;">Table of Content</th>
+							<th width="32"><a href="<?php echo URL; ?>/manual_toc.php"><img src="<?php echo URL; ?>/images/help/contents.jpg" width="32" height="32" border="0"></a></th>
+						</tr>
+					</table>
+				</td>
+			</tr>
+
+		</table>
+
+	</body>
+</html><?php
 }
 catch(Exception $e)
 {
