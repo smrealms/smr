@@ -430,31 +430,36 @@ function canWeUNO(AbstractSmrPlayer &$player)
 		return false;
 	$sector =& $player->getSector();
 	
+	// We buy armour in preference to shields as it's cheaper.
+	// We buy cargo holds last if we have no newbie turns because we'd rather not die
+	$hardwareArray = array(HARDWARE_ARMOUR,HARDWARE_SHIELDS,HARDWARE_CARGO);
+	
+	$amount = 0;
+	
 	$locations =& $sector->getLocations();
 	foreach($locations as &$location)
 	{
 		if($location->isHardwareSold())
 		{
 			$hardware =& $location->getHardwareSold();
-			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]))
+			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareID)))) > 0)
 			{ // Buy cargo holds first if we have plenty of newbie turns left.
 				$hardwareID = HARDWARE_CARGO;
 			}
-			else if(!$ship->hasMaxArmour() && isset($hardware[HARDWARE_ARMOUR]))
-			{ // We buy armour in preference to shields as it's cheaper.
-				$hardwareID = HARDWARE_ARMOUR;
-			}
-			else if(!$ship->hasMaxShields() && isset($hardware[HARDWARE_SHIELDS]))
+			else
 			{
-				$hardwareID = HARDWARE_SHIELDS;
-			}
-			else if(!$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]))
-			{ // We buy cargo holds last if we have no newbie turns because we'd rather not die
-				$hardwareID = HARDWARE_CARGO;
+				foreach($hardwareArray as $hardwareArrayID)
+				{
+					if(!$ship->hasMaxHardware($hardwareArrayID) && isset($hardware[hardwareArrayID]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareID)))) > 0)
+					{
+						$hardwareID = HARDWARE_ARMOUR;
+						break;
+					}
+				}
 			}
 			if(isset($hardwareID))
 			{
-				return doUNO($hardwareID,min($ship->getMaxHardware($hardwareID)-$ship->getHardware($hardwareID),floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareID))));
+				return doUNO($hardwareID,min($ship->getMaxHardware($hardwareID)-$ship->getHardware($hardwareID),$amount);
 			}
 		}
 	}
