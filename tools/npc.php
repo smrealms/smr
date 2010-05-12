@@ -187,7 +187,7 @@ function NPCStuff()
 			else if(($container = canWeUNO($player))!==false)
 			{ //We have money and are at a uno, let's uno!
 				debug('We\'re UNOing');
-				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
+				processContainer($container);
 			}
 			else if($player->hasPlottedCourse()===true)
 			{ //We have a route to follow, figure it's probably a sensible thing to follow.
