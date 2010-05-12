@@ -430,7 +430,7 @@ function canWeUNO(AbstractSmrPlayer &$player)
 		return false;
 	$sector =& $player->getSector();
 	
-	$locations =& $this->getLocations();
+	$locations =& $sector->getLocations();
 	foreach($locations as &$location)
 	{
 		if($location->isHardwareSold())
