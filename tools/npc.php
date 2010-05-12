@@ -459,7 +459,7 @@ function canWeUNO(AbstractSmrPlayer &$player)
 			}
 			if(isset($hardwareID))
 			{
-				return doUNO($hardwareID,min($ship->getMaxHardware($hardwareID)-$ship->getHardware($hardwareID),$amount);
+				return doUNO($hardwareID,min($ship->getMaxHardware($hardwareID)-$ship->getHardware($hardwareID),$amount));
 			}
 		}
 	}
