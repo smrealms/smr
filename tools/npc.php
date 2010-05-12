@@ -137,6 +137,7 @@ function NPCStuff()
 			
 			//We have to reload player on each loop
 			$player	=& SmrPlayer::getPlayer($account->getAccountID(), SmrSession::$game_id);
+			$player->updateTurns();
 			$GLOBALS['player'] =& $player;
 			
 			if($actions==0)
