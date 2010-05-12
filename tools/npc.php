@@ -30,8 +30,8 @@ try
 	define('NPC_START_TURNS',300);
 	define('MINUMUM_RESERVE_CREDITS',100000);
 	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
-	define('MIN_SLEEP_TIME',1000);
-	define('MAX_SLEEP_TIME',1500);
+	define('MIN_SLEEP_TIME',1000000);
+	define('MAX_SLEEP_TIME',1500000);
 
 	$HIDDEN_PLAYERS = array();
 
