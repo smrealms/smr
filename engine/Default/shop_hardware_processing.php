@@ -6,9 +6,9 @@ if (!is_numeric($amount))
 // only whole numbers allowed
 $amount = floor($amount);
 
-$hardware_id	= $var['hardware_id'];
-$hardware_name	= $var['hardware_name'];
-$cost			= $var['cost'];
+$hardware_id = $var['hardware_id'];
+$hardware_name = Globals::getHardwareName($hardware_id);
+$cost = Globals::getHardwareCost($hardware_id);
 
 // no negative amounts are allowed
 if ($amount <= 0)

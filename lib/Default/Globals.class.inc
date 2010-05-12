@@ -196,6 +196,18 @@ class Globals
 		return self::$HARDWARE_TYPES[$hardwareTypeID];
 	}
 	
+	public static function getHardwareName($hardwareTypeID)
+	{
+		$hardware =& self::getGoods();
+		return $hardware[$hardwareTypeID]['Name'];
+	}
+	
+	public static function getHardwareCost($hardwareTypeID)
+	{
+		$hardware =& self::getGoods();
+		return $hardware[$hardwareTypeID]['Cost'];
+	}
+	
 	public static function &getGameInfo($gameID = false)
 	{
 		if($gameID===false)

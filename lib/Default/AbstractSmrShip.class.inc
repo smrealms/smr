@@ -629,6 +629,11 @@ abstract class AbstractSmrShip
 		return $this->getShields()<$this->getOldShields();
 	}
 	
+	public function hasMaxShields()
+	{
+		return $this->getShields()==$this->getMaxShields();
+	}
+	
 	public function getMaxShields()
 	{
 		return $this->getMaxHardware(HARDWARE_SHIELDS);
@@ -674,6 +679,11 @@ abstract class AbstractSmrShip
 	public function hasLostArmour()
 	{
 		return $this->getArmour()<$this->getOldArmour();
+	}
+	
+	public function hasMaxArmour()
+	{
+		return $this->getArmour()==$this->getMaxArmour();
 	}
 	
 	public function getMaxArmour()
@@ -869,6 +879,11 @@ abstract class AbstractSmrShip
 	public function getUsedHolds()
 	{
 		return array_sum($this->getCargo());
+	}
+	
+	public function hasMaxCargoHolds()
+	{
+		return $this->getCargoHolds()==$this->getMaxCargoHolds();
 	}
 	
 	public function getMaxCargoHolds()
