@@ -521,7 +521,7 @@ class SmrPort
 		$this->goods['All Goods'][$goodID] =& $newGood;
 		$this->goods[$type][$type] =& $newGood;
 		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->getGameID() . ',' . $this->getSectorID() . ',' . $goodID . ',' . $this->db->escapeString($type) . ',' . $newGood['Amount'] . ')');
-		$this->db->query('DELETE FROM routes_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
+		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
 	protected function removePortGood($goodID)
@@ -533,7 +533,7 @@ class SmrPort
 		elseif(isset($this->goods['Buy'][$goodID])) unset($this->goods['Buy'][$goodID]);
 		
 		$this->db->query('DELETE FROM port_has_goods WHERE '.$this->SQL.' AND good_id='.$goodID.';');
-		$this->db->query('DELETE FROM routes_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
+		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
 	public function checkForDowngrade($damageDone)
