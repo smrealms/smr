@@ -287,7 +287,14 @@ class SmrPort
 		if(!isset($good['Distance']))
 		{
 			$x = Globals::getGood($goodID);
-			$x['TransactionType'] = $good['TransactionType'];
+			switch($$good['TransactionType'])
+			{
+				case 'Buy':
+					$x['TransactionType'] = 'Sell';
+				break;
+				case 'Sell':
+					$x['TransactionType'] = 'Buy';
+			}
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if(is_object($di))
 				$di = $di->getRelativeDistance();
