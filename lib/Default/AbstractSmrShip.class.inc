@@ -580,6 +580,11 @@ abstract class AbstractSmrShip
 		$this->hasChangedHardware = true;
 	}
 	
+	public function hasMaxHardware($hardwareTypeID)
+	{
+		return $this->getHardware($hardwareTypeID)==$this->getMaxHardware($hardwareTypeID);
+	}
+	
 	public function getMaxHardware($hardwareTypeID = false)
 	{
 		if($hardwareTypeID === false)
