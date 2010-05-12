@@ -442,7 +442,7 @@ function canWeUNO(AbstractSmrPlayer &$player)
 		if($location->isHardwareSold())
 		{
 			$hardware =& $location->getHardwareSold();
-			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareID)))) > 0)
+			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost(HARDWARE_CARGO)))) > 0)
 			{ // Buy cargo holds first if we have plenty of newbie turns left.
 				$hardwareID = HARDWARE_CARGO;
 			}
@@ -450,7 +450,7 @@ function canWeUNO(AbstractSmrPlayer &$player)
 			{
 				foreach($hardwareArray as $hardwareArrayID)
 				{
-					if(!$ship->hasMaxHardware($hardwareArrayID) && isset($hardware[hardwareArrayID]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareID)))) > 0)
+					if(!$ship->hasMaxHardware($hardwareArrayID) && isset($hardware[hardwareArrayID]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareArrayID)))) > 0)
 					{
 						$hardwareID = HARDWARE_ARMOUR;
 						break;
