@@ -21,7 +21,7 @@ class Plotter
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if($checkSector->hasWarp()===true)
 		{
-			$d = new Distance($checkSector->getSectorID());
+			$d = new Distance($gameID,$checkSector->getSectorID());
 			$d->addWarpToPath($checkSector->getWarp());
 			$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $d;
 		}
@@ -30,7 +30,7 @@ class Plotter
 			if($nextSector!==0)
 			{
 				$visitedSectors[$nextSector] = true;
-				$d = new Distance($checkSector->getSectorID());
+				$d = new Distance($gameID,$checkSector->getSectorID());
 				$d->addToPath($nextSector);
 				$distanceQ[0][] = $d;
 			}
@@ -50,7 +50,7 @@ class Plotter
 			$maybeWarps=0;
 			while (($distance = array_shift($q))!==null)
 			{
-				$checkSectorID = $distance->getEndSectorId();
+				$checkSectorID = $distance->getEndSectorID();
 				$visitedSectors[$checkSectorID] = true; // This is here for warps, because they are delayed visits if we set this before the actual visit we'll get sectors marked as visited long before they are actually visited - causes problems when it's quicker to walk to the warp exit than to warp there.
 																// We still need to mark walked sectors as visited before we go to each one otherwise we get a huge number of paths being checked twice (up then left, left then up are essentially the same but if we set up-left as visited only when we actually check it then it gets queued up twice - nasty)
 				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit)
@@ -121,12 +121,14 @@ class Plotter
 
 class Distance
 {
+	private $gameID;
 	private $distance = -1; //First sector added will be the start and a distance of 0
 	private $numWarps = 0;
 	private $path = array();
 
-	public function __construct($_startSectorId)
+	public function __construct($gameID,$_startSectorId)
 	{
+		$this->gameID = $gameID;
 		$this->addToPath($_startSectorId);
 	}
 
@@ -190,9 +192,14 @@ class Distance
 	/**
 	 * @return the endSectorId
 	 */
-	public function getEndSectorId()
+	public function getEndSectorID()
 	{
 		return $this->path[count($this->path)-1];
+	}
+
+	public function &getEndSector()
+	{
+		return SmrSector::getSector($this->gameID,$this->getEndSectorID());
 	}
 
 	/**

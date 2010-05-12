@@ -28,6 +28,10 @@ try
 	define('NPC_GAME_ID',108);
 	define('NPC_LOW_TURNS',75);
 	define('NPC_START_TURNS',300);
+	define('MINUMUM_RESERVE_CREDITS',100000);
+	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
+	define('MIN_SLEEP_TIME',1000);
+	define('MAX_SLEEP_TIME',1500);
 
 	$HIDDEN_PLAYERS = array();
 
@@ -148,10 +152,20 @@ function NPCStuff()
 			if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
 			
-			if($player->getShip()->isUnderAttack()===true&&($player->hasPlottedCourse()===false||SmrSector::getSector($player->getGameID(),$player->getPlottedCourse()->getEndSectorId())->offersFederalProtection()===false))
+			if($player->getShip()->isUnderAttack()===true&&($player->hasPlottedCourse()===false||SmrSector::getSector($player->getGameID(),$player->getPlottedCourse()->getEndSectorID())->offersFederalProtection()===false))
 			{ //We're under attack and need to plot course to fed.
 				debug('Under Attack');
-				processContainer(plotToFed());
+				processContainer(plotToFed(true));
+			}
+			else if($player->hasPlottedCourse()===true&&$player->getPlottedCourse()->getEndSector()->offersFederalProtection())
+			{ //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
+				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
+				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
+			}
+			else if(($container = canWeUNO($player))!==false)
+			{ //We have money and are at a uno, let's uno!
+				debug('We\'re UNOing');
+				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
 			}
 			else if($player->hasPlottedCourse()===true)
 			{ //We have a route to follow, figure it's probably a sensible thing to follow.
@@ -166,7 +180,8 @@ function NPCStuff()
 					debug('We have newbie turns, let\'s just switch to another NPC.');
 					changeNPCLogin();
 				}
-				processContainer(plotToFed());
+				$ship =& $player->getShip();
+				processContainer(plotToFed(!$ship->hasMaxShields||!$ship->hasMaxArmour()||!$ship->hasMaxCargoHolds()));
 			}
 			else if($TRADE_ROUTE instanceof Route)
 			{
@@ -314,7 +329,7 @@ function processContainer($container)
 
 function sleepNPC()
 {
-	sleep(mt_rand(10,15)/10); //Sleep for a random time between 1-1.5s
+	usleep(mt_rand(MIN_SLEEP_TIME,MAX_SLEEP_TIME)); //Sleep for a random time
 }
 
 function exitNPC()
@@ -384,6 +399,53 @@ function changeNPCLogin()
 	SmrSession::$account_id = $account->getAccountID();
 }
 
+function canWeUNO(AbstractSmrPlayer &$player)
+{
+	if($player->getCredits()<MINUMUM_RESERVE_CREDITS)
+		return false;
+	$ship =& $player->getShip();
+	if($ship->hasMaxShields()&&$ship->hasMaxArmour()&&$ship->hasMaxCargoHolds())
+		return false;
+	$sector =& $player->getSector();
+	
+	$locations =& $this->getLocations();
+	foreach($locations as &$location)
+	{
+		if($location->isHardwareSold())
+		{
+			$hardware =& $location->getHardwareSold();
+			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]))
+			{ // Buy cargo holds first if we have plenty of newbie turns left.
+				$hardwareID = HARDWARE_CARGO;
+			}
+			else if(!$ship->hasMaxArmour() && isset($hardware[HARDWARE_ARMOUR]))
+			{ // We buy armour in preference to shields as it's cheaper.
+				$hardwareID = HARDWARE_ARMOUR;
+			}
+			else if(!$ship->hasMaxShields() && isset($hardware[HARDWARE_SHIELDS]))
+			{
+				$hardwareID = HARDWARE_SHIELDS;
+			}
+			else if(!$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]))
+			{ // We buy cargo holds last if we have no newbie turns because we'd rather not die
+				$hardwareID = HARDWARE_CARGO;
+			}
+			if(isset($hardwareID))
+			{
+				return doUNO($hardwareID,min($ship->getMaxHardware($hardwareID)-$ship->getHardware($hardwareID),floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareID))));
+			}
+		}
+	}
+	return false;
+}
+
+function doUNO($hardwareID,$amount)
+{
+	debug('Buying '.$amount.' units of "'.Globals::getHardwareName($hardwareID).'"');
+	$_REQUEST['amount'] = $amount;
+	return create_container('shop_hardware_processing.php','',array('hardware_id'=>$hardwareID));
+}
+
 function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port)
 {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
@@ -422,7 +484,7 @@ function plotToSector($sectorID)
 	return create_container('course_plot_processing.php','',array('from'=>$player->getSectorID(),'to'=>$sectorID));
 }
 
-function plotToFed()
+function plotToFed($plotToHQ=false)
 {
 	global $player;
 	debug('Plotting To Fed');
@@ -439,7 +501,7 @@ function plotToFed()
 	}
 	
 	$_REQUEST['xtype'] = 'Locations';
-	$_REQUEST['X'] = 'Fed';
+	$_REQUEST['X'] = $plotToHQ===true?'HQ':'Fed';
 	
 	return create_container('course_plot_nearest_processing.php');
 }
