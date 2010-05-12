@@ -198,13 +198,13 @@ class Globals
 	
 	public static function getHardwareName($hardwareTypeID)
 	{
-		$hardware =& self::getGoods();
+		$hardware =& self::getHardwareTypes();
 		return $hardware[$hardwareTypeID]['Name'];
 	}
 	
 	public static function getHardwareCost($hardwareTypeID)
 	{
-		$hardware =& self::getGoods();
+		$hardware =& self::getHardwareTypes();
 		return $hardware[$hardwareTypeID]['Cost'];
 	}
 	
