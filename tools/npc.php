@@ -105,6 +105,27 @@ catch(Exception $e)
 	}
 	
 	var_dump($message);
+	
+	try
+	{
+		if(is_object($player) && method_exists($player,'sendMessageToBox'))
+			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
+		else if(is_object($account) && method_exists($account,'sendMessageToBox'))
+			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
+		else
+			mail('bugs@smrealms.de',
+			 'Automatic Bug Report',
+			 $message,
+			 'From: bugs@smrealms.de');
+	}
+	catch(Exception $e)
+	{
+		mail('bugs@smrealms.de',
+		 'Automatic Bug Report',
+		 $message,
+		 'From: bugs@smrealms.de');
+	}
+	
 	exit;
 }
 		
