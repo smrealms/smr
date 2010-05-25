@@ -287,7 +287,7 @@ class SmrPort
 		if(!isset($good['Distance']))
 		{
 			$x = Globals::getGood($goodID);
-			switch($$good['TransactionType'])
+			switch($good['TransactionType'])
 			{
 				case 'Buy':
 					$x['TransactionType'] = 'Sell';
