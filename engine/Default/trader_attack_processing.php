@@ -5,13 +5,9 @@ if($var['time'])
 	$timeBetweenAttacks = microtime(true)-$var['time'];
 	if($timeBetweenAttacks<MIN_TIME_BETWEEN_SHOTS)
 	{
-		$sleepTime = (MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks);
-	//	echo '$sleepTime' . $sleepTime . ' ';
-		$sleepTimeMicro = $sleepTime - floor($sleepTime);
-		$sleepTimeSecs = $sleepTime - $sleepTimeMicro;
-		$sleepTimeNano = round($sleepTimeMicro*1000000000);
-	//	echo 'Sleeping for: ' . $sleepTimeSecs . 's ' . round($sleepTimeMicro*1000000000) . 'ns' . ' ';
-		time_nanosleep($sleepTimeSecs, $sleepTimeNano);
+		$sleepTime = round((MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks)*1000000);
+	//	echo 'Sleeping for: ' . $sleepTime . 'us';
+		usleep($sleepTime);
 	}
 	$var['time']=microtime(true);
 	$db->query('INSERT INTO debug VALUES (\'attack_speed\','.$player->getAccountID().','.($timeBetweenAttacks).')');
