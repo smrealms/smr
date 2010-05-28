@@ -25,11 +25,7 @@ $path->removeStart();
 // now get the sector we are going to but don't remove it (sector_move_processing does it)
 $next_sector = $path->getNextOnPath();
 
-if ($next_sector == $sector->getLinkUp() ||
-	$next_sector == $sector->getLinkDown() ||
-	$next_sector == $sector->getLinkLeft() ||
-	$next_sector == $sector->getLinkRight() ||
-	$next_sector == $sector->getWarp()) {
+if ($sector->isLinked($next_sector)) {
 
 	// save this to db (if we still have something
 	if ($path->getTotalSectors()>0)

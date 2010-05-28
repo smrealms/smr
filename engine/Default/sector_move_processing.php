@@ -56,6 +56,9 @@ if ($player->isLandedOnPlanet())
 if ($player->getTurns() < $turns)
 	create_error('You don\'t have enough turns to move!');
 
+if (!$sector->isLinked($var['target_sector']))
+	create_error('You cannot move to that sector!');
+
 require_once(get_file_loc('Sorter.class.inc'));
 $sectorForces =& $sector->getForces();
 Sorter::sortByNumMethod($sectorForces,'getMines',true);

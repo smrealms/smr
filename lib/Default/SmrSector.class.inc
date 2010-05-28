@@ -435,6 +435,11 @@ class SmrSector
 		return $this->links;
 	}
 	
+	public function isLinked($sectorID)
+	{
+		return in_array($this->links,$sectorID);
+	}
+	
 	public function getLink($name)
 	{
 		return isset($this->links[$name]) ? $this->links[$name] : 0;
@@ -884,7 +889,7 @@ class SmrSector
 		return self::limitFightingTraders($fightingPlayers,$attackingPlayer,$defendingPlayer);
 	}
 	
-	public static function limitFightingTraders(array &$fightingPlayers, AbstractSmrPlayer &$attackingPlayer, $defendingPlayer)
+	public static function &limitFightingTraders(array &$fightingPlayers, AbstractSmrPlayer &$attackingPlayer, $defendingPlayer)
 	{
 		// Cap fleets to the required size
 		foreach($fightingPlayers as $team => &$teamPlayers)
