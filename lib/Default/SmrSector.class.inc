@@ -962,7 +962,7 @@ class SmrSector
 		return $otherSector->getSectorID()==$this->getSectorID()&&$otherSector->getGameID()==$this->getGameID();
 	}
 	
-	function isLinked(SmrSector $otherSector)
+	function isLinkedSector(SmrSector $otherSector)
 	{
 		return $otherSector->getGameID()==$this->getGameID()&&($otherSector->getSectorID()==$this->getWarp()||in_array($otherSector->getSectorID(),$this->getLinks()));
 	}
