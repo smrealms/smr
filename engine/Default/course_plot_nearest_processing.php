@@ -47,7 +47,10 @@ if($path===false)
 $container['Distance'] = serialize($path);
 
 $path->removeStart();
-$player->setPlottedCourse($path);
+if ($sector->isLinked($next_sector)&&$path->getTotalSectors()>0)
+{
+	$player->setPlottedCourse($path);
+}
 forward($container);
 
 ?>
