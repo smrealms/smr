@@ -437,7 +437,7 @@ class SmrSector
 	
 	public function isLinked($sectorID)
 	{
-		return in_array($sectorID,$this->links);
+		return in_array($sectorID,$this->links)||$sectorID==$this->getWarp();
 	}
 	
 	public function getLink($name)
