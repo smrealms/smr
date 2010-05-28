@@ -6,7 +6,7 @@
 			foreach($MapSector as &$Sector)
 			{
 				$isCurrentSector = $ThisSector->equals($Sector);
-				$isLinkedSector = $ThisSector->isLinked($Sector); ?>
+				$isLinkedSector = $ThisSector->isLinkedSector($Sector); ?>
 				<td>
 					<?php if($isCurrentSector){ ?><div class="currentSeclm"><?php } ?>
 					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm2<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
