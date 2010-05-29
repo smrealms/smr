@@ -544,13 +544,24 @@ abstract class AbstractSmrShip
 	public function getCostToUpgradeAndUNO($upgradeShipID)
 	{
 		$upgadeBaseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$upgradeShipID);
-		$cost = $this->getCostToUpgrade($upgradeShipID);
+		return $this->getCostToUpgrade($upgradeShipID) + $this->getCostToUNOAgainstShip($upgradeShipID);
+	}
+	
+	protected function getCostToUNOAgainstShip($shipID)
+	{
+		$baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$shipID);
+		$cost = 0;
 		$hardwareTypes = array(HARDWARE_SHIELDS, HARDWARE_ARMOUR, HARDWARE_CARGO);
 		foreach($hardwareTypes as $hardwareTypeID)
 		{
-			$cost += max(0,$upgadeBaseShip['MaxHardware'][$hardwareTypeID]-$this->getHardware($hardwareTypeID))*Globals::getHardwareCost($hardwareTypeID);
+			$cost += max(0,$baseShip['MaxHardware'][$hardwareTypeID]-$this->getHardware($hardwareTypeID))*Globals::getHardwareCost($hardwareTypeID);
 		}
 		return $cost;
+	}
+	
+	public function getCostToUNO()
+	{
+		return $this->getCostToUNOAgainstShip($this->getShipTypeID());
 	}
 	
 	public function getSpeed()

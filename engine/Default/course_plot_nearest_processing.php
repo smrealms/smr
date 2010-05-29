@@ -1,35 +1,43 @@
 <?php
 
-if (!isset($_REQUEST['xtype']) || !isset($_REQUEST['X']))
-	create_error('You have to select what you would like to find');
-$xType = $_REQUEST['xtype'];
-$X = $_REQUEST['X'];
-
-switch($xType)
+if(isset($var['RealX']))
 {
-	case 'Technology':
-		$realX =& Globals::getHardwareTypes($X);
-	break;
-	case 'Ships':
-		$realX =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$X);
-	break;
-	case 'Weapons':
-		$realX =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$X);
-	break;
-	case 'Locations':
-		if(is_numeric($X))
-			$realX =& SmrLocation::getLocation($X);
-		else
-			$realX = $X;
-	break;
-	case 'Goods': 
-		$realX =& Globals::getGood($X);
-	break;
-	default:
-		create_error('Invalid search');
+	$realX = $var['RealX'];
+}
+else
+{
+	if (!isset($_REQUEST['xtype']) || !isset($_REQUEST['X']))
+		create_error('You have to select what you would like to find');
+	$xType = $_REQUEST['xtype'];
+	$X = $_REQUEST['X'];
+	
+	switch($xType)
+	{
+		case 'Technology':
+			$realX =& Globals::getHardwareTypes($X);
+		break;
+		case 'Ships':
+			$realX =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$X);
+		break;
+		case 'Weapons':
+			$realX =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$X);
+		break;
+		case 'Locations':
+			if(is_numeric($X))
+				$realX =& SmrLocation::getLocation($X);
+			else
+				$realX = $X;
+		break;
+		case 'Goods': 
+			$realX =& Globals::getGood($X);
+		break;
+		default:
+			create_error('Invalid search');
+	}
+	
+	$account->log(5, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
 }
 
-$account->log(5, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
 
 $container = array();
 $container['url'] = 'skeleton.php';
