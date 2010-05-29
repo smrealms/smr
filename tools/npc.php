@@ -32,6 +32,51 @@ try
 	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
 	define('MIN_SLEEP_TIME',1000000);
 	define('MAX_SLEEP_TIME',1500000);
+	
+	$SHIP_UPGRADE_PATH = array(
+		2 => array( //Alskant
+			SHIP_TYPE_TRADE_MASTER,
+			SHIP_TYPE_TRIP_MAKER,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_SMALL_TIMER
+		),
+		3 => array( //Creonti
+			SHIP_TYPE_LEVIATHAN,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_MEDIUM_CARGO_HULK
+		),
+		4 => array( //Human
+			SHIP_TYPE_AMBASSADOR,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_LIGHT_FREIGHTER
+		),
+		5 => array( //Ik'Thorne
+			SHIP_TYPE_FAVOURED_OFFSPRING,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_TINY_DELIGHT
+		),
+		6 => array( //Salvene
+			SHIP_TYPE_DRUDGE,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_HATCHLINGS_DUE
+		),
+		7 => array( //Thevian
+			SHIP_TYPE_EXPEDITER,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_SWIFT_VENTURE
+		),
+		8 => array( //WQ Human
+			SHIP_TYPE_BLOCKADE_RUNNER,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_ROGUE,
+			SHIP_TYPE_SLIP_FREIGHTER
+		),
+		9 => array( //Nijarin
+			SHIP_TYPE_VENGEANCE,
+			SHIP_TYPE_NEWBIE_MERCHANT_VESSEL,
+			SHIP_TYPE_REDEEMER
+		)
+	);
 
 	$HIDDEN_PLAYERS = array();
 
@@ -170,7 +215,7 @@ function NPCStuff()
 				}
 			}
 			
-			$TRADE_ROUTES =& findRoutes();
+			$TRADE_ROUTES =& findRoutes(); //TODO: This probably shouldn't be called in every block? Maybe only call whilst in fed as it's potentially slow?
 			if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
 			
@@ -184,7 +229,7 @@ function NPCStuff()
 				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
 			}
-			else if(($container = canWeUNO($player))!==false)
+			else if(($container = canWeUNO($player,true))!==false)
 			{ //We have money and are at a uno, let's uno!
 				debug('We\'re UNOing');
 				processContainer($container);
@@ -205,9 +250,18 @@ function NPCStuff()
 				$ship =& $player->getShip();
 				processContainer(plotToFed(!$ship->hasMaxShields||!$ship->hasMaxArmour()||!$ship->hasMaxCargoHolds()));
 			}
+			else if(($container = checkForShipUpgrade($player))!==false)
+			{ //We have money and are at a uno, let's uno!
+				debug('We\'re reshipping!');
+				processContainer($container);
+			}
+			else if(($container = canWeUNO($player,false))!==false)
+			{ //We need to UNO and have enough money to do it properly so let's do it sooner rather than later.
+				debug('We need to UNO, so off we go!');
+				processContainer($container);
+			}
 			else if($TRADE_ROUTE instanceof Route)
 			{
-//				var_dump($TRADE_ROUTE);
 				debug('Trade Route');
 				$forwardRoute =& $TRADE_ROUTE->getForwardRoute();
 				$returnRoute =& $TRADE_ROUTE->getReturnRoute();
@@ -421,7 +475,7 @@ function changeNPCLogin()
 	SmrSession::$account_id = $account->getAccountID();
 }
 
-function canWeUNO(AbstractSmrPlayer &$player)
+function canWeUNO(AbstractSmrPlayer &$player, $oppurtunisticOnly)
 {
 	if($player->getCredits()<MINUMUM_RESERVE_CREDITS)
 		return false;
@@ -433,7 +487,7 @@ function canWeUNO(AbstractSmrPlayer &$player)
 	// We buy armour in preference to shields as it's cheaper.
 	// We buy cargo holds last if we have no newbie turns because we'd rather not die
 	$hardwareArray = array(HARDWARE_ARMOUR,HARDWARE_SHIELDS,HARDWARE_CARGO);
-	
+				
 	$amount = 0;
 	
 	$locations =& $sector->getLocations();
@@ -441,8 +495,8 @@ function canWeUNO(AbstractSmrPlayer &$player)
 	{
 		if($location->isHardwareSold())
 		{
-			$hardware =& $location->getHardwareSold();
-			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardware[HARDWARE_CARGO]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost(HARDWARE_CARGO))) > 0)
+			$hardwareSold =& $location->getHardwareSold();
+			if($player->getNewbieTurns() > MIN_NEWBIE_TURNS_TO_BUY_CARGO && !$ship->hasMaxCargoHolds() && isset($hardwareSold[HARDWARE_CARGO]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost(HARDWARE_CARGO))) > 0)
 			{ // Buy cargo holds first if we have plenty of newbie turns left.
 				$hardwareID = HARDWARE_CARGO;
 			}
@@ -450,9 +504,9 @@ function canWeUNO(AbstractSmrPlayer &$player)
 			{
 				foreach($hardwareArray as $hardwareArrayID)
 				{
-					if(!$ship->hasMaxHardware($hardwareArrayID) && isset($hardware[hardwareArrayID]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareArrayID))) > 0)
+					if(!$ship->hasMaxHardware($hardwareArrayID) && isset($hardwareSold[$hardwareArrayID]) && ($amount = floor(($player->getCredits()-MINUMUM_RESERVE_CREDITS)/Globals::getHardwareCost($hardwareArrayID))) > 0)
 					{
-						$hardwareID = HARDWARE_ARMOUR;
+						$hardwareID = $hardwareArrayID;
 						break;
 					}
 				}
@@ -463,7 +517,21 @@ function canWeUNO(AbstractSmrPlayer &$player)
 			}
 		}
 	}
-	return false;
+	
+	if($oppurtunisticOnly===true)
+		return false;
+	
+	if($player->getCredits()-$ship->getCostToUNO()<MINUMUM_RESERVE_CREDITS)
+		return false; //Only do non-oppurtunistic UNO if we have the money to do it properly!
+	
+	foreach($hardwareArray as $hardwareArrayID)
+	{
+		if(!$ship->hasMaxHardware($hardwareArrayID))
+		{
+			$hardwareNeededID = $hardwareArrayID;
+			return plotToNearest($player, Globals::getHardwareTypes($hardwareArrayID));
+		}
+	}
 }
 
 function doUNO($hardwareID,$amount)
@@ -527,14 +595,54 @@ function plotToFed($plotToHQ=false)
 		changeNPCLogin();
 	}
 	
-	$_REQUEST['xtype'] = 'Locations';
-	$_REQUEST['X'] = $plotToHQ===true?'HQ':'Fed';
+	return plotToNearest($player,$plotToHQ===true?'HQ':'Fed');
+}
+
+function plotToNearest(AbstractSmrPlayer &$player, &$realX)
+{
+	debug('Plotting To: '.var_export($realX,true)); //TODO: Can we make the debug output a bit nicer?
 	
-	return create_container('course_plot_nearest_processing.php');
+	if($player->getSector()->hasX($realX)) //Check if current sector has what we're looking for before we attempt to plot and get error.
+	{
+		debug('Already available in sector');
+		return true;
+	}
+	
+	return create_container('course_plot_nearest_processing.php','',array('RealX'=>$realX));
 }
 function moveToSector($targetSector)
 {
 	return create_container('sector_move_processing.php','',array('target_sector'=>$targetSector,'target_page'=>''));
+}
+
+function checkForShipUpgrade(AbstractSmrPlayer &$player)
+{
+	global $SHIP_UPGRADE_PATH;
+	
+	foreach($SHIP_UPGRADE_PATH[$player->getRaceID()] as $upgradeShipID)
+	{
+		if($player->getShipTypeID()==$upgradeShipID) //We can't upgrade, only downgrade.
+			return false;
+		if($upgradeShipID == SHIP_TYPE_NEWBIE_MERCHANT_VESSEL) //We can't actually buy the NMV, we just don't want to downgrade from it if we have it.
+			continue;
+		$cost = $player->getShip()->getCostToUpgradeAndUNO($upgradeShipID);
+		var_dump($cost);
+		if($player->getCredits()-$cost > MINUMUM_RESERVE_CREDITS)
+		{
+			return doShipUpgrade($player, $upgradeShipID);
+		}
+	}
+}
+
+function doShipUpgrade(AbstractSmrPlayer &$player,$upgradeShipID)
+{
+	$plotNearest = plotToNearest($player,AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$upgradeShipID));
+	
+	if($plotNearest == true) //We're already there!
+	{ //TODO: We're going to want to UNO after upgrading
+		return create_container('shop_ship_processing.php','',array('ship_id'=>$upgradeShipID));
+	} //Otherwise return the plot
+	return $plotNearest;
 }
 
 function &changeRoute(array &$tradeRoutes)
@@ -566,6 +674,8 @@ function joinGame($gameID,$playerName)
 function &findRoutes()
 {
 	global $player;
+	
+	debug('Finding Routes');
 	
 	$galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
 	
@@ -600,11 +710,13 @@ function &findRoutes()
 	$db->query('SELECT routes FROM route_cache WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND max_ports='.$db->escapeNumber($maxNumberOfPorts).' AND goods_allowed='.$db->escapeObject($tradeGoods).' AND races_allowed='.$db->escapeObject($tradeRaces).' AND start_sector_id='.$db->escapeNumber($startSectorID).' AND end_sector_id='.$db->escapeNumber($endSectorID).' AND routes_for_port='.$db->escapeNumber($routesForPort).' AND max_distance='.$db->escapeNumber($maxDistance));
 	if($db->nextRecord())
 	{
+		debug('Using Cached Routes');
 		$routes = unserialize(gzuncompress($db->getField('routes')));
 		return $routes;
 	}
 	else
 	{
+		debug('Generating Routes');
 		$allSectors = array();
 		foreach($galaxies as &$galaxy)
 		{

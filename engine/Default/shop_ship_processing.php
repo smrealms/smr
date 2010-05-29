@@ -2,7 +2,7 @@
 
 $shipID = $var['ship_id'];
 $newShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipID);
-$cost		= $newShip['Cost'] - $ship->getCost() / 2;
+$cost = $ship->getCostToUpgrade($shipID);
 
 // trade master 33
 // trip maker 30
