@@ -1,7 +1,8 @@
 <?php
 
 //only if we are coming from the bank screen do we unexempt selection first
-if (isset($var['minVal'])) {
+if (isset($var['minVal']))
+{
 	for ($i = $var['minVal']; $i <= $var['maxVal']; $i++) $temp[] = $i;
 	$db->query('UPDATE alliance_bank_transactions SET exempt = 0 WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' ' .
 				'AND transaction_id IN (' . implode(',',$temp) . ')');
