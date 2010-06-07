@@ -22,16 +22,17 @@ if ($db->nextRecord())
 	$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
 	
 	$newsletterHtml = $db->getField('newsletter_html');
+	$newsletterText = $db->getField('newsletter_text');
 	
 	if(!empty($newsletterHtml))
 	{
-		$mail->Body = $newsletterHtml;
-		$mail->AltBody = $db->getField('newsletter_text');
+		$mail->MsgHTML($newsletterHtml);
+		if(!empty($newsletterText))
+			$mail->AltBody = $newsletterText;
 	}
 	else
-	{
-		$mail->Body = $db->getField('newsletter_text');
-	}
+		$mail->Body = $newsletterText;
+	
 	// attach footer
 //	$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
 }
