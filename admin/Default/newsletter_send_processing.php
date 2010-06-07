@@ -21,9 +21,11 @@ if ($db->nextRecord())
 {
 	$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
 	
-	if(!empty($db->getField('newsletter_html')))
+	$newsletterHtml = $db->getField('newsletter_html');
+	
+	if(!empty($newsletterHtml))
 	{
-		$mail->MsgHTML    = $db->getField('newsletter_html');
+		$mail->MsgHTML = $newsletterHtml;
 		$mail->AltBody = $db->getField('newsletter_text');
 	}
 	else
