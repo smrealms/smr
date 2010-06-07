@@ -4,34 +4,38 @@
 require(LIB . 'phpMailer/class.phpmailer.php');
 
 $mail = new PHPMailer();
+$mail->From		     = 'newsletter@smrealms.de';
+$mail->FromName		 = 'SMR Team';
+$mail->Mailer		   = 'smtp';
+$mail->SMTPKeepAlive    = true;
+
+//$mail->ConfirmReadingTo       = 'newsletter-read@smrealms.de';
+
+$mail->AddReplyTo('newsletter@smrealms.de', 'SMR Support');
+$mail->Encoding = 'base64';
+$mail->WordWrap = 72;
+
+$db = new SmrMySqlDatabase();
+$db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
+if ($db->nextRecord())
+{
+	$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
+	
+	if(!empty($db->getField('newsletter_html')))
+	{
+		$mail->MsgHTML    = $db->getField('newsletter_html');
+		$mail->AltBody = $db->getField('newsletter_text');
+	}
+	else
+	{
+		$mail->Body = $db->getField('newsletter_text');
+	}
+	// attach footer
+//	$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
+}
 
 if($_REQUEST['to_email']=='*')
 {
-	// database objects
-	$db = new SmrMySqlDatabase();
-	$db2 = new SmrMySqlDatabase();
-	
-	$mail = new PHPMailer();
-	
-	$mail->FromName      = 'SMR Team';
-	$mail->Mailer        = 'smtp';
-	$mail->SMTPKeepAlive = true;
-	//$mail->ConfirmReadingTo	= 'newsletter-read@smrealms.de';
-	
-	$mail->AddReplyTo('newsletter@smrealms.de', 'SMR Support');
-	
-	$db->query('SELECT newsletter_id, newsletter FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-	if ($db->nextRecord())
-	{
-		$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
-		$mail->Body    = $db->getField('newsletter');
-	
-		// attach footer
-		$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
-	}
-	
-	$mail->WordWrap = 72;
-	
 	// counter
 	$i = 1;
 	$total = 0;
@@ -47,17 +51,6 @@ if($_REQUEST['to_email']=='*')
 		// debug output
 		echo $account_id.'. Preparing mail for '.$to_name.' <'.$to_email.'>... ';
 	
-		// skip newsletter if account is closed.
-		$db2->query('SELECT account_id FROM account_is_closed WHERE account_id = '.$account_id);
-		if ($db2->getNumRows() > 0)
-		{
-			// debug output
-			echo 'skipped.'.EOL;
-	
-			// go on with next account
-			continue;
-		}
-	
 		// set a bounce address we can process later
 		$mail->From = 'bounce_' . $account_id . '@smrealms.de';
 		$mail->AddAddress($to_email, $to_name);
@@ -66,6 +59,7 @@ if($_REQUEST['to_email']=='*')
 		{
 			echo 'error.'.EOL . $mail->ErrorInfo;
 			$mail->SmtpClose();
+			ob_flush();
 			exit;
 		}
 		else
@@ -88,24 +82,8 @@ if($_REQUEST['to_email']=='*')
 }
 else
 {
-	$mail->From		     = 'newsletter@smrealms.de';
-	$mail->FromName		 = 'SMR Team';
-	$mail->Mailer		   = 'smtp';
-	$mail->SMTPKeepAlive    = true;
-	//$mail->ConfirmReadingTo       = 'newsletter-read@smrealms.de';
-	
-	$mail->AddReplyTo('support@smrealms.de', 'SMR Support');
-	
-	$db= new SmrMySqlDatabase();
-	$db->query('SELECT newsletter_id, newsletter FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-	if ($db->nextRecord())
-	{
-		$mail->Subject  = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
-		$mail->Body     = $db->getField('newsletter');
-	}
-	
-	$mail->WordWrap = 72;
 	$mail->AddAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
+	
 	$mail->Send();
 	$mail->SmtpClose();
 }
