@@ -33,11 +33,11 @@ if ($action == 'Paint a logo (3 SMR Credits)')
 		if (filesize($_FILES['photo']['tmp_name']) > 20560 && SmrSession::$account_id >= 100)
 			create_error('Image is bigger than 20k');
 		
-		$orig_name = '<img style="padding:3px;" src="'.URL.'/upload/' . SmrSession::$account_id . 'logo"><br />';
+		$name = '<img style="padding:3px;" src="'.URL.'/upload/' . SmrSession::$account_id . 'logo"><br />';
 		$cred_cost = 3;
 		move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . SmrSession::$account_id . 'logo');
 		$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
-				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($orig_name, FALSE) . ')');
+				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($name, FALSE) . ')');
 		$account->decreaseTotalSmrCredits($cred_cost);
 		$container=create_container('skeleton.php','bar_main.php');
 		$container['script']='bar_opening.php';
@@ -69,12 +69,18 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done)
 }
 elseif (isset($var['process']) && $continue == 'TRUE')
 {
-	$orig_name = $name;
+	if ($account->getTotalSmrCredits() < $cred_cost)
+		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+
+	// disallow certain ascii chars
+	for ($i = 0; $i < strlen($name); $i++)
+		if (ord($name[$i]) < 32 || ord($name[$i]) > 127 || in_array(ord($name[$i]), array(37,39,59,92,63,42)))
+			create_error('The ship name contains invalid characters! ' . chr(ord($name[$i])));
+	
 	if ($html)
 	{
 		$cred_cost = 2;
 		$max_len = 128;
-		$name = $db->escape_string($name);
 		//check for some bad html
 		$bad = array('<form','<applet','<a ','<bgsound','<body','<meta','<dd','<dir','<dl','<!doctype','<dt','<embed','<frame','<head','<hr','<iframe','<ilayer','<img','<input','<isindex','<layer','<li','<link','<map','<menu','<nobr','<no','<object','<ol','<opt','<p','<script','<select','<sound','<td','<text','<t','<ul','<h','<br','</marquee><marquee','size','width','height','<div','width=','</marquee>%<marquee','</marquee>?');
 		foreach($bad as $check)
@@ -94,14 +100,12 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 		list ($first, $second) = explode('<marquee>', $name);
 		if ($first != '' && $second != '')
 			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES) . ' tag.');
-		//lets try to see if they closed all tages
+		//lets try to see if they closed all tags
 		$first = explode ('<', $name);
 		foreach ($first as $second)
 		{
 			if ($second == '') continue;
-			// the / char will be 0 and evaluate to false unless we put something at the start
-			$second = '.' . $second;
-			if (strpos($second, '/'))
+			if (strpos($second, '/')!==false)
 			{
 				$open -= 1;
 				$close += 1;
@@ -122,7 +126,7 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 	{
 		$max_len = 48;
 		$cred_cost = 1;
-		$name = $db->escape_string(htmlentities($name, ENT_NOQUOTES));
+		$name = htmlentities($name, ENT_NOQUOTES);
 	}
 	
 	//list of html tags that have an auto br
@@ -132,20 +136,12 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 	{
 		if (stristr($name, $bad)) $done = TRUE;
 	}
-	if (!$done)	$orig_name .= '<br />';
-	if (strlen($orig_name) > $max_len)
+	if (!$done)	$name .= '<br />';
+	if (strlen($name) > $max_len)
 		create_error('That won\'t fit on your ship!');
 	
-	if ($account->getTotalSmrCredits() < $cred_cost)
-		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
-
-	// disallow certain ascii chars
-	for ($i = 0; $i < strlen($orig_name); $i++)
-		if (ord($orig_name[$i]) < 32 || ord($orig_name[$i]) > 127 || in_array(ord($orig_name[$i]), array(37,39,59,92,63,42)))
-			create_error('The ship name contains invalid characters! ' . chr(ord($orig_name[$i])));
-	
 	$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
-				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($orig_name, FALSE) . ')');
+				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($name, FALSE) . ')');
 	$account->decreaseTotalSmrCredits($cred_cost);
 	
 	$message = '<div align=center>Thanks for your purchase! Your ship is ready!<br />';
