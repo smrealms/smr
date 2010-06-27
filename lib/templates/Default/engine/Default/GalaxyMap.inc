@@ -29,7 +29,7 @@
 				{ 
 					$GalaxyID = $GameGalaxy->getGalaxyID(); ?>
 					<option value="<?php echo $GalaxyID; ?>"<?php if($ThisGalaxy->equals($GameGalaxy)){ ?> selected="selected"<?php } ?>>
-					<a href="<?php echo URL; ?>/map_galaxy.php?galaxy_id=<?php echo $GalaxyID; ?>"><?php echo $GameGalaxy->getName(); ?></a>
+					<?php echo $GameGalaxy->getName(); ?>
 					</option><?php
 				} unset($GameGalaxy); ?>
 			</select>

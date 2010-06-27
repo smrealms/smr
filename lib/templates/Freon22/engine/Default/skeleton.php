@@ -247,7 +247,7 @@
 									foreach($ThisShip->getCargo() as $GoodID => $GoodAmount)
 									{
 										$Good =& Globals::getGood($GoodID); ?>
-										<img src="<?php echo $Good['ImageLink']; ?>" alt="<?php echo $Good['Name']; ?>"> : <?php echo $GoodAmount; ?><br /><?php
+										<img src="<?php echo $Good['ImageLink']; ?>" alt="<?php echo $Good['Name']; ?>" /> : <?php echo $GoodAmount; ?><br /><?php
 									}
 								} ?>
 								

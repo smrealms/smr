@@ -103,8 +103,8 @@ try
 		foreach ($stat as $value)
 			echo ('<td align="center">'.$value.'</td>');
 		echo ('</tr>');
-	}
-	echo ('</table>');
+	} ?>
+	</table><?php
 }
 catch(Exception $e)
 {
