@@ -4,6 +4,7 @@ require_once(get_file_loc('council.inc'));
 class SmrPlayer extends AbstractSmrPlayer
 {
 	protected static $CACHE_SECTOR_PLAYERS = array();
+	protected static $CACHE_ALLIANCE_PLAYERS = array();
 	protected static $CACHE_PLAYERS = array();
 	
 	protected $db;
@@ -119,7 +120,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(false) .' ORDER BY last_cpl_action DESC');
+			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND last_cpl_action > '.INACTIVE_TIME.' AND account_id NOT IN (' . implode(',', $HIDDEN_PLAYERS) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while($db->nextRecord())
 			{
@@ -133,7 +134,7 @@ class SmrPlayer extends AbstractSmrPlayer
 
 	public static function &getAlliancePlayers($gameID,$allianceID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$allianceID]))
+		if($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID]))
 		{
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT account_id FROM player WHERE alliance_id = ' . $allianceID . ' AND game_id=' . $gameID .' ORDER BY experience DESC');
@@ -143,9 +144,9 @@ class SmrPlayer extends AbstractSmrPlayer
 				$accountID = $db->getField('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID);
 			}
-			return self::$CACHE_SECTOR_PLAYERS[$gameID][$allianceID] =& $players;
+			return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] =& $players;
 		}
-		return self::$CACHE_SECTOR_PLAYERS[$gameID][$allianceID];
+		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
 	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false)

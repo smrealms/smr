@@ -175,6 +175,7 @@ define('UNI_GEN_LOCATION_SLOTS',10);
 define('NUM_RACES', 8);
 
 define('TIME', time());
+define('INACTIVE_TIME', TIME - 259200);
 
 define('ACCURACY_STAT_FACTOR', 0.04);
 define('INCREASED_ACC_GADGET_FACTOR', 0.15);
