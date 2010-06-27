@@ -1,50 +1,37 @@
 <?php
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
+$sector =& $player->getSector();
 $template->assign('PageTopic','Sector Scan');
 
 // initialize vars
+$scanSector =& SmrSector::getSector($player->getGameID(), $var['target_sector']);
 $friendly_forces = 0;
 $enemy_forces = 0;
 $friendly_vessel = 0;
 $enemy_vessel = 0;
 
-// get our rank
-$rank_id = $account->get_rank();
-
 // iterate over all forces in the target sector
-require_once(get_file_loc('SmrForce.class.inc'));
-$allForces =& SmrForce::getSectorForces($player->getGameID(), $var['target_sector']);
-foreach ($allForces as $forces)
+$scanSectorAllForces =& $scanSector->getForces();
+foreach ($scanSectorAllForces as &$scanSectorForces)
 {
 	// decide if it's a friendly or enemy stack
-	$forces_owner	=& $forces->getOwner();
-
-	if ($player->getAllianceID() == 0 && $forces_owner->getAccountID() == $player->getAccountID() || $player->getAllianceID() != 0 && $player->getAllianceID() == $forces_owner->getAllianceID())
-		$friendly_forces += $forces->getMines() * 3 + $forces->getCDs() * 2 + $forces->getSDs();
+	if ($player->sameAlliance($scanSectorForces->getOwner()))
+		$friendly_forces += $scanSectorForces->getMines() * 3 + $scanSectorForces->getCDs() * 2 + $scanSectorForces->getSDs();
 	else
-		$enemy_forces += $forces->getMines() * 3 + $forces->getCDs() * 2 + $forces->getSDs();
+		$enemy_forces += $scanSectorForces->getMines() * 3 + $scanSectorForces->getCDs() * 2 + $scanSectorForces->getSDs();
+} unset($scanSectorForces);
 
-}
-
-$last_active = TIME - 259200;
-$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND ' .
-									  'sector_id = ' . $var['target_sector'] . ' AND ' .
-									  'last_cpl_action > '.$last_active.' AND ' .
-									  'land_on_planet = \'FALSE\' AND ' .
-									  'account_id NOT IN (' . implode(',', $HIDDEN_PLAYERS) . ')');
-while ($db->nextRecord())
+$scanSectorPlayers =& $scanSector->getOtherTraders($player);
+foreach($scanSectorPlayers as &$scanSectorPlayer)
 {
-	$curr_player	=& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
-	$curr_ship		=& $curr_player->getShip();
+	$scanSectorShip =& $scanSectorPlayer->getShip();
 
 	// he's a friend if he's in our alliance (and we are not in a 0 alliance
-	if ($player->traderMAPAlliance($curr_player))
-		$friendly_vessel += $curr_ship->getAttackRating();
+	if ($player->traderMAPAlliance($scanSectorPlayer))
+		$friendly_vessel += $scanSectorShip->getAttackRating();
 	else
-		$enemy_vessel += $curr_ship->getDefenseRating() * 10;
-
-}
+		$enemy_vessel += $scanSectorShip->getDefenseRating() * 10;
+} unset($scanSectorPlayer);
 
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=('<table class="standard">');
@@ -71,26 +58,24 @@ $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('</table>');
 $PHP_OUTPUT.=('</p>');
 
-$target_sector =& SmrSector::getSector(SmrSession::$game_id, $var['target_sector']);
-
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=('<table class="standard">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Planet</td>');
 $PHP_OUTPUT.=('<td>');
-if ($target_sector->hasPlanet()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
+if ($scanSector->hasPlanet()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
 $PHP_OUTPUT.=('</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Port</td>');
 $PHP_OUTPUT.=('<td>');
-if ($target_sector->hasPort()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
+if ($scanSector->hasPort()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
 $PHP_OUTPUT.=('</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>Location</td>');
 $PHP_OUTPUT.=('<td>');
-if ($target_sector->hasLocation()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
+if ($scanSector->hasLocation()) $PHP_OUTPUT.=('Yes'); else $PHP_OUTPUT.=('No');
 $PHP_OUTPUT.=('</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('</table>');
@@ -98,17 +83,16 @@ $PHP_OUTPUT.=('</p><br />');
 
 // is it a warp or a normal move?
 if ($sector->getWarp() == $var['target_sector'])
-	$turns = 5;
+	$turns = TURNS_PER_WARP;
 else
-	$turns = 1;
+	$turns = TURNS_PER_SECTOR;
 
-$container = array();
-$container['url']			= 'sector_move_processing.php';
+$container = create_container('sector_move_processing.php');
 $container['target_page']	= 'current_sector.php';
 transfer('target_sector');
 
-$PHP_OUTPUT.= '<a href="'.$target_sector->getScanSectorHREF().'" class="submitStyle">Rescan ' . $target_sector->getSectorID() . '</a>&nbsp;';
-$PHP_OUTPUT.= '<a href="'.$target_sector->getCurrentSectorHREF().'" class="submitStyle">Enter ' . $target_sector->getSectorID() . ' ('.$turns.')</a>';
+$PHP_OUTPUT.= '<a href="'.$scanSector->getScanSectorHREF().'" class="submitStyle">Rescan ' . $scanSector->getSectorID() . '</a>&nbsp;';
+$PHP_OUTPUT.= '<a href="'.$scanSector->getCurrentSectorHREF().'" class="submitStyle">Enter ' . $scanSector->getSectorID() . ' ('.$turns.')</a>';
 $PHP_OUTPUT.=('</form></p>');
 
 ?>
