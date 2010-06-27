@@ -70,7 +70,9 @@ B. Disciplinary actions.
 
 <li>In especially severe cases, including, but not limited to ban hopping in game action will be taken.</li>
 
-<li>If you disagree with the action taken against you feel free to complain to the chat admin aka Blum in chat or through email chat@smrealms.de</li><br>
+<li>If you disagree with the action taken against you feel free to complain to the chat admin aka Blum in chat or through email chat@smrealms.de</li>
+</ol>
+<br>
 <br><br>
 <br>
 <?php

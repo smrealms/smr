@@ -69,8 +69,8 @@
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 		<table class="standard">
 			<tr>
-				<th align="center">Time</span>
-				<th align="center">News</span>
+				<th align="center">Time</th>
+				<th align="center">News</th>
 			</tr>
 			<?php
 			foreach($NewsItems as $NewsItem)

@@ -85,7 +85,7 @@ else
 						</td>
 						<td nowrap="nowrap"<?php if(!isset($Message['Sender'])) { ?> colspan="3"<?php } ?>>Date: <?php echo date(DATE_FULL_SHORT, $Message['SendTime']); ?></td>
 						<td>
-							<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/notify.gif" border="0" align="right"title="Report this message to an admin"</a>
+							<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/notify.gif" border="0" align="right" title="Report this message to an admin" /></a>
 						</td><?php
 						if (isset($Message['Sender']))
 						{ ?>

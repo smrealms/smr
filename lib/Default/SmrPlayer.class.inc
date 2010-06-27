@@ -1889,10 +1889,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->sendMessageToBox(BOX_GLOBALS,$message);
 		
 		// send to all online player
-		$allowed = TIME - 600;
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT active_session.account_id FROM active_session, player
-				WHERE active_session.last_accessed >= ' . $allowed . ' AND
+				WHERE active_session.last_accessed >= ' . TIME - SmrSession::TIME_BEFORE_EXPIRY . ' AND
 					  active_session.game_id = '.$this->getGameID() . ' AND
 					  active_session.account_id = player.account_id AND
 					  active_session.game_id = player.game_id AND 

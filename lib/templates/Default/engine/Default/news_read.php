@@ -17,8 +17,8 @@ if(isset($NewsItems) && count($NewsItems) > 0)
 	</div>
 	<table class="standard">
 		<tr>
-			<th align="center">Time</span>
-			<th align="center">News</span>
+			<th align="center">Time</th>
+			<th align="center">News</th>
 		</tr>
 		<?php
 		foreach($NewsItems as $NewsItem)

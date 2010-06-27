@@ -2,12 +2,12 @@
 
 $template->assign('PageTopic','Current Players');
 $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . TIME);
-$db->query('SELECT count(*) FROM active_session
+$db->query('SELECT count(*) count FROM active_session
 			WHERE last_accessed >= ' . (TIME - 600) . ' AND
 				  game_id = '.SmrSession::$game_id);
 $count_real_last_active = 0;
 if($db->nextRecord())
-	$count_real_last_active = $db->getField('count(*)');
+	$count_real_last_active = $db->getField('count');
 if (empty($var['sort'])) $sort = 'experience DESC, player_name';
 else $sort = $var['sort'];
 if (empty($var['seq'])) $seq = 'DESC';
@@ -42,9 +42,8 @@ else
 	$PHP_OUTPUT.=('were moving so your ship computer was able to intercept '.$count_last_active.' transmission');
 
 	if ($count_last_active > 1)
-		$PHP_OUTPUT.=('s.<br />');
-	else
-		$PHP_OUTPUT.=('.<br />');
+		$PHP_OUTPUT.=('s');
+	$PHP_OUTPUT.=('.<br />');
 }
 
 $PHP_OUTPUT.=('The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p>');
