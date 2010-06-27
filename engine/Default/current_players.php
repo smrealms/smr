@@ -8,6 +8,10 @@ $db->query('SELECT count(*) count FROM active_session
 $count_real_last_active = 0;
 if($db->nextRecord())
 	$count_real_last_active = $db->getField('count');
+if(SmrSession::$last_accessed < TIME - 600)
+	++$count_real_last_active;
+	
+	
 if (empty($var['sort'])) $sort = 'experience DESC, player_name';
 else $sort = $var['sort'];
 if (empty($var['seq'])) $seq = 'DESC';
