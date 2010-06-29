@@ -11,7 +11,7 @@ $mbWrite = TRUE;
 $in_alliance = TRUE;
 if ($alliance_id != $player->getAllianceID())
 {
-	if (!in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $in_alliance = FALSE;
+	if (!in_array($player->getAccountID(), Globals::getHiddenPlayers())) $in_alliance = FALSE;
 	$db->query('SELECT mb_read FROM alliance_treaties
 					WHERE (alliance_id_1 = '.$alliance_id.' OR alliance_id_1 = '.$player->getAllianceID().')'.
 					' AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')'.
@@ -121,7 +121,7 @@ if ($db->getNumRows() > 0)
 }
 $template->assignByRef('Threads',$threads);
 
-if ($mbWrite || in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 {
 	$container = create_container('alliance_message_add_processing.php');
 	$container['alliance_id'] = $alliance_id;

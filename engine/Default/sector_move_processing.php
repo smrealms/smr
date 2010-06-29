@@ -12,7 +12,7 @@ if($sector->getWarp() == $var['target_sector'])
 else
 	$turns = TURNS_PER_SECTOR;
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 {
 	//for plotted course
 	$player->setLastSectorID($player->getSectorID());

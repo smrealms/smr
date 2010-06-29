@@ -3,6 +3,7 @@ require_once('SmrSession.class.inc');
 require_once('SmrMySqlDatabase.class.inc');
 class Globals
 {
+	protected static $HIDDEN_PLAYERS = null;
 	protected static $PLANET_BUILDINGS = null;
 	protected static $LEVEL_REQUIREMENTS = null;
 	protected static $RACES = null;
@@ -25,6 +26,19 @@ class Globals
 	{
 		if(self::$db==null)
 			self::$db = new SmrMySqlDatabase();
+	}
+	
+	public static function &getHiddenPlayers()
+	{
+		if(self::$HIDDEN_PLAYERS==null)
+		{
+			self::initialiseDatabase();
+			$db->query('SELECT account_id FROM hidden_players');
+			self::$HIDDEN_PLAYERS = array(0);//stop errors
+			while ($db->nextRecord())
+				self::$HIDDEN_PLAYERS[] = $db->getField('account_id');
+		}
+		return self::$HIDDEN_PLAYERS;
 	}
 
 	public static function &getPlanetBuildings()

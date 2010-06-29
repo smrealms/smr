@@ -4,7 +4,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 if (isset($_REQUEST['target'])) $target = $_REQUEST['target'];
 else $target = $var['target'];
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) {
+if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$player->setLastSectorID($player->getSectorID());
 	$player->setSectorID($target);
 	$player->update();
