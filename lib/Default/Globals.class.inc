@@ -33,10 +33,10 @@ class Globals
 		if(self::$HIDDEN_PLAYERS==null)
 		{
 			self::initialiseDatabase();
-			$db->query('SELECT account_id FROM hidden_players');
+			self::$db->query('SELECT account_id FROM hidden_players');
 			self::$HIDDEN_PLAYERS = array(0);//stop errors
-			while ($db->nextRecord())
-				self::$HIDDEN_PLAYERS[] = $db->getField('account_id');
+			while (self::$db->nextRecord())
+				self::$HIDDEN_PLAYERS[] = self::$db->getField('account_id');
 		}
 		return self::$HIDDEN_PLAYERS;
 	}
