@@ -2,7 +2,7 @@
 
 function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 {
-	global $player, $HIDDEN_PLAYERS, $template;
+	global $player, $template;
 
 	$db2 = new SmrMySqlDatabase();
 	if($alliance_id)
@@ -49,24 +49,24 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 		//$menue_items[] = create_link($container,'Treaties','nav');	
 	//}
 	$menuItems = array();
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $modRead)
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead)
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceMotdHREF($alliance_id),'Text'=>'Message of the Day');
 	}
 	$menuItems[] = array('Link'=>Globals::getAllianceRosterHREF($alliance_id),'Text'=>'Roster');
-	if (($send && $in_alliance) || in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+	if (($send && $in_alliance) || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageHREF($alliance_id),'Text'=>'Send Message');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $mbRead)
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $mbRead)
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageBoardHREF($alliance_id),'Text'=>'Message Board');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS) || $planetLand)
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $planetLand)
 	{
 		$menuItems[] = array('Link'=>Globals::getAlliancePlanetsHREF($alliance_id),'Text'=>'Planets');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 	{
 		$menuItems[] = array('Link'=>Globals::getAllianceForcesHREF($alliance_id),'Text'=>'Forces');
 		$menuItems[] = array('Link'=>Globals::getAllianceOptionsHREF($alliance_id),'Text'=>'Options');

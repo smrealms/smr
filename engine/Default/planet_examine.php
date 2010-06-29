@@ -40,7 +40,7 @@ $db->query('SELECT planet_land FROM alliance_treaties
 				AND game_id = '.$player->getGameID().'
 				AND planet_land = 1 AND official = \'TRUE\'');
 if ($db->nextRecord()) $planetLand = TRUE;
-if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $planetLand = TRUE;
+if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $planetLand = TRUE;
 if ($player->getAllianceID() == $ownerAllianceID && $ownerAllianceID != 0) $planetLand = TRUE;
 if ($planet->owner_id == $player->getAccountID()) $planetLand = TRUE;
 if ($planet->owner_id == 0) $planetLand = TRUE;

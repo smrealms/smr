@@ -71,18 +71,7 @@ try
 		header('Location: '.URL.'/login.php');
 		exit;
 	}
-	
-	// ********************************
-	// *
-	// * Get Hidden Admins
-	// *
-	// ********************************
-
-	$db->query('SELECT account_id FROM hidden_players');
-	$HIDDEN_PLAYERS = array(0);//stop errors
-	while ($db->nextRecord())
-		$HIDDEN_PLAYERS[] = $db->getField('account_id');
-	
+  
 	// ********************************
 	// *
 	// * g e t   S e s s i o n

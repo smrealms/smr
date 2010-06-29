@@ -77,7 +77,7 @@ while ($db->nextRecord())
 	$thread['Replies'][] = array('Sender' => $players[$db->getField('sender_id')], 'Message' => $db->getField('text'), 'SendTime' => $db->getField('sendtime'));
 }
 
-if ($mbWrite || in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 {
 	$container = create_container('alliance_message_add_processing.php');
 	$container['alliance_id'] = $alliance_id;

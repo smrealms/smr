@@ -42,7 +42,7 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=('<th>Race</th>');
 	$PHP_OUTPUT.=('<th>Experience</th>');
 	$PHP_OUTPUT.=('<th>Online</th>');
-	if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $PHP_OUTPUT.=('<th>Sector</th>');
+	if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<th>Sector</th>');
 	$PHP_OUTPUT.=('<th>Option</th>');
 	$PHP_OUTPUT.=('</tr>');
 
@@ -90,7 +90,7 @@ if ($db->getNumRows() > 0)
 			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
 		else
 			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="red">NO</td>');
-		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getSectorID().'</td>');
+		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getSectorID().'</td>');
 		$PHP_OUTPUT.=('<td style="font-size:75%;" width="10%" class="center">');
 		$container = array();
 		$container['url']		= 'skeleton.php';
@@ -115,7 +115,7 @@ if ($db->getNumRows() > 0)
 		$container['submit'] = 'Search For Player';
 		$container['playerName'] = $curr_player->getPlayerName();
 		$PHP_OUTPUT.=create_link($container, '<span class="yellow">View News</span>');
-		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+		if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 		{
 			$PHP_OUTPUT.= '<br />';
 			$container=array();
@@ -151,7 +151,7 @@ if (empty($player_id))
 		$PHP_OUTPUT.=('<th>Race</th>');
 		$PHP_OUTPUT.=('<th>Experience</th>');
 		$PHP_OUTPUT.=('<th>Online</th>');
-		if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $PHP_OUTPUT.=('<th>Sector</th>');
+		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<th>Sector</th>');
 		$PHP_OUTPUT.=('<th>Option</th>');
 		$PHP_OUTPUT.=('</tr>');
 	
@@ -200,7 +200,7 @@ if (empty($player_id))
 				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
 			else
 				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="red">NO</td>');
-			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->sector_id.'</td>');
+			if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->sector_id.'</td>');
 			$PHP_OUTPUT.=('<td style="font-size:75%;" width="10%" class="center">');
 			$container = array();
 			$container['url']		= 'skeleton.php';
@@ -219,7 +219,7 @@ if (empty($player_id))
 			$container['game_id'] = $curr_player->getGameID();
 			$container['sending_page'] = 'search';
 			$PHP_OUTPUT.=create_link($container, '<span class="yellow">View Stats</span><br />');
-			if (in_array($player->getAccountID(), $HIDDEN_PLAYERS))
+			if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 			{
 				$container=array();
 				$container['url'] = 'sector_jump_processing.php';

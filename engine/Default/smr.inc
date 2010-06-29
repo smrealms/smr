@@ -739,8 +739,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$container['player_id']	= $player->getPlayerID();
 		$template->assign('PlayerNameLink',SmrSession::get_new_href($container));
 		
-		global $HIDDEN_PLAYERS;
-		if (is_array($HIDDEN_PLAYERS)&&in_array($player->getAccountID(), $HIDDEN_PLAYERS)) $template->assign('PlayerInvisible',true);
+		if (is_array(Globals::getHiddenPlayers())&&in_array($player->getAccountID(), Globals::getHiddenPlayers())) $template->assign('PlayerInvisible',true);
 	
 		// ******* Hardware *******
 		$container = array();
