@@ -905,6 +905,7 @@ class SmrSector
 						$key = array_rand($teamPlayers);
 					} while($attackingPlayer->equals($teamPlayers[$key]) || ($defendingPlayer!==null && $defendingPlayer->equals($teamPlayers[$key])));
 					unset($teamPlayers[$key]);
+					unset($fightingPlayers[$team][$key]);
 				}
 			}
 		} unset($teamPlayers);
