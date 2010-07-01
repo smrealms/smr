@@ -295,6 +295,14 @@
 							}
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
+						<div style="width:60%; float: left; text-align: left;">
+							<span style="font-size: xx-small;">Get <b><u>FREE TURNS</u></b> for voting if you see the star.</span>
+							<br /><?php
+							foreach($VoteSites as $VoteSite)
+							{
+								echo $VoteSite;
+							} ?>
+						</div>
 						<div class="copyright">
 							SMR <?php echo $Version; ?>&copy;2007-<?php echo $CurrentYear; ?> Page and SMR
 							<br />
