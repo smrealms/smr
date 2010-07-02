@@ -21,6 +21,7 @@
 		{
 			$this->includeTemplate($HeaderTemplateInclude);
 		} ?>
+		<script type="text/javascript" src="js/smr15.js"></script>
 	</head>
 	<body>
 		<div id="Container">
