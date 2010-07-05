@@ -2095,5 +2095,10 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		return $otherPlayer!==null&&$this->getAccountID()==$otherPlayer->getAccountID()&&$this->getGameID()==$otherPlayer->getGameID();
 	}
+	
+	public function __sleep()
+	{
+        return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName');
+	}
 }
 ?>
