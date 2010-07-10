@@ -584,16 +584,16 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$container['body'] = 'course_plot.php';
 		$template->assign('PlotCourseLink',Globals::getPlotCourseHREF());
 		
-		$container['body'] = 'trader_status.php';
-		$template->assign('TraderLink',SmrSession::get_new_href($container));
+		$template->assign('TraderLink',Globals::getTraderStatusHREF());
+	
+		$template->assign('PoliticsLink',Globals::getPoliticsHREF());
 	
 		$template->assign('AllianceLink',Globals::getAllianceHREF($player->getAllianceID()));
 	
 		$container['body'] = 'combat_log_viewer.php';
 		$template->assign('CombatLogsLink',SmrSession::get_new_href($container));
 	
-		$container['body'] = 'trader_planet.php';
-		$template->assign('PlanetLink',SmrSession::get_new_href($container));
+		$template->assign('PlanetLink',Globals::getTraderPlanetHREF());
 	
 		$container['body'] = 'forces_list.php';
 		$template->assign('ForcesLink',SmrSession::get_new_href($container));
