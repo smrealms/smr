@@ -26,6 +26,7 @@ if(isset($GameID))
 	<br />
 	<a href="<?php echo $TraderLink; ?>">Trader</a><br />
 	<a href="<?php echo $AllianceLink; ?>">Alliance</a><br />
+	<a href="<?php echo $PoliticsLink; ?>">Politics</a><br />
 	<a href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a>
 	<br />
 	<br />

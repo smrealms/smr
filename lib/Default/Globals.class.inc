@@ -628,6 +628,11 @@ class Globals
 		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_bounties.php'));
 	}
 	
+	public static function getPoliticsHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'council_list.php'));
+	}
+	
 	public static function getBarMainHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');

@@ -22,6 +22,7 @@ if(isset($GameID))
 		<br />
 		<a class="leftNav" href="<?php echo $TraderLink; ?>">Trader</a><br />
 		<a class="leftNav" href="<?php echo $AllianceLink; ?>">Alliance</a><br />
+		<a class="leftNav" href="<?php echo $PoliticsLink; ?>">Politics</a><br />
 		<a class="leftNav" href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a>
 		<br />
 		<br />
