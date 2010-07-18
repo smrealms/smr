@@ -108,6 +108,8 @@ define('MOVEMENT_WALK', 1);
 define('MOVEMENT_JUMP', 2);
 define('MOVEMENT_WARP', 3);
 
+define('EXPLORATION_EXPERIENCE', 1);
+
 define('TURNS_WARP_SECTOR_EQUIVALENCE', 5);
 define('TURNS_PER_SECTOR', 1);
 define('TURNS_PER_WARP', 5);
