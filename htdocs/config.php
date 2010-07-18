@@ -24,7 +24,20 @@ define('DEFAULT_DATE_TIME_SHORT','g:i:s A');
 define('DEFAULT_DATE_FULL_SHORT',DEFAULT_DATE_DATE_SHORT.' '.DEFAULT_DATE_TIME_SHORT);
 define('DEFAULT_DATE_FULL_SHORT_SPLIT',DEFAULT_DATE_DATE_SHORT.'\<b\r /\>'.DEFAULT_DATE_TIME_SHORT);
 define('DEFAULT_DATE_FULL_LONG','l jS F '.DEFAULT_DATE_TIME_SHORT);
- 
+
+/*
+ * Race types
+ */
+
+define('RACE_ALSKANT',2);
+define('RACE_CREONTI',3);
+define('RACE_HUMAN',4);
+define('RACE_IKTHORNE',5);
+define('RACE_SALVENE',6);
+define('RACE_THEVIAN',7);
+define('RACE_WQHUMAN',8);
+define('RACE_NIJARIN',9);
+
 /*
  * Ship types
  */

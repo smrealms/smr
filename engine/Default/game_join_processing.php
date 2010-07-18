@@ -65,7 +65,35 @@ if ($account->isNewbie())
 }
 else
 {
-	$ship_id = SHIP_TYPE_GALACTIC_SEMI;
+	switch($race_id)
+	{
+		case RACE_ALSKANT:
+			$ship_id = SHIP_TYPE_SMALL_TIMER;
+		break;
+		case RACE_CREONTI:
+			$ship_id = SHIP_TYPE_MEDIUM_CARGO_HULK;
+		break;
+		case RACE_HUMAN:
+			$ship_id = SHIP_TYPE_LIGHT_FREIGHTER;
+		break;
+		case RACE_IKTHORNE:
+			$ship_id = SHIP_TYPE_TINY_DELIGHT;
+		break;
+		case RACE_SALVENE:
+			$ship_id = SHIP_TYPE_HATCHLINGS_DUE;
+		break;
+		case RACE_THEVIAN:
+			$ship_id = SHIP_TYPE_SWIFT_VENTURE;
+		break;
+		case RACE_WQHUMAN:
+			$ship_id = SHIP_TYPE_SLIP_FREIGHTER;
+		break;
+		case RACE_NIJARIN:
+			$ship_id = SHIP_TYPE_REDEEMER;
+		break;
+		default:
+			$ship_id = SHIP_TYPE_GALACTIC_SEMI;
+	}
 	$amount_shields = 50;
 	$amount_armour = 50;
 }
