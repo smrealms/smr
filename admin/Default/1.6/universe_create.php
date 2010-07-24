@@ -18,5 +18,6 @@ while ($db->nextRecord())
 {
 	$editGames[$db->getField('game_id')] = array('GameID'=>$db->getField('game_id'),'GameName'=>$db->getField('game_name'));
 }
+
 $template->assignByRef('EditGames',$editGames);
 ?>

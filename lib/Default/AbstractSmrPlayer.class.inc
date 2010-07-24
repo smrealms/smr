@@ -6,7 +6,6 @@ abstract class AbstractSmrPlayer
 {
 	protected $db;
 	
-	const DEFAULT_MAX_TURNS = 450;
 	const HOF_CHANGED = 1;
 	const HOF_NEW = 2;
 //	var $race_name;
@@ -967,7 +966,8 @@ abstract class AbstractSmrPlayer
 	
 	public function getMaxTurns()
 	{
-		return round(self::DEFAULT_MAX_TURNS * Globals::getGameSpeed($this->getGameID()));
+		return Globals::getGameMaxTurns($this->getGameID());
+//		round(DEFAULT_MAX_TURNS * Globals::getGameSpeed($this->getGameID()));
 	}
 
 	public function setTurns($maint,$newNoob = false,$updateLastActive = false)

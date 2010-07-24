@@ -22,6 +22,10 @@ create_echo_form($link);
 		<td class="left"><input type="text" size="6" name="game_speed" value="1.25"></td>
 	</tr>
 	<tr>
+		<td class="right">Max Turns</td>
+		<td class="left"><input type="text" size="6" name="max_turns" value="<?php echo DEFAULT_MAX_TURNS; ?>"></td>
+	</tr>
+	<tr>
 		<td class="right">Max Players</td>
 		<td class="left"><input type="text" size="6" name="max_players" value="5000"></td>
 	</tr>

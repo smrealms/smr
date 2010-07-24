@@ -263,6 +263,7 @@ class Globals
 											'GameDescription' => (string)self::$db->getField('game_description'),
 											'StartDate' => (string)self::$db->getField('start_date'),
 											'EndDate' => (string)self::$db->getField('end_date'),
+											'MaxTurns' => (int)self::$db->getField('max_turns'),
 											'GameMaxPlayers' => (int)self::$db->getField('max_players'),
 											'GameCreditsRequired' => (int)self::$db->getField('credits_needed'),
 											'AllianceMaxPlayers' => (int)self::$db->getField('alliance_max_players'),
@@ -311,6 +312,12 @@ class Globals
 	{
 		$gameInfo =& self::getGameInfo($gameID);
 		return $gameInfo['EndDate'];
+	}
+	
+	public static function &getGameMaxTurns($gameID)
+	{
+		$gameInfo =& self::getGameInfo($gameID);
+		return $gameInfo['MaxTurns'];
 	}
 	
 	public static function &getGameMaxPlayers($gameID)
