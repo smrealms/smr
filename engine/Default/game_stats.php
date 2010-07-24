@@ -19,6 +19,7 @@ $PHP_OUTPUT.='<tr><td align="center">General Info</td><td align="center">Other I
 <tr><td align="right">Start Date</td>			<td>&nbsp;</td><td align="left">'.date(DATE_DATE_SHORT,Globals::getGameStartDate($game_id)).'</td></tr>
 <tr><td align="right">End Date</td>				<td>&nbsp;</td><td align="left">'.date(DATE_DATE_SHORT,Globals::getGameEndDate($game_id)).'</td></tr>
 <tr><td align="right">Current Players</td>		<td>&nbsp;</td><td align="left">'.$current.'</td></tr>
+<tr><td align="right">Max Turns</td>			<td>&nbsp;</td><td align="left">'.Globals::getGameMaxTurns($game_id).'</td></tr>
 <tr><td align="right">Max Players</td>			<td>&nbsp;</td><td align="left">'.Globals::getGameMaxPlayers($game_id).'</td></tr>
 <tr><td align="right">Alliance Max Players</td>	<td>&nbsp;</td><td align="left">'.Globals::getAllianceMaxPlayers($game_id).'</td></tr>
 <tr><td align="right">Alliance Max Vets</td>	<td>&nbsp;</td><td align="left">'.Globals::getAllianceMaxVets($game_id).'</td></tr>
