@@ -420,7 +420,11 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 		//Racial/Fed
 		$linkedLocations =& $location->getLinkedLocations();
 		foreach($linkedLocations as &$linkedLocation)
+		{
 			$sector->addLocation($linkedLocation);
+			if($linkedLocation->isFed())
+				$fedBeacon =& $linkedLocation;
+		} unset($linkedLocation);
 			
 		//add Beacons to all surrounding areas (up to 2 sectors out)
 		if (!$sector->offersFederalProtection())
