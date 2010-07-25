@@ -10,21 +10,21 @@
 					<tr>
 						<td align="right">Name</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo Globals::getGameName($GameID); ?></td></tr>
+						<td align="left"><?php echo Globals::getGameName($StatsGameID); ?></td></tr>
 					<tr>
 						<td align="right">Description</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo bbifyMessage(Globals::getGameDescription($GameID)); ?></td>
+						<td align="left"><?php echo bbifyMessage(Globals::getGameDescription($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Start Date</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameStartDate($GameID)); ?></td>
+						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameStartDate($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">End Date</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameEndDate($GameID)); ?></td>
+						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameEndDate($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Current Players</td>
@@ -33,47 +33,47 @@
 					<tr>
 						<td align="right">Max Turns</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getGameMaxTurns($GameID)); ?></td>
+						<td align="left"><?php echo number_format(Globals::getGameMaxTurns($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Max Players</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getGameMaxPlayers($GameID)); ?></td>
+						<td align="left"><?php echo number_format(Globals::getGameMaxPlayers($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Alliance Max Players</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getAllianceMaxPlayers($GameID)); ?></td>
+						<td align="left"><?php echo number_format(Globals::getAllianceMaxPlayers($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Alliance Max Vets</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getAllianceMaxVets($GameID)); ?></td>
+						<td align="left"><?php echo number_format(Globals::getAllianceMaxVets($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Game Type</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo Globals::getGameType($GameID); ?></td>
+						<td align="left"><?php echo Globals::getGameType($StatsGameID); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Game Speed</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getGameSpeed($GameID)); ?></td>
+						<td align="left"><?php echo number_format(Globals::getGameSpeed($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Credits Needed</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getGameCreditsRequired($GameID)); ?></td>
+						<td align="left"><?php echo number_format(Globals::getGameCreditsRequired($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Stats Ignored</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo Globals::getGameIgnoreStats($GameID)?'Yes':'No'; ?></td>
+						<td align="left"><?php echo Globals::getGameIgnoreStats($StatsGameID)?'Yes':'No'; ?></td>
 					</tr>
 					<tr>
 						<td align="right">Starting Credits</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getStartingCredits($GameID)); ?></td>
+						<td align="left"><?php echo number_format(Globals::getStartingCredits($StatsGameID)); ?></td>
 					</tr>
 				</table>
 			</td>
