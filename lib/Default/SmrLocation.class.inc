@@ -383,11 +383,13 @@ class SmrLocation
 		{
 			if($this->getTypeID()==LOCATION_TYPE_FEDERAL_HQ)
 			{
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
 				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_MINT);
 			}
 			else
 			{
 				$relativeID = $this->getTypeID()%100-2;
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS+$relativeID);
 				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS+$relativeID);
 				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS+$relativeID);
 			}
