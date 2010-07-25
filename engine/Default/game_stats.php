@@ -3,7 +3,7 @@
 //get game id
 $gameID = $var['game_id'];
 
-$template->assign('GameID',$gameID);
+$template->assign('StatsGameID',$gameID);
 
 $db->query('SELECT count(*) total_players, MAX(experience) max_exp, MAX(alignment) max_align, MIN(alignment) min_alignment, MAX(kills) max_kills FROM player WHERE game_id = '.$gameID.' ORDER BY experience DESC');
 if ($db->nextRecord())
