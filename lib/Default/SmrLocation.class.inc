@@ -130,10 +130,7 @@ class SmrLocation
 		if(!isset($this->fed))
 		{
 			$this->db->query('SELECT * FROM location_is_fed WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
-			if($this->db->nextRecord())
-				$this->fed = true;
-			else
-				$this->fed = false;
+			$this->fed = $this->db->nextRecord();
 		}
 		return $this->fed;
 	}
@@ -159,10 +156,7 @@ class SmrLocation
 		if(!isset($this->bank))
 		{
 			$this->db->query('SELECT * FROM location_is_bank WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
-			if($this->db->nextRecord())
-				$this->bank = true;
-			else
-				$this->bank = false;
+			$this->bank = $this->db->nextRecord();
 		}
 		return $this->bank;
 	}
@@ -188,10 +182,7 @@ class SmrLocation
 		if(!isset($this->bar))
 		{
 			$this->db->query('SELECT * FROM location_is_bar WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
-			if($this->db->nextRecord())
-				$this->bar = true;
-			else
-				$this->bar = false;
+			$this->bar = $this->db->nextRecord();
 		}
 		return $this->bar;
 	}
@@ -217,10 +208,7 @@ class SmrLocation
 		if(!isset($this->HQ))
 		{
 			$this->db->query('SELECT * FROM location_is_hq WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
-			if($this->db->nextRecord())
-				$this->HQ = true;
-			else
-				$this->HQ = false;
+			$this->HQ = $this->db->nextRecord();
 		}
 		return $this->HQ;
 	}
@@ -246,10 +234,7 @@ class SmrLocation
 		if(!isset($this->UG))
 		{
 			$this->db->query('SELECT * FROM location_is_ug WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
-			if($this->db->nextRecord())
-				$this->UG = true;
-			else
-				$this->UG = false;
+			$this->UG = $this->db->nextRecord();
 		}
 		return $this->UG;
 	}
