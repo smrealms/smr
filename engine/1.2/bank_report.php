@@ -38,7 +38,7 @@ foreach ($totals as $accId => $total) {
 	$text .= "<table class=\"nobord\" cellspacing=\"0\">";
 	$text .= "<tr><td colspan=\"2\"><span class=\"yellow\">" . $players[$accId] . ":</span></td></tr>";
 	$text .= "<tr><td>Deposits</td><td>" . number_format($trans[$accId][DEPOSIT]) . "</td></tr>";
-	$text .= "<tr><td>Withdraws</td><td> -" . number_format($trans[$accId][WITHDRAW]) . "</td></tr>";
+	$text .= "<tr><td>Withdrawals</td><td> -" . number_format($trans[$accId][WITHDRAW]) . "</td></tr>";
 	$text .= "<tr><td><span class=\"bold\">Total</td><td><span class=\"";
 	if ($total < 0) $text .= "red bold";
 	else $text .= "bold";
