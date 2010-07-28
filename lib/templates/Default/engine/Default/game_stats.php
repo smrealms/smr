@@ -203,7 +203,7 @@
 				{
 					$Style = 'italic';
 				}
-				if ($CurrentPlayer->getAccountID() == $ThisPlayer->getAccountID())
+				if ($CurrentPlayer->getAccountID() == $ThisAccount->getAccountID())
 				{
 					$Style .= ' bold';
 				}
