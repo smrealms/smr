@@ -59,8 +59,8 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done)
 	$container['body'] = 'bar_main.php';
 	$container['script'] = 'bar_ship_name.php';
 	$container['process'] = 'yes';
-	$container['html'] = TRUE;
-	$container['done'] = TRUE;
+	$container['html'] = true;
+	$container['done'] = true;
 	$container['ship_name'] = stripslashes($name);
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('Yes:<input type="radio" name="continue" value="TRUE"><br />No:<input type="radio" name="continue" value="FALSE"><br />');
@@ -69,6 +69,9 @@ if ($action == 'Include HTML (2 SMR Credits)' && !$done)
 }
 elseif (isset($var['process']) && $continue == 'TRUE')
 {
+	if($name=='Enter Name Here')
+		create_error('Please enter a ship name!');
+	
 	if ($account->getTotalSmrCredits() < $cred_cost)
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 
