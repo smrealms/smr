@@ -130,6 +130,8 @@ define('TURNS_PER_SECTOR', 1);
 define('TURNS_PER_WARP', 5);
 define('TURNS_PER_TRADE', 1);
 
+define('TURNS_TO_CLOAK',1);
+
 define('GOOD_NOTHING',0);
 /*
  * Special locations

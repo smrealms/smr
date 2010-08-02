@@ -20,7 +20,7 @@ if ($ship->hasCloak())
 	if (!$ship->isCloaked())
 	{
 		$container['action'] = 'Enable';
-		$PHP_OUTPUT.= create_button($container,'Enable');
+		$PHP_OUTPUT.= create_button($container,'Enable ('.TURNS_TO_CLOAK.')');
 	}
 	else
 	{
