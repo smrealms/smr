@@ -28,7 +28,7 @@ if ($portGood['TransactionType'] == 'Sell')
 	$PHP_OUTPUT.=('buy ');
 elseif ($portGood['TransactionType'] == 'Buy')
 	$PHP_OUTPUT.=('offer you ');
-$PHP_OUTPUT.=($var['amount'] . ' pcs. of ' . $var['good_name'] . ' for ' . $var['offered_price'] . ' credits!<br />');
+$PHP_OUTPUT.=($var['amount'] . ' pcs. of ' . $portGood['Name'] . ' for ' . $var['offered_price'] . ' credits!<br />');
 $PHP_OUTPUT.=('Note: In order to maximize your experience you have to bargain with the port owner, unless you have maximum relations (1000) with that race, which gives full experience without the need to bargain.</p>');
 
 $container = array();
