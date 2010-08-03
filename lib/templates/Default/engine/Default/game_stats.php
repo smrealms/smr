@@ -214,7 +214,7 @@
 				?>
 				<tr>
 					<td valign="top"<?php echo $Style; ?>><?php echo $CurrentPlayer->getLevelName();?> <?php echo $CurrentPlayer->getDisplayName(); ?></td>
-					<td align="center"<?php echo $Style; ?>><?php echo $player->getColouredRaceName($CurrentPlayer->getRaceID()); ?></td>
+					<td align="center"<?php echo $Style; ?>><?php echo AbstractSmrPlayer::getColouredRaceNameOrDefault($CurrentPlayer->getRaceID(),$ThisPlayer); ?></td>
 					<td<?php echo $Style; ?>><?php echo $CurrentPlayer->getAllianceName(); ?></td>
 					<td align="right"<?php echo $Style; ?>><?php echo number_format($CurrentPlayer->getExperience()); ?></td>
 				</tr><?php
