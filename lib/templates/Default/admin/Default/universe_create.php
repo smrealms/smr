@@ -27,13 +27,13 @@
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
-				<td align="right">Start Date:</td>
+				<td align="right">Start Date (DD/MM/YYYY):</td>
 				<td><input type="text" name="start_date" value="<?php echo $DefaultStartDate ?>" id="InputFields"></td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
-				<td align="right">End Date:</td>
+				<td align="right">End Date (DD/MM/YYYY):</td>
 				<td><input type="text" name="end_date" value="<?php echo $DefaultEndDate ?>" id="InputFields"></td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
