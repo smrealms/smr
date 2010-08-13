@@ -179,7 +179,7 @@ catch(Exception $e)
 		
 function NPCStuff()
 {
-	global $account,$actions;
+	global $account,$actions,$var;
 	
 	$actions=-1;
 //	for($i=0;$i<40;$i++)
@@ -222,7 +222,11 @@ function NPCStuff()
 			if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
 			
-			if($player->getShip()->isUnderAttack()===true&&($player->hasPlottedCourse()===false||SmrSector::getSector($player->getGameID(),$player->getPlottedCourse()->getEndSectorID())->offersFederalProtection()===false))
+			if($var['url']=='shop_ship_processing.php')
+			{ //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
+				plotToFed(true);
+			}
+			else if($player->getShip()->isUnderAttack()===true&&($player->hasPlottedCourse()===false||SmrSector::getSector($player->getGameID(),$player->getPlottedCourse()->getEndSectorID())->offersFederalProtection()===false))
 			{ //We're under attack and need to plot course to fed.
 				debug('Under Attack');
 				processContainer(plotToFed(true));
@@ -251,7 +255,7 @@ function NPCStuff()
 					changeNPCLogin();
 				}
 				$ship =& $player->getShip();
-				processContainer(plotToFed(!$ship->hasMaxShields||!$ship->hasMaxArmour()||!$ship->hasMaxCargoHolds()));
+				processContainer(plotToFed(!$ship->hasMaxShields()||!$ship->hasMaxArmour()||!$ship->hasMaxCargoHolds()));
 			}
 			else if(($container = checkForShipUpgrade($player))!==false)
 			{ //We have money and are at a uno, let's uno!
@@ -394,9 +398,9 @@ function NPCStuff()
 	exitNPC();
 }
 
-function debug($message)
-{
-	echo date('Y-m-d H:i:s - ').$message.EOL;
+function debug($message, $moreMessage = '')
+{ //TODO: Can we varargs this? Also check for objects and treat specially.
+	echo date('Y-m-d H:i:s - ').$message.$moreMessage.EOL;
 }
 
 function processContainer($container)
@@ -598,12 +602,13 @@ function plotToFed($plotToHQ=false)
 		changeNPCLogin();
 	}
 	
-	return plotToNearest($player,$plotToHQ===true?'HQ':'Fed');
+	return plotToNearest($player,$plotToHQ===true?SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_HQS):SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_BEACONS));
+//	return plotToNearest($player,$plotToHQ===true?'HQ':'Fed');
 }
 
 function plotToNearest(AbstractSmrPlayer &$player, &$realX)
 {
-	debug('Plotting To: '.var_export($realX,true)); //TODO: Can we make the debug output a bit nicer?
+	debug('Plotting To: ',var_export($realX,true)); //TODO: Can we make the debug output a bit nicer?
 	
 	if($player->getSector()->hasX($realX)) //Check if current sector has what we're looking for before we attempt to plot and get error.
 	{
