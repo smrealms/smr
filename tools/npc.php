@@ -1,16 +1,27 @@
 <?php
 try
 {
+	
 	echo '<pre>';
 	require_once('../htdocs/config.inc');
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/Globals.class.inc');
+	
+	$db = new SmrMySqlDatabase();
+	
+	debug('Script started');
+	define('SCRIPT_ID', $db->getInsertID());
+	$db->query('UPDATE npc_logs SET script_id='.SCRIPT_ID.' WHERE log_id='.SCRIPT_ID);
+
 
 	$forwardedCount = 0;
 	function overrideForward($container)
 	{
 		if($container['body']=='error.php') //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
-			throw new Exception($container['message']);
+		{
+			debug('Hit an error');
+			throw new Exception('Script: '.SCRIPT_ID.EOL.$container['message']);
+		}
 		throw new Exception('Forward'); //We catch and check for exceptions with the message "Forward" in NPCStuff, very hacky but works - need to extend Exception for a less over-arching catch.
 											//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
 	}
@@ -398,14 +409,16 @@ function NPCStuff()
 	exitNPC();
 }
 
-function debug($message, $moreMessage = '')
-{ //TODO: Can we varargs this? Also check for objects and treat specially.
-	echo date('Y-m-d H:i:s - ').$message.$moreMessage.EOL;
+function debug($message, $debugObject = null)
+{
+	global $account,$var,$db;
+	echo date('Y-m-d H:i:s - ').$message.($debugObject!==null?var_export($debugObject,true):'').EOL;
+	$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES ('.(defined('SCRIPT_ID')?SCRIPT_ID:0).', '.(is_object($account)?$account->getAccountID():0).',NOW(),'.$db->escapeString($message).','.$db->escapeString(var_export($debugObject,true)).','.$db->escapeString(var_export($var,true)).')');
 }
 
 function processContainer($container)
 {
-	var_dump($container);
+	debug('Executing container',$container);
 	resetContainer($container);
 	do_voodoo();
 }
@@ -608,7 +621,7 @@ function plotToFed($plotToHQ=false)
 
 function plotToNearest(AbstractSmrPlayer &$player, &$realX)
 {
-	debug('Plotting To: ',var_export($realX,true)); //TODO: Can we make the debug output a bit nicer?
+	debug('Plotting To: ',$realX); //TODO: Can we make the debug output a bit nicer?
 	
 	if($player->getSector()->hasX($realX)) //Check if current sector has what we're looking for before we attempt to plot and get error.
 	{
