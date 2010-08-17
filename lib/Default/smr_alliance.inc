@@ -140,11 +140,11 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	function update()
 	{
 
-		$this->query('UPDATE alliance SET alliance_password = ' . $this->escape_string($this->password, false) . ', ' .
+		$this->query('UPDATE alliance SET alliance_password = ' . $this->escapeString($this->password) . ', ' .
 										 'alliance_account = '.$this->account.', ' .
-										 'alliance_description = ' . nl2br($this->escape_string($this->description, true)) . ', ' .
-										 '`mod` = ' . nl2br($this->escape_string($this->mod, true)) . ', ' .
-										 'img_src = ' . $this->escape_string($this->img_src, False) . ', ' .
+										 'alliance_description = ' . $this->escapeString(nl2br($this->description)) . ', ' .
+										 'mod = ' . $this->escapeString(nl2br($this->mod)) . ', ' .
+										 'img_src = ' . $this->escapeString($this->img_src) . ', ' .
 										 'alliance_kills = '.$this->kills.', ' .
 										 'alliance_deaths = '.$this->deaths.', ' .
 										 'leader_id = '.$this->leader_id.' ' .
