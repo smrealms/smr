@@ -28,7 +28,7 @@
 			<table class="tableHeight">
 				<tr>
 					<td class="topleftCell">
-						<b><span style="font-size: 72px;">smr</span></b>
+						<b><span class="smrBanner">smr</span></b>
 						<br />
 						<span id="tod"><?php echo $timeDisplay; ?></span>
 					</td>

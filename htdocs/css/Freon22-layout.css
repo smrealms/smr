@@ -23,6 +23,9 @@ h3 {
 	font-size: 1.15em;
 }
 /* ----- End Heading styles ----- */
+span.smrBanner {
+	font-size: 72px;
+}
 #Container {
 	width: 100%;
 	height: 100%;
