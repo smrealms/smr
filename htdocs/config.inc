@@ -38,7 +38,7 @@ function handleException(Exception $e)
 		}
 		$message .= 'Trace: ' . $ee->getTraceAsString();
 	}
-	var_dump($message); exit;
+	
 	try
 	{
 		if(is_object($player) && method_exists($player,'sendMessageToBox'))
