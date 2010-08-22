@@ -1697,14 +1697,15 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		if($this->hasHOFChanged!==false)
 			$this->doHOFSave($this->hasHOFChanged);
-		if(!empty($this->hasHOFVisChanged))
+		if(!empty(self::$hasHOFVisChanged))
 		{
-			foreach($this->hasHOFVisChanged as $hofType => $changeType)
+			foreach(self::$hasHOFVisChanged as $hofType => $changeType)
 			{
 				if($changeType==self::HOF_NEW)
-					$this->db->query('INSERT INTO hof_visibility (type, visibility) VALUES ('.$this->db->escapeString($hofType).','.$this->db->escapeString($this->HOFVis[$hofType]).')');
+					$this->db->query('INSERT INTO hof_visibility (type, visibility) VALUES ('.$this->db->escapeString($hofType).','.$this->db->escapeString(self::$HOFVis[$hofType]).')');
 				else
-					$this->db->query('UPDATE hof_visibility SET visibility = '.$this->db->escapeString($this->HOFVis[$hofType]).' WHERE type = '.$this->db->escapeString($hofType).' LIMIT 1');
+					$this->db->query('UPDATE hof_visibility SET visibility = '.$this->db->escapeString(self::$HOFVis[$hofType]).' WHERE type = '.$this->db->escapeString($hofType).' LIMIT 1');
+				unset(self::$hasHOFVisChanged[$hofType]);
 			}
 		}
 	}
@@ -1762,12 +1763,21 @@ class SmrPlayer extends AbstractSmrPlayer
 				}
 				$hof = $this->db->getField('amount');
 			}
+			self::getHOFVis();
+		}
+	}
+	
+	public static function getHOFVis()
+	{
+		if(!isset(self::$HOFVis))
+		{
 			//Get Player HOF Vis
-			$this->db->query('SELECT type,visibility FROM hof_visibility');
-			$this->HOFVisibility = array();
-			while($this->db->nextRecord())
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT type,visibility FROM hof_visibility');
+			self::$HOFVis = array();
+			while($db->nextRecord())
 			{
-				$this->HOFVisibility[$this->db->getField('type')] = $this->db->getField('visibility');
+				self::$HOFVis[$db->getField('type')] = $db->getField('visibility');
 			}
 		}
 	}
