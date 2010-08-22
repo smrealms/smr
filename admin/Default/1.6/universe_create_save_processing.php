@@ -262,6 +262,7 @@ elseif ($submit == 'Create Ports and Mines')
 				$port =& $galSector->createPort();
 				$port->setRaceID($raceID);
 				$port->upgradeToLevel($i);
+				$port->addCredits(($port->getLevel()-1)*2000000);
 			}
 		}
 		SmrPort::savePorts();
