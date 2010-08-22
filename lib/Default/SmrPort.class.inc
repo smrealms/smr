@@ -640,10 +640,10 @@ class SmrPort
 		if($this->isCachedVersion())
 			throw new Exception('Cannot attack a cached port!');
 			
-		$trigger->increaseHOF(1,array('Combat','Port','Number Of Triggers'));
+		$trigger->increaseHOF(1,array('Combat','Port','Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as &$attacker)
 		{
-			$attacker->increaseHOF(1,array('Combat','Port','Number Of Attacks'));
+			$attacker->increaseHOF(1,array('Combat','Port','Number Of Attacks'), HOF_PUBLIC);
 			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ' .
 						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
 		} unset($attacker);
@@ -1366,8 +1366,8 @@ class SmrPort
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF($this->db->getField('level'),array('Combat','Port','Levels Raided'));
-			$currPlayer->increaseHOF(1,array('Combat','Port','Total Raided'));
+			$currPlayer->increaseHOF($this->db->getField('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
+			$currPlayer->increaseHOF(1,array('Combat','Port','Total Raided'), HOF_PUBLIC);
 		}
 		$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID().' LIMIT '.$numToDelete);
 	}
@@ -1377,7 +1377,7 @@ class SmrPort
 		$return = array();
 		$return['KillerCredits'] = $this->getCredits();
 		$killer->increaseCredits($return['KillerCredits']);
-		$killer->increaseHOF($return['KillerCredits'],array('Combat','Port','Money','Gained'));
+		$killer->increaseHOF($return['KillerCredits'],array('Combat','Port','Money','Gained'), HOF_PUBLIC);
 		$this->setCredits(0);
 		
 		$this->creditCurrentAttackersForKill();
@@ -1390,13 +1390,13 @@ class SmrPort
 		// Trigger gets an alignment change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ',$return['KillerBounty']);
-		$killer->increaseHOF($return['KillerBounty'],array('Combat','Port','Bounties','Gained'));
+		$killer->increaseHOF($return['KillerBounty'],array('Combat','Port','Bounties','Gained'), HOF_PUBLIC);
 		
 		if($this->getRaceID() > 1)
 		{
 			$return['KillerRelations'] = 45;
 			$killer->decreaseRelations($return['KillerRelations'],$this->getRaceID());
-			$killer->increaseHOF($return['KillerRelations'],array('Combat','Port','Relation','Loss'));
+			$killer->increaseHOF($return['KillerRelations'],array('Combat','Port','Relation','Loss'), HOF_PUBLIC);
 		}
 		// also we change alignment
 		$relations = Globals::getRaceRelations($killer->getGameID(),$killer->getRaceID());
@@ -1404,13 +1404,13 @@ class SmrPort
 		{
 			$return['KillerAlign'] = $this->getLevel() * 2;
 			$killer->increaseAlignment($return['KillerAlign']);
-			$killer->increaseHOF($return['KillerAlign'],array('Combat','Port','Alignment','Gain'));
+			$killer->increaseHOF($return['KillerAlign'],array('Combat','Port','Alignment','Gain'), HOF_PUBLIC);
 		}
 		else
 		{
 			$return['KillerAlign'] = -$this->getLevel() * 2;
 			$killer->decreaseAlignment(-$return['KillerAlign']);
-			$killer->increaseHOF(-$return['KillerAlign'],array('Combat','Port','Alignment','Loss'));
+			$killer->increaseHOF(-$return['KillerAlign'],array('Combat','Port','Alignment','Loss'), HOF_PUBLIC);
 		}
 		
 		return $return;

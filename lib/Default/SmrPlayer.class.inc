@@ -1321,11 +1321,11 @@ class SmrPlayer extends AbstractSmrPlayer
 						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
 
 		// record death stat
-		$this->increaseHOF(1,array('Dying','Deaths'));
+		$this->increaseHOF(1,array('Dying','Deaths'), HOF_PUBLIC);
 		//record cost of ship lost
-		$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Cost Of Ships Lost'));
+		$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Cost Of Ships Lost'), HOF_PUBLIC);
 		// reset turns since last death
-		$this->setHOF(0,array('Movement','Turns Used','Since Last Death'));
+		$this->setHOF(0,array('Movement','Turns Used','Since Last Death'), HOF_PUBLIC);
 
 		// 1/4 of ship value -> insurance
 		$newCredits = round($this->getShip()->getCost() / 4);
@@ -1390,9 +1390,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
-		$killer->increaseHOF($gainedExp,array('Killing','Experience','Gained'));
-		$killer->increaseHOF($this->getExperience(),array('Killing','Experience','Of Traders Killed'));
-		$this->increaseHOF($gainedExp,array('Dying','Experience','Gained By Killer'));
+		$killer->increaseHOF($gainedExp,array('Killing','Experience','Gained'), HOF_PUBLIC);
+		$killer->increaseHOF($this->getExperience(),array('Killing','Experience','Of Traders Killed'), HOF_PUBLIC);
+		$this->increaseHOF($gainedExp,array('Dying','Experience','Gained By Killer'), HOF_PUBLIC);
 		// Dead player loses experience
 		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
 		$return['DeadExp'] = 0;
@@ -1401,15 +1401,15 @@ class SmrPlayer extends AbstractSmrPlayer
 			$lostExp = floor($this->getExperience() * $expLossPercentage);
 			$return['DeadExp'] = $lostExp;
 			$this->decreaseExperience($lostExp);
-			$this->increaseHOF($return['DeadExp'],array('Dying','Experience','Lost'));
-			$killer->increaseHOF($return['DeadExp'],array('Killing','Experience','Lost By Traders Killed'));
+			$this->increaseHOF($return['DeadExp'],array('Dying','Experience','Lost'), HOF_PUBLIC);
+			$killer->increaseHOF($return['DeadExp'],array('Killing','Experience','Lost By Traders Killed'), HOF_PUBLIC);
 		}
 		
 		$creditsGained = $this->getCredits();
 		$return['KillerCredits'] = $creditsGained;
 		$killer->increaseCredits($creditsGained);
-		$killer->increaseHOF($creditsGained,array('Killing','Money','Gain'));
-		$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Cost Of Ships Killed'));
+		$killer->increaseHOF($creditsGained,array('Killing','Money','Gain'), HOF_PUBLIC);
+		$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Cost Of Ships Killed'), HOF_PUBLIC);
 
 		// The killer may change alignment
 		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
@@ -1424,12 +1424,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($alignChange>0)
 		{
 			$killer->increaseAlignment($alignChange);
-			$killer->increaseHOF($alignChange,array('Killing','Alignment','Gain'));
+			$killer->increaseHOF($alignChange,array('Killing','Alignment','Gain'), HOF_PUBLIC);
 		}
 		else
 		{
 			$killer->decreaseAlignment(-$alignChange);
-			$killer->increaseHOF(-$alignChange,array('Killing','Alignment','Loss'));
+			$killer->increaseHOF(-$alignChange,array('Killing','Alignment','Loss'), HOF_PUBLIC);
 		}
 		// War setting gives them military pay
 		if($relation <= -300)
@@ -1480,19 +1480,19 @@ class SmrPlayer extends AbstractSmrPlayer
 			if(isset($bounty_type))
 			{
 				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
-				$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Bounty Gained'));
-				$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Bounty Gained By Killer'));
+				$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Bounty Gained'), HOF_PUBLIC);
+				$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Bounty Gained By Killer'), HOF_PUBLIC);
 			}
 		}
 		
 		if($this->getShip()->getAttackRating()<=MAX_ATTACK_RATING_NEWBIE&&$this->getAccount()->isNewbie()&&$killer->getAccount()->isVeteran()) //Newbie kill
 		{
-			$killer->increaseHOF(1,array('Killing','Newbie Kills'));
+			$killer->increaseHOF(1,array('Killing','Newbie Kills'), HOF_PUBLIC);
 		}
 		else
 		{
 			$killer->increaseKills(1);
-			$killer->increaseHOF(1,array('Killing','Kills'));
+			$killer->increaseHOF(1,array('Killing','Kills'), HOF_PUBLIC);
 		}
 
 		if($killer->hasAlliance())
@@ -1697,6 +1697,16 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		if($this->hasHOFChanged!==false)
 			$this->doHOFSave($this->hasHOFChanged);
+		if(!empty($this->hasHOFVisChanged))
+		{
+			foreach($this->hasHOFVisChanged as $hofType => $changeType)
+			{
+				if($changeType==self::HOF_NEW)
+					$this->db->query('INSERT INTO hof_visibility (type, visibility) VALUES ('.$this->db->escapeString($hofType).','.$this->db->escapeString($this->HOFVis[$hofType]),')');
+				else
+					$this->db->query('UPDATE hof_visibility SET visibility = '.$this->db->escapeString($this->HOFVis[$hofType]).' WHERE type = '.$this->db->escapeString($hofType).' LIMIT 1');
+			}
+		}
 	}
 	protected function doHOFSave(array &$hasChangedList,array $typeList = array())
 	{
@@ -1751,6 +1761,13 @@ class SmrPlayer extends AbstractSmrPlayer
 					$hof =& $hof[$type];
 				}
 				$hof = $this->db->getField('amount');
+			}
+			//Get Player HOF Vis
+			$this->db->query('SELECT type,visibility FROM hof_visibility');
+			$this->HOFVisibility = array();
+			while($this->db->nextRecord())
+			{
+				$this->HOFVisibility[$this->db->getField('type')] = $this->db->getField('visibility');
 			}
 		}
 	}
@@ -1911,7 +1928,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			if($this->getAccount()->isMailBanned())
 				create_error('You are currently banned from sending messages');
 			// Don't send messages to players ignoring us
-			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiverID . ' AND blacklisted_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
+			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiverID . ' AND blacklisted_id=' . $this->getAccountID() . ' LIMIT 1');
 			if($this->db->nextRecord())
 				return;
 		}

@@ -27,8 +27,8 @@ if ($action == 'process')
 	$db->query('INSERT INTO player_has_ticket (game_id, account_id, time) VALUES (' .
 				$player->getGameID().', '.$player->getAccountID().', '.$time.')');
 	$player->decreaseCredits(1000000);
-	$player->increaseHOF(1000000,array('Bar','Lotto', 'Money', 'Spent'));
-	$player->increaseHOF(1,array('Bar','Lotto', 'Tickets Bought'));
+	$player->increaseHOF(1000000,array('Bar','Lotto', 'Money', 'Spent'), HOF_PUBLIC);
+	$player->increaseHOF(1,array('Bar','Lotto', 'Tickets Bought'), HOF_PUBLIC);
 	$db->query('SELECT count(*) as num FROM player_has_ticket WHERE game_id = '.$player->getGameID() .
 				' AND account_id = '.$player->getAccountID().' AND time > 0 GROUP BY account_id');
 	$db->nextRecord();
@@ -327,8 +327,8 @@ elseif ($action == 'blackjack')
 	{
 		$message.=('You have <span class="red"><b>BUSTED</b></span>');
 		$bet = $var['bet'];
-		$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
-		$player->increaseHOF(1,array('Blackjack','Results','Lost'));
+		$player->increaseHOF($bet,array('Blackjack','Money','Lost'), HOF_PUBLIC);
+		$player->increaseHOF(1,array('Blackjack','Results','Lost'), HOF_PUBLIC);
 		$container = create_container('skeleton.php','bar_main.php');
 		$container['script'] = 'bar_gambling_processing.php';
 		$container['cards'] = $cards;
@@ -368,8 +368,8 @@ elseif ($action == 'blackjack')
 			$player->increaseCredits($bet * 2.5);
 			$stat = ($bet * 2.5) - $bet;
 			$player->update();
-			$player->increaseHOF($stat, array('Blackjack','Money','Won'));
-			$player->increaseHOF(1, array('Blackjack','Results','Won'));
+			$player->increaseHOF($stat, array('Blackjack','Money','Won'), HOF_PUBLIC);
+			$player->increaseHOF(1, array('Blackjack','Results','Won'), HOF_PUBLIC);
 			$message.=('You have won $' . number_format($bet * 2.5) . ' credits!');
 		}
 		elseif ($win == 'yes')
@@ -377,21 +377,21 @@ elseif ($action == 'blackjack')
 			$player->increaseCredits($bet * 2);
 			$stat = ($bet * 2) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,array('Blackjack','Money','Won'));
-			$player->increaseHOF(1, array('Blackjack','Results','Won'));
+			$player->increaseHOF($stat,array('Blackjack','Money','Won'), HOF_PUBLIC);
+			$player->increaseHOF(1, array('Blackjack','Results','Won'), HOF_PUBLIC);
 			$message.=('You have won $' . number_format($bet * 2) . ' credits!');
 		}
 		elseif ($win == 'tie')
 		{
 			$player->increaseCredits($bet);
 			$player->update();
-			$player->increaseHOF(1, array('Blackjack','Results','Draw'));
+			$player->increaseHOF(1, array('Blackjack','Results','Draw'), HOF_PUBLIC);
 			$message.=('You have won back your $' . number_format($bet) . ' credits.');
 		}
 		else
 		{
-			$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
-			$player->increaseHOF(1,array('Blackjack','Results','Lost'));
+			$player->increaseHOF($bet,array('Blackjack','Money','Lost'), HOF_PUBLIC);
+			$player->increaseHOF(1,array('Blackjack','Results','Lost'), HOF_PUBLIC);
 		}
 		$container = create_container('skeleton.php','bar_main.php');
 		$container['script'] = 'bar_gambling_processing.php';
@@ -413,8 +413,8 @@ elseif ($action == 'blackjack')
 			$player->increaseCredits($bet * $winnings);
 			$stat = ($bet * $winnings) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,array('Blackjack','Money','Win'));
-			$player->increaseHOF(1,array('Blackjack','Results','Win'));
+			$player->increaseHOF($stat,array('Blackjack','Money','Win'), HOF_PUBLIC);
+			$player->increaseHOF(1,array('Blackjack','Results','Win'), HOF_PUBLIC);
 			$message.=('You have won $' . number_format($bet * $winnings) . ' credits!');
 		}
 		else if(sizeof($ai_card) > 2)
@@ -424,16 +424,16 @@ elseif ($action == 'blackjack')
 			$player->increaseCredits($bet * $winnings);
 			$stat = ($bet * $winnings) - $bet;
 			$player->update();
-			$player->increaseHOF($stat,array('Blackjack','Money','Win'));
-			$player->increaseHOF(1,array('Blackjack','Results','Win'));
+			$player->increaseHOF($stat,array('Blackjack','Money','Win'), HOF_PUBLIC);
+			$player->increaseHOF(1,array('Blackjack','Results','Win'), HOF_PUBLIC);
 			$message.=('You have won back your $' . number_format($bet * $winnings) . ' credits!');
 		}
 		else
 		{
 			//AI has BJ already...sorry
 			if (empty($bet)) $bet = $var['bet'];
-			$player->increaseHOF($bet,array('Blackjack','Money','Lost'));
-			$player->increaseHOF(1,array('Blackjack','Results','Lost'));
+			$player->increaseHOF($bet,array('Blackjack','Money','Lost'), HOF_PUBLIC);
+			$player->increaseHOF(1,array('Blackjack','Results','Lost'), HOF_PUBLIC);
 		}
 		$container = create_container('skeleton.php','bar_main.php');
 		$container['script'] = 'bar_gambling_processing.php';

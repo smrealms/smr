@@ -91,6 +91,12 @@ define('PLANET_TURRET',3);
 define('PLANET_GENERATOR_SHIELDS',100);
 define('PLANET_HANGAR_DRONES',20);
 
+/*
+ * HoF
+ */
+define('HOF_PUBLIC', 'PUBLIC');
+define('HOF_ALLIANCE', 'ALLIANCE');
+define('HOF_PRIVATE', 'PRIVATE');
 
 /*
  * Messaging system

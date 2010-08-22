@@ -44,9 +44,9 @@ if(!isset($var['ClaimText']))
 			$claimText.=('<span class="yellow">'.$name->getPlayerName().'</span> : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
 	
 			// add HoF stat
-			$player->increaseHOF(1,array('Bounties','Claimed','Results'));
-			$player->increaseHOF($amount,array('Bounties','Claimed','Money'));
-			$player->increaseHOF($smrCredits,array('Bounties','Claimed','SMR Credits'));
+			$player->increaseHOF(1,array('Bounties','Claimed','Results'), HOF_PUBLIC);
+			$player->increaseHOF($amount,array('Bounties','Claimed','Money'), HOF_PUBLIC);
+			$player->increaseHOF($smrCredits,array('Bounties','Claimed','SMR Credits'), HOF_PUBLIC);
 	
 			// delete bounty
 			$db2->query('DELETE FROM bounty

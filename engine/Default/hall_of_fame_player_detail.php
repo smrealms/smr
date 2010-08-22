@@ -26,8 +26,13 @@ else
 	$template->assign('PageTopic',$account->getHofName().'\'s All Time Personal Hall of Fame');
 }
 $PHP_OUTPUT.=('<div class="center">');
-
-$db->query('SELECT DISTINCT type FROM player_hof WHERE account_id='.$account_id. (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
+$allowedVisibities = array(HOF_PUBLIC);
+if($account->getAccountID()==$account_id)
+{
+	$allowedVisibities[] = HOF_ALLIANCE;
+	$allowedVisibities[] = HOF_PRIVATE;
+}
+$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') AND account_id='.$account_id . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);

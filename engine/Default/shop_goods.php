@@ -65,10 +65,10 @@ elseif ($player->getLastPort() != $player->getSectorID())
 	$rand = mt_rand(1, 100);
 	if ($rand <= $base_chance)
 	{
-		$player->increaseHOF(1,array('Trade','Search','Total'));
+		$player->increaseHOF(1,array('Trade','Search','Total'), HOF_PUBLIC);
 		if ($ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12))
 		{
-			$player->increaseHOF(1,array('Trade','Search','Caught','Number Of Times'));
+			$player->increaseHOF(1,array('Trade','Search','Caught','Number Of Times'), HOF_PUBLIC);
 			//find the fine
 			//get base for ports that dont happen to trade that good
 			$query = new SmrMySqlDatabase();
@@ -76,8 +76,8 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			$fine = $port->getLevel() * (($ship->getCargo(5) * $GOODS[5]['BasePrice']) +
 									($ship->getCargo(9) * $GOODS[9]['BasePrice']) +
 									($ship->getCargo(12) * $GOODS[12]['BasePrice']));
-			$player->increaseHOF($ship->getCargo(5)+$ship->getCargo(9)+$ship->getCargo(12),array('Trade','Search','Caught','Goods Confiscated'));
-			$player->increaseHOF($fine,array('Trade','Search','Caught','Amount Fined'));
+			$player->increaseHOF($ship->getCargo(5)+$ship->getCargo(9)+$ship->getCargo(12),array('Trade','Search','Caught','Goods Confiscated'), HOF_PUBLIC);
+			$player->increaseHOF($fine,array('Trade','Search','Caught','Amount Fined'), HOF_PUBLIC);
 			if($fine > $player->getCredits())
 			{
 				$fine -= $player->getCredits();
@@ -111,7 +111,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 		}
 		else
 		{
-			$player->increaseHOF(1,array('Trade','Search','Times Found Innocent'));
+			$player->increaseHOF(1,array('Trade','Search','Times Found Innocent'), HOF_PUBLIC);
 			$PHP_OUTPUT.=('<span class="blue">The Federation searched your ship and no illegal goods where found!</span>');
 			$player->increaseAlignment(1);
 			$account->log(6, 'Player gains alignment at port', $player->getSectorID());

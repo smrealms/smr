@@ -34,13 +34,13 @@ $good_distance = max(1,$good_distance);
 
 $lost_xp = (round($amount / 30) + 1) * 2 * $good_distance;
 $player->decreaseExperience($lost_xp);
-$player->increaseHOF($lost_xp,array('Trade','Experience', 'Jettisoned'));
+$player->increaseHOF($lost_xp,array('Trade','Experience', 'Jettisoned'), HOF_PUBLIC);
 
 // take turn
 $player->takeTurns(1,1);
 
 $ship->decreaseCargo($good_id,$amount);
-$player->increaseHOF($amount,array('Trade','Goods', 'Jettisoned'));
+$player->increaseHOF($amount,array('Trade','Goods', 'Jettisoned'), HOF_PUBLIC);
 
 // log action
 $account->log(6, 'Dumps '.$amount.' of '.$good_name.' and looses '.$lost_xp.' experience', $player->getSectorID());

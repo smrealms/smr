@@ -1088,8 +1088,8 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/4)); // 1/4 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Player','Damage Done'));
-		$thisPlayer->increaseHOF(1,array('Combat','Player','Shots'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Player','Damage Done'), HOF_PUBLIC);
+		$thisPlayer->increaseHOF(1,array('Combat','Player','Shots'), HOF_PUBLIC);
 		return $results;
 	}
 	
@@ -1109,13 +1109,13 @@ abstract class AbstractSmrShip
 			if($results['Weapons'][$orderID]['Hit'])
 			{
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'],array('Combat','Forces','Mines','Killed'));
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['Mines'],array('Combat','Forces','Mines','Damage Done'));
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumCDs'],array('Combat','Forces','Combat Drones','Killed'));
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['CDs'],array('Combat','Forces','Combat Drones','Damage Done'));
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumSDs'],array('Combat','Forces','Scout Drones','Killed'));
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'));
-				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines']+$results['Weapons'][$orderID]['ActualDamage']['NumCDs']+$results['Weapons'][$orderID]['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'));
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines'],array('Combat','Forces','Mines','Killed'), HOF_PUBLIC);
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['Mines'],array('Combat','Forces','Mines','Damage Done'), HOF_PUBLIC);
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumCDs'],array('Combat','Forces','Combat Drones','Killed'), HOF_PUBLIC);
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['CDs'],array('Combat','Forces','Combat Drones','Damage Done'), HOF_PUBLIC);
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumSDs'],array('Combat','Forces','Scout Drones','Killed'), HOF_PUBLIC);
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'), HOF_PUBLIC);
+				$thisPlayer->increaseHOF($results['Weapons'][$orderID]['ActualDamage']['NumMines']+$results['Weapons'][$orderID]['ActualDamage']['NumCDs']+$results['Weapons'][$orderID]['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'), HOF_PUBLIC);
 			}
 		}
 		if($this->hasCDs())
@@ -1123,17 +1123,17 @@ abstract class AbstractSmrShip
 			$thisCDs = new SmrCombatDrones($this->getGameID(),$this->getCDs());
 			$results['Drones'] =& $thisCDs->shootForces($thisPlayer, $forces);
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'],array('Combat','Forces','Mines','Killed'));
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['Mines'],array('Combat','Forces','Mines','Damage Done'));
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumCDs'],array('Combat','Forces','Combat Drones','Killed'));
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['CDs'],array('Combat','Forces','Combat Drones','Damage Done'));
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumSDs'],array('Combat','Forces','Scout Drones','Killed'));
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'));
-			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines']+$results['Drones']['ActualDamage']['NumCDs']+$results['Drones']['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'));
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines'],array('Combat','Forces','Mines','Killed'), HOF_PUBLIC);
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['Mines'],array('Combat','Forces','Mines','Damage Done'), HOF_PUBLIC);
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumCDs'],array('Combat','Forces','Combat Drones','Killed'), HOF_PUBLIC);
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['CDs'],array('Combat','Forces','Combat Drones','Damage Done'), HOF_PUBLIC);
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumSDs'],array('Combat','Forces','Scout Drones','Killed'), HOF_PUBLIC);
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['SDs'],array('Combat','Forces','Scout Drones','Damage Done'), HOF_PUBLIC);
+			$thisPlayer->increaseHOF($results['Drones']['ActualDamage']['NumMines']+$results['Drones']['ActualDamage']['NumCDs']+$results['Drones']['ActualDamage']['NumSDs'],array('Combat','Forces','Killed'), HOF_PUBLIC);
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Forces','Damage Done'));
-		$thisPlayer->increaseHOF(1,array('Combat','Forces','Shots'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Forces','Damage Done'), HOF_PUBLIC);
+		$thisPlayer->increaseHOF(1,array('Combat','Forces','Shots'), HOF_PUBLIC);
 		return $results;
 	}
 	
@@ -1160,7 +1160,7 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Port','Damage Done'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Port','Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
 		return $results;
 	}
@@ -1188,7 +1188,7 @@ abstract class AbstractSmrShip
 			$results['TotalDamage'] += $results['Drones']['ActualDamage']['TotalDamage'];
 		}
 		$thisPlayer->increaseExperience(round($results['TotalDamage']/20)); // 1/20 weapon damage to exp.
-		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Planet','Damage Done'));
+		$thisPlayer->increaseHOF($results['TotalDamage'],array('Combat','Planet','Damage Done'), HOF_PUBLIC);
 //		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
 		return $results;
 	}

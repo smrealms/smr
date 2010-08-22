@@ -2,8 +2,8 @@
 if ($var['action'] == 'Enable')
 {
 	$player->takeTurns(TURNS_TO_CLOAK);
-	$player->increaseHOF(TURNS_TO_CLOAK,array('Movement','Cloaking','Turns Used'));
-	$player->increaseHOF(1,array('Movement','Cloaking','Times'));
+	$player->increaseHOF(TURNS_TO_CLOAK,array('Movement','Cloaking','Turns Used'), HOF_PUBLIC);
+	$player->increaseHOF(1,array('Movement','Cloaking','Times'), HOF_PUBLIC);
 	$ship->enableCloak();
 }
 elseif ($var['action'] == 'Disable')

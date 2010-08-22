@@ -67,9 +67,11 @@ abstract class AbstractSmrPlayer
 	protected $visitedSectors;
 	
 	protected $HOF;
+	protected $HOFVis;
 	
 	protected $hasChanged=false;
 	protected $hasHOFChanged=false;
+	protected $hasHOFVisChanged=array();
 	protected $hasBountyChanged = array();
 	
 	protected function __construct()
@@ -355,7 +357,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$newExperience = $this->experience + $experience;
 		$this->setExperience($newExperience);
-		$this->increaseHOF($experience,array('Experience','Total','Gain'));
+		$this->increaseHOF($experience,array('Experience','Total','Gain'), HOF_PUBLIC);
 	}
 	public function decreaseExperience($experience)
 	{
@@ -365,7 +367,7 @@ abstract class AbstractSmrPlayer
 			return;
 		$newExperience = $this->experience - $experience;
 		$this->setExperience($newExperience);
-		$this->decreaseHOF($experience,array('Experience','Total','Loss'));
+		$this->decreaseHOF($experience,array('Experience','Total','Loss'), HOF_PUBLIC);
 	}
 	
 	public function isLandedOnPlanet()
@@ -902,25 +904,25 @@ abstract class AbstractSmrPlayer
 		return $hof;
 	}
 	
-	public function increaseHOF($amount,array $typeList)
+	public function increaseHOF($amount,array $typeList, $visibility)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to increase negative HOF: '.implode(':',$typeList));
 		if($amount == 0)
 			return;
-		$this->setHOF($this->getHOF($typeList)+$amount,$typeList);
+		$this->setHOF($this->getHOF($typeList)+$amount,$typeList, $visibility);
 	}
 	
-	public function decreaseHOF($amount,array $typeList)
+	public function decreaseHOF($amount,array $typeList, $visibility)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative HOF: '.implode(':',$typeList));
 		if($amount == 0)
 			return;
-		$this->setHOF($this->getHOF($typeList)-$amount,$typeList);
+		$this->setHOF($this->getHOF($typeList)-$amount,$typeList, $visibility);
 	}
 	
-	public function setHOF($amount,array $typeList)
+	public function setHOF($amount,array $typeList, $visibility)
 	{
 		if(is_array($this->getHOF($typeList)))
 			throw new Exception('Trying to overwrite a HOF type: '.implode(':',$typeList));
@@ -929,6 +931,17 @@ abstract class AbstractSmrPlayer
 		if($amount < 0)
 			$amount=0;
 		$this->getHOF();
+		
+		$hofType = implode(':',$typeList);
+		if(!isset($this->HOFVis[$hofType]))
+		{
+			$this->hasHOFVisChanged[$hofType] = self::HOF_NEW;
+		}
+		else if($this->HOFVis[$hofType] != $visibility)
+		{
+			$this->hasHOFVisChanged[$hofType] = self::HOF_CHANGED;
+		}
+		$this->HOFVis[$hofType] = $visibility;
 		
 		$hof =& $this->HOF;
 		$hofChanged =& $this->hasHOFChanged;
@@ -1019,9 +1032,9 @@ abstract class AbstractSmrPlayer
 		
 		if(!has_beta_privilege('No SC Loss'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
-		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'));
-		$this->increaseHOF($take,array('Movement','Turns Used','Total'));
-		$this->increaseHOF($newbiesTaken,array('Movement','Turns Used','Newbie'));
+		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'), HOF_PUBLIC);
+		$this->increaseHOF($take,array('Movement','Turns Used','Total'), HOF_PUBLIC);
+		$this->increaseHOF($newbiesTaken,array('Movement','Turns Used','Newbie'), HOF_PUBLIC);
 	}
 	
 	public function giveTurns($give, $noob = 0,$updateLastActive = false)

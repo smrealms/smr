@@ -30,8 +30,7 @@ if(isset($var['error']))
 $PHP_OUTPUT.= '<h2>Blacklisted Players</h2><br />';
 
 $db = new SmrMySqlDatabase();
-
-$db->query('SELECT p.player_name, b.entry_id FROM player p JOIN message_blacklist b ON p.account_id = b.blacklisted_id AND b.game_id = p.game_id WHERE b.account_id=' . SmrSession::$account_id . ' AND p.game_id = ' . SmrSession::$game_id);
+$db->query('SELECT p.player_name, p.game_id, b.entry_id FROM player p JOIN message_blacklist b ON p.account_id = b.blacklisted_id AND b.game_id = p.game_id WHERE b.account_id=' . SmrSession::$account_id .' ORDER BY p.game_id, p.player_name');
 
 if($db->getNumRows())
 {
@@ -40,7 +39,7 @@ if($db->getNumRows())
 	$form = create_form($container,'Remove Selected');
 	$PHP_OUTPUT.= $form['form'];
 	
-	$PHP_OUTPUT.= '<table class="standard"><tr><th>Option</th><th>Name</th>';
+	$PHP_OUTPUT.= '<table class="standard"><tr><th>Option</th><th>Name</th><th>Game ID</th>';
 	
 	while($db->nextRecord())
 	{
@@ -48,6 +47,7 @@ if($db->getNumRows())
 		$PHP_OUTPUT.= '<tr>';
 		$PHP_OUTPUT.= '<td class="center shrink"><input type="checkbox" name="entry_ids[]" value="' . $row['entry_id'] . '"></td>';
 		$PHP_OUTPUT.= '<td>' . $row['player_name'] . '</td>';
+		$PHP_OUTPUT.= '<td>' . $row['game_id'] . '</td>';
 		$PHP_OUTPUT.= '</tr>';
 	}
 	
