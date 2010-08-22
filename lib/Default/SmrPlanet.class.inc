@@ -432,7 +432,7 @@ class SmrPlanet
 				if($this->db->getField('time_complete') <= TIME)
 				{
 					$player =& SmrPlayer::getPlayer($this->db->getField('constructor_id'),$this->getGameID());
-					$player->increaseHOF(1,array('Planet','Buildings','Built'));
+					$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
 					$db2 = new SmrMySqlDatabase();
 					$db2->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
 											 'sector_id = '.$this->getSectorID() . ' AND building_slot_id = ' . $this->db->getField('building_slot_id') . ' LIMIT 1');
@@ -676,10 +676,10 @@ class SmrPlanet
 	
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers)
 	{
-		$trigger->increaseHOF(1,array('Combat','Planet','Number Of Triggers'));
+		$trigger->increaseHOF(1,array('Combat','Planet','Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker)
 		{
-			$attacker->increaseHOF(1,array('Combat','Planet','Number Of Attacks'));
+			$attacker->increaseHOF(1,array('Combat','Planet','Number Of Attacks'), HOF_PUBLIC);
 			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
 						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
 		}
@@ -872,8 +872,8 @@ class SmrPlanet
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF($this->db->getField('level'),array('Combat','Planet','Levels'));
-			$currPlayer->increaseHOF(1,array('Combat','Planet','Completed'));
+			$currPlayer->increaseHOF($this->db->getField('level'),array('Combat','Planet','Levels'), HOF_PUBLIC);
+			$currPlayer->increaseHOF(1,array('Combat','Planet','Completed'), HOF_PUBLIC);
 		}
 		$this->db->query('DELETE FROM player_attacks_planet WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID());
 	}

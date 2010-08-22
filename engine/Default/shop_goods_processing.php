@@ -93,10 +93,10 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
-		$player->increaseHOF($amount,array('Trade','Goods','Bought'));
-		$player->increaseHOF($gained_exp,array('Trade','Experience','Buying'));
-		$player->decreaseHOF($bargain_price,array('Trade','Money','Profit'));
-		$player->increaseHOF($bargain_price,array('Trade','Money','Buying'));
+		$player->increaseHOF($amount,array('Trade','Goods','Bought'), HOF_PUBLIC);
+		$player->increaseHOF($gained_exp,array('Trade','Experience','Buying'), HOF_PUBLIC);
+		$player->decreaseHOF($bargain_price,array('Trade','Money','Profit'), HOF_PUBLIC);
+		$player->increaseHOF($bargain_price,array('Trade','Money','Buying'), HOF_PUBLIC);
 
 		$port->buyGoods($portGood,$amount,$bargain_price,$gained_exp);
 
@@ -107,14 +107,14 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
 		$player->increaseCredits($bargain_price);
-		$player->increaseHOF($amount,array('Trade','Goods','Sold'));
-		$player->increaseHOF($gained_exp,array('Trade','Experience','Selling'));
-		$player->increaseHOF($bargain_price,array('Trade','Money','Profit'));
-		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'));
+		$player->increaseHOF($amount,array('Trade','Goods','Sold'), HOF_PUBLIC);
+		$player->increaseHOF($gained_exp,array('Trade','Experience','Selling'), HOF_PUBLIC);
+		$player->increaseHOF($bargain_price,array('Trade','Money','Profit'), HOF_PUBLIC);
+		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'), HOF_PUBLIC);
 		$port->sellGoods($portGood,$amount,$bargain_price,$gained_exp);
 	}
-	$player->increaseHOF($gained_exp,array('Trade','Experience','Total'));
-	$player->increaseHOF(1,array('Trade','Results','Success'));
+	$player->increaseHOF($gained_exp,array('Trade','Experience','Total'), HOF_PUBLIC);
+	$player->increaseHOF(1,array('Trade','Results','Success'), HOF_PUBLIC);
 
 	// log action
 	$account->log(6, $portGood['TransactionType'] . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());

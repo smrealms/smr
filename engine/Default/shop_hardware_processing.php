@@ -33,9 +33,9 @@ $ship->update_hardware();
 $ship->removeUnderAttack();
 
 //HoF
-if ($hardware_id == 4) $player->increaseHOF($amount,array('Forces','Bought','Combat Drones'));
-if ($hardware_id == 5) $player->increaseHOF($amount,array('Forces','Bought','Scout Drones'));
-if ($hardware_id == 6) $player->increaseHOF($amount,array('Forces','Bought','Mines'));
+if ($hardware_id == 4) $player->increaseHOF($amount,array('Forces','Bought','Combat Drones'), HOF_ALLIANCE);
+if ($hardware_id == 5) $player->increaseHOF($amount,array('Forces','Bought','Scout Drones'), HOF_ALLIANCE);
+if ($hardware_id == 6) $player->increaseHOF($amount,array('Forces','Bought','Mines'), HOF_ALLIANCE);
 
 $account->log(10, 'Player Buys '.$amount.' '.$hardware_name, $player->getSectorID());
 

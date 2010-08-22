@@ -42,7 +42,7 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 		{
 			$player->decreaseRelationsByTrade($amount,$port->getRaceID());
 		}
-		$player->increaseHOF(1,array('Trade','Results','Fail'));
+		$player->increaseHOF(1,array('Trade','Results','Fail'), HOF_PUBLIC);
 		// transfer values
 		transfer('overall_number_of_bargains');
 
@@ -61,7 +61,7 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 				*/
 
 			}
-			$player->increaseHOF(1,array('Trade','Results','Epic Fail'));
+			$player->increaseHOF(1,array('Trade','Results','Epic Fail'), HOF_PUBLIC);
 			create_error('You don\'t want to accept my offer? I\'m sick of you! Get out of here!');
 		}
 

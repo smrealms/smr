@@ -139,8 +139,8 @@ $sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 if (!$sector->isVisited($player))
 {
 	$player->increaseExperience(EXPLORATION_EXPERIENCE);
-	$player->increaseHOF(EXPLORATION_EXPERIENCE,array('Movement','Exploration Experience Gained'));
-	$player->increaseHOF(1,array('Movement','Sectors Explored'));
+	$player->increaseHOF(EXPLORATION_EXPERIENCE,array('Movement','Exploration Experience Gained'), HOF_PUBLIC);
+	$player->increaseHOF(1,array('Movement','Sectors Explored'), HOF_PUBLIC);
 }
 // make current sector visible to him
 $sector->markVisited($player);
