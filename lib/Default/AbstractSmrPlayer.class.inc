@@ -67,11 +67,11 @@ abstract class AbstractSmrPlayer
 	protected $visitedSectors;
 	
 	protected $HOF;
-	protected $HOFVis;
+	protected static $HOFVis;
 	
 	protected $hasChanged=false;
 	protected $hasHOFChanged=false;
-	protected $hasHOFVisChanged=array();
+	protected static $hasHOFVisChanged=array();
 	protected $hasBountyChanged = array();
 	
 	protected function __construct()
@@ -933,15 +933,15 @@ abstract class AbstractSmrPlayer
 		$this->getHOF();
 		
 		$hofType = implode(':',$typeList);
-		if(!isset($this->HOFVis[$hofType]))
+		if(!isset(self::$HOFVis[$hofType]))
 		{
-			$this->hasHOFVisChanged[$hofType] = self::HOF_NEW;
+			self::$hasHOFVisChanged[$hofType] = self::HOF_NEW;
 		}
-		else if($this->HOFVis[$hofType] != $visibility)
+		else if(self::$HOFVis[$hofType] != $visibility)
 		{
-			$this->hasHOFVisChanged[$hofType] = self::HOF_CHANGED;
+			self::$hasHOFVisChanged[$hofType] = self::HOF_CHANGED;
 		}
-		$this->HOFVis[$hofType] = $visibility;
+		self::$HOFVis[$hofType] = $visibility;
 		
 		$hof =& $this->HOF;
 		$hofChanged =& $this->hasHOFChanged;
