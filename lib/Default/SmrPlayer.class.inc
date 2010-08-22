@@ -1702,7 +1702,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			foreach($this->hasHOFVisChanged as $hofType => $changeType)
 			{
 				if($changeType==self::HOF_NEW)
-					$this->db->query('INSERT INTO hof_visibility (type, visibility) VALUES ('.$this->db->escapeString($hofType).','.$this->db->escapeString($this->HOFVis[$hofType]),')');
+					$this->db->query('INSERT INTO hof_visibility (type, visibility) VALUES ('.$this->db->escapeString($hofType).','.$this->db->escapeString($this->HOFVis[$hofType]).')');
 				else
 					$this->db->query('UPDATE hof_visibility SET visibility = '.$this->db->escapeString($this->HOFVis[$hofType]).' WHERE type = '.$this->db->escapeString($hofType).' LIMIT 1');
 			}
