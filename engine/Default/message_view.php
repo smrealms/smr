@@ -256,54 +256,58 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 			$message_text = str_replace('!' . $timea . '!', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
-	$sender = false;
-	if (!empty ($sender_id) && $sender_id != ACCOUNT_ID_PORT && $sender_id != ACCOUNT_ID_ADMIN && $sender_id != ACCOUNT_ID_PLANET)
-		$sender = & SmrPlayer::getPlayer($sender_id, $player->getGameID());
 
+	$sender = false;
 	$senderName = '';
 	if ($sender_id == ACCOUNT_ID_PORT)
 	{
 		$senderName .= '<span class="yellow">Port Defenses</span>';
 	}
-	else
-		if ($sender_id == ACCOUNT_ID_ADMIN)
+	else if ($sender_id == ACCOUNT_ID_ADMIN)
+	{
+		$senderName .= '<span class="admin">Administrator</span>';
+	}
+	else if ($sender_id == ACCOUNT_ID_PLANET)
+	{
+		$senderName .= '<span class="yellow">Planetary Defenses</span>';
+	}
+	else if (!empty ($sender_id))
+	{
+		$sender = & SmrPlayer::getPlayer($sender_id, $player->getGameID());
+		$replace = explode('?', $message_text);
+		foreach ($replace as $key => $timea)
 		{
-			$senderName .= '<span class="admin">Administrator</span>';
-		}
-		else
-			if ($sender_id == ACCOUNT_ID_PLANET)
+			if ($sender_id > 0 && $timea != '' && ($final = strtotime($timea)) !== false) //WARNING: Expects PHP 5.1.0 or later
 			{
-				$senderName .= '<span class="yellow">Planetary Defenses</span>';
+				$send_acc = & $sender->getAccount();
+				$final += ($account->offset * 3600 - $send_acc->offset * 3600);
+				$message_text = str_replace('?' . $timea . '?', date(DATE_FULL_SHORT, $final), $message_text);
 			}
-			else
-				if (is_object($sender))
-				{
-					$replace = explode('?', $message_text);
-					foreach ($replace as $key => $timea)
-					{
-						if ($sender_id > 0 && $timea != '' && ($final = strtotime($timea)) !== false) //WARNING: Expects PHP 5.1.0 or later
-						{
-							$send_acc = & $sender->getAccount();
-							$final += ($account->offset * 3600 - $send_acc->offset * 3600);
-							$message_text = str_replace('?' . $timea . '?', date(DATE_FULL_SHORT, $final), $message_text);
-						}
-					}
-					$container = create_container('skeleton.php', 'trader_search_result.php');
-					$container['player_id'] = $sender->getPlayerID();
-					$senderName .= create_link($container, $sender->getDisplayName());
-				}
-				else
-				{
-					if ($type == 7)
-						$senderName .= ('<span class="admin">Administrator</span>');
-					elseif ($type == 6)
-					{
-						$senderName .= ('<span class="green">Alliance Ambassador</span>');
-					}
-					elseif ($type == 2) $senderName .= ('<span class="yellow">Port Defenses</span>');
-					else
-						$senderName .= ('Unknown');
-				}
+		}
+		$container = create_container('skeleton.php', 'trader_search_result.php');
+		$container['player_id'] = $sender->getPlayerID();
+		$senderName .= create_link($container, $sender->getDisplayName());
+	}
+	else
+	{
+		switch($type)
+		{
+			case MSG_ADMIN:
+				$senderName .= ('<span class="admin">Administrator</span>');
+			break;
+			
+			case MSG_ALLIANCE:
+				$senderName .= ('<span class="green">Alliance Ambassador</span>');
+			break;
+			
+			case MSG_PLAYER:
+				$senderName .= ('<span class="yellow">Port Defenses</span>');
+			break;
+			
+			default:
+				$senderName .= ('Unknown');
+		}
+	}
 	$container = create_container('skeleton.php', 'message_notify_confirm.php');
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
@@ -317,13 +321,13 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 		$container = create_container('skeleton.php', 'message_send.php');
 		$container['receiver'] = $sender->getAccountID();
 		$message['ReplyHref'] = SmrSession::get_new_href($container);
+		
+		$message['Sender'] = & $sender;
 	}
 
 	$message['ID'] = $message_id;
 	$message['Text'] = $message_text;
 	$message['SenderDisplayName'] = $senderName;
-	if (is_object($sender))
-		$message['Sender'] = & $sender;
 
 	$reciever = & SmrPlayer::getPlayer($reciever_id, $player->getGameID());
 	if ($sentMessage && is_object($reciever))
