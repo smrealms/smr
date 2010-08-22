@@ -14,6 +14,9 @@ $continue = $_REQUEST['continue'];
 if (empty($html)) $continue = TRUE;
 if ($action == 'Paint a logo (3 SMR Credits)')
 {
+	$cred_cost = 3;
+	if ($account->getTotalSmrCredits() < $cred_cost)
+		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 	// check if we have an image
 	if ($_FILES['photo']['error'] == UPLOAD_ERR_OK)
 	{
@@ -34,7 +37,6 @@ if ($action == 'Paint a logo (3 SMR Credits)')
 			create_error('Image is bigger than 20k');
 		
 		$name = '<img style="padding:3px;" src="'.URL.'/upload/' . SmrSession::$account_id . 'logo"><br />';
-		$cred_cost = 3;
 		move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . SmrSession::$account_id . 'logo');
 		$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
 				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($name, FALSE) . ')');
@@ -72,6 +74,10 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 	if($name=='Enter Name Here')
 		create_error('Please enter a ship name!');
 	
+	if ($html)
+		$cred_cost = 2;
+	else
+		$cred_cost = 1;
 	if ($account->getTotalSmrCredits() < $cred_cost)
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 
@@ -128,7 +134,6 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 	else
 	{
 		$max_len = 48;
-		$cred_cost = 1;
 		$name = htmlentities($name, ENT_NOQUOTES);
 	}
 	
