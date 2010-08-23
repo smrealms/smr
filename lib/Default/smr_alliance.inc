@@ -143,7 +143,7 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 		$this->query('UPDATE alliance SET alliance_password = ' . $this->escapeString($this->password) . ', ' .
 										 'alliance_account = '.$this->account.', ' .
 										 'alliance_description = ' . $this->escapeString(nl2br($this->description)) . ', ' .
-										 'mod = ' . $this->escapeString(nl2br($this->mod)) . ', ' .
+										 '`mod` = ' . $this->escapeString(nl2br($this->mod)) . ', ' .
 										 'img_src = ' . $this->escapeString($this->img_src) . ', ' .
 										 'alliance_kills = '.$this->kills.', ' .
 										 'alliance_deaths = '.$this->deaths.', ' .
