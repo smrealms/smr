@@ -91,11 +91,6 @@ if ($action == 'Deposit') {
 
 }
 
-// update player credits
-$player->update();
-
-// save money for alliance
-$alliance->update();
 
 // get next transaction id
 $db->query('SELECT MAX(transaction_id) as next_id FROM alliance_bank_transactions ' .
@@ -110,6 +105,12 @@ else $requestExempt = 0;
 $db->query('INSERT INTO alliance_bank_transactions ' .
 		   '(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt) ' .
 		   'VALUES('.$alliance_id.', '.$player->getGameID().', '.$next_id.', ' . TIME . ', '.$player->getAccountID().', ' . $db->escape_string($message, true) . ', '.$db->escapeString($action).', '.$amount.', '.$requestExempt.')');
+
+// update player credits
+$player->update();
+
+// save money for alliance
+$alliance->update();
 
 $container = create_container('skeleton.php', 'bank_alliance.php');
 $container['alliance_id'] = $alliance_id;
