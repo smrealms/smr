@@ -1479,9 +1479,10 @@ class SmrPlayer extends AbstractSmrPlayer
 
 			if(isset($bounty_type))
 			{
-				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
-				$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Bounty Gained'), HOF_PUBLIC);
-				$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Bounty Gained By Killer'), HOF_PUBLIC);
+				$bountyGained = floor(pow($alignment_diff, 2.56));
+				$killer->increaseCurrentBountyAmount($bounty_type,$bountyGained);
+				$killer->increaseHOF($bountyGained,array('Killing','Money','Bounty Gained'), HOF_PUBLIC);
+				$this->increaseHOF($bountyGained,array('Dying','Money','Bounty Gained By Killer'), HOF_PUBLIC);
 			}
 		}
 		
