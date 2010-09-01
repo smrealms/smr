@@ -9,8 +9,12 @@ else $target = $_POST['to'];
 if (empty($start) || empty($target))
 	create_error('Where do you want to go today?');
 
+
 if (!is_numeric($start) || !is_numeric($target))
 	create_error('Please enter only numbers!');
+
+$start = abs(str_replace($start,'.',''));
+$target = abs(str_replace($target,'.',''));
 
 if ($start == $target)
 	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*your real smart*cough*');
