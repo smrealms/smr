@@ -257,7 +257,8 @@ elseif ($type == 'list') {
 } elseif ($type == 'alliance_ips') {
 	
 	list ($alliance, $game) = preg_split('/[\/]/', $variable);
-	$db->query('SELECT * FROM player WHERE game_id = '.$game.' AND alliance_id = '.$alliance);
+	if(!is_numeric($game)||!is_numeric($alliance)) create_error('Incorrect format used.');
+	$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game).' AND alliance_id = '.$db->escapeNumber($alliance));
 	$list = '(';
 	$a = 1;
 	while ($db->nextRecord()) {
