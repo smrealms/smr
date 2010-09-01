@@ -75,7 +75,7 @@ $PHP_OUTPUT.=('</table>');
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
-$bond_time = 48 / Globals::getGameSpeed($player->getGameID());
+$bond_time = BOND_TIME / Globals::getGameSpeed($player->getGameID());
 
 $PHP_OUTPUT.=('<p>You are able to transfer this money into a saving bond.<br />');
 $PHP_OUTPUT.=('It remains there for ' . format_time($bond_time) . ' and will gain ' . ($rate * 100 - 100) . '% interest.<br /><br />');
