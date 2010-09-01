@@ -183,6 +183,8 @@ define('GENERATOR',1);
 define('HANGAR',1);
 define('TURRET',1);
 
+define('BOND_TIME',172800);
+
 /*
  * Miscellaneous definitions
  */
