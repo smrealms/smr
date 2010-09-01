@@ -219,9 +219,9 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('</form></center>');
 	
 } elseif ($type == 'account_ips') {
-	
+	if(!is_numeric($variable)) create_error('Account id must be numeric.');
 	$PHP_OUTPUT.=('<center>Account '.$variable.' has had the following IPs at the following times.<br />');
-	$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$variable);
+	$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db->escapeNumber($variable));
 	if ($db2->nextRecord()) {
 		$ex = $db2->getField('reason');
 		$PHP_OUTPUT.=('This account has an exception: '.$ex);

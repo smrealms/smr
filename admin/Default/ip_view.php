@@ -61,7 +61,7 @@ $PHP_OUTPUT.=create_form_parameter($container, 'name="form_ip"');
 $PHP_OUTPUT.='<select name=type onchange=go() id="InputFields">
 <option value="list">List all IPs</option>
 <option value="search">Search for a specific IP</option>
-<option value="account_ips">List all IPs for a specific account</option>
+<option value="account_ips">List all IPs for a specific account (id)</option>
 <option value="alliance_ips">List All IPs for a specific alliance</option>
 <option value="wild_log">List All IPs for a wildcard login name</option>
 <option value="wild_in">List All IPs for a wildcard ingame name</option>
