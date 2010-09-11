@@ -202,7 +202,7 @@ foreach ($galaxies as &$galaxy)
 		if($sector->hasFriendlyForces($player))
 		{
 			$forcesString= 'FriendlyForces=';
-			$friendlyForces =& $sector->getFriendlyForces();
+			$friendlyForces =& $sector->getFriendlyForces($player);
 			foreach($friendlyForces as &$forces)
 			{
 				$forcesString .= inify($forces->getOwner()->getName()) . '='.inify(Globals::getHardwareName(HARDWARE_MINE)).'='.$forces->getMines().';'.inify(Globals::getHardwareName(HARDWARE_COMBAT)).'='.$forces->getCDs().';'.inify(Globals::getHardwareName(HARDWARE_SCOUT)).'='.$forces->getSDs().',';
