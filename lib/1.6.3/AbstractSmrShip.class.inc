@@ -249,6 +249,11 @@ abstract class AbstractSmrShip
 		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getCDs() * .7) / 40);
 	}
 	
+	public function getAttackRatingWithMaxCDs()
+	{
+		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * .7) / 40);
+	}
+	
 	public function getDefenseRating()
 	{
 		return round((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));

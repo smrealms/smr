@@ -1486,7 +1486,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			}
 		}
 		
-		if($this->getShip()->getAttackRating()<=MAX_ATTACK_RATING_NEWBIE&&$this->getAccount()->isNewbie()&&$killer->getAccount()->isVeteran()) //Newbie kill
+		if($this->getShip()->getAttackRatingWithMaxCDs()<=MAX_ATTACK_RATING_NEWBIE&&$this->getAccount()->isNewbie()&&$killer->getAccount()->isVeteran()) //Newbie kill
 		{
 			$killer->increaseHOF(1,array('Killing','Newbie Kills'), HOF_PUBLIC);
 		}
