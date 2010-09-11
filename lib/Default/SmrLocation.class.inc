@@ -408,9 +408,7 @@ class SmrLocation
 	
 	public function getEditHREF()
 	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'location_edit.php';
+		$container = create_container('skeleton.php', 'location_edit.php');
 		$container['game_type_id'] = 0; //TODO add game type id
 		$container['location_type_id'] = $this->getTypeID();
 		return SmrSession::get_new_href($container);

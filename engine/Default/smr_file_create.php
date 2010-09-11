@@ -9,7 +9,7 @@ if(isset($var['AdminCreateGameID']) && $var['AdminCreateGameID'] !== false)
 else
 	$adminCreate = false;
 
-$file = ';SMR1.6 Sectors File v 1.02
+$file = ';SMR1.6 Sectors File v 1.03
 [Races]
 ; Name = ID' . EOL;
 $races =& Globals::getRaces();
@@ -47,7 +47,7 @@ foreach($hardwares as &$hardware)
 $file.='[Ships]
 ; Name = Race,Cost,TPH,Hardpoints,Power,+Equipment (Optional),+Restrictions(Optional)
 ; Restrictions:Align(Integer)' . EOL;
-$ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType($gameID));
+$ships =& AbstractSmrShip::getAllBaseShips($gameID);
 foreach($ships as &$ship)
 {
 	$file.=inify($ship['Name']).'='.Globals::getRaceName($ship['RaceID']).','.$ship['Cost'].','.$ship['Speed'].','.$ship['Hardpoint'].','.$ship['MaxPower'];
@@ -198,6 +198,17 @@ foreach ($galaxies as &$galaxy)
 			} unset ($location);
 			unset($locations);
 			$file .= substr($locationsString,0,-1) . EOL;
+		}
+		if($sector->hasFriendlyForces($player))
+		{
+			$forcesString= 'FriendlyForces=';
+			$friendlyForces =& $sector->getFriendlyForces();
+			foreach($friendlyForces as &$forces)
+			{
+				$forcesString .= inify($forces->getOwner()->getName()) . '='.inify(Globals::getHardwareName(HARDWARE_MINE)).'='.$forces->getMines().';'.inify(Globals::getHardwareName(HARDWARE_COMBAT)).'='.$forces->getCDs().';'.inify(Globals::getHardwareName(HARDWARE_SCOUT)).'='.$forces->getSDs().',';
+			} unset ($forces);
+			unset($friendlyForces);
+			$file .= substr($forcesString,0,-1) . EOL;
 		}
 	} unset($sector);
 } unset($galaxy);

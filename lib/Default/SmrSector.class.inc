@@ -756,6 +756,20 @@ class SmrSector
 		return false;
 	}
 
+	public function &getFriendlyForces(AbstractSmrPlayer &$player)
+	{
+		$friendlyForces = array();
+		if(!$this->hasForces())
+			return $friendlyForces;
+		$forces =& $this->getForces();
+		foreach($forces as &$force)
+		{
+			if($player->forceNAPAlliance($force->getOwner()))
+				$friendlyForces[] =& $force;
+		} unset($force);
+		return $friendlyForces;
+	}
+
 	public function &getForces()
 	{
 		require_once(get_file_loc('SmrForce.class.inc'));
