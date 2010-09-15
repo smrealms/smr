@@ -13,8 +13,8 @@ if (empty($start) || empty($target))
 if (!is_numeric($start) || !is_numeric($target))
 	create_error('Please enter only numbers!');
 
-$start = abs(str_replace($start,'.',''));
-$target = abs(str_replace($target,'.',''));
+$start = abs(str_replace('.','',$start));
+$target = abs(str_replace('.','',$target));
 
 if ($start == $target)
 	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*your real smart*cough*');
