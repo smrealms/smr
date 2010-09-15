@@ -1,1 +1,0 @@
-<?php echo $TargetPlanet->getDisplayName() ?>'s defenses are <span class="red">DESTROYED!</span><br />
