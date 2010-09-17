@@ -100,9 +100,10 @@ try
 	
 	
 	//used for include if we need a spec game script outside of the game
-	if (isset($var['game_id'])) $g_id = $var['game_id'];
-	else if (isset($var['GameID'])) $g_id = $var['GameID'];
-	else $g_id = 0;
+	$overrideGameID = 0;
+	if (isset($var['game_id']) && is_numeric($var['game_id'])) $overrideGameID = $var['game_id'];
+	if ($overrideGameID == 0 && isset($var['GameID']) && is_numeric($var['GameID'])) $overrideGameID = $var['GameID'];
+	if($overrideGameID == 0) $overrideGameID = SmrSession::$game_id;
 
 	
 	require_once(get_file_loc('SmrAccount.class.inc'));
