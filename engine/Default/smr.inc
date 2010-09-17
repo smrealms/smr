@@ -13,6 +13,37 @@ function htmliseMessage($message)
 	return $message;
 }
 
+function smrBBCode($bbParser, $action, $tagName, $default, $params, $tagContent)
+{
+	global $overrideGameID;
+	switch($tagName)
+	{
+		case 'player':
+			try
+			{
+				$bbPlayer =& SmrPlayer::getPlayerByPlayerID($tagContent, $overrideGameID);
+				if ($action == BBCODE_CHECK)
+				{
+					return true;
+				}
+				return $bbPlayer->getLinkedDisplayName();
+			}
+			catch (Exception $e)
+			{
+				if ($action == BBCODE_CHECK)
+				{
+					return false;
+				}
+			}
+		break;
+	}
+	if ($action == BBCODE_CHECK)
+	{
+		return false;
+	}
+	return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+}
+
 function bbifyMessage($message)
 {
     static $bbParser;
@@ -25,7 +56,14 @@ function bbifyMessage($message)
 		$bbParser->RemoveRule('img');
 		$bbParser->SetURLTarget('_blank');
 		$bbParser->SetURLTargetable('override');
-    }
+		$bbParser->AddRule('player', array(
+				'mode' => BBCODE_MODE_CALLBACK,
+				'method' => 'smrBBCode',
+				'class' => 'link',
+				'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
+				'content' => BBCODE_REQUIRED,
+			));
+	}
 	$message = $bbParser->parse($message);
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
 	return $message;

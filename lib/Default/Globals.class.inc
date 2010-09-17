@@ -691,7 +691,7 @@ class Globals
 
 function get_file_loc($file_name, $exists = 1, $overrideGameDir = false)
 {
-	global $g_id;
+	global $overrideGameID;
 	static $stored_dir;
 	if(isset($stored_dir))
 	{
@@ -699,11 +699,9 @@ function get_file_loc($file_name, $exists = 1, $overrideGameDir = false)
 	}
 	else
 	{
-		if (SmrSession::$game_id > 0 || $g_id > 0)
+		if ($overrideGameID > 0)
 		{
-			if ($g_id > 0) $game_id = $g_id;
-			else $g_id = SmrSession::$game_id;
-			$stored_dir = Globals::getGameType($g_id) . '/';
+			$stored_dir = Globals::getGameType($overrideGameID) . '/';
 			$game_dir = $stored_dir;
 		} else $game_dir = 'Default/';
 	}
