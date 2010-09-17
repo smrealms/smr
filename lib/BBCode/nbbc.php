@@ -30,8 +30,8 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN
 IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-define("BBCODE_VERSION", "1.4.3");
-define("BBCODE_RELEASE", "2009-10-10");
+define("BBCODE_VERSION", "1.4.4");
+define("BBCODE_RELEASE", "2010-06-05");
 define("BBCODE_VERBATIM", 2);
 define("BBCODE_REQUIRED", 1);
 define("BBCODE_OPTIONAL", 0);
@@ -75,17 +75,20 @@ var $unget;
 var $verbatim;
 var $debug;
 var $tagmarker;
+var $end_tagmarker;
 var $pat_main;
 var $pat_comment;
 var $pat_comment2;
 var $pat_wiki;
 function BBCodeLexer($string, $tagmarker = '[') {
-$beginmarkers = Array( '[' => '\[', '<' => '<', '{' => '\{', '(' => '\(' );
-$endmarkers = Array( '[' => '\]', '<' => '>', '{' => '\}', '(' => '\)' );
-if (!isset($endmarkers[$tagmarker])) $tagmarker = '[';
-$e = $endmarkers[$tagmarker];
-$b = $beginmarkers[$tagmarker];
+$regex_beginmarkers = Array( '[' => '\[', '<' => '<', '{' => '\{', '(' => '\(' );
+$regex_endmarkers = Array( '[' => '\]', '<' => '>', '{' => '\}', '(' => '\)' );
+$endmarkers = Array( '[' => ']', '<' => '>', '{' => '}', '(' => ')' );
+if (!isset($regex_endmarkers[$tagmarker])) $tagmarker = '[';
+$e = $regex_endmarkers[$tagmarker];
+$b = $regex_beginmarkers[$tagmarker];
 $this->tagmarker = $tagmarker;
+$this->end_tagmarker = $endmarkers[$tagmarker];
 $this->pat_main = "/( "
 . "{$b}"
 . "(?! -- | ' | !-- | {$b}{$b} )"
@@ -158,11 +161,31 @@ $this->text = preg_replace("/[\\x00-\\x08\\x0B-\\x0C\\x0E-\\x1F]/", "",
 $this->input[$this->ptr++]);
 if ($this->verbatim) {
 $this->tag = false;
-if ($this->state == BBCODE_LEXSTATE_TEXT)
+if ($this->state == BBCODE_LEXSTATE_TEXT) {
 $this->state = BBCODE_LEXSTATE_TAG;
-else $this->state = BBCODE_LEXSTATE_TEXT;
+$token_type = BBCODE_TEXT;
+}
+else {
+$this->state = BBCODE_LEXSTATE_TEXT;
+switch (ord(substr($this->text, 0, 1))) {
+case 10:
+case 13:
+$token_type = BBCODE_NL;
+break;
+default:
+$token_type = BBCODE_WS;
+break;
+case 45:
+case 40:
+case 60:
+case 91:
+case 123:
+$token_type = BBCODE_TEXT;
+break;
+}
+}
 if (strlen($this->text) > 0)
-return $this->token = BBCODE_TEXT;
+return $this->token = $token_type;
 }
 else if ($this->state == BBCODE_LEXSTATE_TEXT) {
 $this->state = BBCODE_LEXSTATE_TAG;
@@ -199,9 +222,11 @@ case 60:
 case 91:
 case 123:
 if (preg_match($this->pat_comment, $this->text)) {
+$this->state = BBCODE_LEXSTATE_TEXT;
 continue;
 }
 if (preg_match($this->pat_comment2, $this->text)) {
+$this->state = BBCODE_LEXSTATE_TEXT;
 continue;
 }
 if (preg_match($this->pat_wiki, $this->text, $matches)) {
@@ -1054,11 +1079,11 @@ function ClearRules() { $this->tag_rules = Array(); }
 function GetDefaultRule($name) { return isset($this->defaults->default_tag_rules[$name])
 ? $this->defaults->default_tag_rules[$name] : false; }
 function SetDefaultRule($name) { if (isset($this->defaults->default_tag_rules[$name]))
-AddRule($name, $this->defaults->default_tag_rules[$name]);
-else RemoveRule($name); }
+$this->AddRule($name, $this->defaults->default_tag_rules[$name]);
+else $this->RemoveRule($name); }
 function GetDefaultRules() { return $this->defaults->default_tag_rules; }
 function SetDefaultRules() { $this->tag_rules = $this->defaults->default_tag_rules; }
-function SetWikiURL($url) { $this->wiki_url = $func; }
+function SetWikiURL($url) { $this->wiki_url = $url; }
 function GetWikiURL($url) { return $this->wiki_url; }
 function GetDefaultWikiURL() { return '/?page='; }
 function SetLocalImgDir($path) { $this->local_img_dir = $path; }
@@ -1110,7 +1135,7 @@ function IsValidURL($string, $email_too = true) {
 if (preg_match("/^
 (?:https?|ftp):\\/\\/
 (?:
-(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+
+(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\\.)+
 [a-zA-Z0-9]
 (?:[a-zA-Z0-9-]*[a-zA-Z0-9])?
 |
@@ -1335,7 +1360,7 @@ if (isset($insert_array[$matches[1]]))
 $value = @$insert_array[$matches[1]];
 else $value = @$default_array[$matches[1]];
 if (strlen(@$matches[2])) {
-foreach (preg_split("/./", substr($matches[2], 1)) as $index) {
+foreach (preg_split('/./', substr($matches[2], 1)) as $index) {
 if (is_array($value))
 $value = @$value[$index];
 else if (is_object($value)) {
@@ -1746,10 +1771,11 @@ BBCODE_STACK_CLASS => $this->current_class,
 }
 function Internal_ProcessVerbatimTag($tag_name, $tag_params, $tag_rule) {
 $state = $this->lexer->SaveState();
+$end_tag = $this->lexer->tagmarker . "/" . $tag_name . $this->lexer->end_tagmarker;
 $start = count($this->stack);
+$this->lexer->verbatim = true;
 while (($token_type = $this->lexer->NextToken()) != BBCODE_EOI) {
-if ($token_type == BBCODE_ENDTAG
-&& @$this->lexer->tag['_name'] == $tag_name) {
+if ($this->lexer->text == $end_tag) {
 $end_tag_params = $this->lexer->tag;
 break;
 }
@@ -1777,6 +1803,7 @@ BBCODE_STACK_TAG => $this->lexer->tag,
 BBCODE_STACK_CLASS => $this->current_class,
 );
 }
+$this->lexer->verbatim = false;
 if ($token_type == BBCODE_EOI) {
 $this->lexer->RestoreState($state);
 $this->stack[] = Array(
