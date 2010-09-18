@@ -29,7 +29,7 @@ if ($db->getNumRows())
 	$NewsItems = array();
 	while ($db->nextRecord())
 	{
-		$NewsItems[] = array('Time' => $db->getField('time'), 'Message' => $db->getField('news_message'));
+		$NewsItems[] = array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message')));
 	}
 	$template->assign('NewsItems',$NewsItems);
 }

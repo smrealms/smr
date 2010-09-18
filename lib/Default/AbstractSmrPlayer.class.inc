@@ -435,6 +435,11 @@ abstract class AbstractSmrPlayer
 			return get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
 	}
 
+	public function getBBLink()
+	{
+			return '[player='.$this->getPlayerID().']';
+	}
+	
 	public function getLinkedDisplayName($includeAlliance=true)
 	{
 		$return = '<a href="'.$this->getTraderSearchHREF().'">'.$this->getDisplayName().'</a>';

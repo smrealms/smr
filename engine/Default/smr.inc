@@ -13,7 +13,7 @@ function htmliseMessage($message)
 	return $message;
 }
 
-function smrBBCode($bbParser, $action, $tagName, $default, $params, $tagContent)
+function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent)
 {
 	global $overrideGameID;
 	switch($tagName)
@@ -21,12 +21,15 @@ function smrBBCode($bbParser, $action, $tagName, $default, $params, $tagContent)
 		case 'player':
 			try
 			{
-				$bbPlayer =& SmrPlayer::getPlayerByPlayerID($tagContent, $overrideGameID);
+				$playerID = $default;
+				if(!is_numeric($playerID))
+					$playerID = $tagParams['id'];
+				$bbPlayer =& SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
 				if ($action == BBCODE_CHECK)
 				{
 					return true;
 				}
-				return $bbPlayer->getLinkedDisplayName();
+				return $bbPlayer->getLinkedDisplayName((bool)$tagParams['showalliance']);
 			}
 			catch (Exception $e)
 			{
@@ -61,7 +64,8 @@ function bbifyMessage($message)
 				'method' => 'smrBBCode',
 				'class' => 'link',
 				'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
-				'content' => BBCODE_REQUIRED,
+				'end_tag' => BBCODE_PROHIBIT,
+				'content' => BBCODE_PROHIBIT,
 			));
 	}
 	$message = $bbParser->parse($message);
