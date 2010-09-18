@@ -29,7 +29,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				{
 					return true;
 				}
-				return $bbPlayer->getLinkedDisplayName((bool)$tagParams['showalliance']);
+				if($overrideGameID==SmrSession::$game_id)
+				{
+					return $bbPlayer->getLinkedDisplayName((bool)$tagParams['showalliance']);
+				}
+				return $bbPlayer->getDisplayName((bool)$tagParams['showalliance']);
 			}
 			catch (Exception $e)
 			{
@@ -59,15 +63,19 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 						return true;
 					}
 					
-					global $player;
-					
-					$container = create_container('skeleton.php');
-					$container['alliance_id'] = $db->getInt('alliance_id');
-					if (is_object($player) && $container['alliance_id'] == $player->getAllianceID())
-						$container['body'] = 'alliance_mod.php';
-					else
-						$container['body'] = 'alliance_roster.php';
-					return create_link($container, $db->getField('alliance_name'));
+					if($overrideGameID==SmrSession::$game_id)
+					{
+						global $player;
+						
+						$container = create_container('skeleton.php');
+						$container['alliance_id'] = $db->getInt('alliance_id');
+						if (is_object($player) && $container['alliance_id'] == $player->getAllianceID())
+							$container['body'] = 'alliance_mod.php';
+						else
+							$container['body'] = 'alliance_roster.php';
+						return create_link($container, $db->getField('alliance_name'));
+					}
+					return $db->getField('alliance_name');
 				}
 			}
 			catch (Exception $e)

@@ -429,10 +429,15 @@ abstract class AbstractSmrPlayer
 		return $this->playerName;
 	}
 
-	public function getDisplayName()
+	public function getDisplayName($includeAlliance=false)
 	{
+		$return = get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
+		if($includeAlliance)
+		{
+			$return.= ' (' . $this->getAllianceName() . '</a>' . ')';
+		}
 //NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
-			return get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
+			return $return;
 	}
 
 	public function getBBLink()
