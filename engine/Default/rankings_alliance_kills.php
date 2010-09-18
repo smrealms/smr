@@ -17,7 +17,7 @@ $numAlliances = sizeof($alliances);
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of alliances by their kills.</p>');
-if ($player->getAllianceID() > 0)
+if ($player->hasAlliance())
     $PHP_OUTPUT.=('<p>Your alliance is ranked '.$ourRank.' out of '.$numAlliances.' alliances.</p>');
 
 $PHP_OUTPUT.=('<table class="standard" width="95%">');

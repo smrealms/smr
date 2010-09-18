@@ -126,11 +126,7 @@ if ($count_last_active > 0)
 		$PHP_OUTPUT.=('<td>');
 		if ($curr_player->hasAlliance())
 		{
-			$container = array();
-			$container['url'] 			= 'skeleton.php';
-			$container['body'] 			= 'alliance_roster.php';
-			$container['alliance_id']	= $curr_player->getAllianceID();
-			$PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
+			$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
 		}
 		else
 			$PHP_OUTPUT.=('(none)');

@@ -517,6 +517,11 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
+	public function getAllianceBBLink()
+	{
+		return $this->hasAlliance()?'[alliance='.$this->getAllianceID().']':$this->getAllianceName();
+	}
+	
 	public function getAllianceName()
 	{
 		if(!isset($this->allianceName))
@@ -1107,7 +1112,7 @@ abstract class AbstractSmrPlayer
 	
 	public function sameAlliance(AbstractSmrPlayer $otherPlayer)
 	{
-		return $this->equals($otherPlayer) || ($this->hasAlliance()>0&&$this->getAllianceID()==$otherPlayer->getAllianceID());
+		return $this->equals($otherPlayer) || ($this->hasAlliance()&&$this->getAllianceID()==$otherPlayer->getAllianceID());
 	}
 	
 	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer)

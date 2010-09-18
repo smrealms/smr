@@ -2078,9 +2078,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function getExamineTraderHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_examine.php';
+		$container = create_container('skeleton.php','trader_examine.php');
 		$container['target']	= $this->getAccountID();
 		return SmrSession::get_new_href($container);
 	}
@@ -2088,9 +2086,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function getAttackTraderHREF()
 	{
 		global $var;
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_attack_processing.php';
+		$container = create_container('skeleton.php','trader_attack_processing.php');
 		$container['target']	= $this->getAccountID();
 		if(isset($var['time']))
 			$container['time']	= $var['time'];
@@ -2101,28 +2097,22 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function getTraderSearchHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_search_result.php';
-		$container['player_id']	= $this->getPlayerID();
+		$container = create_container('skeleton.php','trader_search_result.php');
+		$container['player_id'] = $this->getPlayerID();
 		return SmrSession::get_new_href($container);
 	}
 	
 	public function getAllianceRosterHREF()
 	{
-		$container = array();
-		$container['url']			= 'skeleton.php';
-		$container['body']			= 'alliance_roster.php';
-		$container['alliance_id']	= $this->getAllianceID();
+		$container = create_container('skeleton.php','alliance_roster.php');
+		$container['alliance_id'] = $this->getAllianceID();
 		return SmrSession::get_new_href($container);
 	}
 	
 	public function getToggleWeaponHidingHREF()
 	{
-		$container = array();
-		$container['url']			= 'skeleton.php';
-		$container['body']			= 'toggle_processing.php';
-		$container['toggle']		= 'WeaponHiding';
+		$container = create_container('skeleton.php','toggle_processing.php');
+		$container['toggle'] = 'WeaponHiding';
 		return SmrSession::get_new_href($container);
 	}
 	

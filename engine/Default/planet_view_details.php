@@ -4,7 +4,7 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 		require_once(get_file_loc('SmrPlanet.class.inc'));
 $template->assign('PageTopic','Viewing Planet Details');
 $db2 = new SmrMySqlDatabase();
-if ($player->getAllianceID() != 0)
+if ($player->hasAlliance())
 	$db->query('SELECT planet.sector_id as sector, player.game_id as game, time_attack, attacker_damage, planet_damage, trigger_id FROM player, planet, planet_attack WHERE player.game_id = planet.game_id AND ' .
 											  'owner_id = account_id AND ' .
 											  'player.game_id = '.$player->getGameID().' AND ' .

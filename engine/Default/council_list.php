@@ -44,21 +44,15 @@ if (is_object($president))
 	$PHP_OUTPUT.=('</td>');
 
 	$PHP_OUTPUT.=('<td align="center">');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'council_send_message.php';
+	$container = create_container('skeleton.php','council_send_message.php');
 	$container['race_id'] = $president->getRaceID();
 	$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($president->getRaceID()));
 	$PHP_OUTPUT.=('</td>');
 
 	$PHP_OUTPUT.=('<td>');
-	if ($president->hasAlliance()) {
-
-		$container = array();
-		$container['url'] 			= 'skeleton.php';
-		$container['body'] 			= 'alliance_roster.php';
-		$container['alliance_id']	= $president->getAllianceID();
-		$PHP_OUTPUT.=create_link($container, $president->getAllianceName());
+	if ($president->hasAlliance())
+	{
+		$PHP_OUTPUT.=create_link($president->getAllianceRosterHREF(), $president->getAllianceName());
 	} else
 		$PHP_OUTPUT.=('(none)');
 	$PHP_OUTPUT.=('</td>');
@@ -129,13 +123,9 @@ if ($db->getNumRows() > 0)
 		if ($council->getAccountID() == $player->getAccountID())
 			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
-		if ($council->hasAlliance()) {
-
-			$container = array();
-			$container['url'] 			= 'skeleton.php';
-			$container['body'] 			= 'alliance_roster.php';
-			$container['alliance_id']	= $council->getAllianceID();
-			$PHP_OUTPUT.=create_link($container, $council->getAllianceName());
+		if ($council->hasAlliance())
+		{
+			$PHP_OUTPUT.=create_link($council->getAllianceRosterHREF(), $council->getAllianceName());
 		} else
 			$PHP_OUTPUT.=('(none)');
 		$PHP_OUTPUT.=('</td>');

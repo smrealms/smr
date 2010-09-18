@@ -154,7 +154,7 @@ if ($db->getNumRows() == 0)
 //get our arrays
 $db->query('SELECT * FROM universe_array WHERE game_id = '.$player->getGameID());
 $uni_array = $db->getField('array');
-if ($player->getAllianceID() != 0)
+if ($player->hasAlliance())
 	$db->query('SELECT * FROM alliance_maps WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID());
 else
 	$db->query('SELECT * FROM player_has_maps WHERE game_id = '.$player->getGameID().' AND ' .

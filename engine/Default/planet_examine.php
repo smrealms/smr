@@ -14,7 +14,7 @@ $PHP_OUTPUT.=('<tr><td><b>Planet Name:</b></td><td>'.$planet->planet_name.'</td>
 $PHP_OUTPUT.=('<tr><td><b>Level:</b></td><td>' . number_format($planet->getLevel(),2) . '</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Owner:</b></td><td>');
 if ($planet->owner_id != 0)
-	$PHP_OUTPUT.=($planet_owner->getPlayerName());
+	$PHP_OUTPUT.=($planet_owner->getLinkedDisplayName(false));
 else
 	$PHP_OUTPUT.=('Unclaimed');
 
@@ -22,7 +22,7 @@ $PHP_OUTPUT.=('</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Alliance:</b></td><td>');
 
 if ($planet->owner_id != 0)
-	$PHP_OUTPUT.=($planet_owner->getAllianceName());
+	$PHP_OUTPUT.=create_link($planet_owner->getAllianceRosterHREF(), $planet_owner->getAllianceName());
 else
 	$PHP_OUTPUT.=('none');
 
