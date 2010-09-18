@@ -277,7 +277,7 @@ class SmrSector
 	function enteringSector(AbstractSmrPlayer &$player, $movementType)
 	{
 		// send scout messages to user
-		$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
+		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		switch($movementType)
 		{
 			case MOVEMENT_JUMP:
@@ -302,7 +302,7 @@ class SmrSector
 	function leavingSector(AbstractSmrPlayer &$player, $movementType)
 	{
 		// send scout messages to user
-		$message = 'Your forces have spotted ' . $player->getDisplayName() . ' ';
+		$message = 'Your forces have spotted ' . $player->getBBLink() . ' ';
 		switch($movementType)
 		{
 			case MOVEMENT_JUMP:
@@ -334,7 +334,7 @@ class SmrSector
 		foreach($forces as &$force)
 		{
 			// send scout messages to user
-			$message = 'Your forces have spotted that ' . $player->getDisplayName() . ' has been <span class="red">DESTROYED</span> in sector #'.$this->sectorID;
+			$message = 'Your forces have spotted that ' . $player->getBBLink() . ' has been <span class="red">DESTROYED</span> in sector #'.$this->sectorID;
 			$force->ping($message,$player);
 		} unset($force);
 	}
