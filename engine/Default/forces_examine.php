@@ -18,10 +18,9 @@ $template->assign('PageTopic','Examine Forces');
 // should we display an attack button
 if (($ship->getAttackRating() > 0 || $ship->getCDs() > 0) &&
 	!$player->hasFederalProtection() &&
-	$player->getNewbieTurns() == 0 &&
+	!$player->hasNewbieTurns() &&
 	!$player->isLandedOnPlanet() &&
-	($player->getAllianceID() == 0 || $forces_owner->getAllianceID() == 0 || $forces_owner->getAllianceID() != $player->getAllianceID()) &&
-	$player->getAccountID() != $forces_owner->getAccountID()) {
+	!$player->forceNAPAlliance($forces_owner)) {
 
 	$container = array();
 	$container['url'] = 'forces_attack_processing.php';
@@ -35,10 +34,10 @@ if (($ship->getAttackRating() > 0 || $ship->getCDs() > 0) &&
 	$PHP_OUTPUT.=('<p><big style="color:#3333FF;">You are under federal protection! That wouldn\'t be fair.</big></p>');
 elseif ($player->hasNewbieTurns())
 	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">You are under newbie protection!</big></p>');
-elseif ($player->sameAlliance($forces_owner))
-	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">These are your alliance\'s forces!</big></p>');
 elseif ($forces_owner->getAccountID() == $player->getAccountID())
 	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">These are your forces!</big></p>');
+elseif ($player->forceNAPAlliance($forces_owner))
+	$PHP_OUTPUT.=('<p><big style="color:#33FF33;">These are allied forces!</big></p>');
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<table class="standard" width="95%">');
@@ -65,10 +64,10 @@ foreach($attackers as &$attacker)
 	 $attackerShip =& $attacker->getShip();
 
 	 $PHP_OUTPUT.=($attacker->getLevelName().'<br />');
-	 $PHP_OUTPUT.=('<span class="yellow">'.$attacker->getPlayerName().' ('.$attacker->getPlayerID().')</span><br />');
+	 $PHP_OUTPUT.=($attacker->getLinkedDisplayName(false).'<br />');
 	 $PHP_OUTPUT.=('Race: '.$attacker->getRaceName().'<br />');
 	 $PHP_OUTPUT.=('Level: '.$attacker->getLevelID().'<br />');
-	 $PHP_OUTPUT.=('Alliance: '.$attacker->getAllianceName().'<br /><br />');
+	 $PHP_OUTPUT.=('Alliance: '.create_link($attacker->getAllianceRosterHREF(), $attacker->getAllianceName()).'<br /><br />');
 	 $PHP_OUTPUT.=('<small>');
 	 $PHP_OUTPUT.=($attackerShip->getName().'<br />');
 	 $PHP_OUTPUT.=('Rating : ' . $attackerShip->getAttackRating() . '/' . $attackerShip->getDefenseRating() . '<br />');

@@ -64,13 +64,9 @@ while ($db->nextRecord())
     if ($player->getAccountID() == $curr_player->getAccountID())
         $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>');
-    if ($curr_player->getAllianceID() > 0)
+    if ($curr_player->hasAlliance())
     {
-        $container = array();
-        $container['url']			= 'skeleton.php';
-        $container['body']			= 'alliance_roster.php';
-        $container['alliance_id']	= $curr_player->getAllianceID();
-        $PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
+        $PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
     }
     else
         $PHP_OUTPUT.=('(none)');
@@ -168,13 +164,9 @@ while ($db->nextRecord())
     if ($player->getAccountID() == $curr_player->getAccountID())
         $PHP_OUTPUT.=(' class="bold"');
     $PHP_OUTPUT.=('>');
-    if ($curr_player->getAllianceID() > 0)
+    if ($curr_player->hasAlliance())
     {
-        $container = array();
-        $container['url']             = 'skeleton.php';
-        $container['body']             = 'alliance_roster.php';
-        $container['alliance_id']    = $curr_player->getAllianceID();
-        $PHP_OUTPUT.=create_link($container, $curr_player->getAllianceName());
+        $PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
     }
     else
         $PHP_OUTPUT.=('(none)');

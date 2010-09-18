@@ -22,7 +22,7 @@ if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
 
 // it could be we got kicked during writing the msg
-if ($player->getAllianceID() == 0)
+if (!$player->hasAlliance())
 	create_error('You are not in an alliance anymore');
 
 if (empty($body))

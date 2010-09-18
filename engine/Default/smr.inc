@@ -39,6 +39,45 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 			}
 		break;
+		case 'alliance':
+			try
+			{
+				$db = new SmrMySqlDatabase();
+				$allianceID = $default;
+				if(!is_numeric($allianceID))
+					$allianceID = $tagParams['id'];
+				$db->query('SELECT alliance_id, alliance_name, leader_id
+					FROM alliance
+					WHERE alliance_id = '.$db->escapeNumber($allianceID).'
+					AND game_id = ' . $db->escapeNumber($overrideGameID) . '
+					LIMIT 1'
+				);
+				if($db->nextRecord())
+				{
+					if ($action == BBCODE_CHECK)
+					{
+						return true;
+					}
+					
+					global $player;
+					
+					$container = create_container('skeleton.php');
+					$container['alliance_id'] = $db->getInt('alliance_id');
+					if (is_object($player) && $container['alliance_id'] == $player->getAllianceID())
+						$container['body'] = 'alliance_mod.php';
+					else
+						$container['body'] = 'alliance_roster.php';
+					return create_link($container, $db->getField('alliance_name'));
+				}
+			}
+			catch (Exception $e)
+			{
+				if ($action == BBCODE_CHECK)
+				{
+					return false;
+				}
+			}
+		break;
 	}
 	if ($action == BBCODE_CHECK)
 	{
@@ -59,14 +98,16 @@ function bbifyMessage($message)
 		$bbParser->RemoveRule('img');
 		$bbParser->SetURLTarget('_blank');
 		$bbParser->SetURLTargetable('override');
-		$bbParser->AddRule('player', array(
+		$smrRule = array(
 				'mode' => BBCODE_MODE_CALLBACK,
 				'method' => 'smrBBCode',
 				'class' => 'link',
 				'allow_in' => Array('listitem', 'block', 'columns', 'inline'),
 				'end_tag' => BBCODE_PROHIBIT,
 				'content' => BBCODE_PROHIBIT,
-			));
+			);
+		$bbParser->AddRule('player',$smrRule);
+		$bbParser->AddRule('alliance',$smrRule);
 	}
 	$message = $bbParser->parse($message);
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
@@ -274,7 +315,7 @@ function create_container($file, $body = '', array $extra = array())
 }
 
 function create_link($container, $text, $class=null) {
-	return '<a'.($class==null?'':' class="'.$class.'"').' href="' . SmrSession::get_new_href($container) . '">' . $text . '</a>';
+	return '<a'.($class==null?'':' class="'.$class.'"').' href="' . (is_array($container)?SmrSession::get_new_href($container):$container) . '">' . $text . '</a>';
 }
 
 function create_submit_link($container, $text)

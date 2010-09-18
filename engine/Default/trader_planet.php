@@ -86,7 +86,7 @@ if ($db->getNumRows() > 0)
 else
 	$PHP_OUTPUT.=('You don\'t have a planet claimed!<br /><br />');
 	
-if ($player->getAllianceID() != 0)
+if ($player->hasAlliance())
 {
 	$alliance = new SMR_ALLIANCE($player->getAllianceID(), SmrSession::$game_id);
 	

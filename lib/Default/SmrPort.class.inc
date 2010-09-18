@@ -658,14 +658,14 @@ class SmrPort
 			//add news
 			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector #<span class="sectorColor">' . $this->getSectorID() . '</span>. It is under attack by ';
 			if($trigger->hasAlliance())
-				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceName().'</span>';
+				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
 			else
 				$newsMessage .= $trigger->getBBLink();
 			
 			$newsMessage .= '. The Federal Government is offering ';
 			
 			if($trigger->hasAlliance())
-				$newsMessage .= 'various bounties for the deaths of any raiding members of <span class="yellow">'.$trigger->getAllianceName().'</span>';
+				$newsMessage .= 'various bounties for the deaths of any raiding members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
 			else
 				$newsMessage .= 'a bounty of ' . number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL)) . ' credits for the death of '.$trigger->getBBLink();
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
@@ -1384,7 +1384,7 @@ class SmrPort
 		
 		// News Entry
 		$news = $this->getDisplayName() . ' has been successfully raided by ';
-		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceName() . '</span>';
+		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
 		else $news .= $killer->getBBLink();
 		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES ('.$this->getGameID().', ' . TIME . ', '.$this->db->escapeString($news).', \'REGULAR\','.$killer->getAccountID().','.$killer->getAllianceID().','.ACCOUNT_ID_PORT.')');
 		// Trigger gets an alignment change and a bounty if port is taken

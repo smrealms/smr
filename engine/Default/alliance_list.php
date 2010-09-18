@@ -4,18 +4,14 @@ $template->assign('PageTopic','List Of Alliances');
 
 $PHP_OUTPUT.= '<div align="center">';
 
-if ($player->getAllianceID() == 0) {
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'alliance_create.php';
+if (!$player->hasAlliance()) {
+	$container = create_container('skeleton.php','alliance_create.php');
 	$PHP_OUTPUT.=create_button($container,'Create your own alliance!');
 	$PHP_OUTPUT.= '<br /><br />';
 }
 
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'alliance_list.php';
+$container = create_container('skeleton.php','alliance_list.php');
 
 $varSequence = isset($var['sequence']) ? $var['sequence'] : 'ASC';
 

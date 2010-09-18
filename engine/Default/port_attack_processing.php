@@ -96,7 +96,7 @@ forward($container);
 //	global $player, $db;
 //	$mainText = 'From the reports we have been able to gather the following information:<br /><br />';
 //	$mainText .= $results[PORT_DISPLAY] . '<br />' . $results[PLAYER_DISPLAY];
-//	if ($player->getAllianceID() > 0) {
+//	if ($player->hasAlliance()) {
 //		$topic = 'Port Siege Report Sector '.$player->getSectorID();
 //		$text = 'Reports have come in from the space above <span class="yellow">Port ' . $player->getSectorID() . '</span> and have confirmed our <span class="red">siege</span>!<br />';
 //		$text .= $mainText;

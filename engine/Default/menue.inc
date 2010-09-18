@@ -321,7 +321,7 @@ function create_bank_menue() {
 	$menue_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
 													'Personal Account','nav');
 
-	if ($player->getAllianceID() != 0)
+	if ($player->hasAlliance())
 		$menue_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
 														'Alliance Account','nav');
 
