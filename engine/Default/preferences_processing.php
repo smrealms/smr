@@ -190,7 +190,7 @@ else if ($action == 'Alter Player')
 	
 	$player->setPlayerName($player_name);
 
-	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getDisplayName() . '</span>';
+	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink() . '</span>';
 	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . SmrSession::$game_id . ','.$player->getAccountID().','.$player->getAllianceID().')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }

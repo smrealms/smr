@@ -23,7 +23,7 @@ function doBountyList(&$PHP_OUTPUT,&$db,&$player)
 	{
 		$any=true;
 		$bountyPlayer =& SmrPlayer::getPlayer($db->getField('account_id'),$player->getGameID());
-		$PHP_OUTPUT.= $bountyPlayer->getDisplayName()
+		$PHP_OUTPUT.= $bountyPlayer->getLinkedDisplayName()
 						.' : <span class="creds">'.number_format($db->getField('amount')).'</span> credits and'
 						. ' <span class="yellow">'.number_format($db->getField('smr_credits')). '</span> SMR credits<br />';
 	}

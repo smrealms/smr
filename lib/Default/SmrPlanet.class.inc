@@ -692,7 +692,7 @@ class SmrPlanet
 			{
 				$owner =& $this->getOwner();
 				$text = count($attackers) . ' members of '.$trigger->getAllianceName().' have been spotted attacking ' .
-						$this->getDisplayName() . ' in sector #' . $this->getSectorID() . '.  The planet is owned by ' . $owner->getDisplayName();
+						$this->getDisplayName() . ' in sector #' . $this->getSectorID() . '.  The planet is owned by ' . $owner->getBBLink();
 				if ($owner->hasAlliance())
 				{
 					$text .= ', a member of ' . $owner->getAllianceName();
