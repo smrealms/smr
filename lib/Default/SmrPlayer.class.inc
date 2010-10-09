@@ -465,8 +465,28 @@ class SmrPlayer extends AbstractSmrPlayer
 	function leaveAlliance()
 	{
 		$this->setAllianceID(0);
+		$alliance = $this->getAlliance();
+		if ($alliance->leader_id != $this->getAccountID())
+			$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
+
+		$db->query('DELETE
+					FROM player_has_alliance_role
+					WHERE account_id = '.$player->getAccountID().' AND
+						  game_id = '.$player->getGameID());
+	
+		$this->getAccount()->log(3, 'left alliance: '.$alliance->alliance_name, $player->getSectorID());
 //		$this->setAllianceJoinable(TIME + 1 * 3600);
 //		$this->db->query('DELETE FROM player_has_alliance_role WHERE '.$this->SQL);
+	}
+	
+	function joinAlliance($allianceID)
+	{
+		$this->setAllianceID($allianceID);
+		$alliance = $this->getAlliance();
+		if ($alliance->leader_id != $this->getAccountID())
+			$this->sendMessage($alliance->leader_id, 2, 'I joined your alliance!', false);
+		$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$player->getGameID().', '.$player->getAccountID().', 2,'.$alliance->alliance_id.')');
+		$this->getAccount()->log(3, 'joined alliance: '.$alliance->alliance_name, $player->getSectorID());
 	}
 	
 //	function getAllianceJoinable()
