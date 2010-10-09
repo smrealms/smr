@@ -32,18 +32,8 @@ if ($action == 'YES') {
 	} elseif ($alliance->leader_id == $player->getAccountID())
 		create_error('You are the leader! You must hand over leadership first!');
 
-	if ($alliance->leader_id != $player->getAccountID())
-		$player->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
-
-	$player->setAllianceID(0);
+	$player->leaveAlliance();
 	$player->update();
-
-	$db->query('DELETE
-				FROM player_has_alliance_role
-				WHERE account_id = '.$player->getAccountID().' AND
-					  game_id = '.$player->getGameID());
-
-	$account->log(3, 'left alliance: '.$alliance->alliance_name, $player->getSectorID());
 
 }
 
