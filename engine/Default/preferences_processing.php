@@ -161,6 +161,13 @@ else if ($action == 'Alter Player')
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
 	
+	$old_name = $player->getName();
+	
+	if($old_name == $player_name)
+	{
+		create_error('Your player already has that name!');
+	}
+	
 	// disallow certain ascii chars
 	for ($i = 0; $i < strlen($player_name); $i++)
 		if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127)
@@ -170,17 +177,10 @@ else if ($action == 'Alter Player')
 		create_error('You must enter a player name!');
 	
 	// Check if name is in use.
-	$db->query('SELECT account_id FROM player WHERE account_id!=' . SmrSession::$account_id . ' AND game_id=' .SmrSession::$game_id . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
+	$db->query('SELECT account_id FROM player WHERE game_id=' .SmrSession::$game_id . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
 	if($db->getNumRows())
 	{
 		create_error('Name is already being used in this game!');
-	}
-	
-	$old_name = $player->getDisplayName();
-	
-	if($old_name == $player_name)
-	{
-		create_error('Your player already has that name!');
 	}
 	
 	if($player->isNameChanged())
