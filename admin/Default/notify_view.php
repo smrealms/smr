@@ -48,7 +48,7 @@ if ($db->getNumRows())
 		$offended = 'To: ';
 		if(is_object($receiver))
 		{
-			$offender .= $receiver_acc->login.' ('.$receiver_acc->account_id.')';
+			$offended .= $receiver_acc->login.' ('.$receiver_acc->account_id.')';
 			if ($receiver_acc->login != $receiver->getPlayerName())
 				$offended .= ' a.k.a '.$receiver->getPlayerName();
 		}
