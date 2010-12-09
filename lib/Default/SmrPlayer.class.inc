@@ -471,10 +471,10 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->setAllianceID(0);
 		$this->db->query('DELETE
 					FROM player_has_alliance_role
-					WHERE account_id = '.$player->getAccountID().' AND
-						  game_id = '.$player->getGameID());
+					WHERE account_id = '.$this->getAccountID().' AND
+						  game_id = '.$this->getGameID());
 	
-		$this->getAccount()->log(3, 'left alliance: '.$alliance->alliance_name, $player->getSectorID());
+		$this->getAccount()->log(3, 'left alliance: '.$alliance->alliance_name, $this->getSectorID());
 //		$this->setAllianceJoinable(TIME + 1 * 3600);
 //		$this->db->query('DELETE FROM player_has_alliance_role WHERE '.$this->SQL);
 	}
