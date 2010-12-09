@@ -464,11 +464,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	function leaveAlliance()
 	{
-		$this->setAllianceID(0);
 		$alliance = $this->getAlliance();
 		if ($alliance->leader_id != $this->getAccountID())
 			$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
 
+		$this->setAllianceID(0);
 		$db->query('DELETE
 					FROM player_has_alliance_role
 					WHERE account_id = '.$player->getAccountID().' AND
