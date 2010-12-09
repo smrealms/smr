@@ -469,7 +469,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
 
 		$this->setAllianceID(0);
-		$db->query('DELETE
+		$this->db->query('DELETE
 					FROM player_has_alliance_role
 					WHERE account_id = '.$player->getAccountID().' AND
 						  game_id = '.$player->getGameID());
