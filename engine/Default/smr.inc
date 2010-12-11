@@ -13,9 +13,16 @@ function htmliseMessage($message)
 	return $message;
 }
 
+function parseBoolean($check)
+{
+	if(is_string($check) && (strcasecmp($check,'NO') == 0 || strcasecmp($check,'FALSE')==0))
+		return true;
+	return (bool)$tagParams['showalliance'];
+}
+
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent)
 {
-	global $overrideGameID;
+	global $overrideGameID, $disableBBLinks;
 	switch($tagName)
 	{
 		case 'player':
@@ -29,11 +36,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				{
 					return true;
 				}
-				if($overrideGameID==SmrSession::$game_id)
+				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
 				{
-					return $bbPlayer->getLinkedDisplayName((bool)$tagParams['showalliance']);
+					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
-				return $bbPlayer->getDisplayName((bool)$tagParams['showalliance']);
+				return $bbPlayer->getDisplayName(parseBoolean($tagParams['showalliance']));
 			}
 			catch (Exception $e)
 			{
@@ -63,7 +70,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 						return true;
 					}
 					
-					if($overrideGameID==SmrSession::$game_id)
+					if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
 					{
 						global $player;
 						
@@ -94,7 +101,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
 }
 
-function bbifyMessage($message)
+function bbifyMessage($message,$noLinks=false)
 {
     static $bbParser;
     if(!isset($bbParser))
@@ -117,6 +124,11 @@ function bbifyMessage($message)
 		$bbParser->AddRule('player',$smrRule);
 		$bbParser->AddRule('alliance',$smrRule);
 	}
+	global $disableBBLinks;
+	if($noLinks===true)
+		$disableBBLinks = true;
+	else
+		$disableBBLinks = false;
 	$message = $bbParser->parse($message);
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
 	return $message;
