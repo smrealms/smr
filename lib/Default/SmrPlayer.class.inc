@@ -485,8 +485,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$alliance = $this->getAlliance();
 		if ($alliance->leader_id != $this->getAccountID())
 			$this->sendMessage($alliance->leader_id, 2, 'I joined your alliance!', false);
-		$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$player->getGameID().', '.$player->getAccountID().', 2,'.$alliance->alliance_id.')');
-		$this->getAccount()->log(3, 'joined alliance: '.$alliance->alliance_name, $player->getSectorID());
+		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$this->getGameID().', '.$this->getAccountID().', 2,'.$alliance->alliance_id.')');
+		$this->getAccount()->log(3, 'joined alliance: '.$alliance->alliance_name, $this->getSectorID());
 	}
 	
 //	function getAllianceJoinable()
