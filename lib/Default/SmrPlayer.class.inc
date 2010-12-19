@@ -165,6 +165,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$db->query('SELECT account_id FROM player WHERE game_id = '.$db->escapeNumber($gameID).' AND player_id = '.$db->escapeNumber($playerID).' LIMIT 1');
 		if($db->nextRecord())
 			return self::getPlayer($db->getField('account_id'),$gameID,$forceUpdate);
+		throw new Exception('Player ID not found.');
 	}
 	
 	protected function __construct($gameID,&$accountIDOrResultArray)
