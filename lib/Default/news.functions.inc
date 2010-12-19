@@ -6,7 +6,7 @@ function doBreakingNewsAssign($gameID,&$template)
 	$db->query('SELECT * FROM news WHERE game_id = '.$gameID.' AND type = \'breaking\' ORDER BY time DESC LIMIT 1');
 	if ($db->nextRecord())
 	{
-		$template->assign('BreakingNews',array('Time' => $db->getField('time'), 'Message' => $db->getField('news_message')));
+		$template->assign('BreakingNews',array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
 	}
 }
 function doLottoNewsAssign($gameID,&$template)
@@ -17,7 +17,7 @@ function doLottoNewsAssign($gameID,&$template)
 	$db->query('SELECT * FROM news WHERE game_id = '.$gameID.' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');
 	if($db->nextRecord())
 	{
-		 $template->assign('LottoNews',array('Time' => $db->getField('time'), 'Message' => $db->getField('news_message')));
+		 $template->assign('LottoNews',array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
 	}
 }
 
