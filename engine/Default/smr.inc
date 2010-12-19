@@ -23,11 +23,11 @@ function parseBoolean($check)
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent)
 {
 	global $overrideGameID, $disableBBLinks;
-	switch($tagName)
+	try
 	{
-		case 'player':
-			try
-			{
+		switch($tagName)
+		{
+			case 'player':
 				$playerID = $default;
 				if(!is_numeric($playerID))
 					$playerID = $tagParams['id'];
@@ -41,18 +41,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
 				return $bbPlayer->getDisplayName(parseBoolean($tagParams['showalliance']));
-			}
-			catch (Exception $e)
-			{
-				if ($action == BBCODE_CHECK)
-				{
-					return false;
-				}
-			}
-		break;
-		case 'alliance':
-			try
-			{
+			break;
+			case 'alliance':
 				$db = new SmrMySqlDatabase();
 				$allianceID = $default;
 				if(!is_numeric($allianceID))
@@ -84,15 +74,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					}
 					return $db->getField('alliance_name');
 				}
-			}
-			catch (Exception $e)
-			{
-				if ($action == BBCODE_CHECK)
-				{
-					return false;
-				}
-			}
-		break;
+			break;
+		}
+	}
+	catch (Exception $e)
+	{
 	}
 	if ($action == BBCODE_CHECK)
 	{
