@@ -19,28 +19,29 @@ $template->assign('PageTopic','Confirmation');
 
 $PHP_OUTPUT.=('Are you sure you want to transfer '.$amount.' credits to<br />');
 
-$db->query('SELECT * FROM account WHERE account_id = '.$account_id);
+$db->query('SELECT hof_name FROM account WHERE account_id = '.$account_id);
 if ($db->nextRecord())
-	$login = $db->getField('login');
+	$hofName = $db->getField('hof_name');
 
-$db->query('SELECT * FROM player WHERE account_id = '.$account_id);
-if ($db->getNumRows())
-{
-	while ($db->nextRecord())
-	{
-	    $player_name = stripslashes($db->getField('player_name'));
-    	$game_id = $db->getField('game_id');
+//$db->query('SELECT * FROM player WHERE account_id = '.$account_id);
+//if ($db->getNumRows())
+//{
+//	while ($db->nextRecord())
+//	{
+//	    $player_name = stripslashes($db->getField('player_name'));
+//    	$game_id = $db->getField('game_id');
+//
+//	    $db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
+//    	if ($db2->nextRecord())
+//			$game_name = $db2->getField('game_name');
+//
+//		$PHP_OUTPUT.=($player_name.' in game '.$game_name.'('.$game_id.')<br />');
+//	}
+//}
+//else
+	$PHP_OUTPUT.=('Player with HoF name '.$hofName.'?<br />');
 
-	    $db2->query('SELECT * FROM game WHERE game_id = '.$game_id);
-    	if ($db2->nextRecord())
-			$game_name = $db2->getField('game_name');
-
-		$PHP_OUTPUT.=($player_name.' in game '.$game_name.'('.$game_id.')<br />');
-	}
-}
-else
-	$PHP_OUTPUT.=('Player with login name '.$login.'?<br />');
-
+$PHP_OUTPUT.=('<br/><h3>Please make sure this is definitely the correct person before confirming.</h3>');
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
 $container = array();
