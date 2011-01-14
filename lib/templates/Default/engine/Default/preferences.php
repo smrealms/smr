@@ -327,7 +327,7 @@ if(isset($GameID))
 		<tr>
 			<td>Transfer Credits:</td>
 			<td>
-				<input type="text" name="amount" id="InputFields" style="width:30px;text-align:center;"> credits to <?php if(!isset($GameID)){ ?>the account of <?php } ?>
+				<input type="text" name="amount" id="InputFields" style="width:30px;text-align:center;"> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
 				<select name="account_id" id="InputFields"><?php
 					foreach($TransferAccounts as $AccID => $AccOrPlayerName)
 					{
