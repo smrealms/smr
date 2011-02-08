@@ -2,6 +2,7 @@
 require_once('AbstractSmrCombatWeapon.class.inc');
 class SmrMines extends AbstractSmrCombatWeapon
 {
+	const TOTAL_ENEMY_MINES_MODIFIER = 50;
 	protected $numberOfMines;
 	
 	public function __construct($gameTypeID,$numberOfMines)
@@ -39,7 +40,20 @@ class SmrMines extends AbstractSmrCombatWeapon
 		$modifiedAccuracy = $this->getModifiedAccuracy();
 		$modifiedAccuracy -= $targetPlayer->getLevelID() + $random;
 		if($minesAreAttacker)
+		{
 			$modifiedAccuracy /= pow(SmrSector::getSector($forces->getGameID(),$forces->getSectorID())->getNumberOfConnections(), 0.6);
+		}
+	
+		if(self::TOTAL_ENEMY_MINES_MODIFIER > 0)
+		{
+			$enemyMines = 0;
+			$enemyForces =& $forces->getSector()->getEnemyForces($targetPlayer);
+			foreach($enemyForces as &$enemyForce)
+			{
+				$enemyMines += $enemyForce->getMines();
+			}
+			$modifiedAccuracy += $enemyMines / self::TOTAL_ENEMY_MINES_MODIFIER;
+		}
 		return max(0,min(100,$modifiedAccuracy));
 	}
 	
