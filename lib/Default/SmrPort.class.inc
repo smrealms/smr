@@ -1029,10 +1029,10 @@ class SmrPort
 		 if($transactionType == 'Buy')
 		 {
 			$relationsEffect = 2-$relationsEffect;
-			return floor($idealPrice * $relationsEffect);
+			return max($idealPrice,floor($idealPrice * $relationsEffect));
 		 }
 		 else
-			return ceil($idealPrice * $relationsEffect);
+			return min($idealPrice,ceil($idealPrice * $relationsEffect));
 //		$range = .11 - .095;
 //		$rand = .095 + $range * mt_rand(0, 32767)/32767;
 //		
