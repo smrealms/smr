@@ -743,6 +743,20 @@ class SmrSector
 		return false;
 	}
 
+	public function &getEnemyForces(AbstractSmrPlayer &$player)
+	{
+		$enemyForces = array();
+		if(!$this->hasForces())
+			return $enemyForces;
+		$forces =& $this->getForces();
+		foreach($forces as &$force)
+		{
+			if(!$player->forceNAPAlliance($force->getOwner()))
+				$enemyForces[] =& $force;
+		} unset($force);
+		return $enemyForces;
+	}
+
 	public function hasFriendlyForces(AbstractSmrPlayer &$player)
 	{
 		if(!$this->hasForces())

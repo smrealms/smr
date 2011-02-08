@@ -356,6 +356,11 @@ class SmrForce
 		return $this->gameID;
 	}
 	
+	public function &getSector()
+	{
+		return SmrSector::getSector($this->getGameID(),$this->getSectorID());
+	}
+	
 	public function getSectorID()
 	{
 		return $this->sectorID;
