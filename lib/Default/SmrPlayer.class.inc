@@ -466,7 +466,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	function leaveAlliance()
 	{
 		$alliance = $this->getAlliance();
-		if ($alliance->leader_id != $this->getAccountID())
+		if ($alliance->leader_id != 0 && $alliance->leader_id != $this->getAccountID())
 			$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
 
 		$this->setAllianceID(0);
