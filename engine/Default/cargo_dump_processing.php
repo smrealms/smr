@@ -1,6 +1,5 @@
 <?php
 require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
@@ -12,15 +11,19 @@ if (!is_numeric($amount))
 if ($amount <= 0)
 	create_error('You must actually enter an ammount > 0!');
 
+if ($player->isLandedOnPlanet())
+	create_error('You can\'t dump cargo while on a planet!');
+
+if ($player->getTurns() < 1)
+	create_error('You do not have enough turns to dump cargo!');
+
 //lets make sure there is actually that much on the ship
 if ($amount > $ship->getCargo($good_id))
 	create_error('You can\'t dump more than you have.');
 
+$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 if ($sector->has_fed_beacon())
 	create_error('You can\'t dump cargo in a Federal Sector!');
-
-if ($player->getTurns() < 1)
-	create_error('You do not have enough turns to dump cargo!');
 
 require_once('shop_goods.inc');
 
