@@ -37,6 +37,7 @@ if (empty($admin_id)) {
 	$PHP_OUTPUT.=('<select name="admin_id">');
 	$db->query('SELECT account_id, login
 				FROM account
+				WHERE validated = '.$db->escapeBoolean(true).'
 				ORDER BY login');
 	while ($db->nextRecord()) {
 		$PHP_OUTPUT.=('<option value="' . $db->getField('account_id') . '">' . $db->getField('login') . '</option>');
