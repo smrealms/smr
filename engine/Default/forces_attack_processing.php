@@ -53,6 +53,7 @@ $attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
 foreach($attackers as &$attacker)
 {
 	$attacker->getShip()->decloak();
+	$attacker->setLastSectorID(0);
 } unset($attacker);
 
 foreach($attackers as &$attacker)
