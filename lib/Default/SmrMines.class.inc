@@ -3,6 +3,7 @@ require_once('AbstractSmrCombatWeapon.class.inc');
 class SmrMines extends AbstractSmrCombatWeapon
 {
 	const TOTAL_ENEMY_MINES_MODIFIER = 25;
+	const FED_SHIP_DAMAGE_MODIFIER = .5;
 	protected $numberOfMines;
 	
 	public function __construct($gameTypeID,$numberOfMines)
@@ -112,11 +113,11 @@ class SmrMines extends AbstractSmrCombatWeapon
 			return $return;
 		}
 		$damage =& $this->getModifiedDamage();
-		if($targetPlayer->getShip()->isFederal()) // do 1/2 damage
+		if($targetPlayer->getShip()->isFederal()) // do less damage to fed ships
 		{
-			$damage['MaxDamage'] /= 2;
-			$damage['Shield'] /= 2;
-			$damage['Armour'] /= 2;
+			$damage['MaxDamage'] = round($damage['MaxDamage'] * self::FED_SHIP_DAMAGE_MODIFIER);
+			$damage['Shield'] = round($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);
+			$damage['Armour'] = round($damage['Armour'] * self::FED_SHIP_DAMAGE_MODIFIER);
 		}
 		$damage['Launched'] = ceil($this->getNumberOfMines() * $this->getModifiedForceAccuracyAgainstPlayer($forces,$targetPlayer,$minesAreAttacker) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
