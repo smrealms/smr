@@ -5,7 +5,7 @@
 			<?php
 			if(isset($Sectors['Up']['MoveLink']))
 			{ ?>
-				<div class="move_up move_text move_hover">
+				<div class="move_up move_text move_hover" id="moveUp" class="ajax">
 					<a href="<?php echo $Sectors['Up']['MoveLink']; ?>" class="<?php echo $Sectors['Up']['Class']; ?>">
 						<?php echo $Sectors['Up']['ID']; ?>
 					</a>
@@ -31,7 +31,7 @@
 			
 			if(isset($Sectors['Left']['MoveLink']))
 			{ ?>
-				<div class="move_left move_text move_hover">
+				<div class="move_left move_text move_hover" id="moveLeft" class="ajax">
 					<a href="<?php echo $Sectors['Left']['MoveLink']; ?>" class="<?php echo $Sectors['Left']['Class']; ?>">
 						<?php echo $Sectors['Left']['ID']; ?>
 					</a>
@@ -65,7 +65,7 @@
 			<?php
 			if(isset($Sectors['Right']['MoveLink']))
 			{ ?>
-				<div class="move_right move_text move_hover">
+				<div class="move_right move_text move_hover" id="moveRight" class="ajax">
 					<a href="<?php echo $Sectors['Right']['MoveLink']; ?>" class="<?php echo $Sectors['Right']['Class']; ?>">
 						<?php echo $Sectors['Right']['ID']; ?>
 					</a>
@@ -91,7 +91,7 @@
 
 			if(isset($Sectors['Down']['MoveLink']))
 			{ ?>
-				<div class="move_down move_text move_hover">
+				<div class="move_down move_text move_hover" id="moveDown" class="ajax">
 					<a href="<?php echo $Sectors['Down']['MoveLink']; ?>" class="<?php echo $Sectors['Down']['Class']; ?>">
 						<?php echo $Sectors['Down']['ID']; ?>
 					</a>
@@ -117,7 +117,7 @@
 
 			if(isset($Sectors['Warp']['MoveLink']))
 			{ ?>
-				<div class="move_warp move_text move_hover">
+				<div class="move_warp move_text move_hover" id="moveWarp" class="ajax">
 					<a href="<?php echo $Sectors['Warp']['MoveLink']; ?>" class="<?php echo $Sectors['Warp']['Class']; ?>">
 						<?php echo $Sectors['Warp']['ID']; ?>
 					</a>
