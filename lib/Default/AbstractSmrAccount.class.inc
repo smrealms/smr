@@ -178,7 +178,8 @@ abstract class AbstractSmrAccount
 			if ($expire_time > 0 && $expire_time < TIME)
 			{
 				// get rid of the expire entry
-				$this->unbanAccount(null);
+				$admin = null;
+				$this->unbanAccount($admin);
 				return false;
 			}
 			return $reason;
@@ -848,6 +849,21 @@ abstract class AbstractSmrAccount
 		$this->password = md5($password);
 		$this->generatePasswordReset();
 		$this->update();
+	}
+	
+	public function addAuthMethod($loginType,$authKey)
+	{
+		$this->db->query('SELECT account_id FROM account_auth WHERE login_type='.$this->db->escapeString($loginType).' AND auth_key = '.$this->db->escapeString($authKey).';');
+		if($this->db->nextRecord())
+		{
+			if($this->db->getInt('account_id')!=$this->getAccountID())
+			{
+				throw new Exception('Another account already uses this form of auth.');
+			}
+			return true;
+		}
+		$this->db->query('INSERT INTO account_auth values ('.$this->db->escapeNumber($this->getAccountID()).','.$this->db->escapeString($loginType).','.$this->db->escapeString($authKey).');');
+		return true;
 	}
 	
 	public function generatePasswordReset()

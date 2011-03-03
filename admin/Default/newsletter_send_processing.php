@@ -4,10 +4,10 @@
 require(LIB . 'phpMailer/class.phpmailer.php');
 
 $mail = new PHPMailer();
-$mail->From		     = 'newsletter@smrealms.de';
-$mail->FromName		 = 'SMR Team';
-$mail->Mailer		   = 'smtp';
-$mail->SMTPKeepAlive    = true;
+$mail->From				= 'newsletter@smrealms.de';
+$mail->FromName			= 'SMR Team';
+$mail->Maile			= 'smtp';
+$mail->SMTPKeepAlive	= true;
 
 //$mail->ConfirmReadingTo       = 'newsletter-read@smrealms.de';
 
