@@ -29,5 +29,10 @@ if(count($gameNews)>0)
 
 include_once('story.php');
 
+
+require_once('SocialLogin.class.inc');
+
+$template->assign('FacebookLogin',SocialLogin::getFacebookLoginUrl());
+
 $template->display('login.inc');
 ?>

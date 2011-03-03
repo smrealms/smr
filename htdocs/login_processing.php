@@ -24,41 +24,90 @@ try
 	// *
 	// ********************************
 	
-	$login = (isset($_REQUEST['login']) ? $_REQUEST['login'] : (isset($var['login']) ? $var['login'] : ''));
-	$password = (isset($_REQUEST['password']) ? $_REQUEST['password'] : (isset($var['password']) ? $var['password'] : ''));
-	if (SmrSession::$account_id == 0) {
-	
-		// does the user submitted empty fields
-		if (empty($login) || empty($password)) {
-	
-			$msg = 'Please enter login and password!';
-			header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-	
-		$db->query('SELECT account_id,old_account_id FROM account ' .
-				   'WHERE login = '.$db->escapeString($login).' AND ' .
-						 'password = '.$db->escapeString(md5($password)).' LIMIT 1');
-		if ($db->nextRecord())
+	if (SmrSession::$account_id == 0)
+	{
+		if(isset($_REQUEST['redirect']))
 		{
-			// register session
-			SmrSession::$account_id = $db->getField('account_id');
-			SmrSession::$old_account_id = $db->getField('old_account_id');
-		}
-		else if(USE_COMPATIBILITY)
-		{
-			if(!SmrAccount::upgradeAccount($login,$password))
+			if(isset($_REQUEST['session']))
 			{
-				$msg = 'Password is incorrect!';
+				$_REQUEST['loginType'] = $_REQUEST['redirect'];
+			}
+			else
+			{
+				require_once(LIB.'Login/SocialLogin.class.inc');
+				if($_REQUEST['redirect']=='Facebook')
+				{
+					header('Location: '.SocialLogin::getFacebookLoginUrl());
+					exit;
+				}
+			}
+		}
+		if(isset($_REQUEST['loginType']))
+		{
+			require_once(LIB.'Login/SocialLogin.class.inc');
+			if(!SocialLogin::checkLogin())
+			{
+				$msg = 'Error validating login.';
 				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+				exit;
+			}
+			$loginType = SocialLogin::getLoginType();
+			$authKey = SocialLogin::getUserID();
+			$db->query('SELECT account_id,old_account_id FROM account JOIN account_auth USING(account_id)' .
+					   'WHERE login_type = '.$db->escapeString($loginType).' AND ' .
+							 'auth_key = '.$db->escapeString($authKey).' LIMIT 1');
+			if ($db->nextRecord())
+			{
+				// register session
+				SmrSession::$account_id = $db->getField('account_id');
+				SmrSession::$old_account_id = $db->getField('old_account_id');
+			}
+			else
+			{
+				session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
+				$_SESSION['loginType'] = $loginType;
+				$_SESSION['authKey'] = $authKey;
+				$template->display('socialRegister.inc');
 				exit;
 			}
 		}
 		else
 		{
-			$msg = 'Password is incorrect!';
-			header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
+			$login = (isset($_REQUEST['login']) ? $_REQUEST['login'] : (isset($var['login']) ? $var['login'] : ''));
+			$password = (isset($_REQUEST['password']) ? $_REQUEST['password'] : (isset($var['password']) ? $var['password'] : ''));
+			
+			// has the user submitted empty fields
+			if (empty($login) || empty($password))
+			{
+				$msg = 'Please enter login and password!';
+				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+				exit;
+			}
+		
+			$db->query('SELECT account_id,old_account_id FROM account ' .
+					   'WHERE login = '.$db->escapeString($login).' AND ' .
+							 'password = '.$db->escapeString(md5($password)).' LIMIT 1');
+			if ($db->nextRecord())
+			{
+				// register session
+				SmrSession::$account_id = $db->getField('account_id');
+				SmrSession::$old_account_id = $db->getField('old_account_id');
+			}
+			else if(USE_COMPATIBILITY)
+			{
+				if(!SmrAccount::upgradeAccount($login,$password))
+				{
+					$msg = 'Password is incorrect!';
+					header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+					exit;
+				}
+			}
+			else
+			{
+				$msg = 'Password is incorrect!';
+				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+				exit;
+			}
 		}
 	}
 	
@@ -70,6 +119,20 @@ try
 	
 	// get this user from db
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+
+	if($_REQUEST['social'])
+	{
+		session_start();
+		$socialLogin = isset($_REQUEST['social']);
+		if($socialLogin && (!$_SESSION['loginType'] || !$_SESSION['authKey']))
+		{
+			$msg = 'Tried a social login link without having a social session.';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+		$account->addAuthMethod($_SESSION['loginType'],$_SESSION['authKey']);
+		session_destroy();
+	}
 	
 	$db->query('SELECT * FROM game_disable');
 	if ($db->nextRecord())
@@ -140,11 +203,12 @@ try
 	// log?
 	$account->log(1, 'logged in from '.$curr_ip);
 	//now we set a cookie that we can use for mult checking
-	if (!isset($_COOKIE['Session_Info'])) {
-	
+	if (!isset($_COOKIE['Session_Info']))
+	{
 		//we get their info from db if they have any
 		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->account_id);
-		if ($db->nextRecord()) {
+		if ($db->nextRecord())
+		{
 			//convert to array
 			$old = explode('-', $db->getField('array'));
 			//get rid of old version cookie since it isn't optimal.
@@ -162,7 +226,9 @@ try
 		//now we update their cookie with the newest info
 		setcookie('Session_Info', $new, TIME + 157680000);
 	
-	} else {
+	}
+	else
+	{
 	
 		//we have a cookie so we see if we add to it etc
 		//break cookie into array

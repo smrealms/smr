@@ -21,6 +21,15 @@ try
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
+	session_start();
+	$socialLogin = isset($_REQUEST['social']);
+	if($socialLogin && (!$_SESSION['loginType'] || !$_SESSION['authKey']))
+	{
+		$msg = 'Tried a social registration without having a social session.';
+		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
+	}
+	
 	
 	// db object
 	$db = new SmrMySqlDatabase();
@@ -53,76 +62,12 @@ try
 		exit;
 	}
 	
-	if (empty($password)) {
+	if (!$socialLogin && empty($password)) {
 	
 		$msg = 'Password is missing!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	
-	$email = trim($_REQUEST['email']);
-	if (empty($email)) {
-	
-		$msg = 'Email address is missing!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
-	}
-	
-	if (strstr($email, ' ')) {
-	
-		$msg = 'The email is invalid! It cannot contain any spaces.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
-	
-	}
-	
-	$first_name = $_REQUEST['first_name'];
-	if (empty($first_name)) {
-	
-		$msg = 'First name is missing!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
-	}
-	
-	$last_name = $_REQUEST['last_name'];
-	if (empty($last_name)) {
-	
-		$msg = 'Last name is missing!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
-	}
-	
-	$address = $_REQUEST['address'];
-	//if (empty($address)) {
-	//
-	//	$msg = 'Address is missing!';
-	//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	//	exit;
-	//}
-	
-	$city = $_REQUEST['city'];
-	//if (empty($city)) {
-	//
-	//	$msg = 'City is missing!';
-	//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	//	exit;
-	//}
-	
-	$postal_code = $_REQUEST['postal_code'];
-	//if (empty($postal_code)) {
-	//
-	//	$msg = 'Postal code is missing!';
-	//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	//	exit;
-	//}
-	
-	$country_code = $_REQUEST['country_code'];
-	//if (empty($country_code)) {
-	//
-	//	$msg = 'Please choose a country!';
-	//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	//	exit;
-	//}
 	
 	$pass_verify = $_REQUEST['pass_verify'];
 	if ($password != $pass_verify) {
@@ -132,29 +77,95 @@ try
 		exit;
 	}
 	
-	$email_verify = $_REQUEST['email_verify'];
-	if ($email != $email_verify) {
+	if(!$socialLogin)
+	{
+		$email = trim($_REQUEST['email']);
+		if (empty($email)) {
+		
+			$msg = 'Email address is missing!';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+		
+		if (strstr($email, ' ')) {
+		
+			$msg = 'The email is invalid! It cannot contain any spaces.';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		
+		}
 	
-		$msg = 'The eMail addresses you entered do not match.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		$email_verify = $_REQUEST['email_verify'];
+		if ($email != $email_verify) {
+		
+			$msg = 'The eMail addresses you entered do not match.';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+	
+		// get user and host for the provided address
+		list($user, $host) = explode('@', $email);
+		
+		// check if the host got a MX or at least an A entry
+		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
+		
+			$msg = 'This is not a valid email address! The domain '.$host.' does not exist.';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+		
+		$first_name = $_REQUEST['first_name'];
+		if (empty($first_name)) {
+		
+			$msg = 'First name is missing!';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+		
+		$last_name = $_REQUEST['last_name'];
+		if (empty($last_name)) {
+		
+			$msg = 'Last name is missing!';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+		
+		$address = $_REQUEST['address'];
+		//if (empty($address)) {
+		//
+		//	$msg = 'Address is missing!';
+		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		//	exit;
+		//}
+		
+		$city = $_REQUEST['city'];
+		//if (empty($city)) {
+		//
+		//	$msg = 'City is missing!';
+		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		//	exit;
+		//}
+		
+		$postal_code = $_REQUEST['postal_code'];
+		//if (empty($postal_code)) {
+		//
+		//	$msg = 'Postal code is missing!';
+		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		//	exit;
+		//}
+		
+		$country_code = $_REQUEST['country_code'];
+		//if (empty($country_code)) {
+		//
+		//	$msg = 'Please choose a country!';
+		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		//	exit;
+		//}
 	}
 	
 	if ($login == $password)
 	{
-	
 		$msg = 'Your chosen password is invalid!';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
-	}
-	
-	// get user and host for the provided address
-	list($user, $host) = explode('@', $email);
-	
-	// check if the host got a MX or at least an A entry
-	if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-	
-		$msg = 'This is not a valid email address! The domain '.$host.' does not exist.';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
@@ -167,12 +178,15 @@ try
 		exit;
 	}
 	
-	$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
-	if ($db->getNumRows() > 0) {
-	
-		$msg = 'This eMail address is already registered.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+	if(!$socialLogin)
+	{
+		$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
+		if ($db->getNumRows() > 0) {
+		
+			$msg = 'This eMail address is already registered.';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
 	}
 	
 	$referral = !empty($_REQUEST['referral_id']) ? $_REQUEST['referral_id'] : 0;
@@ -210,6 +224,13 @@ try
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	}
 	$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
+	if($socialLogin)
+	{
+		$account->addAuthMethod($_SESSION['loginType'],$_SESSION['authKey']);
+		$account->validated = 'TRUE';
+		$account->update();
+		session_destroy();
+	}
 	
 	// register session
 	SmrSession::$account_id = $account->getAccountID();

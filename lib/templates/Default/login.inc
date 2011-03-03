@@ -168,6 +168,11 @@ if(isset($Message))
 				</table>
 			</form>
 		</td>
+		<td>
+			<a href="<?php echo $FacebookLogin; ?>">
+				<img src="images/fblogin.png">
+			</a>
+		</td>
 		<td width="470px"><?php
 		if(isset($LoginNews))
 			{ ?>
