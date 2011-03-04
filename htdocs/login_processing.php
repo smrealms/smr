@@ -26,22 +26,6 @@ try
 	
 	if (SmrSession::$account_id == 0)
 	{
-		if(isset($_REQUEST['redirect']))
-		{
-			if(isset($_REQUEST['session']))
-			{
-				$_REQUEST['loginType'] = $_REQUEST['redirect'];
-			}
-			else
-			{
-				require_once(LIB.'Login/SocialLogin.class.inc');
-				if($_REQUEST['redirect']=='Facebook')
-				{
-					header('Location: '.SocialLogin::getFacebookLoginUrl());
-					exit;
-				}
-			}
-		}
 		if(isset($_REQUEST['loginType']))
 		{
 			require_once(LIB.'Login/SocialLogin.class.inc');
