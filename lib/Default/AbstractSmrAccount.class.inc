@@ -1037,8 +1037,15 @@ abstract class AbstractSmrAccount
 			$days = 480;
 		else
 			$days = 0; //Forever/indefinite
-			
-		$expireTime = TIME + $days * 86400;
+		
+		if($days==0)
+		{
+			$expireTime = 0;
+		}
+		else
+		{
+			$expireTime = TIME + $days * 86400;
+		}
 		$this->banAccount($expireTime,$admin,$reasonID,$suspicion);
 	
 		return $days;
