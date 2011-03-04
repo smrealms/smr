@@ -115,7 +115,7 @@ function album_entry($album_id)
 	echo('<tr>');
 
 	$db->query('SELECT hof_name
-				FROM album NATURAL JOIN account
+				FROM album JOIN account USING(account_id)
 				WHERE hof_name < ' . $db->escapeString($nick) . ' AND
 					  approved = \'YES\'
 				ORDER BY hof_name DESC
