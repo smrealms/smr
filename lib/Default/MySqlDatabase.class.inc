@@ -65,6 +65,14 @@ abstract class MySqlDatabase implements Database
 		return (int)$this->dbRecord[$name];
 	}
 	
+	public function getObject($name,$compressed=false)
+	{
+		$object = $this->getField($name);
+		if($compressed===true)
+			$object = gzuncompress($object);
+		return unserialize($object);
+	}
+	
 	public function getRow()
 	{
 		return $this->dbRecord;
