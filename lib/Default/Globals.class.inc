@@ -289,7 +289,11 @@ class Globals
 	
 	public static function &getGameType($gameID)
 	{
-		return SmrGame::getGame($gameID)->getGameType();
+		if(self::isValidGame($gameID))
+		{
+			return SmrGame::getGame($gameID)->getGameType();
+		}
+		return 0;
 	}
 	
 	public static function &getGameName($gameID)

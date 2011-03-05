@@ -1,0 +1,1 @@
+ALTER TABLE  `game` CHANGE  `game_type`  `game_type` ENUM(  'Default',  'Classic',  'Classic 1.6',  '1.6.3',  'Semi Wars',  'Draft' ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  'Default';
