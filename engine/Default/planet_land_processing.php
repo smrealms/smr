@@ -1,7 +1,7 @@
 <?php
 
 // is account validated?
-if ($account->validated == 'FALSE')
+if (!$account->isValidated())
 	create_error('You are not validated so you can\'t land on a planet.');
 
 // do we have enough turns?

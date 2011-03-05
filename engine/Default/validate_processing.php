@@ -6,8 +6,7 @@ if (!empty($_REQUEST['validation_code'])) {
 	if ($account->validation_code != $_REQUEST['validation_code'])
 		create_error('The validation code you entered is incorrect.');
 
-	$account->validated = 'TRUE';
-	$account->update();
+	$account->setValidated(true);
 
 	// delete the notification (when send)
 	$db->query('DELETE FROM notification WHERE account_id = '.SmrSession::$account_id.' AND ' .

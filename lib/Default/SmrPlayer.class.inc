@@ -25,7 +25,6 @@ class SmrPlayer extends AbstractSmrPlayer
 //	var $sector_change;
 //	var $game_type;
 //	var $game_speed;
-	protected $validated;
 //	var $out_of_game;
 	protected $tickers;
 //    var $safe_exit;
@@ -230,12 +229,6 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->nameChanged					= $result['name_changed']=='TRUE';
 			$this->combatDronesKamikazeOnMines	= $result['combat_drones_kamikaze_on_mines']=='TRUE';
 //			$this->changedStats = $result['changed_stats'];
-
-
-			// is account validated?
-			$this->db->query('SELECT * FROM account WHERE account_id = '.$this->accountID);
-			if ($this->db->nextRecord())
-				$this->validated = $this->db->getField('validated')=='TRUE';
 			
 			$this->SQL = 'account_id = '.$this->accountID.' AND game_id = '.$this->gameID;
 		}
@@ -634,7 +627,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function updateTurns()
 	{
 		// is account validated?
-		if (!$this->isValidated()) return;
+		if (!$this->getAccount()->isValidated()) return;
 		$ship =& $this->getShip();
 		
 		// update turns?
@@ -1842,11 +1835,6 @@ class SmrPlayer extends AbstractSmrPlayer
 		return Council::isOnCouncil($this->getGameID(),$this->getRaceID(),$this->getAccountID());
 	}
 	
-	public function isValidated()
-	{
-		return $this->validated;
-	}
-	
 	public function setNewbieWarning($bool)
 	{
 		$this->newbieWarning=$bool;
@@ -1926,6 +1914,30 @@ class SmrPlayer extends AbstractSmrPlayer
 		// give him the message icon
 		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
 						'('.$gameID.', '.$receiverID.', '.$messageTypeID.')');
+		
+		switch ($messageTypeID)
+		{
+			case MSG_PLAYER:
+				$receiverAccount =& SmrAccount::getAccount($receiverID);
+				if($receiverAccount->isReceivingMessageNotifications($messageTypeID))
+				{
+					require_once(LIB.'phpMailer/class.phpmailer.php');
+					$senderPlayer =& SmrPlayer::getPlayer($senderID, $gameID);
+					$mail = new PHPMailer();
+					$mail->Subject	= 'Message Notification';
+					$mail->From		= 'notifications@smrealms.de';
+					$mail->FromName	= 'SMR Notifications';
+					$mail->Mailer	= 'smtp';
+					$bbifiedMessage = 'From: ' . $senderPlayer->getDisplayName() . ' Date: ' . date($receiverAccount->getShortDateFormat().' '.$receiverAccount->getShortTimeFormat(),TIME) . "<br/>\r\n<br/>\r\n" . bbifyMessage($message,true);
+					$mail->MsgHTML($bbifiedMessage);
+					$mail->AltBody = strip_tags($bbifiedMessage);
+					$mail->AddAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
+					$mail->Send();
+					$mail->SmtpClose();
+				}
+			break;
+		}
+		ob_flush();
 	}
 	
 	public function sendMessageToBox($boxTypeID, $message)

@@ -8,7 +8,7 @@
 // ********************************
 
 // is account validated?
-if ($account->validated == 'FALSE')
+if (!$account->isValidated())
 	create_error('You are not validated so you cannot use banks.');
 
 if(isset($_REQUEST['account_num']))

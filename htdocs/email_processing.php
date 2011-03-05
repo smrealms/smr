@@ -54,7 +54,7 @@ try
 	
 	$account->email = $_POST['email'];
 	$account->validation_code = substr(SmrSession::$session_id, 0, 10);
-	$account->validated = 'FALSE';
+	$account->setValidated(false);
 	$account->update();
 	
 	// remember when we sent validation code

@@ -20,7 +20,7 @@ abstract class AbstractSmrAccount
 	protected $password;
 	var $email;
 	var $first_name;
-	var $validated;
+	protected $validated;
 	var $validation_code;
 	var $last_login;
 	protected $hofName;
@@ -118,7 +118,7 @@ abstract class AbstractSmrAccount
 			$this->password			= $row['password'];
 			$this->email			= $row['email'];
 			$this->first_name		= $row['first_name'];
-			$this->validated		= $row['validated'];
+			$this->validated		= $this->db->getBoolean('validated');
 			
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
@@ -198,7 +198,7 @@ abstract class AbstractSmrAccount
 	{
 		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).', ' .
 			'validation_code = '.$this->db->escapeString($this->validation_code).', ' .
-			'validated = '.$this->db->escapeString($this->validated).', ' .
+			'validated = '.$this->db->escapeBoolean($this->validated).', ' .
 			'password = '.$this->db->escapeString($this->password).', ' .
 			'images = '.$this->db->escapeString($this->images).', ' .
 			'password_reset = '.$this->db->escapeString($this->passwordReset).', ' .
@@ -832,6 +832,20 @@ abstract class AbstractSmrAccount
 	public function getValidationCode()
 	{
 		return $this->validation_code;
+	}
+	
+	public function setValidated($bool)
+	{
+		if($this->validated == $bool)
+			return;
+		$this->validated=$bool;
+		$this->hasChanged=true;
+		$this->update();
+	}
+	
+	public function isValidated()
+	{
+		return $this->validated;
 	}
 	
 	protected function getPassword()
