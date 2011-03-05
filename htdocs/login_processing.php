@@ -29,14 +29,14 @@ try
 		if(isset($_REQUEST['loginType']))
 		{
 			require_once(LIB.'Login/SocialLogin.class.inc');
-			if(!SocialLogin::checkLogin())
+			if(!($socialLogin = new SocialLogin($_REQUEST['loginType'])))
 			{
 				$msg = 'Error validating login.';
 				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
 			}
-			$loginType = SocialLogin::getLoginType();
-			$authKey = SocialLogin::getUserID();
+			$loginType = $socialLogin->getLoginType();
+			$authKey = $socialLogin->getUserID();
 			$db->query('SELECT account_id,old_account_id FROM account JOIN account_auth USING(account_id)' .
 					   'WHERE login_type = '.$db->escapeString($loginType).' AND ' .
 							 'auth_key = '.$db->escapeString($authKey).' LIMIT 1');
@@ -49,8 +49,7 @@ try
 			else
 			{
 				session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
-				$_SESSION['loginType'] = $loginType;
-				$_SESSION['authKey'] = $authKey;
+				$_SESSION['socialLogin'] = $socialLogin;
 				$template->display('socialRegister.inc');
 				exit;
 			}
@@ -108,13 +107,13 @@ try
 	{
 		session_start();
 		$socialLogin = isset($_REQUEST['social']);
-		if($socialLogin && (!$_SESSION['loginType'] || !$_SESSION['authKey']))
+		if($socialLogin && (!$_SESSION['socialLogin']))
 		{
 			$msg = 'Tried a social login link without having a social session.';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
-		$account->addAuthMethod($_SESSION['loginType'],$_SESSION['authKey']);
+		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),$_SESSION['socialLogin']->getUserID());
 		session_destroy();
 	}
 	
