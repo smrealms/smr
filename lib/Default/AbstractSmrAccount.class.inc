@@ -38,6 +38,7 @@ abstract class AbstractSmrAccount
 	protected $score;
 	protected $cssLink;
 	protected $defaultCSSEnabled;
+	protected $messageNotifications;
 	protected $centerGalaxyMapOnPlayer;
 	protected $oldAccountIDs = array();
 	protected $maxRankAchieved;
@@ -136,6 +137,8 @@ abstract class AbstractSmrAccount
 			$this->defaultCSSEnabled	= $this->db->getBoolean('default_css_enabled');
 			$this->centerGalaxyMapOnPlayer	= $this->db->getBoolean('center_galaxy_map_on_player');
 			
+			$this->messageNotifications = $this->db->getObject('message_notifications');
+			
 			if(USE_COMPATIBILITY)
 			{
 				foreach(Globals::getCompatibilityDatabases('Game') as $databaseName => $databaseInfo)
@@ -206,7 +209,8 @@ abstract class AbstractSmrAccount
 			'mail_banned='.$this->db->escapeNumber($this->mailBanned).', ' .
 			'max_rank_achieved='.$this->db->escapeNumber($this->maxRankAchieved).', ' .
 			'default_css_enabled='.$this->db->escapeBoolean($this->defaultCSSEnabled).', ' .
-			'center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).
+			'center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).', ' .
+			'message_notifications='.$this->db->escapeObject($this->messageNotifications).
 			' WHERE account_id = '.$this->account_id.' LIMIT 1');
 		$this->hasChanged = false;
 	}
@@ -925,6 +929,21 @@ abstract class AbstractSmrAccount
 		if($this->defaultCSSEnabled == $bool)
 			return;
 		$this->defaultCSSEnabled=$bool;
+		$this->hasChanged=true;
+		$this->update();
+	}
+	
+	public function isReceivingMessageNotifications($messageTypeID)
+	{
+		return isset($this->messageNotifications[$messageTypeID])?$this->messageNotifications[$messageTypeID]:false;
+	}
+	
+	public function setReceivingMessageNotifications($messageTypeID,$bool)
+	{
+		$bool = (bool)$bool;
+		if($this->isReceivingMessageNotifications($messageTypeID) == $bool)
+			return;
+		$this->messageNotifications[$messageTypeID]=$bool;
 		$this->hasChanged=true;
 		$this->update();
 	}
