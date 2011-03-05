@@ -2,6 +2,7 @@
 require_once('SmrShip.class.inc');
 require_once('SmrForce.class.inc');
 require_once('SmrGame.class.inc');
+require_once('smr_alliance.inc');
 
 abstract class AbstractSmrPlayer
 {
