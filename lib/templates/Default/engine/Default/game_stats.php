@@ -10,7 +10,8 @@
 					<tr>
 						<td align="right">Name</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo Globals::getGameName($StatsGameID); ?></td></tr>
+						<td align="left"><?php echo Globals::getGameName($StatsGameID); ?></td>
+					</tr>
 					<tr>
 						<td align="right">Description</td>
 						<td>&nbsp;</td>
@@ -22,6 +23,11 @@
 						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameStartDate($StatsGameID)); ?></td>
 					</tr>
 					<tr>
+						<td align="right">Start Turns Date</td>
+						<td>&nbsp;</td>
+						<td align="left"><?php echo date(DATE_DATE_SHORT,SmrGame::getGame($StatsGameID)->getStartTurnsDate()); ?></td>
+					</tr>
+					<tr>
 						<td align="right">End Date</td>
 						<td>&nbsp;</td>
 						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameEndDate($StatsGameID)); ?></td>
@@ -29,11 +35,17 @@
 					<tr>
 						<td align="right">Current Players</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(count($CurrentPlayers)); ?></td></tr>
+						<td align="left"><?php echo number_format(count($CurrentPlayers)); ?></td>
+					</tr>
 					<tr>
 						<td align="right">Max Turns</td>
 						<td>&nbsp;</td>
 						<td align="left"><?php echo number_format(Globals::getGameMaxTurns($StatsGameID)); ?></td>
+					</tr>
+					<tr>
+						<td align="right">Start Turns</td>
+						<td>&nbsp;</td>
+						<td align="left"><?php echo number_format(SmrGame::getGame($StatsGameID)->getStartTurns()); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Max Players</td>

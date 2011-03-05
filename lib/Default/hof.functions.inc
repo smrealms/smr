@@ -40,7 +40,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 function displayHOFRow($rank,$accountID,$amount)
 {
 	global $account,$player,$var;
-	if(isset($var['game_id']) && Globals::getGameInfo($var['game_id'])!==false)
+	if(isset($var['game_id']) && Globals::isValidGame($var['game_id']))
 	{
 		try
 		{

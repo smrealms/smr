@@ -26,7 +26,7 @@ $db->query('SELECT * FROM player WHERE game_id = ' . $gameID . ' AND player_name
 if ($db->getNumRows() > 0)
 	create_error('The player name already exists.');
 
-if (Globals::getGameInfo($gameID)===false)
+if (!Globals::isValidGame($gameID))
 	create_error('Game not found!');
 
 // does it cost something to join that game?

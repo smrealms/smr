@@ -21,7 +21,7 @@ if ($account_id > 0)
 	$db->query('SELECT * FROM album WHERE account_id = '.$account_id.' AND Approved = \'YES\'');
 	if ($db->nextRecord())
 	{
-		$disabled = $db->getField('disabled') == 'TRUE';
+		$disabled = $db->getBoolean('disabled');
 		$location = stripslashes($db->getField('location'));
 		$email = stripslashes($db->getField('email'));
 		$website = stripslashes($db->getField('website'));

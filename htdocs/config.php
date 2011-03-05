@@ -126,6 +126,7 @@ define('MESSAGES_PER_PAGE',50);
  * Movement
  */
 define('DEFAULT_MAX_TURNS', 450);
+define('DEFAULT_START_TURNS', 200);
  
 define('MOVEMENT_WALK', 1);
 define('MOVEMENT_JUMP', 2);

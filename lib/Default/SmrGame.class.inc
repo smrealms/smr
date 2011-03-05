@@ -10,12 +10,19 @@ class SmrGame
 	protected $name;
 	protected $description;
 	protected $startDate;
+	protected $startTurnsDate;
 	protected $endDate;
 	protected $maxPlayers;
+	protected $maxTurns;
+	protected $startTurns;
 	protected $gameType;
 	protected $creditsNeeded;
 	protected $gameSpeed;
 	protected $enabled;
+	protected $ignoreStats;
+	protected $allianceMaxPlayers;
+	protected $allianceMaxVets;
+	protected $startingCredits;
 	
 	protected $hasChanged = false;
 	protected $isNew = false;
@@ -55,16 +62,23 @@ class SmrGame
 		$this->db->query('SELECT * FROM game WHERE game_id = '.$gameID.' LIMIT 1');
 		if($this->db->nextRecord())
 		{
-			$this->gameID		= (int)$this->db->getField('game_id');
-			$this->name			= $this->db->getField('game_name');
-			$this->description	= $this->db->getField('game_description');
-			$this->startDate	= (int)$this->db->getField('start_date');
-			$this->endDate		= (int)$this->db->getField('end_date');
-			$this->maxPlayers	= (int)$this->db->getField('max_players');
-			$this->gameType		= $this->db->getField('game_type');
-			$this->creditsNeeded= (int)$this->db->getField('credits_needed');
-			$this->gameSpeed	= (int)$this->db->getField('game_speed');
-			$this->enabled		= $this->db->getField('enabled')=='TRUE';
+			$this->gameID				= $this->db->getInt('game_id');
+			$this->name					= $this->db->getField('game_name');
+			$this->description			= $this->db->getField('game_description');
+			$this->startDate			= $this->db->getInt('start_date');
+			$this->startTurnsDate		= $this->db->getInt('start_turns_date');
+			$this->endDate				= $this->db->getInt('end_date');
+			$this->maxPlayers			= $this->db->getInt('max_players');
+			$this->maxTurns				= $this->db->getInt('max_turns');
+			$this->startTurns			= $this->db->getInt('start_turns');
+			$this->gameType				= $this->db->getField('game_type');
+			$this->creditsNeeded		= $this->db->getInt('credits_needed');
+			$this->gameSpeed			= $this->db->getReal('game_speed');
+			$this->enabled				= $this->db->getBoolean('enabled');
+			$this->ignoreStats			= $this->db->getBoolean('ignore_stats');
+			$this->allianceMaxPlayers	= $this->db->getInt('alliance_max_players');
+			$this->allianceMaxVets		= $this->db->getInt('alliance_max_vets');
+			$this->startingCredits		= $this->db->getInt('starting_credits');
 		}
 		else if($create===true)
 		{
@@ -85,30 +99,44 @@ class SmrGame
 			if($this->isNew==false)
 			{
 				$this->db->query('UPDATE game SET game_name = '.$this->db->escapeString($this->getName()).
-										' game_description = '.$this->db->escapeString($this->getDescription()).
-										' start_date = '.$this->getStartDate().
-										' end_date = '.$this->getEndDate().
-										' max_players = '.$this->getMaxPlayers().
-										' game_type = '.$this->db->escapeString($this->getGameType()).
-										' credits_needed = '.$this->getCreditsNeeded().
-										' game_speed = '.$this->getGameSpeed().
-										' enabled = '.$this->escapeBoolean($this->getEnabled()).
+										', game_description = '.$this->db->escapeString($this->getDescription()).
+										', start_date = '.$this->db->escapeNumber($this->getStartDate()).
+										', start_turns_date = '.$this->db->escapeNumber($this->getStartTurnsDate()).
+										', end_date = '.$this->db->escapeNumber($this->getEndDate()).
+										', max_players = '.$this->db->escapeNumber($this->getMaxPlayers()).
+										', max_turns = '.$this->db->escapeNumber($this->getMaxTurns()).
+										', start_turns = '.$this->db->escapeNumber($this->getStartTurns()).
+										', game_type = '.$this->db->escapeString($this->getGameType()).
+										', credits_needed = '.$this->db->escapeNumber($this->getCreditsNeeded()).
+										', game_speed = '.$this->db->escapeNumber($this->getGameSpeed()).
+										', enabled = '.$this->db->escapeBoolean($this->isEnabled()).
+										', ignore_stats = '.$this->db->escapeBoolean($this->isIgnoreStats()).
+										', alliance_max_players = '.$this->db->escapeNumber($this->getAllianceMaxPlayers()).
+										', alliance_max_vets = '.$this->db->escapeNumber($this->getAllianceMaxVets()).
+										', starting_credits = '.$this->db->escapeNumber($this->getStartingCredits()).
 								   ' WHERE game_id = '.$this->getGameID().' LIMIT 1');
 			}
 			else
 			{
-				$this->db->query('INSERT INTO game (game_id,game_name,game_description,start_date,end_date,max_players,game_type,credits_needed,game_speed,enabled)'.
+				$this->db->query('INSERT INTO game (game_id,game_name,game_description,start_date,start_turns_date,end_date,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)'.
 									'values'.
 									'('.$this->getGameID().
 										','.$this->db->escapeString($this->getName()).
 										','.$this->db->escapeString($this->getDescription()).
-										','.$this->getStartDate().
-										','.$this->getEndDate().
-										','.$this->getMaxPlayers().
+										','.$this->db->escapeNumber($this->getStartDate()).
+										','.$this->db->escapeNumber($this->getStartTurnsDate()).
+										','.$this->db->escapeNumber($this->getEndDate()).
+										','.$this->db->escapeNumber($this->getMaxPlayers()).
+										','.$this->db->escapeNumber($this->getMaxTurns()).
+										','.$this->db->escapeNumber($this->getStartTurns()).
 										','.$this->db->escapeString($this->getGameType()).
-										','.$this->getCreditsNeeded().
-										','.$this->getGameSpeed().
-										','.$this->escapeBoolean($this->getEnabled()). ')');
+										','.$this->db->escapeNumber($this->getCreditsNeeded()).
+										','.$this->db->escapeNumber($this->getGameSpeed()).
+										','.$this->db->escapeBoolean($this->isEnabled()).
+										','.$this->db->escapeBoolean($this->isIgnoreStats()).
+										','.$this->db->escapeNumber($this->getAllianceMaxPlayers()).
+										','.$this->db->escapeNumber($this->getAllianceMaxVets()).
+										','.$this->db->escapeNumber($this->getStartingCredits()). ')');
 			}
 		}
 	}
@@ -157,6 +185,19 @@ class SmrGame
 		$this->hasChanged=true;
 	}
 	
+	public function getStartTurnsDate()
+	{
+		return $this->startTurnsDate;
+	}
+	
+	public function setStartTurnsDate($startTurnsDate)
+	{
+		if($this->startTurnsDate==$startTurnsDate)
+			return;
+		$this->startTurnsDate=$startTurnsDate;
+		$this->hasChanged=true;
+	}
+	
 	public function getEndDate()
 	{
 		return $this->endDate;
@@ -180,6 +221,32 @@ class SmrGame
 		if($this->maxPlayers==$maxPlayers)
 			return;
 		$this->maxPlayers=$maxPlayers;
+		$this->hasChanged=true;
+	}
+	
+	public function getMaxTurns()
+	{
+		return $this->maxTurns;
+	}
+	
+	public function setMaxTurns($int)
+	{
+		if($this->maxTurns==$int)
+			return;
+		$this->maxTurns=$int;
+		$this->hasChanged=true;
+	}
+	
+	public function getStartTurns()
+	{
+		return $this->startTurns;
+	}
+	
+	public function setStartTurns($int)
+	{
+		if($this->startTurns==$int)
+			return;
+		$this->startTurns=$int;
 		$this->hasChanged=true;
 	}
 	
@@ -222,7 +289,7 @@ class SmrGame
 		$this->hasChanged=true;
 	}
 	
-	public function getEnabled()
+	public function isEnabled()
 	{
 		return $this->gameSpeed;
 	}
@@ -232,6 +299,58 @@ class SmrGame
 		if($this->enabled==$bool)
 			return;
 		$this->enabled=$bool;
+		$this->hasChanged=true;
+	}
+	
+	public function isIgnoreStats()
+	{
+		return $this->ignoreStats;
+	}
+	
+	public function setIgnoreStats($bool)
+	{
+		if($this->ignoreStats==$bool)
+			return;
+		$this->ignoreStats=$bool;
+		$this->hasChanged=true;
+	}
+	
+	public function getAllianceMaxPlayers()
+	{
+		return $this->allianceMaxPlayers;
+	}
+	
+	public function setAllianceMaxPlayers($int)
+	{
+		if($this->allianceMaxPlayers==$int)
+			return;
+		$this->allianceMaxPlayers=$int;
+		$this->hasChanged=true;
+	}
+	
+	public function getAllianceMaxVets()
+	{
+		return $this->allianceMaxVets;
+	}
+	
+	public function setAllianceMaxVets($int)
+	{
+		if($this->allianceMaxVets==$int)
+			return;
+		$this->allianceMaxVets=$int;
+		$this->hasChanged=true;
+	}
+	
+	public function getStartingCredits()
+	{
+		return $this->startingCredits;
+	}
+	
+	public function setStartingCredits($int)
+	{
+		if($this->startingCredits==$int)
+			return;
+		$this->startingCredits=$int;
 		$this->hasChanged=true;
 	}
 	

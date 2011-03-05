@@ -19,11 +19,15 @@ create_echo_form($link);
 	</tr>
 	<tr>
 		<td class="right">Game Speed</td>
-		<td class="left"><input type="text" size="6" name="game_speed" value="1.25"></td>
+		<td class="left"><input type="text" size="6" name="game_speed" value="1.5"></td>
 	</tr>
 	<tr>
 		<td class="right">Max Turns</td>
 		<td class="left"><input type="text" size="6" name="max_turns" value="<?php echo DEFAULT_MAX_TURNS; ?>"></td>
+	</tr>
+	<tr>
+		<td class="right">Starting Turns</td>
+		<td class="left"><input type="text" size="6" name="start_turns" value="<?php echo DEFAULT_START_TURNS; ?>"></td>
 	</tr>
 	<tr>
 		<td class="right">Max Players</td>
@@ -36,6 +40,10 @@ create_echo_form($link);
 	<tr>
 		<td class="right">Start Date (YYYY/MM/DD)</td>
 		<td class="left"><input type="text" size="32" name="game_start" value="<?php echo date(DATE_DATE_SHORT,TIME) ?>"></td>
+	</tr>
+	<tr>
+		<td class="right">Turns Start Date (YYYY/MM/DD) - Leave blank if unsure</td>
+		<td class="left"><input type="text" size="32" name="game_start_turns" value=""></td>
 	</tr>
 	<tr>
 		<td class="right">End Date (YYYY/MM/DD)</td>

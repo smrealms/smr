@@ -1,0 +1,1 @@
+ALTER TABLE  `game` ADD  `start_turns` INT UNSIGNED NOT NULL DEFAULT  '200' AFTER  `max_turns`;
