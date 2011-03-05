@@ -2,50 +2,64 @@
 require_once('socialConfig.specific.inc');
 class SocialLogin
 {
-	private static $loginType = null;
-	private static $userID = null;
+	private $loginType = null;
+	private $userID = null;
+	private $email = null;
+	private $firstName = null;
+	private $lastName = null;
 	private static $facebook=null;
+	
 	private static function &getFacebookObj()
 	{
-		if($facebook==null)
+		if(self::$facebook==null)
 		{
 			require_once('lib/facebook.php');
-			$facebook = new Facebook(array(
+			self::$facebook = new Facebook(array(
 				'appId'  => FACEBOOK_APP_ID,
 				'secret' => FACEBOOK_APP_SECRET,
 				'cookie' => true,
 			));
 		}
-		return $facebook;
+		return self::$facebook;
 	}
 	
 	public static function getFacebookLoginUrl()
 	{
-		return self::getFacebookObj()->getLoginUrl(array('fbconnect'=>null,'next'=>URL.'/login_processing.php?loginType=fb','cancel_url'=>URL.'/login_processing.php?loginType=fb'));
+		return self::getFacebookObj()->getLoginUrl(array('fbconnect'=>null,'next'=>URL.'/login_processing.php?loginType=Facebook','cancel_url'=>URL.'/login_processing.php?loginType=Facebook','req_perms'=>'email'));
 	}
 	
-	public static function checkLogin()
+	public function __construct($loginType)
 	{
-		if($_REQUEST['loginType']=='Facebook')
+	
+		if($loginType=='Facebook')
 		{
 			if(self::getFacebookObj()->getSession())
 			{
-				self::$loginType='Facebook';
-				self::$userID=self::getFacebookObj()->getUser();
+				$this->loginType=$loginType;
+				$this->userID=self::getFacebookObj()->getUser();
+				$userInfo = self::getFacebookObj()->api('me');
+				$this->email=$userInfo['email'];
+				$this->firstName=$userInfo['first_name'];
+				$this->lastName=$userInfo['last_name'];
 				return true;
 			}
-			return false;
 		}
+		return false;
 	}
 	
-	public static function getLoginType()
+	public function getLoginType()
 	{
-		return self::$loginType;
+		return $this->loginType;
 	}
 	
-	public static function getUserID()
+	public function getUserID()
 	{
-		return self::$userID;
+		return $this->userID;
+	}
+	
+	public function getEmail()
+	{
+		return $this->email;
 	}
 }
 

@@ -21,13 +21,17 @@ try
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	session_start();
-	$socialLogin = isset($_REQUEST['social']);
-	if($socialLogin && (!$_SESSION['loginType'] || !$_SESSION['authKey']))
+	$socialLogin = isset($_REQUEST['socialReg']);
+	if($socialLogin)
 	{
-		$msg = 'Tried a social registration without having a social session.';
-		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		exit;
+		require_once(LIB.'Login/SocialLogin.class.inc');
+		session_start();
+		if(!$_SESSION['socialLogin'])
+		{
+			$msg = 'Tried a social registration without having a social session.';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
 	}
 	
 	
@@ -80,8 +84,8 @@ try
 	if(!$socialLogin)
 	{
 		$email = trim($_REQUEST['email']);
-		if (empty($email)) {
-		
+		if (empty($email))
+		{
 			$msg = 'Email address is missing!';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
@@ -162,6 +166,10 @@ try
 		//	exit;
 		//}
 	}
+	else
+	{
+		$email = $_SESSION['socialLogin']->getEmail();
+	}
 	
 	if ($login == $password)
 	{
@@ -178,15 +186,13 @@ try
 		exit;
 	}
 	
-	if(!$socialLogin)
-	{
-		$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
-		if ($db->getNumRows() > 0) {
-		
-			$msg = 'This eMail address is already registered.';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
+	
+	$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
+	if ($db->getNumRows() > 0) {
+	
+		$msg = 'This email address is already registered.';
+		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
 	}
 	
 	$referral = !empty($_REQUEST['referral_id']) ? $_REQUEST['referral_id'] : 0;
@@ -226,9 +232,8 @@ try
 	$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
 	if($socialLogin)
 	{
-		$account->addAuthMethod($_SESSION['loginType'],$_SESSION['authKey']);
-		$account->validated = 'TRUE';
-		$account->update();
+		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),$_SESSION['socialLogin']->getUserID());
+		$account->setValidated(true);
 		session_destroy();
 	}
 	

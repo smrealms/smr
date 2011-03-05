@@ -49,7 +49,7 @@
 					<a href='http://smrcnn.smrealms.de/viewtopic.php?t=382' style='font-weight:bold;'>Click HERE</a> for more information.
 				</p>
 
-				<form action='login_create_processing.php?social=1' method='POST'>
+				<form action='login_create_processing.php?socialReg=1' method='POST'>
 					<div align='center' style='color:red;'>*** Any personal information is confidential and will not be sold to third parties. ***</div>
 
 					<table border='0' cellspacing='0' cellpadding='1'>
