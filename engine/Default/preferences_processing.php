@@ -37,7 +37,7 @@ else if ($action == 'Save and resend validation code')
 
 	$account->email = $email;
 	$account->validation_code = substr(SmrSession::$session_id, 0, 10);
-	$account->validated = 'FALSE';
+	$account->isValidated(false);
 	$account->update();
 
 	// remember when we sent validation code

@@ -9,7 +9,7 @@ require_once(get_file_loc('smr_alliance.inc'));
 // ********************************
 
 // is account validated?
-if ($account->validated != 'TRUE')
+if (!$account->isValidated())
 	create_error('You are not validated. You can\'t join an alliance yet.');
 
 // ********************************
