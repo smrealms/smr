@@ -1,11 +1,29 @@
 <table class="standard">
 	<tr>
-		<th width="150">Game Name</th>
+		<th>Game Name</th>
 		<th>Start Date</th>
+		<th>Start Turns Date</th>
 		<th>End Date</th>
+		<th>Max Turns</th>
+		<th>Start Turns</th>
 		<th>Max Players</th>
 		<th>Alliance Max Players</th>
 		<th>Alliance Max Vets</th>
+	</tr>
+	<tr>
+		<td width="40%"><?php echo $Game['GameName'] ?> (<?php echo $Game['ID']; ?>)</td>
+		<td><?php echo date(DATE_DATE_SHORT,$Game['StartDate']); ?></td>
+		<td><?php echo date(DATE_DATE_SHORT,$Game['StartTurnsDate']); ?></td>
+		<td><?php echo date(DATE_DATE_SHORT,$Game['EndDate']); ?></td>
+		<td><?php echo $Game['MaxTurns']; ?></td>
+		<td><?php echo $Game['StartTurns']; ?></td>
+		<td><?php echo $Game['GameMaxPlayers']; ?></td>
+		<td><?php echo $Game['AllianceMaxPlayers']; ?></td>
+		<td><?php echo $Game['AllianceMaxVets']; ?></td>
+	</tr>
+</table><br/>
+<table class="standard">
+	<tr>
 		<th>Type</th>
 		<th>Game Speed</th>
 		<th>Credits Required</th>
@@ -13,12 +31,6 @@
 		<th>Starting Credits</th>
 	</tr>
 	<tr>
-		<td width="40%"><?php echo $Game['GameName'] ?> (<?php echo $Game['ID']; ?>)</td>
-		<td><?php echo date(DATE_DATE_SHORT,$Game['StartDate']); ?></td>
-		<td><?php echo date(DATE_DATE_SHORT,$Game['EndDate']); ?></td>
-		<td><?php echo $Game['GameMaxPlayers']; ?></td>
-		<td><?php echo $Game['AllianceMaxPlayers']; ?></td>
-		<td><?php echo $Game['AllianceMaxVets']; ?></td>
 		<td><?php echo $Game['GameType']; ?></td>
 		<td><?php echo $Game['Speed']; ?></td>
 		<td><?php echo $Game['GameCreditsRequired']; ?></td>

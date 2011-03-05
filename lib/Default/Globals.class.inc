@@ -1,6 +1,7 @@
 <?php
 require_once('SmrSession.class.inc');
 require_once('SmrMySqlDatabase.class.inc');
+require_once('SmrGame.class.inc');
 class Globals
 {
 	protected static $HIDDEN_PLAYERS = null;
@@ -222,138 +223,123 @@ class Globals
 		return $hardware[$hardwareTypeID]['Cost'];
 	}
 	
+	public static function isValidGame($gameID)
+	{
+		return self::getGameInfo($gameID)!==false;
+	}
+	
 	public static function &getGameInfo($gameID = false)
 	{
 		if($gameID===false)
 		{
 			self::initialiseDatabase();
-			self::$db->query('SELECT * FROM game');
+			self::$db->query('SELECT game_id FROM game');
 			while(self::$db->nextRecord())
 			{
-				self::$GAMES[(int)self::$db->getField('game_id')] = array(
-											'ID' => (int)self::$db->getField('game_id'),
-											'Speed' => (float)self::$db->getField('game_speed'),
-											'GameType' => (string)self::$db->getField('game_type'),
-											'GameName' => (string)self::$db->getField('game_name'),
-											'GameDescription' => (string)self::$db->getField('game_description'),
-											'StartDate' => (string)self::$db->getField('start_date'),
-											'EndDate' => (string)self::$db->getField('end_date'),
-											'GameMaxPlayers' => (int)self::$db->getField('max_players'),
-											'GameCreditsRequired' => (int)self::$db->getField('credits_needed'),
-											'AllianceMaxPlayers' => (int)self::$db->getField('alliance_max_players'),
-											'AllianceMaxVets' => (int)self::$db->getField('alliance_max_vets'),
-											'IgnoreStats' => self::$db->getBoolean('ignore_stats'),
-											'StartingCredits' => (int)self::$db->getField('starting_credits')
-											);
+				$allGames[self::$db->getInt('game_id')] = self::getGameInfo(self::$db->getInt('game_id'));
 			}
-			return self::$GAMES;
+			return $allGames;
 		}
-		if(!isset(self::$GAMES[$gameID]))
+		try
 		{
-			self::initialiseDatabase();
 			$gameID = (int)$gameID;
-			self::$db->query('SELECT * FROM game WHERE game_id = '.$gameID.' LIMIT 1');
-			if(self::$db->nextRecord())
+			$game =& SmrGame::getGame($gameID);
+			$gameInfo = array(
+					'ID' => $game->getGameID(),
+					'Speed' => $game->getGameSpeed(),
+					'GameType' => $game->getGameType(),
+					'GameName' => $game->getName(),
+					'GameDescription' => $game->getDescription(),
+					'StartDate' => $game->getStartDate(),
+					'StartTurnsDate' => $game->getStartTurnsDate(),
+					'EndDate' => $game->getEndDate(),
+					'MaxTurns' => $game->getMaxTurns(),
+					'StartTurns' => $game->getStartTurns(),
+					'GameMaxPlayers' => $game->getMaxPlayers(),
+					'GameCreditsRequired' => $game->getCreditsNeeded(),
+					'AllianceMaxPlayers' => $game->getAllianceMaxPlayers(),
+					'AllianceMaxVets' => $game->getAllianceMaxVets(),
+					'IgnoreStats' => $game->isIgnoreStats(),
+					'StartingCredits' => $game->getStartingCredits()
+					);
+		}
+		catch (Exception $e)
+		{
+			if(stripos($e->getMessage(),'No such game')!==false)
 			{
-				self::$GAMES[$gameID] = array(
-											'ID' => (int)self::$db->getField('game_id'),
-											'Speed' => (float)self::$db->getField('game_speed'),
-											'GameType' => (string)self::$db->getField('game_type'),
-											'GameName' => (string)self::$db->getField('game_name'),
-											'GameDescription' => (string)self::$db->getField('game_description'),
-											'StartDate' => (string)self::$db->getField('start_date'),
-											'EndDate' => (string)self::$db->getField('end_date'),
-											'MaxTurns' => (int)self::$db->getField('max_turns'),
-											'GameMaxPlayers' => (int)self::$db->getField('max_players'),
-											'GameCreditsRequired' => (int)self::$db->getField('credits_needed'),
-											'AllianceMaxPlayers' => (int)self::$db->getField('alliance_max_players'),
-											'AllianceMaxVets' => (int)self::$db->getField('alliance_max_vets'),
-											'IgnoreStats' => self::$db->getBoolean('ignore_stats'),
-											'StartingCredits' => (int)self::$db->getField('starting_credits')
-											);
+				$gameInfo = false;
 			}
 			else
-				self::$GAMES[$gameID] = false;
+			{
+				throw $e;
+			}
 		}
-		return self::$GAMES[$gameID];
+		return $gameInfo;
 	}
 	
 	public static function getGameDescription($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['GameDescription'];
+		return SmrGame::getGame($gameID)->getDescription();
 	}
 	
 	public static function &getGameSpeed($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['Speed'];
+		return SmrGame::getGame($gameID)->getGameSpeed();
 	}
 	
 	public static function &getGameType($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['GameType'];
+		return SmrGame::getGame($gameID)->getGameType();
 	}
 	
 	public static function &getGameName($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['GameName'];
+		return SmrGame::getGame($gameID)->getName();
 	}
 	
 	public static function &getGameStartDate($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['StartDate'];
+		return SmrGame::getGame($gameID)->getStartDate();
 	}
 	
 	public static function &getGameEndDate($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['EndDate'];
+		return SmrGame::getGame($gameID)->getEndDate();
 	}
 	
 	public static function &getGameMaxTurns($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['MaxTurns'];
+		return SmrGame::getGame($gameID)->getMaxTurns();
 	}
 	
 	public static function &getGameMaxPlayers($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['GameMaxPlayers'];
+		return SmrGame::getGame($gameID)->getMaxPlayers();
 	}
 	
 	public static function &getGameCreditsRequired($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['GameCreditsRequired'];
+		return SmrGame::getGame($gameID)->getCreditsNeeded();
 	}
 	
 	public static function &getGameIgnoreStats($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['IgnoreStats'];
+		return SmrGame::getGame($gameID)->isIgnoreStats();
 	}
 	
 	public static function &getAllianceMaxPlayers($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['AllianceMaxPlayers'];
+		return SmrGame::getGame($gameID)->getAllianceMaxPlayers();
 	}
 	
 	public static function &getAllianceMaxVets($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['AllianceMaxVets'];
+		return SmrGame::getGame($gameID)->getAllianceMaxVets();
 	}
 	
 	public static function &getStartingCredits($gameID)
 	{
-		$gameInfo =& self::getGameInfo($gameID);
-		return $gameInfo['StartingCredits'];
+		return SmrGame::getGame($gameID)->getStartingCredits();
 	}
 	
 	public static function isBetaOpen()

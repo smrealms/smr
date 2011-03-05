@@ -1,0 +1,1 @@
+ALTER TABLE  `player` CHANGE  `turns`  `turns` INT( 10 ) UNSIGNED NOT NULL DEFAULT  '0';

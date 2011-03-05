@@ -190,7 +190,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->lastSectorID					= (int) $result['last_sector_id'];
 			$this->turns						= (int) $result['turns'];
 			$this->originalMaintenance			= $this->turns;
-			$this->lastTurnUpdate		= (int) $result['last_turn_update'];
+			$this->lastTurnUpdate				= (int) $result['last_turn_update'];
 			$this->newbieTurns					= (int) $result['newbie_turns'];
 			$this->lastShipMod					= (int) $result['last_ship_mod'];
 			$this->lastNewsUpdate				= (int) $result['last_news_update'];
@@ -640,7 +640,16 @@ class SmrPlayer extends AbstractSmrPlayer
 		if ($extraTurns > 0)
 		{
 			// recalc the time to avoid errors
-			$this->setLastTurnUpdate($this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed()));
+			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed());
+		
+			$startTurnsDate = $this->getGame()->getStartTurnsDate();
+			if($startTurnsDate <= $newLastTurnUpdate && $startTurnsDate > $this->getLastTurnUpdate())
+			{
+				$extraTurns += $this->getGame()->getStartTurns();
+			}
+			
+			$this->setLastTurnUpdate($newLastTurnUpdate);
+			
 			
 			$this->giveTurns($extraTurns);	
 		}

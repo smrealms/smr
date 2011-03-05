@@ -1,6 +1,7 @@
 <?php
 require_once('SmrShip.class.inc');
 require_once('SmrForce.class.inc');
+require_once('SmrGame.class.inc');
 
 abstract class AbstractSmrPlayer
 {
@@ -86,6 +87,11 @@ abstract class AbstractSmrPlayer
 	public function getGameID()
 	{
 		return $this->gameID;
+	}
+	
+	public function getGame()
+	{
+		return SmrGame::getGame($this->gameID);
 	}
 	
 	public function getNewbieTurns()

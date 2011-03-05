@@ -56,7 +56,7 @@ if ($db->getNumRows())
 			$offended .= $receiver;
 		$PHP_OUTPUT.=create_link($container, $offended);
 		$PHP_OUTPUT.=('</td><td>');
-		if (Globals::getGameInfo($gameID)===false) $PHP_OUTPUT.=('Game no longer exists');
+		if (!Globals::isValidGame($gameID)) $PHP_OUTPUT.=('Game no longer exists');
 		else $PHP_OUTPUT.=Globals::getGameName($gameID);
 		$PHP_OUTPUT.=('</td></tr><tr><td colspan="2">');
 		$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('sent_time')));

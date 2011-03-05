@@ -51,7 +51,7 @@ else
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td><input type="checkbox" name="message_id[]" value="'.$db->getField('message_id').'"></td>');
 			$senderPlayer = false;
-			if($gameID!==false && Globals::getGameInfo($gameID)!==false)
+			if($gameID!==false && Globals::isValidGame($gameID))
 				$senderPlayer =& SmrPlayer::getPlayer($db->getField('sender_id'), $db->getField('game_id'));
 			$sender_acc =& SmrAccount::getAccount($db->getField('sender_id'));
 			$container = array();
@@ -70,7 +70,7 @@ else
 				$PHP_OUTPUT.=$sender;
 			$PHP_OUTPUT.='</td>';
 			$PHP_OUTPUT.='<td>';
-			if ($gameID===false || Globals::getGameInfo($gameID)===false) $PHP_OUTPUT.=('Game no longer exists');
+			if ($gameID===false || !Globals::isValidGame($gameID)) $PHP_OUTPUT.=('Game no longer exists');
 			else $PHP_OUTPUT.=Globals::getGameName($gameID);
 			$PHP_OUTPUT.=('</td></tr><tr><td colspan="3">');
 			$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('send_time')));

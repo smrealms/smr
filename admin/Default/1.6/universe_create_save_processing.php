@@ -11,6 +11,8 @@ if ($submit=='Create Game')
 		create_error('Game speed must be a number.');
 	if(!is_numeric($_REQUEST['max_turns']))
 		create_error('Max turns must be a number.');
+	if(!is_numeric($_REQUEST['start_turns']))
+		create_error('Start turns must be a number.');
 	if(!is_numeric($_REQUEST['max_players']))
 		create_error('Max players must be a number.');
 	if(!is_numeric($_REQUEST['alliance_max_players']))
@@ -20,7 +22,7 @@ if ($submit=='Create Game')
 	if(!is_numeric($_REQUEST['starting_credits']))
 		create_error('Starting credits must be a number.');
 	//first create the game
-	$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_POST['game_name']).' LIMIT 1');
+	$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_REQUEST['game_name']).' LIMIT 1');
 	if($db->nextRecord())
 		create_error('That game name is already taken.');
 	$db->query('SELECT game_id FROM game ORDER BY game_id DESC LIMIT 1');
@@ -28,11 +30,14 @@ if ($submit=='Create Game')
 		$newID = $db->getField('game_id')+1;
 	else
 		$newID = 1;
-	list($day,$month,$year) = explode("/",$_POST['game_start']);
+	list($day,$month,$year) = explode("/",$_REQUEST['game_start']);
 	$start = mktime(0,0,0,$month,$day,$year);
-	list($day,$month,$year) = explode("/",$_POST['game_end']);
+	$gameStartTurns = empty($_REQUEST['game_start_turns']) ? $_REQUEST['game_start'] : $_REQUEST['game_start_turns'];
+	list($day,$month,$year) = explode("/",$gameStartTurns);
+	$gameStartTurns = mktime(0,0,0,$month,$day,$year);
+	list($day,$month,$year) = explode("/",$_REQUEST['game_end']);
 	$end = mktime(0,0,0,$month,$day,$year);
-	$db->query('INSERT INTO game (game_id, game_name, game_description, game_type, max_turns, max_players, alliance_max_players, alliance_max_vets, start_date, end_date,game_speed,ignore_stats,starting_credits) VALUES (' . $db->escapeNumber($newID) . ', ' . $db->escapeString($_POST['game_name']) . ', ' . $db->escapeString($_POST['desc']) . ', ' . $db->escapeString($_POST['game_type']) . ', ' . $db->escapeNumber($_POST['max_turns']) . ', ' . $db->escapeNumber($_POST['max_players']) . ', ' . $db->escapeNumber($_POST['alliance_max_players']) . ', ' . $db->escapeNumber($_POST['alliance_max_vets']) . ', ' . $db->escapeNumber($start) . ', ' . $db->escapeNumber($end) . ','.$db->escapeNumber($_REQUEST['game_speed']) . ','.$db->escapeBoolean($_REQUEST['ignore_stats']=='Yes').','.$db->escapeNumber($_REQUEST['starting_credits']).')');
+	$db->query('INSERT INTO game (game_id, game_name, game_description, game_type, max_turns, start_turns, max_players, alliance_max_players, alliance_max_vets, start_date, start_turns_date, end_date,game_speed,ignore_stats,starting_credits) VALUES (' . $db->escapeNumber($newID) . ', ' . $db->escapeString($_REQUEST['game_name']) . ', ' . $db->escapeString($_REQUEST['desc']) . ', ' . $db->escapeString($_REQUEST['game_type']) . ', ' . $db->escapeNumber($_REQUEST['max_turns']) . ', ' . $db->escapeNumber($_REQUEST['start_turns']) . ', ' . $db->escapeNumber($_REQUEST['max_players']) . ', ' . $db->escapeNumber($_REQUEST['alliance_max_players']) . ', ' . $db->escapeNumber($_REQUEST['alliance_max_vets']) . ', ' . $db->escapeNumber($start) . ', ' . $db->escapeNumber($gameStartTurns) . ', ' . $db->escapeNumber($end) . ','.$db->escapeNumber($_REQUEST['game_speed']) . ','.$db->escapeBoolean($_REQUEST['ignore_stats']=='Yes').','.$db->escapeNumber($_REQUEST['starting_credits']).')');
 	$var['game_id']=$newID;
 	
 	//insert race relations
