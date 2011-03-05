@@ -105,6 +105,7 @@ try
 
 	if($_REQUEST['social'])
 	{
+		require_once(LIB.'Login/SocialLogin.class.inc');
 		session_start();
 		$socialLogin = isset($_REQUEST['social']);
 		if($socialLogin && (!$_SESSION['socialLogin']))
