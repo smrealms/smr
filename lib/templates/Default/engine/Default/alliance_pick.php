@@ -3,6 +3,7 @@ if(count($PickPlayers)>0)
 { ?>
 	<table class="standard">
 		<tr>
+			<th></th>
 			<th>Player Name</th>
 			<th>Race Name</th>
 			<th>HoF Name</th>

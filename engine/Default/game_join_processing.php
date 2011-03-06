@@ -98,7 +98,7 @@ else
 	$amount_armour = 50;
 }
 
-$last_turn_update = Globals::getGameStartDate($gameID);
+$last_turn_update = SmrGame::getGame($gameID)->getStartTurns();
 
 //// newbie leaders need to put into there alliances
 if (SmrSession::$account_id == ACCOUNT_ID_NHL)
