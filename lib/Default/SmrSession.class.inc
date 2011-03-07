@@ -5,6 +5,44 @@ if(!defined('USING_AJAX'))
 class SmrSession
 {
 	const TIME_BEFORE_EXPIRY = 3600;
+	private static $URL_DEFAULT_REMAINING_PAGE_LOADS = array(
+			'alliance_broadcast.php' => 50,
+			'alliance_forces.php' => 50,
+			'alliance_list.php' => 50,
+			'alliance_message.php' => 50,
+			'alliance_message_view.php' => 50,
+			'alliance_mod.php' => 50,
+			'alliance_option.php' => 50,
+			'alliance_pick.php' => 50,
+			'alliance_pick_processing.php' => 50,
+			'alliance_planets.php' => 50,
+			'alliance_roster.php' => 50,
+			'beta_functions.php' => 50,
+			'council_list.php' => 50,
+			'course_plot.php' => 50,
+			'current_sector.php' => 50,
+			'hall_of_fame_player_new.php' => 50,
+			'hall_of_fame_player_detail.php' => 50,
+			'map_local.php' => 50,
+			'message_view.php' => 50,
+			'news_read_advanced.php' => 50,
+			'planet_construction.php' => 50,
+			'planet_defense.php' => 50,
+			'planet_financial.php' => 50,
+			'planet_main.php' => 50,
+			'planet_ownership.php' => 50,
+			'planet_stockpile.php' => 50,
+			'rankings_view.php' => 50,
+			'trader_bounties.php' => 50,
+			'trader_planet.php' => 50,
+			'trader_relations.php' => 50,
+			'trader_status.php' => 50,
+			//Processing pages
+			'alliance_message_add_processing.php' => 50,
+			'alliance_message_delete_processing.php' => 50,
+			'toggle_processing.php' => 50
+		);
+	
 	protected static $db;
 
 	public static $session_id;
@@ -165,7 +203,7 @@ class SmrSession
 			unset(self::$var[$sn]['CommonID']);
 		}
 		
-		self::$var[$sn]['RemainingPageLoads'] = 1; // Allow refreshing
+		self::$var[$sn]['RemainingPageLoads'] += 1; // Allow refreshing
 		self::$var[$sn]['Expires'] = 0; // Allow refreshing forever
 		return self::$var[$sn];
 	}
@@ -176,9 +214,14 @@ class SmrSession
 			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		self::$SN = $sn;
 		if(!isset($container['Expires']))
+		{
 			$container['Expires'] = 0; // Lasts forever
+		}
 		if(!isset($container['RemainingPageLoads']))
-			$container['RemainingPageLoads'] = 1; // One refresh to destroy the link
+		{
+			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
+			$container['RemainingPageLoads'] += isset(self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
+		}
 
 		self::$var[$sn] = $container;
 		return $sn;

@@ -431,10 +431,7 @@ class Globals
 	
 	public static function getCurrentSectorHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'current_sector.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php','current_sector.php'));
 	}
 	
 	public static function getLocalMapHREF()
@@ -449,10 +446,7 @@ class Globals
 	
 	public static function getBetaFunctionsHREF() //BETA
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'beta_functions.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php','beta_functions.php'));
 	}
 	
 	public static function getWeaponReorderHREF($weaponOrderID, $direction)
@@ -522,59 +516,42 @@ class Globals
 	
 	public static function getAllianceListHREF()
 	{
-		$container = create_container('skeleton.php','alliance_list.php');
-		$container['order'] = 'alliance_name';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_list.php', array('order'=>'alliance_name')));
 	}
 	
 	public static function getAllianceNewsHREF($allianceID)
 	{
-		$container = create_container('skeleton.php','news_read_advanced.php');
-		$container['submit'] = 'Search For Alliance';
-		$container['AllianceID'] = $allianceID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php', array('alliance_id'=>$allianceID, 'submit' => 'Search For Alliance')));
 	}
 	
 	public static function getAllianceMotdHREF($allianceID)
 	{
-		$container = create_container('skeleton.php', 'alliance_mod.php');
-		$container['alliance_id'] = $allianceID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_mod.php', array('alliance_id'=>$allianceID)));
 	}
 	
 	public static function getAllianceMessageHREF($allianceID)
 	{
-		$container = create_container('skeleton.php', 'alliance_broadcast.php');
-		$container['alliance_id'] = $allianceID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_broadcast.php', array('alliance_id'=>$allianceID)));
 	}
 	
 	public static function getAllianceMessageBoardHREF($allianceID)
 	{
-		$container = create_container('skeleton.php', 'alliance_message.php');
-		$container['alliance_id'] = $allianceID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_message.php', array('alliance_id'=>$allianceID)));
 	}
 	
 	public static function getAlliancePlanetsHREF($allianceID)
 	{
-		$container = create_container('skeleton.php', 'alliance_planets.php');
-		$container['alliance_id'] = $allianceID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_planets.php', array('alliance_id'=>$allianceID)));
 	}
 	
 	public static function getAllianceForcesHREF($allianceID)
 	{
-		$container = create_container('skeleton.php', 'alliance_forces.php');
-		$container['alliance_id'] = $allianceID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_forces.php', array('alliance_id'=>$allianceID)));
 	}
 	
 	public static function getAllianceOptionsHREF($allianceID)
 	{
-		$container = create_container('skeleton.php', 'alliance_option.php');
-		$container['alliance_id'] = $allianceID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_option.php', array('alliance_id'=>$allianceID)));
 	}
 	
 	public static function getViewMessagesHREF()

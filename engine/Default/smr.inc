@@ -311,12 +311,15 @@ function transfer($what)
 
 }
 
-function create_container($file, $body = '', array $extra = array())
+function create_container($file, $body = '', array $extra = array(), $remainingPageLoads = null)
 {
 	$container = $extra;
 	$container['url'] = $file;
 	$container['body'] = $body;
-
+	if($remainingPageLoads)
+	{
+		$container['RemainingPageLoads'] = $remainingPageLoads;
+	}
 	return $container;
 }
 

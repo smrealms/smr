@@ -6,8 +6,7 @@ else $allEyesOnly = FALSE;
 
 if($_REQUEST['action'] == 'Preview Thread' || $_REQUEST['action'] == 'Preview Reply')
 {
-	$container = $var;
-	$container['url'] = 'skeleton.php';
+	$container = create_container('skeleton.php', '', $var);
 	if(!isset($var['thread_index']))
 		$container['body'] = 'alliance_message.php';
 	else
@@ -82,8 +81,7 @@ $db->query('REPLACE INTO player_read_thread ' .
 		   '(account_id, game_id, alliance_id, thread_id, time)' .
 		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.(TIME+2).')');
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 $container['alliance_id'] = $alliance_id;
 if (isset($var['alliance_eyes'])) $container['alliance_eyes'] = $var['alliance_eyes'];
 if(isset($var['thread_index']))

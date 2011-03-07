@@ -6,6 +6,9 @@
 //
 ////////////////////////////////////////////////////////////
 
+if($player->isLandedOnPlanet())
+	create_error('You are on a planet!');
+
 $template->assign('SpaceView',true);
 $template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
