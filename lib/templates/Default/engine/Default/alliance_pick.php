@@ -13,19 +13,19 @@ if(count($PickPlayers)>0)
 		{ ?>
 			<td>
 				<div>
-					<form id="PlayerPickForm" action="<?php echo $PickPlayer['PlayerPickHREF']; ?>" method="POST">
+					<form id="PlayerPickForm" action="<?php echo $PickPlayer['HREF']; ?>" method="POST">
 						<input type="submit" value="Pick"/>
 					</form>
 				</div>
 			</td>
 			<td>
-				<?php echo $PickPlayer['PickPlayer']->getPlayerName(); ?>
+				<?php echo $PickPlayer['Player']->getPlayerName(); ?>
 			</td>
 			<td>
-				<?php echo $PickPlayer['PickPlayer']->getRaceName(); ?>
+				<?php echo $PickPlayer['Player']->getRaceName(); ?>
 			</td>
 			<td>
-				<?php echo $PickPlayer['PickPlayer']->getAccount()->getHofName(); ?>
+				<?php echo $PickPlayer['Player']->getAccount()->getHofName(); ?>
 			</td><?php
 		} ?>
 		</tr>
