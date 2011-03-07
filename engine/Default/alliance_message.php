@@ -122,7 +122,7 @@ $template->assignByRef('Threads',$threads);
 
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 {
-	$container = create_container('alliance_message_add_processing.php',array(),50);
+	$container = create_container('alliance_message_add_processing.php');
 	$container['alliance_id'] = $alliance_id;
 	$template->assign('CreateNewThreadFormHref',SmrSession::get_new_href($container));
 }
