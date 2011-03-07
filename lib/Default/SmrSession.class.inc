@@ -219,8 +219,7 @@ class SmrSession
 		}
 		if(!isset($container['RemainingPageLoads']))
 		{
-			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
-			$container['RemainingPageLoads'] += isset(self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
+			$container['RemainingPageLoads'] += 1; // Allow refreshing
 		}
 
 		self::$var[$sn] = $container;
@@ -245,9 +244,14 @@ class SmrSession
 	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
 	{
 		if(!isset($container['Expires']))
+		{
 			$container['Expires'] = 0; // Lasts forever
+		}
 		if(!isset($container['RemainingPageLoads']))
-			$container['RemainingPageLoads'] = 1; // One refresh to destroy the link
+		{
+			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
+			$container['RemainingPageLoads'] = isset(self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
+		}
 			
 		if($sn === false)
 		{
