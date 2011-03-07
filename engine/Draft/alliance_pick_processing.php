@@ -1,5 +1,5 @@
 <?php
-if(!is_numeric($_REQUEST['picked_account_id']))
+if(!is_numeric($var['PickedAccountID']))
 {
 	create_error('You have to pick a player');
 }
@@ -18,7 +18,7 @@ if($player->getAlliance()->getNumMembers()>$db->getInt('min_members'))
 {
 	create_error('You have to wait for others to pick first.');
 }
-$pickedPlayer =& SmrPlayer::getPlayer($_REQUEST['picked_account_id'], $player->getGameID());
+$pickedPlayer =& SmrPlayer::getPlayer($var['PickedAccountID'], $player->getGameID());
 
 if($pickedPlayer->hasAlliance())
 {

@@ -13,9 +13,8 @@ if(count($PickPlayers)>0)
 		{ ?>
 			<td>
 				<div>
-					<form id="PlayerPickForm" action="<?php echo $PlayerPickHREF; ?>" method="POST">
-						<input type="submit" value="Pick"/>
-						<input name="picked_account_id" type="hidden" value="<?php echo $PickPlayer->getAccountID(); ?>"/>
+					<form id="PlayerPickForm" action="<?php echo $PickPlayer['PlayerPickHREF']; ?>" method="POST">
+						<input name="picked_account_id" type="hidden" value="<?php echo $PickPlayer['PickPlayer']->getAccountID(); ?>"/>
 					</form>
 				</div>
 			</td>
