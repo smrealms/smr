@@ -7,6 +7,7 @@ if(count($PickPlayers)>0)
 			<th>Player Name</th>
 			<th>Race Name</th>
 			<th>HoF Name</th>
+			<th>User Score</th>
 		</tr>
 		<tr><?php
 		foreach($PickPlayers as &$PickPlayer)
@@ -25,7 +26,10 @@ if(count($PickPlayers)>0)
 				<?php echo $PickPlayer['Player']->getRaceName(); ?>
 			</td>
 			<td>
-				<?php echo $PickPlayer['Player']->getAccount()->getHofName(); ?>
+				<a href="<?php echo $PickPlayer['Player']->getAccount()->getPersonalHofHREF(); ?>"><?php echo $PickPlayer['Player']->getAccount()->getHofName(); ?></a>
+			</td>
+			<td>
+				<?php echo $PickPlayer['Player']->getAccount()->getScore(); ?>
 			</td><?php
 		} ?>
 		</tr>

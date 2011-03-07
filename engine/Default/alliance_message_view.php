@@ -28,9 +28,7 @@ if ($alliance_id != $player->getAllianceID()) {
 	else $mbWrite = FALSE;
 }
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'alliance_message_view.php';
+$container = create_container('skeleton.php','alliance_message_view.php');
 $container['alliance_id'] = $alliance_id;
 $container['thread_ids'] = $var['thread_ids'];
 $container['thread_topics'] = $var['thread_topics'];
