@@ -11,7 +11,7 @@ FROM
 	FROM player
 	WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND alliance_id!=302 AND alliance_id!=0
 	GROUP BY alliance_id
-)');
+) t');
 $db->nextRecord();
 
 if($player->getAlliance()->getNumMembers()>$db->getInt('min_members'))
