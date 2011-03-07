@@ -1151,7 +1151,7 @@ abstract class AbstractSmrAccount
 	
 	public function getPersonalHofHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php','hall_of_fame_player_detail.php',array('account_id => $this->ggetAccountID())));
+		return SmrSession::get_new_href(create_container('skeleton.php','hall_of_fame_player_detail.php',array('account_id' => $this->getAccountID())));
 	}
 }
 
