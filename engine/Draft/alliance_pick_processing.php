@@ -22,7 +22,14 @@ $pickedPlayer =& SmrPlayer::getPlayer($var['PickedAccountID'], $player->getGameI
 
 if($pickedPlayer->hasAlliance())
 {
-	create_error('Picked player already has an alliance');
+	if($pickedPlayer->getAllianceID()==302)
+	{
+		$pickedPlayer->leaveAlliance();
+	}
+	else
+	{
+		create_error('Picked player already has an alliance');
+	}
 }
 // assign the player to the current alliance
 $pickedPlayer->joinAlliance($player->getAllianceID());
