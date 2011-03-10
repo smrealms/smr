@@ -1,17 +1,16 @@
 <?php
 
 // creates a new player object for attacker and defender
-$forces_owner	=& SmrPlayer::getPlayer($var['owner_id'], SmrSession::$game_id);
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 // first check if both ship and forces are in same sector
-if ($player->getSectorID() != $forces->getSectorID()) {
-
+if ($player->getSectorID() != $forces->getSectorID())
+{
 	create_error('Those forces are no longer here!');
-	return;
-
 }
+
+$forces_owner =& $forces->getOwner();
 
 $template->assign('PageTopic','Examine Forces');
 
@@ -53,8 +52,7 @@ $PHP_OUTPUT.=('<tr>');
 // *
 // ********************************
 
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
+$sector =& $player->getSector();
 $attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
 
 $PHP_OUTPUT.=('<td valign="top">');

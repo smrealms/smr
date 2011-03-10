@@ -1,8 +1,11 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& $player->getSector();
-$template->assign('PageTopic','Sector Scan');
+if(!$sector->isLinked($var['target_sector']))
+{
+	create_error('You cannot scan a sector you are not linked to.');
+}
 
+$template->assign('PageTopic','Sector Scan');
 // initialize vars
 $scanSector =& SmrSector::getSector($player->getGameID(), $var['target_sector']);
 $friendly_forces = 0;

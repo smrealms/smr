@@ -1,4 +1,10 @@
 <?php
+
+if(!$player->isPresident())
+{
+	create_error('Only the president can view the embassy.');
+}
+
 $action = $_REQUEST['action'];
 $race_id = $var['race_id'];
 $type = strtoupper($action);

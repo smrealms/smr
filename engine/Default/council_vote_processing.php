@@ -1,4 +1,8 @@
 <?php
+if (!$player->isOnCouncil())
+{
+	create_error('You have to be on the council in order to vote.');
+}
 
 include(get_file_loc('race_voting.php'));
 $action = $_REQUEST['action'];

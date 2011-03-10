@@ -1,5 +1,10 @@
 <?php
 
+if(!$player->isPresident())
+{
+	create_error('Only the president can view the embassy.');
+}
+
 require_once(get_file_loc('council.inc'));
 require_once(get_file_loc('menue.inc'));
 
