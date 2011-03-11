@@ -4,7 +4,7 @@ else $alliance_id = $player->getAllianceID();
 		require_once(get_file_loc('SmrPlanet.class.inc'));
 $db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
-$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
+$template->assign('PageTopic',$db->getField('alliance_name') . ' (' . $db->getField('alliance_id') . ')');
 //$template->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
 include(get_file_loc('menue.inc'));
 create_alliance_menue($alliance_id,$db->getField('leader_id'));
@@ -53,7 +53,7 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= $planet->planet_name;
 		$PHP_OUTPUT.= '</td><td>';
-		$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
+		$PHP_OUTPUT.= $db->getField('player_name');
 		$PHP_OUTPUT.= '</td><td class="shrink noWrap">';
 		$PHP_OUTPUT.= $planet->getSectorID();
 		$PHP_OUTPUT.= '&nbsp;(';

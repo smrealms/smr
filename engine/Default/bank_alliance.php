@@ -42,7 +42,7 @@ if (sizeof($tempAllIDs))
 	$tempAllIDs[] = $player->getAllianceID();
 	$temp[$player->getAllianceID()] = $player->getAllianceID();
 	$db->query('SELECT alliance_name, alliance_id FROM alliance WHERE alliance_id IN (' . implode(',',$tempAllIDs) . ') AND game_id = '.$player->getGameID());
-	while ($db->nextRecord()) $alliances[$db->getField('alliance_id')] = stripslashes($db->getField('alliance_name'));
+	while ($db->nextRecord()) $alliances[$db->getField('alliance_id')] = $db->getField('alliance_name');
 	if (sizeof($temp) > 0)
 	{
 		$container=array();
@@ -201,9 +201,9 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.= '</td><td>';
 		if ($db->getField('exempt')) $PHP_OUTPUT.= 'Alliance Funds c/o<br />';
 		$container['player_id']	= $db->getField('player_id');
-		$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('alignment'),stripslashes($db->getField('player_name'))));
+		$PHP_OUTPUT.=create_link($container, get_colored_text($db->getField('alignment'),$db->getField('player_name')));
 		$PHP_OUTPUT.= '</td><td>';
-		$PHP_OUTPUT.= stripslashes($db->getField('reason'));
+		$PHP_OUTPUT.= $db->getField('reason');
 		$PHP_OUTPUT.= '</td><td class="shrink right">';
 		if ($db->getField('transaction') == 'Payment') $PHP_OUTPUT.= (number_format($db->getField('amount')));
 		else $PHP_OUTPUT.= '&nbsp;';

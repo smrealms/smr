@@ -92,7 +92,7 @@ if ($db->getNumRows() > 0)
 		$container['alliance_id'] = $db->getField('alliance_id');
 
 		$PHP_OUTPUT.= '<tr><td>';
-		$PHP_OUTPUT.=create_link($container, stripslashes($db->getField('alliance_name')));
+		$PHP_OUTPUT.=create_link($container, $db->getField('alliance_name'));
 		$PHP_OUTPUT.= '</td>';
 		$PHP_OUTPUT.= '<td class="right">' .  $db->getField('alliance_xp') . '</td>';
 		$PHP_OUTPUT.= '<td class="right">' . $db->getField('alliance_avg') . '</td>';

@@ -26,7 +26,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.= '<option value="' . $db->getField('account_id') . '"';
 	if ($db->getField('account_id') == $player->getAccountID()) $PHP_OUTPUT.= ' selected="selected"';
 	$PHP_OUTPUT.= '>';
-	$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
+	$PHP_OUTPUT.= $db->getField('player_name');
 	$PHP_OUTPUT.= ' (';
 	$PHP_OUTPUT.= $db->getField('player_id');
 	$PHP_OUTPUT.= ')</option>';

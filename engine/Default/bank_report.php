@@ -28,7 +28,7 @@ foreach ($trans as $accId => $transArray) $totals[$accId] = $transArray[DEPOSIT]
 arsort($totals, SORT_NUMERIC);
 $db->query('SELECT * FROM player WHERE account_id IN (' . implode(',',$playerIDs) . ') AND game_id = '.$player->getGameID().' ORDER BY player_name');
 $players[0] = 'Alliance Funds';
-while ($db->nextRecord()) $players[$db->getField('account_id')] = stripslashes($db->getField('player_name'));
+while ($db->nextRecord()) $players[$db->getField('account_id')] = $db->getField('player_name');
 //format it this way so its easy to send to the alliance MB if requested.
 $text = '<table class="nobord" cellspacing="0" align="center">';
 foreach ($totals as $accId => $total) {

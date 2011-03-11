@@ -4,7 +4,7 @@ else $alliance_id = $player->getAllianceID();
 $db->query('SELECT leader_id,`mod`,img_src, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $leader_id = $db->getField('leader_id');
-$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
+$template->assign('PageTopic',$db->getField('alliance_name') . ' (' . $db->getField('alliance_id') . ')');
 //$template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
 create_alliance_menue($alliance_id,$db->getField('leader_id'));
@@ -14,7 +14,7 @@ $PHP_OUTPUT.= '<div align="center">';
 if (strlen($db->getField('img_src')) && $db->getField('img_src') != 'http://') {
 	$PHP_OUTPUT.= '<img class="alliance" src="';
 	$PHP_OUTPUT.= $db->getField('img_src');
-	$PHP_OUTPUT.= '" alt="' . stripslashes($db->getField('alliance_name')) . ' Banner"><br /><br />';
+	$PHP_OUTPUT.= '" alt="' . htmlspecialchars($db->getField('alliance_name')) . ' Banner"><br /><br />';
 }
 
 $PHP_OUTPUT.= '<span class="yellow">Message from your leader</span><br /><br />';

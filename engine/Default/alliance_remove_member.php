@@ -68,7 +68,7 @@ if ($db->getNumRows() != 0) {
 			}
 
 			$PHP_OUTPUT.= '<tr><td>';
-			$PHP_OUTPUT.= stripslashes($db->getField('player_name'));
+			$PHP_OUTPUT.= $db->getField('player_name');
 			$PHP_OUTPUT.= '(';
 			$PHP_OUTPUT.= $db->getField('player_id');
 			$PHP_OUTPUT.= ')</td><td class="shrink noWrap center" style="color:' . $color;

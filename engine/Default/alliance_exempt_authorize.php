@@ -12,7 +12,7 @@ $PHP_OUTPUT.=('Selecting a box will authorize it, leaving a box unselected will 
 $db->query('UPDATE alliance_bank_transactions SET request_exempt = 0 WHERE exempt = 1');
 //build player array
 $db->query('SELECT * FROM player WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID());
-while ($db->nextRecord()) $players[$db->getField('account_id')] = stripslashes($db->getField('player_name'));
+while ($db->nextRecord()) $players[$db->getField('account_id')] = $db->getField('player_name');
 $db->query('SELECT * FROM alliance_bank_transactions WHERE request_exempt = 1 ' . 
 			'AND alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND exempt = 0');
 if ($db->getNumRows()) {
