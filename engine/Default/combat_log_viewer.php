@@ -229,7 +229,7 @@ if($action != 5)
 					WHERE account_id IN (' . implode(',',$player_ids) . ')
 					AND game_id = '.SmrSession::$game_id.'
 					LIMIT ' . sizeof($player_ids));
-		while ($db->nextRecord()) $players[$db->getField('account_id')] = stripslashes($db->getField('player_name'));
+		while ($db->nextRecord()) $players[$db->getField('account_id')] = $db->getField('player_name');
 		foreach ($logs as $id => $info)
 		{
 			$container['id'] = $id;

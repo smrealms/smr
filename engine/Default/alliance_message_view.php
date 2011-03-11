@@ -9,7 +9,7 @@ if(empty($thread_id))
 
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
-$template->assign('PageTopic',stripslashes($var['thread_topics'][$thread_index]));
+$template->assign('PageTopic',$var['thread_topics'][$thread_index]);
 require_once(get_file_loc('menue.inc'));
 create_alliance_menue($alliance_id,$db->getField('leader_id'));
 
@@ -58,7 +58,7 @@ $db->query('SELECT account_id as id, player_name as name FROM player, alliance_t
 			'WHERE alliance_thread.game_id = '.$player->getGameID().' AND player.game_id = '.$player->getGameID().' ' .
 			'AND alliance_thread.alliance_id = '.$alliance_id.' AND alliance_thread.thread_id = ' .
 			$thread_id);
-while ($db->nextRecord()) $players[$db->getField('id')] = stripslashes($db->getField('name'));
+while ($db->nextRecord()) $players[$db->getField('id')] = $db->getField('name');
 
 $db->query('SELECT 
 alliance_thread.text as text,
