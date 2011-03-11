@@ -47,9 +47,9 @@ while ($db->nextRecord())
 		}
 		else continue;
 		$PHP_OUTPUT.= create_table();
-		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
+		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Most Common IP</th><th>Last Login</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
 		
-		$db2->query('SELECT account_id, login FROM account WHERE account_id = '.$currTabAccId);
+		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$currTabAccId);
 		if ($db2->nextRecord())
 			$currTabAccLogin = $db2->getField('login');
 		else
@@ -62,14 +62,16 @@ while ($db->nextRecord())
 			if($isDisabled = $db2->nextRecord())
 				$suspicion = $db2->getField('suspicion');
 			
-			$db2->query('SELECT account_id, login, email, validated FROM account WHERE account_id = '.$currLinkAccId);
+			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord())
 				$currLinkAccLogin = $db2->getField('login');
 			else $currLinkAccLogin = '[Account no longer Exists]';
 			$PHP_OUTPUT.=('<tr class="center'.($isDisabled?' red':'').'">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.='<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td>';
-			$PHP_OUTPUT.='<td'.($db2->getBoolean('validated')?'':' style="text-decoration:line-through;"').'>'.$db2->getField('email').' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td><td>';
+			$PHP_OUTPUT.='<td'.($db2->getBoolean('validated')?'':' style="text-decoration:line-through;"').'>'.$db2->getField('email').' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td>';
+			$PHP_OUTPUT.='<td>'.$db2->getField('common_ip').')</td><td>';
+			$PHP_OUTPUT.='<td>'.date(DATE_FULL_SHORT,$db2->getField('last_login')).')</td><td>';
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
