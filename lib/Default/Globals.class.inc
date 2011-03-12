@@ -282,12 +282,12 @@ class Globals
 		return SmrGame::getGame($gameID)->getDescription();
 	}
 	
-	public static function &getGameSpeed($gameID)
+	public static function getGameSpeed($gameID)
 	{
 		return SmrGame::getGame($gameID)->getGameSpeed();
 	}
 	
-	public static function &getGameType($gameID)
+	public static function getGameType($gameID)
 	{
 		if(self::isValidGame($gameID))
 		{
@@ -296,52 +296,52 @@ class Globals
 		return 0;
 	}
 	
-	public static function &getGameName($gameID)
+	public static function getGameName($gameID)
 	{
 		return SmrGame::getGame($gameID)->getName();
 	}
 	
-	public static function &getGameStartDate($gameID)
+	public static function getGameStartDate($gameID)
 	{
 		return SmrGame::getGame($gameID)->getStartDate();
 	}
 	
-	public static function &getGameEndDate($gameID)
+	public static function getGameEndDate($gameID)
 	{
 		return SmrGame::getGame($gameID)->getEndDate();
 	}
 	
-	public static function &getGameMaxTurns($gameID)
+	public static function getGameMaxTurns($gameID)
 	{
 		return SmrGame::getGame($gameID)->getMaxTurns();
 	}
 	
-	public static function &getGameMaxPlayers($gameID)
+	public static function getGameMaxPlayers($gameID)
 	{
 		return SmrGame::getGame($gameID)->getMaxPlayers();
 	}
 	
-	public static function &getGameCreditsRequired($gameID)
+	public static function getGameCreditsRequired($gameID)
 	{
 		return SmrGame::getGame($gameID)->getCreditsNeeded();
 	}
 	
-	public static function &getGameIgnoreStats($gameID)
+	public static function getGameIgnoreStats($gameID)
 	{
 		return SmrGame::getGame($gameID)->isIgnoreStats();
 	}
 	
-	public static function &getAllianceMaxPlayers($gameID)
+	public static function getAllianceMaxPlayers($gameID)
 	{
 		return SmrGame::getGame($gameID)->getAllianceMaxPlayers();
 	}
 	
-	public static function &getAllianceMaxVets($gameID)
+	public static function getAllianceMaxVets($gameID)
 	{
 		return SmrGame::getGame($gameID)->getAllianceMaxVets();
 	}
 	
-	public static function &getStartingCredits($gameID)
+	public static function getStartingCredits($gameID)
 	{
 		return SmrGame::getGame($gameID)->getStartingCredits();
 	}
