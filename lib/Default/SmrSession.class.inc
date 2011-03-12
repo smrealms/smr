@@ -265,7 +265,7 @@ class SmrSession
 		}
 		if(!isset($container['RemainingPageLoads']))
 		{
-			$container['RemainingPageLoads'] += 1; // Allow refreshing
+			$container['RemainingPageLoads'] = 1; // Allow refreshing
 		}
 
 		self::$var[$sn] = $container;
