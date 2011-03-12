@@ -1,4 +1,4 @@
-CREATE TABLE  `smr_page`.`account_auth` (
+CREATE TABLE  `smr_new`.`account_auth` (
 `account_id` SMALLINT UNSIGNED NOT NULL ,
 `login_type` VARCHAR( 100 ) NOT NULL ,
 `auth_key` VARCHAR( 100 ) NOT NULL ,
