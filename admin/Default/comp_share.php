@@ -70,7 +70,7 @@ while ($db->nextRecord())
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.='<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td>';
 			$PHP_OUTPUT.='<td'.($db2->getBoolean('validated')?'':' style="text-decoration:line-through;"').'>'.$db2->getField('email').' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td>';
-			$PHP_OUTPUT.='<td>'.$db2->getField('common_ip').')</td><td>';
+			$PHP_OUTPUT.='<td>'.$db2->getField('common_ip').'</td>';
 			$PHP_OUTPUT.='<td>'.date(DATE_FULL_SHORT,$db2->getField('last_login')).')</td><td>';
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
