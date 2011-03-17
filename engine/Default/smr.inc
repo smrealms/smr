@@ -92,7 +92,7 @@ function bbifyMessage($message,$noLinks=false)
     static $bbParser;
     if(!isset($bbParser))
     {
-		require_once(LIB.'BBCode/nbbc.php');
+		require_once(LIB.'External/BBCode/nbbc.php');
 		$bbParser = new BBCode();
 		$bbParser->SetEnableSmileys(false);
 		$bbParser->RemoveRule('wiki');

@@ -1,7 +1,7 @@
 <?php
 
 // mailer
-require(LIB . 'phpMailer/class.phpmailer.php');
+require(LIB . 'External/phpMailer/class.phpmailer.php');
 
 $mail = new PHPMailer();
 $mail->From				= 'newsletter@smrealms.de';
