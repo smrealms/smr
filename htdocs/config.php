@@ -1,5 +1,4 @@
 <?php
-//error_reporting(E_ALL | E_STRICT);
 @date_default_timezone_set(@date_default_timezone_get());
 //ini_set('display_errors', TRUE);
 //ini_set('display_startup_errors', TRUE);
