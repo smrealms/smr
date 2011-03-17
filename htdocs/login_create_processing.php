@@ -17,7 +17,7 @@ try
 	
 	if (SmrSession::$account_id > 0)
 	{
-		$msg = 'You already logged in! Creating multis is against the rules!';
+		$msg = 'You\'re already logged in! Creating multis is against the rules!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
@@ -33,7 +33,6 @@ try
 			exit;
 		}
 	}
-	
 	
 	// db object
 	$db = new SmrMySqlDatabase();
@@ -214,6 +213,20 @@ try
 	//	exit;
 	//}
 	//$db->query('UPDATE beta_key SET used = '.$db->escapeString('TRUE').' WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
+
+	//Check the captcha if it's a standard registration.
+	if(!$socialLogin)
+	{
+		require_once(LIB.'External/recaptcha/recaptchalib.php');
+		$resp = recaptcha_check_answer (RECAPTCHA_PRIVATE, $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
+
+		if (!$resp->is_valid)
+		{
+			$msg = 'Invalid captcha!';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
+	}
 	
 	$icq = $_REQUEST['icq'];
 	// create account
