@@ -4,7 +4,7 @@ $db2 = new SmrMySqlDatabase();
 $db->query("SELECT * FROM galactic_post_paper WHERE paper_id = $var[id] AND game_id = $player->game_id");
 $db->next_record();
 $paper_title = stripslashes($db->f("title"));
-$db->query("SELECT * FROM galactic_post_paper_content WHERE paper_id = $var[id]");
+$db->query("SELECT * FROM galactic_post_paper_content WHERE paper_id = $var[id] AND game_id = $player->game_id");
 include(get_file_loc('menue.inc'));
 print_galactic_post_menue();
 print("$paper_title<br><br><ul>");
