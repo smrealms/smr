@@ -1,5 +1,5 @@
 <?php
-require_once(LIB.'simplehtmldom/simple_html_dom.php');
+require_once(LIB.'External/simplehtmldom/simple_html_dom.php');
 class Template
 {
 	protected $data = array();

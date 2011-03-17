@@ -13,7 +13,7 @@ class SocialLogin
 	{
 		if(self::$facebook==null)
 		{
-			require_once('lib/facebook.php');
+			require_once(LIB.'External/Facebook/facebook.php');
 			self::$facebook = new Facebook(array(
 				'appId'  => FACEBOOK_APP_ID,
 				'secret' => FACEBOOK_APP_SECRET,

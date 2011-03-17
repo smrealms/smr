@@ -1930,7 +1930,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				$receiverAccount =& SmrAccount::getAccount($receiverID);
 				if($receiverAccount->isReceivingMessageNotifications($messageTypeID))
 				{
-					require_once(LIB.'phpMailer/class.phpmailer.php');
+					require_once(LIB.'External/phpMailer/class.phpmailer.php');
 					$senderPlayer =& SmrPlayer::getPlayer($senderID, $gameID);
 					$mail = new PHPMailer();
 					$mail->Subject	= 'Message Notification';

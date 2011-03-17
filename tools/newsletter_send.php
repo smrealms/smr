@@ -7,7 +7,7 @@ include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 include(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
 // mailer
-require(LIB . 'phpMailer/class.phpmailer.php');
+require(LIB . 'External/phpMailer/class.phpmailer.php');
 
 // database objects
 $db = new SmrMySqlDatabase();
