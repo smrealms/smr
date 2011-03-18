@@ -1946,7 +1946,6 @@ class SmrPlayer extends AbstractSmrPlayer
 				}
 			break;
 		}
-		ob_flush();
 	}
 	
 	public function sendMessageToBox($boxTypeID, $message)
