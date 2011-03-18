@@ -21,10 +21,18 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		{
 			return $rank;
 		}
-		$standardQuery = false;
+		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
+		$realAmount = 0;
+		if($db->nextRecord())
+		{
+			if($db->getField('amount')!=null)
+			{
+				$realAmount = $db->getField('amount');
+			}
+		}
 		if($db->getField('visibility')==HOF_PRIVATE&&$account->getAccountID()==$accountID)
 		{
-			$standardQuery = true;
+			$rank['Amount'] = $realAmount;
 		}
 		else if($db->getField('visibility')==HOF_ALLIANCE&&$account->getAccountID()!=$accountID)
 		{
@@ -33,27 +41,28 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 				$hofPlayer =& SmrPlayer::getPlayer($accountID, $player->getGameID());
 				if($player->sameAlliance($hofPlayer))
 				{
-					$standardQuery = true;
+					$rank['Amount'] = $realAmount;
+				}
+				else
+				{
+					$rank['Amount'] = '-'; //Show a - rather than 0 when hidden due to alliance restrictions so that it is clearer. 
 				}
 			}
 			catch(Exception $e)
 			{
+				$rank['Amount'] = $realAmount;
 			}
 			if(!$standardQuery && !isset($gameID))
 			{
 				$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.') GROUP BY account_id LIMIT 1');
+				if($db->nextRecord())
+				{
+					if($db->getField('amount')!=null)
+					{
+						$rank['Amount'] = $db->getField('amount');
+					}
+				}
 			}
-		}
-		if($standardQuery===true)
-		{
-			$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
-		}
-	}
-	if($db->nextRecord())
-	{
-		if($db->getField('amount')!=null)
-		{
-			$rank['Amount'] = $db->getField('amount');
 		}
 	}
 	if($view == DONATION_NAME)
@@ -67,7 +76,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 	}
 	else
 	{
-		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id HAVING SUM(amount)>'.$rank['Amount'].') x');
+		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id HAVING SUM(amount)>'.$realAmount.') x');
 	}
 	if($db->nextRecord())
 	{
