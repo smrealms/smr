@@ -126,14 +126,18 @@ else
 			$foundMe = true;
 			$amount = $db->getField('amount');
 		}
-		else if($vis==HOF_PRIVATE)
+		else if($vis==HOF_PUBLIC)
 		{
-			$amount = '-';
+			$amount = $db->getField('amount');
 		}
 		else if($vis==HOF_ALLIANCE)
 		{
 			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $var['game_id'], $db2);
 			$amount = $rankInfo['Amount'];
+		}
+		else
+		{
+			$amount = '-';
 		}
 		$PHP_OUTPUT .= displayHOFRow($rank++, $accountID, $amount);
 	}
