@@ -25,7 +25,7 @@ if ($db->nextRecord()) $role_id = $db->getField('role_id');
 else $role_id = 0;
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
 $db->nextRecord();
-if ($db->getField('change_mod') == 'TRUE' || $db->getField('change_pass') == 'TRUE') {
+if ($db->getBoolean('change_mod') || $db->getBoolean('change_pass')) {
 	$PHP_OUTPUT.= '<br /><br />';
 	$container=create_container('skeleton.php','alliance_stat.php');
 	$container['alliance_id'] = $alliance_id;
