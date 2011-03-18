@@ -24,7 +24,7 @@ $PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />T
 			'aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />'.
 				create_link($container,'You can also view your Personal Hall of Fame here.').'<br /><br />';
 
-$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . (isset($var['game_id']) ? ' game_id='.$var['game_id'] : '').' ORDER BY type');
+$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
