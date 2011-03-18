@@ -32,6 +32,10 @@ if($account->getAccountID()==$account_id)
 	$allowedVisibities[] = HOF_ALLIANCE;
 	$allowedVisibities[] = HOF_PRIVATE;
 }
+else if(isset($hofPlayer) && $hofPlayer->sameAlliance($player))
+{
+	$allowedVisibities[] = HOF_ALLIANCE;
+}
 $db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') AND account_id='.$account_id . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');

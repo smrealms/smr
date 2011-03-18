@@ -24,7 +24,7 @@ $PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />T
 			'aspects of the game rather than just kills, deaths, and experience with the rankings system.<br />'.
 				create_link($container,'You can also view your Personal Hall of Fame here.').'<br /><br />';
 
-$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility = ' . $db->escapeString(HOF_PUBLIC) . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
+$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . (isset($var['game_id']) ? ' game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
@@ -68,7 +68,7 @@ if(!isset($var['view']))
 				
 				$rankType = $container['type'];
 				$rankType[] = $subType;
-				$rank = getHofRank($subType,$rankType,$account->account_id,$game_id,$db);
+				$rank = getHofRank($subType,$rankType,$account->getAccountID(),$game_id,$db);
 				$rankMsg='';
 				if($rank['Rank']!=0)
 					$rankMsg = ' (#' . $rank['Rank'] .')';
@@ -81,7 +81,7 @@ if(!isset($var['view']))
 		else
 		{
 			unset($container['view']);
-			$rank = getHofRank($type,$container['type'],$account->account_id,$game_id,$db);
+			$rank = getHofRank($type,$container['type'],$account->getAccountID(),$game_id,$db);
 			$PHP_OUTPUT.=create_submit_link($container,'View (#' . $rank['Rank'] .')');
 		}
 		$PHP_OUTPUT.=('</td></tr>');
@@ -94,6 +94,7 @@ else
 	
 	$gameIDSql = ' AND game_id '.(isset($var['game_id']) ? '= ' . $var['game_id'] : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 	
+	$vis = HOF_PUBLIC;
 	$rank=1;
 	$foundMe=false;
 	$viewType = $var['type'];
@@ -108,12 +109,33 @@ else
 		$db->query($query);
 	}
 	else
+	{
+		$db->query('SELECT visibility FROM hof_visibility WHERE type = '.$db->escapeArray($viewType,false,true,':',false).' LIMIT 1');
+		if($db->nextRecord())
+		{
+			$vis = $db->getField('visibility');
+		}
 		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+	}
+	$db2 = new SmrMySqlDatabase();
 	while($db->nextRecord())
 	{
-		if($db->getField('account_id') == $account->account_id)
+		$accountID = $db->getField('account_id');
+		if($accountID == $account->getAccountID())
+		{
 			$foundMe = true;
-		$PHP_OUTPUT .= displayHOFRow($rank++,$db->getField('account_id'),$db->getField('amount') );
+			$amount = $db->getField('amount');
+		}
+		else if($vis==HOF_PRIVATE)
+		{
+			$amount = '-';
+		}
+		else if($vis==HOF_ALLIANCE)
+		{
+			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $var['game_id'], $db2);
+			$amount = $rankInfo['Amount'];
+		}
+		$PHP_OUTPUT .= displayHOFRow($rank++, $accountID, $amount);
 	}
 	if(!$foundMe)
 	{
