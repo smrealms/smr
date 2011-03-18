@@ -170,7 +170,7 @@ if ($mine_owner_id)
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
 		$container['msg'] .= $turns.' turn'.($turns==1?'':'s');
 		
-		$player->takeTurns($turns,min($turns,1));
+		$player->takeTurns($turns,$turns);
 		
 		$container['msg'] .= ' to navigate the minefield safely';
 		forward($container);
