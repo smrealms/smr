@@ -45,14 +45,14 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 				}
 				else
 				{
-					$rank['Amount'] = '-'; //Show a - rather than 0 when hidden due to alliance restrictions so that it is clearer. 
+					$rank['Amount'] = '-'; //Show a - rather than 0 when hidden due to alliance restrictions so that it is clearer.
 				}
 			}
 			catch(Exception $e)
 			{
-				$rank['Amount'] = $realAmount;
+				$rank['Amount'] = '-';
 			}
-			if(!$standardQuery && !isset($gameID))
+			if($rank['Amount'] == '-' && !isset($gameID))
 			{
 				$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.') GROUP BY account_id LIMIT 1');
 				if($db->nextRecord())
