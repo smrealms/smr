@@ -21,6 +21,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		{
 			return $rank;
 		}
+		$vis = $db->getField('visibility');
 		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
 		$realAmount = 0;
 		if($db->nextRecord())
@@ -30,11 +31,11 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 				$realAmount = $db->getField('amount');
 			}
 		}
-		if($db->getField('visibility')==HOF_PRIVATE&&$account->getAccountID()==$accountID)
+		if($vis==HOF_PUBLIC || $account->getAccountID()==$accountID)
 		{
 			$rank['Amount'] = $realAmount;
 		}
-		else if($db->getField('visibility')==HOF_ALLIANCE&&$account->getAccountID()!=$accountID)
+		else if($vis==HOF_ALLIANCE&&$account->getAccountID()!=$accountID)
 		{
 			try
 			{
