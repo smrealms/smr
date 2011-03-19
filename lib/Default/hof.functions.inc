@@ -123,7 +123,6 @@ function displayHOFRow($rank,$accountID,$amount)
 	}
 	else
 	{
-		$container['game_id'] = $player->getGameID();
 		$container['sending_page'] = 'personal_hof';
 	}
 	if(is_object($hofPlayer))
