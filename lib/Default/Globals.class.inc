@@ -521,7 +521,7 @@ class Globals
 	
 	public static function getAllianceNewsHREF($allianceID)
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php', array('alliance_id'=>$allianceID, 'submit' => 'Search For Alliance')));
+		return SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php', array('AllianceID'=>$allianceID, 'submit' => 'Search For Alliance')));
 	}
 	
 	public static function getAllianceMotdHREF($allianceID)
