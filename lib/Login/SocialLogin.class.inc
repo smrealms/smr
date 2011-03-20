@@ -8,6 +8,7 @@ class SocialLogin
 	private $firstName = null;
 	private $lastName = null;
 	private static $facebook=null;
+	private static $openID=null;
 	
 	private static function &getFacebookObj()
 	{
@@ -23,9 +24,32 @@ class SocialLogin
 		return self::$facebook;
 	}
 	
+	public static function getOpenIdObj()
+	{
+		if(self::$openID==null)
+		{
+			require_once(LIB.'External/OpenID/openid.php');
+			self::$openID = new LightOpenID();
+		}
+		return self::$openID;
+		if(!$openID->mode)
+		{
+		}
+		return $openID;
+	}
+	
 	public static function getFacebookLoginUrl()
 	{
 		return self::getFacebookObj()->getLoginUrl(array('fbconnect'=>null,'next'=>URL.'/login_processing.php?loginType=Facebook','cancel_url'=>URL.'/login_processing.php?loginType=Facebook','req_perms'=>'email'));
+	}
+	
+	public static function getGoogleLoginUrl()
+	{
+		$openID =& self::getOpenIdObj();
+		$openID->required = array('contact/email','namePerson/first','namePerson/last');
+		$openID->returnUrl = URL.'/login_processing.php?loginType=Google';
+		$openID->identity = 'https://www.google.com/accounts/o8/id';
+		return $openID->authUrl();
 	}
 	
 	public function __construct($loginType)
@@ -41,6 +65,19 @@ class SocialLogin
 				$this->email=$userInfo['email'];
 				$this->firstName=$userInfo['first_name'];
 				$this->lastName=$userInfo['last_name'];
+				return true;
+			}
+		}
+		else if($loginType == 'Google')
+		{
+			if(self::getOpenIdObj()->validate())
+			{
+				$this->loginType=$loginType;
+				$this->userID=self::getOpenIdObj()->identity;
+				$userInfo = self::getOpenIdObj()->getAttributes();
+				$this->email=$userInfo['contact/email'];
+				$this->firstName=$userInfo['namePerson/first'];
+				$this->lastName=$userInfo['namePerson/last'];
 				return true;
 			}
 		}

@@ -168,13 +168,17 @@ if(isset($Message))
 				</table>
 			</form>
 		</td>
-		<td>
-			<a href="<?php echo $FacebookLogin; ?>">
-				<img src="images/fblogin.png">
-			</a>
+		<td style="font-size: 3px; text-align: center; padding: 3px;">
+			<?php require_once(LIB.'Login/SocialLogin.class.inc'); ?>
+				<a href="<?php echo SocialLogin::getFacebookLoginUrl(); ?>" style="margin:10px;">
+					<img src="images/login/facebook.png">
+				</a><br /><br/>
+				<a href="<?php echo SocialLogin::getGoogleLoginUrl(); ?>" style="margin:10px;">
+					<img src="images/login/google.png">
+				</a>
 		</td>
 		<td width="470px"><?php
-		if(isset($LoginNews))
+			if(isset($LoginNews))
 			{ ?>
 				<table class="standard">
 				<tr><th>Date</th><th>News</th></tr><?php
@@ -193,13 +197,17 @@ if(isset($Message))
 								{ ?>
 									<br /><br />- <?php echo $News['AdminName'];
 								} ?>
-					</span></td></tr>
-				<?php } ?>
-				</table>
-			<?php } ?>
-			</td></tr>
+							</span>
+						</td>
+					</tr><?php
+				} ?>
+				</table><?php
+			} ?>
+		</td>
+	</tr>
 			
-			<tr><td align="center" colspan="2">
+	<tr>
+		<td align="center" colspan="4">
 			Players Online Now: <?php echo $ActiveSessions; ?><br /><br /><?php
 			if(isset($GameNews))
 			{ ?>
