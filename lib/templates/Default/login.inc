@@ -168,14 +168,20 @@ if(isset($Message))
 				</table>
 			</form>
 		</td>
-		<td style="font-size: 3px; text-align: center; padding: 3px;">
-			<?php require_once(LIB.'Login/SocialLogin.class.inc'); ?>
-				<a href="<?php echo SocialLogin::getFacebookLoginUrl(); ?>" style="margin:10px;">
+		<td style="text-align: center; padding: 3px; width: 200px;">
+			<span style="font-size: 14px;">Or login with:</span>
+			<span style="font-size: 3px;"><br /><br />
+				<?php require_once(LIB.'Login/SocialLogin.class.inc'); ?>
+				<a style="display: inline;" href="<?php echo SocialLogin::getFacebookLoginUrl(); ?>" style="margin:10px;">
 					<img src="images/login/facebook.png">
-				</a><br /><br/>
-				<a href="<?php echo SocialLogin::getOpenIdLoginUrl('Google'); ?>" style="margin:10px;">
+				</a><br /><br />
+				<a style="display: inline;" href="<?php echo SocialLogin::getOpenIdLoginUrl('Google'); ?>" style="margin:10px;">
 					<img src="images/login/google.png">
+				</a>&nbsp;
+				<a style="display: inline;" href="<?php echo SocialLogin::getTwitterLoginUrl(); ?>" style="margin:10px;">
+					<img src="images/login/twitter.png">
 				</a>
+			</span>
 		</td>
 		<td width="470px"><?php
 			if(isset($LoginNews))

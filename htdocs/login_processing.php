@@ -49,9 +49,12 @@ try
 			}
 			else
 			{
-				$db->query('SELECT account_id,old_account_id FROM account ' .
+				if($socialLogin->getEmail()!=null)
+				{
+					$db->query('SELECT account_id,old_account_id FROM account ' .
 					   'WHERE email = '.$db->escapeString($socialLogin->getEmail()).' LIMIT 1');
-				if ($db->nextRecord()) //Email already has an account so let's link.
+				}
+				if ($socialLogin->getEmail()!=null && $db->nextRecord()) //Email already has an account so let's link.
 				{
 					$account =& SmrAccount::getAccount(SmrSession::$account_id);
 					$account->addAuthMethod($socialLogin->getLoginType(),$socialLogin->getUserID());
@@ -63,6 +66,7 @@ try
 				{
 					session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
 					$_SESSION['socialLogin'] =& $socialLogin;
+					$template->assignByRef('SocialLogin',$socialLogin);
 					$template->display('socialRegister.inc');
 					exit;
 				}

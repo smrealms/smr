@@ -50,37 +50,36 @@ try
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	if (isset($_REQUEST['agreement']) && empty($_REQUEST['agreement'])) {
-	
+	if (isset($_REQUEST['agreement']) && empty($_REQUEST['agreement']))
+	{
 		$msg = 'You must accept the agreement!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
-	
 	}
 	
-	if (empty($login)) {
-	
+	if (empty($login))
+	{
 		$msg = 'Login name is missing!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	
-	if (!$socialLogin && empty($password)) {
-	
+	if (!$socialLogin && empty($password))
+	{
 		$msg = 'Password is missing!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	
 	$pass_verify = $_REQUEST['pass_verify'];
-	if ($password != $pass_verify) {
-	
+	if ($password != $pass_verify)
+	{
 		$msg = 'The passwords you entered do not match.';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	
-	if(!$socialLogin)
+	if(!$socialLogin || $_SESSION['socialLogin']->getEmail() == null)
 	{
 		$email = trim($_REQUEST['email']);
 		if (empty($email))
@@ -90,17 +89,16 @@ try
 			exit;
 		}
 		
-		if (strstr($email, ' ')) {
-		
+		if (strstr($email, ' '))
+		{
 			$msg = 'The email is invalid! It cannot contain any spaces.';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
-		
 		}
 	
 		$email_verify = $_REQUEST['email_verify'];
-		if ($email != $email_verify) {
-		
+		if ($email != $email_verify)
+		{
 			$msg = 'The eMail addresses you entered do not match.';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
@@ -110,24 +108,32 @@ try
 		list($user, $host) = explode('@', $email);
 		
 		// check if the host got a MX or at least an A entry
-		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A')) {
-		
+		if (!checkdnsrr($host, 'MX') && !checkdnsrr($host, 'A'))
+		{
 			$msg = 'This is not a valid email address! The domain '.$host.' does not exist.';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
+	}
+	else
+	{
+		$email = $_SESSION['socialLogin']->getEmail();
+	}
 		
+	
+	if(!$socialLogin)
+	{
 		$first_name = $_REQUEST['first_name'];
-		if (empty($first_name)) {
-		
+		if (empty($first_name))
+		{
 			$msg = 'First name is missing!';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
 		
 		$last_name = $_REQUEST['last_name'];
-		if (empty($last_name)) {
-		
+		if (empty($last_name))
+		{
 			$msg = 'Last name is missing!';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
@@ -165,10 +171,6 @@ try
 		//	exit;
 		//}
 	}
-	else
-	{
-		$email = $_SESSION['socialLogin']->getEmail();
-	}
 	
 	if ($login == $password)
 	{
@@ -178,8 +180,8 @@ try
 	}
 	
 	$db->query('SELECT * FROM account WHERE login = '.$db->escapeString($login));
-	if ($db->getNumRows() > 0) {
-	
+	if ($db->getNumRows() > 0)
+	{
 		$msg = 'This user name is already registered.';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
@@ -187,8 +189,8 @@ try
 	
 	
 	$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email));
-	if ($db->getNumRows() > 0) {
-	
+	if ($db->getNumRows() > 0)
+	{
 		$msg = 'This email address is already registered.';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
