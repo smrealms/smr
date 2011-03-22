@@ -29,7 +29,8 @@ try
 		if(isset($_REQUEST['loginType']))
 		{
 			require_once(LIB.'Login/SocialLogin.class.inc');
-			if(!($socialLogin = new SocialLogin($_REQUEST['loginType'])))
+			$socialLogin = new SocialLogin($_REQUEST['loginType']);
+			if(!$socialLogin->isValid())
 			{
 				$msg = 'Error validating login.';
 				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
