@@ -2,6 +2,7 @@
 require_once('socialConfig.specific.inc');
 class SocialLogin
 {
+	private $valid = false;
 	private $loginType = null;
 	private $userID = null;
 	private $email = null;
@@ -65,7 +66,7 @@ class SocialLogin
 				$this->email=$userInfo['email'];
 				$this->firstName=$userInfo['first_name'];
 				$this->lastName=$userInfo['last_name'];
-				return true;
+				$this->valid = true;
 			}
 		}
 		else if($loginType == 'Google')
@@ -78,10 +79,14 @@ class SocialLogin
 				$this->email=$userInfo['contact/email'];
 				$this->firstName=$userInfo['namePerson/first'];
 				$this->lastName=$userInfo['namePerson/last'];
-				return true;
+				$this->valid = true;
 			}
 		}
-		return false;
+	}
+	
+	public function isValid()
+	{
+		return $this->valid;
 	}
 	
 	public function getLoginType()
