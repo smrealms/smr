@@ -177,6 +177,9 @@ if(isset($Message))
 				</a><br /><br />
 				<a style="display: inline;" href="<?php echo SocialLogin::getOpenIdLoginUrl('Google'); ?>" style="margin:10px;">
 					<img src="images/login/google.png">
+				</a>&nbsp;
+				<a style="display: inline;" href="<?php echo SocialLogin::getTwitterLoginUrl(); ?>" style="margin:10px;">
+					<img src="images/login/twitter.png">
 				</a>
 			</span>
 		</td>
