@@ -2,6 +2,7 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<title><?php echo $Title; ?> <?php if(isset($GameName)) echo $GameName; ?></title>
 		<meta http-equiv="pragma" content="no-cache"><?php
 		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled())
