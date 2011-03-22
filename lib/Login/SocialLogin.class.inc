@@ -10,6 +10,7 @@ class SocialLogin
 	private $lastName = null;
 	private static $facebook=null;
 	private static $openID=null;
+	private static $OPEN_ID_IDENTITIES = array('Google' => 'https://www.google.com/accounts/o8/id');
 	
 	private static function &getFacebookObj()
 	{
@@ -25,7 +26,7 @@ class SocialLogin
 		return self::$facebook;
 	}
 	
-	public static function getOpenIdObj()
+	public static function &getOpenIdObj()
 	{
 		if(self::$openID==null)
 		{
@@ -33,10 +34,6 @@ class SocialLogin
 			self::$openID = new LightOpenID();
 		}
 		return self::$openID;
-		if(!$openID->mode)
-		{
-		}
-		return $openID;
 	}
 	
 	public static function getFacebookLoginUrl()
@@ -44,18 +41,21 @@ class SocialLogin
 		return self::getFacebookObj()->getLoginUrl(array('fbconnect'=>null,'next'=>URL.'/login_processing.php?loginType=Facebook','cancel_url'=>URL.'/login_processing.php?loginType=Facebook','req_perms'=>'email'));
 	}
 	
-	public static function getGoogleLoginUrl()
+	public static function getOpenIdLoginUrl($loginType)
 	{
+		if(!isset(self::$OPEN_ID_IDENTITIES[$loginType]))
+		{
+			throw new Exception('OpenID does not exist for login type: '.$loginType);
+		}
 		$openID =& self::getOpenIdObj();
 		$openID->required = array('contact/email','namePerson/first','namePerson/last');
-		$openID->returnUrl = URL.'/login_processing.php?loginType=Google';
-		$openID->identity = 'https://www.google.com/accounts/o8/id';
+		$openID->returnUrl = URL.'/login_processing.php?loginType='.$loginType;
+		$openID->identity = self::$OPEN_ID_IDENTITIES[$loginType];
 		return $openID->authUrl();
 	}
 	
 	public function __construct($loginType)
 	{
-	
 		if($loginType=='Facebook')
 		{
 			if(self::getFacebookObj()->getSession())
@@ -73,13 +73,16 @@ class SocialLogin
 		{
 			if(self::getOpenIdObj()->validate())
 			{
-				$this->loginType=$loginType;
-				$this->userID=self::getOpenIdObj()->identity;
-				$userInfo = self::getOpenIdObj()->getAttributes();
-				$this->email=$userInfo['contact/email'];
-				$this->firstName=$userInfo['namePerson/first'];
-				$this->lastName=$userInfo['namePerson/last'];
-				$this->valid = true;
+				if(strripos(self::getOpenIdObj()->identity, self::$OPEN_ID_IDENTITIES[$loginType]) === 0)
+				{
+					$this->loginType=$loginType;
+					$this->userID=self::getOpenIdObj()->identity;
+					$userInfo = self::getOpenIdObj()->getAttributes();
+					$this->email=$userInfo['contact/email'];
+					$this->firstName=$userInfo['namePerson/first'];
+					$this->lastName=$userInfo['namePerson/last'];
+					$this->valid = true;
+				}
 			}
 		}
 	}

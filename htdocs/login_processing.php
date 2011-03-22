@@ -49,10 +49,23 @@ try
 			}
 			else
 			{
-				session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
-				$_SESSION['socialLogin'] = $socialLogin;
-				$template->display('socialRegister.inc');
-				exit;
+				$db->query('SELECT account_id,old_account_id FROM account ' .
+					   'WHERE email = '.$db->escapeString($socialLogin->getEmail()).' LIMIT 1');
+				if ($db->nextRecord()) //Email already has an account so let's link.
+				{
+					$account =& SmrAccount::getAccount(SmrSession::$account_id);
+					$account->addAuthMethod($socialLogin->getLoginType(),$socialLogin->getUserID());
+					$account->setValidated(true);
+					SmrSession::$account_id = $db->getField('account_id');
+					SmrSession::$old_account_id = $db->getField('old_account_id');
+				}
+				else
+				{
+					session_start(); //Pass the data in a standard session as we don't want to initialise a normal one.
+					$_SESSION['socialLogin'] =& $socialLogin;
+					$template->display('socialRegister.inc');
+					exit;
+				}
 			}
 		}
 		else
@@ -104,7 +117,7 @@ try
 	// get this user from db
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 
-	if($_REQUEST['social'])
+	if(isset($_REQUEST['social']))
 	{
 		require_once(LIB.'Login/SocialLogin.class.inc');
 		session_start();

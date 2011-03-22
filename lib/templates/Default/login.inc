@@ -173,7 +173,7 @@ if(isset($Message))
 				<a href="<?php echo SocialLogin::getFacebookLoginUrl(); ?>" style="margin:10px;">
 					<img src="images/login/facebook.png">
 				</a><br /><br/>
-				<a href="<?php echo SocialLogin::getGoogleLoginUrl(); ?>" style="margin:10px;">
+				<a href="<?php echo SocialLogin::getOpenIdLoginUrl('Google'); ?>" style="margin:10px;">
 					<img src="images/login/google.png">
 				</a>
 		</td>
