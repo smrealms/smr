@@ -107,12 +107,10 @@ class SocialLogin
 				$spaceIndex = strpos($userInfo->name, ' ');
 				if($spaceIndex===false)
 				{
-					echo 'a';
 					$this->firstName=$userInfo->name;
 				}
 				else
 				{
-					echo 'b';
 					$this->firstName=substr($userInfo->name, 0, $spaceIndex);
 					$this->lastName=substr($userInfo->name, $spaceIndex);
 				}
