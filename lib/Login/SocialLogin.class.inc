@@ -9,9 +9,10 @@ class SocialLogin
 	private $firstName = null;
 	private $lastName = null;
 	private static $facebook=null;
+	private static $twitter=null;
 	private static $openID=null;
 	private static $OPEN_ID_IDENTITIES = array('Google' => 'https://www.google.com/accounts/o8/id');
-	
+
 	private static function &getFacebookObj()
 	{
 		if(self::$facebook==null)
@@ -24,6 +25,20 @@ class SocialLogin
 			));
 		}
 		return self::$facebook;
+	}
+
+	private static function &getTwitterObj()
+	{
+		if(self::$twitter==null)
+		{
+			if(!isset($_SESSION))
+			{
+				session_start();
+			}
+			require_once(LIB.'External/Twitter/twitteroauth.php');
+			self::$twitter = new TwitterOAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, $_SESSION['TwitterToken']['oauth_token'], $_SESSION['TwitterToken']['oauth_token_secret']);
+		}
+		return self::$twitter;
 	}
 	
 	public static function &getOpenIdObj()
@@ -39,6 +54,17 @@ class SocialLogin
 	public static function getFacebookLoginUrl()
 	{
 		return self::getFacebookObj()->getLoginUrl(array('fbconnect'=>null,'next'=>URL.'/login_processing.php?loginType=Facebook','cancel_url'=>URL.'/login_processing.php?loginType=Facebook','req_perms'=>'email'));
+	}
+	
+	public static function getTwitterLoginUrl()
+	{
+		if(!isset($_SESSION))
+		{
+			session_start();
+		}
+		self::getTwitterObj()->token = null;
+		$_SESSION['TwitterToken'] = self::getTwitterObj()->getRequestToken(URL.'/login_processing.php?loginType=Twitter');
+		return self::getTwitterObj()->getAuthorizeURL($_SESSION['TwitterToken']);
 	}
 	
 	public static function getOpenIdLoginUrl($loginType)
@@ -66,6 +92,30 @@ class SocialLogin
 				$this->email=$userInfo['email'];
 				$this->firstName=$userInfo['first_name'];
 				$this->lastName=$userInfo['last_name'];
+				$this->valid = true;
+			}
+		}
+		else if($loginType == 'Twitter')
+		{
+			self::getTwitterObj()->getAccessToken($_REQUEST['oauth_verifier']);
+			if(self::getTwitterObj()->http_code == 200)
+			{
+				$this->loginType=$loginType;
+				
+				$userInfo = self::getTwitterObj()->get('account/verify_credentials');
+				$this->userID=$userInfo->id_str;
+				$spaceIndex = strpos($userInfo->name, ' ');
+				if($spaceIndex===false)
+				{
+					echo 'a';
+					$this->firstName=$userInfo->name;
+				}
+				else
+				{
+					echo 'b';
+					$this->firstName=substr($userInfo->name, 0, $spaceIndex);
+					$this->lastName=substr($userInfo->name, $spaceIndex);
+				}
 				$this->valid = true;
 			}
 		}
