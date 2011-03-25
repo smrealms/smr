@@ -71,7 +71,7 @@ else
 					<tr>
 						<td align="right"><b>Name:</b></td>
 						<td><input type="text" name="player_name" maxlength="32" class="InputFields"<?php if(!isset($JoinGameFormHref)){ ?>disabled="disabled"<?php } ?>></td>
-						<td rowspan="4" class="standard"><img name="race_image" src="images/race1.gif" alt="Please select a race."></td>
+						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race1.gif" alt="Please select a race."></td>
 					</tr>
 					<tr>
 						<td align="right"><b>Race:</b></td>
@@ -102,7 +102,7 @@ else
 					
 					<tr>
 						<td colspan="2">
-							<textarea name="race_descr" class="InputFields" style="width:300px;height:275px;border:0;"></textarea>
+							<div id="race_descr" class="InputFields" style="width:300px;height:275px;border:0;"></div>
 						</td>
 					</tr>
 					
@@ -138,8 +138,9 @@ var	desc = new Array(<?php echo $RaceDescriptions; ?>);
 function go()
 {
 	var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;
-	document.race_image.src = "images/race" + race_id + ".gif";
+	document.getElementById('race_image').src = "images/race" + race_id + ".gif";
 	document.getElementById('graphframe').src = "images/graph" + race_id + ".gif";
-	document.FORM.race_descr.value = desc[race_id - 1];
+	document.getElementById('race_descr').innerHTML = desc[race_id - 1];
 }
+go();
 </script>
