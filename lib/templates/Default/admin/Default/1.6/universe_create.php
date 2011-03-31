@@ -38,16 +38,16 @@ create_echo_form($link);
 		<td class="left"><input type="text" size="5" name="num_gals" value="12"></td>
 	</tr>
 	<tr>
-		<td class="right">Start Date (YYYY/MM/DD)</td>
-		<td class="left"><input type="text" size="32" name="game_start" value="<?php echo date(DATE_DATE_SHORT,TIME) ?>"></td>
+		<td class="right">Start Date (DD/MM/YYYY)</td>
+		<td class="left"><input type="text" size="32" name="game_start" value="<?php echo date('d/m/Y',TIME) ?>"></td>
 	</tr>
 	<tr>
-		<td class="right">Turns Start Date (YYYY/MM/DD) - Leave blank if unsure</td>
+		<td class="right">Turns Start Date (DD/MM/YYYY) - Leave blank if unsure</td>
 		<td class="left"><input type="text" size="32" name="game_start_turns" value=""></td>
 	</tr>
 	<tr>
-		<td class="right">End Date (YYYY/MM/DD)</td>
-		<td class="left"><input type="text" size="32" name="game_end" value="<?php echo date(DATE_DATE_SHORT,$DefaultEnd) ?>"></td></tr>
+		<td class="right">End Date (DD/MM/YYYY)</td>
+		<td class="left"><input type="text" size="32" name="game_end" value="<?php echo date('d/m/Y',$DefaultEnd) ?>"></td></tr>
 	<tr>
 		<td class="right">Credits Required</td>
 		<td class="left"><input type="text" size="5" name="creds_needed" value="0"></td>
