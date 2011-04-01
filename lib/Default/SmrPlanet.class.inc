@@ -431,8 +431,12 @@ class SmrPlanet
 				{
 					if($this->db->getField('time_complete') <= TIME)
 					{
+						$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 						$player =& SmrPlayer::getPlayer($this->db->getField('constructor_id'),$this->getGameID());
 						$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
+						$expGain = $PLANET_BUILDINGS[$this->db->getField('construction_id')]['ExpGain'];
+						$player->increaseExperience($expGain);
+						$player->increaseHOF(1,array('Planet','Buildings','Experience'), $expGain);
 						$db2 = new SmrMySqlDatabase();
 						$db2->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
 										 'sector_id = '.$this->getSectorID() . ' AND building_slot_id = ' . $this->db->getField('building_slot_id') . ' LIMIT 1');
