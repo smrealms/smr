@@ -21,8 +21,11 @@ if($var['link_id'] > 3 || $var['link_id'] < 1 ) {
 if($valid == true) {
 	// Allow vote
 	$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . SmrSession::$account_id . ',' . $var['link_id'] . ',' . TIME . ')');
-	// They get 1/3 of their hourly turns for a valid click
-	$player->giveTurns($ship->getRealSpeed()/3);
+	if(TIME >= $player->getGame()->getStartTurnsDate())
+	{
+		// They get 1/3 of their hourly turns for a valid click
+		$player->giveTurns($ship->getRealSpeed()/3);
+	}
 }
 
 $container = array();
