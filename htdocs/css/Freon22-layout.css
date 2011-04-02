@@ -193,5 +193,6 @@ span#ship_name
 }
 
 li {
-	display: list-item;
+	list-style: disc;
+	padding-left: 40px;
 }
