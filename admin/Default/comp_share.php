@@ -1,8 +1,9 @@
 <?php
 
 //future features
-$skipClosedAccs = FALSE;
-$skipExceptions = FALSE;
+$skipUnusedAccs = true;
+$skipClosedAccs = false;
+$skipExceptions = false;
 
 //extra db object and other vars
 $db2 = new SmrMySqlDatabase();
@@ -49,7 +50,7 @@ while ($db->nextRecord())
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Most Common IP</th><th>Last Login</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
 		
-		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$currTabAccId);
+		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$currTabAccId.($skipUnusedAccs?' AND last_login > '.(TIME-86400*30):'').' LIMIT 1');
 		if ($db2->nextRecord())
 			$currTabAccLogin = $db2->getField('login');
 		else
