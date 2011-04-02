@@ -58,15 +58,11 @@ while ($db->nextRecord())
 		foreach ($accountIDs as $currLinkAccId)
 		{
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
-			
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
-			if($isDisabled = $db2->nextRecord())
-				$suspicion = $db2->getField('suspicion');
-			
-			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = '.$currLinkAccId);
+			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = '.$currLinkAccId.($skipUnusedAccs?' AND last_login > '.(TIME-86400*30):''));
 			if ($db2->nextRecord())
 				$currLinkAccLogin = $db2->getField('login');
-			else $currLinkAccLogin = '[Account no longer Exists]';
+			else continue;
+			
 			$PHP_OUTPUT.=('<tr class="center'.($isDisabled?' red':'').'">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.='<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td>';
@@ -77,7 +73,10 @@ while ($db->nextRecord())
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td>');
-			if ($isDisabled) $PHP_OUTPUT.=$suspicion;
+			
+			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
+			if($db2->nextRecord())
+				$PHP_OUTPUT.=$db2->getField('suspicion');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td><input type="checkbox" name="close['.$currLinkAccId.']" value="'.$associatedAccs.'">');
 			$PHP_OUTPUT.=('</td></tr>');
