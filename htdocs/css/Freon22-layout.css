@@ -192,7 +192,9 @@ span#ship_name
 	white-space: pre-wrap; 
 }
 
+ul {
+	margin-left: 40px;
+}
 li {
 	list-style: disc;
-	padding-left: 40px;
 }
