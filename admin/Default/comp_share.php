@@ -79,7 +79,7 @@ while ($db->nextRecord())
 			$PHP_OUTPUT.=('</td><td>');
 			
 			if($isDisabled)
-				$PHP_OUTPUT.=$db2->getField('suspicion');
+				$PHP_OUTPUT.=$db3->getField('suspicion');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td><input type="checkbox" name="close['.$currLinkAccId.']" value="'.$associatedAccs.'">');
 			$PHP_OUTPUT.=('</td></tr>');
