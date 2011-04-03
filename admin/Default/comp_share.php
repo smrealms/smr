@@ -54,7 +54,7 @@ while ($db->nextRecord())
 		if ($db2->nextRecord())
 			$currTabAccLogin = $db2->getField('login');
 		else
-			$currTabAccLogin = '[Account no longer Exists]';
+			continue;
 		foreach ($accountIDs as $currLinkAccId)
 		{
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
