@@ -86,7 +86,27 @@ class SmrSession
 			'alliance_message_add_processing.php' => 50,
 			'alliance_message_delete_processing.php' => 50,
 			'alliance_pick_processing.php' => 50,
-			'toggle_processing.php' => 50
+			'toggle_processing.php' => 50,
+			//Admin pages
+			'account_edit.php' => 50,
+			'account_ip_view_result.php' => 50,
+			'album_moderate.php' => 50,
+			'box_view.php' => 50,
+			'changelog.php' => 50,
+			'comp_share.php' => 50,
+			'form_open.php' => 50,
+			'ip_view_results.php' => 50,
+			'ip_view.php' => 50,
+			'password_check.php' => 50,
+			'permission_manage.php' => 50,
+			'word_filter.php' => 50,
+			//Uni gen
+			'universe_create_locations.php' => 50,
+			'universe_create_planets.php' => 50,
+			'universe_create_ports.php' => 50,
+			'universe_create_sector_details.php' => 50,
+			'universe_create_sectors.php' => 50,
+			'universe_create_warps.php' => 50
 		);
 	
 	protected static $db;
