@@ -83,16 +83,17 @@ function create_galactic_post_menue()
 	$menuItems = array();
 	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
 
+	$allowedWrite = true; //Lets always allow people to write for the GP? The less hoops to jump through the more writers we'll have surely? 
 	$allowedEdit = false;
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
-	if ($allowedWrite = $db->nextRecord())
+	if ($db->nextRecord())
 	{
 		$allowedEdit = $db->getField('position') == 'editor';
 	}
 	
-	if ($allowedWrite)
+	if ($allowedWrite === false)
 	{
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
 	}
@@ -103,7 +104,7 @@ function create_galactic_post_menue()
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
 	}
-	if ($allowedWrite)
+	if ($allowedWrite === true)
 	{
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
 	}
