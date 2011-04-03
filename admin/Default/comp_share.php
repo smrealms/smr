@@ -7,6 +7,7 @@ $skipExceptions = false;
 
 //extra db object and other vars
 $db2 = new SmrMySqlDatabase();
+$db3 = new SmrMySqlDatabase();
 $used = array();
 
 //check the db and get the info we need
@@ -31,6 +32,12 @@ while ($db->nextRecord())
 	if (isset($used[$currTabAccId])) continue;
 	if ($rows > 1)
 	{
+		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$currTabAccId.($skipUnusedAccs?' AND last_login > '.(TIME-86400*30):'').' LIMIT 1');
+		if ($db2->nextRecord())
+			$currTabAccLogin = $db2->getField('login');
+		else
+			continue;
+		
 		if (!$skipClosedAccs)
 		{
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currTabAccId);
@@ -49,12 +56,6 @@ while ($db->nextRecord())
 		else continue;
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Most Common IP</th><th>Last Login</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
-		
-		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$currTabAccId.($skipUnusedAccs?' AND last_login > '.(TIME-86400*30):'').' LIMIT 1');
-		if ($db2->nextRecord())
-			$currTabAccLogin = $db2->getField('login');
-		else
-			continue;
 		foreach ($accountIDs as $currLinkAccId)
 		{
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
@@ -62,6 +63,9 @@ while ($db->nextRecord())
 			if ($db2->nextRecord())
 				$currLinkAccLogin = $db2->getField('login');
 			else continue;
+			
+			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
+			$isDisabled = $db3->nextRecord();
 			
 			$PHP_OUTPUT.=('<tr class="center'.($isDisabled?' red':'').'">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
@@ -74,8 +78,7 @@ while ($db->nextRecord())
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td>');
 			
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
-			if($db2->nextRecord())
+			if($isDisabled)
 				$PHP_OUTPUT.=$db2->getField('suspicion');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td><input type="checkbox" name="close['.$currLinkAccId.']" value="'.$associatedAccs.'">');
