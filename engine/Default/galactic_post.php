@@ -1,25 +1,10 @@
 <?php
 
 $template->assign('PageTopic','Galactic Post');
-$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
-if ($db->nextRecord()) {
-
-    $position = $db->getField('position');
-    if ($position == 'writer')
-        $allowed_write = 'yes';
-    else
-        $allowed_edit = 'yes';
-
-} else {
-
-    $allowed_write = 'no';
-    $allowed_edit = 'no';
-
-}
-
-if ($allowed_edit == 'yes') {
-
+if ($db->nextRecord() && $db->getField('position') == 'editor')
+{
+	$db2 = new SmrMySqlDatabase();
 	include(get_file_loc('menue.inc'));
     $PHP_OUTPUT.=create_galactic_post_menue();
     $PHP_OUTPUT.=('<b>EDITOR OPTIONS<br /></b>');
