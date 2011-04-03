@@ -83,36 +83,30 @@ function create_galactic_post_menue()
 	$menuItems = array();
 	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
 
+	$allowedEdit = false;
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
-	if ($db->nextRecord()) {
-
-		$position = $db->getField('position');
-		if ($position == 'writer')
-			$allowed_write = 'yes';
-		else
-			$allowed_edit = 'yes';
-
+	if ($allowedWrite = $db->nextRecord())
+	{
+		$allowedEdit = $db->getField('position') == 'editor';
 	}
-	else {
-
-		$allowed_write = 'no';
-		$allowed_edit = 'no';
-
+	
+	if ($allowedWrite)
+	{
+		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
 	}
-	if ($allowed_write == 'no' && $allowed_edit == 'no')
-	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
-	if ($allowed_edit == 'yes')
+	if ($allowedEdit === true)
 	{
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_applications.php')),'Text'=>'View the applications');
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_article.php')),'Text'=>'View the articles');
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
-
 	}
-	if ($allowed_edit == 'yes' || $allowed_write == 'yes')
+	if ($allowedWrite)
+	{
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
+	}
 	$template->assign('MenuItems', $menuItems);
 }
 

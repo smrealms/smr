@@ -35,7 +35,7 @@ if (isset($var['article'])) {
         $article_id = $db2->getField('article_id');
         $db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID().' AND article_id = '.$article_id);
         $db3->nextRecord();
-        $article_title = stripslashes($db3->getField('title'));
+        $article_title = bbifyMessage($db3->getField('title'));
         $PHP_OUTPUT.=($article_title.'<br />');
 
     }

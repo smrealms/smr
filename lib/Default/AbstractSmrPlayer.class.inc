@@ -90,7 +90,7 @@ abstract class AbstractSmrPlayer
 		return $this->gameID;
 	}
 	
-	public function getGame()
+	public function &getGame()
 	{
 		return SmrGame::getGame($this->gameID);
 	}
