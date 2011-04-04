@@ -15,7 +15,7 @@ if ($db->nextRecord())
 	$template->assign('PageTopic','Reading <i>Galactic Post</i> Edition : '.$paper_name);
 	include(get_file_loc('menue.inc'));
 	$PHP_OUTPUT.=create_galactic_post_menue();
-	$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());
+	$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$db2->escapeNumber($paper_id).' AND game_id = '.$db2->escapeNumber($player->getGameID()));
 	$even = $db2->getNumRows() % 2 == 0;
 	$curr_position = 0;
 	$PHP_OUTPUT.=('<table align="center" spacepadding="20" cellspacing="20">');
@@ -24,8 +24,8 @@ if ($db->nextRecord())
 	{
 		$amount += 1;
 	}
-	while ($curr_position + 1 <= $amount) {
-
+	while ($curr_position < $amount)
+	{
 		$curr_position += 1;
 		if ($even === false && $db2->getNumRows() + 1 == $curr_position)
 		{
@@ -34,8 +34,7 @@ if ($db->nextRecord())
 		}
 		$db2->nextRecord();
 		//now we have the articles in this paper.
-		$article_num = $db2->getField('article_id');
-		$db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID().' AND article_id = '.$article_num);
+		$db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$db3->escapeNumber($player->getGameID()).' AND article_id = '.$db3->escapeNumber($db2->getField('article_id')).' LIMIT 1');
 		$db3->nextRecord();
 
 		if ($curr_position % 2 == 1)
