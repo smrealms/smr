@@ -35,7 +35,7 @@ if (!isset($var['role_id']))
 	$changeRoles = (bool)$_REQUEST['changeRoles'];
 	$planetAccess = (bool)$_REQUEST['planets'];
 	$mbMessages = (bool)$_REQUEST['mbMessages'];
-	$exemptWith = (bool)$_REQUEST['exemptWithdrawls'];
+	$exemptWith = (bool)$_REQUEST['exemptWithdrawals'];
 	$sendAllMsg = (bool)$_REQUEST['sendAllMsg'];
 
 	$db->query('INSERT INTO alliance_has_roles
