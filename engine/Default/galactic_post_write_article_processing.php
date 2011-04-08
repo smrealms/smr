@@ -1,6 +1,16 @@
 <?php
-$title = $_REQUEST['title'];
-$message = $_REQUEST['message'];
+
+$title = htmlentities(trim($_REQUEST['title']));
+$message = htmlentities(trim($_REQUEST['message']));
+
+if($_REQUEST['action'] == 'Preview article')
+{
+	$container = create_container('skeleton.php','galactic_post_write_article.php');
+	$container['previewTitle'] = $title;
+	$container['preview'] = $message;
+	forward($container);
+}
+
 if (empty($title))
 {
     create_error('You must enter a title');
