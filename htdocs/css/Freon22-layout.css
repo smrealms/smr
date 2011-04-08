@@ -192,9 +192,12 @@ span#ship_name
 	white-space: pre-wrap; 
 }
 
-ul {
+ul, ol {
 	margin-left: 40px;
 }
-li {
+ul li {
 	list-style: disc;
+}
+ol li {
+	list-style: decimal;
 }
