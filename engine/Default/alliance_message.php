@@ -47,14 +47,6 @@ if ($db->getNumRows() > 0)
 	$alliance_eyes = array();
 	while ($db->nextRecord())
 	{
-		$db2->query('SELECT time
-					FROM player_read_thread 
-					WHERE account_id=' . $player->getAccountID()  . '
-					AND game_id=' . $player->getGameID() . '
-					AND alliance_id =' . $alliance_id . '
-					AND thread_id=' . $db->getField('thread') . ' 
-					AND time>' . $db->getField('sendtime') . ' LIMIT 1
-					');
 		if ($db->getField('alliance_only')) $alliance_eyes[$i] = TRUE;
 		else $alliance_eyes[$i] = FALSE;
 		$threads[$i]['thread_id'] = $db->getField('thread');
@@ -63,6 +55,15 @@ if ($db->getNumRows() > 0)
 		$thread_topics[$i] = $db->getField('topic');
 
 		$threads[$i]['Topic'] = $db->getField('topic');
+		
+		$db2->query('SELECT time
+					FROM player_read_thread 
+					WHERE account_id=' . $player->getAccountID()  . '
+					AND game_id=' . $player->getGameID() . '
+					AND alliance_id =' . $alliance_id . '
+					AND thread_id=' . $db->getField('thread') . ' 
+					AND time>' . $db->getField('sendtime') . ' LIMIT 1
+					');
 		$threads[$i]['Unread'] = $db2->getNumRows() == 0;
 		
 		if ($db->getField('sender_id') > 0)
@@ -78,9 +79,16 @@ if ($db->getNumRows() > 0)
 						AND alliance_thread.reply_id=1
 						AND player.account_id=alliance_thread.sender_id LIMIT 1
 						');
-			$db2->nextRecord();
-			$playerName = $db2->getField('player_name');
-			$sender_id = $db2->getField('sender_id');
+			if($db2->nextRecord())
+			{
+				$sender_id = $db2->getField('sender_id');
+				$author =& SmrPlayer::getPlayer($sender_id, $player->getGameID());
+				$playerName = $author->getLinkedDisplayName(false);
+			}
+			else
+			{
+				$playerName = 'Unknown';
+			}
 		}
 		else
 		{
@@ -94,7 +102,7 @@ if ($db->getNumRows() > 0)
 
 		$db3->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id.' LIMIT 1');
 		$db3->nextRecord();
-		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db3->getField('mb_messages') == 'TRUE';
+		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db3->getBoolean('mb_messages');
 		if($threads[$i]['CanDelete'])
 		{
 			$container['thread_id'] = $db->getField('thread');
@@ -115,7 +123,7 @@ if ($db->getNumRows() > 0)
 	for($j=0;$j<$i;$j++)
 	{
 		$container['thread_index'] = $j;
-		$threads[$j]['ViewHref']=SmrSession::get_new_href($container);
+		$threads[$j]['ViewHref'] = SmrSession::get_new_href($container);
 	}
 }
 $template->assignByRef('Threads',$threads);

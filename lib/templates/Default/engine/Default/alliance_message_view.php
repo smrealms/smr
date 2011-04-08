@@ -39,14 +39,22 @@ if(	isset($PrevThread) || isset($NextThread) )
 		<tr>
 			<th>Author</th>
 			<th>Message</th>
-			<th>Time</th>
+			<th>Time</th><?php
+			if($Thread['CanDelete'])
+			{
+				?><th></th><?php
+			} ?>
 		</tr><?php
 		foreach($Thread['Replies'] as &$Reply)
 		{ ?>
 			<tr>
 				<td class="shrink noWrap top"><?php echo $Reply['Sender']; ?></td>
 				<td><?php echo bbifyMessage($Reply['Message']); ?></td>
-				<td class="shrink noWrap top"><?php echo date(DATE_FULL_SHORT,$Reply['SendTime']); ?></td>
+				<td class="shrink noWrap top"><?php echo date(DATE_FULL_SHORT,$Reply['SendTime']); ?></td><?php
+				if($Thread['CanDelete'])
+				{
+					?><td class="shrink noWrap top"><a href="<?php echo $Reply['DeleteHref']; ?>"><img src="images/silk/cross.png" alt="Delete" title="Delete Post"/></a></td><?php
+				} ?>
 			</tr><?php
 		} unset($Reply); ?>
 	</table>
