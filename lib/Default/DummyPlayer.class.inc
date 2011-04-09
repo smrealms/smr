@@ -126,6 +126,13 @@ class DummyPlayer extends AbstractSmrPlayer
 		return 1;
 	}
 	
+	public function setAllianceID($ID)
+	{
+		if($this->allianceID == $ID)
+			return;
+		$this->allianceID=$ID;
+	}
+	
 	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer)
 	{
 		
