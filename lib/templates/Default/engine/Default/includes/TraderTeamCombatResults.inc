@@ -104,7 +104,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 				}
 				else
 				{
-					?>launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php
+					?> launches <span class="cds"><?php echo $WeaponDamage['Launched'] ?></span> combat drones at <?php
 					if($ActualDamage['TargetAlreadyDead'])
 					{
 						?>the debris that was once <?php
@@ -118,25 +118,25 @@ if(is_array($TraderTeamCombatResults['Traders']))
 							{
 								if($ActualDamage['HasCDs'])
 								{
-									?>which prove ineffective against their combat drones<?php
+									?> which prove ineffective against their combat drones<?php
 								}
 								else
 								{
-									?>which washes harmlessly over their hull<?php
+									?> which washes harmlessly over their hull<?php
 								}
 							}
 							if($ActualDamage['Armour'] > 0)
 							{
-								?>which is deflected by their shields<?php
+								?> which is deflected by their shields<?php
 							}
 							else
 							{
-								?>but they cannot do any damage<?php
+								?> but they cannot do any damage<?php
 							}
 						}
 						else
 						{
-							?>destroying <?php
+							?> destroying <?php
 							if($ActualDamage['Shield'] > 0)
 							{
 								?><span class="shields"><?php echo number_format($ActualDamage['Shield']) ?></span> shields<?php
