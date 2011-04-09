@@ -110,7 +110,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		$new_speed = 7;
 
 		// adapt turns
-		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
+//		$this->setTurns(round($this->turns / $old_speed * $new_speed),100);
 
 		$this->setSectorID($this->getHome());
 		$this->increaseDeaths(1);
