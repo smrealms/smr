@@ -400,12 +400,19 @@ class SmrPort
 	{
 		if($this->isCachedVersion())
 			throw new Exception('Cannot upgrade a cached port!');
+		$upgrades = 0;
 		while($this->upgrade >= $this->getUpgradeRequirement() && $this->level < 9)
 		{
+			++$upgrades;
 			$this->decreaseUpgrade($this->getUpgradeRequirement());
 			$this->decreaseCredits($this->getUpgradeRequirement());
 			$this->doUpgrade();
 		}
+		if($upgrades > 0)
+		{
+			$this->updateSectorPlayersCache();
+		}
+		return $upgrades;
 	}
 	
 	public function upgradeToLevel($level)
@@ -428,7 +435,7 @@ class SmrPort
 		switch($this->getLevel())
 		{
 			case 0:
-				for($i=0;$i<3;$i++) // Add 3 goods for upgrading to level 1
+				for($i=0;$i<3;++$i) // Add 3 goods for upgrading to level 1
 				{
 					$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell'; //Regenerate type for each good.
 					do
@@ -546,6 +553,10 @@ class SmrPort
 				++$downgrades;
 				$this->doDowngrade();
 			}
+		}
+		if($downgrades > 0)
+		{
+			$this->updateSectorPlayersCache();
 		}
 		return $downgrades;
 	}
@@ -1122,6 +1133,16 @@ class SmrPort
 	protected function setCachedTime($cachedTime)
 	{
 		return $this->cachedTime=$cachedTime;
+	}
+	public function updateSectorPlayersCache()
+	{
+		$accountIDs = array();
+		$sectorPlayers =& $this->getSector()->getTraders();
+		foreach($sectorPlayers as &$sectorPlayer)
+		{
+			$accountIDs[] = $sectorPlayer->getAccountID();
+		}
+		$this->addCachePorts($accountIDs);
 	}
 	public function addCachePort($accountID)
 	{
