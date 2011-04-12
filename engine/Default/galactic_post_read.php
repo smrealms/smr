@@ -20,7 +20,7 @@ if ($db->nextRecord())
 	$curr_position = 0;
 	$PHP_OUTPUT.=('<table align="center" spacepadding="20" cellspacing="20">');
 	$amount = $db2->getNumRows();
-	if ($even === true)
+	if ($even === false)
 	{
 		$amount += 1;
 	}
