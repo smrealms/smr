@@ -882,7 +882,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' ORDER BY link_id LIMIT 3');
 		while($db->nextRecord())
 		{
-			$nextVoteTime[$db->getField('link_id')] = (TIME - 86400) - $db->getField('timeout');
+			$nextVoteTime[$db->getField('link_id')] = 86400 - (TIME - $db->getField('timeout'));
 		}
 	}
 	
@@ -903,7 +903,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		}
 		$minVoteTime = min($minVoteTime,$nextVoteTime[$i]);
 		$voteSite[$i] = '<a href=';
-		if(SmrSession::$game_id != 0 && $nextVoteTime[$i] == 0)
+		if(SmrSession::$game_id != 0 && $nextVoteTime[$i] <= 0)
 		{
 			$container['link_id'] = $i;
 			$voteSite[$i] .= '\'javascript:voteSite("' . $voteLinks[$i]['location'] . '",';

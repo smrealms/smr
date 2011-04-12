@@ -298,7 +298,7 @@
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
 						<div style="width:60%; float: left; text-align: left;">
-							<span style="font-size: xx-small;">Get <b><u>FREE TURNS</u></b> for voting if you see the star, next available <?php if($TimeToNextVote <= 0){ ?>now<?php }else{ ?>in <?php echo format_time($TimeToNextVote,true); } ?>.</span>
+							<span style="font-size: xx-small;">Get <b><u>FREE TURNS</u></b> for voting if you see the star, next available <span id="v"><?php if($TimeToNextVote <= 0){ ?>now<?php }else{ ?>in <?php echo format_time($TimeToNextVote,true); } ?></span>.</span>
 							<br /><?php
 							foreach($VoteSites as $VoteSite)
 							{

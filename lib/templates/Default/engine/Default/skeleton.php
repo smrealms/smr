@@ -72,7 +72,7 @@
 			</tr>
 			<tr>
 				<td class="footer_left">
-					<div style="width:294px;" class="center">Get <b><u>FREE TURNS</u></b> for voting if you see the star, next available <?php if($TimeToNextVote <= 0){ ?>now<?php }else{ ?>in <?php echo format_time($TimeToNextVote,true); } ?>.</div><?php
+					<div style="width:294px;" class="center">Get <b><u>FREE TURNS</u></b> for voting if you see the star, next available <span id="v"><?php if($TimeToNextVote <= 0){ ?>now<?php }else{ ?>in <?php echo format_time($TimeToNextVote,true); } ?></span>.</div><?php
 						foreach($VoteSites as $VoteSite)
 						{
 							echo $VoteSite;
