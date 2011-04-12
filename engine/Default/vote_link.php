@@ -5,7 +5,7 @@ $db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$acc
 if(!$db->nextRecord()) {
 	$valid=true;
 }
-else if($db->getField('timeout') < TIME - 86400) {
+else if($db->getField('timeout') <= TIME - 86400) {
 	$valid = true;
 }
 else {
