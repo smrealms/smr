@@ -901,10 +901,10 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		{
 			$nextVoteTime[$i] = 0;
 		}
+		$minVoteTime = min($minVoteTime,$nextVoteTime[$i]);
 		$voteSite[$i] = '<a href=';
 		if(SmrSession::$game_id != 0 && $nextVoteTime[$i] == 0)
 		{
-			$minVoteTime = min($minVoteTime,$nextVoteTime[$i]);
 			$container['link_id'] = $i;
 			$voteSite[$i] .= '\'javascript:voteSite("' . $voteLinks[$i]['location'] . '",';
 			$voteSite[$i] .= '"' . SmrSession::get_new_href($container,true) . '")\'';
