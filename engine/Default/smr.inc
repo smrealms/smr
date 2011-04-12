@@ -878,53 +878,48 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 		$template->assign('WeaponReorderLink',SmrSession::get_new_href(create_container('skeleton.php', 'weapon_reorder.php')));
 	
-		
-	}
-	
-	$container=array();
-	$container['url'] = 'vote_link.php';
-	
-	$in_game = isset(SmrSession::$game_id) && SmrSession::$game_id>0;
-	if($in_game)
-	{
+		$nextVoteTime = array();
 		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' ORDER BY link_id LIMIT 3');
 		while($db->nextRecord())
 		{
-			if($db->getField('timeout') < TIME - 86400)
-			{
-				$turns_for_votes[$db->getField('link_id')] = 1;
-			}
-			else {
-				$turns_for_votes[$db->getField('link_id')] = 0;
-			}
+			$nextVoteTime[$db->getField('link_id')] = (TIME - 86400) - $db->getField('timeout');
 		}
 	}
 	
-	$vote_links = array();
-	$vote_links[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'location' => 'http://www.mpogd.com/games/game.asp?ID=1145', 'name' => 'MPOGD');
-	$vote_links[2] = array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'location' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30', 'name' => 'OMGN');
-	$vote_links[3] = array('default_img' => 'twg.png', 'star_img' => 'twg_vote.png', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
+	$container=create_container('vote_link.php');
 	
+	$voteLinks = array();
+	$voteLinks[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'location' => 'http://www.mpogd.com/games/game.asp?ID=1145', 'name' => 'MPOGD');
+	$voteLinks[2] = array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'location' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30', 'name' => 'OMGN');
+	$voteLinks[3] = array('default_img' => 'twg.png', 'star_img' => 'twg_vote.png', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
+	
+	$minVoteTime = 86400;
 	$voteSite = array();
 	for($i=1;$i<4;$i++)
 	{
-		$voteSite[$i] = '<a href=';
-		if($in_game && (!isset($turns_for_votes[$i]) || ($turns_for_votes[$i])))
+		if(!isset($nextVoteTime[$i]))
 		{
+			$nextVoteTime[$i] = 0;
+		}
+		$voteSite[$i] = '<a href=';
+		if(SmrSession::$game_id != 0 && $nextVoteTime[$i] == 0)
+		{
+			$minVoteTime = min($minVoteTime,$nextVoteTime[$i]);
 			$container['link_id'] = $i;
-			$voteSite[$i] .= '\'javascript:voteSite("' . $vote_links[$i]['location'] . '",';
+			$voteSite[$i] .= '\'javascript:voteSite("' . $voteLinks[$i]['location'] . '",';
 			$voteSite[$i] .= '"' . SmrSession::get_new_href($container,true) . '")\'';
-			$img = $vote_links[$i]['star_img'];
+			$img = $voteLinks[$i]['star_img'];
 		}
 		else
 		{
-			$voteSite[$i] .= '"' . $vote_links[$i]['location'] . '" target="_blank"';
-			$img = $vote_links[$i]['default_img'];
+			$voteSite[$i] .= '"' . $voteLinks[$i]['location'] . '" target="_blank"';
+			$img = $voteLinks[$i]['default_img'];
 		}
 	
-		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $vote_links[$i]['name'] . '"></a>';
+		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $voteLinks[$i]['name'] . '"></a>';
 	}
 	$template->assign('VoteSites',$voteSite);
+	$template->assign('TimeToNextVote',$minVoteTime);
 	
 	
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
@@ -945,7 +940,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 //		echo '<br />SMR 1.5 Launch in ' . format_time($launch - $now, TRUE) . '</span>!';
 }
 
-function format_time($seconds, $short=FALSE)
+function format_time($seconds, $short=false)
 {
 	$minutes=0;
 	$hours=0;
