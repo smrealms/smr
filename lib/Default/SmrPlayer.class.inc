@@ -2099,7 +2099,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->getPlottedCourse()!==false;
 	}
 	
-	public function isPartOfCourse($sectorOrSectorID)
+	public function isPartOfCourse(&$sectorOrSectorID)
 	{
 		if(!$this->hasPlottedCourse())
 			return false;

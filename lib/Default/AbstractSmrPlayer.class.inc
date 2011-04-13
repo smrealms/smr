@@ -483,7 +483,7 @@ abstract class AbstractSmrPlayer
 		return Globals::getRaceName($this->getRaceID());
 	}
 	
-	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer $player = null)
+	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer &$player = null)
 	{
 		if($player!==null)
 			return $player->getColouredRaceName($otherRaceID);
@@ -1105,7 +1105,7 @@ abstract class AbstractSmrPlayer
 		$this->setLastCPLAction(TIME);
 	}
 	
-	public function canSeeAny(array $otherPlayerArray)
+	public function canSeeAny(array &$otherPlayerArray)
 	{
 		$canSee=false;
 		foreach($otherPlayerArray as $otherPlayer)
@@ -1116,7 +1116,7 @@ abstract class AbstractSmrPlayer
 		return $canSee;
 	}
 	
-	public function canSee(AbstractSmrPlayer $otherPlayer)
+	public function canSee(AbstractSmrPlayer &$otherPlayer)
 	{
 		if($this->sameAlliance($otherPlayer))
 			return true;
@@ -1127,57 +1127,57 @@ abstract class AbstractSmrPlayer
 		return true;
 	}
 	
-	public function sameAlliance(AbstractSmrPlayer $otherPlayer)
+	public function sameAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->equals($otherPlayer) || ($this->hasAlliance()&&$this->getAllianceID()==$otherPlayer->getAllianceID());
 	}
 	
-	public function sharedForceAlliance(AbstractSmrPlayer $otherPlayer)
+	public function sharedForceAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function forceNAPAlliance(AbstractSmrPlayer $otherPlayer)
+	public function forceNAPAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function planetNAPAlliance(AbstractSmrPlayer $otherPlayer)
+	public function planetNAPAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderNAPAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderNAPAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderMAPAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderMAPAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->traderAttackTraderAlliance($otherPlayer) && $this->traderDefendTraderAlliance($otherPlayer);
 	}
 	
-	public function traderAttackTraderAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderAttackTraderAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderDefendTraderAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderDefendTraderAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderAttackForceAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderAttackForceAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderAttackPortAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderAttackPortAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}
 	
-	public function traderAttackPlanetAlliance(AbstractSmrPlayer $otherPlayer)
+	public function traderAttackPlanetAlliance(AbstractSmrPlayer &$otherPlayer)
 	{
 		return $this->sameAlliance($otherPlayer);
 	}

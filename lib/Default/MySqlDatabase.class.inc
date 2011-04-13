@@ -240,7 +240,11 @@ abstract class MySqlDatabase implements Database
 	
 	//below this is purely for compatibility reasons
 	
-	function free() { }
+	function free()
+	{
+		unset($this->dbRecord);
+		mysql_free_result($this->dbResult);
+	}
 	
 	function escape_string($string, $transfer_html=false)
 	{

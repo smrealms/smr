@@ -42,6 +42,11 @@ class SmrPlanet
 			}
 		}
 	}
+	
+	public static function clearCache()
+	{
+		self::$CACHE_PLANETS = array();
+	}
 
 	public static function &getPlanet($gameID,$sectorID,$forceUpdate = false)
 	{
