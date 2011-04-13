@@ -93,14 +93,14 @@ class Template
 	{
 		if($this->nestedIncludes > 15)
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
-		foreach($this->data as $key => $value)
+		foreach($this->data as $key => &$value)
 		{
 			$$key=&$value;
 			unset($value);
 		}
 		if($assignVars!==null)
 		{
-			foreach($assignVars as $key => $value)
+			foreach($assignVars as $key => &$value)
 			{
 				$$key=&$value;
 				unset($value);

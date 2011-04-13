@@ -984,12 +984,12 @@ class SmrSector
 		$this->setBattles($this->battles+$amount);
 	}
 	
-	function equals(SmrSector $otherSector)
+	function equals(SmrSector &$otherSector)
 	{
 		return $otherSector->getSectorID()==$this->getSectorID()&&$otherSector->getGameID()==$this->getGameID();
 	}
 	
-	function isLinkedSector(SmrSector $otherSector)
+	function isLinkedSector(SmrSector &$otherSector)
 	{
 		return $otherSector->getGameID()==$this->getGameID()&&($otherSector->getSectorID()==$this->getWarp()||in_array($otherSector->getSectorID(),$this->getLinks()));
 	}

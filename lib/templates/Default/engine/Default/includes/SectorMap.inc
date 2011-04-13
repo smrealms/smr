@@ -165,5 +165,9 @@
 				</td><?php
 			} unset($Sector); ?>
 		</tr><?php
+		//A little hacky but clearing these caches for each row of gal map drastically reduces total memory usage, and these caches should never be needed after this point either.
+		SmrPort::clearCache();
+		SmrForce::clearCache();
+		SmrPlanet::clearCache();
 		} unset($MapSector); ?>
 </table>
