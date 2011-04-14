@@ -1,9 +1,9 @@
 <?php
 
 if (isset($var['from'])) $start = $var['from'];
-else $start = $_POST['from'];
+else $start = trim($_POST['from']);
 if (isset($var['to'])) $target = $var['to'];
-else $target = $_POST['to'];
+else $target = trim($_POST['to']);
 
 // perform some basic checks on both numbers
 if (empty($start) || empty($target))
