@@ -7,18 +7,12 @@ if ($player->isLandedOnPlanet())
 	create_error('You must first launch to drop forces');
 
 // take either from container or request, prefer container
-if (isset($var['drop_mines']))
-	$drop_mines = $var['drop_mines']; else $drop_mines = $_REQUEST['drop_mines'];
-if (isset($var['drop_combat_drones']))
-	$drop_combat_drones = $var['drop_combat_drones']; else $drop_combat_drones = $_REQUEST['drop_combat_drones'];
-if (isset($var['drop_scout_drones']))
-	$drop_scout_drones = $var['drop_scout_drones']; else $drop_scout_drones = $_REQUEST['drop_scout_drones'];
-if (isset($var['take_mines']))
-	$take_mines = $var['take_mines']; else $take_mines = $_REQUEST['take_mines'];
-if (isset($var['take_combat_drones']))
-	$take_combat_drones = $var['take_combat_drones']; else $take_combat_drones = $_REQUEST['take_combat_drones'];
-if (isset($var['take_scout_drones']))
-	$take_scout_drones = $var['take_scout_drones']; else $take_scout_drones = $_REQUEST['take_scout_drones'];
+$drop_mines			= isset($var['drop_mines'])			? $var['drop_mines']			: trim($_REQUEST['drop_mines']);
+$drop_combat_drones = isset($var['drop_combat_drones'])	? $var['drop_combat_drones']	: trim($_REQUEST['drop_combat_drones']);
+$drop_scout_drones	= isset($var['drop_scout_drones'])	? $var['drop_scout_drones']		: trim($_REQUEST['drop_scout_drones']);
+$take_mines			= isset($var['take_mines'])			? $var['take_mines']			: trim($_REQUEST['take_mines']);
+$take_combat_drones	= isset($var['take_combat_drones'])	? $var['take_combat_drones']	: trim($_REQUEST['take_combat_drones']);
+$take_scout_drones	= isset($var['take_scout_drones'])	? $var['take_scout_drones']		: trim($_REQUEST['take_scout_drones']);
 
 // do we have numbers?
 if (isset($drop_mines) && !is_numeric($drop_mines)) create_error('Only numbers as input allowed');
@@ -54,26 +48,41 @@ $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var
 include(get_file_loc('mine_change.php'));
 // check max on that stack
 if ($forces->getMines() + $change_mines > 50)
-	create_error('This stack can only take up to 50 mines!');
+{
+	$change_mines = 50 - $forces->getMines();
+//	create_error('This stack can only take up to 50 mines!');
+}
 
 if ($forces->getCDs() + $change_combat_drones > 50)
-	create_error('This stack can only take up to 50 combat drones!');
+{
+	$change_combat_drones = 50 - $forces->getCDs();
+//	create_error('This stack can only take up to 50 combat drones!');
+}
 
 if ($forces->getSDs() + $change_scout_drones > 5)
-	create_error('This stack can only take up to 5 scout drones!');
+{
+	$change_scout_drones = 50 - $forces->getSDs();
+//	create_error('This stack can only take up to 5 scout drones!');
+}
 
 // combat drones
-if ($change_combat_drones != 0) {
-
+if ($change_combat_drones != 0)
+{
 	// we can't take more forces than are in sector
 	if ($forces->getCDs() + $change_combat_drones < 0)
+	{
 		create_error('You can\'t take more combat drones than are on this stack!');
+	}
 
 	if ($ship->getCDs() - $change_combat_drones > $ship->getMaxCDs())
+	{
 		create_error('Your ships supports no more than ' . $ship->getMaxCDs() . ' combat drones!');
+	}
 
 	if ($ship->getCDs() - $change_combat_drones < 0)
+	{
 		create_error('You can\'t drop more combat drones than you carry!');
+	}
 
 	// remove from ship
 	if($change_combat_drones>0)
