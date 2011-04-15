@@ -29,6 +29,20 @@ class Globals
 			self::$db = new SmrMySqlDatabase();
 	}
 	
+	public static function canAccessPage($pageName, AbstractSmrPlayer &$player, array $extraInfo)
+	{
+		switch($pageName)
+		{
+			case 'AllianceMOTD':
+				if($player->getAllianceID() != $extraInfo['AllianceID'])
+				{
+					logException(new Exception('Tried to access page without permission.'));
+					create_error('You cannot access this page.');
+				}
+			break;
+		}
+	}
+	
 	public static function &getHiddenPlayers()
 	{
 		if(self::$HIDDEN_PLAYERS==null)

@@ -1,6 +1,5 @@
 <?php
-
-function handleException(Exception $e)
+function logException(Exception $e)
 {
 	global $account,$var,$player;
 	$errorType = 'Error';
@@ -58,9 +57,25 @@ function handleException(Exception $e)
 		 $message,
 		 'From: bugs@smrealms.de');
 	}
+	return $errorType;
+}
+
+function handleException(Exception $e)
+{
+	$errorType = logException($e);
 	if(!defined('USING_AJAX')||!USING_AJAX)
 		header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
 	exit;
+}
+
+function dumpMemDiff($msg)
+{
+	static $memory;
+	@ob_end_clean();
+	var_dump($msg);
+	var_dump(($memory2 = memory_get_usage()) - $memory);
+	$memory = $memory2;
+	ob_start();
 }
 
 require_once('config.php');
