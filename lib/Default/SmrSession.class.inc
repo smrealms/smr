@@ -157,6 +157,7 @@ class SmrSession
 			self::$game_id			= self::$db->getField('game_id');
 			self::$last_accessed	= self::$db->getField('last_accessed');
 			self::$var = @unserialize(@gzuncompress(self::$db->getField('session_var')));
+			self::$commonIDs	= array();
 			self::$lastSN = self::$db->getField('last_sn');
 			self::$previousAjaxReturns = @unserialize(@gzuncompress(self::$db->getField('ajax_returns')));
 			if(!is_array(self::$var))
@@ -184,7 +185,9 @@ class SmrSession
 					{
 						--$value['RemainingPageLoads'];
 						if(isset($value['CommonID']))
+						{
 							self::$commonIDs[$value['CommonID']] = $key;
+						}
 					}
 				} unset($value);
 			}
@@ -196,6 +199,8 @@ class SmrSession
 			self::$old_account_id	= 0;
 			self::$game_id		= 0;
 			self::$var			= array();
+			self::$game_id		= 0;
+			self::$commonIDs	= array();
 		}
 		
 		if(self::$game_id)
@@ -306,6 +311,12 @@ class SmrSession
 			$var[$key] = $value;
 			self::$var[self::$SN][$key] = $value;
 		}
+	}
+	
+	public static function clearLinks()
+	{
+		self::$var = array(self::$SN => self::$var[self::$SN]);
+		self::$commonIDs = array();
 	}
 	
 	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
