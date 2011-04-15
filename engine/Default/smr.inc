@@ -463,6 +463,7 @@ function do_voodoo()
 	
 	if($var['url'] == 'game_play_preprocessing.php') // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
 	{
+		SmrSession::clearLinks();
 		if (SmrSession::$game_id > 0)
 			$account->log(2, 'Player left game '.SmrSession::$game_id);
 		
