@@ -15,12 +15,12 @@ $take_combat_drones	= isset($var['take_combat_drones'])	? $var['take_combat_dron
 $take_scout_drones	= isset($var['take_scout_drones'])	? $var['take_scout_drones']		: trim($_REQUEST['take_scout_drones']);
 
 // do we have numbers?
-if (isset($drop_mines) && !is_numeric($drop_mines)) create_error('Only numbers as input allowed');
-if (isset($drop_combat_drones) && !is_numeric($drop_combat_drones)) create_error('Only numbers as input allowed');
-if (isset($drop_scout_drones) && !is_numeric($drop_scout_drones)) create_error('Only numbers as input allowed');
-if (isset($take_mines) && !is_numeric($take_mines)) create_error('Only numbers as input allowed');
-if (isset($take_combat_drones) && !is_numeric($take_combat_drones)) create_error('Only numbers as input allowed');
-if (isset($take_scout_drones) && !is_numeric($take_scout_drones)) create_error('Only numbers as input allowed');
+if (!empty($drop_mines) && !is_numeric($drop_mines)) create_error('Only numbers as input allowed');
+if (!empty($drop_combat_drones) && !is_numeric($drop_combat_drones)) create_error('Only numbers as input allowed');
+if (!empty($drop_scout_drones) && !is_numeric($drop_scout_drones)) create_error('Only numbers as input allowed');
+if (!empty($take_mines) && !is_numeric($take_mines)) create_error('Only numbers as input allowed');
+if (!empty($take_combat_drones) && !is_numeric($take_combat_drones)) create_error('Only numbers as input allowed');
+if (!empty($take_scout_drones) && !is_numeric($take_scout_drones)) create_error('Only numbers as input allowed');
 
 // round if necessary
 $drop_mines = round($drop_mines);
