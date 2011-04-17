@@ -115,5 +115,23 @@ else
 				} unset($Message);
 			} ?>
 		</table>
+		<table class="fullwidth center">
+			<tr>
+				<td style="width: 30%" valign="middle"><?php
+					if(isset($PreviousPageHREF))
+					{
+						?><a href="<?php echo $PreviousPageHREF; ?>"><img src="<?php echo URL; ?>/images/album/rew.jpg" alt="Previous Page" border="0"></a><?php
+					} ?>
+				</td>
+				<td>
+				</td>
+				<td style="width: 30%" valign="middle"><?php
+					if(isset($NextPageHREF))
+					{
+						?><a href="<?php echo $NextPageHREF; ?>"><img src="<?php echo URL; ?>/images/album/fwd.jpg" alt="Next Page" border="0"></a><?php
+					} ?>
+				</td>
+			</tr>
+		</table>
 	</form><?php
 } ?>
