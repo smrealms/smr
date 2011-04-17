@@ -71,6 +71,7 @@ if (isset($Msg))
 				</tr>
 			</table>
 		</td><?php
+		$this->includeTemplate('includes/Ticker.inc'); 
 		if(isset($PlanetPlayers))
 		{ ?>
 			<td><?php

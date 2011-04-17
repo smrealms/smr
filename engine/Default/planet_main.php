@@ -18,6 +18,7 @@ if (isset($var['msg']))
 
 $template->assignByRef('ThisPlanet',$planet);
 
+doTickerAssigns($template, $player, $db);
 
 $db->query('SELECT * FROM player WHERE sector_id = '.$player->getSectorID().' AND ' .
 									'game_id = '.SmrSession::$game_id.' AND ' .
