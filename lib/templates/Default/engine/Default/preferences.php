@@ -52,6 +52,19 @@ if(isset($GameID))
 			</tr>
 	
 			<tr>
+				<td>Recieve force change messages</td>
+				<td>
+					Yes: <input type="radio" name="forceDropMessages" id="InputFields" value="Yes"<?php if($ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> /><br />
+					No: <input type="radio" name="forceDropMessages" id="InputFields" value="No"<?php if(!$ThisPlayer->isForceDropMessages()){ ?> checked="checked"<?php } ?> />
+				</td>
+			</tr>
+	
+			<tr>
+				<td>&nbsp;</td>
+				<td><input type="submit" name="action" value="Change Message Setting" id="InputFields" /></td>
+			</tr>
+	
+			<tr>
 				<td colspan="2">&nbsp;</td>
 			</tr>
 			

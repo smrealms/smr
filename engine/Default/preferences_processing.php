@@ -156,6 +156,11 @@ else if ($action == 'Change Kamikaze Setting')
 	$player->setCombatDronesKamikazeOnMines($_REQUEST['kamikaze']=='Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your combat drones options.';
 }
+else if ($action == 'Change Message Setting')
+{
+	$player->setForceDropMessages($_REQUEST['forceDropMessages']=='Yes');
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
+}
 else if ($action == 'Alter Player')
 {
 	// trim input now
