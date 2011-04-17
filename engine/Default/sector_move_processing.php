@@ -14,8 +14,6 @@ else
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 {
-	//for plotted course
-	$player->setLastSectorID($player->getSectorID());
 	//make them pop on CPL
 	$player->updateLastCPLAction();
 	$player->setSectorID($var['target_sector']);
@@ -97,9 +95,6 @@ if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id)
 		return;
 	}
 }
-
-//set the last sector
-$player->setLastSectorID($player->getSectorID());
 
 // log action
 $account->log(5, 'Moves to sector: ' . $var['target_sector'], $player->getSectorID());
