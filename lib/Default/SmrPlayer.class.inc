@@ -224,6 +224,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			$this->chatPosition = $result['chat_position'];
 			$this->displayMissions				= $result['display_missions']=='TRUE';
 			$this->displayWeapons				= $result['display_weapons']=='TRUE';
+			$this->forceDropMessages			= $result['force_drop_messages']=='TRUE';
 			$this->ignoreGlobals				= $result['ignore_globals']=='TRUE';
 			$this->newbieWarning				= $result['newbie_warning']=='TRUE';
 			$this->nameChanged					= $result['name_changed']=='TRUE';
@@ -708,6 +709,19 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($this->displayWeapons == $bool)
 			return;
 		$this->displayWeapons=$bool;
+		$this->hasChanged=true;
+	}
+	
+	function isForceDropMessages()
+	{
+		return $this->forceDropMessages;
+	}
+	
+	function setForceDropMessages($bool)
+	{
+		if($this->forceDropMessages == $bool)
+			return;
+		$this->forceDropMessages=$bool;
 		$this->hasChanged=true;
 	}
 	
@@ -1687,6 +1701,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //				', chat_position='.$this->db->escapeString($this->chatPosition).
 				', display_missions='.$this->db->escapeBoolean($this->displayMissions).
 				', display_weapons='.$this->db->escapeBoolean($this->displayWeapons).
+				', force_drop_messages='.$this->db->escapeBoolean($this->forceDropMessages).
 				', ignore_globals='.$this->db->escapeBoolean($this->ignoreGlobals).
 //				', changed_stats='.$this->db->escapeString($this->changedStats).
 				', newbie_warning = ' . $this->db->escapeBoolean($this->newbieWarning).

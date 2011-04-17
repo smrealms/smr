@@ -151,7 +151,7 @@ if ($change_mines != 0) {
 }
 
 // message to send out
-if ($var['owner_id'] != $player->getAccountID())
+if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages())
 {
 	if ($change_mines > 0)
 		$mines_message = 'added ' . ($drop_mines - $take_mines) . ' mine';
@@ -214,7 +214,6 @@ if ($var['owner_id'] != $player->getAccountID())
 	$message .= ' your stack in sector #'.$forces->getSectorID();
 
 	$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
-
 }
 
 $account->log(9, $change_combat_drones.' combat drones, '.$change_scout_drones.' scout drones, '.$change_mines.' mines', $player->getSectorID());
