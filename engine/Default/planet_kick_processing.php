@@ -12,10 +12,6 @@ $message = 'You have been kicked from '.$planet->planet_name.' in #'.$player->ge
 $player->sendMessage($planet_player->getAccountID(), 2, $message, false);
 
 $planet_player->setLandedOnPlanet(false);
-//update their last active time so that they are visable if kicked
-$worst = TIME - 1500;
-if ($planet_player->getLastCPLAction() < $worst)
-	$planet_player->setLastCPLAction($worst);
 $planet_player->setKicked(true);
 $planet_player->update();
 
