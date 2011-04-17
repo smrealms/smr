@@ -61,7 +61,7 @@ if ($forces->getCDs() + $change_combat_drones > 50)
 
 if ($forces->getSDs() + $change_scout_drones > 5)
 {
-	$change_scout_drones = 50 - $forces->getSDs();
+	$change_scout_drones = 5 - $forces->getSDs();
 //	create_error('This stack can only take up to 5 scout drones!');
 }
 
