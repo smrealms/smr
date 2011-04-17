@@ -2015,7 +2015,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				$expires = 3600; // 1h
 			break;
 			case MSG_PLAYER:
-				$expires = 86400 * 7;
+				$expires = 86400 * 31;
 			break;
 			case MSG_PLANET:
 				$expires = 86400 * 3;
@@ -2024,13 +2024,13 @@ class SmrPlayer extends AbstractSmrPlayer
 				$expires = 86400 * 3;
 			break;
 			case MSG_POLITICAL:
-				$expires = 86400 * 3;
+				$expires = 86400 * 31;
 			break;
 			case MSG_ALLIANCE:
-				$expires = 86400 * 7;
+				$expires = 86400 * 31;
 			break;
 			case MSG_ADMIN:
-				$expires = 86400 * 7;
+				$expires = 86400 * 365;
 			break;
 			default:
 				$expires = 86400 * 3;
