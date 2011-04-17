@@ -71,21 +71,24 @@ if (isset($Msg))
 				</tr>
 			</table>
 		</td><?php
-		$this->includeTemplate('includes/Ticker.inc'); 
-		if(isset($PlanetPlayers))
+		if(isset($PlanetPlayers) || isset($Ticker))
 		{ ?>
 			<td><?php
-				foreach($PlanetPlayers as $PlanetPlayer)
+				$this->includeTemplate('includes/Ticker.inc');
+				if(isset($PlanetPlayers))
 				{
-					if(isset($PlanetPlayer['KickFormLink']))
+					foreach($PlanetPlayers as $PlanetPlayer)
 					{
-						?><form name="KickPlayerForm" method="POST" action="<?php echo $PlanetPlayer['KickFormLink']; ?>"><?php
-					} ?>
-					<a href="<?php echo $PlanetPlayer['SearchLink']; ?>"><span class="yellow"><?php echo $PlanetPlayer['Player']->getPlayerName(); ?></span></a><br /><?php
-					if(isset($PlanetPlayer['KickFormLink']))
-					{
-						?><input type="submit" name="action" value="Kick" id="InputFields">
-						</form><?php
+						if(isset($PlanetPlayer['KickFormLink']))
+						{
+							?><form name="KickPlayerForm" method="POST" action="<?php echo $PlanetPlayer['KickFormLink']; ?>"><?php
+						} ?>
+						<a href="<?php echo $PlanetPlayer['SearchLink']; ?>"><span class="yellow"><?php echo $PlanetPlayer['Player']->getPlayerName(); ?></span></a><br /><?php
+						if(isset($PlanetPlayer['KickFormLink']))
+						{
+							?><input type="submit" name="action" value="Kick" id="InputFields">
+							</form><?php
+						}
 					}
 				} ?>
 			</td><?php
