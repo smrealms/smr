@@ -4,8 +4,8 @@ $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 if (isset($_REQUEST['target'])) $target = $_REQUEST['target'];
 else $target = $var['target'];
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
-	$player->setLastSectorID($player->getSectorID());
+if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
+{
 	$player->setSectorID($target);
 	$player->update();
 	$sector->markVisited($player);
@@ -195,9 +195,6 @@ $account->log(5, 'Jumps to sector: '.$target.' but hits: '.$player->getSectorID(
 
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_JUMP);
-
-//set the last sector
-$player->setLastSectorID($sector->getSectorID());
 
 // Move the user around (Must be done while holding both sector locks)
 $player->takeTurns(15,15);
