@@ -27,7 +27,7 @@
 	<body>
 		<div id="Container">
 			<table class="tableHeight">
-				<tr>
+				<tr class="topRow">
 					<td class="topleftCell">
 						<b><span class="smrBanner">smr</span></b>
 						<br />
