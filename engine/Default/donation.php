@@ -1,38 +1,14 @@
 <?php
 
-// defines the pixel length of bar
-$total_length = 400;
-
 $template->assign('PageTopic','Donations');
-$PHP_OUTPUT.=('<p style="width:60%; text-align:justify;">Do you enjoy Space Merchant Realms? Would you like to see the game grow? If your answer is yes, then consider making a donation! Your donation will translate into SMR credits that you can use in game to get nifty items, and will also help the game improve.</p>');
-$db->query('SELECT SUM(amount) as total_donation FROM account_donated WHERE time > ' . TIME . ' - (60 * 60 * 24 * 90)');
+$db->query('SELECT SUM(amount) as total_donation FROM account_donated WHERE time > ' . TIME . ' - (86400 * 90)');
 if ($db->nextRecord())
-	$total_donation = $db->getField('total_donation');
-
-$PHP_OUTPUT.=('Current donation rate is: $' . number_format($total_donation / 12, 2) . ' per week (within last 3 months).');
-
-$PHP_OUTPUT.=('<br /><br /><br />');
-
-// Begin PayPal Logo
-$PHP_OUTPUT.=('<form action="https://www.paypal.com/cgi-bin/webscr" method="post">');
-$PHP_OUTPUT.=('<input type="hidden" name="cmd" value="_xclick">');
-$PHP_OUTPUT.=('<input type="hidden" name="business" value="paypal@chaos-inc.de">');
-$PHP_OUTPUT.=('<input type="hidden" name="item_name" value="Support development with money.">');
-$PHP_OUTPUT.=('<input type="hidden" name="item_number" value="' . $account->account_id . '">');
-$PHP_OUTPUT.=('<input type="hidden" name="no_shipping" value="1">');
-$PHP_OUTPUT.=('<input type="hidden" name="no_note" value="1">');
-$PHP_OUTPUT.=('<input type="hidden" name="currency_code" value="USD">');
-$PHP_OUTPUT.=('<input type="hidden" name="tax" value="0">');
-$PHP_OUTPUT.=('<input type="hidden" name="lc" value="US">');
-$PHP_OUTPUT.=('<input type="hidden" name="bn" value="PP-DonationsBF">');
-$PHP_OUTPUT.=('<input type="image" src="https://www.paypal.com/en_US/i/btn/x-click-but21.gif" border="0" name="submit" alt="Make payments with PayPal - it\'s fast, free and secure!">');
-$PHP_OUTPUT.=('<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">');
-$PHP_OUTPUT.=('</form>');
-// End PayPal Logo -->
-
-// get donations from db
+	$template->assign('TotalDonation', $db->getField('total_donation'));
 
 /*
+
+// defines the pixel length of bar
+$total_length = 400;
 
 $components = array();
 $components['<b>Processor</b><br /><span style="font-size:75%;">AMD ATHLON XP 2700+ Thoroughbred (2166MHz, 166/333 MHz) Socket A Boxed </span>'] = 299.99;
@@ -77,7 +53,5 @@ if ($donations < $total_price) {
 
 $PHP_OUTPUT.=('</div>');
 */
-$PHP_OUTPUT.=('<p>&nbsp;</p>');
-$PHP_OUTPUT.=('<p>Thank you for your donation.<br /></p>');
 
 ?>
