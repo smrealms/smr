@@ -75,6 +75,21 @@ abstract class AbstractSmrPlayer
 	protected $hasHOFChanged=false;
 	protected static $hasHOFVisChanged=array();
 	protected $hasBountyChanged = array();
+
+	public static function compareName($a,$b)
+	{
+		return compare($a->getPlayerName(),$b->getPlayerName());
+	}
+
+	public static function compareExperience($a,$b)
+	{
+		return compare($a->getExperience(),$b->getExperience());
+	}
+
+	public static function compareRace($a,$b)
+	{
+		return compare($a->getRaceName(),$b->getRaceName());
+	}
 	
 	protected function __construct()
 	{

@@ -127,11 +127,7 @@ abstract class AbstractSmrShip
 	
 	public static function compareName($a,$b)
 	{
-		$aName = $a['Name'];
-		$bName = $b['Name'];
-	    if ($aName == $bName)
-	        return 0;
-	    return $aName < $bName ? -1 : 1;
+		return compare($a['Name'],$b['Name']);
 	}
 	
 	protected function __construct(AbstractSmrPlayer &$player)

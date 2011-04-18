@@ -109,9 +109,9 @@ $PHP_OUTPUT.= '
 <table class="standard fullwidth">
 	<tr>
 	<th>&nbsp;</th>
-	<th>Trader Name</th>
-	<th>Race</th>
-	<th>Experience</th>
+	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'Name',$var['SortKey']=='Name'?!$var['SortDesc']:false).'">Trader Name</a></th>
+	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'Race',$var['SortKey']=='Race'?!$var['SortDesc']:false).'">Race</a></th>
+	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'Experience',$var['SortKey']=='Experience'?!$var['SortDesc']:true).'">Experience</a></th>
 ';
 
 if($varAction == 'Show Alliance Roles') {
@@ -129,6 +129,25 @@ $db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->get
 if ($db2->nextRecord()) $allowed = TRUE;
 
 $alliancePlayers =& SmrPlayer::getAlliancePlayers(SmrSession::$game_id,$alliance_id);
+
+switch($var['SortKey'])
+{
+	case 'Experience':
+		if($var['SortDesc']===true) //We are sorted this way by default.
+		{
+			break;
+		}
+	case 'Name':
+	case 'Race':
+		uasort($alliancePlayers,array('AbstractSmrPlayer','Compare'.$var['SortKey']));
+		if($var['SortDesc']===true)
+		{
+			$alliancePlayers = array_reverse($alliancePlayers);
+		}
+	break;
+}
+
+
 foreach($alliancePlayers as &$alliancePlayer)
 {
 	$class='';
