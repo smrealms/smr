@@ -34,6 +34,9 @@ span.smrBanner {
 	height: 95%;
 	width: 95%;
 }
+tr.topRow {
+	height:0%;
+}
 .topleftCell {
 	font-family: 'Bookman Old Style', serif;
 	width: 20%;
