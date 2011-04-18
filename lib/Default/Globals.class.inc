@@ -633,7 +633,31 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getLottoHREF()
+	public static function getBarBuyDrinkHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_buy_drink_processing.php';
+		$container['action'] = 'drink';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBarBuyWaterHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_buy_drink_processing.php';
+		$container['action'] = 'water';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBarLottoClaimHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_lotto_claim.php';
+		$container['action'] = 'lotto_claim';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBarLottoPlayHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_gambling_lotto.php';
@@ -641,11 +665,35 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getBlackjackHREF()
+	public static function getBarBlackjackHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_gambling_bet.php';
 		$container['action'] = 'blackjack';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBarShipnameHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_ship_name.php';
+		$container['action'] = 'customize';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBarTickerHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_ticker_buy.php';
+		$container['action'] = 'system';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBarGalMapHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_main.php');
+		$container['script'] = 'bar_galmap_buy.php';
+		$container['action'] = 'map';
 		return SmrSession::get_new_href($container);
 	}
 	
