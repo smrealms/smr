@@ -52,7 +52,7 @@ if ($action == 'Paint a logo (3 SMR Credits)')
 
 if ($action == 'Include HTML (2 SMR Credits)' && !$done)
 {
-	$PHP_OUTPUT.=('<div align=center>If you ship is found to use HTML inappropriately you may be banned.');
+	$PHP_OUTPUT.=('<div align="center">If you ship is found to use HTML inappropriately you may be banned.');
 	$PHP_OUTPUT.=('  Inappropriate HTML includes but is not limited to something that can either cause display errors or cause functionallity of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />');
 	$PHP_OUTPUT.=('Preview:<br />' . stripslashes($name) . '<br /></div>');
 	$PHP_OUTPUT.=('Are you sure you want to continue?<br />');
@@ -152,7 +152,7 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 				$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($name, FALSE) . ')');
 	$account->decreaseTotalSmrCredits($cred_cost);
 	
-	$message = '<div align=center>Thanks for your purchase! Your ship is ready!<br />';
+	$message = '<div align="center">Thanks for your purchase! Your ship is ready!<br />';
 	if ($html) $message .= 'If you ship is found to use HTML inappropriately you may be banned.  If your ship does contain inappropriate HTML talk to an admin ASAP.';
 	$message .= '<br /></div>';
 	$container=create_container('skeleton.php','bar_main.php');
@@ -168,7 +168,7 @@ else
 	$db->query('SELECT location_name FROM location_type NATURAL JOIN location WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND location_type.location_type_id > 800 AND location_type.location_type_id < 900');
 	
 	//next welcome them
-	if ($db->nextRecord()) $PHP_OUTPUT.=('<div align=center>So you want to name your ship?  Great!  ' .
+	if ($db->nextRecord()) $PHP_OUTPUT.=('So you want to name your ship?  Great!  ' .
 					'Anyone who knows anything will tell you ' . $db->getField('location_name') . ' ' .
 					'is the place to get it done!<br /><br />');
 					

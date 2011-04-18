@@ -23,7 +23,7 @@ require_once(get_file_loc('menue.inc'));
 global $BAR_SCRIPTS_USED; // HACKY
 if(!is_array($BAR_SCRIPTS_USED)||!in_array($script,$BAR_SCRIPTS_USED))
 {
-	$PHP_OUTPUT.=create_bar_menue();
+	create_bar_menue();
 	$BAR_SCRIPTS_USED[] = $script;
 }
 //get rid of drinks older than 30 mins
@@ -32,5 +32,12 @@ $db->query('DELETE FROM player_has_drinks WHERE time < '.$time);
 
 //include bar part
 require_once(get_file_loc($script));
+
+switch($script)
+{
+	case 'bar_opening.php':
+		$template->assign('IncludeScript',$script);
+	break;
+}
 
 ?>

@@ -398,8 +398,8 @@ function create_bar_menue()
 	global $template;
 	$template->assign('MenuItems', array(
 					array('Link'=>Globals::getBarMainHREF(),'Text'=>'Bar Main'),
-					array('Link'=>Globals::getLottoHREF(),'Text'=>'Lotto'),
-					array('Link'=>Globals::getBlackjackHREF(),'Text'=>'BlackJack')));
+					array('Link'=>Globals::getBarLottoPlayHREF(),'Text'=>'Lotto'),
+					array('Link'=>Globals::getBarBlackjackHREF(),'Text'=>'BlackJack')));
 }
 
 function create_news_menue(&$template)
