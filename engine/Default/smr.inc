@@ -6,6 +6,13 @@ require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 
+function compare($a,$b)
+{
+    if ($a == $b)
+        return 0;
+    return $a < $b ? -1 : 1;
+}
+
 function htmliseMessage($message)
 {
 	$message = htmlentities($message);
