@@ -5,9 +5,12 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 	global $account,$player;
 	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $gameID : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 
+	$vis = HOF_PUBLIC;
 	$rank = array('Amount'=>0,'Rank'=>0);
 	if($view == DONATION_NAME)
+	{
 		$db->query('SELECT SUM(amount) as amount FROM account_donated WHERE account_id='.$accountID.' GROUP BY account_id LIMIT 1');
+	}
 	else if($view == USER_SCORE_NAME)
 	{
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
@@ -23,49 +26,51 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		}
 		$vis = $db->getField('visibility');
 		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
-		$realAmount = 0;
-		if($db->nextRecord())
+	}
+	
+	$realAmount = 0;
+	if($db->nextRecord())
+	{
+		if($db->getField('amount')!=null)
 		{
-			if($db->getField('amount')!=null)
+			$realAmount = $db->getField('amount');
+		}
+	}
+	if($vis==HOF_PUBLIC || $account->getAccountID()==$accountID)
+	{
+		$rank['Amount'] = $realAmount;
+	}
+	else if($vis==HOF_ALLIANCE&&$account->getAccountID()!=$accountID)
+	{
+		try
+		{
+			$hofPlayer =& SmrPlayer::getPlayer($accountID, $player->getGameID());
+			if($player->sameAlliance($hofPlayer))
 			{
-				$realAmount = $db->getField('amount');
+				$rank['Amount'] = $realAmount;
+			}
+			else
+			{
+				$rank['Amount'] = '-'; //Show a - rather than 0 when hidden due to alliance restrictions so that it is clearer.
 			}
 		}
-		if($vis==HOF_PUBLIC || $account->getAccountID()==$accountID)
+		catch(Exception $e)
 		{
-			$rank['Amount'] = $realAmount;
+			$rank['Amount'] = '-';
 		}
-		else if($vis==HOF_ALLIANCE&&$account->getAccountID()!=$accountID)
+		if($rank['Amount'] == '-' && !isset($gameID))
 		{
-			try
+			$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.') GROUP BY account_id LIMIT 1');
+			if($db->nextRecord())
 			{
-				$hofPlayer =& SmrPlayer::getPlayer($accountID, $player->getGameID());
-				if($player->sameAlliance($hofPlayer))
+				if($db->getField('amount')!=null)
 				{
-					$rank['Amount'] = $realAmount;
-				}
-				else
-				{
-					$rank['Amount'] = '-'; //Show a - rather than 0 when hidden due to alliance restrictions so that it is clearer.
-				}
-			}
-			catch(Exception $e)
-			{
-				$rank['Amount'] = '-';
-			}
-			if($rank['Amount'] == '-' && !isset($gameID))
-			{
-				$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.') GROUP BY account_id LIMIT 1');
-				if($db->nextRecord())
-				{
-					if($db->getField('amount')!=null)
-					{
-						$rank['Amount'] = $db->getField('amount');
-					}
+					$rank['Amount'] = $db->getField('amount');
 				}
 			}
 		}
 	}
+	
 	if($view == DONATION_NAME)
 	{
 		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $rank['Amount'] . ') x');
