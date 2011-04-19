@@ -857,6 +857,12 @@ abstract class AbstractSmrAccount
 		return $this->password;
 	}
 	
+	public function isLoggedIn()
+	{
+		$this->db->query('SELECT * FROM active_session WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+		return $this->db->nextRecord();
+	}
+	
 	public function checkPassword($password)
 	{
 		return $this->getPassword()==$password;

@@ -1,6 +1,11 @@
 <?php
 
-$template->assign('Message',isset($var['Message'])?$var['Message']:'');
+if(isset($var['Message']))
+{
+	$template->assign('Message',$var['Message']);
+}
+
+$template->assign('PageTopic','Message Notifications');
 
 $container = create_container('buy_message_notifications_processing.php');
 
