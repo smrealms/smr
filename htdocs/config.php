@@ -212,6 +212,7 @@ define('PERMISSION_EDIT_STARTED_GAMES', 32);
 
 define('UNI_GEN_LOCATION_SLOTS',10);
 
+define('NHA_ID',302);
 
 define('NUM_RACES', 8);
 

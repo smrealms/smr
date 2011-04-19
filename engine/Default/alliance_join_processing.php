@@ -10,7 +10,10 @@ require_once(get_file_loc('smr_alliance.inc'));
 
 // is account validated?
 if (!$account->isValidated())
+{
 	create_error('You are not validated. You can\'t join an alliance yet.');
+}
+	
 
 // ********************************
 // *
@@ -19,6 +22,12 @@ if (!$account->isValidated())
 // ********************************
 
 $alliance = new SMR_ALLIANCE($var['alliance_id'], SmrSession::$game_id);
+
+if ($alliance->canJoinAlliance($player))
+{
+	create_error('You are not allowed to join this alliance currently.');
+}
+
 $password = $_REQUEST['password'];
 
 if ($password != $alliance->password)
