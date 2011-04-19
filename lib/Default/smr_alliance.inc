@@ -95,6 +95,8 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 			return false;
 		if($this->getPassword()=='*')
 			return false;
+		if($player->getAllianceJoinable() > TIME)
+			return false;
 		if($this->getNumMembers()<Globals::getAllianceMaxPlayers($this->getGameID()))
 		{
 			$maxVets = Globals::getAllianceMaxVets($this->getGameID());

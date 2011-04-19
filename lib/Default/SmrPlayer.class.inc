@@ -3,6 +3,7 @@ require_once(get_file_loc('AbstractSmrPlayer.class.inc'));
 require_once(get_file_loc('council.inc'));
 class SmrPlayer extends AbstractSmrPlayer
 {
+	const TIME_FOR_ALLIANCE_SWITCH = 86400;
 	protected static $CACHE_SECTOR_PLAYERS = array();
 	protected static $CACHE_ALLIANCE_PLAYERS = array();
 	protected static $CACHE_PLAYERS = array();
@@ -39,7 +40,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $kicked;
 //	protected $pastKnowledge;
 	protected $governmentHelp;
-//	protected $allianceJoinable;
+	protected $allianceJoinable;
 	protected $lastPort;
 	protected $bank;
 	protected $zoom;
@@ -212,7 +213,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			$this->pastKnowledge = $result['past_knowledge'];
 			$this->governmentHelp				= (int) $result['government_help'];
 			$this->allianceID					= (int) $result['alliance_id'];
-//			$this->allianceJoinable = $result['alliance_join'];
+			$this->allianceJoinable				= (int) $result['alliance_join'];
 			$this->shipID						= (int) $result['ship_type_id'];
 			$this->kills						= (int) $result['kills'];
 			$this->deaths						= (int) $result['deaths'];
@@ -280,8 +281,8 @@ class SmrPlayer extends AbstractSmrPlayer
 				return $this->governmentHelp;
 			case 'Alliance ID':
 				return $this->allianceID;
-//			case 'Alliance Joinable':
-//				return $this->allianceJoinable;
+			case 'Alliance Joinable':
+				return $this->allianceJoinable;
 			case 'Ship ID':
 				return $this->shipID;
 			case 'Dead':
@@ -459,6 +460,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	function leaveAlliance()
 	{
+		$allianceID = $this->getAllianceID();
 		$alliance = $this->getAlliance();
 		if ($alliance->leader_id != 0 && $alliance->leader_id != $this->getAccountID())
 			$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
@@ -470,8 +472,10 @@ class SmrPlayer extends AbstractSmrPlayer
 						  game_id = '.$this->getGameID());
 	
 		$this->getAccount()->log(3, 'left alliance: '.$alliance->alliance_name, $this->getSectorID());
-//		$this->setAllianceJoinable(TIME + 1 * 3600);
-//		$this->db->query('DELETE FROM player_has_alliance_role WHERE '.$this->SQL);
+		if($allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA
+		{
+			$this->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH);
+		}
 	}
 	
 	function joinAlliance($allianceID)
@@ -484,19 +488,18 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->getAccount()->log(3, 'joined alliance: '.$alliance->alliance_name, $this->getSectorID());
 	}
 	
-//	function getAllianceJoinable()
-//	{
-//		return $this->allianceJoinable;
-//	}
+	function getAllianceJoinable()
+	{
+		return $this->allianceJoinable;
+	}
 	
-//	function setAllianceJoinable($time)
-//	{
-//		if($this->allianceJoinable == $time)
-//			return;
-//		$this->allianceJoinable=$time;
-//		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET alliance_join = '.$time.' WHERE '.$this->SQL.' LIMIT 1');
-//	}
+	function setAllianceJoinable($time)
+	{
+		if($this->allianceJoinable == $time)
+			return;
+		$this->allianceJoinable=$time;
+		$this->hasChanged=true;
+	}
 	
 	function getAttackColor()
 	{
@@ -1665,37 +1668,37 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($this->hasChanged === true)
 		{
 			$this->db->query('UPDATE player SET player_name='.$this->db->escapeString($this->playerName).
-				', player_id='.$this->db->escapeString($this->playerID).
-				', sector_id='.$this->db->escapeString($this->sectorID).
-				', last_sector_id='.$this->db->escapeString($this->lastSectorID).
-				', turns='.$this->db->escapeString($this->turns).
-				', last_turn_update='.$this->db->escapeString($this->lastTurnUpdate).
-				', newbie_turns='.$this->db->escapeString($this->newbieTurns).
-				', last_ship_mod='.$this->db->escapeString($this->lastShipMod).
-				', last_news_update='.$this->db->escapeString($this->lastNewsUpdate).
+				', player_id='.$this->db->escapeNumber($this->playerID).
+				', sector_id='.$this->db->escapeNumber($this->sectorID).
+				', last_sector_id='.$this->db->escapeNumber($this->lastSectorID).
+				', turns='.$this->db->escapeNumber($this->turns).
+				', last_turn_update='.$this->db->escapeNumber($this->lastTurnUpdate).
+				', newbie_turns='.$this->db->escapeNumber($this->newbieTurns).
+				', last_ship_mod='.$this->db->escapeNumber($this->lastShipMod).
+				', last_news_update='.$this->db->escapeNumber($this->lastNewsUpdate).
 				', stunned='.$this->db->escapeString($this->stunned).
 				', fleed='.$this->db->escapeBoolean($this->fleed).
 				', attack_warning='.$this->db->escapeString($this->attackColor).
 				', dead='.$this->db->escapeBoolean($this->dead).
 				', land_on_planet='.$this->db->escapeBoolean($this->landedOnPlanet).
 				', kicked='.$this->db->escapeBoolean($this->kicked).
-				', last_shield_update='.$this->db->escapeString($this->lastShieldUpdate).
-				', last_active='.$this->db->escapeString($this->lastActive).
-				', last_cpl_action='.$this->db->escapeString($this->lastCPLAction).
-				', race_id='.$this->db->escapeString($this->raceID).
-				', credits='.$this->db->escapeString($this->credits).
-				', experience='.$this->db->escapeString($this->experience).
-				', alignment='.$this->db->escapeString($this->alignment).
+				', last_shield_update='.$this->db->escapeNumber($this->lastShieldUpdate).
+				', last_active='.$this->db->escapeNumber($this->lastActive).
+				', last_cpl_action='.$this->db->escapeNumber($this->lastCPLAction).
+				', race_id='.$this->db->escapeNumber($this->raceID).
+				', credits='.$this->db->escapeNumber($this->credits).
+				', experience='.$this->db->escapeNumber($this->experience).
+				', alignment='.$this->db->escapeNumber($this->alignment).
 				', military_payment='.$this->db->escapeString($this->militaryPayment).
 //				', past_knowledge='.$this->db->escapeString($this->pastKnowledge).
 				', government_help='.$this->db->escapeString($this->governmentHelp).
-				', alliance_id='.$this->db->escapeString($this->allianceID).
-//				', alliance_join='.$this->db->escapeString($this->allianceJoinable).
-				', ship_type_id='.$this->db->escapeString($this->shipID).
-				', kills='.$this->db->escapeString($this->kills).
-				', deaths='.$this->db->escapeString($this->deaths).
-				', last_port='.$this->db->escapeString($this->lastPort).
-				', bank='.$this->db->escapeString($this->bank).
+				', alliance_id='.$this->db->escapeNumber($this->allianceID).
+				', alliance_join='.$this->db->escapeNumber($this->allianceJoinable).
+				', ship_type_id='.$this->db->escapeNumber($this->shipID).
+				', kills='.$this->db->escapeNumber($this->kills).
+				', deaths='.$this->db->escapeNumber($this->deaths).
+				', last_port='.$this->db->escapeNumber($this->lastPort).
+				', bank='.$this->db->escapeNumber($this->bank).
 				', zoom='.$this->db->escapeString($this->zoom).
 //				', chat='.$this->db->escapeString($this->chat).
 //				', chat_position='.$this->db->escapeString($this->chatPosition).

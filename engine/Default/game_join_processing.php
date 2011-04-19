@@ -143,9 +143,8 @@ $db->nextRecord();
 if ($db->getField('games_joined') == 1) {
 
 	//we are a newb set our alliance to be Newbie Help Allaince
-	$id = 302;
-	$db->query('UPDATE player SET alliance_id = '.$id.' WHERE account_id = '.$account->account_id.' AND game_id = '.$gameID);
-	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$gameID.', '.$account->account_id.', 2,'.$id.')');
+	$db->query('UPDATE player SET alliance_id = '.NHA_ID.' WHERE account_id = '.$account->account_id.' AND game_id = '.$gameID);
+	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$gameID.', '.$account->account_id.', 2,'.NHA_ID.')');
 	//we need to send them some messages
 	$time = TIME;
 	$message = 'Welcome to Space Merchant Realms, this message is to get you underway with information to start you off in the game. All newbie and beginner rated player are placed into a teaching alliance run by a Veteran player who is experienced enough to answer all your questions and give you a helping hand at learning the basics of the game.<br /><br />
