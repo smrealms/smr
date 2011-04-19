@@ -935,17 +935,39 @@ abstract class AbstractSmrAccount
 	
 	public function isReceivingMessageNotifications($messageTypeID)
 	{
-		return isset($this->messageNotifications[$messageTypeID])?$this->messageNotifications[$messageTypeID]:false;
+		return isset($this->messageNotifications[$messageTypeID])?$this->messageNotifications[$messageTypeID]>0:false;
 	}
 	
-	public function setReceivingMessageNotifications($messageTypeID,$bool)
+	public function getMessageNotifications($messageTypeID)
 	{
-		$bool = (bool)$bool;
-		if($this->isReceivingMessageNotifications($messageTypeID) == $bool)
+		return isset($this->messageNotifications[$messageTypeID])?$this->messageNotifications[$messageTypeID]:0;
+	}
+	
+	public function setMessageNotifications($messageTypeID,$num)
+	{
+		if($this->getMessageNotifications($messageTypeID) == $num)
 			return;
-		$this->messageNotifications[$messageTypeID]=$bool;
+		$this->messageNotifications[$messageTypeID]=$num;
 		$this->hasChanged=true;
 		$this->update();
+	}
+	
+	public function increaseMessageNotifications($messageTypeID,$num)
+	{
+		if($num==0)
+			return;
+		if($num<0)
+			throw new Exception('You cannot increase by a negative amount');
+		$this->setMessageNotifications($messageTypeID, $this->getMessageNotifications($messageTypeID) + $num);
+	}
+	
+	public function decreaseMessageNotifications($messageTypeID,$num)
+	{
+		if($num==0)
+			return;
+		if($num<0)
+			throw new Exception('You cannot decrease by a negative amount');
+		$this->setMessageNotifications($messageTypeID, $this->getMessageNotifications($messageTypeID) - $num);
 	}
 	
 	public function isCenterGalaxyMapOnPlayer()
