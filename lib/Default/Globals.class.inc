@@ -689,11 +689,31 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
+	public static function getBuyTickerHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_ticker_buy.php');
+		$container['action'] = 'system';
+		return SmrSession::get_new_href($container);
+	}
+	
 	public static function getBarGalMapHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_galmap_buy.php';
 		$container['action'] = 'map';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBuyGalMapHREF()
+	{
+		$container = create_container('skeleton.php', 'bar_galmap_buy.php');
+		$container['action'] = 'map';
+		return SmrSession::get_new_href($container);
+	}
+	
+	public static function getBuyMessageNotificationsHREF()
+	{
+		$container = create_container('skeleton.php', 'buy_message_notifications.php');
 		return SmrSession::get_new_href($container);
 	}
 	

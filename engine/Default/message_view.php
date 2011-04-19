@@ -13,7 +13,6 @@ if (!isset ($var['folder_id']))
 	$db2->query('SELECT * FROM message WHERE account_id = ' . $player->getAccountID() . ' AND message_type_id = ' . MSG_POLITICAL . ' AND game_id = ' . $player->getGameID() . ' AND reciever_delete = \'FALSE\' AND reciever_delete = \'FALSE\'');
 	if ($player->isOnCouncil() || $db2->getNumRows())
 		$db->query('SELECT * FROM message_type ' .
-		'WHERE message_type_id < 8 ' .
 		'ORDER BY message_type_id');
 	else
 		$db->query('SELECT * FROM message_type ' .

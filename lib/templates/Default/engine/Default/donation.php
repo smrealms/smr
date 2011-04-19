@@ -19,4 +19,24 @@ Current donation rate is: $<?php echo number_format($TotalDonation / 90*7, 2); ?
 </form>
 
 <p>&nbsp;</p>
-<p>Thank you for your donation.<br /></p>
+<p>Thank you for your donation.</p><br /><br />
+
+
+<h2>Message Notifications</h2><br />
+Want to receive emails when you get a message? Well now you can!<br />
+<br />
+<div class="buttonA">
+	<a class="buttonA" href="<?php echo Globals::getBuyMessageNotificationsHREF(); ?>">&nbsp;Buy Message Notifications&nbsp;</a>
+</div><br /><br />
+
+<?php
+/*
+if(isset($GameID))
+{ ?>
+	<h2>Maps</h2><br />
+	New intelligence has just come in! We now have full maps of EVERY galaxy!  We are willing to sell you the newest maps of each galaxy for 2 SMR credits each!<br />
+	<br />
+	<div class="buttonA">
+		<a class="buttonA" href="<?php echo Globals::getBuyGalMapHREF(); ?>">&nbsp;Buy a Galaxy Map (2 SMR Credits)&nbsp;</a>
+	</div><br /><br /><?php
+} */ ?>

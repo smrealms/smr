@@ -121,6 +121,16 @@ define('COMBAT_LOGS_PER_PAGE',50);
 define('MESSAGES_PER_PAGE',50);
 
 
+$MESSAGES_PER_CREDIT = array(
+	MSG_GLOBAL => 25,
+	MSG_PLAYER => 25,
+	MSG_PLANET => 25,
+	MSG_SCOUT => 25,
+	MSG_POLITICAL => 25,
+	MSG_ALLIANCE => 25,
+	MSG_ADMIN => 50
+);
+
 /*
  * Movement
  */

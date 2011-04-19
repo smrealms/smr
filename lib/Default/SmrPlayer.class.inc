@@ -1958,6 +1958,7 @@ class SmrPlayer extends AbstractSmrPlayer
 					$mail->AddAddress($receiverAccount->getEmail(), $receiverAccount->getHofName());
 					$mail->Send();
 					$mail->SmtpClose();
+					$receiverAccount->decreaseMessageNotifications($messageTypeID,1);
 				}
 			break;
 		}
