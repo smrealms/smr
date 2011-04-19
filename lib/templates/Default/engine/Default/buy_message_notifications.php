@@ -1,7 +1,14 @@
 <?php
+if(isset($Message))
+{
+	echo $Message; ?>
+	<br /><br /><?php
+}
+?>
 
-echo $Message;
-
+<span class="red">WARNING:</span> Message notifications will only be received when you are logged out, therefore when logging out you will have to either have to click the logout link on the left or wait <?php echo format_time(SmrSession::TIME_BEFORE_EXPIRY); ?> for your session to time out.<br />
+<br />
+<?php
 if (isset($MessageBoxes))
 { ?>
 	<table class="standard">
