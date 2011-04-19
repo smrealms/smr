@@ -4,7 +4,7 @@ $template->assign('Message',isset($var['Message'])?$var['Message']:'');
 
 $container = create_container('buy_message_notifications_processing.php');
 
-$db->query('SELECT * FROM message_type ORDER BY message_type_id');
+$db->query('SELECT * FROM message_type WHERE message_type_id = '.$db->escapeNumber(MSG_PLAYER).' ORDER BY message_type_id');
 $messageBoxes = array ();
 while ($db->nextRecord())
 {
