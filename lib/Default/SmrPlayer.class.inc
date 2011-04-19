@@ -2044,7 +2044,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	public static function sendMessageFromPlanet($gameID, $receiverID, $message)
 	{
 		//get expire time
-		$expires = TIME + 3600 * 24 * 7;
+		$expires = TIME + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PLANET,$receiverID, $gameID, MSG_PLANET, $message, $expires);
 	}
@@ -2052,7 +2052,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	public static function sendMessageFromPort($gameID, $receiverID, $message)
 	{
 		//get expire time
-		$expires = TIME + 3600 * 24 * 7;
+		$expires = TIME + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PORT,$receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
@@ -2061,7 +2061,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		//get expire time
 		if($expires===false)
-			$expires = TIME + 3600 * 24 * 7;
+			$expires = TIME + 86400 * 365;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_ADMIN,$receiverID, $gameID, MSG_ADMIN, $message, $expires);
 	}
