@@ -585,7 +585,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //	{
 //		return $this->changedStats;
 //	}
-//	
+//
 //	function setChangedStats($boolStr)
 //	{
 //		if($this->changedStats == $boolStr)
@@ -599,7 +599,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //	{
 //		return $this->chat;
 //	}
-//	
+//
 //	function setChat($chat)
 //	{
 //		if($this->chat == $chat)
@@ -608,12 +608,12 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->hasChanged=true;
 //		$this->db->query('UPDATE player SET chat = ' . $this->db->escapeString($chat) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 //	}
-//	
+//
 //	function getChatPosition()
 //	{
 //		return $this->chatPosition;
 //	}
-//	
+//
 //	function setChatPosition($chatPosition)
 //	{
 //		if($this->chatPosition == $chatPosition)
@@ -655,7 +655,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->setLastTurnUpdate($newLastTurnUpdate);
 			
 			
-			$this->giveTurns($extraTurns);	
+			$this->giveTurns($extraTurns);
 		}
 	}
 		
@@ -923,7 +923,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 //	protected function getGoodsInfo()
 //	{
-//		
+//
 //		if(!isset($this->goods) || !isset($this->goodsExpGained))
 //		{
 //			//Get Player Goods
@@ -943,7 +943,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //			}
 //		}
 //	}
-//	
+//
 //	function getGoods()
 //	{
 //		if(!isset($this->goods))
@@ -1205,7 +1205,7 @@ class SmrPlayer extends AbstractSmrPlayer
 						'Starting Sector' => $this->getSectorID()
 						);
 						
-		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' . 
+		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' .
 				'VALUES ('.$this->gameID.','.$this->accountID.','.$missionID.','.$playerMission['On Step'].','.$playerMission['Progress'].','.$this->db->escapeString($playerMission['Next Step']).','.$playerMission['Total'].','.$playerMission['Starting Sector'].','.$playerMission['Sector'].','.$playerMission['Expires'].')');
 		$this->missions[$missionID] = $playerMission;
 		$this->rebuildMission($missionID);
@@ -1277,10 +1277,10 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			//Get Player Mining Info
 			$this->mining = array();
-			$this->db->query('SELECT sector_has_mining.mine_id as mine_id, level, type, started, amount, starting_amount' . 
-							' FROM player_is_mining, sector_has_mining WHERE sector_id = ' . $this->sectorID . 
-							' AND sector_has_mining.game_id = player_is_mining.game_id' . 
-							' AND sector_has_mining.mine_id = player_is_mining.mine_id' . 
+			$this->db->query('SELECT sector_has_mining.mine_id as mine_id, level, type, started, amount, starting_amount' .
+							' FROM player_is_mining, sector_has_mining WHERE sector_id = ' . $this->sectorID .
+							' AND sector_has_mining.game_id = player_is_mining.game_id' .
+							' AND sector_has_mining.mine_id = player_is_mining.mine_id' .
 							' AND account_id = ' . $this->accountID . ' AND sector_has_mining.game_id = ' . $this->gameID .' LIMIT 1');
 			while ($this->db->nextRecord())
 			{
@@ -1588,7 +1588,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$percentage = 33;
 		if ($percentage > 0 )
 			$this->decreaseExperience($this->getExperience() * $percentage / 100);
-		$this->db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' . 
+		$this->db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' .
 						'alliance_id_2 = '.$this->getAllianceID().' AND game_id = '.$this->getGameID());
 		if ($this->db->nextRecord()) $this->db->query('UPDATE alliance_vs_alliance SET kills = kills + 1 ' .
 											'WHERE alliance_id_1 = -1 AND alliance_id_2 = '.$this->getAllianceID().' AND ' .
@@ -1727,7 +1727,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				else
 				{
 					if($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
-						$this->db->query('UPDATE bounty 
+						$this->db->query('UPDATE bounty
 							SET amount=' . $bounty['Amount'] . ',
 							smr_credits=' . $this->db->escapeString($bounty['SmrCredits']) . ',
 							type=' . $this->db->escapeString($bounty['Type']) . ',
@@ -1779,7 +1779,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				else if($hofChanged==self::HOF_CHANGED)
 				{
 	//				if($amount > 0)
-						$this->db->query('UPDATE player_hof 
+						$this->db->query('UPDATE player_hof
 							SET amount=' . $amount . '
 							WHERE account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = '.$this->db->escapeArray($tempTypeList,false,true,':',false).' LIMIT 1');
 	//				else
@@ -1927,7 +1927,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		// send him the message
 		$db->query('INSERT INTO message
 			(account_id,game_id,message_type_id,message_text,
-			sender_id,send_time,expire_time,sender_delete) VALUES(' . 
+			sender_id,send_time,expire_time,sender_delete) VALUES(' .
 			$receiverID . ',' .
 			$gameID . ',' .
 			$messageTypeID . ',' .
@@ -1946,7 +1946,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			case MSG_PLAYER:
 				$receiverAccount =& SmrAccount::getAccount($receiverID);
-				if($receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn())
+				if($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn())
 				{
 					require_once(LIB.'External/phpMailer/class.phpmailer.php');
 					$senderPlayer =& SmrPlayer::getPlayer($senderID, $gameID);
@@ -1988,7 +1988,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				WHERE active_session.last_accessed >= ' . (TIME - SmrSession::TIME_BEFORE_EXPIRY) . ' AND
 					  active_session.game_id = '.$this->getGameID() . ' AND
 					  active_session.account_id = player.account_id AND
-					  active_session.game_id = player.game_id AND 
+					  active_session.game_id = player.game_id AND
 					  player.ignore_globals = \'FALSE\'');
 	//	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
 	
@@ -2081,7 +2081,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			require_once(get_file_loc('Plotter.class.inc'));
 			// check if we have a course plotted
-			$this->db->query('SELECT course FROM player_plotted_course 
+			$this->db->query('SELECT course FROM player_plotted_course
 			WHERE account_id=' . $this->getAccountID() . '
 			AND game_id=' . $this->getGameID() . '
 			LIMIT 1'
