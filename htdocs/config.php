@@ -120,6 +120,9 @@ define('MESSAGE_SCOUT_GROUP_LIMIT',30);
 define('COMBAT_LOGS_PER_PAGE',50);
 define('MESSAGES_PER_PAGE',50);
 
+/*
+ * Credit features
+ */
 
 $MESSAGES_PER_CREDIT = array(
 	MSG_GLOBAL => 20,
@@ -130,6 +133,8 @@ $MESSAGES_PER_CREDIT = array(
 	MSG_ALLIANCE => 20,
 	MSG_ADMIN => 50
 );
+
+define('CREDITS_PER_NAME_CHANGE',2);
 
 /*
  * Movement

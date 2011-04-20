@@ -161,7 +161,7 @@ else if ($action == 'Change Message Setting')
 	$player->setForceDropMessages($_REQUEST['forceDropMessages']=='Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
 }
-else if ($action == 'Alter Player')
+else if (strpos(trim($action),'Alter Player')===0)
 {
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
@@ -190,7 +190,11 @@ else if ($action == 'Alter Player')
 	
 	if($player->isNameChanged())
 	{
-		create_error('You have already changed your name once!');
+		if($account->getTotalSmrCredits()<CREDITS_PER_NAME_CHANGE)
+		{
+			create_error('You do not have enough credits to change your name.');
+		}
+		$account->decreaseTotalSmrCredits(CREDITS_PER_NAME_CHANGE);
 	}
 	
 	$player->setPlayerName($player_name);

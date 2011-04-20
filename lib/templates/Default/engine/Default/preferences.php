@@ -70,21 +70,22 @@ if(isset($GameID))
 			
 			<tr>
 				<td>Player Name</td>
-				<td><?php
-					if(!$ThisPlayer->isNameChanged())
+				<td>
+					<input type="text" maxlength="32" name="PlayerName" value="<?php echo $ThisPlayer->getPlayerName(); ?>" size="32"> <?php
+					if($ThisPlayer->isNameChanged())
 					{
-						?><input type="text" maxlength="32" name="PlayerName" value="<?php echo $ThisPlayer->getPlayerName(); ?>" size="32"> (You can only change your name once)<?php
+						?>(You have already changed your name for free, further changes will cost <?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits)<?php
 					}
 					else
 					{
-						echo $ThisPlayer->getPlayerName(); ?> (You have already changed your name)<?php
+						?>(You can change your name for free once)<?php
 					} ?>
 				</td>
 			</tr>
 	
 			<tr>
 				<td>&nbsp;</td>
-				<td><?php if(!$ThisPlayer->isNameChanged()) { ?><input type="submit" name="action" value="Alter Player" id="InputFields" /><?php } ?></td>
+				<td><input type="submit" name="action" value=" Alter Player <?php if($ThisPlayer->isNameChanged()) { ?>(<?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits) <?php } ?>" id="InputFields" /></td>
 			</tr>
 		</table>
 	</form>
@@ -221,7 +222,7 @@ if(isset($GameID))
 		<tr>
 			<td>Use AJAX (Auto&nbsp;Refresh):</td>
 			<td>
-				<a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if($ThisAccount->isUseAJAX()){ ?>Disable AJAX (Currently Enabled)<?php }else{ ?>Enable AJAX (Currently Disabled)<?php } ?></a><br />				
+				<a href="<?php echo $ThisAccount->getToggleAJAXHREF() ?>"><?php if($ThisAccount->isUseAJAX()){ ?>Disable AJAX (Currently Enabled)<?php }else{ ?>Enable AJAX (Currently Disabled)<?php } ?></a><br />
 			</td>
 		</tr>
 		
