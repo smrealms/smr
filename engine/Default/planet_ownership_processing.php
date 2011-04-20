@@ -9,9 +9,9 @@ $action = $_REQUEST['action'];
 $password = $_REQUEST['password'];
 $name = $_REQUEST['name'];
 
-if ($action == 'Take Ownership') {
-
-	if ($planet->owner_id != 0 && $planet->password != $password)
+if ($action == 'Take Ownership')
+{
+	if ($planet->hasOwner() && $planet->getPassword() != $password)
 		create_error('You are not allowed to take ownership!');
 
 	// delete all previous ownerships
@@ -24,22 +24,22 @@ if ($action == 'Take Ownership') {
 	$planet->removePassword();
 	$planet->update();
 	$account->log(11, 'Player takes ownership of planet.', $player->getSectorID());
-
-} else if ($action == 'Rename') {
-
+}
+else if ($action == 'Rename')
+{
 	include(get_file_loc('planet_change_name.php'));
 	// rename planet
-	$planet->planet_name = $name;
+	$planet->setName($name);
 	$planet->update();
 	$account->log(11, 'Player renames planet to '.$name.'.', $player->getSectorID());
 
-} else if ($action == 'Set Password') {
-
+}
+else if ($action == 'Set Password')
+{
 	// set password
 	$planet->setPassword($password);
 	$planet->update();
 	$account->log(11, 'Player sets planet password to '.$password, $player->getSectorID());
-
 }
 
 forward(create_container('skeleton.php', 'planet_ownership.php'));

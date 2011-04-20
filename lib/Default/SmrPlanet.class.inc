@@ -9,15 +9,15 @@ class SmrPlanet
 
 	protected $db;
 
-	var $sector_id;
-	var $game_id;
-	var $planet_name;
-	var $owner_id;
-	var $password;
-	var $shields;
-	var $drones;
-	var $credits;
-	var $bonds;
+	protected $sector_id;
+	protected $game_id;
+	protected $planet_name;
+	protected $owner_id;
+	protected $password;
+	protected $shields;
+	protected $drones;
+	protected $credits;
+	protected $bonds;
 	var $maturity;
 	protected $stockpile;
 	protected $buildings;
@@ -200,6 +200,11 @@ class SmrPlanet
 		{
 			return $this->sector_id;
 		}
+		
+		public function &getGalaxy()
+		{
+			return SmrGalaxy::getGalaxyContaining($this->getGameID(),$this->getSectorID());
+		}
 
 		public function getOwnerID()
 		{
@@ -236,12 +241,88 @@ class SmrPlanet
 			$this->setPassword('');
 		}
 
+		public function getCredits()
+		{
+			return $this->credits;
+		}
+
+		public function setCredits($num)
+		{
+			if($this->credits==$num)
+			{
+				return;
+			}
+			if($num < 0)
+			{
+				throw new Exception('You cannot set negative credits.');
+			}
+			$this->credits = $num;
+		}
+
+		public function increaseCredits($num)
+		{
+			if($num == 0)
+			{
+				return;
+			}
+			$this->setCredits($this->getCredits() + $num);
+		}
+
+		public function decreaseCredits($num)
+		{
+			if($num == 0)
+			{
+				return;
+			}
+			$this->setCredits($this->getCredits() - $num);
+		}
+
+		public function getBonds()
+		{
+			return $this->bonds;
+		}
+
+		public function setBonds($num)
+		{
+			if($this->bonds==$num)
+			{
+				return;
+			}
+			if($num < 0)
+			{
+				throw new Exception('You cannot set negative bonds.');
+			}
+			$this->bonds = $num;
+		}
+
+		public function increaseBonds($num)
+		{
+			if($num == 0)
+			{
+				return;
+			}
+			$this->setBonds($this->getBonds() + $num);
+		}
+
+		public function decreaseBonds($num)
+		{
+			if($num == 0)
+			{
+				return;
+			}
+			$this->setBonds($this->getBonds() - $num);
+		}
+
 		public function checkForExcessDefense()
 		{
 			if ($this->getShields() > $this->getMaxShields())
-			$this->setShields($this->getMaxShields());
+			{
+				$this->setShields($this->getMaxShields());
+			}
 			if ($this->getCDs() > $this->getMaxCDs())
-			$this->setCDs($this->getMaxCDs());
+			{
+				$this->setCDs($this->getMaxCDs());
+			}
 		}
 
 		public function getShields($delayed = false)
@@ -257,20 +338,50 @@ class SmrPlanet
 		public function setShields($shields)
 		{
 			if($shields<0)
-			$shields=0;
+			{
+				$shields=0;
+			}
 			if ($shields > $this->getMaxShields())
-			$shields = $this->getMaxShields();
+			{
+				$shields = $this->getMaxShields();
+			}
 			if($this->shields == $shields)
-			return;
+			{
+				return;
+			}
 			$this->shields=$shields;
 		}
 
 		public function decreaseShields($number, $delayed = false)
 		{
+			if($number == 0)
+			{
+				return;
+			}
 			if($delayed===false)
-			$this->setShields($this->getShields() - $number);
+			{
+				$this->setShields($this->getShields() - $number);
+			}
 			else
-			$this->delayedShieldsDelta -= $number;
+			{
+				$this->delayedShieldsDelta -= $number;
+			}
+		}
+
+		public function increaseShields($number, $delayed = false)
+		{
+			if($number == 0)
+			{
+				return;
+			}
+			if($delayed===false)
+			{
+				$this->setShields($this->getShields() + $number);
+			}
+			else
+			{
+				$this->delayedShieldsDelta += $number;
+			}
 		}
 
 		public function getMaxShields()
@@ -291,20 +402,50 @@ class SmrPlanet
 		public function setCDs($combatDrones)
 		{
 			if($combatDrones<0)
-			$combatDrones=0;
+			{
+				$combatDrones=0;
+			}
 			if ($combatDrones > $this->getMaxCDs())
-			$combatDrones = $this->getMaxCDs();
+			{
+				$combatDrones = $this->getMaxCDs();
+			}
 			if($this->drones == $combatDrones)
-			return;
+			{
+				return;
+			}
 			$this->drones=$combatDrones;
 		}
 
 		public function decreaseCDs($number, $delayed = false)
 		{
+			if($number == 0)
+			{
+				return;
+			}
 			if($delayed===false)
-			$this->setCDs($this->getCDs() - $number);
+			{
+				$this->setCDs($this->getCDs() - $number);
+			}
 			else
-			$this->delayedCDsDelta -= $number;
+			{
+				$this->delayedCDsDelta -= $number;
+			}
+		}
+
+		public function increaseCDs($number, $delayed = false)
+		{
+			if($number == 0)
+			{
+				return;
+			}
+			if($delayed===false)
+			{
+				$this->setCDs($this->getCDs() + $number);
+			}
+			else
+			{
+				$this->delayedCDsDelta += $number;
+			}
 		}
 
 		public function getMaxCDs()
@@ -652,6 +793,11 @@ class SmrPlanet
 	public function getName()
 	{
 		return $this->planet_name;
+	}
+
+	public function setName($name)
+	{
+		$this->planet_name = $name;
 	}
 
 	public function getDisplayName()
