@@ -27,7 +27,7 @@ if (isset($_REQUEST['action']))
 				if (!empty($query)) $query .= ',';
 				$query .= '('.$a[0].','.$db->escape_string($a[1]).','.$a[2].','.$a[3].','.$a[4].','.$a[5].','.$a[6].','.$a[7].',' . $db->escape_string($a[8]) . ',' . $player->getAccountID() . ')';
 			}
-			$db->query('INSERT INTO combat_logs 
+			$db->query('INSERT INTO combat_logs
 						(game_id,type,sector_id,timestamp,attacker_id,attacker_alliance_id,defender_id,defender_alliance_id,result,saved)
 						VALUES ' . $query);
 		}
@@ -73,7 +73,7 @@ if($action == 5)
 			}
 			else
 			{
-				++$container['current_log'];			
+				++$container['current_log'];
 			}
 		}
 		$display_id = $container['log_ids'][$container['current_log']];
@@ -221,15 +221,19 @@ if($action != 5)
 		{
 			//attacker_id,defender_id,timestamp,sector_id,log_id
 			$logs[$db->getField('log_id')] = array($db->getField('attacker_id'),$db->getField('defender_id'),$db->getField('timestamp'),$db->getField('sector_id'));
-			$player_ids[] = $db->getField('attacker_id');
-			$player_ids[] = $db->getField('defender_id');
+			$playerIDs[] = $db->getField('attacker_id');
+			$playerIDs[] = $db->getField('defender_id');
 		}
-		array_unique($player_ids);
-		$db->query('SELECT player_name, account_id FROM player
-					WHERE account_id IN (' . implode(',',$player_ids) . ')
+		array_unique($playerIDs);
+		$db->query('SELECT * FROM player
+					WHERE account_id IN (' . implode(',',$playerIDs) . ')
 					AND game_id = '.SmrSession::$game_id.'
-					LIMIT ' . sizeof($player_ids));
-		while ($db->nextRecord()) $players[$db->getField('account_id')] = $db->getField('player_name');
+					LIMIT ' . sizeof($playerIDs));
+		while ($db->nextRecord())
+		{
+			$currPlayer =& SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
+			$players[$db->getField('account_id')] = $currPlayer->getLinkedDisplayName(false);
+		}
 		foreach ($logs as $id => $info)
 		{
 			$container['id'] = $id;
