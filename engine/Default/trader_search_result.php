@@ -124,7 +124,7 @@ if ($db->getNumRows() > 0)
 	}
 	$PHP_OUTPUT.=('</table>');
 	$count++;
-} 
+}
 if (empty($player_id))
 {
 	$real = $player_name;
@@ -140,7 +140,7 @@ if (empty($player_id))
 			   
 	if ($db->getNumRows() > 0)
 	{
-		$PHP_OUTPUT.=('<table class="standard" width="75%">');
+		$PHP_OUTPUT.=('<br /><table class="standard" width="75%">');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<th>Name</th>');
 		$PHP_OUTPUT.=('<th>Alliance</th>');
