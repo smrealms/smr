@@ -99,9 +99,9 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 			return false;
 		if($this->getNumMembers()<Globals::getAllianceMaxPlayers($this->getGameID()))
 		{
-			$maxVets = Globals::getAllianceMaxVets($this->getGameID());
 			if(!$player->getAccount()->isVeteran())
 				return true;
+			$maxVets = Globals::getAllianceMaxVets($this->getGameID());
 			if($this->getNumMembers()<$maxVets)
 				return true;
 			$this->query('SELECT status FROM player_joined_alliance WHERE account_id='.$this->escapeNumber($player->getAccountID()).' AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
@@ -111,7 +111,16 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 					return true;
 				else
 				{
-					$this->query('SELECT SUM(account_id) AS num_orig_vets FROM player_joined_alliance WHERE account_id IN (SELECT account_id FROM player WHERE alliance_id = '.$this->escapeNumber($this->getAllianceID()) .') AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
+					$this->query('SELECT COUNT(pja.account_id) AS num_orig_vets
+									FROM player_joined_alliance pja
+									WHERE account_id IN (
+										SELECT account_id
+										FROM player p
+										WHERE p.alliance_id = pja.alliance_id
+										AND p.game_id = pja.game_id
+									)
+									AND game_id='.$this->escapeNumber($player->getGameID()).'
+									AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
 					if($this->nextRecord() && $this->getField('num_orig_vets') < $maxVets)
 						return true;
 				}
