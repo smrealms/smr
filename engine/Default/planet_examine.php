@@ -10,10 +10,10 @@ if ($planet->hasOwner())
 } else $ownerAllianceID = 0;
 $template->assign('PageTopic','Examine Planet');
 $PHP_OUTPUT.=('<table>');
-$PHP_OUTPUT.=('<tr><td><b>Planet Name:</b></td><td>'.$planet->planet_name.'</td></tr>');
+$PHP_OUTPUT.=('<tr><td><b>Planet Name:</b></td><td>'.$planet->getName().'</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Level:</b></td><td>' . number_format($planet->getLevel(),2) . '</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Owner:</b></td><td>');
-if ($planet->owner_id != 0)
+if ($planet->hasOwner())
 	$PHP_OUTPUT.=($planet_owner->getLinkedDisplayName(false));
 else
 	$PHP_OUTPUT.=('Unclaimed');
@@ -21,7 +21,7 @@ else
 $PHP_OUTPUT.=('</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Alliance:</b></td><td>');
 
-if ($planet->owner_id != 0)
+if ($planet->hasOwner())
 	$PHP_OUTPUT.=create_link($planet_owner->getAllianceRosterHREF(), $planet_owner->getAllianceName());
 else
 	$PHP_OUTPUT.=('none');
@@ -42,8 +42,8 @@ $db->query('SELECT planet_land FROM alliance_treaties
 if ($db->nextRecord()) $planetLand = TRUE;
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $planetLand = TRUE;
 if ($player->getAllianceID() == $ownerAllianceID && $ownerAllianceID != 0) $planetLand = TRUE;
-if ($planet->owner_id == $player->getAccountID()) $planetLand = TRUE;
-if ($planet->owner_id == 0) $planetLand = TRUE;
+if ($planet->getOwnerID() == $player->getAccountID()) $planetLand = TRUE;
+if (!$planet->hasOwner()) $planetLand = TRUE;
 if (!$planetLand)
 	$PHP_OUTPUT.=create_button(create_container('planet_attack_processing.php', ''), 'Attack Planet (3)');
 elseif ($planet->isInhabitable())

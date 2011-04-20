@@ -290,7 +290,7 @@ while ($db->nextRecord()) {
 	if ($db2->nextRecord()) {
 		$planet =& SmrPlanet::getPlanet($game_id,$id);
 		$level = $planet->getLevel();
-		$owner = $planet->owner_id;
+		$owner = $planet->getOwnerID();
 		$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' AND account_id = '.$owner);
 		$db2->nextRecord();
 		$all_id = $db2->getField('alliance_id');

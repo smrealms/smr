@@ -5,7 +5,7 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
-$template->assign('PageTopic','Planet : '.$planet->planet_name.' [Sector #'.$player->getSectorID().']');
+$template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 
 include(get_file_loc('menue.inc'));
 create_planet_menue();

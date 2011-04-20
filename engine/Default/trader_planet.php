@@ -1,4 +1,4 @@
-<?php		
+<?php
 require_once(get_file_loc('smr_alliance.inc'));
 require_once(get_file_loc('SmrPlanet.class.inc'));
 function echo_time($sek)
@@ -38,12 +38,11 @@ if ($db->getNumRows() > 0)
 	while ($db->nextRecord())
 	{
 		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
-		$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id'));
 		$planet_sec = $db->getField('sector_id');
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
-		$PHP_OUTPUT.=('<td align="right">'.$planet->sector_id.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$planet_sector->getGalaxyName().'</td>');
+		$PHP_OUTPUT.=('<td>'.$planet->getName().'</td>');
+		$PHP_OUTPUT.=('<td align="right">' . $planet->getSectorID() . '</td>');
+		$PHP_OUTPUT.=('<td align="center">' . $planet->getGalaxy()->getName().'</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_GENERATOR) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_HANGAR) . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_TURRET) . '</td>');
@@ -62,8 +61,8 @@ if ($db->getNumRows() > 0)
 			$PHP_OUTPUT.=('Nothing');
 
 		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$planet->shields.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$planet->drones.'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$planet->getShields().'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$planet->getCDs().'</td>');
 		$PHP_OUTPUT.=('<td align="left">');
 		foreach ($planet->getStockpile() as $id => $amount)
 			if ($amount > 0)
@@ -88,7 +87,6 @@ else
 	
 if ($player->hasAlliance())
 {
-	$alliance = new SMR_ALLIANCE($player->getAllianceID(), SmrSession::$game_id);
 	
 	$template->assign('PageTopic','Planet List For '.$player->getAllianceName().' ('.$player->getAllianceID().')');
 	
@@ -103,7 +101,7 @@ if ($player->hasAlliance())
 											'ORDER BY planet.sector_id');
 	if ($db->getNumRows() > 0)
 	{
-		$PHP_OUTPUT.=('<div align="center">');
+		$PHP_OUTPUT.=('<br /><div align="center">');
 		$PHP_OUTPUT.=('<table class="standard" width="95%">');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<th align="center">Name</th>');
@@ -122,13 +120,11 @@ if ($player->hasAlliance())
 		while ($db->nextRecord())
 		{
 			$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
-			$planet_sector =& SmrSector::getSector(SmrSession::$game_id, $db->getField('sector_id'));
-			$planet_owner =& SmrPlayer::getPlayer($planet->owner_id, SmrSession::$game_id);
 			$PHP_OUTPUT.=('<tr>');
-			$PHP_OUTPUT.=('<td>'.$planet->planet_name.'</td>');
-			$PHP_OUTPUT.=('<td>'.$planet_owner->getPlayerName().'</td>');
-			$PHP_OUTPUT.=('<td align="center">'.$planet->sector_id.'</td>');
-			$PHP_OUTPUT.=('<td align="center">'.$planet_sector->getGalaxyName().'</td>');
+			$PHP_OUTPUT.=('<td>' . $planet->getName() . '</td>');
+			$PHP_OUTPUT.=('<td>' . $planet->getOwner()->getLinkedDisplayName(false) . '</td>');
+			$PHP_OUTPUT.=('<td align="center">' . $planet->getSectorID() . '</td>');
+			$PHP_OUTPUT.=('<td align="center">' . $planet->getGalaxy()->getName().'</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_GENERATOR) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_HANGAR) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_TURRET) . '</td>');
@@ -147,8 +143,8 @@ if ($player->hasAlliance())
 				$PHP_OUTPUT.=('Nothing');
 	
 			$PHP_OUTPUT.=('</td>');
-			$PHP_OUTPUT.=('<td align="center">'.$planet->shields.'</td>');
-			$PHP_OUTPUT.=('<td align="center">'.$planet->drones.'</td>');
+			$PHP_OUTPUT.=('<td align="center">'.$planet->getShields().'</td>');
+			$PHP_OUTPUT.=('<td align="center">'.$planet->getCDs().'</td>');
 			$PHP_OUTPUT.=('<td align="left">');
 			$supply = false;
 			foreach ($planet->getStockpile() as $id => $amount)

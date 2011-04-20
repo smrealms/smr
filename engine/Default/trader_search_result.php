@@ -192,7 +192,7 @@ if (empty($player_id))
 				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
 			else
 				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="red">NO</td>');
-			if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->sector_id.'</td>');
+			if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getSectorID().'</td>');
 			$PHP_OUTPUT.=('<td style="font-size:75%;" width="10%" class="center">');
 			$container = array();
 			$container['url']		= 'skeleton.php';

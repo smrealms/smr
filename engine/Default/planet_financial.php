@@ -6,7 +6,7 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 // create planet object
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 
-$template->assign('PageTopic','Planet : '.$planet->planet_name.' [Sector #'.$player->getSectorID().']');
+$template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 
 include(get_file_loc('menue.inc'));
 create_planet_menue();
@@ -34,16 +34,16 @@ else
 $rate = pow($base,2);
 
 // grant for all days we didn't got
-while ($planet->maturity < $curr_time && $planet->maturity > 0) {
-
+while ($planet->maturity < $curr_time && $planet->maturity > 0)
+{
 	// calc the interest for the time
-	$interest = $planet->bonds * $rate - $planet->bonds;
+	$interest = $planet->getBonds() * $rate - $planet->getBonds();
 
 	// transfer money to free avail cash
-	$planet->credits += $planet->bonds + $interest;
+	$planet->increaseCredits($planet->getBonds() + $interest);
 
 	// reset bonds
-	$planet->bonds = 0;
+	$planet->setBonds(0);
 
 	// reset maturity
 	$planet->maturity = 0;
@@ -53,7 +53,7 @@ while ($planet->maturity < $curr_time && $planet->maturity > 0) {
 
 }
 
-$PHP_OUTPUT.=('<p>Balance: <b>' . number_format($planet->credits) . '</b></p>');
+$PHP_OUTPUT.=('<p>Balance: <b>' . number_format($planet->getCredits()) . '</b></p>');
 if (!empty($interest))
 	$PHP_OUTPUT.=('<span style="font-size:75%">Since your last visit<br />you got <span class="creds bold">' . number_format(round($interest)) . '</span> credits interest!</span>');
 
@@ -80,9 +80,9 @@ $bond_time = BOND_TIME / Globals::getGameSpeed($player->getGameID());
 $PHP_OUTPUT.=('<p>You are able to transfer this money into a saving bond.<br />');
 $PHP_OUTPUT.=('It remains there for ' . format_time($bond_time) . ' and will gain ' . ($rate * 100 - 100) . '% interest.<br /><br />');
 
-if ($planet->bonds > 0) {
+if ($planet->getBonds() > 0) {
 
-	$PHP_OUTPUT.=('Right now there are ' . number_format($planet->bonds) . ' credits bonded');
+	$PHP_OUTPUT.=('Right now there are ' . number_format($planet->getBonds()) . ' credits bonded');
 
 	if ($planet->maturity > 0) {
 

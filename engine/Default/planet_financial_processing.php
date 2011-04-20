@@ -5,8 +5,8 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 $planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
 $action = $_REQUEST['action'];
 $amount = $_REQUEST['amount'];
-if ($action == 'Deposit' || $action == 'Withdraw') {
-
+if ($action == 'Deposit' || $action == 'Withdraw')
+{
 	if (!is_numeric($amount))
 		create_error('Numbers only please');
 
@@ -17,46 +17,44 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 	if ($amount <= 0)
 		create_error('You must actually enter an amount > 0!');
 
-	if ($action == 'Deposit') {
-
+	if ($action == 'Deposit')
+	{
 		if ($player->getCredits() < $amount)
 			create_error('You don\'t own that much money!');
 
 		$player->decreaseCredits($amount);
-		$planet->credits += $amount;
+		$planet->increaseCredits($amount);
 		$account->log(4, 'Player puts '.$amount.' credits on planet', $player->getSectorID());
-
-	} elseif ($action == 'Withdraw') {
-
-		if ($planet->credits < $amount)
+	}
+	elseif ($action == 'Withdraw')
+	{
+		if ($planet->getCredits() < $amount)
 			create_error('There are not enough credits in the planetary account!');
 
 		$player->increaseCredits($amount);
-		$planet->credits -= $amount;
+		$planet->decreaseCredits($amount);
 		$account->log(4, 'Player takes '.$amount.' credits from planet', $player->getSectorID());
-
 	}
 
 	$player->update();
 	$planet->update();
-
 }
 elseif ($action == 'Bond It!')
 {
 	if(!$planet->isClaimed())
 		create_error('Cannot bond on an unclaimed planet.');
 	// add it to bond
-	$planet->bonds += $planet->credits;
+	$planet->increaseBonds($planet->getCredits());
 
 	// set free cash to 0
-	$planet->credits = 0;
+	$planet->setCredits(0);
 
 	// initialize time
 	$planet->maturity = TIME + round(BOND_TIME / Globals::getGameSpeed($player->getGameID()));
 
 	// save to db
 	$planet->update();
-	$account->log(4, 'Player bonds '.$planet->credits.' credits at planet.', $player->getSectorID());
+	$account->log(4, 'Player bonds '.$planet->getCredits().' credits at planet.', $player->getSectorID());
 }
 
 forward(create_container('skeleton.php', 'planet_financial.php'));
