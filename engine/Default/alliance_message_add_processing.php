@@ -1,5 +1,5 @@
 <?php
-$body = trim(htmlentities($_POST['body']));
+$body = htmlentities(trim($_POST['body']),ENT_COMPAT,'utf-8');
 $topic = isset($_REQUEST['topic'])?$_REQUEST['topic']:'';
 if (isset($_REQUEST['allEyesOnly'])) $allEyesOnly = TRUE;
 else $allEyesOnly = FALSE;

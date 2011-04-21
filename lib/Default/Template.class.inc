@@ -51,13 +51,16 @@ class Template
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output);
 			if($forAjax)
 			{
-				header('Content-Type: text/xml');
+				header('Content-Type: text/xml; charset: utf-8');
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$ajaxXml='<all>'.$ajaxXml.'</all>';
 				echo $ajaxXml;
 			}
 			else
+			{
+				header('Content-Type: text/html; charset: utf-8');
 				echo $output;
+			}
 			SmrSession::saveAjaxReturns();
 		}
 		else
@@ -149,7 +152,7 @@ class Template
 //		foreach($this->ajax as $element => $content)
 //		{
 //			if(trim($content)!='')
-//				echo '<'.$element.'>'.htmlentities($this->trimWhiteSpace($content)).'</'.$element.'>';
+//				echo '<'.$element.'>'.htmlentities($this->trimWhiteSpace($content),ENT_COMPAT,'utf-8').'</'.$element.'>';
 //		}
 //	}
 	
@@ -251,7 +254,7 @@ class Template
 				$id = $span->getAttribute('id');
 				$inner = $span->innertext();
 				if(!SmrSession::addAjaxReturns($id,$inner))
-					$xml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+					$xml.= '<'.$id.'>'.htmlentities($inner,ENT_COMPAT,'utf-8'). '</'.$id.'>';
 			}
 		}
 		if(!$this->ignoreMiddle)
@@ -275,7 +278,7 @@ class Template
 					{
 						$id = $mid->getAttribute('id');
 						if(!SmrSession::addAjaxReturns($id,$inner))
-							$xml.= '<'.$id.'>'.htmlentities($inner). '</'.$id.'>';
+							$xml.= '<'.$id.'>'.htmlentities($inner,ENT_COMPAT,'utf-8'). '</'.$id.'>';
 					}
 				}
 			}

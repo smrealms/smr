@@ -1,7 +1,7 @@
 <?php
 
-$title = htmlentities(trim($_REQUEST['title']));
-$message = htmlentities(trim($_REQUEST['message']));
+$title = htmlentities(trim($_REQUEST['title']),ENT_COMPAT,'utf-8');
+$message = htmlentities(trim($_REQUEST['message']),ENT_COMPAT,'utf-8');
 
 if($_REQUEST['action'] == 'Preview article')
 {

@@ -25,6 +25,7 @@ abstract class MySqlDatabase implements Database
 				$this->error('Database selection failed.');
 			}
 		}
+//		mysql_query("SET NAMES 'utf8' COLLATE 'utf8_general_ci'", self::$dbConn);
 	}
 	
 	public function query($query)
@@ -260,7 +261,7 @@ abstract class MySqlDatabase implements Database
 		}
 		
 		if ($transfer_html)
-			return '\'' . mysql_real_escape_string(htmlentities($string),self::$dbConn) . '\'';
+			return '\'' . mysql_real_escape_string(htmlentities($string,ENT_COMPAT,'utf-8'),self::$dbConn) . '\'';
 		else
 			return '\'' . mysql_real_escape_string($string,self::$dbConn) . '\'';
 	}

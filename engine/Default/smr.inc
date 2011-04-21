@@ -15,7 +15,7 @@ function compare($a,$b)
 
 function htmliseMessage($message)
 {
-	$message = htmlentities($message);
+	$message = htmlentities($message,ENT_COMPAT,'utf-8');
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
 	return $message;
 }
