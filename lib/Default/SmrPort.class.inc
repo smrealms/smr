@@ -526,7 +526,7 @@ class SmrPort
 		$newGood['Amount'] = $newGood['Max'];
 		$newGood['TransactionType'] = $type;
 		$this->goods['All Goods'][$goodID] =& $newGood;
-		$this->goods[$type][$type] =& $newGood;
+		$this->goods[$type][$goodID] =& $newGood;
 		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->getGameID() . ',' . $this->getSectorID() . ',' . $goodID . ',' . $this->db->escapeString($type) . ',' . $newGood['Amount'] . ')');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
@@ -1046,7 +1046,7 @@ class SmrPort
 			return min($idealPrice,ceil($idealPrice * $relationsEffect));
 //		$range = .11 - .095;
 //		$rand = .095 + $range * mt_rand(0, 32767)/32767;
-//		
+//
 //		if($transactionType == 'Buy')
 //			$offeredPrice = round( $idealPrice * (($relations - 1250) / 10000 + 1 * (pow($relations / 500 + 1, $rand)) - ($relations / 9500)) );
 //		else if($transactionType == 'Sell')
