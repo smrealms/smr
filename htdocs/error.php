@@ -28,7 +28,7 @@
 
 							<h1>ERROR</h1>
 
-							<p><b><big><?php echo (addslashes(htmlentities($_REQUEST['msg'], ENT_NOQUOTES))); ?>
+							<p><b><big><?php echo (addslashes(htmlentities($_REQUEST['msg'], ENT_NOQUOTES,'utf-8'))); ?>
 							</big></b></p>
 							<br /><br /><br />
 							<p><small>If the error was caused by something you entered, press back and try again.</small></p>

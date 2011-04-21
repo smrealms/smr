@@ -99,7 +99,7 @@ class SmrLocation
 	
 	public function setName($name)
 	{
-		$name = htmlentities($name);
+		$name = htmlentities($name,ENT_COMPAT,'utf-8');
 		if($this->name==$name)
 			return;
 		$this->name = $name;

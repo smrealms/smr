@@ -1,6 +1,6 @@
 <?php
 
-$message = htmlentities(trim($_REQUEST['message']));
+$message = htmlentities(trim($_REQUEST['message']),ENT_COMPAT,'utf-8');
 
 if($_REQUEST['action'] == 'Preview message')
 {
@@ -20,7 +20,7 @@ if (empty($message))
 
 if(isset($var['alliance_id']))
 {
-	$db->query('SELECT account_id FROM player WHERE game_id=' . $player->getGameID() . 
+	$db->query('SELECT account_id FROM player WHERE game_id=' . $player->getGameID() .
 				' AND alliance_id=' . $var['alliance_id']); //No limit in case they are over limit - ie NHA
 	while ($db->nextRecord())
 	{

@@ -1,6 +1,6 @@
 <?php
 
-$message = htmlentities(trim($_POST['message']));
+$message = htmlentities(trim($_POST['message']),ENT_COMPAT,'utf-8');
 
 if (empty($message))
 	create_error('You have to enter a text to send!');

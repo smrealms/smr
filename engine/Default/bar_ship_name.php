@@ -97,18 +97,18 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 			if (stristr($name, $check))
 			{
 				$check .= '*>';
-				if ($check != '<h*>' && $check != '</marquee>?*>') create_error(htmlentities($check, ENT_NOQUOTES) . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
-				elseif ($check == '</marquee>?*>') create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
-				else create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES) . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES) . ' tag which is not needed.');
+				if ($check != '<h*>' && $check != '</marquee>?*>') create_error(htmlentities($check, ENT_NOQUOTES,'utf-8') . ' tag is not allowed in ship names.<br /><small>If you believe the name is appropriate please contact an admin.</small>');
+				elseif ($check == '</marquee>?*>') create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES,'utf-8') . ' tag.');
+				else create_error('Either you used the ' . htmlentities($check, ENT_NOQUOTES,'utf-8') . ' tag which is not allowed or the ' . htmlentities('<html>', ENT_NOQUOTES,'utf-8') . ' tag which is not needed.');
 			}
 		}
 		list ($first, $second) = explode('</marquee>', $name);
 		if ($second != '')
-			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES) . ' tag.');
+			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES,'utf-8') . ' tag.');
 		
 		list ($first, $second) = explode('<marquee>', $name);
 		if ($first != '' && $second != '')
-			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES) . ' tag.');
+			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES,'utf-8') . ' tag.');
 		//lets try to see if they closed all tags
 		$first = explode ('<', $name);
 		foreach ($first as $second)
@@ -134,7 +134,7 @@ elseif (isset($var['process']) && $continue == 'TRUE')
 	else
 	{
 		$max_len = 48;
-		$name = htmlentities($name, ENT_NOQUOTES);
+		$name = htmlentities($name, ENT_NOQUOTES,'utf-8');
 	}
 	
 	//list of html tags that have an auto br
