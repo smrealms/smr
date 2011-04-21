@@ -19,7 +19,7 @@ $transferAccounts = array();
 //}
 //else
 {
-	$db->query('SELECT * FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
+	$db->query('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
 	while ($db->nextRecord())
 	{
 		$transferAccounts[$db->getField('account_id')] = $db->getField('hof_name');
