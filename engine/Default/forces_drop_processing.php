@@ -7,12 +7,12 @@ if ($player->isLandedOnPlanet())
 	create_error('You must first launch to drop forces');
 
 // take either from container or request, prefer container
-$drop_mines			= isset($var['drop_mines'])			? $var['drop_mines']			: trim($_REQUEST['drop_mines']);
-$drop_combat_drones = isset($var['drop_combat_drones'])	? $var['drop_combat_drones']	: trim($_REQUEST['drop_combat_drones']);
-$drop_scout_drones	= isset($var['drop_scout_drones'])	? $var['drop_scout_drones']		: trim($_REQUEST['drop_scout_drones']);
-$take_mines			= isset($var['take_mines'])			? $var['take_mines']			: trim($_REQUEST['take_mines']);
-$take_combat_drones	= isset($var['take_combat_drones'])	? $var['take_combat_drones']	: trim($_REQUEST['take_combat_drones']);
-$take_scout_drones	= isset($var['take_scout_drones'])	? $var['take_scout_drones']		: trim($_REQUEST['take_scout_drones']);
+$drop_mines			= isset($var['drop_mines'])			? $var['drop_mines']			: (isset($_REQUEST['drop_mines'])			? trim($_REQUEST['drop_mines']) : 0);
+$drop_combat_drones = isset($var['drop_combat_drones'])	? $var['drop_combat_drones']	: (isset($_REQUEST['drop_combat_drones'])	? trim($_REQUEST['drop_combat_drones']) : 0);
+$drop_scout_drones	= isset($var['drop_scout_drones'])	? $var['drop_scout_drones']		: (isset($_REQUEST['drop_scout_drones'])	? trim($_REQUEST['drop_scout_drones']) : 0);
+$take_mines			= isset($var['take_mines'])			? $var['take_mines']			: (isset($_REQUEST['take_mines'])			? trim($_REQUEST['take_mines']) : 0);
+$take_combat_drones	= isset($var['take_combat_drones'])	? $var['take_combat_drones']	: (isset($_REQUEST['take_combat_drones'])	? trim($_REQUEST['take_combat_drones']) : 0);
+$take_scout_drones	= isset($var['take_scout_drones'])	? $var['take_scout_drones']		: (isset($_REQUEST['take_scout_drones'])	? trim($_REQUEST['take_scout_drones']) : 0);
 
 // do we have numbers?
 if (!empty($drop_mines) && !is_numeric($drop_mines)) create_error('Only numbers as input allowed');
@@ -153,6 +153,7 @@ if ($change_mines != 0) {
 // message to send out
 if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages())
 {
+	$mines_message = '';
 	if ($change_mines > 0)
 		$mines_message = 'added ' . ($drop_mines - $take_mines) . ' mine';
 	elseif ($change_mines < 0)
@@ -190,23 +191,23 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 	// now compile it together
 	$message = $player->getPlayerName().' has ' . $mines_message;
 
-	if (isset($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message))
+	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message))
 		$message .= ' and '.$combat_drones_message;
-	elseif (isset($mines_message) && isset($combat_drones_message))
+	elseif (!empty($mines_message) && isset($combat_drones_message))
 		$message .= ', '.$combat_drones_message;
-	elseif (!isset($mines_message) && isset($combat_drones_message))
+	elseif (empty($mines_message) && isset($combat_drones_message))
 		$message .= $combat_drones_message;
 
-	if (isset($mines_message) && isset($combat_drones_message) && isset($scout_drones_message))
+	if (!empty($mines_message) && isset($combat_drones_message) && isset($scout_drones_message))
 		$message .= ', and '.$scout_drones_message;
-	elseif ((isset($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message))
+	elseif ((!empty($mines_message) || isset($combat_drones_message)) && isset($scout_drones_message))
 		$message .= ' and '.$scout_drones_message;
-	elseif (!isset($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message))
+	elseif (empty($mines_message) && !isset($combat_drones_message) && isset($scout_drones_message))
 		$message .= $scout_drones_message;
 
-	if($change_mines >= 0 && $combat_drones_message >= 0 && $change_scout_drones >= 0)
+	if($change_mines >= 0 && $change_combat_drones >= 0 && $change_scout_drones >= 0)
 		$message .= ' to';
-	elseif($change_mines <= 0 && $combat_drones_message <= 0 && $change_scout_drones <= 0)
+	elseif($change_mines <= 0 && $change_combat_drones <= 0 && $change_scout_drones <= 0)
 		$message .= ' from';
 	else
 		$message .= ' from/to';

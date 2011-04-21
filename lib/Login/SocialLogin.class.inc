@@ -36,7 +36,7 @@ class SocialLogin
 				session_start();
 			}
 			require_once(LIB.'External/Twitter/twitteroauth.php');
-			self::$twitter = new TwitterOAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, $_SESSION['TwitterToken']['oauth_token'], $_SESSION['TwitterToken']['oauth_token_secret']);
+			self::$twitter = new TwitterOAuth(TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, isset($_SESSION['TwitterToken']['oauth_token'])?$_SESSION['TwitterToken']['oauth_token']:null, isset($_SESSION['TwitterToken']['oauth_token_secret'])?$_SESSION['TwitterToken']['oauth_token_secret']:null);
 		}
 		return self::$twitter;
 	}

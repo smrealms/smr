@@ -12,7 +12,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 		}
 		else
 		{
-			if(is_array($TraderResults['Weapons']))
+			if(isset($TraderResults['Weapons']) && is_array($TraderResults['Weapons']))
 			{
 				foreach($TraderResults['Weapons'] as $WeaponResults)
 				{
@@ -25,7 +25,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 					if($ActualDamage['NumMines'] > 0){ $DamageTypes = $DamageTypes+1; }
 					if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 					if($ActualDamage['NumSDs'] > 0){ $DamageTypes = $DamageTypes+1; }
-					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at<?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php } ?> the forces<?php 
+					echo $ShootingPlayer->getDisplayName() ?> fires their <?php echo $ShootingWeapon->getName() ?> at<?php if($ShotHit && $ActualDamage['TargetAlreadyDead']){ ?> the debris that was once<?php } ?> the forces<?php
 					if(!$ActualDamage['TargetAlreadyDead'])
 					{
 						if(!$ShotHit)

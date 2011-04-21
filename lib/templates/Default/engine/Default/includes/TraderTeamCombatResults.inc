@@ -12,7 +12,7 @@ if(is_array($TraderTeamCombatResults['Traders']))
 		}
 		else
 		{
-			if(is_array($TraderResults['Weapons']))
+			if(isset($TraderResults['Weapons']) && is_array($TraderResults['Weapons']))
 			{
 				foreach($TraderResults['Weapons'] as $WeaponResults)
 				{

@@ -21,5 +21,5 @@ $container = array();
 $container['url'] = 'planet_defense_processing.php';
 $container['type_id'] = 4;
 
-$template->assignByRef('TransferCDsHref',SmrSession::get_new_href($container));
+$template->assign('TransferCDsHref',SmrSession::get_new_href($container));
 ?>

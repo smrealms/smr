@@ -10,6 +10,16 @@ else
 {
 	$alliance_id=$player->getAllianceID();
 }
+
+if(!isset($var['SortKey']))
+{
+	SmrSession::updateVar('SortKey','Experience');
+}
+if(!isset($var['SortDesc']))
+{
+	SmrSession::updateVar('SortDesc',true);
+}
+
 $alliance = new SMR_ALLIANCE($alliance_id,SmrSession::$game_id);
 $leader_id = $alliance->getLeaderID();
 $password = $alliance->getPassword();
@@ -46,7 +56,7 @@ if ($varAction == 'Show Alliance Roles') {
 
 // If the alliance is the player's alliance they get live information
 // Otherwise it comes from the cache.
-$db->query('SELECT 
+$db->query('SELECT
 	sum(experience) as alliance_xp,
 	floor(avg(experience)) as alliance_avg
 	FROM player
@@ -124,7 +134,7 @@ $count = 1;
 $db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id);
 if ($db2->nextRecord()) $my_role_id = $db2->getField('role_id');
 else $my_role_id = 0;
-$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' . 
+$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' .
 					'role_id = '.$my_role_id.' AND change_roles = \'TRUE\'');
 if ($db2->nextRecord()) $allowed = TRUE;
 
@@ -239,7 +249,7 @@ if ($alliance_id == $player->getAllianceID())
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'alliance_roster.php';
-	if($varAction == '' || $varAction == 'Hide Alliance Roles') 
+	if($varAction == '' || $varAction == 'Hide Alliance Roles')
 	{
 		$container['action'] = 'Show Alliance Roles';
 		$PHP_OUTPUT.=create_button($container,'Show Alliance Roles');

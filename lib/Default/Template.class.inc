@@ -36,8 +36,6 @@ class Template
 	
 	public function display($templateName,$forAjax=false)
 	{
-		if($forAjax)
-			header('Content-Type: text/xml');
 		@ob_clean();
 		ob_start();
 		$this->includeTemplate($templateName);
@@ -53,6 +51,7 @@ class Template
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output);
 			if($forAjax)
 			{
+				header('Content-Type: text/xml');
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$ajaxXml='<all>'.$ajaxXml.'</all>';
 				echo $ajaxXml;
@@ -135,7 +134,7 @@ class Template
 //		$this->currentAjaxID=$id;
 //		$this->startCapture();
 //	}
-//	
+//
 //	protected function &storeAJAXCapture()
 //	{
 //		if($this->currentAjaxID===false)
@@ -144,7 +143,7 @@ class Template
 //		echo $this->ajax[$this->currentAjaxID];
 //		$this->currentAjaxID=false;
 //	}
-//	
+//
 //	protected function echoAjaxXml()
 //	{
 //		foreach($this->ajax as $element => $content)

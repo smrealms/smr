@@ -167,7 +167,6 @@ abstract class AbstractSmrPlayer
 	{
 		$this->lastSectorID = $this->getSectorID();
 		$this->sectorID = $sectorID;
-		$this->updateLastCPLAction();
 		$this->hasChanged=true;
 	}
 	
@@ -187,7 +186,7 @@ abstract class AbstractSmrPlayer
 		if (!$sector->offersFederalProtection())
 		{
 			return false;
-		}	
+		}
 
         $ship =& $this->getShip();
         $attackRating = $ship->getAttackRating();
@@ -1059,7 +1058,7 @@ abstract class AbstractSmrPlayer
 		if($updateLastActive === true)
 		{
 			$this->setLastActive(TIME);
-			$this->setLastCPLAction(TIME);
+			$this->updateLastCPLAction();
 		}
 	}
 
