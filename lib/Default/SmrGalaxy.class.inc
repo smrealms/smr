@@ -14,6 +14,8 @@ class SmrGalaxy
 	protected $galaxyType;
 	protected $maxForceTime;
 	
+	protected $startSector = false;
+	
 	protected $hasChanged = false;
 	protected $isNew = false;
 
@@ -177,16 +179,19 @@ class SmrGalaxy
 	
 	public function getStartSector()
 	{
-		$startSector = 1;
-		if ($this->getGalaxyID() != 1)
+		if($this->startSector===false)
 		{
-			$galaxies =& SmrGalaxy::getGameGalaxies($this->getGameID());
-			for ($i=1;$i < $this->getGalaxyID();$i++)
+			$this->startSector = 1;
+			if ($this->getGalaxyID() != 1)
 			{
-				$startSector += $galaxies[$i]->getSize();
+				$galaxies =& SmrGalaxy::getGameGalaxies($this->getGameID());
+				for ($i=1;$i < $this->getGalaxyID();$i++)
+				{
+					$this->startSector += $galaxies[$i]->getSize();
+				}
 			}
 		}
-		return $startSector;
+		return $this->startSector;
 	}
 	
 	public function getEndSector()
