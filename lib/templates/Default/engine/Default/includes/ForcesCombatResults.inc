@@ -1,5 +1,5 @@
 <?php
-if(is_array($ForcesCombatResults['Results']))
+if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Results']))
 {
 	foreach($ForcesCombatResults['Results'] as $ForceType => $ForceResults)
 	{
@@ -32,7 +32,7 @@ if(is_array($ForcesCombatResults['Results']))
 		if(!$ActualDamage['TargetAlreadyDead'])
 		{
 			if(!$ShotHit)
-			{ 
+			{
 				?> and misses<?php
 			}
 			else if($ActualDamage['TotalDamage'] == 0)
@@ -83,7 +83,7 @@ if(is_array($ForcesCombatResults['Results']))
 		}
 	}
 }
-if($ForcesCombatResults['ForcesDestroyed'])
+if(isset($ForcesCombatResults['ForcesDestroyed']) && $ForcesCombatResults['ForcesDestroyed'])
 {
 	?>Forces are <span class="red">DESTROYED!</span><br /><?php
 }

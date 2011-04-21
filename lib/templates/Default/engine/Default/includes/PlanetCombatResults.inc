@@ -14,7 +14,7 @@ if($MinimalDisplay)
 	} ?>.<?php
 	return;
 }
-if(is_array($PlanetCombatResults['Weapons']))
+if(isset($PlanetCombatResults['Weapons']) && is_array($PlanetCombatResults['Weapons']))
 {
 	foreach($PlanetCombatResults['Weapons'] as $WeaponResults)
 	{
@@ -142,7 +142,7 @@ if(isset($PlanetCombatResults['Drones']))
 				if($ActualDamage['Armour'] > 0)
 				{
 					?><span class="red"><?php echo number_format($ActualDamage['Armour']); ?></span> plates of armour<?php
-				} 
+				}
 			}
 		}
 	} ?>.

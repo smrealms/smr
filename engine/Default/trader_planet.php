@@ -64,6 +64,7 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=('<td align="center">'.$planet->getShields().'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$planet->getCDs().'</td>');
 		$PHP_OUTPUT.=('<td align="left">');
+		$supply = false;
 		foreach ($planet->getStockpile() as $id => $amount)
 			if ($amount > 0)
 			{
@@ -74,7 +75,7 @@ if ($db->getNumRows() > 0)
 			}
 
 		if (!$supply)
-			$PHP_OUTPUT.=('none');
+			$PHP_OUTPUT.=('None.');
 
 	}
 

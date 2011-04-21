@@ -23,7 +23,7 @@ foreach($TraderTeamCombatResults['Traders'] as $AccountID => $TraderResults)
 	}
 	else
 	{
-		if(is_array($TraderResults['Weapons']))
+		if(isset($TraderResults['Weapons']) && is_array($TraderResults['Weapons']))
 		{
 			foreach($TraderResults['Weapons'] as $WeaponResults)
 			{

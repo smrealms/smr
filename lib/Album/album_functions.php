@@ -59,7 +59,7 @@ function main_page()
 			$created = $db->getField('created');
 			$nick = get_album_nick($db->getField('account_id'));
 
-			echo('<span style="font-size:85%;"><b>[' . date(defined(DATE_FULL_SHORT)?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="'.URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> added</span><br />');
+			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT')?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="'.URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> added</span><br />');
 		}
 	}
 	else
@@ -208,7 +208,7 @@ function album_entry($album_id)
 		$postee	= get_album_nick($db->getField('post_id'));
 		$msg	= stripslashes($db->getField('msg'));
 
-		echo('<span style="font-size:85%;">[' . date(defined(DATE_FULL_SHORT)?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span><br />');
+		echo('<span style="font-size:85%;">[' . date(defined('DATE_FULL_SHORT')?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span><br />');
 	}
 
 	if (SmrSession::$account_id > 0)

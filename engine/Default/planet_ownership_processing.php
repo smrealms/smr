@@ -6,8 +6,7 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 $planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$player->getSectorID());
 include(get_file_loc('planet_claim_disallow.php'));
 $action = $_REQUEST['action'];
-$password = $_REQUEST['password'];
-$name = $_REQUEST['name'];
+$password = isset($_REQUEST['password'])?$_REQUEST['password']:'';
 
 if ($action == 'Take Ownership')
 {
@@ -27,6 +26,7 @@ if ($action == 'Take Ownership')
 }
 else if ($action == 'Rename')
 {
+	$name = $_REQUEST['name'];
 	include(get_file_loc('planet_change_name.php'));
 	// rename planet
 	$planet->setName($name);

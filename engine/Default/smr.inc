@@ -913,7 +913,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 			$container['drop_mines'] = 1;
 			$template->assign('DropMineLink',SmrSession::get_new_href($container));
 		}
-		if ($ship->hasCDs()) 
+		if ($ship->hasCDs())
 		{
 	
 			$container = array();

@@ -150,7 +150,7 @@ elseif ($action == 'blackjack')
 	function check_for_win($comp, $play)
 	{
 		//TODO: Hack to prevent an error, fix it
-		global $player_card; 
+		global $player_card;
 		//does the player win
 		if (sizeof($player_card) == 2 && get_value($player_card) == 21) return 'bj';
 		elseif ($play > $comp && $comp <= 21 && $play <= 21) return 'yes';
@@ -164,7 +164,7 @@ elseif ($action == 'blackjack')
 	//new game if $do == nothing
 	if ($do == 'nothing')
 	{
-		if (isset($var['bet'])) $bet = $var['bet'];	
+		if (isset($var['bet'])) $bet = $var['bet'];
 		else $bet = $_REQUEST['bet'];
 		if (!is_numeric($bet))
 			create_error('Only Numbers Please');
@@ -246,11 +246,11 @@ elseif ($action == 'blackjack')
 			else
 			{
 				//lets try and echo cards
-				//new row?			
+				//new row?
 				if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
 				if (get_value($ai_card) == 21 || get_value($player_card) >= 21) $message.=create_card($value, TRUE);
 				else $message.=create_card($value, FALSE);
-				$i++;						
+				$i++;
 			}
 		}
 
@@ -268,9 +268,12 @@ elseif ($action == 'blackjack')
 	{
 		$db->query('SELECT * FROM blackjack WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID());
-		if ($db->nextRecord()) $old_card = unserialize($db->getField('last_hand'));
-		if ($old_card == $player_card)
-			create_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');
+		if ($db->nextRecord())
+		{
+			$old_card = unserialize($db->getField('last_hand'));
+			if ($old_card == $player_card)
+				create_error('You can\'t keep the same cards twice! Note:Next time your account will be logged!');
+		}
 		$db->query('REPLACE INTO blackjack (game_id, account_id, last_hand) VALUES ' .
 					'('.$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string(serialize($player_card)) . ')');
 		//heres the Banks cards
@@ -292,7 +295,7 @@ elseif ($action == 'blackjack')
 		$message.=('<div align=center>Bank\'s Cards are</div><br /><table align=center><tr>');
 		foreach ($ai_card as $key => $value)
 		{
-			//now row?			
+			//now row?
 			if ($i == 4 || $i == 7 || $i == 10) $message.=('</tr><tr>');
 			$message.=create_card($value, TRUE);
 			$i++;

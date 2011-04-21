@@ -14,7 +14,7 @@ if($MinimalDisplay)
 	} ?>.<?php
 	return;
 }
-if(is_array($PortCombatResults['Weapons']))
+if(isset($PortCombatResults['Weapons']) && is_array($PortCombatResults['Weapons']))
 {
 	foreach($PortCombatResults['Weapons'] as $WeaponResults)
 	{

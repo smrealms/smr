@@ -42,7 +42,7 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$PHP_OUTPUT .= buildBreadcrumb(&$var,$hofTypes,isset($var['game_id'])?'Current HoF':'Global HoF');
+$PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,isset($var['game_id'])?'Current HoF':'Global HoF');
 $PHP_OUTPUT.= '<table class="standard" align="center">';
 
 if(!isset($var['view']))

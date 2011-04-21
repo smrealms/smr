@@ -46,7 +46,7 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 //	if ($player->getAccountID() == $alliance_leader_id)
 //	{
 		//$container['body']='alliance_treaties.php';
-		//$menue_items[] = create_link($container,'Treaties','nav');	
+		//$menue_items[] = create_link($container,'Treaties','nav');
 	//}
 	$menuItems = array();
 	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead)
@@ -83,7 +83,7 @@ function create_galactic_post_menue()
 	$menuItems = array();
 	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
 
-	$allowedWrite = true; //Lets always allow people to write for the GP? The less hoops to jump through the more writers we'll have surely? 
+	$allowedWrite = true; //Lets always allow people to write for the GP? The less hoops to jump through the more writers we'll have surely?
 	$allowedEdit = false;
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
@@ -229,7 +229,9 @@ function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
 
 }
 
-function create_sub_menu($menu, $active_level1, $active_level2) {
+
+function create_sub_menu($menu, $active_level1, $active_level2)
+{
 	global $template;
 	$return = ('<p>');
 	$return .= ('<table class="bar1">');
@@ -241,8 +243,8 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 
 	$return .= ('<table>');
 	$return .= ('<tr>');
-	foreach ($menu as $number => $entry) {
-
+	foreach ($menu as $number => $entry)
+	{
 		// insert spacer
 		if ($number > 0)
 			$return .= ('<td>&nbsp;|&nbsp;</td>');
@@ -260,14 +262,14 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 	$return .= ('</tr>');
 
 	$return .= ('<tr>');
-	foreach ($menu as $number => $entry) {
-
+	foreach ($menu as $number => $entry)
+	{
 		// if this entry has a submenu and is the active one
-		if ($entry['submenu'] && $number == $active_level1) {
-
+		if (isset($entry['submenu']) && $number == $active_level1)
+		{
 			$return .= ('<td><small>');
-			foreach ($entry['submenu'] as $sub_number => $sub_entry) {
-
+			foreach ($entry['submenu'] as $sub_number => $sub_entry)
+			{
 				if ($sub_number > 0)
 					$return .= (' | ');
 
@@ -275,12 +277,11 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 					$return .= ('<span class="bold">'.$sub_entry.'</span>');
 				else
 					$return .= ($sub_entry);
-
 			}
 			$return .= ('</small></td>');
-
-		} else {
-
+		}
+		else
+		{
 			// if it's not the first entry we have to put
 			// additional empty cell for the spacer
 			//if ($number > 0)
@@ -288,10 +289,7 @@ function create_sub_menu($menu, $active_level1, $active_level2) {
 
 			// emppty cell (no submenu)
 			$return .= ('<td>&nbsp;<td>');
-
 		}
-
-
 	}
 	$return .= ('</tr>');
 
