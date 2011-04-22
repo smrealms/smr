@@ -120,7 +120,8 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 										AND p.game_id = pja.game_id
 									)
 									AND game_id='.$this->escapeNumber($player->getGameID()).'
-									AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
+									AND alliance_id='.$this->escapeNumber($this->getAllianceID()).'
+									AND status=\'VETERAN\'');
 					if($this->nextRecord() && $this->getField('num_orig_vets') < $maxVets)
 						return true;
 				}
