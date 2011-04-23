@@ -131,8 +131,8 @@ if(isset($Message))
 							<img src="images/login/loginPw.png" alt="Login/Password" />
 						</td>
 						<td>
-							<input class="InputFields inputbox" type="text" name="login"><br />
-							<input class="InputFields inputbox" type="password" name="password">
+							<input id="login_username" class="InputFields inputbox" type="text" name="login"><br />
+							<input id="login_password" class="InputFields inputbox" type="password" name="password">
 						</td>
 						<td>
 							<img src="images/login/loginPwRight.png" alt="">
@@ -157,7 +157,7 @@ if(isset($Message))
 					</tr>
 					<tr>
 						<td>
-							<img src="images/login/enter_left.png" alt=""><input type="image" src="images/login/enter.png" alt="Enter"><img src="images/login/enter_right.png" alt="">
+							<img src="images/login/enter_left.png" alt=""><input id="login_submit" type="image" src="images/login/enter.png" alt="Enter"><img src="images/login/enter_right.png" alt="">
 						</td>
 					</tr>
 					<tr>
