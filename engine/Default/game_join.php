@@ -9,7 +9,7 @@ if ($game['GameCreditsRequired'] > 0)
 {
 	// do we have enough
 	if ($account->getTotalSmrCredits() < $game['GameCreditsRequired'])
-	    create_error('Sorry you dont have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR');
+	    create_error('Sorry you do not have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR.');
 }
 
 // is the game already full?
