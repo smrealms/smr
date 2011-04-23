@@ -21,6 +21,8 @@ if ($submit=='Create Game')
 		create_error('Alliance max vets must be a number.');
 	if(!is_numeric($_REQUEST['starting_credits']))
 		create_error('Starting credits must be a number.');
+	if(!is_numeric($_REQUEST['creds_needed']))
+		create_error('Credits required must be a number.');
 	//first create the game
 	$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_REQUEST['game_name']).' LIMIT 1');
 	if($db->nextRecord())
@@ -37,7 +39,7 @@ if ($submit=='Create Game')
 	$gameStartTurns = mktime(0,0,0,$month,$day,$year);
 	list($day,$month,$year) = explode("/",$_REQUEST['game_end']);
 	$end = mktime(0,0,0,$month,$day,$year);
-	$db->query('INSERT INTO game (game_id, game_name, game_description, game_type, max_turns, start_turns, max_players, alliance_max_players, alliance_max_vets, start_date, start_turns_date, end_date,game_speed,ignore_stats,starting_credits) VALUES (' . $db->escapeNumber($newID) . ', ' . $db->escapeString($_REQUEST['game_name']) . ', ' . $db->escapeString($_REQUEST['desc']) . ', ' . $db->escapeString($_REQUEST['game_type']) . ', ' . $db->escapeNumber($_REQUEST['max_turns']) . ', ' . $db->escapeNumber($_REQUEST['start_turns']) . ', ' . $db->escapeNumber($_REQUEST['max_players']) . ', ' . $db->escapeNumber($_REQUEST['alliance_max_players']) . ', ' . $db->escapeNumber($_REQUEST['alliance_max_vets']) . ', ' . $db->escapeNumber($start) . ', ' . $db->escapeNumber($gameStartTurns) . ', ' . $db->escapeNumber($end) . ','.$db->escapeNumber($_REQUEST['game_speed']) . ','.$db->escapeBoolean($_REQUEST['ignore_stats']=='Yes').','.$db->escapeNumber($_REQUEST['starting_credits']).')');
+	$db->query('INSERT INTO game (game_id, game_name, game_description, game_type, max_turns, start_turns, max_players, alliance_max_players, alliance_max_vets, start_date, start_turns_date, end_date,game_speed,ignore_stats,starting_credits,credits_needed) VALUES (' . $db->escapeNumber($newID) . ', ' . $db->escapeString($_REQUEST['game_name']) . ', ' . $db->escapeString($_REQUEST['desc']) . ', ' . $db->escapeString($_REQUEST['game_type']) . ', ' . $db->escapeNumber($_REQUEST['max_turns']) . ', ' . $db->escapeNumber($_REQUEST['start_turns']) . ', ' . $db->escapeNumber($_REQUEST['max_players']) . ', ' . $db->escapeNumber($_REQUEST['alliance_max_players']) . ', ' . $db->escapeNumber($_REQUEST['alliance_max_vets']) . ', ' . $db->escapeNumber($start) . ', ' . $db->escapeNumber($gameStartTurns) . ', ' . $db->escapeNumber($end) . ','.$db->escapeNumber($_REQUEST['game_speed']) . ','.$db->escapeBoolean($_REQUEST['ignore_stats']=='Yes').','.$db->escapeNumber($_REQUEST['starting_credits']).','.$db->escapeNumber($_REQUEST['creds_needed']).')');
 	$var['game_id']=$newID;
 	
 	//insert race relations
@@ -397,7 +399,7 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 {
 	$fedBeacon =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
 //	if ($loc_id > 1 && $loc_id < 10)
-//	{	
+//	{
 //		//get max loc #s for each type
 //		$max = array(0,0,0,0,0,0,0,0,0,0);
 //		foreach ($LOCATIONS as $id => $array)
@@ -692,7 +694,7 @@ function createGame($gameID)
 	$db->query('REPLACE INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES('.$gameID.', '.NHA_ID.', 21, 1, '.$db->escapeString($text).', '.ACCOUNT_ID_NHL.', '.TIME.')');
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ('.$gameID.', '.NHA_ID.', 22, \'Ships\')');
-	$text = 'Everything you do in SMR is done while you are flying some kind of ship - it can be anything from an escape pod to a huge IkThorne mothership, but you are always the pilot of something. In addition to the neutral ships, each race also has unique ships that only race members can purchase. You can find the SMR shiplist here:<br />	
+	$text = 'Everything you do in SMR is done while you are flying some kind of ship - it can be anything from an escape pod to a huge IkThorne mothership, but you are always the pilot of something. In addition to the neutral ships, each race also has unique ships that only race members can purchase. You can find the SMR shiplist here:<br />
 	<br />
 	<a href="http://www.smrealms.de/manual.php?52">http://www.smrealms.de/manual.php?52</a><br />
 	<br />
