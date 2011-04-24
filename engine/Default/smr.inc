@@ -122,7 +122,10 @@ function bbifyMessage($message,$noLinks=false)
 		$disableBBLinks = true;
 	else
 		$disableBBLinks = false;
-	$message = $bbParser->parse($message);
+	if(strpos($message, '[')!==false)
+	{
+		$message = $bbParser->parse($message);
+	}
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
 	return $message;
 }
