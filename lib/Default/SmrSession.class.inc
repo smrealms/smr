@@ -248,7 +248,7 @@ class SmrSession
 		if(!USING_AJAX)
 			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
-		new SmrMySqlDatabase();	
+		new SmrMySqlDatabase();
 	}
 
 	public static function destroy()
