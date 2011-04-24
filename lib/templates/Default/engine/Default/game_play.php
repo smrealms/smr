@@ -31,7 +31,7 @@ if(isset($Games['Play']))
 			<tr>
 				<td>
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $Game['PlayGameLink']; ?>">&nbsp;Play Game&nbsp;</a>
+						<a id="game_play_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['PlayGameLink']; ?>">&nbsp;Play Game&nbsp;</a>
 					</div>
 				</td>
 				<td width="35%"><a href="<?php echo $Game['GameStatsLink']; ?>"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</a></td>
@@ -83,7 +83,7 @@ if(isset($Games['Join']))
 		{ ?>
 			<tr>
 				<td>
-					<div class="buttonA"><a class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>">&nbsp;<?php if(TIME < $Game['StartDate']) {?>View Info<?php }else{ ?>Join Game<?php } ?>&nbsp;</a></div>
+					<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>">&nbsp;<?php if(TIME < $Game['StartDate']) {?>View Info<?php }else{ ?>Join Game<?php } ?>&nbsp;</a></div>
 				</td>
 				<td width="35%"><?php echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)</td>
 				<td class="noWrap"><?php echo $Game['StartDate']; ?></td>
