@@ -1,5 +1,5 @@
 <?php
-require_once(LIB.'External/simplehtmldom/simple_html_dom.php');
+
 class Template
 {
 	protected $data = array();
@@ -48,7 +48,7 @@ class Template
 		$this->trimWhiteSpace($output);
 		if($this->data['AJAX_ENABLE_REFRESH'])
 		{
-			$ajaxXml =& $this->convertHtmlToAjaxXml($output);
+			$ajaxXml =& $this->convertHtmlToAjaxXml($output,USING_AJAX);
 			if($forAjax)
 			{
 				header('Content-Type: text/xml; charset: utf-8');
@@ -238,13 +238,15 @@ class Template
 			echo 'a';
 	}
 	
-	protected function &convertHtmlToAjaxXml(&$str)
+	protected function &convertHtmlToAjaxXml(&$str,$returnXml)
 	{
-		$xml='';
-//		$str =& $this->trimWhiteSpace($str);
 		if(empty($str))
 			return '';
-		$html = new simple_html_dom($str);
+
+		require_once(LIB.'External/phpQuery/phpQuery.php');
+		
+		$xml='';
+		$html = phpQuery::newDocument($str);
 		$searches = array('span[id]','[class=ajax]');
 		foreach($searches as $search)
 		{
@@ -252,8 +254,8 @@ class Template
 			foreach($spans as $span)
 			{
 				$id = $span->getAttribute('id');
-				$inner = $span->innertext();
-				if(!SmrSession::addAjaxReturns($id,$inner))
+				$inner = $span->textContent;
+				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
 					$xml.= '<'.$id.'>'.htmlentities($inner,ENT_COMPAT,'utf-8'). '</'.$id.'>';
 			}
 		}
@@ -273,11 +275,11 @@ class Template
 				if(!empty($mid))
 				{
 					$mid=$mid[0];
-					$inner = $mid->innertext();
+					$inner = $mid->textContent;
 					if(!$this->checkDisableAJAX($inner))
 					{
 						$id = $mid->getAttribute('id');
-						if(!SmrSession::addAjaxReturns($id,$inner))
+						if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
 							$xml.= '<'.$id.'>'.htmlentities($inner,ENT_COMPAT,'utf-8'). '</'.$id.'>';
 					}
 				}
