@@ -254,7 +254,7 @@ class Template
 			foreach($spans as $span)
 			{
 				$id = $span->getAttribute('id');
-				$inner = $span->nodeValue;
+				$inner = pq($span)->html();
 				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
 					$xml.= '<'.$id.'>'.htmlentities($inner,ENT_COMPAT,'utf-8'). '</'.$id.'>';
 			}
@@ -275,7 +275,7 @@ class Template
 				if(!empty($mid))
 				{
 					$mid=$mid[0];
-					$inner = $mid->nodeValue;
+					$inner = pq($mid)->html();
 					if(!$this->checkDisableAJAX($inner))
 					{
 						$id = $mid->getAttribute('id');
