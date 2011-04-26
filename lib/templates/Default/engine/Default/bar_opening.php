@@ -27,7 +27,7 @@ if ($WinningTicket)
 	Congratulations. You have a winning lotto ticket.<br />
 	<br />
 	<div class="buttonA">
-		<a class="buttonA" href="<?php echo Globals::getBarBuyWaterHREF(); ?>">&nbsp;Claim Your Prize (<?php echo number_format($WinningTicket); ?> Cr)&nbsp;</a>
+		<a class="buttonA" href="<?php echo Globals::getBarLottoClaimHREF(); ?>">&nbsp;Claim Your Prize (<?php echo number_format($WinningTicket); ?> Cr)&nbsp;</a>
 	</div><br />
 	<br /><?php
 } ?>
