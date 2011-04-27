@@ -684,9 +684,9 @@ function joinGame($gameID,$playerName)
 	global $NPC_LOGIN;
 	debug('Creating player for: '.$NPC_LOGIN);
 	$races =& Globals::getRaces();
-	while(($raceID = array_rand(array_keys($races)))!==1); //Random race that's not neutral.
+	while(($raceID = array_rand(array_keys($races)))===1); //Random race that's not neutral.
 	
-	debug('Chosen race "'.$races[$raceID]['Race Name'].'": '.raceID);
+	debug('Chosen race "'.$races[$raceID]['Race Name'].'": '.$raceID);
 	
 	$_REQUEST['player_name'] = $playerName;
 	$_REQUEST['race_id'] = $raceID;
