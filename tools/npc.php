@@ -36,7 +36,10 @@ try
 
 	changeNPCLogin();
 	
-	define('NPC_GAME_ID',108);
+	if(!defined('NPC_GAME_ID'))
+	{
+		define('NPC_GAME_ID',2);
+	}
 	define('NPC_LOW_TURNS',75);
 	define('NPC_START_TURNS',300);
 	define('MINUMUM_RESERVE_CREDITS',100000);
