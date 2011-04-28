@@ -19,7 +19,12 @@ if (!isset($var['subcategory']))
 else
 	$subcategory = $var['subcategory'];
 
-$db->query('SELECT * FROM sector_has_forces WHERE owner_id = '.$player->getAccountID().' AND game_id = '.SmrSession::$game_id.' ORDER BY '.$categorySQL.', '.$subcategory);
+$db->query('
+SELECT sector_id
+FROM sector_has_forces
+WHERE owner_id = '.$player->getAccountID().'
+AND game_id = '.SmrSession::$game_id.'
+ORDER BY '.$categorySQL.', '.$subcategory);
 $db2 = new SmrMySqlDatabase();
 if ($db->getNumRows() > 0) {
 	
@@ -58,22 +63,15 @@ if ($db->getNumRows() > 0) {
 	
 	while ($db->nextRecord())
 	{
-		$forceGalaxy =& SmrGalaxy::getGalaxyContaining($db->getField('game_id'),$db->getField('sector_id'));
+		$forces =& SmrForce::getForce(SmrSession::$game_id, $db->getField('sector_id'));
 		
-		$force_sector	= $db->getField('sector_id');
-		$force_sd		= $db->getField('scout_drones');
-		$force_cd		= $db->getField('combat_drones');
-		$force_mine		= $db->getField('mines');
-		$force_time		= $db->getField('expire_time');
-		
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center">'.$force_sector.' ('.($forceGalaxy===null?'None':$forceGalaxy->getName()).')</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$force_cd.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$force_sd.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$force_mine.'</td>');
-		$PHP_OUTPUT.=('<td align="center">' . date(DATE_FULL_SHORT, $force_time) . '</td>');
-		$PHP_OUTPUT.=('</tr>');
-		
+		$PHP_OUTPUT .= '<tr>';
+		$PHP_OUTPUT .= '<td class="shrink noWrap">'.$forces->getSectorID().' ('.$forces->getGalaxy()->getName().')</td>';
+		$PHP_OUTPUT .= '<td class="shrink center">'.$forces->getCDs().'</td>';
+		$PHP_OUTPUT .= '<td class="shrink center">'.$forces->getSDs().'</td>';
+		$PHP_OUTPUT .= '<td class="shrink center">'.$forces->getMines().'</td>';
+		$PHP_OUTPUT .= '<td class="shrink noWrap">' . date(DATE_FULL_SHORT, $forces->getExpire()) . '</td>';
+		$PHP_OUTPUT .= '</tr>';
 	}
 	
 	$PHP_OUTPUT.=('</table>');
