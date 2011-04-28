@@ -22,11 +22,11 @@ elseif ($var['func'] == 'Money')
 	$player->setCredits(50000000);
 elseif ($var['func'] == 'PageNewb')
 {
-	if(!defined('ACCOUNT_PAGE'))
+	if(!defined('ACCOUNT_ID_PAGE'))
 	{
 		create_error('You\'re so mean! Go pick on someone else!');
 	}
-	$page =& SmrPlayer::getPlayer(ACCOUNT_PAGE,$player->getGameID());
+	$page =& SmrPlayer::getPlayer(ACCOUNT_ID_PAGE,$player->getGameID());
 	$page->setNewbieTurns(0);
 }
 elseif ($var['func'] == 'Ship')// && $_REQUEST['ship_id'] <= 75 && $_REQUEST['ship_id'] != 68)
