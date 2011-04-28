@@ -45,7 +45,7 @@ if ($db->nextRecord())
 }
 
 $db->query('
-SELECT sector_has_forces.sector_id
+SELECT sector_has_forces.sector_id, sector_has_forces.owner_id
 FROM player
 JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
 WHERE player.game_id=' . $player->getGameID() . '
@@ -107,7 +107,7 @@ if ($db->getNumRows() > 0)
 
 	while ($db->nextRecord())
 	{
-		$forces =& SmrForce::getForce(SmrSession::$game_id, $db->getField('sector_id'));
+		$forces =& SmrForce::getForce(SmrSession::$game_id, $db->getField('sector_id'), $db->getField('owner_id'));
 		
 		$PHP_OUTPUT .= '<tr>';
 		$PHP_OUTPUT .= '<td>'.$forces->getOwner()->getLinkedDisplayName(false).'</td>';

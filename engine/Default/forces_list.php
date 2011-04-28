@@ -20,7 +20,7 @@ else
 	$subcategory = $var['subcategory'];
 
 $db->query('
-SELECT sector_id
+SELECT sector_id, owner_id
 FROM sector_has_forces
 WHERE owner_id = '.$player->getAccountID().'
 AND game_id = '.SmrSession::$game_id.'
@@ -63,7 +63,7 @@ if ($db->getNumRows() > 0) {
 	
 	while ($db->nextRecord())
 	{
-		$forces =& SmrForce::getForce(SmrSession::$game_id, $db->getField('sector_id'));
+		$forces =& SmrForce::getForce(SmrSession::$game_id, $db->getField('sector_id'), $db->getField('owner_id'));
 		
 		$PHP_OUTPUT .= '<tr>';
 		$PHP_OUTPUT .= '<td class="shrink noWrap">'.$forces->getSectorID().' ('.$forces->getGalaxy()->getName().')</td>';
