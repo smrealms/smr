@@ -122,11 +122,15 @@ function bbifyMessage($message,$noLinks=false)
 		$disableBBLinks = true;
 	else
 		$disableBBLinks = false;
-	if(strpos($message, '[')!==false)
+	if(strpos($message, '[')!==false) //We have BBCode so let's do a full parse.
 	{
 		$message = $bbParser->parse($message);
+		$message = str_replace('&lt;br /&gt;','<br />',$message);
 	}
-	$message = str_replace('&lt;br /&gt;','<br />',$message);
+	else //Otherwise just convert newlines
+	{
+		$message = nl2br($message, true);
+	}
 	return $message;
 }
 
@@ -514,7 +518,7 @@ function do_voodoo()
 
 		global $locksFailed;
 		if(!USING_AJAX) //AJAX should never do anything that requires a lock.
-			if(!$lock && !$locksFailed[$sector_id])
+			if(!$lock && !isset($locksFailed[$sector_id]))
 			{
 				if(!acquire_lock($sector_id))
 				{
