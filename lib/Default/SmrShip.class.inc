@@ -21,6 +21,11 @@ class SmrShip extends AbstractSmrShip
 		}
 	}
 	
+	public static function clearCache()
+	{
+		self::$CACHE_SHIPS = array();
+	}
+	
 	public static function saveShips()
 	{
 		foreach(self::$CACHE_SHIPS as &$gameShips)
@@ -148,10 +153,10 @@ class SmrShip extends AbstractSmrShip
 					$this->db->query('SELECT * FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
 					if ($this->db->nextRecord())
 					{
-						$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->getOldHardware($hardware_type_id).' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);	
+						$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->getOldHardware($hardware_type_id).' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
 					}
 					else
-					{	
+					{
 						$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$this->getOldHardware($hardware_type_id).')');
 					}
 				}
@@ -256,7 +261,7 @@ class SmrShip extends AbstractSmrShip
 			$this->decloak();
 			$this->setHardware(HARDWARE_CLOAK,0);
 			return true;
-		}	
+		}
 		
 		return false;
 	}
