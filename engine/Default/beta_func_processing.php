@@ -22,6 +22,10 @@ elseif ($var['func'] == 'Money')
 	$player->setCredits(50000000);
 elseif ($var['func'] == 'PageNewb')
 {
+	if(!defined('ACCOUNT_PAGE'))
+	{
+		create_error('You\'re so mean! Go pick on someone else!');
+	}
 	$page =& SmrPlayer::getPlayer(ACCOUNT_PAGE,$player->getGameID());
 	$page->setNewbieTurns(0);
 }
