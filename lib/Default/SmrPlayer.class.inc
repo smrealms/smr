@@ -1864,6 +1864,10 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function setNewbieWarning($bool)
 	{
+		if($this->newbieWarning==$bool)
+		{
+			return;
+		}
 		$this->newbieWarning=$bool;
 		$this->hasChanged=true;
 	}
