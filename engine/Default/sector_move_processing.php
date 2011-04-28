@@ -14,11 +14,6 @@ else
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 {
-	//make them pop on CPL
-	$player->updateLastCPLAction();
-	$player->setSectorID($var['target_sector']);
-	$player->update();
-	
 	//update plot
 	if ($player->hasPlottedCourse())
 	{
@@ -31,6 +26,11 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 		else
 			$player->deletePlottedCourse();
 	}
+	
+	//make them pop on CPL
+	$player->updateLastCPLAction();
+	$player->setSectorID($var['target_sector']);
+	$player->update();
 					
 	// get new sector object
 	$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
@@ -57,43 +57,58 @@ if ($player->getTurns() < $turns)
 if (!$sector->isLinked($var['target_sector']))
 	create_error('You cannot move to that sector!');
 
-require_once(get_file_loc('Sorter.class.inc'));
-$sectorForces =& $sector->getForces();
-Sorter::sortByNumMethod($sectorForces,'getMines',true);
-$mine_owner_id = false;
-foreach($sectorForces as &$forces)
+if ($player->getLastSectorID() != $var['target_sector'])
 {
-	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
+	require_once(get_file_loc('Sorter.class.inc'));
+	$sectorForces =& $sector->getForces();
+	Sorter::sortByNumMethod($sectorForces,'getMines',true);
+	$mine_owner_id = false;
+	foreach($sectorForces as &$forces)
 	{
-		$mine_owner_id = $forces->getOwnerID();
-		break;
-	}
-} unset($forces);
-
-if ($player->getLastSectorID() != $var['target_sector'] && $mine_owner_id)
-{
+		if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
+		{
+			$mine_owner_id = $forces->getOwnerID();
+			break;
+		}
+	} unset($forces);
 	// set last sector
 	$player->setLastSectorID($var['target_sector']);
 	
-	if ($player->hasNewbieTurns())
+	if($mine_owner_id)
 	{
-		$container['url']	= 'skeleton.php';
-		$container['body']	= 'current_sector.php';
-		$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
-		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
-		$container['msg'] .= $turns.' turn'.($turns==1?'':'s');
-		
-		$player->takeTurns($turns,$turns);
-		
-		$container['msg'] .= ' to navigate the minefield safely';
-		forward($container);
+		if ($player->hasNewbieTurns())
+		{
+			$container['url']	= 'skeleton.php';
+			$container['body']	= 'current_sector.php';
+			$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
+			$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
+			$container['msg'] .= $turns.' turn'.($turns==1?'':'s');
+			
+			$player->takeTurns($turns,$turns);
+			
+			$container['msg'] .= ' to navigate the minefield safely';
+			forward($container);
+		}
+		else
+		{
+			$owner_id = $mine_owner_id;
+			include('forces_minefield_processing.php');
+			return;
+		}
+	}
+}
+
+// check if this came from a plotted course from db
+if ($player->hasPlottedCourse())
+{
+	$path =& $player->getPlottedCourse();
+	if ($path->getNextOnPath() == $var['target_sector'])
+	{
+		$path->followPath($sector->getWarp() == $var['target_sector']);
+		$player->setPlottedCourse($path);
 	}
 	else
-	{
-		$owner_id = $mine_owner_id;
-		include('forces_minefield_processing.php');
-		return;
-	}
+		$player->deletePlottedCourse();
 }
 
 // log action
@@ -114,19 +129,6 @@ release_lock();
 // We need a lock on the new sector so that more than one person isn't hitting the same mines
 acquire_lock($var['target_sector']);
 
-// check if this came from a plotted course from db
-if ($player->hasPlottedCourse())
-{
-	$path =& $player->getPlottedCourse();
-	if ($path->getNextOnPath() == $var['target_sector'])
-	{
-		$path->followPath($sector->getWarp() == $var['target_sector']);
-		$player->setPlottedCourse($path);
-	}
-	else
-		$player->deletePlottedCourse();
-}
-
 // get new sector object
 $sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 
@@ -141,6 +143,8 @@ if (!$sector->isVisited($player))
 $sector->markVisited($player);
 
 // send scout msgs
+$sector->enteringSector($player,MOVEMENT_WALK);
+
 $sectorForces =& $sector->getForces();
 $mine_owner_id = false;
 Sorter::sortByNumMethod($sectorForces,'getMines',true);
@@ -152,8 +156,6 @@ foreach($sectorForces as &$forces)
 		break;
 	}
 } unset($forces);
-
-$sector->enteringSector($player,MOVEMENT_WALK);
 
 if ($mine_owner_id)
 {
