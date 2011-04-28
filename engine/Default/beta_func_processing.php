@@ -37,7 +37,7 @@ elseif ($var['func'] == 'Ship')// && $_REQUEST['ship_id'] <= 75 && $_REQUEST['sh
 	
 	//now adapt turns
 	$player->setTurns($player->getTurns() * ($speed / $ship->getSpeed()));
-	doUNO($player,$ship);	
+	doUNO($player,$ship);
 	
 } elseif ($var['func'] == 'Weapon') {
 	$weapon_id = $_REQUEST['weapon_id'];
@@ -52,7 +52,15 @@ elseif ($var['func'] == 'Ship')// && $_REQUEST['ship_id'] <= 75 && $_REQUEST['sh
 	doUNO($player,$ship);
 
 } elseif ($var['func'] == 'Warp') {
-	$sector_to = $_REQUEST['sector_to'];
+	$sector_to = trim($_REQUEST['sector_to']);
+	if(!is_numeric($sector_to))
+	{
+		create_error('Sector ID has to be a number.');
+	}
+	if(SmrGalaxy::getGalaxyContaining($player->getGameID(), $sector_to))
+	{
+		create_error('Sector ID is not in any galaxy.');
+	}
 	$player->setSectorID($sector_to);
 	$player->setLandedOnPlanet(false);
 } elseif ($var['func'] == 'Turns') {
