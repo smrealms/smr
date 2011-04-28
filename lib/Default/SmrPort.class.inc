@@ -842,6 +842,7 @@ class SmrPort
 			return;
 		$this->raceID = $raceID;
 		$this->hasChanged=true;
+		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
 	public function getRaceName()
@@ -1108,17 +1109,14 @@ class SmrPort
 	
 	public function getClaimHREF()
 	{
-		$container = array();
-		$container['url'] = 'port_claim_processing.php';
+		$container = create_container('port_claim_processing.php');
 		$container['port_id'] = $this->getSectorID();
 		return SmrSession::get_new_href($container);
 	}
 	
 	public function getLootHREF()
 	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'port_loot.php';
+		$container = create_container('skeleton.php','port_loot.php');
 		$container['port_id'] = $this->getSectorID();
 		return SmrSession::get_new_href($container);
 	}
