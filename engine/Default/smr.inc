@@ -528,10 +528,7 @@ function do_voodoo()
 
 		if($player->isDead() && $var['body'] != 'death.php' && !isset($var['override_death']))
 		{
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'death.php';
-			forward($container);
+			forward(create_container('skeleton.php','death.php'));
 		}
 		enableProtectionDependantRefresh($template,$player);
 
