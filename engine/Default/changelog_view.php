@@ -8,8 +8,8 @@ $db->query('SELECT *
 			FROM version
 			WHERE version_id <= ' . $var['version_id'] . '
 			ORDER BY version_id DESC');
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
 	$version_id = $db->getField('version_id');
 	$version = $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level');
 	$went_live = $db->getField('went_live');
@@ -31,7 +31,7 @@ while ($db->nextRecord()) {
 	while ($db2->nextRecord())
 		$PHP_OUTPUT.=('<li>' . stripslashes($db2->getField('change_title')) . '<br /><small>' . stripslashes($db2->getField('change_message')) . '</small></li>');
 
-	$PHP_OUTPUT.=('</ul>');
+	$PHP_OUTPUT.=('</ul><br />');
 
 }
 
