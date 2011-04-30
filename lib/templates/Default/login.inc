@@ -91,7 +91,7 @@ input.inputbox {
 <div align="center">
 <img src="images/login/smr_banner_16.png" alt=""><br />
 <img src="images/login/bottom_left.gif" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.png" alt="Home"></a><img src="images/login/site_map.png" alt="Site Map"><img src="images/login/contact.png" alt="Contact"><img src="images/login/bottom_right.png" alt=""><br />
-<a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" alt="Video Tutorials"></a><a href="http://manual.smrealms.de" target="ml"><img src="images/login/sml.png" alt="Merchant Library"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.png" alt="Manual"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" alt="Web Board"></a><a href="http://www.smrealms.de/cgi-bin/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" alt="Site Statistics"></a><br />
+<a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" alt="Video Tutorials"></a><a href="http://manual.smrealms.de" target="ml"><img src="images/login/sml.png" alt="Merchant Library"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.png" alt="Manual"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" alt="Web Board"></a><a href="http://www.smrealms.de/awstats/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" alt="Site Statistics"></a><br />
 
 <?php
 /*
