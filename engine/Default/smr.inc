@@ -613,16 +613,20 @@ function acquire_lock($sector)
 	
 	$lock = $db->getInsertID();
 
-	for($i=0;$i<100;++$i)
+	for($i=0;$i<250;++$i)
 	{
+		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER)
+		{
+			break;
+		}
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' LIMIT 1');
-		if($db->nextRecord() && $db->getField('COUNT(*)'))
+		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION) .' LIMIT 1');
+		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')))
 		{
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' LIMIT 1');
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION) .' LIMIT 1');
 			if($db->nextRecord())
 			{
 				if($db->getField('COUNT(*)') > 1)
@@ -634,7 +638,7 @@ function acquire_lock($sector)
 				}
 			}
 
-			usleep(25000 * $db->getField('COUNT(*)'));
+			usleep(25000 * $locksInQueue);
 			continue;
 		}
 		else
@@ -648,11 +652,17 @@ function acquire_lock($sector)
 	return false;
 }
 
+function clearOldLocks()
+{
+	global $db;
+	$db->query('DELETE from locks_queue WHERE timestamp<' . (TIME - LOCK_DURATION));
+}
+
 function release_lock()
 {
 	global $db, $lock;
 	if($lock)
-		$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - 15));
+		$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - LOCK_DURATION));
 
 	$lock=false;
 }
