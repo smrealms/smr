@@ -17,6 +17,8 @@ try
 	$forwardedCount = 0;
 	function overrideForward($container)
 	{
+		global $forwardedContainer;
+		$forwardedContainer = $container;
 		if($container['body']=='error.php') //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
 		{
 			debug('Hit an error');
@@ -33,8 +35,6 @@ try
 	require_once(get_file_loc('SmrAccount.class.inc'));
 
 	$NPC_LOGINS_USED = array('');
-
-	changeNPCLogin();
 	
 	if(!defined('NPC_GAME_ID'))
 	{
@@ -98,12 +98,16 @@ try
 	$HIDDEN_PLAYERS = array();
 
 
-
-
 	require_once(get_file_loc('Plotter.class.inc'));
 	require_once(get_file_loc('RouteGenerator.class.inc'));
 	require_once(get_file_loc('shop_goods.inc'));
 
+	try
+	{
+		changeNPCLogin();
+	}
+	catch(Exception $e) {}
+	
 	NPCStuff();
 }
 catch(Exception $e)
@@ -203,24 +207,13 @@ function NPCStuff()
 		try
 		{
 			debug('Action #'.$actions);
-			
-			if($actions==0)
-			{ //Auto-create player if need be.
-				$db = new SmrMySqlDatabase();
-				$db->query('SELECT * FROM player WHERE account_id = '.$account->getAccountID().' AND game_id = '.NPC_GAME_ID.' LIMIT 1');
-				if(!$db->nextRecord())
-				{
-					debug('Auto-creating player: '.$account->getLogin());
-					$actions--;
-					processContainer(joinGame(SmrSession::$game_id,$account->getLogin()));
-				}
-			}
 
 			SmrSession::$game_id = NPC_GAME_ID;
 			
 			//We have to reload player on each loop
 			$player	=& SmrPlayer::getPlayer($account->getAccountID(), SmrSession::$game_id);
 			$player->updateTurns();
+			$player->setNewbieWarning(false); //NPCs don't want a newbie warning.
 			$GLOBALS['player'] =& $player;
 			
 			if($actions==0)
@@ -232,18 +225,30 @@ function NPCStuff()
 				}
 			}
 			
-			$TRADE_ROUTES =& findRoutes(); //TODO: This probably shouldn't be called in every block? Maybe only call whilst in fed as it's potentially slow?
 			if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
+			{
+				$TRADE_ROUTES =& findRoutes();
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
-			
-			if($var['url']=='shop_ship_processing.php')
-			{ //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
-				plotToFed(true);
 			}
-			else if($player->getShip()->isUnderAttack()===true&&($player->hasPlottedCourse()===false||SmrSector::getSector($player->getGameID(),$player->getPlottedCourse()->getEndSectorID())->offersFederalProtection()===false))
+			
+			if($player->isDead())
+			{
+				debug('Some evil person killed us, let\'s move on now.');
+				$player->setDead(false);
+				$player->deletePlottedCourse(); //Remove any plotted course we had that might cause problems.
+			}
+			
+			$fedContainer = null;
+			if($var['url']=='shop_ship_processing.php'&&($fedContainer = plotToFed(true))!==true)
+			{ //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
+				processContainer($fedContainer);
+			}
+			else if($player->getShip()->isUnderAttack()===true
+				&&($player->hasPlottedCourse()===false||$player->getPlottedCourse()->getEndSector()->offersFederalProtection()===false)
+				&&($fedContainer==null?$fedContainer = plotToFed(true):$fedContainer)!==true)
 			{ //We're under attack and need to plot course to fed.
 				debug('Under Attack');
-				processContainer(plotToFed(true));
+				processContainer($fedContainer);
 			}
 			else if($player->hasPlottedCourse()===true&&$player->getPlottedCourse()->getEndSector()->offersFederalProtection())
 			{ //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
@@ -266,6 +271,11 @@ function NPCStuff()
 				if($player->hasNewbieTurns())
 				{ //We have newbie turns, we can just wait here.
 					debug('We have newbie turns, let\'s just switch to another NPC.');
+					changeNPCLogin();
+				}
+				if($player->hasFederalProtection())
+				{
+					debug('We are in fed, time to switch to another NPC.');
 					changeNPCLogin();
 				}
 				$ship =& $player->getShip();
@@ -401,8 +411,13 @@ function NPCStuff()
 				//Clean up the caches as the data may get changed by other players
 				SmrSector::clearCache();
 				SmrPlayer::clearCache();
+				SmrShip::clearCache();
 				SmrForce::clearCache();
 				SmrPort::clearCache();
+				//Clear up some global vars
+				global $locksFailed;
+				$locksFailed = array();
+				$_REQUEST = array();
 				//Have a sleep between actions
 				sleepNPC();
 			}
@@ -415,12 +430,20 @@ function NPCStuff()
 function debug($message, $debugObject = null)
 {
 	global $account,$var,$db;
-	echo date('Y-m-d H:i:s - ').$message.($debugObject!==null?var_export($debugObject,true):'').EOL;
+	echo date('Y-m-d H:i:s - ').$message.($debugObject!==null?EOL.var_export($debugObject,true):'').EOL;
 	$db->query('INSERT INTO npc_logs (script_id, npc_id, time, message, debug_info, var) VALUES ('.(defined('SCRIPT_ID')?SCRIPT_ID:0).', '.(is_object($account)?$account->getAccountID():0).',NOW(),'.$db->escapeString($message).','.$db->escapeString(var_export($debugObject,true)).','.$db->escapeString(var_export($var,true)).')');
 }
 
 function processContainer($container)
 {
+	global $forwardedContainer;
+	static $previousContainer;
+	if($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php')
+	{
+		debug('We are executing the same container twice?', $container);
+		throw new Exception('We are executing the same container twice?');
+	}
+	$previousContainer = $container;
 	debug('Executing container',$container);
 	resetContainer($container);
 	do_voodoo();
@@ -486,7 +509,7 @@ function changeNPCLogin()
 	if(SmrAccount::getAccountByName($NPC_LOGIN)==null)
 	{
 		debug('Creating account for: '.$NPC_LOGIN);
-		$account = SmrAccount::createAccount($NPC_LOGIN,'21sdgasdg,s..,23','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
+		$account = SmrAccount::createAccount($NPC_LOGIN,'','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
 		$account->setValidated(true);
 	}
 	else
@@ -495,6 +518,17 @@ function changeNPCLogin()
 	}
 
 	SmrSession::$account_id = $account->getAccountID();
+
+	//Auto-create player if need be.
+	$db->query('SELECT * FROM player WHERE account_id = '.$account->getAccountID().' AND game_id = '.NPC_GAME_ID.' LIMIT 1');
+	if(!$db->nextRecord())
+	{
+		SmrSession::$game_id = 0; //Have to be out of game to join game.
+		debug('Auto-creating player: '.$account->getLogin());
+		processContainer(joinGame(SmrSession::$game_id,$account->getLogin()));
+	}
+	
+	throw new Exception('Forward');
 }
 
 function canWeUNO(AbstractSmrPlayer &$player, $oppurtunisticOnly)
@@ -587,6 +621,7 @@ function dumpCargo()
 	global $player;
 	$ship =& $player->getShip();
 	$cargo =& $ship->getCargo();
+	debug('Ship Cargo',$cargo);
 	foreach($cargo as $goodID => $amount)
 	{
 		if($amount > 0)
@@ -604,9 +639,9 @@ function plotToSector($sectorID)
 function plotToFed($plotToHQ=false)
 {
 	global $player;
-	debug('Plotting To Fed');
+	debug('Plotting To Fed',$plotToHQ);
 	
-	if($player->getSector()->offersFederalProtection())
+	if($plotToHQ === false && $player->getSector()->offersFederalProtection())
 	{
 		if(!$player->hasNewbieTurns() && !$player->hasFederalProtection() && $player->getShip()->hasIllegalGoods())
 		{ //We have illegals and no newbie turns, dump the illegals to get fed protection.
@@ -615,9 +650,13 @@ function plotToFed($plotToHQ=false)
 		}
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		changeNPCLogin();
+		return true;
 	}
-	
-	return plotToNearest($player,$plotToHQ===true?SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_HQS):SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_BEACONS));
+	if($plotToHQ===true)
+	{
+		return plotToNearest($player,SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_HQS-1));
+	}
+	return plotToNearest($player,SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_BEACONS-1));
 //	return plotToNearest($player,$plotToHQ===true?'HQ':'Fed');
 }
 
@@ -635,6 +674,9 @@ function plotToNearest(AbstractSmrPlayer &$player, &$realX)
 }
 function moveToSector($targetSector)
 {
+	global $player;
+	debug('Moving to',$targetSector);
+	debug('From',$player->getSectorID());
 	return create_container('sector_move_processing.php','',array('target_sector'=>$targetSector,'target_page'=>''));
 }
 
