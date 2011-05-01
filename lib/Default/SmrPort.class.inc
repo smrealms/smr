@@ -1114,11 +1114,11 @@ class SmrPort
 		return SmrSession::get_new_href($container);
 	}
 	
-	public function getLootHREF()
+	public function getLootHREF($justContainer = false)
 	{
 		$container = create_container('skeleton.php','port_loot.php');
 		$container['port_id'] = $this->getSectorID();
-		return SmrSession::get_new_href($container);
+		return $justContainer === false ? SmrSession::get_new_href($container) : $container;
 	}
 	public function isCachedVersion()
 	{
