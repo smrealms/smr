@@ -475,36 +475,43 @@ function do_voodoo()
 	$db = new SmrMySqlDatabase();
 	$GLOBALS['db'] =& $db;
 	
-	if($var['url'] == 'game_play_preprocessing.php') // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
+	if(isset($var['url']))
 	{
-		SmrSession::clearLinks();
-		if (SmrSession::$game_id > 0)
-			$account->log(2, 'Player left game '.SmrSession::$game_id);
-		
-		// reset game id
-		SmrSession::$game_id = 0;
-		SmrSession::update();
-		
-		forward(create_container('skeleton.php', 'game_play.php'));
-	}
-	else if($var['url'] == 'logoff_preprocessing.php')
-	{
-		SmrSession::$game_id = 0;
-		SmrSession::update();
-		
-		// try to get a real ip first
-		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-			$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		else
-			$curr_ip = $_SERVER['REMOTE_ADDR'];
-		
-		// log?
-		$account->log(1, 'logged off from '.$curr_ip);
-		$container = array();
-		$container['body'] ='logoff.php';
-		$container['url'] = 'skeleton.php';
-		$container['logoff'] = 'yes';
-		forward($container);
+		if($var['url'] == 'skeleton.php') //No need to load the skeleton page.
+		{
+			unset($var['url']);
+		}
+		if($var['url'] == 'game_play_preprocessing.php') // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
+		{
+			SmrSession::clearLinks();
+			if (SmrSession::$game_id > 0)
+				$account->log(2, 'Player left game '.SmrSession::$game_id);
+			
+			// reset game id
+			SmrSession::$game_id = 0;
+			SmrSession::update();
+			
+			forward(create_container('skeleton.php', 'game_play.php'));
+		}
+		else if($var['url'] == 'logoff_preprocessing.php')
+		{
+			SmrSession::$game_id = 0;
+			SmrSession::update();
+			
+			// try to get a real ip first
+			if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+				$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+			else
+				$curr_ip = $_SERVER['REMOTE_ADDR'];
+			
+			// log?
+			$account->log(1, 'logged off from '.$curr_ip);
+			$container = array();
+			$container['body'] ='logoff.php';
+			$container['url'] = 'skeleton.php';
+			$container['logoff'] = 'yes';
+			forward($container);
+		}
 	}
 
 	// initialize objects we usually need, like player, ship
@@ -517,7 +524,9 @@ function do_voodoo()
 		$sector_id=$db->getField('sector_id');
 
 		global $locksFailed;
-		if(!USING_AJAX) //AJAX should never do anything that requires a lock.
+		if(!USING_AJAX //AJAX should never do anything that requires a lock.
+			&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php')) //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
+		{
 			if(!$lock && !isset($locksFailed[$sector_id]))
 			{
 				if(!acquire_lock($sector_id))
@@ -525,7 +534,8 @@ function do_voodoo()
 					create_error('Failed to acquire sector lock');
 				}
 			}
-
+		}
+		
 		// Now that they've acquire a lock we can move on
 		$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 		$GLOBALS['player'] =& $player;
@@ -549,14 +559,16 @@ function do_voodoo()
 			$player->getNewbieWarning() &&
 			$var['body'] != 'newbie_warning.php')
 			forward(create_container('skeleton.php', 'newbie_warning.php'));
-
 	}
 
-	require(get_file_loc($var['url']));
+	if(isset($var['url']))
+	{
+		require(get_file_loc($var['url']));
+	}
 	if($var['body'])
 	{
 		$PHP_OUTPUT = '';
-		if($var['body']=='error.php'||$var['body']=='bar_main.php') // infinite includes for error page
+		if($var['body']=='error.php'||$var['body']=='bar_main.php') // infinite includes for error/bar pages
 			include(get_file_loc($var['body']));
 		else
 			include_once(get_file_loc($var['body']));
@@ -564,6 +576,18 @@ function do_voodoo()
 		if($PHP_OUTPUT!='')
 			$template->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
+	
+	if($lock)
+	{ //Only save if we have the lock.
+		SmrSector::saveSectors();
+		SmrShip::saveShips();
+		SmrPlayer::savePlayers();
+		SmrForce::saveForces();
+		SmrPort::savePorts();
+		release_lock();
+	}
+	
+	//Nothing below this point should require the lock.
 	
 	$template->assign('TemplateBody',$var['body']);
 	if (SmrSession::$game_id > 0)
@@ -583,16 +607,6 @@ function do_voodoo()
 		$template->assign('AJAX_ENABLE_REFRESH',false);
 	
 	$template->display($var['url'],USING_AJAX);
-	
-	if($lock)
-	{ //only save if we have the lock.
-		SmrSector::saveSectors();
-		SmrShip::saveShips();
-		SmrPlayer::savePlayers();
-		SmrForce::saveForces();
-		SmrPort::savePorts();
-		release_lock();
-	}
 	
 	SmrSession::update();
 	exit;
@@ -650,12 +664,6 @@ function acquire_lock($sector)
 	release_lock();
 	$locksFailed[$sector] = true;
 	return false;
-}
-
-function clearOldLocks()
-{
-	global $db;
-	$db->query('DELETE from locks_queue WHERE timestamp<' . (TIME - LOCK_DURATION));
 }
 
 function release_lock()
