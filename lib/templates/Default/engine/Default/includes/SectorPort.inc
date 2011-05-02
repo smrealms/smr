@@ -26,24 +26,21 @@
 				<td style="padding-right:1px;border-left:none;vertical-align:bottom;text-align:right">
 					<img style="height:<?php echo $Port->getUpgradePercent()*32 ?>px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/green.gif" alt="Upgrade" title="Upgrade" /><img style="height:<?php echo $Port->getCreditsPercent()*32 ?>px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/blue.gif" alt="Credits" title="Credits" /><img style="height:<?php echo $Port->getReinforcePercent()*32 ?>px;width:6px;border:2px solid #000000;border-bottom:none;" src="images/red.gif" alt="Defense" title="Defense" />
 				</td>
-				<td class="center shrink noWrap">
-					<div class="buttonA">
-						<?php if($Port->isUnderAttack())
-						{ ?>
-							<span class="red bold">ALERT!!</span>
-						<?php 
-						}
-						else if($PortIsAtWar)
-						{ ?>
-							<span class="red bold">WAR!!</span>
-						<?php 
-						}
-						else
-						{ ?>
+				<td class="center shrink noWrap"><?php
+					if($Port->isUnderAttack())
+					{
+						?><span class="red bold">ALERT!!</span><?php
+					}
+					else if($PortIsAtWar)
+					{
+						?><span class="red bold">WAR!!</span><?php
+					}
+					else
+					{ ?>
+						<div class="buttonA">
 							<a class="buttonA" href="<?php echo $Port->getTradeHREF() ?>">&nbsp;Trade&nbsp;</a>
-						<?php
-						} ?>
-					</div>&nbsp;
+						</div><?php
+					} ?>&nbsp;
 					<div class="buttonA">
 						<a class="buttonA" href="<?php echo $Port->getRaidWarningHREF() ?>">&nbsp;Raid&nbsp;</a>
 					</div>
