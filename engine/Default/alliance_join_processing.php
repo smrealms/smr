@@ -23,9 +23,9 @@ if (!$account->isValidated())
 
 $alliance = new SMR_ALLIANCE($var['alliance_id'], SmrSession::$game_id);
 
-if (!$alliance->canJoinAlliance($player))
+if ($alliance->canJoinAlliance($player) !== true)
 {
-	create_error('You are not allowed to join this alliance currently.');
+	create_error('You are not able to join this alliance currently.');
 }
 
 $password = $_REQUEST['password'];
