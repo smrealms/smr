@@ -61,7 +61,7 @@ elseif ($var['func'] == 'Ship')// && $_REQUEST['ship_id'] <= 75 && $_REQUEST['sh
 	{
 		create_error('Sector ID has to be a number.');
 	}
-	if(SmrGalaxy::getGalaxyContaining($player->getGameID(), $sector_to))
+	if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $sector_to))
 	{
 		create_error('Sector ID is not in any galaxy.');
 	}
