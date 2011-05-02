@@ -266,15 +266,16 @@ class Template
 			foreach($searches as $search)
 			{
 				$spans = $html->find($search);
-				if(!empty($spans))
+				if(count($spans) > 0)
 					$doAjaxMiddle=false;
 			}
 			if($doAjaxMiddle)
 			{
+				$mid = each($mid);
 				$mid=$html->find('div#middle_panel');
-				if(!empty($mid))
+				if(count($mid) > 0)
 				{
-					$mid=$mid[0];
+					$mid=$mid->get(0);
 					$inner = pq($mid)->html();
 					if(!$this->checkDisableAJAX($inner))
 					{
