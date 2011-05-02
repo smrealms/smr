@@ -94,7 +94,12 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
 }
 
-function bbifyMessage($message,$noLinks=false)
+function &xmlify(&$str)
+{
+	return str_replace('&nbsp;','&#160;',htmlentities($str,ENT_COMPAT,'utf-8'));
+}
+	
+function &bbifyMessage($message,$noLinks=false)
 {
     static $bbParser;
     if(!isset($bbParser))
@@ -571,7 +576,10 @@ function do_voodoo()
 			$template->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
 	
-	$template->assign('UnderAttack', $ship->removeUnderAttack());
+	if (SmrSession::$game_id > 0)
+	{
+		$template->assign('UnderAttack', $ship->removeUnderAttack());
+	}
 	
 	if($lock)
 	{ //Only save if we have the lock.

@@ -152,7 +152,7 @@ class Template
 //		foreach($this->ajax as $element => $content)
 //		{
 //			if(trim($content)!='')
-//				echo '<'.$element.'>'.htmlentities($this->trimWhiteSpace($content),ENT_COMPAT,'utf-8').'</'.$element.'>';
+//				echo '<'.$element.'>'.xmlify($this->trimWhiteSpace($content)).'</'.$element.'>';
 //		}
 //	}
 	
@@ -256,7 +256,7 @@ class Template
 				$id = $span->getAttribute('id');
 				$inner = pq($span)->html();
 				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
-					$xml.= '<'.$id.'>'.htmlentities($inner,ENT_COMPAT,'utf-8'). '</'.$id.'>';
+					$xml.= '<'.$id.'>'.xmlify($inner). '</'.$id.'>';
 			}
 		}
 		if(!$this->ignoreMiddle)
@@ -280,7 +280,7 @@ class Template
 					{
 						$id = $mid->getAttribute('id');
 						if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
-							$xml.= '<'.$id.'>'.htmlentities($inner,ENT_COMPAT,'utf-8'). '</'.$id.'>';
+							$xml.= '<'.$id.'>'.xmlify($inner). '</'.$id.'>';
 					}
 				}
 			}
