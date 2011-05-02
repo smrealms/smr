@@ -264,7 +264,7 @@ if ($alliance_id == $player->getAllianceID())
 	}
 }
 
-if ($alliance->canJoinAlliance($player))
+if (($canJoin = $alliance->canJoinAlliance($player)) === true)
 {
 	$PHP_OUTPUT.= '<br />';
 	$container = array();
@@ -276,6 +276,11 @@ if ($alliance->canJoinAlliance($player))
 	$PHP_OUTPUT.= '<input type="password" name="password" size="30">&nbsp;';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';
+}
+else if($canJoin !== false)
+{
+	$PHP_OUTPUT.= '<br />';
+	$PHP_OUTPUT .= $canJoin;
 }
 
 ?>

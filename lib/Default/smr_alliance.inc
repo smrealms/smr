@@ -94,9 +94,9 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 		if($player->hasAlliance())
 			return false;
 		if($this->getPassword()=='*')
-			return false;
+			return 'This alliance is not currently accepting new recruits.';
 		if($player->getAllianceJoinable() > TIME)
-			return false;
+			return 'You cannot join another alliance for '.format_time($player->getAllianceJoinable()-TIME).'.';
 		if($this->getNumMembers()<Globals::getAllianceMaxPlayers($this->getGameID()))
 		{
 			if(!$player->getAccount()->isVeteran())
@@ -130,7 +130,7 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 				return true;
 			
 		}
-		return false;
+		return 'There is not currently enough room for you in this alliance.';
 	}
 	
 	public function getNumVeterans()
