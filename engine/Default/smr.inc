@@ -571,7 +571,7 @@ function do_voodoo()
 			$template->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
 	
-	$template->assign('UnderAttack', $ThisShip->removeUnderAttack());
+	$template->assign('UnderAttack', $ship->removeUnderAttack());
 	
 	if($lock)
 	{ //Only save if we have the lock.
