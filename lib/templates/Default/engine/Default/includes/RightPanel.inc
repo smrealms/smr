@@ -1,7 +1,6 @@
 <?php
 if(isset($GameID))
-{
-	$UnderAttack = $ThisShip->removeUnderAttack(); ?>
+{ ?>
 	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script type="text/javascript">TriggerAttackBlink('3B1111');</script><?php } ?></span>
 	<span id="message_area"><?php
 	if(isset($MessageGlobalLink))
@@ -38,7 +37,7 @@ if(isset($GameID))
 	{ ?>
 		<a href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.png" alt="Planet Messages" /></a>
 		<span class="small"><?php echo $MessagePlanetNum; ?></span><?php
-	} 
+	}
 	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
 	{
 		?><br /><?php
@@ -188,7 +187,7 @@ if(isset($GameID))
 	} ?>
 	Open : <?php echo $ThisShip->getOpenWeaponSlots(); ?><br />
 	Total Damage: (<?php echo $ThisShip->getTotalShieldDamage(); ?>/<?php echo $ThisShip->getTotalArmourDamage(); ?>)<br />
-	Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower(); ?><br /><br /><?php 
+	Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower(); ?><br /><br /><?php
 	if(ENABLE_BETA)
 	{
 		?><a href="<?php echo Globals::getBetaFunctionsHREF(); ?>"><span class="bold">Beta Functions</span></a><?php
