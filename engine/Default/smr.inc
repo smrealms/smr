@@ -518,7 +518,8 @@ function do_voodoo()
 
 		global $locksFailed;
 		if(!USING_AJAX //AJAX should never do anything that requires a lock.
-			&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php')) //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
+//			&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
+			)
 		{
 			if(!$lock && !isset($locksFailed[$sector_id]))
 			{
