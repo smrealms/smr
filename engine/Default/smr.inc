@@ -475,43 +475,36 @@ function do_voodoo()
 	$db = new SmrMySqlDatabase();
 	$GLOBALS['db'] =& $db;
 	
-	if(isset($var['url']))
+	if($var['url'] == 'game_play_preprocessing.php') // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
 	{
-		if($var['url'] == 'skeleton.php') //No need to load the skeleton page.
-		{
-			unset($var['url']);
-		}
-		if($var['url'] == 'game_play_preprocessing.php') // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
-		{
-			SmrSession::clearLinks();
-			if (SmrSession::$game_id > 0)
-				$account->log(2, 'Player left game '.SmrSession::$game_id);
-			
-			// reset game id
-			SmrSession::$game_id = 0;
-			SmrSession::update();
-			
-			forward(create_container('skeleton.php', 'game_play.php'));
-		}
-		else if($var['url'] == 'logoff_preprocessing.php')
-		{
-			SmrSession::$game_id = 0;
-			SmrSession::update();
-			
-			// try to get a real ip first
-			if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-				$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-			else
-				$curr_ip = $_SERVER['REMOTE_ADDR'];
-			
-			// log?
-			$account->log(1, 'logged off from '.$curr_ip);
-			$container = array();
-			$container['body'] ='logoff.php';
-			$container['url'] = 'skeleton.php';
-			$container['logoff'] = 'yes';
-			forward($container);
-		}
+		SmrSession::clearLinks();
+		if (SmrSession::$game_id > 0)
+			$account->log(2, 'Player left game '.SmrSession::$game_id);
+		
+		// reset game id
+		SmrSession::$game_id = 0;
+		SmrSession::update();
+		
+		forward(create_container('skeleton.php', 'game_play.php'));
+	}
+	else if($var['url'] == 'logoff_preprocessing.php')
+	{
+		SmrSession::$game_id = 0;
+		SmrSession::update();
+		
+		// try to get a real ip first
+		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+			$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+		else
+			$curr_ip = $_SERVER['REMOTE_ADDR'];
+		
+		// log?
+		$account->log(1, 'logged off from '.$curr_ip);
+		$container = array();
+		$container['body'] ='logoff.php';
+		$container['url'] = 'skeleton.php';
+		$container['logoff'] = 'yes';
+		forward($container);
 	}
 
 	// initialize objects we usually need, like player, ship
@@ -561,7 +554,7 @@ function do_voodoo()
 			forward(create_container('skeleton.php', 'newbie_warning.php'));
 	}
 
-	if(isset($var['url']))
+	if($var['url'] != 'skeleton.php')
 	{
 		require(get_file_loc($var['url']));
 	}
