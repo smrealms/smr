@@ -865,6 +865,54 @@ class SmrPlanet
 		}
 	}
 
+	public function &getTraders()
+	{
+		return SmrPlayer::getPlanetPlayers($this->getGameID(),$this->getSectorID());
+	}
+
+	public function hasTraders()
+	{
+		return count($this->getTraders()) > 0;
+	}
+
+	public function &getOtherTraders(AbstractSmrPlayer &$player)
+	{
+		$players = SmrPlayer::getPlanetPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
+	//	unset($players[$player->getAccountID()]);
+		return $players;
+	}
+
+	public function hasOtherTraders(AbstractSmrPlayer &$player)
+	{
+		return count($this->getOtherTraders($player)) > 0;
+	}
+
+	public function hasEnemyTraders(AbstractSmrPlayer &$player)
+	{
+		if(!$this->hasOtherTraders($player))
+			return false;
+		$otherPlayers =& $this->getOtherTraders($player);
+		foreach($otherPlayers as &$otherPlayer)
+		{
+			if(!$player->traderNAPAlliance($otherPlayer))
+				return true;
+		} unset($otherPlayer);
+		return false;
+	}
+
+	public function hasFriendlyTraders(AbstractSmrPlayer &$player)
+	{
+		if(!$this->hasOtherTraders($player))
+			return false;
+		$otherPlayers =& $this->getOtherTraders($player);
+		foreach($otherPlayers as &$otherPlayer)
+		{
+			if($player->traderNAPAlliance($otherPlayer))
+				return true;
+		} unset($otherPlayer);
+		return false;
+	}
+
 	public function &getWeapons()
 	{
 		$weapons = array();

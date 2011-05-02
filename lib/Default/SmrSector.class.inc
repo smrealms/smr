@@ -323,7 +323,7 @@ class SmrSector
 		{
 			$force->ping($message,$player);
 		} unset($force);
-		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' . 
+		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' .
 					'refresher = '.$player->getAccountID());
 	}
 
@@ -790,9 +790,21 @@ class SmrSector
 		return SmrForce::getSectorForces($this->getGameID(),$this->getSectorID());
 	}
 
+	public function &getTraders()
+	{
+		return SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID());
+	}
+
 	public function hasTraders()
 	{
 		return count($this->getTraders()) > 0;
+	}
+
+	public function &getOtherTraders(AbstractSmrPlayer &$player)
+	{
+		$players = SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
+		unset($players[$player->getAccountID()]);
+		return $players;
 	}
 
 	public function hasOtherTraders(AbstractSmrPlayer &$player)
@@ -824,11 +836,6 @@ class SmrSector
 				return true;
 		} unset($otherPlayer);
 		return false;
-	}
-
-	public function &getTraders()
-	{
-		return SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID());
 	}
 
 	public function &getFightingTradersAgainstForces(AbstractSmrPlayer &$attackingPlayer, SmrForce &$defendingForces)
@@ -952,13 +959,6 @@ class SmrSector
 				}
 			} unset($player);
 		return $fightingPlayers;
-	}
-
-	public function &getOtherTraders(AbstractSmrPlayer &$player)
-	{
-		$players = SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
-		unset($players[$player->getAccountID()]);
-		return $players;
 	}
 	
 	public function getBattles()
