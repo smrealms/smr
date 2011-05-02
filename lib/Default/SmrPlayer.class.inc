@@ -5,6 +5,7 @@ class SmrPlayer extends AbstractSmrPlayer
 {
 	const TIME_FOR_ALLIANCE_SWITCH = 86400;
 	protected static $CACHE_SECTOR_PLAYERS = array();
+	protected static $CACHE_PLANET_PLAYERS = array();
 	protected static $CACHE_ALLIANCE_PLAYERS = array();
 	protected static $CACHE_PLAYERS = array();
 	
@@ -130,6 +131,23 @@ class SmrPlayer extends AbstractSmrPlayer
 			return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
 		}
 		return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID];
+	}
+
+	public static function &getPlanetPlayers($gameID,$sectorID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID]))
+		{
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . implode(',', Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$players = array();
+			while($db->nextRecord())
+			{
+				$accountID = $db->getField('account_id');
+				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
+			}
+			return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] =& $players;
+		}
+		return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID];
 	}
 
 	public static function &getAlliancePlayers($gameID,$allianceID,$forceUpdate = false)
@@ -2167,6 +2185,13 @@ class SmrPlayer extends AbstractSmrPlayer
 			$container['time']	= $var['time'];
 		else
 			$container['time']	= 0;
+		return SmrSession::get_new_href($container);
+	}
+	
+	public function getPlanetKickHREF()
+	{
+		$container = create_container('planet_kick_processing.php','trader_attack_processing.php');
+		$container['account_id']	= $this->getAccountID();
 		return SmrSession::get_new_href($container);
 	}
 	

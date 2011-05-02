@@ -1,8 +1,8 @@
 <div id="players_cs" class="ajax"><?php
-	if($ThisSector->hasOtherTraders($ThisPlayer))
+	if($PlayersContainer->hasOtherTraders($ThisPlayer))
 	{
-		$Players =& $ThisSector->getOtherTraders($ThisPlayer);
-		if($ThisPlayer->canSeeAny($Players))
+		$Players =& $PlayersContainer->getOtherTraders($ThisPlayer);
+		if(!($PlayersContainer instanceof SmrSector) || $ThisPlayer->canSeeAny($Players))
 		{ ?>
 			<table class="standard fullwidth csShips">
 				<tr>
@@ -16,9 +16,9 @@
 					<th>Option</th>
 				</tr>
 				<?php
-				foreach($Players as $Player)
+				foreach($Players as &$Player)
 				{
-					if($ThisPlayer->canSee($Player))
+					if(!($PlayersContainer instanceof SmrSector) || $ThisPlayer->canSee($Player))
 					{
 						$Ship =& $Player->getShip();?>
 						<tr<?php if($Player->getAccount()->isNewbie()) { ?> class="newbie"<?php } ?>>
@@ -63,12 +63,22 @@
 								} ?></td>
 							<td class="shrink center noWrap"><?php echo $Player->getLevelID() ?></td>
 							<td class="shrink center noWrap">
-								<div class="buttonA">
-									<a href="<?php echo $Player->getExamineTraderHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Examine </a>
+								<div class="buttonA"><?php
+									if($PlayersContainer instanceof SmrPlanet)
+									{
+										if($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID() && !$ThisPlayer->equals($Player))
+										{
+											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Kick </a><?php
+										}
+									}
+									else
+									{
+										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Examine </a><?php
+									} ?>
 								</div>
 							</td>
 						</tr><?php
-					} 
+					}
 				} ?>
 			</table><?php
 		}
