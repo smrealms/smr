@@ -247,7 +247,7 @@ class Template
 		
 		$xml='';
 		$html = phpQuery::newDocument($str);
-		$searches = array('span[id]','[class=ajax]');
+		$searches = array('span[id]','.ajax');
 		foreach($searches as $search)
 		{
 			$spans = $html->find($search);
@@ -262,7 +262,7 @@ class Template
 		if(!$this->ignoreMiddle)
 		{
 			$doAjaxMiddle=true;
-			$searches = array('div#middle_panel span[id]','div#middle_panel [class=ajax]');
+			$searches = array('div#middle_panel span[id]','div#middle_panel .ajax');
 			foreach($searches as $search)
 			{
 				$spans = $html->find($search);
