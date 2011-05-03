@@ -248,7 +248,7 @@ define('DEFAULT_CSS',URL.'/css/Default.css');
 define('DEFAULT_CSS_COLOUR',URL.'/css/Default/Default.css');
 
 define('AJAX_DEFAULT_REFRESH_TIME',1500);
-define('AJAX_UNPROTECTED_REFRESH_TIME',700);
+define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 
 define('LOCK_DURATION',10); // The max time for a lock to last before timing out.
 define('LOCK_BUFFER',3); // The minimum time that must be remaining on the lock duration for the lock to be valid.
