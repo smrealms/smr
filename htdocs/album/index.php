@@ -148,8 +148,8 @@ Quick Search:<br />
 
 <tr>
 	<td align='right' style='font-size:65%;'>
-	    &copy; 2002-2007 by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
-	    Hosted by <a href='http://www.fem.tu-ilmenau.de/index.php?id=93&L=1' target='fem'>FeM</a>
+	    &copy; 2002-2011 by <a href="<?php echo URL; ?>"><?php echo URL; ?></a><br />
+	    Hosted by <a href='http://www.fem.tu-ilmenau.de/' target='fem'>FeM</a>
 	</td>
 
 </tr>
