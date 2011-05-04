@@ -24,7 +24,8 @@ if($valid == true) {
 	if(TIME >= $player->getGame()->getStartTurnsDate())
 	{
 		// They get 1/3 of their hourly turns for a valid click
-		$player->giveTurns($ship->getRealSpeed()/3);
+		$player->setLastTurnUpdate($player->getLastTurnUpdate()-1200); //Give 20mins worth of turns, no rounding errors.
+		$player->updateTurns(); //Display updated turns straight away.
 	}
 }
 
@@ -34,7 +35,7 @@ $container['url'] = 'skeleton.php';
 // Return them to the appropriate screen
 if (!$player->isLandedOnPlanet())
 	$container['body'] = 'current_sector.php';
-else 
+else
 	$container['body'] = 'planet_main.php';
 
 $container['voted'] = true;
