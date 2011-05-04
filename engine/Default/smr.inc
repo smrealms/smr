@@ -985,7 +985,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 	$minVoteTime = 86400;
 	$voteSite = array();
-	for($i=1;$i<3;$i++)
+	for($i=1;$i<2;$i++)
 	{
 		if(!isset($nextVoteTime[$i]))
 		{
