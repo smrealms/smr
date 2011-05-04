@@ -878,7 +878,7 @@ class SmrPlanet
 	public function &getOtherTraders(AbstractSmrPlayer &$player)
 	{
 		$players = SmrPlayer::getPlanetPlayers($this->getGameID(),$this->getSectorID()); //Do not use & because we unset something and only want that in what we return
-	//	unset($players[$player->getAccountID()]);
+		unset($players[$player->getAccountID()]);
 		return $players;
 	}
 
