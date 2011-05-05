@@ -78,10 +78,11 @@ if (isset($Msg))
 			</td><?php
 		} ?>
 	</tr>
-</table><?php
-$this->includeTemplate('includes/SectorPlayers.inc',array('PlayersContainer'=>&$ThisPlanet));
-?>
+</table>
 <br />
 <form name="LaunchForm" method="POST" action="<?php echo $LaunchFormLink; ?>">
 	<input type="submit" name="action" value="Launch" id="InputFields"/>
 </form>
+<br /><?php
+$this->includeTemplate('includes/SectorPlayers.inc',array('PlayersContainer'=>&$ThisPlanet));
+?>
