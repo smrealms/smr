@@ -75,7 +75,7 @@ else
 		$changeRoles = (bool)($var['role_id'] == 1 || $_REQUEST['changeRoles']); //Leader can always change roles.
 		$planetAccess = (bool)$_REQUEST['planets'];
 		$mbMessages = (bool)$_REQUEST['mbMessages'];
-		$exemptWith = (bool)$_REQUEST['exemptWithdrawls'];
+		$exemptWith = (bool)$_REQUEST['exemptWithdrawals'];
 		$sendAllMsg = (bool)$_REQUEST['sendAllMsg'];
 		$db->query('UPDATE alliance_has_roles
 					SET role = ' . $db->escape_string($_POST['role'], true) . ',
@@ -87,7 +87,7 @@ else
 					planet_access = '.$db->escapeBoolean($planetAccess).',
 					exempt_with = '.$db->escapeBoolean($exemptWith).',
 					mb_messages = '.$db->escapeBoolean($mbMessages).',
-					send_alliance_msg = '.$db->escapeBoolean($sendAllMsg).' 
+					send_alliance_msg = '.$db->escapeBoolean($sendAllMsg).'
 					WHERE game_id = '.$player->getGameID().' AND
 						  alliance_id = '.$alliance_id.' AND
 						  role_id = ' . $var['role_id']);
