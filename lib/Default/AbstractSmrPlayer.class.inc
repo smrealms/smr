@@ -1032,11 +1032,12 @@ abstract class AbstractSmrPlayer
 //		round(DEFAULT_MAX_TURNS * Globals::getGameSpeed($this->getGameID()));
 	}
 
-	public function setTurns($maint,$newNoob = false,$updateLastActive = false)
+	public function setTurns($turns,$newNoob = false,$updateLastActive = false)
 	{
-		if(($maintSame=($this->turns == $maint)) & ($newbSame=($this->newbieTurns == $newNoob)) && !$updateLastActive)
+		if($this->turns == $turns && ($this->newbieTurns == $newNoob || $newNoob==false) && !$updateLastActive)
 			return;
-		$this->turns = $maint;
+		
+		$this->turns = $turns;
 
 		if(!has_beta_privilege('No SC Change'))
 		{
