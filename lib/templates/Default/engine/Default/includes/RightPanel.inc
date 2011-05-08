@@ -147,7 +147,7 @@ if(isset($GameID))
 		<a href="<?php echo $DropCDLink; ?>">
 			<span class="bold">[X]</span>
 		</a><?php
-	} ?>Combat : <?php echo $ThisShip->getCDs(); ?>/<?php echo $ThisShip->getMaxCDs(); ?><br /><?php
+	} ?>Combat : <span id="cds"><?php echo $ThisShip->getCDs(); ?></span>/<?php echo $ThisShip->getMaxCDs(); ?><br /><?php
 	
 	if(isset($DropSDLink))
 	{ ?>
