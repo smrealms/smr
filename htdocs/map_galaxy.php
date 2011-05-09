@@ -41,13 +41,9 @@ try
 	
 	if(isset($_REQUEST['sector_id']))
 	{
-		try
+		if(($galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $_REQUEST['sector_id'])) === false)
 		{
-			$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$_REQUEST['sector_id']);
-		}
-		catch(Exception $e)
-		{
-			header('location: ' . URL . '/error.php?msg=Invalid galaxy id');
+			header('location: ' . URL . '/error.php?msg=Invalid sector id');
 			exit;
 		}
 	}
@@ -96,7 +92,7 @@ try
 		}
 	}
 	else
-		$topLeft =& SmrSector::getSector($player->getGameID(), $galaxy->getStartSector());	
+		$topLeft =& SmrSector::getSector($player->getGameID(), $galaxy->getStartSector());
 	
 	$mapSectors = array();
 	$leftMostSec =& $topLeft;
