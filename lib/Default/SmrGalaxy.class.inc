@@ -310,7 +310,7 @@ class SmrGalaxy
 			if($galaxy->contains($sectorID))
 				return $galaxy;
 		}
-		$return = null;
+		$return = false;
 		return $return;
 	}
 	
