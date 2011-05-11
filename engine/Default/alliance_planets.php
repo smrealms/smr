@@ -59,7 +59,10 @@ if ($db->getNumRows() > 0)
 		{
 			if ($amount > 0)
 			{
-				$PHP_OUTPUT.= '<span class="noWrap">' . Globals::getGoodName($id) . '</span>: ';
+				// Get current good
+				$Good = Globals::getGood($id);
+
+				$PHP_OUTPUT.= '<img src="' . $Good['ImageLink'] . '" title="' . $Good['Name'] . '" alt="' . $Good['Name'] . '" />:&nbsp;';
 				$PHP_OUTPUT.= $amount;
 				$PHP_OUTPUT.= '<br />';
 				$supply = true;
@@ -78,7 +81,7 @@ if ($db->getNumRows() > 0)
 			foreach($planet->getCurrentlyBuilding() as $building)
 			{
 				$PHP_OUTPUT.= $PLANET_BUILDINGS[$building['ConstructionID']]['Name'];
-				
+
 				$PHP_OUTPUT.= '<br />'.($building['TimeRemaining'] / 3600 % 24).':'.($building['TimeRemaining'] / 60 % 60).':'.($building['TimeRemaining'] % 60).' ';
 			}
 		}
