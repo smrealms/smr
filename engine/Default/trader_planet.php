@@ -68,9 +68,12 @@ if ($db->getNumRows() > 0)
 		foreach ($planet->getStockpile() as $id => $amount)
 			if ($amount > 0)
 			{
-				$db2->query('SELECT * FROM good WHERE good_id = '.$id);
-				if ($db2->nextRecord())
-					$PHP_OUTPUT.=($db2->getField('good_name') . ': '.$amount.'<br />');
+				// Get current good
+				$Good = Globals::getGood($id);
+
+				$PHP_OUTPUT.= '<img src="' . $Good['ImageLink'] . '" title="' . $Good['Name'] . '" alt="' . $Good['Name'] . '" />&nbsp;';
+				$PHP_OUTPUT.= $amount;
+				$PHP_OUTPUT.= '<br />';
 				$supply = true;
 			}
 
@@ -85,12 +88,12 @@ if ($db->getNumRows() > 0)
 }
 else
 	$PHP_OUTPUT.=('You don\'t have a planet claimed!<br /><br />');
-	
+
 if ($player->hasAlliance())
 {
-	
+
 	$template->assign('PageTopic','Planet List For '.$player->getAllianceName().' ('.$player->getAllianceID().')');
-	
+
 	$db2 = new SmrMySqlDatabase();
 	if (!isset($planet_sec)) $planet_sec = 0;
 	$db->query('SELECT * FROM player, planet WHERE player.game_id = planet.game_id AND ' .
@@ -117,7 +120,7 @@ if ($player->hasAlliance())
 		$PHP_OUTPUT.=('<th align="center">Drones</th>');
 		$PHP_OUTPUT.=('<th align="center">Supplies</th>');
 		$PHP_OUTPUT.=('</tr>');
-	
+
 		while ($db->nextRecord())
 		{
 			$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
@@ -130,7 +133,7 @@ if ($player->hasAlliance())
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_HANGAR) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">' . $planet->getBuilding(PLANET_TURRET) . '</td>');
 			$PHP_OUTPUT.=('<td align="center">');
-	
+
 			if ($planet->hasCurrentlyBuilding())
 			{
 				$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
@@ -142,7 +145,7 @@ if ($player->hasAlliance())
 			}
 			else
 				$PHP_OUTPUT.=('Nothing');
-	
+
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$planet->getShields().'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$planet->getCDs().'</td>');
@@ -156,15 +159,15 @@ if ($player->hasAlliance())
 						$PHP_OUTPUT.=($db2->getField('good_name') . ': '.$amount.'<br />');
 					$supply = true;
 				}
-	
+
 			if (!$supply)
 				$PHP_OUTPUT.=('none');
 			$PHP_OUTPUT.=('</td>');
 		}
-	
+
 		$PHP_OUTPUT.=('</table>');
 		$PHP_OUTPUT.=('</div>');
-	
+
 	}
 	elseif ($planet_sec == 0)
 		$PHP_OUTPUT.=('Your alliance has no claimed planets!');
