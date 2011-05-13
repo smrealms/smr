@@ -714,6 +714,10 @@ class SmrPlanet
 
 	public function update()
 	{
+		if(!$this->exists())
+		{
+			return;
+		}
 		$this->doDelayedUpdates();
 		if($this->hasChanged)
 		{
