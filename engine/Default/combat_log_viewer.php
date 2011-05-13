@@ -208,7 +208,7 @@ if($action != 5)
 			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/rew.jpg" alt="Previous Page" border="0"></a>';
 		$PHP_OUTPUT.='</td><td>';
 		$PHP_OUTPUT.= $form['submit']['View'];
-		$PHP_OUTPUT.= '&nbsp';
+		$PHP_OUTPUT.= '&nbsp;';
 		$PHP_OUTPUT.= $form['submit']['Save'];
 		$PHP_OUTPUT.='</td><td style="width: 30%" valign="middle">';
 		$container['page'] = $page+1;

@@ -1598,7 +1598,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
-		$news_message .= ' was destroyed by forces in sector&nbsp#'.$forces->getSectorID();
+		$news_message .= ' was destroyed by forces in sector #'.$forces->getSectorID();
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$owner->getAccountID().','.$owner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
@@ -1658,7 +1658,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
-		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector&nbsp#'.$planet->getSectorID().'.';
+		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector #'.$planet->getSectorID().'.';
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$planetOwner->getAccountID().','.$planetOwner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');

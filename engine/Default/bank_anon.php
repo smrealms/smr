@@ -123,7 +123,7 @@ if (!isset($account_num) && !isset($make))
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';
 
-	$db->query('SELECT * FROM anon_bank 
+	$db->query('SELECT * FROM anon_bank
 				WHERE owner_id=' . $player->getAccountID() . '
 				AND game_id=' . $player->getGameID());
 	if ($db->getNumRows()) {
@@ -281,7 +281,7 @@ if (isset($account_num))
 		$PHP_OUTPUT.= '</td><td>';
 		$PHP_OUTPUT.= $form['submit'];
 		$PHP_OUTPUT.= '</td></tr></table></form>';
-		$PHP_OUTPUT.= '<table class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp</th></tr>';
+		$PHP_OUTPUT.= '<table class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp;</th></tr>';
 
 		$container = array();
 		$container['url']		= 'skeleton.php';
