@@ -51,7 +51,7 @@ if(isset($XType))
 				break;
 				case 'Ships':
 					$Ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType(SmrSession::$game_id));
-					uasort($Ships,array('AbstractSmrShip','CompareName'));
+					Sorter::sortByNumProp($Ships, 'Name');
 					foreach($Ships as &$Ship)
 					{
 						?><option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
@@ -59,7 +59,7 @@ if(isset($XType))
 				break;
 				case 'Weapons':
 					$Weapons =& SmrWeapon::getAllWeapons(Globals::getGameType(SmrSession::$game_id));
-					uasort($Weapons,array('SmrWeapon','CompareName'));
+					Sorter::sortByNumMethod($Weapons, 'getName');
 					foreach($Weapons as &$Weapon)
 					{
 						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
@@ -75,13 +75,13 @@ if(isset($XType))
 					<option value="Ship">Any Ship Shop</option>
 					<option value="Weapon">Any Weapon Shop</option><?php
 					$Locations =& SmrLocation::getAllLocations();
-					uasort($Locations,array('SmrLocation','CompareName'));
+					Sorter::sortByNumMethod($Locations, 'getName');
 					foreach($Locations as &$Location)
 					{
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
 					} unset($Location);
 				break;
-				case 'Goods': 
+				case 'Goods':
 					$Goods =& Globals::getGoods();
 					foreach($Goods as &$Good)
 					{

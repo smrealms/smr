@@ -96,7 +96,7 @@ abstract class AbstractSmrShip
 		}
 		
 		$ship['BaseMR'] = 	round(
-								700 - 
+								700 -
 								(
 									(
 										$ship['MaxHardware'][HARDWARE_SHIELDS]
@@ -123,11 +123,6 @@ abstract class AbstractSmrShip
 			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')]))
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')] =& self::buildBaseShip($db);
 		return self::$CACHE_BASE_SHIPS[$gameTypeID];
-	}
-	
-	public static function compareName($a,$b)
-	{
-		return compare($a['Name'],$b['Name']);
 	}
 	
 	protected function __construct(AbstractSmrPlayer &$player)
@@ -328,7 +323,7 @@ abstract class AbstractSmrShip
 			for($i=count($this->weapons)-1;$i>0;--$i)
 			{
 				$this->weapons[$i] =& $this->weapons[$i-1];
-			}	
+			}
 			$this->weapons[0] =& $temp;
 		}
 		else
@@ -1283,7 +1278,7 @@ abstract class AbstractSmrShip
 	public function getMR()
 	{
 		return round(
-						700 - 
+						700 -
 						(
 							(
 								$this->getShields()

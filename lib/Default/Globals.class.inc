@@ -521,7 +521,7 @@ class Globals
 			return self::getAllianceListHREF();
 	}
 	
-	public static function getAllianceRosterHREF($allianceID = null, $sortKey = 'Experience', $sortDesc = true)
+	public static function getAllianceRosterHREF($allianceID = null, $sortKey = 'getExperience', $sortDesc = true)
 	{
 		$container = create_container('skeleton.php', 'alliance_roster.php');
 		if ($allianceID!=null)

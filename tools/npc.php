@@ -22,7 +22,7 @@ try
 		if($container['body']=='error.php') //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
 		{
 			debug('Hit an error');
-			throw new Exception('Script: '.SCRIPT_ID.EOL.$container['message']);
+			throw new Exception($container['message']);
 		}
 		throw new Exception('Forward'); //We catch and check for exceptions with the message "Forward" in NPCStuff, very hacky but works - need to extend Exception for a less over-arching catch.
 											//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
@@ -44,8 +44,8 @@ try
 	define('NPC_START_TURNS',300);
 	define('MINUMUM_RESERVE_CREDITS',100000);
 	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
-	define('MIN_SLEEP_TIME',1000000);
-	define('MAX_SLEEP_TIME',1500000);
+	define('MIN_SLEEP_TIME',800000);
+	define('MAX_SLEEP_TIME',1300000);
 	
 	$SHIP_UPGRADE_PATH = array(
 		2 => array( //Alskant
@@ -118,7 +118,8 @@ catch(Exception $e)
 	$currMySQLError='';
 	if(is_object($account))
 	{
-		$message .= 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
+		$message .= 'Script: '.SCRIPT_ID.EOL.EOL.'-----------'.EOL.EOL.
+			'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
 			'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
 			'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL;
 	}
@@ -197,7 +198,7 @@ catch(Exception $e)
 		
 function NPCStuff()
 {
-	global $account,$actions,$var;
+	global $account,$actions,$var,$previousContainer,$TRADE_ROUTE;
 	
 	$actions=-1;
 //	for($i=0;$i<40;$i++)
@@ -234,6 +235,8 @@ function NPCStuff()
 			if($player->isDead())
 			{
 				debug('Some evil person killed us, let\'s move on now.');
+				$previousContainer = null; //We died, we don't care what we were doing beforehand.
+				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
 				$player->setDead(false);
 				$player->deletePlottedCourse(); //Remove any plotted course we had that might cause problems.
 			}
@@ -408,19 +411,19 @@ function NPCStuff()
 				SmrForce::saveForces();
 				SmrPort::savePorts();
 				release_lock();
-				//Clean up the caches as the data may get changed by other players
-				SmrSector::clearCache();
-				SmrPlayer::clearCache();
-				SmrShip::clearCache();
-				SmrForce::clearCache();
-				SmrPort::clearCache();
-				//Clear up some global vars
-				global $locksFailed;
-				$locksFailed = array();
-				$_REQUEST = array();
-				//Have a sleep between actions
-				sleepNPC();
 			}
+			//Clean up the caches as the data may get changed by other players
+			SmrSector::clearCache();
+			SmrPlayer::clearCache();
+			SmrShip::clearCache();
+			SmrForce::clearCache();
+			SmrPort::clearCache();
+			//Clear up some global vars
+			global $locksFailed;
+			$locksFailed = array();
+			$_REQUEST = array();
+			//Have a sleep between actions
+			sleepNPC();
 		}
 	}
 	debug('Actions Finished.');
@@ -436,8 +439,7 @@ function debug($message, $debugObject = null)
 
 function processContainer($container)
 {
-	global $forwardedContainer;
-	static $previousContainer;
+	global $forwardedContainer, $previousContainer;
 	if($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php')
 	{
 		debug('We are executing the same container twice?', $container);
@@ -445,6 +447,7 @@ function processContainer($container)
 	}
 	$previousContainer = $container;
 	debug('Executing container',$container);
+	runkit_constant_redefine('TIME',time()); //Redefine TIME, the rest of the game expects TIME to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant.
 	resetContainer($container);
 	do_voodoo();
 }
@@ -474,8 +477,9 @@ function exitNPC()
 
 function changeNPCLogin()
 {
-	global $NPC_LOGIN,$actions,$account,$NPC_LOGINS_USED;
+	global $NPC_LOGIN,$actions,$account,$NPC_LOGINS_USED,$TRADE_ROUTE;
 	$actions=0;
+	$TRADE_ROUTE = null;
 	$db = new SmrMySqlDatabase();
 	$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN));
 	if($db->getChangedRows()>0)

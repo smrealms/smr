@@ -57,7 +57,6 @@ if ($player->getTurns() < $turns)
 if (!$sector->isLinked($var['target_sector']))
 	create_error('You cannot move to that sector!');
 
-require_once(get_file_loc('Sorter.class.inc'));
 if ($player->getLastSectorID() != $var['target_sector'])
 {
 	$sectorForces =& $sector->getForces();
