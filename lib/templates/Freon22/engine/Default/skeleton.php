@@ -186,9 +186,10 @@
 									Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo get_colored_text_range($ThisShip->getDefenseRating(), $ThisShip->getMaxDefenseRating()); ?></span><br />
 								</div><br />
 								
-								Shields: <span id="shields"><?php echo get_colored_text_range($ThisShip->getShields(),$ThisShip->getMaxShields()); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
-		
-								Armor: <span id="armour"><?php echo get_colored_text_range($ThisShip->getArmour(),$ThisShip->getMaxArmour()); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
+								Shields : <span id="shields"><?php echo get_colored_text_range($ThisShip->getShields(),$ThisShip->getMaxShields(),number_format($ThisShip->getShields()).'/'.number_format($ThisShip->getMaxShields())); ?></span><br />
+								
+								Armour : <span id="armour"><?php echo get_colored_text_range($ThisShip->getArmour(),$ThisShip->getMaxArmour(),number_format($ThisShip->getArmour()).'/'.number_format($ThisShip->getMaxArmour())); ?></span><br />
+
 								<a class="nav" href="<?php echo $HardwareLink; ?>">CIJSD: <?php
 									if($ThisShip->hasCloak()) echo '*';
 									else echo '-';
