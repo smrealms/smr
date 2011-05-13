@@ -38,9 +38,9 @@ class SmrPlanet
 	{
 		foreach(self::$CACHE_PLANETS as $gameID => &$gamePlanets)
 		{
-			foreach($gamePlanets as $sectorID => &$planets)
+			foreach($gamePlanets as $sectorID => &$planet)
 			{
-				$planets = self::getPlanet($gameID,$sectorID,true);
+				$planet = self::getPlanet($gameID,$sectorID,true);
 			}
 		}
 	}
@@ -54,12 +54,9 @@ class SmrPlanet
 	{
 		foreach(self::$CACHE_PLANETS as &$gamePlanets)
 		{
-			foreach($gamePlanets as &$gameSectorPlanets)
+			foreach($gamePlanets as &$planet)
 			{
-				foreach($gameSectorPlanets as &$planet)
-				{
-					$planet->update();
-				}
+				$planet->update();
 			}
 		}
 	}
