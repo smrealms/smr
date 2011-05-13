@@ -103,8 +103,8 @@ if(isset($GameID))
 		echo $ThisPlayer->getCustomShipName(); ?><br /><?php
 	} ?>
 	Rating : <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
-	Shields : <span id="shields"><?php echo $ThisShip->getShields(); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
-	Armour : <span id="armour"><?php echo $ThisShip->getArmour(); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
+	Shields : <span id="shields"><?php echo get_colored_text_range($ThisShip->getShields(),$ThisShip->getMaxShields()); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
+	Armour : <span id="armour"><?php echo get_colored_text_range($ThisShip->getArmour(),$ThisShip->getMaxArmour()); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
 	<a href="<?php echo $HardwareLink; ?>">CIJSD</a> : <?php
 	if($ThisShip->hasCloak()) echo '*';
 	else echo '-';
@@ -149,7 +149,7 @@ if(isset($GameID))
 		<a href="<?php echo $DropCDLink; ?>">
 			<span class="bold">[X]</span>
 		</a><?php
-	} ?>Combat : <span id="cds"><?php echo $ThisShip->getCDs(); ?></span>/<?php echo $ThisShip->getMaxCDs(); ?><br /><?php
+	} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs()); ?>/<?php echo $ThisShip->getMaxCDs(); ?></span><br /><?php
 	
 	if(isset($DropSDLink))
 	{ ?>

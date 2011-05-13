@@ -346,51 +346,60 @@ function create_submit_link($container, $text)
 	return '<a href="' . SmrSession::get_new_href($container) . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text($value, $text, $type='Game', $return_type = 'Normal')
+function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type='Game', $return_type = 'Normal')
 {
-
+	$value = round(510*max(0,min($maxValue,$value)-$minValue)/($maxValue-$minValue))-255;
 	if ($type == 'Game')
 	{
-		if($value < 0) {
+		if($value < 0)
+		{
 			$r_component='ff';
-			if($value < -300) $value=-300;
-			$temp = ceil((300 + $value)* 0.85);
-			$g_component = dechex($temp);
-			if($temp < 16) $g_component = '0' . $g_component;
+			$g_component = dechex(abs($value));
+			if(strlen($g_component) == 1)
+			{
+				$g_component = '0' . $g_component;
+			}
 		}
-		else if($value > 0) {
+		else if($value > 0)
+		{
 			$g_component='ff';
-			if($value > 300) $value=300;
-			$temp = ceil((300 - $value) * 0.85);
-			$r_component = dechex($temp);
-			if($temp < 16) $r_component = '0' . $r_component;
+			$r_component = dechex(abs($value));
+			if(strlen($r_component) == 1)
+			{
+				$r_component = '0' . $r_component;
+			}
 		}
-		else {
+		else
+		{
 			$r_component = 'ff';
 			$g_component = 'ff';
 		}
 		$colour = $r_component . $g_component . '00';
 		if ($return_type == 'Color') return $colour;
-		return '<span style="color:#' . $colour . '">' . $text . '</span>';
+		return '<span style="color:#' . $colour . '">' . ($text==null?$value:$text) . '</span>';
 	}
 	elseif ($type == 'IRC')
 	{
 		//IRC color codes
-		if ($value >= 300) $colour = '[k03]';
-		elseif ($value <= -300) $colour = '[k04]';
+		if ($value == 255) $colour = '[k03]';
+		elseif ($value == -255) $colour = '[k04]';
 		else $colour = '[k08]';
 		if ($return_type == 'Color') return $colour;
-		return $colour . $text;
+		return $colour . ($text==null?$value:$text);
 	}
 }
 
-function makeBold($value) {
+function get_colored_text($value, $text, $type='Game', $return_type = 'Normal')
+{
+	return get_colored_text_range($value, $text, 300, -300, $type, $return_type);
+}
 
+function makeBold($value)
+{
 	if ($value)
 		return ' style="font-weight:bold;"';
 	else
 		return '';
-
 }
 
 //function different_level($rank1, $rank2, $forced_vet1, $forced_vet2) {
@@ -415,29 +424,31 @@ function makeBold($value) {
 //
 //}
 
-function hex2bin( $data ) {
-
+function hex2bin( $data )
+{
 	$len = strlen( $data );
 	return pack( 'H' . $len, $data );
-
 }
 
-function word_filter($string) {
-	
+function word_filter($string)
+{
 	static $words;
 	
-	if(!is_array($words)) {
+	if(!is_array($words))
+	{
 		require_once(LIB . '/Default/SmrMySqlDatabase.class.inc');
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
-		while($db->nextRecord()) {
+		while($db->nextRecord())
+		{
 			$row = $db->getRow();
 			$words[] = array('word_value' => '/'.str_replace('/','\/',$row['word_value']).'/i','word_replacement'=> $row['word_replacement']);
 		}
 	}
 	
-	foreach ($words as $word) {
+	foreach ($words as $word)
+	{
 		$string = preg_replace($word['word_value'],$word['word_replacement'],$string);
 	}
 
