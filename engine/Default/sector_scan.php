@@ -5,9 +5,11 @@ if(!$sector->isLinked($var['target_sector']))
 	create_error('You cannot scan a sector you are not linked to.');
 }
 
-$template->assign('PageTopic','Sector Scan');
 // initialize vars
 $scanSector =& SmrSector::getSector($player->getGameID(), $var['target_sector']);
+
+$template->assign('PageTopic','Sector Scan of #'.$sector->getSectorID().' ('.$sector->getGalaxyName().')');
+
 $friendly_forces = 0;
 $enemy_forces = 0;
 $friendly_vessel = 0;
