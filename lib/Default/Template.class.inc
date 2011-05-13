@@ -271,7 +271,6 @@ class Template
 			}
 			if($doAjaxMiddle)
 			{
-				$mid = each($mid);
 				$mid=$html->find('div#middle_panel');
 				if(count($mid) > 0)
 				{
