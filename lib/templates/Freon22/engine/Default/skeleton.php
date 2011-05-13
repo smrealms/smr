@@ -41,7 +41,7 @@
 									<tr>
 										<td>
 											<div class="name noWrap">
-												<?php echo $ThisPlayer->getLevelName(); ?>
+												<span id="lvlName"><?php echo $ThisPlayer->getLevelName(); ?></span>
 												<br />
 												<a class="nav" href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a>
 											</div>
@@ -76,31 +76,33 @@
 													} ?>
 												</span>
 												
-												Credits: <?php echo number_format($ThisPlayer->getCredits()); ?><br />
+												Credits: <span id="creds"><?php echo number_format($ThisPlayer->getCredits()); ?></span><br />
 												
-												Experience: <?php echo number_format($ThisPlayer->getExperience()); ?>
+												Experience: <span id="exp"><?php echo number_format($ThisPlayer->getExperience()); ?></span>
 											</div>
 										</td>
 										<td>
 											<div class="topcenterTwo noWrap">
-												Level: <a class="nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><?php echo $ThisPlayer->getLevelID(); ?></a>
+												Level: <a class="nav" href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements"><span id="lvl"><?php echo $ThisPlayer->getLevelID(); ?></span></a>
 												<br />
 												Next Level: <?php
 													$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
 													$Experience = number_format($ThisPlayer->getExperience()); ?>
-													<img src="images/bar_left.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
-													<img src="images/blue.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentAcquired(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
-													<img src="images/bar_border.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentRemaining(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
-													<img src="images/bar_right.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
+													<span id="lvlBar">
+														<img src="images/bar_left.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
+														<img src="images/blue.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentAcquired(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
+														<img src="images/bar_border.gif" style="width:<?php echo $ThisPlayer->getNextLevelPercentRemaining(); ?>px;height:10px;" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" />
+														<img src="images/bar_right.gif" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
+													</span>
 												
-												Alignment: <?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?><br />
+												Alignment: <span id="align"><?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?></span><br />
 												
-												Alliance: <a href="<?php echo $AllianceLink; ?>"><?php
+												Alliance: <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php
 													echo $ThisPlayer->getAllianceName();
 													if($ThisPlayer->hasAlliance())
 													{
 														echo '('.number_format($ThisPlayer->getAllianceID()).')';
-													} ?></a>
+													} ?></a></span>
 											</div>
 										</td>
 									</tr>
@@ -167,7 +169,7 @@
 										{ ?>
 											<a class="message" title="Planet Messages" href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.png" alt="Planet Messages"/></a>
 											<span class="small"><?php echo $MessagePlanetNum; ?></span><?php
-										} 
+										}
 										if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
 										{
 											?><br /><?php
@@ -322,7 +324,7 @@
 		if(!empty($js))
 		{
 			?><script type="text/javascript" src="<?php echo $js; ?>"></script><?php
-		} 
+		}
 		if($AJAX_ENABLE_REFRESH)
 		{
 			?><script type="text/javascript">window.onload=function(){startRefresh('<?php echo $AJAX_ENABLE_REFRESH; ?>');}</script><?php

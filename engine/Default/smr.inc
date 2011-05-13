@@ -762,8 +762,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 		$template->assign('PoliticsLink',Globals::getPoliticsHREF());
 	
-		$template->assign('AllianceLink',Globals::getAllianceHREF($player->getAllianceID()));
-	
 		$container['body'] = 'combat_log_viewer.php';
 		$template->assign('CombatLogsLink',SmrSession::get_new_href($container));
 	
