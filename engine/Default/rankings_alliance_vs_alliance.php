@@ -21,7 +21,7 @@ $PHP_OUTPUT.=('Click on an alliances name for more detailed death stats.</p>');
 
 $PHP_OUTPUT.=('<table class="standard" width="95%">');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th rowspan="9">Killed</th><th colspan="8">Killers</th></tr><tr><td>&nbsp</td>');
+$PHP_OUTPUT.=('<th rowspan="9">Killed</th><th colspan="8">Killers</th></tr><tr><td></td>');
 if (empty($alliancer))
 {
 	$alliance_vs = array();
@@ -214,6 +214,6 @@ if (isset($var['alliance_id']))
 	}
 	else $PHP_OUTPUT.=($main_alliance->alliance_name.' has no deaths!');
 	$PHP_OUTPUT.=('</td></tr></table>');
-}		
+}
 
 ?>

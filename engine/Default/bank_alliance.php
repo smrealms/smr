@@ -17,11 +17,11 @@ $template->assign('PageTopic','Bank');
 include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_bank_menue();
 
-$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
+$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 		'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\'');
 if ($db->nextRecord()) $playerWith = $db->getField('total');
 else $playerWith = 0;
-$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
+$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 		'payee_id = '.$player->getAccountID().' AND transaction = \'Deposit\'');
 if ($db->nextRecord()) $playerDep = $db->getField('total');
 else $playerDep = 0;
@@ -79,7 +79,7 @@ else
 {
 	$perDay = $db->getField('with_per_day');
 	$PHP_OUTPUT.=('You can withdraw up to ' . number_format($db->getField('with_per_day')) . ' credits per 24 hours.<br />');
-	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
+	$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 			'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\' AND exempt = 0 AND time > ' . (TIME - 24 * 60 * 60));
 	$PHP_OUTPUT.=('So far you have withdrawn ');
 	$remaining = $perDay;
@@ -179,7 +179,7 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.= '</td><td>';
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</td></tr></table></form>';
-	$PHP_OUTPUT.= '<table class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Reason for transfer</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp</th>';
+	$PHP_OUTPUT.= '<table class="standard inset"><tr><th>#</th><th>Date</th><th>Trader</th><th>Reason for transfer</th><th>Withdrawal</th><th>&nbsp;&nbsp;Deposit&nbsp;&nbsp;</th>';
 	if ($exempt) $PHP_OUTPUT.=('<th>Make Exempt</th>');
 	$PHP_OUTPUT.= '</tr>';
 
