@@ -349,13 +349,13 @@ function create_submit_link($container, $text)
 
 function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type='Game', $return_type = 'Normal')
 {
-	$value = round(510*max(0,min($maxValue,$value)-$minValue)/($maxValue-$minValue))-255;
+	$normalisedValue = round(510*max(0,min($maxValue,$value)-$minValue)/($maxValue-$minValue))-255;
 	if ($type == 'Game')
 	{
 		if($value < 0)
 		{
 			$r_component='ff';
-			$g_component = dechex(abs($value));
+			$g_component = dechex(abs($normalisedValue));
 			if(strlen($g_component) == 1)
 			{
 				$g_component = '0' . $g_component;
@@ -364,7 +364,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		else if($value > 0)
 		{
 			$g_component='ff';
-			$r_component = dechex(abs($value));
+			$r_component = dechex(abs($normalisedValue));
 			if(strlen($r_component) == 1)
 			{
 				$r_component = '0' . $r_component;
@@ -382,8 +382,8 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 	elseif ($type == 'IRC')
 	{
 		//IRC color codes
-		if ($value == 255) $colour = '[k03]';
-		elseif ($value == -255) $colour = '[k04]';
+		if ($normalisedValue == 255) $colour = '[k03]';
+		elseif ($normalisedValue == -255) $colour = '[k04]';
 		else $colour = '[k08]';
 		if ($return_type == 'Color') return $colour;
 		return $colour . ($text==null?number_format($value):$text);
