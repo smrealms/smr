@@ -35,9 +35,6 @@ if ($action == 'Deposit' || $action == 'Withdraw')
 		$planet->decreaseCredits($amount);
 		$account->log(4, 'Player takes '.$amount.' credits from planet', $player->getSectorID());
 	}
-
-	$player->update();
-	$planet->update();
 }
 elseif ($action == 'Bond It!')
 {
@@ -50,10 +47,9 @@ elseif ($action == 'Bond It!')
 	$planet->setCredits(0);
 
 	// initialize time
-	$planet->maturity = TIME + round(BOND_TIME / Globals::getGameSpeed($player->getGameID()));
+	$planet->setMaturity(TIME + round(BOND_TIME / Globals::getGameSpeed($player->getGameID())));
 
 	// save to db
-	$planet->update();
 	$account->log(4, 'Player bonds '.$planet->getCredits().' credits at planet.', $player->getSectorID());
 }
 

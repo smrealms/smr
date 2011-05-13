@@ -30,7 +30,6 @@ if ($planet->isDestroyed())
 	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$planet->getSectorID().' AND game_id = '.$player->getGameID());
 	$planet->removeClaimed();
 	$planet->removePassword();
-	$planet->update();
 	$container=create_container('skeleton.php','planet_attack.php');
 	$container['sector_id'] = $planet->getSectorID();
 	forward($container);
@@ -78,15 +77,13 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $planetAttackMessage = 'Reports from the surface of '.$planet->getDisplayName().' confirm that it is under <span class="red">attack</span>!';
 if($planetOwner->hasAlliance())
 {
-	$db->query('SELECT account_id FROM player WHERE game_id=' . $planetOwner->getGameID() . 
+	$db->query('SELECT account_id FROM player WHERE game_id=' . $planetOwner->getGameID() .
 			' AND alliance_id=' . $planetOwner->getAllianceID()); //No limit in case they are over limit - ie NHA
 	while ($db->nextRecord())
 		SmrPlayer::sendMessageFromPlanet($planet->getGameID(),$db->getField('account_id'),$planetAttackMessage);
 }
 else
 	SmrPlayer::sendMessageFromPlanet($planet->getGameID(),$planetOwner->getAccountID(),$planetAttackMessage);
-
-$planet->update();
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
