@@ -25,7 +25,7 @@ if(isset($GameID))
 	<a href="map_galaxy.php" target="gal_map">Galaxy Map</a><br />
 	<br />
 	<a href="<?php echo $TraderLink; ?>">Trader</a><br />
-	<a href="<?php echo $AllianceLink; ?>">Alliance</a><br />
+	<a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>">Alliance</a><br />
 	<a href="<?php echo $PoliticsLink; ?>">Politics</a><br />
 	<a href="<?php echo $CombatLogsLink; ?>"><span>Combat Logs</span></a>
 	<br />
