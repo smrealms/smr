@@ -13,7 +13,7 @@ else
 
 if(!isset($var['SortKey']))
 {
-	SmrSession::updateVar('SortKey','Experience');
+	SmrSession::updateVar('SortKey','getExperience');
 }
 if(!isset($var['SortDesc']))
 {
@@ -119,9 +119,9 @@ $PHP_OUTPUT.= '
 <table class="standard fullwidth">
 	<tr>
 	<th>&nbsp;</th>
-	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'Name',$var['SortKey']=='Name'?!$var['SortDesc']:false).'">Trader Name</a></th>
-	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'Race',$var['SortKey']=='Race'?!$var['SortDesc']:false).'">Race</a></th>
-	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'Experience',$var['SortKey']=='Experience'?!$var['SortDesc']:true).'">Experience</a></th>
+	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'getPlayerName',$var['SortKey']=='getPlayerName'?!$var['SortDesc']:false).'">Trader Name</a></th>
+	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'getRaceName',$var['SortKey']=='getRaceName'?!$var['SortDesc']:false).'">Race</a></th>
+	<th><a href="'.Globals::getAllianceRosterHREF($alliance_id,'getExperience',$var['SortKey']=='getExperience'?!$var['SortDesc']:true).'">Experience</a></th>
 ';
 
 if($varAction == 'Show Alliance Roles') {
@@ -140,21 +140,9 @@ if ($db2->nextRecord()) $allowed = TRUE;
 
 $alliancePlayers =& SmrPlayer::getAlliancePlayers(SmrSession::$game_id,$alliance_id);
 
-switch($var['SortKey'])
+if($var['SortKey']!='getPlayerName' && $var['SortDesc']!==true)
 {
-	case 'Experience':
-		if($var['SortDesc']===true) //We are sorted this way by default.
-		{
-			break;
-		}
-	case 'Name':
-	case 'Race':
-		uasort($alliancePlayers,array('AbstractSmrPlayer','Compare'.$var['SortKey']));
-		if($var['SortDesc']===true)
-		{
-			$alliancePlayers = array_reverse($alliancePlayers);
-		}
-	break;
+	Sorter::sortByNumMethod($alliancePlayers, $var['SortKey'], $var['SortDesc']);
 }
 
 

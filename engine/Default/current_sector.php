@@ -5,7 +5,7 @@ if($player->isLandedOnPlanet())
 require_once(get_file_loc('SmrSector.class.inc'));
 $sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 
-$template->assign('ThisSector',$sector);
+$template->assignByRef('ThisSector',$sector);
 $template->assign('SpaceView',true);
 
 $template->assign('PageTopic','Current Sector: ' . $player->getSectorID() . ' (' .$sector->getGalaxyName() . ')');
@@ -65,7 +65,7 @@ foreach($links as $key => $linkArray)
 	}
 }
 
-$template->assign('Sectors',$links);
+$template->assignByRef('Sectors',$links);
 
 doTickerAssigns($template, $player, $db);
 

@@ -44,11 +44,6 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $weapons;
 	}
 	
-	public static function compareName($a,$b)
-	{
-		return compare($a->getName(),$b->getName());
-	}
-	
 	protected function __construct($gameTypeID,$weaponTypeID)
 	{
 		self::initialiseDatabase();
@@ -359,20 +354,20 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 //{
 //	//this will be used in the future to display more accurate info for the person using the weapon
 //	global TIME,$GAME_ID, $WEAPONS, $ACCURACY_MOD, $WEAPON_DAMAGE_MOD, $BOMBARDMENT_MOD, $GADGETS, $INCREASED_ACC, $INCREASED_MAN, $INCREASED_DAMAGE_GADGET_VALUE, $WEAPON_RESTRICTIONS,$INCREASED_PLANET_DAMAGE_GADGET_VALUE;
-//	
+//
 //	//get the weapon restrictions
 //	$res_rev = array();
 //	foreach ($WEAPON_RESTRICTIONS as $res_id => $res_name) $res_rev[$res_name] = $res_id;
-//	
+//
 //	//get base weapon
 //	$this_weapon = $WEAPONS[$weapon_id];
-//	
+//
 //	//check for special restrictions/abilities
 //	if (in_array($res_rev['Raiding Damage Only'],$this_weapon['Restriction'])) $this_weapon['Raid Only'] = 'TRUE';
 //	else $this_weapon['Raid Only'] = 'FALSE';
 //	if (in_array($res_rev['May Damage Fleet'],$this_weapon['Restriction'])) $this_weapon['May Damage Fleet'] = 'TRUE';
 //	else $this_weapon['May Damage Fleet'] = 'FALSE';
-//	
+//
 //	//Determine New Damage
 //	//do they have the raid damage gadget and are raiding?
 //	if (gadget_equipped($weaponPlayer,'Weapon Accelerator') && ($purpose == 'PortRaid' || $purpose == 'PlanetRaid'))
@@ -411,8 +406,8 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 //	if ($diminishing <= 0) $diminishing = 0.00001;
 //	$this_weapon['Shield Damage'] = ceil($diminishing * $this_weapon['Shield Damage']);
 //	$this_weapon['Armour Damage'] = ceil($diminishing * $this_weapon['Armour Damage']);
-//	
-//	
+//
+//
 //	return $this_weapon;
 //}
 }

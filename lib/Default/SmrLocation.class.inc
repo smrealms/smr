@@ -66,11 +66,6 @@ class SmrLocation
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
 	
-	public static function compareName($a,$b)
-	{
-		return compare($a->getName(),$b->getName());
-	}
-	
 	protected function __construct($locationTypeID)
 	{
 		$this->db = new SmrMySqlDatabase();
