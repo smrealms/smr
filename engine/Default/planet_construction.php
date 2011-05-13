@@ -11,13 +11,14 @@ include(get_file_loc('menue.inc'));
 create_planet_menue();
 
 $PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+$PHP_OUTPUT.=('<p>You are currently building: ');
 if ($planet->hasCurrentlyBuilding())
 {
-	$PHP_OUTPUT.=('<p>You are currently building:<br />');
+	$PHP_OUTPUT.=('<br />');
 	$currentlyBuilding = $planet->getCurrentlyBuilding();
 	foreach($currentlyBuilding as $building)
 	{
-		$PHP_OUTPUT.=($PLANET_BUILDINGS[$building['ConstructionID']]['Name'].' which will finish in ');
+		$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['ConstructionID']]['Name'].' which will finish in ';
 	
 		$PHP_OUTPUT.=format_time($building['TimeRemaining']);
 	
@@ -30,7 +31,10 @@ if ($planet->hasCurrentlyBuilding())
 	}
 }
 else
-	$PHP_OUTPUT.=('<p>You are currently building: Nothing</p>');
+{
+	$PHP_OUTPUT.='Nothing';
+}
+$PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=('<div align="center">');

@@ -90,7 +90,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 
 function &xmlify(&$str)
 {
-	return str_replace('&nbsp;','&#160;',htmlentities($str,ENT_COMPAT,'utf-8'));
+	$xml = str_replace('&nbsp;','&#160;',htmlentities($str,ENT_COMPAT,'utf-8'));
+	return $xml;
 }
 	
 function &bbifyMessage($message,$noLinks=false)
