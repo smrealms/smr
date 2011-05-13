@@ -102,7 +102,7 @@ if(isset($GameID))
 	{
 		echo $ThisPlayer->getCustomShipName(); ?><br /><?php
 	} ?>
-	Rating : <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
+	Rating : <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo get_colored_text_range($ThisShip->getDefenseRating(), $ThisShip->getMaxDefenseRating()); ?></span><br />
 	Shields : <span id="shields"><?php echo get_colored_text_range($ThisShip->getShields(),$ThisShip->getMaxShields()); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
 	Armour : <span id="armour"><?php echo get_colored_text_range($ThisShip->getArmour(),$ThisShip->getMaxArmour()); ?>/<?php echo $ThisShip->getMaxArmour(); ?></span><br />
 	<a href="<?php echo $HardwareLink; ?>">CIJSD</a> : <?php
