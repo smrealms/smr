@@ -113,7 +113,7 @@ foreach ($planet->getStockpile() as $id => $amount)
 {
 	if ($amount > 0)
 	{
-		$PHP_OUTPUT.=('<li><img src="' . $GOODS[$id]['ImageLink'] . '" title="' . $GOODS[$id]['Name'] . '" alt="' . $GOODS[$id]['Name'] . '" />: '.$amount.'</li>');
+		$PHP_OUTPUT.=('<li><img src="' . $GOODS[$id]['ImageLink'] . '" title="' . $GOODS[$id]['Name'] . '" alt="' . $GOODS[$id]['Name'] . '" />&nbsp;' . $GOODS[$id]['Name'] . ': '.$amount.'</li>');
 
 	}
 }
