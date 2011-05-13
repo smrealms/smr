@@ -355,7 +355,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		if($value < 0)
 		{
 			$r_component='ff';
-			$g_component = dechex(abs($normalisedValue));
+			$g_component = dechex(255+$normalisedValue);
 			if(strlen($g_component) == 1)
 			{
 				$g_component = '0' . $g_component;
@@ -364,7 +364,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		else if($value > 0)
 		{
 			$g_component='ff';
-			$r_component = dechex(abs($normalisedValue));
+			$r_component = dechex(255-$normalisedValue);
 			if(strlen($r_component) == 1)
 			{
 				$r_component = '0' . $r_component;
