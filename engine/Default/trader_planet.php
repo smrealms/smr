@@ -69,9 +69,9 @@ if ($db->getNumRows() > 0)
 			if ($amount > 0)
 			{
 				// Get current good
-				$Good = Globals::getGood($id);
+				$good = Globals::getGood($id);
 
-				$PHP_OUTPUT.= '<img src="' . $Good['ImageLink'] . '" title="' . $Good['Name'] . '" alt="' . $Good['Name'] . '" />&nbsp;';
+				$PHP_OUTPUT.= '<img src="' . $good['ImageLink'] . '" title="' . $good['Name'] . '" alt="' . $good['Name'] . '" />&nbsp;';
 				$PHP_OUTPUT.= $amount;
 				$PHP_OUTPUT.= '<br />';
 				$supply = true;
