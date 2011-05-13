@@ -9,6 +9,11 @@ class Sorter
 		return (self::$reverseOrder?-1:1)*strcasecmp($a->{self::$sortKey}, $b->{self::$sortKey});
 	}
 
+	private static function cmpNumElement($a, $b)
+	{
+		return self::cmpNum($a[self::$sortKey], $b[self::$sortKey]);
+	}
+
 	private static function cmpNumProp($a, $b)
 	{
 		return self::cmpNum($a->{self::$sortKey}, $b->{self::$sortKey});
@@ -30,6 +35,13 @@ class Sorter
 		self::$sortKey = $property;
 		self::$reverseOrder = $reverseOrder;
 		usort($array, array(__CLASS__, 'cmpStrProp'));
+	}
+
+	public static function sortByNumElement(array &$array, $property, $reverseOrder = false)
+	{
+		self::$sortKey = $property;
+		self::$reverseOrder = $reverseOrder;
+		uasort($array, array(__CLASS__, 'cmpNumElement'));
 	}
 
 	public static function sortByNumProp(array &$array, $property, $reverseOrder = false)
