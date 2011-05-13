@@ -34,7 +34,7 @@ else
 $rate = pow($base,2);
 
 // grant for all days we didn't got
-while ($planet->maturity < $curr_time && $planet->maturity > 0)
+while ($planet->getMaturity() < $curr_time && $planet->getMaturity() > 0)
 {
 	// calc the interest for the time
 	$interest = $planet->getBonds() * $rate - $planet->getBonds();
@@ -46,7 +46,7 @@ while ($planet->maturity < $curr_time && $planet->maturity > 0)
 	$planet->setBonds(0);
 
 	// reset maturity
-	$planet->maturity = 0;
+	$planet->setMaturity(0);
 
 	// update planet
 	$planet->update();

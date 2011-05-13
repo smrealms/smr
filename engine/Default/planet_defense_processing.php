@@ -95,10 +95,6 @@ elseif ($action == 'Planet')
 else
     create_error('You must choose if you want to transfer to planet or to the ship!');
 
-// update both
-$planet->update();
-
-$ship->update_hardware();
 $ship->removeUnderAttack();
 
 forward(create_container('skeleton.php', 'planet_defense.php'));

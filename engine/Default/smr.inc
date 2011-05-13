@@ -582,6 +582,7 @@ function do_voodoo()
 		SmrPlayer::savePlayers();
 		SmrForce::saveForces();
 		SmrPort::savePorts();
+		SmrPlanet::savePlanets();
 		release_lock();
 	}
 	

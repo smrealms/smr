@@ -53,7 +53,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 	$PHP_OUTPUT.=('<td align="center">');
 	$PHP_OUTPUT.=($planet->getBuilding($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('/');
-	$PHP_OUTPUT.=($planet->max_construction[$planetBuilding['ConstructionID']]);
+	$PHP_OUTPUT.=($planet->getMaxBuildings($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
 	$missing_good = false;
@@ -81,7 +81,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	if (!$missing_good && !$missing_credits && !$planet->hasCurrentlyBuilding() && $planet->getBuilding($planetBuilding['ConstructionID']) < $planet->max_construction[$planetBuilding['ConstructionID']])
+	if (!$missing_good && !$missing_credits && !$planet->hasCurrentlyBuilding() && $planet->getBuilding($planetBuilding['ConstructionID']) < $planet->getMaxBuildings($planetBuilding['ConstructionID']))
 	{
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
