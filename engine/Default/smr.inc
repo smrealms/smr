@@ -337,7 +337,8 @@ function create_container($file, $body = '', array $extra = array(), $remainingP
 	return $container;
 }
 
-function create_link($container, $text, $class=null) {
+function create_link($container, $text, $class=null)
+{
 	return '<a'.($class==null?'':' class="'.$class.'"').' href="' . (is_array($container)?SmrSession::get_new_href($container):$container) . '">' . $text . '</a>';
 }
 
@@ -376,7 +377,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		}
 		$colour = $r_component . $g_component . '00';
 		if ($return_type == 'Color') return $colour;
-		return '<span style="color:#' . $colour . '">' . ($text==null?$value:$text) . '</span>';
+		return '<span style="color:#' . $colour . '">' . ($text==null?number_format($value):$text) . '</span>';
 	}
 	elseif ($type == 'IRC')
 	{
@@ -385,7 +386,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		elseif ($value == -255) $colour = '[k04]';
 		else $colour = '[k08]';
 		if ($return_type == 'Color') return $colour;
-		return $colour . ($text==null?$value:$text);
+		return $colour . ($text==null?number_format($value):$text);
 	}
 }
 

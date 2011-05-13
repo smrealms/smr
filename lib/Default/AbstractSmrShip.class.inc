@@ -266,6 +266,11 @@ abstract class AbstractSmrShip
 		return round((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
 	}
 	
+	public function getMaxDefenseRating()
+	{
+		return round((($this->getMaxShields() + $this->getMaxArmour()) / 100) + (($this->getMaxCDs() * 3) / 100));
+	}
+	
 	public function shield_low() { return floor($this->getShields() / 100) * 100; }
 	public function shield_high() { return $this->shield_low() + 100; }
 	public function armour_low() { return floor($this->getArmour() / 100) * 100; }

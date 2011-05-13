@@ -183,7 +183,7 @@
 									{
 										echo $ThisPlayer->getCustomShipName(); ?><br /><?php
 									} ?>
-									Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo number_format($ThisShip->getDefenseRating()); ?></span><br />
+									Rating: <span id="offense"><?php echo number_format($ThisShip->getAttackRating()); ?></span>/<span id="defense"><?php echo get_colored_text_range($ThisShip->getDefenseRating(), $ThisShip->getMaxDefenseRating()); ?></span><br />
 								</div><br />
 								
 								Shields: <span id="shields"><?php echo get_colored_text_range($ThisShip->getShields(),$ThisShip->getMaxShields()); ?>/<?php echo $ThisShip->getMaxShields(); ?></span><br />
@@ -234,7 +234,7 @@
 									<a class="nav" href="<?php echo $DropCDLink; ?>">
 										<span class="bold">[X]</span>
 									</a><?php
-								} ?>Combat : <?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs()); ?>/<?php echo $ThisShip->getMaxCDs(); ?><br /><?php
+								} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs()); ?>/<?php echo $ThisShip->getMaxCDs(); ?></span><br /><?php
 			
 								if(isset($DropSDLink))
 								{ ?>
