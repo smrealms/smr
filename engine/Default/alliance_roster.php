@@ -140,7 +140,7 @@ if ($db2->nextRecord()) $allowed = TRUE;
 
 $alliancePlayers =& SmrPlayer::getAlliancePlayers(SmrSession::$game_id,$alliance_id);
 
-if($var['SortKey']!='getPlayerName' && $var['SortDesc']!==true)
+if($var['SortKey']!='getExperience' || $var['SortDesc']!==true)
 {
 	Sorter::sortByNumMethod($alliancePlayers, $var['SortKey'], $var['SortDesc']);
 }
