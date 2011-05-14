@@ -73,11 +73,11 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			//get base for ports that dont happen to trade that good
 			$query = new SmrMySqlDatabase();
 			$GOODS = Globals::getGoods();
-			$fine = $port->getLevel() * (($ship->getCargo(5) * $GOODS[5]['BasePrice']) +
+			$fine = $totalFine = $port->getLevel() * (($ship->getCargo(5) * $GOODS[5]['BasePrice']) +
 									($ship->getCargo(9) * $GOODS[9]['BasePrice']) +
 									($ship->getCargo(12) * $GOODS[12]['BasePrice']));
 			$player->increaseHOF($ship->getCargo(5)+$ship->getCargo(9)+$ship->getCargo(12),array('Trade','Search','Caught','Goods Confiscated'), HOF_PUBLIC);
-			$player->increaseHOF($fine,array('Trade','Search','Caught','Amount Fined'), HOF_PUBLIC);
+			$player->increaseHOF($totalFine,array('Trade','Search','Caught','Amount Fined'), HOF_PUBLIC);
 			if($fine > $player->getCredits())
 			{
 				$fine -= $player->getCredits();
@@ -97,7 +97,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			}
 
 			$PHP_OUTPUT.=('<span class="red">The Federation searched your ship and illegal goods were found!</span><br />');
-			$PHP_OUTPUT.=('<span class="red">All illegal goods have been removed from your ship and you have been fined ' . number_format($fine) . ' credits</span>');
+			$PHP_OUTPUT.=('<span class="red">All illegal goods have been removed from your ship and you have been fined ' . number_format($totalFine) . ' credits</span>');
 
 			//lose align and the good your carrying along with money
 			$player->decreaseAlignment(5);
@@ -105,7 +105,6 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			$ship->setCargo(5,0);
 			$ship->setCargo(9,0);
 			$ship->setCargo(12,0);
-			$ship->update_cargo();
 			$account->log(6, 'Player gets caught with illegals', $player->getSectorID());
 
 		}
