@@ -67,7 +67,6 @@ class SmrForce
 		{
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID,$sectorID));
 			$db = new SmrMySqlDatabase();
-			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 			$db->query('SELECT owner_id FROM sector_has_forces WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID.' ORDER BY expire_time ASC');
 			$forces = array();
 			while($db->nextRecord())
