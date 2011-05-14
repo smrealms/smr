@@ -227,7 +227,7 @@ elseif ($submit == 'Create Ports and Mines')
 	foreach ($races as &$race)
 	{
 		$totalRaceDist+=$_REQUEST['race' . $race['Race ID']];
-		$numRacePorts[$race['Race ID']] = floor($_REQUEST['race' . $race['Race ID']] / 100 * $totalPorts);
+		$numRacePorts[$race['Race ID']] = ceil($_REQUEST['race' . $race['Race ID']] / 100 * $totalPorts);
 		$assignedPorts+=$numRacePorts[$race['Race ID']];
 		if($numRacePorts[$race['Race ID']]==0)
 			unset($numRacePorts[$race['Race ID']]);
@@ -254,7 +254,7 @@ elseif ($submit == 'Create Ports and Mines')
 		for ($i=1;$i<=9;$i++)
 		{
 			//iterate once for each port of this level
-			for ($j=1;$j<=$_REQUEST['port' . $i];$j++)
+			for ($j=0;$j<$_REQUEST['port' . $i];$j++)
 			{
 				//get a sector for this port
 				$galSector =& $galSectors[array_rand($galSectors)];
