@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
+require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
 $game_name = $var['game_name'];
 $game_id = $var['game_id'];
 $template->assign('PageTopic',$game_name.' - Extended Stats');
@@ -9,16 +9,13 @@ $PHP_OUTPUT.=('<div align=center>');
 if (empty($action)) {
 
 	$PHP_OUTPUT.=('Click a link to view those stats.<br /><br />');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'games_previous.php';
+	$container = create_container('skeleton.php','games_previous.php');
 	$container['game_id'] = $game_id;
 	$container['game_name'] = $game_name;
+	$container['HistoryDatabase'] = $var['HistoryDatabase'];
 	$PHP_OUTPUT.=create_link($container, '<b>Basic Game Stats</b>');
 	$PHP_OUTPUT.=('<br />');
 	$container['body'] = 'games_previous_detail.php';
-	$container['game_id'] = $game_id;
-	$container['game_name'] = $game_name;
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=create_submit('Top Mined Sectors');
 	$PHP_OUTPUT.=('<br />');
@@ -46,16 +43,15 @@ if (empty($action)) {
 	elseif ($action == 'Top Alliance Kills') { $sql = 'kills'; $from = 'alliance'; $dis = 'Alliance Kills'; $gr = 'dummy';}
 	elseif ($action == 'Top Alliance Deaths') { $sql = 'deaths'; $from = 'alliance'; $dis = 'Alliance Deaths'; $gr = 'dummy';}
 
-	$db2 = new SmrHistoryMySqlDatabase();
+	$db2 = new $var['HistoryDatabase']();
 	if (empty($gr)) {
 		
 		$db2->query('SELECT '.$sql.' as val, sector_id FROM '.$from.' WHERE game_id = '.$game_id.' '.$gr.' ORDER BY '.$sql.' DESC LIMIT 30');
 	
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'games_previous_detail.php';
+		$container = create_container('skeleton.php', 'games_previous_detail.php');
 		$container['game_id'] = $game_id;
 		$container['game_name'] = $game_name;
+		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Sector ID</th><th align=center>'.$dis.'</th></tr>');
@@ -71,12 +67,11 @@ if (empty($action)) {
 	} else {
 		$sql = 'SELECT alliance_id, '.$sql.' as val FROM '.$from.' WHERE game_id = '.$game_id.' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC LIMIT 30';
 		$db2->query($sql);
-		$db = new SmrHistoryMySqlDatabase();
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'games_previous_detail.php';
+		$db = new $var['HistoryDatabase']();
+		$container = create_container('skeleton.php','games_previous_detail.php');
 		$container['game_id'] = $game_id;
 		$container['game_name'] = $game_name;
+		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Alliance ID</th><th align=center>'.$dis.'</th></tr>');

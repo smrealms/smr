@@ -1,10 +1,9 @@
 <?php
-require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
+require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
 //offer a back button
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'games_previous.php';
-$db = new SmrHistoryMySqlDatabase();
+$container = create_container('skeleton.php', 'games_previous.php');
+$container['HistoryDatabase'] = $var['HistoryDatabase'];
+$db = new $var['HistoryDatabase']();
 $db->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
 $db->nextRecord();
 $game_id = $db->getField('game_id');
@@ -36,7 +35,6 @@ $PHP_OUTPUT.= '
 $db->query('SELECT * FROM player WHERE alliance_id = '.$id.' AND game_id = '.$game_id.' ORDER BY experience DESC');
 while ($db->nextRecord())
 {
-	
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align=center>' . stripslashes($db->getField('player_name')) . '</td>');
 	$PHP_OUTPUT.=('<td align=center>' . $db->getField('experience') . '</td>');
@@ -46,7 +44,6 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<td align=center>' . $db->getField('deaths') . '</td>');
 	$PHP_OUTPUT.=('<td align=center>' . $db->getField('bounty') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
-	
 }
 $PHP_OUTPUT.=('</table></div>');
 $db = new SmrMySqlDatabase();
