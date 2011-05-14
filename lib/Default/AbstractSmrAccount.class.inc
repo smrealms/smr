@@ -108,7 +108,7 @@ abstract class AbstractSmrAccount
 	function __construct($accountID)
 	{
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM account WHERE account_id = '.$accountID.' LIMIT 1');	
+		$this->db->query('SELECT * FROM account WHERE account_id = '.$accountID.' LIMIT 1');
 		
 		if ($this->db->nextRecord())
 		{
@@ -217,9 +217,6 @@ abstract class AbstractSmrAccount
 	
 	function update_ip()
 	{
-		// get time
-		$time = TIME;
-		
 		// try to get a real ip first
 		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
 			$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
@@ -228,10 +225,9 @@ abstract class AbstractSmrAccount
 		
 		// more than 50 elements in it?
 		
-		$this->db->query('SELECT * FROM account_has_ip WHERE account_id = '.$this->account_id.' ORDER BY time ASC');
+		$this->db->query('SELECT account_id,time,ip FROM account_has_ip WHERE account_id = '.$this->account_id.' ORDER BY time ASC');
 		if ($this->db->getNumRows() > 50 && $this->db->nextRecord())
 		{
-			
 			$delete_id = $this->db->getField('account_id');
 			$delete_time = $this->db->getField('time');
 			$delete_ip = $this->db->getField('ip');
@@ -240,7 +236,6 @@ abstract class AbstractSmrAccount
 				WHERE account_id = '.$delete_id.' AND
 				time = '.$delete_time.' AND
 				ip = '.$this->db->escapeString($delete_ip));
-			
 		}
 		list($fi,$se,$th,$fo) = preg_split('/[.\s,]/', $curr_ip, 4);
 		if ($curr_ip != 'unknown' && $curr_ip != 'unknown...' && $curr_ip != 'unknown, unknown')
@@ -250,9 +245,7 @@ abstract class AbstractSmrAccount
 		} else $host = 'unknown';
 		
 		// save...first make sure there isn't one for these keys (someone could double click and get error)
-		$this->db->query('SELECT * FROM account_has_ip WHERE account_id = '.$this->account_id.' AND time = '.$time);
-		if (!$this->db->getNumRows())
-			$this->db->query('INSERT INTO account_has_ip (account_id, time, ip, host) VALUES ('.$this->account_id.', '.$time.', '.$this->db->escapeString($curr_ip).', '.$this->db->escapeString($host).')');
+		$this->db->query('REPLACE INTO account_has_ip (account_id, time, ip, host) VALUES ('.$this->account_id.', '.TIME.', '.$this->db->escapeString($curr_ip).', '.$this->db->escapeString($host).')');
 	}
 	
 	public function update_last_login()
@@ -543,7 +536,7 @@ abstract class AbstractSmrAccount
 		// send him the message
 		$db->query('INSERT INTO message_boxes
 			(box_type_id,game_id,message_text,
-			sender_id,send_time) VALUES (' . 
+			sender_id,send_time) VALUES (' .
 			$boxTypeID . ',' .
 			$gameID . ',' .
 			$db->escapeString($message) . ',' .
