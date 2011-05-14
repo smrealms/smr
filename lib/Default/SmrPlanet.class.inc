@@ -674,10 +674,10 @@ class SmrPlanet
 				$this->db->query('SELECT construction_id, max_construction FROM planet_construction');
 				while ($this->db->nextRecord())
 				{
-					$construction_id	= $this->db->getField('construction_id');
+					$constructionID	= $this->db->getField('construction_id');
 					$maxConstruction	= $this->db->getField('max_construction');
 
-					$this->maxConstruction[$construction_id] = $maxConstruction;
+					$this->maxConstruction[$constructionID] = $maxConstruction;
 				}
 			}
 			if($buildingTypeID===false)
@@ -809,25 +809,56 @@ class SmrPlanet
 		return count($this->getCurrentlyBuilding()) > 0;
 	}
 
-	function startBuilding($constructor_id,$construction_id)
+	function canBuild(AbstractSmrPlayer &$constructor, $constructionID)
 	{
+		if($planet->hasCurrentlyBuilding())
+		{
+			return 'There is already a building in progress!';
+		}
+		if($planet->getBuilding($constructionID) >= $planet->getMaxBuildings($constructionID))
+		{
+			return 'This planet has reached the maximum buildings of that type.';
+		}
 		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+		if($constructor->getCredits() < $PLANET_BUILDINGS[$constructionID]['Credit Cost'])
+		{
+			return 'You do not have enough credits.';
+		}
 		// take the goods that are needed
-		foreach($PLANET_BUILDINGS[$construction_id]['Goods'] as $goodID => $amount)
+		foreach($PLANET_BUILDINGS[$constructionID]['Goods'] as $goodID => $amount)
+		{
+			if ($this->getStockpile($goodID) < $amount)
+			{
+				return 'There are not enough goods available.';
+			}
+		}
+		return true;
+	}
+
+	function startBuilding(AbstractSmrPlayer &$constructor,$constructionID)
+	{
+		if(($message = $this->canBuild($constructor, $constructionID)) !== true)
+		{
+			throw new Exception('Unable to start building: '.$message);
+		}
+		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
+		$constructor->decreaseCredits($PLANET_BUILDINGS[$constructionID]['Credit Cost']);
+		// take the goods that are needed
+		foreach($PLANET_BUILDINGS[$constructionID]['Goods'] as $goodID => $amount)
 		{
 			$this->decreaseStockpile($goodID,$amount);
 		}
 
 		// gets the time for the buildings
-		$time_complete = TIME + round($PLANET_BUILDINGS[$construction_id]['Build Time'] / Globals::getGameSpeed($this->getGameID()));
+		$time_complete = TIME + round($PLANET_BUILDINGS[$constructionID]['Build Time'] / Globals::getGameSpeed($this->getGameID()));
 
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
-												'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$construction_id.', '.$constructor_id.','.$time_complete.')');
+												'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$constructionID.', '.$constructor->getAccountID().','.$time_complete.')');
 
 		$this->currentlyBuilding[$this->db->getInsertID()] = array(
 			'BuildingSlotID' => $this->db->getInsertID(),
-			'ConstructionID' => $construction_id,
-			'ConstructorID' => $constructor_id,
+			'ConstructionID' => $constructionID,
+			'ConstructorID' => $constructor->getAccountID(),
 			'Finishes' => $time_complete,
 			'TimeRemaining' => $time_complete - TIME
 		);
