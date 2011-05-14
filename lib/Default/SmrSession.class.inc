@@ -141,7 +141,11 @@ class SmrSession
 		else
 		{
 			// create a new session id
-			self::$session_id = md5 (uniqid (mt_rand()) );
+			do
+			{
+				self::$session_id = md5 (uniqid (mt_rand()) );
+				self::$db->query('SELECT 1 FROM active_session WHERE session_id = '.self::$db->escapeString(self::$session_id).' LIMIT 1');
+			} while(self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
 			setcookie('session_id', self::$session_id);
 		}
 
