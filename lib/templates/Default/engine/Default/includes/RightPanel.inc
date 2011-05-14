@@ -116,7 +116,7 @@ if(isset($GameID))
 	else echo '-';
 	if($ThisShip->hasDCS()) echo '*';
 	else echo '-';
-	?><br /><?php
+	?><br /><br /><?php
 	if($ThisShip->hasCloak())
 	{ ?>
 		<a href="<?php echo $HardwareLink; ?>"><?php
@@ -138,7 +138,6 @@ if(isset($GameID))
 		</a><br />
 		<br /><?php
 	} ?>
-	<br />
 	<a href="<?php echo $ForceDropLink; ?>"><span class="bold">Forces</span></a><br /><?php
 	if(isset($DropMineLink))
 	{ ?>
