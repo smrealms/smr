@@ -150,8 +150,8 @@ AND player.account_id = alliance_bank_transactions.payee_id';
 
 
 if($maxValue > 0 && $minValue > 0) {
-	$query .= ' AND alliance_bank_transactions.transaction_id>=' . $minValue;
-	$query .= ' AND alliance_bank_transactions.transaction_id<=' . $maxValue;
+	$query .= ' AND alliance_bank_transactions.transaction_id>=' . $db->escapeNumber($minValue);
+	$query .= ' AND alliance_bank_transactions.transaction_id<=' . $db->escapeNumber($maxValue);
 	$query .= ' ORDER BY time LIMIT ';
 	$query .= (1 + $maxValue - $minValue);
 }
