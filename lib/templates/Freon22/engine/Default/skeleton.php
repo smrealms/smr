@@ -238,7 +238,7 @@
 									<a class="nav" href="<?php echo $DropCDLink; ?>">
 										<span class="bold">[X]</span>
 									</a><?php
-								} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs()); ?>/<?php echo $ThisShip->getMaxCDs(); ?></span><br /><?php
+								} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs(),number_format($ThisShip->getCDs()).'/'.number_format($ThisShip->getMaxCDs())); ?></span><br /><?php
 			
 								if(isset($DropSDLink))
 								{ ?>
