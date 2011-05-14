@@ -30,13 +30,20 @@
 								{
 									echo $Player->getCustomShipName();
 								}
-								if($Ship->hasActiveIllusion())
-								{
-									echo $Ship->getIllusionShipName();
-								}
-								else
+								if($ThisPlayer->traderMAPAlliance($Player) || !$Ship->hasActiveIllusion())
 								{
 									echo $Ship->getName();
+								}
+								if($Ship->hasActiveIllusion())
+								{
+									if($ThisPlayer->traderMAPAlliance($Player))
+									{
+										?>(<?php echo $Ship->getIllusionShipName(); ?>)<?php
+									}
+									else
+									{
+										echo $Ship->getIllusionShipName();
+									}
 								}
 								if($Ship->isCloaked())
 								{
@@ -44,22 +51,20 @@
 								} ?>
 							</td>
 							<td class="shrink center noWrap"><?php
+								if($ThisPlayer->traderMAPAlliance($Player) || !$Ship->hasActiveIllusion())
+								{
+									echo $Ship->getAttackRating(); ?> / <?php echo $Ship->getDefenseRating();
+								}
 								if($Ship->hasActiveIllusion())
 								{
-									echo $Ship->getIllusionAttack();
-								}
-								else
-								{
-									echo $Ship->getAttackRating();
-								}
-								echo ' / ';
-								if($Ship->hasActiveIllusion())
-								{
-									echo $Ship->getIllusionDefense();
-								}
-								else
-								{
-									echo $Ship->getDefenseRating();
+									if($ThisPlayer->traderMAPAlliance($Player))
+									{
+										?>(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)<?php
+									}
+									else
+									{
+										echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense();
+									}
 								} ?></td>
 							<td class="shrink center noWrap"><?php echo $Player->getLevelID() ?></td>
 							<td class="shrink center noWrap">
