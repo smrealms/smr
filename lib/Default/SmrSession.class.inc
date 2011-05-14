@@ -242,6 +242,7 @@ class SmrSession
 		{
 			self::$db->query('DELETE FROM active_session WHERE account_id=' . self::$account_id . ' LIMIT 1');
 			self::$db->query('INSERT INTO active_session (session_id, account_id, old_account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$account_id . ',' . (is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',' . self::$game_id . ',' . TIME . ',' . self::$db->escapeBinary($compressed)  . ')');
+			self::$generate = false;
 		}
 		$db = new SmrMySqlDatabase();
 	}
