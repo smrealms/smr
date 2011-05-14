@@ -32,11 +32,11 @@ SELECT
 sum(mines) as tot_mines,
 sum(combat_drones) as tot_cds,
 sum(scout_drones) as tot_sds
-FROM sector_has_forces,player
+FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
 WHERE player.game_id=' . $player->getGameID() . '
-AND sector_has_forces.game_id=' . $player->getGameID() . '
 AND player.alliance_id=' . $alliance_id . '
-AND sector_has_forces.owner_id=player.account_id');
+AND expire_time >= '.TIME);
+
 if ($db->nextRecord())
 {
 	$total['Mines'] = $db->getField('tot_mines');
@@ -50,6 +50,7 @@ FROM player
 JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
 WHERE player.game_id=' . $player->getGameID() . '
 AND player.alliance_id=' . $alliance_id . '
+AND expire_time >= '.TIME.'
 ORDER BY ' . $categorySQL . ', ' . $subcategory);
 
 $PHP_OUTPUT.= '<div align="center">';
