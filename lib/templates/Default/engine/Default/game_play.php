@@ -115,7 +115,7 @@ if(isset($Games['Previous']))
 		foreach($Games['Previous'] as $Game)
 		{ ?>
 			<tr>
-				<td width="35%"><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameStatsLink'])){ ?></a><?php } ?></td>
+				<td width="35%"><?php if(isset($Game['PreviousGameLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameLink'])){ ?></a><?php } ?></td>
 				<td><?php echo $Game['StartDate'] ?></td>
 				<td><?php echo $Game['EndDate'] ?></td>
 				<td><?php echo $Game['Speed'] ?></td>
