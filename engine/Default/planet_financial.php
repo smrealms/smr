@@ -84,9 +84,9 @@ if ($planet->getBonds() > 0) {
 
 	$PHP_OUTPUT.=('Right now there are ' . number_format($planet->getBonds()) . ' credits bonded');
 
-	if ($planet->maturity > 0) {
+	if ($planet->getMaturity() > 0) {
 
-		$maturity = $planet->maturity - $curr_time;
+		$maturity = $planet->getMaturity() - $curr_time;
 		$hours = floor($maturity / 3600);
 		$minutes = ceil(($maturity - ($hours * 3600)) / 60);
 
