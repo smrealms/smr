@@ -70,7 +70,6 @@ if ($db->getNumRows() > 0)
 			{
 				// Get current good
 				$good = Globals::getGood($id);
-
 				$PHP_OUTPUT.= '<img src="' . $good['ImageLink'] . '" title="' . $good['Name'] . '" alt="' . $good['Name'] . '" />&nbsp;';
 				$PHP_OUTPUT.= $amount;
 				$PHP_OUTPUT.= '<br />';
@@ -154,9 +153,9 @@ if ($player->hasAlliance())
 			foreach ($planet->getStockpile() as $id => $amount)
 				if ($amount > 0)
 				{
-					$db2->query('SELECT * FROM good WHERE good_id = '.$id);
-					if ($db2->nextRecord())
-						$PHP_OUTPUT.=($db2->getField('good_name') . ': '.$amount.'<br />');
+					$good = Globals::getGood($id);
+					$PHP_OUTPUT.= '<img src="' . $good['ImageLink'] . '" title="' . $good['Name'] . '" alt="' . $good['Name'] . '" />&nbsp;';
+					$PHP_OUTPUT.= $amount.'<br />';
 					$supply = true;
 				}
 
