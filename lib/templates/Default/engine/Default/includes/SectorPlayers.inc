@@ -59,7 +59,7 @@
 								{
 									if($ThisPlayer->traderMAPAlliance($Player))
 									{
-										?>(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)<?php
+										?> <span class="npcColor">(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)</span><?php
 									}
 									else
 									{
