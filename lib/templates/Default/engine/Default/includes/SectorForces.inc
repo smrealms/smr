@@ -2,7 +2,7 @@
 	<?php if($ThisSector->hasForces())
 	{
 		$Forces =& $ThisSector->getForces();
-		Sorter::sortByNumMethod($Forces,'getExpire',true);
+		Sorter::sortByNumMethod($Forces,'getExpire');
 		$RefreshAny = false; ?>
 		<table class="standard fullwidth csForces">
 			<tbody>
