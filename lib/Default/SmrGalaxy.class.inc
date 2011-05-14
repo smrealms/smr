@@ -104,10 +104,10 @@ class SmrGalaxy
 			if($this->isNew==false)
 			{
 				$this->db->query('UPDATE game_galaxy SET galaxy_name = '.$this->db->escapeString($this->getName()).
-										' width = '.$this->getWidth().
-										' height = '.$this->getHeight().
-										' galaxy_type = '.$this->db->escapeString($this->getGalaxyType()).
-										' max_force_time = '.$this->getMaxForceTime().
+										', width = '.$this->getWidth().
+										', height = '.$this->getHeight().
+										', galaxy_type = '.$this->db->escapeString($this->getGalaxyType()).
+										', max_force_time = '.$this->getMaxForceTime().
 								   ' WHERE game_id = '.$this->getGameID().
 										' AND galaxy_id = '.$this->getGalaxyID() . ' LIMIT 1');
 			}
