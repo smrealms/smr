@@ -1,6 +1,6 @@
 <?php
 
-require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
+require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
 $PHP_OUTPUT.=('<div align=center>');
 
 //topic
@@ -13,7 +13,7 @@ $template->assign('PageTopic','Viewing Old SMR '.$topic);
 if (!isset($game_name)) {
 
 	//list old games
-	$db2 = new SmrHistoryMySqlDatabase();
+	$db2 = new $var['HistoryDatabase']();
 	$db2->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, ' .
 				'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 				'FROM game ORDER BY game_id');
@@ -24,11 +24,10 @@ if (!isset($game_name)) {
 		while ($db2->nextRecord()) {
 
 			$id = $db2->getField('game_id');
-			$container = array();
-			$container['url'] = 'skeleton.php';
+			$container = create_container('skeleton.php','games_previous.php');
 			$container['game_id'] = $db2->getField('game_id');
 			$container['game_name'] = $db2->getField('game_name');
-			$container['body'] = 'games_previous.php';
+			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$name = $db2->getField('game_name');
 			$PHP_OUTPUT.=('<tr><td align=center>');
 			$PHP_OUTPUT.=create_link($container, $name.' ('.$id.')');
@@ -37,22 +36,20 @@ if (!isset($game_name)) {
 			$PHP_OUTPUT.=('<td align=center>' . date(DATE_DATE_SHORT,$db2->getField('end_date')) . '</td>');
 			$PHP_OUTPUT.=('<td align=center>' . $db2->getField('speed') . '</td>');
 			$PHP_OUTPUT.=('<td align=center>');
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'hall_of_fame_new.php';
+			$container = create_container('skeleton.php','hall_of_fame_new.php');
 			$container['game_id'] = $db2->getField('game_id');
 			$PHP_OUTPUT.=create_link($container, 'Hall of Fame');
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align=center>');
-			$container['body'] = 'games_previous_news.php';
+			$container = create_container('skeleton.php','games_previous_news.php');
 			$container['game_id'] = $db2->getField('game_id');
 			$container['game_name'] = $db2->getField('game_name');
+			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$PHP_OUTPUT.=create_link($container, 'Game News');
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align=center>');
 			$container['body'] = 'games_previous_detail.php';
-			$container['game_id'] = $db2->getField('game_id');
-			$container['game_name'] = $db2->getField('game_name');
+			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$PHP_OUTPUT.=create_link($container, 'Game Stats');
 			$PHP_OUTPUT.=('</td>');
 
@@ -65,7 +62,7 @@ if (!isset($game_name)) {
 
 	//code for the game goes in here
 
-	$db2 = new SmrHistoryMySqlDatabase();
+	$db2 = new $var['HistoryDatabase']();
 	$db2->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, type, ' .
 				'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 				'FROM game WHERE game_id = '.$game_id);

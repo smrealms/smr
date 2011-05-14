@@ -242,8 +242,9 @@ if(USE_COMPATIBILITY)
 				$games['Previous'][$index]['Speed'] = $historyDB->getField('speed');
 				// create a container that will hold next url and additional variables.
 				$container = array();
-				$container['game_id'] = $game_id;
 				$container['url'] = 'skeleton.php';
+				$container['game_id'] = $game_id;
+				$container['HistoryDatabase'] = $databaseClassName;
 				$container['game_name'] = $games['Previous'][$index]['Name'];
 				$container['body'] = 'games_previous.php';
 		
