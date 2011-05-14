@@ -765,10 +765,10 @@ class SmrPlanet
 		{
 			if($hasChanged===true)
 			{
-				if ($amount != 0)
+				if ($this->hasBuilding($id))
 				{
 					$this->db->query('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
-										'VALUES('.$this->game_id.', '.$this->sector_id.', '.$id.', '.$amount.')');
+										'VALUES('.$this->game_id.', '.$this->sector_id.', '.$id.', '.$this->getBuilding($id).')');
 				}
 				else
 				{
