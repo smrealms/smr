@@ -349,7 +349,14 @@ function create_submit_link($container, $text)
 
 function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type='Game', $return_type = 'Normal')
 {
-	$normalisedValue = round(510*max(0,min($maxValue,$value)-$minValue)/($maxValue-$minValue))-255;
+	if($maxValue-$minValue==0)
+	{
+		$normalisedValue = 0;
+	}
+	else
+	{
+		$normalisedValue = round(510*max(0,min($maxValue,$value)-$minValue)/($maxValue-$minValue))-255;
+	}
 	if ($type == 'Game')
 	{
 		if($value < 0)
