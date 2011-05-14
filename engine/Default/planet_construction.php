@@ -60,23 +60,19 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 	$PHP_OUTPUT.=($planet->getMaxBuildings($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	$missing_good = false;
 	foreach($planetBuilding['Goods'] as $goodID => $amount)
 	{
 		if ($planet->getStockpile($goodID) < $amount)
 		{
 			$PHP_OUTPUT.=('<span class="red">'.$amount.'-'.$GOODS[$goodID]['Name'].', </span>');
-			$missing_good = true;
 		}
 		else
 			$PHP_OUTPUT.=($amount.'-'.$GOODS[$goodID]['Name'].', ');
 	}
 
-	$missing_credits = false;
 	if ($player->getCredits() < $planetBuilding['Credit Cost'])
 	{
 		$PHP_OUTPUT.=('<span class="red">'.$planetBuilding['Credit Cost'].'-credits, </span>');
-		$missing_credits = true;
 	}
 	else
 		$PHP_OUTPUT.=($planetBuilding['Credit Cost'].'-credits, ');
@@ -85,12 +81,11 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	if (!$missing_good && !$missing_credits && !$planet->hasCurrentlyBuilding() && $planet->getBuilding($planetBuilding['ConstructionID']) < $planet->getMaxBuildings($planetBuilding['ConstructionID']))
+	if ($planet->canBuild($player, $planetBuilding['ConstructionID'])===true)
 	{
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
 		$container['construction_id'] = $planetBuilding['ConstructionID'];
-		$container['cost'] = $planetBuilding['Credit Cost'];
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('Build');
 		$PHP_OUTPUT.=('</form>');
@@ -114,7 +109,6 @@ foreach ($planet->getStockpile() as $id => $amount)
 	if ($amount > 0)
 	{
 		$PHP_OUTPUT.=('<li><img src="' . $GOODS[$id]['ImageLink'] . '" title="' . $GOODS[$id]['Name'] . '" alt="' . $GOODS[$id]['Name'] . '" />&nbsp;' . $GOODS[$id]['Name'] . ': '.$amount.'</li>');
-
 	}
 }
 $PHP_OUTPUT.=('</ul>');
