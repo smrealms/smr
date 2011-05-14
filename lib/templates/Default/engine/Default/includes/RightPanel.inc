@@ -118,21 +118,24 @@ if(isset($GameID))
 	else echo '-';
 	?><br /><?php
 	if($ThisShip->hasCloak())
-	{
-		if($ThisShip->isCloaked())
-		{
-			?><strong class="green">*** Cloak active ***</strong><?php
-		}
-		else
-		{
-			?><strong class="red">*** Cloak inactive ***</strong><?php
-		} ?>
-		<br /><br /><?php
+	{ ?>
+		<a href="<?php echo $HardwareLink; ?>"><?php
+			if($ThisShip->isCloaked())
+			{
+				?><strong class="green">*** Cloak active ***</strong><?php
+			}
+			else
+			{
+				?><strong class="red">*** Cloak inactive ***</strong><?php
+			} ?>
+		</a><br /><br /><?php
 	}
 	if($ThisShip->hasActiveIllusion())
 	{ ?>
-		<span class="npcColor"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
-		IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?><br />
+		<a href="<?php echo $HardwareLink; ?>">
+			<span class="npcColor"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
+			IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?>
+		</a><br />
 		<br /><?php
 	} ?>
 	<br />
