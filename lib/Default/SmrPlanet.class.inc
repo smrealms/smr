@@ -811,11 +811,11 @@ class SmrPlanet
 
 	function canBuild(AbstractSmrPlayer &$constructor, $constructionID)
 	{
-		if($planet->hasCurrentlyBuilding())
+		if($this->hasCurrentlyBuilding())
 		{
 			return 'There is already a building in progress!';
 		}
-		if($planet->getBuilding($constructionID) >= $planet->getMaxBuildings($constructionID))
+		if($this->getBuilding($constructionID) >= $this->getMaxBuildings($constructionID))
 		{
 			return 'This planet has reached the maximum buildings of that type.';
 		}
@@ -908,7 +908,7 @@ class SmrPlanet
 
 	public function isInhabitable()
 	{
-		return $this->inhabitable_time<= TIME;
+		return $this->inhabitableTime<= TIME;
 	}
 
 	public function isClaimed()
