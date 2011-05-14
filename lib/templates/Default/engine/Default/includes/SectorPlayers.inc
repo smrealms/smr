@@ -38,7 +38,7 @@
 								{
 									if($ThisPlayer->traderMAPAlliance($Player))
 									{
-										?>(<?php echo $Ship->getIllusionShipName(); ?>)<?php
+										?> <span class="npcColor">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
 									}
 									else
 									{
