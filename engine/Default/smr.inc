@@ -351,7 +351,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 {
 	if($maxValue-$minValue==0)
 	{
-		$normalisedValue = 0;
+		return $text==null?number_format($value):$text;
 	}
 	else
 	{
