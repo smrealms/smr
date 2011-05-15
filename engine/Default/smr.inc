@@ -359,7 +359,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 	}
 	if ($type == 'Game')
 	{
-		if($value < 0)
+		if($normalisedValue < 0)
 		{
 			$r_component='ff';
 			$g_component = dechex(255+$normalisedValue);
@@ -368,7 +368,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 				$g_component = '0' . $g_component;
 			}
 		}
-		else if($value > 0)
+		else if($normalisedValue > 0)
 		{
 			$g_component='ff';
 			$r_component = dechex(255-$normalisedValue);
