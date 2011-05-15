@@ -8,7 +8,7 @@ if(!$sector->isLinked($var['target_sector']))
 // initialize vars
 $scanSector =& SmrSector::getSector($player->getGameID(), $var['target_sector']);
 
-$template->assign('PageTopic','Sector Scan of #'.$sector->getSectorID().' ('.$sector->getGalaxyName().')');
+$template->assign('PageTopic','Sector Scan of #'.$scanSector->getSectorID().' ('.$scanSector->getGalaxyName().')');
 
 $friendly_forces = 0;
 $enemy_forces = 0;
