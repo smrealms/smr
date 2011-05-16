@@ -18,6 +18,7 @@ $total_player = $db->getNumRows();
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of players by their experience</p>');
+$PHP_OUTPUT.=('The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p>');
 $PHP_OUTPUT.=('<p>You are ranked '.$our_rank.' out of '.$total_player.'</p>');
 $PHP_OUTPUT.=('<table class="standard" width="95%">');
 $PHP_OUTPUT.=('<tr>');
@@ -33,20 +34,25 @@ $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER 
 $rank = 0;
 while ($db->nextRecord())
 {
-    // get current player
+    // get current account and player
+    $curr_account =& SmrAccount::getAccount($db->getField('account_id'));
     $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), SmrSession::$game_id);
+
     // increase rank counter
     $rank++;
 
-    $PHP_OUTPUT.=('<tr>');
-    $PHP_OUTPUT.=('<td valign="top" align="center"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>'.$rank.'</td>');
-    $PHP_OUTPUT.=('<td valign="top"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>'.$curr_player->getLevelName().' ');
+    $class='';
+    if ($player->equals($curr_player))
+        $class .= 'bold';
+    if($curr_account->isNewbie())
+        $class.= ' newbie';
+    if($class!='')
+        $class = ' class="'.trim($class).'"';
+    $PHP_OUTPUT.= '<tr'.$class.'>';
+
+    $PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
+
+    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
 
     $container = array();
     $container['url']        = 'skeleton.php';
@@ -55,15 +61,9 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 
     $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>'.$curr_player->getRaceName().'</td>');
+    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getRaceName().'</td>');
 
-    $PHP_OUTPUT.=('<td valign="top"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>');
+    $PHP_OUTPUT.=('<td valign="top">');
     if ($curr_player->hasAlliance())
     {
         $PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
@@ -71,10 +71,7 @@ while ($db->nextRecord())
     else
         $PHP_OUTPUT.=('(none)');
     $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top" align="right"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>' . number_format($curr_player->getExperience()) . '</td>');
+    $PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getExperience()) . '</td>');
     $PHP_OUTPUT.=('</tr>');
 }
 
@@ -130,20 +127,24 @@ $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER 
 $rank = $min_rank - 1;
 while ($db->nextRecord())
 {
-    // get current player
+    // get current account and player
+    $curr_account =& SmrAccount::getAccount($db->getField('account_id'));
     $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
+
     // increase rank counter
     $rank++;
 
-    $PHP_OUTPUT.=('<tr>');
-    $PHP_OUTPUT.=('<td valign="top" align="center"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>'.$rank.'</td>');
-    $PHP_OUTPUT.=('<td valign="top"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>'.$curr_player->getLevelName().' ');
+    $class='';
+    if ($player->equals($curr_player))
+        $class .= 'bold';
+    if($curr_account->isNewbie())
+        $class.= ' newbie';
+    if($class!='')
+        $class = ' class="'.trim($class).'"';
+    $PHP_OUTPUT.= '<tr'.$class.'>';
+
+    $PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
+    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
 
     $container = array();
     $container['url']        = 'skeleton.php';
@@ -152,15 +153,9 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 
     $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>'.$curr_player->getRaceName().'</td>');
+    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getRaceName().'</td>');
 
-    $PHP_OUTPUT.=('<td valign="top"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>');
+    $PHP_OUTPUT.=('<td valign="top">');
     if ($curr_player->hasAlliance())
     {
         $PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
@@ -168,10 +163,7 @@ while ($db->nextRecord())
     else
         $PHP_OUTPUT.=('(none)');
     $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top" align="right"');
-    if ($player->getAccountID() == $curr_player->getAccountID())
-        $PHP_OUTPUT.=(' class="bold"');
-    $PHP_OUTPUT.=('>' . number_format($curr_player->getExperience()) . '</td>');
+    $PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getExperience()) . '</td>');
     $PHP_OUTPUT.=('</tr>');
 }
 
