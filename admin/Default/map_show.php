@@ -5,17 +5,18 @@ $template->assign('PageTopic', 'Show Map');
 if (isset($_REQUEST['game_id'])) {
 
     SmrSession::updateVar('game_id', $_REQUEST['game_id']);
+    $game_id = $var['game_id'];
 
     $container = array();
     $container['url'] = 'map_show_processing.php';
-    transfer('game_id');
+    $container['game_id'] = $game_id;
 
     $PHP_OUTPUT .= create_echo_form($container);
     $PHP_OUTPUT .= ('<select name="account_id" size="1" id="InputFields">');
     $PHP_OUTPUT .= ('<option value="0">[Please Select]</option>');
     $PHP_OUTPUT .= ('<option value="all">All Players</option>');
 
-    $db->query('SELECT * FROM player WHERE game_id = ' . $var['game_id'] . ' ORDER BY player_id');
+    $db->query('SELECT * FROM player WHERE game_id = ' . $game_id . ' ORDER BY player_id');
 
     while ($db->nextRecord())
         $PHP_OUTPUT .= ('<option value="' . $db->getField('account_id') . '">' . stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')</option>');
