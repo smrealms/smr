@@ -1067,7 +1067,7 @@ abstract class AbstractSmrAccount
 	public function addPoints($numPoints,SmrAccount &$admin,$reasonID,$suspicion)
 	{
 		//do we have points
-		$this->setPoints($this->getPoints() + $numPoints,true);
+		$this->setPoints($this->getPoints() + $numPoints,TIME);
 		$totalPoints = $this->getPoints();
 		if ($totalPoints < 10)
 			return false;//leave scripts its only a warning
