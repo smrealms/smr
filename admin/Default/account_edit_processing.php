@@ -46,7 +46,7 @@ if ($choise == 'reopen')
 	if($reopenType=='account')
 	{
 		//do we have points
-		$curr_account->removePoints($points,TIME);
+		$curr_account->removePoints($points);
 		$curr_account->unbanAccount($account);
 		if (strlen($msg) > 9)
 			$msg .= 'and ';
