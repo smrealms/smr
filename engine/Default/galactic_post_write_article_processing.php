@@ -11,8 +11,8 @@ if(!isset($var['id']))
 if($_REQUEST['action'] == 'Preview article')
 {
 	$container = create_container('skeleton.php','galactic_post_write_article.php');
-	$container['previewTitle'] = $title;
-	$container['preview'] = $message;
+	$container['PreviewTitle'] = $title;
+	$container['Preview'] = $message;
 	if(isset($var['id']))
 	{
 		$container['id'] = $var['id'];
