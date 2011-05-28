@@ -44,7 +44,7 @@ if (isset($var['id']))
     $PHP_OUTPUT.=('<br />');
     $container = array();
     $container['url'] = 'skeleton.php';
-    $container['body'] = 'galactic_post_edit_article.php';
+    $container['body'] = 'galactic_post_write_article.php';
     transfer('id');
     $PHP_OUTPUT.=create_link($container, '<b>Edit this article</b>');
     $PHP_OUTPUT.=('<br />');
