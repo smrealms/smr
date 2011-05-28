@@ -2,6 +2,11 @@
 
 $title = trim($_REQUEST['title']);
 $message = trim($_REQUEST['message']);
+if(!isset($var['id']))
+{
+	$title = htmlentities($title,ENT_COMPAT,'utf-8');
+	$message = htmlentities($message,ENT_COMPAT,'utf-8');
+}
 
 if($_REQUEST['action'] == 'Preview article')
 {
@@ -32,8 +37,6 @@ if(isset($var['id']))
 }
 else
 {
-	$title = htmlentities($title,ENT_COMPAT,'utf-8');
-	$message = htmlentities($message,ENT_COMPAT,'utf-8');
 	$db->query('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = '.$player->getGameID().' LIMIT 1');
 	$db->nextRecord();
 	$num = $db->getField('article_id') + 1;
