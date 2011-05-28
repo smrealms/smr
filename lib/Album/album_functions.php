@@ -216,7 +216,7 @@ function album_entry($album_id)
 		echo('<input type="hidden" name="album_id" value="'.$album_id.'">');
 		echo('<table>');
 		echo('<tr>');
-		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . get_album_nick(SmrSession::$account_id) . '" id="InputFields" readonly></td>');
+		echo('<td style="color:green; font-size:70%;">Nick:<br /><input type="text" size="10" name="nick" value="' . htmlspecialchars(get_album_nick(SmrSession::$account_id)) . '" id="InputFields" readonly></td>');
 		echo('<td style="color:green; font-size:70%;">Comment:<br /><input type="text" size="50" name="comment" id="InputFields"></td>');
 		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send" id="InputFields"></td>');
 		$db->query('SELECT *

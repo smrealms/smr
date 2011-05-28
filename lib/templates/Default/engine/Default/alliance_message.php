@@ -47,7 +47,7 @@ if (isset($CreateNewThreadFormHref))
 	<table class="standardnobord nohpad">
 		<tr>
 			<td class="top">Topic:&nbsp;</td>
-			<td class="mb"><input type="text" name="topic" size="30" value="<?php if(isset($Topic)) { echo $Topic; } ?>"></td>
+			<td class="mb"><input type="text" name="topic" size="30" value="<?php if(isset($Topic)) { echo htmlspecialchars($Topic); } ?>"></td>
 			<td style="text-align:left;">For Alliance Eyes Only:<input id="InputFields" name="allEyesOnly" type="checkbox"<?php if(isset($AllianceEyesOnly) && $AllianceEyesOnly) { ?>checked="checked" <?php } ?>></td>
 		</tr>
 		<tr>

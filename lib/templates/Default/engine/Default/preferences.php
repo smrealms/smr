@@ -71,7 +71,7 @@ if(isset($GameID))
 			<tr>
 				<td>Player Name</td>
 				<td>
-					<input type="text" maxlength="32" name="PlayerName" value="<?php echo $ThisPlayer->getPlayerName(); ?>" size="32"> <?php
+					<input type="text" maxlength="32" name="PlayerName" value="<?php echo htmlspecialchars($ThisPlayer->getPlayerName()); ?>" size="32"> <?php
 					if($ThisPlayer->isNameChanged())
 					{
 						?>(You have already changed your name for free, further changes will cost <?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits)<?php
@@ -151,7 +151,7 @@ if(isset($GameID))
 		
 		<tr>
 			<td>Email address:</td>
-			<td><input type="text" name="email" value="<?php echo $ThisAccount->getEmail(); ?>" id="InputFields" size="50" /></td>
+			<td><input type="text" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" id="InputFields" size="50" /></td>
 		</tr>
 		
 		<tr>
@@ -165,7 +165,7 @@ if(isset($GameID))
 		
 		<tr>
 			<td>Hall of Fame Name:</td>
-			<td><input type="text" name="HoF_name" value="<?php echo $ThisAccount->getHofName(); ?>" id="InputFields" size="50" /></td>
+			<td><input type="text" name="HoF_name" value="<?php echo htmlspecialchars($ThisAccount->getHofName()); ?>" id="InputFields" size="50" /></td>
 		</tr>
 		
 		<tr>
@@ -202,12 +202,12 @@ if(isset($GameID))
 	
 		<tr>
 			<td>Date Format:</td>
-			<td><input type="text" name="dateformat" value="<?php echo $ThisAccount->getShortDateFormat(); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
+			<td><input type="text" name="dateformat" value="<?php echo htmlspecialchars($ThisAccount->getShortDateFormat()); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_DATE_SHORT; ?>')</td>
 		</tr>
 	
 		<tr>
 			<td>Time Format:</td>
-			<td><input type="text" name="timeformat" value="<?php echo $ThisAccount->getShortTimeFormat(); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
+			<td><input type="text" name="timeformat" value="<?php echo htmlspecialchars($ThisAccount->getShortTimeFormat()); ?>" id="InputFields" /><br />(Default: '<?php echo DEFAULT_DATE_TIME_SHORT; ?>')</td>
 		</tr>
 	
 		<tr>
@@ -281,7 +281,7 @@ if(isset($GameID))
 		<tr>
 			<td>Change CSS Link</td>
 			<td>
-				<input type="text" size="50" name="csslink" value="<?php echo $ThisAccount->getCssLink(); ?>"><br />
+				<input type="text" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink()); ?>"><br />
         		</td>
 		</tr>
 

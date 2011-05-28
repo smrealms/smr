@@ -55,14 +55,14 @@ else
 	$container['body'] = 'bar_main.php';
 	$container['script'] = 'bar_galmap_buy.php';
 	$container['process'] = true;
-	$PHP_OUTPUT.=('<div align=center>What galaxy do you want info on?<br />');
+	$PHP_OUTPUT.=('<div align="center">What galaxy do you want info on?<br />');
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<select type=select name=gal_id>');
-	$PHP_OUTPUT.=('<option value=0>[Select a galaxy]</option>');
+	$PHP_OUTPUT.=('<select type="select" name="gal_id">');
+	$PHP_OUTPUT.=('<option value="0">[Select a galaxy]</option>');
 	$gameGalaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
 	foreach ($gameGalaxies as &$galaxy)
-	{	
-		$PHP_OUTPUT.=('<option value='.$galaxy->getGalaxyID().'>' . $galaxy->getName() . '</option>');
+	{
+		$PHP_OUTPUT.=('<option value="'.$galaxy->getGalaxyID().'">' . $galaxy->getName() . '</option>');
 	} unset($galaxy);
 	$PHP_OUTPUT.=('</select><br />');
 	$PHP_OUTPUT.=create_submit('Buy the map');

@@ -32,7 +32,7 @@ else
 			} ?>
 		</p>
 		<textarea name="message" id="InputFields"><?php if(isset($Preview)) { echo $Preview; } ?></textarea><br />
-		Hours Till Expire: <input type=text name=expire value=1 size=2 id=InputFields> (0 = never expire)<br />
+		Hours Till Expire: <input type="text" name="expire" value="1" size="2" id="InputFields"> (0 = never expire)<br />
 		<br />
 		<input type="submit" name="action" value="Send message" id="InputFields" />&nbsp;<input type="submit" name="action" value="Preview message" id="InputFields" />
 	</form><?php

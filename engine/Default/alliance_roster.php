@@ -212,7 +212,7 @@ foreach($alliancePlayers as &$alliancePlayer)
 			$PHP_OUTPUT.= '<select name="role[' . $alliancePlayer->getAccountID() . ']" id="InputFields">';
 			foreach ($roles as $curr_role_id => $role) {
 				$PHP_OUTPUT.= '<option value="' . $curr_role_id .'"';
-				if ($curr_role_id == $role_id) $PHP_OUTPUT.= ' selected';
+				if ($curr_role_id == $role_id) $PHP_OUTPUT.= ' selected="selected"';
 				$PHP_OUTPUT.= '>';
 				$PHP_OUTPUT.= stripslashes($role);
 				$PHP_OUTPUT.= '</option>';

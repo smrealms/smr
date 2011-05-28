@@ -62,9 +62,9 @@ else
 	$container['script'] = 'bar_ticker_buy.php';
 	$container['process'] = 'yes';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type="radio" name="type" value="SCOUT"">Send Scout Messages<br />');
-	$PHP_OUTPUT.=('<input type="radio" name="type" value="NEWS"">Send Recent News<br />');
-	$PHP_OUTPUT.=('<input type="radio" name="type" value="BLOCK"">Block Scout Message Tickers<br /><small>This will only block messages to tickers, it will not completely block scout messages</small><br />');
+	$PHP_OUTPUT.=('<input type="radio" name="type" value="SCOUT">Send Scout Messages<br />');
+	$PHP_OUTPUT.=('<input type="radio" name="type" value="NEWS">Send Recent News<br />');
+	$PHP_OUTPUT.=('<input type="radio" name="type" value="BLOCK">Block Scout Message Tickers<br /><small>This will only block messages to tickers, it will not completely block scout messages</small><br />');
 	$PHP_OUTPUT.=create_submit('Continue');
 	$PHP_OUTPUT.=('</form>');
 }

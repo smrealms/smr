@@ -18,13 +18,13 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">Login:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="login" value="'.$account->login.'">');
+$PHP_OUTPUT.=('<input type="hidden" name="login" value="'.htmlspecialchars($account->login).'">');
 $PHP_OUTPUT.=('<td>'.$account->login.'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">eMail:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="email" value="'.$account->email.'">');
+$PHP_OUTPUT.=('<input type="hidden" name="email" value="'.htmlspecialchars($account->email).'">');
 $PHP_OUTPUT.=('<td>'.$account->email.'</td>');
 $PHP_OUTPUT.=('</tr>');
 

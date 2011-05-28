@@ -58,7 +58,7 @@ create_echo_form($link);
 			<select name="game_type" id="InputFields"><?php
 			foreach($GameTypes as $GameType)
 			{
-				?><option value="<?php echo $GameType; ?>"><?php echo $GameType; ?></option><?php
+				?><option value="<?php echo htmlspecialchars($GameType); ?>"><?php echo $GameType; ?></option><?php
 			} ?>
 			</select>
 		</td>

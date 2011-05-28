@@ -254,12 +254,12 @@ function create_form($container,$actions) {
 	$form['form'] = '<form class="standard" id="FORM' . $form_id . '" method="POST" action="' . SmrSession::get_new_href($container) . '">';
 
 	if(!is_array($actions)) {
-		$form['submit'] =  '<input class="submit" type="submit" name="action" value="' . $actions . '">';
+		$form['submit'] =  '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($actions) . '">';
 	}
 	else {
 		$form['submit'] = array();
 		foreach($actions as $action) {
-		$form['submit'][$action[0]] =  '<input class="submit" type="submit" name="action" value="' . $action[1] . '">';
+			$form['submit'][$action[0]] =  '<input class="submit" type="submit" name="action" value="' . htmlspecialchars($action[1]) . '">';
 		}
 	}
 
@@ -269,11 +269,11 @@ function create_form($container,$actions) {
 }
 
 function create_submit($value) {
-	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" />');
+	return ('<input type="submit" name="action" value="'.htmlspecialchars($value).'" id="InputFields" />');
 }
 
 function create_submit_style($value, $style) {
-	return ('<input type="submit" name="action" value="'.$value.'" id="InputFields" style="'.$style.'" />');
+	return ('<input type="submit" name="action" value="'.htmlspecialchars($value).'" id="InputFields" style="'.$style.'" />');
 }
 
 function create_error($message)

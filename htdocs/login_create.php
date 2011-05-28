@@ -82,14 +82,14 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 							<select name="timez" id="InputFields">
 								<?php
 								$time = TIME;
-									for ($i = -12; $i<= 11; $i++) echo('<option value='.$i.'>' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
+									for ($i = -12; $i<= 11; $i++) echo('<option value="'.$i.'">' . date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600));
 								?>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<td width='27%'>Referral ID (Optional):</td>
-						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' id='InputFields'<?php if(isset($_REQUEST['ref'])){ echo 'value="'.$_REQUEST['ref'].'"'; }?>></td>
+						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' id='InputFields'<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
 					</tr>
 					<tr>
 						<td colspan='2'><?php echo recaptcha_get_html(RECAPTCHA_PUBLIC); ?></td>
@@ -127,13 +127,13 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 						<td width='27%'>Country:</td>
 						<td width='73%'>
 							<select name='country_code' id='InputFields'>
-								<option value=None selected>[Select your country]</option>
+								<option value="None" selected="selected">[Select your country]</option>
 								<option value='US'>United States</option>
 								<option value='UK'>United Kingdom</option>
 								<option value='DE'>Germany</option>
 								<option value='CA'>Canada</option>
 								<option value='FR'>France</option>
-								<option value=0>--------------------</option>
+								<option value="0">--------------------</option>
 								<option value='AF'>Afghanistan</option>
 								<option value='AL'>Albania</option>
 								<option value='DZ'>Algeria</option>
