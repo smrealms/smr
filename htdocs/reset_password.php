@@ -34,11 +34,11 @@
 											<table border="0">
 												<tr>
 														<th align="right">Username:</th>
-														<td><input name="login" type="text" id="InputFields" value="<?php echo isset($_REQUEST['login']) ? $_REQUEST['login'] : ''; ?>" /></td>
+														<td><input name="login" type="text" id="InputFields" value="<?php echo isset($_REQUEST['login']) ? htmlspecialchars($_REQUEST['login']) : ''; ?>" /></td>
 												</tr>
 												<tr>
 														<th align="right">Password Reset Code:</th>
-														<td><input name="password_reset" type="text" id="InputFields" value="<?php echo isset($_REQUEST['resetcode']) ? $_REQUEST['resetcode'] : ''; ?>" /></td>
+														<td><input name="password_reset" type="text" id="InputFields" value="<?php echo isset($_REQUEST['resetcode']) ? htmlspecialchars($_REQUEST['resetcode']) : ''; ?>" /></td>
 												</tr>
 												<tr>
 														<th align="right">New Password:</th>

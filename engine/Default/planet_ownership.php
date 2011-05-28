@@ -40,13 +40,13 @@ else
 	{
 		$PHP_OUTPUT.=('You can set a password for that planet.');
 		$PHP_OUTPUT.=create_echo_form(create_container('planet_ownership_processing.php', ''));
-		$PHP_OUTPUT.=('<input type="text" name="password" value="'.$planet->getPassword().'" id="InputFields">&nbsp;&nbsp;&nbsp;');
+		$PHP_OUTPUT.=('<input type="text" name="password" value="'.htmlspecialchars($planet->getPassword()).'" id="InputFields">&nbsp;&nbsp;&nbsp;');
 		$PHP_OUTPUT.=create_submit('Set Password');
 		$PHP_OUTPUT.=('</form>');
 
 		$PHP_OUTPUT.=('You can rename the planet.');
 		$PHP_OUTPUT.=create_echo_form(create_container('planet_ownership_processing.php', ''));
-		$PHP_OUTPUT.=('<input type="text" name="name" value="'.$planet->getName().'" id="InputFields">&nbsp;&nbsp;&nbsp;');
+		$PHP_OUTPUT.=('<input type="text" name="name" value="'.htmlspecialchars($planet->getName()).'" id="InputFields">&nbsp;&nbsp;&nbsp;');
 		$PHP_OUTPUT.=create_submit('Rename');
 		$PHP_OUTPUT.=('</form>');
 	}

@@ -10,7 +10,7 @@
 				<option value="none">None</option><?php
 				foreach($DummyNames as $DummyName)
 				{ ?>
-					<option value="<?php echo $DummyName ?>"<?php if($Dummy && $DummyName==$Dummy->getPlayerName()){ ?> selected="selected"<?php } ?>><?php echo $DummyName ?></option><?php
+					<option value="<?php echo htmlspecialchars($DummyName) ?>"<?php if($Dummy && $DummyName==$Dummy->getPlayerName()){ ?> selected="selected"<?php } ?>><?php echo $DummyName ?></option><?php
 				} ?>
 			</select><br />
 		</td>
@@ -23,7 +23,7 @@
 					<br />Level: <?php echo $Dummy->getLevelID() ?><br />
 					Ship: <?php echo $Ship->getName() ?> (<?php echo $Ship->getAttackRating() ?>/<?php echo $Ship->getDefenseRating() ?>)<br />
 					DCS: <?php if($Ship->hasDCS()){ ?>Yes<?php }else{ ?>No<?php } ?><br />
-					Weapons: <?php foreach($ShipWeapons as $ShipWeapon){ ?>* <?php echo $ShipWeapon->getName() ?><br /><?php } 
+					Weapons: <?php foreach($ShipWeapons as $ShipWeapon){ ?>* <?php echo $ShipWeapon->getName() ?><br /><?php }
 				}
 				else{ ?>No Dummy<?php } ?>
 		</td>

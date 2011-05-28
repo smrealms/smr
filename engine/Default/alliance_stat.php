@@ -30,9 +30,7 @@ $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="nobord nohpad">';
 
 if ($db->getField('change_pass') == 'TRUE')
 {
-	$PHP_OUTPUT.= '<tr><td class="top">Password:&nbsp;</td><td><input type="password" name="password" size="30" value="';
-	$PHP_OUTPUT.= $pw;
-	$PHP_OUTPUT.= '"></td></tr>';
+	$PHP_OUTPUT.= '<tr><td class="top">Password:&nbsp;</td><td><input type="password" name="password" size="30" value="'.htmlspecialchars($pw).'"></td></tr>';
 }
 if ($db->getField('change_mod') == 'TRUE' || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
 {
@@ -41,10 +39,8 @@ if ($db->getField('change_mod') == 'TRUE' || $account->hasPermission(PERMISSION_
 	$PHP_OUTPUT.= '</textarea></td></tr>';
 }
 if ($db->getField('change_mod') == 'TRUE')
-{	
-	$PHP_OUTPUT.= '<tr><td class="top">Image URL:&nbsp;</td><td><input type="text" name="url" size="30" value="';
-	$PHP_OUTPUT.= $img;
-	$PHP_OUTPUT.= '"></td></tr>';
+{
+	$PHP_OUTPUT.= '<tr><td class="top">Image URL:&nbsp;</td><td><input type="text" name="url" size="30" value="'.htmlspecialchars($img).'"></td></tr>';
 	
 	$PHP_OUTPUT.= '<tr><td class="top">Message Of The Day:&nbsp;</td><td><textarea name="mod">';
 	$PHP_OUTPUT.= $mod;
