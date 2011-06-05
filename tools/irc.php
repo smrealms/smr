@@ -1,6 +1,5 @@
 #!/usr/bin/php -q
 <?php
-define('IRC_BOT_SOCKET_MAX_LENGTH',512);
 
 function echo_r($message)
 {
@@ -10,30 +9,195 @@ function echo_r($message)
 			echo_r($msg);
 	}
 	else
-		echo $message.EOL;
+		echo date("d.m.Y H:i:s => ").$message.EOL;
 }
 
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
-include(LIB . 'Default/SmrMySqlDatabase.class.inc');
+include(LIB . '/Default/SmrMySqlDatabase.class.inc');
 
 include(ENGINE . '/Default/smr.inc');
 
-$channel = '#smr-beta';
-$nick = 'Rawr';
-	
-$sockets = array();
-if (socket_create_pair(AF_UNIX, SOCK_STREAM, 0, $sockets) === false)
-	echo_r('socket_create_pair failed. Reason: '.socket_strerror(socket_last_error()));
-$pid = pcntl_fork();
-if(!$pid)
+require_once(get_file_loc('smr_alliance.inc'));
+
+$address = 'ice.coldfront.net';
+$port = 6667;
+$channel = '#smr';
+$nick = 'Caretaker';
+$pass = 'smr4ever';
+
+$events = array();
+
+echo_r('Connecting to '.$address);
+
+// include all sub files
+require_once('irc/server.php');
+require_once('irc/ctcp.php');
+require_once('irc/invite.php');
+//require_once('irc/rank.php');
+//require_once('irc/ship.php');
+require_once('irc/user.php');
+require_once('irc/query.php');
+require_once('irc/notice.php');
+//require_once('irc/weapon.php');
+//require_once('irc/level.php');
+require_once('irc/channel.php');
+require_once('irc/channel_msg.php');
+//require_once('irc/login.php');
+require_once('irc/maintenance.php');
+
+// database object
+$db = new SmrMySqlDatabase();
+
+// delete all seen stats that appear to be on (we do not want to take something for granted that happend while we were away)
+$db->query('DELETE from irc_seen WHERE signed_off = 0');
+
+$fp = fsockopen($address, $port);
+if ($fp)
 {
-	doIRCListen($sockets[0]);
-}
-else
-{
-	doLocalListen($sockets[1]);
+    stream_set_blocking($fp, TRUE);
+    echo_r('Socket '.$fp.' is connected... Identifying...');
+
+    fputs($fp, 'NICK CareGhost'.EOL);
+    fputs($fp, 'USER '.strtolower($nick).' oberon smrealms.de :Official SMR bot'.EOL);
+
+    // kill any other user that is using our nick
+    fputs($fp, 'NICKSERV GHOST '.$nick.' '.$pass.EOL);
+
+    sleep(1);
+
+    fputs($fp, 'NICK '.$nick.EOL);
+    fputs($fp, 'NICKSERV IDENTIFY '.$pass.EOL);
+
+    // join our public channel
+    fputs($fp, 'JOIN '.$channel.EOL);
+    sleep(1);
+    fputs($fp, 'WHO '.$channel.EOL);
+
+	// join any alliance channels
+	$db->query('SELECT    channel ' .
+	           'FROM      irc_alliance_has_channel ' .
+	           'LEFT JOIN game USING (game_id) ' .
+	           'WHERE     start_date < ' . time() .
+	           '  AND     end_date > ' . time());
+	while ($db->nextRecord()) {
+		$alliance_channel = $db->getField('channel');
+
+		// join channels
+		fputs($fp, 'JOIN #'.$alliance_channel.EOL);
+		sleep(1);
+		fputs($fp, 'WHO #'.$alliance_channel.EOL);
+	}
+
+    while (!feof($fp))
+    {
+
+        $rdata = fgets($fp, 4096);
+        $rdata = preg_replace('/\s+/', ' ', $rdata);
+
+	    // we simply do some poll stuff here
+	    check_planet_builds($fp);
+	    check_events($fp);
+        
+        // required!!! otherwise timeout!
+        if (server_ping($fp, $rdata))
+            continue;
+
+	    // server msg
+        if (server_msg_307($fp, $rdata))
+            continue;
+        if (server_msg_318($fp, $rdata))
+            continue;
+        if (server_msg_352($fp, $rdata))
+            continue;
+        if (server_msg_401($fp, $rdata))
+            continue;
+
+        // some nice things
+        if (ctcp_version($fp, $rdata))
+            continue;
+        if (ctcp_finger($fp, $rdata))
+            continue;
+        if (ctcp_time($fp, $rdata))
+            continue;
+        if (ctcp_ping($fp, $rdata))
+            continue;
+
+	    if (invite($fp, $rdata))
+	        continue;
+
+        // join and part
+        if (channel_join($fp, $rdata))
+            continue;
+        if (channel_part($fp, $rdata))
+            continue;
+
+	    // nick change and quit
+        if (user_nick($fp, $rdata))
+            continue;
+        if (user_quit($fp, $rdata))
+            continue;
+
+        // channel msg (!xyz)
+        if (channel_msg_help($fp, $rdata))
+            continue;
+        if (channel_msg_seen($fp, $rdata))
+            continue;
+        if (channel_msg_seed($fp, $rdata))
+            continue;
+        if (channel_msg_op($fp, $rdata))
+	        continue;
+        if (channel_msg_money($fp, $rdata))
+	        continue;
+        if (channel_msg_timer($fp, $rdata))
+	        continue;
+	    
+/* doing these later...
+
+        // channel messages
+        if (channel_msg_rank($fp, $rdata))
+            continue;
+        if (channel_msg_level($fp, $rdata))
+            continue;
+        if (channel_msg_ship($fp, $rdata))
+            continue;
+*/
+
+/* doing these later...
+
+        // private messages
+        if (private_msg_login($fp, $rdata))
+            continue;
+        if (private_msg_weapon($fp, $rdata))
+            continue;
+
+*/
+
+	    // MrSpock can use this to send commands as caretaker
+        if (query_command($fp, $rdata))
+            continue;
+
+
+        // debug
+        if (strlen($rdata) > 0) {
+            echo_r('[UNKNOWN] '.$rdata);
+            continue;
+        }
+
+        // every minute or so we get a message from server with empty msg.
+        // we use this to do our stuff
+
+    }
+
+    fclose ($fp); // close socket
+    echo_r('Fatal error: Socket closed');
+
+} else {
+
+    echo_r('There was an error connecting to '.$address.'/'.$port);
+    exit();
+
 }
 
 function fill_string($str, $length) {
@@ -45,133 +209,4 @@ function fill_string($str, $length) {
 
 }
 
-function doLocalListen($socket)
-{
-	unlink(IRC_BOT_SOCKET);
-	$sock = socket_create(AF_UNIX, SOCK_STREAM, 0) or die('Could not create socket');
-	// Bind the socket to an address/port
-	socket_bind($sock, IRC_BOT_SOCKET) or die('Could not bind to address');
-	chmod(IRC_BOT_SOCKET, 0777);
-	socket_listen($sock);
-	while($listenSock = socket_accept($sock))
-	{
-		while(($data = socket_read($listenSock, IRC_BOT_SOCKET_MAX_LENGTH, PHP_NORMAL_READ))!== false)
-		{
-			if($data!='')
-			{
-				socket_write($socket, $data.EOL);
-			}
-		}
-	}
-}
-function doIRCListen($socket)
-{
-	global $channel, $nick;
-
-	$address = 'irc.VJTD3.com';
-	$port = 6667;
-	$pass = 'botpassrawr123';
-	
-	echo_r('Connecting to '.$address);
-	
-	// include all sub files
-	require_once('irc/help.php');
-	require_once('irc/rank.php');
-	require_once('irc/ship.php');
-	require_once('irc/server.php');
-	require_once('irc/weapon.php');
-	require_once('irc/seen.php');
-	require_once('irc/level.php');
-	require_once('irc/channel.php');
-	require_once('irc/login.php');
-
-	$fp = fsockopen($address, $port);
-	if ($fp)
-	{
-		stream_set_blocking($fp, FALSE);
-		echo_r('Socket '.$fp.' is connected... Identifying...');
-	
-		fputs($fp, 'NICK '.$nick.EOL);
-		fputs($fp, 'USER rawr snoopy vjtd3 :Page Test Bot'.EOL);
-	
-		// join our channel
-		fputs($fp, 'NICKSERV IDENTIFY '.$pass.EOL);
-		fputs($fp, 'JOIN '.$channel.EOL);
-		sleep(1);
-		fputs($fp, 'WHO '.$channel.EOL);
-	
-		// database object
-		$db = new SmrMySqlDatabase();
-	
-		// avoid that some1 uses another one nick
-		$db->query('TRUNCATE irc_logged_in');
-		while (!feof($fp))
-		{
-//			if(($data = socket_read($socket, IRC_BOT_SOCKET_MAX_LENGTH, PHP_NORMAL_READ)) !== false)
-//			{
-//				if($data !== '')
-//				{
-//					echo_r('Recieved to send: '.$data);
-////					fputs($fp, $data.EOL);
-//					fputs($fp, 'PRIVMSG '.$channel.' :'.$data.EOL);
-//				}
-//			}
-			
-			$rdata = fgets($fp, 4096);
-			$rdata = preg_replace('/\s+/', ' ', $rdata);
-	
-			// debug
-			echo_r($rdata);
-	
-			// required!!! otherwise timeout!
-			if (server_ping($fp, $rdata))
-				continue;
-	
-			// join and part
-			if (channel_join($fp, $rdata))
-				continue;
-			if (channel_part($fp, $rdata))
-				continue;
-			if (channel_nick($fp, $rdata))
-				continue;
-			if (channel_who($fp, $rdata))
-				continue;
-	
-			// some nice things
-			if (ctcp_version($fp, $rdata))
-				continue;
-			if (ctcp_time($fp, $rdata))
-				continue;
-	
-			// help system
-			if (msg_help($fp, $rdata))
-				continue;
-	
-			// channel messages
-			if (channel_msg_rank($fp, $rdata))
-				continue;
-			if (channel_msg_level($fp, $rdata))
-				continue;
-			if (channel_msg_ship($fp, $rdata))
-				continue;
-			if (channel_msg_seen($fp, $rdata))
-				continue;
-	
-			// private messages
-			if (private_msg_login($fp, $rdata))
-				continue;
-			if (private_msg_weapon($fp, $rdata))
-				continue;
-		}
-	
-		fclose ($fp); // close socket
-		echo_r('Fatal error: Socket closed');
-	
-	} else {
-	
-		echo_r('There was an error connecting to '.$address.'/'.$port);
-		exit();
-	
-	}
-}
 ?>

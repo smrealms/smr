@@ -1,95 +1,56 @@
 <?php
 
-function channel_join($fp, $rdata) {
+function channel_join($fp, $rdata)
+{
 
-	global $channel;
+	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:#(.*)\s$/i', $rdata, $msg)) {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:'.$channel.'\s$/i', $rdata, $msg)) {
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
 
-		echo_r($msg);
-		if ($msg[1] == 'MrSpock' && $msg[2] == '~foo' && $msg[3] == 'jfwmodule.intershop.de')
-			fputs($fp, 'PRIVMSG '.$channel.' :The creator! The God! He\'s among us! Praise him!'.EOL);
+		echo_r('[JOIN] ' . $nick . '!' . $user . '@' . $host . ' joined #' . $channel);
+
+		if ($nick == 'MrSpock' && $user == 'mrspock')
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
+		if ($nick == 'Holti' && $user == 'Holti')
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands Holti a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . ' -,`--' . EOL);
 
 		$db = new SmrMySqlDatabase();
 
-		$db->query('INSERT irc_logged_in (nick, user, host)' .
-				   ' values ('.$db->escapeString($msg[1]).','.$db->escapeString($msg[2]).','.$db->escapeString($msg[3]).')');
-						 
-		$db->query('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escape_string('%'.$msg[1].'%'));
+		// check if we have seen this user before
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
 
-		// exiting nick?
-		if($db->nextRecord())
-		{
-
+		if ($db->nextRecord()) {
+			// exiting nick?
 			$seen_id = $db->getField('seen_id');
 
-			$db->query('UPDATE irc_seen SET signed_on = ' . time() . ' WHERE seen_id = '.$seen_id);
+			$seen_count = $db->getField('seen_count');
+			$seen_by = $db->getField('seen_by');
 
-		// new nick?
-		}
-		else
-		{
-
-			$nick		= serialize(array($msg[1]));
-			$user		= $msg[2];
-			$host		= $msg[3];
-			$signed_on	= time();
-
-			$db->query('INSERT INTO irc_seen (nick, user, host, signed_on) VALUES('.$db->escapeString($nick).', '.$db->escapeString($user).', '.$db->escapeString($host).', '.$signed_on.')');
-
-		}
-
-		return true;
-
-	}
-
-	return false;
-
-}
-
-/**
- * Someone changed his nick
- */
-function channel_nick($fp, $rdata) {
-
-	global $channel;
-
-	if (preg_match('/^:(.*)!(.*)@(.*)\sNICK\s:(.*)\s$/i', $rdata, $msg)) {
-
-		echo_r($msg);
-
-		// database object
-		$db = new SmrMySqlDatabase();
-		$db2 = new SmrMySqlDatabase();
-
-		// update nick if he's logged in
-		$db->query('UPDATE irc_logged_in ' .
-				   'SET nick = '.$db->escapeString($msg[4]).' ' .
-				   'WHERE nick = '.$db->escapeString($msg[1]).' AND ' .
-						 'user = '.$db->escapeString($msg[2]).' AND ' .
-						 'host = '.$db->escapeString($msg[3]));
-
-		// update seen stats
-		$db->query('SELECT * FROM irc_seen ' .
-				   'WHERE user = '.$db->escapeString($msg[2]).' AND ' .
-						 'host = '.$db->escapeString($msg[3]));
-		while($db->nextRecord()) {
-
-			$seen_id = $db->getField('seen_id');
-			$nick_list = unserialize($db->getField('nick'));
-
-			// add this nick if it isn't in current nicklist
-			if (!array_search($msg[1], $nick_list))
-			{
-
-				array_push($nick_list, $msg[4]);
-				$db2->query('UPDATE irc_seen ' .
-							'SET nick = ' . $db->escape_string(serialize($nick_list)) . ' ' .
-							'WHERE seen_id = '.$seen_id);
-
+			if ($seen_count > 1) {
+				fputs($fp, 'PRIVMSG #' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_count . ' players were looking for you, the last one being ' . $seen_by . EOL);
+			} elseif ($seen_count > 0) {
+				fputs($fp, 'PRIVMSG #' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
 			}
 
+			$db->query('UPDATE irc_seen SET ' .
+			           'signed_on = ' . time() . ', ' .
+			           'signed_off = 0, ' .
+			           'user = ' . $db->escapeString($user) . ', ' .
+			           'host = ' . $db->escapeString($host) . ', ' .
+			           'seen_count = 0, ' .
+			           'seen_by = NULL, ' .
+			           'registered = NULL ' .
+			           'WHERE seen_id = ' . $seen_id);
+
+		} else {
+			// new nick?
+			$db->query('INSERT INTO irc_seen (nick, user, host, channel, signed_on) VALUES(' . $db->escapeString($nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
 		}
+
+		fputs($fp, 'WHOIS ' . $nick . EOL);
 
 		return true;
 
@@ -99,90 +60,35 @@ function channel_nick($fp, $rdata) {
 
 }
 
-function channel_part($fp, $rdata) {
+function channel_part($fp, $rdata)
+{
 
-	global $channel;
+	// :Azool!Azool@coldfront-F706F7E1.co.hfc.comcastbusiness.net PART #smr-irc :
+	// :SomeGuy!mrspock@coldfront-DD847655.dip.t-dialin.net PART #smr-irc
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPART\s#(.*?)\s/i', $rdata, $msg)) {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPART\s'.$channel.'\s$/i', $rdata, $msg)) {
-		echo_r($msg);
-		// delete this user from the active session
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+
+		echo_r('[PART] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
 		// database object
 		$db = new SmrMySqlDatabase();
 
-		// avoid that some1 uses another one nick
-		$db->query('DELETE FROM irc_logged_in ' .
-				   'WHERE nick = '.$db->escapeString($msg[1]).' AND ' .
-						 'user = '.$db->escapeString($msg[2]).' AND ' .
-						 'host = '.$db->escapeString($msg[3]));
-
-		$db->query('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escape_string('%'.$msg[1].'%'));
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND channel = ' . $db->escapeString($channel));
 
 		// exiting nick?
-		if($db->nextRecord()) {
+		if ($db->nextRecord()) {
 
 			$seen_id = $db->getField('seen_id');
 
-			$db->query('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = '.$seen_id);
+			$db->query('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
 
-		// new nick?
-		}
-		else
-		{
+		} else {
 
-			$nick		= serialize(array($msg[1]));
-			$user		= $msg[2];
-			$host		= $msg[3];
-			$signed_off	= time();
-
-			$db->query('INSERT INTO irc_seen (nick, user, host, signed_off) VALUES('.$db->escapeString($nick).', '.$db->escapeString($user).', '.$db->escapeString($host).', '.$signed_off.')');
-
-		}
-
-		return true;
-
-	}
-
-	return false;
-
-}
-
-
-function channel_who($fp, $rdata)
-{
-	global $channel,$nick;
-	//  /^:( SERVER )\s352'.$nick.'\s'.$channel.'\s( USER )\s( HOST )\s( SERVER )\s( NICK )\s( USER_MODES? irc op/channel op for sure )\s( :(int) changes depending on server? )\s( REAL_NAME )$/i'
-//if (preg_match('/^:(.*)\s352\s'.$nick.'\s'.$channel.'\s([^\s]*)\s(.*?)\s([^\s]*)\s([^\s]*)\s([^\s]*)\s([^\s]*)\s(.*)$/i', $rdata, $msg))
-		if (preg_match('/^:(.*?) 352 '.$nick.' '.$channel.' (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg))
-	{
-		echo_r($msg);
-//		sleep(8);
-		$db = new SmrMySqlDatabase();
-
-		$db->query('INSERT IGNORE INTO irc_logged_in (nick, user, host)' .
-				   ' values ('.$db->escapeString($msg[5]).','.$db->escapeString($msg[2]).','.$db->escapeString($msg[3]).')');
-		
-		$db->query('SELECT * FROM irc_seen WHERE nick LIKE '.$db->escape_string('%'.$msg[5].'%'));
-
-		// exiting nick?
-		if($db->nextRecord())
-		{
-
-			$seen_id = $db->getField('seen_id');
-
-			$db->query('UPDATE irc_seen SET signed_on = ' . time() . ' WHERE seen_id = '.$seen_id);
-
-		// new nick?
-		}
-		else
-		{
-
-			$nick		= serialize(array($msg[5]));
-			$user		= $msg[2];
-			$host		= $msg[3];
-			$signed_on	= time();
-
-			$db->query('INSERT INTO irc_seen (nick, user, host, signed_on) VALUES('.$db->escapeString($nick).', '.$db->escapeString($user).', '.$db->escapeString($host).', '.$signed_on.')');
+			// we don't know this one, but who cares? he just left anyway...
 
 		}
 
