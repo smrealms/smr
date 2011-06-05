@@ -11,7 +11,7 @@ $email = $_REQUEST['email'];
 $new_password = $_REQUEST['new_password'];
 $old_password = $_REQUEST['old_password'];
 $retype_password = $_REQUEST['retype_password'];
-$HoF_name = $_REQUEST['HoF_name'];
+$HoF_name = trim($_REQUEST['HoF_name']);
 
 if (USE_COMPATIBILITY && $action == 'Link Account')
 {
