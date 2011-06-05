@@ -69,6 +69,16 @@ abstract class AbstractSmrAccount
 		return $return;
 	}
 	
+	public static function &getAccountByHofName($hofName,$forceUpdate = false)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT account_id FROM account WHERE hof_name = '.$db->escapeString($hofName).' LIMIT 1');
+		if($db->nextRecord())
+			return self::getAccount($db->getField('account_id'),$forceUpdate);
+		$return = null;
+		return $return;
+	}
+
 	public static function &createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral)
 	{
 		if($referral!=0)
