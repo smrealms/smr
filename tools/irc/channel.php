@@ -15,7 +15,9 @@ function channel_join($fp, $rdata)
 		if ($nick == 'MrSpock' && $user == 'mrspock')
 			fputs($fp, 'PRIVMSG #' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
 		if ($nick == 'Holti' && $user == 'Holti')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands Holti a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . ' -,`--' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands Holti a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . EOL);
+		if ($nick == 'kiNky' && $user == 'cicika')
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands kiNky a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . EOL);
 
 		$db = new SmrMySqlDatabase();
 

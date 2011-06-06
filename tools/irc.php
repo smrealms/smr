@@ -148,6 +148,12 @@ if ($fp)
             continue;
         if (channel_msg_op($fp, $rdata))
 	        continue;
+        if (channel_msg_op_info($fp, $rdata))
+	        continue;
+        if (channel_msg_op_signup($fp, $rdata))
+	        continue;
+        if (channel_msg_op_list($fp, $rdata))
+	        continue;
         if (channel_msg_money($fp, $rdata))
 	        continue;
         if (channel_msg_timer($fp, $rdata))
@@ -181,12 +187,9 @@ if ($fp)
 
         // debug
         if (strlen($rdata) > 0) {
-            echo_r('[UNKNOWN] '.$rdata);
+//            echo_r('[UNKNOWN] '.$rdata);
             continue;
         }
-
-        // every minute or so we get a message from server with empty msg.
-        // we use this to do our stuff
 
     }
 
