@@ -94,7 +94,7 @@ function server_msg_352($fp, $rdata)
         $host = $msg[4];
         $nick = $msg[6];
 
-        echo_r('[WHO] ' . $channel . ': ' . $nick);
+        echo_r('[WHO] #' . $channel . ': ' . $nick);
 
         $db = new SmrMySqlDatabase();
 

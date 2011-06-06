@@ -216,6 +216,32 @@ function channel_msg_op($fp, $rdata)
 
 		echo_r('[OP] by ' . $nick . ' in #' . $channel);
 
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The !op command can be used to manage an upcoming op.' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The following sub commands are available:' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op info      Displays the time left until next op' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op list      Displays a list of players who have signed up' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op signup    Sign you up for the upcoming up' . EOL);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_op_info($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!op info\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+
+		echo_r('[OP_INFO] by ' . $nick . ' in #' . $channel);
+
 		$db = new SmrMySqlDatabase();
 
 		// only registered users are allowed to use this command
@@ -304,6 +330,220 @@ function channel_msg_op($fp, $rdata)
 
 }
 
+function channel_msg_op_signup($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!op signup\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+
+		echo_r('[OP_SIGNUP] by ' . $nick . ' in #' . $channel);
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+
+			error_not_registered($fp, $channel, $nick);
+
+			fputs($fp, 'WHOIS ' . $nick . EOL);
+			return true;
+
+		}
+
+		// check if the query is in public channel
+		if ($channel == 'smr') {
+			error_public_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+
+		} else {
+			error_unknown_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr account{}
+		$account =& SmrAccount::getAccountByHofName($nick);
+
+		// do we have such an account?
+		if ($account == null) {
+			error_unknown_account($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+
+		// do we have such an account?
+		if ($player == null) {
+			error_unknown_player($fp, $channel, $nick);
+			return true;
+		}
+
+		// is the user part of this alliance?
+		if ($player->getAllianceID() != $alliance_id) {
+			error_unknown_alliance($fp, $channel, $nick);
+			return true;
+		}
+
+		// get the op info from db
+		$db->query('SELECT time, attendees ' .
+		           'FROM alliance_has_op ' .
+		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+		           '      game_id = ' . $game_id);
+		if (!$db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
+			return true;
+		}
+
+		$op_time = $db->getField('time');
+		$attendees = unserialize($db->getField('attendees'));
+		if (!is_array($attendees))
+			$attendees = array();
+
+		// check the that is in the future
+		if ($op_time < time()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', sorry. You missed the OP.' . EOL);
+			return true;
+		}
+
+		// add nick to the list of the attendees
+		array_push($attendees, $nick);
+
+		// save it back in the database
+		$db->query('UPDATE alliance_has_op ' .
+		           'SET attendees = ' . $db->escapeString(serialize($attendees)) . ' ' .
+		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+		           '      game_id = ' . $game_id);
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you have been added to the list of attendees. You are number ' . count($attendees) . EOL);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_op_list($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!op list\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+
+		echo_r('[OP_LIST] by ' . $nick . ' in #' . $channel);
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+
+			error_not_registered($fp, $channel, $nick);
+
+			fputs($fp, 'WHOIS ' . $nick . EOL);
+			return true;
+
+		}
+
+		// check if the query is in public channel
+		if ($channel == 'smr') {
+			error_public_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+
+		} else {
+			error_unknown_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr account{}
+		$account =& SmrAccount::getAccountByHofName($nick);
+
+		// do we have such an account?
+		if ($account == null) {
+			error_unknown_account($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+
+		// do we have such an account?
+		if ($player == null) {
+			error_unknown_player($fp, $channel, $nick);
+			return true;
+		}
+
+		// is the user part of this alliance?
+		if ($player->getAllianceID() != $alliance_id) {
+			error_unknown_alliance($fp, $channel, $nick);
+			return true;
+		}
+
+		// get the op info from db
+		$db->query('SELECT time, attendees ' .
+		           'FROM alliance_has_op ' .
+		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+		           '      game_id = ' . $game_id);
+		if (!$db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
+			return true;
+		}
+
+		$op_time = $db->getField('time');
+		$attendees = unserialize($db->getField('attendees'));
+		if (!is_array($attendees))
+			$attendees = array();
+
+		// check the that is in the future
+		if ($op_time < time()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', sorry. You missed the OP.' . EOL);
+			return true;
+		}
+
+		if (count($attendees) == 0) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :Noone has signed up for the upcoming OP.' . EOL);
+			return true;
+		}
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The following people have signed up:' . EOL);
+		foreach($attendees as $attendee) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :  * ' . $attendee . EOL);
+		}
+		unset($attendee);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
 function channel_msg_money($fp, $rdata)
 {
 
@@ -377,15 +617,17 @@ function channel_msg_money($fp, $rdata)
 		           '      game_id = ' . $game_id);
 
 		if ($db->nextRecord())
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The alliance has ' . number_format($db->getField('alliance_account')) . ' credits in the account.' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The alliance has ' . number_format($db->getField('alliance_account')) . ' credits in the bank account.' . EOL);
 
 		$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank ' .
 		           'FROM player ' .
 		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
 		           '      game_id = ' . $game_id);
 
-		if ($db->nextRecord())
-			fputs($fp, 'PRIVMSG #' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits at the their personal bank account.' . EOL);
+		if ($db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits at the their personal bank account.' . EOL);
+		}
 
 		$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds ' .
 		           'FROM planet ' .
@@ -395,8 +637,10 @@ function channel_msg_money($fp, $rdata)
 		           '                   WHERE alliance_id = ' . $alliance_id . ' AND ' .
 		           '                         game_id = ' . $game_id .
 		           '                   )');
-		if ($db->nextRecord())
-			fputs($fp, 'PRIVMSG #' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets and ' . number_format($db->getField('total_bonds')) . ' credits in bonds.' . EOL);
+		if ($db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :and ' . number_format($db->getField('total_bonds')) . ' credits in bonds.' . EOL);
+		}
 
 
 		return true;
