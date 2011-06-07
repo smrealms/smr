@@ -80,10 +80,26 @@ elseif ($action == 'Change Password')
 }
 elseif ($action == 'Change Name')
 {
-	// disallow certain ascii chars
-	for ($i = 0; $i < strlen($HoF_name); $i++)
+	$limited_char = 0;
+	for ($i = 0; $i < strlen($HoF_name); $i++) {
+		// disallow certain ascii chars
 		if (ord($HoF_name[$i]) < 32 || ord($HoF_name[$i]) > 127)
 			create_error('Your Hall Of Fame name contains invalid characters!');
+
+		// numbers 48..57
+		// Letters 65..90
+		// letters 97..122
+		if (!((ord($HoF_name[$i]) >= 48 && ord($HoF_name[$i]) <= 57) ||
+			  (ord($HoF_name[$i]) >= 65 && ord($HoF_name[$i]) <= 90) ||
+			  (ord($HoF_name[$i]) >= 97 && ord($HoF_name[$i]) <= 122)))
+		{
+			$limited_char += 1;
+		}
+	}
+
+	if ($limited_char > 4)
+		create_error('You cannot use a name with more than 4 special characters.');
+
 
 	//disallow blank names
 	if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
@@ -173,10 +189,25 @@ else if (strpos(trim($action),'Alter Player')===0)
 		create_error('Your player already has that name!');
 	}
 	
-	// disallow certain ascii chars
-	for ($i = 0; $i < strlen($player_name); $i++)
+	$limited_char = 0;
+	for ($i = 0; $i < strlen($player_name); $i++) {
+		// disallow certain ascii chars
 		if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127)
 			create_error('The player name contains invalid characters!');
+
+		// numbers 48..57
+		// Letters 65..90
+		// letters 97..122
+		if (!((ord($player_name[$i]) >= 48 && ord($player_name[$i]) <= 57) ||
+			  (ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
+			  (ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122)))
+		{
+			$limited_char += 1;
+		}
+	}
+
+	if ($limited_char > 4)
+		create_error('You cannot use a name with more than 4 special characters.');
 
 	if (empty($player_name))
 		create_error('You must enter a player name!');
