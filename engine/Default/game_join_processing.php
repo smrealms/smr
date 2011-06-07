@@ -6,11 +6,24 @@ $player_name = trim($_REQUEST['player_name']);
 if(!defined('NPCScript')&&strpos($player_name,'NPC')===0)
 	create_error('Player names cannot begin with "NPC".');
 
-// disallow certain ascii chars
-for ($i = 0; $i < strlen($player_name); $i++)
+$limited_char = 0;
+for ($i = 0; $i < strlen($player_name); $i++) {
+	// disallow certain ascii chars
 	if (ord($player_name[$i]) < 32 || ord($player_name[$i]) > 127)
 		create_error('The player name contains invalid characters!');
 
+// numbers 48..57
+// Letters 65..90
+// letters 97..122
+	if (!((ord($player_name[$i]) >= 48 && ord($player_name[$i]) <= 57) ||
+		  (ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
+		  (ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122))) {
+		$limited_char += 1;
+	}
+}
+
+if ($limited_char > 4)
+	create_error('You cannot use a name with more than 4 special characters.');
 
 if (empty($player_name))
 	create_error('You must enter a player name!');
