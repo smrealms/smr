@@ -147,7 +147,7 @@ function channel_msg_seed($fp, $rdata)
 		}
 
 		// get smr account{}
-		$account =& SmrAccount::getAccountByHofName($nick);
+		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -156,7 +156,7 @@ function channel_msg_seed($fp, $rdata)
 		}
 
 		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 
 		// do we have such an account?
 		if ($player == null) {
@@ -174,11 +174,11 @@ function channel_msg_seed($fp, $rdata)
 		$db->query('SELECT sector_id ' .
 		           'FROM alliance_has_seedlist ' .
 		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
-		           '     game_id = ' . $game_id . ' AND ' .
-		           '     sector_id NOT IN (SELECT sector_id ' .
-		           '                       FROM sector_has_forces ' .
-		           '                       WHERE game_id = ' . $game_id . ' AND ' .
-		           '                             owner_id = ' . $account->getAccountID() .
+		           '      game_id = ' . $game_id . ' AND ' .
+		           '      sector_id NOT IN (SELECT sector_id ' .
+		           '                        FROM sector_has_forces ' .
+		           '                        WHERE game_id = ' . $game_id . ' AND ' .
+		           '                              owner_id = ' . $account->getAccountID() .
 		           '                       )');
 		$missing_seeds = array();
 		while ($db->nextRecord()) {
@@ -218,9 +218,11 @@ function channel_msg_op($fp, $rdata)
 
 		fputs($fp, 'PRIVMSG #' . $channel . ' :The !op command can be used to manage an upcoming op.' . EOL);
 		fputs($fp, 'PRIVMSG #' . $channel . ' :The following sub commands are available:' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op info      Displays the time left until next op' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op list      Displays a list of players who have signed up' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op signup    Sign you up for the upcoming up' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op info       Displays the time left until next op' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op list       Displays a list of players who have signed up' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op signup     Sign you up for the upcoming up' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op set <time> The leader can set up an OP. <time> has to be a unix timestamp. Use http://www.epochconverter.com' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op cancel     The leader can cancel the OP' . EOL);
 
 		return true;
 
@@ -274,7 +276,7 @@ function channel_msg_op_info($fp, $rdata)
 		}
 
 		// get smr account{}
-		$account =& SmrAccount::getAccountByHofName($nick);
+		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -283,7 +285,7 @@ function channel_msg_op_info($fp, $rdata)
 		}
 
 		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 
 		// do we have such an account?
 		if ($player == null) {
@@ -322,6 +324,200 @@ function channel_msg_op_info($fp, $rdata)
 			$op_turns > $player->getMaxTurns();
 		fputs($fp, 'PRIVMSG #' . $channel . ' :You will have ' . ($op_turns) . ' turns by then.' . EOL);
 
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_op_cancel($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!op cancel\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+
+		echo_r('[OP_INFO] by ' . $nick . ' in #' . $channel);
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+
+			error_not_registered($fp, $channel, $nick);
+
+			fputs($fp, 'WHOIS ' . $nick . EOL);
+			return true;
+
+		}
+
+		// check if the query is in public channel
+		if ($channel == 'smr') {
+			error_public_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+
+		} else {
+			error_unknown_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr account{}
+		$account =& SmrAccount::getAccountByHofName($nick, true);
+
+		// do we have such an account?
+		if ($account == null) {
+			error_unknown_account($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+
+		// do we have such an account?
+		if ($player == null) {
+			error_unknown_player($fp, $channel, $nick);
+			return true;
+		}
+
+		// is the user part of this alliance?
+		if ($player->getAllianceID() != $alliance_id) {
+			error_unknown_alliance($fp, $channel, $nick);
+			return true;
+		}
+
+		// get the op from db
+		$db->query('SELECT time ' .
+		           'FROM alliance_has_op ' .
+		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+		           '      game_id = ' . $game_id);
+		if (!$db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
+			return true;
+		}
+
+		// check if $nick is leader
+		if ($player->getAlliance()->getLeaderID() != $player->getAccountID()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance can cancel an OP.' . EOL);
+			return true;
+		}
+
+		// just get rid of op
+		$db->query('DELETE FROM alliance_has_op ' .
+		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+		           '      game_id = ' . $game_id);
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The OP has been canceled.' . EOL);
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_op_set($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!op set (.*)\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$op_time = $msg[5];
+
+		echo_r('[OP_INFO] by ' . $nick . ' in #' . $channel);
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+
+			error_not_registered($fp, $channel, $nick);
+
+			fputs($fp, 'WHOIS ' . $nick . EOL);
+			return true;
+
+		}
+
+		// check if the query is in public channel
+		if ($channel == 'smr') {
+			error_public_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+
+		} else {
+			error_unknown_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr account{}
+		$account =& SmrAccount::getAccountByHofName($nick, true);
+
+		// do we have such an account?
+		if ($account == null) {
+			error_unknown_account($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+
+		// do we have such an account?
+		if ($player == null) {
+			error_unknown_player($fp, $channel, $nick);
+			return true;
+		}
+
+		// is the user part of this alliance?
+		if ($player->getAllianceID() != $alliance_id) {
+			error_unknown_alliance($fp, $channel, $nick);
+			return true;
+		}
+
+		// check if $nick is leader
+		if ($player->getAlliance()->getLeaderID() != $player->getAccountID()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance can setup an OP.' . EOL);
+			return true;
+		}
+
+		// get the op from db
+		$db->query('SELECT time ' .
+		           'FROM alliance_has_op ' .
+		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+		           '      game_id = ' . $game_id);
+		if ($db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :There is already an OP scheduled. Cancel it first!' . EOL);
+			return true;
+		}
+
+		// just get rid of op
+		$db->query('INSERT INTO alliance_has_op (alliance_id, game_id, time) ' .
+		           'VALUES (' . $alliance_id . ', ' . $game_id . ', ' . $op_time . ')');
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The OP has been scheduled.' . EOL);
 		return true;
 
 	}
@@ -374,7 +570,7 @@ function channel_msg_op_signup($fp, $rdata)
 		}
 
 		// get smr account{}
-		$account =& SmrAccount::getAccountByHofName($nick);
+		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -383,7 +579,7 @@ function channel_msg_op_signup($fp, $rdata)
 		}
 
 		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 
 		// do we have such an account?
 		if ($player == null) {
@@ -481,7 +677,7 @@ function channel_msg_op_list($fp, $rdata)
 		}
 
 		// get smr account{}
-		$account =& SmrAccount::getAccountByHofName($nick);
+		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -490,7 +686,7 @@ function channel_msg_op_list($fp, $rdata)
 		}
 
 		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 
 		// do we have such an account?
 		if ($player == null) {
@@ -588,7 +784,7 @@ function channel_msg_money($fp, $rdata)
 		}
 
 		// get smr account{}
-		$account =& SmrAccount::getAccountByHofName($nick);
+		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -597,7 +793,7 @@ function channel_msg_money($fp, $rdata)
 		}
 
 		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
 
 		// do we have such an account?
 		if ($player == null) {

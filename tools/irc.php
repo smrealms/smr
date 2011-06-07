@@ -149,6 +149,10 @@ if ($fp)
 	        continue;
         if (channel_msg_op_info($fp, $rdata))
 	        continue;
+        if (channel_msg_op_cancel($fp, $rdata))
+	        continue;
+        if (channel_msg_op_set($fp, $rdata))
+	        continue;
         if (channel_msg_op_signup($fp, $rdata))
 	        continue;
         if (channel_msg_op_list($fp, $rdata))
