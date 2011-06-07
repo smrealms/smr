@@ -145,6 +145,12 @@ if ($fp)
             continue;
         if (channel_msg_seed($fp, $rdata))
             continue;
+        if (channel_msg_seedlist($fp, $rdata))
+            continue;
+        if (channel_msg_seedlist_add($fp, $rdata))
+            continue;
+        if (channel_msg_seedlist_del($fp, $rdata))
+            continue;
         if (channel_msg_op($fp, $rdata))
 	        continue;
         if (channel_msg_op_info($fp, $rdata))

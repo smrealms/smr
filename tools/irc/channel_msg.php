@@ -3,6 +3,7 @@
 function error_not_registered($fp, $channel, $nick)
 {
 	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', to me it looks like that you do not use a registered nick. Please identify with NICKSERV and try again.' . EOL);
+	fputs($fp, 'WHOIS ' . $nick . EOL);
 }
 
 function error_public_channel($fp, $channel, $nick)
@@ -120,12 +121,8 @@ function channel_msg_seed($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-
 			error_not_registered($fp, $channel, $nick);
-
-			fputs($fp, 'WHOIS ' . $nick . EOL);
 			return true;
-
 		}
 
 		// check if the query is in public channel
@@ -137,16 +134,14 @@ function channel_msg_seed($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
 		if ($db->nextRecord()) {
-
 			$game_id = $db->getField('game_id');
 			$alliance_id = $db->getField('alliance_id');
-
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
 			return true;
 		}
 
-		// get smr account{}
+		// get smr account
 		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
@@ -204,6 +199,247 @@ function channel_msg_seed($fp, $rdata)
 
 }
 
+function channel_msg_seedlist($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seedlist\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+
+		echo_r('[SEEDLIST] by ' . $nick . ' in #' . $channel);
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The !seedlist command enables alliance leader to add or remove sectors to the seedlist' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The following sub commands are available:' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !seedlist add <sector>        Adds <sector> to the seedlist' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !seedlist del <sector>        Removes <sector> from seedlist' . EOL);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_seedlist_add($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seedlist add (.*)\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$sector = $msg[5];
+
+		echo_r('[SEEDLIST_ADD] by ' . $nick . ' in #' . $channel);
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+			error_not_registered($fp, $channel, $nick);
+			return true;
+		}
+
+		// check if the query is in public channel
+		if ($channel == 'smr') {
+			error_public_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+		} else {
+			error_unknown_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr account
+		$account =& SmrAccount::getAccountByHofName($nick, true);
+
+		// do we have such an account?
+		if ($account == null) {
+			error_unknown_account($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+
+		// do we have such an account?
+		if ($player == null) {
+			error_unknown_player($fp, $channel, $nick);
+			return true;
+		}
+
+		// is the user part of this alliance?
+		if ($player->getAllianceID() != $alliance_id) {
+			error_unknown_alliance($fp, $channel, $nick);
+			return true;
+		}
+
+		// check if $nick is leader
+		if ($player->getAlliance()->getLeaderID() != $player->getAccountID()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
+			return true;
+		}
+
+		// see if the sector is numeric
+		if (!is_numeric($sector)) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector needs to be numeric. Example: !seedlist add 1537' . EOL);
+			return true;
+		}
+
+		// check if the sector is a part of the game
+		$db->query('SELECT sector_id ' .
+		           'FROM   sector ' .
+		           'WHERE  game_id = ' . $game_id . ' ' .
+		           '  AND  sector_id = ' . $db->escapeNumber($sector)
+		);
+
+		if (!$db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' does not exist in current game.' . EOL);
+			return true;
+		}
+
+		// check if the given sector is already part of the seed list
+		$db->query('SELECT sector_id ' .
+		           'FROM   alliance_has_seedlist ' .
+		           'WHERE  alliance_id = ' . $alliance_id . ' ' .
+		           '  AND  game_id = ' . $game_id . ' ' .
+				   '  AND  sector_id = ' . $db->escapeNumber($sector)
+		);
+
+		if ($db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' is already in the seedlist.' . EOL);
+			return true;
+		}
+
+		// add sector to db
+		$db->query('INSERT INTO alliance_has_seedlist ' .
+		           '(alliance_id, game_id, sector_id) ' .
+		           'VALUES (' . $alliance_id . ', ' . $game_id . ', ' . $db->escapeNumber($sector) . ')');
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The sector has been added.' . EOL);
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_seedlist_del($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seedlist del (.*)\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$sector = $msg[5];
+
+		echo_r('[SEEDLIST_DEL] by ' . $nick . ' in #' . $channel);
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+			error_not_registered($fp, $channel, $nick);
+			return true;
+		}
+
+		// check if the query is in public channel
+		if ($channel == 'smr') {
+			error_public_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+		} else {
+			error_unknown_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr account
+		$account =& SmrAccount::getAccountByHofName($nick, true);
+
+		// do we have such an account?
+		if ($account == null) {
+			error_unknown_account($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+
+		// do we have such an account?
+		if ($player == null) {
+			error_unknown_player($fp, $channel, $nick);
+			return true;
+		}
+
+		// is the user part of this alliance?
+		if ($player->getAllianceID() != $alliance_id) {
+			error_unknown_alliance($fp, $channel, $nick);
+			return true;
+		}
+
+		// check if $nick is leader
+		if ($player->getAlliance()->getLeaderID() != $player->getAccountID()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
+			return true;
+		}
+
+		// see if the sector is numeric
+		if (!is_numeric($sector)) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector needs to be numeric. Example: !seedlist del 1537' . EOL);
+			return true;
+		}
+
+		// check if the given sector is already part of the seed list
+		$db->query('SELECT sector_id ' .
+		           'FROM   alliance_has_seedlist ' .
+		           'WHERE  alliance_id = ' . $alliance_id . ' ' .
+		           '  AND  game_id = ' . $game_id . ' ' .
+				   '  AND  sector_id = ' . $db->escapeNumber($sector)
+		);
+
+		if (!$db->nextRecord()) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' is not part of the seedlist.' . EOL);
+			return true;
+		}
+
+		// add sector to db
+		$db->query('DELETE FROM alliance_has_seedlist ' .
+		           'WHERE  alliance_id = ' . $alliance_id . ' ' .
+		           '  AND  game_id = ' . $game_id . ' ' .
+				   '  AND  sector_id = ' . $db->escapeNumber($sector)
+		);
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The sector has been deleted.' . EOL);
+		return true;
+
+	}
+
+	return false;
+
+}
+
 function channel_msg_op($fp, $rdata)
 {
 
@@ -249,12 +485,8 @@ function channel_msg_op_info($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-
 			error_not_registered($fp, $channel, $nick);
-
-			fputs($fp, 'WHOIS ' . $nick . EOL);
 			return true;
-
 		}
 
 		// check if the query is in public channel
@@ -266,16 +498,14 @@ function channel_msg_op_info($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
 		if ($db->nextRecord()) {
-
 			$game_id = $db->getField('game_id');
 			$alliance_id = $db->getField('alliance_id');
-
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
 			return true;
 		}
 
-		// get smr account{}
+		// get smr account
 		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
@@ -299,17 +529,21 @@ function channel_msg_op_info($fp, $rdata)
 			return true;
 		}
 
-		// get the seedlist from db
-		$db->query('SELECT time ' .
+		// get the op from db
+		$db->query('SELECT time, attendees ' .
 		           'FROM alliance_has_op ' .
 		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
-		           '     game_id = ' . $game_id);
+		           '      game_id = ' . $game_id);
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
 		}
 
+		// retrieve values
 		$op_time = $db->getField('time');
+		$attendees = unserialize($db->getField('attendees'));
+		if (!is_array($attendees))
+			$attendees = array();
 
 		// check the that is in the future
 		if ($op_time < time()) {
@@ -319,6 +553,15 @@ function channel_msg_op_info($fp, $rdata)
 
 		// announce time left
 		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', the next scheduled op will be in ' . format_time($op_time - time()) . EOL);
+
+		// have we signed up?
+		if (array_search($nick, $attendees)) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :You have already signed up for this one.' . EOL);
+		} else {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :You have NOT signed up for this one.' . EOL);
+		}
+
+		// announce players turns
 		$op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $player->getShip()->getRealSpeed() / 3600));
 		if ($op_turns > $player->getMaxTurns())
 			$op_turns > $player->getMaxTurns();
@@ -342,19 +585,15 @@ function channel_msg_op_cancel($fp, $rdata)
 		$host = $msg[3];
 		$channel = $msg[4];
 
-		echo_r('[OP_INFO] by ' . $nick . ' in #' . $channel);
+		echo_r('[OP_CANCEL] by ' . $nick . ' in #' . $channel);
 
 		$db = new SmrMySqlDatabase();
 
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-
 			error_not_registered($fp, $channel, $nick);
-
-			fputs($fp, 'WHOIS ' . $nick . EOL);
 			return true;
-
 		}
 
 		// check if the query is in public channel
@@ -366,16 +605,14 @@ function channel_msg_op_cancel($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
 		if ($db->nextRecord()) {
-
 			$game_id = $db->getField('game_id');
 			$alliance_id = $db->getField('alliance_id');
-
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
 			return true;
 		}
 
-		// get smr account{}
+		// get smr account
 		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
@@ -440,19 +677,15 @@ function channel_msg_op_set($fp, $rdata)
 		$channel = $msg[4];
 		$op_time = $msg[5];
 
-		echo_r('[OP_INFO] by ' . $nick . ' in #' . $channel);
+		echo_r('[OP_SET] by ' . $nick . ' in #' . $channel);
 
 		$db = new SmrMySqlDatabase();
 
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-
 			error_not_registered($fp, $channel, $nick);
-
-			fputs($fp, 'WHOIS ' . $nick . EOL);
 			return true;
-
 		}
 
 		// check if the query is in public channel
@@ -464,16 +697,14 @@ function channel_msg_op_set($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
 		if ($db->nextRecord()) {
-
 			$game_id = $db->getField('game_id');
 			$alliance_id = $db->getField('alliance_id');
-
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
 			return true;
 		}
 
-		// get smr account{}
+		// get smr account
 		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
@@ -505,17 +736,22 @@ function channel_msg_op_set($fp, $rdata)
 
 		// get the op from db
 		$db->query('SELECT time ' .
-		           'FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
-		           '      game_id = ' . $game_id);
+		           'FROM   alliance_has_op ' .
+		           'WHERE  alliance_id = ' . $alliance_id . ' ' .
+		           '  AND  game_id = ' . $game_id);
 		if ($db->nextRecord()) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :There is already an OP scheduled. Cancel it first!' . EOL);
 			return true;
 		}
 
-		// just get rid of op
+		if (!is_numeric($op_time)) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The <time> needs to be a unix timestamp. See http://www.epochconverter.com for a converter.' . EOL);
+			return true;
+		}
+
+		// add op to db
 		$db->query('INSERT INTO alliance_has_op (alliance_id, game_id, time) ' .
-		           'VALUES (' . $alliance_id . ', ' . $game_id . ', ' . $op_time . ')');
+		           'VALUES (' . $alliance_id . ', ' . $game_id . ', ' . $db->escapeNumber($op_time) . ')');
 
 		fputs($fp, 'PRIVMSG #' . $channel . ' :The OP has been scheduled.' . EOL);
 		return true;
@@ -543,12 +779,8 @@ function channel_msg_op_signup($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-
 			error_not_registered($fp, $channel, $nick);
-
-			fputs($fp, 'WHOIS ' . $nick . EOL);
 			return true;
-
 		}
 
 		// check if the query is in public channel
@@ -560,16 +792,14 @@ function channel_msg_op_signup($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
 		if ($db->nextRecord()) {
-
 			$game_id = $db->getField('game_id');
 			$alliance_id = $db->getField('alliance_id');
-
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
 			return true;
 		}
 
-		// get smr account{}
+		// get smr account
 		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
@@ -650,12 +880,8 @@ function channel_msg_op_list($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-
 			error_not_registered($fp, $channel, $nick);
-
-			fputs($fp, 'WHOIS ' . $nick . EOL);
 			return true;
-
 		}
 
 		// check if the query is in public channel
@@ -667,16 +893,14 @@ function channel_msg_op_list($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
 		if ($db->nextRecord()) {
-
 			$game_id = $db->getField('game_id');
 			$alliance_id = $db->getField('alliance_id');
-
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
 			return true;
 		}
 
-		// get smr account{}
+		// get smr account
 		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
@@ -757,12 +981,8 @@ function channel_msg_money($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-
 			error_not_registered($fp, $channel, $nick);
-
-			fputs($fp, 'WHOIS ' . $nick . EOL);
 			return true;
-
 		}
 
 		// check if the query is in public channel
@@ -774,16 +994,14 @@ function channel_msg_money($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
 		if ($db->nextRecord()) {
-
 			$game_id = $db->getField('game_id');
 			$alliance_id = $db->getField('alliance_id');
-
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
 			return true;
 		}
 
-		// get smr account{}
+		// get smr account
 		$account =& SmrAccount::getAccountByHofName($nick, true);
 
 		// do we have such an account?
@@ -902,8 +1120,9 @@ function channel_msg_help($fp, $rdata)
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seen <nickname>         Displays the last time <nickname> was seen' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !timer <mins> <msg>      Starts a countdown which will send a notice to the channel with the <msg> in <mins> minutes' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :Available alliance commands commands:' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :  !seedlist                Manages the seedlist' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !op                      Displays the time and turns you have until next scheduled op' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :  !op                      Command to manage OPs' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !money                   Displays the funds the alliance owns' . EOL);
 
 		return true;
