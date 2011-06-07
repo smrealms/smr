@@ -44,7 +44,6 @@ require_once('irc/notice.php');
 //require_once('irc/level.php');
 require_once('irc/channel.php');
 require_once('irc/channel_msg.php');
-//require_once('irc/login.php');
 require_once('irc/maintenance.php');
 
 // database object

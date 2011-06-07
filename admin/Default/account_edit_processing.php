@@ -161,7 +161,6 @@ if (!empty($delete)) {
 			$db->query('DELETE FROM galactic_post_applications WHERE account_id=' . $account_id . ' AND game_id=' . $game_id);
 			$db->query('DELETE FROM galactic_post_article WHERE writer_id=' . $account_id . ' AND game_id=' . $game_id);
 			$db->query('DELETE FROM galactic_post_writer WHERE account_id=' . $account_id . ' AND game_id=' . $game_id);
-			$db->query('DELETE FROM irc_logged_in WHERE account_id=' . $account_id . ' AND game_id=' . $game_id);
 			$db->query('DELETE FROM kills WHERE (dead_id=' . $account_id . ' OR killer_id=' . $account_id .') AND game_id=' . $game_id);
 			$db->query('DELETE FROM message WHERE account_id=' . $account_id . ' AND game_id=' . $game_id);
 			$db->query('DELETE FROM message_notify WHERE (from_id=' . $account_id . ' OR to_id=' . $account_id .') AND game_id=' . $game_id);
