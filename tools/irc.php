@@ -12,6 +12,13 @@ function echo_r($message)
 		echo date("d.m.Y H:i:s => ").$message.EOL;
 }
 
+// not keeping the filehandle might not be the wisest idea.
+function write_log_message($msg) {
+	$logFile = fopen("/var/log/irc/" . date("Ymd") . ".log", "a+");
+	fwrite($logFile, round(microtime(true) * 1000) . ' ' . $msg . EOL);
+	fclose($logFile);
+}
+
 // config file
 include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
@@ -28,7 +35,6 @@ $nick = 'Caretaker';
 $pass = 'smr4ever';
 
 $events = array();
-$eightBall = false;
 $answers = array(
 	'Signs point to yes.',
 	'Yes.',
@@ -118,6 +124,10 @@ if ($fp)
         $rdata = fgets($fp, 4096);
         $rdata = preg_replace('/\s+/', ' ', $rdata);
 
+	    // log for reports
+	    if (strlen($rdata) > 0)
+		    write_log_message($rdata);
+
 	    // we simply do some poll stuff here
 	    check_planet_builds($fp);
 	    check_events($fp);
@@ -190,15 +200,9 @@ if ($fp)
 	        continue;
         if (channel_msg_timer($fp, $rdata))
 	        continue;
-        if (channel_msg_8ball($fp, $rdata))
+        if (channel_msg_8ball($fp, $rdata, $answers))
 	        continue;
-        if (channel_msg_8ball_on($fp, $rdata))
-	        continue;
-        if (channel_msg_8ball_off($fp, $rdata))
-	        continue;
-	    if ($eightBall and channel_msg_question($fp, $rdata))
-		    continue;
-	    
+
 /* doing these later...
 
         // channel messages
