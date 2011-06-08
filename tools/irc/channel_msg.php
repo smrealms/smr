@@ -456,7 +456,7 @@ function channel_msg_op($fp, $rdata)
 		fputs($fp, 'PRIVMSG #' . $channel . ' :The following sub commands are available:' . EOL);
 		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op info       Displays the time left until next op' . EOL);
 		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op list       Displays a list of players who have signed up' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op signup     Sign you up for the upcoming up' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op signup     Sign you up for the upcoming OP' . EOL);
 		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op set <time> The leader can set up an OP. <time> has to be a unix timestamp. Use http://www.epochconverter.com' . EOL);
 		fputs($fp, 'PRIVMSG #' . $channel . ' :  !op cancel     The leader can cancel the OP' . EOL);
 
@@ -776,13 +776,6 @@ function channel_msg_op_signup($fp, $rdata)
 
 		$db = new SmrMySqlDatabase();
 
-		// only registered users are allowed to use this command
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
-		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
-			return true;
-		}
-
 		// check if the query is in public channel
 		if ($channel == 'smr') {
 			error_public_channel($fp, $channel, $nick);
@@ -796,30 +789,6 @@ function channel_msg_op_signup($fp, $rdata)
 			$alliance_id = $db->getField('alliance_id');
 		} else {
 			error_unknown_channel($fp, $channel, $nick);
-			return true;
-		}
-
-		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
-
-		// do we have such an account?
-		if ($account == null) {
-			error_unknown_account($fp, $channel, $nick);
-			return true;
-		}
-
-		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
-
-		// do we have such an account?
-		if ($player == null) {
-			error_unknown_player($fp, $channel, $nick);
-			return true;
-		}
-
-		// is the user part of this alliance?
-		if ($player->getAllianceID() != $alliance_id) {
-			error_unknown_alliance($fp, $channel, $nick);
 			return true;
 		}
 
@@ -877,13 +846,6 @@ function channel_msg_op_list($fp, $rdata)
 
 		$db = new SmrMySqlDatabase();
 
-		// only registered users are allowed to use this command
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
-		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
-			return true;
-		}
-
 		// check if the query is in public channel
 		if ($channel == 'smr') {
 			error_public_channel($fp, $channel, $nick);
@@ -900,30 +862,6 @@ function channel_msg_op_list($fp, $rdata)
 			return true;
 		}
 
-		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
-
-		// do we have such an account?
-		if ($account == null) {
-			error_unknown_account($fp, $channel, $nick);
-			return true;
-		}
-
-		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
-
-		// do we have such an account?
-		if ($player == null) {
-			error_unknown_player($fp, $channel, $nick);
-			return true;
-		}
-
-		// is the user part of this alliance?
-		if ($player->getAllianceID() != $alliance_id) {
-			error_unknown_alliance($fp, $channel, $nick);
-			return true;
-		}
-
 		// get the op info from db
 		$db->query('SELECT time, attendees ' .
 		           'FROM alliance_has_op ' .
@@ -934,16 +872,9 @@ function channel_msg_op_list($fp, $rdata)
 			return true;
 		}
 
-		$op_time = $db->getField('time');
 		$attendees = unserialize($db->getField('attendees'));
 		if (!is_array($attendees))
 			$attendees = array();
-
-		// check the that is in the future
-		if ($op_time < time()) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', sorry. You missed the OP.' . EOL);
-			return true;
-		}
 
 		if (count($attendees) == 0) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :Noone has signed up for the upcoming OP.' . EOL);
@@ -1093,6 +1024,110 @@ function channel_msg_timer($fp, $rdata)
 
 }
 
+function channel_msg_question($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:(.*)\?\s$/i', $rdata, $msg)) {
+
+		global $answers;
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$question = $msg[5];
+
+		echo_r('[QUESTION] by ' . $nick . ' in #' . $channel);
+		echo_r('[QUESTION] ' . $question);
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $answers[rand(0, count($answers) - 1)] . EOL);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_8ball($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$question = $msg[4];
+
+		echo_r('[8Ball] by ' . $nick . ' in #' . $channel);
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :With the 8ball comannds caretaker can give answers to your most pressing questions, like the famous 8ball' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :The following sub commands are available:' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !8ball on         Every question in channel will be answered.' . EOL);
+		fputs($fp, 'PRIVMSG #' . $channel . ' :  !8ball off        Turn off 8ball answers' . EOL);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_8ball_on($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball on\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$question = $msg[4];
+
+		echo_r('[8Ball_ON] by ' . $nick . ' in #' . $channel);
+
+		global $eightBall;
+		$eightBall = true;
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :I\'ll answer all your questions you have' . EOL);
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
+function channel_msg_8ball_off($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball off\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$question = $msg[4];
+
+		echo_r('[8Ball_OFF] by ' . $nick . ' in #' . $channel);
+
+		global $eightBall;
+		$eightBall = false;
+
+		fputs($fp, 'PRIVMSG #' . $channel . ' :I\'ll stop answering any questions' . EOL);
+		
+		return true;
+
+	}
+
+	return false;
+
+}
+
 function channel_msg_help($fp, $rdata)
 {
 
@@ -1119,6 +1154,7 @@ function channel_msg_help($fp, $rdata)
 		//		fputs($fp, 'NOTICE '.$nick.' :                         Displays all weapons that have <object> great than <lower_limit> and <object> less than <upper_limit> in order (see !help weapon range)'.EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seen <nickname>         Displays the last time <nickname> was seen' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !timer <mins> <msg>      Starts a countdown which will send a notice to the channel with the <msg> in <mins> minutes' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :  !8ball                   Manages 8ball options' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :Available alliance commands commands:' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seedlist                Manages the seedlist' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
@@ -1178,6 +1214,5 @@ function channel_msg_help($fp, $rdata)
 	return false;
 
 }
-
 
 ?>

@@ -28,6 +28,29 @@ $nick = 'Caretaker';
 $pass = 'smr4ever';
 
 $events = array();
+$eightBall = false;
+$answers = array(
+	'Signs point to yes.',
+	'Yes.',
+	'Reply hazy, try again.',
+	'Without a doubt.',
+	'My sources say no.',
+	'As I see it, yes.',
+	'You may rely on it.',
+	'Concentrate and ask again.',
+	'Outlook not so good.',
+	'It is decidedly so.',
+	'Better not tell you now.',
+	'Very doubtful.',
+	'Yes - definitely.',
+	'It is certain.',
+	'Cannot predict now.',
+	'Most likely.',
+	'Ask again later.',
+	'My reply is no.',
+	'Outlook good.',
+	'Don\'t count on it.'
+);
 
 echo_r('Connecting to '.$address);
 
@@ -167,6 +190,14 @@ if ($fp)
 	        continue;
         if (channel_msg_timer($fp, $rdata))
 	        continue;
+        if (channel_msg_8ball($fp, $rdata))
+	        continue;
+        if (channel_msg_8ball_on($fp, $rdata))
+	        continue;
+        if (channel_msg_8ball_off($fp, $rdata))
+	        continue;
+	    if ($eightBall and channel_msg_question($fp, $rdata))
+		    continue;
 	    
 /* doing these later...
 
