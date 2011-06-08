@@ -2,7 +2,7 @@
 
 function error_not_registered($fp, $channel, $nick)
 {
-	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', to me it looks like that you do not use a registered nick. Please identify with NICKSERV and try again.' . EOL);
+	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', to me it looks like that you do not use a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 	fputs($fp, 'WHOIS ' . $nick . EOL);
 }
 
@@ -999,9 +999,9 @@ function channel_msg_money($fp, $rdata)
 function channel_msg_timer($fp, $rdata)
 {
 
-	global $events;
-
 	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :!timer ([^ ]+) (.*)$/i', $rdata, $msg)) {
+
+		global $events;
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -1024,102 +1024,21 @@ function channel_msg_timer($fp, $rdata)
 
 }
 
-function channel_msg_question($fp, $rdata)
+function channel_msg_8ball($fp, $rdata, $answers)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:(.*)\?\s$/i', $rdata, $msg)) {
-
-		global $answers;
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
-		$question = $msg[5];
+		$question = $msg[4];
 
-		echo_r('[QUESTION] by ' . $nick . ' in #' . $channel);
-		echo_r('[QUESTION] ' . $question);
+		echo_r('[8BALL] by ' . $nick . ' in #' . $channel . '. Question: ' . $question);
 
 		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $answers[rand(0, count($answers) - 1)] . EOL);
 
-		return true;
-
-	}
-
-	return false;
-
-}
-
-function channel_msg_8ball($fp, $rdata)
-{
-
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball\s$/i', $rdata, $msg)) {
-
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$question = $msg[4];
-
-		echo_r('[8Ball] by ' . $nick . ' in #' . $channel);
-
-		fputs($fp, 'PRIVMSG #' . $channel . ' :With the 8ball comannds caretaker can give answers to your most pressing questions, like the famous 8ball' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :The following sub commands are available:' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !8ball on         Every question in channel will be answered.' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !8ball off        Turn off 8ball answers' . EOL);
-
-		return true;
-
-	}
-
-	return false;
-
-}
-
-function channel_msg_8ball_on($fp, $rdata)
-{
-
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball on\s$/i', $rdata, $msg)) {
-
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$question = $msg[4];
-
-		echo_r('[8Ball_ON] by ' . $nick . ' in #' . $channel);
-
-		global $eightBall;
-		$eightBall = true;
-
-		fputs($fp, 'PRIVMSG #' . $channel . ' :I\'ll answer all your questions you have' . EOL);
-
-		return true;
-
-	}
-
-	return false;
-
-}
-
-function channel_msg_8ball_off($fp, $rdata)
-{
-
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball off\s$/i', $rdata, $msg)) {
-
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		$question = $msg[4];
-
-		echo_r('[8Ball_OFF] by ' . $nick . ' in #' . $channel);
-
-		global $eightBall;
-		$eightBall = false;
-
-		fputs($fp, 'PRIVMSG #' . $channel . ' :I\'ll stop answering any questions' . EOL);
-		
 		return true;
 
 	}
@@ -1154,7 +1073,7 @@ function channel_msg_help($fp, $rdata)
 		//		fputs($fp, 'NOTICE '.$nick.' :                         Displays all weapons that have <object> great than <lower_limit> and <object> less than <upper_limit> in order (see !help weapon range)'.EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seen <nickname>         Displays the last time <nickname> was seen' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !timer <mins> <msg>      Starts a countdown which will send a notice to the channel with the <msg> in <mins> minutes' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !8ball                   Manages 8ball options' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :  !8ball <question>        Display one of the famous 8ball answers to your <question>' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :Available alliance commands commands:' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seedlist                Manages the seedlist' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
