@@ -58,6 +58,11 @@ $answers = array(
 	'Don\'t count on it.'
 );
 
+$logging = false;
+if ($argc > 1) {
+	$logging = ($argv[1] == '-log');
+}
+
 echo_r('Connecting to '.$address);
 
 // include all sub files
@@ -124,8 +129,8 @@ if ($fp)
         $rdata = fgets($fp, 4096);
         $rdata = preg_replace('/\s+/', ' ', $rdata);
 
-	    // log for reports
-	    if (strlen($rdata) > 0)
+	    // log for reports (if enabled via command line (-log)
+	    if ($logging && strlen($rdata) > 0)
 		    write_log_message($rdata);
 
 	    // we simply do some poll stuff here
