@@ -12,8 +12,8 @@ function channel_join($fp, $rdata)
 
 		echo_r('[JOIN] ' . $nick . '!' . $user . '@' . $host . ' joined #' . $channel);
 
-		if ($nick == 'MrSpock' && $user == 'mrspock')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
+//		if ($nick == 'MrSpock' && $user == 'mrspock')
+//			fputs($fp, 'PRIVMSG #' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
 		if ($nick == 'Holti' && $user == 'Holti')
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands Holti a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . EOL);
 		if ($nick == 'kiNky' && $user == 'cicika')
@@ -53,6 +53,32 @@ function channel_join($fp, $rdata)
 		}
 
 		fputs($fp, 'WHOIS ' . $nick . EOL);
+
+		// check if player joined alliance chat
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+
+			// check if there is an upcoming op
+			$db->query('SELECT time, attendees ' .
+					   'FROM alliance_has_op ' .
+					   'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+					   '      game_id = ' . $game_id . ' AND ' .
+			           '      time > ' . time());
+			if ($db->nextRecord()) {
+				$attendees = unserialize($db->getField('attendees'));
+				if (!is_array($attendees))
+					$attendees = array();
+
+				// if we are not in the attendees list we give the player a hint
+				if (!array_search($nick, $attendees)) {
+					fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op command to do so.' . EOL);
+				}
+			}
+
+		}
+
 
 		return true;
 
