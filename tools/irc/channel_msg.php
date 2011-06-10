@@ -813,16 +813,23 @@ function channel_msg_op_signup($fp, $rdata)
 			return true;
 		}
 
-		// add nick to the list of the attendees
-		array_push($attendees, $nick);
+		// check if we are on the list
+		if (!array_search($nick, $attendees)) {
 
-		// save it back in the database
-		$db->query('UPDATE alliance_has_op ' .
-		           'SET attendees = ' . $db->escapeString(serialize($attendees)) . ' ' .
-		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
-		           '      game_id = ' . $game_id);
+			// add nick to the list of the attendees
+			array_push($attendees, $nick);
 
-		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you have been added to the list of attendees. You are number ' . count($attendees) . EOL);
+			// save it back in the database
+			$db->query('UPDATE alliance_has_op ' .
+					   'SET attendees = ' . $db->escapeString(serialize($attendees)) . ' ' .
+					   'WHERE alliance_id = ' . $alliance_id . ' AND ' .
+					   '      game_id = ' . $game_id);
+
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you have been added to the list of attendees. You are number ' . count($attendees) . EOL);
+
+		} else {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you have already signed up for the OP.' . EOL);
+		}
 
 		return true;
 
