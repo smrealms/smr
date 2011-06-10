@@ -978,7 +978,7 @@ function channel_msg_money($fp, $rdata)
 
 		if ($db->nextRecord()) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them' . EOL);
-			fputs($fp, 'PRIVMSG #' . $channel . ' :and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits at the their personal bank account.' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits in their personal bank accounts.' . EOL);
 		}
 
 		$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds ' .
