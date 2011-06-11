@@ -78,6 +78,19 @@ function dumpMemDiff($msg)
 	ob_start();
 }
 
+function microtimeDiff($m1,$m2)
+{
+	$t1 = explode(' ', $m1);
+	$t2 = explode(' ', $m2);
+	return ($t1[0] - $t2[0])*1000 + $t1[1] - $t2[1];
+}
+
+function explodeElement($delimiter, $string, $index)
+{
+	$arr = explode($delimiter, $string, $index);
+	return $arr[$index];
+}
+
 require_once('config.php');
 
 //	//num races

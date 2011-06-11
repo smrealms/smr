@@ -71,6 +71,11 @@ abstract class MySqlDatabase implements Database
 		return (float)$this->dbRecord[$name];
 	}
 	
+	public function getMicrotime($name)
+	{
+		return substr($this->dbRecord[$name],0,-6).' '.substr($this->dbRecord[$name],-6);
+	}
+	
 	public function getObject($name,$compressed=false)
 	{
 		$object = $this->getField($name);
@@ -210,6 +215,15 @@ abstract class MySqlDatabase implements Database
 			return $this->escapeString($num,$quotes);
 		else
 			throw new Exception('Not a number! ('.$num.')');
+	}
+	
+	public function escapeMicrotime($microtime,$quotes=false)
+	{
+		$timePieces = explode(' ', $microtime);
+		if(count($timePieces)==2 && strlen($microtime[1])<=6)
+			return $this->escapeString($microtime[0].str_pad($microtime[1],6,'0'),$quotes);
+		else
+			throw new Exception('Not a microtime! ('.$microtime.')');
 	}
 	
 	public function escapeBoolean($bool,$quotes=true)

@@ -32,8 +32,6 @@ try
 	//xdebug_start_profiling();
 	
 	//ob_start();
-
-	$time_start = microtime(true);
 	
 	// ********************************
 	// *

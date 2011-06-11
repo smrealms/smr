@@ -2,14 +2,14 @@
 $timeBetweenAttacks = 0;
 if($var['time'])
 {
-	$timeBetweenAttacks = microtime(true)-$var['time'];
+	$timeBetweenAttacks = microtimeDiff(microtime(),$var['time']);
 	if($timeBetweenAttacks<MIN_TIME_BETWEEN_SHOTS)
 	{
 		$sleepTime = round((MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks)*1000000);
 	//	echo 'Sleeping for: ' . $sleepTime . 'us';
 		usleep($sleepTime);
 	}
-	$var['time']=microtime(true);
+	$var['time']=microtime();
 	$db->query('INSERT INTO debug VALUES (\'attack_speed\','.$player->getAccountID().','.($timeBetweenAttacks).')');
 }
 
@@ -56,7 +56,7 @@ foreach($fightingPlayers as &$teamPlayers)
 $player->takeTurns(3);
 $player->update();
 
-$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0), 
+$results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 				'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
 foreach($fightingPlayers['Attackers'] as $accountID => &$teamPlayer)
 {
