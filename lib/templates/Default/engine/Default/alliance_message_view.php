@@ -20,8 +20,7 @@ if(	isset($PrevThread) || isset($NextThread) )
 				<td style="text-align:right">
 				<?php echo $NextThread['Topic']; ?>&nbsp;&nbsp;
 				<a href="<?php echo $NextThread['Href']; ?>"><img src="images/album/fwd.jpg" alt="Next" title="Next"></a>
-				</td>
-			</tr><?php
+				</td><?php
 		}
 		else
 		{
