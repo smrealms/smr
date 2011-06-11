@@ -200,7 +200,7 @@ else
 	while ($db->nextRecord())
 	{
 		$account_id		= $db->getField('account_id');
-		$time			= $db->getField('time');
+		$microtime		= $db->getMicrotime('microtime');
 		$message		= stripslashes($db->getField('message'));
 		$log_type_id	= $db->getField('log_type_id');
 		$sector_id		= $db->getField('sector_id');
@@ -209,7 +209,7 @@ else
 		$style = ' style="color:' . $colors[$account_id] . ';"';
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td'.$style.'>' . date(DATE_FULL_SHORT, $time) . '</td>');
+		$PHP_OUTPUT.=('<td'.$style.'>' . date(DATE_FULL_SHORT, explodeElement(' ',$microtime,0)) . ' ' . explodeElement(' ',$microtime,1) . 'us</td>');
 
 		$db2->query('SELECT * FROM log_type WHERE log_type_id = '.$log_type_id);
 		if ($db2->nextRecord())

@@ -290,7 +290,7 @@ function resetContainer($new_container)
 	global $time_start,$sn,$container,$var;
 
 	// add start time of that script to next page
-	$new_container['time'] = $time_start;
+	$new_container['time'] = MICRO_TIME;
 	// this sn identifies our container later
 
 	SmrSession::resetLink($new_container,$sn);
@@ -475,7 +475,7 @@ function do_voodoo()
 		exit;
 //	ob_clean();
 
-	global $lock, $var,$template,$time_start,$account;
+	global $lock, $var,$template,$account;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -619,7 +619,7 @@ function do_voodoo()
 	if($account->getCssLink()!=null)
 		$template->assign('ExtraCSSLink',$account->getCssLink());
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
-	$time_elapsed = microtime(true) - $time_start;
+	$time_elapsed = microtimeDiff(microtime(),MICRO_TIME)/1000;
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
 	if(isset($var['DisableAjax']) && $var['DisableAjax']===true)
