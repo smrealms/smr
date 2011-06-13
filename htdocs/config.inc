@@ -87,7 +87,7 @@ function microtimeDiff($m1,$m2)
 
 function explodeElement($delimiter, $string, $index)
 {
-	$arr = explode($delimiter, $string, $index);
+	$arr = explode($delimiter, $string, $index+1);
 	return $arr[$index];
 }
 
