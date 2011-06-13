@@ -72,7 +72,7 @@ define('SHIP_TYPE_VENGEANCE',72);
  * Combat system
  */
 define('MAX_ATTACK_RATING_NEWBIE',4);
-define('MIN_TIME_BETWEEN_SHOTS',500000); // .5s
+define('MIN_TIME_BETWEEN_SHOTS',.5);
 define('MAXIMUM_FLEET_SIZE', 10);
 define('MINE_ARMOUR', 20);
 define('CD_ARMOUR', 3);
@@ -222,7 +222,7 @@ define('NHA_ID',302);
 define('NUM_RACES', 8);
 
 define('MICRO_TIME', microtime());
-define('TIME', (int)explodeElement(' ',MICRO_TIME,0));
+define('TIME', (int)microtimeSec(MICRO_TIME));
 define('INACTIVE_TIME', TIME - 259200);
 
 define('ACCURACY_STAT_FACTOR', 0.04);

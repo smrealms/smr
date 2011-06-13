@@ -82,12 +82,23 @@ function microtimeDiff($m1,$m2)
 {
 	$t1 = explode(' ', $m1);
 	$t2 = explode(' ', $m2);
-	return ($t1[0] - $t2[0])*1000 + $t1[1] - $t2[1];
+	return $t1[1] - $t2[1] + $t1[0] - $t2[0];
+}
+
+function microtimeSec($microtime)
+{
+	return substr($microtime,10);
+}
+
+function microtimeMSec($microtime)
+{
+	return substr($microtime,2,6);
 }
 
 function explodeElement($delimiter, $string, $index)
 {
 	$arr = explode($delimiter, $string, $index+1);
+	var_dump($string);exit;
 	return $arr[$index];
 }
 
