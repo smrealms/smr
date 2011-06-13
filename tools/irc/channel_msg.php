@@ -62,7 +62,7 @@ function channel_msg_seen($fp, $rdata)
 
 		// if user provided more than 3 letters we do a wildcard search
 		if (strlen($seennick) > 3) {
-			$db->query('SELECT * FROM irc_seen WHERE nick LIKE ' . $db->escapeString('%' . $seennick . '%') . ' AND channel = ' . $db->escapeString($channel));
+			$db->query('SELECT * FROM irc_seen WHERE nick LIKE ' . $db->escapeString('%' . $seennick . '%') . ' AND channel = ' . $db->escapeString($channel) . ' ORDER BY signed_on DESC');
 		} else {
 			$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($seennick) . ' AND channel = ' . $db->escapeString($channel));
 		}
@@ -556,7 +556,7 @@ function channel_msg_op_info($fp, $rdata)
 
 		// have we signed up?
 		if (array_search($nick, $attendees)) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :You have already signed up for this one.' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :You already signed up for this one.' . EOL);
 		} else {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :You have NOT signed up for this one.' . EOL);
 		}
@@ -564,7 +564,7 @@ function channel_msg_op_info($fp, $rdata)
 		// announce players turns
 		$op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $player->getShip()->getRealSpeed() / 3600));
 		if ($op_turns > $player->getMaxTurns())
-			$op_turns > $player->getMaxTurns();
+			$op_turns = $player->getMaxTurns();
 		fputs($fp, 'PRIVMSG #' . $channel . ' :You will have ' . ($op_turns) . ' turns by then.' . EOL);
 
 		return true;
@@ -993,7 +993,6 @@ function channel_msg_money($fp, $rdata)
 			fputs($fp, 'PRIVMSG #' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets' . EOL);
 			fputs($fp, 'PRIVMSG #' . $channel . ' :and ' . number_format($db->getField('total_bonds')) . ' credits in bonds.' . EOL);
 		}
-
 
 		return true;
 
