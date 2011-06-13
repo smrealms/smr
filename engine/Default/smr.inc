@@ -619,7 +619,7 @@ function do_voodoo()
 	if($account->getCssLink()!=null)
 		$template->assign('ExtraCSSLink',$account->getCssLink());
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
-	$time_elapsed = microtimeDiff(microtime(),MICRO_TIME)/1000;
+	$time_elapsed = microtimeDiff(microtime(),MICRO_TIME);
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
 	if(isset($var['DisableAjax']) && $var['DisableAjax']===true)
