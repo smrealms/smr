@@ -11,7 +11,7 @@ if (isset($var['news']))
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = '.$player->getGameID());
 if ($db->getNumRows())
 {
-    $PHP_OUTPUT.=('It is your responsibility to make sure ALL HTML tages are closed!<br />');
+    $PHP_OUTPUT.=('It is your responsibility to make sure ALL HTML tags are closed!<br />');
     $PHP_OUTPUT.=('You have the following articles to view.<br /><br />');
 }
 else
