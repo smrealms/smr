@@ -33,7 +33,7 @@ $account_list = build_list($account_ids);
 
 // initialize order items
 if (!isset($var['item']))
-	$var['item'] = 'time';
+	$var['item'] = 'microtime';
 if (!isset($var['order']))
 	$var['order'] = 'ASC';
 
@@ -185,7 +185,7 @@ else
 	else
 		$container['order'] = 'ASC';
 
-	$container['item'] = 'time';
+	$container['item'] = 'microtime';
 	$PHP_OUTPUT.=create_link($container, '<th style="cursor:hand;">Time</th>');
 	$PHP_OUTPUT.=('<th>Log Type</th>');
 	$container['item'] = 'sector_id';
