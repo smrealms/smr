@@ -71,8 +71,6 @@ $container['admin_id'] = $admin_id;
 
 $PHP_OUTPUT.=create_echo_form($container);
 
-$PHP_OUTPUT.=('<input type="hidden" name="admin_id" value="'.$admin_id.'">');
-
 // collect all the permission that this guy has
 $db->query('SELECT permission_id
 			FROM account_has_permission

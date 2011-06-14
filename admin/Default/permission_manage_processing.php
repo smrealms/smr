@@ -1,6 +1,6 @@
 <?php
 
-if ($_POST['action'] == 'Change')
+if ($_REQUEST['action'] == 'Change')
 {
 	// delete everything first
 	$db->query('DELETE
@@ -17,10 +17,6 @@ if ($_POST['action'] == 'Change')
 
 	}
 
-}
-else if ($_POST['action'] == 'Select Another User')
-{
-	unset($_POST['admin_id']);
 }
 
 forward(create_container('skeleton.php', 'permission_manage.php'));
