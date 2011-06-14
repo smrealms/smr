@@ -219,7 +219,7 @@ abstract class MySqlDatabase implements Database
 	
 	public function escapeMicrotime($microtime,$quotes=false)
 	{
-		if(strlen($microtime)==19)
+		if(strlen($microtime)==21)
 			return $this->escapeString(microtimeSec($microtime).microtimeMSec($microtime),$quotes);
 		else
 			throw new Exception('Not a microtime! ('.$microtime.')');
