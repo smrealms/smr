@@ -109,24 +109,19 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 			{
 				if($this->getField('status')=='NEWBIE')
 					return true;
-				else
-				{
-					$this->query('SELECT COUNT(pja.account_id) AS num_orig_vets
-									FROM player_joined_alliance pja
-									WHERE account_id IN (
-										SELECT account_id
-										FROM player p
-										WHERE p.alliance_id = pja.alliance_id
-										AND p.game_id = pja.game_id
-									)
-									AND game_id='.$this->escapeNumber($player->getGameID()).'
-									AND alliance_id='.$this->escapeNumber($this->getAllianceID()).'
-									AND status=\'VETERAN\'');
-					if($this->nextRecord() && $this->getField('num_orig_vets') < $maxVets)
-						return true;
-				}
 			}
-			if($this->getNumVeterans() < $maxVets)
+			$this->query('SELECT COUNT(pja.account_id) AS num_orig_vets
+							FROM player_joined_alliance pja
+							WHERE account_id IN (
+								SELECT account_id
+								FROM player p
+								WHERE p.alliance_id = pja.alliance_id
+								AND p.game_id = pja.game_id
+							)
+							AND game_id='.$this->escapeNumber($player->getGameID()).'
+							AND alliance_id='.$this->escapeNumber($this->getAllianceID()).'
+							AND status=\'VETERAN\'');
+			if(!$this->nextRecord() || $this->getField('num_orig_vets') < $maxVets)
 				return true;
 			
 		}
