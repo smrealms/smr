@@ -34,7 +34,12 @@ $channel = '#smr';
 $nick = 'Caretaker';
 $pass = 'smr4ever';
 
+// timer events
 $events = array();
+
+// on<something> actions
+$actions = array();
+
 $answers = array(
 	'Signs point to yes.',
 	'Yes.',
@@ -206,6 +211,8 @@ if ($fp)
         if (channel_msg_timer($fp, $rdata))
 	        continue;
         if (channel_msg_8ball($fp, $rdata, $answers))
+	        continue;
+        if (channel_msg_forces($fp, $rdata, $answers))
 	        continue;
 
 /* doing these later...

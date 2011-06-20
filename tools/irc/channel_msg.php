@@ -1,9 +1,12 @@
 <?php
 
-function error_not_registered($fp, $channel, $nick)
+function error_not_registered($fp, $channel, $nick, $callback)
 {
-	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', to me it looks like that you do not use a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+	global $actions;
+
+	// execute a whois and continue here on whois
 	fputs($fp, 'WHOIS ' . $nick . EOL);
+	array_push($actions, array('MSG_318', $channel, $nick, $callback, time()));
 }
 
 function error_public_channel($fp, $channel, $nick)
@@ -121,7 +124,7 @@ function channel_msg_seed($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
+			error_not_registered($fp, $channel, $nick, 'channel_msg_seed($fp, \'' . $rdata . '\');');
 			return true;
 		}
 
@@ -242,7 +245,7 @@ function channel_msg_seedlist_add($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
+			error_not_registered($fp, $channel, $nick, 'channel_msg_seedlist_add($fp, \'' . $rdata . '\');');
 			return true;
 		}
 
@@ -355,7 +358,7 @@ function channel_msg_seedlist_del($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
+			error_not_registered($fp, $channel, $nick, 'channel_msg_seedlist_del($fp, \'' . $rdata . '\');');
 			return true;
 		}
 
@@ -485,7 +488,7 @@ function channel_msg_op_info($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
+			error_not_registered($fp, $channel, $nick, 'channel_msg_op_info($fp, \'' . $rdata . '\');');
 			return true;
 		}
 
@@ -561,8 +564,10 @@ function channel_msg_op_info($fp, $rdata)
 			fputs($fp, 'PRIVMSG #' . $channel . ' :You already signed up for this one.' . EOL);
 		}
 
-		// announce players turns
-		$op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $player->getShip()->getRealSpeed() / 3600));
+		// get uncached ship
+		$ship =& SmrShip::getShip($player, true);
+
+		$op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600));
 		if ($op_turns > $player->getMaxTurns())
 			$op_turns = $player->getMaxTurns();
 		fputs($fp, 'PRIVMSG #' . $channel . ' :You will have ' . ($op_turns) . ' turns by then.' . EOL);
@@ -592,7 +597,7 @@ function channel_msg_op_cancel($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
+			error_not_registered($fp, $channel, $nick, 'channel_msg_op_cancel($fp, \'' . $rdata . '\');');
 			return true;
 		}
 
@@ -684,7 +689,7 @@ function channel_msg_op_set($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
+			error_not_registered($fp, $channel, $nick, 'channel_msg_op_set($fp, \'' . $rdata . '\');');
 			return true;
 		}
 
@@ -919,7 +924,7 @@ function channel_msg_money($fp, $rdata)
 		// only registered users are allowed to use this command
 		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
 		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick);
+			error_not_registered($fp, $channel, $nick, 'channel_msg_money($fp, \'' . $rdata . '\');');
 			return true;
 		}
 
@@ -1053,6 +1058,112 @@ function channel_msg_8ball($fp, $rdata, $answers)
 
 }
 
+function channel_msg_forces($fp, $rdata)
+{
+
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		$galaxy = trim($msg[5]);
+
+		echo_r('[FORCE_EXPIRE] by ' . $nick . ' in #' . $channel . ' Galaxy: ' . $galaxy);
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+			error_not_registered($fp, $channel, $nick, 'channel_msg_forces($fp, \'' . $rdata . '\');');
+			return true;
+		}
+
+		// check if the query is in public channel
+		if ($channel == 'smr') {
+			error_public_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
+		if ($db->nextRecord()) {
+			$game_id = $db->getField('game_id');
+			$alliance_id = $db->getField('alliance_id');
+		} else {
+			error_unknown_channel($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr account
+		$account =& SmrAccount::getAccountByHofName($nick, true);
+
+		// do we have such an account?
+		if ($account == null) {
+			error_unknown_account($fp, $channel, $nick);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
+
+		// do we have such an account?
+		if ($player == null) {
+			error_unknown_player($fp, $channel, $nick);
+			return true;
+		}
+
+		// is the user part of this alliance?
+		if ($player->getAllianceID() != $alliance_id) {
+			error_unknown_alliance($fp, $channel, $nick);
+			return true;
+		}
+
+		// did we get a galaxy name?
+		if (!empty($galaxy))
+			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time ' .
+					   'FROM sector_has_forces LEFT JOIN sector USING (sector_id, game_id)' .
+			           '                       LEFT JOIN game_galaxy USING (game_id, galaxy_id) ' .
+			           'WHERE sector_has_forces.game_id = ' . $game_id . ' AND ' .
+			           '      galaxy_name = ' . $db->escapeString($galaxy) . ' AND ' .
+					   '      owner_id IN (SELECT account_id ' .
+					   '                   FROM player ' .
+					   '                   WHERE game_id = ' . $game_id . ' AND ' .
+					   '                         alliance_id = ' . $alliance_id .
+					   '                  )' .
+					   'ORDER BY expire_time ASC'
+			);
+		else
+			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time ' .
+					   'FROM sector_has_forces ' .
+					   'WHERE game_id = ' . $game_id . ' AND ' .
+					   '      owner_id IN (SELECT account_id ' .
+					   '                   FROM player ' .
+					   '                   WHERE game_id = ' . $game_id . ' AND ' .
+					   '                         alliance_id = ' . $alliance_id .
+					   '                  )' .
+					   'ORDER BY expire_time ASC'
+			);
+
+		if ($db->nextRecord()) {
+			$sector_id = $db->getField('sector');
+			$expire = $db->getField('expire_time');
+
+			fputs($fp, 'PRIVMSG #' . $channel . ' :Forces in sector ' . $sector_id . ' will expire in ' . format_time($expire - time()) . EOL);
+		} else {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your alliance does not own any forces that could expire.' . EOL);
+		}
+
+
+		return true;
+
+	}
+
+	return false;
+
+}
+
 function channel_msg_help($fp, $rdata)
 {
 
@@ -1085,6 +1196,7 @@ function channel_msg_help($fp, $rdata)
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !op                      Command to manage OPs' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !money                   Displays the funds the alliance owns' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :  !forces {Galaxy}         Will tell you when forces will expire. Can be used without parameters.' . EOL);
 
 		return true;
 
