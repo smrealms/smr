@@ -72,7 +72,7 @@ function channel_join($fp, $rdata)
 					$attendees = array();
 
 				// if we are not in the attendees list we give the player a hint
-				if (!array_search($nick, $attendees)) {
+				if (array_search($nick, $attendees) === false && $nick !== 'Caretaker') {
 					fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op command to do so.' . EOL);
 				}
 			}
