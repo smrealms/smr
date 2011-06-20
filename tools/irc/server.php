@@ -74,6 +74,29 @@ function server_msg_318($fp, $rdata)
                         'WHERE seen_id = ' . $seen_id);
         }
 
+
+	    global $actions;
+        foreach($actions as $key => $action) {
+
+	        // is that a callback for our nick?
+	        if ($action[0] == 'MSG_318' && $nick == $action[2]) {
+
+		        echo_r('Callback found: ' . $action[3]);
+
+		        unset($actions[$key]);
+
+		        // so we should do a callback but need to check first if the guy has registered
+		        $db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($action[1]));
+				if ($db->nextRecord()) {
+					eval($action[3]);
+				} else {
+					fputs($fp, 'PRIVMSG #' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+				}
+		        
+	        }
+
+        }
+
         return true;
     }
 
@@ -119,8 +142,8 @@ function server_msg_352($fp, $rdata)
                        'VALUES(' . $db->escapeString($nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
         }
 
-	    sleep(1);
-	    fputs($fp, 'WHOIS ' . $nick . EOL);
+//	    sleep(1);
+//	    fputs($fp, 'WHOIS ' . $nick . EOL);
 
         return true;
 
