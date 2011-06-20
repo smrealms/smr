@@ -555,10 +555,10 @@ function channel_msg_op_info($fp, $rdata)
 		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', the next scheduled op will be in ' . format_time($op_time - time()) . EOL);
 
 		// have we signed up?
-		if (array_search($nick, $attendees)) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :You already signed up for this one.' . EOL);
-		} else {
+		if (array_search($nick, $attendees) === false) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :You have NOT signed up for this one.' . EOL);
+		} else {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :You already signed up for this one.' . EOL);
 		}
 
 		// announce players turns
