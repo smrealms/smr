@@ -243,7 +243,7 @@ define('MAX_MONEY',4294967296);
 
 define('EOL',"\n");
 
-define('TEMPLATES_DIR',LIB . 'templates/');
+define('TEMPLATES_DIR',ROOT . 'templates/');
 
 define('DEFAULT_CSS',URL.'/css/Default.css');
 define('DEFAULT_CSS_COLOUR',URL.'/css/Default/Default.css');
