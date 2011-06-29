@@ -36,7 +36,7 @@ if ($action == 'Deposit') {
 		
 	}
 	// log action
-	$account->log(4, 'Deposits '.$amount.' credits in alliance account of '.$alliance->alliance_name, $player->getSectorID());
+	$account->log(4, 'Deposits '.$amount.' credits in alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
 
 } else {
 
@@ -55,11 +55,11 @@ if ($action == 'Deposit') {
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $alliance_id . ' AND game_id = ' . $player->getGameID() . ' AND ' . $query);
 	$db->nextRecord();
 	if ($db->getField('with_per_day') == -1) {
-		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
+		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\'');
 		if ($db->nextRecord()) $playerWith = $db->getField('total');
 		else $playerWith = 0;
-		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
+		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Deposit\'');
 		if ($db->nextRecord()) $playerDep = $db->getField('total');
 		else $playerDep = 0;
@@ -67,7 +67,7 @@ if ($action == 'Deposit') {
 		if ($differential - $amount < 0) create_error('Your alliance won\'t allow you to take so much with how little you\'ve given!');
 	} elseif ($db->getField('with_per_day') >= 0) {
 		$max = $db->getField('with_per_day');
-		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' . 
+		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\' AND time > ' . (TIME - 24 * 60 * 60));
 		if ($db->nextRecord() && !is_null($db->getField('total'))) $total = $db->getField('total');
 		else $total = 0;
@@ -87,7 +87,7 @@ if ($action == 'Deposit') {
 	}
 
 	// log action
-	$account->log(4, 'Takes '.$amount.' credits from alliance account of '.$alliance->alliance_name, $player->getSectorID());
+	$account->log(4, 'Takes '.$amount.' credits from alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
 
 }
 

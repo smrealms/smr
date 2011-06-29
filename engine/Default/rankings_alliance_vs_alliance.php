@@ -51,7 +51,7 @@ foreach ($alliance_vs as $key => $id)
 		$container['url']             = 'skeleton.php';
 		$container['body']             = 'alliance_roster.php';
 		$container['alliance_id']    = $curr_alliance_id;
-		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->alliance_name');*/
+		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->getAllianceName()');*/
 		$PHP_OUTPUT.=('<select name="alliancer[]" style="width:105">');
 		$db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND alliance_deaths > 0 OR alliance_kills > 0 ORDER BY alliance_name');
 		while ($db->nextRecord())
@@ -60,9 +60,9 @@ foreach ($alliance_vs as $key => $id)
 			$PHP_OUTPUT.=('<option value=' . $db->getField('alliance_id'));
 			if ($id == $db->getField('alliance_id'))
 				$PHP_OUTPUT.=(' selected');
-			$PHP_OUTPUT.=('>' . $curr_alliance->alliance_name . '</option>');
+			$PHP_OUTPUT.=('>' . $curr_alliance->getAllianceName() . '</option>');
 		}
-		$PHP_OUTPUT.=($curr_alliance->alliance_name);
+		$PHP_OUTPUT.=($curr_alliance->getAllianceName());
 		$PHP_OUTPUT.=('</td>');
 	}
 	//$alliance_vs[] = $curr_alliance_id;
@@ -83,7 +83,7 @@ foreach ($alliance_vs as $key => $id)
 		else $out = FALSE;
 		
 		$PHP_OUTPUT.=('<td width=10% valign="top"');
-		if ($player->getAllianceID() == $curr_alliance->alliance_id)
+		if ($player->getAllianceID() == $curr_alliance->getAllianceID())
 			$PHP_OUTPUT.=(' class="bold"');
 		if ($out)
 			$PHP_OUTPUT.=(' class="red"');
@@ -91,9 +91,9 @@ foreach ($alliance_vs as $key => $id)
 		$container1 = array();
 		$container1['url']            = 'skeleton.php';
 		$container1['body']           = 'rankings_alliance_vs_alliance.php';
-		$container1['alliance_id']    = $curr_alliance->alliance_id;
-		$PHP_OUTPUT.=create_link($container1, $curr_alliance->alliance_name);
-		//$PHP_OUTPUT.=('.$db->escapeString($curr_alliance->alliance_name');
+		$container1['alliance_id']    = $curr_alliance->getAllianceID();
+		$PHP_OUTPUT.=create_link($container1, $curr_alliance->getAllianceName());
+		//$PHP_OUTPUT.=('.$db->escapeString($curr_alliance->getAllianceName()');
 		$PHP_OUTPUT.=('</td>');
 	}
 	else
@@ -164,7 +164,7 @@ if (isset($var['alliance_id']))
 				' AND game_id = '.$player->getGameID().' ORDER BY kills DESC');
 	if ($db->getNumRows() > 0)
 	{
-		$PHP_OUTPUT.=('<div align="center">Kills for '.$main_alliance->alliance_name);
+		$PHP_OUTPUT.=('<div align="center">Kills for '.$main_alliance->getAllianceName());
 		$PHP_OUTPUT.=('<table class="standard"><tr><th align=center>Alliance Name</th>');
 		$PHP_OUTPUT.=('<th align="center">Amount</th></tr>');
 		while ($db->nextRecord())
@@ -174,7 +174,7 @@ if (isset($var['alliance_id']))
 			if ($id > 0)
 			{
 				$killer_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
-				$alliance_name = $killer_alliance->alliance_name;
+				$alliance_name = $killer_alliance->getAllianceName();
 			}
 			elseif ($id == 0) $alliance_name = '<span class="blue">No Alliance</span>';
 			elseif ($id == -1) $alliance_name = '<span class="blue">Forces</span>';
@@ -185,13 +185,13 @@ if (isset($var['alliance_id']))
 		}
 		$PHP_OUTPUT.=('</table>');
 	}
-	else $PHP_OUTPUT.=($main_alliance->alliance_name.' has no kills!');
+	else $PHP_OUTPUT.=($main_alliance->getAllianceName().' has no kills!');
 	$PHP_OUTPUT.=('</td><td width="10%">&nbsp;</td><td width="45%" align="center" valign="top">');
 	$db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_2 = '.$var['alliance_id'] .
 				' AND game_id = '.$player->getGameID().' ORDER BY kills DESC');
 	if ($db->getNumRows() > 0)
 	{
-		$PHP_OUTPUT.=('<div align="center">Deaths for '.$main_alliance->alliance_name);
+		$PHP_OUTPUT.=('<div align="center">Deaths for '.$main_alliance->getAllianceName());
 		$PHP_OUTPUT.=('<table class="standard"><tr><th align=center>Alliance Name</th>');
 		$PHP_OUTPUT.=('<th align="center">Amount</th></tr>');
 		while ($db->nextRecord())
@@ -201,7 +201,7 @@ if (isset($var['alliance_id']))
 			if ($id > 0)
 			{
 				$killer_alliance = new SMR_ALLIANCE($id, SmrSession::$game_id);
-				$alliance_name = $killer_alliance->alliance_name;
+				$alliance_name = $killer_alliance->getAllianceName();
 			}
 			elseif ($id == 0) $alliance_name = '<span class="blue">No Alliance</span>';
 			elseif ($id == -1) $alliance_name = '<span class="blue">Forces</span>';
@@ -212,7 +212,7 @@ if (isset($var['alliance_id']))
 		}
 		$PHP_OUTPUT.=('</table>');
 	}
-	else $PHP_OUTPUT.=($main_alliance->alliance_name.' has no deaths!');
+	else $PHP_OUTPUT.=($main_alliance->getAllianceName().' has no deaths!');
 	$PHP_OUTPUT.=('</td></tr></table>');
 }
 

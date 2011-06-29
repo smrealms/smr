@@ -483,16 +483,16 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($kickedBy != null)
 		{
 			$kickedBy->sendMessage($id, 2, 'You were kicked out of the alliance!', false);
-			$this->getAccount()->log(3, 'was kicked from alliance '.$alliance->alliance_name.' by '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().')', 0);
-			$kickedBy->getAccount()->log(3, 'kicked '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().') from alliance '.$alliance->alliance_name, 0);
+			$this->getAccount()->log(3, 'was kicked from alliance '.$alliance->getAllianceName().' by '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().')', 0);
+			$kickedBy->getAccount()->log(3, 'kicked '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().') from alliance '.$alliance->getAllianceName(), 0);
 		}
 		else if($alliance->leader_id == $this->getAccountID())
 		{
-			$this->getAccount()->log(3, 'disbanded alliance '.$alliance->alliance_name, $this->getSectorID());
+			$this->getAccount()->log(3, 'disbanded alliance '.$alliance->getAllianceName(), $this->getSectorID());
 		}
 		else
 		{
-			$this->getAccount()->log(3, 'left alliance '.$alliance->alliance_name, $this->getSectorID());
+			$this->getAccount()->log(3, 'left alliance '.$alliance->getAllianceName(), $this->getSectorID());
 			if ($alliance->leader_id != 0 && $alliance->leader_id != ACCOUNT_ID_NHL)
 			{
 				$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
@@ -518,8 +518,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$alliance = $this->getAlliance();
 		if ($alliance->leader_id != $this->getAccountID())
 			$this->sendMessage($alliance->leader_id, 2, 'I joined your alliance!', false);
-		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$this->getGameID().', '.$this->getAccountID().', 2,'.$alliance->alliance_id.')');
-		$this->getAccount()->log(3, 'joined alliance: '.$alliance->alliance_name, $this->getSectorID());
+		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$this->getGameID().', '.$this->getAccountID().', 2,'.$alliance->getAllianceID().')');
+		$this->getAccount()->log(3, 'joined alliance: '.$alliance->getAllianceName(), $this->getSectorID());
 	}
 	
 	function getAllianceJoinable()

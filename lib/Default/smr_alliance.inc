@@ -4,11 +4,11 @@ require_once(get_file_loc('SmrPlayer.class.inc'));
 
 class SMR_ALLIANCE extends SmrMySqlDatabase
 {
-	var $game_id;
-	var $alliance_id;
-	var $alliance_name;
-	var $description;
-	var $password;
+	protected $gameID;
+	protected $allianceID;
+	protected $allianceName;
+	protected $description;
+	protected $password;
 	var $leader_id;
 	var $account;
 	var $kills;
@@ -18,17 +18,17 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	
 	protected $memberList;
 
-	function SMR_ALLIANCE($alliance_id, $game_id)
+	function SMR_ALLIANCE($allianceID, $game_id)
 	{
-		$this->alliance_id = $alliance_id;
-		$this->game_id = $game_id;
+		$this->allianceID = $allianceID;
+		$this->gameID = $game_id;
 
-		if ($alliance_id != 0)
+		if ($allianceID != 0)
 		{
-			$this->query('SELECT * FROM alliance WHERE game_id = '.$this->game_id.' AND ' .
-													  'alliance_id = '.$this->alliance_id);
+			$this->query('SELECT * FROM alliance WHERE game_id = '.$this->gameID.' AND ' .
+													  'alliance_id = '.$this->allianceID);
 			$this->nextRecord();
-			$this->alliance_name	= stripslashes($this->getField('alliance_name'));
+			$this->allianceName		= stripslashes($this->getField('alliance_name'));
 			$this->password			= stripslashes($this->getField('alliance_password'));
 			$this->description		= strip_tags(stripslashes($this->getField('alliance_description')));
 			$this->leader_id		= $this->getField('leader_id');
@@ -47,17 +47,17 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	
 	public function getAllianceID()
 	{
-		return $this->alliance_id;
+		return $this->allianceID;
 	}
 	
 	public function getAllianceName()
 	{
-		return $this->alliance_name;
+		return $this->allianceName;
 	}
 	
 	public function getGameID()
 	{
-		return $this->game_id;
+		return $this->gameID;
 	}
 	
 	public function getLeaderID()
@@ -78,6 +78,11 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	public function getPassword()
 	{
 		return $this->password;
+	}
+	
+	public function setPassword($password)
+	{
+		$this->password = $password;
 	}
 	
 	public function setAllianceDescription($description)
@@ -160,15 +165,15 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 										 'alliance_kills = '.$this->kills.', ' .
 										 'alliance_deaths = '.$this->deaths.', ' .
 										 'leader_id = '.$this->leader_id.' ' .
-									 'WHERE alliance_id = '.$this->alliance_id.' AND ' .
-									 	   'game_id = '.$this->game_id);
+									 'WHERE alliance_id = '.$this->allianceID.' AND ' .
+									 	   'game_id = '.$this->gameID);
 	}
 
 	function return_member_ids()
 	{
 		if(!isset($this->memberList))
 		{
-			$this->query('SELECT * FROM player WHERE alliance_id = '.$this->alliance_id.' AND game_id = '.$this->game_id);
+			$this->query('SELECT * FROM player WHERE alliance_id = '.$this->allianceID.' AND game_id = '.$this->gameID);
 	
 			//we have the list of players put them in an array now
 			$this->memberList = array();

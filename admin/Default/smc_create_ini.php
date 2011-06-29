@@ -28,7 +28,7 @@ while ($db->nextRecord())
 	$user =& SmrPlayer::getPlayer($account->account_id, $game_id);
 	$sector = $db->getField('sector_id');
 
-	if ($owner->alliance_id == $user->alliance_id)
+	if ($owner->sameAlliance($user))
 		echo ($sector.'=2'.EOL);
 	else
 		echo ($sector.'=1'.EOL);
