@@ -912,40 +912,35 @@ class SmrPort
 			$weapons[$i] =& SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PORT_TURRET);
 		return $weapons;
 	}
-	
-	public function getAccuracy($targetLevel)
-	{
-		return $this->getBaseAccuracy() - $targetLevel / 1.5;
-	}
 
-	function getUpgradePercent()
+	public function getUpgradePercent()
 	{
 		return min(1,max(0,$this->upgrade / $this->getUpgradeRequirement()));
 	}
 	
-	function getCreditsPercent()
+	public function getCreditsPercent()
 	{
 		return min(1,max(0,$this->credits / 32000000));
 	}
 	
-	function getReinforcePercent()
+	public function getReinforcePercent()
 	{
 		if(!$this->isUnderAttack())
 			return 0;
 		return min(1,max(0,($this->getReinforceTime() - TIME) / ($this->getReinforceTime() - $this->getAttackStarted())));
 	}
 	
-	function getReinforceTime()
+	public function getReinforceTime()
 	{
 		return $this->reinforceTime;
 	}
 	
-	function setReinforceTime($reinforceTime)
+	public function setReinforceTime($reinforceTime)
 	{
 		$this->reinforceTime=$reinforceTime;
 	}
 	
-	function getAttackStarted()
+	public function getAttackStarted()
 	{
 		return $this->attackStarted;
 	}
