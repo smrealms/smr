@@ -26,7 +26,7 @@ include(LIB . '/Default/SmrMySqlDatabase.class.inc');
 
 include(ENGINE . '/Default/smr.inc');
 
-require_once(get_file_loc('smr_alliance.inc'));
+require_once(get_file_loc('SmrAlliance.class.inc'));
 
 $address = 'ice.coldfront.net';
 $port = 6667;

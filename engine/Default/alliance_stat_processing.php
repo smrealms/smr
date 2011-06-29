@@ -1,7 +1,7 @@
 <?php
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
-require_once(get_file_loc('smr_alliance.inc'));
+require_once(get_file_loc('SmrAlliance.class.inc'));
 if (isset($_REQUEST['password']))
 	$password = trim($_REQUEST['password']);
 if (isset($_REQUEST['description']))
@@ -20,7 +20,7 @@ if (isset($password) && $password == '')
 if (isset($description) && $description == '')
 	create_error('Please enter a description for your alliance.');
 
-$alliance = new SMR_ALLIANCE($alliance_id, $player->getGameID());
+$alliance =& SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 if (isset($password))
 	$alliance->setPassword($password);
 if (isset($description))

@@ -1,7 +1,7 @@
 <?php
-require_once(get_file_loc('smr_alliance.inc'));
+require_once(get_file_loc('SmrAlliance.class.inc'));
 
-$alliance = new SMR_ALLIANCE($player->getAllianceID(), SmrSession::$game_id);
+$alliance =& SmrAlliance::getAlliance($player->getAllianceID(), SmrSession::$game_id);
 $action = $var['action'];
 include(get_file_loc('alliance_members.php'));
 if ($action == 'YES') {
