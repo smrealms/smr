@@ -1,6 +1,6 @@
 <?php
 
-require_once(get_file_loc('smr_alliance.inc'));
+require_once(get_file_loc('SmrAlliance.class.inc'));
 
 // ********************************
 // *
@@ -21,7 +21,7 @@ if (!$account->isValidated())
 // *
 // ********************************
 
-$alliance = new SMR_ALLIANCE($var['alliance_id'], SmrSession::$game_id);
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], SmrSession::$game_id);
 
 if ($alliance->canJoinAlliance($player) !== true)
 {

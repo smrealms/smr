@@ -1,6 +1,6 @@
 <?php
 
-require_once(get_file_loc('smr_alliance.inc'));
+require_once(get_file_loc('SmrAlliance.class.inc'));
 
 if (isset($var['alliance_id']))
 {
@@ -20,7 +20,7 @@ if(!isset($var['SortDesc']))
 	SmrSession::updateVar('SortDesc',true);
 }
 
-$alliance = new SMR_ALLIANCE($alliance_id,SmrSession::$game_id);
+$alliance =& SmrAlliance::getAlliance($alliance_id,SmrSession::$game_id);
 $leader_id = $alliance->getLeaderID();
 $password = $alliance->getPassword();
 

@@ -2,8 +2,10 @@
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
 
-class SMR_ALLIANCE extends SmrMySqlDatabase
+class SmrAlliance extends SmrMySqlDatabase
 {
+	protected static $CACHE_ALLIANCES = array();
+	
 	protected $gameID;
 	protected $allianceID;
 	protected $allianceName;
@@ -18,10 +20,19 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	
 	protected $memberList;
 
-	function SMR_ALLIANCE($allianceID, $game_id)
+	public static function &getAlliance($allianceID,$gameID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID]))
+		{
+			self::$CACHE_ALLIANCES[$gameID][$a->getAllianceID()] = new SmrAlliance($gameID,$allianceID);
+		}
+		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
+	}
+
+	function __construct($gameID, $allianceID)
 	{
 		$this->allianceID = $allianceID;
-		$this->gameID = $game_id;
+		$this->gameID = $gameID;
 
 		if ($allianceID != 0)
 		{

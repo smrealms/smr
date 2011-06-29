@@ -2,7 +2,7 @@
 require_once('SmrShip.class.inc');
 require_once('SmrForce.class.inc');
 require_once('SmrGame.class.inc');
-require_once('smr_alliance.inc');
+require_once('SmrAlliance.class.inc');
 
 abstract class AbstractSmrPlayer
 {
@@ -507,9 +507,9 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
-	public function getAlliance()
+	public function &getAlliance()
 	{
-		return new SMR_ALLIANCE($this->getAllianceID(), $this->getGameID());
+		return SmrAlliance::getAlliance($this->getAllianceID(), $this->getGameID());
 	}
 	
 	public function getAllianceID()

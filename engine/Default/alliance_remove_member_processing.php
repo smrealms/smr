@@ -1,6 +1,6 @@
 <?php
-require_once(get_file_loc('smr_alliance.inc'));
-$alliance = new SMR_ALLIANCE($player->getAllianceID(), SmrSession::$game_id);
+require_once(get_file_loc('SmrAlliance.class.inc'));
+$alliance =& SmrAlliance::getAlliance($player->getAllianceID(), SmrSession::$game_id);
 $accountIDs = $_REQUEST['account_id'];
 
 if(empty($account_id))

@@ -1,7 +1,7 @@
 <?php
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
-require_once(get_file_loc('smr_alliance.inc'));
+require_once(get_file_loc('SmrAlliance.class.inc'));
 $amount = $_REQUEST['amount'];
 // check for numbers
 if (!is_numeric($amount))
@@ -16,7 +16,7 @@ if ($amount <= 0)
 $message = $_REQUEST['message'];
 if (empty($message)) $message = 'No reason specified';
 
-$alliance = new SMR_ALLIANCE($alliance_id, $player->getGameID());
+$alliance =& SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 $action = $_REQUEST['action'];
 if ($action == 'Deposit')
 {
