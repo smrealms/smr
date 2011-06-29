@@ -65,6 +65,11 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 		return $this->leader_id;
 	}
 	
+	public function &getLeader()
+	{
+		return SmrPlayer::getPlayer($this->getLeaderID(),$this->getGameID());
+	}
+	
 	public function getDescription()
 	{
 		return $this->description;
