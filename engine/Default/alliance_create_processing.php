@@ -1,5 +1,8 @@
 <?php
 
+if($player->getAllianceJoinable() > TIME)
+	create_error('You cannot create an alliance for another '.format_time($player->getAllianceJoinable()-TIME).'.');
+
 // disallow certain ascii chars
 for ($i = 0; $i < strlen($_POST['name']); $i++)
 	if (ord($_POST['name'][$i]) < 32 || ord($_POST['name'][$i]) > 127)
