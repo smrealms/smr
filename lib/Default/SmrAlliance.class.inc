@@ -2,9 +2,11 @@
 require_once(get_file_loc('SmrAccount.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
 
-class SmrAlliance extends SmrMySqlDatabase
+class SmrAlliance
 {
 	protected static $CACHE_ALLIANCES = array();
+	
+	protected $db;
 	
 	protected $gameID;
 	protected $allianceID;
@@ -31,23 +33,25 @@ class SmrAlliance extends SmrMySqlDatabase
 
 	function __construct($gameID, $allianceID)
 	{
+		$this->db = new SmrMySqlDatabase();
+		
 		$this->allianceID = $allianceID;
 		$this->gameID = $gameID;
 
 		if ($allianceID != 0)
 		{
-			$this->query('SELECT * FROM alliance WHERE game_id = '.$this->gameID.' AND ' .
+			$this->db->query('SELECT * FROM alliance WHERE game_id = '.$this->gameID.' AND ' .
 													  'alliance_id = '.$this->allianceID);
-			$this->nextRecord();
-			$this->allianceName		= stripslashes($this->getField('alliance_name'));
-			$this->password			= stripslashes($this->getField('alliance_password'));
-			$this->description		= strip_tags(stripslashes($this->getField('alliance_description')));
-			$this->leaderID			= $this->getField('leader_id');
-			$this->account			= $this->getField('alliance_account');
-			$this->kills			= $this->getField('alliance_kills');
-			$this->deaths			= $this->getField('alliance_deaths');
-			$this->motd				= strip_tags(stripslashes($this->getField('mod')));
-			$this->imgSrc			= $this->getField('img_src');
+			$this->db->nextRecord();
+			$this->allianceName		= stripslashes($this->db->getField('alliance_name'));
+			$this->password			= stripslashes($this->db->getField('alliance_password'));
+			$this->description		= strip_tags(stripslashes($this->db->getField('alliance_description')));
+			$this->leaderID			= $this->db->getField('leader_id');
+			$this->account			= $this->db->getField('alliance_account');
+			$this->kills			= $this->db->getField('alliance_kills');
+			$this->deaths			= $this->db->getField('alliance_deaths');
+			$this->motd				= strip_tags(stripslashes($this->db->getField('mod')));
+			$this->imgSrc			= $this->db->getField('img_src');
 
 			if (empty($this->kills))
 				$this->kills = 0;
@@ -108,7 +112,7 @@ class SmrAlliance extends SmrMySqlDatabase
 	
 	public function getMotD()
 	{
-		return $this->account;
+		return $this->motd;
 	}
 	
 	public function setMotD($motd)
@@ -155,13 +159,13 @@ class SmrAlliance extends SmrMySqlDatabase
 			$maxVets = Globals::getAllianceMaxVets($this->getGameID());
 			if($this->getNumMembers()<$maxVets)
 				return true;
-			$this->query('SELECT status FROM player_joined_alliance WHERE account_id='.$this->escapeNumber($player->getAccountID()).' AND game_id='.$this->escapeNumber($player->getGameID()).' AND alliance_id='.$this->escapeNumber($this->getAllianceID()));
-			if($this->nextRecord())
+			$this->db->query('SELECT status FROM player_joined_alliance WHERE account_id='.$this->db->escapeNumber($player->getAccountID()).' AND game_id='.$this->db->escapeNumber($player->getGameID()).' AND alliance_id='.$this->db->escapeNumber($this->getAllianceID()));
+			if($this->db->nextRecord())
 			{
-				if($this->getField('status')=='NEWBIE')
+				if($this->db->getField('status')=='NEWBIE')
 					return true;
 			}
-			$this->query('SELECT COUNT(pja.account_id) AS num_orig_vets
+			$this->db->query('SELECT COUNT(pja.account_id) AS num_orig_vets
 							FROM player_joined_alliance pja
 							WHERE account_id IN (
 								SELECT account_id
@@ -169,10 +173,10 @@ class SmrAlliance extends SmrMySqlDatabase
 								WHERE p.alliance_id = pja.alliance_id
 								AND p.game_id = pja.game_id
 							)
-							AND game_id='.$this->escapeNumber($player->getGameID()).'
-							AND alliance_id='.$this->escapeNumber($this->getAllianceID()).'
+							AND game_id='.$this->db->escapeNumber($player->getGameID()).'
+							AND alliance_id='.$this->db->escapeNumber($this->getAllianceID()).'
 							AND status=\'VETERAN\'');
-			if(!$this->nextRecord() || $this->getField('num_orig_vets') < $maxVets)
+			if(!$this->db->nextRecord() || $this->db->getField('num_orig_vets') < $maxVets)
 				return true;
 			
 		}
@@ -198,11 +202,11 @@ class SmrAlliance extends SmrMySqlDatabase
 	function update()
 	{
 
-		$this->query('UPDATE alliance SET alliance_password = ' . $this->escapeString($this->password) . ', ' .
+		$this->db->query('UPDATE alliance SET alliance_password = ' . $this->db->escapeString($this->password) . ', ' .
 										 'alliance_account = '.$this->account.', ' .
-										 'alliance_description = ' . $this->escapeString(nl2br($this->description)) . ', ' .
-										 '`mod` = ' . $this->escapeString(nl2br($this->motd)) . ', ' .
-										 'img_src = ' . $this->escapeString($this->imgSrc) . ', ' .
+										 'alliance_description = ' . $this->db->escapeString(nl2br($this->description)) . ', ' .
+										 '`mod` = ' . $this->db->escapeString(nl2br($this->motd)) . ', ' .
+										 'img_src = ' . $this->db->escapeString($this->imgSrc) . ', ' .
 										 'alliance_kills = '.$this->kills.', ' .
 										 'alliance_deaths = '.$this->deaths.', ' .
 										 'leader_id = '.$this->leaderID.' ' .
@@ -214,12 +218,12 @@ class SmrAlliance extends SmrMySqlDatabase
 	{
 		if(!isset($this->memberList))
 		{
-			$this->query('SELECT * FROM player WHERE alliance_id = '.$this->allianceID.' AND game_id = '.$this->gameID);
+			$this->db->query('SELECT * FROM player WHERE alliance_id = '.$this->allianceID.' AND game_id = '.$this->gameID);
 	
 			//we have the list of players put them in an array now
 			$this->memberList = array();
-			while ($this->nextRecord())
-				$this->memberList[] = $this->getField('account_id');
+			while ($this->db->nextRecord())
+				$this->memberList[] = $this->db->getField('account_id');
 		}
 		return $this->memberList;
 	}
