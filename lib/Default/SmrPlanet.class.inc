@@ -11,7 +11,7 @@ class SmrPlanet
 
 	protected $sectorID;
 	protected $gameID;
-	protected $planet_name;
+	protected $planetName;
 	protected $ownerID;
 	protected $password;
 	protected $shields;
@@ -173,9 +173,9 @@ class SmrPlanet
 											'sector_id = '.$sectorID);
 		if ($this->db->nextRecord())
 		{
-			$this->sectorID		= $this->db->getField('sector_id');
+			$this->sectorID			= $this->db->getField('sector_id');
 			$this->gameID			= $this->db->getField('game_id');
-			$this->planet_name		= stripslashes($this->db->getField('planet_name'));
+			$this->planetName		= stripslashes($this->db->getField('planet_name'));
 			$this->ownerID			= $this->db->getField('owner_id');
 			$this->password			= $this->db->getField('password');
 			$this->shields			= $this->db->getField('shields');
@@ -723,7 +723,7 @@ class SmrPlanet
 		{
 			$this->db->query('UPDATE planet SET owner_id = '.$this->ownerID.', ' .
 									'password = '.$this->db->escapeString($this->password).', ' .
-									'planet_name = ' . $this->db->escapeString($this->planet_name) . ', ' .
+									'planet_name = ' . $this->db->escapeString($this->planetName) . ', ' .
 									'shields = '.$this->shields.', ' .
 									'drones = '.$this->drones.', ' .
 									'credits = '.$this->credits.', ' .
@@ -888,16 +888,16 @@ class SmrPlanet
 
 	public function getName()
 	{
-		return $this->planet_name;
+		return $this->planetName;
 	}
 
 	public function setName($name)
 	{
-		if($this->planet_name == $name)
+		if($this->planetName == $name)
 		{
 			return;
 		}
-		$this->planet_name = $name;
+		$this->planetName = $name;
 		$this->hasChanged = true;
 	}
 
