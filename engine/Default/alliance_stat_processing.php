@@ -26,9 +26,9 @@ if (isset($password))
 if (isset($description))
 	$alliance->setAllianceDescription($description);
 if (isset($mod))
-	$alliance->mod = $mod;
+	$alliance->setMotD($mod);
 if (isset($url))
-	$alliance->img_src = $url;
+	$alliance->setImageURL($url);
 
 $alliance->update();
 $container = create_container('skeleton.php', 'alliance_roster.php');

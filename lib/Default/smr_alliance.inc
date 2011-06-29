@@ -9,12 +9,12 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	protected $allianceName;
 	protected $description;
 	protected $password;
-	var $leader_id;
-	var $account;
-	var $kills;
-	var $deaths;
-	var $mod;
-	var $img_src;
+	protected $leaderID;
+	protected $account;
+	protected $kills;
+	protected $deaths;
+	protected $motd;
+	protected $imgSrc;
 	
 	protected $memberList;
 
@@ -31,12 +31,12 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 			$this->allianceName		= stripslashes($this->getField('alliance_name'));
 			$this->password			= stripslashes($this->getField('alliance_password'));
 			$this->description		= strip_tags(stripslashes($this->getField('alliance_description')));
-			$this->leader_id		= $this->getField('leader_id');
+			$this->leaderID			= $this->getField('leader_id');
 			$this->account			= $this->getField('alliance_account');
 			$this->kills			= $this->getField('alliance_kills');
 			$this->deaths			= $this->getField('alliance_deaths');
-			$this->mod				= strip_tags(stripslashes($this->getField('mod')));
-			$this->img_src			= $this->getField('img_src');
+			$this->motd				= strip_tags(stripslashes($this->getField('mod')));
+			$this->imgSrc			= $this->getField('img_src');
 
 			if (empty($this->kills))
 				$this->kills = 0;
@@ -62,7 +62,7 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	
 	public function getLeaderID()
 	{
-		return $this->leader_id;
+		return $this->leaderID;
 	}
 	
 	public function &getLeader()
@@ -73,6 +73,36 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 	public function getDescription()
 	{
 		return $this->description;
+	}
+	
+	public function getImageURL()
+	{
+		return $this->imgSrc;
+	}
+	
+	public function setImageURL($url)
+	{
+		$this->imgSrc = $url;
+	}
+	
+	public function getAccount()
+	{
+		return $this->account;
+	}
+	
+	public function setAccount($credits)
+	{
+		$this->account = $credits;
+	}
+	
+	public function getMotD()
+	{
+		return $this->account;
+	}
+	
+	public function setMotD($motd)
+	{
+		$this->motd = $motd;
 	}
 	
 	public function getPassword()
@@ -160,11 +190,11 @@ class SMR_ALLIANCE extends SmrMySqlDatabase
 		$this->query('UPDATE alliance SET alliance_password = ' . $this->escapeString($this->password) . ', ' .
 										 'alliance_account = '.$this->account.', ' .
 										 'alliance_description = ' . $this->escapeString(nl2br($this->description)) . ', ' .
-										 '`mod` = ' . $this->escapeString(nl2br($this->mod)) . ', ' .
-										 'img_src = ' . $this->escapeString($this->img_src) . ', ' .
+										 '`mod` = ' . $this->escapeString(nl2br($this->motd)) . ', ' .
+										 'img_src = ' . $this->escapeString($this->imgSrc) . ', ' .
 										 'alliance_kills = '.$this->kills.', ' .
 										 'alliance_deaths = '.$this->deaths.', ' .
-										 'leader_id = '.$this->leader_id.' ' .
+										 'leader_id = '.$this->leaderID.' ' .
 									 'WHERE alliance_id = '.$this->allianceID.' AND ' .
 									 	   'game_id = '.$this->gameID);
 	}

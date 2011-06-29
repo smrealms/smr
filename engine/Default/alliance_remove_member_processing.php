@@ -10,7 +10,7 @@ if(empty($account_id))
 
 foreach ($account_id as $id)
 {
-	if ($id == $alliance->leader_id)
+	if ($id == $alliance->getLeaderID())
 		create_error('You can\'t remove the leader!');
 }
 

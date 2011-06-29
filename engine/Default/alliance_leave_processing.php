@@ -29,7 +29,7 @@ if ($action == 'YES') {
 		$db->query('UPDATE alliance SET leader_id=0 WHERE alliance_id = '.$player->getAllianceID().' AND ' .
 						 'game_id = '.$player->getGameID());
 
-	} elseif ($alliance->leader_id == $player->getAccountID())
+	} elseif ($alliance->getLeaderID() == $player->getAccountID())
 		create_error('You are the leader! You must hand over leadership first!');
 
 	$player->leaveAlliance();
