@@ -476,20 +476,31 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET last_sector_id = '.$this->lastSectorID.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	function leaveAlliance()
+	function leaveAlliance(AbstractSmrPlayer $kickedBy = null)
 	{
 		$allianceID = $this->getAllianceID();
 		$alliance = $this->getAlliance();
-		if ($alliance->leader_id != 0 && $alliance->leader_id != ACCOUNT_ID_NHL && $alliance->leader_id != $this->getAccountID())
-			$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
-
+		if($kickedBy != null)
+		{
+			$kickedBy->sendMessage($id, 2, 'You were kicked out of the alliance!', false);
+			$this->getAccount()->log(3, 'was kicked from alliance '.$alliance->alliance_name.' by '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().')', 0);
+			$kickedBy->getAccount()->log(3, 'kicked '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().') from alliance '.$alliance->alliance_name, 0);
+		}
+		else
+		{
+			$this->getAccount()->log(3, 'left alliance '.$alliance->alliance_name, $this->getSectorID());
+			if ($alliance->leader_id != 0 && $alliance->leader_id != ACCOUNT_ID_NHL && $alliance->leader_id != $this->getAccountID())
+			{
+				$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
+			}
+		}
+			
 		$this->setAllianceID(0);
 		$this->db->query('DELETE
 					FROM player_has_alliance_role
 					WHERE account_id = '.$this->getAccountID().' AND
 						  game_id = '.$this->getGameID());
 	
-		$this->getAccount()->log(3, 'left alliance: '.$alliance->alliance_name, $this->getSectorID());
 		if($allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA
 		{
 			$this->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH);
