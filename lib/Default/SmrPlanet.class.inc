@@ -9,10 +9,10 @@ class SmrPlanet
 
 	protected $db;
 
-	protected $sector_id;
-	protected $game_id;
+	protected $sectorID;
+	protected $gameID;
 	protected $planet_name;
-	protected $owner_id;
+	protected $ownerID;
 	protected $password;
 	protected $shields;
 	protected $drones;
@@ -173,10 +173,10 @@ class SmrPlanet
 											'sector_id = '.$sectorID);
 		if ($this->db->nextRecord())
 		{
-			$this->sector_id		= $this->db->getField('sector_id');
-			$this->game_id			= $this->db->getField('game_id');
+			$this->sectorID		= $this->db->getField('sector_id');
+			$this->gameID			= $this->db->getField('game_id');
 			$this->planet_name		= stripslashes($this->db->getField('planet_name'));
-			$this->owner_id			= $this->db->getField('owner_id');
+			$this->ownerID			= $this->db->getField('owner_id');
 			$this->password			= $this->db->getField('password');
 			$this->shields			= $this->db->getField('shields');
 			$this->drones			= $this->db->getField('drones');
@@ -205,12 +205,12 @@ class SmrPlanet
 
 		public function getGameID()
 		{
-			return $this->game_id;
+			return $this->gameID;
 		}
 
 		public function getSectorID()
 		{
-			return $this->sector_id;
+			return $this->sectorID;
 		}
 		
 		public function &getGalaxy()
@@ -220,21 +220,21 @@ class SmrPlanet
 
 		public function getOwnerID()
 		{
-			return $this->owner_id;
+			return $this->ownerID;
 		}
 
 		public function hasOwner()
 		{
-			return $this->owner_id!=0;
+			return $this->ownerID!=0;
 		}
 
 		public function setOwnerID($claimerID)
 		{
-			if($this->owner_id==$claimerID)
+			if($this->ownerID==$claimerID)
 			{
 				return;
 			}
-			$this->owner_id=$claimerID;
+			$this->ownerID=$claimerID;
 			$this->hasChanged = true;
 		}
 
@@ -515,8 +515,8 @@ class SmrPlanet
 				// initialize cargo array
 				$this->stockpile = array();
 				// get supplies from db
-				$this->db->query('SELECT * FROM planet_has_cargo WHERE game_id = '.$this->game_id.' AND ' .
-																'sector_id = '.$this->sector_id);
+				$this->db->query('SELECT * FROM planet_has_cargo WHERE game_id = '.$this->gameID.' AND ' .
+																'sector_id = '.$this->sectorID);
 				// adding cargo and amount to array
 				while ($this->db->nextRecord())
 				$this->stockpile[$this->db->getField('good_id')] = $this->db->getField('amount');
@@ -634,8 +634,8 @@ class SmrPlanet
 				$toBeUpdated = false;
 				$this->currentlyBuilding = array();
 				$this->db->query('SELECT * FROM planet_is_building ' .
-							 'WHERE game_id = '.$this->game_id.' AND ' .
-								   'sector_id = '.$this->sector_id);
+							 'WHERE game_id = '.$this->gameID.' AND ' .
+								   'sector_id = '.$this->sectorID);
 				while($this->db->nextRecord())
 				{
 					if($this->db->getField('time_complete') <= TIME)
@@ -721,7 +721,7 @@ class SmrPlanet
 		$this->doDelayedUpdates();
 		if($this->hasChanged)
 		{
-			$this->db->query('UPDATE planet SET owner_id = '.$this->owner_id.', ' .
+			$this->db->query('UPDATE planet SET owner_id = '.$this->ownerID.', ' .
 									'password = '.$this->db->escapeString($this->password).', ' .
 									'planet_name = ' . $this->db->escapeString($this->planet_name) . ', ' .
 									'shields = '.$this->shields.', ' .
@@ -729,8 +729,8 @@ class SmrPlanet
 									'credits = '.$this->credits.', ' .
 									'bonds = '.$this->bonds.', ' .
 									'maturity = '.$this->maturity.' ' .
-								'WHERE game_id = '.$this->game_id.' AND ' .
-									  'sector_id = '.$this->sector_id);
+								'WHERE game_id = '.$this->gameID.' AND ' .
+									  'sector_id = '.$this->sectorID);
 			$this->hasChanged = false;
 		}
 
@@ -768,12 +768,12 @@ class SmrPlanet
 				if ($this->hasBuilding($id))
 				{
 					$this->db->query('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
-										'VALUES('.$this->game_id.', '.$this->sector_id.', '.$id.', '.$this->getBuilding($id).')');
+										'VALUES('.$this->gameID.', '.$this->sectorID.', '.$id.', '.$this->getBuilding($id).')');
 				}
 				else
 				{
-					$this->db->query('DELETE FROM planet_has_building WHERE game_id = '.$this->game_id.' AND ' .
-									   'sector_id = '.$this->sector_id.' AND ' .
+					$this->db->query('DELETE FROM planet_has_building WHERE game_id = '.$this->gameID.' AND ' .
+									   'sector_id = '.$this->sectorID.' AND ' .
 									   'construction_id = '.$id);
 				}
 				$this->hasChangedBuildings[$id] = false;
@@ -913,7 +913,7 @@ class SmrPlanet
 
 	public function isClaimed()
 	{
-		return $this->owner_id>0;
+		return $this->ownerID>0;
 	}
 
 	public function removeClaimed()
