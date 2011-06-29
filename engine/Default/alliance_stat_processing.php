@@ -10,7 +10,7 @@ if (isset($_REQUEST['mod']))
 {
 	if(preg_match('/"/',$_REQUEST['mod']))
 		create_error('You cannot use a " in the image link!');
-	$mod = trim($_REQUEST['mod']);	
+	$mod = trim($_REQUEST['mod']);
 }
 if (isset($_REQUEST['url']))
 	$url = trim($_REQUEST['url']);
@@ -22,7 +22,7 @@ if (isset($description) && $description == '')
 
 $alliance = new SMR_ALLIANCE($alliance_id, $player->getGameID());
 if (isset($password))
-	$alliance->password = $password;
+	$alliance->setPassword($password);
 if (isset($description))
 	$alliance->setAllianceDescription($description);
 if (isset($mod))

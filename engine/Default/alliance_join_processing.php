@@ -30,11 +30,11 @@ if ($alliance->canJoinAlliance($player) !== true)
 
 $password = $_REQUEST['password'];
 
-if ($password != $alliance->password)
+if ($password != $alliance->getPassword())
 	create_error('Incorrect Password!');
 
 // assign the player to the current alliance
-$player->joinAlliance($alliance->alliance_id);
+$player->joinAlliance($alliance->getAllianceID());
 $player->update();
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));
