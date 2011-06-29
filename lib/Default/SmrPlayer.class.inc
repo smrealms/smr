@@ -486,16 +486,16 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->getAccount()->log(3, 'was kicked from alliance '.$alliance->getAllianceName().' by '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().')', 0);
 			$kickedBy->getAccount()->log(3, 'kicked '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().') from alliance '.$alliance->getAllianceName(), 0);
 		}
-		else if($alliance->leader_id == $this->getAccountID())
+		else if($alliance->getLeaderID() == $this->getAccountID())
 		{
 			$this->getAccount()->log(3, 'disbanded alliance '.$alliance->getAllianceName(), $this->getSectorID());
 		}
 		else
 		{
 			$this->getAccount()->log(3, 'left alliance '.$alliance->getAllianceName(), $this->getSectorID());
-			if ($alliance->leader_id != 0 && $alliance->leader_id != ACCOUNT_ID_NHL)
+			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL)
 			{
-				$this->sendMessage($alliance->leader_id, 2, 'I left your alliance!', false);
+				$this->sendMessage($alliance->getLeaderID(), 2, 'I left your alliance!', false);
 			}
 		}
 			
@@ -505,7 +505,7 @@ class SmrPlayer extends AbstractSmrPlayer
 					WHERE account_id = '.$this->getAccountID().' AND
 						  game_id = '.$this->getGameID());
 	
-		if($alliance->leader_id != $this->getAccountID() && $allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
+		if($alliance->getLeaderID() != $this->getAccountID() && $allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
 		{
 			$this->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH);
 			$alliance->getLeader()->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
@@ -516,8 +516,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		$this->setAllianceID($allianceID);
 		$alliance = $this->getAlliance();
-		if ($alliance->leader_id != $this->getAccountID())
-			$this->sendMessage($alliance->leader_id, 2, 'I joined your alliance!', false);
+		if ($alliance->getLeaderID() != $this->getAccountID())
+			$this->sendMessage($alliance->getLeaderID(), 2, 'I joined your alliance!', false);
 		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$this->getGameID().', '.$this->getAccountID().', 2,'.$alliance->getAllianceID().')');
 		$this->getAccount()->log(3, 'joined alliance: '.$alliance->getAllianceName(), $this->getSectorID());
 	}

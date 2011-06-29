@@ -18,31 +18,30 @@ if (empty($message)) $message = 'No reason specified';
 
 $alliance = new SMR_ALLIANCE($alliance_id, $player->getGameID());
 $action = $_REQUEST['action'];
-if ($action == 'Deposit') {
-
+if ($action == 'Deposit')
+{
 	if ($player->getCredits() < $amount)
 		create_error('You don\'t own that much money!');
 
 	$player->decreaseCredits($amount);
-	$alliance->account += $amount;
+	$allianceCredits = $alliance->getAccount() + $amount;
 	//too much money?
-	if ($alliance->account > 4294967295) {
-		
-		$overflow = $alliance->account - 4294967295;
-		$alliance->account -= $overflow;
+	if ($allianceCredits > 4294967295)
+	{
+		$overflow = $allianceCredits - 4294967295;
+		$allianceCredits -= $overflow;
 		$player->increaseCredits($overflow);
 		$message .= ' (Account is Full)';
 		$amount -= $overflow;
-		
 	}
+	$alliance->setAccount($allianceCredits);
 	// log action
 	$account->log(4, 'Deposits '.$amount.' credits in alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
-
-} else {
-
+}
+else
+{
 	$action = 'Payment';
-
-	if ($alliance->account < $amount)
+	if ($alliance->getAccount() < $amount)
 		create_error('Your alliance isn\'t soo rich!');
 	if ($alliance_id == $player->getAllianceID()) {
 		$db->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id);
@@ -75,16 +74,16 @@ if ($action == 'Deposit') {
 	}
 	
 	$player->increaseCredits($amount);
-	$alliance->account -= $amount;
+	$allianceCredits = $alliance->getAccount() - $amount;
 	//too much money?
-	if ($player->getCredits() > 4294967295) {
-		
+	if ($player->getCredits() > 4294967295)
+	{
 		$overflow = $player->getCredits() - 4294967295;
-		$alliance->account += $overflow;
+		$allianceCredits += $overflow;
 		$player->decreaseCredits($overflow);
 		$amount += $overflow;
-		
 	}
+	$alliance->setAccount($allianceCredits);
 
 	// log action
 	$account->log(4, 'Takes '.$amount.' credits from alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
