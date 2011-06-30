@@ -26,7 +26,7 @@ class SmrAlliance
 	{
 		if($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID]))
 		{
-			self::$CACHE_ALLIANCES[$gameID][$a->getAllianceID()] = new SmrAlliance($gameID,$allianceID);
+			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($gameID,$allianceID);
 		}
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
 	}
