@@ -108,7 +108,7 @@ if ($sector->getGalaxyID() == $target_sector->getGalaxyID())
 	$free_sector = 15 + floor($player->getLevelID() / 10);
 
 	// the rest gets a 10% failure per sector
-	if ($distance > $free_sector)
+	if ($path->getTurns() > $free_sector)
 		$failure_chance = 10 * ($path->getRelativeDistance() - $free_sector);
 	else
 		$failure_chance = 0;
