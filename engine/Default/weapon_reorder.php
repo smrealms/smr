@@ -14,7 +14,7 @@ if (isset($var['Down']) && is_numeric($var['Down']))
 
 if(isset($var['Form']))
 {
-	if(is_array($_REQUEST['weapon_reorder']))
+	if(isset($_REQUEST['weapon_reorder']) && is_array($_REQUEST['weapon_reorder']))
 		$ship->setWeaponLocations($_REQUEST['weapon_reorder']);
 }
 ?>

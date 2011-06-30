@@ -130,11 +130,11 @@ function displayHOFRow($rank,$accountID,$amount)
 	{
 		$container['sending_page'] = 'personal_hof';
 	}
-	if(is_object($hofPlayer))
+	if(isset($hofPlayer) && is_object($hofPlayer))
 	{
 		$return.=('<td align="center"'.$bold.'>'.create_link($container, $hofPlayer->getPlayerName()) .'</td>');
 	}
-	else if(is_object($hofAccount))
+	else if(isset($hofAccount) && is_object($hofAccount))
 	{
 		$return.=('<td align="center"'.$bold.'>'.create_link($container, $hofAccount->getHofName()) .'</td>');
 	}

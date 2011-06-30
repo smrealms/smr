@@ -1,14 +1,14 @@
 <?php
 if(isset($CombatResultsType)&&$CombatResultsType)
 {
-	if($PreviousLogHREF || $NextLogHREF)
+	if(isset($PreviousLogHREF) || isset($NextLogHREF))
 	{ ?>
 		<div class="center"><?php
-		if($PreviousLogHREF)
+		if(isset($PreviousLogHREF))
 		{
 			?><a href="<?php echo $PreviousLogHREF ?>"><img title="Previous" alt="Previous" src="images/album/rew.jpg" /></a><?php
 		}
-		if($NextLogHREF)
+		if(isset($NextLogHREF))
 		{
 			?><a href="<?php echo $NextLogHREF ?>"><img title="Next" alt="Next" src="images/album/fwd.jpg" /></a><?php
 		} ?>
