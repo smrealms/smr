@@ -226,6 +226,11 @@ class Distance
 	{
 		return $this->path;
 	}
+	
+	public function reversePath()
+	{
+		$this->path = array_reverse($this->path);
+	}
 
 	/**
 	 * @param path
