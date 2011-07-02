@@ -28,7 +28,7 @@ else
 			else
 				$realX = $X;
 		break;
-		case 'Goods': 
+		case 'Goods':
 			$realX =& Globals::getGood($X);
 		break;
 		default:
@@ -51,6 +51,12 @@ require_once(get_file_loc('Plotter.class.inc'));
 $path =& Plotter::findDistanceToX($realX, $sector, true, $player);
 if($path===false)
 	create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
+
+if($path->getEndSectorID() < $sector->getSectorID()) //If sector we find is a lower sector id we replot so we always use the plot from lowest to highest sector.
+{
+	$path =& Plotter::findDistanceToX($sector->getSectorID(), $path->getEndSector(), true);
+	$path->reversePath();
+}
 
 $container['Distance'] = serialize($path);
 
