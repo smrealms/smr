@@ -54,7 +54,7 @@ if($path===false)
 
 if($path->getEndSectorID() < $sector->getSectorID()) //If sector we find is a lower sector id we replot so we always use the plot from lowest to highest sector.
 {
-	$path =& Plotter::findDistanceToX($sector->getSectorID(), $path->getEndSector(), true);
+	$path =& Plotter::findDistanceToX($sector, $path->getEndSector(), true);
 	$path->reversePath();
 }
 
