@@ -13,6 +13,7 @@ $old_password = $_REQUEST['old_password'];
 $retype_password = $_REQUEST['retype_password'];
 $HoF_name = trim($_REQUEST['HoF_name']);
 $ircNick = trim($_REQUEST['irc_nick']);
+$cellPhone = trim($_REQUEST['cell_phone']);
 
 if (USE_COMPATIBILITY && $action == 'Link Account')
 {
@@ -135,6 +136,30 @@ elseif ($action == 'Change Nick')
 		$account->setIrcNick($ircNick);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your irc nick.';
 
+	}
+
+}
+elseif ($action == 'Change cell phone')
+{
+	// check for the + as first character
+	if ($cellPhone[0] != '+')
+		create_error('Cell phone numbers must start with a plus sign, e.g: +1 for US or +44 for UK.<br/>See <a href="http://en.wikipedia.org/wiki/List_of_country_calling_codes">http://en.wikipedia.org/wiki/List_of_country_calling_codes</a>');
+
+	// the rest of the number can only be digits
+	for ($i = 1; $i < strlen($cellPhone); $i++) {
+		// disallow all non digits
+		if (ord($cellPhone[$i]) < 48 || ord($cellPhone[$i]) > 57)
+			create_error('A cell phone number can only contain digits');
+	}
+
+	if (empty($cellPhone) || $cellPhone == '') {
+		// delete cell phone
+		$account->setCellPhone(null);
+		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your cell phone number.';
+	} else {
+		// or save cell phone
+		$account->setCellPhone($cellPhone);
+		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your cell phone number.';
 	}
 
 }
