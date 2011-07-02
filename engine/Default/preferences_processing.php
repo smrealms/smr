@@ -148,10 +148,11 @@ elseif ($action == 'Change cell phone')
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your cell phone number.';
 	} else {
 
-		if (!preg_match('^\+[0-9]{3,24}$', $cellPhone))
+		// validate number
+		if (preg_match('^\+[0-9]{3,24}$', $cellPhone) == 0)
 			create_error('Cell phone numbers must be given in the international format, eg: +15551234567');
 
-		// or save cell phone
+		// and save cell phone
 		$account->setCellPhone($cellPhone);
 		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your cell phone number.';
 	}
