@@ -826,7 +826,7 @@ abstract class AbstractSmrAccount
 	{
 		if($this->ircNick==$nick)
 			return;
-		$this->db->query('UPDATE account SET irc_nick = ' . $this->db->escapeString($nick) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->query('UPDATE account SET irc_nick = ' . $this->db->escapeString($nick, true, true) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->ircNick=$nick;
 	}
 
