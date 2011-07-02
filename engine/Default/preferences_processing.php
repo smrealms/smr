@@ -12,6 +12,7 @@ $new_password = $_REQUEST['new_password'];
 $old_password = $_REQUEST['old_password'];
 $retype_password = $_REQUEST['retype_password'];
 $HoF_name = trim($_REQUEST['HoF_name']);
+$ircNick = trim($_REQUEST['irc_nick']);
 
 if (USE_COMPATIBILITY && $action == 'Link Account')
 {
@@ -111,6 +112,31 @@ elseif ($action == 'Change Name')
 	// set the HoF name in account stat
 	$account->setHofName($HoF_name);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your hall of fame name.';
+}
+elseif ($action == 'Change Nick')
+{
+	for ($i = 0; $i < strlen($ircNick); $i++) {
+		// disallow certain ascii chars (and whitespace!)
+		if (ord($ircNick[$i]) < 33 || ord($ircNick[$i]) > 127)
+			create_error('Your IRC Nick contains invalid characters!');
+	}
+
+	// here you can delete your registered irc nick
+	if (empty($ircNick) || $ircNick == '') {
+		$account->setIrcNick(null);
+		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your irc nick.';
+	} else {
+
+		// no duplicates
+		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escape_string($ircNick, true) . ' AND account_id != '.$account->getAccountID().' LIMIT 1');
+		if ($db->nextRecord()) create_error('Someone is already using that nick!');
+
+		// save irc nick in db and set message
+		$account->setIrcNick($ircNick);
+		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your irc nick.';
+
+	}
+
 }
 elseif ($action == 'Yes')
 {

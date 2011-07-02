@@ -178,6 +178,20 @@ if(isset($GameID))
 		</tr>
 	
 		<tr>
+			<td>IRC Nick:</td>
+			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick()); ?>" id="InputFields" size="50" /></td>
+		</tr>
+
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Change Nick" id="InputFields" /></td>
+		</tr>
+
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+
+		<tr>
 			<td>Timezone:</td>
 			<td>
 				<select name="timez" id="InputFields"><?php

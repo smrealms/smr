@@ -24,6 +24,7 @@ abstract class AbstractSmrAccount
 	var $validation_code;
 	var $last_login;
 	protected $hofName;
+	protected $ircNick;
 	protected $veteran;
 	protected $logging;
 	var $offset;
@@ -48,7 +49,7 @@ abstract class AbstractSmrAccount
 	protected $template;
 	
 	protected $hasChanged;
-	
+
 	public static function &getAccount($accountID,$forceUpdate = false)
 	{
 		if($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID]))
@@ -75,6 +76,16 @@ abstract class AbstractSmrAccount
 		$db->query('SELECT account_id FROM account WHERE hof_name = '.$db->escapeString($hofName).' LIMIT 1');
 		if($db->nextRecord())
 			return self::getAccount($db->getField('account_id'),$forceUpdate);
+		$return = null;
+		return $return;
+	}
+
+	public static function &getAccountByIrcNick($nick, $forceUpdate = false)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT account_id FROM account WHERE irc_nick = '.$db->escapeString($nick).' LIMIT 1');
+		if($db->nextRecord())
+			return self::getAccount($db->getField('account_id'), $forceUpdate);
 		$return = null;
 		return $return;
 	}
@@ -161,7 +172,8 @@ abstract class AbstractSmrAccount
 			$this->maxRankAchieved	= $row['max_rank_achieved'];
 			
 			$this->hofName			= $row['hof_name'];
-			
+			$this->ircNick			= $row['irc_nick'];
+
 			$this->dateShort		= $row['date_short'];
 			$this->timeShort		= $row['time_short'];
 			
@@ -805,6 +817,19 @@ abstract class AbstractSmrAccount
 		$this->hofName=$name;
 	}
 	
+	public function getIrcNick()
+	{
+		return $this->ircNick;
+	}
+
+	public function setIrcNick($nick)
+	{
+		if($this->ircNick==$nick)
+			return;
+		$this->db->query('UPDATE account SET irc_nick = ' . $this->db->escapeString($nick) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->ircNick=$nick;
+	}
+
 	public function getReferralLink()
 	{
 		return URL . '/login_create.php?ref='.$this->getAccountID();
