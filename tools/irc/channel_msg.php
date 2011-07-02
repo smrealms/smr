@@ -16,7 +16,7 @@ function error_public_channel($fp, $channel, $nick)
 
 function error_unknown_account($fp, $channel, $nick)
 {
-	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you need to set your \'Hall-of-Fame\' name in SMR to your registered nick so i can recognize you.' . EOL);
+	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
 }
 
 function error_unknown_player($fp, $channel, $nick)
@@ -145,7 +145,7 @@ function channel_msg_seed($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -266,7 +266,7 @@ function channel_msg_seedlist_add($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -379,7 +379,7 @@ function channel_msg_seedlist_del($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -509,7 +509,7 @@ function channel_msg_op_info($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -618,7 +618,7 @@ function channel_msg_op_cancel($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -710,7 +710,7 @@ function channel_msg_op_set($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -945,7 +945,7 @@ function channel_msg_money($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
@@ -1097,7 +1097,7 @@ function channel_msg_forces($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccountByHofName($nick, true);
+		$account =& SmrAccount::getAccount($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
