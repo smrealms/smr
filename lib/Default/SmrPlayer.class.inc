@@ -1605,7 +1605,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return = array();
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
-		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span class="red">DESTROYED</span> '.$this->getBBLink().' in sector '.$forces->getSectorID(),false);
+		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span class="red">DESTROYED </span>'.$this->getBBLink().' in sector '.$forces->getSectorID(),false);
 		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
 
 		$news_message = $this->getBBLink();
