@@ -21,6 +21,7 @@ abstract class AbstractSmrAccount
 	var $email;
 	var $first_name;
 	protected $validated;
+	protected $cellPhone;
 	var $validation_code;
 	var $last_login;
 	protected $hofName;
@@ -144,6 +145,7 @@ abstract class AbstractSmrAccount
 			
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
+			$this->cellPhone        = $row['cell_phone'];
 			$this->veteran			= $this->db->getBoolean('veteran');
 			$this->logging			= $this->db->getBoolean('logging');
 			$this->offset			= $row['offset'];
@@ -880,6 +882,19 @@ abstract class AbstractSmrAccount
 		return $this->validated;
 	}
 	
+	public function getCellPhone()
+	{
+		return $this->cellPhone;
+	}
+
+	public function setCellPhone($cell)
+	{
+		if($this->cellPhone==$cell)
+			return;
+		$this->db->query('UPDATE account SET cell_phone = ' . $this->db->escapeString($cell, true, true) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->cellPhone=$cell;
+	}
+
 	protected function getPassword()
 	{
 		return $this->password;

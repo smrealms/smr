@@ -159,6 +159,18 @@ if(isset($GameID))
 			<td><input type="submit" name="action" value="Save and resend validation code" id="InputFields" /></td>
 		</tr>
 	
+		<tr><td colspan="2">&nbsp;</td></tr>
+
+		<tr>
+			<td>Cell phone:</td>
+			<td><input type="text" name="cell_phone" value="<?php echo htmlspecialchars($ThisAccount->getCellPhone()); ?>" id="InputFields" size="50" /></td>
+		</tr>
+
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Change cell phone" id="InputFields" /></td>
+		</tr>
+
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
