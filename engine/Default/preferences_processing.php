@@ -149,7 +149,7 @@ elseif ($action == 'Change cell phone')
 	} else {
 
 		// validate number
-		if (preg_match('^\+[0-9]{3,24}$', $cellPhone) == 0)
+		if (preg_match('/^\+[0-9]{3,24}$/', $cellPhone) == 0)
 			create_error('Cell phone numbers must be given in the international format, eg: +15551234567');
 
 		// and save cell phone
