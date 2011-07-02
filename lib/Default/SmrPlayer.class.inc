@@ -482,7 +482,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$alliance = $this->getAlliance();
 		if($kickedBy != null)
 		{
-			$kickedBy->sendMessage($id, 2, 'You were kicked out of the alliance!', false);
+			$kickedBy->sendMessage($kickedBy->getAccountID(), 2, 'You were kicked out of the alliance!', false);
 			$this->getAccount()->log(3, 'was kicked from alliance '.$alliance->getAllianceName().' by '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().')', 0);
 			$kickedBy->getAccount()->log(3, 'kicked '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().') from alliance '.$alliance->getAllianceName(), 0);
 		}
