@@ -240,6 +240,18 @@ class SmrSector
 		}
 		return false;
 	}
+	
+	public function getFedRaceIDs()
+	{
+		$raceIDs = array();
+		$locations =& $this->getLocations();
+		foreach($locations as &$location)
+		{
+			if($location->isFed())
+				$raceIDs[$location->getRaceID()] = $location->getRaceID();
+		}
+		return $raceIDs;
+	}
 
 	function has_bar()
 	{

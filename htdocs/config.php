@@ -28,6 +28,7 @@ define('DEFAULT_DATE_FULL_LONG','l jS F '.DEFAULT_DATE_TIME_SHORT);
  * Race types
  */
 
+define('RACE_NEUTRAL',1);
 define('RACE_ALSKANT',2);
 define('RACE_CREONTI',3);
 define('RACE_HUMAN',4);
@@ -89,6 +90,8 @@ define('PLANET_HANGAR',2);
 define('PLANET_TURRET',3);
 define('PLANET_GENERATOR_SHIELDS',100);
 define('PLANET_HANGAR_DRONES',20);
+
+define('ALIGN_FED_PROTECTION', 0);
 
 /*
  * HoF

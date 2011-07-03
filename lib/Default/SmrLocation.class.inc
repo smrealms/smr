@@ -87,6 +87,15 @@ class SmrLocation
 		return $this->typeID;
 	}
 	
+	public function getRaceID()
+	{
+		if($this->isFed())
+		{
+			return $this->typeID + 1 - LOCATION_TYPE_FEDERAL_BEACON;
+		}
+		return RACE_NEUTRAL;
+	}
+	
 	public function getName()
 	{
 		return $this->name;
