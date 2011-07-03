@@ -179,11 +179,24 @@ abstract class AbstractSmrPlayer
 			return false;
 		if ($ship->hasIllegalGoods())
 			return false;
-		if ($attackRating == 0)
-			return true;
-		if ($this->getAlignment() > ($attackRating - 4) * 150)
-			return true;
+		
+		if ($attackRating == 0 || $this->getAlignment() > ($attackRating - 4) * 150)
+		{
+			foreach($sector->getFedRaceIDs() as $fedRaceID)
+			{
+				if($this->canBeProtectedByRace($fedRaceID))
+				{
+					return true;
+				}
+			}
+		}
+			
 		return false;
+	}
+	
+	public function canBeProtectedByRace($raceID)
+	{
+		return $this->getRelation($raceID) >= ALIGN_FED_PROTECTION;
 	}
 	
 	public function canFight()
