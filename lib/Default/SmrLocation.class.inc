@@ -91,7 +91,7 @@ class SmrLocation
 	{
 		if($this->isFed())
 		{
-			return $this->typeID + 1 - LOCATION_TYPE_FEDERAL_BEACON;
+			return $this->typeID - LOCATION_TYPE_FEDERAL_BEACON;
 		}
 		return RACE_NEUTRAL;
 	}
