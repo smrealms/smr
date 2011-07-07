@@ -455,13 +455,13 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 			{
 				foreach($links as $link)
 				{
-					if ($fedSector->hasLink($link) && $visitedSectors[$fedSector->getLinkSectorID($link)] === false)
+					if ($fedSector->hasLink($link) && $visitedSectors[$fedSector->getLink($link)] === false)
 					{
 						$linkSector =& $sector->getLinkSector($link);
 						if (!$linkSector->offersFederalProtection())
 							$linkSector->addLocation($fedBeacon); //add beacon to this sector
 						$tempFedSectors[] =& $linkSector;
-						$visitedSectors[$fedSector->getLinkSectorID($link)] = true;
+						$visitedSectors[$fedSector->getLink($link)] = true;
 					}
 				}
 			}
