@@ -455,7 +455,7 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 			{
 				foreach($links as $link)
 				{
-					if ($fedSector->hasLink($link) && $visitedSectors[$fedSector->getLink($link)] === false)
+					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)]))
 					{
 						$linkSector =& $sector->getLinkSector($link);
 						if (!$linkSector->offersFederalProtection())
