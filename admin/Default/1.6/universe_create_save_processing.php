@@ -445,24 +445,28 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 		//add Beacons to all surrounding areas (up to 2 sectors out)
 		if (!$sector->offersFederalProtection())
 			$sector->addLocation($fedBeacon); //add beacon to this sector
+		$visitedSectors = array();
 		$links = array('Up','Right','Down','Left');
-		foreach($links as $link)
+		$fedSectors = array(&$sector);
+		$tempFedSectors = array();
+		for($i=0;$i<DEFAULT_FED_RADIUS;$i++)
 		{
-			if ($sector->hasLink($link))
+			foreach($fedSectors as &$fedSector)
 			{
-				$linkSector =& $sector->getLinkSector($link);
-				if (!$linkSector->offersFederalProtection())
-					$linkSector->addLocation($fedBeacon); //add beacon to this sector
-				foreach($links as $link2)
+				foreach($links as $link)
 				{
-					if ($linkSector->hasLink($link2))
+					if ($fedSector->hasLink($link) && $visitedSectors[$fedSector->getLinkSectorID($link)] === false)
 					{
-						$linkLinkSector =& $linkSector->getLinkSector($link2);
-						if (!$linkLinkSector->offersFederalProtection())
-							$linkLinkSector->addLocation($fedBeacon); //add beacon to this sector
+						$linkSector =& $sector->getLinkSector($link);
+						if (!$linkSector->offersFederalProtection())
+							$linkSector->addLocation($fedBeacon); //add beacon to this sector
+						$tempFedSectors[] =& $linkSector;
+						$visitedSectors[$fedSector->getLinkSectorID($link)] = true;
 					}
 				}
 			}
+			$fedSectors =& $tempFedSectors;
+			$tempFedSectors = array();
 		}
 	}
 	return true;

@@ -178,6 +178,8 @@ define('LOCATION_GROUP_RACIAL_BEACONS', 202);
 define('LOCATION_GROUP_RACIAL_SHIPS', 400);
 define('LOCATION_GROUP_RACIAL_SHOPS', 900);
 
+define('DEFAULT_FED_RADIUS',1);
+
 /*
  * Hardware definitions
  */
