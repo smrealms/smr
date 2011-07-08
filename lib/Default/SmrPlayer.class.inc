@@ -1467,7 +1467,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		
 		// The person who got the kill gains experience
-		$gainedExp = ceil(0.75*((((($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID())) + 1) * 0.04 * $this->getExperience()) + (0.025 * $this->getExperience())));
+		$gainedExp = ceil(0.75*(( (($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID()) + 1) * 0.04 + 0.025)  * $this->getExperience()));
 		
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
@@ -1475,7 +1475,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$killer->increaseHOF($this->getExperience(),array('Killing','Experience','Of Traders Killed'), HOF_PUBLIC);
 		$this->increaseHOF($gainedExp,array('Dying','Experience','Gained By Killer'), HOF_PUBLIC);
 		// Dead player loses experience
-		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
+		$expLossPercentage = 0.10 + (($this->getLevelID() - $killer->getLevelID()) * 0.0025);
 		$return['DeadExp'] = 0;
 		if($expLossPercentage > 0)
 		{
