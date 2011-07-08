@@ -12,4 +12,4 @@ UPDATE smr_new.ship_type_support_hardware SET max_amount = 250 WHERE ship_type_i
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 350 WHERE ship_type_id = 10 AND hardware_type_id = 2; -- Freighter to 350 armour
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 10 AND hardware_type_id IN(5,6); -- Freighter to 0 scouts/mines
 
-UPDATE smr_new.ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 12 AND hardware_type_id = 3; -- Planetary Super Freighter to 425 holds
+UPDATE smr_new.ship_type_support_hardware SET max_amount = 425 WHERE ship_type_id = 12 AND hardware_type_id = 3; -- Planetary Super Freighter to 425 holds
