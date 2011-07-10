@@ -78,21 +78,21 @@ class Globals
 				$db2->query('SELECT * FROM planet_cost_time WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$buildingID]['Build Time'] += (int)$db2->getField('amount');
+					$PLANET_BUILDINGS[$buildingID]['Build Time'] += $db2->getInt('amount');
 				}
 				
 				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = 0;
 				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += (int)$db2->getField('amount');
+					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += $db2->getInt('amount');
 				}
 				
 				$PLANET_BUILDINGS[$buildingID]['Goods'] = array();
 				$db2->query('SELECT * FROM planet_cost_good WHERE construction_id=' . $buildingID);
 				while($db2->nextRecord())
 				{
-					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getField('good_id')] = (int)$db2->getField('amount');
+					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getInt('good_id')] = $db2->getInt('amount');
 				}
 				
 //				global $PLANET_RESEARCH;
@@ -127,10 +127,10 @@ class Globals
 			self::$db->query('SELECT * FROM level ORDER BY level_id ASC');
 			while (self::$db->nextRecord())
 			{
-				self::$LEVEL_REQUIREMENTS[(int)self::$db->getField('level_id')] = array(
-																				'ID' => (int)self::$db->getField('level_id'),
+				self::$LEVEL_REQUIREMENTS[self::$db->getInt('level_id')] = array(
+																				'ID' => self::$db->getInt('level_id'),
 																				'Name' => self::$db->getField('level_name'),
-																				'Requirement' => (int)self::$db->getField('requirement')
+																				'Requirement' => self::$db->getInt('requirement')
 																				);
 			}
 		}
@@ -148,8 +148,8 @@ class Globals
 			self::$db->query('SELECT race_id,race_name,race_description FROM race ORDER BY race_id');
 			while(self::$db->nextRecord())
 			{
-				self::$RACES[self::$db->getField('race_id')] = array(
-																'Race ID' => (int)self::$db->getField('race_id'),
+				self::$RACES[self::$db->getInt('race_id')] = array(
+																'Race ID' => self::$db->getInt('race_id'),
 																'Race Name' => self::$db->getField('race_name'),
 																'Description' => self::$db->getField('race_description'),
 																);
@@ -177,13 +177,13 @@ class Globals
 			{
 				self::$GOODS[self::$db->getField('good_id')] = array(
 																'Type' => 'Good',
-																'ID' => (int)self::$db->getField('good_id'),
+																'ID' => self::$db->getInt('good_id'),
 																'Name' => self::$db->getField('good_name'),
-																'Max' => (int)self::$db->getField('max_amount'),
-																'BasePrice' => (int)self::$db->getField('base_price'),
-																'Class' => (int)self::$db->getField('good_class'),
+																'Max' => self::$db->getInt('max_amount'),
+																'BasePrice' => self::$db->getInt('base_price'),
+																'Class' => self::$db->getInt('good_class'),
 																'ImageLink' => 'images/port/' . self::$db->getField('good_id') . '.png',
-																'AlignRestriction' => (int)self::$db->getField('align_restriction')
+																'AlignRestriction' => self::$db->getInt('align_restriction')
 															);
 			}
 		}
@@ -215,9 +215,9 @@ class Globals
 			{
 				self::$HARDWARE_TYPES[self::$db->getField('hardware_type_id')] = array(
 																			'Type' => 'Hardware',
-																			'ID' => (int)self::$db->getField('hardware_type_id'),
+																			'ID' => self::$db->getInt('hardware_type_id'),
 																			'Name' => self::$db->getField('hardware_name'),
-																			'Cost' => (int)self::$db->getField('cost')
+																			'Cost' => self::$db->getInt('cost')
 																			);
 			}
 		}
@@ -407,7 +407,7 @@ class Globals
 			self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1='.$raceID.' AND game_id='.$gameID.' LIMIT '.count($RACES));
 			while (self::$db->nextRecord())
 			{
-				self::$RACE_RELATIONS[$gameID][$raceID][(int)self::$db->getField('race_id_2')] = (int)self::$db->getField('relation');
+				self::$RACE_RELATIONS[$gameID][$raceID][self::$db->getInt('race_id_2')] = self::$db->getInt('relation');
 			}
 		}
 		return self::$RACE_RELATIONS[$gameID][$raceID];
@@ -422,7 +422,7 @@ class Globals
 			self::$db->query('SELECT * FROM user_rankings ORDER BY rank');
 			while (self::$db->nextRecord())
 			{
-				self::$USER_RANKINGS[(int)self::$db->getField('rank')] = self::$db->getField('rank_name');
+				self::$USER_RANKINGS[self::$db->getInt('rank')] = self::$db->getField('rank_name');
 			}
 		}
 		return self::$USER_RANKINGS;
