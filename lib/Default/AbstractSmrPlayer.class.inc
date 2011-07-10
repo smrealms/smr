@@ -196,7 +196,24 @@ abstract class AbstractSmrPlayer
 	
 	public function canBeProtectedByRace($raceID)
 	{
-		return $this->getRelation($raceID) >= ALIGN_FED_PROTECTION;
+		if(!isset($this->canFed))
+		{
+			$this->canFed = array();
+			$RACES =& Globals::getRaces();
+			foreach($RACES as $raceID => $raceName)
+			{
+				$this->canFed[$raceID] = $this->getRelation($raceID) < ALIGN_FED_PROTECTION;
+			}
+			$this->db->query('SELECT race_id, allowed FROM player_can_fed
+								WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+									AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+									AND expiry > ' . $this->db->escapeNumber(TIME) . ';');
+			while($this->db->nextRecord())
+			{
+				$this->canFed[$this->db->getInt('race_id')] = $this->db->getBoolean('allowed');
+			}
+		}
+		return $this->canFed[$raceID];
 	}
 	
 	public function canFight()
