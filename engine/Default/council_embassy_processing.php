@@ -8,11 +8,7 @@ if(!$player->isPresident())
 $action = $_REQUEST['action'];
 $race_id = $var['race_id'];
 $type = strtoupper($action);
-$time = 259200;
-//adjust for game speed
-//adjust it correctly now
-$time = $time / Globals::getGameSpeed($player->getGameID());
-$time = TIME + $time;
+$time = TIME + TIME_FOR_COUNCIL_VOTE;// / Globals::getGameSpeed($player->getGameID());
 
 $db->query('SELECT * FROM race_has_voting ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .

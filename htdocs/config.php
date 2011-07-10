@@ -8,7 +8,8 @@ define('ACCOUNT_ID_ADMIN',65534);
 define('ACCOUNT_ID_PLANET',65533);
 define('ACCOUNT_ID_NHL',36);
 
-define('TIME_BEFORE_NEWBIE_TIME',604800); //7 days, ie disable automatic newbie turn, at least whilst still on new.smrealms.de
+define('TIME_BEFORE_NEWBIE_TIME',3600); //1 hour
+define('TIME_FOR_COUNCIL_VOTE',259200); //3 days
 
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 define('MULTI_CHECKING_COOKIE_VERSION','v3');
