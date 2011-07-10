@@ -2107,6 +2107,15 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::doMessageSending(ACCOUNT_ID_ADMIN,$receiverID, $gameID, MSG_ADMIN, $message, $expires);
 	}
 	
+	public static function sendMessageFromRace($raceID, $gameID, $receiverID, $message, $expires = false)
+	{
+		//get expire time
+		if($expires===false)
+			$expires = TIME + 86400 * 5;
+		// send him the message
+		self::doMessageSending(ACCOUNT_ID_GROUP_RACES+$raceID,$receiverID, $gameID, MSG_POLITICAL, $message, $expires);
+	}
+	
 	public function setMessagesRead($messageTypeID)
 	{
 		$this->db->query('DELETE FROM player_has_unread_messages WHERE '.$this->SQL.' AND ' .
