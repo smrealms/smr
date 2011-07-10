@@ -150,6 +150,47 @@ function checkPacts($race_id_1)
 		{
 			if ($type == 'WAR')
 			{
+				$currentlyParkedAccountIDs = array();
+				$raceFedSectors = array(
+										$race_id_1 => &SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
+										$race_id_2 => &SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
+									);
+				foreach($raceFedSectors as $raceID => &$fedSectors)
+				{
+					$otherRaceID = $raceID == $race_id_1 ? $race_id_2 : $race_id_1;
+					foreach($fedSectors as &$fedSector)
+					{
+						$sectorPlayers =& $fedSector->getPlayers();
+						foreach($sectorPlayers as &$sectorPlayer)
+						{
+							if($sectorPlayer->getRaceID() == $otherRaceID && $sectorPlayer->canBeProtectedByRace($raceID))
+							{
+								$currentlyParkedAccountIDs[$raceID][] = $sectorPlayer->getAccountID();
+							}
+						}
+					}
+				}
+				
+				if( count($currentlyParkedAccountIDs[$race_id_1]) + count($currentlyParkedAccountIDs[$race_id_2]) > 0 )
+				{
+					$expireTime = TIME + TIME_FOR_WAR_VOTE_FED_SAFETY;
+					$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
+					foreach($currentlyParkedAccountIDs as $raceID => &$accountIDs)
+					{
+						if($raceID == $race_id_1)
+							$message = 'We have declared war upon your race';
+						else
+							$message = 'Your race has declared war upon us';
+						$message .= ', you have '.format_time(TIME_FOR_WAR_VOTE_FED_SAFETY).' to vacate our federal space, after that time you will no longer be protected unless you have strong personal relations.';
+						foreach($accountIDs as &$accountID)
+						{
+							$query .= '('.$db2->escapeNumber($accountID).','.$db2->escapeNumber($player->getGameID()).','.$db2->escapeNumber($raceID).','.$db2->escapeNumber($expireTime).','.$db2->escapeBoolean(true).').';
+							SmrPlayer::sendMessageFromRace($raceID, $gameID, $accountID, $message, $expireTime);
+						}
+					}
+					$db2->query(substr($query,0,-1));
+				}
+					
 				$db2->query('UPDATE race_has_relation ' .
 							'SET relation = -400 ' .
 							'WHERE game_id = '.$player->getGameID().' AND ' .
