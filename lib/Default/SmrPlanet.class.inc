@@ -966,14 +966,14 @@ class SmrPlanet
 		}
 	}
 
-	public function &getTraders()
+	public function &getPlayers()
 	{
 		return SmrPlayer::getPlanetPlayers($this->getGameID(),$this->getSectorID());
 	}
 
-	public function hasTraders()
+	public function hasPlayers()
 	{
-		return count($this->getTraders()) > 0;
+		return count($this->getPlayers()) > 0;
 	}
 
 	public function &getOtherTraders(AbstractSmrPlayer &$player)

@@ -40,10 +40,10 @@
 								</div><?php
 							}
 							$CanScanSector = ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
-							if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasTraders()) ) || $Sector->hasFriendlyForces($ThisPlayer) || $Sector->hasFriendlyTraders($ThisPlayer))
+							if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($ThisPlayer) || $Sector->hasFriendlyTraders($ThisPlayer))
 							{ ?>
 								<div class="lmtf"><?php
-									if(($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasTraders()) || $Sector->hasFriendlyTraders($ThisPlayer))
+									if(($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($ThisPlayer))
 									{
 										if($CanScanSector && $Sector->hasEnemyTraders($ThisPlayer))
 										{

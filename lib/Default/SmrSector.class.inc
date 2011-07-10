@@ -9,6 +9,7 @@ class SmrSector
 {
 	protected static $CACHE_SECTORS = array();
 	protected static $CACHE_GALAXY_SECTORS = array();
+	protected static $CACHE_LOCATION_SECTORS = array();
 	
 	protected $db;
 	
@@ -33,20 +34,36 @@ class SmrSector
 			$sectors = array();
 			while($db->nextRecord())
 			{
-				$sectorID = $db->getField('sector_id');
+				$sectorID = $db->getInt('sector_id');
 				$sectors[$sectorID] =& self::getSector($gameID,$sectorID,$forceUpdate);
 			}
-			return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] =& $sectors;
+			self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID] =& $sectors;
 		}
 		return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID];
+	}
+	
+	public static function &getLocationSectors($gameID,$locationTypeID,$forceUpdate = false)
+	{
+		if($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$galaxyID]))
+		{
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT sector_id FROM location WHERE location_type_id = ' . $locationTypeID . ' AND game_id=' . $gameID.' ORDER BY sector_id ASC');
+			$sectors = array();
+			while($db->nextRecord())
+			{
+				$sectorID = $db->getInt('sector_id');
+				$sectors[$sectorID] =& self::getSector($gameID,$sectorID,$forceUpdate);
+			}
+			self::$CACHE_LOCATION_SECTORS[$gameID][$galaxyID] =& $sectors;
+		}
+		return self::$CACHE_LOCATION_SECTORS[$gameID][$galaxyID];
 	}
 
 	public static function &getSector($gameID,$sectorID,$forceUpdate = false)
 	{
 		if(!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate)
 		{
-			$s = new SmrSector($gameID,$sectorID);
-			return self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()] =& $s;
+			self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()] = new SmrSector($gameID,$sectorID);
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
@@ -802,14 +819,14 @@ class SmrSector
 		return SmrForce::getSectorForces($this->getGameID(),$this->getSectorID());
 	}
 
-	public function &getTraders()
+	public function &getPlayers()
 	{
 		return SmrPlayer::getSectorPlayers($this->getGameID(),$this->getSectorID());
 	}
 
-	public function hasTraders()
+	public function hasPlayers()
 	{
-		return count($this->getTraders()) > 0;
+		return count($this->getPlayers()) > 0;
 	}
 
 	public function &getOtherTraders(AbstractSmrPlayer &$player)
