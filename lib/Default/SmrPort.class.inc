@@ -1130,7 +1130,7 @@ class SmrPort
 	public function updateSectorPlayersCache()
 	{
 		$accountIDs = array();
-		$sectorPlayers =& $this->getSector()->getTraders();
+		$sectorPlayers =& $this->getSector()->getPlayers();
 		foreach($sectorPlayers as &$sectorPlayer)
 		{
 			$accountIDs[] = $sectorPlayer->getAccountID();
