@@ -184,8 +184,8 @@ function displayScouts(& $messageBox, & $player, $read, $group)
 	{
 		//here we group new messages
 		$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, msg_read
-						FROM message, player 
-						WHERE player.account_id = message.sender_id 
+						FROM message, player
+						WHERE player.account_id = message.sender_id
 						AND message.account_id = ' . $player->getAccountID() . '
 						AND message.game_id = ' . $player->getGameID() . '
 						AND player.game_id = ' . $player->getGameID() . '
@@ -242,6 +242,7 @@ function displayGrouped(& $messageBox, $playerName, $player_id, $sender_id, $mes
 }
 function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $message_text, $send_time, $msg_read, $type, $sentMessage = false)
 {
+	require_once(get_file_loc('message.functions.inc'));
 	global $player, $account;
 
 	$message = array ();
@@ -257,22 +258,11 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 	}
 
 	$sender = false;
-	$senderName = '';
-	if ($sender_id == ACCOUNT_ID_PORT)
+	$senderName =& getMessagePlayer($sender_id,$player->getGameID(),$type);
+	if ($senderName instanceof SmrPlayer)
 	{
-		$senderName .= '<span class="yellow">Port Defenses</span>';
-	}
-	else if ($sender_id == ACCOUNT_ID_ADMIN)
-	{
-		$senderName .= '<span class="admin">Administrator</span>';
-	}
-	else if ($sender_id == ACCOUNT_ID_PLANET)
-	{
-		$senderName .= '<span class="yellow">Planetary Defenses</span>';
-	}
-	else if (!empty ($sender_id))
-	{
-		$sender = & SmrPlayer::getPlayer($sender_id, $player->getGameID());
+		$sender =& $senderName;
+		unset($senderName);
 		$replace = explode('?', $message_text);
 		foreach ($replace as $key => $timea)
 		{
@@ -285,28 +275,9 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 		}
 		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id'] = $sender->getPlayerID();
-		$senderName .= create_link($container, $sender->getDisplayName());
+		$senderName =& create_link($container, $sender->getDisplayName());
 	}
-	else
-	{
-		switch($type)
-		{
-			case MSG_ADMIN:
-				$senderName .= ('<span class="admin">Administrator</span>');
-			break;
-			
-			case MSG_ALLIANCE:
-				$senderName .= ('<span class="green">Alliance Ambassador</span>');
-			break;
-			
-			case MSG_PLAYER:
-				$senderName .= ('<span class="yellow">Port Defenses</span>');
-			break;
-			
-			default:
-				$senderName .= ('Unknown');
-		}
-	}
+	
 	$container = create_container('skeleton.php', 'message_notify_confirm.php');
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
