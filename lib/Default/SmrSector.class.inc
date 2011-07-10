@@ -63,7 +63,7 @@ class SmrSector
 	{
 		if(!isset(self::$CACHE_SECTORS[$gameID][$sectorID]) || $forceUpdate)
 		{
-			self::$CACHE_SECTORS[$s->getGameID()][$s->getSectorID()] = new SmrSector($gameID,$sectorID);
+			self::$CACHE_SECTORS[$gameID][$sectorID] = new SmrSector($gameID,$sectorID);
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
