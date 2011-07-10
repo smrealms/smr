@@ -63,8 +63,8 @@ class Council
 	}
 }
 
-function modifyRelations($race_id_1) {
-
+function modifyRelations($race_id_1)
+{
 	global $player, $db;
 
 	$endtime = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
@@ -75,8 +75,8 @@ function modifyRelations($race_id_1) {
 			   'WHERE time < '.$endtime.' AND ' .
 					 'game_id = '.$player->getGameID().' AND ' .
 					 'race_id_1 = '.$race_id_1);
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$account_id	= $db->getField('account_id');
 		$race_id_2	= $db->getField('race_id_2');
 		$action		= $db->getField('action');
@@ -113,8 +113,8 @@ function modifyRelations($race_id_1) {
 
 }
 
-function checkPacts($race_id_1) {
-
+function checkPacts($race_id_1)
+{
 	global $player, $db;
 
 	$db2 = new SmrMySqlDatabase();
@@ -123,8 +123,8 @@ function checkPacts($race_id_1) {
 			   'WHERE end_time < '.TIME.' AND ' .
 					 'game_id = '.$player->getGameID().' AND ' .
 					 'race_id_1 = '.$race_id_1);
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$race_id_2	= $db->getField('race_id_2');
 		$type		= $db->getField('type');
 
@@ -144,79 +144,58 @@ function checkPacts($race_id_1) {
 						  'vote = \'NO\'');
 		$no_votes = $db2->getNumRows();
 
-		if ($type == 'WAR') {
-
-			// more yes than no?
-			if ($yes_votes > $no_votes) {
-
+		
+		// more yes than no?
+		if ($yes_votes > $no_votes)
+		{
+			if ($type == 'WAR')
+			{
 				$db2->query('UPDATE race_has_relation ' .
 							'SET relation = -400 ' .
 							'WHERE game_id = '.$player->getGameID().' AND ' .
 								  '(race_id_1 = '.$race_id_1.' AND race_id_2 = '.$race_id_2.' OR ' .
 								  'race_id_1 = '.$race_id_2.' AND race_id_2 = '.$race_id_1.')');
-
-				//get races
-				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_1);
-				if ($db2->nextRecord())
-					$our_race = $db2->getField('race_name');
-
-				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_2);
-				if ($db2->nextRecord())
-					$their_race = $db2->getField('race_name');
-
+	
 				// get news message
-				$news = 'The '.$our_race.' have declared <span class="red">WAR</span> on the '.$their_race;
+				$news = 'The '.Globals::getRaceName($race_id_1).' have declared <span class="red">WAR</span> on the '.Globals::getRaceName($race_id_2);
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
 							'('.$player->getGameID().', '.TIME.', ' . $db->escape_string($news, false) . ')');
-
 			}
-
-		} elseif ($type == 'PEACE' && $yes_votes > $no_votes) {
-
-			// get 'yes' votes
-			$db2->query('SELECT * FROM player_votes_pact ' .
-						'WHERE game_id = '.$player->getGameID().' AND ' .
-							  'race_id_1 = '.$race_id_2.' AND ' .
-							  'race_id_2 = '.$race_id_1.' AND ' .
-							  'vote = \'YES\'');
-			$rev_yes_votes = $db2->getNumRows();
-
-			// get 'no' votes
-			$db2->query('SELECT * FROM player_votes_pact ' .
-						'WHERE game_id = '.$player->getGameID().' AND ' .
-							  'race_id_1 = '.$race_id_2.' AND ' .
-							  'race_id_2 = '.$race_id_1.' AND ' .
-							  'vote = \'NO\'');
-			$rev_no_votes = $db2->getNumRows();
-
-			// more yes than no?
-			if ($rev_yes_votes > $rev_no_votes) {
-
-				$db2->query('UPDATE race_has_relation ' .
-							'SET relation = 300 ' .
+			elseif ($type == 'PEACE')
+			{
+				// get 'yes' votes
+				$db2->query('SELECT * FROM player_votes_pact ' .
 							'WHERE game_id = '.$player->getGameID().' AND ' .
-								  '(race_id_1 = '.$race_id_1.' AND race_id_2 = '.$race_id_2.' OR ' .
-								  'race_id_1 = '.$race_id_2.' AND race_id_2 = '.$race_id_1.')');
-
-
-				//get races
-				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_1);
-				if ($db2->nextRecord())
-					$our_race = $db2->getField('race_name');
-
-				$db2->query('SELECT * FROM race WHERE race_id = '.$race_id_2);
-				if ($db2->nextRecord())
-					$their_race = $db2->getField('race_name');
-
-				//get news message
-				$news = 'The '.$our_race.' have signed a <span class="dgreen">PEACE</span> treaty with the '.$their_race;
-				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
-							'('.$player->getGameID().', '.TIME.', ' . $db->escape_string($news, false) . ')');
-
+								  'race_id_1 = '.$race_id_2.' AND ' .
+								  'race_id_2 = '.$race_id_1.' AND ' .
+								  'vote = \'YES\'');
+				$rev_yes_votes = $db2->getNumRows();
+	
+				// get 'no' votes
+				$db2->query('SELECT * FROM player_votes_pact ' .
+							'WHERE game_id = '.$player->getGameID().' AND ' .
+								  'race_id_1 = '.$race_id_2.' AND ' .
+								  'race_id_2 = '.$race_id_1.' AND ' .
+								  'vote = \'NO\'');
+				$rev_no_votes = $db2->getNumRows();
+	
+				// more yes than no?
+				if ($rev_yes_votes > $rev_no_votes)
+				{
+					$db2->query('UPDATE race_has_relation ' .
+								'SET relation = 300 ' .
+								'WHERE game_id = '.$player->getGameID().' AND ' .
+									  '(race_id_1 = '.$race_id_1.' AND race_id_2 = '.$race_id_2.' OR ' .
+									  'race_id_1 = '.$race_id_2.' AND race_id_2 = '.$race_id_1.')');
+	
+					//get news message
+					$news = 'The '.Globals::getRaceName($race_id_1).' have signed a <span class="dgreen">PEACE</span> treaty with the '.Globals::getRaceName($race_id_2);
+					$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
+								'('.$player->getGameID().', '.TIME.', ' . $db->escape_string($news, false) . ')');
+				}
 			}
-
 		}
-
+		
 		// delete vote and user votes
 		$db2->query('DELETE FROM race_has_voting ' .
 					'WHERE game_id = '.$player->getGameID().' AND ' .
@@ -235,9 +214,7 @@ function checkPacts($race_id_1) {
 					'WHERE game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$race_id_2.' AND ' .
 						  'race_id_2 = '.$race_id_1);
-
 	}
-
 }
 
 ?>
