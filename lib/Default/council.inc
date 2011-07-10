@@ -152,8 +152,8 @@ function checkPacts($race_id_1)
 			{
 				$currentlyParkedAccountIDs = array();
 				$raceFedSectors = array(
-										$race_id_1 => &SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
-										$race_id_2 => &SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
+										$race_id_1 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
+										$race_id_2 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
 									);
 				foreach($raceFedSectors as $raceID => &$fedSectors)
 				{
