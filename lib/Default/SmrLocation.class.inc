@@ -89,9 +89,13 @@ class SmrLocation
 	
 	public function getRaceID()
 	{
-		if($this->isFed())
+		if($this->isFed() && $this->getTypeID()!=LOCATION_TYPE_FEDERAL_BEACON)
 		{
-			return $this->typeID - LOCATION_TYPE_FEDERAL_BEACON;
+			return $this->getTypeID() - LOCATION_GROUP_RACIAL_BEACONS;
+		}
+		if($this->isHQ() && $this->getTypeID()!=LOCATION_TYPE_FEDERAL_HQ)
+		{
+			return $this->getTypeID() - LOCATION_GROUP_RACIAL_HQS;
 		}
 		return RACE_NEUTRAL;
 	}
@@ -388,10 +392,10 @@ class SmrLocation
 			}
 			else
 			{
-				$relativeID = $this->getTypeID()%100-2;
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS+$relativeID);
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS+$relativeID);
-				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS+$relativeID);
+				$raceID = $this->getRaceID();
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_BEACONS+$raceID);
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHIPS+$raceID);
+				$linkedLocations[] =& SmrLocation::getLocation(LOCATION_GROUP_RACIAL_SHOPS+$raceID);
 			}
 		}
 		return $linkedLocations;

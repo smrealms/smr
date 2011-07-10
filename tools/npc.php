@@ -658,9 +658,9 @@ function plotToFed($plotToHQ=false)
 	}
 	if($plotToHQ===true)
 	{
-		return plotToNearest($player,SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_HQS-1));
+		return plotToNearest($player,SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_HQS));
 	}
-	return plotToNearest($player,SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_BEACONS-1));
+	return plotToNearest($player,SmrLocation::getLocation($player->getRaceID()+LOCATION_GROUP_RACIAL_BEACONS));
 //	return plotToNearest($player,$plotToHQ===true?'HQ':'Fed');
 }
 
