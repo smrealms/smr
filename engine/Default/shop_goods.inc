@@ -33,7 +33,7 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 	$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 	
 	// increase current number of tries
-	$container['number_of_bargains'] = $var['number_of_bargains'] + 1;
+	$container['number_of_bargains'] = isset($var['number_of_bargains']) ? $var['number_of_bargains'] + 1 : 1;
 
 	if (isset($var['overall_number_of_bargains']))
 	{
