@@ -9,7 +9,7 @@ UPDATE smr_new.ship_type SET cost = 5314159 WHERE ship_type_id = 9; -- Inter-Ste
 
 UPDATE smr_new.ship_type SET cost = 4791393, speed = 10 WHERE ship_type_id = 10; -- Freighter to 4,791,393 credits, 10 speed
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 250 WHERE ship_type_id = 10 AND hardware_type_id = 3; -- Freighter to 250 holds
-UPDATE smr_new.ship_type_support_hardware SET max_amount = 350 WHERE ship_type_id = 10 AND hardware_type_id = 2; -- Freighter to 350 armour
+UPDATE smr_new.ship_type_support_hardware SET max_amount = 325 WHERE ship_type_id = 10 AND hardware_type_id = 2; -- Freighter to 325 armour
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 10 AND hardware_type_id IN(5,6); -- Freighter to 0 scouts/mines
 
 UPDATE smr_new.ship_type SET cost = 6215028 WHERE ship_type_id = 11; -- Planetary Freighter to 6,215,028 credits
