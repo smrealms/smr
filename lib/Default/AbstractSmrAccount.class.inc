@@ -55,8 +55,7 @@ abstract class AbstractSmrAccount
 	{
 		if($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID]))
 		{
-			$a = new SmrAccount($accountID);
-			return self::$CACHE_ACCOUNTS[$accountID] =& $a;
+			self::$CACHE_ACCOUNTS[$accountID] = new SmrAccount($accountID);
 		}
 		return self::$CACHE_ACCOUNTS[$accountID];
 	}
