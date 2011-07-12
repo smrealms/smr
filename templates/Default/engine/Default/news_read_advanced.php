@@ -1,6 +1,6 @@
 <div align="center">
 	<form name="AdvancedNewsForm" method="POST" action="<?php echo $AdvancedNewsFormHref; ?>">
-		<table class="standardnobord nobord" width="100%"><tr>
+		<table class="standardnobord fullwidth"><tr>
 			<td class="center">
 				<h2>Player Search</h2>
 				<input type="text" name="playerName" size="14"><br /><br /><input type="submit" value="Search For Player" name="submit"><br />
@@ -43,7 +43,7 @@
 							}
 						} ?>
 						</select>
-						 vs. 
+						 vs.
 						<select name="alliance2" id="InputFields">
 							<option value="-1">Select an alliance</option><?php
 							if(isset($NewsAlliances) && count($NewsAlliances)>0)

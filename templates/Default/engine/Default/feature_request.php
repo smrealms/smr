@@ -27,7 +27,7 @@ if(isset($FeatureRequests))
 				} ?>
 			</div><br /><?php
 		} ?>
-		<table class="standard" width="100%">
+		<table class="standard fullwidth">
 			<tr><?php
 				if($FeatureModerator)
 				{

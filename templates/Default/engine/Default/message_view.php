@@ -62,7 +62,7 @@ else
 		{
 			?><div class="buttonA"><a class="buttonA" href="<?php echo $MessageBox['ShowAllHref'] ?>">&nbsp;Show all Messages&nbsp;</a></div><br /><br /><?php
 		} ?>
-		<table width="100%" class="standard"><?php
+		<table class="standard fullwidth"><?php
 			if(isset($MessageBox['Messages']))
 			{
 				foreach($MessageBox['Messages'] as &$Message)
@@ -87,7 +87,7 @@ else
 						{ ?>
 							<td>
 								<a href="<?php echo $Message['BlacklistHref']; ?>">Blacklist Player</a>
-							</td>	
+							</td>
 							<td>
 								<a href="<?php echo $Message['ReplyHref']; ?>">Reply</a>
 							</td><?php

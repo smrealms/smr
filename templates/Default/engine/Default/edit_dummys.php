@@ -14,7 +14,7 @@
 <table>
 	<tr>
 		<td style="vertical-align:top">
-			<u><?php echo $DummyPlayer->getPlayerName(); ?></u><br /><br />
+			<span class="underline"><?php echo $DummyPlayer->getPlayerName(); ?></span><br /><br />
 			<form action="<?php echo $EditDummysLink; ?>" method="POST">
 				<input type="text" name="dummy_name" value="<?php echo $DummyPlayer->getPlayerName() ?>" />
 				Level
@@ -26,13 +26,12 @@
 				</select>
 				Ship:
 				<select name="ship_id"><?php
-				foreach($BaseShips as $BaseShip)
+					foreach($BaseShips as $BaseShip)
 					{
 						?><option value="<?php echo $BaseShip['ShipTypeID']; ?>"<?php if($BaseShip['ShipTypeID']==$DummyPlayer->getShipTypeID()){ ?> selected="selected"<?php } ?>><?php echo $BaseShip['Name']; ?></option><?php
 					} ?>
-				</select><br />
+				</select><br /><?php
 				
-				<?php
 				foreach($DummyShip->getWeapons() as $OrderID => $ShipWeapon)
 				{ ?>
 					Weapon: <?php echo $OrderID+1; ?>
@@ -59,7 +58,7 @@
 			</form>
 		</td>
 		<td style="vertical-align:top">
-			<u>Current Details</u>
+			<span class="underline">Current Details</span>
 				<br />Level: <?php echo $DummyPlayer->getLevelID(); ?><br />
 				Ship: <?php echo $DummyShip->getName(); ?> (<?php echo $DummyShip->getAttackRating() ?>/<?php echo $DummyShip->getDefenseRating(); ?>)<br />
 				DCS: <?php if($DummyShip->hasDCS()){ ?>Yes<?php }else{ ?>No<?php } ?><br />
