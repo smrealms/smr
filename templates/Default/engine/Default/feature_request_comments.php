@@ -9,7 +9,7 @@ else
 }
 if(isset($FeatureRequests))
 { ?>
-	<table class="standard" width="100%">
+	<table class="standard fullwidth">
 		<tr>
 			<th>Poster</th>
 			<th>Comment</th>

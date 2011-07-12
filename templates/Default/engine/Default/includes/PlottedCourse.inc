@@ -3,7 +3,7 @@ if($ThisPlayer->hasPlottedCourse())
 {
 	$PlottedCourse =& $ThisPlayer->getPlottedCourse();
 	$NextSector =& SmrSector::getSector($ThisPlayer->getGameID(),$PlottedCourse->getNextOnPath(),$ThisPlayer->getAccountID()); ?>
-	<table class="nobord" width="100%">
+	<table class="nobord fullwidth">
 		<tr>
 			<td<?php if($ThisShip->hasScanner()){ ?> rowspan="2"<?php }?>><?php echo implode(' - ',$PlottedCourse->getPath()); ?><br />
 				(<?php echo $PlottedCourse->getTotalSectors() ?> sectors, <?php echo $PlottedCourse->getTurns(); ?> turns)
