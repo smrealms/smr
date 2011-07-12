@@ -42,30 +42,25 @@ if($Game['GameDescription'])
 { ?>
 	<h1>Description</h1>
 	<p><?php echo bbifyMessage($Game['GameDescription']); ?></p><?php
-}
-if(isset($JoinGameFormHref))
-{
-	?><form name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>"><?php
-}
-else
-{
-	?><form><?php //Dummy form
-} ?>
+}?>
+<form<?php if(isset($JoinGameFormHref)){ ?> name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>"<?php } ?>>
 	<h1>Create Merchant</h1><br />
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td>
-				<p>Each Space Merchant Realms game requires you to create a new Merchant. For this purpose you must choose a name and a race.<br />
-				To enhance the roleplaying atmosphere of the game, there are certain criteria your name must meet.<br />
-				The following names will not be accepted:
-				<ul>
-				<li>Names with references to "out of character" information - ie. something that would make sense only to the player, not the character - such as "SpaceGamer", "SMR Rules" etc.</li>
-				<li>Names that are taken from real life history, or the names of existing people - eg. "Osama bin Laden", "Stalin" or "Harrison Ford".</li>
-				<li>Names that convey an attitude towards yourself or someone else - such as "Lamer" or "Shadow Sucks".</li>
-				<li>Names that make excessive use of special characters, eg. "~-=[Daron]=-~" should be "Daron" instead.</li>
-				<li>Names that look similar or identical to another player in an attempt to trick other players are prohibited.</li>
-				</ul>
-				If you disregard these rules, your player will be deleted, so choose your name wisely.</p><br />
+				<p>
+					Each Space Merchant Realms game requires you to create a new Merchant. For this purpose you must choose a name and a race.<br />
+					To enhance the roleplaying atmosphere of the game, there are certain criteria your name must meet.<br />
+					The following names will not be accepted:
+					<ul>
+						<li>Names with references to "out of character" information - ie. something that would make sense only to the player, not the character - such as "SpaceGamer", "SMR Rules" etc.</li>
+						<li>Names that are taken from real life history, or the names of existing people - eg. "Osama bin Laden", "Stalin" or "Harrison Ford".</li>
+						<li>Names that convey an attitude towards yourself or someone else - such as "Lamer" or "Shadow Sucks".</li>
+						<li>Names that make excessive use of special characters, eg. "~-=[Daron]=-~" should be "Daron" instead.</li>
+						<li>Names that look similar or identical to another player in an attempt to trick other players are prohibited.</li>
+					</ul>
+					If you disregard these rules, your player will be deleted, so choose your name wisely.
+				</p><br />
 				<br />
 				<table border="0" cellpadding="3">
 					<tr>
@@ -106,7 +101,7 @@ else
 						</td>
 					</tr>
 					
-				</table>	
+				</table>
 			</td>
 		</tr>
 					
