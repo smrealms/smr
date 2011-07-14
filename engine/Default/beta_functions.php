@@ -26,7 +26,7 @@ $PHP_OUTPUT.=('<br />');
 $container['func'] = 'Ship';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="ship_id">');
-$db->query('SELECT * FROM ship_type ORDER BY ship_type_id');
+$db->query('SELECT * FROM ship_type ORDER BY ship_name');
 while ($db->nextRecord())
 	$PHP_OUTPUT.=('<option value="' . $db->getField('ship_type_id') . '">' . $db->getField('ship_name') . '</option>');
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
@@ -39,7 +39,7 @@ $container['func'] = 'Weapon';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('Amount:&nbsp;&nbsp;<input type="text" name="amount" value="1"><br />');
 $PHP_OUTPUT.=('<select name="weapon_id">');
-$db->query('SELECT * FROM weapon_type ORDER BY weapon_type_id');
+$db->query('SELECT * FROM weapon_type ORDER BY weapon_name');
 while ($db->nextRecord())
 	$PHP_OUTPUT.=('<option value="' . $db->getField('weapon_type_id') . '">' . $db->getField('weapon_name') . '</option>');
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
