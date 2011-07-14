@@ -27,8 +27,7 @@ if (!$sector->hasPort())
 	create_error('I can\'t see a port in this sector. Can you?');
 
 // check if the player has the right relations to trade at the current port
-$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
-if ($portRelations[$player->getRaceID()] + $player->getRelation($port->getRaceID()) < -300)
+if ($player->getRelation($port->getRaceID()) < -300)
 	create_error('This port refuses to trade with you because you are at <big><span class="bold red">WAR!</span></big>');
 
 $portGood = $port->getGood($good_id);
@@ -49,8 +48,7 @@ if ($portGood['TransactionType'] == 'Buy' && $player->getCredits() < $bargain_pr
 	create_error('You don\'t have enough credits!');
 
 // get relations for us (global + personal)
-$portRelations = Globals::getRaceRelations($player->getGameID(),$port->getRaceID());
-$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
+$relations = $player->getRelation($port->getRaceID());
 
 $container = array();
 

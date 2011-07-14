@@ -181,11 +181,9 @@ if($sector->hasPort())
 	$container['body'] = 'trader_relations.php';
 	$template->assign('TraderRelationsLink', SmrSession::get_new_href($container));
 	
-	$template->assign('PortRaceName',get_colored_text($player->getRelation($port->getRaceID()), $RACES[$port->getRaceID()]['Race Name']));
+	$template->assign('PortRaceName',$player->getColouredRaceName($port->getRaceID()));
 	
-	$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
-	$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
-	$template->assign('PortIsAtWar',$relations <= -300);
+	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()));
 }
 
 function checkForForceRefreshMessage(&$msg)

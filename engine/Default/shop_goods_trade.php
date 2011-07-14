@@ -42,8 +42,6 @@ transfer('number_of_bargains');
 transfer('overall_number_of_bargains');
 
 $PHP_OUTPUT.=create_echo_form($container);
-$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
-$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
 //gives value 0-1
 if (isset($var['ideal_price']))
 {

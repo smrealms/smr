@@ -9,18 +9,11 @@ function checkPortTradeable(&$port,&$player)
 	if(!$port->exists())
 		return 'There is no port in this sector!';
 	
-	// total relations with that race (personal + global)
-	$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
-	$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
-	if (empty($relations))
-		$relations = 0;
-	
-	if($relations <= -300)
+	if($player->getRelation($port->getRaceID()) <= -300)
 		return 'We will not trade with our enemies!';
 	
 	if($port->getReinforceTime() > TIME)
 		return 'We are still repairing damage caused during the last raid.';
-	
 	
 	return true;
 }

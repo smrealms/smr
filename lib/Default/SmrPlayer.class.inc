@@ -19,8 +19,6 @@ class SmrPlayer extends AbstractSmrPlayer
 //	var $controlled;
 //	var $old_dead;
 	protected $newbieWarning;
-//	var $relations_global;
-//	var $relations_global_rev;
 //	var $display_experience;
 //	var $display_level_id;
 //	var $display_level_name;
@@ -909,13 +907,13 @@ class SmrPlayer extends AbstractSmrPlayer
 	function setRelations($relations,$raceID)
 	{
 		$this->getPureRelations();
-		$this->getRelations();
 		if($this->pureRelations[$raceID] == $relations)
 			return;
 		if($relations < MIN_RELATIONS)
 			$relations = MIN_RELATIONS;
+		$relationsDiff = $relations = $this->pureRelations[$raceID];
 		$this->pureRelations[$raceID] = $relations;
-		$this->relations[$raceID] = round($relations + $this->getStat('Relations') / 2);
+		$this->relations[$raceID] += round($relationsDiff);
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values ('.$this->getAccountID().','.$this->getGameID().','.$raceID.','.$this->pureRelations[$raceID].')');
 	}
 	
