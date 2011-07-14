@@ -13,9 +13,7 @@ if($tradeable!==true)
 	create_error($tradeable);
 
 $portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
-$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
-if (empty($relations))
-	$relations = 0;
+$relations = $player->getRelation($port->getRaceID());
 
 // topic
 $template->assign('PageTopic','Port In Sector #'.$player->getSectorID());

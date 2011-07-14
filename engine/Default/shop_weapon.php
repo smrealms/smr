@@ -44,10 +44,8 @@ if ($db->getNumRows() > 0 ) {
 		$container = create_container('shop_weapon_processing.php');
 		transfer('LocationID');
         if ($race_id !=1) {
-			$weaponRelations = Globals::getRaceRelations(SmrSession::$game_id,$race_id);
-        	if ($weaponRelations[$player->getRaceID()] + $player->getRelation($race_id) < 300)
+        	if ($player->getRelation($race_id) < 300)
         		$container['cant_buy'] = 'Yes';
-
         }
 		$container['weapon_id'] = $weapon_type_id;
 		$container['power_level'] = $power_level;

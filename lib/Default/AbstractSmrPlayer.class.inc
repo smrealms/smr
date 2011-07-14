@@ -18,8 +18,6 @@ abstract class AbstractSmrPlayer
 //	var $old_dead;
 //	var $bank;
 //	var $newbie_warning;
-//	var $relations_global;
-//	var $relations_global_rev;
 //	var $ignore_global;
 //	var $last_news_update;
 //	var $display_experience;
@@ -672,12 +670,14 @@ abstract class AbstractSmrPlayer
 		{
 			//get relations
 			$RACES = Globals::getRaces();
+			$raceRelations =& Globals::getRaceRelations($this->getGameID(),$this->getRaceID());
 			$pureRels = $this->getPureRelations(); // make sure they're initialised.
 //			$stats = $this->getStats(); // make sure they're initialised.
 			$this->relations = array();
-			foreach ($RACES as $race_id => $race_name)
+			foreach ($RACES as $raceID => $raceName)
 			{
-				$this->relations[$race_id] = round($pureRels[$race_id]);// + $stats['Relations'] / 2);
+				$raceRelations = Globals::getRaceRelations($this->getGameID(), $raceID);
+				$this->relations[$raceID] = round($pureRels[$raceID] + $raceRelations[$this->getRaceID()]);// + $stats['Relations'] / 2);
 			}
 		}
 		return $this->relations;
