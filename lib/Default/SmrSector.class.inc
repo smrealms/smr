@@ -44,7 +44,7 @@ class SmrSector
 	
 	public static function &getLocationSectors($gameID,$locationTypeID,$forceUpdate = false)
 	{
-		if($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$galaxyID]))
+		if($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID]))
 		{
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT sector_id FROM location WHERE location_type_id = ' . $locationTypeID . ' AND game_id=' . $gameID.' ORDER BY sector_id ASC');
@@ -54,9 +54,9 @@ class SmrSector
 				$sectorID = $db->getInt('sector_id');
 				$sectors[$sectorID] =& self::getSector($gameID,$sectorID,$forceUpdate);
 			}
-			self::$CACHE_LOCATION_SECTORS[$gameID][$galaxyID] =& $sectors;
+			self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID] =& $sectors;
 		}
-		return self::$CACHE_LOCATION_SECTORS[$gameID][$galaxyID];
+		return self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID];
 	}
 
 	public static function &getSector($gameID,$sectorID,$forceUpdate = false)
