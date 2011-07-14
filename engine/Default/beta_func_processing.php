@@ -99,6 +99,8 @@ elseif ($var['func'] == 'Hard_add') {
 	$race = $_REQUEST['race'];
 	if(!is_numeric($amount) || !is_numeric($race))
 		create_error('Amount and Race IDs have to be numbers.');
+	if($player->getRaceID()==$race)
+		create_error('You cannot change race relations with your own race.');
 	$db->query('UPDATE race_has_relation SET relation = '.$amount.' WHERE race_id_1 = '.$player->getRaceID().' AND race_id_2 = '.$race.' AND game_id = '.$player->getGameID());
 	$db->query('UPDATE race_has_relation SET relation = '.$amount.' WHERE race_id_1 = '.$race.' AND race_id_2 = '.$player->getRaceID().' AND game_id = '.$player->getGameID());
 } elseif ($var['func'] == 'Race') {
