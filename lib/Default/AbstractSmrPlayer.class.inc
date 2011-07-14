@@ -202,7 +202,7 @@ abstract class AbstractSmrPlayer
 			$RACES =& Globals::getRaces();
 			foreach($RACES as $raceID => $raceName)
 			{
-				$this->canFed[$raceID] = $this->getRelation($raceID) < ALIGN_FED_PROTECTION;
+				$this->canFed[$raceID] = $this->getRelation($raceID) >= ALIGN_FED_PROTECTION;
 			}
 			$this->db->query('SELECT race_id, allowed FROM player_can_fed
 								WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
