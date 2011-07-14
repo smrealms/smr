@@ -181,11 +181,11 @@ function checkPacts($race_id_1)
 							$message = 'We have declared war upon your race';
 						else
 							$message = 'Your race has declared war upon us';
-						$message .= ', you have '.format_time(TIME_FOR_WAR_VOTE_FED_SAFETY).' to vacate our federal space, after that time you will no longer be protected unless you have strong personal relations.';
+						$message .= ', you have '.format_time(TIME_FOR_WAR_VOTE_FED_SAFETY).' to vacate our federal space, after that time you will no longer be protected (unless you have strong personal relations).';
 						foreach($accountIDs as &$accountID)
 						{
 							$query .= '('.$db2->escapeNumber($accountID).','.$db2->escapeNumber($player->getGameID()).','.$db2->escapeNumber($raceID).','.$db2->escapeNumber($expireTime).','.$db2->escapeBoolean(true).').';
-							SmrPlayer::sendMessageFromRace($raceID, $gameID, $accountID, $message, $expireTime);
+							SmrPlayer::sendMessageFromRace($raceID, $player->getGameID(), $accountID, $message, $expireTime);
 						}
 					}
 					$db2->query(substr($query,0,-1));
