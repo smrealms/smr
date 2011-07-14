@@ -676,7 +676,7 @@ abstract class AbstractSmrPlayer
 			$this->relations = array();
 			foreach ($RACES as $raceID => $raceName)
 			{
-				$raceRelations = Globals::getRaceRelations($this->getGameID(), $raceID);
+				$raceRelations =& Globals::getRaceRelations($this->getGameID(), $raceID);
 				$this->relations[$raceID] = round($pureRels[$raceID] + $raceRelations[$this->getRaceID()]);// + $stats['Relations'] / 2);
 			}
 		}
