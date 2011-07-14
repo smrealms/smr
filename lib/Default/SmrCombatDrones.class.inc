@@ -235,9 +235,9 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		$damage['Armour'] = ceil($diminishing * $damage['Armour']);
 		if($targetPlayer->getShip()->hasDCS())
 		{
-			$damage['MaxDamage'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['MaxDamage'];
-			$damage['Shield'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Shield'];
-			$damage['Armour'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Armour'];
+			$damage['MaxDamage'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
+			$damage['Shield'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
+			$damage['Armour'] *= DCS_PLAYER_DAMAGE_DECIMAL_PERCENT;
 		}
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
@@ -257,9 +257,9 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		
 		if($targetPlayer->getShip()->hasDCS())
 		{
-			$damage['MaxDamage'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['MaxDamage'];
-			$damage['Shield'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Shield'];
-			$damage['Armour'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Armour'];
+			$damage['MaxDamage'] *= DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
+			$damage['Shield'] *= DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
+			$damage['Armour'] *= DCS_FORCE_DAMAGE_DECIMAL_PERCENT;
 		}
 		
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedForceAccuracyAgainstPlayer($forces,$targetPlayer) / 100);
@@ -280,9 +280,9 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		
 		if($targetPlayer->getShip()->hasDCS())
 		{
-			$damage['MaxDamage'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['MaxDamage'];
-			$damage['Shield'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Shield'];
-			$damage['Armour'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Armour'];
+			$damage['MaxDamage'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
+			$damage['Shield'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
+			$damage['Armour'] *= DCS_PORT_DAMAGE_DECIMAL_PERCENT;
 		}
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedPortAccuracyAgainstPlayer($port,$targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
@@ -302,9 +302,9 @@ class SmrCombatDrones extends AbstractSmrCombatWeapon
 		
 		if($targetPlayer->getShip()->hasDCS())
 		{
-			$damage['MaxDamage'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['MaxDamage'];
-			$damage['Shield'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Shield'];
-			$damage['Armour'] = DCS_DAMAGE_DECIMAL_PERCENT * $damage['Armour'];
+			$damage['MaxDamage'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
+			$damage['Shield'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
+			$damage['Armour'] *= DCS_PLANET_DAMAGE_DECIMAL_PERCENT;
 		}
 		$damage['Launched'] = ceil($this->getNumberOfCDs() * $this->getModifiedPlanetAccuracyAgainstPlayer($planet,$targetPlayer) / 100);
 		$damage['MaxDamage'] = ceil($damage['Launched'] * $damage['MaxDamage']);
