@@ -4,7 +4,7 @@ $player->setNewbieWarning(false);
 
 $template->assign('PageTopic','Warning!');
 
-$PHP_OUTPUT.=('<p>You have gotten this page because you are almost out of newbie turns.');
+$PHP_OUTPUT.=('<p>You have received this page because you are almost out of newbie turns.');
 $PHP_OUTPUT.=('What does this mean? You can now do many things that you couldn\'t do while in newbie turns.</p>');
 
 $PHP_OUTPUT.=('<ol>You can...');
