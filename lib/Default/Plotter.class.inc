@@ -6,7 +6,7 @@ class Plotter
 	{
 	}
 
-	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
+	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
 	{
 		$checkSector =& $sector;
 		$gameID = $sector->getGameID();
@@ -56,7 +56,7 @@ class Plotter
 				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit)
 				{
 					$checkSector =& SmrSector::getSector($gameID,$checkSectorID);
-					if (($needsToHaveBeenExploredBy===null||$needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID()))===true&&$checkSector->hasX($x)===true)
+					if (($needsToHaveBeenExploredBy===null||$needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID()))===true&&$checkSector->hasX($x,$player)===true)
 					{
 						if($useFirst===true)
 							return $distance;
@@ -115,7 +115,7 @@ class Plotter
 
 	public static function &findDistanceToOtherPorts(SmrSector &$sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000)
 	{
-		return self::findDistanceToX('Port', $sector, false, null, $distanceLimit, $lowLimit, $highLimit, $distanceLimit);
+		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit, $distanceLimit);
 	}
 }
 
