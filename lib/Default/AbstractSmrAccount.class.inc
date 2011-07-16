@@ -49,6 +49,8 @@ abstract class AbstractSmrAccount
 	protected $timeShort;
 	protected $template;
 	
+	protected $npc;
+	
 	protected $hasChanged;
 
 	public static function &getAccount($accountID,$forceUpdate = false)
@@ -304,6 +306,16 @@ abstract class AbstractSmrAccount
 	public function isNewbie()
 	{
 		return !$this->isVeteran();
+	}
+	
+	public function isNPC()
+	{
+		if(!isset($this->npc))
+		{
+			$this->db->query('SELECT login FROM npc_logins WHERE login = '.$this->db->escapeArray($this->getLogin()).' LIMIT 1;');
+			$this->npc = $this->db->nextRecord();
+		}
+		return $this->npc;
 	}
 	
 	protected function getHOFData()

@@ -1469,8 +1469,17 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
-		$killer->increaseHOF($gainedExp,array('Killing','Experience','Gained'), HOF_PUBLIC);
-		$killer->increaseHOF($this->getExperience(),array('Killing','Experience','Of Traders Killed'), HOF_PUBLIC);
+		
+		if($this->isNPC())
+		{
+			$killer->increaseHOF($gainedExp,array('Killing','NPC','Experience','Gained'), HOF_PUBLIC);
+			$killer->increaseHOF($this->getExperience(),array('Killing','NPC','Experience','Of Traders Killed'), HOF_PUBLIC);
+		}
+		else
+		{
+			$killer->increaseHOF($gainedExp,array('Killing','Experience','Gained'), HOF_PUBLIC);
+			$killer->increaseHOF($this->getExperience(),array('Killing','Experience','Of Traders Killed'), HOF_PUBLIC);
+		}
 		$this->increaseHOF($gainedExp,array('Dying','Experience','Gained By Killer'), HOF_PUBLIC);
 		// Dead player loses experience
 		$expLossPercentage = 0.10 + (($this->getLevelID() - $killer->getLevelID()) * 0.0025);
@@ -1481,14 +1490,25 @@ class SmrPlayer extends AbstractSmrPlayer
 			$return['DeadExp'] = $lostExp;
 			$this->decreaseExperience($lostExp);
 			$this->increaseHOF($return['DeadExp'],array('Dying','Experience','Lost'), HOF_PUBLIC);
-			$killer->increaseHOF($return['DeadExp'],array('Killing','Experience','Lost By Traders Killed'), HOF_PUBLIC);
+			if($this->isNPC())
+				$killer->increaseHOF($return['DeadExp'],array('Killing','Experience','Lost By NPCs Killed'), HOF_PUBLIC);
+			else
+				$killer->increaseHOF($return['DeadExp'],array('Killing','Experience','Lost By Traders Killed'), HOF_PUBLIC);
 		}
 		
 		$creditsGained = $this->getCredits();
 		$return['KillerCredits'] = $creditsGained;
 		$killer->increaseCredits($creditsGained);
-		$killer->increaseHOF($creditsGained,array('Killing','Money','Gain'), HOF_PUBLIC);
-		$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Cost Of Ships Killed'), HOF_PUBLIC);
+		if($this->isNPC())
+		{
+			$killer->increaseHOF($creditsGained,array('Killing','NPC','Money','Gain'), HOF_PUBLIC);
+			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','NPC','Money','Cost Of Ships Killed'), HOF_PUBLIC);
+		}
+		else
+		{
+			$killer->increaseHOF($creditsGained,array('Killing','Money','Gain'), HOF_PUBLIC);
+			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Cost Of Ships Killed'), HOF_PUBLIC);
+		}
 
 		// The killer may change alignment
 		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
@@ -1503,12 +1523,18 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($alignChange>0)
 		{
 			$killer->increaseAlignment($alignChange);
-			$killer->increaseHOF($alignChange,array('Killing','Alignment','Gain'), HOF_PUBLIC);
+			if($this->isNPC())
+				$killer->increaseHOF($alignChange,array('Killing','NPC','Alignment','Gain'), HOF_PUBLIC);
+			else
+				$killer->increaseHOF($alignChange,array('Killing','Alignment','Gain'), HOF_PUBLIC);
 		}
 		else
 		{
 			$killer->decreaseAlignment(-$alignChange);
-			$killer->increaseHOF(-$alignChange,array('Killing','Alignment','Loss'), HOF_PUBLIC);
+			if($this->isNPC())
+				$killer->increaseHOF(-$alignChange,array('Killing','NPC','Alignment','Loss'), HOF_PUBLIC);
+			else
+				$killer->increaseHOF(-$alignChange,array('Killing','Alignment','Loss'), HOF_PUBLIC);
 		}
 		// War setting gives them military pay
 		if($relation <= -300)
@@ -1560,24 +1586,28 @@ class SmrPlayer extends AbstractSmrPlayer
 			{
 				$bountyGained = floor(pow($alignment_diff, 2.56));
 				$killer->increaseCurrentBountyAmount($bounty_type,$bountyGained);
+				if($this->isNPC())
+					$killer->increaseHOF($bountyGained,array('Killing','NPC','Money','Bounty Gained'), HOF_PUBLIC);
+				else
+					$killer->increaseHOF($bountyGained,array('Killing','Money','Bounty Gained'), HOF_PUBLIC);
 				$killer->increaseHOF($bountyGained,array('Killing','Money','Bounty Gained'), HOF_PUBLIC);
 				$this->increaseHOF($bountyGained,array('Dying','Money','Bounty Gained By Killer'), HOF_PUBLIC);
 			}
 		}
 		
-		if($this->getShip()->getAttackRatingWithMaxCDs()<=MAX_ATTACK_RATING_NEWBIE&&$this->getAccount()->isNewbie()&&$killer->getAccount()->isVeteran()) //Newbie kill
-		{
+		if($this->isNPC())
+			$killer->increaseHOF(1,array('Killing','NPC Kills'), HOF_PUBLIC);
+		else if($this->getShip()->getAttackRatingWithMaxCDs()<=MAX_ATTACK_RATING_NEWBIE&&$this->getAccount()->isNewbie()&&$killer->getAccount()->isVeteran()) //Newbie kill
 			$killer->increaseHOF(1,array('Killing','Newbie Kills'), HOF_PUBLIC);
-		}
 		else
 		{
 			$killer->increaseKills(1);
 			$killer->increaseHOF(1,array('Killing','Kills'), HOF_PUBLIC);
-		}
 
-		if($killer->hasAlliance())
-		{
-			$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $killer->getAllianceID() . ' AND game_id=' . $killer->getGameID() . ' LIMIT 1');
+			if($killer->hasAlliance())
+			{
+				$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $killer->getAllianceID() . ' AND game_id=' . $killer->getGameID() . ' LIMIT 1');
+			}
 		}
 
 		if($this->hasAlliance() && $killer->hasAlliance())
