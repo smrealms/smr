@@ -163,6 +163,11 @@ abstract class AbstractSmrPlayer
 		return $this->dead;
 	}
 	
+	public function isNPC()
+	{
+		return $this->getAccount()->isNPC();
+	}
+	
 	public function hasFederalProtection()
 	{
 		$sector =& SmrSector::getSector($this->getGameID(),$this->getSectorID());
