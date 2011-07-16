@@ -3,7 +3,7 @@ UPDATE smr_new.ship_type_support_hardware SET max_amount = 300 WHERE ship_type_i
 
 UPDATE smr_new.ship_type SET cost = 4560740 WHERE ship_type_id = 8; -- Advanced Courier Vessel to 4,560,740 credits
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 235 WHERE ship_type_id = 8 AND hardware_type_id = 3; -- Advanced Courier Vessel to 235 holds
-UPDATE smr_new.ship_type_support_hardware SET max_amount = 235 WHERE ship_type_id = 8 AND hardware_type_id IN (1,2); -- Advanced Courier Vessel to 225 shields/armour
+UPDATE smr_new.ship_type_support_hardware SET max_amount = 225 WHERE ship_type_id = 8 AND hardware_type_id IN (1,2); -- Advanced Courier Vessel to 225 shields/armour
 
 UPDATE smr_new.ship_type SET cost = 5314159 WHERE ship_type_id = 9; -- Inter-Stellar Trader to 5,314,159 credits
 
