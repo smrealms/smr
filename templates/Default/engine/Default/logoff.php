@@ -1,10 +1,10 @@
-<table cellspacing="0" cellpadding="0" border="0" style="vertical-align: bottom;">
+<table style="vertical-align: bottom;">
 <tr>
 	<td width="100%" align="left"><h1>LOGOFF</h1></td>
 </tr>
 </table>
 
-<table cellspacing="5" cellpadding="5" border="0">
+<table>
 <tr>
 	<td width="600" height="100%">
 		<p align="left">You have been logged off.</p>

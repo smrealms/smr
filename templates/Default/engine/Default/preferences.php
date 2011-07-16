@@ -7,7 +7,7 @@ if (isset($Reason))
 if(USE_COMPATIBILITY && !$ThisAccount->hasAllOldAccountIDs())
 { ?>
 	<form id="LinkOldAccountForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
-		<table cellpadding="5">
+		<table>
 			<tr>
 				<th colspan="2">Link Old Account</th>
 			</tr>
@@ -33,7 +33,7 @@ if(USE_COMPATIBILITY && !$ThisAccount->hasAllOldAccountIDs())
 if(isset($GameID))
 { ?>
 	<form class="standard" id="GamePreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
-		<table cellpadding="5">
+		<table>
 			<tr>
 				<th colspan="2">Player Preferences (For Current Game)</th>
 			</tr>
@@ -92,7 +92,7 @@ if(isset($GameID))
 	<br /><?php
 } ?>
 <form id="AccountPreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
-	<table cellpadding="5">
+	<table>
 		<tr>
 			<th colspan="2">Account Preferences</th>
 		</tr>

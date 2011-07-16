@@ -17,7 +17,7 @@ else
 	{ ?>
 		<form id="SetIllusionForm" method="POST" action="<?php echo $SetIllusionFormHREF; ?>">
 			<b>Illusion Generator:</b><br /><br />
-			<table cellspacing="0" class="nobord">
+			<table class="nobord">
 				<tr>
 					<td>Ship:</td>
 					<td>

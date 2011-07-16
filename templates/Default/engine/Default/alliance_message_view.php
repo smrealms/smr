@@ -2,7 +2,7 @@
 if(	isset($PrevThread) || isset($NextThread) )
 { ?>
 	<h2>Switch Topic</h2><br />
-	<table cellspacing="0" cellpadding="0" class="nobord fullwidth">
+	<table class="nobord fullwidth">
 		<tr><?php
 		if(isset($PrevThread))
 		{ ?>
@@ -63,7 +63,7 @@ if(isset($Thread['CreateThreadReplyFormHref']))
 	<br /><h2>Create Reply</h2><br /><?php
 	if(isset($Preview)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($Preview); ?></td></tr></table><?php } ?>
 	<form class="standard" id="CreateThreadReplyForm" method="POST" action="<?php echo $Thread['CreateThreadReplyFormHref']; ?>">
-		<table cellspacing="0" cellpadding="0" class="nobord nohpad">
+		<table class="nobord nohpad">
 			<tr>
 				<td class="top">Body:&nbsp;</td>
 				<td><textarea name="body"><?php if(isset($Preview)) { echo $Preview; } ?></textarea></td>
