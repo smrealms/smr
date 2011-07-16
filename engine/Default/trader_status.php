@@ -32,22 +32,11 @@ $container['body'] = 'trader_relations.php';
 
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Relations (Personal)</span>');
 
-$db->query('SELECT
-race.race_name as race_name,
-player_has_relation.relation as relation
-FROM player_has_relation,race
-WHERE player_has_relation.game_id=' . SmrSession::$game_id . ' 
-AND player_has_relation.account_id=' . SmrSession::$account_id . ' 
-AND race.race_id=player_has_relation.race_id
-ORDER BY race.race_id LIMIT 8');
-
 $PHP_OUTPUT.= '<br />';
-while($db->nextRecord())
+$RACES = Globals::getRaces();
+foreach($RACES as $raceID => $raceInfo)
 {
-	$PHP_OUTPUT.= $db->getField('race_name');
-	$PHP_OUTPUT.= ' : ';
-	$PHP_OUTPUT.= get_colored_text($db->getField('relation'), $db->getField('relation'));
-	$PHP_OUTPUT.= '<br />';
+	$PHP_OUTPUT.= $raceInfo['Race Name'] . ' : ' . get_colored_text($player->getPureRelation($raceID), $player->getPureRelation($raceID)) . '<br />';
 }
 $PHP_OUTPUT.= '<br />';
 
