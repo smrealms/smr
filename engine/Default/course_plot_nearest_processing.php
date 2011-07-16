@@ -44,11 +44,11 @@ $container['url'] = 'skeleton.php';
 $container['body'] = 'course_plot_result.php';
 
 $sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID());
-if($sector->hasX($realX))
+if($sector->hasX($realX,$player))
 	create_error('Current sector has what you\'re looking for');
 
 require_once(get_file_loc('Plotter.class.inc'));
-$path =& Plotter::findDistanceToX($realX, $sector, true, $player);
+$path =& Plotter::findDistanceToX($realX, $sector, true, $player, $player);
 if($path===false)
 	create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
 

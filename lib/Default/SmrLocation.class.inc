@@ -423,7 +423,7 @@ class SmrLocation
 		return $this->getTypeID()==$otherLocation->getTypeID();
 	}
 
-	public function hasX(/*Object*/ &$x)
+	public function hasX(/*Object*/ &$x, AbstractSmrPlayer &$player=null)
 	{
 		if ($x instanceof SmrWeapon)
 		{
@@ -453,6 +453,10 @@ class SmrLocation
 			if ($x=='Fed')
 			{
 				return $this->isFed();
+			}
+			if ($x=='SafeFed')
+			{
+				return $player != null && $this->isFed() && $player->canBeProtectedByRace($this->getRaceID());
 			}
 			if ($x=='HQ')
 			{
