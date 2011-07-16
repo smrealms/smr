@@ -911,7 +911,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			return;
 		if($relations < MIN_RELATIONS)
 			$relations = MIN_RELATIONS;
-		$relationsDiff = $relations = $this->pureRelations[$raceID];
+		$relationsDiff = $relations - $this->pureRelations[$raceID];
 		$this->pureRelations[$raceID] = $relations;
 		$this->relations[$raceID] += round($relationsDiff);
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values ('.$this->getAccountID().','.$this->getGameID().','.$raceID.','.$this->pureRelations[$raceID].')');
