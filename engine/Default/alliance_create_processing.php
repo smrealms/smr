@@ -31,15 +31,17 @@ if($name!=$filteredName)
 	create_error('The alliance name contains one or more filtered words, please reconsider the name');
 
 // check if the alliance name already exist
-$db->query('SELECT * FROM alliance WHERE alliance_name = ' . $db->escape_string($name, true) . ' AND ' .
+$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escape_string($name, true) . ' AND ' .
 										'game_id = '.SmrSession::$game_id);
 if ($db->getNumRows() > 0)
 	create_error('That alliance name already exists!');
 
 // get the next alliance id
-$db->query('SELECT * FROM alliance WHERE game_id = '.SmrSession::$game_id.' AND (alliance_id < 302 OR alliance_id > 309) ORDER BY alliance_id DESC LIMIT 1');
+$db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = '.SmrSession::$game_id.' AND (alliance_id < 302 OR alliance_id > 309) LIMIT 1');
 $db->nextRecord();
-$alliance_id = $db->getField('alliance_id') + 1;
+$alliance_id = $db->getField('max(alliance_id)') + 1;
+if($alliance_id >= 302 && $alliance_id <= 309)
+	$alliance_id = 310;
 
 
 $description = word_filter($description);
