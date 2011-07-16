@@ -84,7 +84,7 @@ if(isset($FeatureRequests))
 } ?>
 <p>
 	<form name="FeatureRequestForm" method="POST" action="<?php echo $FeatureRequestFormHREF; ?>">
-		<table border="0" cellpadding="5">
+		<table>
 			<tr>
 				<td align="center">Please describe the feature here:</td>
 			</tr>

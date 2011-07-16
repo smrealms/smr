@@ -39,7 +39,7 @@ if(isset($FeatureRequests))
 } ?>
 <p>
 	<form name="FeatureRequestCommentForm" method="POST" action="<?php echo $FeatureRequestCommentFormHREF; ?>">
-		<table border="0" cellpadding="5">
+		<table>
 			<tr>
 				<td align="center">Comment:</td>
 			</tr>

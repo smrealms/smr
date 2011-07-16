@@ -1,4 +1,4 @@
-<table cellspacing="0" cellpadding="0" class="fullwidth" style="border:none">
+<table class="fullwidth" style="border:none">
 	<tr>
 		<td style="padding:0px;vertical-align:top">
 			<?php $this->includeTemplate('includes/SectorNavigation.inc'); ?>

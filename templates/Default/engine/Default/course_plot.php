@@ -1,6 +1,6 @@
 <form class="standard" id="PlotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">
 	<h2>Conventional</h2><br />
-	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
+	<table class="nobord nohpad">
 		<tr>
 			<td>From:&nbsp;</td>
 			<td><input type="text" size="5" name="from" maxlength="5" class="center" value="<?php echo $ThisPlayer->getSectorID(); ?>"></td>

@@ -116,7 +116,7 @@ if ($CompareShip)
 		</tr>
 	</table><br />
 
-	<table cellspacing="0"class="nobord">
+	<table class="nobord">
 		<tr>
 			<td colspan="2"><hr style="width:200px"></td>
 		</tr>

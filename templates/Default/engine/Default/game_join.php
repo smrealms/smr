@@ -45,7 +45,7 @@ if($Game['GameDescription'])
 }?>
 <form<?php if(isset($JoinGameFormHref)){ ?> name="JoinGameForm" method="POST" action="<?php echo $JoinGameFormHref; ?>"<?php } ?>>
 	<h1>Create Merchant</h1><br />
-	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
+	<table class="nobord nohpad">
 		<tr>
 			<td>
 				<p>
@@ -62,7 +62,7 @@ if($Game['GameDescription'])
 					If you disregard these rules, your player will be deleted, so choose your name wisely.
 				</p><br />
 				<br />
-				<table border="0" cellpadding="3">
+				<table>
 					<tr>
 						<td align="right"><b>Name:</b></td>
 						<td><input type="text" name="player_name" maxlength="32" class="InputFields"<?php if(!isset($JoinGameFormHref)){ ?>disabled="disabled"<?php } ?>></td>
