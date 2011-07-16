@@ -36,7 +36,8 @@ $PHP_OUTPUT.= '<br />';
 $RACES = Globals::getRaces();
 foreach($RACES as $raceID => $raceInfo)
 {
-	$PHP_OUTPUT.= $raceInfo['Race Name'] . ' : ' . get_colored_text($player->getPureRelation($raceID), $player->getPureRelation($raceID)) . '<br />';
+	if($player->getPureRelation($raceID) != 0)
+		$PHP_OUTPUT.= $raceInfo['Race Name'] . ' : ' . get_colored_text($player->getPureRelation($raceID), $player->getPureRelation($raceID)) . '<br />';
 }
 $PHP_OUTPUT.= '<br />';
 
