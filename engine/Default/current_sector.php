@@ -183,7 +183,7 @@ if($sector->hasPort())
 	
 	$template->assign('PortRaceName',$player->getColouredRaceName($port->getRaceID()));
 	
-	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()));
+	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()) < -300);
 }
 
 function checkForForceRefreshMessage(&$msg)
