@@ -192,6 +192,10 @@ div.secNavBox div.move_warp
 {
 	text-align: center;
 }
+table.center
+{
+	margin:auto;
+}
 .nopad
 {
 	margin: 0px;
