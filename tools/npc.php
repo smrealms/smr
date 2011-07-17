@@ -820,7 +820,7 @@ function &findRoutes()
 		$db->query('INSERT INTO route_cache ' .
 				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, routes_for_port, max_distance, routes)' .
 				' VALUES ('.$db->escapeNumber($player->getGameID()).', '.$db->escapeNumber($maxNumberOfPorts).', '.$db->escapeObject($tradeGoods).', '.$db->escapeObject($tradeRaces).', '.$db->escapeNumber($startSectorID).', '.$db->escapeNumber($endSectorID).', '.$db->escapeNumber($routesForPort).', '.$db->escapeNumber($maxDistance).', '.$db->escapeObject($routesMerged,true).')');
-		debug('Found Routes',$routesMerged);
+		debug('Found Routes'.count($routesMerged));
 		return $routesMerged;
 	}
 }
