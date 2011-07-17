@@ -673,14 +673,6 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getBarShipnameHREF()
-	{
-		$container = create_container('skeleton.php', 'bar_main.php');
-		$container['script'] = 'bar_ship_name.php';
-		$container['action'] = 'customize';
-		return SmrSession::get_new_href($container);
-	}
-	
 	public static function getBarTickerHREF()
 	{
 		$container = create_container('skeleton.php', 'bar_main.php');
@@ -713,8 +705,12 @@ class Globals
 	
 	public static function getBuyMessageNotificationsHREF()
 	{
-		$container = create_container('skeleton.php', 'buy_message_notifications.php');
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'buy_message_notifications.php'));
+	}
+	
+	public static function getBuyShipNameHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'buy_ship_name.php'));
 	}
 	
 	public static function getAvailableTemplates()
