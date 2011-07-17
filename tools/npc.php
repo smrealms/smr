@@ -198,7 +198,7 @@ catch(Exception $e)
 		
 function NPCStuff()
 {
-	global $account,$actions,$var,$previousContainer,$TRADE_ROUTE;
+	global $actions,$var,$previousContainer,$TRADE_ROUTE;
 	
 	$actions=-1;
 //	for($i=0;$i<40;$i++)
@@ -211,9 +211,9 @@ function NPCStuff()
 
 			SmrSession::$game_id = NPC_GAME_ID;
 			
-			debug('Getting player for account id: '.$account->getAccountID());
+			debug('Getting player for account id: '.SmrSession::$account_id);
 			//We have to reload player on each loop
-			$player	=& SmrPlayer::getPlayer($account->getAccountID(), SmrSession::$game_id);
+			$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 			$player->updateTurns();
 			$player->setNewbieWarning(false); //NPCs don't want a newbie warning.
 			$GLOBALS['player'] =& $player;
@@ -480,7 +480,7 @@ function exitNPC()
 
 function changeNPCLogin()
 {
-	global $NPC_LOGIN,$actions,$account,$NPC_LOGINS_USED,$TRADE_ROUTE;
+	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED,$TRADE_ROUTE;
 	$actions=0;
 	$TRADE_ROUTE = null;
 	$db = new SmrMySqlDatabase();
@@ -516,14 +516,15 @@ function changeNPCLogin()
 	if(SmrAccount::getAccountByName($NPC_LOGIN)==null)
 	{
 		debug('Creating account for: '.$NPC_LOGIN);
-		$account = SmrAccount::createAccount($NPC_LOGIN,'','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
+		$account =& SmrAccount::createAccount($NPC_LOGIN,'','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
 		$account->setValidated(true);
 	}
 	else
 	{
-		$account = SmrAccount::getAccountByName($NPC_LOGIN);
+		$account =& SmrAccount::getAccountByName($NPC_LOGIN);
 	}
-
+	
+	$GLOBALS['account'] =& $account;
 	SmrSession::$account_id = $account->getAccountID();
 
 	//Auto-create player if need be.
