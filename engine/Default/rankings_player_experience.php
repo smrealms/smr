@@ -7,14 +7,16 @@ $PHP_OUTPUT.=create_ranking_menue(0, 0);
 
 
 // what rank are we?
-$db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' AND ' .
+$db->query('SELECT count(*) FROM player WHERE game_id = '.SmrSession::$game_id.' AND ' .
                                       '(experience > '.$player->getExperience().' OR ' .
                                       '(experience = '.$player->getExperience().' AND player_name <= ' . $db->escapeString($player->getPlayerName()) . ' ))');
-$our_rank = $db->getNumRows();
+$db->nextRecord();
+$our_rank = $db->getInt('count(*)');
 
 // how many players are there?
-$db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id);
-$total_player = $db->getNumRows();
+$db->query('SELECT count(*) FROM player WHERE game_id = '.SmrSession::$game_id);
+$db->nextRecord();
+$total_player = $db->getInt('count(*)');
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of players by their experience</p>');
