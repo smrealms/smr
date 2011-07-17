@@ -221,7 +221,7 @@ function NPCStuff()
 			
 			if($actions==0)
 			{
-				if($player->getTurns()<NPC_START_TURNS && $player->hasNewbieTurns() && $player->hasFederalProtection())
+				if($player->getTurns()<NPC_START_TURNS && ($player->hasNewbieTurns() || $player->hasFederalProtection()))
 				{
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: '.$player->getTurns());
 					changeNPCLogin();
