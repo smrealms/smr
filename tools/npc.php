@@ -726,6 +726,7 @@ function &changeRoute(array &$tradeRoutes)
 	$routeKey = array_rand($tradeRoutes);
 	$tradeRoute =& $tradeRoutes[$routeKey];
 	unset($tradeRoutes[$routeKey]);
+	debug('Switched route',$tradeRoute);
 	return $tradeRoute;
 }
 
@@ -783,8 +784,8 @@ function &findRoutes()
 	$db->query('SELECT routes FROM route_cache WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND max_ports='.$db->escapeNumber($maxNumberOfPorts).' AND goods_allowed='.$db->escapeObject($tradeGoods).' AND races_allowed='.$db->escapeObject($tradeRaces).' AND start_sector_id='.$db->escapeNumber($startSectorID).' AND end_sector_id='.$db->escapeNumber($endSectorID).' AND routes_for_port='.$db->escapeNumber($routesForPort).' AND max_distance='.$db->escapeNumber($maxDistance));
 	if($db->nextRecord())
 	{
-		debug('Using Cached Routes');
 		$routes = unserialize(gzuncompress($db->getField('routes')));
+		debug('Using Cached Routes',$routes);
 		return $routes;
 	}
 	else
@@ -819,6 +820,7 @@ function &findRoutes()
 		$db->query('INSERT INTO route_cache ' .
 				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, routes_for_port, max_distance, routes)' .
 				' VALUES ('.$db->escapeNumber($player->getGameID()).', '.$db->escapeNumber($maxNumberOfPorts).', '.$db->escapeObject($tradeGoods).', '.$db->escapeObject($tradeRaces).', '.$db->escapeNumber($startSectorID).', '.$db->escapeNumber($endSectorID).', '.$db->escapeNumber($routesForPort).', '.$db->escapeNumber($maxDistance).', '.$db->escapeObject($routesMerged,true).')');
+		debug('Found Routes',$routesMerged);
 		return $routesMerged;
 	}
 }
