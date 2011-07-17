@@ -67,6 +67,8 @@ if(!isset($var['ShipName']))
 	{
 		$max_len = 128;
 		//check for some bad html
+		if(preg_match('/(\<span[^\>]*id\s*=)|(class\s*=\s*"[^"]*ajax)/i', $name)>0)
+			create_error('You have used html that is not allowed.');
 		$bad = array('<form','<applet','<a ','<bgsound','<body','<meta','<dd','<dir','<dl','<!doctype','<dt','<embed','<frame','<head','<hr','<iframe','<ilayer','<img','<input','<isindex','<layer','<li','<link','<map','<menu','<nobr','<no','<object','<ol','<opt','<p','<script','<select','<sound','<td','<text','<t','<ul','<h','<br','</marquee><marquee','size','width','height','<div','width=','</marquee>%<marquee','</marquee>?');
 		foreach($bad as $check)
 		{
