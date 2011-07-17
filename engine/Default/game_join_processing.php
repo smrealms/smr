@@ -35,8 +35,8 @@ if(!is_numeric($var['game_id']))
 
 $gameID = $var['game_id'];
 
-$db->query('SELECT * FROM player WHERE game_id = ' . $gameID . ' AND player_name = ' . $db->escape_string($player_name, true));
-if ($db->getNumRows() > 0)
+$db->query('SELECT 1 FROM player WHERE game_id = ' . $gameID . ' AND player_name = ' . $db->escape_string($player_name, true) . ' LIMIT 1');
+if ($db->nextRecord() > 0)
 	create_error('The player name already exists.');
 
 if (!Globals::isValidGame($gameID))
@@ -52,8 +52,8 @@ if ($credits > 0)
 }
 
 // check if hof entry is there
-$db->query('SELECT * FROM account_has_stats WHERE account_id = '.SmrSession::$account_id);
-if (!$db->getNumRows())
+$db->query('SELECT 1 FROM account_has_stats WHERE account_id = '.SmrSession::$account_id . ' LIMIT 1');
+if (!$db->nextRecord())
 	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$account->account_id.', ' . $db->escape_string($account->login, true) . ')');
 
 // put him in a sector with a hq

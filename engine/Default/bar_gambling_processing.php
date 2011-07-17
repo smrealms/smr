@@ -16,7 +16,7 @@ if ($action == 'process')
 	while (true)
 	{
 		//stop double entries...250,000 usecs at a time so as to not slow them down too much.
-		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND ' .
+		$db->query('SELECT 1 FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND ' .
 					'account_id = '.$player->getAccountID().' AND time = '.$time);
 		if ($db->getNumRows())
 		{

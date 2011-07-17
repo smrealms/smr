@@ -48,7 +48,7 @@ $players[0] = 'Planet Reporter';
 $players[-1] = 'Bank Reporter';
 $players[-2] = 'Forces Reporter';
 $players[-3] = 'Game Admins';
-$db->query('SELECT account_id FROM player, alliance_thread ' . 
+$db->query('SELECT account_id FROM player, alliance_thread ' .
 			'WHERE alliance_thread.game_id = '.$player->getGameID().' AND player.game_id = '.$player->getGameID().
 			' AND alliance_thread.alliance_id = '.$alliance_id.' AND alliance_thread.thread_id = ' . $thread_id);
 while ($db->nextRecord())
@@ -56,7 +56,7 @@ while ($db->nextRecord())
 	$players[$db->getInt('account_id')] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID())->getLinkedDisplayName(false);
 }
 
-$db->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id.' LIMIT 1');
+$db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id.' LIMIT 1');
 $db->nextRecord();
 $thread['CanDelete'] = $db->getBoolean('mb_messages');
 

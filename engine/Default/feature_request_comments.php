@@ -22,7 +22,6 @@ if ($db->getNumRows() > 0)
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator',$featureModerator);
 
-	$db2 = new SmrMySqlDatabase();
 	$featureRequestComments = array();
 	while ($db->nextRecord())
 	{

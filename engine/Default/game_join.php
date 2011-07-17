@@ -13,8 +13,8 @@ if ($game['GameCreditsRequired'] > 0)
 }
 
 // is the game already full?
-$db->query('SELECT * FROM player WHERE game_id = ' . $var['game_id']);
-if ($db->getNumRows() >= $game['GameMaxPlayers'])
+$db->query('SELECT count(*) FROM player WHERE game_id = ' . $var['game_id']);
+if ($db->nextRecord() && $db->getInt('count(*)') >= $game['GameMaxPlayers'])
     create_error('The maximum number of players in that game is reached!');
 
 //if (TIME < $game['StartDate'])

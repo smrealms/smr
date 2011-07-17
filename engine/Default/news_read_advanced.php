@@ -84,7 +84,7 @@ elseif ($submit_value == 'Search For Players')
 	{
 		$IDs2[] = $db->getField('account_id');
 	}
-	$db->query('SELECT * FROM news WHERE game_id = ' . $gameID . 
+	$db->query('SELECT * FROM news WHERE game_id = ' . $gameID .
 					' AND (
 							(killer_id IN (' . $db->escapeArray($IDs) . ') AND dead_id IN (' . $db->escapeArray($IDs2) . '))
 							OR
@@ -94,7 +94,7 @@ elseif ($submit_value == 'Search For Players')
 elseif ($submit_value == 'Search For Alliances')
 {
 	$PHP_OUTPUT .= 'Returning Results for ' . $newsAlliances[$_REQUEST['alliance1']]['Name'] . ' vs. ' . $newsAlliances[$_REQUEST['alliance2']]['Name'] . '<br />';
-	$db->query('SELECT * FROM news WHERE game_id = ' . $gameID . 
+	$db->query('SELECT * FROM news WHERE game_id = ' . $gameID .
 					' AND (
 							(killer_alliance IN (' . $db->escapeNumber($_REQUEST['alliance1']) . ') AND dead_alliance IN (' . $db->escapeNumber($_REQUEST['alliance2']) . '))
 							OR
@@ -105,7 +105,6 @@ else
 {
 	$db->query('SELECT * FROM news WHERE game_id = ' . $gameID . ' ORDER BY news_id DESC LIMIT 50');
 }
-$num_news = $db->getNumRows();
 
 if ($db->getNumRows())
 {
