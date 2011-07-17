@@ -272,7 +272,7 @@ function NPCStuff()
 			}
 			else if($player->getTurns()<NPC_LOW_TURNS)
 			{ //We're low on turns and need to plot course to fed
-				debug('Low Turns:'.$player->getTurns());
+				debug('Low Turns: '.$player->getTurns());
 				if($player->hasNewbieTurns())
 				{ //We have newbie turns, we can just wait here.
 					debug('We have newbie turns, let\'s just switch to another NPC.');
@@ -786,7 +786,7 @@ function &findRoutes()
 	if($db->nextRecord())
 	{
 		$routes = unserialize(gzuncompress($db->getField('routes')));
-		debug('Using Cached Routes'.count($routes));
+		debug('Using Cached Routes: #'.count($routes));
 		return $routes;
 	}
 	else
