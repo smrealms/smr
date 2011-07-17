@@ -785,7 +785,7 @@ function &findRoutes()
 	if($db->nextRecord())
 	{
 		$routes = unserialize(gzuncompress($db->getField('routes')));
-		debug('Using Cached Routes',$routes);
+		debug('Using Cached Routes'.count($routes));
 		return $routes;
 	}
 	else
