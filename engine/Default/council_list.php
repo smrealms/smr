@@ -66,7 +66,7 @@ if (is_object($president))
 
 $PHP_OUTPUT.=('<br /><br /><div align="center" class="bold">Member</div>');
 
-$db->query('SELECT * FROM player ' .
+$db->query('SELECT account_id FROM player ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
 				 'race_id = '.$race_id.' ' .
 		   'ORDER by experience DESC ' .
@@ -148,18 +148,16 @@ if ($db->getNumRows() > 0)
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
 $PHP_OUTPUT.=('<b>View Council</b><br />');
-$db->query('SELECT * FROM race WHERE race_id > 1');
-while($db->nextRecord()) {
+$races =& Globals::getRaces();
+foreach($races as $raceID => $raceInfo)
+{
+	if($raceID == RACE_NEUTRAL)
+		continue;
 
-	$race_id	= $db->getField('race_id');
-	$race_name	= $db->getField('race_name');
+	$container = create_container('skeleton.php','council_list.php');
+	$container['race_id']	= $raceID;
 
-	$container = array();
-	$container['url']		= 'skeleton.php';
-	$container['body']		= 'council_list.php';
-	$container['race_id']	= $race_id;
-
-	$PHP_OUTPUT.=create_link($container, '<span style="font-size:75%;">'.$race_name.'</span>');
+	$PHP_OUTPUT.=create_link($container, '<span style="font-size:75%;">'.$raceInfo['Race Name'].'</span>');
 	$PHP_OUTPUT.=('<br />');
 
 }
