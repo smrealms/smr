@@ -27,9 +27,20 @@ Want to receive emails when you get a message? Well now you can!<br />
 <br />
 <div class="buttonA">
 	<a class="buttonA" href="<?php echo Globals::getBuyMessageNotificationsHREF(); ?>">&nbsp;Buy Message Notifications&nbsp;</a>
-</div><br /><br />
+</div>
 
 <?php
+if(isset($GameID))
+{ ?>
+	<br />
+	<br />
+	<h2>Ship</h2><br />
+	Well... of course you could always pay our painters to customise your ship name, or even spray on your favourite logo!<br />
+	<br />
+	<div class="buttonA">
+		<a class="buttonA" href="<?php echo Globals::getBuyShipNameHref(); ?>">&nbsp;Customize Ship Name (1-3 SMR Credit(s))&nbsp;</a>
+	</div><?php
+}
 /*
 if(isset($GameID))
 { ?>

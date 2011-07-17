@@ -47,7 +47,7 @@ if ($WinningTicket)
 Well...of course you could always pay our painters to customize your ship name, or even spray on your favorite logo!<br />
 <br />
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getBarShipnameHREF(); ?>">&nbsp;Customize Ship Name (1-3 SMR Credit(s))&nbsp;</a>
+	<a class="buttonA" href="<?php echo Globals::getBuyShipnameHREF(); ?>">&nbsp;Customize Ship Name (1-3 SMR Credit(s))&nbsp;</a>
 </div>
 
 <br />
