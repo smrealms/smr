@@ -6,14 +6,16 @@ include(get_file_loc('menue.inc'));
 $PHP_OUTPUT.=create_ranking_menue(0, 1);
 
 // what rank are we?
-$db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' AND ' .
+$db->query('SELECT count(*) FROM player WHERE game_id = '.SmrSession::$game_id.' AND ' .
                                       '(kills > '.$player->getKills().' OR ' .
                                       '(kills = '.$player->getKills().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
-$our_rank = $db->getNumRows();
+$db->nextRecord();
+$our_rank = $db->getInt('count(*)');
 
 // how many players are there?
-$db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id);
-$total_player = $db->getNumRows();
+$db->query('SELECT count(*) FROM player WHERE game_id = '.SmrSession::$game_id);
+$db->nextRecord();
+$total_player = $db->getInt('count(*)');
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of players by their kills</p>');
