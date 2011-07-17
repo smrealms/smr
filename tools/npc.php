@@ -482,7 +482,7 @@ function exitNPC()
 function changeNPCLogin()
 {
 	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED;
-	$actions=0;
+	$actions=-1;
 	$GLOBALS['TRADE_ROUTE'] = null;
 	$db = new SmrMySqlDatabase();
 	$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN));
