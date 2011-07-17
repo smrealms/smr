@@ -32,40 +32,38 @@ $PHP_OUTPUT.=('<th>Vote</th>');
 $PHP_OUTPUT.=('<th>Our Relation<br />with them</th>');
 $PHP_OUTPUT.=('<th>Their Relation<br />with us</th>');
 $PHP_OUTPUT.=('</tr>');
-$db->query('SELECT * FROM race ' .
-		   'WHERE race_id != '.$player->getRaceID().' AND ' .
-				 'race_id > 1');
 $playerRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$player->getRaceID());
-while($db->nextRecord())
+$races =& Globals::getRaces();
+foreach($races as $raceID => $raceInfo)
 {
-	$race_id	= $db->getField('race_id');
-	$race_name	= $db->getField('race_name');
+	if($raceID == RACE_NEUTRAL)
+		continue;
 
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($race_id) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . $player->getColouredRaceName($raceID) . '</td>');
 
 	$container = array();
 	$container['url']		= 'council_vote_processing.php';
-	$container['race_id']	= $race_id;
+	$container['race_id']	= $raceID;
 
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('<td align="center">');
-	if ($voted_for_race == $race_id && $voted_for == 'INC')
+	if ($voted_for_race == $raceID && $voted_for == 'INC')
 		$PHP_OUTPUT.=create_submit_style('Increase', 'background-color:green;');
 	else
 		$PHP_OUTPUT.=create_submit('Increase');
 	$PHP_OUTPUT.=('&nbsp;');
-	if ($voted_for_race == $race_id && $voted_for == 'DEC')
+	if ($voted_for_race == $raceID && $voted_for == 'DEC')
 		$PHP_OUTPUT.=create_submit_style('Decrease', 'background-color:green;');
 	else
 		$PHP_OUTPUT.=create_submit('Decrease');
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('</form>');
 
-	$relation = $playerRaceGlobalRelations[$race_id];
+	$relation = $playerRaceGlobalRelations[$raceID];
 	$PHP_OUTPUT.=('<td align="center">' . get_colored_text($relation, $relation) . '</td>');
 
-	$otherRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$race_id);
+	$otherRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$raceID);
 	$relation = $otherRaceGlobalRelations[$player->getRaceID()];
 	$PHP_OUTPUT.=('<td align="center">' . get_colored_text($relation, $relation) . '</td>');
 
@@ -110,7 +108,7 @@ if ($db->getNumRows() > 0)
 
 		$PHP_OUTPUT.=create_echo_form($container);
 
-		$db2->query('SELECT * FROM player_votes_pact ' .
+		$db2->query('SELECT vote FROM player_votes_pact ' .
 					'WHERE account_id = '.$player->getAccountID().' AND ' .
 						  'game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
@@ -138,20 +136,22 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=('</td>');
 
 		// get 'yes' votes
-		$db2->query('SELECT * FROM player_votes_pact ' .
+		$db2->query('SELECT count(*) FROM player_votes_pact ' .
 					'WHERE game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
 						  'race_id_2 = '.$race_id_2.' AND ' .
 						  'vote = \'YES\'');
-		$yes_votes = $db2->getNumRows();
+		$db2->nextRecord();
+		$yes_votes = $db2->getInt('count(*)');
 
 		// get 'no' votes
-		$db2->query('SELECT * FROM player_votes_pact ' .
+		$db2->query('SELECT count(*) FROM player_votes_pact ' .
 					'WHERE game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
 						  'race_id_2 = '.$race_id_2.' AND ' .
 						  'vote = \'NO\'');
-		$no_votes = $db2->getNumRows();
+		$db2->nextRecord();
+		$no_votes = $db2->getInt('count(*)');
 
 		$PHP_OUTPUT.=('<td align="center">'.$yes_votes.' / '.$no_votes.'</td>');
 		$PHP_OUTPUT.=('<td class="noWrap" align="center">' . date(DATE_FULL_SHORT_SPLIT, $end_time) . '</td>');
