@@ -198,7 +198,7 @@ catch(Exception $e)
 		
 function NPCStuff()
 {
-	global $actions,$var,$previousContainer,$TRADE_ROUTE;
+	global $actions,$var,$previousContainer;
 	
 	$actions=-1;
 //	for($i=0;$i<40;$i++)
@@ -207,6 +207,7 @@ function NPCStuff()
 		$actions++;
 		try
 		{
+			$TRADE_ROUTE =& $GLOBALS['TRADE_ROUTE'];
 			debug('Action #'.$actions);
 
 			SmrSession::$game_id = NPC_GAME_ID;
@@ -480,9 +481,9 @@ function exitNPC()
 
 function changeNPCLogin()
 {
-	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED,$TRADE_ROUTE;
+	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED;
 	$actions=0;
-	$TRADE_ROUTE = null;
+	$GLOBALS['TRADE_ROUTE'] = null;
 	$db = new SmrMySqlDatabase();
 	$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN));
 	if($db->getChangedRows()>0)
@@ -725,6 +726,7 @@ function &changeRoute(array &$tradeRoutes)
 	$routeKey = array_rand($tradeRoutes);
 	$tradeRoute =& $tradeRoutes[$routeKey];
 	unset($tradeRoutes[$routeKey]);
+	$GLOBALS['TRADE_ROUTE'] =& $tradeRoute;
 	debug('Switched route',$tradeRoute);
 	return $tradeRoute;
 }
