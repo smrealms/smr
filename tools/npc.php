@@ -683,8 +683,7 @@ function plotToNearest(AbstractSmrPlayer &$player, &$realX)
 function moveToSector($targetSector)
 {
 	global $player;
-	debug('Moving to',$targetSector);
-	debug('From',$player->getSectorID());
+	debug('Moving from #'.$player->getSectorID().' to #'.$targetSector);
 	return create_container('sector_move_processing.php','',array('target_sector'=>$targetSector,'target_page'=>''));
 }
 
