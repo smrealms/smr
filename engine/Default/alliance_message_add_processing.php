@@ -62,7 +62,7 @@ if ($reply_id == 1) {
 		create_error('Topic can\'t be longer than 255 chars!');
 
 	// test if this topic already exists
-	$db->query('SELECT * FROM alliance_thread_topic ' .
+	$db->query('SELECT 1 FROM alliance_thread_topic ' .
 			   'WHERE game_id = '.$player->getGameID().' AND ' .
 			   		 'alliance_id = '.$alliance_id.' AND ' .
 			   		 'topic = ' . $db->escape_string($topic, true));

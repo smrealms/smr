@@ -33,7 +33,7 @@ else if ($action == 'Save and resend validation code')
 	if (strstr($email, ' '))
 		create_error('The eMail is invalid! It cannot contain any spaces.');
 	
-	$db->query('SELECT * FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $account->account_id);
+	$db->query('SELECT 1 FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $account->getAccountID() . ' LIMIT 1');
 	if ($db->getNumRows() > 0)
 		create_error('This eMail address is already registered.');
 
@@ -259,7 +259,7 @@ else if (strpos(trim($action),'Alter Player')===0)
 		create_error('You must enter a player name!');
 	
 	// Check if name is in use.
-	$db->query('SELECT account_id FROM player WHERE game_id=' .SmrSession::$game_id . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
+	$db->query('SELECT 1 FROM player WHERE game_id=' .SmrSession::$game_id . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
 	if($db->getNumRows())
 	{
 		create_error('Name is already being used in this game!');

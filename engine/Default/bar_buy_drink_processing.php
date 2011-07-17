@@ -63,8 +63,9 @@ else
 		}
 
 	}
-	$db->query('SELECT * FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
-	$num_drinks = $db->getNumRows();
+	$db->query('SELECT count(*) FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
+	$db->nextRecord();
+	$num_drinks = $db->getInt('count(*)');
 	//display woozy message
 	$message.= '<br />You feel a little W';
 	for ($i = 1; $i <= $num_drinks; ++$i) $message.= 'oO';

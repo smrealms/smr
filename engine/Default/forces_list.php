@@ -26,7 +26,6 @@ WHERE owner_id = '.$player->getAccountID().'
 AND game_id = '.SmrSession::$game_id.'
 AND expire_time >= '.TIME.'
 ORDER BY '.$categorySQL.', '.$subcategory);
-$db2 = new SmrMySqlDatabase();
 if ($db->getNumRows() > 0) {
 	
 	$container = array();

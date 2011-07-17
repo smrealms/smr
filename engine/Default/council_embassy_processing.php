@@ -10,10 +10,10 @@ $race_id = $var['race_id'];
 $type = strtoupper($action);
 $time = TIME + TIME_FOR_COUNCIL_VOTE;// / Globals::getGameSpeed($player->getGameID());
 
-$db->query('SELECT * FROM race_has_voting ' .
+$db->query('SELECT count(*) FROM race_has_voting ' .
 		   'WHERE game_id = '.$player->getGameID().' AND ' .
 				 'race_id_1 = '.$player->getRaceID());
-if ($db->getNumRows() > 2)
+if ($db->nextRecord() && $db->getInt('count(*)') > 2)
 	create_error('You can\'t initiate more than 3 votes at a time!');
 
 $db->query('REPLACE INTO race_has_voting ' .

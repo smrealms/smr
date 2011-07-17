@@ -10,8 +10,8 @@ if (!isset ($var['folder_id']))
 
 	require_once(get_file_loc('council.inc'));
 
-	$db2->query('SELECT * FROM message WHERE account_id = ' . $player->getAccountID() . ' AND message_type_id = ' . MSG_POLITICAL . ' AND game_id = ' . $player->getGameID() . ' AND reciever_delete = \'FALSE\' AND reciever_delete = \'FALSE\'');
-	if ($player->isOnCouncil() || $db2->getNumRows())
+	$db2->query('SELECT 1 FROM message WHERE account_id = ' . $player->getAccountID() . ' AND message_type_id = ' . MSG_POLITICAL . ' AND game_id = ' . $player->getGameID() . ' AND reciever_delete = \'FALSE\' AND reciever_delete = \'FALSE\' LIMIT 1');
+	if ($db2->getNumRows() || $player->isOnCouncil())
 		$db->query('SELECT * FROM message_type ' .
 		'ORDER BY message_type_id');
 	else
@@ -25,7 +25,7 @@ if (!isset ($var['folder_id']))
 		$messageBox['Name'] = $db->getField('message_type_name');
 
 		// do we have unread msges in that folder?
-		$db2->query('SELECT message_id FROM message ' .
+		$db2->query('SELECT 1 FROM message ' .
 		'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
 		'game_id = ' . SmrSession::$game_id . ' AND ' .
 		'message_type_id = ' . $message_type_id . ' AND ' .

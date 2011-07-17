@@ -7,8 +7,8 @@ create_trader_menue();
 
 $PHP_OUTPUT.=('<br /><br />');
 $db->query('SELECT * FROM anon_bank WHERE owner_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-if ($db->getNumRows()) {
-
+if ($db->getNumRows())
+{
     $PHP_OUTPUT.=('You own the following accounts<br /><br />');
 	while ($db->nextRecord())
 	{
@@ -16,8 +16,8 @@ if ($db->getNumRows()) {
     	$pass = $db->getField('password');
 	    $PHP_OUTPUT.=('Account <span class="yellow">'.$acc_id.'</span> with password <span class="yellow">'.$pass.'</span><br />');
     }
-
-} else
+}
+else
 	$PHP_OUTPUT.=('You own no anonymous accounts<br />');
 
 require_once(get_file_loc('bar.functions.inc'));
@@ -34,21 +34,23 @@ $lottoInfo['TimeRemaining'] -= $mins * 60;
 $secs = $lottoInfo['TimeRemaining'];
 $lottoInfo['TimeRemaining'] = '<b>'.$days.' Days, '.$hours.' Hours, '.$mins.' Minutes, and '.$secs.' Seconds</b>';
 	
-$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .
-			$player->getAccountID().' AND time > 0');
-$tickets = $db->getNumRows();
+$db->query('SELECT count(*) FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' . $player->getAccountID().' AND time > 0');
+$db->nextRecord();
+$tickets = $db->getInt('count(*)');
 $PHP_OUTPUT.=('<br />You own <span class="yellow">'.$tickets.'</span> Lotto Tickets.<br />There are '.$lottoInfo['TimeRemaining'].' remaining until the drawing.');
-$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND time > 0');
-$tickets_tot = $db->getNumRows();
+$db->query('SELECT count(*) FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND time > 0');
+$db->nextRecord();
+$tickets_tot = $db->getInt('count(*)');
 if ($tickets_tot > 0)
 {
 	$chance = round(($tickets / $tickets_tot) * 100,2);
 	$PHP_OUTPUT.=('<br />Currently you have a '.$chance.' % chance to win.');
 	
 }
-$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .
+$db->query('SELECT count(*) FROM player_has_ticket WHERE game_id = '.$player->getGameID().' AND account_id = ' .
 			$player->getAccountID().' AND time = 0');
-$tickets = $db->getNumRows();
-if ($tickets > 0)
-	$PHP_OUTPUT.=('<br /><br />You currently own '.$tickets.' winning tickets.  You should go to the bar to claim your prize.');
+$db->nextRecord();
+$winningTickets = $db->getInt('count(*)');
+if ($winningTickets > 0)
+	$PHP_OUTPUT.=('<br /><br />You currently own '.$winningTickets.' winning tickets.  You should go to the bar to claim your prize.');
 ?>
