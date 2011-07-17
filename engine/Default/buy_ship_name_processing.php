@@ -11,7 +11,7 @@ if(!isset($var['ShipName']))
 {
 	if($action == 'Paint a logo (3 SMR Credits)')
 		$cred_cost = 3;
-	else
+	else if($action == 'Get It Painted! (1 SMR Credit)')
 		$cred_cost = 1;
 	
 	if ($account->getTotalSmrCredits() < $cred_cost)

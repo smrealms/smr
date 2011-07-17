@@ -18,8 +18,9 @@ Current donation rate is: $<?php echo number_format($TotalDonation / 90*7, 2); ?
 	<img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
 </form>
 
-<p>&nbsp;</p>
-<p>Thank you for your donation.</p><br /><br />
+<br />
+<br />
+<p>Thank you for your donation.</p><br />
 
 
 <h2>Message Notifications</h2><br />
@@ -32,6 +33,7 @@ Want to receive emails when you get a message? Well now you can!<br />
 <?php
 if(isset($GameID))
 { ?>
+	<br />
 	<br />
 	<br />
 	<h2>Ship</h2><br />

@@ -4,9 +4,10 @@
 		<div align="center">If you ship is found to use HTML inappropriately you may be banned.
 		  Inappropriate HTML includes but is not limited to something that can either cause display errors or cause functionality of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />
 			Preview:<br />
-			<?php echo $Preview; ?><br />
-		</div>
+			<?php echo $Preview; ?>
+		</div><br />
 		Are you sure you want to continue?<br />
+		<br />
 		<a href="<?php echo $ContinueHref; ?>" class="submitStyle">Continue </a> <a href="<?php echo Globals::getBuyShipNameHref(); ?>" class="submitStyle">Back</a><?php
 	}
 	else
