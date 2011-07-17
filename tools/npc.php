@@ -447,7 +447,9 @@ function processContainer($container)
 	}
 	$previousContainer = $container;
 	debug('Executing container',$container);
-	runkit_constant_redefine('TIME',time()); //Redefine TIME, the rest of the game expects TIME to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant.
+ 	//Redefine MICRO_TIME and TIME, the rest of the game expects them to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant.
+ 	runkit_constant_redefine('MICRO_TIME', microtime());
+	runkit_constant_redefine('TIME', (int)microtimeSec(MICRO_TIME));
 	resetContainer($container);
 	do_voodoo();
 }
@@ -524,7 +526,7 @@ function changeNPCLogin()
 	SmrSession::$account_id = $account->getAccountID();
 
 	//Auto-create player if need be.
-	$db->query('SELECT * FROM player WHERE account_id = '.$account->getAccountID().' AND game_id = '.NPC_GAME_ID.' LIMIT 1');
+	$db->query('SELECT 1 FROM player WHERE account_id = '.$account->getAccountID().' AND game_id = '.NPC_GAME_ID.' LIMIT 1');
 	if(!$db->nextRecord())
 	{
 		SmrSession::$game_id = 0; //Have to be out of game to join game.
