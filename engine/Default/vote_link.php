@@ -18,14 +18,18 @@ if($var['link_id'] > 3 || $var['link_id'] < 1 ) {
 }
 
 
-if($valid == true) {
-	// Allow vote
-	$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . SmrSession::$account_id . ',' . $var['link_id'] . ',' . TIME . ')');
-	if(TIME >= $player->getGame()->getStartTurnsDate())
+if($valid == true)
+{
+	if(TIME > $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME) //Make sure we cannot take their last turn update before start time
 	{
-		// They get 1/3 of their hourly turns for a valid click
-		$player->setLastTurnUpdate($player->getLastTurnUpdate()-1200); //Give 20mins worth of turns, no rounding errors.
+		// Allow vote
+		$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . SmrSession::$account_id . ',' . $var['link_id'] . ',' . TIME . ')');
+		$player->setLastTurnUpdate($player->getLastTurnUpdate()-VOTE_BONUS_TURNS_TIME); //Give turns via added time, no rounding errors.
 		$player->updateTurns(); //Display updated turns straight away.
+	}
+	else
+	{
+		create_error('You cannot gain bonus turns in this game yet, please wait '.format_time($player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME - TIME).'.');
 	}
 }
 
