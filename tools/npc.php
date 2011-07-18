@@ -198,8 +198,9 @@ catch(Exception $e)
 		
 function NPCStuff()
 {
-	global $actions,$var,$previousContainer;
+	global $actions,$var,$previousContainer,$underAttack;
 	
+	$underAttack = false;
 	$actions=-1;
 //	for($i=0;$i<40;$i++)
 	while(true)
@@ -253,6 +254,7 @@ function NPCStuff()
 				&&($fedContainer==null?$fedContainer = plotToFed(true):$fedContainer)!==true)
 			{ //We're under attack and need to plot course to fed.
 				debug('Under Attack');
+				$underAttack = true;
 				processContainer($fedContainer);
 			}
 			else if($player->hasPlottedCourse()===true&&$player->getPlottedCourse()->getEndSector()->offersFederalProtection())
@@ -270,9 +272,12 @@ function NPCStuff()
 				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
 			}
-			else if($player->getTurns()<NPC_LOW_TURNS)
-			{ //We're low on turns and need to plot course to fed
-				debug('Low Turns: '.$player->getTurns());
+			else if($player->getTurns()<NPC_LOW_TURNS || $underAttack)
+			{ //We're low on turns or have been under attack and need to plot course to fed
+				if($player->getTurns()<NPC_LOW_TURNS)
+					debug('Low Turns:'.$player->getTurns());
+				if($underAttack)
+					debug('Fedding after attack.');
 				if($player->hasNewbieTurns())
 				{ //We have newbie turns, we can just wait here.
 					debug('We have newbie turns, let\'s just switch to another NPC.');
@@ -481,7 +486,7 @@ function exitNPC()
 
 function changeNPCLogin()
 {
-	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED;
+	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED,$underAttack;
 	$actions=-1;
 	$GLOBALS['TRADE_ROUTE'] = null;
 	$db = new SmrMySqlDatabase();
@@ -527,6 +532,7 @@ function changeNPCLogin()
 	
 	$GLOBALS['account'] =& $account;
 	SmrSession::$account_id = $account->getAccountID();
+	$underAttack = false;
 
 	//Auto-create player if need be.
 	$db->query('SELECT 1 FROM player WHERE account_id = '.$account->getAccountID().' AND game_id = '.NPC_GAME_ID.' LIMIT 1');
@@ -821,7 +827,7 @@ function &findRoutes()
 		$db->query('INSERT INTO route_cache ' .
 				'(game_id, max_ports, goods_allowed, races_allowed, start_sector_id, end_sector_id, routes_for_port, max_distance, routes)' .
 				' VALUES ('.$db->escapeNumber($player->getGameID()).', '.$db->escapeNumber($maxNumberOfPorts).', '.$db->escapeObject($tradeGoods).', '.$db->escapeObject($tradeRaces).', '.$db->escapeNumber($startSectorID).', '.$db->escapeNumber($endSectorID).', '.$db->escapeNumber($routesForPort).', '.$db->escapeNumber($maxDistance).', '.$db->escapeObject($routesMerged,true).')');
-		debug('Found Routes'.count($routesMerged));
+		debug('Found Routes: #'.count($routesMerged));
 		return $routesMerged;
 	}
 }
