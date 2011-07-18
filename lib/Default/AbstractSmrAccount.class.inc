@@ -312,7 +312,7 @@ abstract class AbstractSmrAccount
 	{
 		if(!isset($this->npc))
 		{
-			$this->db->query('SELECT login FROM npc_logins WHERE login = '.$this->db->escapeArray($this->getLogin()).' LIMIT 1;');
+			$this->db->query('SELECT login FROM npc_logins WHERE login = '.$this->db->escapeString($this->getLogin()).' LIMIT 1;');
 			$this->npc = $this->db->nextRecord();
 		}
 		return $this->npc;
