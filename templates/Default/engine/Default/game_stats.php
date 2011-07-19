@@ -70,7 +70,7 @@
 					<tr>
 						<td align="right">Game Speed</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(Globals::getGameSpeed($StatsGameID)); ?></td>
+						<td align="left"><?php echo Globals::getGameSpeed($StatsGameID); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Credits Needed</td>
