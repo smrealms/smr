@@ -314,7 +314,7 @@ class SmrForce
 		}
 		else
 		{
-			$time = $this->getCDs()*$this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_COMBAT  + $this->getSDs()*$this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_SCOUT + $this->getMines()*$this->getMaxGalaxyExpireTime()*self::TIME_PERCENT_PER_MINE;
+			$time = ($this->getCDs()*self::TIME_PERCENT_PER_COMBAT + $this->getSDs()*self::TIME_PERCENT_PER_SCOUT + $this->getMines()*self::TIME_PERCENT_PER_MINE) * $this->getMaxGalaxyExpireTime();
 		}
 		$this->setExpire(TIME + $time);
 	}
