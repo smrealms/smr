@@ -131,7 +131,7 @@ abstract class AbstractSmrAccount
 	function __construct($accountID)
 	{
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM account WHERE account_id = '.$accountID.' LIMIT 1');
+		$this->db->query('SELECT * FROM account WHERE account_id = '.$this->db->escapeNumber($accountID).' LIMIT 1');
 		
 		if ($this->db->nextRecord())
 		{
