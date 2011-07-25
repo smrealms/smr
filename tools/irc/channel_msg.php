@@ -1097,7 +1097,7 @@ function channel_msg_forces($fp, $rdata)
 		}
 
 		// get smr account
-		$account =& SmrAccount::getAccount($nick, true);
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 
 		// do we have such an account?
 		if ($account == null) {
