@@ -3,24 +3,24 @@
 
 function echo_r($message)
 {
-	if(is_array($message))
-	{
-		foreach($message as $msg)
+	if (is_array($message)) {
+		foreach ($message as $msg)
 			echo_r($msg);
 	}
 	else
-		echo date("d.m.Y H:i:s => ").$message.EOL;
+		echo date("d.m.Y H:i:s => ") . $message . EOL;
 }
 
 // not keeping the filehandle might not be the wisest idea.
-function write_log_message($msg) {
+function write_log_message($msg)
+{
 	$logFile = fopen("/var/log/irc/" . date("Ymd") . ".log", "a+");
 	fwrite($logFile, round(microtime(true) * 1000) . ' ' . $msg . EOL);
 	fclose($logFile);
 }
 
 // config file
-include( realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
+include(realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
 include(LIB . '/Default/SmrMySqlDatabase.class.inc');
 
@@ -66,7 +66,7 @@ if ($argc > 1) {
 	$logging = ($argv[1] == '-log');
 }
 
-echo_r('Connecting to '.$address);
+echo_r('Connecting to ' . $address);
 
 // include all sub files
 require_once('irc/server.php');
@@ -80,7 +80,10 @@ require_once('irc/notice.php');
 //require_once('irc/weapon.php');
 //require_once('irc/level.php');
 require_once('irc/channel.php');
+require_once('irc/channel_action.php');
 require_once('irc/channel_msg.php');
+require_once('irc/channel_msg_op.php');
+require_once('irc/channel_msg_seed.php');
 require_once('irc/maintenance.php');
 
 // database object
@@ -90,26 +93,29 @@ $db = new SmrMySqlDatabase();
 $db->query('DELETE from irc_seen WHERE signed_off = 0');
 
 $fp = fsockopen($address, $port);
-if ($fp)
-{
-    stream_set_blocking($fp, TRUE);
-    echo_r('Socket '.$fp.' is connected... Identifying...');
+if ($fp) {
+	stream_set_blocking($fp, TRUE);
+	echo_r('Socket ' . $fp . ' is connected... Identifying...');
 
-    fputs($fp, 'NICK CareGhost'.EOL);
-    fputs($fp, 'USER '.strtolower($nick).' oberon smrealms.de :Official SMR bot'.EOL);
+	fputs($fp, 'NICK CareGhost' . EOL);
+	fputs($fp, 'USER ' . strtolower($nick) . ' oberon smrealms.de :Official SMR bot' . EOL);
 
-    // kill any other user that is using our nick
-    fputs($fp, 'NICKSERV GHOST '.$nick.' '.$pass.EOL);
+	// kill any other user that is using our nick
+	fputs($fp, 'NICKSERV GHOST ' . $nick . ' ' . $pass . EOL);
 
-    sleep(1);
+	sleep(1);
 
-    fputs($fp, 'NICK '.$nick.EOL);
-    fputs($fp, 'NICKSERV IDENTIFY '.$pass.EOL);
+	fputs($fp, 'NICK ' . $nick . EOL);
+	fputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
 
-    // join our public channel
-    fputs($fp, 'JOIN '.$channel.EOL);
-    sleep(1);
-    fputs($fp, 'WHO '.$channel.EOL);
+	// join our public channel
+	fputs($fp, 'JOIN ' . $channel . EOL);
+	sleep(1);
+	fputs($fp, 'WHO ' . $channel . EOL);
+	sleep(1);
+	fputs($fp, 'JOIN #smr-bar' . EOL);
+	sleep(1);
+	fputs($fp, 'WHO #smr-bar' . EOL);
 
 	// join any alliance channels
 	$db->query('SELECT    channel ' .
@@ -121,143 +127,153 @@ if ($fp)
 		$alliance_channel = $db->getField('channel');
 
 		// join channels
-		fputs($fp, 'JOIN #'.$alliance_channel.EOL);
+		fputs($fp, 'JOIN #' . $alliance_channel . EOL);
 		sleep(1);
-		fputs($fp, 'WHO #'.$alliance_channel.EOL);
+		fputs($fp, 'WHO #' . $alliance_channel . EOL);
 	}
 
-    while (!feof($fp))
-    {
+	while (!feof($fp))
+	{
 
-        $rdata = fgets($fp, 4096);
-        $rdata = preg_replace('/\s+/', ' ', $rdata);
+		$rdata = fgets($fp, 4096);
+		$rdata = preg_replace('/\s+/', ' ', $rdata);
 
-	    // log for reports (if enabled via command line (-log)
-	    if ($logging && strlen($rdata) > 0)
-		    write_log_message($rdata);
+		// log for reports (if enabled via command line (-log)
+		if ($logging && strlen($rdata) > 0)
+			write_log_message($rdata);
 
-	    // we simply do some poll stuff here
-	    check_planet_builds($fp);
-	    check_events($fp);
-        
-        // required!!! otherwise timeout!
-        if (server_ping($fp, $rdata))
-            continue;
+		// we simply do some poll stuff here
+		check_planet_builds($fp);
+		check_events($fp);
 
-	    // server msg
-        if (server_msg_307($fp, $rdata))
-            continue;
-        if (server_msg_318($fp, $rdata))
-            continue;
-        if (server_msg_352($fp, $rdata))
-            continue;
-        if (server_msg_401($fp, $rdata))
-            continue;
+		// required!!! otherwise timeout!
+		if (server_ping($fp, $rdata))
+			continue;
 
-        // some nice things
-        if (ctcp_version($fp, $rdata))
-            continue;
-        if (ctcp_finger($fp, $rdata))
-            continue;
-        if (ctcp_time($fp, $rdata))
-            continue;
-        if (ctcp_ping($fp, $rdata))
-            continue;
+		// server msg
+		if (server_msg_307($fp, $rdata))
+			continue;
+		if (server_msg_318($fp, $rdata))
+			continue;
+		if (server_msg_352($fp, $rdata))
+			continue;
+		if (server_msg_401($fp, $rdata))
+			continue;
 
-	    if (invite($fp, $rdata))
-	        continue;
+		// some nice things
+		if (ctcp_version($fp, $rdata))
+			continue;
+		if (ctcp_finger($fp, $rdata))
+			continue;
+		if (ctcp_time($fp, $rdata))
+			continue;
+		if (ctcp_ping($fp, $rdata))
+			continue;
 
-        // join and part
-        if (channel_join($fp, $rdata))
-            continue;
-        if (channel_part($fp, $rdata))
-            continue;
+		if (invite($fp, $rdata))
+			continue;
 
-	    // nick change and quit
-        if (user_nick($fp, $rdata))
-            continue;
-        if (user_quit($fp, $rdata))
-            continue;
+		// join and part
+		if (channel_join($fp, $rdata))
+			continue;
+		if (channel_part($fp, $rdata))
+			continue;
 
-        // channel msg (!xyz)
-        if (channel_msg_help($fp, $rdata))
-            continue;
-        if (channel_msg_seen($fp, $rdata))
-            continue;
-        if (channel_msg_seed($fp, $rdata))
-            continue;
-        if (channel_msg_seedlist($fp, $rdata))
-            continue;
-        if (channel_msg_seedlist_add($fp, $rdata))
-            continue;
-        if (channel_msg_seedlist_del($fp, $rdata))
-            continue;
-        if (channel_msg_op($fp, $rdata))
-	        continue;
-        if (channel_msg_op_info($fp, $rdata))
-	        continue;
-        if (channel_msg_op_cancel($fp, $rdata))
-	        continue;
-        if (channel_msg_op_set($fp, $rdata))
-	        continue;
-        if (channel_msg_op_signup($fp, $rdata))
-	        continue;
-        if (channel_msg_op_list($fp, $rdata))
-	        continue;
-        if (channel_msg_money($fp, $rdata))
-	        continue;
-        if (channel_msg_timer($fp, $rdata))
-	        continue;
-        if (channel_msg_8ball($fp, $rdata, $answers))
-	        continue;
-        if (channel_msg_forces($fp, $rdata, $answers))
-	        continue;
+		// nick change and quit
+		if (user_nick($fp, $rdata))
+			continue;
+		if (user_quit($fp, $rdata))
+			continue;
 
-/* doing these later...
+		// channel msg (!xyz)
+		if (channel_msg_help($fp, $rdata))
+			continue;
+		if (channel_msg_seen($fp, $rdata))
+			continue;
+		if (channel_msg_seed($fp, $rdata))
+			continue;
+		if (channel_msg_seedlist($fp, $rdata))
+			continue;
+		if (channel_msg_seedlist_add($fp, $rdata))
+			continue;
+		if (channel_msg_seedlist_del($fp, $rdata))
+			continue;
+		if (channel_msg_op($fp, $rdata))
+			continue;
+		if (channel_msg_op_info($fp, $rdata))
+			continue;
+		if (channel_msg_op_cancel($fp, $rdata))
+			continue;
+		if (channel_msg_op_set($fp, $rdata))
+			continue;
+		if (channel_msg_op_turns($fp, $rdata))
+			continue;
+		if (channel_msg_op_yes($fp, $rdata))
+			continue;
+		if (channel_msg_op_no($fp, $rdata))
+			continue;
+		if (channel_msg_op_maybe($fp, $rdata))
+			continue;
+		if (channel_msg_op_list($fp, $rdata))
+			continue;
+		if (channel_msg_money($fp, $rdata))
+			continue;
+		if (channel_msg_timer($fp, $rdata))
+			continue;
+		if (channel_msg_8ball($fp, $rdata, $answers))
+			continue;
+		if (channel_msg_forces($fp, $rdata))
+			continue;
 
-        // channel messages
-        if (channel_msg_rank($fp, $rdata))
-            continue;
-        if (channel_msg_level($fp, $rdata))
-            continue;
-        if (channel_msg_ship($fp, $rdata))
-            continue;
-*/
+		if (channel_action_slap($fp, $rdata))
+			continue;
 
-/* doing these later...
+		/* doing these later...
 
-        // private messages
-        if (private_msg_login($fp, $rdata))
-            continue;
-        if (private_msg_weapon($fp, $rdata))
-            continue;
+		  // channel messages
+		  if (channel_msg_rank($fp, $rdata))
+			  continue;
+		  if (channel_msg_level($fp, $rdata))
+			  continue;
+		  if (channel_msg_ship($fp, $rdata))
+			  continue;
+  */
 
-*/
+		/* doing these later...
 
-	    // MrSpock can use this to send commands as caretaker
-        if (query_command($fp, $rdata))
-            continue;
+		  // private messages
+		  if (private_msg_login($fp, $rdata))
+			  continue;
+		  if (private_msg_weapon($fp, $rdata))
+			  continue;
+
+  */
+
+		// MrSpock can use this to send commands as caretaker
+		if (query_command($fp, $rdata))
+			continue;
 
 
-        // debug
-        if (strlen($rdata) > 0) {
-//            echo_r('[UNKNOWN] '.$rdata);
-            continue;
-        }
+		// debug
+		if (strlen($rdata) > 0) {
+//			echo_r('[UNKNOWN] ' . $rdata);
+			continue;
+		}
 
-    }
+	}
 
-    fclose ($fp); // close socket
-    echo_r('Fatal error: Socket closed');
+	fclose($fp); // close socket
+	echo_r('Fatal error: Socket closed');
 
 } else {
 
-    echo_r('There was an error connecting to '.$address.'/'.$port);
-    exit();
+	echo_r('There was an error connecting to ' . $address . '/' . $port);
+	exit();
 
 }
 
-function fill_string($str, $length) {
+function fill_string($str, $length)
+{
 
 	while (strlen($str) < $length)
 		$str .= ' ';
