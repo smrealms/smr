@@ -95,15 +95,14 @@ class SmrForce
 		{
 			self::$TIDIED_UP[$galaxyToTidy->getGameID()][$galaxyToTidy->getGalaxyID()] = true;
 			$db = new SmrMySqlDatabase();
-			$db->query('UPDATE sector_has_forces SET refresher=0, expire_time = (refresh_at + if(combat_drones+mines=0,scout_drones*'.self::TIME_PER_SCOUT_ONLY.',combat_drones*'.($galaxyToTidy->getMaxForceTime()*self::TIME_PERCENT_PER_COMBAT).'+scout_drones*'.($galaxyToTidy->getMaxForceTime()*self::TIME_PERCENT_PER_SCOUT).'+mines*'.($galaxyToTidy->getMaxForceTime()*self::TIME_PERCENT_PER_MINE).')) WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND refresher != 0 AND refresh_at <= '.TIME);
+			$db->query('UPDATE sector_has_forces
+						SET refresher=0,
+							expire_time = (refresh_at + if(combat_drones+mines=0,
+															LEAST('.self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY.', scout_drones*'.self::TIME_PER_SCOUT_ONLY.'),
+															LEAST('.$galaxyToTidy->getMaxForceTime().', (combat_drones*'.self::TIME_PERCENT_PER_COMBAT.'+scout_drones*'.self::TIME_PERCENT_PER_SCOUT.'+mines*'.self::TIME_PERCENT_PER_MINE.')*'.$galaxyToTidy->getMaxForceTime().')
+														))
+						WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND refresher != 0 AND refresh_at <= '.TIME);
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
-			if($galaxyToTidy->getMaxForceTime()<self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY)
-			{
-				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+$galaxyToTidy->getMaxForceTime()).' WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+$galaxyToTidy->getMaxForceTime().' AND (combat_drones > 0 OR mines > 0)'));
-				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY).' WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY.' AND combat_drones = 0 AND mines = 0'));
-			}
-			else
-				$db->query('UPDATE sector_has_forces SET expire_time = '.(TIME+$galaxyToTidy->getMaxForceTime()).' WHERE game_id = '.$galaxyToTidy->getGameID().' AND sector_id >= '.$galaxyToTidy->getStartSector().' AND sector_id <= '.$galaxyToTidy->getEndSector().' AND expire_time > '.(TIME+$galaxyToTidy->getMaxForceTime()));
 		}
 	}
 	
