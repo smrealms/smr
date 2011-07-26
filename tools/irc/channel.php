@@ -15,9 +15,11 @@ function channel_join($fp, $rdata)
 //		if ($nick == 'MrSpock' && $user == 'mrspock')
 //			fputs($fp, 'PRIVMSG #' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
 		if ($nick == 'Holti' && $user == 'Holti')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands Holti a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
 		if ($nick == 'kiNky' && $user == 'cicika')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands kiNky a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
+		if ($nick == 'River' && $user == 'Serenity')
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
 
 		$db = new SmrMySqlDatabase();
 
@@ -61,19 +63,27 @@ function channel_join($fp, $rdata)
 			$alliance_id = $db->getField('alliance_id');
 
 			// check if there is an upcoming op
-			$db->query('SELECT time, attendees ' .
+			$db->query('SELECT time, yes, no, maybe ' .
 					   'FROM alliance_has_op ' .
 					   'WHERE alliance_id = ' . $alliance_id . ' AND ' .
 					   '      game_id = ' . $game_id . ' AND ' .
 			           '      time > ' . time());
 			if ($db->nextRecord()) {
-				$attendees = unserialize($db->getField('attendees'));
-				if (!is_array($attendees))
-					$attendees = array();
+				$yes = unserialize($db->getField('yes'));
+				if (!is_array($yes))
+					$yes = array();
+				$no = unserialize($db->getField('no'));
+				if (!is_array($no))
+					$no = array();
+				$maybe = unserialize($db->getField('maybe'));
+				if (!is_array($maybe))
+					$maybe = array();
+
+				$attendees = array_merge($yes, $no, $maybe);
 
 				// if we are not in the attendees list we give the player a hint
 				if (array_search($nick, $attendees) === false && $nick !== 'Caretaker') {
-					fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op command to do so.' . EOL);
+					fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
 				}
 			}
 
