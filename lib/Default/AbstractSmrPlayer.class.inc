@@ -540,9 +540,9 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
-	public function &getAlliance()
+	public function &getAlliance($forceUpdate = false)
 	{
-		return SmrAlliance::getAlliance($this->getAllianceID(), $this->getGameID());
+		return SmrAlliance::getAlliance($this->getAllianceID(), $this->getGameID(), $forceUpdate);
 	}
 	
 	public function getAllianceID()
