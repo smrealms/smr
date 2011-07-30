@@ -486,7 +486,7 @@ function exitNPC()
 
 function changeNPCLogin()
 {
-	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED,$underAttack;
+	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED,$underAttack,$previousContainer;
 	$actions=-1;
 	$GLOBALS['TRADE_ROUTE'] = null;
 	$db = new SmrMySqlDatabase();
@@ -497,6 +497,9 @@ function changeNPCLogin()
 		debug('Failed to unlock NPC: '.$NPC_LOGIN);
 	
 	$NPC_LOGIN = null;
+
+	// We chose a new NPC, we don't care what we were doing beforehand.
+	$previousContainer = null;
 	
 	debug('Choosing new NPC');
 	$db2 = new SmrMySqlDatabase();
