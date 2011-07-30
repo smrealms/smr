@@ -20,7 +20,7 @@ if($var['link_id'] > 3 || $var['link_id'] < 1 ) {
 
 if($valid == true)
 {
-	if(TIME > $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME) //Make sure we cannot take their last turn update before start time
+	if($player->getLastTurnUpdate() > $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME) //Make sure we cannot take their last turn update before start time
 	{
 		// Allow vote
 		$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . SmrSession::$account_id . ',' . $var['link_id'] . ',' . TIME . ')');
@@ -29,7 +29,7 @@ if($valid == true)
 	}
 	else
 	{
-		create_error('You cannot gain bonus turns in this game yet, please wait '.format_time($player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME - TIME).'.');
+		create_error('You cannot gain bonus turns in this game yet, please wait '.format_time( $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME - min(TIME, $player->getLastTurnUpdate())).'.');
 	}
 }
 
