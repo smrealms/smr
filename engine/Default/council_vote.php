@@ -36,7 +36,7 @@ $playerRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$pla
 $races =& Globals::getRaces();
 foreach($races as $raceID => $raceInfo)
 {
-	if($raceID == RACE_NEUTRAL)
+	if($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID())
 		continue;
 
 	$PHP_OUTPUT.=('<tr>');
