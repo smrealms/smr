@@ -1204,13 +1204,13 @@ abstract class AbstractSmrAccount
 		$adminID = 0;
 		if($admin!==null)
 			$adminID = $admin->getAccountID();
-		$this->db->query('DELETE FROM account_is_closed ' .
-				   'WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->db->query('INSERT INTO account_has_closing_history ' .
-				   '(account_id, time, admin_id, action) ' .
-				   'VALUES('.$this->getAccountID().', ' . TIME . ', '.$adminID.', \'Opened\')');
-   		$this->db->query('UPDATE player SET last_turn_update = ' . TIME .
-				   ' WHERE account_id = '.$this->getAccountID());
+		$this->db->query('DELETE FROM account_is_closed
+					 	WHERE account_id = '.$this->getAccountID().' LIMIT 1');
+		$this->db->query('INSERT INTO account_has_closing_history
+						(account_id, time, admin_id, action)
+						VALUES('.$this->getAccountID().', ' . TIME . ', '.$adminID.', \'Opened\')');
+   		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . TIME . ', last_turn_update)
+				   		WHERE account_id = '.$this->getAccountID());
 		if($admin!==null)
 			$this->log(13, 'Account reopened by ' . $admin->getLogin() . '.');
 		else
