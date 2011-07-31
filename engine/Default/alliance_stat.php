@@ -2,18 +2,12 @@
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
 
-$db->query('SELECT leader_id,img_src,alliance_password,alliance_description,`mod`,alliance_name,alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$pw = $db->getField('alliance_password');
-$desc = strip_tags($db->getField('alliance_description'));
-$img = $db->getField('img_src');
-$mod = strip_tags($db->getField('mod'));
-$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
-include(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+$alliance =& SmrAlliance::getAlliance($alliance_id,$player->getGameID());
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
+require_once(get_file_loc('menue.inc'));
+create_alliance_menue($alliance_id,$alliance->getLeaderID());
 
-$container=array();
-$container['url'] = 'alliance_stat_processing.php';
+$container=create_container('alliance_stat_processing.php');
 $container['body'] = '';
 $container['alliance_id'] = $alliance_id;
 
@@ -30,20 +24,24 @@ $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="nobord nohpad">';
 
 if ($db->getField('change_pass') == 'TRUE')
 {
-	$PHP_OUTPUT.= '<tr><td class="top">Password:&nbsp;</td><td><input type="password" name="password" size="30" value="'.htmlspecialchars($pw).'"></td></tr>';
+	$PHP_OUTPUT.= '<tr><td class="top">Password:&nbsp;</td><td><input type="password" name="password" size="30" value="'.htmlspecialchars($alliance->getPassword()).'"></td></tr>';
 }
 if ($db->getField('change_mod') == 'TRUE' || $account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
 {
 	$PHP_OUTPUT.= '<tr><td class="top">Description:&nbsp;</td><td><textarea name="description">';
-	$PHP_OUTPUT.= $desc;
+	$PHP_OUTPUT.= $alliance->getDescription();
 	$PHP_OUTPUT.= '</textarea></td></tr>';
+}
+if ($player->isAllianceLeader())
+{
+	$PHP_OUTPUT.= '<tr><td class="top">IRC Channel:&nbsp;</td><td><input type="text" name="irc" size="30" value="'.htmlspecialchars($alliance->getIrcChannel()).'"></td></tr>';
 }
 if ($db->getField('change_mod') == 'TRUE')
 {
-	$PHP_OUTPUT.= '<tr><td class="top">Image URL:&nbsp;</td><td><input type="text" name="url" size="30" value="'.htmlspecialchars($img).'"></td></tr>';
+	$PHP_OUTPUT.= '<tr><td class="top">Image URL:&nbsp;</td><td><input type="text" name="url" size="30" value="'.htmlspecialchars($alliance->getImageURL()).'"></td></tr>';
 	
 	$PHP_OUTPUT.= '<tr><td class="top">Message Of The Day:&nbsp;</td><td><textarea name="mod">';
-	$PHP_OUTPUT.= $mod;
+	$PHP_OUTPUT.= $alliance->getMotD();
 	$PHP_OUTPUT.= '</textarea></td></tr>';
 }
 $PHP_OUTPUT.= '</table><br />';

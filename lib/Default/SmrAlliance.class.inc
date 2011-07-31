@@ -19,6 +19,7 @@ class SmrAlliance
 	protected $deaths;
 	protected $motd;
 	protected $imgSrc;
+	protected $ircChannel;
 	
 	protected $memberList;
 
@@ -29,6 +30,16 @@ class SmrAlliance
 			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($gameID,$allianceID);
 		}
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
+	}
+
+	public static function &getAllianceByIrcChannel($channel,$forceUpdate = false)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = '.$db->escapeString($channel).' LIMIT 1');
+		if($db->nextRecord())
+			return self::getAccount($db->getField('alliance_id'), $db->getField('game_id'), $forceUpdate);
+		$return = null;
+		return $return;
 	}
 
 	function __construct($gameID, $allianceID)
@@ -88,6 +99,27 @@ class SmrAlliance
 	public function getDescription()
 	{
 		return $this->description;
+	}
+	
+	public function getIrcChannel()
+	{
+		if(!isset($this->ircChannel))
+		{
+			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeString($this->getAllianceID()) .' AND game_id = ' . $this->db->escapeString($this->getGameID()) . ' LIMIT 1;');
+			if($this->db->nextRecord())
+				$this->ircChannel = $this->db->getField('channel');
+			else
+				$this->ircChannel = '';
+		}
+		return $this->ircChannel;
+	}
+	
+	public function setIrcChannel($ircChannel)
+	{
+		if($this->ircChannel == $ircChannel)
+			return;
+		$this->ircChannel = $ircChannel;
+		$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($this->ircChannel) . ',' . $this->db->escapeString($this->getAllianceID()) . ',' . $this->db->escapeString($this->getGameID()) . ');');
 	}
 	
 	public function getImageURL()

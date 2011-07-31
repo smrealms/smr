@@ -183,7 +183,7 @@ function channel_msg_seedlist_add($fp, $rdata)
 		}
 
 		// check if $nick is leader
-		if ($player->getAlliance(true)->getLeaderID() != $player->getAccountID()) {
+		if (!$player->isAllianceLeader(true)) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
 			return true;
 		}
@@ -296,7 +296,7 @@ function channel_msg_seedlist_del($fp, $rdata)
 		}
 
 		// check if $nick is leader
-		if ($player->getAlliance(true)->getLeaderID() != $player->getAccountID()) {
+		if (!$player->isAllianceLeader(true)) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
 			return true;
 		}
