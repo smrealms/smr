@@ -212,7 +212,7 @@ function channel_msg_op_cancel($fp, $rdata)
 		}
 
 		// check if $nick is leader
-		if ($player->getAlliance(true)->getLeaderID() != $player->getAccountID()) {
+		if (!$player->isAllianceLeader(true)) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance can cancel an OP.' . EOL);
 			return true;
 		}
@@ -304,7 +304,7 @@ function channel_msg_op_set($fp, $rdata)
 		}
 
 		// check if $nick is leader
-		if ($player->getAlliance(true)->getLeaderID() != $player->getAccountID()) {
+		if (!$player->isAllianceLeader(true)) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance can setup an OP.' . EOL);
 			return true;
 		}
@@ -399,7 +399,7 @@ function channel_msg_op_turns($fp, $rdata)
 		}
 
 		// check if $nick is leader
-		if ($player->getAlliance(true)->getLeaderID() != $player->getAccountID()) {
+		if (!$player->isAllianceLeader(true)) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance can use this command.' . EOL);
 			return true;
 		}

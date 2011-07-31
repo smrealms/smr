@@ -6,6 +6,8 @@ if (isset($_REQUEST['password']))
 	$password = trim($_REQUEST['password']);
 if (isset($_REQUEST['description']))
 	$description = trim($_REQUEST['description']);
+if (isset($_REQUEST['irc']))
+	$irc = trim($_REQUEST['irc']);
 if (isset($_REQUEST['mod']))
 {
 	if(preg_match('/"/',$_REQUEST['mod']))
@@ -25,6 +27,8 @@ if (isset($password))
 	$alliance->setPassword($password);
 if (isset($description))
 	$alliance->setAllianceDescription($description);
+if (isset($irc))
+	$alliance->setIrcChannel($irc);
 if (isset($mod))
 	$alliance->setMotD($mod);
 if (isset($url))
