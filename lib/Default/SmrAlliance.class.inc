@@ -118,8 +118,13 @@ class SmrAlliance
 	{
 		if($this->ircChannel == $ircChannel)
 			return;
+		if(strlen($ircChannel)>0 && $ircChannel[0] != '#')
+			$ircChannel = '#' . $ircChannel;
 		$this->ircChannel = $ircChannel;
-		$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($this->ircChannel) . ',' . $this->db->escapeString($this->getAllianceID()) . ',' . $this->db->escapeString($this->getGameID()) . ');');
+		if($this->ircChannel == '')
+			$this->db->query('DELETE FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeString($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeString($this->getGameID()) . ';');
+		else
+			$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($this->ircChannel) . ',' . $this->db->escapeString($this->getAllianceID()) . ',' . $this->db->escapeString($this->getGameID()) . ');');
 	}
 	
 	public function getImageURL()
