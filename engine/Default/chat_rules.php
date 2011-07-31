@@ -31,7 +31,7 @@ A. Rules <br /><br />
 
 <li>Since the only language that all of the ops speak is English, it is the only language allowed in #smr. If you want to speak other languages feel free to do it in other rooms or in PMs.</li>
 
-<li>Ban hopping (logging in from another IP after you get banned and similar activities) is striclty forbidden.</li> 
+<li>Ban hopping (logging in from another IP after you get banned and similar activities) is striclty forbidden.</li>
 
 <li>Bots are allowed only with Spock's permission.</li>
 
@@ -40,7 +40,7 @@ A. Rules <br /><br />
 </ol>
 
 <br /><br />
-B. Disciplinary actions. 
+B. Disciplinary actions.
 <br /><br />
 
 <ol>
@@ -75,7 +75,16 @@ B. Disciplinary actions.
 <br />
 <br />
 <br />";
-$PHP_OUTPUT .= '<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=%23SMR&autoConnect=true&nick='.urlencode('SMR-'.str_replace(' ','_',$player->getPlayerName())).'" target="_chat" class="submitStyle">Chat</a></center>';
+$allianceChan = '';
+if($player->hasAlliance())
+{
+	$allianceChan = $player->getAlliance()->getIrcChannel();
+	if($allianceChan != '')
+	{
+		$allianceChan = ',' . urlencode($allianceChan);
+	}
+}
+$PHP_OUTPUT .= '<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=%23SMR'.$allianceChan.'&autoConnect=true&nick='.urlencode('SMR-'.str_replace(' ','_',$player->getPlayerName())).'" target="_chat" class="submitStyle">Chat</a></center>';
 //$PHP_OUTPUT .= '<center><form method="POST" action="http://chat.vjtd3.com/sjc.php?Nickname='. urlencode('SMR-'.strtr($player->getPlayerName(), array(' ' => '_'))) .'&Channel=%23smr" name="loginform" onsubmit="setjs();return true;" id="ietest" target="_chat">
 
 //<input type="hidden" name="interface" value="nonjs">';
