@@ -211,6 +211,8 @@ if ($fp) {
 			continue;
 		if (channel_msg_seen($fp, $rdata))
 			continue;
+		if (channel_msg_sd($fp, $rdata))
+			continue;
 
 		// channel msg (!xyz) with registration
 		if (channel_msg_with_registration($fp, $rdata))
