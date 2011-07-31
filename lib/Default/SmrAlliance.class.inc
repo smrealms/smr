@@ -37,7 +37,7 @@ class SmrAlliance
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = '.$db->escapeString($channel).' LIMIT 1');
 		if($db->nextRecord())
-			return self::getAccount($db->getField('alliance_id'), $db->getField('game_id'), $forceUpdate);
+			return self::getAlliance($db->getField('alliance_id'), $db->getField('game_id'), $forceUpdate);
 		$return = null;
 		return $return;
 	}
