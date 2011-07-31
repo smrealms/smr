@@ -398,12 +398,19 @@ function NPCStuff()
 				}
 			}
 			else
+			{ //Something weird is going on.. Let's fed and wait.
+				debug('No actual action? Wtf?');
+				processContainer(plotToFed());
+			}
+			/*
+			else
 			{ //Otherwise let's run around at random.
 				$links = $player->getSector()->getLinks();
 				$moveTo = $links[array_rand($links)];
 				debug('Random Wanderings: '.$moveTo);
 				processContainer(moveToSector($moveTo));
 			}
+			*/
 		}
 		catch(Exception $e)
 		{
