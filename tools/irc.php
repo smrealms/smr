@@ -28,12 +28,14 @@ include(ENGINE . '/Default/smr.inc');
 
 $address = 'ice.coldfront.net';
 $port = 6667;
-$channel = '#smr';
 $nick = 'Caretaker';
 $pass = 'smr4ever';
 
 // timer events
 $events = array();
+
+// supply/demand list
+$sds = array();
 
 // on<something> actions
 $actions = array();
@@ -62,11 +64,19 @@ $answers = array(
 );
 
 $logging = false;
-if ($argc > 1) {
-	$logging = ($argv[1] == '-log');
-}
+$debugging = false;
 
-echo_r('Connecting to ' . $address);
+if ($argc > 1) {
+	foreach ($argv as $arg) {
+		if ($arg == '-log') {
+			$logging = true;
+		}
+		if ($arg == '-debug') {
+			$debugging = true;
+		}
+	}
+
+}
 
 // include all sub files
 require_once('irc/server.php');
@@ -83,15 +93,15 @@ require_once('irc/channel.php');
 require_once('irc/channel_action.php');
 require_once('irc/channel_msg.php');
 require_once('irc/channel_msg_op.php');
+require_once('irc/channel_msg_sd.php');
 require_once('irc/channel_msg_seed.php');
 require_once('irc/maintenance.php');
 
-// database object
-$db = new SmrMySqlDatabase();
-
 // delete all seen stats that appear to be on (we do not want to take something for granted that happend while we were away)
+$db = new SmrMySqlDatabase();
 $db->query('DELETE from irc_seen WHERE signed_off = 0');
 
+echo_r('Connecting to ' . $address);
 $fp = fsockopen($address, $port);
 if ($fp) {
 	stream_set_blocking($fp, TRUE);
@@ -109,15 +119,15 @@ if ($fp) {
 	fputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
 
 	// join our public channel
-	fputs($fp, 'JOIN ' . $channel . EOL);
-	sleep(1);
-	fputs($fp, 'WHO ' . $channel . EOL);
-	sleep(1);
-	fputs($fp, 'JOIN #smr-bar' . EOL);
-	sleep(1);
-	fputs($fp, 'WHO #smr-bar' . EOL);
+	if (!$debugging) {
+		fputs($fp, 'JOIN #smr' . EOL);
+		fputs($fp, 'JOIN #smr-bar' . EOL);
+		sleep(1);
+		fputs($fp, 'WHO #smr' . EOL);
+		fputs($fp, 'WHO #smr-bar' . EOL);
+	}
 
-	// join any alliance channels
+	// join all alliance channels
 	$db->query('SELECT    channel ' .
 	           'FROM      irc_alliance_has_channel ' .
 	           'LEFT JOIN game USING (game_id) ' .
@@ -185,78 +195,34 @@ if ($fp) {
 		if (user_quit($fp, $rdata))
 			continue;
 
-		// channel msg (!xyz)
+		if (channel_action_slap($fp, $rdata))
+			continue;
+
+		// channel msg (!xyz) without registration
 		if (channel_msg_help($fp, $rdata))
-			continue;
-		if (channel_msg_seen($fp, $rdata))
-			continue;
-		if (channel_msg_seed($fp, $rdata))
 			continue;
 		if (channel_msg_seedlist($fp, $rdata))
 			continue;
-		if (channel_msg_seedlist_add($fp, $rdata))
-			continue;
-		if (channel_msg_seedlist_del($fp, $rdata))
-			continue;
 		if (channel_msg_op($fp, $rdata))
-			continue;
-		if (channel_msg_op_info($fp, $rdata))
-			continue;
-		if (channel_msg_op_cancel($fp, $rdata))
-			continue;
-		if (channel_msg_op_set($fp, $rdata))
-			continue;
-		if (channel_msg_op_turns($fp, $rdata))
-			continue;
-		if (channel_msg_op_yes($fp, $rdata))
-			continue;
-		if (channel_msg_op_no($fp, $rdata))
-			continue;
-		if (channel_msg_op_maybe($fp, $rdata))
-			continue;
-		if (channel_msg_op_list($fp, $rdata))
-			continue;
-		if (channel_msg_money($fp, $rdata))
 			continue;
 		if (channel_msg_timer($fp, $rdata))
 			continue;
 		if (channel_msg_8ball($fp, $rdata, $answers))
 			continue;
-		if (channel_msg_forces($fp, $rdata))
+		if (channel_msg_seen($fp, $rdata))
 			continue;
 
-		if (channel_action_slap($fp, $rdata))
+		// channel msg (!xyz) with registration
+		if (channel_msg_with_registration($fp, $rdata))
 			continue;
-
-		/* doing these later...
-
-		  // channel messages
-		  if (channel_msg_rank($fp, $rdata))
-			  continue;
-		  if (channel_msg_level($fp, $rdata))
-			  continue;
-		  if (channel_msg_ship($fp, $rdata))
-			  continue;
-  */
-
-		/* doing these later...
-
-		  // private messages
-		  if (private_msg_login($fp, $rdata))
-			  continue;
-		  if (private_msg_weapon($fp, $rdata))
-			  continue;
-
-  */
 
 		// MrSpock can use this to send commands as caretaker
 		if (query_command($fp, $rdata))
 			continue;
 
-
 		// debug
-		if (strlen($rdata) > 0) {
-//			echo_r('[UNKNOWN] ' . $rdata);
+		if ($debugging && strlen($rdata) > 0) {
+			echo_r('[UNKNOWN] ' . $rdata);
 			continue;
 		}
 

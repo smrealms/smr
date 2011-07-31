@@ -13,7 +13,7 @@ function check_events($fp)
 
 		if ($event[0] < time()) {
 			echo_r('[TIMER] finished. Sending a note to #' . $event[2]);
-			fputs($fp, 'NOTICE #' . $event[2] . ' :ALERT! ALERT! ALERT! ' . $event[1] . EOL);
+			fputs($fp, 'NOTICE #' . $event[2] . ' :' . $event[1] . EOL);
 			unset($events[$key]);
 		}
 

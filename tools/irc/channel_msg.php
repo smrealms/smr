@@ -1,38 +1,100 @@
 <?php
 
-function error_not_registered($fp, $channel, $nick, $callback)
+function channel_msg_with_registration($fp, $rdata)
 {
-	global $actions;
 
-	// execute a whois and continue here on whois
-	fputs($fp, 'WHOIS ' . $nick . EOL);
-	array_push($actions, array('MSG_318', $channel, $nick, $callback, time()));
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!/i', $rdata, $msg)) {
+
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+
+		// check if the query is in public channel
+		if ($channel == 'smr' || $channel == 'smr-bar') {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
+			return true;
+		}
+
+		$db = new SmrMySqlDatabase();
+
+		// only registered users are allowed to use this command
+		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+		if (!$db->nextRecord()) {
+
+			global $actions;
+
+			// execute a whois and continue here on whois
+			fputs($fp, 'WHOIS ' . $nick . EOL);
+			array_push($actions, array('MSG_318', $channel, $nick, 'channel_msg_with_registration($fp, \'' . $rdata . '\');', time()));
+
+			return true;
+		}
+
+		// get alliance_id and game_id for this channel
+		$alliance =& SmrAlliance::getAllianceByIrcChannel($channel, true);
+		if ($alliance == null) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', the channel #' . $channel . ' has not been registered with me.' . EOL);
+			return true;
+		}
+
+		// get smr account
+		$account =& SmrAccount::getAccountByIrcNick($nick, true);
+		if ($account == null) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+			return true;
+		}
+
+		// get smr player
+		$player =& SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameId(), true);
+		if ($player == null) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
+			return true;
+		}
+
+		// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
+		if ($player->getAllianceID() != $alliance->getAllianceID()) {
+			fputs($fp, 'KICK #' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
+			return true;
+		}
+
+		if (channel_msg_money($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_forces($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_seed($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_seedlist_add($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_seedlist_del($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_info($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_cancel($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_set($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_turns($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_yes($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_no($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_maybe($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_op_list($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_sd_set($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_sd_list($fp, $rdata, $account, $player))
+			return true;
+
+	}
+
+	return false;
+
 }
 
-function error_public_channel($fp, $channel, $nick)
-{
-	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', that command does only work in an alliance channel.' . EOL);
-}
-
-function error_unknown_account($fp, $channel, $nick)
-{
-	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
-}
-
-function error_unknown_player($fp, $channel, $nick)
-{
-	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
-}
-
-function error_unknown_alliance($fp, $channel, $nick)
-{
-	fputs($fp, 'KICK #' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
-}
-
-function error_unknown_channel($fp, $channel, $nick)
-{
-	fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', the channel #' . $channel . ' has not been registered with me.' . EOL);
-}
 
 function channel_msg_seen($fp, $rdata)
 {
@@ -107,7 +169,7 @@ function channel_msg_seen($fp, $rdata)
 
 }
 
-function channel_msg_money($fp, $rdata)
+function channel_msg_money($fp, $rdata, $account, $player)
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!money\s$/i', $rdata, $msg)) {
@@ -119,67 +181,20 @@ function channel_msg_money($fp, $rdata)
 
 		echo_r('[MONEY] by ' . $nick . ' in #' . $channel);
 
+		// get money from AA
 		$db = new SmrMySqlDatabase();
-
-		// only registered users are allowed to use this command
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
-		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick, 'channel_msg_money($fp, \'' . $rdata . '\');');
-			return true;
-		}
-
-		// check if the query is in public channel
-		if ($channel == 'smr') {
-			error_public_channel($fp, $channel, $nick);
-			return true;
-		}
-
-		// get alliance_id and game_id for this channel
-		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
-		if ($db->nextRecord()) {
-			$game_id = $db->getField('game_id');
-			$alliance_id = $db->getField('alliance_id');
-		} else {
-			error_unknown_channel($fp, $channel, $nick);
-			return true;
-		}
-
-		// get smr account
-		$account =& SmrAccount::getAccountByIrcNick($nick, true);
-
-		// do we have such an account?
-		if ($account == null) {
-			error_unknown_account($fp, $channel, $nick);
-			return true;
-		}
-
-		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
-
-		// do we have such an account?
-		if ($player == null) {
-			error_unknown_player($fp, $channel, $nick);
-			return true;
-		}
-
-		// is the user part of this alliance?
-		if ($player->getAllianceID() != $alliance_id) {
-			error_unknown_alliance($fp, $channel, $nick);
-			return true;
-		}
-
 		$db->query('SELECT alliance_account ' .
 		           'FROM alliance ' .
-		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
-		           '      game_id = ' . $game_id);
+		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
+		           '      game_id = ' . $player->getGameID());
 
 		if ($db->nextRecord())
 			fputs($fp, 'PRIVMSG #' . $channel . ' :The alliance has ' . number_format($db->getField('alliance_account')) . ' credits in the bank account.' . EOL);
 
 		$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank ' .
 		           'FROM player ' .
-		           'WHERE alliance_id = ' . $alliance_id . ' AND ' .
-		           '      game_id = ' . $game_id);
+		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
+		           '      game_id = ' . $player->getGameID());
 
 		if ($db->nextRecord()) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them' . EOL);
@@ -188,11 +203,11 @@ function channel_msg_money($fp, $rdata)
 
 		$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds ' .
 		           'FROM planet ' .
-		           'WHERE game_id = ' . $game_id . ' AND ' .
+		           'WHERE game_id = ' . $player->getGameID() . ' AND ' .
 		           '      owner_id IN (SELECT account_id ' .
 		           '                   FROM player ' .
-		           '                   WHERE alliance_id = ' . $alliance_id . ' AND ' .
-		           '                         game_id = ' . $game_id .
+		           '                   WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
+		           '                         game_id = ' . $player->getGameID() .
 		           '                   )');
 		if ($db->nextRecord()) {
 			fputs($fp, 'PRIVMSG #' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets' . EOL);
@@ -210,7 +225,7 @@ function channel_msg_money($fp, $rdata)
 function channel_msg_timer($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :!timer ([^ ]+) (.*)$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :!timer(\s\d+)?(\s.+)?\s$/i', $rdata, $msg)) {
 
 		global $events;
 
@@ -218,8 +233,30 @@ function channel_msg_timer($fp, $rdata)
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
-		$countdown = $msg[5];
-		$message = trim($msg[6]);
+
+		// no countdown means we give a list of active timers
+		if (!isset($msg[5])) {
+
+			fputs($fp, 'PRIVMSG #' . $channel . ' :The floowing timers have been defined for this channel:' . EOL);
+			foreach ($events as $event) {
+				if ($event[2] == $channel) {
+					fputs($fp, 'PRIVMSG #' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);
+				}
+			}
+
+			return true;
+
+		}
+
+		if (!is_numeric($msg[5])) {
+			fputs($fp, 'PRIVMSG #' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
+		}
+
+		$countdown = intval($msg[5]);
+		$message = 'ALERT! ALERT! ALERT!';
+
+		if (isset($msg[6]))
+			$message .= ' ' . $msg[6];
 
 		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in #' . $channel);
 
@@ -258,7 +295,7 @@ function channel_msg_8ball($fp, $rdata, $answers)
 
 }
 
-function channel_msg_forces($fp, $rdata)
+function channel_msg_forces($fp, $rdata, $account, $player)
 {
 
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
@@ -271,79 +308,31 @@ function channel_msg_forces($fp, $rdata)
 
 		echo_r('[FORCE_EXPIRE] by ' . $nick . ' in #' . $channel . ' Galaxy: ' . $galaxy);
 
-		$db = new SmrMySqlDatabase();
-
-		// only registered users are allowed to use this command
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
-		if (!$db->nextRecord()) {
-			error_not_registered($fp, $channel, $nick, 'channel_msg_forces($fp, \'' . $rdata . '\');');
-			return true;
-		}
-
-		// check if the query is in public channel
-		if ($channel == 'smr') {
-			error_public_channel($fp, $channel, $nick);
-			return true;
-		}
-
-		// get alliance_id and game_id for this channel
-		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
-		if ($db->nextRecord()) {
-			$game_id = $db->getField('game_id');
-			$alliance_id = $db->getField('alliance_id');
-		} else {
-			error_unknown_channel($fp, $channel, $nick);
-			return true;
-		}
-
-		// get smr account
-		$account =& SmrAccount::getAccountByIrcNick($nick, true);
-
-		// do we have such an account?
-		if ($account == null) {
-			error_unknown_account($fp, $channel, $nick);
-			return true;
-		}
-
-		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $game_id, true);
-
-		// do we have such an account?
-		if ($player == null) {
-			error_unknown_player($fp, $channel, $nick);
-			return true;
-		}
-
-		// is the user part of this alliance?
-		if ($player->getAllianceID() != $alliance_id) {
-			error_unknown_alliance($fp, $channel, $nick);
-			return true;
-		}
-
 		// did we get a galaxy name?
+		$db = new SmrMySqlDatabase();
 		if (!empty($galaxy))
 			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time ' .
-					   'FROM sector_has_forces LEFT JOIN sector USING (sector_id, game_id)' .
+			           'FROM sector_has_forces LEFT JOIN sector USING (sector_id, game_id)' .
 			           '                       LEFT JOIN game_galaxy USING (game_id, galaxy_id) ' .
-			           'WHERE sector_has_forces.game_id = ' . $game_id . ' AND ' .
+			           'WHERE sector_has_forces.game_id = ' . $player->getGameID() . ' AND ' .
 			           '      galaxy_name = ' . $db->escapeString($galaxy) . ' AND ' .
-					   '      owner_id IN (SELECT account_id ' .
-					   '                   FROM player ' .
-					   '                   WHERE game_id = ' . $game_id . ' AND ' .
-					   '                         alliance_id = ' . $alliance_id .
-					   '                  )' .
-					   'ORDER BY expire_time ASC'
+			           '      owner_id IN (SELECT account_id ' .
+			           '                   FROM player ' .
+			           '                   WHERE game_id = ' . $player->getGameID() . ' AND ' .
+			           '                         alliance_id = ' . $player->getAllianceID() .
+			           '                  )' .
+			           'ORDER BY expire_time ASC'
 			);
 		else
 			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time ' .
-					   'FROM sector_has_forces ' .
-					   'WHERE game_id = ' . $game_id . ' AND ' .
-					   '      owner_id IN (SELECT account_id ' .
-					   '                   FROM player ' .
-					   '                   WHERE game_id = ' . $game_id . ' AND ' .
-					   '                         alliance_id = ' . $alliance_id .
-					   '                  )' .
-					   'ORDER BY expire_time ASC'
+			           'FROM sector_has_forces ' .
+			           'WHERE game_id = ' . $player->getGameID() . ' AND ' .
+			           '      owner_id IN (SELECT account_id ' .
+			           '                   FROM player ' .
+			           '                   WHERE game_id = ' . $player->getGameID() . ' AND ' .
+			           '                         alliance_id = ' . $player->getAllianceID() .
+			           '                  )' .
+			           'ORDER BY expire_time ASC'
 			);
 
 		if ($db->nextRecord()) {
@@ -395,6 +384,7 @@ function channel_msg_help($fp, $rdata)
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seedlist                Manages the seedlist' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !seed                    Displays a list of sectors you have not yet seeded' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !op                      Command to manage OPs' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :  !sd                      Command to manage supply/demands for ports' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !money                   Displays the funds the alliance owns' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !forces {Galaxy}         Will tell you when forces will expire. Can be used without parameters.' . EOL);
 

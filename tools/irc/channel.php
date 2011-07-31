@@ -19,7 +19,7 @@ function channel_join($fp, $rdata)
 		if ($nick == 'kiNky' && $user == 'cicika')
 			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
 		if ($nick == 'River' && $user == 'Serenity')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
+			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '8@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
 
 		$db = new SmrMySqlDatabase();
 
@@ -53,8 +53,6 @@ function channel_join($fp, $rdata)
 			// new nick?
 			$db->query('INSERT INTO irc_seen (nick, user, host, channel, signed_on) VALUES(' . $db->escapeString($nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
 		}
-
-		fputs($fp, 'WHOIS ' . $nick . EOL);
 
 		// check if player joined alliance chat
 		$db->query('SELECT * FROM irc_alliance_has_channel WHERE channel = ' . $db->escapeString($channel));
