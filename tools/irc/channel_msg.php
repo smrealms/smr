@@ -86,6 +86,8 @@ function channel_msg_with_registration($fp, $rdata)
 			return true;
 		if (channel_msg_sd_set($fp, $rdata, $account, $player))
 			return true;
+		if (channel_msg_sd_del($fp, $rdata, $account, $player))
+			return true;
 		if (channel_msg_sd_list($fp, $rdata, $account, $player))
 			return true;
 
