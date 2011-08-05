@@ -17,10 +17,10 @@ if ($db->getNumRows())
 		$loggedAccounts[$accountID] = array('AccountID' => $accountID,
 								'Login' => $db->getField('login'),
 								'TotalEntries' => $db->getField('number_of_entries'),
-								'Checked' => is_array($var['account_ids']) && in_array($account_id, $var['account_ids']),
+								'Checked' => is_array($var['account_ids']) && in_array($accountID, $var['account_ids']),
 								'Notes' => '');
 
-		$db2->query('SELECT notes FROM log_has_notes WHERE account_id = '.$account_id);
+		$db2->query('SELECT notes FROM log_has_notes WHERE account_id = '.$accountID);
 		if ($db2->nextRecord())
 			$loggedAccounts[$accountID]['Notes'] = nl2br($db2->getField('notes'));
 	}
