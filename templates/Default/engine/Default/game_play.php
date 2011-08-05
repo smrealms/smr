@@ -94,12 +94,11 @@ if(isset($Games['Join']))
 				<td><?php echo $Game['Credits']; ?></td>
 			</tr>
 		<?php } ?>
-	</table><br />
-	<br /><?php
+	</table><?php
 }
 else
 {
-	?><p>You have joined all open games.</p><br /><?php
+	?><p>You have joined all open games.</p><?php
 } ?>
 <br />
 <br />
@@ -131,8 +130,10 @@ if(isset($AdminPermissions))
 			} ?>
 		</li><?php
 	} ?>
-	</ul><?php
-} ?><br /><br />
+	</ul>
+	<br />
+	<br /><?php
+} ?>
 <h1>Previous Games</h1><?php
 if(isset($Games['Previous']))
 { ?>
@@ -156,10 +157,9 @@ if(isset($Games['Previous']))
 				<td><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
 			</tr>
 		<?php } ?>
-	</table><br />
-	<br /><?php
+	</table><?php
 }
 else
 {
-	?><p>There are no previous games.</p><br /><?php
+	?><p>There are no previous games.</p><?php
 } ?>
