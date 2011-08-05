@@ -101,36 +101,6 @@ else
 {
 	?><p>You have joined all open games.</p><br /><?php
 } ?>
-<h1>Previous Games</h1><?php
-if(isset($Games['Previous']))
-{ ?>
-	<table class="standard">
-		<tr>
-			<th width="150">Game Name</th>
-			<th>Start Date</th>
-			<th>End Date</th>
-			<th>Game Speed</th>
-			<th colspan="3">Options</th>
-		</tr><?php
-		foreach($Games['Previous'] as $Game)
-		{ ?>
-			<tr>
-				<td width="35%"><?php if(isset($Game['PreviousGameLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameLink'])){ ?></a><?php } ?></td>
-				<td><?php echo $Game['StartDate'] ?></td>
-				<td><?php echo $Game['EndDate'] ?></td>
-				<td><?php echo $Game['Speed'] ?></td>
-				<td><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
-				<td><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
-				<td><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
-			</tr>
-		<?php } ?>
-	</table><br />
-	<br /><?php
-}
-else
-{
-	?><p>There are no previous games.</p><br /><?php
-} ?>
 <br />
 <br />
 <h1>Donate Money</h1>
@@ -162,4 +132,34 @@ if(isset($AdminPermissions))
 		</li><?php
 	} ?>
 	</ul><?php
+} ?><br /><br />
+<h1>Previous Games</h1><?php
+if(isset($Games['Previous']))
+{ ?>
+	<table class="standard">
+		<tr>
+			<th width="150">Game Name</th>
+			<th>Start Date</th>
+			<th>End Date</th>
+			<th>Game Speed</th>
+			<th colspan="3">Options</th>
+		</tr><?php
+		foreach($Games['Previous'] as $Game)
+		{ ?>
+			<tr>
+				<td width="35%"><?php if(isset($Game['PreviousGameLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameLink'])){ ?></a><?php } ?></td>
+				<td><?php echo $Game['StartDate'] ?></td>
+				<td><?php echo $Game['EndDate'] ?></td>
+				<td><?php echo $Game['Speed'] ?></td>
+				<td><a href="<?php echo $Game['PreviousGameHOFLink']; ?>">Hall Of Fame</a></td>
+				<td><a href="<?php echo $Game['PreviousGameNewsLink']; ?>">Game News</a></td>
+				<td><?php if(isset($Game['PreviousGameStatsLink'])){ ?><a href="<?php echo $Game['PreviousGameStatsLink']; ?>">Game Stats</a><?php } ?></td>
+			</tr>
+		<?php } ?>
+	</table><br />
+	<br /><?php
+}
+else
+{
+	?><p>There are no previous games.</p><br /><?php
 } ?>
