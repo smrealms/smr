@@ -16,7 +16,7 @@ if ($db->getNumRows())
 		$accountID = $db->getInt('account_id');
 		$loggedAccounts[$accountID] = array('AccountID' => $accountID,
 								'Login' => $db->getField('login'),
-								'TotalEntries' => $db->getField('number_of_entries'),
+								'TotalEntries' => $db->getInt('number_of_entries'),
 								'Checked' => is_array($var['account_ids']) && in_array($accountID, $var['account_ids']),
 								'Notes' => '');
 
