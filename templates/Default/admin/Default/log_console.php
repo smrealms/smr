@@ -36,7 +36,6 @@ if (count($LoggedAccounts)>0)
 				<td>
 					<input type="submit" name="action" value="View" id="InputFields" />	&nbsp;&nbsp;<input type="submit" name="action" value="Delete" id="InputFields" />
 				</td>
-				<td>&nbsp;</td>
 			</tr>
 		</table>
 
