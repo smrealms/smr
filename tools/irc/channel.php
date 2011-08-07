@@ -3,23 +3,23 @@
 function channel_join($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:#(.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
 
-		echo_r('[JOIN] ' . $nick . '!' . $user . '@' . $host . ' joined #' . $channel);
+		echo_r('[JOIN] ' . $nick . '!' . $user . '@' . $host . ' joined ' . $channel);
 
 //		if ($nick == 'MrSpock' && $user == 'mrspock')
-//			fputs($fp, 'PRIVMSG #' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
+//			fputs($fp, 'PRIVMSG ' . $channel . ' :The creator! The God! He\'s among us! Praise him!' . EOL);
 		if ($nick == 'Holti' && $user == 'Holti')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
 		if ($nick == 'kiNky' && $user == 'cicika')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '4@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
 		if ($nick == 'River' && $user == 'Serenity')
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '8@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . chr(1) . 'ACTION hands ' . $nick . ' a ' . chr(3) . '8@' . chr(3) . '3' . chr(2) . '}' . chr(2) . '-,`--' . chr(1) . EOL);
 
 		$db = new SmrMySqlDatabase();
 
@@ -34,9 +34,9 @@ function channel_join($fp, $rdata)
 			$seen_by = $db->getField('seen_by');
 
 			if ($seen_count > 1) {
-				fputs($fp, 'PRIVMSG #' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_count . ' players were looking for you, the last one being ' . $seen_by . EOL);
+				fputs($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_count . ' players were looking for you, the last one being ' . $seen_by . EOL);
 			} elseif ($seen_count > 0) {
-				fputs($fp, 'PRIVMSG #' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
+				fputs($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
 			}
 
 			$db->query('UPDATE irc_seen SET ' .
@@ -81,7 +81,7 @@ function channel_join($fp, $rdata)
 
 				// if we are not in the attendees list we give the player a hint
 				if (array_search($nick, $attendees) === false && $nick !== 'Caretaker') {
-					fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
+					fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
 				}
 			}
 
@@ -101,7 +101,7 @@ function channel_part($fp, $rdata)
 
 	// :Azool!Azool@coldfront-F706F7E1.co.hfc.comcastbusiness.net PART #smr-irc :
 	// :SomeGuy!mrspock@coldfront-DD847655.dip.t-dialin.net PART #smr-irc
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPART\s#(.*?)\s/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPART\s(.*?)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];

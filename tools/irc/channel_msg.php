@@ -3,7 +3,7 @@
 function channel_msg_with_registration($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -12,7 +12,7 @@ function channel_msg_with_registration($fp, $rdata)
 
 		// check if the query is in public channel
 		if ($channel == 'smr' || $channel == 'smr-bar') {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
 			return true;
 		}
 
@@ -34,27 +34,27 @@ function channel_msg_with_registration($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$alliance =& SmrAlliance::getAllianceByIrcChannel($channel, true);
 		if ($alliance == null) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', the channel #' . $channel . ' has not been registered with me.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
 			return true;
 		}
 
 		// get smr account
 		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 		if ($account == null) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
 			return true;
 		}
 
 		// get smr player
 		$player =& SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameId(), true);
 		if ($player == null) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
 			return true;
 		}
 
 		// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
 		if ($player->getAllianceID() != $alliance->getAllianceID()) {
-			fputs($fp, 'KICK #' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
+			fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
 			return true;
 		}
 
@@ -109,7 +109,7 @@ function channel_msg_seen($fp, $rdata)
 
 	// MrSpock, please look a bit closer at the memberlist of this channel.
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seen\s(.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seen\s(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -117,11 +117,11 @@ function channel_msg_seen($fp, $rdata)
 		$channel = $msg[4];
 		$seennick = $msg[5];
 
-		echo_r('[SEEN] by ' . $nick . ' in #' . $channel . ' for ' . $seennick);
+		echo_r('[SEEN] by ' . $nick . ' in ' . $channel . ' for ' . $seennick);
 
 		// if the user asks for himself
 		if ($nick == $seennick) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', do I look like a mirror?' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', do I look like a mirror?' . EOL);
 			return true;
 		}
 
@@ -153,16 +153,16 @@ function channel_msg_seen($fp, $rdata)
 				           'seen_by = ' . $db->escapeString($nick) . ' ' .
 				           'WHERE seen_id = ' . $seen_id);
 
-				fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', ' . $seennick . ' (' . $seenuser . '@' . $seenhost . ') was last seen quitting ' . $channel . ' ' . format_time(time() - $signed_off) . ' ago after spending ' . format_time($signed_off - $signed_on) . ' there.' . EOL);
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', ' . $seennick . ' (' . $seenuser . '@' . $seenhost . ') was last seen quitting ' . $channel . ' ' . format_time(time() - $signed_off) . ' ago after spending ' . format_time($signed_off - $signed_on) . ' there.' . EOL);
 			} else {
-				fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', please look a bit closer at the memberlist of this channel.' . EOL);
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please look a bit closer at the memberlist of this channel.' . EOL);
 			}
 
 			return true;
 
 		}
 
-		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', I don\'t remember seeing ' . $seennick . '.' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', I don\'t remember seeing ' . $seennick . '.' . EOL);
 		return true;
 
 	}
@@ -174,14 +174,14 @@ function channel_msg_seen($fp, $rdata)
 function channel_msg_money($fp, $rdata, $account, $player)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!money\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!money\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
 
-		echo_r('[MONEY] by ' . $nick . ' in #' . $channel);
+		echo_r('[MONEY] by ' . $nick . ' in ' . $channel);
 
 		// get money from AA
 		$db = new SmrMySqlDatabase();
@@ -191,7 +191,7 @@ function channel_msg_money($fp, $rdata, $account, $player)
 		           '      game_id = ' . $player->getGameID());
 
 		if ($db->nextRecord())
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The alliance has ' . number_format($db->getField('alliance_account')) . ' credits in the bank account.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The alliance has ' . number_format($db->getField('alliance_account')) . ' credits in the bank account.' . EOL);
 
 		$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank ' .
 		           'FROM player ' .
@@ -199,8 +199,8 @@ function channel_msg_money($fp, $rdata, $account, $player)
 		           '      game_id = ' . $player->getGameID());
 
 		if ($db->nextRecord()) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them' . EOL);
-			fputs($fp, 'PRIVMSG #' . $channel . ' :and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits in their personal bank accounts.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits in their personal bank accounts.' . EOL);
 		}
 
 		$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds ' .
@@ -212,8 +212,8 @@ function channel_msg_money($fp, $rdata, $account, $player)
 		           '                         game_id = ' . $player->getGameID() .
 		           '                   )');
 		if ($db->nextRecord()) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets' . EOL);
-			fputs($fp, 'PRIVMSG #' . $channel . ' :and ' . number_format($db->getField('total_bonds')) . ' credits in bonds.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :and ' . number_format($db->getField('total_bonds')) . ' credits in bonds.' . EOL);
 		}
 
 		return true;
@@ -227,7 +227,7 @@ function channel_msg_money($fp, $rdata, $account, $player)
 function channel_msg_timer($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG #(.*) :!timer(\s\d+)?(\s.+)?\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*) PRIVMSG (.*) :!timer(\s\d+)?(\s.+)?\s$/i', $rdata, $msg)) {
 
 		global $events;
 
@@ -239,10 +239,10 @@ function channel_msg_timer($fp, $rdata)
 		// no countdown means we give a list of active timers
 		if (!isset($msg[5])) {
 
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The floowing timers have been defined for this channel:' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The floowing timers have been defined for this channel:' . EOL);
 			foreach ($events as $event) {
 				if ($event[2] == $channel) {
-					fputs($fp, 'PRIVMSG #' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);
+					fputs($fp, 'PRIVMSG ' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);
 				}
 			}
 
@@ -251,7 +251,7 @@ function channel_msg_timer($fp, $rdata)
 		}
 
 		if (!is_numeric($msg[5])) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :I need to know in how many minutes the timer needs to go off. Example: !timer 25 message to channel' . EOL);
 		}
 
 		$countdown = intval($msg[5]);
@@ -260,11 +260,11 @@ function channel_msg_timer($fp, $rdata)
 		if (isset($msg[6]))
 			$message .= ' ' . $msg[6];
 
-		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in #' . $channel);
+		echo_r('[TIMER] ' . $nick . ' started a timer with ' . $countdown . ' minute(s) (' . $message . ') in ' . $channel);
 
 		array_push($events, array(time() + $countdown * 60, $message, $channel));
 
-		fputs($fp, 'PRIVMSG #' . $channel . ' :The timer has been started and will go off in ' . $countdown . ' minute(s).' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :The timer has been started and will go off in ' . $countdown . ' minute(s).' . EOL);
 
 		return true;
 
@@ -277,7 +277,7 @@ function channel_msg_timer($fp, $rdata)
 function channel_msg_8ball($fp, $rdata, $answers)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -285,9 +285,9 @@ function channel_msg_8ball($fp, $rdata, $answers)
 		$channel = $msg[4];
 		$question = $msg[4];
 
-		echo_r('[8BALL] by ' . $nick . ' in #' . $channel . '. Question: ' . $question);
+		echo_r('[8BALL] by ' . $nick . ' in ' . $channel . '. Question: ' . $question);
 
-		fputs($fp, 'PRIVMSG #' . $channel . ' :' . $answers[rand(0, count($answers) - 1)] . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $answers[rand(0, count($answers) - 1)] . EOL);
 
 		return true;
 
@@ -300,7 +300,7 @@ function channel_msg_8ball($fp, $rdata, $answers)
 function channel_msg_forces($fp, $rdata, $account, $player)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -308,7 +308,7 @@ function channel_msg_forces($fp, $rdata, $account, $player)
 		$channel = $msg[4];
 		$galaxy = trim($msg[5]);
 
-		echo_r('[FORCE_EXPIRE] by ' . $nick . ' in #' . $channel . ' Galaxy: ' . $galaxy);
+		echo_r('[FORCE_EXPIRE] by ' . $nick . ' in ' . $channel . ' Galaxy: ' . $galaxy);
 
 		// did we get a galaxy name?
 		$db = new SmrMySqlDatabase();
@@ -341,9 +341,9 @@ function channel_msg_forces($fp, $rdata, $account, $player)
 			$sector_id = $db->getField('sector');
 			$expire = $db->getField('expire_time');
 
-			fputs($fp, 'PRIVMSG #' . $channel . ' :Forces in sector ' . $sector_id . ' will expire in ' . format_time($expire - time()) . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :Forces in sector ' . $sector_id . ' will expire in ' . format_time($expire - time()) . EOL);
 		} else {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', your alliance does not own any forces that could expire.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance does not own any forces that could expire.' . EOL);
 		}
 
 
@@ -359,7 +359,7 @@ function channel_msg_help($fp, $rdata)
 {
 
 	// global help?
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!help\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!help\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -388,12 +388,12 @@ function channel_msg_help($fp, $rdata)
 		fputs($fp, 'NOTICE ' . $nick . ' :  !op                      Command to manage OPs' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !sd                      Command to manage supply/demands for ports' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :  !money                   Displays the funds the alliance owns' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :  !forces {Galaxy}         Will tell you when forces will expire. Can be used without parameters.' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :  !forces [Galaxy]         Will tell you when forces will expire. Can be used without parameters.' . EOL);
 
 		return true;
 
 		// help on a spec command?
-	} elseif (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!help\s(.*)\s$/i', $rdata, $msg)) {
+	} elseif (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!help\s(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];

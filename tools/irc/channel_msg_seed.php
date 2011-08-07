@@ -3,14 +3,14 @@
 function channel_msg_seed($fp, $rdata, $account, $player)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seed\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seed\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
 
-		echo_r('[SEED] by ' . $nick . ' in #' . $channel);
+		echo_r('[SEED] by ' . $nick . ' in ' . $channel);
 
 		// get the seedlist from db
 		$db = new SmrMySqlDatabase();
@@ -29,14 +29,14 @@ function channel_msg_seed($fp, $rdata, $account, $player)
 		}
 
 		if (count($missing_seeds) == 0) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you seeded all sectors.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you seeded all sectors.' . EOL);
 		} else {
 			$seed_list = '';
 			foreach ($missing_seeds as $sector) {
 				$seed_list .= $sector . ', ';
 			}
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', you are missing the following seeds:' . EOL);
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . substr_replace($seed_list, ' [' . count($missing_seeds) . ' missing seed(s)]', -2, 1) . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you are missing the following seeds:' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . substr_replace($seed_list, ' [' . count($missing_seeds) . ' missing seed(s)]', -2, 1) . EOL);
 		}
 
 		return true;
@@ -50,19 +50,19 @@ function channel_msg_seed($fp, $rdata, $account, $player)
 function channel_msg_seedlist($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seedlist\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
 
-		echo_r('[SEEDLIST] by ' . $nick . ' in #' . $channel);
+		echo_r('[SEEDLIST] by ' . $nick . ' in ' . $channel);
 
-		fputs($fp, 'PRIVMSG #' . $channel . ' :The !seedlist command enables alliance leader to add or remove sectors to the seedlist' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :The following sub commands are available:' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !seedlist add <sector>        Adds <sector> to the seedlist' . EOL);
-		fputs($fp, 'PRIVMSG #' . $channel . ' :  !seedlist del <sector>        Removes <sector> from seedlist' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :The !seedlist command enables alliance leader to add or remove sectors to the seedlist' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :The following sub commands are available:' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist add <sector>        Adds <sector> to the seedlist' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist del <sector>        Removes <sector> from seedlist' . EOL);
 
 		return true;
 
@@ -75,7 +75,7 @@ function channel_msg_seedlist($fp, $rdata)
 function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seedlist add (.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist add (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -83,17 +83,17 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 		$channel = $msg[4];
 		$sector = $msg[5];
 
-		echo_r('[SEEDLIST_ADD] by ' . $nick . ' in #' . $channel);
+		echo_r('[SEEDLIST_ADD] by ' . $nick . ' in ' . $channel);
 
 		// check if $nick is leader
 		if (!$player->isAllianceLeader(true)) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
 			return true;
 		}
 
 		// see if the sector is numeric
 		if (!is_numeric($sector)) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector needs to be numeric. Example: !seedlist add 1537' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector needs to be numeric. Example: !seedlist add 1537' . EOL);
 			return true;
 		}
 
@@ -106,7 +106,7 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 		);
 
 		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' does not exist in current game.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' does not exist in current game.' . EOL);
 			return true;
 		}
 
@@ -119,7 +119,7 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 		);
 
 		if ($db->nextRecord()) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' is already in the seedlist.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' is already in the seedlist.' . EOL);
 			return true;
 		}
 
@@ -128,7 +128,7 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 		           '(alliance_id, game_id, sector_id) ' .
 		           'VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $db->escapeNumber($sector) . ')');
 
-		fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' has been added.' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' has been added.' . EOL);
 		return true;
 
 	}
@@ -140,7 +140,7 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s#(.*)\s:!seedlist del (.*)\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist del (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -148,17 +148,17 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 		$channel = $msg[4];
 		$sector = $msg[5];
 
-		echo_r('[SEEDLIST_DEL] by ' . $nick . ' in #' . $channel);
+		echo_r('[SEEDLIST_DEL] by ' . $nick . ' in ' . $channel);
 
 		// check if $nick is leader
 		if (!$player->isAllianceLeader(true)) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance manages the seedlist.' . EOL);
 			return true;
 		}
 
 		// see if the sector is numeric
 		if (!is_numeric($sector)) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector needs to be numeric. Example: !seedlist del 1537' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector needs to be numeric. Example: !seedlist del 1537' . EOL);
 			return true;
 		}
 
@@ -172,7 +172,7 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 		);
 
 		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' is not part of the seedlist.' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' is not part of the seedlist.' . EOL);
 			return true;
 		}
 
@@ -183,7 +183,7 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 				   '  AND  sector_id = ' . $db->escapeNumber($sector)
 		);
 
-		fputs($fp, 'PRIVMSG #' . $channel . ' :The sector ' . $sector . ' has been deleted.' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' has been deleted.' . EOL);
 		return true;
 
 	}

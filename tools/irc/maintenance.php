@@ -12,8 +12,8 @@ function check_events($fp)
 	foreach($events as $key => $event) {
 
 		if ($event[0] < time()) {
-			echo_r('[TIMER] finished. Sending a note to #' . $event[2]);
-			fputs($fp, 'NOTICE #' . $event[2] . ' :' . $event[1] . EOL);
+			echo_r('[TIMER] finished. Sending a note to ' . $event[2]);
+			fputs($fp, 'NOTICE ' . $event[2] . ' :' . $event[1] . EOL);
 			unset($events[$key]);
 		}
 

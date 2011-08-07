@@ -90,7 +90,7 @@ function server_msg_318($fp, $rdata)
 				if ($db->nextRecord()) {
 					eval($action[3]);
 				} else {
-					fputs($fp, 'PRIVMSG #' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
 		        
 	        }
@@ -109,7 +109,7 @@ function server_msg_352($fp, $rdata)
 {
 
 	// :ice.coldfront.net 352 Caretaker #KMFDM caretaker coldfront-425DB813.dip.t-dialin.net ice.coldfront.net Caretaker Hr :0 Official SMR bot
-    if (preg_match('/^:(.*?) 352 Caretaker #(.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg)) {
+    if (preg_match('/^:(.*?) 352 Caretaker (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg)) {
 
         $server = $msg[1];
         $channel = $msg[2];
@@ -117,7 +117,7 @@ function server_msg_352($fp, $rdata)
         $host = $msg[4];
         $nick = $msg[6];
 
-        echo_r('[WHO] #' . $channel . ': ' . $nick);
+        echo_r('[WHO] ' . $channel . ': ' . $nick);
 
         $db = new SmrMySqlDatabase();
 
@@ -141,9 +141,6 @@ function server_msg_352($fp, $rdata)
             $db->query('INSERT INTO irc_seen (nick, user, host, channel, signed_on) ' .
                        'VALUES(' . $db->escapeString($nick) . ', ' . $db->escapeString($user) . ', ' . $db->escapeString($host) . ', ' . $db->escapeString($channel) . ', ' . time() . ')');
         }
-
-//	    sleep(1);
-//	    fputs($fp, 'WHOIS ' . $nick . EOL);
 
         return true;
 
