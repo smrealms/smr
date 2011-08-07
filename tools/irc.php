@@ -137,9 +137,9 @@ if ($fp) {
 		$alliance_channel = $db->getField('channel');
 
 		// join channels
-		fputs($fp, 'JOIN #' . $alliance_channel . EOL);
+		fputs($fp, 'JOIN ' . $alliance_channel . EOL);
 		sleep(1);
-		fputs($fp, 'WHO #' . $alliance_channel . EOL);
+		fputs($fp, 'WHO ' . $alliance_channel . EOL);
 	}
 
 	while (!feof($fp))
