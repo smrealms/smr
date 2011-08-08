@@ -425,82 +425,54 @@ class SmrPort
 		}
 	}
 	
-	protected function doUpgrade()
+	protected function selectAndAddGood($goodClass)
 	{
 		$GOODS = Globals::getGoods();
 		shuffle($GOODS);
+		do
+		{
+			if(count($GOODS) == 0) return false;
+			$newGood = array_shift($GOODS);
+		} while( $this->hasGood($newGood['ID']) || $newGood['Class'] != $goodClass );
 		
-		$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
-		$count = count($GOODS);
+		$transactionType = mt_rand(1,2) == 1 ? 'Buy' : 'Sell';
+		$this->addPortGood($newGood['ID'],$transactionType);
+		return $newGood;
+	}
+	
+	protected function doUpgrade()
+	{
 		switch($this->getLevel())
 		{
 			case 0:
 				for($i=0;$i<3;++$i) // Add 3 goods for upgrading to level 1
 				{
-					$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell'; //Regenerate type for each good.
-					do
-					{
-						$newGood = array_shift($GOODS);
-					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
-					if($count == 0)
-						break;
-					$this->addPortGood($newGood['ID'],$type);
+					if( $this->selectAndAddGood(1) === false ) break;
 				}
 			break;
 			
 			case 1:
-				do
-				{
-					$newGood = array_shift($GOODS);
-				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->addPortGood($newGood['ID'],$type);
+				$this->selectAndAddGood(1);
 			break;
 			
 			case 2:
 			case 3:
 			case 4:
 			case 5:
-				do
-				{
-					$newGood = array_shift($GOODS);
-				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=2) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->addPortGood($newGood['ID'],$type);
+				$this->selectAndAddGood(2);
 			break;
 			
 			case 6:
 			case 7:
-				do
-				{
-					$newGood = array_shift($GOODS);
-				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->addPortGood($newGood['ID'],$type);
+				$this->selectAndAddGood(3);
 			break;
 
 			case 8: // Add 1 level 3, and 50% chance of level 4
-				do
-				{
-					$newGood = array_shift($GOODS);;
-				} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->addPortGood($newGood['ID'],$type);
+				$this->selectAndAddGood(3);
 		
 				if (mt_rand(1,100) <= 50) //50% chance to get tier 4 when upgrading to level 9
 				{
-					$type = (mt_rand(1,2) == 1) ? 'Buy' : 'Sell';
-					do
-					{
-						$newGood = array_shift($GOODS);;
-					} while( ($this->hasGood($newGood['ID']) || $newGood['Class']!=4) && ($count = count($GOODS))!=0 );
-					if($count == 0)
-						break;
-					$this->addPortGood($newGood['ID'],$type);
+					$this->selectAndAddGood(4);
 				}
 			break;
 			
