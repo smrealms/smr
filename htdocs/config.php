@@ -15,6 +15,9 @@ define('TIME_FOR_WAR_VOTE_FED_SAFETY',259200); //3 days
 define('TIME_MAP_BUY_WAIT',259200); //3 days
 define('VOTE_BONUS_TURNS_TIME',1200); //20 mins
 
+define('MAX_IMAGE_SIZE',30); //in kb
+define('MAX_IMAGE_WIDTH',200);
+define('MAX_IMAGE_HEIGHT',30);
 
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 define('MULTI_CHECKING_COOKIE_VERSION','v3');

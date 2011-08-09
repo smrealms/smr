@@ -14,7 +14,7 @@
 	{ ?>
 		So you want to name your ship?  Great!
 					
-		So...what do you want to name it? (max 48 text chars) (max 30 height by 200 width and 20k for logos)<br />
+		So...what do you want to name it? (max 48 text chars) (max <?php echo MAX_IMAGE_HEIGHT; ?> height by <?php echo MAX_IMAGE_WIDTH; ?> width and <?php echo MAX_IMAGE_SIZE; ?>k for logos)<br />
 		<form name="ship_naming" enctype="multipart/form-data" method="POST" action="<?php echo $ShipNameFormHref; ?>">
 			<input type="text" name="ship_name" value="Enter Name Here" id="InputFields"><br />
 			<br />
