@@ -27,18 +27,20 @@ if(!isset($var['ShipName']))
 			// get dimensions
 			$size = getimagesize($_FILES['photo']['tmp_name']);
 			// check if we really have a jpg
-			if ($size[2] < 1 || $size[2] > 3)
+			if($size[2] != IMG_JPG && $size[2] != IMG_PNG && $size[2] != IMG_GIF)
+			{
 				create_error('Only gif, jpg or png-image allowed! s = '.$size[2]);
+			}
 		
-			// check if width > 200
-			if ($size[0] > 200)
-				create_error('Image is wider than 200 pixels!');
+			// check if width > MAX_IMAGE_WIDTH
+			if ($size[0] > MAX_IMAGE_WIDTH)
+				create_error('Image is wider than '.MAX_IMAGE_WIDTH.' pixels!');
 		
-			// check if height > 30
-			if ($size[1] > 30)
-				create_error('Image is higher than 30 pixels!');
-			if (filesize($_FILES['photo']['tmp_name']) > 20560 && SmrSession::$account_id >= 100)
-				create_error('Image is bigger than 20k');
+			// check if height > MAX_IMAGE_HEIGHT
+			if ($size[1] > MAX_IMAGE_HEIGHT)
+				create_error('Image is taller than '.MAX_IMAGE_HEIGHT.' pixels!');
+			if (filesize($_FILES['photo']['tmp_name']) > MAX_IMAGE_SIZE*1024)
+				create_error('Image is bigger than '.MAX_IMAGE_SIZE.'k');
 			
 			$name = '<img style="padding:3px;" src="'.URL.'/upload/' . $player->getAccountID() . 'logo"><br />';
 			move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $player->getAccountID() . 'logo');
