@@ -78,11 +78,16 @@ function channel_msg_op_info($fp, $rdata, $account, $player)
 
 			// get uncached ship
 			$ship =& SmrShip::getShip($player, true);
-
 			$op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600));
+
+			$msg = 'You are on the YES list and you will have ';
+
 			if ($op_turns > $player->getMaxTurns())
-				$op_turns = $player->getMaxTurns();
-			fputs($fp, 'PRIVMSG ' . $channel . ' :You are on the YES list and you will have ' . ($op_turns) . ' turns by then.' . EOL);
+				$msg .= 'max turns by then. If you do not move you\'ll waste ' . ($player->getMaxTurns() - $op_turns) . ' turns.';
+			else
+				$msg .= $op_turns . ' turns by then.';
+
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $msg . EOL);
 
 		}
 		elseif (array_search($nick, $no) !== false) {
@@ -244,7 +249,7 @@ function channel_msg_op_turns($fp, $rdata, $account, $player)
 			if ($attendeePlayer == null)
 				continue;
 
-			$oppers[$attendee] = $attendeePlayer->getTurns();
+			$oppers[$attendee . ' (' . $attendeePlayer->getPlayerName() . ')'] = $attendeePlayer->getTurns();
 		}
 
 		// sort by turns
