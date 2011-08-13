@@ -83,7 +83,7 @@ function channel_msg_op_info($fp, $rdata, $account, $player)
 			$msg = 'You are on the YES list and you will have ';
 
 			if ($op_turns > $player->getMaxTurns())
-				$msg .= 'max turns by then. If you do not move you\'ll waste ' . ($player->getMaxTurns() - $op_turns) . ' turns.';
+				$msg .= 'max turns by then. If you do not move you\'ll waste ' . ($op_turns - $player->getMaxTurns()) . ' turns.';
 			else
 				$msg .= $op_turns . ' turns by then.';
 
