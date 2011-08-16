@@ -206,8 +206,7 @@ abstract class AbstractSmrAccount
 			if ($expire_time > 0 && $expire_time < TIME)
 			{
 				// get rid of the expire entry
-				$admin = null;
-				$this->unbanAccount($admin);
+				$this->unbanAccount();
 				return false;
 			}
 			return $reason;
@@ -1199,7 +1198,7 @@ abstract class AbstractSmrAccount
 			$this->db->query('DELETE FROM account_exceptions WHERE account_id = '.$this->getAccountID());
 	}
 	
-	public function unbanAccount(SmrAccount &$admin,$currException=false)
+	public function unbanAccount(SmrAccount &$admin = null,$currException=false)
 	{
 		$adminID = 0;
 		if($admin!==null)
