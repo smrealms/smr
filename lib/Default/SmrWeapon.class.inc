@@ -1,5 +1,6 @@
 <?php
 require_once('AbstractSmrCombatWeapon.class.inc');
+require_once('WeightedRandom.class.inc');
 
 class SmrWeapon extends AbstractSmrCombatWeapon
 {
@@ -87,6 +88,16 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function getBuyerRestriction()
 	{
 		return $this->buyerRestriction;
+	}
+	
+	protected function &getWeightedRandom(AbstractSmrPlayer &$player)
+	{
+		return WeightedRandom::getWeightedRandom($player,'Weapon',$this->getWeaponTypeID());
+	}
+	
+	protected function checkMiss(AbstractSmrPlayer &$player, $percent)
+	{
+		return $this->getWeightedRandom($player)->percentFailed($percent);
 	}
 	
 	public static function getPlayerLevelAccuracyMod(AbstractSmrPlayer &$player)
@@ -275,7 +286,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function &shootForces(AbstractSmrPlayer &$weaponPlayer, SmrForce &$forces)
 	{
 		$return = array('Weapon' => &$this, 'TargetForces' => &$forces);
-		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces)) //Check if we miss
+		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstForces($weaponPlayer,$forces))) //Check if we miss
 		{
 			$return['Hit'] = false;
 			return $return;
@@ -287,7 +298,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function &shootPort(AbstractSmrPlayer &$weaponPlayer, SmrPort &$port)
 	{
 		$return = array('Weapon' => &$this, 'TargetPort' => &$port);
-		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPort($weaponPlayer,$port)) //Check if we miss
+		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPort($weaponPlayer,$port))) //Check if we miss
 		{
 			$return['Hit'] = false;
 			return $return;
@@ -299,7 +310,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function &shootPlanet(AbstractSmrPlayer &$weaponPlayer, SmrPlanet &$planet, $delayed)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlanet' => &$planet);
-		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPlanet($weaponPlayer,$planet)) //Check if we miss
+		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlanet($weaponPlayer,$planet))) //Check if we miss
 		{
 			$return['Hit'] = false;
 			return $return;
@@ -311,7 +322,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function &shootPlayer(AbstractSmrPlayer &$weaponPlayer, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
-		if(mt_rand(0,99)>=$this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer)) //Check if we miss
+		if($this->checkMiss($weaponPlayer, $this->getModifiedAccuracyAgainstPlayer($weaponPlayer,$targetPlayer))) //Check if we miss
 		{
 			$return['Hit'] = false;
 			return $return;
@@ -329,7 +340,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function &shootPlayerAsPort(SmrPort &$port, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
-		if(mt_rand(0,99)>=$this->getModifiedPortAccuracyAgainstPlayer($port,$targetPlayer)) //Check if we miss
+		if($this->checkMiss($targetPlayer, $this->getModifiedPortAccuracyAgainstPlayer($port,$targetPlayer))) //Check if the port misses, weight based upon the player being shot at.
 		{
 			$return['Hit'] = false;
 			return $return;
@@ -341,7 +352,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 	public function &shootPlayerAsPlanet(SmrPlanet &$planet, AbstractSmrPlayer &$targetPlayer)
 	{
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer);
-		if(mt_rand(0,99)>=$this->getModifiedPlanetAccuracyAgainstPlayer($planet,$targetPlayer)) //Check if we miss
+		if($this->checkMiss($targetPlayer, $this->getModifiedPlanetAccuracyAgainstPlayer($planet,$targetPlayer))) //Check if the planet misses, weight based upon the player being shot at.
 		{
 			$return['Hit'] = false;
 			return $return;
