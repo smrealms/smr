@@ -90,14 +90,14 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		return $this->buyerRestriction;
 	}
 	
-	protected function &getWeightedRandom(AbstractSmrPlayer &$player)
+	protected function &getWeightedRandomForPlayer(AbstractSmrPlayer &$player)
 	{
-		return WeightedRandom::getWeightedRandom($player,'Weapon',$this->getWeaponTypeID());
+		return WeightedRandom::getWeightedRandomForPlayer($player,'Weapon',$this->getWeaponTypeID());
 	}
 	
 	protected function checkMiss(AbstractSmrPlayer &$player, $percent)
 	{
-		return $this->getWeightedRandom($player)->percentFailed($percent);
+		return $this->getWeightedRandomForPlayer($player)->percentFailed($percent);
 	}
 	
 	public static function getPlayerLevelAccuracyMod(AbstractSmrPlayer &$player)
