@@ -603,6 +603,8 @@ function do_voodoo()
 		SmrForce::saveForces();
 		SmrPort::savePorts();
 		SmrPlanet::savePlanets();
+		if(class_exists('WeightedRandom', false))
+			WeightedRandom::saveWeightedRandoms();
 		release_lock();
 	}
 	
