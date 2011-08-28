@@ -1486,9 +1486,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return['DeadExp'] = 0;
 		if($expLossPercentage > 0)
 		{
-			$lostExp = floor($this->getExperience() * $expLossPercentage);
-			$return['DeadExp'] = $lostExp;
-			$this->decreaseExperience($lostExp);
+			$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
+			$this->decreaseExperience($return['DeadExp']);
 			$this->increaseHOF($return['DeadExp'],array('Dying','Experience','Lost'), HOF_PUBLIC);
 			if($this->isNPC())
 				$killer->increaseHOF($return['DeadExp'],array('Killing','Experience','Lost By NPCs Killed'), HOF_PUBLIC);
@@ -1647,7 +1646,10 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$owner->getAccountID().','.$owner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
-		$percentage = 33;
+		$expLossPercentage = .33;
+		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
+		$this->decreaseExperience($return['DeadExp']);
+		
 		if ($percentage > 0 )
 			$this->decreaseExperience($this->getExperience() * $percentage / 100);
 		$this->db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' .
@@ -1680,9 +1682,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message).','.ACCOUNT_ID_PORT.','.$this->getAccountID().','.$this->getAllianceID().')');
 		
-		$percentage = 33;
-		if ($percentage > 0 )
-			$this->decreaseExperience($this->getExperience() * $percentage / 100);
+		$expLossPercentage = .33;
+		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
+		$this->decreaseExperience($return['DeadExp']);
 		
 		$this->killPlayer($port->getSectorID());
 		return $return;
@@ -1707,9 +1709,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$planetOwner->getAccountID().','.$planetOwner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
-		$percentage = 33;
-		if ($percentage > 0 )
-			$this->decreaseExperience($this->getExperience() * $percentage / 100);
+		$expLossPercentage = .33;
+		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
+		$this->decreaseExperience($return['DeadExp']);
 		
 		$this->killPlayer($planet->getSectorID());
 		return $return;
