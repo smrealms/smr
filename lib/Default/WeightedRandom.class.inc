@@ -113,7 +113,7 @@ class WeightedRandom
 	{
 		if($this->hasChanged===true)
 		{
-			$this->db->query('REPLACE INTO port (game_id,account_id,type,type_id,weighting)' .
+			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)' .
 							'values' .
 							'('.$this->getGameID().
 							','.$this->getAccountID() .
