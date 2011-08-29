@@ -568,7 +568,7 @@ function do_voodoo()
 		// update turns on that player
 		$player->updateTurns();
 
-		if ($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT &&
+		if (!$player->isDead() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT &&
 			$player->getNewbieWarning() &&
 			$var['body'] != 'newbie_warning.php')
 			forward(create_container('skeleton.php', 'newbie_warning.php'));
@@ -630,6 +630,9 @@ function do_voodoo()
 	$template->display($var['url'],USING_AJAX);
 	
 	SmrSession::update();
+	
+	$xhprof_runs = new XHProfRuns_Default();
+	$run_id = $xhprof_runs->save_run(xhprof_disable(), "xhprof_foo");
 	exit;
 }
 
