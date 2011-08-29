@@ -55,7 +55,7 @@ class WeightedRandom
 		$this->typeID = $typeID;
 		
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = '.$this->db->escapeNumber($gameID).' AND account_id = '.$this->db->escapeNumber($accountID).' AND type = '.$this->db->escapeNumber($type).' AND type_id = '.$this->db->escapeNumber($typeID).' LIMIT 1');
+		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = '.$this->db->escapeNumber($gameID).' AND account_id = '.$this->db->escapeNumber($accountID).' AND type = '.$this->db->escapeString($type).' AND type_id = '.$this->db->escapeNumber($typeID).' LIMIT 1');
 		if ($this->db->nextRecord())
 		{
 			$this->weighting = $this->db->getField('weighting');
@@ -117,7 +117,7 @@ class WeightedRandom
 							'values' .
 							'('.$this->getGameID().
 							','.$this->getAccountID() .
-							','.$this->getType() .
+							','.$this->db->escapeString($this->getType()) .
 							','.$this->getTypeID() .
 							','.$this->getWeighting().')');
 			$this->hasChanged=false;
