@@ -126,7 +126,7 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 		$param['to'] = $recv_account->getCellPhone();
 		$param['from'] = 'SMR';
 		$param['route'] = 'direct';
-		$param['debug'] = SMR_DEBUG;
+		$param['debug'] = SMS_DEBUG;
 		$param['message_id'] = '1';
 
 		foreach ($param as $key => $val)
@@ -147,10 +147,14 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 		           'VALUES (' . $account->getAccountID() . ', ' . time() . ', ' . $recv_account->getAccountID() . ', ' . $db->escapeString($recv_account->getCellPhone()) . ', ' . $response_code . ', ' . $message_id . ')');
 
 		// confirm sending
-		if ($response_code == 100)
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your text message will be delivered to ' . $recv_account->getIrcNick() . ' immediately.' . EOL);
-		else
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while i was trying to send your text message. Please contact MrSpock!' . EOL);
+		if (SMS_DEBUG) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', sending SMS messages is currently disabled.' . EOL);
+		} else {
+			if ($response_code == 100)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your text message will be delivered to ' . $recv_account->getIrcNick() . ' immediately.' . EOL);
+			else
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while i was trying to send your text message. Please contact MrSpock!' . EOL);
+		}
 
 		return true;
 
