@@ -3,7 +3,7 @@
 function channel_msg_with_registration($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd)\s/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd|sms)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
@@ -62,12 +62,14 @@ function channel_msg_with_registration($fp, $rdata)
 			return true;
 		if (channel_msg_forces($fp, $rdata, $account, $player))
 			return true;
+
 		if (channel_msg_seed($fp, $rdata, $account, $player))
 			return true;
 		if (channel_msg_seedlist_add($fp, $rdata, $account, $player))
 			return true;
 		if (channel_msg_seedlist_del($fp, $rdata, $account, $player))
 			return true;
+
 		if (channel_msg_op_info($fp, $rdata, $account, $player))
 			return true;
 		if (channel_msg_op_cancel($fp, $rdata, $account, $player))
@@ -89,6 +91,11 @@ function channel_msg_with_registration($fp, $rdata)
 		if (channel_msg_sd_del($fp, $rdata, $account, $player))
 			return true;
 		if (channel_msg_sd_list($fp, $rdata, $account, $player))
+			return true;
+
+		if (channel_msg_sms_search($fp, $rdata, $account, $player))
+			return true;
+		if (channel_msg_sms_send($fp, $rdata, $account, $player))
 			return true;
 
 	}
@@ -239,7 +246,7 @@ function channel_msg_timer($fp, $rdata)
 		// no countdown means we give a list of active timers
 		if (!isset($msg[5])) {
 
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The floowing timers have been defined for this channel:' . EOL);
+			fputs($fp, 'PRIVMSG ' . $channel . ' :The following timers have been defined for this channel:' . EOL);
 			foreach ($events as $event) {
 				if ($event[2] == $channel) {
 					fputs($fp, 'PRIVMSG ' . $channel . ' :' . $event[1] . ' in ' . format_time($event[0] - time()) . EOL);

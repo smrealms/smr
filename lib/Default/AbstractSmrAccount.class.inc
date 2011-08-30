@@ -92,6 +92,21 @@ abstract class AbstractSmrAccount
 		return $return;
 	}
 
+	public static function &findAccountByIrcNick($nick, $forceUpdate = false)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT account_id FROM account WHERE irc_nick LIKE '.$db->escapeString($nick).' LIMIT 2');
+		if($db->getNumRows() > 1) {
+			$return = true;
+			return $return;
+		} elseif($db->nextRecord()) {
+			return self::getAccount($db->getField('account_id'), $forceUpdate);
+		} else{
+			$return = null;
+			return $return;
+		}
+	}
+
 	public static function &createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral)
 	{
 		if($referral!=0)
@@ -215,6 +230,16 @@ abstract class AbstractSmrAccount
 			return false;
 	}
 	
+	public function is_sms_blacklisted()
+	{
+		$this->db->query('SELECT reason FROM account_sms_blacklist ' .
+			'WHERE account_id = '.$this->account_id.' LIMIT 1');
+		if ($this->db->nextRecord())
+			return $this->db->getField('reason');
+		else
+			return false;
+	}
+
 	function is_allowed($permission)
 	{
 		$this->db->query('SELECT account_id FROM account WHERE account_id = '.$this->account_id.' AND permission LIKE \'%'.$permission.'%\' LIMIT 1');
