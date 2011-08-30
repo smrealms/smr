@@ -95,6 +95,7 @@ require_once('irc/channel_msg.php');
 require_once('irc/channel_msg_op.php');
 require_once('irc/channel_msg_sd.php');
 require_once('irc/channel_msg_seed.php');
+require_once('irc/channel_msg_sms.php');
 require_once('irc/maintenance.php');
 
 // delete all seen stats that appear to be on (we do not want to take something for granted that happend while we were away)
@@ -125,21 +126,26 @@ if ($fp) {
 		sleep(1);
 		fputs($fp, 'WHO #smr' . EOL);
 		fputs($fp, 'WHO #smr-bar' . EOL);
-	}
 
-	// join all alliance channels
-	$db->query('SELECT    channel ' .
-	           'FROM      irc_alliance_has_channel ' .
-	           'LEFT JOIN game USING (game_id) ' .
-	           'WHERE     start_date < ' . time() .
-	           '  AND     end_date > ' . time());
-	while ($db->nextRecord()) {
-		$alliance_channel = $db->getField('channel');
+		// join all alliance channels
+		$db->query('SELECT    channel ' .
+				   'FROM      irc_alliance_has_channel ' .
+				   'LEFT JOIN game USING (game_id) ' .
+				   'WHERE     start_date < ' . time() .
+				   '  AND     end_date > ' . time());
+		while ($db->nextRecord()) {
+			$alliance_channel = $db->getField('channel');
 
-		// join channels
-		fputs($fp, 'JOIN ' . $alliance_channel . EOL);
+			// join channels
+			fputs($fp, 'JOIN ' . $alliance_channel . EOL);
+			sleep(1);
+			fputs($fp, 'WHO ' . $alliance_channel . EOL);
+		}
+
+	} else {
+		fputs($fp, 'JOIN #caretaker' . EOL);
 		sleep(1);
-		fputs($fp, 'WHO ' . $alliance_channel . EOL);
+		fputs($fp, 'WHO #caretaker' . EOL);
 	}
 
 	while (!feof($fp))
@@ -212,6 +218,8 @@ if ($fp) {
 		if (channel_msg_seen($fp, $rdata))
 			continue;
 		if (channel_msg_sd($fp, $rdata))
+			continue;
+		if (channel_msg_sms($fp, $rdata))
 			continue;
 
 		// channel msg (!xyz) with registration
