@@ -11,7 +11,7 @@ function channel_msg_with_registration($fp, $rdata)
 		$channel = $msg[4];
 
 		// check if the query is in public channel
-		if ($channel == 'smr' || $channel == 'smr-bar') {
+		if ($channel == '#smr' || $channel == '#smr-bar') {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
 			return true;
 		}
