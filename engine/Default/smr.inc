@@ -631,8 +631,6 @@ function do_voodoo()
 	
 	SmrSession::update();
 	
-	$xhprof_runs = new XHProfRuns_Default();
-	$run_id = $xhprof_runs->save_run(xhprof_disable(), "xhprof_foo");
 	exit;
 }
 
