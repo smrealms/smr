@@ -70,7 +70,7 @@ class SmrGame
 			$this->endDate				= $this->db->getInt('end_date');
 			$this->maxPlayers			= $this->db->getInt('max_players');
 			$this->maxTurns				= $this->db->getInt('max_turns');
-			$this->startTurns			= $this->db->getInt('start_turns');
+			$this->startTurnHours		= $this->db->getInt('start_turns');
 			$this->gameType				= $this->db->getField('game_type');
 			$this->creditsNeeded		= $this->db->getInt('credits_needed');
 			$this->gameSpeed			= $this->db->getReal('game_speed');
@@ -105,7 +105,7 @@ class SmrGame
 										', end_date = '.$this->db->escapeNumber($this->getEndDate()).
 										', max_players = '.$this->db->escapeNumber($this->getMaxPlayers()).
 										', max_turns = '.$this->db->escapeNumber($this->getMaxTurns()).
-										', start_turns = '.$this->db->escapeNumber($this->getStartTurns()).
+										', start_turns = '.$this->db->escapeNumber($this->getStartTurnHours()).
 										', game_type = '.$this->db->escapeString($this->getGameType()).
 										', credits_needed = '.$this->db->escapeNumber($this->getCreditsNeeded()).
 										', game_speed = '.$this->db->escapeNumber($this->getGameSpeed()).
@@ -128,7 +128,7 @@ class SmrGame
 										','.$this->db->escapeNumber($this->getEndDate()).
 										','.$this->db->escapeNumber($this->getMaxPlayers()).
 										','.$this->db->escapeNumber($this->getMaxTurns()).
-										','.$this->db->escapeNumber($this->getStartTurns()).
+										','.$this->db->escapeNumber($this->getStartTurnHours()).
 										','.$this->db->escapeString($this->getGameType()).
 										','.$this->db->escapeNumber($this->getCreditsNeeded()).
 										','.$this->db->escapeNumber($this->getGameSpeed()).
@@ -237,16 +237,16 @@ class SmrGame
 		$this->hasChanged=true;
 	}
 	
-	public function getStartTurns()
+	public function getStartTurnHours()
 	{
-		return $this->startTurns;
+		return $this->startTurnHours;
 	}
 	
-	public function setStartTurns($int)
+	public function setStartTurnHours($int)
 	{
-		if($this->startTurns==$int)
+		if($this->startTurnHours==$int)
 			return;
-		$this->startTurns=$int;
+		$this->startTurnHours=$int;
 		$this->hasChanged=true;
 	}
 	

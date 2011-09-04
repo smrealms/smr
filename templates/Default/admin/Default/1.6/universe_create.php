@@ -26,8 +26,8 @@ create_echo_form($link);
 		<td class="left"><input type="text" size="6" name="max_turns" value="<?php echo DEFAULT_MAX_TURNS; ?>"></td>
 	</tr>
 	<tr>
-		<td class="right">Starting Turns</td>
-		<td class="left"><input type="text" size="6" name="start_turns" value="<?php echo DEFAULT_START_TURNS; ?>"></td>
+		<td class="right">Starting Turn Hours</td>
+		<td class="left"><input type="text" size="6" name="start_turns" value="<?php echo DEFAULT_START_TURN_HOURS; ?>"></td>
 	</tr>
 	<tr>
 		<td class="right">Max Players</td>

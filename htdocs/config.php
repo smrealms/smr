@@ -155,8 +155,8 @@ define('CREDITS_PER_NAME_CHANGE',2);
  * Movement
  */
 define('DEFAULT_MAX_TURNS', 450);
-define('DEFAULT_START_TURNS', 200);
- 
+define('DEFAULT_START_TURN_HOURS', 15);
+
 define('MOVEMENT_WALK', 1);
 define('MOVEMENT_JUMP', 2);
 define('MOVEMENT_WARP', 3);
@@ -253,7 +253,7 @@ define('MIN_RELATIONS', -1000);
 define('MIN_EXPERIENCE',0);
 define('MAX_EXPERIENCE',4294967296);
 define('MAX_COUNCIL_MEMBERS',10);
-	
+
 define('NEWBIE_TURNS_WARNING_LIMIT',20);
 
 define('MAX_MONEY',4294967296);
@@ -271,20 +271,20 @@ define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 define('LOCK_DURATION',10); // The max time for a lock to last before timing out.
 define('LOCK_BUFFER',3); // The minimum time that must be remaining on the lock duration for the lock to be valid.
 
-	require_once(LIB . 'Default/Template.class.inc');
-	$template = new Template();
-	$GLOBALS['template'] =& $template;
+require_once(LIB . 'Default/Template.class.inc');
+$template = new Template();
+$GLOBALS['template'] =& $template;
 //	$template->assign('links',$db->_LINKS);
 //	$template->assign('javaScriptFiles',$db->_JS);
-	$template->assign('URL',URL);
-	$template->assign('CSSLink',DEFAULT_CSS);
-	$template->assign('CSSColourLink',DEFAULT_CSS_COLOUR);
-	$template->assign('Title','Space Merchant Realms 1.6:');
+$template->assign('URL',URL);
+$template->assign('CSSLink',DEFAULT_CSS);
+$template->assign('CSSColourLink',DEFAULT_CSS_COLOUR);
+$template->assign('Title','Space Merchant Realms 1.6:');
 //	$template->assign('isFirefox',preg_match('/(firefox|minefield)/i',$_SERVER['HTTP_USER_AGENT']));
 //	$template->assign('isAprilFools',(date('n') == 4 && date('j') == 1));
-	
-	$links = array('Register' => 'login_create.php',
+
+$links = array('Register' => 'login_create.php',
 					'ResetPassword' => 'resend_password.php');
-	$template->assign('Links',$links);
-	$template->assign('AJAX_ENABLE_REFRESH',AJAX_DEFAULT_REFRESH_TIME);
+$template->assign('Links',$links);
+$template->assign('AJAX_ENABLE_REFRESH',AJAX_DEFAULT_REFRESH_TIME);
 ?>

@@ -5,7 +5,7 @@
 		<th>Start Turns Date</th>
 		<th>End Date</th>
 		<th>Max Turns</th>
-		<th>Start Turns</th>
+		<th>Start Turn Hours</th>
 		<th>Max Players</th>
 		<th>Alliance Max Players</th>
 		<th>Alliance Max Vets</th>
@@ -16,7 +16,7 @@
 		<td><?php echo date(DATE_DATE_SHORT,$Game['StartTurnsDate']); ?></td>
 		<td><?php echo date(DATE_DATE_SHORT,$Game['EndDate']); ?></td>
 		<td><?php echo $Game['MaxTurns']; ?></td>
-		<td><?php echo $Game['StartTurns']; ?></td>
+		<td><?php echo $Game['StartTurnHours']; ?></td>
 		<td><?php echo $Game['GameMaxPlayers']; ?></td>
 		<td><?php echo $Game['AllianceMaxPlayers']; ?></td>
 		<td><?php echo $Game['AllianceMaxVets']; ?></td>
