@@ -38,8 +38,6 @@ class SmrPlayer extends AbstractSmrPlayer
 	protected $useAJAX;
 	protected $ignoreGlobals;
 //	protected $changedStats;
-	protected $completedMissions;
-	protected $missions;
 	protected $mining;
 	protected $plottedCourse;
 	protected $nameChanged;
@@ -468,16 +466,16 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($kickedBy != null)
 		{
 			$kickedBy->sendMessage($this->getAccountID(), 2, 'You were kicked out of the alliance!', false);
-			$this->getAccount()->log(3, 'was kicked from alliance '.$alliance->getAllianceName().' by '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().')', 0);
-			$kickedBy->getAccount()->log(3, 'kicked '.$kickedBy->getAccount()->getLogin().' ('.$kickedBy->getPlayerName().') from alliance '.$alliance->getAllianceName(), 0);
+			$this->actionTaken('PlayerKicked', array('Alliance' => &$alliance, 'Player' => &$kickedBy));
+			$kickedBy->actionTaken('KickPlayer', array('Alliance' => &$alliance, 'Player' => &$this));
 		}
 		else if($this->isAllianceLeader())
 		{
-			$this->getAccount()->log(3, 'disbanded alliance '.$alliance->getAllianceName(), $this->getSectorID());
+			$this->actionTaken('DisbandAlliance', array('Alliance' => &$alliance));
 		}
 		else
 		{
-			$this->getAccount()->log(3, 'left alliance '.$alliance->getAllianceName(), $this->getSectorID());
+			$this->actionTaken('LeaveAlliance', array('Alliance' => &$alliance));
 			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL)
 			{
 				$this->sendMessage($alliance->getLeaderID(), 2, 'I left your alliance!', false);
@@ -504,7 +502,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if (!$this->isAllianceLeader())
 			$this->sendMessage($alliance->getLeaderID(), 2, 'I joined your alliance!', false);
 		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$this->getGameID().', '.$this->getAccountID().', 2,'.$alliance->getAllianceID().')');
-		$this->getAccount()->log(3, 'joined alliance: '.$alliance->getAllianceName(), $this->getSectorID());
+		$this->actionTaken('JoinAlliance', array('Alliance' => &$alliance));
 	}
 	
 	function getAllianceJoinable()
@@ -1117,180 +1115,6 @@ class SmrPlayer extends AbstractSmrPlayer
 			default:
 				throw new Exception('Invalid gadget attribute: '.$key);
 		}
-	}
-	
-	
-	function getCompletedMissions()
-	{
-		if(!isset($this->completedMissions))
-		{
-			//Get Player missions
-			$this->db->query('SELECT mission_id FROM player_completed_mission WHERE ' . $this->SQL);
-			$this->completedMissions = array();
-			while ($this->db->nextRecord())
-				$this->completedMissions[$this->db->getField('mission_id')] = $this->db->getField('mission_id');
-		}
-		return $this->completedMissions;
-	}
-	
-	function getMissions()
-	{
-		if(!isset($this->missions))
-		{
-			//Get Player missions
-			global $MISSIONS;
-			$this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
-			$this->missions = array();
-			while ($this->db->nextRecord())
-			{
-				$this->missions[$this->db->getField('mission_id')] = array(
-								'On Step' => $this->db->getField('on_step'),
-								'Total' => $this->db->getField('total_steps'),
-								'Progress' => $this->db->getField('progress'),
-								'Next Step' => $this->db->getField('next_step'),
-								'Expires' => $this->db->getField('step_fails'),
-								'Mission ID' => $this->db->getField('mission_id'),
-								'Sector' => $this->db->getField('mission_sector'),
-								'Starting Sector' => $this->db->getField('starting_sector')
-								);
-				$this->rebuildMission($this->db->getField('mission_id'));
-			}
-		}
-		return $this->missions;
-	}
-	
-	function getMission($missionID)
-	{
-		$missions = $this->getMissions();
-		if(isset($missions[$missionID]))
-			return $missions[$missionID];
-		return false;
-	}
-	
-	function updateMission($missionID,$keyOrUpdateArray,$newInfo=false)
-	{
-		$this->getMissions();
-		if(isset($this->missions[$missionID]))
-		{
-			if(is_array($keyOrUpdateArray))
-			{
-				$set = '';
-				foreach($keyOrUpdateArray as $bit => $newInfo)
-				{
-					$field = $this->missionKeyToField($bit);
-					if($field!==false)
-					{
-						$this->missions[$missionID][$bit]=$newInfo;
-						$set .= $field.' = '.$this->db->escapeString($newInfo).',';
-					}
-				}
-				if($set!=='')
-				{
-					$set=substr($set,0,-1);
-					$this->db->query('UPDATE player_has_mission SET '.$set.' WHERE '.$this->SQL.' AND mission_id = '.$missionID.' LIMIT 1');
-					$this->rebuildMission($missionID);
-					return true;
-				}
-			}
-			else
-			{
-				$field = $this->missionKeyToField($keyOrUpdateArray);
-				if($field!==false)
-				{
-					$this->missions[$missionID][$keyOrUpdateArray]=$newInfo;
-					$this->db->query('UPDATE player_has_mission SET '.$field.' = '.$newInfo.' WHERE '.$this->SQL.' AND mission_id = '.$missionID.' LIMIT 1');
-					$this->rebuildMission($missionID);
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
-	function addMission($missionID,$randomSector)
-	{
-		global $MISSIONS;
-		$this->getMissions();
-
-		if(isset($this->missions[$missionID]))
-			return;
-			
-		$mission = $MISSIONS[$missionID];
-		$playerMission = array(
-						'On Step' => 1,
-						'Total' => sizeof($mission['Steps']),
-						'Progress' => 0,
-						'Next Step' => 'TRUE',
-						'Expires' => (TIME + 24 * 3600),
-						'Mission ID' => $missionID,
-						'Sector' => $randomSector,
-						'Starting Sector' => $this->getSectorID()
-						);
-						
-		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' .
-				'VALUES ('.$this->gameID.','.$this->accountID.','.$missionID.','.$playerMission['On Step'].','.$playerMission['Progress'].','.$this->db->escapeString($playerMission['Next Step']).','.$playerMission['Total'].','.$playerMission['Starting Sector'].','.$playerMission['Sector'].','.$playerMission['Expires'].')');
-		$this->missions[$missionID] = $playerMission;
-		$this->rebuildMission($missionID);
-	}
-	
-	function rebuildMission($missionID)
-	{
-		global $MISSIONS;
-		$RACES = Globals::getRaces();
-		$missionInfo = $this->missions[$missionID];
-		$currentStep = $MISSIONS[$missionID]['Steps'][$missionInfo['On Step']];
-		$detail = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Detail']);
-		$text = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Text']);
-		$task = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Task']);
-		if (isset($currentStep['Level']))
-			$step_level = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
-		else $step_level = 0;
-		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
-		$this->missions[$missionID]['Location'] = $MISSIONS[$missionID]['Location'];
-		$this->missions[$missionID]['Task']['Step'] = $currentStep['Step'];
-		$this->missions[$missionID]['Task']['Level'] = $step_level;
-		$this->missions[$missionID]['Task']['Detail'] = $detail;
-		$this->missions[$missionID]['Task']['Text'] = $text;
-		$this->missions[$missionID]['Task']['Task'] = $task;
-	}
-	
-	function deleteMission($missionID)
-	{
-		$this->getMissions();
-		if(isset($this->missions[$missionID]))
-		{
-			unset($this->missions[$missionID]);
-			$this->db->query('DELETE FROM player_has_mission WHERE '.$this->SQL.' AND mission_id = '.$missionID.' LIMIT 1');
-			return true;
-		}
-		return false;
-	}
-	
-	protected function missionKeyToField($bit)
-	{
-		$field = false;
-		switch($bit)
-		{
-			case 'On Step':
-				$field='on_step';
-			break;
-			case 'Total':
-				$field='total_steps';
-			break;
-			case 'Progress':
-				$field='progress';
-			break;
-			case 'Next Step':
-				$field='next_step';
-			break;
-			case 'Expires':
-				$field='step_fails';
-			break;
-			case 'Mission ID':
-				$field='mission_id';
-			break;
-		}
-		return $field;
 	}
 	
 	function getMining($mineID=false)

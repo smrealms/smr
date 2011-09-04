@@ -111,7 +111,7 @@ if ($player->hasPlottedCourse())
 }
 
 // log action
-$account->log(5, 'Moves to sector: ' . $var['target_sector'], $player->getSectorID());
+$player->actionTaken('WalkSector',array('Sector',&$sector));
 
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_WALK);
