@@ -5,7 +5,8 @@
 		</td>
 		<td style="padding:0px;vertical-align:top;width:32em;"><?php
 			$this->includeTemplate('includes/PlottedCourse.inc');
-			$this->includeTemplate('includes/Ticker.inc'); ?>
+			$this->includeTemplate('includes/Ticker.inc');
+			$this->includeTemplate('includes/Missions.inc'); ?>
 			<span id="secmess"><?php
 				if(isset($ErrorMessage))
 				{
