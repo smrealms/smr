@@ -1191,7 +1191,7 @@ class SmrPort
 		$this->db = new SmrMySqlDatabase();
 	}
 	
-	function update()
+	public function update()
 	{
 		if(!$this->exists())
 			return;
