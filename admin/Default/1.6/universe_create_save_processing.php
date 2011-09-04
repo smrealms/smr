@@ -12,7 +12,7 @@ if ($submit=='Create Game')
 	if(!is_numeric($_REQUEST['max_turns']))
 		create_error('Max turns must be a number.');
 	if(!is_numeric($_REQUEST['start_turns']))
-		create_error('Start turns must be a number.');
+		create_error('Start turn hours must be a number.');
 	if(!is_numeric($_REQUEST['max_players']))
 		create_error('Max players must be a number.');
 	if(!is_numeric($_REQUEST['alliance_max_players']))

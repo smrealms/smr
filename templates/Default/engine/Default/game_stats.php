@@ -43,9 +43,9 @@
 						<td align="left"><?php echo number_format(Globals::getGameMaxTurns($StatsGameID)); ?></td>
 					</tr>
 					<tr>
-						<td align="right">Start Turns</td>
+						<td align="right">Start Turn Hours</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(SmrGame::getGame($StatsGameID)->getStartTurns()); ?></td>
+						<td align="left"><?php echo number_format(SmrGame::getGame($StatsGameID)->getStartTurnHours()); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Max Players</td>

@@ -269,7 +269,7 @@ class Globals
 					'StartTurnsDate' => $game->getStartTurnsDate(),
 					'EndDate' => $game->getEndDate(),
 					'MaxTurns' => $game->getMaxTurns(),
-					'StartTurns' => $game->getStartTurns(),
+					'StartTurnHours' => $game->getStartTurnHours(),
 					'GameMaxPlayers' => $game->getMaxPlayers(),
 					'GameCreditsRequired' => $game->getCreditsNeeded(),
 					'AllianceMaxPlayers' => $game->getAllianceMaxPlayers(),
