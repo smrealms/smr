@@ -11,24 +11,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	protected $db;
 	
-//	var $race_name;
-//	var $level_id;
-//	var $level_name;
-//	var $alliance_description;
-//	var $military_payment;
-//	var $controlled;
-//	var $old_dead;
 	protected $newbieWarning;
-//	var $display_experience;
-//	var $display_level_id;
-//	var $display_level_name;
-//	var $sector_change;
-//	var $game_type;
-//	var $game_speed;
-//	var $out_of_game;
+
+
 	protected $tickers;
-//    var $safe_exit;
-//    var $detected;
+
 	protected $originalMaintenance;
 	protected $lastTurnUpdate;
 	protected $lastShipMod;

@@ -10,26 +10,7 @@ abstract class AbstractSmrPlayer
 	
 	const HOF_CHANGED = 1;
 	const HOF_NEW = 2;
-//	var $race_name;
-//	var $level_id;
-//	var $level_name;
-//	var $alliance_description;
-//	var $controlled;
-//	var $old_dead;
-//	var $bank;
-//	var $newbie_warning;
-//	var $ignore_global;
-//	var $last_news_update;
-//	var $display_experience;
-//	var $display_level_id;
-//	var $display_level_name;
-//	var $sector_change;
-//	var $game_type;
-//	var $game_speed;
-//	var $validated;
-//	var $out_of_game;
-//    var $safe_exit;
-//    var $detected;
+
 	protected $accountID;
 	protected $gameID;
 	protected $playerName;
