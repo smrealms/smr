@@ -1305,8 +1305,9 @@ abstract class AbstractSmrPlayer
 		return $field;
 	}
 	
-	public function getAvailableMissions($bit)
+	public function getAvailableMissions()
 	{
+		global $MISSIONS;
 		$availableMissions = array();
 		foreach($MISSIONS as $mission)
 		{
@@ -1316,8 +1317,9 @@ abstract class AbstractSmrPlayer
 		return $availableMissions;
 	}
 	
-	public function actionTaken($actionID, array &$values)
+	public function actionTaken($actionID, array $values)
 	{
+		global $MISSION_ACTIONS;
 		if(!in_array($value,$MISSION_ACTIONS))
 			throw Exception('Unknown action: ' . $actionID);
 		if($this->getAccount()->isLoggingEnabled())
