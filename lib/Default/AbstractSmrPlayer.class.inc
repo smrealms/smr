@@ -1320,8 +1320,8 @@ abstract class AbstractSmrPlayer
 	public function actionTaken($actionID, array $values)
 	{
 		global $MISSION_ACTIONS;
-		if(!in_array($value,$MISSION_ACTIONS))
-			throw Exception('Unknown action: ' . $actionID);
+		if(!in_array($actionID,$MISSION_ACTIONS))
+			throw new Exception('Unknown action: ' . $actionID);
 		if($this->getAccount()->isLoggingEnabled())
 			switch($actionID)
 			{
