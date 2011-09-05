@@ -1322,7 +1322,7 @@ abstract class AbstractSmrPlayer
 		global $MISSION_ACTIONS;
 		if(!in_array($actionID,$MISSION_ACTIONS))
 			throw new Exception('Unknown action: ' . $actionID);
-		if($this->getAccount()->isLoggingEnabled())
+// TODO: Reenable this once tested.		if($this->getAccount()->isLoggingEnabled())
 			switch($actionID)
 			{
 				case 'WalkSector':
