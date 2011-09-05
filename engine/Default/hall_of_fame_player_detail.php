@@ -3,7 +3,7 @@ require_once(get_file_loc('hof.functions.inc'));
 
 if (isset($var['account_id']))
 	$account_id = $var['account_id'];
-else 
+else
 	$account_id = $account->getAccountID();
 $game_id =null;
 if (isset($var['game_id'])) $game_id = $var['game_id'];
@@ -36,7 +36,8 @@ else if(isset($hofPlayer) && $hofPlayer->sameAlliance($player))
 {
 	$allowedVisibities[] = HOF_ALLIANCE;
 }
-$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') AND account_id='.$account_id . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
+$db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
+//$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') AND account_id='.$account_id . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
