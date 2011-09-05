@@ -133,9 +133,9 @@ abstract class AbstractSmrPlayer
 	public function setSectorID($sectorID)
 	{
 		$this->lastSectorID = $this->getSectorID();
-		$this->actionTaken('LeaveSector',array('Sector'=>&$this->getSector()));
+		$this->actionTaken('LeaveSector',array('Sector'=>$this->getSector()));
 		$this->sectorID = $sectorID;
-		$this->actionTaken('EnterSector',array('Sector'=>&$this->getSector()));
+		$this->actionTaken('EnterSector',array('Sector'=>$this->getSector()));
 		$this->hasChanged=true;
 	}
 	

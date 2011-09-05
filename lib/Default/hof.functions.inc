@@ -3,29 +3,29 @@
 function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 {
 	global $account,$player;
-	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $gameID : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+	$gameIDSql = ' AND game_id '.(isset($gameID) ? '= ' . $db->escapeNumber($gameID) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
 
 	$vis = HOF_PUBLIC;
 	$rank = array('Amount'=>0,'Rank'=>0);
 	if($view == DONATION_NAME)
 	{
-		$db->query('SELECT SUM(amount) as amount FROM account_donated WHERE account_id='.$accountID.' GROUP BY account_id LIMIT 1');
+		$db->query('SELECT SUM(amount) as amount FROM account_donated WHERE account_id='.$db->escapeNumber($accountID).' GROUP BY account_id LIMIT 1');
 	}
 	else if($view == USER_SCORE_NAME)
 	{
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
-		$query = 'SELECT '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
+		$query = 'SELECT '.$statements['CASE'].' amount FROM (SELECT type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].') AND account_id='.$db->escapeNumber($accountID).$gameIDSql.' GROUP BY account_id,type) x ORDER BY amount DESC';
 		$db->query($query);
 	}
 	else
 	{
-		$db->query('SELECT type, visibility FROM player_hof JOIN hof_visibility USING(type) WHERE type='.$db->escapeArray($viewType,false,true,':',false).' LIMIT 1');
+		$db->query('SELECT visibility FROM hof_visibility WHERE type='.$db->escapeArray($viewType,false,true,':',false).' LIMIT 1');
 		if(!$db->nextRecord())
 		{
 			return $rank;
 		}
 		$vis = $db->getField('visibility');
-		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.$gameIDSql.' GROUP BY account_id LIMIT 1');
+		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$db->escapeNumber($accountID).$gameIDSql.' GROUP BY account_id LIMIT 1');
 	}
 	
 	$realAmount = 0;
