@@ -111,7 +111,7 @@ if ($player->hasPlottedCourse())
 }
 
 // log action
-$player->actionTaken('WalkSector',array('Sector',&$sector));
+$player->actionTaken('WalkSector',array('Sector'=>&$sector));
 
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_WALK);
