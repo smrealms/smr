@@ -1305,7 +1305,7 @@ abstract class AbstractSmrPlayer
 		return $field;
 	}
 	
-	protected function getAvailableMissions($bit)
+	public function getAvailableMissions($bit)
 	{
 		$availableMissions = array();
 		foreach($MISSIONS as $mission)
