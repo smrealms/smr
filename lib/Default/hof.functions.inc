@@ -60,7 +60,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		}
 		if($rank['Amount'] == '-' && !isset($gameID))
 		{
-			$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.') GROUP BY account_id LIMIT 1');
+			$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$accountID.' AND game_id IN (SELECT game_id FROM game WHERE end_date < '.TIME.' AND ignore_stats = '.$db->escapeBoolean(false).') GROUP BY account_id LIMIT 1');
 			if($db->nextRecord())
 			{
 				if($db->getField('amount')!=null)
