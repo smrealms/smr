@@ -152,8 +152,26 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 		} else {
 			if ($response_code == 100)
 				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your text message will be delivered to ' . $recv_account->getIrcNick() . ' immediately.' . EOL);
+			elseif ($response_code == 10)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Unknown receiver number!' . EOL);
+			elseif ($response_code == 20)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Unknown sender number!' . EOL);
+			elseif ($response_code == 30)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Error in message!' . EOL);
+			elseif ($response_code == 40)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Unknown route!' . EOL);
+			elseif ($response_code == 50)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Identifikation failed!' . EOL);
+			elseif ($response_code == 60)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Insufficient funds! Please donate!' . EOL);
+			elseif ($response_code == 70)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Text message can\'t be delivered!' . EOL);
+			elseif ($response_code == 71)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Feature not possible!' . EOL);
+			elseif ($response_code == 80)
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Error while delivering to SMS-C!' . EOL);
 			else
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while i was trying to send your text message. Please contact MrSpock!' . EOL);
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message' . EOL);
 		}
 
 		return true;
