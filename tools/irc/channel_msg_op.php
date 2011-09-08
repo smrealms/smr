@@ -291,6 +291,9 @@ function channel_msg_op_yes($fp, $rdata, $account, $player)
 			return true;
 		}
 
+		// normalize nick
+		$nick = $account->getIrcNick();
+
 		$op_time = $db->getField('time');
 		$yes = unserialize($db->getField('yes'));
 		if (!is_array($yes))
@@ -357,6 +360,9 @@ function channel_msg_op_no($fp, $rdata, $account, $player)
 			return true;
 		}
 
+		// normalize nick
+		$nick = $account->getIrcNick();
+
 		$op_time = $db->getField('time');
 		$yes = unserialize($db->getField('yes'));
 		if (!is_array($yes))
@@ -422,6 +428,9 @@ function channel_msg_op_maybe($fp, $rdata, $account, $player)
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
 		}
+
+		// normalize nick
+		$nick = $account->getIrcNick();
 
 		$op_time = $db->getField('time');
 		$yes = unserialize($db->getField('yes'));
