@@ -713,6 +713,11 @@ class Globals
 		return SmrSession::get_new_href(create_container('skeleton.php', 'buy_ship_name.php'));
 	}
 	
+	public static function getAcceptMissionHREF(&$mission)
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'mission_accept.php', array('MissionID'=>$mission['ID'])));
+	}
+	
 	public static function getAvailableTemplates()
 	{
 		return array('Default' => array('Default'),
