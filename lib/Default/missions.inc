@@ -74,6 +74,10 @@ $MISSIONS = array(
 		)
 	)
 );
+foreach($MISSIONS as $id => &$mission)
+{
+	$mission['ID'] = $id;
+} unset($mission);
 
 /*
 function getMissionText($mission)

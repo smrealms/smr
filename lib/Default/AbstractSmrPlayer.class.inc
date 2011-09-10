@@ -1219,7 +1219,7 @@ abstract class AbstractSmrPlayer
 		return false;
 	}
 	
-	function addMission($missionID,$randomSector)
+	function addMission($missionID,$randomSector=0)
 	{
 		global $MISSIONS;
 		$this->getMissions();
@@ -1233,7 +1233,7 @@ abstract class AbstractSmrPlayer
 						'Total' => sizeof($mission['Steps']),
 						'Progress' => 0,
 						'Next Step' => 'TRUE',
-						'Expires' => (TIME + 24 * 3600),
+						'Expires' => (TIME + 86400),
 						'Mission ID' => $missionID,
 						'Sector' => $randomSector,
 						'Starting Sector' => $this->getSectorID()
