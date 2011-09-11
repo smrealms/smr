@@ -1179,6 +1179,11 @@ abstract class AbstractSmrPlayer
 		return false;
 	}
 	
+	function hasMission($missionID)
+	{
+		return $this->getMission($missionID) !== false;
+	}
+	
 	function updateMission($missionID,$keyOrUpdateArray,$newInfo=false)
 	{
 		$this->getMissions();
@@ -1311,6 +1316,8 @@ abstract class AbstractSmrPlayer
 		$availableMissions = array();
 		foreach($MISSIONS as $mission)
 		{
+			if($this->hasMission($mission['ID']))
+				continue;
 			if($this->getSector()->hasX($mission['Location']))
 				$availableMissions[] = $mission;
 		}
