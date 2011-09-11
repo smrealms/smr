@@ -124,16 +124,20 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 		$param['key'] = SMS_GATEWAY_KEY;
 		$param['message'] = $msg;
 		$param['to'] = $recv_account->getCellPhone();
-		$param['from'] = 'SMR';
+//		$param['from'] = 'SMR';
 		$param['route'] = 'direct';
 		$param['debug'] = SMS_DEBUG;
 		$param['message_id'] = '1';
+		$param['dlr'] = '1';
+		$param['response'] = '1';
 
 		foreach ($param as $key => $val)
 		{
 			$request .= $key . '=' . urlencode($val);
 			$request .= '&';
 		}
+
+		echo_r('Calling url: ' . $url . '?' . $request);
 
 		// request url = send text
 		$response = @file($url . '?' . $request);
