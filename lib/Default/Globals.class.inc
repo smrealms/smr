@@ -715,7 +715,7 @@ class Globals
 	
 	public static function getAcceptMissionHREF(&$mission)
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php', 'mission_accept.php', array('MissionID'=>$mission['ID'])));
+		return SmrSession::get_new_href(create_container('skeleton.php', 'mission_accept_processing.php', array('MissionID'=>$mission['ID'])));
 	}
 	
 	public static function getAvailableTemplates()
