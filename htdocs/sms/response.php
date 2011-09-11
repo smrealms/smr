@@ -17,4 +17,15 @@ include(ENGINE . '/Default/smr.inc');
 // database object
 $db = new SmrMySqlDatabase();
 
+// get input
+$message_id = (int)$_GET['message_id'];
+$message = $_GET['message'];
+$from = $_GET['from'];
+
+// add dlr to database
+$db->query(
+	'INSERT INTO account_sms_response ' .
+	'(message_id, message, from) ' .
+	'VALUES (' . $db->escapeNumber($message_id) . ', ' . $db->escapeString($message) . ', ' . $db->escapeString($from) . ')');
+
 ?>
