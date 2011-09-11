@@ -142,10 +142,6 @@ if ($fp) {
 			fputs($fp, 'WHO ' . $alliance_channel . EOL);
 		}
 
-	} else {
-		fputs($fp, 'JOIN #caretaker' . EOL);
-		sleep(1);
-		fputs($fp, 'WHO #caretaker' . EOL);
 	}
 
 	while (!feof($fp))
@@ -161,6 +157,7 @@ if ($fp) {
 		// we simply do some poll stuff here
 		check_planet_builds($fp);
 		check_events($fp);
+		check_sms_dlr($fp);
 
 		// required!!! otherwise timeout!
 		if (server_ping($fp, $rdata))
