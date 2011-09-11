@@ -18,7 +18,7 @@ function check_sms_dlr($fp)
 //		$send_time = $db->getField('send_time');
 //		$receive_time = $db->getField('receive_time');
 
-		echo_r('Found new DLR... ' . $message_id);
+		echo_r('Found new SMS DLR... ' . $message_id);
 
 		$sender =& SmrAccount::getAccount($sender_id, true);
 		$receiver =& SmrAccount::getAccount($receiver_id, true);
@@ -29,6 +29,37 @@ function check_sms_dlr($fp)
 		$db->query('UPDATE account_sms_dlr ' .
 		           'SET    announce = 1 ' .
 		           'WHERE  message_id = ' . $message_id);
+	}
+
+}
+
+function check_sms_response($fp)
+{
+	// get one dlr per time so we do not spam anyone
+	$db = new SmrMySqlDatabase();
+	$db->query(
+		'SELECT     * ' .
+		'FROM       account_sms_response ' .
+		'LEFT JOIN  account_sms_log USING (message_id) ' .
+		'WHERE      announce = 0'
+	);
+	if ($db->nextRecord()) {
+		$response_id = $db->getField('response_id');
+		$message_id = $db->getField('message_id');
+		$message = $db->getField('message');
+		$orig_sender_id = $db->getField('account_id');
+
+		echo_r('Found new SMS response... ' . $message_id);
+
+		$orig_sender =& SmrAccount::getAccount($orig_sender_id, true);
+
+		fputs($fp, 'NOTICE ' . $orig_sender->getIrcNick() . ' :You have received an response to your text: ' . EOL);
+		fputs($fp, 'NOTICE ' . $orig_sender->getIrcNick() . ' :' . $message . EOL);
+
+		// update announce status
+		$db->query('UPDATE account_sms_response ' .
+		           'SET    announce = 1 ' .
+		           'WHERE  response_id = ' . $response_id);
 	}
 
 }

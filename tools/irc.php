@@ -158,6 +158,7 @@ if ($fp) {
 		check_planet_builds($fp);
 		check_events($fp);
 		check_sms_dlr($fp);
+		check_sms_response($fp);
 
 		// required!!! otherwise timeout!
 		if (server_ping($fp, $rdata))
