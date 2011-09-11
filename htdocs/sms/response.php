@@ -2,10 +2,10 @@
 
 /*
 
-%message_id% Message ID der ursprünglich versendeten Nachricht
-%message% Inhalt der SMS Antwort
-%from% Absender der Antwort
-%ref% Referenz der versendeten Nachricht
+%message_id%    Message ID of text that is being responded to
+%message%       text of response
+%from%          cell number of responder
+%ref%           reference
 
  */
 

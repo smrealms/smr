@@ -1,12 +1,12 @@
 <?php
 
 /*
-	%message_id%    Message ID der versendeten Nachricht
-	%send%          Versandzeitpunkt als Unix Timestamp
-	%receive%       Empfangszeitpunkt als Unix Timestamp
-	%status%        Versandbericht
-	%ref%           Referenz der versendeten Nachricht
-	%to%            Empfängernummer der Nachricht
+	%message_id%    Message ID of outgoing text from gateway
+	%send%          sending time as timestamp
+	%receive%       receiving time as timestamp
+	%status%        sending result
+	%ref%           reference (can be given when sending)
+	%to%            where text was being send to
  */
 
 include('../config.inc');
