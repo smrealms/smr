@@ -67,7 +67,7 @@ if (isset($Msg))
 				<tr>
 					<td>Turrets</td>
 					<td align="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET) ?></span> / <?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
-					<td align="center"><span id="planetAcc"><?php echo $ThisPlanet->accuracy() ?></span> %</td>
+					<td align="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->accuracy(), 2) ?></span> %</td>
 				</tr>
 			</table>
 		</td><?php
