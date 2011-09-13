@@ -38,14 +38,13 @@ foreach ($alliance_vs as $key => $id)
 	$curr_alliance_id = $id;
 	if ($id > 0)
 	{
-	    $curr_alliance =& SmrAlliance::getAlliance($id, SmrSession::$game_id);
 		$db2->query('SELECT * FROM player WHERE alliance_id = '.$id.' AND game_id = '.SmrSession::$game_id);
 		if ($db2->getNumRows() == 0) $out = TRUE;
 		else $out = FALSE;
 		
 		$PHP_OUTPUT.=('<td width=15% valign="top"');
 		if ($player->getAllianceID() == $curr_alliance_id)
-		$PHP_OUTPUT.=(' class="bold"');
+			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
 		/*$container = array();
 		$container['url']             = 'skeleton.php';
@@ -53,7 +52,7 @@ foreach ($alliance_vs as $key => $id)
 		$container['alliance_id']    = $curr_alliance_id;
 		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->getAllianceName()');*/
 		$PHP_OUTPUT.=('<select name="alliancer[]" style="width:105">');
-		$db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND alliance_deaths > 0 OR alliance_kills > 0 ORDER BY alliance_name');
+		$db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_name');
 		while ($db->nextRecord())
 		{
 			$curr_alliance =& SmrAlliance::getAlliance($db->getField('alliance_id'), SmrSession::$game_id);
@@ -62,7 +61,7 @@ foreach ($alliance_vs as $key => $id)
 				$PHP_OUTPUT.=(' selected');
 			$PHP_OUTPUT.=('>' . $curr_alliance->getAllianceName() . '</option>');
 		}
-		$PHP_OUTPUT.=($curr_alliance->getAllianceName());
+		$PHP_OUTPUT.='</select>';
 		$PHP_OUTPUT.=('</td>');
 	}
 	//$alliance_vs[] = $curr_alliance_id;
