@@ -84,10 +84,9 @@ class SocialLogin
 	{
 		if($loginType=='Facebook')
 		{
-			if(self::getFacebookObj()->getSession())
+			if($this->userID=self::getFacebookObj()->getUser())
 			{
 				$this->loginType=$loginType;
-				$this->userID=self::getFacebookObj()->getUser();
 				$userInfo = self::getFacebookObj()->api('me');
 				$this->email=$userInfo['email'];
 				$this->firstName=$userInfo['first_name'];
