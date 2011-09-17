@@ -53,7 +53,7 @@ class SocialLogin
 	
 	public static function getFacebookLoginUrl()
 	{
-		return self::getFacebookObj()->getLoginUrl(array('fbconnect'=>null,'next'=>URL.'/login_processing.php?loginType=Facebook','cancel_url'=>URL.'/login_processing.php?loginType=Facebook','req_perms'=>'email'));
+		return self::getFacebookObj()->getLoginUrl(array('redirect_uri'=>URL.'/login_processing.php?loginType=Facebook','scope'=>'email'));
 	}
 	
 	public static function getTwitterLoginUrl()
