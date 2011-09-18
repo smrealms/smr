@@ -123,7 +123,9 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 		$request = '';
 		$param['key'] = SMS_GATEWAY_KEY;
 		$param['message'] = $msg;
-		$param['to'] = $recv_account->getCellPhone();
+		// numbers like +177 will be (for some reason) 'corrected' to a german number because it's a common area code here
+		// therefor support asked me to use 00-1-77 instad of +1-77
+		$param['to'] = '00' . substr($recv_account->getCellPhone(), 1);
 //		$param['from'] = 'SMR';
 		$param['route'] = 'direct';
 		$param['debug'] = SMS_DEBUG;
