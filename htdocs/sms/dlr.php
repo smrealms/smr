@@ -1,6 +1,8 @@
 <?php
 
 /*
+    http://www.smrealms.de/sms/dlr.php?message_id=%message_id%&send=%send%&receive=%receive%&status=%status%&ref=%ref%&to=%to%
+
 	%message_id%    Message ID of outgoing text from gateway
 	%send%          sending time as timestamp
 	%receive%       receiving time as timestamp
