@@ -8,7 +8,8 @@ function check_sms_dlr($fp)
 		'SELECT     * ' .
 		'FROM       account_sms_dlr ' .
 		'LEFT JOIN  account_sms_log USING (message_id) ' .
-		'WHERE      announce = 0'
+		'WHERE      announce = 0 ' .
+		'ORDER BY   log_id'
 	);
 	if ($db->nextRecord()) {
 		$message_id = $db->getField('message_id');
@@ -23,7 +24,17 @@ function check_sms_dlr($fp)
 		$sender =& SmrAccount::getAccount($sender_id, true);
 		$receiver =& SmrAccount::getAccount($receiver_id, true);
 
-		fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text to ' . $receiver->getIrcNick() . ' has been processed. Delivery status: ' . $status . EOL);
+		if ($status == 'DELIVERED') {
+			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text message has been delivered to ' . $receiver->getIrcNick() . '\'s cell phone.' . EOL);
+		} elseif ($status == 'NOT_DELIVERED') {
+			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text message has NOT been delivered. Most likely ' . $receiver->getIrcNick() . ' has entered an invalid cell phone number.' . EOL);
+		} elseif ($status == 'BUFFERED') {
+			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text message has been buffered and will be delivered when ' . $receiver->getIrcNick() . ' turns on his/her cell phone.' . EOL);
+		} elseif ($status == 'TRANSMITTED') {
+			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text message has been delivered to ' . $receiver->getIrcNick() . '\'s cell phone.' . EOL);
+		} else {
+			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Something unexpected happend to your text message. Status returned by gateway was: ' . $status . EOL);
+		}
 
 		// update announce status
 		$db->query('UPDATE account_sms_dlr ' .
