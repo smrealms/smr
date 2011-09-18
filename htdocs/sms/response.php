@@ -2,10 +2,12 @@
 
 /*
 
-%message_id%    Message ID of text that is being responded to
-%message%       text of response
-%from%          cell number of responder
-%ref%           reference
+	http://www.smrealms.de/sms/response.php?message_id=%message_id%&message=%message%&from=%from%&ref=%ref%
+
+	%message_id%    Message ID of text that is being responded to
+	%message%       text of response
+	%from%          cell number of responder
+	%ref%           reference
 
  */
 
