@@ -8,16 +8,14 @@ if(isset($_REQUEST['amount']))
 if(isset($_REQUEST['smrcredits']))
 	SmrSession::updateVar('BountySmrCredits',empty($_REQUEST['smrcredits'])?0:$_REQUEST['smrcredits']);
 if(isset($_REQUEST['account_id']))
-	SmrSession::updateVar('BountyAccountID',$_REQUEST['account_id']);
+	SmrSession::updateVar('BountyPlayerID',$_REQUEST['player_id']);
 
 $amount = $var['BountyAmount'];
 $smrCredits = $var['BountySmrCredits'];
-$account_id = $var['BountyAccountID'];
+$playerID = $var['BountyPlayerID'];
 
-if ($account_id == 0)
+if ($playerID == '0')
 	create_error('Uhhh...who is [Please Select]?');
-if (!is_numeric($account_id))
-	create_error('Please select a player');
 
 if (!is_numeric($amount)||!is_numeric($smrCredits))
 	create_error('Numbers only please');
@@ -33,7 +31,7 @@ if ($account->getSmrCredits() < $smrCredits)
 if ($amount <= 0 && $smrCredits <= 0)
 	create_error('You must enter an amount greater than 0');
 
-if ((empty($amount) && empty($smrCredits)) || empty($account_id))
+if ((empty($amount) && empty($smrCredits)) || empty($playerID))
 	create_error('Don\'t you want to place bounty?');
 
 $template->assign('PageTopic','Placing a bounty');
@@ -43,7 +41,7 @@ if ($sector->has_hq()) $PHP_OUTPUT.=create_hq_menue();
 else $PHP_OUTPUT.=create_ug_menue();
 
 // get this guy from db
-$bounty_guy =& SmrPlayer::getPlayer($account_id, $player->getGameID());
+$bounty_guy =& SmrPlayer::getPlayerByPlayerID($playerID, $player->getGameID());
 
 $PHP_OUTPUT.=('Are you sure you want to place a <span class="creds">' . number_format($amount) .
 	  '</span> credits and <span class="yellow">' . number_format($smrCredits) .
