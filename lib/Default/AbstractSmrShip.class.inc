@@ -549,7 +549,6 @@ abstract class AbstractSmrShip
 	
 	public function getCostToUpgradeAndUNO($upgradeShipID)
 	{
-		$upgadeBaseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$upgradeShipID);
 		return $this->getCostToUpgrade($upgradeShipID) + $this->getCostToUNOAgainstShip($upgradeShipID);
 	}
 	

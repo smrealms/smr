@@ -716,8 +716,8 @@ function checkForShipUpgrade(AbstractSmrPlayer &$player)
 			return false;
 		if($upgradeShipID == SHIP_TYPE_NEWBIE_MERCHANT_VESSEL) //We can't actually buy the NMV, we just don't want to downgrade from it if we have it.
 			continue;
-		$cost = $player->getShip()->getCostToUpgradeAndUNO($upgradeShipID);
-		if($cost == 0 || $player->getCredits()-$cost > MINUMUM_RESERVE_CREDITS)
+		$cost = $player->getShip()->getCostToUpgrade($upgradeShipID);
+		if($cost <= 0 || $player->getCredits()-$cost > MINUMUM_RESERVE_CREDITS)
 		{
 			return doShipUpgrade($player, $upgradeShipID);
 		}
