@@ -7,7 +7,7 @@ if(isset($_REQUEST['amount']))
 	SmrSession::updateVar('BountyAmount',empty($_REQUEST['amount'])?0:$_REQUEST['amount']);
 if(isset($_REQUEST['smrcredits']))
 	SmrSession::updateVar('BountySmrCredits',empty($_REQUEST['smrcredits'])?0:$_REQUEST['smrcredits']);
-if(isset($_REQUEST['account_id']))
+if(isset($_REQUEST['player_id']))
 	SmrSession::updateVar('BountyPlayerID',$_REQUEST['player_id']);
 
 $amount = $var['BountyAmount'];
