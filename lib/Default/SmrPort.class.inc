@@ -1115,10 +1115,8 @@ class SmrPort
 	}
 	public function addCachePorts(array $accountIDs)
 	{
-		if ($this->exists())
+		if (count($accountIDs)>0 && $this->exists())
 		{
-			if(count($accountIDs)==0)
-				throw new Exception('Cannot add cached port for no accounts');
 			$cachedVersion = $this->cachedVersion;
 			$this->getGoods();
 			$goods = array();
@@ -1151,7 +1149,9 @@ class SmrPort
 				$this->goods['All Goods'][$key] =& $good;
 			} unset($good); //Serializing this would have screwed up stock counts
 			unset($cache);
+			return true;
 		}
+		return false;
 	}
 	public static function &getCachedPort($gameID,$sectorID,$accountID,$forceUpdate=false)
 	{
