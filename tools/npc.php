@@ -433,11 +433,7 @@ function NPCStuff()
 				release_lock();
 			}
 			//Clean up the caches as the data may get changed by other players
-			SmrSector::clearCache();
-			SmrPlayer::clearCache();
-			SmrShip::clearCache();
-			SmrForce::clearCache();
-			SmrPort::clearCache();
+			clearCaches();
 			//Clear up some global vars
 			global $locksFailed;
 			$locksFailed = array();
@@ -448,6 +444,15 @@ function NPCStuff()
 	}
 	debug('Actions Finished.');
 	exitNPC();
+}
+
+function clearCaches()
+{
+	SmrSector::clearCache();
+	SmrPlayer::clearCache();
+	SmrShip::clearCache();
+	SmrForce::clearCache();
+	SmrPort::clearCache();
 }
 
 function debug($message, $debugObject = null)
@@ -465,6 +470,7 @@ function processContainer($container)
 		debug('We are executing the same container twice?', $container);
 		throw new Exception('We are executing the same container twice?');
 	}
+	clearCaches(); //Clear caches of anything we have used for decision making before processing container and getting lock.
 	$previousContainer = $container;
 	debug('Executing container',$container);
  	//Redefine MICRO_TIME and TIME, the rest of the game expects them to be the single point in time that the script is executing, with it being redefined for each page load - unfortunately NPCs are one consistent script so we have to do a hack and redefine it (or change every instance of the TIME constant.
