@@ -45,7 +45,7 @@ try
 	define('MINUMUM_RESERVE_CREDITS',100000);
 	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
 	define('MIN_SLEEP_TIME',800000);
-	define('MAX_SLEEP_TIME',1300000);
+	define('MAX_SLEEP_TIME',1100000);
 	
 	$SHIP_UPGRADE_PATH = array(
 		2 => array( //Alskant
