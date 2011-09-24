@@ -229,7 +229,10 @@ function NPCStuff()
 				}
 				if($player->getAllianceID() != $NPC_LOGIN['AllianceID'])
 				{
-					processContainer(joinAlliance($NPC_LOGIN['AllianceID'], '*--NPCS--*'));
+					if($player->hasAlliance())
+						processContainer(leaveAlliance());
+					else
+						processContainer(joinAlliance($NPC_LOGIN['AllianceID'], '*--NPCS--*'));
 				}
 			}
 			
@@ -784,6 +787,12 @@ function joinAlliance($allianceID,$password)
 	debug('Joining alliance: '.$allianceID);
 	$_REQUEST['password'] = $password;
 	return create_container('alliance_join_processing.php','',array('alliance_id'=>$allianceID));
+}
+
+function leaveAlliance()
+{
+	debug('Leaving alliance');
+	return create_container('alliance_leave_processing.php','',array('action'=>'YES'));
 }
 
 function &findRoutes()
