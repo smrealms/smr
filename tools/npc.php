@@ -198,7 +198,7 @@ catch(Exception $e)
 		
 function NPCStuff()
 {
-	global $actions,$var,$previousContainer,$underAttack;
+	global $actions,$var,$previousContainer,$underAttack,$NPC_LOGIN;
 	
 	$underAttack = false;
 	$actions=-1;
