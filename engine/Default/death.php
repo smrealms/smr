@@ -7,6 +7,7 @@ $PHP_OUTPUT.=('Activating the emergency warp system, your stomach turns as you a
 $PHP_OUTPUT.=('<p><img src="images/escape_pod.jpg"></p>');
 
 $player->setDead(false);
+$player->deletePlottedCourse();
 
 $account->log(8, 'Player sees death screen', $player->getSectorID());
 ?>
