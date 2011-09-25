@@ -236,7 +236,7 @@ function NPCStuff()
 			
 			if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set.
 			{
-				$TRADE_ROUTES =& findRoutes();
+				$TRADE_ROUTES =& findRoutes($player);
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
 			}
 			
@@ -796,10 +796,8 @@ function leaveAlliance()
 	return create_container('alliance_leave_processing.php','',array('action'=>'YES'));
 }
 
-function &findRoutes()
+function &findRoutes($player)
 {
-	global $player;
-	
 	debug('Finding Routes');
 	
 	$galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
