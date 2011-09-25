@@ -553,9 +553,9 @@ function do_voodoo()
 		$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 		$GLOBALS['player'] =& $player;
 
-		if($player->isDead() && $var['body'] != 'death.php' && !isset($var['override_death']))
+		if($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death']))
 		{
-			forward(create_container('skeleton.php','death.php'));
+			forward(create_container('death_processing.php'));
 		}
 		enableProtectionDependantRefresh($template,$player);
 
@@ -570,8 +570,8 @@ function do_voodoo()
 
 		if (!$player->isDead() && $player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT &&
 			$player->getNewbieWarning() &&
-			$var['body'] != 'newbie_warning.php')
-			forward(create_container('skeleton.php', 'newbie_warning.php'));
+			$var['url'] != 'newbie_warning_processing.php')
+			forward(create_container('newbie_warning_processing.php'));
 	}
 
 	if($var['url'] != 'skeleton.php')
