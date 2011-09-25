@@ -217,8 +217,6 @@ function NPCStuff()
 			//We have to reload player on each loop
 			$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 			$player->updateTurns();
-			$player->setNewbieWarning(false); //NPCs don't want a newbie warning.
-			$GLOBALS['player'] =& $player;
 			
 			if($actions==0)
 			{
@@ -249,7 +247,11 @@ function NPCStuff()
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
 				processContainer(create_container('skeleton.php','death.php'));
 			}
-			
+			if($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning)
+			{
+				processContainer(create_container('skeleton.php','newbie_warning.php'));
+			}
+				
 			$fedContainer = null;
 			if($var['url']=='shop_ship_processing.php'&&($fedContainer = plotToFed(true))!==true)
 			{ //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
