@@ -253,13 +253,13 @@ function NPCStuff()
 			}
 				
 			$fedContainer = null;
-			if($var['url']=='shop_ship_processing.php'&&($fedContainer = plotToFed(true))!==true)
+			if($var['url']=='shop_ship_processing.php'&&($fedContainer = plotToFed($player,true))!==true)
 			{ //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
 			}
 			else if($player->getShip()->isUnderAttack()===true
 				&&($player->hasPlottedCourse()===false||$player->getPlottedCourse()->getEndSector()->offersFederalProtection()===false)
-				&&($fedContainer==null?$fedContainer = plotToFed(true):$fedContainer)!==true)
+				&&($fedContainer==null?$fedContainer = plotToFed($player,true):$fedContainer)!==true)
 			{ //We're under attack and need to plot course to fed.
 				debug('Under Attack');
 				$underAttack = true;
@@ -268,7 +268,7 @@ function NPCStuff()
 			else if($player->hasPlottedCourse()===true&&$player->getPlottedCourse()->getEndSector()->offersFederalProtection())
 			{ //We have a route to fed to follow, figure it's probably a damned sensible thing to follow.
 				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
-				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
+				processContainer(moveToSector($player,$player->getPlottedCourse()->getNextOnPath()));
 			}
 			else if(($container = canWeUNO($player,true))!==false)
 			{ //We have money and are at a uno, let's uno!
@@ -278,7 +278,7 @@ function NPCStuff()
 			else if($player->hasPlottedCourse()===true)
 			{ //We have a route to follow, figure it's probably a sensible thing to follow.
 				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
-				processContainer(moveToSector($player->getPlottedCourse()->getNextOnPath()));
+				processContainer(moveToSector($player,$player->getPlottedCourse()->getNextOnPath()));
 			}
 			else if($player->getTurns()<NPC_LOW_TURNS || $underAttack)
 			{ //We're low on turns or have been under attack and need to plot course to fed
@@ -297,7 +297,7 @@ function NPCStuff()
 					changeNPCLogin();
 				}
 				$ship =& $player->getShip();
-				processContainer(plotToFed(!$ship->hasMaxShields()||!$ship->hasMaxArmour()||!$ship->hasMaxCargoHolds()));
+				processContainer(plotToFed($player,!$ship->hasMaxShields()||!$ship->hasMaxArmour()||!$ship->hasMaxCargoHolds()));
 			}
 			else if(($container = checkForShipUpgrade($player))!==false)
 			{ //We have money and are at a uno, let's uno!
@@ -349,7 +349,7 @@ function NPCStuff()
 								{
 //									var_dump($TRADE_ROUTES);
 									debug('Changing Route Failed');
-									processContainer(plotToFed());
+									processContainer(plotToFed($player));
 								}
 								else
 								{
@@ -361,13 +361,13 @@ function NPCStuff()
 						else if($ship->hasCargo($buyRoute->getGoodID())===true)
 						{ //We've bought goods, plot to sell
 							debug('Plot To Sell: '.$buyRoute->getSellSectorId());
-							processContainer(plotToSector($buyRoute->getSellSectorId()));
+							processContainer(plotToSector($player,$buyRoute->getSellSectorId()));
 						}
 						else
 						{
 							//Dump goods
 							debug('Dump Goods');
-							processContainer(dumpCargo());
+							processContainer(dumpCargo($player));
 						}
 					}
 					else
@@ -389,7 +389,7 @@ function NPCStuff()
 							{
 //								var_dump($TRADE_ROUTES);
 								debug('Changing Route Failed');
-								processContainer(plotToFed());
+								processContainer(plotToFed($player));
 							}
 							else
 							{
@@ -402,13 +402,13 @@ function NPCStuff()
 				else
 				{
 					debug('Plot To Buy: '.$forwardRoute->getBuySectorId());
-					processContainer(plotToSector($forwardRoute->getBuySectorId()));
+					processContainer(plotToSector($player,$forwardRoute->getBuySectorId()));
 				}
 			}
 			else
 			{ //Something weird is going on.. Let's fed and wait.
 				debug('No actual action? Wtf?');
-				processContainer(plotToFed());
+				processContainer(plotToFed($player));
 			}
 			/*
 			else
@@ -416,7 +416,7 @@ function NPCStuff()
 				$links = $player->getSector()->getLinks();
 				$moveTo = $links[array_rand($links)];
 				debug('Random Wanderings: '.$moveTo);
-				processContainer(moveToSector($moveTo));
+				processContainer(moveToSector($player,$moveTo));
 			}
 			*/
 		}
@@ -661,9 +661,8 @@ function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port)
 	
 	return create_container('shop_goods_processing.php','',array('offered_price'=>$offeredPrice,'ideal_price'=>$idealPrice,'amount'=>$amount,'good_id'=>$goodID,'bargain_price'=>$offeredPrice));
 }
-function dumpCargo()
+function dumpCargo(&$player)
 {
-	global $player;
 	$ship =& $player->getShip();
 	$cargo =& $ship->getCargo();
 	debug('Ship Cargo',$cargo);
@@ -675,15 +674,13 @@ function dumpCargo()
 		}
 	}
 }
-function plotToSector($sectorID)
+function plotToSector(&$player,$sectorID)
 {
-	global $player;
 	return create_container('course_plot_processing.php','',array('from'=>$player->getSectorID(),'to'=>$sectorID));
 }
 
-function plotToFed($plotToHQ=false)
+function plotToFed(&$player,$plotToHQ=false)
 {
-	global $player;
 	debug('Plotting To Fed',$plotToHQ);
 	
 	if($plotToHQ === false && $player->getSector()->offersFederalProtection())
@@ -691,7 +688,7 @@ function plotToFed($plotToHQ=false)
 		if(!$player->hasNewbieTurns() && !$player->hasFederalProtection() && $player->getShip()->hasIllegalGoods())
 		{ //We have illegals and no newbie turns, dump the illegals to get fed protection.
 			debug('Dumping illegals');
-			processContainer(dumpCargo());
+			processContainer(dumpCargo($player));
 		}
 		debug('Plotted to fed whilst in fed, switch NPC and wait for turns');
 		changeNPCLogin();
@@ -717,9 +714,8 @@ function plotToNearest(AbstractSmrPlayer &$player, &$realX)
 	
 	return create_container('course_plot_nearest_processing.php','',array('RealX'=>$realX));
 }
-function moveToSector($targetSector)
+function moveToSector(&$player,$targetSector)
 {
-	global $player;
 	debug('Moving from #'.$player->getSectorID().' to #'.$targetSector);
 	return create_container('sector_move_processing.php','',array('target_sector'=>$targetSector,'target_page'=>''));
 }
@@ -796,7 +792,7 @@ function leaveAlliance()
 	return create_container('alliance_leave_processing.php','',array('action'=>'YES'));
 }
 
-function &findRoutes($player)
+function &findRoutes(&$player)
 {
 	debug('Finding Routes');
 	
