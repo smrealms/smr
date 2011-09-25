@@ -247,8 +247,7 @@ function NPCStuff()
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
-				$player->setDead(false);
-				$player->deletePlottedCourse(); //Remove any plotted course we had that might cause problems.
+				processContainer(create_container('skeleton.php','death.php'));
 			}
 			
 			$fedContainer = null;
