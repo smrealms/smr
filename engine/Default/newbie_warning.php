@@ -1,7 +1,4 @@
 <?php
-
-$player->setNewbieWarning(false);
-
 $template->assign('PageTopic','Warning!');
 
 $PHP_OUTPUT.=('<p>You have received this page because you are almost out of newbie turns.');

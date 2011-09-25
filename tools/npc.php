@@ -245,11 +245,11 @@ function NPCStuff()
 				debug('Some evil person killed us, let\'s move on now.');
 				$previousContainer = null; //We died, we don't care what we were doing beforehand.
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
-				processContainer(create_container('skeleton.php','death.php'));
+				processContainer(create_container('death_processing.php'));
 			}
 			if($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning)
 			{
-				processContainer(create_container('skeleton.php','newbie_warning.php'));
+				processContainer(create_container('newbie_warning_processing.php'));
 			}
 				
 			$fedContainer = null;

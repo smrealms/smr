@@ -51,15 +51,15 @@ if (!$db->nextRecord()) {
 
 	$db->query('SELECT * FROM kills WHERE dead_id = '.$player->getAccountID().' AND processed = \'TRUE\' AND game_id = '.$player->getGameID());
 	if ($db->nextRecord() && $var['body'] != 'trader_attack.php') {
-		$container = create_container('skeleton.php','death.php');
+		$container = create_container('death_processing.php');
 		$container['ahhh'] = 'Yes';
 	}
 }
 
 if ($player->getNewbieTurns() <= 20 &&
 	$player->getNewbieWarning() &&
-	$var['body'] != 'newbie_warning.php')
-	$container = create_container('skeleton.php', 'newbie_warning.php');
+	$var['url'] != 'newbie_warning_processing.php')
+	$container = create_container('newbie_warning_processing.php');
 
 $url = SmrSession::get_new_href($container);
 SmrSession::update();

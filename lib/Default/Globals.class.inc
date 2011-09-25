@@ -456,7 +456,7 @@ class Globals
 	
 	public static function getPodScreenHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php','death.php'));
+		return SmrSession::get_new_href(create_container('death_processing.php'));
 	}
 	
 	public static function getBetaFunctionsHREF() //BETA
@@ -624,6 +624,21 @@ class Globals
 	public static function getPoliticsHREF()
 	{
 		return SmrSession::get_new_href(create_container('skeleton.php', 'council_list.php'));
+	}
+	
+	public static function getCasinoHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'chess.php'));
+	}
+	
+	public static function getChessHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'chess.php'));
+	}
+	
+	public static function getChessCreateHREF()
+	{
+		return SmrSession::get_new_href(create_container('skeleton.php', 'chess_create_processing.php'));
 	}
 	
 	public static function getBarMainHREF()
