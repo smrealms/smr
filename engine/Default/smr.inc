@@ -519,7 +519,7 @@ function do_voodoo()
 		
 		// log?
 		$account->log(1, 'logged off from '.$curr_ip);
-		$container = create_container('logoff.php', 'skeleton.php');
+		$container = create_container('skeleton.php', 'logoff.php');
 		$container['logoff'] = 'yes';
 		forward($container);
 	}
