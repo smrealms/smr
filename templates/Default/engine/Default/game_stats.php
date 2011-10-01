@@ -20,17 +20,17 @@
 					<tr>
 						<td align="right">Start Date</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameStartDate($StatsGameID)); ?></td>
+						<td align="left"><?php echo date(DATE_FULL_SHORT,Globals::getGameStartDate($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Start Turns Date</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo date(DATE_DATE_SHORT,SmrGame::getGame($StatsGameID)->getStartTurnsDate()); ?></td>
+						<td align="left"><?php echo date(DATE_FULL_SHORT,SmrGame::getGame($StatsGameID)->getStartTurnsDate()); ?></td>
 					</tr>
 					<tr>
 						<td align="right">End Date</td>
 						<td>&nbsp;</td>
-						<td align="left"><?php echo date(DATE_DATE_SHORT,Globals::getGameEndDate($StatsGameID)); ?></td>
+						<td align="left"><?php echo date(DATE_FULL_SHORT,Globals::getGameEndDate($StatsGameID)); ?></td>
 					</tr>
 					<tr>
 						<td align="right">Current Players</td>
