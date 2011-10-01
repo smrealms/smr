@@ -527,8 +527,9 @@ function do_voodoo()
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::$game_id > 0)
 	{
-		if(SmrGame::getGame(SmrSession::$game_id)->getEndDate() < TIME) {
-			forward(SmrSession::get_new_sn(create_container('game_play_preprocessing.php', '', array('errorMsg' => 'The game has ended.'))));
+		if(SmrGame::getGame(SmrSession::$game_id)->getEndDate() < TIME)
+		{
+			forward(create_container('game_play_preprocessing.php', '', array('errorMsg' => 'The game has ended.')));
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
