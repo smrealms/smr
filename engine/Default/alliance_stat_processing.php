@@ -9,13 +9,12 @@ if (isset($_REQUEST['description']))
 if (isset($_REQUEST['irc']))
 	$irc = trim($_REQUEST['irc']);
 if (isset($_REQUEST['mod']))
-{
-	if(preg_match('/"/',$_REQUEST['mod']))
-		create_error('You cannot use a " in the image link!');
 	$mod = trim($_REQUEST['mod']);
-}
 if (isset($_REQUEST['url']))
 	$url = trim($_REQUEST['url']);
+
+if(preg_match('/"/',$url))
+	create_error('You cannot use a " in the image link!');
 
 if (isset($password) && $password == '')
 	create_error('You cannot set an empty password!');
