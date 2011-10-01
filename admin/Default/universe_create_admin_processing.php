@@ -109,7 +109,7 @@ $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
 			WHERE game_id = ' . $var['game_id']);
 if (!$db->nextRecord())
-	create_error('This game doesn\'t have any sectors');
+	create_error('This game doesn\'t have any sectors!');
 
 $min_sector = $db->getField('MIN(sector_id)');
 $max_sector = $db->getField('MAX(sector_id)');

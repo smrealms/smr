@@ -17,7 +17,7 @@ if(isset($_REQUEST['player_name']))
 
 if(!empty($var['account_id']) && !is_numeric($var['account_id']))
 {
-	create_error('Account ID must be a number');
+	create_error('Account ID must be a number.');
 }
 
 $account_id = $var['account_id'];

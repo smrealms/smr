@@ -8,7 +8,7 @@ if (isset($var['process']))
 		SmrSession::updateVar('type',$_REQUEST['type']);
 	$type = $var['type'];
 	if(empty($type))
-		create_error('You have to choose the type of ticker to buy');
+		create_error('You have to choose the type of ticker to buy.');
 	switch($type)
 	{
 		case 'NEWS':

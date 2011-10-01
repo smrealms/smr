@@ -22,11 +22,11 @@ if($_REQUEST['action'] == 'Preview article')
 
 if (empty($title))
 {
-    create_error('You must enter a title');
+    create_error('You must enter a title.');
 }
 if(empty($message))
 {
-    create_error('You must enter some text');
+    create_error('You must enter some text.');
 }
 
 if(isset($var['id']))

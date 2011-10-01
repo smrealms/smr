@@ -20,7 +20,7 @@ if ($player->hasAlliance())
 		$db->query('SELECT owner_id FROM planet WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID().' LIMIT 1');
 		$db->nextRecord();
 		if ($db->getField('owner_id') != 0 && $db->getField('owner_id') != $player->getAccountID())
-			create_error('Your alliance doesn\'t allow you to dock at their planet');
+			create_error('Your alliance doesn\'t allow you to dock at their planet.');
 	}
 }
 $player->setLandedOnPlanet(true);

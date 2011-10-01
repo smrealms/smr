@@ -10,10 +10,8 @@ $GLOBALS['port'] =& $port;
 $amount = get_amount();
 $bargain_price = get_bargain_price();
 
-if (!is_numeric($amount))
-	create_error('Numbers only please');
-if (!is_numeric($bargain_price))
-	create_error('Numbers only please');
+if (!is_numeric($amount) || !is_numeric($bargain_price))
+	create_error('Numbers only please!');
 // get good name, id, ...
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);

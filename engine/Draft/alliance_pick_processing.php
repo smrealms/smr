@@ -1,7 +1,7 @@
 <?php
 if(!is_numeric($var['PickedAccountID']))
 {
-	create_error('You have to pick a player');
+	create_error('You have to pick a player.');
 }
 $db->query('
 SELECT MIN(alliance_member) min_members
@@ -28,7 +28,7 @@ if($pickedPlayer->hasAlliance())
 	}
 	else
 	{
-		create_error('Picked player already has an alliance');
+		create_error('Picked player already has an alliance.');
 	}
 }
 // assign the player to the current alliance

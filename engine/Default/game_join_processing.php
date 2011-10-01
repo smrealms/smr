@@ -47,7 +47,7 @@ $credits	= Globals::getGameCreditsRequired($gameID);
 if ($credits > 0)
 {
 	if($account->getTotalSmrCredits()<$credits)
-		create_error('You do not have enough credits to join this game');
+		create_error('You do not have enough credits to join this game!');
 	$account->decreaseTotalSmrCredits($credits);
 }
 

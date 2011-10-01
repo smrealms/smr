@@ -10,7 +10,7 @@ else {
     //make sure it isnt online
     $db->query('SELECT * FROM galactic_post_online WHERE game_id = '.$player->getGameID().' AND paper_id = '.$var['id']);
     if ($db->getNumRows())
-    	create_error('You cant delete a paper that is online.  You must first replace the paper with another');
+    	create_error('You cant delete a paper that is online.  You must first replace the paper with another.');
     else {
 
     	//its ok to delete this paper

@@ -1,7 +1,7 @@
 <?php
 $action = $_REQUEST['action'];
 if (!isset($action) || ($action != 'Deposit' && $action != 'Withdraw'))
-    create_error('You must choose if you want to deposit or withdraw');
+    create_error('You must choose if you want to deposit or withdraw.');
 $amount = $_REQUEST['amount'];
 // only whole numbers allowed
 $amount = floor($amount);

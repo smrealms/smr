@@ -7,7 +7,7 @@ if(isset($var['RealX']))
 else
 {
 	if (!isset($_REQUEST['xtype']) || !isset($_REQUEST['X']))
-		create_error('You have to select what you would like to find');
+		create_error('You have to select what you would like to find.');
 	$xType = $_REQUEST['xtype'];
 	$X = $_REQUEST['X'];
 	
@@ -32,7 +32,7 @@ else
 			$realX =& Globals::getGood($X);
 		break;
 		default:
-			create_error('Invalid search');
+			create_error('Invalid search.');
 	}
 	
 	$account->log(5, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
@@ -45,7 +45,7 @@ $container['body'] = 'course_plot_result.php';
 
 $sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID());
 if($sector->hasX($realX,$player))
-	create_error('Current sector has what you\'re looking for');
+	create_error('Current sector has what you\'re looking for!');
 
 require_once(get_file_loc('Plotter.class.inc'));
 $path =& Plotter::findDistanceToX($realX, $sector, true, $player, $player);

@@ -7,10 +7,10 @@ $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))
-	create_error('Numbers only please');
+	create_error('Numbers only please!');
 $amount = floor($amount);
 if ($amount <= 0)
-	create_error('You must enter an amount > 0');
+	create_error('You must enter an amount > 0!');
 
 $good =& $port->getGood($good_id);
 // check if there are enough left at port

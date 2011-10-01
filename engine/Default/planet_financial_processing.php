@@ -8,7 +8,7 @@ $amount = $_REQUEST['amount'];
 if ($action == 'Deposit' || $action == 'Withdraw')
 {
 	if (!is_numeric($amount))
-		create_error('Numbers only please');
+		create_error('Numbers only please!');
 
 	// only whole numbers allowed
 	$amount = floor($amount);

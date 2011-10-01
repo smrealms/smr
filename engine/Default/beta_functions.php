@@ -1,6 +1,6 @@
 <?php
 if(!ENABLE_BETA)
-	create_error('Beta functions are disabled');
+	create_error('Beta functions are disabled.');
 
 $template->assign('PageTopic','Beta things');
 
