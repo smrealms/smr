@@ -47,6 +47,7 @@ if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
 // create sector object for target sector
 $targetSector =& SmrSector::getSector($player->getGameID(), $target);
 
+require_once(get_file_loc('Plotter.class.inc'));
 $path =& Plotter::findDistanceToX($targetSector, $player->getSector(), true);
 if($path===false)
 	create_error('Unable to plot from '.$start.' to '.$target.'.');
