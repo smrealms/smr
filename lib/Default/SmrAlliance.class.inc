@@ -139,7 +139,9 @@ class SmrAlliance
 	
 	public function setImageURL($url)
 	{
-		$this->imgSrc = $url;
+		if(preg_match('/"/',$url))
+			throw new Exception('Tried to set an image url with ": ' . $url);
+		$this->imgSrc = htmlspecialchars($url);
 	}
 	
 	public function getAccount()
