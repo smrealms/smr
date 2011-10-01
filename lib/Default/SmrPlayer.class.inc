@@ -1279,7 +1279,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		
 		// The person who got the kill gains experience
-		$gainedExp = ceil(0.75*(( (($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID()) + 1) * 0.04 + 0.025)  * $this->getExperience()));
+		$expGainPercent = 0.04875 + 0.03 * ($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID());
+		$gainedExp = ceil($expGainPercent * $this->getExperience());
 		
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
