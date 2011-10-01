@@ -77,15 +77,10 @@ if ($player->getLastSectorID() != $var['target_sector'])
 	{
 		if ($player->hasNewbieTurns())
 		{
-			$container['url']	= 'skeleton.php';
-			$container['body']	= 'current_sector.php';
-			$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
 			$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
-			$container['msg'] .= $turns.' turn'.($turns==1?'':'s');
-			
 			$player->takeTurns($turns,$turns);
-			
-			$container['msg'] .= ' to navigate the minefield safely';
+			create_container('skeleton.php', 'current_sector.php');
+			$container['msg']= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns.' turn'.($turns==1?'':'s') . ' to navigate the minefield safely';
 			forward($container);
 		}
 		else
@@ -116,10 +111,10 @@ $player->actionTaken('WalkSector',array('Sector'=>&$sector));
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_WALK);
 
-// Move the user around (Must be done while holding both sector locks)
+// Move the user around
+// TODO: (Must be done while holding both sector locks)
 $player->setSectorID($var['target_sector']);
 $player->takeTurns($turns,$turns);
-$player->detected = 'false';
 $player->update();
 
 // We need to release the lock on our old sector
@@ -160,23 +155,10 @@ if ($mine_owner_id)
 {
 	if ($player->hasNewbieTurns())
 	{
-		$container['url']	= 'skeleton.php';
-		$container['body']	= 'current_sector.php';
-		$container['msg']	= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ';
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
-		$container['msg'] .= $turns.' turn'.($turns==1?'':'s');
-		
 		$player->takeTurns($turns,$turns);
-		
-		$container['msg'] .= ' to navigate the minefield safely';
-		forward($container);
-	}
-	
-	$player->update();
-	
-	if($player->getNewbieTurns() > 0)
-	{
-		$container['msg'] .= ' to navigate the minefield safely';
+		create_container('skeleton.php', 'current_sector.php');
+		$container['msg']= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns.' turn'.($turns==1?'':'s') . ' to navigate the minefield safely.';
 		forward($container);
 	}
 	else
@@ -188,7 +170,5 @@ if ($mine_owner_id)
 }
 
 // otherwise
-$container['url'] = 'skeleton.php';
-$container['body'] = $var['target_page'];
-forward($container);
+forward(create_container('skeleton.php', $var['target_page']));
 ?>
