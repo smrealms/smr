@@ -4,12 +4,12 @@ if($player->getAllianceJoinable() > TIME)
 	create_error('You cannot create an alliance for another '.format_time($player->getAllianceJoinable()-TIME).'.');
 
 // disallow certain ascii chars
-for ($i = 0; $i < strlen($_POST['name']); $i++)
-	if (ord($_POST['name'][$i]) < 32 || ord($_POST['name'][$i]) > 127)
+for ($i = 0; $i < strlen($_REQUEST['name']); $i++)
+	if (ord($_REQUEST['name'][$i]) < 32 || ord($_REQUEST['name'][$i]) > 127)
 		create_error('The alliance name contains invalid characters!');
 
 // trim input first
-$name = trim($_POST['name']);
+$name = trim($_REQUEST['name']);
 $password = $_REQUEST['password'];
 $description = $_REQUEST['description'];
 $recruit = $_REQUEST['recruit'];

@@ -38,7 +38,7 @@ try
 	
 	if(!defined('NPC_GAME_ID'))
 	{
-		define('NPC_GAME_ID',40);
+		define('NPC_GAME_ID',42);
 	}
 	define('NPC_LOW_TURNS',75);
 	define('NPC_START_TURNS',300);
@@ -198,7 +198,7 @@ catch(Exception $e)
 		
 function NPCStuff()
 {
-	global $actions,$var,$previousContainer,$underAttack,$NPC_LOGIN;
+	global $actions,$var,$previousContainer,$underAttack,$NPC_LOGIN,$db;
 	
 	$underAttack = false;
 	$actions=-1;
@@ -225,12 +225,18 @@ function NPCStuff()
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: '.$player->getTurns());
 					changeNPCLogin();
 				}
-				if($player->getAllianceID() != $NPC_LOGIN['AllianceID'])
+				if($player->getAllianceName() != $NPC_LOGIN['AllianceName'])
 				{
 					if($player->hasAlliance())
 						processContainer(leaveAlliance());
-					else
-						processContainer(joinAlliance($NPC_LOGIN['AllianceID'], '*--NPCS--*'));
+					else {
+						// figure out if the alliance already exist
+						$db->query('SELECT alliance_id FROM alliance WHERE alliance_name='.$db->escapeString($NPC_LOGIN['AllianceName']).' AND game_id='.$db->escapeNumber(SmrSession::$game_id));
+						if ($db->nextRecord())
+							processContainer(joinAlliance($db->getField('alliance_id'),'*--NPCS--*'));
+						else
+							processContainer(createAlliance($NPC_LOGIN['AllianceName'],'*--NPCS--*'));
+					}
 				}
 			}
 			
@@ -526,7 +532,7 @@ function changeNPCLogin()
 	
 	debug('Choosing new NPC');
 	$db2 = new SmrMySqlDatabase();
-	$db->query('SELECT login, player_name, alliance_id FROM npc_logins WHERE working='.$db->escapeBoolean(false).' AND login NOT IN ('.$db->escapeArray($NPC_LOGINS_USED).')');
+	$db->query('SELECT login, player_name, alliance_name FROM npc_logins WHERE active='.$db->escapeBoolean(true).' AND working='.$db->escapeBoolean(false).' AND login NOT IN ('.$db->escapeArray($NPC_LOGINS_USED).')');
 	while($db->nextRecord())
 	{
 		$db2->query('UPDATE npc_logins SET working='.$db2->escapeBoolean(true).' WHERE login='.$db2->escapeString($db->getField('login')).' AND working='.$db2->escapeBoolean(false));
@@ -535,7 +541,7 @@ function changeNPCLogin()
 			$NPC_LOGIN = array(
 					'Login' => $db->getField('login'),
 					'PlayerName' => $db->getField('player_name'),
-					'AllianceID' => $db->getField('alliance_id')
+					'AllianceName' => $db->getField('alliance_name')
 			);
 			break;
 		}
@@ -784,6 +790,13 @@ function joinAlliance($allianceID,$password)
 	debug('Joining alliance: '.$allianceID);
 	$_REQUEST['password'] = $password;
 	return create_container('alliance_join_processing.php','',array('alliance_id'=>$allianceID));
+}
+
+function createAlliance($allianceName,$password)
+{
+	debug('Creating alliance: '.$allianceName);
+	$_REQUEST['password'] = $password;
+	return create_container('alliance_create_processing.php','',array('name'=>$allianceName,'password'=>$password,'perms'=>'full'));
 }
 
 function leaveAlliance()
