@@ -161,7 +161,7 @@ class SmrAlliance
 	
 	public function setMotD($motd)
 	{
-		$this->motd = $motd;
+		$this->motd = nl2br(htmlspecialchars($motd));
 	}
 	
 	public function getPassword()
@@ -185,7 +185,7 @@ class SmrAlliance
 			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,$boxDescription);
 		else
 			$account->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,$boxDescription);
-		$this->description=$description;
+		$this->description=nl2br(htmlspecialchars($description));
 	}
 	
 	public function canJoinAlliance(SmrPlayer &$player)
@@ -248,8 +248,8 @@ class SmrAlliance
 
 		$this->db->query('UPDATE alliance SET alliance_password = ' . $this->db->escapeString($this->password) . ', ' .
 										 'alliance_account = '.$this->account.', ' .
-										 'alliance_description = ' . $this->db->escapeString(nl2br($this->description)) . ', ' .
-										 '`mod` = ' . $this->db->escapeString(nl2br($this->motd)) . ', ' .
+										 'alliance_description = ' . $this->db->escapeString($this->description) . ', ' .
+										 '`mod` = ' . $this->db->escapeString($this->motd) . ', ' .
 										 'img_src = ' . $this->db->escapeString($this->imgSrc) . ', ' .
 										 'alliance_kills = '.$this->kills.', ' .
 										 'alliance_deaths = '.$this->deaths.', ' .
