@@ -16,11 +16,15 @@ if (isset($_REQUEST['mod']))
 }
 if (isset($_REQUEST['url']))
 	$url = trim($_REQUEST['url']);
+
 if (isset($password) && $password == '')
 	create_error('You cannot set an empty password!');
 
 if (isset($description) && $description == '')
 	create_error('Please enter a description for your alliance.');
+
+if (isset($irc) && ($irc == '' || $irc == '#' || $irc == '#smr' || $irc == '#smr-bar'))
+	create_error('Please enter a valid irc channel for your alliance.');
 
 $alliance =& SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 if (isset($password))
