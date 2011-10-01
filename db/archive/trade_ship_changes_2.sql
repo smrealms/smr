@@ -44,3 +44,4 @@ UPDATE smr_new.ship_type_support_hardware SET max_amount = 255 WHERE ship_type_i
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 250 WHERE ship_type_id = 46 AND hardware_type_id = 3; -- Favoured Offspring to 250 holds
 
 UPDATE smr_new.ship_type SET speed = 10 WHERE ship_type_id = 72; -- Vengeance to 10 speed
+UPDATE smr_new.ship_type_support_hardware SET max_amount = 200 WHERE ship_type_id = 72 AND hardware_type_id = 3; -- Vengeance to 200 holds
