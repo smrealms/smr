@@ -504,7 +504,7 @@ function do_voodoo()
 		SmrSession::$game_id = 0;
 		SmrSession::update();
 		
-		forward(create_container('skeleton.php', 'game_play.php'));
+		forward(create_container('skeleton.php', 'game_play.php', $var));
 	}
 	else if($var['url'] == 'logoff_preprocessing.php')
 	{
@@ -519,9 +519,7 @@ function do_voodoo()
 		
 		// log?
 		$account->log(1, 'logged off from '.$curr_ip);
-		$container = array();
-		$container['body'] ='logoff.php';
-		$container['url'] = 'skeleton.php';
+		$container = create_container('logoff.php', 'skeleton.php');
 		$container['logoff'] = 'yes';
 		forward($container);
 	}
@@ -529,6 +527,9 @@ function do_voodoo()
 	// initialize objects we usually need, like player, ship
 	if (SmrSession::$game_id > 0)
 	{
+		if(SmrGame::getGame(SmrSession::$game_id)->getEndDate() < TIME) {
+			forward(SmrSession::get_new_sn(create_container('game_play_preprocessing.php', '', array('errorMsg' => 'The game has ended.'))));
+		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
 		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
