@@ -56,7 +56,9 @@ class Plotter
 				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit)
 				{
 					$checkSector =& SmrSector::getSector($gameID,$checkSectorID);
-					if (($needsToHaveBeenExploredBy===null||$needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID()))===true&&$checkSector->hasX($x,$player)===true)
+					if (($x=='Distance' && $sectorsTravelled==$distanceLimit)
+						|| (($needsToHaveBeenExploredBy===null||$needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID()))===true
+							&& $checkSector->hasX($x,$player)===true))
 					{
 						if($useFirst===true)
 							return $distance;
