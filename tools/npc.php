@@ -220,23 +220,22 @@ function NPCStuff()
 			
 			if($actions==0)
 			{
-				if($player->getTurns()<NPC_START_TURNS && ($player->hasNewbieTurns() || $player->hasFederalProtection()))
-				{
-					debug('We don\'t have enough turns to bother starting trading, and we are protected: '.$player->getTurns());
-					changeNPCLogin();
-				}
 				if($player->getAllianceName() != $NPC_LOGIN['AllianceName'])
 				{
 					if($player->hasAlliance())
 						processContainer(leaveAlliance());
-					else {
-						// figure out if the alliance already exist
-						$db->query('SELECT alliance_id FROM alliance WHERE alliance_name='.$db->escapeString($NPC_LOGIN['AllianceName']).' AND game_id='.$db->escapeNumber(SmrSession::$game_id));
-						if ($db->nextRecord())
-							processContainer(joinAlliance($db->getField('alliance_id'),'*--NPCS--*'));
-						else
-							processContainer(createAlliance($NPC_LOGIN['AllianceName'],'*--NPCS--*'));
-					}
+
+					// figure out if the selected alliance already exist
+					$db->query('SELECT alliance_id FROM alliance WHERE alliance_name='.$db->escapeString($NPC_LOGIN['AllianceName']).' AND game_id='.$db->escapeNumber(SmrSession::$game_id));
+					if ($db->nextRecord())
+						processContainer(joinAlliance($db->getField('alliance_id'),'*--NPCS--*'));
+					else
+						processContainer(createAlliance($NPC_LOGIN['AllianceName'],'*--NPCS--*'));
+				}
+				if($player->getTurns()<NPC_START_TURNS && ($player->hasNewbieTurns() || $player->hasFederalProtection()))
+				{
+					debug('We don\'t have enough turns to bother starting trading, and we are protected: '.$player->getTurns());
+					changeNPCLogin();
 				}
 			}
 			
