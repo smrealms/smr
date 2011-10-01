@@ -795,8 +795,10 @@ function joinAlliance($allianceID,$password)
 function createAlliance($allianceName,$password)
 {
 	debug('Creating alliance: '.$allianceName);
+	$_REQUEST['name'] = $allianceName;
 	$_REQUEST['password'] = $password;
-	return create_container('alliance_create_processing.php','',array('name'=>$allianceName,'password'=>$password,'perms'=>'full'));
+	$_REQUEST['perms'] = 'full';
+	return create_container('alliance_create_processing.php');
 }
 
 function leaveAlliance()
