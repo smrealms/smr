@@ -222,6 +222,9 @@ function NPCStuff()
 			{
 				if($player->getAllianceName() != $NPC_LOGIN['AllianceName'])
 				{
+					// dirty hack so we can revisit the init block here on next iteration
+					$actions--;
+
 					if($player->hasAlliance())
 						processContainer(leaveAlliance());
 
