@@ -5,7 +5,7 @@ require_once(get_file_loc('SmrAlliance.class.inc'));
 $amount = $_REQUEST['amount'];
 // check for numbers
 if (!is_numeric($amount))
-	create_error('Numbers only please');
+	create_error('Numbers only!');
 
 // only whole numbers allowed
 $amount = floor($amount);
@@ -70,7 +70,7 @@ else
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\' AND time > ' . (TIME - 24 * 60 * 60));
 		if ($db->nextRecord() && !is_null($db->getField('total'))) $total = $db->getField('total');
 		else $total = 0;
-		if ($total + $amount > $max) create_error('Your alliance doesn\'t allow you to take that much cash this often');
+		if ($total + $amount > $max) create_error('Your alliance doesn\'t allow you to take that much cash this often!');
 	}
 	
 	$player->increaseCredits($amount);

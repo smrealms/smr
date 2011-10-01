@@ -18,7 +18,7 @@ if ($playerID == '0')
 	create_error('Uhhh...who is [Please Select]?');
 
 if (!is_numeric($amount)||!is_numeric($smrCredits))
-	create_error('Numbers only please');
+	create_error('Numbers only please!');
 
 $amount = round($amount);
 if ($player->getCredits() < $amount)
@@ -29,7 +29,7 @@ if ($account->getSmrCredits() < $smrCredits)
 	create_error('You dont have that many SMR credits.');
 
 if ($amount <= 0 && $smrCredits <= 0)
-	create_error('You must enter an amount greater than 0');
+	create_error('You must enter an amount greater than 0!');
 
 if ((empty($amount) && empty($smrCredits)) || empty($playerID))
 	create_error('Don\'t you want to place bounty?');

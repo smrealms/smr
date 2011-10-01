@@ -40,7 +40,7 @@ if(!isset($var['ShipName']))
 			if ($size[1] > MAX_IMAGE_HEIGHT)
 				create_error('Image is taller than '.MAX_IMAGE_HEIGHT.' pixels!');
 			if (filesize($_FILES['photo']['tmp_name']) > MAX_IMAGE_SIZE*1024)
-				create_error('Image is bigger than '.MAX_IMAGE_SIZE.'k');
+				create_error('Image is bigger than '.MAX_IMAGE_SIZE.'k.');
 			
 			$name = '<img style="padding:3px;" src="'.URL.'/upload/' . $player->getAccountID() . 'logo"><br />';
 			move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $player->getAccountID() . 'logo');

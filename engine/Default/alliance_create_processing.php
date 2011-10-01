@@ -28,7 +28,7 @@ if ($name2 == 'none' || $name == '(none)' || $name == '( none )' || $name == 'no
 	create_error('That is not a valid alliance name!');
 $filteredName = word_filter($name);
 if($name!=$filteredName)
-	create_error('The alliance name contains one or more filtered words, please reconsider the name');
+	create_error('The alliance name contains one or more filtered words, please reconsider the name.');
 
 // check if the alliance name already exist
 $db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escape_string($name, true) . ' AND ' .

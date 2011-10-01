@@ -80,10 +80,10 @@ if (isset($made) && !USING_AJAX)
 	$verify_pass = trim($_REQUEST['verify_pass']);
 
     if ($password != $verify_pass)
-    	create_error('The passwords do NOT match');
+    	create_error('The passwords do NOT match!');
 
     if (empty($password))
-    	create_error('You cannot use a blank password');
+    	create_error('You cannot use a blank password!');
 
 	$db->query('SELECT MAX(anon_id) FROM anon_bank WHERE game_id = '.SmrSession::$game_id);
     if ($db->nextRecord())
@@ -186,13 +186,13 @@ if (isset($account_num))
 		{
 			if ($db->getField('password') != $var['Password'])
 			{
-				create_error('Invalid password');
+				create_error('Invalid password!');
 			}
 		}
 	}
 	else
 	{
-		create_error('This account does not exist');
+		create_error('This account does not exist!');
 	}
 
 	$balance = $db->getField('amount');

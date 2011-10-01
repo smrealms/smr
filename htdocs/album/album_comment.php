@@ -47,7 +47,7 @@ try
 	$db = new SmrMySqlDatabase();
 	
 	if (!isset($_GET['comment']) || empty($_GET['comment']))
-		create_error_offline('Please enter a comment');
+		create_error_offline('Please enter a comment.');
 	else
 		$comment = $_GET['comment'];
 	

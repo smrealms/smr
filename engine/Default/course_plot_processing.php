@@ -17,7 +17,7 @@ $start = abs(str_replace('.','',$start));
 $target = abs(str_replace('.','',$target));
 
 if ($start == $target)
-	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*your real smart*cough*');
+	create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
 $startExists = false;
 $targetExists = false;

@@ -22,7 +22,7 @@ else $alliance_id = $player->getAllianceID();
 
 // it could be we got kicked during writing the msg
 if (!$player->hasAlliance())
-	create_error('You are not in an alliance anymore');
+	create_error('You are not in an alliance!');
 
 if (empty($body))
 	create_error('You must enter text!');

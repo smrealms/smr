@@ -25,11 +25,11 @@ $amount = $var['amount'];
 $smrCredits = $var['SmrCredits'];
 $account_id = $var['account_id'];
 if (!$amount&&!$smrCredits)
-	create_error('You must enter an amount');
+	create_error('You must enter an amount!');
 if ($amount < 0)
-	create_error('You must enter a positive amount');
+	create_error('You must enter a positive amount!');
 if ($smrCredits < 0)
-	create_error('You must enter a positive credits amount');
+	create_error('You must enter a positive SMR credits amount!');
 // take the bounty from the cash
 $player->decreaseCredits($amount);
 $account->decreaseSmrCredits($smrCredits);

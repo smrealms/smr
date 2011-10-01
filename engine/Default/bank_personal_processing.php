@@ -1,10 +1,10 @@
 <?php
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))
-	create_error('Numbers only please');
+	create_error('Numbers only!');
 $action = $_REQUEST['action'];
 if (!isset($action) || ($action != 'Deposit' && $action != 'Withdraw'))
-	create_error('You must choose if you want to deposit or withdraw');
+	create_error('You must choose if you want to deposit or withdraw.');
 
 // only whole numbers allowed
 $amount = floor($amount);

@@ -1,7 +1,7 @@
 <?php
 if(empty($_REQUEST['login'])||empty($_REQUEST['webboard'])||empty($_REQUEST['ircnick'])||empty($_REQUEST['started'])||empty($_REQUEST['reasons'])||empty($_REQUEST['time'])||empty($_REQUEST['online']))
 {
-	create_error('You must fill in all the fields');
+	create_error('You must fill in all the fields!');
 }
 $new_sub = 'Beta Application';
 $message = 'Login: '.$_REQUEST['login'].EOL.EOL.'-----------'.EOL.EOL.

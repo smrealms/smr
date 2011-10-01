@@ -167,7 +167,7 @@ elseif ($action == 'blackjack')
 		if (isset($var['bet'])) $bet = $var['bet'];
 		else $bet = $_REQUEST['bet'];
 		if (!is_numeric($bet))
-			create_error('Only Numbers Please');
+			create_error('Numbers only!');
 		$bet = round($bet);
 		if ($player->getCredits() < $bet)
 			create_error('Not even enough to play BlackJack...you need to trade!');

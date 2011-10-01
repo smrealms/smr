@@ -110,7 +110,7 @@ class Course_Plotter extends SmrMySqlDatabase{
 			create_error('Please enter only numbers!');
 	
 		if ($start == $target)
-			create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOUR ALREADY THERE! *cough*your real smart*cough*');
+			create_error('Hmmmm...if ' . $start . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
 		// get the galaxy_ids of the sectors that the user has requested a plot between
 		$this->start_galaxy = $this->get_galaxy_id($start);
@@ -174,7 +174,7 @@ class Course_Plotter extends SmrMySqlDatabase{
 		if($this->next_record()) {
 			$galaxy_id = $this->f('galaxy_id');
 		} else
-			create_error('The sector #' . $sector_id . ' doesn\'t exist');
+			create_error('The sector #' . $sector_id . ' doesn\'t exist.');
 
 		// Retrieve the information for the local galaxies array
 		$this->query('SELECT MIN(sector_id), MAX(sector_id) FROM sector WHERE

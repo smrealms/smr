@@ -8,7 +8,7 @@ if (SmrSession::$game_id > 0 && is_object($player) && $lock)
 	$container['url'] = 'skeleton.php';
 	if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php';
 	else $container['body'] = 'current_sector.php';
-	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'] . '!';
+	$errorMsg = '<span class="red bold">ERROR:</span> ' . $var['message'];
 	$container['errorMsg'] = $errorMsg;
 	forward($container);
 }

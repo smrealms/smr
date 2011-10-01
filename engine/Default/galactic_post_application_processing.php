@@ -3,10 +3,10 @@ $exp = $_REQUEST['exp'];
 $message = $_REQUEST['message'];
 $amount = $_REQUEST['amount'];
 if (empty($exp) || empty($message) || empty($amount))
-	create_error('You left some value blank');
+	create_error('You left some value blank.');
 if(!is_numeric($amount))
 {
-	create_error('Articles per day must be a number');
+	create_error('Articles per day must be a number.');
 }
 if ($exp == 1)
 	$value = 'YES';

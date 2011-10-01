@@ -20,7 +20,7 @@ elseif ($var['action'] == 'Set Illusion')
 	if (!is_numeric($_REQUEST['ship_id']) ||
 		!is_numeric($_REQUEST['attack']) ||
 		!is_numeric($_REQUEST['defense']))
-		create_error('Numbers only please');
+		create_error('Numbers only please!');
 
 	$ship->setIllusion($_REQUEST['ship_id'], $_REQUEST['attack'], $_REQUEST['defense']);
 }

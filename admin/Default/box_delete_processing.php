@@ -11,7 +11,7 @@ if ($action == 'Marked Messages')
 else if ($action == 'All Messages')
 {
 	if (!isset($var['box_type_id']))
-		create_error('No box selected');
+		create_error('No box selected.');
 	$db->query('DELETE FROM message_boxes WHERE box_type_id = '.$var['box_type_id']);
 }	
 forward(create_container('skeleton.php', 'box_view.php'));

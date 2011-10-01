@@ -11,7 +11,7 @@ $PHP_OUTPUT.=create_bank_menue();
 
 //get all transactions
 $db->query('SELECT * FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID());
-if (!$db->getNumRows()) create_error('Your alliance has no recorded transactions');
+if (!$db->getNumRows()) create_error('Your alliance has no recorded transactions.');
 while ($db->nextRecord()) {
 	if ($db->getField('transaction') == 'Payment') {
 		if (!$db->getField('exempt')) $trans[$db->getField('payee_id')][WITHDRAW] += $db->getField('amount');

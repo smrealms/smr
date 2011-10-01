@@ -4,7 +4,7 @@ if ($player->getNewbieTurns() > 0)
 	create_error('You can\'t take/drop forces under newbie protection!');
 
 if ($player->isLandedOnPlanet())
-	create_error('You must first launch to drop forces');
+	create_error('You must first launch to drop forces!');
 
 // take either from container or request, prefer container
 $drop_mines			= round(isset($var['drop_mines'])			? $var['drop_mines']			: (isset($_REQUEST['drop_mines'])			? trim($_REQUEST['drop_mines']) : 0));
@@ -15,12 +15,13 @@ $take_combat_drones	= round(isset($var['take_combat_drones'])	? $var['take_comba
 $take_scout_drones	= round(isset($var['take_scout_drones'])	? $var['take_scout_drones']		: (isset($_REQUEST['take_scout_drones'])	? trim($_REQUEST['take_scout_drones']) : 0));
 
 // do we have numbers?
-if (!empty($drop_mines) && !is_numeric($drop_mines)) create_error('Only numbers as input allowed');
-if (!empty($drop_combat_drones) && !is_numeric($drop_combat_drones)) create_error('Only numbers as input allowed');
-if (!empty($drop_scout_drones) && !is_numeric($drop_scout_drones)) create_error('Only numbers as input allowed');
-if (!empty($take_mines) && !is_numeric($take_mines)) create_error('Only numbers as input allowed');
-if (!empty($take_combat_drones) && !is_numeric($take_combat_drones)) create_error('Only numbers as input allowed');
-if (!empty($take_scout_drones) && !is_numeric($take_scout_drones)) create_error('Only numbers as input allowed');
+if (   (!empty($drop_mines) && !is_numeric($drop_mines))
+	|| (!empty($drop_combat_drones) && !is_numeric($drop_combat_drones))
+	|| (!empty($drop_scout_drones) && !is_numeric($drop_scout_drones))
+	|| (!empty($take_mines) && !is_numeric($take_mines))
+	|| (!empty($take_combat_drones) && !is_numeric($take_combat_drones))
+	|| (!empty($take_scout_drones) && !is_numeric($take_scout_drones)))
+	create_error('Only numbers as input allowed!');
 
 // so how many forces do we take/add per type?
 $change_mines = $drop_mines - $take_mines;

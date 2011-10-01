@@ -1,3 +1,3 @@
 <?php
-create_error('Bounties are disabled in Semi Wars');
+create_error('Bounties are disabled in Semi Wars!');
 ?>

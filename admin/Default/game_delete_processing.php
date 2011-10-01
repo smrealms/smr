@@ -1,6 +1,6 @@
 <?php
 
-create_error('Deleting games is disabled');
+create_error('Deleting games is disabled!');
 
 require_once(get_file_loc('SmrHistoryMySqlDatabase.class.inc'));
 

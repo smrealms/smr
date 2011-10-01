@@ -64,7 +64,7 @@ if ($submit_value == 'Search For Player')
 elseif ($submit_value == 'Search For Alliance')
 {
 	if (isset($_REQUEST['allianceID'])) SmrSession::updateVar('AllianceID',$_REQUEST['allianceID']);
-	if(!isset($var['AllianceID'])) create_error('No alliance was specified');
+	if(!isset($var['AllianceID'])) create_error('No alliance was specified!');
 	$allianceID = $var['AllianceID'];
 	$PHP_OUTPUT .= 'Returning Results for ' . $newsAlliances[$allianceID]['Name'] . '.<br />';
 	$db->query('SELECT * FROM news WHERE game_id = ' . $gameID . ' AND ((killer_alliance = ' . $db->escapeNumber($allianceID) . ' AND killer_id != '.ACCOUNT_ID_PORT.') OR (dead_alliance = ' . $db->escapeNumber($allianceID) . ' AND dead_id != '.ACCOUNT_ID_PORT.')) ORDER BY news_id DESC');
