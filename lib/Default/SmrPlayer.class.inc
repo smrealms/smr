@@ -1296,7 +1296,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$this->increaseHOF($gainedExp,array('Dying','Experience','Gained By Killer'), HOF_PUBLIC);
 		// Dead player loses experience
-		$expLossPercentage = 0.10 + (($this->getLevelID() - $killer->getLevelID()) * 0.0025);
+		$expLossPercentage = 0.12 + (($this->getLevelID() - $killer->getLevelID()) * 0.0025);
 		$return['DeadExp'] = 0;
 		if($expLossPercentage > 0)
 		{
@@ -1460,7 +1460,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$owner->getAccountID().','.$owner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
-		$expLossPercentage = .33;
+		$expLossPercentage = .30;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 		
@@ -1496,7 +1496,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message).','.ACCOUNT_ID_PORT.','.$this->getAccountID().','.$this->getAllianceID().')');
 		
-		$expLossPercentage = .33;
+		$expLossPercentage = .31 - $port->getLevel()/100;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 		
@@ -1523,7 +1523,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
 					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$planetOwner->getAccountID().','.$planetOwner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
 		
-		$expLossPercentage = .33;
+		$expLossPercentage = .27 - $planet->getLevel()/1000;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 		
