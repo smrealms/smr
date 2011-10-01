@@ -12,9 +12,9 @@
 	</tr>
 	<tr>
 		<td width="40%"><?php echo $Game['GameName'] ?> (<?php echo $Game['ID']; ?>)</td>
-		<td><?php echo date(DATE_DATE_SHORT,$Game['StartDate']); ?></td>
-		<td><?php echo date(DATE_DATE_SHORT,$Game['StartTurnsDate']); ?></td>
-		<td><?php echo date(DATE_DATE_SHORT,$Game['EndDate']); ?></td>
+		<td><?php echo date(DATE_FULL_SHORT_SPLIT,$Game['StartDate']); ?></td>
+		<td><?php echo date(DATE_FULL_SHORT_SPLIT,$Game['StartTurnsDate']); ?></td>
+		<td><?php echo date(DATE_FULL_SHORT_SPLIT,$Game['EndDate']); ?></td>
 		<td><?php echo $Game['MaxTurns']; ?></td>
 		<td><?php echo $Game['StartTurnHours']; ?></td>
 		<td><?php echo $Game['GameMaxPlayers']; ?></td>
