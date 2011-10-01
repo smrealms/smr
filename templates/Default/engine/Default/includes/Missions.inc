@@ -1,5 +1,5 @@
 <?php
-
+/*
 $AvailableMissions =& $ThisPlayer->getAvailableMissions();
 if(count($AvailableMissions) > 0)
 {
@@ -9,5 +9,5 @@ if(count($AvailableMissions) > 0)
 		<div class="buttonA"><a href="<?php echo Globals::getAcceptMissionHREF($AvailableMission); ?>" class="buttonA"> Accept </a></div><?php
 	}
 }
-
+*/
 ?>
