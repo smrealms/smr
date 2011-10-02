@@ -8,7 +8,7 @@ UPDATE smr_new.ship_type_support_hardware SET max_amount = 200 WHERE ship_type_i
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 200 WHERE ship_type_id = 31 AND hardware_type_id = 3; -- Deal-Maker to 200 holds
 
 UPDATE smr_new.ship_type SET cost = 7508455, speed = 8 WHERE ship_type_id = 6; -- Stellar Freighter to 7,508,455 credits, 8 speed
-UPDATE smr_new.ship_type_support_hardware SET max_amount = 225 WHERE ship_type_id = 31 AND hardware_type_id = 3; -- Stellar Freighter to 225 holds
+UPDATE smr_new.ship_type_support_hardware SET max_amount = 225 WHERE ship_type_id = 6 AND hardware_type_id = 3; -- Stellar Freighter to 225 holds
 
 UPDATE smr_new.ship_type SET cost = 9802157 WHERE ship_type_id = 23; -- Thief to 9,802,157 credits
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 160 WHERE ship_type_id = 23 AND hardware_type_id = 3; -- Thief to 160 holds
