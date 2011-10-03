@@ -21,7 +21,7 @@
 		</td>
 		<td>
 			<div class="chat" style="height: 500px; width: 300px; overflow-y:scroll;">
-				<table id="moveTable">
+				<table id="moveTable" class="ajax">
 					<?php $this->includeTemplate('includes/ChessMoves.inc'); ?>
 				</table>
 			</div>
