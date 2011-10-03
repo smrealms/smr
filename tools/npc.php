@@ -41,7 +41,6 @@ try
 		define('NPC_GAME_ID',42);
 	}
 	define('NPC_LOW_TURNS',75);
-	define('NPC_START_TURNS',300);
 	define('MINUMUM_RESERVE_CREDITS',100000);
 	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
 	define('MIN_SLEEP_TIME',800000);
@@ -235,7 +234,7 @@ function NPCStuff()
 					else
 						processContainer(createAlliance($NPC_LOGIN['AllianceName'],'*--NPCS--*'));
 				}
-				if($player->getTurns()<NPC_START_TURNS && ($player->hasNewbieTurns() || $player->hasFederalProtection()))
+				if($player->getTurns()<=mt_rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection()))
 				{
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: '.$player->getTurns());
 					changeNPCLogin();
@@ -255,7 +254,7 @@ function NPCStuff()
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES); //Change route
 				processContainer(create_container('death_processing.php'));
 			}
-			if($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning)
+			if($player->getNewbieTurns() <= NEWBIE_TURNS_WARNING_LIMIT && $player->getNewbieWarning())
 			{
 				processContainer(create_container('newbie_warning_processing.php'));
 			}
