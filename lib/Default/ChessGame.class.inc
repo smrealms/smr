@@ -196,7 +196,7 @@ class ChessGame
 		return $chessGameID;
 	}
 
-	public static function getAccountGames($accountID)
+	public static function &getAccountGames($accountID)
 	{
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');

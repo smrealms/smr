@@ -12,7 +12,7 @@ foreach($chessGames as $chessGame)
 	$playersChallenged[$chessGame->getBlackID()] = true;
 }
 
-$db->query('SELECT player_id, player.player_name FROM player JOIN account USING(account_id) LEFT OUTER JOIN npc_logins USING(login) WHERE working IS NULL AND validated = ' . $db->escapeBoolean(true) . ' AND game_id = ' . $db->escapeString($player->getGameID()) . ' AND account_id NOT IN ' . $db->escapeArray(array_keys($playersChallenged)) . ' ORDER BY player_name');
+$db->query('SELECT player_id, player.player_name FROM player JOIN account USING(account_id) LEFT OUTER JOIN npc_logins USING(login) WHERE working IS NULL AND validated = ' . $db->escapeBoolean(true) . ' AND game_id = ' . $db->escapeString($player->getGameID()) . ' AND account_id NOT IN (' . $db->escapeArray(array_keys($playersChallenged)) . ') ORDER BY player_name');
 while ($db->nextRecord())
 {
 	$players[$db->getField('player_id')] = $db->getField('player_name');
