@@ -1,5 +1,5 @@
 <?php
-if($CreateGameMessage!=null)
+if(isset($CreateGameMessage))
 {
 	echo $CreateGameMessage;
 } ?>
