@@ -480,7 +480,7 @@ table.chess
    background-repeat: repeat;
 }
 
-table#moveTable
+div.chat, table#moveTable
 {
 	color: black;
 	background-color: white;
