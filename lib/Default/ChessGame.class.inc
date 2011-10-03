@@ -294,14 +294,14 @@ class ChessGame
 				if($this->board[$toY][$toX] != null)
 				{
 					$pieceTaken = $this->board[$toY][$toX];
-//					$this->db->query('DELETE FROM chess_game_pieces' .
-//							' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $pieceTaken->accountID . ' AND piece_id=' . $pieceTaken->pieceID . ' AND piece_no=' . $pieceTaken->pieceNo . ';');
+					$this->db->query('DELETE FROM chess_game_pieces' .
+							' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $pieceTaken->accountID . ' AND piece_id=' . $pieceTaken->pieceID . ' AND piece_no=' . $pieceTaken->pieceNo . ';');
 					if($pieceTaken->pieceID == ChessPiece::KING)
 					{
-//						$this->db->query('UPDATE chess_game' .
-//								' SET end_time=' . TIME . ',' .
-//								' winner=' . $forAccountID .
-//								' WHERE chess_game_id=' . $this->chessGameID . ';');
+						$this->db->query('UPDATE chess_game' .
+								' SET end_time=' . TIME . ',' .
+								' winner=' . $forAccountID .
+								' WHERE chess_game_id=' . $this->chessGameID . ';');
 					}
 				}
 
@@ -318,10 +318,10 @@ class ChessGame
 				{
 					$checking = 'MATE';
 				}
-//				$this->db->query('INSERT INTO chess_game_moves' .
-//				'(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken)' .
-//				'values' .
-//				'(' . $p->gameID . ',' . $p->pieceID . ',' . $x . ',' . $y . ',' . $toX . ',' . $toY . ',' . ($checking == null ? 'NULL' : $this->db->escapeString($checking) ) . ',' . ($pieceTaken == null ? 'NULL' : $pieceTaken->pieceID) . ');');
+				$this->db->query('INSERT INTO chess_game_moves' .
+				'(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken)' .
+				'values' .
+				'(' . $p->gameID . ',' . $p->pieceID . ',' . $x . ',' . $y . ',' . $toX . ',' . $toY . ',' . ($checking == null ? 'NULL' : $this->db->escapeString($checking) ) . ',' . ($pieceTaken == null ? 'NULL' : $pieceTaken->pieceID) . ');');
 				if($this->moves!=null)
 				{
 					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking);
@@ -331,15 +331,15 @@ class ChessGame
 					$this->db->query('ROLLBACK;');
 					return 3;
 				}
-//				$this->db->query('UPDATE chess_game_pieces' .
-//				' SET x=' . $toX . ', y=' . $toY .
-//				' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
+				$this->db->query('UPDATE chess_game_pieces' .
+				' SET x=' . $toX . ', y=' . $toY .
+				' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
 				if($checking != null && $checking == 'MATE')
 				{
-//					$this->db->query('UPDATE chess_game' +
-//							' SET end_time=' + TIME + ',' +
-//							' winner=' + $forAccountID +
-//							' WHERE chess_game_id=' + $this->chessGameID + ';');
+					$this->db->query('UPDATE chess_game' +
+							' SET end_time=' + TIME + ',' +
+							' winner=' + $forAccountID +
+							' WHERE chess_game_id=' + $this->chessGameID + ';');
 				}
 				$this->db->query('COMMIT;');
 			}
