@@ -11,7 +11,7 @@
 							foreach($Row as $X => $Cell)
 							{ ?>
 								<td id="x<?php echo $X; ?>y<?php echo $Y; ?>" class="ajax<?php if(($X+$Y) % 2 == 0) { ?> whiteSquare<?php } ?>" onClick="highlightMoves(<?php echo $X; ?>,<?php echo $Y; ?>)"><?php
-									if($Cell==null){ ?>&nbsp;<?php } else { echo $Cell->getPieceSymbol(); } ?>
+									if($Cell==null){ ?>&nbsp;<?php } else { ?><span class="pointer"><?php echo $Cell->getPieceSymbol(); ?></span><?php } ?>
 								</td><?php
 							}?>
 						</tr><?php

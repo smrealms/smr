@@ -9,7 +9,7 @@
 					<X><?php echo $X; ?></X>
 					<Y><?php echo $Y; ?></Y><?php
 					if($Cell!=null) { ?>
-						<INNER_HTML><?php echo $Cell->getPieceSymbol(); ?></INNER_HTML>
+						<INNER_HTML><![CDATA[<span class="pointer"><?php echo $Cell->getPieceSymbol(); ?></span>]]></INNER_HTML>
 						<POSSIBLE_MOVE_LIST><?php
 							if($ChessGame->isCurrentTurn($ThisAccount->getAccountID()))
 							{

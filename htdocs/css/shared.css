@@ -485,3 +485,8 @@ div.chat, table#moveTable
 	color: black;
 	background-color: white;
 }
+
+.pointer
+{
+	cursor: pointer;
+}
