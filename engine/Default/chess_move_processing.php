@@ -5,9 +5,9 @@ $template->assign('ChessGame',$chessGame);
 if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQUEST['toX']) && is_numeric($_REQUEST['toY']))
 {
 	$x = $_REQUEST['x'];
-	$y = $_REQUEST["y"];
-	$toX = $_REQUEST["toX"];
-	$toY = $_REQUEST["toY"];
+	$y = $_REQUEST['y'];
+	$toX = $_REQUEST['toX'];
+	$toY = $_REQUEST['toY'];
 	if($chessGame->getEndDate()==null)
 	{
 		if($chessGame->isCurrentTurn($account->getAccountID()))

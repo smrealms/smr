@@ -6,14 +6,14 @@
 			foreach($Row as $X => $Cell)
 			{ ?>
 				<TILE>
-					<X><?php echo $X ?></X>
-					<Y><?php echo $Y ?></Y><?php
+					<X><?php echo $X; ?></X>
+					<Y><?php echo $Y; ?></Y><?php
 					if($Cell!=null) { ?>
 						<INNER_HTML><?php echo $Cell->getPieceSymbol(); ?></INNER_HTML>
 						<POSSIBLE_MOVE_LIST><?php
 							if($ChessGame->isCurrentTurn($ThisAccount->getAccountID()))
 							{
-								$Moves = $Cell->getPossibleMoves(board, username);
+								$Moves = $Cell->getPossibleMoves($Board, $ThisAccount->getAccountID());
 								foreach($Moves as $Move)
 								{
 									?><POSSIBLE_MOVE><MOVE_X><?php echo $Move[0]; ?></MOVE_X><MOVE_Y><?php echo $Move[1]; ?></MOVE_Y></POSSIBLE_MOVE><?php
