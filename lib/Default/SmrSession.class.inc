@@ -235,7 +235,7 @@ class SmrSession
 			}
 		} unset($value);
 		$compressed = gzcompress(serialize(self::$var));
-		if(!self::$generate)
+		if(!self::$generate || (isset($var['AJAX']) && $var['AJAX'] == true))
 		{
 			self::$db->query('UPDATE active_session SET account_id='.self::$account_id.',old_account_id='.(is_numeric(self::$old_account_id)?self::$old_account_id:0).',game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
 					',last_sn='.self::$db->escapeString(self::$SN).
