@@ -10,7 +10,7 @@
 						<tr><?php
 							foreach($Row as $X => $Cell)
 							{ ?>
-								<td id="x<?php echo $X; ?>y<?php echo $Y; ?>"<?php if(($X+$Y) % 2 == 0) { ?> class="whiteSquare"<?php } ?> onClick="highlightMoves(<?php echo $X; ?>,<?php echo $Y; ?>)"><?php
+								<td id="x<?php echo $X; ?>y<?php echo $Y; ?>" class="ajax<?php if(($X+$Y) % 2 == 0) { ?> whiteSquare<?php } ?>" onClick="highlightMoves(<?php echo $X; ?>,<?php echo $Y; ?>)"><?php
 									if($Cell==null){ ?>&nbsp;<?php } else { echo $Cell->getPieceSymbol(); } ?>
 								</td><?php
 							}?>
@@ -20,7 +20,7 @@
 			</div>
 		</td>
 		<td>
-			<div class = "chat" style="height: 500px; width: 300px; overflow-y:scroll;">
+			<div class="chat" style="height: 500px; width: 300px; overflow-y:scroll;">
 				<table id="moveTable">
 					<?php $this->includeTemplate('includes/ChessMoves.inc'); ?>
 				</table>
