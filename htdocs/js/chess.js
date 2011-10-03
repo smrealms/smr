@@ -10,11 +10,7 @@ function highlightMoves(x,y)
 			{
 				ele = document.getElementById('x'+moves[i].x+'y'+moves[i].y);
 				highlighted.push({"ele":ele,"x":moves[i].x,"y":moves[i].y});
-				if( ele.attachEvent ) {
-					ele.attachEvent('onclick', 'submitMove('+x+','+y+','+moves[i].x+','+moves[i].y+');');
-				} else {
-					ele.setAttribute('onclick', 'submitMove('+x+','+y+','+moves[i].x+','+moves[i].y+');'); 
-				}
+				ele.onclick = 'submitMove('+x+','+y+','+moves[i].x+','+moves[i].y+');';
 				ele.innerHTML = ele.innerHTML + 'X'; 
 			}
 		}
@@ -30,11 +26,7 @@ function unhighlightMoves()
 	while(h = highlighted.pop())
 	{
 		h.ele.innerHTML = h.ele.innerHTML.replace('X','');
-		if( h.ele.attachEvent ) {
-			h.ele.attachEvent('onclick', 'highlightMoves('+h.x+','+h.y+');');
-		} else {
-			h.ele.setAttribute('onclick', 'highlightMoves('+h.x+','+h.y+');'); 
-		}
+		h.ele.onclick = 'highlightMoves('+h.x+','+h.y+');';
 	}
 }
 
