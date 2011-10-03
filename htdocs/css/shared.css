@@ -479,3 +479,9 @@ table.chess
    background-color: white;
    background-repeat: repeat;
 }
+
+table#moveTable
+{
+	color: black;
+	background-color: white;
+}
