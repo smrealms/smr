@@ -30,10 +30,16 @@ function unhighlightMoves()
 	}
 }
 
-function getTextElem(ele,name)
-{
-	return ele.getElementsByTagName(name)[0].textContent;
-}
+getTextElem = document.getElementsByTagName("body")[0].innerText != undefined ?
+	function(ele, name)
+	{
+		return ele.getElementsByTagName(name)[0].innerText;
+	}
+	:
+	function(ele, name)
+	{
+		return ele.getElementsByTagName(name)[0].textContent;
+	}
 
 function submitMove(x,y,toX,toY)
 {
