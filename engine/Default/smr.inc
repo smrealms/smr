@@ -469,13 +469,13 @@ function word_filter($string)
 // This function is a hack around the old style http forward mechanism
 function do_voodoo()
 {
+	global $lock, $var,$template,$account;
+	$ajaxContainer = isset($var['AJAX']) && $var['AJAX'] == true;
 	if(!defined('USING_AJAX'))
 		define('USING_AJAX',false);
-	if(USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
+	if(!$ajaxContainer && USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
 		exit;
 //	ob_clean();
-
-	global $lock, $var,$template,$account;
 	
 	foreach ($GLOBALS as $key => $value)
 	{
@@ -629,7 +629,7 @@ function do_voodoo()
 	if(isset($var['DisableAjax']) && $var['DisableAjax']===true)
 		$template->assign('AJAX_ENABLE_REFRESH',false);
 	
-	$template->display($var['url'],USING_AJAX);
+	$template->display($ajaxContainer ? $var['body'] : $var['url'], USING_AJAX, $ajaxContainer);
 	
 	SmrSession::update();
 	

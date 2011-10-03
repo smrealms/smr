@@ -25,6 +25,8 @@ class SmrSession
 			'course_plot.php' => self::ALWAYS_AVAILABLE,
 			'changelog_view.php' => self::ALWAYS_AVAILABLE,
 			'chat_rules.php' => self::ALWAYS_AVAILABLE,
+			'chess_move.php' => self::ALWAYS_AVAILABLE,
+			'chess_play.php' => self::ALWAYS_AVAILABLE,
 			'combat_log_viewer.php' => self::ALWAYS_AVAILABLE,
 			'current_sector.php' => self::ALWAYS_AVAILABLE,
 			'configure_hardware.php' => self::ALWAYS_AVAILABLE,
@@ -87,6 +89,7 @@ class SmrSession
 			'alliance_message_add_processing.php' => self::ALWAYS_AVAILABLE,
 			'alliance_message_delete_processing.php' => self::ALWAYS_AVAILABLE,
 			'alliance_pick_processing.php' => self::ALWAYS_AVAILABLE,
+			'chess_move_processing.php' => self::ALWAYS_AVAILABLE,
 			'toggle_processing.php' => self::ALWAYS_AVAILABLE,
 			//Admin pages
 			'account_edit.php' => self::ALWAYS_AVAILABLE,
@@ -370,10 +373,11 @@ class SmrSession
 
 	public static function get_new_href($container,$forceFullURL=false)
 	{
+		$sn = self::addLink($container) . (isset($container['AJAX']) && $container['AJAX'] == true ? '&ajax=1':'');
 		if($forceFullURL===true||stripos($_SERVER['REQUEST_URI'],'loader.php')===false)
-			return URL.'/loader.php?sn=' . self::addLink($container);
+			return URL.'/loader.php?sn=' . $sn;
 		else
-			return '?sn=' . self::addLink($container);
+			return '?sn=' . $sn;
 	}
 	
 	public static function addAjaxReturns($element,$contents)

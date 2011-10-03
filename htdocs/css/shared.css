@@ -451,3 +451,31 @@ div.lm_sector img.move_hack
 	left: 0px;
 	z-index: 1;
 }
+
+
+
+
+
+/** Chess **/
+
+table.chess
+{
+	background-color: #47525D;
+    border: 1px solid #FFFFFF;
+    white-space: nowrap;
+	color: black;
+}
+
+.chess td
+{
+	font-size: 3em;
+	color: black;
+	width: 52px;
+	height: 52px;
+	text-align: center;
+}
+
+.whiteSquare {
+   background-color: white;
+   background-repeat: repeat;
+}

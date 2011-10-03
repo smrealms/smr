@@ -34,7 +34,7 @@ class Template
 		$this->data[$var] =& $value;
 	}
 	
-	public function display($templateName,$forAjax=false)
+	public function display($templateName,$forAjax=false, $xmlResponse=false)
 	{
 		@ob_clean();
 		ob_start();
@@ -46,19 +46,21 @@ class Template
 			$output.=$captured;
 		}
 		$this->trimWhiteSpace($output);
-		if($this->data['AJAX_ENABLE_REFRESH'])
+		if($forAjax)
+			header('Content-Type: text/xml; charset: utf-8');
+		else
+			header('Content-Type: text/html; charset: utf-8');
+		if(!$xmlResponse && $this->data['AJAX_ENABLE_REFRESH'])
 		{
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output,USING_AJAX);
 			if($forAjax)
 			{
-				header('Content-Type: text/xml; charset: utf-8');
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$ajaxXml='<all>'.$ajaxXml.'</all>';
 				echo $ajaxXml;
 			}
 			else
 			{
-				header('Content-Type: text/html; charset: utf-8');
 				echo $output;
 			}
 			SmrSession::saveAjaxReturns();
