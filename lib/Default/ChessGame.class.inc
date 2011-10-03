@@ -254,18 +254,18 @@ class ChessGame
 					foreach($moves as $move)
 					{
 						$takenPiece = $this->board[$move[1]][$move[0]];
-						$this->board[$move[1]][$move[0]] = $piece;
 						$piece->setX($move[0]);
 						$piece->setY($move[1]);
+						$this->board[$move[1]][$move[0]] = $piece;
 						if(!$king->isChecked($this->board))
 						{
 							return false;
 						}
 						$this->board[$move[1]][$move[0]] = $takenPiece;
 					}
-					$this->board[$y][$x] = $piece;
 					$piece->setX($x);
 					$piece->setY($y);
+					$this->board[$y][$x] = $piece;
 				}
 			}
 		}
