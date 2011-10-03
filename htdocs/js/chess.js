@@ -10,7 +10,7 @@ function highlightMoves(x,y)
 			{
 				ele = document.getElementById('x'+moves[i].x+'y'+moves[i].y);
 				highlighted.push({"ele":ele,"x":moves[i].x,"y":moves[i].y});
-				ele.onclick = (function(x,y){return function(){submitMove(x,y,toX,toY);}})(x,y, moves[i].x, moves[i].y);
+				ele.onclick = (function(x,y,toX,toY){return function(){submitMove(x,y,toX,toY);}})(x,y, moves[i].x, moves[i].y);
 				ele.innerHTML = ele.innerHTML + 'X'; 
 			}
 		}
