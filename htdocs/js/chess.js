@@ -30,10 +30,10 @@ function unhighlightMoves()
 	}
 }
 
-getTextElem = document.getElementsByTagName("body")[0].innerText != undefined ?
+getTextElem = document.getElementsByTagName("body")[0].text != undefined ?
 	function(ele, name)
 	{
-		return ele.getElementsByTagName(name)[0].innerText;
+		return ele.getElementsByTagName(name)[0].text;
 	}
 	:
 	function(ele, name)
