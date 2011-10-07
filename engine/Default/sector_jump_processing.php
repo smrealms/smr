@@ -58,7 +58,7 @@ $sector->leavingSector($player,MOVEMENT_JUMP);
 // Move the user around
 // TODO: (Must be done while holding both sector locks)
 $distance = $path->getRelativeDistance();
-$turnsToJump = min(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE));
+$turnsToJump = max(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE));
 
 // check for turns
 if ($player->getTurns() < $turnsToJump)
