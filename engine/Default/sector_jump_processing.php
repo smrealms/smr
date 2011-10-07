@@ -66,10 +66,9 @@ if ($player->getTurns() < $turnsToJump)
 
 $maxMisjump = max(0,round(($distance - $turnsToJump) * 1.5 / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
 $misjump = mt_rand(0,$maxMisjump);
-
 if ($misjump > 0)
 { // we missed the sector
-	$distances = Plotter::findDistanceToX('Distance', SmrSector::getSector($player->getGameID(), $player->getSectorID()), false, null, null, $misjump);
+	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
 	$player->setSectorID(array_rand($distances));
 }
 else
