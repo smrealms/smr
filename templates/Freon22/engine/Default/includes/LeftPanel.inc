@@ -29,7 +29,6 @@ if(isset($GameID))
 		<?php /* <a class="leftNav" href="<?php echo $TradingLink; ?>">Trading</a><br /> */ ?>
 		<a class="leftNav" href="<?php echo $PlanetLink; ?>">Planet</a><br />
 		<a class="leftNav" href="<?php echo $ForcesLink; ?>">Forces</a><br />
-		<a class="leftNav" href="<?php echo Globals::getCasinoHREF(); ?>">Casino</a><br />
 		<br />
 		<a class="leftNav" href="<?php echo $MessagesLink; ?>">Messages</a><br />
 		<a class="leftNav" href="<?php echo $ReadNewsLink; ?>">Read News</a><br />
