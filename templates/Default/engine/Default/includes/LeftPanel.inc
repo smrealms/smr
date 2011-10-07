@@ -33,6 +33,7 @@ if(isset($GameID))
 	<?php /* <a href="<?php echo $TradingLink; ?>">Trading</a><br /> */ ?>
 	<a href="<?php echo $PlanetLink; ?>">Planet</a><br />
 	<a href="<?php echo $ForcesLink; ?>">Forces</a><br />
+	<a href="<?php echo Globals::getCasinoHREF(); ?>">Casino</a><br />
 	<br />
 	<a href="<?php echo $MessagesLink; ?>">Messages</a><br />
 	<a href="<?php echo $ReadNewsLink; ?>">Read News</a><br />
