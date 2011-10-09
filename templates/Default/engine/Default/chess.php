@@ -3,12 +3,20 @@ if(isset($CreateGameMessage))
 {
 	echo $CreateGameMessage;
 } ?>
-<table class="standardnobord"><?php
+<table class="standard">
+	<tr>
+		<th>Players</th>
+		<th>Current Turn</th>
+		<th></th>
+	</tr><?php
 	foreach($ChessGames as $ChessGame)
 	{ ?>
 		<tr>
 			<td><?php
 				echo $ChessGame->getWhitePlayer()->getLinkedDisplayName(false); ?> vs <?php echo $ChessGame->getBlackPlayer()->getLinkedDisplayName(false); ?>
+			</td>
+			<td><?php
+				echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?>
 			</td>
 			<td>
 				<div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getPlayGameHREF(); ?>">&nbsp;Play&nbsp;</a></div>
