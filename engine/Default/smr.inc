@@ -631,7 +631,8 @@ function do_voodoo()
 	
 	$template->display($ajaxContainer ? $var['body'] : $var['url'], USING_AJAX, $ajaxContainer);
 	
-	SmrSession::update();
+	if(!$ajaxContainer)
+		SmrSession::update();
 	
 	exit;
 }
