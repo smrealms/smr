@@ -16,6 +16,14 @@ $db->query('SELECT count(*) FROM race_has_voting ' .
 if ($db->nextRecord() && $db->getInt('count(*)') > 2)
 	create_error('You can\'t initiate more than 3 votes at a time!');
 
+if ($type == 'PEACE')
+{
+	$db->query('SELECT 1 FROM race_has_voting
+				WHERE race_id_1='.$db->escapeNumber($race_id).' AND race_id_2='.$db->escapeNumber($player->getRaceID()));
+	if($db->nextRecord())
+		create_error('You cannot start a vote with that race.');
+}
+
 $db->query('REPLACE INTO race_has_voting ' .
 		   '(game_id, race_id_1, race_id_2, type, end_time) ' .
 		   'VALUES('.$player->getGameID().', '.$player->getRaceID().', '.$race_id.', '.$db->escapeString($type).', '.$time.')');
