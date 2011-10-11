@@ -62,7 +62,7 @@ if ($db->getNumRows() > 0)
 		$db2->query('SELECT count(*) FROM player_votes_pact ' .
 					'WHERE game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
-						  'race_id_2 = '.$race_id_2.' AND ' .
+						  'race_id_2 = '.$otherRaceID.' AND ' .
 						  'vote = \'YES\'');
 		$db2->nextRecord();
 		$yesVotes = $db2->getInt('count(*)');
@@ -71,7 +71,7 @@ if ($db->getNumRows() > 0)
 		$db2->query('SELECT count(*) FROM player_votes_pact ' .
 					'WHERE game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
-						  'race_id_2 = '.$race_id_2.' AND ' .
+						  'race_id_2 = '.$otherRaceID.' AND ' .
 						  'vote = \'NO\'');
 		$db2->nextRecord();
 		$noVotes = $db2->getInt('count(*)');
@@ -80,7 +80,7 @@ if ($db->getNumRows() > 0)
 					'WHERE account_id = '.$player->getAccountID().' AND ' .
 						  'game_id = '.$player->getGameID().' AND ' .
 						  'race_id_1 = '.$player->getRaceID().' AND ' .
-						  'race_id_2 = '.$race_id_2);
+						  'race_id_2 = '.$otherRaceID);
 		$votedFor = '';
 		if ($db2->nextRecord())
 			$votedFor = $db2->getField('vote');
