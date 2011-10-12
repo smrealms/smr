@@ -105,9 +105,7 @@ if ($db->getNumRows() > 0)
 		$container['game_id'] = $curr_player->getGameID();
 		$container['sending_page'] = 'search';
 		$PHP_OUTPUT.=create_link($container, '<span class="yellow">View Stats</span><br />');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'news_read_advanced.php';
+		$container = create_container('skeleton.php', 'news_read_advanced.php');
 		$container['submit'] = 'Search For Player';
 		$container['playerName'] = $curr_player->getPlayerName();
 		$PHP_OUTPUT.=create_link($container, '<span class="yellow">View News</span>');
@@ -211,6 +209,10 @@ if (empty($player_id))
 			$container['game_id'] = $curr_player->getGameID();
 			$container['sending_page'] = 'search';
 			$PHP_OUTPUT.=create_link($container, '<span class="yellow">View Stats</span><br />');
+			$container = create_container('skeleton.php', 'news_read_advanced.php');
+			$container['submit'] = 'Search For Player';
+			$container['playerName'] = $curr_player->getPlayerName();
+			$PHP_OUTPUT.=create_link($container, '<span class="yellow">View News</span>');
 			if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 			{
 				$container=array();
