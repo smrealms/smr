@@ -267,8 +267,11 @@ while ($running) {
 
 	} else {
 
+		// network troubles
 		echo_r('There was an error connecting to ' . $address . '/' . $port);
-		exit();
+
+		// sleep and try again!
+		sleep(60);
 
 	}
 
