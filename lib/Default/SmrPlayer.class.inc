@@ -1218,7 +1218,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		//record cost of ship lost
 		$this->increaseHOF($this->getShip()->getCost(),array('Dying','Money','Cost Of Ships Lost'), HOF_PUBLIC);
 		// reset turns since last death
-		$this->setHOF(0,array('Movement','Turns Used','Since Last Death'), HOF_PUBLIC);
+		$this->setHOF(0,array('Movement','Turns Used','Since Last Death'), HOF_ALLIANCE);
 
 		// 1/4 of ship value -> insurance
 		$newCredits = round($this->getShip()->getCost() / 4);

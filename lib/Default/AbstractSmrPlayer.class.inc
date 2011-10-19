@@ -1085,9 +1085,9 @@ abstract class AbstractSmrPlayer
 		
 		if(!has_beta_privilege('No SC Loss'))
 			$this->setTurns($new_maint,$new_noob,$updateLastActive);
-		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'), HOF_PUBLIC);
-		$this->increaseHOF($take,array('Movement','Turns Used','Total'), HOF_PUBLIC);
-		$this->increaseHOF($newbiesTaken,array('Movement','Turns Used','Newbie'), HOF_PUBLIC);
+		$this->increaseHOF($take,array('Movement','Turns Used','Since Last Death'), HOF_ALLIANCE);
+		$this->increaseHOF($take,array('Movement','Turns Used','Total'), HOF_ALLIANCE);
+		$this->increaseHOF($newbiesTaken,array('Movement','Turns Used','Newbie'), HOF_ALLIANCE);
 	}
 	
 	public function giveTurns($give, $noob = 0,$updateLastActive = false)

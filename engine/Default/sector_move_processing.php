@@ -35,9 +35,7 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 	// get new sector object
 	$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 	$sector->markVisited($player);
-	$container['url'] = 'skeleton.php';
-	$container['body'] = $var['target_page'];
-	forward($container);
+	forward(create_container('skeleton.php', $var['target_page']));
 }
 $action = '';
 if(isset($_REQUEST['action']))
@@ -130,8 +128,8 @@ $sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
 if (!$sector->isVisited($player))
 {
 	$player->increaseExperience(EXPLORATION_EXPERIENCE);
-	$player->increaseHOF(EXPLORATION_EXPERIENCE,array('Movement','Exploration Experience Gained'), HOF_PUBLIC);
-	$player->increaseHOF(1,array('Movement','Sectors Explored'), HOF_PUBLIC);
+	$player->increaseHOF(EXPLORATION_EXPERIENCE,array('Movement','Exploration Experience Gained'), HOF_ALLIANCE);
+	$player->increaseHOF(1,array('Movement','Sectors Explored'), HOF_ALLIANCE);
 }
 // make current sector visible to him
 $sector->markVisited($player);
