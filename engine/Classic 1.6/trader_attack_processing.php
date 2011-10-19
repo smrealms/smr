@@ -1111,7 +1111,7 @@ function update_player_stats(&$players,$account_id,&$ships)
 	{
 		$currPlayer->increaseHOF(1,array('Dying','Deaths'));
 		$currPlayer->increaseHOF($ships[$players[$account_id][SHIP_ID]][0],array('Dying','Money','Cost Of Ships Lost'));
-		$this->setHOF(0,array('Movement','Turns Used','Since Last Death'));
+		$this->setHOF(0,array('Movement','Turns Used','Since Last Death',HOF_ALLIANCE));
 	}
 	$num_kills = count($players[$account_id][KILLED]);
 	if($num_kills)
