@@ -80,14 +80,14 @@ if (!isset($number) && !isset($var['number'])) {
 				$PHP_OUTPUT.=('<td>User closed in big IP Search or Edit Account matching ');
 				//this is who they initially match
 				$curr_account =& SmrAccount::getAccount($info);
-				$PHP_OUTPUT.=($curr_account->login);
+				$PHP_OUTPUT.=($curr_account->getLogin());
 				$listed[] = $info;
 				//who matches them
 				$db2->query('SELECT * FROM account_is_closed WHERE suspicion = \'Match:'.$account->getAccountID().'\'');
 				while ($db2->nextRecord()) {
 					
 					$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
-					$PHP_OUTPUT.=(', '.$curr_account->login);
+					$PHP_OUTPUT.=(', '.$curr_account->getLogin());
 					$listed[] = $db2->getField('account_id');
 					//add this acc to the search one
 					$search[] = $db2->getField('account_id');
@@ -106,7 +106,7 @@ if (!isset($number) && !isset($var['number'])) {
 					while ($db2->nextRecord()) {
 					
 						$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
-						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->login);
+						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->getLogin());
 						$listed[] = $db2->getField('account_id');
 						//add this acc to the search one
 						$search[] = $db2->getField('account_id');
@@ -117,7 +117,7 @@ if (!isset($number) && !isset($var['number'])) {
 					while ($db2->nextRecord()) {
 					
 						$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
-						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->login);
+						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->getLogin());
 						$listed[] = $db2->getField('account_id');
 						//get this accs match
 						$reason = $db2->getField('suspicion');
@@ -164,7 +164,7 @@ if (!isset($number) && !isset($var['number'])) {
 					$curr_account =& SmrAccount::getAccount($value);
 					if ($curr_account->getAccountID() != $id) {
 						
-						$PHP_OUTPUT.=($curr_account->login);
+						$PHP_OUTPUT.=($curr_account->getLogin());
 						if ($key + 1 < $size) $PHP_OUTPUT.=(', ');
 						
 					}

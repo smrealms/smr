@@ -61,8 +61,8 @@ else
 			$container['game_id'] = $gameID;
 			$PHP_OUTPUT.=('<td class="noWrap">');
 			
-			$sender = 'From: '.$sender_acc->login.' ('.$sender_acc->getAccountID().')';
-			if ($senderPlayer!==false&&$sender_acc->login != $senderPlayer->getPlayerName())
+			$sender = 'From: '.$sender_acc->getLogin().' ('.$sender_acc->getAccountID().')';
+			if ($senderPlayer!==false&&$sender_acc->getLogin() != $senderPlayer->getPlayerName())
 				$sender .= ' a.k.a '.$senderPlayer->getPlayerName();
 			if($gameID!==false)
 				$PHP_OUTPUT.=create_link($container, $sender);

@@ -21,7 +21,7 @@ $admin_account =& SmrAccount::getAccount($_POST['admin_id']);
 // check if hof entry is there
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.$admin_account->getAccountID());
 if (!$db->getNumRows())
-	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$admin_account->getAccountID().', ' . $db->escape_string($admin_account->login, true) . ')');
+	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$admin_account->getAccountID().', ' . $db->escape_string($admin_account->getLogin(), true) . ')');
 
 // give game stats entry
 $db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.$admin_account->getAccountID().', ' . $var['game_id'] . ')');

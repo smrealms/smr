@@ -68,7 +68,7 @@ while ($db->nextRecord()) {
 	if ($db2->nextRecord())
 		$text = strtolower($db2->getField('transaction')) . ' ' . $db2->getField('amount') . ' credits';
 
-	$PHP_OUTPUT.=('<li>'.$curr_account->login.' '.$text.'</li>');
+	$PHP_OUTPUT.=('<li>'.$curr_account->getLogin().' '.$text.'</li>');
 
 }
 $PHP_OUTPUT.=('</ul>');

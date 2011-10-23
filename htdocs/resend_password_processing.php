@@ -32,7 +32,7 @@ try
 	
 	$account->generatePasswordReset();
 	
-	$resetURL = URL.'/reset_password.php?login='.$account->login.'&resetcode='.$account->getPasswordReset();
+	$resetURL = URL.'/reset_password.php?login='.$account->getLogin().'&resetcode='.$account->getPasswordReset();
 	// send email with password to user
 	mail($email, 'Space Merchant Realms Password',
 		 'A user from ' . $curr_ip . ' requested to reset your password!'.EOL.EOL.

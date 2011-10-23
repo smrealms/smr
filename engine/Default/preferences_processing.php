@@ -73,7 +73,7 @@ elseif ($action == 'Change Password')
 	if ($new_password != $retype_password)
 		create_error('The passwords you entered don\'t match!');
 
-	if ($new_password == $account->login)
+	if ($new_password == $account->getLogin())
 		create_error('Your chosen password is invalid!');
 
 	$account->setPassword($new_password);
