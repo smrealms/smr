@@ -54,7 +54,7 @@ if ($credits > 0)
 // check if hof entry is there
 $db->query('SELECT 1 FROM account_has_stats WHERE account_id = '.SmrSession::$account_id . ' LIMIT 1');
 if (!$db->nextRecord())
-	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$account->getAccountID().', ' . $db->escape_string($account->login, true) . ')');
+	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$account->getAccountID().', ' . $db->escape_string($account->getLogin(), true) . ')');
 
 // put him in a sector with a hq
 $hq_id = $race_id + 101;

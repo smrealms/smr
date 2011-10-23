@@ -269,7 +269,7 @@ try
 								  'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . TIME . ')');
 	
 	// insert into the account stats table
-	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.SmrSession::$account_id.', ' . $db->escape_string($account->login) . ')');
+	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.SmrSession::$account_id.', ' . $db->escape_string($account->getLogin()) . ')');
 	
 	$container = array();
 	$container['login'] = $login;

@@ -11,7 +11,7 @@ $PHP_OUTPUT.=('<table>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">Login:</td>');
-$PHP_OUTPUT.=('<td>'.$account->login.'</td>');
+$PHP_OUTPUT.=('<td>'.$account->getLogin().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');

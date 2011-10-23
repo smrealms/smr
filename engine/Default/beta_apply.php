@@ -18,8 +18,8 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">Login:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="login" value="'.htmlspecialchars($account->login).'">');
-$PHP_OUTPUT.=('<td>'.$account->login.'</td>');
+$PHP_OUTPUT.=('<input type="hidden" name="login" value="'.htmlspecialchars($account->getLogin()).'">');
+$PHP_OUTPUT.=('<td>'.$account->getLogin().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');

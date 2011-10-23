@@ -36,20 +36,20 @@ if ($db->getNumRows())
 		$offender = 'From: ';
 		if(is_object($sender))
 		{
-			$offender .= $sender_acc->login.' ('.$sender_acc->getAccountID().')';
-			if ($sender_acc->login != $sender->getPlayerName())
+			$offender .= $sender_acc->getLogin().' ('.$sender_acc->getAccountID().')';
+			if ($sender_acc->getLogin() != $sender->getPlayerName())
 				$offender .= ' a.k.a '.$sender->getPlayerName();
 		}
 		else
 			$offender .= $sender;
 		$PHP_OUTPUT.=create_link($container, $offender);
 		$PHP_OUTPUT.=('</td><td class="noWrap">');
-		//To: $receiver_acc->login ($receiver_acc->getAccountID())');
+		//To: $receiver_acc->getLogin() ($receiver_acc->getAccountID())');
 		$offended = 'To: ';
 		if(is_object($receiver))
 		{
-			$offended .= $receiver_acc->login.' ('.$receiver_acc->getAccountID().')';
-			if ($receiver_acc->login != $receiver->getPlayerName())
+			$offended .= $receiver_acc->getLogin().' ('.$receiver_acc->getAccountID().')';
+			if ($receiver_acc->getLogin() != $receiver->getPlayerName())
 				$offended .= ' a.k.a '.$receiver->getPlayerName();
 		}
 		else

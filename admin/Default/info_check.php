@@ -106,7 +106,7 @@ if (!isset($number) && !isset($var['number'])) {
 							//we have a match the other way
 							$curr_acc =& SmrAccount::getAccount($db3->getField('account_id'));
 							$id = $curr_acc->getAccountID();
-							$match_sec = $curr_acc->login;
+							$match_sec = $curr_acc->getLogin();
 							if (!in_array($match_sec, $names)) {
 
 								$continue = 'next';

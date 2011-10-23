@@ -80,7 +80,7 @@ $PHP_OUTPUT.=('<td align="right" class="bold">Login:</td>');
 if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="login" id="InputFields" size="20"></td>');
 else
-	$PHP_OUTPUT.=('<td>'.$curr_account->login.'</td>');
+	$PHP_OUTPUT.=('<td>'.$curr_account->getLogin().'</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">Validation Code:</td>');
@@ -253,7 +253,7 @@ if ($curr_account!==false)
 			if ($admin_id > 0)
 			{
 				$admin_account =& SmrAccount::getAccount($admin_id);
-				$admin = $admin_account->login;
+				$admin = $admin_account->getLogin();
 			}
 			else
 				$admin = 'System';

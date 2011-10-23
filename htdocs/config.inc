@@ -7,7 +7,7 @@ function logException(Exception $e)
 	$currMySQLError='';
 	if(is_object($account))
 	{
-		$message .= 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
+		$message .= 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
 			'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
 			'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL;
 	}

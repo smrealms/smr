@@ -6,7 +6,7 @@ SmrSession::$game_id = $var['game_id'];
 // check if hof entry is there
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.SmrSession::$account_id);
 if (!$db->getNumRows())
-	$db->query('INSERT INTO account_has_stats (account_id, HoF_name, games_joined) VALUES ('.$account->getAccountID().', ' . $db->escape_string($account->login, true) . ', 1)');
+	$db->query('INSERT INTO account_has_stats (account_id, HoF_name, games_joined) VALUES ('.$account->getAccountID().', ' . $db->escape_string($account->getLogin(), true) . ', 1)');
 
 $player =& SmrPlayer::getPlayer(SmrSession::$account_id, $var['game_id']);
 $player->setLastSectorID(0);
