@@ -25,7 +25,7 @@ $db->query('SELECT * FROM sector_has_forces WHERE game_id = '.$game_id.' GROUP B
 while ($db->nextRecord())
 {
 	$owner =& SmrPlayer::getPlayer($db->getField('owner_id'), $game_id);
-	$user =& SmrPlayer::getPlayer($account->account_id, $game_id);
+	$user =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
 	$sector = $db->getField('sector_id');
 
 	if ($owner->sameAlliance($user))

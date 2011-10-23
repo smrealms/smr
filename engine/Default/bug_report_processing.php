@@ -7,7 +7,7 @@ $description = $_REQUEST['description'];
 $new_sub = '[Bug] '.$subject;
 
 $message = 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
-	 'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
+	 'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
 	 'Description: '.$description.EOL.EOL.'-----------'.EOL.EOL.
 	 'Steps to repeat: '.$steps.EOL.EOL.'-----------'.EOL.EOL.
 	 'Error Message: '.$error_msg;

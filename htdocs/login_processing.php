@@ -208,7 +208,7 @@ try
 	if (!isset($_COOKIE['Session_Info']))
 	{
 		//we get their info from db if they have any
-		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->account_id);
+		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->getAccountID());
 		if ($db->nextRecord())
 		{
 			//convert to array
@@ -217,14 +217,14 @@ try
 			if ($old[0] != MULTI_CHECKING_COOKIE_VERSION) $old = array();
 		} else $old = array();
 		$old[0] = MULTI_CHECKING_COOKIE_VERSION;
-		if (!in_array($account->account_id, $old)) $old[] = $account->account_id;
+		if (!in_array($account->getAccountID(), $old)) $old[] = $account->getAccountID();
 		if (sizeof($old) <= 2) $use = 'FALSE';
 		else $use = 'TRUE';
 		//check that each value is legit and add it to db string
 		$new = MULTI_CHECKING_COOKIE_VERSION;
 		foreach ($old as $accID)
 			if (is_numeric($accID)) $new .= '-'.$accID;
-		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->account_id.', '.$db->escapeString($new).', '.$db->escapeString($use).')');
+		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->getAccountID().', '.$db->escapeString($new).', '.$db->escapeString($use).')');
 		//now we update their cookie with the newest info
 		setcookie('Session_Info', $new, TIME + 157680000);
 	
@@ -239,9 +239,9 @@ try
 		if ($cookie[0] != MULTI_CHECKING_COOKIE_VERSION) $cookie = array();
 		$cookie[0] = MULTI_CHECKING_COOKIE_VERSION;
 		//add this acc to the cookie if it isn't there
-		if (!in_array($account->account_id, $cookie)) $cookie[] = $account->account_id;
+		if (!in_array($account->getAccountID(), $cookie)) $cookie[] = $account->getAccountID();
 	
-		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->account_id);
+		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->getAccountID());
 		if ($db->nextRecord()) {
 			//convert to array
 			$old = explode('-', $db->getField('array'));
@@ -258,7 +258,7 @@ try
 		$new = MULTI_CHECKING_COOKIE_VERSION;
 		foreach ($old as $accID)
 			if (is_numeric($accID)) $new .= '-'.$accID;
-		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->account_id.', '.$db->escapeString($new).', '.$db->escapeString($use).')');
+		$db->query('REPLACE INTO multi_checking_cookie (account_id, array, `use`) VALUES ('.$account->getAccountID().', '.$db->escapeString($new).', '.$db->escapeString($use).')');
 		//update newest cookie
 		setcookie('Session_Info', $new, TIME + 157680000);
 	
@@ -274,11 +274,11 @@ try
 	$db2->query('UPDATE message SET reciever_delete = \'TRUE\', sender_delete = \'TRUE\' WHERE expire_time < '.TIME.' AND expire_time > 0');
 	//check to see if we need to remove player_has_unread
 	$db2 = new SmrMySqlDatabase();
-	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$account->account_id);
-	$db2->query('SELECT * FROM message WHERE account_id = '.$account->account_id.' AND msg_read = \'FALSE\' AND reciever_delete = \'FALSE\'');
+	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$account->getAccountID());
+	$db2->query('SELECT * FROM message WHERE account_id = '.$account->getAccountID().' AND msg_read = \'FALSE\' AND reciever_delete = \'FALSE\'');
 	
 	while ($db2->nextRecord())
-		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->getField('game_id') . ', '.$account->account_id.', ' . $db2->getField('message_type_id') . ')');
+		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->getField('game_id') . ', '.$account->getAccountID().', ' . $db2->getField('message_type_id') . ')');
 	//if (!empty($_POST['return_page'])) {
 	//echo 'DAMN';
 	//	header('Location: ' . $_POST['return_page']);

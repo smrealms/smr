@@ -83,7 +83,7 @@ if (!isset($number) && !isset($var['number'])) {
 				$PHP_OUTPUT.=($curr_account->login);
 				$listed[] = $info;
 				//who matches them
-				$db2->query('SELECT * FROM account_is_closed WHERE suspicion = \'Match:'.$account->account_id.'\'');
+				$db2->query('SELECT * FROM account_is_closed WHERE suspicion = \'Match:'.$account->getAccountID().'\'');
 				while ($db2->nextRecord()) {
 					
 					$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
@@ -162,7 +162,7 @@ if (!isset($number) && !isset($var['number'])) {
 				foreach ($users as $key => $value) {
 					
 					$curr_account =& SmrAccount::getAccount($value);
-					if ($curr_account->account_id != $id) {
+					if ($curr_account->getAccountID() != $id) {
 						
 						$PHP_OUTPUT.=($curr_account->login);
 						if ($key + 1 < $size) $PHP_OUTPUT.=(', ');

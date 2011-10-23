@@ -71,8 +71,7 @@ try
 	
 	// get rid of that email permission
 	$db->query('DELETE FROM account_is_closed
-				WHERE account_id = '.$account->account_id.' AND
-					  reason_id = 1');
+				WHERE account_id = '.$account->getAccountID().' AND reason_id = 1');
 	
 	$container = array();
 	$container['login'] = $login;

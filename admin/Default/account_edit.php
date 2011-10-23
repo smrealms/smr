@@ -56,18 +56,13 @@ $db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumbe
 if ($db->nextRecord())
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 
-$container = array();
-
-if (!$curr_account) {
-
-	$container['url']			= 'skeleton.php';
-	$container['body']			= 'account_edit.php';
-
-} else {
-
-	$container['url']			= 'account_edit_processing.php';
-	$container['account_id']	= $curr_account->account_id;
-
+if ($curr_account===false)
+{
+	$container = create_container('skeleton.php', 'account_edit.php');
+}
+else
+{
+	$container = create_container('account_edit_processing.php', $curr_account->getAccountID());
 }
 
 $PHP_OUTPUT.=create_form_parameter($container, 'name="form_acc"');
@@ -75,41 +70,42 @@ $PHP_OUTPUT.=('<p>');
 $PHP_OUTPUT.=('<table cellpadding="3" border="0">');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">Account ID:</td>');
-if (!empty($curr_account->account_id))
-	$PHP_OUTPUT.=('<td>'.$curr_account->account_id.'</td>');
-else
+if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="account_id" id="InputFields" size="5"></td>');
+else
+	$PHP_OUTPUT.=('<td>'.$curr_account->getAccountID().'</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">Login:</td>');
-if (!empty($curr_account->login))
-	$PHP_OUTPUT.=('<td>'.$curr_account->login.'</td>');
-else
+if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="login" id="InputFields" size="20"></td>');
+else
+	$PHP_OUTPUT.=('<td>'.$curr_account->login.'</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">Validation Code:</td>');
-if (!empty($curr_account->validation_code))
-	$PHP_OUTPUT.=('<td>'.$curr_account->validation_code.'</td>');
-else
+if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="val_code" id="InputFields" size="20"></td>');
+else
+	$PHP_OUTPUT.=('<td>'.$curr_account->validation_code.'</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">Email:</td>');
-if (!empty($curr_account->email))
-	$PHP_OUTPUT.=('<td>'.$curr_account->email.'</td>');
-else
+if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="email" id="InputFields" size="20"></td>');
+else
+	$PHP_OUTPUT.=('<td>'.$curr_account->email.'</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">HoF Name:</td>');
-if (!empty($curr_account) && $curr_account->getHofName())
-	$PHP_OUTPUT.=('<td>'.$curr_account->getHofName().'</td>');
-else
+if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="hofname" id="InputFields" size="20"></td>');
+else
+	$PHP_OUTPUT.=('<td>'.$curr_account->getHofName().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
-if (!empty($curr_account->email)) {
+if ($curr_account!==false)
+{
 	//ban points go here
 	$points = $curr_account->getPoints();
 	$PHP_OUTPUT.=('<tr>');
@@ -120,17 +116,17 @@ if (!empty($curr_account->email)) {
 
 $PHP_OUTPUT.=('<tr><td colspan="2">&nbsp;</td></tr>');
 
-if ($curr_account && $curr_account->account_id != 0) {
-
+if ($curr_account!==false)
+{
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Player:</td>');
-	$db->query('SELECT * FROM player WHERE account_id = '.$curr_account->account_id);
-	if ($db->getNumRows()) {
-
+	$db->query('SELECT * FROM player WHERE account_id = '.$curr_account->getAccountID());
+	if ($db->getNumRows())
+	{
 		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=('<table>');
-		while ($db->nextRecord()) {
-
+		while ($db->nextRecord())
+		{
 			$game_id = $db->getField('game_id');
 			$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $game_id);
 			$curr_ship =& $curr_player->getShip();
@@ -153,8 +149,8 @@ if ($curr_account && $curr_account->account_id != 0) {
 		}
 		$PHP_OUTPUT.=('</table>');
 		$PHP_OUTPUT.=('</td>');
-
-	} else
+	}
+	else
 		$PHP_OUTPUT.=('<td>Joined no active games</td>');
 
 	$PHP_OUTPUT.=('</tr>');
@@ -204,13 +200,13 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<option value="0">[Please Select]</option>');
 
 	$db->query('SELECT * FROM account_is_closed ' .
-			   'WHERE account_id = '.$curr_account->account_id);
+			   'WHERE account_id = '.$curr_account->getAccountID());
 	if ($db->nextRecord())
 		$curr_reason_id = $db->getField('reason_id');
 
 	$db->query('SELECT * FROM closing_reason');
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		$reason_id	= $db->getField('reason_id');
 		$reason		= $db->getField('reason');
 		if (strlen($reason) > 50)
@@ -220,7 +216,6 @@ if ($curr_account && $curr_account->account_id != 0) {
 		if ($curr_reason_id == $reason_id)
 			$PHP_OUTPUT.=(' selected');
 		$PHP_OUTPUT.=('>'.$reason.'</option>');
-
 	}
 	$PHP_OUTPUT.=('</select></p>');
 	$PHP_OUTPUT.=('<p><input type="radio" name="choise" value="individual">');
@@ -230,7 +225,8 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<p>Mail ban: <input type="text" name="mailban" id="InputFields" class="center" style="width:30px;"> days</p>');
 	$PHP_OUTPUT.=('<p>Points: <input type="text" name="points" id="InputFields" class="center" style="width:30px;"> points</p>');
 	$db->query('SELECT * FROM account_is_closed WHERE account_id = '.$account_id);
-	if ($db->nextRecord()) {
+	if ($db->nextRecord())
+	{
 		$cont = 'yes';
 		$expireTime = $db->getField('expires');
 	}
@@ -244,32 +240,28 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Closing History:</td>');
 	$PHP_OUTPUT.=('<td>');
-	$db->query('SELECT * FROM account_has_closing_history WHERE account_id = '.$curr_account->account_id.' ORDER BY time ASC');
+	$db->query('SELECT * FROM account_has_closing_history WHERE account_id = '.$curr_account->getAccountID().' ORDER BY time ASC');
 	if ($db->getNumRows())
 	{
-
 		while ($db->nextRecord())
 		{
-
 			$curr_time	= $db->getField('time');
 			$action		= $db->getField('action');
 			$admin_id	= $db->getField('admin_id');
 
 			// if an admin did it we get his/her name
-			if ($admin_id > 0) {
-
+			if ($admin_id > 0)
+			{
 				$admin_account =& SmrAccount::getAccount($admin_id);
-
 				$admin = $admin_account->login;
-
-			} else
+			}
+			else
 				$admin = 'System';
 
 			$PHP_OUTPUT.=(date(DATE_FULL_SHORT, $curr_time) . ' - '.$action.' by '.$admin.'<br />');
-
 		}
-
-	} else
+	}
+	else
 		$PHP_OUTPUT.=('no activity.');
 
 	$PHP_OUTPUT.=('</td>');
@@ -279,13 +271,13 @@ if ($curr_account && $curr_account->account_id != 0) {
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" valign="top" class="bold">Exception:</td>');
-	$db->query('SELECT * FROM account_exceptions WHERE account_id = '.$curr_account->account_id);
-	if ($db->nextRecord()) {
-
+	$db->query('SELECT * FROM account_exceptions WHERE account_id = '.$curr_account->getAccountID());
+	if ($db->nextRecord())
+	{
 		$reason_txt = $db->getField('reason');
 		$PHP_OUTPUT.=('<td>'.$reason_txt.'</td>');
-
-	} else
+	}
+	else
 		$PHP_OUTPUT.=('<td>This account is not listed.<br /><input type=text name=exception_add value="Add An Exception"></td>');
 	$PHP_OUTPUT.=('</tr>');
 
@@ -324,30 +316,27 @@ if ($curr_account && $curr_account->account_id != 0) {
 	$PHP_OUTPUT.=('<td>');
 
 	$PHP_OUTPUT.=('<table>');
-	$db->query('SELECT ip, time, host FROM account_has_ip WHERE account_id = '.$curr_account->account_id.' ORDER BY time DESC');
+	$db->query('SELECT ip, time, host FROM account_has_ip WHERE account_id = '.$curr_account->getAccountID().' ORDER BY time DESC');
 	while ($db->nextRecord())
 	{
-
 		$curr_ip	= $db->getField('ip');
 		$curr_time	= $db->getField('time');
 		$host		= $db->getField('host');
 		if ($host == $curr_ip)
 			$host = 'unknown';
 		$PHP_OUTPUT.=('<tr><td>' . date(DATE_FULL_SHORT, $curr_time) . '</td><td>&nbsp;</td><td>'.$curr_ip.'</td><td>&nbsp;</td><td>'.$host.'</td></tr>');
-
 	}
 	$PHP_OUTPUT.=('</table>');
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('</tr>');
-
-} else {
-
+}
+else
+{
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right" class="bold">Player Name:</td>');
 	$PHP_OUTPUT.=('<td><input type="text" name="player_name" id="InputFields" size="20"></td>');
 	$PHP_OUTPUT.=('</tr>');
-
 }
 
 $PHP_OUTPUT.=('</table>');
@@ -355,23 +344,20 @@ $PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.=( '<table>' );
 $PHP_OUTPUT.=( '<tr><td>' );
-if ($curr_account && $curr_account->account_id != 0)
+if ($curr_account!==false)
 	$PHP_OUTPUT.=create_submit('Edit Account');
 else
 	$PHP_OUTPUT.=create_submit('Search');
 $PHP_OUTPUT.=( '</td>' );
 $PHP_OUTPUT.=( '</form>' );
 
-$container = array();
-
-if ($curr_account && $curr_account->account_id != 0) {
-
+if ($curr_account!==false)
+{
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'account_edit.php'));
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=create_submit('Reset Form');
 	$PHP_OUTPUT.=('</td>' );
 	$PHP_OUTPUT.=('</form>' );
-
 }
 
 $PHP_OUTPUT.=( '</table>' );

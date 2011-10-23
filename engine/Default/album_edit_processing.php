@@ -132,7 +132,7 @@ if ($comment)
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$account->account_id.', '.$comment_id.', '.TIME.', 0, '.$db->escapeString($comment).')');
+				VALUES ('.$account->getAccountID().', '.$comment_id.', '.TIME.', 0, '.$db->escapeString($comment).')');
 	$db->unlock();
 }
 
