@@ -15,14 +15,14 @@ abstract class AbstractSmrAccount
 	
 	protected $db;
 	
-	var $account_id;
-	var $login;
+	protected $account_id;
+	protected $login;
 	protected $password;
-	var $email;
+	protected $email;
 	protected $first_name;
 	protected $validated;
 	protected $cellPhone;
-	var $validation_code;
+	protected $validation_code;
 	protected $last_login;
 	protected $hofName;
 	protected $ircNick;
