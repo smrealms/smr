@@ -46,9 +46,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$alliance_id_2 = $_REQUEST['proposedAlliance'];
 	$db->query('SELECT alliance_id_1, alliance_id_2, game_id FROM alliance_treaties WHERE (alliance_id_1 = '.$alliance_id_1.' OR alliance_id_1 = '.$alliance_id_2.') AND (alliance_id_2 = '.$alliance_id_1.' OR alliance_id_2 = '.$alliance_id_2.') AND game_id = '.$player->getGameID());
 	if ($db->nextRecord()) {
-		$container=array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'alliance_treaties.php';
+		$container=create_container('skeleton.php', 'alliance_treaties.php');
 		$container['alliance_id'] = $alliance_id_1;
 		$container['message'] = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
 		forward($container);
@@ -125,15 +123,12 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$container['planetLand'] = $planetLand;
 	$PHP_OUTPUT.=create_button($container,'Yes');
 	$PHP_OUTPUT.=('&nbsp;');
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'alliance_treaties.php';
+	$container=create_container('skeleton.php', 'alliance_treaties.php');
 	$container['alliance_id'] = $alliance_id_1;
 	$PHP_OUTPUT.=create_button($container,'No');
 	$PHP_OUTPUT.=('</div>');
 	
 } else {
-	define('MESSAGE_EXPIRES', TIME + 259200);
 	$alliance_id_2 = $var['proposedAlliance'];
 	$db->query('INSERT INTO alliance_treaties (alliance_id_1,alliance_id_2,game_id,trader_assist,trader_defend,trader_nap,raid_assist,planet_land,planet_nap,forces_nap,aa_access,mb_read,mb_write,mod_read,official) 
 				VALUES ('.$alliance_id_1.', '.$alliance_id_2.', '.$player->getGameID().', ' . $var['traderAssist'] . ', ' . 
@@ -147,13 +142,9 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$db->nextRecord();
 	$leader_2 = $db->getField('leader_id');
 	$message = 'An ambassador from <span class="yellow">' . $alliance_name . '</span> has arrived.';
-	$message = mysql_real_escape_string($message);
-	$msg = '(' . SmrSession::$game_id . ',' . $leader_2 . ',6,' . $db->escape_string($message) . ',0,' . TIME . ',\'FALSE\',' . MESSAGE_EXPIRES . ')';
-	$db->query('INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES '.$msg);
-	$db->query('INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ('.$leader_2.', '.SmrSession::$game_id.', 6)');
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'alliance_treaties.php';
+	
+	SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader_2, $message, MESSAGE_EXPIRES);
+	$container=create_container('skeleton.php', 'alliance_treaties.php');
 	$container['alliance_id'] = $alliance_id_1;
 	$container['message'] = 'The treaty offer has been sent.';
 	forward($container);
