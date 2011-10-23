@@ -252,7 +252,7 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 	{
 		if ($timea != '' && ($final = strtotime($timea)) !== false) //WARNING: Expects PHP 5.1.0 or later
 		{
-			$final += $account->offset * 3600;
+			$final += $account->getOffset() * 3600;
 			$message_text = str_replace('!' . $timea . '!', date(DATE_FULL_SHORT, $final), $message_text);
 		}
 	}
@@ -269,7 +269,7 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 			if ($sender_id > 0 && $timea != '' && ($final = strtotime($timea)) !== false) //WARNING: Expects PHP 5.1.0 or later
 			{
 				$send_acc = & $sender->getAccount();
-				$final += ($account->offset * 3600 - $send_acc->offset * 3600);
+				$final += ($account->getOffset() * 3600 - $send_acc->getOffset() * 3600);
 				$message_text = str_replace('?' . $timea . '?', date(DATE_FULL_SHORT, $final), $message_text);
 			}
 		}
