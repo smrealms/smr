@@ -866,12 +866,10 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		if($db->getNumRows()) {
 			$messages = array();
 			while($db->nextRecord()) {
-				$messages[$db->getField('message_type_id')] = $db->getField('COUNT(*)');
+				$messages[$db->getInt('message_type_id')] = $db->getInt('COUNT(*)');
 			}
 	
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'message_view.php';
+			$container = create_container('skeleton.php','message_view.php');
 	
 			if(isset($messages[MSG_GLOBAL])) {
 				$container['folder_id'] = MSG_GLOBAL;
@@ -910,25 +908,20 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 			}
 	
 			if(isset($messages[MSG_PLANET])) {
-				$container = array();
-				$container['url'] = 'planet_msg_processing.php';
+				$container = create_container('planet_msg_processing.php');
 				$template->assign('MessagePlanetLink',SmrSession::get_new_href($container));
 				$template->assign('MessagePlanetNum',$messages[MSG_PLANET]);
 			}
 		}
 	
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_search_result.php';
+		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id']	= $player->getPlayerID();
 		$template->assign('PlayerNameLink',SmrSession::get_new_href($container));
 		
 		if (is_array(Globals::getHiddenPlayers())&&in_array($player->getAccountID(), Globals::getHiddenPlayers())) $template->assign('PlayerInvisible',true);
 	
 		// ******* Hardware *******
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'configure_hardware.php';
+		$container = create_container('skeleton.php', 'configure_hardware.php');
 	
 		$template->assign('HardwareLink',SmrSession::get_new_href($container));
 	
@@ -938,17 +931,14 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		if ($ship->hasMines())
 		{
 	
-			$container = array();
-			$container['url'] = 'forces_drop_processing.php';
+			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
 			$template->assign('DropMineLink',SmrSession::get_new_href($container));
 		}
 		if ($ship->hasCDs())
 		{
-	
-			$container = array();
-			$container['url'] = 'forces_drop_processing.php';
+			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
 			$template->assign('DropCDLink',SmrSession::get_new_href($container));
@@ -957,9 +947,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 		if ($ship->hasSDs())
 		{
-	
-			$container = array();
-			$container['url'] = 'forces_drop_processing.php';
+			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
 			$template->assign('DropSDLink',SmrSession::get_new_href($container));
@@ -1019,12 +1007,11 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
-	if ($db->nextRecord()) {
-	
+	if ($db->nextRecord())
+	{
 		$version_id = $db->getField('version_id');
-		$container = array('url' => 'skeleton.php', 'body' => 'changelog_view.php', 'version_id' => $version_id );
+		$container = create_container('skeleton.php', 'changelog_view.php', array('version_id' => $version_id));
 		$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
-	
 	}
 	
 	$template->assign('Version',$version);
