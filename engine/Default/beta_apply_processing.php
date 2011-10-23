@@ -6,7 +6,7 @@ if(empty($_REQUEST['login'])||empty($_REQUEST['webboard'])||empty($_REQUEST['irc
 $new_sub = 'Beta Application';
 $message = 'Login: '.$_REQUEST['login'].EOL.EOL.'-----------'.EOL.EOL.
 	'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
-	'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL.
+	'E-Mail: '.$account->getEmail().EOL.EOL.'-----------'.EOL.EOL.
 	'Webboard Name: '.$_REQUEST['webboard'].EOL.EOL.'-----------'.EOL.EOL.
 	'IRC Nick: '.$_REQUEST['ircnick'].EOL.EOL.'-----------'.EOL.EOL.
 	'Start Time: '.$_REQUEST['started'].EOL.EOL.'-----------'.EOL.EOL.
@@ -16,7 +16,7 @@ $message = 'Login: '.$_REQUEST['login'].EOL.EOL.'-----------'.EOL.EOL.
 //mail('beta@smrealms.de',
 //	 $new_sub,
 //	 $message,
-//	 'From: '.$account->email);
+//	 'From: '.$account->getEmail());
 $player->sendMessageToBox(BOX_BETA_APPLICATIONS, $message);
 
 $container = array();

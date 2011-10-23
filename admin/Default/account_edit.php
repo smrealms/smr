@@ -94,7 +94,7 @@ $PHP_OUTPUT.=('<td align="right" class="bold">Email:</td>');
 if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="email" id="InputFields" size="20"></td>');
 else
-	$PHP_OUTPUT.=('<td>'.$curr_account->email.'</td>');
+	$PHP_OUTPUT.=('<td>'.$curr_account->getEmail().'</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">HoF Name:</td>');

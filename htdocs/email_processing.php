@@ -26,7 +26,7 @@ try
 		exit;
 	}
 	
-	if ($_POST['email'] == $account->email)
+	if ($_POST['email'] == $account->getEmail())
 	{
 		$msg = 'You have to use a different email than the registered one!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
@@ -52,7 +52,7 @@ try
 		exit;
 	}
 	
-	$account->email = $_POST['email'];
+	$account->setEmail($_POST['email']);
 	$account->validation_code = substr(SmrSession::$session_id, 0, 10);
 	$account->setValidated(false);
 	$account->update();

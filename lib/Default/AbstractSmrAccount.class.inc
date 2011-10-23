@@ -788,6 +788,15 @@ abstract class AbstractSmrAccount
 		return $this->email;
 	}
 	
+	public function setEmail($email)
+	{
+		if($this->$email==$email)
+			return;
+		$this->email = $email;
+		$this->hasChanged = true;
+		$this->update();
+	}
+	
 	public function getOffset()
 	{
 		return $this->offset;
