@@ -23,7 +23,7 @@ abstract class AbstractSmrAccount
 	protected $validated;
 	protected $cellPhone;
 	var $validation_code;
-	var $last_login;
+	protected $last_login;
 	protected $hofName;
 	protected $ircNick;
 	protected $veteran;
@@ -302,6 +302,11 @@ abstract class AbstractSmrAccount
 		$this->last_login = TIME;
 		$this->db->query('UPDATE account SET last_login = '.$this->last_login.' ' .
 			'WHERE account_id = '.$this->account_id);
+	}
+	
+	public function getLastLogin()
+	{
+		return $this->last_login;
 	}
 	
 	public function setLoggingEnabled($bool)
