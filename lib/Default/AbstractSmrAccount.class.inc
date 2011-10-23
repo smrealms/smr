@@ -29,7 +29,7 @@ abstract class AbstractSmrAccount
 	protected $veteran;
 	protected $logging;
 	var $offset;
-	var $images;
+	protected $images;
 	protected $fontSize;
 	protected $passwordReset;
 	protected $points;
@@ -937,7 +937,7 @@ abstract class AbstractSmrAccount
 	
 	public function isLoggedIn()
 	{
-		$this->db->query('SELECT * FROM active_session WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
+		$this->db->query('SELECT 1 FROM active_session WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
 		return $this->db->nextRecord();
 	}
 	
@@ -948,7 +948,10 @@ abstract class AbstractSmrAccount
 	
 	public function setPassword($password)
 	{
-		$this->password = md5($password);
+		$password = md5($password);
+		if($this->password == $password)
+			return;
+		$this->password = $password;
 		$this->generatePasswordReset();
 		$this->update();
 	}
@@ -980,13 +983,25 @@ abstract class AbstractSmrAccount
 	
 	protected function setPasswordReset($passwordReset)
 	{
+		if($this->passwordReset == $passwordReset)
+			return;
 		$this->passwordReset=$passwordReset;
+		$this->hasChanged=true;
 		$this->update();
 	}
 	
 	public function isDisplayShipImages()
 	{
 		return $this->images == 'Yes';
+	}
+	
+	public function setDisplayShipImages($yesNo)
+	{
+		if($this->images == $yesNo)
+			return;
+		$this->images = $yesNo;
+		$this->hasChanged=true;
+		$account->update();
 	}
 	
 	public function isUseAJAX()
