@@ -53,12 +53,12 @@ $db2 = new SmrMySqlDatabase();
 //this prevents multiple races appearing when there is more than 1 game
 $only = array();
 // get all available hq's
-$db->query('SELECT location_name, location.location_type_id as loc_id
-			FROM location NATURAL JOIN location_type
-			WHERE location.location_type_id > '.UNDERGROUND.' AND
-				  location.location_type_id < '.FED.' AND
+$db->query('SELECT location_name, location_type_id
+			FROM location JOIN location_type USING(location_type_id)
+			WHERE location_type_id > '.UNDERGROUND.' AND
+				  location_type_id < '.FED.' AND
 				  game_id = ' . $var['game_id'] . '
-			ORDER BY location.location_type_id');
+			ORDER BY location_type_id');
 $races = array();
 $selectedRace = mt_rand(1,$db->getNumRows());
 $i=1;
@@ -68,7 +68,7 @@ while ($db->nextRecord())
 	// HACK! cut ' Headquarters' from location name!
 	$race_name = substr(stripslashes($db->getField('location_name')), 0, -13);
 
-	$curr_race_id = $db->getField('loc_id') - 101;
+	$curr_race_id = $db->getField('location_type_id') - 101;
 	if (in_array($curr_race_id, $only)) continue;
 	$only[] = $curr_race_id;
 	// get number of traders in game

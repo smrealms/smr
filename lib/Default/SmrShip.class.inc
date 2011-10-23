@@ -281,8 +281,8 @@ class SmrShip extends AbstractSmrShip
 		if(!isset($this->illusionShip))
 		{
 			$this->illusionShip=false;
-			$this->db->query('SELECT ship_has_illusion.*,ship_type.ship_name FROM ship_has_illusion NATURAL JOIN ship_type WHERE account_id = '.$this->getAccountID().' AND ' .
-				'game_id = '.$this->getGameID().' LIMIT 1');
+			$this->db->query('SELECT ship_has_illusion.*,ship_type.ship_name FROM ship_has_illusion JOIN ship_type USING(ship_type_id)' .
+							' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' LIMIT 1');
 			if($this->db->nextRecord())
 			{
 				$this->illusionShip=array();

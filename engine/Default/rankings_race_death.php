@@ -16,7 +16,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
 $db2 = new SmrMySqlDatabase();
-$db->query('SELECT race.race_id as race_id, race_name, sum(deaths) as death_sum, count(account_id) FROM player NATURAL JOIN race WHERE game_id = '.$player->getGameID().' GROUP BY player.race_id ORDER BY death_sum DESC');
+$db->query('SELECT race_id, race_name, sum(deaths) as death_sum, count(*) FROM player JOIN race USING(race_id) WHERE game_id = '.$player->getGameID().' GROUP BY race_id ORDER BY death_sum DESC');
 while ($db->nextRecord())
 {
 	$rank++;
@@ -31,7 +31,6 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('race_name') . '</td>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('death_sum') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
-
 }
 
 $PHP_OUTPUT.=('</table>');

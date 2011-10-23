@@ -5,32 +5,30 @@ $template->assign('PageTopic','Check Anonymous Accounts');
 // a second db object
 $db2 = new SmrMySqlDatabase();
 
-$db->query('SELECT account_has_logs.account_id as account_id, login, player_name, count(account_has_logs.account_id) as number_of_entries
+$db->query('SELECT account_id, login, player_name, count(account_id) as number_of_entries
 			FROM account_has_logs
-			NATURAL JOIN account
-			NATURAL JOIN player
-			GROUP BY account_has_logs.account_id');
-if (!$db->getNumRows()) {
-
+			JOIN account USING(account_id)
+			JOIN player USING(account_id)
+			GROUP BY account_id');
+if (!$db->getNumRows())
+{
 	$PHP_OUTPUT.=create_error('There are no log entries at all!');
 	return;
 }
 
-while ($db->nextRecord()) {
-
+while ($db->nextRecord())
+{
 	if ($account_list)
 		$account_list .= ', ';
 	$account_list .= $db->getField('account_id');
-
 }
 
 // get all anon bank transactions that are logged in an array
 $db->query('SELECT * FROM anon_bank_transactions WHERE account_id IN ('.$account_list.') ORDER BY anon_id');
-if (!$db->getNumRows()) {
-
+if (!$db->getNumRows())
+{
 	$PHP_OUTPUT.=create_error('None of the entries in all the log files contains anonymous bank transaction!');
 	return;
-
 }
 
 // variable to remember the group of anon_ids in which we currently are
@@ -40,10 +38,10 @@ $PHP_OUTPUT.=('Following accounts where accessed by these logged people:');
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 $PHP_OUTPUT.=('<p>');
 
-while ($db->nextRecord()) {
-
-	if ($anon_id != $db->getField('anon_id')) {
-
+while ($db->nextRecord())
+{
+	if ($anon_id != $db->getField('anon_id'))
+	{
 		// if this is not the first entry we have to close previous list
 		if ($anon_id > 0)
 			$PHP_OUTPUT.=('</ul>');
@@ -54,7 +52,6 @@ while ($db->nextRecord()) {
 		// start topic for it
 		$PHP_OUTPUT.=('Account #'.$anon_id);
 		$PHP_OUTPUT.=('<ul>');
-
 	}
 
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));

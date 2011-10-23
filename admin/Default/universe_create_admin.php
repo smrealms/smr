@@ -70,13 +70,13 @@ $PHP_OUTPUT.=('<select name="race_id" id="InputFields" style="padding-left:10px;
 $only = array();
 // get all available hq's
 $db->query('SELECT location_name
-			FROM location NATURAL JOIN location_type
-			WHERE location.location_type_id > '.UNDERGROUND.' AND
-				  location.location_type_id < '.FED.' AND
+			FROM location JOIN location_type USING(location_type_id)
+			WHERE location_type_id > '.UNDERGROUND.' AND
+				  location_type_id < '.FED.' AND
 				  game_id = ' . $var['game_id'] . '
-			ORDER BY location.location_type_id');
-while ($db->nextRecord()) {
-
+			ORDER BY location_type_id');
+while ($db->nextRecord())
+{
 	// get the name for this race
 	// HACK! cut ' HQ' from location name!
 	$race_name = substr($db->getField('location_name'), 0, -3);
@@ -91,7 +91,7 @@ while ($db->nextRecord()) {
 	$only[] = $race_id;
 	// hack for the user mrspock
 	if ($player_name == 'MrSpock' && $race_name == 'Salvene')
-		$selected = ' selected';
+		$selected = ' selected="selected"';
 	else
 		$selected = '';
 	$PHP_OUTPUT.=('<option value="'.$race_id.'"'.$selected.'>'.$race_name.'</option>');

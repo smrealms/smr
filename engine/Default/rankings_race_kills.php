@@ -16,7 +16,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
 $db2 = new SmrMySqlDatabase();
-$db->query('SELECT race.race_id as race_id, race_name, sum(kills) as kill_sum, count(account_id) FROM player NATURAL JOIN race WHERE game_id = '.$player->getGameID().' GROUP BY player.race_id ORDER BY kill_sum DESC');
+$db->query('SELECT race_id, race_name, sum(kills) as kill_sum, count(*) FROM player JOIN race USING(race_id) WHERE game_id = '.$player->getGameID().' GROUP BY race_id ORDER BY kill_sum DESC');
 while ($db->nextRecord())
 {
 	$rank++;

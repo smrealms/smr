@@ -28,8 +28,8 @@ $db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.$admin_
 
 // put him in a sector with a hq
 $hq_id = $_POST['race_id'] + 101;
-$db->query('SELECT * FROM location NATURAL JOIN sector ' .
-		   'WHERE location.game_id = ' . $var['game_id'] . ' AND ' .
+$db->query('SELECT * FROM location JOIN sector USING(game_id, sector_id) ' .
+		   'WHERE game_id = ' . $var['game_id'] . ' AND ' .
 		   'location_type_id = '.$hq_id);
 if ($db->nextRecord())
 	$home_sector_id = $db->getField('sector_id');
