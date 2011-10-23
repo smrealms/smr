@@ -3,7 +3,7 @@
 if (!empty($_REQUEST['validation_code'])) {
 
 	// is this our validation code?
-	if ($account->validation_code != $_REQUEST['validation_code'])
+	if ($account->getValidationCode() != $_REQUEST['validation_code'])
 		create_error('The validation code you entered is incorrect.');
 
 	$account->setValidated(true);

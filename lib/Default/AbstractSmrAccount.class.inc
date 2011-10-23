@@ -922,6 +922,15 @@ abstract class AbstractSmrAccount
 		return $this->validation_code;
 	}
 	
+	public function setValidationCode($code)
+	{
+		if($this->validation_code == $code)
+			return;
+		$this->validation_code=$code;
+		$this->hasChanged=true;
+		$this->update();
+	}
+	
 	public function setValidated($bool)
 	{
 		if($this->validated == $bool)
