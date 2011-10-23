@@ -12,7 +12,7 @@ if (!isset($var['view_all'])) {
 				announcement.msg as msg
 				FROM announcement,account
 				WHERE announcement.admin_id=account.account_id
-				AND time > ' . $account->last_login . '
+				AND time > ' . $account->getLastLogin() . '
 				ORDER BY time DESC'
 				);
 }
