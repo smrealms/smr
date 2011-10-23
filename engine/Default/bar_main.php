@@ -11,7 +11,7 @@ if (isset($var['script'])) $script = $var['script'];
 else $script = 'bar_opening.php';
 //if ($script == 'bar_gambling_bet.php') create_error('Blackjack is currently outlawed, you will have to come back later.');
 //get bar name
-$db->query('SELECT location_name FROM location_type NATURAL JOIN location WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND location_type.location_type_id > 800 AND location_type.location_type_id < 900');
+$db->query('SELECT location_name FROM location_type JOIN location USING(location_type_id) WHERE game_id = '.$player->getGameID().' AND sector_id = '.$player->getSectorID().' AND location_type_id > 800 AND location_type_id < 900');
 
 //next welcome them
 if ($db->nextRecord()) $template->assign('PageTopic','Welcome to ' . $db->getField('location_name') . '.');

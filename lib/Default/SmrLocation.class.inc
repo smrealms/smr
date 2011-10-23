@@ -264,7 +264,7 @@ class SmrLocation
 		if(!isset($this->hardwareSold))
 		{
 			$this->hardwareSold = array();
-			$this->db->query('SELECT * FROM location_sells_hardware NATURAL JOIN hardware_type WHERE location_type_id = ' . $this->getTypeID());
+			$this->db->query('SELECT * FROM location_sells_hardware JOIN hardware_type USING(hardware_type_id) WHERE location_type_id = ' . $this->getTypeID());
 			while($this->db->nextRecord())
 				$this->hardwareSold[$this->db->getField('hardware_type_id')] = $this->db->getField('hardware_name');
 		}

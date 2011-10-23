@@ -1246,8 +1246,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
-		$this->db->query('SELECT location.sector_id FROM location NATURAL JOIN sector ' .
-					 'WHERE location.game_id = '.$this->getGameID().' AND ' .
+		$this->db->query('SELECT sector_id FROM location JOIN sector USING(game_id, sector_id) ' .
+					 'WHERE game_id = '.$this->getGameID().' AND ' .
 						   'location_type_id = '.$hq_id.' LIMIT 1');
 		if ($this->db->nextRecord())
 			return $this->db->getField('sector_id');

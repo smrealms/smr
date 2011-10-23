@@ -36,13 +36,13 @@ function private_msg_weapon($fp, $rdata) {
 	$db = new SmrMySqlDatabase();
 
 	if ($type == 1)
-		$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE weapon_name LIKE '.$db->escape_string('%' . $msg_1[4] . '%'));
+		$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) WHERE weapon_name LIKE '.$db->escape_string('%' . $msg_1[4] . '%'));
 	elseif ($type == 2) {
 
 		if (in_array($msg_2[5], $a))
-			$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE power_level = '.$msg_2[4].' ORDER BY '.$msg_2[5].' DESC');
+			$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) WHERE power_level = '.$msg_2[4].' ORDER BY '.$msg_2[5].' DESC');
 		else
-			$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE power_level = '.$msg_2[4]);
+			$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) WHERE power_level = '.$msg_2[4]);
 
 	} elseif ($type == 3) {
 
@@ -53,13 +53,13 @@ function private_msg_weapon($fp, $rdata) {
 		//first make sure we arent flooding
 		sleep(2);
 		if (in_array($msg_3[4], $a) && in_array($msg_3[7], $a))
-			$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE '.$msg_3[4].' > '.$msg_3[5].' AND '.$msg_3[4].' < '.$msg_3[6].' ORDER BY '.$msg_3[7].' DESC');
+			$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) WHERE '.$msg_3[4].' > '.$msg_3[5].' AND '.$msg_3[4].' < '.$msg_3[6].' ORDER BY '.$msg_3[7].' DESC');
 		elseif (in_array($msg_3[4], $a))
-			$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE '.$msg_3[4].' > '.$msg_3[5].' AND '.$msg_3[4].' < '.$msg_3[6]);
+			$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) WHERE '.$msg_3[4].' > '.$msg_3[5].' AND '.$msg_3[4].' < '.$msg_3[6]);
 		else {
 			$rand = mt_rand(0,7);
 			$object = $a[$rand];
-			$db->query('SELECT * FROM weapon_type NATURAL JOIN race WHERE '.$object.' > '.$msg_3[5].' AND '.$object.' < '.$msg_3[6]);
+			$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) WHERE '.$object.' > '.$msg_3[5].' AND '.$object.' < '.$msg_3[6]);
 		}
 
 	}

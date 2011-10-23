@@ -58,8 +58,8 @@ if (!$db->nextRecord())
 
 // put him in a sector with a hq
 $hq_id = $race_id + 101;
-$db->query('SELECT * FROM location NATURAL JOIN sector ' .
-		   'WHERE location.game_id = ' . $gameID . ' AND ' .
+$db->query('SELECT * FROM location JOIN sector USING(game_id, sector_id) ' .
+		   'WHERE game_id = ' . $gameID . ' AND ' .
 		   'location_type_id = '.$hq_id);
 if ($db->nextRecord())
 	$home_sector_id = $db->getField('sector_id');

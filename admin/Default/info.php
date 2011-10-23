@@ -288,7 +288,7 @@ if (!isset($number) && !isset($var['number'])) {
 			$PHP_OUTPUT.=('<td align=center><input type="text" name="exception['.$account_wanted.']" value="'.$value.'" size="15" id="InputFields" disabled><br /><input onclick=go(this,'.$u.') type="checkbox" name="account_id[]" value="'.$account_wanted.'"></td>');
 			$u += 2;
 			$value2 = 'Check Box Below';
-			$db3->query('SELECT * FROM account_is_closed NATURAL JOIN closing_reason WHERE account_id = '.$account_wanted);
+			$db3->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$account_wanted);
 			if ($db3->nextRecord())
 				$value2 = $db3->getField('reason');
 			$PHP_OUTPUT.=('<td align="center">');
