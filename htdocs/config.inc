@@ -8,7 +8,7 @@ function logException(Exception $e)
 	if(is_object($account))
 	{
 		$message .= 'Login: '.$account->login.EOL.EOL.'-----------'.EOL.EOL.
-			'Account ID: '.$account->account_id.EOL.EOL.'-----------'.EOL.EOL.
+			'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
 			'E-Mail: '.$account->email.EOL.EOL.'-----------'.EOL.EOL;
 	}
 	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
