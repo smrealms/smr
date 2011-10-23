@@ -189,8 +189,7 @@ elseif ($action == 'Change Date Formats')
 }
 elseif ($action == 'Change Images')
 {
-	$account->images = $_REQUEST['images'];
-	$account->update();
+	$account->setDisplayShipImages($_REQUEST['images']);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your ship images preferences.';
 }
 elseif ($action == 'Change Centering')
