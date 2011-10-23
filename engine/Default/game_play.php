@@ -322,7 +322,7 @@ $template->assign('OldAnnouncementsLink',SmrSession::get_new_href($container));
 // ***************************************
 // ** Admin Functions
 // ***************************************
-$db->query('SELECT * FROM account_has_permission NATURAL JOIN permission WHERE account_id = '.$account->account_id);
+$db->query('SELECT * FROM account_has_permission JOIN permission USING (permission_id) WHERE account_id = '.$account->getAccountID());
 
 if ($db->getNumRows())
 {
