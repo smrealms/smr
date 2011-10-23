@@ -260,7 +260,7 @@ abstract class AbstractSmrAccount
 			', default_css_enabled='.$this->db->escapeBoolean($this->defaultCSSEnabled).
 			', center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).
 			', message_notifications='.$this->db->escapeObject($this->messageNotifications).
-			', last_login = '.$this->escapeNumber($this->last_login).
+			', last_login = '.$this->db->escapeNumber($this->last_login).
 			', logging = '.$this->db->escapeBoolean($this->logging).
 			', time_short = ' . $this->db->escapeString($this->timeShort).
 			', date_short = ' . $this->db->escapeString($this->dateShort).
@@ -270,7 +270,7 @@ abstract class AbstractSmrAccount
 			', fontsize = ' . $this->db->escapeNumber($this->fontSize).
 			', css_link = ' . $this->db->escapeString($this->cssLink,true,true).
 			', cell_phone = ' . $this->db->escapeString($this->cellPhone, true, true).
-			' WHERE account_id = '.$this->account_id.' LIMIT 1');
+			' WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1');
 		$this->hasChanged = false;
 	}
 	
