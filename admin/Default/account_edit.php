@@ -87,7 +87,7 @@ $PHP_OUTPUT.=('<td align="right" class="bold">Validation Code:</td>');
 if ($curr_account===false)
 	$PHP_OUTPUT.=('<td><input type="text" name="val_code" id="InputFields" size="20"></td>');
 else
-	$PHP_OUTPUT.=('<td>'.$curr_account->validation_code.'</td>');
+	$PHP_OUTPUT.=('<td>'.$curr_account->getValidationCode().'</td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right" class="bold">Email:</td>');
