@@ -2,9 +2,7 @@
 
 //if we dont have an alliance we forward to message box
 //if (!$player->hasAlliance()) { //All planet messages are currently as messages
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'message_view.php';
+	$container = create_container('skeleton.php', 'message_view.php');
 	$container['folder_id'] = MSG_PLANET;
 	forward($container);
 //}

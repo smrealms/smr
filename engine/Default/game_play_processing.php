@@ -9,7 +9,6 @@ if (!$db->getNumRows())
 	$db->query('INSERT INTO account_has_stats (account_id, HoF_name, games_joined) VALUES ('.$account->account_id.', ' . $db->escape_string($account->login, true) . ', 1)');
 
 $player =& SmrPlayer::getPlayer(SmrSession::$account_id, $var['game_id']);
-include(get_file_loc('out_check.php'));
 $player->setLastSectorID(0);
 $player->updateLastCPLAction();
 $player->update();
@@ -20,8 +19,7 @@ $player->deletePlottedCourse();
 // log
 $account->log(2, 'Player entered game '.SmrSession::$game_id, $player->getSectorID());
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 if ($player->isLandedOnPlanet())
     $container['body'] = 'planet_main.php';
 else
