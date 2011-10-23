@@ -248,18 +248,28 @@ abstract class AbstractSmrAccount
 	
 	function update()
 	{
-		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).', ' .
-			'validation_code = '.$this->db->escapeString($this->validation_code).', ' .
-			'validated = '.$this->db->escapeBoolean($this->validated).', ' .
-			'password = '.$this->db->escapeString($this->password).', ' .
-			'images = '.$this->db->escapeString($this->images).', ' .
-			'password_reset = '.$this->db->escapeString($this->passwordReset).', ' .
-			'use_ajax='.$this->db->escapeBoolean($this->useAJAX).', ' .
-			'mail_banned='.$this->db->escapeNumber($this->mailBanned).', ' .
-			'max_rank_achieved='.$this->db->escapeNumber($this->maxRankAchieved).', ' .
-			'default_css_enabled='.$this->db->escapeBoolean($this->defaultCSSEnabled).', ' .
-			'center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).', ' .
-			'message_notifications='.$this->db->escapeObject($this->messageNotifications).
+		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).
+			', validation_code = '.$this->db->escapeString($this->validation_code).
+			', validated = '.$this->db->escapeBoolean($this->validated).
+			', password = '.$this->db->escapeString($this->password).
+			', images = '.$this->db->escapeString($this->images).
+			', password_reset = '.$this->db->escapeString($this->passwordReset).
+			', use_ajax='.$this->db->escapeBoolean($this->useAJAX).
+			', mail_banned='.$this->db->escapeNumber($this->mailBanned).
+			', max_rank_achieved='.$this->db->escapeNumber($this->maxRankAchieved).
+			', default_css_enabled='.$this->db->escapeBoolean($this->defaultCSSEnabled).
+			', center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).
+			', message_notifications='.$this->db->escapeObject($this->messageNotifications).
+			', last_login = '.$this->escapeNumber($this->last_login).
+			', logging = '.$this->db->escapeBoolean($this->logging).
+			', time_short = ' . $this->db->escapeString($this->timeShort).
+			', date_short = ' . $this->db->escapeString($this->dateShort).
+			', irc_nick = ' . $this->db->escapeString($this->ircNick, true, true).
+			', hof_name = ' . $this->db->escapeString($this->hofName).
+			', colour_scheme = ' . $this->db->escapeString($this->colourScheme).
+			', fontsize = ' . $this->db->escapeNumber($this->fontSize).
+			', css_link = ' . $this->db->escapeString($this->cssLink,true,true).
+			', cell_phone = ' . $this->db->escapeString($this->cellPhone, true, true).
 			' WHERE account_id = '.$this->account_id.' LIMIT 1');
 		$this->hasChanged = false;
 	}
@@ -299,9 +309,11 @@ abstract class AbstractSmrAccount
 	
 	public function update_last_login()
 	{
+		if($this->last_login == TIME)
+			return;
 		$this->last_login = TIME;
-		$this->db->query('UPDATE account SET last_login = '.$this->last_login.' ' .
-			'WHERE account_id = '.$this->account_id);
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function getLastLogin()
@@ -313,8 +325,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->logging==$bool)
 			return;
-		$this->db->query('UPDATE account SET logging = '.$this->db->escapeBoolean($bool).' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->logging=$bool;
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function isLoggingEnabled()
@@ -472,8 +485,6 @@ abstract class AbstractSmrAccount
 	{
 		if ($this->isLoggingEnabled())
 		{
-			if (empty($sector_id))
-				$sector_id = 0;
 			$this->db->query('INSERT INTO account_has_logs ' .
 				'(account_id, microtime, log_type_id, message, sector_id) ' .
 				'VALUES('.$this->account_id.', '. $this->db->escapeMicrotime(MICRO_TIME) . ', '.$log_type_id.', ' . $this->db->escapeString($msg) . ', '.$sector_id.')');
@@ -811,8 +822,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->fontSize==$size)
 			return;
-		$this->db->query('UPDATE account SET fontsize = ' . $this->db->escapeNumber($size) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->fontSize=$size;
+		$this->fontSize = $size;
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function getCssLink()
@@ -824,8 +836,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->cssLink==$link)
 			return;
-		$this->db->query('UPDATE account SET css_link = ' . $this->db->escapeString($link,true,true) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->cssLink=$link;
+		$this->cssLink = $link;
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function getTemplate()
@@ -856,8 +869,9 @@ abstract class AbstractSmrAccount
 			return;
 		if(!in_array($colourScheme,array_keys(Globals::getAvailableColourSchemes($this->getTemplate()))))
 			throw new Exception('Colour scheme not allowed: '.$colourScheme);
-		$this->db->query('UPDATE account SET colour_scheme = ' . $this->db->escapeString($colourScheme) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
 		$this->colourScheme = $colourScheme;
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function getHofName()
@@ -869,8 +883,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->hofName==$name)
 			return;
-		$this->db->query('UPDATE account SET hof_name = ' . $this->db->escapeString($name) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->hofName=$name;
+		$this->hofName = $name;
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function getIrcNick()
@@ -882,8 +897,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->ircNick==$nick)
 			return;
-		$this->db->query('UPDATE account SET irc_nick = ' . $this->db->escapeString($nick, true, true) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->ircNick=$nick;
+		$this->ircNick = $nick;
+		$this->hasChanged = true;
+		$this->update();
 	}
 
 	public function getReferralLink()
@@ -900,8 +916,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->dateShort==$format)
 			return;
-		$this->db->query('UPDATE account SET date_short = ' . $this->db->escapeString($format) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->dateShort=$format;
+		$this->dateShort = $format;
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function getShortTimeFormat()
@@ -913,8 +930,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->timeShort==$format)
 			return;
-		$this->db->query('UPDATE account SET time_short = ' . $this->db->escapeString($format) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->timeShort=$format;
+		$this->timeShort = $format;
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function getValidationCode()
@@ -935,8 +953,8 @@ abstract class AbstractSmrAccount
 	{
 		if($this->validated == $bool)
 			return;
-		$this->validated=$bool;
-		$this->hasChanged=true;
+		$this->validated = $bool;
+		$this->hasChanged = true;
 		$this->update();
 	}
 	
@@ -954,8 +972,9 @@ abstract class AbstractSmrAccount
 	{
 		if($this->cellPhone==$cell)
 			return;
-		$this->db->query('UPDATE account SET cell_phone = ' . $this->db->escapeString($cell, true, true) . ' WHERE account_id = '.$this->getAccountID().' LIMIT 1');
-		$this->cellPhone=$cell;
+		$this->cellPhone = $cell;
+		$this->hasChanged = true;
+		$this->update();
 	}
 
 	protected function getPassword()
@@ -1028,8 +1047,8 @@ abstract class AbstractSmrAccount
 		if($this->images == $yesNo)
 			return;
 		$this->images = $yesNo;
-		$this->hasChanged=true;
-		$account->update();
+		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function isUseAJAX()
