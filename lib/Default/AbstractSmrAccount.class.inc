@@ -28,7 +28,7 @@ abstract class AbstractSmrAccount
 	protected $ircNick;
 	protected $veteran;
 	protected $logging;
-	var $offset;
+	protected $offset;
 	protected $images;
 	protected $fontSize;
 	protected $passwordReset;
