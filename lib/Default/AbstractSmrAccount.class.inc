@@ -19,7 +19,7 @@ abstract class AbstractSmrAccount
 	var $login;
 	protected $password;
 	var $email;
-	var $first_name;
+	protected $first_name;
 	protected $validated;
 	protected $cellPhone;
 	var $validation_code;
@@ -776,6 +776,11 @@ abstract class AbstractSmrAccount
 	public function getLogin()
 	{
 		return $this->login;
+	}
+	
+	public function getFirstName()
+	{
+		return $this->first_name;
 	}
 	
 	public function getEmail()

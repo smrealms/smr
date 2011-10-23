@@ -1,10 +1,6 @@
 <?php
-$container = array();
-$container['url'] = 'validate_processing.php';
-
 if(isset($var['msg']))
 	$template->assign('Message', $var['msg']);
-$template->assign('ValidateFormHref', SmrSession::get_new_href($container));
-$template->assign('FirstName', $account->first_name);
+$template->assign('ValidateFormHref', SmrSession::get_new_href(create_container('validate_processing.php')));
 
 ?>
