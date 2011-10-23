@@ -18,8 +18,8 @@ try
 	// creates a new user account object
 	$account =& SmrAccount::getAccountByName($login);
 	$email = $_REQUEST['email'];
-	if ($account==null || $account->email != $email) {
-	
+	if ($account==null || $account->getEmail() != $email)
+	{
 		// unknown user
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode('User does not exist'));
 		exit;

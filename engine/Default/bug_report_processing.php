@@ -15,7 +15,7 @@ $message = 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
 //mail('bugs@smrealms.de',
 //	 $new_sub,
 //	 $message,
-//	 'From: '.$account->email);
+//	 'From: '.$account->getEmail());
 
 if(is_object($player))
 	$player->sendMessageToBox(BOX_BUGS_REPORTED, $message);

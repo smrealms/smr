@@ -9,7 +9,7 @@ mail($receiver,
 	 'Login:'.EOL.'------'.EOL.$account->getLogin().EOL.EOL .
 	 'Account ID:'.EOL.'-----------'.EOL.$account->getAccountID().EOL.EOL .
 	 'Message:'.EOL.'------------'.EOL.$msg,
-	 'From: '.$account->email);
+	 'From: '.$account->getEmail());
 	 
 $container = array();
 $container['url'] = 'skeleton.php';

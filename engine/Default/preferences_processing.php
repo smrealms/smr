@@ -37,7 +37,7 @@ else if ($action == 'Save and resend validation code')
 	if ($db->getNumRows() > 0)
 		create_error('This eMail address is already registered.');
 
-	$account->email = $email;
+	$account->setEmail($email);
 	$account->validation_code = substr(SmrSession::$session_id, 0, 10);
 	$account->isValidated(false);
 	$account->update();

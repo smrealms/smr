@@ -24,8 +24,8 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">eMail:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="email" value="'.htmlspecialchars($account->email).'">');
-$PHP_OUTPUT.=('<td>'.$account->email.'</td>');
+$PHP_OUTPUT.=('<input type="hidden" name="email" value="'.htmlspecialchars($account->getEmail()).'">');
+$PHP_OUTPUT.=('<td>'.$account->getEmail().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
