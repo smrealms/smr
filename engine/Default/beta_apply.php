@@ -10,21 +10,16 @@ $template->assign('PageTopic','Apply for Beta');
 $PHP_OUTPUT.=('The information on this page will be used by the beta team leader in choosing applicants.<br />');
 $PHP_OUTPUT.=('You must fill in all fields for your application to be considered.');
 
-$container = array();
-$container['url'] = 'beta_apply_processing.php';
-
-$PHP_OUTPUT.=create_echo_form($container);
+$PHP_OUTPUT.=create_echo_form(create_container('beta_apply_processing.php'));
 
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">Login:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="login" value="'.htmlspecialchars($account->getLogin()).'">');
 $PHP_OUTPUT.=('<td>'.$account->getLogin().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">eMail:</td>');
-$PHP_OUTPUT.=('<input type="hidden" name="email" value="'.htmlspecialchars($account->getEmail()).'">');
 $PHP_OUTPUT.=('<td>'.$account->getEmail().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
