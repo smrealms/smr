@@ -147,32 +147,6 @@ $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id
 $db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
 								 'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 0, 46)');
 
-// update stats
-$db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$account->account_id);
-
-// is this our first game?
-$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->account_id);
-$db->nextRecord();
-if ($db->getField('games_joined') == 1) {
-
-	//we are a newb set our alliance to be Newbie Help Allaince
-	$db->query('UPDATE player SET alliance_id = '.NHA_ID.' WHERE account_id = '.$account->account_id.' AND game_id = '.$gameID);
-	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$gameID.', '.$account->account_id.', 2,'.NHA_ID.')');
-	//we need to send them some messages
-	$time = TIME;
-	$message = 'Welcome to Space Merchant Realms, this message is to get you underway with information to start you off in the game. All newbie and beginner rated player are placed into a teaching alliance run by a Veteran player who is experienced enough to answer all your questions and give you a helping hand at learning the basics of the game.<br /><br />
-	Apart from your leader (denoted with a star on your alliance roster) there are various other ways to get information and help. Newbie helpers are players in Blue marked on the Current Players List which you can view by clicking the link on the left-hand side of the screen that says "Current Players". Also you can visit the SMR Manual via a link on the left which gives detailed information on all aspects fo the game.<br /><br />
-	SMR is a very community orientated game and as such there is an IRC Chat server setup for people to talk with each other and coordinate your alliances. There is a link on the left which will take you directly to the main SMR room where people come to hang out and chat. You can also get help in the game in the #smr room. You can access this by typing /join #smr-help in the server window. If you prefer to use a dedicated program to access IRC Chat rather than a browser you can goto http://www.mirc.com which is a good shareware program (asks to register the program after 30 days but you can still use it after 30 days so you won\'t get cut off from using it) or http://www.xchat.org which is a free alternative. In the options of either program you will need to enter the server information to access the server. Add a new server and enter the server address irc.coldfront.net using port 6667. Once connected you can use the /join command to join #smr (/join #smr) or any other room on the server as normal.<br /><br />
-	Apart from this you can view the webboard via a link on the left to join in community chat and conversations, ask questions for help and make suggestions for the game in various forums.<br /><br />
-	To get underway, click the alliance link on the left where you can get more information on 	how to get started on the alliance message board which will get you into your alliance chat 	on IRC so you can get started and have your questions answered.<br /><br />Depending on the size and resolution of your monitor the default font size may be too large or small. This can be changed using the preferences link on the left panel.';
-
-	$db->query('INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) ' .
-	'VALUES ('.$gameID.', '.$account->account_id.', '.MSG_ADMIN.', '.$db->escapeString($message).', 0, '.$time.', \'FALSE\', 0)');
-
-	$db->query('REPLACE INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ' .
-				'('.$account->account_id.', '.$gameID.', '.MSG_ADMIN.')');
-
-}
 // insert the huge amount of sectors into the database :)
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
@@ -193,6 +167,29 @@ for ($i = $min_sector; $i <= $max_sector; $i++) {
 
 }
 $db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ')');
+
+
+
+// update stats
+$db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$account->account_id);
+
+// is this our first game?
+$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->account_id);
+$db->nextRecord();
+if ($db->getField('games_joined') == 1)
+{
+	//we are a newb set our alliance to be Newbie Help Allaince
+	$db->query('UPDATE player SET alliance_id = '.NHA_ID.' WHERE account_id = '.$account->account_id.' AND game_id = '.$gameID);
+	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$gameID.', '.$account->account_id.', 2,'.NHA_ID.')');
+	//we need to send them some messages
+	$message = 'Welcome to Space Merchant Realms, this message is to get you underway with information to start you off in the game. All newbie and beginner rated player are placed into a teaching alliance run by a Veteran player who is experienced enough to answer all your questions and give you a helping hand at learning the basics of the game.<br /><br />
+	Apart from your leader (denoted with a star on your alliance roster) there are various other ways to get information and help. Newbie helpers are players in Blue marked on the Current Players List which you can view by clicking the link on the left-hand side of the screen that says "Current Players". Also you can visit the SMR Manual via a link on the left which gives detailed information on all aspects fo the game.<br /><br />
+	SMR is a very community orientated game and as such there is an IRC Chat server setup for people to talk with each other and coordinate your alliances. There is a link on the left which will take you directly to the main SMR room where people come to hang out and chat. You can also get help in the game in the #smr room. You can access this by typing /join #smr-help in the server window. If you prefer to use a dedicated program to access IRC Chat rather than a browser you can goto http://www.mirc.com which is a good shareware program (asks to register the program after 30 days but you can still use it after 30 days so you won\'t get cut off from using it) or http://www.xchat.org which is a free alternative. In the options of either program you will need to enter the server information to access the server. Add a new server and enter the server address irc.coldfront.net using port 6667. Once connected you can use the /join command to join #smr (/join #smr) or any other room on the server as normal.<br /><br />
+	Apart from this you can view the webboard via a link on the left to join in community chat and conversations, ask questions for help and make suggestions for the game in various forums.<br /><br />
+	To get underway, click the alliance link on the left where you can get more information on 	how to get started on the alliance message board which will get you into your alliance chat 	on IRC so you can get started and have your questions answered.<br /><br />Depending on the size and resolution of your monitor the default font size may be too large or small. This can be changed using the preferences link on the left panel.';
+
+	SmrPlayer::sendMessageFromAdmin($gameID, $account->account_id, $message);
+}
 forward(create_container('skeleton.php', 'game_play.php'));
 
 ?>
