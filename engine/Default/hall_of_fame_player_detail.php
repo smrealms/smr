@@ -81,7 +81,7 @@ if(!isset($var['view']))
 				
 				$rankType = $container['type'];
 				$rankType[] = $subType;
-				$rank = getHofRank($subType,$rankType,$account->account_id,$game_id,$db);
+				$rank = getHofRank($subType,$rankType,$account->getAccountID(),$game_id,$db);
 				$rankMsg='';
 				if($rank['Rank']!=0)
 					$rankMsg = ' (#' . $rank['Rank'] .')';
@@ -94,7 +94,7 @@ if(!isset($var['view']))
 		else
 		{
 			unset($container['view']);
-			$rank = getHofRank($type,$container['type'],$account->account_id,$game_id,$db);
+			$rank = getHofRank($type,$container['type'],$account->getAccountID(),$game_id,$db);
 			$PHP_OUTPUT.=create_submit_link($container,'View (#' . $rank['Rank'] .')');
 		}
 		$PHP_OUTPUT.=('</td></tr>');

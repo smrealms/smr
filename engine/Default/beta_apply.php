@@ -30,7 +30,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold">Account ID:</td>');
-$PHP_OUTPUT.=('<td>'.$account->account_id.'</td>');
+$PHP_OUTPUT.=('<td>'.$account->getAccountID().'</td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');

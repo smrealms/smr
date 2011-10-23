@@ -31,7 +31,7 @@ if (1 == 1) {
 					$new_ip[] = $ip;
 
 				}
-				$ordered_ip[$curr_account->account_id] = $new_ip;
+				$ordered_ip[$curr_account->getAccountID()] = $new_ip;
 			}
 		}
 		//order them by IP
@@ -65,7 +65,7 @@ if (1 == 1) {
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$acc_id);
 			if ($db2->getNumRows() && $db_ip != $last_ip) continue;
 			$PHP_OUTPUT.=('<tr>');
-			$PHP_OUTPUT.=('<td align=center>'.$new_acc->login.' ('.$new_acc->account_id.')</td>');
+			$PHP_OUTPUT.=('<td align=center>'.$new_acc->login.' ('.$new_acc->getAccountID().')</td>');
 			$PHP_OUTPUT.=('<td align=center>'.$ip_wanted.'</td>');
 			if ($ip_wanted == $last_ip && !$db2->nextRecord())
 			   $PHP_OUTPUT.=('<td align=center><span class="red">MATCH w/ '.$last_acc->login.'</span></td>');
@@ -73,10 +73,10 @@ if (1 == 1) {
 				$PHP_OUTPUT.=('<td align=center><span class="red">(Already disabled) MATCH w/ '.$last_acc->login.'</span></td>');
 			else
 				$PHP_OUTPUT.=('<td align=center>&nbsp;</td>');
-			$PHP_OUTPUT.=('<td><input type="checkbox" name="account_id[]" value="'.$new_acc->account_id.'"></td>');
+			$PHP_OUTPUT.=('<td><input type="checkbox" name="account_id[]" value="'.$new_acc->getAccountID().'"></td>');
 			$PHP_OUTPUT.=('</tr>');
 			$i += 1;
-			$last_acc_id = $new_acc->account_id;
+			$last_acc_id = $new_acc->getAccountID();
 			$last_ip = $ip_wanted;
 		}
 		$PHP_OUTPUT.=('</table>');

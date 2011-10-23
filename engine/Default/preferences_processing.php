@@ -56,8 +56,7 @@ else if ($action == 'Save and resend validation code')
 
 	// get rid of that email permission
 	$db->query('DELETE FROM account_is_closed ' .
-						'WHERE account_id = '.$account->account_id.' AND ' .
-								'reason_id = 1');
+				'WHERE account_id = '.$account->getAccountID().' AND reason_id = 1');
 
 	// overwrite container
 	$container['body'] = 'validate.php';

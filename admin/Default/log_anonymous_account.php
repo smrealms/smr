@@ -62,7 +62,7 @@ while ($db->nextRecord()) {
 	$transaction_id = $db->getField('transaction_id');
 
 	$db2->query('SELECT * FROM anon_bank_transactions
-				 WHERE account_id = '.$curr_account->account_id.' AND
+				 WHERE account_id = '.$curr_account->getAccountID().' AND
 					   anon_id = '.$anon_id.' AND
 					   transaction_id = '.$transaction_id);
 	if ($db2->nextRecord())
