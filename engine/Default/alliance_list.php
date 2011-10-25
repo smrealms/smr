@@ -25,25 +25,24 @@ $varSequence = isset($var['sequence']) ? $var['sequence'] : 'ASC';
 //FROM player, player_cache, alliance 
 //WHERE player.alliance_id = alliance.alliance_id 
 //AND alliance.leader_id > 0
-//AND player.game_id = ' . SmrSession::$game_id . '
-//AND alliance.game_id = ' . SmrSession::$game_id
-// . 'AND player_cache.game_id = ' . SmrSession::$game_id
+//AND player.game_id = ' . $player->getGameID() . '
+//AND alliance.game_id = ' . $player->getGameID()
+// . 'AND player_cache.game_id = ' . $player->getGameID()
 // . 'AND player_cache.account_id = player.account_id
 //GROUP BY alliance.alliance_id 
 //ORDER BY ' . $var['order'] . ' ' . $varSequence
 //);
 $db->query('SELECT 
-count(player_name) as alliance_member_count,
-sum(player.experience) as alliance_xp,
-floor(avg(player.experience)) as alliance_avg,
-alliance.alliance_name as alliance_name,
-player.alliance_id as alliance_id 
-FROM player, alliance 
-WHERE player.alliance_id = alliance.alliance_id 
-AND alliance.leader_id > 0
-AND player.game_id = ' . SmrSession::$game_id . '
-AND alliance.game_id = ' . SmrSession::$game_id .'
-GROUP BY alliance.alliance_id 
+count(account_id) as alliance_member_count,
+sum(experience) as alliance_xp,
+floor(avg(experience)) as alliance_avg,
+alliance_name,
+alliance_id 
+FROM player
+JOIN alliance USING (game_id, alliance_id)
+WHERE leader_id > 0
+AND game_id = ' . $player->getGameID() . '
+GROUP BY alliance_id 
 ORDER BY ' . $var['order'] . ' ' . $varSequence
 );
 //echo 'SELECT 
@@ -55,8 +54,8 @@ ORDER BY ' . $var['order'] . ' ' . $varSequence
 //FROM player, alliance 
 //WHERE player.alliance_id = alliance.alliance_id 
 //AND alliance.leader_id > 0
-//AND player.game_id = ' . SmrSession::$game_id . '
-//AND alliance.game_id = ' . SmrSession::$game_id .'
+//AND player.game_id = ' . $player->getGameID() . '
+//AND alliance.game_id = ' . $player->getGameID() .'
 //GROUP BY alliance.alliance_id 
 //ORDER BY ' . $var['order'] . ' ' . $varSequence;
 
