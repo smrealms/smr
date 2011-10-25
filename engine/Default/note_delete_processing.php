@@ -20,7 +20,7 @@ if(isset($_POST['note_id'])) {
 		}
 	}
 	if($verified) {
-		$db->query('DELETE FROM player_has_notes WHERE game_id=' . SmrSession::$game_id .
+		$db->query('DELETE FROM player_has_notes WHERE game_id=' . $player->getGameID() .
 		' AND account_id=' . SmrSession::$account_id .
 		' AND note_id IN ('  . implode(',',$note_ids)  . ')');
 	}

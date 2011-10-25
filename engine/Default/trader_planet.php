@@ -37,7 +37,7 @@ if ($db->getNumRows() > 0)
 
 	while ($db->nextRecord())
 	{
-		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
+		$planet =& SmrPlanet::getPlanet($player->getGameID(),$db->getField('sector_id'));
 		$planet_sec = $db->getField('sector_id');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$planet->getName().'</td>');
@@ -122,7 +122,7 @@ if ($player->hasAlliance())
 
 		while ($db->nextRecord())
 		{
-			$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
+			$planet =& SmrPlanet::getPlanet($player->getGameID(),$db->getField('sector_id'));
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td>' . $planet->getName() . '</td>');
 			$PHP_OUTPUT.=('<td>' . $planet->getOwner()->getLinkedDisplayName(false) . '</td>');

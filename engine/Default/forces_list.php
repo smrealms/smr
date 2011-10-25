@@ -23,7 +23,7 @@ $db->query('
 SELECT sector_id, owner_id
 FROM sector_has_forces
 WHERE owner_id = '.$player->getAccountID().'
-AND game_id = '.SmrSession::$game_id.'
+AND game_id = '.$player->getGameID().'
 AND expire_time >= '.TIME.'
 ORDER BY '.$categorySQL.', '.$subcategory);
 if ($db->getNumRows() > 0) {
@@ -63,7 +63,7 @@ if ($db->getNumRows() > 0) {
 	
 	while ($db->nextRecord())
 	{
-		$forces =& SmrForce::getForce(SmrSession::$game_id, $db->getField('sector_id'), $db->getField('owner_id'));
+		$forces =& SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'));
 		
 		$PHP_OUTPUT .= '<tr>';
 		$PHP_OUTPUT .= '<td class="shrink noWrap">'.$forces->getSectorID().' ('.$forces->getGalaxy()->getName().')</td>';

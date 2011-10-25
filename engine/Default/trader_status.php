@@ -137,7 +137,7 @@ $form = create_form($container,'Delete Selected');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><th colspan="2">Notes</th></tr>';
 
-$db->query('SELECT * FROM player_has_notes WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . SmrSession::$account_id . ' ORDER BY note_id desc');
+$db->query('SELECT * FROM player_has_notes WHERE game_id=' . $player->getGameID() . ' AND account_id=' . SmrSession::$account_id . ' ORDER BY note_id desc');
 if($db->getNumRows() > 0)
 {
 	while($db->nextRecord())

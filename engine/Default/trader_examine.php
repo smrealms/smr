@@ -1,7 +1,7 @@
 <?php
 
 // Get the player we're attacking
-$targetPlayer =& SmrPlayer::getPlayer($var['target'],SmrSession::$game_id);
+$targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 
 if($targetPlayer->isDead())
 {

@@ -1,7 +1,6 @@
 <?php
 require_once(get_file_loc('SmrPort.class.inc'));
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
+$sector =& $player->getSector();
 
 $alliance_ids = array();
 $alliance_list = '';
@@ -30,9 +29,9 @@ if (empty($alliance_list))
 // get min and max sectors
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
-			WHERE game_id = '.SmrSession::$game_id);
-if ($db->nextRecord()) {
-
+			WHERE game_id = '.$player->getGameID());
+if ($db->nextRecord())
+{
 	$min_sector = $db->getField('MIN(sector_id)');
 	$max_sector = $db->getField('MAX(sector_id)');
 
@@ -43,7 +42,7 @@ $unvisitted_sectors = array();
 // get the sectors the user hasn't visited yet
 $db->query('SELECT sector_id
 			FROM player_visited_sector
-			WHERE game_id = '.SmrSession::$game_id.' AND
+			WHERE game_id = '.$player->getGameID().' AND
 				  account_id = '.SmrSession::$account_id);
 while ($db->nextRecord())
 	$unvisitted_sectors[$db->getField('sector_id')] = true;
@@ -75,7 +74,7 @@ if ($visitted_sector_list) {
 	$db->query('DELETE
 				FROM player_visited_sector
 				WHERE account_id IN ('.$alliance_list.') AND
-					  game_id = '.SmrSession::$game_id.' AND
+					  game_id = '.$player->getGameID().' AND
 					  sector_id IN ('.$visitted_sector_list.')');
 
 }
@@ -84,10 +83,10 @@ if ($visitted_sector_list) {
 $db->query('SELECT sector_id
 			FROM player_visited_port
 			WHERE account_id = '.SmrSession::$account_id.' AND
-				  game_id = '.SmrSession::$game_id);
+				  game_id = '.$player->getGameID());
 while ($db->nextRecord())
 {
-	$cachedPort =& SmrPort::getCachedPort(SmrSession::$game_id,$db->getField('sector_id'),SmrSession::$account_id);
+	$cachedPort =& SmrPort::getCachedPort($player->getGameID(),$db->getField('sector_id'),SmrSession::$account_id);
 	$cachedPort->addCachePorts($alliance_ids);
 }
 

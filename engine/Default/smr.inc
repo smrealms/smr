@@ -564,7 +564,7 @@ function do_voodoo()
 		$ship	=& $player->getShip();
 		$GLOBALS['ship'] =& $ship;
 		
-		$sector	=& SmrSector::getSector(SmrSession::$game_id,$player->getSectorID());
+		$sector	=& $player->getSector();
 		$GLOBALS['sector'] =& $sector;
 
 		// update turns on that player

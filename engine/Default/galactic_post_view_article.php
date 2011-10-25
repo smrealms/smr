@@ -55,7 +55,7 @@ if (isset($var['id']))
     transfer('id');
     $PHP_OUTPUT.=create_link($container, '<b>Delete This article</b>');
     $PHP_OUTPUT.=('<br /><br />');
-    $db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.SmrSession::$game_id);
+    $db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.$player->getGameID());
     $container = array();
     $container['url'] = 'galactic_post_add_article_to_paper.php';
     transfer('id');

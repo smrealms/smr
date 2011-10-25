@@ -85,12 +85,12 @@ if (isset($made) && !USING_AJAX)
     if (empty($password))
     	create_error('You cannot use a blank password!');
 
-	$db->query('SELECT MAX(anon_id) FROM anon_bank WHERE game_id = '.SmrSession::$game_id);
+	$db->query('SELECT MAX(anon_id) FROM anon_bank WHERE game_id = '.$player->getGameID());
     if ($db->nextRecord())
 	    $new_acc = $db->getField('MAX(anon_id)') + 1;
     else
     	$new_acc = 1;
-    $db->query('INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES ('.SmrSession::$game_id.', '.$new_acc.', '.$player->getAccountID().', '.$db->escapeString($password).', 0)');
+    $db->query('INSERT INTO anon_bank (game_id, anon_id, owner_id, password, amount) VALUES ('.$player->getGameID().', '.$new_acc.', '.$player->getAccountID().', '.$db->escapeString($password).', 0)');
     $PHP_OUTPUT.= 'Account #'.$new_acc.' has been opened for you.<br /><br />';
 }
 

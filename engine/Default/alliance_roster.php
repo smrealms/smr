@@ -20,7 +20,7 @@ if(!isset($var['SortDesc']))
 	SmrSession::updateVar('SortDesc',true);
 }
 
-$alliance =& SmrAlliance::getAlliance($alliance_id,SmrSession::$game_id);
+$alliance =& SmrAlliance::getAlliance($alliance_id,$player->getGameID());
 $leader_id = $alliance->getLeaderID();
 $password = $alliance->getPassword();
 
@@ -39,7 +39,7 @@ if ($varAction == 'Show Alliance Roles') {
 	// get all roles from db for faster access later
 	$db->query('SELECT role_id, role
 				FROM alliance_has_roles
-				WHERE game_id=' . SmrSession::$game_id . '
+				WHERE game_id=' . $player->getGameID() . '
 				AND alliance_id=' .  $alliance_id . '
 				ORDER BY role_id'
 				);
@@ -61,7 +61,7 @@ $db->query('SELECT
 	floor(avg(experience)) as alliance_avg
 	FROM player
 	WHERE alliance_id=' . $alliance_id  . '
-	AND game_id = ' . SmrSession::$game_id . '
+	AND game_id = ' . $player->getGameID() . '
 	GROUP BY alliance_id'
 );
 
@@ -138,7 +138,7 @@ $db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->get
 					'role_id = '.$my_role_id.' AND change_roles = \'TRUE\'');
 if ($db2->nextRecord()) $allowed = TRUE;
 
-$alliancePlayers =& SmrPlayer::getAlliancePlayers(SmrSession::$game_id,$alliance_id);
+$alliancePlayers =& SmrPlayer::getAlliancePlayers($player->getGameID(),$alliance_id);
 
 if($var['SortKey']!='getExperience' || $var['SortDesc']!==true)
 {
@@ -194,7 +194,7 @@ foreach($alliancePlayers as &$alliancePlayer)
 		$db2->query('SELECT role_id
 					FROM player_has_alliance_role
 					WHERE account_id=' . $alliancePlayer->getAccountID() .'
-					AND game_id=' . SmrSession::$game_id . '
+					AND game_id=' . $player->getGameID() . '
 					AND alliance_id='.$alliancePlayer->getAllianceID().'
 					LIMIT 1'
 					);

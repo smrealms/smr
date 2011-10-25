@@ -31,13 +31,12 @@ if($name!=$filteredName)
 	create_error('The alliance name contains one or more filtered words, please reconsider the name.');
 
 // check if the alliance name already exist
-$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escape_string($name, true) . ' AND ' .
-										'game_id = '.SmrSession::$game_id);
+$db->query('SELECT 1 FROM alliance WHERE alliance_name = ' . $db->escape_string($name, true) . ' AND game_id = '.$player->getGameID());
 if ($db->getNumRows() > 0)
 	create_error('That alliance name already exists!');
 
 // get the next alliance id
-$db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = '.SmrSession::$game_id.' AND (alliance_id < 302 OR alliance_id > 309) LIMIT 1');
+$db->query('SELECT max(alliance_id) FROM alliance WHERE game_id = '.$player->getGameID().' AND (alliance_id < 302 OR alliance_id > 309) LIMIT 1');
 $db->nextRecord();
 $alliance_id = $db->getField('max(alliance_id)') + 1;
 if($alliance_id >= 302 && $alliance_id <= 309)
@@ -48,7 +47,7 @@ $description = word_filter($description);
 $player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,'Alliance '.$name.'('.$alliance_id.') had their description changed to:'.EOL.EOL.$description);
 // actually create the alliance here
 $db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, recruiting) ' .
-						  'VALUES('.$alliance_id.', '.SmrSession::$game_id.', ' . $db->escape_string($name, true) . ', ' . $db->escape_string($description, false) . ', '.$db->escapeString($password).', '.SmrSession::$account_id.', '.$db->escapeString($recruit).')');
+						  'VALUES('.$alliance_id.', '.$player->getGameID().', ' . $db->escape_string($name, true) . ', ' . $db->escape_string($description, false) . ', '.$db->escapeString($password).', '.SmrSession::$account_id.', '.$db->escapeString($recruit).')');
 
 // assign the player to the current alliance
 $player->setAllianceID($alliance_id);
@@ -64,7 +63,7 @@ $exemptWith = TRUE;
 $mbMessages = TRUE;
 $sendAllMsg = TRUE;
 $db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg) ' .
-			'VALUES ('.$alliance_id.', '.SmrSession::$game_id.', 1, \'Leader\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).')');
+			'VALUES ('.$alliance_id.', '.$player->getGameID().', 1, \'Leader\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).')');
 switch ($perms) {
 	case 'full':
 		//do nothing, perms already set above.
@@ -95,7 +94,7 @@ switch ($perms) {
 		break;
 }
 $db->query('INSERT INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg) ' .
-			'VALUES ('.$alliance_id.', '.SmrSession::$game_id.', 2, \'New Member\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).')');
+			'VALUES ('.$alliance_id.', '.$player->getGameID().', 2, \'New Member\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).')');
 $db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$player->getGameID().', '.$player->getAccountID().', 1,'.$alliance_id.')');
 forward(create_container('skeleton.php', 'alliance_roster.php'));
 

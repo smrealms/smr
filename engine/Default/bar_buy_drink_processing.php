@@ -63,7 +63,7 @@ else
 		}
 
 	}
-	$db->query('SELECT count(*) FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
+	$db->query('SELECT count(*) FROM player_has_drinks WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $player->getAccountID());
 	$db->nextRecord();
 	$num_drinks = $db->getInt('count(*)');
 	//display woozy message
@@ -84,7 +84,7 @@ if ($num_drinks > 15)
 	$player->increaseHOF(1,array('Bar','Robbed','Number Of Times'), HOF_PUBLIC);
 	$player->increaseHOF($lostCredits,array('Bar','Robbed','Money Lost'), HOF_PUBLIC);
 
-	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . SmrSession::$game_id . ' AND account_id=' . $player->getAccountID());
+	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $player->getAccountID());
 
 }
 $player->increaseHOF(1,array('Bar','Drinks', 'Total'), HOF_PUBLIC);

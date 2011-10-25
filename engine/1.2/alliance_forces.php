@@ -4,7 +4,7 @@ else $alliance_id = $player->alliance_id;
 define('MINES',0);
 define('CDS',1);
 define('SDS',2);
-$db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
+$db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->next_record();
 print_topic(stripslashes($db->f("alliance_name")) . ' (' . $db->f("alliance_id") . ')');
 //print_topic($player->alliance_name . ' (' . $alliance_id . ')');

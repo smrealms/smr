@@ -7,7 +7,7 @@ $thread_id = $var['thread_ids'][$thread_index];
 if(empty($thread_id))
 	create_error('Unable to find thread id.');
 
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
+$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getAllianceID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $template->assign('PageTopic',$var['thread_topics'][$thread_index]);
 require_once(get_file_loc('menue.inc'));

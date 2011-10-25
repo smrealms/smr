@@ -3,7 +3,7 @@ require_once(get_file_loc('SmrPort.class.inc'));
 $template->assign('PageTopic','Negotiate Price');
 require_once('shop_goods.inc');
 // creates needed objects
-$port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
+$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 // get values from request
 $good_id = $var['good_id'];
 $portGood = $port->getGood($good_id);

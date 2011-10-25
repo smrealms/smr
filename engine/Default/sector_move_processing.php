@@ -3,7 +3,7 @@
 if ($var['target_sector'] == $player->getSectorID())
 	forward(create_container('skeleton.php', $var['target_page']));
 
-$db->query('SELECT galaxy_id FROM sector WHERE sector_id=' . $var['target_sector'] . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
+$db->query('SELECT galaxy_id FROM sector WHERE sector_id=' . $var['target_sector'] . ' AND game_id=' . $player->getGameID() . ' LIMIT 1');
 $db->nextRecord();
 $targetGalaxyID = $db->getField('galaxy_id');
 

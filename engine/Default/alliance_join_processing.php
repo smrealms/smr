@@ -21,7 +21,7 @@ if (!$account->isValidated())
 // *
 // ********************************
 
-$alliance =& SmrAlliance::getAlliance($var['alliance_id'], SmrSession::$game_id);
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 
 if ($alliance->canJoinAlliance($player) !== true)
 {

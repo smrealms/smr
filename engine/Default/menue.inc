@@ -87,7 +87,7 @@ function create_galactic_post_menue()
 	$allowedEdit = false;
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
+	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 	if ($db->nextRecord())
 	{
 		$allowedEdit = $db->getField('position') == 'editor';

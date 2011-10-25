@@ -1,6 +1,6 @@
 <?php
 
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
+$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
 $db->nextRecord();
 $template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 require_once(get_file_loc('menue.inc'));

@@ -1,18 +1,15 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-require_once(get_file_loc('SmrPort.class.inc'));
 // include helper file
 require_once('shop_goods.inc');
 
 // create object from port we can work with
-$port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
+$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 
 $tradeable = checkPortTradeable($port,$player);
 if($tradeable!==true)
 	create_error($tradeable);
 
-$portRelations = Globals::getRaceRelations(SmrSession::$game_id,$port->getRaceID());
+$portRelations = Globals::getRaceRelations($player->getGameID(),$port->getRaceID());
 $relations = $player->getRelation($port->getRaceID());
 
 // topic

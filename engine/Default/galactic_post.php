@@ -1,7 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Galactic Post');
-$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.SmrSession::$game_id.' AND account_id = '.$player->getAccountID());
+$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
 if ($db->nextRecord() && $db->getField('position') == 'editor')
 {
 	$db2 = new SmrMySqlDatabase();
