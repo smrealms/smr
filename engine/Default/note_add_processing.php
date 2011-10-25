@@ -23,7 +23,7 @@ if(isset($_POST['note'])) {
 		$note = nl2br($note);
 		$db->query('INSERT INTO player_has_notes (account_id,game_id,note) VALUES(' .
 		SmrSession::$account_id . ',' .
-		SmrSession::$game_id . ',' .
+		$player->getGameID() . ',' .
 		$db->escapeBinary(gzcompress($note)) .
 		')');
 	}

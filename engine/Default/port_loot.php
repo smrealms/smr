@@ -1,6 +1,4 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
 require_once(get_file_loc('SmrPort.class.inc'));
 $template->assign('PageTopic','Looting The Port');
 
@@ -16,7 +14,7 @@ $PHP_OUTPUT.=('<th align="center">Action</th>');
 $PHP_OUTPUT.=('</tr>');
 
 // and a port object
-$port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
+$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 
 $container = array();
 $container['url'] = 'port_loot_processing.php';
@@ -25,9 +23,9 @@ $want = 'Buy';
 $db->query('SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_has_goods.game_id AND ' .
                                                          'port.sector_id = port_has_goods.sector_id AND ' .
                                                          'port_has_goods.good_id = good.good_id AND ' .
-                                                         'port.sector_id = '.$sector->getSectorID().' AND ' .
+                                                         'port.sector_id = '.$player->getSectorID().' AND ' .
                                                          'port_has_goods.transaction_type = ' . $db->escape_string($want, true) . ' AND ' .
-                                                         'port.game_id = '.SmrSession::$game_id.' ' .
+                                                         'port.game_id = '.$player->getGameID().' ' .
                                                    'ORDER BY good.good_id');
 
 

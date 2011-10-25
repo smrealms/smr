@@ -31,7 +31,7 @@ if(empty($message))
 
 if(isset($var['id']))
 {
-	$db->query('UPDATE galactic_post_article SET last_modified = ' . TIME . ', text = '.$db->escapeString($message).', title = '.$db->escapeString($title).' WHERE game_id = '.SmrSession::$game_id.' AND article_id = '.$var['id']);
+	$db->query('UPDATE galactic_post_article SET last_modified = ' . TIME . ', text = '.$db->escapeString($message).', title = '.$db->escapeString($title).' WHERE game_id = '.$player->getGameID().' AND article_id = '.$var['id']);
 	//its been changed send back now
 	forward(create_container('skeleton.php','galactic_post_view_article.php'));
 }

@@ -117,19 +117,19 @@ switch($action)
 {
 	case(0):
 	case(1):
-		$query = 'type=\'PLAYER\' AND game_id=' . SmrSession::$game_id;
+		$query = 'type=\'PLAYER\' AND game_id=' . $player->getGameID();
 	break;
 	case(2):
-		$query = 'type=\'PORT\' AND game_id=' . SmrSession::$game_id;
+		$query = 'type=\'PORT\' AND game_id=' . $player->getGameID();
 	break;
 	case(3):
-		$query = 'type=\'PLANET\' AND game_id=' . SmrSession::$game_id;
+		$query = 'type=\'PLANET\' AND game_id=' . $player->getGameID();
 	break;
 	case(4):
 		$query = 'saved = ' . $player->getAccountID() . ' AND game_id = ' . $player->getGameID();
 	break;
 	case(6):
-		$query = 'type=\'FORCE\' AND game_id=' . SmrSession::$game_id;
+		$query = 'type=\'FORCE\' AND game_id=' . $player->getGameID();
 	break;
 	default:
 }
@@ -227,7 +227,7 @@ if($action != 5)
 		array_unique($playerIDs);
 		$db->query('SELECT * FROM player
 					WHERE account_id IN (' . implode(',',$playerIDs) . ')
-					AND game_id = '.SmrSession::$game_id.'
+					AND game_id = '.$player->getGameID().'
 					LIMIT ' . sizeof($playerIDs));
 		while ($db->nextRecord())
 		{

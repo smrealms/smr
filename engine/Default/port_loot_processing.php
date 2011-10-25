@@ -1,7 +1,4 @@
 <?php
-require_once(get_file_loc('SmrPort.class.inc'));
-$port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
-
 // get good name, id, ...
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
@@ -12,6 +9,7 @@ $amount = floor($amount);
 if ($amount <= 0)
 	create_error('You must enter an amount > 0!');
 
+$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
 $good =& $port->getGood($good_id);
 // check if there are enough left at port
 if ($good['Amount'] < $amount)
@@ -19,7 +17,7 @@ if ($good['Amount'] < $amount)
 
 // check if we have enough room for the thing we are going to buy
 if ($good['TransactionType'] == 'Buy' && $amount > $ship->getEmptyHolds())
-   create_error('Scanning your ships indicates you don\'t have enough free cargo bay!');
+   create_error('Scanning your ships indicates that you do not have enough free cargo bays!');
 
 // do we have enough turns?
 if ($player->getTurns() == 0)

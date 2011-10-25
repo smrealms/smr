@@ -32,7 +32,7 @@ if ($db->getNumRows() > 0)
 
     while ($db->nextRecord())
     {
-		$planet =& SmrPlanet::getPlanet(SmrSession::$game_id,$db->getField('sector_id'));
+		$planet =& SmrPlanet::getPlanet($player->getAllianceID(),$db->getField('sector_id'));
 		$PHP_OUTPUT.= '<tr><td>';
 		$PHP_OUTPUT.= $planet->getName();
 		$PHP_OUTPUT.= '</td><td>';

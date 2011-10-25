@@ -3,7 +3,7 @@ $template->assign('PageTopic','Weapon Dealer');
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM location, location_sells_weapons, location_type, weapon_type ' .
 					'WHERE location.sector_id = '.$player->getSectorID().' AND ' .
-    					  'location.game_id = '.SmrSession::$game_id.' AND ' .
+    					  'location.game_id = '.$player->getGameID().' AND ' .
     					  'location.location_type_id = '.$var['LocationID'].' AND ' .
     					  'location.location_type_id = location_sells_weapons.location_type_id AND ' .
     					  'location_sells_weapons.location_type_id = location_type.location_type_id AND ' .

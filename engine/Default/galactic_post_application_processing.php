@@ -16,7 +16,7 @@ $db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->
 if ($db->nextRecord())
 	create_error('You have already applied once.  Please be patient and your application will be answered at a later time.');
 
-$db->query('INSERT INTO galactic_post_applications (game_id, account_id, description, written_before, articles_per_day) VALUES ('.SmrSession::$game_id.', '.$player->getAccountID().', ' . $db->escape_string($message,true) . ', '.$db->escapeString($value).', '.$db->escapeNumber($amount).')');
+$db->query('INSERT INTO galactic_post_applications (game_id, account_id, description, written_before, articles_per_day) VALUES ('.$player->getGameID().', '.$player->getAccountID().', ' . $db->escape_string($message,true) . ', '.$db->escapeString($value).', '.$db->escapeNumber($amount).')');
 $container = array();
 $container['url'] = 'skeleton.php';
 if (!$player->isLandedOnPlanet())

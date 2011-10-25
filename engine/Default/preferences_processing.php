@@ -257,7 +257,7 @@ else if (strpos(trim($action),'Alter Player')===0)
 		create_error('You must enter a player name!');
 	
 	// Check if name is in use.
-	$db->query('SELECT 1 FROM player WHERE game_id=' .SmrSession::$game_id . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
+	$db->query('SELECT 1 FROM player WHERE game_id=' .$player->getGameID() . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
 	if($db->getNumRows())
 	{
 		create_error('Name is already being used in this game!');
@@ -275,7 +275,7 @@ else if (strpos(trim($action),'Alter Player')===0)
 	$player->setPlayerName($player_name);
 
 	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink() . '</span>';
-	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . SmrSession::$game_id . ','.$player->getAccountID().','.$player->getAllianceID().')');
+	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . $player->getGameID() . ','.$player->getAccountID().','.$player->getAllianceID().')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }
 

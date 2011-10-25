@@ -1,6 +1,6 @@
 <?php
 
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
+$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getAllianceID() . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
 $db->nextRecord();
 $template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
@@ -13,7 +13,7 @@ player_id,
 player_name,
 last_cpl_action
 FROM player
-WHERE game_id=' . SmrSession::$game_id . '
+WHERE game_id=' . $player->getAllianceID() . '
 AND alliance_id=' . $player->getAllianceID() .'
 AND account_id<>' . SmrSession::$account_id . '
 ORDER BY last_cpl_action DESC

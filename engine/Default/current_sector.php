@@ -2,8 +2,7 @@
 if($player->isLandedOnPlanet())
 	create_error('You are on a planet!');
 
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
+$sector =& $player->getSector();
 
 $template->assignByRef('ThisSector',$sector);
 $template->assign('SpaceView',true);
@@ -21,9 +20,6 @@ create_nav_menue($template,$player);
 // *******************************************
 
 // Sector links
-$db->query('SELECT sector_id,link_up,link_right,link_down,link_left FROM sector WHERE sector_id=' . $player->getSectorID() . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
-
-$db->nextRecord();
 $links = array();
 $links['Up'] = array('ID'=>$sector->getLinkUp());
 $links['Right'] = array('ID'=>$sector->getLinkRight());
@@ -33,7 +29,7 @@ $links['Warp'] = array('ID'=>$sector->getWarp());
 
 $unvisited = array();
 
-$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeString($links,false) . ') AND account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id);
+$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeString($links,false) . ') AND account_id=' . SmrSession::$account_id . ' AND game_id=' . $player->getGameID());
 while($db->nextRecord())
 {
 	$unvisited[$db->getField('sector_id')] = TRUE;

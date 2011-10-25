@@ -1,11 +1,10 @@
 <?php
 
-foreach ($_POST['role'] as $account_id => $role_id) {
-
+foreach ($_POST['role'] as $account_id => $role_id)
+{
 	$db->query('REPLACE INTO player_has_alliance_role
 				(account_id, game_id, role_id, alliance_id)
-				VALUES ('.$account_id.', '.SmrSession::$game_id.', '.$role_id.','.$var['alliance_id'].')');
-
+				VALUES ('.$account_id.', '.$player->getGameID().', '.$role_id.','.$var['alliance_id'].')');
 }
 
 $container=array();

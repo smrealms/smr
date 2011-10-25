@@ -49,8 +49,7 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
 				'Forced' => false);
 
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $planet->getSectorID());
+$sector =& $player->getSector();
 $attackers =& $sector->getFightingTradersAgainstPlanet($player, $planet);
 
 $planet->attackedBy($player,$attackers);

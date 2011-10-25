@@ -18,7 +18,7 @@ $RACES =& Globals::getRaces();
 foreach($RACES as $raceID => $race)
 {
 	if ($raceID == 1) continue;
-	$otherRaceRelations = Globals::getRaceRelations(SmrSession::$game_id,$raceID);
+	$otherRaceRelations = Globals::getRaceRelations($player->getGameID(),$raceID);
 	$PHP_OUTPUT.=($race['Race Name'].' : ' . get_colored_text($otherRaceRelations[$player->getRaceID()], $otherRaceRelations[$player->getRaceID()]) . '<br />');
 
 }

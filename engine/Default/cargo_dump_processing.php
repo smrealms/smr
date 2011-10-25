@@ -1,6 +1,4 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
-
 $good_id = $var['good_id'];
 $good_name = Globals::getGoodName($good_id);
 if(isset($_REQUEST['amount'])) SmrSession::updateVar('amount',$_REQUEST['amount']);
@@ -21,7 +19,7 @@ if ($player->getTurns() < 1)
 if ($amount > $ship->getCargo($good_id))
 	create_error('You can\'t dump more than you have.');
 
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
+$sector =& $player->getSector();
 if ($sector->has_fed_beacon())
 	create_error('You can\'t dump cargo in a Federal Sector!');
 

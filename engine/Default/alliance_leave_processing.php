@@ -1,9 +1,7 @@
 <?php
 require_once(get_file_loc('SmrAlliance.class.inc'));
 
-$alliance =& SmrAlliance::getAlliance($player->getAllianceID(), SmrSession::$game_id);
 $action = $var['action'];
-include(get_file_loc('alliance_members.php'));
 if ($action == 'YES')
 {
 	$db->query('SELECT count(*) FROM player WHERE alliance_id = '.$player->getAllianceID().' AND ' .

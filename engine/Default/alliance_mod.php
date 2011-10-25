@@ -4,7 +4,7 @@ else $alliance_id = $player->getAllianceID();
 
 Globals::canAccessPage('AllianceMOTD', $player, array('AllianceID' => $alliance_id));
 
-$db->query('SELECT leader_id,`mod`,img_src, alliance_name, alliance_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
+$db->query('SELECT leader_id,`mod`,img_src, alliance_name, alliance_id FROM alliance WHERE game_id=' . $player->getAllianceID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $leader_id = $db->getField('leader_id');
 $template->assign('PageTopic',$db->getField('alliance_name') . ' (' . $db->getField('alliance_id') . ')');

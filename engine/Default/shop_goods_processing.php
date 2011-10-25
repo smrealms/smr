@@ -1,11 +1,9 @@
 <?php
-require_once(get_file_loc('SmrSector.class.inc'));
-$sector =& SmrSector::getSector(SmrSession::$game_id, $player->getSectorID());
-require_once(get_file_loc('SmrPort.class.inc'));
+$sector =& $player->getSector();
 require_once('shop_goods.inc');
 
 // creates needed objects
-$port =& SmrPort::getPort(SmrSession::$game_id,$player->getSectorID());
+$port =& $sector->getPort();
 $GLOBALS['port'] =& $port;
 $amount = get_amount();
 $bargain_price = get_bargain_price();

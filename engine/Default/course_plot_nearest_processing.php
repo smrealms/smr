@@ -17,10 +17,10 @@ else
 			$realX =& Globals::getHardwareTypes($X);
 		break;
 		case 'Ships':
-			$realX =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$X);
+			$realX =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$X);
 		break;
 		case 'Weapons':
-			$realX =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$X);
+			$realX =& SmrWeapon::getWeapon(Globals::getGameType($player->getGameID()),$X);
 		break;
 		case 'Locations':
 			if(is_numeric($X))
