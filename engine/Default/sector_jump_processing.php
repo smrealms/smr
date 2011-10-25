@@ -93,7 +93,7 @@ acquire_lock($player->getSectorID());
 $player->deletePlottedCourse();
 
 // get new sector object
-$sector =& SmrSector::getSector($player->getGameID(), $player->getSectorID());
+$sector =& $player->getSector();
 
 // make current sector visible to him
 $sector->markVisited($player);

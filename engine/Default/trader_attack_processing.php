@@ -39,7 +39,7 @@ $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 	else if($targetPlayer->hasFederalProtection())
 		create_error('Target is under federal protection.');
 
-$sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID());
+$sector =& $player->getSector();
 $fightingPlayers =& $sector->getFightingTraders($player,$targetPlayer);
 
 	
