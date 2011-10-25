@@ -43,7 +43,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'course_plot_result.php';
 
-$sector =& SmrSector::getSector($player->getGameID(),$player->getSectorID());
+$sector =& $player->getSector();
 if($sector->hasX($realX,$player))
 	create_error('Current sector has what you\'re looking for!');
 

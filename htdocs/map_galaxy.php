@@ -118,7 +118,7 @@ try
 	$template->assignByRef('ThisGalaxy',$galaxy);
 	$template->assignByRef('ThisAccount',$account);
 	$template->assignByRef('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
-	$template->assignByRef('ThisSector',SmrSector::getSector($player->getGameID(),$player->getSectorID()));
+	$template->assignByRef('ThisSector',$player->getSector());
 	$template->assignByRef('MapSectors',$mapSectors);
 	$template->assignByRef('ThisShip',$player->getShip());
 	$template->assignByRef('ThisPlayer',$player);
