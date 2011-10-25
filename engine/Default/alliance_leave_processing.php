@@ -1,6 +1,4 @@
 <?php
-require_once(get_file_loc('SmrAlliance.class.inc'));
-
 $action = $var['action'];
 if ($action == 'YES')
 {
