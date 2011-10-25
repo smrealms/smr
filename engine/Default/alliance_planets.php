@@ -1,7 +1,7 @@
 <?php
 if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
-		require_once(get_file_loc('SmrPlanet.class.inc'));
+require_once(get_file_loc('SmrPlanet.class.inc'));
 $db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->nextRecord();
 $template->assign('PageTopic',$db->getField('alliance_name') . ' (' . $db->getField('alliance_id') . ')');

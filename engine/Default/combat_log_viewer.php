@@ -95,6 +95,7 @@ if($action == 5)
 
 if(isset($display_id))
 {
+	//These are required in case we unzip these classes.
 	require_once(get_file_loc('SmrPort.class.inc'));
 	require_once(get_file_loc('SmrPlanet.class.inc'));
 	$db->query('SELECT timestamp,sector_id,result,type FROM combat_logs WHERE log_id=' . $display_id . ' LIMIT 1');
