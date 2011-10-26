@@ -120,10 +120,10 @@ function getGoodDistanceOld(SmrSector &$sector, $goodID, $transaction)
 
 		// does the current sector buy/sell the good we're looking for?
         if ($good_distance != 0) {
-			if ($curr_sector->has_good($goodID, $neg_transaction) && $distance < $good_distance)
+			if ($curr_sector->hasPort() && $curr_sector->getPort()->hasGood($goodID, $neg_transaction) && $distance < $good_distance)
 				$good_distance = $distance;
         } else {
-			if ($curr_sector->has_good($goodID, $neg_transaction))
+			if ($curr_sector->hasPort() && $curr_sector->getPort()->hasGood($goodID, $neg_transaction))
 				$good_distance = $distance;
         }
 

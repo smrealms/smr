@@ -191,13 +191,6 @@ class SmrSector
 		$this->visited[$player->getAccountID()]=true;
 	}
 
-	function has_good($good_id, $transaction=false)
-	{
-		if(!$this->hasPort())
-			return false;
-		return $this->getPort()->hasGood($good_id,$transaction);
-	}
-
 	function hasWeaponShop()
 	{
 		$locations =& $this->getLocations();
