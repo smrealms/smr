@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Experience Rankings');
 
 require_once(get_file_loc('menu.inc'));
-create_ranking_menue(0, 0);
+create_ranking_menu(0, 0);
 
 
 // what rank are we?

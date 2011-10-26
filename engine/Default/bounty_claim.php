@@ -6,12 +6,12 @@ $template->assign('PageTopic','Bounty Payout');
 require_once(get_file_loc('menu.inc'));
 if ($sector->has_hq())
 {
-	create_hq_menue();
+	create_hq_menu();
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'HQ\'');
 }
 else
 {
-	create_ug_menue();
+	create_ug_menu();
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'UG\'');
 }
 

@@ -11,7 +11,7 @@ if(empty($thread_id))
 
 $template->assign('PageTopic',$var['thread_topics'][$thread_index]);
 require_once(get_file_loc('menu.inc'));
-create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
+create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $db->query('REPLACE INTO player_read_thread ' .
 		   '(account_id, game_id, alliance_id, thread_id, time)' .

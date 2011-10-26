@@ -2,7 +2,7 @@
 $alliance =& $player->getAlliance();
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 require_once(get_file_loc('menu.inc'));
-create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
+create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $PHP_OUTPUT.= '<h2>Exemption Requests</h2><br />';
 $PHP_OUTPUT.=('Selecting a box will authorize it, leaving a box unselected will make it unauthorized after you submit.<br />');

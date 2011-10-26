@@ -3,7 +3,7 @@ require_once(get_file_loc('SmrSector.class.inc'));
 $template->assign('PageTopic','Sector Death Rankings');
 
 require_once(get_file_loc('menu.inc'));
-create_ranking_menue(3,0);
+create_ranking_menu(3,0);
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the most deadly Sectors!</p>');

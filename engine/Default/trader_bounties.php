@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Bounties');
 
 require_once(get_file_loc('menu.inc'));
-create_trader_menue();
+create_trader_menu();
 
 $PHP_OUTPUT.= 'Bounties awaiting collection.<br /><br />';
 

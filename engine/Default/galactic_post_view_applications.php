@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Viewing Applications');
 require_once(get_file_loc('menu.inc'));
-create_galactic_post_menue();
+create_galactic_post_menu();
 $db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->getGameID());
 if ($db->getNumRows()) {
 

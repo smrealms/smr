@@ -13,8 +13,8 @@ $db->query('SELECT * FROM race ' .
 if ($db->nextRecord())
 	$template->assign('PageTopic','Ruling Council Of ' . $db->getField('race_name'));
 
-// echo menue
-$PHP_OUTPUT.=create_council_menue($race_id);
+// echo menu
+create_council_menu($race_id);
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>We are at War/Peace<br />with the following races:</p>');

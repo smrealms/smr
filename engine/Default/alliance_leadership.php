@@ -3,7 +3,7 @@
 $alliance =& $player->getAlliance();
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 require_once(get_file_loc('menu.inc'));
-create_alliance_menue($player->getAllianceID(),$alliance->getLeaderID());
+create_alliance_menu($player->getAllianceID(),$alliance->getLeaderID());
 
 $container = array();
 $container['url'] = 'alliance_leadership_processing.php';

@@ -36,8 +36,8 @@ if ((empty($amount) && empty($smrCredits)) || empty($playerID))
 $template->assign('PageTopic','Placing a bounty');
 
 require_once(get_file_loc('menu.inc'));
-if ($sector->has_hq()) create_hq_menue();
-else create_ug_menue();
+if ($sector->has_hq()) create_hq_menu();
+else create_ug_menu();
 
 // get this guy from db
 $bounty_guy =& SmrPlayer::getPlayerByPlayerID($playerID, $player->getGameID());

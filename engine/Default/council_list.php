@@ -13,7 +13,7 @@ if ($db->nextRecord())
 	$template->assign('PageTopic','Ruling Council Of ' . $db->getField('race_name'));
 
 
-$PHP_OUTPUT.=create_council_menue($race_id);
+create_council_menu($race_id);
 
 // check for relations here
 modifyRelations($race_id);

@@ -7,7 +7,7 @@ if ($db->nextRecord())
 $template->assign('PageTopic','Send message to ruling council of the '.$race_name);
 
 require_once(get_file_loc('menu.inc'));
-create_message_menue();
+create_message_menu();
 
 $PHP_OUTPUT.=('<p>');
 

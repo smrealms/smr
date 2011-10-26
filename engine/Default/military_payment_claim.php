@@ -5,9 +5,9 @@ $template->assign('PageTopic','Military Payment Center');
 
 require_once(get_file_loc('menu.inc'));
 if ($sector->has_hq())
-	create_hq_menue();
+	create_hq_menu();
 else
-	create_ug_menue();
+	create_ug_menu();
 
 if ($player->hasMilitaryPayment())
 {

@@ -1,6 +1,6 @@
 <?php
 
-function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
+function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE)
 {
 	global $player, $template;
 
@@ -46,7 +46,7 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 //	if ($player->getAccountID() == $alliance_leader_id)
 //	{
 		//$container['body']='alliance_treaties.php';
-		//$menue_items[] = create_link($container,'Treaties','nav');
+		//$menu_items[] = create_link($container,'Treaties','nav');
 	//}
 	$menuItems = array();
 	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead)
@@ -77,7 +77,7 @@ function create_alliance_menue($alliance_id = null, $alliance_leader_id = FALSE)
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_galactic_post_menue()
+function create_galactic_post_menu()
 {
 	global $template, $player;
 	$menuItems = array();
@@ -111,7 +111,7 @@ function create_galactic_post_menue()
 	$template->assign('MenuItems', $menuItems);
 }
 
-function create_message_menue()
+function create_message_menu()
 {
 	global $player, $template;
 	$menuItems = array();
@@ -126,7 +126,7 @@ function create_message_menue()
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_combat_log_menue()
+function create_combat_log_menu()
 {
 	global $template;
 
@@ -149,7 +149,7 @@ function create_combat_log_menue()
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_trader_menue()
+function create_trader_menu()
 {
 	global $player, $template;
 	$template->assign('MenuItems', array(
@@ -161,7 +161,7 @@ function create_trader_menue()
 						array('Link'=>Globals::getTraderBountiesHREF(),'Text'=>'Bounties')));
 }
 
-function create_planet_menue()
+function create_planet_menu()
 {
 	global $template;
 	$template->assign('MenuItems', array(
@@ -177,7 +177,7 @@ function create_planet_menue()
  * $active_level1 - the id of the active menu on the first level
  * $active_level1 - the id of the active menu on the second level
  */
-function create_ranking_menue($active_level1 = 0, $active_level2 = 0) {
+function create_ranking_menu($active_level1 = 0, $active_level2 = 0) {
 
 	$menu = array();
 
@@ -306,91 +306,91 @@ function create_sub_menu($menu, $active_level1, $active_level2)
 	$template->assign('SubMenuBar',$return);
 }
 
-function create_bank_menue() {
+function create_bank_menu() {
 
 	global $player;
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
+	$menu_items[] = create_link(create_container('skeleton.php', 'bank_personal.php'),
 													'Personal Account','nav');
 
 	if ($player->hasAlliance())
-		$menue_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
+		$menu_items[] = create_link(create_container('skeleton.php', 'bank_alliance.php'),
 														'Alliance Account','nav');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
+	$menu_items[] = create_link(create_container('skeleton.php', 'bank_anon.php'),
 													'Anonymous Account','nav');
-	create_menue($menue_items);
+	create_menu($menu_items);
 
 }
 
-function create_hq_menue()
+function create_hq_menu()
 {
 	global $var;
 	$container = create_container('skeleton.php');
 	$container['LocationID'] = $var['LocationID'];
 	
 	$container['body'] = 'government.php';
-	$menue_items[] = create_link($container, 'Government','nav');
+	$menu_items[] = create_link($container, 'Government','nav');
 
 	$container['body'] = 'military_payment_claim.php';
-	$menue_items[] = create_link($container, 'Claim Military Payment','nav');
+	$menu_items[] = create_link($container, 'Claim Military Payment','nav');
 
 	$container['body'] = 'bounty_claim.php';
-	$menue_items[] = create_link($container, 'Claim Bounty','nav');
+	$menu_items[] = create_link($container, 'Claim Bounty','nav');
 
 	$container['body'] = 'bounty_place.php';
-	$menue_items[] = create_link($container, 'Place a Bounty','nav');
+	$menu_items[] = create_link($container, 'Place a Bounty','nav');
 
-	create_menue($menue_items);
+	create_menu($menu_items);
 }
 
-function create_ug_menue() {
+function create_ug_menu() {
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'underground.php'),
+	$menu_items[] = create_link(create_container('skeleton.php', 'underground.php'),
 													'Underground','nav');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_claim.php'),
+	$menu_items[] = create_link(create_container('skeleton.php', 'bounty_claim.php'),
 													'Claim Bounty','nav');
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'bounty_place.php'),
+	$menu_items[] = create_link(create_container('skeleton.php', 'bounty_place.php'),
 													'Place a Bounty','nav');
 
-	create_menue($menue_items);
+	create_menu($menu_items);
 }
 
-function create_council_menue($race_id)
+function create_council_menu($race_id)
 {
 	global $player;
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
+	$menu_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
 													'View Council','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_politics.php';
 	$container['race_id'] = $race_id;
-	$menue_items[] = create_link($container, 'Political Status','nav');
+	$menu_items[] = create_link($container, 'Political Status','nav');
 
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
 	$container['race_id'] = $race_id;
-	$menue_items[] = create_link($container, 'Send Message','nav');
+	$menu_items[] = create_link($container, 'Send Message','nav');
 
 	if($player->getRaceID()==$race_id)
 	{
 		if ($player->isOnCouncil())
-			$menue_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
+			$menu_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
 															'Voting Center','nav');
 		if ($player->isPresident())
-			$menue_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
+			$menu_items[] = create_link(create_container('skeleton.php', 'council_embassy.php'),
 															'Embassy','nav');
 	}
 
-	create_menue($menue_items);
+	create_menu($menu_items);
 }
 
-function create_bar_menue()
+function create_bar_menu()
 {
 	global $template;
 	$template->assign('MenuItems', array(
@@ -399,7 +399,7 @@ function create_bar_menue()
 					array('Link'=>Globals::getBarBlackjackHREF(),'Text'=>'BlackJack')));
 }
 
-function create_news_menue(&$template)
+function create_news_menu(&$template)
 {
 	global $var;
 	$menuItems = array();
@@ -411,7 +411,7 @@ function create_news_menue(&$template)
 	$template->assign('MenuItems', $menuItems);
 }
 
-function create_nav_menue(&$template, &$player)
+function create_nav_menu(&$template, &$player)
 {
 	$menuItems = array();
 	$menuItems[] = array('Link'=>Globals::getPlotCourseHREF(),'Text'=>'Plot A Course');
@@ -421,9 +421,9 @@ function create_nav_menue(&$template, &$player)
 	$template->assign('MenuItems', $menuItems);
 }
 
-function create_hof_menue() {
+function create_hof_menu() {
 
-	$menue_items[] = create_link(create_container('skeleton.php', 'hall_of_fame.php'),
+	$menu_items[] = create_link(create_container('skeleton.php', 'hall_of_fame.php'),
 													'Hall of Fame Main','nav');
 
 	$container = array();
@@ -431,13 +431,13 @@ function create_hof_menue() {
 	$container['body'] = 'hall_of_fame.php';
 
 	$container['type'] = 'Newbie';
-	$menue_items[] = create_link($container, 'Newbie Stats','nav');
+	$menu_items[] = create_link($container, 'Newbie Stats','nav');
 	$container['type'] = 'Veteran';
-	$menue_items[] = create_link($container, 'Veteran Stats','nav');
+	$menu_items[] = create_link($container, 'Veteran Stats','nav');
 	$container['type'] = 'Semi War';
-	$menue_items[] = create_link($container, 'Special Game Stats','nav');
+	$menu_items[] = create_link($container, 'Special Game Stats','nav');
 
-	create_menue($menue_items);
+	create_menu($menu_items);
 
 }
 ?>
