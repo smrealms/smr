@@ -4,7 +4,7 @@ $sector =& $player->getSector();
 $template->assign('PageTopic','Military Payment Center');
 
 require_once(get_file_loc('menu.inc'));
-if ($sector->has_hq())
+if ($sector->hasHQ())
 	create_hq_menu();
 else
 	create_ug_menu();
