@@ -207,7 +207,7 @@ abstract class AbstractSmrAccount
 		}
 	}
 	
-	public function is_disabled()
+	public function isDisabled()
 	{
 		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
@@ -238,12 +238,6 @@ abstract class AbstractSmrAccount
 			return $this->db->getField('reason');
 		else
 			return false;
-	}
-
-	function is_allowed($permission)
-	{
-		$this->db->query('SELECT account_id FROM account WHERE account_id = '.$this->account_id.' AND permission LIKE \'%'.$permission.'%\' LIMIT 1');
-		return $this->db->getNumRows();
 	}
 	
 	function update()

@@ -18,7 +18,7 @@ try
 		{
 			$time = $db->getField('expires');
 		
-			$reason = $account->is_disabled();
+			$reason = $account->isDisabled();
 			if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $time) . '.';
 			else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
 		}
