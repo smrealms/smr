@@ -235,11 +235,6 @@ class SmrSector
 		return false;
 	}
 
-	function has_fed_beacon()
-	{
-		return $this->offersFederalProtection();
-	}
-
 	function offersFederalProtection()
 	{
 		$locations =& $this->getLocations();
