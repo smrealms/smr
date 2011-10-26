@@ -1,28 +1,28 @@
 <?php
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
+if (!isset($var['alliance_id']))
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $thread_index = $var['thread_index'];
 $thread_id = $var['thread_ids'][$thread_index];
 
 if(empty($thread_id))
 	create_error('Unable to find thread id.');
 
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getAllianceID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
 $template->assign('PageTopic',$var['thread_topics'][$thread_index]);
 require_once(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $db->query('REPLACE INTO player_read_thread ' .
 		   '(account_id, game_id, alliance_id, thread_id, time)' .
-		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance_id.', '.$thread_id.', '.(TIME+2).')');
+		   'VALUES('.$player->getAccountID().', '.$player->getGameID().', '.$alliance->getAllianceID().', '.$thread_id.', '.(TIME+2).')');
 
 $mbWrite = true;
-if ($alliance_id != $player->getAllianceID())
+if ($alliance->getAllianceID() != $player->getAllianceID())
 {
 	$db->query('SELECT mb_read FROM alliance_treaties
-					WHERE (alliance_id_1 = '.$alliance_id.' OR alliance_id_1 = '.$player->getAllianceID().')'.
-					' AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')'.
+					WHERE (alliance_id_1 = '.$alliance->getAllianceID().' OR alliance_id_1 = '.$player->getAllianceID().')'.
+					' AND (alliance_id_2 = '.$alliance->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')'.
 					' AND game_id = '.$player->getGameID().
 					' AND mb_write = 1 AND official = \'TRUE\'');
 	$mbWrite = $db->nextRecord();
@@ -50,20 +50,20 @@ $players[-2] = 'Forces Reporter';
 $players[-3] = 'Game Admins';
 $db->query('SELECT account_id FROM player, alliance_thread ' .
 			'WHERE alliance_thread.game_id = '.$player->getGameID().' AND player.game_id = '.$player->getGameID().
-			' AND alliance_thread.alliance_id = '.$alliance_id.' AND alliance_thread.thread_id = ' . $thread_id);
+			' AND alliance_thread.alliance_id = '.$alliance->getAllianceID().' AND alliance_thread.thread_id = ' . $thread_id);
 while ($db->nextRecord())
 {
 	$players[$db->getInt('account_id')] = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID())->getLinkedDisplayName(false);
 }
 
-$db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id.' LIMIT 1');
+$db->query('SELECT mb_messages FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance->getAllianceID().' LIMIT 1');
 $db->nextRecord();
 $thread['CanDelete'] = $db->getBoolean('mb_messages');
 
 $db->query('SELECT text, sender_id, time, reply_id
 FROM alliance_thread
 WHERE game_id=' .  $player->getGameID() . '
-AND alliance_id=' .  $alliance_id . '
+AND alliance_id=' .  $alliance->getAllianceID() . '
 AND thread_id=' .  $thread_id . '
 ORDER BY reply_id LIMIT ' . $var['thread_replies'][$thread_index]);
 

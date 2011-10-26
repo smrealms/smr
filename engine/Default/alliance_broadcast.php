@@ -1,10 +1,8 @@
 <?php
-
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 require_once(get_file_loc('menue.inc'));
-create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $container = create_container('message_send_processing.php');
 $container['alliance_id'] = $var['alliance_id'];

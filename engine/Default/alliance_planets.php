@@ -1,21 +1,19 @@
 <?php
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
-require_once(get_file_loc('SmrPlanet.class.inc'));
-$db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',$db->getField('alliance_name') . ' (' . $db->getField('alliance_id') . ')');
-//$template->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
+if (!isset($var['alliance_id']))
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 // Ugly, but funtional
 $db->query('
 SELECT planet.sector_id
 FROM player
 JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
-WHERE player.game_id=' . $player->getGameID() . '
-AND player.alliance_id=' . $alliance_id . '
+WHERE player.game_id=' . $alliance->getGameID() . '
+AND player.alliance_id=' . $alliance->getAllianceID() . '
 ORDER BY planet.sector_id
 ');
 
@@ -30,6 +28,7 @@ if ($db->getNumRows() > 0)
 
 	$db2 = new SmrMySqlDatabase();
 
+	require_once(get_file_loc('SmrPlanet.class.inc'));
     while ($db->nextRecord())
     {
 		$planet =& SmrPlanet::getPlanet($player->getAllianceID(),$db->getField('sector_id'));

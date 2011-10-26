@@ -1,20 +1,19 @@
 <?php
+if (!isset($var['alliance_id']))
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
-$db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . $player->getAllianceID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',$db->getField('alliance_name') . ' (' . $db->getField('alliance_id') . ')');
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 require_once(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 $mbWrite = TRUE;
 $in_alliance = TRUE;
-if ($alliance_id != $player->getAllianceID())
+if ($alliance->getAllianceID() != $player->getAllianceID())
 {
 	if (!in_array($player->getAccountID(), Globals::getHiddenPlayers())) $in_alliance = FALSE;
 	$db->query('SELECT mb_read FROM alliance_treaties
-					WHERE (alliance_id_1 = '.$alliance_id.' OR alliance_id_1 = '.$player->getAllianceID().')'.
-					' AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')'.
+					WHERE (alliance_id_1 = '.$alliance->getAllianceID().' OR alliance_id_1 = '.$player->getAllianceID().')'.
+					' AND (alliance_id_2 = '.$alliance->getAllianceID().' OR alliance_id_2 = '.$player->getAllianceID().')'.
 					' AND game_id = '.$player->getGameID().
 					' AND mb_write = 1 AND official = \'TRUE\' LIMIT 1');
 	if ($db->nextRecord()) $mbWrite = TRUE;
@@ -29,8 +28,8 @@ $query = 'SELECT
 	count(reply_id) as num_replies
 FROM alliance_thread_topic
 	JOIN alliance_thread USING(game_id,alliance_id,thread_id)
-WHERE game_id=' . $player->getGameID() . '
-	AND alliance_id=' . $alliance_id;
+WHERE game_id=' . $alliance->getGameID() . '
+	AND alliance_id=' . $alliance->getAllianceID();
 if (!$in_alliance) $query .= ' AND alliance_only = 0';
 $query .= ' GROUP BY thread_id ORDER BY sendtime DESC';
 $db->query($query);
@@ -41,7 +40,7 @@ if ($db->getNumRows() > 0)
 	$db3 = new SmrMySqlDatabase();
 
 	$container = create_container('alliance_message_delete_processing.php');
-	$container['alliance_id'] = $alliance_id;
+	$container['alliance_id'] = $alliance->getAllianceID();
 
 	$i=0;
 	$alliance_eyes = array();
@@ -60,7 +59,7 @@ if ($db->getNumRows() > 0)
 					FROM player_read_thread 
 					WHERE account_id=' . $player->getAccountID()  . '
 					AND game_id=' . $player->getGameID() . '
-					AND alliance_id =' . $alliance_id . '
+					AND alliance_id =' . $alliance->getAllianceID() . '
 					AND thread_id=' . $db->getField('thread') . ' 
 					AND time>' . $db->getField('sendtime') . ' LIMIT 1
 					');
@@ -74,7 +73,7 @@ if ($db->getNumRows() > 0)
 						FROM alliance_thread,player
 						WHERE player.game_id=' . $player->getGameID() . '
 						AND alliance_thread.game_id=' . $player->getGameID() . '
-						AND alliance_thread.alliance_id=' . $alliance_id . '
+						AND alliance_thread.alliance_id=' . $alliance->getAllianceID() . '
 						AND alliance_thread.thread_id=' . $db->getField('thread') . '
 						AND alliance_thread.reply_id=1
 						AND player.account_id=alliance_thread.sender_id LIMIT 1
@@ -100,7 +99,7 @@ if ($db->getNumRows() > 0)
 		}
 		$threads[$i]['Sender'] = $playerName;
 
-		$db3->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id.' LIMIT 1');
+		$db3->query('SELECT * FROM player_has_alliance_role JOIN alliance_has_roles USING(game_id,alliance_id,role_id) WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance->getAllianceID().' LIMIT 1');
 		$db3->nextRecord();
 		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db3->getBoolean('mb_messages');
 		if($threads[$i]['CanDelete'])
@@ -115,7 +114,7 @@ if ($db->getNumRows() > 0)
 	}
 
 	$container = create_container('skeleton.php','alliance_message_view.php');
-	$container['alliance_id'] = $alliance_id;
+	$container['alliance_id'] = $alliance->getAllianceID();
 	$container['thread_ids'] = $thread_ids;
 	$container['thread_topics'] = $thread_topics;
 	$container['thread_replies'] = $thread_replies;
@@ -131,7 +130,7 @@ $template->assignByRef('Threads',$threads);
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 {
 	$container = create_container('alliance_message_add_processing.php');
-	$container['alliance_id'] = $alliance_id;
+	$container['alliance_id'] = $alliance->getAllianceID();
 	$template->assign('CreateNewThreadFormHref',SmrSession::get_new_href($container));
 }
 

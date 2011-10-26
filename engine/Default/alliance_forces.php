@@ -1,13 +1,11 @@
 <?php
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
+if (!isset($var['alliance_id']))
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 
-$db->query('SELECT leader_id, alliance_id, alliance_name FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',$db->getField('alliance_name') . ' (' . $db->getField('alliance_id') . ')');
-//$template->assign('PageTopic',$player->getAllianceName() . ' (' . $alliance_id . ')');
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 //get the sequence
 if (!isset($var['seq']))
@@ -33,8 +31,8 @@ sum(mines) as tot_mines,
 sum(combat_drones) as tot_cds,
 sum(scout_drones) as tot_sds
 FROM sector_has_forces JOIN player ON player.game_id=sector_has_forces.game_id AND sector_has_forces.owner_id=player.account_id
-WHERE player.game_id=' . $player->getGameID() . '
-AND player.alliance_id=' . $alliance_id . '
+WHERE player.game_id=' . $alliance->getGameID() . '
+AND player.alliance_id=' . $alliance->getAllianceID() . '
 AND expire_time >= '.TIME);
 
 if ($db->nextRecord())
@@ -48,8 +46,8 @@ $db->query('
 SELECT sector_has_forces.sector_id, sector_has_forces.owner_id
 FROM player
 JOIN sector_has_forces ON player.game_id = sector_has_forces.game_id AND player.account_id = sector_has_forces.owner_id
-WHERE player.game_id=' . $player->getGameID() . '
-AND player.alliance_id=' . $alliance_id . '
+WHERE player.game_id=' . $alliance->getGameID() . '
+AND player.alliance_id=' . $alliance->getAllianceID() . '
 AND expire_time >= '.TIME.'
 ORDER BY ' . $categorySQL . ', ' . $subcategory);
 

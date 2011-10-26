@@ -1,13 +1,11 @@
 <?php
+if (!isset($var['alliance_id']))
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
-$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $player->getAllianceID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$leader_id = $db->getField('leader_id');
-$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $container=array();
 $container['url'] = 'skeleton.php';
@@ -22,14 +20,14 @@ $container['body'] = '';
 $PHP_OUTPUT.=create_link($container,'Share Maps');
 $PHP_OUTPUT.= '</big></b>';
 $PHP_OUTPUT.= '<br />Share your knowledge of the universe with your alliance mates.';
-$db->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id);
+$db->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance->getAllianceID());
 if ($db->nextRecord()) $role_id = $db->getField('role_id');
 else $role_id = 0;
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
 $db->nextRecord();
 
 $container['url'] = 'skeleton.php';
-$container['alliance_id'] = $alliance_id;
+$container['alliance_id'] = $alliance->getAllianceID();
 if ($db->getField('remove_member') == 'TRUE') {
 	$PHP_OUTPUT.= '<br /><br />';
 	$PHP_OUTPUT.='<b><big>';
@@ -37,7 +35,7 @@ if ($db->getField('remove_member') == 'TRUE') {
 	$PHP_OUTPUT.=create_link($container,'Remove Member');
 	$PHP_OUTPUT.= '</big></b>';
 	$PHP_OUTPUT.= '<br />Remove a trader from alliance roster.';
-} if ($player->getAccountID() == $leader_id) {
+} if ($player->getAccountID() == $alliance->getLeaderID()) {
 	$PHP_OUTPUT.= '<br /><br /><b><big>';
 	$container['body'] = 'alliance_leadership.php';
 	$PHP_OUTPUT.=create_link($container,'Handover Leadership');
