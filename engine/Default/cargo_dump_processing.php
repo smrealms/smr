@@ -20,7 +20,7 @@ if ($amount > $ship->getCargo($good_id))
 	create_error('You can\'t dump more than you have.');
 
 $sector =& $player->getSector();
-if ($sector->has_fed_beacon())
+if ($sector->offersFederalProtection())
 	create_error('You can\'t dump cargo in a Federal Sector!');
 
 require_once('shop_goods.inc');
