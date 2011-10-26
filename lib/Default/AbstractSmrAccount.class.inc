@@ -342,7 +342,7 @@ abstract class AbstractSmrAccount
 	
 	public function isVeteran()
 	{
-		return $this->isVeteranBumped() || $this->get_rank() >= FLEDGLING;
+		return $this->isVeteranBumped() || $this->getRank() >= FLEDGLING;
 	}
 	
 	public function isNewbie()
@@ -399,11 +399,11 @@ abstract class AbstractSmrAccount
 		return $hof;
 	}
 	
-	function get_rank_name()
+	function getRankName()
 	{
 		$rankings = GLOBALS::getUserRanking();
-		if(isset($rankings[$this->get_rank()]))
-			return $rankings[$this->get_rank()];
+		if(isset($rankings[$this->getRank()]))
+			return $rankings[$this->getRank()];
 		else
 			return end($rankings);
 	}
@@ -442,7 +442,7 @@ abstract class AbstractSmrAccount
 		return $this->individualScores[$gameID];
 	}
 	
-	public function get_rank()
+	public function getRank()
 	{
 		$rank = ceil(pow($this->getScore(),self::USER_RANKINGS_TOTAL_SCORE_POW)/self::USER_RANKINGS_RANK_BOUNDARY);
 		if($rank<1)

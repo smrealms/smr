@@ -21,7 +21,7 @@ if (empty($target) || $target == '')
 	create_error('Where do you want to go today?');
 
 // get our rank
-$rank_id = $account->get_rank();
+$rank_id = $account->getRank();
 
 // you can't move while on planet
 if ($player->isLandedOnPlanet())

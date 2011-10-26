@@ -1,6 +1,6 @@
 <?php
 
-$rank_id = $account->get_rank();
+$rank_id = $account->getRank();
 
 $template->assign('PageTopic','Extended User Rankings');
 require_once(get_file_loc('menu.inc'));
@@ -24,7 +24,7 @@ if ($db->nextRecord())
 }
 
 $PHP_OUTPUT.=('You have a score of <span class="red">'.number_format($account->getScore()).'</span>.<br /><br />');
-$PHP_OUTPUT.=('You are ranked as a <font size="4" color="greenyellow">'.$account->get_rank_name().'</font> player.<p><br />');
+$PHP_OUTPUT.=('You are ranked as a <font size="4" color="greenyellow">'.$account->getRankName().'</font> player.<p><br />');
 $db->query('SELECT * FROM user_rankings ORDER BY rank');
 $i = 0;
 while ($db->nextRecord())

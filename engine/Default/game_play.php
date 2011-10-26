@@ -7,7 +7,7 @@ if (isset($var['msg']))
 	$template->assign('Message',$var['msg']);
 
 $template->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
-$template->assign('UserRankName',$account->get_rank_name());
+$template->assign('UserRankName',$account->getRankName());
 
 $games = array();
 $games['Play'] = array();
