@@ -155,7 +155,7 @@ try
 	// ********************************
 	
 	// get reason for disabled user
-	if(($reason = $account->is_disabled())!==false)
+	if(($reason = $account->isDisabled())!==false)
 	{
 		// save session (incase we forward)
 		SmrSession::update();
