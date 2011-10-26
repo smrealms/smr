@@ -1,9 +1,8 @@
 <?php
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
-require_once(get_file_loc('SmrPlanet.class.inc'));
 // get a planet from the sector where the player is in
-$planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
+$planet =& $player->getSectorPlanet();
 include(get_file_loc('planet_claim_disallow.php'));
 $action = $_REQUEST['action'];
 $password = isset($_REQUEST['password'])?$_REQUEST['password']:'';

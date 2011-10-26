@@ -1,7 +1,6 @@
 <?php
-require_once(get_file_loc('SmrPlanet.class.inc'));
 // get a planet from the sector where the player is in
-$planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
+$planet =& $player->getSectorPlanet();
 // owner of planet
 if ($planet->hasOwner())
 {
