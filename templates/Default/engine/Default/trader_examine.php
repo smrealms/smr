@@ -67,10 +67,10 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 						Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) .'/'. $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
 						if ($ThisShip->hasScanner())
 						{
-							?>Shields : <?php echo $fleetShip->shield_low() . '-' . $fleetShip->shield_high() ?><br />
-							Armour : <?php echo $fleetShip->armour_low() . '-' . $fleetShip->armour_high() ?><br />
+							?>Shields : <?php echo $fleetShip->getShieldLow() . '-' . $fleetShip->getShieldHigh() ?><br />
+							Armour : <?php echo $fleetShip->getArmourLow() . '-' . $fleetShip->getArmourHigh() ?><br />
 							Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
-							Combat Drones: <?php echo $fleetShip->combat_drones_low() . '-' . $fleetShip->combat_drones_high() ?><br /><?php
+							Combat Drones: <?php echo $fleetShip->getCDsLow() . '-' . $fleetShip->getCDsHigh() ?><br /><?php
 						} ?>
 						</small><br /><br /><?php
 					}

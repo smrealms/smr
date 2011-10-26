@@ -69,10 +69,10 @@ foreach($attackers as &$attacker)
 	 $PHP_OUTPUT.=('<small>');
 	 $PHP_OUTPUT.=($attackerShip->getName().'<br />');
 	 $PHP_OUTPUT.=('Rating : ' . $attackerShip->getAttackRating() . '/' . $attackerShip->getDefenseRating() . '<br />');
-	 $PHP_OUTPUT.=('Shields : ' . $attackerShip->shield_low() . '-' . $attackerShip->shield_high() . '<br />');
-	 $PHP_OUTPUT.=('Armour : ' . $attackerShip->armour_low() . '-' . $attackerShip->armour_high() . '<br />');
+	 $PHP_OUTPUT.=('Shields : ' . $attackerShip->getShieldLow() . '-' . $attackerShip->getShieldHigh() . '<br />');
+	 $PHP_OUTPUT.=('Armour : ' . $attackerShip->getArmourLow() . '-' . $attackerShip->getArmourHigh() . '<br />');
 	 $PHP_OUTPUT.=('Hard Points: '.$attackerShip->getNumWeapons().'<br />');
-	 $PHP_OUTPUT.=('Combat Drones: ' . $attackerShip->combat_drones_low() . '-' . $attackerShip->combat_drones_high());
+	 $PHP_OUTPUT.=('Combat Drones: ' . $attackerShip->getCDsLow() . '-' . $attackerShip->getCDsHigh());
 	 $PHP_OUTPUT.=('</small><br /><br /><br />');
 }
 
