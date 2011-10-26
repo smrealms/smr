@@ -393,7 +393,7 @@ abstract class AbstractSmrShip
 		$this->hasChangedHardware = true;
 	}
 	
-	public function get_pod($isNewbie = false)
+	public function getPod($isNewbie = false)
 	{
 		$this->removeAllWeapons();
 		$this->removeAllCargo();

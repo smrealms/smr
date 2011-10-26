@@ -354,7 +354,7 @@ if ($db->next_record()) {
 
 		// run through dead methods for player and ship
 		$curr_attacker->died_by_forces($forces->getOwnerID());
-		$curr_attacker_ship->get_pod();
+		$curr_attacker_ship->getPod();
 
 		// if we are the guy who's dead
 		if ($curr_attacker->getAccountID() == $player->getAccountID()) {

@@ -117,7 +117,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		$this->setLandedOnPlanet(false);
 		$this->setDead(true);
 //		$this->setNewbieWarning(true);
-		$this->getShip()->get_pod();
+		$this->getShip()->getPod();
 		
 	}
 	

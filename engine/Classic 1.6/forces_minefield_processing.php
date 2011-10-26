@@ -375,7 +375,7 @@ if ($player->isDead()) {
 
 	$force_msg[] = '<span style="color:yellow;">'.$player->getPlayerName().'</span> is <span style="color:red;">DESTROYED!</span>';
 	$player->died_by_forces($forces->owner_id);
-	$ship->get_pod();
+	$ship->getPod();
 
 	$player->setDead(false);
 	$player->update();

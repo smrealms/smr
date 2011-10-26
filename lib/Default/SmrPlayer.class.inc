@@ -1239,7 +1239,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->setLandedOnPlanet(false);
 		$this->setDead(true);
 		$this->setNewbieWarning(true);
-		$this->getShip()->get_pod($this->getAccount()->isNewbie());
+		$this->getShip()->getPod($this->getAccount()->isNewbie());
 	}
 	
 	public function getHome()
