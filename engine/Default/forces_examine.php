@@ -69,10 +69,10 @@ foreach($attackers as &$attacker)
 	 $PHP_OUTPUT.=('<small>');
 	 $PHP_OUTPUT.=($attackerShip->getName().'<br />');
 	 $PHP_OUTPUT.=('Rating : ' . $attackerShip->getAttackRating() . '/' . $attackerShip->getDefenseRating() . '<br />');
-	 $PHP_OUTPUT.=('Shields : ' . $attackerShip->getShieldLow() . '-' . $attackerShip->getShieldHigh() . '<br />');
-	 $PHP_OUTPUT.=('Armour : ' . $attackerShip->getArmourLow() . '-' . $attackerShip->getArmourHigh() . '<br />');
+	 $PHP_OUTPUT.=('Shields : ' . $attackerShip->getShields() . '<br />');
+	 $PHP_OUTPUT.=('Armour : ' . $attackerShip->getArmour() . '<br />');
 	 $PHP_OUTPUT.=('Hard Points: '.$attackerShip->getNumWeapons().'<br />');
-	 $PHP_OUTPUT.=('Combat Drones: ' . $attackerShip->getCDsLow() . '-' . $attackerShip->getCDsHigh());
+	 $PHP_OUTPUT.=('Combat Drones: ' . $attackerShip->getCDs());
 	 $PHP_OUTPUT.=('</small><br /><br /><br />');
 }
 
