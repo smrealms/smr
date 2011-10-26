@@ -1,6 +1,8 @@
 <?php
 
 $template->assign('PageTopic','Galactic Post');
+require_once(get_file_loc('menu.inc'));
+create_galactic_post_menue();
 
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
@@ -13,8 +15,6 @@ if ($db->nextRecord())
 	$paper_name = bbifyMessage($db2->getField('title'));
 
 	$template->assign('PageTopic','Reading <i>Galactic Post</i> Edition : '.$paper_name);
-	include(get_file_loc('menue.inc'));
-	$PHP_OUTPUT.=create_galactic_post_menue();
 	$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$db2->escapeNumber($paper_id).' AND game_id = '.$db2->escapeNumber($player->getGameID()));
 	$even = $db2->getNumRows() % 2 == 0;
 	$curr_position = 0;
@@ -57,8 +57,6 @@ if ($db->nextRecord())
 }
 else
 {
-	include(get_file_loc('menue.inc'));
-	$PHP_OUTPUT.=create_galactic_post_menue();
 	$PHP_OUTPUT.=('There is no current edition of the Galactic Post for this game.');
 
 }

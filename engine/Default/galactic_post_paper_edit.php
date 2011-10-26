@@ -5,8 +5,8 @@ $db->query('SELECT * FROM galactic_post_paper WHERE paper_id = '.$var['id'].' AN
 $db->nextRecord();
 $paper_title = bbifyMessage($db->getField('title'));
 $db->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$var['id'].' AND game_id = '.$player->getGameID());
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_galactic_post_menue();
+require_once(get_file_loc('menu.inc'));
+create_galactic_post_menue();
 $PHP_OUTPUT.=($paper_title.'<br /><br /><ul>');
 while ($db->nextRecord())
 {

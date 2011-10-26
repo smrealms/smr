@@ -2,8 +2,8 @@
 
 $template->assign('PageTopic','Experience Rankings');
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_ranking_menue(0, 0);
+require_once(get_file_loc('menu.inc'));
+create_ranking_menue(0, 0);
 
 
 // what rank are we?

@@ -6,7 +6,7 @@ if (!$player->isLandedOnPlanet())
 $planet =& $player->getSectorPlanet();
 $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_planet_menue();
 
 $PLANET_BUILDINGS =& Globals::getPlanetBuildings();

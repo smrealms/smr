@@ -1,8 +1,8 @@
 <?php
 
 $template->assign('PageTopic','Making A Paper');
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_galactic_post_menue();
+require_once(get_file_loc('menu.inc'));
+create_galactic_post_menue();
 $PHP_OUTPUT.=('What is the title of this edition?<br />');
 $container = array();
 $container['url'] = 'galactic_post_make_paper_processing.php';

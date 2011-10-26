@@ -1,7 +1,7 @@
 <?php
 $template->assign('PageTopic','Alliance Death Rankings');
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_ranking_menue(1, 2);
+require_once(get_file_loc('menu.inc'));
+create_ranking_menue(1, 2);
 
 $db->query('SELECT alliance_id, alliance_name, alliance_deaths, leader_id FROM alliance
 			WHERE game_id = '.$player->getGameID().' ORDER BY alliance_deaths DESC, alliance_name');

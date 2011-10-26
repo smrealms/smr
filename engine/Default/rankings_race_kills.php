@@ -2,8 +2,8 @@
 
 $template->assign('PageTopic','Racial Standings');
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_ranking_menue(2, 1);
+require_once(get_file_loc('menu.inc'));
+create_ranking_menue(2, 1);
 
 $PHP_OUTPUT.=('<div align=center>');
 $PHP_OUTPUT.=('<p>Here are the rankings of the races by their kills</p>');

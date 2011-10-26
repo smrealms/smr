@@ -82,7 +82,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	if ($mbWrite) $mbRead = 1;
 	//get confirmation
 	$template->assign('PageTopic',$alliance1->getAllianceName() . ' (' . $alliance1->getAllianceID() . ')');
-	include(get_file_loc('menue.inc'));
+	require_once(get_file_loc('menu.inc'));
 	create_alliance_menue($alliance1->getAllianceID(),$alliance1->getLeaderID());
 	$PHP_OUTPUT.=('<br /><br /');
 	$PHP_OUTPUT.=('<div align="center">Are you sure you want to offer a treaty to <span class="yellow">');

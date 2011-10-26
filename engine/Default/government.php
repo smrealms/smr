@@ -31,8 +31,8 @@ else
 	$template->assign('PageTopic','Federal Headquarters');
 
 // header menue
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_hq_menue();
+require_once(get_file_loc('menu.inc'));
+create_hq_menue();
 
 $PHP_OUTPUT.='<div align="center">';
 if (isset($location_type_id))

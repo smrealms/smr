@@ -15,8 +15,8 @@ if (!$account->isValidated())
 
 $template->assign('PageTopic','bank');
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_bank_menue();
+require_once(get_file_loc('menu.inc'));
+create_bank_menue();
 
 $PHP_OUTPUT.= 'Hello ';
 $PHP_OUTPUT.= $player->getPlayerName();

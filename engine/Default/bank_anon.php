@@ -36,8 +36,8 @@ else
 	$topic = 'Anonymous Account #' . $account_num;
 $template->assign('PageTopic',$topic);
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_bank_menue();
+require_once(get_file_loc('menu.inc'));
+create_bank_menue();
 
 if (isset($make))
 {

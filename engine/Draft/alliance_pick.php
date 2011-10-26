@@ -1,7 +1,7 @@
 <?php
 $alliance =& $player->getAlliance();
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $players = array();

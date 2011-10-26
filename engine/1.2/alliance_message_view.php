@@ -7,7 +7,7 @@ $thread_id = $var['thread_ids'][$thread_index];
 $db->query('SELECT leader_id FROM alliance WHERE game_id=' . SmrSession::$game_id . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
 $db->next_record();
 print_topic(stripslashes($var['thread_topics'][$thread_index]));
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 print_alliance_menue($alliance_id,$db->f('leader_id'));
 
 $curr_time = time() + 2;

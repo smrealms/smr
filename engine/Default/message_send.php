@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Send Message');
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_message_menue();
 
 $container = create_container('message_send_processing.php');

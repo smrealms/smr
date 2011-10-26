@@ -10,7 +10,7 @@ if(empty($thread_id))
 	create_error('Unable to find thread id.');
 
 $template->assign('PageTopic',$var['thread_topics'][$thread_index]);
-require_once(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $db->query('REPLACE INTO player_read_thread ' .

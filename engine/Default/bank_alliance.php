@@ -14,8 +14,8 @@ if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
 else $alliance_id = $player->getAllianceID();
 $template->assign('PageTopic','Bank');
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_bank_menue();
+require_once(get_file_loc('menu.inc'));
+create_bank_menue();
 
 $db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 		'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\'');

@@ -2,8 +2,8 @@
 
 $template->assign('PageTopic','Kill Rankings');
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_ranking_menue(0, 1);
+require_once(get_file_loc('menu.inc'));
+create_ranking_menue(0, 1);
 
 // what rank are we?
 $db->query('SELECT count(*) FROM player WHERE game_id = '.$player->getGameID().' AND ' .

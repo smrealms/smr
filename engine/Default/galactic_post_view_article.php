@@ -1,7 +1,7 @@
 <?php
 $template->assign('PageTopic','Viewing Articles');
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_galactic_post_menue();
+require_once(get_file_loc('menu.inc'));
+create_galactic_post_menue();
 $db2 = new SmrMySqlDatabase();
 if (isset($var['news']))
 {

@@ -3,15 +3,15 @@ $sector =& $player->getSector();
 
 $template->assign('PageTopic','Bounty Payout');
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 if ($sector->has_hq())
 {
-	$PHP_OUTPUT.=create_hq_menue();
+	create_hq_menue();
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'HQ\'');
 }
 else
 {
-	$PHP_OUTPUT.=create_ug_menue();
+	create_ug_menue();
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'UG\'');
 }
 
