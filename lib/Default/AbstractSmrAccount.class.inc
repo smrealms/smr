@@ -268,7 +268,7 @@ abstract class AbstractSmrAccount
 		$this->hasChanged = false;
 	}
 	
-	function update_ip()
+	function updateIP()
 	{
 		// try to get a real ip first
 		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
@@ -301,7 +301,7 @@ abstract class AbstractSmrAccount
 		$this->db->query('REPLACE INTO account_has_ip (account_id, time, ip, host) VALUES ('.$this->account_id.', '.TIME.', '.$this->db->escapeString($curr_ip).', '.$this->db->escapeString($host).')');
 	}
 	
-	public function update_last_login()
+	public function updateLastLogin()
 	{
 		if($this->last_login == TIME)
 			return;
