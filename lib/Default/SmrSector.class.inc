@@ -224,7 +224,7 @@ class SmrSector
 		return false;
 	}
 
-	function has_ship_shop()
+	function hasShipShop()
 	{
 		$locations =& $this->getLocations();
 		foreach($locations as &$location)
