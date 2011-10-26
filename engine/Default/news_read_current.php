@@ -4,7 +4,7 @@ $gameID = $var['GameID'];
 
 $template->assign('PageTopic','Current News');
 require_once(get_file_loc('menu.inc'));
-create_news_menue($template);
+create_news_menu($template);
 
 require_once(get_file_loc('news.functions.inc'));
 doBreakingNewsAssign($gameID,$template);

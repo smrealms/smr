@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Combat Logs');
 require_once(get_file_loc('menu.inc'));
-$PHP_OUTPUT.=create_combat_log_menue();
+create_combat_log_menu();
 if (isset($_REQUEST['action'])) {
 	$submitAction = $_REQUEST['action'];
 	if ($submitAction == 'Save' && isset($_POST['id']))

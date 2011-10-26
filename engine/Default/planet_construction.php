@@ -7,7 +7,7 @@ $planet =& $player->getSectorPlanet();
 $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 
 require_once(get_file_loc('menu.inc'));
-create_planet_menue();
+create_planet_menu();
 
 $PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 $PHP_OUTPUT.=('<p>You are currently building: ');

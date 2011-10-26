@@ -4,7 +4,7 @@ $sector =& $player->getSector();
 $template->assign('PageTopic','Reading The Wall');
 
 require_once(get_file_loc('menu.inc'));
-create_bar_menue();
+create_bar_menu();
 
 $db = new SmrMySqlDatabase();
 $db->query('SELECT message_id FROM bar_wall WHERE sector_id = '.$sector->getSectorID().' AND game_id = '.SmrSession::$game_id.' ORDER BY message_id DESC');

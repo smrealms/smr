@@ -10,7 +10,7 @@ if ($player->getAlignment() >= 100) {
 $template->assign('PageTopic','Underground Headquarters');
 
 require_once(get_file_loc('menu.inc'));
-create_ug_menue();
+create_ug_menu();
 
 require_once(get_file_loc('gov.functions.inc'));
 displayBountyList($PHP_OUTPUT,'UG',0);

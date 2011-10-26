@@ -15,7 +15,7 @@ else $alliance_id = $player->getAllianceID();
 $template->assign('PageTopic','Bank');
 
 require_once(get_file_loc('menu.inc'));
-create_bank_menue();
+create_bank_menu();
 
 $db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 		'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\'');

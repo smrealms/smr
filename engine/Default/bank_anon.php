@@ -37,7 +37,7 @@ else
 $template->assign('PageTopic',$topic);
 
 require_once(get_file_loc('menu.inc'));
-create_bank_menue();
+create_bank_menu();
 
 if (isset($make))
 {

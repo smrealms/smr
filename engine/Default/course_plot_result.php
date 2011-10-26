@@ -5,7 +5,7 @@ $sector =& $player->getSector();
 $template->assign('PageTopic','Plot A Course');
 
 require_once(get_file_loc('menu.inc'));
-create_nav_menue($template, $player);
+create_nav_menu($template, $player);
 
 $path = unserialize($var['Distance']);
 

@@ -2,7 +2,7 @@
 $template->assign('PageTopic','Trader Relations');
 
 require_once(get_file_loc('menu.inc'));
-create_trader_menue();
+create_trader_menu();
 
 $PHP_OUTPUT.=('<p align="center">');
 $PHP_OUTPUT.=('<table width="60%" class="standard">');

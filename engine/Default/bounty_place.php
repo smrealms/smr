@@ -5,9 +5,9 @@ $template->assign('PageTopic','Place a Bounty');
 
 require_once(get_file_loc('menu.inc'));
 if ($sector->has_hq())
-	create_hq_menue();
+	create_hq_menu();
 else
-	create_ug_menue();
+	create_ug_menu();
 
 $container = create_container('skeleton.php','bounty_place_confirm.php');
 transfer('LocationID');

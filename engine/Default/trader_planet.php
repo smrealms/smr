@@ -9,7 +9,7 @@ function echo_time($sek)
 $template->assign('PageTopic','Planets');
 
 require_once(get_file_loc('menu.inc'));
-create_trader_menue();
+create_trader_menu();
 
 $db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM player, planet WHERE player.account_id = planet.owner_id AND ' .

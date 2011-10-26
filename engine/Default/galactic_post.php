@@ -6,7 +6,7 @@ if ($db->nextRecord() && $db->getField('position') == 'editor')
 {
 	$db2 = new SmrMySqlDatabase();
 	require_once(get_file_loc('menu.inc'));
-    create_galactic_post_menue();
+    create_galactic_post_menu();
     $PHP_OUTPUT.=('<b>EDITOR OPTIONS<br /></b>');
     $PHP_OUTPUT.=('Welcome '.$player->getPlayerName().' your position is <i>Editor</i><br />');
     $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'galactic_post_view_applications.php'), 'View the applications');

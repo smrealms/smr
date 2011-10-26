@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Viewing Members');
 require_once(get_file_loc('menu.inc'));
-create_galactic_post_menue();
+create_galactic_post_menu();
 
 $container = array();
 $container['url'] = 'skeleton.php';

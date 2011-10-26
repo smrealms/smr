@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Galactic Post Application');
 require_once(get_file_loc('menu.inc'));
-create_galactic_post_menue();
+create_galactic_post_menu();
 $container = array();
 $container['url'] = 'galactic_post_application_processing.php';
 $PHP_OUTPUT.=create_echo_form($container);

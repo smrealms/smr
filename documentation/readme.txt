@@ -12,7 +12,7 @@ Table of Content
 	2.2. Code Layout
 	2.3. Using HTML links
 	2.4. Using HTML forms
-	2.5. Using SMR submenues
+	2.5. Using SMR submenus
 	2.6. Functions to use
 	2.7. What to do in ERROR case?
 
@@ -81,7 +81,7 @@ Table of Content
 		$container['url'] = 'skeleton.php';
 
 	For most pages you have to define the 'body' page. That is the page that will be displayed
-	between the menue and the user information. You don't have to care about that.
+	between the menu and the user information. You don't have to care about that.
 
 		$container['body'] = 'game_play.php';
 
@@ -164,23 +164,23 @@ Table of Content
 	If the URL equals 'skeleton.php' you have to provide the second parameter as body page.
 
 
-2.5. Using SMR submenues
+2.5. Using SMR submenus
 ------------------------
 
 	First of all u have to create an array that conatins all the links.
 
-		$menue_items = array();
+		$menu_items = array();
 
-	Create links like described above and push it into the menue_item array
+	Create links like described above and push it into the menu_item array
 
-		$menue_items[] = create_link(create_container('skeleton.php', 'game_play.php'),
+		$menu_items[] = create_link(create_container('skeleton.php', 'game_play.php'),
 													  'Play Game');
-		$menue_items[] = create_link(create_container('skeleton.php', 'logoff.php'),
+		$menu_items[] = create_link(create_container('skeleton.php', 'logoff.php'),
 													  'Logoff');
 
-	Finally echo the menue into the page
+	Finally echo the menu into the page
 
-		echo_menue($menue_items);
+		echo_menu($menu_items);
 
 
 2.6. Functions to use

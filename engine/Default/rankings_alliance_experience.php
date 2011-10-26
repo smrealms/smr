@@ -1,7 +1,7 @@
 <?php
 $template->assign('PageTopic','Alliance Experience Rankings');
 require_once(get_file_loc('menu.inc'));
-create_ranking_menue(1, 0);
+create_ranking_menu(1, 0);
 
 $db->query('SELECT alliance_id, sum( experience ) AS alliance_exp, count( account_id ) AS members, alliance_name AS name
 				FROM alliance

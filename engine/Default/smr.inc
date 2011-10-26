@@ -205,11 +205,11 @@ function create_echo_error($message) {
 	$return.=('<p><small>If the error was unrecognizable, please notify the administrators.</small></p>');
 }
 
-function create_menue($menue)
+function create_menu($menu)
 {
 	global $template;
 	$return = '<span class="noWrap">';
-	foreach ($menue as $number => $entry) {
+	foreach ($menu as $number => $entry) {
 		if ($number > 0) $return .= '</span> | <span class="noWrap">';
 		$return .= $entry;
 	}

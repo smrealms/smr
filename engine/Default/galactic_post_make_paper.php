@@ -2,7 +2,7 @@
 
 $template->assign('PageTopic','Making A Paper');
 require_once(get_file_loc('menu.inc'));
-create_galactic_post_menue();
+create_galactic_post_menu();
 $PHP_OUTPUT.=('What is the title of this edition?<br />');
 $container = array();
 $container['url'] = 'galactic_post_make_paper_processing.php';

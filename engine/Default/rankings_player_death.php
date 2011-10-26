@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Death Rankings');
 
 require_once(get_file_loc('menu.inc'));
-create_ranking_menue(0, 2);
+create_ranking_menu(0, 2);
 
 // what rank are we?
 $db->query('SELECT count(*) FROM player WHERE game_id = '.$player->getGameID().' AND ' .

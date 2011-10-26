@@ -2,7 +2,7 @@
 $alliance =&$player->getAlliance();
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 require_once(get_file_loc('menu.inc'));
-create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
+create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $db->query('
 SELECT

@@ -30,9 +30,9 @@ if (isset($location))
 else
 	$template->assign('PageTopic','Federal Headquarters');
 
-// header menue
+// header menu
 require_once(get_file_loc('menu.inc'));
-create_hq_menue();
+create_hq_menu();
 
 $PHP_OUTPUT.='<div align="center">';
 if (isset($location_type_id))

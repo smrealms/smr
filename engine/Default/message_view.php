@@ -1,6 +1,6 @@
 <?php
 require_once(get_file_loc('menu.inc'));
-create_message_menue();
+create_message_menu();
 
 if (!isset ($var['folder_id']))
 {
