@@ -213,7 +213,7 @@ class SmrSector
 		return false;
 	}
 
-	function has_ug()
+	function hasUG()
 	{
 		$locations =& $this->getLocations();
 		foreach($locations as &$location)
