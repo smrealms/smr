@@ -33,19 +33,7 @@ $player->updateTurns();
 
 // we cant move if we are dead
 //check if we are in kill db...if we are we don't do anything
-$db->query('SELECT * FROM kills WHERE dead_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
-if (!$db->nextRecord()) {
-
-	if ($ship->isDead() && ($var['body'] != 'trader_attack.php' && $var['url'] != 'trader_attack_processing.php' && $var['body'] != 'port_attack.php' && $var['url'] != 'port_attack_processing.php'&& $var['body'] != 'planet_attack.php' && $var['url'] != 'planet_attack_processing.php'))
-	{
-		$player->setSectorID($player->getHome());
-		$player->setNewbieTurns(100);
-		$player->update();
-		$ship->get_pod();
-		//$PHP_OUTPUT.=('.$db->escapeString($var[body], $var[url]');
-		$container = create_container('skeleton.php','current_sector.php');
-	}
-} elseif (!isset($var['ahhh'])) {
+if (!isset($var['ahhh'])) {
 
 	$db->query('SELECT * FROM kills WHERE dead_id = '.$player->getAccountID().' AND processed = \'TRUE\' AND game_id = '.$player->getGameID());
 	if ($db->nextRecord() && $var['body'] != 'trader_attack.php') {
