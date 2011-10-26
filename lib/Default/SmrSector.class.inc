@@ -269,7 +269,7 @@ class SmrSector
 		return false;
 	}
 
-	function has_hardware_shop()
+	function hasHardwareShop()
 	{
 		$locations =& $this->getLocations();
 		foreach($locations as &$location)
