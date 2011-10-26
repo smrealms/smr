@@ -1,6 +1,5 @@
 <?php
-require_once(get_file_loc('SmrPort.class.inc'));
-$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
+$port =& $player->getSectorPort();
 $port->setRaceID($player->getRaceID());
 
 forward($port->getLootHREF(true));

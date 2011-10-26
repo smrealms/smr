@@ -171,7 +171,7 @@ if($sector->hasPort())
 	// Cache good names for later
 	$GOODS = Globals::getGoods();
 	
-	$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
+	$port =& $sector->getPort();
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'trader_relations.php';

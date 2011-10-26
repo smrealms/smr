@@ -120,6 +120,11 @@ abstract class AbstractSmrPlayer
 		$this->hasChanged=true;
 	}
 	
+	public function &getSectorPort()
+	{
+		return SmrPort::getPort($this->getGameID(),$this->getSectorID());
+	}
+	
 	public function getSectorID()
 	{
 		return $this->sectorID;

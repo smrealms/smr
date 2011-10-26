@@ -9,7 +9,7 @@ $amount = floor($amount);
 if ($amount <= 0)
 	create_error('You must enter an amount > 0!');
 
-$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
+$port =& $player->getSectorPort();
 $good =& $port->getGood($good_id);
 // check if there are enough left at port
 if ($good['Amount'] < $amount)
