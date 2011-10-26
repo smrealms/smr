@@ -1,7 +1,7 @@
 <?php
 
 // update last login time
-$account->update_last_login();
+$account->updateLastLogin();
 
 $container = array();
 $container['url'] = 'skeleton.php';

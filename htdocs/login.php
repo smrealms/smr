@@ -29,7 +29,7 @@ try
 		$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	
 		// update last login column
-		$account->update_last_login();
+		$account->updateLastLogin();
 	
 		$container = array();
 		$container['url'] = 'validate_check.php';

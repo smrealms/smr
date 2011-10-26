@@ -256,7 +256,7 @@ try
 	SmrSession::$account_id = $account->getAccountID();
 	
 	// save ip
-	$account->update_ip();
+	$account->updateIP();
 	
 	// send email with validation code to user
 	mail($email, 'New Space Merchant Realms User',

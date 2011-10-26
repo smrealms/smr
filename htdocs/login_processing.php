@@ -194,7 +194,7 @@ try
 	$db->query('DELETE FROM cpl_tag WHERE expires <= ' . TIME . ' AND expires > 0');
 	
 	// save ip
-	$account->update_ip();
+	$account->updateIP();
 	
 	// try to get a real ip first
 	if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
