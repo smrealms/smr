@@ -1,5 +1,4 @@
 <?php
-require_once(get_file_loc('SmrPort.class.inc'));
 $template->assign('PageTopic','Looting The Port');
 
 $PHP_OUTPUT.=('<div align="center">');
@@ -14,7 +13,7 @@ $PHP_OUTPUT.=('<th align="center">Action</th>');
 $PHP_OUTPUT.=('</tr>');
 
 // and a port object
-$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
+$port =& $player->getSectorPort();
 
 $container = array();
 $container['url'] = 'port_loot_processing.php';

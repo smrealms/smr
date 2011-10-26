@@ -13,8 +13,8 @@ if(!$ship->hasWeapons() && !$ship->hasCDs())
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
 
-require_once(get_file_loc('SmrPort.class.inc'));
-$port =& SmrPort::getPort($player->getGameID(), $player->getSectorID());
+$sector =& $player->getSector();
+$port =& $sector->getPort();
 
 if(!$port->exists())
 	create_error('This port does not exist.');
@@ -41,7 +41,6 @@ $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
 				'Forced' => false);
 
-$sector =& $player->getSector();
 $attackers =& $sector->getFightingTradersAgainstPort($player, $port);
 
 $port->attackedBy($player,$attackers);

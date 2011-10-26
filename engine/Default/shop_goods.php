@@ -3,7 +3,7 @@
 require_once('shop_goods.inc');
 
 // create object from port we can work with
-$port =& SmrPort::getPort($player->getGameID(),$player->getSectorID());
+$port =& $player->getSectorPort();
 
 $tradeable = checkPortTradeable($port,$player);
 if($tradeable!==true)
