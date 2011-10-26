@@ -280,7 +280,7 @@ class SmrSector
 		return false;
 	}
 
-	function has_bank()
+	function hasBank()
 	{
 		$locations =& $this->getLocations();
 		foreach($locations as &$location)
@@ -344,7 +344,7 @@ class SmrSector
 					'refresher = '.$player->getAccountID());
 	}
 
-	function died_here(AbstractSmrPlayer &$player)
+	function diedHere(AbstractSmrPlayer &$player)
 	{
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
