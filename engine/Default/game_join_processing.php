@@ -67,7 +67,7 @@ else
 	$home_sector_id = 1;
 
 // get rank_id
-$rank_id = $account->get_rank();
+$rank_id = $account->getRank();
 
 // for newbie and beginner another ship, more shields and armour
 if ($account->isNewbie())

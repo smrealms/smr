@@ -127,7 +127,7 @@ $container['body'] = 'rankings_view.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">User Ranking</span>');
 
 $PHP_OUTPUT.= '<br />You are ranked as a <span class="green">';
-$PHP_OUTPUT.= $account->get_rank_name();
+$PHP_OUTPUT.= $account->getRankName();
 $PHP_OUTPUT.= '</span> player.<br /><br />';
 $PHP_OUTPUT.= '</td></tr></table><br />';
 

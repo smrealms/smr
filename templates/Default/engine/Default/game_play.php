@@ -9,7 +9,7 @@ if(isset($Message))
 } ?>
 
 <a href="<?php echo $ThisAccount->getUserRankingHREF(); ?>"><b class="yellow">Rankings</b></a>
-<br />You are ranked as <?php $this->doAn($ThisAccount->get_rank_name()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
+<br />You are ranked as <?php $this->doAn($ThisAccount->getRankName()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
 
 <?php
 if(isset($Games['Play']))
