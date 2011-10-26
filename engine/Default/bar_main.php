@@ -2,7 +2,7 @@
 $sector =& $player->getSector();
 
 //first check if there is a bar here
-if (!$sector->has_bar()) create_error('So two guys walk into this bar...');
+if (!$sector->hasBar()) create_error('So two guys walk into this bar...');
 
 
 //get script to include

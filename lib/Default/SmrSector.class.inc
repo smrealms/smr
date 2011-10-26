@@ -270,7 +270,7 @@ class SmrSector
 		return $raceIDs;
 	}
 
-	function has_bar()
+	function hasBar()
 	{
 		$locations =& $this->getLocations();
 		foreach($locations as &$location)
