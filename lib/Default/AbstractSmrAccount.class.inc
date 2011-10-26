@@ -230,7 +230,7 @@ abstract class AbstractSmrAccount
 			return false;
 	}
 	
-	public function is_sms_blacklisted()
+	public function isSmsBlacklisted()
 	{
 		$this->db->query('SELECT reason FROM account_sms_blacklist ' .
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
