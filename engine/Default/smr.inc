@@ -962,7 +962,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' ORDER BY link_id LIMIT 3');
 		while($db->nextRecord())
 		{
-			$nextVoteTime[$db->getField('link_id')] = 86400 - (TIME - $db->getField('timeout'));
+			$nextVoteTime[$db->getField('link_id')] = TIME_BETWEEN_VOTING - (TIME - $db->getField('timeout'));
 		}
 	}
 	
