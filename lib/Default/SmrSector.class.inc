@@ -198,7 +198,7 @@ class SmrSector
 		return $this->getPort()->hasGood($good_id,$transaction);
 	}
 
-	function has_weapon_shop()
+	function hasWeaponShop()
 	{
 		$locations =& $this->getLocations();
 		foreach($locations as &$location)
