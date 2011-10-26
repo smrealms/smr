@@ -209,7 +209,7 @@ class SmrSector
 		return false;
 	}
 
-	function has_hq()
+	function hasHQ()
 	{
 		$locations =& $this->getLocations();
 		foreach($locations as &$location)

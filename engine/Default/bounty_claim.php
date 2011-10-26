@@ -4,7 +4,7 @@ $sector =& $player->getSector();
 $template->assign('PageTopic','Bounty Payout');
 
 require_once(get_file_loc('menu.inc'));
-if ($sector->has_hq())
+if ($sector->hasHQ())
 {
 	create_hq_menu();
 	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'HQ\'');

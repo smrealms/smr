@@ -4,7 +4,7 @@ $sector =& $player->getSector();
 $container = array();
 $container['url'] = 'skeleton.php';
 transfer('LocationID');
-if ($sector->has_hq())
+if ($sector->hasHQ())
 {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
