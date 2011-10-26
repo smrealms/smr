@@ -1,7 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Combat Logs');
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_combat_log_menue();
 if (isset($_REQUEST['action']))
 {

@@ -1,7 +1,7 @@
 <?php
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_bar_menue();
+require_once(get_file_loc('menu.inc'));
+create_bar_menue();
 
 $db->query('SELECT message_id FROM bar_tender WHERE game_id = '.$player->getGameID().' ORDER BY message_id DESC');
 if ($db->nextRecord())

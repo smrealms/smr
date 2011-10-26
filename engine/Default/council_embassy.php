@@ -6,7 +6,7 @@ if(!$player->isPresident())
 }
 
 require_once(get_file_loc('council.inc'));
-require_once(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 
 $template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
 

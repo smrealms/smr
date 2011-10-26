@@ -1,8 +1,8 @@
 <?php
 
 $template->assign('PageTopic','Viewing Members');
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_galactic_post_menue();
+require_once(get_file_loc('menu.inc'));
+create_galactic_post_menue();
 
 $container = array();
 $container['url'] = 'skeleton.php';

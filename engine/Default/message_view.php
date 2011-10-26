@@ -1,5 +1,5 @@
 <?php
-require_once(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_message_menue();
 
 if (!isset ($var['folder_id']))

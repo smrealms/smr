@@ -1,7 +1,7 @@
 <?php
 $template->assign('PageTopic','Trader Relations');
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_trader_menue();
 
 $PHP_OUTPUT.=('<p align="center">');

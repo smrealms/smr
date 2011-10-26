@@ -2,8 +2,8 @@
 
 $template->assign('PageTopic','Player Blacklist');
 
-include(get_file_loc('menue.inc'));
-$PHP_OUTPUT.=create_message_menue();
+require_once(get_file_loc('menu.inc'));
+create_message_menue();
  
 if(isset($var['error']))
 {

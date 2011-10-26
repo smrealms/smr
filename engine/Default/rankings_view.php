@@ -3,7 +3,7 @@
 $rank_id = $account->get_rank();
 
 $template->assign('PageTopic','Extended User Rankings');
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 if (SmrSession::$game_id != 0)
 	create_trader_menue();
 

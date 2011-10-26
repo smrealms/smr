@@ -3,7 +3,7 @@ if(!isset($var['GameID'])) SmrSession::updateVar('GameID',$player->getGameID());
 $gameID = $var['GameID'];
 
 $template->assign('PageTopic','Current News');
-require_once(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_news_menue($template);
 
 require_once(get_file_loc('news.functions.inc'));

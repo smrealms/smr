@@ -1,6 +1,6 @@
 <?php
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_galactic_post_menue();
 $container = create_container('galactic_post_write_article_processing.php');
 

@@ -3,11 +3,11 @@ $sector =& $player->getSector();
 
 $template->assign('PageTopic','Military Payment Center');
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 if ($sector->has_hq())
-	$PHP_OUTPUT.=create_hq_menue();
+	create_hq_menue();
 else
-	$PHP_OUTPUT.=create_ug_menue();
+	create_ug_menue();
 
 if ($player->hasMilitaryPayment())
 {

@@ -8,7 +8,7 @@ function echo_time($sek)
 
 $template->assign('PageTopic','Planets');
 
-include(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_trader_menue();
 
 $db2 = new SmrMySqlDatabase();

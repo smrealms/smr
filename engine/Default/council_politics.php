@@ -1,7 +1,7 @@
 <?php
 
 require_once(get_file_loc('council.inc'));
-require_once(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 
 // echo topic
 $race_id = $var['race_id'];

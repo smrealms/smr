@@ -1,7 +1,7 @@
 <?php
 $alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
-require_once(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $container = create_container('message_send_processing.php');

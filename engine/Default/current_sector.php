@@ -9,7 +9,7 @@ $template->assign('SpaceView',true);
 
 $template->assign('PageTopic','Current Sector: ' . $player->getSectorID() . ' (' .$sector->getGalaxyName() . ')');
 
-require_once(get_file_loc('menue.inc'));
+require_once(get_file_loc('menu.inc'));
 create_nav_menue($template,$player);
 
 
