@@ -38,7 +38,7 @@ function channel_msg_sms_search($fp, $rdata, $account, $player)
 
 		echo_r('[SMS_SEARCH] by ' . $nick . ' in ' . $channel . ' for ' . $recv);
 
-		if (($blacklist_reason = $account->is_sms_blacklisted()) !== false) {
+		if (($blacklist_reason = $account->isSmsBlacklisted()) !== false) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you are not allowed to send text messages via Caretaker. Reason: ' . $blacklist_reason . EOL);
 			return true;
 		}
@@ -85,7 +85,7 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 
 		echo_r('[SMS_SEND] by ' . $nick . ' in ' . $channel . ' for ' . $recv);
 
-		if (($blacklist_reason = $account->is_sms_blacklisted()) !== false) {
+		if (($blacklist_reason = $account->isSmsBlacklisted()) !== false) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you are not allowed to send text messages via Caretaker. Reason: ' . $blacklist_reason . EOL);
 			return true;
 		}
