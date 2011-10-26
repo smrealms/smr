@@ -1,7 +1,6 @@
 <?php
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
-require_once(get_file_loc('SmrPlanet.class.inc'));
 $amount = trim($_REQUEST['amount']);
 if (!is_numeric($amount))
 	create_error('Numbers only please');
@@ -14,7 +13,7 @@ if ($amount <= 0)
 if ($player->getNewbieTurns() > 0)
 	create_error('You can\'t drop defenses under newbie protection!');
 // get a planet from the sector where the player is in
-$planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
+$planet =& $player->getSectorPlanet();
 
 $type_id = $var['type_id'];
 $action = $_REQUEST['action'];

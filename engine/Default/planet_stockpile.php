@@ -1,11 +1,9 @@
 <?php
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
-require_once(get_file_loc('SmrPlanet.class.inc'));
-
 
 // create planet object
-$planet =& SmrPlanet::getPlanet($player->getGameID(),$player->getSectorID());
+$planet =& $player->getSectorPlanet();
 
 $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 

@@ -13,8 +13,7 @@ if(!$ship->hasWeapons() && !$ship->hasCDs())
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
 
-require_once(get_file_loc('SmrPlanet.class.inc'));
-$planet =& SmrPlanet::getPlanet($player->getGameID(), $player->getSectorID());
+$planet =& $player->getSectorPlanet();
 if(!$planet->exists())
 	create_error('This planet does not exist.');
 if(!$planet->isClaimed())
