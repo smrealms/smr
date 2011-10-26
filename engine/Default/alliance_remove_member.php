@@ -1,10 +1,8 @@
 <?php
-
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getAllianceID() . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
+$alliance =&$player->getAlliance();
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $db->query('
 SELECT
@@ -13,8 +11,8 @@ player_id,
 player_name,
 last_cpl_action
 FROM player
-WHERE game_id=' . $player->getAllianceID() . '
-AND alliance_id=' . $player->getAllianceID() .'
+WHERE game_id=' . $alliance->getAllianceID() . '
+AND alliance_id=' . $alliance->getAllianceID() .'
 AND account_id<>' . SmrSession::$account_id . '
 ORDER BY last_cpl_action DESC
 ');

@@ -1,10 +1,9 @@
 <?php
 
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
+$alliance =& $player->getAlliance();
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
+create_alliance_menue($player->getAllianceID(),$alliance->getLeaderID());
 
 $container = array();
 $container['url'] = 'alliance_leadership_processing.php';
@@ -18,8 +17,8 @@ $PHP_OUTPUT.= 'Please select the new Leader:&nbsp;&nbsp;&nbsp;<select name="lead
 $db->query('
 SELECT account_id,player_id,player_name 
 FROM player 
-WHERE game_id=' . $player->getGameID() . '
-AND alliance_id=' . $player->getAllianceID() //No limit in case they are over limit - ie NHA
+WHERE game_id=' . $alliance->getGameID() . '
+AND alliance_id=' . $alliance->getAllianceID() //No limit in case they are over limit - ie NHA
 );
 
 while ($db->nextRecord()) {

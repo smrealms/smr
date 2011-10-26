@@ -1,16 +1,16 @@
 <?php
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
-$db->query('SELECT leader_id,alliance_id,alliance_name FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
+if (!isset($var['alliance_id']))
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $db->query('SELECT * 
 FROM alliance_has_roles
-WHERE game_id=' . $player->getGameID() . '
-AND alliance_id=' . $alliance_id .'
+WHERE game_id=' . $alliance->getGameID() . '
+AND alliance_id=' . $alliance->getAllianceID() .'
 ORDER BY role_id
 ');
 $allianceRoles = array();
@@ -44,12 +44,12 @@ while ($db->nextRecord())
 		$PHP_OUTPUT.= '</form><br />';
 	}
 	$container['role_id'] = $roleID;
-	$container['alliance_id'] = $alliance_id;
+	$container['alliance_id'] = $alliance->getAllianceID();
 	$allianceRoles[$roleID]['HREF'] = SmrSession::get_new_href($container);
 }
 $template->assignByRef('AllianceRoles',$allianceRoles);
 $container = create_container('alliance_roles_processing.php');
-$container['alliance_id'] = $alliance_id;
+$container['alliance_id'] = $alliance->getAllianceID();
 
 $template->assign('CreateRole', array(
 	'HREF' => SmrSession::get_new_href($container),

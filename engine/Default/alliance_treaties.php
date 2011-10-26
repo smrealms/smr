@@ -46,20 +46,19 @@ $types = array	(
 										'Allow your ally to land on your planets.'
 										)
 				);
-if (isset($var['alliance_id'])) $alliance_id = $var['alliance_id'];
-else $alliance_id = $player->getAllianceID();
-$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id . ' LIMIT 1');
-$db->nextRecord();
-$leader_id = $db->getField('leader_id');
+if (!isset($var['alliance_id']))
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+
+$alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($alliance_id,$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 $db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND alliance_id != '.$player->getAllianceID().' ORDER BY alliance_name');
 while ($db->nextRecord()) $temp[$db->getField('alliance_id')] = stripslashes($db->getField('alliance_name'));
 $PHP_OUTPUT.=('<div align="center">');
 if (isset($var['message'])) $PHP_OUTPUT.=($var['message'] . '<br />');
 $PHP_OUTPUT.=('<br /><br />');
-$db->query('SELECT * FROM alliance_treaties WHERE alliance_id_2 = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND official = \'FALSE\'');
+$db->query('SELECT * FROM alliance_treaties WHERE alliance_id_2 = '.$alliance->getAllianceID().' AND game_id = '.$alliance->getGameID().' AND official = \'FALSE\'');
 while ($db->nextRecord()) {
 	$template->assign('PageTopic','Treaty Offers');
 	$PHP_OUTPUT.=('Treaty offer from <span class="yellow">');
@@ -78,7 +77,7 @@ while ($db->nextRecord()) {
 	if ($db->getField('planet_land')) $PHP_OUTPUT.=('<li>Planet Landing Rights</li>');
 	$PHP_OUTPUT.=('</ul>');
 	$container=create_container('alliance_treaties_processing.php','');
-	$container['alliance_id'] = $alliance_id;
+	$container['alliance_id'] = $alliance->getAllianceID();
 	$container['alliance_id_1'] = $db->getField('alliance_id_1');
 	$container['aa'] = $db->getField('aa_access');
 	$container['alliance_name'] = $temp[$db->getField('alliance_id_1')];
@@ -94,7 +93,7 @@ $PHP_OUTPUT.=('Select the alliance you wish to offer a treaty.<br /><small>Note:
 $container=array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'alliance_treaties_processing.php';
-$container['alliance_id'] = $alliance_id;
+$container['alliance_id'] = $alliance->getAllianceID();
 $form = create_form($container,'Send the Offer');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.=('<select name="proposedAlliance" id="InputFields">');

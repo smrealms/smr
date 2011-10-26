@@ -41,6 +41,7 @@ if (isset($var['accept'])) {
 	$container['alliance_id'] = $alliance_id_1;
 	forward($container);
 }
+$alliance1 =& SmrAlliance::getAlliance($alliance_id_1, $player->getGameID());
 if (isset($_REQUEST['proposedAlliance'])) {
 	
 	$alliance_id_2 = $_REQUEST['proposedAlliance'];
@@ -80,12 +81,9 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	if ($planetLand) $planetNAP = 1;
 	if ($mbWrite) $mbRead = 1;
 	//get confirmation
-	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
-	$db->nextRecord();
-	$leader_id = $db->getField('leader_id');
-	$template->assign('PageTopic',stripslashes($db->getField('alliance_name')) . ' (' . $db->getField('alliance_id') . ')');
+	$template->assign('PageTopic',$alliance1->getAllianceName() . ' (' . $alliance1->getAllianceID() . ')');
 	include(get_file_loc('menue.inc'));
-	create_alliance_menue($alliance_id_1,$db->getField('leader_id'));
+	create_alliance_menue($alliance1->getAllianceID(),$alliance1->getLeaderID());
 	$PHP_OUTPUT.=('<br /><br /');
 	$PHP_OUTPUT.=('<div align="center">Are you sure you want to offer a treaty to <span class="yellow">');
 	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
@@ -135,13 +133,10 @@ if (isset($_REQUEST['proposedAlliance'])) {
 				$var['traderDefend'] . ', ' . $var['traderNAP'] . ', ' . $var['raidAssist'] . ', ' . $var['planetLand'] . ', ' . $var['planetNAP'] . ', ' .
 				$var['forcesNAP'] . ', ' . $var['aaAccess'] . ', ' . $var['mbRead'] . ', ' . $var['mbWrite'] . ', ' . $var['modRead'] . ', \'FALSE\')');
 	//send a message to the leader letting them know the offer is waiting.
-	$db->query('SELECT alliance_name FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id_1 . ' LIMIT 1');
-	$db->nextRecord();
-	$alliance_name = stripslashes($db->getField('alliance_name'));
 	$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
 	$db->nextRecord();
 	$leader_2 = $db->getField('leader_id');
-	$message = 'An ambassador from <span class="yellow">' . $alliance_name . '</span> has arrived.';
+	$message = 'An ambassador from <span class="yellow">' . $alliance1->getAllianceName() . '</span> has arrived.';
 	
 	SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader_2, $message, MESSAGE_EXPIRES);
 	$container=create_container('skeleton.php', 'alliance_treaties.php');

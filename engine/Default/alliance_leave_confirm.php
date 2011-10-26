@@ -1,10 +1,9 @@
 <?php
 
-$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $player->getAllianceID() . ' LIMIT 1');
-$db->nextRecord();
-$template->assign('PageTopic',$player->getAllianceName() . ' (' . $player->getAllianceID() . ')');
+$alliance =& $player->getAlliance();
+$template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
 include(get_file_loc('menue.inc'));
-create_alliance_menue($player->getAllianceID(),$db->getField('leader_id'));
+create_alliance_menue($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $PHP_OUTPUT.= 'Do you really want to leave this alliance?<br /><br />';
 
