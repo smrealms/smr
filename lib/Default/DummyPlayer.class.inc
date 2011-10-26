@@ -84,7 +84,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		// forget plotted course
 //		$this->deletePlottedCourse();
 
-//		$sector->died_here($this);
+//		$sector->diedHere($this);
 		
 		// if we are in an alliance we increase their deaths
 //		if ($this->hasAlliance())
