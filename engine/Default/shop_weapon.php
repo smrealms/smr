@@ -1,13 +1,13 @@
 <?php
 $template->assign('PageTopic','Weapon Dealer');
 $db2 = new SmrMySqlDatabase();
-$db->query('SELECT * FROM location, location_sells_weapons, location_type, weapon_type ' .
-					'WHERE location.sector_id = '.$player->getSectorID().' AND ' .
-    					  'location.game_id = '.$player->getGameID().' AND ' .
-    					  'location.location_type_id = '.$var['LocationID'].' AND ' .
-    					  'location.location_type_id = location_sells_weapons.location_type_id AND ' .
-    					  'location_sells_weapons.location_type_id = location_type.location_type_id AND ' .
-    					  'location_sells_weapons.weapon_type_id = weapon_type.weapon_type_id');
+$db->query('SELECT * FROM location
+			JOIN location_type USING (location_type_id)
+			JOIN location_sells_weapons USING (location_type_id)
+			JOIN weapon_type USING (weapon_type_id)
+			WHERE sector_id = '.$player->getSectorID().'
+				AND game_id = '.$player->getGameID().'
+				AND location_type_id = '.$var['LocationID']);
 
 if ($db->getNumRows() > 0 ) {
 

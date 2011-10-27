@@ -184,10 +184,9 @@ function displayScouts(& $messageBox, & $player, $read, $group)
 	{
 		//here we group new messages
 		$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, msg_read
-						FROM message, player
-						WHERE player.account_id = message.sender_id
-						AND message.account_id = ' . $player->getAccountID() . '
-						AND message.game_id = ' . $player->getGameID() . '
+						FROM message
+						JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
+						WHERE message.account_id = ' . $player->getAccountID() . '
 						AND player.game_id = ' . $player->getGameID() . '
 						AND message_type_id = ' . MSG_SCOUT . '
 						AND reciever_delete = \'FALSE\'

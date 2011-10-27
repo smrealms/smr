@@ -70,13 +70,12 @@ if ($db->getNumRows() > 0)
 			$db2->query('SELECT
 						player.player_name as player_name,
 						alliance_thread.sender_id as sender_id
-						FROM alliance_thread,player
+						FROM player
+						JOIN alliance_thread ON alliance_thread.game_id = player.game_id AND player.account_id=alliance_thread.sender_id
 						WHERE player.game_id=' . $player->getGameID() . '
-						AND alliance_thread.game_id=' . $player->getGameID() . '
 						AND alliance_thread.alliance_id=' . $alliance->getAllianceID() . '
 						AND alliance_thread.thread_id=' . $db->getField('thread') . '
-						AND alliance_thread.reply_id=1
-						AND player.account_id=alliance_thread.sender_id LIMIT 1
+						AND alliance_thread.reply_id=1 LIMIT 1
 						');
 			if($db2->nextRecord())
 			{

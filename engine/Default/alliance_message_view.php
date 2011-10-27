@@ -48,8 +48,8 @@ $players[0] = 'Planet Reporter';
 $players[-1] = 'Bank Reporter';
 $players[-2] = 'Forces Reporter';
 $players[-3] = 'Game Admins';
-$db->query('SELECT account_id FROM player, alliance_thread ' .
-			'WHERE alliance_thread.game_id = '.$player->getGameID().' AND player.game_id = '.$player->getGameID().
+$db->query('SELECT account_id FROM player JOIN alliance_thread USING (game_id)' .
+			' WHERE game_id = '.$player->getGameID().
 			' AND alliance_thread.alliance_id = '.$alliance->getAllianceID().' AND alliance_thread.thread_id = ' . $thread_id);
 while ($db->nextRecord())
 {

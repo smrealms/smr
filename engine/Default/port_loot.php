@@ -19,13 +19,13 @@ $container = array();
 $container['url'] = 'port_loot_processing.php';
 
 $want = 'Buy';
-$db->query('SELECT * FROM port, port_has_goods, good WHERE port.game_id = port_has_goods.game_id AND ' .
-                                                         'port.sector_id = port_has_goods.sector_id AND ' .
-                                                         'port_has_goods.good_id = good.good_id AND ' .
-                                                         'port.sector_id = '.$player->getSectorID().' AND ' .
-                                                         'port_has_goods.transaction_type = ' . $db->escape_string($want, true) . ' AND ' .
-                                                         'port.game_id = '.$player->getGameID().' ' .
-                                                   'ORDER BY good.good_id');
+$db->query('SELECT * FROM port
+	JOIN port_has_goods USING (game_id, sector_id)
+	JOIN good USING (good_id)
+	WHERE sector_id = '.$player->getSectorID().'
+		AND transaction_type = ' . $db->escape_string($want, true) . '
+		AND game_id = '.$player->getGameID().'
+	ORDER BY good_id');
 
 
 while ($db->nextRecord())

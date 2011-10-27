@@ -163,7 +163,9 @@ if (!isset($game_name)) {
 	<td align=center>';
 	$rank = 0;
 	//now for the alliance stuff
-	$db2->query('SELECT sum(experience) as exp, alliance_name, player.alliance_id FROM player, alliance WHERE player.game_id = '.$game_id.' AND alliance.game_id = '.$game_id.' AND player.alliance_id = alliance.alliance_id GROUP BY player.alliance_id ORDER BY exp DESC LIMIT 10');
+	$db2->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
+				FROM player JOIN alliance USING (game_id, alliance_id)
+				WHERE game_id = '.$game_id.' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
 	if ($db2->getNumRows()) {
 
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Alliance</th><th align=center>Experience</th></tr>');
