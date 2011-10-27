@@ -7,10 +7,7 @@ if (!isset($var['race_id']))
 	SmrSession::updateVar('race_id',$player->getRaceID());
 $race_id = $var['race_id'];
 
-$db->query('SELECT * FROM race ' .
-		   'WHERE race_id = '.$race_id);
-if ($db->nextRecord())
-	$template->assign('PageTopic','Ruling Council Of ' . $db->getField('race_name'));
+$template->assign('PageTopic','Ruling Council Of ' . Globals::getRaceName($race_id));
 
 
 create_council_menu($race_id);
