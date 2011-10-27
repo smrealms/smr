@@ -6,23 +6,17 @@ $PHP_OUTPUT.= '<table class="standard fullwidth">';
 $PHP_OUTPUT.= '<tr><th>Time</th><th>Message</th></tr>';
 
 if (!isset($var['view_all'])) {
-	$db->query('SELECT
-				announcement.time as time,
-				account.login as login,
-				announcement.msg as msg
-				FROM announcement,account
-				WHERE announcement.admin_id=account.account_id
+	$db->query('SELECT time, login, msg
+				FROM announcement
+				JOIN account ON announcement.admin_id=account.account_id
 				AND time > ' . $account->getLastLogin() . '
 				ORDER BY time DESC'
 				);
 }
 else {
-	$db->query('SELECT
-				announcement.time as time,
-				account.login as login,
-				announcement.msg as msg
-				FROM announcement,account
-				WHERE announcement.admin_id=account.account_id
+	$db->query('SELECT time, login, msg
+				FROM announcement
+				JOIN account ON announcement.admin_id=account.account_id
 				ORDER BY time DESC'
 				);
 }

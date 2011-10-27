@@ -12,10 +12,10 @@ require_once(get_file_loc('menu.inc'));
 create_trader_menu();
 
 $db2 = new SmrMySqlDatabase();
-$db->query('SELECT * FROM player, planet WHERE player.account_id = planet.owner_id AND ' .
-											  'player.game_id = '.$player->getGameID().' AND ' .
-											  'planet.game_id = '.$player->getGameID().' AND ' .
-											  'player.account_id = '.$player->getAccountID());
+$db->query('SELECT * FROM player
+			JOIN planet ON player.account_id = planet.owner_id AND player.game_id = planet.game_id
+			WHERE player.game_id = '.$player->getGameID().'
+				AND player.account_id = '.$player->getAccountID());
 $template->assign('PageTopic','Your Planet');
 if ($db->getNumRows() > 0)
 {
@@ -94,13 +94,13 @@ if ($player->hasAlliance())
 
 	$db2 = new SmrMySqlDatabase();
 	if (!isset($planet_sec)) $planet_sec = 0;
-	$db->query('SELECT * FROM player, planet WHERE player.game_id = planet.game_id AND ' .
-												  'owner_id = account_id AND ' .
-												  'player.game_id = '.$player->getGameID().' AND ' .
-												  'planet.game_id = '.$player->getGameID().' AND ' .
-												  'planet.sector_id != '.$planet_sec.' AND ' .
-												  'alliance_id = '.$player->getAllianceID().' ' .
-											'ORDER BY planet.sector_id');
+	$db->query('SELECT * FROM player
+				JOIN planet ON player.account_id = planet.owner_id AND player.game_id = planet.game_id
+				WHERE player.game_id = '.$player->getGameID().'
+					AND player.account_id = '.$player->getAccountID().'
+					AND planet.sector_id != '.$planet_sec.'
+				AND alliance_id = '.$player->getAllianceID().'
+				ORDER BY planet.sector_id');
 	if ($db->getNumRows() > 0)
 	{
 		$PHP_OUTPUT.=('<br /><div align="center">');

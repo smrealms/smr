@@ -142,11 +142,10 @@ alliance_bank_transactions.transaction as transaction,
 alliance_bank_transactions.amount as amount,
 alliance_bank_transactions.exempt as exempt,
 alliance_bank_transactions.reason as reason
-FROM alliance_bank_transactions,player
-WHERE alliance_bank_transactions.game_id=' . $player->getGameID() . '
-AND player.game_id=' . $player->getGameID() . '
-AND alliance_bank_transactions.alliance_id=' . $alliance_id  . '
-AND player.account_id = alliance_bank_transactions.payee_id';
+FROM player
+JOIN alliance_bank_transactions ON alliance_bank_transactions.game_id = player.game_id AND player.account_id = alliance_bank_transactions.payee_id
+WHERE player.game_id=' . $player->getGameID() . '
+AND alliance_bank_transactions.alliance_id=' . $alliance_id;
 
 
 if($maxValue > 0 && $minValue > 0) {

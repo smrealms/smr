@@ -243,11 +243,10 @@ if (isset($account_num))
 	anon_bank_transactions.transaction_id as transaction_id,
 	anon_bank_transactions.transaction as transaction,
 	anon_bank_transactions.amount as amount
-	FROM anon_bank_transactions,player
-	WHERE anon_bank_transactions.game_id=' . $player->getGameID() . '
-	AND player.game_id=' . $player->getGameID() . '
-	AND anon_bank_transactions.anon_id=' . $db->escapeNumber($account_num) . '
-	AND player.account_id = anon_bank_transactions.account_id';
+	FROM player
+	JOIN anon_bank_transactions ON anon_bank_transactions.game_id = player.game_id AND player.account_id = anon_bank_transactions.account_id
+	WHERE player.game_id=' . $player->getGameID() . '
+	AND anon_bank_transactions.anon_id=' . $db->escapeNumber($account_num);
 
 
 	if($maxValue > 0 && $minValue > 0) {

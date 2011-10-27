@@ -2,13 +2,13 @@
 
 $template->assign('PageTopic','Hardware Shop');
 
-$db->query('SELECT * FROM location, location_sells_hardware, location_type, hardware_type ' .
-					'WHERE location.sector_id = '.$player->getSectorID().' AND ' .
-						  'location.game_id = '.$player->getGameID().' AND ' .
-						  'location.location_type_id = '.$var['LocationID'].' AND ' .
-						  'location.location_type_id = location_sells_hardware.location_type_id AND ' .
-						  'location_sells_hardware.location_type_id = location_type.location_type_id AND ' .
-						  'location_sells_hardware.hardware_type_id = hardware_type.hardware_type_id');
+$db->query('SELECT * FROM location
+			JOIN location_type USING (location_type_id)
+			JOIN location_sells_hardware USING (location_type_id)
+			JOIN hardware_type USING (hardware_type_id)
+			WHERE sector_id = '.$player->getSectorID().'
+				AND game_id = '.$player->getGameID().'
+				AND location_type_id = '.$var['LocationID']);
 
 if ($db->getNumRows() > 0 )
 {

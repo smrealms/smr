@@ -12,11 +12,11 @@ $template->assign('UserRankName',$account->getRankName());
 $games = array();
 $games['Play'] = array();
 $game_id_list ='';
-$db->query('SELECT end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
-		'WHERE game.game_id = player.game_id AND ' .
-			  'account_id = '.SmrSession::$account_id.' AND ' .
-			  'end_date >= \'' . TIME . '\' ' .
-		'ORDER BY start_date DESC');
+$db->query('SELECT end_date, game_id, game_name, game_speed, game_type
+			FROM game JOIN player USING (game_id)
+			WHERE account_id = '.SmrSession::$account_id.'
+				AND end_date >= ' . TIME . '
+			ORDER BY start_date DESC');
 if ($db->getNumRows() > 0)
 {
 	while ($db->nextRecord())
@@ -76,11 +76,11 @@ if(false&&USE_COMPATIBILITY)
 	{
 		require_once(get_file_loc($databaseClassName.'.class.inc'));
 		$db = new $databaseClassName();
-		$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, game_speed,game_type FROM game, player ' .
-				'WHERE game.game_id = player.game_id AND ' .
-					  'account_id = '.SmrSession::$old_account_id.' AND ' .
-					  'end_date >= \'' . TIME . '\' ' .
-			'ORDER BY start_date DESC');
+		$db->query('SELECT DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game.game_id as game_id, game_name, game_speed, game_type
+					FROM game JOIN player USING (game_id)
+					WHERE account_id = '.SmrSession::$old_account_id.'
+						AND end_date >= ' . TIME . '
+					ORDER BY start_date DESC');
 		if ($db->getNumRows() > 0)
 		{
 			require_once(get_file_loc('smr_player.inc',1,$databaseInfo['GameType']));
