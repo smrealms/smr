@@ -30,7 +30,7 @@ $PHP_OUTPUT.=('<table>');
 
 foreach ($RACES as $otherRaceID => $raceInfo)
 {
-	if($raceID != $otherRaceID && $raceRelations[$otherRaceID] >= 300)
+	if($raceID != RACE_NEUTRAL && $raceID != $otherRaceID && $raceRelations[$otherRaceID] >= 300)
 	{
 		$container = create_container('skeleton.php', 'council_send_message.php');
 		$container['race_id'] = $otherRaceID;
@@ -48,7 +48,7 @@ $PHP_OUTPUT.=('<td align="center" valign="top">');
 $PHP_OUTPUT.=('<table>');
 foreach ($RACES as $otherRaceID => $raceInfo)
 {
-	if($raceID != $otherRaceID && $raceRelations[$otherRaceID] <= -300)
+	if($raceID != RACE_NEUTRAL && $raceID != $otherRaceID && $raceRelations[$otherRaceID] <= -300)
 	{
 		$container = create_container('skeleton.php', 'council_send_message.php');
 		$container['race_id'] = $otherRaceID;

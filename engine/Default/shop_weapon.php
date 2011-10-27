@@ -37,10 +37,6 @@ if ($db->getNumRows() > 0 ) {
 		$cost = $db->getField('cost');
 		$buyer_restriction = $db->getField('buyer_restriction');
 
-        $db2->query('SELECT * FROM race WHERE race_id = '.$race_id);
-        $db2->nextRecord();
-        $weapon_race = $db2->getField('race_name');
-
 		$container = create_container('shop_weapon_processing.php');
 		transfer('LocationID');
         if ($race_id !=1) {
@@ -59,7 +55,7 @@ if ($db->getNumRows() > 0 ) {
 		$PHP_OUTPUT.=('<td align="center">'.$shield_damage.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$armour_damage.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$accuracy.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$weapon_race.'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.Globals::getRaceName($race_id).'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$power_level.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$cost.'</td>');
 		$PHP_OUTPUT.=('<td align="center">');
