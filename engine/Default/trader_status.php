@@ -120,7 +120,7 @@ if(!$db->nextRecord())
 	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
 	$db->nextRecord();
 }
-$PHP_OUTPUT.= $db->getField('level_name') . ': ' . number_format($db->getField('requirement')) . 'xp';
+$PHP_OUTPUT.= $db->getField('level_name') . ': ' . number_format($db->getInt('requirement')) . 'xp';
 
 $PHP_OUTPUT.= '<br /><br />';
 $container['body'] = 'rankings_view.php';
@@ -137,7 +137,7 @@ $form = create_form($container,'Delete Selected');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><th colspan="2">Notes</th></tr>';
 
-$db->query('SELECT * FROM player_has_notes WHERE game_id=' . $player->getGameID() . ' AND account_id=' . SmrSession::$account_id . ' ORDER BY note_id desc');
+$db->query('SELECT * FROM player_has_notes WHERE game_id=' . $player->getGameID() . ' AND account_id=' . SmrSession::$account_id . ' ORDER BY note_id DESC');
 if($db->getNumRows() > 0)
 {
 	while($db->nextRecord())
