@@ -13,9 +13,9 @@ if ($action == 'Take Ownership')
 		create_error('You are not allowed to take ownership!');
 
 	// delete all previous ownerships
-	$db->query('UPDATE planet SET owner_id = 0, password = NULL ' .
-							 'WHERE owner_id = '.$player->getAccountID().' AND ' .
-							 		'game_id = '.$player->getGameID());
+	$db->query('UPDATE planet SET owner_id = 0, password = NULL
+				WHERE owner_id = '.$player->getAccountID().'
+				AND game_id = '.$player->getGameID());
 
 	// set ownership
 	$planet->setOwnerID($player->getAccountID());
