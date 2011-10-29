@@ -1867,17 +1867,18 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		// send to all online player
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT active_session.account_id FROM active_session, player
-				WHERE active_session.last_accessed >= ' . (TIME - SmrSession::TIME_BEFORE_EXPIRY) . ' AND
-					  active_session.game_id = '.$this->getGameID() . ' AND
-					  active_session.account_id = player.account_id AND
-					  active_session.game_id = player.game_id AND
-					  player.ignore_globals = \'FALSE\'');
+		$db->query('SELECT account_id
+					FROM active_session
+					JOIN player USING (game_id, account_id)
+					WHERE active_session.last_accessed >= ' . (TIME - SmrSession::TIME_BEFORE_EXPIRY) . '
+						AND game_id = ' . $this->getGameID() . '
+						AND player.ignore_globals = \'FALSE\'
+						AND account_id != ' . $this->getAccountID());
 	//	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
 	
 		while ($db->nextRecord())
 		{
-			$this->sendMessage($db->getField('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
+			$this->sendMessage($db->getInt('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
 		}
 	}
 	

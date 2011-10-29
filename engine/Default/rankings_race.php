@@ -22,7 +22,7 @@ $db->query('SELECT race_id, race_name, SUM(experience) as experience_sum, COUNT(
 while ($db->nextRecord())
 {
 	$rank++;
-	$race_id = $db->getField('race_id');
+	$race_id = $db->getInt('race_id');
 	$db2->query('SELECT * FROM player WHERE race_id = '.$race_id.' AND game_id = '.$player->getGameID().' AND out_of_game = \'TRUE\'');
 	if ($player->getRaceID() == $race_id) $style = ' class="bold"';
 	elseif ($db2->nextRecord()) $style = ' class="red"';
@@ -32,9 +32,9 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>'.$rank.'</td>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('race_name') . '</td>');
-	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('experience_sum') . '</td>');
-	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . round($db->getField('experience_sum') / $db->getField('members')) . '</td>');
-	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('members') . '</td>');
+	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getInt('experience_sum') . '</td>');
+	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . round($db->getInt('experience_sum') / $db->getInt('members')) . '</td>');
+	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getInt('members') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 }
 
