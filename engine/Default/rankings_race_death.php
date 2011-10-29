@@ -20,7 +20,7 @@ $db->query('SELECT race_id, race_name, sum(deaths) as death_sum, count(*) FROM p
 while ($db->nextRecord())
 {
 	$rank++;
-	$race_id = $db->getField('race_id');
+	$race_id = $db->getInt('race_id');
 	$db2->query('SELECT * FROM player WHERE race_id = '.$race_id.' AND game_id = '.$player->getGameID().' AND out_of_game = \'TRUE\'');
 	if ($player->getRaceID() == $race_id) $style = ' class="bold"';
 	elseif ($db2->nextRecord()) $style = ' class="red"';
@@ -29,7 +29,7 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>'.$rank.'</td>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('race_name') . '</td>');
-	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('death_sum') . '</td>');
+	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getgetIntField('death_sum') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 }
 
