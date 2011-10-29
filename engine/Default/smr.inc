@@ -23,7 +23,7 @@ function parseBoolean($check)
 
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent)
 {
-	global $overrideGameID, $disableBBLinks;
+	global $overrideGameID, $disableBBLinks, $player;
 	try
 	{
 		switch($tagName)
@@ -48,32 +48,43 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				$allianceID = $default;
 				if(!is_numeric($allianceID))
 					$allianceID = $tagParams['id'];
-				$db->query('SELECT alliance_id, alliance_name, leader_id
-					FROM alliance
-					WHERE alliance_id = '.$db->escapeNumber($allianceID).'
-					AND game_id = ' . $db->escapeNumber($overrideGameID) . '
-					LIMIT 1'
-				);
-				if($db->nextRecord())
+				$alliance =& SmrAlliance::getAlliance($allianceID, $overrideGameID);
+				if ($action == BBCODE_CHECK)
 				{
-					if ($action == BBCODE_CHECK)
+					return true;
+				}
+
+				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
+				{
+					$container = create_container('skeleton.php');
+					$container['alliance_id'] = $alliance->getAllianceID();
+					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID())
+						$container['body'] = 'alliance_mod.php';
+					else
+						$container['body'] = 'alliance_roster.php';
+					return create_link($container, $alliance->getAllianceName());
+				}
+				return $alliance->getAllianceName();
+			break;
+			case 'race':
+				$raceNameID = $default;
+				$RACES =& Globals::getRaces();
+				foreach($RACES as $raceID => $raceInfo)
+				{
+					if((is_numeric($raceNameID) && $raceNameID == $raceID)
+						|| $raceNameID == $raceInfo['Race Name'])
 					{
-						return true;
+						if ($action == BBCODE_CHECK)
+						{
+							return true;
+						}
+
+						if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
+						{
+							$container = create_container('skeleton.php','council_list.php', array('race_id' => $raceID));
+							return create_link($container,  AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID,$player));
+						}
 					}
-					
-					if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
-					{
-						global $player;
-						
-						$container = create_container('skeleton.php');
-						$container['alliance_id'] = $db->getInt('alliance_id');
-						if (is_object($player) && $container['alliance_id'] == $player->getAllianceID())
-							$container['body'] = 'alliance_mod.php';
-						else
-							$container['body'] = 'alliance_roster.php';
-						return create_link($container, $db->getField('alliance_name'));
-					}
-					return $db->getField('alliance_name');
 				}
 			break;
 		}
