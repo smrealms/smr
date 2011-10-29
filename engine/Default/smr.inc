@@ -127,6 +127,7 @@ function &bbifyMessage($message,$noLinks=false)
 			);
 		$bbParser->AddRule('player',$smrRule);
 		$bbParser->AddRule('alliance',$smrRule);
+		$bbParser->AddRule('race',$smrRule);
 	}
 	global $disableBBLinks;
 	if($noLinks===true)
