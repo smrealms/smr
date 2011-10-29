@@ -198,7 +198,7 @@ function checkPacts($race_id_1)
 								  'race_id_1 = '.$race_id_2.' AND race_id_2 = '.$race_id_1.')');
 	
 				// get news message
-				$news = 'The '.Globals::getRaceName($race_id_1).' have declared <span class="red">WAR</span> on the '.Globals::getRaceName($race_id_2);
+				$news = 'The [race='.$race_id_1.'] have declared <span class="red">WAR</span> on the [race='.$race_id_2.']';
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
 							'('.$player->getGameID().', '.TIME.', ' . $db->escape_string($news, false) . ')');
 			}
@@ -230,7 +230,7 @@ function checkPacts($race_id_1)
 									  'race_id_1 = '.$race_id_2.' AND race_id_2 = '.$race_id_1.')');
 	
 					//get news message
-					$news = 'The '.Globals::getRaceName($race_id_1).' have signed a <span class="dgreen">PEACE</span> treaty with the '.Globals::getRaceName($race_id_2);
+					$news = 'The [race='.$race_id_1.'] have signed a <span class="dgreen">PEACE</span> treaty with the [race='.$race_id_2.']';
 					$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
 								'('.$player->getGameID().', '.TIME.', ' . $db->escape_string($news, false) . ')');
 				}
