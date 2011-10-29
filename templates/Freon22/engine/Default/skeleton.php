@@ -48,7 +48,7 @@
 										</td>
 										<td>
 											<div class="topcenterOne noWrap">
-												Race: <?php echo $ThisPlayer->getRaceName(); ?><br />
+												Race: <a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a><br />
 												
 												Turns : <span id="turns">
 													<span class="<?php

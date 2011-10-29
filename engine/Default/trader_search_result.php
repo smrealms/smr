@@ -73,11 +73,8 @@ if ($db->getNumRows() > 0)
 		else
 			$PHP_OUTPUT.=('(none)');
 		$PHP_OUTPUT.=('</td>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'council_list.php';
+		$container = create_container('skeleton.php', 'council_list.php');
 		$container['race_id'] = $curr_player->getRaceID();
-		$container['race_name'] = $curr_player->getRaceName();
 		$PHP_OUTPUT.=('<td align="center" valign="middle">');
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
@@ -177,11 +174,8 @@ if (empty($player_id))
 			else
 				$PHP_OUTPUT.=('(none)');
 			$PHP_OUTPUT.=('</td>');
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'council_send_message.php';
+			$container = create_container('skeleton.php', 'council_send_message.php');
 			$container['race_id'] = $curr_player->getRaceID();
-			$container['race_name'] = $curr_player->getRaceName();
 			$PHP_OUTPUT.=('<td align="center" valign="middle">');
 			$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 			$PHP_OUTPUT.=('</td>');

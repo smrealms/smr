@@ -61,7 +61,9 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 
     $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getRaceName().'</td>');
+	$container = create_container('skeleton.php', 'council_list.php');
+	$container['race_id'] = $curr_player->getRaceID();
+	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
 
     $PHP_OUTPUT.=('<td valign="top">');
     if ($curr_player->hasAlliance())
@@ -154,7 +156,9 @@ while ($db->nextRecord())
     $PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 
     $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getRaceName().'</td>');
+	$container = create_container('skeleton.php', 'council_list.php');
+	$container['race_id'] = $curr_player->getRaceID();
+	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
 
     $PHP_OUTPUT.=('<td valign="top">');
     if ($curr_player->hasAlliance())
