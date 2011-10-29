@@ -43,7 +43,7 @@ if (!Globals::isValidGame($gameID))
 	create_error('Game not found!');
 
 // does it cost something to join that game?
-$credits	= Globals::getGameCreditsRequired($gameID);
+$credits = Globals::getGameCreditsRequired($gameID);
 if ($credits > 0)
 {
 	if($account->getTotalSmrCredits()<$credits)
@@ -124,7 +124,7 @@ $db->lockTable('player');
 // get last registered player id in that game and increase by one.
 $db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $gameID . ' ORDER BY player_id DESC LIMIT 1');
 if ($db->nextRecord())
-	$player_id = $db->getField('MAX(player_id)') + 1;
+	$player_id = $db->getInt('MAX(player_id)') + 1;
 else
 	$player_id = 1;
 
@@ -154,17 +154,16 @@ $db->query('SELECT MIN(sector_id), MAX(sector_id)
 if (!$db->nextRecord())
 	create_error('This game doesn\'t have any sectors');
 
-$min_sector = $db->getField('MIN(sector_id)');
-$max_sector = $db->getField('MAX(sector_id)');
+$min_sector = $db->getInt('MIN(sector_id)');
+$max_sector = $db->getInt('MAX(sector_id)');
 
-for ($i = $min_sector; $i <= $max_sector; $i++) {
-
+for ($i = $min_sector; $i <= $max_sector; $i++)
+{
     //if this is our home sector we dont add it.
     if ($i == $home_sector_id)
         continue;
 
     $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ', '.$i.')');
-
 }
 $db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ')');
 
@@ -175,8 +174,7 @@ $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE a
 
 // is this our first game?
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->getAccountID());
-$db->nextRecord();
-if ($db->getField('games_joined') == 1)
+if ($db->nextRecord() && $db->getInt('games_joined') == 1)
 {
 	//we are a newb set our alliance to be Newbie Help Allaince
 	$db->query('UPDATE player SET alliance_id = '.NHA_ID.' WHERE account_id = '.$account->getAccountID().' AND game_id = '.$gameID);
@@ -189,6 +187,16 @@ if ($db->getField('games_joined') == 1)
 	To get underway, click the alliance link on the left where you can get more information on 	how to get started on the alliance message board which will get you into your alliance chat 	on IRC so you can get started and have your questions answered.<br /><br />Depending on the size and resolution of your monitor the default font size may be too large or small. This can be changed using the preferences link on the left panel.';
 
 	SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
+}
+
+if($race_id != RACE_ALSKANT) // Give Alskants 250 personal relations to start.
+{
+	$player =& SmrPlayer::getPlanetPlayers($gameID, $account->getAccountID());
+	$RACES =& Globals::getRaces();
+	foreach($RACES as $raceID => $raceInfo)
+	{
+		$player->setRelation(250, $raceID);
+	}
 }
 forward(create_container('skeleton.php', 'game_play.php'));
 

@@ -855,7 +855,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->db->query('SELECT race_id,relation FROM player_has_relation WHERE '.$this->SQL.' LIMIT '.sizeof($RACES));
 			while ($this->db->nextRecord())
 			{
-				$this->pureRelations[$this->db->getField('race_id')] = $this->db->getField('relation');
+				$this->pureRelations[$this->db->getInt('race_id')] = $this->db->getInt('relation');
 			}
 		}
 	}
