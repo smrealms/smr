@@ -23,7 +23,7 @@ function parseBoolean($check)
 
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent)
 {
-	global $overrideGameID, $disableBBLinks, $player;
+	global $overrideGameID, $disableBBLinks, $player, $account;
 	try
 	{
 		switch($tagName)
@@ -87,6 +87,19 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					}
 				}
 			break;
+			case 'servertimetouser':
+				$timeString = $default;
+				if ($action == BBCODE_CHECK)
+				{
+					return true;
+				}
+				if ($timeString != '' && ($time = strtotime($timeString)) !== false)
+				{
+					if(is_object($account))
+						$time += $account->getOffset() * 3600;
+					return date(DATE_FULL_SHORT, $time);
+				}
+			break;
 		}
 	}
 	catch (Exception $e)
@@ -128,6 +141,7 @@ function &bbifyMessage($message,$noLinks=false)
 		$bbParser->AddRule('player',$smrRule);
 		$bbParser->AddRule('alliance',$smrRule);
 		$bbParser->AddRule('race',$smrRule);
+		$bbParser->AddRule('servertimetouser',$smrRule);
 	}
 	global $disableBBLinks;
 	if($noLinks===true)
