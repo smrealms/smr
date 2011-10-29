@@ -165,20 +165,7 @@ if (!empty($var['traded_xp']) ||
 
 if($sector->hasPort())
 {
-	// We need the races later for the players, so pull them out here
-	$RACES = Globals::getRaces();
-	
-	// Cache good names for later
-	$GOODS = Globals::getGoods();
-	
 	$port =& $sector->getPort();
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'trader_relations.php';
-	$template->assign('TraderRelationsLink', SmrSession::get_new_href($container));
-	
-	$template->assign('PortRaceName',$player->getColouredRaceName($port->getRaceID()));
-	
 	$template->assign('PortIsAtWar',$player->getRelation($port->getRaceID()) < -300);
 }
 
