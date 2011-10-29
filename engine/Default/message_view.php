@@ -246,16 +246,6 @@ function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $m
 
 	$message = array ();
 
-	$replace = explode('!', $message_text);
-	foreach ($replace as $key => $timea)
-	{
-		if ($timea != '' && ($final = strtotime($timea)) !== false) //WARNING: Expects PHP 5.1.0 or later
-		{
-			$final += $account->getOffset() * 3600;
-			$message_text = str_replace('!' . $timea . '!', date(DATE_FULL_SHORT, $final), $message_text);
-		}
-	}
-
 	$sender = false;
 	$senderName =& getMessagePlayer($sender_id,$player->getGameID(),$type);
 	if ($senderName instanceof SmrPlayer)
