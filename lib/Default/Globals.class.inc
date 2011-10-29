@@ -606,9 +606,12 @@ class Globals
 		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_planet.php'));
 	}
 	
-	public static function getCouncilHREF()
+	public static function getCouncilHREF($raceID=false)
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php', 'council_list.php'));
+		$container = create_container('skeleton.php', 'council_list.php');
+		if($raceID!==false)
+			$container['race_id'] = $raceID;
+		return SmrSession::get_new_href($container);
 	}
 	
 	public static function getTraderRelationsHREF()

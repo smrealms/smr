@@ -9,7 +9,7 @@
 	foreach($VoteRelations as $RaceID => $VoteInfo)
 	{ ?>
 		<tr>
-			<td align="center"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></td>
+			<td align="center"><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
 			<td align="center">
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
 					<input type="submit" name="action" value="Increase" id="InputFields"<?php if($VoteInfo['Increased']){ ?> style="background-color:green"<?php } ?> />
@@ -39,7 +39,7 @@ if ($VoteTreaties)
 	foreach($VoteTreaties as $RaceID => $VoteInfo)
 	{ ?>
 		<tr>
-			<td align="center"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></td>
+			<td align="center"><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
 			<td align="center"><?php echo $VoteInfo['Type']; ?></td>
 			<td class="noWrap" align="center">
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">

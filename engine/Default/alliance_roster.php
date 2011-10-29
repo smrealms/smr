@@ -164,11 +164,8 @@ foreach($alliancePlayers as &$alliancePlayer)
 	$PHP_OUTPUT.= '</td><td class="center shrink">';
 
 	// race name (colored)
-	$container=array();
-	$container['url']= 'skeleton.php';
-	$container['body'] = 'council_list.php';
-	$container['race_id']	= $alliancePlayer->getRaceID();
-	$container['race_name']	= $alliancePlayer->getRaceName();
+	$container=create_container('skeleton.php', 'council_list.php');
+	$container['race_id'] = $alliancePlayer->getRaceID();
 
 	$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($alliancePlayer->getRaceID()));
 
