@@ -50,7 +50,7 @@ if(isset($GameID))
 		<span class="smallFont smallCaps red">INVISIBLE</span><br /><?php
 	} ?>
 	<br />
-	Race : <a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a><br />
+	Race : <a href="<?php echo Globals::getCouncilHREF($ThisPlayer->getRaceID()); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a><br />
 	Turns : <span id="turns">
 		<span class="<?php
 			switch($ThisPlayer->getTurnsLevel())
