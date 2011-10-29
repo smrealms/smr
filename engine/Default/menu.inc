@@ -116,11 +116,11 @@ function create_message_menu()
 	global $player, $template;
 	$menuItems = array();
 	$menuItems[] = array('Link'=>Globals::getViewMessagesHREF(),'Text'=>'View Messages');
+	$menuItems[] = array('Link'=>Globals::getSendGlobalMessageHREF(),'Text'=>'Send Global Message');
 	if ($player->isOnCouncil())
 	{
 		$menuItems[] = array('Link'=>Globals::getSendCouncilMessageHREF($player->getRaceID()),'Text'=>'Send Council Message');
 	}
-	$menuItems[] = array('Link'=>Globals::getSendGlobalMessageHREF(),'Text'=>'Send Global Message');
 	$menuItems[] = array('Link'=>Globals::getManageBlacklistHREF(),'Text'=>'Manage Blacklist');
 
 	$template->assign('MenuItems',$menuItems);
