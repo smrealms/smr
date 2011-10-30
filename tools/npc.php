@@ -41,6 +41,7 @@ try
 		define('NPC_GAME_ID',42);
 	}
 	define('NPC_LOW_TURNS',75);
+	define('NPC_LOW_NEWBIE_TURNS',10);
 	define('MINUMUM_RESERVE_CREDITS',100000);
 	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
 	define('MIN_SLEEP_TIME',800000);
@@ -287,7 +288,7 @@ function NPCStuff()
 				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player,$player->getPlottedCourse()->getNextOnPath()));
 			}
-			else if($player->getTurns()<NPC_LOW_TURNS || $underAttack)
+			else if($player->getTurns()<NPC_LOW_TURNS || $player->getNewbieTurns()<NPC_LOW_NEWBIE_TURNS || $underAttack)
 			{ //We're low on turns or have been under attack and need to plot course to fed
 				if($player->getTurns()<NPC_LOW_TURNS)
 					debug('Low Turns:'.$player->getTurns());
