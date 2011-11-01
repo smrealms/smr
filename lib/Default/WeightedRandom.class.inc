@@ -105,7 +105,7 @@ class WeightedRandom
 		{
 			$percent = -1 + $percent;
 		}
-		$this->weighting -= WEIGHTING_CHANGE*$percent;
+		$this->weighting -= self::WEIGHTING_CHANGE*$percent;
 		$this->hasChanged = true;
 	}
 	
