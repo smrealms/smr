@@ -113,6 +113,8 @@ try
 		}
 	}
 	
+	if($account->getCssLink()!=null)
+		$template->assign('ExtraCSSLink',$account->getCssLink());
 	$template->assign('CSSLink',URL.'/css/'.$account->getTemplate().'.css');
 	$template->assign('CSSColourLink',URL.'/css/'.$account->getTemplate().'/'.$account->getColourScheme().'.css');
 	$template->assignByRef('ThisGalaxy',$galaxy);
