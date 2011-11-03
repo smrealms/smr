@@ -37,8 +37,17 @@ if (!is_numeric($target))
 if ($player->getSectorID() == $target)
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
-if ($sector->hasEnemyForces($player))
-	create_error('You cant jump when there are unfriendly forces in the sector!');
+if ($sector->hasForces())
+{
+	$sectorForces =& $sector->getForces();
+	foreach($sectorForces as &$forces)
+	{
+		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
+		{
+			create_error('You cant jump when there are unfriendly forces in the sector!');
+		}
+	} unset($forces);
+}
 
 if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
 	create_error('The target sector doesn\'t exist!');
