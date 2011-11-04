@@ -171,6 +171,7 @@ define('TURNS_PER_WARP', 5);
 define('TURNS_PER_TRADE', 1);
 define('TURNS_PER_JUMP_DISTANCE', .6);
 define('MISJUMP_LEVEL_FACTOR', .02);
+define('MISJUMP_DISTANCE_DIFF_FACTOR', 1.25);
 define('TURNS_JUMP_MINIMUM', 10);
 
 define('TURNS_TO_CLOAK',1);

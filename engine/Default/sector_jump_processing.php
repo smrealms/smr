@@ -72,7 +72,7 @@ $turnsToJump = max(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE
 if ($player->getTurns() < $turnsToJump)
 	create_error('You don\'t have enough turns for that jump!');
 
-$maxMisjump = max(0,round(($distance - $turnsToJump) * 1.5 / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
+$maxMisjump = max(0,round(($distance - $turnsToJump) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
 $misjump = mt_rand(0,$maxMisjump);
 if ($misjump > 0)
 { // we missed the sector
