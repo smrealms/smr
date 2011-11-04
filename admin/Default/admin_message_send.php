@@ -16,6 +16,7 @@ else
 	$container['GameID']	= $gameID;
 	$template->assign('AdminMessageSendFormHref',SmrSession::get_new_href($container));
 	$template->assign('MessageGameID',$gameID);
+	$template->assign('ExpireTime', 1);
 
 	if ($gameID != 20000)
 	{
@@ -25,7 +26,9 @@ else
 			$gamePlayers[]= array('AccountID' => $db->getField('account_id'), 'PlayerID' => $db->getField('player_id'), 'Name' => $db->getField('player_name'));
 		$template->assignByRef('GamePlayers',$gamePlayers);
 	}
-	if(isset($var['preview']))
+	if(isset($var['preview'])) {
 		$template->assign('Preview', $var['preview']);
+		$template->assign('ExpireTime', $var['expire']);
+	}
 }
 ?>
