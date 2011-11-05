@@ -11,7 +11,7 @@ create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 $db->query('
 SELECT planet.sector_id
 FROM player
-JOIN planet ON player.game_id = planet.game_id
+JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
 WHERE player.game_id=' . $alliance->getGameID() . '
 AND player.alliance_id=' . $alliance->getAllianceID() . '
 ORDER BY planet.sector_id
