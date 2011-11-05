@@ -18,11 +18,10 @@ ORDER BY planet.sector_id
 ');
 
 $alliancePlanets = array();
-
 while ($db->nextRecord())
 {
 	$sectorID = $db->getInt('sector_id');
-	$alliancePlanets[$sectorID] =& SmrPlanet::getPlanet($player->getAllianceID(),$sectorID);
+	$alliancePlanets[$sectorID] =& SmrPlanet::getPlanet($player->getGameID(),$sectorID);
 	$alliancePlanets[$sectorID]->getCurrentlyBuilding(); //In case anything gets updated here we want to do it before template.
 }
 $template->assignByRef('AlliancePlanets',$alliancePlanets);
