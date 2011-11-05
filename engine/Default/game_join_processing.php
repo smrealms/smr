@@ -189,9 +189,9 @@ if ($db->nextRecord() && $db->getInt('games_joined') == 1)
 	SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
 }
 
-if($race_id != RACE_ALSKANT) // Give Alskants 250 personal relations to start.
+if($race_id == RACE_ALSKANT) // Give Alskants 250 personal relations to start.
 {
-	$player =& SmrPlayer::getPlanetPlayers($gameID, $account->getAccountID());
+	$player =& SmrPlayer::getPlayer($gameID, $account->getAccountID());
 	$RACES =& Globals::getRaces();
 	foreach($RACES as $raceID => $raceInfo)
 	{
