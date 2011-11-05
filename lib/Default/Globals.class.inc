@@ -478,9 +478,12 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getPlotCourseHREF()
+	public static function getPlotCourseHREF($fromSector = false, $toSector = false)
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php','course_plot.php'));
+		if($fromSector === false && $toSector === false)
+			return SmrSession::get_new_href(create_container('skeleton.php','course_plot.php'));
+		else
+			return SmrSession::get_new_href(create_container('course_plot_processing.php','',array('from'=>$fromSector,'to'=>$toSector)));
 	}
 	
 	public static function getPlanetMainHREF()
