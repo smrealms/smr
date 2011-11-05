@@ -2,7 +2,7 @@
 	<?php
 	if (count($AlliancePlanets) > 0)
 	{ ?>
-		Your alliance currently has <?php echo $AlliancePlanets; ?> planets in the universe!<br /><br /><?php
+		Your alliance currently has <?php echo count($AlliancePlanets); ?> planets in the universe!<br /><br /><?php
 		$this->includeTemplate('includes/PlanetList.inc',array('Planets'=>&$AlliancePlanets));
 	}
 	else
