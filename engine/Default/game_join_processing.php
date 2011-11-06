@@ -195,7 +195,7 @@ if($race_id == RACE_ALSKANT) // Give Alskants 250 personal relations to start.
 	$RACES =& Globals::getRaces();
 	foreach($RACES as $raceID => $raceInfo)
 	{
-		$player->setRelation(250, $raceID);
+		$player->setRelations(250, $raceID);
 	}
 }
 forward(create_container('skeleton.php', 'game_play.php'));
