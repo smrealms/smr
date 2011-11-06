@@ -1025,8 +1025,7 @@ class SmrSector
 	
 	protected function getHREF($targetPage)
 	{
-		$container = array();
-		$container['url'] = 'sector_move_processing.php';
+		$container = create_container('sector_move_processing.php');
 		$container['target_page'] = $targetPage;
 		$container['target_sector'] = $this->getSectorID();
 		return SmrSession::get_new_href($container);
@@ -1049,9 +1048,7 @@ class SmrSector
 	
 	public function getScanSectorHREF()
 	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'sector_scan.php';
+		$container = create_container('skeleton.php','sector_scan.php');
 		$container['target_sector'] = $this->getSectorID();
 		return SmrSession::get_new_href($container);
 	}

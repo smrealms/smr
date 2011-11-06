@@ -35,13 +35,10 @@ while($db->nextRecord())
 	$unvisited[$db->getField('sector_id')] = TRUE;
 }
 
-$container1 = array();
-$container1['url'] = 'sector_move_processing.php';
+$container1 = create_container('sector_move_processing.php');
 $container1['target_page'] = 'current_sector.php';
 
-$container2 = array();
-$container2['url'] = 'skeleton.php';
-$container2['body'] = 'sector_scan.php';
+$container2 = create_container('skeleton.php','sector_scan.php');
 
 foreach($links as $key => $linkArray)
 {
