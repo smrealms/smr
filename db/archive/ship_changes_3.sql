@@ -8,15 +8,15 @@ UPDATE smr_new.ship_type_support_hardware SET max_amount = 10 WHERE ship_type_id
 UPDATE smr_new.ship_type SET hardpoint = 5 WHERE ship_type_id = 36; -- Goliath to 5 hardpoints
 
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 215 WHERE ship_type_id = 73 AND hardware_type_id IN (1,2); -- Retribution to 215 shields/armour
-UPDATE smr_new.ship_type SET cost = 3235800, hardpoint = 5 WHERE ship_type_id = 73; -- Retribution to 3,235,800 credits and 5 hardpoints
+UPDATE smr_new.ship_type SET cost = 3235800, hardpoint = 5, speed = 10 WHERE ship_type_id = 73; -- Retribution to 3,235,800 credits, 5 hardpoints and 10 speed
 
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 415 WHERE ship_type_id = 53 AND hardware_type_id = 1; -- Predator to 415 shields
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 375 WHERE ship_type_id = 53 AND hardware_type_id = 2; -- Predator to 375 armour
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 15 WHERE ship_type_id = 53 AND hardware_type_id = 5; -- Predator to 15 scouts
-UPDATE smr_new.ship_type SET hardpoint = 5 WHERE ship_type_id = 53; -- Predator to 5 hardpoints
+UPDATE smr_new.ship_type SET hardpoint = 5, speed = 10 WHERE ship_type_id = 53; -- Predator to 5 hardpoints and 10 speed
 
 UPDATE smr_new.ship_type_support_hardware SET max_amount = 250 WHERE ship_type_id = 59 AND hardware_type_id IN (1,2); -- Bounty Hunter to 250 shields/armour
-UPDATE smr_new.ship_type SET cost = 2568634, hardpoint = 5 WHERE ship_type_id = 59; -- Bounty Hunter to 2,568,634 credits and 5 hardpoints
+UPDATE smr_new.ship_type SET cost = 2568634, hardpoint = 5, speed = 13 WHERE ship_type_id = 59; -- Bounty Hunter to 2,568,634 credits, 5 hardpoints and 13 speed
 
 UPDATE smr_new.ship_type SET cost = 6574860, hardpoint = 5 WHERE ship_type_id = 65; -- Rogue to 6,574,860 credits and 5 hardpoints
 
