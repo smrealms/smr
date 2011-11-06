@@ -191,7 +191,7 @@ if ($db->nextRecord() && $db->getInt('games_joined') == 1)
 
 if($race_id == RACE_ALSKANT) // Give Alskants 250 personal relations to start.
 {
-	$player =& SmrPlayer::getPlayer($gameID, $account->getAccountID());
+	$player =& SmrPlayer::getPlayer($account->getAccountID(), $gameID);
 	$RACES =& Globals::getRaces();
 	foreach($RACES as $raceID => $raceInfo)
 	{
