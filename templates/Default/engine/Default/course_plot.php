@@ -39,7 +39,7 @@ if(isset($XType))
 					} unset($Hardware);
 				break;
 				case 'Ships':
-					$Ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType($player->getGameID()));
+					$Ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType($ThisPlayer->getGameID()));
 					Sorter::sortByNumElement($Ships, 'Name');
 					foreach($Ships as &$Ship)
 					{
@@ -47,7 +47,7 @@ if(isset($XType))
 					} unset($Ship);
 				break;
 				case 'Weapons':
-					$Weapons =& SmrWeapon::getAllWeapons(Globals::getGameType($player->getGameID()));
+					$Weapons =& SmrWeapon::getAllWeapons(Globals::getGameType($ThisPlayer->getGameID()));
 					Sorter::sortByNumMethod($Weapons, 'getName');
 					foreach($Weapons as &$Weapon)
 					{
