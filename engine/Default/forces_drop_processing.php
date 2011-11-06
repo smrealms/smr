@@ -38,7 +38,6 @@ if ($sector->hasLocation())
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
-include(get_file_loc('mine_change.php'));
 // check max on that stack
 if ($forces->getMines() + $change_mines > 50)
 {
