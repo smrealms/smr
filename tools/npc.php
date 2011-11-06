@@ -215,7 +215,7 @@ function NPCStuff()
 			
 			debug('Getting player for account id: '.SmrSession::$account_id);
 			//We have to reload player on each loop
-			$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
+			$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id, true);
 			$player->updateTurns();
 			
 			if($actions==0)
