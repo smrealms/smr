@@ -78,27 +78,27 @@ if ($db->getNumRows() > 0)
 	else
 		$container['seq'] = 'ASC';
 
-	setCategories(&$container,'player_name',$category,$categorySQL,$subcategory);
+	setCategories($container,'player_name',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.= '<th>';
 	$PHP_OUTPUT.=create_header_link($container, 'Player Name');
 	$PHP_OUTPUT.= '</th>';
-	setCategories(&$container,'sector_has_forces.sector_id',$category,$categorySQL,$subcategory);
+	setCategories($container,'sector_has_forces.sector_id',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.= '<th>';
 	$PHP_OUTPUT.=create_header_link($container, 'Sector ID');
 	$PHP_OUTPUT.= '</th>';
-	setCategories(&$container,'combat_drones',$category,$categorySQL,$subcategory);
+	setCategories($container,'combat_drones',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.= '<th>';
 	$PHP_OUTPUT.=create_header_link($container, 'Combat Drones');
 	$PHP_OUTPUT.= '</th>';
-	setCategories(&$container,'scout_drones',$category,$categorySQL,$subcategory);
+	setCategories($container,'scout_drones',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.= '<th>';
 	$PHP_OUTPUT.=create_header_link($container, 'Scout Drones');
 	$PHP_OUTPUT.= '</th>';
-	setCategories(&$container,'mines',$category,$categorySQL,$subcategory);
+	setCategories($container,'mines',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.= '<th>';
 	$PHP_OUTPUT.=create_header_link($container, 'Mines');
 	$PHP_OUTPUT.= '</th>';
-	setCategories(&$container,'expire_time',$category,$categorySQL,$subcategory);
+	setCategories($container,'expire_time',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.= '<th>';
 	$PHP_OUTPUT.=create_header_link($container, 'Expire time');
 	$PHP_OUTPUT.= '</th>';
