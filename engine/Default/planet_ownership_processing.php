@@ -3,7 +3,6 @@ if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 // get a planet from the sector where the player is in
 $planet =& $player->getSectorPlanet();
-include(get_file_loc('planet_claim_disallow.php'));
 $action = $_REQUEST['action'];
 $password = isset($_REQUEST['password'])?$_REQUEST['password']:'';
 
@@ -26,7 +25,6 @@ if ($action == 'Take Ownership')
 else if ($action == 'Rename')
 {
 	$name = $_REQUEST['name'];
-	include(get_file_loc('planet_change_name.php'));
 	// rename planet
 	$planet->setName($name);
 	$planet->update();
