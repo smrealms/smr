@@ -83,8 +83,8 @@ if(false&&USE_COMPATIBILITY)
 					ORDER BY start_date DESC');
 		if ($db->getNumRows() > 0)
 		{
-			require_once(get_file_loc('smr_player.inc',1,$databaseInfo['GameType']));
-			require_once(get_file_loc('smr_ship.inc',1,$databaseInfo['GameType']));
+			require_once(get_file_loc('smr_player.inc',$databaseInfo['GameType']));
+			require_once(get_file_loc('smr_ship.inc',$databaseInfo['GameType']));
 			while ($db->nextRecord())
 			{
 				$game_id = $db->getField('game_id');
