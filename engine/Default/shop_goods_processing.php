@@ -127,9 +127,8 @@ if (!empty($bargain_price) &&
 else
 {
 	// does the trader try to outsmart us?
-	check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price);
-
 	$container = create_container('skeleton.php', 'shop_goods_trade.php');
+	check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price,$container);
 
 	// transfer values to next page
 	transfer('good_id');
