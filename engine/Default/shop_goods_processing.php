@@ -46,11 +46,9 @@ if ($portGood['TransactionType'] == 'Buy' && $player->getCredits() < $bargain_pr
 $relations = $player->getRelation($port->getRaceID());
 
 if (!isset($var['ideal_price'])) SmrSession::updateVar('ideal_price',$port->getIdealPrice($good_id, $portGood['TransactionType'], $amount, $relations));
-transfer('ideal_price');
 $ideal_price = $var['ideal_price'];
 
 if (!isset($var['offered_price'])) SmrSession::updateVar('offered_price',$port->getOfferPrice($ideal_price, $relations, $portGood['TransactionType']));
-transfer('offered_price');
 $offered_price = $var['offered_price'];
 
 // nothing should happen here but just to avoid / by 0
@@ -65,6 +63,8 @@ if (!empty($bargain_price) &&
 
 	// the url we going to
 	$container = create_container('skeleton.php');
+	transfer('ideal_price');
+	transfer('offered_price');
 
 	// base xp is the amount you would get for a perfect trade.
 	// this is the absolut max. the real xp can only be smaller.
@@ -128,6 +128,8 @@ else
 {
 	// does the trader try to outsmart us?
 	$container = create_container('skeleton.php', 'shop_goods_trade.php');
+	transfer('ideal_price');
+	transfer('offered_price');
 	check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price,$container);
 
 	// transfer values to next page
