@@ -192,7 +192,7 @@ function checkPacts($race_id_1)
 				}
 					
 				$db2->query('UPDATE race_has_relation ' .
-							'SET relation = -400 ' .
+							'SET relation = LEAST(relation,-400) ' .
 							'WHERE game_id = '.$player->getGameID().' AND ' .
 								  '(race_id_1 = '.$race_id_1.' AND race_id_2 = '.$race_id_2.' OR ' .
 								  'race_id_1 = '.$race_id_2.' AND race_id_2 = '.$race_id_1.')');
@@ -224,7 +224,7 @@ function checkPacts($race_id_1)
 				if ($rev_yes_votes > $rev_no_votes)
 				{
 					$db2->query('UPDATE race_has_relation ' .
-								'SET relation = 300 ' .
+								'SET relation = GREATEST(relation,300) ' .
 								'WHERE game_id = '.$player->getGameID().' AND ' .
 									  '(race_id_1 = '.$race_id_1.' AND race_id_2 = '.$race_id_2.' OR ' .
 									  'race_id_1 = '.$race_id_2.' AND race_id_2 = '.$race_id_1.')');
