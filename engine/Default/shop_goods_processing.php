@@ -1,10 +1,7 @@
 <?php
-$sector =& $player->getSector();
 require_once('shop_goods.inc');
 
 // creates needed objects
-$port =& $sector->getPort();
-$GLOBALS['port'] =& $port;
 $amount = get_amount();
 $bargain_price = get_bargain_price();
 
@@ -18,9 +15,11 @@ $good_name = Globals::getGoodName($good_id);
 if ($player->getTurns() == 0)
 	create_error('You don\'t have enough turns to trade.');
 
+$sector =& $player->getSector();
 // get rid of those bugs when we die...there is no port at the home sector
 if (!$sector->hasPort())
 	create_error('I can\'t see a port in this sector. Can you?');
+$port =& $sector->getPort();
 
 // check if the player has the right relations to trade at the current port
 if ($player->getRelation($port->getRaceID()) < -300)
@@ -46,8 +45,6 @@ if ($portGood['TransactionType'] == 'Buy' && $player->getCredits() < $bargain_pr
 // get relations for us (global + personal)
 $relations = $player->getRelation($port->getRaceID());
 
-$container = array();
-
 if (!isset($var['ideal_price'])) SmrSession::updateVar('ideal_price',$port->getIdealPrice($good_id, $portGood['TransactionType'], $amount, $relations));
 transfer('ideal_price');
 $ideal_price = $var['ideal_price'];
@@ -67,7 +64,7 @@ if (!empty($bargain_price) &&
 {
 
 	// the url we going to
-	$container['url'] = 'skeleton.php';
+	$container = create_container('skeleton.php');
 
 	// base xp is the amount you would get for a perfect trade.
 	// this is the absolut max. the real xp can only be smaller.
@@ -113,10 +110,6 @@ if (!empty($bargain_price) &&
 	// log action
 	$account->log(6, $portGood['TransactionType'] . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());
 
-	//update ship
-	$ship->update_cargo();
-	$port->update();
-
 	$player->increaseExperience($gained_exp);
 
 	// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
@@ -136,8 +129,7 @@ else
 	// does the trader try to outsmart us?
 	check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price);
 
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'shop_goods_trade.php';
+	$container = create_container('skeleton.php', 'shop_goods_trade.php');
 
 	// transfer values to next page
 	transfer('good_id');
@@ -149,8 +141,6 @@ else
 // only take turns if they bargained
 if (!isset($container['number_of_bargains'])||$container['number_of_bargains'] != 1)
 	$player->takeTurns(TURNS_PER_TRADE,TURNS_PER_TRADE);
-
-$player->update();
 
 // go to next page
 forward($container);
