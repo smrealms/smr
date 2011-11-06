@@ -62,7 +62,7 @@ if ($curr_account===false)
 }
 else
 {
-	$container = create_container('account_edit_processing.php', array('account_id' => $curr_account->getAccountID()));
+	$container = create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()));
 }
 
 $PHP_OUTPUT.=create_form_parameter($container, 'name="form_acc"');
