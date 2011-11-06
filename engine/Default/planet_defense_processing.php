@@ -20,10 +20,8 @@ $action = $_REQUEST['action'];
 // transfer to ship
 if ($action == 'Ship')
 {
-	include(get_file_loc('planet_defenses_disallow.php'));
-    // do the user wants to transfer shields?
-    if ($type_id == 1) {
-
+    if ($type_id == HARDWARE_SHIELDS)
+	{
         // do we want transfer more than we have?
         if ($amount > $planet->getShields())
             create_error('You can\'t take more shields from planet than are on it!');
@@ -36,10 +34,8 @@ if ($action == 'Ship')
         $planet->decreaseShields($amount);
         $ship->increaseShields($amount);
         $account->log(11, 'Player takes '.$amount.' shields from planet.', $player->getSectorID());
-
-    // do the user wants to transfer drones?
     }
-    else if ($type_id == 4)
+    else if ($type_id == HARDWARE_COMBAT)
     {
         // do we want transfer more than we have?
         if ($amount > $planet->getCDs())
@@ -57,9 +53,8 @@ if ($action == 'Ship')
 }
 elseif ($action == 'Planet')
 {
-	include(get_file_loc('planet_defenses_disallow.php'));
     // do the user wants to transfer shields?
-    if ($type_id == 1)
+    if ($type_id == HARDWARE_SHIELDS)
     {
         // do we want transfer more than we have?
         if ($amount > $ship->getShields())
@@ -75,7 +70,7 @@ elseif ($action == 'Planet')
 		$account->log(11, 'Player puts '.$amount.' shields on planet.', $player->getSectorID());
     // do the user wants to transfer drones?
     }
-    else if ($type_id == 4)
+    else if ($type_id == HARDWARE_COMBAT)
     {
         // do we want transfer more than we have?
         if ($amount > $ship->getCDs())
