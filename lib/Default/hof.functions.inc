@@ -44,8 +44,8 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 	{
 		try
 		{
-			$hofPlayer =& SmrPlayer::getPlayer($accountID, $player->getGameID());
-			if($player->sameAlliance($hofPlayer))
+			$hofPlayer =& SmrPlayer::getPlayer($accountID, $gameID);
+			if($hofPlayer->sameAlliance($player))
 			{
 				$rank['Amount'] = $realAmount;
 			}
