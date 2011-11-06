@@ -2,7 +2,7 @@
 $db->query('SELECT 1 FROM draft_leaders WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND account_id='.$db->escapeNumber($player->getAccountID()));
 if($db->nextRecord())
 {
-	include(ENGINE.'Default/alliance_create_processing.php');
+	require_once(ENGINE.'Default/alliance_create_processing.php');
 }
 else
 {

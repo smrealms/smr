@@ -80,7 +80,7 @@ if ($player->getLastSectorID() != $var['target_sector'])
 		else
 		{
 			$owner_id = $mine_owner_id;
-			include('forces_minefield_processing.php');
+			require_once('forces_minefield_processing.php');
 			return;
 		}
 	}
@@ -158,7 +158,7 @@ if ($mine_owner_id)
 	else
 	{
 		$owner_id = $mine_owner_id;
-		include('forces_minefield_processing.php');
+		require_once('forces_minefield_processing.php');
 		return;
 	}
 }
