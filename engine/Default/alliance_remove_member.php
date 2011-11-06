@@ -11,7 +11,7 @@ player_id,
 player_name,
 last_cpl_action
 FROM player
-WHERE game_id=' . $alliance->getAllianceID() . '
+WHERE game_id=' . $alliance->getGameID() . '
 AND alliance_id=' . $alliance->getAllianceID() .'
 AND account_id<>' . SmrSession::$account_id . '
 ORDER BY last_cpl_action DESC
