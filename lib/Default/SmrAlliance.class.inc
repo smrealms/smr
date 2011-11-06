@@ -132,6 +132,11 @@ class SmrAlliance
 		$this->ircChannel = $ircChannel;
 	}
 	
+	public function hasImageURL()
+	{
+		return strlen($this->imgSrc) && $this->imgSrc != 'http://';
+	}
+	
 	public function getImageURL()
 	{
 		return $this->imgSrc;
