@@ -863,8 +863,9 @@ class SmrPlayer extends AbstractSmrPlayer
 	function increaseRelationsByTrade($numGoods,$raceID)
 	{
 		$relations = ceil(min($numGoods,300)/30);
-		if($this->getPureRelation($raceID) >= 500)
-			$relations=1;
+		//Cap relations to a max of 1 after 500 have been reached
+		if($this->getPureRelation($raceID) + $relations >= 500)
+			$relations = max(1, min($relations, 500 - $this->getPureRelation($raceID)));
 		$this->increaseRelations($relations,$raceID);
 	}
 
