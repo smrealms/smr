@@ -782,22 +782,27 @@ function get_file_loc($fileName, $overrideGameDir = false)
 	}
 	if($gameDir=='1.2/')
 		$gameDir='Default/';
+	
+	$startPaths = array(ENGINE, LIB, ADMIN);
+	$midPaths = array($gameDir, 'Default/');
 	if ($overrideGameDir !== false)
 	{
 		if($overrideGameDir[strlen($overrideGameDir)]!='/') $overrideGameDir .= '/';
-		if(is_file(ENGINE . $overrideGameDir . $fileName)) return ENGINE . $overrideGameDir . $fileName;
-		if(is_file(LIB . $overrideGameDir . $fileName)) return LIB . $overrideGameDir . $fileName;
-		if(is_file(ADMIN . $overrideGameDir . $fileName)) return ADMIN . $overrideGameDir . $fileName;
+		array_unshift($overrideGameDir);
 	}
-	if (is_file(LIB . $gameDir . $fileName)) return LIB . $gameDir . $fileName;
-	if (is_file(ENGINE . $gameDir . $fileName)) return ENGINE . $gameDir . $fileName;
-	if (is_file(ADMIN . $gameDir . $fileName)) return ADMIN . $gameDir . $fileName;
+	foreach($midPaths as $midPath)
+	{
+		foreach($startPaths as $startPath)
+		{
+			$filePath = $startPath . $midPath . $fileName;
+			if(is_file($filePath) && is_readable($filePath))
+				return $filePath;
+		}
+	}
+	$filePath = WWW . $fileName;
+	if(is_file($filePath) && is_readable($filePath))
+		return WWW . $fileName;
 	
-	if (is_file(LIB . 'Default/' . $fileName)) return LIB . 'Default/' . $fileName;
-	if (is_file(ENGINE . 'Default/' . $fileName)) return ENGINE . 'Default/' . $fileName;
-	if (is_file(ADMIN . 'Default/' . $fileName)) return ADMIN . 'Default/' . $fileName;
-	
-	if (is_file(WWW . $fileName)) return WWW . $fileName;
 	//We haven't matched on anything
 	throw new Exception('Cannot match given filename: ' . $fileName);
 }
