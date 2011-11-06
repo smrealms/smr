@@ -38,7 +38,7 @@ try
 	
 	if(!defined('NPC_GAME_ID'))
 	{
-		define('NPC_GAME_ID',42);
+		define('NPC_GAME_ID',44);
 	}
 	define('NPC_LOW_TURNS',75);
 	define('NPC_LOW_NEWBIE_TURNS',10);
