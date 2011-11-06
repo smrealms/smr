@@ -19,7 +19,7 @@ if ($db->nextRecord() && $db->getInt('count(*)') > 2)
 if ($type == 'PEACE')
 {
 	$db->query('SELECT 1 FROM race_has_voting
-				WHERE race_id_1='.$db->escapeNumber($race_id).' AND race_id_2='.$db->escapeNumber($player->getRaceID()));
+				WHERE race_id_1='.$db->escapeNumber($race_id).' AND race_id_2='.$db->escapeNumber($player->getRaceID()).' AND game_id = '.$db->escapeNumber($player->getGameID()));
 	if($db->nextRecord())
 		create_error('You cannot start a vote with that race.');
 }
