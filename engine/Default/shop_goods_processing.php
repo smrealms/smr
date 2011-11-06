@@ -113,7 +113,7 @@ if (!empty($bargain_price) &&
 	$player->increaseExperience($gained_exp);
 
 	// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
-	if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
+	if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT)
 	{
 		$player->increaseRelationsByTrade($amount,$port->getRaceID());
 	}
