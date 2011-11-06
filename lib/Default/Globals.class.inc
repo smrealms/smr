@@ -764,42 +764,41 @@ class Globals
 	}
 }
 
-
-function get_file_loc($file_name, $exists = 1, $overrideGameDir = false)
+function get_file_loc($fileName, $overrideGameDir = false)
 {
 	global $overrideGameID;
-	static $stored_dir;
-	if(isset($stored_dir))
+	static $storedDir;
+	if(isset($storedDir))
 	{
-		$game_dir = $stored_dir;
+		$gameDir = $storedDir;
 	}
 	else
 	{
 		if ($overrideGameID > 0)
 		{
-			$stored_dir = Globals::getGameType($overrideGameID) . '/';
-			$game_dir = $stored_dir;
-		} else $game_dir = 'Default/';
+			$storedDir = Globals::getGameType($overrideGameID) . '/';
+			$gameDir = $storedDir;
+		} else $gameDir = 'Default/';
 	}
-	if($game_dir=='1.2/')
-		$game_dir='Default/';
+	if($gameDir=='1.2/')
+		$gameDir='Default/';
 	if ($overrideGameDir !== false)
 	{
 		if($overrideGameDir[strlen($overrideGameDir)]!='/') $overrideGameDir .= '/';
-		if(file_exists(ENGINE . $overrideGameDir . $file_name)) return ENGINE . $overrideGameDir . $file_name;
-		if(file_exists(LIB . $overrideGameDir . $file_name)) return LIB . $overrideGameDir . $file_name;
-		if(file_exists(ADMIN . $overrideGameDir . $file_name)) return ADMIN . $overrideGameDir . $file_name;
+		if(is_file(ENGINE . $overrideGameDir . $fileName)) return ENGINE . $overrideGameDir . $fileName;
+		if(is_file(LIB . $overrideGameDir . $fileName)) return LIB . $overrideGameDir . $fileName;
+		if(is_file(ADMIN . $overrideGameDir . $fileName)) return ADMIN . $overrideGameDir . $fileName;
 	}
-	if (file_exists(LIB . $game_dir . $file_name)) return LIB . $game_dir . $file_name;
-	if (file_exists(ENGINE . $game_dir . $file_name)) return ENGINE . $game_dir . $file_name;
-	if (file_exists(ADMIN . $game_dir . $file_name)) return ADMIN . $game_dir . $file_name;
+	if (is_file(LIB . $gameDir . $fileName)) return LIB . $gameDir . $fileName;
+	if (is_file(ENGINE . $gameDir . $fileName)) return ENGINE . $gameDir . $fileName;
+	if (is_file(ADMIN . $gameDir . $fileName)) return ADMIN . $gameDir . $fileName;
 	
-	if (file_exists(LIB . 'Default/' . $file_name)) return LIB . 'Default/' . $file_name;
-	if (file_exists(ENGINE . 'Default/' . $file_name)) return ENGINE . 'Default/' . $file_name;
-	if (file_exists(ADMIN . 'Default/' . $file_name)) return ADMIN . 'Default/' . $file_name;
+	if (is_file(LIB . 'Default/' . $fileName)) return LIB . 'Default/' . $fileName;
+	if (is_file(ENGINE . 'Default/' . $fileName)) return ENGINE . 'Default/' . $fileName;
+	if (is_file(ADMIN . 'Default/' . $fileName)) return ADMIN . 'Default/' . $fileName;
 	
-	if (file_exists(WWW . $file_name)) return WWW . $file_name;
-	if ($exists == 1) return ENGINE . 'empty.php';
-	return $file_name;
+	if (is_file(WWW . $fileName)) return WWW . $fileName;
+	//We haven't matched on anything
+	throw new Exception('Cannot match given filename: ' . $fileName);
 }
 ?>
