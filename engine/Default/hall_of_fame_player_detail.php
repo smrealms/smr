@@ -55,7 +55,7 @@ while($db->nextRecord())
 	}
 	$hof = true;
 }
-$PHP_OUTPUT .= buildBreadcrumb(&$var,$hofTypes,'Personal HoF');
+$PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,'Personal HoF');
 $PHP_OUTPUT.= '<table class="standard" align="center">';
 
 if(!isset($var['view']))
