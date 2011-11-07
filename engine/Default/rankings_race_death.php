@@ -29,7 +29,7 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>'.$rank.'</td>');
 	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getField('race_name') . '</td>');
-	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getgetIntField('death_sum') . '</td>');
+	$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db->getInt('death_sum') . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 }
 
