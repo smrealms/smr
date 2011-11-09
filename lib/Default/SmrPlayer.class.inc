@@ -1804,7 +1804,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->save();
 	}
 	
-	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires, $senderDelete = false)
+	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires, $senderDelete = false, $unread = true)
 	{
 		$message = trim($message);
 		$db = new SmrMySqlDatabase();
@@ -1822,10 +1822,13 @@ class SmrPlayer extends AbstractSmrPlayer
 			$db->escapeBoolean($senderDelete) . ')'
 		);
 
-		// give him the message icon
-		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
+		if($unread === true)
+		{
+			// give him the message icon
+			$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
 						'('.$gameID.', '.$receiverID.', '.$messageTypeID.')');
-		
+		}
+
 		switch ($messageTypeID)
 		{
 			case MSG_PLAYER:
@@ -1881,9 +1884,10 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			$this->sendMessage($db->getInt('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
 		}
+		$this->sendMessage($this->getAccountID(), MSG_GLOBAL, $message, $canBeIgnored, false);
 	}
 	
-	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true)
+	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true, $unread = true)
 	{
 		//get expire time
 		if($canBeIgnored)
@@ -1926,7 +1930,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$expires += TIME;
 		// send him the message
-		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $messageTypeID == MSG_SCOUT);
+		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $messageTypeID == MSG_SCOUT, $unread);
 	}
 	
 	public static function sendMessageFromPlanet($gameID, $receiverID, $message)

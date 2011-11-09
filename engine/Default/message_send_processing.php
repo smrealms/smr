@@ -26,8 +26,9 @@ if(isset($var['alliance_id']))
 				AND account_id != ' . $player->getAccountID()); //No limit in case they are over limit - ie NHA
 	while ($db->nextRecord())
 	{
-		$player->sendMessage($db->getField('account_id'), MSG_ALLIANCE, $message,false);
+		$player->sendMessage($db->getField('account_id'), MSG_ALLIANCE, $message, false);
 	}
+	$player->sendMessage($player->getAccountID(), MSG_ALLIANCE, $message, true, false);
 }
 else if (!empty($var['receiver']))
 {

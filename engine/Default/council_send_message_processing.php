@@ -11,11 +11,10 @@ $db->query('SELECT * FROM player
 				AND race_id = '.$var['race_id'].'
 			ORDER by experience DESC
 			LIMIT ' . MAX_COUNCIL_MEMBERS);
-
-while ($db->nextRecord()) {
+while ($db->nextRecord())
+{
 	$accountID = $db->getInt('account_id');
-	if($player->getAccountID() != $accountID)
-		$player->sendMessage($accountID, MSG_POLITICAL, $message);
+	$player->sendMessage($accountID, MSG_POLITICAL, $message, true, $player->getAccountID() != $accountID);
 }
 
 $container = array();
