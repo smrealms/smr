@@ -10,24 +10,24 @@ if (isset($game_name)) $topic = 'Game '.$var['game_name'];
 else $topic = 'Games';
 $template->assign('PageTopic','Viewing Old SMR '.$topic);
 
-if (!isset($game_name)) {
-
+if (!isset($game_name))
+{
 	//list old games
 	$db2 = new $var['HistoryDatabase']();
 	$db2->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, ' .
 				'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
 				'FROM game ORDER BY game_id');
-	if ($db2->getNumRows()) {
-
+	if ($db2->getNumRows())
+	{
 		$PHP_OUTPUT.=create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Game Name</th><th align=center>Start Date</th><th align=center>End Date</th><th align=center>Speed</th><th align=center colspan=3>Options</th></tr>');
-		while ($db2->nextRecord()) {
-
+		while ($db2->nextRecord())
+		{
 			$id = $db2->getField('game_id');
 			$container = create_container('skeleton.php','games_previous.php');
+			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$container['game_id'] = $db2->getField('game_id');
 			$container['game_name'] = $db2->getField('game_name');
-			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$name = $db2->getField('game_name');
 			$PHP_OUTPUT.=('<tr><td align=center>');
 			$PHP_OUTPUT.=create_link($container, $name.' ('.$id.')');
@@ -42,24 +42,22 @@ if (!isset($game_name)) {
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align=center>');
 			$container = create_container('skeleton.php','games_previous_news.php');
+			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$container['game_id'] = $db2->getField('game_id');
 			$container['game_name'] = $db2->getField('game_name');
-			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$PHP_OUTPUT.=create_link($container, 'Game News');
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align=center>');
 			$container['body'] = 'games_previous_detail.php';
-			$container['HistoryDatabase'] = $var['HistoryDatabase'];
 			$PHP_OUTPUT.=create_link($container, 'Game Stats');
 			$PHP_OUTPUT.=('</td>');
-
 		}
 		$PHP_OUTPUT.=('</table>');
 
 	}
-
-} else {
-
+}
+else
+{
 	//code for the game goes in here
 
 	$db2 = new $var['HistoryDatabase']();
@@ -84,11 +82,10 @@ if (!isset($game_name)) {
 	</table>
 	</td>';
 	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC');
-	if ($db2->nextRecord()) {
-
+	if ($db2->nextRecord())
+	{
 		$players = $db2->getNumRows();
 		$max_exp = $db2->getField('experience');
-
 	}
 	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY alignment DESC');
 	if ($db2->nextRecord()) $align = $db2->getField('alignment');
@@ -123,35 +120,31 @@ if (!isset($game_name)) {
 	<td align=center>';
 	$rank = 0;
 	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC LIMIT 10');
-	if ($db2->getNumRows() > 0) {
-
+	if ($db2->getNumRows() > 0)
+	{
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Experience</th></tr>');
-		while ($db2->nextRecord()) {
-
+		while ($db2->nextRecord())
+		{
 			$exp = $db2->getField('experience');
 			$player_name = stripslashes($db2->getField('player_name'));
 			$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$player_name.'</td><td align=center>'.$exp.'</td></tr>');
-
 		}
 		$PHP_OUTPUT.=('</table>');
-
 	}
 	$PHP_OUTPUT.='
 	</td><td align=center>';
 	$rank = 0;
 	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY kills DESC LIMIT 10');
-	if ($db2->getNumRows() > 0) {
-
+	if ($db2->getNumRows() > 0)
+	{
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Kills</th></tr>');
-		while ($db2->nextRecord()) {
-
+		while ($db2->nextRecord())
+		{
 			$kills = $db2->getField('kills');
 			$player_name = stripslashes($db2->getField('player_name'));
 			$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>'.$player_name.'</td><td align=center>'.$kills.'</td></tr>');
-
 		}
 		$PHP_OUTPUT.=('</table>');
-
 	}
 	$PHP_OUTPUT.='
 	</td>
@@ -166,15 +159,14 @@ if (!isset($game_name)) {
 	$db2->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
 				FROM player JOIN alliance USING (game_id, alliance_id)
 				WHERE game_id = '.$game_id.' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
-	if ($db2->getNumRows()) {
-
+	if ($db2->getNumRows())
+	{
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Alliance</th><th align=center>Experience</th></tr>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'alliance_detail_old.php';
+		$container = create_container('skeleton.php', 'alliance_detail_old.php');
+		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['game_id'] = $game_id;
-		while ($db2->nextRecord()) {
-
+		while ($db2->nextRecord())
+		{
 			$exp = $db2->getField('exp');
 			$alliance = stripslashes($db2->getField('alliance_name'));
 			$id = $db2->getField('alliance_id');
@@ -182,11 +174,9 @@ if (!isset($game_name)) {
 			$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>');
 			$PHP_OUTPUT.=create_link($container, $alliance);
 			$PHP_OUTPUT.=('</td><td align=center>'.$exp.'</td></tr>');
-
 		}
 
 		$PHP_OUTPUT.=('</table>');
-
 	}
 	$PHP_OUTPUT.='
 	</td>
@@ -194,15 +184,14 @@ if (!isset($game_name)) {
 	$rank = 0;
 	//now for the alliance stuff
 	$db2->query('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = '.$game_id.' ORDER BY kills DESC LIMIT 10');
-	if ($db2->getNumRows()) {
-
+	if ($db2->getNumRows())
+	{
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Alliance</th><th align=center>Kills</th></tr>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'alliance_detail_old.php';
+		$container = create_container('skeleton.php', 'alliance_detail_old.php');
+		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['game_id'] = $game_id;
-		while ($db2->nextRecord()) {
-
+		while ($db2->nextRecord())
+		{
 			$kill = $db2->getField('kills');
 			$alliance = stripslashes($db2->getField('alliance_name'));
 			$id = $db2->getField('alliance_id');
@@ -210,7 +199,6 @@ if (!isset($game_name)) {
 			$PHP_OUTPUT.=('<tr><td align=center>' . ++$rank . '</td><td align=center>');
 			$PHP_OUTPUT.=create_link($container, $alliance);
 			$PHP_OUTPUT.=('</td><td align=center>'.$kill.'</td></tr>');
-
 		}
 
 		$PHP_OUTPUT.=('</table>');
