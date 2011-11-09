@@ -13,11 +13,11 @@ if (!isset ($var['folder_id']))
 	$db2->query('SELECT 1 FROM message WHERE account_id = ' . $player->getAccountID() . ' AND message_type_id = ' . MSG_POLITICAL . ' AND game_id = ' . $player->getGameID() . ' AND reciever_delete = \'FALSE\' AND reciever_delete = \'FALSE\' LIMIT 1');
 	if ($db2->getNumRows() || $player->isOnCouncil())
 		$db->query('SELECT * FROM message_type ' .
-		'ORDER BY message_type_id');
+					'ORDER BY message_type_id');
 	else
 		$db->query('SELECT * FROM message_type ' .
-		'WHERE message_type_id != 5 ' .
-		'ORDER BY message_type_id');
+					'WHERE message_type_id != 5 ' .
+					'ORDER BY message_type_id');
 	$messageBoxes = array ();
 	while ($db->nextRecord())
 	{
@@ -26,19 +26,19 @@ if (!isset ($var['folder_id']))
 
 		// do we have unread msges in that folder?
 		$db2->query('SELECT 1 FROM message ' .
-		'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
-		'game_id = ' . $player->getGameID() . ' AND ' .
-		'message_type_id = ' . $message_type_id . ' AND ' .
-		'msg_read = \'FALSE\' AND ' .
-		'reciever_delete = \'FALSE\' LIMIT 1');
+					'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
+					'game_id = ' . $player->getGameID() . ' AND ' .
+					'message_type_id = ' . $message_type_id . ' AND ' .
+					'msg_read = \'FALSE\' AND ' .
+					'reciever_delete = \'FALSE\' LIMIT 1');
 		$messageBox['HasUnread'] = $db2->getNumRows() != 0;
 
 		$messageBox['MessageCount'] = 0;
 		// get number of msges
 		$db2->query('SELECT count(message_id) as message_count FROM message ' .
-		'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
-		'game_id = ' . $player->getGameID() . ' AND ' .
-		'message_type_id = ' . $message_type_id . ' AND reciever_delete = \'FALSE\'');
+					'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
+					'game_id = ' . $player->getGameID() . ' AND ' .
+					'message_type_id = ' . $message_type_id . ' AND reciever_delete = \'FALSE\'');
 		if ($db2->nextRecord())
 			$messageBox['MessageCount'] = $db2->getField('message_count');
 
@@ -55,10 +55,10 @@ if (!isset ($var['folder_id']))
 	$messageBox = array ();
 	$messageBox['MessageCount'] = 0;
 	$db->query('SELECT count(message_id) as count FROM message ' .
-	'WHERE sender_id = ' . SmrSession::$account_id . ' AND ' .
-	'game_id = ' . $player->getGameID() . ' AND ' .
-	'message_type_id = ' . MSG_PLAYER . ' AND ' .
-	'sender_delete = \'FALSE\'');
+				'WHERE sender_id = ' . SmrSession::$account_id . ' AND ' .
+				'game_id = ' . $player->getGameID() . ' AND ' .
+				'message_type_id = ' . MSG_PLAYER . ' AND ' .
+				'sender_delete = \'FALSE\'');
 	if ($db->nextRecord())
 		$messageBox['MessageCount'] = $db->getField('count');
 	$messageBox['Name'] = 'Sent Messages';
@@ -83,19 +83,19 @@ else
 	$whereClause = 'WHERE game_id = ' . $player->getGameID();
 	if ($var['folder_id'] == MSG_SENT)
 		$whereClause .= ' AND sender_id = ' . $player->getAccountID() .
-		' AND message_type_id = ' . MSG_PLAYER .
-		' AND sender_delete = ' . $db->escapeBoolean(false);
+						' AND message_type_id = ' . MSG_PLAYER .
+						' AND sender_delete = ' . $db->escapeBoolean(false);
 	else
 		$whereClause .= ' AND account_id = ' . $player->getAccountID() .
-		' AND message_type_id = ' . $var['folder_id'] .
-		' AND reciever_delete = ' . $db->escapeBoolean(false);
+						' AND message_type_id = ' . $var['folder_id'] .
+						' AND reciever_delete = ' . $db->escapeBoolean(false);
 
 	if ($var['folder_id'] == MSG_SENT)
 		$messageBox['UnreadMessages'] = 0;
 	else
 	{
 		$db->query('SELECT count(*) as count FROM message ' .
-		$whereClause . ' AND msg_read = ' . $db->escapeBoolean(false));
+					$whereClause . ' AND msg_read = ' . $db->escapeBoolean(false));
 		$db->nextRecord();
 		$messageBox['UnreadMessages'] = $db->getField('count');
 	}
