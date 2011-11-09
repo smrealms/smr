@@ -59,4 +59,4 @@ if (count($Planets) > 0)
 			</tr><?php
 		} ?>
 	</table><?php
-}
+} ?>
