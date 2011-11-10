@@ -53,7 +53,7 @@ if ($db->getNumRows() > 0 )
 		$PHP_OUTPUT.=('<td align="center">'.$accuracy.'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.Globals::getRaceName($race_id).'</td>');
 		$PHP_OUTPUT.=('<td align="center">'.$power_level.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$cost.'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.number_format($cost).'</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit('Buy');
 		$PHP_OUTPUT.=('</td>');
@@ -89,7 +89,7 @@ if ($ship->hasWeapons())
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">'.$weapon->getName().'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$cost.'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.number_format($cost).'</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit('Sell');
 		$PHP_OUTPUT.=('</td>');

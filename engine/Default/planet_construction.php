@@ -71,10 +71,10 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 
 	if ($player->getCredits() < $planetBuilding['Credit Cost'])
 	{
-		$PHP_OUTPUT.=('<span class="red">'.$planetBuilding['Credit Cost'].'-credits, </span>');
+		$PHP_OUTPUT.=('<span class="red">'.number_format($planetBuilding['Credit Cost']).'-credits, </span>');
 	}
 	else
-		$PHP_OUTPUT.=($planetBuilding['Credit Cost'].'-credits, ');
+		$PHP_OUTPUT.=number_format($planetBuilding['Credit Cost']).'-credits, ';
 
 	$PHP_OUTPUT.= format_time(($planetBuilding['Build Time']) / Globals::getGameSpeed($player->getGameID()));
 
