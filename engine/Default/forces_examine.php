@@ -54,6 +54,7 @@ $PHP_OUTPUT.=('<tr>');
 
 $sector =& $player->getSector();
 $attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
+$attackers[$player->getAccountID()] =& $player;
 
 $PHP_OUTPUT.=('<td valign="top">');
 
