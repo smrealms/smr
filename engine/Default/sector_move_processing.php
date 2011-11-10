@@ -151,7 +151,7 @@ if ($mine_owner_id)
 	{
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
 		$player->takeTurns($turns,$turns);
-		create_container('skeleton.php', 'current_sector.php');
+		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg']= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns.' turn'.($turns==1?'':'s') . ' to navigate the minefield safely.';
 		forward($container);
 	}
