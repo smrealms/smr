@@ -55,14 +55,14 @@ try
 	    $stat = array();
 	    $stat[] = $db->getField('weapon_name');
 	    $stat[] = $db->getField('race_name');
-	    $stat[] = $db->getField('cost');
-	    $stat[] = $db->getField('shield_damage');
-	    $stat[] = $db->getField('armour_damage');
-	    $stat[] = $db->getField('accuracy');
-	    $stat[] = $db->getField('power_level');
-		if ($db->getField('buyer_restriction') == 1)
+	    $stat[] = number_format($db->getInt('cost'));
+	    $stat[] = $db->getInt('shield_damage');
+	    $stat[] = $db->getInt('armour_damage');
+	    $stat[] = $db->getInt('accuracy');
+	    $stat[] = $db->getInt('power_level');
+		if ($db->getInt('buyer_restriction') == 1)
 	    	$restriction = '<font color="green">Good</font>';
-		elseif ($db->getField('buyer_restriction') == 2)
+		elseif ($db->getInt('buyer_restriction') == 2)
 	    	$restriction = '<font color="red">Evil</font>';
 		else
 	    	$restriction = '&nbsp;';

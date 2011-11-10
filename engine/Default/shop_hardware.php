@@ -53,7 +53,7 @@ if ($db->getNumRows() > 0 )
 		$PHP_OUTPUT.=('<td align="center">'.$hardware_name.'</td>');
 		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="'.$amount.'" size="5" onKeyUp="recalc_' . $hardware_type_id . '_onkeyup()" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td>*</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$cost.'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.number_format($cost).'</td>');
 		$PHP_OUTPUT.=('<td>=</td>');
 		$PHP_OUTPUT.=('<td align="center"><input type="text" name="total" value="' . ($amount * $cost) . '" size="7" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td align="center">');

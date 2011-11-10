@@ -115,16 +115,11 @@ function buildShipStats($db)
 {
 	//we want to put them all in an array so we dont have to have 15 td rows
 	$stat = array();
-   	$name = str_replace(' ','&nbsp;',$db->getField('ship_name'));
-    $stat[] = $name;
-	$race = str_replace(' ','&nbsp;',$db->getField('race_name'));
-	$stat[] = $race;
-	$cost = $db->getField('cost');
-	$stat[] = $cost;
-    $speed = $db->getField('speed');
-    $stat[] = $speed;
-	$hardpoints = $db->getField('hardpoint');
-	$stat[] = $hardpoints;
+    $stat[] = str_replace(' ','&nbsp;',$db->getField('ship_name'));
+	$stat[] = str_replace(' ','&nbsp;',$db->getField('race_name'));
+	$stat[] = number_format($db->getInt('cost'));
+    $stat[] = $db->getInt('speed');
+	$stat[] = $db->getInt('hardpoint');
 	if ($db->getField('buyer_restriction') == 1)
 		$restriction = '<font color="green">Good</font>';
     elseif ($db->getField('buyer_restriction') == 2)
@@ -132,9 +127,8 @@ function buildShipStats($db)
 	else
 		$restriction = '&nbsp;';
     $stat[] = $restriction;
-	$level = $db->getField('lvl_needed');
-    $stat[] = $level;
-	$stat[] = $db->getField('max_amount');
+    $stat[] = $db->getInt('lvl_needed');
+	$stat[] = $db->getInt('max_amount');
 	$hardware_id = 2;
     //get our hardware
     while ($hardware_id <= 11)
@@ -143,8 +137,8 @@ function buildShipStats($db)
 		{
 
 	    	if ($hardware_id < 7)
-		    	$stat[] = $db->getField('max_amount');
-    		elseif ($db->getField('max_amount') == 1)
+		    	$stat[] = number_format($db->getInt('max_amount'));
+    		elseif ($db->getInt('max_amount') == 1)
         		$stat[] = 'Yes';
             else
 	        	$stat[] = '&nbsp;';
