@@ -48,7 +48,7 @@ if (count($Planets) > 0)
 						foreach($Planet->getCurrentlyBuilding() as $Building)
 						{
 							echo $PLANET_BUILDINGS[$Building['ConstructionID']]['Name']; ?><br /><?php
-							echo format_time($building['TimeRemaining'], true);
+							echo format_time($Building['TimeRemaining'], true);
 						}
 					}
 					else
