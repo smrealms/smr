@@ -41,7 +41,7 @@ if (count($Planets) > 0)
 						?>none<?php
 					} ?>
 				</td>
-				<td class="shrink noWrap center"><?
+				<td class="shrink noWrap center"><?php
 					if ($Planet->hasCurrentlyBuilding())
 					{
 						$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
