@@ -17,8 +17,8 @@
 					<input type="submit" name="action" value="Decrease" id="InputFields"<?php if($VoteInfo['Decreased']){ ?> style="background-color:green"<?php } ?> />
 				</form>
 			</td>
-			<td align="center"><?php echo $VoteInfo['RelationToThem']; ?></td>
-			<td align="center"><?php echo $VoteInfo['RelationToUs']; ?></td>
+			<td align="center"><?php echo get_colored_text($VoteInfo['RelationToThem']); ?></td>
+			<td align="center"><?php echo get_colored_text($VoteInfo['RelationToUs']); ?></td>
 		</tr><?php
 	} ?>
 </table>

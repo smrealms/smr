@@ -423,7 +423,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 	}
 }
 
-function get_colored_text($value, $text, $type='Game', $return_type = 'Normal')
+function get_colored_text($value, $text = null, $type='Game', $return_type = 'Normal')
 {
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
 }
