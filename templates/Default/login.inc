@@ -76,6 +76,9 @@ span.small {
 .bold {
 	font-weight:bold;
 }
+.dgreen {
+	color: #008000;
+}
 </style>
 <!--[if IE]>
 <style>
