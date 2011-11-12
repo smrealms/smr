@@ -355,8 +355,7 @@ class ChessGame
 	}
 
 	public function getGameID() {
-		//TODO
-		return 2;
+		return SmrSession::$game_id;
 //		return $this->gameID;
 	}
 
