@@ -84,6 +84,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 							$container = create_container('skeleton.php','council_list.php', array('race_id' => $raceID));
 							return create_link($container,  AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID,$player));
 						}
+						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID,$player);
 					}
 				}
 			break;
