@@ -155,11 +155,11 @@ try
 	// ********************************
 	
 	// get reason for disabled user
-	if(($reason = $account->isDisabled())!==false)
+	if(($disabled = $account->isDisabled())!==false)
 	{
 		// save session (incase we forward)
 		SmrSession::update();
-		if ($reason == 'Invalid eMail')
+		if ($disabled['Reason'] == 'Invalid eMail')
 		{
 			header('Location: '.URL.'/email.php');
 			exit;

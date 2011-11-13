@@ -214,17 +214,17 @@ abstract class AbstractSmrAccount
 		if ($this->db->nextRecord())
 		{
 			// get the expire time
-			$expire_time = $this->db->getField('expires');
+			$expireTime = $this->db->getInt('expires');
 			$reason		 = $this->db->getField('reason');
 			
 			// are we over this time?
-			if ($expire_time > 0 && $expire_time < TIME)
+			if ($expireTime > 0 && $expireTime < TIME)
 			{
 				// get rid of the expire entry
 				$this->unbanAccount();
 				return false;
 			}
-			return $reason;
+			return array('Time' => $expireTime, 'Reason' => $reason);
 		}
 		else
 			return false;
