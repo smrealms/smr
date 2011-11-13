@@ -13,13 +13,11 @@ try
 	if (SmrSession::$account_id > 0)
 	{
 		$account =& SmrAccount::getAccount(SmrSession::$account_id);
-		$db->query('SELECT * FROM account_is_closed WHERE account_id = '.SmrSession::$account_id);
-		if ($db->nextRecord())
+		$disabled = $account->isDisabled();
+		if ($disabled !== false)
 		{
-			$time = $db->getField('expires');
-		
-			$reason = $account->isDisabled();
-			if ($time > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $time) . '.';
+			$reason = $disabled['Reason'];
+			if ($disabled['Time'] > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $disabled['Time']) . '.';
 			else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
 		}
 	
