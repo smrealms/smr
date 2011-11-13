@@ -35,11 +35,9 @@ if ($varAction == 'Show Alliance Roles') {
 				AND alliance_id=' .  $alliance->getAllianceID() . '
 				ORDER BY role_id'
 				);
-	while ($db->nextRecord()) $roles[$db->getField('role_id')] = $db->getField('role');
+	while ($db->nextRecord()) $roles[$db->getInt('role_id')] = $db->getField('role');
 
-	$container=array();
-	$container['url'] = 'alliance_roles_save.php';
-	$container['body'] = '';
+	$container=create_container('alliance_roles_save_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$form = create_form($container, 'Save Alliance Roles');
 	$PHP_OUTPUT.= $form['form'];
