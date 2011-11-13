@@ -47,7 +47,7 @@ $description = word_filter($description);
 $player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,'Alliance '.$name.'('.$alliance_id.') had their description changed to:'.EOL.EOL.$description);
 // actually create the alliance here
 $db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, recruiting) ' .
-						  'VALUES('.$alliance_id.', '.$player->getGameID().', ' . $db->escape_string($name, true) . ', ' . $db->escape_string($description, false) . ', '.$db->escapeString($password).', '.SmrSession::$account_id.', '.$db->escapeString($recruit).')');
+						  'VALUES('.$alliance_id.', '.$player->getGameID().', ' . $db->escape_string($name, true) . ', ' . $db->escape_string($description, false) . ', '.$db->escapeString($password).', '.$player->getAccountID().', '.$db->escapeString($recruit).')');
 
 // assign the player to the current alliance
 $player->setAllianceID($alliance_id);

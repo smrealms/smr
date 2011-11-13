@@ -63,7 +63,7 @@ try
 	$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 	
 	// create account object
-	$account =& SmrAccount::getAccount(SmrSession::$account_id);
+	$account =& $player->getAccount();
 	
 	if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id']))
 	{

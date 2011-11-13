@@ -29,7 +29,7 @@ $links['Warp'] = array('ID'=>$sector->getWarp());
 
 $unvisited = array();
 
-$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeString($links,false) . ') AND account_id=' . SmrSession::$account_id . ' AND game_id=' . $player->getGameID());
+$db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id IN (' . $db->escapeString($links,false) . ') AND account_id=' . $player->getAccountID() . ' AND game_id=' . $player->getGameID());
 while($db->nextRecord())
 {
 	$unvisited[$db->getField('sector_id')] = TRUE;

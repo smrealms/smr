@@ -44,7 +44,7 @@ else if ($action == 'Save and resend validation code')
 
 	// remember when we sent validation code
 	$db->query('REPLACE INTO notification (notification_type, account_id, time) ' .
-									 'VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . TIME . ')');
+									 'VALUES(\'validation_code\', '.$account->getAccountID().', ' . TIME . ')');
 
 	mail($email, 'Your validation code!',
 		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
@@ -177,7 +177,7 @@ elseif ($action == 'Change Timezone')
 	if (!is_numeric($timez))
 		create_error('Numbers only please');
 
-	$db->query('UPDATE account SET offset = '.$timez.' WHERE account_id = '.SmrSession::$account_id);
+	$db->query('UPDATE account SET offset = '.$timez.' WHERE account_id = '.$account->getAccountID());
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 }
 elseif ($action == 'Change Date Formats')

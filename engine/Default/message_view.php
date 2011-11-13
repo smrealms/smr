@@ -26,7 +26,7 @@ if (!isset ($var['folder_id']))
 
 		// do we have unread msges in that folder?
 		$db2->query('SELECT 1 FROM message ' .
-					'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
+					'WHERE account_id = ' . $player->getAccountID() . ' AND ' .
 					'game_id = ' . $player->getGameID() . ' AND ' .
 					'message_type_id = ' . $message_type_id . ' AND ' .
 					'msg_read = \'FALSE\' AND ' .
@@ -36,7 +36,7 @@ if (!isset ($var['folder_id']))
 		$messageBox['MessageCount'] = 0;
 		// get number of msges
 		$db2->query('SELECT count(message_id) as message_count FROM message ' .
-					'WHERE account_id = ' . SmrSession::$account_id . ' AND ' .
+					'WHERE account_id = ' . $player->getAccountID() . ' AND ' .
 					'game_id = ' . $player->getGameID() . ' AND ' .
 					'message_type_id = ' . $message_type_id . ' AND reciever_delete = \'FALSE\'');
 		if ($db2->nextRecord())
@@ -55,7 +55,7 @@ if (!isset ($var['folder_id']))
 	$messageBox = array ();
 	$messageBox['MessageCount'] = 0;
 	$db->query('SELECT count(message_id) as count FROM message ' .
-				'WHERE sender_id = ' . SmrSession::$account_id . ' AND ' .
+				'WHERE sender_id = ' . $player->getAccountID() . ' AND ' .
 				'game_id = ' . $player->getGameID() . ' AND ' .
 				'message_type_id = ' . MSG_PLAYER . ' AND ' .
 				'sender_delete = \'FALSE\'');

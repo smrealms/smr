@@ -59,7 +59,7 @@ try
 	
 	// remember when we sent validation code
 	$db->query('REPLACE INTO notification (notification_type, account_id, time)
-				VALUES(\'validation_code\', '.SmrSession::$account_id.', ' . TIME . ')');
+				VALUES(\'validation_code\', '.$account->getAccountID().', ' . TIME . ')');
 	
 	mail($email, 'Your validation code!',
 		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.

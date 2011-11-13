@@ -24,7 +24,8 @@ create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 $db2 = new SmrMySqlDatabase();
 $varAction = isset($var['action']) ? $var['action'] : '';
 // Does anyone actually use these?
-if ($varAction == 'Show Alliance Roles') {
+if ($varAction == 'Show Alliance Roles')
+{
 	// initialize with text
 	$roles = array();
 
@@ -191,13 +192,11 @@ foreach($alliancePlayers as &$alliancePlayer)
 		else
 			$role_id = 0;
 
-		if ($allowed && $alliancePlayer->getAccountID() != $alliance->getLeaderID()) {
-		// ok do we display a select box or just a plain entry
-		/*if (SmrSession::$account_id == $db->getField('account_id') ||
-			SmrSession::$account_id == $alliance->getLeaderID()) {*/
-
+		if ($allowed && $alliancePlayer->getAccountID() != $alliance->getLeaderID())
+		{
 			$PHP_OUTPUT.= '<select name="role[' . $alliancePlayer->getAccountID() . ']" id="InputFields">';
-			foreach ($roles as $curr_role_id => $role) {
+			foreach ($roles as $curr_role_id => $role)
+			{
 				$PHP_OUTPUT.= '<option value="' . $curr_role_id .'"';
 				if ($curr_role_id == $role_id) $PHP_OUTPUT.= ' selected="selected"';
 				$PHP_OUTPUT.= '>';
@@ -205,7 +204,6 @@ foreach($alliancePlayers as &$alliancePlayer)
 				$PHP_OUTPUT.= '</option>';
 			}
 			$PHP_OUTPUT.= '</select>';
-
 		}
 		else {
 			$PHP_OUTPUT.= $roles[$role_id];

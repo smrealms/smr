@@ -51,7 +51,7 @@ else
 	}
 	else
 	{
-		$db->query('UPDATE message SET reciever_delete = \'TRUE\' WHERE account_id = '.SmrSession::$account_id.' AND ' .
+		$db->query('UPDATE message SET reciever_delete = \'TRUE\' WHERE account_id = '.$player->getAccountID().' AND ' .
 										   'game_id = '.$player->getGameID().' AND ' .
 										   'message_type_id = ' . $var['folder_id'] . ' AND ' .
 										   'msg_read = \'TRUE\'');

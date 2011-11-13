@@ -11,37 +11,35 @@ player_id,
 player_name,
 last_cpl_action
 FROM player
-WHERE game_id=' . $alliance->getGameID() . '
-AND alliance_id=' . $alliance->getAllianceID() .'
-AND account_id<>' . SmrSession::$account_id . '
+WHERE game_id = ' . $alliance->getGameID() . '
+AND alliance_id = ' . $alliance->getAllianceID() .'
+AND account_id != ' . $player->getAccountID() . '
 ORDER BY last_cpl_action DESC
 ');
 
 $PHP_OUTPUT.= '<div align="center">';
 
-if ($db->getNumRows() != 0) {
-
-	$container=array();
-	$container['url'] = 'alliance_remove_member_processing.php';
-	$container['body'] = '';
+if ($db->getNumRows() != 0)
+{
+	$container=create_container('alliance_remove_member_processing.php');
 	$form = create_form($container,'Banish \'em!');
 	$PHP_OUTPUT.= $form['form'];
 	$PHP_OUTPUT.= '<table class="standard inset"><th>Trader Name</th><th>Last Online</th><th>Action</th>';
 
-	while ($db->nextRecord()) {
-
+	while ($db->nextRecord())
+	{
 		// we won't exile ourself!
-		if ($player->getAccountID() != $account_id) {
-
+		if ($player->getAccountID() != $account_id)
+		{
 			// get the amount of time since last_active
-			$diff = TIME - $db->getField('last_cpl_action');
+			$diff = TIME - $db->getInt('last_cpl_action');
 
 			if ($diff > 864000)
 				$diff = 864000;
 
 			// green
-			if ($diff < 432000) {
-
+			if ($diff < 432000)
+			{
 				// scale it down to 255
 				$dec = round($diff / 1694);
 
@@ -52,8 +50,9 @@ if ($db->getNumRows() != 0) {
 				$color = '#' . $color . 'FF00';
 
 			// red
-			} else {
-
+			}
+			else
+			{
 				// scale it down to 255
 				$dec = round((864000 - $diff) / 1694);
 
@@ -62,7 +61,6 @@ if ($db->getNumRows() != 0) {
 
 				// make it a full color code
 				$color = '#FF' . $color . '00';
-
 			}
 
 			$PHP_OUTPUT.= '<tr><td>'.$db->getField('player_name').'('.$db->getField('player_id').')</td>';
@@ -80,8 +78,8 @@ if ($db->getNumRows() != 0) {
 
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';
-
-} else
+}
+else
 	$PHP_OUTPUT.= 'There is no-one to kick! You are all by yourself!';
 
 $PHP_OUTPUT.= '</div>';
