@@ -26,7 +26,7 @@ function unhighlightMoves()
 	while(h = highlighted.pop())
 	{
 		h.ele.innerHTML = h.ele.innerHTML.replace('X','');
-		h.ele.onclick = (function(x,y){return function(){highlightMoves('+x+','+y+')}})(h.x,h.y);
+		h.ele.onclick = (function(x,y){return function(){highlightMoves(x,y)}})(h.x,h.y);
 	}
 }
 
