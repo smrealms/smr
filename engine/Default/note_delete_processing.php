@@ -11,17 +11,21 @@
  * 		Deletes selected notes
  */
  
-if(isset($_POST['note_id'])) {
+if(isset($_POST['note_id']))
+{
 	$note_ids = $_POST['note_id'];
 	$verified = true;
-	foreach($note_ids as $note_id) {
-		if(preg_match('/[^0-9]/',$note_id)) {
+	foreach($note_ids as $note_id)
+	{
+		if(preg_match('/[^0-9]/',$note_id))
+		{
 			$verified = false;
 		}
 	}
-	if($verified) {
+	if($verified)
+	{
 		$db->query('DELETE FROM player_has_notes WHERE game_id=' . $player->getGameID() .
-		' AND account_id=' . SmrSession::$account_id .
+		' AND account_id=' . $player->getAccountID() .
 		' AND note_id IN ('  . implode(',',$note_ids)  . ')');
 	}
 }

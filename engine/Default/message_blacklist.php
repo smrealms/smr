@@ -30,7 +30,7 @@ if(isset($var['error']))
 $PHP_OUTPUT.= '<h2>Blacklisted Players</h2><br />';
 
 $db = new SmrMySqlDatabase();
-$db->query('SELECT p.player_name, p.game_id, b.entry_id FROM player p JOIN message_blacklist b ON p.account_id = b.blacklisted_id AND b.game_id = p.game_id WHERE b.account_id=' . SmrSession::$account_id .' ORDER BY p.game_id, p.player_name');
+$db->query('SELECT p.player_name, p.game_id, b.entry_id FROM player p JOIN message_blacklist b ON p.account_id = b.blacklisted_id AND b.game_id = p.game_id WHERE b.account_id=' . $player->getAccountID() .' ORDER BY p.game_id, p.player_name');
 
 if($db->getNumRows())
 {

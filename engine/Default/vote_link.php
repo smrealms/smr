@@ -2,18 +2,11 @@
 $db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' AND link_id=' . $var['link_id'] . ' LIMIT 1');
 
 // They get to vote once every 24 hours
-if(!$db->nextRecord()) {
-	$valid=true;
-}
-else if($db->getField('timeout') <= TIME - TIME_BETWEEN_VOTING) {
-	$valid = true;
-}
-else {
-	$valid = false;
-}
+$valid = !$db->nextRecord() || $db->getField('timeout') <= TIME - TIME_BETWEEN_VOTING;
 
 // Sanity checking
-if($var['link_id'] > 3 || $var['link_id'] < 1 ) {
+if($var['link_id'] > 3 || $var['link_id'] < 1 )
+{
 	$valid = false;
 }
 
@@ -33,8 +26,7 @@ if($valid == true)
 	}
 }
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 
 // Return them to the appropriate screen
 if (!$player->isLandedOnPlanet())

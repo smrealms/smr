@@ -68,7 +68,7 @@ try
 	
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$album_id.', '.$comment_id.', '.$curr_time.', '.SmrSession::$account_id.', '.$db->escapeString($comment).')');
+				VALUES ('.$album_id.', '.$comment_id.', '.$curr_time.', '.$account->getAccountID().', '.$db->escapeString($comment).')');
 	$db->unlock();
 	
 	header('Location: '.URL.'/album/?' . get_album_nick($album_id));

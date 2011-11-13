@@ -562,7 +562,7 @@ function do_voodoo()
 		// Otherwise we could be working on stale information
 		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 		$db->nextRecord();
-		$sector_id=$db->getField('sector_id');
+		$sector_id = $db->getInt('sector_id');
 
 		global $locksFailed;
 		if(!USING_AJAX //AJAX should never do anything that requires a lock.
@@ -986,10 +986,10 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$template->assign('WeaponReorderLink',SmrSession::get_new_href(create_container('skeleton.php', 'weapon_reorder.php')));
 	
 		$nextVoteTime = array();
-		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . SmrSession::$account_id . ' ORDER BY link_id LIMIT 3');
+		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . $player->getAccountID() . ' ORDER BY link_id LIMIT 3');
 		while($db->nextRecord())
 		{
-			$nextVoteTime[$db->getField('link_id')] = TIME_BETWEEN_VOTING - (TIME - $db->getField('timeout'));
+			$nextVoteTime[$db->getInt('link_id')] = TIME_BETWEEN_VOTING - (TIME - $db->getField('timeout'));
 		}
 	}
 	

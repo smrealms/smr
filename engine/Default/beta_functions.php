@@ -85,20 +85,20 @@ $PHP_OUTPUT.=('</form>');
 
 $db->query('SELECT kills, experience_traded
 			FROM account_has_stats
-			WHERE account_id = '.SmrSession::$account_id);
-if ($db->nextRecord()) {
-
+			WHERE account_id = '.$player->getAccountID());
+if ($db->nextRecord())
+{
 	//Set kills
 	$container['func'] = 'Kills';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type="text" name="kills" value="' . $db->getField('kills') . '">&nbsp;&nbsp;');
+	$PHP_OUTPUT.=('<input type="text" name="kills" value="' . $db->getInt('kills') . '">&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Set Kills to Amount');
 	$PHP_OUTPUT.=('</form>');
 
 	//Set traded xp
 	$container['func'] = 'Traded_XP';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type=text name="traded_xp" value="' . $db->getField('experience_traded') . '">&nbsp;&nbsp;');
+	$PHP_OUTPUT.=('<input type=text name="traded_xp" value="' . $db->getInt('experience_traded') . '">&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Set Traded XP to Amount');
 	$PHP_OUTPUT.=('</form>');
 
@@ -111,7 +111,8 @@ $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<input type="text" name="amount_hard" value="0"><br />');
 $PHP_OUTPUT.=('<select name="type_hard">');
 $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
-while ($db->nextRecord()) {
+while ($db->nextRecord())
+{
 	$id = $db->getField('hardware_type_id');
 	$name = $db->getField('hardware_name');
 	$PHP_OUTPUT.=('<option value='.$id.'>'.$name.'</option>');

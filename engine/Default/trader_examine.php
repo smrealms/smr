@@ -5,9 +5,7 @@ $targetPlayer =& SmrPlayer::getPlayer($var['target'],$player->getGameID());
 
 if($targetPlayer->isDead())
 {
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'current_sector.php';
+	$container=create_container('skeleton.php', 'current_sector.php');
 	$container['msg'] = '<span class="red bold">ERROR:</span> Target already dead.';
 	forward($container);
 }
