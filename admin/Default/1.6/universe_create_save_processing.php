@@ -11,6 +11,8 @@ if ($submit=='Create Game')
 		create_error('Game speed must be a number.');
 	if(!is_numeric($_REQUEST['max_turns']))
 		create_error('Max turns must be a number.');
+	if($_REQUEST['max_turns'] > 650)
+		create_error('Max turns must not be greater than 650.');
 	if(!is_numeric($_REQUEST['start_turns']))
 		create_error('Start turn hours must be a number.');
 	if(!is_numeric($_REQUEST['max_players']))
@@ -29,7 +31,7 @@ if ($submit=='Create Game')
 		create_error('That game name is already taken.');
 	$db->query('SELECT game_id FROM game ORDER BY game_id DESC LIMIT 1');
 	if ($db->nextRecord())
-		$newID = $db->getField('game_id')+1;
+		$newID = $db->getInt('game_id')+1;
 	else
 		$newID = 1;
 	list($day,$month,$year) = explode("/",$_REQUEST['game_start']);
