@@ -179,7 +179,7 @@ abstract class AbstractSmrPlayer
 		if ($ship->hasIllegalGoods())
 			return false;
 		
-		if ($attackRating == 0 || $this->getAlignment() > ($attackRating - 4) * 150)
+		if ($attackRating == 0 || $attackRating <= $this->getAlignment() / 150 + 4)
 		{
 			foreach($sector->getFedRaceIDs() as $fedRaceID)
 			{
