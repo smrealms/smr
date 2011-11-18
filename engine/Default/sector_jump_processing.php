@@ -77,6 +77,8 @@ $misjump = mt_rand(0,$maxMisjump);
 if ($misjump > 0)
 { // we missed the sector
 	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
+	if(count($distances))
+		throw new Exception('Misjumps array is empty, target sector: ' . $targetSector . ', misjump: ' . $misjump);
 	$misjumpSector = array_rand($distances);
 	if($misjumpSector == null)
 		throw new Exception('Misjump sector is null, distances: ' . var_export ($distances, true));
