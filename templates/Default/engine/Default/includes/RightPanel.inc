@@ -41,6 +41,11 @@ if(isset($GameID))
 	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
 	{
 		?><br /><?php
+	}
+	if(isset($MessageCasinoLink))
+	{ ?>
+		<a href="<?php echo $MessageCasinoLink; ?>"><img src="images/casino_msg.png" alt="Casino Messages" /></a>
+		<span class="small"><?php echo $MessageCasinoNum; ?></span><?php
 	} ?>
 	</span>
 	<span id="lvlName"><?php echo $ThisPlayer->getLevelName(); ?></span><br />

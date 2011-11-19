@@ -10,6 +10,8 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false)
 		$return = '<span class="yellow">Planetary Defenses</span>';
 	else if($accountID==ACCOUNT_ID_ALLIANCE_AMBASSADOR)
 		$return = '<span class="green">Alliance Ambassador</span>';
+	else if($accountID==ACCOUNT_ID_CASINO)
+		$return = '<span class="yellow">Casino</span>';
 	else
 	{
 		$RACES =& Globals::getRaces();

@@ -934,6 +934,12 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 				$template->assign('MessageAdminNum',$messages[MSG_ADMIN]);
 			}
 	
+			if(isset($messages[MSG_CASINO])) {
+				$container['folder_id'] = MSG_CASINO;
+				$template->assign('MessageCasinoLink',SmrSession::get_new_href($container));
+				$template->assign('MessageCasinoNum',$messages[MSG_PLANET]);
+			}
+	
 			if(isset($messages[MSG_PLANET])) {
 				$container = create_container('planet_msg_processing.php');
 				$template->assign('MessagePlanetLink',SmrSession::get_new_href($container));
