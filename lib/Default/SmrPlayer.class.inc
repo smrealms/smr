@@ -1911,7 +1911,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				$expires = 86400 * 31;
 			break;
 			case MSG_PLANET:
-				$expires = 86400 * 3;
+				$expires = 86400 * 7;
 			break;
 			case MSG_SCOUT:
 				$expires = 86400 * 3;
@@ -1925,8 +1925,11 @@ class SmrPlayer extends AbstractSmrPlayer
 			case MSG_ADMIN:
 				$expires = 86400 * 365;
 			break;
+			case MSG_CASINO:
+				$expires = 86400 * 31;
+			break;
 			default:
-				$expires = 86400 * 3;
+				$expires = 86400 * 7;
 		}
 		$expires += TIME;
 		// send him the message
@@ -1948,6 +1951,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PORT,$receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
+	
 	public static function sendMessageFromAdmin($gameID, $receiverID, $message, $expires = false)
 	{
 		//get expire time
@@ -1964,6 +1968,15 @@ class SmrPlayer extends AbstractSmrPlayer
 			$expires = TIME + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
+	}
+	
+	public static function sendMessageFromCasino($gameID, $receiverID, $message, $expires = false)
+	{
+		//get expire time
+		if($expires===false)
+			$expires = TIME + 86400 * 7;
+		// send him the message
+		self::doMessageSending(ACCOUNT_ID_CASINO, $receiverID, $gameID, MSG_CASINO, $message, $expires);
 	}
 	
 	public static function sendMessageFromRace($raceID, $gameID, $receiverID, $message, $expires = false)

@@ -7,6 +7,7 @@ define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
 define('ACCOUNT_ID_PLANET',65533);
 define('ACCOUNT_ID_ALLIANCE_AMBASSADOR',65532);
+define('ACCOUNT_ID_CASINO',65531);
 define('ACCOUNT_ID_GROUP_RACES',65500);
 define('ACCOUNT_ID_NHL',36);
 
@@ -125,6 +126,7 @@ define('MSG_SCOUT', 4);
 define('MSG_POLITICAL', 5);
 define('MSG_ALLIANCE', 6);
 define('MSG_ADMIN', 7);
+define('MSG_CASINO', 8);
 define('BOX_BUGS_AUTO', 1);
 define('BOX_BUGS_REPORTED', 2);
 define('BOX_GLOBALS', 3);

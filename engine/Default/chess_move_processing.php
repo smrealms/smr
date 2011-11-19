@@ -19,12 +19,13 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 				{
 					case 0:
 						//Success
+						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnPlayer(), 'It is now your turn in the chess game against [player=' . $player->getPlayerID() . ']');
 					break;
 					case 1:
-						$template->assign('MoveMessage', 'There is no piece in that square.');
+						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnPlayer(), 'You have just lost the chess game against [player=' . $player->getPlayerID() . ']');
 					break;
 					case 2:
-						$template->assign('MoveMessage', 'Database error, please try again.');
+						$template->assign('MoveMessage', 'There is no piece in that square.');
 					break;
 					case 3:
 						$template->assign('MoveMessage', 'You cannot end your turn in check.');

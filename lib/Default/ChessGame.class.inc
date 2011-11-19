@@ -281,7 +281,7 @@ class ChessGame
 		$p = $this->board[$y][$x];
 		if($p == null)
 		{
-			return 1;
+			return 2;
 		}
 		$moves = $p->getPossibleMoves($this->board, $forAccountID);
 		foreach($moves as $move)
@@ -331,6 +331,7 @@ class ChessGame
 					$this->db->query('ROLLBACK;');
 					return 3;
 				}
+				$return = 0;
 				$this->db->query('UPDATE chess_game_pieces' .
 				' SET x=' . $toX . ', y=' . $toY .
 				' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
@@ -340,8 +341,10 @@ class ChessGame
 							' SET end_time=' + TIME + ',' +
 							' winner=' + $forAccountID +
 							' WHERE chess_game_id=' + $this->chessGameID + ';');
+					$return = 1;
 				}
 				$this->db->query('COMMIT;');
+				return $return;
 			}
 		}
 	}
@@ -385,18 +388,18 @@ class ChessGame
 		return $this->winner;
 	}
 
-	public function getCurrentTurn()
+	public function getCurrentTurnAccountID()
 	{
 		return count($this->getMoves()) % 2 == 0 ? $this->whiteID : $this->blackID;
 	}
 
 	public function &getCurrentTurnPlayer()
 	{
-		return SmrPlayer::getPlayer($this->getCurrentTurn(), $this->getGameID());
+		return SmrPlayer::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
 	}
 
 	public function isCurrentTurn($accountID) {
-		return $accountID == $this->getCurrentTurn();
+		return $accountID == $this->getCurrentTurnAccountID();
 	}
 	
 	public function getPlayGameHREF()
