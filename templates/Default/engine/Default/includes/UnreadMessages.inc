@@ -29,6 +29,11 @@
 		<a href="<?php echo $MessageAdminLink; ?>"><img src="images/admin_msg.png" alt="Admin Messages" /></a>
 		<span class="small"><?php echo $MessageAdminNum; ?></span><?php
 	}
+	if(isset($MessageCasinoLink))
+	{ ?>
+		<a href="<?php echo $MessageCasinoLink; ?>"><img src="images/casino_msg.png" alt="Casino Messages" /></a>
+		<span class="small"><?php echo $MessageCasinoNum; ?></span><?php
+	}
 	if(isset($MessagePlanetLink))
 	{ ?>
 		<a href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.png" alt="Planet Messages" /></a>
@@ -37,10 +42,5 @@
 	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
 	{
 		?><br /><?php
-	}
-	if(isset($MessageCasinoLink))
-	{ ?>
-		<a href="<?php echo $MessageCasinoLink; ?>"><img src="images/casino_msg.png" alt="Casino Messages" /></a>
-		<span class="small"><?php echo $MessageCasinoNum; ?></span><?php
 	} ?>
 </span>
