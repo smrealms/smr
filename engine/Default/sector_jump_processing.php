@@ -77,12 +77,16 @@ $misjump = mt_rand(0,$maxMisjump);
 if ($misjump > 0)
 { // we missed the sector
 	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
-	if(count($distances))
-		throw new Exception('Misjumps array is empty, target sector: ' . $targetSector . ', misjump: ' . $misjump);
-	$misjumpSector = array_rand($distances);
+	while(count($distances[$misjump]) == 0)
+	{
+		$misjump--;
+	}
+		
+	$misjumpSector = array_rand($distances[$misjump]);
 	if($misjumpSector == null)
 		throw new Exception('Misjump sector is null, distances: ' . var_export ($distances, true));
 	$player->setSectorID($misjumpSector);
+	unset($distances);
 }
 else
 { // we hit it. exactly
