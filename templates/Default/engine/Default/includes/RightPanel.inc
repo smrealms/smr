@@ -1,53 +1,8 @@
 <?php
 if(isset($GameID))
 { ?>
-	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script type="text/javascript">TriggerAttackBlink('3B1111');</script><?php } ?></span>
-	<span id="message_area"><?php
-	if(isset($MessageGlobalLink))
-	{ ?>
-		<a href="<?php echo $MessageGlobalLink; ?>"><img src="images/global_msg.png" alt="Global Messages" /></a>
-		<span class="small"><?php echo $MessageGlobalNum; ?></span><?php
-	}
-	if(isset($MessagePersonalLink))
-	{ ?>
-		<a href="<?php echo $MessagePersonalLink; ?>"><img src="images/personal_msg.png" alt="Personal Messages" /></a>
-		<span class="small"><?php echo $MessagePersonalNum; ?></span><?php
-	}
-	if(isset($MessageScoutLink))
-	{ ?>
-		<a href="<?php echo $MessageScoutLink; ?>"><img src="images/scout_msg.png" alt="Scout Messages" /></a>
-		<span class="small"><?php echo $MessageScoutNum; ?></span><?php
-	}
-	if(isset($MessagePoliticalLink))
-	{ ?>
-		<a href="<?php echo $MessagePoliticalLink; ?>"><img src="images/council_msg.png" alt="Political Messages" /></a>
-		<span class="small"><?php echo $MessagePoliticalNum; ?></span><?php
-	}
-	if(isset($MessageAllianceLink))
-	{ ?>
-		<a href="<?php echo $MessageAllianceLink; ?>"><img src="images/alliance_msg.png" alt="Alliance Messages" /></a>
-		<span class="small"><?php echo $MessageAllianceNum; ?></span><?php
-	}
-	if(isset($MessageAdminLink))
-	{ ?>
-		<a href="<?php echo $MessageAdminLink; ?>"><img src="images/admin_msg.png" alt="Admin Messages" /></a>
-		<span class="small"><?php echo $MessageAdminNum; ?></span><?php
-	}
-	if(isset($MessagePlanetLink))
-	{ ?>
-		<a href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.png" alt="Planet Messages" /></a>
-		<span class="small"><?php echo $MessagePlanetNum; ?></span><?php
-	}
-	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
-	{
-		?><br /><?php
-	}
-	if(isset($MessageCasinoLink))
-	{ ?>
-		<a href="<?php echo $MessageCasinoLink; ?>"><img src="images/casino_msg.png" alt="Casino Messages" /></a>
-		<span class="small"><?php echo $MessageCasinoNum; ?></span><?php
-	} ?>
-	</span>
+	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script type="text/javascript">TriggerAttackBlink('3B1111');</script><?php } ?></span><?php
+	$this->includeTemplate('includes/UnreadMessages.inc'); ?>
 	<span id="lvlName"><?php echo $ThisPlayer->getLevelName(); ?></span><br />
 	<big><a href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a></big><br /><?php
 	if(isset($PlayerInvisible))
