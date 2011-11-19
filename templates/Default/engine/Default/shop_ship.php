@@ -27,7 +27,7 @@ else
 	?>We've got nothing for you here! Get outta here!<br /><?php
 }
 ?><br /><?php
-if ($CompareShip)
+if (isset($CompareShip))
 { ?>
 	<table class="standard">
 		<tr>
