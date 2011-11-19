@@ -56,7 +56,6 @@ $container['alliance_id'] = $alliance_id;
 $container['text'] = $text;
 if (isset($var['text'])) {
 	$thread_id = 0;
-	$bankReporterID = -1;
 	$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$alliance_id.' AND topic = \'Bank Statement\' LIMIT 1');
 	if ($db->nextRecord()) $thread_id = $db->getField('thread_id');
 	if ($thread_id == 0) {
@@ -67,7 +66,7 @@ if (isset($var['text'])) {
 		$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ' .
 					'('.$player->getGameID().', '.$alliance_id.', '.$thread_id.', \'Bank Statement\')');
 		$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES ' .
-				'('.$player->getGameID().', '.$alliance_id.', '.$thread_id.', 1, '.$db->escapeString($text).', '.$bankReporterID.', ' . TIME . ')');
+				'('.$player->getGameID().', '.$alliance_id.', '.$thread_id.', 1, '.$db->escapeString($text).', '.ACCOUNT_ID_BANK_REPORTER.', ' . TIME . ')');
 	} else {
 		$db->query('UPDATE alliance_thread SET time = ' . TIME . ', text = ' . $db->escapeString($text) . ' WHERE thread_id = '.$thread_id.' AND alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND reply_id = 1');
 		$db->query('DELETE FROM player_read_thread WHERE thread_id = '.$thread_id.' AND game_id = '.$player->getGameID().' AND alliance_id = '.$alliance_id);
