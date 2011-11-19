@@ -133,48 +133,8 @@
 						if(isset($ThisPlayer))
 						{ ?>
 							<div class="rightInfo noWrap">
-								<div class="messages">
-									<span id="message_area"><?php
-										if(isset($MessageGlobalLink))
-										{ ?>
-											<a class="message" title="Global Messages" href="<?php echo $MessageGlobalLink; ?>"><img src="images/global_msg.png" alt="Global Messages"/></a>
-											<span class="small"><?php echo $MessageGlobalNum; ?></span><?php
-										}
-										if(isset($MessagePersonalLink))
-										{ ?>
-											<a class="message" title="Personal Messages" href="<?php echo $MessagePersonalLink; ?>"><img src="images/personal_msg.png" alt="Personal Messages"/></a>
-											<span class="small"><?php echo $MessagePersonalNum; ?></span><?php
-										}
-										if(isset($MessageScoutLink))
-										{ ?>
-											<a class="message" title="Scout Messages" href="<?php echo $MessageScoutLink; ?>"><img src="images/scout_msg.png" alt="Scout Messages"/></a>
-											<span class="small"><?php echo $MessageScoutNum; ?></span><?php
-										}
-										if(isset($MessagePoliticalLink))
-										{ ?>
-											<a class="message" title="Political Messages" href="<?php echo $MessagePoliticalLink; ?>"><img src="images/council_msg.png" alt="Political Messages"/></a>
-											<span class="small"><?php echo $MessagePoliticalNum; ?></span><?php
-										}
-										if(isset($MessageAllianceLink))
-										{ ?>
-											<a class="message" title="Alliance Messages" href="<?php echo $MessageAllianceLink; ?>"><img src="images/alliance_msg.png" alt="Alliance Messages"/></a>
-											<span class="small"><?php echo $MessageAllianceNum; ?></span><?php
-										}
-										if(isset($MessageAdminLink))
-										{ ?>
-											<a class="message" title="Admin Messages" href="<?php echo $MessageAdminLink; ?>"><img src="images/admin_msg.png" alt="Admin Messages"/></a>
-											<span class="small"><?php echo $MessageAdminNum; ?></span><?php
-										}
-										if(isset($MessagePlanetLink))
-										{ ?>
-											<a class="message" title="Planet Messages" href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.png" alt="Planet Messages"/></a>
-											<span class="small"><?php echo $MessagePlanetNum; ?></span><?php
-										}
-										if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
-										{
-											?><br /><?php
-										} ?>
-									</span>
+								<div class="messages"><?php
+									$this->includeTemplate('includes/UnreadMessages.inc'); ?>
 								</div>
 
 								<div class="rightInfoShip">
