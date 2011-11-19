@@ -1,0 +1,27 @@
+
+# /
+/.buildpath
+/.project
+/nbproject
+
+# /.settings/
+/.settings/
+
+# /htdocs/
+/htdocs/config.specific.php
+/htdocs/upload
+
+# /lib/1.2/
+/lib/1.2/SmrMySqlDatabase.class.inc
+
+# /lib/Default/
+/lib/Default/SmrMySqlDatabase.class.inc
+/lib/Default/SmrHistoryMySqlDatabase.class.inc
+/lib/Default/SmrSessionMySqlDatabase.class.inc
+/lib/Default/Smr12MySqlDatabase.class.inc
+/lib/Default/SmrClassicMySqlDatabase.class.inc
+/lib/Default/SmrClassicHistoryMySqlDatabase.class.inc
+/lib/Default/Smr12HistoryMySqlDatabase.class.inc
+
+# /lib/Login/
+/lib/Login/socialConfig.specific.inc
