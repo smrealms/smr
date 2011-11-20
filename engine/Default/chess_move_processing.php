@@ -30,6 +30,9 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 					case 3:
 						$template->assign('MoveMessage', 'You cannot end your turn in check.');
 					break;
+					case 3:
+						$template->assign('MoveMessage', 'It is not your turn to move.');
+					break;
 				}
 			}
 			else

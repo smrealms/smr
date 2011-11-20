@@ -288,7 +288,12 @@ class ChessGame
 		return true;
 	}
 
-	public function tryMove($x, $y, $toX, $toY, $forAccountID) {
+	public function tryMove($x, $y, $toX, $toY, $forAccountID)
+	{
+		if($this->getCurrentTurnAccountID() != $forAccountID)
+		{
+			return 4;
+		}
 		$this->getBoard();
 		$p = $this->board[$y][$x];
 		if($p == null)
@@ -301,7 +306,6 @@ class ChessGame
 			if($move[0]==$toX && $move[1]==$toY)
 			{
 				$pieceTaken = null;
-				$this->db->query('START TRANSACTION;');
 				$pieceTakenID = null;
 				if($this->board[$toY][$toX] != null)
 				{
