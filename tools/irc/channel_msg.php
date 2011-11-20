@@ -1,8 +1,9 @@
 <?php
 
-function channel_msg_with_registration($fp, $rdata)
+function channel_msg_with_registration($fp, $rdata, $validationMessages = true)
 {
-
+	//Force $validationMessages to always be boolean.
+	$validationMessages = $validationMessages === true;
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd|sms)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -26,7 +27,7 @@ function channel_msg_with_registration($fp, $rdata)
 
 			// execute a whois and continue here on whois
 			fputs($fp, 'WHOIS ' . $nick . EOL);
-			array_push($actions, array('MSG_318', $channel, $nick, 'channel_msg_with_registration($fp, \'' . $rdata . '\');', time()));
+			array_push($actions, array('MSG_318', $channel, $nick, 'channel_msg_with_registration($fp, \'' . $rdata . '\',' . $validationMessages . ');', time()));
 
 			return true;
 		}
@@ -34,27 +35,40 @@ function channel_msg_with_registration($fp, $rdata)
 		// get alliance_id and game_id for this channel
 		$alliance =& SmrAlliance::getAllianceByIrcChannel($channel, true);
 		if ($alliance == null) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
+			if($validationMessages === true) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
+			}
 			return true;
 		}
 
 		// get smr account
 		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 		if ($account == null) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+			if($validationMessages === true) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+			}
 			return true;
 		}
 
 		// get smr player
 		$player =& SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameId(), true);
 		if ($player == null) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
+			if($validationMessages === true) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
+			}
 			return true;
 		}
 
 		// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
 		if ($player->getAllianceID() != $alliance->getAllianceID()) {
-			fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
+			if($validationMessages === true) {
+				fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
+			}
+			return true;
+		}
+		
+		if($rdata === 'EntryOpCheck') {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
 			return true;
 		}
 
