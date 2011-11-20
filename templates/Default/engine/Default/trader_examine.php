@@ -58,21 +58,23 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 					foreach ($fleet as &$fleetPlayer)
 					{
 						$fleetShip =& $fleetPlayer->getShip();
+						if($fleetPlayer->getAccount()->isNewbie()) { ?><span class="newbie"><?php }
 						echo $fleetPlayer->getLevelName(); ?><br /><?php
 						echo $fleetPlayer->getDisplayName() ?><br />
 						Race: <?php echo $fleetPlayer->getRaceName() ?><br />
 						Level: <?php echo $fleetPlayer->getLevelName() ?><br />
-						Alliance: <?php echo $fleetPlayer->getAllianceName() ?><br /><br />
-						<small><?php echo $fleetShip->getName() ?><br />
+						Alliance: <?php echo $fleetPlayer->getAllianceName() ?><br /><br /><?php
+						echo $fleetShip->getName() ?><br />
 						Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) .'/'. $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
 						if ($ThisShip->hasScanner())
-						{
-							?>Shields : <?php echo $fleetShip->getShieldLow() . '-' . $fleetShip->getShieldHigh() ?><br />
+						{ ?>
+							Shields : <?php echo $fleetShip->getShieldLow() . '-' . $fleetShip->getShieldHigh() ?><br />
 							Armour : <?php echo $fleetShip->getArmourLow() . '-' . $fleetShip->getArmourHigh() ?><br />
 							Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
 							Combat Drones: <?php echo $fleetShip->getCDsLow() . '-' . $fleetShip->getCDsHigh() ?><br /><?php
-						} ?>
-						</small><br /><br /><?php
+						}
+						if($fleetPlayer->getAccount()->isNewbie()) { ?></span><?php } ?>
+						<br /><br /><?php
 					}
 				}
 				else
