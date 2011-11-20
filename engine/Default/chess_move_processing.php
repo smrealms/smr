@@ -30,7 +30,7 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 					case 3:
 						$template->assign('MoveMessage', 'You cannot end your turn in check.');
 					break;
-					case 3:
+					case 4:
 						$template->assign('MoveMessage', 'It is not your turn to move.');
 					break;
 				}
@@ -43,11 +43,12 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 		else
 		{
 //			this.logger.error('Player tried to move in an ended game');
-			$template->assign('MoveMessage', 'This game is over.');
+			$template->assign('MoveMessage', 'It is not your turn to move.');
 		}
 	}
 	else
 	{
+		$template->assign('MoveMessage', 'This game is over.');
 //		this.logger.error('Player tried to move when it was not their turn: x = ' + xIn + ', y = ' + yIn + ', toX = ' + toXIn + ', toY = ' + toYIn);
 	}
 }
