@@ -199,7 +199,7 @@ class ChessGame
 	public static function &getOngoingAccountGames($accountID)
 	{
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time < ' . TIME . ' OR end_time IS NULL);');
+		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
 		$games = array();
 		while($db->nextRecord())
 		{
