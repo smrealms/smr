@@ -222,11 +222,11 @@ class ChessGame
 	
 	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking)
 	{
-		return ChessPiece::getSymbolForPiece($pieceID, $pieceID % 2 == 0 ? self::PLAYER_WHITE : self::PLAYER_BLACK)
+		return ChessPiece::getSymbolForPiece($pieceID, $this->getCurrentTurnColour())
 			. chr(ord('a')+$startX)
 			. (8-$startY)
 			. ' '
-			. ($pieceTaken == null ? '' : ChessPiece::getSymbolForPiece($pieceTaken, $pieceTaken % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK))
+			. ($pieceTaken == null ? '' : ChessPiece::getSymbolForPiece($pieceTaken, $this->getCurrentTurnColour()))
 			. chr(ord('a')+$endX)
 			. (8-$endY)
 			. ' '
@@ -393,6 +393,11 @@ class ChessGame
 	public function getWinner()
 	{
 		return $this->winner;
+	}
+
+	public function getCurrentTurnColour()
+	{
+		return count($this->getMoves()) % 2 == 0 ? self::PLAYER_WHITE : self::PLAYER_BLACK;
 	}
 
 	public function getCurrentTurnAccountID()
