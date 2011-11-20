@@ -5,7 +5,7 @@
 	{ ?>
 		<div class="buttonA">
 			<a href="<?php echo $Target->getAttackTraderHREF(); ?>" class="buttonA">Continue&nbsp;Attack</a>
-		</div>><?php
+		</div><?php
 	}
 	else
 	{ ?>
