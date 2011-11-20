@@ -937,7 +937,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 			if(isset($messages[MSG_CASINO])) {
 				$container['folder_id'] = MSG_CASINO;
 				$template->assign('MessageCasinoLink',SmrSession::get_new_href($container));
-				$template->assign('MessageCasinoNum',$messages[MSG_PLANET]);
+				$template->assign('MessageCasinoNum',$messages[MSG_CASINO]);
 			}
 	
 			if(isset($messages[MSG_PLANET])) {
