@@ -2,7 +2,7 @@
 require_once(get_file_loc('ChessGame.class.inc'));
 //$chessGame = new ChessGame(0);
 //$template->assignByRef('Board',$chessGame->getBoard());
-$chessGames =& ChessGame::getAccountGames($player->getAccountID());
+$chessGames =& ChessGame::getOngoingAccountGames($player->getAccountID());
 $template->assign('ChessGames', $chessGames);
 
 $playersChallenged = array($player->getAccountID() => true);

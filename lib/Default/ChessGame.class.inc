@@ -196,6 +196,18 @@ class ChessGame
 		return $chessGameID;
 	}
 
+	public static function &getOngoingAccountGames($accountID)
+	{
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time < ' . TIME . ' OR end_time IS NULL);');
+		$games = array();
+		while($db->nextRecord())
+		{
+			$games[] = new ChessGame($db->getInt('chess_game_id'));
+		}
+		return $games;
+	}
+
 	public static function &getAccountGames($accountID)
 	{
 		$db = new SmrMySqlDatabase();
@@ -337,10 +349,10 @@ class ChessGame
 				' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
 				if($checking != null && $checking == 'MATE')
 				{
-					$this->db->query('UPDATE chess_game' +
-							' SET end_time=' + TIME + ',' +
-							' winner=' + $forAccountID +
-							' WHERE chess_game_id=' + $this->chessGameID + ';');
+					$this->db->query('UPDATE chess_game' .
+							' SET end_time=' . TIME . ',' .
+							' winner=' . $forAccountID .
+							' WHERE chess_game_id=' . $this->chessGameID . ';');
 					$return = 1;
 				}
 				$this->db->query('COMMIT;');
