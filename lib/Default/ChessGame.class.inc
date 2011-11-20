@@ -77,7 +77,7 @@ class ChessGame
 			while($this->db->nextRecord())
 			{
 				$pieceTakenID = $this->db->getField('piece_taken') == null ? null : $this->db->getInt('piece_taken');
-				$this->moves[$this->db->getInt('move_id')] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'));
+				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK);
 			}
 		}
 		return $this->moves;
@@ -220,13 +220,13 @@ class ChessGame
 		return $games;
 	}
 	
-	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking)
+	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour)
 	{
-		return ChessPiece::getSymbolForPiece($pieceID, $this->getCurrentTurnColour())
+		return ChessPiece::getSymbolForPiece($pieceID, $playerColour)
 			. chr(ord('a')+$startX)
 			. (8-$startY)
 			. ' '
-			. ($pieceTaken == null ? '' : ChessPiece::getSymbolForPiece($pieceTaken, $this->getCurrentTurnColour()))
+			. ($pieceTaken == null ? '' : ChessPiece::getSymbolForPiece($pieceTaken, $playerColour))
 			. chr(ord('a')+$endX)
 			. (8-$endY)
 			. ' '
@@ -332,7 +332,7 @@ class ChessGame
 				}
 				if($this->moves!=null)
 				{
-					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking);
+					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour());
 				}
 				if($p->isChecked($this->board))
 				{
