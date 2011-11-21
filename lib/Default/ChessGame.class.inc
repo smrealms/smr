@@ -351,10 +351,10 @@ class ChessGame
 									' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $pieceTaken->accountID . ' AND piece_id=' . $pieceTaken->pieceID . ' AND piece_no=' . $pieceTaken->pieceNo . ';');
 				
 					$pieceTakenSymbol = ChessPiece::getSymbolForPiece($pieceTaken, $this->getCurrentTurnColour());
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken','Total'));
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken','Total'));
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken',$pieceTakenSymbol));
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken',$pieceTakenSymbol));
+					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken','Total'), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken','Total'), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
 				}
 				$this->db->query('UPDATE chess_game_pieces' .
 							' SET x=' . $toX . ', y=' . $toY .
@@ -367,14 +367,14 @@ class ChessGame
 										' SET end_time=' . TIME . ',' .
 										' winner=' . $forAccountID .
 										' WHERE chess_game_id=' . $this->chessGameID . ';');
-						$currentPlayer->increaseHOF(1, array('Chess','Games','Won'));
-						$otherPlayer->increaseHOF(1, array('Chess','Games','Lost'));
+						$currentPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
+						$otherPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
 						return 1;
 					}
 					else if($checking == 'CHECK')
 					{
-						$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'));
-						$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'));
+						$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
+						$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'), HOF_PUBLIC);
 					}
 				}
 				return 0;
