@@ -349,9 +349,6 @@ class ChessGame
 				{
 					$this->db->query('DELETE FROM chess_game_pieces' .
 									' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $pieceTaken->accountID . ' AND piece_id=' . $pieceTaken->pieceID . ' AND piece_no=' . $pieceTaken->pieceNo . ';');
-					$this->db->query('UPDATE chess_game_pieces' .
-								' SET x=' . $toX . ', y=' . $toY .
-								' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
 				
 					$pieceTakenSymbol = ChessPiece::getSymbolForPiece($pieceTaken, $this->getCurrentTurnColour());
 					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken','Total'));
@@ -359,6 +356,9 @@ class ChessGame
 					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken',$pieceTakenSymbol));
 					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken',$pieceTakenSymbol));
 				}
+				$this->db->query('UPDATE chess_game_pieces' .
+							' SET x=' . $toX . ', y=' . $toY .
+							' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
 				if($checking != null)
 				{
 					if($checking == 'MATE')
