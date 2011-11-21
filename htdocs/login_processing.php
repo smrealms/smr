@@ -272,13 +272,15 @@ try
 	SmrSession::update();
 	//get rid of expired messages
 	$db2->query('UPDATE message SET reciever_delete = \'TRUE\', sender_delete = \'TRUE\' WHERE expire_time < '.TIME.' AND expire_time > 0');
+	// Mark message as read if it was sent to self as a mass mail.
+	$db2->query('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
 	//check to see if we need to remove player_has_unread
 	$db2 = new SmrMySqlDatabase();
 	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$account->getAccountID());
-	$db2->query('SELECT * FROM message WHERE account_id = '.$account->getAccountID().' AND msg_read = \'FALSE\' AND reciever_delete = \'FALSE\'');
+	$db2->query('SELECT game_id, message_type_id FROM message WHERE account_id = '.$account->getAccountID().' AND msg_read = \'FALSE\' AND reciever_delete = \'FALSE\'');
 	
 	while ($db2->nextRecord())
-		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->getField('game_id') . ', '.$account->getAccountID().', ' . $db2->getField('message_type_id') . ')');
+		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db2->getInt('game_id') . ', '.$account->getAccountID().', ' . $db2->getInt('message_type_id') . ')');
 	//if (!empty($_POST['return_page'])) {
 	//echo 'DAMN';
 	//	header('Location: ' . $_POST['return_page']);
