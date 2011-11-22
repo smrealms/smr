@@ -211,13 +211,14 @@ class SmrSession
 				$var = self::$var[$_REQUEST['sn']];
 				$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 				$loadDelay = isset(self::$URL_LOAD_DELAY[$currentPage]) ? self::$URL_LOAD_DELAY[$currentPage] : 0;
+				$initialTimeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime']);
 				while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay)
 				{
 					$sleepTime = round(($loadDelay-$timeBetweenLoads)*1000000);
 				//	echo 'Sleeping for: ' . $sleepTime . 'us';
 					usleep($sleepTime);
 				}
-				self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
+				self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
 			}
 		}
 		else
