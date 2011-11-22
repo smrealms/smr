@@ -275,6 +275,7 @@ define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 define('LOCK_DURATION',10); // The max time for a lock to last before timing out.
 define('LOCK_BUFFER',3); // The minimum time that must be remaining on the lock duration for the lock to be valid.
 
+define('USING_AJAX',isset($_REQUEST['ajax'])&&$_REQUEST['ajax']==1);
 require_once(LIB . 'Default/SmrSession.class.inc');
 require_once(LIB . 'Default/Template.class.inc');
 $template = new Template();

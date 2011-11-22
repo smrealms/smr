@@ -498,8 +498,6 @@ function do_voodoo()
 {
 	global $lock, $var,$template,$account;
 	$ajaxContainer = isset($var['AJAX']) && $var['AJAX'] == true;
-	if(!defined('USING_AJAX'))
-		define('USING_AJAX',false);
 	if(!$ajaxContainer && USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
 		exit;
 //	ob_clean();
