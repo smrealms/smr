@@ -22,13 +22,6 @@ try
 	//A date in the past
 	header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
 	
-	if(isset($_REQUEST['ajax'])&&$_REQUEST['ajax']==1)
-		$ajax=true;
-	else
-		$ajax=false;
-	
-	define('USING_AJAX',$ajax);
-	
 	//xdebug_start_profiling();
 	
 	//ob_start();
