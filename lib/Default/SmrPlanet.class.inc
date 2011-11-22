@@ -81,7 +81,7 @@ class SmrPlanet
 			// insert planet into db
 			$db = new SmrMySqlDatabase();
 			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time) ' .
-				'VALUES (' . $gameID . ', '.$sectorID.', '.$inhabitableTime.')');
+				'VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ')');
 		}
 		return self::getPlanet($gameID,$sectorID,true);
 		//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID]))
@@ -95,14 +95,10 @@ class SmrPlanet
 	public static function removePlanet($gameID,$sectorID)
 	{
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM planet WHERE game_id = '.$gameID.' AND ' .
-									'sector_id = '.$sectorID);
-		$db->query('DELETE FROM planet_has_cargo WHERE game_id = '.$gameID.' AND ' .
-									'sector_id = '.$sectorID);
-		$db->query('DELETE FROM planet_has_building WHERE game_id = '.$gameID.' AND ' .
-									'sector_id = '.$sectorID);
-		$db->query('DELETE FROM planet_is_building WHERE game_id = '.$gameID.' AND ' .
-									'sector_id = '.$sectorID);
+		$db->query('DELETE FROM planet WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM planet_has_cargo WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM planet_has_building WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM planet_is_building WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
@@ -169,21 +165,20 @@ class SmrPlanet
 		//	return $planet;
 
 
-		$this->db->query('SELECT * FROM planet WHERE game_id = '.$gameID.' AND ' .
-											'sector_id = '.$sectorID);
+		$this->db->query('SELECT * FROM planet WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		if ($this->db->nextRecord())
 		{
-			$this->sectorID			= $this->db->getField('sector_id');
-			$this->gameID			= $this->db->getField('game_id');
+			$this->sectorID			= $this->db->getInt('sector_id');
+			$this->gameID			= $this->db->getInt('game_id');
 			$this->planetName		= stripslashes($this->db->getField('planet_name'));
-			$this->ownerID			= $this->db->getField('owner_id');
+			$this->ownerID			= $this->db->getInt('owner_id');
 			$this->password			= $this->db->getField('password');
-			$this->shields			= $this->db->getField('shields');
-			$this->drones			= $this->db->getField('drones');
-			$this->credits			= $this->db->getField('credits');
-			$this->bonds			= $this->db->getField('bonds');
-			$this->maturity			= $this->db->getField('maturity');
-			$this->inhabitableTime	= $this->db->getField('inhabitable_time');
+			$this->shields			= $this->db->getInt('shields');
+			$this->drones			= $this->db->getInt('drones');
+			$this->credits			= $this->db->getInt('credits');
+			$this->bonds			= $this->db->getInt('bonds');
+			$this->maturity			= $this->db->getInt('maturity');
+			$this->inhabitableTime	= $this->db->getInt('inhabitable_time');
 
 			$this->getStockpile();
 			$this->getBuildings();
@@ -313,7 +308,7 @@ class SmrPlanet
 			}
 			if($num < 0)
 			{
-				throw new Exception('You cannot set negative bonds.');
+				throw new Exception('You cannot set negative maturity.');
 			}
 			$this->maturity = $num;
 			$this->hasChanged = true;
@@ -515,16 +510,15 @@ class SmrPlanet
 				// initialize cargo array
 				$this->stockpile = array();
 				// get supplies from db
-				$this->db->query('SELECT * FROM planet_has_cargo WHERE game_id = '.$this->gameID.' AND ' .
-																'sector_id = '.$this->sectorID);
+				$this->db->query('SELECT good_id, amount FROM planet_has_cargo WHERE game_id = ' . $db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $db->escapeNumber($this->getSectorID()));
 				// adding cargo and amount to array
 				while ($this->db->nextRecord())
-				$this->stockpile[$this->db->getField('good_id')] = $this->db->getField('amount');
+					$this->stockpile[$this->db->getInt('good_id')] = $this->db->getInt('amount');
 			}
 			if($goodID===false)
-			return $this->stockpile;
+				return $this->stockpile;
 			if(isset($this->stockpile[$goodID]))
-			return $this->stockpile[$goodID];
+				return $this->stockpile[$goodID];
 			return 0;
 		}
 
@@ -550,14 +544,14 @@ class SmrPlanet
 		public function decreaseStockpile($goodID,$amount)
 		{
 			if($amount < 0)
-			throw new Exception('Trying to decrease negative stockpile.');
+				throw new Exception('Trying to decrease negative stockpile.');
 			$this->setStockpile($goodID,$this->getStockpile($goodID) - $amount);
 		}
 
 		public function increaseStockpile($goodID,$amount)
 		{
 			if($amount < 0)
-			throw new Exception('Trying to increase negative stockpile.');
+				throw new Exception('Trying to increase negative stockpile.');
 			$this->setStockpile($goodID,$this->getStockpile($goodID) + $amount);
 		}
 
@@ -568,12 +562,11 @@ class SmrPlanet
 				$this->buildings = array();
 					
 				// get buildingss from db
-				$this->db->query('SELECT * FROM planet_has_building WHERE game_id = '.$this->getGameID().' AND ' .
-																 'sector_id = '.$this->getSectorID());
+				$this->db->query('SELECT construction_id, amount FROM planet_has_building WHERE game_id = ' . $db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $db->escapeNumber($this->getSectorID()));
 				// adding building and amount to array
 				while ($this->db->nextRecord())
 				{
-					$this->buildings[$this->db->getField('construction_id')] = $this->db->getField('amount');
+					$this->buildings[$this->db->getInt('construction_id')] = $this->db->getInt('amount');
 				}
 			}
 			return $this->buildings;
@@ -633,30 +626,28 @@ class SmrPlanet
 			{
 				$toBeUpdated = false;
 				$this->currentlyBuilding = array();
-				$this->db->query('SELECT * FROM planet_is_building ' .
-							 'WHERE game_id = '.$this->gameID.' AND ' .
-								   'sector_id = '.$this->sectorID);
+				$this->db->query('SELECT * FROM planet_is_building WHERE game_id = ' . $db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $db->escapeNumber($this->getSectorID()));
 				while($this->db->nextRecord())
 				{
-					if($this->db->getField('time_complete') <= TIME)
+					if($this->db->getInt('time_complete') <= TIME)
 					{
 						$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-						$expGain = $PLANET_BUILDINGS[$this->db->getField('construction_id')]['ExpGain'];
-						$player =& SmrPlayer::getPlayer($this->db->getField('constructor_id'),$this->getGameID());
+						$expGain = $PLANET_BUILDINGS[$this->db->getInt('construction_id')]['ExpGain'];
+						$player =& SmrPlayer::getPlayer($this->db->getInt('constructor_id'),$this->getGameID());
 						$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
 						$player->increaseExperience($expGain);
 						$player->increaseHOF($expGain,array('Planet','Buildings','Experience'), HOF_ALLIANCE);
-						$this->hasStoppedBuilding[] = $this->db->getField('building_slot_id');
-						$this->increaseBuilding($this->db->getField('construction_id'), 1);
+						$this->hasStoppedBuilding[] = $this->db->getInt('building_slot_id');
+						$this->increaseBuilding($this->db->getInt('construction_id'), 1);
 					}
 					else
 					{
-						$this->currentlyBuilding[$this->db->getField('building_slot_id')] = array(
-						'BuildingSlotID' => $this->db->getField('building_slot_id'),
-						'ConstructionID' => $this->db->getField('construction_id'),
-						'ConstructorID' => $this->db->getField('constructor_id'),
-						'Finishes' => $this->db->getField('time_complete'),
-						'TimeRemaining' => $this->db->getField('time_complete') - TIME
+						$this->currentlyBuilding[$this->db->getInt('building_slot_id')] = array(
+							'BuildingSlotID' => $this->db->getInt('building_slot_id'),
+							'ConstructionID' => $this->db->getInt('construction_id'),
+							'ConstructorID' => $this->db->getInt('constructor_id'),
+							'Finishes' => $this->db->getInt('time_complete'),
+							'TimeRemaining' => $this->db->getInt('time_complete') - TIME
 						);
 					}
 				}
@@ -674,10 +665,7 @@ class SmrPlanet
 				$this->db->query('SELECT construction_id, max_construction FROM planet_construction');
 				while ($this->db->nextRecord())
 				{
-					$constructionID	= $this->db->getField('construction_id');
-					$maxConstruction	= $this->db->getField('max_construction');
-
-					$this->maxConstruction[$constructionID] = $maxConstruction;
+					$this->maxConstruction[$this->db->getInt('construction_id')] = $this->db->getInt('max_construction');
 				}
 			}
 			if($buildingTypeID===false)
@@ -721,16 +709,16 @@ class SmrPlanet
 		$this->doDelayedUpdates();
 		if($this->hasChanged)
 		{
-			$this->db->query('UPDATE planet SET owner_id = '.$this->ownerID.', ' .
-									'password = '.$this->db->escapeString($this->password).', ' .
-									'planet_name = ' . $this->db->escapeString($this->planetName) . ', ' .
-									'shields = '.$this->shields.', ' .
-									'drones = '.$this->drones.', ' .
-									'credits = '.$this->credits.', ' .
-									'bonds = '.$this->bonds.', ' .
-									'maturity = '.$this->maturity.' ' .
-								'WHERE game_id = '.$this->gameID.' AND ' .
-									  'sector_id = '.$this->sectorID);
+			$this->db->query('UPDATE planet SET owner_id = ' . $this->db->escapeNumber($this->ownerID) . ',
+									password = '.$this->db->escapeString($this->password) .',
+									planet_name = ' . $this->db->escapeString($this->planetName) . ',
+									shields = ' . $this->db->escapeNumber($this->shields) . ',
+									drones = ' . $this->db->escapeNumber($this->drones) . ',
+									credits = ' . $this->db->escapeNumber($this->credits) . ',
+									bonds = ' . $this->db->escapeNumber($this->bonds) . ',
+									maturity = ' . $this->db->escapeNumber($this->maturity) . '
+								WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . '
+									AND sector_id = ' . $this->db->escapeNumber($this->sectorID));
 			$this->hasChanged = false;
 		}
 
@@ -742,13 +730,13 @@ class SmrPlanet
 				if ($amount != 0)
 				{
 					$this->db->query('REPLACE INTO planet_has_cargo (game_id, sector_id, good_id, amount) ' .
-										 'VALUES('.$this->getGameID().', '.$this->getSectorID().', '.$id.', '.$amount.')');
+										 'VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($amount) . ')');
 				}
 				else
 				{
-					$this->db->query('DELETE FROM planet_has_cargo WHERE game_id = '.$this->getGameID().' AND ' .
-										'sector_id = '.$this->getSectorID().' AND ' .
-										'good_id = '.$id);
+					$this->db->query('DELETE FROM planet_has_cargo WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+										AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
+										AND good_id = ' . $this->db->escapeNumber($id));
 				}
 			}
 		}
@@ -756,8 +744,10 @@ class SmrPlanet
 		
 		if(count($this->hasStoppedBuilding)>0)
 		{
-			$this->db->query('DELETE FROM planet_is_building WHERE game_id = '.$this->getGameID().' AND ' .
-							 'sector_id = '.$this->getSectorID() . ' AND building_slot_id IN (' . $this->db->escapeArray($this->hasStoppedBuilding) . ') LIMIT '.count($this->hasStoppedBuilding));
+			$this->db->query('DELETE FROM planet_is_building
+							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
+								AND building_slot_id IN (' . $this->db->escapeArray($this->hasStoppedBuilding) . ') LIMIT ' . count($this->hasStoppedBuilding));
 			$this->hasStoppedBuilding = array();
 		}
 		// write building info
@@ -768,13 +758,14 @@ class SmrPlanet
 				if ($this->hasBuilding($id))
 				{
 					$this->db->query('REPLACE INTO planet_has_building (game_id, sector_id, construction_id, amount) ' .
-										'VALUES('.$this->gameID.', '.$this->sectorID.', '.$id.', '.$this->getBuilding($id).')');
+										'VALUES(' . $this->db->escapeNumber($this->gameID) . ', ' . $this->db->escapeNumber($this->sectorID) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($this->getBuilding($id)) . ')');
 				}
 				else
 				{
-					$this->db->query('DELETE FROM planet_has_building WHERE game_id = '.$this->gameID.' AND ' .
-									   'sector_id = '.$this->sectorID.' AND ' .
-									   'construction_id = '.$id);
+					$this->db->query('DELETE FROM planet_has_building
+									WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . '
+										AND sector_id = ' . $this->db->escapeNumber($this->sectorID) . '
+										AND construction_id = ' . $this->db->escapeNumber($id));
 				}
 				$this->hasChangedBuildings[$id] = false;
 			}
@@ -850,17 +841,17 @@ class SmrPlanet
 		}
 
 		// gets the time for the buildings
-		$time_complete = TIME + round($PLANET_BUILDINGS[$constructionID]['Build Time'] / Globals::getGameSpeed($this->getGameID()));
+		$timeComplete = TIME + round($PLANET_BUILDINGS[$constructionID]['Build Time'] / Globals::getGameSpeed($this->getGameID()));
 
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
-												'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$constructionID.', '.$constructor->getAccountID().','.$time_complete.')');
+						'VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($constructionID) . ', ' . $this->db->escapeNumber($constructor->getAccountID()) . ',' . $this->db->escapeNumber($timeComplete) . ')');
 
 		$this->currentlyBuilding[$this->db->getInsertID()] = array(
 			'BuildingSlotID' => $this->db->getInsertID(),
 			'ConstructionID' => $constructionID,
 			'ConstructorID' => $constructor->getAccountID(),
-			'Finishes' => $time_complete,
-			'TimeRemaining' => $time_complete - TIME
+			'Finishes' => $timeComplete,
+			'TimeRemaining' => $timeComplete - TIME
 		);
 	}
 
@@ -944,24 +935,24 @@ class SmrPlanet
 		{
 			$attacker->increaseHOF(1,array('Combat','Planet','Number Of Attacks'), HOF_PUBLIC);
 			$this->db->query('REPLACE INTO player_attacks_planet (game_id, account_id, sector_id, time, level) VALUES ' .
-					'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
+					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 
 		$allowed = TIME - 600;
-		$this->db->getField('SELECT * FROM news WHERE type = \'BREAKING\' AND game_id = '.$trigger->getGameID().' AND time > '.$allowed);
+		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND time > ' . $this->db->escapeNumber($allowed) . ' LIMIT 1');
 		if ($this->db->getNumRows()==0)
 		{
 			if (count($attackers) >= 5)
 			{
 				$owner =& $this->getOwner();
 				$text = count($attackers) . ' members of '.$trigger->getAllianceBBLink().' have been spotted attacking ' .
-				$this->getDisplayName() . ' in sector #' . $this->getSectorID() . '.  The planet is owned by ' . $owner->getBBLink();
+					$this->getDisplayName() . ' in sector #' . $this->getSectorID() . '.  The planet is owned by ' . $owner->getBBLink();
 				if ($owner->hasAlliance())
 				{
 					$text .= ', a member of ' . $owner->getAllianceBBLink();
 				}
 				$text .= '.';
-				$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$this->getGameID().', ' . TIME . ', '.$this->db->escapeString($text).', \'BREAKING\','.$trigger->getAccountID().','.$trigger->getAllianceID().','.$owner->getAccountID().','.$owner->getAllianceID().')');
+				$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($text) . ', \'BREAKING\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ')');
 			}
 		}
 	}
@@ -1179,16 +1170,16 @@ class SmrPlanet
 	public function creditCurrentAttackersForKill()
 	{
 		//get all players involved for HoF
-		$allowed = TIME - 60 * 60 * 3;
-		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND time > '.$allowed);
+		$allowed = TIME - 3600 * 3;
+		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber($allowed));
 		$temp = array();
 		while ($this->db->nextRecord())
 		{
-			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF($this->db->getField('level'),array('Combat','Planet','Levels'), HOF_PUBLIC);
+			$currPlayer =& SmrPlayer::getPlayer($this->db->getInt('account_id'),$this->getGameID());
+			$currPlayer->increaseHOF($this->db->getInt('level'),array('Combat','Planet','Levels'), HOF_PUBLIC);
 			$currPlayer->increaseHOF(1,array('Combat','Planet','Completed'), HOF_PUBLIC);
 		}
-		$this->db->query('DELETE FROM player_attacks_planet WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID());
+		$this->db->query('DELETE FROM player_attacks_planet WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 	}
 
 	public function &killPlanetByPlayer(AbstractSmrPlayer &$killer)
@@ -1197,7 +1188,7 @@ class SmrPlanet
 		$this->creditCurrentAttackersForKill();
 
 		//kick everyone from planet
-		$this->db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID());
+		$this->db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		$this->removeClaimed();
 		$this->removePassword();
 		return $return;
