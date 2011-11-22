@@ -113,6 +113,13 @@ class SmrSession
 			'universe_create_warps.php' => self::ALWAYS_AVAILABLE
 		);
 	
+	private static $URL_LOAD_DELAY = array(
+		'sector_jump_processing' => .3,
+		'sector_move_processing' => .3,
+		'trader_attack_processing.php' => .5,
+		'trader_examine.php' => .3
+	);
+	
 	protected static $db;
 
 	public static $session_id;
@@ -198,6 +205,23 @@ class SmrSession
 					}
 				} unset($value);
 			}
+			
+			if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']]))
+			{
+				$var = self::$var[$_REQUEST['sn']];
+				$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
+				if(isset(self::$URL_LOAD_DELAY[$currentPage]))
+				{
+					$loadDelay = self::$URL_LOAD_DELAY[$currentPage];
+					while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay)
+					{
+						$sleepTime = round(($loadDelay-$timeBetweenLoads)*1000000);
+					//	echo 'Sleeping for: ' . $sleepTime . 'us';
+						usleep($sleepTime);
+					}
+				}
+				$db->query('INSERT INTO debug VALUES (' . $db->escapeString('Delay: ' . $currentPage) . ',' . $db->escapeNumber(self::$account_id) . ',' . $db->escapeNumber($timeBetweenLoads) . ')');
+			}
 		}
 		else
 		{
@@ -209,6 +233,9 @@ class SmrSession
 			self::$game_id		= 0;
 			self::$commonIDs	= array();
 		}
+		
+		define('MICRO_TIME', microtime());
+		define('TIME', (int)microtimeSec(MICRO_TIME));
 		
 		if(self::$game_id)
 		{
@@ -272,10 +299,10 @@ class SmrSession
 	
 	public static function retrieveVar($sn)
 	{
-		self::$SN = $sn;
-		SmrSession::updateSN();
 		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
 			return false;
+		self::$SN = $sn;
+		SmrSession::updateSN();
 		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID']))
 		{
 //			if(preg_match('/processing/',self::$var[$sn]['body']))
@@ -351,9 +378,15 @@ class SmrSession
 	{
 		$container['CommonID'] = self::getCommonID($container);
 		if(isset(self::$commonIDs[$container['CommonID']]))
+		{
 			$sn = self::$commonIDs[$container['CommonID']];
+			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
+		}
 		else
+		{
 			do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
+			$container['PreviousRequestTime'] = MICRO_TIME;
+		}
 		self::$commonIDs[$container['CommonID']] = $sn;
 		return $sn;
 	}
@@ -362,6 +395,7 @@ class SmrSession
 	{
 		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
+		unset($commonContainer['PreviousRequestTime']);
 		unset($commonContainer['CommonID']);
 		return md5(serialize($commonContainer));
 	}

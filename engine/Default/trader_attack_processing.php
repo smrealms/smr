@@ -1,17 +1,4 @@
 <?php
-$timeBetweenAttacks = 0;
-if($var['time'])
-{
-	$timeBetweenAttacks = microtimeDiff(microtime(),$var['time']);
-	if($timeBetweenAttacks<MIN_TIME_BETWEEN_SHOTS)
-	{
-		$sleepTime = round((MIN_TIME_BETWEEN_SHOTS-$timeBetweenAttacks)*1000000);
-	//	echo 'Sleeping for: ' . $sleepTime . 'us';
-		usleep($sleepTime);
-	}
-	$var['time']=microtime();
-	$db->query('INSERT INTO debug VALUES (\'attack_speed\','.$player->getAccountID().','.($timeBetweenAttacks).')');
-}
 
 if($player->hasNewbieTurns())
 	create_error('You are under newbie protection.');
@@ -72,7 +59,7 @@ foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer)
 } unset($teamPlayer);
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
-$account->log(7, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'].' with '.$timeBetweenAttacks.'s between script loads', $sector->getSectorID());
+$account->log(7, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $sector->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');

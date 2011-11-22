@@ -1,7 +1,7 @@
 <?php
 @date_default_timezone_set(@date_default_timezone_get());
-//ini_set('display_errors', TRUE);
-//ini_set('display_startup_errors', TRUE);
+
+require_once('config.specific.php');
 
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
@@ -25,8 +25,6 @@ define('MAX_IMAGE_HEIGHT',30);
 
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 define('MULTI_CHECKING_COOKIE_VERSION','v3');
-
-require_once('config.specific.php');
 
 /*
  * Localisations
@@ -86,7 +84,6 @@ define('SHIP_TYPE_VENGEANCE',72);
  * Combat system
  */
 define('MAX_ATTACK_RATING_NEWBIE',4);
-define('MIN_TIME_BETWEEN_SHOTS',.5);
 define('MAXIMUM_FLEET_SIZE', 10);
 define('MINE_ARMOUR', 20);
 define('CD_ARMOUR', 3);
@@ -247,8 +244,6 @@ define('NHA_ID',302);
 
 define('NUM_RACES', 8);
 
-define('MICRO_TIME', microtime());
-define('TIME', (int)microtimeSec(MICRO_TIME));
 define('TIME_BEFORE_INACTIVE', 259200); // 3 days.
 
 define('ACCURACY_STAT_FACTOR', 0.04);
@@ -280,6 +275,7 @@ define('AJAX_UNPROTECTED_REFRESH_TIME',800);
 define('LOCK_DURATION',10); // The max time for a lock to last before timing out.
 define('LOCK_BUFFER',3); // The minimum time that must be remaining on the lock duration for the lock to be valid.
 
+require_once(LIB . 'Default/SmrSession.class.inc');
 require_once(LIB . 'Default/Template.class.inc');
 $template = new Template();
 $GLOBALS['template'] =& $template;
