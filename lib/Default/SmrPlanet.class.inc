@@ -165,7 +165,7 @@ class SmrPlanet
 		//	return $planet;
 
 
-		$this->db->query('SELECT * FROM planet WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$this->db->query('SELECT * FROM planet WHERE game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID));
 		if ($this->db->nextRecord())
 		{
 			$this->sectorID			= $this->db->getInt('sector_id');
@@ -510,7 +510,7 @@ class SmrPlanet
 				// initialize cargo array
 				$this->stockpile = array();
 				// get supplies from db
-				$this->db->query('SELECT good_id, amount FROM planet_has_cargo WHERE game_id = ' . $db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $db->escapeNumber($this->getSectorID()));
+				$this->db->query('SELECT good_id, amount FROM planet_has_cargo WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
 				// adding cargo and amount to array
 				while ($this->db->nextRecord())
 					$this->stockpile[$this->db->getInt('good_id')] = $this->db->getInt('amount');
@@ -562,7 +562,7 @@ class SmrPlanet
 				$this->buildings = array();
 					
 				// get buildingss from db
-				$this->db->query('SELECT construction_id, amount FROM planet_has_building WHERE game_id = ' . $db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $db->escapeNumber($this->getSectorID()));
+				$this->db->query('SELECT construction_id, amount FROM planet_has_building WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
 				// adding building and amount to array
 				while ($this->db->nextRecord())
 				{
@@ -626,7 +626,7 @@ class SmrPlanet
 			{
 				$toBeUpdated = false;
 				$this->currentlyBuilding = array();
-				$this->db->query('SELECT * FROM planet_is_building WHERE game_id = ' . $db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $db->escapeNumber($this->getSectorID()));
+				$this->db->query('SELECT * FROM planet_is_building WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
 				while($this->db->nextRecord())
 				{
 					if($this->db->getInt('time_complete') <= TIME)
