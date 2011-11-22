@@ -249,7 +249,7 @@ define('NUM_RACES', 8);
 
 define('MICRO_TIME', microtime());
 define('TIME', (int)microtimeSec(MICRO_TIME));
-define('INACTIVE_TIME', TIME - 259200);
+define('TIME_BEFORE_INACTIVE', 259200); // 3 days.
 
 define('ACCURACY_STAT_FACTOR', 0.04);
 define('INCREASED_ACC_GADGET_FACTOR', 0.15);
