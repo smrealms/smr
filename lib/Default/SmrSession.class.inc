@@ -153,16 +153,16 @@ class SmrSession
 		}
 
 		// try to get current session
-		self::$db->query('DELETE FROM active_session WHERE last_accessed < '.(TIME-self::TIME_BEFORE_EXPIRY));
+		self::$db->query('DELETE FROM active_session WHERE last_accessed < '.self::$db->escapeNumber(TIME-self::TIME_BEFORE_EXPIRY));
 		self::$db->query('SELECT * FROM active_session WHERE session_id = '.self::$db->escapeString(self::$session_id).' LIMIT 1');
 		if (self::$db->nextRecord())
 		{
 			self::$generate = false;
 			self::$session_id		= self::$db->getField('session_id');
-			self::$account_id		= self::$db->getField('account_id');
-			self::$old_account_id	= self::$db->getField('old_account_id');
-			self::$game_id			= self::$db->getField('game_id');
-			self::$last_accessed	= self::$db->getField('last_accessed');
+			self::$account_id		= self::$db->getInt('account_id');
+			self::$old_account_id	= self::$db->getInt('old_account_id');
+			self::$game_id			= self::$db->getInt('game_id');
+			self::$last_accessed	= self::$db->getInt('last_accessed');
 			self::$var = @unserialize(@gzuncompress(self::$db->getField('session_var')));
 			self::$commonIDs	= array();
 			self::$lastSN = self::$db->getField('last_sn');
@@ -212,11 +212,11 @@ class SmrSession
 		
 		if(self::$game_id)
 		{
-			self::$db->query('SELECT game_type,game_speed FROM game WHERE game_id = '.self::$game_id.' LIMIT 1');
+			self::$db->query('SELECT game_type, game_speed FROM game WHERE game_id = ' . self::$db->escapeNumber(self::$game_id) . ' LIMIT 1');
 			if (self::$db->nextRecord())
 			{
-				self::$game_type = self::$db->getField('game_type');
-				self::$game_speed = self::$db->getField('game_speed');
+				self::$game_type = self::$db->getInt('game_type');
+				self::$game_speed = self::$db->getInt('game_speed');
 			}
 		}
 		if(class_exists('SmrMySqlDatabase',false))
@@ -237,14 +237,14 @@ class SmrSession
 		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate || (isset($var['AJAX']) && $var['AJAX'] == true))
 		{
-			self::$db->query('UPDATE active_session SET account_id='.self::$account_id.',old_account_id='.(is_numeric(self::$old_account_id)?self::$old_account_id:0).',game_id=' . self::$game_id . (!USING_AJAX ? ',last_accessed=' . TIME : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
+			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',old_account_id=' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(TIME) : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
 					',last_sn='.self::$db->escapeString(self::$SN).
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
 		else
 		{
-			self::$db->query('DELETE FROM active_session WHERE account_id=' . self::$account_id . ' LIMIT 1');
-			self::$db->query('INSERT INTO active_session (session_id, account_id, old_account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$account_id . ',' . (is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',' . self::$game_id . ',' . TIME . ',' . self::$db->escapeBinary($compressed)  . ')');
+			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' LIMIT 1');
+			self::$db->query('INSERT INTO active_session (session_id, account_id, old_account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(TIME) . ',' . self::$db->escapeBinary($compressed)  . ')');
 			self::$generate = false;
 		}
 		$db = new SmrMySqlDatabase();
