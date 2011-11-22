@@ -220,7 +220,7 @@ class SmrSession
 						usleep($sleepTime);
 					}
 				}
-				$db->query('INSERT INTO debug VALUES (' . $db->escapeString('Delay: ' . $currentPage) . ',' . $db->escapeNumber(self::$account_id) . ',' . $db->escapeNumber($timeBetweenLoads) . ')');
+				self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
 			}
 		}
 		else
