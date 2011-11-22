@@ -23,6 +23,9 @@ Table of Content
 	This document describes how to write code for SMR. It is advised to follow these guide in each
 	way! Otherwise your script can't be used!
 
+
+	SMR requires mysql, curl, refkit (for npcs)
+
 2.	Writing Code for SMR
 ========================
 
@@ -40,16 +43,14 @@ Table of Content
 	the closing bracket has to be reidented. The block have to be surrounded by one
 	empty line (before and after). So typical code would look like:
 
-		if {!empty($action)) {
-
+		if (!empty($action)) {
 			doSomtething1();
 			doSomtething2();
-
 		}
 
 	If the is only one line leave out the brackets and the empty lines!
 
-		if {!empty($action))
+		if (!empty($action))
 			doSomtething();
 
 	For HTML form elements always use the css class InputFields
@@ -67,11 +68,16 @@ Table of Content
 	SEARCH YOUR FILES FOR 'HREF'! If you get a result you made something wrong and didn't
 	follow this guide!
 	I've created a functionality to transport information from one page to another pager
-	saftly through database. To use this functionality you must proceed the following
+	safely through database. To use this functionality you must proceed the following
 	guideline. To transport any variables between pages you must create a container object.
 	This object is an error that must have at least one element with the URL of the calling
 	page. First of all you have to create a new container array. NEVER reuse an old container
-	because you never know which information are in that. So the first line would be:
+	because you never know which information are in that.
+
+	Preferred is to use create_container:
+	$container = create_container('skeleton.php', 'game_play.php');
+
+	So the first line would be:
 
 		$container = array();
 
@@ -207,14 +213,14 @@ Table of Content
 
 		forward($container);
 
-	If you have to take turns from a user use the $player->takeTurns(); It also deduct newbie turns!
+	If you have to take turns from a user use the $player->takeTurns(); It also deducts newbie turns!
 
 		$player->takeTurns(3);
 
 	Don't forget to $player->update() after that to make it permanent.
 	If you have to safe a VARCHAR string to the database you have to look for ' in the string you
-	want to save. This apostroph causes troubles to database while updating tables. Consider using
-	the function formatString() from loader.php script. It can AND should be used everywhere.
+	want to save. This apostrophe causes troubles to database while updating tables. Consider using
+	the function $db->escapeString() from MySqlDatabase.class.inc script. It can AND _should_ be used everywhere.
 
 		$db->query('UPDATE table SET column = ' . formatString($my_column));
 
@@ -226,21 +232,7 @@ Table of Content
 2.7. What to do in ERROR case?
 ------------------------------
 
-	In case you have to present the user an error page you must consider what to do.
-	If you are in a processing script (that doesn't have any output at all)
-	you have to use setError() like
+	In case you have to present the user an error page you have to use create_error() like
 
 		if ($player->getNewbieTurns() > 0)
-			setError('You are under newbie protection!');
-
-	If you are within a script that is loaded from the skeleton.php page
-	you must use create_error AND return from current script
-
-		if ($player->getNewbieTurns() > 0) {
-
-	        create_error('You are under newbie protection!');
-	        return;
-
-		}
-
-	Always think about using which one is the correct one! There are magnificent differences!
+			create_error('You are under newbie protection!');
