@@ -44,31 +44,39 @@ else
 	if ($alliance->getAccount() < $amount)
 		create_error('Your alliance isn\'t soo rich!');
 	if ($alliance_id == $player->getAllianceID()) {
-		$db->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$alliance_id);
-		if ($db->nextRecord()) $role_id = $db->getField('role_id');
+		$db->query('SELECT role_id FROM player_has_alliance_role WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id));
+		if ($db->nextRecord()) $role_id = $db->getInt('role_id');
 		else $role_id = 0;
-		$query = 'role_id = '.$role_id;
+		$query = 'role_id = ' . $db->escapeNumber($role_id);
 	} else {
 		$query = 'role = ' . $db->escape_string($player->getAllianceName());
 	}
-	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $alliance_id . ' AND game_id = ' . $player->getGameID() . ' AND ' . $query);
+	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' . $query);
 	$db->nextRecord();
-	if ($db->getField('with_per_day') == -1) {
+	if ($db->getInt('with_per_day') == -1)
+	{
 		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\'');
-		if ($db->nextRecord()) $playerWith = $db->getField('total');
+		if ($db->nextRecord()) $playerWith = $db->getInt('total');
 		else $playerWith = 0;
 		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
 				'payee_id = '.$player->getAccountID().' AND transaction = \'Deposit\'');
-		if ($db->nextRecord()) $playerDep = $db->getField('total');
+		if ($db->nextRecord()) $playerDep = $db->getInt('total');
 		else $playerDep = 0;
 		$differential = $playerDep - $playerWith;
 		if ($differential - $amount < 0) create_error('Your alliance won\'t allow you to take so much with how little you\'ve given!');
-	} elseif ($db->getField('with_per_day') >= 0) {
-		$max = $db->getField('with_per_day');
-		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
-				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\' AND time > ' . (TIME - 24 * 60 * 60));
-		if ($db->nextRecord() && !is_null($db->getField('total'))) $total = $db->getField('total');
+	}
+	elseif ($db->getInt('with_per_day') >= 0)
+	{
+		$max = $db->getInt('with_per_day');
+		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions
+					WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . '
+						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+						AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
+						AND transaction = \'Payment\'
+						AND exempt = 0
+						AND time > ' . $db->escapeNumber(TIME - 86400));
+		if ($db->nextRecord() && !is_null($db->getField('total'))) $total = $db->getInt('total');
 		else $total = 0;
 		if ($total + $amount > $max) create_error('Your alliance doesn\'t allow you to take that much cash this often!');
 	}
@@ -93,17 +101,17 @@ else
 
 // get next transaction id
 $db->query('SELECT MAX(transaction_id) as next_id FROM alliance_bank_transactions ' .
-		   'WHERE alliance_id = '.$alliance_id.' AND ' .
-				 'game_id = '.$player->getGameID());
+		   'WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND ' .
+				 'game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->nextRecord())
-	$next_id = $db->getField('next_id') + 1;
+	$next_id = $db->getInt('next_id') + 1;
 
 // save log
 if ($_REQUEST['requestExempt']) $requestExempt = 1;
 else $requestExempt = 0;
-$db->query('INSERT INTO alliance_bank_transactions ' .
-		   '(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt) ' .
-		   'VALUES('.$alliance_id.', '.$player->getGameID().', '.$next_id.', ' . TIME . ', '.$player->getAccountID().', ' . $db->escape_string($message, true) . ', '.$db->escapeString($action).', '.$amount.', '.$requestExempt.')');
+$db->query('INSERT INTO alliance_bank_transactions 
+		   (alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt)
+		   VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escape_string($message, true) . ', '.$db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
 
 // update player credits
 $player->update();
