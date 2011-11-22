@@ -16,7 +16,7 @@ if (isset($MessageBoxes))
 					<a href="<?php echo $MessageBox['ViewHref']; ?>"><?php echo $MessageBox['Name']; ?></a>
 				</td>
 				<td align="center" class="yellow"><?php echo $MessageBox['MessageCount']; ?></td>
-				<td><a href="<?php echo $MessageBox['DeleteHref']; ?>">Empty</a></td>
+				<td><a href="<?php echo $MessageBox['DeleteHref']; ?>">Empty Read Messages</a></td>
 			</tr><?php
 		} ?>
 	</table>
