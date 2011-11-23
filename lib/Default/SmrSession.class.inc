@@ -136,9 +136,6 @@ class SmrSession
 	
 	protected static $previousAjaxReturns;
 	protected static $ajaxReturns=array();
-	
-	public static $game_type;
-	public static $game_speed;
 
 	public static function init()
 	{
@@ -235,15 +232,6 @@ class SmrSession
 		define('MICRO_TIME', microtime());
 		define('TIME', (int)microtimeSec(MICRO_TIME));
 		
-		if(self::$game_id)
-		{
-			self::$db->query('SELECT game_type, game_speed FROM game WHERE game_id = ' . self::$db->escapeNumber(self::$game_id) . ' LIMIT 1');
-			if (self::$db->nextRecord())
-			{
-				self::$game_type = self::$db->getInt('game_type');
-				self::$game_speed = self::$db->getInt('game_speed');
-			}
-		}
 		if(class_exists('SmrMySqlDatabase',false))
 			$db = new SmrMySqlDatabase();
 	}
