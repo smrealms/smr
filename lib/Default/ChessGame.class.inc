@@ -360,6 +360,7 @@ class ChessGame
 				$this->db->query('UPDATE chess_game_pieces' .
 							' SET x=' . $toX . ', y=' . $toY .
 							' WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
+				$return = 0;
 				if($checking != null)
 				{
 					if($checking == 'MATE')
@@ -370,7 +371,7 @@ class ChessGame
 										' WHERE chess_game_id=' . $this->chessGameID . ';');
 						$currentPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
 						$otherPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
-						return 1;
+						$return = 1;
 					}
 					else if($checking == 'CHECK')
 					{
@@ -378,7 +379,9 @@ class ChessGame
 						$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'), HOF_PUBLIC);
 					}
 				}
-				return 0;
+				$currentPlayer->saveHOF();
+				$otherPlayer->saveHOF();
+				return $return;
 			}
 		}
 	}
