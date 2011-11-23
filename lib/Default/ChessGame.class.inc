@@ -345,6 +345,7 @@ class ChessGame
 								'(' . $p->gameID . ',' . $p->pieceID . ',' . $x . ',' . $y . ',' . $toX . ',' . $toY . ',' . ($checking == null ? 'NULL' : $this->db->escapeString($checking) ) . ',' . ($pieceTaken == null ? 'NULL' : $pieceTaken->pieceID) . ');');
 				
 				
+				$currentPlayer->increaseHOF(1, array('Chess','Moves','Total Taken'), HOF_PUBLIC);
 				if($pieceTaken != null)
 				{
 					$this->db->query('DELETE FROM chess_game_pieces' .
