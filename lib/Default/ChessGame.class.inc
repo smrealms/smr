@@ -367,7 +367,7 @@ class ChessGame
 					{
 						$this->db->query('UPDATE chess_game' .
 										' SET end_time=' . TIME . ',' .
-										' winner=' . $forAccountID .
+										' winner_id=' . $forAccountID .
 										' WHERE chess_game_id=' . $this->chessGameID . ';');
 						$currentPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
 						$otherPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
