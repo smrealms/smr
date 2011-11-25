@@ -157,7 +157,7 @@ class SmrSession
 		}
 
 		// try to get current session
-		self::$db->query('DELETE FROM active_session WHERE last_accessed < '.self::$db->escapeNumber(TIME-self::TIME_BEFORE_EXPIRY));
+		self::$db->query('DELETE FROM active_session WHERE last_accessed < '.self::$db->escapeNumber(time()-self::TIME_BEFORE_EXPIRY));
 		self::$db->query('SELECT * FROM active_session WHERE session_id = '.self::$db->escapeString(self::$session_id).' LIMIT 1');
 		if (self::$db->nextRecord())
 		{
