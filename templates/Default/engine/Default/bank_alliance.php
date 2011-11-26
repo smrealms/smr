@@ -14,17 +14,18 @@ if (count($AlliedAllianceBanks) > 0)
 Hello <?php echo $ThisPlayer->getPlayerName(); ?>,<br /><?php
 if ($UnlimitedWithdrawal === true)
 {
-	?>You can withdraw an unlimited amount from this account. <br /><?php
+	?>You can withdraw an unlimited amount from this account.<?php
 }
 else if (isset($PositiveWithdrawal))
 {
-	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<br /><?php
+	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
 }
 else
 { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
-	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<br /><?php
-}
+	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
+} ?>
+<br /><br /><?php
 
 // only if we have at least one result
 if (count($BankTransactions) > 0)
@@ -57,7 +58,7 @@ if (count($BankTransactions) > 0)
 					<th>Trader</th>
 					<th>Reason for transfer</th>
 					<th>Withdrawal</th>
-					<th>&nbsp;&nbsp;Deposit&nbsp;&nbsp;</th><?php
+					<th>Deposit</th><?php
 					if($CanExempt)
 					{
 						?><th>Make Exempt</th><?php
@@ -76,7 +77,6 @@ if (count($BankTransactions) > 0)
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
 						<td><?php echo $BankTransaction['Reason']; ?></td>
-						<td class="shrink right"><?php echo $BankTransaction['TransactionID']; ?></td>
 						<td class="center shrink"><?php echo $BankTransaction['Withdrawal']; ?></td>
 						<td class="center shrink"><?php echo $BankTransaction['Deposit']; ?></td><?php
 						if ($CanExempt)
@@ -98,17 +98,18 @@ if (count($BankTransactions) > 0)
 		{
 			?></form><?php
 		} ?>
+	</div>
+	
+	<div align="center">
+		<div class="buttonA">
+			<a class="buttonA" href="<?php echo $BankReportHREF; ?>">&nbsp;View Bank Report&nbsp;</a>
+		</div>
 	</div><?php
 }
 else
 {
-	?>Your alliance account is still unused<br /><?php
+	?>Your alliance account is still unused.<br /><?php
 } ?>
-<div align="center">
-	<div class="buttonA">
-		<a class="buttonA" href="<?php echo $BankReportHREF; ?>">&nbsp;View Bank Report&nbsp;</a>
-	</div>
-</div>
 
 <h2>Make transaction</h2><br />
 <form class="standard" method="POST" action="<?php echo $BankTransactionFormHREF; ?>">
