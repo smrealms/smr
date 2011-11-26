@@ -1,5 +1,4 @@
 <?php
-
 if (count($AlliedAllianceBanks) > 0)
 { ?>
 	<ul><?php
@@ -7,9 +6,9 @@ if (count($AlliedAllianceBanks) > 0)
 	{ ?>
 		<li>
 			<a class="bold" href="<?php echo Globals::getAllianceBankHref($AlliedAlliance->getAllianceID()); ?>"><?php echo $AlliedAlliance->getAllianceName(); ?>'s Account'</a>
-		</li>
-	}
-	</ul><br />
+		</li><?php
+	} ?>
+	</ul><br /><?php
 } ?>
 
 Hello <?php echo $ThisPlayer->getPlayerName(); ?>,<br /><?php
