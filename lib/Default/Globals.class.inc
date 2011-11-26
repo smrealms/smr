@@ -524,6 +524,16 @@ class Globals
 			return self::getAllianceListHREF();
 	}
 	
+	public static function getAllianceBankHREF($allianceID = null)
+	{
+		$container = create_container('skeleton.php', 'bank_alliance.php');
+		if ($allianceID!=null)
+		{
+			$container['alliance_id'] = $allianceID;
+		}
+		return SmrSession::get_new_href($container);
+	}
+	
 	public static function getAllianceRosterHREF($allianceID = null, $sortKey = 'getExperience', $sortDesc = true)
 	{
 		$container = create_container('skeleton.php', 'alliance_roster.php');
