@@ -59,7 +59,7 @@ $template->assign('CanExempt', $db->getBoolean('exempt_with'));
 $withdrawalPerDay = $db->getInt('with_per_day');
 if($withdrawalPerDay == -2)
 {
-	$db->assign('UnlimitedWithdrawal', true);
+	$template->assign('UnlimitedWithdrawal', true);
 }
 if($withdrawalPerDay == -1)
 {
