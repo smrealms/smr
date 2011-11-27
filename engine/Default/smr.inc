@@ -639,6 +639,8 @@ function do_voodoo()
 		SmrPlanet::savePlanets();
 		if(class_exists('WeightedRandom', false))
 			WeightedRandom::saveWeightedRandoms();
+		//Update session here to make sure current page $var is up to date before releasing lock.
+		SmrSession::update();
 		release_lock();
 	}
 	
