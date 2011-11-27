@@ -226,14 +226,14 @@
 								{ ?>
 									<div class="wep_drop1" id="hide-show" onclick="toggleWepD('<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>');">
 										<noscript><a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>"></noscript>
-											Show/Hide (<?php echo $ThisShip->getNumWeapons(); ?>)<br /><?php
+											Show/Hide (<?php echo $ThisShip->getNumWeapons(); ?>)<br />
+											<span class="wep1"<?php if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?>><?php
 												$Weapons =& $ThisShip->getWeapons();
 												foreach($Weapons as &$Weapon)
-												{ ?>
-													<span class="wep1" <?php if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?>>
-														<?php echo $Weapon->getName(); ?><br />
-													</span><?php
+												{ 
+													echo $Weapon->getName(); ?><br /><?php
 												} unset($Weapon); unset($Weapons); ?>
+											</span>
 										<noscript></a></noscript>
 									</div><?php
 								} ?>
