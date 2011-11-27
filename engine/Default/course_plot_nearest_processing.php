@@ -35,7 +35,7 @@ else
 			create_error('Invalid search.');
 	}
 	
-	$account->log(5, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
+	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
 }
 
 

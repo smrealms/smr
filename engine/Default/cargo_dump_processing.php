@@ -44,7 +44,7 @@ $ship->decreaseCargo($good_id,$amount);
 $player->increaseHOF($amount,array('Trade','Goods', 'Jettisoned'), HOF_PUBLIC);
 
 // log action
-$account->log(6, 'Dumps '.$amount.' of '.$good_name.' and looses '.$lost_xp.' experience', $player->getSectorID());
+$account->log(LOG_TYPE_TRADING, 'Dumps '.$amount.' of '.$good_name.' and looses '.$lost_xp.' experience', $player->getSectorID());
 
 $container = array();
 $container['url'] = 'skeleton.php';

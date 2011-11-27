@@ -37,7 +37,7 @@ if ($hardware_id == 4) $player->increaseHOF($amount,array('Forces','Bought','Com
 if ($hardware_id == 5) $player->increaseHOF($amount,array('Forces','Bought','Scout Drones'), HOF_ALLIANCE);
 if ($hardware_id == 6) $player->increaseHOF($amount,array('Forces','Bought','Mines'), HOF_ALLIANCE);
 
-$account->log(10, 'Player Buys '.$amount.' '.$hardware_name, $player->getSectorID());
+$account->log(LOG_TYPE_HARDWARE, 'Player Buys '.$amount.' '.$hardware_name, $player->getSectorID());
 
 $container = create_container('skeleton.php', 'shop_hardware.php');
 transfer('LocationID');

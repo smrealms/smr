@@ -27,7 +27,7 @@ if ($action == 'Ship') {
 	// now transfer
 	$planet->decreaseStockpile($var['good_id'],$amount);
 	$ship->increaseCargo($var['good_id'],$amount);
-	$account->log(11, 'Player takes '.$amount.' '.Globals::getGoodName($var['good_id']).' from planet.', $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player takes '.$amount.' '.Globals::getGoodName($var['good_id']).' from planet.', $player->getSectorID());
 
 // transfer to planet
 }

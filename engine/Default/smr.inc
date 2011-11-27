@@ -523,7 +523,7 @@ function do_voodoo()
 	{
 		SmrSession::clearLinks();
 		if (SmrSession::$game_id > 0)
-			$account->log(2, 'Player left game '.SmrSession::$game_id);
+			$account->log(LOG_TYPE_GAME_ENTERING, 'Player left game '.SmrSession::$game_id);
 		
 		// reset game id
 		SmrSession::$game_id = 0;
@@ -543,7 +543,7 @@ function do_voodoo()
 			$curr_ip = $_SERVER['REMOTE_ADDR'];
 		
 		// log?
-		$account->log(1, 'logged off from '.$curr_ip);
+		$account->log(LOG_TYPE_LOGIN, 'logged off from '.$curr_ip);
 		$container = create_container('skeleton.php', 'logoff.php');
 		$container['logoff'] = 'yes';
 		forward($container);
@@ -684,8 +684,8 @@ function acquire_lock($sector)
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' and game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION) .' LIMIT 1');
-		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')))
+		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION) .' LIMIT 1');
+		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')) > 0)
 		{
 			//usleep(100000 + mt_rand(0,50000));
 

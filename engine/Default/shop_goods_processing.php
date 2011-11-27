@@ -108,7 +108,7 @@ if (!empty($bargain_price) &&
 	$player->increaseHOF(1,array('Trade','Results','Success'), HOF_PUBLIC);
 
 	// log action
-	$account->log(6, $portGood['TransactionType'] . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());
+	$account->log(LOG_TYPE_TRADING, $portGood['TransactionType'] . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());
 
 	$player->increaseExperience($gained_exp);
 

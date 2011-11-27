@@ -33,7 +33,7 @@ foreach($galaxies as &$galaxy)
 if($startExists===false || $targetExists===false)
 	create_error('The sectors have to exist!');
 
-$account->log(5, 'Player plots to '.$target.'.', $player->getSectorID());
+$account->log(LOG_TYPE_MOVEMENT, 'Player plots to '.$target.'.', $player->getSectorID());
 
 $container = array();
 $container['url'] = 'skeleton.php';

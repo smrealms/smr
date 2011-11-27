@@ -36,6 +36,23 @@ define('DEFAULT_DATE_FULL_SHORT_SPLIT',DEFAULT_DATE_DATE_SHORT.'\<b\r /\>'.DEFAU
 define('DEFAULT_DATE_FULL_LONG','l jS F '.DEFAULT_DATE_TIME_SHORT);
 
 /*
+ * Log types
+ */
+define('LOG_TYPE_LOGIN', 1);
+define('LOG_TYPE_GAME_ENTERING', 2);
+define('LOG_TYPE_ALLIANCE', 3);
+define('LOG_TYPE_BANK', 4);
+define('LOG_TYPE_MOVEMENT', 5);
+define('LOG_TYPE_TRADING', 6);
+define('LOG_TYPE_PORT_RAIDING', 7);
+define('LOG_TYPE_TRADER_COMBAT', 8);
+define('LOG_TYPE_FORCES', 9);
+define('LOG_TYPE_HARDWARE', 10);
+define('LOG_TYPE_PLANETS', 11);
+define('LOG_TYPE_PLANET_BUSTING', 12);
+define('LOG_TYPE_ACCOUNT_CHANGES', 13);
+
+/*
  * Race types
  */
 

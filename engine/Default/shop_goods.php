@@ -22,7 +22,7 @@ $PHP_OUTPUT.=('<p>This is a level '.$port->getLevel().' port and run by the ' . 
 $PHP_OUTPUT.=('Your relations with them are ' . get_colored_text($relations, $relations) . '.</p>');
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
-$account->log(6, 'Player examines port', $player->getSectorID());
+$account->log(LOG_TYPE_TRADING, 'Player examines port', $player->getSectorID());
 //The player is sent here after trading and sees this if his offer is accepted.
 //You have bought/sold 300 units of Luxury Items for 1738500 credits. For your excellent trading skills you receive 220 experience points!
 if (!empty($var['traded_xp']) ||
@@ -97,7 +97,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			$ship->setCargo(5,0);
 			$ship->setCargo(9,0);
 			$ship->setCargo(12,0);
-			$account->log(6, 'Player gets caught with illegals', $player->getSectorID());
+			$account->log(LOG_TYPE_TRADING, 'Player gets caught with illegals', $player->getSectorID());
 
 		}
 		else
@@ -105,7 +105,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			$player->increaseHOF(1,array('Trade','Search','Times Found Innocent'), HOF_PUBLIC);
 			$PHP_OUTPUT.=('<span class="blue">The Federation searched your ship and no illegal goods where found!</span>');
 			$player->increaseAlignment(1);
-			$account->log(6, 'Player gains alignment at port', $player->getSectorID());
+			$account->log(LOG_TYPE_TRADING, 'Player gains alignment at port', $player->getSectorID());
 		}
 	}
 }

@@ -203,7 +203,7 @@ try
 		$curr_ip = $_SERVER['REMOTE_ADDR'];
 	
 	// log?
-	$account->log(1, 'logged in from '.$curr_ip);
+	$account->log(LOG_TYPE_LOGIN, 'logged in from '.$curr_ip);
 	//now we set a cookie that we can use for mult checking
 	if (!isset($_COOKIE['Session_Info']))
 	{

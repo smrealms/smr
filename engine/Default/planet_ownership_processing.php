@@ -20,7 +20,7 @@ if ($action == 'Take Ownership')
 	$planet->setOwnerID($player->getAccountID());
 	$planet->removePassword();
 	$planet->update();
-	$account->log(11, 'Player takes ownership of planet.', $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.', $player->getSectorID());
 }
 else if ($action == 'Rename')
 {
@@ -28,7 +28,7 @@ else if ($action == 'Rename')
 	// rename planet
 	$planet->setName($name);
 	$planet->update();
-	$account->log(11, 'Player renames planet to '.$name.'.', $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player renames planet to '.$name.'.', $player->getSectorID());
 
 }
 else if ($action == 'Set Password')
@@ -36,7 +36,7 @@ else if ($action == 'Set Password')
 	// set password
 	$planet->setPassword($password);
 	$planet->update();
-	$account->log(11, 'Player sets planet password to '.$password, $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player sets planet password to '.$password, $player->getSectorID());
 }
 
 forward(create_container('skeleton.php', 'planet_ownership.php'));
