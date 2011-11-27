@@ -674,6 +674,7 @@ function acquire_lock($sector)
 
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
+	$db->query('INSERT INTO locks_queue2 (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 	
 	$lock = $db->getInsertID();
 
@@ -684,13 +685,13 @@ function acquire_lock($sector)
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION) .' LIMIT 1');
+		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION));
 		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')) > 0)
 		{
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION) .' LIMIT 1');
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION));
 			if($db->nextRecord())
 			{
 				if($db->getField('COUNT(*)') > 1)
