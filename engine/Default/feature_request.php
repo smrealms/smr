@@ -6,12 +6,14 @@ $template->assign('PageTopic','Feature Request');
 
 $container = $var;
 $container['implemented'] = true;
+$container['ShowOld'] = false;
 $template->assign('ViewImplementedFeaturesHref',SmrSession::get_new_href($container));
 
 $onlyImplemented = isset($var['implemented'])?$var['implemented']===true:false;
 $template->assign('OnlyImplemented',$onlyImplemented);
 
 $container = $var;
+$container['implemented'] = false;
 $container['ShowOld'] = true;
 $template->assign('ShowOldFeaturesHref',SmrSession::get_new_href($container));
 
