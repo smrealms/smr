@@ -573,6 +573,13 @@ function do_voodoo()
 				{
 					create_error('Failed to acquire sector lock');
 				}
+				//Refetch var info in case it changed between grabbing lock.
+				SmrSession::fetchVarInfo();
+				if (!($var = SmrSession::retrieveVar(SmrSession::$SN)))
+				{
+					self::$db->query('INSERT INTO debug VALUES (\'SPAM\',0,0,0)');
+					create_error('Please do not spam click!');
+				}
 			}
 		}
 		
