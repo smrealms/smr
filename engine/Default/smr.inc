@@ -672,26 +672,26 @@ function acquire_lock($sector)
 	if($lock)
 		return true;
 
-	$randID = mt_rand(100,10000);
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 	$db->query('INSERT INTO locks_queue2 (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 	
 	$lock = $db->getInsertID();
-	$db->query('INSERT INTO debug VALUES(\'LOCK_ID\',' . $randID . ',' . $lock . ',' . $sector . ')');
+	$db->query('INSERT INTO debug VALUES(\'LOCK_ID\',' . $lock . ',' . $lock . ',' . $sector . ')');
 	
 	for($i=0;$i<250;++$i)
 	{
-		$db->query('INSERT INTO debug VALUES(\'LOCK_TIME\',' . $randID . ',' . (time() - TIME) . ',' . (LOCK_DURATION - LOCK_BUFFER) . ')');
+		$db->query('INSERT INTO debug VALUES(\'LOCK_TIME\',' . $lock . ',' . (time() - TIME) . ',' . (TIME) . ')');
 		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER)
 		{
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION));
+		$locksInQueue = -1;
 		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')) > 0)
 		{
-			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT\',' . $randID . ',' . $locksInQueue . ')');
+			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT\',' . $lock . ',' . $locksInQueue . ')');
 		
 			//usleep(100000 + mt_rand(0,50000));
 
@@ -711,6 +711,7 @@ function acquire_lock($sector)
 		}
 		else
 		{
+			$db->query('INSERT INTO debug VALUES(\'LOCK_QUEUE\',' . $lock . ',' . $locksInQueue . ')');
 			return true;
 		}
 	}
