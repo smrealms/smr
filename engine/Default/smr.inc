@@ -691,7 +691,7 @@ function acquire_lock($sector)
 		$locksInQueue = -1;
 		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')) > 0)
 		{
-			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT\',' . $lock . ',' . $locksInQueue . ')');
+			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT\',' . $lock . ',' . $locksInQueue . ', 0)');
 		
 			//usleep(100000 + mt_rand(0,50000));
 
@@ -711,7 +711,7 @@ function acquire_lock($sector)
 		}
 		else
 		{
-			$db->query('INSERT INTO debug VALUES(\'LOCK_QUEUE\',' . $lock . ',' . $locksInQueue . ')');
+			$db->query('INSERT INTO debug VALUES(\'LOCK_QUEUE\',' . $lock . ',' . $locksInQueue . ',0)');
 			return true;
 		}
 	}
