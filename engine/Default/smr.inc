@@ -672,16 +672,17 @@ function acquire_lock($sector)
 	if($lock)
 		return true;
 
+	$randID = mt_rand(100,10000);
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 	$db->query('INSERT INTO locks_queue2 (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 	
 	$lock = $db->getInsertID();
-	$db->query('INSERT INTO debug VALUES(\'LOCK_ID\',' . SmrSession::$account_id . ',' . $lock . ',' . $sector . ')');
+	$db->query('INSERT INTO debug VALUES(\'LOCK_ID\',' . $randID . ',' . $lock . ',' . $sector . ')');
 	
 	for($i=0;$i<250;++$i)
 	{
-		$db->query('INSERT INTO debug VALUES(\'LOCK_TIME\',' . SmrSession::$account_id . ',' . (time() - TIME) . ',' . (LOCK_DURATION - LOCK_BUFFER) . ')');
+		$db->query('INSERT INTO debug VALUES(\'LOCK_TIME\',' . $randID . ',' . (time() - TIME) . ',' . (LOCK_DURATION - LOCK_BUFFER) . ')');
 		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER)
 		{
 			break;
@@ -690,12 +691,15 @@ function acquire_lock($sector)
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION));
 		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')) > 0)
 		{
+			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT\',' . $randID . ',' . $locksInQueue . ')');
+		
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
 			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION));
 			if($db->nextRecord() && $db->getField('COUNT(*)') > 1)
 			{
+			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT2\',' . $randID . ',' . $db->getField('COUNT(*)') . ')');
 				release_lock();
 				$locksFailed[$sector] = true;
 				create_error('Multiple actions cannot be performed at the same time!');
