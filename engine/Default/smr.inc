@@ -677,9 +677,11 @@ function acquire_lock($sector)
 	$db->query('INSERT INTO locks_queue2 (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 	
 	$lock = $db->getInsertID();
-
+	$db->query('INSERT INTO debug VALUES(\'LOCK_ID\',' . SmrSession::$account_id . ',' . $lock . ',' . $sector . ')');
+	
 	for($i=0;$i<250;++$i)
 	{
+		$db->query('INSERT INTO debug VALUES(\'LOCK_TIME\',' . SmrSession::$account_id . ',' . (time() - TIME) . ',' . (LOCK_DURATION - LOCK_BUFFER) . ')');
 		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER)
 		{
 			break;
@@ -692,15 +694,12 @@ function acquire_lock($sector)
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
 			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION));
-			if($db->nextRecord())
+			if($db->nextRecord() && $db->getField('COUNT(*)') > 1)
 			{
-				if($db->getField('COUNT(*)') > 1)
-				{
-					release_lock();
-					$locksFailed[$sector] = true;
-					create_error('Multiple actions cannot be performed at the same time!');
-					exit;
-				}
+				release_lock();
+				$locksFailed[$sector] = true;
+				create_error('Multiple actions cannot be performed at the same time!');
+				exit;
 			}
 
 			usleep(25000 * $locksInQueue);
