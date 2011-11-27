@@ -116,7 +116,7 @@ class SmrSession
 	private static $URL_LOAD_DELAY = array(
 		'sector_jump_processing' => .3,
 		'sector_move_processing' => .3,
-		'trader_attack_processing.php' => .65,
+		'trader_attack_processing.php' => 5,
 		'trader_examine.php' => .3
 	);
 	
