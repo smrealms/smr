@@ -158,6 +158,32 @@ class SmrSession
 
 		// try to get current session
 		self::$db->query('DELETE FROM active_session WHERE last_accessed < '.self::$db->escapeNumber(time()-self::TIME_BEFORE_EXPIRY));
+		self::fetchVarInfo();
+		
+		if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']]))
+		{
+			$var = self::$var[$_REQUEST['sn']];
+			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
+			$loadDelay = isset(self::$URL_LOAD_DELAY[$currentPage]) ? self::$URL_LOAD_DELAY[$currentPage] : 0;
+			$initialTimeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime']);
+			while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay)
+			{
+				$sleepTime = round(($loadDelay-$timeBetweenLoads)*1000000);
+			//	echo 'Sleeping for: ' . $sleepTime . 'us';
+				usleep($sleepTime);
+			}
+			self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
+		}
+		
+		define('MICRO_TIME', microtime());
+		define('TIME', (int)microtimeSec(MICRO_TIME));
+		
+		if(class_exists('SmrMySqlDatabase',false))
+			$db = new SmrMySqlDatabase();
+	}
+	
+	public static function fetchVarInfo()
+	{
 		self::$db->query('SELECT * FROM active_session WHERE session_id = '.self::$db->escapeString(self::$session_id).' LIMIT 1');
 		if (self::$db->nextRecord())
 		{
@@ -202,21 +228,6 @@ class SmrSession
 					}
 				} unset($value);
 			}
-			
-			if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']]))
-			{
-				$var = self::$var[$_REQUEST['sn']];
-				$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
-				$loadDelay = isset(self::$URL_LOAD_DELAY[$currentPage]) ? self::$URL_LOAD_DELAY[$currentPage] : 0;
-				$initialTimeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime']);
-				while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay)
-				{
-					$sleepTime = round(($loadDelay-$timeBetweenLoads)*1000000);
-				//	echo 'Sleeping for: ' . $sleepTime . 'us';
-					usleep($sleepTime);
-				}
-				self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
-			}
 		}
 		else
 		{
@@ -228,12 +239,6 @@ class SmrSession
 			self::$game_id		= 0;
 			self::$commonIDs	= array();
 		}
-		
-		define('MICRO_TIME', microtime());
-		define('TIME', (int)microtimeSec(MICRO_TIME));
-		
-		if(class_exists('SmrMySqlDatabase',false))
-			$db = new SmrMySqlDatabase();
 	}
 	
 	public static function update()
