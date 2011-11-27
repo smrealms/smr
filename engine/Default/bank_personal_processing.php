@@ -31,7 +31,7 @@ if ($action == 'Deposit') {
 	$player->update();
 
 	// log action
-	$account->log(4, 'Deposits '.$amount.' credits in personal account', $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Deposits '.$amount.' credits in personal account', $player->getSectorID());
 
 } else {
 
@@ -43,7 +43,7 @@ if ($action == 'Deposit') {
 	$player->update();
 
 	// log action
-	$account->log(4, 'Takes '.$amount.' credits from personal account', $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Takes '.$amount.' credits from personal account', $player->getSectorID());
 
 }
 

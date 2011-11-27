@@ -95,7 +95,7 @@ else
 $player->takeTurns($turnsToJump,$turnsToJump);
 
 // log action
-$account->log(5, 'Jumps to sector: '.$target.' but hits: '.$player->getSectorID(), $sector->getSectorID());
+$account->log(LOG_TYPE_MOVEMENT, 'Jumps to sector: '.$target.' but hits: '.$player->getSectorID(), $sector->getSectorID());
 
 //$player->sector_change();
 //$player->detected = 'false';

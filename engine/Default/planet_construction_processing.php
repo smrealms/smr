@@ -15,14 +15,14 @@ if ($action == 'Build')
 	$player->increaseHOF(1,array('Planet','Buildings','Started'), HOF_ALLIANCE);
 
 	$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-	$account->log(11, 'Player starts a '.$PLANET_BUILDINGS[$var['construction_id']]['Name'].' on planet.', $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player starts a '.$PLANET_BUILDINGS[$var['construction_id']]['Name'].' on planet.', $player->getSectorID());
 
 }
 elseif ($action == 'Cancel')
 {
 	$planet->stopBuilding($var['construction_id']);
 	$player->increaseHOF(1,array('Planet','Buildings','Stopped'), HOF_ALLIANCE);
-	$account->log(11, 'Player cancels planet construction', $player->getSectorID());
+	$account->log(LOG_TYPE_PLANETS, 'Player cancels planet construction', $player->getSectorID());
 }
 
 forward(create_container('skeleton.php', 'planet_construction.php'));

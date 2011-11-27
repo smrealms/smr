@@ -45,7 +45,7 @@ $ship->removeUnderAttack();
 $ship->update();
 $player->update();
 
-$account->log(10, 'Buys a '.$ship->getName().' for '.$cost.' credits', $player->getSectorID());
+$account->log(LOG_TYPE_HARDWARE, 'Buys a '.$ship->getName().' for '.$cost.' credits', $player->getSectorID());
 
 $container = create_container('skeleton.php', 'current_sector.php');
 transfer('LocationID');

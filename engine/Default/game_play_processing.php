@@ -11,7 +11,7 @@ $player->deletePlottedCourse();
 $player->update();
 
 // log
-$account->log(2, 'Player entered game '.SmrSession::$game_id, $player->getSectorID());
+$account->log(LOG_TYPE_GAME_ENTERING, 'Player entered game '.SmrSession::$game_id, $player->getSectorID());
 
 $container = create_container('skeleton.php');
 if ($player->isLandedOnPlanet())

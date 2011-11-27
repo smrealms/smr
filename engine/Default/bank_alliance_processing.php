@@ -36,7 +36,7 @@ if ($action == 'Deposit')
 	}
 	$alliance->setAccount($allianceCredits);
 	// log action
-	$account->log(4, 'Deposits '.$amount.' credits in alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Deposits '.$amount.' credits in alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
 }
 else
 {
@@ -94,7 +94,7 @@ else
 	$alliance->setAccount($allianceCredits);
 
 	// log action
-	$account->log(4, 'Takes '.$amount.' credits from alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Takes '.$amount.' credits from alliance account of '.$alliance->getAllianceName(), $player->getSectorID());
 
 }
 

@@ -23,7 +23,7 @@ if ($good['TransactionType'] == 'Buy' && $amount > $ship->getEmptyHolds())
 if ($player->getTurns() == 0)
    create_error('You don\'t have enough turns to loot.');
 
-$account->log(6, 'Player Loots '.$amount.' '.$good_name, $player->getSectorID());
+$account->log(LOG_TYPE_TRADING, 'Player Loots '.$amount.' '.$good_name, $player->getSectorID());
 $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'port_loot.php';

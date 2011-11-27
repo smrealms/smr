@@ -59,7 +59,7 @@ foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer)
 } unset($teamPlayer);
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
-$account->log(7, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'], $sector->getSectorID());
+$account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $sector->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');

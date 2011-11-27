@@ -209,7 +209,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 	$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
 }
 
-$account->log(9, $change_combat_drones.' combat drones, '.$change_scout_drones.' scout drones, '.$change_mines.' mines', $player->getSectorID());
+$account->log(LOG_TYPE_FORCES, $change_combat_drones.' combat drones, '.$change_scout_drones.' scout drones, '.$change_mines.' mines', $player->getSectorID());
 
 $forces->updateExpire();
 $forces->update(); // Needs to be in db to show up on CS instantly when querying sector forces

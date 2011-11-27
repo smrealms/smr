@@ -23,7 +23,7 @@ if ($action == 'Deposit' || $action == 'Withdraw')
 
 		$player->decreaseCredits($amount);
 		$planet->increaseCredits($amount);
-		$account->log(4, 'Player puts '.$amount.' credits on planet', $player->getSectorID());
+		$account->log(LOG_TYPE_BANK, 'Player puts '.$amount.' credits on planet', $player->getSectorID());
 	}
 	elseif ($action == 'Withdraw')
 	{
@@ -32,7 +32,7 @@ if ($action == 'Deposit' || $action == 'Withdraw')
 
 		$player->increaseCredits($amount);
 		$planet->decreaseCredits($amount);
-		$account->log(4, 'Player takes '.$amount.' credits from planet', $player->getSectorID());
+		$account->log(LOG_TYPE_BANK, 'Player takes '.$amount.' credits from planet', $player->getSectorID());
 	}
 }
 elseif ($action == 'Bond It!')
@@ -49,7 +49,7 @@ elseif ($action == 'Bond It!')
 	$planet->setMaturity(TIME + round(BOND_TIME / Globals::getGameSpeed($player->getGameID())));
 
 	// save to db
-	$account->log(4, 'Player bonds '.$planet->getCredits().' credits at planet.', $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Player bonds '.$planet->getCredits().' credits at planet.', $player->getSectorID());
 }
 
 forward(create_container('skeleton.php', 'planet_financial.php'));

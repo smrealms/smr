@@ -1270,7 +1270,7 @@ abstract class AbstractSmrAccount
 			$player->updateTurns();
 			$player->update();
 		}
-		$this->log(13, 'Account closed by ' . $admin->getLogin() . '.');
+		$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account closed by ' . $admin->getLogin() . '.');
 		if($removeExceptions!==false)
 			$this->db->query('DELETE FROM account_exceptions WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
 	}
@@ -1288,9 +1288,9 @@ abstract class AbstractSmrAccount
    		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(TIME) . ', last_turn_update)
 				   		WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
 		if($admin!==null)
-			$this->log(13, 'Account reopened by ' . $admin->getLogin() . '.');
+			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account reopened by ' . $admin->getLogin() . '.');
 		else
-			$this->log(13, 'Account automatically reopened.');
+			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account automatically reopened.');
 		if($currException!==false)
 			$this->db->query('REPLACE INTO account_exceptions (account_id, reason)
 							VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeString($currException) . ')');

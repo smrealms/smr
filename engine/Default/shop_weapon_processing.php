@@ -31,7 +31,7 @@ if ($action == 'Buy')
 
 	// add the weapon to the users ship
 	$weapon =& $ship->addWeapon($var['weapon_id']);
-	$account->log(10, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
+	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
 }
 elseif ($action == 'Sell')
 {
@@ -42,7 +42,7 @@ elseif ($action == 'Sell')
 	// take weapon
 	$ship->removeWeapon($var['order_id']);
 
-	$account->log(10, 'Player Sells a '.SmrWeapon::getWeapon($player->getGameID(),$var['weapon_type_id'])->getName(), $player->getSectorID());
+	$account->log(LOG_TYPE_HARDWARE, 'Player Sells a '.SmrWeapon::getWeapon($player->getGameID(),$var['weapon_type_id'])->getName(), $player->getSectorID());
 }
 $container = create_container('skeleton.php', 'shop_weapon.php');
 transfer('LocationID');
