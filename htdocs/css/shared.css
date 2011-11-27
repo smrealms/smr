@@ -10,6 +10,7 @@ td {
 /* wep drop down */
 div.wep_drop1 {
 	cursor: pointer;
+	width:100%
 }
 
 /*** CS Stuff ***/
