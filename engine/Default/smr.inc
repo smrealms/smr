@@ -674,14 +674,10 @@ function acquire_lock($sector)
 
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
-	$db->query('INSERT INTO locks_queue2 (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
-	
 	$lock = $db->getInsertID();
-	$db->query('INSERT INTO debug VALUES(\'LOCK_ID\',' . $lock . ',' . $lock . ',' . $sector . ')');
 	
 	for($i=0;$i<250;++$i)
 	{
-		$db->query('INSERT INTO debug VALUES(\'LOCK_TIME\',' . $lock . ',' . (time() - TIME) . ',' . (TIME) . ')');
 		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER)
 		{
 			break;
@@ -689,17 +685,14 @@ function acquire_lock($sector)
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION));
 		$locksInQueue = -1;
-		if($db->nextRecord() && ($locksInQueue = $db->getField('COUNT(*)')) > 0)
+		if($db->nextRecord() && ($locksInQueue = $db->getInt('COUNT(*)')) > 0)
 		{
-			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT\',' . $lock . ',' . $locksInQueue . ', 0)');
-		
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
 			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION));
-			if($db->nextRecord() && $db->getField('COUNT(*)') > 1)
+			if($db->nextRecord() && $db->getInt('COUNT(*)') > 1)
 			{
-			$db->query('INSERT INTO debug VALUES(\'LOCK_COUNT2\',' . $randID . ',' . $db->getField('COUNT(*)') . ')');
 				release_lock();
 				$locksFailed[$sector] = true;
 				create_error('Multiple actions cannot be performed at the same time!');
@@ -711,7 +704,6 @@ function acquire_lock($sector)
 		}
 		else
 		{
-			$db->query('INSERT INTO debug VALUES(\'LOCK_QUEUE\',' . $lock . ',' . $locksInQueue . ',0)');
 			return true;
 		}
 	}
