@@ -11,19 +11,19 @@ if($AJAX_ENABLE_REFRESH)
 	?><script type="text/javascript">$(function(){
 		startRefresh('<?php echo $AJAX_ENABLE_REFRESH; ?>');<?php
 		if(isset($AvailableLinks['MoveUp'])) {
-			?>$(document).bind('keydown', 'w', followLink(<?php echo $AvailableLinks['MoveUp']; ?>));<?php
+			?>$(document).bind('keydown', 'w', followLink('<?php echo $AvailableLinks['MoveUp']; ?>'));<?php
 		}
 		if(isset($AvailableLinks['MoveLeft'])) {
-			?>$(document).bind('keydown', 'a', followLink(<?php echo $AvailableLinks['MoveLeft']; ?>));<?php
+			?>$(document).bind('keydown', 'a', followLink('<?php echo $AvailableLinks['MoveLeft']; ?>'));<?php
 		}
 		if(isset($AvailableLinks['MoveDown'])) {
-			?>$(document).bind('keydown', 's', followLink(<?php echo $AvailableLinks['MoveDown']; ?>));<?php
+			?>$(document).bind('keydown', 's', followLink('<?php echo $AvailableLinks['MoveDown']; ?>'));<?php
 		}
 		if(isset($AvailableLinks['MoveRight'])) {
-			?>$(document).bind('keydown', 'd', followLink(<?php echo $AvailableLinks['MoveRight']; ?>));<?php
+			?>$(document).bind('keydown', 'd', followLink('<?php echo $AvailableLinks['MoveRight']; ?>'));<?php
 		}
 		if(isset($AvailableLinks['MoveWarp'])) {
-			?>$(document).bind('keydown', 'e', followLink(<?php echo $AvailableLinks['MoveRight']; ?>));<?php
+			?>$(document).bind('keydown', 'e', followLink('<?php echo $AvailableLinks['MoveWarp']; ?>'));<?php
 		} ?>
 	})</script><?php
 } ?>
