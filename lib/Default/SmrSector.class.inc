@@ -1023,22 +1023,14 @@ class SmrSector
 		return $this->visited[$player->getAccountID()];
 	}
 	
-	protected function getHREF($targetPage)
-	{
-		$container = create_container('sector_move_processing.php');
-		$container['target_page'] = $targetPage;
-		$container['target_sector'] = $this->getSectorID();
-		return SmrSession::get_new_href($container);
-	}
-	
 	public function getLocalMapHREF()
 	{
-		return $this->getHREF('map_local.php');
+		return Globals::getSectorMoveHREF($this->getSectorID(), 'map_local.php');
 	}
 	
 	public function getCurrentSectorHREF()
 	{
-		return $this->getHREF('current_sector.php');
+		return Globals::getCurrentSectorMoveHREF($this->getSectorID());
 	}
 	
 	public function getGalaxyMapHREF()

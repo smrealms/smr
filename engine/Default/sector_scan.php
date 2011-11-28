@@ -92,10 +92,6 @@ if ($sector->getWarp() == $var['target_sector'])
 else
 	$turns = TURNS_PER_SECTOR;
 
-$container = create_container('sector_move_processing.php');
-$container['target_page']	= 'current_sector.php';
-transfer('target_sector');
-
 $PHP_OUTPUT.= '<a href="'.$scanSector->getScanSectorHREF().'" class="submitStyle">Rescan ' . $scanSector->getSectorID() . '</a>&nbsp;';
 $PHP_OUTPUT.= '<a href="'.$scanSector->getCurrentSectorHREF().'" class="submitStyle">Enter ' . $scanSector->getSectorID() . ' ('.$turns.')</a>';
 $PHP_OUTPUT.=('</form></p>');

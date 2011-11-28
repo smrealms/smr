@@ -478,6 +478,19 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
+	public static function getCurrentSectorMoveHREF($toSector, $targetPage)
+	{
+		self::getSectorMoveHREF($this->getSectorID(), 'current_sector.php');
+	}
+	
+	public static function getSectorMoveHREF($toSector, $targetPage)
+	{
+		$container = create_container('sector_move_processing.php');
+		$container['target_page'] = $targetPage;
+		$container['target_sector'] = $toSector;
+		return SmrSession::get_new_href($container);
+	}
+	
 	public static function getPlotCourseHREF($fromSector = false, $toSector = false)
 	{
 		if($fromSector === false && $toSector === false)

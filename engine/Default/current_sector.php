@@ -35,19 +35,14 @@ while($db->nextRecord())
 	$unvisited[$db->getField('sector_id')] = TRUE;
 }
 
-$container1 = create_container('sector_move_processing.php');
-$container1['target_page'] = 'current_sector.php';
-
 $container2 = create_container('skeleton.php','sector_scan.php');
 
 foreach($links as $key => $linkArray)
 {
 	if($linkArray['ID']>0 && $linkArray['ID']!=$player->getSectorID())
 	{
-		$container1['target_sector'] = $linkArray['ID'];
 		$container2['target_sector'] = $linkArray['ID'];
 		
-		$links[$key]['MoveLink']=SmrSession::get_new_href($container1);
 		if ($player->getLastSectorID() == $linkArray['ID']) $class = 'lastVisited';
 		else if(isset($unvisited[$linkArray['ID']])) $class = 'unvisited';
 		else $class = 'visited';
