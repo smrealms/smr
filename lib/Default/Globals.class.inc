@@ -496,7 +496,7 @@ class Globals
 		$container['target_page'] = $targetPage;
 		$container['target_sector'] = $toSector;
 		$href = SmrSession::get_new_href($container);
-		$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($sectorID)] = $href;
+		self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($sectorID)] = $href;
 		return $href;
 	}
 	
