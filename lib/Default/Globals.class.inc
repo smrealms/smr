@@ -486,7 +486,7 @@ class Globals
 	
 	public static function getCurrentSectorMoveHREF($toSector, $targetPage)
 	{
-		self::getSectorMoveHREF($toSector, 'current_sector.php');
+		return self::getSectorMoveHREF($toSector, 'current_sector.php');
 	}
 	
 	public static function getSectorMoveHREF($toSector, $targetPage)
