@@ -246,7 +246,7 @@ class SmrSession
 	
 	public static function update()
 	{
-		self::$db= new SmrSessionMySqlDatabase();
+		self::$db = new SmrSessionMySqlDatabase();
 		foreach(self::$var as $key => &$value)
 		{
 			if ($value['RemainingPageLoads'] <= 0)
@@ -311,6 +311,7 @@ class SmrSession
 	
 	public static function resetLink($container, $sn) //Do not allow sharing SN, useful for forwarding.
 	{
+		global $lock;
 		if(isset(self::$var[$sn]['CommonID']))
 			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		self::$SN = $sn;
@@ -324,6 +325,8 @@ class SmrSession
 		}
 
 		self::$var[$sn] = $container;
+		if(!$lock && !USING_AJAX)
+			self::update();
 		return $sn;
 	}
 	
