@@ -15,6 +15,7 @@ class Globals
 	protected static $FEATURE_REQUEST_OPEN = null;
 	protected static $RACE_RELATIONS = array();
 	protected static $USER_RANKINGS = null;
+	protected static $AVAILABLE_LINKS = array();
 	protected static $db = null;
 	
 	private static $compatibilityDatabases;
@@ -27,6 +28,11 @@ class Globals
 	{
 		if(self::$db==null)
 			self::$db = new SmrMySqlDatabase();
+	}
+	
+	public static function getAvailableLinks()
+	{
+		return self::$AVAILABLE_LINKS;
 	}
 	
 	public static function canAccessPage($pageName, AbstractSmrPlayer &$player, array $extraInfo)
@@ -485,10 +491,13 @@ class Globals
 	
 	public static function getSectorMoveHREF($toSector, $targetPage)
 	{
+		global $player;
 		$container = create_container('sector_move_processing.php');
 		$container['target_page'] = $targetPage;
 		$container['target_sector'] = $toSector;
-		return SmrSession::get_new_href($container);
+		$href = SmrSession::get_new_href($container);
+		$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($sectorID)] = $href;
+		return $href;
 	}
 	
 	public static function getPlotCourseHREF($fromSector = false, $toSector = false)
