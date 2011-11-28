@@ -10,6 +10,7 @@ if($AJAX_ENABLE_REFRESH)
 	$AvailableLinks = Globals::getAvailableLinks();
 	?><script type="text/javascript">$(function(){
 		startRefresh('<?php echo $AJAX_ENABLE_REFRESH; ?>');<?php
+		/*
 		if(isset($AvailableLinks['MoveUp'])) {
 			?>$(document).bind('keydown', 'w', followLink('<?php echo $AvailableLinks['MoveUp']; ?>'));<?php
 		}
@@ -24,6 +25,6 @@ if($AJAX_ENABLE_REFRESH)
 		}
 		if(isset($AvailableLinks['MoveWarp'])) {
 			?>$(document).bind('keydown', 'e', followLink('<?php echo $AvailableLinks['MoveWarp']; ?>'));<?php
-		} ?>
+		} ?>*/
 	})</script><?php
 } ?>
