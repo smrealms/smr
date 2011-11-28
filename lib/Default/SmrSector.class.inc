@@ -442,6 +442,16 @@ class SmrSector
 		return $neighbour;
 	}
 	
+	public function getSectorDirection($sectorID)
+	{
+		$dir = array_search($sectorID, $this->getLinks());
+		if($dir !== false)
+			return $dir;
+		if($sectorID == $this->getWarp())
+			return 'Warp';
+		return 'None';
+	}
+	
 	public function &getNeighbourSector($dir)
 	{
 		return SmrSector::getSector($this->getGameID(),$this->getNeighbourID($dir));
