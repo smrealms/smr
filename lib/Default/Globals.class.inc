@@ -484,7 +484,7 @@ class Globals
 		return SmrSession::get_new_href($container);
 	}
 	
-	public static function getCurrentSectorMoveHREF($toSector, $targetPage)
+	public static function getCurrentSectorMoveHREF($toSector)
 	{
 		return self::getSectorMoveHREF($toSector, 'current_sector.php');
 	}
