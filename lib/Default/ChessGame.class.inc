@@ -370,7 +370,7 @@ class ChessGame
 				{
 					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castling);
 				}
-				if($p->isUnderAttack($this->board))
+				if($p->isChecked($this->board))
 				{
 					return 3;
 				}
