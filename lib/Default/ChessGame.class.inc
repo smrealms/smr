@@ -235,7 +235,7 @@ class ChessGame
 			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
 		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX = 7) && ($startY == 0 || $startY == 7))
 			$this->hasMoved[$playerColour][ChessPiece::ROOK][$startX==0?'Queen':'King'] = true;
-		return ($castling == 'Queen' ? '0-0-0' : $castling == 'King' ? '0-0' : '')
+		return ($castling == 'Queen' ? '0-0-0' : ($castling == 'King' ? '0-0' : ''))
 			. ChessPiece::getSymbolForPiece($pieceID, $playerColour)
 			. chr(ord('a')+$startX)
 			. (8-$startY)
@@ -456,7 +456,7 @@ class ChessGame
 	}
 	
 	public function getColourForAccountID($accountID) {
-		return $accountID == $this->getWhiteID() ? self::PLAYER_WHITE : $accountID == $this->getBlackID() ? self::PLAYER_BLACK : false;
+		return $accountID == $this->getWhiteID() ? self::PLAYER_WHITE : ($accountID == $this->getBlackID() ? self::PLAYER_BLACK : false);
 	}
 
 	public function getEndDate()
