@@ -456,7 +456,7 @@ class ChessGame
 	}
 	
 	public function getColourForAccountID($accountID) {
-		return $accountID == $this->getWhiteID() ? self::PLAYER_WHITE : $accountID == $this->getBlacID() ? self::PLAYER_BLACK : false;
+		return $accountID == $this->getWhiteID() ? self::PLAYER_WHITE : $accountID == $this->getBlackID() ? self::PLAYER_BLACK : false;
 	}
 
 	public function getEndDate()
