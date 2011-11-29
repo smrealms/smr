@@ -53,22 +53,22 @@ if (count($BankTransactions) > 0)
 		} ?>
 			<table class="standard inset">
 				<tr>
-					<th>#</th>
-					<th>Date</th>
+					<th class="shrink">#</th>
+					<th class="shrink">Date</th>
 					<th>Trader</th>
 					<th>Reason for transfer</th>
-					<th>Withdrawal</th>
-					<th>Deposit</th><?php
+					<th class="shrink">Withdrawal</th>
+					<th class="shrink">Deposit</th><?php
 					if($CanExempt)
 					{
-						?><th>Make Exempt</th><?php
+						?><th class="shrink noWrap">Make Exempt</th><?php
 					} ?>
 				</tr><?php
 				foreach($BankTransactions as $TransactionID => &$BankTransaction)
 				{ ?>
 					<tr>
-						<td class="center shrink"><?php echo number_format($TransactionID); ?></td>
-						<td class="center shrink noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
+						<td class="center"><?php echo number_format($TransactionID); ?></td>
+						<td class="center noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
 						<td><?php
 							if($BankTransaction['Exempt'])
 							{
@@ -77,8 +77,8 @@ if (count($BankTransactions) > 0)
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
 						<td><?php echo $BankTransaction['Reason']; ?></td>
-						<td class="center shrink"><?php echo number_format($BankTransaction['Withdrawal']); ?></td>
-						<td class="center shrink"><?php echo number_format($BankTransaction['Deposit']); ?></td><?php
+						<td class="center"><?php echo number_format($BankTransaction['Withdrawal']); ?></td>
+						<td class="center"><?php echo number_format($BankTransaction['Deposit']); ?></td><?php
 						if ($CanExempt)
 						{ ?>
 							<td class="center"><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
@@ -87,7 +87,7 @@ if (count($BankTransactions) > 0)
 				} ?>
 				<tr>
 					<th colspan="5" class="right">Ending Balance</th>
-					<td class="bold shrink right"><?php echo number_format($Alliance->getAccount()); ?></td><?php
+					<td class="bold right"><?php echo number_format($Alliance->getAccount()); ?></td><?php
 					if($CanExempt)
 					{
 						?><td><input class="submit" type="submit" name="action" value="Make Exempt"></td><?php
