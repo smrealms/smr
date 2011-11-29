@@ -77,8 +77,8 @@ if (count($BankTransactions) > 0)
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
 						<td><?php echo $BankTransaction['Reason']; ?></td>
-						<td class="center"><?php if(is_numeric($$BankTransaction['Withdrawal'])){ echo number_format($BankTransaction['Withdrawal']); }else{ ?>&nbsp;<?php } ?></td>
-						<td class="center"><?php if(is_numeric($$BankTransaction['Deposit'])){ echo number_format($BankTransaction['Deposit']); }else{ ?>&nbsp;<?php } ?></td><?php
+						<td class="center"><?php if(is_numeric($BankTransaction['Withdrawal'])){ echo number_format($BankTransaction['Withdrawal']); }else{ ?>&nbsp;<?php } ?></td>
+						<td class="center"><?php if(is_numeric($BankTransaction['Deposit'])){ echo number_format($BankTransaction['Deposit']); }else{ ?>&nbsp;<?php } ?></td><?php
 						if ($CanExempt)
 						{ ?>
 							<td class="center"><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
