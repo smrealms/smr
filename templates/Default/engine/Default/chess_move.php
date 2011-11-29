@@ -13,7 +13,7 @@
 						<POSSIBLE_MOVE_LIST><?php
 							if($ChessGame->isCurrentTurn($ThisAccount->getAccountID()))
 							{
-								$Moves = $Cell->getPossibleMoves($Board, $ThisAccount->getAccountID());
+								$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
 								foreach($Moves as $Move)
 								{
 									?><POSSIBLE_MOVE><MOVE_X><?php echo $Move[0]; ?></MOVE_X><MOVE_Y><?php echo $Move[1]; ?></MOVE_Y></POSSIBLE_MOVE><?php

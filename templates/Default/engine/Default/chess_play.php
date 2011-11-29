@@ -40,7 +40,8 @@
 				"x<?php echo $X; ?>y<?php echo $Y; ?>": [<?php
 					if($ChessGame->isCurrentTurn($ThisAccount->getAccountID()))
 					{
-						foreach($Cell->getPossibleMoves($Board,$ThisAccount->getAccountID()) as $Move)
+						$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
+						foreach($Moves as $Move)
 						{
 							?>{"x":<?php echo $Move[0]; ?>, "y":<?php echo $Move[1]; ?>},<?php
 						}
