@@ -9,8 +9,6 @@ class ChessPiece
 	const KNIGHT = 5;
 	const PAWN = 6;
 
-	private $log;
-
 	public $gameID;
 	public $accountID;
 	public $colour;
@@ -18,11 +16,6 @@ class ChessPiece
 	public $pieceNo;
 	private $x;
 	private $y;
-
-	public function staticx()
-	{
-		$log = Logger.getLogger('Piece.class');
-	}
 	
 	public function __construct($gameID, $accountID, $colour, $pieceID, $x, $y, $pieceNo = -1)
 	{
@@ -53,13 +46,13 @@ class ChessPiece
 		$this->y = $y;
 	}
 
-	public function isChecked($board)
+	public function isChecked($board, $hasMoved, $king = true, $x = -1, $y = -1)
 	{
 		foreach($board as $row)
 		{
 			foreach($row as $p)
 			{
-				if($p != null && $p->colour != $this->colour && $p->isChecking($board))
+				if($p != null && $p->colour != $this->colour && $p->isAttacking($board, $hasMoved, $king, $x, $y))
 				{
 					return true;
 				}
@@ -68,24 +61,21 @@ class ChessPiece
 		return false;
 	}
 	
-	public function isChecking($board)
+	public function isAttacking($board, $hasMoved, $king, $x = -1, $y = -1)
 	{
-		$moves = $this->getPossibleMoves($board, null);
+		$moves = $this->getPossibleMoves($board, $hasMoved);
 		foreach($moves as $move)
 		{
 			$p = $board[$move[1]][$move[0]];
-			if($p!=null)
+			if(($move[0] == $x && $move[1] == $y) || ($king === true && $p != null && $p->pieceID==self::KING && $colour != $p->colour))
 			{
-				if($p->pieceID==self::KING && $colour != $p->colour)
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		return false;
 	}
 
-	public function getPossibleMoves($board, $forAccountID = null)
+	public function getPossibleMoves($board, $hasMoved, $forAccountID = null)
 	{
 		$moves = array();
 		if($forAccountID == null || $this->accountID == $forAccountID)
@@ -133,6 +123,14 @@ class ChessPiece
 						{
 							$this->addMove($this->x+$i, $this->y+$j, $board, $moves);
 						}
+					}
+				}
+				if(!$hasMoved[$this->colour][ChessPiece::KING]) {
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && $board[$this->y][$this->x-1] == null && $board[$this->y][$this->x-3] == null && $this->isChecked($board, $hasMoved, false, $this->x-1, $this->y)) {
+						$this->addMove($this->x-2, $this->y, $board, $moves);
+					}
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] && $board[$this->y][$this->x+1] == null && $this->isChecked($board, $hasMoved, false, $this->x+1, $this->y)) {
+						$this->addMove($this->x+2, $this->y, $board, $moves);
 					}
 				}
 			}
