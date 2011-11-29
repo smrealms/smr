@@ -67,7 +67,7 @@ if (count($BankTransactions) > 0)
 				foreach($BankTransactions as $TransactionID => &$BankTransaction)
 				{ ?>
 					<tr>
-						<td class="center shrink"><?php echo $TransactionID; ?></td>
+						<td class="center shrink"><?php echo number_format($TransactionID); ?></td>
 						<td class="center shrink noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
 						<td><?php
 							if($BankTransaction['Exempt'])
@@ -77,8 +77,8 @@ if (count($BankTransactions) > 0)
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
 						</td>
 						<td><?php echo $BankTransaction['Reason']; ?></td>
-						<td class="center shrink"><?php echo $BankTransaction['Withdrawal']; ?></td>
-						<td class="center shrink"><?php echo $BankTransaction['Deposit']; ?></td><?php
+						<td class="center shrink"><?php echo number_format($BankTransaction['Withdrawal']); ?></td>
+						<td class="center shrink"><?php echo number_format($BankTransaction['Deposit']); ?></td><?php
 						if ($CanExempt)
 						{ ?>
 							<td class="center"><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
