@@ -114,22 +114,21 @@ class ChessPiece
 			}
 			else if($this->pieceID==self::KING)
 			{
-				//TODO: Check for check
 				for($i = -1; $i < 2; $i++)
 				{
 					for($j = -1; $j < 2; $j++)
 					{
-						if($i!=0 || $j!=0)
+						if(($i!=0 || $j!=0) && !$this->isChecked($board, $hasMoved, false, $this->x+$i, $this->y+$j))
 						{
 							$this->addMove($this->x+$i, $this->y+$j, $board, $moves);
 						}
 					}
 				}
 				if(!$hasMoved[$this->colour][ChessPiece::KING]) {
-					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && $board[$this->y][$this->x-1] == null && $board[$this->y][$this->x-3] == null && $this->isChecked($board, $hasMoved, false, $this->x-1, $this->y)) {
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && $board[$this->y][$this->x-1] == null && $board[$this->y][$this->x-3] == null && !$this->isChecked($board, $hasMoved, false, $this->x-1, $this->y)) {
 						$this->addMove($this->x-2, $this->y, $board, $moves);
 					}
-					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] && $board[$this->y][$this->x+1] == null && $this->isChecked($board, $hasMoved, false, $this->x+1, $this->y)) {
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] && $board[$this->y][$this->x+1] == null && !$this->isChecked($board, $hasMoved, false, $this->x+1, $this->y)) {
 						$this->addMove($this->x+2, $this->y, $board, $moves);
 					}
 				}
