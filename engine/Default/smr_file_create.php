@@ -199,7 +199,7 @@ foreach ($galaxies as &$galaxy)
 			unset($locations);
 			$file .= substr($locationsString,0,-1) . EOL;
 		}
-		if($sector->hasFriendlyForces($player))
+		if($adminCreate === false && $sector->hasFriendlyForces($player))
 		{
 			$forcesString= 'FriendlyForces=';
 			$friendlyForces =& $sector->getFriendlyForces($player);
