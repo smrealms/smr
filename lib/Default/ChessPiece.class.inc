@@ -234,8 +234,6 @@ class ChessPiece
 	
 	private static function isValidCoord($x, $y, array &$board)
 	{
-		if(memory_get_usage() > 50000000)
-			throw new Exception('Wtf memory');
 		return $y < count($board) && $y >= 0 && $x < count($board[$y]) && $x >= 0;
 	}
 	
