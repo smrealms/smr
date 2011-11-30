@@ -87,7 +87,7 @@ class ChessGame
 			while($this->db->nextRecord())
 			{
 				$pieceTakenID = $this->db->getField('piece_taken') == null ? null : $this->db->getInt('piece_taken');
-				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $this->db->getField('castling'));
+				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $this->db->getField('castling'), $this->db->getBoolean('en_passant'));
 			}
 		}
 		return $this->moves;
@@ -230,13 +230,13 @@ class ChessGame
 		return $games;
 	}
 	
-	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour, $castling)
+	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour, $castling, $enPassant)
 	{
 		if($pieceID == ChessPiece::KING)
 			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
-		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX = 7) && ($startY == 0 || $startY == 7))
+		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX == 7) && ($startY == 0 || $startY == 7))
 			$this->hasMoved[$playerColour][ChessPiece::ROOK][$startX==0?'Queen':'King'] = true;
-		if($pieceID == ChessPiece::PAWN && ($startY == 1 || $startY = 6) && ($endY == 3 || $endY == 4))
+		if($pieceID == ChessPiece::PAWN && ($startY == 1 || $startY == 6) && ($endY == 3 || $endY == 4))
 			$this->hasMoved[ChessPiece::PAWN] = array($endX, $endY);
 		else
 			$this->hasMoved[ChessPiece::PAWN] = array(-1,-1);
@@ -430,7 +430,7 @@ class ChessGame
 				}
 				if($this->moves!=null)
 				{
-					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $moveInfo['Castling']['Type']);
+					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $moveInfo['Castling']['Type'], $moveInfo['EnPassant']);
 				}
 				if($p->isChecked($this->board, $this->getHasMoved()))
 				{
