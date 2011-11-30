@@ -105,7 +105,9 @@ class ChessPiece
 					$moveX = $this->x+$i;
 					if(self::isValidCoord($moveX, $moveY, $board))
 					{
-						if($attackingCheck || ($hasMoved[ChessPiece::PAWN][0] == $moveX && ($hasMoved[ChessPiece::PAWN][1] == $moveY-1 || $hasMoved[ChessPiece::PAWN][1] == $moveY+1)) || ($board[$moveY][$moveX] != null && $board[$moveY][$moveX]->colour!=$this->colour))
+						if($attackingCheck || 
+							// ($hasMoved[ChessPiece::PAWN][0] == $moveX && ($hasMoved[ChessPiece::PAWN][1] == $moveY-1 || $hasMoved[ChessPiece::PAWN][1] == $moveY+1)) || 
+							($board[$moveY][$moveX] != null && $board[$moveY][$moveX]->colour!=$this->colour))
 						{
 							$moves[] = array($moveX,$moveY);
 						}
