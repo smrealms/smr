@@ -327,7 +327,7 @@ class ChessGame
 	}
 	
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
-		$pieceTaken = $this->board[$toY][$toX];
+		$pieceTaken = $board[$toY][$toX];
 		$board[$toY][$toX] = $board[$y][$x];
 		$board[$y][$x] = null; 
 		$p->setX($toX);
