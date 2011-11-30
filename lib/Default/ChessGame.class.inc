@@ -240,7 +240,7 @@ class ChessGame
 			. chr(ord('a')+$startX)
 			. (8-$startY)
 			. ' '
-			. ($pieceTaken == null ? '' : ChessPiece::getSymbolForPiece($pieceTaken, $playerColour))
+			. ($pieceTaken == null ? '' : ChessPiece::getSymbolForPiece($pieceTaken, $playerColour == self::PLAYER_WHITE ? self::PLAYER_WHITE : self::PLAYER_BLACK))
 			. chr(ord('a')+$endX)
 			. (8-$endY)
 			. ' '
