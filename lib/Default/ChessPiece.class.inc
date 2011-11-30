@@ -49,7 +49,7 @@ class ChessPiece
 	public function isSafeMove(array &$board, &$hasMoved, $toX = -1, $toY = -1) {
 		$moveInfo = ChessGame::movePiece($board, $hasMoved, $this->x, $this->y, $toX, $toY);
 		$safe = !$this->isChecked($board, $hasMoved, $this->x-1, $this->y);
-		ChessGame::undoMovePiece($board, $hasMoved, $this->x, $this->y, $toX, $toY, $moveInfo['PieceTaken']);
+		ChessGame::undoMovePiece($board, $hasMoved, $this->x, $this->y, $toX, $toY, $moveInfo['PieceTaken'], $moveInfo['EnPassant']);
 	}
 
 	public function isChecked(array &$board, $hasMoved, $king = true, $x = -1, $y = -1)
@@ -105,7 +105,7 @@ class ChessPiece
 					$moveX = $this->x+$i;
 					if(self::isValidCoord($moveX, $moveY, $board))
 					{
-						if($attackingCheck || ($board[$moveY][$moveX] != null && $board[$moveY][$moveX]->colour!=$this->colour))
+						if($attackingCheck || ($hasMoved[ChessPiece::PAWN][0] == $moveX && ($hasMoved[ChessPiece::PAWN][1] == $moveY-1 || $hasMoved[ChessPiece::PAWN][1] == $moveY+1)) || ($board[$moveY][$moveX] != null && $board[$moveY][$moveX]->colour!=$this->colour))
 						{
 							$moves[] = array($moveX,$moveY);
 						}
