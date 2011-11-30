@@ -406,6 +406,9 @@ class ChessGame
 			if($move[0]==$toX && $move[1]==$toY)
 			{
 				$currentPlayer =& $this->getCurrentTurnPlayer();
+				
+				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY);
+				
 				$pieceTakenID = null;
 				if($moveInfo['PieceTaken'] != null)
 				{
@@ -415,8 +418,6 @@ class ChessGame
 						throw new Exception('King was taken.');
 					}
 				}
-				
-				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY);
 				
 				$checking = null;
 				if($p->isAttacking($this->board, $this->getHasMoved(), true))
@@ -431,7 +432,7 @@ class ChessGame
 				{
 					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $moveInfo['Castling']['Type']);
 				}
-				if($p->isChecked($this->board))
+				if($p->isChecked($this->board, $this->getHasMoved()))
 				{
 					return 3;
 				}
@@ -530,7 +531,7 @@ class ChessGame
 		return $this->winner;
 	}
 
-	public function getHasMoved()
+	public function &getHasMoved()
 	{
 		return $this->hasMoved;
 	}
