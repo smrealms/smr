@@ -7,35 +7,9 @@ if(isset($_REQUEST['account_id']))
 	SmrSession::updateVar('account_id',$_REQUEST['account_id']);
 $account_id = $var['account_id'];
 
-// check if input is numeric
-if (!is_numeric($account_id))
-	create_error('Please enter an account ID, which has to be numeric!');
-
 // echo green topic
 $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'album_moderate.php'),
 		   '<h1>MODERATE PHOTO ALBUM</h1>');
-
-// check if the givin account really has an entry
-if ($account_id > 0)
-{
-	$db->query('SELECT * FROM album WHERE account_id = '.$account_id.' AND Approved = \'YES\'');
-	if ($db->nextRecord())
-	{
-		$disabled = $db->getBoolean('disabled');
-		$location = stripslashes($db->getField('location'));
-		$email = stripslashes($db->getField('email'));
-		$website = stripslashes($db->getField('website'));
-		$day = $db->getField('day');
-		$month = $db->getField('month');
-		$year = $db->getField('year');
-		$other = nl2br(stripslashes($db->getField('other')));
-	}
-	else
-	{
-		$account_id = 0;
-		$error_msg = '<div align="center" class="red bold">This User doesn\'t have an album entry or it needs to be approved first!</div>';
-	}
-}
 
 // if we don't have an account id yet, ask for it (and echo error message if invalid number was entered)
 if (empty($account_id))
@@ -49,6 +23,32 @@ if (empty($account_id))
 }
 else
 {
+	// check if input is numeric
+	if (!is_numeric($account_id))
+		create_error('Please enter an account ID, which has to be numeric!');
+
+	// check if the givin account really has an entry
+	if ($account_id > 0)
+	{
+		$db->query('SELECT * FROM album WHERE account_id = '.$account_id.' AND Approved = \'YES\'');
+		if ($db->nextRecord())
+		{
+			$disabled = $db->getBoolean('disabled');
+			$location = stripslashes($db->getField('location'));
+			$email = stripslashes($db->getField('email'));
+			$website = stripslashes($db->getField('website'));
+			$day = $db->getField('day');
+			$month = $db->getField('month');
+			$year = $db->getField('year');
+			$other = nl2br(stripslashes($db->getField('other')));
+		}
+		else
+		{
+			$account_id = 0;
+			$error_msg = '<div align="center" class="red bold">This User doesn\'t have an album entry or it needs to be approved first!</div>';
+		}
+	}
+
 	$container = create_container('album_moderate_processing.php', '');
 	$container['account_id'] = $account_id;
 
