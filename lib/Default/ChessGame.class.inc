@@ -249,7 +249,8 @@ class ChessGame
 			. chr(ord('a')+$endX)
 			. (8-$endY)
 			. ' '
-			. ($checking == null ? '' : ($checking  == 'CHECK' ? '+' : '++') );
+			. ($checking == null ? '' : ($checking  == 'CHECK' ? '+' : '++') )
+			. ($enPassant ? ' e.p.' : '');
 	}
 	
 	public function isCheckmated($colour)
