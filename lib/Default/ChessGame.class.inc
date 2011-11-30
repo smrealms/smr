@@ -34,7 +34,8 @@ class ChessGame
 				'Queen' => false,
 				'King' => false
 			)
-		)
+		),
+		ChessPiece::PAWN => array(-1,-1)
 	);
 	private $board;
 	private $moves;
@@ -235,6 +236,10 @@ class ChessGame
 			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
 		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX = 7) && ($startY == 0 || $startY == 7))
 			$this->hasMoved[$playerColour][ChessPiece::ROOK][$startX==0?'Queen':'King'] = true;
+		if($pieceID == ChessPiece::PAWN && ($startY == 1 || $startY = 6) && ($endY == 3 || $endY == 4))
+			$this->hasMoved[ChessPiece::PAWN] = array($endX, $endY);
+		else
+			$this->hasMoved[ChessPiece::PAWN] = array(-1,-1);
 		return ($castling == 'Queen' ? '0-0-0' : ($castling == 'King' ? '0-0' : ''))
 			. ChessPiece::getSymbolForPiece($pieceID, $playerColour)
 			. chr(ord('a')+$startX)
@@ -339,12 +344,22 @@ class ChessGame
 				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
 			}
 		}
+		$enPassant = false;
+		if($p->pieceID == ChessPiece::PAWN) {
+			if($hasMoved[ChessPiece::PAWN][0] == $toX && ($hasMoved[ChessPiece::PAWN][1] == $toY-1 || $hasMoved[ChessPiece::PAWN][1] == $toY+1)) {
+				$enPassant = true;
+				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
+				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
+				$hasMoved[ChessPiece::PAWN] = array(-1,-1);
+			}
+		}
 		return array('Castling' => $castling,
-				'PieceTaken' => &$pieceTaken
+				'PieceTaken' => &$pieceTaken,
+				'EnPassant' => $enPassant
 			);
 	}
 	
-	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken) {
+	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
 		$board[$y][$x] = $board[$toY][$toX];
 		$board[$toY][$toX] = $pieceTaken;
 		$p->setX($x);
@@ -359,6 +374,11 @@ class ChessGame
 				$board[$toY][$castling['X']] = $board[$y][$castling['ToX']];
 				$board[$toY][$castling['X']]->setX($castling['X']);
 			}
+		}
+		if($enPassant === true) {
+			$board[$toY][$toX] = null;
+			$hasMoved[ChessPiece::PAWN] = array($toX,$toY == 1 ? 2 : 5);
+			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $pieceTaken;
 		}
 	}
 
@@ -411,9 +431,9 @@ class ChessGame
 				}
 				$otherPlayer =& $this->getCurrentTurnPlayer();
 				$this->db->query('INSERT INTO chess_game_moves
-								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling)
+								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling,en_passant)
 								VALUES
-								(' . $p->gameID . ',' . $p->pieceID . ',' . $x . ',' . $y . ',' . $toX . ',' . $toY . ',' . $this->db->escapeString($checking, true, true) . ',' . ($moveInfo['PieceTaken'] == null ? 'NULL' : $moveInfo['PieceTaken']->pieceID) . ',' . $this->db->escapeString($moveInfo['Castling']['Type'], true, true) . ');');
+								(' . $p->gameID . ',' . $p->pieceID . ',' . $x . ',' . $y . ',' . $toX . ',' . $toY . ',' . $this->db->escapeString($checking, true, true) . ',' . ($moveInfo['PieceTaken'] == null ? 'NULL' : $moveInfo['PieceTaken']->pieceID) . ',' . $this->db->escapeString($moveInfo['Castling']['Type'], true, true) . ',' . $this->db->escapeBoolean($moveInfo['EnPassant']) .');');
 				
 				
 				$currentPlayer->increaseHOF(1, array('Chess','Moves','Total Taken'), HOF_PUBLIC);
