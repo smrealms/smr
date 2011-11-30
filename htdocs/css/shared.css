@@ -459,10 +459,11 @@ div.lm_sector img.move_hack
 
 /** Chess **/
 
-table.chess
-{
+table.chess {
 	background-color: #47525D;
     border: 1px solid #FFFFFF;
+	border-collapse: separate;
+	border-spacing: 0px;
     white-space: nowrap;
 	color: black;
 }
@@ -474,20 +475,24 @@ table.chess
 	width: 52px;
 	height: 52px;
 	text-align: center;
+	border: 4px solid #47525D;
 }
 
-.whiteSquare {
-   background-color: white;
-   background-repeat: repeat;
+.chess td.whiteSquare {
+	background-color: white;
+	background-repeat: repeat;
+	border: 4px solid white;
 }
 
-div.chat, table#moveTable
-{
+div.chat, table#moveTable {
 	color: black;
 	background-color: white;
 }
 
-.pointer
-{
+.pointer {
 	cursor: pointer;
+}
+
+.chess td.chessHighlight {
+	border: 4px solid orange;
 }
