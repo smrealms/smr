@@ -222,7 +222,7 @@ class ChessPiece
 	{
 		if(self::isValidCoord($x, $y, $board))
 		{
-			if(($board[$y][$x] == null || $board[$y][$x]->colour!=$this->colour) && ($attackingCheck == true || ($this->pieceID == self::KING && $this->isSafeMove($board, $hasMoved, $x, $y))))
+			if(($board[$y][$x] == null || $board[$y][$x]->colour!=$this->colour) && ($attackingCheck == true || $this->pieceID != self::KING || $this->isSafeMove($board, $hasMoved, $x, $y)))
 			{
 				$moves[] = array($x,$y);
 				return true;
