@@ -300,6 +300,67 @@ class ChessGame
 		}
 		return true;
 	}
+	
+	public static function isCastling($x, $toX) {
+		$movement = $toX - $x;
+		if(abs($movement) == 2) {
+			//To the left.
+			if($movement == -2) {
+				return array('Type' => 'Queen',
+						'X' => 0,
+						'ToX' => 3
+					);
+			} //To the right
+			else if($movement == 2) {
+				return array('Type' => 'King',
+						'X' => 7,
+						'ToX' => 5
+					);
+			}
+		}
+		return false;
+	}
+	
+	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
+		$pieceTaken = $this->board[$toY][$toX];
+		$board[$toY][$toX] = $board[$y][$x];
+		$board[$y][$x] = null; 
+		$p->setX($toX);
+		$p->setY($toY);
+
+		//Castling
+		$castling = false;
+		if($p->pieceID == ChessPiece::KING) {
+			$castling = self::isCastling($x, $toX);
+			if($castling !== false) {
+				$hasMoved[$p->colour][ChessPiece::KING] = true;
+				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = true;
+				$board[$toY][$castling['ToX']] = $board[$y][$castling['X']];
+				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
+			}
+		}
+		return array('Castling' => $castling,
+				'PieceTaken' => &$pieceTaken
+			);
+	}
+	
+	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken) {
+		$board[$y][$x] = $board[$toY][$toX];
+		$board[$toY][$toX] = $pieceTaken;
+		$p->setX($x);
+		$p->setY($y);
+
+		//Castling
+		if($p->pieceID == ChessPiece::KING) {
+			$castling = self::isCastling($x, $toX);
+			if($castling !== false) {
+				$hasMoved[$p->colour][ChessPiece::KING] = false;
+				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = false;
+				$board[$toY][$castling['X']] = $board[$y][$castling['ToX']];
+				$board[$toY][$castling['X']]->setX($castling['X']);
+			}
+		}
+	}
 
 	public function tryMove($x, $y, $toX, $toY, $forAccountID)
 	{
@@ -319,43 +380,17 @@ class ChessGame
 			if($move[0]==$toX && $move[1]==$toY)
 			{
 				$currentPlayer =& $this->getCurrentTurnPlayer();
-				$pieceTaken = null;
 				$pieceTakenID = null;
-				if($this->board[$toY][$toX] != null)
+				if($moveInfo['PieceTaken'] != null)
 				{
-					$pieceTaken = $this->board[$toY][$toX];
-					if($pieceTaken->pieceID == ChessPiece::KING)
+					$pieceTakenID = $moveInfo['PieceTaken']->pieceID;
+					if($moveInfo['PieceTaken']->pieceID == ChessPiece::KING)
 					{
 						throw new Exception('King was taken.');
 					}
 				}
-
-				$this->board[$toY][$toX] = $this->board[$y][$x];
-				$this->board[$y][$x] = null; 
-				$p->setX($toX);
-				$p->setY($toY);
 				
-				//Castling
-				$castling = null;
-				if($p->pieceID == ChessPiece::KING) {
-					$movement = $toX - $x;
-					if(abs($movement) == 2) {
-						$this->hasMoved[$p->colour][ChessPiece::KING] = true;
-						//To the left.
-						if($movement == -2) {
-							$castling = 'Queen';
-							$castleX = 0;
-							$castleToX = 3;
-						} //To the right
-						else if($movement == 2) {
-							$castling = 'King';
-							$castleX = 7;
-							$castleToX = 5;
-						}
-						$this->board[$toY][$castleToX] = $this->board[$y][$castleX];
-						$this->board[$toY][$castleToX]->setX($castleX);
-					}
-				}
+				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY);
 				
 				$checking = null;
 				if($p->isAttacking($this->board, $this->getHasMoved(), true))
@@ -368,7 +403,7 @@ class ChessGame
 				}
 				if($this->moves!=null)
 				{
-					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $castling);
+					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $moveInfo['Castling']['Type']);
 				}
 				if($p->isChecked($this->board))
 				{
@@ -378,16 +413,16 @@ class ChessGame
 				$this->db->query('INSERT INTO chess_game_moves
 								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling)
 								VALUES
-								(' . $p->gameID . ',' . $p->pieceID . ',' . $x . ',' . $y . ',' . $toX . ',' . $toY . ',' . $this->db->escapeString($checking, true, true) . ',' . ($pieceTaken == null ? 'NULL' : $pieceTaken->pieceID) . ',' . $this->db->escapeString($castling, true, true) . ');');
+								(' . $p->gameID . ',' . $p->pieceID . ',' . $x . ',' . $y . ',' . $toX . ',' . $toY . ',' . $this->db->escapeString($checking, true, true) . ',' . ($moveInfo['PieceTaken'] == null ? 'NULL' : $moveInfo['PieceTaken']->pieceID) . ',' . $this->db->escapeString($moveInfo['Castling']['Type'], true, true) . ');');
 				
 				
 				$currentPlayer->increaseHOF(1, array('Chess','Moves','Total Taken'), HOF_PUBLIC);
-				if($pieceTaken != null)
+				if($moveInfo['PieceTaken'] != null)
 				{
 					$this->db->query('DELETE FROM chess_game_pieces
-									WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $pieceTaken->accountID . ' AND piece_id=' . $pieceTaken->pieceID . ' AND piece_no=' . $pieceTaken->pieceNo . ';');
+									WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $moveInfo['PieceTaken']->accountID . ' AND piece_id=' . $moveInfo['PieceTaken']->pieceID . ' AND piece_no=' . $moveInfo['PieceTaken']->pieceNo . ';');
 				
-					$pieceTakenSymbol = ChessPiece::getSymbolForPiece($pieceTaken, $this->getCurrentTurnColour());
+					$pieceTakenSymbol = ChessPiece::getSymbolForPiece($moveInfo['PieceTaken'], $this->getCurrentTurnColour());
 					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken','Total'), HOF_PUBLIC);
 					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken','Total'), HOF_PUBLIC);
 					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
@@ -396,10 +431,10 @@ class ChessGame
 				$this->db->query('UPDATE chess_game_pieces
 							SET x=' . $toX . ', y=' . $toY . '
 							WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND piece_id=' . $p->pieceID . ' AND piece_no=' . $p->pieceNo . ';');
-				if($castling != null) {
+				if($moveInfo['Castling'] !== false) {
 					$this->db->query('UPDATE chess_game_pieces
-								SET x=' . $castleToX . '
-								WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND x = ' . $castleX . ' AND y = ' . $y . ';');
+								SET x=' . $moveInfo['Castling']['ToX'] . '
+								WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $p->accountID . ' AND x = ' . $moveInfo['Castling']['X'] . ' AND y = ' . $y . ';');
 				}
 				$return = 0;
 				if($checking != null)
