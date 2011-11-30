@@ -39,7 +39,7 @@
 		<a href="<?php echo $MessagePlanetLink ?>"><img src="images/planet_msg.png" alt="Planet Messages" /></a>
 		<span class="small"><?php echo $MessagePlanetNum; ?></span><?php
 	}
-	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessagePlanetLink))
+	if(isset($MessageGlobalLink) || isset($MessagePersonalLink) || isset($MessageScoutLink) || isset($MessagePoliticalLink) || isset($MessageAllianceLink) || isset($MessageAdminLink) || isset($MessageCasinoLink) || isset($MessagePlanetLink))
 	{
 		?><br /><?php
 	} ?>
