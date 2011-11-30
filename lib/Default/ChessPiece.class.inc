@@ -118,18 +118,18 @@ class ChessPiece
 				{
 					for($j = -1; $j < 2; $j++)
 					{
-						if(($i!=0 || $j!=0) && ($attackingCheck == true || $this->isSafeMove($board, $hasMoved, $this->x+$i, $this->y+$j)))
+						if($i!=0 || $j!=0)
 						{
-							$this->addMove($this->x+$i, $this->y+$j, $board, $moves);
+							$this->addMove($this->x+$i, $this->y+$j, $board, $moves, $hasMoved, $attackingCheck);
 						}
 					}
 				}
 				if(!$hasMoved[$this->colour][ChessPiece::KING]) {
-					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && $board[$this->y][$this->x-1] == null && $board[$this->y][$this->x-3] == null && ($attackingCheck == true || $this->isSafeMove($board, $hasMoved, $this->x-1, $this->y))) {
-						$this->addMove($this->x-2, $this->y, $board, $moves);
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && $board[$this->y][$this->x-1] == null && $board[$this->y][$this->x-3] == null) {
+						$this->addMove($this->x-2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
-					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] && $board[$this->y][$this->x+1] == null && ($attackingCheck == true || $this->isSafeMove($board, $hasMoved, $this->x+1, $this->y))) {
-						$this->addMove($this->x+2, $this->y, $board, $moves);
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] && $board[$this->y][$this->x+1] == null) {
+						$this->addMove($this->x+2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
 				}
 			}
@@ -216,11 +216,11 @@ class ChessPiece
 		return $moves;
 	}
 	
-	private function addMove($x, $y, array &$board, array &$moves)
+	private function addMove($x, $y, array &$board, array &$moves, array &$hasMoved = null, $attackingCheck = true)
 	{
 		if(self::isValidCoord($x, $y, $board))
 		{
-			if($board[$y][$x] == null || $board[$y][$x]->colour!=$this->colour)
+			if(($board[$y][$x] == null || $board[$y][$x]->colour!=$this->colour) && ($attackingCheck == true || ($this->pieceID == self::KING && $this->isSafeMove($board, $hasMoved, $x, $y))))
 			{
 				$moves[] = array($x,$y);
 				return true;
