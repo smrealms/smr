@@ -329,7 +329,8 @@ class ChessGame
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
 		$pieceTaken = $board[$toY][$toX];
 		$board[$toY][$toX] = $board[$y][$x];
-		$board[$y][$x] = null; 
+		$board[$y][$x] = null;
+		$p = $this->board[$y][$x];
 		$p->setX($toX);
 		$p->setY($toY);
 
@@ -362,6 +363,7 @@ class ChessGame
 	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
 		$board[$y][$x] = $board[$toY][$toX];
 		$board[$toY][$toX] = $pieceTaken;
+		$p = $this->board[$toX][$toY];
 		$p->setX($x);
 		$p->setY($y);
 
