@@ -458,6 +458,9 @@ div.lm_sector img.move_hack
 
 
 /** Chess **/
+.chessFont {
+	font-family: Times New Roman;
+}
 
 table.chess {
 	background-color: #47525D;
