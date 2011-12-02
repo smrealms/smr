@@ -75,7 +75,7 @@ class ChessPiece
 		$moves =& $this->getPossibleMoves($board, $hasMoved, null, true);
 		foreach($moves as &$move)
 		{
-			$p =& $board[$move[1]][$move[0]];
+			$p = $board[$move[1]][$move[0]];
 			if(($move[0] == $x && $move[1] == $y) || ($king === true && $p != null && $p->pieceID == self::KING && $this->colour != $p->colour))
 			{
 				return true;

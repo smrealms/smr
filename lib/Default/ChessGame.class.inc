@@ -332,7 +332,7 @@ class ChessGame
 		$p = $board[$toY][$toX] = $board[$y][$x];
 		$board[$y][$x] = null;
 		if($p == null) {
-			throw new Exception('Trying to move non-existent piece.');
+			throw new Exception('Trying to move non-existent piece: ' . var_export($board, true));
 		}
 		$p->setX($toX);
 		$p->setY($toY);
