@@ -11,7 +11,7 @@ body {
 }
 /* ----- All Heading styles ----- */
 h1, h2 {
-	font: bold 125% Arial, sans-serif;
+	font: bold 125%;
 	padding: 0px;
 	margin: 0px;
 }
@@ -26,37 +26,30 @@ h3 {
 /* ---------------------------- */
 #InputFields, .InputFields {
 	font: inherit;
-	font-family: Arial;
 }
 .submitStyle:link {
 	font: inherit;
-	font-family: Arial;
 	padding: 0px 8px;
 }
 .submitStyle:visited {
 	font: inherit;
-	font-family: Arial;
 	padding: 0px 8px;
 }
 .submitStyle:hover {
 	font: inherit;
-	font-family: Arial;
 	padding: 0px 8px;
 }
 .submitStyle:active {
 	font: inherit;
-	font-family: Arial;
 	padding: 0px 8px;
 }
 .submitStyle {
 	font: inherit;
-	font-family: Arial;
 	padding: 0px 8px;
 	display: inline-table; /* Fixes the problems with vertical overlap in FF, but not IE :( */
 }
 #InputFieldsText {
 	font: inherit;
-	font-family: Arial;
 }
 /* ------------------------------------ */
 #help_content {
@@ -81,7 +74,6 @@ table {
 }
 td {
 	font-variant: normal;
-	font-family: Arial, Sans-Serif;
 }
 td.sector {
 	padding: 0px;
@@ -100,7 +92,7 @@ td.footer_right {
 	padding: 10px;
 	vertical-align: bottom;
 	text-align: right;
-	font: 75% Arial, Sans-Serif;
+	font-size: 75%;
 	white-space: nowrap;
 }
 /* =.create td child, th also on line 110 */
@@ -175,7 +167,7 @@ div.bar1 div {
 	text-align: center;
 }
 input {
-	font: 100% Arial;
+	font: 100%;
 }
 a {
 	text-decoration: none;
@@ -204,7 +196,7 @@ ul.boxy {
 	padding: 4px 4px 0 4px;
 	margin: 0px;
 	width: 10em;
-	font: 13px Arial, Sans-Serif;
+	font: 13px;
 }
 ul.boxy li {
 	cursor: move;
