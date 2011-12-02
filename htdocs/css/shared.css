@@ -473,14 +473,10 @@ table.chess {
 
 .chess td
 {
-	font-size: 3em;
+	font-size: 37px;
 	color: black;
 	width: 48px;
-	min-width: 48px;
-	max-width: 48px;
 	height: 48px;
-	min-height: 48px;
-	max-height: 48px;
 	text-align: center;
 	border: 4px solid #47525D;
 }
