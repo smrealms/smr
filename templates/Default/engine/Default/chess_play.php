@@ -3,7 +3,7 @@
 	<tr>
 		<td>
 			<div style="height: 500px; width: 500px;">
-				<table class="chess"><?php
+				<table class="chess chessFont"><?php
 					$Board = $ChessGame->getBoard();
 					foreach($Board as $Y => $Row)
 					{ ?>
@@ -21,7 +21,7 @@
 		</td>
 		<td>
 			<div class="chat" style="height: 500px; width: 300px; overflow-y:scroll;">
-				<table id="moveTable" class="ajax">
+				<table id="moveTable" class="ajax chessFont">
 					<?php $this->includeTemplate('includes/ChessMoves.inc'); ?>
 				</table>
 			</div>
