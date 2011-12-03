@@ -35,21 +35,14 @@ while($db->nextRecord())
 	$unvisited[$db->getField('sector_id')] = TRUE;
 }
 
-$container2 = create_container('skeleton.php','sector_scan.php');
-
 foreach($links as $key => $linkArray)
 {
 	if($linkArray['ID']>0 && $linkArray['ID']!=$player->getSectorID())
 	{
-		$container2['target_sector'] = $linkArray['ID'];
-		
 		if ($player->getLastSectorID() == $linkArray['ID']) $class = 'lastVisited';
 		else if(isset($unvisited[$linkArray['ID']])) $class = 'unvisited';
 		else $class = 'visited';
 		$links[$key]['Class']=$class;
-		
-		if($ship->hasScanner())
-			$links[$key]['ScanLink']=SmrSession::get_new_href($container2);
 	}
 }
 

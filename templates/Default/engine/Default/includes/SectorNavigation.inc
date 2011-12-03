@@ -13,7 +13,7 @@
 				if($ThisShip->hasScanner())
 				{ ?>
 					<div class="scan_up scan_hover scan_text_hor">
-						<a href="<?php echo $Sectors['Up']['ScanLink']; ?>">
+						<a href="<?php echo Globals::getSectorScanHREF($Sectors['Up']['ID']); ?>">
 							SCAN
 						</a>
 					</div><?php
@@ -39,7 +39,7 @@
 				if($ThisShip->hasScanner())
 				{ ?>
 					<div class="scan_left scan_hover scan_text_vert">
-						<a href="<?php echo $Sectors['Left']['ScanLink']; ?>">
+						<a href="<?php echo Globals::getSectorScanHREF($Sectors['Left']['ID']); ?>">
 							S<br />C<br />A<br />N
 						</a>
 					</div><?php
@@ -47,16 +47,20 @@
 			}
 			else
 			{ ?>
-				<div class="move_left move_text"></div>
-				<?php if($ThisShip->hasScanner())
+				<div class="move_left move_text"></div><?php
+				if($ThisShip->hasScanner())
 				{
 					?><div class="scan_left scan_hover scan_text_vert"></div><?php
 				}
-			}?>
+			}
 			
+			if($ThisShip->hasScanner())
+			{
+				$ThisSector->getScanSectorHREF();
+			} ?>
 			
 			<div class="cs_mid move_text move_hover">
-				<a href="<?php echo $ThisSector->getCurrentSectorHREF(); ?>" class="currentSector">
+				<a href="<?php echo Globals::getCurrentSectorHREF(); ?>" class="currentSector">
 					<?php echo $ThisSector->getSectorID(); ?>
 				</a>
 			</div>
@@ -73,7 +77,7 @@
 				if($ThisShip->hasScanner())
 				{ ?>
 					<div class="scan_right scan_hover scan_text_vert">
-						<a href="<?php echo $Sectors['Right']['ScanLink']; ?>">
+						<a href="<?php echo Globals::getSectorScanHREF($Sectors['Right']['ID']); ?>">
 							S<br />C<br />A<br />N
 						</a>
 					</div><?php
@@ -99,7 +103,7 @@
 				if($ThisShip->hasScanner())
 				{ ?>
 					<div class="scan_down scan_hover scan_text_hor">
-						<a href="<?php echo $Sectors['Down']['ScanLink']; ?>">
+						<a href="<?php echo Globals::getSectorScanHREF($Sectors['Down']['ID']); ?>">
 							SCAN
 						</a>
 					</div><?php
@@ -125,7 +129,7 @@
 				if($ThisShip->hasScanner())
 				{ ?>
 					<div class="scan_warp scan_hover scan_text_vert">
-						<a href="<?php echo $Sectors['Warp']['ScanLink']; ?>">
+						<a href="<?php echo Globals::getSectorScanHREF($Sectors['Warp']['ID']); ?>">
 							S<br />C<br />A<br />N
 						</a>
 					</div><?php

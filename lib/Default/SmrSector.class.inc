@@ -444,6 +444,8 @@ class SmrSector
 	
 	public function getSectorDirection($sectorID)
 	{
+		if($sectorID == $this->getSectorID())
+			return 'Current';
 		$dir = array_search($sectorID, $this->getLinks());
 		if($dir !== false)
 			return $dir;
@@ -1050,9 +1052,7 @@ class SmrSector
 	
 	public function getScanSectorHREF()
 	{
-		$container = create_container('skeleton.php','sector_scan.php');
-		$container['target_sector'] = $this->getSectorID();
-		return SmrSession::get_new_href($container);
+		return Globals::getSectorScanHREF($this->getSectorID());
 	}
 	
 	public function hasX(/*Object*/ &$x, AbstractSmrPlayer &$player=null)

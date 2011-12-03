@@ -308,7 +308,7 @@ if(isset($GameID))
 			<td>Change CSS Link</td>
 			<td>
 				<input type="text" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink()); ?>"><br />
-        		</td>
+			</td>
 		</tr>
 
 		<tr>
@@ -357,6 +357,44 @@ if(isset($GameID))
 			<td><input type="submit" name="action" value="Change CSS Options" id="InputFields" /></td>
 		</tr>
 	</table>
+	
+	
+	<table>
+		<tr>
+			<th colspan="2">Hotkeys (Use space to separate multiple hotkeys)</th>
+		</tr><?php
+		$MovementTypes = array('Up','Left','Right','Down','Warp');
+		$MovementSubTypes = array('Move','Scan');
+		foreach($MovementTypes as $MovementType)
+		{
+			foreach($MovementSubTypes as $MovementSubType)
+			{ 
+				$FullMovement = $MovementSubType . $MovementType; ?>
+				<tr>
+					<td><?php echo $MovementSubType, ' ', $MovementType; ?>:</td>
+					<td>
+						<input type="text" size="50" name="<?php echo $FullMovement; ?>" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys($FullMovement))); ?>"><br />
+					</td>
+				</tr><?php
+			}
+		} ?>
+		<tr>
+			<td>Show Current Sector:</td>
+			<td>
+				<input type="text" size="50" name="CurrentSector" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('MoveCurrent'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
+			<td>Scan Current Sector:</td>
+			<td>
+				<input type="text" size="50" name="ScanCurrent" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('ScanCurrent'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Save Hotkeys" id="InputFields" /></td>
+		</tr>
+	</table>
 </form><br />
 
 <form id="TransferSMRCreditsForm" method="POST" action="<?php echo $PreferencesConfirmFormHREF; ?>">
@@ -367,7 +405,7 @@ if(isset($GameID))
 		<tr>
 			<td>Transfer Credits:</td>
 			<td>
-				<input type="text" name="amount" id="InputFields" style="width:30px;text-align:center;"> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
+				<input type="text" name="amount" id="InputFields" style="width:30px;text-align:center;" /> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
 				<select name="account_id" id="InputFields"><?php
 					foreach($TransferAccounts as $AccID => $AccOrPlayerName)
 					{

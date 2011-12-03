@@ -221,6 +221,15 @@ else if ($action == 'Change Message Setting')
 	$player->setForceDropMessages($_REQUEST['forceDropMessages']=='Yes');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your message options.';
 }
+else if ($action == 'Save Hotkeys')
+{
+	foreach(AbstractSmrAccount::getDefaultHotkeys() as $hotkey => $binding) {
+		if(isset($_REQUEST[$hotkey])) {
+			$account->setHotkey($hotkey, explode(' ', $_REQUEST[$hotkey]));
+		}
+	}
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have saved your hotkeys.';
+}
 else if (strpos(trim($action),'Alter Player')===0)
 {
 	// trim input now
