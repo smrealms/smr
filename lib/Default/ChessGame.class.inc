@@ -366,7 +366,7 @@ class ChessGame
 	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
 		$p = $board[$y][$x] = $board[$toY][$toX];
 		if($p == null) {
-			throw new Exception('Trying to undo move of a non-existent piece.');
+			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
 		}
 		$board[$toY][$toX] = $pieceTaken;
 		$p->setX($x);
@@ -384,7 +384,7 @@ class ChessGame
 		}
 		if($enPassant === true) {
 			$board[$toY][$toX] = null;
-			$hasMoved[ChessPiece::PAWN] = array($toX,$toY == 1 ? 2 : 5);
+			$hasMoved[ChessPiece::PAWN] = array($toX,$toY == 2 ? 3 : 4);
 			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $pieceTaken;
 		}
 	}
