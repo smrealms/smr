@@ -436,28 +436,22 @@ class Globals
 	
 	public static function getBetaApplyHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'beta_apply.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'beta_apply.php'));
 	}
 	
 	public static function getFeatureRequestHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'feature_request.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'feature_request.php'));
 	}
 	
 	public static function getCurrentSectorHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php','current_sector.php'));
+		return self::$AVAILABLE_LINKS['CurrentSector'] = SmrSession::get_new_href(create_container('skeleton.php','current_sector.php'));
 	}
 	
 	public static function getLocalMapHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php','map_local.php'));
+		return self::$AVAILABLE_LINKS['LocalMap'] = SmrSession::get_new_href(create_container('skeleton.php','map_local.php'));
 	}
 	
 	public static function getPodScreenHREF()
@@ -495,15 +489,21 @@ class Globals
 		$container = create_container('sector_move_processing.php');
 		$container['target_page'] = $targetPage;
 		$container['target_sector'] = $toSector;
-		$href = SmrSession::get_new_href($container);
-		self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = $href;
-		return $href;
+		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = SmrSession::get_new_href($container);
+	}
+	
+	public static function getSectorScanHREF($toSector)
+	{
+		global $player;
+		$container = create_container('skeleton.php','sector_scan.php');
+		$container['target_sector'] = $toSector;
+		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = SmrSession::get_new_href($container);
 	}
 	
 	public static function getPlotCourseHREF($fromSector = false, $toSector = false)
 	{
 		if($fromSector === false && $toSector === false)
-			return SmrSession::get_new_href(create_container('skeleton.php','course_plot.php'));
+			return self::$AVAILABLE_LINKS['PlotCourse'] = SmrSession::get_new_href(create_container('skeleton.php','course_plot.php'));
 		else
 			return SmrSession::get_new_href(create_container('course_plot_processing.php','',array('from'=>$fromSector,'to'=>$toSector)));
 	}

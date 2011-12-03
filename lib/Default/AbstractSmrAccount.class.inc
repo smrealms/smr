@@ -12,6 +12,22 @@ abstract class AbstractSmrAccount
 		);
 	
 	protected static $CACHE_ACCOUNTS = array();
+	protected static $DEFAULT_HOTKEYS = array(
+		'MoveUp' => array('w','up'),
+		'ScanUp' => array('shift+w','shift+up'),
+		'MoveLeft' => array('a','left'),
+		'ScanLeft' => array('shift+a','shift+left'),
+		'MoveRight' => array('d','right'),
+		'ScanRight' => array('shift+d','shift+right'),
+		'MoveDown' => array('s','down'),
+		'ScanDown' => array('shift+s','shift+down'),
+		'MoveWarp' => array('e','0'),
+		'ScanWarp' => array('shift+e','shift+0'),
+		'ScanCurrent' => array('shift+1'),
+		'CurrentSector' => array('1'),
+		'LocalMap' => array('2'),
+		'PlotCourse' => array('3')
+	);
 	
 	protected $db;
 	
@@ -48,11 +64,16 @@ abstract class AbstractSmrAccount
 	protected $dateShort;
 	protected $timeShort;
 	protected $template;
+	protected $hotkeys = array();
 	
 	protected $npc;
 	
 	protected $hasChanged;
 
+	public static function getDefaultHotkeys() {
+		return self::$DEFAULT_HOTKEYS;
+	}
+	
 	public static function &getAccount($accountID,$forceUpdate = false)
 	{
 		if($forceUpdate || !isset(self::$CACHE_ACCOUNTS[$accountID]))
@@ -177,11 +198,15 @@ abstract class AbstractSmrAccount
 			$this->centerGalaxyMapOnPlayer	= $this->db->getBoolean('center_galaxy_map_on_player');
 			
 			$this->messageNotifications = $this->db->getObject('message_notifications');
+			$this->hotkeys = $this->db->getObject('hotkeys');
+			foreach(self::$DEFAULT_HOTKEYS as $hotkey => $binding) {
+				if(!isset($this->hotkeys[$hotkey])) {
+					$this->hotkeys[$hotkey] = $binding;
+				}
+			}
 			
-			if(USE_COMPATIBILITY)
-			{
-				foreach(Globals::getCompatibilityDatabases('Game') as $databaseName => $databaseInfo)
-				{
+			if(USE_COMPATIBILITY) {
+				foreach(Globals::getCompatibilityDatabases('Game') as $databaseName => $databaseInfo) {
 					$this->oldAccountIDs[$databaseName] = $row[$databaseInfo['Column']];
 				}
 			}
@@ -253,6 +278,7 @@ abstract class AbstractSmrAccount
 			', default_css_enabled='.$this->db->escapeBoolean($this->defaultCSSEnabled).
 			', center_galaxy_map_on_player='.$this->db->escapeBoolean($this->centerGalaxyMapOnPlayer).
 			', message_notifications='.$this->db->escapeObject($this->messageNotifications).
+			', hotkeys='.$this->db->escapeObject($this->hotkeys).
 			', last_login = '.$this->db->escapeNumber($this->last_login).
 			', logging = '.$this->db->escapeBoolean($this->logging).
 			', time_short = ' . $this->db->escapeString($this->timeShort).
@@ -1066,6 +1092,28 @@ abstract class AbstractSmrAccount
 		if($this->defaultCSSEnabled == $bool)
 			return;
 		$this->defaultCSSEnabled=$bool;
+		$this->hasChanged=true;
+		$this->update();
+	}
+	
+	public function getHotkeys($hotkeyType = false)
+	{
+		if($hotkeyType!==false) {
+			if(isset($this->hotkeys[$hotkeyType])) {
+				return $this->hotkeys[$hotkeyType];
+			}
+			else {
+				return array();
+			}
+		}
+		return $this->hotkeys;
+	}
+	
+	public function setHotkey($hotkeyType,$binding)
+	{
+		if($this->getHotkeys($hotkeyType) == $binding)
+			return;
+		$this->hotkeys[$hotkeyType] = $binding;
 		$this->hasChanged=true;
 		$this->update();
 	}
