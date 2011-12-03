@@ -1,12 +1,4 @@
-<?php
-if($OnlyImplemented)
-{
-	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">Back</a></p><?php
-}
-else
-{
-	?><p><a href="<?php echo Globals::getFeatureRequestHREF(); ?>">Back</a></p><?php
-}
+<p><a href="<?php echo $BackHref; ?>">Back</a></p><?php
 if(isset($FeatureRequests))
 { ?>
 	<table class="standard fullwidth">

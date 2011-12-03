@@ -1,28 +1,29 @@
 <?php
-if($OnlyImplemented || $ShowOld)
+if(!$ShowCurrent)
 {
 	?><p><a href="<?php echo Globals::getFeatureRequestHREF(); ?>">View Current Feature Requests</a></p><?php
 }
-if(!$OnlyImplemented)
+if($Status != 'Implemented')
 {
 	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">View Previously Implemented Features</a></p><?php
 }
-if(!$ShowOld)
+if($Status != 'Opened' || $ShowCurrent)
 {
 	?><p><a href="<?php echo $ShowOldFeaturesHref; ?>">View Old Requests</a></p><?php
 }
+if($Status != 'Rejected')
+{
+	?><p><a href="<?php echo $ShowRejectedFeaturesHref; ?>">View Rejected Requests</a></p><?php
+}
 if(isset($FeatureRequests))
 { ?>
-	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>"><?php
-		if(!$OnlyImplemented)
-		{ ?>
-			<div align="right"><input type="submit" name="action" value="Vote"><?php
-				if($FeatureModerator)
-				{
-					?>&nbsp;<input type="submit" name="action" value="Implemented">&nbsp;<input type="submit" name="action" value="Delete"><?php
-				} ?>
-			</div><br /><?php
-		} ?>
+	<form name="FeatureRequestVoteForm" method="POST" action="<?php echo $FeatureRequestVoteFormHREF; ?>">
+		<div align="right"><?php
+			if($Status == 'Opened')
+			{ ?>
+				<input type="submit" name="action" value="Vote"><?php
+			} ?>
+		</div><br />
 		<table class="standard fullwidth">
 			<tr><?php
 				if($FeatureModerator)
@@ -32,15 +33,15 @@ if(isset($FeatureRequests))
 				<th width="30">Votes (Fav/Yes/No)</th>
 				<th>Feature</th>
 				<th>Comments</th><?php
-				if(!$OnlyImplemented)
+				if($Status == 'Opened')
 				{ ?>
 					<th width="20">Favourite</th>
 					<th width="20">Yes</th>
 					<th width="20">No</th><?php
-					if($FeatureModerator)
-					{
-						?><th width="20">&nbsp;</th><?php
-					}
+				}
+				if($FeatureModerator)
+				{
+					?><th width="20">&nbsp;</th><?php
 				} ?>
 			</tr><?php
 			foreach($FeatureRequests as &$FeatureRequest)
@@ -53,29 +54,29 @@ if(isset($FeatureRequests))
 					<td><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?> / <?php echo $FeatureRequest['Votes']['YES']; ?> / <?php echo $FeatureRequest['Votes']['NO']; ?></td>
 					<td style="text-align:left;"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
 					<td class="shrink noWrap top"><a href="<?php echo $FeatureRequest['CommentsHREF']; ?>">View (<?php echo $FeatureRequest['Comments']; ?>)</a></td><?php
-					if(!$OnlyImplemented)
+					if($Status == 'Opened')
 					{ ?>
 						<td><input type="radio" name="favourite" value="<?php echo $FeatureRequest['RequestID']; ?>"<?php if($FeatureRequest['VotedFor'] == 'FAVOURITE') { ?> checked="checked"<?php } ?>></td>
 						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="YES"<?php if($FeatureRequest['VotedFor'] == 'YES') { ?> checked="checked"<?php } ?>></td>
 						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if($FeatureRequest['VotedFor'] == 'NO') { ?> checked="checked"<?php } ?>></td><?php
-						if($FeatureModerator)
-						{
-							?><td valign="middle" align="center"><input type="checkbox" name="delete[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
-						}
+					}
+					if($FeatureModerator)
+					{
+						?><td valign="middle" align="center"><input type="checkbox" name="delete[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
 					} ?>
 				</tr><?php
 			} unset($FeatureRequest); ?>
-		</table><?php
-		if(!$OnlyImplemented)
-		{ ?>
-			<br />
-			<div align="right"><input type="submit" name="action" value="Vote"><?php
-				if($FeatureModerator)
-				{
-					?>&nbsp;<input type="submit" name="action" value="Implemented">&nbsp;<input type="submit" name="action" value="Delete"><?php
-				} ?>
-			</div><?php
-		} ?>
+		</table>
+		<div align="right"><?php
+			if($FeatureModerator)
+			{
+				?>&nbsp;<select name="status"><option value="Implemented">Implemented</option><option value="Rejected">Rejected</option><option value="Opened">Open</option><option value="Deleted">Delete</option></select>&nbsp;<input type="submit" name="action" value="Set Status"><?php
+			}
+			if($Status == 'Opened')
+			{ ?>
+				<input type="submit" name="action" value="Vote"><?php
+			} ?>
+		</div><br />
 	</form><?php
 } ?>
 <p>

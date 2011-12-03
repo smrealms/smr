@@ -6,11 +6,7 @@ $template->assign('PageTopic','Feature Request Comments');
 
 $container = $var;
 $container['body'] = 'feature_request.php';
-$container['implemented'] = true;
-$template->assign('ViewImplementedFeaturesHref',SmrSession::get_new_href($container));
-
-$onlyImplemented = isset($var['implemented'])?$var['implemented']===true:false;
-$template->assign('OnlyImplemented',$onlyImplemented);
+$template->assign('BackHref',SmrSession::get_new_href($container));
 
 $db->query('SELECT * ' .
 			'FROM feature_request ' .
