@@ -1362,26 +1362,24 @@ abstract class AbstractSmrPlayer
 		
 	}
 	
-	public function canSeeAny(array &$otherPlayerArray)
-	{
-		$canSee=false;
-		foreach($otherPlayerArray as $otherPlayer)
-		{
-			if($this->canSee($otherPlayer))
-				$canSee = true;
+	public function canSeeAny(array &$otherPlayerArray) {
+		foreach($otherPlayerArray as &$otherPlayer) {
+			if($this->canSee($otherPlayer)) {
+				return true;
+			}
 		}
-		return $canSee;
+		return false;
 	}
 	
 	public function canSee(AbstractSmrPlayer &$otherPlayer)
 	{
+		if(!$otherPlayer->getShip()->isCloaked())
+			return true;
 		if($this->sameAlliance($otherPlayer))
 			return true;
 		if($this->getLevelID()>$otherPlayer->getLevelID())
 			return true;
-		if($otherPlayer->getShip()->isCloaked())
-			return false;
-		return true;
+		return false;
 	}
 	
 	public function equals(AbstractSmrPlayer &$otherPlayer = null)
