@@ -164,6 +164,10 @@ abstract class AbstractSmrPlayer
 		return $this->getAccount()->isNPC();
 	}
 	
+	public function getSafeAttackRating() {
+		return max(0, min(8, $this->getAlignment() / 150 + 4));
+	}
+	
 	public function hasFederalProtection()
 	{
 		$sector =& SmrSector::getSector($this->getGameID(),$this->getSectorID());
@@ -173,13 +177,10 @@ abstract class AbstractSmrPlayer
 		}
 
         $ship =& $this->getShip();
-        $attackRating = $ship->getAttackRating();
-		if ($attackRating > 8)
-			return false;
 		if ($ship->hasIllegalGoods())
 			return false;
-		
-		if ($attackRating == 0 || $attackRating <= $this->getAlignment() / 150 + 4)
+
+		if ($ship->getAttackRating() <= $this->getSafeAttackRating())
 		{
 			foreach($sector->getFedRaceIDs() as $fedRaceID)
 			{
