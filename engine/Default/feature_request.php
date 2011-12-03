@@ -4,23 +4,28 @@ if (!Globals::isFeatureRequestOpen())
 
 $template->assign('PageTopic','Feature Request');
 
+if(!isset($var['Status'])) {
+	SmrSession::updateVar('Status', 'Opened');
+}
+
 $container = $var;
-$container['implemented'] = true;
-$container['ShowOld'] = false;
+$container['Status'] = 'Implemented';
 $template->assign('ViewImplementedFeaturesHref',SmrSession::get_new_href($container));
 
-$onlyImplemented = isset($var['implemented'])?$var['implemented']===true:false;
-$template->assign('OnlyImplemented',$onlyImplemented);
-
 $container = $var;
-$container['implemented'] = false;
+$container['Status'] = 'Opened';
 $container['ShowOld'] = true;
 $template->assign('ShowOldFeaturesHref',SmrSession::get_new_href($container));
 
-$showOld = isset($var['ShowOld'])?$var['ShowOld']===true:false;
-$template->assign('ShowOld',$showOld);
+$container = $var;
+$container['Status'] = 'Rejected';
+$template->assign('ShowRejectedFeaturesHref',SmrSession::get_new_href($container));
 
-if(!$onlyImplemented)
+$showCurrent = isset($var['ShowOld']) && $var['Status']=='Opened' ? $var['ShowOld']!==true:false;
+$template->assign('ShowCurrent',$showCurrent);
+$template->assign('Status',$var['Status']);
+
+if($var['Status'] == 'Opened')
 {
 	$featureVotes = array();
 	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
@@ -31,8 +36,8 @@ $db->query('SELECT * ' .
 			'FROM feature_request ' .
 			'JOIN feature_request_comments super USING(feature_request_id) ' .
 			'WHERE comment_id = 1 ' .
-			'AND implemented = ' . $db->escapeBoolean($onlyImplemented) .
-			(!$showOld&&!$onlyImplemented?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-14*86400) .')':'') .
+			'AND status = ' . $db->escapeString($var['Status']) .
+			($showCurrent?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-14*86400) .')':'') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
 if ($db->getNumRows() > 0)
 {
@@ -56,7 +61,7 @@ if ($db->getNumRows() > 0)
 		if($featureModerator)
 			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getField('poster_id'));
 		
-		if(!$onlyImplemented)
+		if($var['Status'] == 'Opened')
 		{
 			$db2->query('SELECT COUNT(*), vote_type ' .
 						  'FROM account_votes_for_feature ' .
