@@ -16,7 +16,7 @@ class Council
 			self::$db = new SmrMySqlDatabase();
 	}
 	
-	protected static function &getRaceCouncil($gameID,$raceID)
+	public static function &getRaceCouncil($gameID,$raceID)
 	{
 		if(!isset(self::$RACE_COUNCIL[$gameID]))
 		{
@@ -30,17 +30,22 @@ class Council
 			self::$RACE_COUNCIL[$gameID][$raceID] = array();
 			self::$RACE_PRESIDENTS[$gameID][$raceID] = false;
 			
-			$i=0;
-			self::$db->query('SELECT account_id,alignment FROM player ' .
-						'WHERE game_id = '.$gameID.' AND ' .
-							'race_id = '.$raceID.' ' .
-						'ORDER by experience DESC ' .
-						'LIMIT '.MAX_COUNCIL_MEMBERS);
+			$i=1;
+			self::$db->query('SELECT account_id, alignment
+								FROM player
+								JOIN account USING(account_id)
+								LEFT JOIN npc_logins ON account.login = npc_logins.login
+								WHERE game_id = ' . self::$db->escapeNumber($gameID) . '
+									AND race_id = ' . self::$db->escapeNumber($raceID) . '
+									AND npc_logins.player_name IS NULL
+								ORDER by experience DESC
+								LIMIT ' . MAX_COUNCIL_MEMBERS);
 			while(self::$db->nextRecord())
 			{
 				self::$RACE_COUNCIL[$gameID][$raceID][$i] = self::$db->getField('account_id');
-				if(self::$RACE_PRESIDENTS[$gameID][$raceID]==false&&self::$db->getField('alignment')>=150)
+				if(self::$RACE_PRESIDENTS[$gameID][$raceID]==false && self::$db->getField('alignment')>=150) {
 					self::$RACE_PRESIDENTS[$gameID][$raceID] = self::$db->getField('account_id');
+				}
 				$i++;
 			}
 		}
