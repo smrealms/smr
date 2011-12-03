@@ -21,7 +21,7 @@ $container = $var;
 $container['Status'] = 'Rejected';
 $template->assign('ShowRejectedFeaturesHref',SmrSession::get_new_href($container));
 
-$showCurrent = isset($var['ShowOld']) && $var['Status']=='Opened' ? $var['ShowOld']!==true:false;
+$showCurrent = (!isset($var['ShowOld']) || $var['ShowOld']!==true) && $var['Status']=='Opened';
 $template->assign('ShowCurrent',$showCurrent);
 $template->assign('Status',$var['Status']);
 
