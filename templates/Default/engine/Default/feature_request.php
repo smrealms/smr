@@ -3,13 +3,13 @@ if(!$ShowCurrent)
 {
 	?><p><a href="<?php echo Globals::getFeatureRequestHREF(); ?>">View Current Feature Requests</a></p><?php
 }
-if($Status != 'Implemented')
-{
-	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">View Previously Implemented Features</a></p><?php
-}
 if($Status != 'Opened' || $ShowCurrent)
 {
 	?><p><a href="<?php echo $ShowOldFeaturesHref; ?>">View Old Requests</a></p><?php
+}
+if($Status != 'Implemented')
+{
+	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">View Previously Implemented Features</a></p><?php
 }
 if($Status != 'Rejected')
 {
