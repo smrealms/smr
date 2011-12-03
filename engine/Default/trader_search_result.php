@@ -41,6 +41,7 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=('<th>Alliance</th>');
 	$PHP_OUTPUT.=('<th>Race</th>');
 	$PHP_OUTPUT.=('<th>Experience</th>');
+	$PHP_OUTPUT.=('<th>Newbie</th>');
 	$PHP_OUTPUT.=('<th>Online</th>');
 	if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<th>Sector</th>');
 	$PHP_OUTPUT.=('<th>Option</th>');
@@ -79,6 +80,10 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getExperience().'</td>');
+		if ($curr_player->getAccount()->isNewbie())
+			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
+		else
+			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="red">NO</td>');
 		if ($curr_player->getLastCPLAction() > TIME - 600)
 			$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
 		else
@@ -141,6 +146,7 @@ if (empty($player_id))
 		$PHP_OUTPUT.=('<th>Alliance</th>');
 		$PHP_OUTPUT.=('<th>Race</th>');
 		$PHP_OUTPUT.=('<th>Experience</th>');
+		$PHP_OUTPUT.=('<th>Newbie</th>');
 		$PHP_OUTPUT.=('<th>Online</th>');
 		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $PHP_OUTPUT.=('<th>Sector</th>');
 		$PHP_OUTPUT.=('<th>Option</th>');
@@ -180,6 +186,10 @@ if (empty($player_id))
 			$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td align="center" valign="middle">'.$curr_player->getExperience().'</td>');
+			if ($curr_player->getAccount()->isNewbie())
+				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
+			else
+				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="red">NO</td>');
 			if ($curr_player->getLastCPLAction() > TIME - 600)
 				$PHP_OUTPUT.=('<td width="10%" align="center" valign="middle" class="dgreen">YES</td>');
 			else
