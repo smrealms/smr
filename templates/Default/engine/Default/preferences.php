@@ -379,15 +379,27 @@ if(isset($GameID))
 			}
 		} ?>
 		<tr>
-			<td>Show Current Sector:</td>
-			<td>
-				<input type="text" size="50" name="CurrentSector" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('MoveCurrent'))); ?>"><br />
-			</td>
-		</tr>
-		<tr>
 			<td>Scan Current Sector:</td>
 			<td>
 				<input type="text" size="50" name="ScanCurrent" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('ScanCurrent'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
+			<td>Show Current Sector:</td>
+			<td>
+				<input type="text" size="50" name="CurrentSector" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('CurrentSector'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
+			<td>Show Local Map:</td>
+			<td>
+				<input type="text" size="50" name="LocalMap" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('LocalMap'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
+			<td>Show Plot Course:</td>
+			<td>
+				<input type="text" size="50" name="PlotCourse" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('PlotCourse'))); ?>"><br />
 			</td>
 		</tr>
 		<tr>
