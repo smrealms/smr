@@ -19,7 +19,7 @@ if (count($Planets) > 0)
 			<tr>
 				<td><?php echo $Planet->getName(); ?></td>
 				<td class="shrink noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
-				<td class="shrink center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a></td>
+				<td class="shrink center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="map_galaxy.php?galaxy_id=<?php echo $Planet->getGalaxy()->getGalaxyID(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 				<td class="shrink center"><?php echo $Planet->getBuilding(PLANET_GENERATOR); ?></td>
 				<td class="shrink center"><?php echo $Planet->getBuilding(PLANET_HANGAR); ?></td>
 				<td class="shrink center"><?php echo $Planet->getBuilding(PLANET_TURRET); ?></td>
