@@ -58,88 +58,76 @@ if ($forces->getSDs() + $change_scout_drones > 5)
 }
 
 // combat drones
-if ($change_combat_drones != 0)
-{
+if ($change_combat_drones != 0) {
 	// we can't take more forces than are in sector
-	if ($forces->getCDs() + $change_combat_drones < 0)
-	{
+	if ($forces->getCDs() + $change_combat_drones < 0) {
 		create_error('You can\'t take more combat drones than are on this stack!');
 	}
 
-	if ($ship->getCDs() - $change_combat_drones > $ship->getMaxCDs())
-	{
+	if ($ship->getCDs() - $change_combat_drones > $ship->getMaxCDs()) {
 		create_error('Your ships supports no more than ' . $ship->getMaxCDs() . ' combat drones!');
 	}
 
-	if ($ship->getCDs() - $change_combat_drones < 0)
-	{
+	if ($ship->getCDs() - $change_combat_drones < 0) {
 		create_error('You can\'t drop more combat drones than you carry!');
 	}
 
-	// remove from ship
-	if($change_combat_drones>0)
+	if($change_combat_drones>0) {
 		$ship->decreaseCDs($change_combat_drones,true);
-	else
-		$ship->increaseCDs(-$change_combat_drones,true);
-
-	// drop in sector
-	if($change_combat_drones>0)
 		$forces->addCDs($change_combat_drones);
-	else
+	}
+	else {
+		$ship->increaseCDs(-$change_combat_drones,true);
 		$forces->takeCDs(-$change_combat_drones);
-
+	}
 }
 
 if ($change_scout_drones != 0) {
-
 	// we can't take more forces than are in sector
-	if ($forces->getSDs() + $change_scout_drones < 0)
+	if ($forces->getSDs() + $change_scout_drones < 0) {
 		create_error('You can\'t take more scout drones than are on this stack!');
+	}
 
-	if ($ship->getSDs() - $change_scout_drones > $ship->getMaxSDs())
+	if ($ship->getSDs() - $change_scout_drones > $ship->getMaxSDs()) {
 		create_error('Your ships supports no more than ' . $ship->getMaxSDs() . ' scout drones!');
+	}
 
-	if ($ship->getSDs() - $change_scout_drones < 0)
+	if ($ship->getSDs() - $change_scout_drones < 0) {
 		create_error('You can\'t drop more scout drones than you carry!');
+	}
 
-	// remove from ship
-	if($change_scout_drones>0)
+	if($change_scout_drones>0) {
 		$ship->decreaseSDs($change_scout_drones);
-	else
-		$ship->increaseSDs(-$change_scout_drones);
-
-	// drop in sector
-	if($change_scout_drones>0)
 		$forces->addSDs($change_scout_drones);
-	else
+	}
+	else {
+		$ship->increaseSDs(-$change_scout_drones);
 		$forces->takeSDs(-$change_scout_drones);
-
+	}
 }
 
 if ($change_mines != 0) {
-
 	// we can't take more forces than are in sector
-	if ($forces->getMines() + $change_mines < 0)
+	if ($forces->getMines() + $change_mines < 0) {
 		create_error('You can\'t take more mines than are on this stack!');
+	}
 
-	if ($ship->getMines() - $change_mines > $ship->getMaxMines())
+	if ($ship->getMines() - $change_mines > $ship->getMaxMines()) {
 		create_error('Your ships supports no more than ' . $ship->getMaxMines() . ' mines!');
+	}
 
-	if ($ship->getMines() - $change_mines < 0)
+	if ($ship->getMines() - $change_mines < 0) {
 		create_error('You can\'t drop more mines than you carry!');
+	}
 
-	// remove from ship
-	if($change_mines>0)
+	if($change_mines>0) {
 		$ship->decreaseMines($change_mines);
-	else
-		$ship->increaseMines(-$change_mines);
-
-	// drop in sector
-	if($change_mines>0)
 		$forces->addMines($change_mines);
-	else
+	}
+	else {
+		$ship->increaseMines(-$change_mines);
 		$forces->takeMines(-$change_mines);
-
+	}
 }
 
 // message to send out
