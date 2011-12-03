@@ -450,7 +450,7 @@ class ChessGame
 					$this->db->query('DELETE FROM chess_game_pieces
 									WHERE chess_game_id=' . $this->chessGameID . ' AND account_id=' . $moveInfo['PieceTaken']->accountID . ' AND piece_id=' . $moveInfo['PieceTaken']->pieceID . ' AND piece_no=' . $moveInfo['PieceTaken']->pieceNo . ';');
 				
-					$pieceTakenSymbol = ChessPiece::getSymbolForPiece($moveInfo['PieceTaken'], $this->getCurrentTurnColour());
+					$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
 					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken','Total'), HOF_PUBLIC);
 					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken','Total'), HOF_PUBLIC);
 					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
