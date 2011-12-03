@@ -6,14 +6,10 @@ if (empty($message))
 	create_error('You have to enter a text to send!');
 
 // send to all council members
-$db->query('SELECT * FROM player
-			WHERE game_id = '.$player->getGameID().'
-				AND race_id = '.$var['race_id'].'
-			ORDER by experience DESC
-			LIMIT ' . MAX_COUNCIL_MEMBERS);
-while ($db->nextRecord())
+require_once(get_file_loc('council.inc'));
+$councilMembers = Council::getRaceCouncil($player->getGameID(), $var['race_id']);
+foreach($councilMembers as $accountID)
 {
-	$accountID = $db->getInt('account_id');
 	$player->sendMessage($accountID, MSG_POLITICAL, $message, true, $player->getAccountID() != $accountID);
 }
 
