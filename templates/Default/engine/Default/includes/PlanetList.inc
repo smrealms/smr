@@ -4,6 +4,7 @@ if (count($Planets) > 0)
 	<table class="standard inset">
 		<tr>
 			<th>Name</th>
+			<th>Level</th>
 			<th>Owner</th>
 			<th>Sector</th>
 			<th>G</th>
@@ -18,6 +19,7 @@ if (count($Planets) > 0)
 		{ ?>
 			<tr>
 				<td><?php echo $Planet->getName(); ?></td>
+				<td class="shrink noWrap"><?php echo number_format($Planet->getLevel(),2); ?></td>
 				<td class="shrink noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
 				<td class="shrink center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 				<td class="shrink center"><?php echo $Planet->getBuilding(PLANET_GENERATOR); ?></td>
