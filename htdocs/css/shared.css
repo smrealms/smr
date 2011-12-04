@@ -492,6 +492,10 @@ div.chat, table#moveTable {
 	background-color: white;
 }
 
+table#moveTable {
+	font-size: 135%;
+}
+
 .pointer {
 	cursor: pointer;
 }
