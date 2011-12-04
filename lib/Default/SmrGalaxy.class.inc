@@ -137,6 +137,10 @@ class SmrGalaxy
 		return $this->galaxyID;
 	}
 	
+	public function getGalaxyMapHREF() {
+		return 'map_galaxy.php?galaxy_id=' . $this->getGalaxyID();
+	}
+	
 	public function getName()
 	{
 		return $this->name;
