@@ -577,7 +577,7 @@ function do_voodoo()
 				SmrSession::fetchVarInfo();
 				if (!($var = SmrSession::retrieveVar(SmrSession::$SN)))
 				{
-					self::$db->query('INSERT INTO debug VALUES (\'SPAM\',0,0,0)');
+					$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber(SmrSession::$account_id) . ',0,0)');
 					create_error('Please do not spam click!');
 				}
 			}
@@ -798,7 +798,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 			$template->assign('LocalMapLink',Globals::getLocalMapHREF());
 		}
 
-		$container['body'] = 'course_plot.php';
 		$template->assign('PlotCourseLink',Globals::getPlotCourseHREF());
 		
 		$template->assign('TraderLink',Globals::getTraderStatusHREF());
