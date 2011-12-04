@@ -57,13 +57,12 @@ $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escape
 $db->nextRecord();
 $template->assign('CanExempt', $db->getBoolean('exempt_with'));
 $withdrawalPerDay = $db->getInt('with_per_day');
-if($withdrawalPerDay == -2)
+if($db->getBoolean('positive_balance')) {
+	$template->assign('PositiveWithdrawal', $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment']);
+}
+else if($withdrawalPerDay == ALLIANCE_BANK_UNLIMITED)
 {
 	$template->assign('UnlimitedWithdrawal', true);
-}
-if($withdrawalPerDay == -1)
-{
-	$template->assign('PositiveWithdrawal', $playerTrans['Deposit'] - $playerTrans['Payment']);
 }
 else
 {

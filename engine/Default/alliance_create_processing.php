@@ -53,7 +53,7 @@ $db->query('INSERT INTO alliance (alliance_id, game_id, alliance_name, alliance_
 $player->setAllianceID($alliance_id);
 $player->update();
 
-$withPerDay = -2;
+$withPerDay = ALLIANCE_BANK_UNLIMITED;
 $removeMember = TRUE;
 $changePass = TRUE;
 $changeMOD = TRUE;
@@ -80,7 +80,7 @@ switch ($perms) {
 		$sendAllMsg = FALSE;
 		break;
 	case 'basic':
-		$withPerDay = -2;
+		$withPerDay = ALLIANCE_BANK_UNLIMITED;
 		$removeMember = FALSE;
 		$changePass = FALSE;
 		$changeMOD = FALSE;
