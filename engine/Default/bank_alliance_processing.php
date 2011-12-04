@@ -53,22 +53,22 @@ else
 	}
 	$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' . $query);
 	$db->nextRecord();
-	if ($db->getInt('with_per_day') == -1)
+	$withdrawalPerDay = $db->getInt('with_per_day');
+	if ($db->getBoolean('positive_balance'))
 	{
-		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
-				'payee_id = '.$player->getAccountID().' AND transaction = \'Payment\'');
-		if ($db->nextRecord()) $playerWith = $db->getInt('total');
-		else $playerWith = 0;
-		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions WHERE alliance_id = '.$alliance_id.' AND game_id = '.$player->getGameID().' AND ' .
-				'payee_id = '.$player->getAccountID().' AND transaction = \'Deposit\'');
-		if ($db->nextRecord()) $playerDep = $db->getInt('total');
-		else $playerDep = 0;
-		$differential = $playerDep - $playerWith;
-		if ($differential - $amount < 0) create_error('Your alliance won\'t allow you to take so much with how little you\'ve given!');
+		$db->query('SELECT transaction, sum(amount) as total FROM alliance_bank_transactions
+			WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND payee_id = ' . $db->escapeNumber($player->getAccountID()) . '
+			GROUP BY transaction');
+		while($db->nextRecord()) {
+			$playerTrans[$db->getField('transaction')] = $db->getInt('total');
+		}
+		$allowedWithdrawal = $withdrawalPerDay + $playerTrans['Deposit'] - $playerTrans['Payment'];
+		if ($allowedWithdrawal - $amount < 0) {
+			create_error('Your alliance won\'t allow you to take so much with how little you\'ve given!');
+		}
 	}
-	elseif ($db->getInt('with_per_day') >= 0)
+	elseif ($withdrawalPerDay >= 0)
 	{
-		$max = $db->getInt('with_per_day');
 		$db->query('SELECT sum(amount) as total FROM alliance_bank_transactions
 					WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
@@ -78,7 +78,7 @@ else
 						AND time > ' . $db->escapeNumber(TIME - 86400));
 		if ($db->nextRecord() && !is_null($db->getField('total'))) $total = $db->getInt('total');
 		else $total = 0;
-		if ($total + $amount > $max) create_error('Your alliance doesn\'t allow you to take that much cash this often!');
+		if ($total + $amount > $withdrawalPerDay) create_error('Your alliance doesn\'t allow you to take that much cash this often!');
 	}
 	
 	$player->increaseCredits($amount);

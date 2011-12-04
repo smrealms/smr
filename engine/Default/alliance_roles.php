@@ -24,6 +24,7 @@ while ($db->nextRecord())
 	{
 		$container = create_container('alliance_roles_processing.php');
 		$allianceRoles[$roleID]['WithdrawalLimit'] = $db->getInt('with_per_day');
+		$allianceRoles[$roleID]['PositiveBalance'] = $db->getBoolean('positive_balance');
 		$allianceRoles[$roleID]['TreatyCreated'] = $db->getBoolean('treaty_created');
 		$allianceRoles[$roleID]['RemoveMember'] = $db->getBoolean('remove_member');
 		$allianceRoles[$roleID]['ChangePass'] = $db->getBoolean('change_pass');

@@ -7,14 +7,14 @@
 		if ($Role['EditingRole'])
 		{ ?>
 			<tr>
-				<td align="left" rowspan="3">Withdrawal limit per 24 hours</td>
+				<td align="left" rowspan="3">Withdrawal limit per 24 hours (Or max negative balance for "positive balance")</td>
 				<td align="left"><input type="text" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'],0); ?>" maxlength="32"></td>
 			</tr>
 			<tr>
-				<td align="left">Unlimited:<input type="checkbox" name="unlimited"<?php if ($Role['WithdrawalLimit'] == -2){ ?> checked="checked"<?php } ?>></td>
+				<td align="left">Unlimited:<input type="checkbox" name="unlimited"<?php if ($Role['WithdrawalLimit'] == ALLIANCE_BANK_UNLIMITED){ ?> checked="checked"<?php } ?>></td>
 			</tr>
 			<tr>
-				<td align="left">Positive Balance:<input type="checkbox" name="positive" alt="Members must deposit more than they withdraw."<?php if ($Role['WithdrawalLimit'] == -1){ ?> checked="checked"<?php } ?>></td>
+				<td align="left">Positive Balance:<input type="checkbox" name="positive" alt="Members must deposit more than they withdraw."<?php if ($Role['PositiveBalance']){ ?> checked="checked"<?php } ?>></td>
 			</tr><?php
 			if (!$Role['TreatyCreated'])
 			{ ?>

@@ -484,7 +484,7 @@ function createGame($gameID)
 	
 	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES ' .
 				'('.NHA_ID.','.$gameID.',\'Newbie Help Alliance\',\'Newbie Help Alliance\',\'*\','.ACCOUNT_ID_NHL.',\'Alliance message board includes tips and FAQs.\')');
-	$withPerDay = -2;
+	$withPerDay = ALLIANCE_BANK_UNLIMITED;
 	$removeMember = TRUE;
 	$changePass = TRUE;
 	$changeMOD = TRUE;
@@ -495,7 +495,7 @@ function createGame($gameID)
 	$sendAllMsg = TRUE;
 	$db->query('REPLACE INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg) ' .
 				'VALUES ('.NHA_ID.', '.$gameID.', 1, \'Leader\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).')');
-	$withPerDay = -2;
+	$withPerDay = ALLIANCE_BANK_UNLIMITED;
 	$removeMember = FALSE;
 	$changePass = FALSE;
 	$changeMOD = FALSE;
