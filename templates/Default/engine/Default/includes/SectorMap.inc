@@ -29,9 +29,10 @@
 									}
 									if($Sector->isVisited($ThisPlayer) && $Sector->hasWarp())
 									{
-										if($isCurrentSector && !$GalaxyMap){ ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapHREF(); ?>"><?php } ?>
+										if($GalaxyMap){ ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php }
+										else if($isCurrentSector){ ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapHREF(); ?>"><?php } ?>
 											<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxyName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.gif" /><?php
-										if($isCurrentSector && !$GalaxyMap){ ?></a><?php }
+										if($isCurrentSector || $GalaxyMap){ ?></a><?php }
 									}
 									if($Sector->isVisited($ThisPlayer) && $Sector->hasMine())
 									{
