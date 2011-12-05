@@ -350,7 +350,7 @@ class ChessGame
 		}
 		$enPassant = false;
 		if($p->pieceID == ChessPiece::PAWN) {
-			if($hasMoved[ChessPiece::PAWN][0] == $toX && ($hasMoved[ChessPiece::PAWN][1] == $toY-1 || $hasMoved[ChessPiece::PAWN][1] == $toY+1)) {
+			if($hasMoved[ChessPiece::PAWN][0] == $toX && ($hasMoved[ChessPiece::PAWN][1] == $y)) {
 				$enPassant = true;
 				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
