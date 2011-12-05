@@ -35,7 +35,7 @@ else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' 
 				SELECT COUNT(feature_request_id)
 				FROM account_votes_for_feature
 				WHERE feature_request_id=fr.feature_request_id
-					AND vote_type=' . $db->escapeString('YES') . '
+					AND vote_type IN (' . $db->escapeString('YES') . ',' . $db->escapeString('FAVOURITE') . ')
 			)
 			, no = (
 				SELECT COUNT(feature_request_id)
