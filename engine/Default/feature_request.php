@@ -30,7 +30,7 @@ if($var['Status'] == 'Opened')
 	$featureVotes = array();
 	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
 	while($db->nextRecord())
-		$featureVotes[$db->getField('feature_request_id')] = $db->getField('vote_type');
+		$featureVotes[$db->getInt('feature_request_id')] = $db->getField('vote_type');
 }
 $db->query('SELECT * ' .
 			'FROM feature_request ' .
@@ -51,15 +51,15 @@ if ($db->getNumRows() > 0)
 	$featureRequests = array();
 	while ($db->nextRecord())
 	{
-		$featureRequestID = $db->getField('feature_request_id');
+		$featureRequestID = $db->getInt('feature_request_id');
 		$featureRequests[$featureRequestID] = array(
 								'RequestID' => $featureRequestID,
 								'Message' => $db->getField('text'),
-								'Votes' => array('FAVOURITE'=>$db->getField('fav'),'YES'=>$db->getField('yes'),'NO'=>$db->getField('no')),
+								'Votes' => array('FAVOURITE'=>$db->getInt('fav'),'YES'=>$db->getInt('yes'),'NO'=>$db->getInt('no')),
 								'VotedFor' => isset($featureVotes[$featureRequestID]) ? $featureVotes[$featureRequestID] : false
 		);
 		if($featureModerator)
-			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getField('poster_id'));
+			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getInt('poster_id'));
 		
 		if($var['Status'] == 'Opened')
 		{
@@ -69,7 +69,7 @@ if ($db->getNumRows() > 0)
 						  ' GROUP BY vote_type');
 			while($db2->nextRecord())
 			{
-				$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getField('COUNT(*)');
+				$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getInt('COUNT(*)');
 			}
 		}
 		$db2->query('SELECT COUNT(*) ' .
@@ -77,7 +77,7 @@ if ($db->getNumRows() > 0)
 					  'WHERE feature_request_id='.$featureRequestID);
 		while($db2->nextRecord())
 		{
-			$featureRequests[$featureRequestID]['Comments'] = $db2->getField('COUNT(*)');
+			$featureRequests[$featureRequestID]['Comments'] = $db2->getInt('COUNT(*)');
 		}
 		$commentsContainer['RequestID'] = $featureRequestID;
 		$featureRequests[$featureRequestID]['CommentsHREF'] = SmrSession::get_new_href($commentsContainer);
