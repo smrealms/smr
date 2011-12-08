@@ -3,7 +3,7 @@ if(isset($CreateGameMessage))
 {
 	echo $CreateGameMessage;
 } ?>
-<table class="standard" id="GameList" class="ajax">
+<table class="standard ajax" id="GameList">
 	<tr>
 		<th>Players</th>
 		<th>Current Turn</th>
