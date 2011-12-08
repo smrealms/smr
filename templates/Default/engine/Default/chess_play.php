@@ -5,6 +5,10 @@
 			<div style="height: 500px; width: 500px;">
 				<table class="chess chessFont"><?php
 					$Board = $ChessGame->getBoard();
+					//If we are the black player then reverse the board
+					if($ChessGame->getBlackID() == $ThisPlayer->getAccountID()) {
+						$Board = array_reverse($Board, true);
+					}
 					foreach($Board as $Y => $Row)
 					{ ?>
 						<tr><?php
