@@ -9,7 +9,7 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 <head>
 	<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS; ?>">
 	<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
-	<style>.recaptchatable * {background:white; color: black;}</style>
+	<style>.recaptchatable #recaptcha_response_field {background:white; color: black;}</style>
 	<title>Space Merchant Realms</title>
 </head>
 
