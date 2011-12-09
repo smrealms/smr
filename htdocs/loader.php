@@ -71,17 +71,18 @@ try
 	$sn = $_REQUEST['sn'];
 		
 	// check if we got a sn number with our url
-	if (empty($sn))
-	{
-		require_once(get_file_loc('smr.inc'));
-		create_error('Your browser lost the SN. Try to reload the page!');
+	if (empty($sn)) {
+		if(!USING_AJAX) {
+			require_once(get_file_loc('smr.inc'));
+			create_error('Your browser lost the SN. Try to reload the page!');
+		}
+		else
+			exit;
 	}
 	
 	// do we have such a container object in the db?
-	if (!($var = SmrSession::retrieveVar($sn)))
-	{
-		if(!USING_AJAX)
-		{
+	if (!($var = SmrSession::retrieveVar($sn))) {
+		if(!USING_AJAX) {
 			require_once(get_file_loc('smr.inc'));
 			create_error('Please avoid using the back button!');
 		}
