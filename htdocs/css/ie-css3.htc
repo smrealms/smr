@@ -256,7 +256,7 @@ function ondocumentready(classID) {
 	this.stroked = 'true';
 	if (isNaN(this.strokeWeight) || (this.strokeWeight == 0)) {
 		this.strokeWeight = 0;
-		this.strokeColor = fillColor;
+		this.strokeColor = this.fillColor;
 		this.stroked = 'false';
 	}
 	this.opacity = parseFloat(this.currentStyle.opacity || 1);
