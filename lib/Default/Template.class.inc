@@ -47,9 +47,9 @@ class Template
 		}
 		$this->trimWhiteSpace($output);
 		if($forAjax)
-			header('Content-Type: text/xml; charset: utf-8');
+			header('Content-Type: text/xml; charset=utf-8');
 		else
-			header('Content-Type: text/html; charset: utf-8');
+			header('Content-Type: text/html; charset=utf-8');
 		if(!$xmlResponse && $this->data['AJAX_ENABLE_REFRESH'])
 		{
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output,USING_AJAX);
