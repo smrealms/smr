@@ -3,7 +3,12 @@
 	<tr>
 		<td>
 			<div style="height: 500px; width: 500px;">
-				<table class="chess chessFont"><?php
+				<table class="chess chessFont">
+					<td class="chessOutline">&nbsp;</td><?php
+					for($X=ord('a');$X<=ord('h');$X++)
+					{ ?>
+						<td class="chessOutline"><?php echo chr($X); ?></td><?php
+					} ?><?php
 					$Board = $ChessGame->getBoard();
 					//If we are the black player then reverse the board
 					if($ChessGame->getBlackID() == $ThisPlayer->getAccountID()) {
@@ -11,14 +16,21 @@
 					}
 					foreach($Board as $Y => $Row)
 					{ ?>
-						<tr><?php
+						<tr>
+							<td class="chessOutline"><?php echo 8-$Y; ?></td><?php
 							foreach($Row as $X => $Cell)
 							{ ?>
-								<td id="x<?php echo $X; ?>y<?php echo $Y; ?>" class="ajax<?php if(($X+$Y) % 2 == 0) { ?> whiteSquare<?php } ?>" onClick="highlightMoves(<?php echo $X; ?>,<?php echo $Y; ?>)"><?php
+								<td id="x<?php echo $X; ?>y<?php echo $Y; ?>" class="ajax<?php if(($X+$Y) % 2 == 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves(<?php echo $X; ?>,<?php echo $Y; ?>)"><?php
 									if($Cell==null){ ?>&nbsp;<?php } else { ?><span class="pointer"><?php echo $Cell->getPieceSymbol(); ?></span><?php } ?>
 								</td><?php
-							}?>
+							} ?>
+							<td class="chessOutline"><?php echo 8-$Y; ?></td>
 						</tr><?php
+					}?>
+					<td class="chessOutline">&nbsp;</td><?php
+					for($X=ord('a');$X<=ord('h');$X++)
+					{ ?>
+						<td class="chessOutline"><?php echo chr($X); ?></td><?php
 					} ?>
 				</table>
 			</div>
