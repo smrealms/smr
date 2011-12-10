@@ -35,6 +35,7 @@
 <script type="text/javascript">
 	var submitMoveHREF = '<?php echo $ChessMoveHREF; ?>',
 	availableMoves = {<?php
+	$this->startCapture();
 	foreach($Board as $Y => $Row)
 	{
 		foreach($Row as $X => $Cell)
@@ -44,17 +45,22 @@
 				"x<?php echo $X; ?>y<?php echo $Y; ?>": [<?php
 					if($ChessGame->isCurrentTurn($ThisAccount->getAccountID()))
 					{
+						$this->startCapture();
 						$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
 						foreach($Moves as $Move)
 						{
 							?>{"x":<?php echo $Move[0]; ?>, "y":<?php echo $Move[1]; ?>},<?php
 						}
-					} ?>
-				],
-				<?php
+						$Captured =& $this->stopCapture();
+						echo substr($Captured, 0, strlen($Captured)-1);
+					}?>
+				],<?php
 			}
 		}
-	} ?>
+	}
+	$Captured =& $this->stopCapture();
+	echo substr($Captured, 0, strlen($Captured)-1);
+	unset($Captured); ?>
 	};
 </script>
 <script type="text/javascript" src="js/chess.js"></script>
