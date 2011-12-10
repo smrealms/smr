@@ -29,7 +29,7 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 		<tr>
 			<td valign='top'>
 
-				<h1>CREATE LOGIN</h1>
+				<h1>Create Login</h1>
 				<p align='justify'>
 					Creating multiple logins will not be tolerated. If we discover someone playing with several
 					logins, then all of them will be deleted. We have implemented architecture elements to help
