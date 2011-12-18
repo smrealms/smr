@@ -376,9 +376,12 @@ function create_submit_link($container, $text)
 
 function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type='Game', $return_type = 'Normal')
 {
+	if($text == null) {
+		$text = number_format($value);
+	}
 	if($maxValue-$minValue==0)
 	{
-		return $text==null?number_format($value):$text;
+		return $text;
 	}
 	else
 	{
@@ -411,7 +414,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		}
 		$colour = $r_component . $g_component . '00';
 		if ($return_type == 'Color') return $colour;
-		return '<span style="color:#' . $colour . '">' . ($text==null?number_format($value):$text) . '</span>';
+		return '<span style="color:#' . $colour . '">' . $text . '</span>';
 	}
 	elseif ($type == 'IRC')
 	{
@@ -420,7 +423,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		elseif ($normalisedValue == -255) $colour = '[k04]';
 		else $colour = '[k08]';
 		if ($return_type == 'Color') return $colour;
-		return $colour . ($text==null?number_format($value):$text);
+		return $colour . $text;
 	}
 }
 

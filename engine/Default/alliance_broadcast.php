@@ -9,6 +9,7 @@ $container['alliance_id'] = $var['alliance_id'];
 $template->assign('MessageSendFormHref',SmrSession::get_new_href($container));
 
 $template->assign('Reciever', 'Whole Alliance');
-if(isset($var['preview']))
+if(isset($var['preview'])) {
 	$template->assign('Preview', $var['preview']);
+}
 ?>

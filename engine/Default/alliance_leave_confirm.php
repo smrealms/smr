@@ -7,9 +7,7 @@ create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $PHP_OUTPUT.= 'Do you really want to leave this alliance?<br /><br />';
 
-$container = array();
-$container['url'] = 'alliance_leave_processing.php';
-$container['body'] = '';
+$container = create_container('alliance_leave_processing.php');
 $container['action'] = 'YES';
 
 $PHP_OUTPUT.=create_button($container,'Yes!');

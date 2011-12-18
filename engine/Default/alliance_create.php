@@ -2,9 +2,7 @@
 
 $template->assign('PageTopic','Create Alliance');
 
-$container = array();
-$container['url'] = 'alliance_create_processing.php';
-$container['body'] = '';
+$container = create_container('alliance_create_processing.php');
 $form = create_form($container,'Create');
 
 $PHP_OUTPUT.= $form['form'];

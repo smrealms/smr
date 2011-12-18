@@ -1,0 +1,1 @@
+ALTER TABLE alliance CHANGE recruiting recruiting ENUM( 'TRUE', 'FALSE' ) NOT NULL;

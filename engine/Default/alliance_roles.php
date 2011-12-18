@@ -1,6 +1,7 @@
 <?php
-if (!isset($var['alliance_id']))
+if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+}
 
 $alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->getAllianceID() . ')');
@@ -9,19 +10,17 @@ create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
 $db->query('SELECT * 
 FROM alliance_has_roles
-WHERE game_id=' . $alliance->getGameID() . '
-AND alliance_id=' . $alliance->getAllianceID() .'
+WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
+AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) .'
 ORDER BY role_id
 ');
 $allianceRoles = array();
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$roleID = $db->getField('role_id');
 	$allianceRoles[$roleID]['RoleID'] = $roleID;
 	$allianceRoles[$roleID]['Name'] = $db->getField('role');
 	$allianceRoles[$roleID]['EditingRole'] = $var['role_id'] == $roleID;
-	if ($allianceRoles[$roleID]['EditingRole'])
-	{
+	if ($allianceRoles[$roleID]['EditingRole']) {
 		$container = create_container('alliance_roles_processing.php');
 		$allianceRoles[$roleID]['WithdrawalLimit'] = $db->getInt('with_per_day');
 		$allianceRoles[$roleID]['PositiveBalance'] = $db->getBoolean('positive_balance');
@@ -35,8 +34,7 @@ while ($db->nextRecord())
 		$allianceRoles[$roleID]['ExemptWithdrawals'] = $db->getBoolean('exempt_with');
 		$allianceRoles[$roleID]['SendAllianceMessage'] = $db->getBoolean('send_alliance_msg');
 	}
-	else
-	{
+	else {
 		$container = create_container('skeleton.php', 'alliance_roles.php');
 		$form = create_form($container,'Edit');
 		$PHP_OUTPUT.= $form['form'];

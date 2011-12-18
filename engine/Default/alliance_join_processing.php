@@ -9,8 +9,7 @@ require_once(get_file_loc('SmrAlliance.class.inc'));
 // ********************************
 
 // is account validated?
-if (!$account->isValidated())
-{
+if (!$account->isValidated()) {
 	create_error('You are not validated. You can\'t join an alliance yet.');
 }
 	
@@ -23,15 +22,15 @@ if (!$account->isValidated())
 
 $alliance =& SmrAlliance::getAlliance($var['alliance_id'], $player->getGameID());
 
-if ($alliance->canJoinAlliance($player) !== true)
-{
+if ($alliance->canJoinAlliance($player) !== true) {
 	create_error('You are not able to join this alliance currently.');
 }
 
 $password = $_REQUEST['password'];
 
-if ($password != $alliance->getPassword())
+if ($password != $alliance->getPassword()) {
 	create_error('Incorrect Password!');
+}
 
 // assign the player to the current alliance
 $player->joinAlliance($alliance->getAllianceID());
