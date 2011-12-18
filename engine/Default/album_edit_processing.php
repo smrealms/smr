@@ -1,7 +1,8 @@
 <?php
 
-if ($_POST['action'] == 'Delete Entry')
+if ($_POST['action'] == 'Delete Entry') {
 	forward(create_container('skeleton.php', 'album_delete_confirmation.php'));
+}
 
 // get location
 $location = $_POST['location'];
@@ -10,143 +11,132 @@ $location = $_POST['location'];
 $email = $_POST['email'];
 
 // get website (and validate it)
+$website = '';
 if ($_POST['website'] != 'http://')
 {
+	$website = $_POST['website'];
 	// add http:// if missing
-	if (!preg_match('=://=', $_POST['website']))
-		$website = 'http://' . $_POST['website'];
-	else
-	  $website = $_POST['website'];
+	if (!preg_match('=://=', $website)) {
+		$website = 'http://' . $website;
+	}
 
 	// validate
-	$status = floor(php_link_check($website, TRUE) / 100);
+	$status = floor(php_link_check($website, true) / 100);
 
-	if ($status != 2 && $status != 3)
+	if ($status != 2 && $status != 3) {
 		create_error('The website you entered is invalid!');
-
+	}
 }
-else
-	$website = '';
 
 // get 'other' info
 $other = $_POST['other'];
 
-// get day
-if ($_POST['day'] != 'N/A')
-	$day = $_POST['day'];
-else
-	$day = 0;
-
-// get month
-if ($_POST['month'] != 'N/A')
-	$month = $_POST['month'];
-else
-	$month = 0;
-
-// get year
-if ($_POST['year'] != 'N/A')
-	$year = $_POST['year'];
-else
-	$year = 0;
+$day = $_POST['day'] != 'N/A' ? $_POST['day'] : 0;
+$month = $_POST['month'] != 'N/A' ? $_POST['month'] : 0;
+$year = $_POST['year'] != 'N/A' ? $_POST['year'] : 0;
 
 // check if these values are nummeric
-if (!is_numeric($day))
+if (!is_numeric($day)) {
 	create_error('The day has to be a number!');
-if (!is_numeric($month))
+}
+if (!is_numeric($month)) {
 	create_error('The month has to be a number!');
-if (!is_numeric($year))
+}
+if (!is_numeric($year)) {
 	create_error('The year has to be a number!');
+}
 
 // check if we have an image
-if ($_FILES['photo']['error'] == UPLOAD_ERR_OK)
-{
+$noPicture = true;
+if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
+	$noPicture = false;
 	// get dimensions
 	$size = getimagesize($_FILES['photo']['tmp_name']);
 
 	// check if we really have a jpg
-	if ($size[2] < 1 || $size[2] > 3)
+	if ($size[2] < 1 || $size[2] > 3) {
 		create_error('Only gif, jpg or png-image allowed!');
+	}
 
 	// check if width > 500
-	if ($size[0] > 500)
+	if ($size[0] > 500) {
 		create_error('Image is wider than 500 pixels!');
+	}
 
 	// check if height > 500
-	if ($size[1] > 500)
+	if ($size[1] > 500) {
 		create_error('Image is higher than 500 pixels!');
+	}
 
-	move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD.SmrSession::$account_id);
-
+	move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . SmrSession::$account_id);
 }
-else
-	$no_picture = true;
 
 
 // check if we had a album entry so far
-$db->query('SELECT * FROM album WHERE account_id = '.SmrSession::$account_id);
-if ($db->nextRecord())
-{
-	if ($no_picture == false)
+$db->query('SELECT * FROM album WHERE account_id = ' . $db->escapeNumber(SmrSession::$account_id));
+if ($db->nextRecord()) {
+	if ($noPicture == false) {
 		$comment = '<span class="green">*** Picture changed</span>';
+	}
 
 	// change album entry
 	$db->query('UPDATE album
-				SET location = '.$db->escapeString($location).',
-					email = '.$db->escapeString($email).',
-					website= '.$db->escapeString($website).',
-					day = '.$day.',
-					month = '.$month.',
-					year = '.$year.',
-					other = '.$db->escapeString($other).',
-					last_changed = '.TIME.',
+				SET location = ' . $db->escapeString($location) . ',
+					email = ' . $db->escapeString($email) . ',
+					website= ' . $db->escapeString($website) . ',
+					day = ' . $db->escapeNumber($day) . ',
+					month = ' . $db->escapeNumber($month) . ',
+					year = ' . $db->escapeNumber($year) . ',
+					other = ' . $db->escapeString($other) . ',
+					last_changed = ' . $db->escapeNumber(TIME) . ',
 					approved = \'TBC\',
 					disabled = \'FALSE\'
-				WHERE account_id = '.SmrSession::$account_id . ' LIMIT 1');
-
+				WHERE account_id = ' . $db->escapeNumber(SmrSession::$account_id) . ' LIMIT 1');
 }
-else
-{
+else {
 	// if he didn't upload a picture before
 	// we kick him out here
-	if ($no_picture)
+	if ($noPicture) {
 		create_error('What is it worth if you don\'t upload an image?');
+	}
 
 	$comment = '<span class="green">*** Picture added</span>';
 
 	// add album entry
-	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved) ' .
-			   'VALUES('.SmrSession::$account_id.', '.$db->escapeString($location).', '.$db->escapeString($email).', '.$db->escapeString($website).', '.$day.', '.$month.', '.$year.', '.$db->escapeString($other).', '.TIME.', '.TIME.', \'TBC\')');
-
+	$db->query('INSERT INTO album (account_id, location, email, website, day, month, year, other, created, last_changed, approved)
+				VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ', \'TBC\')');
 }
 
-if ($comment)
-{
+if ($comment) {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
 	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.SmrSession::$account_id);
-	if ($db->nextRecord())
+	if ($db->nextRecord()) {
 		$comment_id = $db->getField('MAX(comment_id)') + 1;
-	else
+	}
+	else {
 		$comment_id = 1;
+	}
 
 	$db->query('INSERT INTO album_has_comments
 				(album_id, comment_id, time, post_id, msg)
-				VALUES ('.$account->getAccountID().', '.$comment_id.', '.TIME.', 0, '.$db->escapeString($comment).')');
+				VALUES (' . $db->escapeNumber($account->getAccountID()) . ', ' . $db->escapeNumber($comment_id) . ', ' . $db->escapeNumber(TIME) . ', 0, ' . $db->escapeString($comment) . ')');
 	$db->unlock();
 }
 
 $container = array();
 $container['url'] = 'skeleton.php';
-if (SmrSession::$game_id > 0)
+if (SmrSession::$game_id > 0) {
 	if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php'; else $container['body'] = 'current_sector.php';
-else
+}
+else {
 	$container['body'] = 'game_play.php';
+}
 
 forward($container);
 
-function php_link_check($url, $r = FALSE)
-{
+function php_link_check($url, $r = FALSE) {
 	/*	Purpose: Check HTTP Links
 	 *	Usage:	 $var = phpLinkCheck(absoluteURI)
 	 *					 $var['Status-Code'] will return the HTTP status code
@@ -200,7 +190,6 @@ function php_link_check($url, $r = FALSE)
 
 		return $http;
 	}
-
 }
 
 ?>
