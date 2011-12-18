@@ -20,11 +20,9 @@ $exemptWith = (bool)$_REQUEST['exemptWithdrawals'];
 $sendAllMsg = (bool)$_REQUEST['sendAllMsg'];
 
 // with empty role the user wants to create a new entry
-if (!isset($var['role_id']))
-{
+if (!isset($var['role_id'])) {
 	// role empty too? that doesn't make sence
-	if (empty($_POST['role']))
-	{
+	if (empty($_POST['role'])) {
 		create_error('You must enter a role if you want to create a new one.');
 	}
 
@@ -33,15 +31,10 @@ if (!isset($var['role_id']))
 	// get last id
 	$db->query('SELECT MAX(role_id)
 				FROM alliance_has_roles
-				WHERE game_id = '.$player->getGameID().' AND
-					  alliance_id = '.$alliance_id);
-	if ($db->nextRecord())
-	{
-		$role_id = $db->getField('MAX(role_id)') + 1;
-	}
-	else
-	{
-		$role_id = 1;
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND
+					  alliance_id = ' . $db->escapeNumber($alliance_id));
+	if ($db->nextRecord()) {
+		$role_id = $db->getInt('MAX(role_id)') + 1;
 	}
 
 	$db->query('INSERT INTO alliance_has_roles
@@ -50,23 +43,19 @@ if (!isset($var['role_id']))
 
 	$db->unlock();
 }
-else
-{
+else {
 	// if no role is given we delete that entry
-	if (empty($_POST['role']))
-	{
-		if($var['role_id']==1)
-		{
+	if (empty($_POST['role'])) {
+		if($var['role_id']==1) {
 			create_error('You cannot delete the leader role.');
 		}
-		else if($var['role_id']==2)
-		{
+		else if($var['role_id']==2) {
 			create_error('You cannot delete the new member role.');
 		}
 		$db->query('DELETE FROM alliance_has_roles
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND
-						  alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND
-						  role_id = ' . $db->escapeNumber($var['role_id']));
+					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
+					AND role_id = ' . $db->escapeNumber($var['role_id']));
 	// otherwise we update it
 	}
 	else

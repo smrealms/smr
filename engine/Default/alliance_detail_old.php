@@ -32,17 +32,16 @@ $PHP_OUTPUT.= '
 	</tr>
 ';
 
-$db->query('SELECT * FROM player WHERE alliance_id = '.$id.' AND game_id = '.$game_id.' ORDER BY experience DESC');
-while ($db->nextRecord())
-{
+$db->query('SELECT * FROM player WHERE alliance_id = ' . $db->escapeNumber($id) . ' AND game_id = ' . $db->escapeNumber($game_id) . ' ORDER BY experience DESC');
+while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align=center>' . stripslashes($db->getField('player_name')) . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->getField('experience') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->getField('alignment') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->getField('race') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->getField('kills') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->getField('deaths') . '</td>');
-	$PHP_OUTPUT.=('<td align=center>' . $db->getField('bounty') . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . $db->getField('player_name') . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('experience')) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('alignment')) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('race')) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('kills')) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('deaths')) . '</td>');
+	$PHP_OUTPUT.=('<td align="center">' . number_format($db->getInt('bounty')) . '</td>');
 	$PHP_OUTPUT.=('</tr>');
 }
 $PHP_OUTPUT.=('</table></div>');

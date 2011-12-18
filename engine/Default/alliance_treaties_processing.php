@@ -1,92 +1,77 @@
 <?php
 
 //get the alliances
-if (isset($var['alliance_id'])) $alliance_id_1 = $var['alliance_id'];
-else $alliance_id_1 = $player->getAllianceID();
+if (!isset($var['alliance_id'])) {
+	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+}
+$alliance_id_1 = $var['alliance_id'];
 if ($alliance_id_1 == 0) create_error('You are not in an alliance!');
 if (isset($var['accept'])) {
 	if ($var['accept']) {
-		$db->query('UPDATE alliance_treaties SET official = \'TRUE\' WHERE alliance_id_1 = ' . $var['alliance_id_1'] . ' AND alliance_id_2 = '.$alliance_id_1.' AND game_id = '.$player->getGameID());
+		$db->query('UPDATE alliance_treaties SET official = \'TRUE\' WHERE alliance_id_1 = ' . $db->escapeNumber($var['alliance_id_1']) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 		if ($var['aa']) {
 			//make an AA entry to the alliance, use treaty_created column
 			// get last id
 			$db->query('SELECT MAX(role_id)
 						FROM alliance_has_roles
-						WHERE game_id = '.$player->getGameID().' AND
-							  alliance_id = '.$alliance_id_1);
-			if ($db->nextRecord())
-				$role_id = $db->getField('MAX(role_id)') + 1;
-			else
-				$role_id = 1;
+						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+							AND alliance_id = ' . $db->escapeNumber($alliance_id_1));
+			if ($db->nextRecord()) {
+				$role_id = $db->getInt('MAX(role_id)') + 1;
+			}
 			$allianceName = $var['alliance_name'];
 			$db->query('INSERT INTO alliance_has_roles
 				(alliance_id, game_id, role_id, role, treaty_created)
-				VALUES ('.$alliance_id_1.', '.$player->getGameID().', '.$role_id.', ' . $db->escape_string($allianceName) . ',1)');
+				VALUES (' . $db->escapeNumber($alliance_id_1) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString($allianceName) . ',1)');
 			$db->query('SELECT MAX(role_id)
 						FROM alliance_has_roles
 						WHERE game_id = '.$player->getGameID().' AND
 							  alliance_id = ' . $var['alliance_id_1']);
-			if ($db->nextRecord())
-				$role_id = $db->getField('MAX(role_id)') + 1;
-			else
-				$role_id = 1;
+			if ($db->nextRecord()) {
+				$role_id = $db->getInt('MAX(role_id)') + 1;
+			}
 			$allianceName = $player->getAllianceName();
 			$db->query('INSERT INTO alliance_has_roles
 				(alliance_id, game_id, role_id, role, treaty_created)
-				VALUES (' . $var['alliance_id_1'] . ', '.$player->getGameID().', '.$role_id.', ' . $db->escape_string($allianceName) . ',1)');
+				VALUES (' . $db->escapeNumber($var['alliance_id_1']) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString($allianceName) . ',1)');
 		}
 	}
-	else $db->query('DELETE FROM alliance_treaties WHERE alliance_id_1 = ' . $var['alliance_id_1'] . ' AND alliance_id_2 = '.$alliance_id_1.' AND game_id = '.$player->getGameID());
+	else {
+		$db->query('DELETE FROM alliance_treaties WHERE alliance_id_1 = ' . $db->escapeNumber($var['alliance_id_1']) . ' AND alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	}
 	$container = create_container('skeleton.php','alliance_treaties.php');
 	$container['alliance_id'] = $alliance_id_1;
 	forward($container);
 }
 $alliance1 =& SmrAlliance::getAlliance($alliance_id_1, $player->getGameID());
 if (isset($_REQUEST['proposedAlliance'])) {
-	
 	$alliance_id_2 = $_REQUEST['proposedAlliance'];
-	$db->query('SELECT alliance_id_1, alliance_id_2, game_id FROM alliance_treaties WHERE (alliance_id_1 = '.$alliance_id_1.' OR alliance_id_1 = '.$alliance_id_2.') AND (alliance_id_2 = '.$alliance_id_1.' OR alliance_id_2 = '.$alliance_id_2.') AND game_id = '.$player->getGameID());
+	$db->query('SELECT alliance_id_1, alliance_id_2, game_id FROM alliance_treaties WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_1 = '.$alliance_id_2.') AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id_1) . ' OR alliance_id_2 = ' . $db->escapeNumber($alliance_id_2) . ') AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	if ($db->nextRecord()) {
 		$container=create_container('skeleton.php', 'alliance_treaties.php');
 		$container['alliance_id'] = $alliance_id_1;
 		$container['message'] = '<span class="red bold">ERROR:</span> There is already an outstanding treaty with that alliance.';
 		forward($container);
 	}
-	//get the terms, assume false at first
-	$traderAssist = 0;
-	$raidAssist = 0;
-	$traderDefend = 0;
-	$traderNAP = 0;
-	$planetNAP = 0;
-	$forcesNAP = 0;
-	$aaAccess = 0;
-	$mbRead = 0;
-	$mbWrite = 0;
-	$modRead = 0;
-	$planetLand = 0;
-	if (isset($_REQUEST['assistTrader'])) $traderAssist = 1;
-	if (isset($_REQUEST['assistRaids'])) $raidAssist = 1;
-	if (isset($_REQUEST['defendTrader'])) $traderDefend = 1;
-	if (isset($_REQUEST['napTrader'])) $traderNAP = 1;
-	if (isset($_REQUEST['napPlanets'])) $planetNAP = 1;
-	if (isset($_REQUEST['napForces'])) $forcesNAP = 1;
-	if (isset($_REQUEST['aaAccess'])) $aaAccess = 1;
-	if (isset($_REQUEST['mbRead'])) $mbRead = 1;
-	if (isset($_REQUEST['mbWrite'])) $mbWrite = 1;
-	if (isset($_REQUEST['modRead'])) $modRead = 1;
-	if (isset($_REQUEST['planetLand'])) $planetLand = 1;
-	//make sure its all logical.
-	if ($traderAssist) $traderNAP = 1;
-	if ($traderDefend) $traderNAP = 1;
-	if ($planetLand) $planetNAP = 1;
-	if ($mbWrite) $mbRead = 1;
+	//get the terms
+	$traderAssist = isset($_REQUEST['assistTrader']);
+	$raidAssist = isset($_REQUEST['assistRaids']);
+	$traderDefend = isset($_REQUEST['defendTrader']);
+	$traderNAP = $traderDefend || $traderAssist || isset($_REQUEST['napTrader']);
+	$planetLand = isset($_REQUEST['planetLand']);
+	$planetNAP = $planetLand ||isset($_REQUEST['napPlanets']);
+	$forcesNAP = isset($_REQUEST['napForces']);
+	$aaAccess = isset($_REQUEST['aaAccess']);
+	$mbWrite = isset($_REQUEST['mbWrite']);
+	$mbRead = $mbWrite || isset($_REQUEST['mbRead']);
+	$modRead = isset($_REQUEST['modRead']);
 	//get confirmation
 	$template->assign('PageTopic',$alliance1->getAllianceName() . ' (' . $alliance1->getAllianceID() . ')');
 	require_once(get_file_loc('menu.inc'));
 	create_alliance_menu($alliance1->getAllianceID(),$alliance1->getLeaderID());
 	$PHP_OUTPUT.=('<br /><br /');
 	$PHP_OUTPUT.=('<div align="center">Are you sure you want to offer a treaty to <span class="yellow">');
-	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
+	$db->query('SELECT leader_id, alliance_name, alliance_id FROM alliance WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance_id_2) . ' LIMIT 1');
 	$db->nextRecord();
 	$PHP_OUTPUT.=(stripslashes($db->getField('alliance_name')));
 	$PHP_OUTPUT.=('</span> with the following conditions:<br /><ul>');
@@ -104,8 +89,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$PHP_OUTPUT.=('</ul>');
 	
 	//give them options
-	$container=array();
-	$container['url'] = 'alliance_treaties_processing.php';
+	$container=create_container('alliance_treaties_processing.php');
 	$container['alliance_id'] = $alliance_id_1;
 	$container['proposedAlliance'] = $alliance_id_2;
 	$container['traderAssist'] = $traderAssist;
@@ -129,11 +113,11 @@ if (isset($_REQUEST['proposedAlliance'])) {
 } else {
 	$alliance_id_2 = $var['proposedAlliance'];
 	$db->query('INSERT INTO alliance_treaties (alliance_id_1,alliance_id_2,game_id,trader_assist,trader_defend,trader_nap,raid_assist,planet_land,planet_nap,forces_nap,aa_access,mb_read,mb_write,mod_read,official) 
-				VALUES ('.$alliance_id_1.', '.$alliance_id_2.', '.$player->getGameID().', ' . $var['traderAssist'] . ', ' . 
-				$var['traderDefend'] . ', ' . $var['traderNAP'] . ', ' . $var['raidAssist'] . ', ' . $var['planetLand'] . ', ' . $var['planetNAP'] . ', ' .
-				$var['forcesNAP'] . ', ' . $var['aaAccess'] . ', ' . $var['mbRead'] . ', ' . $var['mbWrite'] . ', ' . $var['modRead'] . ', \'FALSE\')');
+				VALUES (' . $db->escapeNumber($alliance_id_1) . ', ' . $db->escapeNumber($alliance_id_2) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeBoolean($var['traderAssist']) . ', ' .
+				$db->escapeBoolean($var['traderDefend']) . ', ' . $db->escapeNumber($var['traderNAP']) . ', ' . $db->escapeBoolean($var['raidAssist']) . ', ' . $db->escapeBoolean($var['planetLand']) . ', ' . $db->escapeBoolean($var['planetNAP']) . ', ' .
+				$db->escapeBoolean($var['forcesNAP']) . ', ' . $db->escapeBoolean($var['aaAccess']) . ', ' . $db->escapeBoolean($var['mbRead']) . ', ' . $db->escapeBoolean($var['mbWrite']) . ', ' . $db->escapeBoolean($var['modRead']) . ', \'FALSE\')');
 	//send a message to the leader letting them know the offer is waiting.
-	$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $player->getGameID() . ' AND alliance_id=' . $alliance_id_2 . ' LIMIT 1');
+	$db->query('SELECT leader_id FROM alliance WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance_id_2) . ' LIMIT 1');
 	$db->nextRecord();
 	$leader_2 = $db->getField('leader_id');
 	$message = 'An ambassador from <span class="yellow">' . $alliance1->getAllianceName() . '</span> has arrived.';

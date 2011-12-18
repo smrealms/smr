@@ -2,15 +2,14 @@
 
 require_once(get_file_loc('SmrAlliance.class.inc'));
 
-if (!isset($var['alliance_id']))
+if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
+}
 
-if(!isset($var['SortKey']))
-{
+if(!isset($var['SortKey'])) {
 	SmrSession::updateVar('SortKey','getExperience');
 }
-if(!isset($var['SortDesc']))
-{
+if(!isset($var['SortDesc'])) {
 	SmrSession::updateVar('SortDesc',true);
 }
 
@@ -20,12 +19,10 @@ $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->g
 require_once(get_file_loc('menu.inc'));
 create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
-
 $db2 = new SmrMySqlDatabase();
 $varAction = isset($var['action']) ? $var['action'] : '';
 // Does anyone actually use these?
-if ($varAction == 'Show Alliance Roles')
-{
+if ($varAction == 'Show Alliance Roles') {
 	// initialize with text
 	$roles = array();
 
@@ -36,7 +33,9 @@ if ($varAction == 'Show Alliance Roles')
 				AND alliance_id=' .  $alliance->getAllianceID() . '
 				ORDER BY role_id'
 				);
-	while ($db->nextRecord()) $roles[$db->getInt('role_id')] = $db->getField('role');
+	while ($db->nextRecord()) {
+		$roles[$db->getInt('role_id')] = $db->getField('role');
+	}
 
 	$container=create_container('alliance_roles_save_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
@@ -51,8 +50,8 @@ $db->query('SELECT
 	sum(experience) as alliance_xp,
 	floor(avg(experience)) as alliance_avg
 	FROM player
-	WHERE alliance_id=' . $alliance->getAllianceID()  . '
-	AND game_id = ' . $alliance->getGameID() . '
+	WHERE alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
+	AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 	GROUP BY alliance_id'
 );
 
@@ -60,8 +59,7 @@ $db->nextRecord();
 
 $PHP_OUTPUT.= '<div align="center">';
 $PHP_OUTPUT.= bbifyMessage($alliance->getDescription());
-if($account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION))
-{
+if($account->hasPermission(PERMISSION_EDIT_ALLIANCE_DESCRIPTION)) {
 	$PHP_OUTPUT.= '<br /><br />';
 	$container=array();
 	$container['url'] = 'skeleton.php';
@@ -123,36 +121,45 @@ $PHP_OUTPUT.= '</tr>';
 $count = 1;
 
 $db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$alliance->getGameID().' AND alliance_id='.$alliance->getAllianceID());
-if ($db2->nextRecord()) $my_role_id = $db2->getField('role_id');
-else $my_role_id = 0;
-$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$alliance->getAllianceID().' AND game_id = '.$alliance->getGameID().' AND ' .
-					'role_id = '.$my_role_id.' AND change_roles = \'TRUE\'');
-if ($db2->nextRecord()) $allowed = TRUE;
+if ($db2->nextRecord()) {
+	$my_role_id = $db2->getInt('role_id');
+}
+else {
+	$my_role_id = 0;
+}
+$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
+			AND role_id = ' . $db->escapeNumber($my_role_id) . ' AND change_roles = \'TRUE\'');
+if ($db2->nextRecord()) {
+	$allowed = TRUE;
+}
 
 $alliancePlayers =& SmrPlayer::getAlliancePlayers($player->getGameID(),$alliance->getAllianceID());
 
-if($var['SortKey']!='getExperience' || $var['SortDesc']!==true)
-{
+if($var['SortKey']!='getExperience' || $var['SortDesc']!==true) {
 	Sorter::sortByNumMethod($alliancePlayers, $var['SortKey'], $var['SortDesc']);
 }
 
 
-foreach($alliancePlayers as &$alliancePlayer)
-{
+foreach($alliancePlayers as &$alliancePlayer) {
 	$class='';
 	// check if this guy is the current guy
-	if ($player->equals($alliancePlayer))
+	if ($player->equals($alliancePlayer)) {
 		$class .= 'bold';
-	if($alliancePlayer->getAccount()->isNewbie())
+	}
+	if($alliancePlayer->getAccount()->isNewbie()) {
 		$class.= ' newbie';
-	if($class!='')
+	}
+	if($class!='') {
 		$class = ' class="'.trim($class).'"';
+	}
 	$PHP_OUTPUT.= '<tr'.$class.'>';
 
 	$PHP_OUTPUT.= '<td class="center shrink">';
 
 	// counter
-	if ($alliancePlayer->getAccountID() == $alliance->getLeaderID()) $PHP_OUTPUT.= '*';
+	if ($alliancePlayer->getAccountID() == $alliance->getLeaderID()) {
+		$PHP_OUTPUT.= '*';
+	}
 	$PHP_OUTPUT.= ($count++);
 	$PHP_OUTPUT.= '</td><td>';
 
@@ -174,31 +181,31 @@ foreach($alliancePlayers as &$alliancePlayer)
 	$PHP_OUTPUT.= '</td>';
 
 	// Roles
-	if ($varAction == 'Show Alliance Roles')
-	{
+	if ($varAction == 'Show Alliance Roles') {
 		$PHP_OUTPUT.= '<td class="shrink right">';
 
 		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT role_id
 					FROM player_has_alliance_role
-					WHERE account_id=' . $alliancePlayer->getAccountID() .'
-					AND game_id=' . $player->getGameID() . '
-					AND alliance_id='.$alliancePlayer->getAllianceID().'
-					LIMIT 1'
-					);
+					WHERE account_id=' . $db->escapeNumber($alliancePlayer->getAccountID()) . '
+					AND game_id=' . $db->escapeNumber($player->getGameID()) . '
+					AND alliance_id=' . $db->escapeNumber($alliancePlayer->getAllianceID()) . '
+					LIMIT 1');
 
-		if ($db2->nextRecord())
-			$role_id = $db2->getField('role_id');
-		else
+		if ($db2->nextRecord()) {
+			$role_id = $db2->getInt('role_id');
+		}
+		else {
 			$role_id = 0;
+		}
 
-		if ($allowed && $alliancePlayer->getAccountID() != $alliance->getLeaderID())
-		{
+		if ($allowed && $alliancePlayer->getAccountID() != $alliance->getLeaderID()) {
 			$PHP_OUTPUT.= '<select name="role[' . $alliancePlayer->getAccountID() . ']" id="InputFields">';
-			foreach ($roles as $curr_role_id => $role)
-			{
+			foreach ($roles as $curr_role_id => $role) {
 				$PHP_OUTPUT.= '<option value="' . $curr_role_id .'"';
-				if ($curr_role_id == $role_id) $PHP_OUTPUT.= ' selected="selected"';
+				if ($curr_role_id == $role_id) {
+					$PHP_OUTPUT.= ' selected="selected"';
+				}
 				$PHP_OUTPUT.= '>';
 				$PHP_OUTPUT.= stripslashes($role);
 				$PHP_OUTPUT.= '</option>';
@@ -216,19 +223,16 @@ foreach($alliancePlayers as &$alliancePlayer)
 $PHP_OUTPUT.= '</table>';
 $PHP_OUTPUT.= '</div>';
 
-if ($alliance->getAllianceID() == $player->getAllianceID())
-{
+if ($alliance->getAllianceID() == $player->getAllianceID()) {
 	$PHP_OUTPUT.= '<br /><h2>Options</h2><br />';
 	$container=array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'alliance_roster.php';
-	if($varAction == '' || $varAction == 'Hide Alliance Roles')
-	{
+	if($varAction == '' || $varAction == 'Hide Alliance Roles') {
 		$container['action'] = 'Show Alliance Roles';
 		$PHP_OUTPUT.=create_button($container,'Show Alliance Roles');
 	}
-	else
-	{
+	else {
 		$PHP_OUTPUT.= $form['submit'];
 		$PHP_OUTPUT.= '&nbsp;&nbsp;';
 		$container['action'] = 'Hide Alliance Roles';
@@ -237,8 +241,7 @@ if ($alliance->getAllianceID() == $player->getAllianceID())
 	}
 }
 
-if (($canJoin = $alliance->canJoinAlliance($player)) === true)
-{
+if (($canJoin = $alliance->canJoinAlliance($player)) === true) {
 	$PHP_OUTPUT.= '<br />';
 	$container = array();
 	$container['url'] = 'alliance_join_processing.php';
@@ -250,8 +253,7 @@ if (($canJoin = $alliance->canJoinAlliance($player)) === true)
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form>';
 }
-else if($canJoin !== false)
-{
+else if($canJoin !== false) {
 	$PHP_OUTPUT.= '<br />';
 	$PHP_OUTPUT .= $canJoin;
 }
