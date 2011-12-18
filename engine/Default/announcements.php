@@ -10,19 +10,16 @@ if (!isset($var['view_all'])) {
 				FROM announcement
 				JOIN account ON announcement.admin_id=account.account_id
 				AND time > ' . $account->getLastLogin() . '
-				ORDER BY time DESC'
-				);
+				ORDER BY time DESC');
 }
 else {
 	$db->query('SELECT time, login, msg
 				FROM announcement
 				JOIN account ON announcement.admin_id=account.account_id
-				ORDER BY time DESC'
-				);
+				ORDER BY time DESC');
 }
 
 while ($db->nextRecord()) {
-
 	$PHP_OUTPUT.= '<tr>';
 	$PHP_OUTPUT.= '<td class="shrink top noWrap">';
 	//$PHP_OUTPUT.=  $db->getField('login');
@@ -35,9 +32,7 @@ while ($db->nextRecord()) {
 
 $PHP_OUTPUT.= '</table><br />';
 
-$container = array();
-$container['url'] = 'logged_in.php';
-$container['body'] = '';
+$container = create_container('logged_in.php');
 $PHP_OUTPUT.=create_button($container,'Select a Game!');
 
 ?>
