@@ -230,12 +230,14 @@ function NPCStuff()
 
 					// figure out if the selected alliance already exist
 					$db->query('SELECT alliance_id FROM alliance WHERE alliance_name='.$db->escapeString($NPC_LOGIN['AllianceName']).' AND game_id='.$db->escapeNumber(SmrSession::$game_id));
-					if ($db->nextRecord())
+					if ($db->nextRecord()) {
 						processContainer(joinAlliance($db->getField('alliance_id'),'*--NPCS--*'));
-					else
+					}
+					else {
 						processContainer(createAlliance($NPC_LOGIN['AllianceName'],'*--NPCS--*'));
+					}
 				}
-				if($player->getTurns()<=mt_rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection()))
+				if($player->getTurns() <= mt_rand($player->getMaxTurns() / 2, $player->getMaxTurns()) && ($player->hasNewbieTurns() || $player->hasFederalProtection()))
 				{
 					debug('We don\'t have enough turns to bother starting trading, and we are protected: '.$player->getTurns());
 					changeNPCLogin();
@@ -288,12 +290,14 @@ function NPCStuff()
 				debug('Follow Course: '.$player->getPlottedCourse()->getNextOnPath());
 				processContainer(moveToSector($player,$player->getPlottedCourse()->getNextOnPath()));
 			}
-			else if($player->getTurns()<NPC_LOW_TURNS || $player->getNewbieTurns()<NPC_LOW_NEWBIE_TURNS || $underAttack)
+			else if($player->getTurns()<NPC_LOW_TURNS || ($player->getTurns() < $player->getMaxTurns() / 2 && $player->getNewbieTurns()<NPC_LOW_NEWBIE_TURNS) || $underAttack)
 			{ //We're low on turns or have been under attack and need to plot course to fed
-				if($player->getTurns()<NPC_LOW_TURNS)
+				if($player->getTurns()<NPC_LOW_TURNS) {
 					debug('Low Turns:'.$player->getTurns());
-				if($underAttack)
+				}
+				if($underAttack) {
 					debug('Fedding after attack.');
+				}
 				if($player->hasNewbieTurns())
 				{ //We have newbie turns, we can just wait here.
 					debug('We have newbie turns, let\'s just switch to another NPC.');
