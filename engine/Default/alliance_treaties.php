@@ -23,7 +23,7 @@ $types = array	(
 	),
 	'napForces' => array(
 		'Non Aggression - Forces',
-		'Cease Fire against Forces.  Also allows refreshing of allied forces.'
+		'Cease Fire against Forces. Also allows refreshing of allied forces.'
 	),
 	'aaAccess' => array(
 		'Alliance Account Access',
@@ -68,7 +68,7 @@ while ($db->nextRecord()) {
 	$template->assign('PageTopic','Treaty Offers');
 	$PHP_OUTPUT.=('Treaty offer from <span class="yellow">');
 	$PHP_OUTPUT.=($temp[$db->getInt('alliance_id_1')]);
-	$PHP_OUTPUT.=('</span>.  Terms as follows:<br /><ul>');
+	$PHP_OUTPUT.=('</span>. Terms as follows:<br /><ul>');
 	if ($db->getBoolean('trader_assist')) {
 		$PHP_OUTPUT.=('<li>Assist - Trader Attacks</li>');
 	}

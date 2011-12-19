@@ -75,7 +75,7 @@ if ($reply_id == 1) {
 	}
 
 	$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic, alliance_only)
-			   VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeString($topic) . ', ' . $db->escapeString($allEyesOnly) . ')');
+				VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($thread_id) . ', ' . $db->escapeString($topic) . ', ' . $db->escapeString($allEyesOnly) . ')');
 }
 
 // and the body

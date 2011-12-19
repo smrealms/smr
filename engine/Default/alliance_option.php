@@ -60,7 +60,7 @@ if ($db->getBoolean('exempt_with')) {
 	$PHP_OUTPUT.= '<br /><br /><b><big>';
 	$container['body'] = 'alliance_exempt_authorize.php';
 	$PHP_OUTPUT.=create_link($container,'Exempt Bank Transactions');
-	$PHP_OUTPUT.= '</big></b><br />Here you can set certain alliance account transactions as exempt.  This makes them not count against, or for, the player making the transaction in the bank report.';
+	$PHP_OUTPUT.= '</big></b><br />Here you can set certain alliance account transactions as exempt. This makes them not count against, or for, the player making the transaction in the bank report.';
 }
 if ($db->getBoolean('treaty_entry')) {
 	$PHP_OUTPUT.= '<br /><br /><b><big>';

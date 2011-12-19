@@ -31,8 +31,8 @@ if (!isset($var['role_id'])) {
 	// get last id
 	$db->query('SELECT MAX(role_id)
 				FROM alliance_has_roles
-				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND
-					  alliance_id = ' . $db->escapeNumber($alliance_id));
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND alliance_id = ' . $db->escapeNumber($alliance_id));
 	if ($db->nextRecord()) {
 		$role_id = $db->getInt('MAX(role_id)') + 1;
 	}
@@ -72,9 +72,9 @@ else {
 					exempt_with = ' . $db->escapeBoolean($exemptWith) . ',
 					mb_messages = ' . $db->escapeBoolean($mbMessages) . ',
 					send_alliance_msg = ' . $db->escapeBoolean($sendAllMsg) . '
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND
-						  alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND
-						  role_id = ' . $db->escapeNumber($var['role_id']));
+					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+						AND alliance_id = ' . $db->escapeNumber($alliance_id) . '
+						AND role_id = ' . $db->escapeNumber($var['role_id']));
 
 	}
 

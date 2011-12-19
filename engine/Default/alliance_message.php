@@ -54,7 +54,7 @@ if ($db->getNumRows() > 0) {
 		
 		$db2->query('SELECT time
 					FROM player_read_thread 
-					WHERE account_id=' . $db->escapeNumber($player->getAccountID())  . '
+					WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . '
 					AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id =' . $db->escapeNumber($alliance->getAllianceID()) . '
 					AND thread_id=' . $db->escapeNumber($db->getInt('thread_id')) . ' 

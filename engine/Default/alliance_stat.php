@@ -37,7 +37,7 @@ if ($db->getBoolean('change_mod') || $account->hasPermission(PERMISSION_EDIT_ALL
 	$PHP_OUTPUT.= '</textarea></td></tr>';
 }
 if ($player->isAllianceLeader()) {
-	$PHP_OUTPUT.= '<tr><td class="top">IRC Channel:&nbsp;</td><td><input type="text" name="irc" size="30" value="'.htmlspecialchars($alliance->getIrcChannel()).'">  (For Caretaker and autojoining via chat link - works best if you join the channel using the chat link and type "/autoconnect on" as an op)</td></tr>';
+	$PHP_OUTPUT.= '<tr><td class="top">IRC Channel:&nbsp;</td><td><input type="text" name="irc" size="30" value="'.htmlspecialchars($alliance->getIrcChannel()).'"> (For Caretaker and autojoining via chat link - works best if you join the channel using the chat link and type "/autoconnect on" as an op)</td></tr>';
 }
 if ($db->getBoolean('change_mod')) {
 	$PHP_OUTPUT.= '<tr><td class="top">Image URL:&nbsp;</td><td><input type="text" name="url" size="30" value="'.htmlspecialchars($alliance->getImageURL()).'"></td></tr>';
