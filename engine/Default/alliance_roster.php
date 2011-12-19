@@ -30,7 +30,7 @@ if ($varAction == 'Show Alliance Roles') {
 	$db->query('SELECT role_id, role
 				FROM alliance_has_roles
 				WHERE game_id=' . $alliance->getGameID() . '
-				AND alliance_id=' .  $alliance->getAllianceID() . '
+				AND alliance_id=' . $alliance->getAllianceID() . '
 				ORDER BY role_id'
 				);
 	while ($db->nextRecord()) {

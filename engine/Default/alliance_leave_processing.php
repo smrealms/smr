@@ -7,8 +7,7 @@ if ($action == 'YES') {
 		create_error('You are the leader! You must hand over leadership first!');
 	}
 	$player->leaveAlliance();
-	//$db->query('DELETE FROM alliance WHERE alliance_id = '.$player->getAllianceID().' AND ' .
-										  //'game_id = '.$player->getGameID());
+	//$db->query('DELETE FROM alliance WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID());
 	$db->query('DELETE FROM alliance_bank_transactions
 				WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()));
