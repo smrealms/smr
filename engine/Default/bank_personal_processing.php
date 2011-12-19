@@ -1,22 +1,25 @@
 <?php
 $amount = $_REQUEST['amount'];
-if (!is_numeric($amount))
+if (!is_numeric($amount)) {
 	create_error('Numbers only!');
+}
 $action = $_REQUEST['action'];
-if (!isset($action) || ($action != 'Deposit' && $action != 'Withdraw'))
+if (!isset($action) || ($action != 'Deposit' && $action != 'Withdraw')) {
 	create_error('You must choose if you want to deposit or withdraw.');
+}
 
 // only whole numbers allowed
 $amount = floor($amount);
 
 // no negative amounts are allowed
-if ($amount <= 0)
+if ($amount <= 0) {
 	create_error('You must actually enter an amount > 0!');
+}
 
 if ($action == 'Deposit') {
-
-	if ($player->getCredits() < $amount)
+	if ($player->getCredits() < $amount) {
 		create_error('You don\'t own that much money!');
+	}
 
 	$player->decreaseCredits($amount);
 	$player->increaseBank($amount);
@@ -31,20 +34,21 @@ if ($action == 'Deposit') {
 	$player->update();
 
 	// log action
-	$account->log(LOG_TYPE_BANK, 'Deposits '.$amount.' credits in personal account', $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Deposits ' . $amount . ' credits in personal account', $player->getSectorID());
 
-} else {
+}
+else {
 
-	if ($player->getBank() < $amount)
+	if ($player->getBank() < $amount) {
 		create_error('You don\'t have that much money on your account!');
+	}
 
 	$player->decreaseBank($amount);
 	$player->increaseCredits($amount);
 	$player->update();
 
 	// log action
-	$account->log(LOG_TYPE_BANK, 'Takes '.$amount.' credits from personal account', $player->getSectorID());
-
+	$account->log(LOG_TYPE_BANK, 'Takes ' . $amount . ' credits from personal account', $player->getSectorID());
 }
 
 forward(create_container('skeleton.php', 'bank_personal.php'));
