@@ -28,7 +28,7 @@ if (!empty($donation))
     // add the credits to the players account - if requested
     if (!empty($smr_credit))
     {
-    	$curr_account->increaseSmrCredits($donation);
+    	$curr_account->increaseSmrCredits($donation * CREDITS_PER_DOLLAR);
 	}
 
 	$msg .= 'added $'.$donation;

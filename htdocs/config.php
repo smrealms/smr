@@ -168,7 +168,8 @@ $MESSAGES_PER_CREDIT = array(
 	MSG_ADMIN => 50
 );
 
-define('CREDITS_PER_NAME_CHANGE',2);
+define('CREDITS_PER_NAME_CHANGE', 2);
+define('CREDITS_PER_DOLLAR', 1);
 
 /*
  * Movement
