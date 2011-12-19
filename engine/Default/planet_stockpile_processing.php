@@ -4,7 +4,7 @@ if (!$player->isLandedOnPlanet())
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))
 	create_error('Numbers only please');
-    
+	
 $amount = floor($amount);
 
 if ($amount <= 0)

@@ -18,8 +18,8 @@ if ($db->getNumRows() > 0 )
 		$shipTypeID = $db->getField('ship_type_id');
 		$shipsSold[$shipTypeID] =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipTypeID);
 		$container['ship_id'] = $shipTypeID;
-        $container['level_needed'] = $shipsSold[$shipTypeID]['Level'];
-        $shipsSoldHREF[$shipTypeID] = SmrSession::get_new_href($container);
+		$container['level_needed'] = $shipsSold[$shipTypeID]['Level'];
+		$shipsSoldHREF[$shipTypeID] = SmrSession::get_new_href($container);
 	}
 }
 $template->assign('ShipsSold',$shipsSold);

@@ -7,7 +7,7 @@ if ($action == 'Buy')
 	$cant_buy = $var['cant_buy'];
 
 	if ($cant_buy == 'Yes')
-    	create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
+		create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
 	
 	// do we have enough cash?
 	if ($player->getCredits() < $cost)
@@ -17,7 +17,7 @@ if ($action == 'Buy')
 	if ($ship->check_power_level($power_level) == 0)
 		create_error('Your ship doesn\'t have enough power to support that weapon!');
 
-    if ($ship->getOpenWeaponSlots() < 1)
+	if ($ship->getOpenWeaponSlots() < 1)
 		create_error('You can\'t buy any more weapon!');
 
 	if ($var['buyer_restriction'] == 2 && $player->getAlignment() > -100)

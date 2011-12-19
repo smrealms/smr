@@ -16,8 +16,8 @@ for ($i = 0; $i < strlen($player_name); $i++) {
 // Letters 65..90
 // letters 97..122
 	if (!((ord($player_name[$i]) >= 48 && ord($player_name[$i]) <= 57) ||
-		  (ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
-		  (ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122))) {
+		(ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
+		(ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122))) {
 		$limited_char += 1;
 	}
 }
@@ -59,8 +59,8 @@ if (!$db->nextRecord())
 // put him in a sector with a hq
 $hq_id = $race_id + 101;
 $db->query('SELECT * FROM location JOIN sector USING(game_id, sector_id) ' .
-		   'WHERE game_id = ' . $gameID . ' AND ' .
-		   'location_type_id = '.$hq_id);
+		'WHERE game_id = ' . $gameID . ' AND ' .
+		'location_type_id = '.$hq_id);
 if ($db->nextRecord())
 	$home_sector_id = $db->getField('sector_id');
 else
@@ -136,16 +136,16 @@ $db->unlock();
 
 // give the player shields
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								   'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 1, '.$amount_shields.', '.$amount_shields.')');
+								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 1, '.$amount_shields.', '.$amount_shields.')');
 // give the player armour
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								   'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 2, '.$amount_armour.', '.$amount_armour.')');
+								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 2, '.$amount_armour.', '.$amount_armour.')');
 // give the player cargo hold
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								   'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 3, 40, 40)');
+								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 3, 40, 40)');
 // give the player weapons
 $db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-								 'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 0, 46)');
+								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 0, 46)');
 
 // insert the huge amount of sectors into the database :)
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
@@ -159,11 +159,11 @@ $max_sector = $db->getInt('MAX(sector_id)');
 
 for ($i = $min_sector; $i <= $max_sector; $i++)
 {
-    //if this is our home sector we dont add it.
-    if ($i == $home_sector_id)
-        continue;
+	//if this is our home sector we dont add it.
+	if ($i == $home_sector_id)
+		continue;
 
-    $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ', '.$i.')');
+	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ', '.$i.')');
 }
 $db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ')');
 

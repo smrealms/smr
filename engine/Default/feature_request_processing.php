@@ -7,7 +7,7 @@ if (empty($_REQUEST['feature']))
 $db->query('INSERT INTO feature_request (feature_request_id) VALUES (NULL)');
 $featureRequestID = $db->getInsertID();
 $db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text) ' .
-								 'VALUES(' . $db->escapeNumber($featureRequestID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeBoolean(isset($_REQUEST['anon'])) . ',' . $db->escapeString(word_filter($_REQUEST['feature'])).')');
+								'VALUES(' . $db->escapeNumber($featureRequestID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeBoolean(isset($_REQUEST['anon'])) . ',' . $db->escapeString(word_filter($_REQUEST['feature'])).')');
 
 // vote for this feature
 $db->query('INSERT INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$featureRequestID.',\'YES\')');

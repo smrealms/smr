@@ -14,9 +14,9 @@ $message = 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
 	'Time spent on beta: '.$_REQUEST['time'].EOL.EOL.'-----------'.EOL.EOL.
 	'Online time: '.$_REQUEST['online'];
 //mail('beta@smrealms.de',
-//	 $new_sub,
-//	 $message,
-//	 'From: '.$account->getEmail());
+//	$new_sub,
+//	$message,
+//	'From: '.$account->getEmail());
 $player->sendMessageToBox(BOX_BETA_APPLICATIONS, $message);
 
 $container = array();

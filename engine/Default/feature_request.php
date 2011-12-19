@@ -64,17 +64,17 @@ if ($db->getNumRows() > 0)
 		if($var['Status'] == 'Opened')
 		{
 			$db2->query('SELECT COUNT(*), vote_type ' .
-						  'FROM account_votes_for_feature ' .
-						  'WHERE feature_request_id='.$featureRequestID .
-						  ' GROUP BY vote_type');
+						'FROM account_votes_for_feature ' .
+						'WHERE feature_request_id='.$featureRequestID .
+						' GROUP BY vote_type');
 			while($db2->nextRecord())
 			{
 				$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getInt('COUNT(*)');
 			}
 		}
 		$db2->query('SELECT COUNT(*) ' .
-					  'FROM feature_request_comments ' .
-					  'WHERE feature_request_id='.$featureRequestID);
+					'FROM feature_request_comments ' .
+					'WHERE feature_request_id='.$featureRequestID);
 		while($db2->nextRecord())
 		{
 			$featureRequests[$featureRequestID]['Comments'] = $db2->getInt('COUNT(*)');

@@ -44,7 +44,7 @@ else if ($action == 'Save and resend validation code')
 
 	// remember when we sent validation code
 	$db->query('REPLACE INTO notification (notification_type, account_id, time) ' .
-									 'VALUES(\'validation_code\', '.$account->getAccountID().', ' . TIME . ')');
+									'VALUES(\'validation_code\', '.$account->getAccountID().', ' . TIME . ')');
 
 	mail($email, 'Your validation code!',
 		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
@@ -91,8 +91,8 @@ elseif ($action == 'Change Name')
 		// Letters 65..90
 		// letters 97..122
 		if (!((ord($HoF_name[$i]) >= 48 && ord($HoF_name[$i]) <= 57) ||
-			  (ord($HoF_name[$i]) >= 65 && ord($HoF_name[$i]) <= 90) ||
-			  (ord($HoF_name[$i]) >= 97 && ord($HoF_name[$i]) <= 122)))
+			(ord($HoF_name[$i]) >= 65 && ord($HoF_name[$i]) <= 90) ||
+			(ord($HoF_name[$i]) >= 97 && ord($HoF_name[$i]) <= 122)))
 		{
 			$limited_char += 1;
 		}
@@ -252,8 +252,8 @@ else if (strpos(trim($action),'Alter Player')===0)
 		// Letters 65..90
 		// letters 97..122
 		if (!((ord($player_name[$i]) >= 48 && ord($player_name[$i]) <= 57) ||
-			  (ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
-			  (ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122)))
+			(ord($player_name[$i]) >= 65 && ord($player_name[$i]) <= 90) ||
+			(ord($player_name[$i]) >= 97 && ord($player_name[$i]) <= 122)))
 		{
 			$limited_char += 1;
 		}

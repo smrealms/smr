@@ -9,19 +9,19 @@ if ($game['GameCreditsRequired'] > 0)
 {
 	// do we have enough
 	if ($account->getTotalSmrCredits() < $game['GameCreditsRequired'])
-	    create_error('Sorry you do not have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR.');
+		create_error('Sorry you do not have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR.');
 }
 
 // is the game already full?
 $db->query('SELECT count(*) FROM player WHERE game_id = ' . $var['game_id']);
 if ($db->nextRecord() && $db->getInt('count(*)') >= $game['GameMaxPlayers'])
-    create_error('The maximum number of players in that game is reached!');
+	create_error('The maximum number of players in that game is reached!');
 
 //if (TIME < $game['StartDate'])
-//    create_error('You want to join a game that hasn\'t started yet?');
+//	create_error('You want to join a game that hasn\'t started yet?');
 
 if (TIME > $game['EndDate'])
-    create_error('You want to join a game that is already over?');
+	create_error('You want to join a game that is already over?');
 
 $template->assign('PageTopic', 'Join Game');
 
@@ -30,14 +30,14 @@ $raceDescriptions='';
 $first = true;
 foreach($raceInfo as $race)
 {
-    if ($first)
-    {
-        $raceDescriptions.=('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
-        $first = false;
+	if ($first)
+	{
+		$raceDescriptions.=('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
+		$first = false;
 
-    }
-    else
-        $raceDescriptions.=(', \'' . str_replace('\'','\\\'',$race['Description']) . '\'');
+	}
+	else
+		$raceDescriptions.=(', \'' . str_replace('\'','\\\'',$race['Description']) . '\'');
 }
 $template->assign('RaceDescriptions',$raceDescriptions);
 
@@ -56,8 +56,8 @@ $only = array();
 $db->query('SELECT location_name, location_type_id
 			FROM location JOIN location_type USING(location_type_id)
 			WHERE location_type_id > '.UNDERGROUND.' AND
-				  location_type_id < '.FED.' AND
-				  game_id = ' . $var['game_id'] . '
+				location_type_id < '.FED.' AND
+				game_id = ' . $var['game_id'] . '
 			ORDER BY location_type_id');
 $races = array();
 $selectedRace = mt_rand(1,$db->getNumRows());

@@ -70,28 +70,28 @@ $PHP_OUTPUT.=('</table>');
 $action = $_REQUEST['action'];
 if ($action == 'Show')
 {
-    $min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-    $max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	SmrSession::updateVar('MinRank',$min_rank);
 	SmrSession::updateVar('MaxRank',$max_rank);
 }
 elseif(isset($var['MinRank'])&&isset($var['MaxRank']))
 {
-    $min_rank = $var['MinRank'];
-    $max_rank = $var['MaxRank'];
+	$min_rank = $var['MinRank'];
+	$max_rank = $var['MaxRank'];
 }
 else
 {
-    $min_rank = $ourRank - 5;
-    $max_rank = $ourRank + 5;
+	$min_rank = $ourRank - 5;
+	$max_rank = $ourRank + 5;
 }
 if ($min_rank <= 0)
 {
-    $min_rank = 1;
-    $max_rank = 10;
+	$min_rank = 1;
+	$max_rank = 10;
 }
 if ($max_rank > $numAlliances)
-    $max_rank = $numAlliances;
+	$max_rank = $numAlliances;
 
 $container = create_container('skeleton.php','rankings_alliance_experience.php');
 $container['min_rank']	= $min_rank;

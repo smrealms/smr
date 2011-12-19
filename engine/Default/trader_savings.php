@@ -9,13 +9,13 @@ $PHP_OUTPUT.=('<br /><br />');
 $db->query('SELECT * FROM anon_bank WHERE owner_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID());
 if ($db->getNumRows())
 {
-    $PHP_OUTPUT.=('You own the following accounts<br /><br />');
+	$PHP_OUTPUT.=('You own the following accounts<br /><br />');
 	while ($db->nextRecord())
 	{
 		$acc_id = $db->getField('anon_id');
-    	$pass = $db->getField('password');
-	    $PHP_OUTPUT.=('Account <span class="yellow">'.$acc_id.'</span> with password <span class="yellow">'.$pass.'</span><br />');
-    }
+		$pass = $db->getField('password');
+		$PHP_OUTPUT.=('Account <span class="yellow">'.$acc_id.'</span> with password <span class="yellow">'.$pass.'</span><br />');
+	}
 }
 else
 	$PHP_OUTPUT.=('You own no anonymous accounts<br />');

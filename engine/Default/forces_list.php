@@ -83,10 +83,10 @@ else
 
 function setCategories(&$container,$newCategory,$oldCategory,$oldCategorySQL,$subcategory)
 {
-    $container['category'] = $newCategory;
-    if($oldCategory==$container['category'])
+	$container['category'] = $newCategory;
+	if($oldCategory==$container['category'])
 		$container['subcategory'] = $subcategory;
-    else
+	else
 		$container['subcategory'] = $oldCategorySQL;
 }
 ?>

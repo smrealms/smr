@@ -4,12 +4,12 @@ if (isset($var['owner_id']))
 {
 	$owner =& SmrPlayer::getPlayer($var['owner_id'], $player->getGameID());
 	$template->assign('PageTopic','Change '.$owner->getPlayerName().'\'s Forces');
-    $owner_id = $var['owner_id'];
+	$owner_id = $var['owner_id'];
 }
 else
 {
 	$template->assign('PageTopic','Drop Forces');
-    $owner_id = $player->getAccountID();
+	$owner_id = $player->getAccountID();
 }
 
 require_once(get_file_loc('SmrForce.class.inc'));

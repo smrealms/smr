@@ -34,7 +34,7 @@ if(!isset($var['ClaimText']))
 			// no interest on bounties
 			// $time = TIME;
 			// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
-	    	// $amount = round($db->getField('amount') * pow(1.05,$days));
+			// $amount = round($db->getField('amount') * pow(1.05,$days));
 	
 			// add bounty to our cash
 			$player->increaseCredits($amount);
@@ -49,9 +49,9 @@ if(!isset($var['ClaimText']))
 	
 			// delete bounty
 			$db2->query('DELETE FROM bounty
-						 WHERE game_id = '.$player->getGameID().' AND
-						 	   claimer_id = '.$player->getAccountID().' AND
-						 	   bounty_id = '.$bounty_id);
+						WHERE game_id = '.$player->getGameID().'
+							AND claimer_id = '.$player->getAccountID().'
+							AND bounty_id = '.$bounty_id);
 		}
 	}
 	else

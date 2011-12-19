@@ -43,8 +43,8 @@ else create_ug_menu();
 $bounty_guy =& SmrPlayer::getPlayerByPlayerID($playerID, $player->getGameID());
 
 $PHP_OUTPUT.=('Are you sure you want to place a <span class="creds">' . number_format($amount) .
-	  '</span> credits and <span class="yellow">' . number_format($smrCredits) .
-	  '</span> SMR credits bounty on <span class="yellow">'.$bounty_guy->getPlayerName().'</span>?');
+	'</span> credits and <span class="yellow">' . number_format($smrCredits) .
+	'</span> SMR credits bounty on <span class="yellow">'.$bounty_guy->getPlayerName().'</span>?');
 
 $container = array();
 $container['url'] = 'bounty_place_processing.php';

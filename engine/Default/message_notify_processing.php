@@ -9,9 +9,9 @@ if (empty($var['message_id']))
 // get next id
 $db->query('SELECT max(notify_id) FROM message_notify WHERE game_id = '.$player->getGameID().' ORDER BY notify_id DESC');
 if ($db->nextRecord())
-    $notify_id = $db->getField('max(notify_id)') + 1;
+	$notify_id = $db->getField('max(notify_id)') + 1;
 else
-    $notify_id = 1;
+	$notify_id = 1;
 
 // get message form db
 $db->query('SELECT account_id, sender_id, message_text

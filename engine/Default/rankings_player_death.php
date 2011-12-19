@@ -7,8 +7,8 @@ create_ranking_menu(0, 2);
 
 // what rank are we?
 $db->query('SELECT count(*) FROM player WHERE game_id = '.$player->getGameID().' AND ' .
-                                      '(deaths > '.$player->getDeaths().' OR ' .
-                                      '(deaths = '.$player->getDeaths().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
+									'(deaths > '.$player->getDeaths().' OR ' .
+									'(deaths = '.$player->getDeaths().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
 $db->nextRecord();
 $our_rank = $db->getInt('count(*)');
 
@@ -35,76 +35,76 @@ $db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' ORDER 
 $rank = 0;
 while ($db->nextRecord())
 {
-    // get current account and player
-    $curr_account =& SmrAccount::getAccount($db->getField('account_id'));
-    $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
+	// get current account and player
+	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
+	$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
-    // increase rank counter
-    $rank++;
+	// increase rank counter
+	$rank++;
 
-    $class='';
-    if ($player->equals($curr_player))
-        $class .= 'bold';
-    if($curr_account->isNewbie())
-        $class.= ' newbie';
-    if($class!='')
-        $class = ' class="'.trim($class).'"';
-    $PHP_OUTPUT.= '<tr'.$class.'>';
+	$class='';
+	if ($player->equals($curr_player))
+		$class .= 'bold';
+	if($curr_account->isNewbie())
+		$class.= ' newbie';
+	if($class!='')
+		$class = ' class="'.trim($class).'"';
+	$PHP_OUTPUT.= '<tr'.$class.'>';
 
-    $PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
-    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
+	$PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
+	$PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
 
-    $container = array();
-    $container['url']        = 'skeleton.php';
-    $container['body']        = 'trader_search_result.php';
-    $container['player_id'] = $curr_player->getPlayerID();
-    $PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
+	$container = array();
+	$container['url']		= 'skeleton.php';
+	$container['body']		= 'trader_search_result.php';
+	$container['player_id'] = $curr_player->getPlayerID();
+	$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 
-    $PHP_OUTPUT.=('</td>');
+	$PHP_OUTPUT.=('</td>');
 	$container = create_container('skeleton.php', 'council_list.php');
 	$container['race_id'] = $curr_player->getRaceID();
 	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
 
-    $PHP_OUTPUT.=('<td valign="top">');
-    if ($curr_player->hasAlliance())
-    {
-        $PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
-    }
-    else
-        $PHP_OUTPUT.=('(none)');
-    $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getDeaths()) . '</td>');
-    $PHP_OUTPUT.=('</tr>');
+	$PHP_OUTPUT.=('<td valign="top">');
+	if ($curr_player->hasAlliance())
+	{
+		$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
+	}
+	else
+		$PHP_OUTPUT.=('(none)');
+	$PHP_OUTPUT.=('</td>');
+	$PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getDeaths()) . '</td>');
+	$PHP_OUTPUT.=('</tr>');
 }
 
 $PHP_OUTPUT.=('</table>');
 $action = $_REQUEST['action'];
 if ($action == 'Show' && is_numeric($_REQUEST['min_rank'])&&is_numeric($_REQUEST['max_rank']))
 {
-    $min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-    $max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	SmrSession::updateVar('MinRank',$min_rank);
 	SmrSession::updateVar('MaxRank',$max_rank);
 }
 elseif(isset($var['MinRank'])&&isset($var['MaxRank']))
 {
-    $min_rank = $var['MinRank'];
-    $max_rank = $var['MaxRank'];
+	$min_rank = $var['MinRank'];
+	$max_rank = $var['MaxRank'];
 }
 else
 {
-    $min_rank = $our_rank - 5;
-    $max_rank = $our_rank + 5;
+	$min_rank = $our_rank - 5;
+	$max_rank = $our_rank + 5;
 }
 
 if ($min_rank <= 0)
 {
-    $min_rank = 1;
-    $max_rank = 10;
+	$min_rank = 1;
+	$max_rank = 10;
 }
 
 if ($max_rank > $total_player)
-    $max_rank = $total_player;
+	$max_rank = $total_player;
 
 $container = array();
 $container['url']		= 'skeleton.php';
@@ -130,46 +130,46 @@ $db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' ORDER 
 $rank = $min_rank - 1;
 while ($db->nextRecord())
 {
-    // get current account and player
-    $curr_account =& SmrAccount::getAccount($db->getField('account_id'));
-    $curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
+	// get current account and player
+	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
+	$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
-    // increase rank counter
-    $rank++;
+	// increase rank counter
+	$rank++;
 
-    $class='';
-    if ($player->equals($curr_player))
-        $class .= 'bold';
-    if($curr_account->isNewbie())
-        $class.= ' newbie';
-    if($class!='')
-        $class = ' class="'.trim($class).'"';
-    $PHP_OUTPUT.= '<tr'.$class.'>';
+	$class='';
+	if ($player->equals($curr_player))
+		$class .= 'bold';
+	if($curr_account->isNewbie())
+		$class.= ' newbie';
+	if($class!='')
+		$class = ' class="'.trim($class).'"';
+	$PHP_OUTPUT.= '<tr'.$class.'>';
 
-    $PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
-    $PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
+	$PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
+	$PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
 
-    $container = array();
-    $container['url']        = 'skeleton.php';
-    $container['body']        = 'trader_search_result.php';
-    $container['player_id'] = $curr_player->getPlayerID();
-    $PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
+	$container = array();
+	$container['url']		= 'skeleton.php';
+	$container['body']		= 'trader_search_result.php';
+	$container['player_id'] = $curr_player->getPlayerID();
+	$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 
-    $PHP_OUTPUT.=('</td>');
+	$PHP_OUTPUT.=('</td>');
 	$container = create_container('skeleton.php', 'council_list.php');
 	$container['race_id'] = $curr_player->getRaceID();
 	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
 
-    $PHP_OUTPUT.=('<td valign="top">');
-    if ($curr_player->hasAlliance())
-    {
-        $PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
-    }
-    else
-        $PHP_OUTPUT.=('(none)');
-    $PHP_OUTPUT.=('</td>');
-    $PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getDeaths()) . '</td>');
-    $PHP_OUTPUT.=('</tr>');
+	$PHP_OUTPUT.=('<td valign="top">');
+	if ($curr_player->hasAlliance())
+	{
+		$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
+	}
+	else
+		$PHP_OUTPUT.=('(none)');
+	$PHP_OUTPUT.=('</td>');
+	$PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getDeaths()) . '</td>');
+	$PHP_OUTPUT.=('</tr>');
 }
 
 $PHP_OUTPUT.=('</table>');

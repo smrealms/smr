@@ -49,8 +49,8 @@ $PHP_OUTPUT.=('</table>');
 $action = $_REQUEST['action'];
 if ($action == 'Show')
 {
-    $min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-    $max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 }
 else
 {

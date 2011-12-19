@@ -15,9 +15,9 @@ $account->log(LOG_TYPE_GAME_ENTERING, 'Player entered game '.SmrSession::$game_i
 
 $container = create_container('skeleton.php');
 if ($player->isLandedOnPlanet())
-    $container['body'] = 'planet_main.php';
+	$container['body'] = 'planet_main.php';
 else
-    $container['body'] = 'current_sector.php';
+	$container['body'] = 'current_sector.php';
 
 forward($container);
 ?>

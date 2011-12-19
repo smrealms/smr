@@ -47,7 +47,7 @@ else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' 
 	foreach($_REQUEST['delete'] as $featureID)
 	{
 		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
-				 	VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
+					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}
 			
 	forward(create_container('skeleton.php', 'feature_request.php'));

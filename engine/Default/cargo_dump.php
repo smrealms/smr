@@ -5,8 +5,8 @@ $PHP_OUTPUT.=('Enter the amount of cargo you wish to jettison.<br />');
 $PHP_OUTPUT.=('Please keep in mind that you will lose experience and one turn!<br /><br />');
 
 $db->query('SELECT * FROM ship_has_cargo JOIN good USING(good_id) ' .
-		   'WHERE account_id = '.$player->getAccountID().' AND ' .
-				 'game_id = '.$player->getGameID());
+		'WHERE account_id = '.$player->getAccountID().' AND ' .
+				'game_id = '.$player->getGameID());
 if ($db->getNumRows())
 {
 	$PHP_OUTPUT.=create_table();
