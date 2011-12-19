@@ -25,3 +25,4 @@
 
 # /lib/Login/
 /lib/Login/socialConfig.specific.inc
+/sys$command
