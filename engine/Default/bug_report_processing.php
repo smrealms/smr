@@ -7,15 +7,15 @@ $description = $_REQUEST['description'];
 $new_sub = '[Bug] '.$subject;
 
 $message = 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
-	 'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
-	 'Description: '.$description.EOL.EOL.'-----------'.EOL.EOL.
-	 'Steps to repeat: '.$steps.EOL.EOL.'-----------'.EOL.EOL.
-	 'Error Message: '.$error_msg;
-	 
+	'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
+	'Description: '.$description.EOL.EOL.'-----------'.EOL.EOL.
+	'Steps to repeat: '.$steps.EOL.EOL.'-----------'.EOL.EOL.
+	'Error Message: '.$error_msg;
+	
 //mail('bugs@smrealms.de',
-//	 $new_sub,
-//	 $message,
-//	 'From: '.$account->getEmail());
+//	$new_sub,
+//	$message,
+//	'From: '.$account->getEmail());
 
 if(is_object($player))
 	$player->sendMessageToBox(BOX_BUGS_REPORTED, $message);

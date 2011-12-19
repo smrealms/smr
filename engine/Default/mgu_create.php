@@ -92,9 +92,9 @@ while ($db->nextRecord())
 		continue;
 	}
 	$db2->query('SELECT * FROM player_visited_port ' .
-						  'WHERE account_id = '.$player->getAccountID().' AND ' .
-						  		'game_id = '.$game_id.' AND ' .
-						  		'sector_id = '.$sector_id.' LIMIT 1');
+						'WHERE account_id = '.$player->getAccountID().' AND ' .
+								'game_id = '.$game_id.' AND ' .
+								'sector_id = '.$sector_id.' LIMIT 1');
 
 	if ($db2->nextRecord())
 	{

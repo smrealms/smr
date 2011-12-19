@@ -74,11 +74,11 @@ else
 	<tr>
 	<td valign=top align=center>
 	<table>
-	<tr><td align=right>Name</td>           <td>&nbsp;</td><td align=left>'.$game_name.'</td></tr>
-	<tr><td align=right>Start Date</td>     <td>&nbsp;</td><td align=left>'.date(DATE_DATE_SHORT,$start).'</td></tr>
-	<tr><td align=right>End Date</td>       <td>&nbsp;</td><td align=left>'.date(DATE_DATE_SHORT,$end).'</td></tr>
-	<tr><td align=right>Game Type</td>      <td>&nbsp;</td><td align=left>'.$type.'</td></tr>
-	<tr><td align=right>Game Speed</td>     <td>&nbsp;</td><td align=left>'.$speed.'</td></tr>
+	<tr><td align=right>Name</td>		<td>&nbsp;</td><td align=left>'.$game_name.'</td></tr>
+	<tr><td align=right>Start Date</td>	<td>&nbsp;</td><td align=left>'.date(DATE_DATE_SHORT,$start).'</td></tr>
+	<tr><td align=right>End Date</td>	<td>&nbsp;</td><td align=left>'.date(DATE_DATE_SHORT,$end).'</td></tr>
+	<tr><td align=right>Game Type</td>	<td>&nbsp;</td><td align=left>'.$type.'</td></tr>
+	<tr><td align=right>Game Speed</td>	<td>&nbsp;</td><td align=left>'.$speed.'</td></tr>
 	</table>
 	</td>';
 	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC');
@@ -100,12 +100,12 @@ else
 	$PHP_OUTPUT.='
 	<td valign=top align=center>
 	<table>
-	<tr><td align=right>Players</td>           <td>&nbsp;</td><td align=left>'.$players.'</td></tr>
-	<tr><td align=right>Alliances</td>          <td>&nbsp;</td><td align=left>'.$alliances.'</td></tr>
+	<tr><td align=right>Players</td>		<td>&nbsp;</td><td align=left>'.$players.'</td></tr>
+	<tr><td align=right>Alliances</td>		<td>&nbsp;</td><td align=left>'.$alliances.'</td></tr>
 	<tr><td align=right>Highest Experience</td><td>&nbsp;</td><td align=left>'.$max_exp.'</td></tr>
 	<tr><td align=right>Highest Alignment</td> <td>&nbsp;</td><td align=left>'.$align.'</td></tr>
 	<tr><td align=right>Lowest Alignment</td><td>&nbsp;</td><td align=left>'.$align_low.'</td></tr>
-	<tr><td align=right>Highest Kills</td>     <td>&nbsp;</td><td align=left>'.$kills.'</td></tr>
+	<tr><td align=right>Highest Kills</td>	<td>&nbsp;</td><td align=left>'.$kills.'</td></tr>
 	</table>
 	</td>
 	</tr>

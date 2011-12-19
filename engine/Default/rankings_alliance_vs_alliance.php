@@ -47,9 +47,9 @@ foreach ($alliance_vs as $key => $id)
 			$PHP_OUTPUT.=(' class="bold"');
 		$PHP_OUTPUT.=('>');
 		/*$container = array();
-		$container['url']             = 'skeleton.php';
-		$container['body']             = 'alliance_roster.php';
-		$container['alliance_id']    = $curr_alliance_id;
+		$container['url']			= 'skeleton.php';
+		$container['body']			= 'alliance_roster.php';
+		$container['alliance_id']	= $curr_alliance_id;
 		$PHP_OUTPUT.=create_link($container, '.$db->escapeString($curr_alliance->getAllianceName()');*/
 		$PHP_OUTPUT.=('<select name="alliancer[]" style="width:105">');
 		$db->query('SELECT * FROM alliance WHERE game_id = '.$player->getGameID().' AND (alliance_deaths > 0 OR alliance_kills > 0) ORDER BY alliance_name');
@@ -88,9 +88,9 @@ foreach ($alliance_vs as $key => $id)
 			$PHP_OUTPUT.=(' class="red"');
 		$PHP_OUTPUT.=('>');
 		$container1 = array();
-		$container1['url']            = 'skeleton.php';
-		$container1['body']           = 'rankings_alliance_vs_alliance.php';
-		$container1['alliance_id']    = $curr_alliance->getAllianceID();
+		$container1['url']			= 'skeleton.php';
+		$container1['body']		= 'rankings_alliance_vs_alliance.php';
+		$container1['alliance_id']	= $curr_alliance->getAllianceID();
 		$PHP_OUTPUT.=create_link($container1, $curr_alliance->getAllianceName());
 		//$PHP_OUTPUT.=('.$db->escapeString($curr_alliance->getAllianceName()');
 		$PHP_OUTPUT.=('</td>');
@@ -98,9 +98,9 @@ foreach ($alliance_vs as $key => $id)
 	else
 	{
 		$container1 = array();
-		$container1['url']            = 'skeleton.php';
-		$container1['body']           = 'rankings_alliance_vs_alliance.php';
-		$container1['alliance_id']    = 0;
+		$container1['url']			= 'skeleton.php';
+		$container1['body']		= 'rankings_alliance_vs_alliance.php';
+		$container1['alliance_id']	= 0;
 		$PHP_OUTPUT.=('<td width=10% valign="top">');
 		$PHP_OUTPUT.=create_link($container1, 'None');
 		$PHP_OUTPUT.=('</td>');
@@ -148,7 +148,7 @@ foreach ($alliance_vs as $key => $id)
 		}
 		$PHP_OUTPUT.=('</td>');
 	}
-    $PHP_OUTPUT.=('</tr>');
+	$PHP_OUTPUT.=('</tr>');
 }
 
 $PHP_OUTPUT.=('</table>');

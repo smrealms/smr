@@ -11,30 +11,30 @@ if($curr_player->hasBounties())
 	$hasBounty = false;
 	foreach($bounties as $bounty)
 	{
-		 if($bounty['Type'] == 'HQ')
-		 {
-		 	$PHP_OUTPUT.=('The <span class="green">Federal Government</span> is offering a bounty on '.$curr_player->getPlayerName().' worth <span class="creds">'.$bounty['Amount'].'</span> credits and <span class="yellow">'.$bounty['SmrCredits'].'</span> SMR credits.<br />');
-		 	if ($bounty['Claimer'] != 0)
-		 	{
-			 	$claiming_player =& SmrPlayer::getPlayer($bounty['Claimer'], $player->getGameID());
-			 	$PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->getPlayerName().'<br />');
-			 	$hasBounty = true;
-		 	}
-		 }
+		if($bounty['Type'] == 'HQ')
+		{
+			$PHP_OUTPUT.=('The <span class="green">Federal Government</span> is offering a bounty on '.$curr_player->getPlayerName().' worth <span class="creds">'.$bounty['Amount'].'</span> credits and <span class="yellow">'.$bounty['SmrCredits'].'</span> SMR credits.<br />');
+			if ($bounty['Claimer'] != 0)
+			{
+				$claiming_player =& SmrPlayer::getPlayer($bounty['Claimer'], $player->getGameID());
+				$PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->getPlayerName().'<br />');
+				$hasBounty = true;
+			}
+		}
 	}
 	if($hasBounty)
 		$PHP_OUTPUT.=('<br /><br /><br />');
 	foreach($bounties as $bounty)
 	{
-		 if($bounty['Type'] == 'UG')
-		 {
+		if($bounty['Type'] == 'UG')
+		{
 			$PHP_OUTPUT.=('The <span class="red">Underground</span> is offering a bounty on '.$curr_player->getPlayerName().' worth <span class="creds">'.$bounty['Amount'].'</span> credits and <span class="yellow">'.$bounty['SmrCredits'].'</span> SMR credits.<br />');
-		 	if ($bounty['Claimer'] != 0)
-		 	{
-			 	$claiming_player =& SmrPlayer::getPlayer($bounty['Claimer'], $player->getGameID());
-			 	$PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->getPlayerName().'<br />');
-		 	}
-		 }
+			if ($bounty['Claimer'] != 0)
+			{
+				$claiming_player =& SmrPlayer::getPlayer($bounty['Claimer'], $player->getGameID());
+				$PHP_OUTPUT.=('This bounty can be claimed by '.$claiming_player->getPlayerName().'<br />');
+			}
+		}
 	}
 }
 else

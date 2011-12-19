@@ -51,7 +51,7 @@ if ($db->getNumRows() > 0)
 		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT count(*) as num_playing FROM player ' .
 					'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
-						  'game_id = '.$game_id);
+						'game_id = '.$game_id);
 		$db2->nextRecord();
 		$games['Play'][$game_id]['NumberPlaying'] = $db2->getField('num_playing');
 
@@ -115,7 +115,7 @@ if(false&&USE_COMPATIBILITY)
 				$db2 = new $databaseClassName();
 				$db2->query('SELECT count(*) as num_playing FROM player ' .
 							'WHERE last_active >= ' . (TIME - 600) . ' AND ' .
-								  'game_id = '.$game_id);
+								'game_id = '.$game_id);
 				$db2->nextRecord();
 				$games['Play'][$index]['NumberPlaying'] = $db2->getField('num_playing');
 		
@@ -192,7 +192,7 @@ $games['Previous'] = array();
 
 //New previous games
 $db->query('SELECT start_date, end_date, game_name, game_speed, game_id ' .
-		   'FROM game WHERE end_date < '.TIME.' ORDER BY game_id DESC');
+		'FROM game WHERE end_date < '.TIME.' ORDER BY game_id DESC');
 if ($db->getNumRows())
 {
 	while ($db->nextRecord())
@@ -228,7 +228,7 @@ if(USE_COMPATIBILITY)
 		//Old previous games
 		$historyDB = new $databaseClassName();
 		$historyDB->query('SELECT start_date, end_date, game_name, speed, game_id ' .
-				   'FROM game ORDER BY game_id DESC');
+				'FROM game ORDER BY game_id DESC');
 		if ($historyDB->getNumRows())
 		{
 			while ($historyDB->nextRecord())

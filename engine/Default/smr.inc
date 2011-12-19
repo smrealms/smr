@@ -121,9 +121,9 @@ function &xmlify(&$str)
 	
 function &bbifyMessage($message,$noLinks=false)
 {
-    static $bbParser;
-    if(!isset($bbParser))
-    {
+	static $bbParser;
+	if(!isset($bbParser))
+	{
 		require_once(LIB.'External/BBCode/nbbc.php');
 		$bbParser = new BBCode();
 		$bbParser->SetEnableSmileys(false);
@@ -507,7 +507,7 @@ function do_voodoo()
 	
 	foreach ($GLOBALS as $key => $value)
 	{
-	   	$$key = &$GLOBALS[$key];
+		$$key = &$GLOBALS[$key];
 	}
 	// create account object
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
@@ -1011,8 +1011,8 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	$voteLinks[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'location' => 'http://www.mpogd.com/games/game.asp?ID=1145', 'name' => 'MPOGD');
 	//OMGN no longer do voting - the link actually just redirects to archive site.
 	///$voteLinks[2] = array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'location' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30', 'name' => 'OMGN');
-    // as long as TWG uses this stupid captcha which is very hard to figure out we will not support this site
-    // nor will we give free turns for NOT voting
+	// as long as TWG uses this stupid captcha which is very hard to figure out we will not support this site
+	// nor will we give free turns for NOT voting
 	//$voteLinks[3] = array('default_img' => 'twg.png', 'star_img' => 'twg_vote.png', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
 	
 	$minVoteTime = 86400;

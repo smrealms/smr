@@ -139,9 +139,9 @@ if($mineOwnerID)
 	}
 	else
 	{
-    	$owner_id = $mineOwnerID;
-    	require_once('forces_minefield_processing.php');
-    	exit;
+		$owner_id = $mineOwnerID;
+		require_once('forces_minefield_processing.php');
+		exit;
 	}
 }
 

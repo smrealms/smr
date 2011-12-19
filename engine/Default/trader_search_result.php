@@ -20,17 +20,17 @@ $template->assign('PageTopic','Search Trader Results');
 
 if (!empty($player_id))
 	$db->query('SELECT * FROM player ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-			   'player_id = '.$player_id.' LIMIT 5');
+			'WHERE game_id = '.$player->getGameID().' AND ' .
+			'player_id = '.$player_id.' LIMIT 5');
 else
 {
 	if (empty($player_name))
 		$player_name = '%';
 
 	$db->query('SELECT * FROM player ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'player_name = ' . $db->escapeString($player_name) . ' ' .
-			   'ORDER BY player_name LIMIT 5');
+			'WHERE game_id = '.$player->getGameID().' AND ' .
+					'player_name = ' . $db->escapeString($player_name) . ' ' .
+			'ORDER BY player_name LIMIT 5');
 }
 
 if ($db->getNumRows() > 0)
@@ -134,10 +134,10 @@ if (empty($player_id))
 		$player_name = '%';
 	
 	$db->query('SELECT * FROM player ' .
-			   'WHERE game_id = '.$player->getGameID().' AND ' .
-					 'player_name LIKE ' . $db->escape_string($player_name, true) . ' AND player_name != ' . $db->escape_string($real, true) . ' ' .
-			   'ORDER BY player_name LIMIT 5');
-			   
+			'WHERE game_id = '.$player->getGameID().' AND ' .
+					'player_name LIKE ' . $db->escape_string($player_name, true) . ' AND player_name != ' . $db->escape_string($real, true) . ' ' .
+			'ORDER BY player_name LIMIT 5');
+			
 	if ($db->getNumRows() > 0)
 	{
 		$PHP_OUTPUT.=('<br /><table class="standard" width="75%">');

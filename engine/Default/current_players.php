@@ -4,7 +4,7 @@ $template->assign('PageTopic','Current Players');
 $db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . TIME);
 $db->query('SELECT count(*) count FROM active_session
 			WHERE last_accessed >= ' . (TIME - 600) . ' AND
-				  game_id = '.$player->getGameID());
+				game_id = '.$player->getGameID());
 $count_real_last_active = 0;
 if($db->nextRecord())
 	$count_real_last_active = $db->getField('count');
@@ -18,9 +18,9 @@ if (empty($var['seq'])) $seq = 'DESC';
 else $seq = $var['seq'];
 
 $db->query('SELECT * FROM player ' .
-		   'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
-				 'game_id = '.$player->getGameID().' ' .
-		   'ORDER BY '.$sort.' '.$seq);
+		'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
+				'game_id = '.$player->getGameID().' ' .
+		'ORDER BY '.$sort.' '.$seq);
 $count_last_active = $db->getNumRows();
 
 // fix it if some1 is using the logoff button

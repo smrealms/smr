@@ -20,7 +20,7 @@ if (isset($var['action']) && $var['action'] != 'drink')
 else
 {
 	$random = mt_rand(1, 20);
-    //only get Azool or Spock drink if they are very lucky
+	//only get Azool or Spock drink if they are very lucky
 	if ($random != 1)
 		$db->query('SELECT * FROM bar_drink WHERE drink_id != 1 && drink_id != 11 ORDER BY rand() LIMIT 1');
 	else
@@ -31,11 +31,11 @@ else
 		$drink_name = $db->getField('drink_name');
 		$drink_id = $db->getField('drink_id');
 
-        $db2->query('SELECT * FROM player_has_drinks WHERE game_id = '.$player->getGameID().' ORDER by drink_id DESC LIMIT 1');
-        if ($db2->nextRecord())
-        	$curr_drink_id = $db2->getField('drink_id') + 1;
-        else
-        	$curr_drink_id = 1;
+		$db2->query('SELECT * FROM player_has_drinks WHERE game_id = '.$player->getGameID().' ORDER by drink_id DESC LIMIT 1');
+		if ($db2->nextRecord())
+			$curr_drink_id = $db2->getField('drink_id') + 1;
+		else
+			$curr_drink_id = 1;
 
 		if ($drink_id != 11 && $drink_id !=1)
 		{
@@ -58,7 +58,7 @@ else
 			//has the power of 2 drinks
 			$db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
 			$curr_drink_id++;
-            $db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
+			$db2->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES ('.$player->getAccountID().', '.$player->getGameID().', '.$curr_drink_id.', '.TIME.')');
 			$player->increaseHOF(1,array('Bar','Drinks', 'Special'), HOF_PUBLIC);
 		}
 

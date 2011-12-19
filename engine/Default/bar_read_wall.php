@@ -37,7 +37,7 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=('</tr>');
 
 	}
-    $PHP_OUTPUT.=('</table>');
+	$PHP_OUTPUT.=('</table>');
 }
 $template->assign('PageTopic','Write on the wall');
 

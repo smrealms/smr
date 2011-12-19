@@ -138,17 +138,17 @@ forward($container);
 
 function php_link_check($url, $r = FALSE) {
 	/*	Purpose: Check HTTP Links
-	 *	Usage:	 $var = phpLinkCheck(absoluteURI)
-	 *					 $var['Status-Code'] will return the HTTP status code
-	 *					 (e.g. 200 or 404). In case of a 3xx code (redirection)
-	 *					 $var['Location-Status-Code'] will contain the status
-	 *					 code of the new loaction.
-	 *					 See echo_r($var) for the complete result
-	 *
-	 *	Author:	Johannes Froemter <j-f@gmx.net>
-	 *	Date:		2001-04-14
-	 *	Version: 0.1 (currently requires PHP4)
-	 */
+	*	Usage:	$var = phpLinkCheck(absoluteURI)
+	*					$var['Status-Code'] will return the HTTP status code
+	*					(e.g. 200 or 404). In case of a 3xx code (redirection)
+	*					$var['Location-Status-Code'] will contain the status
+	*					code of the new loaction.
+	*					See echo_r($var) for the complete result
+	*
+	*	Author:	Johannes Froemter <j-f@gmx.net>
+	*	Date:		2001-04-14
+	*	Version: 0.1 (currently requires PHP4)
+	*/
 	$url = trim($url);
 	if (!preg_match('=://=', $url)) $url = 'http://'.$url;
 	$url = parse_url($url);
