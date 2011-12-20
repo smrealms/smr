@@ -1,6 +1,5 @@
 <?php
-if(empty($_REQUEST['webboard'])||empty($_REQUEST['ircnick'])||empty($_REQUEST['started'])||empty($_REQUEST['reasons'])||empty($_REQUEST['time'])||empty($_REQUEST['online']))
-{
+if(empty($_REQUEST['webboard']) || empty($_REQUEST['ircnick']) || empty($_REQUEST['started']) || empty($_REQUEST['reasons']) || empty($_REQUEST['time']) || empty($_REQUEST['online'])) {
 	create_error('You must fill in all the fields!');
 }
 $new_sub = 'Beta Application';
@@ -21,15 +20,17 @@ $player->sendMessageToBox(BOX_BETA_APPLICATIONS, $message);
 
 $container = array();
 $container['url'] = 'skeleton.php';
-if (SmrSession::$game_id > 0)
-{
-	if ($player->isLandedOnPlanet())
+if (SmrSession::$game_id > 0) {
+	if ($player->isLandedOnPlanet()) {
 		$container['body'] = 'planet_main.php';
-	else
+	}
+	else {
 		$container['body'] = 'current_sector.php';
+	}
 }
-else
+else {
 	$container['body'] = 'game_play.php';
+}
 
 forward($container);
 

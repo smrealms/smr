@@ -1,9 +1,7 @@
 <?php
 
-if (!Globals::isBetaOpen())
-{
+if (!Globals::isBetaOpen()) {
 	create_error('Beta Applications are currently not being accepted.');
-	return;
 }
 
 $template->assign('PageTopic','Apply for Beta');

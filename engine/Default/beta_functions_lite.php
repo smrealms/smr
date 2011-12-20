@@ -1,6 +1,7 @@
 <?php
-if(!ENABLE_BETA)
+if(!ENABLE_BETA) {
 	create_error('Beta functions are disabled.');
+}
 
 $template->assign('PageTopic','Beta LITE');
 
@@ -24,8 +25,9 @@ $container['func'] = 'Ship';
 $PHP_OUTPUT.=create_echo_form($container);
 $PHP_OUTPUT.=('<select name="ship_id">');
 $db->query('SELECT * FROM ship_type WHERE ship_type_Id != 68 AND ship_type_id != 999 ORDER BY ship_name');
-while ($db->nextRecord())
-	$PHP_OUTPUT.=('<option value="' . $db->getField('ship_type_id') . '">' . $db->getField('ship_name') . '</option>');
+while ($db->nextRecord()) {
+	$PHP_OUTPUT.=('<option value="' . $db->getInt('ship_type_id') . '">' . $db->getField('ship_name') . '</option>');
+}
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Change Ship');
 $PHP_OUTPUT.=('</form>');
