@@ -58,8 +58,7 @@ if ($ideal_price == 0 || $offered_price == 0)
 // can we accept the current price?
 if (!empty($bargain_price) &&
 	(($portGood['TransactionType'] == 'Buy' && $bargain_price >= $ideal_price) ||
-	($portGood['TransactionType'] == 'Sell' && $bargain_price <= $ideal_price)))
-{
+	($portGood['TransactionType'] == 'Sell' && $bargain_price <= $ideal_price))) {
 
 	// the url we going to
 	$container = create_container('skeleton.php');
@@ -79,8 +78,7 @@ if (!empty($bargain_price) &&
 	$container['traded_good'] = $good_name;
 	$container['traded_credits'] = $bargain_price;
 
-	if ($portGood['TransactionType'] == 'Buy')
-	{
+	if ($portGood['TransactionType'] == 'Buy') {
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
@@ -92,8 +90,7 @@ if (!empty($bargain_price) &&
 		$port->buyGoods($portGood,$amount,$bargain_price,$gained_exp);
 
 	}
-	elseif ($portGood['TransactionType'] == 'Sell')
-	{
+	elseif ($portGood['TransactionType'] == 'Sell') {
 
 		$container['traded_transaction'] = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
@@ -113,8 +110,7 @@ if (!empty($bargain_price) &&
 	$player->increaseExperience($gained_exp);
 
 	// change relation for non neutral ports (Alskants get to treat neutrals as an alskant port);
-	if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT)
-	{
+	if ($port->getRaceID() != RACE_NEUTRAL || $player->getRaceID() == RACE_ALSKANT) {
 		$player->increaseRelationsByTrade($amount,$port->getRaceID());
 	}
 
@@ -124,8 +120,7 @@ if (!empty($bargain_price) &&
 		$container['body'] = 'shop_goods.php';
 
 }
-else
-{
+else {
 	// does the trader try to outsmart us?
 	$container = create_container('skeleton.php', 'shop_goods_trade.php');
 	transfer('ideal_price');

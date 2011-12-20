@@ -9,8 +9,7 @@ if ($sector->hasHQ())
 else
 	create_ug_menu();
 
-if ($player->hasMilitaryPayment())
-{
+if ($player->hasMilitaryPayment()) {
 	$PHP_OUTPUT.=('For your military help you have been paid <span class="creds">'.number_format($player->getMilitaryPayment()).'</span> credits');
 
 	$player->increaseHOF($player->getMilitaryPayment(),array('Military Payment','Money','Claimed'), HOF_PUBLIC);

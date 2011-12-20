@@ -27,14 +27,12 @@ $PHP_OUTPUT.= '</tr><tr>';
 
 $PHP_OUTPUT.= '<td>Next Point Removal Available</td>';
 $PHP_OUTPUT.= '<td>';
-if (!$ship->canDowngrade())
-{
+if (!$ship->canDowngrade()) {
 	$remove = FALSE;
 	$time_left = $ship->getRemainingDowngradeWait();
 	$PHP_OUTPUT.= '<span class="red">' . format_time($time_left) . '</span>';
 }
-else
-{
+else {
 	$remove = TRUE;
 	$PHP_OUTPUT.= '<span class="green">Now</span>';
 }
@@ -44,8 +42,7 @@ if (isset($error)) $PHP_OUTPUT.= $error . '<br />';
 $PHP_OUTPUT.= '<table class="standard">';
 $PHP_OUTPUT.= '<tr><th>Upgrade Area</th><th>Current Upgrades</th><th>Point Cost</th><th>Action</th></tr>';
 
-foreach ($STAT_INCREASE_TYPES as $upgrade_id => $upgrade_array)
-{
+foreach ($STAT_INCREASE_TYPES as $upgrade_id => $upgrade_array) {
 	$baseAmountOfAttribute=getBaseAmountOfUpgradeAttribute($ship,$upgrade_array);
 	
 	$PHP_OUTPUT.= '<tr>';

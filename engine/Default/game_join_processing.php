@@ -44,8 +44,7 @@ if (!Globals::isValidGame($gameID))
 
 // does it cost something to join that game?
 $credits = Globals::getGameCreditsRequired($gameID);
-if ($credits > 0)
-{
+if ($credits > 0) {
 	if($account->getTotalSmrCredits()<$credits)
 		create_error('You do not have enough credits to join this game!');
 	$account->decreaseTotalSmrCredits($credits);
@@ -70,16 +69,13 @@ else
 $rank_id = $account->getRank();
 
 // for newbie and beginner another ship, more shields and armour
-if ($account->isNewbie())
-{
+if ($account->isNewbie()) {
 	$ship_id = SHIP_TYPE_NEWBIE_MERCHANT_VESSEL;
 	$amount_shields = 75;
 	$amount_armour = 150;
 }
-else
-{
-	switch($race_id)
-	{
+else {
+	switch($race_id) {
 		case RACE_ALSKANT:
 			$ship_id = SHIP_TYPE_SMALL_TIMER;
 		break;
@@ -157,8 +153,7 @@ if (!$db->nextRecord())
 $min_sector = $db->getInt('MIN(sector_id)');
 $max_sector = $db->getInt('MAX(sector_id)');
 
-for ($i = $min_sector; $i <= $max_sector; $i++)
-{
+for ($i = $min_sector; $i <= $max_sector; $i++) {
 	//if this is our home sector we dont add it.
 	if ($i == $home_sector_id)
 		continue;
@@ -174,8 +169,7 @@ $db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE a
 
 // is this our first game?
 $db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->getAccountID());
-if ($db->nextRecord() && $db->getInt('games_joined') == 1)
-{
+if ($db->nextRecord() && $db->getInt('games_joined') == 1) {
 	//we are a newb set our alliance to be Newbie Help Allaince
 	$db->query('UPDATE player SET alliance_id = '.NHA_ID.' WHERE account_id = '.$account->getAccountID().' AND game_id = '.$gameID);
 	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$gameID.', '.$account->getAccountID().', 2,'.NHA_ID.')');
@@ -189,12 +183,10 @@ if ($db->nextRecord() && $db->getInt('games_joined') == 1)
 	SmrPlayer::sendMessageFromAdmin($gameID, $account->getAccountID(), $message);
 }
 
-if($race_id == RACE_ALSKANT) // Give Alskants 250 personal relations to start.
-{
+if($race_id == RACE_ALSKANT) { // Give Alskants 250 personal relations to start.
 	$player =& SmrPlayer::getPlayer($account->getAccountID(), $gameID);
 	$RACES =& Globals::getRaces();
-	foreach($RACES as $raceID => $raceInfo)
-	{
+	foreach($RACES as $raceID => $raceInfo) {
 		$player->setRelations(250, $raceID);
 	}
 }

@@ -6,14 +6,14 @@ require_once(get_file_loc('menu.inc'));
 create_ranking_menu(0, 1);
 
 // what rank are we?
-$db->query('SELECT count(*) FROM player WHERE game_id = '.$player->getGameID().' AND ' .
+$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' .
 			'(kills > '.$player->getKills().' OR ' .
 			'(kills = '.$player->getKills().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
 $db->nextRecord();
 $our_rank = $db->getInt('count(*)');
 
 // how many players are there?
-$db->query('SELECT count(*) FROM player WHERE game_id = '.$player->getGameID());
+$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $db->nextRecord();
 $total_player = $db->getInt('count(*)');
 
@@ -33,8 +33,7 @@ $PHP_OUTPUT.=('</tr>');
 $db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER BY kills DESC, player_name LIMIT 10');
 
 $rank = 0;
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	// get current account and player
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 	$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
@@ -64,8 +63,7 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
 
 	$PHP_OUTPUT.=('<td valign="top">');
-	if ($curr_player->hasAlliance())
-	{
+	if ($curr_player->hasAlliance()) {
 		$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
 	}
 	else
@@ -78,26 +76,22 @@ while ($db->nextRecord())
 
 $PHP_OUTPUT.=('</table>');
 $action = $_REQUEST['action'];
-if ($action == 'Show' && is_numeric($_REQUEST['min_rank'])&&is_numeric($_REQUEST['max_rank']))
-{
+if ($action == 'Show' && is_numeric($_REQUEST['min_rank'])&&is_numeric($_REQUEST['max_rank'])) {
 	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	SmrSession::updateVar('MinRank',$min_rank);
 	SmrSession::updateVar('MaxRank',$max_rank);
 }
-elseif(isset($var['MinRank'])&&isset($var['MaxRank']))
-{
+elseif(isset($var['MinRank'])&&isset($var['MaxRank'])) {
 	$min_rank = $var['MinRank'];
 	$max_rank = $var['MaxRank'];
 }
-else
-{
+else {
 	$min_rank = $our_rank - 5;
 	$max_rank = $our_rank + 5;
 }
 
-if ($min_rank <= 0)
-{
+if ($min_rank <= 0) {
 	$min_rank = 1;
 	$max_rank = 10;
 }
@@ -124,11 +118,10 @@ $PHP_OUTPUT.=('<th>Alliance</th>');
 $PHP_OUTPUT.=('<th>Kills</th>');
 $PHP_OUTPUT.=('</tr>');
 
-$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' ORDER BY kills DESC, player_name LIMIT ' . ($min_rank - 1) . ', ' . ($max_rank - $min_rank + 1));
+$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY kills DESC, player_name LIMIT ' . ($min_rank - 1) . ', ' . ($max_rank - $min_rank + 1));
 
 $rank = $min_rank - 1;
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	// get current account and player
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 	$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
@@ -158,8 +151,7 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
 
 	$PHP_OUTPUT.=('<td valign="top">');
-	if ($curr_player->hasAlliance())
-	{
+	if ($curr_player->hasAlliance()) {
 		$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
 	}
 	else

@@ -3,10 +3,8 @@ if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 $planet =& $player->getSectorPlanet();
 $action = $_REQUEST['action'];
-if ($action == 'Build')
-{
-	if(($message = $planet->canBuild($player, $var['construction_id']))!==true)
-	{
+if ($action == 'Build') {
+	if(($message = $planet->canBuild($player, $var['construction_id']))!==true) {
 		create_error($message);
 	}
 
@@ -18,8 +16,7 @@ if ($action == 'Build')
 	$account->log(LOG_TYPE_PLANETS, 'Player starts a '.$PLANET_BUILDINGS[$var['construction_id']]['Name'].' on planet.', $player->getSectorID());
 
 }
-elseif ($action == 'Cancel')
-{
+elseif ($action == 'Cancel') {
 	$planet->stopBuilding($var['construction_id']);
 	$player->increaseHOF(1,array('Planet','Buildings','Stopped'), HOF_ALLIANCE);
 	$account->log(LOG_TYPE_PLANETS, 'Player cancels planet construction', $player->getSectorID());

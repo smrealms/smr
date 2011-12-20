@@ -1,5 +1,4 @@
 <?php
-$db2 = new SmrMySqlDatabase();
 if(isset($_REQUEST['amount']))
 	SmrSession::updateVar('amount',$_REQUEST['amount']);
 if(isset($_REQUEST['account_id']))

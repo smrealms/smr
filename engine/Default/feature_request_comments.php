@@ -13,14 +13,12 @@ $db->query('SELECT * ' .
 			'JOIN feature_request_comments USING(feature_request_id) ' .
 			'WHERE feature_request_id = ' . $db->escapeNumber($var['RequestID']) .
 			' ORDER BY comment_id ASC');
-if ($db->getNumRows() > 0)
-{
+if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator',$featureModerator);
 
 	$featureRequestComments = array();
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$commentID = $db->getField('comment_id');
 		$featureRequestComments[$commentID] = array(
 								'CommentID' => $commentID,

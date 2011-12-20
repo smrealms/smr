@@ -6,12 +6,11 @@ $db->query('SELECT * FROM location
 			JOIN location_type USING (location_type_id)
 			JOIN location_sells_hardware USING (location_type_id)
 			JOIN hardware_type USING (hardware_type_id)
-			WHERE sector_id = '.$player->getSectorID().'
-				AND game_id = '.$player->getGameID().'
+			WHERE sector_id = ' . $db->escapeNumber($player->getSectorID()) . '
+				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND location_type_id = '.$var['LocationID']);
 
-if ($db->getNumRows() > 0 )
-{
+if ($db->getNumRows() > 0 ) {
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
@@ -25,8 +24,7 @@ if ($db->getNumRows() > 0 )
 
 	$form = 0;
 
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$hardware_name = $db->getField('hardware_name');
 		$hardware_type_id = $db->getField('hardware_type_id');
 		$cost = $db->getField('cost');

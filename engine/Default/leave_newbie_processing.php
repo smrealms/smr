@@ -1,7 +1,6 @@
 <?php
 $action = $_REQUEST['action'];
-if ($action == 'Yes!')
-{
+if ($action == 'Yes!') {
 	$player->setNewbieTurns(0);
 	$player->setNewbieWarning(false);
 }

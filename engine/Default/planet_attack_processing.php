@@ -24,9 +24,8 @@ $planetOwner =& $planet->getOwner();
 if($player->forceNAPAlliance($planetOwner))
 	create_error('You have a planet NAP, you cannot attack this planet!');
 	
-if ($planet->isDestroyed())
-{
-	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$planet->getSectorID().' AND game_id = '.$player->getGameID());
+if ($planet->isDestroyed()) {
+	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$planet->getSectorID().' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$planet->removeClaimed();
 	$planet->removePassword();
 	$container=create_container('skeleton.php','planet_attack.php');
@@ -54,13 +53,11 @@ $attackers =& $sector->getFightingTradersAgainstPlanet($player, $planet);
 $planet->attackedBy($player,$attackers);
 
 //decloak all attackers
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	$attacker->getShip()->decloak();
 } unset($attacker);
 
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	$playerResults =& $attacker->shootPlanet($planet, false);
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
@@ -73,8 +70,7 @@ $account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does '
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $planetAttackMessage = 'Reports from the surface of '.$planet->getDisplayName().' confirm that it is under <span class="red">attack</span>!';
-if($planetOwner->hasAlliance())
-{
+if($planetOwner->hasAlliance()) {
 	$db->query('SELECT account_id FROM player WHERE game_id=' . $planetOwner->getGameID() .
 			' AND alliance_id=' . $planetOwner->getAllianceID()); //No limit in case they are over limit - ie NHA
 	while ($db->nextRecord())
@@ -84,11 +80,10 @@ else
 	SmrPlayer::sendMessageFromPlanet($planet->getGameID(),$planetOwner->getAccountID(),$planetAttackMessage);
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 $logId = $db->escapeString('[ATTACK_RESULTS]'.$db->getInsertID());
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	if(!$player->equals($attacker))
 		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ','.$logId.')');
 } unset($attacker);
@@ -99,8 +94,7 @@ $container['body'] = 'planet_attack.php';
 $container['sector_id'] = $planet->getSectorID();
 
 // If they died on the shot they get to see the results
-if($player->isDead())
-{
+if($player->isDead()) {
 	$container['override_death'] = TRUE;
 }
 

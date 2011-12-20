@@ -6,15 +6,14 @@ $planet =& $player->getSectorPlanet();
 $action = $_REQUEST['action'];
 $password = isset($_REQUEST['password'])?$_REQUEST['password']:'';
 
-if ($action == 'Take Ownership')
-{
+if ($action == 'Take Ownership') {
 	if ($planet->hasOwner() && $planet->getPassword() != $password)
 		create_error('You are not allowed to take ownership!');
 
 	// delete all previous ownerships
 	$db->query('UPDATE planet SET owner_id = 0, password = NULL
-				WHERE owner_id = '.$player->getAccountID().'
-				AND game_id = '.$player->getGameID());
+				WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
+				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 
 	// set ownership
 	$planet->setOwnerID($player->getAccountID());
@@ -22,8 +21,7 @@ if ($action == 'Take Ownership')
 	$planet->update();
 	$account->log(LOG_TYPE_PLANETS, 'Player takes ownership of planet.', $player->getSectorID());
 }
-else if ($action == 'Rename')
-{
+else if ($action == 'Rename') {
 	$name = $_REQUEST['name'];
 	// rename planet
 	$planet->setName($name);
@@ -31,8 +29,7 @@ else if ($action == 'Rename')
 	$account->log(LOG_TYPE_PLANETS, 'Player renames planet to '.$name.'.', $player->getSectorID());
 
 }
-else if ($action == 'Set Password')
-{
+else if ($action == 'Set Password') {
 	// set password
 	$planet->setPassword($password);
 	$planet->update();

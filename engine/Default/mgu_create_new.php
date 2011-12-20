@@ -34,19 +34,18 @@ $total_sectors = 0;
 
 // Build the galaxy array.
 $galaxies =& SmrGalaxy::getGameGalaxies($game_id);
-foreach ($galaxies as &$galaxy)
-{
+foreach ($galaxies as &$galaxy) {
 	$total_sectors += $galaxy->getSize();
 } unset($galaxy);
 
 // Fill the sectors array with visited sectors
 $db->query(
 	'SELECT sector_id,galaxy_id,link_up,link_left,link_right,link_down ' .
-	'FROM sector WHERE game_id=' . $player->getGameID() . ' ' .
+	'FROM sector WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
 	'AND sector_id NOT IN ( ' .
 	'SELECT sector_id FROM player_visited_sector ' .
-	'WHERE game_id = ' . $player->getGameID() . ' ' .
-	'AND account_id = ' . $player->getAccountID() . ' ) '
+	'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
+	'AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' ) '
 );
 
 while($db->nextRecord()) {
@@ -64,12 +63,12 @@ $db->query(
 	'location.sector_id as sector_id,' .
 	'location_type.mgu_id as mgu_id ' .
 	'FROM location,location_type ' .
-	'WHERE location.game_id=' . $player->getGameID() . ' ' .
+	'WHERE location.game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
 	'AND location.location_type_id = location_type.location_type_id ' .
 	'AND location.sector_id NOT IN ( ' .
 	'SELECT sector_id FROM player_visited_sector ' .
-	'WHERE game_id = ' . $player->getGameID() . ' ' .
-	'AND account_id = ' . $player->getAccountID() . ' ) '
+	'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
+	'AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' ) '
 );
 
 // Adjust the sectors array
@@ -82,15 +81,15 @@ $db->query(
 	'SELECT ' .
 	'sector_id_1,sector_id_2 ' .
 	'FROM warp ' .
-	'WHERE game_id=' . $player->getGameID() . ' ' .
+	'WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
 	'AND ((sector_id_1 NOT IN ( ' .
 	'SELECT sector_id FROM player_visited_sector ' .
-	'WHERE game_id = ' . $player->getGameID() . ' ' .
-	'AND account_id = ' . $player->getAccountID() . ' ))' .
+	'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
+	'AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' ))' .
 	' OR (sector_id_2 NOT IN ( ' .
 	'SELECT sector_id FROM player_visited_sector ' .
-	'WHERE game_id = ' . $player->getGameID() . ' ' .
-	'AND account_id = ' . $player->getAccountID() . ' ))' .
+	'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
+	'AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' ))' .
 	') '
 );
 
@@ -112,10 +111,10 @@ $db->query(
 	'port.sector_id as sector_id, ' .
 	'player_visited_port.port_info as port_info ' .
 	'FROM player_visited_port,port ' .
-	'WHERE port.game_id=' . $player->getGameID() . ' ' .
-	'AND player_visited_port.game_id=' . $player->getGameID() . ' ' .
+	'WHERE port.game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
+	'AND player_visited_port.game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
 	'AND port.sector_id = player_visited_port.sector_id ' .
-	'AND player_visited_port.account_id=' . $player->getAccountID()
+	'AND player_visited_port.account_id=' . $db->escapeNumber($player->getAccountID())
 );
 
 // Adjust the sectors array
@@ -143,21 +142,21 @@ $query =
 	'AND ';
 
 if($player->getAllianceID()) {
-	$query .= '(player.alliance_id = ' . $player->getAllianceID() . ' OR ' .
-	'sector_has_forces.owner_id = ' . $player->getAccountID() . ' ) ';
+	$query .= '(player.alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' OR ' .
+	'sector_has_forces.owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' ) ';
 }
 else {
-	$query .= 'sector_has_forces.owner_id = ' . $player->getAccountID() . ' ';
+	$query .= 'sector_has_forces.owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' ';
 }
 
 $query .= 
 	'AND player.game_id = sector_has_forces.game_id ' .
-	'AND sector_has_forces.game_id = ' . $player->getGameID() . ' ' .
+	'AND sector_has_forces.game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
 	'AND sector_has_forces.mines > 0 ' .
 	'AND sector_has_forces.sector_id NOT IN ( ' .
 	'SELECT sector_id FROM player_visited_sector ' .
-	'WHERE game_id = ' . $player->getGameID() . ' ' .
-	'AND account_id = ' . $player->getAccountID() . ' ) ' .
+	'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
+	'AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' ) ' .
 	'GROUP BY sector_has_forces.sector_id';
 
 $db->query($query);
@@ -172,11 +171,11 @@ $planets=array();
 $db->query(
 	'SELECT sector_id ' .
 	'FROM planet ' .
-	'WHERE game_id=' . $player->getGameID() . ' ' .
+	'WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
 	'AND sector_id NOT IN ( ' .
 	'SELECT sector_id FROM player_visited_sector ' .
-	'WHERE game_id = ' . $player->getGameID() . ' ' .
-	'AND account_id = ' . $player->getAccountID() . ' ) '
+	'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
+	'AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' ) '
 ); 
 
 // Adjust the sectors array
@@ -190,23 +189,23 @@ $query =
 		'SUM(planet_has_building.amount) as level,' .
 		'planet_has_building.sector_id as sector_id ' .
 		'FROM planet_has_building,planet,player ' .
-		'WHERE planet.game_id=' . $player->getGameID() . ' ' .
-		'AND planet_has_building.game_id=' . $player->getGameID() . ' ' .
-		'AND player.game_id=' . $player->getGameID() . ' ' .
+		'WHERE planet.game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
+		'AND planet_has_building.game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
+		'AND player.game_id=' . $db->escapeNumber($player->getGameID()) . ' ' .
 		'AND planet_has_building.sector_id = planet.sector_id ' .
 		'AND player.account_id = planet.owner_id ' .
 		'AND planet_has_building.sector_id NOT IN ( ' .
 		'SELECT sector_id FROM player_visited_sector ' .
-		'WHERE game_id = ' . $player->getGameID() . ' ' .
-		'AND account_id = ' . $player->getAccountID() . ' ) ' .
+		'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ' .
+		'AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' ) ' .
 		'AND ';
 
 if($player->getAllianceID()) {
-	$query .= '(player.alliance_id = ' . $player->getAllianceID() . ' OR ' .
-	'planet.owner_id = ' . $player->getAccountID() . ' ) ';
+	$query .= '(player.alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' OR ' .
+	'planet.owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' ) ';
 }
 else {
-	$query .= 'planet.owner_id = ' . $player->getAccountID() . ' ';
+	$query .= 'planet.owner_id = ' . $db->escapeNumber($player->getAccountID()) . ' ';
 }		
 
 $query .= 'GROUP BY sector_id';
@@ -329,7 +328,7 @@ for($i=1;$i<$max;++$i) {
 				$file .= pack('C', 0);
 			}
 		}
-		else if(isset($sectors[$i]['port'])){
+		else if(isset($sectors[$i]['port'])) {
 			$file .= pack('C', $byte);
 		}
 		

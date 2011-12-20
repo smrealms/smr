@@ -10,20 +10,18 @@ $template->assign('PreferencesConfirmFormHREF', SmrSession::get_new_href(create_
 
 $transferAccounts = array();
 //if(SmrSession::$game_id>0)
-//{
-//	$db->query('SELECT account_id,player_name,player_id FROM player WHERE game_id = '.$player->getGameID().' ORDER BY player_name');
+// {
+//	$db->query('SELECT account_id,player_name,player_id FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
 //	while ($db->nextRecord())
-//	{
+// {
 //		$transferAccounts[$db->getField('account_id')] = $db->getField('player_name') .' ('. $db->getField('player_id').')';
 //	}
 //}
-//else
-{
+//else {
 	$db->query('SELECT account_id,hof_name FROM account WHERE validated = ' . $db->escapeBoolean(true) . ' ORDER BY hof_name');
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$transferAccounts[$db->getField('account_id')] = $db->getField('hof_name');
 	}
-}
+//}
 $template->assignByRef('TransferAccounts',$transferAccounts);
 ?>

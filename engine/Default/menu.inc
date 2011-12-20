@@ -1,73 +1,61 @@
 <?php
 
-function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE)
-{
-	global $player, $template;
+function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) {
+	global $player, $template, $db;
 
-	$db2 = new SmrMySqlDatabase();
-	if($alliance_id)
-	{
+	if($alliance_id) {
 		$in_alliance = ($alliance_id == $player->getAllianceID());
 	}
-	else
-	{
+	else {
 		$in_alliance = $player->hasAlliance();
 	}
-	if(!$in_alliance)
-	{
-		$db2->query('SELECT mb_read, mod_read, planet_land FROM alliance_treaties
-						WHERE (alliance_id_1 = '.$alliance_id.' OR alliance_id_1 = '.$player->getAllianceID().')
-						AND (alliance_id_2 = '.$alliance_id.' OR alliance_id_2 = '.$player->getAllianceID().')
-						AND game_id = '.$player->getGameID().'
+	if(!$in_alliance) {
+		$db->query('SELECT mb_read, mod_read, planet_land FROM alliance_treaties
+						WHERE (alliance_id_1 = ' . $db->escapeNumber($alliance_id) . ' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
+						AND (alliance_id_2 = ' . $db->escapeNumber($alliance_id) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
+						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND (mb_read = 1 OR mod_read = 1 OR planet_land = 1) AND official = \'TRUE\'');
-		if ($db2->nextRecord())
-		{
-			if ($db2->getField('mb_read')) $mbRead = TRUE;
+		if ($db->nextRecord()) {
+			if ($db->getField('mb_read')) $mbRead = TRUE;
 			else $mbRead = FALSE;
-			if ($db2->getField('mod_read')) $modRead = TRUE;
+			if ($db->getField('mod_read')) $modRead = TRUE;
 			else $modRead = FALSE;
-			if ($db2->getField('planet_land')) $planetLand = TRUE;
+			if ($db->getField('planet_land')) $planetLand = TRUE;
 			else $planetLand = FALSE;
 		}
-		else
-		{
+		else {
 			$mbRead = FALSE;
 			$modRead = FALSE;
 			$planetLand = FALSE;
 		}
 	}
 
-	$db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$player->getGameID().' AND alliance_id='.$player->getAllianceID());
-	if ($db2->nextRecord()) $role_id = $db2->getField('role_id');
+	$db->query('SELECT role_id FROM player_has_alliance_role WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($player->getAllianceID()));
+	if ($db->nextRecord()) $role_id = $db->getInt('role_id');
 	else $role_id = 0;
-	$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND role_id = '.$role_id);
-	$db2->nextRecord();
-	$send = $db2->getField('send_alliance_msg') == 'TRUE';
+	$db->query('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
+	$db->nextRecord();
+	$send = $db->getBoolean('send_alliance_msg');
 //	if ($player->getAccountID() == $alliance_leader_id)
-//	{
+// {
 		//$container['body']='alliance_treaties.php';
 		//$menu_items[] = create_link($container,'Treaties','nav');
 	//}
 	$menuItems = array();
-	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead)
-	{
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $modRead) {
 		$menuItems[] = array('Link'=>Globals::getAllianceMotdHREF($alliance_id),'Text'=>'Message of the Day');
 	}
 	$menuItems[] = array('Link'=>Globals::getAllianceRosterHREF($alliance_id),'Text'=>'Roster');
-	if (($send && $in_alliance) || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
-	{
+	if (($send && $in_alliance) || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageHREF($alliance_id),'Text'=>'Send Message');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $mbRead)
-	{
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $mbRead) {
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageBoardHREF($alliance_id),'Text'=>'Message Board');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $planetLand)
-	{
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $planetLand) {
 		$menuItems[] = array('Link'=>Globals::getAlliancePlanetsHREF($alliance_id),'Text'=>'Planets');
 	}
-	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()))
-	{
+	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 		$menuItems[] = array('Link'=>Globals::getAllianceForcesHREF($alliance_id),'Text'=>'Forces');
 		$menuItems[] = array('Link'=>Globals::getAllianceOptionsHREF($alliance_id),'Text'=>'Options');
 	}
@@ -77,8 +65,7 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE)
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_galactic_post_menu()
-{
+function create_galactic_post_menu() {
 	global $template, $player;
 	$menuItems = array();
 	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
@@ -87,38 +74,32 @@ function create_galactic_post_menu()
 	$allowedEdit = false;
 	//find out the user's privligages
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
-	if ($db->nextRecord())
-	{
+	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
+	if ($db->nextRecord()) {
 		$allowedEdit = $db->getField('position') == 'editor';
 	}
 	
-	if ($allowedWrite === false)
-	{
+	if ($allowedWrite === false) {
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
 	}
-	if ($allowedEdit === true)
-	{
+	if ($allowedEdit === true) {
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_applications.php')),'Text'=>'View the applications');
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_article.php')),'Text'=>'View the articles');
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
 	}
-	if ($allowedWrite === true)
-	{
+	if ($allowedWrite === true) {
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
 	}
 	$template->assign('MenuItems', $menuItems);
 }
 
-function create_message_menu()
-{
+function create_message_menu() {
 	global $player, $template;
 	$menuItems = array();
 	$menuItems[] = array('Link'=>Globals::getViewMessagesHREF(),'Text'=>'View Messages');
 	$menuItems[] = array('Link'=>Globals::getSendGlobalMessageHREF(),'Text'=>'Send Global Message');
-	if ($player->isOnCouncil())
-	{
+	if ($player->isOnCouncil()) {
 		$menuItems[] = array('Link'=>Globals::getSendCouncilMessageHREF($player->getRaceID()),'Text'=>'Send Council Message');
 	}
 	$menuItems[] = array('Link'=>Globals::getManageBlacklistHREF(),'Text'=>'Manage Blacklist');
@@ -126,8 +107,7 @@ function create_message_menu()
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_combat_log_menu()
-{
+function create_combat_log_menu() {
 	global $template;
 
 	$container = create_container('skeleton.php','combat_log_viewer.php');
@@ -149,8 +129,7 @@ function create_combat_log_menu()
 	$template->assign('MenuItems',$menuItems);
 }
 
-function create_trader_menu()
-{
+function create_trader_menu() {
 	global $player, $template;
 	$template->assign('MenuItems', array(
 						array('Link'=>Globals::getTraderStatusHREF(),'Text'=>'Trader Status'),
@@ -161,8 +140,7 @@ function create_trader_menu()
 						array('Link'=>Globals::getTraderBountiesHREF(),'Text'=>'Bounties')));
 }
 
-function create_planet_menu()
-{
+function create_planet_menu() {
 	global $template;
 	$template->assign('MenuItems', array(
 						array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main'),
@@ -229,8 +207,7 @@ function create_ranking_menu($active_level1 = 0, $active_level2 = 0) {
 
 }
 
-function create_sub_menu($menu, $active_level1, $active_level2)
-{
+function create_sub_menu($menu, $active_level1, $active_level2) {
 	global $template;
 	$return = ('<p>');
 	$return .= ('<table class="bar1">');
@@ -242,8 +219,7 @@ function create_sub_menu($menu, $active_level1, $active_level2)
 
 	$return .= ('<table>');
 	$return .= ('<tr>');
-	foreach ($menu as $number => $entry)
-	{
+	foreach ($menu as $number => $entry) {
 		// insert spacer
 		if ($number > 0)
 			$return .= ('<td>&nbsp;|&nbsp;</td>');
@@ -261,14 +237,11 @@ function create_sub_menu($menu, $active_level1, $active_level2)
 	$return .= ('</tr>');
 
 	$return .= ('<tr>');
-	foreach ($menu as $number => $entry)
-	{
+	foreach ($menu as $number => $entry) {
 		// if this entry has a submenu and is the active one
-		if (isset($entry['submenu']) && $number == $active_level1)
-		{
+		if (isset($entry['submenu']) && $number == $active_level1) {
 			$return .= ('<td><small>');
-			foreach ($entry['submenu'] as $sub_number => $sub_entry)
-			{
+			foreach ($entry['submenu'] as $sub_number => $sub_entry) {
 				if ($sub_number > 0)
 					$return .= (' | ');
 
@@ -279,8 +252,7 @@ function create_sub_menu($menu, $active_level1, $active_level2)
 			}
 			$return .= ('</small></td>');
 		}
-		else
-		{
+		else {
 			// if it's not the first entry we have to put
 			// additional empty cell for the spacer
 			//if ($number > 0)
@@ -323,8 +295,7 @@ function create_bank_menu() {
 
 }
 
-function create_hq_menu()
-{
+function create_hq_menu() {
 	global $var;
 	$container = create_container('skeleton.php');
 	$container['LocationID'] = $var['LocationID'];
@@ -358,8 +329,7 @@ function create_ug_menu() {
 	create_menu($menu_items);
 }
 
-function create_council_menu($race_id)
-{
+function create_council_menu($race_id) {
 	global $player;
 
 	$menu_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
@@ -377,8 +347,7 @@ function create_council_menu($race_id)
 	$container['race_id'] = $race_id;
 	$menu_items[] = create_link($container, 'Send Message','nav');
 
-	if($player->getRaceID()==$race_id)
-	{
+	if($player->getRaceID()==$race_id) {
 		if ($player->isOnCouncil())
 			$menu_items[] = create_link(create_container('skeleton.php', 'council_vote.php'),
 															'Voting Center','nav');
@@ -390,8 +359,7 @@ function create_council_menu($race_id)
 	create_menu($menu_items);
 }
 
-function create_bar_menu()
-{
+function create_bar_menu() {
 	global $template;
 	$template->assign('MenuItems', array(
 					array('Link'=>Globals::getBarMainHREF(),'Text'=>'Bar Main'),
@@ -399,8 +367,7 @@ function create_bar_menu()
 					array('Link'=>Globals::getBarBlackjackHREF(),'Text'=>'BlackJack')));
 }
 
-function create_news_menu(&$template)
-{
+function create_news_menu(&$template) {
 	global $var;
 	$menuItems = array();
 	if(SmrSession::$game_id==$var['GameID'])
@@ -411,8 +378,7 @@ function create_news_menu(&$template)
 	$template->assign('MenuItems', $menuItems);
 }
 
-function create_nav_menu(&$template, &$player)
-{
+function create_nav_menu(&$template, &$player) {
 	$menuItems = array();
 	$menuItems[] = array('Link'=>Globals::getPlotCourseHREF(),'Text'=>'Plot A Course');
 	if(!$player->isLandedOnPlanet())

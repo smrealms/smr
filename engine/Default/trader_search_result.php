@@ -1,7 +1,5 @@
 <?php
 
-$db2 = new SmrMySqlDatabase();
-
 if(isset($_REQUEST['player_id']))
 	SmrSession::updateVar('PlayerID',$_REQUEST['player_id']);
 if (isset($var['player_id']))
@@ -19,22 +17,20 @@ $count = 0;
 $template->assign('PageTopic','Search Trader Results');
 
 if (!empty($player_id))
-	$db->query('SELECT * FROM player ' .
-			'WHERE game_id = '.$player->getGameID().' AND ' .
-			'player_id = '.$player_id.' LIMIT 5');
-else
-{
+	$db->query('SELECT * FROM player
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND player_id = '.$player_id.' LIMIT 5');
+else {
 	if (empty($player_name))
 		$player_name = '%';
 
-	$db->query('SELECT * FROM player ' .
-			'WHERE game_id = '.$player->getGameID().' AND ' .
-					'player_name = ' . $db->escapeString($player_name) . ' ' .
-			'ORDER BY player_name LIMIT 5');
+	$db->query('SELECT * FROM player
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND player_name = ' . $db->escapeString($player_name) . '
+				ORDER BY player_name LIMIT 5');
 }
 
-if ($db->getNumRows() > 0)
-{
+if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('<table class="standard" width="75%">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Name</th>');
@@ -47,8 +43,7 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=('<th>Option</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 		$PHP_OUTPUT.=('<tr>');
 
@@ -60,15 +55,13 @@ if ($db->getNumRows() > 0)
 		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 		$PHP_OUTPUT.=('<br />');
-		if ($curr_player->hasCustomShipName())
-		{
+		if ($curr_player->hasCustomShipName()) {
 			$PHP_OUTPUT.= $curr_player->getCustomShipName();
 		}
 		$PHP_OUTPUT.=('</td>');
 
 		$PHP_OUTPUT.=('<td>');
-		if ($curr_player->hasAlliance())
-		{
+		if ($curr_player->hasAlliance()) {
 			$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
 		}
 		else
@@ -111,8 +104,7 @@ if ($db->getNumRows() > 0)
 		$container['submit'] = 'Search For Player';
 		$container['playerName'] = $curr_player->getPlayerName();
 		$PHP_OUTPUT.=create_link($container, '<span class="yellow">View News</span>');
-		if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
-		{
+		if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 			$PHP_OUTPUT.= '<br />';
 			$container=array();
 			$container['url'] = 'sector_jump_processing.php';
@@ -125,8 +117,7 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=('</table>');
 	$count++;
 }
-if (empty($player_id))
-{
+if (empty($player_id)) {
 	$real = $player_name;
 	if (!empty($player_name))
 		$player_name = '%' . $player_name . '%';
@@ -134,12 +125,11 @@ if (empty($player_id))
 		$player_name = '%';
 	
 	$db->query('SELECT * FROM player ' .
-			'WHERE game_id = '.$player->getGameID().' AND ' .
+			'WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' .
 					'player_name LIKE ' . $db->escape_string($player_name, true) . ' AND player_name != ' . $db->escape_string($real, true) . ' ' .
 			'ORDER BY player_name LIMIT 5');
 			
-	if ($db->getNumRows() > 0)
-	{
+	if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT.=('<br /><table class="standard" width="75%">');
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<th>Name</th>');
@@ -152,8 +142,7 @@ if (empty($player_id))
 		$PHP_OUTPUT.=('<th>Option</th>');
 		$PHP_OUTPUT.=('</tr>');
 	
-		while ($db->nextRecord())
-		{
+		while ($db->nextRecord()) {
 			$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 			$PHP_OUTPUT.=('<tr>');
@@ -166,15 +155,13 @@ if (empty($player_id))
 			$PHP_OUTPUT.=('<td>');
 			$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
 			$PHP_OUTPUT.=('<br />');
-			if ($curr_player->hasCustomShipName())
-			{
+			if ($curr_player->hasCustomShipName()) {
 				$PHP_OUTPUT.= $curr_player->getCustomShipName();
 			}
 			$PHP_OUTPUT.=('</td>');
 	
 			$PHP_OUTPUT.=('<td>');
-			if ($curr_player->hasAlliance())
-			{
+			if ($curr_player->hasAlliance()) {
 				$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
 			}
 			else
@@ -217,8 +204,7 @@ if (empty($player_id))
 			$container['submit'] = 'Search For Player';
 			$container['playerName'] = $curr_player->getPlayerName();
 			$PHP_OUTPUT.=create_link($container, '<span class="yellow">View News</span>');
-			if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
-			{
+			if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 				$container=array();
 				$container['url'] = 'sector_jump_processing.php';
 				$container['to'] = $curr_player->getSectorID();

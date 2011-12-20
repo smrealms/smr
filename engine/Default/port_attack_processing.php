@@ -20,8 +20,7 @@ if(!$port->exists())
 	create_error('This port does not exist.');
 	
 	
-if ($port->isDestroyed())
-{
+if ($port->isDestroyed()) {
 	$container=create_container('skeleton.php','port_attack.php');
 	$container['sector_id'] = $port->getSectorID();
 	forward($container);
@@ -46,13 +45,11 @@ $attackers =& $sector->getFightingTradersAgainstPort($player, $port);
 $port->attackedBy($player,$attackers);
 
 //decloak all attackers
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	$attacker->getShip()->decloak();
 } unset($attacker);
 
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	$playerResults =& $attacker->shootPort($port);
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
@@ -66,11 +63,10 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $port->update();
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PORT\',' . $port->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ','.ACCOUNT_ID_PORT.',' . PORT_ALLIANCE_ID . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $port->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ','.ACCOUNT_ID_PORT.',' . PORT_ALLIANCE_ID . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 $logId = $db->escapeString('[ATTACK_RESULTS]'.$db->getInsertID());
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	if(!$player->equals($attacker))
 		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ','.$logId.')');
 } unset($attacker);
@@ -80,8 +76,7 @@ $container=create_container('skeleton.php','port_attack.php');
 $container['sector_id'] = $port->getSectorID();
 
 // If they died on the shot they get to see the results
-if($player->isDead())
-{
+if($player->isDead()) {
 	$container['override_death'] = TRUE;
 }
 
@@ -100,23 +95,23 @@ forward($container);
 //		$text .= $mainText;
 //		$text = mysql_real_escape_string($text);
 //		$thread_id = 0;
-//		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' AND topic = '.$db->escapeString($topic).' LIMIT 1');
+//		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 //		if ($db->nextRecord()) $thread_id = $db->getField('thread_id');
 //		if ($thread_id == 0)
-//		{
-//			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' ORDER BY thread_id DESC LIMIT 1');
+// {
+//			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY thread_id DESC LIMIT 1');
 //			if ($db->nextRecord())
 //				$thread_id = $db->getField('thread_id') + 1;
 //			else $thread_id = 1;
 //			$db->query('INSERT INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES ' .
-//						'('.$player->getGameID().', '.$player->getAllianceID().', '.$thread_id.', '.$db->escapeString($topic).')');
+//						'(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', '.$thread_id.', '.$db->escapeString($topic).')');
 //		}
-//		$db->query('SELECT * FROM alliance_thread WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' .
+//		$db->query('SELECT * FROM alliance_thread WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' .
 //					'thread_id = '.$thread_id.' ORDER BY reply_id DESC LIMIT 1');
 //		if ($db->nextRecord()) $reply_id = $db->getField('reply_id') + 1;
 //		else $reply_id = 1;
 //		$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES ' .
-//				'('.$player->getGameID().', '.$player->getAllianceID().', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', 0, ' . TIME . ')');
+//				'(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', 0, ' . TIME . ')');
 //	}
 //}
 ?>

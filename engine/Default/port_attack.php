@@ -1,7 +1,6 @@
 <?php
 require_once(get_file_loc('SmrPort.class.inc'));
-if(isset($var['results']))
-{
+if(isset($var['results'])) {
 	$results = unserialize($var['results']);
 	$template->assignByRef('FullPortCombatResults',$results);
 	$template->assign('AlreadyDestroyed',false);

@@ -26,8 +26,7 @@ $player->takeTurns($forces->getBumpTurnCost());
 
 
 // send message if scouts are present
-if ($forces->hasSDs())
-{
+if ($forces->hasSDs()) {
 	$message = 'Your forces in sector '.$forces->getSectorID().' are being attacked by '.$player->getPlayerName();
 	$forces->ping($message, $player);
 }
@@ -47,16 +46,14 @@ $sector =& $player->getSector();
 $attackers = array(&$player); //When hitting mines by bumping only the current player attacks/gets hit.
 
 //decloak all attackers
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	$attacker->getShip()->decloak();
 } unset($attacker);
 
 $results['Forces'] =& $forces->shootPlayers($attackers,true);
 
 $results['Attackers'] = array('TotalDamage' => 0);
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	$playerResults =& $attacker->shootForces($forces);
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
@@ -65,7 +62,7 @@ foreach($attackers as &$attacker)
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $forces->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $forceOwner->getAccountID() . ',' . $forceOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $forces->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $forceOwner->getAccountID() . ',' . $forceOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = create_container('skeleton.php', 'forces_attack.php');
@@ -77,8 +74,7 @@ else
 	$container['owner_id'] = 0;
 
 // If they died on the shot they get to see the results
-if($player->isDead())
-{
+if($player->isDead()) {
 	$container['override_death'] = TRUE;
 	$container['owner_id'] = 0;
 }

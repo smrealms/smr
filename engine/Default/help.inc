@@ -1,7 +1,6 @@
 <?php
 
-function echo_nav($topic_id)
-{
+function echo_nav($topic_id) {
 	// database object
 	$db = new SmrMySqlDatabase();
 	$db2 = new SmrMySqlDatabase();
@@ -9,8 +8,7 @@ function echo_nav($topic_id)
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$db->escapeNumber($topic_id));
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$parent_topic_id = $db->getField('parent_topic_id');
 		$order_id = $db->getField('order_id');
 		$topic = stripslashes($db->getField('topic'));
@@ -28,8 +26,7 @@ function echo_nav($topic_id)
 			$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
 
 		echo ('<th width="32">');
-		if ($db2->nextRecord())
-		{
+		if ($db2->nextRecord()) {
 			$previous_topic_id = $db2->getField('topic_id');
 			$previous_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$previous_topic_id.'"><img src="'.URL.'/images/help/previous.jpg" width="32" height="32" border="0"></a>');
@@ -42,8 +39,7 @@ function echo_nav($topic_id)
 		// **************************
 		$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
 		echo ('<th width="32">');
-		if ($db2->nextRecord())
-		{
+		if ($db2->nextRecord()) {
 			$up_topic_id = $db2->getField('topic_id');
 			$up_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$up_topic_id.'"><img src="'.URL.'/images/help/up.jpg" width="32" height="32" border="0"></a>');
@@ -60,8 +56,7 @@ function echo_nav($topic_id)
 			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$parent_topic_id.' AND order_id = '.$order_id.' + 1');
 
 		$curr_parent_topic_id = $parent_topic_id;
-		while (!$db2->getNumRows() && $curr_parent_topic_id != 0)
-		{
+		while (!$db2->getNumRows() && $curr_parent_topic_id != 0) {
 			$db3->query('SELECT * FROM manual WHERE topic_id = '.$curr_parent_topic_id);
 			$db3->nextRecord();
 			$curr_order_id = $db3->getField('order_id');
@@ -71,8 +66,7 @@ function echo_nav($topic_id)
 		}
 
 		echo ('<th width="32">');
-		if ($db2->nextRecord())
-		{
+		if ($db2->nextRecord()) {
 			$next_topic_id = $db2->getField('topic_id');
 			$next_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$next_topic_id.'"><img src="'.URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
@@ -100,15 +94,13 @@ function echo_nav($topic_id)
 		echo ('Invalid Topic!');
 }
 
-function echo_content($topic_id)
-{
+function echo_content($topic_id) {
 	// database object
 	$db = new SmrMySqlDatabase();
 
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$parent_topic_id = $db->getField('parent_topic_id');
 		$order_id = $db->getField('order_id');
 		$topic = stripslashes($db->getField('topic'));
@@ -122,15 +114,13 @@ function echo_content($topic_id)
 		echo ('Invalid Topic!');
 }
 
-function echo_subsection($topic_id)
-{
+function echo_subsection($topic_id) {
 	// database object
 	$db = new SmrMySqlDatabase();
 	$return='';
 	// check if there are subsections
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$db->escapeNumber($topic_id).' ORDER BY order_id');
-	if ($db->getNumRows())
-	{
+	if ($db->getNumRows()) {
 		echo ('<hr noshade width="75%" size="1" align="center"/>');
 		echo ('<div id="help_menu">');
 		echo ('<h2>Subsections:</h2>');
@@ -142,18 +132,15 @@ function echo_subsection($topic_id)
 	return $return;
 }
 
-function echo_menu($topic_id)
-{
+function echo_menu($topic_id) {
 	$return='';
 	// database object
 	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM manual WHERE parent_topic_id = '.$db->escapeNumber($topic_id).' ORDER BY order_id');
-	if ($db->getNumRows())
-	{
+	if ($db->getNumRows()) {
 		echo ('<ul type="disc">');
-		while($db->nextRecord())
-		{
+		while($db->nextRecord()) {
 			$sub_topic_id = $db->getField('topic_id');
 			$order_id = $db->getField('order_id');
 			$sub_topic = stripslashes($db->getField('topic'));
@@ -166,13 +153,11 @@ function echo_menu($topic_id)
 	return $return;
 }
 
-function get_numbering($topic_id)
-{
+function get_numbering($topic_id) {
 	$db = new SmrMySqlDatabase();
 
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$db->escapeNumber($topic_id));
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$up_topic_id = $db->getField('parent_topic_id');
 		$order_id = $db->getField('order_id');
 

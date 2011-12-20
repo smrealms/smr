@@ -25,7 +25,7 @@ if (isset($var['accept'])) {
 				VALUES (' . $db->escapeNumber($alliance_id_1) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($role_id) . ', ' . $db->escapeString($allianceName) . ',1)');
 			$db->query('SELECT MAX(role_id)
 						FROM alliance_has_roles
-						WHERE game_id = ' . $player->getGameID() . '
+						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 							AND alliance_id = ' . $var['alliance_id_1']);
 			if ($db->nextRecord()) {
 				$role_id = $db->getInt('MAX(role_id)') + 1;

@@ -2,8 +2,7 @@
 // get a planet from the sector where the player is in
 $planet =& $player->getSectorPlanet();
 // owner of planet
-if ($planet->hasOwner())
-{
+if ($planet->hasOwner()) {
 	$planet_owner =& $planet->getOwner();
 	$ownerAllianceID = $planet_owner->getAllianceID();
 } else $ownerAllianceID = 0;
@@ -34,9 +33,9 @@ $PHP_OUTPUT.=('<div align="center">');
 //check for treaty
 $planetLand = FALSE;
 $db->query('SELECT planet_land FROM alliance_treaties
-				WHERE (alliance_id_1 = '.$ownerAllianceID.' OR alliance_id_1 = '.$player->getAllianceID().')
-				AND (alliance_id_2 = '.$ownerAllianceID.' OR alliance_id_2 = '.$player->getAllianceID().')
-				AND game_id = '.$player->getGameID().'
+				WHERE (alliance_id_1 = '.$ownerAllianceID.' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
+				AND (alliance_id_2 = '.$ownerAllianceID.' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
+				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND planet_land = 1 AND official = \'TRUE\'');
 if ($db->nextRecord()) $planetLand = TRUE;
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $planetLand = TRUE;

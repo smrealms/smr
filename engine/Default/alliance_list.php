@@ -18,22 +18,6 @@ if(!isset($var['sequence'])) {
 }
 
 // get list of alliances
-//$db->query('SELECT 
-//count(player_name) as alliance_member_count,
-//sum(player_cache.experience) as alliance_xp,
-//floor(avg(player_cache.experience)) as alliance_avg,
-//alliance.alliance_name as alliance_name,
-//player.alliance_id as alliance_id 
-//FROM player, player_cache, alliance 
-//WHERE player.alliance_id = alliance.alliance_id 
-//AND alliance.leader_id > 0
-//AND player.game_id = ' . $player->getGameID() . '
-//AND alliance.game_id = ' . $player->getGameID()
-// . 'AND player_cache.game_id = ' . $player->getGameID()
-// . 'AND player_cache.account_id = player.account_id
-//GROUP BY alliance.alliance_id 
-//ORDER BY ' . $var['order'] . ' ' . $varSequence
-//);
 $db->query('SELECT 
 count(account_id) as alliance_member_count,
 sum(experience) as alliance_xp,

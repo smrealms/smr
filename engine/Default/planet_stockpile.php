@@ -22,8 +22,7 @@ $PHP_OUTPUT.=('<th>Transfer to</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $GOODS =& Globals::getGoods();
-foreach($GOODS as $goodID => $good)
-{
+foreach($GOODS as $goodID => $good) {
 	if (!$ship->hasCargo($goodID) && !$planet->hasStockpile($goodID)) continue;
 
 	$container = create_container('planet_stockpile_processing.php');

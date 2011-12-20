@@ -8,14 +8,11 @@ if($sector->getWarp() == $var['target_sector'])
 else
 	$turns = TURNS_PER_SECTOR;
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
-{
+if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	//update plot
-	if ($player->hasPlottedCourse())
-	{
+	if ($player->hasPlottedCourse()) {
 		$path =& $player->getPlottedCourse();
-		if ($path->getNextOnPath() == $var['target_sector'])
-		{
+		if ($path->getNextOnPath() == $var['target_sector']) {
 			$path->followPath($sector->getWarp() == $var['target_sector']);
 			$player->setPlottedCourse($path);
 		}
@@ -34,8 +31,7 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
 	forward(create_container('skeleton.php', $var['target_page']));
 }
 $action = '';
-if(isset($_REQUEST['action']))
-{
+if(isset($_REQUEST['action'])) {
 	$action = $_REQUEST['action'];
 	if ($action == 'No')
 		forward(create_container('skeleton.php', $var['target_page']));
@@ -51,15 +47,12 @@ if ($player->getTurns() < $turns)
 if (!$sector->isLinked($var['target_sector']))
 	create_error('You cannot move to that sector!');
 
-if ($player->getLastSectorID() != $var['target_sector'])
-{
+if ($player->getLastSectorID() != $var['target_sector']) {
 	$sectorForces =& $sector->getForces();
 	Sorter::sortByNumMethod($sectorForces,'getMines',true);
 	$mine_owner_id = false;
-	foreach($sectorForces as &$forces)
-	{
-		if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
-		{
+	foreach($sectorForces as &$forces) {
+		if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 			$mine_owner_id = $forces->getOwnerID();
 			break;
 		}
@@ -67,18 +60,15 @@ if ($player->getLastSectorID() != $var['target_sector'])
 	// set last sector
 	$player->setLastSectorID($var['target_sector']);
 	
-	if($mine_owner_id)
-	{
-		if ($player->hasNewbieTurns())
-		{
+	if($mine_owner_id) {
+		if ($player->hasNewbieTurns()) {
 			$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
 			$player->takeTurns($turns,$turns);
 			$container = create_container('skeleton.php', 'current_sector.php');
 			$container['msg']= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns.' turn'.($turns==1?'':'s') . ' to navigate the minefield safely';
 			forward($container);
 		}
-		else
-		{
+		else {
 			$owner_id = $mine_owner_id;
 			require_once('forces_minefield_processing.php');
 			return;
@@ -87,11 +77,9 @@ if ($player->getLastSectorID() != $var['target_sector'])
 }
 
 // check if this came from a plotted course from db
-if ($player->hasPlottedCourse())
-{
+if ($player->hasPlottedCourse()) {
 	$path =& $player->getPlottedCourse();
-	if ($path->getNextOnPath() == $var['target_sector'])
-	{
+	if ($path->getNextOnPath() == $var['target_sector']) {
 		$path->followPath($sector->getWarp() == $var['target_sector']);
 		$player->setPlottedCourse($path);
 	}
@@ -121,8 +109,7 @@ acquire_lock($var['target_sector']);
 $sector =& $player->getSector();
 
 //add that the player explored here if it hasnt been explored...for HoF
-if (!$sector->isVisited($player))
-{
+if (!$sector->isVisited($player)) {
 	$player->increaseExperience(EXPLORATION_EXPERIENCE);
 	$player->increaseHOF(EXPLORATION_EXPERIENCE,array('Movement','Exploration Experience Gained'), HOF_ALLIANCE);
 	$player->increaseHOF(1,array('Movement','Sectors Explored'), HOF_ALLIANCE);
@@ -136,27 +123,22 @@ $sector->enteringSector($player,MOVEMENT_WALK);
 $sectorForces =& $sector->getForces();
 $mine_owner_id = false;
 Sorter::sortByNumMethod($sectorForces,'getMines',true);
-foreach($sectorForces as &$forces)
-{
-	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
-	{
+foreach($sectorForces as &$forces) {
+	if(!$mine_owner_id && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 		$mine_owner_id = $forces->getOwnerID();
 		break;
 	}
 } unset($forces);
 
-if ($mine_owner_id)
-{
-	if ($player->hasNewbieTurns())
-	{
+if ($mine_owner_id) {
+	if ($player->hasNewbieTurns()) {
 		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
 		$player->takeTurns($turns,$turns);
 		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg']= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns.' turn'.($turns==1?'':'s') . ' to navigate the minefield safely.';
 		forward($container);
 	}
-	else
-	{
+	else {
 		$owner_id = $mine_owner_id;
 		require_once('forces_minefield_processing.php');
 		return;

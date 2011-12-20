@@ -5,10 +5,8 @@ $template->assign('PageTopic','Player Blacklist');
 require_once(get_file_loc('menu.inc'));
 create_message_menu();
  
-if(isset($var['error']))
-{
-	switch($var['error'])
-	{
+if(isset($var['error'])) {
+	switch($var['error']) {
 		case(1):
 			$PHP_OUTPUT.= '<span class="red bold">ERROR: </span>Player does not exist.';
 			break;
@@ -30,10 +28,9 @@ if(isset($var['error']))
 $PHP_OUTPUT.= '<h2>Blacklisted Players</h2><br />';
 
 $db = new SmrMySqlDatabase();
-$db->query('SELECT p.player_name, p.game_id, b.entry_id FROM player p JOIN message_blacklist b ON p.account_id = b.blacklisted_id AND b.game_id = p.game_id WHERE b.account_id=' . $player->getAccountID() .' ORDER BY p.game_id, p.player_name');
+$db->query('SELECT p.player_name, p.game_id, b.entry_id FROM player p JOIN message_blacklist b ON p.account_id = b.blacklisted_id AND b.game_id = p.game_id WHERE b.account_id=' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY p.game_id, p.player_name');
 
-if($db->getNumRows())
-{
+if($db->getNumRows()) {
 	$container = array();
 	$container['url'] = 'message_blacklist_del.php';
 	$form = create_form($container,'Remove Selected');
@@ -41,8 +38,7 @@ if($db->getNumRows())
 	
 	$PHP_OUTPUT.= '<table class="standard"><tr><th>Option</th><th>Name</th><th>Game ID</th>';
 	
-	while($db->nextRecord())
-	{
+	while($db->nextRecord()) {
 		$row = $db->getRow();		
 		$PHP_OUTPUT.= '<tr>';
 		$PHP_OUTPUT.= '<td class="center shrink"><input type="checkbox" name="entry_ids[]" value="' . $row['entry_id'] . '"></td>';
@@ -55,8 +51,7 @@ if($db->getNumRows())
 	$PHP_OUTPUT.= $form['submit'];
 	$PHP_OUTPUT.= '</form><br />';
 }
-else
-{
+else {
 	$PHP_OUTPUT.= 'You are currently accepting all communications.<br />';
 }
 

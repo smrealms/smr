@@ -1,8 +1,6 @@
 <?php
-if ($var['action'] == 'Enable')
-{
-	if($player->getTurns() < TURNS_TO_CLOAK)
-	{
+if ($var['action'] == 'Enable') {
+	if($player->getTurns() < TURNS_TO_CLOAK) {
 		create_error('You do not have enough turns to cloak.');
 	}
 	$player->takeTurns(TURNS_TO_CLOAK);
@@ -10,13 +8,11 @@ if ($var['action'] == 'Enable')
 	$player->increaseHOF(1,array('Movement','Cloaking','Times'), HOF_ALLIANCE);
 	$ship->enableCloak();
 }
-elseif ($var['action'] == 'Disable')
-{
+elseif ($var['action'] == 'Disable') {
 	$ship->decloak();
 }
 
-elseif ($var['action'] == 'Set Illusion')
-{
+elseif ($var['action'] == 'Set Illusion') {
 	if (!is_numeric($_REQUEST['ship_id']) ||
 		!is_numeric($_REQUEST['attack']) ||
 		!is_numeric($_REQUEST['defense']))
@@ -24,8 +20,7 @@ elseif ($var['action'] == 'Set Illusion')
 
 	$ship->setIllusion($_REQUEST['ship_id'], $_REQUEST['attack'], $_REQUEST['defense']);
 }
-elseif ($var['action'] == 'Disable Illusion')
-{
+elseif ($var['action'] == 'Disable Illusion') {
 	$ship->disableIllusion();
 }
 

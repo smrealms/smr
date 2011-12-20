@@ -5,23 +5,19 @@ $db->query('SELECT timeout FROM vote_links WHERE account_id=' . SmrSession::$acc
 $valid = !$db->nextRecord() || $db->getField('timeout') <= TIME - TIME_BETWEEN_VOTING;
 
 // Sanity checking
-if($var['link_id'] > 3 || $var['link_id'] < 1 )
-{
+if($var['link_id'] > 3 || $var['link_id'] < 1 ) {
 	$valid = false;
 }
 
 
-if($valid == true)
-{
-	if($player->getLastTurnUpdate() > $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME) //Make sure we cannot take their last turn update before start time
-	{
+if($valid == true) {
+	if($player->getLastTurnUpdate() > $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME) { //Make sure we cannot take their last turn update before start time
 		// Allow vote
 		$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . SmrSession::$account_id . ',' . $var['link_id'] . ',' . TIME . ')');
 		$player->setLastTurnUpdate($player->getLastTurnUpdate()-VOTE_BONUS_TURNS_TIME); //Give turns via added time, no rounding errors.
 		$player->updateTurns(); //Display updated turns straight away.
 	}
-	else
-	{
+	else {
 		create_error('You cannot gain bonus turns in this game yet, please wait '.format_time( $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME - min(TIME, $player->getLastTurnUpdate())).'.');
 	}
 }

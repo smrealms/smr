@@ -1,16 +1,14 @@
 <?php
 $template->assign('PageTopic','Weapon Dealer');
-$db2 = new SmrMySqlDatabase();
 $db->query('SELECT * FROM location
 			JOIN location_type USING (location_type_id)
 			JOIN location_sells_weapons USING (location_type_id)
 			JOIN weapon_type USING (weapon_type_id)
-			WHERE sector_id = '.$player->getSectorID().'
-				AND game_id = '.$player->getGameID().'
+			WHERE sector_id = ' . $db->escapeNumber($player->getSectorID()) . '
+				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND location_type_id = '.$var['LocationID']);
 
-if ($db->getNumRows() > 0 )
-{
+if ($db->getNumRows() > 0 ) {
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
@@ -23,8 +21,7 @@ if ($db->getNumRows() > 0 )
 	$PHP_OUTPUT.=('<th align="center">Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$weapon_name = $db->getField('weapon_name');
 		$weapon_type_id = $db->getField('weapon_type_id');
 		$shield_damage = $db->getField('shield_damage');
@@ -64,8 +61,7 @@ if ($db->getNumRows() > 0 )
 	$PHP_OUTPUT.=('</table>');
 }
 
-if ($ship->hasWeapons())
-{
+if ($ship->hasWeapons()) {
 
 	$template->assign('PageTopic','Sell Weapons');
 
@@ -77,8 +73,7 @@ if ($ship->hasWeapons())
 	$PHP_OUTPUT.=('</tr>');
 
 	$shipWeapons =& $ship->getWeapons();
-	foreach ($shipWeapons as $order_id => &$weapon)
-	{
+	foreach ($shipWeapons as $order_id => &$weapon) {
 		$cost = $weapon->getCost() / 2;
 
 		$container = create_container('shop_weapon_processing.php');

@@ -13,16 +13,14 @@ $file = ';SMR1.6 Sectors File v 1.03
 [Races]
 ; Name = ID' . EOL;
 $races =& Globals::getRaces();
-foreach($races as &$race)
-{
+foreach($races as &$race) {
 	$file.=inify($race['Race Name']).'='.$race['Race ID'] . EOL;
 } unset($race);
 
 $file.='[Goods]
 ; ID = Name, BasePrice' . EOL;
 $goods =& Globals::getGoods();
-foreach($goods as &$good)
-{
+foreach($goods as &$good) {
 	$file.=$good['ID'].'='.inify($good['Name']).','.$good['BasePrice'] . EOL;
 } unset($good);
 
@@ -31,16 +29,14 @@ $file.='[Weapons]
 ; Align: 0=none, 1=good, 2=evil
 ; Attack: 0=none, 1=raid' . EOL;
 $weapons =& SmrWeapon::getAllWeapons(Globals::getGameType($gameID));
-foreach($weapons as &$weapon)
-{
+foreach($weapons as &$weapon) {
 	$file.=inify($weapon->getName()).'='.inify($weapon->getRaceName()).','.$weapon->getCost().','.$weapon->getShieldDamage().','.$weapon->getArmourDamage().','.$weapon->getBaseAccuracy().','.$weapon->getPowerLevel().','.$weapon->getEmpDamage().','.$weapon->getBuyerRestriction().','.($weapon->isRaidWeapon()?'1':'0') . EOL;
 } unset($weapon);
 
 $file.='[ShipEquipment]
 ; Name = Cost' . EOL;
 $hardwares =& Globals::getHardwareTypes();
-foreach($hardwares as &$hardware)
-{
+foreach($hardwares as &$hardware) {
 	$file.=inify($hardware['Name']).'='.$hardware['Cost'] . EOL;
 } unset($hardware);
 
@@ -48,14 +44,11 @@ $file.='[Ships]
 ; Name = Race,Cost,TPH,Hardpoints,Power,+Equipment (Optional),+Restrictions(Optional)
 ; Restrictions:Align(Integer)' . EOL;
 $ships =& AbstractSmrShip::getAllBaseShips($gameID);
-foreach($ships as &$ship)
-{
+foreach($ships as &$ship) {
 	$file.=inify($ship['Name']).'='.Globals::getRaceName($ship['RaceID']).','.$ship['Cost'].','.$ship['Speed'].','.$ship['Hardpoint'].','.$ship['MaxPower'];
-	if($ship['MaxHardware']>0)
-	{
+	if($ship['MaxHardware']>0) {
 		$shipEquip=',ShipEquipment=';
-		foreach($ship['MaxHardware'] as $hardwareID => $maxHardware)
-		{
+		foreach($ship['MaxHardware'] as $hardwareID => $maxHardware) {
 			$shipEquip.=$hardwares[$hardwareID]['Name'].'='.$maxHardware.';';
 		}
 		$file .= substr($shipEquip,0,-1);
@@ -67,58 +60,46 @@ foreach($ships as &$ship)
 $file.='[Locations]
 ; Name = +Sells' . EOL;
 $locations =& SmrLocation::getAllLocations();
-foreach($locations as &$location)
-{
+foreach($locations as &$location) {
 	$file.=inify($location->getName()).'=';
 	$locSells='';
-	if($location->isWeaponSold())
-	{
+	if($location->isWeaponSold()) {
 		$locWeapons =& $location->getWeaponsSold();
 		$locSells.='Weapons=';
-		foreach($locWeapons as &$locWeapon)
-		{
+		foreach($locWeapons as &$locWeapon) {
 			$locSells.=$locWeapon->getName().';';
 		} unset($locWeapon);
 		$locSells = substr($locSells,0,-1).',';
 	}
-	if($location->isHardwareSold())
-	{
+	if($location->isHardwareSold()) {
 		$locHardwares =& $location->getHardwareSold();
 		$locSells.='ShipEquipment=';
-		foreach($locHardwares as $locHardware)
-		{
+		foreach($locHardwares as $locHardware) {
 			$locSells.=$locHardware.';';
 		}
 		$locSells = substr($locSells,0,-1).',';
 	}
-	if($location->isShipSold())
-	{
+	if($location->isShipSold()) {
 		$locShips =& $location->getShipsSold();
 		$locSells.='Ships=';
-		foreach($locShips as &$locShip)
-		{
+		foreach($locShips as &$locShip) {
 			$locSells.=$locShip['Name'].';';
 		} unset($locShip);
 		$locSells = substr($locSells,0,-1).',';
 	}
-	if($location->isBank())
-	{
+	if($location->isBank()) {
 		$locSells.='Bank=,';
 	}
-	if($location->isBar())
-	{
+	if($location->isBar()) {
 		$locSells.='Bar=,';
 	}
-	if($location->isHQ())
-	{
+	if($location->isHQ()) {
 		$locSells.='HQ=,';
 	}
-	if($location->isUG())
-	{
+	if($location->isUG()) {
 		$locSells.='UG=,';
 	}
-	if($location->isFed())
-	{
+	if($location->isFed()) {
 		$locSells.='Fed=,';
 	}
 	if($locSells!='')
@@ -131,30 +112,25 @@ Name='.inify(Globals::getGameName($gameID)).'
 [Galaxies]
 ';
 $galaxies =& SmrGalaxy::getGameGalaxies($gameID);
-foreach ($galaxies as &$galaxy)
-{
+foreach ($galaxies as &$galaxy) {
 	$file .= $galaxy->getGalaxyID() . '=' . $galaxy->getWidth() . ',' . $galaxy->getHeight() . ',' . $galaxy->getGalaxyType() . ',' . inify($galaxy->getName()) . EOL;
 } unset($galaxy);
 
 
-foreach ($galaxies as &$galaxy)
-{
+foreach ($galaxies as &$galaxy) {
 	$sectors =& $galaxy->getSectors();
-	foreach ($sectors as &$sector)
-	{
+	foreach ($sectors as &$sector) {
 		$file .= '[Sector=' . $sector->getSectorID() . ']' . EOL;
 		
 		if(!$sector->isVisited($player) && $adminCreate === false)
 			continue;
 		
-		foreach($sector->getLinks() as $linkName => $link)
-		{
+		foreach($sector->getLinks() as $linkName => $link) {
 			$file .= $linkName.'='.$link . EOL;
 		}
 		if($sector->hasWarp())
 			$file .= 'Warp='.$sector->getWarp() . EOL;
-		if(($adminCreate !== false && $sector->hasPort()) || is_object($player) && $sector->hasCachedPort($player))
-		{
+		if(($adminCreate !== false && $sector->hasPort()) || is_object($player) && $sector->hasCachedPort($player)) {
 			if($adminCreate !== false)
 				$port =& $sector->getPort();
 			else
@@ -162,21 +138,17 @@ foreach ($galaxies as &$galaxy)
 			$file .= 'Port Level='.$port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
 			$portGoods =& $port->getGoods();
-			if(count($portGoods['Sell'])>0)
-			{
+			if(count($portGoods['Sell'])>0) {
 				$buyString = 'Buys=';
-				foreach($portGoods['Sell'] as $goodID => $amount)
-				{
+				foreach($portGoods['Sell'] as $goodID => $amount) {
 					$buyString .= $goodID .',';
 				}
 				$file .= substr($buyString,0,-1) . EOL;
 			}
 			
-			if(count($portGoods['Buy'])>0)
-			{
+			if(count($portGoods['Buy'])>0) {
 				$sellString = 'Sells=';
-				foreach($portGoods['Buy'] as $goodID => $amount)
-				{
+				foreach($portGoods['Buy'] as $goodID => $amount) {
 					$sellString .= $goodID .',';
 				}
 				$file .= substr($sellString,0,-1) . EOL;
@@ -184,27 +156,22 @@ foreach ($galaxies as &$galaxy)
 			unset($portGoods);
 			unset($port);
 		}
-		if($sector->hasPlanet())
-		{
+		if($sector->hasPlanet()) {
 			$file .= 'Planet=1' . EOL;
 		}
-		if($sector->hasLocation())
-		{
+		if($sector->hasLocation()) {
 			$locationsString= 'Locations=';
 			$locations =& $sector->getLocations();
-			foreach($locations as &$location)
-			{
+			foreach($locations as &$location) {
 				$locationsString .= inify($location->getName()) . ',';
 			} unset ($location);
 			unset($locations);
 			$file .= substr($locationsString,0,-1) . EOL;
 		}
-		if($adminCreate === false && $sector->hasFriendlyForces($player))
-		{
+		if($adminCreate === false && $sector->hasFriendlyForces($player)) {
 			$forcesString= 'FriendlyForces=';
 			$friendlyForces =& $sector->getFriendlyForces($player);
-			foreach($friendlyForces as &$forces)
-			{
+			foreach($friendlyForces as &$forces) {
 				$forcesString .= inify($forces->getOwner()->getName()) . '='.inify(Globals::getHardwareName(HARDWARE_MINE)).'='.$forces->getMines().';'.inify(Globals::getHardwareName(HARDWARE_COMBAT)).'='.$forces->getCDs().';'.inify(Globals::getHardwareName(HARDWARE_SCOUT)).'='.$forces->getSDs().',';
 			} unset ($forces);
 			unset($friendlyForces);
@@ -230,8 +197,7 @@ release_lock();
 exit;
 
 
-function inify($text)
-{
+function inify($text) {
 	return str_replace(',','',html_entity_decode($text));
 }
 ?>

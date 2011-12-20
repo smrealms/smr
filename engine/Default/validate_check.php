@@ -3,8 +3,7 @@
 $container = array();
 
 // is account validated?
-if (!$account->isValidated())
-{
+if (!$account->isValidated()) {
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'validate.php';
 }

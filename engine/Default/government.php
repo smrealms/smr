@@ -5,17 +5,15 @@ if ($player->getAlignment() <= -100)
 	create_error('You are not allowed to enter our Government HQ!');
 
 // get the name of this facility
-$db->query('SELECT 1 FROM location JOIN location_type USING(location_type_id) JOIN location_is_hq USING(location_type_id) ' .
-			'WHERE game_id = '.$player->getGameID().' AND ' .
-			'sector_id = '.$player->getSectorID().' AND ' .
-			'location_type_id = '.$var['LocationID']);
-if ($db->nextRecord())
-{
+$db->query('SELECT 1 FROM location JOIN location_type USING(location_type_id) JOIN location_is_hq USING(location_type_id)
+			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . '
+				AND location_type_id = '.$var['LocationID']);
+if ($db->nextRecord()) {
 	$location =& SmrLocation::getLocation($var['LocationID']);
 	$raceID = $location->getRaceID();
 }
-else
-{
+else {
 	create_error('There is no headquarter. Obviously.');
 //	throw new Exception('Unable to find that hq.');
 }
@@ -35,13 +33,11 @@ require_once(get_file_loc('menu.inc'));
 create_hq_menu();
 
 $PHP_OUTPUT.='<div align="center">';
-if (isset($location_type_id))
-{
+if (isset($location_type_id)) {
 	$races =& Globals::getRaces();
 	$raceRelations =& Globals::getRaceRelations($player->getGameID(), $raceID);
 	$PHP_OUTPUT.=('We are at WAR with<br /><br />');
-	foreach($raceRelations as $otherRaceID => $relation)
-	{
+	foreach($raceRelations as $otherRaceID => $relation) {
 		if ($relation <= -300)
 			$PHP_OUTPUT.=('<span class="red">The '.$races[$otherRaceID]['Race Name'].'<br /></span>');
 
@@ -54,8 +50,7 @@ displayBountyList($PHP_OUTPUT,'HQ',0);
 displayBountyList($PHP_OUTPUT,'HQ',$player->getAccountID());
 
 
-if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100)
-{
+if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100) {
 	$container = create_container('government_processing.php');
 	transfer('LocationID');
 	$PHP_OUTPUT.=create_echo_form($container);

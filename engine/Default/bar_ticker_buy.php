@@ -11,8 +11,7 @@ if (isset($var['process'])) {
 	if(empty($type)) {
 		create_error('You have to choose the type of ticker to buy.');
 	}
-	switch($type)
-	{
+	switch($type) {
 		case 'NEWS':
 		case 'SCOUT':
 		case 'BLOCK':

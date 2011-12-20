@@ -12,8 +12,7 @@ $email = $_POST['email'];
 
 // get website (and validate it)
 $website = '';
-if ($_POST['website'] != 'http://')
-{
+if ($_POST['website'] != 'http://') {
 	$website = $_POST['website'];
 	// add http:// if missing
 	if (!preg_match('=://=', $website)) {
@@ -163,8 +162,7 @@ function php_link_check($url, $r = FALSE) {
 	$fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
 
 	if (!$fp) return FALSE;
-	else
-	{
+	else {
 		$head = '';
 		$httpRequest = 'HEAD '. $url['path'] .' HTTP/1.1'.EOL
 								.'Host: '. $url['host'].EOL
@@ -173,7 +171,7 @@ function php_link_check($url, $r = FALSE) {
 		while(!feof($fp)) $head .= fgets($fp, 1024);
 		fclose($fp);
 
-		preg_match('=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=', $head, $matches);
+		preg_match('=^(HTTP/\d+\.\d+) (\d {3}) ([^\r\n]*)=', $head, $matches);
 		$http['Status-Line'] = $matches[0];
 		$http['HTTP-Version'] = $matches[1];
 		$http['Status-Code'] = $matches[2];

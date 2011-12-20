@@ -27,14 +27,12 @@ $next_sector = $path->getNextOnPath();
 if ($sector->isLinked($next_sector)) {
 
 	// save this to db (if we still have something
-	if ($path->getTotalSectors()>0)
-	{
+	if ($path->getTotalSectors()>0) {
 		$player->setPlottedCourse($path);
 	}
 
 	//$PHP_OUTPUT.=create_echo_form($container);
-	if (!$player->isLandedOnPlanet())
-	{
+	if (!$player->isLandedOnPlanet()) {
 		$nextSector =& SmrSector::getSector($player->getGameID(),$path->getNextOnPath(),$player->getAccountID());
 	
 		$PHP_OUTPUT.='<table class="nobord" width="100%">
@@ -45,8 +43,7 @@ if ($sector->isLinked($next_sector)) {
 					</div>
 				</td>
 			</tr>';
-		if($ship->hasScanner())
-		{
+		if($ship->hasScanner()) {
 			$PHP_OUTPUT.='<tr>
 				<td class="top right">
 					<div class="buttonA">

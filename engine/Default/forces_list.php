@@ -19,13 +19,12 @@ if (!isset($var['subcategory']))
 else
 	$subcategory = $var['subcategory'];
 
-$db->query('
-SELECT sector_id, owner_id
-FROM sector_has_forces
-WHERE owner_id = '.$player->getAccountID().'
-AND game_id = '.$player->getGameID().'
-AND expire_time >= '.TIME.'
-ORDER BY '.$categorySQL.', '.$subcategory);
+$db->query('SELECT sector_id, owner_id
+			FROM sector_has_forces
+			WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
+			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+			AND expire_time >= '.TIME.'
+			ORDER BY '.$categorySQL.', '.$subcategory);
 if ($db->getNumRows() > 0) {
 	
 	$container = array();
@@ -61,8 +60,7 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=('</th>');
 	$PHP_OUTPUT.=('</tr>');
 	
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$forces =& SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'));
 		
 		$PHP_OUTPUT .= '<tr>';
@@ -81,8 +79,7 @@ else
 	$PHP_OUTPUT.=('You have no deployed forces');
 
 
-function setCategories(&$container,$newCategory,$oldCategory,$oldCategorySQL,$subcategory)
-{
+function setCategories(&$container,$newCategory,$oldCategory,$oldCategorySQL,$subcategory) {
 	$container['category'] = $newCategory;
 	if($oldCategory==$container['category'])
 		$container['subcategory'] = $subcategory;

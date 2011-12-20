@@ -25,8 +25,7 @@ $showCurrent = (!isset($var['ShowOld']) || $var['ShowOld']!==true) && $var['Stat
 $template->assign('ShowCurrent',$showCurrent);
 $template->assign('Status',$var['Status']);
 
-if($var['Status'] == 'Opened')
-{
+if($var['Status'] == 'Opened') {
 	$featureVotes = array();
 	$db->query('SELECT * FROM account_votes_for_feature WHERE account_id = '.SmrSession::$account_id);
 	while($db->nextRecord())
@@ -39,8 +38,7 @@ $db->query('SELECT * ' .
 			'AND status = ' . $db->escapeString($var['Status']) .
 			($showCurrent?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-14*86400) .')':'') .
 			' ORDER BY (SELECT MAX(posting_time) FROM feature_request_comments WHERE feature_request_id = super.feature_request_id) DESC');
-if ($db->getNumRows() > 0)
-{
+if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator',$featureModerator);
 	$template->assign('FeatureRequestVoteFormHREF',SmrSession::get_new_href(create_container('feature_request_vote_processing.php', '')));
@@ -49,8 +47,7 @@ if ($db->getNumRows() > 0)
 	$commentsContainer['body'] = 'feature_request_comments.php';
 	$db2 = new SmrMySqlDatabase();
 	$featureRequests = array();
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$featureRequestID = $db->getInt('feature_request_id');
 		$featureRequests[$featureRequestID] = array(
 								'RequestID' => $featureRequestID,
@@ -61,22 +58,19 @@ if ($db->getNumRows() > 0)
 		if($featureModerator)
 			$featureRequests[$featureRequestID]['RequestAccount'] =& SmrAccount::getAccount($db->getInt('poster_id'));
 		
-		if($var['Status'] == 'Opened')
-		{
-			$db2->query('SELECT COUNT(*), vote_type ' .
-						'FROM account_votes_for_feature ' .
-						'WHERE feature_request_id='.$featureRequestID .
-						' GROUP BY vote_type');
-			while($db2->nextRecord())
-			{
+		if($var['Status'] == 'Opened') {
+			$db2->query('SELECT COUNT(*), vote_type
+						FROM account_votes_for_feature
+						WHERE feature_request_id=' . $db2->escapeNumber($featureRequestID) . '
+						GROUP BY vote_type');
+			while($db2->nextRecord()) {
 				$featureRequests[$featureRequestID]['Votes'][$db2->getField('vote_type')] = $db2->getInt('COUNT(*)');
 			}
 		}
-		$db2->query('SELECT COUNT(*) ' .
-					'FROM feature_request_comments ' .
-					'WHERE feature_request_id='.$featureRequestID);
-		while($db2->nextRecord())
-		{
+		$db2->query('SELECT COUNT(*)
+					FROM feature_request_comments
+					WHERE feature_request_id=' . $db2->escapeNumber($featureRequestID));
+		while($db2->nextRecord()) {
 			$featureRequests[$featureRequestID]['Comments'] = $db2->getInt('COUNT(*)');
 		}
 		$commentsContainer['RequestID'] = $featureRequestID;

@@ -17,8 +17,7 @@ $port =& $player->getSectorPort();
 $container = create_container('port_loot_processing.php');
 
 $boughtGoods =& $port->getVisibleGoodsBought($player);
-foreach($boughtGoods as $goodID => &$boughtGood)
-{
+foreach($boughtGoods as $goodID => &$boughtGood) {
 	$container['good_id'] = $goodID;
 	$PHP_OUTPUT.=create_echo_form($container);
 

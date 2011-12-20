@@ -7,8 +7,7 @@ $port =& $player->getSectorPort();
 $good_id = $var['good_id'];
 $portGood = $port->getGood($good_id);
 
-if ($var['bargain_price'] > 0)
-{
+if ($var['bargain_price'] > 0) {
 	$bargain_price = $var['bargain_price'];
 
 	$PHP_OUTPUT.=('<p>I can\'t accept your offer. It\'s still too ');
@@ -42,16 +41,14 @@ transfer('overall_number_of_bargains');
 
 $PHP_OUTPUT.=create_echo_form($container);
 //gives value 0-1
-if (isset($var['ideal_price']))
-{
+if (isset($var['ideal_price'])) {
 	// transfer this value
 	transfer('ideal_price');
 
 	// return this value
 	$ideal_price = $var['ideal_price'];
 }
-if (isset($var['offered_price']))
-{
+if (isset($var['offered_price'])) {
 	// transfer this value
 	transfer('offered_price');
 

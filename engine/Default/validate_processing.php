@@ -1,7 +1,6 @@
 <?php
 
-if (!empty($_REQUEST['validation_code']))
-{
+if (!empty($_REQUEST['validation_code'])) {
 	// is this our validation code?
 	if ($account->getValidationCode() != $_REQUEST['validation_code'])
 		create_error('The validation code you entered is incorrect.');

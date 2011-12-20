@@ -6,8 +6,7 @@ $gameID = $var['game_id'];
 $template->assign('StatsGameID',$gameID);
 
 $db->query('SELECT count(*) total_players, MAX(experience) max_exp, MAX(alignment) max_align, MIN(alignment) min_alignment, MAX(kills) max_kills FROM player WHERE game_id = '.$gameID.' ORDER BY experience DESC');
-if ($db->nextRecord())
-{
+if ($db->nextRecord()) {
 	$template->assign('TotalPlayers',$db->getField('total_players'));
 	$template->assign('HighestExp',$db->getField('max_exp'));
 	$template->assign('HighestAlign',$db->getField('max_align'));
@@ -16,18 +15,15 @@ if ($db->nextRecord())
 }
 	
 $db->query('SELECT count(*) num_alliance FROM alliance WHERE game_id = '.$gameID);
-if ($db->nextRecord())
-{
+if ($db->nextRecord()) {
 	$template->assign('TotalAlliances',$db->getField('num_alliance'));
 }
 
 $db->query('SELECT account_id FROM player WHERE game_id = '.$gameID.' ORDER BY experience DESC LIMIT 10');
-if ($db->getNumRows() > 0)
-{
+if ($db->getNumRows() > 0) {
 	$rank = 0;
 	$expRankings = array();
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		++$rank;
 		$expRankings[$rank] =& SmrPlayer::getPlayer($db->getField('account_id'), $gameID);
 	}
@@ -36,12 +32,10 @@ if ($db->getNumRows() > 0)
 
 
 $db->query('SELECT account_id FROM player WHERE game_id = '.$gameID.' ORDER BY kills DESC LIMIT 10');
-if ($db->getNumRows() > 0)
-{
+if ($db->getNumRows() > 0) {
 	$rank = 0;
 	$killRankings = array();
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		++$rank;
 		$killRankings[$rank] =& SmrPlayer::getPlayer($db->getField('account_id'), $gameID);
 	}
@@ -67,8 +61,7 @@ if ($count_real_last_active < $count_last_active)
 $template->assign('PlayersAccessed',$count_real_last_active);
 
 $currentPlayers = array();
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$currentPlayers[] =& SmrPlayer::getPlayer($db->getField('account_id'), $gameID);
 }
 $template->assign('CurrentPlayers',$currentPlayers);

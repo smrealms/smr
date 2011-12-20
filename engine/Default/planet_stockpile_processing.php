@@ -31,8 +31,7 @@ if ($action == 'Ship') {
 
 // transfer to planet
 }
-elseif ($action == 'Planet')
-{
+elseif ($action == 'Planet') {
 	// do we want transfer more than we have?
 	if ($amount > $ship->getCargo($var['good_id']))
 		create_error('You can\'t store more than you carry!');

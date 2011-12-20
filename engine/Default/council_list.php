@@ -20,8 +20,7 @@ checkPacts($race_id);
 $PHP_OUTPUT.=('<div align="center" class="bold">President</div>');
 
 $president =& Council::getPresident($player->getGameID(),$race_id);
-if (is_object($president))
-{
+if (is_object($president)) {
 
 	$PHP_OUTPUT.=('<p><table class="standard" align="center" width="75%">');
 	$PHP_OUTPUT.=('<tr>');
@@ -47,8 +46,7 @@ if (is_object($president))
 	$PHP_OUTPUT.=('</td>');
 
 	$PHP_OUTPUT.=('<td>');
-	if ($president->hasAlliance())
-	{
+	if ($president->hasAlliance()) {
 		$PHP_OUTPUT.=create_link($president->getAllianceRosterHREF(), $president->getAllianceName());
 	} else
 		$PHP_OUTPUT.=('(none)');
@@ -137,8 +135,7 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
 $PHP_OUTPUT.=('<b>View Council</b><br />');
 $races =& Globals::getRaces();
-foreach($races as $raceID => $raceInfo)
-{
+foreach($races as $raceID => $raceInfo) {
 	if($raceID == RACE_NEUTRAL)
 		continue;
 
