@@ -17,22 +17,26 @@ $message = 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
 //	$message,
 //	'From: '.$account->getEmail());
 
-if(is_object($player))
+if(is_object($player)) {
 	$player->sendMessageToBox(BOX_BUGS_REPORTED, $message);
-else
+}
+else {
 	$account->sendMessageToBox(BOX_BUGS_REPORTED, $message);
+}
 
 $container = array();
 $container['url'] = 'skeleton.php';
 if (SmrSession::$game_id > 0) {
-
-	if ($player->isLandedOnPlanet())
+	if ($player->isLandedOnPlanet()) {
 		$container['body'] = 'planet_main.php';
-	else
+	}
+	else {
 		$container['body'] = 'current_sector.php';
-
-} else
+	}
+}
+else {
 	$container['body'] = 'game_play.php';
+}
 
 forward($container);
 
