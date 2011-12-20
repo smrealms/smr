@@ -1,7 +1,6 @@
 <?php
 try
 {
-	
 	echo '<pre>';
 	require_once('../htdocs/config.inc');
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
@@ -481,9 +480,8 @@ function debug($message, $debugObject = null)
 function processContainer($container)
 {
 	global $forwardedContainer, $previousContainer;
-	if($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php')
-	{
-		debug('We are executing the same container twice?', $container);
+	if($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php') {
+		debug('We are executing the same container twice?', array('ForwardedContainer' => $forwardedContainer, 'Container' => $container));
 		throw new Exception('We are executing the same container twice?');
 	}
 	clearCaches(); //Clear caches of anything we have used for decision making before processing container and getting lock.
