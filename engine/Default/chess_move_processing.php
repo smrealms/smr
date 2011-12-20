@@ -2,21 +2,16 @@
 require_once(get_file_loc('ChessGame.class.inc'));
 $chessGame = new ChessGame($var['ChessGameID']);
 $template->assignByRef('ChessGame',$chessGame);
-if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQUEST['toX']) && is_numeric($_REQUEST['toY']))
-{
+if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQUEST['toX']) && is_numeric($_REQUEST['toY'])) {
 	$x = $_REQUEST['x'];
 	$y = $_REQUEST['y'];
 	$toX = $_REQUEST['toX'];
 	$toY = $_REQUEST['toY'];
-	if($chessGame->getEndDate()==null)
-	{
-		if($chessGame->isCurrentTurn($account->getAccountID()))
-		{
+	if($chessGame->getEndDate()==null) {
+		if($chessGame->isCurrentTurn($account->getAccountID())) {
 			$board = $chessGame->getBoard();
-			if($board[$y][$x] != null)
-			{
-				switch($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID()))
-				{
+			if($board[$y][$x] != null) {
+				switch($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID())) {
 					case 0:
 						//Success
 						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnAccountID(), 'It is now your turn in the chess game against [player=' . $player->getPlayerID() . '].');
@@ -35,25 +30,21 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 					break;
 				}
 			}
-			else
-			{
+			else {
 //				this.logger.error('Player tried to move from an empty tile: username = ' + username + ', x = ' + xIn + ', y = ' + yIn + ', toX = ' + toXIn + ', toY = ' + toYIn);
 			}
 		}
-		else
-		{
+		else {
 //			this.logger.error('Player tried to move in an ended game');
 			$template->assign('MoveMessage', 'It is not your turn to move.');
 		}
 	}
-	else
-	{
+	else {
 		$template->assign('MoveMessage', 'This game is over.');
 //		this.logger.error('Player tried to move when it was not their turn: x = ' + xIn + ', y = ' + yIn + ', toX = ' + toXIn + ', toY = ' + toYIn);
 	}
 }
-else
-{
+else {
 //	this.logger.error('Player supplied an invalid number: x = ' + xIn + ', y = ' + yIn + ', toX = ' + toXIn + ', toY = ' + toYIn);
 }
 ?>
