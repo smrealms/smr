@@ -17,7 +17,7 @@ if($player->hasAlliance())
 			JOIN sector_has_forces
 				ON sector_has_forces.game_id = player.game_id AND sector_has_forces.owner_id = player.account_id
 			WHERE sector_has_forces.sector_id = '.$player->getSectorID().'
-			AND alliance_id IN (' . implode(',',$allied) . ')
+			AND alliance_id IN (' . $db->escapeArray($allied) . ')
 			AND player.game_id = '.$player->getGameID());
 	$time = TIME;
 	$db2 = new SmrMySqlDatabase();
