@@ -39,8 +39,7 @@ if (!empty($var['traded_xp']) ||
 
 // test if we are searched. (but only if we hadn't a previous trade here
 }
-elseif ($player->getLastPort() != $player->getSectorID())
-{
+elseif ($player->getLastPort() != $player->getSectorID()) {
 	$allGoods = $port->getGoodsAll();
 
 	$base_chance = 15;
@@ -55,11 +54,9 @@ elseif ($player->getLastPort() != $player->getSectorID())
 		$base_chance -= 4;
 
 	$rand = mt_rand(1, 100);
-	if ($rand <= $base_chance)
-	{
+	if ($rand <= $base_chance) {
 		$player->increaseHOF(1,array('Trade','Search','Total'), HOF_PUBLIC);
-		if ($ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12))
-		{
+		if ($ship->hasCargo(5) || $ship->hasCargo(9) || $ship->hasCargo(12)) {
 			$player->increaseHOF(1,array('Trade','Search','Caught','Number Of Times'), HOF_PUBLIC);
 			//find the fine
 			//get base for ports that dont happen to trade that good
@@ -70,12 +67,10 @@ elseif ($player->getLastPort() != $player->getSectorID())
 									($ship->getCargo(12) * $GOODS[12]['BasePrice']));
 			$player->increaseHOF($ship->getCargo(5)+$ship->getCargo(9)+$ship->getCargo(12),array('Trade','Search','Caught','Goods Confiscated'), HOF_PUBLIC);
 			$player->increaseHOF($totalFine,array('Trade','Search','Caught','Amount Fined'), HOF_PUBLIC);
-			if($fine > $player->getCredits())
-			{
+			if($fine > $player->getCredits()) {
 				$fine -= $player->getCredits();
 				$player->decreaseCredits($player->getCredits());
-				if ($fine > 0)
-				{
+				if ($fine > 0) {
 					// because credits is 0 it will take money from bank
 					$player->decreaseBank(min($fine,$player->getBank()));
 					// leave insurance
@@ -83,8 +78,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 						$player->setBank(5000);
 				}
 			}
-			else
-			{
+			else {
 				$player->decreaseCredits($fine);
 			}
 
@@ -100,8 +94,7 @@ elseif ($player->getLastPort() != $player->getSectorID())
 			$account->log(LOG_TYPE_TRADING, 'Player gets caught with illegals', $player->getSectorID());
 
 		}
-		else
-		{
+		else {
 			$player->increaseHOF(1,array('Trade','Search','Times Found Innocent'), HOF_PUBLIC);
 			$PHP_OUTPUT.=('<span class="blue">The Federation searched your ship and no illegal goods where found!</span>');
 			$player->increaseAlignment(1);
@@ -113,8 +106,7 @@ $player->setLastPort($player->getSectorID());
 //update controlled in db
 $player->controlled = $player->getSectorID();
 $boughtGoods = $port->getVisibleGoodsBought($player);
-if (!empty($boughtGoods))
-{
+if (!empty($boughtGoods)) {
 	$PHP_OUTPUT.=('<h2>The port sells you the following:</h2>');
 	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr>');
@@ -129,8 +121,7 @@ if (!empty($boughtGoods))
 	$container = array();
 	$container['url'] = 'shop_goods_processing.php';
 
-	foreach ($boughtGoods as $good)
-	{
+	foreach ($boughtGoods as $good) {
 		$container['good_id'] = $good['ID'];
 		
 		$PHP_OUTPUT.=create_echo_form($container);
@@ -165,8 +156,7 @@ if (!empty($boughtGoods))
 }
 
 $soldGoods = $port->getVisibleGoodsSold($player);
-if (!empty($soldGoods))
-{
+if (!empty($soldGoods)) {
 	$PHP_OUTPUT.=('<h2>The port would buy the following:</h2>');
 	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr>');
@@ -181,8 +171,7 @@ if (!empty($soldGoods))
 	$container = array();
 	$container['url'] = 'shop_goods_processing.php';
 
-	foreach ($soldGoods as $good)
-	{
+	foreach ($soldGoods as $good) {
 		$container['good_id'] = $good['ID'];
 		$PHP_OUTPUT.=create_echo_form($container);
 

@@ -54,11 +54,11 @@ if ($db->getNumRows() > 0) {
 		
 		$db2->query('SELECT time
 					FROM player_read_thread 
-					WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . '
-					AND game_id=' . $db->escapeNumber($player->getGameID()) . '
-					AND alliance_id =' . $db->escapeNumber($alliance->getAllianceID()) . '
-					AND thread_id=' . $db->escapeNumber($db->getInt('thread_id')) . ' 
-					AND time>' . $db->escapeNumber($db->getInt('sendtime')) . ' LIMIT 1');
+					WHERE account_id=' . $db2->escapeNumber($player->getAccountID()) . '
+					AND game_id=' . $db2->escapeNumber($player->getGameID()) . '
+					AND alliance_id =' . $db2->escapeNumber($alliance->getAllianceID()) . '
+					AND thread_id=' . $db2->escapeNumber($db->getInt('thread_id')) . ' 
+					AND time>' . $db2->escapeNumber($db->getInt('sendtime')) . ' LIMIT 1');
 		$threads[$i]['Unread'] = $db2->getNumRows() == 0;
 		
 		if ($db->getInt('sender_id') > 0) {
@@ -67,9 +67,9 @@ if ($db->getNumRows() > 0) {
 						alliance_thread.sender_id as sender_id
 						FROM player
 						JOIN alliance_thread ON alliance_thread.game_id = player.game_id AND player.account_id=alliance_thread.sender_id
-						WHERE player.game_id=' . $db->escapeNumber($player->getGameID()) . '
-						AND alliance_thread.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-						AND alliance_thread.thread_id=' . $db->escapeNumber($db->getInt('thread_id')) . '
+						WHERE player.game_id=' . $db2->escapeNumber($player->getGameID()) . '
+						AND alliance_thread.alliance_id=' . $db2->escapeNumber($alliance->getAllianceID()) . '
+						AND alliance_thread.thread_id=' . $db2->escapeNumber($db->getInt('thread_id')) . '
 						AND alliance_thread.reply_id=1 LIMIT 1
 						');
 			if($db2->nextRecord()) {

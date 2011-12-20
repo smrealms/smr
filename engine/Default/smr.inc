@@ -7,38 +7,31 @@ require_once(get_file_loc('SmrShip.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('Sorter.class.inc'));
 
-function htmliseMessage($message)
-{
+function htmliseMessage($message) {
 	$message = htmlentities($message,ENT_COMPAT,'utf-8');
 	$message = str_replace('&lt;br /&gt;','<br />',$message);
 	return $message;
 }
 
-function parseBoolean($check)
-{
+function parseBoolean($check) {
 	if(is_string($check) && (strcasecmp($check,'NO') == 0 || strcasecmp($check,'FALSE')==0))
 		return true;
 	return (bool)$tagParams['showalliance'];
 }
 
-function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent)
-{
+function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
 	global $overrideGameID, $disableBBLinks, $player, $account;
-	try
-	{
-		switch($tagName)
-		{
+	try {
+		switch($tagName) {
 			case 'player':
 				$playerID = $default;
 				if(!is_numeric($playerID))
 					$playerID = $tagParams['id'];
 				$bbPlayer =& SmrPlayer::getPlayerByPlayerID($playerID, $overrideGameID);
-				if ($action == BBCODE_CHECK)
-				{
+				if ($action == BBCODE_CHECK) {
 					return true;
 				}
-				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
-				{
+				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
 					return $bbPlayer->getLinkedDisplayName($showAlliance);
 				}
 				return $bbPlayer->getDisplayName(parseBoolean($tagParams['showalliance']));
@@ -49,13 +42,11 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				if(!is_numeric($allianceID))
 					$allianceID = $tagParams['id'];
 				$alliance =& SmrAlliance::getAlliance($allianceID, $overrideGameID);
-				if ($action == BBCODE_CHECK)
-				{
+				if ($action == BBCODE_CHECK) {
 					return true;
 				}
 
-				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
-				{
+				if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
 					$container = create_container('skeleton.php');
 					$container['alliance_id'] = $alliance->getAllianceID();
 					if (is_object($player) && $alliance->getAllianceID() == $player->getAllianceID())
@@ -69,18 +60,14 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			case 'race':
 				$raceNameID = $default;
 				$RACES =& Globals::getRaces();
-				foreach($RACES as $raceID => $raceInfo)
-				{
+				foreach($RACES as $raceID => $raceInfo) {
 					if((is_numeric($raceNameID) && $raceNameID == $raceID)
-						|| $raceNameID == $raceInfo['Race Name'])
-					{
-						if ($action == BBCODE_CHECK)
-						{
+						|| $raceNameID == $raceInfo['Race Name']) {
+						if ($action == BBCODE_CHECK) {
 							return true;
 						}
 
-						if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id)
-						{
+						if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
 							$container = create_container('skeleton.php','council_list.php', array('race_id' => $raceID));
 							return create_link($container,  AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID,$player));
 						}
@@ -90,12 +77,10 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 			case 'servertimetouser':
 				$timeString = $default;
-				if ($action == BBCODE_CHECK)
-				{
+				if ($action == BBCODE_CHECK) {
 					return true;
 				}
-				if ($timeString != '' && ($time = strtotime($timeString)) !== false)
-				{
+				if ($timeString != '' && ($time = strtotime($timeString)) !== false) {
 					if(is_object($account))
 						$time += $account->getOffset() * 3600;
 					return date(DATE_FULL_SHORT, $time);
@@ -103,27 +88,22 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			break;
 		}
 	}
-	catch (Exception $e)
-	{
+	catch (Exception $e) {
 	}
-	if ($action == BBCODE_CHECK)
-	{
+	if ($action == BBCODE_CHECK) {
 		return false;
 	}
 	return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
 }
 
-function &xmlify(&$str)
-{
+function &xmlify(&$str) {
 	$xml = str_replace('&nbsp;','&#160;',htmlentities($str,ENT_COMPAT,'utf-8'));
 	return $xml;
 }
 	
-function &bbifyMessage($message,$noLinks=false)
-{
+function &bbifyMessage($message,$noLinks=false) {
 	static $bbParser;
-	if(!isset($bbParser))
-	{
+	if(!isset($bbParser)) {
 		require_once(LIB.'External/BBCode/nbbc.php');
 		$bbParser = new BBCode();
 		$bbParser->SetEnableSmileys(false);
@@ -149,51 +129,44 @@ function &bbifyMessage($message,$noLinks=false)
 		$disableBBLinks = true;
 	else
 		$disableBBLinks = false;
-	if(strpos($message, '[')!==false) //We have BBCode so let's do a full parse.
-	{
+	if(strpos($message, '[')!==false) { //We have BBCode so let's do a full parse.
 		$message = $bbParser->parse($message);
 		$message = str_replace('&lt;br /&gt;','<br />',$message);
 	}
-	else //Otherwise just convert newlines
-	{
+	else { //Otherwise just convert newlines
 		$message = nl2br($message, true);
 	}
 	return $message;
 }
 
-function enableProtectionDependantRefresh(&$template,&$player)
-{
+function enableProtectionDependantRefresh(&$template,&$player) {
 	$ajaxRefresh = AJAX_UNPROTECTED_REFRESH_TIME;
 	if ($player->hasNewbieTurns()||$player->isLandedOnPlanet()||$player->hasFederalProtection())
 		$ajaxRefresh=AJAX_DEFAULT_REFRESH_TIME;
 	$template->assign('AJAX_ENABLE_REFRESH',$ajaxRefresh);
 }
 
-function hardware_is_mining_drone($hardwareTypeID)
-{
+function hardware_is_mining_drone($hardwareTypeID) {
 //	if ($hardware == 'Rundown Mining Drones' || $hardware == 'Simple Mining Drones' || $hardware == 'Basic Mining Drones' || $hardware == 'Advanced Mining Drones' || $hardware == 'Elite Mining Drones')
 //		return TRUE;
 //	else
 		return FALSE;
 }
 
-function has_beta_privilege($priv = '', $acc = 0)
-{
+function has_beta_privilege($priv = '', $acc = 0) {
 	//PAGE
 	return false;
 	global $PRIVILEGES, $ACCOUNT_ID,$BETA_CONSTANTS,$USE_BETA_CONSTANTS;
 	if($USE_BETA_CONSTANTS !== true)
 		return false;
 	if ($acc == 0) $acc = $ACCOUNT_ID;
-	switch($priv)
-	{
+	switch($priv) {
 		case 'Create Universe':
 			if(isset($BETA_CONSTANTS['Anyone Create Games']) && $BETA_CONSTANTS['Anyone Create Games']===true)
 			return true;
 	}
 	
-	if(isset($BETA_CONSTANTS[$priv]))
-	{
+	if(isset($BETA_CONSTANTS[$priv])) {
 		if ($BETA_CONSTANTS[$priv] === true) return true;
 		if (is_array($BETA_CONSTANTS[$priv]) && in_array($acc, $BETA_CONSTANTS[$priv])) return true;
 	}
@@ -205,8 +178,7 @@ function has_beta_privilege($priv = '', $acc = 0)
 	return false;
 }
 
-function has_privilege($priv = '', $acc = 0)
-{
+function has_privilege($priv = '', $acc = 0) {
 	//PAGE
 	return false;
 	//if ($priv == 'Always Join Alliances') return TRUE;
@@ -232,8 +204,7 @@ function create_echo_error($message) {
 	$return.=('<p><small>If the error was unrecognizable, please notify the administrators.</small></p>');
 }
 
-function create_menu($menu)
-{
+function create_menu($menu) {
 	global $template;
 	$return = '<span class="noWrap">';
 	foreach ($menu as $number => $entry) {
@@ -303,8 +274,7 @@ function create_submit_style($value, $style) {
 	return ('<input type="submit" name="action" value="'.htmlspecialchars($value).'" id="InputFields" style="'.$style.'" />');
 }
 
-function create_error($message)
-{
+function create_error($message) {
 	if(USING_AJAX)
 		throw new Exception('No errors should be created when using AJAX as nothing should have changed from the last time the page loaded: ' . $message);
 	$container = create_container('skeleton.php','error.php');
@@ -312,8 +282,7 @@ function create_error($message)
 	forward($container);
 }
 
-function resetContainer($new_container)
-{
+function resetContainer($new_container) {
 	global $time_start,$sn,$container,$var;
 
 	// add start time of that script to next page
@@ -326,24 +295,21 @@ function resetContainer($new_container)
 	$container = $new_container;
 }
 
-function forward($new_container)
-{
+function forward($new_container) {
 	if(defined('OVERRIDE_FORWARD')&&OVERRIDE_FORWARD===true)
 		return overrideForward($new_container);
 	resetContainer($new_container);
 	do_voodoo();
 }
 
-function forwardURL($new_container)
-{
+function forwardURL($new_container) {
 	resetContainer($new_container);
 	global $var;
 	require_once(get_file_loc($var['url']));
 
 }
 
-function transfer($what)
-{
+function transfer($what) {
 	global $var, $container;
 
 	// transfer this value to next container
@@ -352,63 +318,50 @@ function transfer($what)
 
 }
 
-function create_container($file, $body = '', array $extra = array(), $remainingPageLoads = null)
-{
+function create_container($file, $body = '', array $extra = array(), $remainingPageLoads = null) {
 	$container = $extra;
 	$container['url'] = $file;
 	$container['body'] = $body;
-	if($remainingPageLoads)
-	{
+	if($remainingPageLoads) {
 		$container['RemainingPageLoads'] = $remainingPageLoads;
 	}
 	return $container;
 }
 
-function create_link($container, $text, $class=null)
-{
+function create_link($container, $text, $class=null) {
 	return '<a'.($class==null?'':' class="'.$class.'"').' href="' . (is_array($container)?SmrSession::get_new_href($container):$container) . '">' . $text . '</a>';
 }
 
-function create_submit_link($container, $text)
-{
+function create_submit_link($container, $text) {
 	return '<a href="' . SmrSession::get_new_href($container) . '" class="submitStyle">' . $text . '</a>';
 }
 
-function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type='Game', $return_type = 'Normal')
-{
+function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, $type='Game', $return_type = 'Normal') {
 	if($text == null) {
 		$text = number_format($value);
 	}
-	if($maxValue-$minValue==0)
-	{
+	if($maxValue-$minValue==0) {
 		return $text;
 	}
-	else
-	{
+	else {
 		$normalisedValue = round(510*max(0,min($maxValue,$value)-$minValue)/($maxValue-$minValue))-255;
 	}
-	if ($type == 'Game')
-	{
-		if($normalisedValue < 0)
-		{
+	if ($type == 'Game') {
+		if($normalisedValue < 0) {
 			$r_component='ff';
 			$g_component = dechex(255+$normalisedValue);
-			if(strlen($g_component) == 1)
-			{
+			if(strlen($g_component) == 1) {
 				$g_component = '0' . $g_component;
 			}
 		}
-		else if($normalisedValue > 0)
-		{
+		else if($normalisedValue > 0) {
 			$g_component='ff';
 			$r_component = dechex(255-$normalisedValue);
-			if(strlen($r_component) == 1)
-			{
+			if(strlen($r_component) == 1) {
 				$r_component = '0' . $r_component;
 			}
 		}
-		else
-		{
+		else {
 			$r_component = 'ff';
 			$g_component = 'ff';
 		}
@@ -416,8 +369,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		if ($return_type == 'Color') return $colour;
 		return '<span style="color:#' . $colour . '">' . $text . '</span>';
 	}
-	elseif ($type == 'IRC')
-	{
+	elseif ($type == 'IRC') {
 		//IRC color codes
 		if ($normalisedValue == 255) $colour = '[k03]';
 		elseif ($normalisedValue == -255) $colour = '[k04]';
@@ -427,13 +379,11 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 	}
 }
 
-function get_colored_text($value, $text = null, $type='Game', $return_type = 'Normal')
-{
+function get_colored_text($value, $text = null, $type='Game', $return_type = 'Normal') {
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
 }
 
-function makeBold($value)
-{
+function makeBold($value) {
 	if ($value)
 		return ' style="font-weight:bold;"';
 	else
@@ -462,31 +412,26 @@ function makeBold($value)
 //
 //}
 
-function hex2bin( $data )
-{
+function hex2bin( $data ) {
 	$len = strlen( $data );
 	return pack( 'H' . $len, $data );
 }
 
-function word_filter($string)
-{
+function word_filter($string) {
 	static $words;
 	
-	if(!is_array($words))
-	{
+	if(!is_array($words)) {
 		require_once(LIB . '/Default/SmrMySqlDatabase.class.inc');
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT word_value, word_replacement FROM word_filter');
 		$words = array();
-		while($db->nextRecord())
-		{
+		while($db->nextRecord()) {
 			$row = $db->getRow();
 			$words[] = array('word_value' => '/'.str_replace('/','\/',$row['word_value']).'/i','word_replacement'=> $row['word_replacement']);
 		}
 	}
 	
-	foreach ($words as $word)
-	{
+	foreach ($words as $word) {
 		$string = preg_replace($word['word_value'],$word['word_replacement'],$string);
 	}
 
@@ -497,16 +442,14 @@ function word_filter($string)
 
 
 // This function is a hack around the old style http forward mechanism
-function do_voodoo()
-{
+function do_voodoo() {
 	global $lock, $var,$template,$account;
 	$ajaxContainer = isset($var['AJAX']) && $var['AJAX'] == true;
 	if(!$ajaxContainer && USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
 		exit;
 //	ob_clean();
 	
-	foreach ($GLOBALS as $key => $value)
-	{
+	foreach ($GLOBALS as $key => $value) {
 		$$key = &$GLOBALS[$key];
 	}
 	// create account object
@@ -522,8 +465,7 @@ function do_voodoo()
 	$db = new SmrMySqlDatabase();
 	$GLOBALS['db'] =& $db;
 	
-	if($var['url'] == 'game_play_preprocessing.php') // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
-	{
+	if($var['url'] == 'game_play_preprocessing.php') { // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
 		SmrSession::clearLinks();
 		if (SmrSession::$game_id > 0)
 			$account->log(LOG_TYPE_GAME_ENTERING, 'Player left game '.SmrSession::$game_id);
@@ -534,8 +476,7 @@ function do_voodoo()
 		
 		forward(create_container('skeleton.php', 'game_play.php', $var));
 	}
-	else if($var['url'] == 'logoff_preprocessing.php')
-	{
+	else if($var['url'] == 'logoff_preprocessing.php') {
 		SmrSession::$game_id = 0;
 		SmrSession::update();
 		
@@ -553,10 +494,8 @@ function do_voodoo()
 	}
 
 	// initialize objects we usually need, like player, ship
-	if (SmrSession::$game_id > 0)
-	{
-		if(SmrGame::getGame(SmrSession::$game_id)->getEndDate() < TIME)
-		{
+	if (SmrSession::$game_id > 0) {
+		if(SmrGame::getGame(SmrSession::$game_id)->getEndDate() < TIME) {
 			forward(create_container('game_play_preprocessing.php', '', array('errorMsg' => 'The game has ended.')));
 		}
 		// We need to acquire locks BEFORE getting the player information
@@ -568,18 +507,14 @@ function do_voodoo()
 		global $locksFailed;
 		if(!USING_AJAX //AJAX should never do anything that requires a lock.
 //			&& !isset($var['url']) && ($var['body'] == 'current_sector.php' || $var['body'] == 'map_local.php') //Neither should CS or LM and they gets loaded a lot so should reduce lag issues with big groups.
-			)
-		{
-			if(!$lock && !isset($locksFailed[$sector_id]))
-			{
-				if(!acquire_lock($sector_id))
-				{
+			) {
+			if(!$lock && !isset($locksFailed[$sector_id])) {
+				if(!acquire_lock($sector_id)) {
 					create_error('Failed to acquire sector lock');
 				}
 				//Refetch var info in case it changed between grabbing lock.
 				SmrSession::fetchVarInfo();
-				if (!($var = SmrSession::retrieveVar(SmrSession::$SN)))
-				{
+				if (!($var = SmrSession::retrieveVar(SmrSession::$SN))) {
 					$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber(SmrSession::$account_id) . ',0,0)');
 					create_error('Please do not spam click!');
 				}
@@ -590,8 +525,7 @@ function do_voodoo()
 		$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 		$GLOBALS['player'] =& $player;
 
-		if($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death']))
-		{
+		if($player->isDead() && $var['url'] != 'death_processing.php' && !isset($var['override_death'])) {
 			forward(create_container('death_processing.php'));
 		}
 		enableProtectionDependantRefresh($template,$player);
@@ -611,37 +545,36 @@ function do_voodoo()
 			forward(create_container('newbie_warning_processing.php'));
 	}
 
-	if($var['url'] != 'skeleton.php')
-	{
+	if($var['url'] != 'skeleton.php') {
 		require(get_file_loc($var['url']));
 	}
-	if($var['body'])
-	{
+	if($var['body']) {
 		$PHP_OUTPUT = '';
-		if($var['body']=='error.php'||$var['body']=='bar_main.php') // infinite includes for error/bar pages
+		if($var['body']=='error.php'||$var['body']=='bar_main.php') { // infinite includes for error/bar pages
 			include(get_file_loc($var['body']));
-		else
+		}
+		else {
 			include_once(get_file_loc($var['body']));
+		}
 			
 		if($PHP_OUTPUT!='')
 			$template->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
 	
-	if (SmrSession::$game_id > 0)
-	{
+	if (SmrSession::$game_id > 0) {
 		$template->assign('UnderAttack', $ship->removeUnderAttack());
 	}
 	
-	if($lock)
-	{ //Only save if we have the lock.
+	if($lock) { //Only save if we have the lock.
 		SmrSector::saveSectors();
 		SmrShip::saveShips();
 		SmrPlayer::savePlayers();
 		SmrForce::saveForces();
 		SmrPort::savePorts();
 		SmrPlanet::savePlanets();
-		if(class_exists('WeightedRandom', false))
+		if(class_exists('WeightedRandom', false)) {
 			WeightedRandom::saveWeightedRandoms();
+		}
 		//Update session here to make sure current page $var is up to date before releasing lock.
 		SmrSession::update();
 		release_lock();
@@ -650,8 +583,7 @@ function do_voodoo()
 	//Nothing below this point should require the lock.
 	
 	$template->assign('TemplateBody',$var['body']);
-	if (SmrSession::$game_id > 0)
-	{
+	if (SmrSession::$game_id > 0) {
 		$template->assignByRef('ThisSector',$sector);
 		$template->assignByRef('ThisPlayer',$player);
 		$template->assignByRef('ThisShip',$ship);
@@ -663,13 +595,15 @@ function do_voodoo()
 	$time_elapsed = microtimeDiff(microtime(),MICRO_TIME);
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
 	
-	if(isset($var['DisableAjax']) && $var['DisableAjax']===true)
+	if(isset($var['DisableAjax']) && $var['DisableAjax']===true) {
 		$template->assign('AJAX_ENABLE_REFRESH',false);
+	}
 	
 	$template->display($ajaxContainer ? $var['body'] : $var['url'], USING_AJAX, $ajaxContainer);
 	
-	if(!$ajaxContainer)
+	if(!$ajaxContainer) {
 		SmrSession::update();
+	}
 	
 	exit;
 }
@@ -677,8 +611,7 @@ function do_voodoo()
 //xdebug_dump_function_profile(2);
 
 // This is hackish, but without row level locking it's the best we can do
-function acquire_lock($sector)
-{
+function acquire_lock($sector) {
 	global $db, $lock, $locksFailed;
 
 	if($lock)
@@ -688,23 +621,19 @@ function acquire_lock($sector)
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
 	$lock = $db->getInsertID();
 	
-	for($i=0;$i<250;++$i)
-	{
-		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER)
-		{
+	for($i=0;$i<250;++$i) {
+		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER) {
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
 		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION));
 		$locksInQueue = -1;
-		if($db->nextRecord() && ($locksInQueue = $db->getInt('COUNT(*)')) > 0)
-		{
+		if($db->nextRecord() && ($locksInQueue = $db->getInt('COUNT(*)')) > 0) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
 			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION));
-			if($db->nextRecord() && $db->getInt('COUNT(*)') > 1)
-			{
+			if($db->nextRecord() && $db->getInt('COUNT(*)') > 1) {
 				release_lock();
 				$locksFailed[$sector] = true;
 				create_error('Multiple actions cannot be performed at the same time!');
@@ -714,8 +643,7 @@ function acquire_lock($sector)
 			usleep(25000 * $locksInQueue);
 			continue;
 		}
-		else
-		{
+		else {
 			return true;
 		}
 	}
@@ -725,8 +653,7 @@ function acquire_lock($sector)
 	return false;
 }
 
-function release_lock()
-{
+function release_lock() {
 	global $db, $lock;
 	if($lock)
 		$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - LOCK_DURATION));
@@ -734,37 +661,31 @@ function release_lock()
 	$lock=false;
 }
 
-function doTickerAssigns(&$template,&$player,&$db)
-{
+function doTickerAssigns(&$template,&$player,&$db) {
 	//any ticker news?
-	if($player->hasTickers())
-	{
+	if($player->hasTickers()) {
 		$ticker = array();
 		$max = TIME - 60;
-		if($player->hasTicker('NEWS'))
-		{
+		if($player->hasTicker('NEWS')) {
 			$text = '';
 			//get recent news (5 mins)
 			
-			$db->query('SELECT time,news_message FROM news WHERE game_id = '.$player->getGameID().' AND time >= '.$max.' ORDER BY time DESC LIMIT 4');
-			while($db->nextRecord())
-			{
+			$db->query('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= '.$max.' ORDER BY time DESC LIMIT 4');
+			while($db->nextRecord()) {
 				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('time')),
 								'Message'=>$db->getField('news_message'));
 			}
 		}
-		if ($player->hasTicker('SCOUT'))
-		{
+		if ($player->hasTicker('SCOUT')) {
 			$db->query('SELECT message_text,send_time FROM message
-						WHERE account_id=' . $player->getAccountID() . '
-						AND game_id=' . $player->getGameID() . '
+						WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . '
+						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 						AND message_type_id=' . MSG_SCOUT . '
 						AND send_time>=' . $max . '
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > ' . TIME . ' AND game_id = ' . $player->getGameID() . ') AND reciever_delete = \'FALSE\'
+						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > ' . TIME . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND reciever_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4');
-			while($db->nextRecord())
-			{
+			while($db->nextRecord()) {
 				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('send_time')),
 								'Message'=>$db->getField('message_text'));
 			}
@@ -773,8 +694,7 @@ function doTickerAssigns(&$template,&$player,&$db)
 	}
 }
 
-function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
-{
+function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) {
 	$template->assign('CSSLink',URL.'/css/'.$account->getTemplate().'.css');
 	$template->assign('CSSColourLink',URL.'/css/'.$account->getTemplate().'/'.$account->getColourScheme().'.css');
 
@@ -787,17 +707,14 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	$container['url'] = 'skeleton.php';
 	
 	
-	if (SmrSession::$game_id > 0)
-	{
+	if (SmrSession::$game_id > 0) {
 		$template->assign('GameName',Globals::getGameName(SmrSession::$game_id));
 		$template->assign('GameID',SmrSession::$game_id);
 	
-		if ($player->isLandedOnPlanet())
-		{
+		if ($player->isLandedOnPlanet()) {
 			$template->assign('PlanetMainLink',Globals::getPlanetMainHREF());
 		}
-		else
-		{
+		else {
 			$template->assign('LocalMapLink',Globals::getLocalMapHREF());
 		}
 
@@ -843,8 +760,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$template->assign('MGULink',SmrSession::get_new_href($container));
 	}
 	
-	if (SmrSession::$account_id > 0 && empty($var['logoff']))
-	{
+	if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'hall_of_fame_new.php';
 		$template->assign('HallOfFameLink',SmrSession::get_new_href($container));
@@ -871,8 +787,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	$container['body'] = 'contact.php';
 	$template->assign('ContactFormLink',SmrSession::get_new_href($container));
 	
-	if (SmrSession::$game_id > 0)
-	{
+	if (SmrSession::$game_id > 0) {
 		$container['body'] = 'chat_rules.php';
 		$template->assign('IRCLink',SmrSession::get_new_href($container));
 	}
@@ -882,8 +797,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 	
 	
-	if (SmrSession::$game_id != 0)
-	{
+	if (SmrSession::$game_id != 0) {
 	//	if ($under_attack_shields || $under_attack_armour || $under_attack_drones) {
 	//		echo '
 	//			<div id="attack_warning" class="attack_warning"><nobr>You are under attack!</nobr></div>
@@ -894,7 +808,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	//		$ship->removeUnderAttack();
 	//	}
 	
-		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $player->getAccountID() . ' AND game_id=' . $player->getGameID() . ' GROUP BY message_type_id');
+		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' GROUP BY message_type_id');
 	
 		if($db->getNumRows()) {
 			$messages = array();
@@ -967,16 +881,14 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		// ******* Forces *******
 		$template->assign('ForceDropLink',SmrSession::get_new_href(create_container('skeleton.php', 'forces_drop.php')));
 	
-		if ($ship->hasMines())
-		{
+		if ($ship->hasMines()) {
 	
 			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
 			$template->assign('DropMineLink',SmrSession::get_new_href($container));
 		}
-		if ($ship->hasCDs())
-		{
+		if ($ship->hasCDs()) {
 			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
@@ -984,8 +896,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 		}
 	
-		if ($ship->hasSDs())
-		{
+		if ($ship->hasSDs()) {
 			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
@@ -998,9 +909,8 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 		$template->assign('WeaponReorderLink',SmrSession::get_new_href(create_container('skeleton.php', 'weapon_reorder.php')));
 	
 		$nextVoteTime = array();
-		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . $player->getAccountID() . ' ORDER BY link_id LIMIT 3');
-		while($db->nextRecord())
-		{
+		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY link_id LIMIT 3');
+		while($db->nextRecord()) {
 			$nextVoteTime[$db->getInt('link_id')] = TIME_BETWEEN_VOTING - (TIME - $db->getField('timeout'));
 		}
 	}
@@ -1017,23 +927,19 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 	$minVoteTime = 86400;
 	$voteSite = array();
-	for($i=1;$i<2;$i++)
-	{
-		if(!isset($nextVoteTime[$i]))
-		{
+	for($i=1;$i<2;$i++) {
+		if(!isset($nextVoteTime[$i])) {
 			$nextVoteTime[$i] = 0;
 		}
 		$minVoteTime = min($minVoteTime,$nextVoteTime[$i]);
 		$voteSite[$i] = '<a href=';
-		if(SmrSession::$game_id != 0 && $nextVoteTime[$i] <= 0)
-		{
+		if(SmrSession::$game_id != 0 && $nextVoteTime[$i] <= 0) {
 			$container['link_id'] = $i;
 			$voteSite[$i] .= '\'javascript:voteSite("' . $voteLinks[$i]['location'] . '",';
 			$voteSite[$i] .= '"' . SmrSession::get_new_href($container,true) . '")\'';
 			$img = $voteLinks[$i]['star_img'];
 		}
-		else
-		{
+		else {
 			$voteSite[$i] .= '"' . $voteLinks[$i]['location'] . '" target="_blank"';
 			$img = $voteLinks[$i]['default_img'];
 		}
@@ -1046,8 +952,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 	
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$version_id = $db->getField('version_id');
 		$container = create_container('skeleton.php', 'changelog_view.php', array('version_id' => $version_id));
 		$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
@@ -1061,100 +966,84 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account)
 //		echo '<br />SMR 1.5 Launch in ' . format_time($launch - $now, TRUE) . '</span>!';
 }
 
-function format_time($seconds, $short=false)
-{
+function format_time($seconds, $short=false) {
 	$minutes=0;
 	$hours=0;
 	$days=0;
 	$weeks=0;
 	$string = '';
-	if ($seconds == 0)
-	{
+	if ($seconds == 0) {
 		$string = '0 seconds';
 		if ($short) $string = '0s';
 	}
-	if ($seconds >= 60)
-	{
+	if ($seconds >= 60) {
 		$minutes = floor($seconds/60);
 		$seconds = $seconds % 60;
 	}
-	if ($minutes >= 60)
-	{
+	if ($minutes >= 60) {
 		$hours = floor($minutes/60);
 		$minutes = $minutes % 60;
 	}
-	if ($hours >= 24)
-	{
+	if ($hours >= 24) {
 		$days = floor($hours/24);
 		$hours = $hours % 24;
 	}
-	if ($days >= 7)
-	{
+	if ($days >= 7) {
 		$weeks = floor($days/7);
 		$days = $days % 7;
 	}
-	if ($weeks > 0)
-	{
+	if ($weeks > 0) {
 		$string .= $weeks;
 		if ($short) $string .= 'w';
-		else
-		{
+		else {
 			$string .= ' week';
 			if ($weeks > 1) $string .= 's';
 		}
 	}
-	if ($days > 0)
-	{
+	if ($days > 0) {
 		$before = $weeks;
 		$after = $hours + $minutes + $seconds;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $days;
 		if ($short) $string .= 'd';
-		else
-		{
+		else {
 			$string .= ' day';
 			if ($days > 1) $string .= 's';
 		}
 	}
-	if ($hours > 0)
-	{
+	if ($hours > 0) {
 		$before = $weeks + $days;
 		$after = $minutes + $seconds;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $hours;
 		if ($short) $string .= 'h';
-		else
-		{
+		else {
 			$string .= ' hour';
 			if ($hours > 1) $string .= 's';
 		}
 	}
-	if ($minutes > 0)
-	{
+	if ($minutes > 0) {
 		$before = $weeks + $days + $hours;
 		$after = $seconds;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $minutes;
 		if ($short) $string .= 'm';
-		else
-		{
+		else {
 			$string .= ' minute';
 			if ($minutes > 1) $string .= 's';
 		}
 	}
-	if ($seconds > 0)
-	{
+	if ($seconds > 0) {
 		$before = $weeks + $days + $hours + $minutes;
 		$after = 0;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $seconds;
 		if ($short) $string .= 's';
-		else
-		{
+		else {
 			$string .= ' second';
 			if ($seconds > 1) $string .= 's';
 		}
@@ -1162,8 +1051,7 @@ function format_time($seconds, $short=false)
 	return $string;
 }
 
-function number_colour_format($number,$justSign = false)
-{
+function number_colour_format($number,$justSign = false) {
 	$formatted = '<span';
 	if($number > 0)
 		$formatted .= ' class="green">+';
@@ -1171,8 +1059,7 @@ function number_colour_format($number,$justSign = false)
 		$formatted .= ' class="red">-';
 	else
 		$formatted .= '>';
-	if($justSign===false)
-	{
+	if($justSign===false) {
 		$decimalPlaces = 0;
 		if(($pos = strpos($number,'.'))!==false)
 			$decimalPlaces = strlen(substr($number,$pos+1));

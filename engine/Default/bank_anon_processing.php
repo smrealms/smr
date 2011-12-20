@@ -35,7 +35,7 @@ if ($action == 'Deposit') {
 //	if ($total > 4294967295) {
 //		
 //		$overflow = $total - 4294967295;
-//		$db->query('UPDATE anon_bank SET amount = amount - '.$overflow.' WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num);
+//		$db->query('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($overflow) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 //		$player->increaseCredits($overflow);
 //		
 //	}
@@ -60,7 +60,7 @@ else {
 							'VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($account_num) . ', ' . $db->escapeNumber($trans_id) . ', \'Payment\', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber(TIME) . ')');
 	$db->query('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 	$player->increaseCredits($amount);
-	$db->query('SELECT amount FROM anon_bank WHERE game_id = '.$player->getGameID().' AND anon_id = '.$account_num);
+	$db->query('SELECT amount FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 	$db->nextRecord();
 	$total = $db->getInt('amount');
 	//too much money?

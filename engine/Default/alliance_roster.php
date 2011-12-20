@@ -19,7 +19,6 @@ $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->g
 require_once(get_file_loc('menu.inc'));
 create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
-$db2 = new SmrMySqlDatabase();
 $varAction = isset($var['action']) ? $var['action'] : '';
 // Does anyone actually use these?
 if ($varAction == 'Show Alliance Roles') {
@@ -29,10 +28,9 @@ if ($varAction == 'Show Alliance Roles') {
 	// get all roles from db for faster access later
 	$db->query('SELECT role_id, role
 				FROM alliance_has_roles
-				WHERE game_id=' . $alliance->getGameID() . '
-				AND alliance_id=' . $alliance->getAllianceID() . '
-				ORDER BY role_id'
-				);
+				WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
+				AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
+				ORDER BY role_id');
 	while ($db->nextRecord()) {
 		$roles[$db->getInt('role_id')] = $db->getField('role');
 	}
@@ -120,16 +118,16 @@ if($varAction == 'Show Alliance Roles') {
 $PHP_OUTPUT.= '</tr>';
 $count = 1;
 
-$db2->query('SELECT * FROM player_has_alliance_role WHERE account_id = '.$player->getAccountID().' AND game_id = '.$alliance->getGameID().' AND alliance_id='.$alliance->getAllianceID());
-if ($db2->nextRecord()) {
-	$my_role_id = $db2->getInt('role_id');
+$db->query('SELECT * FROM player_has_alliance_role WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()));
+if ($db->nextRecord()) {
+	$my_role_id = $db->getInt('role_id');
 }
 else {
 	$my_role_id = 0;
 }
-$db2->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
+$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 			AND role_id = ' . $db->escapeNumber($my_role_id) . ' AND change_roles = \'TRUE\'');
-if ($db2->nextRecord()) {
+if ($db->nextRecord()) {
 	$allowed = TRUE;
 }
 
@@ -184,16 +182,15 @@ foreach($alliancePlayers as &$alliancePlayer) {
 	if ($varAction == 'Show Alliance Roles') {
 		$PHP_OUTPUT.= '<td class="shrink right">';
 
-		$db2 = new SmrMySqlDatabase();
-		$db2->query('SELECT role_id
+		$db->query('SELECT role_id
 					FROM player_has_alliance_role
 					WHERE account_id=' . $db->escapeNumber($alliancePlayer->getAccountID()) . '
 					AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id=' . $db->escapeNumber($alliancePlayer->getAllianceID()) . '
 					LIMIT 1');
 
-		if ($db2->nextRecord()) {
-			$role_id = $db2->getInt('role_id');
+		if ($db->nextRecord()) {
+			$role_id = $db->getInt('role_id');
 		}
 		else {
 			$role_id = 0;

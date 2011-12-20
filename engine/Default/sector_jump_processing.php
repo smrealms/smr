@@ -3,8 +3,7 @@ $sector =& $player->getSector();
 if (isset($_REQUEST['target'])) $target = trim($_REQUEST['target']);
 else $target = $var['target'];
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
-if (in_array($player->getAccountID(), Globals::getHiddenPlayers()))
-{
+if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$player->setSectorID($target);
 	$player->update();
 	$sector->markVisited($player);
@@ -37,13 +36,10 @@ if (!is_numeric($target))
 if ($player->getSectorID() == $target)
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
-if ($sector->hasForces())
-{
+if ($sector->hasForces()) {
 	$sectorForces =& $sector->getForces();
-	foreach($sectorForces as &$forces)
-	{
-		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
-		{
+	foreach($sectorForces as &$forces) {
+		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 			create_error('You cant jump when there are unfriendly forces in the sector!');
 		}
 	} unset($forces);
@@ -74,11 +70,9 @@ if ($player->getTurns() < $turnsToJump)
 
 $maxMisjump = max(0,round(($distance - $turnsToJump) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
 $misjump = mt_rand(0,$maxMisjump);
-if ($misjump > 0)
-{ // we missed the sector
+if ($misjump > 0) { // we missed the sector
 	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
-	while(count($distances[$misjump]) == 0)
-	{
+	while(count($distances[$misjump]) == 0) {
 		$misjump--;
 	}
 		
@@ -88,8 +82,7 @@ if ($misjump > 0)
 	$player->setSectorID($misjumpSector);
 	unset($distances);
 }
-else
-{ // we hit it. exactly
+else { // we hit it. exactly
 	$player->setSectorID($targetSector->getSectorID());
 }
 $player->takeTurns($turnsToJump,$turnsToJump);
@@ -121,24 +114,19 @@ $sector->enteringSector($player,MOVEMENT_JUMP);
 
 $sectorForces =& $sector->getForces();
 $mineOwnerID = false;
-foreach($sectorForces as &$forces)
-{
-	if(!$mineOwnerID && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner()))
-	{
+foreach($sectorForces as &$forces) {
+	if(!$mineOwnerID && $forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
 		$mineOwnerID = $forces->getOwnerID();
 		break;
 	}
 } unset($forces);
-if($mineOwnerID)
-{
-	if ($player->hasNewbieTurns())
-	{
+if($mineOwnerID) {
+	if ($player->hasNewbieTurns()) {
 		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg'] = 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.';
 		forward($container);
 	}
-	else
-	{
+	else {
 		$owner_id = $mineOwnerID;
 		require_once('forces_minefield_processing.php');
 		exit;

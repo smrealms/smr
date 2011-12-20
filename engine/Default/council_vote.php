@@ -1,7 +1,6 @@
 <?php
 
-if (!$player->isOnCouncil())
-{
+if (!$player->isOnCouncil()) {
 	create_error('You have to be on the council in order to vote.');
 }
 
@@ -14,12 +13,11 @@ $template->assign('PageTopic','Ruling Council Of '.$player->getRaceName());
 create_council_menu($player->getRaceID());
 
 // determine for what we voted
-$db->query('SELECT * FROM player_votes_relation ' .
-		'WHERE account_id = '.$player->getAccountID().' AND ' .
-				'game_id = '.$player->getGameID());
+$db->query('SELECT * FROM player_votes_relation
+			WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+				AND game_id = ' . $db->escapeNumber($player->getGameID()));
 $votedForRace = -1;
-if ($db->nextRecord())
-{
+if ($db->nextRecord()) {
 	$votedForRace	= $db->getField('race_id_2');
 	$votedFor		= $db->getField('action');
 }
@@ -27,8 +25,7 @@ if ($db->nextRecord())
 $voteRelations = array();
 $playerRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$player->getRaceID());
 $races =& Globals::getRaces();
-foreach($races as $raceID => $raceInfo)
-{
+foreach($races as $raceID => $raceInfo) {
 	if($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID())
 		continue;
 	$container = create_container('council_vote_processing.php', '', array('race_id' => $raceID));
@@ -44,46 +41,45 @@ foreach($races as $raceID => $raceInfo)
 $template->assign('VoteRelations', $voteRelations);
 
 $voteTreaties = array();
-$db->query('SELECT * FROM race_has_voting ' .
-		'WHERE '.TIME.' < end_time AND ' .
-				'game_id = '.$player->getGameID().' AND ' .
-				'race_id_1 = '.$player->getRaceID());
-if ($db->getNumRows() > 0)
-{
+$db->query('SELECT * FROM race_has_voting
+			WHERE '.TIME.' < end_time
+			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
+if ($db->getNumRows() > 0) {
 
 	$db2 = new SmrMySqlDatabase();
 
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$otherRaceID = $db->getField('race_id_2');
 		$container = create_container('council_vote_processing.php', '', array('race_id' => $otherRaceID));
 		
 		// get 'yes' votes
-		$db2->query('SELECT count(*) FROM player_votes_pact ' .
-					'WHERE game_id = '.$player->getGameID().' AND ' .
-						'race_id_1 = '.$player->getRaceID().' AND ' .
-						'race_id_2 = '.$otherRaceID.' AND ' .
-						'vote = \'YES\'');
+		$db2->query('SELECT count(*) FROM player_votes_pact
+					WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
+						AND race_id_1 = ' . $db2->escapeNumber($player->getRaceID()) . '
+						AND race_id_2 = ' . $db2->escapeNumber($otherRaceID) . '
+						AND vote = \'YES\'');
 		$db2->nextRecord();
 		$yesVotes = $db2->getInt('count(*)');
 
 		// get 'no' votes
-		$db2->query('SELECT count(*) FROM player_votes_pact ' .
-					'WHERE game_id = '.$player->getGameID().' AND ' .
-						'race_id_1 = '.$player->getRaceID().' AND ' .
-						'race_id_2 = '.$otherRaceID.' AND ' .
-						'vote = \'NO\'');
+		$db2->query('SELECT count(*) FROM player_votes_pact
+					WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
+						AND race_id_1 = ' . $db2->escapeNumber($player->getRaceID()) . '
+						AND race_id_2 = ' . $db2->escapeNumber($otherRaceID) . '
+						AND vote = \'NO\'');
 		$db2->nextRecord();
 		$noVotes = $db2->getInt('count(*)');
 
-		$db2->query('SELECT vote FROM player_votes_pact ' .
-					'WHERE account_id = '.$player->getAccountID().' AND ' .
-						'game_id = '.$player->getGameID().' AND ' .
-						'race_id_1 = '.$player->getRaceID().' AND ' .
-						'race_id_2 = '.$otherRaceID);
+		$db2->query('SELECT vote FROM player_votes_pact
+					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+						AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
+						AND race_id_2 = '.$otherRaceID);
 		$votedFor = '';
-		if ($db2->nextRecord())
+		if ($db2->nextRecord()) {
 			$votedFor = $db2->getField('vote');
+		}
 		
 		$voteTreaties[$otherRaceID] = array(
 			'HREF' => SmrSession::get_new_href($container),

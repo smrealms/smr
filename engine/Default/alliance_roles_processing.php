@@ -58,8 +58,7 @@ else {
 					AND role_id = ' . $db->escapeNumber($var['role_id']));
 	// otherwise we update it
 	}
-	else
-	{
+	else {
 		$db->query('UPDATE alliance_has_roles
 					SET role = ' . $db->escapeString($_POST['role']) . ',
 					with_per_day = ' . $db->escapeNumber($withPerDay) . ',

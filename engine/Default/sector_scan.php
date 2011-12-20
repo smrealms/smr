@@ -1,7 +1,6 @@
 <?php
 $sector =& $player->getSector();
-if(!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var['target_sector'])
-{
+if(!$sector->isLinked($var['target_sector']) && $sector->getSectorID() != $var['target_sector']) {
 	create_error('You cannot scan a sector you are not linked to.');
 }
 
@@ -17,8 +16,7 @@ $enemy_vessel = 0;
 
 // iterate over all forces in the target sector
 $scanSectorAllForces =& $scanSector->getForces();
-foreach ($scanSectorAllForces as &$scanSectorForces)
-{
+foreach ($scanSectorAllForces as &$scanSectorForces) {
 	// decide if it's a friendly or enemy stack
 	if ($player->sameAlliance($scanSectorForces->getOwner()))
 		$friendly_forces += $scanSectorForces->getMines() * 3 + $scanSectorForces->getCDs() * 2 + $scanSectorForces->getSDs();
@@ -27,8 +25,7 @@ foreach ($scanSectorAllForces as &$scanSectorForces)
 } unset($scanSectorForces);
 
 $scanSectorPlayers =& $scanSector->getOtherTraders($player);
-foreach($scanSectorPlayers as &$scanSectorPlayer)
-{
+foreach($scanSectorPlayers as &$scanSectorPlayer) {
 	$scanSectorShip =& $scanSectorPlayer->getShip();
 
 	// he's a friend if he's in our alliance (and we are not in a 0 alliance

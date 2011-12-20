@@ -11,8 +11,7 @@
  * 		Adds a new note into the database
  */
  
-if(isset($_REQUEST['note']))
-{
+if(isset($_REQUEST['note'])) {
 	$note = $_REQUEST['note'];
 	if(strlen($note) > 1000)
 		create_error('Note cannot be longer than 1000 characters.');

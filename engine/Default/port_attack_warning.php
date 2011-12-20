@@ -1,7 +1,6 @@
 <?php
 
-if(!$sector->hasPort())
-{
+if(!$sector->hasPort()) {
 	create_error('This sector does not have a port.');
 }
 

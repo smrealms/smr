@@ -1,8 +1,7 @@
 <?php
 require_once(get_file_loc('Plotter.class.inc'));
 
-function checkPortTradeable(&$port,&$player)
-{
+function checkPortTradeable(&$port,&$player) {
 	if($port->getSectorID()!=$player->getSectorID())
 		return 'That port is not in this sector!';
 	
@@ -18,8 +17,7 @@ function checkPortTradeable(&$port,&$player)
 	return true;
 }
 
-function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price,&$container)
-{
+function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price,&$container) {
 	global $var, $player;
 
 	$port =& $player->getSectorPort();
@@ -27,11 +25,9 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 	// increase current number of tries
 	$container['number_of_bargains'] = isset($var['number_of_bargains']) ? $var['number_of_bargains'] + 1 : 1;
 
-	if (isset($var['overall_number_of_bargains']))
-	{
+	if (isset($var['overall_number_of_bargains'])) {
 		// lose relations for bad bargain
-		if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
-		{
+		if ($port->getRaceID() > 1 || $player->getRaceID() == 2) {
 			$player->decreaseRelationsByTrade($amount,$port->getRaceID());
 		}
 		$player->increaseHOF(1,array('Trade','Results','Fail'), HOF_PUBLIC);
@@ -39,11 +35,9 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 		transfer('overall_number_of_bargains');
 
 		// does we have enough of it?
-		if ($container['number_of_bargains'] > $container['overall_number_of_bargains'])
-		{
+		if ($container['number_of_bargains'] > $container['overall_number_of_bargains']) {
 			// change relation for non neutral ports
-			if ($port->getRaceID() > 1 || $player->getRaceID() == 2)
-			{
+			if ($port->getRaceID() > 1 || $player->getRaceID() == 2) {
 				$player->decreaseRelationsByTrade($amount,$port->getRaceID());
 
 				/*what the hell is this doing here Spock??? ;)
@@ -66,8 +60,7 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 		$trader_off_rel = 100 - $trader_off;
 
 		// only do something, if we are more off than the trader
-		if (abs($port_off_rel) > abs($trader_off_rel))
-		{
+		if (abs($port_off_rel) > abs($trader_off_rel)) {
 			// get a random number between
 			// (port_off) and (100 +/- $trader_off_rel)
 			if (100 + $trader_off_rel < $port_off)
@@ -82,8 +75,7 @@ function check_bargain_number($amount,$ideal_price,$offered_price,$bargain_price
 		$container['overall_number_of_bargains'] = mt_rand(2, 5);
 }
 
-function get_amount()
-{
+function get_amount() {
 	global $var, $_REQUEST;
 
 	// retrieve amount
@@ -108,8 +100,7 @@ function get_amount()
 	return $amount;
 }
 
-function get_bargain_price()
-{
+function get_bargain_price() {
 	global $_REQUEST,$var;
 
 	// we get it from form

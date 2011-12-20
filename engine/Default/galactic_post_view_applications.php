@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Viewing Applications');
 require_once(get_file_loc('menu.inc'));
 create_galactic_post_menu();
-$db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->getGameID());
+$db->query('SELECT * FROM galactic_post_applications WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->getNumRows()) {
 	$PHP_OUTPUT.=('You have recieved an application from the following players (click name to view description)<br />');
 	$PHP_OUTPUT.=('Becareful when choosing your writters.  Make sure it is someone who will actually help you.<br /><br />');
@@ -27,7 +27,7 @@ while ($db->nextRecord()) {
 }
 $PHP_OUTPUT.=('<br /><br />');
 if (isset($var['id'])) {
-	$db->query('SELECT * FROM galactic_post_applications WHERE game_id = '.$player->getGameID().' AND account_id = '.$var['id']);
+	$db->query('SELECT * FROM galactic_post_applications WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = '.$var['id']);
 	$db->nextRecord();
 	$desc = stripslashes($db->getField('description'));
 	$applie =& SmrPlayer::getPlayer($var['id'], $player->getGameID());

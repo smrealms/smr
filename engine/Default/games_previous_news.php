@@ -18,8 +18,7 @@ $db2 = new $var['HistoryDatabase']();
 $db2->query('SELECT * FROM news WHERE game_id = '.$game_id.' AND news_id >= '.$min.' AND news_id <= '.$max);
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.=('<tr><th class="center">Time</th><th class="center">News</th></tr>');
-while ($db2->nextRecord())
-{
+while ($db2->nextRecord()) {
 	$time = $db2->getField('time');
 	$news = $db2->getField('message');
 	$PHP_OUTPUT.=('<tr><td>' . date(DATE_FULL_SHORT, $time) . '</td><td>'.$news.'</td></tr>');

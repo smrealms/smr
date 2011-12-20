@@ -1,18 +1,15 @@
 <?php
 
-if(isset($var['RealX']))
-{
+if(isset($var['RealX'])) {
 	$realX = $var['RealX'];
 }
-else
-{
+else {
 	if (!isset($_REQUEST['xtype']) || !isset($_REQUEST['X']))
 		create_error('You have to select what you would like to find.');
 	$xType = $_REQUEST['xtype'];
 	$X = $_REQUEST['X'];
 	
-	switch($xType)
-	{
+	switch($xType) {
 		case 'Technology':
 			$realX =& Globals::getHardwareTypes($X);
 		break;
@@ -52,8 +49,7 @@ $path =& Plotter::findDistanceToX($realX, $sector, true, $player, $player);
 if($path===false)
 	create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
 
-if($path->getEndSectorID() < $sector->getSectorID()) //If sector we find is a lower sector id we replot so we always use the plot from lowest to highest sector.
-{
+if($path->getEndSectorID() < $sector->getSectorID()) { //If sector we find is a lower sector id we replot so we always use the plot from lowest to highest sector.
 	$path =& Plotter::findDistanceToX($sector, $path->getEndSector(), true);
 	$path->reversePath();
 }
@@ -61,8 +57,7 @@ if($path->getEndSectorID() < $sector->getSectorID()) //If sector we find is a lo
 $container['Distance'] = serialize($path);
 
 $path->removeStart();
-if ($sector->isLinked($path->getNextOnPath())&&$path->getTotalSectors()>0)
-{
+if ($sector->isLinked($path->getNextOnPath())&&$path->getTotalSectors()>0) {
 	$player->setPlottedCourse($path);
 }
 forward($container);

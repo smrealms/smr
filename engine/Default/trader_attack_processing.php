@@ -31,10 +31,8 @@ $fightingPlayers =& $sector->getFightingTraders($player,$targetPlayer);
 
 	
 //decloak all fighters
-foreach($fightingPlayers as &$teamPlayers)
-{
-	foreach($teamPlayers as &$teamPlayer)
-	{
+foreach($fightingPlayers as &$teamPlayers) {
+	foreach($teamPlayers as &$teamPlayer) {
 		$teamPlayer->getShip()->decloak();
 	} unset($teamPlayer);
 } unset($teamPlayers);
@@ -45,14 +43,12 @@ $player->update();
 
 $results = array('Attackers' => array('Traders' => array(), 'TotalDamage' => 0),
 				'Defenders' => array('Traders' => array(), 'TotalDamage' => 0));
-foreach($fightingPlayers['Attackers'] as $accountID => &$teamPlayer)
-{
+foreach($fightingPlayers['Attackers'] as $accountID => &$teamPlayer) {
 	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Defenders']);
 	$results['Attackers']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($teamPlayer);
-foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer)
-{
+foreach($fightingPlayers['Defenders'] as $accountID => &$teamPlayer) {
 	$playerResults =& $teamPlayer->shootPlayers($fightingPlayers['Attackers']);
 	$results['Defenders']['Traders'][$teamPlayer->getAccountID()]  =& $playerResults;
 	$results['Defenders']['TotalDamage'] += $playerResults['TotalDamage'];
@@ -62,7 +58,7 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $account->log(LOG_TYPE_TRADER_COMBAT, 'Player attacks player, their team does ' . $results['Attackers']['TotalDamage'].' and the other team does '.$results['Defenders']['TotalDamage'], $sector->getSectorID());
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'PLAYER\',' . $sector->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLAYER\',' . $sector->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $var['target'] . ',' . $targetPlayer->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();
@@ -76,8 +72,7 @@ else
 	$container['target'] = 0;
 
 // If they died on the shot they get to see the results
-if($player->isDead())
-{
+if($player->isDead()) {
 	$container['override_death'] = TRUE;
 	$container['target'] = 0;
 }

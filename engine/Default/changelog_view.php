@@ -27,7 +27,7 @@ while ($db->nextRecord()) {
 
 	$db2->query('SELECT *
 				FROM changelog
-				WHERE version_id = ' . $db->escapeNumber($version_id) . '
+				WHERE version_id = ' . $db2->escapeNumber($version_id) . '
 				ORDER BY changelog_id');
 	while ($db2->nextRecord()) {
 		$PHP_OUTPUT.=('<li>' . $db2->getField('change_title') . '<br /><small>' . $db2->getField('change_message') . '</small></li>');

@@ -1,6 +1,6 @@
 <?php
 
-$db->query('DELETE FROM galactic_post_paper_content WHERE game_id = '.$player->getGameID().' AND article_id = '.$var['article_id']);
+$db->query('DELETE FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = '.$var['article_id']);
 
 $container = array();
 $container['url'] = 'skeleton.php';

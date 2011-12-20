@@ -8,7 +8,7 @@
 //}
 //$db2 = new SmrMySqlDatabase();
 ////check for planet messages
-//$db->query('SELECT * FROM alliance_thread_topic WHERE alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND ' .
+//$db->query('SELECT * FROM alliance_thread_topic WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' .
 //					'topic LIKE \'Planet Attack Report Sector %\'');
 //$container = array();
 //$msg = array();
@@ -16,10 +16,10 @@
 //
 //	//get the newest post time and such
 //	$thread_id = $db->getField('thread_id');
-//	$db2->query('SELECT * FROM alliance_thread WHERE thread_id = '.$thread_id.' AND alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' ORDER BY reply_id DESC');
+//	$db2->query('SELECT * FROM alliance_thread WHERE thread_id = '.$thread_id.' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY reply_id DESC');
 //	$db2->nextRecord();
 //	$post_time = $db2->getField('time');
-//	$db2->query('SELECT * FROM player_read_thread WHERE thread_id = '.$thread_id.' AND alliance_id = '.$player->getAllianceID().' AND game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+//	$db2->query('SELECT * FROM player_read_thread WHERE thread_id = '.$thread_id.' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
 //	if($db2->nextRecord())
 //		$time_read = $db2->getField('time');
 //	else
@@ -45,10 +45,10 @@
 //max(alliance_thread.time) as sendtime,
 //count(alliance_thread.reply_id) as num_replies
 //FROM alliance_thread_topic,alliance_thread
-//WHERE alliance_thread.game_id=' . $player->getGameID() . '
-//AND alliance_thread_topic.game_id=' . $player->getGameID() . '
-//AND alliance_thread_topic.alliance_id=' . $player->getAllianceID() . '
-//AND alliance_thread.alliance_id=' . $player->getAllianceID() . '
+//WHERE alliance_thread.game_id=' . $db->escapeNumber($player->getGameID()) . '
+//AND alliance_thread_topic.game_id=' . $db->escapeNumber($player->getGameID()) . '
+//AND alliance_thread_topic.alliance_id=' . $db->escapeNumber($player->getAllianceID()) . '
+//AND alliance_thread.alliance_id=' . $db->escapeNumber($player->getAllianceID()) . '
 //AND alliance_thread.thread_id=alliance_thread_topic.thread_id
 //GROUP BY alliance_thread.thread_id ORDER BY sendtime DESC
 //');

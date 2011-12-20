@@ -4,8 +4,7 @@ if (!$player->isLandedOnPlanet())
 $planet =& $player->getSectorPlanet();
 $action = $_REQUEST['action'];
 $amount = $_REQUEST['amount'];
-if ($action == 'Deposit' || $action == 'Withdraw')
-{
+if ($action == 'Deposit' || $action == 'Withdraw') {
 	if (!is_numeric($amount))
 		create_error('Numbers only please!');
 
@@ -16,8 +15,7 @@ if ($action == 'Deposit' || $action == 'Withdraw')
 	if ($amount <= 0)
 		create_error('You must actually enter an amount > 0!');
 
-	if ($action == 'Deposit')
-	{
+	if ($action == 'Deposit') {
 		if ($player->getCredits() < $amount)
 			create_error('You don\'t own that much money!');
 
@@ -25,8 +23,7 @@ if ($action == 'Deposit' || $action == 'Withdraw')
 		$planet->increaseCredits($amount);
 		$account->log(LOG_TYPE_BANK, 'Player puts '.$amount.' credits on planet', $player->getSectorID());
 	}
-	elseif ($action == 'Withdraw')
-	{
+	elseif ($action == 'Withdraw') {
 		if ($planet->getCredits() < $amount)
 			create_error('There are not enough credits in the planetary account!');
 
@@ -35,8 +32,7 @@ if ($action == 'Deposit' || $action == 'Withdraw')
 		$account->log(LOG_TYPE_BANK, 'Player takes '.$amount.' credits from planet', $player->getSectorID());
 	}
 }
-elseif ($action == 'Bond It!')
-{
+elseif ($action == 'Bond It!') {
 	if(!$planet->isClaimed())
 		create_error('Cannot bond on an unclaimed planet.');
 	// add it to bond

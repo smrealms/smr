@@ -10,19 +10,16 @@ $container['url'] = 'skeleton.php';
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><td style="width:50%" class="top">';
 
 $PHP_OUTPUT.= '<span class="yellow bold">Protection</span><br />';
-if($player->getNewbieTurns())
-{
+if($player->getNewbieTurns()) {
 	$PHP_OUTPUT.= 'You are under <span class="green">NEWBIE</span> protection.<br /><br />';
 
 	$container['body'] = 'leave_newbie.php';
 	$PHP_OUTPUT.=create_button($container, 'Leave Newbie Protection');
 }
-else if($player->hasFederalProtection())
-{
+else if($player->hasFederalProtection()) {
 	$PHP_OUTPUT.= 'You are under <span class="blue">FEDERAL</span> protection.';
 }
-else
-{
+else {
 	$PHP_OUTPUT.= 'You are <span class="red">NOT</span> under protection.';
 }
 
@@ -34,8 +31,7 @@ $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Relations (Perso
 
 $PHP_OUTPUT.= '<br />';
 $RACES = Globals::getRaces();
-foreach($RACES as $raceID => $raceInfo)
-{
+foreach($RACES as $raceID => $raceInfo) {
 	if($player->getPureRelation($raceID) != 0)
 		$PHP_OUTPUT.= $raceInfo['Race Name'] . ' : ' . get_colored_text($player->getPureRelation($raceID), $player->getPureRelation($raceID)) . '<br />';
 }
@@ -47,19 +43,15 @@ $PHP_OUTPUT.= '<br />';
 
 require_once(get_file_loc('council.inc'));
 
-if($player->isOnCouncil())
-{
-	if($player->isPresident())
-	{
+if($player->isOnCouncil()) {
+	if($player->isPresident()) {
 		$PHP_OUTPUT.= 'You are the <span class="red">President</span> of the ruling council.';
 	}
-	else
-	{
+	else {
 		$PHP_OUTPUT.= 'You are a <span class="blue">member</span> of the ruling council.';
 	}
 }
-else
-{
+else {
 	$PHP_OUTPUT.= 'You are <span class="red">NOT</span> a member of the ruling council.';
 }
 
@@ -104,8 +96,7 @@ if (!$ship->canHaveScanner() &&
 	!$ship->canHaveCloak() &&
 	!$ship->canHaveJump() &&
 	!$ship->canHaveDCS()) $PHP_OUTPUT.= 'none<br />';
-else
-{
+else {
 	if ($ship->canHaveScanner()) $PHP_OUTPUT.= 'Scanner<br />';
 	if ($ship->canHaveIllusion()) $PHP_OUTPUT.= 'Illusion Generator<br />';
 	if ($ship->canHaveCloak()) $PHP_OUTPUT.= 'Cloaking Device<br />';
@@ -115,8 +106,7 @@ else
 
 $PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="levelRequirements"><span class="yellow bold">Next Level</span></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
-if(!$db->nextRecord())
-{
+if(!$db->nextRecord()) {
 	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
 	$db->nextRecord();
 }
@@ -137,11 +127,9 @@ $form = create_form($container,'Delete Selected');
 $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><th colspan="2">Notes</th></tr>';
 
-$db->query('SELECT * FROM player_has_notes WHERE game_id=' . $player->getGameID() . ' AND account_id=' . $player->getAccountID() . ' ORDER BY note_id DESC');
-if($db->getNumRows() > 0)
-{
-	while($db->nextRecord())
-	{
+$db->query('SELECT * FROM player_has_notes WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY note_id DESC');
+if($db->getNumRows() > 0) {
+	while($db->nextRecord()) {
 		$PHP_OUTPUT.= '<tr>';
 		$PHP_OUTPUT.= '<td class="shrink"><input type="checkbox" name="note_id[]" value="' . $db->getField('note_id') . '" /></td>';
 		$PHP_OUTPUT.= '<td>' . bbifyMessage(gzuncompress($db->getField('note'))) . '</td>';

@@ -39,20 +39,17 @@ require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 // check max on that stack
-if ($forces->getMines() + $change_mines > 50)
-{
+if ($forces->getMines() + $change_mines > 50) {
 	$change_mines = 50 - $forces->getMines();
 //	create_error('This stack can only take up to 50 mines!');
 }
 
-if ($forces->getCDs() + $change_combat_drones > 50)
-{
+if ($forces->getCDs() + $change_combat_drones > 50) {
 	$change_combat_drones = 50 - $forces->getCDs();
 //	create_error('This stack can only take up to 50 combat drones!');
 }
 
-if ($forces->getSDs() + $change_scout_drones > 5)
-{
+if ($forces->getSDs() + $change_scout_drones > 5) {
 	$change_scout_drones = 5 - $forces->getSDs();
 //	create_error('This stack can only take up to 5 scout drones!');
 }
@@ -131,8 +128,7 @@ if ($change_mines != 0) {
 }
 
 // message to send out
-if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages())
-{
+if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
 	$mines_message = '';
 	if ($change_mines > 0)
 		$mines_message = 'added ' . $change_mines . ' mine';
@@ -150,15 +146,13 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 	if (abs($change_combat_drones) > 1)
 		$combat_drones_message .= 's';
 
-	if ($change_scout_drones > 0)
-	{
+	if ($change_scout_drones > 0) {
 		$scout_drones_message='';
 		if((isset($combat_drones_message) && $change_combat_drones < 0) || (!isset($combat_drones_message) && $change_mines <= 0))
 			$scout_drones_message = 'added ';
 		$scout_drones_message .= $change_scout_drones . ' scout drone';
 	}
-	elseif ($change_scout_drones < 0)
-	{
+	elseif ($change_scout_drones < 0) {
 		$scout_drones_message='';
 		if((isset($combat_drones_message) && $change_combat_drones > 0) || (!isset($combat_drones_message) && $change_mines >= 0))
 			$scout_drones_message = 'removed ';

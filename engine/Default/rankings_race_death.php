@@ -16,12 +16,11 @@ $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
 $db2 = new SmrMySqlDatabase();
-$db->query('SELECT race_id, race_name, sum(deaths) as death_sum, count(*) FROM player JOIN race USING(race_id) WHERE game_id = '.$player->getGameID().' GROUP BY race_id ORDER BY death_sum DESC');
-while ($db->nextRecord())
-{
+$db->query('SELECT race_id, race_name, sum(deaths) as death_sum, count(*) FROM player JOIN race USING(race_id) WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' GROUP BY race_id ORDER BY death_sum DESC');
+while ($db->nextRecord()) {
 	$rank++;
 	$race_id = $db->getInt('race_id');
-	$db2->query('SELECT * FROM player WHERE race_id = '.$race_id.' AND game_id = '.$player->getGameID().' AND out_of_game = \'TRUE\'');
+	$db2->query('SELECT * FROM player WHERE race_id = ' . $db2->escapeNumber($race_id) . ' AND game_id = ' . $db2->escapeNumber($player->getGameID()) . ' AND out_of_game = \'TRUE\'');
 	if ($player->getRaceID() == $race_id) $style = ' class="bold"';
 	elseif ($db2->nextRecord()) $style = ' class="red"';
 	else $style = '';

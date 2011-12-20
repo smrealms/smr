@@ -5,8 +5,7 @@ $game =& Globals::getGameInfo($var['game_id']);
 $template->assignByRef('Game',$game);
 
 // do we need credits for this game?
-if ($game['GameCreditsRequired'] > 0)
-{
+if ($game['GameCreditsRequired'] > 0) {
 	// do we have enough
 	if ($account->getTotalSmrCredits() < $game['GameCreditsRequired'])
 		create_error('Sorry you do not have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR.');
@@ -28,10 +27,8 @@ $template->assign('PageTopic', 'Join Game');
 $raceInfo =& Globals::getRaces();
 $raceDescriptions='';
 $first = true;
-foreach($raceInfo as $race)
-{
-	if ($first)
-	{
+foreach($raceInfo as $race) {
+	if ($first) {
 		$raceDescriptions.=('\'' . str_replace('\'','\\\'"',$race['Description']) . '\'');
 		$first = false;
 
@@ -62,8 +59,7 @@ $db->query('SELECT location_name, location_type_id
 $races = array();
 $selectedRace = mt_rand(1,$db->getNumRows());
 $i=1;
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	// get the name for this race
 	// HACK! cut ' Headquarters' from location name!
 	$race_name = substr(stripslashes($db->getField('location_name')), 0, -13);

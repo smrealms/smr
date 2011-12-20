@@ -138,16 +138,15 @@ if (!isset($account_num) && !isset($make)) {
 		$container = create_container('skeleton.php', 'bank_anon.php');
 		$db2 = new SmrMySqlDatabase();
 		while ($db->nextRecord()) {
-			$db2->query('SELECT MAX(time) FROM anon_bank_transactions
-						WHERE game_id=' . $db->escapeNumber($player->getGameID()) . '
-						AND anon_id=' . $db->escapeNumber($db->getInt('anon_id')) . ' LIMIT 1');
-
 			$PHP_OUTPUT.= '<tr><td class="shrink center">';
 			$PHP_OUTPUT.= $db->getInt('anon_id');
 			$PHP_OUTPUT.= '</td><td>';
 			$PHP_OUTPUT.= $db->getField('password');
 			$PHP_OUTPUT.= '</td><td class="shrink noWrap">';
 
+			$db2->query('SELECT MAX(time) FROM anon_bank_transactions
+						WHERE game_id=' . $db2->escapeNumber($player->getGameID()) . '
+						AND anon_id=' . $db2->escapeNumber($db->getInt('anon_id')) . ' LIMIT 1');
 			if($db2->nextRecord() && $db2->getInt('MAX(time)')) {
 				$PHP_OUTPUT.= date(DATE_FULL_SHORT, $db2->getInt('MAX(time)'));
 			}
@@ -212,7 +211,7 @@ if (isset($account_num)) {
 				$minValue = 1;
 			}
 		}
-		else{
+		else {
 			$minValue = 1;
 			$maxValue = 5;
 		}

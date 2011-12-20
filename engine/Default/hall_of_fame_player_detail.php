@@ -9,31 +9,25 @@ $game_id =null;
 if (isset($var['game_id'])) $game_id = $var['game_id'];
 $base = array();
 
-if(isset($var['game_id']))
-{
-	try
-	{
+if(isset($var['game_id'])) {
+	try {
 		$hofPlayer =& SmrPlayer::getPlayer($account_id,$var['game_id']);
 	}
-	catch(Exception $e)
-	{
+	catch(Exception $e) {
 		create_error('That player has not yet joined this game.');
 	}
 	$template->assign('PageTopic',$hofPlayer->getPlayerName().'\'s Personal Hall of Fame For '.Globals::getGameName($var['game_id']));
 }
-else
-{
+else {
 	$template->assign('PageTopic',$account->getHofName().'\'s All Time Personal Hall of Fame');
 }
 $PHP_OUTPUT.=('<div class="center">');
 $allowedVisibities = array(HOF_PUBLIC);
-if($account->getAccountID()==$account_id)
-{
+if($account->getAccountID()==$account_id) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 	$allowedVisibities[] = HOF_PRIVATE;
 }
-else if(isset($hofPlayer) && $hofPlayer->sameAlliance($player))
-{
+else if(isset($hofPlayer) && $hofPlayer->sameAlliance($player)) {
 	$allowedVisibities[] = HOF_ALLIANCE;
 }
 $db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escapeArray($allowedVisibities) . ') ORDER BY type');
@@ -41,14 +35,11 @@ $db->query('SELECT type FROM hof_visibility WHERE visibility IN (' . $db->escape
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
-while($db->nextRecord())
-{
+while($db->nextRecord()) {
 	$hof =& $hofTypes;
 	$typeList = explode(':',$db->getField('type'));
-	foreach($typeList as $type)
-	{
-		if(!isset($hof[$type]))
-		{
+	foreach($typeList as $type) {
+		if(!isset($hof[$type])) {
 			$hof[$type] = array();
 		}
 		$hof =& $hof[$type];
@@ -58,12 +49,10 @@ while($db->nextRecord())
 $PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,'Personal HoF');
 $PHP_OUTPUT.= '<table class="standard" align="center">';
 
-if(!isset($var['view']))
-{
+if(!isset($var['view'])) {
 	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');
 	
-	foreach($hofTypes as $type => $value)
-	{
+	foreach($hofTypes as $type => $value) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$type.'</td>');
 		$container = $var;
@@ -72,10 +61,8 @@ if(!isset($var['view']))
 		$container['type'][] = $type;
 		$PHP_OUTPUT.=('<td valign="middle">');
 		$i=0;
-		if(is_array($value))
-		{
-			foreach($value as $subType => $subTypeValue)
-			{
+		if(is_array($value)) {
+			foreach($value as $subType => $subTypeValue) {
 				++$i;
 				$container['view'] = $subType;
 				
@@ -91,8 +78,7 @@ if(!isset($var['view']))
 				if ($i % 3 == 0) $PHP_OUTPUT.=('<br />');
 			}
 		}
-		else
-		{
+		else {
 			unset($container['view']);
 			$rank = getHofRank($type,$container['type'],$account->getAccountID(),$game_id,$db);
 			$PHP_OUTPUT.=create_submit_link($container,'View (#' . $rank['Rank'] .')');
@@ -100,8 +86,7 @@ if(!isset($var['view']))
 		$PHP_OUTPUT.=('</td></tr>');
 	}
 }
-else
-{
+else {
 	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
 	
 	$viewType = $var['type'];
@@ -109,8 +94,7 @@ else
 
 	$hofRank = getHofRank($var['view'],$viewType,$account_id,$game_id,$db);
 	
-	if($account->getAccountID() != $account_id)
-	{
+	if($account->getAccountID() != $account_id) {
 		//current player's score.
 		$playerRank = getHofRank($var['view'],$viewType,$account->getAccountID(),$game_id,$db);
 		

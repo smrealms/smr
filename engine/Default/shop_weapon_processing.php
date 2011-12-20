@@ -1,7 +1,6 @@
 <?php
 $action = $_REQUEST['action'];
-if ($action == 'Buy')
-{
+if ($action == 'Buy') {
 	$cost = $var['cost'];
 	$power_level = $var['power_level'];
 	$cant_buy = $var['cant_buy'];
@@ -33,8 +32,7 @@ if ($action == 'Buy')
 	$weapon =& $ship->addWeapon($var['weapon_id']);
 	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
 }
-elseif ($action == 'Sell')
-{
+elseif ($action == 'Sell') {
 	// mhh we wonna sell our weapon
 	// give the money to the user
 	$player->increaseCredits($var['cash_back']);

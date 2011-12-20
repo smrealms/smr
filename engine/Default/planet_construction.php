@@ -11,12 +11,10 @@ create_planet_menu();
 
 $PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 $PHP_OUTPUT.=('<p>You are currently building: ');
-if ($planet->hasCurrentlyBuilding())
-{
+if ($planet->hasCurrentlyBuilding()) {
 	$PHP_OUTPUT.=('<br />');
 	$currentlyBuilding = $planet->getCurrentlyBuilding();
-	foreach($currentlyBuilding as $building)
-	{
+	foreach($currentlyBuilding as $building) {
 		$PHP_OUTPUT.=$PLANET_BUILDINGS[$building['ConstructionID']]['Name'].' which will finish in ';
 	
 		$PHP_OUTPUT.=format_time($building['TimeRemaining']);
@@ -29,8 +27,7 @@ if ($planet->hasCurrentlyBuilding())
 		$PHP_OUTPUT.=('</form>');
 	}
 }
-else
-{
+else {
 	$PHP_OUTPUT.='Nothing';
 }
 $PHP_OUTPUT.=('</p>');
@@ -48,8 +45,7 @@ $PHP_OUTPUT.=('<th>Build</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $GOODS =& Globals::getGoods();
-foreach($PLANET_BUILDINGS as $planetBuilding)
-{
+foreach($PLANET_BUILDINGS as $planetBuilding) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td>'.$planetBuilding['Name'].'</td>');
 	$PHP_OUTPUT.=('<td>'.$planetBuilding['Description'].'</td>');
@@ -59,18 +55,15 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 	$PHP_OUTPUT.=($planet->getMaxBuildings($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	foreach($planetBuilding['Goods'] as $goodID => $amount)
-	{
-		if ($planet->getStockpile($goodID) < $amount)
-		{
+	foreach($planetBuilding['Goods'] as $goodID => $amount) {
+		if ($planet->getStockpile($goodID) < $amount) {
 			$PHP_OUTPUT.=('<span class="red">'.$amount.'-'.$GOODS[$goodID]['Name'].', </span>');
 		}
 		else
 			$PHP_OUTPUT.=($amount.'-'.$GOODS[$goodID]['Name'].', ');
 	}
 
-	if ($player->getCredits() < $planetBuilding['Credit Cost'])
-	{
+	if ($player->getCredits() < $planetBuilding['Credit Cost']) {
 		$PHP_OUTPUT.=('<span class="red">'.number_format($planetBuilding['Credit Cost']).'-credits, </span>');
 	}
 	else
@@ -80,8 +73,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding)
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
-	if ($planet->canBuild($player, $planetBuilding['ConstructionID'])===true)
-	{
+	if ($planet->canBuild($player, $planetBuilding['ConstructionID'])===true) {
 		$container = array();
 		$container['url'] = 'planet_construction_processing.php';
 		$container['construction_id'] = $planetBuilding['ConstructionID'];
@@ -103,10 +95,8 @@ $PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.=('<p>Your stockpile contains :</p>');
 $PHP_OUTPUT.=('<ul>');
-foreach ($planet->getStockpile() as $id => $amount)
-{
-	if ($amount > 0)
-	{
+foreach ($planet->getStockpile() as $id => $amount) {
+	if ($amount > 0) {
 		$PHP_OUTPUT.=('<li><img src="' . $GOODS[$id]['ImageLink'] . '" title="' . $GOODS[$id]['Name'] . '" alt="' . $GOODS[$id]['Name'] . '" />&nbsp;' . $GOODS[$id]['Name'] . ': '.$amount.'</li>');
 	}
 }

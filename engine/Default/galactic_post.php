@@ -1,7 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Galactic Post');
-$db->query('SELECT * FROM galactic_post_writer WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID());
+$db->query('SELECT * FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
 if ($db->nextRecord() && $db->getField('position') == 'editor') {
 	$db2 = new SmrMySqlDatabase();
 	require_once(get_file_loc('menu.inc'));
@@ -16,7 +16,7 @@ if ($db->nextRecord() && $db->getField('position') == 'editor') {
 	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_link(create_container('skeleton.php', 'galactic_post_view_members.php'), 'View Members');
 	$PHP_OUTPUT.=('<br />');
-	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = '.$player->getGameID());
+	$db->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 	if ($db->getNumRows()) {
 		$PHP_OUTPUT.=('The following papers are already made (note papers must have 3-8 articles to go to the press)');
 	}
@@ -24,7 +24,7 @@ if ($db->nextRecord() && $db->getField('position') == 'editor') {
 		$paper_name = $db->getField('title');
 		$paper_id = $db->getField('paper_id');
 		$PHP_OUTPUT.=('<span class="red">***</span><i>'.$paper_name.'</i>');
-		$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$paper_id.' AND game_id = '.$player->getGameID());
+		$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = ' . $db2->escapeNumber($paper_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 		$PHP_OUTPUT.=(' which contains <span class="red"> ' . $db2->getNumRows() . ' </span>articles. ');
 		if ($db2->getNumRows() > 2 && $db2->getNumRows() < 9) {
 			$container = array();

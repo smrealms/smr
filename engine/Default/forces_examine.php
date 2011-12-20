@@ -5,8 +5,7 @@ require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 // first check if both ship and forces are in same sector
-if ($player->getSectorID() != $forces->getSectorID())
-{
+if ($player->getSectorID() != $forces->getSectorID()) {
 	create_error('Those forces are no longer here!');
 }
 
@@ -58,8 +57,7 @@ $attackers[$player->getAccountID()] =& $player;
 
 $PHP_OUTPUT.=('<td valign="top">');
 
-foreach($attackers as &$attacker)
-{
+foreach($attackers as &$attacker) {
 	$attackerShip =& $attacker->getShip();
 
 	$PHP_OUTPUT.=($attacker->getLevelName().'<br />');
@@ -86,13 +84,11 @@ $PHP_OUTPUT.=('<td valign="top">');
 // *
 // ********************************
 
-if ($player->forceNAPAlliance($forces_owner))
-{
+if ($player->forceNAPAlliance($forces_owner)) {
 	// you can't attack ur own alliance forces.
 	$PHP_OUTPUT.='&nbsp;';
 }
-else
-{
+else {
 	$PHP_OUTPUT.=('Mines: '.$forces->getMines().'<br />');
 	$PHP_OUTPUT.=('Combat Drones: '.$forces->getCDs().'<br />');
 	$PHP_OUTPUT.=('Scouts: '.$forces->getSDs().'<br /><br />');

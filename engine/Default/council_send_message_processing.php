@@ -8,8 +8,7 @@ if (empty($message))
 // send to all council members
 require_once(get_file_loc('council.inc'));
 $councilMembers = Council::getRaceCouncil($player->getGameID(), $var['race_id']);
-foreach($councilMembers as $accountID)
-{
+foreach($councilMembers as $accountID) {
 	$player->sendMessage($accountID, MSG_POLITICAL, $message, true, $player->getAccountID() != $accountID);
 }
 

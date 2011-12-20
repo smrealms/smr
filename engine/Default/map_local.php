@@ -13,15 +13,12 @@ $template->assign('SpaceView',true);
 $template->assign('HeaderTemplateInclude','includes/LocalMapJS.inc');
 
 $zoomOn = false;
-if(isset($var['Dir']))
-{
+if(isset($var['Dir'])) {
 	$zoomOn = true;
-	if ($var['Dir'] == 'Up')
-	{
+	if ($var['Dir'] == 'Up') {
 		$player->decreaseZoom(1);
 	}
-	elseif ($var['Dir'] == 'Down')
-	{
+	elseif ($var['Dir'] == 'Down') {
 		$player->increaseZoom(1);
 	}
 }
@@ -56,8 +53,7 @@ for ($i=0;$i<$dist&&$i<(int)($galaxy->getHeight()/2);$i++)
 
 $mapSectors = array();
 $leftMostSec =& $topLeft;
-for ($i=0;$i<$span&&$i<$galaxy->getHeight();$i++)
-{
+for ($i=0;$i<$span&&$i<$galaxy->getHeight();$i++) {
 	$mapSectors[$i] = array();
 	//new row
 	if ($i!=0) $leftMostSec =& $leftMostSec->getNeighbourSector('Down');
@@ -65,8 +61,7 @@ for ($i=0;$i<$span&&$i<$galaxy->getHeight();$i++)
 	//get left most sector for this row
 	$thisSec =& $leftMostSec;
 	//iterate through the columns
-	for ($j=0;$j<$span&&$j<$galaxy->getWidth();$j++)
-	{
+	for ($j=0;$j<$span&&$j<$galaxy->getWidth();$j++) {
 		//new sector
 		if ($j!=0) $thisSec =& $thisSec->getNeighbourSector('Right');
 		$mapSectors[$i][$j] =& $thisSec;

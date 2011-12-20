@@ -9,18 +9,16 @@ $PHP_OUTPUT.= 'Bounties awaiting collection.<br /><br />';
 
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><th>Federal</th><th>Underground</th></tr><tr>';
 
-$db->query('SELECT * FROM bounty WHERE claimer_id=' . $player->getAccountID() . ' AND game_id=' . $player->getGameID() .' AND type=\'HQ\'');
+$db->query('SELECT * FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND type=\'HQ\'');
 doBountyList($PHP_OUTPUT,$db,$player);
-$db->query('SELECT * FROM bounty WHERE claimer_id=' . $player->getAccountID() . ' AND game_id=' . $player->getGameID() .' AND type=\'UG\'');
+$db->query('SELECT * FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' AND type=\'UG\'');
 doBountyList($PHP_OUTPUT,$db,$player);
 $PHP_OUTPUT.= '</tr></table>';
 
-function doBountyList(&$PHP_OUTPUT,&$db,&$player)
-{
+function doBountyList(&$PHP_OUTPUT,&$db,&$player) {
 	$PHP_OUTPUT.='<td style="width:50%" class="top">';
 	$any=false;
-	while($db->nextRecord())
-	{
+	while($db->nextRecord()) {
 		$any=true;
 		$bountyPlayer =& SmrPlayer::getPlayer($db->getField('account_id'),$player->getGameID());
 		$PHP_OUTPUT.= $bountyPlayer->getLinkedDisplayName()

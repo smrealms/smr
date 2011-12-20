@@ -44,9 +44,9 @@ if(!isset($var['ClaimText'])) {
 	
 			// delete bounty
 			$db2->query('DELETE FROM bounty
-						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . '
-							AND bounty_id = ' . $db->escapeNumber($bounty_id));
+						WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
+							AND claimer_id = ' . $db2->escapeNumber($player->getAccountID()) . '
+							AND bounty_id = ' . $db2->escapeNumber($bounty_id));
 		}
 	}
 	else {

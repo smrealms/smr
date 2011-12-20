@@ -6,12 +6,11 @@ create_ranking_menu(1, 0);
 $db->query('SELECT alliance_id, sum( experience ) AS alliance_exp, count( account_id ) AS members, alliance_name AS name
 				FROM alliance
 				LEFT JOIN player USING (game_id,alliance_id)
-				WHERE alliance.game_id = ' . $player->getGameID() . ' 
+				WHERE alliance.game_id = ' . $db->escapeNumber($player->getGameID()) . ' 
 				GROUP BY alliance_id
 				ORDER BY alliance_exp DESC');
 $alliances = array();
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$alliances[$db->getField('alliance_id')] = array(stripslashes($db->getField('name')), $db->getField('alliance_exp'), $db->getField('members'));
 	if ($db->getField('alliance_id') == $player->getAllianceID()) $ourRank = sizeof($alliances);
 }
@@ -33,8 +32,7 @@ $PHP_OUTPUT.=('<th>Total Traders</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
-foreach ($alliances as $id => $infoArray)
-{
+foreach ($alliances as $id => $infoArray) {
 	$rank++;
 	$currAllianceName = $infoArray[0];
 	$totalExp = $infoArray[1];
@@ -68,25 +66,21 @@ foreach ($alliances as $id => $infoArray)
 $PHP_OUTPUT.=('</table>');
 
 $action = $_REQUEST['action'];
-if ($action == 'Show')
-{
+if ($action == 'Show') {
 	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	SmrSession::updateVar('MinRank',$min_rank);
 	SmrSession::updateVar('MaxRank',$max_rank);
 }
-elseif(isset($var['MinRank'])&&isset($var['MaxRank']))
-{
+elseif(isset($var['MinRank'])&&isset($var['MaxRank'])) {
 	$min_rank = $var['MinRank'];
 	$max_rank = $var['MaxRank'];
 }
-else
-{
+else {
 	$min_rank = $ourRank - 5;
 	$max_rank = $ourRank + 5;
 }
-if ($min_rank <= 0)
-{
+if ($min_rank <= 0) {
 	$min_rank = 1;
 	$max_rank = 10;
 }
@@ -112,8 +106,7 @@ $PHP_OUTPUT.=('<th>Total Traders</th>');
 $PHP_OUTPUT.=('</tr>');
 
 $rank = 0;
-foreach ($alliances as $id => $infoArray)
-{
+foreach ($alliances as $id => $infoArray) {
 	$rank++;
 	if ($rank < $min_rank) continue;
 	elseif ($rank > $max_rank) break;

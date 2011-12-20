@@ -25,11 +25,9 @@ $db->query('SELECT * FROM alliance_treaties WHERE game_id = ' . $db->escapeNumbe
 			AND (alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 			AND aa_access = 1 AND official = \'TRUE\'');
 $alliedAllianceBanks=array();
-if($db->getNumRows() > 0)
-{
+if($db->getNumRows() > 0) {
 	$alliedAllianceBanks[$player->getAllianceID()] = $player->getAlliance();
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		if ($db->getInt('alliance_id_1') == $player->getAllianceID()) {
 			$alliedAllianceBanks[$db->getInt('alliance_id_2')] = SmrAlliance::getAlliance($db->getInt('alliance_id_2'), $alliance->getGameID());
 		}
@@ -95,8 +93,7 @@ else {
 	$db->query('SELECT MAX(transaction_id) FROM alliance_bank_transactions
 				WHERE game_id=' . $db->escapeNumber($alliance->getGameID()) . '
 				AND alliance_id=' . $db->escapeNumber($alliance->getAllianceID()));
-	if($db->nextRecord())
-	{
+	if($db->nextRecord()) {
 		$maxValue = $db->getInt('MAX(transaction_id)');
 		$minValue = $maxValue - 5;
 		if($minValue < 1) {

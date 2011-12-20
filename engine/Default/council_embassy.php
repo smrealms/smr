@@ -1,7 +1,6 @@
 <?php
 
-if(!$player->isPresident())
-{
+if(!$player->isPresident()) {
 	create_error('Only the president can view the embassy.');
 }
 
@@ -14,13 +13,12 @@ create_council_menu($player->getRaceID());
 
 $voteRaces = array();
 $RACES = Globals::getRaces();
-foreach($RACES as $raceID => $raceInfo)
-{
+foreach($RACES as $raceID => $raceInfo) {
 	if ($raceID == RACE_NEUTRAL || $raceID == $player->getRaceID()) continue;
-	$db->query('SELECT 1 FROM race_has_voting ' .
-				'WHERE game_id = '.$player->getGameID().' AND ' .
-					'race_id_1 = '.$player->getRaceID().' AND ' .
-					'race_id_2 = '.$raceID);
+	$db->query('SELECT 1 FROM race_has_voting
+				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
+				AND race_id_2 = '.$raceID);
 	if ($db->getNumRows() > 0) continue;
 	$voteRaces[$raceID] = SmrSession::get_new_href(create_container('council_embassy_processing.php','',array('race_id' => $raceID)));
 }

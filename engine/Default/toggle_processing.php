@@ -1,14 +1,11 @@
 <?php
-if($var['toggle']=='WeaponHiding')
-{
+if($var['toggle']=='WeaponHiding') {
 	$player->setDisplayWeapons(!$player->isDisplayWeapons());
 }
-else if($var['toggle']=='AJAX')
-{
+else if($var['toggle']=='AJAX') {
 	$account->setUseAJAX(!$account->isUseAJAX());
 }
-if(!USING_AJAX)
-{
+if(!USING_AJAX) {
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	if(isset($var['referrer'])) $container['body'] = $var['referrer'];

@@ -1,12 +1,9 @@
 <?php
-if($_REQUEST['action']=='Vote')
-{
+if($_REQUEST['action']=='Vote') {
 //	$db->query('DELETE FROM account_votes_for_feature WHERE account_id='.SmrSession::$account_id);
-	if(is_array($_REQUEST['vote']))
-	{
+	if(is_array($_REQUEST['vote'])) {
 		$query = 'REPLACE INTO account_votes_for_feature VALUES ';
-		foreach($_REQUEST['vote'] as $requestID => $vote)
-		{
+		foreach($_REQUEST['vote'] as $requestID => $vote) {
 			$query.='('.SmrSession::$account_id.', '.$db->escapeNumber($requestID).','.$db->escapeString($vote).'),';
 		}
 		$db->query(substr($query,0,-1));
@@ -16,8 +13,7 @@ if($_REQUEST['action']=='Vote')
 	
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
-else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' || $_REQUEST['status']=='Rejected' || $_REQUEST['status']=='Opened')
-{
+else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' || $_REQUEST['status']=='Rejected' || $_REQUEST['status']=='Opened') {
 	$status = $_REQUEST['status'];
 	if(empty($_REQUEST['delete']))
 		create_error('You have to select a feature');
@@ -44,8 +40,7 @@ else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' 
 					AND vote_type=' . $db->escapeString('NO') . '
 			)
 			WHERE feature_request_id IN (' . $db->escapeArray($_REQUEST['delete']) . ')');
-	foreach($_REQUEST['delete'] as $featureID)
-	{
+	foreach($_REQUEST['delete'] as $featureID) {
 		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
 					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}

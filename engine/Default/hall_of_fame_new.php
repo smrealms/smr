@@ -4,12 +4,10 @@ $game_id =null;
 if (isset($var['game_id'])) $game_id = $var['game_id'];
 $base = array();
 
-if (empty($game_id))
-{
+if (empty($game_id)) {
 	$topic = 'All Time Hall of Fame';
 }
-else
-{
+else {
 	$topic = Globals::getGameName($game_id).' Hall of Fame';
 }
 $template->assign('PageTopic',$topic);
@@ -29,14 +27,11 @@ $db->query('SELECT type FROM hof_visibility WHERE visibility != '. $db->escapeSt
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
-while($db->nextRecord())
-{
+while($db->nextRecord()) {
 	$hof =& $hofTypes;
 	$typeList = explode(':',$db->getField('type'));
-	foreach($typeList as $type)
-	{
-		if(!isset($hof[$type]))
-		{
+	foreach($typeList as $type) {
+		if(!isset($hof[$type])) {
 			$hof[$type] = array();
 		}
 		$hof =& $hof[$type];
@@ -46,12 +41,10 @@ while($db->nextRecord())
 $PHP_OUTPUT .= buildBreadcrumb($var,$hofTypes,isset($var['game_id'])?'Current HoF':'Global HoF');
 $PHP_OUTPUT.= '<table class="standard" align="center">';
 
-if(!isset($var['view']))
-{
+if(!isset($var['view'])) {
 	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');
 	
-	foreach($hofTypes as $type => $value)
-	{
+	foreach($hofTypes as $type => $value) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$type.'</td>');
 		$container = $var;
@@ -60,10 +53,8 @@ if(!isset($var['view']))
 		$container['type'][] = $type;
 		$PHP_OUTPUT.=('<td valign="middle">');
 		$i=0;
-		if(is_array($value))
-		{
-			foreach($value as $subType => $subTypeValue)
-			{
+		if(is_array($value)) {
+			foreach($value as $subType => $subTypeValue) {
 				++$i;
 				$container['view'] = $subType;
 				
@@ -79,8 +70,7 @@ if(!isset($var['view']))
 				if ($i % 3 == 0) $PHP_OUTPUT.=('<br />');
 			}
 		}
-		else
-		{
+		else {
 			unset($container['view']);
 			$rank = getHofRank($type,$container['type'],$account->getAccountID(),$game_id,$db);
 			$PHP_OUTPUT.=create_submit_link($container,'View (#' . $rank['Rank'] .')');
@@ -88,8 +78,7 @@ if(!isset($var['view']))
 		$PHP_OUTPUT.=('</td></tr>');
 	}
 }
-else
-{
+else {
 	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
 	
 	
@@ -103,47 +92,38 @@ else
 	if($var['view'] == DONATION_NAME)
 		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated ' .
 				'GROUP BY account_id ORDER BY amount DESC LIMIT 25');
-	else if($var['view'] == USER_SCORE_NAME)
-	{
+	else if($var['view'] == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
 		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';
 		$db->query($query);
 	}
-	else
-	{
+	else {
 		$db->query('SELECT visibility FROM hof_visibility WHERE type = '.$db->escapeArray($viewType,false,true,':',false).' LIMIT 1');
-		if($db->nextRecord())
-		{
+		if($db->nextRecord()) {
 			$vis = $db->getField('visibility');
 		}
 		$db->query('SELECT account_id,SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id ORDER BY amount DESC LIMIT 25');
 	}
 	$db2 = new SmrMySqlDatabase();
-	while($db->nextRecord())
-	{
+	while($db->nextRecord()) {
 		$accountID = $db->getField('account_id');
-		if($accountID == $account->getAccountID())
-		{
+		if($accountID == $account->getAccountID()) {
 			$foundMe = true;
 			$amount = $db->getField('amount');
 		}
-		else if($vis==HOF_PUBLIC)
-		{
+		else if($vis==HOF_PUBLIC) {
 			$amount = $db->getField('amount');
 		}
-		else if($vis==HOF_ALLIANCE)
-		{
+		else if($vis==HOF_ALLIANCE) {
 			$rankInfo = getHofRank($var['view'], $viewType, $db->getField('account_id'), $var['game_id'], $db2);
 			$amount = $rankInfo['Amount'];
 		}
-		else
-		{
+		else {
 			$amount = '-';
 		}
 		$PHP_OUTPUT .= displayHOFRow($rank++, $accountID, $amount);
 	}
-	if(!$foundMe)
-	{
+	if(!$foundMe) {
 		$rank = getHofRank($var['view'],$viewType,$account->getAccountID(),$var['game_id'],$db);
 		$PHP_OUTPUT .= displayHOFRow($rank['Rank'],$account->getAccountID(),$rank['Amount']);
 	}

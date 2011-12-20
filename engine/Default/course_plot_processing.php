@@ -22,8 +22,7 @@ if ($start == $target)
 $startExists = false;
 $targetExists = false;
 $galaxies =& SmrGalaxy::getGameGalaxies($player->getGameID());
-foreach($galaxies as &$galaxy)
-{
+foreach($galaxies as &$galaxy) {
 	if($galaxy->contains($start))
 		$startExists = true;
 	if($galaxy->contains($target))
@@ -41,19 +40,16 @@ $container['body'] = 'course_plot_result.php';
 
 require_once(get_file_loc('Plotter.class.inc'));
 $path =& Plotter::findDistanceToX(SmrSector::getSector($player->getGameID(),max($target,$start)), SmrSector::getSector($player->getGameID(),min($target,$start)), true);
-if($path===false)
-{
+if($path===false) {
 	create_error('Unable to plot from '.$start.' to '.$target.'.');
 }
-if($start > $target) //We always plot lowest to highest, so reverse if need be.
-{
+if($start > $target) { //We always plot lowest to highest, so reverse if need be.
 	$path->reversePath();
 }
 $container['Distance'] = serialize($path);
 
 $path->removeStart();
-if ($sector->isLinked($path->getNextOnPath())&&$path->getTotalSectors()>0)
-{
+if ($sector->isLinked($path->getNextOnPath())&&$path->getTotalSectors()>0) {
 	$player->setPlottedCourse($path);
 }
 forward($container);
