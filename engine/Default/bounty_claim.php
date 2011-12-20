@@ -4,33 +4,28 @@ $sector =& $player->getSector();
 $template->assign('PageTopic','Bounty Payout');
 
 require_once(get_file_loc('menu.inc'));
-if ($sector->hasHQ())
-{
+if ($sector->hasHQ()) {
 	create_hq_menu();
-	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'HQ\'');
+	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND type = \'HQ\'');
 }
-else
-{
+else {
 	create_ug_menu();
-	$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND claimer_id = '.$player->getAccountID().' AND type = \'UG\'');
+	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND type = \'UG\'');
 }
 
 $claimText='';
 
-if(!isset($var['ClaimText']))
-{
-	if ($db->getNumRows())
-	{
+if(!isset($var['ClaimText'])) {
+	if ($db->getNumRows()) {
 		$claimText.=('You have claimed the following bounties<br /><br />');
 		$db2 = new SmrMySqlDatabase();
 	
-		while ($db->nextRecord())
-		{
+		while ($db->nextRecord()) {
 			// get bounty id from db
-			$bounty_id = $db->getField('bounty_id');
-			$acc_id = $db->getField('account_id');
-			$amount = $db->getField('amount');
-			$smrCredits = $db->getField('smr_credits');
+			$bounty_id = $db->getInt('bounty_id');
+			$acc_id = $db->getInt('account_id');
+			$amount = $db->getInt('amount');
+			$smrCredits = $db->getInt('smr_credits');
 			// no interest on bounties
 			// $time = TIME;
 			// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
@@ -49,13 +44,14 @@ if(!isset($var['ClaimText']))
 	
 			// delete bounty
 			$db2->query('DELETE FROM bounty
-						WHERE game_id = '.$player->getGameID().'
-							AND claimer_id = '.$player->getAccountID().'
-							AND bounty_id = '.$bounty_id);
+						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+							AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . '
+							AND bounty_id = ' . $db->escapeNumber($bounty_id));
 		}
 	}
-	else
+	else {
 		$claimText.=('You have no claimable bounties<br /><br />');
+	}
 	
 	SmrSession::updateVar('ClaimText',$claimText);
 }

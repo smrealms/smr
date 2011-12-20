@@ -4,10 +4,12 @@ $sector =& $player->getSector();
 $template->assign('PageTopic','Place a Bounty');
 
 require_once(get_file_loc('menu.inc'));
-if ($sector->hasHQ())
+if ($sector->hasHQ()) {
 	create_hq_menu();
-else
+}
+else {
 	create_ug_menu();
+}
 
 $container = create_container('skeleton.php','bounty_place_confirm.php');
 transfer('LocationID');
@@ -17,10 +19,9 @@ $PHP_OUTPUT.=('Select the player you want to add the bounty to<br />');
 $PHP_OUTPUT.=('<select name="player_id" size="1" id="InputFields">');
 $PHP_OUTPUT.=('<option value="0">[Please Select]</option>');
 
-$db->query('SELECT player_id, player_name FROM player JOIN account USING(account_id) WHERE game_id = ' . $db->escapeString($player->getGameID()) . ' AND account_id != ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY player_name');
-while($db->nextRecord())
-{
-	$PHP_OUTPUT.=('<option value="' . $db->getField('player_id') . '">' . $db->getField('player_name') . '</option>');
+$db->query('SELECT player_id, player_name FROM player JOIN account USING(account_id) WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id != ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY player_name');
+while($db->nextRecord()) {
+	$PHP_OUTPUT.=('<option value="' . $db->getInt('player_id') . '">' . $db->getField('player_name') . '</option>');
 }
 $PHP_OUTPUT.=('</select>');
 

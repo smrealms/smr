@@ -4,31 +4,33 @@ $sector =& $player->getSector();
 $container = array();
 $container['url'] = 'skeleton.php';
 transfer('LocationID');
-if ($sector->hasHQ())
-{
+if ($sector->hasHQ()) {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
 }
-else
-{
+else {
 	$container['body'] = 'underground.php';
 	$type = 'UG';
 }
 $action = $_REQUEST['action'];
 // if we don't have a yes we leave immediatly
-if ($action != 'Yes')
+if ($action != 'Yes') {
 	forward($container);
+}
 
 // get values from container
 $amount = $var['amount'];
 $smrCredits = $var['SmrCredits'];
 $account_id = $var['account_id'];
-if (!$amount&&!$smrCredits)
+if ((!is_numeric($amount) && !is_numeric($smrCredits)) || ($amount == 0 && $smrCredits == 0)) {
 	create_error('You must enter an amount!');
-if ($amount < 0)
+}
+if ($amount < 0) {
 	create_error('You must enter a positive amount!');
-if ($smrCredits < 0)
+}
+if ($smrCredits < 0) {
 	create_error('You must enter a positive SMR credits amount!');
+}
 // take the bounty from the cash
 $player->decreaseCredits($amount);
 $account->decreaseSmrCredits($smrCredits);
