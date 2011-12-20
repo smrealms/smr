@@ -1,8 +1,6 @@
 <?php
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'word_filter.php';
+$container = create_container('skeleton.php', 'word_filter.php');
 
 if(!isset($_REQUEST['word_ids']) || !is_array($_REQUEST['word_ids'])) {
 	$container['error'] = 2;	
@@ -21,8 +19,7 @@ foreach($_REQUEST['word_ids'] as $word_id) {
 	}
 }
 
-$db = new SmrMySqlDatabase();
-$db->query('DELETE FROM word_filter WHERE word_id IN (' . implode(',',$word_ids) . ')');
+$db->query('DELETE FROM word_filter WHERE word_id IN (' . $db->escapeArray($word_ids) . ')');
 forward($container);
  
 ?>

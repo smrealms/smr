@@ -104,7 +104,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME-TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . implode(',', Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME-TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while($db->nextRecord())
 			{
@@ -121,7 +121,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . implode(',', Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while($db->nextRecord())
 			{
