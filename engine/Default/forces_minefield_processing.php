@@ -32,13 +32,6 @@ if ($forces->hasSDs())
 	$forces->ping($message, $player);
 }
 
-
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'forces_attack.php';
-$container['continue'] = 'yes';
-$container['forced'] = 'yes';
-
 // ********************************
 // *
 // * F o r c e s   a t t a c k
@@ -75,9 +68,7 @@ $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $player->getGameID() . ',\'FORCE\',' . $forces->getSectorID() . ',' . TIME . ',' . $player->getAccountID() . ',' . $player->getAllianceID() . ',' . $forceOwner->getAccountID() . ',' . $forceOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'forces_attack.php';
+$container = create_container('skeleton.php', 'forces_attack.php');
 
 // If their target is dead there is no continue attack button
 if($forces->exists())
