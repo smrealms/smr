@@ -464,6 +464,11 @@ class Globals
 		return SmrSession::get_new_href(create_container('skeleton.php','beta_functions.php'));
 	}
 	
+	public static function getBugReportProcessingHREF() //BETA
+	{
+		return SmrSession::get_new_href(create_container('bug_report_processing.php'));
+	}
+	
 	public static function getWeaponReorderHREF($weaponOrderID, $direction)
 	{
 		$container = create_container('skeleton.php','weapon_reorder.php');
