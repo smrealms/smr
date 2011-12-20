@@ -1,14 +1,16 @@
 <?php
 
-if (isset($var['process']))
-{
-	if ($account->getTotalSmrCredits() == 0)
+if (isset($var['process'])) {
+	if ($account->getTotalSmrCredits() == 0) {
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
-	if(isset($_REQUEST['type']))
+	}
+	if(isset($_REQUEST['type'])) {
 		SmrSession::updateVar('type',$_REQUEST['type']);
+	}
 	$type = $var['type'];
-	if(empty($type))
+	if(empty($type)) {
 		create_error('You have to choose the type of ticker to buy.');
+	}
 	switch($type)
 	{
 		case 'NEWS':
@@ -20,10 +22,11 @@ if (isset($var['process']))
 	}
 	$expires = TIME;
 	$ticker = $player->getTicker($type);
-	if($ticker !== false)
+	if($ticker !== false) {
 		$expires = $ticker['Expires'];
+	}
 	$expires += 5*86400;
-	$db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES ('.$player->getGameID().', '.$player->getAccountID().', '.$db->escapeString($type).', '.$expires.')');
+	$db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($expires) . ')');
 	//take credits
 	$account->decreaseTotalSmrCredits(1);
 	//offer another drink and such
@@ -32,17 +35,20 @@ if (isset($var['process']))
 	$container['message'] = '<div align="center">Your system has been added.  Enjoy!</div><br />';
 	forward($container);
 }
-else
-{
-	
+else {
 	//they can buy the ticker...first we need to find out what they want
 	$tickers = $player->getTickers();
-	foreach($tickers as $ticker)
-	{
+	foreach($tickers as $ticker) {
 		$type = $ticker['Type'];
-		if ($ticker['Type'] == 'NEWS') $type = 'News Ticker';
-		if ($ticker['Type'] == 'SCOUT') $type = 'Scout Message Ticker';
-		if ($ticker['Type'] == 'BLOCK') $type = 'Scout Message Blocker';
+		if ($ticker['Type'] == 'NEWS') {
+			$type = 'News Ticker';
+		}
+		if ($ticker['Type'] == 'SCOUT') {
+			$type = 'Scout Message Ticker';
+		}
+		if ($ticker['Type'] == 'BLOCK') {
+			$type = 'Scout Message Blocker';
+		}
 		$left = $ticker['Expires'] - TIME;
 		$days = floor($left / 86400);
 		$left -= $days * 86400;
@@ -56,9 +62,7 @@ else
 //		if ($type == 'Scout Message Ticker') $PHP_OUTPUT.=('Note: If you select Current News Ticker you will lose your Scout Message Ticker<br />');
 	}
 	$PHP_OUTPUT.=('Great idea!  So what do you want us to configure your system to do?<br />');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'bar_main.php';
+	$container = create_container('skeleton.php', 'bar_main.php');
 	$container['script'] = 'bar_ticker_buy.php';
 	$container['process'] = 'yes';
 	$PHP_OUTPUT.=create_echo_form($container);

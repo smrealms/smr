@@ -1,26 +1,19 @@
 <?php
-if(isset($var['message']))
-{
+if(isset($var['message'])) {
 	$PHP_OUTPUT.=$var['message'];
 	return;
 }
 
 $PHP_OUTPUT.=('<div align=center>How much do you want to bet? ');
 if ($player->getNewbieTurns() > 0) {
-
 	$value = 100;
 	$PHP_OUTPUT.=('(Since you have newbie protection max bet is '.$value.')<br />');
-
 } else {
-
 	$value = 10000;
 	$PHP_OUTPUT.=('(Max bet is '.$value.')<br />');
-
 }
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'bar_main.php';
+$container = create_container('skeleton.php', 'bar_main.php');
 $container['script'] = 'bar_gambling_processing.php';
 $container['action'] = 'blackjack';
 $PHP_OUTPUT.=create_echo_form($container);

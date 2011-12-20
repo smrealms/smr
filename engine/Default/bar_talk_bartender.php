@@ -3,26 +3,28 @@
 require_once(get_file_loc('menu.inc'));
 create_bar_menu();
 
-$db->query('SELECT message_id FROM bar_tender WHERE game_id = '.$player->getGameID().' ORDER BY message_id DESC');
-if ($db->nextRecord())
-	$amount = $db->getField('message_id') + 1;
-else
+$db->query('SELECT message_id FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY message_id DESC');
+if ($db->nextRecord()) {
+	$amount = $db->getInt('message_id') + 1;
+}
+else {
 	$amount = 1;
+}
 $gossip_tell = $_REQUEST['gossip_tell'];
 if (isset($gossip_tell))
-	$db->query('INSERT INTO bar_tender (game_id, message_id, message) VALUES ('.$player->getGameID().', '.$amount.',  ' . $db->escape_string($gossip_tell, true) . ' )');
+	$db->query('INSERT INTO bar_tender (game_id, message_id, message) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($amount) . ',  ' . $db->escapeString($gossip_tell) . ' )');
 
-$db->query('SELECT * FROM bar_tender WHERE game_id = '.$player->getGameID().' ORDER BY rand() LIMIT 1');
+$db->query('SELECT * FROM bar_tender WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY rand() LIMIT 1');
 
 if ($db->nextRecord()) {
-
 	$PHP_OUTPUT.=('I heard ');
-	$message = stripslashes($db->getField('message'));
+	$message = $db->getField('message');
 	$PHP_OUTPUT.=($message.'<br /><br />');
 	$PHP_OUTPUT.=('Got anything else to tell me?<br />');
-
-} else
+}
+else {
 	$PHP_OUTPUT.=('I havent heard anything recently...got anything to tell me?<br /><br />');
+}
 
 
 $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'bar_talk_bartender.php'));
