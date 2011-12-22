@@ -76,7 +76,7 @@ else {
 	$account->log(LOG_TYPE_BANK, 'Takes '.$amount.' credits from anonymous account #'.$account_num, $player->getSectorID());
 }
 
-$container = create_container('skeleton.php#', 'bank_anon.php');
+$container = create_container('skeleton.php', 'bank_anon.php');
 $container['account_num'] = $account_num;
 $container['allowed'] = 'yes';
 transfer($password);
