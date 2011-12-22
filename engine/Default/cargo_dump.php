@@ -20,7 +20,7 @@ if ($db->getNumRows()) {
 		$good_name	= $db->getField('good_name');
 		$amount		= $db->getInt('amount');
 
-		$container = create_containter('cargo_dump_processing.php');
+		$container = create_container('cargo_dump_processing.php');
 		$container['good_id'] = $good_id;
 
 		$PHP_OUTPUT.=create_echo_form($container);
