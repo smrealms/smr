@@ -25,6 +25,7 @@ $categorySQL = $category.' '.$order;
 if (!isset($var['subcategory'])) {
 	SmrSession::updateVar('subcategory', 'expire_time ASC');
 }
+$subcategory = $var['subcategory'];
 	
 $db->query('
 SELECT
