@@ -19,10 +19,9 @@ if (isset($var['process'])) {
 	$low = $galaxy->getStartSector();
 	//get end sector
 	$high = $galaxy->getEndSector();
-	$account_id = $player->getAccountID();
 
 	// Have they already got this map? (Are there any unexplored sectors?
-	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND account_id = ' . $db->escapeNumber($account_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
+	$db->query('SELECT * FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 	if(!$db->nextRecord()) {
 		create_error('You already have maps of this galaxy!');
 	}
@@ -33,14 +32,14 @@ if (isset($var['process'])) {
 	//now give maps
 	
 	// delete all entries from the player_visited_sector/port table
-	$db->query('DELETE FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND account_id = ' . $db->escapeNumber($account_id) . ' AND game_id = ' . $db->escapeNumber($game_id));
+	$db->query('DELETE FROM player_visited_sector WHERE sector_id >= ' . $db->escapeNumber($low) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	//start section
 	
 	require_once(get_file_loc('SmrPort.class.inc'));
 	// add port infos
-	$db->query('SELECT sector_id FROM port WHERE game_id = ' . $db->escapeNumber($game_id) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND sector_id >= ' . $db->escapeNumber($low) . ' ORDER BY sector_id');
+	$db->query('SELECT sector_id FROM port WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND sector_id <= ' . $db->escapeNumber($high) . ' AND sector_id >= ' . $db->escapeNumber($low) . ' ORDER BY sector_id');
 	while ($db->nextRecord()) {
-		SmrPort::getPort($player->getGameID(),$db->getField('sector_id'))->addCachePort($account_id);
+		SmrPort::getPort($player->getGameID(),$db->getField('sector_id'))->addCachePort($player->getAccountID());
 	}
 	
 	$container=create_container('skeleton.php','bar_main.php');
