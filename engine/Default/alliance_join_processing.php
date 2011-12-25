@@ -26,9 +26,7 @@ if ($alliance->canJoinAlliance($player) !== true) {
 	create_error('You are not able to join this alliance currently.');
 }
 
-$password = $_REQUEST['password'];
-
-if ($password != $alliance->getPassword()) {
+if ($_REQUEST['password'] != $alliance->getPassword()) {
 	create_error('Incorrect Password!');
 }
 
