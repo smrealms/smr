@@ -36,14 +36,11 @@ $db->query('SELECT sector_id
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND account_id = ' . $db->escapeNumber($player->getAccountID()));
 while ($db->nextRecord()) {
-	$unvisitedSectors[$db->getInt('sector_id')] = true;
+	$unvisitedSectors[] = $db->getInt('sector_id');
 }
 
-// free some memory
-unset($unvisitedSectors);
-
 // do we have any visited sectors?
-if ($visited_sector_list) {
+if (count($unvisitedSectors) > 0) {
 	// delete all visited sectors from the table of all our alliance mates
 	$db->query('DELETE
 				FROM player_visited_sector
@@ -51,6 +48,9 @@ if ($visited_sector_list) {
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND sector_id NOT IN (' . $db->escapeArray($unvisitedSectors) . ')');
 }
+
+// free some memory
+unset($unvisitedSectors);
 
 // get a list of all visited ports
 $db->query('SELECT sector_id
