@@ -589,8 +589,9 @@ function do_voodoo() {
 		$template->assignByRef('ThisShip',$ship);
 	}
 	$template->assignByRef('ThisAccount',$account);
-	if($account->getCssLink()!=null)
+	if($account->getCssLink()!=null) {
 		$template->assign('ExtraCSSLink',$account->getCssLink());
+	}
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
 	$time_elapsed = microtimeDiff(microtime(),MICRO_TIME);
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
@@ -700,8 +701,9 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 
 	$template->assign('FontSize',$account->getFontSize());
 	$template->assign('timeDisplay',date(DATE_FULL_SHORT_SPLIT,TIME));
-	if(!$account->isUseAJAX())
+	if(!$account->isUseAJAX()) {
 		$template->assign('AJAX_ENABLE_REFRESH',false);
+	}
 	
 	$container = create_container('skeleton.php');
 	
@@ -755,21 +757,16 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	}
 	
 	if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'hall_of_fame_new.php';
+		$container = create_container('skeleton.php', 'hall_of_fame_new.php');
 		$template->assign('HallOfFameLink',SmrSession::get_new_href($container));
 		
 		$template->assign('AccountID',SmrSession::$account_id);
-		unset($container['body']);
-		$container['url'] = 'game_play_preprocessing.php';
-		$template->assign('PlayGameLink',SmrSession::get_new_href($container));
+		$template->assign('PlayGameLink',SmrSession::get_new_href(create_container('game_play_preprocessing.php')));
 	
-		$container['url'] = 'logoff_preprocessing.php';
-		$template->assign('LogoutLink',SmrSession::get_new_href($container));
+		$template->assign('LogoutLink',SmrSession::get_new_href(create_container('logoff_preprocessing.php')));
 	}
 	
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'preferences.php';
+	$container = create_container('skeleton.php', 'preferences.php');
 	$template->assign('PreferencesLink',SmrSession::get_new_href($container));
 	
 	$container['body'] = 'album_edit.php';
@@ -792,16 +789,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	
 	
 	if (SmrSession::$game_id != 0) {
-	//	if ($under_attack_shields || $under_attack_armour || $under_attack_drones) {
-	//		echo '
-	//			<div id="attack_warning" class="attack_warning"><nobr>You are under attack!</nobr></div>
-	//			<script type="text/javascript">
-	//			SetBlink();
-	//			</script>
-	//			';
-	//		$ship->removeUnderAttack();
-	//	}
-	
 		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' GROUP BY message_type_id');
 	
 		if($db->getNumRows()) {
@@ -876,7 +863,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$template->assign('ForceDropLink',SmrSession::get_new_href(create_container('skeleton.php', 'forces_drop.php')));
 	
 		if ($ship->hasMines()) {
-	
 			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_mines'] = 1;
@@ -887,7 +873,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
 			$template->assign('DropCDLink',SmrSession::get_new_href($container));
-	
 		}
 	
 		if ($ship->hasSDs()) {
@@ -895,7 +880,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
 			$template->assign('DropSDLink',SmrSession::get_new_href($container));
-	
 		}
 	
 		$template->assign('CargoJettisonLink',SmrSession::get_new_href(create_container('skeleton.php', 'cargo_dump.php')));
@@ -909,7 +893,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		}
 	}
 	
-	$container=create_container('vote_link.php');
+	$container = create_container('vote_link.php');
 	
 	$voteLinks = array();
 	$voteLinks[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'location' => 'http://www.mpogd.com/games/game.asp?ID=1145', 'name' => 'MPOGD');
