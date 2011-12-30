@@ -703,8 +703,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	if(!$account->isUseAJAX())
 		$template->assign('AJAX_ENABLE_REFRESH',false);
 	
-	$container = array();
-	$container['url'] = 'skeleton.php';
+	$container = create_container('skeleton.php');
 	
 	
 	if (SmrSession::$game_id > 0) {
@@ -753,11 +752,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$container['body'] = 'hall_of_fame_new.php';
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink',SmrSession::get_new_href($container));
-		unset($container['game_id']);
-		
-		unset($container['body']);
-		$container['url'] = 'mgu_create_new.php';
-		$template->assign('MGULink',SmrSession::get_new_href($container));
 	}
 	
 	if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
