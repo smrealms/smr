@@ -60,7 +60,6 @@ if(isset($GameID))
 	if(isset($GameID))
 	{
 		?><a class="leftNav" href="<?php echo Globals::getSmrFileCreateHREF(); ?>">DL Sectors File</a><br /><?php
-		/* ?><a class="leftNav" href="<?php echo $MGULink ?>">DL MGU Maps</a><br /><?php */
 	} ?>
 	<a class="leftNav" href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
 	<a class="leftNav" href="album/" target="album">View Album</a><br /><br /><?php
