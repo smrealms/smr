@@ -16,16 +16,7 @@ while ($db->nextRecord()) {
 
 // end here if we are alone in the alliance
 if (empty($alliance_ids)) {
-	forward(create_container('skeleton.php', 'alliance_roster.php'));
-}
-
-// get min and max sectors
-$db->query('SELECT MIN(sector_id), MAX(sector_id)
-			FROM sector
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-if ($db->nextRecord()) {
-	$min_sector = $db->getInt('MIN(sector_id)');
-	$max_sector = $db->getInt('MAX(sector_id)');
+	create_error('Who exactly are you sharing maps with?');
 }
 
 $unvisitedSectors = array();
