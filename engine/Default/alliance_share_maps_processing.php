@@ -19,7 +19,7 @@ if (empty($alliance_ids)) {
 	create_error('Who exactly are you sharing maps with?');
 }
 
-$unvisitedSectors = array();
+$unvisitedSectors = array(0);
 
 // get the sectors the user hasn't visited yet
 $db->query('SELECT sector_id
@@ -30,15 +30,12 @@ while ($db->nextRecord()) {
 	$unvisitedSectors[] = $db->getInt('sector_id');
 }
 
-// do we have any visited sectors?
-if (count($unvisitedSectors) > 0) {
-	// delete all visited sectors from the table of all our alliance mates
-	$db->query('DELETE
-				FROM player_visited_sector
-				WHERE account_id IN (' . $db->escapeArray($alliance_ids) . ')
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND sector_id NOT IN (' . $db->escapeArray($unvisitedSectors) . ')');
-}
+// delete all visited sectors from the table of all our alliance mates
+$db->query('DELETE
+			FROM player_visited_sector
+			WHERE account_id IN (' . $db->escapeArray($alliance_ids) . ')
+				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				AND sector_id NOT IN (' . $db->escapeArray($unvisitedSectors) . ')');
 
 // free some memory
 unset($unvisitedSectors);
