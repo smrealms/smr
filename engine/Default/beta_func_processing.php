@@ -63,7 +63,7 @@ elseif ($var['func'] == 'Turns') {
 	$player->setTurns((int)$_REQUEST['turns']);
 }
 elseif ($var['func'] == 'Exp') {
-	$exp = max(500000, (int)$_REQUEST['exp']);
+	$exp = min(500000, (int)$_REQUEST['exp']);
 	$player->setExperience($exp);
 }
 elseif ($var['func'] == 'Align') {
