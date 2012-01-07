@@ -1,5 +1,5 @@
-<div id="sector_forces" class="ajax">
-	<?php if($ThisSector->hasForces())
+<div id="sector_forces" class="ajax"><?php
+	if($ThisSector->hasForces())
 	{
 		$Forces =& $ThisSector->getForces();
 		Sorter::sortByNumMethod($Forces,'getExpire');
@@ -16,8 +16,7 @@
 					<th>Expires</th>
 					<th>Owner</th>
 					<th>Option</th>
-				</tr>
-				<?php
+				</tr><?php
 				foreach($Forces as $Force)
 				{
 					$Owner =& $Force->getOwner();
@@ -39,8 +38,7 @@
 								?><a href="<?php echo $Force->getDropMineHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
-						<td class="center shrink noWrap">
-							<?php
+						<td class="center shrink noWrap"><?php
 							if($SharedForceAlliance && $ThisShip->canAcceptCDs()&&$Force->hasCDs())
 							{
 								?><a href="<?php echo $Force->getTakeCDHREF() ?>">[-]</a><?php
@@ -51,8 +49,7 @@
 								?><a href="<?php echo $Force->getDropCDHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
-						<td class="center shrink noWrap">
-							<?php
+						<td class="center shrink noWrap"><?php
 							if($SharedForceAlliance && $ThisShip->canAcceptSDs()&&$Force->hasSDs())
 							{
 								?><a href="<?php echo $Force->getTakeSDHREF() ?>">[-]</a><?php
@@ -63,8 +60,8 @@
 								?><a href="<?php echo $Force->getDropSDHREF() ?>">[+]</a><?php
 							} ?>
 						</td>
-						<td class="shrink noWrap center">
-							<?php if($SharedForceAlliance)
+						<td class="shrink noWrap center"><?php
+							if($SharedForceAlliance)
 							{
 								?><span class="green"><?php echo date(DATE_FULL_SHORT,$Force->getExpire());?></span><?php
 							}
@@ -73,15 +70,15 @@
 								?><span class="red">WAR</span><?php
 							} ?>
 						</td>
-						<td>
-							<?php if($SharedForceAlliance)
-							{
+						<td><?php
+//							if($SharedForceAlliance)
+//							{
 								echo $Owner->getLinkedDisplayName();
-							}
-							else
-							{
-								?><span class="red">UNKNOWN</span><?php
-							} ?>
+//							}
+//							else
+//							{
+//								<span class="red">UNKNOWN</span>
+//							} ?>
 						</td>
 						<td align="center" class="shrink center">
 							
@@ -102,8 +99,7 @@
 								<br />
 								<div class="buttonA">
 									<a href="<?php echo $Force->getRefreshHREF() ?>" class="buttonA"> Refresh </a>
-								</div>
-							<?php
+								</div><?php
 							} ?>
 						</td>
 					</tr><?php
