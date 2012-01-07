@@ -272,7 +272,7 @@ class ChessGame {
 		$hasMoved =& $this->getHasMoved();
 		$king = null;
 		foreach($board as $row) {
-			foreach($row as &$piece) {
+			foreach($row as $piece) {
 				if($piece != null && $piece->pieceID == ChessPiece::KING && $piece->colour == $colour) {
 					$king = $piece;
 					break;
@@ -286,13 +286,12 @@ class ChessGame {
 			return false;
 		}
 		foreach($board as $row) {
-			foreach($row as &$piece) {
+			foreach($row as $piece) {
 				if($piece != null && $piece->colour == $colour) {
 					$moves = $piece->getPossibleMoves($board, $hasMoved);
-					foreach($moves as $move) {
-						if(!$piece->isSafeMove($board, $hasMoved, $move[0], $move[1])) {
-							return false;
-						}
+					//There are moves we can make, we are clearly not checkmated.
+					if(count($moves) > 0) {
+						return false;
 					}
 				}
 			}
