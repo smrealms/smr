@@ -109,10 +109,10 @@ class ChessPiece {
 					}
 				}
 				if(!$hasMoved[$this->colour][ChessPiece::KING]) {
-					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && $board[$this->y][$this->x-1] == null && $board[$this->y][$this->x-3] == null) {
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && $board[$this->y][$this->x-1] == null && $board[$this->y][$this->x-3] == null && $this->isSafeMove($board, $hasMoved, $this->y, $this->x-1)) {
 						$this->addMove($this->x-2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
-					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] && $board[$this->y][$this->x+1] == null) {
+					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] && $board[$this->y][$this->x+1] == null && $this->isSafeMove($board, $hasMoved, $this->y, $this->x-1)) {
 						$this->addMove($this->x+2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
 				}
@@ -198,8 +198,11 @@ class ChessPiece {
 	
 	private function addMove($toX, $toY, array &$board, array &$moves, array &$hasMoved = null, $attackingCheck = true) {
 		if(self::isValidCoord($toX, $toY, $board)) {
-			if(($board[$toY][$toX] == null || $board[$toY][$toX]->colour!=$this->colour) && ($attackingCheck == true || $this->isSafeMove($board, $hasMoved, $toX, $toY))) {
-				$moves[] = array($toX,$toY);
+			if(($board[$toY][$toX] == null || $board[$toY][$toX]->colour!=$this->colour)) {
+				//We can only actually move to this position if it is safe to do so, however we can pass through it looking for a safe move so we still want to return true.
+				if(($attackingCheck == true || $this->isSafeMove($board, $hasMoved, $toX, $toY))) {
+					$moves[] = array($toX,$toY);
+				}
 				return true;
 			}
 		}
