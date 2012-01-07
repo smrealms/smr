@@ -3,7 +3,7 @@ require_once(get_file_loc('AbstractSmrPlayer.class.inc'));
 require_once(get_file_loc('council.inc'));
 class SmrPlayer extends AbstractSmrPlayer
 {
-	const TIME_FOR_ALLIANCE_SWITCH = 86400;
+	const TIME_FOR_ALLIANCE_SWITCH = 0;
 	protected static $CACHE_SECTOR_PLAYERS = array();
 	protected static $CACHE_PLANET_PLAYERS = array();
 	protected static $CACHE_ALLIANCE_PLAYERS = array();
