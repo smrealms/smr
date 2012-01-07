@@ -414,7 +414,7 @@ class ChessGame {
 				if($p->isAttacking($this->board, $this->getHasMoved(), true)) {
 					$checking = 'CHECK';
 				}
-				if($this->isCheckmated($p->colour == self::PLAYER_WHITE ? self::PLAYER_BLACK : self::PLAYER_BLACK)) {
+				if($this->isCheckmated($p->colour == self::PLAYER_WHITE ? self::PLAYER_BLACK : self::PLAYER_WHITE)) {
 					$checking = 'MATE';
 				}
 				if($this->moves!=null) {
