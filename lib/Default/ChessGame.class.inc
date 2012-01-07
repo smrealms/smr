@@ -230,11 +230,11 @@ class ChessGame {
 	}
 	
 	public function isCheckmated($colour) {
-		$board = $this->getBoard();
-		$hasMoved = $this->getHasMoved();
+		$board =& $this->board;
+		$hasMoved =& $this->getHasMoved();
 		$king = null;
 		foreach($board as $row) {
-			foreach($row as $piece) {
+			foreach($row as &$piece) {
 				if($piece != null && $piece->pieceID == ChessPiece::KING && $piece->colour == $colour) {
 					$king =& $piece;
 					break;
@@ -242,13 +242,13 @@ class ChessGame {
 			}
 		}
 		if($king == null) {
-			throw new Exception('Could not find the king: game id = ' . $id);
+			throw new Exception('Could not find the king: game id = ' . $this->chessGameID);
 		}
 		if(!$king->isChecked($board, $hasMoved)) {
 			return false;
 		}
 		foreach($board as $row) {
-			foreach($row as $piece) {
+			foreach($row as &$piece) {
 				if($piece != null && $piece->colour == $colour) {
 					$moves = $piece->getPossibleMoves($board, $hasMoved);
 					foreach($moves as $move) {
@@ -284,7 +284,8 @@ class ChessGame {
 	
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
 		$pieceTaken = $board[$toY][$toX];
-		$p = $board[$toY][$toX] = $board[$y][$x];
+		$board[$toY][$toX] =& $board[$y][$x];
+		$p =& $board[$toY][$toX];
 		$board[$y][$x] = null;
 		if($p == null) {
 			throw new Exception('Trying to move non-existent piece: ' . var_export($board, true));
@@ -349,7 +350,7 @@ class ChessGame {
 			return 4;
 		}
 		$this->getBoard();
-		$p = $this->board[$y][$x];
+		$p =& $this->board[$y][$x];
 		if($p == null) {
 			return 2;
 		}
