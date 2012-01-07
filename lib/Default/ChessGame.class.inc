@@ -1,5 +1,6 @@
 <?php
-require_once('ChessPiece.class.inc');
+require_once(get_file_loc('SmrPlayer.class.inc'));
+require_once(get_file_loc('ChessPiece.class.inc'));
 /**
  * @author Page
  *
@@ -16,26 +17,8 @@ class ChessGame {
 	private $endDate;
 	private $gameType;
 	private $winner;
-	
-	private $players = array();
 
-	private $hasMoved = array(
-		self::PLAYER_WHITE => array(
-			ChessPiece::KING => false,
-			ChessPiece::ROOK => array(
-				'Queen' => false,
-				'King' => false
-			)
-		),
-		self::PLAYER_BLACK => array(
-			ChessPiece::KING => false,
-			ChessPiece::ROOK => array(
-				'Queen' => false,
-				'King' => false
-			)
-		),
-		ChessPiece::PAWN => array(-1,-1)
-	);
+	private $hasMoved;
 	private $board;
 	private $moves;
 	private $messages;
@@ -52,9 +35,51 @@ class ChessGame {
 			$this->whiteID = $this->db->getInt('white_id');
 			$this->blackID = $this->db->getInt('black_id');
 			$this->winner = $this->db->getInt('winner_id');
+			$this->resetHasMoved();
 		}
 		else {
 			throw new Exception('Chess game not found: ' . $chessGameID);
+		}
+	}
+	
+	private function resetHasMoved() {
+		$this->hasMoved = array(
+			self::PLAYER_WHITE => array(
+				ChessPiece::KING => false,
+				ChessPiece::ROOK => array(
+					'Queen' => false,
+					'King' => false
+				)
+			),
+			self::PLAYER_BLACK => array(
+				ChessPiece::KING => false,
+				ChessPiece::ROOK => array(
+					'Queen' => false,
+					'King' => false
+				)
+			),
+			ChessPiece::PAWN => array(-1,-1)
+		);
+	}
+	
+	public function rerunGame() {
+		$db = new SmrMySqlDatabase();
+		$db2 = new SmrMySqlDatabase();
+		
+		$db->query('DELETE FROM chess_game_pieces WHERE chess_game_id = ' . $this->chessGameID . ';');
+		self::insertPieces($this->chessGameID, $this->getWhitePlayer(), $this->getBlackPlayer());
+		
+		$db->query('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->chessGameID . ' ORDER BY move_id;');
+		$db2->query('DELETE FROM chess_game_moves WHERE chess_game_id = ' . $this->chessGameID . ';');
+		
+		$this->moves = array();
+		$this->board = null;
+		$this->resetHasMoved();
+
+		while($db->nextRecord()) {
+			if(0 != $this->tryMove($db->getInt('start_x'), $db->getInt('start_y'), $db->getInt('end_x'), $db->getInt('end_y'), $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID())) {
+				break;
+			}
 		}
 	}
 	
@@ -177,6 +202,12 @@ class ChessGame {
 				'(' . $db->escapeNumber($startDate) . ',' . ($endDate == null ? 'NULL' : $db->escapeNumber($endDate)) . ',' . $db->escapeNumber($whitePlayer->getAccountID()) . ',' . $db->escapeNumber($blackPlayer->getAccountID()) . ');');
 		$chessGameID = $db->getInsertID();
 
+		self::insertPieces($chessGameID, $whitePlayer, $blackPlayer);
+		return $chessGameID;
+	}
+	
+	private static function insertPieces($chessGameID, AbstractSmrPlayer &$whitePlayer, AbstractSmrPlayer &$blackPlayer) {
+		$db = new SmrMySqlDatabase();
 		$pieces = self::getStandardGame($chessGameID, $whitePlayer, $blackPlayer);
 		foreach($pieces as $p) {
 			$db->query('INSERT INTO chess_game_pieces' .
@@ -184,7 +215,6 @@ class ChessGame {
 			'values' .
 			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeNumber($p->accountID) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->getX()) . ',' . $db->escapeNumber($p->getY()) . ');');
 		}
-		return $chessGameID;
 	}
 
 	public static function &getOngoingAccountGames($accountID) {
@@ -208,14 +238,18 @@ class ChessGame {
 	}
 	
 	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour, $castling, $enPassant) {
-		if($pieceID == ChessPiece::KING)
+		if($pieceID == ChessPiece::KING) {
 			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
-		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX == 7) && ($startY == 0 || $startY == 7))
+		}
+		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX == 7) && ($startY == 0 || $startY == 7)) {
 			$this->hasMoved[$playerColour][ChessPiece::ROOK][$startX==0?'Queen':'King'] = true;
-		if($pieceID == ChessPiece::PAWN && ($startY == 1 || $startY == 6) && ($endY == 3 || $endY == 4))
+		}
+		if($pieceID == ChessPiece::PAWN && ($startY == 1 || $startY == 6) && ($endY == 3 || $endY == 4)) {
 			$this->hasMoved[ChessPiece::PAWN] = array($endX, $endY);
-		else
+		}
+		else {
 			$this->hasMoved[ChessPiece::PAWN] = array(-1,-1);
+		}
 		return ($castling == 'Queen' ? '0-0-0' : ($castling == 'King' ? '0-0' : ''))
 			. ChessPiece::getSymbolForPiece($pieceID, $playerColour)
 			. chr(ord('a')+$startX)
@@ -357,6 +391,7 @@ class ChessGame {
 		if($p == null) {
 			return 2;
 		}
+		
 		$moves = $p->getPossibleMoves($this->board, $this->getHasMoved(), $forAccountID);
 		foreach($moves as $move) {
 			if($move[0]==$toX && $move[1]==$toY) {
