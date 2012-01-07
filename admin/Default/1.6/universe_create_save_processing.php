@@ -11,8 +11,8 @@ if ($submit=='Create Game')
 		create_error('Game speed must be a number.');
 	if(!is_numeric($_REQUEST['max_turns']))
 		create_error('Max turns must be a number.');
-	if($_REQUEST['max_turns'] > 650)
-		create_error('Max turns must not be greater than 650.');
+//	if($_REQUEST['max_turns'] > 650)
+//		create_error('Max turns must not be greater than 650.');
 	if(!is_numeric($_REQUEST['start_turns']))
 		create_error('Start turn hours must be a number.');
 	if(!is_numeric($_REQUEST['max_players']))
