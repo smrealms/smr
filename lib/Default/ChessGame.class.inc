@@ -68,7 +68,7 @@ class ChessGame {
 		
 		$db->query('UPDATE chess_game
 					SET end_time = NULL, winner_id = 0
-					WHERE chess_game_id=' . $this->chessGameID . ';';
+					WHERE chess_game_id=' . $this->chessGameID . ';');
 		$db->query('DELETE FROM chess_game_pieces WHERE chess_game_id = ' . $this->chessGameID . ';');
 		self::insertPieces($this->chessGameID, $this->getWhitePlayer(), $this->getBlackPlayer());
 		
