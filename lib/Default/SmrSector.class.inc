@@ -870,20 +870,23 @@ class SmrSector
 	public function &getFightingTradersAgainstForces(AbstractSmrPlayer &$attackingPlayer, SmrForce &$defendingForces)
 	{
 		$forceOwner =& $defendingForces->getOwner();
-		if($attackingPlayer->forceNAPAlliance($forceOwner))
+		if($attackingPlayer->forceNAPAlliance($forceOwner)) {
 			throw new Exception('The trader has a force NAP.');
-		$fightingPlayers = array();
-		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
-		if(count($alliancePlayers) > 0)
-			foreach($alliancePlayers as $accountID => $player)
-			{
-				if($player->canFight())
-				{
-					if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
-						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
-				}
-			}
-		return self::limitFightingTraders($fightingPlayers,$attackingPlayer);
+		}
+		return array($attackingPlayer->getAccountID() => &$attackingPlayer);
+//		$fightingPlayers = array();
+//		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+//		if(count($alliancePlayers) > 0) {
+//			foreach($alliancePlayers as $accountID => $player)
+//			{
+//				if($player->canFight())
+//				{
+//					if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
+//						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+//				}
+//			}
+//		}
+//		return self::limitFightingTraders($fightingPlayers,$attackingPlayer);
 	}
 
 	public function &getFightingTradersAgainstPort(AbstractSmrPlayer &$attackingPlayer, SmrPort &$defendingPort)
