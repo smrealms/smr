@@ -104,7 +104,7 @@ class ChessGame {
 		$this->messages[] = $message;
 	}
 	
-	public static function parsePieces($pieces) {
+	public static function parsePieces(array &$pieces) {
 		$board = array();
 		$row = array();
 		for($i=0;$i<8;$i++) {
@@ -113,7 +113,7 @@ class ChessGame {
 		for($i=0;$i<8;$i++) {
 			$board[] = $row;
 		}
-		foreach($pieces as $piece) {
+		foreach($pieces as &$piece) {
 			if($board[$piece->getY()][$piece->getX()] != null) {
 				throw new Exception('Two pieces found in the same tile.');
 			}
