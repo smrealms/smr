@@ -66,7 +66,7 @@ class ChessGame {
 				$accountID = $this->db->getInt('account_id');
 				$pieces[] = new ChessPiece($this->chessGameID, $accountID, $this->getColourForAccountID($accountID), $this->db->getInt('piece_id'), $this->db->getInt('x'), $this->db->getInt('y'), $this->db->getInt('piece_no'));
 			}
-			$this->board = $this->parsePieces($pieces);
+			$this->board =& $this->parsePieces($pieces);
 		}
 		return $this->board;
 	}
@@ -104,7 +104,7 @@ class ChessGame {
 		$this->messages[] = $message;
 	}
 	
-	public static function parsePieces(array &$pieces) {
+	public static function &parsePieces(array &$pieces) {
 		$board = array();
 		$row = array();
 		for($i=0;$i<8;$i++) {
@@ -236,7 +236,7 @@ class ChessGame {
 		foreach($board as $row) {
 			foreach($row as &$piece) {
 				if($piece != null && $piece->pieceID == ChessPiece::KING && $piece->colour == $colour) {
-					$king =& $piece;
+					$king = $piece;
 					break;
 				}
 			}
@@ -283,8 +283,8 @@ class ChessGame {
 	}
 	
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
-		$pieceTaken =& $board[$toY][$toX];
-		$board[$toY][$toX] =& $board[$y][$x];
+		$pieceTaken = $board[$toY][$toX];
+		$board[$toY][$toX] = $board[$y][$x];
 		$p =& $board[$toY][$toX];
 		$board[$y][$x] = null;
 		if($p == null) {
@@ -300,15 +300,16 @@ class ChessGame {
 			if($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = true;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = true;
-				$board[$toY][$castling['ToX']] =& $board[$y][$castling['X']];
+				$board[$toY][$castling['ToX']] = $board[$y][$castling['X']];
 				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
+				$board[$y][$castling['X']] = null;
 			}
 		}
 		$enPassant = false;
 		if($p->pieceID == ChessPiece::PAWN) {
 			if($hasMoved[ChessPiece::PAWN][0] == $toX && ($hasMoved[ChessPiece::PAWN][1] == $y)) {
 				$enPassant = true;
-				$pieceTaken =& $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
+				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
 				$hasMoved[ChessPiece::PAWN] = array(-1,-1);
 			}
@@ -320,12 +321,12 @@ class ChessGame {
 	}
 	
 	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
-		$board[$y][$x] =& $board[$toY][$toX];
+		$board[$y][$x] = $board[$toY][$toX];
 		$p =& $board[$y][$x];
 		if($p == null) {
 			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
 		}
-		$board[$toY][$toX] =& $pieceTaken;
+		$board[$toY][$toX] = $pieceTaken;
 		$p->setX($x);
 		$p->setY($y);
 
@@ -335,14 +336,15 @@ class ChessGame {
 			if($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = false;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = false;
-				$board[$toY][$castling['X']] =& $board[$y][$castling['ToX']];
+				$board[$toY][$castling['X']] = $board[$y][$castling['ToX']];
 				$board[$toY][$castling['X']]->setX($castling['X']);
+				$board[$y][$castling['ToX']] = null;
 			}
 		}
 		if($enPassant === true) {
 			$board[$toY][$toX] = null;
 			$hasMoved[ChessPiece::PAWN] = array($toX,$toY == 2 ? 3 : 4);
-			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] =& $pieceTaken;
+			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $pieceTaken;
 		}
 	}
 
@@ -351,7 +353,7 @@ class ChessGame {
 			return 4;
 		}
 		$this->getBoard();
-		$p =& $this->board[$y][$x];
+		$p = $this->board[$y][$x];
 		if($p == null) {
 			return 2;
 		}
