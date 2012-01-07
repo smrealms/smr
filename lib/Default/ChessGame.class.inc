@@ -66,14 +66,18 @@ class ChessGame {
 		$db = new SmrMySqlDatabase();
 		$db2 = new SmrMySqlDatabase();
 		
+		$db->query('UPDATE chess_game
+					SET end_time = NULL, winner_id = 0
+					WHERE chess_game_id=' . $this->chessGameID . ';';
 		$db->query('DELETE FROM chess_game_pieces WHERE chess_game_id = ' . $this->chessGameID . ';');
 		self::insertPieces($this->chessGameID, $this->getWhitePlayer(), $this->getBlackPlayer());
 		
 		$db->query('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->chessGameID . ' ORDER BY move_id;');
 		$db2->query('DELETE FROM chess_game_moves WHERE chess_game_id = ' . $this->chessGameID . ';');
-		
 		$this->moves = array();
 		$this->board = null;
+		$this->endDate = null;
+		$this->winner = null;
 		$this->resetHasMoved();
 
 		while($db->nextRecord()) {
