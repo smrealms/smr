@@ -117,7 +117,7 @@ class ChessGame {
 			if($board[$piece->getY()][$piece->getX()] != null) {
 				throw new Exception('Two pieces found in the same tile.');
 			}
-			$board[$piece->getY()][$piece->getX()] = $piece;
+			$board[$piece->getY()][$piece->getX()] =& $piece;
 		}
 		return $board;
 	}
@@ -283,7 +283,7 @@ class ChessGame {
 	}
 	
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
-		$pieceTaken = $board[$toY][$toX];
+		$pieceTaken =& $board[$toY][$toX];
 		$board[$toY][$toX] =& $board[$y][$x];
 		$p =& $board[$toY][$toX];
 		$board[$y][$x] = null;
@@ -300,7 +300,7 @@ class ChessGame {
 			if($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = true;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = true;
-				$board[$toY][$castling['ToX']] = $board[$y][$castling['X']];
+				$board[$toY][$castling['ToX']] =& $board[$y][$castling['X']];
 				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
 			}
 		}
@@ -308,7 +308,7 @@ class ChessGame {
 		if($p->pieceID == ChessPiece::PAWN) {
 			if($hasMoved[ChessPiece::PAWN][0] == $toX && ($hasMoved[ChessPiece::PAWN][1] == $y)) {
 				$enPassant = true;
-				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
+				$pieceTaken =& $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
 				$hasMoved[ChessPiece::PAWN] = array(-1,-1);
 			}
@@ -320,11 +320,12 @@ class ChessGame {
 	}
 	
 	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
-		$p = $board[$y][$x] = $board[$toY][$toX];
+		$board[$y][$x] =& $board[$toY][$toX];
+		$p =& $board[$y][$x];
 		if($p == null) {
 			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
 		}
-		$board[$toY][$toX] = $pieceTaken;
+		$board[$toY][$toX] =& $pieceTaken;
 		$p->setX($x);
 		$p->setY($y);
 
@@ -334,14 +335,14 @@ class ChessGame {
 			if($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = false;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = false;
-				$board[$toY][$castling['X']] = $board[$y][$castling['ToX']];
+				$board[$toY][$castling['X']] =& $board[$y][$castling['ToX']];
 				$board[$toY][$castling['X']]->setX($castling['X']);
 			}
 		}
 		if($enPassant === true) {
 			$board[$toY][$toX] = null;
 			$hasMoved[ChessPiece::PAWN] = array($toX,$toY == 2 ? 3 : 4);
-			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $pieceTaken;
+			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] =& $pieceTaken;
 		}
 	}
 
