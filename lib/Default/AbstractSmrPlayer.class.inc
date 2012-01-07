@@ -1377,7 +1377,7 @@ abstract class AbstractSmrPlayer
 			return true;
 		if($this->sameAlliance($otherPlayer))
 			return true;
-		if($this->getLevelID()>$otherPlayer->getLevelID())
+		if($this->getExperience()>=$otherPlayer->getExperience())
 			return true;
 		return false;
 	}
