@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Lave Newbie Protection');
+$template->assign('PageTopic','Leave Newbie Protection');
 
 $PHP_OUTPUT.=create_echo_form(create_container('leave_newbie_processing.php', ''));
 $PHP_OUTPUT.=('Do you really want to leave Newbie Protection?<br /><br />');
