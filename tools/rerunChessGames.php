@@ -4,7 +4,7 @@ require_once(LIB . 'Default/Globals.class.inc');
 
 require_once(get_file_loc('ChessGame.class.inc'));
 
-SmrSession::$game_id = 2;
+SmrSession::$game_id = 44;
 
 $db = new SmrMySqlDatabase();
 $db->query('DELETE FROM player_hof WHERE type LIKE \'Chess%\'');
