@@ -29,7 +29,13 @@ if(isset($CreateGameMessage))
 				} ?>
 			</td>
 			<td><?php
-				echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?>
+				$CurrentTurnPlayer =& $ChessGame->getCurrentTurnPlayer();
+				if($CurrentTurnPlayer == null) {
+					?>Unknown<?php
+				}
+				else {
+					echo $CurrentTurnPlayer->getLinkedDisplayName(false);
+				} ?>
 			</td>
 			<td>
 				<div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getPlayGameHREF(); ?>">&nbsp;Play&nbsp;</a></div>

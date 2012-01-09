@@ -557,7 +557,13 @@ class ChessGame {
 	}
 
 	public function &getCurrentTurnPlayer() {
+		try {
 		return SmrPlayer::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
+		}
+		catch(Exception $e) {
+			$null = null;
+			return $null;
+		}
 	}
 
 	public function isCurrentTurn($accountID) {
