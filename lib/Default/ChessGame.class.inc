@@ -345,6 +345,9 @@ class ChessGame {
 			if($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = true;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = true;
+				if($board[$y][$castling['X']] == null) {
+					throw new Exception('Cannot castle with non-existent castle.');
+				}
 				$board[$toY][$castling['ToX']] = $board[$y][$castling['X']];
 				$board[$toY][$castling['ToX']]->setX($castling['ToX']);
 				$board[$y][$castling['X']] = null;
@@ -355,6 +358,9 @@ class ChessGame {
 			if($hasMoved[ChessPiece::PAWN][0] == $toX && ($hasMoved[ChessPiece::PAWN][1] == $y)) {
 				$enPassant = true;
 				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
+				if($board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] == null) {
+					throw new Exception('Cannot en passant a non-existent pawn.');
+				}
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
 				$hasMoved[ChessPiece::PAWN] = array(-1,-1);
 			}
