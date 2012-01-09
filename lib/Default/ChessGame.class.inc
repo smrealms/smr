@@ -369,7 +369,7 @@ class ChessGame {
 			}
 		}
 		return array('Castling' => $castling,
-				'PieceTaken' => &$pieceTaken,
+				'PieceTaken' => $pieceTaken,
 				'EnPassant' => $enPassant
 			);
 	}
@@ -393,9 +393,9 @@ class ChessGame {
 				if($board[$y][$castling['X']] == null) {
 					throw new Exception('Cannot undo castle with non-existent castle.');
 				}
-				$board[$toY][$castling['X']] = $board[$y][$castling['ToX']];
-				$board[$toY][$castling['X']]->setX($castling['X']);
-				$board[$y][$castling['ToX']] = null;
+				$board[$y][$castling['X']] = $board[$toY][$castling['ToX']];
+				$board[$y][$castling['X']]->setX($castling['X']);
+				$board[$toY][$castling['ToX']] = null;
 			}
 		}
 		if($enPassant === true) {
