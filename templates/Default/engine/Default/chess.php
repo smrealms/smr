@@ -13,7 +13,20 @@ if(isset($CreateGameMessage))
 	{ ?>
 		<tr>
 			<td><?php
-				echo $ChessGame->getWhitePlayer()->getLinkedDisplayName(false); ?> vs <?php echo $ChessGame->getBlackPlayer()->getLinkedDisplayName(false); ?>
+				$WhitePlayer =& $ChessGame->getWhitePlayer();
+				$BlackPlayer =& $ChessGame->getBlackPlayer();
+				if($WhitePlayer == null) {
+					?>Unknown<?php
+				}
+				else {
+					echo $WhitePlayer->getLinkedDisplayName(false);
+				} ?> vs <?php 
+				if($BlackPlayer == null) {
+					?>Unknown<?php
+				}
+				else {
+					echo $BlackPlayer->getLinkedDisplayName(false);
+				} ?>
 			</td>
 			<td><?php
 				echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?>
