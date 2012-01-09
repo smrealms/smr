@@ -390,7 +390,7 @@ class ChessGame {
 			if($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = false;
 				$hasMoved[$p->colour][ChessPiece::ROOK][$castling['Type']] = false;
-				if($board[$y][$castling['X']] == null) {
+				if($board[$toY][$castling['ToX']] == null) {
 					throw new Exception('Cannot undo castle with non-existent castle.');
 				}
 				$board[$y][$castling['X']] = $board[$toY][$castling['ToX']];
