@@ -92,7 +92,7 @@ class ChessGame {
 		}
 		catch(Exception $e) {
 			if($debugInfo === true) {
-				echo $e->getTraceAsString() . EOL;
+				echo $e->getMessage() . EOL . $e->getTraceAsString() . EOL;
 			}
 			// We probably tried an invalid move - move on.
 		}
