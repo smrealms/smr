@@ -80,10 +80,15 @@ class ChessGame {
 		$this->winner = null;
 		$this->resetHasMoved();
 
-		while($db->nextRecord()) {
-			if(0 != $this->tryMove($db->getInt('start_x'), $db->getInt('start_y'), $db->getInt('end_x'), $db->getInt('end_y'), $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID())) {
-				break;
+		try {
+			while($db->nextRecord()) {
+				if(0 != $this->tryMove($db->getInt('start_x'), $db->getInt('start_y'), $db->getInt('end_x'), $db->getInt('end_y'), $db->getInt('move_id') % 2 == 1 ? $this->getWhiteID() : $this->getBlackID())) {
+					break;
+				}
 			}
+		}
+		catch(Exception $e) {
+			// We probably tried an invalid move - move on.
 		}
 	}
 	
@@ -485,7 +490,13 @@ class ChessGame {
 	}
 
 	public function &getWhitePlayer() {
-		return SmrPlayer::getPlayer($this->whiteID, $this->getGameID());
+		try {
+			return SmrPlayer::getPlayer($this->whiteID, $this->getGameID());
+		}
+		catch(Exception $e) {
+			$null = null;
+			return $null;
+		}
 	}
 
 	public function getWhiteID() {
@@ -493,7 +504,13 @@ class ChessGame {
 	}
 
 	public function &getBlackPlayer() {
-		return SmrPlayer::getPlayer($this->blackID, $this->getGameID());
+		try {
+			return SmrPlayer::getPlayer($this->blackID, $this->getGameID());
+		}
+		catch(Exception $e) {
+			$null = null;
+			return $null;
+		}
 	}
 
 	public function getBlackID() {
