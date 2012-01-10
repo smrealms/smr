@@ -351,6 +351,8 @@ class ChessGame {
 		$p->setX($toX);
 		$p->setY($toY);
 
+		$oldPawnMovement = $hasMoved[ChessPiece::PAWN];
+		$nextPawnMovement = array(-1,-1);
 		$castling = false;
 		$enPassant = false;
 		$rookMoved = false;
@@ -369,15 +371,20 @@ class ChessGame {
 			}
 		}
 		else if($p->pieceID == ChessPiece::PAWN) {
+			//Double move to track?
+			if(($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
+				$nextPawnMovement = array($endX, $endY);
+			}
 			//En passant?
-			if($hasMoved[ChessPiece::PAWN][0] == $toX && $hasMoved[ChessPiece::PAWN][1] == $toY) {
+			else if($hasMoved[ChessPiece::PAWN][0] == $toX &&
+					$hasMoved[ChessPiece::PAWN][1] == 3 && $toY == 2 &&
+					$hasMoved[ChessPiece::PAWN][1] == 4 && $toY == 5) {
 				$enPassant = true;
 				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
 				if($board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] == null) {
 					throw new Exception('Cannot en passant a non-existent pawn.');
 				}
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
-				$hasMoved[ChessPiece::PAWN] = array(-1,-1);
 			}
 		}
 		else if($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && ($y == 0 || $y == 7)) {
@@ -387,14 +394,16 @@ class ChessGame {
 				$hasMoved[$p->colour][ChessPiece::ROOK][$rookMoved] = true;
 			}
 		}
+		$this->hasMoved[ChessPiece::PAWN] = $nextPawnMovement;
 		return array('Castling' => $castling,
 				'PieceTaken' => $pieceTaken,
 				'EnPassant' => $enPassant,
-				'RookMoved' => $rookMoved
+				'RookMoved' => $rookMoved,
+				'OldPawnMovement' => $oldPawnMovement
 			);
 	}
 	
-	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant, $rookMoved) {
+	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, $moveInfo) {
 		if(!self::isValidCoord($x, $y, $board)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
 		}
@@ -409,10 +418,11 @@ class ChessGame {
 		if($p == null) {
 			throw new Exception('Trying to undo move of a non-existent piece: ' . var_export($board, true));
 		}
-		$board[$toY][$toX] = $pieceTaken;
+		$board[$toY][$toX] = $moveInfo['PieceTaken'];
 		$p->setX($x);
 		$p->setY($y);
 
+		$hasMoved[ChessPiece::PAWN] = $moveInfo['OldPawnMovement'];
 		//Castling
 		if($p->pieceID == ChessPiece::KING) {
 			$castling = self::isCastling($x, $toX);
@@ -427,13 +437,12 @@ class ChessGame {
 				$board[$toY][$castling['ToX']] = null;
 			}
 		}
-		else if($enPassant === true) {
+		else if($moveInfo['EnPassant'] === true) {
 			$board[$toY][$toX] = null;
-			$hasMoved[ChessPiece::PAWN] = array($toX,$toY == 2 ? 3 : 4);
-			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $pieceTaken;
+			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $moveInfo['PieceTaken'];
 		}
-		else if ($rookMoved !== false) {
-			$hasMoved[$p->colour][ChessPiece::ROOK][$rookMoved] = false;
+		else if ($moveInfo['RookMoved'] !== false) {
+			$hasMoved[$p->colour][ChessPiece::ROOK][$moveInfo['RookMoved']] = false;
 		}
 	}
 
@@ -504,8 +513,9 @@ class ChessGame {
 				$return = 0;
 				if($checking != null) {
 					if($checking == 'MATE') {
+						$this->winner = $forAccountID;
 						$this->db->query('UPDATE chess_game
-										SET end_time=' . TIME . ', winner_id=' . $forAccountID . '
+										SET end_time=' . TIME . ', winner_id=' . $this->winner . '
 										WHERE chess_game_id=' . $this->chessGameID . ';');
 						$currentPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
 						$otherPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
