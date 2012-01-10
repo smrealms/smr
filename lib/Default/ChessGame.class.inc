@@ -351,9 +351,11 @@ class ChessGame {
 		$p->setX($toX);
 		$p->setY($toY);
 
-		//Castling
 		$castling = false;
+		$enPassant = false;
+		$rookMoved = false;
 		if($p->pieceID == ChessPiece::KING) {
+			//Castling?
 			$castling = self::isCastling($x, $toX);
 			if($castling !== false) {
 				$hasMoved[$p->colour][ChessPiece::KING] = true;
@@ -366,8 +368,8 @@ class ChessGame {
 				$board[$y][$castling['X']] = null;
 			}
 		}
-		$enPassant = false;
-		if($p->pieceID == ChessPiece::PAWN) {
+		else if($p->pieceID == ChessPiece::PAWN) {
+			//En passant?
 			if($hasMoved[ChessPiece::PAWN][0] == $toX && ($hasMoved[ChessPiece::PAWN][1] == $y)) {
 				$enPassant = true;
 				$pieceTaken = $board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]];
@@ -378,13 +380,21 @@ class ChessGame {
 				$hasMoved[ChessPiece::PAWN] = array(-1,-1);
 			}
 		}
+		else if($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && ($y == 0 || $y == 7)) {
+			//Rook moved?
+			if($hasMoved[$p->colour][ChessPiece::ROOK][$x==0?'Queen':'King'] === false) {
+				$rookMoved = $x==0?'Queen':'King';
+				$hasMoved[$p->colour][ChessPiece::ROOK][$rookMoved] = true;
+			}
+		}
 		return array('Castling' => $castling,
 				'PieceTaken' => $pieceTaken,
-				'EnPassant' => $enPassant
+				'EnPassant' => $enPassant,
+				'RookMoved' => $rookMoved
 			);
 	}
 	
-	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
+	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant, $rookMoved) {
 		if(!self::isValidCoord($x, $y, $board)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
 		}
@@ -417,10 +427,13 @@ class ChessGame {
 				$board[$toY][$castling['ToX']] = null;
 			}
 		}
-		if($enPassant === true) {
+		else if($enPassant === true) {
 			$board[$toY][$toX] = null;
 			$hasMoved[ChessPiece::PAWN] = array($toX,$toY == 2 ? 3 : 4);
 			$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = $pieceTaken;
+		}
+		else if ($rookMoved !== false) {
+			$hasMoved[$p->colour][ChessPiece::ROOK][$rookMoved] = false;
 		}
 	}
 
