@@ -391,6 +391,9 @@ class ChessGame {
 		if(!self::isValidCoord($toX, $toY, $board)) {
 			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
 		}
+		if($board[$y][$x] != null) {
+			throw new Exception('Undoing move onto another piece? x=' . $x . ', y=' . $y);
+		}
 		$board[$y][$x] = $board[$toY][$toX];
 		$p =& $board[$y][$x];
 		if($p == null) {
