@@ -114,14 +114,14 @@ class ChessPiece {
 				//Castling is not attacking - so don't check it if doing an attacking check.
 				if(!$attackingCheck && !$hasMoved[$this->colour][ChessPiece::KING]) {
 					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && 
-							ChessGame::isValidCoord($this->y, $this->x-1, $board) && $board[$this->y][$this->x-1] == null &&
-							ChessGame::isValidCoord($this->y, $this->x-3, $board) && $board[$this->y][$this->x-3] == null &&
-							$this->isSafeMove($board, $hasMoved, $this->y, $this->x-1)) {
+							ChessGame::isValidCoord($this->x-1, $this->y, $board) && $board[$this->y][$this->x-1] == null &&
+							ChessGame::isValidCoord($this->x-3, $this->y, $board) && $board[$this->y][$this->x-3] == null &&
+							$this->isSafeMove($board, $hasMoved, $this->x-1, $this->y)) {
 						$this->addMove($this->x-2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
 					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['King'] &&
-							ChessGame::isValidCoord($this->y, $this->x+1, $board) && $board[$this->y][$this->x+1] == null &&
-							$this->isSafeMove($board, $hasMoved, $this->y, $this->x+1)) {
+							ChessGame::isValidCoord($this->x+1, $this->y, $board) && $board[$this->y][$this->x+1] == null &&
+							$this->isSafeMove($board, $hasMoved, $this->x+1, $this->y)) {
 						$this->addMove($this->x+2, $this->y, $board, $moves, $hasMoved, $attackingCheck);
 					}
 				}
