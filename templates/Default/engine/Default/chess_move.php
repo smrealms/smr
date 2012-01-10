@@ -32,6 +32,13 @@
 	<MOVE_TABLE>
 		<![CDATA[<?php $this->includeTemplate('includes/ChessMoves.inc'); ?>]]>
 	</MOVE_TABLE>
-	<TURN><![CDATA[<?php echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?>]]></TURN>
+	<TURN><![CDATA[<?php
+		$CurrentTurnPlayer =& $ChessGame->getCurrentTurnPlayer();
+		if($CurrentTurnPlayer == null) {
+			?>Unknown<?php
+		}
+		else {
+			echo $CurrentTurnPlayer->getLinkedDisplayName(false);
+		} ?>]]></TURN>
 	<?php if(isset($MoveMessage)) { ?><MOVE_MESSAGE><?php echo $MoveMessage ?></MOVE_MESSAGE><?php } ?>
 </ROOT>
