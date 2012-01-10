@@ -1,4 +1,11 @@
-<p>It is currently <span id="turn"><?php echo $ChessGame->getCurrentTurnPlayer()->getLinkedDisplayName(false); ?></span>'s turn.</p>
+<p>It is currently <span id="turn"><?php
+	$CurrentTurnPlayer =& $ChessGame->getCurrentTurnPlayer();
+	if($CurrentTurnPlayer == null) {
+		?>Unknown<?php
+	}
+	else {
+		echo $CurrentTurnPlayer->getLinkedDisplayName(false);
+	} ?></span>'s turn.</p>
 <table>
 	<tr>
 		<td>
