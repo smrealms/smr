@@ -42,6 +42,10 @@ class ChessGame {
 		}
 	}
 	
+	public static function isValidCoord($x, $y, array &$board) {
+		return $y < count($board) && $y >= 0 && $x < count($board[$y]) && $x >= 0;
+	}
+	
 	private function resetHasMoved() {
 		$this->hasMoved = array(
 			self::PLAYER_WHITE => array(
@@ -331,6 +335,12 @@ class ChessGame {
 	}
 	
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
+		if(self::isValidCoord($x, $y, $board)) {
+			throw new Exception('Invalid from coordinates.');
+		}
+		if(self::isValidCoord($toX, $toY, $board)) {
+			throw new Exception('Invalid to coordinates.');
+		}
 		$pieceTaken = $board[$toY][$toX];
 		$board[$toY][$toX] = $board[$y][$x];
 		$p =& $board[$toY][$toX];
@@ -375,6 +385,12 @@ class ChessGame {
 	}
 	
 	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
+		if(self::isValidCoord($x, $y, $board)) {
+			throw new Exception('Invalid from coordinates.');
+		}
+		if(self::isValidCoord($toX, $toY, $board)) {
+			throw new Exception('Invalid to coordinates.');
+		}
 		$board[$y][$x] = $board[$toY][$toX];
 		$p =& $board[$y][$x];
 		if($p == null) {
