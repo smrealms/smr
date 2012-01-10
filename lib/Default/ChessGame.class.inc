@@ -394,7 +394,7 @@ class ChessGame {
 				$hasMoved[$p->colour][ChessPiece::ROOK][$rookMoved] = true;
 			}
 		}
-		$this->hasMoved[ChessPiece::PAWN] = $nextPawnMovement;
+		$hasMoved[ChessPiece::PAWN] = $nextPawnMovement;
 		return array('Castling' => $castling,
 				'PieceTaken' => $pieceTaken,
 				'EnPassant' => $enPassant,
