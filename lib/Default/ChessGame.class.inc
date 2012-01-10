@@ -335,10 +335,10 @@ class ChessGame {
 	}
 	
 	public static function movePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY) {
-		if(self::isValidCoord($x, $y, $board)) {
+		if(!self::isValidCoord($x, $y, $board)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
 		}
-		if(self::isValidCoord($toX, $toY, $board)) {
+		if(!self::isValidCoord($toX, $toY, $board)) {
 			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
 		}
 		$pieceTaken = $board[$toY][$toX];
@@ -385,10 +385,10 @@ class ChessGame {
 	}
 	
 	public static function undoMovePiece(array &$board, array &$hasMoved, $x, $y, $toX, $toY, &$pieceTaken, $enPassant) {
-		if(self::isValidCoord($x, $y, $board)) {
+		if(!self::isValidCoord($x, $y, $board)) {
 			throw new Exception('Invalid from coordinates, x=' . $x . ', y=' . $y);
 		}
-		if(self::isValidCoord($toX, $toY, $board)) {
+		if(!self::isValidCoord($toX, $toY, $board)) {
 			throw new Exception('Invalid to coordinates, x=' . $toX . ', y=' . $toY);
 		}
 		$board[$y][$x] = $board[$toY][$toX];
