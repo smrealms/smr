@@ -79,13 +79,16 @@ class ChessPiece {
 			if($this->pieceID==self::PAWN) {
 				$dirY = $this->colour==ChessGame::PLAYER_BLACK ? 1 : -1;
 				$moveY = $this->y+$dirY;
-				if(!$attackingCheck && ChessGame::isValidCoord($this->x, $moveY, $board) && $board[$moveY][$this->x] == null && $this->isSafeMove($board, $hasMoved, $this->x, $moveY)) {
-					$moves[] = array($this->x,$moveY);
-				}
-				$doubleMoveY = $moveY + $dirY;
-				if(!$attackingCheck && ($this->y-$dirY == 0 || $this->y-$dirY*2 == count($board))) { //Double move first move
-					if($board[$moveY][$this->x] == null && $board[$doubleMoveY][$this->x] == null && $this->isSafeMove($board, $hasMoved, $this->x, $doubleMoveY)) {
-						$moves[] = array($this->x,$doubleMoveY);
+				//Pawn forward movement is not attacking - so don't check it if doing an attacking check.
+				if(!$attackingCheck) {
+					if(ChessGame::isValidCoord($this->x, $moveY, $board) && $board[$moveY][$this->x] == null && $this->isSafeMove($board, $hasMoved, $this->x, $moveY)) {
+						$moves[] = array($this->x,$moveY);
+					}
+					$doubleMoveY = $moveY + $dirY;
+					if($this->y-$dirY == 0 || $this->y-$dirY*2 == count($board)) { //Double move first move
+						if($board[$moveY][$this->x] == null && $board[$doubleMoveY][$this->x] == null && $this->isSafeMove($board, $hasMoved, $this->x, $doubleMoveY)) {
+							$moves[] = array($this->x,$doubleMoveY);
+						}
 					}
 				}
 				for($i=-1;$i<2;$i+=2) {
@@ -108,7 +111,8 @@ class ChessPiece {
 						}
 					}
 				}
-				if(!$hasMoved[$this->colour][ChessPiece::KING]) {
+				//Castling is not attacking - so don't check it if doing an attacking check.
+				if(!$attackingCheck && !$hasMoved[$this->colour][ChessPiece::KING]) {
 					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && 
 							ChessGame::isValidCoord($this->y, $this->x-1, $board) && $board[$this->y][$this->x-1] == null &&
 							ChessGame::isValidCoord($this->y, $this->x-3, $board) && $board[$this->y][$this->x-3] == null &&
