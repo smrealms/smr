@@ -47,7 +47,7 @@ class ChessPiece {
 		$y = $this->y;
 		$moveInfo = ChessGame::movePiece($board, $hasMoved, $x, $y, $toX, $toY);
 		$safe = !$this->isChecked($board, $hasMoved, true);
-		ChessGame::undoMovePiece($board, $hasMoved, $x, $y, $toX, $toY, $moveInfo['PieceTaken'], $moveInfo['EnPassant'], $moveInfo['RookMoved']);
+		ChessGame::undoMovePiece($board, $hasMoved, $x, $y, $toX, $toY, $moveInfo);
 		return $safe;
 	}
 
