@@ -373,7 +373,7 @@ class ChessGame {
 		else if($p->pieceID == ChessPiece::PAWN) {
 			//Double move to track?
 			if(($y == 1 || $y == 6) && ($toY == 3 || $toY == 4)) {
-				$nextPawnMovement = array($endX, $endY);
+				$nextPawnMovement = array($toX, $toY);
 			}
 			//En passant?
 			else if($hasMoved[ChessPiece::PAWN][0] == $toX &&
