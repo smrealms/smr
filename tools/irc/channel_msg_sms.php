@@ -14,8 +14,8 @@ function channel_msg_sms($fp, $rdata)
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The !sms command enables you to send text messages to the users cellphones.' . EOL);
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The following sub commands are available:' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op send <nick> <msg>           Sends the <msg> to the cell phone of the user identified by <nick>' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !op search <partial nick>%      Searches the database for the nick and returns the nick found (% Wildcard)' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :  !sms send <nick> <msg>           Sends the <msg> to the cell phone of the user identified by <nick>' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :  !sms search <partial nick>%      Searches the database for the nick and returns the nick found (% Wildcard)' . EOL);
 
 		return true;
 
