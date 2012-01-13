@@ -50,7 +50,7 @@ function channel_msg_seed($fp, $rdata, $account, $player)
 function channel_msg_seedlist($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!seedlist(\s*help)?\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];

@@ -3,7 +3,7 @@
 function channel_msg_sd($fp, $rdata)
 {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!sd(\s*help)?\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
