@@ -1,6 +1,6 @@
 <?php
 
-function channel_msg_with_registration($fp, $rdata, $validationMessages = true)
+function channel_msg_with_registration($fp, $rdata, $validationMessages = true, $callback = false)
 {
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
@@ -67,9 +67,8 @@ function channel_msg_with_registration($fp, $rdata, $validationMessages = true)
 			return true;
 		}
 		
-		if($rdata === 'EntryOpCheck') {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
-			return true;
+		if($callback !== false) {
+			return $callback($fp, $rdata, $account, $player);
 		}
 
 		if (channel_msg_money($fp, $rdata, $account, $player))
