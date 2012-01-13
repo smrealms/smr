@@ -80,7 +80,7 @@ function channel_join($fp, $rdata)
 				$attendees = array_merge($yes, $no, $maybe);
 
 				// if we are not in the attendees list we give the player a hint
-				if (array_search($nick, $attendees) === false && $nick !== 'Caretaker') {
+				if (array_search($nick, $attendees) === false && $nick !== IRC_BOT_NICK) {
 					channel_msg_with_registration($fp, $rdata, false, 'channel_op_notification');
 				}
 			}

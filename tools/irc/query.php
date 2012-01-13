@@ -4,7 +4,7 @@ function query_command($fp, $rdata)
 {
 
     // :MrSpock!mrspock@coldfront-120CBD34.dip.t-dialin.net PRIVMSG Caretaker :Test
-    if (preg_match('/^:MrSpock!mrspock@.*\sPRIVMSG\sCaretaker\s:(.*)\s$/i', $rdata, $msg)) {
+    if (preg_match('/^:MrSpock!mrspock@.*\sPRIVMSG\s' . IRC_BOT_NICK . '\s:(.*)\s$/i', $rdata, $msg)) {
 
         $text = $msg[1];
 
@@ -18,7 +18,6 @@ function query_command($fp, $rdata)
     }
 
     return false;
-
 }
 
 

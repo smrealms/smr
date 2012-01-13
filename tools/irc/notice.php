@@ -5,7 +5,7 @@ function notice_nickserv_registered_user($fp, $rdata)
 {
 
     // :NickServ!services@coldfront.net NOTICE Caretaker
-    if (preg_match('/^:NickServ!services@coldfront.net NOTICE Caretaker :([^ ]+) is ([^.]+)\s$/i', $rdata, $msg)) {
+    if (preg_match('/^:NickServ!services@coldfront.net NOTICE ' . IRC_BOT_NICK . ' :([^ ]+) is ([^.]+)\s$/i', $rdata, $msg)) {
 
         $nick = $msg[1];
         $registered_nick = $msg[2];
@@ -23,7 +23,7 @@ function notice_nickserv_registered_user($fp, $rdata)
                         'registered_nick = ' . $db->escapeString($registered_nick) . ' ' .
                         'WHERE seen_id = ' . $seen_id);
         }
-
+		
         return true;
 
     }
@@ -36,12 +36,12 @@ function notice_nickserv_unknown_user($fp, $rdata)
 {
 
     // :NickServ!services@coldfront.net NOTICE Caretaker :Nickname Slevin isn't registered.
-    if (preg_match('/^:NickServ!services@coldfront.net NOTICE Caretaker :Nickname .(.*). isn\'t registered\.\s$/i', $rdata, $msg)) {
+    if (preg_match('/^:NickServ!services@coldfront.net NOTICE ' . IRC_BOT_NICK . ' :Nickname .(.*). isn\'t registered\.\s$/i', $rdata, $msg)) {
 
         $nick = $msg[1];
 
         echo_r('[NOTICE_NICKSERV_UNKNOWN_NICK] ' . $nick);
-
+		
         $db = new SmrMySqlDatabase();
         $db2 = new SmrMySqlDatabase();
 
