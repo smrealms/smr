@@ -545,4 +545,16 @@ function channel_msg_op_list($fp, $rdata, $account, $player)
 
 }
 
+function channel_op_notification($fp, $rdata, $account, $player) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:(.*)\s$/i', $rdata, $msg)) {
+		$nick = $msg[1];
+		$user = $msg[2];
+		$host = $msg[3];
+		$channel = $msg[4];
+		
+		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
+		return true;
+	}
+	return false;
+}
 ?>
