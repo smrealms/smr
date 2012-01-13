@@ -46,20 +46,9 @@ class ChessPiece {
 		$x = $this->x;
 		$y = $this->y;
 		$moveInfo = ChessGame::movePiece($board, $hasMoved, $x, $y, $toX, $toY);
-		$safe = !$this->isChecked($board, $hasMoved, true);
+		$safe = !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour);
 		ChessGame::undoMovePiece($board, $hasMoved, $x, $y, $toX, $toY, $moveInfo);
 		return $safe;
-	}
-
-	public function isChecked(array &$board, array &$hasMoved, $king = true, $x = -1, $y = -1) {
-		foreach($board as &$row) {
-			foreach($row as &$p) {
-				if($p != null && $p->colour != $this->colour && $p->isAttacking($board, $hasMoved, $king, $x, $y)) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 	
 	public function isAttacking(array &$board, array &$hasMoved, $king, $x = -1, $y = -1) {
