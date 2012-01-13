@@ -14,7 +14,7 @@ function echo_r($message)
 // not keeping the filehandle might not be the wisest idea.
 function write_log_message($msg)
 {
-	$logFile = fopen("/var/log/irc/" . date("Ymd") . ".log", "a+");
+	$logFile = fopen('/home/r/irc.log','a+');//"/var/log/irc/" . date("Ymd") . ".log", "a+");
 	fwrite($logFile, round(microtime(true) * 1000) . ' ' . $msg . EOL);
 	fclose($logFile);
 }
@@ -38,7 +38,7 @@ include(ENGINE . '/Default/smr.inc');
 
 $address = 'ice.coldfront.net';
 $port = 6667;
-$nick = 'Caretaker';
+define('IRC_BOT_NICK', 'Caretaker');
 $pass = 'smr4ever';
 
 // timer events
@@ -125,14 +125,14 @@ while ($running) {
 		echo_r('Socket ' . $fp . ' is connected... Identifying...');
 
 		fputs($fp, 'NICK CareGhost' . EOL);
-		fputs($fp, 'USER ' . strtolower($nick) . ' oberon smrealms.de :Official SMR bot' . EOL);
+		fputs($fp, 'USER ' . strtolower(IRC_BOT_NICK) . ' oberon smrealms.de :Official SMR bot' . EOL);
 
 		// kill any other user that is using our nick
-		fputs($fp, 'NICKSERV GHOST ' . $nick . ' ' . $pass . EOL);
+		fputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . $pass . EOL);
 
 		sleep(1);
 
-		fputs($fp, 'NICK ' . $nick . EOL);
+		fputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
 		fputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
 
 		// join our public channel
@@ -192,6 +192,12 @@ while ($running) {
 			if (server_msg_352($fp, $rdata))
 				continue;
 			if (server_msg_401($fp, $rdata))
+				continue;
+			
+			//Are they using a linked nick instead
+			if(notice_nickserv_registered_user($fp, $rdata))
+				continue;
+			if(notice_nickserv_unknown_user($fp, $rdata))
 				continue;
 
 			// some nice things

@@ -545,16 +545,13 @@ function channel_msg_op_list($fp, $rdata, $account, $player)
 
 }
 
-function channel_op_notification($fp, $rdata, $account, $player) {
-	if (preg_match('/^:(.*)!(.*)@(.*)\sJOIN\s:(.*)\s$/i', $rdata, $msg)) {
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-		
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
+function channel_op_notification($fp, $rdata, $nick, $channel) {
+	echo_r('[OP_ATTENDANCE_CHECK] ' . $nick);
+	if(check_for_registration($account, $player, $fp, $nick, $channel, 'channel_op_notification($fp, \'' . $rdata . '\', \'' . $nick . '\', \'' . $channel . '\');', false)) {
 		return true;
 	}
-	return false;
+		
+	fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance leader has scheduled an OP, which you have not signed up yet. Please use the !op yes/no/maybe command to do so.' . EOL);
+	return true;
 }
 ?>

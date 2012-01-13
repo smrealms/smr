@@ -1,9 +1,71 @@
 <?php
 
-function channel_msg_with_registration($fp, $rdata, $validationMessages = true, $callback = false)
-{
+function check_for_registration(&$account, &$player, $fp, $nick, $channel, $callback, $validationMessages = true) {
 	//Force $validationMessages to always be boolean.
 	$validationMessages = $validationMessages === true;
+	
+	$db = new SmrMySqlDatabase();
+
+	// only registered users are allowed to use this command
+	$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
+	if (!$db->nextRecord()) {
+
+		global $actions;
+
+		// execute a whois and continue here on whois
+		fputs($fp, 'WHOIS ' . $nick . EOL);
+		array_push($actions, array('MSG_318', $channel, $nick, $callback, time()));
+
+		return true;
+	}
+	
+	$registeredNick = $db->getField('registered_nick');
+
+	// get alliance_id and game_id for this channel
+	$alliance =& SmrAlliance::getAllianceByIrcChannel($channel, true);
+	if ($alliance == null) {
+		if($validationMessages === true) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
+		}
+		return true;
+	}
+
+	// get smr account
+	$account = SmrAccount::getAccountByIrcNick($nick, true);
+	if ($account == null) {
+		if($registeredNick != '') {
+			$account = SmrAccount::getAccountByIrcNick($registeredNick, true);
+		}
+		if ($account == null) {
+			if($validationMessages === true) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+			}
+			return true;
+		}
+	}
+
+	// get smr player
+	$player = SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameId(), true);
+	if ($player == null) {
+		if($validationMessages === true) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
+		}
+		return true;
+	}
+
+	// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
+	if ($player->getAllianceID() != $alliance->getAllianceID()) {
+		if($validationMessages === true) {
+			fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
+		}
+		return true;
+	}
+	
+	return false;
+}
+
+function channel_msg_with_registration($fp, $rdata)
+{
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!(money|forces|seed|seedlist|op|sd|sms)\s/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -16,59 +78,9 @@ function channel_msg_with_registration($fp, $rdata, $validationMessages = true, 
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', that command can only be used in an alliance controlled channel.' . EOL);
 			return true;
 		}
-
-		$db = new SmrMySqlDatabase();
-
-		// only registered users are allowed to use this command
-		$db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($channel));
-		if (!$db->nextRecord()) {
-
-			global $actions;
-
-			// execute a whois and continue here on whois
-			fputs($fp, 'WHOIS ' . $nick . EOL);
-			array_push($actions, array('MSG_318', $channel, $nick, 'channel_msg_with_registration($fp, \'' . $rdata . '\',' . $validationMessages . ',\'' . $callback . '\');', time()));
-
-			return true;
-		}
 		
-		// get alliance_id and game_id for this channel
-		$alliance =& SmrAlliance::getAllianceByIrcChannel($channel, true);
-		if ($alliance == null) {
-			if($validationMessages === true) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the channel ' . $channel . ' has not been registered with me.' . EOL);
-			}
+		if(check_for_registration($account, $player, $fp, $nick, $channel, 'channel_msg_with_registration($fp, \'' . $rdata . '\');')) {
 			return true;
-		}
-
-		// get smr account
-		$account =& SmrAccount::getAccountByIrcNick($nick, true);
-		if ($account == null) {
-				if($validationMessages === true) {
-					fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
-				}
-				return true;
-			}
-
-		// get smr player
-		$player =& SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameId(), true);
-		if ($player == null) {
-			if($validationMessages === true) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have not joined the game that this channel belongs to.' . EOL);
-			}
-			return true;
-		}
-
-		// is the user part of this alliance? (no need to check for 0, cannot happen at this point in code)
-		if ($player->getAllianceID() != $alliance->getAllianceID()) {
-			if($validationMessages === true) {
-				fputs($fp, 'KICK ' . $channel . ' ' . $nick . ' :You are not a member of this alliance!' . EOL);
-			}
-			return true;
-		}
-		
-		if($callback !== false) {
-			return $callback($fp, $rdata, $account, $player);
 		}
 
 		if (channel_msg_money($fp, $rdata, $account, $player))

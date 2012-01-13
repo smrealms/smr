@@ -81,7 +81,7 @@ function channel_join($fp, $rdata)
 
 				// if we are not in the attendees list we give the player a hint
 				if (array_search($nick, $attendees) === false && $nick !== IRC_BOT_NICK) {
-					channel_msg_with_registration($fp, $rdata, false, 'channel_op_notification');
+					channel_op_notification($fp, $rdata, $nick, $channel);
 				}
 			}
 

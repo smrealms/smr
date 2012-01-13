@@ -88,7 +88,11 @@ function server_msg_318($fp, $rdata)
 		        // so we should do a callback but need to check first if the guy has registered
 		        $db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($action[1]));
 				if ($db->nextRecord()) {
-					eval($action[3]);
+					//Forward to a NICKSERV INFO call.
+					$action[0] = 'NICKSERV_INFO';
+					$action[4] = time();
+					array_push($actions, $action);
+					fputs($fp, 'NICKSERV INFO ' . $nick . EOL);
 				} else {
 					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
 				}
