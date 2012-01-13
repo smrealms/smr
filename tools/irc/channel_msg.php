@@ -27,7 +27,7 @@ function channel_msg_with_registration($fp, $rdata, $validationMessages = true, 
 
 			// execute a whois and continue here on whois
 			fputs($fp, 'WHOIS ' . $nick . EOL);
-			array_push($actions, array('MSG_318', $channel, $nick, 'channel_msg_with_registration($fp, \'' . $rdata . '\',' . $validationMessages . ');', time()));
+			array_push($actions, array('MSG_318', $channel, $nick, 'channel_msg_with_registration($fp, \'' . $rdata . '\',' . $validationMessages . ',\'' . $callback . '\');', time()));
 
 			return true;
 		}
