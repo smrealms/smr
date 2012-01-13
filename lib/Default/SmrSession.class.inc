@@ -114,10 +114,13 @@ class SmrSession
 		);
 	
 	private static $URL_LOAD_DELAY = array(
+		'configure_hardware.php' => .4,
+		'forces_drop.php' => .4,
 		'forces_drop_processing.php' => .4,
-		'forces_refresh_processing.php' => .35,
+		'forces_refresh_processing.php' => .4,
 		'sector_jump_processing.php' => .4,
 		'sector_move_processing.php' => .4,
+		'sector_scan.php' => .4,
 		'shop_goods_processing.php' => .4,
 		'trader_attack_processing.php' => .65,
 		'trader_examine.php' => .4
