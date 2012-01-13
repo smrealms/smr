@@ -24,7 +24,7 @@ function server_msg_307($fp, $rdata)
 {
 
     // :ice.coldfront.net 307 Caretaker MrSpock :is a registered nick
-    if (preg_match('/^:(.*) 307 Caretaker (.*) :is a registered nick\s/i', $rdata, $msg)) {
+    if (preg_match('/^:(.*) 307 ' . IRC_BOT_NICK . ' (.*) :is a registered nick\s/i', $rdata, $msg)) {
 
         $server = $msg[1];
         $nick = $msg[2];
@@ -55,7 +55,7 @@ function server_msg_318($fp, $rdata)
 {
 
     // :ice.coldfront.net 318 Caretaker MrSpock :End of /WHOIS list.
-    if (preg_match('/^:(.*) 318 Caretaker (.*) :End of \/WHOIS list\.\s/i', $rdata, $msg)) {
+    if (preg_match('/^:(.*) 318 ' . IRC_BOT_NICK . ' (.*) :End of \/WHOIS list\.\s/i', $rdata, $msg)) {
 
         $server = $msg[1];
         $nick = $msg[2];
@@ -82,8 +82,8 @@ function server_msg_318($fp, $rdata)
 	        if ($action[0] == 'MSG_318' && $nick == $action[2]) {
 
 		        echo_r('Callback found: ' . $action[3]);
-
-		        unset($actions[$key]);
+				
+				unset($actions[$key]);
 
 		        // so we should do a callback but need to check first if the guy has registered
 		        $db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND registered = 1 AND channel = ' . $db->escapeString($action[1]));
@@ -109,7 +109,7 @@ function server_msg_352($fp, $rdata)
 {
 
 	// :ice.coldfront.net 352 Caretaker #KMFDM caretaker coldfront-425DB813.dip.t-dialin.net ice.coldfront.net Caretaker Hr :0 Official SMR bot
-    if (preg_match('/^:(.*?) 352 Caretaker (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg)) {
+    if (preg_match('/^:(.*?) 352 ' . IRC_BOT_NICK . ' (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?) (.*?)$/i', $rdata, $msg)) {
 
         $server = $msg[1];
         $channel = $msg[2];
@@ -155,7 +155,7 @@ function server_msg_401($fp, $rdata)
 {
 
     // :ice.coldfront.net 401 Caretaker MrSpock :No such nick/channel
-    if (preg_match('/^:(.*) 401 Caretaker (.*) :No such nick\/channel\s/i', $rdata, $msg)) {
+    if (preg_match('/^:(.*) 401 ' . IRC_BOT_NICK . ' (.*) :No such nick\/channel\s/i', $rdata, $msg)) {
 
         $server = $msg[1];
         $nick = $msg[2];

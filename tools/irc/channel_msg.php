@@ -31,7 +31,7 @@ function channel_msg_with_registration($fp, $rdata, $validationMessages = true, 
 
 			return true;
 		}
-
+		
 		// get alliance_id and game_id for this channel
 		$alliance =& SmrAlliance::getAllianceByIrcChannel($channel, true);
 		if ($alliance == null) {
@@ -44,11 +44,11 @@ function channel_msg_with_registration($fp, $rdata, $validationMessages = true, 
 		// get smr account
 		$account =& SmrAccount::getAccountByIrcNick($nick, true);
 		if ($account == null) {
-			if($validationMessages === true) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+				if($validationMessages === true) {
+					fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', please set your \'irc nick\' in SMR preferences to your registered nick so i can recognize you.' . EOL);
+				}
+				return true;
 			}
-			return true;
-		}
 
 		// get smr player
 		$player =& SmrPlayer::getPlayer($account->getAccountID(), $alliance->getGameId(), true);
@@ -389,8 +389,8 @@ function channel_msg_help($fp, $rdata)
 		echo_r('[HELP] ' . $nick . '!' . $user . '@' . $host . ' ' . $channel);
 
 		fputs($fp, 'NOTICE ' . $nick . ' :--- HELP ---' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :Caretaker is the official SMR bot' . EOL);
-		fputs($fp, 'NOTICE ' . $nick . ' :If you want his services in your channel please invite him using \'/invite caretaker #channel\'' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :' . IRC_BOT_NICK . ' is the official SMR bot' . EOL);
+		fputs($fp, 'NOTICE ' . $nick . ' :If you want his services in your channel please invite him using \'/invite ' . IRC_BOT_NICK . ' #channel\'' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' : ' . EOL);
 		fputs($fp, 'NOTICE ' . $nick . ' :Available public commands commands:' . EOL);
 		//		fputs($fp, 'NOTICE '.$nick.' :!rank <nickname>         Displays the rank of the specified trader'.EOL);
