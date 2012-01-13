@@ -45,6 +45,17 @@ class ChessGame {
 	public static function isValidCoord($x, $y, array &$board) {
 		return $y < count($board) && $y >= 0 && $x < count($board[$y]) && $x >= 0;
 	}
+
+	public static function isPlayerChecked(array &$board, array &$hasMoved, $colour) {
+		foreach($board as &$row) {
+			foreach($row as &$p) {
+				if($p != null && $p->colour != $colour && $p->isAttacking($board, $hasMoved, true)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 	
 	private function resetHasMoved() {
 		$this->hasMoved = array(
@@ -297,7 +308,7 @@ class ChessGame {
 		if($king == null) {
 			throw new Exception('Could not find the king: game id = ' . $this->chessGameID);
 		}
-		if(!$king->isChecked($board, $hasMoved)) {
+		if(!self::isPlayerChecked($board, $hasMoved, $colour)) {
 			return false;
 		}
 		foreach($board as $row) {
@@ -452,7 +463,7 @@ class ChessGame {
 		}
 		$this->getBoard();
 		$p = $this->board[$y][$x];
-		if($p == null) {
+		if($p == null || $p->colour != $this->getColourForAccountID($forAccountID)) {
 			return 2;
 		}
 		
@@ -462,6 +473,8 @@ class ChessGame {
 				$currentPlayer =& $this->getCurrentTurnPlayer();
 				
 				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY);
+				//We have taken the move, we should refresh $p
+				$p = $this->board[$toY][$toX];
 				
 				$pieceTakenID = null;
 				if($moveInfo['PieceTaken'] != null) {
@@ -481,7 +494,7 @@ class ChessGame {
 				if($this->moves!=null) {
 					$this->moves[] = $this->createMove($p->pieceID, $x, $y, $toX, $toY, $pieceTakenID, $checking, $this->getCurrentTurnColour(), $moveInfo['Castling']['Type'], $moveInfo['EnPassant']);
 				}
-				if($p->isChecked($this->board, $this->getHasMoved())) {
+				if(self::isPlayerChecked($this->board, $this->getHasMoved(), $p->colour)) {
 					return 3;
 				}
 				$otherPlayer =& $this->getCurrentTurnPlayer();
