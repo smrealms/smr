@@ -2,13 +2,14 @@
 
 class Template
 {
-	protected $data = array();
+	private $data = array();
 //	protected $ajax = array();
 //	protected $currentAjaxID=false;
-	protected $captures=array('');
-	protected $currentCaptureID=0;
-	protected $ignoreMiddle=false;
-	protected $nestedIncludes = 0;
+	private $captures=array('');
+	private $currentCaptureID=0;
+	private $ignoreMiddle=false;
+	private $nestedIncludes = 0;
+	private $ajaxJS = array();
 	
 	public function __construct()
 	{
@@ -240,8 +241,23 @@ class Template
 			echo 'a';
 	}
 	
-	protected function &convertHtmlToAjaxXml(&$str,$returnXml)
-	{
+	/*
+	 * Eval is special (well, will be when needed and implemented in the javascript).
+	 */
+	protected function addJavascriptForAjax($varName, $obj) {
+		if($varName != 'Eval') {
+			if(isset($this->ajaxJS[$varName])) {
+				throw new Exception('Trying to set javascript val twice: ' . $varName);
+			}
+			return $this->ajaxJS[$varName] = json_encode($obj);
+		}
+		if(!isset($this->ajaxJS['Eval'])) {
+			return $this->ajaxJS['Eval'] = $obj;
+		}
+		return $this->ajaxJS['Eval'] .= ';' . $obj;
+	}
+	
+	protected function &convertHtmlToAjaxXml(&$str,$returnXml) {
 		if(empty($str))
 			return '';
 
@@ -286,6 +302,15 @@ class Template
 					}
 				}
 			}
+		}
+		$js = '';
+		foreach($this->ajaxJS as $varName => $JSON) {
+			if(true || !SmrSession::addAjaxReturns('JS:'.$varName,$JSON) && $returnXml) {
+				$js .= '<'.$varName.'>'.xmlify($JSON).'</'.$varName.'>';
+			}
+		}
+		if(strlen($js) > 0) {
+			$xml .= '<JS>'.$js.'</JS>';
 		}
 		return $xml;
 	}

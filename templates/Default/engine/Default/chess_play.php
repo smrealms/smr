@@ -51,35 +51,24 @@
 		</td>
 	</tr>
 </table>
-<script type="text/javascript">
-	var submitMoveHREF = '<?php echo $ChessMoveHREF; ?>',
-	availableMoves = {<?php
-	$this->startCapture();
-	foreach($Board as $Y => $Row)
-	{
-		foreach($Row as $X => $Cell)
-		{
-			if($Cell!=null)
-			{ ?>
-				"x<?php echo $X; ?>y<?php echo $Y; ?>": [<?php
-					if($ChessGame->isCurrentTurn($ThisAccount->getAccountID()))
-					{
-						$this->startCapture();
-						$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
-						foreach($Moves as $Move)
-						{
-							?>{"x":<?php echo $Move[0]; ?>, "y":<?php echo $Move[1]; ?>},<?php
-						}
-						$Captured =& $this->stopCapture();
-						echo substr($Captured, 0, strlen($Captured)-1);
-					}?>
-				],<?php
+<script type="text/javascript" ><?php
+	$AvailableMoves = array();
+	foreach($Board as $Y => $Row) {
+		foreach($Row as $X => $Cell) {
+			if($Cell!=null) { 
+				$XY = 'x' . $X . 'y' . $Y;
+				$AvailableMoves[$XY] = array();
+				if($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
+					$this->startCapture();
+					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
+					foreach($Moves as $Move) {
+						$AvailableMoves[$XY][] = array('x' => $Move[0], 'y' => $Move[1]);
+					}
+				}
 			}
 		}
-	}
-	$Captured =& $this->stopCapture();
-	echo substr($Captured, 0, strlen($Captured)-1);
-	unset($Captured); ?>
-	};
+	} ?>
+	var submitMoveHREF = '<?php echo $ChessMoveHREF; ?>',
+		availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;
 </script>
 <script type="text/javascript" src="js/chess.js"></script>
