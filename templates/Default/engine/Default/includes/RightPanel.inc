@@ -1,7 +1,7 @@
 <?php
 if(isset($GameID))
 { ?>
-	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script type="text/javascript">TriggerAttackBlink('3B1111');</script><?php } ?></span><?php
+	<span id="attack_area"><?php if($UnderAttack) { ?><p class="attack_warning">You Are Under Attack!</p><script type="text/javascript">triggerAttackBlink('3B1111');</script><?php } ?></span><?php
 	$this->includeTemplate('includes/UnreadMessages.inc'); ?>
 	<span id="lvlName"><?php echo $ThisPlayer->getLevelName(); ?></span><br />
 	<big><a href="<?php echo $PlayerNameLink; ?>"><?php echo $ThisPlayer->getDisplayName(); ?></a></big><br /><?php
