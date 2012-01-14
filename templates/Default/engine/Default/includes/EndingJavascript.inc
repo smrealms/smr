@@ -5,6 +5,10 @@ if(!empty($js))
 {
 	?><script type="text/javascript" src="<?php echo $js; ?>"></script><?php
 }
+foreach($this->jsAlerts as $string)
+{
+	?>alert(<?php echo json_encode($string); ?>);<?php
+}
 if($AJAX_ENABLE_REFRESH)
 {
 	$AvailableLinks = Globals::getAvailableLinks();

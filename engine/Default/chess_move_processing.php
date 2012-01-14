@@ -18,6 +18,7 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 					break;
 					case 1:
 						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnAccountID(), 'You have just lost the chess game against [player=' . $player->getPlayerID() . '].');
+						$template->assign('MoveMessage', 'You have just checkmated your opponent, congratulations!');
 					break;
 					case 2:
 						$template->assign('MoveMessage', 'There is no piece in that square.');
@@ -47,4 +48,7 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 else {
 //	this.logger.error('Player supplied an invalid number: x = ' + xIn + ', y = ' + yIn + ', toX = ' + toXIn + ', toY = ' + toYIn);
 }
+
+$var = SmrSession::retrieveVar(SmrSession::$lastSN);
+do_voodoo();
 ?>

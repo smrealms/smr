@@ -59,7 +59,6 @@
 				$XY = 'x' . $X . 'y' . $Y;
 				$AvailableMoves[$XY] = array();
 				if($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
-					$this->startCapture();
 					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
 					foreach($Moves as $Move) {
 						$AvailableMoves[$XY][] = array('x' => $Move[0], 'y' => $Move[1]);
@@ -67,8 +66,10 @@
 				}
 			}
 		}
+	}
+	if(isset($MoveMessage)) {
+		$this->addJavascriptAlert($MoveMessage);
 	} ?>
 	var submitMoveHREF = '<?php echo $ChessMoveHREF; ?>',
 		availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;
 </script>
-<script type="text/javascript" src="js/chess.js"></script>

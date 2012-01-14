@@ -443,9 +443,11 @@ function word_filter($string) {
 
 // This function is a hack around the old style http forward mechanism
 function do_voodoo() {
-	global $lock, $var,$template,$account;
-	$ajaxContainer = isset($var['AJAX']) && $var['AJAX'] == true;
-	if(!$ajaxContainer && USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
+	global $lock, $var, $template, $account;
+	if(!defined('AJAX_CONTAINER')) {
+		define('AJAX_CONTAINER', isset($var['AJAX']) && $var['AJAX'] === true);
+	}
+	if(!AJAX_CONTAINER && USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
 		exit;
 //	ob_clean();
 	
@@ -600,11 +602,9 @@ function do_voodoo() {
 		$template->assign('AJAX_ENABLE_REFRESH',false);
 	}
 	
-	$template->display($ajaxContainer ? $var['body'] : $var['url'], USING_AJAX, $ajaxContainer);
+	$template->display($var['url'], USING_AJAX);
 	
-	if(!$ajaxContainer) {
-		SmrSession::update();
-	}
+	SmrSession::update();
 	
 	exit;
 }

@@ -25,7 +25,6 @@ class SmrSession
 			'course_plot.php' => self::ALWAYS_AVAILABLE,
 			'changelog_view.php' => self::ALWAYS_AVAILABLE,
 			'chat_rules.php' => self::ALWAYS_AVAILABLE,
-			'chess_move.php' => self::ALWAYS_AVAILABLE,
 			'chess_play.php' => self::ALWAYS_AVAILABLE,
 			'combat_log_viewer.php' => self::ALWAYS_AVAILABLE,
 			'current_sector.php' => self::ALWAYS_AVAILABLE,
@@ -259,7 +258,7 @@ class SmrSession
 			}
 		} unset($value);
 		$compressed = gzcompress(serialize(self::$var));
-		if(!self::$generate || (isset($var['AJAX']) && $var['AJAX'] == true))
+		if(!self::$generate)
 		{
 			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',old_account_id=' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(TIME) : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
 					',last_sn='.self::$db->escapeString(self::$SN).
@@ -405,7 +404,7 @@ class SmrSession
 		return self::addLink($container, $forceSN);
 	}
 
-	public static function get_new_href($container,$forceFullURL=false)
+	public static function get_new_href($container, $forceFullURL=false)
 	{
 		$sn = self::addLink($container) . (isset($container['AJAX']) && $container['AJAX'] == true ? '&ajax=1':'');
 		if($forceFullURL===true||stripos($_SERVER['REQUEST_URI'],'loader.php')===false)

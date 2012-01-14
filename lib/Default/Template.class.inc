@@ -9,6 +9,7 @@ class Template {
 	private $ignoreMiddle=false;
 	private $nestedIncludes = 0;
 	private $ajaxJS = array();
+	protected $jsAlerts = array();
 	
 	public function __construct() {
 	}
@@ -45,7 +46,7 @@ class Template {
 		else {
 			header('Content-Type: text/html; charset=utf-8');
 		}
-		if(!$xmlResponse && $this->data['AJAX_ENABLE_REFRESH']) {
+		if($forAjax || $this->data['AJAX_ENABLE_REFRESH']) {
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output,USING_AJAX);
 			if($forAjax) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
@@ -141,6 +142,7 @@ class Template {
 		$this->captures[$this->currentCaptureID].=ob_get_contents();
 		ob_clean();
 		$this->currentCaptureID++;
+		$this->captures[$this->currentCaptureID] = '';
 	}
 	
 	protected function &stopCapture() {
@@ -258,19 +260,26 @@ class Template {
 	}
 	
 	/*
-	 * Eval is special (well, will be when needed and implemented in the javascript).
+	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
 	protected function addJavascriptForAjax($varName, $obj) {
-		if($varName != 'Eval') {
-			if(isset($this->ajaxJS[$varName])) {
-				throw new Exception('Trying to set javascript val twice: ' . $varName);
+		if($varName == 'EVAL') {
+			if(!isset($this->ajaxJS['EVAL'])) {
+				return $this->ajaxJS['EVAL'] = $obj;
 			}
-			return $this->ajaxJS[$varName] = json_encode($obj);
+			return $this->ajaxJS['EVAL'] .= ';' . $obj;
 		}
-		if(!isset($this->ajaxJS['Eval'])) {
-			return $this->ajaxJS['Eval'] = $obj;
+		
+		if(isset($this->ajaxJS[$varName])) {
+			throw new Exception('Trying to set javascript val twice: ' . $varName);
 		}
-		return $this->ajaxJS['Eval'] .= ';' . $obj;
+		return $this->ajaxJS[$varName] = json_encode($obj);
+	}
+	
+	protected function addJavascriptAlert($string) {
+		if(!SmrSession::addAjaxReturns('ALERT:'.$string,$string)) {
+			$this->jsAlerts[] = $string;
+		}
 	}
 	
 	protected function &convertHtmlToAjaxXml(&$str,$returnXml) {
@@ -320,6 +329,9 @@ class Template {
 			if(!SmrSession::addAjaxReturns('JS:'.$varName,$JSON) && $returnXml) {
 				$js .= '<'.$varName.'>'.xmlify($JSON).'</'.$varName.'>';
 			}
+		}
+		if($returnXml && count($this->jsAlerts) > 0) {
+			$js = '<ALERT>'.json_encode($this->jsAlerts).'</ALERT>';
 		}
 		if(strlen($js) > 0) {
 			$xml .= '<JS>'.$js.'</JS>';
