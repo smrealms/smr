@@ -65,7 +65,7 @@ foreach ($races as &$race)
 }
 $PHP_OUTPUT.= '<tr><td class="right">Total</td><td class="left"><input size="5" name="racedist" value="0" type="text"></td></tr>';
 $PHP_OUTPUT.= '<tr><td class="center" colspan="2">';
-$PHP_OUTPUT.= '<div class="buttonA"><a class="buttonA" onClick="set_even();">&nbsp;Set All Equal&nbsp;</a></div></td></tr>';
+$PHP_OUTPUT.= '<div class="buttonA"><a class="buttonA" onClick="setEven();">&nbsp;Set All Equal&nbsp;</a></div></td></tr>';
 $PHP_OUTPUT.= '</table>';
 $PHP_OUTPUT.= '</td><td class="center"><table class="standard">';
 for ($i=1;$i<=20;$i++)
