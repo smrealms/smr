@@ -2073,16 +2073,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		return SmrSession::get_new_href($container);
 	}
 	
-	public function getAttackTraderHREF()
-	{
-		global $var;
-		$container = create_container('skeleton.php','trader_attack_processing.php');
-		$container['target']	= $this->getAccountID();
-		if(isset($var['time']))
-			$container['time']	= $var['time'];
-		else
-			$container['time']	= 0;
-		return SmrSession::get_new_href($container);
+	public function getAttackTraderHREF() {
+		return Globals::getAttackTraderHREF($this->getAccountID());
 	}
 	
 	public function getPlanetKickHREF()

@@ -28,7 +28,8 @@ abstract class AbstractSmrAccount
 		'LocalMap' => array('2'),
 		'PlotCourse' => array('3'),
 		'CurrentPlayers' => array('4'),
-		'EnterPort' => array('q')
+		'EnterPort' => array('q'),
+		'AttackTrader' => array('f')
 	);
 	
 	protected $db;

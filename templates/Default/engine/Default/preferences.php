@@ -415,6 +415,12 @@ if(isset($GameID))
 			</td>
 		</tr>
 		<tr>
+			<td>Attack Trader/Continue Attack</td>
+			<td>
+				<input type="text" size="50" name="AttackTrader" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('AttackTrader'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Save Hotkeys" id="InputFields" /></td>
 		</tr>

@@ -285,8 +285,6 @@ function create_error($message) {
 function resetContainer($new_container) {
 	global $time_start,$sn,$container,$var;
 
-	// add start time of that script to next page
-	$new_container['time'] = MICRO_TIME;
 	// this sn identifies our container later
 
 	SmrSession::resetLink($new_container,$sn);
