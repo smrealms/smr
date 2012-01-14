@@ -1,7 +1,6 @@
 <?php
 
-class Template
-{
+class Template {
 	private $data = array();
 //	protected $ajax = array();
 //	protected $currentAjaxID=false;
@@ -11,102 +10,124 @@ class Template
 	private $nestedIncludes = 0;
 	private $ajaxJS = array();
 	
-	public function __construct()
-	{
+	public function __construct() {
 	}
 	
-	public function hasTemplateVar($var)
-	{
+	public function hasTemplateVar($var) {
 		return isset($this->data[$var]);
 	}
 	
-	public function assign($var,$value)
-	{
+	public function assign($var, $value) {
 		$this->data[$var] =& $value;
 	}
 	
-	public function unassign($var)
-	{
+	public function unassign($var) {
 		unset($this->data[$var]);
 	}
 	
-	public function assignByRef($var,&$value)
-	{
+	public function assignByRef($var, &$value) {
 		$this->data[$var] =& $value;
 	}
 	
-	public function display($templateName,$forAjax=false, $xmlResponse=false)
-	{
+	public function display($templateName,$forAjax=false, $xmlResponse=false) {
 		@ob_clean();
 		ob_start();
 		$this->includeTemplate($templateName);
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
 		$output='';
-		foreach($this->captures as $captured)
-		{
+		foreach($this->captures as $captured) {
 			$output.=$captured;
 		}
 		$this->trimWhiteSpace($output);
-		if($forAjax)
+		if($forAjax) {
 			header('Content-Type: text/xml; charset=utf-8');
-		else
+		}
+		else {
 			header('Content-Type: text/html; charset=utf-8');
-		if(!$xmlResponse && $this->data['AJAX_ENABLE_REFRESH'])
-		{
+		}
+		if(!$xmlResponse && $this->data['AJAX_ENABLE_REFRESH']) {
 			$ajaxXml =& $this->convertHtmlToAjaxXml($output,USING_AJAX);
-			if($forAjax)
-			{
+			if($forAjax) {
 				/* Left out for size: <?xml version="1.0" encoding="ISO-8859-1"?>*/
 				$ajaxXml='<all>'.$ajaxXml.'</all>';
 				echo $ajaxXml;
 			}
-			else
-			{
+			else {
 				echo $output;
 			}
 			SmrSession::saveAjaxReturns();
 		}
-		else
+		else {
 			echo $output;
+		}
 	}
 	
 	
-	protected function getTemplateLocation($templateName)
-	{
+	protected function getTemplateLocation($templateName) {
 		$templateDir = TEMPLATES_DIR;
-		if (isset($this->data['ThisAccount'])&&is_object($this->data['ThisAccount'])&&$this->data['ThisAccount'] instanceof SmrAccount) $templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
-		else $templateDir .= 'Default/';
+		if (isset($this->data['ThisAccount']) && is_object($this->data['ThisAccount']) && $this->data['ThisAccount'] instanceof SmrAccount) {
+			$templateDir .= $this->data['ThisAccount']->getTemplate() . '/';
+		}
+		else {
+			$templateDir .= 'Default/';
+		}
 
-		if (SmrSession::$game_id > 0) $gameDir = Globals::getGameType(SmrSession::$game_id) . '/';
-		else $gameDir = 'Default/';
+		if (SmrSession::$game_id > 0) {
+			$gameDir = Globals::getGameType(SmrSession::$game_id) . '/';
+		}
+		else {
+			$gameDir = 'Default/';
+		}
 
-		if (file_exists($templateDir . 'engine/' . $gameDir . $templateName)) return $templateDir . 'engine/' . $gameDir . $templateName;
-		elseif (file_exists($templateDir . 'engine/Default/' . $templateName)) return $templateDir . 'engine/Default/' . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName)) return TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/Default/' . $templateName)) return TEMPLATES_DIR . 'Default/engine/Default/' . $templateName;
-		elseif (file_exists($templateDir . 'admin/' . $gameDir . $templateName)) return $templateDir . 'admin/' . $gameDir . $templateName;
-		elseif (file_exists($templateDir . 'admin/Default/' . $templateName)) return $templateDir . 'admin/Default/' . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName)) return TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/Default/' . $templateName)) return TEMPLATES_DIR . 'Default/admin/Default/' . $templateName;
-		elseif (file_exists($templateDir .  $templateName)) return $templateDir . $templateName;
-		elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) return TEMPLATES_DIR . 'Default/' . $templateName;
-		elseif (file_exists($templateDir .  'default.inc')) return $templateDir.'default.inc';
-		else return TEMPLATES_DIR.'Default/default.inc';//return $file_name;
+		if (file_exists($templateDir . 'engine/' . $gameDir . $templateName)) {
+			return $templateDir . 'engine/' . $gameDir . $templateName;
+		}
+		elseif (file_exists($templateDir . 'engine/Default/' . $templateName)) {
+			return $templateDir . 'engine/Default/' . $templateName;
+		}
+		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName)) {
+			return TEMPLATES_DIR . 'Default/engine/' . $gameDir . $templateName;
+		}
+		elseif (file_exists(TEMPLATES_DIR . 'Default/engine/Default/' . $templateName)) {
+			return TEMPLATES_DIR . 'Default/engine/Default/' . $templateName;
+		}
+		elseif (file_exists($templateDir . 'admin/' . $gameDir . $templateName)) {
+			return $templateDir . 'admin/' . $gameDir . $templateName;
+		}
+		elseif (file_exists($templateDir . 'admin/Default/' . $templateName)) {
+			return $templateDir . 'admin/Default/' . $templateName;
+		}
+		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName)) {
+			return TEMPLATES_DIR . 'Default/admin/' . $gameDir . $templateName;
+		}
+		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/Default/' . $templateName)) {
+			return TEMPLATES_DIR . 'Default/admin/Default/' . $templateName;
+		}
+		elseif (file_exists($templateDir .  $templateName)) {
+			return $templateDir . $templateName;
+		}
+		elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) {
+			return TEMPLATES_DIR . 'Default/' . $templateName;
+		}
+		elseif (file_exists($templateDir .  'default.inc')) {
+			return $templateDir.'default.inc';
+		}
+		else {
+			return TEMPLATES_DIR.'Default/default.inc';//return $file_name;
+		}
 	}
 	
 	protected function includeTemplate($templateName, array $assignVars = null)
 	{
-		if($this->nestedIncludes > 15)
+		if($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
-		foreach($this->data as $key => &$value)
-		{
+		}
+		foreach($this->data as $key => &$value) {
 			$$key=&$value;
 			unset($value);
 		}
-		if($assignVars!==null)
-		{
-			foreach($assignVars as $key => &$value)
-			{
+		if($assignVars!==null) {
+			foreach($assignVars as $key => &$value) {
 				$$key=&$value;
 				unset($value);
 			}
@@ -116,15 +137,13 @@ class Template
 		$this->nestedIncludes--;
 	}
 	
-	protected function startCapture()
-	{
+	protected function startCapture() {
 		$this->captures[$this->currentCaptureID].=ob_get_contents();
 		ob_clean();
 		$this->currentCaptureID++;
 	}
 	
-	protected function &stopCapture()
-	{
+	protected function &stopCapture() {
 		$captured =& $this->captures[$this->currentCaptureID];
 		unset($this->captures[$this->currentCaptureID]);
 		$captured .= ob_get_contents();
@@ -133,39 +152,36 @@ class Template
 		return $captured;
 	}
 	
-//	protected function startAJAXCapture($id)
-//	{
-//		if($this->currentAjaxID!==false)
+//	protected function startAJAXCapture($id) {
+//		if($this->currentAjaxID!==false) {
 //			throw new Exception('Already capturing for AJAX');
+//		}
 //		$this->currentAjaxID=$id;
 //		$this->startCapture();
 //	}
 //
-//	protected function &storeAJAXCapture()
-//	{
-//		if($this->currentAjaxID===false)
+//	protected function &storeAJAXCapture() {
+//		if($this->currentAjaxID===false) {
 //			throw new Exception('Not capturing for AJAX');
+//		}
 //		$this->ajax[$this->currentAjaxID] = $this->stopCapture();
 //		echo $this->ajax[$this->currentAjaxID];
 //		$this->currentAjaxID=false;
 //	}
 //
-//	protected function echoAjaxXml()
-//	{
-//		foreach($this->ajax as $element => $content)
-//		{
-//			if(trim($content)!='')
+//	protected function echoAjaxXml() {
+//		foreach($this->ajax as $element => $content) {
+//			if(trim($content)!='') {
 //				echo '<'.$element.'>'.xmlify($this->trimWhiteSpace($content)).'</'.$element.'>';
+//			}
 //		}
 //	}
 	
-	protected function checkDisableAJAX(&$html)
-	{
+	protected function checkDisableAJAX(&$html) {
 		return preg_match('/<input'.'[^>]*'.'[^(submit)(hidden)(image)]'.'[^>]*'.'>/i', $html)!=0;
 	}
 	
-	protected function trimWhiteSpace(&$html)
-	{
+	protected function trimWhiteSpace(&$html) {
 		// Pull out the script blocks
 		/*    preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
 		 $_script_blocks = $match[0];
@@ -208,19 +224,20 @@ class Template
 		// replace script blocks
 //		$this->replaceTrimHolder("@@@SMARTY:TRIM:SCRIPT@@@",$_script_blocks, $html);
 	}
-	protected function replaceTrimHolder($search_str, $replace, &$subject)
-	{
+	protected function replaceTrimHolder($search_str, $replace, &$subject) {
 	    $_len = strlen($search_str);
 	    $_pos = 0;
-	    for ($_i=0, $_count=count($replace); $_i<$_count; $_i++)
-	        if (($_pos=strpos($subject, $search_str, $_pos))!==false)
+	    for ($_i=0, $_count=count($replace); $_i<$_count; $_i++) {
+	        if (($_pos=strpos($subject, $search_str, $_pos))!==false) {
 	            $subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
-	        else
+			}
+	        else {
 	            break;
+			}
+		}
 	}
 	
-	protected function doDamageTypeReductionDisplay(&$damageTypes)
-	{
+	protected function doDamageTypeReductionDisplay(&$damageTypes) {
 		if($damageTypes == 3)
 		{
 			echo ', ';
@@ -232,8 +249,7 @@ class Template
 		$damageTypes--;
 	}
 	
-	protected function doAn($wordAfter)
-	{
+	protected function doAn($wordAfter) {
 		$char = strtoupper($wordAfter[0]);
 		if($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U')
 			echo 'an';
@@ -258,54 +274,50 @@ class Template
 	}
 	
 	protected function &convertHtmlToAjaxXml(&$str,$returnXml) {
-		if(empty($str))
+		if(empty($str)) {
 			return '';
+		}
 
 		require_once(LIB.'External/phpQuery/phpQuery.php');
 		
 		$xml='';
 		$html = phpQuery::newDocument($str);
 		$searches = array('span[id]','.ajax');
-		foreach($searches as $search)
-		{
+		foreach($searches as $search) {
 			$spans = $html->find($search);
-			foreach($spans as $span)
-			{
+			foreach($spans as $span) {
 				$id = $span->getAttribute('id');
 				$inner = pq($span)->html();
 				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
 					$xml.= '<'.$id.'>'.xmlify($inner). '</'.$id.'>';
 			}
 		}
-		if(!$this->ignoreMiddle)
-		{
+		if(!$this->ignoreMiddle) {
 			$doAjaxMiddle=true;
 			$searches = array('div#middle_panel span[id]','div#middle_panel .ajax');
-			foreach($searches as $search)
-			{
+			foreach($searches as $search) {
 				$spans = $html->find($search);
-				if(count($spans) > 0)
+				if(count($spans) > 0) {
 					$doAjaxMiddle=false;
+				}
 			}
-			if($doAjaxMiddle)
-			{
+			if($doAjaxMiddle) {
 				$mid=$html->find('div#middle_panel');
-				if(count($mid) > 0)
-				{
+				if(count($mid) > 0) {
 					$mid=$mid->get(0);
 					$inner = pq($mid)->html();
-					if(!$this->checkDisableAJAX($inner))
-					{
+					if(!$this->checkDisableAJAX($inner)) {
 						$id = $mid->getAttribute('id');
-						if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
-							$xml.= '<'.$id.'>'.xmlify($inner). '</'.$id.'>';
+						if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml) {
+							$xml .= '<'.$id.'>'.xmlify($inner).'</'.$id.'>';
+						}
 					}
 				}
 			}
 		}
 		$js = '';
 		foreach($this->ajaxJS as $varName => $JSON) {
-			if(true || !SmrSession::addAjaxReturns('JS:'.$varName,$JSON) && $returnXml) {
+			if(!SmrSession::addAjaxReturns('JS:'.$varName,$JSON) && $returnXml) {
 				$js .= '<'.$varName.'>'.xmlify($JSON).'</'.$varName.'>';
 			}
 		}
@@ -315,9 +327,8 @@ class Template
 		return $xml;
 	}
 	
-	public function ignoreMiddle()
-	{
-		$this->ignoreMiddle=true;
+	public function ignoreMiddle() {
+		$this->ignoreMiddle = true;
 	}
 }
 ?>
