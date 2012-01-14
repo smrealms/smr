@@ -50,29 +50,6 @@ $sds = array();
 // on<something> actions
 $actions = array();
 
-$answers = array(
-	'Signs point to yes.',
-	'Yes.',
-	'Reply hazy, try again.',
-	'Without a doubt.',
-	'My sources say no.',
-	'As I see it, yes.',
-	'You may rely on it.',
-	'Concentrate and ask again.',
-	'Outlook not so good.',
-	'It is decidedly so.',
-	'Better not tell you now.',
-	'Very doubtful.',
-	'Yes - definitely.',
-	'It is certain.',
-	'Cannot predict now.',
-	'Most likely.',
-	'Ask again later.',
-	'My reply is no.',
-	'Outlook good.',
-	'Don\'t count on it.'
-);
-
 $logging = false;
 $debugging = false;
 
@@ -85,8 +62,9 @@ if ($argc > 1) {
 			$debugging = true;
 		}
 	}
-
 }
+define('IRC_LOGGING', $logging);
+define('IRC_DEBUGGING', $debugging);
 
 // include all sub files
 require_once('irc/server.php');
@@ -121,154 +99,49 @@ while ($running) {
 	echo_r('Connecting to ' . $address);
 	$fp = fsockopen($address, $port);
 	if ($fp) {
-		stream_set_blocking($fp, TRUE);
 		echo_r('Socket ' . $fp . ' is connected... Identifying...');
-
-		fputs($fp, 'NICK CareGhost' . EOL);
-		fputs($fp, 'USER ' . strtolower(IRC_BOT_NICK) . ' oberon smrealms.de :Official SMR bot' . EOL);
+		
+		
+		safefputs($fp, 'NICK CareGhost' . EOL);
+		safefputs($fp, 'USER ' . strtolower(IRC_BOT_NICK) . ' oberon smrealms.de :Official SMR bot' . EOL);
 
 		// kill any other user that is using our nick
-		fputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . $pass . EOL);
+		safefputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . $pass . EOL);
 
 		sleep(1);
 
-		fputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
-		fputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
+		//4
+		safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
+		safefputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
 
 		// join our public channel
-		if (!$debugging) {
-			fputs($fp, 'JOIN #smr' . EOL);
-			fputs($fp, 'JOIN #smr-bar' . EOL);
+		if (!IRC_DEBUGGING) {
+			safefputs($fp, 'JOIN #smr' . EOL);
+			safefputs($fp, 'JOIN #smr-bar' . EOL);
 			sleep(1);
-			fputs($fp, 'WHO #smr' . EOL);
-			fputs($fp, 'WHO #smr-bar' . EOL);
+			safefputs($fp, 'WHO #smr' . EOL);
+			safefputs($fp, 'WHO #smr-bar' . EOL);
 
 			// join all alliance channels
 			$db->query('SELECT    channel ' .
 					   'FROM      irc_alliance_has_channel ' .
-					   'LEFT JOIN game USING (game_id) ' .
+					   'JOIN game USING (game_id) ' .
 					   'WHERE     start_date < ' . time() .
 					   '  AND     end_date > ' . time());
 			while ($db->nextRecord()) {
 				$alliance_channel = $db->getField('channel');
-
 				// join channels
-				fputs($fp, 'JOIN ' . $alliance_channel . EOL);
+				safefputs($fp, 'JOIN ' . $alliance_channel . EOL);
 				sleep(1);
-				fputs($fp, 'WHO ' . $alliance_channel . EOL);
+				safefputs($fp, 'WHO ' . $alliance_channel . EOL);
 			}
 
 		}
 
-		while (!feof($fp))
-		{
-
-			$rdata = fgets($fp, 4096);
-			$rdata = preg_replace('/\s+/', ' ', $rdata);
-
-			// log for reports (if enabled via command line (-log)
-			if ($logging && strlen($rdata) > 0)
-				write_log_message($rdata);
-
-			// remember the last time we got something from the server
-			if (strlen($rdata) > 0)
-				$last_ping = time();
-
-			// we simply do some poll stuff here
-			check_planet_builds($fp);
-			check_events($fp);
-			check_sms_dlr($fp);
-			check_sms_response($fp);
-
-			// required!!! otherwise timeout!
-			if (server_ping($fp, $rdata))
-				continue;
-
-			// server msg
-			if (server_msg_307($fp, $rdata))
-				continue;
-			if (server_msg_318($fp, $rdata))
-				continue;
-			if (server_msg_352($fp, $rdata))
-				continue;
-			if (server_msg_401($fp, $rdata))
-				continue;
-			
-			//Are they using a linked nick instead
-			if(notice_nickserv_registered_user($fp, $rdata))
-				continue;
-			if(notice_nickserv_unknown_user($fp, $rdata))
-				continue;
-
-			// some nice things
-			if (ctcp_version($fp, $rdata))
-				continue;
-			if (ctcp_finger($fp, $rdata))
-				continue;
-			if (ctcp_time($fp, $rdata))
-				continue;
-			if (ctcp_ping($fp, $rdata))
-				continue;
-
-			if (invite($fp, $rdata))
-				continue;
-
-			// join and part
-			if (channel_join($fp, $rdata))
-				continue;
-			if (channel_part($fp, $rdata))
-				continue;
-
-			// nick change and quit
-			if (user_nick($fp, $rdata))
-				continue;
-			if (user_quit($fp, $rdata))
-				continue;
-
-			if (channel_action_slap($fp, $rdata))
-				continue;
-
-			// channel msg (!xyz) without registration
-			if (channel_msg_help($fp, $rdata))
-				continue;
-			if (channel_msg_seedlist($fp, $rdata))
-				continue;
-			if (channel_msg_op($fp, $rdata))
-				continue;
-			if (channel_msg_timer($fp, $rdata))
-				continue;
-			if (channel_msg_8ball($fp, $rdata, $answers))
-				continue;
-			if (channel_msg_seen($fp, $rdata))
-				continue;
-			if (channel_msg_sd($fp, $rdata))
-				continue;
-			if (channel_msg_sms($fp, $rdata))
-				continue;
-
-			// channel msg (!xyz) with registration
-			if (channel_msg_with_registration($fp, $rdata))
-				continue;
-
-			// MrSpock can use this to send commands as caretaker
-			if (query_command($fp, $rdata))
-				continue;
-
-			// timeout detection!
-			if ($last_ping < time() - 300) {
-				echo_r('TIMEOUT detected!');
-				break;
-			}
-
-
-			// debug
-			if ($debugging && strlen($rdata) > 0) {
-				echo_r('[UNKNOWN] ' . $rdata);
-				continue;
-			}
-
+		stream_set_blocking($fp, true);
+		while (!feof($fp)) {
+			readFromStream($fp);
 		}
-
 		fclose($fp); // close socket
 
 	} else {
@@ -282,5 +155,128 @@ while ($running) {
 	}
 
 } // end of while running
+
+function safefputs($fp, $text) {
+	stream_set_blocking($fp, false);
+	while(readFromStream($fp)!==false);
+	fputs($fp, $text);
+	stream_set_blocking($fp, true);
+}
+
+function readFromStream($fp) {
+	static $last_ping = 0;
+	if($last_ping == 0) {
+		$last_ping = time();
+	}
+	
+	$rdata = fgets($fp, 4096);
+	$rdata = preg_replace('/\s+/', ' ', $rdata);
+
+	// log for reports (if enabled via command line (-log)
+	if (IRC_LOGGING && strlen($rdata) > 0)
+		write_log_message($rdata);
+
+	// remember the last time we got something from the server
+	if (strlen($rdata) > 0)
+		$last_ping = time();
+
+	// timeout detection!
+	if ($last_ping < time() - 300) {
+		echo_r('TIMEOUT detected!');
+		fclose($fp); // close socket
+		exit;
+	}
+
+	// we simply do some poll stuff here
+	check_planet_builds($fp);
+	check_events($fp);
+	check_sms_dlr($fp);
+	check_sms_response($fp);
+	
+	if (strlen($rdata) == 0) {
+		return false;
+	}
+
+	// required!!! otherwise timeout!
+	if (server_ping($fp, $rdata))
+		return;
+
+	// server msg
+	if (server_msg_307($fp, $rdata))
+		return;
+	if (server_msg_318($fp, $rdata))
+		return;
+	if (server_msg_352($fp, $rdata))
+		return;
+	if (server_msg_401($fp, $rdata))
+		return;
+
+	//Are they using a linked nick instead
+	if(notice_nickserv_registered_user($fp, $rdata))
+		return;
+	if(notice_nickserv_unknown_user($fp, $rdata))
+		return;
+
+	// some nice things
+	if (ctcp_version($fp, $rdata))
+		return;
+	if (ctcp_finger($fp, $rdata))
+		return;
+	if (ctcp_time($fp, $rdata))
+		return;
+	if (ctcp_ping($fp, $rdata))
+		return;
+
+	if (invite($fp, $rdata))
+		return;
+
+	// join and part
+	if (channel_join($fp, $rdata))
+		return;
+	if (channel_part($fp, $rdata))
+		return;
+
+	// nick change and quit
+	if (user_nick($fp, $rdata))
+		return;
+	if (user_quit($fp, $rdata))
+		return;
+
+	if (channel_action_slap($fp, $rdata))
+		return;
+
+	// channel msg (!xyz) without registration
+	if (channel_msg_help($fp, $rdata))
+		return;
+	if (channel_msg_seedlist($fp, $rdata))
+		return;
+	if (channel_msg_op($fp, $rdata))
+		return;
+	if (channel_msg_timer($fp, $rdata))
+		return;
+	if (channel_msg_8ball($fp, $rdata))
+		return;
+	if (channel_msg_seen($fp, $rdata))
+		return;
+	if (channel_msg_sd($fp, $rdata))
+		return;
+	if (channel_msg_sms($fp, $rdata))
+		return;
+
+	// channel msg (!xyz) with registration
+	if (channel_msg_with_registration($fp, $rdata))
+		return;
+
+	// MrSpock can use this to send commands as caretaker
+	if (query_command($fp, $rdata))
+		return;
+
+
+	// debug
+	if (IRC_DEBUGGING) {
+		echo_r('[UNKNOWN] ' . $rdata);
+		return;
+	}
+}
 
 ?>
