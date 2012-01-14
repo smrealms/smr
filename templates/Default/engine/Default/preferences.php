@@ -409,6 +409,12 @@ if(isset($GameID))
 			</td>
 		</tr>
 		<tr>
+			<td>Enter Port:</td>
+			<td>
+				<input type="text" size="50" name="EnterPort" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('EnterPort'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Save Hotkeys" id="InputFields" /></td>
 		</tr>

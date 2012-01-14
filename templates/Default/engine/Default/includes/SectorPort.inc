@@ -38,7 +38,7 @@
 					else
 					{ ?>
 						<div class="buttonA">
-							<a class="buttonA" href="<?php echo $Port->getTradeHREF() ?>">&nbsp;Trade&nbsp;</a>
+							<a class="buttonA" href="<?php echo Globals::getTradeHREF() ?>">&nbsp;Trade&nbsp;</a>
 						</div><?php
 					} ?>&nbsp;
 					<div class="buttonA">

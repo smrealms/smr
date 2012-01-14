@@ -127,7 +127,7 @@
 								<div class="left lmport"><?php
 									if($isCurrentSector && !$GalaxyMap)
 									{
-										?><a href="<?php echo $Port->getTradeHREF(); ?>"><?php
+										?><a href="<?php echo Globals::getTradeHREF(); ?>"><?php
 									} ?>
 										<img src="images/port/buy.gif" alt="Buy (<?php echo $Port->getRaceName(); ?>)" title="Buy (<?php echo $Port->getRaceName(); ?>)" /><?php
 											foreach($Port->getVisibleGoodsSold($ThisPlayer) as $Good)

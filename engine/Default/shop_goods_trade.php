@@ -61,10 +61,10 @@ $PHP_OUTPUT.=('<input type="text" name="bargain_price" value="'.$bargain_price.'
 $PHP_OUTPUT.=create_submit('Bargain (1)');
 $PHP_OUTPUT.=('</form>');
 
-$PHP_OUTPUT.=('<script type="text/javascript">'.EOL);
-$PHP_OUTPUT.=('window.document.FORM.bargain_price.select();'.EOL);
-$PHP_OUTPUT.=('window.document.FORM.bargain_price.focus();'.EOL);
-$PHP_OUTPUT.=('</script>'.EOL);
+$PHP_OUTPUT.= '<script type="text/javascript">
+					window.document.FORM.bargain_price.select();
+					window.document.FORM.bargain_price.focus();
+				</script>';
 
 $PHP_OUTPUT.=('<p>Distance Index: '. $port->getGoodDistance($good_id) .'</p>');
 
