@@ -66,4 +66,4 @@ B. Disciplinary actions.
 <br />
 <br />
 <br />
-<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=<?php urlencode($AutoChannels); ?>&autoConnect=true&nick=<?php urlencode('SMR-'.str_replace(' ','_',$ThisPlayer->getPlayerName())); ?>" target="_chat" class="submitStyle">Chat</a></center>
+<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=<?php echo urlencode($AutoChannels); ?>&autoConnect=true&nick=<?php echo urlencode('SMR-'.str_replace(' ','_',$ThisPlayer->getPlayerName())); ?>" target="_chat" class="submitStyle">Chat</a></center>
