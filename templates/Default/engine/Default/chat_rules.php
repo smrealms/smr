@@ -61,10 +61,9 @@ B. Disciplinary actions.
 	
 	<li>In especially severe cases, including, but not limited to ban hopping in game action will be taken.</li>
 	
-	<li>If you disagree with the action taken against you feel free to complain to the chat admin aka Blum in chat or through email chat@smrealms.de</li>
+	<li>If you disagree with the action taken against you feel free to complain to the chat admin aka RCK in chat or through email chat@smrealms.de</li>
 </ol>
 <br />
 <br />
 <br />
-<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=<?php urlencode($AutoChannels); ?>'&autoConnect=true&nick=<?php urlencode('SMR-'.str_replace(' ','_',$ThisPlayer->getPlayerName())); ?>" target="_chat" class="submitStyle">Chat</a></center>
-?>
+<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=<?php urlencode($AutoChannels); ?>&autoConnect=true&nick=<?php urlencode('SMR-'.str_replace(' ','_',$ThisPlayer->getPlayerName())); ?>" target="_chat" class="submitStyle">Chat</a></center>
