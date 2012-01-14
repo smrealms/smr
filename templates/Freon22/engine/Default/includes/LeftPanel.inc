@@ -36,7 +36,7 @@ if(isset($GameID))
 		<a class="leftNav" href="<?php echo $GalacticPostLink; ?>">Galactic Post</a><br />
 		<br />
 		<a class="leftNav" href="<?php echo $SearchForTraderLink; ?>">Search For Trader</a><br />
-		<a class="leftNav" href="<?php echo $CurrentPlayersLink; ?>">Current Players</a><br />
+		<a class="leftNav" href="<?php echo Globals::getCurrentPlayersHREF(); ?>">Current Players</a><br />
 		<br />
 		<a class="leftNav" href="<?php echo $RankingsLink; ?>">Rankings</a><br />
 		<a class="leftNav" href="<?php echo $HallOfFameLink; ?>">Hall of Fame</a><br />

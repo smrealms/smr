@@ -454,6 +454,11 @@ class Globals
 		return self::$AVAILABLE_LINKS['LocalMap'] = SmrSession::get_new_href(create_container('skeleton.php','map_local.php'));
 	}
 	
+	public static function getCurrentPlayersHREF()
+	{
+		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::get_new_href(create_container('skeleton.php','current_players.php'));
+	}
+	
 	public static function getPodScreenHREF()
 	{
 		return SmrSession::get_new_href(create_container('death_processing.php'));

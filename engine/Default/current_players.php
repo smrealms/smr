@@ -54,13 +54,13 @@ $PHP_OUTPUT.=('The traders listed in <span class="italic">italics</span> are sti
 if ($count_last_active > 0) {
 	$PHP_OUTPUT.=('<table class="standard" width="95%">');
 	$PHP_OUTPUT.=('<tr>');
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'current_players.php';
-	if ($seq == 'DESC')
+	$container = create_container('skeleton.php', 'current_players.php');
+	if ($seq == 'DESC') {
 		$container['seq'] = 'ASC';
-	else
+	}
+	else {
 		$container['seq'] = 'DESC';
+	}
 	$container['sort'] = 'player_name';
 	$PHP_OUTPUT.=('<th>');
 	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Player</span>');
