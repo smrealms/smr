@@ -745,9 +745,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$container['body'] = 'trader_search.php';
 		$template->assign('SearchForTraderLink',SmrSession::get_new_href($container));
 	
-		$container['body'] = 'current_players.php';
-		$template->assign('CurrentPlayersLink',SmrSession::get_new_href($container));
-	
 		$container['body'] = 'rankings_player_experience.php';
 		$template->assign('RankingsLink',SmrSession::get_new_href($container));
 	

@@ -2,10 +2,17 @@
 
 $container = array();
 $container['url'] = 'skeleton.php';
-if (SmrSession::$game_id > 0)
-	if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php'; else $container['body'] = 'current_sector.php';
-else
+if (SmrSession::$game_id > 0) {
+	if ($player->isLandedOnPlanet()) {
+		$container['body'] = 'planet_main.php';
+	}
+	else {
+		$container['body'] = 'current_sector.php';
+	}
+}
+else {
 	$container['body'] = 'game_play.php';
+}
 $action = $_REQUEST['action'];
 $email = $_REQUEST['email'];
 $new_password = $_REQUEST['new_password'];
@@ -16,8 +23,9 @@ $ircNick = trim($_REQUEST['irc_nick']);
 $cellPhone = trim($_REQUEST['cell_phone']);
 
 if (USE_COMPATIBILITY && $action == 'Link Account') {
-	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword']))
+	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword'])) {
 		create_error('There is no old account with that username/password.');
+	}
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have linked your old account.';
 }
 else if ($action == 'Save and resend validation code') {

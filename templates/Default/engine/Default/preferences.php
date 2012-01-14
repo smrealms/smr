@@ -403,6 +403,12 @@ if(isset($GameID))
 			</td>
 		</tr>
 		<tr>
+			<td>Show Current Players:</td>
+			<td>
+				<input type="text" size="50" name="CurrentPlayers" value="<?php echo htmlentities(implode(' ', $ThisAccount->getHotkeys('CurrentPlayers'))); ?>"><br />
+			</td>
+		</tr>
+		<tr>
 			<td>&nbsp;</td>
 			<td><input type="submit" name="action" value="Save Hotkeys" id="InputFields" /></td>
 		</tr>
