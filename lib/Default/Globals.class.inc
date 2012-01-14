@@ -459,6 +459,11 @@ class Globals
 		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::get_new_href(create_container('skeleton.php','current_players.php'));
 	}
 	
+	public function getTradeHREF()
+	{
+		return self::$AVAILABLE_LINKS['EnterPort'] = SmrSession::get_new_href(create_container('skeleton.php', 'shop_goods.php'));
+	}
+	
 	public static function getPodScreenHREF()
 	{
 		return SmrSession::get_new_href(create_container('death_processing.php'));

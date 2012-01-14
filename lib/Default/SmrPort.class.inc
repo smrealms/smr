@@ -1049,27 +1049,14 @@ class SmrPort
 		return $expPercent;
 	}
 	
-	public function getTradeHREF()
-	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'shop_goods.php';
-		return SmrSession::get_new_href($container);
-	}
-	
 	public function getRaidWarningHREF()
 	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'port_attack_warning.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'port_attack_warning.php'));
 	}
 	
 	public function getAttackHREF()
 	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'port_attack_processing.php';
+		$container = create_container('skeleton.php', 'port_attack_processing.php');
 		$container['port_id'] = $this->getSectorID();
 		return SmrSession::get_new_href($container);
 	}
