@@ -131,6 +131,7 @@ function &bbifyMessage($message,$noLinks=false) {
 		$bbParser->AddRule('alliance',$smrRule);
 		$bbParser->AddRule('race',$smrRule);
 		$bbParser->AddRule('servertimetouser',$smrRule);
+		$bbParser->AddRule('chess',$smrRule);
 	}
 	global $disableBBLinks;
 	if($noLinks===true)
