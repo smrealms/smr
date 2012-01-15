@@ -101,7 +101,7 @@ class ChessPiece {
 					}
 				}
 				//Castling is not attacking - so don't check it if doing an attacking check.
-				if(!$attackingCheck && !$hasMoved[$this->colour][ChessPiece::KING]) {
+				if(!$attackingCheck && !$hasMoved[$this->colour][ChessPiece::KING] && !ChessGame::isPlayerChecked($board, $hasMoved, $this->colour)) {
 					if(!$hasMoved[$this->colour][ChessPiece::ROOK]['Queen'] && 
 							ChessGame::isValidCoord($this->x-1, $this->y, $board) && $board[$this->y][$this->x-1] == null &&
 							ChessGame::isValidCoord($this->x-3, $this->y, $board) && $board[$this->y][$this->x-3] == null &&
