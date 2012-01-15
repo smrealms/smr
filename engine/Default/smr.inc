@@ -86,6 +86,14 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return date(DATE_FULL_SHORT, $time);
 				}
 			break;
+			case 'chess':
+				$chessGameID = $default;
+				$chessGame = new ChessGame($chessGameID);
+				if ($action == BBCODE_CHECK) {
+					return true;
+				}
+				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
+			break;
 		}
 	}
 	catch (Exception $e) {
