@@ -89,7 +89,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			case 'chess':
 				$chessGameID = $default;
 				require_once(get_file_loc('ChessGame.class.inc'));
-				$chessGame = new ChessGame($chessGameID);
+				$chessGame =& ChessGame::getChessGame($chessGameID);
 				if ($action == BBCODE_CHECK) {
 					return true;
 				}

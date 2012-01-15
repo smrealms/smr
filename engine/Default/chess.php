@@ -1,7 +1,6 @@
 <?php
 require_once(get_file_loc('ChessGame.class.inc'));
-//$chessGame = new ChessGame(0);
-//$template->assignByRef('Board',$chessGame->getBoard());
+
 $chessGames =& ChessGame::getOngoingAccountGames($player->getAccountID());
 $template->assign('ChessGames', $chessGames);
 

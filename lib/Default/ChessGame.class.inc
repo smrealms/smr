@@ -9,6 +9,7 @@ class ChessGame {
 	const GAMETYPE_STANDARD = 'Standard';
 	const PLAYER_BLACK = 'Black';
 	const PLAYER_WHITE = 'White';
+	protected static $CACHE_CHESS_GAMES = array();
 
 	private $db;
 	
@@ -22,6 +23,33 @@ class ChessGame {
 	private $board;
 	private $moves;
 	private $messages;
+
+	public static function &getOngoingAccountGames($accountID) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
+		$games = array();
+		while($db->nextRecord()) {
+			$games[] =& self::getChessGame($db->getInt('chess_game_id'));
+		}
+		return $games;
+	}
+
+	public static function &getAccountGames($accountID) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
+		$games = array();
+		while($db->nextRecord()) {
+			$games[] =& self::getChessGame($db->getInt('chess_game_id'));
+		}
+		return $games;
+	}
+
+	public static function &getChessGame($chessGameID,$forceUpdate = false) {
+		if($forceUpdate || !isset(self::$CACHE_CHESS_GAMES[$chessGameID])) {
+			self::$CACHE_CHESS_GAMES[$chessGameID] = new ChessGame($chessGameID);
+		}
+		return self::$CACHE_CHESS_GAMES[$chessGameID];
+	}
 	
 	public function __construct($chessGameID) {
 		$this->db = new SmrMySqlDatabase();
@@ -245,26 +273,6 @@ class ChessGame {
 			'values' .
 			'(' . $db->escapeNumber($chessGameID) . ',' . $db->escapeNumber($p->accountID) . ',' . $db->escapeNumber($p->pieceID) . ',' . $db->escapeNumber($p->getX()) . ',' . $db->escapeNumber($p->getY()) . ');');
 		}
-	}
-
-	public static function &getOngoingAccountGames($accountID) {
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
-		$games = array();
-		while($db->nextRecord()) {
-			$games[] = new ChessGame($db->getInt('chess_game_id'));
-		}
-		return $games;
-	}
-
-	public static function &getAccountGames($accountID) {
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT chess_game_id FROM chess_game WHERE black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ';');
-		$games = array();
-		while($db->nextRecord()) {
-			$games[] = new ChessGame($db->getInt('chess_game_id'));
-		}
-		return $games;
 	}
 	
 	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour, $castling, $enPassant) {
