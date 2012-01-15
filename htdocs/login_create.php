@@ -110,7 +110,7 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 						<td width='73%'><input type='text' name='first_name' size='20' maxlength='50' id='InputFields'></td>
 					</tr>
 					<tr>
-						<td width='27%'>Last Lame:</td>
+						<td width='27%'>Last Name:</td>
 						<td width='73%'><input type='text' name='last_name' size='20' maxlength='50' id='InputFields'></td>
 					</tr>
 					<tr>
