@@ -25,9 +25,9 @@ class ChessGame {
 	
 	public function __construct($chessGameID) {
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT *' .
-				' FROM chess_game' .
-				' WHERE chess_game_id=' . $chessGameID . ' LIMIT 1;');
+		$this->db->query('SELECT *
+						FROM chess_game
+						WHERE chess_game_id=' . $this->db->escapeNumber($chessGameID) . ' LIMIT 1;');
 		if($this->db->nextRecord()) {
 			$this->chessGameID = $chessGameID;
 			$this->startDate = $this->db->getInt('start_time');
