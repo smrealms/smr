@@ -14,10 +14,10 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 				switch($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID())) {
 					case 0:
 						//Success
-						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnAccountID(), 'It is now your turn in the chess game against [player=' . $player->getPlayerID() . '].');
+						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $chessGame->getChessGameID() . '] against [player=' . $player->getPlayerID() . '].');
 					break;
 					case 1:
-						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnAccountID(), 'You have just lost the chess game against [player=' . $player->getPlayerID() . '].');
+						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnAccountID(), 'You have just lost [chess=' . $chessGame->getChessGameID() . '] against [player=' . $player->getPlayerID() . '].');
 						$template->assign('MoveMessage', 'You have just checkmated your opponent, congratulations!');
 					break;
 					case 2:
