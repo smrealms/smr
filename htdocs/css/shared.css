@@ -503,7 +503,7 @@ td.chessOutline {
 	padding: 0px 3px;
 }
 
-div.chat, table#moveTable {
+div.chat, table#moveTable td {
 	color: black;
 	background-color: white;
 }
