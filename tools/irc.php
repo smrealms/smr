@@ -14,7 +14,7 @@ function echo_r($message)
 // not keeping the filehandle might not be the wisest idea.
 function write_log_message($msg)
 {
-	$logFile = fopen('/home/r/irc.log','a+');//"/var/log/irc/" . date("Ymd") . ".log", "a+");
+	$logFile = fopen("/var/log/irc/" . date("Ymd") . ".log", "a+");
 	fwrite($logFile, round(microtime(true) * 1000) . ' ' . $msg . EOL);
 	fclose($logFile);
 }
