@@ -27,7 +27,7 @@
 							<td class="chessOutline"><?php echo 8-$Y; ?></td><?php
 							foreach($Row as $X => $Cell)
 							{ ?>
-								<td id="x<?php echo $X; ?>y<?php echo $Y; ?>" class="ajax<?php if(($X+$Y) % 2 == 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves(<?php echo $X; ?>,<?php echo $Y; ?>)"><?php
+								<td id="c<?php echo $X . $Y; ?>" data-x="<?php echo $X; ?>" data-y="<?php echo $Y; ?>" class="ajax<?php if(($X+$Y) % 2 == 0) { ?> whiteSquare<?php } else { ?> blackSquare<?php } ?>" onClick="highlightMoves.call(this)"><?php
 									if($Cell==null){ ?>&nbsp;<?php } else { ?><span class="pointer"><?php echo $Cell->getPieceSymbol(); ?></span><?php } ?>
 								</td><?php
 							} ?>
@@ -52,17 +52,17 @@
 	</tr>
 </table>
 <script type="text/javascript" ><?php
-	$AvailableMoves = array();
+	$AvailableMoves = array_pad(array(), count($Board), array());
 	foreach($Board as $Y => $Row) {
 		foreach($Row as $X => $Cell) {
+			$AvailableMoves[$Y][$X] = array();
 			if($Cell!=null) { 
-				$XY = 'x' . $X . 'y' . $Y;
-				$AvailableMoves[$XY] = array();
 				if($ChessGame->isCurrentTurn($ThisAccount->getAccountID())) {
 					$Moves = $Cell->getPossibleMoves($Board, $ChessGame->getHasMoved(), $ThisAccount->getAccountID());
 					foreach($Moves as $Move) {
-						$AvailableMoves[$XY][] = array('x' => $Move[0], 'y' => $Move[1]);
+						$AvailableMoves[$Y][$X][] = '#c' . $Move[0] . $Move[1];
 					}
+					$AvailableMoves[$Y][$X] = implode(',',$AvailableMoves[$Y][$X]);
 				}
 			}
 		}
