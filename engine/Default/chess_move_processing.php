@@ -11,7 +11,7 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 		if($chessGame->isCurrentTurn($account->getAccountID())) {
 			$board = $chessGame->getBoard();
 			if($board[$y][$x] != null) {
-				switch($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID())) {
+				switch($chessGame->tryMove($x, $y, $toX, $toY, $account->getAccountID(), ChessPiece::QUEEN)) {
 					case 0:
 						//Success
 						SmrPlayer::sendMessageFromCasino($player->getGameID(), $chessGame->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $chessGame->getChessGameID() . '] against [player=' . $player->getPlayerID() . '].');

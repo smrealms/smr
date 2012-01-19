@@ -207,6 +207,25 @@ class ChessPiece {
 		return false;
 	}
 	
+	public function promote($pawnPromotionPieceID, array &$board) {
+		if($pawnPromotionPieceID==null) {
+			throw new Exception('Promotion piece cannot be null on a promote.');
+		}
+		$takenNos = array();
+		foreach($board as $row) {
+			foreach($row as $piece) {
+				if($piece != null && $piece->pieceID == $pawnPromotionPieceID && $piece->colour == $this->colour) {
+					$takenNos[$piece->pieceNo] = true;
+				}
+			}
+		}
+		$i=0;
+		while(isset($takenNos[$i])) {
+			$i++;
+		}
+		return array('PieceID' => $pawnPromotionPieceID, 'PieceNo' => $i);
+	}
+	
 	public function getPieceSymbol() {
 		return self::getSymbolForPiece($this->pieceID,$this->colour);
 	}
