@@ -503,11 +503,6 @@ class ChessGame {
 				if($moveInfo['PawnPromotion'] !== false) {
 					$p->pieceID = $moveInfo['PawnPromotion']['PieceID'];
 					$p->pieceNo = $moveInfo['PawnPromotion']['PieceNo'];
-					$piecePromotedSymbol = $p->getPieceSymbol();
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted','Total'), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted','Total'), HOF_PUBLIC);
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
 				}
 				
 				$checking = null;
@@ -525,6 +520,13 @@ class ChessGame {
 				}
 				
 				$otherPlayer =& $this->getCurrentTurnPlayer();
+				if($moveInfo['PawnPromotion'] !== false) {
+					$piecePromotedSymbol = $p->getPieceSymbol();
+					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted','Total'), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted','Total'), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
+				}
 				$this->db->query('INSERT INTO chess_game_moves
 								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling,en_passant,promote_piece_id)
 								VALUES
