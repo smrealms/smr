@@ -503,6 +503,11 @@ class ChessGame {
 				if($moveInfo['PawnPromotion'] !== false) {
 					$p->pieceID = $moveInfo['PawnPromotion']['PieceID'];
 					$p->pieceNo = $moveInfo['PawnPromotion']['PieceNo'];
+					$piecePromotedSymbol = $p->getPieceSymbol();
+					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted','Total'), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted','Total'), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
 				}
 				
 				$checking = null;
