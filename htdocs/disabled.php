@@ -17,7 +17,7 @@ try
 		if ($disabled !== false)
 		{
 			$reason = $disabled['Reason'];
-			if ($disabled['Time'] > 0) $reason .= '  Your account is set to reopen ' . date(DEFAULT_DATE_FULL_LONG, $disabled['Time']) . '.';
+			if ($disabled['Time'] > 0) $reason .= '  Your account is set to reopen on ' . date(DEFAULT_DATE_FULL_LONG, $disabled['Time']) . '.';
 			else $reason .= '  Your account is set to never reopen.  If you believe this is wrong contact an admin.';
 		}
 	
