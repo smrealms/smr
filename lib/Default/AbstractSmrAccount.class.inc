@@ -239,11 +239,9 @@ abstract class AbstractSmrAccount
 	{
 		$this->db->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) ' .
 			'WHERE account_id = '.$this->account_id.' LIMIT 1');
-		if ($this->db->nextRecord())
-		{
+		if ($this->db->nextRecord()) {
 			// get the expire time
 			$expireTime = $this->db->getInt('expires');
-			$reason		 = $this->db->getField('reason');
 			
 			// are we over this time?
 			if ($expireTime > 0 && $expireTime < TIME)
@@ -252,10 +250,14 @@ abstract class AbstractSmrAccount
 				$this->unbanAccount();
 				return false;
 			}
-			return array('Time' => $expireTime, 'Reason' => $reason);
+			return array('Time' => $expireTime,
+				'Reason' => $this->db->getField('reason'),
+				'ReasonID' => $this->db->getInt('reason_id')
+			);
 		}
-		else
+		else {
 			return false;
+		}
 	}
 	
 	public function isSmsBlacklisted()
