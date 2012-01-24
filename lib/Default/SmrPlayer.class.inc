@@ -1990,8 +1990,8 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function setMessagesRead($messageTypeID)
 	{
-		$this->db->query('DELETE FROM player_has_unread_messages WHERE '.$this->SQL.' AND ' .
-					'message_type_id = '.$messageTypeID);
+		$this->db->query('DELETE FROM player_has_unread_messages
+							WHERE '.$this->SQL.' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
 	}
 	
 	public function &getPlottedCourse()

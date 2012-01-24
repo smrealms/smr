@@ -9,14 +9,22 @@ if (!isset ($var['folder_id'])) {
 
 	require_once(get_file_loc('council.inc'));
 
-	$db2->query('SELECT 1 FROM message WHERE account_id = ' . $db2->escapeNumber($player->getAccountID()) . ' AND message_type_id = ' . $db2->escapeNumber(MSG_POLITICAL) . ' AND game_id = ' . $db2->escapeNumber($player->getGameID()) . ' AND reciever_delete = \'FALSE\' AND reciever_delete = \'FALSE\' LIMIT 1');
-	if ($db2->getNumRows() || $player->isOnCouncil())
-		$db->query('SELECT * FROM message_type ' .
-					'ORDER BY message_type_id');
-	else
-		$db->query('SELECT * FROM message_type ' .
-					'WHERE message_type_id != 5 ' .
-					'ORDER BY message_type_id');
+	$db->query('SELECT 1 FROM message
+				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+					AND message_type_id = ' . $db->escapeNumber(MSG_POLITICAL) . '
+					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND reciever_delete = \'FALSE\'
+					AND reciever_delete = \'FALSE\'
+				LIMIT 1');
+	if ($db->getNumRows() || $player->isOnCouncil()) {
+		$db->query('SELECT * FROM message_type
+					ORDER BY message_type_id');
+	}
+	else {
+		$db->query('SELECT * FROM message_type
+					WHERE message_type_id != 5
+					ORDER BY message_type_id');
+	}
 	$messageBoxes = array ();
 	while ($db->nextRecord()) {
 		$message_type_id = $db->getField('message_type_id');
@@ -59,8 +67,9 @@ if (!isset ($var['folder_id'])) {
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . MSG_PLAYER . '
 					AND sender_delete = \'FALSE\'');
-	if ($db->nextRecord())
+	if ($db->nextRecord()) {
 		$messageBox['MessageCount'] = $db->getField('count');
+	}
 	$messageBox['Name'] = 'Sent Messages';
 	$messageBox['HasUnread'] = false;
 	$container = create_container('skeleton.php', 'message_view.php');
@@ -80,53 +89,62 @@ if (!isset ($var['folder_id'])) {
 }
 else {
 	$whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
-	if ($var['folder_id'] == MSG_SENT)
-		$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . 
-						' AND message_type_id = ' . MSG_PLAYER .
-						' AND sender_delete = ' . $db->escapeBoolean(false);
-	else
-		$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . 
-						' AND message_type_id = ' . $var['folder_id'] .
-						' AND reciever_delete = ' . $db->escapeBoolean(false);
-
-	if ($var['folder_id'] == MSG_SENT)
-		$messageBox['UnreadMessages'] = 0;
+	if ($var['folder_id'] == MSG_SENT) {
+		$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
+						AND message_type_id = ' . MSG_PLAYER . '
+						AND sender_delete = ' . $db->escapeBoolean(false);
+	}
 	else {
-		$db->query('SELECT count(*) as count FROM message ' .
-					$whereClause . ' AND msg_read = ' . $db->escapeBoolean(false));
+		$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+						AND message_type_id = ' . $var['folder_id'] . '
+						AND reciever_delete = ' . $db->escapeBoolean(false);
+	}
+
+	if ($var['folder_id'] == MSG_SENT) {
+		$messageBox['UnreadMessages'] = 0;
+	}
+	else {
+		$db->query('SELECT count(*) as count
+					FROM message ' . $whereClause . '
+						AND msg_read = ' . $db->escapeBoolean(false));
 		$db->nextRecord();
 		$messageBox['UnreadMessages'] = $db->getField('count');
 	}
-	$db->query('SELECT count(*) as count FROM message ' .
-	$whereClause);
+	$db->query('SELECT count(*) as count FROM message ' . $whereClause);
 	$db->nextRecord();
 	$messageBox['TotalMessages'] = $db->getField('count');
 	$messageBox['Type'] = $var['folder_id'];
 
 	$page = 0;
-	if (isset ($var['page']))
+	if (isset ($var['page'])) {
 		$page = $var['page'];
+	}
 
 	$container = $var;
 	$container['page'] = $page -1;
-	if ($page > 0)
+	if ($page > 0) {
 		$template->assign('PreviousPageHREF', SmrSession::get_new_href($container));
+	}
 	$container['page'] = $page +1;
-	if (($page +1) * MESSAGES_PER_PAGE < $messageBox['TotalMessages'])
+	if (($page +1) * MESSAGES_PER_PAGE < $messageBox['TotalMessages']) {
 		$template->assign('NextPageHREF', SmrSession::get_new_href($container));
+	}
 
 	// remove entry for this folder from unread msg table
 	if ($page == 0 && !USING_AJAX) {
 		$player->setMessagesRead($messageBox['Type']);
 	}
 
-	if ($var['folder_id'] == MSG_SENT)
+	if ($var['folder_id'] == MSG_SENT) {
 		$messageBox['Name'] = 'Sent Messages';
+	}
 	else {
-		$db->query('SELECT * FROM message_type WHERE message_type_id = ' . $var['folder_id']);
-		if ($db->nextRecord())
+		$db->query('SELECT * FROM message_type
+					WHERE message_type_id = ' . $var['folder_id']);
+		if ($db->nextRecord()) {
 			$messageBox['Name'] = $db->getField('message_type_name');
 		}
+	}
 	$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
 	if ($messageBox['Type'] == MSG_GLOBAL) {
@@ -138,17 +156,16 @@ else {
 	$messageBox['DeleteFormHref'] = SmrSession::get_new_href($container);
 
 	$db->query('SELECT * FROM message ' .
-	$whereClause .
-	' ORDER BY send_time DESC' .
-	' LIMIT ' . ($page * MESSAGES_PER_PAGE) . ', ' . MESSAGES_PER_PAGE);
+				$whereClause . '
+				ORDER BY send_time DESC
+				LIMIT ' . ($page * MESSAGES_PER_PAGE) . ', ' . MESSAGES_PER_PAGE);
 
 	$messageBox['NumberMessages'] = $db->getNumRows();
 	$messageBox['Messages'] = array ();
 
 	if ($var['folder_id'] == MSG_SCOUT && !isset ($var['show_all'])) {
 		// get rid of all old scout messages (>48h)
-		$db2 = new SmrMySqlDatabase();
-		$db2->query('DELETE FROM message WHERE expire_time < ' . $db2->escapeNumber(TIME) . ' AND message_type_id = ' . $db2->escapeNumber(MSG_SCOUT));
+		$db->query('DELETE FROM message WHERE expire_time < ' . $db->escapeNumber(TIME) . ' AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT));
 
 		if ($messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT || $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT) {
 			$dispContainer = create_container('skeleton.php', 'message_view.php');
@@ -156,22 +173,23 @@ else {
 			$dispContainer['show_all'] = true;
 			$messageBox['ShowAllHref'] = SmrSession::get_new_href($dispContainer);
 		}
-		displayScouts($messageBox, $player, false, $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
-		displayScouts($messageBox, $player, true, $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
+		$db2 = new SmrMySqlDatabase();
+		displayScouts($db2, $messageBox, $player, false, $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
+		displayScouts($db2, $messageBox, $player, true, $messageBox['NumberMessages'] - $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
 	}
 	else {
 		while ($db->nextRecord()) {
 			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), $db->getField('message_text'), $db->getField('send_time'), $db->getField('msg_read'), $var['folder_id'], $var['folder_id'] == 0);
 		}
 	}
-	if (!USING_AJAX)
+	if (!USING_AJAX) {
 		$db->query('UPDATE message SET msg_read = \'TRUE\'
 					WHERE message_type_id = ' . $var['folder_id'] . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
+	}
 	$template->assignByRef('MessageBox', $messageBox);
 }
 
-function displayScouts(& $messageBox, & $player, $read, $group) {
-	global $db;
+function displayScouts(&$db, &$messageBox, &$player, $read, $group) {
 	if ($group) {
 		//here we group new messages
 		$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, msg_read
@@ -204,12 +222,13 @@ function displayScouts(& $messageBox, & $player, $read, $group) {
 					AND msg_read = ' . $db->escapeBoolean($read) . '
 					ORDER BY send_time DESC';
 		$db->query($query);
-		while ($db->nextRecord())
+		while ($db->nextRecord()) {
 			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), MSG_SCOUT);
 		}
+	}
 }
 
-function displayGrouped(& $messageBox, $playerName, $player_id, $sender_id, $message_text, $first, $last, $star) {
+function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $message_text, $first, $last, $star) {
 	$array = array (
 		$sender_id,
 		$first,
@@ -227,7 +246,7 @@ function displayGrouped(& $messageBox, $playerName, $player_id, $sender_id, $mes
 	$message['Text'] = $message_text;
 	$messageBox['GroupedMessages'][] = $message;
 }
-function displayMessage(& $messageBox, $message_id, $reciever_id, $sender_id, $message_text, $send_time, $msg_read, $type, $sentMessage = false) {
+function displayMessage(&$messageBox, $message_id, $reciever_id, $sender_id, $message_text, $send_time, $msg_read, $type, $sentMessage = false) {
 	require_once(get_file_loc('message.functions.inc'));
 	global $player, $account;
 
