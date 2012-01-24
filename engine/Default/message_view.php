@@ -116,8 +116,9 @@ else {
 		$template->assign('NextPageHREF', SmrSession::get_new_href($container));
 
 	// remove entry for this folder from unread msg table
-	if ($page == 0)
+	if ($page == 0 && !USING_AJAX) {
 		$player->setMessagesRead($messageBox['Type']);
+	}
 
 	if ($var['folder_id'] == MSG_SENT)
 		$messageBox['Name'] = 'Sent Messages';
@@ -125,7 +126,7 @@ else {
 		$db->query('SELECT * FROM message_type WHERE message_type_id = ' . $var['folder_id']);
 		if ($db->nextRecord())
 			$messageBox['Name'] = $db->getField('message_type_name');
-	}
+		}
 	$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
 	if ($messageBox['Type'] == MSG_GLOBAL) {
@@ -165,7 +166,7 @@ else {
 	}
 	if (!USING_AJAX)
 		$db->query('UPDATE message SET msg_read = \'TRUE\'
-			WHERE message_type_id = ' . $var['folder_id'] . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
+					WHERE message_type_id = ' . $var['folder_id'] . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
 	$template->assignByRef('MessageBox', $messageBox);
 }
 
@@ -174,15 +175,15 @@ function displayScouts(& $messageBox, & $player, $read, $group) {
 	if ($group) {
 		//here we group new messages
 		$query = 'SELECT alignment, player_id, sender_id, player_name AS sender, count( message_id ) AS number, min( send_time ) as first, max( send_time) as last, msg_read
-						FROM message
-						JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
-						WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND player.game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND message_type_id = ' . MSG_SCOUT . '
-						AND reciever_delete = \'FALSE\'
-						AND msg_read = ' . $db->escapeBoolean($read) . '
-						GROUP BY sender_id, msg_read
-						ORDER BY send_time DESC';
+					FROM message
+					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
+					WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+					AND player.game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND message_type_id = ' . MSG_SCOUT . '
+					AND reciever_delete = \'FALSE\'
+					AND msg_read = ' . $db->escapeBoolean($read) . '
+					GROUP BY sender_id, msg_read
+					ORDER BY send_time DESC';
 
 		$db->query($query);
 		while ($db->nextRecord()) {
@@ -195,17 +196,17 @@ function displayScouts(& $messageBox, & $player, $read, $group) {
 	else {
 		//not enough to group, display separately
 		$query = 'SELECT message_id, account_id, sender_id, message_text, send_time, msg_read
-						FROM message
-						WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-						AND message_type_id = ' . MSG_SCOUT . '
-						AND reciever_delete = \'FALSE\'
-						AND msg_read = ' . $db->escapeBoolean($read) . '
-						ORDER BY send_time DESC';
+					FROM message
+					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND message_type_id = ' . MSG_SCOUT . '
+					AND reciever_delete = \'FALSE\'
+					AND msg_read = ' . $db->escapeBoolean($read) . '
+					ORDER BY send_time DESC';
 		$db->query($query);
 		while ($db->nextRecord())
 			displayMessage($messageBox, $db->getField('message_id'), $db->getField('account_id'), $db->getField('sender_id'), stripslashes($db->getField('message_text')), $db->getField('send_time'), $db->getField('msg_read'), MSG_SCOUT);
-	}
+		}
 }
 
 function displayGrouped(& $messageBox, $playerName, $player_id, $sender_id, $message_text, $first, $last, $star) {
