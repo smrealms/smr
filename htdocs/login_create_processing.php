@@ -243,6 +243,7 @@ try
 	{
 		$msg = 'Invalid referral id!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+		exit;
 	}
 	$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
 	if($socialLogin)
