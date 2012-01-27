@@ -9,8 +9,8 @@ function echo_nav($topic_id) {
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$db->escapeNumber($topic_id));
 	if ($db->nextRecord()) {
-		$parent_topic_id = $db->getField('parent_topic_id');
-		$order_id = $db->getField('order_id');
+		$parent_topic_id = $db->getInt('parent_topic_id');
+		$order_id = $db->getInt('order_id');
 		$topic = stripslashes($db->getField('topic'));
 
 		echo ('<table>');
@@ -40,7 +40,7 @@ function echo_nav($topic_id) {
 		$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
 		echo ('<th width="32">');
 		if ($db2->nextRecord()) {
-			$up_topic_id = $db2->getField('topic_id');
+			$up_topic_id = $db2->getInt('topic_id');
 			$up_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$up_topic_id.'"><img src="'.URL.'/images/help/up.jpg" width="32" height="32" border="0"></a>');
 		} else
@@ -67,7 +67,7 @@ function echo_nav($topic_id) {
 
 		echo ('<th width="32">');
 		if ($db2->nextRecord()) {
-			$next_topic_id = $db2->getField('topic_id');
+			$next_topic_id = $db2->getInt('topic_id');
 			$next_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$next_topic_id.'"><img src="'.URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
 		} else
@@ -101,8 +101,8 @@ function echo_content($topic_id) {
 	// get current entry
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$topic_id);
 	if ($db->nextRecord()) {
-		$parent_topic_id = $db->getField('parent_topic_id');
-		$order_id = $db->getField('order_id');
+		$parent_topic_id = $db->getInt('parent_topic_id');
+		$order_id = $db->getInt('order_id');
 		$topic = stripslashes($db->getField('topic'));
 		$text = stripslashes($db->getField('text'));
 
@@ -141,8 +141,8 @@ function echo_menu($topic_id) {
 	if ($db->getNumRows()) {
 		echo ('<ul type="disc">');
 		while($db->nextRecord()) {
-			$sub_topic_id = $db->getField('topic_id');
-			$order_id = $db->getField('order_id');
+			$sub_topic_id = $db->getInt('topic_id');
+			$order_id = $db->getInt('order_id');
 			$sub_topic = stripslashes($db->getField('topic'));
 
 			echo ('<li><a href="'.URL.'/manual.php?'.$sub_topic_id.'">' . get_numbering($sub_topic_id) . $sub_topic.'</a></li>');
@@ -158,8 +158,8 @@ function get_numbering($topic_id) {
 
 	$db->query('SELECT * FROM manual WHERE topic_id = '.$db->escapeNumber($topic_id));
 	if ($db->nextRecord()) {
-		$up_topic_id = $db->getField('parent_topic_id');
-		$order_id = $db->getField('order_id');
+		$up_topic_id = $db->getInt('parent_topic_id');
+		$order_id = $db->getInt('order_id');
 
 		return get_numbering($up_topic_id) . $order_id . '. ';
 	}
