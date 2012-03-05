@@ -10,6 +10,8 @@ class SmrPort
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
+	const BASE_REFRESH_PER_HOUR = 250;
+	const REFRESH_PER_GOOD = 0.25;
 	
 	protected $db;
 	
@@ -172,7 +174,7 @@ class SmrPort
 		{
 			$GOODS = Globals::getGoods();
 			
-			$refresh_per_hour = 250 * Globals::getGameSpeed($this->getGameID());
+			$refresh_per_hour = self::BASE_REFRESH_PER_HOUR * Globals::getGameSpeed($this->getGameID());
 			$refresh_per_sec = $refresh_per_hour / 3600;
 			$seconds_since_refresh = TIME - $this->lastUpdate;
 			if ($seconds_since_refresh < 0) $seconds_since_refresh = 0;
@@ -367,7 +369,7 @@ class SmrPort
 	
 	protected function refreshGoods($classTraded,$amountTraded)
 	{
-		$refreshAmount = round($amountTraded / 4);
+		$refreshAmount = round($amountTraded * self::REFRESH_PER_GOOD);
 		//refresh goods that need it
 		$portGoods =& $this->getGoodsAll();
 		$refreshClass = $classTraded+1;
