@@ -75,7 +75,9 @@ while ($db->nextRecord()) {
 	$races[$curr_race_id]['Selected'] = false;
 }
 if(count($races) > 1) {
-	while($races[$raceKey = array_rand($races)]['ID'] == RACE_ALSKANT);
+	do {
+		$raceKey = array_rand($races);
+	} while($races[$raceKey]['ID'] == RACE_ALSKANT);
 	$races[$raceKey]['Selected'] = true;
 }
 $template->assign('Races',$races);
