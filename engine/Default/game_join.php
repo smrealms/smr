@@ -57,8 +57,6 @@ $db->query('SELECT location_name, location_type_id
 				game_id = ' . $var['game_id'] . '
 			ORDER BY location_type_id');
 $races = array();
-$selectedRace = mt_rand(1,$db->getNumRows());
-$i=1;
 while ($db->nextRecord()) {
 	// get the name for this race
 	// HACK! cut ' Headquarters' from location name!
@@ -73,9 +71,12 @@ while ($db->nextRecord()) {
 	
 	$races[$curr_race_id]['ID'] = $curr_race_id;
 	$races[$curr_race_id]['Name'] = $race_name;
-	$races[$curr_race_id]['NumberOfPlayers'] = $db2->getField('number_of_race')>0?$db2->getField('number_of_race'):0;
-	$races[$curr_race_id]['Selected'] = $i==$selectedRace;
-	$i++;
+	$races[$curr_race_id]['NumberOfPlayers'] = $db2->getInt('number_of_race');
+	$races[$curr_race_id]['Selected'] = false;
+}
+if(count($races) > 1) {
+	while($races[$raceKey = array_rand($races)]['ID'] == RACE_ALSKANT);
+	$races[$raceKey]['Selected'] = true;
 }
 $template->assign('Races',$races);
 
