@@ -118,14 +118,15 @@ class SmrMines extends AbstractSmrCombatWeapon {
 	
 	public function &shootPlayerAsForce(SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false) {
 		$return = array('Weapon' => &$this, 'TargetPlayer' => &$targetPlayer, 'Hit' => true);
-		$this->doForceDamageToPlayer($return, $forces, $targetPlayer,$minesAreAttacker);
-		$forces->takeMines($return['WeaponDamage']['Launched']);
+		$this->doForceDamageToPlayer($return, $forces, $targetPlayer, $minesAreAttacker);
+		$forces->takeMines($return['ActualDamage']['Launched']);
 		return $return;
 	}
 	
 	protected function &doForceDamageToPlayer(array &$return, SmrForce &$forces, AbstractSmrPlayer &$targetPlayer,$minesAreAttacker=false) {
 		$return['WeaponDamage'] =& $this->getModifiedForceDamageAgainstPlayer($forces,$targetPlayer,$minesAreAttacker);
 		$return['ActualDamage'] =& $targetPlayer->getShip()->doMinesDamage($return['WeaponDamage']);
+		$return['ActualDamage']['Launched'] = ceil($return['WeaponDamage']['Launched'] * $return['ActualDamage']['TotalDamage'] / $return['WeaponDamage']['MaxDamage']);
 
 		if($return['ActualDamage']['KillingShot']) {
 			$return['KillResults'] =& $targetPlayer->killPlayerByForces($forces);
