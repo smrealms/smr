@@ -282,6 +282,7 @@ define('MAX_COUNCIL_MEMBERS',10);
 define('NEWBIE_TURNS_WARNING_LIMIT',20);
 
 define('MAX_MONEY',4294967296);
+define('SHIP_RESELL_PERCENT', .75);
 
 define('EOL',"\n");
 

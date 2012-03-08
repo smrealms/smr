@@ -127,13 +127,13 @@ if (isset($CompareShip))
 			<td colspan="2"><hr style="width:200px"></td>
 		</tr>
 		<tr>
-			<td class="right">Ship Refund</td><td class="right"><?php echo number_colour_format(-($ThisShip->getCost() >> 1)); ?></td>
+			<td class="right">Ship Refund</td><td class="right"><?php echo number_colour_format(-$ThisShip->getCost() * SHIP_RESELL_PERCENT); ?></td>
 		</tr>
 		<tr>
 			<td colspan="2"><hr style="width:200px"></td>
 		</tr>
 		<tr>
-			<td class="right">Total Cost</td><td class="right"><?php echo number_colour_format($CompareShip['Cost'] - ($ThisShip->getCost() >> 1)); ?></td>
+			<td class="right">Total Cost</td><td class="right"><?php echo number_colour_format($ThisShip->getCostToUpgrade($CompareShip['ShipTypeID'])); ?></td>
 		</tr>
 		<tr>
 			<td colspan="2"><hr style="width:200px"></td>
