@@ -335,7 +335,7 @@ elseif ($submit == 'Edit Sector')
 	//update port
 	if ($_POST['port_level'] > 0)
 	{
-		if($sector->hasPort() && $sector->getPort()->getLevel()!=$_POST['port_level'])
+		if(!$sector->hasPort() || $sector->getPort()->getLevel()!=$_POST['port_level'])
 		{
 			$sector->removePort();
 			$port =& $sector->createPort();
