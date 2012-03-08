@@ -86,7 +86,7 @@ class SmrPort
 	{
 		if(!isset(self::$CACHE_PORTS[$gameID][$sectorID]))
 		{
-			$p = new SmrPort($gameID,$sectorID,true);
+			$p = new SmrPort($gameID,$sectorID);
 			self::$CACHE_PORTS[$gameID][$sectorID] =& $p;
 		}
 		return self::$CACHE_PORTS[$gameID][$sectorID];
@@ -103,7 +103,7 @@ class SmrPort
 		}
 	}
 	
-	protected function __construct($gameID,$sectorID,$create=false)
+	protected function __construct($gameID,$sectorID)
 	{
 		$this->db = new SmrMySqlDatabase();
 		$this->db->query('SELECT * FROM port WHERE sector_id = '.$sectorID.' AND game_id = '.$gameID.' LIMIT 1');
@@ -130,7 +130,7 @@ class SmrPort
 			$this->getGoods();
 			$this->checkForUpgrade();
 		}
-		else if($create === true)
+		else
 		{
 			$this->isNew = true;
 			$this->gameID = $gameID;
@@ -148,9 +148,6 @@ class SmrPort
 			$this->experience = 0;
 			
 			$this->SQL = 'sector_id = '.$this->sectorID.' AND game_id = '.$this->gameID;
-		}
-		else {
-			throw new Exception('Trying to get a port that doesn\'t exists with $create = ' . var_export($create));
 		}
 	}
 	
