@@ -130,7 +130,7 @@ class SmrPort
 			$this->getGoods();
 			$this->checkForUpgrade();
 		}
-		else
+		else if($create === true)
 		{
 			$this->isNew = true;
 			$this->gameID = $gameID;
@@ -148,6 +148,9 @@ class SmrPort
 			$this->experience = 0;
 			
 			$this->SQL = 'sector_id = '.$this->sectorID.' AND game_id = '.$this->gameID;
+		}
+		else {
+			throw new Exception('Trying to get a port that doesn\'t exists with $create = ' . var_export($create));
 		}
 	}
 	
