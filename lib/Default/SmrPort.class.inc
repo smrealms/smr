@@ -10,8 +10,8 @@ class SmrPort
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
-	const BASE_REFRESH_PER_HOUR = 250;
-	const REFRESH_PER_GOOD = 0.25;
+	const BASE_REFRESH_PER_HOUR = 100;
+	const REFRESH_PER_GOOD = 1;
 	
 	protected $db;
 	
