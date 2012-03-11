@@ -189,7 +189,7 @@
 					<td><?php
 						if(count($ClosingHistory) > 0) {
 							foreach($ClosingHistory as $Action) {
-								echo date(DATE_FULL_SHORT, $Action['Time']); ?> - <?php echo date(DATE_FULL_SHORT, $Action['Action']); ?> by <?php echo date(DATE_FULL_SHORT, $Action['AdminName']); ?><br /><?php
+								echo date(DATE_FULL_SHORT, $Action['Time']); ?> - <?php echo $Action['Action']; ?> by <?php echo $Action['AdminName']; ?><br /><?php
 							}
 						}
 						else { ?>
