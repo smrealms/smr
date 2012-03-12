@@ -45,14 +45,20 @@ if(isset($CreateGameMessage))
 ?>
 </table>
 
-
-<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
-	<label for="player_id">Challenge: </label>
-	<select id="player_id" name="player_id"><?php
-		foreach($PlayerList as $PlayerID => $PlayerName)
-		{
-			?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
-		} ?>
-	</select><br/>
-	<input type="submit"/>
-</form>
+<?php
+if(count($PlayerList) > 0) { ?>
+	<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
+		<label for="player_id">Challenge: </label>
+		<select id="player_id" name="player_id"><?php
+			foreach($PlayerList as $PlayerID => $PlayerName)
+			{
+				?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
+			} ?>
+		</select><br/>
+		<input type="submit"/>
+	</form><?php
+}
+else { ?>
+	<p>You have challenged every player.</p>
+<?php
+} ?>
