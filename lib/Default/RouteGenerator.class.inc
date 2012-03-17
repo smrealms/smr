@@ -88,7 +88,7 @@ class RouteGenerator
 					self::addExpRoute($mpr);
 					self::addMoneyRoute($mpr);
 				}
-				else if ($maxNumPorts > 1)
+				else if ($maxNumPorts > 1 && !$routeToContinue->containsPort($currentStepBuySector))
 				{
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
 					self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $mpr, $routeLists[$currentStepBuySector], $routeLists, $lastGoodIsNothing);
@@ -298,6 +298,12 @@ abstract class Route
 	{
 		return $this->getForwardRoute()->getMultiplierSum() + $this->getReturnRoute()->getMultiplierSum();
 	}
+	
+	public function containsPort($sectorID)
+	{
+		$route = $this->getReturnRoute();
+		return ($route != null && $route->containsPort($sectorID)) || (($route = $this->getForwardRoute()) != null && $route->containsPort($sectorID));
+	}
 
 	public abstract function &getForwardRoute();
 
@@ -423,12 +429,11 @@ class OneWayRoute extends Route
 		$sellRelFactor = 1;
 		if (ROUTE_GEN_USE_RELATIONS_FACTOR===true)
 		{
-			$relations = PlayerPreferences.getRelationsForRace($this->buyPortRace);
-			if ($relations > Settings.MAX_MONEY_RELATIONS)
-				$relations = Settings.MAX_MONEY_RELATIONS;
-			$buyRelFactor = ($relations + 350) / 8415.0;
-
-			$sellRelFactor = 2 - (PlayerPreferences.getRelationsForRace($this->sellPortRace) + 50) / 850.0 * ((relations + 350)/1500);
+			//TODO: This needs to be converted for PHP/SMR.
+//			$relations = max(PlayerPreferences.getRelationsForRace($this->buyPortRace), Settings.MAX_MONEY_RELATIONS);
+//			$buyRelFactor = ($relations + 350) / 8415.0;
+//
+//			$sellRelFactor = 2 - (PlayerPreferences.getRelationsForRace($this->sellPortRace) + 50) / 850.0 * ((relations + 350)/1500);
 		}
 		$goodInfo = Globals::getGood($this->goodId);
 		$buyPrice = round(($goodInfo['BasePrice'] * 0.6 * pow($this->buyDi + .5, 1.8) * $buyRelFactor));
@@ -462,6 +467,11 @@ class OneWayRoute extends Route
 		if ($this->getOverallExpMultiplier() > $compare->getOverallExpMultiplier())
 			return 1;
 		return -1;
+	}
+	
+	public function containsPort($sectorID)
+	{
+		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
 	}
 
 	public function &getForwardRoute()
