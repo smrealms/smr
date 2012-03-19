@@ -13,7 +13,7 @@ if(isset($ForcesCombatResults['Results']) && is_array($ForcesCombatResults['Resu
 		if($ActualDamage['NumCDs'] > 0){ $DamageTypes = $DamageTypes+1; }
 		if($ActualDamage['Armour'] > 0){ $DamageTypes = $DamageTypes+1; } ?>
 		
-		<span class="cds"><?php echo $WeaponDamage['Launched'] ?></span><?php
+		<span class="cds"><?php echo isset($ActualDamage['Launched']) ? $ActualDamage['Launched'] : $WeaponDamage['Launched']; ?></span><?php
 		if($ForceType == 'Mines')
 		{
 			?> mines kamikaze themselves against <?php
