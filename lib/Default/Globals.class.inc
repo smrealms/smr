@@ -71,19 +71,19 @@ class Globals {
 				$PLANET_BUILDINGS[$buildingID]['ExpGain'] = self::$db->getField('exp_gain');
 
 				$PLANET_BUILDINGS[$buildingID]['Build Time'] = 0;
-				$db2->query('SELECT * FROM planet_cost_time WHERE construction_id=' . $db->escapeNumber($buildingID));
+				$db2->query('SELECT * FROM planet_cost_time WHERE construction_id=' . self::$db->escapeNumber($buildingID));
 				while($db2->nextRecord()) {
 					$PLANET_BUILDINGS[$buildingID]['Build Time'] += $db2->getInt('amount');
 				}
 
 				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = 0;
-				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . $db->escapeNumber($buildingID));
+				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . self::$db->escapeNumber($buildingID));
 				while($db2->nextRecord()) {
 					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += $db2->getInt('amount');
 				}
 
 				$PLANET_BUILDINGS[$buildingID]['Goods'] = array();
-				$db2->query('SELECT * FROM planet_cost_good WHERE construction_id=' . $db->escapeNumber($buildingID));
+				$db2->query('SELECT * FROM planet_cost_good WHERE construction_id=' . self::$db->escapeNumber($buildingID));
 				while($db2->nextRecord()) {
 					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getInt('good_id')] = $db2->getInt('amount');
 				}
@@ -222,6 +222,7 @@ class Globals {
 		if($gameID===false) {
 			self::initialiseDatabase();
 			self::$db->query('SELECT game_id FROM game');
+			$allGames = array();
 			while(self::$db->nextRecord()) {
 				$allGames[self::$db->getInt('game_id')] = self::getGameInfo(self::$db->getInt('game_id'));
 			}
@@ -350,7 +351,7 @@ class Globals {
 			foreach ($RACES as $otherRaceID => $raceArray) {
 				self::$RACE_RELATIONS[$gameID][$raceID][$otherRaceID] = 0;
 			}
-			self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1='.$db->escapeNumber($raceID).' AND game_id='.$db->escapeNumber($gameID).' LIMIT '.count($RACES));
+			self::$db->query('SELECT race_id_2,relation FROM race_has_relation WHERE race_id_1='.self::$db->escapeNumber($raceID).' AND game_id='.self::$db->escapeNumber($gameID).' LIMIT '.count($RACES));
 			while (self::$db->nextRecord()) {
 				self::$RACE_RELATIONS[$gameID][$raceID][self::$db->getInt('race_id_2')] = self::$db->getInt('relation');
 			}
