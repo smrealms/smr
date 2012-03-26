@@ -49,6 +49,7 @@ else {
 	if ($alliance->getAccount() < $amount) {
 		create_error('Your alliance isn\'t soo rich!');
 	}
+	$query = '';
 	if ($alliance_id == $player->getAllianceID()) {
 		$db->query('SELECT role_id FROM player_has_alliance_role WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id));
 		if ($db->nextRecord()) {
@@ -94,7 +95,7 @@ else {
 			create_error('Your alliance doesn\'t allow you to take that much cash this often!');
 		}
 	}
-	
+
 	$player->increaseCredits($amount);
 	$allianceCredits = $alliance->getAccount() - $amount;
 	//too much money?
@@ -126,7 +127,7 @@ if ($_REQUEST['requestExempt']) {
 else {
 	$requestExempt = 0;
 }
-$db->query('INSERT INTO alliance_bank_transactions 
+$db->query('INSERT INTO alliance_bank_transactions
 			(alliance_id, game_id, transaction_id, time, payee_id, reason, transaction, amount, request_exempt)
 			VALUES(' . $db->escapeNumber($alliance_id) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($next_id) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($message) . ', '.$db->escapeString($action) . ', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber($requestExempt) . ')');
 

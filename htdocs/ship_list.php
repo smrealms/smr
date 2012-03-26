@@ -27,49 +27,54 @@ try
 	$order = @$_REQUEST['order'];
 	$hardwarea = @$_REQUEST['hardwarea'];
 	echo ('<body>');
-	if (empty($seq))
+	if (empty($seq)) {
 		$seq = 'ASC';
-	elseif ($seq == 'ASC')
+	}
+	elseif ($seq == 'ASC') {
 		$seq = 'DESC';
-	else
+	}
+	else {
 		$seq = 'ASC';
+	}
 
 	$allowedOrders = array('ship_name','race_name','cost','speed','hardpoint','buyer_restriction','lvl_needed');
 
-	if (!empty($order) && in_array($order,$allowedOrders))
+	if (!empty($order) && in_array($order,$allowedOrders)) {
 		$order_by = $order .' '. $seq;
-	else
+	}
+	else {
 		$order_by = 'ship_type.ship_type_id';
+	}
 
 
 	$order_by .= ', ship_name ASC, ship_type_support_hardware.hardware_type_id ASC';
 
 
-	if(!empty($hardwarea) && is_numeric($hardwarea) && $hardwarea >=1 && $hardwarea <= 11)
-	{
-		$db->query('SELECT ship_type_id FROM ship_type_support_hardware ' .
-				'WHERE hardware_type_id = '.$hardwarea.' ' .
-				'ORDER BY max_amount '.$seq);
+	if(!empty($hardwarea) && is_numeric($hardwarea) && $hardwarea >=1 && $hardwarea <= 11) {
+		$db->query('SELECT ship_type_id
+					FROM ship_type_support_hardware
+					WHERE hardware_type_id = '.$db->escapeNumber($hardwarea).'
+					ORDER BY max_amount '.$seq);
 		$db2 = new SmrMySqlDatabase();
-		while ($db->nextRecord())
-		{
-			$db2->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
-				'WHERE race.race_id = ship_type.race_id AND ' .
-				'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id AND ' .
-				'ship_type.ship_type_id=' . $db->getField('ship_type_id') . ' ' .
-				'ORDER BY ship_type_support_hardware.hardware_type_id ASC');
-			if($db2->nextRecord())
+		while ($db->nextRecord()) {
+			$db2->query('SELECT *
+						FROM ship_type
+						JOIN ship_type_support_hardware USING(ship_type_id)
+						JOIN race USING(race_id)
+						WHERE ship_type_id=' . $db->escapeNumber($db->getInt('ship_type_id')) . '
+						ORDER BY hardware_type_id ASC');
+			if($db2->nextRecord()) {
 				$shipArray[] = buildShipStats($db2);
+			}
 		}
 	}
-	else
-	{
-		$db->query('SELECT * FROM ship_type, ship_type_support_hardware, race ' .
-				'WHERE race.race_id = ship_type.race_id AND ' .
-				'ship_type_support_hardware.ship_type_id = ship_type.ship_type_id ' .
-				'ORDER BY '.$order_by);
-		while ($db->nextRecord())
-		{
+	else {
+		$db->query('SELECT *
+					FROM ship_type
+					JOIN ship_type_support_hardware USING(ship_type_id)
+					JOIN race USING(race_id)
+					ORDER BY '.$order_by);
+		while ($db->nextRecord()) {
 			$shipArray[] = buildShipStats($db);
 		}
 	}

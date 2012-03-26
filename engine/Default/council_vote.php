@@ -42,7 +42,7 @@ $template->assign('VoteRelations', $voteRelations);
 
 $voteTreaties = array();
 $db->query('SELECT * FROM race_has_voting
-			WHERE '.TIME.' < end_time
+			WHERE '.$db->escapeNumber(TIME).' < end_time
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 			AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()));
 if ($db->getNumRows() > 0) {
@@ -52,7 +52,7 @@ if ($db->getNumRows() > 0) {
 	while ($db->nextRecord()) {
 		$otherRaceID = $db->getField('race_id_2');
 		$container = create_container('council_vote_processing.php', '', array('race_id' => $otherRaceID));
-		
+
 		// get 'yes' votes
 		$db2->query('SELECT count(*) FROM player_votes_pact
 					WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
@@ -75,12 +75,12 @@ if ($db->getNumRows() > 0) {
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND race_id_1 = ' . $db->escapeNumber($player->getRaceID()) . '
-						AND race_id_2 = '.$otherRaceID);
+						AND race_id_2 = '.$db->escapeNumber($otherRaceID));
 		$votedFor = '';
 		if ($db2->nextRecord()) {
 			$votedFor = $db2->getField('vote');
 		}
-		
+
 		$voteTreaties[$otherRaceID] = array(
 			'HREF' => SmrSession::get_new_href($container),
 			'Type' => $db->getField('type'),

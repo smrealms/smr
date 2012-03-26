@@ -4,7 +4,7 @@
 function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy)
 {
 	$db = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM bounty WHERE game_id = '.SmrSession::$game_id.' AND type ='.$db->escapeString($type).' AND claimer_id = '.$claimableBy.' ORDER BY amount DESC');
+	$db->query('SELECT * FROM bounty WHERE game_id = '.$db->escapeNumber(SmrSession::$game_id).' AND type ='.$db->escapeString($type).' AND claimer_id = '.$db->escapeNumber($claimableBy).' ORDER BY amount DESC');
 	$PHP_OUTPUT.=('<p>&nbsp;</p>');
 	if ($db->getNumRows())
 	{
@@ -15,7 +15,7 @@ function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy)
 		$PHP_OUTPUT.=('<th>Bounty Amount (Credits)</th>');
 		$PHP_OUTPUT.=('<th>Bounty Amount (SMR credits)</th>');
 		$PHP_OUTPUT.=('</tr>');
-	
+
 		while ($db->nextRecord())
 		{
 			$bountyPlayer =& SmrPlayer::getPlayer($db->getField('account_id'),SmrSession::$game_id);
@@ -24,7 +24,7 @@ function displayBountyList(&$PHP_OUTPUT,$type,$claimableBy)
 			$PHP_OUTPUT.=('<td align="center"><span class="creds"> ' . number_format($db->getField('amount')) . ' </span></td>');
 			$PHP_OUTPUT.=('<td align="center"><span class="red"> ' . number_format($db->getField('smr_credits')) . ' </span></td>');
 			$PHP_OUTPUT.=('</tr>');
-	
+
 		}
 		$PHP_OUTPUT.=('</table>');
 	}

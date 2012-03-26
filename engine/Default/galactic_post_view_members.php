@@ -8,7 +8,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'galactic_post_view_members.php';
 if ($action == 'Remove')
-	$db->query('DELETE FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = '.$var['id']);
+	$db->query('DELETE FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = '.$db->escapeNumber($var['id']));
 
 $db->query('SELECT * FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id != ' . $db->escapeNumber($player->getAccountID()));
 if ($db->getNumRows()) {

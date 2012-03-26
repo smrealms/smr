@@ -1,21 +1,21 @@
 <?php
 $close = $_REQUEST['close'];
 if (isset($close)) {
-	
+
 	//get accs to close
 	$reason = $_REQUEST['reason'];
 	//never expire
 	$expire_time = 0;
 	$amount = 0;
 	foreach ($close as $key => $value) {
-		
+
 		$val = 'Match list:';
 		$val .= $value;
 		$bannedAccount =& SmrAccount::getAccount($key);
 		$bannedAccount->banAccount($expire_time,$account,2,$val);
 		$amount++;
 	}
-	
+
 }
 $first = $_REQUEST['first'];
 if (isset($first)) {
@@ -76,7 +76,7 @@ if (isset($disable_id)) {
 		$reason = $suspicion[$id];
 		if (empty($reason) || $reason == '')
 			$reason = $suspicion2[$id];
-	    $db->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
+	    $db->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));
 	    if (!$db->getNumRows())
 	        $amount += 1;
 

@@ -40,14 +40,14 @@ function channel_join($fp, $rdata)
 			}
 
 			$db->query('UPDATE irc_seen SET ' .
-			           'signed_on = ' . time() . ', ' .
+			           'signed_on = ' . $db->escapeNumber(time()) . ', ' .
 			           'signed_off = 0, ' .
 			           'user = ' . $db->escapeString($user) . ', ' .
 			           'host = ' . $db->escapeString($host) . ', ' .
 			           'seen_count = 0, ' .
 			           'seen_by = NULL, ' .
 			           'registered = NULL ' .
-			           'WHERE seen_id = ' . $seen_id);
+			           'WHERE seen_id = ' . $db->escapeNumber($seen_id));
 
 		} else {
 			// new nick?

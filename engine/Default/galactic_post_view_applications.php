@@ -27,7 +27,7 @@ while ($db->nextRecord()) {
 }
 $PHP_OUTPUT.=('<br /><br />');
 if (isset($var['id'])) {
-	$db->query('SELECT * FROM galactic_post_applications WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = '.$var['id']);
+	$db->query('SELECT * FROM galactic_post_applications WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = '.$db->escapeNumber($var['id']));
 	$db->nextRecord();
 	$desc = stripslashes($db->getField('description'));
 	$applie =& SmrPlayer::getPlayer($var['id'], $player->getGameID());

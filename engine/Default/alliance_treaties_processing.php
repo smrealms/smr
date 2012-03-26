@@ -26,7 +26,7 @@ if (isset($var['accept'])) {
 			$db->query('SELECT MAX(role_id)
 						FROM alliance_has_roles
 						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-							AND alliance_id = ' . $var['alliance_id_1']);
+							AND alliance_id = ' . $db->escapeNumber($var['alliance_id_1']));
 			if ($db->nextRecord()) {
 				$role_id = $db->getInt('MAX(role_id)') + 1;
 			}
@@ -87,7 +87,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	if ($modRead) $PHP_OUTPUT.=('<li>Message of the Day Read Rights</li>');
 	if ($planetLand) $PHP_OUTPUT.=('<li>Planet Landing Rights</li>');
 	$PHP_OUTPUT.=('</ul>');
-	
+
 	//give them options
 	$container=create_container('alliance_treaties_processing.php');
 	$container['alliance_id'] = $alliance_id_1;
@@ -109,10 +109,10 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$container['alliance_id'] = $alliance_id_1;
 	$PHP_OUTPUT.=create_button($container,'No');
 	$PHP_OUTPUT.=('</div>');
-	
+
 } else {
 	$alliance_id_2 = $var['proposedAlliance'];
-	$db->query('INSERT INTO alliance_treaties (alliance_id_1,alliance_id_2,game_id,trader_assist,trader_defend,trader_nap,raid_assist,planet_land,planet_nap,forces_nap,aa_access,mb_read,mb_write,mod_read,official) 
+	$db->query('INSERT INTO alliance_treaties (alliance_id_1,alliance_id_2,game_id,trader_assist,trader_defend,trader_nap,raid_assist,planet_land,planet_nap,forces_nap,aa_access,mb_read,mb_write,mod_read,official)
 				VALUES (' . $db->escapeNumber($alliance_id_1) . ', ' . $db->escapeNumber($alliance_id_2) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeBoolean($var['traderAssist']) . ', ' .
 				$db->escapeBoolean($var['traderDefend']) . ', ' . $db->escapeNumber($var['traderNAP']) . ', ' . $db->escapeBoolean($var['raidAssist']) . ', ' . $db->escapeBoolean($var['planetLand']) . ', ' . $db->escapeBoolean($var['planetNAP']) . ', ' .
 				$db->escapeBoolean($var['forcesNAP']) . ', ' . $db->escapeBoolean($var['aaAccess']) . ', ' . $db->escapeBoolean($var['mbRead']) . ', ' . $db->escapeBoolean($var['mbWrite']) . ', ' . $db->escapeBoolean($var['modRead']) . ', \'FALSE\')');
@@ -121,7 +121,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$db->nextRecord();
 	$leader_2 = $db->getField('leader_id');
 	$message = 'An ambassador from <span class="yellow">' . $alliance1->getAllianceName() . '</span> has arrived.';
-	
+
 	SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader_2, $message, MESSAGE_EXPIRES);
 	$container=create_container('skeleton.php', 'alliance_treaties.php');
 	$container['alliance_id'] = $alliance_id_1;

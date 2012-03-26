@@ -16,15 +16,13 @@ if (!$db->getNumRows())
 	return;
 }
 
-while ($db->nextRecord())
-{
-	if ($account_list)
-		$account_list .= ', ';
-	$account_list .= $db->getField('account_id');
+$account_list = array(0);
+while ($db->nextRecord()) {
+	$account_list[] = $db->getInt('account_id');
 }
 
 // get all anon bank transactions that are logged in an array
-$db->query('SELECT * FROM anon_bank_transactions WHERE account_id IN ('.$account_list.') ORDER BY anon_id');
+$db->query('SELECT * FROM anon_bank_transactions WHERE account_id IN ('.$db->escapeArray($account_list).') ORDER BY anon_id');
 if (!$db->getNumRows())
 {
 	$PHP_OUTPUT.=create_error('None of the entries in all the log files contains anonymous bank transaction!');
@@ -47,23 +45,24 @@ while ($db->nextRecord())
 			$PHP_OUTPUT.=('</ul>');
 
 		// set current anon_id
-		$anon_id = $db->getField('anon_id');
+		$anon_id = $db->getInt('anon_id');
 
 		// start topic for it
 		$PHP_OUTPUT.=('Account #'.$anon_id);
 		$PHP_OUTPUT.=('<ul>');
 	}
 
-	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
+	$curr_account =& SmrAccount::getAccount($db->getInt('account_id'));
 
-	$transaction_id = $db->getField('transaction_id');
+	$transaction_id = $db->getInt('transaction_id');
 
 	$db2->query('SELECT * FROM anon_bank_transactions
-				 WHERE account_id = '.$curr_account->getAccountID().' AND
-					   anon_id = '.$anon_id.' AND
-					   transaction_id = '.$transaction_id);
-	if ($db2->nextRecord())
-		$text = strtolower($db2->getField('transaction')) . ' ' . $db2->getField('amount') . ' credits';
+				 WHERE account_id = '.$db2->escapeNumber($curr_account->getAccountID()).' AND
+					   anon_id = '.$db2->escapeNumber($anon_id).' AND
+					   transaction_id = '.$db2->escapeNumber($transaction_id));
+	if ($db2->nextRecord()) {
+		$text = strtolower($db2->getField('transaction')) . ' ' . number_format($db2->getInt('amount')) . ' credits';
+	}
 
 	$PHP_OUTPUT.=('<li>'.$curr_account->getLogin().' '.$text.'</li>');
 

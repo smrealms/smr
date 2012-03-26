@@ -25,7 +25,7 @@ if(empty($message)) {
 }
 
 if(isset($var['id'])) {
-	$db->query('UPDATE galactic_post_article SET last_modified = ' . TIME . ', text = '.$db->escapeString($message).', title = '.$db->escapeString($title).' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = '.$var['id']);
+	$db->query('UPDATE galactic_post_article SET last_modified = ' . $db->escapeNumber(TIME) . ', text = '.$db->escapeString($message).', title = '.$db->escapeString($title).' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = '.$db->escapeNumber($var['id']));
 	//its been changed send back now
 	forward(create_container('skeleton.php','galactic_post_view_article.php'));
 }
@@ -33,8 +33,8 @@ else {
 	$db->query('SELECT MAX(article_id) article_id FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 	$db->nextRecord();
 	$num = $db->getField('article_id') + 1;
-	$db->query('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', '.$num.', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . TIME . ')');
-	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . TIME . ' WHERE account_id = '.$account->getAccountID());
+	$db->query('INSERT INTO galactic_post_article (game_id, article_id, writer_id, title, text, last_modified) VALUES (' . $db->escapeNumber($player->getGameID()) . ', '.$db->escapeNumber($num).', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($title) . ' , ' . $db->escapeString($message) . ' , ' . $db->escapeNumber(TIME) . ')');
+	$db->query('UPDATE galactic_post_writer SET last_wrote = ' . $db->escapeNumber(TIME) . ' WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
 	forward(create_container('skeleton.php', 'galactic_post_read.php'));
 }
 ?>

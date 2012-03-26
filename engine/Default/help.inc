@@ -19,11 +19,11 @@ function echo_nav($topic_id) {
 		// **************************
 		// **  PREVIOUS
 		// **************************
-		$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$parent_topic_id.' AND order_id = '.$order_id.' - 1');
+		$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$db2->escapeNumber($parent_topic_id).' AND order_id = '.$db2->escapeNumber($order_id - 1));
 
 		// no result?
 		if (!$db2->getNumRows())
-			$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
+			$db2->query('SELECT * FROM manual WHERE topic_id = '.$db2->escapeNumber($parent_topic_id));
 
 		echo ('<th width="32">');
 		if ($db2->nextRecord()) {
@@ -37,7 +37,7 @@ function echo_nav($topic_id) {
 		// **************************
 		// **  UP
 		// **************************
-		$db2->query('SELECT * FROM manual WHERE topic_id = '.$parent_topic_id);
+		$db2->query('SELECT * FROM manual WHERE topic_id = '.$db2->escapeNumber($parent_topic_id));
 		echo ('<th width="32">');
 		if ($db2->nextRecord()) {
 			$up_topic_id = $db2->getInt('topic_id');
@@ -50,19 +50,19 @@ function echo_nav($topic_id) {
 		// **************************
 		// **  NEXT
 		// **************************
-		$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$topic_id.' AND order_id = 1');
+		$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$db2->escapeNumber($topic_id).' AND order_id = 1');
 
 		if (!$db2->getNumRows())
-			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$parent_topic_id.' AND order_id = '.$order_id.' + 1');
+			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$db2->escapeNumber($parent_topic_id).' AND order_id = '.$db2->escapeNumber($order_id + 1));
 
 		$curr_parent_topic_id = $parent_topic_id;
 		while (!$db2->getNumRows() && $curr_parent_topic_id != 0) {
-			$db3->query('SELECT * FROM manual WHERE topic_id = '.$curr_parent_topic_id);
+			$db3->query('SELECT * FROM manual WHERE topic_id = '.$db3->escapeNumber($parent_topic_id));
 			$db3->nextRecord();
 			$curr_order_id = $db3->getField('order_id');
 			$curr_parent_topic_id = $db3->getField('parent_topic_id');
 
-			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$curr_parent_topic_id.' AND order_id = '.$curr_order_id.' + 1');
+			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$db2->escapeNumber($parent_topic_id).' AND order_id = '.$db2->escapeNumber($curr_order_id + 1));
 		}
 
 		echo ('<th width="32">');
@@ -70,8 +70,10 @@ function echo_nav($topic_id) {
 			$next_topic_id = $db2->getInt('topic_id');
 			$next_topic = stripslashes($db2->getField('topic'));
 			echo ('<a href="'.URL.'/manual.php?'.$next_topic_id.'"><img src="'.URL.'/images/help/next.jpg" width="32" height="32" border="0"></a>');
-		} else
+		}
+		else {
 			echo ('<img src="'.URL.'/images/help/empty.jpg" width="32" height="32">');
+		}
 		echo ('</th>');
 
 		echo ('<th width="100%" align="center" validn="middle" style="font-size:18pt;font-weight:bold;">' . get_numbering($topic_id) . $topic.'</th>');

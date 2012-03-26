@@ -21,7 +21,7 @@ else
 	if ($gameID != 20000)
 	{
 		$gamePlayers = array();
-		$db->query('SELECT account_id,player_id,player_name FROM player WHERE game_id = '.$gameID.' ORDER BY player_name');
+		$db->query('SELECT account_id,player_id,player_name FROM player WHERE game_id = '.$db->escapeNumber($gameID).' ORDER BY player_name');
 		while ($db->nextRecord())
 			$gamePlayers[]= array('AccountID' => $db->getField('account_id'), 'PlayerID' => $db->getField('player_id'), 'Name' => $db->getField('player_name'));
 		$template->assignByRef('GamePlayers',$gamePlayers);

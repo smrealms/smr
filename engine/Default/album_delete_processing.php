@@ -1,6 +1,6 @@
 <?php
 
-if ($_POST['action'] == 'Yes') {
+if ($_REQUEST['action'] == 'Yes') {
 	$db->query('DELETE
 				FROM album
 				WHERE account_id = ' . $db->escapeNumber(SmrSession::$account_id) . ' LIMIT 1');
@@ -10,8 +10,7 @@ if ($_POST['action'] == 'Yes') {
 				WHERE album_id = ' . $db->escapeNumber(SmrSession::$account_id));
 }
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 if(!is_object($player)) {
 	$container['body'] = 'game_play.php';
 }

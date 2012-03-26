@@ -4,13 +4,13 @@ if($_REQUEST['action']=='Vote') {
 	if(is_array($_REQUEST['vote'])) {
 		$query = 'REPLACE INTO account_votes_for_feature VALUES ';
 		foreach($_REQUEST['vote'] as $requestID => $vote) {
-			$query.='('.SmrSession::$account_id.', '.$db->escapeNumber($requestID).','.$db->escapeString($vote).'),';
+			$query.='('.$db->escapeNumber(SmrSession::$account_id).', '.$db->escapeNumber($requestID).','.$db->escapeString($vote).'),';
 		}
 		$db->query(substr($query,0,-1));
 	}
 	if(!empty($_REQUEST['favourite']) && is_numeric($_REQUEST['favourite']))
-		$db->query('REPLACE INTO account_votes_for_feature VALUES('.SmrSession::$account_id.', '.$db->escapeNumber($_REQUEST['favourite']).',\'FAVOURITE\')');
-	
+		$db->query('REPLACE INTO account_votes_for_feature VALUES('.$db->escapeNumber(SmrSession::$account_id).', '.$db->escapeNumber($_REQUEST['favourite']).',\'FAVOURITE\')');
+
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
 else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' || $_REQUEST['status']=='Rejected' || $_REQUEST['status']=='Opened') {
@@ -19,7 +19,7 @@ else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' 
 		create_error('You have to select a feature');
 	if(!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST))
 		create_error('You do not have permission to do that');
-	
+
 	$db->query('UPDATE feature_request fr SET status = ' . $db->escapeString($status) . '
 			, fav = (
 				SELECT COUNT(feature_request_id)
@@ -42,9 +42,9 @@ else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' 
 			WHERE feature_request_id IN (' . $db->escapeArray($_REQUEST['delete']) . ')');
 	foreach($_REQUEST['delete'] as $featureID) {
 		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
-					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . TIME . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
+					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}
-			
+
 	forward(create_container('skeleton.php', 'feature_request.php'));
 }
 ?>

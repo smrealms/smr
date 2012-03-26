@@ -1,18 +1,15 @@
 <?php
 
-if ($_POST['action'] == 'Delete Entry') {
+if ($_REQUEST['action'] == 'Delete Entry') {
 	forward(create_container('skeleton.php', 'album_delete_confirmation.php'));
 }
 
-// get location
 $location = $_POST['location'];
-
-// get email
 $email = $_POST['email'];
 
 // get website (and validate it)
 $website = '';
-if ($_POST['website'] != 'http://') {
+if ($_REQUEST['website'] != 'http://') {
 	$website = $_POST['website'];
 	// add http:// if missing
 	if (!preg_match('=://=', $website)) {
@@ -27,12 +24,11 @@ if ($_POST['website'] != 'http://') {
 	}
 }
 
-// get 'other' info
-$other = $_POST['other'];
+$other = $_REQUEST['other'];
 
-$day = $_POST['day'] != 'N/A' ? $_POST['day'] : 0;
-$month = $_POST['month'] != 'N/A' ? $_POST['month'] : 0;
-$year = $_POST['year'] != 'N/A' ? $_POST['year'] : 0;
+$day = $_REQUEST['day'] != 'N/A' ? $_POST['day'] : 0;
+$month = $_REQUEST['month'] != 'N/A' ? $_POST['month'] : 0;
+$year = $_REQUEST['year'] != 'N/A' ? $_POST['year'] : 0;
 
 // check if these values are nummeric
 if (!is_numeric($day)) {
@@ -110,7 +106,7 @@ if ($comment) {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
-	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.SmrSession::$account_id);
+	$db->query('SELECT MAX(comment_id) FROM album_has_comments WHERE album_id = '.$db->escapeNumber(SmrSession::$account_id));
 	if ($db->nextRecord()) {
 		$comment_id = $db->getField('MAX(comment_id)') + 1;
 	}
@@ -124,10 +120,14 @@ if ($comment) {
 	$db->unlock();
 }
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 if (SmrSession::$game_id > 0) {
-	if ($player->isLandedOnPlanet()) $container['body'] = 'planet_main.php'; else $container['body'] = 'current_sector.php';
+	if ($player->isLandedOnPlanet()) {
+		$container['body'] = 'planet_main.php';
+	}
+	else {
+		$container['body'] = 'current_sector.php';
+	}
 }
 else {
 	$container['body'] = 'game_play.php';
@@ -149,26 +149,39 @@ function php_link_check($url, $r = FALSE) {
 	*	Version: 0.1 (currently requires PHP4)
 	*/
 	$url = trim($url);
-	if (!preg_match('=://=', $url)) $url = 'http://'.$url;
+	if (!preg_match('=://=', $url)) {
+		$url = 'http://'.$url;
+	}
 	$url = parse_url($url);
-	if (strtolower($url['scheme']) != 'http') return FALSE;
+	if (strtolower($url['scheme']) != 'http') {
+		return false;
+	}
 
-	if (!isset($url['port'])) $url['port'] = 80;
-	if (!isset($url['path'])) $url['path'] = '/';
+	if (!isset($url['port'])) {
+		$url['port'] = 80;
+	}
+	if (!isset($url['path'])) {
+		$url['path'] = '/';
+	}
 
-	if (!checkdnsrr($url['host'], 'A'))
-		return FALSE;
+	if (!checkdnsrr($url['host'], 'A')) {
+		return false;
+	}
 
 	$fp = fsockopen($url['host'], $url['port'], $errno, $errstr, 30);
 
-	if (!$fp) return FALSE;
+	if (!$fp) {
+		return false;
+	}
 	else {
 		$head = '';
 		$httpRequest = 'HEAD '. $url['path'] .' HTTP/1.1'.EOL
 								.'Host: '. $url['host'].EOL
 								.'Connection: close'.EOL.EOL;
 		fputs($fp, $httpRequest);
-		while(!feof($fp)) $head .= fgets($fp, 1024);
+		while(!feof($fp)) {
+			$head .= fgets($fp, 1024);
+		}
 		fclose($fp);
 
 		preg_match('=^(HTTP/\d+\.\d+) (\d {3}) ([^\r\n]*)=', $head, $matches);
@@ -177,14 +190,17 @@ function php_link_check($url, $r = FALSE) {
 		$http['Status-Code'] = $matches[2];
 		$http['Reason-Phrase'] = $matches[3];
 
-		if ($r)
+		if ($r) {
 			return $http['Status-Code'];
+		}
 
 		$rclass = array('Informational', 'Success', 'Redirection', 'Client Error', 'Server Error');
 		$http['Response-Class'] = $rclass[$http['Status-Code'][0] - 1];
 
 		preg_match_all('=^(.+): ([^\r\n]*)=m', $head, $matches, PREG_SET_ORDER);
-		foreach($matches as $line) $http[$line[1]] = $line[2];
+		foreach($matches as $line) {
+			$http[$line[1]] = $line[2];
+		}
 
 		return $http;
 	}

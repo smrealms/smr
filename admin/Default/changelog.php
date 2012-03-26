@@ -11,9 +11,9 @@ $db->query('SELECT *
 			ORDER BY version_id DESC');
 while ($db->nextRecord())
 {
-	$version_id = $db->getField('version_id');
-	$version = $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level');
-	$went_live = $db->getField('went_live');
+	$version_id = $db->getInt('version_id');
+	$version = $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level');
+	$went_live = $db->getInt('went_live');
 	if ($went_live > 0)
 	{
 		// from this point on we don't create links to set a version to live
@@ -40,7 +40,7 @@ while ($db->nextRecord())
 	$PHP_OUTPUT.=('<table border="0"">');
 	$db2->query('SELECT *
 				FROM changelog
-				WHERE version_id = '.$version_id.'
+				WHERE version_id = '.$db->escapeNumber($version_id).'
 				ORDER BY changelog_id');
 	while ($db2->nextRecord())
 	{

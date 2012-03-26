@@ -38,8 +38,8 @@ else if ($action == 'Save and resend validation code') {
 
 	if (strstr($email, ' '))
 		create_error('The eMail is invalid! It cannot contain any spaces.');
-	
-	$db->query('SELECT 1 FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $account->getAccountID() . ' LIMIT 1');
+
+	$db->query('SELECT 1 FROM account WHERE email = '.$db->escapeString($email).' and account_id != ' . $db->escapeNumber($account->getAccountID()) . ' LIMIT 1');
 	if ($db->getNumRows() > 0)
 		create_error('This eMail address is already registered.');
 
@@ -49,8 +49,8 @@ else if ($action == 'Save and resend validation code') {
 	$account->update();
 
 	// remember when we sent validation code
-	$db->query('REPLACE INTO notification (notification_type, account_id, time) ' .
-									'VALUES(\'validation_code\', '.$account->getAccountID().', ' . TIME . ')');
+	$db->query('REPLACE INTO notification (notification_type, account_id, time)
+				VALUES(\'validation_code\', '.$db->escapeNumber($account->getAccountID()).', ' . $db->escapeNumber(TIME) . ')');
 
 	mail($email, 'Your validation code!',
 		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
@@ -61,8 +61,8 @@ else if ($action == 'Save and resend validation code') {
 		'From: support@smrealms.de');
 
 	// get rid of that email permission
-	$db->query('DELETE FROM account_is_closed ' .
-				'WHERE account_id = '.$account->getAccountID().' AND reason_id = 1');
+	$db->query('DELETE FROM account_is_closed
+				WHERE account_id = '.$db->escapeNumber($account->getAccountID()).' AND reason_id = 1');
 
 	// overwrite container
 	$container['body'] = 'validate.php';
@@ -109,7 +109,7 @@ elseif ($action == 'Change Name') {
 	if (empty($HoF_name) || $HoF_name == '') create_error('You Hall of Fame name must contain characters!');
 
 	//no duplicates
-	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id != '.$account->getAccountID().' LIMIT 1');
+	$db->query('SELECT * FROM account WHERE hof_name = ' . $db->escape_string($HoF_name, true) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
 	if ($db->nextRecord()) create_error('Someone is already using that name!');
 
 	// set the HoF name in account stat
@@ -130,7 +130,7 @@ elseif ($action == 'Change Nick') {
 	} else {
 
 		// no duplicates
-		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escape_string($ircNick, true) . ' AND account_id != '.$account->getAccountID().' LIMIT 1');
+		$db->query('SELECT * FROM account WHERE irc_nick = ' . $db->escape_string($ircNick, true) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
 		if ($db->nextRecord()) create_error('Someone is already using that nick!');
 
 		// save irc nick in db and set message
@@ -164,7 +164,7 @@ elseif ($action == 'Yes') {
 
 	// create his account
 	$his_account =& SmrAccount::getAccount($account_id);
-	
+
 	// take from us
 	$account->decreaseSmrCredits($amount);
 	// add to him
@@ -176,7 +176,7 @@ elseif ($action == 'Change Timezone') {
 	if (!is_numeric($timez))
 		create_error('Numbers only please');
 
-	$db->query('UPDATE account SET offset = '.$timez.' WHERE account_id = '.$account->getAccountID());
+	$db->query('UPDATE account SET offset = '.$db->escapeNumber($timez).' WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your time offset.';
 }
 elseif ($action == 'Change Date Formats') {
@@ -224,13 +224,13 @@ else if ($action == 'Save Hotkeys') {
 else if (strpos(trim($action),'Alter Player')===0) {
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
-	
+
 	$old_name = $player->getName();
-	
+
 	if($old_name == $player_name) {
 		create_error('Your player already has that name!');
 	}
-	
+
 	$limited_char = 0;
 	for ($i = 0; $i < strlen($player_name); $i++) {
 		// disallow certain ascii chars
@@ -252,24 +252,24 @@ else if (strpos(trim($action),'Alter Player')===0) {
 
 	if (empty($player_name))
 		create_error('You must enter a player name!');
-	
+
 	// Check if name is in use.
 	$db->query('SELECT 1 FROM player WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND player_name=' . $db->escape_string($player_name) . ' LIMIT 1' );
 	if($db->getNumRows()) {
 		create_error('Name is already being used in this game!');
 	}
-	
+
 	if($player->isNameChanged()) {
 		if($account->getTotalSmrCredits()<CREDITS_PER_NAME_CHANGE) {
 			create_error('You do not have enough credits to change your name.');
 		}
 		$account->decreaseTotalSmrCredits(CREDITS_PER_NAME_CHANGE);
 	}
-	
+
 	$player->setPlayerName($player_name);
 
 	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink() . '</span>';
-	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . TIME . ',' . $db->escape_string($news, FALSE) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ')');
+	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }
 

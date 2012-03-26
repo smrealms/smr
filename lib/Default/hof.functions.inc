@@ -27,7 +27,7 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 		$vis = $db->getField('visibility');
 		$db->query('SELECT SUM(amount) amount FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false) .' AND account_id='.$db->escapeNumber($accountID).$gameIDSql.' GROUP BY account_id LIMIT 1');
 	}
-	
+
 	$realAmount = 0;
 	if($db->nextRecord())
 	{
@@ -70,23 +70,23 @@ function getHofRank($view,$viewType,$accountID,$gameID,&$db)
 			}
 		}
 	}
-	
+
 	if($view == DONATION_NAME)
 	{
-		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $rank['Amount'] . ') x');
+		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM account_donated GROUP BY account_id HAVING SUM(amount)>' . $db->escapeNumber($rank['Amount']) . ') x');
 	}
 	else if($view == USER_SCORE_NAME)
 	{
-		$query = 'SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id HAVING '.$statements['CASE'].'>' . $rank['Amount'] . ') x';
+		$query = 'SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id HAVING '.$statements['CASE'].'>' . $db->escapeNumber($rank['Amount']) . ') x';
 		$db->query($query);
 	}
 	else
 	{
-		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id HAVING SUM(amount)>'.$realAmount.') x');
+		$db->query('SELECT COUNT(account_id) rank FROM (SELECT account_id FROM player_hof WHERE type='.$db->escapeArray($viewType,false,true,':',false).$gameIDSql.' GROUP BY account_id HAVING SUM(amount)>'.$db->escapeNumber($realAmount).') x');
 	}
 	if($db->nextRecord())
 	{
-		$rank['Rank'] = $db->getField('rank') + 1;
+		$rank['Rank'] = $db->getInt('rank') + 1;
 	}
 	return $rank;
 }
@@ -112,15 +112,14 @@ function displayHOFRow($rank,$accountID,$amount)
 	$bold = '';
 	if ($accountID == $account->getAccountID())
 	{
-		$foundMe = true;
 		$bold = ' class="bold"';
 	}
 	$return=('<tr>');
 	$return.=('<td align="center"'.$bold.'>' . $rank . '</td>');
-	
+
 	$container = create_container('skeleton.php','hall_of_fame_player_detail.php');
 	$container['account_id'] = $accountID;
-	
+
 	if (isset($var['game_id']))
 	{
 		$container['game_id'] = $var['game_id'];
@@ -173,7 +172,7 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName)
 			$container['type'] = $typeList;
 			unset($container['view']);
 			$viewing.= create_link($container,$type);
-			
+
 			$hofTypes = $hofTypes[$type];
 		}
 	}
@@ -187,7 +186,7 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName)
 		}
 		$container = $var;
 		$viewing .= create_link($container,$var['view']);
-		
+
 		if(is_array($hofTypes[$var['view']]))
 		{
 			$hofTypes = $hofTypes[$var['view']];

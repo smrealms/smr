@@ -15,8 +15,9 @@ elseif ($var['action'] == 'Disable') {
 elseif ($var['action'] == 'Set Illusion') {
 	if (!is_numeric($_REQUEST['ship_id']) ||
 		!is_numeric($_REQUEST['attack']) ||
-		!is_numeric($_REQUEST['defense']))
+		!is_numeric($_REQUEST['defense'])) {
 		create_error('Numbers only please!');
+	}
 
 	$ship->setIllusion($_REQUEST['ship_id'], $_REQUEST['attack'], $_REQUEST['defense']);
 }
@@ -24,12 +25,13 @@ elseif ($var['action'] == 'Disable Illusion') {
 	$ship->disableIllusion();
 }
 
-$container = array();
-$container['url'] = 'skeleton.php';
-if ($player->isLandedOnPlanet())
+$container = create_container('skeleton.php');
+if ($player->isLandedOnPlanet()) {
 	$container['body'] = 'planet_main.php';
-else
+}
+else {
 	$container['body'] = 'current_sector.php';
+}
 
 forward($container);
 

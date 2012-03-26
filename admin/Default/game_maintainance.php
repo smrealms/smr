@@ -1,7 +1,7 @@
 <?php
 
 //script to do all the cleanup maintainance stuff...
-		
+
 ///////////////////////////////////////////
 //
 // close game and (lock) clear active
@@ -30,63 +30,63 @@ $db->query('OPTIMIZE TABLE `account` , `account_donated` , `account_exceptions` 
 $file_name = ROOT . 'documentation/SmrMySqlDatabase_BACKUP_' . date('m-d') . '.sql';
 $db2 = new SmrMySqlDatabase();
 if (!file_exists($file_name)) {
-	
+
 	//we are good to create!
 	if (touch($file_name)) {
-		
+
 		if (!$db_file = fopen($file_name, 'a')) {
-			
+
 			echo 'Cannot open file ('.$file_name.')';
 			exit;
-			
+
 		}
 
 		//we are good to add entries
 		$db->query('SHOW TABLES');
 		$db2 = new SmrMySqlDatabase();
 		while ($db->nextRecord()) {
-			
+
 			$table = $db->getField(0);
 			$db2->query('SHOW COLUMNS FROM '.$table);
 			$insert = 'INSERT INTO '.$table.' (';
 			$i = $db2->getNumRows() - 1;
 			$cols = $db2->getNumRows() -1;
 			while ($db2->nextRecord()) {
-				
+
 				$field = $db2->getField(0);
 				$insert .= $field;
 				if ($i != 0) $insert .= ',';
 				$i--;
-			
+
 			}
 			$i = $cols;
 			$insert .= ') VALUES (';
 			$db2->query('SELECT * FROM '.$table);
 			while ($db2->nextRecord()) {
-				
+
 				$db_ent = $insert;
 				for ($j=0; $j<=$cols; $j++) {
-					
+
 					$db_ent .= $db2->getField($j);
 					if ($i != 0) $db_ent .= ',';
 					$i--;
-				
+
 				}
 				$db_ent .= ');';
 				if (fwrite($db_file, $db_ent) === FALSE) {
-					
+
 					echo 'Cannot write to file ('.$file_name.')';
 					exit;
-					
+
 				}
-				
+
 			}
-			
+
 		}
 		fclose($db_file);
-		
+
 	}
-	
+
 }
 
 ///////////////////////////////////////////
@@ -100,6 +100,6 @@ if (!file_exists($file_name)) {
 // message table stuff
 //
 ///////////////////////////////////////////
-	
+
 
 ?>

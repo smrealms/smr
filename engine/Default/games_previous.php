@@ -59,7 +59,7 @@ else {
 	$db2 = new $var['HistoryDatabase']();
 	$db2->query('SELECT DATE_FORMAT(start_date, \'%c/%e/%Y\') as start_date, type, ' .
 				'DATE_FORMAT(end_date, \'%c/%e/%Y\') as end_date, game_name, speed, game_id ' .
-				'FROM game WHERE game_id = '.$game_id);
+				'FROM game WHERE game_id = '.$db->escapeNumber($game_id));
 	$PHP_OUTPUT.=create_table();
 	$db2->nextRecord();
 	$start = $db2->getField('start_date');
@@ -82,15 +82,15 @@ else {
 		$players = $db2->getNumRows();
 		$max_exp = $db2->getField('experience');
 	}
-	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY alignment DESC');
+	$db2->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY alignment DESC');
 	if ($db2->nextRecord()) $align = $db2->getField('alignment');
-	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY alignment ASC');
+	$db2->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY alignment ASC');
 	if ($db2->nextRecord()) $align_low = $db2->getField('alignment');
-	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY kills DESC');
+	$db2->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY kills DESC');
 	if ($db2->nextRecord()) $kills = $db2->getField('kills');
 
 
-	$db2->query('SELECT * FROM alliance WHERE game_id = '.$game_id);
+	$db2->query('SELECT * FROM alliance WHERE game_id = '.$db->escapeNumber($game_id));
 	if ($db2->nextRecord()) $alliances = $db2->getNumRows();
 	$PHP_OUTPUT.='
 	<td valign=top align=center>
@@ -114,7 +114,7 @@ else {
 	<tr>
 	<td align=center>';
 	$rank = 0;
-	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY experience DESC LIMIT 10');
+	$db2->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY experience DESC LIMIT 10');
 	if ($db2->getNumRows() > 0) {
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Experience</th></tr>');
 		while ($db2->nextRecord()) {
@@ -127,7 +127,7 @@ else {
 	$PHP_OUTPUT.='
 	</td><td align=center>';
 	$rank = 0;
-	$db2->query('SELECT * FROM player WHERE game_id = '.$game_id.' ORDER BY kills DESC LIMIT 10');
+	$db2->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY kills DESC LIMIT 10');
 	if ($db2->getNumRows() > 0) {
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Player</th><th align=center>Kills</th></tr>');
 		while ($db2->nextRecord()) {
@@ -149,7 +149,7 @@ else {
 	//now for the alliance stuff
 	$db2->query('SELECT SUM(experience) as exp, alliance_name, alliance_id
 				FROM player JOIN alliance USING (game_id, alliance_id)
-				WHERE game_id = '.$game_id.' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
+				WHERE game_id = '.$db->escapeNumber($game_id).' GROUP BY alliance_id ORDER BY exp DESC LIMIT 10');
 	if ($db2->getNumRows()) {
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Alliance</th><th align=center>Experience</th></tr>');
 		$container = create_container('skeleton.php', 'alliance_detail_old.php');
@@ -172,7 +172,7 @@ else {
 	<td valign=top align=center>';
 	$rank = 0;
 	//now for the alliance stuff
-	$db2->query('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = '.$game_id.' ORDER BY kills DESC LIMIT 10');
+	$db2->query('SELECT kills, alliance_name, alliance_id FROM alliance WHERE game_id = '.$db->escapeNumber($game_id).' ORDER BY kills DESC LIMIT 10');
 	if ($db2->getNumRows()) {
 		$PHP_OUTPUT.=('<table><tr><th align=center>Rank</th><th align=center>Alliance</th><th align=center>Kills</th></tr>');
 		$container = create_container('skeleton.php', 'alliance_detail_old.php');

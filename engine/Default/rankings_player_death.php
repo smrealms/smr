@@ -6,9 +6,15 @@ require_once(get_file_loc('menu.inc'));
 create_ranking_menu(0, 2);
 
 // what rank are we?
-$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' .
-									'(deaths > '.$player->getDeaths().' OR ' .
-									'(deaths = '.$player->getDeaths().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
+$db->query('SELECT count(*) FROM player
+			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				AND (
+					deaths > '.$db->escapeNumber($player->getDeaths()).'
+					OR (
+						deaths = '.$db->escapeNumber($player->getDeaths()).'
+						AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . '
+					)
+				)');
 $db->nextRecord();
 $our_rank = $db->getInt('count(*)');
 

@@ -55,7 +55,7 @@ $PHP_OUTPUT.=('Change permissions for the Account of ');
 // get the account we got
 $db->query('SELECT login
 			FROM account
-			WHERE account_id = '.$admin_id);
+			WHERE account_id = '.$db->escapeNumber($admin_id));
 if (!$db->nextRecord())
 {
 	$PHP_OUTPUT.=('<u>Unknown Account</u>!');
@@ -72,7 +72,7 @@ $PHP_OUTPUT.=create_echo_form($container);
 // collect all the permission that this guy has
 $db->query('SELECT permission_id
 			FROM account_has_permission
-			WHERE account_id = '.$admin_id);
+			WHERE account_id = '.$db->escapeNumber($admin_id));
 while ($db->nextRecord())
 	$account_has_permissions[$db->getField('permission_id')] = true;
 

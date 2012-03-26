@@ -43,8 +43,8 @@ else {
 
 	$db2 = new $var['HistoryDatabase']();
 	if (empty($gr)) {
-		$db2->query('SELECT '.$sql.' as val, sector_id FROM '.$from.' WHERE game_id = '.$game_id.' '.$gr.' ORDER BY '.$sql.' DESC LIMIT 30');
-	
+		$db2->query('SELECT '.$sql.' as val, sector_id FROM '.$from.' WHERE game_id = '.$db->escapeNumber($game_id).' '.$gr.' ORDER BY '.$sql.' DESC LIMIT 30');
+
 		$container = create_container('skeleton.php', 'games_previous_detail.php');
 		$container['HistoryDatabase'] = $var['HistoryDatabase'];
 		$container['game_id'] = $game_id;
@@ -60,7 +60,7 @@ else {
 		$PHP_OUTPUT.=('</table>');
 	}
 	else {
-		$sql = 'SELECT alliance_id, '.$sql.' as val FROM '.$from.' WHERE game_id = '.$game_id.' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC LIMIT 30';
+		$sql = 'SELECT alliance_id, '.$sql.' as val FROM '.$from.' WHERE game_id = '.$db->escapeNumber($game_id).' AND alliance_id > 0 GROUP BY alliance_id ORDER BY val DESC LIMIT 30';
 		$db2->query($sql);
 		$db = new $var['HistoryDatabase']();
 		$container = create_container('skeleton.php','games_previous_detail.php');
@@ -75,7 +75,7 @@ else {
 		$container['game_id'] = $game_id;
 		while ($db2->nextRecord()) {
 			$alliance_id = $db2->getField('alliance_id');
-			$db->query('SELECT * FROM alliance WHERE alliance_id = '.$alliance_id.' AND game_id = '.$game_id);
+			$db->query('SELECT * FROM alliance WHERE alliance_id = '.$db->escapeNumber($alliance_id).' AND game_id = '.$db->escapeNumber($game_id));
 			$db->nextRecord();
 			$name = stripslashes($db->getField('alliance_name'));
 			$val = $db2->getField('val');

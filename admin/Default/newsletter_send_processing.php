@@ -20,10 +20,10 @@ $db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newslett
 if ($db->nextRecord())
 {
 	$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
-	
+
 	$newsletterHtml = $db->getField('newsletter_html');
 	$newsletterText = $db->getField('newsletter_text');
-	
+
 	if(!empty($newsletterHtml))
 	{
 		$mail->MsgHTML($newsletterHtml);
@@ -32,7 +32,7 @@ if ($db->nextRecord())
 	}
 	else
 		$mail->Body = $newsletterText;
-	
+
 	// attach footer
 //	$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
 }
@@ -42,22 +42,22 @@ if($_REQUEST['to_email']=='*')
 	// counter
 	$i = 1;
 	$total = 0;
-	
-	$db->query('SELECT account_id, email, first_name, last_name FROM newsletter_accounts WHERE account_id >= '.$i.' ORDER BY account_id');
+
+	$db->query('SELECT account_id, email, first_name, last_name FROM newsletter_accounts WHERE account_id >= '.$db->escapeNumber($i).' ORDER BY account_id');
 	while ($db->nextRecord())
 	{
 		// get account data
 		$account_id	= $db->getField('account_id');
 		$to_email	= $db->getField('email');
 		$to_name	= $db->getField('first_name') . ' ' . $db->getField('last_name');
-	
+
 		// debug output
 		echo $account_id.'. Preparing mail for '.$to_name.' <'.$to_email.'>... ';
-	
+
 		// set a bounce address we can process later
 		$mail->From = 'bounce_' . $account_id . '@smrealms.de';
 		$mail->AddAddress($to_email, $to_name);
-	
+
 		if(!$mail->Send())
 		{
 			echo 'error.'.EOL . $mail->ErrorInfo;
@@ -67,18 +67,18 @@ if($_REQUEST['to_email']=='*')
 		}
 		else
 			echo 'sent.'.EOL;
-	
+
 		$total++;
-	
+
 		// Clear all addresses for next loop
 		$mail->ClearAddresses();
-	
+
 		//sleep(1);
-	
+
 	}
-	
+
 	$mail->SmtpClose();
-	
+
 	echo 'Total '.$total.' mails sent.'.EOL;
 	release_lock();
 	exit();
@@ -86,7 +86,7 @@ if($_REQUEST['to_email']=='*')
 else
 {
 	$mail->AddAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
-	
+
 	$mail->Send();
 	$mail->SmtpClose();
 }

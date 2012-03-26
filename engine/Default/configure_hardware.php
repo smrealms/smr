@@ -2,10 +2,6 @@
 
 $template->assign('PageTopic','Configure Hardware');
 
-if (!$ship->hasCloak() && !$ship->hasIllusion() && !$ship->hasJump()) {
-	return;
-}
-
 if ($ship->hasCloak()) {
 	$container = create_container('configure_hardware_processing.php');
 	if (!$ship->isCloaked()) {

@@ -26,7 +26,7 @@ if (!isset($var['subcategory'])) {
 	SmrSession::updateVar('subcategory', 'expire_time ASC');
 }
 $subcategory = $var['subcategory'];
-	
+
 $db->query('
 SELECT
 sum(mines) as tot_mines,
@@ -58,9 +58,9 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.= 'Your alliance currently has ';
 	$PHP_OUTPUT.= $db->getNumRows();
 	$PHP_OUTPUT.= ' stacks of forces in the universe!<br />';
-	
+
 	$hardwareTypes =& Globals::getHardwareTypes();
-	
+
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<th>Number of Force</th><th>Value</th></tr>');
 	$PHP_OUTPUT.=('<tr><td><span class="yellow">' . number_format($total['Mines']) . '</span> mines</td><td><span class="creds">' . number_format($total['Mines'] * $hardwareTypes[HARDWARE_MINE]['Cost']) . '</span> credits</td></tr>');
@@ -103,7 +103,7 @@ if ($db->getNumRows() > 0) {
 
 	while ($db->nextRecord()) {
 		$forces =& SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'));
-		
+
 		$PHP_OUTPUT .= '<tr>';
 		$PHP_OUTPUT .= '<td>'.$forces->getOwner()->getLinkedDisplayName(false) . '</td>';
 		$PHP_OUTPUT .= '<td class="shrink noWrap">' . $forces->getSectorID() . ' (' . $forces->getGalaxy()->getName() . ')</td>';

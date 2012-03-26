@@ -8,7 +8,7 @@ $db->query('SELECT * FROM location
 			JOIN hardware_type USING (hardware_type_id)
 			WHERE sector_id = ' . $db->escapeNumber($player->getSectorID()) . '
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND location_type_id = '.$var['LocationID']);
+				AND location_type_id = '.$db->escapeNumber($var['LocationID']));
 
 if ($db->getNumRows() > 0 ) {
 	$PHP_OUTPUT.=('<table class="standard">');
