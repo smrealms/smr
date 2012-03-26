@@ -92,7 +92,7 @@ class SmrForce
 						SET refresher=0,
 							expire_time = (refresh_at + if(combat_drones+mines=0,
 															LEAST('.$db->escapeNumber(self::LOWEST_MAX_EXPIRE_SCOUTS_ONLY).', scout_drones*'.$db->escapeNumber(self::TIME_PER_SCOUT_ONLY).'),
-															LEAST('.$db->escapeNumber($galaxyToTidy->getMaxForceTime()).', (combat_drones*'.$db->escapeNumber(self::TIME_PERCENT_PER_COMBAT).'+scout_drones*'.$db->escapeNumber(self::TIME_PERCENT_PER_SCOUT).'+mines*'.$db->escapeNumber(self::TIME_PERCENT_PER_MINE).')*'.$this->db->escapeNumber($galaxyToTidy->getMaxForceTime()).')
+															LEAST('.$db->escapeNumber($galaxyToTidy->getMaxForceTime()).', (combat_drones*'.$db->escapeNumber(self::TIME_PERCENT_PER_COMBAT).'+scout_drones*'.$db->escapeNumber(self::TIME_PERCENT_PER_SCOUT).'+mines*'.$db->escapeNumber(self::TIME_PERCENT_PER_MINE).')*'.$db->escapeNumber($galaxyToTidy->getMaxForceTime()).')
 														))
 						WHERE game_id = '.$db->escapeNumber($galaxyToTidy->getGameID()).' AND sector_id >= '.$db->escapeNumber($galaxyToTidy->getStartSector()).' AND sector_id <= '.$db->escapeNumber($galaxyToTidy->getEndSector()).' AND refresher != 0 AND refresh_at <= '.$db->escapeNumber(TIME));
 			$db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . $db->escapeNumber(TIME));
