@@ -68,11 +68,11 @@ if (!isset($number) && !isset($var['number'])) {
 			$PHP_OUTPUT.=('<td align="center">'.$aname.'<br />'.$name.'<br />Account:'.$id.'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$city.'<br />'.$email.'</td>');
 			//check who they match...first find out the method.
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db2->escapeNumber($id));
 			if ($db2->nextRecord()) $reason = $db2->getField('suspicion');
 			list ($method, $info) = explode(':', $reason);
 			if ($method == 'Match') {
-				
+
 				//this stops loops evetually
 				$done = array();
 				$listed = array();
@@ -83,39 +83,39 @@ if (!isset($number) && !isset($var['number'])) {
 				$PHP_OUTPUT.=($curr_account->getLogin());
 				$listed[] = $info;
 				//who matches them
-				$db2->query('SELECT * FROM account_is_closed WHERE suspicion = \'Match:'.$account->getAccountID().'\'');
+				$db2->query('SELECT * FROM account_is_closed WHERE suspicion = ' . $db->escapeString('Match:'.$account->getAccountID()));
 				while ($db2->nextRecord()) {
-					
+
 					$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
 					$PHP_OUTPUT.=(', '.$curr_account->getLogin());
 					$listed[] = $db2->getField('account_id');
 					//add this acc to the search one
 					$search[] = $db2->getField('account_id');
-					
+
 				}
 				//of course we have to check the guy that he matches too
 				$search[] = $info;
 				//now we check all the others
 				while (sizeof($search) > 0) {
-					
+
 					$info = array_shift($search);
 					//prevent infinite loops
 					if (in_array($info, $done)) continue;
 					$done[] = $info;
-					$db2->query('SELECT * FROM account_is_closed WHERE suspicion = \'Match:'.$info.'\' AND account_id != '.$id);
+					$db2->query('SELECT * FROM account_is_closed WHERE suspicion = ' . $db->escapeString('Match:'.$info).' AND account_id != '.$db->escapeNumber($id));
 					while ($db2->nextRecord()) {
-					
+
 						$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
 						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->getLogin());
 						$listed[] = $db2->getField('account_id');
 						//add this acc to the search one
 						$search[] = $db2->getField('account_id');
-						
+
 					}
 					//another way to search it...
-					$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$info.' AND account_id != '.$id);
+					$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($info).' AND account_id != '.$db->escapeNumber($id));
 					while ($db2->nextRecord()) {
-					
+
 						$curr_account =& SmrAccount::getAccount($db2->getField('account_id'));
 						if (!in_array($db2->getField('account_id'),$listed)) $PHP_OUTPUT.=(', '.$curr_account->getLogin());
 						$listed[] = $db2->getField('account_id');
@@ -123,14 +123,14 @@ if (!isset($number) && !isset($var['number'])) {
 						$reason = $db2->getField('suspicion');
 						list ($method, $info_2) = explode(':', $reason);
 						if ($method == 'Match') $search[] = $info_2;
-						
+
 					}
 
 				}
 				$PHP_OUTPUT.=('.</td>');
-				
+
 			} elseif ($method == 'Match list') {
-				
+
 				//entered via Multi Tools
 				//check how it is listed...do we have - or , to separate
 				$sql = 'SELECT '.$info.' LIKE \'%,%\'';
@@ -140,54 +140,54 @@ if (!isset($number) && !isset($var['number'])) {
 				$db3->query($sql);
 				$db3->nextRecord();
 				if ($db2->getField(0) == 1) {
-					
+
 					//this is the ip search way
 					$users = explode(',', $info);
 					$PHP_OUTPUT.=('<td align=center>User IP was found to match ');
-					
+
 				} elseif ($db3->getField(0) == 1) {
-					
+
 					//this is the comp share way
 					$users = explode('-', $info);
 					$PHP_OUTPUT.=('<td align=center>User was found to share comp with ');
 
 				} else {
-					
+
 					//the admin closed (Edit account_account way)
 					$users = explode('+', $info);
 					$PHP_OUTPUT.=('<td align=center>User was closed via Edit Account with ');
-					
+
 				}
 				$size = sizeof($users);
 				foreach ($users as $key => $value) {
-					
+
 					$curr_account =& SmrAccount::getAccount($value);
 					if ($curr_account->getAccountID() != $id) {
-						
+
 						$PHP_OUTPUT.=($curr_account->getLogin());
 						if ($key + 1 < $size) $PHP_OUTPUT.=(', ');
-						
+
 					}
-					
+
 				}
 				$PHP_OUTPUT.=('.</td>');
 			} elseif ($method == 'Auto') {
-				
+
 				//closed by admin with multi tools
-				$PHP_OUTPUT.=('<td align=center>Closed by Admin After viewing the accounts IPs</td>');	
-				
+				$PHP_OUTPUT.=('<td align=center>Closed by Admin After viewing the accounts IPs</td>');
+
 			} else {
-				
+
 				//method unsupported for lookup
-				$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
+				$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));
 				if ($db2->nextRecord())
 					$PHP_OUTPUT.=('<td align=center>'.$method.', '.$info.', '.$reason.'.The method this account was closed with is not supported by Info Check</td>');
 				else $PHP_OUTPUT.=('<td align=center>This account is not closed</td>');
-				
+
 			}
 			$PHP_OUTPUT.='
 			<SCRIPT LANGUAGE=JavaScript>
-			
+
 			function go(e, ty) {
 				var base = document.form_inf;
 				var buttons_d = base.buttons.value;
@@ -196,7 +196,7 @@ if (!isset($number) && !isset($var['number'])) {
 				var len = base.elements.length;
 				for (var i = ty; i < len; i++) {
 					var e = base.elements[i];
-					
+
 					if (e.name != "action") {
 						if (u.checked) {
 							e.disabled=false;
@@ -234,7 +234,7 @@ if (!isset($number) && !isset($var['number'])) {
 					}
 				}
 			}
-			
+
 			function go2(e, ty) {
 				var base = document.form_inf;
 				var buttons_e = base.buttons2.value;
@@ -282,13 +282,13 @@ if (!isset($number) && !isset($var['number'])) {
 			}</script>';
 			$account_wanted = $id;
 			$value = 'Check Box Below';
-			$db3->query('SELECT * FROM account_exceptions WHERE account_id = '.$account_wanted);
+			$db3->query('SELECT * FROM account_exceptions WHERE account_id = '.$db->escapeNumber($account_wanted));
 			if ($db3->nextRecord())
 				$value = $db3->getField('reason');
 			$PHP_OUTPUT.=('<td align=center><input type="text" name="exception['.$account_wanted.']" value="'.$value.'" size="15" id="InputFields" disabled><br /><input onclick=go(this,'.$u.') type="checkbox" name="account_id[]" value="'.$account_wanted.'"></td>');
 			$u += 2;
 			$value2 = 'Check Box Below';
-			$db3->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$account_wanted);
+			$db3->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($account_wanted));
 			if ($db3->nextRecord())
 				$value2 = $db3->getField('reason');
 			$PHP_OUTPUT.=('<td align="center">');

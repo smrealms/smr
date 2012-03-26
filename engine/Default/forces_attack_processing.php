@@ -10,13 +10,13 @@ if ($player->getTurns() < 3)
 	create_error('You do not have enough turns to attack these forces!');
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
-	
+
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 if(!$forces->exists())
 	create_error('These forces no longer exist.');
-	
+
 $forceOwner =& $forces->getOwner();
 
 if($player->forceNAPAlliance($forceOwner))
@@ -65,7 +65,7 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $forces->updateExpire();
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $forces->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $forceOwner->getAccountID() . ',' . $forceOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = array();

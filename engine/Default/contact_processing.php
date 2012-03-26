@@ -10,18 +10,20 @@ mail($receiver,
 	'Account ID:'.EOL.'-----------'.EOL.$account->getAccountID().EOL.EOL .
 	'Message:'.EOL.'------------'.EOL.$msg,
 	'From: '.$account->getEmail());
-	
+
 $container = array();
 $container['url'] = 'skeleton.php';
 if (SmrSession::$game_id > 0) {
-
-	if ($player->isLandedOnPlanet())
+	if ($player->isLandedOnPlanet()) {
 		$container['body'] = 'planet_main.php';
-	else
+	}
+	else {
 		$container['body'] = 'current_sector.php';
-
-} else
+	}
+}
+else {
 	$container['body'] = 'game_play.php';
+}
 
 forward($container);
 

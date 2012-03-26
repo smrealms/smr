@@ -67,7 +67,7 @@ if (!isset($number) && !isset($var['number'])) {
 			$PHP_OUTPUT.=('<td align="center">'.$city.'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$email.'</td>');
 			$names = array();
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));
 			if ($db2->nextRecord())
 				$continue = 'TRUE';
 			else
@@ -141,7 +141,7 @@ if (!isset($number) && !isset($var['number'])) {
 						$id = $curr_acc->getAccountID();
 
 					}
-					$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id);
+					$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));
 					if($db2->nextRecord()) {
 
 						$match = $db2->getField('suspicion');

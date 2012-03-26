@@ -32,15 +32,15 @@ while ($db->nextRecord())
 	if (isset($used[$currTabAccId])) continue;
 	if ($rows > 1)
 	{
-		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$currTabAccId.($skipUnusedAccs?' AND last_login > '.(TIME-86400*30):'').' LIMIT 1');
+		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$db2->escapeNumber($currTabAccId).($skipUnusedAccs?' AND last_login > '.$this->db->escapeNumber(TIME-86400*30):'').' LIMIT 1');
 		if ($db2->nextRecord())
 			$currTabAccLogin = $db2->getField('login');
 		else
 			continue;
-		
+
 		if (!$skipClosedAccs)
 		{
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$currTabAccId);
+			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$this->db->escapeNumber($currTabAccId));
 			if ($db2->nextRecord())
 			{
 				if ($db2->getField('reason_id') != 5) $PHP_OUTPUT.=('Closed: ' . $db2->getField('suspicion') . '.<br />');
@@ -50,7 +50,7 @@ while ($db->nextRecord())
 		else continue;
 		if (!$skipExceptions)
 		{
-			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currTabAccId);
+			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$this->db->escapeNumber($currTabAccId));
 			if ($db2->nextRecord()) $PHP_OUTPUT.=('Exception: ' . $db2->getField('reason') . '.<br />');
 		}
 		else continue;
@@ -59,25 +59,25 @@ while ($db->nextRecord())
 		foreach ($accountIDs as $currLinkAccId)
 		{
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
-			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = '.$currLinkAccId.($skipUnusedAccs?' AND last_login > '.(TIME-86400*30):''));
+			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = '.$this->db->escapeNumber($currLinkAccId).($skipUnusedAccs?' AND last_login > '.$this->db->escapeNumber(TIME-86400*30):''));
 			if ($db2->nextRecord())
 				$currLinkAccLogin = $db2->getField('login');
 			else continue;
-			
-			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$currLinkAccId);
+
+			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$this->db->escapeNumber($currLinkAccId));
 			$isDisabled = $db3->nextRecord();
-			
+
 			$PHP_OUTPUT.=('<tr class="center'.($isDisabled?' red':'').'">');
 			//if ($echoMainAcc) $PHP_OUTPUT.=('<td rowspan='.$rows.' align=center>'.$currTabAccLogin.' ('.$currTabAccId.')</td>');
 			$PHP_OUTPUT.='<td>'.$currLinkAccLogin.' ('.$currLinkAccId.')</td>';
 			$PHP_OUTPUT.='<td'.($db2->getBoolean('validated')?'':' style="text-decoration:line-through;"').'>'.$db2->getField('email').' ('.($db2->getBoolean('validated')?'Valid':'Invalid').')</td>';
 			$PHP_OUTPUT.='<td>'.$db2->getField('common_ip').'</td>';
 			$PHP_OUTPUT.='<td>'.date(DATE_FULL_SHORT,$db2->getField('last_login')).')</td><td>';
-			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$currLinkAccId);
+			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$this->db->escapeNumber($currLinkAccId));
 			if ($db2->nextRecord()) $PHP_OUTPUT.=$db2->getField('reason');
 			else $PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td><td>');
-			
+
 			if($isDisabled)
 				$PHP_OUTPUT.=$db3->getField('suspicion');
 			else $PHP_OUTPUT.=('&nbsp;');

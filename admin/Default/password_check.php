@@ -6,10 +6,10 @@ $template->assign('PageTopic','Password Checker');
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
 
-$db->query('SELECT count(password) as pwd_count, password FROM account ' .
-			'GROUP BY password ' .
-			'HAVING pwd_count > 1 ' .
-			'ORDER BY pwd_count DESC');
+$db->query('SELECT count(password) as pwd_count, password FROM account
+			GROUP BY password
+			HAVING pwd_count > 1
+			ORDER BY pwd_count DESC');
 if ($db->getNumRows() > 0)
 {
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'password_check.php'));
@@ -31,8 +31,8 @@ if ($db->getNumRows() > 0)
 		while ($db2->nextRecord())
 		{
 			$curr_account_id = $db2->getField('account_id');
-			
-			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$curr_account_id.' LIMIT 1');
+
+			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($curr_account_id).' LIMIT 1');
 			$isDisabled = $db3->getNumRows() > 0;
 
 			$PHP_OUTPUT.=('<tr'.($isDisabled?' class="red"':'').'>');
@@ -42,7 +42,7 @@ if ($db->getNumRows() > 0)
 			$PHP_OUTPUT.=('<td align="center"><input type="checkbox" name="disable_account[]" value="'.$curr_account_id.'"');
 
 			// check if this guy is maybe already disabled
-			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$curr_account_id);
+			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($curr_account_id));
 			if ($isDisabled)
 				$PHP_OUTPUT.=(' checked');
 

@@ -10,7 +10,7 @@ if (empty($var['message_id']))
 // get message form db
 $db->query('SELECT message_text
 			FROM message
-			WHERE message_id = ' . $var['message_id']);
+			WHERE message_id = ' . $db->escapeNumber($var['message_id']));
 if (!$db->nextRecord())
 	create_error('Could not find the message you selected!');
 

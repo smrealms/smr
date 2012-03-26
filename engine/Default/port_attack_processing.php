@@ -18,8 +18,8 @@ $port =& $sector->getPort();
 
 if(!$port->exists())
 	create_error('This port does not exist.');
-	
-	
+
+
 if ($port->isDestroyed()) {
 	$container=create_container('skeleton.php','port_attack.php');
 	$container['sector_id'] = $port->getSectorID();
@@ -63,12 +63,12 @@ $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 $port->update();
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $port->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ','.ACCOUNT_ID_PORT.',' . PORT_ALLIANCE_ID . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', \'FALSE\')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PORT\',' . $db->escapeNumber($port->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ','.$db->escapeNumber(ACCOUNT_ID_PORT).',' . $db->escapeNumber(PORT_ALLIANCE_ID) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ', ' . $db->escapeBoolean(false) . ')');
 unserialize($serializedResults); //because of references we have to undo this.
 $logId = $db->escapeString('[ATTACK_RESULTS]'.$db->getInsertID());
 foreach($attackers as &$attacker) {
 	if(!$player->equals($attacker))
-		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ','.$logId.')');
+		$db->query('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getAccountID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ','.$db->escapeNumber($logId).')');
 } unset($attacker);
 
 $container = array();

@@ -35,7 +35,7 @@ if(!is_numeric($var['game_id']))
 
 $gameID = $var['game_id'];
 
-$db->query('SELECT 1 FROM player WHERE game_id = ' . $gameID . ' AND player_name = ' . $db->escape_string($player_name, true) . ' LIMIT 1');
+$db->query('SELECT 1 FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND player_name = ' . $db->escape_string($player_name, true) . ' LIMIT 1');
 if ($db->nextRecord() > 0)
 	create_error('The player name already exists.');
 
@@ -51,15 +51,15 @@ if ($credits > 0) {
 }
 
 // check if hof entry is there
-$db->query('SELECT 1 FROM account_has_stats WHERE account_id = '.SmrSession::$account_id . ' LIMIT 1');
+$db->query('SELECT 1 FROM account_has_stats WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id) . ' LIMIT 1');
 if (!$db->nextRecord())
-	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$account->getAccountID().', ' . $db->escape_string($account->getLogin(), true) . ')');
+	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$db->escapeNumber($account->getAccountID()).', ' . $db->escape_string($account->getLogin(), true) . ')');
 
 // put him in a sector with a hq
 $hq_id = $race_id + 101;
 $db->query('SELECT * FROM location JOIN sector USING(game_id, sector_id) ' .
-		'WHERE game_id = ' . $gameID . ' AND ' .
-		'location_type_id = '.$hq_id);
+		'WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ' .
+		'location_type_id = '.$db->escapeNumber($hq_id));
 if ($db->nextRecord())
 	$home_sector_id = $db->getField('sector_id');
 else
@@ -118,35 +118,35 @@ else
 $db->lockTable('player');
 
 // get last registered player id in that game and increase by one.
-$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $gameID . ' ORDER BY player_id DESC LIMIT 1');
+$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_id DESC LIMIT 1');
 if ($db->nextRecord())
 	$player_id = $db->getInt('MAX(player_id)') + 1;
 else
 	$player_id = 1;
 
 // insert into player table.
-$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action,last_active) ' .
-						'VALUES('.SmrSession::$account_id.', ' . $gameID . ', '.$player_id.', ' . $db->escape_string($player_name, true) . ', '.$race_id.', '.$ship_id.', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$alliance_id.', '.$home_sector_id.', '.$last_turn_update.', ' . TIME . ', ' . TIME . ')');
+$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action,last_active)
+			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ')');
 
 $db->unlock();
 
 // give the player shields
-$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 1, '.$amount_shields.', '.$amount_shields.')');
+$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
+			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 1, '.$db->escapeNumber($amount_shields).', '.$db->escapeNumber($amount_shields).')');
 // give the player armour
-$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 2, '.$amount_armour.', '.$amount_armour.')');
+$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
+			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 2, '.$db->escapeNumber($amount_armour).', '.$db->escapeNumber($amount_armour).')');
 // give the player cargo hold
-$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) ' .
-								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 3, 40, 40)');
+$db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
+			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 3, 40, 40)');
 // give the player weapons
-$db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-								'VALUES('.SmrSession::$account_id.', ' . $gameID . ', 0, 46)');
+$db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id)
+			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 0, 46)');
 
 // insert the huge amount of sectors into the database :)
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
-			WHERE game_id = ' . $gameID);
+			WHERE game_id = ' . $db->escapeNumber($gameID));
 if (!$db->nextRecord())
 	create_error('This game doesn\'t have any sectors');
 
@@ -158,21 +158,21 @@ for ($i = $min_sector; $i <= $max_sector; $i++) {
 	if ($i == $home_sector_id)
 		continue;
 
-	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ', '.$i.')');
+	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($i).')');
 }
-$db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.SmrSession::$account_id.', ' . $gameID . ')');
+$db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ')');
 
 
 
 // update stats
-$db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$account->getAccountID());
+$db->query('UPDATE account_has_stats SET games_joined = games_joined + 1 WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
 
 // is this our first game?
-$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$account->getAccountID());
+$db->query('SELECT * FROM account_has_stats WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
 if ($db->nextRecord() && $db->getInt('games_joined') == 1) {
 	//we are a newb set our alliance to be Newbie Help Allaince
-	$db->query('UPDATE player SET alliance_id = '.NHA_ID.' WHERE account_id = '.$account->getAccountID().' AND game_id = '.$gameID);
-	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$gameID.', '.$account->getAccountID().', 2,'.NHA_ID.')');
+	$db->query('UPDATE player SET alliance_id = '.$db->escapeNumber(NHA_ID).' WHERE account_id = '.$db->escapeNumber($account->getAccountID()).' AND game_id = '.$db->escapeNumber($gameID));
+	$db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id,alliance_id) VALUES ('.$db->escapeNumber($gameID).', '.$db->escapeNumber($account->getAccountID()).', 2,'.$db->escapeNumber(NHA_ID).')');
 	//we need to send them some messages
 	$message = 'Welcome to Space Merchant Realms, this message is to get you underway with information to start you off in the game. All newbie and beginner rated player are placed into a teaching alliance run by a Veteran player who is experienced enough to answer all your questions and give you a helping hand at learning the basics of the game.<br /><br />
 	Apart from your leader (denoted with a star on your alliance roster) there are various other ways to get information and help. Newbie helpers are players in Blue marked on the Current Players List which you can view by clicking the link on the left-hand side of the screen that says "Current Players". Also you can visit the SMR Manual via a link on the left which gives detailed information on all aspects fo the game.<br /><br />

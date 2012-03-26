@@ -4,7 +4,7 @@ require_once(get_file_loc($var['HistoryDatabase'].'.class.inc'));
 $container = create_container('skeleton.php', 'games_previous.php');
 $container['HistoryDatabase'] = $var['HistoryDatabase'];
 $db = new $var['HistoryDatabase']();
-$db->query('SELECT * FROM game WHERE game_id = '.$var['game_id']);
+$db->query('SELECT * FROM game WHERE game_id = '.$db->escapeNumber($var['game_id']));
 $db->nextRecord();
 $game_id = $db->getField('game_id');
 $container['game_id'] = $game_id;
@@ -13,7 +13,7 @@ $container['game_name'] = $db->getField('game_name');
 //get alliance members
 $id = $var['alliance_id'];
 //$PHP_OUTPUT.=($game_id.','. $id);
-$db->query('SELECT * FROM alliance WHERE alliance_id = '.$id.' AND game_id = '.$game_id);
+$db->query('SELECT * FROM alliance WHERE alliance_id = '.$db->escapeNumber($id).' AND game_id = '.$db->escapeNumber($game_id));
 $db->nextRecord();
 $PHP_OUTPUT.=('<div align=center>');
 $PHP_OUTPUT.=create_link($container, '<b>&lt;&lt;Back</b>');

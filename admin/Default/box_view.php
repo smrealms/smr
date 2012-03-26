@@ -27,7 +27,7 @@ if(!isset($var['box_type_id']))
 else
 {
 	$PHP_OUTPUT.=create_link(create_container('skeleton.php','box_view.php'),'Back<br />');
-	$db->query('SELECT * FROM message_boxes WHERE box_type_id='.$var['box_type_id'].' ORDER BY send_time DESC');
+	$db->query('SELECT * FROM message_boxes WHERE box_type_id='.$db->escapeNumber($var['box_type_id']).' ORDER BY send_time DESC');
 	$container = array();
 	$container['url'] = 'box_delete_processing.php';
 	$container['box_type_id'] = $var['box_type_id'];
@@ -40,11 +40,11 @@ else
 		$PHP_OUTPUT.=('<option>Marked Messages</option>');
 		$PHP_OUTPUT.=('<option>All Messages</option>');
 		$PHP_OUTPUT.=('</select>');
-	
+
 		$PHP_OUTPUT.=('<br /><br />');
 		$PHP_OUTPUT.=('Click the name to reply<br />');
 		$PHP_OUTPUT.=('<table width="100%" class="standard">');
-		
+
 		while($db->nextRecord())
 		{
 			$gameID = $db->getField('game_id')>0?$db->getField('game_id'):false;
@@ -60,7 +60,7 @@ else
 			$container['sender_id'] = $sender_acc->getAccountID();
 			$container['game_id'] = $gameID;
 			$PHP_OUTPUT.=('<td class="noWrap">');
-			
+
 			$sender = 'From: '.$sender_acc->getLogin().' ('.$sender_acc->getAccountID().')';
 			if ($senderPlayer!==false&&$sender_acc->getLogin() != $senderPlayer->getPlayerName())
 				$sender .= ' a.k.a '.$senderPlayer->getPlayerName();
@@ -80,12 +80,12 @@ else
 			$PHP_OUTPUT.=('<td width="100%" colspan="3">');
 			$PHP_OUTPUT.= bbifyMessage(htmliseMessage($db->getField('message_text')));
 			$PHP_OUTPUT.=('</td></tr>');
-			
+
 		}
-		
+
 		$PHP_OUTPUT.=('</table>');
 		$PHP_OUTPUT.=('</form>');
-		
+
 	} else
 		$PHP_OUTPUT.=('There are currently no messages in this box.');
 }

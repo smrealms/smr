@@ -9,8 +9,7 @@ $db4 = new SmrMySqlDatabase();
 if(isset($var['errorMsg'])) $PHP_OUTPUT.=($var['errorMsg'] . '<br /><br />');
 if (isset($var['msg'])) $PHP_OUTPUT.=($var['msg'] . '<br /><br />');
 
-$container = array();
-$container['url'] = 'keyword_processing.php';
+$container = create_container('keyword_processing.php');
 $container['type'] = 'alliance';
 $PHP_OUTPUT.=create_echo_form($container);
 //count of messages
@@ -18,21 +17,20 @@ $count = 0;
 //array for mb so we dont duplicate
 $mb_msgs = array();
 while ($db->nextRecord()) {
-	
+
 	//search every message on webboards for each word first
 	$id = $db->getField('id');
 	$word = $db->getField('keyword');
-	
-	$db2->query('SELECT * FROM alliance_thread WHERE sender_id != 0 AND text LIKE \'%'.$word.'%\' ORDER BY time DESC');
+
+	$db2->query('SELECT * FROM alliance_thread WHERE sender_id != 0 AND text LIKE ' . $db2->escapeString('%'.$word.'%') . ' ORDER BY time DESC');
 	while ($db2->nextRecord()) {
 		//assume we arent skipping
 		$skip = 'no';
 		$bad = $db2->getField('text');
-		$db3->query('SELECT * FROM mb_keywords WHERE assoc = '.$id.' AND type = \'ignore\' AND `use` = 1');
+		$db3->query('SELECT * FROM mb_keywords WHERE assoc = '.$db3->escapeNumber($id).' AND type = \'ignore\' AND `use` = 1');
 		while ($db3->nextRecord()) {
 			$word2 = $db3->getField('keyword');
-			$sql = 'SELECT '.$db->escapeString($bad).' LIKE \'%'.$word2.'%\'';
-			$db4->query($sql);
+			$db4->query('SELECT '.$db->escapeString($bad).' LIKE ' . $db4->escapeString('%'.$word2.'%'));
 			$db4->nextRecord();
 			if ($db4->getField(0)) $skip = 'yes';
 		}
@@ -68,7 +66,7 @@ while ($db->nextRecord()) {
 			$PHP_OUTPUT.=('<th align=center>Ignore</th>');
 			$PHP_OUTPUT.=('</tr>');
 		}
-		
+
 		//lets echo this message
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align=center>'.$game_id.'</td>');
@@ -87,7 +85,7 @@ while ($db->nextRecord()) {
 		$PHP_OUTPUT.=('</tr>');
 		//update count
 		$count += 1;
-	
+
 	}
 }
 
@@ -112,21 +110,20 @@ $count = 0;
 //array so we dont duplicate messages
 $personal_msgs = array();
 while ($db->nextRecord()) {
-	
+
 	//now search personal messages
 	$word = $db->getField('keyword');
 	$id = $db->getField('id');
-	$db2->query('SELECT * FROM message WHERE message_type_id = 2 AND sender_id != 0 AND message_text LIKE \'%'.$word.'%\' ORDER BY send_time DESC');
+	$db2->query('SELECT * FROM message WHERE message_type_id = 2 AND sender_id != 0 AND message_text LIKE ' . $db2->escapeString('%'.$word.'%') . ' ORDER BY send_time DESC');
 	while ($db2->nextRecord()) {
-		
+
 		//assume we arent skipping
 		$skip = 'no';
 		$bad = $db2->getField('message_text');
-		$db3->query('SELECT * FROM mb_keywords WHERE assoc = '.$id.' AND type = \'ignore\' AND `use` = 1');
+		$db3->query('SELECT * FROM mb_keywords WHERE assoc = '.$db3->escapeNumber($id).' AND type = \'ignore\' AND `use` = 1');
 		while ($db3->nextRecord()) {
 			$word2 = $db3->getField('keyword');
-			$sql = 'SELECT '.$db->escapeString($bad).' LIKE \'%'.$word2.'%\'';
-			$db4->query($sql);
+			$db4->query('SELECT '.$db->escapeString($bad).' LIKE ' . $db4->escapeString('%'.$word2.'%'));
 			$db4->nextRecord();
 			if ($db4->getField(0)) $skip = 'yes';
 		}
@@ -151,7 +148,7 @@ while ($db->nextRecord()) {
 			$PHP_OUTPUT.=('<th align=center>Ignore</th>');
 			$PHP_OUTPUT.=('</tr>');
 		}
-		
+
 		//lets echo this message
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align=center>' . $db2->getField('game_id') . '</td>');
@@ -166,7 +163,7 @@ while ($db->nextRecord()) {
 		$PHP_OUTPUT.=('</tr>');
 		//update count
 		$count += 1;
-		
+
 	}
 }
 

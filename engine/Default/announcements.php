@@ -9,7 +9,7 @@ if (!isset($var['view_all'])) {
 	$db->query('SELECT time, login, msg
 				FROM announcement
 				JOIN account ON announcement.admin_id=account.account_id
-				AND time > ' . $account->getLastLogin() . '
+				AND time > ' . $db->escapeNumber($account->getLastLogin()) . '
 				ORDER BY time DESC');
 }
 else {

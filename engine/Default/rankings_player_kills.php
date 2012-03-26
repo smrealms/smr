@@ -6,9 +6,15 @@ require_once(get_file_loc('menu.inc'));
 create_ranking_menu(0, 1);
 
 // what rank are we?
-$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND ' .
-			'(kills > '.$player->getKills().' OR ' .
-			'(kills = '.$player->getKills().' AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . ' ))');
+$db->query('SELECT count(*) FROM player
+			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				AND (
+					kills > '.$db->escapeNumber($player->getKills()).'
+					OR (
+						kills = '.$db->escapeNumber($player->getKills()).'
+						AND player_name <= ' . $db->escapeString($player->getPlayerName(), true) . '
+					)
+				)');
 $db->nextRecord();
 $our_rank = $db->getInt('count(*)');
 
@@ -30,7 +36,7 @@ $PHP_OUTPUT.=('<th>Alliance</th>');
 $PHP_OUTPUT.=('<th>Kills</th>');
 $PHP_OUTPUT.=('</tr>');
 
-$db->query('SELECT * FROM player WHERE game_id = '.SmrSession::$game_id.' ORDER BY kills DESC, player_name LIMIT 10');
+$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($player->getGameID()).' ORDER BY kills DESC, player_name LIMIT 10');
 
 $rank = 0;
 while ($db->nextRecord()) {

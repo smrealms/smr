@@ -62,7 +62,7 @@ if (1 == 1) {
 
 			$new_acc =& SmrAccount::getAccount($account_wanted);
 			$last_acc =& SmrAccount::getAccount($last_acc_id);
-			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$acc_id);
+			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db2->escapeNumber($acc_id));
 			if ($db2->getNumRows() && $db_ip != $last_ip) continue;
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td align=center>'.$new_acc->getLogin().' ('.$new_acc->getAccountID().')</td>');

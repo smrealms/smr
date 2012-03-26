@@ -77,12 +77,12 @@ function album_entry($album_id)
 	if (SmrSession::$account_id != 0 && $album_id != SmrSession::$account_id)
 		$db->query('UPDATE album
 				SET page_views = page_views + 1
-				WHERE account_id = '.$album_id.' AND
+				WHERE account_id = '.$db->escapeNumber($album_id).' AND
 					  approved = \'YES\'');
 
 	$db->query('SELECT *
 				FROM album
-				WHERE account_id = '.$album_id.' AND
+				WHERE account_id = '.$db->escapeNumber($album_id).' AND
 					  approved = \'YES\'');
 	if ($db->nextRecord())
 	{
@@ -200,7 +200,7 @@ function album_entry($album_id)
 
 	$db->query('SELECT *
 				FROM album_has_comments
-				WHERE album_id = '.$album_id);
+				WHERE album_id = '.$db->escapeNumber($album_id));
 	while ($db->nextRecord())
 	{
 		$time	= $db->getField('time');
@@ -221,8 +221,8 @@ function album_entry($album_id)
 		echo('<td style="color:green; font-size:70%;"><br /><input type="submit" value="Send" id="InputFields"></td>');
 		$db->query('SELECT *
 					FROM account_has_permission
-					WHERE account_id = '.SmrSession::$account_id.' AND
-						  permission_id = '.PERMISSION_MODERATE_PHOTO_ALBUM);
+					WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id).' AND
+						  permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
 		if ($db->nextRecord())
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" id="InputFields"></td>');
 

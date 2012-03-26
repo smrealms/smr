@@ -23,7 +23,7 @@ $PHP_OUTPUT.='Welcome to the Hall of Fame ' . $account->getHofName() . '!<br />T
 				create_link($container,'You can also view your Personal Hall of Fame here.').'<br /><br />';
 
 $db->query('SELECT type FROM hof_visibility WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . ' ORDER BY type');
-//$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . (isset($var['game_id']) ? ' AND game_id='.$var['game_id'] : '').' ORDER BY type');
+//$db->query('SELECT DISTINCT type FROM player_hof JOIN hof_visibility USING(type) WHERE visibility != '. $db->escapeString(HOF_PRIVATE) . (isset($var['game_id']) ? ' AND game_id='.$db->escapeNumber($var['game_id']) : '').' ORDER BY type');
 define('DONATION_NAME','Money Donated To SMR');
 define('USER_SCORE_NAME','User Score');
 $hofTypes = array(DONATION_NAME=>true, USER_SCORE_NAME=>true);
@@ -43,7 +43,7 @@ $PHP_OUTPUT.= '<table class="standard" align="center">';
 
 if(!isset($var['view'])) {
 	$PHP_OUTPUT.=('<tr><th>Category</th><th width="60%">Subcategory</th></tr>');
-	
+
 	foreach($hofTypes as $type => $value) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td>'.$type.'</td>');
@@ -57,14 +57,14 @@ if(!isset($var['view'])) {
 			foreach($value as $subType => $subTypeValue) {
 				++$i;
 				$container['view'] = $subType;
-				
+
 				$rankType = $container['type'];
 				$rankType[] = $subType;
 				$rank = getHofRank($subType,$rankType,$account->getAccountID(),$game_id,$db);
 				$rankMsg='';
 				if($rank['Rank']!=0)
 					$rankMsg = ' (#' . $rank['Rank'] .')';
-				
+
 				$PHP_OUTPUT.=create_submit_link($container,$subType.$rankMsg);
 				$PHP_OUTPUT.=('&nbsp;');
 				if ($i % 3 == 0) $PHP_OUTPUT.=('<br />');
@@ -80,18 +80,18 @@ if(!isset($var['view'])) {
 }
 else {
 	$PHP_OUTPUT.=('<tr><th>Rank</th><th>Player</th><th>Total</th></tr>');
-	
-	
-	$gameIDSql = ' AND game_id '.(isset($var['game_id']) ? '= ' . $var['game_id'] : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
-	
+
+
+	$gameIDSql = ' AND game_id '.(isset($var['game_id']) ? '= ' . $db->escapeNumber($var['game_id']) : 'IN (SELECT game_id FROM game WHERE ignore_stats = '.$db->escapeBoolean(false).')');
+
 	$vis = HOF_PUBLIC;
 	$rank=1;
 	$foundMe=false;
 	$viewType = $var['type'];
 	$viewType[] = $var['view'];
 	if($var['view'] == DONATION_NAME)
-		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated ' .
-				'GROUP BY account_id ORDER BY amount DESC LIMIT 25');
+		$db->query('SELECT account_id, SUM(amount) as amount FROM account_donated
+					GROUP BY account_id ORDER BY amount DESC LIMIT 25');
 	else if($var['view'] == USER_SCORE_NAME) {
 		$statements = SmrAccount::getUserScoreCaseStatement($db);
 		$query = 'SELECT account_id, '.$statements['CASE'].' amount FROM (SELECT account_id, type, SUM(amount) amount FROM player_hof WHERE type IN ('.$statements['IN'].')'.$gameIDSql.' GROUP BY account_id,type) x GROUP BY account_id ORDER BY amount DESC LIMIT 25';

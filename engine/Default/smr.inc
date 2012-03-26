@@ -109,7 +109,7 @@ function &xmlify(&$str) {
 	$xml = str_replace('&nbsp;','&#160;',htmlentities($str,ENT_COMPAT,'utf-8'));
 	return $xml;
 }
-	
+
 function &bbifyMessage($message,$noLinks=false) {
 	static $bbParser;
 	if(!isset($bbParser)) {
@@ -175,7 +175,7 @@ function has_beta_privilege($priv = '', $acc = 0) {
 			if(isset($BETA_CONSTANTS['Anyone Create Games']) && $BETA_CONSTANTS['Anyone Create Games']===true)
 			return true;
 	}
-	
+
 	if(isset($BETA_CONSTANTS[$priv])) {
 		if ($BETA_CONSTANTS[$priv] === true) return true;
 		if (is_array($BETA_CONSTANTS[$priv]) && in_array($acc, $BETA_CONSTANTS[$priv])) return true;
@@ -427,7 +427,7 @@ function hex2bin( $data ) {
 
 function word_filter($string) {
 	static $words;
-	
+
 	if(!is_array($words)) {
 		require_once(LIB . '/Default/SmrMySqlDatabase.class.inc');
 		$db = new SmrMySqlDatabase();
@@ -438,13 +438,13 @@ function word_filter($string) {
 			$words[] = array('word_value' => '/'.str_replace('/','\/',$row['word_value']).'/i','word_replacement'=> $row['word_replacement']);
 		}
 	}
-	
+
 	foreach ($words as $word) {
 		$string = preg_replace($word['word_value'],$word['word_replacement'],$string);
 	}
 
 	return $string;
-	
+
 }
 
 
@@ -458,7 +458,7 @@ function do_voodoo() {
 	if(!AJAX_CONTAINER && USING_AJAX && SmrSession::$SN != SmrSession::$lastSN)
 		exit;
 //	ob_clean();
-	
+
 	foreach ($GLOBALS as $key => $value) {
 		$$key = &$GLOBALS[$key];
 	}
@@ -470,32 +470,32 @@ function do_voodoo() {
 	if(!defined('DATE_TIME_SHORT')) define('DATE_TIME_SHORT',$account->getShortTimeFormat());
 	if(!defined('DATE_FULL_SHORT')) define('DATE_FULL_SHORT',DATE_DATE_SHORT.' '.DATE_TIME_SHORT);
 	if(!defined('DATE_FULL_SHORT_SPLIT')) define('DATE_FULL_SHORT_SPLIT',DATE_DATE_SHORT.'\<b\r /\>'.DATE_TIME_SHORT);
-	
-	
+
+
 	$db = new SmrMySqlDatabase();
 	$GLOBALS['db'] =& $db;
-	
+
 	if($var['url'] == 'game_play_preprocessing.php') { // Would rather not have these here but if we go through the initialisation based on game id when leaving a classic game it breaks.
 		SmrSession::clearLinks();
 		if (SmrSession::$game_id > 0)
 			$account->log(LOG_TYPE_GAME_ENTERING, 'Player left game '.SmrSession::$game_id);
-		
+
 		// reset game id
 		SmrSession::$game_id = 0;
 		SmrSession::update();
-		
+
 		forward(create_container('skeleton.php', 'game_play.php', $var));
 	}
 	else if($var['url'] == 'logoff_preprocessing.php') {
 		SmrSession::$game_id = 0;
 		SmrSession::update();
-		
+
 		// try to get a real ip first
 		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
 			$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
 		else
 			$curr_ip = $_SERVER['REMOTE_ADDR'];
-		
+
 		// log?
 		$account->log(LOG_TYPE_LOGIN, 'logged off from '.$curr_ip);
 		$container = create_container('skeleton.php', 'logoff.php');
@@ -510,7 +510,7 @@ function do_voodoo() {
 		}
 		// We need to acquire locks BEFORE getting the player information
 		// Otherwise we could be working on stale information
-		$db->query('SELECT sector_id FROM player WHERE account_id=' . SmrSession::$account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
+		$db->query('SELECT sector_id FROM player WHERE account_id=' . $db->escapeNumber(SmrSession::$account_id) . ' AND game_id=' . $db->escapeNumber(SmrSession::$game_id) . ' LIMIT 1');
 		$db->nextRecord();
 		$sector_id = $db->getInt('sector_id');
 
@@ -530,7 +530,7 @@ function do_voodoo() {
 				}
 			}
 		}
-		
+
 		// Now that they've acquire a lock we can move on
 		$player	=& SmrPlayer::getPlayer(SmrSession::$account_id, SmrSession::$game_id);
 		$GLOBALS['player'] =& $player;
@@ -542,7 +542,7 @@ function do_voodoo() {
 
 		$ship	=& $player->getShip();
 		$GLOBALS['ship'] =& $ship;
-		
+
 		$sector	=& $player->getSector();
 		$GLOBALS['sector'] =& $sector;
 
@@ -566,15 +566,15 @@ function do_voodoo() {
 		else {
 			include_once(get_file_loc($var['body']));
 		}
-			
+
 		if($PHP_OUTPUT!='')
 			$template->assign('PHP_OUTPUT',$PHP_OUTPUT);
 	}
-	
+
 	if (SmrSession::$game_id > 0) {
 		$template->assign('UnderAttack', $ship->removeUnderAttack());
 	}
-	
+
 	if($lock) { //Only save if we have the lock.
 		SmrSector::saveSectors();
 		SmrShip::saveShips();
@@ -589,9 +589,9 @@ function do_voodoo() {
 		SmrSession::update();
 		release_lock();
 	}
-	
+
 	//Nothing below this point should require the lock.
-	
+
 	$template->assign('TemplateBody',$var['body']);
 	if (SmrSession::$game_id > 0) {
 		$template->assignByRef('ThisSector',$sector);
@@ -605,15 +605,15 @@ function do_voodoo() {
 	doSkeletionAssigns($template,$player,$ship,$sector,$db,$account);
 	$time_elapsed = microtimeDiff(microtime(),MICRO_TIME);
 	$template->assign('ScriptRuntime',number_format($time_elapsed,4));
-	
+
 	if(isset($var['DisableAjax']) && $var['DisableAjax']===true) {
 		$template->assign('AJAX_ENABLE_REFRESH',false);
 	}
-	
+
 	$template->display($var['url'], USING_AJAX);
-	
+
 	SmrSession::update();
-	
+
 	exit;
 }
 
@@ -627,21 +627,21 @@ function acquire_lock($sector) {
 		return true;
 
 	// Insert ourselves into the queue.
-	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$account_id . ',' . $sector . ',' . TIME . ')');
+	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . $db->escapeNumber(SmrSession::$game_id) . ',' . $db->escapeNumber(SmrSession::$account_id) . ',' . $db->escapeNumber($sector) . ',' . $db->escapeNumber(TIME) . ')');
 	$lock = $db->getInsertID();
-	
+
 	for($i=0;$i<250;++$i) {
 		if(time() - TIME >= LOCK_DURATION - LOCK_BUFFER) {
 			break;
 		}
 		// If there is someone else before us in the queue we sleep for a while
-		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $lock . ' AND sector_id=' . $sector . ' AND game_id=' . SmrSession::$game_id . ' AND timestamp > ' . (TIME - LOCK_DURATION));
+		$db->query('SELECT COUNT(*) FROM locks_queue WHERE lock_id<' . $db->escapeNumber($lock) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND game_id=' . $db->escapeNumber(SmrSession::$game_id) . ' AND timestamp > ' . $db->escapeNumber(TIME - LOCK_DURATION));
 		$locksInQueue = -1;
 		if($db->nextRecord() && ($locksInQueue = $db->getInt('COUNT(*)')) > 0) {
 			//usleep(100000 + mt_rand(0,50000));
 
 			// We can only have one lock in the queue, anything more means someone is screwing around
-			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . SmrSession::$account_id . ' AND sector_id=' . $sector . ' AND timestamp > ' . (TIME - LOCK_DURATION));
+			$db->query('SELECT COUNT(*) FROM locks_queue WHERE account_id=' . $db->escapeNumber(SmrSession::$account_id) . ' AND sector_id=' . $db->escapeNumber($sector) . ' AND timestamp > ' . $db->escapeNumber(TIME - LOCK_DURATION));
 			if($db->nextRecord() && $db->getInt('COUNT(*)') > 1) {
 				release_lock();
 				$locksFailed[$sector] = true;
@@ -664,10 +664,11 @@ function acquire_lock($sector) {
 
 function release_lock() {
 	global $db, $lock;
-	if($lock)
-		$db->query('DELETE from locks_queue WHERE lock_id=' . $lock . ' OR timestamp<' . (TIME - LOCK_DURATION));
+	if($lock) {
+		$db->query('DELETE from locks_queue WHERE lock_id=' . $db->escapeNumber($lock) . ' OR timestamp<' . $db->escapeNumber(TIME - LOCK_DURATION));
+	}
 
-	$lock=false;
+	$lock = false;
 }
 
 function doTickerAssigns(&$template,&$player,&$db) {
@@ -678,7 +679,7 @@ function doTickerAssigns(&$template,&$player,&$db) {
 		if($player->hasTicker('NEWS')) {
 			$text = '';
 			//get recent news (5 mins)
-			
+
 			$db->query('SELECT time,news_message FROM news WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND time >= '.$max.' ORDER BY time DESC LIMIT 4');
 			while($db->nextRecord()) {
 				$ticker[] = array('Time' => date(DATE_FULL_SHORT, $db->getField('time')),
@@ -689,9 +690,9 @@ function doTickerAssigns(&$template,&$player,&$db) {
 			$db->query('SELECT message_text,send_time FROM message
 						WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
-						AND message_type_id=' . MSG_SCOUT . '
-						AND send_time>=' . $max . '
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > ' . TIME . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND reciever_delete = \'FALSE\'
+						AND message_type_id=' . $db->escapeNumber(MSG_SCOUT) . '
+						AND send_time>=' . $db->escapeNumber($max) . '
+						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > ' . $db->escapeNumber(TIME) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND reciever_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4');
 			while($db->nextRecord()) {
@@ -712,14 +713,14 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	if(!$account->isUseAJAX()) {
 		$template->assign('AJAX_ENABLE_REFRESH',false);
 	}
-	
+
 	$container = create_container('skeleton.php');
-	
-	
+
+
 	if (SmrSession::$game_id > 0) {
 		$template->assign('GameName',Globals::getGameName(SmrSession::$game_id));
 		$template->assign('GameID',SmrSession::$game_id);
-	
+
 		if ($player->isLandedOnPlanet()) {
 			$template->assign('PlanetMainLink',Globals::getPlanetMainHREF());
 		}
@@ -728,145 +729,145 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		}
 
 		$template->assign('PlotCourseLink',Globals::getPlotCourseHREF());
-		
+
 		$template->assign('TraderLink',Globals::getTraderStatusHREF());
-	
+
 		$template->assign('PoliticsLink',Globals::getPoliticsHREF());
-	
+
 		$container['body'] = 'combat_log_viewer.php';
 		$template->assign('CombatLogsLink',SmrSession::get_new_href($container));
-	
+
 		$template->assign('PlanetLink',Globals::getTraderPlanetHREF());
-	
+
 		$container['body'] = 'forces_list.php';
 		$template->assign('ForcesLink',SmrSession::get_new_href($container));
-	
+
 		$container['body'] = 'message_view.php';
 		$template->assign('MessagesLink',SmrSession::get_new_href($container));
-	
+
 		$container['body'] = 'news_read_current.php';
 		$template->assign('ReadNewsLink',SmrSession::get_new_href($container));
-	
+
 		$container['body'] = 'galactic_post_read.php';
 		$template->assign('GalacticPostLink',SmrSession::get_new_href($container));
-	
+
 		$container['body'] = 'trader_search.php';
 		$template->assign('SearchForTraderLink',SmrSession::get_new_href($container));
-	
+
 		$container['body'] = 'rankings_player_experience.php';
 		$template->assign('RankingsLink',SmrSession::get_new_href($container));
-	
+
 		$container['body'] = 'hall_of_fame_new.php';
 		$container['game_id'] = $player->getGameID();
 		$template->assign('CurrentHallOfFameLink',SmrSession::get_new_href($container));
 	}
-	
+
 	if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
 		$container = create_container('skeleton.php', 'hall_of_fame_new.php');
 		$template->assign('HallOfFameLink',SmrSession::get_new_href($container));
-		
+
 		$template->assign('AccountID',SmrSession::$account_id);
 		$template->assign('PlayGameLink',SmrSession::get_new_href(create_container('game_play_preprocessing.php')));
-	
+
 		$template->assign('LogoutLink',SmrSession::get_new_href(create_container('logoff_preprocessing.php')));
 	}
-	
+
 	$container = create_container('skeleton.php', 'preferences.php');
 	$template->assign('PreferencesLink',SmrSession::get_new_href($container));
-	
+
 	$container['body'] = 'album_edit.php';
 	$template->assign('EditPhotoLink',SmrSession::get_new_href($container));
-	
+
 	$container['body'] = 'bug_report.php';
 	$template->assign('ReportABugLink',SmrSession::get_new_href($container));
-	
+
 	$container['body'] = 'contact.php';
 	$template->assign('ContactFormLink',SmrSession::get_new_href($container));
-	
+
 	if (SmrSession::$game_id > 0) {
 		$container['body'] = 'chat_rules.php';
 		$template->assign('IRCLink',SmrSession::get_new_href($container));
 	}
-	
+
 	$container['body'] = 'donation.php';
 	$template->assign('DonateLink',SmrSession::get_new_href($container));
-	
-	
-	
+
+
+
 	if (SmrSession::$game_id != 0) {
 		$db->query('SELECT message_type_id,COUNT(*) FROM player_has_unread_messages WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' GROUP BY message_type_id');
-	
+
 		if($db->getNumRows()) {
 			$messages = array();
 			while($db->nextRecord()) {
 				$messages[$db->getInt('message_type_id')] = $db->getInt('COUNT(*)');
 			}
-	
+
 			$container = create_container('skeleton.php','message_view.php');
-	
+
 			if(isset($messages[MSG_GLOBAL])) {
 				$container['folder_id'] = MSG_GLOBAL;
 				$template->assign('MessageGlobalLink',SmrSession::get_new_href($container));
 				$template->assign('MessageGlobalNum',$messages[MSG_GLOBAL]);
 			}
-	
+
 			if(isset($messages[MSG_PLAYER])) {
 				$container['folder_id'] = MSG_PLAYER;
 				$template->assign('MessagePersonalLink',SmrSession::get_new_href($container));
 				$template->assign('MessagePersonalNum',$messages[MSG_PLAYER]);
 			}
-	
+
 			if(isset($messages[MSG_SCOUT])) {
 				$container['folder_id'] = MSG_SCOUT;
 				$template->assign('MessageScoutLink',SmrSession::get_new_href($container));
 				$template->assign('MessageScoutNum',$messages[MSG_SCOUT]);
 			}
-	
+
 			if(isset($messages[MSG_POLITICAL])) {
 				$container['folder_id'] = MSG_POLITICAL;
 				$template->assign('MessagePoliticalLink',SmrSession::get_new_href($container));
 				$template->assign('MessagePoliticalNum',$messages[MSG_POLITICAL]);
 			}
-	
+
 			if(isset($messages[MSG_ALLIANCE])) {
 				$container['folder_id'] = MSG_ALLIANCE;
 				$template->assign('MessageAllianceLink',SmrSession::get_new_href($container));
 				$template->assign('MessageAllianceNum',$messages[MSG_ALLIANCE]);
 			}
-	
+
 			if(isset($messages[MSG_ADMIN])) {
 				$container['folder_id'] = MSG_ADMIN;
 				$template->assign('MessageAdminLink',SmrSession::get_new_href($container));
 				$template->assign('MessageAdminNum',$messages[MSG_ADMIN]);
 			}
-	
+
 			if(isset($messages[MSG_CASINO])) {
 				$container['folder_id'] = MSG_CASINO;
 				$template->assign('MessageCasinoLink',SmrSession::get_new_href($container));
 				$template->assign('MessageCasinoNum',$messages[MSG_CASINO]);
 			}
-	
+
 			if(isset($messages[MSG_PLANET])) {
 				$container = create_container('planet_msg_processing.php');
 				$template->assign('MessagePlanetLink',SmrSession::get_new_href($container));
 				$template->assign('MessagePlanetNum',$messages[MSG_PLANET]);
 			}
 		}
-	
+
 		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id']	= $player->getPlayerID();
 		$template->assign('PlayerNameLink',SmrSession::get_new_href($container));
-		
+
 		if (is_array(Globals::getHiddenPlayers())&&in_array($player->getAccountID(), Globals::getHiddenPlayers())) $template->assign('PlayerInvisible',true);
-	
+
 		// ******* Hardware *******
 		$container = create_container('skeleton.php', 'configure_hardware.php');
-	
+
 		$template->assign('HardwareLink',SmrSession::get_new_href($container));
-	
+
 		// ******* Forces *******
 		$template->assign('ForceDropLink',SmrSession::get_new_href(create_container('skeleton.php', 'forces_drop.php')));
-	
+
 		if ($ship->hasMines()) {
 			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
@@ -879,27 +880,27 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 			$container['drop_combat_drones'] = 1;
 			$template->assign('DropCDLink',SmrSession::get_new_href($container));
 		}
-	
+
 		if ($ship->hasSDs()) {
 			$container = create_container('forces_drop_processing.php');
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_scout_drones'] = 1;
 			$template->assign('DropSDLink',SmrSession::get_new_href($container));
 		}
-	
+
 		$template->assign('CargoJettisonLink',SmrSession::get_new_href(create_container('skeleton.php', 'cargo_dump.php')));
-	
+
 		$template->assign('WeaponReorderLink',SmrSession::get_new_href(create_container('skeleton.php', 'weapon_reorder.php')));
-	
+
 		$nextVoteTime = array();
 		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY link_id LIMIT 3');
 		while($db->nextRecord()) {
 			$nextVoteTime[$db->getInt('link_id')] = TIME_BETWEEN_VOTING - (TIME - $db->getField('timeout'));
 		}
 	}
-	
+
 	$container = create_container('vote_link.php');
-	
+
 	$voteLinks = array();
 	$voteLinks[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'location' => 'http://www.mpogd.com/games/game.asp?ID=1145', 'name' => 'MPOGD');
 	//OMGN no longer do voting - the link actually just redirects to archive site.
@@ -907,7 +908,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	// as long as TWG uses this stupid captcha which is very hard to figure out we will not support this site
 	// nor will we give free turns for NOT voting
 	//$voteLinks[3] = array('default_img' => 'twg.png', 'star_img' => 'twg_vote.png', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
-	
+
 	$minVoteTime = 86400;
 	$voteSite = array();
 	for($i=1;$i<2;$i++) {
@@ -926,13 +927,13 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 			$voteSite[$i] .= '"' . $voteLinks[$i]['location'] . '" target="_blank"';
 			$img = $voteLinks[$i]['default_img'];
 		}
-	
+
 		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $voteLinks[$i]['name'] . '"></a>';
 	}
 	$template->assign('VoteSites',$voteSite);
 	$template->assign('TimeToNextVote',$minVoteTime);
-	
-	
+
+
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
 	if ($db->nextRecord()) {
@@ -940,7 +941,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$container = create_container('skeleton.php', 'changelog_view.php', array('version_id' => $version_id));
 		$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
 	}
-	
+
 	$template->assign('Version',$version);
 	$template->assign('CurrentYear',date('Y',TIME));
 //	$launch = mktime(0,0,0,3,12,2008);

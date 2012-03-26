@@ -2,7 +2,7 @@
 require_once('SmrGalaxy.class.inc');
 class SmrGame {
 	protected static $CACHE_GAMES = array();
-	
+
 	protected $db;
 
 	protected $gameID;
@@ -22,7 +22,7 @@ class SmrGame {
 	protected $allianceMaxPlayers;
 	protected $allianceMaxVets;
 	protected $startingCredits;
-	
+
 	protected $hasChanged = false;
 	protected $isNew = false;
 
@@ -33,13 +33,13 @@ class SmrGame {
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
-	
+
 	public static function saveGames() {
 		foreach(self::$CACHE_GAMES as &$game) {
 			$game->save();
 		}
 	}
-	
+
 	public static function &createGame($gameID) {
 		if(!isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID,true);
@@ -47,7 +47,7 @@ class SmrGame {
 		}
 		return self::$CACHE_GAMES[$gameID];
 	}
-	
+
 	protected function __construct($gameID, $create=false) {
 		$this->db = new SmrMySqlDatabase();
 
@@ -125,15 +125,15 @@ class SmrGame {
 			}
 		}
 	}
-	
+
 	public function getGameID() {
 		return $this->gameID;
 	}
-	
+
 	public function getName() {
 		return $this->name;
 	}
-	
+
 	public function setName($name) {
 		if($this->name==$name) {
 			return;
@@ -141,11 +141,11 @@ class SmrGame {
 		$this->name=$name;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getDescription() {
 		return $this->description;
 	}
-	
+
 	public function setDescription($description) {
 		if($this->description==$description) {
 			return;
@@ -153,11 +153,11 @@ class SmrGame {
 		$this->description=$description;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getStartDate() {
 		return $this->startDate;
 	}
-	
+
 	public function setStartDate($startDate) {
 		if($this->startDate==$startDate) {
 			return;
@@ -165,11 +165,11 @@ class SmrGame {
 		$this->startDate=$startDate;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getStartTurnsDate() {
 		return $this->startTurnsDate;
 	}
-	
+
 	public function setStartTurnsDate($startTurnsDate) {
 		if($this->startTurnsDate==$startTurnsDate) {
 			return;
@@ -177,11 +177,11 @@ class SmrGame {
 		$this->startTurnsDate=$startTurnsDate;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getEndDate() {
 		return $this->endDate;
 	}
-	
+
 	public function setEndDate($endDate) {
 		if($this->endDate==$endDate) {
 			return;
@@ -189,11 +189,11 @@ class SmrGame {
 		$this->endDate=$endDate;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getMaxPlayers() {
 		return $this->maxPlayers;
 	}
-	
+
 	public function setMaxPlayers($maxPlayers) {
 		if($this->maxPlayers==$maxPlayers) {
 			return;
@@ -201,11 +201,11 @@ class SmrGame {
 		$this->maxPlayers=$maxPlayers;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getMaxTurns() {
 		return $this->maxTurns;
 	}
-	
+
 	public function setMaxTurns($int) {
 		if($this->maxTurns==$int) {
 			return;
@@ -213,11 +213,11 @@ class SmrGame {
 		$this->maxTurns=$int;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getStartTurnHours() {
 		return $this->startTurnHours;
 	}
-	
+
 	public function setStartTurnHours($int) {
 		if($this->startTurnHours==$int) {
 			return;
@@ -225,11 +225,11 @@ class SmrGame {
 		$this->startTurnHours=$int;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getGameType() {
 		return $this->gameType;
 	}
-	
+
 	public function setGameType($gameType) {
 		if($this->gameType==$gameType) {
 			return;
@@ -237,11 +237,11 @@ class SmrGame {
 		$this->gameType=$gameType;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getCreditsNeeded() {
 		return $this->creditsNeeded;
 	}
-	
+
 	public function setCreditsNeeded($creditsNeeded) {
 		if($this->creditsNeeded==$creditsNeeded) {
 			return;
@@ -249,11 +249,11 @@ class SmrGame {
 		$this->creditsNeeded=$creditsNeeded;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getGameSpeed() {
 		return $this->gameSpeed;
 	}
-	
+
 	public function setGameSpeed($gameSpeed) {
 		if($this->gameSpeed==$gameSpeed) {
 			return;
@@ -261,11 +261,11 @@ class SmrGame {
 		$this->gameSpeed=$gameSpeed;
 		$this->hasChanged=true;
 	}
-	
+
 	public function isEnabled() {
 		return $this->gameSpeed;
 	}
-	
+
 	public function setEnabled($bool) {
 		if($this->enabled==$bool) {
 			return;
@@ -273,11 +273,11 @@ class SmrGame {
 		$this->enabled=$bool;
 		$this->hasChanged=true;
 	}
-	
+
 	public function isIgnoreStats() {
 		return $this->ignoreStats;
 	}
-	
+
 	public function setIgnoreStats($bool) {
 		if($this->ignoreStats==$bool) {
 			return;
@@ -285,11 +285,11 @@ class SmrGame {
 		$this->ignoreStats=$bool;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getAllianceMaxPlayers() {
 		return $this->allianceMaxPlayers;
 	}
-	
+
 	public function setAllianceMaxPlayers($int) {
 		if($this->allianceMaxPlayers==$int) {
 			return;
@@ -297,11 +297,11 @@ class SmrGame {
 		$this->allianceMaxPlayers=$int;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getAllianceMaxVets() {
 		return $this->allianceMaxVets;
 	}
-	
+
 	public function setAllianceMaxVets($int) {
 		if($this->allianceMaxVets==$int) {
 			return;
@@ -309,11 +309,11 @@ class SmrGame {
 		$this->allianceMaxVets=$int;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getStartingCredits() {
 		return $this->startingCredits;
 	}
-	
+
 	public function setStartingCredits($int) {
 		if($this->startingCredits==$int) {
 			return;
@@ -321,11 +321,11 @@ class SmrGame {
 		$this->startingCredits=$int;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getNumberOfGalaxies() {
 		return count(SmrGalaxy::getGameGalaxies($this->getGameID()));
 	}
-	
+
 	public function equals(SmrGame $otherGame) {
 		return $otherGame->getGameID()==$this->getGameID();
 	}

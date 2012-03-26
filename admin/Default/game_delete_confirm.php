@@ -10,7 +10,7 @@ if(isset($_REQUEST['game_id']))
 $game_id = $var['game_id'];
 $db->query('SELECT game_name, end_date
 			FROM game
-			WHERE game_id = '.$game_id);
+			WHERE game_id = '.$db->escapeNumber($game_id));
 if ($db->nextRecord()) {
 
 	$name		= $db->getField('game_name');

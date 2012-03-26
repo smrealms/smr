@@ -5,7 +5,7 @@ create_galactic_post_menu();
 $db2 = new SmrMySqlDatabase();
 if (isset($var['news'])) {
 	$db->query('INSERT INTO news (game_id, time, news_message, type) ' .
-		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . TIME . ', ' . $db->escape_string($var['news'], false) . ', \'BREAKING\')');
+		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escape_string($var['news'], false) . ', \'BREAKING\')');
 }
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->getNumRows()) {
@@ -14,9 +14,9 @@ if ($db->getNumRows()) {
 }
 else
 	$PHP_OUTPUT.=('There are no articles to view');
-	
+
 while ($db->nextRecord()) {
-	$db2->query('SELECT * FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->getField('article_id'));
+	$db2->query('SELECT * FROM galactic_post_paper_content WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = ' . $db->escapeNumber($db->getInt('article_id')));
 	if (!$db2->nextRecord()) {
 		$title = stripslashes($db->getField('title'));
 		$writter =& SmrPlayer::getPlayer($db->getField('writer_id'), $player->getGameID());
@@ -30,7 +30,7 @@ while ($db->nextRecord()) {
 }
 $PHP_OUTPUT.=('<br /><br />');
 if (isset($var['id'])) {
-	$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = '.$var['id']);
+	$db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND article_id = '.$db->escapeNumber($var['id']));
 	$db->nextRecord();
 	$title = stripslashes($db->getField('title'));
 	$message = stripslashes($db->getField('text'));

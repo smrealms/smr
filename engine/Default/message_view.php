@@ -13,8 +13,8 @@ if (!isset ($var['folder_id'])) {
 				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_POLITICAL) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND reciever_delete = \'FALSE\'
-					AND reciever_delete = \'FALSE\'
+					AND reciever_delete = ' . $db->escapeBoolean(false) . '
+					AND reciever_delete = ' . $db->escapeBoolean(false) . '
 				LIMIT 1');
 	if ($db->getNumRows() || $player->isOnCouncil()) {
 		$db->query('SELECT * FROM message_type
@@ -35,8 +35,8 @@ if (!isset ($var['folder_id'])) {
 					WHERE account_id = ' . $db2->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db2->escapeNumber($player->getGameID()) . '
 						AND message_type_id = ' . $db2->escapeNumber($message_type_id) . '
-						AND msg_read = \'FALSE\'
-						AND reciever_delete = \'FALSE\' LIMIT 1');
+						AND msg_read = ' . $db2->escapeBoolean(false) . '
+						AND reciever_delete = ' . $db2->escapeBoolean(false) . ' LIMIT 1');
 		$messageBox['HasUnread'] = $db2->getNumRows() != 0;
 
 		$messageBox['MessageCount'] = 0;
@@ -45,7 +45,7 @@ if (!isset ($var['folder_id'])) {
 					WHERE account_id = ' . $db2->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db2->escapeNumber($player->getGameID()) . '
 						AND message_type_id = ' . $db2->escapeNumber($message_type_id) . '
-						AND reciever_delete = \'FALSE\'');
+						AND reciever_delete = ' . $db2->escapeBoolean(false));
 		if ($db2->nextRecord()) {
 			$messageBox['MessageCount'] = $db2->getField('message_count');
 		}
@@ -65,8 +65,8 @@ if (!isset ($var['folder_id'])) {
 	$db->query('SELECT count(message_id) as count FROM message
 				WHERE sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND message_type_id = ' . MSG_PLAYER . '
-					AND sender_delete = \'FALSE\'');
+					AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
+					AND sender_delete = ' . $db->escapeBoolean(false));
 	if ($db->nextRecord()) {
 		$messageBox['MessageCount'] = $db->getField('count');
 	}
@@ -82,7 +82,7 @@ if (!isset ($var['folder_id'])) {
 	$messageBoxes[] = $messageBox;
 
 	$template->assignByRef('MessageBoxes', $messageBoxes);
-	
+
 	$container = create_container('skeleton.php','message_blacklist.php');
 	$container['folder_id'] = $message_type_id;
 	$template->assignByRef('ManageBlacklistLink', SmrSession::get_new_href($container));
@@ -91,12 +91,12 @@ else {
 	$whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
 	if ($var['folder_id'] == MSG_SENT) {
 		$whereClause .= ' AND sender_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND message_type_id = ' . MSG_PLAYER . '
+						AND message_type_id = ' . $db->escapeNumber(MSG_PLAYER) . '
 						AND sender_delete = ' . $db->escapeBoolean(false);
 	}
 	else {
 		$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND message_type_id = ' . $var['folder_id'] . '
+						AND message_type_id = ' . $db->escapeNumber($var['folder_id']) . '
 						AND reciever_delete = ' . $db->escapeBoolean(false);
 	}
 
@@ -184,7 +184,7 @@ else {
 	}
 	if (!USING_AJAX) {
 		$db->query('UPDATE message SET msg_read = \'TRUE\'
-					WHERE message_type_id = ' . $var['folder_id'] . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
+					WHERE message_type_id = ' . $db->escapeNumber($var['folder_id']) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
 	}
 	$template->assignByRef('MessageBox', $messageBox);
 }
@@ -197,8 +197,8 @@ function displayScouts(&$db, &$messageBox, &$player, $read, $group) {
 					JOIN player ON player.account_id = message.sender_id AND message.game_id = player.game_id
 					WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND player.game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND message_type_id = ' . MSG_SCOUT . '
-					AND reciever_delete = \'FALSE\'
+					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
+					AND reciever_delete = ' . $db->escapeBoolean(false) . '
 					AND msg_read = ' . $db->escapeBoolean($read) . '
 					GROUP BY sender_id, msg_read
 					ORDER BY send_time DESC';
@@ -217,8 +217,8 @@ function displayScouts(&$db, &$messageBox, &$player, $read, $group) {
 					FROM message
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND message_type_id = ' . MSG_SCOUT . '
-					AND reciever_delete = \'FALSE\'
+					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
+					AND reciever_delete = ' . $db->escapeBoolean(false) . '
 					AND msg_read = ' . $db->escapeBoolean($read) . '
 					ORDER BY send_time DESC';
 		$db->query($query);
@@ -269,7 +269,7 @@ function displayMessage(&$messageBox, $message_id, $reciever_id, $sender_id, $me
 		$container['player_id'] = $sender->getPlayerID();
 		$senderName =& create_link($container, $sender->getDisplayName());
 	}
-	
+
 	$container = create_container('skeleton.php', 'message_notify_confirm.php');
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
@@ -282,7 +282,7 @@ function displayMessage(&$messageBox, $message_id, $reciever_id, $sender_id, $me
 		$container = create_container('skeleton.php', 'message_send.php');
 		$container['receiver'] = $sender->getAccountID();
 		$message['ReplyHref'] = SmrSession::get_new_href($container);
-		
+
 		$message['Sender'] = & $sender;
 	}
 

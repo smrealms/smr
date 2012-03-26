@@ -18,14 +18,15 @@ if(!$planet->exists())
 	create_error('This planet does not exist.');
 if(!$planet->isClaimed())
 	create_error('This planet is not claimed.');
-	
+
 $planetOwner =& $planet->getOwner();
 
-if($player->forceNAPAlliance($planetOwner))
+if($player->forceNAPAlliance($planetOwner)) {
 	create_error('You have a planet NAP, you cannot attack this planet!');
-	
+}
+
 if ($planet->isDestroyed()) {
-	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$planet->getSectorID().' AND game_id = ' . $db->escapeNumber($player->getGameID()));
+	$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$db->escapeNumber($planet->getSectorID()).' AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	$planet->removeClaimed();
 	$planet->removePassword();
 	$container=create_container('skeleton.php','planet_attack.php');

@@ -8,7 +8,7 @@ if ($player->getAlignment() <= -100)
 $db->query('SELECT 1 FROM location JOIN location_type USING(location_type_id) JOIN location_is_hq USING(location_type_id)
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . '
-				AND location_type_id = '.$var['LocationID']);
+				AND location_type_id = '.$db->escapeNumber($var['LocationID']));
 if ($db->nextRecord()) {
 	$location =& SmrLocation::getLocation($var['LocationID']);
 	$raceID = $location->getRaceID();

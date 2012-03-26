@@ -15,7 +15,7 @@ $PHP_OUTPUT.=create_submit('Show');
 $PHP_OUTPUT.=('</form>');
 
 $db2 = new $var['HistoryDatabase']();
-$db2->query('SELECT * FROM news WHERE game_id = '.$game_id.' AND news_id >= '.$min.' AND news_id <= '.$max);
+$db2->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($game_id).' AND news_id >= '.$db->escapeNumber($min).' AND news_id <= '.$db->escapeNumber($max));
 $PHP_OUTPUT.=create_table();
 $PHP_OUTPUT.=('<tr><th class="center">Time</th><th class="center">News</th></tr>');
 while ($db2->nextRecord()) {

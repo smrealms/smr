@@ -6,21 +6,21 @@ require_once('SmrForce.class.inc');
 abstract class AbstractSmrShip
 {
 	protected static $CACHE_BASE_SHIPS = array();
-	
+
 	protected $player;
-	
+
 	protected $gameID;
 	protected $baseShip;
-	
+
 	protected $hardware;
 	protected $oldHardware;
-	
+
 	protected $cargo;
-	
+
 	protected $weapons;
-	
+
 	protected $illusionShip;
-	
+
 	protected $hasChangedWeapons = false;
 	protected $hasChangedCargo = false;
 	protected $hasChangedHardware = false;
@@ -31,7 +31,7 @@ abstract class AbstractSmrShip
 		{
 			// determine ship
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$shipTypeID.' LIMIT 1'); //TODO add game type id
+			$db->query('SELECT * FROM ship_type WHERE ship_type_id = '.$db->escapeNumber($shipTypeID).' LIMIT 1'); //TODO add game type id
 			if($db->nextRecord())
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID] =& self::buildBaseShip($db);
 			else
@@ -39,7 +39,7 @@ abstract class AbstractSmrShip
 		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID][$shipTypeID];
 	}
-	
+
 	protected static function &buildBaseShip(Database &$db)
 	{
 		$ship = array();
@@ -52,7 +52,7 @@ abstract class AbstractSmrShip
 		$ship['Cost']				= $db->getField('cost');
 		$ship['AlignRestriction']	= $db->getField('buyer_restriction');
 		$ship['Level']				= $db->getField('lvl_needed');
-		
+
 		$maxPower = 0;
 		switch($ship['Hardpoint'])
 		{
@@ -82,19 +82,19 @@ abstract class AbstractSmrShip
 				$maxPower+=0;
 		}
 		$ship['MaxPower'] = $maxPower;
-		
-		
+
+
 		// get supported hardware from db
 		$db2 = new SmrMySqlDatabase();
 		$db2->query('SELECT hardware_type_id, max_amount FROM ship_type_support_hardware ' .
-			'WHERE ship_type_id = '.$ship['ShipTypeID'].' ORDER BY hardware_type_id');
-		
+			'WHERE ship_type_id = '.$db2->escapeNumber($ship['ShipTypeID']).' ORDER BY hardware_type_id');
+
 		while ($db2->nextRecord())
 		{
 			// adding hardware to array
 			$ship['MaxHardware'][$db2->getField('hardware_type_id')] = $db2->getField('max_amount');
 		}
-		
+
 		$ship['BaseMR'] = 	round(
 								700 -
 								(
@@ -124,20 +124,20 @@ abstract class AbstractSmrShip
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')] =& self::buildBaseShip($db);
 		return self::$CACHE_BASE_SHIPS[$gameTypeID];
 	}
-	
+
 	protected function __construct(AbstractSmrPlayer &$player)
 	{
 		$this->player = $player;
 		$this->gameID = $player->getGameID();
 		$this->regenerateBaseShip();
 	}
-	
+
 	protected function regenerateBaseShip()
 	{
 		$this->baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->gameID),$this->player->getShipTypeID());
 		$this->checkForExcess();
 	}
-	
+
 	public function checkForExcess()
 	{
 		$this->checkForExcessHardware();
@@ -145,7 +145,7 @@ abstract class AbstractSmrShip
 		$this->checkForExcessWeapons();
 		$this->checkForExcessCargo();
 	}
-	
+
 	public function checkForExcessWeapons()
 	{
 		while ($this->hasWeapons() && ($this->getPowerUsed() > $this->getMaxPower() || $this->getNumWeapons() > $this->getHardpoints()))
@@ -154,7 +154,7 @@ abstract class AbstractSmrShip
 			$this->removeLastWeapon();
 		}
 	}
-	
+
 	public function checkForExcessCargo()
 	{
 		if($this->hasCargo())
@@ -171,7 +171,7 @@ abstract class AbstractSmrShip
 			}
 		}
 	}
-	
+
 	public function checkForExcessMiningDrones()
 	{
 		if (($totalDrones = array_sum($drones = $this->getMiningDrones())) > $this->getMaxMiningDrones())
@@ -191,7 +191,7 @@ abstract class AbstractSmrShip
 			}
 		}
 	}
-	
+
 	public function checkForExcessHardware()
 	{
 		//check hardware to see if anything needs to be removed
@@ -205,7 +205,7 @@ abstract class AbstractSmrShip
 				}
 			}
 	}
-	
+
 	public function getPowerUsed()
 	{
 		$power = 0;
@@ -214,27 +214,27 @@ abstract class AbstractSmrShip
 				$power += $weapon->getPowerLevel();
 		return $power;
 	}
-	
+
 	public function getRemainingPower()
 	{
 		return $this->getMaxPower()-$this->getPowerUsed();
 	}
-	
+
 	public function hasRemainingPower()
 	{
 		return $this->getRemainingPower()>0;
 	}
-	
+
 	public function getMaxPower()
 	{
 		return $this->baseShip['MaxPower'];
 	}
-	
+
 	public function hasIllegalGoods()
 	{
 		return $this->hasCargo(5) || $this->hasCargo(9) || $this->hasCargo(12);
 	}
-	
+
 	public function getDisplayAttackRating(AbstractSmrPlayer &$player)
 	{
 		if($this->hasActiveIllusion())
@@ -242,7 +242,7 @@ abstract class AbstractSmrShip
 		else
 			return $this->getAttackRating();
 	}
-	
+
 	public function getDisplayDefenseRating()
 	{
 		if($this->hasActiveIllusion())
@@ -250,36 +250,36 @@ abstract class AbstractSmrShip
 		else
 			return $this->getDefenseRating();
 	}
-	
+
 	public function getAttackRating()
 	{
 		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getCDs() * 2) / 40);
 	}
-	
+
 	public function getAttackRatingWithMaxCDs()
 	{
 		return round(($this->getTotalShieldDamage() + $this->getTotalArmourDamage() + $this->getMaxCDs() * .7) / 40);
 	}
-	
+
 	public function getDefenseRating()
 	{
 		return round((($this->getShields() + $this->getArmour()) / 100) + (($this->getCDs() * 3) / 100));
 	}
-	
+
 	public function getMaxDefenseRating()
 	{
 		return round((($this->getMaxShields() + $this->getMaxArmour()) / 100) + (($this->getMaxCDs() * 3) / 100));
 	}
-	
+
 	public function getShieldLow() { return floor($this->getShields() / 100) * 100; }
 	public function getShieldHigh() { return $this->getShieldLow() + 100; }
 	public function getArmourLow() { return floor($this->getArmour() / 100) * 100; }
 	public function getArmourHigh() { return $this->getArmourLow() + 100; }
 	public function getCDsLow() { return floor($this->getCDs() / 100) * 100; }
 	public function getCDsHigh() { return $this->getCDsLow() + 100; }
-	
-	
-	
+
+
+
 	public function &addWeapon($weaponTypeID)
 	{
 		if($this->hasOpenWeaponSlots() && $this->hasRemainingPower())
@@ -295,7 +295,7 @@ abstract class AbstractSmrShip
 		$return = false;
 		return $return;
 	}
-	
+
 	public function moveWeaponUp($orderID)
 	{
 		$replacement = $orderID - 1;
@@ -317,7 +317,7 @@ abstract class AbstractSmrShip
 		}
 		$this->hasChangedWeapons = true;
 	}
-	
+
 	public function moveWeaponDown($orderID)
 	{
 		$replacement = $orderID + 1;
@@ -339,7 +339,7 @@ abstract class AbstractSmrShip
 		}
 		$this->hasChangedWeapons = true;
 	}
-	
+
 	public function setWeaponLocations(array $orderArray)
 	{
 		$weapons=$this->weapons;
@@ -349,12 +349,12 @@ abstract class AbstractSmrShip
 		}
 		$this->hasChangedWeapons = true;
 	}
-	
+
 	public function removeLastWeapon()
 	{
 		$this->removeWeapon($this->getNumWeapons()-1);
 	}
-	
+
 	public function removeWeapon($orderID)
 	{
 		// Shift everything after the removed weapon up by one and put the selected weapon at the bottom
@@ -364,13 +364,13 @@ abstract class AbstractSmrShip
 		} unset($this->weapons[count($this->weapons)-1]);
 		$this->hasChangedWeapons = true;
 	}
-	
+
 	public function removeAllWeapons()
 	{
 		$this->weapons = array();
 		$this->hasChangedWeapons = true;
 	}
-	
+
 	public function removeAllCargo()
 	{
 		if(is_array($this->cargo))
@@ -381,7 +381,7 @@ abstract class AbstractSmrShip
 			}
 		}
 	}
-	
+
 	public function removeAllHardware()
 	{
 		foreach($this->hardware as &$hardware)
@@ -392,13 +392,13 @@ abstract class AbstractSmrShip
 		$this->disableIllusion();
 		$this->hasChangedHardware = true;
 	}
-	
+
 	public function getPod($isNewbie = false)
 	{
 		$this->removeAllWeapons();
 		$this->removeAllCargo();
 		$this->removeAllHardware();
-		
+
 		if($isNewbie)
 		{
 			$this->setShields(75,true);
@@ -413,145 +413,145 @@ abstract class AbstractSmrShip
 			$this->setCargoHolds(5);
 			$this->setShipTypeID(SHIP_TYPE_ESCAPE_POD);
 		}
-		
+
 		$this->removeUnderAttack();
 	}
-	
+
 	public function hasCloak()
 	{
 		return $this->getHardware(HARDWARE_CLOAK);
 	}
-	
+
 	public function canHaveCloak()
 	{
 		return $this->getMaxHardware(HARDWARE_CLOAK);
 	}
-	
-	
+
+
 	public function hasActiveIllusion()
 	{
 		if(!$this->hasIllusion())
 			return false;
 		return $this->getIllusionShip()!==false;
-		
+
 	}
-	
+
 	public function hasIllusion()
 	{
 		return $this->getHardware(HARDWARE_ILLUSION);
 	}
-	
+
 	public function canHaveIllusion()
 	{
 		return $this->getMaxHardware(HARDWARE_ILLUSION);
 	}
-	
+
 	public function hasJump()
 	{
 		return $this->getHardware(HARDWARE_JUMP);
 	}
-	
+
 	public function canHaveJump()
 	{
 		return $this->getMaxHardware(HARDWARE_JUMP);
 	}
-	
+
 	public function hasDCS()
 	{
 		return $this->getHardware(HARDWARE_DCS);
 	}
-	
+
 	public function canHaveDCS()
 	{
 		return $this->getMaxHardware(HARDWARE_DCS);
 	}
-	
+
 	public function hasScanner()
 	{
 		return $this->getHardware(HARDWARE_SCANNER);
 	}
-	
+
 	public function canHaveScanner()
 	{
 		return $this->getMaxHardware(HARDWARE_SCANNER);
 	}
-	
+
 	abstract public function decloak();
-	
+
 	abstract public function enableCloak();
-	
+
 	abstract public function setIllusion($ship_id, $attack, $defense);
-	
+
 	abstract public function disableIllusion();
-	
+
 	public function getIllusionShipID()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['ID'];
 	}
-	
+
 	public function getIllusionShipName()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['Name'];
 	}
-	
+
 	abstract public function getIllusionShip();
-	
+
 	public function getIllusionAttack()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['Attack'];
 	}
-	
+
 	public function getIllusionDefense()
 	{
 		$this->getIllusionShip();
 		return $this->illusionShip['Defense'];
 	}
-	
+
 	public function &getPlayer()
 	{
 		return $this->player;
 	}
-	
+
 	public function getGameID()
 	{
 		return $this->gameID;
 	}
-	
+
 	public function getShipTypeID()
 	{
 		return $this->baseShip['ShipTypeID'];
 	}
-	
+
 	public function setShipTypeID($shipTypeID)
 	{
 		$this->getPlayer()->setShipTypeID($shipTypeID);
 		$this->regenerateBaseShip();
 	}
-	
+
 	public function getName()
 	{
 		return $this->baseShip['Name'];
 	}
-	
+
 	public function getCost()
 	{
 		return $this->baseShip['Cost'];
 	}
-	
+
 	public function getCostToUpgrade($upgradeShipID)
 	{
 		$upgadeBaseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$upgradeShipID);
 		return $upgadeBaseShip['Cost'] - $this->getCost() * SHIP_RESELL_PERCENT;
 	}
-	
+
 	public function getCostToUpgradeAndUNO($upgradeShipID)
 	{
 		return $this->getCostToUpgrade($upgradeShipID) + $this->getCostToUNOAgainstShip($upgradeShipID);
 	}
-	
+
 	protected function getCostToUNOAgainstShip($shipID)
 	{
 		$baseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$shipID);
@@ -563,29 +563,29 @@ abstract class AbstractSmrShip
 		}
 		return $cost;
 	}
-	
+
 	public function getCostToUNO()
 	{
 		return $this->getCostToUNOAgainstShip($this->getShipTypeID());
 	}
-	
+
 	public function getSpeed()
 	{
 		return $this->baseShip['Speed'];
 	}
-	
+
 	public function getRealSpeed()
 	{
 		return $this->baseShip['Speed'] * Globals::getGameSpeed($this->getGameID());
 	}
-	
+
 	public function getHardware($hardwareTypeID = false)
 	{
 		if($hardwareTypeID === false)
 			return $this->hardware;
 		return isset($this->hardware[$hardwareTypeID]) ? $this->hardware[$hardwareTypeID] : 0;
 	}
-	
+
 	public function setHardware($hardwareTypeID,$amount)
 	{
 		if($this->getHardware($hardwareTypeID) == $amount)
@@ -593,19 +593,19 @@ abstract class AbstractSmrShip
 		$this->hardware[$hardwareTypeID] = $amount;
 		$this->hasChangedHardware = true;
 	}
-	
+
 	public function increaseHardware($hardwareTypeID,$amount)
 	{
 		$this->setHardware($hardwareTypeID,$this->getHardware($hardwareTypeID)+$amount);
 	}
-	
+
 	public function getOldHardware($hardwareTypeID = false)
 	{
 		if($hardwareTypeID === false)
 			return $this->oldHardware;
 		return isset($this->oldHardware[$hardwareTypeID]) ? $this->oldHardware[$hardwareTypeID] : 0;
 	}
-	
+
 	public function setOldHardware($hardwareTypeID,$amount)
 	{
 		if($this->getOldHardware($hardwareTypeID) == $amount)
@@ -613,260 +613,260 @@ abstract class AbstractSmrShip
 		$this->oldHardware[$hardwareTypeID] = $amount;
 		$this->hasChangedHardware = true;
 	}
-	
+
 	public function hasMaxHardware($hardwareTypeID)
 	{
 		return $this->getHardware($hardwareTypeID)==$this->getMaxHardware($hardwareTypeID);
 	}
-	
+
 	public function getMaxHardware($hardwareTypeID = false)
 	{
 		if($hardwareTypeID === false)
 			return $this->baseShip['MaxHardware'];
 		return $this->baseShip['MaxHardware'][$hardwareTypeID];
 	}
-	
+
 	public function getShields()
 	{
 		return $this->getHardware(HARDWARE_SHIELDS);
 	}
-	
+
 	public function setShields($amount,$updateOldAmount=false)
 	{
 		if($updateOldAmount && !$this->hasLostShields())
 			$this->setOldHardware(HARDWARE_SHIELDS,$amount);
 		$this->setHardware(HARDWARE_SHIELDS,$amount);
 	}
-	
+
 	public function decreaseShields($amount)
 	{
 		$this->setShields($this->getShields()-$amount);
 	}
-	
+
 	public function increaseShields($amount)
 	{
 		$this->setShields($this->getShields()+$amount);
 	}
-	
+
 	public function getOldShields()
 	{
 		return $this->getOldHardware(HARDWARE_SHIELDS);
 	}
-	
+
 	public function setOldShields($amount)
 	{
 		$this->setOldHardware(HARDWARE_SHIELDS,$amount);
 	}
-	
+
 	public function hasShields()
 	{
 		return $this->getShields()>0;
 	}
-	
+
 	public function hasLostShields()
 	{
 		return $this->getShields()<$this->getOldShields();
 	}
-	
+
 	public function hasMaxShields()
 	{
 		return $this->getShields()==$this->getMaxShields();
 	}
-	
+
 	public function getMaxShields()
 	{
 		return $this->getMaxHardware(HARDWARE_SHIELDS);
 	}
-	
+
 	public function getArmour()
 	{
 		return $this->getHardware(HARDWARE_ARMOUR);
 	}
-	
+
 	public function setArmour($amount,$updateOldAmount=false)
 	{
 		if($updateOldAmount && !$this->hasLostArmour())
 			$this->setOldHardware(HARDWARE_ARMOUR,$amount);
 		$this->setHardware(HARDWARE_ARMOUR,$amount);
 	}
-	
+
 	public function decreaseArmour($amount)
 	{
 		$this->setArmour($this->getArmour()-$amount);
 	}
-	
+
 	public function increaseArmour($amount)
 	{
 		$this->setArmour($this->getArmour()+$amount);
 	}
-	
+
 	public function getOldArmour()
 	{
 		return $this->getOldHardware(HARDWARE_ARMOUR);
 	}
-	
+
 	public function setOldArmour($amount)
 	{
 		$this->setOldHardware(HARDWARE_ARMOUR,$amount);
 	}
-	
+
 	public function hasArmour()
 	{
 		return $this->getArmour()>0;
 	}
-	
+
 	public function hasLostArmour()
 	{
 		return $this->getArmour()<$this->getOldArmour();
 	}
-	
+
 	public function hasMaxArmour()
 	{
 		return $this->getArmour()==$this->getMaxArmour();
 	}
-	
+
 	public function getMaxArmour()
 	{
 		return $this->getMaxHardware(HARDWARE_ARMOUR);
 	}
-	
+
 	public function isDead()
 	{
 		return !$this->hasArmour()&&!$this->hasShields();
 	}
-	
+
 	public function canAcceptCDs()
 	{
 		return $this->getCDs()<$this->getMaxCDs();
 	}
-	
+
 	public function canAcceptSDs()
 	{
 		return $this->getSDs()<$this->getMaxSDs();
 	}
-	
+
 	public function canAcceptMines()
 	{
 		return $this->getMines()<$this->getMaxMines();
 	}
-	
+
 	public function hasCDs()
 	{
 		return $this->getCDs()>0;
 	}
-	
+
 	public function hasSDs()
 	{
 		return $this->getSDs()>0;
 	}
-	
+
 	public function hasMines()
 	{
 		return $this->getMines()>0;
 	}
-	
+
 	public function getCDs()
 	{
 		return $this->getHardware(HARDWARE_COMBAT);
 	}
-	
+
 	public function setCDs($amount,$updateOldAmount=false)
 	{
 		if($updateOldAmount && !$this->hasLostCDs())
 			$this->setOldHardware(HARDWARE_COMBAT,$amount);
 		$this->setHardware(HARDWARE_COMBAT,$amount);
 	}
-	
+
 	public function decreaseCDs($amount,$updateOldAmount=false)
 	{
 		$this->setCDs($this->getCDs()-$amount,$updateOldAmount);
 	}
-	
+
 	public function increaseCDs($amount)
 	{
 		$this->setCDs($this->getCDs()+$amount);
 	}
-	
+
 	public function getOldCDs()
 	{
 		return $this->getOldHardware(HARDWARE_COMBAT);
 	}
-	
+
 	public function setOldCDs($amount)
 	{
 		$this->setOldHardware(HARDWARE_COMBAT,$amount);
 	}
-	
+
 	public function hasLostCDs()
 	{
 		return $this->getCDs()<$this->getOldCDs();
 	}
-	
+
 	public function getMaxCDs()
 	{
 		return $this->getMaxHardware(HARDWARE_COMBAT);
 	}
-	
+
 	public function getSDs()
 	{
 		return $this->getHardware(HARDWARE_SCOUT);
 	}
-	
+
 	public function setSDs($amount)
 	{
 		$this->setHardware(HARDWARE_SCOUT,$amount);
 	}
-	
+
 	public function decreaseSDs($amount)
 	{
 		$this->setSDs($this->getSDs()-$amount);
 	}
-	
+
 	public function increaseSDs($amount)
 	{
 		$this->setSDs($this->getSDs()+$amount);
 	}
-	
+
 	public function getMaxSDs()
 	{
 		return $this->getMaxHardware(HARDWARE_SCOUT);
 	}
-	
+
 	public function getMines()
 	{
 		return $this->getHardware(HARDWARE_MINE);
 	}
-	
+
 	public function setMines($amount)
 	{
 		$this->setHardware(HARDWARE_MINE,$amount);
 	}
-	
+
 	public function decreaseMines($amount)
 	{
 		$this->setMines($this->getMines()-$amount);
 	}
-	
+
 	public function increaseMines($amount)
 	{
 		$this->setMines($this->getMines()+$amount);
 	}
-	
+
 	public function getMaxMines()
 	{
 		return $this->getMaxHardware(HARDWARE_MINE);
 	}
-	
+
 	public function getCargoHolds()
 	{
 		return $this->getHardware(HARDWARE_CARGO);
 	}
-	
+
 	public function setCargoHolds($amount)
 	{
 		$this->setHardware(HARDWARE_CARGO,$amount);
 	}
-	
+
 	public function &getCargo($goodID=false)
 	{
 		if($goodID!==false)
@@ -878,7 +878,7 @@ abstract class AbstractSmrShip
 		}
 		return $this->cargo;
 	}
-	
+
 	public function hasCargo($goodID=false)
 	{
 		if($goodID!==false)
@@ -887,7 +887,7 @@ abstract class AbstractSmrShip
 			return array_sum($cargo)>0;
 		return false;
 	}
-	
+
 	public function setCargo($goodID,$amount)
 	{
 		if($this->getCargo($goodID) == $amount)
@@ -895,47 +895,47 @@ abstract class AbstractSmrShip
 		$this->cargo[$goodID] = $amount;
 		$this->hasChangedCargo = true;
 	}
-	
+
 	public function decreaseCargo($goodID,$amount)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to decrease negative cargo.');
 		$this->setCargo($goodID,$this->getCargo($goodID)-$amount);
 	}
-	
+
 	public function increaseCargo($goodID,$amount)
 	{
 		if($amount < 0)
 			throw new Exception('Trying to increase negative cargo.');
 		$this->setCargo($goodID,$this->getCargo($goodID)+$amount);
 	}
-	
+
 	public function getEmptyHolds()
 	{
 		return $this->getCargoHolds()-$this->getUsedHolds();
 	}
-	
+
 	public function getUsedHolds()
 	{
 		return array_sum($this->getCargo());
 	}
-	
+
 	public function hasMaxCargoHolds()
 	{
 		return $this->getCargoHolds()==$this->getMaxCargoHolds();
 	}
-	
+
 	public function getMaxCargoHolds()
 	{
 		return $this->getMaxHardware(HARDWARE_CARGO);
 	}
-	
-	
+
+
 	public function getMaxMiningDrones()
 	{
 		return $this->getMaxHardware(HARDWARE_CARGO);
 	}
-	
+
 	public function getMiningDrones()
 	{
 		$miningDrones = array();
@@ -947,13 +947,13 @@ abstract class AbstractSmrShip
 			}
 		return $miningDrones;
 	}
-	
-	
+
+
 	public function isUnderAttack()
 	{
 		return $this->hasLostShields() || $this->hasLostArmour() || $this->hasLostCDs();
 	}
-	
+
 	public function removeUnderAttack()
 	{
 		global $var;
@@ -969,42 +969,42 @@ abstract class AbstractSmrShip
 		}
 		return $underAttack;
 	}
-	
+
 	public function hasWeapons()
 	{
 		return $this->getNumWeapons()>0;
 	}
-	
+
 	public function &getWeapons()
 	{
 		return $this->weapons;
 	}
-	
+
 	public function canAttack()
 	{
 		return $this->hasWeapons() || $this->hasCDs();
 	}
-	
+
 	public function getNumWeapons()
 	{
 		return count($this->getWeapons());
 	}
-	
+
 	public function getOpenWeaponSlots()
 	{
 		return $this->getHardpoints()-$this->getNumWeapons();
 	}
-	
+
 	public function hasOpenWeaponSlots()
 	{
 		return $this->getOpenWeaponSlots()>0;
 	}
-	
+
 	public function getHardpoints()
 	{
 		return $this->baseShip['Hardpoint'];
 	}
-	
+
 	public function getTotalShieldDamage()
 	{
 		$weapons = $this->getWeapons();
@@ -1015,7 +1015,7 @@ abstract class AbstractSmrShip
 		}
 		return $shieldDamage;
 	}
-	
+
 	public function getTotalArmourDamage()
 	{
 		$weapons = $this->getWeapons();
@@ -1026,50 +1026,50 @@ abstract class AbstractSmrShip
 		}
 		return $armourDamage;
 	}
-	
+
 	public function getTotalUpgradeSpace()
 	{
 		//TODO
 		return 0;
 	}
-	
+
 	public function getUsedUpgradeSpace()
 	{
 		//TODO
 		return 0;
 	}
-	
+
 	public function getFreeUpgradeSpace()
 	{
 		return $this->getTotalUpgradeSpace()-$this->getUsedUpgradeSpace();
 	}
-	
+
 	public function getLastDowngrade()
 	{
 		return 0;
 	}
-	
+
 	public function canDowngrade()
 	{
 		return $this->getRemainingDowngradeWait() <= 0;
 	}
-	
+
 	public function getRemainingDowngradeWait()
 	{
 		$downgradeWait = 24 * 3600;
 		return $this->getLastDowngrade() - (TIME - $downgradeWait);
 	}
-	
+
 	public function isFederal()
 	{
 		return $this->getShipTypeID() == 20 || $this->getShipTypeID() == 21 || $this->getShipTypeID() == 22;
 	}
-	
+
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)
 	{
 		return $this->shootPlayers(array(&$targetPlayer));
 	}
-	
+
 	public function &shootPlayers(array &$targetPlayers)
 	{
 		$thisPlayer =& $this->getPlayer();
@@ -1097,7 +1097,7 @@ abstract class AbstractSmrShip
 		$thisPlayer->increaseHOF(1,array('Combat','Player','Shots'), HOF_PUBLIC);
 		return $results;
 	}
-	
+
 	public function &shootForces(SmrForce &$forces)
 	{
 		$thisPlayer =& $this->getPlayer();
@@ -1141,7 +1141,7 @@ abstract class AbstractSmrShip
 		$thisPlayer->increaseHOF(1,array('Combat','Forces','Shots'), HOF_PUBLIC);
 		return $results;
 	}
-	
+
 	public function &shootPort(SmrPort &$port)
 	{
 		$thisPlayer =& $this->getPlayer();
@@ -1169,7 +1169,7 @@ abstract class AbstractSmrShip
 //		$thisPlayer->increaseHOF(1,array('Combat','Port','Shots')); //in SmrPortt::attackedBy()
 		return $results;
 	}
-	
+
 	public function &shootPlanet(SmrPlanet &$planet, $delayed)
 	{
 		$thisPlayer =& $this->getPlayer();
@@ -1197,7 +1197,7 @@ abstract class AbstractSmrShip
 //		$thisPlayer->increaseHOF(1,array('Combat','Planet','Shots')); //in SmrPlanet::attackedBy()
 		return $results;
 	}
-	
+
 	public function &doWeaponDamage(array $damage)
 	{
 		$alreadyDead = $this->getPlayer()->isDead();
@@ -1229,7 +1229,7 @@ abstract class AbstractSmrShip
 		);
 		return $return;
 	}
-	
+
 	public function &doMinesDamage(array $damage)
 	{
 		$alreadyDead = $this->getPlayer()->isDead();
@@ -1257,28 +1257,28 @@ abstract class AbstractSmrShip
 		);
 		return $return;
 	}
-	
+
 	protected function doShieldDamage($damage)
 	{
 		$actualDamage = min($this->getShields(),$damage);
 		$this->decreaseShields($actualDamage);
 		return $actualDamage;
 	}
-	
+
 	protected function doCDDamage($damage)
 	{
 		$actualDamage = min($this->getCDs(),floor($damage/CD_ARMOUR));
 		$this->decreaseCDs($actualDamage);
 		return $actualDamage*CD_ARMOUR;
 	}
-	
+
 	protected function doArmourDamage($damage)
 	{
 		$actualDamage = min($this->getArmour(),$damage);
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
 	}
-	
+
 	public function getMR()
 	{
 		return round(
@@ -1303,7 +1303,7 @@ abstract class AbstractSmrShip
 //						+ $player->getStat('Maneuverability') * $MANEUV_MOD
 					);
 	}
-	
+
 	public function getUpgradeShipHREF()
 	{
 		if(!isset($this->upgradeShipHREF))

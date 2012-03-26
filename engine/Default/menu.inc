@@ -16,12 +16,9 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) 
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND (mb_read = 1 OR mod_read = 1 OR planet_land = 1) AND official = \'TRUE\'');
 		if ($db->nextRecord()) {
-			if ($db->getField('mb_read')) $mbRead = TRUE;
-			else $mbRead = FALSE;
-			if ($db->getField('mod_read')) $modRead = TRUE;
-			else $modRead = FALSE;
-			if ($db->getField('planet_land')) $planetLand = TRUE;
-			else $planetLand = FALSE;
+			$mbRead = $db->getBoolean('mb_read');
+			$modRead = $db->getBoolean('mod_read');
+			$planetLand = $db->getBoolean('planet_land');
 		}
 		else {
 			$mbRead = FALSE;
@@ -36,8 +33,7 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) 
 	$db->query('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 	$db->nextRecord();
 	$send = $db->getBoolean('send_alliance_msg');
-//	if ($player->getAccountID() == $alliance_leader_id)
-// {
+//	if ($player->getAccountID() == $alliance_leader_id) {
 		//$container['body']='alliance_treaties.php';
 		//$menu_items[] = create_link($container,'Treaties','nav');
 	//}
@@ -78,7 +74,7 @@ function create_galactic_post_menu() {
 	if ($db->nextRecord()) {
 		$allowedEdit = $db->getField('position') == 'editor';
 	}
-	
+
 	if ($allowedWrite === false) {
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
 	}
@@ -112,7 +108,7 @@ function create_combat_log_menu() {
 
 	$container = create_container('skeleton.php','combat_log_viewer.php');
 	$menuItems = array();
-	
+
 	$container['action'] = 0;
 	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Personal');
 	$container['action'] = 1;
@@ -189,7 +185,7 @@ function create_ranking_menu($active_level1 = 0, $active_level2 = 0) {
 
 	$menu_item = array();
 	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Racial Standings','nav');
-	
+
 	$menu_subitem = array();
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Experience','nav');
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_race_kills.php'), 'Kills','nav');
@@ -198,7 +194,7 @@ function create_ranking_menu($active_level1 = 0, $active_level2 = 0) {
 	$menu_item['submenu'] = $menu_subitem;
 
 	$menu[] = $menu_item;
-	
+
 	$menu_item = array();
 	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_sector_kill.php'), 'Sector Kills','nav');
 	$menu[] = $menu_item;
@@ -299,7 +295,7 @@ function create_hq_menu() {
 	global $var;
 	$container = create_container('skeleton.php');
 	$container['LocationID'] = $var['LocationID'];
-	
+
 	$container['body'] = 'government.php';
 	$menu_items[] = create_link($container, 'Government','nav');
 
@@ -374,7 +370,7 @@ function create_news_menu(&$template) {
 		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Current News');
 	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Latest News');
 	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$var['GameID']))),'Text'=>'Advanced News');
-					
+
 	$template->assign('MenuItems', $menuItems);
 }
 

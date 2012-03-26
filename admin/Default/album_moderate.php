@@ -30,7 +30,7 @@ else
 	// check if the givin account really has an entry
 	if ($account_id > 0)
 	{
-		$db->query('SELECT * FROM album WHERE account_id = '.$account_id.' AND Approved = \'YES\'');
+		$db->query('SELECT * FROM album WHERE account_id = '.$db->escapeNumber($account_id).' AND Approved = \'YES\'');
 		if ($db->nextRecord())
 		{
 			$disabled = $db->getBoolean('disabled');
@@ -157,12 +157,12 @@ else
 
 	$db->query('SELECT *
 				FROM album_has_comments
-				WHERE album_id = '.$account_id);
+				WHERE album_id = '.$db->escapeNumber($account_id));
 	while ($db->nextRecord())
 	{
-		$comment_id	= $db->getField('comment_id');
-		$time		= $db->getField('time');
-		$postee		= get_album_nick($db->getField('post_id'));
+		$comment_id	= $db->getInt('comment_id');
+		$time		= $db->getInt('time');
+		$postee		= get_album_nick($db->getInt('post_id'));
 		$msg		= stripslashes($db->getField('msg'));
 
 		$PHP_OUTPUT.=('<tr><td align="center"><input type="checkbox" name="comment_ids[]" value="'.$comment_id.'"></td><td colspan="3"><span style="font-size:85%;">[' . date('Y/n/j g:i A', $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span></td></tr>');

@@ -1,24 +1,24 @@
 <?php
 
 $template->assign('PageTopic','Current Players');
-$db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . TIME);
+$db->query('DELETE FROM cpl_tag WHERE expires > 0 AND expires < ' . $db->escapeNumber(TIME));
 $db->query('SELECT count(*) count FROM active_session
-			WHERE last_accessed >= ' . (TIME - 600) . ' AND
+			WHERE last_accessed >= ' . $db->escapeNumber(TIME - 600) . ' AND
 				game_id = ' . $db->escapeNumber($player->getGameID()));
 $count_real_last_active = 0;
 if($db->nextRecord())
 	$count_real_last_active = $db->getField('count');
 if(SmrSession::$last_accessed < TIME - 600)
 	++$count_real_last_active;
-	
-	
+
+
 if (empty($var['sort'])) $sort = 'experience DESC, player_name';
 else $sort = $var['sort'];
 if (empty($var['seq'])) $seq = 'DESC';
 else $seq = $var['seq'];
 
 $db->query('SELECT * FROM player
-		WHERE last_cpl_action >= ' . (TIME - 600) . '
+		WHERE last_cpl_action >= ' . $db->escapeNumber(TIME - 600) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 		ORDER BY '.$sort.' '.$seq);
 $count_last_active = $db->getNumRows();
@@ -93,7 +93,7 @@ if ($count_last_active > 0) {
 		if($class!='')
 			$class = ' class="'.trim($class).'"';
 		$PHP_OUTPUT.= '<tr'.$class.'>';
-	
+
 		$PHP_OUTPUT.=('<td valign="top">');
 		$container = array();
 		$container['url']		= 'skeleton.php';

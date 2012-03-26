@@ -23,10 +23,10 @@ $db->query('SELECT sector_id, owner_id
 			FROM sector_has_forces
 			WHERE owner_id = ' . $db->escapeNumber($player->getAccountID()) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-			AND expire_time >= '.TIME.'
+			AND expire_time >= '.$db->escapeNumber(TIME).'
 			ORDER BY '.$categorySQL.', '.$subcategory);
 if ($db->getNumRows() > 0) {
-	
+
 	$container = array();
 	$container['url'] = 'skeleton.php';
 	$container['body'] = 'forces_list.php';
@@ -35,7 +35,7 @@ if ($db->getNumRows() > 0) {
 	else
 		$container['seq'] = 'ASC';
 	$container['subcategory'] = $category;
-	
+
 	$PHP_OUTPUT.=create_table();
 	$PHP_OUTPUT.=('<tr>');
 	setCategories($container,'sector_id',$category,$categorySQL,$subcategory);
@@ -59,10 +59,10 @@ if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Expire time</span>');
 	$PHP_OUTPUT.=('</th>');
 	$PHP_OUTPUT.=('</tr>');
-	
+
 	while ($db->nextRecord()) {
 		$forces =& SmrForce::getForce($player->getGameID(), $db->getField('sector_id'), $db->getField('owner_id'));
-		
+
 		$PHP_OUTPUT .= '<tr>';
 		$PHP_OUTPUT .= '<td class="shrink noWrap">'.$forces->getSectorID().' ('.$forces->getGalaxy()->getName().')</td>';
 		$PHP_OUTPUT .= '<td class="shrink center">'.$forces->getCDs().'</td>';
@@ -71,7 +71,7 @@ if ($db->getNumRows() > 0) {
 		$PHP_OUTPUT .= '<td class="shrink noWrap">' . date(DATE_FULL_SHORT, $forces->getExpire()) . '</td>';
 		$PHP_OUTPUT .= '</tr>';
 	}
-	
+
 	$PHP_OUTPUT.=('</table>');
 }
 

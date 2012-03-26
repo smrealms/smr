@@ -3,8 +3,9 @@
 require_once(get_file_loc('council.inc'));
 require_once(get_file_loc('menu.inc'));
 
-if (!isset($var['race_id']))
+if (!isset($var['race_id'])) {
 	SmrSession::updateVar('race_id',$player->getRaceID());
+}
 $race_id = $var['race_id'];
 
 $template->assign('PageTopic','Ruling Council Of ' . Globals::getRaceName($race_id));
@@ -32,15 +33,13 @@ if (is_object($president)) {
 	$PHP_OUTPUT.=('<tr>');
 
 	$PHP_OUTPUT.=('<td valign="top">President ');
-	$container = array();
-	$container['url']		= 'skeleton.php';
-	$container['body']		= 'trader_search_result.php';
+	$container = create_container('skeleton.php', 'trader_search_result.php');
 	$container['player_id']	= $president->getPlayerID();
 	$PHP_OUTPUT.=create_link($container, $president->getDisplayName());
 	$PHP_OUTPUT.=('</td>');
 
 	$PHP_OUTPUT.=('<td align="center">');
-	$container = create_container('skeleton.php','council_send_message.php');
+	$container = create_container('skeleton.php', 'council_send_message.php');
 	$container['race_id'] = $president->getRaceID();
 	$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($president->getRaceID()));
 	$PHP_OUTPUT.=('</td>');
@@ -48,16 +47,20 @@ if (is_object($president)) {
 	$PHP_OUTPUT.=('<td>');
 	if ($president->hasAlliance()) {
 		$PHP_OUTPUT.=create_link($president->getAllianceRosterHREF(), $president->getAllianceName());
-	} else
+	}
+	else {
 		$PHP_OUTPUT.=('(none)');
+	}
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td align="right">'.$president->getExperience().'</td>');
 
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('</table></p>');
 
-} else
+}
+else {
 	$PHP_OUTPUT.=('<div align="center">This council doesn\'t have a president!</div>');
+}
 
 $PHP_OUTPUT.=('<br /><br /><div align="center" class="bold">Member</div>');
 
@@ -87,9 +90,7 @@ if(count($councilMembers) > 0) {
 			$PHP_OUTPUT.=(' class="bold"');
 		}
 		$PHP_OUTPUT.=('>'.$councilPlayer->getLevelName().' ');
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_search_result.php';
+		$container = create_container('skeleton.php',  'trader_search_result.php');
 		$container['player_id']	= $councilPlayer->getPlayerID();
 		$PHP_OUTPUT.=create_link($container, $councilPlayer->getDisplayName());
 		$PHP_OUTPUT.=('</td>');
@@ -99,16 +100,15 @@ if(count($councilMembers) > 0) {
 			$PHP_OUTPUT.=(' class="bold"');
 		}
 		$PHP_OUTPUT.=('>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'council_send_message.php';
+		$container = create_container('skeleton.php', 'council_send_message.php');
 		$container['race_id'] = $councilPlayer->getRaceID();
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($councilPlayer->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
 
 		$PHP_OUTPUT.=('<td');
-		if ($councilPlayer->getAccountID() == $player->getAccountID())
+		if ($councilPlayer->getAccountID() == $player->getAccountID()) {
 			$PHP_OUTPUT.=(' class="bold"');
+		}
 		$PHP_OUTPUT.=('>');
 		if ($councilPlayer->hasAlliance()) {
 			$PHP_OUTPUT.=create_link($councilPlayer->getAllianceRosterHREF(), $councilPlayer->getAllianceName());
@@ -136,8 +136,9 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 $PHP_OUTPUT.=('<b>View Council</b><br />');
 $races =& Globals::getRaces();
 foreach($races as $raceID => $raceInfo) {
-	if($raceID == RACE_NEUTRAL)
+	if($raceID == RACE_NEUTRAL) {
 		continue;
+	}
 
 	$container = create_container('skeleton.php','council_list.php');
 	$container['race_id']	= $raceID;

@@ -33,11 +33,11 @@ if ($action == 'Deposit') {
 	$total = $db->getInt('amount');
 	//too much money?
 //	if ($total > 4294967295) {
-//		
+//
 //		$overflow = $total - 4294967295;
 //		$db->query('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($overflow) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 //		$player->increaseCredits($overflow);
-//		
+//
 //	}
 	$player->update();
 
@@ -56,8 +56,8 @@ else {
 	else {
 		$trans_id = 1;
 	}
-	$db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time) ' .
-							'VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($account_num) . ', ' . $db->escapeNumber($trans_id) . ', \'Payment\', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber(TIME) . ')');
+	$db->query('INSERT INTO anon_bank_transactions (account_id, game_id, anon_id, transaction_id, transaction, amount, time)
+				VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($account_num) . ', ' . $db->escapeNumber($trans_id) . ', \'Payment\', ' . $db->escapeNumber($amount) . ', ' . $db->escapeNumber(TIME) . ')');
 	$db->query('UPDATE anon_bank SET amount = amount - ' . $db->escapeNumber($amount) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 	$player->increaseCredits($amount);
 	$db->query('SELECT amount FROM anon_bank WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
@@ -68,7 +68,7 @@ else {
 //		$overflow = $player->getCredits() - 4294967295;
 //		$db->query('UPDATE anon_bank SET amount = amount + ' . $db->escapeNumber($overflow) . ' WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND anon_id = ' . $db->escapeNumber($account_num));
 //		$player->decreaseCredits($overflow);
-//		
+//
 //	}
 	$player->update();
 

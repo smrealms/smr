@@ -22,7 +22,7 @@ $sendAllMsg = (bool)$_REQUEST['sendAllMsg'];
 // with empty role the user wants to create a new entry
 if (!isset($var['role_id'])) {
 	// role empty too? that doesn't make sence
-	if (empty($_POST['role'])) {
+	if (empty($_REQUEST['role'])) {
 		create_error('You must enter a role if you want to create a new one.');
 	}
 
@@ -45,7 +45,7 @@ if (!isset($var['role_id'])) {
 }
 else {
 	// if no role is given we delete that entry
-	if (empty($_POST['role'])) {
+	if (empty($_REQUEST['role'])) {
 		if($var['role_id']==1) {
 			create_error('You cannot delete the leader role.');
 		}
@@ -60,7 +60,7 @@ else {
 	}
 	else {
 		$db->query('UPDATE alliance_has_roles
-					SET role = ' . $db->escapeString($_POST['role']) . ',
+					SET role = ' . $db->escapeString($_REQUEST['role']) . ',
 					with_per_day = ' . $db->escapeNumber($withPerDay) . ',
 					positive_balance = ' . $db->escapeBoolean($positiveBalance) . ',
 					remove_member = ' . $db->escapeBoolean($removeMember) . ',

@@ -12,9 +12,10 @@ if ($game['GameCreditsRequired'] > 0) {
 }
 
 // is the game already full?
-$db->query('SELECT count(*) FROM player WHERE game_id = ' . $var['game_id']);
-if ($db->nextRecord() && $db->getInt('count(*)') >= $game['GameMaxPlayers'])
+$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($var['game_id']));
+if ($db->nextRecord() && $db->getInt('count(*)') >= $game['GameMaxPlayers']) {
 	create_error('The maximum number of players in that game is reached!');
+}
 
 //if (TIME < $game['StartDate'])
 //	create_error('You want to join a game that hasn\'t started yet?');
@@ -52,9 +53,9 @@ $only = array();
 // get all available hq's
 $db->query('SELECT location_name, location_type_id
 			FROM location JOIN location_type USING(location_type_id)
-			WHERE location_type_id > '.UNDERGROUND.' AND
-				location_type_id < '.FED.' AND
-				game_id = ' . $var['game_id'] . '
+			WHERE location_type_id > '.$db->escapeNumber(UNDERGROUND).'
+				AND location_type_id < '.$db->escapeNumber(FED).'
+				AND game_id = ' . $db->escapeNumber($var['game_id']) . '
 			ORDER BY location_type_id');
 $races = array();
 while ($db->nextRecord()) {
@@ -66,9 +67,9 @@ while ($db->nextRecord()) {
 	if (in_array($curr_race_id, $only)) continue;
 	$only[] = $curr_race_id;
 	// get number of traders in game
-	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = '.$curr_race_id.' AND game_id = ' . $var['game_id']);
+	$db2->query('SELECT count(*) as number_of_race FROM player WHERE race_id = '.$db2->escapeNumber($curr_race_id).' AND game_id = ' . $db2->escapeNumber($var['game_id']));
 	$db2->nextRecord();
-	
+
 	$races[$curr_race_id]['ID'] = $curr_race_id;
 	$races[$curr_race_id]['Name'] = $race_name;
 	$races[$curr_race_id]['NumberOfPlayers'] = $db2->getInt('number_of_race');

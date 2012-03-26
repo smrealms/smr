@@ -73,7 +73,7 @@ $template->assign('ResetFormHREF', SmrSession::get_new_href(create_container('sk
 
 if ($curr_account!==false) {
 	$editingPlayers = array();
-	$db->query('SELECT game_id FROM player WHERE account_id = ' . $curr_account->getAccountID() . ' ORDER BY game_id ASC');
+	$db->query('SELECT game_id FROM player WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY game_id ASC');
 	while ($db->nextRecord()) {
 		$editingPlayers[] =& SmrPlayer::getPlayer($curr_account->getAccountID(), $db->getInt('game_id'));
 	}
@@ -89,9 +89,9 @@ if ($curr_account!==false) {
 		$banReasons[$db->getInt('reason_id')] = $reason;
 	}
 	$template->assign('BanReasons', $banReasons);
-	
+
 	$closingHistory = array();
-	$db->query('SELECT * FROM account_has_closing_history WHERE account_id = ' . $curr_account->getAccountID() . ' ORDER BY time DESC');
+	$db->query('SELECT * FROM account_has_closing_history WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
 	while ($db->nextRecord()) {
 		// if an admin did it we get his/her name
 		if ($admin_id > 0) {
@@ -114,7 +114,7 @@ if ($curr_account!==false) {
 	}
 
 	$recentIPs = array();
-	$db->query('SELECT ip, time, host FROM account_has_ip WHERE account_id = ' . $curr_account->getAccountID() . ' ORDER BY time DESC');
+	$db->query('SELECT ip, time, host FROM account_has_ip WHERE account_id = ' . $db->escapeNumber($curr_account->getAccountID()) . ' ORDER BY time DESC');
 	while ($db->nextRecord()) {
 		$recentIPs[] = array(
 			'IP' => $db->getField('ip'),

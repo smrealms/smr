@@ -36,7 +36,7 @@ $db->query('SELECT planet_land FROM alliance_treaties
 				WHERE (alliance_id_1 = '.$ownerAllianceID.' OR alliance_id_1 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 				AND (alliance_id_2 = '.$ownerAllianceID.' OR alliance_id_2 = ' . $db->escapeNumber($player->getAllianceID()) . ')
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND planet_land = 1 AND official = \'TRUE\'');
+				AND planet_land = 1 AND official = ' . $db->escapeBoolean(true));
 if ($db->nextRecord()) $planetLand = TRUE;
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) $planetLand = TRUE;
 if ($player->getAllianceID() == $ownerAllianceID && $ownerAllianceID != 0) $planetLand = TRUE;

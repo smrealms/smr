@@ -29,14 +29,14 @@ elseif ($type == 'list') {
 	//make sure we have enough but not too mant to reduce lag
 	while ($db->nextRecord() && $count <= $variable) {
 		$id = $db->getField('acc_id');
-		$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$id.' AND reason_id = '.$del_num);
+		$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id).' AND reason_id = '.$db->escapeNumber($del_num));
 		if ($db2->nextRecord())
 			continue;
 		$ip = $db->getField('ip');
 		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		//$PHP_OUTPUT.=('fi='.$fi.' se='.$se.' th='.$th.' fo='.$fo.' therefore->'.$ip);
-		
+
 		$total += 1;
 		if ($id == $last_id && $ip == $last)
 			continue;
@@ -78,7 +78,7 @@ elseif ($type == 'list') {
 			array_unshift($ip_array, $db_ip);
 			continue;
 		}*/
-		$db2->query('SELECT login, password FROM account WHERE account_id = '.$account_id);
+		$db2->query('SELECT login, password FROM account WHERE account_id = '.$db->escapeNumber($account_id));
 		$db2->nextRecord();
 		$login = $db2->getField('login');
 		if (sizeof($ip_array) > 0) {
@@ -91,25 +91,25 @@ elseif ($type == 'list') {
 			$next_ip = 0;
 			$next_id = 0;
 		}
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord())
 			continue;
 		$host = gethostbyaddr($db_ip);
-		
+
 		if ($host == $db_ip)
 			$host = 'unknown';
-		
+
 		$PHP_OUTPUT.=('<tr><td>'.$login.'</td><td>'.$db_ip.'</td><td>'.$host.'</td>');
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$account_id);
+		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db->escapeNumber($account_id));
 		if ($next_ip == $db_ip || ($db_ip == $last_ip && $last_acc != $account_id) && ($db_ip != 'unknown' || $db_ip != 'unknown, unknown')) {
 			if ($db2->nextRecord())
 			 	$ex = $db2->getField('reason');
-			
+
 			$PHP_OUTPUT.=('<td><span class="red">Yes</span></td>');
 			$PHP_OUTPUT.=('<td>');
 			$PHP_OUTPUT.=('<input type=checkbox');
 			$PHP_OUTPUT.=(' name="disable_id[]"');
-			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$account_id);
+			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($account_id));
 			if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 			if (isset($ex) && $ex != '')
 				$PHP_OUTPUT.=(' value="'.$account_id.'">');
@@ -135,13 +135,13 @@ elseif ($type == 'list') {
 			$PHP_OUTPUT.=(' value="'.$account_id.'">');
 			$PHP_OUTPUT.=('</td>');
 			$PHP_OUTPUT.=('<td><input type=text name="suspicion2['.$account_id.']" id="InputFields"></td>');
-			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$account_id);
+			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($account_id));
 			//$PHP_OUTPUT.=('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$account_id);
 			if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 			$PHP_OUTPUT.=('<td class="noWrap">'.$close_reason.'</td>');
 		}
 		$PHP_OUTPUT.=('</tr>');
-		
+
 		//set last
 		$last_ip = $db_ip;
 		$last_acc = $account_id;
@@ -162,13 +162,13 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('<br />');
 	$PHP_OUTPUT.=create_submit('Disable');
 	$PHP_OUTPUT.=('</form>');
-	
+
 } elseif ($type == 'search') {
-	
+
 	$PHP_OUTPUT.=('<center>The following accounts have the IP address ');
 	$ip = $variable;
 	$host = gethostbyaddr($ip);
-	
+
 	if ($host == $ip)
 		$host = 'unknown';
 	$PHP_OUTPUT.=(ip.'. Host: '.$host.'<br /><br /><br />');
@@ -187,25 +187,25 @@ elseif ($type == 'list') {
 		$id = $db->getField('account_id');
 		if ($id == $last)
 			continue;
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord())
-			continue;		
+			continue;
 		$time = $db->getField('time');
 		$PHP_OUTPUT.=('<tr><td>'.$id.'</td>');
-		$db2->query('SELECT login FROM account WHERE account_id = '.$id);
+		$db2->query('SELECT login FROM account WHERE account_id = '.$db->escapeNumber($id));
 		$db2->nextRecord();
 		$login = $db2->getField('login');
 		$PHP_OUTPUT.=('<td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td><input type=checkbox name=same_ip[] value='.$id.'></td>');
 		$PHP_OUTPUT.=('<td>');
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord()) {
 			$ex = $db2->getField('reason');
 			$PHP_OUTPUT.=($ex);
 		} else
 			$PHP_OUTPUT.=('&nbsp;');
 		$PHP_OUTPUT.=('</td>');
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 		else $close_reason = '&nbsp;';
 		$PHP_OUTPUT.=('<td class="noWrap">'.$close_reason.'</td>');
@@ -217,7 +217,7 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('<input type=hidden name=first value="'.$val.'">');
 	$PHP_OUTPUT.=create_submit('Disable Accounts');
 	$PHP_OUTPUT.=('</form></center>');
-	
+
 } elseif ($type == 'account_ips') {
 	if(!is_numeric($variable)) create_error('Account id must be numeric.');
 	$PHP_OUTPUT.=('<center>Account '.$variable.' has had the following IPs at the following times.<br />');
@@ -226,7 +226,7 @@ elseif ($type == 'list') {
 		$ex = $db2->getField('reason');
 		$PHP_OUTPUT.=('This account has an exception: '.$ex);
 	}
-	$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$variable);
+	$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($variable));
 	if ($db2->nextRecord()) {
 		$close_reason = $db2->getField('reason');
 		$PHP_OUTPUT.=('This account is closed: '.$reason);
@@ -238,14 +238,14 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr><th align=center>IP</th>');
 	$PHP_OUTPUT.=('<th align=center>Host</th><th align=center>Time</th></tr>');
-	$db->query('SELECT * FROM account_has_ip WHERE account_id = '.$variable.' ORDER BY time');
+	$db->query('SELECT * FROM account_has_ip WHERE account_id = '.$db->escapeNumber($variable).' ORDER BY time');
 	while ($db->nextRecord()) {
 		$ip = $db->getField('ip');
 		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		$time = $db->getField('time');
 		$host = gethostbyaddr($ip);
-		
+
 		if ($host == $ip)
 			$host = 'unknown';
 		$PHP_OUTPUT.=('<tr><td>'.$ip.'</td><td>'.$host.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td></tr>');
@@ -253,26 +253,20 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('</table>Reason:&nbsp;<input type=text name=rea value="Reason Here"><input type=hidden name=second value='.$variable.'>');
 	$PHP_OUTPUT.=create_submit('Disable Account');
 	$PHP_OUTPUT.=('</form></center>');
-	
+
 } elseif ($type == 'alliance_ips') {
-	
+
 	list ($alliance, $game) = preg_split('/[\/]/', $variable);
 	if(!is_numeric($game)||!is_numeric($alliance)) create_error('Incorrect format used.');
 	$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game).' AND alliance_id = '.$db->escapeNumber($alliance));
-	$list = '(';
-	$a = 1;
+	$list = array();
 	while ($db->nextRecord()) {
-		$id = $db->getField('account_id');
-		if ($a > 1)
-			$list .= ',';
-		$list .= $id;
-		$a ++;
+		$list[] = $db->getInt('account_id');
 	}
-	$list .= ')';
-	$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
+	$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
 	$container = array();
 	$container['url'] = 'account_close.php';
-	$db2->query('SELECT * FROM alliance WHERE alliance_id = '.$alliance.' AND game_id = '.$game);
+	$db2->query('SELECT * FROM alliance WHERE alliance_id = '.$db->escapeNumber($alliance).' AND game_id = '.$db->escapeNumber($game));
 	$db2->nextRecord();
 	$name = stripslashes($db2->getField('alliance_name'));
 	$PHP_OUTPUT.=('<center>Listing all IPs for alliance '.$name.' in game with ID '.$game.'<br /><br />');
@@ -294,27 +288,27 @@ elseif ($type == 'list') {
 		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		$host = gethostbyaddr($ip);
-		
+
 		if ($host == $ip)
 			$host = 'unknown';
 		if ($id == $last_id && $ip == $last_ip)
 			continue;
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord())
 			continue;
-		$db2->query('SELECT * FROM account WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account WHERE account_id = '.$db->escapeNumber($id));
 		$db2->nextRecord();
 		$login = $db2->getField('login');
 		$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 		$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord()) {
 			$ex = $db2->getField('reason');
 			$PHP_OUTPUT.=($ex);
 		} else
 			$PHP_OUTPUT.=('&nbsp;');
 		$PHP_OUTPUT.=('</td>');
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 		$PHP_OUTPUT.=('<td class="noWrap">'.$close_reason.'</td>');
 		$PHP_OUTPUT.=('</tr>');
@@ -325,22 +319,16 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=create_submit('Disable Accounts');
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
-		
+
 } elseif ($type == 'wild_log') {
-	
+
 	$db->query('SELECT * FROM account WHERE login LIKE '.$db->escapeString($variable).' ORDER BY login');
-	$list = '(';
-	$a = 1;
+	$list = array();
 	if ($db->getNumRows()) {
 		while ($db->nextRecord()) {
-			$id = $db->getField('account_id');
-			if ($a > 1)
-				$list .= ',';
-			$list .= $id;
-			$a ++;
+			$list[] = $db->getField('account_id');
 		}
-		$list .= ')';
-		$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
+		$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).' ORDER BY ip');
 		$container = array();
 		$container['url'] = 'account_close.php';
 		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
@@ -362,27 +350,27 @@ elseif ($type == 'list') {
 			list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 			$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 			$host = gethostbyaddr($ip);
-		
+
 			if ($host == $ip)
 				$host = 'unknown';
 			if ($id == $last_id && $ip == $last_ip)
 				continue;
-			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($id));
 			if ($db2->nextRecord())
 				continue;
-			$db2->query('SELECT * FROM account WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account WHERE account_id = '.$db->escapeNumber($id));
 			$db2->nextRecord();
 			$login = $db2->getField('login');
 			$PHP_OUTPUT.=('<tr><td>'.$id.'</td><td>'.$login.'</td><td>' . date(DATE_FULL_SHORT,$time) . '</td>');
 			$PHP_OUTPUT.=('<td>'.$ip.'</td><td>'.$host.'</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
-			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db->escapeNumber($id));
 			if ($db2->nextRecord()) {
 				$ex = $db2->getField('reason');
 				$PHP_OUTPUT.=($ex);
 			} else
 				$PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td></tr>');
-			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($id));
 			if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 			$PHP_OUTPUT.=('<td>'.$close_reason.'</td>');
 			$close_reason = '&nbsp;';
@@ -392,25 +380,19 @@ elseif ($type == 'list') {
 		$PHP_OUTPUT.=('</table>');
 		$PHP_OUTPUT.=create_submit('Disable Accounts');
 		$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
-		
+
 	} else
 		$PHP_OUTPUT.=('No login names LIKE '.$variable.' found');
-		
+
 } elseif ($type == 'wild_in') {
-	
+
 	$db->query('SELECT * FROM player WHERE player_name LIKE '.$db->escapeString($variable).' ORDER BY player_name');
-	$list = '(';
-	$a = 1;
+	$list = array();
 	if ($db->getNumRows()) {
 		while ($db->nextRecord()) {
-			$id = $db->getField('account_id');
-			if ($a > 1)
-				$list .= ',';
-			$list .= $id;
-			$a ++;
+			$list[] = $db->getField('account_id');
 		}
-		$list .= ')';
-		$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
+		$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
 		$container = array();
 		$container['url'] = 'account_close.php';
 		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
@@ -433,19 +415,19 @@ elseif ($type == 'list') {
 			list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 			$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 			$host = gethostbyaddr($ip);
-		
+
 			if ($host == $ip)
 				$host = 'unknown';
-			
+
 			if ($id == $last_id && $ip == $last_ip)
 				continue;
-			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db2->escapeNumber($id));
 			if ($db2->nextRecord())
 				continue;
-			$db2->query('SELECT * FROM account WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account WHERE account_id = '.$db2->escapeNumber($id));
 			$db2->nextRecord();
 			$login = $db2->getField('login');
-			$db2->query('SELECT * FROM player WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM player WHERE account_id = '.$db2->escapeNumber($id));
 			$names = array();
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
@@ -458,16 +440,16 @@ elseif ($type == 'list') {
 				$PHP_OUTPUT.=($echoed);
 				$a ++;
 			}
-				
+
 			$PHP_OUTPUT.=('</td><td>'.$ip.'</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
-			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db2->escapeNumber($id));
 			if ($db2->nextRecord()) {
 				$ex = $db2->getField('reason');
 				$PHP_OUTPUT.=($ex);
 			} else
 				$PHP_OUTPUT.=('&nbsp;');
 			$PHP_OUTPUT.=('</td>');
-			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+			$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db2->escapeNumber($id));
 			if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 			$PHP_OUTPUT.=('<td>'.$close_reason.'</td>');
 			$PHP_OUTPUT.=('</tr>');
@@ -478,36 +460,25 @@ elseif ($type == 'list') {
 		$PHP_OUTPUT.=('</table>');
 		$PHP_OUTPUT.=create_submit('Disable Accounts');
 		$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
-		
+
 	} else
 		$PHP_OUTPUT.=('No player names LIKE '.$variable.' found');
-		
+
 } elseif ($type == 'compare') {
-	
+
 	$p = preg_split('/[,]+[\s]/', $variable);
 
-	$list = '(0,';
-	$a = 1;
+	$list = array(0);
 	foreach ($p as $val) {
-		if ($a > 1)
-			$list .= ',';
-		$list .= $db->escapeString($val);
-		$a++;
+		$list[] = $val;
 	}
-	$list .= ')';
-	
-	$db->query('SELECT * FROM player WHERE player_name IN '.$list);
-	$list = '(0,';
-	$a = 1;
+
+	$db->query('SELECT * FROM player WHERE player_name IN ('.$db->escapeArray($list).')');
+	$list = array(0);
 	while ($db->nextRecord()) {
-		$id = $db->getField('account_id');
-		if ($a > 1)
-			$list .= ',';
-		$list .= $id;
-		$a ++;
+		$list[] = $db->getInt('account_id');
 	}
-	$list .= ')';
-	$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
+	$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
 	$container = array();
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=('<center>Listing all IPs for ingame names '.$variable.'<br /><br />');
@@ -531,18 +502,18 @@ elseif ($type == 'list') {
 		list($fi,$se,$th,$fo,$crap) = preg_split('/[.\s,]/', $ip, 5);
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		$host = gethostbyaddr($ip);
-	
+
 		if ($host == $ip)
 			$host = 'unknown';
 		if ($id == $last_id && $ip == $last_ip)
 			continue;
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord())
 			continue;
-		$db2->query('SELECT * FROM account WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account WHERE account_id = '.$db2->escapeNumber($id));
 		$db2->nextRecord();
 		$login = $db2->getField('login');
-		$db2->query('SELECT * FROM player WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM player WHERE account_id = '.$db2->escapeNumber($id));
 			$names = array();
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
@@ -556,14 +527,14 @@ elseif ($type == 'list') {
 			$a ++;
 		}
 		$PHP_OUTPUT.=('</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db2->escapeNumber($id));
 		if ($db2->nextRecord()) {
 			$ex = $db2->getField('reason');
 			$PHP_OUTPUT.=($ex);
 		} else
 			$PHP_OUTPUT.=('&nbsp;');
 		$PHP_OUTPUT.=('</td>');
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db2->escapeNumber($id));
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 		$PHP_OUTPUT.=('<td>'.$close_reason.'</td>');
 		$PHP_OUTPUT.=('</tr>');
@@ -574,33 +545,23 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=create_submit('Disable Accounts');
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
-	
+
 } elseif ($type == 'compare_log') {
-	
+
 	$p = preg_split('/[,]+[\s]/', $variable);
 
-	$list = '(';
-	$a = 1;
+	$list = array();
 	foreach ($p as $val) {
-		if ($a > 1)
-			$list .= ',';
-		$list .= $db->escapeString($val);
-		$a++;
+		$list[] = $val;
 	}
-	$list .= ')';
-	
-	$db->query('SELECT * FROM account WHERE login IN '.$list);
-	$list = '(';
-	$a = 1;
+
+	$db->query('SELECT * FROM account WHERE login IN ('.$db->escapeArray($list).')');
+	$list = array();
 	while ($db->nextRecord()) {
-		$id = $db->getField('account_id');
-		if ($a > 1)
-			$list .= ',';
-		$list .= $id;
-		$a ++;
+		$list[] = $db->getInt('account_id');
 	}
 	$list .= ')';
-	$db->query('SELECT * FROM account_has_ip WHERE account_id IN '.$list.' ORDER BY ip');
+	$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
 	$container = array();
 	$container['url'] = 'account_close.php';
 	$PHP_OUTPUT.=('<center>Listing all IPs for logins '.$variable.'<br /><br />');
@@ -625,13 +586,13 @@ elseif ($type == 'list') {
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		if ($id == $last_id && $ip == $last_ip)
 			continue;
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord())
 			continue;
-		$db2->query('SELECT * FROM account WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account WHERE account_id = '.$db->escapeNumber($id));
 		$db2->nextRecord();
 		$login = $db2->getField('login');
-		$db2->query('SELECT * FROM player WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM player WHERE account_id = '.$db->escapeNumber($id));
 			$names = array();
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
@@ -646,14 +607,14 @@ elseif ($type == 'list') {
 			$a ++;
 		}
 		$PHP_OUTPUT.=('</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db2->escapeNumber($id));
 		if ($db2->nextRecord()) {
 			$ex = $db2->getField('reason');
 			$PHP_OUTPUT.=($ex);
 		} else
 			$PHP_OUTPUT.=('&nbsp;');
 		$PHP_OUTPUT.=('</td>');
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 		$PHP_OUTPUT.=('<td>'.$close_reason.'</td>');
 		$PHP_OUTPUT.=('</tr>');
@@ -664,9 +625,9 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=create_submit('Disable Accounts');
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
-	
+
 } elseif ($type == 'wild_ip') {
-	
+
 	$db->query('SELECT * FROM account_has_ip WHERE ip LIKE '.$db->escapeString($variable).' ORDER BY time, ip');
 
 	$container = array();
@@ -693,13 +654,13 @@ elseif ($type == 'list') {
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		if ($id == $last_id && $ip == $last_ip)
 			continue;
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord())
 			continue;
-		$db2->query('SELECT * FROM account WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account WHERE account_id = '.$db2->escapeNumber($id));
 		$db2->nextRecord();
 		$login = $db2->getField('login');
-		$db2->query('SELECT * FROM player WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM player WHERE account_id = '.$db2->escapeNumber($id));
 			$names = array();
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
@@ -714,14 +675,14 @@ elseif ($type == 'list') {
 			$a ++;
 		}
 		$PHP_OUTPUT.=('</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db2->escapeNumber($id));
 		if ($db2->nextRecord()) {
 			$ex = $db2->getField('reason');
 			$PHP_OUTPUT.=($ex);
 		} else
 			$PHP_OUTPUT.=('&nbsp;');
 		$PHP_OUTPUT.=('</td>');
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db->escapeNumber($id));
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 		$PHP_OUTPUT.=('<td>'.$close_reason.'</td>');
 		$PHP_OUTPUT.=('</tr>');
@@ -732,9 +693,9 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=create_submit('Disable Accounts');
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
-	
+
 } elseif ($type == 'wild_host') {
-	
+
 	$db->query('SELECT * FROM account_has_ip WHERE host LIKE '.$db->escapeString($variable).' ORDER BY time, ip');
 
 	$container = array();
@@ -761,13 +722,13 @@ elseif ($type == 'list') {
 		$ip = $fi.'.'.$se.'.'.$th.'.'.$fo;
 		if ($id == $last_id && $ip == $last_ip)
 			continue;
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE reason = \'Tagged for deletion\' AND account_id = '.$db2->escapeNumber($id));
 		if ($db2->nextRecord())
 			continue;
-		$db2->query('SELECT * FROM account WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account WHERE account_id = '.$db2->escapeNumber($id));
 		$db2->nextRecord();
 		$login = $db2->getField('login');
-		$db2->query('SELECT * FROM player WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM player WHERE account_id = '.$db2->escapeNumber($id));
 			$names = array();
 			while ($db2->nextRecord())
 				$names[] = stripslashes($db2->getField('player_name'));
@@ -782,14 +743,14 @@ elseif ($type == 'list') {
 			$a ++;
 		}
 		$PHP_OUTPUT.=('</td><td><input type=checkbox name=same_ip[] value='.$id.'></td><td>');
-		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$db2->escapeNumber($id));
 		if ($db2->nextRecord()) {
 			$ex = $db2->getField('reason');
 			$PHP_OUTPUT.=($ex);
 		} else
 			$PHP_OUTPUT.=('&nbsp;');
 		$PHP_OUTPUT.=('</td>');
-		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$id);
+		$db2->query('SELECT * FROM account_is_closed JOIN closing_reason USING(reason_id) WHERE account_id = '.$db2->escapeNumber($id));
 		if ($db2->nextRecord()) $close_reason = $db2->getField('reason');
 		$PHP_OUTPUT.=('<td>'.$close_reason.'</td>');
 		$PHP_OUTPUT.=('</tr>');
@@ -800,6 +761,6 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('</table>');
 	$PHP_OUTPUT.=create_submit('Disable Accounts');
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
-	
+
 }
 ?>

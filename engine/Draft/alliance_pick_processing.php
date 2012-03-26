@@ -9,7 +9,7 @@ FROM
 (
 	SELECT COUNT(*) alliance_member
 	FROM player
-	WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND alliance_id!='.NHA_ID.' AND alliance_id!=0
+	WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND alliance_id!='.$db->escapeNumber(NHA_ID).' AND alliance_id!=0
 	GROUP BY alliance_id
 ) t');
 $db->nextRecord();

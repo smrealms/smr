@@ -1,21 +1,5 @@
 <?php
 
-function build_list($array)
-{
-	$list = '';
-	if (!is_array($array))
-		return false;
-
-	foreach ($array as $element)
-	{
-		if (!empty($list))
-			$list .= ', ';
-		$list .= $element;
-	}
-	
-	return '(' . $list . ')';
-}
-
 $template->assign('PageTopic','Log Console - Detail');
 
 // get the account_ids from last form
@@ -28,9 +12,6 @@ if (isset($_REQUEST['log_type_ids']))
 	SmrSession::updateVar('log_type_ids',$_REQUEST['log_type_ids']);
 $log_type_ids = $var['log_type_ids'];
 
-// build a list of it like: (id1, id2, id3)
-$account_list = build_list($account_ids);
-
 // initialize order items
 if (!isset($var['item']))
 	$var['item'] = 'microtime';
@@ -38,22 +19,20 @@ if (!isset($var['order']))
 	$var['order'] = 'ASC';
 
 // nothing marked?
-if (!$account_list)
+if (!is_array($account_ids) || count($account_ids) == 0)
 	$PHP_OUTPUT.=create_error('You have to select the log files you want to view/delete!');
+$account_list = $db->escapeArray($account_ids);
 
 $action = $_REQUEST['action'];
-if ($action == 'Delete')
-{
-	$account_list = build_list($account_ids);
+if ($action == 'Delete') {
 
 	// get rid of all entries
-	$db->query('DELETE FROM account_has_logs WHERE account_id IN '.$account_list);
-	$db->query('DELETE FROM log_has_notes WHERE account_id IN '.$account_list);
+	$db->query('DELETE FROM account_has_logs WHERE account_id IN ('.$account_list.')');
+	$db->query('DELETE FROM log_has_notes WHERE account_id IN ('.$account_list.')');
 
 	$PHP_OUTPUT.=('Operation was completed successfully!');
 }
-else
-{
+else {
 	// a second db object
 	$db2 = new SmrMySqlDatabase();
 
@@ -61,8 +40,7 @@ else
 	$avail_colors = array('#FFFFFF', '#FF0000', '#00FF00', '#0000FF');
 
 	// now assign each account id a color
-	for ($i = 0; $i < count($account_ids); $i++)
-	{
+	for ($i = 0; $i < count($account_ids); $i++) {
 		// get current id
 		$curr_account_id = $account_ids[$i];
 
@@ -89,16 +67,13 @@ else
 	$PHP_OUTPUT.=create_submit('Update');
 	$PHP_OUTPUT.=('<br /><br />');
 
+	$log_type_id_list = array(0);
 	$db->query('SELECT * FROM log_type');
-	while ($db->nextRecord())
-	{
-		$PHP_OUTPUT.=('<input type="checkbox" name="log_type_ids[' . $db->getField('log_type_id') . ']"');
-		if ($log_type_ids[$db->getField('log_type_id')])
-		{
+	while ($db->nextRecord()) {
+		$PHP_OUTPUT.=('<input type="checkbox" name="log_type_ids[' . $db->getInt('log_type_id') . ']"');
+		if ($log_type_ids[$db->getInt('log_type_id')]) {
 			$PHP_OUTPUT.=(' checked');
-			if (!empty($log_type_id_list))
-				$log_type_id_list .= ',';
-			$log_type_id_list .= $db->getField('log_type_id');
+			$log_type_id_list[] = $db->getField('log_type_id');
 
 		}
 		$PHP_OUTPUT.=('>' . $db->getField('log_type_entry') . '<br />');
@@ -132,7 +107,7 @@ else
 	$log_notes = array();
 
 	// get notes from db
-	$db->query('SELECT * FROM log_has_notes WHERE account_id IN '.$account_list);
+	$db->query('SELECT * FROM log_has_notes WHERE account_id IN ('.$account_list.')');
 	while ($db->nextRecord())
 		$log_notes[] = $db->getField('notes');
 
@@ -163,7 +138,7 @@ else
 	$PHP_OUTPUT.=('<ul>');
 	foreach ($colors as $id => $color)
 	{
-		$db->query('SELECT login FROM account WHERE account_id = ' . $id);
+		$db->query('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
 		if ($db->nextRecord())
 			$PHP_OUTPUT.=('<li style="color:'.$color.';">' . $db->getField('login') . '</li>');
 	}
@@ -193,17 +168,13 @@ else
 	$PHP_OUTPUT.=('<th>Message</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	if (empty($log_type_id_list))
-		$log_type_id_list = 0;
-
-	$db->query('SELECT * FROM account_has_logs WHERE account_id IN '.$account_list.' AND log_type_id IN ('.$log_type_id_list.') ORDER BY ' . $var['item'] . ' ' . $var['order']);
-	while ($db->nextRecord())
-	{
-		$account_id		= $db->getField('account_id');
+	$db->query('SELECT * FROM account_has_logs WHERE account_id IN ('.$account_list.') AND log_type_id IN ('.$db->escapeArray($log_type_id_list).') ORDER BY ' . $var['item'] . ' ' . $var['order']);
+	while ($db->nextRecord()) {
+		$account_id		= $db->getInt('account_id');
 		$microtime		= $db->getMicrotime('microtime');
 		$message		= stripslashes($db->getField('message'));
-		$log_type_id	= $db->getField('log_type_id');
-		$sector_id		= $db->getField('sector_id');
+		$log_type_id	= $db->getInt('log_type_id');
+		$sector_id		= $db->getInt('sector_id');
 
 		// generate style string
 		$style = ' style="color:' . $colors[$account_id] . ';"';
@@ -211,7 +182,7 @@ else
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td'.$style.'>' . date(DATE_FULL_SHORT, microtimeSec($microtime)) . ' ' . microtimeMSec($microtime) . 'us</td>');
 
-		$db2->query('SELECT * FROM log_type WHERE log_type_id = '.$log_type_id);
+		$db2->query('SELECT * FROM log_type WHERE log_type_id = '.$db2->escapeNumber($log_type_id));
 		if ($db2->nextRecord())
 			$PHP_OUTPUT.=('<td align="center"'.$style.'>' . $db2->getField('log_type_entry') . '</td>');
 		else

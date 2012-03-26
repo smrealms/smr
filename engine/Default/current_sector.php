@@ -126,7 +126,7 @@ if (!empty($var['traded_xp']) ||
 	}
 
 	$tradeMessage .= '<br />';
-	
+
 	$template->assign('TradeMessage',$tradeMessage);
 }
 
@@ -149,7 +149,7 @@ function checkForForceRefreshMessage(&$msg) {
 	if($contains>0) {
 		if(!$template->hasTemplateVar('ForceRefreshMessage')) {
 			$forceRefreshMessage ='';
-			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . TIME . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
+			$db->query('SELECT refresh_at FROM sector_has_forces WHERE refresh_at >= ' . $db->escapeNumber(TIME) . ' AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND refresher = ' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY refresh_at DESC LIMIT 1');
 			if ($db->nextRecord()) {
 				$remainingTime = $db->getField('refresh_at') - TIME;
 				$forceRefreshMessage = '<span class="green">REFRESH</span>: All forces will be refreshed in '.$remainingTime.' seconds.';
