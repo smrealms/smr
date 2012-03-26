@@ -282,11 +282,11 @@ class ChessGame {
 			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
 		}
 		// Check if the piece moving is a rook and mark it as moved to stop castling.
-		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX == 7) && ($startY == 0 || $startY == 7)) {
+		if($pieceID == ChessPiece::ROOK && ($startX == 0 || $startX == 7) && ($startY == ($playerColour == self::PLAYER_WHITE ? 7 : 0))) {
 			$this->hasMoved[$playerColour][ChessPiece::ROOK][$startX==0?'Queen':'King'] = true;
 		}
 		// Check if we've taken a rook and marked them as moved, if they've already moved this does nothing, but if they were taken before moving this stops an issue with trying to castle with a non-existent castle.
-		if($pieceTaken == ChessPiece::ROOK && ($endX == 0 || $endX == 7) && ($endY == 0 || $endY == 7)) {
+		if($pieceTaken == ChessPiece::ROOK && ($endX == 0 || $endX == 7) && $endY == ($otherPlayerColour == self::PLAYER_WHITE ? 7 : 0)) {
 			$this->hasMoved[$otherPlayerColour][ChessPiece::ROOK][$endX==0?'Queen':'King'] = true;
 		}
 		if($pieceID == ChessPiece::PAWN && ($startY == 1 || $startY == 6) && ($endY == 3 || $endY == 4)) {
@@ -418,7 +418,7 @@ class ChessGame {
 				$board[$hasMoved[ChessPiece::PAWN][1]][$hasMoved[ChessPiece::PAWN][0]] = null;
 			}
 		}
-		else if($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && ($y == 0 || $y == 7)) {
+		else if($p->pieceID == ChessPiece::ROOK && ($x == 0 || $x == 7) && $y == ($p->colour == self::PLAYER_WHITE ? 7 : 0)) {
 			//Rook moved?
 			if($hasMoved[$p->colour][ChessPiece::ROOK][$x==0?'Queen':'King'] === false) {
 				// We set rook moved in here as it's used for move info.
@@ -427,7 +427,7 @@ class ChessGame {
 			}
 		}
 		// Check if we've taken a rook and marked them as moved, if they've already moved this does nothing, but if they were taken before moving this stops an issue with trying to castle with a non-existent castle.
-		if($pieceTaken != null && $pieceTaken->pieceID == ChessPiece::ROOK && ($toX == 0 || $toX == 7) && ($toY == 0 || $toY == 7)) {
+		if($pieceTaken != null && $pieceTaken->pieceID == ChessPiece::ROOK && ($toX == 0 || $toX == 7) && $toY == ($pieceTaken->colour == self::PLAYER_WHITE ? 7 : 0)) {
 			if($hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$toX==0?'Queen':'King'] === false) {
 				$rookTaken = $toX==0?'Queen':'King';
 				$hasMoved[$pieceTaken->colour][ChessPiece::ROOK][$rookTaken] = true;
