@@ -11,7 +11,7 @@ $template->assign('UserRankName',$account->getRankName());
 
 $games = array();
 $games['Play'] = array();
-$game_id_list = [];
+$game_id_list = array();
 $db->query('SELECT end_date, game_id, game_name, game_speed, game_type
 			FROM game JOIN player USING (game_id)
 			WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id).'
