@@ -112,9 +112,11 @@ abstract class AbstractSmrShip {
 		// determine ship
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT * FROM ship_type ORDER BY ship_type_id ASC'); //TODO add game type id
-		while($db->nextRecord())
-			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')]))
+		while($db->nextRecord()) {
+			if(!isset(self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')])) {
 				self::$CACHE_BASE_SHIPS[$gameTypeID][$db->getField('ship_type_id')] =& self::buildBaseShip($db);
+			}
+		}
 		return self::$CACHE_BASE_SHIPS[$gameTypeID];
 	}
 
@@ -157,7 +159,10 @@ abstract class AbstractSmrShip {
 	}
 
 	public function checkForExcessMiningDrones() {
-		if (($totalDrones = array_sum($drones = $this->getMiningDrones())) > $this->getMaxMiningDrones()) {
+		$drones = $this->getMiningDrones();
+		$totalDrones = array_sum($drones);
+		if ($totalDrones > $this->getMaxMiningDrones()) {
+			$remove = array();
 			$need_to_lose = $totalDrones - $this->getMaxMiningDrones();
 			foreach ($drones as $type => $amount) {
 				if ($amount > $need_to_lose)
