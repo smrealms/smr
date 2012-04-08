@@ -37,7 +37,7 @@ elseif ($action == 'Planet') {
 		create_error('You can\'t store more than you carry!');
 
 	// do we want to transfer more than the planet can hold?
-	if ($amount > $planet->stockpile_left($var['good_id']))
+	if ($amount > $planet->getRemainingStockpile($var['good_id']))
 		create_error('You can only put 600 per item at planet!');
 
 	// now transfer

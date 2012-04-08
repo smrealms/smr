@@ -790,7 +790,7 @@ class SmrPlanet
 		return 0;
 	}
 
-	function stockpile_left($id)
+	function getRemainingStockpile($id)
 	{
 		return 600 - $this->getStockpile($id);
 	}
