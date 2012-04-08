@@ -10,8 +10,12 @@ class SmrPort
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
-	const BASE_REFRESH_PER_HOUR = 100;
-	const REFRESH_PER_GOOD = 1;
+	private static $BASE_REFRESH_PER_HOUR = array(
+		'1' => 150,
+		'2' => 110,
+		'3' => 70
+	);
+	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	
 	protected $db;
@@ -173,55 +177,43 @@ class SmrPort
 		}
 	}
 	
-	public function &getGoods()
-	{
-		if(!$this->isCachedVersion() && empty($this->goods))
-		{
+	private function restockGood(&$good, $secondsSinceRefresh) {
+		$db = new SmrMySqlDatabase();
+		$refreshPerHour = self::$BASE_REFRESH_PER_HOUR[$good['Class']] * Globals::getGameSpeed($this->getGameID());
+		$refreshPerSec = $refreshPerHour / 3600;
+		$amountToAdd = floor($secondsSinceRefresh * $refreshPerSec);
+		
+		if ($good['Amount'] > $good['Max'] || ($good['Amount'] < $good['Max'] && $amountToAdd > 0)) {
+			$good['Amount'] = min($good['Max'], $good['Amount'] + $amountToAdd);
+			$db->query('UPDATE port_has_goods SET amount = ' . $db->escapeNumber($good['Amount']) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($good['ID']) . ' LIMIT 1');
+		}
+		return round($amountToAdd / $refreshPerSec);
+	}
+	
+	public function &getGoods() {
+		if(!$this->isCachedVersion() && empty($this->goods)) {
 			$GOODS = Globals::getGoods();
-			
-			$refresh_per_hour = self::BASE_REFRESH_PER_HOUR * Globals::getGameSpeed($this->getGameID());
-			$refresh_per_sec = $refresh_per_hour / 3600;
-			$seconds_since_refresh = TIME - $this->lastUpdate;
-			if ($seconds_since_refresh < 0) $seconds_since_refresh = 0;
-			$amt_to_add = floor($seconds_since_refresh * $refresh_per_sec);
-			
-			$this->lastUpdate += round($amt_to_add / $refresh_per_sec);
+			$secondsSinceRefresh = max(0, TIME - $this->lastUpdate);
 				
 			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC LIMIT ' . count($GOODS));
 			
+			$timeRefreshed = $secondsSinceRefresh;
 			$this->goods['Sell'] = array();
 			$this->goods['Buy'] = array();
 			$this->goods['All Goods'] = array();
-			$db = new SmrMySqlDatabase();
-			while ($this->db->nextRecord())
-			{
-				$good = $GOODS[$this->db->getField('good_id')];
-				$good['Amount'] = $this->db->getField('amount');
+			while ($this->db->nextRecord()) {
+				$good = $GOODS[$this->db->getInt('good_id')];
+				$good['Amount'] = $this->db->getInt('amount');
 				$good['TransactionType'] = $this->db->getField('transaction_type');
+				$timeRefreshed = min($timeRefreshed, $this->restockGood($good, $secondsSinceRefresh));
 				
-				if($good['Amount'] > $good['Max']) // possible to have more than max goods.
-				{
-					$good['Amount'] = $good['Max'];
-					$db->query('UPDATE port_has_goods SET amount = ' . $db->escapeNumber($good['Amount']) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($good['ID']) . ' LIMIT 1');
-				}
-				elseif ($good['Amount'] < $good['Max'] && $amt_to_add > 0)
-				{
-					if ($good['Amount'] + $amt_to_add > $good['Max'])
-					{
-						$good['Amount'] = $good['Max'];
-					}
-					else
-					{
-						$good['Amount'] += $amt_to_add;
-					}
-					$db->query('UPDATE port_has_goods SET amount = ' . $db->escapeNumber($good['Amount']) . ' WHERE '.$this->SQL.' AND good_id = ' . $db->escapeNumber($good['ID']) . ' LIMIT 1');
-				}
 				$g = $good;
 				$this->goods['All Goods'][$g['ID']] =& $g;
 				$this->goods[$g['TransactionType']][$g['ID']] =& $g;
 				unset($g); //HACK Don't want to keep g around - it kills goods due to references.
 			}
-			$this->db->query('UPDATE port SET last_update = ' . $this->db->escapeNumber($this->lastUpdate) . ' WHERE '.$this->SQL.' LIMIT 1');
+			$this->lastUpdate += $timeRefreshed;
+			$this->db->query('UPDATE port SET last_update = ' . $this->db->escapeNumber($this->lastUpdate) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
 		return $this->goods;
 	}
