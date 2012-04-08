@@ -27,7 +27,7 @@ if ($db->getNumRows() != 0) {
 
 	while ($db->nextRecord()) {
 		// we won't exile ourself!
-		if ($player->getAccountID() != $account_id) {
+		if ($player->getAccountID() != $db->getInt('account_id')) {
 			// get the amount of time since last_active
 			$diff = 864000 + max(-864000, $db->getInt('last_cpl_action') - TIME);
 			$lastActive = get_colored_text_range($diff, 864000, date(DATE_FULL_SHORT, $db->getInt('last_cpl_action')));
