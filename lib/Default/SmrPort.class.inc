@@ -12,6 +12,7 @@ class SmrPort
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
 	const BASE_REFRESH_PER_HOUR = 100;
 	const REFRESH_PER_GOOD = 1;
+	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	
 	protected $db;
 	
@@ -1341,8 +1342,7 @@ class SmrPort
 	protected function creditCurrentAttackersForKill()
 	{
 		//get all players involved for HoF
-		$allowed = TIME - 60 * 60 * 3;
-		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND time > '.$allowed);
+		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND time > '.$this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		$numToDelete = $this->db->getNumRows();
 		while ($this->db->nextRecord())
 		{
