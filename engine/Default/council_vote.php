@@ -31,7 +31,7 @@ foreach($races as $raceID => $raceInfo) {
 	$container = create_container('council_vote_processing.php', '', array('race_id' => $raceID));
 	$otherRaceGlobalRelations = Globals::getRaceRelations($player->getGameID(),$raceID);
 	$voteRelations[$raceID] = array(
-		'HREF' => SmrSession::get_new_href($container),
+		'HREF' => SmrSession::getNewHREF($container),
 		'Increased' => $votedForRace == $raceID && $votedFor == 'INC',
 		'Decreased' => $votedForRace == $raceID && $votedFor == 'DEC',
 		'RelationToThem' => $playerRaceGlobalRelations[$raceID],
@@ -82,7 +82,7 @@ if ($db->getNumRows() > 0) {
 		}
 
 		$voteTreaties[$otherRaceID] = array(
-			'HREF' => SmrSession::get_new_href($container),
+			'HREF' => SmrSession::getNewHREF($container),
 			'Type' => $db->getField('type'),
 			'EndTime' => $db->getField('end_time'),
 			'For' => $votedFor == 'YES',

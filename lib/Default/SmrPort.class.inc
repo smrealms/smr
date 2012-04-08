@@ -1057,28 +1057,28 @@ class SmrPort
 	
 	public function getRaidWarningHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php', 'port_attack_warning.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'port_attack_warning.php'));
 	}
 	
 	public function getAttackHREF()
 	{
 		$container = create_container('skeleton.php', 'port_attack_processing.php');
 		$container['port_id'] = $this->getSectorID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function getClaimHREF()
 	{
 		$container = create_container('port_claim_processing.php');
 		$container['port_id'] = $this->getSectorID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function getLootHREF($justContainer = false)
 	{
 		$container = create_container('skeleton.php','port_loot.php');
 		$container['port_id'] = $this->getSectorID();
-		return $justContainer === false ? SmrSession::get_new_href($container) : $container;
+		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
 	}
 	public function isCachedVersion()
 	{

@@ -13,11 +13,11 @@ create_planet_menu();
 $container = array();
 $container['url'] = 'planet_defense_processing.php';
 $container['type_id'] = 1;
-$template->assign('TransferShieldsHref',SmrSession::get_new_href($container));
+$template->assign('TransferShieldsHref',SmrSession::getNewHREF($container));
 
 $container = array();
 $container['url'] = 'planet_defense_processing.php';
 $container['type_id'] = 4;
 
-$template->assign('TransferCDsHref',SmrSession::get_new_href($container));
+$template->assign('TransferCDsHref',SmrSession::getNewHREF($container));
 ?>

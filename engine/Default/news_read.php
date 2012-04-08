@@ -20,7 +20,7 @@ require_once(get_file_loc('news.functions.inc'));
 doBreakingNewsAssign($gameID,$template);
 doLottoNewsAssign($gameID,$template);
 
-$template->assign('ViewNewsFormHref',SmrSession::get_new_href(create_container('skeleton.php','news_read.php',array('GameID'=>$var['GameID']))));
+$template->assign('ViewNewsFormHref',SmrSession::getNewHREF(create_container('skeleton.php','news_read.php',array('GameID'=>$var['GameID']))));
 
 $db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND type != \'breaking\' ORDER BY news_id DESC LIMIT ' . ($min_news - 1) . ', ' . ($max_news - $min_news + 1));
 if ($db->getNumRows()) {

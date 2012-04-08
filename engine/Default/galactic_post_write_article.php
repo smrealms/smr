@@ -22,5 +22,5 @@ if(isset($var['Preview'])) {
 	$template->assign('PreviewTitle', $var['PreviewTitle']);
 	$template->assign('Preview', $var['Preview']);
 }
-$template->assign('SubmitArticleHref',SmrSession::get_new_href($container));
+$template->assign('SubmitArticleHref',SmrSession::getNewHREF($container));
 ?>

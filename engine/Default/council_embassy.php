@@ -24,7 +24,7 @@ foreach($RACES as $raceID => $raceInfo) {
 	if ($db->getNumRows() > 0) {
 		continue;
 	}
-	$voteRaces[$raceID] = SmrSession::get_new_href(create_container('council_embassy_processing.php','',array('race_id' => $raceID)));
+	$voteRaces[$raceID] = SmrSession::getNewHREF(create_container('council_embassy_processing.php','',array('race_id' => $raceID)));
 }
 $template->assign('VoteRaceHrefs',$voteRaces)
 

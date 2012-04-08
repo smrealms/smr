@@ -15,7 +15,7 @@ if($db->getNumRows()>0) {
 		$voting[$voteID]['ID'] = $voteID;
 		$container = create_container('vote.php', 'vote_processing.php');
 		$container['vote_id'] = $voteID;
-		$voting[$voteID]['HREF'] = SmrSession::get_new_href($container);
+		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
 		$voting[$voteID]['Question'] = $db->getField('question');
 		if($db->getField('end') > TIME) {
 			$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);

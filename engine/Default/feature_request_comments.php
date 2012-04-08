@@ -6,7 +6,7 @@ $template->assign('PageTopic','Feature Request Comments');
 
 $container = $var;
 $container['body'] = 'feature_request.php';
-$template->assign('BackHref',SmrSession::get_new_href($container));
+$template->assign('BackHref',SmrSession::getNewHREF($container));
 
 $db->query('SELECT *
 			FROM feature_request
@@ -35,5 +35,5 @@ if ($db->getNumRows() > 0) {
 $container = $var;
 $container['url'] = 'feature_request_comment_processing.php';
 unset($container['body']);
-$template->assign('FeatureRequestCommentFormHREF',SmrSession::get_new_href($container));
+$template->assign('FeatureRequestCommentFormHREF',SmrSession::getNewHREF($container));
 ?>

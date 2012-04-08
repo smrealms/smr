@@ -6,7 +6,7 @@
 	$container['num_gals'] = $var['num_gals'];
 	$container['game_id'] = $var['game_id'];
 	
-	$template->assign('CreateGalaxiesHREF',SmrSession::get_new_href($container));
+	$template->assign('CreateGalaxiesHREF',SmrSession::getNewHREF($container));
 	
 	//Galaxy Creation area
 	$defaultNames = array(0,'Alskant','Creonti','Human','Ik\'Thorne','Nijarin','Salvene','Thevian','WQ Human','Omar','Salzik','Manton','Livstar','Teryllia','Doriath','Anconus','Valheru','Sardine','Clacher','Tangeria');

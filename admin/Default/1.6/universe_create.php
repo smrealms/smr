@@ -7,10 +7,10 @@ $template->assign('GameTypes',array('Default','Semi Wars','Draft'));
 
 //get information
 $container=create_container('1.6/universe_create_save_processing.php','1.6/universe_create_galaxies.php');
-$template->assign('CreateGalaxiesHREF',SmrSession::get_new_href($container));
+$template->assign('CreateGalaxiesHREF',SmrSession::getNewHREF($container));
 
 $container['body'] = '1.6/universe_create_sectors.php';
-$template->assign('EditGameHREF',SmrSession::get_new_href($container));
+$template->assign('EditGameHREF',SmrSession::getNewHREF($container));
 
 $editGames=array();
 $db->query('SELECT * FROM game'.($account->hasPermission(PERMISSION_EDIT_STARTED_GAMES)?'':' WHERE start_date > ' . $db->escapeNumber(TIME)) . ' ORDER BY game_id DESC');

@@ -7,7 +7,7 @@ create_message_menu();
 
 $container = create_container('message_send_processing.php');
 transfer('receiver');
-$template->assign('MessageSendFormHref',SmrSession::get_new_href($container));
+$template->assign('MessageSendFormHref',SmrSession::getNewHREF($container));
 
 if (!empty($var['receiver']))
 	$template->assignByRef('Reciever', SmrPlayer::getPlayer($var['receiver'], $player->getGameID()));

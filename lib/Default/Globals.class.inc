@@ -372,57 +372,57 @@ class Globals {
 	}
 
 	public static function getBetaApplyHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'beta_apply.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'beta_apply.php'));
 	}
 
 	public static function getFeatureRequestHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'feature_request.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'feature_request.php'));
 	}
 
 	public static function getCurrentSectorHREF() {
-		return self::$AVAILABLE_LINKS['CurrentSector'] = SmrSession::get_new_href(create_container('skeleton.php','current_sector.php'));
+		return self::$AVAILABLE_LINKS['CurrentSector'] = SmrSession::getNewHREF(create_container('skeleton.php','current_sector.php'));
 	}
 
 	public static function getLocalMapHREF() {
-		return self::$AVAILABLE_LINKS['LocalMap'] = SmrSession::get_new_href(create_container('skeleton.php','map_local.php'));
+		return self::$AVAILABLE_LINKS['LocalMap'] = SmrSession::getNewHREF(create_container('skeleton.php','map_local.php'));
 	}
 
 	public static function getCurrentPlayersHREF() {
-		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::get_new_href(create_container('skeleton.php','current_players.php'));
+		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::getNewHREF(create_container('skeleton.php','current_players.php'));
 	}
 
 	public function getTradeHREF() {
-		return self::$AVAILABLE_LINKS['EnterPort'] = SmrSession::get_new_href(create_container('skeleton.php', 'shop_goods.php'));
+		return self::$AVAILABLE_LINKS['EnterPort'] = SmrSession::getNewHREF(create_container('skeleton.php', 'shop_goods.php'));
 	}
 
 	public function getAttackTraderHREF($accountID) {
 		$container = create_container('skeleton.php','trader_attack_processing.php');
 		$container['target'] = $accountID;
-		return self::$AVAILABLE_LINKS['AttackTrader'] = SmrSession::get_new_href($container);
+		return self::$AVAILABLE_LINKS['AttackTrader'] = SmrSession::getNewHREF($container);
 	}
 
 	public static function getPodScreenHREF() {
-		return SmrSession::get_new_href(create_container('death_processing.php'));
+		return SmrSession::getNewHREF(create_container('death_processing.php'));
 	}
 
 	public static function getBetaFunctionsHREF(){ //BETA
-		return SmrSession::get_new_href(create_container('skeleton.php','beta_functions.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php','beta_functions.php'));
 	}
 
 	public static function getBugReportProcessingHREF() { //BETA
-		return SmrSession::get_new_href(create_container('bug_report_processing.php'));
+		return SmrSession::getNewHREF(create_container('bug_report_processing.php'));
 	}
 
 	public static function getWeaponReorderHREF($weaponOrderID, $direction) {
 		$container = create_container('skeleton.php','weapon_reorder.php');
 		$container[$direction]	= $weaponOrderID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getSmrFileCreateHREF($adminCreateGameID = false) {
 		$container = create_container('skeleton.php','smr_file_create.php');
 		$container['AdminCreateGameID'] = $adminCreateGameID;
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getCurrentSectorMoveHREF($toSector) {
@@ -434,47 +434,47 @@ class Globals {
 		$container = create_container('sector_move_processing.php');
 		$container['target_page'] = $targetPage;
 		$container['target_sector'] = $toSector;
-		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = SmrSession::get_new_href($container);
+		return self::$AVAILABLE_LINKS['Move' . $player->getSector()->getSectorDirection($toSector)] = SmrSession::getNewHREF($container);
 	}
 
 	public static function getSectorScanHREF($toSector) {
 		global $player;
 		$container = create_container('skeleton.php','sector_scan.php');
 		$container['target_sector'] = $toSector;
-		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = SmrSession::get_new_href($container);
+		return self::$AVAILABLE_LINKS['Scan' . $player->getSector()->getSectorDirection($toSector)] = SmrSession::getNewHREF($container);
 	}
 
 	public static function getPlotCourseHREF($fromSector = false, $toSector = false) {
 		if($fromSector === false && $toSector === false) {
-			return self::$AVAILABLE_LINKS['PlotCourse'] = SmrSession::get_new_href(create_container('skeleton.php','course_plot.php'));
+			return self::$AVAILABLE_LINKS['PlotCourse'] = SmrSession::getNewHREF(create_container('skeleton.php','course_plot.php'));
 		}
 		else {
-			return SmrSession::get_new_href(create_container('course_plot_processing.php','',array('from'=>$fromSector,'to'=>$toSector)));
+			return SmrSession::getNewHREF(create_container('course_plot_processing.php','',array('from'=>$fromSector,'to'=>$toSector)));
 		}
 	}
 
 	public static function getPlanetMainHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php','planet_main.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php','planet_main.php'));
 	}
 
 	public static function getPlanetConstructionHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php','planet_construction.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php','planet_construction.php'));
 	}
 
 	public static function getPlanetDefensesHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php','planet_defense.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php','planet_defense.php'));
 	}
 
 	public static function getPlanetOwnershipHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php','planet_ownership.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php','planet_ownership.php'));
 	}
 
 	public static function getPlanetStockpileHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php','planet_stockpile.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php','planet_stockpile.php'));
 	}
 
 	public static function getPlanetFinancesHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php','planet_financial.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php','planet_financial.php'));
 	}
 
 	public static function getAllianceHREF($allianceID = null) {
@@ -491,7 +491,7 @@ class Globals {
 		if ($allianceID!=null) {
 			$container['alliance_id'] = $allianceID;
 		}
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getAllianceRosterHREF($allianceID = null, $sortKey = 'getExperience', $sortDesc = true) {
@@ -501,66 +501,66 @@ class Globals {
 		}
 		$container['SortKey'] = $sortKey;
 		$container['SortDesc'] = $sortDesc;
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getAllianceListHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_list.php', array('order'=>'alliance_name')));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_list.php', array('order'=>'alliance_name')));
 	}
 
 	public static function getAllianceNewsHREF($allianceID) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php', array('AllianceID'=>$allianceID, 'submit' => 'Search For Alliance')));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_advanced.php', array('AllianceID'=>$allianceID, 'submit' => 'Search For Alliance')));
 	}
 
 	public static function getAllianceMotdHREF($allianceID) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_mod.php', array('alliance_id'=>$allianceID)));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_mod.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getAllianceMessageHREF($allianceID) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_broadcast.php', array('alliance_id'=>$allianceID)));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_broadcast.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getAllianceMessageBoardHREF($allianceID) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_message.php', array('alliance_id'=>$allianceID)));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_message.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getAlliancePlanetsHREF($allianceID) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_planets.php', array('alliance_id'=>$allianceID)));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_planets.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getAllianceForcesHREF($allianceID) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_forces.php', array('alliance_id'=>$allianceID)));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_forces.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getAllianceOptionsHREF($allianceID) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'alliance_option.php', array('alliance_id'=>$allianceID)));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_option.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getViewMessagesHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'message_view.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'message_view.php'));
 	}
 
 	public static function getSendGlobalMessageHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'message_send.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'message_send.php'));
 	}
 
 	public static function getManageBlacklistHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'message_blacklist.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'message_blacklist.php'));
 	}
 
 	public static function getSendCouncilMessageHREF($raceID) {
 		$container = create_container('skeleton.php', 'council_send_message.php');
 		$container['race_id'] = $raceID;
 		$container['folder_id'] = MSG_POLITICAL;
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getTraderStatusHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_status.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'trader_status.php'));
 	}
 
 	public static function getTraderPlanetHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_planet.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'trader_planet.php'));
 	}
 
 	public static function getCouncilHREF($raceID=false) {
@@ -568,110 +568,110 @@ class Globals {
 		if($raceID!==false) {
 			$container['race_id'] = $raceID;
 		}
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getTraderRelationsHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_relations.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'trader_relations.php'));
 	}
 
 	public static function getTraderBountiesHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'trader_bounties.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'trader_bounties.php'));
 	}
 
 	public static function getPoliticsHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'council_list.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'council_list.php'));
 	}
 
 	public static function getCasinoHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'chess.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'chess.php'));
 	}
 
 	public static function getChessHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'chess.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'chess.php'));
 	}
 
 	public static function getChessCreateHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'chess_create_processing.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'chess_create_processing.php'));
 	}
 
 	public static function getBarMainHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_opening.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarBuyDrinkHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_buy_drink_processing.php';
 		$container['action'] = 'drink';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarBuyWaterHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_buy_drink_processing.php';
 		$container['action'] = 'water';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarLottoClaimHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_lotto_claim.php';
 		$container['action'] = 'lotto_claim';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarLottoPlayHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_gambling_lotto.php';
 		$container['action'] = 'lotto';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarBlackjackHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_gambling_bet.php';
 		$container['action'] = 'blackjack';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarTickerHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_ticker_buy.php';
 		$container['action'] = 'system';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBuyTickerHREF() {
 		$container = create_container('skeleton.php', 'bar_ticker_buy.php');
 		$container['action'] = 'system';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBarGalMapHREF() {
 		$container = create_container('skeleton.php', 'bar_main.php');
 		$container['script'] = 'bar_galmap_buy.php';
 		$container['action'] = 'map';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBuyGalMapHREF() {
 		$container = create_container('skeleton.php', 'bar_galmap_buy.php');
 		$container['action'] = 'map';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 
 	public static function getBuyMessageNotificationsHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'buy_message_notifications.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'buy_message_notifications.php'));
 	}
 
 	public static function getBuyShipNameHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'buy_ship_name.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'buy_ship_name.php'));
 	}
 
 	public static function getAcceptMissionHREF(&$mission) {
-		return SmrSession::get_new_href(create_container('skeleton.php', 'mission_accept_processing.php', array('MissionID'=>$mission['ID'])));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'mission_accept_processing.php', array('MissionID'=>$mission['ID'])));
 	}
 
 	public static function getAvailableTemplates() {

@@ -76,11 +76,11 @@ if($action == 5) {
 		if(count($container['log_ids']) > 1) {
 			if($container['current_log'] > 0) {
 				$container['direction'] = 1;
-				$template->assign('PreviousLogHREF',SmrSession::get_new_href($container));
+				$template->assign('PreviousLogHREF',SmrSession::getNewHREF($container));
 			}
 			if($container['current_log'] < count($container['log_ids']) - 1) {
 				$container['direction'] = 2;
-				$template->assign('NextLogHREF',SmrSession::get_new_href($container));
+				$template->assign('NextLogHREF',SmrSession::getNewHREF($container));
 			}
 		}
 	}
@@ -200,7 +200,7 @@ if($action != 5) {
 		$container['page'] = $page-1;
 		$PHP_OUTPUT.='<table class="fullwidth center"><tr><td style="width: 30%" valign="middle">';
 		if($page>0) {
-			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/rew.jpg" alt="Previous Page" border="0"></a>';
+			$PHP_OUTPUT.='<a href="'.SmrSession::getNewHREF($container).'"><img src="'.URL.'/images/album/rew.jpg" alt="Previous Page" border="0"></a>';
 		}
 		$PHP_OUTPUT.='</td><td>';
 		$PHP_OUTPUT.= $form['submit']['View'];
@@ -209,7 +209,7 @@ if($action != 5) {
 		$PHP_OUTPUT.='</td><td style="width: 30%" valign="middle">';
 		$container['page'] = $page+1;
 		if(($page+1)*COMBAT_LOGS_PER_PAGE<$totalLogs) {
-			$PHP_OUTPUT.='<a href="'.SmrSession::get_new_href($container).'"><img src="'.URL.'/images/album/fwd.jpg" alt="Next Page" border="0"></a>';
+			$PHP_OUTPUT.='<a href="'.SmrSession::getNewHREF($container).'"><img src="'.URL.'/images/album/fwd.jpg" alt="Next Page" border="0"></a>';
 		}
 		$PHP_OUTPUT.='</td></tr></table>';
 		$PHP_OUTPUT.= '<br /><br /><table class="standard fullwidth">';

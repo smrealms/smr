@@ -16,7 +16,7 @@ if ($db->getNumRows() > 0 ) {
 		$shipsSold[$shipTypeID] =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipTypeID);
 		$container['ship_id'] = $shipTypeID;
 		$container['level_needed'] = $shipsSold[$shipTypeID]['Level'];
-		$shipsSoldHREF[$shipTypeID] = SmrSession::get_new_href($container);
+		$shipsSoldHREF[$shipTypeID] = SmrSession::getNewHREF($container);
 	}
 }
 $template->assign('ShipsSold',$shipsSold);
@@ -29,7 +29,7 @@ if (isset($var['ship_id'])) {
 	$container = create_container('shop_ship_processing.php');
 	transfer('LocationID');
 	transfer('ship_id');
-	$compareShip['BuyHREF'] = SmrSession::get_new_href($container);
+	$compareShip['BuyHREF'] = SmrSession::getNewHREF($container);
 
 	$template->assign('CompareShip',$compareShip);
 }

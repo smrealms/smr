@@ -52,11 +52,11 @@ if (!isset ($var['folder_id'])) {
 
 		$container = create_container('skeleton.php', 'message_view.php');
 		$container['folder_id'] = $message_type_id;
-		$messageBox['ViewHref'] = SmrSession::get_new_href($container);
+		$messageBox['ViewHref'] = SmrSession::getNewHREF($container);
 
 		$container = create_container('message_delete_processing.php');
 		$container['folder_id'] = $message_type_id;
-		$messageBox['DeleteHref'] = SmrSession::get_new_href($container);
+		$messageBox['DeleteHref'] = SmrSession::getNewHREF($container);
 		$messageBoxes[] = $messageBox;
 	}
 
@@ -74,18 +74,18 @@ if (!isset ($var['folder_id'])) {
 	$messageBox['HasUnread'] = false;
 	$container = create_container('skeleton.php', 'message_view.php');
 	$container['folder_id'] = MSG_SENT;
-	$messageBox['ViewHref'] = SmrSession::get_new_href($container);
+	$messageBox['ViewHref'] = SmrSession::getNewHREF($container);
 
 	$container = create_container('message_delete_processing.php');
 	$container['folder_id'] = MSG_SENT;
-	$messageBox['DeleteHref'] = SmrSession::get_new_href($container);
+	$messageBox['DeleteHref'] = SmrSession::getNewHREF($container);
 	$messageBoxes[] = $messageBox;
 
 	$template->assignByRef('MessageBoxes', $messageBoxes);
 
 	$container = create_container('skeleton.php','message_blacklist.php');
 	$container['folder_id'] = $message_type_id;
-	$template->assignByRef('ManageBlacklistLink', SmrSession::get_new_href($container));
+	$template->assignByRef('ManageBlacklistLink', SmrSession::getNewHREF($container));
 }
 else {
 	$whereClause = 'WHERE game_id = ' . $db->escapeNumber($player->getGameID());
@@ -123,11 +123,11 @@ else {
 	$container = $var;
 	$container['page'] = $page -1;
 	if ($page > 0) {
-		$template->assign('PreviousPageHREF', SmrSession::get_new_href($container));
+		$template->assign('PreviousPageHREF', SmrSession::getNewHREF($container));
 	}
 	$container['page'] = $page +1;
 	if (($page +1) * MESSAGES_PER_PAGE < $messageBox['TotalMessages']) {
-		$template->assign('NextPageHREF', SmrSession::get_new_href($container));
+		$template->assign('NextPageHREF', SmrSession::getNewHREF($container));
 	}
 
 	// remove entry for this folder from unread msg table
@@ -148,12 +148,12 @@ else {
 	$template->assign('PageTopic', 'Viewing ' . $messageBox['Name']);
 
 	if ($messageBox['Type'] == MSG_GLOBAL) {
-		$template->assign('IgnoreGlobalsFormHref', SmrSession::get_new_href(create_container('message_global_ignore.php')));
+		$template->assign('IgnoreGlobalsFormHref', SmrSession::getNewHREF(create_container('message_global_ignore.php')));
 	}
 
 	$container = create_container('message_delete_processing.php');
 	transfer('folder_id');
-	$messageBox['DeleteFormHref'] = SmrSession::get_new_href($container);
+	$messageBox['DeleteFormHref'] = SmrSession::getNewHREF($container);
 
 	$db->query('SELECT * FROM message ' .
 				$whereClause . '
@@ -171,7 +171,7 @@ else {
 			$dispContainer = create_container('skeleton.php', 'message_view.php');
 			$dispContainer['folder_id'] = MSG_SCOUT;
 			$dispContainer['show_all'] = true;
-			$messageBox['ShowAllHref'] = SmrSession::get_new_href($dispContainer);
+			$messageBox['ShowAllHref'] = SmrSession::getNewHREF($dispContainer);
 		}
 		$db2 = new SmrMySqlDatabase();
 		displayScouts($db2, $messageBox, $player, false, $messageBox['UnreadMessages'] > MESSAGE_SCOUT_GROUP_LIMIT);
@@ -273,15 +273,15 @@ function displayMessage(&$messageBox, $message_id, $reciever_id, $sender_id, $me
 	$container = create_container('skeleton.php', 'message_notify_confirm.php');
 	$container['message_id'] = $message_id;
 	$container['sent_time'] = $send_time;
-	$message['ReportHref'] = SmrSession::get_new_href($container);
+	$message['ReportHref'] = SmrSession::getNewHREF($container);
 	if (is_object($sender)) {
 		$container = create_container('skeleton.php', 'message_blacklist_add.php');
 		$container['account_id'] = $sender_id;
-		$message['BlacklistHref'] = SmrSession::get_new_href($container);
+		$message['BlacklistHref'] = SmrSession::getNewHREF($container);
 
 		$container = create_container('skeleton.php', 'message_send.php');
 		$container['receiver'] = $sender->getAccountID();
-		$message['ReplyHref'] = SmrSession::get_new_href($container);
+		$message['ReplyHref'] = SmrSession::getNewHREF($container);
 
 		$message['Sender'] = & $sender;
 	}

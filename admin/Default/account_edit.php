@@ -63,12 +63,12 @@ $db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumbe
 if ($db->nextRecord()) {
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 	$template->assignByRef('EditingAccount', $curr_account);
-	$template->assign('EditFormHREF', SmrSession::get_new_href(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
+	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('account_edit_processing.php', '', array('account_id' => $curr_account->getAccountID()))));
 }
 else {
-	$template->assign('EditFormHREF', SmrSession::get_new_href(create_container('skeleton.php', 'account_edit.php')));
+	$template->assign('EditFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
 }
-$template->assign('ResetFormHREF', SmrSession::get_new_href(create_container('skeleton.php', 'account_edit.php')));
+$template->assign('ResetFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'account_edit.php')));
 
 
 if ($curr_account!==false) {

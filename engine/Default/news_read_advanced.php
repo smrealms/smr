@@ -39,7 +39,7 @@ while($db->nextRecord()) {
 }
 $template->assign('NewsAlliances',$newsAlliances);
 
-$template->assign('AdvancedNewsFormHref',SmrSession::get_new_href(create_container('skeleton.php','news_read_advanced.php',$basicContainer)));
+$template->assign('AdvancedNewsFormHref',SmrSession::getNewHREF(create_container('skeleton.php','news_read_advanced.php',$basicContainer)));
 
 
 if (isset($_REQUEST['submit'])) $submit_value = $_REQUEST['submit'];

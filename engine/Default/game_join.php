@@ -45,7 +45,7 @@ $container = array();
 $container['game_id'] = $var['game_id'];
 $container['url'] = 'game_join_processing.php';
 if (TIME >= $game['StartDate'])
-	$template->assign('JoinGameFormHref',SmrSession::get_new_href($container));
+	$template->assign('JoinGameFormHref',SmrSession::getNewHREF($container));
 
 $db2 = new SmrMySqlDatabase();
 //this prevents multiple races appearing when there is more than 1 game

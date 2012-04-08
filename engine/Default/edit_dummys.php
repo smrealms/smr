@@ -5,11 +5,11 @@ require_once(get_file_loc('DummyPlayer.class.inc'));
 require_once(get_file_loc('DummyShip.class.inc'));
 require_once(get_file_loc('SmrWeapon.class.inc'));
 //TODO add game type id
-$template->assign('CombatSimLink',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
+$template->assign('CombatSimLink',SmrSession::getNewHREF(create_container('skeleton.php','combat_simulator.php')));
 $template->assignByRef('BaseShips',AbstractSmrShip::getAllBaseShips(0));
 $template->assignByRef('Weapons',SmrWeapon::getAllWeapons(0));
 
-$template->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
+$template->assign('EditDummysLink',SmrSession::getNewHREF(create_container('skeleton.php','edit_dummys.php')));
 
 $dummyPlayer =& DummyPlayer::getCachedDummyPlayer($_REQUEST['dummy_name']);
 $dummyShip =& $dummyPlayer->getShip();

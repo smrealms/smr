@@ -33,11 +33,11 @@ $container = create_container('skeleton.php','alliance_message_view.php',$var);
 
 if (isset($var['thread_ids'][$thread_index - 1])) {
 	$container['thread_index'] = $thread_index - 1;
-	$template->assign('PrevThread',array('Topic' => $var['thread_topics'][$thread_index - 1], 'Href' => SmrSession::get_new_href($container)));
+	$template->assign('PrevThread',array('Topic' => $var['thread_topics'][$thread_index - 1], 'Href' => SmrSession::getNewHREF($container)));
 }
 if (isset($var['thread_ids'][$thread_index + 1])) {
 	$container['thread_index'] = $thread_index + 1;
-	$template->assign('NextThread',array('Topic' => $var['thread_topics'][$thread_index + 1], 'Href' => SmrSession::get_new_href($container)));
+	$template->assign('NextThread',array('Topic' => $var['thread_topics'][$thread_index + 1], 'Href' => SmrSession::getNewHREF($container)));
 }
 
 $thread = array();
@@ -75,14 +75,14 @@ while ($db->nextRecord()) {
 	$thread['Replies'][$db->getInt('reply_id')] = array('Sender' => $players[$db->getInt('sender_id')], 'Message' => $db->getField('text'), 'SendTime' => $db->getInt('time'));
 	if($thread['CanDelete']) {
 		$container['reply_id'] = $db->getInt('reply_id');
-		$thread['Replies'][$db->getInt('reply_id')]['DeleteHref'] = SmrSession::get_new_href($container);
+		$thread['Replies'][$db->getInt('reply_id')]['DeleteHref'] = SmrSession::getNewHREF($container);
 	}
 }
 
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$container = create_container('alliance_message_add_processing.php','',$var);
 	$container['thread_index'] = $thread_index;
-	$thread['CreateThreadReplyFormHref'] = SmrSession::get_new_href($container);
+	$thread['CreateThreadReplyFormHref'] = SmrSession::getNewHREF($container);
 }
 $template->assignByRef('Thread',$thread);
 if(isset($var['preview'])) {

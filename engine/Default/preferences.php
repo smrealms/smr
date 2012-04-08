@@ -4,9 +4,9 @@ $template->assign('PageTopic','Preferences');
 if (isset($var['reason']))
 	$template->assign('Reason',$var['reason']);
 
-$template->assign('PreferencesFormHREF', SmrSession::get_new_href(create_container('preferences_processing.php', '')));
+$template->assign('PreferencesFormHREF', SmrSession::getNewHREF(create_container('preferences_processing.php', '')));
 
-$template->assign('PreferencesConfirmFormHREF', SmrSession::get_new_href(create_container('skeleton.php', 'preferences_confirm.php')));
+$template->assign('PreferencesConfirmFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'preferences_confirm.php')));
 
 $transferAccounts = array();
 //if(SmrSession::$game_id>0)
