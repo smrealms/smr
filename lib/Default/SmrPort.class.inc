@@ -1342,15 +1342,15 @@ class SmrPort
 	protected function creditCurrentAttackersForKill()
 	{
 		//get all players involved for HoF
-		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND time > '.$this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
+		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
 		$numToDelete = $this->db->getNumRows();
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF($this->db->getField('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
+			$currPlayer->increaseHOF($this->db->getInt('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
 			$currPlayer->increaseHOF(1,array('Combat','Port','Total Raided'), HOF_PUBLIC);
 		}
-		$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = '.$this->getSectorID().' AND game_id = '.$this->getGameID().' LIMIT '.$numToDelete);
+		$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . $this->db->escapeNumber($numToDelete));
 	}
 	
 	public function &killPortByPlayer(AbstractSmrPlayer &$killer)
@@ -1367,7 +1367,7 @@ class SmrPort
 		$news = $this->getDisplayName() . ' has been successfully raided by ';
 		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
 		else $news .= $killer->getBBLink();
-		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES ('.$this->getGameID().', ' . TIME . ', '.$this->db->escapeString($news).', \'REGULAR\','.$killer->getAccountID().','.$killer->getAllianceID().','.ACCOUNT_ID_PORT.')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		// Trigger gets an alignment change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ',$return['KillerBounty']);
