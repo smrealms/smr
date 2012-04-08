@@ -108,7 +108,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$players = array();
 			while($db->nextRecord())
 			{
-				$accountID = $db->getField('account_id');
+				$accountID = $db->getInt('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
 			}
 			return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
@@ -121,7 +121,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
+			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
 			while($db->nextRecord())
 			{
@@ -138,11 +138,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		if($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT account_id FROM player WHERE alliance_id = ' . $allianceID . ' AND game_id=' . $gameID .' ORDER BY experience DESC');
+			$db->query('SELECT account_id FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) .' ORDER BY experience DESC');
 			$players = array();
 			while($db->nextRecord())
 			{
-				$accountID = $db->getField('account_id');
+				$accountID = $db->getInt('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID);
 			}
 			return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] =& $players;
@@ -165,7 +165,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM player WHERE game_id = '.$db->escapeNumber($gameID).' AND player_id = '.$db->escapeNumber($playerID).' LIMIT 1');
 		if($db->nextRecord())
-			return self::getPlayer($db->getField('account_id'),$gameID,$forceUpdate);
+			return self::getPlayer($db->getInt('account_id'),$gameID,$forceUpdate);
 		throw new Exception('Player ID not found.');
 	}
 	
@@ -178,7 +178,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$result =& $accountIDOrResultArray;
 		else
 		{
-			$this->db->query('SELECT * FROM player WHERE account_id = '.$accountIDOrResultArray.' AND game_id = '.$gameID.' LIMIT 1');
+			$this->db->query('SELECT * FROM player WHERE account_id = ' . $this->db->escapeNumber($accountIDOrResultArray) . ' AND game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
 			$this->db->nextRecord();
 			$result = $this->db->getRow();
 		}
@@ -233,7 +233,7 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->combatDronesKamikazeOnMines	= $result['combat_drones_kamikaze_on_mines']=='TRUE';
 //			$this->changedStats = $result['changed_stats'];
 			
-			$this->SQL = 'account_id = '.$this->accountID.' AND game_id = '.$this->gameID;
+			$this->SQL = 'account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID);
 		}
 		else
 		{
@@ -483,10 +483,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 			
 		$this->setAllianceID(0);
-		$this->db->query('DELETE
-					FROM player_has_alliance_role
-					WHERE account_id = '.$this->getAccountID().' AND
-						  game_id = '.$this->getGameID());
+		$this->db->query('DELETE FROM player_has_alliance_role
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+							AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 	
 		if(!$this->isAllianceLeader() && $allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
 		{
@@ -501,7 +500,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$alliance = $this->getAlliance();
 		if (!$this->isAllianceLeader())
 			$this->sendMessage($alliance->getLeaderID(), 2, 'I joined your alliance!', false);
-		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES ('.$this->getGameID().', '.$this->getAccountID().', 2,'.$alliance->getAllianceID().')');
+		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', 2,' . $this->db->escapeNumber($alliance->getAllianceID()) . ')');
 		$this->actionTaken('JoinAlliance', array('Alliance' => &$alliance));
 	}
 	
@@ -781,10 +780,14 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->pastMaintBought))
 		{
 			//get past maint
-			$this->db->query('DELETE FROM player_repaired WHERE time < '.(TIME - 3600 * 20));
+			$this->db->query('DELETE FROM player_repaired WHERE time < ' . $this->db->escapeNumber(TIME - 3600 * 20));
 			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE ' . $this->SQL . ' AND amount > 0 LIMIT 1');
-			if ($this->db->nextRecord()) $this->pastMaintBought = $this->db->getField('sum');
-			else $this->pastMaintBought = 0;
+			if ($this->db->nextRecord()) {
+				$this->pastMaintBought = $this->db->getInt('sum');
+			}
+			else {
+				$this->pastMaintBought = 0;
+			}
 		}
 		return $this->pastMaintBought;
 	}
@@ -794,9 +797,9 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->pastMaintCredit))
 		{
 			//get past maint
-			$this->db->query('DELETE FROM player_repaired WHERE time < '.(TIME - 3600 * 20));
+			$this->db->query('DELETE FROM player_repaired WHERE time < ' . $this->db->escapeNumber(TIME - 3600 * 20));
 			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE '.$this->SQL.' AND amount < 0 LIMIT 1');
-			if ($this->db->nextRecord()) $this->pastMaintCredit = $this->db->getField('sum');
+			if ($this->db->nextRecord()) $this->pastMaintCredit = $this->db->getInt('sum');
 			else $this->pastMaintCredit = 0;
 		}
 		return $this->pastMaintCredit;
@@ -811,7 +814,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	function addPastMaintBought($amount,$type='Normal')
 	{
 		$this->getPastMaintBought();
-		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->accountID . ',' . $this->gameID . ',' . TIME . ',' . $amount . ','.$this->db->escapeString($type).')');
+		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeNumber($amount) . ',' . $this->db->escapeString($type) . ')');
 		$this->giveTurns($amount*10);
 		$this->pastMaintBought+=$amount;
 	}
@@ -848,11 +851,11 @@ class SmrPlayer extends AbstractSmrPlayer
 			//get relations
 			$RACES = Globals::getRaces();
 			$this->pureRelations = array();
-			foreach ($RACES as $race_id => $race_name)
+			foreach ($RACES as $raceID => $raceName)
 			{
-				$this->pureRelations[$race_id] = 0;
+				$this->pureRelations[$raceID] = 0;
 			}
-			$this->db->query('SELECT race_id,relation FROM player_has_relation WHERE '.$this->SQL.' LIMIT '.sizeof($RACES));
+			$this->db->query('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL . ' LIMIT ' . count($RACES));
 			while ($this->db->nextRecord())
 			{
 				$this->pureRelations[$this->db->getInt('race_id')] = $this->db->getInt('relation');
@@ -903,7 +906,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$relationsDiff = $relations - $this->pureRelations[$raceID];
 		$this->pureRelations[$raceID] = $relations;
 		$this->relations[$raceID] += round($relationsDiff);
-		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values ('.$this->getAccountID().','.$this->getGameID().','.$raceID.','.$this->pureRelations[$raceID].')');
+		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->pureRelations[$raceID]) . ')');
 	}
 	
 	public function setPlayerName($playerName)
@@ -933,7 +936,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		if(!isset($this->customShipName))
 		{
-			$this->db->query('SELECT * FROM ship_has_name WHERE game_id = '.$this->getGameID().' AND account_id = '.$this->getAccountID().' LIMIT 1');
+			$this->db->query('SELECT * FROM ship_has_name WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
 			if ($this->db->nextRecord())
 				$this->customShipName = $this->db->getField('ship_name');
 			else
@@ -1020,7 +1023,7 @@ class SmrPlayer extends AbstractSmrPlayer
 					{
 						$this->gadgets[$gadgetID][$key] = $newInfo;
 					}
-					$set .= $field.' = '.$this->db->escapeString($newInfo).',';
+					$set .= '`' . $field . '` = '.$this->db->escapeString($newInfo).',';
 				}
 			}
 			if($set!=='')
@@ -1038,7 +1041,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				{
 					$this->gadgets[$gadgetID][$keyOrUpdateArray] = $value;
 				}
-				$this->db->query('UPDATE player_has_gadget SET '.$field.' = '.$value.' WHERE '.$this->SQL.' LIMIT '.count($this->gadgets));
+				$this->db->query('UPDATE player_has_gadget SET `'.$field.'` = ' . $this->db->escapeString($value) . ' WHERE '.$this->SQL.' LIMIT '.count($this->gadgets));
 			}
 		}
 	}
@@ -1064,14 +1067,14 @@ class SmrPlayer extends AbstractSmrPlayer
 						if($this->gadgets[$gadgetID][$key] != $newInfo)
 						{
 							$this->gadgets[$gadgetID][$key]=$newInfo;
-							$set .= $field.' = '.$this->db->escapeString($newInfo).',';
+							$set .= '`' . $field . '` = '.$this->db->escapeString($newInfo).',';
 						}
 					}
 				}
 				if($set!=='')
 				{
 					$set=substr($set,0,-1);
-					$this->db->query('UPDATE player_has_gadget SET '.$set.' WHERE '.$this->SQL.' AND gadget_id = '.$gadgetID.' LIMIT 1');
+					$this->db->query('UPDATE player_has_gadget SET '.$set.' WHERE '.$this->SQL.' AND gadget_id = ' . $this->db->escapeNumber($gadgetID) . ' LIMIT 1');
 					return true;
 				}
 			}
@@ -1083,7 +1086,7 @@ class SmrPlayer extends AbstractSmrPlayer
 					if($this->gadgets[$gadgetID][$keyOrUpdateArray] == $value)
 						return;
 					$this->gadgets[$gadgetID][$keyOrUpdateArray]=$value;
-					$this->db->query('UPDATE player_has_gadget SET '.$field.' = '.$value.' WHERE '.$this->SQL.' AND gadget_id = '.$gadgetID.' LIMIT 1');
+					$this->db->query('UPDATE player_has_gadget SET `' . $field . '` = ' . $this->db->escapeString($value) . ' WHERE '.$this->SQL.' AND gadget_id = ' . $this->db->escapeNumber($gadgetID) . ' LIMIT 1');
 					return true;
 				}
 			}
@@ -1096,7 +1099,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(isset($this->gadgets[$gadgetID]))
 			return false;
 		$this->gadgets[$gadgetID] = array('Equipped' => 0, 'Cooldown' => 0, 'Expires' => 0);
-		$this->db->query('REPLACE INTO player_has_gadget (game_id, account_id, gadget_id, cooldown, equipped,lasts_until) VALUES ('.$this->gameID.','.$this->accountID.','.$gadgetID.',0,0,0)');
+		$this->db->query('REPLACE INTO player_has_gadget (game_id, account_id, gadget_id, cooldown, equipped,lasts_until) VALUES (' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($gadgetID) . ',0,0,0)');
 		return true;
 	}
 	
@@ -1124,18 +1127,19 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			//Get Player Mining Info
 			$this->mining = array();
-			$this->db->query('SELECT sector_has_mining.mine_id as mine_id, level, type, started, amount, starting_amount' .
-							' FROM player_is_mining, sector_has_mining WHERE sector_id = ' . $this->sectorID .
-							' AND sector_has_mining.game_id = player_is_mining.game_id' .
-							' AND sector_has_mining.mine_id = player_is_mining.mine_id' .
-							' AND account_id = ' . $this->accountID . ' AND sector_has_mining.game_id = ' . $this->gameID .' LIMIT 1');
+			$this->db->query('SELECT mine_id, level, type, started, amount, starting_amount
+							FROM player_is_mining
+							JOIN sector_has_mining USING(game_id, mine_id)
+							WHERE sector_id = ' . $this->db->escapeNumber($this->sectorID) . '
+								AND account_id = ' . $this->db->escapeNumber($this->accountID) . '
+								AND game_id = ' . $this->db->escapeNumber($this->gameID) .' LIMIT 1');
 			while ($this->db->nextRecord())
 			{
-				$this->mining[$this->db->getField('mine_id')] = array('Level' => $this->db->getField('level'),
-																	'Started' => $this->db->getField('started'),
-																	'Amount' => $this->db->getField('amount'),
+				$this->mining[$this->db->getInt('mine_id')] = array('Level' => $this->db->getInt('level'),
+																	'Started' => $this->db->getInt('started'),
+																	'Amount' => $this->db->getInt('amount'),
 																	'Type' => $this->db->getField('type'),
-																	'Starting Amount' => $this->db->getField('starting_amount'));
+																	'Starting Amount' => $this->db->getInt('starting_amount'));
 			}
 		}
 		if($mineID===false)
@@ -1149,7 +1153,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		$this->getMining();
 		$this->mining[$mineID]['Started'] = $time;
-		$this->db->query('UPDATE player_is_mining SET started = ' . $time . ' WHERE ' . $this->SQL . ' AND mine_id = ' . $mineID . ' LIMIT 1');
+		$this->db->query('UPDATE player_is_mining SET started = ' . $this->db->escapeNumber($time) . ' WHERE ' . $this->SQL . ' AND mine_id = ' . $this->db->escapeNumber($mineID) . ' LIMIT 1');
 	}
 	
 	function deleteMining($mineID=false)
@@ -1164,7 +1168,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 	
 			unset($this->mining[$mineID]);
-			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL.' AND mine_id='.$mineID.' LIMIT 1');
+			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL.' AND mine_id='.$this->db->escapeNumber($mineID).' LIMIT 1');
 		}
 	}
 	
@@ -1176,10 +1180,10 @@ class SmrPlayer extends AbstractSmrPlayer
 			$this->db->query('SELECT * FROM player_knows_faction WHERE ' . $this->SQL . ' LIMIT 1');
 			if ($this->db->nextRecord())
 			{
-				$this->knowledge['Erebus'] = $this->db->getField('erebus');
-				$this->knowledge['Aether'] = $this->db->getField('aether');
-				$this->knowledge['Tartarus'] = $this->db->getField('tartarus');
-				$this->knowledge['Nyx'] = $this->db->getField('nyx');
+				$this->knowledge['Erebus'] = $this->db->getInt('erebus');
+				$this->knowledge['Aether'] = $this->db->getInt('aether');
+				$this->knowledge['Tartarus'] = $this->db->getInt('tartarus');
+				$this->knowledge['Nyx'] = $this->db->getInt('nyx');
 				$this->knowledge['Federation'] = 0;
 				$this->knowledge['Underground'] = 0;
 			}
@@ -1211,8 +1215,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		// if we are in an alliance we increase their deaths
 		if ($this->hasAlliance())
-			$this->db->query('UPDATE alliance SET alliance_deaths = alliance_deaths + 1 ' .
-						 'WHERE game_id = '.$this->getGameID().' AND alliance_id = '.$this->getAllianceID().' LIMIT 1');
+			$this->db->query('UPDATE alliance SET alliance_deaths = alliance_deaths + 1
+							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) . ' LIMIT 1');
 
 		// record death stat
 		$this->increaseHOF(1,array('Dying','Deaths'), HOF_PUBLIC);
@@ -1247,11 +1251,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
-		$this->db->query('SELECT sector_id FROM location JOIN sector USING(game_id, sector_id) ' .
-					 'WHERE game_id = '.$this->getGameID().' AND ' .
-						   'location_type_id = '.$hq_id.' LIMIT 1');
+		$this->db->query('SELECT sector_id FROM location JOIN sector USING(game_id, sector_id)
+							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+							AND location_type_id = ' . $this->db->escapeNumber($hq_id) . ' LIMIT 1');
 		if ($this->db->nextRecord())
-			return $this->db->getField('sector_id');
+			return $this->db->getInt('sector_id');
 		else
 			return 1;
 	}
@@ -1274,7 +1278,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
 		$this->getSector()->increaseBattles(1);
-		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->getGameID() . ',' . TIME . ',' . $this->db->escapeString($msg,true) . ',\'regular\','.$killer->getAccountID().','.$killer->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
+		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($msg,true) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 		
 		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
 		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
@@ -1359,16 +1363,14 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		//check for federal bounty being offered for current port raiders
 		$allowed = TIME - 3600 * 3;
-		$this->db->query('DELETE FROM player_attacks_port WHERE time < '.$allowed);
+		$this->db->query('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber($allowed));
 		$query = 'SELECT count(*) as numAttacks
-					FROM player_attacks_port, player, port
-					WHERE player_attacks_port.game_id = port.game_id
-					AND port.game_id = player.game_id
-					AND armour > 0
-					AND player_attacks_port.sector_id = port.sector_id
-					AND player.account_id = player_attacks_port.account_id
-					AND player.account_id = ' . $this->getAccountID() . '
-					AND player.game_id = ' . $this->getGameID();
+					FROM player_attacks_port
+					JOIN player USING(game_id, sector_id)
+					JOIN port USING(game_id, sector_id)
+					WHERE armour > 0
+						AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+						AND .game_id = ' . $this->db->escapeNumber($this->getGameID());
 		$this->db->query($query);
 		if ($this->db->nextRecord())
 		{
@@ -1421,20 +1423,20 @@ class SmrPlayer extends AbstractSmrPlayer
 
 			if($killer->hasAlliance())
 			{
-				$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $killer->getAllianceID() . ' AND game_id=' . $killer->getGameID() . ' LIMIT 1');
+				$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()) . ' LIMIT 1');
 			}
 		}
 
 		if($this->hasAlliance() && $killer->hasAlliance())
 		{
-			$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $killer->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+			$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 			if($this->db->nextRecord())
 			{
-				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $killer->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
+				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 			}
 			else
 			{
-				$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->getGameID() . ',' . $killer->getAllianceID() . ',' . $this->getAllianceID() . ',1)');
+				$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',1)');
 			}
 		}
 		
@@ -1459,23 +1461,25 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed by forces in sector #'.$forces->getSectorID();
 		// insert the news entry
-		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
-					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$owner->getAccountID().','.$owner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
+						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 		
 		$expLossPercentage = .30;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 		
-		if ($percentage > 0 )
-			$this->decreaseExperience($this->getExperience() * $percentage / 100);
-		$this->db->query('SELECT * FROM alliance_vs_alliance WHERE alliance_id_1 = -1 AND ' .
-						'alliance_id_2 = '.$this->getAllianceID().' AND game_id = '.$this->getGameID());
-		if ($this->db->nextRecord()) $this->db->query('UPDATE alliance_vs_alliance SET kills = kills + 1 ' .
-											'WHERE alliance_id_1 = -1 AND alliance_id_2 = '.$this->getAllianceID().' AND ' .
-											'game_id = '.$this->getGameID());
-		else $this->db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills) ' .
-						'VALUES ('.$this->getGameID().', -1, '.$this->getAllianceID().', 1)');
-		
+		$this->db->query('SELECT * FROM alliance_vs_alliance
+						WHERE alliance_id_1 = -1 AND alliance_id_2 = ' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+		if ($this->db->nextRecord()) {
+			$this->db->query('UPDATE alliance_vs_alliance SET kills = kills + 1
+							WHERE alliance_id_1 = -1
+								AND alliance_id_2 = ' . $this->db->escapeNumber($this->getAllianceID()) . '
+								AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+		}
+		else {
+			$this->db->query('REPLACE INTO alliance_vs_alliance (game_id, alliance_id_1, alliance_id_2, kills)
+							VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', -1, ' . $this->db->escapeNumber($this->getAllianceID()) . ', 1)');
+		}
 		
 		$this->killPlayer($forces->getSectorID());
 		return $return;
@@ -1495,8 +1499,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed while invading '.$port->getDisplayName().'.';
 		// insert the news entry
-		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance) ' .
-					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message).','.ACCOUNT_ID_PORT.','.$this->getAccountID().','.$this->getAllianceID().')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance)
+						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 		
 		$expLossPercentage = .31 - $port->getLevel()/100;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
@@ -1522,8 +1526,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector #'.$planet->getSectorID().'.';
 		// insert the news entry
-		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance) ' .
-					 'VALUES('.$this->getGameID().', ' . TIME . ', ' . $this->db->escapeString($news_message) . ','.$planetOwner->getAccountID().','.$planetOwner->getAllianceID().','.$this->getAccountID().','.$this->getAllianceID().')');
+		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
+						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($planetOwner->getAccountID()) . ',' . $this->db->escapeNumber($planetOwner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 		
 		$expLossPercentage = .27 - $planet->getLevel()/1000;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
@@ -1602,20 +1606,20 @@ class SmrPlayer extends AbstractSmrPlayer
 				if($bounty['New'] === true)
 				{
 					if($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
-						$this->db->query('INSERT INTO bounty (account_id,game_id,type,amount,smr_credits,claimer_id,time) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeString($bounty['Type']) . ',' . $bounty['Amount'] .','.$bounty['SmrCredits'].',' . $bounty['Claimer'] . ',' . $bounty['Time'] .')');
+						$this->db->query('INSERT INTO bounty (account_id,game_id,type,amount,smr_credits,claimer_id,time) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeString($bounty['Type']) . ',' . $this->db->escapeNumber($bounty['Amount']) . ',' . $this->db->escapeNumber($bounty['SmrCredits']) . ',' . $this->db->escapeNumber($bounty['Claimer']) . ',' . $this->db->escapeNumber($bounty['Time']) .')');
 				}
 				else
 				{
 					if($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
 						$this->db->query('UPDATE bounty
-							SET amount=' . $bounty['Amount'] . ',
+							SET amount=' . $this->db->escapeNumber($bounty['Amount']) . ',
 							smr_credits=' . $this->db->escapeString($bounty['SmrCredits']) . ',
 							type=' . $this->db->escapeString($bounty['Type']) . ',
-							claimer_id=' . $bounty['Claimer'] . ',
-							time=' . $bounty['Time'] . '
-							WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
+							claimer_id=' . $this->db->escapeNumber($bounty['Claimer']) . ',
+							time=' . $this->db->escapeNumber($bounty['Time']) . '
+							WHERE bounty_id=' . $this->db->escapeNumber($bounty['ID']) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 					else
-						$this->db->query('DELETE FROM bounty WHERE bounty_id=' . $bounty['ID'] . ' AND account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' LIMIT 1');
+						$this->db->query('DELETE FROM bounty WHERE bounty_id=' . $this->db->escapeNumber($bounty['ID']) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 				}
 			}
 		}
@@ -1654,14 +1658,14 @@ class SmrPlayer extends AbstractSmrPlayer
 				if($hofChanged==self::HOF_NEW)
 				{
 					if($amount > 0)
-						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->getAccountID() . ',' . $this->getGameID() . ',' . $this->db->escapeArray($tempTypeList,false,true,':',false) . ',' . $amount.')');
+						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeArray($tempTypeList,false,true,':',false) . ',' . $this->db->escapeNumber($amount) . ')');
 				}
 				else if($hofChanged==self::HOF_CHANGED)
 				{
 	//				if($amount > 0)
 						$this->db->query('UPDATE player_hof
-							SET amount=' . $amount . '
-							WHERE account_id = ' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = '.$this->db->escapeArray($tempTypeList,false,true,':',false).' LIMIT 1');
+							SET amount=' . $this->db->escapeNumber($amount) . '
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND type = ' . $this->db->escapeArray($tempTypeList,false,true,':',false).' LIMIT 1');
 	//				else
 	//					$this->db->query('DELETE FROM player_hof WHERE account_id=' . $this->getAccountID() . ' AND game_id = ' . $this->getGameID() . ' AND type = ' . $this->db->escapeArray($tempTypeList,false,true,':',false) . ' LIMIT 1');
 	//				}
@@ -1716,16 +1720,16 @@ class SmrPlayer extends AbstractSmrPlayer
 		if(!isset($this->bounties))
 		{
 			$this->bounties = array();
-			$this->db->query('SELECT * FROM bounty WHERE account_id = ' . $this->getAccountID() . ' AND game_id=' . $this->getGameID());
+			$this->db->query('SELECT * FROM bounty WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()));
 			while($this->db->nextRecord())
 			{
 				$this->bounties[$this->db->getField('bounty_id')] = array(
-							'Amount' => $this->db->getField('amount'),
-							'SmrCredits' => $this->db->getField('smr_credits'),
+							'Amount' => $this->db->getInt('amount'),
+							'SmrCredits' => $this->db->getInt('smr_credits'),
 							'Type' => $this->db->getField('type'),
-							'Claimer' => $this->db->getField('claimer_id'),
-							'Time' => $this->db->getField('time'),
-							'ID' => $this->db->getField('bounty_id'),
+							'Claimer' => $this->db->getInt('claimer_id'),
+							'Time' => $this->db->getInt('time'),
+							'ID' => $this->db->getInt('bounty_id'),
 							'New' => false);
 			}
 		}
@@ -1763,11 +1767,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		{
 			$this->tickers = array();
 			//get ticker info
-			$this->db->query('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL .' AND expires > ' . TIME);
+			$this->db->query('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL .' AND expires > ' . $this->db->escapeNumber(TIME));
 			while($this->db->nextRecord())
 				$this->tickers[$this->db->getField('type')] = array( 'Type' => $this->db->getField('type'),
-																				'Time' => $this->db->getField('time'),
-																				'Expires' => $this->db->getField('expires'),
+																				'Time' => $this->db->getInt('time'),
+																				'Expires' => $this->db->getInt('expires'),
 																				'Recent' => $this->db->getField('recent'));
 		}
 		return $this->tickers;
@@ -1812,21 +1816,21 @@ class SmrPlayer extends AbstractSmrPlayer
 		$db->query('INSERT INTO message
 			(account_id,game_id,message_type_id,message_text,
 			sender_id,send_time,expire_time,sender_delete) VALUES(' .
-			$receiverID . ',' .
-			$gameID . ',' .
-			$messageTypeID . ',' .
+			$this->db->escapeNumber($receiverID) . ',' .
+			$this->db->escapeNumber($gameID) . ',' .
+			$this->db->escapeNumber($messageTypeID) . ',' .
 			$db->escapeString($message) . ',' .
-			$senderID . ',' .
-			TIME . ',' .
-			$expires . ',' .
+			$this->db->escapeNumber($senderID) . ',' .
+			$this->db->escapeNumber(TIME) . ',' .
+			$this->db->escapeNumber($expires) . ',' .
 			$db->escapeBoolean($senderDelete) . ')'
 		);
 
 		if($unread === true)
 		{
 			// give him the message icon
-			$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES ' .
-						'('.$gameID.', '.$receiverID.', '.$messageTypeID.')');
+			$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
+						(' . $this->db->escapeNumber($gameID) . ', ' . $this->db->escapeNumber($receiverID) . ', ' . $this->db->escapeNumber($messageTypeID) . ')');
 		}
 
 		switch ($messageTypeID)
@@ -1874,10 +1878,10 @@ class SmrPlayer extends AbstractSmrPlayer
 		$db->query('SELECT account_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
-					WHERE active_session.last_accessed >= ' . (TIME - SmrSession::TIME_BEFORE_EXPIRY) . '
-						AND game_id = ' . $this->getGameID() . '
-						AND player.ignore_globals = \'FALSE\'
-						AND account_id != ' . $this->getAccountID());
+					WHERE active_session.last_accessed >= ' . $this->db->escapeNumber(TIME - SmrSession::TIME_BEFORE_EXPIRY) . '
+						AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+						AND ignore_globals = \'FALSE\'
+						AND account_id != ' . $this->db->escapeNumber($this->getAccountID()));
 	//	$db->query('SELECT * FROM player WHERE game_id = '.$player->getGameID().' AND last_cpl_action >= '.$allowed.' AND ignore_globals = \'FALSE\'');
 	
 		while ($db->nextRecord())
@@ -1895,11 +1899,11 @@ class SmrPlayer extends AbstractSmrPlayer
 			if($this->getAccount()->isMailBanned())
 				create_error('You are currently banned from sending messages');
 			// Don't send messages to players ignoring us
-			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $receiverID . ' AND blacklisted_id=' . $this->getAccountID() . ' LIMIT 1');
+			$this->db->query('SELECT account_id FROM message_blacklist WHERE account_id=' . $this->db->escapeNumber($receiverID) . ' AND blacklisted_id=' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
 			if($this->db->nextRecord())
 				return;
 		}
-				
+		
 		$message = word_filter($message);
 		
 		switch ($messageTypeID)
@@ -2001,8 +2005,8 @@ class SmrPlayer extends AbstractSmrPlayer
 			require_once(get_file_loc('Plotter.class.inc'));
 			// check if we have a course plotted
 			$this->db->query('SELECT course FROM player_plotted_course
-			WHERE account_id=' . $this->getAccountID() . '
-			AND game_id=' . $this->getGameID() . '
+			WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()) . '
+			AND game_id=' . $this->db->escapeNumber($this->getGameID()) . '
 			LIMIT 1'
 			);
 			
@@ -2035,11 +2039,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		if ($this->plottedCourse->getTotalSectors()>0)
 			$this->db->query('REPLACE INTO player_plotted_course
 				(account_id, game_id, course)
-				VALUES('.$this->getAccountID().', '.$this->getGameID().', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
+				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
 		else if($hadPlottedCourse)
 		{
 			$this->plottedCourse = false;
-			$this->db->query('DELETE FROM player_plotted_course WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID());
+			$this->db->query('DELETE FROM player_plotted_course WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		}
 	}
 	
@@ -2062,14 +2066,13 @@ class SmrPlayer extends AbstractSmrPlayer
 	public function deletePlottedCourse()
 	{
 		$this->plottedCourse = false;
-		$this->db->query('DELETE FROM player_plotted_course ' .
-					 'WHERE '.$this->SQL.' LIMIT 1');
+		$this->db->query('DELETE FROM player_plotted_course WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
 	public function getExamineTraderHREF()
 	{
 		$container = create_container('skeleton.php','trader_examine.php');
-		$container['target']	= $this->getAccountID();
+		$container['target'] = $this->getAccountID();
 		return SmrSession::get_new_href($container);
 	}
 	

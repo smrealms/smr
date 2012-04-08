@@ -43,7 +43,7 @@ class SmrLocation
 		if($forceUpdate || !isset(self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT location_type_id FROM location WHERE sector_id = ' . $sectorID . ' AND game_id=' . $gameID);
+			$db->query('SELECT location_type_id FROM location WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID));
 			$locations = array();
 			$i=0;
 			while($db->nextRecord())
@@ -69,7 +69,7 @@ class SmrLocation
 	protected function __construct($locationTypeID)
 	{
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT location_type_id,location_name,location_processor,location_image FROM location_type WHERE location_type_id = ' . $locationTypeID . ' LIMIT 1');
+		$this->db->query('SELECT location_type_id,location_name,location_processor,location_image FROM location_type WHERE location_type_id = ' . $this->db->escapeNumber($locationTypeID) . ' LIMIT 1');
 		
 		if($this->db->nextRecord())
 		{
@@ -78,8 +78,9 @@ class SmrLocation
 			$this->processor = $this->db->getField('location_processor');
 			$this->image = $this->db->getField('location_image');
 		}
-		else
+		else {
 			throw new Exception('Cannot find location: '.$locationTypeID);
+		}
 	}
 	
 	public function getTypeID()
@@ -108,10 +109,11 @@ class SmrLocation
 	public function setName($name)
 	{
 		$name = htmlentities($name,ENT_COMPAT,'utf-8');
-		if($this->name==$name)
+		if($this->name==$name) {
 			return;
+		}
 		$this->name = $name;
-		$this->db->query('UPDATE location_type SET location_name='.$db->escapeString($this->name).' WHERE location_type_id=' . $this->getTypeID() . ' LIMIT 1');
+		$this->db->query('UPDATE location_type SET location_name=' . $this->db->escapeString($this->name) . ' WHERE location_type_id=' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 	}
 	
 	public function hasAction()
@@ -133,7 +135,7 @@ class SmrLocation
 	{
 		if(!isset($this->fed))
 		{
-			$this->db->query('SELECT * FROM location_is_fed WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('SELECT * FROM location_is_fed WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->fed = $this->db->nextRecord();
 		}
 		return $this->fed;
@@ -141,16 +143,17 @@ class SmrLocation
 	
 	public function setFed($bool)
 	{
-		if($this->fed===$bool)
+		if($this->fed===$bool) {
 			return;
+		}
 		if($bool===true)
 		{
-			$this->db->query('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->db->query('INSERT IGNORE INTO location_is_fed (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->fed = true;
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_fed WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_fed WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->fed = false;
 		}
 	}
@@ -159,7 +162,7 @@ class SmrLocation
 	{
 		if(!isset($this->bank))
 		{
-			$this->db->query('SELECT * FROM location_is_bank WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('SELECT * FROM location_is_bank WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->bank = $this->db->nextRecord();
 		}
 		return $this->bank;
@@ -171,12 +174,12 @@ class SmrLocation
 			return;
 		if($bool===true)
 		{
-			$this->db->query('INSERT INTO location_is_bank (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->db->query('INSERT INTO location_is_bank (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bank = true;
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_bank WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_bank WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->bank = false;
 		}
 	}
@@ -185,7 +188,7 @@ class SmrLocation
 	{
 		if(!isset($this->bar))
 		{
-			$this->db->query('SELECT * FROM location_is_bar WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('SELECT * FROM location_is_bar WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->bar = $this->db->nextRecord();
 		}
 		return $this->bar;
@@ -197,12 +200,12 @@ class SmrLocation
 			return;
 		if($bool===true)
 		{
-			$this->db->query('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->db->query('INSERT IGNORE INTO location_is_bar (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->bar = true;
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_bar WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_bar WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->bar = false;
 		}
 	}
@@ -211,7 +214,7 @@ class SmrLocation
 	{
 		if(!isset($this->HQ))
 		{
-			$this->db->query('SELECT * FROM location_is_hq WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('SELECT * FROM location_is_hq WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->HQ = $this->db->nextRecord();
 		}
 		return $this->HQ;
@@ -223,12 +226,12 @@ class SmrLocation
 			return;
 		if($bool===true)
 		{
-			$this->db->query('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->db->query('INSERT IGNORE INTO location_is_hq (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->HQ = true;
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_hq WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_hq WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->HQ = false;
 		}
 	}
@@ -237,7 +240,7 @@ class SmrLocation
 	{
 		if(!isset($this->UG))
 		{
-			$this->db->query('SELECT * FROM location_is_ug WHERE location_type_id = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('SELECT * FROM location_is_ug WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->UG = $this->db->nextRecord();
 		}
 		return $this->UG;
@@ -249,12 +252,12 @@ class SmrLocation
 			return;
 		if($bool===true)
 		{
-			$this->db->query('INSERT INTO location_is_ug (location_type_id) values (' . $this->getTypeID() . ')');
+			$this->db->query('INSERT INTO location_is_ug (location_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ')');
 			$this->UG = true;
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_ug WHERE location_type_id  = ' . $this->getTypeID() . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_ug WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->UG = false;
 		}
 	}
@@ -264,9 +267,10 @@ class SmrLocation
 		if(!isset($this->hardwareSold))
 		{
 			$this->hardwareSold = array();
-			$this->db->query('SELECT * FROM location_sells_hardware JOIN hardware_type USING(hardware_type_id) WHERE location_type_id = ' . $this->getTypeID());
-			while($this->db->nextRecord())
-				$this->hardwareSold[$this->db->getField('hardware_type_id')] = $this->db->getField('hardware_name');
+			$this->db->query('SELECT * FROM location_sells_hardware JOIN hardware_type USING(hardware_type_id) WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
+			while($this->db->nextRecord()) {
+				$this->hardwareSold[$this->db->getInt('hardware_type_id')] = $this->db->getField('hardware_name');
+			}
 		}
 		return $this->hardwareSold;
 	}
@@ -274,8 +278,9 @@ class SmrLocation
 	public function isHardwareSold($hardwareTypeID=false)
 	{
 		$hardware = $this->getHardwareSold();
-		if($hardwareTypeID===false)
+		if($hardwareTypeID===false) {
 			return count($hardware)!=0;
+		}
 		return isset($hardware[$hardwareTypeID]);
 	}
 	
@@ -283,10 +288,10 @@ class SmrLocation
 	{
 		if($this->isHardwareSold($hardwareTypeID))
 			return;
-		$this->db->query('SELECT * FROM hardware_type WHERE hardware_type_id = ' . $hardwareTypeID . ' LIMIT 1');
+		$this->db->query('SELECT * FROM hardware_type WHERE hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID) . ' LIMIT 1');
 		if(!$this->db->nextRecord())
 			throw new Exception('Invalid hardware type id given');
-		$this->db->query('INSERT INTO location_sells_hardware (location_type_id,hardware_type_id) values (' . $this->getTypeID(). ',' . $hardwareTypeID . ')');
+		$this->db->query('INSERT INTO location_sells_hardware (location_type_id,hardware_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($hardwareTypeID) . ')');
 		$this->hardwareSold[$hardwareTypeID] = $this->db->getField('hardware_name');
 	}
 	
@@ -294,7 +299,7 @@ class SmrLocation
 	{
 		if(!$this->isHardwareSold($hardwareTypeID))
 			return;
-		$this->db->query('DELETE FROM location_sells_hardware WHERE location_type_id = ' . $this->getTypeID() . ' AND hardware_type_id = ' . $hardwareTypeID . ' LIMIT 1');
+		$this->db->query('DELETE FROM location_sells_hardware WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID) . ' LIMIT 1');
 		unset($this->hardwareSold[$hardwareTypeID]);
 	}
 	
@@ -304,9 +309,10 @@ class SmrLocation
 		{
 			require_once(get_file_loc('AbstractSmrShip.class.inc'));
 			$this->shipsSold = array();
-			$this->db->query('SELECT * FROM location_sells_ships WHERE location_type_id = ' . $this->getTypeID());
-			while($this->db->nextRecord())
-				$this->shipsSold[$this->db->getField('ship_type_id')] =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$this->db->getField('ship_type_id'));
+			$this->db->query('SELECT * FROM location_sells_ships WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
+			while($this->db->nextRecord()) {
+				$this->shipsSold[$this->db->getInt('ship_type_id')] =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id), $this->db->getInt('ship_type_id'));
+			}
 		}
 		return $this->shipsSold;
 	}
@@ -327,7 +333,7 @@ class SmrLocation
 		$ship =& AbstractSmrShip::getBaseShip(Globals::getGameType(SmrSession::$game_id),$shipTypeID);
 		if($ship===false)
 			throw new Exception('Invalid ship type id given');
-		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->getTypeID(). ',' . $shipTypeID . ')');
+		$this->db->query('INSERT INTO location_sells_ships (location_type_id,ship_type_id) values (' . $this->db->escapeNumber($this->getTypeID()) . ',' . $this->db->escapeNumber($shipTypeID) . ')');
 		$this->shipsSold[$shipTypeID] =& $ship;
 	}
 	
@@ -335,7 +341,7 @@ class SmrLocation
 	{
 		if(!$this->isShipSold($shipTypeID))
 			return;
-		$this->db->query('DELETE FROM location_sells_ships WHERE location_type_id = ' . $this->getTypeID() . ' AND ship_type_id = ' . $shipTypeID . ' LIMIT 1');
+		$this->db->query('DELETE FROM location_sells_ships WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' AND ship_type_id = ' . $this->db->escapeNumber($shipTypeID) . ' LIMIT 1');
 		unset($this->shipsSold[$shipTypeID]);
 	}
 	
@@ -345,9 +351,9 @@ class SmrLocation
 		{
 			require_once(get_file_loc('SmrWeapon.class.inc'));
 			$this->weaponsSold = array();
-			$this->db->query('SELECT * FROM location_sells_weapons WHERE location_type_id = ' . $this->getTypeID());
+			$this->db->query('SELECT * FROM location_sells_weapons WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
 			while($this->db->nextRecord())
-				$this->weaponsSold[$this->db->getField('weapon_type_id')] =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getField('weapon_type_id'));
+				$this->weaponsSold[$this->db->getInt('weapon_type_id')] =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$this->db->getInt('weapon_type_id'));
 		}
 		return $this->weaponsSold;
 	}
@@ -368,7 +374,7 @@ class SmrLocation
 		$weapon =& SmrWeapon::getWeapon(Globals::getGameType(SmrSession::$game_id),$weaponTypeID);
 		if($weapon===false)
 			throw new Exception('Invalid weapon type id given');
-		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->getTypeID(). ',' . $weaponTypeID . ')');
+		$this->db->query('INSERT INTO location_sells_weapons (location_type_id,weapon_type_id) values (' . $this->db->escapeNumber($this->getTypeID()). ',' . $this->db->escapeNumber($weaponTypeID) . ')');
 		$this->weaponsSold[$weaponTypeID] =& $weapon;
 	}
 	
@@ -376,7 +382,7 @@ class SmrLocation
 	{
 		if(!$this->isWeaponSold($weaponTypeID))
 			return;
-		$this->db->query('DELETE FROM location_sells_weapons WHERE location_type_id = ' . $this->getTypeID() . ' AND weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
+		$this->db->query('DELETE FROM location_sells_weapons WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' AND weapon_type_id = ' . $this->db->escapeNumber($weaponTypeID) . ' LIMIT 1');
 		unset($this->weaponsSold[$weaponTypeID]);
 	}
 	
@@ -403,9 +409,7 @@ class SmrLocation
 	
 	public function getExamineHREF()
 	{
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = $this->getAction();
+		$container = create_container('skeleton.php', $this->getAction());
 		$container['LocationID'] = $this->getTypeID();
 		return SmrSession::get_new_href($container);
 	}

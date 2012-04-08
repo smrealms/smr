@@ -105,7 +105,7 @@ else {
 }
 
 $PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="levelRequirements"><span class="yellow bold">Next Level</span></a><br />';
-$db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $player->getExperience() . ' ORDER BY requirement ASC LIMIT 1');
+$db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $db->escapeNumber($player->getExperience()) . ' ORDER BY requirement ASC LIMIT 1');
 if(!$db->nextRecord()) {
 	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
 	$db->nextRecord();

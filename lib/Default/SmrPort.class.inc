@@ -70,14 +70,18 @@ class SmrPort
 	public static function removePort($gameID,$sectorID)
 	{
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM port WHERE game_id = '.$gameID.' AND ' .
-										'sector_id = '.$sectorID);
-		$db->query('DELETE FROM port_has_goods WHERE game_id = '.$gameID.' AND ' .
-										'sector_id = '.$sectorID);
-		$db->query('DELETE FROM player_visited_port WHERE game_id = '.$gameID.' AND ' .
-										'sector_id = '.$sectorID);
-		$db->query('DELETE FROM player_attacks_port WHERE game_id = '.$gameID.' AND ' .
-										'sector_id = '.$sectorID);
+		$db->query('DELETE FROM port
+					WHERE game_id = ' . $db->escapeNumber($gameID) . '
+					AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM port_has_goods
+					WHERE game_id = ' . $db->escapeNumber($gameID) . '
+					AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM player_visited_port
+					WHERE game_id = ' . $db->escapeNumber($gameID) . '
+					AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM player_attacks_port
+					WHERE game_id = ' . $db->escapeNumber($gameID) . '
+					AND sector_id = ' . $db->escapeNumber($sectorID));
 		self::$CACHE_PORTS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PORTS[$gameID][$sectorID]);
 	}
@@ -106,24 +110,24 @@ class SmrPort
 	protected function __construct($gameID,$sectorID)
 	{
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM port WHERE sector_id = '.$sectorID.' AND game_id = '.$gameID.' LIMIT 1');
+		$this->db->query('SELECT * FROM port WHERE sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
 		if ($this->db->nextRecord())
 		{
-			$this->gameID = $this->db->getField('game_id');
-			$this->sectorID = $this->db->getField('sector_id');
-			$this->lastUpdate = $this->db->getField('last_update');
-			$this->shields = $this->db->getField('shields');
-			$this->combatDrones = $this->db->getField('combat_drones');
-			$this->armour = $this->db->getField('armour');
-			$this->reinforceTime = $this->db->getField('reinforce_time');
-			$this->attackStarted = $this->db->getField('attack_started');
-			$this->raceID = $this->db->getField('race_id');
-			$this->level = $this->db->getField('level');
-			$this->credits = $this->db->getField('credits');
-			$this->upgrade = $this->db->getField('upgrade');
-			$this->experience = $this->db->getField('experience');
+			$this->gameID = $this->db->getInt('game_id');
+			$this->sectorID = $this->db->getInt('sector_id');
+			$this->lastUpdate = $this->db->getInt('last_update');
+			$this->shields = $this->db->getInt('shields');
+			$this->combatDrones = $this->db->getInt('combat_drones');
+			$this->armour = $this->db->getInt('armour');
+			$this->reinforceTime = $this->db->getInt('reinforce_time');
+			$this->attackStarted = $this->db->getInt('attack_started');
+			$this->raceID = $this->db->getInt('race_id');
+			$this->level = $this->db->getInt('level');
+			$this->credits = $this->db->getInt('credits');
+			$this->upgrade = $this->db->getInt('upgrade');
+			$this->experience = $this->db->getInt('experience');
 			
-			$this->SQL = 'sector_id = '.$this->sectorID.' AND game_id = '.$this->gameID;
+			$this->SQL = 'sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID);
 			
 			
 			$this->checkDefenses();
@@ -182,7 +186,7 @@ class SmrPort
 			
 			$this->lastUpdate += round($amt_to_add / $refresh_per_sec);
 				
-			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC LIMIT '.sizeof($GOODS));
+			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC LIMIT ' . count($GOODS));
 			
 			$this->goods['Sell'] = array();
 			$this->goods['Buy'] = array();
@@ -197,7 +201,7 @@ class SmrPort
 				if($good['Amount'] > $good['Max']) // possible to have more than max goods.
 				{
 					$good['Amount'] = $good['Max'];
-					$db->query('UPDATE port_has_goods SET amount = '.$good['Amount'].' WHERE '.$this->SQL.' AND good_id = '.$good['ID'].' LIMIT 1');
+					$db->query('UPDATE port_has_goods SET amount = ' . $db->escapeNumber($good['Amount']) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($good['ID']) . ' LIMIT 1');
 				}
 				elseif ($good['Amount'] < $good['Max'] && $amt_to_add > 0)
 				{
@@ -209,14 +213,14 @@ class SmrPort
 					{
 						$good['Amount'] += $amt_to_add;
 					}
-					$db->query('UPDATE port_has_goods SET amount = '.$good['Amount'].' WHERE '.$this->SQL.' AND good_id = '.$good['ID'].' LIMIT 1');
+					$db->query('UPDATE port_has_goods SET amount = ' . $db->escapeNumber($good['Amount']) . ' WHERE '.$this->SQL.' AND good_id = ' . $db->escapeNumber($good['ID']) . ' LIMIT 1');
 				}
 				$g = $good;
 				$this->goods['All Goods'][$g['ID']] =& $g;
 				$this->goods[$g['TransactionType']][$g['ID']] =& $g;
 				unset($g); //HACK Don't want to keep g around - it kills goods due to references.
 			}
-			$this->db->query('UPDATE port SET last_update = '.$this->lastUpdate.' WHERE '.$this->SQL.' LIMIT 1');
+			$this->db->query('UPDATE port SET last_update = ' . $this->db->escapeNumber($this->lastUpdate) . ' WHERE '.$this->SQL.' LIMIT 1');
 		}
 		return $this->goods;
 	}
@@ -338,7 +342,7 @@ class SmrPort
 			$this->goods['Sell'][$goodID]['Amount'] = $amount;
 		else if(isset($this->goods['Buy'][$goodID]))
 			$this->goods['Buy'][$goodID]['Amount'] = $amount;
-		$this->db->query('UPDATE port_has_goods SET amount = '.$amount.' WHERE '.$this->SQL.' AND good_id = '.$goodID.' LIMIT 1');
+		$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
 	}
 	
 	public function getGoodAmount($goodID)
@@ -501,7 +505,7 @@ class SmrPort
 		$newGood['TransactionType'] = $type;
 		$this->goods['All Goods'][$goodID] =& $newGood;
 		$this->goods[$type][$goodID] =& $newGood;
-		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->getGameID() . ',' . $this->getSectorID() . ',' . $goodID . ',' . $this->db->escapeString($type) . ',' . $newGood['Amount'] . ')');
+		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($newGood['Amount']) . ')');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
@@ -513,7 +517,7 @@ class SmrPort
 		if(isset($this->goods['Sell'][$goodID])) unset($this->goods['Sell'][$goodID]);
 		elseif(isset($this->goods['Buy'][$goodID])) unset($this->goods['Buy'][$goodID]);
 		
-		$this->db->query('DELETE FROM port_has_goods WHERE '.$this->SQL.' AND good_id='.$goodID.';');
+		$this->db->query('DELETE FROM port_has_goods WHERE '.$this->SQL.' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
@@ -629,8 +633,8 @@ class SmrPort
 		foreach ($attackers as &$attacker)
 		{
 			$attacker->increaseHOF(1,array('Combat','Port','Number Of Attacks'), HOF_PUBLIC);
-			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES ' .
-						'('.$this->getGameID().', '.$attacker->getAccountID().', '.$this->getSectorID().', ' . TIME . ', ' . $this->getLevel() . ')');
+			$this->db->query('REPLACE INTO player_attacks_port (game_id, account_id, sector_id, time, level) VALUES
+							(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		} unset($attacker);
 		if (!$this->isUnderAttack())
 		{
@@ -655,7 +659,7 @@ class SmrPort
 				$newsMessage .= 'a bounty of ' . number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL)) . ' credits for the death of '.$trigger->getBBLink();
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
-			$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES ('.$this->getGameID().','.TIME.','.$this->db->escapeString($newsMessage).',\'REGULAR\','.$trigger->getAccountID().','.$trigger->getAllianceID().','.ACCOUNT_ID_PORT.')');
+			$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
 		}
 	}
 	
@@ -1126,11 +1130,11 @@ class SmrPort
 			$query = substr($query,0,-1);
 			$this->db->query($query);
 			
-			$this->db->query('INSERT IGNORE INTO port_info_cache ' .
-						'(game_id, sector_id, port_info_hash, port_info) ' .
-						'VALUES ('.$this->getGameID().', '.$this->getSectorID().', '.$cacheHash.', '.$cache.')');
+			$this->db->query('INSERT IGNORE INTO port_info_cache
+						(game_id, sector_id, port_info_hash, port_info)
+						VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $cacheHash . ', ' . $cache.')');
 
-			$this->db->query('UPDATE player_visited_port SET visited='.$this->getCachedTime().', port_info_hash='.$cacheHash.' WHERE visited<='.$this->getCachedTime().' AND account_id IN ('.$this->db->escapeArray($accountIDs).') AND sector_id='.$this->getSectorID().' AND game_id='.$this->getGameID().' LIMIT '.count($accountIDs));
+			$this->db->query('UPDATE player_visited_port SET visited=' . $this->db->escapeNumber($this->getCachedTime()) . ', port_info_hash=' . $cacheHash . ' WHERE visited<=' . $this->db->escapeNumber($this->getCachedTime()) . ' AND account_id IN (' . $this->db->escapeArray($accountIDs) . ') AND sector_id=' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . count($accountIDs));
 			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
 
 			foreach($goods as $key => &$good)
@@ -1147,10 +1151,12 @@ class SmrPort
 		if($forceUpdate || !isset(self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT visited, port_info FROM player_visited_port JOIN port_info_cache USING (game_id,sector_id,port_info_hash) ' .
-							  'WHERE account_id = '.$accountID.' AND ' .
-							  		'game_id = '.$gameID.' AND ' .
-							  		'sector_id = '.$sectorID.' LIMIT 1');
+			$db->query('SELECT visited, port_info
+						FROM player_visited_port
+						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
+						WHERE account_id = ' . $this->db->escapeNumber($accountID) . '
+							AND game_id = ' . $this->db->escapeNumber($gameID) . '
+							AND sector_id = ' . $this->db->escapeNumber($sectorID) . ' LIMIT 1');
 			
 			if($db->nextRecord())
 			{
@@ -1188,47 +1194,47 @@ class SmrPort
 		{
 			if($this->isNew===false)
 			{
-				$this->db->query('UPDATE port SET experience = '.$this->getExperience().', ' .
-								'last_update = '.$this->getLastUpdate().', ' .
-								'shields = '.$this->getShields().', ' .
-								'armour = '.$this->getArmour().', ' .
-								'combat_drones = '.$this->getCDs().', ' .
-								'level = '.$this->getLevel().', ' .
-								'credits = '.$this->getCredits().', ' .
-								'upgrade = '.$this->getUpgrade().', ' .
-								'reinforce_time = '.$this->getReinforceTime().', ' .
-								'attack_started = '.$this->getAttackStarted().', ' .
-								'race_id = '.$this->getRaceID().
-							' WHERE game_id = '.$this->getGameID().' AND ' .
-								'sector_id = '.$this->getSectorID().' LIMIT 1');
+				$this->db->query('UPDATE port SET experience = ' . $this->db->escapeNumber($this->getExperience()) .
+								', last_update = ' . $this->db->escapeNumber($this->getLastUpdate()) .
+								', shields = ' . $this->db->escapeNumber($this->getShields()) .
+								', armour = ' . $this->db->escapeNumber($this->getArmour()) .
+								', combat_drones = ' . $this->db->escapeNumber($this->getCDs()) .
+								', level = ' . $this->db->escapeNumber($this->getLevel()) .
+								', credits = ' . $this->db->escapeNumber($this->getCredits()) .
+								', upgrade = ' . $this->db->escapeNumber($this->getUpgrade()) .
+								', reinforce_time = ' . $this->db->escapeNumber($this->getReinforceTime()) .
+								', attack_started = ' . $this->db->escapeNumber($this->getAttackStarted()) .
+								', race_id = ' . $this->db->escapeNumber($this->getRaceID()) . '
+								WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' LIMIT 1');
 			}
 			else
 			{
-				$this->db->query('INSERT INTO port (game_id,sector_id,experience,last_update,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)' .
-								'values' .
-								'('.$this->getGameID().
-								','.$this->getSectorID() .
-								','.$this->getExperience().
-								','.$this->getLastUpdate().
-								','.$this->getShields().
-								','.$this->getArmour().
-								','.$this->getCDs().
-								','.$this->getLevel().
-								','.$this->getCredits().
-								','.$this->getUpgrade().
-								','.$this->getReinforceTime().
-								','.$this->getAttackStarted().
-								','.$this->getRaceID().')');
+				$this->db->query('INSERT INTO port (game_id,sector_id,experience,last_update,shields,armour,combat_drones,level,credits,upgrade,reinforce_time,attack_started,race_id)
+								values
+								(' . $this->db->escapeNumber($this->getGameID()) .
+								',' . $this->db->escapeNumber($this->getSectorID()) .
+								',' . $this->db->escapeNumber($this->getExperience()) .
+								',' . $this->db->escapeNumber($this->getLastUpdate()) .
+								',' . $this->db->escapeNumber($this->getShields()) .
+								',' . $this->db->escapeNumber($this->getArmour()) .
+								',' . $this->db->escapeNumber($this->getCDs()) .
+								',' . $this->db->escapeNumber($this->getLevel()) .
+								',' . $this->db->escapeNumber($this->getCredits()) .
+								',' . $this->db->escapeNumber($this->getUpgrade()) .
+								',' . $this->db->escapeNumber($this->getReinforceTime()) .
+								',' . $this->db->escapeNumber($this->getAttackStarted()) .
+								',' . $this->db->escapeNumber($this->getRaceID()) . ')');
 				$this->isNew=false;
 			}
 			$this->hasChanged=false;
 		}
 		if(isset($this->goods))
-			foreach ($this->goods['All Goods'] as $id => $good)
-				$this->db->query('UPDATE port_has_goods SET amount = '.$good['Amount'].' ' .
-					'WHERE game_id = '.$this->getGameID().' AND ' .
-                              'sector_id = '.$this->getSectorID().' AND ' .
-                              'good_id = '.$good['ID'].' LIMIT 1');
+			foreach ($this->goods['All Goods'] as $good)
+				$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($good['Amount']) . '
+									WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+										AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
+										AND good_id = ' . $this->db->escapeNumber($good['ID']) . ' LIMIT 1');
     }
 	
 	

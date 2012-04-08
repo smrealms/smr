@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Create Universe - Adding Hardware (9/10)');
 
 $PHP_OUTPUT.=('<dl>');
-$db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
+$db->query('SELECT * FROM game WHERE game_id = ' . $db->escapeNumber($var['game_id']));
 if ($db->nextRecord())
 	$PHP_OUTPUT.=('<dt class="bold">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding hardware shops</d>');
@@ -14,16 +14,15 @@ $PHP_OUTPUT.=('</dl>');
 // put galaxies into one array
 $galaxies = array();
 $db->query('SELECT DISTINCT galaxy.galaxy_id as id, galaxy_name as name
-			FROM sector, galaxy
-			WHERE game_id = ' . $var['game_id'] . ' AND
-				  sector.galaxy_id = galaxy.galaxy_id
-			ORDER BY galaxy.galaxy_id');
+			FROM sector
+			JOIN galaxy USING(galaxy_id)
+			WHERE game_id = ' . $db->escapeNumber($var['game_id']) . '
+			ORDER BY galaxy_id');
 while ($db->nextRecord())
 	$galaxies[$db->getField('id')] = $db->getField('name');
 
-$container = array();
-$container['url']		= 'universe_create_hardware_processing.php';
-$container['game_id']	= $var['game_id'];
+$container = create_container('universe_create_hardware_processing.php');
+$container['game_id'] = $var['game_id'];
 $PHP_OUTPUT.=create_echo_form($container);
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
@@ -36,19 +35,18 @@ $PHP_OUTPUT.=('</tr>');
 $db2 = new SmrMySqlDatabase();
 
 // iterate over all hardware shops
-$db->query('SELECT location_type_id, location_name FROM location_type ' .
-					'WHERE location_type_id > 600 AND location_type_id < 700 ' .
-					'ORDER BY location_name');
+$db->query('SELECT location_type_id, location_name FROM location_type
+			WHERE location_type_id > 600 AND location_type_id < 700
+				ORDER BY location_name');
 while ($db->nextRecord()) {
-
-	$location_name		= $db->getField('location_name');
-	$location_type_id	= $db->getField('location_type_id');
+	$location_name = $db->getField('location_name');
+	$location_type_id = $db->getInt('location_type_id');
 
 	// get all hardware stuff that is sold here
-	$db2->query('SELECT * FROM location_type, location_sells_hardware, hardware_type ' .
-						 'WHERE location_type.location_type_id = location_sells_hardware.location_type_id AND ' .
-						 	   'location_sells_hardware.hardware_type_id = hardware_type.hardware_type_id AND ' .
-						 	   'location_type.location_type_id = '.$location_type_id);
+	$db2->query('SELECT * FROM location_type
+				JOIN location_sells_hardware USING(location_type_id)
+				JOIN hardware_type USING(hardware_type_id)
+				WHERE location_type.location_type_id = ' . $db->escapeNumber($location_type_id));
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b><br />');
 	while ($db2->nextRecord()) $PHP_OUTPUT.=('<span style="font-size:65%;">' . $db2->getField('hardware_name') . '</span><br />');

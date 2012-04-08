@@ -288,8 +288,8 @@ for($galaxy_counter = 0; $galaxy_counter < count($galaxy); $galaxy_counter++) {
 		if ($gal_map[$Xpos][$Ypos]['Exits'][3] == False)
 			$left = 0;
 
-		$db->query('INSERT INTO sector (sector_id, game_id, galaxy_id, link_up, link_down, link_left, link_right) ' .
-								'VALUES('.$curr_sector.', ' . $var['game_id'] . ', '.$galaxy_id.', '.$up.', '.$down.', '.$left.', '.$right.')');
+		$db->query('INSERT INTO sector (sector_id, game_id, galaxy_id, link_up, link_down, link_left, link_right)
+					VALUES(' . $db->escapeNumber($curr_sector) . ', ' . $db->escapeNumber($var['game_id']) . ', ' . $db->escapeNumber($galaxy_id) . ', ' . $db->escapeNumber($up) . ', ' . $db->escapeNumber($down) . ', ' . $db->escapeNumber($left) . ', ' . $db->escapeNumber($right) . ')');
 
 		$Xpos++;
 
@@ -299,9 +299,7 @@ for($galaxy_counter = 0; $galaxy_counter < count($galaxy); $galaxy_counter++) {
 
 }
 
-$container = array();
-$container['url']		= 'skeleton.php';
-$container['body']			= 'universe_create_warps.php';
+$container = create_container('skeleton.php', 'universe_create_warps.php');
 transfer('game_id');
 
 forward($container);

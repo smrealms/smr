@@ -63,16 +63,16 @@ class SmrShip extends AbstractSmrShip
 	protected function load_weapon()
 	{
 		// determine weapon
-		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon WHERE ' .
-			'account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID().
-		' ORDER BY order_id LIMIT ' . $this->getHardpoints());
+		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+							AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+							ORDER BY order_id LIMIT ' . $this->db->escapeNumber($this->getHardpoints()));
 		
 		$this->weapons = array();
 		// generate list of weapon names the user transports
 		while ($this->db->nextRecord())
 		{
-			$this->weapons[$this->db->getField('order_id')] =& SmrWeapon::getWeapon($this->gameID,$this->db->getField('weapon_type_id'));
+			$this->weapons[$this->db->getInt('order_id')] =& SmrWeapon::getWeapon($this->gameID,$this->db->getInt('weapon_type_id'));
 		}
 		$this->checkForExcessWeapons();
 	}
@@ -85,12 +85,13 @@ class SmrShip extends AbstractSmrShip
 			$this->cargo = array();
 			
 			// get cargo from db
-			$this->db->query('SELECT * FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND ' .
-				'game_id = '.$this->getGameID());
+			$this->db->query('SELECT * FROM ship_has_cargo
+								WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+								AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 			while ($this->db->nextRecord())
 			{
 				// adding cargo and amount to array
-				$this->cargo[$this->db->getField('good_id')] = $this->db->getField('amount');
+				$this->cargo[$this->db->getInt('good_id')] = $this->db->getInt('amount');
 			}
 		}
 		$this->checkForExcessCargo();
@@ -102,18 +103,19 @@ class SmrShip extends AbstractSmrShip
 		$this->oldHardware = array();
 		
 		// get currently hardware from db
-		$this->db->query('SELECT * FROM ship_has_hardware, hardware_type ' .
-			'WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID().' AND ' .
-			'ship_has_hardware.hardware_type_id = hardware_type.hardware_type_id');
+		$this->db->query('SELECT *
+							FROM ship_has_hardware
+							JOIN hardware_type USING(hardware_type_id)
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+							AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		
 		while ($this->db->nextRecord())
 		{
-			$hardware_type_id = $this->db->getField('hardware_type_id');
+			$hardwareTypeID = $this->db->getInt('hardware_type_id');
 			
 			// adding hardware to array
-			$this->hardware[$hardware_type_id]		= $this->db->getField('amount');
-			$this->oldHardware[$hardware_type_id] = $this->db->getField('old_amount');
+			$this->hardware[$hardwareTypeID] = $this->db->getInt('amount');
+			$this->oldHardware[$hardwareTypeID] = $this->db->getInt('old_amount');
 		}
 		$this->checkForExcessHardware();
 	}
@@ -131,9 +133,9 @@ class SmrShip extends AbstractSmrShip
 			foreach ($this->getCargo() as $id => $amount)
 			{
 				if ($amount > 0)
-					$this->db->query('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$id.', '.$amount.')');
+					$this->db->query('REPLACE INTO ship_has_cargo (account_id, game_id, good_id, amount) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($id) . ', ' . $this->db->escapeNumber($amount) . ')');
 				else
-					$this->db->query('DELETE FROM ship_has_cargo WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND good_id = '.$id.' LIMIT 1');
+					$this->db->query('DELETE FROM ship_has_cargo WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND good_id = ' . $this->db->escapeNumber($id) . ' LIMIT 1');
 			}
 			$this->hasChangedCargo = false;
 		}
@@ -146,22 +148,14 @@ class SmrShip extends AbstractSmrShip
 			$this->db->lockTable('ship_has_hardware');
 			
 			// write hardware info
-			foreach ($this->hardware as $hardware_type_id => $amount)
+			foreach ($this->hardware as $hardwareTypeID => $amount)
 			{
-				if ($amount > 0)
-				{
-					$this->db->query('SELECT * FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
-					if ($this->db->nextRecord())
-					{
-						$this->db->query('UPDATE ship_has_hardware SET amount = '.$amount.', old_amount = '.$this->getOldHardware($hardware_type_id).' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' and hardware_type_id = '.$hardware_type_id);
-					}
-					else
-					{
-						$this->db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$hardware_type_id.', '.$amount.', '.$this->getOldHardware($hardware_type_id).')');
-					}
+				if ($amount > 0) {
+					$this->db->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($hardwareTypeID) . ', ' . $this->db->escapeNumber($amount) . ', ' . $this->db->escapeNumber($this->getOldHardware($hardwareTypeID)) . ')');
 				}
-				else
-					$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' AND hardware_type_id = '.$hardware_type_id);
+				else {
+					$this->db->query('DELETE FROM ship_has_hardware WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND hardware_type_id = ' . $this->db->escapeNumber($hardwareTypeID));
+				}
 			}
 			$this->db->unlock();
 			$this->hasChangedHardware = false;
@@ -173,13 +167,13 @@ class SmrShip extends AbstractSmrShip
 		if($this->hasChangedWeapons === true)
 		{
 			// write weapon info
-			$this->db->query('DELETE FROM ship_has_weapon ' .
-				'WHERE account_id = '.$this->getAccountID().' AND ' .
-				'game_id = '.$this->getGameID());
-			foreach ($this->weapons as $order_id => &$weapon)
+			$this->db->query('DELETE FROM ship_has_weapon
+								WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+								AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			foreach ($this->weapons as $orderID => &$weapon)
 			{
-				$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id) ' .
-					'VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$order_id.', '.$weapon->getWeaponTypeID().')');
+				$this->db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id)
+								VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($orderID) . ', ' . $this->db->escapeNumber($weapon->getWeaponTypeID()) . ')');
 			}
 			$this->hasChangedWeapons = false;
 		}
@@ -188,22 +182,22 @@ class SmrShip extends AbstractSmrShip
 	function update() {
 		
 		// write ship infos
-		$this->db->query('UPDATE player SET ship_type_id = '.$this->getShipTypeID().' ' .
-			'WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID());
+		$this->db->query('UPDATE player SET ship_type_id = ' . $this->db->escapeNumber($this->getShipTypeID()) . '
+						WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+							AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		
 	}
 	
-	function check_power_level($power_level) {
+	function check_power_level($powerLevel) {
 		
-		$this->db->query('SELECT ship_has_weapon.weapon_type_id FROM ship_has_weapon, weapon_type ' .
-			'WHERE ship_has_weapon.weapon_type_id = weapon_type.weapon_type_id AND ' .
-			'account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID().' AND ' .
-			'power_level = '.$power_level);
+		$this->db->query('SELECT ship_has_weapon.weapon_type_id
+							FROM ship_has_weapon
+							JOIN weapon_type USING(weapon_type_id)
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+								AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+								AND power_level = ' . $this->db->escapeNumber($powerLevel));
 		
-		switch ($power_level) {
-		
+		switch ($powerLevel) {
 			case 5: if ($this->db->getNumRows() < 1) return 1; else return 0;
 			break;
 			case 4: if ($this->db->getNumRows() < 2) return 1; else return 0;
@@ -224,9 +218,9 @@ class SmrShip extends AbstractSmrShip
 			return false;
 		if(!isset($this->isCloaked))
 		{
-			$this->db->query('SELECT * FROM ship_is_cloaked ' .
-				'WHERE account_id = '.$this->getAccountID().' AND ' .
-				'game_id = '.$this->getGameID().' LIMIT 1');
+			$this->db->query('SELECT 1 FROM ship_is_cloaked
+								WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+								AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 			$this->isCloaked = $this->db->getNumRows()>0;
 		}
 		return $this->isCloaked;
@@ -235,15 +229,15 @@ class SmrShip extends AbstractSmrShip
 	function decloak()
 	{
 		$this->isCloaked = false;
-		$this->db->query('DELETE FROM ship_is_cloaked WHERE account_id = '.$this->getAccountID().' AND ' .
-			'game_id = '.$this->getGameID() .' LIMIT 1');
+		$this->db->query('DELETE FROM ship_is_cloaked
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
+							AND game_id = ' . $this->db->escapeNumber($this->getGameID()) .' LIMIT 1');
 	}
 	
 	function enableCloak()
 	{
 		$this->isCloaked = true;
-		$this->db->query('REPLACE INTO ship_is_cloaked VALUES('.$this->getAccountID().', '.$this->getGameID().')');
-		
+		$this->db->query('REPLACE INTO ship_is_cloaked VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ')');		
 	}
 	
 	function cloak_overload()
@@ -251,13 +245,11 @@ class SmrShip extends AbstractSmrShip
 		// 1 in 25 chance of cloak being destroyed if active
 		if($this->isCloaked() && mt_rand(0,99) < 5)
 		{
-			$this->db->query(
-				'DELETE FROM ship_has_hardware ' .
-				'WHERE account_id=' . $this->getAccountID() . ' ' .
-				'AND game_id=' . $this->getGameID() . ' ' .
-				'AND hardware_type_id=8 ' .
-				'limit 1'
-			);
+			$this->db->query('DELETE FROM ship_has_hardware
+								WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()) . '
+								AND game_id=' . $this->db->escapeNumber($this->getGameID()) . '
+								AND hardware_type_id = 8
+								LIMIT 1');
 			$this->decloak();
 			$this->setHardware(HARDWARE_CLOAK,0);
 			return true;
@@ -266,14 +258,14 @@ class SmrShip extends AbstractSmrShip
 		return false;
 	}
 	
-	function setIllusion($ship_id, $attack, $defense)
+	function setIllusion($shipID, $attack, $defense)
 	{
-		$this->db->query('REPLACE INTO ship_has_illusion VALUES('.$this->getAccountID().', '.$this->getGameID().', '.$ship_id.', '.$attack.', '.$defense.')');
+		$this->db->query('REPLACE INTO ship_has_illusion VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($shipID) . ', ' . $this->db->escapeNumber($attack) . ', ' . $this->db->escapeNumber($defense) . ')');
 	}
 	
 	function disableIllusion()
 	{
-		$this->db->query('DELETE FROM ship_has_illusion WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' LIMIT 1');
+		$this->db->query('DELETE FROM ship_has_illusion WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 	}
 	
 	public function getIllusionShip()
@@ -281,15 +273,17 @@ class SmrShip extends AbstractSmrShip
 		if(!isset($this->illusionShip))
 		{
 			$this->illusionShip=false;
-			$this->db->query('SELECT ship_has_illusion.*,ship_type.ship_name FROM ship_has_illusion JOIN ship_type USING(ship_type_id)' .
-							' WHERE account_id = '.$this->getAccountID().' AND game_id = '.$this->getGameID().' LIMIT 1');
+			$this->db->query('SELECT ship_has_illusion.*,ship_type.ship_name
+							FROM ship_has_illusion
+							JOIN ship_type USING(ship_type_id)
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 			if($this->db->nextRecord())
 			{
-				$this->illusionShip=array();
-				$this->illusionShip['ID'] = $this->db->getField('ship_type_id');
-				$this->illusionShip['Attack'] = $this->db->getField('attack');
-				$this->illusionShip['Defense'] = $this->db->getField('defense');
-				$this->illusionShip['Name'] = $this->db->getField('ship_name');
+				$this->illusionShip=array(
+										'ID' => $this->db->getInt('ship_type_id'),
+										'Attack' => $this->db->getInt('attack'),
+										'Defense' => $this->db->getInt('defense'),
+										'Name' => $this->db->getField('ship_name'));
 			}
 		}
 		return $this->illusionShip;
@@ -298,10 +292,7 @@ class SmrShip extends AbstractSmrShip
 	
 	public function getUpgradeShipHREF()
 	{
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'ship_upgrade.php';
-		return SmrSession::get_new_href($container);
+		return SmrSession::get_new_href(create_container('skeleton.php', 'ship_upgrade.php'));
 	}
 }
 

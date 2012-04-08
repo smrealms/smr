@@ -30,7 +30,7 @@ class SmrSector
 		if($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $gameID .' AND galaxy_id='.$galaxyID.' ORDER BY sector_id ASC');
+			$db->query('SELECT sector_id FROM sector WHERE game_id = ' . $db->escapeNumber($gameID) .' AND galaxy_id=' . $db->escapeNumber($galaxyID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while($db->nextRecord())
 			{
@@ -47,7 +47,7 @@ class SmrSector
 		if($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT sector_id FROM location WHERE location_type_id = ' . $locationTypeID . ' AND game_id=' . $gameID.' ORDER BY sector_id ASC');
+			$db->query('SELECT sector_id FROM location WHERE location_type_id = ' . $db->escapeNumber($locationTypeID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' ORDER BY sector_id ASC');
 			$sectors = array();
 			while($db->nextRecord())
 			{
@@ -99,37 +99,39 @@ class SmrSector
 	{
 		$this->db = new SmrMySqlDatabase();
 
-		$this->db->query('SELECT * FROM sector WHERE game_id = '.$gameID.' AND ' .
-														'sector_id = '.$sectorID.' LIMIT 1');
+		$this->db->query('SELECT * FROM sector
+							WHERE game_id = ' . $this->db->escapeNumber($gameID) . '
+							AND sector_id = ' . $this->db->escapeNumber($sectorID) . ' LIMIT 1');
 		if($this->db->nextRecord())
 		{
-			$this->sectorID		= (int)$this->db->getField('sector_id');
-			$this->gameID		= (int)$this->db->getField('game_id');
-			$this->galaxyID		= (int)$this->db->getField('galaxy_id');
-			$this->battles		= (int)$this->db->getField('battles');
-			if (empty($this->battles)) $this->battles = 0;
+			$this->sectorID		= $this->db->getInt('sector_id');
+			$this->gameID		= $this->db->getInt('game_id');
+			$this->galaxyID		= $this->db->getInt('galaxy_id');
+			$this->battles		= $this->db->getInt('battles');
 	
 			$this->links = array();
 			if($this->db->getField('link_up'))
-				$this->links['Up']=(int)$this->db->getField('link_up');
+				$this->links['Up'] = $this->db->getInt('link_up');
 				
 			if($this->db->getField('link_down'))
-				$this->links['Down']=(int)$this->db->getField('link_down');
+				$this->links['Down'] = $this->db->getInt('link_down');
 				
 			if($this->db->getField('link_left'))
-				$this->links['Left']=(int)$this->db->getField('link_left');
+				$this->links['Left'] = $this->db->getInt('link_left');
 				
 			if($this->db->getField('link_right'))
-				$this->links['Right']=(int)$this->db->getField('link_right');
+				$this->links['Right'] = $this->db->getInt('link_right');
 				
 	
-			$this->db->query('SELECT * FROM warp WHERE game_id = '.$this->gameID.' AND ' .
-												  '(sector_id_1 = '.$this->sectorID.' OR ' .
-												   'sector_id_2 = '.$this->sectorID.')');
+			$this->db->query('SELECT * FROM warp
+								WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . '
+								AND (
+									sector_id_1 = ' . $this->db->escapeNumber($this->sectorID) . '
+									OR sector_id_2 = ' . $this->db->escapeNumber($this->sectorID) . ')');
 			if ($this->db->nextRecord())
-				$this->warp=($this->db->getField('sector_id_1') == $this->sectorID) ? (int)$this->db->getField('sector_id_2') : (int)$this->db->getField('sector_id_1');
+				$this->warp = ($this->db->getInt('sector_id_1') == $this->sectorID) ? $this->db->getInt('sector_id_2') : $this->db->getInt('sector_id_1');
 			else
-				$this->warp=0;
+				$this->warp = 0;
 		}
 		else if($create)
 		{
@@ -152,27 +154,27 @@ class SmrSector
 		{
 			if($this->isNew===false)
 			{
-				$this->db->query('UPDATE sector SET battles = '.$this->getBattles() .
-										', galaxy_id=' . $this->getGalaxyID().
-										', link_up=' . $this->getLinkUp().
-										', link_right=' . $this->getLinkRight().
-										', link_down=' . $this->getLinkDown().
-										', link_left=' . $this->getLinkLeft().
-								   ' WHERE game_id = '.$this->getGameID().' AND ' .
-										 'sector_id = '.$this->getSectorID() . ' LIMIT 1');
+				$this->db->query('UPDATE sector SET battles = ' . $this->db->escapeNumber($this->getBattles()) .
+									', galaxy_id=' . $this->db->escapeNumber($this->getGalaxyID()) .
+									', link_up=' . $this->db->escapeNumber($this->getLinkUp()) .
+									', link_right=' . $this->db->escapeNumber($this->getLinkRight()) .
+									', link_down=' . $this->db->escapeNumber($this->getLinkDown()) .
+									', link_left=' . $this->db->escapeNumber($this->getLinkLeft()) .
+								' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+									AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' LIMIT 1');
 			}
 			else
 			{
-				$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right)' .
-						'values' .
-						'(' . $this->getSectorID() .
-						',' . $this->getGameID() .
-						',' . $this->getGalaxyID() .
-						',' . $this->getLinkUp() .
-						',' . $this->getLinkDown() .
-						',' . $this->getLinkLeft() .
-						',' . $this->getLinkRight() .
-						')');
+				$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right)
+								values
+								(' . $this->db->escapeNumber($this->getSectorID()) .
+								',' . $this->db->escapeNumber($this->getGameID()) .
+								',' . $this->db->escapeNumber($this->getGalaxyID()) .
+								',' . $this->db->escapeNumber($this->getLinkUp()) .
+								',' . $this->db->escapeNumber($this->getLinkDown()) .
+								',' . $this->db->escapeNumber($this->getLinkLeft()) .
+								',' . $this->db->escapeNumber($this->getLinkRight()) .
+								')');
 				$this->isNew=false;
 			}
 		}
@@ -185,9 +187,10 @@ class SmrSector
 
 		//now delete the entry from visited
 		if(!$this->isVisited($player))
-			$this->db->query('DELETE FROM player_visited_sector ' .
-					 'WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' .
-					 'account_id = '.$player->getAccountID().' LIMIT 1');
+			$this->db->query('DELETE FROM player_visited_sector
+								WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
+								 AND account_id = ' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
 		$this->visited[$player->getAccountID()]=true;
 	}
 
@@ -340,8 +343,10 @@ class SmrSector
 		{
 			$force->ping($message,$player);
 		} unset($force);
-		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE game_id = '.$this->getGameID().' AND sector_id = '.$this->getSectorID().' AND ' .
-					'refresher = '.$player->getAccountID());
+		$this->db->query('UPDATE sector_has_forces SET refresher = 0
+							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
+								AND refresher = ' . $this->db->escapeNumber($player->getAccountID()));
 	}
 
 	function diedHere(AbstractSmrPlayer &$player)
@@ -621,19 +626,19 @@ class SmrSector
 			if($this->hasWarp())
 			{
 				//Update both possible combinations for the warp
-				$this->db->query('UPDATE warp SET sector_id_1 = '.$warp->getSectorID().' WHERE ' .
-												'game_id=' . $this->getGameID().' AND '.
-												'sector_id_1 = '.$this->getWarp().' AND ' .
-												'sector_id_2 = '.$this->getSectorID().' LIMIT 1');
-				$this->db->query('UPDATE warp SET sector_id_2 = '.$warp->getSectorID().' WHERE ' .
-												'game_id=' . $this->getGameID().' AND '.
-												'sector_id_1 = '.$this->getSectorID().' AND ' .
-												'sector_id_2 = '.$this->getWarp().' LIMIT 1');
+				$this->db->query('UPDATE warp SET sector_id_1 = ' . $this->db->escapeNumber($warp->getSectorID()) . '
+									WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . '
+										AND sector_id_1 = ' . $this->db->escapeNumber($this->getWarp()) . '
+										AND sector_id_2 = ' . $this->db->escapeNumber($this->getSectorID()) . ' LIMIT 1');
+				$this->db->query('UPDATE warp SET sector_id_2 = ' . $this->db->escapeNumber($warp->getSectorID()) . '
+									WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . '
+										AND sector_id_1 = ' . $this->db->escapeNumber($this->getSectorID()) . '
+										AND sector_id_2 = ' . $this->db->escapeNumber($this->getWarp()) . ' LIMIT 1');
 			}
 			else
 			{
 				//Only need to enter once
-				$this->db->query('INSERT INTO warp (game_id,sector_id_1,sector_id_2)values('.$this->getGameID().','.$this->getSectorID().','.$warp->getSectorID().')');
+				$this->db->query('INSERT INTO warp (game_id,sector_id_1,sector_id_2)values(' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($warp->getSectorID()) . ')');
 			}
 			$warp->setWarp($this,true);
 		}
@@ -645,13 +650,16 @@ class SmrSector
 		if($this->hasWarp())
 		{
 			//Update both possible combinations for the warp
-			$this->db->query('DELETE FROM warp WHERE ' .
-											  '(sector_id_1 = '.$this->getWarp().' AND ' .
-											   'sector_id_2 = '.$this->getSectorID().') OR' .
-											  '(sector_id_1 = '.$this->getSectorID().' AND ' .
-											   'sector_id_2 = '.$this->getWarp().') LIMIT 1');
+			$this->db->query('DELETE FROM warp
+								WHERE (
+									sector_id_1 = ' . $this->db->escapeNumber($this->getWarp()) . '
+									AND sector_id_2 = ' . $this->db->escapeNumber($this->getSectorID()) . '
+								) OR (
+									sector_id_1 = ' . $this->db->escapeNumber($this->getSectorID()) . '
+									AND sector_id_2 = ' . $this->db->escapeNumber($this->getWarp()) . '
+								) LIMIT 1');
 		}
-		unset($this->warp);
+		$this->warp = 0;
 	}
 	
 	public function hasMine()
@@ -724,13 +732,14 @@ class SmrSector
 	
 	public function addLocation(SmrLocation &$location)
 	{
-		$this->db->query('INSERT INTO location (game_id,sector_id,location_type_id)values('.$this->getGameID().','.$this->getSectorID().','.$location->getTypeID().')');
+		$this->db->query('INSERT INTO location (game_id,sector_id,location_type_id)
+						values(' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($location->getTypeID()) . ')');
 		SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID(),true);
 	}
 	
 	public function removeAllLocations()
 	{
-		$this->db->query('DELETE FROM location WHERE game_id='.$this->getGameID().' AND sector_id='.$this->getSectorID());
+		$this->db->query('DELETE FROM location WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id=' . $this->db->escapeNumber($this->getSectorID()));
 		SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID(),true);
 	}
 
@@ -1032,7 +1041,7 @@ class SmrSector
 			return true;
 		if(!isset($this->visited[$player->getAccountID()]))
 		{
-			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id = ' . $this->getSectorID() . ' AND account_id=' . $player->getAccountID() . ' AND game_id=' . $this->getGameID() .' LIMIT 1');
+			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) .' LIMIT 1');
 			$this->visited[$player->getAccountID()] = !$this->db->nextRecord();
 		}
 		return $this->visited[$player->getAccountID()];

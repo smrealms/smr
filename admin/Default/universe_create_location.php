@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Create Universe - Adding Special Locations (4/10)');
 
 $PHP_OUTPUT.=('<dl>');
-$db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
+$db->query('SELECT * FROM game WHERE game_id = ' . $db->escapeNumber($var['game_id']));
 if ($db->nextRecord())
 	$PHP_OUTPUT.=('<dt class="bold">Game:<dt><dd>' . $db->getField('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding special Location</d>');
@@ -16,7 +16,7 @@ $PHP_OUTPUT.=('</dl>');
 $galaxies = array();
 $db->query('SELECT DISTINCT galaxy.galaxy_id as id, galaxy_name as name
 			FROM sector, galaxy
-			WHERE game_id = ' . $var['game_id'] . ' AND
+			WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND
 				  sector.galaxy_id = galaxy.galaxy_id
 			ORDER BY galaxy.galaxy_id');
 while ($db->nextRecord())
@@ -80,8 +80,7 @@ $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size="1"></td></tr>');
 
 // banks
-$db->query('SELECT * FROM location_type JOIN location_is_bank USING(location_type_id) ' .
-		   'ORDER BY location_name');
+$db->query('SELECT * FROM location_type JOIN location_is_bank USING(location_type_id) ORDER BY location_name');
 while ($db->nextRecord())
 {
 	$location_name		= $db->getField('location_name');
@@ -96,8 +95,7 @@ while ($db->nextRecord())
 $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size="1"></td></tr>');
 
 // bars
-$db->query('SELECT * FROM location_type JOIN location_is_bar USING(location_type_id) ' .
-		   'ORDER BY location_name');
+$db->query('SELECT * FROM location_type JOIN location_is_bar USING(location_type_id) ORDER BY location_name');
 while ($db->nextRecord())
 {
 	$location_name		= $db->getField('location_name');

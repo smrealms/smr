@@ -2,9 +2,7 @@
 //if (isset($_POST['Create_Game']))
 //{
 	//universe_create_galaxies.php
-	$container=array();
-	$container['url'] = '1.6/universe_create_save_processing.php';
-	$container['body'] = '1.6/universe_create_sectors.php';
+	$container = create_container('1.6/universe_create_save_processing.php', '1.6/universe_create_sectors.php');
 	$container['num_gals'] = $var['num_gals'];
 	$container['game_id'] = $var['game_id'];
 	

@@ -113,13 +113,13 @@ class WeightedRandom
 	{
 		if($this->hasChanged===true)
 		{
-			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)' .
-							'values' .
-							'('.$this->getGameID().
-							','.$this->getAccountID() .
-							','.$this->db->escapeString($this->getType()) .
-							','.$this->getTypeID() .
-							','.$this->getWeighting().')');
+			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)
+							values
+							(' . $this->db->escapeNumber($this->getGameID()) .
+							',' . $this->db->escapeNumber($this->getAccountID()) .
+							',' . $this->db->escapeString($this->getType()) .
+							',' . $this->db->escapeNumber($this->getTypeID()) .
+							',' . $this->db->escapeNumber($this->getWeighting()) . ')');
 			$this->hasChanged=false;
 		}
     }
