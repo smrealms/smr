@@ -220,7 +220,7 @@ class SmrAlliance {
 
 	public function getNumVeterans() {
 		$numVeterans=0;
-		foreach($this->return_member_ids() as $memberID) {
+		foreach($this->getMemberIDs() as $memberID) {
 			if(SmrAccount::getAccount($memberID)->isVeteran()) {
 				$numVeterans++;
 			}
@@ -229,7 +229,7 @@ class SmrAlliance {
 	}
 
 	public function getNumMembers() {
-		return count($this->return_member_ids());
+		return count($this->getMemberIDs());
 	}
 
 	function update() {
@@ -245,7 +245,7 @@ class SmrAlliance {
 								AND game_id = '.$this->db->escapeNumber($this->gameID));
 	}
 
-	function return_member_ids() {
+	function getMemberIDs() {
 		if(!isset($this->memberList)) {
 			$this->db->query('SELECT * FROM player WHERE alliance_id = '.$this->db->escapeNumber($this->allianceID).' AND game_id = '.$this->db->escapeNumber($this->gameID));
 
