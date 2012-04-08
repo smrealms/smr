@@ -32,9 +32,9 @@ class SmrShip extends AbstractSmrShip
 		{
 			foreach($gameShips as &$ship)
 			{
-				$ship->update_hardware();
-				$ship->update_weapon();
-				$ship->update_cargo();
+				$ship->updateHardware();
+				$ship->updateWeapon();
+				$ship->updateCargo();
 				$ship->update();
 			}
 		}
@@ -55,12 +55,12 @@ class SmrShip extends AbstractSmrShip
 		parent::__construct($player);
 		$this->db = new SmrMySqlDatabase();
 		
-		$this->load_hardware();
-		$this->load_weapon();
-		$this->load_cargo();
+		$this->loadHardware();
+		$this->loadWeapon();
+		$this->loadCargo();
 	}
 	
-	protected function load_weapon()
+	protected function loadWeapon()
 	{
 		// determine weapon
 		$this->db->query('SELECT order_id,weapon_type_id FROM ship_has_weapon
@@ -77,7 +77,7 @@ class SmrShip extends AbstractSmrShip
 		$this->checkForExcessWeapons();
 	}
 	
-	protected function load_cargo()
+	protected function loadCargo()
 	{
 		if(!isset($this->cargo))
 		{
@@ -97,7 +97,7 @@ class SmrShip extends AbstractSmrShip
 		$this->checkForExcessCargo();
 	}
 	
-	protected function load_hardware()
+	protected function loadHardware()
 	{
 		$this->hardware = array();
 		$this->oldHardware = array();
@@ -125,7 +125,7 @@ class SmrShip extends AbstractSmrShip
 		return $this->getPlayer()->getAccountID();
 	}
 	
-	function update_cargo()
+	function updateCargo()
 	{
 		if($this->hasChangedCargo === true)
 		{
@@ -141,7 +141,7 @@ class SmrShip extends AbstractSmrShip
 		}
 	}
 	
-	function update_hardware()
+	function updateHardware()
 	{
 		if($this->hasChangedHardware === true)
 		{
@@ -162,7 +162,7 @@ class SmrShip extends AbstractSmrShip
 		}
 	}
 	
-	function update_weapon()
+	function updateWeapon()
 	{
 		if($this->hasChangedWeapons === true)
 		{
@@ -244,7 +244,7 @@ class SmrShip extends AbstractSmrShip
 		$this->db->query('REPLACE INTO ship_is_cloaked VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ')');		
 	}
 	
-	function cloak_overload()
+	function cloakOverload()
 	{
 		// 1 in 25 chance of cloak being destroyed if active
 		if($this->isCloaked() && mt_rand(0,99) < 5)

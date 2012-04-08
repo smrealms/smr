@@ -28,7 +28,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'port_loot.php';
 $ship->increaseCargo($good_id,$amount);
-$ship->update_cargo();
+$ship->updateCargo();
 $port->decreaseGoodAmount($good_id,$amount);
 $port->update();
 forward($container);

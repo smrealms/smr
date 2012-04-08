@@ -28,7 +28,7 @@ $player->update();
 
 // now adjust add to ship
 $ship->increaseHardware($hardware_id,$amount);
-$ship->update_hardware();
+$ship->updateHardware();
 
 $ship->removeUnderAttack();
 
