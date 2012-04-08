@@ -188,9 +188,8 @@ class SmrShip extends AbstractSmrShip
 		
 	}
 	
-	function check_power_level($powerLevel) {
-		
-		$this->db->query('SELECT ship_has_weapon.weapon_type_id
+	function checkPowerLevel($powerLevel) {
+		$this->db->query('SELECT weapon_type_id
 							FROM ship_has_weapon
 							JOIN weapon_type USING(weapon_type_id)
 							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
@@ -198,18 +197,23 @@ class SmrShip extends AbstractSmrShip
 								AND power_level = ' . $this->db->escapeNumber($powerLevel));
 		
 		switch ($powerLevel) {
-			case 5: if ($this->db->getNumRows() < 1) return 1; else return 0;
+			case 5:
+				return $this->db->getNumRows() < 1;
 			break;
-			case 4: if ($this->db->getNumRows() < 2) return 1; else return 0;
+			case 4:
+				return $this->db->getNumRows() < 2;
 			break;
-			case 3: if ($this->db->getNumRows() < 3) return 1; else return 0;
+			case 3:
+				return $this->db->getNumRows() < 3;
 			break;
-			case 2: if ($this->db->getNumRows() < 4) return 1; else return 0;
+			case 2:
+				return $this->db->getNumRows() < 4;
 			break;
-			case 1: return 1;
+			case 1:
+				return true;
 			break;
 		}
-		return 1;
+		return true;
 	}
 	
 	public function isCloaked()
