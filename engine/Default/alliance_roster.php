@@ -125,11 +125,9 @@ if ($db->nextRecord()) {
 else {
 	$my_role_id = 0;
 }
-$db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
+$db->query('SELECT 1 FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 			AND role_id = ' . $db->escapeNumber($my_role_id) . ' AND change_roles = \'TRUE\'');
-if ($db->nextRecord()) {
-	$allowed = TRUE;
-}
+$allowed = $db->nextRecord();
 
 $alliancePlayers =& SmrPlayer::getAlliancePlayers($player->getGameID(),$alliance->getAllianceID());
 
