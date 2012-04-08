@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Create Universe - Adding Weapons (8/10)');
 
 $PHP_OUTPUT.=('<dl>');
-$db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
+$db->query('SELECT * FROM game WHERE game_id = ' . $db->escapeNumber($var['game_id']));
 if ($db->nextRecord())
 	$PHP_OUTPUT.=('<dt class="bold">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding weapon dealers</d>');
@@ -14,12 +14,12 @@ $PHP_OUTPUT.=('</dl>');
 // put galaxies into one array
 $galaxies = array();
 $db->query('SELECT DISTINCT galaxy.galaxy_id as id, galaxy_name as name
-			FROM sector, galaxy
-			WHERE game_id = ' . $var['game_id'] . ' AND
-				  sector.galaxy_id = galaxy.galaxy_id
-			ORDER BY galaxy.galaxy_id');
+			FROM sector
+			JOIN galaxy USING(galaxy_id)
+			WHERE game_id = ' . $db->escapeNumber($var['game_id']) . '
+			ORDER BY galaxy_id');
 while ($db->nextRecord())
-	$galaxies[$db->getField('id')] = $db->getField('name');
+	$galaxies[$db->getInt('id')] = $db->getField('name');
 
 $container = array();
 $container['url']		= 'universe_create_weapons_processing.php';
@@ -48,7 +48,7 @@ while ($db->nextRecord()) {
 	$db2->query('SELECT * FROM location_type, location_sells_weapons, weapon_type ' .
 						 'WHERE location_type.location_type_id = location_sells_weapons.location_type_id AND ' .
 						 	   'location_sells_weapons.weapon_type_id = weapon_type.weapon_type_id AND ' .
-						 	   'location_type.location_type_id = '.$location_type_id);
+						 	   'location_type.location_type_id = ' . $db->escapeNumber($location_type_id));
 
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b><br />');

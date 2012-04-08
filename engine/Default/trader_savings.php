@@ -10,7 +10,7 @@ $db->query('SELECT * FROM anon_bank WHERE owner_id = ' . $db->escapeNumber($play
 if ($db->getNumRows()) {
 	$PHP_OUTPUT.=('You own the following accounts<br /><br />');
 	while ($db->nextRecord()) {
-		$acc_id = $db->getField('anon_id');
+		$acc_id = $db->getInt('anon_id');
 		$pass = $db->getField('password');
 		$PHP_OUTPUT.=('Account <span class="yellow">'.$acc_id.'</span> with password <span class="yellow">'.$pass.'</span><br />');
 	}

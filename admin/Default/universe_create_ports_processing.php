@@ -70,10 +70,10 @@ foreach($ports as $galaxy_id => $amount) {
 	$levels = $input[$galaxy_id];
 
 	// get a sector to put a port in
-	$db->query('SELECT sector_id FROM sector ' .
-			   'WHERE game_id = ' . $var['game_id'] . ' AND ' .
-					 'galaxy_id = '.$galaxy_id.' ' .
-			   'ORDER BY rand()');
+	$db->query('SELECT sector_id FROM sector
+				WHERE game_id = ' . $db->escapeNumber($var['game_id']) . '
+					AND galaxy_id = ' . $db->escapeNumber($galaxy_id) . '
+				ORDER BY rand()');
 
 	$count = 0;
 
@@ -83,15 +83,15 @@ foreach($ports as $galaxy_id => $amount) {
 		$sector_id = $db->getField('sector_id');
 
 		// does this sector has a fed?
-		$db2->query('SELECT * FROM location ' .
-				'WHERE game_id = ' . $var['game_id'] . ' AND ' .
-				'sector_id = '.$sector_id.' AND ' .
-				'location_type_id = '.FED);
+		$db2->query('SELECT * FROM location
+				WHERE game_id = ' . $db->escapeNumber($var['game_id']) . '
+					AND sector_id = ' . $db->escapeNumber($sector_id) . '
+					AND location_type_id = ' . $db->escapeNumber(FED));
 		if ($db2->getNumRows() > 0) continue;
 
 
 		// does this sector already have a port?
-		$db2->query('SELECT sector_id FROM port WHERE game_id = ' . $var['game_id'] . ' AND sector_id = '.$sector_id);
+		$db2->query('SELECT sector_id FROM port WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND sector_id = ' . $db->escapeNumber($sector_id));
 		if ($db2->getNumRows() > 0) continue;
 		
 
@@ -126,9 +126,9 @@ foreach($ports as $galaxy_id => $amount) {
 		$drones = $level * 100;
 
 		// insert port into db
-		$db2->query('INSERT INTO port ' .
-					'(game_id, sector_id, level, credits, race_id, shields, armour, combat_drones) ' .
-					'VALUES (' . $var['game_id'] . ', '.$sector_id.', '.$level.', '.$credits.', '.$race_id.', '.$shields.', '.$armour.', '.$drones.')');
+		$db2->query('INSERT INTO port
+					(game_id, sector_id, level, credits, race_id, shields, armour, combat_drones)
+					VALUES (' . $db2->escapeNumber($var['game_id']) . ', ' . $db2->escapeNumber($sector_id) . ', ' . $db2->escapeNumber($level) . ', ' . $db2->escapeNumber($credits) . ', ' . $db2->escapeNumber($race_id) . ', ' . $db2->escapeNumber($shields) . ', ' . $db2->escapeNumber($armour) . ', ' . $db2->escapeNumber($drones) .')');
 
 		// get a temp of that array with all the good classes
 		// only working with that one!
@@ -173,9 +173,9 @@ foreach($ports as $galaxy_id => $amount) {
 				$transaction = 'Buy';
 			}
 			$good_id = $good_ids[$i];
-			$db2->query('INSERT INTO port_has_goods ' .
-				'(game_id, sector_id, good_id, transaction_type, amount) ' .
-				'VALUES(' . $var['game_id'] . ', '.$sector_id.', '.$good_id.', '.$db->escapeString($transaction).', 0)');
+			$db2->query('INSERT INTO port_has_goods
+				(game_id, sector_id, good_id, transaction_type, amount)
+				VALUES(' . $db2->escapeNumber($var['game_id']) . ', ' . $db2->escapeNumber($sector_id) . ', ' . $db2->escapeNumber($good_id) . ', ' . $db2->escapeString($transaction) . ', 0)');
 
 		}
 	}

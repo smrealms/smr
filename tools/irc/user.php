@@ -22,7 +22,7 @@ function user_quit($fp, $rdata)
         // sign off all nicks
         while ($db->nextRecord()) {
 
-            $seen_id = $db->getField('seen_id');
+            $seen_id = $db->getInt('seen_id');
 
             $db2->query('UPDATE irc_seen SET signed_off = ' . time() . ' WHERE seen_id = ' . $seen_id);
 
@@ -61,7 +61,7 @@ function user_nick($fp, $rdata)
         $db->query('SELECT * FROM irc_seen WHERE nick = ' . $db->escapeString($nick) . ' AND signed_off = 0');
         while ($db->nextRecord()) {
 
-            $seen_id = $db->getField('seen_id');
+            $seen_id = $db->getInt('seen_id');
 
             // remember channels where this nick was active
             array_push($channel_list, $db->getField('channel'));

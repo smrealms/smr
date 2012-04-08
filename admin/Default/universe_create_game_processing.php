@@ -19,10 +19,10 @@ if ($action == 'Create >>') {
 	$credits = $_REQUEST['credits'];
 	$speed = $_REQUEST['speed'];
 	// create the game
-	$db->query('INSERT INTO game (game_name, game_description, start_date, end_date, max_players, game_type, credits_needed, game_speed) ' .
-						  'VALUES('.$db->escapeString($game_name).', '.$db->escapeString($game_description).', '.$db->escapeString($start_date).', '.$db->escapeString($end_date).', '.$max_player.', '.$db->escapeString($game_type).', '.$credits.', '.$speed.')');
+	$db->query('INSERT INTO game (game_name, game_description, start_date, end_date, max_players, game_type, credits_needed, game_speed)
+				VALUES(' . $db->escapeString($game_name) . ', ' . $db->escapeString($game_description) . ', ' . $db->escapeString($start_date) . ', ' . $db->escapeString($end_date) . ', ' . $db->escapeNumber($max_player) . ', ' . $db->escapeString($game_type) . ', ' . $db->escapeNumber($credits) . ', ' . $db->escapeNumber($speed) . ')');
 
-	$container['game_id']	= $db->getInsertID();
+	$container['game_id'] = $db->getInsertID();
 
 	$db->query('SELECT * FROM race');
 	$race_count = $db->getNumRows();
@@ -36,16 +36,14 @@ if ($action == 'Create >>') {
 			else
 				$relation = -500;
 
-			$db->query('INSERT INTO race_has_relation ' .
-					   '(game_id, race_id_1, race_id_2, relation) ' .
-					   'VALUES(' . $container['game_id'] . ', '.$race_id_1.', '.$race_id_2.', '.$relation.')');
-
+			$db->query('INSERT INTO race_has_relation
+						(game_id, race_id_1, race_id_2, relation)
+						VALUES(' . $db->escapeNumber($container['game_id']) . ', ' . $db->escapeNumber($race_id_1) . ', ' . $db->escapeNumber($race_id_2) . ', ' . $db->escapeNumber($relation) . ')');
 		}
-
 	}
-
-} else
-	$container['game_id']	= $game_id;
+}
+else
+	$container['game_id'] = $game_id;
 
 forward($container);
 

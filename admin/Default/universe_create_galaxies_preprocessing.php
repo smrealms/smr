@@ -41,9 +41,8 @@ for($galaxy_counter = 0; $galaxy_counter < count($galaxy); $galaxy_counter++)
 		$down = $curr_sector + $curr_size;
 		if ($down > $down_border) $down = $up_border;
 
-		$db->query('INSERT INTO sector (sector_id, game_id, galaxy_id, link_up, link_down, link_left, link_right) ' .
-								'VALUES('.$curr_sector.', ' . $var['game_id'] . ', '.$galaxy_id.', '.$up.', '.$down.', '.$left.', '.$right.')');
-
+		$db->query('INSERT INTO sector (sector_id, game_id, galaxy_id, link_up, link_down, link_left, link_right)
+					VALUES(' . $db->escapeNumber($curr_sector) . ', ' . $db->escapeNumber($var['game_id']) . ', ' . $db->escapeNumber($galaxy_id) . ', ' . $db->escapeNumber($up) . ', ' . $db->escapeNumber($down) . ', ' . $db->escapeNumber($left) . ', ' . $db->escapeNumber($right) . ')');
 	}
 
 	$sector_count += $curr_size * $curr_size;

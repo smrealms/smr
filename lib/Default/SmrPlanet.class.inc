@@ -80,8 +80,8 @@ class SmrPlanet
 				
 			// insert planet into db
 			$db = new SmrMySqlDatabase();
-			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time) ' .
-				'VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ')');
+			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time)
+				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ')');
 		}
 		return self::getPlanet($gameID,$sectorID,true);
 		//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID]))
@@ -95,10 +95,14 @@ class SmrPlanet
 	public static function removePlanet($gameID,$sectorID)
 	{
 		$db = new SmrMySqlDatabase();
-		$db->query('DELETE FROM planet WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM planet_has_cargo WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM planet_has_building WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
-		$db->query('DELETE FROM planet_is_building WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM planet
+					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM planet_has_cargo
+					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM planet_has_building
+					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		$db->query('DELETE FROM planet_is_building
+					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
@@ -624,7 +628,6 @@ class SmrPlanet
 		{
 			if(!isset($this->currentlyBuilding))
 			{
-				$toBeUpdated = false;
 				$this->currentlyBuilding = array();
 				$this->db->query('SELECT * FROM planet_is_building WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
 				while($this->db->nextRecord())
@@ -1172,7 +1175,6 @@ class SmrPlanet
 		//get all players involved for HoF
 		$allowed = TIME - 3600 * 3;
 		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber($allowed));
-		$temp = array();
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getInt('account_id'),$this->getGameID());

@@ -156,13 +156,13 @@ class SmrSession
 			do
 			{
 				self::$session_id = md5 (uniqid (mt_rand()) );
-				self::$db->query('SELECT 1 FROM active_session WHERE session_id = '.self::$db->escapeString(self::$session_id).' LIMIT 1');
+				self::$db->query('SELECT 1 FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 			} while(self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
 			setcookie('session_id', self::$session_id);
 		}
 
 		// try to get current session
-		self::$db->query('DELETE FROM active_session WHERE last_accessed < '.self::$db->escapeNumber(time()-self::TIME_BEFORE_EXPIRY));
+		self::$db->query('DELETE FROM active_session WHERE last_accessed < ' . self::$db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 		self::fetchVarInfo();
 		
 		if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']]))
@@ -189,7 +189,7 @@ class SmrSession
 	
 	public static function fetchVarInfo()
 	{
-		self::$db->query('SELECT * FROM active_session WHERE session_id = '.self::$db->escapeString(self::$session_id).' LIMIT 1');
+		self::$db->query('SELECT * FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		if (self::$db->nextRecord())
 		{
 			self::$generate = false;
@@ -260,7 +260,7 @@ class SmrSession
 		$compressed = gzcompress(serialize(self::$var));
 		if(!self::$generate)
 		{
-			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',old_account_id=' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(TIME) : '') . ',session_var=' . self::$db->escapeBinary($compressed)  . '' .
+			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',old_account_id=' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(TIME) : '') . ',session_var=' . self::$db->escapeBinary($compressed) .
 					',last_sn='.self::$db->escapeString(self::$SN).
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
@@ -270,12 +270,13 @@ class SmrSession
 			self::$db->query('INSERT INTO active_session (session_id, account_id, old_account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(TIME) . ',' . self::$db->escapeBinary($compressed)  . ')');
 			self::$generate = false;
 		}
+		// This takes us back to the standard database if we had to change it.
 		$db = new SmrMySqlDatabase();
 	}
 	
 	public static function updateSN()
 	{
-		self::$db= new SmrSessionMySqlDatabase();
+		self::$db = new SmrSessionMySqlDatabase();
 		if(!USING_AJAX)
 			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
 				' WHERE session_id=' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
@@ -284,7 +285,7 @@ class SmrSession
 
 	public static function destroy()
 	{
-		self::$db= new SmrSessionMySqlDatabase();
+		self::$db = new SmrSessionMySqlDatabase();
 		self::$db->query('UPDATE active_session SET account_id=0,old_account_id=0,game_id=0,session_var=\'\',ajax_returns=\'\' WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		self::$session_id = '';
 		self::$account_id = 0;

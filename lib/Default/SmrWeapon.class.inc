@@ -40,7 +40,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		$weapons=array();
 		while($db->nextRecord())
 		{
-			$weapons[] =& self::getWeapon($gameTypeID,$db->getField('weapon_type_id'),$forceUpdate);
+			$weapons[] =& self::getWeapon($gameTypeID,$db->getInt('weapon_type_id'),$forceUpdate);
 		}
 		return $weapons;
 	}
@@ -52,18 +52,18 @@ class SmrWeapon extends AbstractSmrCombatWeapon
 		$this->gameTypeID = $gameTypeID;
 		$this->weaponTypeID = $weaponTypeID;
 			
-		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armour_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $weaponTypeID . ' LIMIT 1');
+		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armour_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $this->db->escapeNumber($weaponTypeID) . ' LIMIT 1');
 		
 		if(self::$db->nextRecord())
 		{
 			$this->name = self::$db->getField('weapon_name');
-			$this->raceID = (int)self::$db->getField('race_id');
-			$this->cost = (int)self::$db->getField('cost');
-			$this->shieldDamage = (int)self::$db->getField('shield_damage');
-			$this->armourDamage = (int)self::$db->getField('armour_damage');
-			$this->accuracy = (int)self::$db->getField('accuracy');
-			$this->powerLevel = (int)self::$db->getField('power_level');
-			$this->buyerRestriction = (int)self::$db->getField('buyer_restriction');
+			$this->raceID = self::$db->getInt('race_id');
+			$this->cost = self::$db->getInt('cost');
+			$this->shieldDamage = self::$db->getInt('shield_damage');
+			$this->armourDamage = self::$db->getInt('armour_damage');
+			$this->accuracy = self::$db->getInt('accuracy');
+			$this->powerLevel = self::$db->getInt('power_level');
+			$this->buyerRestriction = self::$db->getInt('buyer_restriction');
 			$this->damageRollover = false;
 			$this->raidWeapon = false;
 			$this->maxDamage = max($this->shieldDamage,$this->armourDamage);

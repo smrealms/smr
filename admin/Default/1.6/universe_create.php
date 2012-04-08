@@ -13,7 +13,7 @@ $container['body'] = '1.6/universe_create_sectors.php';
 $template->assign('EditGameHREF',SmrSession::get_new_href($container));
 
 $editGames=array();
-$db->query('SELECT * FROM game'.($account->hasPermission(PERMISSION_EDIT_STARTED_GAMES)?'':' WHERE start_date > '. TIME).' ORDER BY game_id DESC');
+$db->query('SELECT * FROM game'.($account->hasPermission(PERMISSION_EDIT_STARTED_GAMES)?'':' WHERE start_date > ' . $db->escapeNumber(TIME)) . ' ORDER BY game_id DESC');
 while ($db->nextRecord())
 {
 	$editGames[$db->getField('game_id')] = array('GameID'=>$db->getField('game_id'),'GameName'=>$db->getField('game_name'));

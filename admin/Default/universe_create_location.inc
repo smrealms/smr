@@ -7,47 +7,28 @@ function create_location($game_id, $galaxy_id, $location_type_id, $sector_id = 0
 
 	// if we didn't get a sector we choose one
 	if ($sector_id == 0) {
-
-		// new db object for inner loop
-		$db2 = new SmrMySqlDatabase();
-
-		// for security reasons we set a loop_counter
-		// to avoid invinite recursion
-		$loop_counter = 0;
-
-		while ($sector_id == 0 && $loop_counter < 100) {
-
-			// get one sector where we put it
-			$db->query('SELECT sector_id FROM sector
-						WHERE game_id = '.$game_id.' AND
-							  galaxy_id = '.$galaxy_id.'
-						ORDER BY rand()
-						LIMIT 1');
-
-			// no sectors for this gal?
-			if (!$db->nextRecord())
-				return false;
-
-			// check if this sector already got a location
-			$db2->query('SELECT location_type_id
-						 FROM location
-						 WHERE game_id = '.$game_id.' AND
-							   sector_id = ' . $db->getField('sector_id'));
-			if (!$db2->nextRecord())
-				$sector_id = $db->getField('sector_id');
-
-			// next loop run
-			// increase safety counter
-			$loop_counter++;
-
-		}
-
+		// get one sector where we put it
+		$db->query('SELECT sector_id
+					FROM sector
+					WHERE game_id = ' . $db->escapeNumber($game_id) . '
+						AND galaxy_id = ' . $db->escapeNumber($galaxy_id) . '
+						AND sector_id NOT IN(
+							SELECT sector_id
+							FROM location
+							WHERE game_id = sector.game_id
+							AND location_type_id = ' . $db->escapeNumber($location_type_id) . '
+						)
+					ORDER BY rand()
+					LIMIT 1');
+		if (!$db->nextRecord())
+			return false;
+		$sector_id = $db->getInt('sector_id');
 	}
 
 	// now putting the hq in
 	$db->query('INSERT INTO location
 				(game_id, sector_id, location_type_id)
-				VALUES ('.$game_id.', '.$sector_id.', '.$location_type_id.')');
+				VALUES (' . $db->escapeNumber($game_id) . ', ' . $db->escapeNumber($sector_id) . ', ' . $db->escapeNumber($location_type_id) . ')');
 
 	return $sector_id;
 

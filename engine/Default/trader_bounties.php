@@ -20,10 +20,10 @@ function doBountyList(&$PHP_OUTPUT,&$db,&$player) {
 	$any=false;
 	while($db->nextRecord()) {
 		$any=true;
-		$bountyPlayer =& SmrPlayer::getPlayer($db->getField('account_id'),$player->getGameID());
+		$bountyPlayer =& SmrPlayer::getPlayer($db->getInt('account_id'),$player->getGameID());
 		$PHP_OUTPUT.= $bountyPlayer->getLinkedDisplayName()
-						.' : <span class="creds">'.number_format($db->getField('amount')).'</span> credits and'
-						. ' <span class="yellow">'.number_format($db->getField('smr_credits')). '</span> SMR credits<br />';
+						.' : <span class="creds">'.number_format($db->getInt('amount')).'</span> credits and'
+						. ' <span class="yellow">'.number_format($db->getInt('smr_credits')). '</span> SMR credits<br />';
 	}
 	if(!$any)
 		$PHP_OUTPUT.='None';

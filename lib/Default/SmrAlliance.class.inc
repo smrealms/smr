@@ -95,7 +95,7 @@ class SmrAlliance {
 
 	public function getIrcChannel() {
 		if(!isset($this->ircChannel)) {
-			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeString($this->getAllianceID()) .' AND game_id = ' . $this->db->escapeString($this->getGameID()) . ' LIMIT 1;');
+			$this->db->query('SELECT channel FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) .' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1;');
 			if($this->db->nextRecord()) {
 				$this->ircChannel = $this->db->getField('channel');
 			}
@@ -118,10 +118,10 @@ class SmrAlliance {
 				create_error('Please enter a valid irc channel for your alliance.');
 			}
 
-			$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeString($this->getAllianceID()) . ',' . $this->db->escapeString($this->getGameID()) . ');');
+			$this->db->query('REPLACE INTO irc_alliance_has_channel (channel,alliance_id,game_id) values (' . $this->db->escapeString($ircChannel) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ');');
 		}
 		else {
-			$this->db->query('DELETE FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeString($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeString($this->getGameID()) . ';');
+			$this->db->query('DELETE FROM irc_alliance_has_channel WHERE alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ';');
 		}
 		$this->ircChannel = $ircChannel;
 	}

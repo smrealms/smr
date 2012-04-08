@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Create Universe - Adding Admin (9/10)');
 
 $PHP_OUTPUT.=('<dl>');
-$db->query('SELECT * FROM game WHERE game_id = ' . $var['game_id']);
+$db->query('SELECT * FROM game WHERE game_id = ' . $db->escapeNumber($var['game_id']));
 if ($db->nextRecord())
 	$PHP_OUTPUT.=('<dt class="bold">Game<dt><dd>' . $db->getField('game_name') . '</dd>');
 $PHP_OUTPUT.=('<dt class="bold">Task:<dt><dd>Adding admins</d>');
@@ -26,8 +26,8 @@ $PHP_OUTPUT.=('<select name="admin_id" id="InputFields" style="padding-left:10px
 // check if mrspock was created
 $db->query('SELECT player_name
 			FROM player
-			WHERE account_id = 1 AND
-				  game_id = ' . $var['game_id']);
+			WHERE account_id = 1
+				AND game_id = ' . $db->escapeNumber($var['game_id']));
 if ($db->nextRecord()) {
 
 	$PHP_OUTPUT.=('<option value="0">[please select]</option>');
@@ -36,27 +36,24 @@ if ($db->nextRecord()) {
 				FROM account
 				ORDER BY login');
 	while ($db->nextRecord()) {
-
 		// get current account id and login
-		$curr_account_id	= $db->getField('account_id');
+		$curr_account_id	= $db->getInt('account_id');
 		$curr_login			= $db->getField('login');
 
 		// check if this guy is already in
 		$db2->query('SELECT player_name
 					 FROM player
-					 WHERE account_id = '.$curr_account_id.' AND
-						   game_id = ' . $var['game_id']);
-		if (!$db2->nextRecord())
+					 WHERE account_id = ' . $db2->escapeNumber($curr_account_id) . '
+						 AND game_id = ' . $db2->escapeNumber($var['game_id']));
+		if (!$db2->nextRecord()) {
 			$PHP_OUTPUT.=('<option value="'.$curr_account_id.'">'.$curr_login.'</option>');
-
+		}
 	}
-
-} else {
-
+}
+else {
 	$PHP_OUTPUT.=('<option value="1">MrSpock</option>');
 	$player_name = 'MrSpock';
 	$readonly = ' readonly';
-
 }
 $PHP_OUTPUT.=('</select><br /><br /><br />');
 
@@ -71,12 +68,11 @@ $only = array();
 // get all available hq's
 $db->query('SELECT location_name
 			FROM location JOIN location_type USING(location_type_id)
-			WHERE location_type_id > '.UNDERGROUND.' AND
-				  location_type_id < '.FED.' AND
-				  game_id = ' . $var['game_id'] . '
+			WHERE location_type_id > ' . $db->escapeNumber(UNDERGROUND) . '
+				AND location_type_id < ' . $db->escapeNumber(FED) . '
+				AND game_id = ' . $db->escapeNumber($var['game_id']) . '
 			ORDER BY location_type_id');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	// get the name for this race
 	// HACK! cut ' HQ' from location name!
 	$race_name = substr($db->getField('location_name'), 0, -3);
