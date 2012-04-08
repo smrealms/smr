@@ -305,7 +305,7 @@ abstract class AbstractSmrShip
 			$temp =& $this->weapons[$orderID];
 			for($i=1;$i<count($this->weapons);++$i)
 			{
-				$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref.  Hence $i-1 =& $i not $i =& $i+1
+				$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref. Hence $i-1 =& $i not $i =& $i+1
 			}
 			$this->weapons[count($this->weapons)-1] =& $temp;
 		}
@@ -360,7 +360,7 @@ abstract class AbstractSmrShip
 		// Shift everything after the removed weapon up by one and put the selected weapon at the bottom
 		for($i=$orderID+1;$i<count($this->weapons);++$i)
 		{
-			$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref.  Hence $i-1 =& $i not $i =& $i+1
+			$this->weapons[$i-1] =& $this->weapons[$i]; //If we go above the bounds of the array it will keep on going due to assign by ref. Hence $i-1 =& $i not $i =& $i+1
 		} unset($this->weapons[count($this->weapons)-1]);
 		$this->hasChangedWeapons = true;
 	}

@@ -176,7 +176,7 @@ abstract class AbstractSmrPlayer
 			return false;
 		}
 
-        $ship =& $this->getShip();
+		$ship =& $this->getShip();
 		if ($ship->hasIllegalGoods())
 			return false;
 

@@ -153,7 +153,7 @@ class SmrLocation
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_fed WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_fed WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->fed = false;
 		}
 	}
@@ -179,7 +179,7 @@ class SmrLocation
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_bank WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_bank WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->bank = false;
 		}
 	}
@@ -205,7 +205,7 @@ class SmrLocation
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_bar WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_bar WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->bar = false;
 		}
 	}
@@ -231,7 +231,7 @@ class SmrLocation
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_hq WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_hq WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->HQ = false;
 		}
 	}
@@ -257,7 +257,7 @@ class SmrLocation
 		}
 		else if($bool===false)
 		{
-			$this->db->query('DELETE FROM location_is_ug WHERE location_type_id  = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
+			$this->db->query('DELETE FROM location_is_ug WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()) . ' LIMIT 1');
 			$this->UG = false;
 		}
 	}

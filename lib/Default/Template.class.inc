@@ -104,13 +104,13 @@ class Template {
 		elseif (file_exists(TEMPLATES_DIR . 'Default/admin/Default/' . $templateName)) {
 			return TEMPLATES_DIR . 'Default/admin/Default/' . $templateName;
 		}
-		elseif (file_exists($templateDir .  $templateName)) {
+		elseif (file_exists($templateDir . $templateName)) {
 			return $templateDir . $templateName;
 		}
 		elseif (file_exists(TEMPLATES_DIR . 'Default/' . $templateName)) {
 			return TEMPLATES_DIR . 'Default/' . $templateName;
 		}
-		elseif (file_exists($templateDir .  'default.inc')) {
+		elseif (file_exists($templateDir . 'default.inc')) {
 			return $templateDir.'default.inc';
 		}
 		else {
@@ -185,7 +185,7 @@ class Template {
 	
 	protected function trimWhiteSpace(&$html) {
 		// Pull out the script blocks
-		/*    preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
+		/*	preg_match_all("!<script[^>]*?>.*?</script>!is", $source, $match);
 		 $_script_blocks = $match[0];
 		 $source = preg_replace("!<script[^>]*?>.*?</script>!is",
 		 '@@@SMARTY:TRIM:SCRIPT@@@', $source);
@@ -227,25 +227,23 @@ class Template {
 //		$this->replaceTrimHolder("@@@SMARTY:TRIM:SCRIPT@@@",$_script_blocks, $html);
 	}
 	protected function replaceTrimHolder($search_str, $replace, &$subject) {
-	    $_len = strlen($search_str);
-	    $_pos = 0;
-	    for ($_i=0, $_count=count($replace); $_i<$_count; $_i++) {
-	        if (($_pos=strpos($subject, $search_str, $_pos))!==false) {
-	            $subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
+		$_len = strlen($search_str);
+		$_pos = 0;
+		for ($_i=0, $_count=count($replace); $_i<$_count; $_i++) {
+			if (($_pos=strpos($subject, $search_str, $_pos))!==false) {
+				$subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
 			}
-	        else {
-	            break;
+			else {
+				break;
 			}
 		}
 	}
 	
 	protected function doDamageTypeReductionDisplay(&$damageTypes) {
-		if($damageTypes == 3)
-		{
+		if($damageTypes == 3) {
 			echo ', ';
 		}
-		else if($damageTypes == 2)
-		{
+		else if($damageTypes == 2) {
 			echo ' and ';
 		}
 		$damageTypes--;
@@ -253,10 +251,12 @@ class Template {
 	
 	protected function doAn($wordAfter) {
 		$char = strtoupper($wordAfter[0]);
-		if($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U')
+		if($char == 'A' || $char == 'E' || $char == 'I' || $char == 'O' || $char == 'U') {
 			echo 'an';
-		else
+		}
+		else {
 			echo 'a';
+		}
 	}
 	
 	/*
@@ -297,8 +297,9 @@ class Template {
 			foreach($spans as $span) {
 				$id = $span->getAttribute('id');
 				$inner = pq($span)->html();
-				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml)
+				if(!SmrSession::addAjaxReturns($id,$inner) && $returnXml) {
 					$xml.= '<'.$id.'>'.xmlify($inner). '</'.$id.'>';
+				}
 			}
 		}
 		if(!$this->ignoreMiddle) {

@@ -1178,7 +1178,7 @@ class SmrPort
 			unset($good['Distance']);
 		} unset($good);
 		$this->cachedVersion = true;
-        return array('gameID', 'sectorID', 'raceID', 'level', 'cachedVersion', 'goods');
+		return array('gameID', 'sectorID', 'raceID', 'level', 'cachedVersion', 'goods');
 	}
 	
 	public function __wakeup()
@@ -1235,7 +1235,7 @@ class SmrPort
 									WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
 										AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
 										AND good_id = ' . $this->db->escapeNumber($good['ID']) . ' LIMIT 1');
-    }
+	}
 	
 	
 	public function &shootPlayer(AbstractSmrPlayer &$targetPlayer)

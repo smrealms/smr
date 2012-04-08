@@ -92,9 +92,9 @@ function modifyRelations($race_id_1)
 			$relation_modifier = -10;
 
 		$db2->query('SELECT * FROM race_has_relation ' .
-					'WHERE race_id_1 = '.$db2->escapeNumber($race_id_1).' AND ' .
-						  'race_id_2 = '.$db2->escapeNumber($race_id_2).' AND ' .
-						  'game_id = '.$db2->escapeNumber($player->getGameID()));
+					'WHERE race_id_1 = ' . $db2->escapeNumber($race_id_1) . '
+						AND race_id_2 = ' . $db2->escapeNumber($race_id_2) . '
+						AND game_id = ' . $db2->escapeNumber($player->getGameID()));
 		if ($db2->nextRecord())
 			$relation = $db2->getField('relation') + $relation_modifier;
 
@@ -104,16 +104,15 @@ function modifyRelations($race_id_1)
 		if ($relation > 500)
 			$relation = 500;
 
-		$db2->query('UPDATE race_has_relation ' .
-					'SET relation = '.$db2->escapeNumber($relation).' ' .
-					'WHERE race_id_1 = '.$db2->escapeNumber($race_id_1).' AND ' .
-						  'race_id_2 = '.$db2->escapeNumber($race_id_2).' AND ' .
-						  'game_id = '.$db2->escapeNumber($player->getGameID()));
+		$db2->query('UPDATE race_has_relation
+					SET relation = ' . $db2->escapeNumber($relation) . '
+					WHERE race_id_1 = ' . $db2->escapeNumber($race_id_1) . '
+						AND race_id_2 = '.$db2->escapeNumber($race_id_2) . '
+						AND game_id = '.$db2->escapeNumber($player->getGameID()));
 
-		$db2->query('DELETE FROM player_votes_relation ' .
-					'WHERE account_id = '.$db2->escapeNumber($account_id).' AND ' .
-						  'game_id = '.$db2->escapeNumber($player->getGameID()));
-
+		$db2->query('DELETE FROM player_votes_relation
+					WHERE account_id = ' . $db2->escapeNumber($account_id) . '
+						AND game_id = ' . $db2->escapeNumber($player->getGameID()));
 	}
 
 }
@@ -124,29 +123,29 @@ function checkPacts($race_id_1)
 
 	$db2 = new SmrMySqlDatabase();
 
-	$db->query('SELECT * FROM race_has_voting ' .
-			   'WHERE end_time < '.$db->escapeNumber(TIME).' AND ' .
-					 'game_id = '.$db->escapeNumber($player->getGameID()).' AND ' .
-					 'race_id_1 = '.$db->escapeNumber($race_id_1));
+	$db->query('SELECT * FROM race_has_voting
+				WHERE end_time < ' . $db->escapeNumber(TIME) . '
+					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
 	while ($db->nextRecord())
 	{
-		$race_id_2	= $db->getInt('race_id_2');
-		$type		= $db->getField('type');
+		$race_id_2 = $db->getInt('race_id_2');
+		$type = $db->getField('type');
 
 		// get 'yes' votes
-		$db2->query('SELECT * FROM player_votes_pact ' .
-					'WHERE game_id = '.$db->escapeNumber($player->getGameID()).' AND ' .
-						  'race_id_1 = '.$db->escapeNumber($race_id_1).' AND ' .
-						  'race_id_2 = '.$db->escapeNumber($race_id_2).' AND ' .
-						  'vote = \'YES\'');
+		$db2->query('SELECT * FROM player_votes_pact
+					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
+						AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
+						AND vote = \'YES\'');
 		$yes_votes = $db2->getNumRows();
 
 		// get 'no' votes
-		$db2->query('SELECT * FROM player_votes_pact ' .
-					'WHERE game_id = '.$db->escapeNumber($player->getGameID()).' AND ' .
-						  'race_id_1 = '.$db->escapeNumber($race_id_1).' AND ' .
-						  'race_id_2 = '.$db->escapeNumber($race_id_2).' AND ' .
-						  'vote = \'NO\'');
+		$db2->query('SELECT * FROM player_votes_pact
+					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+						AND race_id_1 = ' . $db->escapeNumber($race_id_1) . '
+						AND race_id_2 = ' . $db->escapeNumber($race_id_2) . '
+						AND vote = \'NO\'');
 		$no_votes = $db2->getNumRows();
 
 

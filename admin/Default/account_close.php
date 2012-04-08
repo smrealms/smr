@@ -78,7 +78,7 @@ if (isset($disable_id)) {
 			$reason = $suspicion2[$id];
 	    $db->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));
 	    if (!$db->getNumRows())
-	        $amount += 1;
+			$amount += 1;
 
 		//never expire
 		$bannedAccount =& SmrAccount::getAccount($id);

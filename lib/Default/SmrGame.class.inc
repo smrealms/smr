@@ -100,7 +100,7 @@ class SmrGame {
 										', alliance_max_players = ' . $this->db->escapeNumber($this->getAllianceMaxPlayers()) .
 										', alliance_max_vets = ' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
 										', starting_credits = ' . $this->db->escapeNumber($this->getStartingCredits()) .
-								   ' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
+									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 			}
 			else {
 				$this->db->query('INSERT INTO game (game_id,game_name,game_description,start_date,start_turns_date,end_date,max_players,max_turns,start_turns,game_type,credits_needed,game_speed,enabled,ignore_stats,alliance_max_players,alliance_max_vets,starting_credits)
@@ -121,7 +121,7 @@ class SmrGame {
 										',' . $this->db->escapeBoolean($this->isIgnoreStats()) .
 										',' . $this->db->escapeNumber($this->getAllianceMaxPlayers()) .
 										',' . $this->db->escapeNumber($this->getAllianceMaxVets()) .
-										',' . $this->db->escapeNumber($this->getStartingCredits()) .  ')');
+										',' . $this->db->escapeNumber($this->getStartingCredits()) . ')');
 			}
 		}
 	}

@@ -24,7 +24,7 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false)
 			}
 		}
 		if(!empty($accountID))
-			$return =  SmrPlayer::getPlayer($accountID, $gameID);
+			$return = SmrPlayer::getPlayer($accountID, $gameID);
 		else
 		{
 			switch($messageType)

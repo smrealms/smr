@@ -305,7 +305,7 @@ class ChessGame {
 			. (8-$endY)
 			. ($promotionPieceID == null ? '' : ChessPiece::getSymbolForPiece($promotionPieceID, $playerColour))
 			. ' '
-			. ($checking == null ? '' : ($checking  == 'CHECK' ? '+' : '++') )
+			. ($checking == null ? '' : ($checking == 'CHECK' ? '+' : '++') )
 			. ($enPassant ? ' e.p.' : '');
 	}
 

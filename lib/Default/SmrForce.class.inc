@@ -105,16 +105,16 @@ class SmrForce
 		$this->db->query('SELECT * FROM sector_has_forces
 							WHERE game_id = '.$this->db->escapeNumber($gameID).'
 								AND sector_id = '.$this->db->escapeNumber($sectorID).'
-								AND owner_id = '.$this->db->escapeNumber($ownerID).'  LIMIT 1');
-		$this->ownerID			= $ownerID;
-		$this->sectorID			= $sectorID;
-		$this->gameID			= $gameID;
+								AND owner_id = '.$this->db->escapeNumber($ownerID).' LIMIT 1');
+		$this->ownerID = $ownerID;
+		$this->sectorID = $sectorID;
+		$this->gameID = $gameID;
 		if($this->db->nextRecord())
 		{
-			$this->combatDrones		= $this->db->getInt('combat_drones');
-			$this->scoutDrones		= $this->db->getInt('scout_drones');
-			$this->mines			= $this->db->getInt('mines');
-			$this->expire			= $this->db->getInt('expire_time');
+			$this->combatDrones = $this->db->getInt('combat_drones');
+			$this->scoutDrones = $this->db->getInt('scout_drones');
+			$this->mines = $this->db->getInt('mines');
+			$this->expire = $this->db->getInt('expire_time');
 			$this->isNew = false;
 		}
 		else {

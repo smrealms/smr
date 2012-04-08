@@ -81,9 +81,9 @@ class DummyShip extends AbstractSmrShip
 		if(!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()]))
 		{
 			$db = new SmrMySqlDatabase();
-			$db->query('SELECT info FROM cached_dummys ' .
-							  'WHERE type = \'DummyShip\' AND ' .
-							  		'id = '.$db->escapeString($player->getPlayerName()).' LIMIT 1');
+			$db->query('SELECT info FROM cached_dummys
+						WHERE type = \'DummyShip\'
+						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
 			if($db->nextRecord())
 			{
 				$return = unserialize($db->getField('info'));
@@ -101,8 +101,8 @@ class DummyShip extends AbstractSmrShip
 	public static function &getDummyShipNames()
 	{
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT id FROM cached_dummys ' .
-						  'WHERE type = \'DummyShip\'');
+		$db->query('SELECT id FROM cached_dummys
+					WHERE type = \'DummyShip\'');
 		$dummyNames = array();
 		while($db->nextRecord())
 		{
@@ -115,7 +115,7 @@ class DummyShip extends AbstractSmrShip
 	
 	public function __sleep()
 	{
-        return array('gameID','weapons');
+		return array('gameID','weapons');
 	}
 	
 	public function __wakeup()

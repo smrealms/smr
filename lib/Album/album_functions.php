@@ -78,12 +78,12 @@ function album_entry($album_id)
 		$db->query('UPDATE album
 				SET page_views = page_views + 1
 				WHERE account_id = '.$db->escapeNumber($album_id).' AND
-					  approved = \'YES\'');
+					approved = \'YES\'');
 
 	$db->query('SELECT *
 				FROM album
 				WHERE account_id = '.$db->escapeNumber($album_id).' AND
-					  approved = \'YES\'');
+					approved = \'YES\'');
 	if ($db->nextRecord())
 	{
 		$location = stripslashes($db->getField('location'));
@@ -116,7 +116,7 @@ function album_entry($album_id)
 	$db->query('SELECT hof_name
 				FROM album JOIN account USING(account_id)
 				WHERE hof_name < ' . $db->escapeString($nick) . ' AND
-					  approved = \'YES\'
+					approved = \'YES\'
 				ORDER BY hof_name DESC
 				LIMIT 1');
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
@@ -131,7 +131,7 @@ function album_entry($album_id)
 	$db->query('SELECT hof_name
 				FROM album JOIN account USING(account_id)
 				WHERE hof_name > ' . $db->escapeString($nick) . ' AND
-					  approved = \'YES\'
+					approved = \'YES\'
 				ORDER BY hof_name
 				LIMIT 1');
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
@@ -222,7 +222,7 @@ function album_entry($album_id)
 		$db->query('SELECT *
 					FROM account_has_permission
 					WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id).' AND
-						  permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
+						permission_id = '.$db->escapeNumber(PERMISSION_MODERATE_PHOTO_ALBUM));
 		if ($db->nextRecord())
 			echo('<td style="color:green; font-size:70%;"><br /><input type="submit" name="action" value="Moderate" id="InputFields"></td>');
 

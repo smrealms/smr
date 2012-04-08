@@ -122,6 +122,6 @@ class WeightedRandom
 							',' . $this->db->escapeNumber($this->getWeighting()) . ')');
 			$this->hasChanged=false;
 		}
-    }
+	}
 }
 ?>
