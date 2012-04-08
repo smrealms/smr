@@ -245,7 +245,7 @@ class Distance
 
 	/**
 	 * @param path
-	 *            the path to set
+	 *		the path to set
 	 */
 	public function addToPath($nextSector)
 	{

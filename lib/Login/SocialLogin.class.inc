@@ -19,7 +19,7 @@ class SocialLogin
 		{
 			require_once(LIB.'External/Facebook/facebook.php');
 			self::$facebook = new Facebook(array(
-				'appId'  => FACEBOOK_APP_ID,
+				'appId' => FACEBOOK_APP_ID,
 				'secret' => FACEBOOK_APP_SECRET,
 				'cookie' => true,
 			));

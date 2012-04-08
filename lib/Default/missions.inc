@@ -24,7 +24,7 @@ $MISSION_ACTIONS = array('LeaveSector','EnterSector','WalkSector','JoinAlliance'
 'ClearNPC' - Clear 'Detail' stacks of NPC forces in sector (use MoveSector) command to tell them which sector, also stored as mission_sector in DB
 *'StartPortRaid' - start raiding 'detail' ports
 *'RaidPort' - raid 'detail' ports
-'Bring' -  bring 'detail' to starting sector
+'Bring' - bring 'detail' to starting sector
 
 Replacements:
 <Race> - Current race name
@@ -50,14 +50,14 @@ $MISSIONS = array(
 			array(
 				'Step' => 'MoveRacial',
 				'Detail' => 60, //Salvene
-				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor.  All the Salvene Swamp Water in this bar is awful!  Go to the Sal...*Hiccup*...the Salvene galaxy, visit a bar and get me some real Salvene Swamp Water.',
+				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the Salvene Swamp Water in this bar is awful! Go to the Sal...*Hiccup*...the Salvene galaxy, visit a bar and get me some real Salvene Swamp Water.',
 				'Task' => 'Go to the Salvene Galaxy'
 			),
 			array(
 				'Step' => 'Drink',
 				'Detail' => 'Salvene Swamp Water',
 				'Text' => 'Here we are! The Salvene Galaxy! Now lets find a bar.',
-				'Task' => 'Go to a bar and buy a Salvene Swamp Water from the bartender.  This may take many tries.'
+				'Task' => 'Go to a bar and buy a Salvene Swamp Water from the bartender. sThis may take many tries.'
 			),
 			array(
 				'Step' => 'MoveSector',

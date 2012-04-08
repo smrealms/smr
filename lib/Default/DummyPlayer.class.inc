@@ -315,9 +315,9 @@ class DummyPlayer extends AbstractSmrPlayer
 	public static function &getCachedDummyPlayer($name)
 	{
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT info FROM cached_dummys ' .
-						  'WHERE type = \'DummyPlayer\' AND ' .
-						  		'id = '.$db->escapeString($name).' LIMIT 1');
+		$db->query('SELECT info FROM cached_dummys
+					WHERE type = \'DummyPlayer\'
+						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
 		if($db->nextRecord())
 		{
 			$return = unserialize($db->getField('info'));
@@ -333,8 +333,8 @@ class DummyPlayer extends AbstractSmrPlayer
 	public static function getDummyPlayerNames()
 	{
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT id FROM cached_dummys ' .
-						  'WHERE type = \'DummyPlayer\'');
+		$db->query('SELECT id FROM cached_dummys
+					WHERE type = \'DummyPlayer\'');
 		$dummyNames = array();
 		while($db->nextRecord())
 		{

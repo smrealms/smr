@@ -2110,7 +2110,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	
 	public function __sleep()
 	{
-        return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName');
+		return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName');
 	}
 }
 ?>

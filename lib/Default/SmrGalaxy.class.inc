@@ -89,7 +89,7 @@ class SmrGalaxy {
 										', height = ' . $this->db->escapeNumber($this->getHeight()) .
 										', galaxy_type = ' . $this->db->escapeString($this->getGalaxyType()) .
 										', max_force_time = ' . $this->db->escapeNumber($this->getMaxForceTime()) .
-								   ' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) .
+									' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) .
 										' AND galaxy_id = ' . $this->db->escapeNumber($this->getGalaxyID()) . ' LIMIT 1');
 			}
 			else {

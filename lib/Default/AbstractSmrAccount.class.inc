@@ -185,7 +185,7 @@ abstract class AbstractSmrAccount
 
 			$this->last_login		= $row['last_login'];
 			$this->validation_code 	= $row['validation_code'];
-			$this->cellPhone        = $row['cell_phone'];
+			$this->cellPhone		= $row['cell_phone'];
 			$this->veteran			= $this->db->getBoolean('veteran');
 			$this->logging			= $this->db->getBoolean('logging');
 			$this->offset			= $row['offset'];
@@ -745,8 +745,8 @@ abstract class AbstractSmrAccount
 			require_once(get_file_loc($databaseClassName.'.class.inc'));
 			$db2 = new $databaseClassName();
 			$db2->query('SELECT * FROM account
-					   WHERE login = '.$db->escapeString($login).'
-						   AND password = '.$db->escapeString($pass));
+						WHERE login = '.$db->escapeString($login).'
+						AND password = '.$db->escapeString($pass));
 			if ($db2->nextRecord())
 			{
 				$db = new SmrMySqlDatabase();
@@ -1204,7 +1204,7 @@ abstract class AbstractSmrAccount
 		$this->db->query('SELECT *
 					FROM account_has_permission
 					WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' AND
-						  permission_id = '.$this->db->escapeNumber($permissionID).' LIMIT 1');
+						permission_id = '.$this->db->escapeNumber($permissionID).' LIMIT 1');
 		return $this->db->nextRecord();
 	}
 
@@ -1338,8 +1338,8 @@ abstract class AbstractSmrAccount
 		$this->db->query('INSERT INTO account_has_closing_history
 						(account_id, time, admin_id, action)
 						VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($adminID) . ', ' . $this->db->escapeString('Opened') . ')');
-   		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(TIME) . ', last_turn_update)
-				   		WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
+		$this->db->query('UPDATE player SET last_turn_update = GREATEST(' . $this->db->escapeNumber(TIME) . ', last_turn_update)
+							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
 		if($admin!==null)
 			$this->log(LOG_TYPE_ACCOUNT_CHANGES, 'Account reopened by ' . $admin->getLogin() . '.');
 		else
