@@ -10,7 +10,7 @@ while($db->nextRecord())
 {
 	$pickPlayer =& SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
 	$players[] = array('Player' => &$pickPlayer,
-						'HREF' => SmrSession::get_new_href(create_container('alliance_pick_processing.php','',array('PickedAccountID'=>$pickPlayer->getAccountID()))));
+						'HREF' => SmrSession::getNewHREF(create_container('alliance_pick_processing.php','',array('PickedAccountID'=>$pickPlayer->getAccountID()))));
 }
 
 $template->assignByRef('PickPlayers', $players);

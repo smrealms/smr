@@ -18,7 +18,7 @@ if(!isset($var['box_type_id']))
 	{
 		$container['box_type_id'] = $db->getField('box_type_id');
 		$PHP_OUTPUT.='<tr>
-						<td><a href="'.SmrSession::get_new_href($container).'">'.$db->getField('box_type_name').'</a></td>
+						<td><a href="'.SmrSession::getNewHREF($container).'">'.$db->getField('box_type_name').'</a></td>
 						<td>'.$db->getField('count(message_id)').'</a></td>
 					</tr>';
 	}

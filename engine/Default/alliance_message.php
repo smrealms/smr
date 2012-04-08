@@ -95,7 +95,7 @@ if ($db->getNumRows() > 0) {
 		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db2->getBoolean('mb_messages');
 		if($threads[$i]['CanDelete']) {
 			$container['thread_id'] = $db->getInt('thread_id');
-			$threads[$i]['DeleteHref'] = SmrSession::get_new_href($container);
+			$threads[$i]['DeleteHref'] = SmrSession::getNewHREF($container);
 		}
 		$threads[$i]['Replies'] = $db->getInt('num_replies');
 		$thread_replies[$i] = $db->getInt('num_replies');
@@ -111,7 +111,7 @@ if ($db->getNumRows() > 0) {
 	$container['alliance_eyes'] = $alliance_eyes;
 	for($j=0;$j<$i;$j++) {
 		$container['thread_index'] = $j;
-		$threads[$j]['ViewHref'] = SmrSession::get_new_href($container);
+		$threads[$j]['ViewHref'] = SmrSession::getNewHREF($container);
 	}
 }
 $template->assignByRef('Threads',$threads);
@@ -119,7 +119,7 @@ $template->assignByRef('Threads',$threads);
 if ($mbWrite || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$container = create_container('alliance_message_add_processing.php');
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$template->assign('CreateNewThreadFormHref',SmrSession::get_new_href($container));
+	$template->assign('CreateNewThreadFormHref',SmrSession::getNewHREF($container));
 }
 
 if(isset($var['preview'])) {

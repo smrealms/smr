@@ -917,17 +917,17 @@ class SmrPlanet
 
 	public function getExamineHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php', 'planet_examine.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_examine.php'));
 	}
 
 	public function getLandHREF()
 	{
-		return SmrSession::get_new_href(create_container('planet_land_processing.php'));
+		return SmrSession::getNewHREF(create_container('planet_land_processing.php'));
 	}
 
 	public function getAttackHREF()
 	{
-		return SmrSession::get_new_href(create_container('planet_attack_processing.php'));
+		return SmrSession::getNewHREF(create_container('planet_attack_processing.php'));
 	}
 
 

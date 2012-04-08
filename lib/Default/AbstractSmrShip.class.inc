@@ -1311,7 +1311,7 @@ abstract class AbstractSmrShip
 			$container = array();
 			$container['url']		= 'skeleton.php';
 			$container['body']		= 'ship_upgrade.php';
-			$this->upgradeShipHREF = SmrSession::get_new_href($container);
+			$this->upgradeShipHREF = SmrSession::getNewHREF($container);
 		}
 		return $this->upgradeShipHREF;
 	}

@@ -10,16 +10,16 @@ if(!isset($var['Status'])) {
 
 $container = $var;
 $container['Status'] = 'Implemented';
-$template->assign('ViewImplementedFeaturesHref',SmrSession::get_new_href($container));
+$template->assign('ViewImplementedFeaturesHref',SmrSession::getNewHREF($container));
 
 $container = $var;
 $container['Status'] = 'Opened';
 $container['ShowOld'] = true;
-$template->assign('ShowOldFeaturesHref',SmrSession::get_new_href($container));
+$template->assign('ShowOldFeaturesHref',SmrSession::getNewHREF($container));
 
 $container = $var;
 $container['Status'] = 'Rejected';
-$template->assign('ShowRejectedFeaturesHref',SmrSession::get_new_href($container));
+$template->assign('ShowRejectedFeaturesHref',SmrSession::getNewHREF($container));
 
 $showCurrent = (!isset($var['ShowOld']) || $var['ShowOld']!==true) && $var['Status']=='Opened';
 $template->assign('ShowCurrent',$showCurrent);
@@ -41,7 +41,7 @@ $db->query('SELECT * ' .
 if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator',$featureModerator);
-	$template->assign('FeatureRequestVoteFormHREF',SmrSession::get_new_href(create_container('feature_request_vote_processing.php', '')));
+	$template->assign('FeatureRequestVoteFormHREF',SmrSession::getNewHREF(create_container('feature_request_vote_processing.php', '')));
 
 	$commentsContainer = $var;
 	$commentsContainer['body'] = 'feature_request_comments.php';
@@ -74,10 +74,10 @@ if ($db->getNumRows() > 0) {
 			$featureRequests[$featureRequestID]['Comments'] = $db2->getInt('COUNT(*)');
 		}
 		$commentsContainer['RequestID'] = $featureRequestID;
-		$featureRequests[$featureRequestID]['CommentsHREF'] = SmrSession::get_new_href($commentsContainer);
+		$featureRequests[$featureRequestID]['CommentsHREF'] = SmrSession::getNewHREF($commentsContainer);
 	}
 	$template->assignByRef('FeatureRequests',$featureRequests);
 }
 
-$template->assign('FeatureRequestFormHREF',SmrSession::get_new_href(create_container('feature_request_processing.php', '')));
+$template->assign('FeatureRequestFormHREF',SmrSession::getNewHREF(create_container('feature_request_processing.php', '')));
 ?>

@@ -33,7 +33,7 @@ try
 	
 		$container = array();
 		$container['url'] = 'validate_check.php';
-		$href = SmrSession::get_new_href($container,true);
+		$href = SmrSession::getNewHREF($container,true);
 		SmrSession::update();
 	
 		header('Location: '.$href);

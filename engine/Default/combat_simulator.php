@@ -3,7 +3,7 @@ $template->assign('PageTopic','Combat Simulator');
 
 require_once(get_file_loc('DummyPlayer.class.inc'));
 
-$template->assign('EditDummysLink',SmrSession::get_new_href(create_container('skeleton.php','edit_dummys.php')));
+$template->assign('EditDummysLink',SmrSession::getNewHREF(create_container('skeleton.php','edit_dummys.php')));
 $template->assign('DummyNames', DummyPlayer::getDummyPlayerNames());
 
 $duplicates = false;
@@ -54,7 +54,7 @@ $template->assignByRef('Defenders',$defenders);
 
 $template->assign('Duplicates',$duplicates);
 
-$template->assign('CombatSimHREF',SmrSession::get_new_href(create_container('skeleton.php','combat_simulator.php')));
+$template->assign('CombatSimHREF',SmrSession::getNewHREF(create_container('skeleton.php','combat_simulator.php')));
 
 if(is_array($realAttackers) && is_array($realDefenders) && count($realAttackers)>0 && count($realDefenders)>0) {
 	if(isset($_REQUEST['run'])) {

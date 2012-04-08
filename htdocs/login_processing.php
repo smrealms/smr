@@ -251,7 +251,7 @@ try
 	$container['url'] = 'validate_check.php';
 
 	// this sn identifies our container later
-	$href = SmrSession::get_new_href($container,true);
+	$href = SmrSession::getNewHREF($container,true);
 	SmrSession::update();
 	//get rid of expired messages
 	$db2->query('UPDATE message SET reciever_delete = \'TRUE\', sender_delete = \'TRUE\' WHERE expire_time < '.$db->escapeNumber(TIME).' AND expire_time > 0');

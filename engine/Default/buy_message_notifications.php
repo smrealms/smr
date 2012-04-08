@@ -19,7 +19,7 @@ while ($db->nextRecord()) {
 	$messageBox['MessagesPerCredit'] = $MESSAGES_PER_CREDIT[$messageTypeID];
 	
 	$container['MessageTypeID'] = $messageTypeID;
-	$messageBox['BuyHref'] = SmrSession::get_new_href($container);
+	$messageBox['BuyHref'] = SmrSession::getNewHREF($container);
 	$messageBoxes[] = $messageBox;
 }
 $template->assignByRef('MessageBoxes', $messageBoxes);

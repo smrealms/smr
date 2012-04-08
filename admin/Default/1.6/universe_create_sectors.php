@@ -25,7 +25,7 @@ $PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getG
 $PHP_OUTPUT.= 'Hover over a sector to get details about that sector.<br />';
 $PHP_OUTPUT.= '<table><tr><td colspan="3">';
 
-$PHP_OUTPUT.= '<div class="center"><a href="'.SmrSession::get_new_href($var).'" class="submitStyle">Refresh</a><br />';
+$PHP_OUTPUT.= '<div class="center"><a href="'.SmrSession::getNewHREF($var).'" class="submitStyle">Refresh</a><br />';
 
 $container = $var;
 $container['url'] = '1.6/universe_create_save_processing.php';
@@ -111,7 +111,7 @@ for ($i=0;$i < $row;$i++)
 		
 		$container['sector_id'] = $galSector->getSectorID();
 		
-		$PHP_OUTPUT.=  '<a href="' . SmrSession::get_new_href($container) . '">';
+		$PHP_OUTPUT.=  '<a href="' . SmrSession::getNewHREF($container) . '">';
 		if ($galSector->hasLocation()) $PHP_OUTPUT.= '<span class="red">';
 		else $PHP_OUTPUT.= '<span>';
 		$PHP_OUTPUT .= $galSector->getSectorID() . '</span></a>';
@@ -132,13 +132,13 @@ $PHP_OUTPUT.= 'Connection Percent<br /><input type="text" name="connect" value="
 $PHP_OUTPUT.= '<input type="submit" name="submit" value="Redo Connections"></form></td><td class="center vert_cent" width="33%">';
 $container = $var;
 $container['body'] = '1.6/universe_create_locations.php';
-$PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Modify Locations</a><br /><br />';
+$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Modify Locations</a><br /><br />';
 $container['body'] = '1.6/universe_create_planets.php';
-$PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Modify Planets</a><br /><br />';
+$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Modify Planets</a><br /><br />';
 $container['body'] = '1.6/universe_create_ports.php';
-$PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Modify Ports</a><br /><br />';
+$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Modify Ports</a><br /><br />';
 $container['body'] = '1.6/universe_create_warps.php';
-$PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Modify Warps</a><br /><br />';
+$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Modify Warps</a><br /><br />';
 $PHP_OUTPUT.= '<a href="'.Globals::getSmrFileCreateHREF($var['game_id']).'" class="submitStyle">Create SMR file</a><br /><br />';
 $PHP_OUTPUT.= '<br />';
 $warning = FALSE;
@@ -146,13 +146,13 @@ if ($var['gal_on'] > 1)
 {
 	$container = $var;
 	$container['gal_on']--;
-	$PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Previous Galaxy</a><br /><br />';
+	$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Previous Galaxy</a><br /><br />';
 }
 if ($var['gal_on'] < count($galaxies))
 {
 	$container = $var;
 	$container['gal_on']++;
-	$PHP_OUTPUT.= '<a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Next Galaxy</a><br />';
+	$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Next Galaxy</a><br />';
 }
 //else
 //{

@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('ViewAllLocationsLink',SmrSession::get_new_href(create_container('skeleton.php','location_edit.php')));
+$template->assign('ViewAllLocationsLink',SmrSession::getNewHREF(create_container('skeleton.php','location_edit.php')));
 
 require_once(get_file_loc('SmrLocation.class.inc'));
 

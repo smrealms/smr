@@ -19,5 +19,5 @@ $template->assignByRef('ThisPlanet',$planet);
 
 doTickerAssigns($template, $player, $db);
 
-$template->assign('LaunchFormLink',SmrSession::get_new_href(create_container('planet_launch_processing.php', '')));
+$template->assign('LaunchFormLink',SmrSession::getNewHREF(create_container('planet_launch_processing.php', '')));
 ?>

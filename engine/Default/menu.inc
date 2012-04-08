@@ -64,7 +64,7 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) 
 function create_galactic_post_menu() {
 	global $template, $player;
 	$menuItems = array();
-	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
 
 	$allowedWrite = true; //Lets always allow people to write for the GP? The less hoops to jump through the more writers we'll have surely?
 	$allowedEdit = false;
@@ -76,16 +76,16 @@ function create_galactic_post_menu() {
 	}
 
 	if ($allowedWrite === false) {
-		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
 	}
 	if ($allowedEdit === true) {
-		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_applications.php')),'Text'=>'View the applications');
-		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_view_article.php')),'Text'=>'View the articles');
-		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
-		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_view_applications.php')),'Text'=>'View the applications');
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_view_article.php')),'Text'=>'View the articles');
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
 	}
 	if ($allowedWrite === true) {
-		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
 	}
 	$template->assign('MenuItems', $menuItems);
 }
@@ -110,17 +110,17 @@ function create_combat_log_menu() {
 	$menuItems = array();
 
 	$container['action'] = 0;
-	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Personal');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Personal');
 	$container['action'] = 1;
-	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Alliance');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Alliance');
 	$container['action'] = 6;
-	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Force');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Force');
 	$container['action'] = 2;
-	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Port');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Port');
 	$container['action'] = 3;
-	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Planet');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Planet');
 	$container['action'] = 4;
-	$menuItems[] = array('Link'=>SmrSession::get_new_href($container),'Text'=>'Saved');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Saved');
 
 	$template->assign('MenuItems',$menuItems);
 }
@@ -367,9 +367,9 @@ function create_news_menu(&$template) {
 	global $var;
 	$menuItems = array();
 	if(SmrSession::$game_id==$var['GameID'])
-		$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Current News');
-	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Latest News');
-	$menuItems[] = array('Link'=>SmrSession::get_new_href(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$var['GameID']))),'Text'=>'Advanced News');
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_current.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Current News');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read.php',array('GameID'=>$var['GameID']))),'Text'=>'Read Latest News');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'news_read_advanced.php',array('GameID'=>$var['GameID']))),'Text'=>'Advanced News');
 
 	$template->assign('MenuItems', $menuItems);
 }

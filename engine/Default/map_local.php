@@ -32,10 +32,10 @@ $container['Dir'] = 'Down';
 $container['rid'] = 'zoom_down';
 $container['body'] = 'map_local.php';
 $container['valid_for'] = -5;
-$template->assign('ZoomDownLink',SmrSession::get_new_href($container));
+$template->assign('ZoomDownLink',SmrSession::getNewHREF($container));
 $container['Dir'] = 'Up';
 $container['rid'] = 'zoom_up';
-$template->assign('ZoomUpLink',SmrSession::get_new_href($container));
+$template->assign('ZoomUpLink',SmrSession::getNewHREF($container));
 
 $span = 1 + ($dist * 2);
 

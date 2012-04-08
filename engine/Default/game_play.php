@@ -6,7 +6,7 @@ if(isset($var['errorMsg']))
 if (isset($var['msg']))
 	$template->assign('Message',$var['msg']);
 
-$template->assign('UserRankingLink',SmrSession::get_new_href(create_container('skeleton.php', 'rankings_view.php')));
+$template->assign('UserRankingLink',SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php')));
 $template->assign('UserRankName',$account->getRankName());
 
 $games = array();
@@ -33,7 +33,7 @@ if ($db->getNumRows() > 0) {
 		if($games['Play'][$game_id]['Type'] == '1.2')
 			$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
 		else
-			$games['Play'][$game_id]['PlayGameLink'] = SmrSession::get_new_href($container);
+			$games['Play'][$game_id]['PlayGameLink'] = SmrSession::getNewHREF($container);
 
 		// creates a new player object
 		$curr_player =& SmrPlayer::getPlayer(SmrSession::$account_id, $game_id);
@@ -59,7 +59,7 @@ if ($db->getNumRows() > 0) {
 		$container_game['url'] = 'skeleton.php';
 		$container_game['body'] = 'game_stats.php';
 		$container_game['game_id'] = $game_id;
-		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::get_new_href($container_game);
+		$games['Play'][$game_id]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
 		$games['Play'][$game_id]['Maintenance'] = $curr_player->getTurns();
 		$games['Play'][$game_id]['LastActive'] = format_time(TIME-$curr_player->getLastCPLAction(),TRUE);
 		$games['Play'][$game_id]['LastMovement'] = format_time(TIME-$curr_player->getLastActive(),TRUE);
@@ -118,7 +118,7 @@ if(false&&USE_COMPATIBILITY) {
 				$container_game['url'] = 'skeleton.php';
 				$container_game['body'] = 'game_stats.php';
 				$container_game['game_id'] = $game_id;
-				$games['Play'][$index]['GameStatsLink'] = SmrSession::get_new_href($container_game);
+				$games['Play'][$index]['GameStatsLink'] = SmrSession::getNewHREF($container_game);
 				$games['Play'][$index]['Maintenance'] = $curr_player->turns;
 				$games['Play'][$index]['LastActive'] = format_time(TIME-$curr_player->last_active,TRUE);
 				$games['Play'][$index]['LastMovement'] = format_time(TIME-$curr_player->last_active,TRUE);
@@ -172,7 +172,7 @@ if ($db->getNumRows() > 0) {
 		$container['url'] = 'skeleton.php';
 		$container['body'] = 'game_join.php';
 
-		$games['Join'][$game_id]['JoinGameLink'] = SmrSession::get_new_href($container);
+		$games['Join'][$game_id]['JoinGameLink'] = SmrSession::getNewHREF($container);
 	}
 }
 
@@ -200,13 +200,13 @@ if ($db->getNumRows()) {
 		$container['game_name'] = $games['Previous'][$game_id]['Name'];
 		$container['body'] = 'games_previous.php';
 
-//		$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::get_new_href($container);
+//		$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::getNewHREF($container);
 		$container['body'] = 'hall_of_fame_new.php';
-		$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
+		$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
 		$container['body'] = 'news_read.php';
-		$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
+		$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
 		$container['body'] = 'games_previous_detail.php';
-//		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
+//		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
 	}
 }
 
@@ -234,13 +234,13 @@ if(USE_COMPATIBILITY) {
 				$container['game_name'] = $games['Previous'][$index]['Name'];
 				$container['body'] = 'games_previous.php';
 
-				$games['Previous'][$index]['PreviousGameLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameLink'] = SmrSession::getNewHREF($container);
 				$container['body'] = 'hall_of_fame_new.php';
-				$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
 				$container['body'] = 'games_previous_news.php';
-				$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
 				$container['body'] = 'games_previous_detail.php';
-				$games['Previous'][$index]['PreviousGameStatsLink'] = SmrSession::get_new_href($container);
+				$games['Previous'][$index]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
 			}
 		}
 	}
@@ -253,7 +253,7 @@ $template->assign('Games',$games);
 // ** Voting
 // ***************************************
 $container = create_container('skeleton.php','vote.php');
-$template->assign('VotingHref',SmrSession::get_new_href($container));
+$template->assign('VotingHref',SmrSession::getNewHREF($container));
 
 $db->query('SELECT * FROM voting WHERE end > ' . $db->escapeNumber(TIME) . ' ORDER BY end DESC');
 if($db->getNumRows()>0) {
@@ -271,7 +271,7 @@ if($db->getNumRows()>0) {
 		$container['body'] = 'game_play.php';
 		$container['url'] = 'vote_processing.php';
 		$container['vote_id'] = $voteID;
-		$voting[$voteID]['HREF'] = SmrSession::get_new_href($container);
+		$voting[$voteID]['HREF'] = SmrSession::getNewHREF($container);
 		$voting[$voteID]['Question'] = $db->getField('question');
 		$voting[$voteID]['TimeRemaining'] = format_time($db->getField('end') - TIME, true);
 		$voting[$voteID]['Options'] = array();
@@ -290,7 +290,7 @@ if($db->getNumRows()>0) {
 // ** Donation Link
 // ***************************************
 
-$template->assign('DonateLink', SmrSession::get_new_href(create_container('skeleton.php', 'donation.php')));
+$template->assign('DonateLink', SmrSession::getNewHREF(create_container('skeleton.php', 'donation.php')));
 
 // ***************************************
 // ** Announcements View
@@ -299,7 +299,7 @@ $container = array();
 $container['url'] = 'skeleton.php';
 $container['body'] = 'announcements.php';
 $container['view_all'] = 'yes';
-$template->assign('OldAnnouncementsLink',SmrSession::get_new_href($container));
+$template->assign('OldAnnouncementsLink',SmrSession::getNewHREF($container));
 
 // ***************************************
 // ** Admin Functions
@@ -309,7 +309,7 @@ $db->query('SELECT * FROM account_has_permission JOIN permission USING (permissi
 if ($db->getNumRows()) {
 	$adminPermissions = array();
 	while ($db->nextRecord()) {
-		$adminPermissions[] = array( 'PermissionLink' => $db->getField('link_to')?SmrSession::get_new_href(create_container('skeleton.php',$db->getField('link_to'))):false,
+		$adminPermissions[] = array( 'PermissionLink' => $db->getField('link_to')?SmrSession::getNewHREF(create_container('skeleton.php',$db->getField('link_to'))):false,
 					'Name' => $db->getField('permission_name'));
 	}
 	$template->assign('AdminPermissions',$adminPermissions);

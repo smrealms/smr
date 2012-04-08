@@ -84,6 +84,6 @@ $PHP_OUTPUT.= '<br /><br />';
 $PHP_OUTPUT.= '<input type="submit" name="submit" value="Edit Sector"><br />';
 $container = $var;
 $container['body'] = '1.6/universe_create_sectors.php';
-$PHP_OUTPUT.= '<br /><a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Cancel</a>';
+$PHP_OUTPUT.= '<br /><a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Cancel</a>';
 $PHP_OUTPUT.= '</form>';
 ?>

@@ -677,7 +677,7 @@ class ChessGame {
 	}
 
 	public function getPlayGameHREF() {
-		return SmrSession::get_new_href(create_container('skeleton.php','chess_play.php',array('ChessGameID' => $this->chessGameID)));
+		return SmrSession::getNewHREF(create_container('skeleton.php','chess_play.php',array('ChessGameID' => $this->chessGameID)));
 	}
 }
 ?>

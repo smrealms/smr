@@ -8,7 +8,7 @@ $container['url']        = 'notify_reply_processing.php';
 transfer('game_id');
 transfer('offended');
 transfer('offender');
-$template->assign('NotifyReplyFormHref',SmrSession::get_new_href($container));
+$template->assign('NotifyReplyFormHref',SmrSession::getNewHREF($container));
 $offender =& getMessagePlayer($var['offender'],$var['game_id']);
 $offended =& getMessagePlayer($var['offended'],$var['game_id']);
 if(is_object($offender))

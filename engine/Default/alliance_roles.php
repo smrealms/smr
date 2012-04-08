@@ -44,14 +44,14 @@ while ($db->nextRecord()) {
 	}
 	$container['role_id'] = $roleID;
 	$container['alliance_id'] = $alliance->getAllianceID();
-	$allianceRoles[$roleID]['HREF'] = SmrSession::get_new_href($container);
+	$allianceRoles[$roleID]['HREF'] = SmrSession::getNewHREF($container);
 }
 $template->assignByRef('AllianceRoles',$allianceRoles);
 $container = create_container('alliance_roles_processing.php');
 $container['alliance_id'] = $alliance->getAllianceID();
 
 $template->assign('CreateRole', array(
-	'HREF' => SmrSession::get_new_href($container),
+	'HREF' => SmrSession::getNewHREF($container),
 	'CreatingRole' => true,
 	'EditingRole' => true,
 	'WithdrawalLimit' => 0,

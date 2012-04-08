@@ -296,7 +296,7 @@ class SmrShip extends AbstractSmrShip
 	
 	public function getUpgradeShipHREF()
 	{
-		return SmrSession::get_new_href(create_container('skeleton.php', 'ship_upgrade.php'));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'ship_upgrade.php'));
 	}
 }
 

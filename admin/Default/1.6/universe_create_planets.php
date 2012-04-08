@@ -32,7 +32,7 @@ $PHP_OUTPUT.= '<input type="text" value="' . (isset($planet_info['NPC']) ? $plan
 $PHP_OUTPUT.= '<tr><td colspan="2" class="center"><input type="submit" name="submit" value="Create Planets">';
 $container = $var;
 $container['body'] = '1.6/universe_create_sectors.php';
-$PHP_OUTPUT.= '<br /><br /><a href="'.SmrSession::get_new_href($container).'" class="submitStyle">Cancel</a>';
+$PHP_OUTPUT.= '<br /><br /><a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Cancel</a>';
 $PHP_OUTPUT.= '</td></tr></table></form>';
 
 $PHP_OUTPUT.= '<span class="small">Note: When you press "Create Planets" this will rearrange all current planets.<br />';

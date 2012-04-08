@@ -411,7 +411,7 @@ class SmrLocation
 	{
 		$container = create_container('skeleton.php', $this->getAction());
 		$container['LocationID'] = $this->getTypeID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function getEditHREF()
@@ -419,7 +419,7 @@ class SmrLocation
 		$container = create_container('skeleton.php', 'location_edit.php');
 		$container['game_type_id'] = 0; //TODO add game type id
 		$container['location_type_id'] = $this->getTypeID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function equals(SmrLocation &$otherLocation)

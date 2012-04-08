@@ -400,12 +400,7 @@ class SmrSession
 		return md5(serialize($commonContainer));
 	}
 
-	public static function get_new_sn($container, $forceSN = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
-	{
-		return self::addLink($container, $forceSN);
-	}
-
-	public static function get_new_href($container, $forceFullURL=false)
+	public static function getNewHREF($container, $forceFullURL=false)
 	{
 		$sn = self::addLink($container) . (isset($container['AJAX']) && $container['AJAX'] == true ? '&ajax=1':'');
 		if($forceFullURL===true||stripos($_SERVER['REQUEST_URI'],'loader.php')===false)

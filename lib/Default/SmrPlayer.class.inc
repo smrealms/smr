@@ -2073,7 +2073,7 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		$container = create_container('skeleton.php','trader_examine.php');
 		$container['target'] = $this->getAccountID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function getAttackTraderHREF() {
@@ -2084,28 +2084,28 @@ class SmrPlayer extends AbstractSmrPlayer
 	{
 		$container = create_container('planet_kick_processing.php','trader_attack_processing.php');
 		$container['account_id']	= $this->getAccountID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function getTraderSearchHREF()
 	{
 		$container = create_container('skeleton.php','trader_search_result.php');
 		$container['player_id'] = $this->getPlayerID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function getAllianceRosterHREF()
 	{
 		$container = create_container('skeleton.php','alliance_roster.php');
 		$container['alliance_id'] = $this->getAllianceID();
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function getToggleWeaponHidingHREF()
 	{
 		$container = create_container('skeleton.php','toggle_processing.php');
 		$container['toggle'] = 'WeaponHiding';
-		return SmrSession::get_new_href($container);
+		return SmrSession::getNewHREF($container);
 	}
 	
 	public function __sleep()
