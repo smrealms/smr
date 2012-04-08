@@ -115,8 +115,7 @@ else {
 	$log_notes = array_unique($log_notes);
 
 	// flattens array
-	foreach ($log_notes as $note)
-	{
+	foreach ($log_notes as $note) {
 		if ($flat_notes)
 			$flat_notes .= EOL;
 		$flat_notes .= $note;
@@ -136,8 +135,7 @@ else {
 	// *********************************
 	$PHP_OUTPUT.=('Following colors will be used:');
 	$PHP_OUTPUT.=('<ul>');
-	foreach ($colors as $id => $color)
-	{
+	foreach ($colors as $id => $color) {
 		$db->query('SELECT login FROM account WHERE account_id = ' . $db->escapeNumber($id));
 		if ($db->nextRecord())
 			$PHP_OUTPUT.=('<li style="color:'.$color.';">' . $db->getField('login') . '</li>');

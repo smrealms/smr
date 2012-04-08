@@ -1,10 +1,8 @@
 <?php
 require_once('AbstractSmrPlayer.class.inc');
 
-class DummyPlayer extends AbstractSmrPlayer
-{
-	public function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60)
-	{
+class DummyPlayer extends AbstractSmrPlayer {
+	public function __construct($gameID=0,$playerName='Dummy',$raceID=1,$experience=1000,$alignment=100,$allianceID=0,$shipTypeID=60) {
 		parent::__construct();
 		$this->accountID				= 0;
 		$this->gameID					= (int) $gameID;
@@ -47,38 +45,30 @@ class DummyPlayer extends AbstractSmrPlayer
 		$this->bounties = array();
 	}
 	
-	public function getPastMaintBought()
-	{
+	public function getPastMaintBought() {
 		return 0;
 	}
 	
-	public function getPastMaintCredit()
-	{
+	public function getPastMaintCredit() {
 		return 0;
 	}
 	
-	protected function getStatsData()
-	{
+	protected function getStatsData() {
 	}
 	
-	protected function getGadgetsData()
-	{
+	protected function getGadgetsData() {
 	}
 	
-	protected function getPureRelationsData()
-	{
+	protected function getPureRelationsData() {
 	}
 	
-	protected function getHOFData()
-	{
+	protected function getHOFData() {
 	}
 	
-	protected function getBountiesData()
-	{
+	protected function getBountiesData() {
 	}
 	
-	public function killPlayer($sectorID)
-	{
+	public function killPlayer($sectorID) {
 //		$sector =& SmrSector::getSector($this->getGameID(),$sectorID);
 		//msg taken care of in trader_att_proc.php
 		// forget plotted course
@@ -121,20 +111,17 @@ class DummyPlayer extends AbstractSmrPlayer
 		
 	}
 	
-	public function getHome()
-	{
+	public function getHome() {
 		return 1;
 	}
 	
-	public function setAllianceID($ID)
-	{
+	public function setAllianceID($ID) {
 		if($this->allianceID == $ID)
 			return;
 		$this->allianceID=$ID;
 	}
 	
-	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer)
-	{
+	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer) {
 		
 		$return = array();
 		$msg = $this->getDisplayName();
@@ -174,8 +161,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		// Dead player loses experience
 		$expLossPercentage = 0.20 + (($this->getLevelID() - $killer->getLevelID()) * 0.005);
 		$return['DeadExp'] = 0;
-		if($expLossPercentage > 0)
-		{
+		if($expLossPercentage > 0) {
 			$lostExp = floor($this->getExperience() * $expLossPercentage);
 			$return['DeadExp'] = $lostExp;
 			$this->decreaseExperience($lostExp);
@@ -202,8 +188,7 @@ class DummyPlayer extends AbstractSmrPlayer
 		else
 			$killer->decreaseAlignment(-$alignChange);
 		// War setting gives them military pay
-		if($relation <= -300)
-		{
+		if($relation <= -300) {
 			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($gainedExp/2,0.25))));
 		}
 		
@@ -235,20 +220,16 @@ class DummyPlayer extends AbstractSmrPlayer
 
 		// If the alignment difference is greater than 200 then a bounty may be set
 		$alignment_diff = abs($this->getAlignment() - $killer->getAlignment());
-		if($alignment_diff >= 200)
-		{
+		if($alignment_diff >= 200) {
 			// If the podded players alignment makes them deputy or member then set bounty
-			if($this->getAlignment() >= 100)
-			{
+			if($this->getAlignment() >= 100) {
 				$bounty_type = 'HQ';
 			}
-			else if ($this->getAlignment() <= 100)
-			{
+			else if ($this->getAlignment() <= 100) {
 				$bounty_type = 'UG';
 			}
 
-			if(isset($bounty_type))
-			{
+			if(isset($bounty_type)) {
 				$killer->increaseCurrentBountyAmount($bounty_type,floor(pow($alignment_diff, 2.56)));
 			}
 		}
@@ -283,26 +264,21 @@ class DummyPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
-	public function &killPlayerByForces(SmrForce &$forces)
-	{
+	public function &killPlayerByForces(SmrForce &$forces) {
 	}
 	
-	public function &killPlayerByPort(SmrPort &$port)
-	{
+	public function &killPlayerByPort(SmrPort &$port) {
 	}
 	
-	public function &killPlayerByPlanet(SmrPlanet &$planet)
-	{
+	public function &killPlayerByPlanet(SmrPlanet &$planet) {
 	}
 	
-	public function &getShip()
-	{
+	public function &getShip() {
 		require_once(get_file_loc('DummyShip.class.inc'));
 		return DummyShip::getCachedDummyShip($this);
 	}
 	
-	public function cacheDummyPlayer()
-	{
+	public function cacheDummyPlayer() {
 		$this->getShip()->cacheDummyShip();
 		$cache = serialize($this);
 		$db = new SmrMySqlDatabase();
@@ -312,32 +288,27 @@ class DummyPlayer extends AbstractSmrPlayer
 		 unserialize($cache);
 	}
 	
-	public static function &getCachedDummyPlayer($name)
-	{
+	public static function &getCachedDummyPlayer($name) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT info FROM cached_dummys
 					WHERE type = \'DummyPlayer\'
 						AND id = ' . $db->escapeString($name) . ' LIMIT 1');
-		if($db->nextRecord())
-		{
+		if($db->nextRecord()) {
 			$return = unserialize($db->getField('info'));
 			return $return;
 		}
-		else
-		{
+		else {
 			$return = new DummyPlayer();
 			return $return;
 		}
 	}
 	
-	public static function getDummyPlayerNames()
-	{
+	public static function getDummyPlayerNames() {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT id FROM cached_dummys
 					WHERE type = \'DummyPlayer\'');
 		$dummyNames = array();
-		while($db->nextRecord())
-		{
+		while($db->nextRecord()) {
 			$dummyNames[] = $db->getField('id');
 		}
 		return $dummyNames;

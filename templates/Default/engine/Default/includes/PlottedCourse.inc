@@ -1,6 +1,5 @@
 <?php
-if($ThisPlayer->hasPlottedCourse())
-{
+if($ThisPlayer->hasPlottedCourse()) {
 	$PlottedCourse =& $ThisPlayer->getPlottedCourse();
 	$NextSector =& SmrSector::getSector($ThisPlayer->getGameID(),$PlottedCourse->getNextOnPath(),$ThisPlayer->getAccountID()); ?>
 	<table class="nobord fullwidth">
@@ -15,8 +14,7 @@ if($ThisPlayer->hasPlottedCourse())
 			</td>
 		</tr>
 		<?php
-		if($ThisShip->hasScanner())
-		{ ?>
+		if($ThisShip->hasScanner()) { ?>
 			<tr>
 				<td class="top right">
 					<div class="buttonA">

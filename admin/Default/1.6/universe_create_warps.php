@@ -8,10 +8,8 @@ $galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galSectors =& $galaxy->getSectors();
 //get totals
-foreach ($galSectors as &$galSector)
-{
-	if($galSector->hasWarp())
-	{
+foreach ($galSectors as &$galSector) {
+	if($galSector->hasWarp()) {
 		$otherGalaxyID = $galSector->getWarpSector()->getGalaxyID();
 		if($otherGalaxyID==$galaxy->getGalaxyID())
 			$warps[$otherGalaxyID]+=0.5;
@@ -27,8 +25,7 @@ $container['body'] = '1.6/universe_create_sectors.php';
 $PHP_OUTPUT.= create_echo_form($container);
 $PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')<br />';
 $PHP_OUTPUT.= '<table class="standard">';
-foreach ($galaxies as &$eachGalaxy)
-{
+foreach ($galaxies as &$eachGalaxy) {
 	$PHP_OUTPUT.= '<tr><td class="right">' . $eachGalaxy->getName() . '</td><td class="left">';
 	$PHP_OUTPUT.= '<input type="text" value="';
 	if (isset($warps[$eachGalaxy->getGalaxyID()])) $PHP_OUTPUT.= $warps[$eachGalaxy->getGalaxyID()];

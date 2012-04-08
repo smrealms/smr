@@ -1,20 +1,16 @@
 <?php
-if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump())
-{
+if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()) {
 	?>You have no configurable hardware!<?php
 }
-else
-{ ?>
+else { ?>
 	<?php
-	if ($ThisShip->hasCloak())
-	{ ?>
+	if ($ThisShip->hasCloak()) { ?>
 		<b>Cloaking Device:</b>&nbsp;&nbsp;&nbsp;&nbsp;<div class="buttonA"><a class="buttonA" href="<?php echo $ToggleCloakHREF; ?>">&nbsp;<?php if ($ThisShip->isCloaked()){ ?>Disable<?php }else{ ?>Enable(<?php echo TURNS_TO_CLOAK; ?>)<?php } ?>&nbsp;</a></div>
 		<br /><br />
 		<?php
 	}
 	
-	if ($ThisShip->hasIllusion())
-	{ ?>
+	if ($ThisShip->hasIllusion()) { ?>
 		<form id="SetIllusionForm" method="POST" action="<?php echo $SetIllusionFormHREF; ?>">
 			<b>Illusion Generator:</b><br /><br />
 			<table class="nobord">
@@ -23,8 +19,7 @@ else
 					<td>
 						<select name="ship_id" size="1" id="InputFields"><?php
 							$CurrentShipID = $ThisShip->hasActiveIllusion() ? $ThisShip->getIllusionShipID() : $ThisShip->getShipTypeID();
-							foreach($IllusionShips as $ShipTypeID => $ShipName)
-							{
+							foreach($IllusionShips as $ShipTypeID => $ShipName) {
 								?><option value="<?php echo $ShipTypeID; ?>"<?php if($CurrentShipID==$ShipTypeID){ ?> selected="selected"<?php } ?>><?php echo $ShipName; ?></option><?php
 							} ?>
 						</select>

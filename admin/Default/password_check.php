@@ -10,8 +10,7 @@ $db->query('SELECT count(password) as pwd_count, password FROM account
 			GROUP BY password
 			HAVING pwd_count > 1
 			ORDER BY pwd_count DESC');
-if ($db->getNumRows() > 0)
-{
+if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'password_check.php'));
 	$PHP_OUTPUT.=create_submit('Select All');
 	$PHP_OUTPUT.=('</form>');
@@ -25,11 +24,9 @@ if ($db->getNumRows() > 0)
 	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$db2->query('SELECT * FROM account WHERE password = ' . $db->escape_string($db->getField('password')));
-		while ($db2->nextRecord())
-		{
+		while ($db2->nextRecord()) {
 			$curr_account_id = $db2->getField('account_id');
 
 			$db3->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($curr_account_id).' LIMIT 1');

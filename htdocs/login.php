@@ -1,7 +1,6 @@
 <?php
 
-try
-{
+try {
 	
 	// ********************************
 	// *
@@ -23,8 +22,7 @@ try
 	// ********************************
 	
 	
-	if (SmrSession::$account_id > 0)
-	{
+	if (SmrSession::$account_id > 0) {
 		// creates a new user account object
 		$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	
@@ -46,8 +44,7 @@ try
 	require_once(LIB . 'Login/loginSmarty.php');
 
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

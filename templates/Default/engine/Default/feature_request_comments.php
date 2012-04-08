@@ -1,26 +1,21 @@
 <p><a href="<?php echo $BackHref; ?>">Back</a></p><?php
-if(isset($FeatureRequests))
-{ ?>
+if(isset($FeatureRequests)) { ?>
 	<table class="standard fullwidth">
 		<tr>
 			<th>Poster</th>
 			<th>Comment</th>
 			<th>Time</th>
 		</tr><?php
-		foreach($FeatureRequests as &$FeatureRequest)
-		{ ?>
+		foreach($FeatureRequests as &$FeatureRequest) { ?>
 			<tr class="center">
 				<td class="shrink noWrap top"><?php
-				if($FeatureRequest['Anonymous'])
-				{
+				if($FeatureRequest['Anonymous']) {
 					?>Anonymous<?php
 				}
-				else
-				{
+				else {
 					echo $FeatureRequest['PosterAccount']->getHofName();
 				}
-				if($FeatureModerator)
-				{
+				if($FeatureModerator) {
 					?> - <?php echo $FeatureRequest['PosterAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['PosterAccount']->getAccountID(); ?>)</td><?php
 				} ?>
 				<td style="text-align:left;"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>

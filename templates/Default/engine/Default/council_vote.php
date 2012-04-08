@@ -6,8 +6,7 @@
 		<th>Their Relation<br />with us</th>
 	</tr><?php
 
-	foreach($VoteRelations as $RaceID => $VoteInfo)
-	{ ?>
+	foreach($VoteRelations as $RaceID => $VoteInfo) { ?>
 		<tr>
 			<td align="center"><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
 			<td align="center">
@@ -25,8 +24,7 @@
 
 <p>&nbsp;</p><?php
 
-if ($VoteTreaties)
-{ ?>
+if ($VoteTreaties) { ?>
 	<table class="standard" align="center" width="65%">
 		<tr>
 			<th>Race</th>
@@ -36,8 +34,7 @@ if ($VoteTreaties)
 			<th>End Time</th>
 		</tr><?php
 
-	foreach($VoteTreaties as $RaceID => $VoteInfo)
-	{ ?>
+	foreach($VoteTreaties as $RaceID => $VoteInfo) { ?>
 		<tr>
 			<td align="center"><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
 			<td align="center"><?php echo $VoteInfo['Type']; ?></td>
@@ -46,8 +43,7 @@ if ($VoteTreaties)
 					<input type="submit" name="action" value="Yes" id="InputFields"<?php if($VoteInfo['For']){ ?> style="background-color:green"<?php } ?> />
 					&nbsp;
 					<input type="submit" name="action" value="No" id="InputFields"<?php if($VoteInfo['Against']){ ?> style="background-color:green"<?php } ?> /><?php
-					if ($ThisPlayer->isPresident())
-					{ ?>
+					if ($ThisPlayer->isPresident()) { ?>
 						&nbsp;
 						<input type="submit" name="action" value="Veto" id="InputFields" /><?php
 					} ?>

@@ -5,23 +5,19 @@
 </dl>
 
 <form name="FORM" method="POST" action="<?php echo $CreateGalaxiesFormHref ?>"><?php
-	if($ChooseNumberOfGalaxies)
-	{ ?>
+	if($ChooseNumberOfGalaxies) { ?>
 			<p>Select number of galaxies<br />you want create!</p>
 			<input type="text" name="galaxy_count" value="10" id="InputFields" size="3">&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Next >>" id="InputFields"><?php 
 	}
-	else
-	{ ?>
+	else { ?>
 		<p>
 			<table cellpadding="5" border="0"><?php
-			for($i=0;$i<$NumberOfGalaxies;$i++)
-			{ ?>
+			for($i=0;$i<$NumberOfGalaxies;$i++) { ?>
 				<tr>
 					<td align="right">Name:</td>
 					<td align="left">
 						<select name="galaxy[<?php echo $i ?>]" size="1" id="InputFields"><?php
-						foreach($GalaxyNames as $GalaxyNumber => $GalaxyName)
-						{ ?>
+						foreach($GalaxyNames as $GalaxyNumber => $GalaxyName) { ?>
 							<option value="<?php echo $GalaxyNumber ?>"<?php if($i == $GalaxyNumber){ ?> selected<?php } ?>>
 								<?php echo $GalaxyName ?>
 							</option>
@@ -35,8 +31,7 @@
 			</table>
 		</p>
 		<input type="submit" name="action" value="Next >>" id="InputFields"><?php
-		if($CanSkip)
-		{
+		if($CanSkip) {
 			?>&nbsp;&nbsp;<input type="submit" name="action" value="Skip >>" id="InputFields"><?php
 		}
 	} ?>

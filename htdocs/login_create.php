@@ -82,8 +82,7 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 						<td width='73%'>
 							<select name="timez" id="InputFields"><?php
 								$time = TIME;
-								for ($i = -12; $i<= 11; $i++)
-								{
+								for ($i = -12; $i<= 11; $i++) {
 									?><option value="<?php echo $i; ?>"><?php echo date(DEFAULT_DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
 								} ?>
 							</select>

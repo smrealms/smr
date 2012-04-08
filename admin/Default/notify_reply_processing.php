@@ -1,8 +1,7 @@
 <?php
 $offenderReply = trim($_REQUEST['offenderReply']);
 $offendedReply = trim($_REQUEST['offendedReply']);
-if($_REQUEST['action'] == 'Preview messages')
-{
+if($_REQUEST['action'] == 'Preview messages') {
 	$container = create_container('skeleton.php','notify_reply.php');
 	transfer('offender');
 	transfer('offended');
@@ -19,13 +18,11 @@ if($_REQUEST['action'] == 'Preview messages')
 }
 
 
-if (isset($offenderReply) && $offenderReply != '')
-{
+if (isset($offenderReply) && $offenderReply != '') {
 	SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['offender'], $offenderReply);
 	
 	//do we have points?
-	if ($_REQUEST['offenderBanPoints'])
-	{
+	if ($_REQUEST['offenderBanPoints']) {
 		$reasonID = 7;
 		$suspicion = 'Inappropriate In-Game Message';
 		$offenderAccount =& SmrAccount::getAccount($var['offender']);
@@ -34,14 +31,12 @@ if (isset($offenderReply) && $offenderReply != '')
 }
 if (isset($_REQUEST['offendedReply'])) $offendedReply = $_REQUEST['offendedReply'];
 
-if (isset($offendedReply) && $offendedReply != '')
-{
+if (isset($offendedReply) && $offendedReply != '') {
 	//next message
 	SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['offended'], $offendedReply);
 
 	//do we have points?
-	if ($_REQUEST['offendedBanPoints'])
-	{
+	if ($_REQUEST['offendedBanPoints']) {
 		$reasonID = 7;
 		$suspicion = 'Inappropriate In-Game Message';
 		$offenderAccount =& SmrAccount::getAccount($var['offended']);

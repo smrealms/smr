@@ -1,13 +1,11 @@
 <?php
 
-function create_error_offline($msg)
-{
+function create_error_offline($msg) {
 	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	exit;
 }
 
-try
-{
+try {
 	require_once('../config.inc');
 	require_once(ENGINE . 'Default/smr.inc');
 	require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
@@ -32,8 +30,7 @@ try
 	require_once(get_file_loc('SmrAccount.class.inc'));
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 
-	if (isset($_GET['action']) && $_GET['action'] == 'Moderate')
-	{
+	if (isset($_GET['action']) && $_GET['action'] == 'Moderate') {
 		if(!$account->hasPermission(PERMISSION_MODERATE_PHOTO_ALBUM))
 			create_error_offline('You do not have permission to do that!');
 		$container = create_container('skeleton.php', 'album_moderate.php');
@@ -74,8 +71,7 @@ try
 	header('Location: '.URL.'/album/?' . get_album_nick($album_id));
 	exit;
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 

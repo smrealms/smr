@@ -1,8 +1,7 @@
 <?php
 
 $action = $_REQUEST['action'];
-if ($action == 'End >>')
-{
+if ($action == 'End >>') {
 	$container = create_container('skeleton.php', 'universe_create_end.php');
 	$container['game_id'] = $var['game_id'];
 	forward($container);
@@ -40,8 +39,7 @@ else
 $rank_id = $admin_account->getRank();
 
 // for newbie and beginner another ship, more shields and armour
-if ($admin_account->isNewbie())
-{
+if ($admin_account->isNewbie()) {
 	$ship_id = 28;
 	$amount_shields = 75;
 	$amount_armour = 150;

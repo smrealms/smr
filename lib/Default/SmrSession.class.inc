@@ -2,8 +2,7 @@
 require_once('SmrSessionMySqlDatabase.class.inc');
 if(!defined('USING_AJAX'))
 	define('USING_AJAX',false);
-class SmrSession
-{
+class SmrSession {
 	const ALWAYS_AVAILABLE = 999999;
 	const TIME_BEFORE_EXPIRY = 3600;
 	private static $URL_DEFAULT_REMAINING_PAGE_LOADS = array(
@@ -142,19 +141,15 @@ class SmrSession
 	protected static $previousAjaxReturns;
 	protected static $ajaxReturns=array();
 
-	public static function init()
-	{
+	public static function init() {
 		self::$db = new SmrSessionMySqlDatabase();
 		// now try the cookie
-		if (isset($_COOKIE['session_id']))
-		{
+		if (isset($_COOKIE['session_id'])) {
 			self::$session_id = $_COOKIE['session_id'];
 		}
-		else
-		{
+		else {
 			// create a new session id
-			do
-			{
+			do {
 				self::$session_id = md5 (uniqid (mt_rand()) );
 				self::$db->query('SELECT 1 FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 			} while(self::$db->nextRecord()); //Make sure we haven't somehow clashed with someone else's session.
@@ -165,14 +160,12 @@ class SmrSession
 		self::$db->query('DELETE FROM active_session WHERE last_accessed < ' . self::$db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 		self::fetchVarInfo();
 		
-		if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']]))
-		{
+		if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']])) {
 			$var = self::$var[$_REQUEST['sn']];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
 			$loadDelay = isset(self::$URL_LOAD_DELAY[$currentPage]) ? self::$URL_LOAD_DELAY[$currentPage] : 0;
 			$initialTimeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime']);
-			while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay)
-			{
+			while(($timeBetweenLoads = microtimeDiff(microtime(), $var['PreviousRequestTime'])) < $loadDelay) {
 				$sleepTime = round(($loadDelay-$timeBetweenLoads)*1000000);
 			//	echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);
@@ -187,11 +180,9 @@ class SmrSession
 			$db = new SmrMySqlDatabase();
 	}
 	
-	public static function fetchVarInfo()
-	{
+	public static function fetchVarInfo() {
 		self::$db->query('SELECT * FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
-		if (self::$db->nextRecord())
-		{
+		if (self::$db->nextRecord()) {
 			self::$generate = false;
 			self::$session_id		= self::$db->getField('session_id');
 			self::$account_id		= self::$db->getInt('account_id');
@@ -202,40 +193,32 @@ class SmrSession
 			self::$commonIDs	= array();
 			self::$lastSN = self::$db->getField('last_sn');
 			self::$previousAjaxReturns = @unserialize(@gzuncompress(self::$db->getField('ajax_returns')));
-			if(!is_array(self::$var))
-			{
+			if(!is_array(self::$var)) {
 				self::$account_id	= 0;
 				self::$old_account_id	= 0;
 				self::$game_id		= 0;
 				self::$var			= array();
 			}
-			else
-			{
-				foreach(self::$var as $key => &$value)
-				{
-					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) // Use 0 for infinity
-					{
+			else {
+				foreach(self::$var as $key => &$value) {
+					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) // Use 0 for infinity {
 						//This link is no longer valid
 						unset(self::$var[$key]);
 					}
-					else if ($value['RemainingPageLoads'] < 0)
-					{
+					else if ($value['RemainingPageLoads'] < 0) {
 						//This link is no longer valid
 						unset(self::$var[$key]);
 					}
-					else
-					{
+					else {
 						--$value['RemainingPageLoads'];
-						if(isset($value['CommonID']))
-						{
+						if(isset($value['CommonID'])) {
 							self::$commonIDs[$value['CommonID']] = $key;
 						}
 					}
 				} unset($value);
 			}
 		}
-		else
-		{
+		else {
 			self::$generate = true;
 			self::$account_id	= 0;
 			self::$old_account_id	= 0;
@@ -246,26 +229,21 @@ class SmrSession
 		}
 	}
 	
-	public static function update()
-	{
+	public static function update() {
 		self::$db = new SmrSessionMySqlDatabase();
-		foreach(self::$var as $key => &$value)
-		{
-			if ($value['RemainingPageLoads'] <= 0)
-			{
+		foreach(self::$var as $key => &$value) {
+			if ($value['RemainingPageLoads'] <= 0) {
 				//This link was valid this load but will not be in the future, removing it now saves database space and data transfer.
 				unset(self::$var[$key]);
 			}
 		} unset($value);
 		$compressed = gzcompress(serialize(self::$var));
-		if(!self::$generate)
-		{
+		if(!self::$generate) {
 			self::$db->query('UPDATE active_session SET account_id=' . self::$db->escapeNumber(self::$account_id) . ',old_account_id=' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',game_id=' . self::$db->escapeNumber(self::$game_id) . (!USING_AJAX ? ',last_accessed=' . self::$db->escapeNumber(TIME) : '') . ',session_var=' . self::$db->escapeBinary($compressed) .
 					',last_sn='.self::$db->escapeString(self::$SN).
 					' WHERE session_id=' . self::$db->escapeString(self::$session_id) . (USING_AJAX ? ' AND last_sn='.self::$db->escapeString(self::$lastSN) : '') . ' LIMIT 1');
 		}
-		else
-		{
+		else {
 			self::$db->query('DELETE FROM active_session WHERE account_id = ' . self::$db->escapeNumber(self::$account_id) . ' LIMIT 1');
 			self::$db->query('INSERT INTO active_session (session_id, account_id, old_account_id, game_id, last_accessed, session_var) VALUES(' . self::$db->escapeString(self::$session_id) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber(is_numeric(self::$old_account_id)?self::$old_account_id:0) . ',' . self::$db->escapeNumber(self::$game_id) . ',' . self::$db->escapeNumber(TIME) . ',' . self::$db->escapeBinary($compressed) . ')');
 			self::$generate = false;
@@ -274,8 +252,7 @@ class SmrSession
 		$db = new SmrMySqlDatabase();
 	}
 	
-	public static function updateSN()
-	{
+	public static function updateSN() {
 		self::$db = new SmrSessionMySqlDatabase();
 		if(!USING_AJAX)
 			self::$db->query('UPDATE active_session SET last_sn='.self::$db->escapeString(self::$SN).
@@ -283,8 +260,7 @@ class SmrSession
 		new SmrMySqlDatabase();
 	}
 
-	public static function destroy()
-	{
+	public static function destroy() {
 		self::$db = new SmrSessionMySqlDatabase();
 		self::$db->query('UPDATE active_session SET account_id=0,old_account_id=0,game_id=0,session_var=\'\',ajax_returns=\'\' WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		self::$session_id = '';
@@ -294,14 +270,12 @@ class SmrSession
 		$db = new SmrMySqlDatabase();
 	}
 	
-	public static function retrieveVar($sn)
-	{
+	public static function retrieveVar($sn) {
 		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
 			return false;
 		self::$SN = $sn;
 		SmrSession::updateSN();
-		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID']))
-		{
+		if(isset(self::$var[$sn]['body']) && isset(self::$var[$sn]['CommonID'])) {
 //			if(preg_match('/processing/',self::$var[$sn]['body']))
 			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
 			unset(self::$var[$sn]['CommonID']);
@@ -312,18 +286,15 @@ class SmrSession
 		return self::$var[$sn];
 	}
 	
-	public static function resetLink($container, $sn) //Do not allow sharing SN, useful for forwarding.
-	{
+	public static function resetLink($container, $sn) //Do not allow sharing SN, useful for forwarding. {
 		global $lock;
 		if(isset(self::$var[$sn]['CommonID']))
 			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
 		self::$SN = $sn;
-		if(!isset($container['Expires']))
-		{
+		if(!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
 		}
-		if(!isset($container['RemainingPageLoads']))
-		{
+		if(!isset($container['RemainingPageLoads'])) {
 			$container['RemainingPageLoads'] = 1; // Allow refreshing
 		}
 
@@ -333,57 +304,46 @@ class SmrSession
 		return $sn;
 	}
 	
-	public static function updateVar($key,$value)
-	{
+	public static function updateVar($key,$value) {
 		global $var;
-		if($value===null)
-		{
+		if($value===null) {
 			unset($var[$key]);
 			unset(self::$var[self::$SN][$key]);
 		}
-		else
-		{
+		else {
 			$var[$key] = $value;
 			self::$var[self::$SN][$key] = $value;
 		}
 	}
 	
-	public static function clearLinks()
-	{
+	public static function clearLinks() {
 		self::$var = array(self::$SN => self::$var[self::$SN]);
 		self::$commonIDs = array();
 	}
 	
-	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
-	{
-		if(!isset($container['Expires']))
-		{
+	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise. {
+		if(!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
 		}
-		if(!isset($container['RemainingPageLoads']))
-		{
+		if(!isset($container['RemainingPageLoads'])) {
 			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
 			$container['RemainingPageLoads'] = isset(self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
 		}
 			
-		if($sn === false)
-		{
+		if($sn === false) {
 			$sn = self::generateSN($container);
 		}
 		self::$var[$sn] = $container;
 		return $sn;
 	}
 	
-	protected static function generateSN(&$container)
-	{
+	protected static function generateSN(&$container) {
 		$container['CommonID'] = self::getCommonID($container);
-		if(isset(self::$commonIDs[$container['CommonID']]))
-		{
+		if(isset(self::$commonIDs[$container['CommonID']])) {
 			$sn = self::$commonIDs[$container['CommonID']];
 			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
 		}
-		else
-		{
+		else {
 			do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
 			$container['PreviousRequestTime'] = MICRO_TIME;
 		}
@@ -391,8 +351,7 @@ class SmrSession
 		return $sn;
 	}
 	
-	protected static function getCommonID($commonContainer)
-	{
+	protected static function getCommonID($commonContainer) {
 		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
 		unset($commonContainer['PreviousRequestTime']);
@@ -400,8 +359,7 @@ class SmrSession
 		return md5(serialize($commonContainer));
 	}
 
-	public static function getNewHREF($container, $forceFullURL=false)
-	{
+	public static function getNewHREF($container, $forceFullURL=false) {
 		$sn = self::addLink($container) . (isset($container['AJAX']) && $container['AJAX'] == true ? '&ajax=1':'');
 		if($forceFullURL===true||stripos($_SERVER['REQUEST_URI'],'loader.php')===false)
 			return URL.'/loader.php?sn=' . $sn;
@@ -409,14 +367,12 @@ class SmrSession
 			return '?sn=' . $sn;
 	}
 	
-	public static function addAjaxReturns($element,$contents)
-	{
+	public static function addAjaxReturns($element,$contents) {
 		self::$ajaxReturns[$element] = $contents;
 		return isset(self::$previousAjaxReturns[$element])&&self::$previousAjaxReturns[$element]==$contents;
 	}
 	
-	public static function saveAjaxReturns()
-	{
+	public static function saveAjaxReturns() {
 		if(empty(self::$ajaxReturns))
 			return;
 		$compressed = gzcompress(serialize(self::$ajaxReturns));

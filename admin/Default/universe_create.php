@@ -19,8 +19,7 @@ $template->assign('DefaultEndDate',date('Y/m/d',TIME + 5184000));
 $db->query('SELECT game_name
 			FROM game
 			WHERE enabled = \'FALSE\'');
-if ($db->getNumRows())
-{
+if ($db->getNumRows()) {
 	$disabledGames=array();
 	while ($db->nextRecord())
 		$disabledGames[] = $db->getField('game_name');

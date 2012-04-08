@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	
 	// ********************************
 	// *
@@ -18,8 +17,7 @@ try
 	// creates a new user account object
 	$account =& SmrAccount::getAccountByName($login);
 	$email = $_REQUEST['email'];
-	if ($account==null || $account->getEmail() != $email)
-	{
+	if ($account==null || $account->getEmail() != $email) {
 		// unknown user
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode('User does not exist'));
 		exit;
@@ -45,8 +43,7 @@ try
 	exit;
 
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

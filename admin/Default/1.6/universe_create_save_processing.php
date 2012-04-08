@@ -4,8 +4,7 @@ require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('SmrLocation.class.inc'));
 $submit = isset($_REQUEST['submit'])?$_REQUEST['submit']:'';
 
-if ($submit=='Create Game')
-{
+if ($submit=='Create Game') {
 	$var['num_gals'] = $_REQUEST['num_gals'];
 	if(!is_numeric($_REQUEST['game_speed']))
 		create_error('Game speed must be a number.');
@@ -46,10 +45,8 @@ if ($submit=='Create Game')
 	
 	//insert race relations
 	$races =& Globals::getRaces();
-	foreach ($races as &$race)
-	{
-		foreach ($races as &$race2)
-		{
+	foreach ($races as &$race) {
+		foreach ($races as &$race2) {
 			if ($race['Race ID'] == $race2['Race ID']) $amount = 500;
 			elseif ($race['Race ID'] == 1 || $race2['Race ID'] == 1) $amount = 0; //0 relats with neutral
 			else $amount = -500;
@@ -60,10 +57,8 @@ if ($submit=='Create Game')
 	createGame($newID); //do the alliances/message stuff
 	$var['message'] = '<span class="green">Success</span> : Succesfully created game.';
 }
-else if ($submit=='Create Galaxies')
-{
-	for ($i=1;$i<=$var['num_gals'];$i++)
-	{
+else if ($submit=='Create Galaxies') {
+	for ($i=1;$i<=$var['num_gals'];$i++) {
 		$galaxy =& SmrGalaxy::createGalaxy($var['game_id'],$i);
 		$galaxy->setName($_POST['gal' . $i]);
 		$galaxy->setWidth($_POST['width' . $i]);
@@ -73,15 +68,13 @@ else if ($submit=='Create Galaxies')
 	}
 	SmrGalaxy::saveGalaxies();
 	$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id'],true);
-	foreach($galaxies as &$galaxy)
-	{
+	foreach($galaxies as &$galaxy) {
 		$galaxy->generateSectors();
 	} unset($galaxy);
 	SmrSector::saveSectors();
 	$var['message'] = '<span class="green">Success</span> : Succesfully created galaxies.';
 }
-else if ($submit=='Redo Connections')
-{
+else if ($submit=='Redo Connections') {
 	$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 	if(!$galaxy->generateSectors($_REQUEST['connect']))
 		$var['message'] = '<span class="red">Error</span> : Regenerating connections failed.';
@@ -89,17 +82,13 @@ else if ($submit=='Redo Connections')
 		$var['message'] = '<span class="green">Success</span> : Regenerated connections.';
 	SmrSector::saveSectors();
 }
-elseif ($submit == 'Jump To Galaxy')
-{
+elseif ($submit == 'Jump To Galaxy') {
 	$var['gal_on'] = $_REQUEST['jumpgal'];
 }
-elseif ($submit == 'Modify Sector')
-{
-	if(!empty($_POST['sector_edit']))
-	{
+elseif ($submit == 'Modify Sector') {
+	if(!empty($_POST['sector_edit'])) {
 		$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
-		if($galaxy->contains($_POST['sector_edit']))
-		{
+		if($galaxy->contains($_POST['sector_edit'])) {
 			$var['sector_id'] = $_POST['sector_edit'];
 			$var['body'] = '1.6/universe_create_sector_details.php';
 		}
@@ -107,25 +96,19 @@ elseif ($submit == 'Modify Sector')
 			$var['message'] = '<span class="red">Error</span> : That sector does not exist in this galaxy.';
 	}
 }
-elseif ($submit == 'Create Locations')
-{
+elseif ($submit == 'Create Locations') {
 	$locations =& SmrLocation::getAllLocations();
 	$galSectors =& SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
-	foreach ($galSectors as &$sector)
-	{
+	foreach ($galSectors as &$sector) {
 		$sector->removeAllLocations();
 	}
-	foreach ($locations as &$location)
-	{
-		if (isset($_POST['loc' . $location->getTypeID()]))
-		{
-			for ($i=0;$i<$_POST['loc' . $location->getTypeID()];$i++)
-			{
+	foreach ($locations as &$location) {
+		if (isset($_POST['loc' . $location->getTypeID()])) {
+			for ($i=0;$i<$_POST['loc' . $location->getTypeID()];$i++) {
 				$sector =& $galSectors[array_rand($galSectors)]; //get random sector from start of gal to end of gal
 				//4 per sector max locs and no locations inside fed
 				
-				while (!checkSectorAllowedForLoc($sector,$location))
-				{
+				while (!checkSectorAllowedForLoc($sector,$location)) {
 					$sector =& $galSectors[array_rand($galSectors)]; //get valid sector
 				}
 				
@@ -135,29 +118,23 @@ elseif ($submit == 'Create Locations')
 	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully added locations.';
 }
-elseif ($submit == 'Create Warps')
-{
+elseif ($submit == 'Create Warps') {
 	//get all warp info from all gals, some need to be removed, some need to be added
 	$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 	$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 	$galSectors =& $galaxy->getSectors();
 	//get totals
-	foreach ($galSectors as &$galSector)
-	{
-		if($galSector->hasWarp())
-		{
+	foreach ($galSectors as &$galSector) {
+		if($galSector->hasWarp()) {
 			$galSector->removeWarp();
 		}
 	} unset($galSector);
 	//iterate over all the galaxies
-	foreach ($galaxies as &$eachGalaxy)
-	{
+	foreach ($galaxies as &$eachGalaxy) {
 		//do we have a warp to this gal?
-		if (isset($_POST['warp' . $eachGalaxy->getGalaxyID()]))
-		{
+		if (isset($_POST['warp' . $eachGalaxy->getGalaxyID()])) {
 			//iterate for each warp to this gal
-			for ($i=1;$i<=$_POST['warp' . $eachGalaxy->getGalaxyID()];$i++)
-			{
+			for ($i=1;$i<=$_POST['warp' . $eachGalaxy->getGalaxyID()];$i++) {
 				$galSector =& $galSectors[array_rand($galSectors)];
 				//only 1 warp per sector
 				while($galSector->hasWarp()) $galSector =& $galSectors[array_rand($galSectors)];
@@ -172,17 +149,14 @@ elseif ($submit == 'Create Warps')
 	} unset($eachGalaxy);
 	$var['message'] = '<span class="green">Success</span> : Succesfully added warps.';
 }
-elseif ($submit == 'Create Planets')
-{
+elseif ($submit == 'Create Planets') {
 	$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 	$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 	$galSectors =& $galaxy->getSectors();
 	//get totals
 	$numberOfPlanets=0;
-	foreach ($galSectors as &$galSector)
-	{
-		if($galSector->hasPlanet())
-		{
+	foreach ($galSectors as &$galSector) {
+		if($galSector->hasPlanet()) {
 			$galSector->removePlanet();
 		}
 	}
@@ -192,8 +166,7 @@ elseif ($submit == 'Create Planets')
 	$updatePlan['Uninhab'] = $num_uninhab;
 	$updatePlan['NPC'] = $num_npc;
 	
-	for ($i=1;$i<=$numberOfPlanets;$i++)
-	{
+	for ($i=1;$i<=$numberOfPlanets;$i++) {
 		$galSector =& $galSectors[array_rand($galSectors)];
 		while ($galSector->hasPlanet()) $galSector =& $galSectors[array_rand($galSectors)]; //1 per sector
 
@@ -216,49 +189,40 @@ elseif ($submit == 'Create Planets')
 //	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 }
-elseif ($submit == 'Create Ports and Mines')
-{
+elseif ($submit == 'Create Ports and Mines') {
 	$totalPorts=0;
-	for ($i=1;$i<=9;$i++)
-	{
+	for ($i=1;$i<=9;$i++) {
 		$totalPorts+=$_REQUEST['port' . $i];
 	}
 	$races =& Globals::getRaces();
 	$totalRaceDist=0;
 	$assignedPorts=0;
 	$numRacePorts = array();
-	foreach ($races as &$race)
-	{
+	foreach ($races as &$race) {
 		$totalRaceDist+=$_REQUEST['race' . $race['Race ID']];
 		$numRacePorts[$race['Race ID']] = ceil($_REQUEST['race' . $race['Race ID']] / 100 * $totalPorts);
 		$assignedPorts+=$numRacePorts[$race['Race ID']];
 		if($numRacePorts[$race['Race ID']]==0)
 			unset($numRacePorts[$race['Race ID']]);
 	}
-	if ($totalRaceDist == 100)
-	{
+	if ($totalRaceDist == 100) {
 		$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 		$galSectors =& $galaxy->getSectors();
-		foreach ($galSectors as &$galSector)
-		{
-			if($galSector->hasPort())
-			{
+		foreach ($galSectors as &$galSector) {
+			if($galSector->hasPort()) {
 				$galSector->removePort();
 			}
 		}
 		//get race for all ports
-		while ($totalPorts > $assignedPorts)
-		{
+		while ($totalPorts > $assignedPorts) {
 			//this adds extra ports until we reach the requested #
 			$numRacePorts[array_rand($numRacePorts)]++;
 			$assignedPorts++;
 		}
 		//iterate through levels 1-9 port
-		for ($i=1;$i<=9;$i++)
-		{
+		for ($i=1;$i<=9;$i++) {
 			//iterate once for each port of this level
-			for ($j=0;$j<$_REQUEST['port' . $i];$j++)
-			{
+			for ($j=0;$j<$_REQUEST['port' . $i];$j++) {
 				//get a sector for this port
 				$galSector =& $galSectors[array_rand($galSectors)];
 				//check if this sector is valid, if not then get a new one
@@ -295,13 +259,11 @@ elseif ($submit == 'Create Ports and Mines')
 //			}
 //		}
 	}
-	else
-	{
+	else {
 		$var['message'] = '<span class="red">Error: Your port race distribution must equal 100!</span>';
 	}
 }
-elseif ($submit == 'Edit Sector')
-{
+elseif ($submit == 'Edit Sector') {
 	$sector =& SmrSector::getSector($var['game_id'],$var['sector_id']);
 
 	//update connections
@@ -322,8 +284,7 @@ elseif ($submit == 'Edit Sector')
 	else
 		$sector->disableLink('Right');
 	//update planet
-	if ($_POST['plan_type'] == 'Uninhab')
-	{
+	if ($_POST['plan_type'] == 'Uninhab') {
 		$sector->createPlanet();
 	}
 //	elseif ($_POST['plan_type'] == 'NPC')
@@ -334,16 +295,13 @@ elseif ($submit == 'Edit Sector')
 //	}
 	else $sector->removePlanet();
 	//update port
-	if ($_POST['port_level'] > 0)
-	{
-		if(!$sector->hasPort() || $sector->getPort()->getLevel()!=$_POST['port_level'])
-		{
+	if ($_POST['port_level'] > 0) {
+		if(!$sector->hasPort() || $sector->getPort()->getLevel()!=$_POST['port_level']) {
 			$sector->removePort();
 			$port =& $sector->createPort();
 			$port->upgradeToLevel($_POST['port_level']);
 		}
-		else
-		{
+		else {
 			$port =& $sector->getPort();
 		}
 		$port->setRaceID($_POST['port_race']);
@@ -353,10 +311,8 @@ elseif ($submit == 'Edit Sector')
 	
 	$locationsToAdd = array();
 	$locationsToKeep = array();
-	for($x=0;$x<UNI_GEN_LOCATION_SLOTS;$x++)
-	{
-		if ($_POST['loc_type'.$x] != 0)
-		{
+	for($x=0;$x<UNI_GEN_LOCATION_SLOTS;$x++) {
+		if ($_POST['loc_type'.$x] != 0) {
 			$locationToAdd =& SmrLocation::getLocation($_POST['loc_type'.$x]);
 			if($sector->hasLocation($locationToAdd->getTypeID()))
 				$locationsToKeep[] =& $locationToAdd;
@@ -365,21 +321,17 @@ elseif ($submit == 'Edit Sector')
 		}
 	}
 	$sector->removeAllLocations();
-	foreach($locationsToKeep as &$locationToAdd)
-	{
+	foreach($locationsToKeep as &$locationToAdd) {
 		$sector->addLocation($locationToAdd);
 	}
-	foreach($locationsToAdd as &$locationToAdd)
-	{
+	foreach($locationsToAdd as &$locationToAdd) {
 		addLocationToSector($locationToAdd,$sector);
 	}
-	if($sector->hasWarp() && $sector->getWarp()!=$_POST['warp'])
-	{
+	if($sector->hasWarp() && $sector->getWarp()!=$_POST['warp']) {
 		$sector->getWarpSector()->removeWarp();
 		$sector->removeWarp();
 	}
-	if ($_POST['warp'] > 0)
-	{
+	if ($_POST['warp'] > 0) {
 		//add warp to other side
 		$sector->setWarp(SmrSector::getSector($var['game_id'],$_POST['warp']));
 	}
@@ -392,22 +344,18 @@ $container['url'] = 'skeleton.php';
 forward($container);
 
 
-function checkSectorAllowedForLoc(SmrSector &$sector,SmrLocation &$location)
-{
-	if (!$location->isHQ())
-	{
+function checkSectorAllowedForLoc(SmrSector &$sector,SmrLocation &$location) {
+	if (!$location->isHQ()) {
 		return (sizeof($sector->getLocations()) < 4 && !$sector->offersFederalProtection() );
 	}
-	else
-	{
+	else {
 		//HQs are here
 		//find a sector where there are no locations yet
 		return !$sector->hasLocation();
 	}
 }
 
-function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
-{
+function addLocationToSector(SmrLocation &$location,SmrSector &$sector) {
 	$fedBeacon =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
 //	if ($loc_id > 1 && $loc_id < 10)
 //	{
@@ -433,13 +381,11 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 		return false;
 
 	$sector->addLocation($location); //insert the location
-	if ($location->isHQ())
-	{
+	if ($location->isHQ()) {
 		//only playable races have extra locations to add
 		//Racial/Fed
 		$linkedLocations =& $location->getLinkedLocations();
-		foreach($linkedLocations as &$linkedLocation)
-		{
+		foreach($linkedLocations as &$linkedLocation) {
 			$sector->addLocation($linkedLocation);
 			if($linkedLocation->isFed())
 				$fedBeacon =& $linkedLocation;
@@ -452,14 +398,10 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 		$links = array('Up','Right','Down','Left');
 		$fedSectors = array(&$sector);
 		$tempFedSectors = array();
-		for($i=0;$i<DEFAULT_FED_RADIUS;$i++)
-		{
-			foreach($fedSectors as &$fedSector)
-			{
-				foreach($links as $link)
-				{
-					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)]))
-					{
+		for($i=0;$i<DEFAULT_FED_RADIUS;$i++) {
+			foreach($fedSectors as &$fedSector) {
+				foreach($links as $link) {
+					if ($fedSector->hasLink($link) && !isset($visitedSectors[$fedSector->getLink($link)])) {
 						$linkSector =& $sector->getLinkSector($link);
 						if (!$linkSector->offersFederalProtection())
 							$linkSector->addLocation($fedBeacon); //add beacon to this sector
@@ -475,8 +417,7 @@ function addLocationToSector(SmrLocation &$location,SmrSector &$sector)
 	return true;
 }
 
-function createGame($gameID)
-{
+function createGame($gameID) {
 	$db = new SmrMySqlDatabase();
 	$db->query('REPLACE INTO alliance (alliance_id, game_id, alliance_name, alliance_description, alliance_password, leader_id, `mod`) VALUES
 			(1,' . $db->escapeNumber($gameID) . ',\'Game Admins\',\'One Alliance to Rule Them All\',\'*\',1,\'We are the Admins!\')');

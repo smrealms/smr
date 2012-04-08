@@ -12,23 +12,18 @@ $totalPorts = array();
 $totalMines = array();
 $total['Ports'] = 0;
 $total['Mines'] = 0;
-for ($i=1;$i<=9;$i++)
-{
+for ($i=1;$i<=9;$i++) {
 	$totalPorts[$i] = 0;
 }
-for ($i=1;$i<=20;$i++)
-{
+for ($i=1;$i<=20;$i++) {
 	$totalMines[$i] = 0;
 }
-foreach ($galSectors as &$galSector)
-{
-	if($galSector->hasPort())
-	{
+foreach ($galSectors as &$galSector) {
+	if($galSector->hasPort()) {
 		$totalPorts[$galSector->getPort()->getLevel()]++;
 		$total['Ports']++;
 	}
-	if($galSector->hasMine())
-	{
+	if($galSector->hasMine()) {
 		$totalMines[$galSector->getMine()->getLevel()]++;
 		$total['Mines']++;
 	}
@@ -44,8 +39,7 @@ $PHP_OUTPUT.= create_echo_form($container);
 $PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')<br />';
 $PHP_OUTPUT.= '<table width="100%"><tr><th>Ports</th><th>Port Races</th><th>Starting Mines</th></tr><tr><td class="center">';
 $PHP_OUTPUT.= '<table class="standard">';
-for ($i=1;$i<=9;$i++)
-{
+for ($i=1;$i<=9;$i++) {
 	$PHP_OUTPUT.= '<tr><td class="right">Level ' . $i . ' Ports</td><td class="left">';
 	$PHP_OUTPUT.= '<input type="text" value="';
 	$PHP_OUTPUT.= $totalPorts[$i];
@@ -59,8 +53,7 @@ $PHP_OUTPUT.= '</td><td class="center">';
 $PHP_OUTPUT.= '<table class="standard"><tr><th colspan="2">Port Race % Distribution</th></tr>';
 
 $races =& Globals::getRaces();
-foreach ($races as &$race)
-{
+foreach ($races as &$race) {
 	$PHP_OUTPUT.= '<tr><td class="right">' . $race['Race Name'] . '</td><td class="left"><input size="5" name="race' . $race['Race ID'] . '" value="0" type="text" onFocus="startRaceCalc();" onBlur="stopRaceCalc();"></td></tr>';
 }
 $PHP_OUTPUT.= '<tr><td class="right">Total</td><td class="left"><input size="5" name="racedist" value="0" type="text"></td></tr>';
@@ -68,8 +61,7 @@ $PHP_OUTPUT.= '<tr><td class="center" colspan="2">';
 $PHP_OUTPUT.= '<div class="buttonA"><a class="buttonA" onClick="setEven();">&nbsp;Set All Equal&nbsp;</a></div></td></tr>';
 $PHP_OUTPUT.= '</table>';
 $PHP_OUTPUT.= '</td><td class="center"><table class="standard">';
-for ($i=1;$i<=20;$i++)
-{
+for ($i=1;$i<=20;$i++) {
 	$PHP_OUTPUT.= '<tr><td class="right">Level ' . $i . ' Mines</td><td class="left">';
 	$PHP_OUTPUT.= '<input type="text" value="';
 	$PHP_OUTPUT.= $totalMines[$i];

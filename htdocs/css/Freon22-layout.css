@@ -185,8 +185,7 @@ a.nav {
 	padding: 0px;
 	margin: 0px;
 }
-span#ship_name 
-{
+span#ship_name  {
 	display: block;
 	word-wrap: break-word;
 	white-space: -moz-pre-wrap;

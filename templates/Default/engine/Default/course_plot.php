@@ -17,40 +17,34 @@ $this->includeTemplate('includes/JumpDrive.inc'); ?>
 <h2>Plot To Nearest</h2><br />
 <form class="standard" id="SelectXTypeForm" method="POST" action="">
 	<select name="xtype" onchange="this.form.submit()"><?php
-	foreach($AllXTypes as $EachXType)
-	{
+	foreach($AllXTypes as $EachXType) {
 		?><option value="<?php echo $EachXType; ?>"<?php if(isset($XType)&&$EachXType==$XType){ ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
 	} ?>
 	</select>&nbsp;
 	<input type="submit" value="Select" />
 </form><?php
-if(isset($XType))
-{ ?>
+if(isset($XType)) { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
 		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br /><br />
 		<select name="X" onchange="this.form.submit()"><?php
-			switch($XType)
-			{
+			switch($XType) {
 				case 'Technology':
 					$Hardwares =& Globals::getHardwareTypes();
-					foreach($Hardwares as &$Hardware)
-					{
+					foreach($Hardwares as &$Hardware) {
 						?><option value="<?php echo $Hardware['ID']; ?>"><?php echo $Hardware['Name']; ?></option><?php
 					} unset($Hardware);
 				break;
 				case 'Ships':
 					$Ships =& AbstractSmrShip::getAllBaseShips(Globals::getGameType($ThisPlayer->getGameID()));
 					Sorter::sortByNumElement($Ships, 'Name');
-					foreach($Ships as &$Ship)
-					{
+					foreach($Ships as &$Ship) {
 						?><option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
 					} unset($Ship);
 				break;
 				case 'Weapons':
 					$Weapons =& SmrWeapon::getAllWeapons(Globals::getGameType($ThisPlayer->getGameID()));
 					Sorter::sortByNumMethod($Weapons, 'getName');
-					foreach($Weapons as &$Weapon)
-					{
+					foreach($Weapons as &$Weapon) {
 						?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
 					} unset($Weapon);
 				break;
@@ -66,15 +60,13 @@ if(isset($XType))
 					<option value="Weapon">Any Weapon Shop</option><?php
 					$Locations =& SmrLocation::getAllLocations();
 					Sorter::sortByNumMethod($Locations, 'getName');
-					foreach($Locations as &$Location)
-					{
+					foreach($Locations as &$Location) {
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
 					} unset($Location);
 				break;
 				case 'Goods':
 					$Goods =& Globals::getGoods();
-					foreach($Goods as &$Good)
-					{
+					foreach($Goods as &$Good) {
 						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
 					} unset($Good);
 				break;

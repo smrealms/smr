@@ -1,5 +1,4 @@
-<?php if(!$Locations)
-{
+<?php if(!$Locations) {
 	?><a href="<?php echo $ViewAllLocationsLink; ?>">View All Locations</a><br /><br />
 	<form action="<?php echo $Location->getEditHREF(); ?>" method="POST"><?php
 } ?>
@@ -18,12 +17,10 @@
 		<th>Weapons</th>
 		<th>Edit</th>
 	</tr><?php
-if($Locations)
-{
+if($Locations) {
 	$this->includeTemplate('includes/ViewLocations.inc',array('Locations'=>$Locations));
 }
-else
-{ ?>
+else { ?>
 	<tr>
 		<td><input name="name" type="text" value="<?php echo htmlspecialchars($Location->getName()); ?>" /></td>
 		<td><input name="action" type="text" value="<?php echo htmlspecialchars($Location->getAction()); ?>" /></td>
@@ -35,8 +32,7 @@ else
 		<td><input name="ug" type="checkbox" <?php if($Location->isUG()){ ?>checked="checked"<?php } ?> /></td>
 		<td>
 			<table><?php
-				foreach($Location->getHardwareSold() as $HardwareID => $Hardware)
-				{ ?>
+				foreach($Location->getHardwareSold() as $HardwareID => $Hardware) { ?>
 					<tr>
 						<td><?php echo $Hardware ?></td>
 						<td><input type="checkbox" name="remove_hardware[]" value="<?php echo $HardwareID; ?>" /></td>
@@ -47,8 +43,7 @@ else
 					<td>
 						<select name="add_hardware_id">
 							<option value="0">None</option><?php
-							foreach($AllHardware as $Hardware)
-							{ ?>
+							foreach($AllHardware as $Hardware) { ?>
 								<option value="<?php echo $Hardware['ID']; ?>"><?php echo $Hardware['Name']; ?></option><?php
 							} ?>
 					</select>
@@ -58,8 +53,7 @@ else
 		</td>
 		<td>
 			<table><?php
-			foreach($Location->getShipsSold() as $Ship)
-			{ ?>
+			foreach($Location->getShipsSold() as $Ship) { ?>
 					<tr>
 						<td><?php echo $Ship['Name'] ?></td>
 						<td><input type="checkbox" name="remove_ships[]" value="<?php echo $Ship['ShipTypeID']; ?>" /></td>
@@ -70,8 +64,7 @@ else
 					<td>
 						<select name="add_ship_id">
 							<option value="0">None</option><?php
-							foreach($Ships as $Ship)
-							{ ?>
+							foreach($Ships as $Ship) { ?>
 								<option value="<?php echo $Ship['ShipTypeID']; ?>"><?php echo $Ship['Name']; ?></option><?php
 							} ?>
 					</select>
@@ -81,8 +74,7 @@ else
 		</td>
 		<td>
 			<table><?php
-			foreach($Location->getWeaponsSold() as $Weapon)
-			{ ?>
+			foreach($Location->getWeaponsSold() as $Weapon) { ?>
 					<tr>
 						<td><?php echo $Weapon->getName(); ?></td>
 						<td><input type="checkbox" name="remove_weapons[]" value="<?php echo $Weapon->getWeaponTypeID(); ?>" /></td>
@@ -93,8 +85,7 @@ else
 					<td>
 						<select name="add_weapon_id">
 							<option value="0">None</option><?php
-							foreach($Weapons as $Weapon)
-							{
+							foreach($Weapons as $Weapon) {
 								?><option value="<?php echo $Weapon->getWeaponTypeID(); ?>"><?php echo $Weapon->getName(); ?></option><?php
 							} ?>
 					</select>
@@ -109,7 +100,6 @@ else
 } ?>
 </table>
 <?php
-if(!$Locations)
-{
+if(!$Locations) {
 	?></form><?php
 } ?>

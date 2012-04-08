@@ -1,6 +1,5 @@
 <div align="center"><?php
-	if(isset($Preview))
-	{ ?>
+	if(isset($Preview)) { ?>
 		<div align="center">If you ship is found to use HTML inappropriately you may be banned.
 		  Inappropriate HTML includes but is not limited to something that can either cause display errors or cause functionality of the game to stop.  Also it is your responsibility to make sure ALL HTML tags that need to be closed are closed!<br />
 			Preview:<br />
@@ -10,8 +9,7 @@
 		<br />
 		<a href="<?php echo $ContinueHref; ?>" class="submitStyle">Continue </a> <a href="<?php echo Globals::getBuyShipNameHref(); ?>" class="submitStyle">Back</a><?php
 	}
-	else
-	{ ?>
+	else { ?>
 		So you want to name your ship?  Great!
 					
 		So...what do you want to name it? (max 48 text chars) (max <?php echo MAX_IMAGE_HEIGHT; ?> height by <?php echo MAX_IMAGE_WIDTH; ?> width and <?php echo MAX_IMAGE_SIZE; ?>k for logos)<br />

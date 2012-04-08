@@ -2,13 +2,11 @@
 "http://www.w3.org/TR/1999/REC-html401-19991224/loose.dtd">
 <html>
 	<head><?php
-		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled())
-		{ ?>
+		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
 		}
-		if(isset($ExtraCSSLink))
-		{
+		if(isset($ExtraCSSLink)) {
 			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
 		} ?>
 	    <title>Galaxy Map</title>
@@ -25,8 +23,7 @@
 		<br/>
 		<form name="GalaxyMapForm" method="GET">
 			<select name="galaxy_id" onchange="this.form.submit()"><?php
-				foreach($GameGalaxies as &$GameGalaxy)
-				{ 
+				foreach($GameGalaxies as &$GameGalaxy) { 
 					$GalaxyID = $GameGalaxy->getGalaxyID(); ?>
 					<option value="<?php echo $GalaxyID; ?>"<?php if($ThisGalaxy->equals($GameGalaxy)){ ?> selected="selected"<?php } ?>>
 					<?php echo $GameGalaxy->getName(); ?>

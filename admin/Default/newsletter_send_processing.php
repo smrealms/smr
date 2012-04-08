@@ -17,15 +17,13 @@ $mail->WordWrap = 72;
 
 $db = new SmrMySqlDatabase();
 $db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-if ($db->nextRecord())
-{
+if ($db->nextRecord()) {
 	$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
 
 	$newsletterHtml = $db->getField('newsletter_html');
 	$newsletterText = $db->getField('newsletter_text');
 
-	if(!empty($newsletterHtml))
-	{
+	if(!empty($newsletterHtml)) {
 		$mail->MsgHTML($newsletterHtml);
 		if(!empty($newsletterText))
 			$mail->AltBody = $newsletterText;
@@ -37,15 +35,13 @@ if ($db->nextRecord())
 //	$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
 }
 
-if($_REQUEST['to_email']=='*')
-{
+if($_REQUEST['to_email']=='*') {
 	// counter
 	$i = 1;
 	$total = 0;
 
 	$db->query('SELECT account_id, email, first_name, last_name FROM newsletter_accounts WHERE account_id >= '.$db->escapeNumber($i).' ORDER BY account_id');
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		// get account data
 		$account_id	= $db->getField('account_id');
 		$to_email	= $db->getField('email');
@@ -58,8 +54,7 @@ if($_REQUEST['to_email']=='*')
 		$mail->From = 'bounce_' . $account_id . '@smrealms.de';
 		$mail->AddAddress($to_email, $to_name);
 
-		if(!$mail->Send())
-		{
+		if(!$mail->Send()) {
 			echo 'error.'.EOL . $mail->ErrorInfo;
 			$mail->SmtpClose();
 			ob_flush();
@@ -83,8 +78,7 @@ if($_REQUEST['to_email']=='*')
 	release_lock();
 	exit();
 }
-else
-{
+else {
 	$mail->AddAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
 
 	$mail->Send();

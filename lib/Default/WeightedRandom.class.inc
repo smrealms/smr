@@ -1,7 +1,6 @@
 <?php
 
-class WeightedRandom
-{
+class WeightedRandom {
 	protected static $CACHE_RANDOMS = array();
 	
 	const WEIGHTING_CHANGE = 50;
@@ -16,30 +15,22 @@ class WeightedRandom
 	
 	protected $hasChanged=false;
 
-	public static function &getWeightedRandom($gameID, $accountID, $type, $typeID, $forceUpdate = false)
-	{
-		if($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID]))
-		{
+	public static function &getWeightedRandom($gameID, $accountID, $type, $typeID, $forceUpdate = false) {
+		if($forceUpdate || !isset(self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID])) {
 			self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID] = new WeightedRandom($gameID, $accountID, $type, $typeID);
 		}
 		return self::$CACHE_RANDOMS[$gameID][$accountID][$type][$typeID];
 	}
 
-	public static function &getWeightedRandomForPlayer(AbstractSmrPlayer &$player, $type, $typeID, $forceUpdate = false)
-	{
+	public static function &getWeightedRandomForPlayer(AbstractSmrPlayer &$player, $type, $typeID, $forceUpdate = false) {
 		return self::getWeightedRandom($player->getGameID(), $player->getAccountID(), $type, $typeID, $forceUpdate);
 	}
 	
-	public static function saveWeightedRandoms()
-	{
-		foreach(self::$CACHE_RANDOMS as &$gameRandoms)
-		{
-			foreach($gameRandoms as &$accountRandoms)
-			{
-				foreach($accountRandoms as &$typeRandoms)
-				{
-					foreach($typeRandoms as &$random)
-					{
+	public static function saveWeightedRandoms() {
+		foreach(self::$CACHE_RANDOMS as &$gameRandoms) {
+			foreach($gameRandoms as &$accountRandoms) {
+				foreach($accountRandoms as &$typeRandoms) {
+					foreach($typeRandoms as &$random) {
 						$random->update();
 					}
 				}
@@ -47,8 +38,7 @@ class WeightedRandom
 		}
 	}
 	
-	protected function __construct($gameID, $accountID, $type, $typeID)
-	{
+	protected function __construct($gameID, $accountID, $type, $typeID) {
 		$this->gameID = $gameID;
 		$this->accountID = $accountID;
 		$this->type = $type;
@@ -56,63 +46,51 @@ class WeightedRandom
 		
 		$this->db = new SmrMySqlDatabase();
 		$this->db->query('SELECT weighting FROM weighted_random WHERE game_id = '.$this->db->escapeNumber($gameID).' AND account_id = '.$this->db->escapeNumber($accountID).' AND type = '.$this->db->escapeString($type).' AND type_id = '.$this->db->escapeNumber($typeID).' LIMIT 1');
-		if ($this->db->nextRecord())
-		{
+		if ($this->db->nextRecord()) {
 			$this->weighting = $this->db->getField('weighting');
 		}
-		else
-		{
+		else {
 			$this->weighting = 0;
 		}
 	}
 	
-	public function getGameID()
-	{
+	public function getGameID() {
 		return $this->gameID;
 	}
 	
-	public function getAccountID()
-	{
+	public function getAccountID() {
 		return $this->accountID;
 	}
 	
-	public function getType()
-	{
+	public function getType() {
 		return $this->type;
 	}
 	
-	public function getTypeID()
-	{
+	public function getTypeID() {
 		return $this->typeID;
 	}
 	
-	public function getWeighting()
-	{
+	public function getWeighting() {
 		return $this->weighting;
 	}
 	
-	public function percentFailed($percent)
-	{
+	public function percentFailed($percent) {
 		$failed = mt_rand(0,99)+$this->weighting >= $percent;
 		$this->adjustWeightByPercent(!$failed, $percent);
 		return $failed;
 	}
 	
-	public function adjustWeightByPercent($success, $percent)
-	{
+	public function adjustWeightByPercent($success, $percent) {
 		$percent = $percent/100;
-		if($success)
-		{
+		if($success) {
 			$percent = -1 + $percent;
 		}
 		$this->weighting -= self::WEIGHTING_CHANGE*$percent;
 		$this->hasChanged = true;
 	}
 	
-	public function update()
-	{
-		if($this->hasChanged===true)
-		{
+	public function update() {
+		if($this->hasChanged===true) {
 			$this->db->query('REPLACE INTO weighted_random (game_id,account_id,type,type_id,weighting)
 							values
 							(' . $this->db->escapeNumber($this->getGameID()) .

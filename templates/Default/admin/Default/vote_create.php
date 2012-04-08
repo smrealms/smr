@@ -6,8 +6,7 @@
 
 	<?php if(isset($PreviewOption)) { ?><table class="standard"><tr><td><?php echo bbifyMessage($PreviewOption); ?></td></tr></table><?php } ?>
 	Vote: <select id="vote" name="vote"><?php
-		foreach($CurrentVotes as $CurrentVote)
-		{
+		foreach($CurrentVotes as $CurrentVote) {
 			?><option value="<?php echo $CurrentVote['ID'];?>"<?php if(isset($VoteID)&&$CurrentVote['ID']==$VoteID) { ?>selected="selected"<?php } ?>><?php echo bbifyMessage($CurrentVote['Question']);?></option><?php
 		} ?>
 	</select><br />

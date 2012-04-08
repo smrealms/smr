@@ -13,8 +13,7 @@ if ($action == 'Skip >>') {
 $sector_count = 0;
 $galaxy = $_REQUEST['galaxy'];
 $size = $_REQUEST['size'];
-for($galaxy_counter = 0; $galaxy_counter < count($galaxy); $galaxy_counter++)
-{
+for($galaxy_counter = 0; $galaxy_counter < count($galaxy); $galaxy_counter++) {
 	$galaxy_id	= $galaxy[$galaxy_counter];
 	$curr_size	= $size[$galaxy_counter];
 

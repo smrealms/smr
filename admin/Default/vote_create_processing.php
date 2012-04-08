@@ -1,23 +1,20 @@
 <?php
 $question = trim($_REQUEST['question']);
-if($_REQUEST['action'] == 'Preview Vote')
-{
+if($_REQUEST['action'] == 'Preview Vote') {
 	$container = create_container('skeleton.php','vote_create.php');
 	$container['PreviewVote'] = $question;
 	$container['Days'] = $_REQUEST['days'];
 	forward($container);
 }
 $option = trim($_REQUEST['option']);
-if($_REQUEST['action'] == 'Preview Option')
-{
+if($_REQUEST['action'] == 'Preview Option') {
 	$container = create_container('skeleton.php','vote_create.php');
 	$container['PreviewOption'] = $option;
 	$container['VoteID'] = $_REQUEST['vote'];
 	forward($container);
 }
 
-if($_REQUEST['action'] == 'Create Vote')
-{
+if($_REQUEST['action'] == 'Create Vote') {
 	if(empty($question))
 		create_error('You have to specify a vote message.');
 	if(empty($_REQUEST['days']))
@@ -29,8 +26,7 @@ if($_REQUEST['action'] == 'Create Vote')
 	// put the msg into the database
 	$db->query('INSERT INTO voting (question, end) VALUES('.$db->escapeString($question).','.$db->escapeNumber($end).')');
 }
-else if($_REQUEST['action'] == 'Add Option')
-{
+else if($_REQUEST['action'] == 'Add Option') {
 	if(empty($option))
 		create_error('You have to specify an option message.');
 	if(empty($_REQUEST['vote']))

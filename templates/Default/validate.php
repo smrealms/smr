@@ -3,8 +3,7 @@
 <form name="FORM" method="POST" action="<?php echo $ValidateFormHref ?>">
 
 <?php
-if(isset($Message))
-{
+if(isset($Message)) {
 	echo $Message; ?><br /><?php
 } ?>
 

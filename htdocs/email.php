@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	// includes
 	require_once('config.inc');
 	require_once(ENGINE . 'Default/smr.inc');
@@ -8,8 +7,7 @@ try
 	require_once(get_file_loc('SmrSession.class.inc'));
 
 	// do we have a session?
-	if (SmrSession::$account_id == 0)
-	{
+	if (SmrSession::$account_id == 0) {
 		header('Location: '.URL.'/login.php');
 		exit;
 	}
@@ -84,8 +82,7 @@ try
 </html>
 <?php
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

@@ -1,24 +1,20 @@
 <?php
 
-function checkForLottoWinner($gameID)
-{
+function checkForLottoWinner($gameID) {
 	global $db;
 	//we we check for a lotto winner...
 	$db->lockTable('player_has_ticket');
 	$lottoInfo = getLottoInfo($gameID);
 	$lottoWon = false;
-	if ($lottoInfo['TimeRemaining'] <= 0)
-	{
+	if ($lottoInfo['TimeRemaining'] <= 0) {
 		//we need to pick a winner
 		$db->query('SELECT * FROM player_has_ticket WHERE game_id = '.$db->escapeNumber($gameID).' AND time > 0 ORDER BY rand() LIMIT 1');
-		if ($db->nextRecord())
-		{
+		if ($db->nextRecord()) {
 			$winner_id = $db->getField('account_id');
 			$time = $db->getField('time');
 		}
 		$db->query('SELECT * FROM player_has_ticket WHERE time = 0 AND game_id = '.$db->escapeNumber($gameID));
-		if ($db->nextRecord())
-		{
+		if ($db->nextRecord()) {
 			$lottoInfo['Prize'] += $db->getField('prize');
 			$db->query('DELETE FROM player_has_ticket WHERE time = 0 AND game_id = '.$db->escapeNumber($gameID));
 		}
@@ -33,8 +29,7 @@ function checkForLottoWinner($gameID)
 		$lottoWon = true;
 	}
 	$db->unlock();
-	if ($lottoWon === true)
-	{
+	if ($lottoWon === true) {
 		// create news msg
 		$winner =& SmrPlayer::getPlayer($winner_id, $gameID);
 		$winner->increaseHOF($lottoInfo['Prize'],array('Bar','Lotto','Money','Winnings'), HOF_PUBLIC);
@@ -48,16 +43,14 @@ function checkForLottoWinner($gameID)
 	}
 }
 
-function getLottoInfo($gameID)
-{
+function getLottoInfo($gameID) {
 	global $db;
 	$amount = 1000000;
 		$firstBuy = TIME;
 	$db->query('SELECT count(*) as num, min(time) as time FROM player_has_ticket
 				WHERE game_id = '.$db->escapeNumber($gameID).' AND time > 0');
 	$db->nextRecord();
-	if ($db->getField('num') > 0)
-	{
+	if ($db->getField('num') > 0) {
 		$amount += $db->getField('num') * 1000000 * .9;
 		$firstBuy = $db->getField('time');
 	}

@@ -1,6 +1,5 @@
 <table><?php
-	foreach($Team as $OrderID => $Dummy)
-	{ ?>
+	foreach($Team as $OrderID => $Dummy) { ?>
 	<tr class="top">
 		<td>
 			<span class="underline"><?php echo $MemberDescription; ?> <?php echo $OrderID; ?></span><br /><br />
@@ -8,16 +7,14 @@
 		<td>
 			<select name="<?php echo $MemberInputName; ?>[]">
 				<option value="none">None</option><?php
-				foreach($DummyNames as $DummyName)
-				{ ?>
+				foreach($DummyNames as $DummyName) { ?>
 					<option value="<?php echo htmlspecialchars($DummyName); ?>"<?php if($Dummy && $DummyName==$Dummy->getPlayerName()){ ?> selected="selected"<?php } ?>><?php echo $DummyName; ?></option><?php
 				} ?>
 			</select><br />
 		</td>
 		<td>
 			<span class="underline">Current Details</span><?php
-				if($Dummy)
-				{
+				if($Dummy) {
 					$Ship =& $Dummy->getShip();
 					$ShipWeapons =& $Ship->getWeapons(); ?>
 					<br />Level: <?php echo $Dummy->getLevelID(); ?><br />

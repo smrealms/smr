@@ -25,8 +25,7 @@ $PHP_OUTPUT.= '</select><br /><br />';
 
 $PHP_OUTPUT.= 'Port: <select name="port_level">';
 $PHP_OUTPUT.= '<option value="0">No Port</option>';
-for ($i=1;$i<=9;$i++)
-{
+for ($i=1;$i<=9;$i++) {
 	$PHP_OUTPUT.= '<option value="' . $i . '"';
 	if ($sector->hasPort() && $sector->getPort()->getLevel() == $i) $PHP_OUTPUT.= 'selected';
 	$PHP_OUTPUT.= '>Level ' . $i . '</option>';
@@ -34,8 +33,7 @@ for ($i=1;$i<=9;$i++)
 $PHP_OUTPUT.= '</select>';
 $PHP_OUTPUT.= '<select name="port_race">';
 $races =& Globals::getRaces();
-foreach ($races as &$race)
-{
+foreach ($races as &$race) {
 	$PHP_OUTPUT.= '<option value="' . $race['Race ID'] . '"';
 	if ($sector->hasPort() && $sector->getPort()->getRaceID() == $race['Race ID']) $PHP_OUTPUT.= 'selected';
 	$PHP_OUTPUT.= '>' . $race['Race Name'] . '</option>';
@@ -45,15 +43,12 @@ $PHP_OUTPUT.= '</select>';
 $PHP_OUTPUT.= '<br /><br />';
 $locations =& SmrLocation::getAllLocations();
 $sectorLocations =& $sector->getLocations();
-for ($i=0;$i<UNI_GEN_LOCATION_SLOTS;$i++)
-{
+for ($i=0;$i<UNI_GEN_LOCATION_SLOTS;$i++) {
 	$PHP_OUTPUT.= 'Location ' . ($i + 1) . ': <select name="loc_type' . $i . '">';
 	$PHP_OUTPUT.= '<option value="0">No Location</option>';
-	foreach ($locations as &$location)
-	{
+	foreach ($locations as &$location) {
 		$PHP_OUTPUT.= '<option value="' . $location->getTypeID() . '"';
-		if (isset($sectorLocations[$i]) && $sectorLocations[$i]->equals($location))
-		{
+		if (isset($sectorLocations[$i]) && $sectorLocations[$i]->equals($location)) {
 			$PHP_OUTPUT.= 'selected';
 		}
 		$PHP_OUTPUT.= '>' . $location->getName() . '</option>';
@@ -67,14 +62,12 @@ $PHP_OUTPUT.= '></td></tr>';
 $PHP_OUTPUT.= '<tr><td width="5%" class="center">&nbsp;</td><td width="90%" class="center"><input type="checkbox" name="down" value="down"';
 if ($sector->hasLinkDown()) $PHP_OUTPUT.= ' checked';
 $PHP_OUTPUT.= '></td><td width="5%" class="center">Warp:<br /><input size="5" type="text" name="warp" value="';
-if ($sector->hasWarp())
-{
+if ($sector->hasWarp()) {
 	$warpSector=& $sector->getWarpSector();
 	$PHP_OUTPUT.= $warpSector->getSectorID();
 	$warpGal = $warpSector->getGalaxyName();
 }
-else
-{
+else {
 	$PHP_OUTPUT.= 0;
 	$warpGal = 'No Warp';
 }

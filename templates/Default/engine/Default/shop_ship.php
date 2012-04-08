@@ -1,15 +1,13 @@
 <?php
 
-if (count($ShipsSold) > 0 )
-{ ?>
+if (count($ShipsSold) > 0 ) { ?>
 	<table class="standard">
 		<tr>
 			<th>Name</th>
 			<th>Cost</th>
 			<th>Action</th>
 		</tr><?php
-		foreach($ShipsSold as &$ShipSold)
-		{ ?>
+		foreach($ShipsSold as &$ShipSold) { ?>
 			<tr>
 				<td><?php echo $ShipSold['Name']; ?></td>
 				<td><?php echo $ShipSold['Cost']; ?></td>
@@ -22,13 +20,11 @@ if (count($ShipsSold) > 0 )
 		} unset($ShipSold);
 	?></table><?php
 }
-else
-{
+else {
 	?>We've got nothing for you here! Get outta here!<br /><?php
 }
 ?><br /><?php
-if (isset($CompareShip))
-{ ?>
+if (isset($CompareShip)) { ?>
 	<table class="standard">
 		<tr>
 			<th>&nbsp;</th>

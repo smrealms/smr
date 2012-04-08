@@ -124,17 +124,14 @@ a.buttonA:active {
 	border-color: #5B3100 #9B7141 #9B7141 #5B3100;
 }
 
-a.enemyExamine
-{
+a.enemyExamine {
 	background-color:#C00;
 	border-color:#CCA3A3 #6E2A2A #6E2A2A #CCA3A3;
 }
-a.enemyExamine:hover
-{
+a.enemyExamine:hover {
 	background-color:#C00;
 }
-a.enemyExamine:active
-{
+a.enemyExamine:active {
 	background-color:#C00;
 	border-color:#6E2A2A #CCA3A3 #CCA3A3 #6E2A2A;
 }

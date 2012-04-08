@@ -1,7 +1,6 @@
 <?php
 require_once('Database.interface.inc');
-abstract class MySqlDatabase implements Database
-{
+abstract class MySqlDatabase implements Database {
 	protected static $errorAlreadyTriggered=false;
 	protected static $dbConn;
 	protected static $currDbName;
@@ -9,10 +8,8 @@ abstract class MySqlDatabase implements Database
 	protected $dbRecord = null;
 	protected $debug = true;
 	
-	public function __construct($host, $user, $password, $databaseName)
-	{
-		if(!self::$dbConn)
-		{
+	public function __construct($host, $user, $password, $databaseName) {
+		if(!self::$dbConn) {
 			if(!self::$dbConn = @mysql_connect($host, $user, $password)) {
 				$this->error('Connection failed.');
 			}
@@ -20,23 +17,20 @@ abstract class MySqlDatabase implements Database
 		
 		if(self::$currDbName != $databaseName) {
 			self::$currDbName = $databaseName;
-			if(!@mysql_select_db(self::$currDbName, self::$dbConn))
-			{
+			if(!@mysql_select_db(self::$currDbName, self::$dbConn)) {
 				$this->error('Database selection failed.');
 			}
 		}
 //		mysql_query("SET NAMES 'utf8' COLLATE 'utf8_general_ci'", self::$dbConn);
 	}
 	
-	public function query($query)
-	{
+	public function query($query) {
 		if(!$this->dbResult = @mysql_query($query, self::$dbConn)) {
 			$this->error('SQL query failed (' . $query . ')');
 		}
 	}
 	
-	public function nextRecord()
-	{
+	public function nextRecord() {
 		if(!$this->dbResult)
 			$this->error('No resource to get record from.');
 		
@@ -47,13 +41,11 @@ abstract class MySqlDatabase implements Database
 	
 	
 	
-	public function getField($name)
-	{
+	public function getField($name) {
 		return $this->dbRecord[$name];
 	}
 	
-	public function getBoolean($name)
-	{
+	public function getBoolean($name) {
 		if($this->dbRecord[$name] == 'TRUE')
 			return true;
 //		if($this->dbRecord[$name] == 'FALSE')
@@ -61,99 +53,80 @@ abstract class MySqlDatabase implements Database
 //		throw new Exception('Field is not a boolean');
 	}
 	
-	public function getInt($name)
-	{
+	public function getInt($name) {
 		return (int)$this->dbRecord[$name];
 	}
 	
-	public function getReal($name)
-	{
+	public function getReal($name) {
 		return (float)$this->dbRecord[$name];
 	}
 	
-	public function getMicrotime($name)
-	{
+	public function getMicrotime($name) {
 		return '0.'.substr($this->dbRecord[$name],-6).'00 '.substr($this->dbRecord[$name],0,-6);
 	}
 	
-	public function getObject($name,$compressed=false)
-	{
+	public function getObject($name,$compressed=false) {
 		$object = $this->getField($name);
 		if($compressed===true)
 			$object = gzuncompress($object);
 		return unserialize($object);
 	}
 	
-	public function getRow()
-	{
+	public function getRow() {
 		return $this->dbRecord;
 	}
 	
-	public function lockTable($table)
-	{
-		if(!@mysql_query('LOCK TABLES ' . $table . ' WRITE', self::$dbConn))
-		{
+	public function lockTable($table) {
+		if(!@mysql_query('LOCK TABLES ' . $table . ' WRITE', self::$dbConn)) {
 			$this->error('Unable to lock table: '. $table);
 		}
 	}
 	
-	public function unlock()
-	{
-		if(!@mysql_query('UNLOCK TABLES', self::$dbConn))
-		{
+	public function unlock() {
+		if(!@mysql_query('UNLOCK TABLES', self::$dbConn)) {
 			$this->error('Unable to remove table locks.');
 		}
 	}
 	
-	public function getNumRows()
-	{
+	public function getNumRows() {
 		return @mysql_num_rows($this->dbResult);
 	}
 	
-	public function getChangedRows()
-	{
+	public function getChangedRows() {
 		return @mysql_affected_rows(self::$dbConn);
 	}
 	
-	public function getInsertID()
-	{
+	public function getInsertID() {
 		return @mysql_insert_id(self::$dbConn);
 	}
 	
-	protected function error($err)
-	{
+	protected function error($err) {
 		throw new Exception($err);
 	}
 	
-	public function escape($escape,$autoQuotes=true,$quotes=true)
-	{
-		if(is_bool($escape))
-		{
+	public function escape($escape,$autoQuotes=true,$quotes=true) {
+		if(is_bool($escape)) {
 			if($autoQuotes)
 				return $this->escapeBoolean($escape);
 			else
 				return $this->escapeBoolean($escape,$quotes);
 		}
-		if(is_numeric($escape))
-		{
+		if(is_numeric($escape)) {
 			if($autoQuotes)
 				return $this->escapeNumber($escape);
 			else
 				return $this->escapeNumber($escape,$quotes);
 		}
-		if(is_string($escape))
-		{
+		if(is_string($escape)) {
 			if($autoQuotes)
 				return $this->escapeString($escape);
 			else
 				return $this->escapeString($escape,$quotes);
 		}
-		if(is_array($escape))
-		{
+		if(is_array($escape)) {
 			return $this->escapeArray($escape,$autoQuotes,$quotes);
 		}
-		if(is_object($escape))
-		{
+		if(is_object($escape)) {
 			if($autoQuotes)
 				return $this->escapeObject($escape);
 			else
@@ -161,19 +134,16 @@ abstract class MySqlDatabase implements Database
 		}
 	}
 	
-	public function escapeString($string,$quotes=true,$nullable=false)
-	{
+	public function escapeString($string,$quotes=true,$nullable=false) {
 		if($nullable===true && ($string===null || $string===''))
 			return 'NULL';
 		if($string===true)
 			$string = 'TRUE';
 		else if($string===false)
 			$string = 'FALSE';
-		if(is_array($string))
-		{
+		if(is_array($string)) {
 			$escapedString = '';
-			foreach($string as $value)
-			{
+			foreach($string as $value) {
 				$escapedString .= $this->escapeString($value, $quotes) .',';
 			}
 			return substr($escapedString,0,-1);
@@ -183,18 +153,14 @@ abstract class MySqlDatabase implements Database
 		return mysql_real_escape_string($string,self::$dbConn);
 	}
 	
-	public function escapeBinary($binary)
-	{
+	public function escapeBinary($binary) {
 		return '0x'.bin2hex($binary);
 	}
 	
-	public function escapeArray(array $array,$autoQuotes=true,$quotes=true,$implodeString=',',$escapeIndividually=true)
-	{
+	public function escapeArray(array $array,$autoQuotes=true,$quotes=true,$implodeString=',',$escapeIndividually=true) {
 		$string = '';
-		if($escapeIndividually)
-		{
-			foreach($array as $value)
-			{
+		if($escapeIndividually) {
+			foreach($array as $value) {
 				if(is_array($value))
 					$string .= $this->escapeArray($value,$autoQuotes,$quotes,$implodeString,$escapeIndividually).$implodeString;
 				else
@@ -202,31 +168,27 @@ abstract class MySqlDatabase implements Database
 			}
 			$string = substr($string,0,-1);
 		}
-		else
-		{
+		else {
 			$string = $this->escape(implode($implodeString,$array), $autoQuotes, $quotes);
 		}
 		return $string;
 	}
 	
-	public function escapeNumber($num,$quotes=false)
-	{
+	public function escapeNumber($num,$quotes=false) {
 		if(is_numeric($num))
 			return $this->escapeString($num,$quotes);
 		else
 			throw new Exception('Not a number! ('.$num.')');
 	}
 	
-	public function escapeMicrotime($microtime,$quotes=false)
-	{
+	public function escapeMicrotime($microtime,$quotes=false) {
 		if(strlen($microtime)==21)
 			return $this->escapeString(microtimeSec($microtime).microtimeMSec($microtime),$quotes);
 		else
 			throw new Exception('Not a microtime! ('.$microtime.')');
 	}
 	
-	public function escapeBoolean($bool,$quotes=true)
-	{
+	public function escapeBoolean($bool,$quotes=true) {
 		if($bool===true)
 			return $this->escapeString('TRUE',$quotes);
 		else if($bool===false)
@@ -235,8 +197,7 @@ abstract class MySqlDatabase implements Database
 			throw new Exception('Not a boolean!'); //TEST
 	}
 	
-	public function escapeObject($object,$compress=false,$quotes=true,$nullable=false)
-	{
+	public function escapeObject($object,$compress=false,$quotes=true,$nullable=false) {
 		if($compress===true)
 			return $this->escapeBinary(gzcompress(serialize($object)));
 		return $this->escapeString(serialize($object),$quotes,$nullable);
@@ -254,20 +215,16 @@ abstract class MySqlDatabase implements Database
 	
 	//below this is purely for compatibility reasons
 	
-	function free()
-	{
+	function free() {
 		unset($this->dbRecord);
 		mysql_free_result($this->dbResult);
 	}
 	
-	function escape_string($string, $transfer_html=false)
-	{
+	function escape_string($string, $transfer_html=false) {
 		
-		if(is_array($string))
-		{
+		if(is_array($string)) {
 			$escapedString = '';
-			foreach($string as $value)
-			{
+			foreach($string as $value) {
 				$escapedString .= $this->escape_string($value, $transfer_html) .',';
 			}
 			return substr($escapedString,0,-1);

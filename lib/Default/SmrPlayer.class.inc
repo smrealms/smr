@@ -1,8 +1,7 @@
 <?php
 require_once(get_file_loc('AbstractSmrPlayer.class.inc'));
 require_once(get_file_loc('council.inc'));
-class SmrPlayer extends AbstractSmrPlayer
-{
+class SmrPlayer extends AbstractSmrPlayer {
 	const TIME_FOR_FEDERAL_BOUNTY_ON_PR = 10800;
 	const TIME_FOR_ALLIANCE_SWITCH = 0;
 	protected static $CACHE_SECTOR_PLAYERS = array();
@@ -61,54 +60,42 @@ class SmrPlayer extends AbstractSmrPlayer
 //		}
 //	}
 	
-	public static function refreshCache()
-	{
-		foreach(self::$CACHE_PLAYERS as $gameID => &$gamePlayers)
-		{
-			foreach($gamePlayers as $accountID => &$player)
-			{
+	public static function refreshCache() {
+		foreach(self::$CACHE_PLAYERS as $gameID => &$gamePlayers) {
+			foreach($gamePlayers as $accountID => &$player) {
 				$player = self::getPlayer($accountID,$gameID,true);
 			}
 		}
 	}
 	
-	public static function clearCache()
-	{
+	public static function clearCache() {
 		self::$CACHE_PLAYERS = array();
 		self::$CACHE_SECTOR_PLAYERS = array();
 	}
 	
-	public static function savePlayers()
-	{
-		foreach(self::$CACHE_PLAYERS as &$gamePlayers)
-		{
-			foreach($gamePlayers as &$player)
-			{
+	public static function savePlayers() {
+		foreach(self::$CACHE_PLAYERS as &$gamePlayers) {
+			foreach($gamePlayers as &$player) {
 				$player->save();
 			}
 		}
 	}
 
-	public static function &getSectorPlayersByAlliances($gameID,$sectorID, array $allianceIDs, $forceUpdate = false)
-	{
+	public static function &getSectorPlayersByAlliances($gameID,$sectorID, array $allianceIDs, $forceUpdate = false) {
 		$players = self::getSectorPlayers($gameID,$sectorID,$forceUpdate); // Don't use & as we do an unset
-		foreach($players as $accountID => &$player)
-		{
+		foreach($players as $accountID => &$player) {
 			if(!in_array($player->getAllianceID(),$allianceIDs))
 				unset($players[$accountID]);
 		}
 		return $players;
 	}
 
-	public static function &getSectorPlayers($gameID,$sectorID,$forceUpdate = false)
-	{
-		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID]))
-		{
+	public static function &getSectorPlayers($gameID,$sectorID,$forceUpdate = false) {
+		if($forceUpdate || !isset(self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(false) . ' AND (last_cpl_action > ' . $db->escapeNumber(TIME-TIME_BEFORE_INACTIVE) . ' OR newbie_turns = 0) AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
-			while($db->nextRecord())
-			{
+			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
 			}
@@ -117,15 +104,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID];
 	}
 
-	public static function &getPlanetPlayers($gameID,$sectorID,$forceUpdate = false)
-	{
-		if($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID]))
-		{
+	public static function &getPlanetPlayers($gameID,$sectorID,$forceUpdate = false) {
+		if($forceUpdate || !isset(self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT account_id FROM player WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id=' . $db->escapeNumber($gameID) . ' AND land_on_planet = ' . $db->escapeBoolean(true) . ' AND account_id NOT IN (' . $db->escapeArray(Globals::getHiddenPlayers()) . ') ORDER BY last_cpl_action DESC');
 			$players = array();
-			while($db->nextRecord())
-			{
+			while($db->nextRecord()) {
 				$accountID = $db->getField('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
 			}
@@ -134,15 +118,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID];
 	}
 
-	public static function &getAlliancePlayers($gameID,$allianceID,$forceUpdate = false)
-	{
-		if($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID]))
-		{
+	public static function &getAlliancePlayers($gameID,$allianceID,$forceUpdate = false) {
+		if($forceUpdate || !isset(self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT account_id FROM player WHERE alliance_id = ' . $db->escapeNumber($allianceID) . ' AND game_id=' . $db->escapeNumber($gameID) .' ORDER BY experience DESC');
 			$players = array();
-			while($db->nextRecord())
-			{
+			while($db->nextRecord()) {
 				$accountID = $db->getInt('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID);
 			}
@@ -151,18 +132,15 @@ class SmrPlayer extends AbstractSmrPlayer
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
 
-	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false)
-	{
-		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray]))
-		{
+	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false) {
+		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray])) {
 			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
 			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray];
 	}
 
-	public static function &getPlayerByPlayerID($playerID,$gameID,$forceUpdate = false)
-	{
+	public static function &getPlayerByPlayerID($playerID,$gameID,$forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM player WHERE game_id = '.$db->escapeNumber($gameID).' AND player_id = '.$db->escapeNumber($playerID).' LIMIT 1');
 		if($db->nextRecord())
@@ -170,21 +148,18 @@ class SmrPlayer extends AbstractSmrPlayer
 		throw new Exception('Player ID not found.');
 	}
 	
-	protected function __construct($gameID,&$accountIDOrResultArray)
-	{
+	protected function __construct($gameID,&$accountIDOrResultArray) {
 		parent::__construct();
 		$this->db = new SmrMySqlDatabase();
 		$result=false;
 		if (is_array($accountIDOrResultArray))
 			$result =& $accountIDOrResultArray;
-		else
-		{
+		else {
 			$this->db->query('SELECT * FROM player WHERE account_id = ' . $this->db->escapeNumber($accountIDOrResultArray) . ' AND game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
 			$this->db->nextRecord();
 			$result = $this->db->getRow();
 		}
-		if($result)
-		{
+		if($result) {
 			$this->accountID					= (int) $result['account_id'];
 			$this->gameID						= (int) $result['game_id'];
 			$this->playerName					= (string) $result['player_name'];
@@ -236,21 +211,17 @@ class SmrPlayer extends AbstractSmrPlayer
 			
 			$this->SQL = 'account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID);
 		}
-		else
-		{
+		else {
 			throw new Exception('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
 		}
 	}
 	
-	public function getSQL()
-	{
+	public function getSQL() {
 		return $this->SQL;
 	}
 	
-	function get($bit)
-	{
-		switch($bit)
-		{
+	function get($bit) {
+		switch($bit) {
 			case 'Sector ID':
 				return $this->sectorID;
 			case 'Last Sector ID':
@@ -351,24 +322,20 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	public function &getShip()
-	{
+	public function &getShip() {
 		return SmrShip::getShip($this);
 	}
 	
-	public function &getAccount()
-	{
+	public function &getAccount() {
 		require_once(get_file_loc('SmrAccount.class.inc'));
 		return SmrAccount::getAccount($this->getAccountID());
 	}
 	
-	public function getKicked()
-	{
+	public function getKicked() {
 		return $this->kicked;
 	}
 	
-	public function setKicked($bool)
-	{
+	public function setKicked($bool) {
 		if($this->kicked == $bool)
 			return;
 		$this->kicked=$bool;
@@ -376,13 +343,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET kicked = '.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function getStunned()
-	{
+	function getStunned() {
 		return $this->stunned;
 	}
 	
-	function setStunned($time)
-	{
+	function setStunned($time) {
 		if($this->stunned == $time)
 			return;
 		$this->stunned=$time;
@@ -390,13 +355,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET stunned = ' . $this->stunned . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function getFleed()
-	{
+	function getFleed() {
 		return $this->fleed;
 	}
 	
-	function setFleed($bool)
-	{
+	function setFleed($bool) {
 		if($this->fleed == $bool)
 			return;
 		$this->fleed=$bool;
@@ -404,13 +367,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET fleed='.$this->db->escapeBoolean($bool).' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function getZoom()
-	{
+	function getZoom() {
 		return $this->zoom;
 	}
 	
-	function setZoom($zoom)
-	{
+	function setZoom($zoom) {
 		if ($zoom < 0) $zoom = 0;
 		if ($zoom > 12) $zoom = 12;
 		if($this->zoom == $zoom)
@@ -420,15 +381,13 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET zoom = ' . $zoom . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function increaseZoom($zoom)
-	{
+	function increaseZoom($zoom) {
 		if ($zoom < 0)
 			throw new Exception('Trying to increase negative zoom.');
 		$this->setZoom($this->getZoom()+$zoom);
 	}
 	
-	function decreaseZoom($zoom)
-	{
+	function decreaseZoom($zoom) {
 		if ($zoom < 0)
 			throw new Exception('Trying to decrease negative zoom.');
 		$this->setZoom($this->getZoom()-$zoom);
@@ -439,8 +398,7 @@ class SmrPlayer extends AbstractSmrPlayer
 //		return $this->zoomOn;
 //	}
 
-	public function setSectorID($sectorID)
-	{
+	public function setSectorID($sectorID) {
 		require_once('SmrPort.class.inc');
 		$port =& SmrPort::getPort($this->getGameID(),$this->getSectorID());
 		$port->addCachePort($this->getAccountID()); //Add port of sector we were just in, to make sure it is left totally up to date.
@@ -451,8 +409,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$port->addCachePort($this->getAccountID()); //Add the port of sector we are now in.
 	}
 	
-	function setLastSectorID($lastSectorID)
-	{
+	function setLastSectorID($lastSectorID) {
 		if($this->lastSectorID == $lastSectorID)
 			return;
 		$this->lastSectorID=$lastSectorID;
@@ -460,25 +417,20 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET last_sector_id = '.$this->lastSectorID.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	function leaveAlliance(AbstractSmrPlayer $kickedBy = null)
-	{
+	function leaveAlliance(AbstractSmrPlayer $kickedBy = null) {
 		$allianceID = $this->getAllianceID();
 		$alliance = $this->getAlliance();
-		if($kickedBy != null)
-		{
+		if($kickedBy != null) {
 			$kickedBy->sendMessage($this->getAccountID(), 2, 'You were kicked out of the alliance!', false);
 			$this->actionTaken('PlayerKicked', array('Alliance' => &$alliance, 'Player' => &$kickedBy));
 			$kickedBy->actionTaken('KickPlayer', array('Alliance' => &$alliance, 'Player' => &$this));
 		}
-		else if($this->isAllianceLeader())
-		{
+		else if($this->isAllianceLeader()) {
 			$this->actionTaken('DisbandAlliance', array('Alliance' => &$alliance));
 		}
-		else
-		{
+		else {
 			$this->actionTaken('LeaveAlliance', array('Alliance' => &$alliance));
-			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL)
-			{
+			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL) {
 				$this->sendMessage($alliance->getLeaderID(), 2, 'I left your alliance!', false);
 			}
 		}
@@ -488,15 +440,13 @@ class SmrPlayer extends AbstractSmrPlayer
 							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
 							AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 	
-		if(!$this->isAllianceLeader() && $allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
-		{
+		if(!$this->isAllianceLeader() && $allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance. {
 			$this->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH);
 			$alliance->getLeader()->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}
 	}
 	
-	function joinAlliance($allianceID)
-	{
+	function joinAlliance($allianceID) {
 		$this->setAllianceID($allianceID);
 		$alliance = $this->getAlliance();
 		if (!$this->isAllianceLeader())
@@ -505,26 +455,22 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->actionTaken('JoinAlliance', array('Alliance' => &$alliance));
 	}
 	
-	function getAllianceJoinable()
-	{
+	function getAllianceJoinable() {
 		return $this->allianceJoinable;
 	}
 	
-	function setAllianceJoinable($time)
-	{
+	function setAllianceJoinable($time) {
 		if($this->allianceJoinable == $time)
 			return;
 		$this->allianceJoinable=$time;
 		$this->hasChanged=true;
 	}
 	
-	function getAttackColor()
-	{
+	function getAttackColor() {
 		return $this->attackColor;
 	}
 	
-	function setAttackColor($colour)
-	{
+	function setAttackColor($colour) {
 		if($this->attackColor == $colour)
 			return;
 		$this->attackColor=$colour;
@@ -532,13 +478,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColor) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function getBank()
-	{
+	function getBank() {
 		return $this->bank;
 	}
 
-	function increaseBank($credits)
-	{
+	function increaseBank($credits) {
 		if($credits < 0)
 			throw new Exception('Trying to increase negative credits.');
 		if($credits == 0)
@@ -546,8 +490,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$credits += $this->bank;
 		$this->setBank($credits);
 	}
-	function decreaseBank($credits)
-	{
+	function decreaseBank($credits) {
 		if($credits < 0)
 			throw new Exception('Trying to decrease negative credits.');
 		if($credits == 0)
@@ -555,8 +498,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$credits = $this->bank - $credits;
 		$this->setBank($credits);
 	}
-	function setBank($credits)
-	{
+	function setBank($credits) {
 		if($this->bank == $credits)
 			return;
 		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) return;
@@ -569,13 +511,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET bank = '.$this->bank.' WHERE '.$this->SQL.' LIMIT 1');
 	}
 
-	function getLastNewsUpdate()
-	{
+	function getLastNewsUpdate() {
 		return $this->lastNewsUpdate;
 	}
 
-	function setLastNewsUpdate($time)
-	{
+	function setLastNewsUpdate($time) {
 		if($this->lastNewsUpdate == $time)
 			return;
 		$this->lastNewsUpdate=$time;
@@ -583,13 +523,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET last_news_update = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
-	function updateLastNewsUpdate()
-	{
+	function updateLastNewsUpdate() {
 		$this->setLastNewsUpdate(TIME);
 	}
 
-	function getGovernmentHelp()
-	{
+	function getGovernmentHelp() {
 		return $this->governmentHelp;
 	}
 
@@ -640,13 +578,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET chat_position = ' . $this->db->escapeString($chatPosition) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 //	}
 	
-	function getOriginalMaintenance()
-	{
+	function getOriginalMaintenance() {
 		return $this->originalMaintenance;
 	}
 	
-	public function updateTurns()
-	{
+	public function updateTurns() {
 		// is account validated?
 		if (!$this->getAccount()->isValidated()) return;
 		$ship =& $this->getShip();
@@ -658,14 +594,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		$extraTurns = floor($time_diff * $ship->getRealSpeed() / 3600);
 		
 		// do we have at least one turn to give?
-		if ($extraTurns > 0)
-		{
+		if ($extraTurns > 0) {
 			// recalc the time to avoid errors
 			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed());
 		
 			$startTurnsDate = $this->getGame()->getStartTurnsDate();
-			if($startTurnsDate < $newLastTurnUpdate && $startTurnsDate >= $this->getLastTurnUpdate())
-			{
+			if($startTurnsDate < $newLastTurnUpdate && $startTurnsDate >= $this->getLastTurnUpdate()) {
 				$startingTurns = min($ship->getRealSpeed() * $this->getGame()->getStartTurnHours(), $this->getMaxTurns() - $this->getTurns());
 				$extraUpdateTime = (ceil($startingTurns) - $startingTurns) * 3600 / $ship->getRealSpeed();
 				$extraTurns += $startingTurns;
@@ -680,13 +614,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	}
 		
 	
-	function isIgnoreGlobals()
-	{
+	function isIgnoreGlobals() {
 		return $this->ignoreGlobals;
 	}
 	
-	function setIgnoreGlobals($bool)
-	{
+	function setIgnoreGlobals($bool) {
 		if($this->ignoreGlobals == $bool)
 			return;
 		$this->ignoreGlobals=$bool;
@@ -695,13 +627,11 @@ class SmrPlayer extends AbstractSmrPlayer
 	}
 	
 	
-	function getLastPort()
-	{
+	function getLastPort() {
 		return $this->lastPort;
 	}
 	
-	function setLastPort($lastPort)
-	{
+	function setLastPort($lastPort) {
 		if($this->lastPort == $lastPort)
 			return;
 		$this->lastPort=$lastPort;
@@ -709,52 +639,44 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET last_port = ' . $this->lastPort . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function isDisplayMissions()
-	{
+	function isDisplayMissions() {
 		return $this->displayMissions;
 	}
 	
-	function setDisplayMissions($bool)
-	{
+	function setDisplayMissions($bool) {
 		if($this->displayMissions == $bool)
 			return;
 		$this->displayMissions=$bool;
 		$this->hasChanged=true;
 	}
 	
-	function isDisplayWeapons()
-	{
+	function isDisplayWeapons() {
 		return $this->displayWeapons;
 	}
 	
-	function setDisplayWeapons($bool)
-	{
+	function setDisplayWeapons($bool) {
 		if($this->displayWeapons == $bool)
 			return;
 		$this->displayWeapons=$bool;
 		$this->hasChanged=true;
 	}
 	
-	function isForceDropMessages()
-	{
+	function isForceDropMessages() {
 		return $this->forceDropMessages;
 	}
 	
-	function setForceDropMessages($bool)
-	{
+	function setForceDropMessages($bool) {
 		if($this->forceDropMessages == $bool)
 			return;
 		$this->forceDropMessages=$bool;
 		$this->hasChanged=true;
 	}
 	
-	function getLastTurnUpdate()
-	{
+	function getLastTurnUpdate() {
 		return $this->lastTurnUpdate;
 	}
 	
-	function setLastTurnUpdate($time)
-	{
+	function setLastTurnUpdate($time) {
 		if($this->lastTurnUpdate == $time)
 			return;
 		$this->lastTurnUpdate=$time;
@@ -762,13 +684,11 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$sql = $this->db->query('UPDATE player SET last_turn_update = ' . $this->lastTurnUpdate . ' WHERE '. $this->SQL . ' LIMIT 1');
 	}
 	
-	function getLastShipMod()
-	{
+	function getLastShipMod() {
 		return $this->lastShipMod;
 	}
 	
-	function setLastShipMod($time)
-	{
+	function setLastShipMod($time) {
 		if($this->lastShipMod == $time)
 			return;
 		$this->lastShipMod = $time;
@@ -776,10 +696,8 @@ class SmrPlayer extends AbstractSmrPlayer
 //		$this->db->query('UPDATE player SET last_ship_mod = ' . $time . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 	
-	function getPastMaintBought()
-	{
-		if(!isset($this->pastMaintBought))
-		{
+	function getPastMaintBought() {
+		if(!isset($this->pastMaintBought)) {
 			//get past maint
 			$this->db->query('DELETE FROM player_repaired WHERE time < ' . $this->db->escapeNumber(TIME - 3600 * 20));
 			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE ' . $this->SQL . ' AND amount > 0 LIMIT 1');
@@ -793,10 +711,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->pastMaintBought;
 	}
 	
-	function getPastMaintCredit()
-	{
-		if(!isset($this->pastMaintCredit))
-		{
+	function getPastMaintCredit() {
+		if(!isset($this->pastMaintCredit)) {
 			//get past maint
 			$this->db->query('DELETE FROM player_repaired WHERE time < ' . $this->db->escapeNumber(TIME - 3600 * 20));
 			$this->db->query('SELECT sum(amount) as sum FROM player_repaired WHERE '.$this->SQL.' AND amount < 0 LIMIT 1');
@@ -806,24 +722,20 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->pastMaintCredit;
 	}
 		
-	function removePastMaint()
-	{
+	function removePastMaint() {
 		$this->pastMaint=0;
 		$this->db->query('DELETE FROM player_repaired WHERE '.$this->SQL);
 	}
 	
-	function addPastMaintBought($amount,$type='Normal')
-	{
+	function addPastMaintBought($amount,$type='Normal') {
 		$this->getPastMaintBought();
 		$this->db->query('REPLACE INTO player_repaired (account_id, game_id, time, amount, source) VALUES (' . $this->db->escapeNumber($this->accountID) . ',' . $this->db->escapeNumber($this->gameID) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeNumber($amount) . ',' . $this->db->escapeString($type) . ')');
 		$this->giveTurns($amount*10);
 		$this->pastMaintBought+=$amount;
 	}
 	
-	protected function getStatsData()
-	{
-		if(!isset($this->stats))
-		{
+	protected function getStatsData() {
+		if(!isset($this->stats)) {
 //			//initialize stats
 //			global $STATS;
 //			foreach ($STATS as $stat_name => $statArray)
@@ -838,34 +750,28 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	function deleteStats()
-	{
+	function deleteStats() {
 		$this->getStats();
 		$this->db->query('DELETE FROM player_has_special WHERE '.$this->SQL.' LIMIT '.count($this->stats));
 		unset($this->stats);
 	}
 	
-	protected function getPureRelationsData()
-	{
-		if(!isset($this->pureRelations))
-		{
+	protected function getPureRelationsData() {
+		if(!isset($this->pureRelations)) {
 			//get relations
 			$RACES = Globals::getRaces();
 			$this->pureRelations = array();
-			foreach ($RACES as $raceID => $raceName)
-			{
+			foreach ($RACES as $raceID => $raceName) {
 				$this->pureRelations[$raceID] = 0;
 			}
 			$this->db->query('SELECT race_id,relation FROM player_has_relation WHERE ' . $this->SQL . ' LIMIT ' . count($RACES));
-			while ($this->db->nextRecord())
-			{
+			while ($this->db->nextRecord()) {
 				$this->pureRelations[$this->db->getInt('race_id')] = $this->db->getInt('relation');
 			}
 		}
 	}
 
-	function increaseRelationsByTrade($numGoods,$raceID)
-	{
+	function increaseRelationsByTrade($numGoods,$raceID) {
 		$relations = ceil(min($numGoods,300)/30);
 		//Cap relations to a max of 1 after 500 have been reached
 		if($this->getPureRelation($raceID) + $relations >= 500)
@@ -873,14 +779,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->increaseRelations($relations,$raceID);
 	}
 
-	function decreaseRelationsByTrade($numGoods,$raceID)
-	{
+	function decreaseRelationsByTrade($numGoods,$raceID) {
 		$relations = ceil(min($numGoods,300)/30);
 		$this->decreaseRelations($relations,$raceID);
 	}
 
-	function increaseRelations($relations,$raceID)
-	{
+	function increaseRelations($relations,$raceID) {
 		if($relations < 0)
 			throw new Exception('Trying to increase negative relations.');
 		if($relations == 0)
@@ -888,8 +792,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$relations += $this->getPureRelation($raceID);
 		$this->setRelations($relations,$raceID);
 	}
-	function decreaseRelations($relations,$raceID)
-	{
+	function decreaseRelations($relations,$raceID) {
 		if($relations < 0)
 			throw new Exception('Trying to decrease negative relations.');
 		if($relations == 0)
@@ -897,8 +800,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$relations = $this->getPureRelation($raceID) - $relations;
 		$this->setRelations($relations,$raceID);
 	}
-	function setRelations($relations,$raceID)
-	{
+	function setRelations($relations,$raceID) {
 		$this->getPureRelations();
 		if($this->pureRelations[$raceID] == $relations)
 			return;
@@ -910,33 +812,27 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->db->query('REPLACE INTO player_has_relation (account_id,game_id,race_id,relation) values (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($raceID) . ',' . $this->db->escapeNumber($this->pureRelations[$raceID]) . ')');
 	}
 	
-	public function setPlayerName($playerName)
-	{
+	public function setPlayerName($playerName) {
 		$this->playerName=$playerName;
 		$this->setNameChanged(true);
 		$this->hasChanged=true;
 	}
 	
-	public function isNameChanged()
-	{
+	public function isNameChanged() {
 		return $this->nameChanged;
 	}
 	
-	public function setNameChanged($bool)
-	{
+	public function setNameChanged($bool) {
 		$this->nameChanged = $bool;
 		$this->hasChanged=true;
 	}
 	
-	public function hasCustomShipName()
-	{
+	public function hasCustomShipName() {
 		return $this->getCustomShipName()!==false;
 	}
 	
-	public function getCustomShipName()
-	{
-		if(!isset($this->customShipName))
-		{
+	public function getCustomShipName() {
+		if(!isset($this->customShipName)) {
 			$this->db->query('SELECT * FROM ship_has_name WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
 			if ($this->db->nextRecord())
 				$this->customShipName = $this->db->getField('ship_name');
@@ -996,10 +892,8 @@ class SmrPlayer extends AbstractSmrPlayer
 //		return $goodsExp[$goodID];
 //	}
 	
-	protected function getGadgetsData()
-	{
-		if(!isset($this->gadgets))
-		{
+	protected function getGadgetsData() {
+		if(!isset($this->gadgets)) {
 			//Get Player Gadgets
 			$this->db->query('SELECT gadget_id,equipped,cooldown,lasts_until FROM player_has_gadget WHERE ' . $this->SQL);
 			$this->gadgets = array();
@@ -1008,38 +902,29 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	public function setGadgets($keyOrUpdateArray,$value)
-	{
+	public function setGadgets($keyOrUpdateArray,$value) {
 		$this->getGadgets();
 
-		if(is_array($keyOrUpdateArray))
-		{
+		if(is_array($keyOrUpdateArray)) {
 			$set = '';
-			foreach($keyOrUpdateArray as $key => $newInfo)
-			{
+			foreach($keyOrUpdateArray as $key => $newInfo) {
 				$field = $this->gadgetKeyToField($key);
-				if($field!==false)
-				{
-					foreach($this->gadgets as $gadgetID => $gadget)
-					{
+				if($field!==false) {
+					foreach($this->gadgets as $gadgetID => $gadget) {
 						$this->gadgets[$gadgetID][$key] = $newInfo;
 					}
 					$set .= '`' . $field . '` = '.$this->db->escapeString($newInfo).',';
 				}
 			}
-			if($set!=='')
-			{
+			if($set!=='') {
 				$set=substr($set,0,-1);
 				$this->db->query('UPDATE player_has_gadget SET '.$set.' WHERE '.$this->SQL.' LIMIT '.count($this->gadgets));
 			}
 		}
-		else
-		{
+		else {
 			$field = $this->gadgetKeyToField($keyOrUpdateArray);
-			if($field!==false)
-			{
-				foreach($this->gadgets as $gadgetID => $gadget)
-				{
+			if($field!==false) {
+				foreach($this->gadgets as $gadgetID => $gadget) {
 					$this->gadgets[$gadgetID][$keyOrUpdateArray] = $value;
 				}
 				$this->db->query('UPDATE player_has_gadget SET `'.$field.'` = ' . $this->db->escapeString($value) . ' WHERE '.$this->SQL.' LIMIT '.count($this->gadgets));
@@ -1047,43 +932,33 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	function setGadget($gadgetID,$keyOrUpdateArray,$value)
-	{
-		if(!is_numeric($gadgetID))
-		{
+	function setGadget($gadgetID,$keyOrUpdateArray,$value) {
+		if(!is_numeric($gadgetID)) {
 			global $GADGETS;
 			$gadgetID = $GADGETS[$gadgetID]['ID'];
 		}
 		$this->getGadgets();
-		if(isset($this->gadgets[$gadgetID]))
-		{
-			if(is_array($keyOrUpdateArray))
-			{
+		if(isset($this->gadgets[$gadgetID])) {
+			if(is_array($keyOrUpdateArray)) {
 				$set = '';
-				foreach($keyOrUpdateArray as $key => $newInfo)
-				{
+				foreach($keyOrUpdateArray as $key => $newInfo) {
 					$field = $this->gadgetKeyToField($key);
-					if($field!==false)
-					{
-						if($this->gadgets[$gadgetID][$key] != $newInfo)
-						{
+					if($field!==false) {
+						if($this->gadgets[$gadgetID][$key] != $newInfo) {
 							$this->gadgets[$gadgetID][$key]=$newInfo;
 							$set .= '`' . $field . '` = '.$this->db->escapeString($newInfo).',';
 						}
 					}
 				}
-				if($set!=='')
-				{
+				if($set!=='') {
 					$set=substr($set,0,-1);
 					$this->db->query('UPDATE player_has_gadget SET '.$set.' WHERE '.$this->SQL.' AND gadget_id = ' . $this->db->escapeNumber($gadgetID) . ' LIMIT 1');
 					return true;
 				}
 			}
-			else
-			{
+			else {
 				$field = $this->gadgetKeyToField($keyOrUpdateArray);
-				if($field!==false)
-				{
+				if($field!==false) {
 					if($this->gadgets[$gadgetID][$keyOrUpdateArray] == $value)
 						return;
 					$this->gadgets[$gadgetID][$keyOrUpdateArray]=$value;
@@ -1095,8 +970,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return false;
 	}
 	
-	public function addGadget($gadgetID)
-	{
+	public function addGadget($gadgetID) {
 		if(isset($this->gadgets[$gadgetID]))
 			return false;
 		$this->gadgets[$gadgetID] = array('Equipped' => 0, 'Cooldown' => 0, 'Expires' => 0);
@@ -1104,10 +978,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		return true;
 	}
 	
-	protected function gadgetKeyToField($key)
-	{
-		switch($key)
-		{
+	protected function gadgetKeyToField($key) {
+		switch($key) {
 			case 'Equipped':
 				return 'equipped';
 			break;
@@ -1122,10 +994,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	function getMining($mineID=false)
-	{
-		if(!isset($this->mining))
-		{
+	function getMining($mineID=false) {
+		if(!isset($this->mining)) {
 			//Get Player Mining Info
 			$this->mining = array();
 			$this->db->query('SELECT mine_id, level, type, started, amount, starting_amount
@@ -1134,8 +1004,7 @@ class SmrPlayer extends AbstractSmrPlayer
 							WHERE sector_id = ' . $this->db->escapeNumber($this->sectorID) . '
 								AND account_id = ' . $this->db->escapeNumber($this->accountID) . '
 								AND game_id = ' . $this->db->escapeNumber($this->gameID) .' LIMIT 1');
-			while ($this->db->nextRecord())
-			{
+			while ($this->db->nextRecord()) {
 				$this->mining[$this->db->getInt('mine_id')] = array('Level' => $this->db->getInt('level'),
 																	'Started' => $this->db->getInt('started'),
 																	'Amount' => $this->db->getInt('amount'),
@@ -1150,37 +1019,30 @@ class SmrPlayer extends AbstractSmrPlayer
 		return false;
 	}
 	
-	function updateMiningStarted($mineID,$time)
-	{
+	function updateMiningStarted($mineID,$time) {
 		$this->getMining();
 		$this->mining[$mineID]['Started'] = $time;
 		$this->db->query('UPDATE player_is_mining SET started = ' . $this->db->escapeNumber($time) . ' WHERE ' . $this->SQL . ' AND mine_id = ' . $this->db->escapeNumber($mineID) . ' LIMIT 1');
 	}
 	
-	function deleteMining($mineID=false)
-	{
+	function deleteMining($mineID=false) {
 		$this->getMining();
-		if($mineID===false)
-		{
+		if($mineID===false) {
 			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL . ' LIMIT ' . count($this->getMining()));
 			$this->mining=array();
 		}
-		else if(isset($this->mining[$mineID]))
-		{
+		else if(isset($this->mining[$mineID])) {
 	
 			unset($this->mining[$mineID]);
 			$this->db->query('DELETE FROM player_is_mining WHERE '.$this->SQL.' AND mine_id='.$this->db->escapeNumber($mineID).' LIMIT 1');
 		}
 	}
 	
-	function getKnowledge($knowledgeType=false)
-	{
-		if(!isset($this->knowledge))
-		{
+	function getKnowledge($knowledgeType=false) {
+		if(!isset($this->knowledge)) {
 			//get players faction knowledge
 			$this->db->query('SELECT * FROM player_knows_faction WHERE ' . $this->SQL . ' LIMIT 1');
-			if ($this->db->nextRecord())
-			{
+			if ($this->db->nextRecord()) {
 				$this->knowledge['Erebus'] = $this->db->getInt('erebus');
 				$this->knowledge['Aether'] = $this->db->getInt('aether');
 				$this->knowledge['Tartarus'] = $this->db->getInt('tartarus');
@@ -1188,8 +1050,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				$this->knowledge['Federation'] = 0;
 				$this->knowledge['Underground'] = 0;
 			}
-			else
-			{
+			else {
 				$this->knowledge['Erebus'] = 0;
 				$this->knowledge['Aether'] = 0;
 				$this->knowledge['Tartarus'] = 0;
@@ -1205,8 +1066,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return false;
 	}
 	
-	public function killPlayer($sectorID)
-	{
+	public function killPlayer($sectorID) {
 		$sector =& SmrSector::getSector($this->getGameID(),$sectorID);
 		//msg taken care of in trader_att_proc.php
 		// forget plotted course
@@ -1248,8 +1108,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->getShip()->getPod($this->getAccount()->isNewbie());
 	}
 	
-	public function getHome()
-	{
+	public function getHome() {
 		// get his home sector
 		$hq_id = GOVERNMENT + $this->getRaceID();
 		$this->db->query('SELECT sector_id FROM location JOIN sector USING(game_id, sector_id)
@@ -1261,19 +1120,16 @@ class SmrPlayer extends AbstractSmrPlayer
 			return 1;
 	}
 	
-	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer)
-	{
+	public function &killPlayerByPlayer(AbstractSmrPlayer &$killer) {
 		$return = array();
 		$msg = $this->getBBLink();
 	
-		if ($this->hasCustomShipName())
-		{
+		if ($this->hasCustomShipName()) {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
 		$msg .= ' was destroyed by ' . $killer->getBBLink();
-		if ($killer->hasCustomShipName())
-		{
+		if ($killer->hasCustomShipName()) {
 			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
@@ -1291,13 +1147,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		$return['KillerExp'] = $gainedExp;
 		$killer->increaseExperience($gainedExp);
 		
-		if($this->isNPC())
-		{
+		if($this->isNPC()) {
 			$killer->increaseHOF($gainedExp,array('Killing','NPC','Experience','Gained'), HOF_PUBLIC);
 			$killer->increaseHOF($this->getExperience(),array('Killing','NPC','Experience','Of Traders Killed'), HOF_PUBLIC);
 		}
-		else
-		{
+		else {
 			$killer->increaseHOF($gainedExp,array('Killing','Experience','Gained'), HOF_PUBLIC);
 			$killer->increaseHOF($this->getExperience(),array('Killing','Experience','Of Traders Killed'), HOF_PUBLIC);
 		}
@@ -1305,8 +1159,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		// Dead player loses experience
 		$expLossPercentage = 0.12 + (($this->getLevelID() - $killer->getLevelID()) * 0.0025);
 		$return['DeadExp'] = 0;
-		if($expLossPercentage > 0)
-		{
+		if($expLossPercentage > 0) {
 			$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 			$this->decreaseExperience($return['DeadExp']);
 			$this->increaseHOF($return['DeadExp'],array('Dying','Experience','Lost'), HOF_PUBLIC);
@@ -1319,13 +1172,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		$creditsGained = $this->getCredits();
 		$return['KillerCredits'] = $creditsGained;
 		$killer->increaseCredits($creditsGained);
-		if($this->isNPC())
-		{
+		if($this->isNPC()) {
 			$killer->increaseHOF($creditsGained,array('Killing','NPC','Money','Gain'), HOF_PUBLIC);
 			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','NPC','Money','Cost Of Ships Killed'), HOF_PUBLIC);
 		}
-		else
-		{
+		else {
 			$killer->increaseHOF($creditsGained,array('Killing','Money','Gain'), HOF_PUBLIC);
 			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Cost Of Ships Killed'), HOF_PUBLIC);
 		}
@@ -1340,16 +1191,14 @@ class SmrPlayer extends AbstractSmrPlayer
 
 		$alignChange = -$relation * $alignChangePerRelation; //Lose relations when killing a peaceful race
 		$return['KillerAlign'] = $alignChange;
-		if($alignChange>0)
-		{
+		if($alignChange>0) {
 			$killer->increaseAlignment($alignChange);
 			if($this->isNPC())
 				$killer->increaseHOF($alignChange,array('Killing','NPC','Alignment','Gain'), HOF_PUBLIC);
 			else
 				$killer->increaseHOF($alignChange,array('Killing','Alignment','Gain'), HOF_PUBLIC);
 		}
-		else
-		{
+		else {
 			$killer->decreaseAlignment(-$alignChange);
 			if($this->isNPC())
 				$killer->increaseHOF(-$alignChange,array('Killing','NPC','Alignment','Loss'), HOF_PUBLIC);
@@ -1357,8 +1206,7 @@ class SmrPlayer extends AbstractSmrPlayer
 				$killer->increaseHOF(-$alignChange,array('Killing','Alignment','Loss'), HOF_PUBLIC);
 		}
 		// War setting gives them military pay
-		if($relation <= -300)
-		{
+		if($relation <= -300) {
 			$killer->increaseMilitaryPayment(-floor($relation * 100 * (pow($gainedExp/2,0.25))));
 		}
 		
@@ -1372,10 +1220,8 @@ class SmrPlayer extends AbstractSmrPlayer
 						AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
 						AND .game_id = ' . $this->db->escapeNumber($this->getGameID());
 		$this->db->query($query);
-		if ($this->db->nextRecord())
-		{
-			if ($this->db->getField('numAttacks'))
-			{
+		if ($this->db->nextRecord()) {
+			if ($this->db->getField('numAttacks')) {
 				$numAttacks = $this->db->getField('numAttacks');
 				$multiplier = round(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
 				$this->increaseCurrentBountyAmount('HQ',$numAttacks * $multiplier);
@@ -1387,20 +1233,16 @@ class SmrPlayer extends AbstractSmrPlayer
 
 		// If the alignment difference is greater than 200 then a bounty may be set
 		$alignment_diff = abs($this->getAlignment() - $killer->getAlignment());
-		if($alignment_diff >= 200)
-		{
+		if($alignment_diff >= 200) {
 			// If the podded players alignment makes them deputy or member then set bounty
-			if($this->getAlignment() >= 100)
-			{
+			if($this->getAlignment() >= 100) {
 				$bounty_type = 'HQ';
 			}
-			else if ($this->getAlignment() <= 100)
-			{
+			else if ($this->getAlignment() <= 100) {
 				$bounty_type = 'UG';
 			}
 
-			if(isset($bounty_type))
-			{
+			if(isset($bounty_type)) {
 				$bountyGained = floor(pow($alignment_diff, 2.56));
 				$killer->increaseCurrentBountyAmount($bounty_type,$bountyGained);
 				if($this->isNPC())
@@ -1416,26 +1258,21 @@ class SmrPlayer extends AbstractSmrPlayer
 			$killer->increaseHOF(1,array('Killing','NPC Kills'), HOF_PUBLIC);
 		else if($this->getShip()->getAttackRatingWithMaxCDs()<=MAX_ATTACK_RATING_NEWBIE&&$this->getAccount()->isNewbie()&&$killer->getAccount()->isVeteran()) //Newbie kill
 			$killer->increaseHOF(1,array('Killing','Newbie Kills'), HOF_PUBLIC);
-		else
-		{
+		else {
 			$killer->increaseKills(1);
 			$killer->increaseHOF(1,array('Killing','Kills'), HOF_PUBLIC);
 
-			if($killer->hasAlliance())
-			{
+			if($killer->hasAlliance()) {
 				$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($killer->getGameID()) . ' LIMIT 1');
 			}
 		}
 
-		if($this->hasAlliance() && $killer->hasAlliance())
-		{
+		if($this->hasAlliance() && $killer->hasAlliance()) {
 			$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-			if($this->db->nextRecord())
-			{
+			if($this->db->nextRecord()) {
 				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->db->escapeNumber($killer->getAllianceID()) . ' AND alliance_id_2=' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 			}
-			else
-			{
+			else {
 				$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ',1)');
 			}
 		}
@@ -1445,8 +1282,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
-	public function &killPlayerByForces(SmrForce &$forces)
-	{
+	public function &killPlayerByForces(SmrForce &$forces) {
 		$return = array();
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
@@ -1454,8 +1290,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by forces in sector '.$forces->getSectorID(),false);
 
 		$news_message = $this->getBBLink();
-		if ($this->hasCustomShipName())
-		{
+		if ($this->hasCustomShipName()) {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
@@ -1485,15 +1320,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
-	public function &killPlayerByPort(SmrPort &$port)
-	{
+	public function &killPlayerByPort(SmrPort &$port) {
 		$return = array();
 		// send a message to the person who died
 		self::sendMessageFromPort($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$port->getDisplayName().'\'s defenses.');
 		
 		$news_message = $this->getBBLink();
-		if ($this->hasCustomShipName())
-		{
+		if ($this->hasCustomShipName()) {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
@@ -1510,8 +1343,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
-	public function &killPlayerByPlanet(SmrPlanet &$planet)
-	{
+	public function &killPlayerByPlanet(SmrPlanet &$planet) {
 		$return = array();
 		// send a message to the person who died
 		$planetOwner =& $planet->getOwner();
@@ -1519,8 +1351,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		$planetOwner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by '.$planet->getDisplayName().'\'s defenses.',false);
 		
 		$news_message = $this->getBBLink();
-		if ($this->hasCustomShipName())
-		{
+		if ($this->hasCustomShipName()) {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
@@ -1537,8 +1368,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $return;
 	}
 	
-	function changeShip(SmrShip &$ship,$shipID)
-	{
+	function changeShip(SmrShip &$ship,$shipID) {
 		$this->db->query('DELETE FROM player_has_goods WHERE '.$this->SQL.' LIMIT 1');
 		decloak($ship);
 		$this->db->query('DELETE FROM player_has_illusion WHERE '.$this->SQL.' LIMIT 1');
@@ -1547,10 +1377,8 @@ class SmrPlayer extends AbstractSmrPlayer
 		checkShipForExcess($ship,$this);
 	}
 	
-	public function save()
-	{
-		if($this->hasChanged === true)
-		{
+	public function save() {
+		if($this->hasChanged === true) {
 			$this->db->query('UPDATE player SET player_name='.$this->db->escapeString($this->playerName).
 				', player_id='.$this->db->escapeNumber($this->playerID).
 				', sector_id='.$this->db->escapeNumber($this->sectorID).
@@ -1597,19 +1425,15 @@ class SmrPlayer extends AbstractSmrPlayer
 				' WHERE '.$this->SQL.' LIMIT 1');
 			$this->hasChanged=false;
 		}
-		foreach($this->hasBountyChanged as $key => &$bountyChanged)
-		{
-			if($bountyChanged===true)
-			{
+		foreach($this->hasBountyChanged as $key => &$bountyChanged) {
+			if($bountyChanged===true) {
 				$bountyChanged = false;
 				$bounty = $this->getBounty($key);
-				if($bounty['New'] === true)
-				{
+				if($bounty['New'] === true) {
 					if($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
 						$this->db->query('INSERT INTO bounty (account_id,game_id,type,amount,smr_credits,claimer_id,time) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeString($bounty['Type']) . ',' . $this->db->escapeNumber($bounty['Amount']) . ',' . $this->db->escapeNumber($bounty['SmrCredits']) . ',' . $this->db->escapeNumber($bounty['Claimer']) . ',' . $this->db->escapeNumber($bounty['Time']) .')');
 				}
-				else
-				{
+				else {
 					if($bounty['Amount'] > 0 || $bounty['SmrCredits'] > 0)
 						$this->db->query('UPDATE bounty
 							SET amount=' . $this->db->escapeNumber($bounty['Amount']) . ',
@@ -1626,14 +1450,11 @@ class SmrPlayer extends AbstractSmrPlayer
 		$this->saveHOF();
 	}
 	
-	public function saveHOF()
-	{
+	public function saveHOF() {
 		if($this->hasHOFChanged!==false)
 			$this->doHOFSave($this->hasHOFChanged);
-		if(!empty(self::$hasHOFVisChanged))
-		{
-			foreach(self::$hasHOFVisChanged as $hofType => $changeType)
-			{
+		if(!empty(self::$hasHOFVisChanged)) {
+			foreach(self::$hasHOFVisChanged as $hofType => $changeType) {
 				if($changeType==self::HOF_NEW)
 					$this->db->query('INSERT INTO hof_visibility (type, visibility) VALUES ('.$this->db->escapeString($hofType).','.$this->db->escapeString(self::$HOFVis[$hofType]).')');
 				else
@@ -1642,26 +1463,20 @@ class SmrPlayer extends AbstractSmrPlayer
 			}
 		}
 	}
-	protected function doHOFSave(array &$hasChangedList,array $typeList = array())
-	{
-		foreach($hasChangedList as $type => &$hofChanged)
-		{
+	protected function doHOFSave(array &$hasChangedList,array $typeList = array()) {
+		foreach($hasChangedList as $type => &$hofChanged) {
 			$tempTypeList = $typeList;
 			$tempTypeList[] = $type;
-			if(is_array($hofChanged))
-			{
+			if(is_array($hofChanged)) {
 				$this->doHOFSave($hofChanged,$tempTypeList);
 			}
-			else
-			{
+			else {
 				$amount = $this->getHOF($tempTypeList);
-				if($hofChanged==self::HOF_NEW)
-				{
+				if($hofChanged==self::HOF_NEW) {
 					if($amount > 0)
 						$this->db->query('INSERT INTO player_hof (account_id,game_id,type,amount) VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeArray($tempTypeList,false,true,':',false) . ',' . $this->db->escapeNumber($amount) . ')');
 				}
-				else if($hofChanged==self::HOF_CHANGED)
-				{
+				else if($hofChanged==self::HOF_CHANGED) {
 	//				if($amount > 0)
 						$this->db->query('UPDATE player_hof
 							SET amount=' . $this->db->escapeNumber($amount) . '
@@ -1675,21 +1490,16 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	protected function getHOFData()
-	{
-		if(!isset($this->HOF))
-		{
+	protected function getHOFData() {
+		if(!isset($this->HOF)) {
 			//Get Player HOF
 			$this->db->query('SELECT type,amount FROM player_hof WHERE ' . $this->SQL);
 			$this->HOF = array();
-			while($this->db->nextRecord())
-			{
+			while($this->db->nextRecord()) {
 				$hof =& $this->HOF;
 				$typeList = explode(':',$this->db->getField('type'));
-				foreach($typeList as $type)
-				{
-					if(!isset($hof[$type]))
-					{
+				foreach($typeList as $type) {
+					if(!isset($hof[$type])) {
 						$hof[$type] = array();
 					}
 					$hof =& $hof[$type];
@@ -1700,29 +1510,23 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	public static function getHOFVis()
-	{
-		if(!isset(self::$HOFVis))
-		{
+	public static function getHOFVis() {
+		if(!isset(self::$HOFVis)) {
 			//Get Player HOF Vis
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT type,visibility FROM hof_visibility');
 			self::$HOFVis = array();
-			while($db->nextRecord())
-			{
+			while($db->nextRecord()) {
 				self::$HOFVis[$db->getField('type')] = $db->getField('visibility');
 			}
 		}
 	}
 	
-	protected function getBountiesData()
-	{
-		if(!isset($this->bounties))
-		{
+	protected function getBountiesData() {
+		if(!isset($this->bounties)) {
 			$this->bounties = array();
 			$this->db->query('SELECT * FROM bounty WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()));
-			while($this->db->nextRecord())
-			{
+			while($this->db->nextRecord()) {
 				$this->bounties[$this->db->getField('bounty_id')] = array(
 							'Amount' => $this->db->getInt('amount'),
 							'SmrCredits' => $this->db->getInt('smr_credits'),
@@ -1735,36 +1539,29 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	public function isPresident()
-	{
+	public function isPresident() {
 		$president =& Council::getPresident($this->getGameID(),$this->getRaceID());
 		return is_object($president)&&$this->equals($president);
 	}
 	
-	public function isOnCouncil()
-	{
+	public function isOnCouncil() {
 		return Council::isOnCouncil($this->getGameID(),$this->getRaceID(),$this->getAccountID());
 	}
 	
-	public function setNewbieWarning($bool)
-	{
-		if($this->newbieWarning==$bool)
-		{
+	public function setNewbieWarning($bool) {
+		if($this->newbieWarning==$bool) {
 			return;
 		}
 		$this->newbieWarning=$bool;
 		$this->hasChanged=true;
 	}
 	
-	public function getNewbieWarning()
-	{
+	public function getNewbieWarning() {
 		return $this->newbieWarning;
 	}
 	
-	public function getTickers()
-	{
-		if(!isset($this->tickers))
-		{
+	public function getTickers() {
+		if(!isset($this->tickers)) {
 			$this->tickers = array();
 			//get ticker info
 			$this->db->query('SELECT type,time,expires,recent FROM player_has_ticker WHERE ' . $this->SQL .' AND expires > ' . $this->db->escapeNumber(TIME));
@@ -1777,39 +1574,33 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->tickers;
 	}
 	
-	public function hasTickers()
-	{
+	public function hasTickers() {
 		return count($this->getTickers()) > 0;
 	}
 	
-	public function getTicker($tickerType)
-	{
+	public function getTicker($tickerType) {
 		$tickers = $this->getTickers();
 		if(isset($tickers[$tickerType]))
 			return $tickers[$tickerType];
 		return false;
 	}
 	
-	public function hasTicker($tickerType)
-	{
+	public function hasTicker($tickerType) {
 		return $this->getTicker($tickerType) !== false;
 	}
 	
-	public function getTurnsLevel()
-	{
+	public function getTurnsLevel() {
 		if (!$this->hasTurns()) return 'NONE';
 		if ($this->getTurns() <= 25 ) return 'LOW';
 		if ($this->getTurns() <= 75 ) return 'MEDIUM';
 		return 'HIGH';
 	}
 	
-	public function update()
-	{
+	public function update() {
 		$this->save();
 	}
 	
-	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires, $senderDelete = false, $unread = true)
-	{
+	protected static function doMessageSending($senderID,$receiverID, $gameID, $messageTypeID, $message, $expires, $senderDelete = false, $unread = true) {
 		$message = trim($message);
 		$db = new SmrMySqlDatabase();
 		// send him the message
@@ -1826,19 +1617,16 @@ class SmrPlayer extends AbstractSmrPlayer
 			$db->escapeBoolean($senderDelete) . ')'
 		);
 
-		if($unread === true)
-		{
+		if($unread === true) {
 			// give him the message icon
 			$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
 						(' . $this->db->escapeNumber($gameID) . ', ' . $this->db->escapeNumber($receiverID) . ', ' . $this->db->escapeNumber($messageTypeID) . ')');
 		}
 
-		switch ($messageTypeID)
-		{
+		switch ($messageTypeID) {
 			case MSG_PLAYER:
 				$receiverAccount =& SmrAccount::getAccount($receiverID);
-				if($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn())
-				{
+				if($receiverAccount->isValidated() && $receiverAccount->isReceivingMessageNotifications($messageTypeID) && !$receiverAccount->isLoggedIn()) {
 					require_once(LIB.'External/phpMailer/class.phpmailer.php');
 					$senderPlayer =& SmrPlayer::getPlayer($senderID, $gameID);
 					$mail = new PHPMailer();
@@ -1858,16 +1646,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		}
 	}
 	
-	public function sendMessageToBox($boxTypeID, $message)
-	{
+	public function sendMessageToBox($boxTypeID, $message) {
 		// send him the message
 		SmrAccount::doMessageSendingToBox($this->getAccountID(), $boxTypeID, $message, $this->getGameID());
 	}
 	
-	public function sendGlobalMessage($message, $canBeIgnored = true)
-	{
-		if($canBeIgnored)
-		{
+	public function sendGlobalMessage($message, $canBeIgnored = true) {
+		if($canBeIgnored) {
 			if($this->getAccount()->isMailBanned())
 				create_error('You are currently banned from sending messages');
 		}
@@ -1883,18 +1668,15 @@ class SmrPlayer extends AbstractSmrPlayer
 						AND ignore_globals = \'FALSE\'
 						AND account_id != ' . $this->db->escapeNumber($this->getAccountID()));
 	
-		while ($db->nextRecord())
-		{
+		while ($db->nextRecord()) {
 			$this->sendMessage($db->getInt('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
 		}
 		$this->sendMessage($this->getAccountID(), MSG_GLOBAL, $message, $canBeIgnored, false);
 	}
 	
-	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true, $unread = true)
-	{
+	public function sendMessage($receiverID, $messageTypeID, $message, $canBeIgnored = true, $unread = true) {
 		//get expire time
-		if($canBeIgnored)
-		{
+		if($canBeIgnored) {
 			if($this->getAccount()->isMailBanned())
 				create_error('You are currently banned from sending messages');
 			// Don't send messages to players ignoring us
@@ -1905,8 +1687,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		
 		$message = word_filter($message);
 		
-		switch ($messageTypeID)
-		{
+		switch ($messageTypeID) {
 			case MSG_GLOBAL: //We don't send globals to the box here or it gets done loads of times.
 				$expires = 3600; // 1h
 			break;
@@ -1939,24 +1720,21 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $messageTypeID == MSG_SCOUT, $unread);
 	}
 	
-	public static function sendMessageFromPlanet($gameID, $receiverID, $message)
-	{
+	public static function sendMessageFromPlanet($gameID, $receiverID, $message) {
 		//get expire time
 		$expires = TIME + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PLANET,$receiverID, $gameID, MSG_PLANET, $message, $expires);
 	}
 	
-	public static function sendMessageFromPort($gameID, $receiverID, $message)
-	{
+	public static function sendMessageFromPort($gameID, $receiverID, $message) {
 		//get expire time
 		$expires = TIME + 86400 * 31;
 		// send him the message
 		self::doMessageSending(ACCOUNT_ID_PORT,$receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 	
-	public static function sendMessageFromAdmin($gameID, $receiverID, $message, $expires = false)
-	{
+	public static function sendMessageFromAdmin($gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if($expires===false)
 			$expires = TIME + 86400 * 365;
@@ -1964,8 +1742,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::doMessageSending(ACCOUNT_ID_ADMIN,$receiverID, $gameID, MSG_ADMIN, $message, $expires);
 	}
 	
-	public static function sendMessageFromAllianceAmbassador($gameID, $receiverID, $message, $expires = false)
-	{
+	public static function sendMessageFromAllianceAmbassador($gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if($expires===false)
 			$expires = TIME + 86400 * 31;
@@ -1973,8 +1750,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::doMessageSending(ACCOUNT_ID_ALLIANCE_AMBASSADOR, $receiverID, $gameID, MSG_ALLIANCE, $message, $expires);
 	}
 	
-	public static function sendMessageFromCasino($gameID, $receiverID, $message, $expires = false)
-	{
+	public static function sendMessageFromCasino($gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if($expires===false)
 			$expires = TIME + 86400 * 7;
@@ -1982,8 +1758,7 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::doMessageSending(ACCOUNT_ID_CASINO, $receiverID, $gameID, MSG_CASINO, $message, $expires);
 	}
 	
-	public static function sendMessageFromRace($raceID, $gameID, $receiverID, $message, $expires = false)
-	{
+	public static function sendMessageFromRace($raceID, $gameID, $receiverID, $message, $expires = false) {
 		//get expire time
 		if($expires===false)
 			$expires = TIME + 86400 * 5;
@@ -1991,16 +1766,13 @@ class SmrPlayer extends AbstractSmrPlayer
 		self::doMessageSending(ACCOUNT_ID_GROUP_RACES+$raceID,$receiverID, $gameID, MSG_POLITICAL, $message, $expires);
 	}
 	
-	public function setMessagesRead($messageTypeID)
-	{
+	public function setMessagesRead($messageTypeID) {
 		$this->db->query('DELETE FROM player_has_unread_messages
 							WHERE '.$this->SQL.' AND message_type_id = ' . $this->db->escapeNumber($messageTypeID));
 	}
 	
-	public function &getPlottedCourse()
-	{
-		if(!isset($this->plottedCourse))
-		{
+	public function &getPlottedCourse() {
+		if(!isset($this->plottedCourse)) {
 			require_once(get_file_loc('Plotter.class.inc'));
 			// check if we have a course plotted
 			$this->db->query('SELECT course FROM player_plotted_course
@@ -2009,16 +1781,13 @@ class SmrPlayer extends AbstractSmrPlayer
 			LIMIT 1'
 			);
 			
-			if ($this->db->nextRecord())
-			{
+			if ($this->db->nextRecord()) {
 				// get the course back
 				$this->plottedCourse = unserialize($this->db->getField('course'));
 				$endSectorID = $this->plottedCourse->getEndSectorID();
-				if($endSectorID != $this->getSectorID() && $this->plottedCourse->isInPath($this->getSectorID())) //Current sector is in the path, we have jumped along it somehow so lets replot from our cur
-				{
+				if($endSectorID != $this->getSectorID() && $this->plottedCourse->isInPath($this->getSectorID())) //Current sector is in the path, we have jumped along it somehow so lets replot from our cur {
 					$this->plottedCourse =& Plotter::findDistanceToX(SmrSector::getSector($this->getGameID(),$endSectorID), $this->getSector(), true);
-					if($this->plottedCourse === false)
-					{
+					if($this->plottedCourse === false) {
 						throw new Exception('For some reason we could not replot from "'.$this->getSectorID().'" to "'.$endSectorID);
 					}
 					$this->plottedCourse->removeStart();
@@ -2031,28 +1800,24 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->plottedCourse;
 	}
 	
-	public function setPlottedCourse(Distance &$plottedCourse)
-	{
+	public function setPlottedCourse(Distance &$plottedCourse) {
 		$hadPlottedCourse = $this->hasPlottedCourse();
 		$this->plottedCourse =& $plottedCourse;
 		if ($this->plottedCourse->getTotalSectors()>0)
 			$this->db->query('REPLACE INTO player_plotted_course
 				(account_id, game_id, course)
 				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
-		else if($hadPlottedCourse)
-		{
+		else if($hadPlottedCourse) {
 			$this->plottedCourse = false;
 			$this->db->query('DELETE FROM player_plotted_course WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		}
 	}
 	
-	public function hasPlottedCourse()
-	{
+	public function hasPlottedCourse() {
 		return $this->getPlottedCourse()!==false;
 	}
 	
-	public function isPartOfCourse(&$sectorOrSectorID)
-	{
+	public function isPartOfCourse(&$sectorOrSectorID) {
 		if(!$this->hasPlottedCourse())
 			return false;
 		if($sectorOrSectorID instanceof SmrSector )
@@ -2062,14 +1827,12 @@ class SmrPlayer extends AbstractSmrPlayer
 		return $this->getPlottedCourse()->isInPath($sectorID);
 	}
 	
-	public function deletePlottedCourse()
-	{
+	public function deletePlottedCourse() {
 		$this->plottedCourse = false;
 		$this->db->query('DELETE FROM player_plotted_course WHERE '.$this->SQL.' LIMIT 1');
 	}
 	
-	public function getExamineTraderHREF()
-	{
+	public function getExamineTraderHREF() {
 		$container = create_container('skeleton.php','trader_examine.php');
 		$container['target'] = $this->getAccountID();
 		return SmrSession::getNewHREF($container);
@@ -2079,36 +1842,31 @@ class SmrPlayer extends AbstractSmrPlayer
 		return Globals::getAttackTraderHREF($this->getAccountID());
 	}
 	
-	public function getPlanetKickHREF()
-	{
+	public function getPlanetKickHREF() {
 		$container = create_container('planet_kick_processing.php','trader_attack_processing.php');
 		$container['account_id']	= $this->getAccountID();
 		return SmrSession::getNewHREF($container);
 	}
 	
-	public function getTraderSearchHREF()
-	{
+	public function getTraderSearchHREF() {
 		$container = create_container('skeleton.php','trader_search_result.php');
 		$container['player_id'] = $this->getPlayerID();
 		return SmrSession::getNewHREF($container);
 	}
 	
-	public function getAllianceRosterHREF()
-	{
+	public function getAllianceRosterHREF() {
 		$container = create_container('skeleton.php','alliance_roster.php');
 		$container['alliance_id'] = $this->getAllianceID();
 		return SmrSession::getNewHREF($container);
 	}
 	
-	public function getToggleWeaponHidingHREF()
-	{
+	public function getToggleWeaponHidingHREF() {
 		$container = create_container('skeleton.php','toggle_processing.php');
 		$container['toggle'] = 'WeaponHiding';
 		return SmrSession::getNewHREF($container);
 	}
 	
-	public function __sleep()
-	{
+	public function __sleep() {
 		return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName');
 	}
 }

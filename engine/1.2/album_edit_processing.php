@@ -154,8 +154,7 @@ else
 
 forward($container);
 
-function php_link_check($url, $r = FALSE)
-{
+function php_link_check($url, $r = FALSE) {
 	/*	Purpose: Check HTTP Links
 	 *	Usage:	 $var = phpLinkCheck(absoluteURI)
 	 *					 $var["Status-Code"] will return the HTTP status code

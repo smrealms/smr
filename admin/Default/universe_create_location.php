@@ -44,14 +44,12 @@ $PHP_OUTPUT.=('</tr>');
 // hq
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">Headquarter</b></td>');
-foreach ($galaxies as $galaxy_id => $galaxy_name)
-{
+foreach ($galaxies as $galaxy_id => $galaxy_name) {
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=('<select name="id['.GOVERNMENT.']['.$galaxy_id.']" size="1">');
 	$PHP_OUTPUT.=('<option value="1">[None]</option>');
 
-	foreach ($races as $race_id => $race_name)
-	{
+	foreach ($races as $race_id => $race_name) {
 		$PHP_OUTPUT.=('<option value="'.$race_id.'"');
 		if ($race_id - 1 == $galaxy_id)
 			$PHP_OUTPUT.=(' selected');
@@ -81,8 +79,7 @@ $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size
 
 // banks
 $db->query('SELECT * FROM location_type JOIN location_is_bank USING(location_type_id) ORDER BY location_name');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$location_name		= $db->getField('location_name');
 	$location_type_id	= $db->getField('location_type_id');
 
@@ -96,8 +93,7 @@ $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size
 
 // bars
 $db->query('SELECT * FROM location_type JOIN location_is_bar USING(location_type_id) ORDER BY location_name');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$location_name		= $db->getField('location_name');
 	$location_type_id	= $db->getField('location_type_id');
 

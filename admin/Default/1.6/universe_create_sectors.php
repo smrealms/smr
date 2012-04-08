@@ -33,8 +33,7 @@ $container['body'] = '1.6/universe_create_sectors.php';
 $PHP_OUTPUT.= create_echo_form($container);
 $PHP_OUTPUT.='<select name="jumpgal">';
 $galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
-foreach($galaxies as &$currGal)
-{
+foreach($galaxies as &$currGal) {
 	$PHP_OUTPUT.= '<option value="'.$currGal->getGalaxyID().'"'.($currGal->equals($galaxy)?'selected="SELECTED"':'').'>'.$currGal->getName().'</option>';
 }
 $PHP_OUTPUT.='</select>';
@@ -45,11 +44,9 @@ $container = $var;
 $container['body'] = '1.6/universe_create_sector_details.php';
 $galSectors =& SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
 reset($galSectors);
-for ($i=0;$i < $row;$i++)
-{
+for ($i=0;$i < $row;$i++) {
 	$PHP_OUTPUT.= '<tr>';
-	for ($j=1;$j <= $col;$j++)
-	{
+	for ($j=1;$j <= $col;$j++) {
 		list($key, $galSector) = each($galSectors);
 		$color = "#xxyyzz";
 		$title = '';
@@ -59,8 +56,7 @@ for ($i=0;$i < $row;$i++)
 		if (!$galSector->hasLinkUp()) $PHP_OUTPUT.= ' border_top';
 		if (!$galSector->hasLinkRight()) $PHP_OUTPUT.= ' border_right';
 		$PHP_OUTPUT.= '"';
-		if ($galSector->hasPlanet())
-		{
+		if ($galSector->hasPlanet()) {
 //			$sectorPlanet =& $galSector->getPlanet();
 			$color = str_replace('yy', 'ff', $color);
 //			if ($GAL_PLANETS[$this_sec]['Owner Type'] == 'NPC')
@@ -69,8 +65,7 @@ for ($i=0;$i < $row;$i++)
 			$title .= 'Player';
 			$title .= ' Planet';
 		}
-		if ($galSector->hasPort())
-		{
+		if ($galSector->hasPort()) {
 			$sectorPort =& $galSector->getPort();
 			if ($title != '') $title .= ', ';
 			$title .= 'Level ' . $sectorPort->getLevel() . ' Port (' . $sectorPort->getRaceName() . ')';
@@ -86,16 +81,13 @@ for ($i=0;$i < $row;$i++)
 			$color = str_replace('xx', $hex2, $color);
 		}
 		elseif ($galSector->hasPlanet()) $PHP_OUTPUT.= ' style="background-color:#00ff00;"';
-		if ($galSector->hasWarp())
-		{
+		if ($galSector->hasWarp()) {
 			if ($title != '') $title .= ', ';
 			$title .= 'Warp to ' . $galSector->getWarp();
 		}
-		if($galSector->hasLocation())
-		{
+		if($galSector->hasLocation()) {
 			$sectorLocations =& $galSector->getLocations();
-			foreach ($sectorLocations as &$sectorLocation)
-			{
+			foreach ($sectorLocations as &$sectorLocation) {
 			
 				if ($title != '') $title .= ', ';
 				$title .= $sectorLocation->getName();
@@ -142,14 +134,12 @@ $PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitSty
 $PHP_OUTPUT.= '<a href="'.Globals::getSmrFileCreateHREF($var['game_id']).'" class="submitStyle">Create SMR file</a><br /><br />';
 $PHP_OUTPUT.= '<br />';
 $warning = FALSE;
-if ($var['gal_on'] > 1)
-{
+if ($var['gal_on'] > 1) {
 	$container = $var;
 	$container['gal_on']--;
 	$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Previous Galaxy</a><br /><br />';
 }
-if ($var['gal_on'] < count($galaxies))
-{
+if ($var['gal_on'] < count($galaxies)) {
 	$container = $var;
 	$container['gal_on']++;
 	$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Next Galaxy</a><br />';

@@ -14,8 +14,7 @@ $container = create_container('skeleton.php', 'permission_manage.php');
 $db->query('SELECT account_id, login
 			FROM account_has_permission JOIN account USING(account_id)
 			GROUP BY account_id');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$container['admin_id'] = $db->getField('account_id');
 	$PHP_OUTPUT.=('<li>');
 	$PHP_OUTPUT.=create_link($container, $db->getField('login'));
@@ -28,8 +27,7 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
 // if we don't have an account_id here
 // we offer a list to choose
-if (empty($admin_id))
-{
+if (empty($admin_id)) {
 	$PHP_OUTPUT.=('Select an Account to add Permissions:<br /><br />');
 
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'permission_manage.php'));
@@ -56,8 +54,7 @@ $PHP_OUTPUT.=('Change permissions for the Account of ');
 $db->query('SELECT login
 			FROM account
 			WHERE account_id = '.$db->escapeNumber($admin_id));
-if (!$db->nextRecord())
-{
+if (!$db->nextRecord()) {
 	$PHP_OUTPUT.=('<u>Unknown Account</u>!');
 	return;
 }
@@ -80,8 +77,7 @@ $db->query('SELECT permission_id, permission_name
 			FROM permission');
 
 $PHP_OUTPUT.=('<p style="padding-left:20px;">');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	if (isset($account_has_permissions[$db->getField('permission_id')]))
 		$checked = ' checked';
 	else

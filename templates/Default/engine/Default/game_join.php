@@ -38,8 +38,7 @@
 		<td><?php echo number_format($Game['StartingCredits']); ?></td>
 	</tr>
 </table><br /><?php
-if($Game['GameDescription'])
-{ ?>
+if($Game['GameDescription']) { ?>
 	<h1>Description</h1>
 	<p><?php echo bbifyMessage($Game['GameDescription']); ?></p><?php
 }?>
@@ -73,8 +72,7 @@ if($Game['GameDescription'])
 						<td>
 						<select name="race_id" size="1" style="border-width:0px;width:150px;" OnChange="go();">
 							<?php /*<option value="1">[please select]</option> */
-							foreach($Races as $Race)
-							{
+							foreach($Races as $Race) {
 								?><option value="<?php echo $Race['ID']; if($Race['Selected']){ ?>" selected="selected<?php } ?>"><?php echo $Race['Name']; ?> (<?php echo $Race['NumberOfPlayers']; ?> Traders)<?php
 							} ?>
 						</select>
@@ -84,12 +82,10 @@ if($Game['GameDescription'])
 					<tr>
 						<td align="right">&nbsp;</td>
 						<td><?php
-						if(isset($JoinGameFormHref))
-						{
+						if(isset($JoinGameFormHref)) {
 							?><input type="submit" name="action" value="Create Player" class="InputFields" /><?php
 						}
-						else
-						{
+						else {
 							?><b>This game has not started yet.</b><?php
 						} ?>
 						</td>
@@ -130,8 +126,7 @@ if($Game['GameDescription'])
 
 <script type="text/javascript">
 var	desc = new Array(<?php echo $RaceDescriptions; ?>);
-function go()
-{
+function go() {
 	var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;
 	document.getElementById('race_image').src = "images/race" + race_id + ".gif";
 	document.getElementById('graphframe').src = "images/graph" + race_id + ".gif";

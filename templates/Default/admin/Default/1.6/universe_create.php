@@ -56,8 +56,7 @@ create_echo_form($link);
 		<td class="right">Game Type</td>
 		<td class="left">
 			<select name="game_type" id="InputFields"><?php
-			foreach($GameTypes as $GameType)
-			{
+			foreach($GameTypes as $GameType) {
 				?><option value="<?php echo htmlspecialchars($GameType); ?>"><?php echo $GameType; ?></option><?php
 			} ?>
 			</select>
@@ -95,8 +94,7 @@ create_echo_form($link);
 			<td class="right">
 				<select name="game_id">
 				<?php
-				foreach($EditGames as $Game)
-				{
+				foreach($EditGames as $Game) {
 					?><option value="<?php echo $Game['GameID']; ?>"><?php echo $Game['GameName']; ?></option><?php
 				} ?>
 				</select>

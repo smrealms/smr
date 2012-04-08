@@ -10,8 +10,7 @@ $db->query('SELECT account_id, login, player_name, count(account_id) as number_o
 			JOIN account USING(account_id)
 			JOIN player USING(account_id)
 			GROUP BY account_id');
-if (!$db->getNumRows())
-{
+if (!$db->getNumRows()) {
 	$PHP_OUTPUT.=create_error('There are no log entries at all!');
 	return;
 }
@@ -23,8 +22,7 @@ while ($db->nextRecord()) {
 
 // get all anon bank transactions that are logged in an array
 $db->query('SELECT * FROM anon_bank_transactions WHERE account_id IN ('.$db->escapeArray($account_list).') ORDER BY anon_id');
-if (!$db->getNumRows())
-{
+if (!$db->getNumRows()) {
 	$PHP_OUTPUT.=create_error('None of the entries in all the log files contains anonymous bank transaction!');
 	return;
 }
@@ -36,10 +34,8 @@ $PHP_OUTPUT.=('Following accounts where accessed by these logged people:');
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 $PHP_OUTPUT.=('<p>');
 
-while ($db->nextRecord())
-{
-	if ($anon_id != $db->getField('anon_id'))
-	{
+while ($db->nextRecord()) {
+	if ($anon_id != $db->getField('anon_id')) {
 		// if this is not the first entry we have to close previous list
 		if ($anon_id > 0)
 			$PHP_OUTPUT.=('</ul>');

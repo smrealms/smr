@@ -1,13 +1,10 @@
 <?php
 require_once(get_file_loc('SmrSector.class.inc'));
-class Plotter
-{
-	public function __construct()
-	{
+class Plotter {
+	public function __construct() {
 	}
 
-	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000)
-	{
+	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000) {
 		$checkSector =& $sector;
 		$gameID = $sector->getGameID();
 		$distances = array();
@@ -21,16 +18,13 @@ class Plotter
 		for($i=0;$i<=TURNS_WARP_SECTOR_EQUIVALENCE;$i++)
 			$distanceQ[] = array();
 		//Warps first as a slight optimisation due to how visitedSectors is set.
-		if($checkSector->hasWarp()===true)
-		{
+		if($checkSector->hasWarp()===true) {
 			$d = new Distance($gameID,$checkSector->getSectorID());
 			$d->addWarpToPath($checkSector->getWarp());
 			$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $d;
 		}
-		foreach ($checkSector->getLinks() as $nextSector)
-		{
-			if($nextSector!==0)
-			{
+		foreach ($checkSector->getLinks() as $nextSector) {
+			if($nextSector!==0) {
 				$visitedSectors[$nextSector] = true;
 				$d = new Distance($gameID,$checkSector->getSectorID());
 				$d->addToPath($nextSector);
@@ -38,55 +32,44 @@ class Plotter
 			}
 		}
 		$maybeWarps=0;
-		while ($maybeWarps<=TURNS_WARP_SECTOR_EQUIVALENCE)
-		{
+		while ($maybeWarps<=TURNS_WARP_SECTOR_EQUIVALENCE) {
 			$sectorsTravelled++;
 			if ($sectorsTravelled > $distanceLimit)
 				return $distances;
-			if($x=='Distance')
-			{
+			if($x=='Distance') {
 				$distances[$sectorsTravelled] = array();
 			}
 			$distanceQ[] = array();
-			if(count($q = array_shift($distanceQ))===0)
-			{
+			if(count($q = array_shift($distanceQ))===0) {
 				$maybeWarps++;
 				continue;
 			}
 			$maybeWarps=0;
-			while (($distance = array_shift($q))!==null)
-			{
+			while (($distance = array_shift($q))!==null) {
 				$checkSectorID = $distance->getEndSectorID();
 				$visitedSectors[$checkSectorID] = true; // This is here for warps, because they are delayed visits if we set this before the actual visit we'll get sectors marked as visited long before they are actually visited - causes problems when it's quicker to walk to the warp exit than to warp there.
 																// We still need to mark walked sectors as visited before we go to each one otherwise we get a huge number of paths being checked twice (up then left, left then up are essentially the same but if we set up-left as visited only when we actually check it then it gets queued up twice - nasty)
-				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit)
-				{
+				if ($checkSectorID >= $lowLimit && $checkSectorID <= $highLimit) {
 					$checkSector =& SmrSector::getSector($gameID,$checkSectorID);
-					if($x=='Distance')
-					{
+					if($x=='Distance') {
 						$distances[$sectorsTravelled][$checkSector->getSectorID()] = $distance;
 					}
 					else if (($needsToHaveBeenExploredBy===null||$needsToHaveBeenExploredBy->hasVisitedSector($checkSector->getSectorID()))===true
-							&& $checkSector->hasX($x,$player)===true)
-					{
+							&& $checkSector->hasX($x,$player)===true) {
 						if($useFirst===true)
 							return $distance;
 						$distances[$checkSector->getSectorID()] = $distance;
 					}
 					//Warps first as a slight optimisation due to how visitedSectors is set.
-					if($checkSector->hasWarp()===true)
-					{
-						if (!isset($visitedSectors[$checkSector->getWarp()]))
-						{
+					if($checkSector->hasWarp()===true) {
+						if (!isset($visitedSectors[$checkSector->getWarp()])) {
 							$cloneDistance = clone($distance);
 							$cloneDistance->addWarpToPath($checkSector->getWarp());
 							$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $cloneDistance;
 						}
 					}
-					foreach ($checkSector->getLinks() as $nextSector)
-					{
-						if (!isset($visitedSectors[$nextSector]))
-						{
+					foreach ($checkSector->getLinks() as $nextSector) {
+						if (!isset($visitedSectors[$nextSector])) {
 							$visitedSectors[$nextSector] = true;
 	
 							$cloneDistance = clone($distance);
@@ -97,25 +80,19 @@ class Plotter
 				}
 			}
 		}
-		if($useFirst===true)
-		{
+		if($useFirst===true) {
 			$return = false;
 			return $return;
 		}
 		return $distances;
 	}
 	
-	public static function &calculatePortToPortDistances(array &$sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000)
-	{
+	public static function &calculatePortToPortDistances(array &$sectors, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		$distances = array();
-		foreach($sectors as &$sec)
-		{
-			if ($sec !== null)
-			{
-				if ($sec->getSectorID() >= $lowLimit && $sec->getSectorID() <= $highLimit)
-				{
-					if ($sec->hasPort()===true)
-					{
+		foreach($sectors as &$sec) {
+			if ($sec !== null) {
+				if ($sec->getSectorID() >= $lowLimit && $sec->getSectorID() <= $highLimit) {
+					if ($sec->hasPort()===true) {
 						$distances[$sec->getSectorID()] =& self::findDistanceToOtherPorts($sec, $distanceLimit, $lowLimit, $highLimit);
 					}
 				}
@@ -124,21 +101,18 @@ class Plotter
 		return $distances;
 	}
 
-	public static function &findDistanceToOtherPorts(SmrSector &$sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000)
-	{
+	public static function &findDistanceToOtherPorts(SmrSector &$sector, $distanceLimit = 10000, $lowLimit = 0, $highLimit = 100000) {
 		return self::findDistanceToX('Port', $sector, false, null, null, $distanceLimit, $lowLimit, $highLimit, $distanceLimit);
 	}
 }
 
-class Distance
-{
+class Distance {
 	private $gameID;
 	private $distance = -1; //First sector added will be the start and a distance of 0
 	private $numWarps = 0;
 	private $path = array();
 
-	public function __construct($gameID,$_startSectorId)
-	{
+	public function __construct($gameID,$_startSectorId) {
 		$this->gameID = $gameID;
 		$this->addToPath($_startSectorId);
 	}
@@ -150,38 +124,31 @@ class Distance
 //		$this->path = $_path;
 //	}
 
-	public function setDistance($_distance)
-	{
+	public function setDistance($_distance) {
 		$this->distance = $_distance;
 	}
 
-	public function setNumWarps($_numWarps)
-	{
+	public function setNumWarps($_numWarps) {
 		$this->numWarps = $_numWarps;
 	}
 
-	protected function incrementDistance()
-	{
+	protected function incrementDistance() {
 		$this->distance++;
 	}
 
-	protected function incrementNumWarps()
-	{
+	protected function incrementNumWarps() {
 		$this->numWarps++;
 	}
 
-	public function getDistance()
-	{
+	public function getDistance() {
 		return $this->distance;
 	}
 
-	public function getTotalSectors()
-	{
+	public function getTotalSectors() {
 		return $this->getDistance()+$this->getNumWarps();
 	}
 
-	public function getNumWarps()
-	{
+	public function getNumWarps() {
 		return $this->numWarps;
 	}
 
@@ -190,39 +157,33 @@ class Distance
 //		return new Distance($this->distance, $this->numWarps, clone($this->path));
 //	}
 
-	public function getTurns()
-	{
+	public function getTurns() {
 		return $this->distance * TURNS_PER_SECTOR + $this->numWarps * TURNS_PER_WARP;
 	}
 
-	public function getRelativeDistance()
-	{
+	public function getRelativeDistance() {
 		return $this->distance + $this->numWarps * TURNS_WARP_SECTOR_EQUIVALENCE;
 	}
 
 	/**
 	 * @return the endSectorId
 	 */
-	public function getEndSectorID()
-	{
+	public function getEndSectorID() {
 		return $this->path[count($this->path)-1];
 	}
 
-	public function &getEndSector()
-	{
+	public function &getEndSector() {
 		return SmrSector::getSector($this->gameID,$this->getEndSectorID());
 	}
 
 	/**
 	 * @return the startSectorId
 	 */
-	public function getStartSectorId()
-	{
+	public function getStartSectorId() {
 		return $this->path[0];
 	}
 
-	public function compareTo(Distance &$d)
-	{
+	public function compareTo(Distance &$d) {
 		if ($this->equals($d)===true)
 			return 0;
 		else if ($d->getTurns() > $this->getTurns())
@@ -233,13 +194,11 @@ class Distance
 	/**
 	 * @return the path
 	 */
-	public function getPath()
-	{
+	public function getPath() {
 		return $this->path;
 	}
 	
-	public function reversePath()
-	{
+	public function reversePath() {
 		$this->path = array_reverse($this->path);
 	}
 
@@ -247,25 +206,21 @@ class Distance
 	 * @param path
 	 *		the path to set
 	 */
-	public function addToPath($nextSector)
-	{
+	public function addToPath($nextSector) {
 		$this->incrementDistance();
 		$this->path[] = $nextSector;
 	}
 	
-	public function addWarpToPath($nextSector)
-	{
+	public function addWarpToPath($nextSector) {
 		$this->incrementNumWarps();
 		$this->path[] = $nextSector;
 	}
 	
-	public function getNextOnPath()
-	{
+	public function getNextOnPath() {
 		return $this->path[0];
 	}
 	
-	public function followPath($isWarp=false)
-	{
+	public function followPath($isWarp=false) {
 		if($isWarp===false)
 			$this->distance--;
 		else
@@ -273,13 +228,11 @@ class Distance
 		return array_shift($this->path);
 	}
 	
-	public function removeStart()
-	{
+	public function removeStart() {
 		return array_shift($this->path);
 	}
 	
-	public function isInPath($sectorID)
-	{
+	public function isInPath($sectorID) {
 		return in_array($sectorID,$this->getPath());
 	}
 }

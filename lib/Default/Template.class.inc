@@ -118,8 +118,7 @@ class Template {
 		}
 	}
 	
-	protected function includeTemplate($templateName, array $assignVars = null)
-	{
+	protected function includeTemplate($templateName, array $assignVars = null) {
 		if($this->nestedIncludes > 15) {
 			throw new Exception('Nested more than 15 template includes, is something wrong?');
 		}

@@ -74,38 +74,31 @@ $MISSIONS = array(
 		)
 	)
 );
-foreach($MISSIONS as $id => &$mission)
-{
+foreach($MISSIONS as $id => &$mission) {
 	$mission['ID'] = $id;
 } unset($mission);
 
 /*
-function getMissionText($mission)
-{
+function getMissionText($mission) {
 	global $RACES,$GAME_ID,$TIME,$id;
 	$text = get_subtitle($mission['Name']);
-	if ($mission['On Step'] > $mission['Total'])
-	{
+	if ($mission['On Step'] > $mission['Total']) {
 		$text .= get_status_message('green','Mission','Mission '.$mission['Name'].' Completed.');
 	}
-	else
-	{
+	else {
 		$progress = $mission['Progress'];
 		$need = $mission['Task']['Detail'];
 		$remain = $need - $progress;
 		$plural = ($remain==1?'':'s');
 		$text .= get_status_message('green','Task',$mission['Task']['Text']);
-		if ($mission['Task']['Step'] == 'KillSpawn')
-		{
+		if ($mission['Task']['Step'] == 'KillSpawn') {
 			//get the npc
 			$sql = query('SELECT * FROM npcs WHERE game_id = '.$GAME_ID.' AND npc_id = '.$mission['Progress'].' AND dead = \'FALSE\' LIMIT 1');
-			if ($result = next_record($sql))
-			{
+			if ($result = next_record($sql)) {
 				$name = stripslashes($result['name']);
 				$text .= get_status_message('green','Status','Kill the NPC '.$name.'.');
 			}
-			elseif ($mission['Expires'] < $TIME)
-			{
+			elseif ($mission['Expires'] < $TIME) {
 				$link = array();
 				$link['body'] = 'trader_missions.php';
 				$link['respawn'] = TRUE;
@@ -117,60 +110,46 @@ function getMissionText($mission)
 				$text .= get_status_message('green','Status','You must wait for a respawn.');
 			
 		}
-		elseif ($mission['Task']['Step'] == 'KillNPCs')
-		{
+		elseif ($mission['Task']['Step'] == 'KillNPCs') {
 			$text .= get_status_message('green','Status','Kill '.$remain.' more NPCs.');
 		}
-		elseif ($mission['Task']['Step'] == 'KillPlayers')
-		{
+		elseif ($mission['Task']['Step'] == 'KillPlayers') {
 			$text .= get_status_message('green','Status','Kill '.$remain.' more players.');
 		}
-		elseif ($mission['Task']['Step'] == 'KillName')
-		{
+		elseif ($mission['Task']['Step'] == 'KillName') {
 			$text .= get_status_message('green','Status','Kill '.$need.'.');
 		}
-		elseif ($mission['Task']['Step'] == 'Visit')
-		{
+		elseif ($mission['Task']['Step'] == 'Visit') {
 			$text .= get_status_message('green','Status','Visit a '.$need.'.');
 		}
-		elseif ($mission['Task']['Step'] == 'DrinkAmount')
-		{
+		elseif ($mission['Task']['Step'] == 'DrinkAmount') {
 			$text .= get_status_message('green','Status','Buy '.$remain.' more drink'.$plural.'.');
 		}
-		elseif ($mission['Task']['Step'] == 'Drink')
-		{
+		elseif ($mission['Task']['Step'] == 'Drink') {
 			$text .= get_status_message('green','Status','Buy a '.$need.' drink.');
 		}
-		elseif ($mission['Task']['Step'] == 'Move')
-		{
+		elseif ($mission['Task']['Step'] == 'Move') {
 			$text .= get_status_message('green','Status','Move '.$remain.' more sector'.$plural.'.');
 		}
-		elseif ($mission['Task']['Step'] == 'MoveSector')
-		{
+		elseif ($mission['Task']['Step'] == 'MoveSector') {
 			$text .= get_status_message('green','Status','Move to sector '.$need.'.');
 		}
-		elseif ($mission['Task']['Step'] == 'MoveRacial')
-		{
+		elseif ($mission['Task']['Step'] == 'MoveRacial') {
 			$text .= get_status_message('green','Status','Move to the racial galaxy of the '.$RACES[$need].'.');
 		}
-		elseif ($mission['Task']['Step'] == 'MoveGal')
-		{
+		elseif ($mission['Task']['Step'] == 'MoveGal') {
 			$text .= get_status_message('green','Status','Move to the '.$need.' galaxy.');
 		}
-		elseif ($mission['Task']['Step'] == 'ClearNPC')
-		{
+		elseif ($mission['Task']['Step'] == 'ClearNPC') {
 			$text .= get_status_message('green','Status','Clear '.$remain.' more NPC force'.$plural.'.');
 		}
-		elseif ($mission['Task']['Step'] == 'StartPortRaid')
-		{
+		elseif ($mission['Task']['Step'] == 'StartPortRaid') {
 			$text .= get_status_message('green','Status','Start '.$remain.' more port raid'.$plural.'.');
 		}
-		elseif ($mission['Task']['Step'] == 'Claim')
-		{
+		elseif ($mission['Task']['Step'] == 'Claim') {
 			$text .= get_status_message('green','Status','Visit a '.$need.' to claim your reward.');
 		}
-		else
-		{
+		else {
 			$text .= get_status_message('green','Status','Unknown Mission Type: '.$mission['Task']['Step'].'.');
 		}
 		$text .= '<br />';
@@ -178,24 +157,20 @@ function getMissionText($mission)
 	}
 }
 
-function checkMissionRequirements($requirements,$THIS_SECTOR,$THIS_PLAYER,$THIS_SHIP)
-{
+function checkMissionRequirements($requirements,$THIS_SECTOR,$THIS_PLAYER,$THIS_SHIP) {
 	$must_meet = sizeof($requirements);
 	$met = 0;
-	foreach ($requirements as $requirement => $value)
-	{
+	foreach ($requirements as $requirement => $value) {
 		$require_name = $requirement;
 		$require_attrib = $value;
 	
-		if (strpos($require_name,'.'))
-		{
+		if (strpos($require_name,'.')) {
 			list($player_object_name,$real_require_name) = explode('.',$require_name);
 			if (strtolower($player_object_name) == 'ship') $player_object = $THIS_SHIP;
 			elseif (strtolower($player_object_name) == 'sector') $player_object = $THIS_SECTOR;
 			elseif (strtolower($player_object_name) == 'player') $player_object = $THIS_PLAYER;
 		}
-		else
-		{
+		else {
 			$player_object = $THIS_PLAYER;
 			$real_require_name = $require_name;
 		}
@@ -204,65 +179,52 @@ function checkMissionRequirements($requirements,$THIS_SECTOR,$THIS_PLAYER,$THIS_
 			$requireObjectActual = $player_object->get($real_require_name);
 		else
 			$requireObjectActual = $player_object[$real_require_name];
-		if (is_array($requireObjectActual))
-		{
-			if (is_array($require_attrib))
-			{
+		if (is_array($requireObjectActual)) {
+			if (is_array($require_attrib)) {
 				//add that they must meet all (-1 because we already accounted for 1 in the array)
 				$must_meet += sizeof($require_attrib) - 1;
-				foreach ($require_attrib as $check_val)
-				{
+				foreach ($require_attrib as $check_val) {
 					if (in_array($check_val,$requireObjectActual)) $met++;
 				}
 			}
 		}
-		elseif (is_array($require_attrib))
-		{
+		elseif (is_array($require_attrib)) {
 			//they only need to meet one of these
-			foreach ($require_attrib as $check_val)
-			{
-				if ($check_val == $requireObjectActual)
-				{
+			foreach ($require_attrib as $check_val) {
+				if ($check_val == $requireObjectActual) {
 					$met++;
 					break;
 				}
 			}
 		}
-		elseif (is_numeric($require_attrib))
-		{
+		elseif (is_numeric($require_attrib)) {
 			//we just do a straight == compare
 			if ($requireObjectActual == $require_attrib)
 				$met++;
 		}
-		else
-		{
+		else {
 			//we need to determine what to do with this number
-			if (strpos($require_attrib,'<') !== FALSE)
-			{
+			if (strpos($require_attrib,'<') !== FALSE) {
 				list($crap,$require_attrib_real) = explode('<',$require_attrib);
 				if ($requireObjectActual < $require_attrib_real)
 					$met++;
 			}
-			elseif (strstr($require_attrib,'>') !== FALSE)
-			{
+			elseif (strstr($require_attrib,'>') !== FALSE) {
 				list($crap,$require_attrib_real) = explode('>',$require_attrib);
 				if ($requireObjectActual > $require_attrib_real)
 					$met++;
 			}
-			elseif (strstr($require_attrib,'!') !== FALSE)
-			{
+			elseif (strstr($require_attrib,'!') !== FALSE) {
 				list($crap,$require_attrib_real) = explode('!',$require_attrib);
 				if ($requireObjectActual != $require_attrib_real)
 					$met++;
 			}
-			elseif (strstr($require_attrib,'|') !== FALSE)
-			{
+			elseif (strstr($require_attrib,'|') !== FALSE) {
 				list($lower,$upper) = explode('|',$require_attrib);
 				if ($requireObjectActual > $lower && $requireObjectActual < $upper)
 					$met++;
 			}
-			else
-			{
+			else {
 				if ($requireObjectActual == $require_attrib)
 				$met++;
 			}
@@ -274,16 +236,13 @@ function checkMissionRequirements($requirements,$THIS_SECTOR,$THIS_PLAYER,$THIS_
 	return false;
 }
 
-function check_missions($player_object = '')
-{
+function check_missions($player_object = '') {
 	global $error, $THIS_PLAYER, $GAME_ID,$weapons,$upgrades,$gadgets,$ship_id;
 	if ($player_object == '') $player_object = $THIS_PLAYER;
 	$playerMissions = $player_object->getMissions();
-	foreach ($playerMissions as $mission_id => $mission_stuff)
-	{
+	foreach ($playerMissions as $mission_id => $mission_stuff) {
 		//see if we need to do anything for this step
-		if ($mission_stuff['Next Step'] == 'TRUE')
-		{
+		if ($mission_stuff['Next Step'] == 'TRUE') {
 			//display the appropriate text
 			if ($mission_stuff['On Step'] == 1)
 				$error .= get_status_message('green','Mission Accepted',$mission_stuff['Task']['Text']);
@@ -291,16 +250,14 @@ function check_missions($player_object = '')
 				$error .= get_status_message('green','Mission Accomplished',$mission_stuff['Task']['Text']);
 			$player_object->updateMission($mission_id,'Next Step','FALSE');
 		}
-		if ($mission_stuff['Task']['Step'] == 'KillSpawn' && $mission_stuff['Progress'] == 0)
-		{
+		if ($mission_stuff['Task']['Step'] == 'KillSpawn' && $mission_stuff['Progress'] == 0) {
 			//spawn the NPC
 			get_ship_setup($mission_stuff['Task']['Detail'],$weapons,$upgrades,$gadgets,$ship_id);
 			$npc_id = create_npc($GAME_ID,'',$player_object->getSectorID(),$ship_id,$mission_stuff['Task']['Level'],0,'',$weapons,$upgrades,$gadgets,0,'Member','None','Attacker',0);
 			//update the db for this npc id
 			$player_object->updateMission($mission_id,'Progress',$npc_id);
 		}
-		elseif ($mission_stuff['Task']['Step'] == 'ClearNPC' && $mission_stuff['Progress'] == 0)
-		{
+		elseif ($mission_stuff['Task']['Step'] == 'ClearNPC' && $mission_stuff['Progress'] == 0) {
 			//spawn forces
 			//update db so that more forces are not spawned everytime
 		}

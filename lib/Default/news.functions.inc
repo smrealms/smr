@@ -12,8 +12,7 @@ function doLottoNewsAssign($gameID,&$template) {
 	checkForLottoWinner($gameID);
 	$db = new SmrMySqlDatabase();
 	$db->query('SELECT * FROM news WHERE game_id = '.$db->escapeNumber($gameID).' AND type = \'lotto\' ORDER BY time DESC LIMIT 1');
-	if($db->nextRecord())
-	{
+	if($db->nextRecord()) {
 		 $template->assign('LottoNews',array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message'))));
 	}
 }

@@ -1,6 +1,5 @@
 <h2>Current Roles</h2><br /><?php
-foreach($AllianceRoles as $RoleID => &$Role)
-{
+foreach($AllianceRoles as $RoleID => &$Role) {
 	$this->includeTemplate('includes/AllianceRole.inc',array('Role' => &$Role));
 } ?><br />
 <h2>Create Role</h2><br /><?php

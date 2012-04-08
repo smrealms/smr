@@ -1,7 +1,6 @@
 <?php
 $message = trim($_REQUEST['message']);
-if($_REQUEST['action'] == 'Preview announcement')
-{
+if($_REQUEST['action'] == 'Preview announcement') {
 	$container = create_container('skeleton.php','announcement_create.php');
 	$container['preview'] = $message;
 	forward($container);

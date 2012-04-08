@@ -8,11 +8,9 @@ $db->query('SELECT account_id as account_id, login, count(*) as number_of_entrie
 			FROM account_has_logs
 			JOIN account USING(account_id)
 			GROUP BY account_id');
-if ($db->getNumRows())
-{
+if ($db->getNumRows()) {
 	$db2 = new SmrMySqlDatabase();
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$accountID = $db->getInt('account_id');
 		$loggedAccounts[$accountID] = array('AccountID' => $accountID,
 								'Login' => $db->getField('login'),

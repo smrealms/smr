@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	require_once('config.inc');
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 
@@ -24,8 +23,7 @@ try
 		<th align="center" style="color:#80C870;">Required Experience</th>
 	</tr><?php
 	$db->query('SELECT * FROM level ORDER BY level_id');
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$level = $db->getField('level_id');
 		$name = $db->getField('level_name');
 		$require = $db->getField('requirement'); ?>
@@ -37,8 +35,7 @@ try
 	} ?>
 	</table><?php
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

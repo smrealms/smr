@@ -76,8 +76,7 @@ define('TOTAL_PLAYER_DMG',2);
 define('TOTAL_PLANET_DMG',3);
 define('DMG_TO_PLAYER',4);
 define('DEBUG',0);
-function getPlanetArray()
-{
+function getPlanetArray() {
 	if (DEBUG) $PHP_OUTPUT.=('Entered planet array<br>');
 	global $db, $session, $player, $account;
 	$db->query('SELECT  * FROM planet WHERE sector_id = ' . $player->getSectorID() . ' AND game_id = ' . $player->getGameID());
@@ -86,10 +85,8 @@ function getPlanetArray()
 			$db->f('drones'),
 			0,0,0,0,array(),$db->f('owner_id'),$db->f('planet_name'));
 		$db->query('SELECT * FROM planet_has_construction WHERE sector_id = ' . $player->getSectorID() . ' AND game_id = ' . $player->getGameID());
-		while ($db->next_record())
-		{
-			switch($db->f('construction_id'))
-			{
+		while ($db->next_record()) {
+			switch($db->f('construction_id')) {
 				case 1:
 					$planet[GENERATORS] = $db->f('amount');
 					break;
@@ -109,16 +106,14 @@ function getPlanetArray()
 	} else {
 		create_error('Planet does not exist');
 	}
-	if ($planet[PLANET_DRONES] == 0 && $planet[PLANET_SHIELDS] == 0)
-	{
+	if ($planet[PLANET_DRONES] == 0 && $planet[PLANET_SHIELDS] == 0) {
 		$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
 		$db->query('UPDATE planet SET owner_id = 0, password = \'\' WHERE sector_id = '.$player->getSectorID().' AND game_id = '.$player->getGameID());
 		create_error('That planet is already destroyed');
 	}
 	return $planet;
 }
-function getPlayerArray()
-{
+function getPlayerArray() {
 	if (DEBUG) $PHP_OUTPUT.=('Entered player array<br>');
 	global $db, $session, $player, $account;
 	//insert our trigger into the players array
@@ -236,8 +231,7 @@ function build_hqs(&$races) {
 	}
 	return $hqs;
 }
-function getHardware(&$players)
-{
+function getHardware(&$players) {
 	if (DEBUG) $PHP_OUTPUT.=('Get Hardware<br>');
 	global $db, $session, $player, $account;
 	$players_in = implode(',',array_keys($players));
@@ -277,8 +271,7 @@ function getHardware(&$players)
 	}
 	return array_unique($weapons);
 }
-function getWeapons($weapon_ids)
-{
+function getWeapons($weapon_ids) {
 	if (DEBUG) $PHP_OUTPUT.=('Get Weps<br>');
 	global $db,$session;
 	$weapons = array();
@@ -404,13 +397,11 @@ function protected_rating($account_id,&$players,&$weapons) {
 
 	return FALSE;
 }
-function planetFires(&$attackers, &$planet, &$players)
-{
+function planetFires(&$attackers, &$planet, &$players) {
 	if (DEBUG) $PHP_OUTPUT.=('Planet Fires<br>');
 	global $db,$session,$player;
 	//Turrets Fire
-	for ($i = 0; $i < $planet[TURRETS]; $i++)
-	{
+	for ($i = 0; $i < $planet[TURRETS]; $i++) {
 		//select target for this turret
 		$target = $attackers[array_rand($attackers)];
 		//get results
@@ -475,8 +466,7 @@ function planetFiresTurret($attackers, $planet, &$players, $target) {
 		return $result;
 	}
 }
-function planetFiresDrones($attackers, $planet, &$players, $target)
-{
+function planetFiresDrones($attackers, $planet, &$players, $target) {
 	if (DEBUG) $PHP_OUTPUT.=('Planet Fires drones<br>');
 	$result = array(0,0,0,0,NORMAL_HIT);
 	$result[DRONES_FIRED] = $planet[PLANET_DRONES];
@@ -484,8 +474,7 @@ function planetFiresDrones($attackers, $planet, &$players, $target)
 	if($players[$target][DCS])
 		$damage = round($damage / (4 / 3));
 	//start with shields
-	if ($players[$target][SHIELDS] > 0)
-	{
+	if ($players[$target][SHIELDS] > 0) {
 		if ($players[$target][SHIELDS] > $damage)
 			$result[SHIELD_DMG_DONE] = $damage;
 		else
@@ -497,8 +486,7 @@ function planetFiresDrones($attackers, $planet, &$players, $target)
 		$result[RESULT_OF_WEAPON] = NORMAL_HIT;
 		return $result;
 	}
-	if ($players[$target][DRONES] > 0)
-	{
+	if ($players[$target][DRONES] > 0) {
 		if ($players[$target][DRONES] * 3 > $damage)
 			$result[DRONE_DMG_DONE] = $damage;
 		else
@@ -509,8 +497,7 @@ function planetFiresDrones($attackers, $planet, &$players, $target)
 		$result[RESULT_OF_WEAPON] = NORMAL_HIT;
 		return $result;
 	}
-	if ($players[$target][ARMOUR] > 0)
-	{
+	if ($players[$target][ARMOUR] > 0) {
 		if ($players[$target][ARMOUR] > $damage) {
 			$result[ARMOUR_DMG_DONE] = $damage;
 			$result[RESULT_OF_WEAPON] = NORMAL_HIT;
@@ -525,8 +512,7 @@ function planetFiresDrones($attackers, $planet, &$players, $target)
 	$result[RESULT_OF_WEAPON] = ALREADY_DEAD;
 	return $result;
 }
-function fleetFires(&$attackers, &$planet, &$players, &$weapons)
-{
+function fleetFires(&$attackers, &$planet, &$players, &$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Fleet Fires<br>');
 	$fleet_size = count($attackers);
 	// Process each player in turn
@@ -535,15 +521,13 @@ function fleetFires(&$attackers, &$planet, &$players, &$weapons)
 	}
 }
 
-function playerFires($attacker, &$planet, &$players, &$weapons)
-{
+function playerFires($attacker, &$planet, &$players, &$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Player fires<br>');
 	global $db,$session,$player;
 	
 	$num_weapons = count($players[$attacker][WEAPONS]);
 	// Process each weapon in turn
-	for($i=0;$i<$num_weapons;++$i)
-	{
+	for($i=0;$i<$num_weapons;++$i) {
 		$result = playerFiresWeapon($players[$attacker][WEAPONS][$i],$attacker,$planet,$players,$weapons);
 		
 		// Take the appropriate damage from the planet
@@ -563,8 +547,7 @@ function playerFires($attacker, &$planet, &$players, &$weapons)
 	
 }
 
-function playerFiresWeapon($weapon,$attacker,&$planet,&$players,&$weapons)
-{
+function playerFiresWeapon($weapon,$attacker,&$planet,&$players,&$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Player Fires Weap<br>');
 	$result = array(0,0,0,NORMAL_HIT,0);
 
@@ -973,8 +956,7 @@ function sendReport($results, $planet) {
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$ownerAlliance.' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 		if ($db->next_record()) $thread_id = $db->f('thread_id');
-		if ($thread_id == 0)
-		{
+		if ($thread_id == 0) {
 			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$ownerAlliance.' ORDER BY thread_id DESC LIMIT 1');
 			if ($db->next_record())
 				$thread_id = $db->f('thread_id') + 1;
@@ -1011,8 +993,7 @@ function sendReport($results, $planet) {
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 		if ($db->next_record()) $thread_id = $db->f('thread_id');
-		if ($thread_id == 0)
-		{
+		if ($thread_id == 0) {
 			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' ORDER BY thread_id DESC LIMIT 1');
 			if ($db->next_record())
 				$thread_id = $db->f('thread_id') + 1;

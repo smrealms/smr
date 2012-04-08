@@ -4,8 +4,7 @@
 			<td align="left">Name</td>
 			<td><input type="text" name="role" value="<?php echo htmlspecialchars($Role['Name']); ?>" maxlength="32"<?php if (!$Role['EditingRole']){ ?> disabled="disabled"<?php } ?>>
 		</tr><?php
-		if ($Role['EditingRole'])
-		{ ?>
+		if ($Role['EditingRole']) { ?>
 			<tr>
 				<td align="left" rowspan="3">Withdrawal limit per 24 hours (Or max negative balance for "positive balance")</td>
 				<td align="left"><input type="text" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'],0); ?>" maxlength="32"></td>
@@ -16,8 +15,7 @@
 			<tr>
 				<td align="left">Positive Balance:<input type="checkbox" name="positive" alt="Members must deposit more than they withdraw."<?php if ($Role['PositiveBalance']){ ?> checked="checked"<?php } ?>></td>
 			</tr><?php
-			if (!$Role['TreatyCreated'])
-			{ ?>
+			if (!$Role['TreatyCreated']) { ?>
 				<tr>
 					<td align="left">Remove Member</td>
 					<td align="left"><input type="checkbox" name="removeMember"<?php if ($Role['RemoveMember']){ ?> checked="checked"<?php } ?>></td>

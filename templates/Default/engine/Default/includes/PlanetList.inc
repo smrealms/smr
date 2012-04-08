@@ -1,6 +1,5 @@
 <?php
-if (count($Planets) > 0)
-{ ?>
+if (count($Planets) > 0) { ?>
 	<table class="standard inset">
 		<tr>
 			<th>Name</th>
@@ -15,8 +14,7 @@ if (count($Planets) > 0)
 			<th>Supplies</th>
 			<th>Build</th>
 		</tr><?php
-		foreach($Planets as &$Planet)
-		{ ?>
+		foreach($Planets as &$Planet) { ?>
 			<tr>
 				<td><?php echo $Planet->getName(); ?></td>
 				<td class="shrink noWrap"><?php echo number_format($Planet->getLevel(),2); ?></td>
@@ -29,32 +27,26 @@ if (count($Planets) > 0)
 				<td class="shrink center"><?php echo $Planet->getCDs(); ?></td>
 				<td class="shrink noWrap"><?php
 					$Supply = false;
-					foreach ($Planet->getStockpile() as $GoodID => $Amount)
-					{
-						if ($Amount > 0)
-						{
+					foreach ($Planet->getStockpile() as $GoodID => $Amount) {
+						if ($Amount > 0) {
 							$Supply = true;
 							$Good = Globals::getGood($GoodID); ?>
 							<img src="<?php echo $Good['ImageLink']; ?>" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" />&nbsp;<?php echo $Amount; ?><br /><?php
 						}
 					}
-					if ($Supply === false)
-					{
+					if ($Supply === false) {
 						?>none<?php
 					} ?>
 				</td>
 				<td class="shrink noWrap center"><?php
-					if ($Planet->hasCurrentlyBuilding())
-					{
+					if ($Planet->hasCurrentlyBuilding()) {
 						$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-						foreach($Planet->getCurrentlyBuilding() as $Building)
-						{
+						foreach($Planet->getCurrentlyBuilding() as $Building) {
 							echo $PLANET_BUILDINGS[$Building['ConstructionID']]['Name']; ?><br /><?php
 							echo format_time($Building['TimeRemaining'], true);
 						}
 					}
-					else
-					{
+					else {
 						?>Nothing<?php
 					} ?>
 				</td>

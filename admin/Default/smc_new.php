@@ -27,8 +27,7 @@ while ($db->nextRecord()) {
 echo ('[GALAXIES]'.EOL);
 $i = 1;
 $gameGals =& SmrGalaxy::getGameGalaxies($game_id);
-foreach($gameGals as &$gameGal)
-{
+foreach($gameGals as &$gameGal) {
 	echo ('GAL' . $i . '='.$gameGal->getName().','.$gameGal->getWidth().','.$gameGal->getHeight().EOL);
 	$i++;
 } unset($gameGal);
@@ -63,8 +62,7 @@ echo ('IPlan=Planet'.EOL);
 //goods
 echo ('[GOODS]'.EOL);
 $db->query('SELECT * FROM good ORDER BY good_id');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$fmv = $db->getField('base_price');
 	$name = $db->getField('good_name');
 	$id = $db->getField('good_id');
@@ -97,8 +95,7 @@ echo ('SP14=DCS,bool'.EOL);
 //ships
 echo ('[SHIPS]'.EOL);
 $db->query('SELECT * FROM ship_type ORDER BY ship_type_id');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$id = $db->getField('ship_type_id');
 	$name = $db->getField('ship_name');
 	$race_id = 'R' . $db->getField('race_id');

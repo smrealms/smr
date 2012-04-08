@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 
 	// ********************************
 	// *
@@ -24,10 +23,8 @@ try
 	// *
 	// ********************************
 
-	if (SmrSession::$account_id == 0)
-	{
-		if(isset($_REQUEST['loginType']))
-		{
+	if (SmrSession::$account_id == 0) {
+		if(isset($_REQUEST['loginType'])) {
 			require_once(LIB.'Login/SocialLogin.class.inc');
 			$socialLogin = new SocialLogin($_REQUEST['loginType']);
 			if(!$socialLogin->isValid()) {
@@ -71,8 +68,7 @@ try
 			$password = (isset($_REQUEST['password']) ? $_REQUEST['password'] : (isset($var['password']) ? $var['password'] : ''));
 
 			// has the user submitted empty fields
-			if (empty($login) || empty($password))
-			{
+			if (empty($login) || empty($password)) {
 				$msg = 'Please enter login and password!';
 				header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 				exit;
@@ -188,12 +184,10 @@ try
 	// log?
 	$account->log(LOG_TYPE_LOGIN, 'logged in from '.$curr_ip);
 	//now we set a cookie that we can use for mult checking
-	if (!isset($_COOKIE['Session_Info']))
-	{
+	if (!isset($_COOKIE['Session_Info'])) {
 		//we get their info from db if they have any
 		$db->query('SELECT * FROM multi_checking_cookie WHERE account_id = '.$account->getAccountID());
-		if ($db->nextRecord())
-		{
+		if ($db->nextRecord()) {
 			//convert to array
 			$old = explode('-', $db->getField('array'));
 			//get rid of old version cookie since it isn't optimal.
@@ -212,8 +206,7 @@ try
 		setcookie('Session_Info', $new, TIME + 157680000);
 
 	}
-	else
-	{
+	else {
 
 		//we have a cookie so we see if we add to it etc
 		//break cookie into array

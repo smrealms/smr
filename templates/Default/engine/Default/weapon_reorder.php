@@ -1,6 +1,5 @@
 <?php
-if($ThisShip->hasWeapons())
-{ ?>
+if($ThisShip->hasWeapons()) { ?>
 	<div align="center">
 		<p>To reorder your weapons simply drag and drop them into the desired order.</p>
 		<noscript><p>It has been detected that you do not have javascript or that it is disabled, you will have to use the arrows to reorder your weapons</p></noscript>
@@ -15,8 +14,7 @@ if($ThisShip->hasWeapons())
 			<th align="center">Accuracy</th>
 			<th align="center">Action</th>
 			</tr><?php
-			foreach($ThisShip->getWeapons() as $OrderID => $Weapon)
-			{ ?>
+			foreach($ThisShip->getWeapons() as $OrderID => $Weapon) { ?>
 				<tr>
 					<td><?php echo $Weapon->getName() ?></td>
 					<td align="center"><?php echo $Weapon->getShieldDamage() ?></td>
@@ -25,22 +23,18 @@ if($ThisShip->hasWeapons())
 					<td><?php echo $Weapon->getBaseAccuracy() ?></td>
 					<td><input type="hidden" name="weapon_reorder[]" value="<?php echo $OrderID ?>" />
 						<noscript><a href="<?php echo Globals::getWeaponReorderHREF($OrderID,'Up') ?>"></noscript><?php
-						if($OrderID > 0)
-						{ ?>
+						if($OrderID > 0) { ?>
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up.gif" alt="Switch up" title="Switch up"><?php
 						}
-						else
-						{ ?>
+						else { ?>
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up_push.gif" alt="Push up" title="Push up"><?php
 						} ?>
 						<noscript></a>
 						<a href="<?php echo Globals::getWeaponReorderHREF($OrderID,'Down') ?>"></noscript><?php
-						if($OrderID < $ThisShip->getNumWeapons()-1)
-						{ ?>
+						if($OrderID < $ThisShip->getNumWeapons()-1) { ?>
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down.gif" alt="Switch down" title="Switch down"><?php
 						}
-						else
-						{ ?>
+						else { ?>
 							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down_push.gif" alt="Push down" title="Push down"><?php
 						} ?>
 						<noscript></a></noscript>
@@ -58,47 +52,38 @@ if($ThisShip->hasWeapons())
 	
 	 document.onmousemove = function(ev)
 	 {
-		if (currenttable && currenttable.dragObject)
-		{
+		if (currenttable && currenttable.dragObject) {
 			ev   = ev || window.event;
 	 		var mousePos = currenttable.mouseCoords(ev);
 			var y = mousePos.y - currenttable.mouseOffset.y;
 	
 			var yOffset = window.pageYOffset;
 			var currentY = mousePos.y;
-			if (document.all)
-			{
+			if (document.all) {
 				yOffset=document.body.scrollTop;
 				currentY = event.clientY;
 			}
-			if (currentY-yOffset < 5)
-			{
+			if (currentY-yOffset < 5) {
 					window.scrollBy(0, -5);
-			} else
-			{
+			} else {
 				var windowHeight = window.innerHeight ? window.innerHeight
 						: document.documentElement.clientHeight ? document.documentElement.clientHeight
 								: document.body.clientHeight;
-				if (windowHeight-currentY-yOffset < 5)
-				{
+				if (windowHeight-currentY-yOffset < 5) {
 					window.scrollBy(0, 5);
 				}
 			}
 	
-			if (y != currenttable.oldY)
-			{
+			if (y != currenttable.oldY) {
 				var movingDown = y > currenttable.oldY;
 				currenttable.oldY = y;
 				currenttable.dragObject.style.backgroundColor.value="#aaa";
 				var currentRow = currenttable.findDropTargetRow(y);
-				if (currentRow)
-				{
-					if (movingDown && currenttable.dragObject != currentRow)
-					{
+				if (currentRow) {
+					if (movingDown && currenttable.dragObject != currentRow) {
 						currenttable.dragObject.parentNode.insertBefore(currenttable.dragObject, currentRow.nextSibling);
 					}
-					else if (! movingDown && currenttable.dragObject != currentRow)
-					{
+					else if (! movingDown && currenttable.dragObject != currentRow) {
 						currenttable.dragObject.parentNode.insertBefore(currenttable.dragObject, currentRow);
 					}
 				}
@@ -127,8 +112,7 @@ if($ThisShip->hasWeapons())
 		}
 	}
 	
-	function TableDnD()
-	{
+	function TableDnD() {
 		this.dragObject = null;
 		this.mouseOffset = null;
 		this.table = null;
@@ -137,30 +121,24 @@ if($ThisShip->hasWeapons())
 		this.init = function(table) {
 			this.table = table;
 			var rows = table.tBodies[0].rows;
-			for (var i=0; i<rows.length; i++)
-			{
+			for (var i=0; i<rows.length; i++) {
 				var nodrag = rows[i].getAttribute("NoDrag");
-				if (nodrag == null || nodrag == "undefined")
-				{
+				if (nodrag == null || nodrag == "undefined") {
 					this.makeDraggable(rows[i]);
 				}
 			}
 		};
 	
-		this.onDrop = function(table, droppedRow)
-		{
+		this.onDrop = function(table, droppedRow) {
 		};
 		
-		this.getPosition = function(e)
-		{
+		this.getPosition = function(e) {
 			var left = 0;
 			var top = 0;
-			if (e.offsetHeight == 0)
-			{
+			if (e.offsetHeight == 0) {
 				e = e.firstChild;
 			}
-			while (e.offsetParent)
-			{
+			while (e.offsetParent) {
 				left += e.offsetLeft;
 				top += e.offsetTop;
 				e = e.offsetParent;
@@ -169,27 +147,22 @@ if($ThisShip->hasWeapons())
 			top += e.offsetTop;
 			return {x:left, y:top};
 		};
-		this.mouseCoords = function(ev)
-		{
-			if(ev.pageX || ev.pageY)
-			{
+		this.mouseCoords = function(ev) {
+			if(ev.pageX || ev.pageY) {
 				return {x:ev.pageX, y:ev.pageY};
 			}
 			return {x:ev.clientX + document.body.scrollLeft - document.body.clientLeft,y:ev.clientY + document.body.scrollTop - document.body.clientTop};
 		};
-		this.getMouseOffset = function(target, ev)
-		{
+		this.getMouseOffset = function(target, ev) {
 			ev = ev || window.event;
 			var docPos = this.getPosition(target);
 			var mousePos = this.mouseCoords(ev);
 			return {x:mousePos.x - docPos.x, y:mousePos.y - docPos.y};
 		};
-		this.makeDraggable = function(item)
-		{
+		this.makeDraggable = function(item) {
 			if(!item) return;
 			var self = this;
-			item.onmousedown = function(ev)
-			{
+			item.onmousedown = function(ev) {
 				var target = getEventSource(ev);
 				if (target.tagName == 'INPUT' || target.tagName == 'SELECT') return true;
 				currenttable = self;
@@ -199,19 +172,15 @@ if($ThisShip->hasWeapons())
 			};
 			item.style.cursor="move";
 		};
-		this.findDropTargetRow = function(y)
-		{
+		this.findDropTargetRow = function(y) {
 			var rows = this.table.tBodies[0].rows;
-			for (var i=0; i<rows.length; i++)
-			{
+			for (var i=0; i<rows.length; i++) {
 				var row = rows[i];
 				var nodrop = row.getAttribute("NoDrop");
-				if (nodrop == null || nodrop == "undefined")
-				{
+				if (nodrop == null || nodrop == "undefined") {
 					var rowY	= this.getPosition(row).y;
 					var rowHeight = parseInt(row.offsetHeight)/2;
-					if (row.offsetHeight == 0)
-					{
+					if (row.offsetHeight == 0) {
 						rowY = this.getPosition(row.firstChild).y;
 						rowHeight = parseInt(row.firstChild.offsetHeight)/2;
 					}
@@ -227,13 +196,11 @@ if($ThisShip->hasWeapons())
 	var tableDnD = new TableDnD();
 	tableDnD.init(table);
 	
-	moveRow=function(cell, move)
-	{
+	moveRow=function(cell, move) {
 		var currentRow = cell.parentNode;
 		var currentRowID = false;
 		var rows = currentRow.parentNode.rows;
-		for(var i = 1; i < rows.length; i++)
-		{
+		for(var i = 1; i < rows.length; i++) {
 			if(rows[i] == currentRow) currentRowID = i;
 		}
 		if(currentRowID==false) return;
@@ -259,7 +226,6 @@ if($ThisShip->hasWeapons())
 	}
 	</script><?php
 }
-else
-{
+else {
 	?>You don't have any weapons!<?php
 } ?>

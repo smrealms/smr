@@ -1,6 +1,5 @@
 <?php
-if(isset($Preview))
-{ ?>
+if(isset($Preview)) { ?>
 	<table class="standard">
 		<tr>
 			<td>Title:</td>

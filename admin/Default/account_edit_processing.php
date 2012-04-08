@@ -20,8 +20,7 @@ $delete = $_REQUEST['delete'];
 
 $msg = 'You ';
 
-if (!empty($donation))
-{
+if (!empty($donation)) {
 	// add entry to account donated table
 	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$db->escapeNumber($account_id).', ' . $db->escapeNumber(TIME) . ' , '.$db->escapeNumber($donation).')');
 
@@ -34,17 +33,14 @@ if (!empty($donation))
 	$msg .= 'added $'.$donation;
 
 }
-if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits']))
-{
+if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits'])) {
     $curr_account->increaseSmrRewardCredits($_REQUEST['grant_credits']);
 	if (strlen($msg) > 9)
 		$msg .= 'and ';
 	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';
 }
-if ($choise == 'reopen')
-{
-	if($reopenType=='account')
-	{
+if ($choise == 'reopen') {
+	if($reopenType=='account') {
 		//do we have points
 		$curr_account->removePoints($points);
 		$curr_account->unbanAccount($account);
@@ -52,28 +48,23 @@ if ($choise == 'reopen')
 			$msg .= 'and ';
 		$msg .= 'reopened ';
 	}
-	else if($reopenType=='mail')
-	{
+	else if($reopenType=='mail') {
 		$account->setMailBanned(TIME);
 		if (strlen($msg) > 9)
 			$msg .= 'and ';
 		$msg .= 'removed mailban ';
 	}
 }
-else if ($points > 0 || $mailBan > 0)
-{
-	if ($choise == 'individual')
-	{
+else if ($points > 0 || $mailBan > 0) {
+	if ($choise == 'individual') {
 		$db->query('INSERT INTO closing_reason (reason) VALUES(' . $db->escape_string($reason_msg) . ')');
 		$reason_id = $db->getInsertID();
 	}
-	else
-	{
+	else {
 		$reason_id = $reason_pre_select;
 	}
 	$expire_msg='';
-	if($mailBan > 0)
-	{
+	if($mailBan > 0) {
 		$curr_account->setMailBanned(TIME+$mailBan*86400);
 		$expire_msg .= 'for '.$mailBan.' days (mail)';
 		if (strlen($msg) > 9)
@@ -81,8 +72,7 @@ else if ($points > 0 || $mailBan > 0)
 		$msg .= 'mail banned ';
 	}
 
-	if($points > 0 && ($bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']))!==false)
-	{
+	if($points > 0 && ($bannedDays = $curr_account->addPoints($points,$account,$reason_id,$_REQUEST['suspicion']))!==false) {
 		if ($bannedDays > 0)
 			$expire_msg .= 'for '.$bannedDays.' days(account)';
 		else
@@ -100,8 +90,7 @@ if ($veteran_status != $curr_account->isVeteranBumped()) {
 
 }
 
-if ($logging_status != $curr_account->isLoggingEnabled())
-{
+if ($logging_status != $curr_account->isLoggingEnabled()) {
 	$curr_account->setLoggingEnabled($logging_status);
 	$msg .= 'set the logging status to '.$logging_status.' ';
 }
@@ -113,10 +102,8 @@ if ($except != 'Add An Exception' && $except != '') {
 }
 
 if (!empty($names))
-	foreach ($names as $game_id => $new_name)
-	{
-		if(!empty($new_name))
-		{
+	foreach ($names as $game_id => $new_name) {
+		if(!empty($new_name)) {
 			$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game_id).' AND player_name = ' . $db->escape_string($new_name, FALSE));
 			if (!$db->nextRecord()) {
 				$db->query('SELECT player_name, player_id FROM player WHERE game_id='.$db->escapeNumber($game_id).' AND account_id = '.$db->escapeNumber($account_id).' LIMIT 1');

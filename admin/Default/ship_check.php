@@ -11,8 +11,7 @@ $db->query('SELECT * FROM ship_type_support_hardware, player, ship_has_hardware,
 				 'ship_has_hardware.hardware_type_id = hardware_type.hardware_type_id AND ' .
 				 'amount > max_amount');
 
-if ($db->getNumRows())
-{
+if ($db->getNumRows()) {
 	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th>Player</th>');

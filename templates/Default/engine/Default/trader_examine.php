@@ -1,44 +1,34 @@
 <?php
 $canAttack=false;
 
-if($ThisPlayer->hasNewbieTurns())
-{
+if($ThisPlayer->hasNewbieTurns()) {
 	?><p><big class="green">You are under newbie protection!</big></p><?php
 }
-else if($TargetPlayer->hasNewbieTurns())
-{
+else if($TargetPlayer->hasNewbieTurns()) {
 	?><p><big class="green">Your target is under newbie protection!</big></p><?php
 }
-else if($ThisPlayer->sameAlliance($TargetPlayer))
-{
+else if($ThisPlayer->sameAlliance($TargetPlayer)) {
 	?><p><big class="blue">This is your alliancemate.</big></p><?php
 }
-else if(!$ThisShip->canAttack())
-{
+else if(!$ThisShip->canAttack()) {
 	?><p><big class="red">You ready your weapons, you take aim, you...realise you have no weapons.</big></p><?php
 }
-else if($ThisPlayer->traderNAPAlliance($TargetPlayer))
-{
+else if($ThisPlayer->traderNAPAlliance($TargetPlayer)) {
 	?><p><big class="blue">This is your ally.</big></p><?php
 }
-else if($ThisPlayer->hasFederalProtection())
-{
+else if($ThisPlayer->hasFederalProtection()) {
 	?><p><big class="blue">You are under federal protection! That wouldn't be fair.</big></p><?php
 }
-else if($TargetPlayer->hasFederalProtection())
-{
+else if($TargetPlayer->hasFederalProtection()) {
 	?><p><big class="blue">Your target is under federal protection!</big></p><?php
 }
-else
-{
+else {
 	$canAttack=true;
 	$fightingPlayers =& $ThisSector->getFightingTraders($ThisPlayer,$TargetPlayer, true);
-	if(count($fightingPlayers['Defenders'])>0)
-	{
+	if(count($fightingPlayers['Defenders'])>0) {
 		?><p><a class="submitStyle" href="<?php echo $TargetPlayer->getAttackTraderHREF(); ?>">Attack Trader (3)</a></p><?php
 	}
-	else
-	{
+	else {
 		?><p><big class="red">You have no targets!</big></p><?php
 	}
 }
@@ -50,13 +40,10 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 	<table class="standard" width="95%">
 		<tr><th width="50%">Attacker</th><th width="50%">Defender</th></tr>
 		<tr><?php
-			foreach ($fightingPlayers as $fleet)
-			{
+			foreach ($fightingPlayers as $fleet) {
 				?><td style="vertical-align:top;"><?php
-				if (is_array($fleet))
-				{
-					foreach ($fleet as &$fleetPlayer)
-					{
+				if (is_array($fleet)) {
+					foreach ($fleet as &$fleetPlayer) {
 						$fleetShip =& $fleetPlayer->getShip();
 						if($fleetPlayer->getAccount()->isNewbie()) { ?><span class="newbie"><?php }
 						echo $fleetPlayer->getLevelName(); ?><br /><?php
@@ -66,8 +53,7 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 						Alliance: <?php echo $fleetPlayer->getAllianceName() ?><br /><br /><?php
 						echo $fleetShip->getName() ?><br />
 						Rating : <?php echo $fleetShip->getDisplayAttackRating($ThisPlayer) .'/'. $fleetShip->getDisplayDefenseRating($ThisPlayer) ?><br /><?php
-						if ($ThisShip->hasScanner())
-						{ ?>
+						if ($ThisShip->hasScanner()) { ?>
 							Shields : <?php echo $fleetShip->getShieldLow() . '-' . $fleetShip->getShieldHigh() ?><br />
 							Armour : <?php echo $fleetShip->getArmourLow() . '-' . $fleetShip->getArmourHigh() ?><br />
 							Hard Points: <?php echo $fleetShip->getNumWeapons() ?><br />
@@ -77,14 +63,12 @@ $fightingPlayers['Attackers'][$ThisPlayer->getAccountID()] =& $ThisPlayer;
 						<br /><br /><?php
 					}
 				}
-				else
-				{
+				else {
 					?>&nbsp;<?php
 				} ?>
 				</td><?php
 			}
-			if(!$canAttack)
-			{
+			if(!$canAttack) {
 				?><td>&nbsp;</td><?php
 			} ?>
 		</tr>

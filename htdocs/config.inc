@@ -1,19 +1,16 @@
 <?php
-function logException(Exception $e)
-{
+function logException(Exception $e) {
 	global $account,$var,$player;
 	$errorType = 'Error';
 	$message='';
 	$currMySQLError='';
-	if(is_object($account))
-	{
+	if(is_object($account)) {
 		$message .= 'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
 			'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
 			'E-Mail: '.$account->getEmail().EOL.EOL.'-----------'.EOL.EOL;
 	}
 	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
-	if($currMySQLError = mysql_error())
-	{
+	if($currMySQLError = mysql_error()) {
 		$errorType = 'Database Error';
 		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
 	}
@@ -21,25 +18,21 @@ function logException(Exception $e)
 		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
 		'USING_AJAX: '.(defined('USING_AJAX')?var_export(USING_AJAX,true):'undefined');
 		
-	try
-	{
+	try {
 		if(function_exists('release_lock'))
 			release_lock(); //Try to release lock so they can carry on normally
 	}
-	catch(Exception $ee)
-	{
+	catch(Exception $ee) {
 		$message .= EOL.EOL.'-----------'.EOL.EOL.
 					'Releasing Lock Failed' .EOL.
 					'Message: ' . $ee->getMessage() .EOL.EOL;
-		if($currMySQLError!=mysql_error())
-		{
+		if($currMySQLError!=mysql_error()) {
 			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
 		}
 		$message .= 'Trace: ' . $ee->getTraceAsString();
 	}
 	
-	try
-	{
+	try {
 		if(is_object($player) && method_exists($player,'sendMessageToBox'))
 			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
 		else if(is_object($account) && method_exists($account,'sendMessageToBox'))
@@ -50,8 +43,7 @@ function logException(Exception $e)
 			 $message,
 			 'From: bugs@smrealms.de');
 	}
-	catch(Exception $e)
-	{
+	catch(Exception $e) {
 		mail('bugs@smrealms.de',
 		 'Automatic Bug Report',
 		 $message,
@@ -60,16 +52,14 @@ function logException(Exception $e)
 	return $errorType;
 }
 
-function handleException(Exception $e)
-{
+function handleException(Exception $e) {
 	$errorType = logException($e);
 	if(!defined('USING_AJAX')||!USING_AJAX)
 		header('location: ' . URL . '/error.php?msg='.urlencode($errorType));
 	exit;
 }
 
-function dumpMemDiff($msg)
-{
+function dumpMemDiff($msg) {
 	static $memory;
 	@ob_end_clean();
 	var_dump($msg);
@@ -78,25 +68,21 @@ function dumpMemDiff($msg)
 	ob_start();
 }
 
-function microtimeDiff($m1,$m2)
-{
+function microtimeDiff($m1,$m2) {
 	$t1 = explode(' ', $m1);
 	$t2 = explode(' ', $m2);
 	return $t1[1] + $t1[0] - ($t2[1] + $t2[0]);
 }
 
-function microtimeSec($microtime)
-{
+function microtimeSec($microtime) {
 	return (int)substr($microtime,11);
 }
 
-function microtimeMSec($microtime)
-{
+function microtimeMSec($microtime) {
 	return (int)substr($microtime,2,6);
 }
 
-function explodeElement($delimiter, $string, $index)
-{
+function explodeElement($delimiter, $string, $index) {
 	$arr = explode($delimiter, $string, $index+1);
 	return $arr[$index];
 }

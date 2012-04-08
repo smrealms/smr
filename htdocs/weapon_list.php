@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	// ********************************
 	// *
 	// * I n c l u d e s   h e r e
@@ -49,8 +48,7 @@ try
 	echo ('<th align="center"><a href="?order=power_level&seq='.$seq.'"><span style=color:#80C870;>Power Level</span></a></th>');
 	echo ('<th align="center"><a href="?order=buyer_restriction&seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a></th>');
 	echo ('</tr>');
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		//we need an array so we dont have 8 td rows
 	    $stat = array();
 	    $stat[] = $db->getField('weapon_name');
@@ -77,8 +75,7 @@ try
 	}
 	echo ('</table>');
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

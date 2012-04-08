@@ -14,8 +14,7 @@ $template->assign('EditGameHREF',SmrSession::getNewHREF($container));
 
 $editGames=array();
 $db->query('SELECT * FROM game'.($account->hasPermission(PERMISSION_EDIT_STARTED_GAMES)?'':' WHERE start_date > ' . $db->escapeNumber(TIME)) . ' ORDER BY game_id DESC');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$editGames[$db->getField('game_id')] = array('GameID'=>$db->getField('game_id'),'GameName'=>$db->getField('game_name'));
 }
 

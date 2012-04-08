@@ -5,21 +5,18 @@ if(isset($_REQUEST['game_id']))
 	SmrSession::updateVar('GameID',$_REQUEST['game_id']);
 $gameID = $var['GameID'];
 // check if we know the game yet
-if (empty($gameID))
-{
+if (empty($gameID)) {
 	$template->assign('AdminMessageChooseGameFormHref',SmrSession::getNewHREF(create_container('skeleton.php', 'admin_message_send.php')));
 	$template->assignByRef('Games',Globals::getGameInfo());
 }
-else
-{
+else {
 	$container =create_container('admin_message_send_processing.php');
 	$container['GameID']	= $gameID;
 	$template->assign('AdminMessageSendFormHref',SmrSession::getNewHREF($container));
 	$template->assign('MessageGameID',$gameID);
 	$template->assign('ExpireTime', 1);
 
-	if ($gameID != 20000)
-	{
+	if ($gameID != 20000) {
 		$gamePlayers = array();
 		$db->query('SELECT account_id,player_id,player_name FROM player WHERE game_id = '.$db->escapeNumber($gameID).' ORDER BY player_name');
 		while ($db->nextRecord())

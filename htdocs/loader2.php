@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 error_reporting(0); // turn off error reporting for clasic
 
 //xdebug_start_profiling();
@@ -110,8 +109,7 @@ if (isset($var['time']))
 SmrSession::update();
 	do_voodoo();
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 
@@ -121,8 +119,7 @@ function do_voodoo() {
 
 	global $lock, $var;
 	
-	foreach ($GLOBALS as $key => $value)
-	{
+	foreach ($GLOBALS as $key => $value) {
 	   	$$key = &$GLOBALS[$key];
 	}
 
@@ -167,8 +164,7 @@ function do_voodoo() {
 	
 	SmrSession::update();
 
-	if($lock)
-	{
+	if($lock) {
 		release_lock($lock);
 	}
 
@@ -223,96 +219,80 @@ function release_lock() {
 
 	$lock=false;
 }
-function format_time($seconds, $short=FALSE)
-{
+function format_time($seconds, $short=FALSE) {
 	$string = '';
-	if ($seconds == 0)
-	{
+	if ($seconds == 0) {
 		$string = '0 seconds';
 		if ($short) $string = '0s';
 	}
-	if ($seconds >= 60)
-	{
+	if ($seconds >= 60) {
 		$minutes = floor($seconds/60);
 		$seconds = $seconds % 60;
 	}
-	if ($minutes >= 60)
-	{
+	if ($minutes >= 60) {
 		$hours = floor($minutes/60);
 		$minutes = $minutes % 60;
 	}
-	if ($hours >= 24)
-	{
+	if ($hours >= 24) {
 		$days = floor($hours/24);
 		$hours = $hours % 24;
 	}
-	if ($days >= 7)
-	{
+	if ($days >= 7) {
 		$weeks = floor($days/7);
 		$days = $days % 7;
 	}
-	if ($weeks > 0)
-	{
+	if ($weeks > 0) {
 		$string .= $weeks;
 		if ($short) $string .= 'w';
-		else
-		{
+		else {
 			$string .= ' week';
 			if ($weeks > 1) $string .= 's';
 		}
 	}
-	if ($days > 0)
-	{
+	if ($days > 0) {
 		$before = $weeks;
 		$after = $hours + $minutes + $seconds;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $days;
 		if ($short) $string .= 'd';
-		else
-		{
+		else {
 			$string .= ' day';
 			if ($days > 1) $string .= 's';
 		}
 	}
-	if ($hours > 0)
-	{
+	if ($hours > 0) {
 		$before = $weeks + $days;
 		$after = $minutes + $seconds;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $hours;
 		if ($short) $string .= 'h';
-		else
-		{
+		else {
 			$string .= ' hour';
 			if ($hours > 1) $string .= 's';
 		}
 	}
-	if ($minutes > 0)
-	{
+	if ($minutes > 0) {
 		$before = $weeks + $days + $hours;
 		$after = $seconds;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $minutes;
 		if ($short) $string .= 'm';
-		else
-		{
+		else {
 			$string .= ' minute';
 			if ($minutes > 1) $string .= 's';
 		}
 	}
-	if ($seconds > 0)
-	{
+	if ($seconds > 0) {
 		$before = $weeks + $days + $hours + $minutes;
 		$after = 0;
 		if ($before > 0 && $after > 0) $string .= ', ';
 		elseif ($before > 0 && $after == 0) $string .= ' and ';
 		$string .= $seconds;
 		if ($short) $string .= 's';
-		else
-		{
+		else {
 			$string .= ' second';
 			if ($seconds > 1) $string .= 's';
 		}
@@ -330,8 +310,7 @@ function getmicrotime() {
 function printmicrotime($rt) {
 
 	$max = sizeof($rt) - 1;
-	for ($j = 0; $j < $max; $j++)
-	{
+	for ($j = 0; $j < $max; $j++) {
 		$step = $j + 1;
 		$runtime = number_format($rt[$step] - $rt[$j], 8);
 		print("Step $step executed in $runtime seconds<br />");

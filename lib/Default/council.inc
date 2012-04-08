@@ -1,31 +1,25 @@
 <?php
 require_once(get_file_loc('SmrPlayer.class.inc'));
-class Council
-{
+class Council {
 	protected static $RACE_COUNCIL = array();
 	protected static $RACE_PRESIDENTS = array();
 	protected static $db = null;
 
-	private function __construct()
-	{
+	private function __construct() {
 	}
 
-	protected static function initialiseDatabase()
-	{
+	protected static function initialiseDatabase() {
 		if(self::$db==null)
 			self::$db = new SmrMySqlDatabase();
 	}
 
-	public static function &getRaceCouncil($gameID,$raceID)
-	{
-		if(!isset(self::$RACE_COUNCIL[$gameID]))
-		{
+	public static function &getRaceCouncil($gameID,$raceID) {
+		if(!isset(self::$RACE_COUNCIL[$gameID])) {
 			self::$RACE_COUNCIL[$gameID] = array();
 			self::$RACE_PRESIDENTS[$gameID] = array();
 		}
 
-		if(!isset(self::$RACE_COUNCIL[$gameID][$raceID]))
-		{
+		if(!isset(self::$RACE_COUNCIL[$gameID][$raceID])) {
 			self::initialiseDatabase();
 			self::$RACE_COUNCIL[$gameID][$raceID] = array();
 			self::$RACE_PRESIDENTS[$gameID][$raceID] = false;
@@ -40,8 +34,7 @@ class Council
 									AND npc_logins.player_name IS NULL
 								ORDER by experience DESC
 								LIMIT ' . MAX_COUNCIL_MEMBERS);
-			while(self::$db->nextRecord())
-			{
+			while(self::$db->nextRecord()) {
 				self::$RACE_COUNCIL[$gameID][$raceID][$i] = self::$db->getField('account_id');
 				if(self::$RACE_PRESIDENTS[$gameID][$raceID]==false && self::$db->getField('alignment')>=150) {
 					self::$RACE_PRESIDENTS[$gameID][$raceID] = self::$db->getField('account_id');
@@ -52,24 +45,20 @@ class Council
 		return self::$RACE_COUNCIL[$gameID][$raceID];
 	}
 
-	public static function &getPresident($gameID,$raceID)
-	{
+	public static function &getPresident($gameID,$raceID) {
 		self::getRaceCouncil($gameID,$raceID);
-		if(isset(self::$RACE_PRESIDENTS[$gameID][$raceID])&&self::$RACE_PRESIDENTS[$gameID][$raceID]!==false&&is_numeric(self::$RACE_PRESIDENTS[$gameID][$raceID]))
-		{
+		if(isset(self::$RACE_PRESIDENTS[$gameID][$raceID])&&self::$RACE_PRESIDENTS[$gameID][$raceID]!==false&&is_numeric(self::$RACE_PRESIDENTS[$gameID][$raceID])) {
 			self::$RACE_PRESIDENTS[$gameID][$raceID] =& SmrPlayer::getPlayer(self::$RACE_PRESIDENTS[$gameID][$raceID],$gameID);
 		}
 		return self::$RACE_PRESIDENTS[$gameID][$raceID];
 	}
 
-	public static function isOnCouncil($gameID,$raceID,$accountID)
-	{
+	public static function isOnCouncil($gameID,$raceID,$accountID) {
 		return in_array($accountID,self::getRaceCouncil($gameID,$raceID));
 	}
 }
 
-function modifyRelations($race_id_1)
-{
+function modifyRelations($race_id_1) {
 	global $player, $db;
 
 	$endtime = mktime(0, 0, 0, date('m'), date('d'), date('Y'));
@@ -80,8 +69,7 @@ function modifyRelations($race_id_1)
 				WHERE time < '.$db->escapeNumber($endtime).'
 					AND game_id = '.$db->escapeNumber($player->getGameID()).'
 					AND race_id_1 = '.$db->escapeNumber($race_id_1));
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$account_id	= $db->getInt('account_id');
 		$race_id_2	= $db->getInt('race_id_2');
 		$action		= $db->getField('action');
@@ -117,8 +105,7 @@ function modifyRelations($race_id_1)
 
 }
 
-function checkPacts($race_id_1)
-{
+function checkPacts($race_id_1) {
 	global $player, $db;
 
 	$db2 = new SmrMySqlDatabase();
@@ -127,8 +114,7 @@ function checkPacts($race_id_1)
 				WHERE end_time < ' . $db->escapeNumber(TIME) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND race_id_1 = ' . $db->escapeNumber($race_id_1));
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$race_id_2 = $db->getInt('race_id_2');
 		$type = $db->getField('type');
 
@@ -150,44 +136,35 @@ function checkPacts($race_id_1)
 
 
 		// more yes than no?
-		if ($yes_votes > $no_votes)
-		{
-			if ($type == 'WAR')
-			{
+		if ($yes_votes > $no_votes) {
+			if ($type == 'WAR') {
 				$currentlyParkedAccountIDs = array();
 				$raceFedSectors = array(
 										$race_id_1 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_1),
 										$race_id_2 => SmrSector::getLocationSectors($player->getGameID(), LOCATION_GROUP_RACIAL_BEACONS + $race_id_2)
 									);
-				foreach($raceFedSectors as $raceID => &$fedSectors)
-				{
+				foreach($raceFedSectors as $raceID => &$fedSectors) {
 					$otherRaceID = $raceID == $race_id_1 ? $race_id_2 : $race_id_1;
-					foreach($fedSectors as &$fedSector)
-					{
+					foreach($fedSectors as &$fedSector) {
 						$sectorPlayers =& $fedSector->getPlayers();
-						foreach($sectorPlayers as &$sectorPlayer)
-						{
-							if($sectorPlayer->getRaceID() == $otherRaceID && $sectorPlayer->canBeProtectedByRace($raceID))
-							{
+						foreach($sectorPlayers as &$sectorPlayer) {
+							if($sectorPlayer->getRaceID() == $otherRaceID && $sectorPlayer->canBeProtectedByRace($raceID)) {
 								$currentlyParkedAccountIDs[$raceID][] = $sectorPlayer->getAccountID();
 							}
 						}
 					}
 				}
 
-				if( count($currentlyParkedAccountIDs[$race_id_1]) + count($currentlyParkedAccountIDs[$race_id_2]) > 0 )
-				{
+				if( count($currentlyParkedAccountIDs[$race_id_1]) + count($currentlyParkedAccountIDs[$race_id_2]) > 0 ) {
 					$expireTime = TIME + TIME_FOR_WAR_VOTE_FED_SAFETY;
 					$query = 'REPLACE INTO player_can_fed (account_id, game_id, race_id, expiry, allowed) VALUES ';
-					foreach($currentlyParkedAccountIDs as $raceID => &$accountIDs)
-					{
+					foreach($currentlyParkedAccountIDs as $raceID => &$accountIDs) {
 						if($raceID == $race_id_1)
 							$message = 'We have declared war upon your race';
 						else
 							$message = 'Your race has declared war upon us';
 						$message .= ', you have '.format_time(TIME_FOR_WAR_VOTE_FED_SAFETY).' to vacate our federal space, after that time you will no longer be protected (unless you have strong personal relations).';
-						foreach($accountIDs as &$accountID)
-						{
+						foreach($accountIDs as &$accountID) {
 							$query .= '('.$db2->escapeNumber($accountID).','.$db2->escapeNumber($player->getGameID()).','.$db2->escapeNumber($raceID).','.$db2->escapeNumber($expireTime).','.$db2->escapeBoolean(true).'),';
 							SmrPlayer::sendMessageFromRace($raceID, $player->getGameID(), $accountID, $message, $expireTime);
 						}
@@ -211,8 +188,7 @@ function checkPacts($race_id_1)
 				$db2->query('INSERT INTO news (game_id, time, news_message) VALUES ' .
 							'('.$db2->escapeNumber($player->getGameID()).', '.$db2->escapeNumber(TIME).', ' . $db2->escape_string($news, false) . ')');
 			}
-			elseif ($type == 'PEACE')
-			{
+			elseif ($type == 'PEACE') {
 				// get 'yes' votes
 				$db2->query('SELECT * FROM player_votes_pact
 							WHERE game_id = '.$db2->escapeNumber($player->getGameID()).'
@@ -230,8 +206,7 @@ function checkPacts($race_id_1)
 				$rev_no_votes = $db2->getNumRows();
 
 				// more yes than no?
-				if ($rev_yes_votes > $rev_no_votes)
-				{
+				if ($rev_yes_votes > $rev_no_votes) {
 					$db2->query('UPDATE race_has_relation
 								SET relation = GREATEST(relation,300)
 								WHERE game_id = '.$db2->escapeNumber($player->getGameID()).'

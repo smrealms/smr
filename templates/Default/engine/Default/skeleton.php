@@ -5,13 +5,11 @@
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<title><?php echo $Title; ?> <?php if(isset($GameName)) echo $GameName; ?></title>
 		<meta http-equiv="pragma" content="no-cache"><?php
-		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled())
-		{ ?>
+		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
 		}
-		if(isset($ExtraCSSLink))
-		{
+		if(isset($ExtraCSSLink)) {
 			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>"><?php
 		} ?>
 		<style type="text/css">
@@ -19,8 +17,7 @@
 				font-size:<?php echo $FontSize-20; ?>%;
 			}
 		</style><?php
-		if(isset($HeaderTemplateInclude))
-		{
+		if(isset($HeaderTemplateInclude)) {
 			$this->includeTemplate($HeaderTemplateInclude);
 		} ?>
 		<script type="text/javascript" src="js/smr15.js"></script>
@@ -38,27 +35,22 @@
 				</td>
 				<td class="m0" colspan="2">
 					<div id="middle_panel"><?php
-						if(isset($PageTopic))
-						{
+						if(isset($PageTopic)) {
 							?><h1><?php echo $PageTopic; ?></h1><br /><?php
 						}
-						if(isset($MenuItems)||isset($MenuBar))
-						{ ?>
+						if(isset($MenuItems)||isset($MenuBar)) { ?>
 							<div class="bar1">
 								<div><?php
-									if(isset($MenuItems))
-									{
+									if(isset($MenuItems)) {
 										$this->includeTemplate('includes/menu.inc');
 									}
-									else if(isset($MenuBar))
-									{
+									else if(isset($MenuBar)) {
 										echo $MenuBar;
 									} ?>
 								</div>
 							</div><br /><?php
 						}
-						else if(isset($SubMenuBar))
-						{
+						else if(isset($SubMenuBar)) {
 							echo $SubMenuBar;
 						}
 						$this->includeTemplate($TemplateBody); ?>
@@ -73,8 +65,7 @@
 			<tr>
 				<td class="footer_left">
 					<div style="width:294px;" class="center">Get <b><u>FREE TURNS</u></b> for voting if you see the star, next available <span id="v"><?php if($TimeToNextVote <= 0){ ?>now<?php }else{ ?>in <?php echo format_time($TimeToNextVote,true); } ?></span>.</div><?php
-						foreach($VoteSites as $VoteSite)
-						{
+						foreach($VoteSites as $VoteSite) {
 							echo $VoteSite;
 						} ?>
 				</td>

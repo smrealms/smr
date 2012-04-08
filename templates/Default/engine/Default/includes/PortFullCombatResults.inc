@@ -1,26 +1,20 @@
 <?php
-if(!$AlreadyDestroyed)
-{
-	if(!$MinimalDisplay)
-	{ ?>
+if(!$AlreadyDestroyed) {
+	if(!$MinimalDisplay) { ?>
 		<h1>Attacker Results</h1><br /><?php
 	}
 	$this->includeTemplate('includes/PortTraderTeamCombatResults.inc',array('TraderTeamCombatResults'=>$FullPortCombatResults['Attackers'],'MinimalDisplay'=>$MinimalDisplay));
 }
-else if(!$MinimalDisplay)
-{
+else if(!$MinimalDisplay) {
 	?><span class="bold">The port is already destroyed.</span><?php
 }
 ?><br /><?php
-if(!$MinimalDisplay)
-{ ?>
+if(!$MinimalDisplay) { ?>
 	<br />
 	<img src="images/portAttack.jpg" width="480px" height="330px" alt="Port Attack" title="Port Attack"><br /><?php
 }
-if(!$AlreadyDestroyed)
-{
-	if(!$MinimalDisplay)
-	{ ?>
+if(!$AlreadyDestroyed) {
+	if(!$MinimalDisplay) { ?>
 		<br />
 		<h1>Port Results</h1><br /><?php
 	}
