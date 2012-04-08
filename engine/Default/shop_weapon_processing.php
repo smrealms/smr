@@ -13,7 +13,7 @@ if ($action == 'Buy') {
 		create_error('You do not have enough cash to purchase this weapon!');
 
 	// can we load such a weapon (power_level)
-	if ($ship->check_power_level($power_level) == 0)
+	if (!$ship->checkPowerLevel($power_level))
 		create_error('Your ship doesn\'t have enough power to support that weapon!');
 
 	if ($ship->getOpenWeaponSlots() < 1)
