@@ -1,10 +1,8 @@
 <?php
-if (isset($ErrorMsg))
-{
+if (isset($ErrorMsg)) {
 	echo $ErrorMsg; ?><br /><?php
 }
-if (isset($Msg))
-{
+if (isset($Msg)) {
 	echo $Msg; ?><br /><?php
 }
 ?>
@@ -71,8 +69,7 @@ if (isset($Msg))
 				</tr>
 			</table>
 		</td><?php
-		if(isset($Ticker))
-		{ ?>
+		if(isset($Ticker)) { ?>
 			<td><?php
 				$this->includeTemplate('includes/Ticker.inc'); ?>
 			</td><?php

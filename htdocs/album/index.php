@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	require_once('../config.inc');
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/Globals.class.inc');
@@ -43,8 +42,7 @@ try
 	<tr>
 	<td valign="top">
 	<?php
-	if (!empty($_SERVER['QUERY_STRING']))
-	{
+	if (!empty($_SERVER['QUERY_STRING'])) {
 		// query string should be a nick or some letters of a nick
 		$query = urldecode($_SERVER['QUERY_STRING']);
 	
@@ -54,8 +52,7 @@ try
 						  approved = \'YES\'
 					ORDER BY hof_name');
 	
-		if ($db->getNumRows() > 1)
-		{
+		if ($db->getNumRows() > 1) {
 			$db2->query('SELECT account_id as album_id
 					FROM album JOIN account USING(account_id)
 					WHERE hof_name = '.$db->escapeString($query).' AND
@@ -64,8 +61,7 @@ try
 			
 			if ($db2->nextRecord())
 				album_entry($db2->getField('album_id'));
-			else
-			{
+			else {
 				// get all id's and build array
 				$album_ids = array();
 		
@@ -80,8 +76,7 @@ try
 			}
 	
 		}
-		elseif ($db->getNumRows() == 1)
-		{
+		elseif ($db->getNumRows() == 1) {
 			if ($db->nextRecord())
 				album_entry($db->getField('album_id'));
 			else
@@ -93,8 +88,7 @@ try
 	else
 		main_page();
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

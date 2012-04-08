@@ -4,8 +4,7 @@
 		<th>Treaty</th>
 	</tr><?php
 
-	foreach($VoteRaceHrefs as $RaceID => $FormHref)
-	{ ?>
+	foreach($VoteRaceHrefs as $RaceID => $FormHref) { ?>
 		<tr>
 			<td align="center"><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
 			<td align="center">

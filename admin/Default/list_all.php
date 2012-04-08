@@ -17,8 +17,7 @@ $PHP_OUTPUT.=('<th align=center>eMail</th>');
 $PHP_OUTPUT.=('<th align=center>Last IP</th>');
 $PHP_OUTPUT.=('<th align=center>Exception</th>');
 $PHP_OUTPUT.=('</tr>');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 
 	$acc_id = $db->getField('account_id');
 	$PHP_OUTPUT.=('<tr>');

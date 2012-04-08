@@ -1,11 +1,9 @@
 <?php
-try
-{
+try {
 	require_once('config.inc');
 	
 	
-	if (get_magic_quotes_gpc())
-	{
+	if (get_magic_quotes_gpc()) {
 	    function stripslashes_array($array)
 	    {
 	        return is_array($array) ? array_map('stripslashes_array', $array) : stripslashes($array);
@@ -57,8 +55,7 @@ try
 	//echo '<pre>';echo_r($session);echo'</pre>';
 	//exit;
 	// do we have a session?
-	if (SmrSession::$account_id == 0)
-	{
+	if (SmrSession::$account_id == 0) {
 		header('Location: '.URL.'/login.php');
 		exit;
 	}
@@ -101,17 +98,14 @@ try
 	require_once(get_file_loc('SmrAccount.class.inc'));
 	$account =& SmrAccount::getAccount(SmrSession::$account_id);
 	// get reason for disabled user
-	if(($disabled = $account->isDisabled())!==false)
-	{
+	if(($disabled = $account->isDisabled())!==false) {
 		// save session (incase we forward)
 		SmrSession::update();
-		if ($disabled['Reason'] == 'Invalid eMail')
-		{
+		if ($disabled['Reason'] == 'Invalid eMail') {
 			header('Location: '.URL.'/email.php');
 			exit;
 		}
-		else
-		{
+		else {
 			header('Location: '.URL.'/disabled.php');
 			exit;
 		}
@@ -120,8 +114,7 @@ try
 	require_once(get_file_loc('smr.inc'));
 	do_voodoo();
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

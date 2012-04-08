@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	// includes
 	require_once('config.inc');
 	require_once(ENGINE . 'Default/smr.inc');
@@ -11,16 +10,14 @@ try
 	$db = new SmrMySqlDatabase();
 	
 	$db->query('SELECT * FROM game_disable');
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$template->assign('Message','Space Merchant Realms is currently <strong>OFF-LINE</strong>.<br />'.$db->getField('reason'));
 	}
 	else header('Location: '.URL);
 	
 	require_once(LIB . 'Login/loginSmarty.php');
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

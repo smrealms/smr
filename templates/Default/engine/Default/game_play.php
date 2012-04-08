@@ -1,10 +1,8 @@
 <?php
-if(isset($ErrorMessage))
-{
+if(isset($ErrorMessage)) {
 	echo $ErrorMessage; ?><br /><br /><?php
 }
-if(isset($Message))
-{
+if(isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
 
@@ -12,8 +10,7 @@ if(isset($Message))
 <br />You are ranked as <?php $this->doAn($ThisAccount->getRankName()); ?> <span style="font-size:125%;color:greenyellow;"><?php echo $UserRankName ?></span> player.<br /><br />
 
 <div id="playGames" class="ajax"><?php
-	if(isset($Games['Play']))
-	{ ?>
+	if(isset($Games['Play'])) { ?>
 		<table class="standard">
 			<tr>
 				<th align="center">&nbsp;</th>
@@ -26,8 +23,7 @@ if(isset($Message))
 				<th align="center">Game Type</th>
 				<th align="center">Game Speed</th>
 			</tr><?php
-			foreach($Games['Play'] as $Game)
-			{ ?>
+			foreach($Games['Play'] as $Game) { ?>
 				<tr>
 					<td>
 						<div class="buttonA">
@@ -51,16 +47,13 @@ if(isset($Message))
 </div>
 		
 <h1><a href="<?php echo $VotingHref; ?>">Voting</a></h1><?php
-if (isset($Voting))
-{
+if (isset($Voting)) {
 	?>Please take a couple of seconds to answer the following question(s) for the SMR Admin team. Thanks!<?php
-	foreach($Voting as $Vote)
-	{
+	foreach($Voting as $Vote) {
 		?><br /><br />
 		<form name="FORM" method="POST" action="<?php echo $Vote['HREF'] ?>">
 			<span class="bold"><?php echo bbifyMessage($Vote['Question']); ?></span> (<?php echo $Vote['TimeRemaining']; ?> Remaining)<br /><?php
-			foreach($Vote['Options'] as $VoteOption)
-			{ ?>
+			foreach($Vote['Options'] as $VoteOption) { ?>
 				<input type="radio" name="vote" value="<?php echo $VoteOption['ID']; ?>"<?php if($VoteOption['Chosen']) { ?> checked<?php } ?>><?php echo bbifyMessage($VoteOption['Text']); ?> (<?php echo $VoteOption['Votes']; ?> votes)<br /><?php
 			} ?>
 			<input type="submit" name="submit" value="Vote!"><br /><br />
@@ -69,8 +62,7 @@ if (isset($Voting))
 } ?><br />
 <h1>Join Game</h1>
 <div id="joinGames" class="ajax"><?php
-	if(isset($Games['Join']))
-	{ ?>
+	if(isset($Games['Join'])) { ?>
 		<table class="standard">
 			<tr>
 				<th align="center">&nbsp;</th>
@@ -82,8 +74,7 @@ if (isset($Voting))
 				<th>Game Speed</th>
 				<th>Credits Needed</th>
 			</tr><?php
-			foreach($Games['Join'] as $Game)
-			{ ?>
+			foreach($Games['Join'] as $Game) { ?>
 				<tr>
 					<td>
 						<div class="buttonA"><a id="game_join_<?php echo $Game['ID']; ?>" class="buttonA" href="<?php echo $Game['JoinGameLink']; ?>">&nbsp;<?php if(TIME < $Game['StartDate']) {?>View Info<?php }else{ ?>Join Game<?php } ?>&nbsp;</a></div>
@@ -99,8 +90,7 @@ if (isset($Voting))
 			<?php } ?>
 		</table><?php
 	}
-	else
-	{
+	else {
 		?><p>You have joined all open games.</p><?php
 	} ?>
 </div>
@@ -116,20 +106,16 @@ if (isset($Voting))
 <br />
 
 <?php
-if(isset($AdminPermissions))
-{ ?>
+if(isset($AdminPermissions)) { ?>
 	<h1>Admin Privileges</h1><br />
 	<ul><?php
-	foreach($AdminPermissions as $Permission)
-	{ ?>
+	foreach($AdminPermissions as $Permission) { ?>
 		<li><?php
-			if($Permission['PermissionLink']!==false)
-			{
+			if($Permission['PermissionLink']!==false) {
 				?><a href="<?php echo $Permission['PermissionLink']; ?>"><?php
 			}
 			echo $Permission['Name'];
-			if($Permission['PermissionLink']!==false)
-			{
+			if($Permission['PermissionLink']!==false) {
 				?></a><?php
 			} ?>
 		</li><?php
@@ -141,8 +127,7 @@ if(isset($AdminPermissions))
 <h1>Previous Games</h1>
 <a onclick="$('#prevGames').slideToggle(600);">Show/Hide</a>
 <div id="prevGames" class="ajax" style="display:none;"><?php
-	if(isset($Games['Previous']))
-	{ ?>
+	if(isset($Games['Previous'])) { ?>
 		<table class="standard">
 			<tr>
 				<th width="150">Game Name</th>
@@ -151,8 +136,7 @@ if(isset($AdminPermissions))
 				<th>Game Speed</th>
 				<th colspan="3">Options</th>
 			</tr><?php
-			foreach($Games['Previous'] as $Game)
-			{ ?>
+			foreach($Games['Previous'] as $Game) { ?>
 				<tr>
 					<td width="35%"><?php if(isset($Game['PreviousGameLink'])){ ?><a href="<?php echo $Game['PreviousGameLink']; ?>"><?php } echo $Game['Name']; ?> (<?php echo $Game['ID']; ?>)<?php if(isset($Game['PreviousGameLink'])){ ?></a><?php } ?></td>
 					<td><?php echo $Game['StartDate'] ?></td>
@@ -165,8 +149,7 @@ if(isset($AdminPermissions))
 			<?php } ?>
 		</table><?php
 	}
-	else
-	{
+	else {
 		?><p>There are no previous games.</p><?php
 	} ?>
 </div>

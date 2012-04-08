@@ -1,7 +1,6 @@
 <?php
 require_once(get_file_loc('SmrPlayer.class.inc'));
-class SmrForce
-{
+class SmrForce {
 	protected static $CACHE_FORCES = array();
 	protected static $CACHE_SECTOR_FORCES = array();
 	protected static $TIDIED_UP = array();
@@ -27,34 +26,25 @@ class SmrForce
 	protected $isNew;
 	protected $hasChanged = false;
 
-	public static function refreshCache()
-	{
-		foreach(self::$CACHE_FORCES as $gameID => &$gameForces)
-		{
-			foreach($gameForces as $sectorID => &$gameSectorForces)
-			{
-				foreach($gameSectorForces as $ownerID => &$forces)
-				{
+	public static function refreshCache() {
+		foreach(self::$CACHE_FORCES as $gameID => &$gameForces) {
+			foreach($gameForces as $sectorID => &$gameSectorForces) {
+				foreach($gameSectorForces as $ownerID => &$forces) {
 					$forces = self::getForce($gameID,$sectorID,$ownerID,true);
 				}
 			}
 		}
 	}
 
-	public static function clearCache()
-	{
+	public static function clearCache() {
 		self::$CACHE_FORCES = array();
 		self::$CACHE_SECTOR_FORCES = array();
 	}
 
-	public static function saveForces()
-	{
-		foreach(self::$CACHE_FORCES as &$gameForces)
-		{
-			foreach($gameForces as &$gameSectorForces)
-			{
-				foreach($gameSectorForces as &$forces)
-				{
+	public static function saveForces() {
+		foreach(self::$CACHE_FORCES as &$gameForces) {
+			foreach($gameForces as &$gameSectorForces) {
+				foreach($gameSectorForces as &$forces) {
 					$forces->update();
 				}
 			}
@@ -109,8 +99,7 @@ class SmrForce
 		$this->ownerID = $ownerID;
 		$this->sectorID = $sectorID;
 		$this->gameID = $gameID;
-		if($this->db->nextRecord())
-		{
+		if($this->db->nextRecord()) {
 			$this->combatDrones = $this->db->getInt('combat_drones');
 			$this->scoutDrones = $this->db->getInt('scout_drones');
 			$this->mines = $this->db->getInt('mines');

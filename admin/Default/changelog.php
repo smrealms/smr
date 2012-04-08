@@ -9,13 +9,11 @@ $link_set_live = true;
 $db->query('SELECT *
 			FROM version
 			ORDER BY version_id DESC');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$version_id = $db->getInt('version_id');
 	$version = $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level');
 	$went_live = $db->getInt('went_live');
-	if ($went_live > 0)
-	{
+	if ($went_live > 0) {
 		// from this point on we don't create links to set a version to live
 		$link_set_live = false;
 
@@ -23,10 +21,8 @@ while ($db->nextRecord())
 		$went_live = date(DATE_FULL_SHORT, $went_live);
 
 	}
-	else
-	{
-		if ($link_set_live)
-		{
+	else {
+		if ($link_set_live) {
 			$container = array('url' => 'changelog_set_live_processing.php',
 							   'version_id' => $version_id
 							  );
@@ -42,8 +38,7 @@ while ($db->nextRecord())
 				FROM changelog
 				WHERE version_id = '.$db->escapeNumber($version_id).'
 				ORDER BY changelog_id');
-	while ($db2->nextRecord())
-	{
+	while ($db2->nextRecord()) {
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td valign="top"><li></td>');
 		$PHP_OUTPUT.=('<td>' . stripslashes($db2->getField('change_title')) . '<br /><small>' . stripslashes($db2->getField('change_message')) . '</small></td>');
@@ -51,8 +46,7 @@ while ($db->nextRecord())
 		$PHP_OUTPUT.=('</tr>');
 	}
 
-	if ($first_entry)
-	{
+	if ($first_entry) {
 		$first_entry = false;
 
 		$container = array('url' => 'changelog_add_processing.php',

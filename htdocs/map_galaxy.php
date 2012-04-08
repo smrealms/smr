@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	// ********************************
 	// *
 	// * I n c l u d e s   h e r e
@@ -39,22 +38,17 @@ try
 	
 	}
 	
-	if(isset($_REQUEST['sector_id']))
-	{
-		if(($galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $_REQUEST['sector_id'])) === false)
-		{
+	if(isset($_REQUEST['sector_id'])) {
+		if(($galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $_REQUEST['sector_id'])) === false) {
 			header('location: ' . URL . '/error.php?msg=Invalid sector id');
 			exit;
 		}
 	}
-	else if(isset($_REQUEST['galaxy_id']))
-	{
-		try
-		{
+	else if(isset($_REQUEST['galaxy_id'])) {
+		try {
 			$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$_REQUEST['galaxy_id']);
 		}
-		catch(Exception $e)
-		{
+		catch(Exception $e) {
 			header('location: ' . URL . '/error.php?msg=Invalid galaxy id');
 			exit;
 		}
@@ -65,16 +59,14 @@ try
 	// create account object
 	$account =& $player->getAccount();
 	
-	if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id']))
-	{
+	if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id'])) {
 		$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
 	}
 	
 	
 	$template->assign('GalaxyName',$galaxy->getName());
 	
-	if($account->isCenterGalaxyMapOnPlayer() || isset($_REQUEST['sector_id']))
-	{
+	if($account->isCenterGalaxyMapOnPlayer() || isset($_REQUEST['sector_id'])) {
 		if(isset($_REQUEST['sector_id']))
 			$topLeft =& SmrSector::getSector($player->getGameID(),$_REQUEST['sector_id']);
 		else
@@ -82,8 +74,7 @@ try
 		
 		if(!$galaxy->contains($topLeft->getSectorID()))
 			$topLeft =& SmrSector::getSector($player->getGameID(),$galaxy->getStartSector());
-		else
-		{
+		else {
 			//go left then up
 			for ($i=0;$i<floor($galaxy->getWidth()/2);$i++)
 				$topLeft =& $topLeft->getNeighbourSector('Left');
@@ -96,8 +87,7 @@ try
 	
 	$mapSectors = array();
 	$leftMostSec =& $topLeft;
-	for ($i=0;$i<$galaxy->getHeight();$i++)
-	{
+	for ($i=0;$i<$galaxy->getHeight();$i++) {
 		$mapSectors[$i] = array();
 		//new row
 		if ($i!=0) $leftMostSec =& $leftMostSec->getNeighbourSector('Down');
@@ -105,8 +95,7 @@ try
 		//get left most sector for this row
 		$thisSec =& $leftMostSec;
 		//iterate through the columns
-		for ($j=0;$j<$galaxy->getWidth();$j++)
-		{
+		for ($j=0;$j<$galaxy->getWidth();$j++) {
 			//new sector
 			if ($j!=0) $thisSec =& $thisSec->getNeighbourSector('Right');
 			$mapSectors[$i][$j] =& $thisSec;
@@ -126,8 +115,7 @@ try
 	$template->assignByRef('ThisPlayer',$player);
 	$template->display('GalaxyMap.inc');
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

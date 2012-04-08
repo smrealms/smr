@@ -16,8 +16,7 @@ $container = array();
 $container['url'] = 'account_close.php';
 $template->assign('PageTopic','Computer Sharing');
 $PHP_OUTPUT.=create_echo_form($container);
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	//get info about linked IDs
 	$associatedAccs = $db->getField('array');
 	//split it into individual IDs
@@ -30,34 +29,29 @@ while ($db->nextRecord())
 	$currTabAccId = $db->getField('account_id');
 	//if this account was listed with another we can skip it.
 	if (isset($used[$currTabAccId])) continue;
-	if ($rows > 1)
-	{
+	if ($rows > 1) {
 		$db2->query('SELECT account_id, login FROM account WHERE account_id ='.$db2->escapeNumber($currTabAccId).($skipUnusedAccs?' AND last_login > '.$this->db->escapeNumber(TIME-86400*30):'').' LIMIT 1');
 		if ($db2->nextRecord())
 			$currTabAccLogin = $db2->getField('login');
 		else
 			continue;
 
-		if (!$skipClosedAccs)
-		{
+		if (!$skipClosedAccs) {
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$this->db->escapeNumber($currTabAccId));
-			if ($db2->nextRecord())
-			{
+			if ($db2->nextRecord()) {
 				if ($db2->getField('reason_id') != 5) $PHP_OUTPUT.=('Closed: ' . $db2->getField('suspicion') . '.<br />');
 				else continue;
 			}
 		}
 		else continue;
-		if (!$skipExceptions)
-		{
+		if (!$skipExceptions) {
 			$db2->query('SELECT * FROM account_exceptions WHERE account_id = '.$this->db->escapeNumber($currTabAccId));
 			if ($db2->nextRecord()) $PHP_OUTPUT.=('Exception: ' . $db2->getField('reason') . '.<br />');
 		}
 		else continue;
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align="center">Accounts</th><th>EMail</th><th>Most Common IP</th><th>Last Login</th><th>Exception</th><th>Closed</th><th>Option</th></tr>');
-		foreach ($accountIDs as $currLinkAccId)
-		{
+		foreach ($accountIDs as $currLinkAccId) {
 			if (!is_numeric($currLinkAccId)) continue; //rare error where user modified their own cookie.  Fixed to not allow to happen in v2.
 			$db2->query('SELECT account_id, login, email, validated, last_login, (SELECT ip FROM account_has_ip WHERE account_id = account.account_id GROUP BY ip ORDER BY COUNT(ip) DESC LIMIT 1) common_ip FROM account WHERE account_id = '.$this->db->escapeNumber($currLinkAccId).($skipUnusedAccs?' AND last_login > '.$this->db->escapeNumber(TIME-86400*30):''));
 			if ($db2->nextRecord())

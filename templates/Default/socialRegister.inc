@@ -80,8 +80,7 @@
 							<td width="27%">Verify (Optional):</td>
 							<td width="73%"><input type="password" name="pass_verify" size="20" maxlength="32" id="InputFields"></td>
 						</tr><?php
-						if($SocialLogin->getEmail()==null)
-						{ ?>
+						if($SocialLogin->getEmail()==null) { ?>
 							<tr>
 								<td width="27%">Email:</td>
 								<td width="73%"><input type="text" name="email" size="20" maxlength="32" id="InputFields"></td>

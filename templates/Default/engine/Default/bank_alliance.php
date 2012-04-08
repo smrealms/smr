@@ -1,9 +1,7 @@
 <?php
-if (count($AlliedAllianceBanks) > 0)
-{ ?>
+if (count($AlliedAllianceBanks) > 0) { ?>
 	<ul><?php
-	foreach ($AlliedAllianceBanks as $AlliedAllianceID => $AlliedAlliance)
-	{ ?>
+	foreach ($AlliedAllianceBanks as $AlliedAllianceID => $AlliedAlliance) { ?>
 		<li>
 			<a class="bold" href="<?php echo Globals::getAllianceBankHref($AlliedAlliance->getAllianceID()); ?>"><?php echo $AlliedAlliance->getAllianceName(); ?>'s Account'</a>
 		</li><?php
@@ -12,24 +10,20 @@ if (count($AlliedAllianceBanks) > 0)
 } ?>
 
 Hello <?php echo $ThisPlayer->getPlayerName(); ?>,<br /><?php
-if ($UnlimitedWithdrawal === true)
-{
+if ($UnlimitedWithdrawal === true) {
 	?>You can withdraw an unlimited amount from this account.<?php
 }
-else if (isset($PositiveWithdrawal))
-{
+else if (isset($PositiveWithdrawal)) {
 	?>You can only withdraw <?php echo number_format($PositiveWithdrawal); ?> more credits based on your deposits.<?php
 }
-else
-{ ?>
+else { ?>
 	You can withdraw up to <?php echo number_format($WithdrawalPerDay); ?> credits per 24 hours.<br />
 	So far you have withdrawn <?php echo number_format($TotalWithdrawn); ?> credits in the past 24 hours. You can withdraw <?php echo number_format($RemainingWithdrawal); ?> more credits.<?php
 } ?>
 <br /><br /><?php
 
 // only if we have at least one result
-if (count($BankTransactions) > 0)
-{ ?>
+if (count($BankTransactions) > 0) { ?>
 	<div align="center">
 		<form class="standard" method="POST" action="<?php echo $FilterTransactionsFormHREF; ?>">
 			<table cellspacing="5" cellpadding="0" class="nobord">
@@ -47,8 +41,7 @@ if (count($BankTransactions) > 0)
 				</tr>
 			</table>
 		</form><?php
-		if($CanExempt)
-		{
+		if($CanExempt) {
 			?><form class="standard" method="POST" action="<?php echo $ExemptTransactionsFormHREF; ?>"><?php
 		} ?>
 			<table class="standard inset">
@@ -59,19 +52,16 @@ if (count($BankTransactions) > 0)
 					<th>Reason for transfer</th>
 					<th class="shrink">Withdrawal</th>
 					<th class="shrink">Deposit</th><?php
-					if($CanExempt)
-					{
+					if($CanExempt) {
 						?><th class="shrink noWrap">Make Exempt</th><?php
 					} ?>
 				</tr><?php
-				foreach($BankTransactions as $TransactionID => &$BankTransaction)
-				{ ?>
+				foreach($BankTransactions as $TransactionID => &$BankTransaction) { ?>
 					<tr>
 						<td class="center"><?php echo number_format($TransactionID); ?></td>
 						<td class="center noWrap"><?php echo date(DATE_FULL_SHORT_SPLIT, $BankTransaction['Time']); ?></td>
 						<td><?php
-							if($BankTransaction['Exempt'])
-							{
+							if($BankTransaction['Exempt']) {
 								?>Alliance Funds c/o<br /><?php
 							}
 							echo $BankTransaction['Player']->getLinkedDisplayName(); ?>
@@ -79,8 +69,7 @@ if (count($BankTransactions) > 0)
 						<td><?php echo $BankTransaction['Reason']; ?></td>
 						<td class="center"><?php if(is_numeric($BankTransaction['Withdrawal'])){ echo number_format($BankTransaction['Withdrawal']); }else{ ?>&nbsp;<?php } ?></td>
 						<td class="center"><?php if(is_numeric($BankTransaction['Deposit'])){ echo number_format($BankTransaction['Deposit']); }else{ ?>&nbsp;<?php } ?></td><?php
-						if ($CanExempt)
-						{ ?>
+						if ($CanExempt) { ?>
 							<td class="center"><input type="checkbox" name="exempt[<?php echo $TransactionID; ?>]" value="true"<?php if($BankTransaction['Exempt']){ ?> checked="checked"<?php } ?>></td><?php
 						} ?>
 					</tr><?php
@@ -88,14 +77,12 @@ if (count($BankTransactions) > 0)
 				<tr>
 					<th colspan="5" class="right">Ending Balance</th>
 					<td class="bold right"><?php echo number_format($Alliance->getAccount()); ?></td><?php
-					if($CanExempt)
-					{
+					if($CanExempt) {
 						?><td><input class="submit" type="submit" name="action" value="Make Exempt"></td><?php
 					} ?>
 				</tr>
 			</table><?php
-		if($CanExempt)
-		{
+		if($CanExempt) {
 			?></form><?php
 		} ?>
 	</div>
@@ -106,8 +93,7 @@ if (count($BankTransactions) > 0)
 		</div>
 	</div><?php
 }
-else
-{
+else {
 	?>Your alliance account is still unused.<br /><?php
 } ?>
 

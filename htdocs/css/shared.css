@@ -14,125 +14,105 @@ div.wep_drop1 {
 }
 
 /*** CS Stuff ***/
-div.secNavBox
-{
+div.secNavBox {
 	position: relative;
 }
-div.secNavBox div.scan
-{
+div.secNavBox div.scan {
 	position: relative;
 	width: 250px;
 	height: 250px;
 }
-div.secNavBox div.no_scan
-{
+div.secNavBox div.no_scan {
 	position: relative;
 	width: 210px;
 	height: 210px;
 	top: -20px;
 	left: -20px;
 }
-div.secNavBox div.scan_up
-{
+div.secNavBox div.scan_up {
 	position: absolute;
 	top: 0px;
 	left: 84px;
 }
-div.secNavBox div.move_up
-{
+div.secNavBox div.move_up {
 	position: absolute;
 	top: 22px;
 	left: 84px;
 }
-div.secNavBox div.scan_left
-{
+div.secNavBox div.scan_left {
 	position: absolute;
 	top: 84px;
 	left: 0px;
 }
-div.secNavBox div.move_left
-{
+div.secNavBox div.move_left {
 	position: absolute;
 	top: 84px;
 	left: 22px;
 }
-div.secNavBox div.cs_mid
-{
+div.secNavBox div.cs_mid {
 	position: absolute;
 	top: 84px;
 	left: 84px;
 }
-div.secNavBox div.scan_right
-{
+div.secNavBox div.scan_right {
 	position: absolute;
 	top: 84px;
 	left: 208px;
 }
-div.secNavBox div.move_right
-{
+div.secNavBox div.move_right {
 	position: absolute;
 	top: 84px;
 	left: 146px;
 }
-div.secNavBox div.scan_down
-{
+div.secNavBox div.scan_down {
 	position: absolute;
 	top: 208px;
 	left: 84px;
 }
-div.secNavBox div.move_down
-{
+div.secNavBox div.move_down {
 	position: absolute;
 	top: 146px;
 	left: 84px;
 }
-div.secNavBox div.scan_warp
-{
+div.secNavBox div.scan_warp {
 	position: absolute;
 	top: 161px;
 	left: 221px;
 }
-div.secNavBox div.move_warp
-{
+div.secNavBox div.move_warp {
 	position: absolute;
 	top: 161px;
 	left: 159px;
 }
-.scan_text_vert
-{
+.scan_text_vert {
 	width: 20px;
 	height: 60px;
 }
-.scan_text_vert a
-{
+.scan_text_vert a {
 	display:block;
 	width: 20px;
 	font-size: 90%;
 	text-align: center;
 	line-height: 15px;
 }
-.scan_text_hor
-{
+.scan_text_hor {
 	width: 60px;
 	height: 20px;
 }
-.scan_text_hor a
-{
+.scan_text_hor a {
 	display:block;
 	width: 60px;
 	font-size: 90%;
 	text-align: center;
 	line-height: 20px;
 }
-.move_text
-{
+.move_text {
 	width: 60px;
 	height: 60px;
 	font-weight: bold;
 	text-align: center;
 }
-.move_text a
-{
+.move_text a {
 	display:block;
 	width: 60px;
 	line-height: 60px;
@@ -154,82 +134,63 @@ div.secNavBox div.move_warp
 	font-weight: bold;
 	color: blue;
 }
-.bold
-{
+.bold {
 	font-weight: bold;
 }
-.italic
-{
+.italic {
 	font-style: italic;
 }
-.underline
-{
+.underline {
 	text-decoration: underline;
 }
-.smallCaps
-{
+.smallCaps {
 	font-variant: small-caps;
 }
-.smallFont
-{
+.smallFont {
 	font-size: 75%;
 }
-.inset
-{
+.inset {
 	width: 95%;
 }
-.fullwidth
-{
+.fullwidth {
 	width: 100%;
 }
-.fullheight
-{
+.fullheight {
 	height: 100%;
 }
-.right
-{
+.right {
 	text-align: right;
 }
-.center
-{
+.center {
 	text-align: center;
 }
-table.center
-{
+table.center {
 	margin:auto;
 }
-.nopad
-{
+.nopad {
 	margin: 0px;
 	padding: 0px;
 }
-.noWrap
-{
+.noWrap {
 	white-space: nowrap;
 }
-.auto
-{
+.auto {
 	width: auto;
 }
-.shrink
-{
+.shrink {
 	width: 1%;
 }
-.top
-{
+.top {
 	vertical-align: top;
 }
-.blank
-{
+.blank {
 	margin: 0px;
 	padding: 0px;
 }
-.shiplistdescription
-{
+.shiplistdescription {
 	white-space: nowrap;
 }
-.newbie
-{
+.newbie {
 	font-style: italic;
 }
 .clear {
@@ -275,18 +236,15 @@ table.center
 }
 
 /* GP */
-.gpsubheader
-{
+.gpsubheader {
 	font-style: italic;
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
-.gpeditornote
-{
+.gpeditornote {
 	font-size: smaller;
 }
-.gpcolumn
-{
+.gpcolumn {
 	width: 50%;
 	vertical-align: top;
 }
@@ -294,12 +252,10 @@ table.center
 /* More */
 
 
-table.standardnobord
-{
+table.standardnobord {
 	border: 0px;
 }
-.standardnobord tr,.standardnobord td,.standardnobord th
-{
+.standardnobord tr,.standardnobord td,.standardnobord th {
 	border: 0px;
 }
 
@@ -329,15 +285,13 @@ textarea {
 	height: 15em;
 }
 
-div.buttonA
-{
+div.buttonA {
 	margin: 0px;
 	font-size: 100%;
 	height: 1.0em;
 	display: inline;
 }
-a.buttonA 
-{
+a.buttonA  {
 	font-size: inherit;
 	text-decoration: none;
 	height: 1.0em;
@@ -349,14 +303,12 @@ a.buttonA
 
 
 /* LM */
-table.lmt
-{
+table.lmt {
 	border-collapse: collapse;
 	border-spacing: 1px;
 }
 /*Local up link Icon*/
-div.lm_sector div.lmup
-{
+div.lm_sector div.lmup {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -364,8 +316,7 @@ div.lm_sector div.lmup
 	width: 120px;
 }
 /*Local Plot/Warp Area*/
-div.lm_sector div.lmp
-{
+div.lm_sector div.lmp {
 	position: absolute;
 	top: 10px;
 	left: 0px;
@@ -373,8 +324,7 @@ div.lm_sector div.lmp
 	z-index: 2;
 }
 /*Local trader and forces*/
-div.lm_sector div.lmtf
-{
+div.lm_sector div.lmtf {
 	position: absolute;
 	top: 10px;
 	right: 0px;
@@ -383,8 +333,7 @@ div.lm_sector div.lmtf
 	z-index: 2;
 }
 /*Local locations*/
-div.lm_sector div.lmloc
-{
+div.lm_sector div.lmloc {
 	position: absolute;
 	top: 28px;
 	left: 0px;
@@ -392,8 +341,7 @@ div.lm_sector div.lmloc
 	z-index: 2;
 }
 /*Local left link Icon*/
-div.lm_sector div.lmleft
-{
+div.lm_sector div.lmleft {
 	position: absolute;
 	top: 46px;
 	left: 0px;
@@ -401,8 +349,7 @@ div.lm_sector div.lmleft
 	width: 20px;
 }
 /*Local sector number*/
-div.lm_sector div.lmsector
-{
+div.lm_sector div.lmsector {
 	position: absolute;
 	top: 46px;
 	left: 20px;
@@ -411,8 +358,7 @@ div.lm_sector div.lmsector
 	width: 80px;
 }
 /*Local right link Icon*/
-div.lm_sector div.lmright
-{
+div.lm_sector div.lmright {
 	position: absolute;
 	top: 46px;
 	left: 100px;
@@ -421,8 +367,7 @@ div.lm_sector div.lmright
 	width: 20px;
 }
 /*Local port section*/
-div.lm_sector div.lmport
-{
+div.lm_sector div.lmport {
 	position: absolute;
 	top: 66px;
 	left: 0px;
@@ -431,21 +376,18 @@ div.lm_sector div.lmport
 	/*width: 120px;*/
 }
 /*Local down link Icon*/
-div.lmdown
-{
+div.lmdown {
 	position: absolute;
 	top: 110px;
 	left: 0px;
 	height: 10px;
 }
-div.lm_sector
-{
+div.lm_sector {
 	position: relative;
 	width: 120px;
 	height: 120px;
 }
-div.lm_sector img.move_hack
-{
+div.lm_sector img.move_hack {
 	height: 120px;
 	width: 120px;
 	position: absolute;
@@ -469,8 +411,7 @@ table.chess {
     white-space: nowrap;
 }
 
-.chess td
-{
+.chess td {
 	font-size: 37px;
 	text-align: center;
 	border: 4px solid;

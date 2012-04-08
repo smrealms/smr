@@ -1,10 +1,8 @@
 <?php
-if(isset($IncludeScript))
-{
+if(isset($IncludeScript)) {
 	$this->includeTemplate($IncludeScript);
 }
-else
-{
+else {
 	echo $PHP_OUTPUT;
 }
 ?>

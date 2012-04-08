@@ -1,12 +1,10 @@
 <?php
 require_once('AbstractSmrShip.class.inc');
 
-class DummyShip extends AbstractSmrShip
-{
+class DummyShip extends AbstractSmrShip {
 	protected static $CACHED_DUMMY_SHIPS;
 	
-	public function __construct(AbstractSmrPlayer &$player)
-	{
+	public function __construct(AbstractSmrPlayer &$player) {
 		parent::__construct($player);
 		
 		$this->weapons = array();
@@ -19,17 +17,14 @@ class DummyShip extends AbstractSmrShip
 		
 		$this->cargo_left = $this->getCargoHolds();
 	}
-	protected function doFullUNO()
-	{
-		foreach($this->getMaxHardware() as $hardwareTypeID => $max)
-		{
+	protected function doFullUNO() {
+		foreach($this->getMaxHardware() as $hardwareTypeID => $max) {
 			$this->hardware[$hardwareTypeID] = $max;
 			$this->oldHardware[$hardwareTypeID] = $max;
 		}
 	}
 	
-	public function regenerate(AbstractSmrPlayer &$player)
-	{
+	public function regenerate(AbstractSmrPlayer &$player) {
 		$this->player =& $player;
 		$this->regenerateBaseShip();
 		$this->doFullUNO();
@@ -41,33 +36,26 @@ class DummyShip extends AbstractSmrShip
 		$this->checkForExcessWeapons();
 	}
 	
-	function decloak()
-	{
+	function decloak() {
 	}
 	
-	function enableCloak()
-	{
+	function enableCloak() {
 	}
 	
-	function setIllusion($ship_id, $attack, $defense)
-	{
+	function setIllusion($ship_id, $attack, $defense) {
 	}
 	
-	function disableIllusion()
-	{
+	function disableIllusion() {
 	}
 	
-	public function getIllusionShip()
-	{
-		if(!isset($this->illusionShip))
-		{
+	public function getIllusionShip() {
+		if(!isset($this->illusionShip)) {
 			$this->illusionShip=false;
 		}
 		return $this->illusionShip;
 	}
 	
-	public function cacheDummyShip()
-	{
+	public function cacheDummyShip() {
 		$cache = serialize(&$this);
 		$db = new SmrMySqlDatabase();
 		$db->query('REPLACE INTO cached_dummys ' .
@@ -76,36 +64,30 @@ class DummyShip extends AbstractSmrShip
 		unserialize(&$cache);
 	}
 	
-	public static function &getCachedDummyShip(AbstractSmrPlayer &$player)
-	{
-		if(!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()]))
-		{
+	public static function &getCachedDummyShip(AbstractSmrPlayer &$player) {
+		if(!isset(self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()])) {
 			$db = new SmrMySqlDatabase();
 			$db->query('SELECT info FROM cached_dummys
 						WHERE type = \'DummyShip\'
 						AND id = ' . $db->escapeString($player->getPlayerName()) . ' LIMIT 1');
-			if($db->nextRecord())
-			{
+			if($db->nextRecord()) {
 				$return = unserialize($db->getField('info'));
 				$return->regenerate($player);
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] =& $return;
 			}
-			else
-			{
+			else {
 				self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()] = new DummyShip($player);
 			}
 		}
 		return self::$CACHED_DUMMY_SHIPS[$player->getPlayerName()];
 	}
 	
-	public static function &getDummyShipNames()
-	{
+	public static function &getDummyShipNames() {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT id FROM cached_dummys
 					WHERE type = \'DummyShip\'');
 		$dummyNames = array();
-		while($db->nextRecord())
-		{
+		while($db->nextRecord()) {
 			$dummyNames[] = $db->getField('id');
 		}
 		return $dummyNames;
@@ -113,13 +95,11 @@ class DummyShip extends AbstractSmrShip
 	
 	
 	
-	public function __sleep()
-	{
+	public function __sleep() {
 		return array('gameID','weapons');
 	}
 	
-	public function __wakeup()
-	{
+	public function __wakeup() {
 	}
 }
 ?>

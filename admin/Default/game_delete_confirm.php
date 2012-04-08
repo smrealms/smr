@@ -1,8 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Delete Game - Confirmation');
-if(isset($_REQUEST['game_id']))
-{
+if(isset($_REQUEST['game_id'])) {
 	if(!is_numeric($_REQUEST['game_id']))
 		create_error('Invalid game id: '.$_REQUEST['game_id']);
 	SmrSession::updateVar('game_id',$_REQUEST['game_id']);

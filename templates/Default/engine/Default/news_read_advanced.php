@@ -9,10 +9,8 @@
 				<h2>Alliance Search</h2>
 				<select name="allianceID" id="InputFields">
 					<option value="-1">Select an alliance</option><?php
-					if(isset($NewsAlliances) && count($NewsAlliances)>0)
-					{
-						foreach($NewsAlliances as $NewsAlliance)
-						{
+					if(isset($NewsAlliances) && count($NewsAlliances)>0) {
+						foreach($NewsAlliances as $NewsAlliance) {
 							?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
 						}
 					} ?>
@@ -35,10 +33,8 @@
 					<h2>Alliance Vs Alliance Search</h2>
 					<select name="alliance1" id="InputFields">
 						<option value="-1">Select an alliance</option><?php
-						if(isset($NewsAlliances) && count($NewsAlliances)>0)
-						{
-							foreach($NewsAlliances as $NewsAlliance)
-							{
+						if(isset($NewsAlliances) && count($NewsAlliances)>0) {
+							foreach($NewsAlliances as $NewsAlliance) {
 								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
 							}
 						} ?>
@@ -46,10 +42,8 @@
 						 vs.
 						<select name="alliance2" id="InputFields">
 							<option value="-1">Select an alliance</option><?php
-							if(isset($NewsAlliances) && count($NewsAlliances)>0)
-							{
-								foreach($NewsAlliances as $NewsAlliance)
-								{
+							if(isset($NewsAlliances) && count($NewsAlliances)>0) {
+								foreach($NewsAlliances as $NewsAlliance) {
 									?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
 								}
 							} ?>
@@ -64,8 +58,7 @@
 	<?php
 	echo $PHP_OUTPUT;
 	
-	if(isset($NewsItems) && count($NewsItems) > 0)
-	{ ?>
+	if(isset($NewsItems) && count($NewsItems) > 0) { ?>
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 		<table class="standard">
 			<tr>
@@ -73,8 +66,7 @@
 				<th align="center">News</th>
 			</tr>
 			<?php
-			foreach($NewsItems as $NewsItem)
-			{ ?>
+			foreach($NewsItems as $NewsItem) { ?>
 				<tr>
 					<td align="center"><?php echo date(DATE_FULL_SHORT, $NewsItem['Time']); ?></td>
 					<td style="text-align:left;vertical-align:middle;"><?php echo $NewsItem['Message']; ?></td>
@@ -82,8 +74,7 @@
 			} ?>
 			</table><?php
 	}
-	else
-	{
+	else {
 		?>No news to read.<?php
 	} ?>
 </div>

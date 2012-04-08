@@ -1,6 +1,5 @@
 <?php
-if(isset($Message))
-{
+if(isset($Message)) {
 	echo $Message; ?>
 	<br /><br /><?php
 }
@@ -10,16 +9,14 @@ if(isset($Message))
 Messages will be sent to your currently validated email, so make sure that is the email address to which you wish to receive emails.<br />
 <br />
 <?php
-if (isset($MessageBoxes))
-{ ?>
+if (isset($MessageBoxes)) { ?>
 	<table class="standard">
 		<tr>
 			<th>Message Type</th>
 			<th>Messages Remaining</th>
 			<th>&nbsp;</th>
 		</tr><?php
-		foreach ($MessageBoxes as $MessageBox)
-		{ ?>
+		foreach ($MessageBoxes as $MessageBox) { ?>
 			<tr>
 				<td>
 					<?php echo $MessageBox['Name']; ?>

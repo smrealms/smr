@@ -2,8 +2,7 @@
 
 require_once(get_file_loc('SmrAccount.class.inc'));
 
-function main_page()
-{
+function main_page() {
 	// database object
 	$db = new SmrMySqlDatabase();
 
@@ -33,10 +32,8 @@ function main_page()
 				WHERE approved = \'YES\'
 				ORDER BY page_views DESC
 				LIMIT 5');
-	if ($db->getNumRows())
-	{
-		while ($db->nextRecord())
-		{
+	if ($db->getNumRows()) {
+		while ($db->nextRecord()) {
 			$page_views = $db->getField('page_views');
 			$nick = get_album_nick($db->getField('account_id'));
 
@@ -51,10 +48,8 @@ function main_page()
 				WHERE approved = \'YES\'
 				ORDER BY created DESC
 				LIMIT 5');
-	if ($db->getNumRows())
-	{
-		while ($db->nextRecord())
-		{
+	if ($db->getNumRows()) {
+		while ($db->nextRecord()) {
 			$created = $db->getField('created');
 			$nick = get_album_nick($db->getField('account_id'));
 
@@ -66,8 +61,7 @@ function main_page()
 	echo('</p>');
 }
 
-function album_entry($album_id)
-{
+function album_entry($album_id) {
 	// database object
 	$db = new SmrMySqlDatabase();
 
@@ -84,8 +78,7 @@ function album_entry($album_id)
 				FROM album
 				WHERE account_id = '.$db->escapeNumber($album_id).' AND
 					approved = \'YES\'');
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$location = stripslashes($db->getField('location'));
 		$email = stripslashes($db->getField('email'));
 		$website = stripslashes($db->getField('website'));
@@ -96,8 +89,7 @@ function album_entry($album_id)
 		$page_views = $db->getField('page_views');
 		$disabled = $db->getField('disabled') == 'TRUE';
 	}
-	else
-	{
+	else {
 		echo('<h1>Error</h1>');
 		echo('This user doesn\'t have an entry in our album!');
 		return;
@@ -120,8 +112,7 @@ function album_entry($album_id)
 				ORDER BY hof_name DESC
 				LIMIT 1');
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$priv_nick = $db->getField('hof_name');
 		echo '<a href="'.URL.'/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
@@ -135,8 +126,7 @@ function album_entry($album_id)
 				ORDER BY hof_name
 				LIMIT 1');
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
-	if ($db->nextRecord())
-	{
+	if ($db->nextRecord()) {
 		$next_nick = $db->getField('hof_name');
 		echo '&nbsp;&nbsp;&nbsp;<a href="'.URL.'/album/?' . urlencode($next_nick) . '"><img src="'.URL.'/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a>';
 	}
@@ -201,8 +191,7 @@ function album_entry($album_id)
 	$db->query('SELECT *
 				FROM album_has_comments
 				WHERE album_id = '.$db->escapeNumber($album_id));
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$time	= $db->getField('time');
 		$postee	= get_album_nick($db->getField('post_id'));
 		$msg	= stripslashes($db->getField('msg'));
@@ -210,8 +199,7 @@ function album_entry($album_id)
 		echo('<span style="font-size:85%;">[' . date(defined('DATE_FULL_SHORT')?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $time) . '] &lt;'.$postee.'&gt; '.$msg.'</span><br />');
 	}
 
-	if (SmrSession::$account_id > 0)
-	{
+	if (SmrSession::$account_id > 0) {
 		echo('<form action="'.URL.'/album/album_comment.php">');
 		echo('<input type="hidden" name="album_id" value="'.$album_id.'">');
 		echo('<table>');
@@ -239,8 +227,7 @@ function album_entry($album_id)
 
 }
 
-function search_result($album_ids)
-{
+function search_result($album_ids) {
 
 	// list of all first letter nicks
 	create_link_list();
@@ -252,8 +239,7 @@ function search_result($album_ids)
 	$count = 0;
 	echo('<tr><td width="25%" valign="top">');
 
-	foreach ($album_ids as $album_id)
-	{
+	foreach ($album_ids as $album_id) {
 		$count++;
 
 		$nick = get_album_nick($album_id);
@@ -267,8 +253,7 @@ function search_result($album_ids)
 	echo('</table>');
 }
 
-function create_link_list()
-{
+function create_link_list() {
 	echo('<div align="center" style="font-size:80%;">[ ');
 	echo('<a href="'.URL.'/album/?%">All</a> | ');
 	echo('<a href="'.URL.'/album/?A">A</a> | ');
@@ -302,8 +287,7 @@ function create_link_list()
 
 
 
-function get_album_nick($album_id)
-{
+function get_album_nick($album_id) {
 	if ($album_id == 0)
 		return 'System';
 

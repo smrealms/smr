@@ -7,8 +7,7 @@ if(empty($accountIDs))
 if(in_array($player->getAlliance()->getLeaderID(), $accountIDs))
 	create_error('You can\'t remove the leader!');
 
-foreach ($accountIDs as $accountID)
-{
+foreach ($accountIDs as $accountID) {
 	$currPlayer =& SmrPlayer::getPlayer($accountID, $player->getGameID());
 	$currPlayer->leaveAlliance($player);
 	$currPlayer->setSectorID(1);

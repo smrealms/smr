@@ -1,6 +1,5 @@
 <?php
-if(isset($BreakingNews))
-{
+if(isset($BreakingNews)) {
 	?><b>MAJOR NEWS! - <?php echo date(DATE_FULL_SHORT, $BreakingNews['Time']); ?></b><br />
 	<table class="standard">
 		<tr>
@@ -15,8 +14,7 @@ if(isset($BreakingNews))
 	<br /><br /><?php
 }
 
-if(isset($LottoNews))
-{ ?>
+if(isset($LottoNews)) { ?>
 	<b>Lotto News</b><br />
 	<table class="standard">
 		<tr>

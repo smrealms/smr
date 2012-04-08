@@ -1,29 +1,25 @@
 <?php
-try
-{
+try {
 	require_once('config.inc');
 	require_once(ENGINE . 'Default/smr.inc');
 	require_once(get_file_loc('SmrAccount.class.inc'));
 	
 	
 	$password = $_REQUEST['password'];
-	if (strstr($password, '\''))
-	{
+	if (strstr($password, '\'')) {
 		$msg = 'Illegal character in password detected! Don\'t use the apostrophe.';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	
-	if (empty($password))
-	{
+	if (empty($password)) {
 		$msg = 'Password is missing!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
 	
 	$pass_verify = $_REQUEST['pass_verify'];
-	if ($password != $pass_verify)
-	{
+	if ($password != $pass_verify) {
 		$msg = 'The passwords you entered do not match.';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
@@ -32,8 +28,7 @@ try
 	
 	// get this user from db
 	$login = $_REQUEST['login'];
-	if ($login == $password)
-	{
+	if ($login == $password) {
 		$msg = 'Your chosen password is invalid!';
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
@@ -42,8 +37,7 @@ try
 	// creates a new user account object
 	$account =& SmrAccount::getAccountByName($login);
 	$passwordReset = $_REQUEST['password_reset'];
-	if ($account==null || empty($passwordReset) || $account->getPasswordReset() != $passwordReset)
-	{
+	if ($account==null || empty($passwordReset) || $account->getPasswordReset() != $passwordReset) {
 		// unknown user
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode('User does not exist or reset password code is incorrect.'));
 		exit;
@@ -54,8 +48,7 @@ try
 	
 	header('Location: '.URL.'/login.php');
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

@@ -8,10 +8,8 @@ $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galSectors =& $galaxy->getSectors();
 //get totals
 $numberOfPlanets=0;
-foreach ($galSectors as &$galSector)
-{
-	if($galSector->hasPlanet())
-	{
+foreach ($galSectors as &$galSector) {
+	if($galSector->hasPlanet()) {
 		$numberOfPlanets++;
 	}
 }

@@ -1,6 +1,5 @@
 <?php
-if($ThisSector->hasPlanet())
-{
+if($ThisSector->hasPlanet()) {
 	$Planet =& $ThisSector->getPlanet(); ?>
 	<table class="standard csl">
 		<tr>
@@ -11,13 +10,11 @@ if($ThisSector->hasPlanet())
 			<td>
 				<img align="left" src="images/planet.gif" alt="Planet" title="Planet" />
 				&nbsp;<?php echo $Planet->getName() ?>&nbsp;
-				<?php if($Planet->isInhabitable())
-				{ ?>
+				<?php if($Planet->isInhabitable()) { ?>
 					<span class="inhab">Inhabitable</span>
 				<?php 
 				}
-				else
-				{ ?>
+				else { ?>
 					<span class="uninhab">Uninhabitable</span>
 				<?php
 				} ?>

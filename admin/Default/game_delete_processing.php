@@ -208,8 +208,7 @@ if ($action == 'Yes') {
 			$amount = 0;
 			$smrCredits = 0;
 			$db2->query('SELECT sum(amount) as bounty_am, sum(smr_credits) as bounty_cred FROM bounty WHERE game_id = '.$game_id.' AND account_id = '.$acc_id.' AND claimer_id = 0');
-			if ($db2->nextRecord())
-			{
+			if ($db2->nextRecord()) {
 				if (is_int($db2->getField('bounty_am'))) $amount = $db2->getField('bounty_am');
 				if (is_int($db2->getField('bounty_cred'))) $smrCredits = $db2->getField('bounty_cred');
 

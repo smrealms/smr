@@ -3,13 +3,11 @@
 	Don't keep unnecessary data!
 </p><?php
 
-if (count($LoggedAccounts)>0)
-{ ?>
+if (count($LoggedAccounts)>0) { ?>
 	<form method="POST" action="<?php echo $LogConsoleFormHREF; ?>"><?php
 
 		// put hidden fields in for log type to have all fields selected on next page.
-		foreach($LogTypes as $LogType)
-		{ ?>
+		foreach($LogTypes as $LogType) { ?>
 			<input type="hidden" name="log_type_ids[<?php echo $LogType; ?>]" value="1"><?php
 		} ?>
 		
@@ -21,8 +19,7 @@ if (count($LoggedAccounts)>0)
 				<th>Notes</th>
 			</tr><?php
 	
-			foreach($LoggedAccounts as &$LoggedAccount)
-			{ ?>
+			foreach($LoggedAccounts as &$LoggedAccount) { ?>
 				<tr>
 					<td valign="top"><?php echo $LoggedAccount['Login']; ?></td>
 					<td valign="top" align="center"><?php echo $LoggedAccount['TotalEntries']; ?></td>
@@ -48,8 +45,7 @@ if (count($LoggedAccounts)>0)
 		<li><a href="<?php echo $AnonAccessHREF; ?>">Anonymous Account access</a></li>
 	</ul><?php
 }
-else
-{ ?>
+else { ?>
 	There are no log entries at all!<?php
 }
 ?>

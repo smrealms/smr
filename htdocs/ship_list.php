@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	// ********************************
 	// *
 	// * I n c l u d e s   h e r e
@@ -102,8 +101,7 @@ try
 			<th align="center"><a href="?hardwarea=11&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Drone Scrambler</span></a></th>
 		</tr><?php
 
-	foreach($shipArray as $stat)
-	{
+	foreach($shipArray as $stat) {
 	    echo ('<tr>');
 		foreach ($stat as $value)
 			echo ('<td align="center">'.$value.'</td>');
@@ -111,13 +109,11 @@ try
 	} ?>
 	</table><?php
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 
-function buildShipStats($db)
-{
+function buildShipStats($db) {
 	//we want to put them all in an array so we dont have to have 15 td rows
 	$stat = array();
     $stat[] = str_replace(' ','&nbsp;',$db->getField('ship_name'));
@@ -138,8 +134,7 @@ function buildShipStats($db)
     //get our hardware
     while ($hardware_id <= 11)
     {
-		if($db->nextRecord())
-		{
+		if($db->nextRecord()) {
 
 	    	if ($hardware_id < 7)
 		    	$stat[] = number_format($db->getInt('max_amount'));

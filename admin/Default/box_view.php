@@ -2,8 +2,7 @@
 
 $template->assign('PageTopic','Viewing Message Boxes');
 
-if(!isset($var['box_type_id']))
-{
+if(!isset($var['box_type_id'])) {
 	$db->query('SELECT count(message_id),box_type_name,box_type_id FROM message_box_types LEFT JOIN message_boxes USING(box_type_id) GROUP BY box_type_id');
 	$container=array();
 	$container['url'] = 'skeleton.php';
@@ -14,8 +13,7 @@ if(!isset($var['box_type_id']))
 	$PHP_OUTPUT.=('<th>Folder</th>');
 	$PHP_OUTPUT.=('<th>Messages</th>');
 	$PHP_OUTPUT.=('</tr>');
-	while($db->nextRecord())
-	{
+	while($db->nextRecord()) {
 		$container['box_type_id'] = $db->getField('box_type_id');
 		$PHP_OUTPUT.='<tr>
 						<td><a href="'.SmrSession::getNewHREF($container).'">'.$db->getField('box_type_name').'</a></td>
@@ -24,15 +22,13 @@ if(!isset($var['box_type_id']))
 	}
 	$PHP_OUTPUT.='</table>';
 }
-else
-{
+else {
 	$PHP_OUTPUT.=create_link(create_container('skeleton.php','box_view.php'),'Back<br />');
 	$db->query('SELECT * FROM message_boxes WHERE box_type_id='.$db->escapeNumber($var['box_type_id']).' ORDER BY send_time DESC');
 	$container = array();
 	$container['url'] = 'box_delete_processing.php';
 	$container['box_type_id'] = $var['box_type_id'];
-	if ($db->getNumRows())
-	{
+	if ($db->getNumRows()) {
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('Delete');
 		$PHP_OUTPUT.=('&nbsp;');
@@ -45,8 +41,7 @@ else
 		$PHP_OUTPUT.=('Click the name to reply<br />');
 		$PHP_OUTPUT.=('<table width="100%" class="standard">');
 
-		while($db->nextRecord())
-		{
+		while($db->nextRecord()) {
 			$gameID = $db->getField('game_id')>0?$db->getField('game_id'):false;
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td><input type="checkbox" name="message_id[]" value="'.$db->getField('message_id').'"></td>');

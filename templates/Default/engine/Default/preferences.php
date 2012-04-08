@@ -1,11 +1,9 @@
 <?php
-if (isset($Reason))
-{
+if (isset($Reason)) {
 	?><p><big><span class="bold red"><?php echo $Reason; ?></span></big></p><?php
 }
 
-if(USE_COMPATIBILITY && !$ThisAccount->hasAllOldAccountIDs())
-{ ?>
+if(USE_COMPATIBILITY && !$ThisAccount->hasAllOldAccountIDs()) { ?>
 	<form id="LinkOldAccountForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<table>
 			<tr>
@@ -30,8 +28,7 @@ if(USE_COMPATIBILITY && !$ThisAccount->hasAllOldAccountIDs())
 	</form><?php
 }
 
-if(isset($GameID))
-{ ?>
+if(isset($GameID)) { ?>
 	<form class="standard" id="GamePreferencesForm" method="POST" action="<?php echo $PreferencesFormHREF; ?>">
 		<table>
 			<tr>
@@ -72,12 +69,10 @@ if(isset($GameID))
 				<td>Player Name</td>
 				<td>
 					<input type="text" maxlength="32" name="PlayerName" value="<?php echo htmlspecialchars($ThisPlayer->getPlayerName()); ?>" size="32"> <?php
-					if($ThisPlayer->isNameChanged())
-					{
+					if($ThisPlayer->isNameChanged()) {
 						?>(You have already changed your name for free, further changes will cost <?php echo CREDITS_PER_NAME_CHANGE; ?> SMR Credits)<?php
 					}
-					else
-					{
+					else {
 						?>(You can change your name for free once)<?php
 					} ?>
 				</td>
@@ -209,8 +204,7 @@ if(isset($GameID))
 				<select name="timez" id="InputFields"><?php
 				$time = TIME;
 				$offset = $ThisAccount->getOffset();
-				for ($i = -12; $i<= 11; $i++)
-				{
+				for ($i = -12; $i<= 11; $i++) {
 					?><option value="<?php echo $i; ?>"<?php if ($offset == $i){ ?> selected="selected"<?php } ?>><?php echo date(DATE_TIME_SHORT, $time + $i * 3600); ?></option><?php
 				} ?>
 				</select>
@@ -333,8 +327,7 @@ if(isset($GameID))
 			<td>Template</td>
 			<td>
 				<select name="template" id="InputFields"><?php
-					foreach(Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes)
-					{
+					foreach(Globals::getAvailableTemplates() as $AvailableTemplate => $ColourSchemes) {
 						?><option value="<?php echo $AvailableTemplate; ?>"<?php if($ThisAccount->getTemplate()==$AvailableTemplate){ ?>selected="selected"<?php } ?>><?php echo $AvailableTemplate; ?></option><?php
 					} ?>
 				</select>
@@ -344,8 +337,7 @@ if(isset($GameID))
 			<td>Colour Scheme</td>
 			<td>
 				<select name="colour_scheme" id="InputFields"><?php
-					foreach(Globals::getAvailableColourSchemes($ThisAccount->getTemplate()) as $ColourScheme)
-					{
+					foreach(Globals::getAvailableColourSchemes($ThisAccount->getTemplate()) as $ColourScheme) {
 						?><option value="<?php echo $ColourScheme; ?>"<?php if($ThisAccount->getColourScheme()==$ColourScheme){ ?>selected="selected"<?php } ?>><?php echo $ColourScheme; ?></option><?php
 					} ?>
 				</select> - This only shows colour schemes available for the current template, if you are changing templates then save the change first to see the colour schemes for the new template.
@@ -365,10 +357,8 @@ if(isset($GameID))
 		</tr><?php
 		$MovementTypes = array('Up','Left','Right','Down','Warp');
 		$MovementSubTypes = array('Move','Scan');
-		foreach($MovementTypes as $MovementType)
-		{
-			foreach($MovementSubTypes as $MovementSubType)
-			{ 
+		foreach($MovementTypes as $MovementType) {
+			foreach($MovementSubTypes as $MovementSubType) { 
 				$FullMovement = $MovementSubType . $MovementType; ?>
 				<tr>
 					<td><?php echo $MovementSubType, ' ', $MovementType; ?>:</td>
@@ -437,8 +427,7 @@ if(isset($GameID))
 			<td>
 				<input type="text" name="amount" id="InputFields" style="width:30px;text-align:center;" /> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
 				<select name="account_id" id="InputFields"><?php
-					foreach($TransferAccounts as $AccID => $AccOrPlayerName)
-					{
+					foreach($TransferAccounts as $AccID => $AccOrPlayerName) {
 						?><option value="<?php echo $AccID; ?>"><?php echo $AccOrPlayerName; ?></option><?php
 					} ?>
 				</select>

@@ -1,6 +1,5 @@
 <?php
-try
-{
+try {
 	require_once('config.inc');
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(ENGINE . 'Default/smr.inc');
@@ -72,8 +71,7 @@ try
 	</body>
 </html><?php
 }
-catch(Exception $e)
-{
+catch(Exception $e) {
 	handleException($e);
 }
 ?>

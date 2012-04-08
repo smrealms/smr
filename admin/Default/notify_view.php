@@ -7,8 +7,7 @@ $db->query('DELETE FROM message_notify WHERE from_id = 0');
 $db->query('SELECT * FROM message_notify');
 $container = array();
 $container['url'] = 'notify_delete_processing.php';
-if ($db->getNumRows())
-{
+if ($db->getNumRows()) {
     $PHP_OUTPUT.=create_echo_form($container);
     $PHP_OUTPUT.=('<br />');
     $PHP_OUTPUT.=('Click either name to reply<br />');
@@ -34,8 +33,7 @@ if ($db->getNumRows())
 		$PHP_OUTPUT.=('<td class="noWrap">');
 		
 		$offender = 'From: ';
-		if(is_object($sender))
-		{
+		if(is_object($sender)) {
 			$offender .= $sender_acc->getLogin().' ('.$sender_acc->getAccountID().')';
 			if ($sender_acc->getLogin() != $sender->getPlayerName())
 				$offender .= ' a.k.a '.$sender->getPlayerName();
@@ -46,8 +44,7 @@ if ($db->getNumRows())
 		$PHP_OUTPUT.=('</td><td class="noWrap">');
 		//To: $receiver_acc->getLogin() ($receiver_acc->getAccountID())');
 		$offended = 'To: ';
-		if(is_object($receiver))
-		{
+		if(is_object($receiver)) {
 			$offended .= $receiver_acc->getLogin().' ('.$receiver_acc->getAccountID().')';
 			if ($receiver_acc->getLogin() != $receiver->getPlayerName())
 				$offended .= ' a.k.a '.$receiver->getPlayerName();

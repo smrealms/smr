@@ -51,8 +51,7 @@ function get_sector($game_id, $sector_id, $distance) {
 
 }
 
-function create_fed($game_id, $galaxy_id, $sector_id = 0)
-{
+function create_fed($game_id, $galaxy_id, $sector_id = 0) {
 	// database object
 	$db = new SmrMySqlDatabase();
 

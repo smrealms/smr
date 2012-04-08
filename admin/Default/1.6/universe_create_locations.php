@@ -13,11 +13,9 @@ $PHP_OUTPUT.= create_echo_form($container);
 $locations =& SmrLocation::getAllLocations();
 
 $galSectors =& SmrSector::getGalaxySectors($var['game_id'],$var['gal_on']);
-foreach ($galSectors as &$sector)
-{
+foreach ($galSectors as &$sector) {
 	$sectorLocations =& $sector->getLocations();
-	foreach ($sectorLocations as &$sectorLocation)
-	{
+	foreach ($sectorLocations as &$sectorLocation) {
 		$totalLocs[$sectorLocation->getTypeID()]++;
 	} unset($sectorLocation);
 } unset($sector);
@@ -25,34 +23,27 @@ $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getGalaxyID() . ')<br />';
 $PHP_OUTPUT.= '<table class="standard">';
 
-foreach ($locations as &$location)
-{
+foreach ($locations as &$location) {
 //	if (isset($loc_array['Do Not List']) && $loc_array['Do Not List']) continue;
 	$extra = '<span class="small"><br />';
-	if ($location->isWeaponSold())
-	{
+	if ($location->isWeaponSold()) {
 		//$extra = '<table class="nobord right">';
 		$weaponsSold =& $location->getWeaponsSold();
-		foreach($weaponsSold as &$weapon)
-		{
+		foreach($weaponsSold as &$weapon) {
 			$extra .= $weapon->getName() . '&nbsp;&nbsp;&nbsp;(' . $weapon->getShieldDamage() . '/' . $weapon->getArmourDamage() . '/' . $weapon->getBaseAccuracy() . ')<br />';
 		} unset($weapon);
 			//$extra .= '<tr><td class="right"><span class="small">' . $WEAPONS[$wep_id]['Weapon Name'] . '</span></td><td class="left"><span class="small">(' . $WEAPONS[$wep_id]['Shield Damage'] . '/' . $WEAPONS[$wep_id]['Armor Damage'] . '/' . $WEAPONS[$wep_id]['Accuracy'] . ')</span></td></tr>';
 		//$extra .= '</table>';
 	}
-	if ($location->isShipSold())
-	{
+	if ($location->isShipSold()) {
 		$shipsSold =& $location->getShipsSold();
-		foreach ($shipsSold as &$ship)
-		{
+		foreach ($shipsSold as &$ship) {
 			$extra .= $ship['Name'] . '<br />';
 		} unset($ship);
 	}
-	if ($location->isHardwareSold())
-	{
+	if ($location->isHardwareSold()) {
 		$hardwareSold =& $location->getHardwareSold();
-		foreach ($hardwareSold as &$hardware)
-		{
+		foreach ($hardwareSold as &$hardware) {
 			$extra .= $hardware . '<br />';
 		} unset($hardware);
 	}

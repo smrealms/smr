@@ -13,8 +13,7 @@
 				<td>&nbsp;</td>
 				<td>
 					<select name="game_id" size="1" id="InputFields">
-						<?php foreach($Games as $Game)
-						{
+						<?php foreach($Games as $Game) {
 							?><option value="<?php echo $Game['ID'] ?>"><?php echo $Game['Name'] ?></option>
 						<?php } ?>
 					</select>
@@ -85,19 +84,16 @@
 	<p>&nbsp;</p>
 </form><?php
 
-if($DisabledGames)
-{ ?>
+if($DisabledGames) { ?>
 	<p>The following games haven\'t been approved yet, but are in the database!<br />
 		So they are <b>NOT</b> visible on the Game-Play Page!
 	</p>
 		<ul><?php
-			foreach($DisabledGames as $GameName)
-			{
+			foreach($DisabledGames as $GameName) {
 				?><li><?php echo $GameName ?></li><?php
 			} ?>
 		</ul><?php
 }
-else
-{
+else {
 	?>All games are approved!<?php
 } ?>

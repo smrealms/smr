@@ -1099,28 +1099,24 @@ function update_player(&$players,$account_id,&$hqs,&$ships) {
 	$db->query($query . ' WHERE account_id=' . $account_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 }
 
-function update_player_stats(&$players,$account_id,&$ships)
-{
+function update_player_stats(&$players,$account_id,&$ships) {
 	global $db,$session;
 	
 	$currPlayer =& SmrPlayer::getPlayer($account_id,SmrSession::$game_id,true);
 	$currPlayer->increaseHOF($players[$account_id][TOTAL_DAMAGE],array('Combat','Player','Damage Done'));
 	$currPlayer->increaseHOF(1,array('Combat','Player','Shots'));
 	
-	if($players[$account_id][KILLER])
-	{
+	if($players[$account_id][KILLER]) {
 		$currPlayer->increaseHOF(1,array('Dying','Deaths'));
 		$currPlayer->increaseHOF($ships[$players[$account_id][SHIP_ID]][0],array('Dying','Money','Cost Of Ships Lost'));
 		$this->setHOF(0,array('Movement','Turns Used','Since Last Death',HOF_ALLIANCE));
 	}
 	$num_kills = count($players[$account_id][KILLED]);
-	if($num_kills)
-	{
+	if($num_kills) {
 		$killer->increaseHOF(1,array('Killing','Kills'));
 		$killed_xp = 0;
 		$killed_ships = 0;
-		for($i=0;$i<$num_kills;++$i)
-		{
+		for($i=0;$i<$num_kills;++$i) {
 			$traders_killed_exp += $players[$players[$account_id][KILLED][$i]][EXPERIENCE];
 			$killed_ships += $ships[$players[$players[$account_id][KILLED][$i]][SHIP_ID]][0];
 		}

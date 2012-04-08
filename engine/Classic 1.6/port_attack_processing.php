@@ -77,8 +77,7 @@ define('TOTAL_PLAYER_DMG',2);
 define('TOTAL_PORT_DMG',3);
 define('DMG_TO_PLAYER',4);
 define('DEBUG',0);
-function getPortArray()
-{
+function getPortArray() {
 	if (DEBUG) $PHP_OUTPUT.=('Entered port array<br>');
 	global $db, $player;
 	$db->query('SELECT  * FROM port WHERE sector_id = ' . $player->getSectorID() . ' AND game_id = ' . $player->getGameID());
@@ -119,8 +118,7 @@ function getPortArray()
 	}
 	return $port;
 }
-function getPlayerArray()
-{
+function getPlayerArray() {
 	if (DEBUG) $PHP_OUTPUT.=('Entered player array<br>');
 	global $db, $session, $player, $account;
 	//insert our trigger into the players array
@@ -238,8 +236,7 @@ function build_hqs(&$races) {
 	}
 	return $hqs;
 }
-function getHardware(&$players)
-{
+function getHardware(&$players) {
 	if (DEBUG) $PHP_OUTPUT.=('Get Hardware<br>');
 	global $db, $session, $player, $account;
 	$players_in = implode(',',array_keys($players));
@@ -279,8 +276,7 @@ function getHardware(&$players)
 	}
 	return array_unique($weapons);
 }
-function getWeapons($weapon_ids)
-{
+function getWeapons($weapon_ids) {
 	if (DEBUG) $PHP_OUTPUT.=('Get Weps<br>');
 	global $db,$session;
 	$weapons = array();
@@ -407,13 +403,11 @@ function protected_rating($account_id,&$players,&$weapons) {
 
 	return FALSE;
 }
-function portFires(&$attackers, &$port, &$players)
-{
+function portFires(&$attackers, &$port, &$players) {
 	if (DEBUG) $PHP_OUTPUT.=('Port Fires<br>');
 	global $db,$session,$player;
 	//Turrets Fire
-	for ($i = 0; $i < NUM_TURRETS; $i++)
-	{
+	for ($i = 0; $i < NUM_TURRETS; $i++) {
 		//select target for this turret
 		$target = $attackers[array_rand($attackers)];
 		//get results
@@ -482,8 +476,7 @@ function portFiresTurret($attackers, $port, &$players, $target) {
 	}
 }
 
-function portFiresDrones($attackers, $port, &$players, $target)
-{
+function portFiresDrones($attackers, $port, &$players, $target) {
 	if (DEBUG) $PHP_OUTPUT.=('Port Fires drones<br>');
 	$result = array(0,0,0,0,NORMAL_HIT);
 	$result[DRONES_FIRED] = $port[PORT_DRONES];
@@ -491,8 +484,7 @@ function portFiresDrones($attackers, $port, &$players, $target)
 	if($players[$target][DCS])
 		$damage = round($damage / (4 / 3));
 	//start with shields
-	if ($players[$target][SHIELDS] > 0)
-	{
+	if ($players[$target][SHIELDS] > 0) {
 		if ($players[$target][SHIELDS] > $damage)
 			$result[SHIELD_DMG_DONE] = $damage;
 		else
@@ -504,8 +496,7 @@ function portFiresDrones($attackers, $port, &$players, $target)
 		$result[RESULT_OF_WEAPON] = NORMAL_HIT;
 		return $result;
 	}
-	if ($players[$target][DRONES] > 0)
-	{
+	if ($players[$target][DRONES] > 0) {
 		if ($players[$target][DRONES] * 3 > $damage)
 			$result[DRONE_DMG_DONE] = $damage;
 		else
@@ -516,8 +507,7 @@ function portFiresDrones($attackers, $port, &$players, $target)
 		$result[RESULT_OF_WEAPON] = NORMAL_HIT;
 		return $result;
 	}
-	if ($players[$target][ARMOUR] > 0)
-	{
+	if ($players[$target][ARMOUR] > 0) {
 		if ($players[$target][ARMOUR] > $damage) {
 			$result[ARMOUR_DMG_DONE] = $damage;
 			$result[RESULT_OF_WEAPON] = NORMAL_HIT;
@@ -532,8 +522,7 @@ function portFiresDrones($attackers, $port, &$players, $target)
 	$result[RESULT_OF_WEAPON] = ALREADY_DEAD;
 	return $result;
 }
-function fleetFires(&$attackers, &$port, &$players, &$weapons)
-{
+function fleetFires(&$attackers, &$port, &$players, &$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Fleet Fires<br>');
 	$fleet_size = count($attackers);
 	// Process each player in turn
@@ -541,15 +530,13 @@ function fleetFires(&$attackers, &$port, &$players, &$weapons)
 		playerFires($attackers[$i],$port, $players,$weapons);
 	}
 }
-function playerFires($attacker, &$port, &$players, &$weapons)
-{
+function playerFires($attacker, &$port, &$players, &$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Player fires<br>');
 	global $db,$session,$player;
 	
 	$num_weapons = count($players[$attacker][WEAPONS]);
 	// Process each weapon in turn
-	for($i=0;$i<$num_weapons;++$i)
-	{
+	for($i=0;$i<$num_weapons;++$i) {
 		$result = playerFiresWeapon($players[$attacker][WEAPONS][$i],$attacker,$port,$players,$weapons);
 		
 		// Take the appropriate damage from the port
@@ -562,8 +549,7 @@ function playerFires($attacker, &$port, &$players, &$weapons)
 	}
 	
 }
-function playerFiresWeapon($weapon,$attacker,&$port,&$players,&$weapons)
-{
+function playerFiresWeapon($weapon,$attacker,&$port,&$players,&$weapons) {
 	if (DEBUG) $PHP_OUTPUT.=('Player Fires Weap<br>');
 	$result = array(0,0,0,NORMAL_HIT,0);
 
@@ -991,8 +977,7 @@ function sendReport($results, $port) {
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 		if ($db->next_record()) $thread_id = $db->f('thread_id');
-		if ($thread_id == 0)
-		{
+		if ($thread_id == 0) {
 			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' ORDER BY thread_id DESC LIMIT 1');
 			if ($db->next_record())
 				$thread_id = $db->f('thread_id') + 1;

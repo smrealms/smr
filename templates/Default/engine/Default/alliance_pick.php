@@ -1,6 +1,5 @@
 <?php 
-if(count($PickPlayers)>0)
-{ ?>
+if(count($PickPlayers)>0) { ?>
 	<table class="standard">
 		<tr>
 			<th></th>
@@ -9,8 +8,7 @@ if(count($PickPlayers)>0)
 			<th>HoF Name</th>
 			<th>User Score</th>
 		</tr><?php
-		foreach($PickPlayers as &$PickPlayer)
-		{ ?>
+		foreach($PickPlayers as &$PickPlayer) { ?>
 			<tr>
 				<td>
 					<div>
@@ -35,7 +33,6 @@ if(count($PickPlayers)>0)
 		} ?>
 	</table><?php
 }
-else
-{
+else {
 	?>No one left to pick.<?php
 } ?>

@@ -1,6 +1,5 @@
 <?php
-foreach($Locations as $Location)
-{ ?>
+foreach($Locations as $Location) { ?>
 <tr>
 	<td><?php echo $Location->getName() ?></td>
 	<td><?php echo $Location->getAction() ?></td>
@@ -11,20 +10,17 @@ foreach($Locations as $Location)
 	<td><?php echo $Location->isHQ() ?></td>
 	<td><?php echo $Location->isUG() ?></td>
 	<td><?php
-		foreach($Location->getHardwareSold() as $Hardware)
-		{
+		foreach($Location->getHardwareSold() as $Hardware) {
 			echo $Hardware ?><br /><?php
 		} ?>
 	</td>
 	<td><?php
-		foreach($Location->getShipsSold() as $Ship)
-		{
+		foreach($Location->getShipsSold() as $Ship) {
 			echo $Ship['Name'] ?><br /><?php
 		} ?>
 	</td>
 	<td>
-		<?php foreach($Location->getWeaponsSold() as $Weapon)
-		{
+		<?php foreach($Location->getWeaponsSold() as $Weapon) {
 			echo $Weapon->getName() ?><br /><?php
 		} ?>
 	</td>

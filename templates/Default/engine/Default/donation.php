@@ -31,8 +31,7 @@ Want to receive emails when you get a message? Well now you can!<br />
 </div>
 
 <?php
-if(isset($GameID))
-{ ?>
+if(isset($GameID)) { ?>
 	<br />
 	<br />
 	<br />
@@ -44,8 +43,7 @@ if(isset($GameID))
 	</div><?php
 }
 /*
-if(isset($GameID))
-{ ?>
+if(isset($GameID)) { ?>
 	<h2>Maps</h2><br />
 	New intelligence has just come in! We now have full maps of EVERY galaxy!  We are willing to sell you the newest maps of each galaxy for 2 SMR credits each!<br />
 	<br />

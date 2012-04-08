@@ -1,8 +1,7 @@
 <?php
 $this->includeTemplate('includes/CommonNews.inc');
 
-if(isset($NewsItems) && count($NewsItems) > 0)
-{ ?>
+if(isset($NewsItems) && count($NewsItems) > 0) { ?>
 	<div align="center">
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 	</div>
@@ -12,8 +11,7 @@ if(isset($NewsItems) && count($NewsItems) > 0)
 			<th align="center">News</th>
 		</tr>
 		<?php
-		foreach($NewsItems as $NewsItem)
-		{ ?>
+		foreach($NewsItems as $NewsItem) { ?>
 			<tr>
 				<td align="center"><?php echo date(DATE_FULL_SHORT, $NewsItem['Time']); ?></td>
 				<td style="text-align:left;vertical-align:middle;"><?php echo $NewsItem['Message']; ?></td>
@@ -21,7 +19,6 @@ if(isset($NewsItems) && count($NewsItems) > 0)
 		} ?>
 		</table><?php
 }
-else
-{
+else {
 	?>You have no current news.<?php
 } ?>

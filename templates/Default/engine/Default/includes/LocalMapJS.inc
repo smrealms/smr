@@ -4,21 +4,17 @@
  */
 /* Toggle Starts On */
 var toggle = <?php if($isZoomOn){ ?>true<?php }else{ ?>false<?php } ?>;
-function toggleM()
-{
-	if (toggle)
-	{
+function toggleM() {
+	if (toggle) {
 		toggle = false;
 		document.getElementById('status').innerHTML='Mouse Zoom is Off. Click to toggle.';
 	 }
-	else
-	{
+	else {
 		toggle = true;
 		document.getElementById('status').innerHTML='Mouse Zoom is On. Click to toggle.';
 	 }
  }
-function handle(delta)
-{
+function handle(delta) {
 	if (delta < 0)
 		window.location = '<?php echo $ZoomDownLink ?>';
 	else
@@ -28,23 +24,19 @@ function handle(delta)
 
 /** Event handler for mouse wheel event.
  */
-function wheel(event)
-{
-	if (toggle)
-	{
+function wheel(event) {
+	if (toggle) {
 		var delta = 0;
 		if (!event) /* For IE. */
 				event = window.event;
-		if (event.wheelDelta)
-		{ /* IE/Opera. */
+		if (event.wheelDelta) { /* IE/Opera. */
 				delta = event.wheelDelta/120;
 				/** In Opera 9, delta differs in sign as compared to IE.
 				 */
 			if (window.opera)
 						delta = -delta;
 		 }
-		else if (event.detail)
-		{ /** Mozilla case. */
+		else if (event.detail) { /** Mozilla case. */
 				/** In Mozilla, sign of delta is different than in IE.
 				 * Also, delta is multiple of 3.
 				 */

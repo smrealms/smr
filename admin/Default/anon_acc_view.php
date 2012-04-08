@@ -16,8 +16,7 @@ if (empty($_REQUEST['anon_account'])||empty($_REQUEST['game_id'])) {
 	$PHP_OUTPUT.=('</form>');
 
 }
-else
-{
+else {
 	//db object
 	$db2 = new SmrMySqlDatabase();
 	//split the name
@@ -29,13 +28,11 @@ else
 				WHERE anon_id = '.$db->escapeNumber($acc).'
 					AND game_id = '.$db->escapeNumber($game).'
 				ORDER BY transaction_id');
-	if ($db->getNumRows() > 0)
-	{
+	if ($db->getNumRows() > 0) {
 		$template->assign('PageTopic','Anonymous Account '.$acc);
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Player Name</th><th align=center>Type</th><th align=center>Amount</th></tr>');
-		while ($db->nextRecord())
-		{
+		while ($db->nextRecord()) {
 			$db2->query('SELECT * FROM player WHERE account_id = ' . $db2->escapeNumber($db->getInt('account_id')));
 			$db2->nextRecord();
 			$PHP_OUTPUT.=('<tr><td align=center>');

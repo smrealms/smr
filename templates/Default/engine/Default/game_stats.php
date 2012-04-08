@@ -126,16 +126,14 @@
 		</tr>
 		<tr>
 			<td class="center" style="border:none"><?php
-				if(isset($ExperienceRankings))
-				{ ?>
+				if(isset($ExperienceRankings)) { ?>
 					<table class="nobord">
 						<tr>
 							<th align="center">Rank</th>
 							<th align="center">Player</th>
 							<th align="center">Experience</th>
 						</tr><?php
-						foreach($ExperienceRankings as $Rank => &$RankedPlayer)
-						{ ?>
+						foreach($ExperienceRankings as $Rank => &$RankedPlayer) { ?>
 							<tr>
 								<td align="center"><?php echo $Rank; ?></td>
 								<td align="center"><?php echo $RankedPlayer->getPlayerName(); ?></td>
@@ -146,16 +144,14 @@
 				} ?>
 			</td>
 			<td align="center"><?php
-				if(isset($KillRankings))
-				{ ?>
+				if(isset($KillRankings)) { ?>
 					<table class="nobord">
 						<tr>
 							<th align="center">Rank</th>
 							<th align="center">Player</th>
 							<th align="center">Kills</th>
 						</tr><?php
-						foreach($KillRankings as $Rank => &$RankedPlayer)
-						{ ?>
+						foreach($KillRankings as $Rank => &$RankedPlayer) { ?>
 							<tr>
 								<td align="center"><?php echo $Rank; ?></td>
 								<td align="center"><?php echo $RankedPlayer->getPlayerName(); ?></td>
@@ -170,28 +166,22 @@
 
 	<h1>Current Players</h1>
 	<p>There <?php
-	if ($PlayersAccessed != 1)
-	{
+	if ($PlayersAccessed != 1) {
 		?>are <?php echo $PlayersAccessed; ?> players who have<?php
 	}
-	else
-	{
+	else {
 		?>is 1 player who has<?php
 	} ?>
 	accessed the server in the last 10 minutes.<br /><?php
 	
-	if (count($CurrentPlayers) == 0)
-	{
+	if (count($CurrentPlayers) == 0) {
 		?>Noone was moving so your ship computer couldn't intercept any transmissions.<br /><?php
 	}
-	else
-	{
-		if (count($CurrentPlayers) == $PlayersAccessed)
-		{
+	else {
+		if (count($CurrentPlayers) == $PlayersAccessed) {
 			?>All of them<?php
 		}
-		else
-		{
+		else {
 			?>A few of them<?php
 		} ?>
 		were moving so your ship computer was able to intercept <?php echo count($CurrentPlayers); ?> transmission<?php if (count($CurrentPlayers) > 1){ ?>s<?php } ?>.<br /><?php
@@ -199,8 +189,7 @@
 
 	The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p><?php
 
-	if (count($CurrentPlayers) > 0)
-	{ ?>
+	if (count($CurrentPlayers) > 0) { ?>
 		<table class="standard" width="95%">
 			<tr>
 				<th>Player</th>
@@ -208,19 +197,15 @@
 				<th>Alliance</th>
 				<th>Experience</th>
 			</tr><?php
-			foreach($CurrentPlayers as &$CurrentPlayer)
-			{
+			foreach($CurrentPlayers as &$CurrentPlayer) {
 				$Style = '';
-				if ($CurrentPlayer->getAccount()->isNewbie())
-				{
+				if ($CurrentPlayer->getAccount()->isNewbie()) {
 					$Style = 'italic';
 				}
-				if ($CurrentPlayer->getAccountID() == $ThisAccount->getAccountID())
-				{
+				if ($CurrentPlayer->getAccountID() == $ThisAccount->getAccountID()) {
 					$Style .= ' bold';
 				}
-				if (!empty($Style))
-				{
+				if (!empty($Style)) {
 					$Style = ' class="'.trim($Style).'"';
 				}
 				?>

@@ -12,8 +12,7 @@ echo ('ID=' . $game_id . EOL.EOL);
 
 echo ('[Galaxy]'.EOL);
 $gameGals =& SmrGalaxy::getGameGalaxies($game_id);
-foreach($gameGals as &$gameGal)
-{
+foreach($gameGals as &$gameGal) {
 	echo ($gameGal->getName().'='.$gameGal->getWidth().';'.$gameGal->getHeight().EOL);
 } unset($gameGal);
 
@@ -22,8 +21,7 @@ $db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . TIME);
 
 echo (EOL.'[Marks]'.EOL);
 $db->query('SELECT * FROM sector_has_forces WHERE game_id = '.$game_id.' GROUP BY sector_id ORDER BY sector_id');
-while ($db->nextRecord())
-{
+while ($db->nextRecord()) {
 	$owner =& SmrPlayer::getPlayer($db->getField('owner_id'), $game_id);
 	$user =& SmrPlayer::getPlayer($account->getAccountID(), $game_id);
 	$sector = $db->getField('sector_id');

@@ -1,7 +1,6 @@
 <?php
 
-function get_album_nick($album_id)
-{
+function get_album_nick($album_id) {
 	if ($album_id == 0)
 		return 'System';
 

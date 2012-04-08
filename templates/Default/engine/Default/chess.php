@@ -1,6 +1,5 @@
 <?php
-if(isset($CreateGameMessage))
-{
+if(isset($CreateGameMessage)) {
 	echo $CreateGameMessage;
 } ?>
 <table class="standard ajax" id="GameList">
@@ -9,8 +8,7 @@ if(isset($CreateGameMessage))
 		<th>Current Turn</th>
 		<th></th>
 	</tr><?php
-	foreach($ChessGames as $ChessGame)
-	{ ?>
+	foreach($ChessGames as $ChessGame) { ?>
 		<tr>
 			<td><?php
 				$WhitePlayer =& $ChessGame->getWhitePlayer();
@@ -50,8 +48,7 @@ if(count($PlayerList) > 0) { ?>
 	<form action="<?php echo Globals::getChessCreateHREF(); ?>" method="POST">
 		<label for="player_id">Challenge: </label>
 		<select id="player_id" name="player_id"><?php
-			foreach($PlayerList as $PlayerID => $PlayerName)
-			{
+			foreach($PlayerList as $PlayerID => $PlayerName) {
 				?><option value="<?php echo $PlayerID; ?>"><?php echo $PlayerName; ?></option><?php
 			} ?>
 		</select><br/>

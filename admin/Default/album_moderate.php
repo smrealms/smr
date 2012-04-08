@@ -12,8 +12,7 @@ $PHP_OUTPUT.=create_link(create_container('skeleton.php', 'album_moderate.php'),
 		   '<h1>MODERATE PHOTO ALBUM</h1>');
 
 // if we don't have an account id yet, ask for it (and echo error message if invalid number was entered)
-if (empty($account_id))
-{
+if (empty($account_id)) {
 	$PHP_OUTPUT.=('Enter the account id of the entry you wish to edit:');
 	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'album_moderate.php'));
 	$PHP_OUTPUT.=('<input type="text" name="account_id" size="5" id="InputFields" class="center">&nbsp;');
@@ -21,18 +20,15 @@ if (empty($account_id))
 	$PHP_OUTPUT.=('</form>');
 	$PHP_OUTPUT.=($error_msg);
 }
-else
-{
+else {
 	// check if input is numeric
 	if (!is_numeric($account_id))
 		create_error('Please enter an account ID, which has to be numeric!');
 
 	// check if the givin account really has an entry
-	if ($account_id > 0)
-	{
+	if ($account_id > 0) {
 		$db->query('SELECT * FROM album WHERE account_id = '.$db->escapeNumber($account_id).' AND Approved = \'YES\'');
-		if ($db->nextRecord())
-		{
+		if ($db->nextRecord()) {
 			$disabled = $db->getBoolean('disabled');
 			$location = stripslashes($db->getField('location'));
 			$email = stripslashes($db->getField('email'));
@@ -42,8 +38,7 @@ else
 			$year = $db->getField('year');
 			$other = nl2br(stripslashes($db->getField('other')));
 		}
-		else
-		{
+		else {
 			$account_id = 0;
 			$error_msg = '<div align="center" class="red bold">This User doesn\'t have an album entry or it needs to be approved first!</div>';
 		}
@@ -158,8 +153,7 @@ else
 	$db->query('SELECT *
 				FROM album_has_comments
 				WHERE album_id = '.$db->escapeNumber($account_id));
-	while ($db->nextRecord())
-	{
+	while ($db->nextRecord()) {
 		$comment_id	= $db->getInt('comment_id');
 		$time		= $db->getInt('time');
 		$postee		= get_album_nick($db->getInt('post_id'));

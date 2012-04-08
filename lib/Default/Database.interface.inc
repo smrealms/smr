@@ -1,6 +1,5 @@
 <?php
-interface Database
-{
+interface Database {
 	public function query($query);
 	
 	public function nextRecord();

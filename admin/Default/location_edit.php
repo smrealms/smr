@@ -4,11 +4,9 @@ $template->assign('ViewAllLocationsLink',SmrSession::getNewHREF(create_container
 
 require_once(get_file_loc('SmrLocation.class.inc'));
 
-if(isset($var['location_type_id']))
-{
+if(isset($var['location_type_id'])) {
 	$location =& SmrLocation::getLocation($var['location_type_id']);
-	if(isset($_REQUEST['save']))
-	{
+	if(isset($_REQUEST['save'])) {
 		if($_REQUEST['add_ship_id']!=0)
 			$location->addShipSold($_REQUEST['add_ship_id']);
 		if($_REQUEST['add_weapon_id']!=0)
@@ -40,15 +38,13 @@ if(isset($var['location_type_id']))
 	
 	$db->query('SELECT * FROM hardware_type');
 	$hardware = array();
-	while($db->nextRecord())
-	{
+	while($db->nextRecord()) {
 		$hardware[$db->getField('hardware_type_id')] = array('ID' => $db->getField('hardware_type_id'),
 														'Name' => $db->getField('hardware_name'));
 	}
 	$template->assignByRef('AllHardware',$hardware);
 }
-else
-{
+else {
 	$template->assignByRef('Locations',SmrLocation::getAllLocations());
 }
 ?>

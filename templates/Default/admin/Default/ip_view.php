@@ -1,6 +1,5 @@
 <script type="text/javascript">
-	function go()
-	{
+	function go() {
 		var val = window.document.form_ip.type.value;
 		if (val == "search") {
 			window.document.form_ip.variable.value = 'Enter IP Here';

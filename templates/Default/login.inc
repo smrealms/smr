@@ -4,15 +4,13 @@
 <!--
 writeCookie();
 
-function writeCookie()
-{
+function writeCookie() {
 var today = new Date();
 var the_date = new Date("December 31, 2023");
 var the_cookie_date = the_date.toGMTString();
-var the_cookie value="users_resolution="+ screen.width +"x"+ screen.height;
-var the_cookie = the_cookie + ";expires=" + the_cookie_date;
+var the_cookie="users_resolution="+ screen.width +"x"+ screen.height;
+the_cookie += ";expires=" + the_cookie_date;
 document.cookie=the_cookie;
- ?>
 //-->
 </script>
 <style type="text/css">
@@ -98,8 +96,7 @@ input.inputbox {
 
 <?php
 /*
-if(!$isFirefox)
-{ ?>
+if(!$isFirefox) { ?>
 	<br />
 	<a class="button" href="http://www.spreadfirefox.com/node&amp;id=216853&amp;t=210">
 	<img alt="Get Firefox!" title="Get Firefox!" src="images/firefox.png"></a><br />
@@ -108,14 +105,12 @@ if(!$isFirefox)
 	<br /><?php 
 }
 
-/*if($isAprilFools)
-{ ?>
+/*if($isAprilFools) { ?>
 	<a href="http://www.smrealms.de/merge.php"><span class="red bold">Important Announcement</span></a> : SMR and TDZK are set to merge. 
 	Please <a href="http://www.smrealms.de/merge.php">click here</a> for more details.<?php
 } */
 
-if(isset($Message))
-{ ?>
+if(isset($Message)) { ?>
 	<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
 } ?>
 
@@ -187,12 +182,10 @@ if(isset($Message))
 			</span>
 		</td>
 		<td width="470px"><?php
-			if(isset($LoginNews))
-			{ ?>
+			if(isset($LoginNews)) { ?>
 				<table class="standard">
 				<tr><th>Date</th><th>News</th></tr><?php
-				foreach($LoginNews as $News)
-				{ ?>
+				foreach($LoginNews as $News) { ?>
 					<tr>
 						<td>
 							<span class="small">
@@ -202,8 +195,7 @@ if(isset($Message))
 						</td>
 						<td>
 							<span class="small"><?php echo bbifyMessage($News['Message']);
-								if($News['AdminName'])
-								{ ?>
+								if($News['AdminName']) { ?>
 									<br /><br />- <?php echo $News['AdminName'];
 								} ?>
 							</span>
@@ -218,12 +210,10 @@ if(isset($Message))
 	<tr>
 		<td align="center" colspan="4">
 			Players Online Now: <?php echo $ActiveSessions; ?><br /><br /><?php
-			if(isset($GameNews))
-			{ ?>
+			if(isset($GameNews)) { ?>
 				Recent News<br />
 				<table class="standard" width="100%"><tr><th align="center">Time</th><th align="center">News</th></tr><?php
-				foreach($GameNews as $News)
-				{ ?>
+				foreach($GameNews as $News) { ?>
 					<tr><td><?php echo $News['Date'] ?><br /><?php echo $News['Time'] ?></td><td><?php echo $News['Message'] ?></td></tr><?php
 				} ?>
 				</table><?php
@@ -235,11 +225,9 @@ if(isset($Message))
 <br />
 
 <?php
-if(isset($Story))
-{ ?>
+if(isset($Story)) { ?>
 	<table border="0" width="640px;"><tr><td colspan="2"><?php
-	foreach($Story as $StoryPart)
-	{ ?>
+	foreach($Story as $StoryPart) { ?>
 		<p align="justify"><span class="small"><font face="Verdana, Arial, Helvetica" color="#FFFFFF"><?php echo $StoryPart ?></font></span></p><?php
 	} ?>
 	</td></tr></table><?php

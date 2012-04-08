@@ -1,7 +1,6 @@
 <?php
 require_once('socialConfig.specific.inc');
-class SocialLogin
-{
+class SocialLogin {
 	private $valid = false;
 	private $loginType = null;
 	private $userID = null;
@@ -13,10 +12,8 @@ class SocialLogin
 	private static $openID=null;
 	private static $OPEN_ID_IDENTITIES = array('Google' => 'https://www.google.com/accounts/o8/id');
 
-	private static function &getFacebookObj()
-	{
-		if(self::$facebook==null)
-		{
+	private static function &getFacebookObj() {
+		if(self::$facebook==null) {
 			require_once(LIB.'External/Facebook/facebook.php');
 			self::$facebook = new Facebook(array(
 				'appId' => FACEBOOK_APP_ID,
@@ -27,12 +24,9 @@ class SocialLogin
 		return self::$facebook;
 	}
 
-	private static function &getTwitterObj()
-	{
-		if(self::$twitter==null)
-		{
-			if(!isset($_SESSION))
-			{
+	private static function &getTwitterObj() {
+		if(self::$twitter==null) {
+			if(!isset($_SESSION)) {
 				session_start();
 			}
 			require_once(LIB.'External/Twitter/twitteroauth.php');
@@ -41,25 +35,20 @@ class SocialLogin
 		return self::$twitter;
 	}
 	
-	public static function &getOpenIdObj()
-	{
-		if(self::$openID==null)
-		{
+	public static function &getOpenIdObj() {
+		if(self::$openID==null) {
 			require_once(LIB.'External/OpenID/openid.php');
 			self::$openID = new LightOpenID();
 		}
 		return self::$openID;
 	}
 	
-	public static function getFacebookLoginUrl()
-	{
+	public static function getFacebookLoginUrl() {
 		return self::getFacebookObj()->getLoginUrl(array('redirect_uri'=>URL.'/login_processing.php?loginType=Facebook','scope'=>'email'));
 	}
 	
-	public static function getTwitterLoginUrl()
-	{
-		if(!isset($_SESSION))
-		{
+	public static function getTwitterLoginUrl() {
+		if(!isset($_SESSION)) {
 			session_start();
 		}
 		self::getTwitterObj()->token = null;
@@ -67,10 +56,8 @@ class SocialLogin
 		return self::getTwitterObj()->getAuthorizeURL($_SESSION['TwitterToken']);
 	}
 	
-	public static function getOpenIdLoginUrl($loginType)
-	{
-		if(!isset(self::$OPEN_ID_IDENTITIES[$loginType]))
-		{
+	public static function getOpenIdLoginUrl($loginType) {
+		if(!isset(self::$OPEN_ID_IDENTITIES[$loginType])) {
 			throw new Exception('OpenID does not exist for login type: '.$loginType);
 		}
 		$openID =& self::getOpenIdObj();
@@ -80,12 +67,9 @@ class SocialLogin
 		return $openID->authUrl();
 	}
 	
-	public function __construct($loginType)
-	{
-		if($loginType=='Facebook')
-		{
-			if($this->userID=self::getFacebookObj()->getUser())
-			{
+	public function __construct($loginType) {
+		if($loginType=='Facebook') {
+			if($this->userID=self::getFacebookObj()->getUser()) {
 				$this->loginType=$loginType;
 				$userInfo = self::getFacebookObj()->api('me');
 				$this->email=$userInfo['email'];
@@ -94,34 +78,27 @@ class SocialLogin
 				$this->valid = true;
 			}
 		}
-		else if($loginType == 'Twitter')
-		{
+		else if($loginType == 'Twitter') {
 			self::getTwitterObj()->getAccessToken($_REQUEST['oauth_verifier']);
-			if(self::getTwitterObj()->http_code == 200)
-			{
+			if(self::getTwitterObj()->http_code == 200) {
 				$this->loginType=$loginType;
 				
 				$userInfo = self::getTwitterObj()->get('account/verify_credentials');
 				$this->userID=$userInfo->id_str;
 				$spaceIndex = strpos($userInfo->name, ' ');
-				if($spaceIndex===false)
-				{
+				if($spaceIndex===false) {
 					$this->firstName=$userInfo->name;
 				}
-				else
-				{
+				else {
 					$this->firstName=substr($userInfo->name, 0, $spaceIndex);
 					$this->lastName=substr($userInfo->name, $spaceIndex);
 				}
 				$this->valid = true;
 			}
 		}
-		else if($loginType == 'Google')
-		{
-			if(self::getOpenIdObj()->validate())
-			{
-				if(strripos(self::getOpenIdObj()->identity, self::$OPEN_ID_IDENTITIES[$loginType]) === 0)
-				{
+		else if($loginType == 'Google') {
+			if(self::getOpenIdObj()->validate()) {
+				if(strripos(self::getOpenIdObj()->identity, self::$OPEN_ID_IDENTITIES[$loginType]) === 0) {
 					$this->loginType=$loginType;
 					$this->userID=self::getOpenIdObj()->identity;
 					$userInfo = self::getOpenIdObj()->getAttributes();
@@ -134,23 +111,19 @@ class SocialLogin
 		}
 	}
 	
-	public function isValid()
-	{
+	public function isValid() {
 		return $this->valid;
 	}
 	
-	public function getLoginType()
-	{
+	public function getLoginType() {
 		return $this->loginType;
 	}
 	
-	public function getUserID()
-	{
+	public function getUserID() {
 		return $this->userID;
 	}
 	
-	public function getEmail()
-	{
+	public function getEmail() {
 		return $this->email;
 	}
 }

@@ -1,6 +1,5 @@
 <?php
-if ($ThisShip->hasJump())
-{ ?>
+if ($ThisShip->hasJump()) { ?>
 	<br />
 	<form class="standard" id="JumpDriveForm" method="POST" action="<?php echo $JumpDriveFormLink; ?>">
 		<h2>Jumpdrive</h2><br />
