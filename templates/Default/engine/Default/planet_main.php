@@ -32,17 +32,17 @@ if (isset($Msg)) {
 				<tr>
 					<td>Generator</td>
 					<td align="center"><span id="planetGens"><?php echo $ThisPlanet->getBuilding(PLANET_GENERATOR); ?></span></td>
-					<td align="center"><?php echo $ThisPlanet->getMaxBuildings(PLANET_GENERATOR); ?></td>
+					<td align="center"><?php echo SmrPlanet::getMaxBuildings(PLANET_GENERATOR); ?></td>
 				</tr>
 				<tr>
 					<td>Hangar</td>
 					<td align="center"><span id="planetHangars"><?php echo $ThisPlanet->getBuilding(PLANET_HANGAR); ?></span></td>
-					<td align="center"><?php echo $ThisPlanet->getMaxBuildings(PLANET_HANGAR); ?></td>
+					<td align="center"><?php echo SmrPlanet::getMaxBuildings(PLANET_HANGAR); ?></td>
 				</tr>
 				<tr>
 					<td>Turret</td>
 					<td align="center"><span id="planetTurrets1"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET); ?></span></td>
-					<td align="center"><?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
+					<td align="center"><?php echo SmrPlanet::getMaxBuildings(PLANET_TURRET); ?></td>
 				</tr>
 			</table>
 			<br />
@@ -64,7 +64,7 @@ if (isset($Msg)) {
 				</tr>
 				<tr>
 					<td>Turrets</td>
-					<td align="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET) ?></span> / <?php echo $ThisPlanet->getMaxBuildings(PLANET_TURRET); ?></td>
+					<td align="center"><span id="planetTurrets2"><?php echo $ThisPlanet->getBuilding(PLANET_TURRET) ?></span> / <?php echo SmrPlanet::getMaxBuildings(PLANET_TURRET); ?></td>
 					<td align="center"><span id="planetAcc"><?php echo number_format($ThisPlanet->accuracy(), 2) ?></span> %</td>
 				</tr>
 			</table>

@@ -8,6 +8,8 @@ class SmrPlanet {
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
 	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 600; // 10 minutes
 
+	protected static $maxBuildings;
+
 	protected $db;
 
 	protected $sectorID;
@@ -22,7 +24,6 @@ class SmrPlanet {
 	protected $maturity;
 	protected $stockpile;
 	protected $buildings;
-	protected $maxConstruction;
 	protected $inhabitableTime;
 	protected $currentlyBuilding;
 
@@ -174,7 +175,6 @@ class SmrPlanet {
 			$this->getStockpile();
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
-			$this->getMaxBuildings();
 		}
 		//		else if($create)
 		//		{
@@ -553,20 +553,20 @@ class SmrPlanet {
 			return $this->currentlyBuilding;
 		}
 
-		public function getMaxBuildings($buildingTypeID=false) {
-			if(!isset($this->maxConstruction)) {
-				$this->maxConstruction = array();
+		public static function getMaxBuildings($buildingTypeID=false) {
+			if(!isset(self::$maxBuildings)) {
+				self::$maxBuildings = array();
 
 				// get buildingss from db
 				$this->db->query('SELECT construction_id, max_construction FROM planet_construction');
 				while ($this->db->nextRecord()) {
-					$this->maxConstruction[$this->db->getInt('construction_id')] = $this->db->getInt('max_construction');
+					self::$maxBuildings[$this->db->getInt('construction_id')] = $this->db->getInt('max_construction');
 				}
 			}
 			if($buildingTypeID===false) {
-				return $this->maxConstruction;
+				return self::$maxBuildings;
 			}
-			return $this->maxConstruction[$buildingTypeID];
+			return self::$maxBuildings[$buildingTypeID];
 			//			global $PRIMARY_BUILDINGS;
 			//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 			//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
@@ -680,7 +680,7 @@ class SmrPlanet {
 		if($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
-		if($this->getBuilding($constructionID) >= $this->getMaxBuildings($constructionID)) {
+		if($this->getBuilding($constructionID) >= self::getMaxBuildings($constructionID)) {
 			return 'This planet has reached the maximum buildings of that type.';
 		}
 		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();

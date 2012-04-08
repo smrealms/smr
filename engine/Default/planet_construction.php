@@ -52,7 +52,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding) {
 	$PHP_OUTPUT.=('<td align="center">');
 	$PHP_OUTPUT.=($planet->getBuilding($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('/');
-	$PHP_OUTPUT.=($planet->getMaxBuildings($planetBuilding['ConstructionID']));
+	$PHP_OUTPUT.=(SmrPlanet::getMaxBuildings($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
 	foreach($planetBuilding['Goods'] as $goodID => $amount) {
