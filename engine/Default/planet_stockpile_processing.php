@@ -47,7 +47,7 @@ elseif ($action == 'Planet') {
 
 // update both
 $planet->update();
-$ship->update_cargo();
+$ship->updateCargo();
 
 forward(create_container('skeleton.php', 'planet_stockpile.php'));
 
