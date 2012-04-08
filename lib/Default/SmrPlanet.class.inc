@@ -6,6 +6,8 @@ class SmrPlanet
 
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 70;
 	const CHANCE_TO_DOWNGRADE = 15;
+	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
+	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 600; // 10 minutes
 
 	protected $db;
 
@@ -941,8 +943,7 @@ class SmrPlanet
 					'(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($attacker->getAccountID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeNumber($this->getLevel()) . ')');
 		}
 
-		$allowed = TIME - 600;
-		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND time > ' . $this->db->escapeNumber($allowed) . ' LIMIT 1');
+		$this->db->query('SELECT 1 FROM news WHERE type = \'BREAKING\' AND game_id = ' . $this->db->escapeNumber($trigger->getGameID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_BEFORE_REPLACING_BREAKING_NEWS) . ' LIMIT 1');
 		if ($this->db->getNumRows()==0)
 		{
 			if (count($attackers) >= 5)
@@ -1173,8 +1174,7 @@ class SmrPlanet
 	public function creditCurrentAttackersForKill()
 	{
 		//get all players involved for HoF
-		$allowed = TIME - 3600 * 3;
-		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber($allowed));
+		$this->db->query('SELECT account_id,level FROM player_attacks_planet WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_BUST));
 		while ($this->db->nextRecord())
 		{
 			$currPlayer =& SmrPlayer::getPlayer($this->db->getInt('account_id'),$this->getGameID());
