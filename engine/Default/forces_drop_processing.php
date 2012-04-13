@@ -28,13 +28,9 @@ $change_mines = $drop_mines - $take_mines;
 $change_combat_drones = $drop_combat_drones - $take_combat_drones;
 $change_scout_drones = $drop_scout_drones - $take_scout_drones;
 
-// do we have any action at all?
-if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 0)
-	create_error('You want to add/remove 0 forces?');
-
 if ($sector->hasLocation())
 	create_error('You can\'t drop forces in a sector with a location!');
-	
+
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
@@ -53,6 +49,10 @@ if ($forces->getSDs() + $change_scout_drones > 5) {
 	$change_scout_drones = 5 - $forces->getSDs();
 //	create_error('This stack can only take up to 5 scout drones!');
 }
+
+// Check if the delta is 0 after applying the caps, in case by applying the caps we actually changed it to 0.
+if ($change_mines == 0 && $change_combat_drones == 0 && $change_scout_drones == 0)
+	create_error('You want to add/remove 0 forces?');
 
 // combat drones
 if ($change_combat_drones != 0) {
@@ -186,7 +186,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 		$message .= ' from';
 	else
 		$message .= ' from/to';
-		
+
 	$message .= ' your stack in sector #'.$forces->getSectorID();
 
 	$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
