@@ -478,10 +478,8 @@ class SmrPort {
 		$count = count($GOODS);
 		switch($this->level) {
 			case 1: // we don't want to downgrade a level 1 port
-//				for($i=0;$i<3;$i++) // Add 3 goods for upgrading to level 1
-//				{
-//					do
-//					{
+//				for($i=0;$i<3;$i++) { // Add 3 goods for upgrading to level 1
+//					do {
 //						$newGood = array_shift($GOODS);
 //					} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
 //					if($count == 0)

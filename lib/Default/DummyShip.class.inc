@@ -28,8 +28,7 @@ class DummyShip extends AbstractSmrShip {
 		$this->player =& $player;
 		$this->regenerateBaseShip();
 		$this->doFullUNO();
-//		for($i=0;$i<$this->getHardpoints();++$i)
-//		{
+//		for($i=0;$i<$this->getHardpoints();++$i) {
 //			if(!isset($this->weapons[$i]))
 //				$this->weapons[$i] = SmrWeapon::getWeapon($player->getGameID(),1);
 //		}

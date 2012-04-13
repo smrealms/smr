@@ -755,10 +755,8 @@ class SmrSector {
 //		$fightingPlayers = array();
 //		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
 //		if(count($alliancePlayers) > 0) {
-//			foreach($alliancePlayers as $accountID => $player)
-//			{
-//				if($player->canFight())
-//				{
+//			foreach($alliancePlayers as $accountID => $player) {
+//				if($player->canFight()) {
 //					if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
 //						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
 //				}

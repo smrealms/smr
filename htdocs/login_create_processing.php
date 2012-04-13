@@ -185,8 +185,7 @@ try {
 	//BETA
 	//$betaKey = $_REQUEST['beta_key'];
 	//$db->query('SELECT used FROM beta_key WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
-	//if (!$db->nextRecord() || $db->getField('used') == 'TRUE')
-	//{
+	//if (!$db->nextRecord() || $db->getField('used') == 'TRUE') {
 	//	$msg = 'Invalid or used beta key.';
 	//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 	//	exit;

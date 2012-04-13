@@ -97,8 +97,7 @@ forward($container);
 //		$thread_id = 0;
 //		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 //		if ($db->nextRecord()) $thread_id = $db->getField('thread_id');
-//		if ($thread_id == 0)
-// {
+//		if ($thread_id == 0) {
 //			$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' ORDER BY thread_id DESC LIMIT 1');
 //			if ($db->nextRecord())
 //				$thread_id = $db->getField('thread_id') + 1;
