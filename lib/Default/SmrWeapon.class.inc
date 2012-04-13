@@ -45,7 +45,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		$this->gameTypeID = $gameTypeID;
 		$this->weaponTypeID = $weaponTypeID;
 			
-		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armour_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . $this->db->escapeNumber($weaponTypeID) . ' LIMIT 1');
+		self::$db->query('SELECT weapon_name,race_id,cost,shield_damage,armour_damage,accuracy,power_level,buyer_restriction FROM weapon_type WHERE weapon_type_id = ' . self::$db->escapeNumber($weaponTypeID) . ' LIMIT 1');
 		
 		if(self::$db->nextRecord()) {
 			$this->name = self::$db->getField('weapon_name');
