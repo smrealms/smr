@@ -1002,9 +1002,9 @@ class SmrPort {
 			$db->query('SELECT visited, port_info
 						FROM player_visited_port
 						JOIN port_info_cache USING (game_id,sector_id,port_info_hash)
-						WHERE account_id = ' . $this->db->escapeNumber($accountID) . '
-							AND game_id = ' . $this->db->escapeNumber($gameID) . '
-							AND sector_id = ' . $this->db->escapeNumber($sectorID) . ' LIMIT 1');
+						WHERE account_id = ' . $db->escapeNumber($accountID) . '
+							AND game_id = ' . $db->escapeNumber($gameID) . '
+							AND sector_id = ' . $db->escapeNumber($sectorID) . ' LIMIT 1');
 			
 			if($db->nextRecord()) {
 				self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID] = unserialize(gzuncompress($db->getField('port_info')));
