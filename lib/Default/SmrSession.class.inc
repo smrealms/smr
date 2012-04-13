@@ -201,7 +201,7 @@ class SmrSession {
 			}
 			else {
 				foreach(self::$var as $key => &$value) {
-					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) // Use 0 for infinity {
+					if ($value['Expires'] > 0 && $value['Expires'] <= TIME) { // Use 0 for infinity
 						//This link is no longer valid
 						unset(self::$var[$key]);
 					}
@@ -286,10 +286,11 @@ class SmrSession {
 		return self::$var[$sn];
 	}
 	
-	public static function resetLink($container, $sn) //Do not allow sharing SN, useful for forwarding. {
+	public static function resetLink($container, $sn) { //Do not allow sharing SN, useful for forwarding.
 		global $lock;
-		if(isset(self::$var[$sn]['CommonID']))
+		if(isset(self::$var[$sn]['CommonID'])) {
 			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for reset page, to allow refreshing to always give the same page in response
+		}
 		self::$SN = $sn;
 		if(!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
@@ -321,7 +322,7 @@ class SmrSession {
 		self::$commonIDs = array();
 	}
 	
-	public static function addLink($container, $sn = false) // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise. {
+	public static function addLink($container, $sn = false) { // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
 		if(!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
 		}

@@ -5,8 +5,7 @@ create_error('Don\'t use this');
 //$db->query('SELECT * FROM player_has_stats WHERE game_id > 6');
 //$db2 = new SmrMySqlDatabase();
 //$done = 0;
-//while ($db->nextRecord())
-//{
+//while ($db->nextRecord()) {
 //	$kills = $db->getField('kills');
 //	$deaths = $db->getField('deaths');
 //	$account_id = $db->getField('account_id');

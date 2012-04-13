@@ -144,8 +144,7 @@ if ($var['gal_on'] < count($galaxies)) {
 	$container['gal_on']++;
 	$PHP_OUTPUT.= '<a href="'.SmrSession::getNewHREF($container).'" class="submitStyle">Next Galaxy</a><br />';
 }
-//else
-//{
+//else {
 //	$warning = TRUE;
 //	$PHP_OUTPUT.= '<input type="hidden" name="num_sectors" value="'.$this_sec.'">';
 //	$PHP_OUTPUT.= '<input type="submit" name="submit" value="Create Universe"><br /><br />';
@@ -158,8 +157,7 @@ $container['body'] = '1.6/universe_create_sectors.php';
 $PHP_OUTPUT.= create_echo_form($container);
 $PHP_OUTPUT.= 'Sector ID<br /><input type="text" size="5" name="sector_edit"><br /><input type="submit" value="Modify Sector" name="submit">';
 $PHP_OUTPUT.= '</form></td></tr><tr><td class="center" colspan="3">';
-//if ($warning)
-//{
+//if ($warning) {
 //	$PHP_OUTPUT.= '<span class="small">Note: When you press "Create Universe" ALL universe data will be erased and rewritten.<br />';
 //	$PHP_OUTPUT.= 'If you modified ports, goods will be changed at ports in that galaxy (unless you used edit sector)<br />';
 //	$PHP_OUTPUT.= 'If you modified planet, NPC planet levels will be reset, player planets will lose their owners (unless you used edit sector)<br />';

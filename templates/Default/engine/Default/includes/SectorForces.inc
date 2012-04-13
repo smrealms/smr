@@ -60,12 +60,10 @@
 							} ?>
 						</td>
 						<td><?php
-//							if($SharedForceAlliance)
-//							{
+//							if($SharedForceAlliance) {
 								echo $Owner->getLinkedDisplayName();
 //							}
-//							else
-//							{
+//							else {
 //								<span class="red">UNKNOWN</span>
 //							} ?>
 						</td>

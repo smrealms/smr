@@ -9,11 +9,9 @@ $template->assign('PreferencesFormHREF', SmrSession::getNewHREF(create_container
 $template->assign('PreferencesConfirmFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'preferences_confirm.php')));
 
 $transferAccounts = array();
-//if(SmrSession::$game_id>0)
-// {
+//if(SmrSession::$game_id>0) {
 //	$db->query('SELECT account_id,player_name,player_id FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
-//	while ($db->nextRecord())
-// {
+//	while ($db->nextRecord()) {
 //		$transferAccounts[$db->getField('account_id')] = $db->getField('player_name') .' ('. $db->getField('player_id').')';
 //	}
 //}

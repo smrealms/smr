@@ -117,8 +117,7 @@ class Distance {
 		$this->addToPath($_startSectorId);
 	}
 
-//	public function __construct($_distance, $_numWarps, array $_path)
-//	{
+//	public function __construct($_distance, $_numWarps, array $_path) {
 //		$this->distance = $_distance;
 //		$this->numWarps = $_numWarps;
 //		$this->path = $_path;
@@ -152,8 +151,7 @@ class Distance {
 		return $this->numWarps;
 	}
 
-//	public function clone()
-//	{
+//	public function clone() {
 //		return new Distance($this->distance, $this->numWarps, clone($this->path));
 //	}
 

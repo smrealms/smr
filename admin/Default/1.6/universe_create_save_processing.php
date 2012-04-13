@@ -176,8 +176,7 @@ elseif ($submit == 'Create Planets') {
 //		$updatePlan[$sector]['Owner'] = 0;
 //		$updatePlan[$sector]['Owner Type'] = 'Player';
 	}
-//	for ($i=1;$i<=$numberOfNpcPlanets;$i++)
-//	{
+//	for ($i=1;$i<=$numberOfNpcPlanets;$i++) {
 //		$galSector =& $galSectors[array_rand($galSectors)];
 //		while ($galSector->hasPlanet()) $galSector =& $galSectors[array_rand($galSectors)]; //1 per sector
 //
@@ -242,11 +241,9 @@ elseif ($submit == 'Create Ports and Mines') {
 		SmrPort::savePorts();
 		$var['message'] = '<span class="green">Success</span> : Succesfully added ports.';
 //		//iterate through levels 1-20 for mines
-//		for ($i=1;$i<=20;$i++)
-//		{
+//		for ($i=1;$i<=20;$i++) {
 //			//iterate once for each port of this level
-//			for ($j=1;$j<=$_POST['mine' . $i];$j++)
-//			{
+//			for ($j=1;$j<=$_POST['mine' . $i];$j++) {
 //				//get a sector for this mine
 //				$sector = mt_rand($start, $end);
 //				//check if this sector is valid, if not then get a new one
@@ -287,8 +284,7 @@ elseif ($submit == 'Edit Sector') {
 	if ($_POST['plan_type'] == 'Uninhab') {
 		$sector->createPlanet();
 	}
-//	elseif ($_POST['plan_type'] == 'NPC')
-//	{
+//	elseif ($_POST['plan_type'] == 'NPC') {
 //		$GAL_PLANETS[$this_sec]['Inhabitable'] = 1;
 //		$GAL_PLANETS[$this_sec]['Owner'] = 0;
 //		$GAL_PLANETS[$this_sec]['Owner Type'] = 'NPC';
@@ -357,12 +353,10 @@ function checkSectorAllowedForLoc(SmrSector &$sector,SmrLocation &$location) {
 
 function addLocationToSector(SmrLocation &$location,SmrSector &$sector) {
 	$fedBeacon =& SmrLocation::getLocation(LOCATION_TYPE_FEDERAL_BEACON);
-//	if ($loc_id > 1 && $loc_id < 10)
-//	{
+//	if ($loc_id > 1 && $loc_id < 10) {
 //		//get max loc #s for each type
 //		$max = array(0,0,0,0,0,0,0,0,0,0);
-//		foreach ($LOCATIONS as $id => $array)
-//		{
+//		foreach ($LOCATIONS as $id => $array) {
 //			//skip fed beacon and "Random Bank Location" and such
 //			if ($id >= 100) $type = floor($id / 100);
 //			else continue;

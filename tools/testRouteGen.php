@@ -47,8 +47,7 @@ foreach($allRoutes as $routeType)
 	foreach($routeType as $routeMulti)
 	{
 		$c += (count($routeMulti));
-//		foreach($routeMulti as $multi => $route)
-//		{
+//		foreach($routeMulti as $multi => $route) {
 //			echo $multi . ":  ".$route->getRouteString();
 //		}
 //		echo "\r\n";

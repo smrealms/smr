@@ -47,14 +47,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	protected $SQL;
 	
-//	public static function getPlayers($gameAccountIDArray,$forceUpdate = false)
-//	{
+//	public static function getPlayers($gameAccountIDArray,$forceUpdate = false) {
 //		global $CACHE_PLAYERS;
 //		$playerArray = array();
-//		if(!$forceUpdate)
-//		{
-//			foreach($gameAccountIDArray as $gameAccountID)
-//			{
+//		if(!$forceUpdate) {
+//			foreach($gameAccountIDArray as $gameAccountID) {
 //				$playerArray[$gameAccountID['Account ID']] = $CACHE_PLAYERS[$gameAccountID['Game ID'].$gameAccountID['Account ID']];
 //			}
 //		}
@@ -393,8 +390,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->setZoom($this->getZoom()-$zoom);
 	}
 	
-//	function isZoomOn()
-//	{
+//	function isZoomOn() {
 //		return $this->zoomOn;
 //	}
 
@@ -440,7 +436,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 							WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
 							AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 	
-		if(!$this->isAllianceLeader() && $allianceID!=NHA_ID) // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance. {
+		if(!$this->isAllianceLeader() && $allianceID!=NHA_ID) { // Don't have a delay for switching alliance after leaving NHA, or for disbanding an alliance.
 			$this->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH);
 			$alliance->getLeader()->setAllianceJoinable(TIME + self::TIME_FOR_ALLIANCE_SWITCH); //We set the joinable time for leader here, that way a single player alliance won't cause a player to wait before switching.
 		}
@@ -531,18 +527,15 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->governmentHelp;
 	}
 
-//	function getPastKnowledge()
-//	{
+//	function getPastKnowledge() {
 //		return $this->pastKnowledge;
 //	}
 	
-//	function getChangedStats()
-//	{
+//	function getChangedStats() {
 //		return $this->changedStats;
 //	}
 //
-//	function setChangedStats($boolStr)
-//	{
+//	function setChangedStats($boolStr) {
 //		if($this->changedStats == $boolStr)
 //			return;
 //		$this->changedStats=$boolStr;
@@ -550,13 +543,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET changed_stats = '.$this->db->escapeString($boolStr).' WHERE '.$this->SQL.' LIMIT 1');
 //	}
 	
-//	function getChat()
-//	{
+//	function getChat() {
 //		return $this->chat;
 //	}
 //
-//	function setChat($chat)
-//	{
+//	function setChat($chat) {
 //		if($this->chat == $chat)
 //			return;
 //		$this->chat=$chat;
@@ -564,13 +555,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 //		$this->db->query('UPDATE player SET chat = ' . $this->db->escapeString($chat) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 //	}
 //
-//	function getChatPosition()
-//	{
+//	function getChatPosition() {
 //		return $this->chatPosition;
 //	}
 //
-//	function setChatPosition($chatPosition)
-//	{
+//	function setChatPosition($chatPosition) {
 //		if($this->chatPosition == $chatPosition)
 //			return;
 //		$this->chatPosition=$chatPosition;
@@ -842,52 +831,41 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->customShipName;
 	}
 	
-//	protected function getGoodsInfo()
-//	{
-//
-//		if(!isset($this->goods) || !isset($this->goodsExpGained))
-//		{
+//	protected function getGoodsInfo() {
+//		if(!isset($this->goods) || !isset($this->goodsExpGained)) {
 //			//Get Player Goods
 //			global $GOODS;
 //			$this->goods = array();
 //			$this->goodsExpGained = array();
-//			foreach ($GOODS as $good_id => $good_name)
-//			{
+//			foreach ($GOODS as $good_id => $good_name) {
 //				$this->goods[$good_id] = 0;
 //				$this->goodsExpGained[$good_id] = 0;
 //			}
 //			$this->db->query('SELECT good_id,amount,exp_gained FROM player_has_goods WHERE ' . $this->SQL);
-//			while ($this->db->nextRecord())
-//			{
+//			while ($this->db->nextRecord()) {
 //				$this->goods[$this->db->getField('good_id')] = $this->db->getField('amount');
 //				$this->goodsExpGained[$this->db->getField('good_id')] = $this->db->getField('exp_gained');
 //			}
 //		}
 //	}
 //
-//	function getGoods()
-//	{
-//		if(!isset($this->goods))
-//		{
+//	function getGoods() {
+//		if(!isset($this->goods)) {
 //			$this->getGoodsInfo();
 //		}
 //		return $this->goods;
 //	}
-//	function getGood($goodID)
-//	{
+//	function getGood($goodID) {
 //		$goods = $this->getGoods();
 //		return $goods[$goodID];
 //	}
-//	function getGoodsExpGained()
-//	{
-//		if(!isset($this->goodsExpGained))
-//		{
+//	function getGoodsExpGained() {
+//		if(!isset($this->goodsExpGained)) {
 //			$this->getGoodsInfo();
 //		}
 //		return $this->goodsExpGained;
 //	}
-//	function getGoodExpGained($goodID)
-//	{
+//	function getGoodExpGained($goodID) {
 //		$goodsExp = $this->getGoodsExpGained();
 //		return $goodsExp[$goodID];
 //	}
@@ -1785,7 +1763,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				// get the course back
 				$this->plottedCourse = unserialize($this->db->getField('course'));
 				$endSectorID = $this->plottedCourse->getEndSectorID();
-				if($endSectorID != $this->getSectorID() && $this->plottedCourse->isInPath($this->getSectorID())) //Current sector is in the path, we have jumped along it somehow so lets replot from our cur {
+				if($endSectorID != $this->getSectorID() && $this->plottedCourse->isInPath($this->getSectorID())) { //Current sector is in the path, we have jumped along it somehow so lets replot from our cur
 					$this->plottedCourse =& Plotter::findDistanceToX(SmrSector::getSector($this->getGameID(),$endSectorID), $this->getSector(), true);
 					if($this->plottedCourse === false) {
 						throw new Exception('For some reason we could not replot from "'.$this->getSectorID().'" to "'.$endSectorID);

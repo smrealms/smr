@@ -205,10 +205,8 @@ class DummyPlayer extends AbstractSmrPlayer {
 //					AND player.account_id = ' . $this->getAccountID() . '
 //					AND player.game_id = ' . $this->getGameID();
 //		$this->db->query($query);
-//		if ($this->db->nextRecord())
-//		{
-//			if ($this->db->getField('numAttacks'))
-//			{
+//		if ($this->db->nextRecord()) {
+//			if ($this->db->getField('numAttacks')) {
 //				$numAttacks = $this->db->getField('numAttacks');
 //				$multiplier = round(.4 * $this->getLevelID());
 //				$this->increaseCurrentBountyAmount('HQ',$numAttacks * 1000000 * $multiplier);
@@ -237,24 +235,19 @@ class DummyPlayer extends AbstractSmrPlayer {
 		$killer->increaseKills(1);
 //		$killer->increaseHOF(1,'killing','kills');
 
-//		if($this->hasAlliance())
-//		{
+//		if($this->hasAlliance()) {
 //			$this->db->query('UPDATE alliance SET alliance_deaths=alliance_deaths+1 WHERE alliance_id=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
 //		}
-//		if($killer->hasAlliance())
-//		{
+//		if($killer->hasAlliance()) {
 //			$this->db->query('UPDATE alliance SET alliance_kills=alliance_kills+1 WHERE alliance_id=' . $killer->getAllianceID() . ' AND game_id=' . $killer->getGameID() . ' LIMIT 1');
 //		}
 //
-//		if($this->hasAlliance() && $killer->hasAlliance())
-//		{
+//		if($this->hasAlliance() && $killer->hasAlliance()) {
 //			$this->db->query('SELECT kills FROM alliance_vs_alliance WHERE alliance_id_1=' . $killer->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
-//			if($this->db->nextRecord())
-//			{
+//			if($this->db->nextRecord()) {
 //				$this->db->query('UPDATE alliance_vs_alliance SET kills=kills+1 WHERE alliance_id_1=' . $this->getAllianceID() . ' AND alliance_id_2=' . $this->getAllianceID() . ' AND game_id=' . $this->getGameID() . ' LIMIT 1');
 //			}
-//			else
-//			{
+//			else {
 //				$this->db->query('INSERT INTO alliance_vs_alliance VALUES (' . $this->getGameID() . ',' . $killer->getAllianceID() . ',' . $this->getAllianceID() . ',1)');
 //			}
 //		}

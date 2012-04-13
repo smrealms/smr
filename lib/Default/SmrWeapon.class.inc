@@ -312,8 +312,7 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 		return $this->doPlanetDamageToPlayer($return,$planet, $targetPlayer);
 	}
 	
-//private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null)
-//{
+//private function get_weapon($weaponPlayer,$weaponShip, $weapon_id, $purpose = 'Normal',$targetPlayer=null,$targetShip=null) {
 //	//this will be used in the future to display more accurate info for the person using the weapon
 //	global TIME,$GAME_ID, $WEAPONS, $ACCURACY_MOD, $WEAPON_DAMAGE_MOD, $BOMBARDMENT_MOD, $GADGETS, $INCREASED_ACC, $INCREASED_MAN, $INCREASED_DAMAGE_GADGET_VALUE, $WEAPON_RESTRICTIONS,$INCREASED_PLANET_DAMAGE_GADGET_VALUE;
 //
@@ -332,36 +331,30 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 //
 //	//Determine New Damage
 //	//do they have the raid damage gadget and are raiding?
-//	if (gadget_equipped($weaponPlayer,'Weapon Accelerator') && ($purpose == 'PortRaid' || $purpose == 'PlanetRaid'))
-//	{
+//	if (gadget_equipped($weaponPlayer,'Weapon Accelerator') && ($purpose == 'PortRaid' || $purpose == 'PlanetRaid')) {
 //		$this_weapon['Shield Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
 //		$this_weapon['Armour Damage'] *= $INCREASED_PLANET_DAMAGE_GADGET_VALUE;
 //	}
 //	//increase for raid damage stat if they are raiding
-//	if ($purpose == 'PortRaid' || $purpose == 'PlanetRaid')
-//	{
+//	if ($purpose == 'PortRaid' || $purpose == 'PlanetRaid') {
 //		$this_weapon['Shield Damage'] *= 1 + ($BOMBARDMENT_MOD * $weaponPlayer->getStat('Bombardment')) / 100;
 //		$this_weapon['Armour Damage'] *= 1 + ($BOMBARDMENT_MOD * $weaponPlayer->getStat('Bombardment')) / 100;
 //	}
 //	//get diminishing returns for attacking
 //	$diminishing=1;
-//	if($purpose == 'PlanetRaid')
-//	{
+//	if($purpose == 'PlanetRaid') {
 //		global $REPAIR_BEFORE_DIMINISHING_PLANET_RAID;
 //		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_PLANET_RAID);
 //	}
-//	else if($purpose == 'PortRaid')
-//	{
+//	else if($purpose == 'PortRaid') {
 //		global $REPAIR_BEFORE_DIMINISHING_PORT_RAID;
 //		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_PORT_RAID);
 //	}
-//	else if($purpose == 'Forces')
-//	{
+//	else if($purpose == 'Forces') {
 //		global $REPAIR_BEFORE_DIMINISHING_FORCE_ATTACK;
 //		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_FORCE_ATTACK);
 //	}
-//	else if($purpose == 'Normal')
-//	{
+//	else if($purpose == 'Normal') {
 //		$REPAIR_BEFORE_DIMINISHING_ATTACK = $weaponShip['Speed'] * 25 + 475;
 //		$diminishing = 1 - ($weaponPlayer->getPastMaint() / $REPAIR_BEFORE_DIMINISHING_ATTACK);
 //	}

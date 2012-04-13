@@ -1,6 +1,5 @@
 <?php
-//if (isset($_POST['Create_Game']))
-//{
+//if (isset($_POST['Create_Game'])) {
 	//universe_create_galaxies.php
 	$container = create_container('1.6/universe_create_save_processing.php', '1.6/universe_create_sectors.php');
 	$container['num_gals'] = $var['num_gals'];
@@ -14,16 +13,13 @@
 	$template->assign('NumGals',$var['num_gals']);
 	$template->assign('GalaxyTypes',array('Racial','Neutral','Planet'));
 //}
-//else
-//{
+//else {
 //	$db->query('SELECT game_id FROM game ORDER BY game_id DESC LIMIT 1');
-//	if ($db->nextRecord())
-//	{
+//	if ($db->nextRecord()) {
 //		$var['game_id'] = $db->getField('game_id');
 //		include('universe_create_sectors.php');
 //	}
-//	else
-//	{
+//	else {
 //		$error = '<span class="red">Error</span>: Could not find a previous game to edit.';
 //		include($GAME_FILES . '/error.php');
 //	}

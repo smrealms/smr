@@ -50,7 +50,7 @@ class RouteGenerator {
 	static function startRoutesToContinue($maxNumPorts, $startSectorId, array &$forwardRoutes, array &$routeLists) {
 		foreach($forwardRoutes as &$currentStepRoute) {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
-			if ($currentStepBuySector > $startSectorId) // Not already checked {
+			if ($currentStepBuySector > $startSectorId) { // Not already checked
 				self::getContinueRoutes($maxNumPorts - 1, $startSectorId, $currentStepRoute, $routeLists[$currentStepBuySector], $routeLists, $currentStepRoute->getGoodID() === GOOD_NOTHING);
 			}
 		} unset($currentStepRoute);
@@ -70,8 +70,8 @@ class RouteGenerator {
 			$currentStepBuySector = $currentStepRoute->getBuySectorId();
 			if ($lastGoodIsNothing & ($lastGoodIsNothing = GOOD_NOTHING === $currentStepRoute->getGoodID()))
 				continue; // Don't do two nothings in a row
-			if ($currentStepBuySector >= $startSectorId) // Not already checked or back to start {
-				if ($currentStepBuySector === $startSectorId) // Route returns to start {
+			if ($currentStepBuySector >= $startSectorId) { // Not already checked or back to start
+				if ($currentStepBuySector === $startSectorId) { // Route returns to start
 					$mpr = new MultiplePortRoute($routeToContinue, $currentStepRoute);
 					self::addExpRoute($mpr);
 					self::addMoneyRoute($mpr);

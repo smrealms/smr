@@ -11,12 +11,10 @@ try {
 	define('SCRIPT_ID', $db->getInsertID());
 	$db->query('UPDATE npc_logs SET script_id='.SCRIPT_ID.' WHERE log_id='.SCRIPT_ID);
 
-
-	$forwardedCount = 0;
 	function overrideForward($container) {
 		global $forwardedContainer;
 		$forwardedContainer = $container;
-		if($container['body']=='error.php') //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing. {
+		if($container['body']=='error.php') { //We hit a create_error - this shouldn't happen for an NPC often, for now we want to throw an exception for it for testing.
 			debug('Hit an error');
 			throw new Exception($container['message']);
 		}
@@ -220,7 +218,7 @@ function NPCStuff() {
 				}
 			}
 			
-			if(!isset($TRADE_ROUTE)) //We only want to change trade route if there isn't already one set. {
+			if(!isset($TRADE_ROUTE)) { //We only want to change trade route if there isn't already one set.
 				$TRADE_ROUTES =& findRoutes($player);
 				$TRADE_ROUTE =& changeRoute($TRADE_ROUTES);
 			}
@@ -306,7 +304,8 @@ function NPCStuff() {
 							$port =& $player->getSector()->getPort();
 							$tradeable = checkPortTradeable($port,$player);
 							
-							if($tradeable===true && $port->getGoodAmount($goodID)>=$ship->getCargo($sellRoute->getGoodID())) //TODO: Sell what we can rather than forcing sell all at once? { //Sell goods
+							if($tradeable===true && $port->getGoodAmount($goodID)>=$ship->getCargo($sellRoute->getGoodID())) { //TODO: Sell what we can rather than forcing sell all at once?
+								//Sell goods
 								debug('Sell Goods');
 								processContainer(tradeGoods($goodID,$player,$port));
 							}
@@ -624,7 +623,7 @@ function plotToFed(&$player,$plotToHQ=false) {
 function plotToNearest(AbstractSmrPlayer &$player, &$realX) {
 	debug('Plotting To: ',$realX); //TODO: Can we make the debug output a bit nicer?
 	
-	if($player->getSector()->hasX($realX)) //Check if current sector has what we're looking for before we attempt to plot and get error. {
+	if($player->getSector()->hasX($realX)) { //Check if current sector has what we're looking for before we attempt to plot and get error.
 		debug('Already available in sector');
 		return true;
 	}
@@ -656,7 +655,8 @@ function checkForShipUpgrade(AbstractSmrPlayer &$player) {
 function doShipUpgrade(AbstractSmrPlayer &$player,$upgradeShipID) {
 	$plotNearest = plotToNearest($player,AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$upgradeShipID));
 	
-	if($plotNearest == true) //We're already there! { //TODO: We're going to want to UNO after upgrading
+	if($plotNearest == true) { //We're already there!
+		//TODO: We're going to want to UNO after upgrading
 		return create_container('shop_ship_processing.php','',array('ship_id'=>$upgradeShipID));
 	} //Otherwise return the plot
 	return $plotNearest;

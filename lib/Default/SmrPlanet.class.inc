@@ -75,8 +75,7 @@ class SmrPlanet {
 				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ')');
 		}
 		return self::getPlanet($gameID,$sectorID,true);
-		//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID]))
-		//		{
+		//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
 		//			$p = new SmrPlanet($gameID,$sectorID,true);
 		//			self::$CACHE_PLANETS[$gameID][$sectorID] =& $p;
 		//		}
@@ -101,8 +100,7 @@ class SmrPlanet {
 		$this->db = new SmrMySqlDatabase();
 
 
-		//	if ($result = next_record($sql))
-		//	{
+		//	if ($result = next_record($sql)) {
 		//		global $PLANET_TYPES, $PLANET_RESEARCH, $GOODS, $PRIMARY_BUILDINGS;
 		//		$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 		//		//get rev planet buildings
@@ -151,8 +149,7 @@ class SmrPlanet {
 		//
 		//		checkForInterest($planet,$rev_build);
 		//	}
-		//	else
-		//	{
+		//	else {
 		//		return FALSE;
 		//	}
 		//	return $planet;
@@ -176,15 +173,13 @@ class SmrPlanet {
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 		}
-		//		else if($create)
-		//		{
+		//		else if($create) {
 		//			$this->gameID		= (int)$gameID;
 		//			$this->sectorID		= (int)$sectorID;
 		//			$this->isNew		= true;
 		//			return;
 		//		}
-		//		else
-		//		{
+		//		else {
 		//			throw new Exception('No such sector: '.$gameID.'-'.$sectorID);
 		//		}
 		}
@@ -572,15 +567,13 @@ class SmrPlanet {
 			//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
 			//					$planet['Defined'] = TRUE;
 			//
-			//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks']))
-			//					{
+			//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks'])) {
 			//						foreach ($PLANET_BUILDINGS[$building_type_id]['Unlocks'] as $building_id => $max_amount)
 			//							$planet['Building Types Available'][$building_id] += $max_amount;
 			//					}
 			//
 			//					//define planet
-			//					if (isset($PRIMARY_BUILDINGS[$building_type_id]))
-			//					{
+			//					if (isset($PRIMARY_BUILDINGS[$building_type_id])) {
 			//						$planet['Type ID'] = $PRIMARY_BUILDINGS[$building_type_id];
 			//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
 			//					}
