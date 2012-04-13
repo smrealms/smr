@@ -1585,20 +1585,20 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$db->query('INSERT INTO message
 			(account_id,game_id,message_type_id,message_text,
 			sender_id,send_time,expire_time,sender_delete) VALUES(' .
-			$this->db->escapeNumber($receiverID) . ',' .
-			$this->db->escapeNumber($gameID) . ',' .
-			$this->db->escapeNumber($messageTypeID) . ',' .
+			$db->escapeNumber($receiverID) . ',' .
+			$db->escapeNumber($gameID) . ',' .
+			$db->escapeNumber($messageTypeID) . ',' .
 			$db->escapeString($message) . ',' .
-			$this->db->escapeNumber($senderID) . ',' .
-			$this->db->escapeNumber(TIME) . ',' .
-			$this->db->escapeNumber($expires) . ',' .
+			$db->escapeNumber($senderID) . ',' .
+			$db->escapeNumber(TIME) . ',' .
+			$db->escapeNumber($expires) . ',' .
 			$db->escapeBoolean($senderDelete) . ')'
 		);
 
 		if($unread === true) {
 			// give him the message icon
 			$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-						(' . $this->db->escapeNumber($gameID) . ', ' . $this->db->escapeNumber($receiverID) . ', ' . $this->db->escapeNumber($messageTypeID) . ')');
+						(' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($receiverID) . ', ' . $db->escapeNumber($messageTypeID) . ')');
 		}
 
 		switch ($messageTypeID) {
@@ -1641,10 +1641,10 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$db->query('SELECT account_id
 					FROM active_session
 					JOIN player USING (game_id, account_id)
-					WHERE active_session.last_accessed >= ' . $this->db->escapeNumber(TIME - SmrSession::TIME_BEFORE_EXPIRY) . '
-						AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+					WHERE active_session.last_accessed >= ' . $db->escapeNumber(TIME - SmrSession::TIME_BEFORE_EXPIRY) . '
+						AND game_id = ' . $db->escapeNumber($this->getGameID()) . '
 						AND ignore_globals = \'FALSE\'
-						AND account_id != ' . $this->db->escapeNumber($this->getAccountID()));
+						AND account_id != ' . $db->escapeNumber($this->getAccountID()));
 	
 		while ($db->nextRecord()) {
 			$this->sendMessage($db->getInt('account_id'), MSG_GLOBAL, $message, $canBeIgnored);
