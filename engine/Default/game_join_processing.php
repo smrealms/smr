@@ -45,36 +45,42 @@ if (!Globals::isValidGame($gameID))
 // does it cost something to join that game?
 $credits = Globals::getGameCreditsRequired($gameID);
 if ($credits > 0) {
-	if($account->getTotalSmrCredits()<$credits)
+	if($account->getTotalSmrCredits() < $credits) {
 		create_error('You do not have enough credits to join this game!');
+	}
 	$account->decreaseTotalSmrCredits($credits);
 }
 
 // check if hof entry is there
 $db->query('SELECT 1 FROM account_has_stats WHERE account_id = '.$db->escapeNumber(SmrSession::$account_id) . ' LIMIT 1');
-if (!$db->nextRecord())
+if (!$db->nextRecord()) {
 	$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES ('.$db->escapeNumber($account->getAccountID()).', ' . $db->escape_string($account->getLogin(), true) . ')');
+}
 
 // put him in a sector with a hq
 $hq_id = $race_id + 101;
 $db->query('SELECT * FROM location JOIN sector USING(game_id, sector_id) ' .
 		'WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND ' .
 		'location_type_id = '.$db->escapeNumber($hq_id));
-if ($db->nextRecord())
-	$home_sector_id = $db->getField('sector_id');
-else
+if ($db->nextRecord()) {
+	$home_sector_id = $db->getInt('sector_id');
+}
+else {
 	$home_sector_id = 1;
+}
 
 // get rank_id
 $rank_id = $account->getRank();
 
 // for newbie and beginner another ship, more shields and armour
 if ($account->isNewbie()) {
+	$startingNewbieTurns = STARTING_NEWBIE_TURNS_NEWBIE;
 	$ship_id = SHIP_TYPE_NEWBIE_MERCHANT_VESSEL;
 	$amount_shields = 75;
 	$amount_armour = 150;
 }
 else {
+	$startingNewbieTurns = STARTING_NEWBIE_TURNS_VET;
 	switch($race_id) {
 		case RACE_ALSKANT:
 			$ship_id = SHIP_TYPE_SMALL_TIMER;
@@ -110,57 +116,63 @@ else {
 $last_turn_update = SmrGame::getGame($gameID)->getStartTurnsDate();
 
 //// newbie leaders need to put into there alliances
-if (SmrSession::$account_id == ACCOUNT_ID_NHL)
-  $alliance_id = 302;
-else
-  $alliance_id = 0;
+if (SmrSession::$account_id == ACCOUNT_ID_NHL) {
+	$alliance_id = 302;
+}
+else {
+	$alliance_id = 0;
+}
 
 $db->lockTable('player');
 
 // get last registered player id in that game and increase by one.
 $db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_id DESC LIMIT 1');
-if ($db->nextRecord())
+if ($db->nextRecord()) {
 	$player_id = $db->getInt('MAX(player_id)') + 1;
-else
+}
+else {
 	$player_id = 1;
+}
 
 // insert into player table.
-$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action,last_active)
-			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ')');
+$db->query('INSERT INTO player (account_id, game_id, player_id, player_name, race_id, ship_type_id, credits, alliance_id, sector_id, last_turn_update, last_cpl_action, last_active, newbie_turns)
+			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($player_id).', ' . $db->escape_string($player_name, true) . ', '.$db->escapeNumber($race_id).', '.$db->escapeNumber($ship_id).', '.$db->escapeNumber(Globals::getStartingCredits($gameID)).', '.$db->escapeNumber($alliance_id).', '.$db->escapeNumber($home_sector_id).', '.$db->escapeNumber($last_turn_update).', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($startingNewbieTurns) . ')');
 
 $db->unlock();
 
 // give the player shields
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
-			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 1, '.$db->escapeNumber($amount_shields).', '.$db->escapeNumber($amount_shields).')');
+			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 1, '.$db->escapeNumber($amount_shields).', '.$db->escapeNumber($amount_shields).')');
 // give the player armour
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
-			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 2, '.$db->escapeNumber($amount_armour).', '.$db->escapeNumber($amount_armour).')');
+			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 2, '.$db->escapeNumber($amount_armour).', '.$db->escapeNumber($amount_armour).')');
 // give the player cargo hold
 $db->query('INSERT INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount)
-			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 3, 40, 40)');
+			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 3, 40, 40)');
 // give the player weapons
 $db->query('INSERT INTO ship_has_weapon (account_id, game_id, order_id, weapon_type_id)
-			VALUES('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', 0, 46)');
+			VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', 0, 46)');
 
 // insert the huge amount of sectors into the database :)
 $db->query('SELECT MIN(sector_id), MAX(sector_id)
 			FROM sector
 			WHERE game_id = ' . $db->escapeNumber($gameID));
-if (!$db->nextRecord())
+if (!$db->nextRecord()) {
 	create_error('This game doesn\'t have any sectors');
+}
 
 $min_sector = $db->getInt('MIN(sector_id)');
 $max_sector = $db->getInt('MAX(sector_id)');
 
 for ($i = $min_sector; $i <= $max_sector; $i++) {
 	//if this is our home sector we dont add it.
-	if ($i == $home_sector_id)
+	if ($i == $home_sector_id) {
 		continue;
+	}
 
-	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES ('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($i).')');
+	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES (' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ', '.$db->escapeNumber($i).')');
 }
-$db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES ('.$db->escapeNumber(SmrSession::$account_id).', ' . $db->escapeNumber($gameID) . ')');
+$db->query('INSERT INTO player_has_stats (account_id, game_id) VALUES (' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeNumber($gameID) . ')');
 
 
 
