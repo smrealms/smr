@@ -1,7 +1,7 @@
 <?php
 
 if (isset($var['process'])) {
-	if ($account->getTotalSmrCredits() == 0) {
+	if ($account->getTotalSmrCredits() < CREDITS_PER_TICKER) {
 		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 	}
 	if(isset($_REQUEST['type'])) {
@@ -27,7 +27,7 @@ if (isset($var['process'])) {
 	$expires += 5*86400;
 	$db->query('REPLACE INTO player_has_ticker (game_id, account_id, type, expires) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($type) . ', ' . $db->escapeNumber($expires) . ')');
 	//take credits
-	$account->decreaseTotalSmrCredits(1);
+	$account->decreaseTotalSmrCredits(CREDITS_PER_TICKER);
 	//offer another drink and such
 	$container=create_container('skeleton.php','bar_main.php');
 	$container['script']='bar_opening.php';

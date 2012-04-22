@@ -3,7 +3,7 @@ if(Globals::getGameStartDate($player->getGameID())+TIME_MAP_BUY_WAIT > TIME) {
 	create_error('You cannot buy maps for another '.format_time(Globals::getGameStartDate($player->getGameID())+TIME_MAP_BUY_WAIT-TIME).'!');
 }
 
-if ($account->getTotalSmrCredits() < 2) {
+if ($account->getTotalSmrCredits() < CREDITS_PER_GAL_MAP) {
 	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 }
 
@@ -28,7 +28,7 @@ if (isset($var['process'])) {
 	
 	$player->increaseHOF(1,array('Bar','Maps Bought'), HOF_PUBLIC);
 	//take money
-	$account->decreaseTotalSmrCredits(2);
+	$account->decreaseTotalSmrCredits(CREDITS_PER_GAL_MAP);
 	//now give maps
 	
 	// delete all entries from the player_visited_sector/port table
