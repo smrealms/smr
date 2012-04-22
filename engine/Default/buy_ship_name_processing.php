@@ -2,13 +2,17 @@
 $action = $_REQUEST['action'];
 $name = isset($var['ShipName']) ? $var['ShipName'] : $_REQUEST['ship_name'];
 
+$actionHtmlShipName = 'Include HTML (' . CREDITS_PER_HTML_SHIP_NAME .' SMR Credits)';
+$actionTextShipName = 'Get It Painted! (' . CREDITS_PER_TEXT_SHIP_NAME . ' SMR Credit)';
+$actionShipLogo = 'Paint a logo (' . CREDITS_PER_SHIP_LOGO . ' SMR Credits)';
+
 if(isset($var['ShipName'])) {
 	$cred_cost = CREDITS_PER_HTML_SHIP_NAME;
 }
-else if($action == 'Paint a logo (3 SMR Credits)') {
+else if($action == $actionShipLogo) {
 	$cred_cost = CREDITS_PER_SHIP_LOGO;
 }
-else if($action == 'Get It Painted! (1 SMR Credit)') {
+else if($action == $actionTextShipName) {
 	$cred_cost = CREDITS_PER_TEXT_SHIP_NAME;
 }
 else {
@@ -18,9 +22,9 @@ else {
 if ($account->getTotalSmrCredits() < $cred_cost) {
 	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
 }
-	
+
 if(!isset($var['ShipName'])) {
-	if ($action == 'Paint a logo (3 SMR Credits)') {
+	if ($action == $actionShipLogo) {
 		// check if we have an image
 		if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
 			// get dimensions
@@ -29,12 +33,12 @@ if(!isset($var['ShipName'])) {
 			if($size[2] != IMG_JPG && $size[2] != IMG_PNG && $size[2] != IMG_GIF) {
 				create_error('Only gif, jpg or png-image allowed! s = '.$size[2]);
 			}
-		
+
 			// check if width > MAX_IMAGE_WIDTH
 			if ($size[0] > MAX_IMAGE_WIDTH) {
 				create_error('Image is wider than '.MAX_IMAGE_WIDTH.' pixels!');
 			}
-		
+
 			// check if height > MAX_IMAGE_HEIGHT
 			if ($size[1] > MAX_IMAGE_HEIGHT) {
 				create_error('Image is taller than '.MAX_IMAGE_HEIGHT.' pixels!');
@@ -42,7 +46,7 @@ if(!isset($var['ShipName'])) {
 			if (filesize($_FILES['photo']['tmp_name']) > MAX_IMAGE_SIZE*1024) {
 				create_error('Image is bigger than '.MAX_IMAGE_SIZE.'k.');
 			}
-			
+
 			$name = '<img style="padding:3px;" src="'.URL.'/upload/' . $player->getAccountID() . 'logo"><br />';
 			move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $player->getAccountID() . 'logo');
 			$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
@@ -56,19 +60,19 @@ if(!isset($var['ShipName'])) {
 			create_error('Error while uploading');
 		}
 	}
-	
+
 	if($name=='Enter Name Here') {
 		create_error('Please enter a ship name!');
 	}
-	
+
 	// disallow certain ascii chars
 	for ($i = 0; $i < strlen($name); $i++) {
 		if (ord($name[$i]) < 32 || ord($name[$i]) > 127 || in_array(ord($name[$i]), array(37,39,59,92,63,42))) {
 			create_error('The ship name contains invalid characters! ' . chr(ord($name[$i])));
 		}
 	}
-	
-	if ($action == 'Include HTML (2 SMR Credits)') {
+
+	if ($action == $actionHtmlShipName) {
 		$max_len = 128;
 		//check for some bad html
 		if(preg_match('/(\<span[^\>]*id\s*=)|(class\s*=\s*"[^"]*ajax)/i', $name) > 0) {
@@ -93,12 +97,12 @@ if(!isset($var['ShipName'])) {
 		if ($second != '') {
 			create_error('Sorry no text is allowed to follow a ' . htmlentities('</marquee>', ENT_NOQUOTES,'utf-8') . ' tag.');
 		}
-		
+
 		list ($first, $second) = explode('<marquee>', $name);
 		if ($first != '' && $second != '') {
 			create_error('Sorry no text is allowed to come before a ' . htmlentities('<marquee>', ENT_NOQUOTES,'utf-8') . ' tag.');
 		}
-		
+
 		//lets try to see if they closed all tags
 		$first = explode ('<', $name);
 		foreach ($first as $second) {
@@ -131,8 +135,8 @@ if(!isset($var['ShipName'])) {
 	if (strlen($name) > $max_len) {
 		create_error('That won\'t fit on your ship!');
 	}
-	
-	if ($action == 'Include HTML (2 SMR Credits)') {
+
+	if ($action == $actionHtmlShipName) {
 		$container = create_container('skeleton.php','buy_ship_name.php');
 		$container['Preview'] = $name;
 		forward($container);
@@ -142,7 +146,7 @@ if(!isset($var['ShipName'])) {
 if (!stristr($name, '</marquee>')) {
 	$name .= '<br />';
 }
-	
+
 $db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escape_string($name, false) . ')');
 $account->decreaseTotalSmrCredits($cred_cost);
 
