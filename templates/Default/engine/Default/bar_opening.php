@@ -46,24 +46,24 @@ if ($WinningTicket) { ?>
 Well... of course you could always pay our painters to customise your ship name, or even spray on your favourite logo!<br />
 <br />
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getBuyShipnameHREF(); ?>">&nbsp;Customize Ship Name (1-3 SMR Credit(s))&nbsp;</a>
+	<a class="buttonA" href="<?php echo Globals::getBuyShipnameHREF(); ?>">&nbsp;Customize Ship Name (<?php echo min(CREDITS_PER_TEXT_SHIP_NAME, CREDITS_PER_HTML_SHIP_NAME, CREDITS_PER_SHIP_LOGO); ?>-<?php echo max(CREDITS_PER_TEXT_SHIP_NAME, CREDITS_PER_HTML_SHIP_NAME, CREDITS_PER_SHIP_LOGO); ?> SMR Credit(s))&nbsp;</a>
 </div>
 
 <br />
 <br />
 
 <h2>Systems</h2><br />
-We just got in a new system that can send information from your scout drones or recent news directly to your main screen! It only costs 1 SMR credit for 5 days! Or you can buy a system to block these messages.<br />
+We just got in a new system that can send information from your scout drones or recent news directly to your main screen! It only costs <?php echo CREDITS_PER_TICKER; ?> SMR credit for 5 days! Or you can buy a system to block these messages.<br />
 <br />
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getBarTickerHREF(); ?>">&nbsp;Buy System (1 SMR Credit)&nbsp;</a>
+	<a class="buttonA" href="<?php echo Globals::getBarTickerHREF(); ?>">&nbsp;Buy System (<?php echo CREDITS_PER_TICKER; ?> SMR Credit)&nbsp;</a>
 </div>
 <br />
 <br />
 
 <h2>Maps</h2><br />
-New intelligence has just come in!  We now have full maps of EVERY galaxy!  We are willing to sell you the newest maps of each galaxy for 2 SMR credits each!<br />
+New intelligence has just come in!  We now have full maps of EVERY galaxy!  We are willing to sell you the newest maps of each galaxy for <?php echo CREDITS_PER_GAL_MAP; ?> SMR credits each!<br />
 <br />
 <div class="buttonA">
-	<a class="buttonA" href="<?php echo Globals::getBarGalMapHREF(); ?>">&nbsp;Buy a Galaxy Map (2 SMR Credits)&nbsp;</a>
+	<a class="buttonA" href="<?php echo Globals::getBarGalMapHREF(); ?>">&nbsp;Buy a Galaxy Map (<?php echo CREDITS_PER_GAL_MAP; ?> SMR Credits)&nbsp;</a>
 </div><br /><br />

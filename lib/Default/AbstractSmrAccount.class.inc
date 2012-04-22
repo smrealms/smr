@@ -467,14 +467,14 @@ abstract class AbstractSmrAccount {
 			$this->rewardCredits = 0;
 			$this->db->query('SELECT * FROM account_has_credits WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' LIMIT 1');
 			if ($this->db->nextRecord()) {
-				$this->credits = $this->db->getField('credits_left');
-				$this->rewardCredits = $this->db->getField('reward_credits');
+				$this->credits = $this->db->getInt('credits_left');
+				$this->rewardCredits = $this->db->getInt('reward_credits');
 			}
 		}
 	}
 
 	public function getTotalSmrCredits() {
-		return $this->getSmrCredits()+$this->getSmrRewardCredits();
+		return $this->getSmrCredits() + $this->getSmrRewardCredits();
 	}
 
 	public function decreaseTotalSmrCredits($totalCredits) {

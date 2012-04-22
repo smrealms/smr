@@ -11,18 +11,18 @@
 	}
 	else { ?>
 		So you want to name your ship?  Great!
-					
+
 		So...what do you want to name it? (max 48 text chars) (max <?php echo MAX_IMAGE_HEIGHT; ?> height by <?php echo MAX_IMAGE_WIDTH; ?> width and <?php echo MAX_IMAGE_SIZE; ?>k for logos)<br />
 		<form name="ship_naming" enctype="multipart/form-data" method="POST" action="<?php echo $ShipNameFormHref; ?>">
 			<input type="text" name="ship_name" value="Enter Name Here" id="InputFields"><br />
 			<br />
-			<input type="submit" name="action" value="Get It Painted! (1 SMR Credit)" id="InputFields" /><br />
+			<input type="submit" name="action" value="Get It Painted! (<?php echo CREDITS_PER_TEXT_SHIP_NAME; ?> SMR Credit)" id="InputFields" /><br />
 			<br />
-			<input type="submit" name="action" value="Include HTML (2 SMR Credits)" id="InputFields" /><br />
+			<input type="submit" name="action" value="Include HTML (<?php echo CREDITS_PER_HTML_SHIP_NAME; ?> SMR Credits)" id="InputFields" /><br />
 			<br />
 			Image: <input type="file" name="photo" accept="image/jpeg" id="InputFields" style="width:40%;"><br />
 			<br />
-			<input type="submit" name="action" value="Paint a logo (3 SMR Credits)" id="InputFields" />
+			<input type="submit" name="action" value="Paint a logo (<?php echo CREDITS_PER_SHIP_LOGO; ?> SMR Credits)" id="InputFields" />
 		</form><?php
 	} ?>
 </div>

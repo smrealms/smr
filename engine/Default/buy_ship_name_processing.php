@@ -1,23 +1,25 @@
 <?php
-
-if ($account->getTotalSmrCredits() == 0)
-	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
-
 $action = $_REQUEST['action'];
 $name = isset($var['ShipName']) ? $var['ShipName'] : $_REQUEST['ship_name'];
 
-$cred_cost = 2;
+if(isset($var['ShipName'])) {
+	$cred_cost = CREDITS_PER_HTML_SHIP_NAME;
+}
+else if($action == 'Paint a logo (3 SMR Credits)') {
+	$cred_cost = CREDITS_PER_SHIP_LOGO;
+}
+else if($action == 'Get It Painted! (1 SMR Credit)') {
+	$cred_cost = CREDITS_PER_TEXT_SHIP_NAME;
+}
+else {
+	throw new Exception('Did not match an expected ship name type.');
+}
+
+if ($account->getTotalSmrCredits() < $cred_cost) {
+	create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
+}
+	
 if(!isset($var['ShipName'])) {
-	if($action == 'Paint a logo (3 SMR Credits)') {
-		$cred_cost = 3;
-	}
-	else if($action == 'Get It Painted! (1 SMR Credit)') {
-		$cred_cost = 1;}
-	
-	if ($account->getTotalSmrCredits() < $cred_cost) {
-		create_error('You don\'t have enough SMR Credits.  Donate money to SMR to gain SMR Credits!');
-	}
-	
 	if ($action == 'Paint a logo (3 SMR Credits)') {
 		// check if we have an image
 		if ($_FILES['photo']['error'] == UPLOAD_ERR_OK) {
