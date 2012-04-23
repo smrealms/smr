@@ -126,7 +126,7 @@ else {
 $db->lockTable('player');
 
 // get last registered player id in that game and increase by one.
-$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID) . ' ORDER BY player_id DESC LIMIT 1');
+$db->query('SELECT MAX(player_id) FROM player WHERE game_id = ' . $db->escapeNumber($gameID));
 if ($db->nextRecord()) {
 	$player_id = $db->getInt('MAX(player_id)') + 1;
 }
