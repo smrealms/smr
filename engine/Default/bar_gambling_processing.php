@@ -29,7 +29,7 @@ if ($action == 'process') {
 	$num = $db->getInt('num');
 	$message=('<div align=center>Thanks for your purchase and good luck!!!  You currently');
 	$message.=(' own '.$num.' tickets!</div><br />');
-	
+
 	$container=create_container('skeleton.php','bar_main.php');
 	$container['script']='bar_opening.php';
 	$container['message'] = $message;
@@ -77,7 +77,7 @@ elseif ($action == 'blackjack') {
 			}
 			$real_cards[] = ($first + (13 * ($second - 1))) * $third;
 		}
-				
+
 		$max = 52 * $decks;
 		//1=ace of H, 13=king of H, 14=ace of C, 26=king of C
 		//27=ace of D, 39=king of D, 40=ace of S, 52=king of S
@@ -120,7 +120,7 @@ elseif ($action == 'blackjack') {
 		$result = $result.'-'.$suit.'-'.$down;
 		return $result;
 	}
-	
+
 	function get_value($deck) {
 		//this function used to find the value of a player's/bank's cards
 		//if this is just one card push it into an array so we can run the func
@@ -152,7 +152,7 @@ elseif ($action == 'blackjack') {
 		}
 		return $return_val;
 	}
-	
+
 	function create_card($card, $show) {
 		//picture directory
 		$dir = URL . '/images';
@@ -179,7 +179,7 @@ elseif ($action == 'blackjack') {
 		$return.=('</td></tr></table></td>');
 		return $return;
 	}
-	
+
 	function check_for_win($comp, $play) {
 		//TODO: Hack to prevent an error, fix it
 		global $player_card;
@@ -236,9 +236,8 @@ elseif ($action == 'blackjack') {
 		}
 		$player->decreaseCredits($bet);
 		$player->update();
-		
+
 		//first we deal some cards...player,ai,player,ai
-		$ai_aces = 0;
 		if (isset($var['cards'])) {
 			$cards = $var['cards'];
 		}
@@ -292,7 +291,7 @@ elseif ($action == 'blackjack') {
 		}
 		$play_val = get_value($player_card);
 	}
-	
+
 	//only display if we wont display later..
 	if ($do != 'STAY' && get_value($player_card) != 21) {
 		//heres the AIs cards
@@ -336,7 +335,7 @@ elseif ($action == 'blackjack') {
 			$message.=('<div align=center>Bank has at least '.$ai_val.'</div><br />');
 		}
 	}
-	
+
 	if ($do == 'STAY' || get_value($player_card) == 21) {
 		$db->query('SELECT * FROM blackjack WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND account_id = ' . $db->escapeNumber($player->getAccountID()));
@@ -433,7 +432,6 @@ elseif ($action == 'blackjack') {
 		$container['action'] = 'blackjack';
 		$container['player_does'] = 'HIT';
 		$container['ai_card'] = $ai_card;
-		$container['ai_aces'] = $ai_aces;
 		$container['bet'] = $bet;
 		$container['player_val'] = $val1;
 		$message.=create_echo_form($container);
