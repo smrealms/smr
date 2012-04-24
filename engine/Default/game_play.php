@@ -135,15 +135,15 @@ if(empty($games['Play']))
 if (count($game_id_list) > 0) {
 	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed
 				FROM game
-				WHERE end_date >= ' . $db->escapeNumber(TIME) . '
+				WHERE game_id NOT IN '.$db->escapeArray($game_id_list).'
+					AND end_date >= ' . $db->escapeNumber(TIME) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_date DESC');
 }
 else {
 	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed
 				FROM game
-				WHERE game_id NOT IN '.$db->escapeArray($game_id_list).'
-					AND end_date >= ' . $db->escapeNumber(TIME) . '
+				WHERE end_date >= ' . $db->escapeNumber(TIME) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_date DESC');
 }
