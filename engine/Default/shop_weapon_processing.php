@@ -3,11 +3,10 @@ $action = $_REQUEST['action'];
 if ($action == 'Buy') {
 	$cost = $var['cost'];
 	$power_level = $var['power_level'];
-	$cant_buy = $var['cant_buy'];
 
-	if ($cant_buy == 'Yes')
+	if ($var['cant_buy'] === true)
 		create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
-	
+
 	// do we have enough cash?
 	if ($player->getCredits() < $cost)
 		create_error('You do not have enough cash to purchase this weapon!');

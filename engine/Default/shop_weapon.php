@@ -34,8 +34,7 @@ if ($db->getNumRows() > 0 ) {
 
 		$container = create_container('shop_weapon_processing.php');
 		transfer('LocationID');
-		if ($race_id != RACE_NEUTRAL && $player->getRelation($race_id) < 300)
-			$container['cant_buy'] = 'Yes';
+		$container['cant_buy'] = $race_id != RACE_NEUTRAL && $player->getRelation($race_id) < 300;
 		$container['weapon_id'] = $weapon_type_id;
 		$container['power_level'] = $power_level;
 		$container['buyer_restriction'] = $buyer_restriction;
