@@ -334,6 +334,10 @@ class SmrSession {
 		if($sn === false) {
 			$sn = self::generateSN($container);
 		}
+		else {
+			// If we've been provided an SN to use then copy over the existing 'PreviousRequestTime' 
+			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
+		}
 		self::$var[$sn] = $container;
 		return $sn;
 	}
@@ -345,7 +349,9 @@ class SmrSession {
 			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
 		}
 		else {
-			do{$sn = substr(md5(mt_rand()),0,8);} while(isset(self::$var[$sn]));
+			do {
+				$sn = substr(md5(mt_rand()),0,8);
+			} while(isset(self::$var[$sn]));
 			$container['PreviousRequestTime'] = MICRO_TIME;
 		}
 		self::$commonIDs[$container['CommonID']] = $sn;
