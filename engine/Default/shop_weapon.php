@@ -8,7 +8,8 @@ $db->query('SELECT * FROM location
 				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				AND location_type_id = '.$db->escapeNumber($var['LocationID']));
 
-if ($db->getNumRows() > 0 ) {
+$location =& SmrLocation::getLocation($var['LocationID']);
+if ($location->isWeaponSold()) {
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
@@ -21,35 +22,20 @@ if ($db->getNumRows() > 0 ) {
 	$PHP_OUTPUT.=('<th align="center">Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	while ($db->nextRecord()) {
-		$weapon_name = $db->getField('weapon_name');
-		$weapon_type_id = $db->getField('weapon_type_id');
-		$shield_damage = $db->getField('shield_damage');
-		$armour_damage = $db->getField('armour_damage');
-		$accuracy = $db->getField('accuracy');
-		$race_id = $db->getField('race_id');
-		$power_level = $db->getField('power_level');
-		$cost = $db->getField('cost');
-		$buyer_restriction = $db->getField('buyer_restriction');
-
+	foreach($location->getWeaponsSold() as &$weaponSold) {
 		$container = create_container('shop_weapon_processing.php');
 		transfer('LocationID');
-		$container['cant_buy'] = $race_id != RACE_NEUTRAL && $player->getRelation($race_id) < 300;
-		$container['weapon_id'] = $weapon_type_id;
-		$container['power_level'] = $power_level;
-		$container['buyer_restriction'] = $buyer_restriction;
-		$container['cost'] = $cost;
 		$container['weapon_type_id'] = $weapon_type_id;
 		$PHP_OUTPUT.=create_echo_form($container);
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center">'.$weapon_name.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$shield_damage.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$armour_damage.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$accuracy.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.Globals::getRaceName($race_id).'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.$power_level.'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.number_format($cost).'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$weaponSold->getName().'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$weaponSold->getShieldDamage().'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$weaponSold->getArmourDamage().'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$weaponSold->getBaseAccuracy().'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$weaponSold->getRaceName().'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$weaponSold->getPowerLevel().'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.$weaponSold->getCost().'</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit('Buy');
 		$PHP_OUTPUT.=('</td>');
@@ -73,17 +59,14 @@ if ($ship->hasWeapons()) {
 
 	$shipWeapons =& $ship->getWeapons();
 	foreach ($shipWeapons as $order_id => &$weapon) {
-		$cost = $weapon->getCost() / 2;
-
 		$container = create_container('shop_weapon_processing.php');
 		transfer('LocationID');
 		$container['order_id'] = $order_id;
-		$container['cash_back'] = $cost;
 		$container['weapon_type_id'] = $weapon->getWeaponTypeID();
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">'.$weapon->getName().'</td>');
-		$PHP_OUTPUT.=('<td align="center">'.number_format($cost).'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.number_format(floor($weapon->getCost() * WEAPON_REFUND_PERCENT)).'</td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit('Sell');
 		$PHP_OUTPUT.=('</td>');
