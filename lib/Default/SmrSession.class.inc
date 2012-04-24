@@ -346,7 +346,7 @@ class SmrSession {
 		$container['CommonID'] = self::getCommonID($container);
 		if(isset(self::$commonIDs[$container['CommonID']])) {
 			$sn = self::$commonIDs[$container['CommonID']];
-			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
+			$container['PreviousRequestTime'] = isset(self::$var[$sn]) ? self::$var[$sn]['PreviousRequestTime'] : MICRO_TIME;
 		}
 		else {
 			do {
