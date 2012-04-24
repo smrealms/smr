@@ -2,6 +2,14 @@
 if(!is_numeric($var['PickedAccountID'])) {
 	create_error('You have to pick a player.');
 }
+$db->query('SELECT 1
+			FROM draft_leaders
+			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+			AND account_id = ' . $db->escapeNumber($var['PickedAccountID']));
+if($db->nextRecord()) {
+	create_error('You cannot pick another leader.');
+}
+
 $db->query('
 SELECT MIN(alliance_member) min_members
 FROM
