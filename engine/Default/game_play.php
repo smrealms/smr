@@ -27,9 +27,8 @@ if ($db->getNumRows() > 0) {
 		$games['Play'][$game_id]['Speed'] = $db->getField('game_speed');
 		$games['Play'][$game_id]['Type'] = $db->getField('game_type');
 
-		$container = array();
+		$container = create_container('game_play_processing.php');
 		$container['game_id'] = $game_id;
-		$container['url'] = 'game_play_processing.php';
 		if($games['Play'][$game_id]['Type'] == '1.2')
 			$games['Play'][$game_id]['PlayGameLink'] = 'loader2.php?sn=' . SmrSession::addLink($container);
 		else
@@ -135,7 +134,7 @@ if(empty($games['Play']))
 if (count($game_id_list) > 0) {
 	$db->query('SELECT start_date, end_date, game.game_id as game_id, game_name, max_players, game_type, credits_needed, game_speed
 				FROM game
-				WHERE game_id NOT IN '.$db->escapeArray($game_id_list).'
+				WHERE game_id NOT IN (' . $db->escapeArray($game_id_list) . ')
 					AND end_date >= ' . $db->escapeNumber(TIME) . '
 					AND enabled = ' . $db->escapeBoolean(true) . '
 				ORDER BY start_date DESC');
