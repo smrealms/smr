@@ -43,11 +43,11 @@ class SmrPlanet {
 			}
 		}
 	}
-	
+
 	public static function clearCache() {
 		self::$CACHE_PLANETS = array();
 	}
-	
+
 	public static function savePlanets() {
 		foreach(self::$CACHE_PLANETS as &$gamePlanets) {
 			foreach($gamePlanets as &$planet) {
@@ -68,7 +68,7 @@ class SmrPlanet {
 		if(!self::getPlanet($gameID,$sectorID)->exists()) {
 			require_once(get_file_loc('SmrGame.class.inc'));
 			$inhabitableTime = SmrGame::getGame($gameID)->getStartDate() + pow(mt_rand(45, 85), 3);
-				
+
 			// insert planet into db
 			$db = new SmrMySqlDatabase();
 			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time)
@@ -191,7 +191,7 @@ class SmrPlanet {
 		public function getSectorID() {
 			return $this->sectorID;
 		}
-		
+
 		public function &getGalaxy() {
 			return SmrGalaxy::getGalaxyContaining($this->getGameID(),$this->getSectorID());
 		}
@@ -469,7 +469,7 @@ class SmrPlanet {
 		public function getBuildings() {
 			if(!isset($this->buildings)) {
 				$this->buildings = array();
-					
+
 				// get buildingss from db
 				$this->db->query('SELECT construction_id, amount FROM planet_has_building WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
 				// adding building and amount to array
@@ -495,7 +495,7 @@ class SmrPlanet {
 		public function setBuilding($buildingTypeID,$number) {
 			if($this->getBuilding($buildingTypeID) == $number)
 				return;
-			
+
 			$this->buildings[$buildingTypeID] = $number;
 			$this->hasChangedBuildings[$buildingTypeID] = true;
 		}
@@ -552,10 +552,11 @@ class SmrPlanet {
 			if(!isset(self::$maxBuildings)) {
 				self::$maxBuildings = array();
 
+				$db = new SmrMySqlDatabase();
 				// get buildingss from db
-				$this->db->query('SELECT construction_id, max_construction FROM planet_construction');
+				$db->query('SELECT construction_id, max_construction FROM planet_construction');
 				while ($this->db->nextRecord()) {
-					self::$maxBuildings[$this->db->getInt('construction_id')] = $this->db->getInt('max_construction');
+					self::$maxBuildings[$db->getInt('construction_id')] = $db->getInt('max_construction');
 				}
 			}
 			if($buildingTypeID===false) {
@@ -620,7 +621,7 @@ class SmrPlanet {
 			}
 		}
 
-		
+
 		if(count($this->hasStoppedBuilding)>0) {
 			$this->db->query('DELETE FROM planet_is_building
 							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
