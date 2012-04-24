@@ -1196,7 +1196,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 					JOIN port USING(game_id, sector_id)
 					WHERE armour > 0
 						AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
-						AND .game_id = ' . $this->db->escapeNumber($this->getGameID());
+						AND game_id = ' . $this->db->escapeNumber($this->getGameID());
 		$this->db->query($query);
 		if ($this->db->nextRecord()) {
 			if ($this->db->getField('numAttacks')) {
