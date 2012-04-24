@@ -468,7 +468,7 @@ abstract class AbstractSmrShip {
 
 	public function getCostToUpgrade($upgradeShipID) {
 		$upgadeBaseShip =& AbstractSmrShip::getBaseShip(Globals::getGameType($this->getGameID()),$upgradeShipID);
-		return $upgadeBaseShip['Cost'] - $this->getCost() * SHIP_RESELL_PERCENT;
+		return $upgadeBaseShip['Cost'] - floor($this->getCost() * SHIP_REFUND_PERCENT);
 	}
 
 	public function getCostToUpgradeAndUNO($upgradeShipID) {
