@@ -141,7 +141,7 @@ if ($db->getNumRows() > 0) {
 		);
 	}
 	$template->assignByRef('BankTransactions', $bankTransactions);
-	
+
 	$template->assign('MinValue', $minValue);
 	$template->assign('MaxValue', $maxValue);
 	$container = create_container('skeleton.php', 'bank_alliance.php');
@@ -157,11 +157,11 @@ if ($db->getNumRows() > 0) {
 }
 
 $container=create_container('skeleton.php', 'bank_report.php');
-$container['alliance_id'] = $alliance_id;
+$container['alliance_id'] = $alliance->getAllianceID();
 $template->assign('BankReportHREF', SmrSession::getNewHREF($container));
 
 $container=create_container('bank_alliance_processing.php');
-$container['alliance_id'] = $alliance_id;
+$container['alliance_id'] = $alliance->getAllianceID();
 $template->assign('BankTransactionFormHREF', SmrSession::getNewHREF($container));
 
 ?>
