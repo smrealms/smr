@@ -1,6 +1,6 @@
 <?php
 
-$message.= '<div align=center>';
+$message = '<div align=center>';
 $template->assign('PageTopic','Drinking');
 
 if ($player->getCredits() < 10) {
