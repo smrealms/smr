@@ -1192,7 +1192,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber(TIME - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
 		$query = 'SELECT count(*) as numAttacks
 					FROM player_attacks_port
-					JOIN player USING(game_id, sector_id)
+					JOIN player USING(game_id, account_id, sector_id)
 					JOIN port USING(game_id, sector_id)
 					WHERE armour > 0
 						AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
