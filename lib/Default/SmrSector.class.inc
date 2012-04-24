@@ -4,14 +4,14 @@ require_once(get_file_loc('SmrLocation.class.inc'));
 require_once(get_file_loc('SmrPlanet.class.inc'));
 require_once(get_file_loc('SmrPort.class.inc'));
 require_once(get_file_loc('SmrGalaxy.class.inc'));
-		
+
 class SmrSector {
 	protected static $CACHE_SECTORS = array();
 	protected static $CACHE_GALAXY_SECTORS = array();
 	protected static $CACHE_LOCATION_SECTORS = array();
-	
+
 	protected $db;
-	
+
 
 	protected $gameID;
 	protected $sectorID;
@@ -20,7 +20,7 @@ class SmrSector {
 	protected $visited = array();
 	protected $links;
 	protected $warp;
-	
+
 	protected $hasChanged = false;
 	protected $isNew = false;
 
@@ -37,7 +37,7 @@ class SmrSector {
 		}
 		return self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID];
 	}
-	
+
 	public static function &getLocationSectors($gameID,$locationTypeID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_LOCATION_SECTORS[$gameID][$locationTypeID])) {
 			$db = new SmrMySqlDatabase();
@@ -58,12 +58,12 @@ class SmrSector {
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
-	
+
 	public static function clearCache() {
 		self::$CACHE_GALAXY_SECTORS = array();
 		self::$CACHE_SECTORS = array();
 	}
-	
+
 	public static function saveSectors() {
 		foreach(self::$CACHE_SECTORS as &$gameSectors) {
 			foreach($gameSectors as &$sector) {
@@ -71,7 +71,7 @@ class SmrSector {
 			}
 		}
 	}
-	
+
 	public static function &createSector($gameID,$sectorID) {
 		if(!isset(self::$CACHE_SECTORS[$gameID][$sectorID])) {
 			$s = new SmrSector($gameID,$sectorID,true);
@@ -79,7 +79,7 @@ class SmrSector {
 		}
 		return self::$CACHE_SECTORS[$gameID][$sectorID];
 	}
-	
+
 	protected function __construct($gameID, $sectorID,$create=false) {
 		$this->db = new SmrMySqlDatabase();
 
@@ -91,21 +91,21 @@ class SmrSector {
 			$this->gameID		= $this->db->getInt('game_id');
 			$this->galaxyID		= $this->db->getInt('galaxy_id');
 			$this->battles		= $this->db->getInt('battles');
-	
+
 			$this->links = array();
 			if($this->db->getField('link_up'))
 				$this->links['Up'] = $this->db->getInt('link_up');
-				
+
 			if($this->db->getField('link_down'))
 				$this->links['Down'] = $this->db->getInt('link_down');
-				
+
 			if($this->db->getField('link_left'))
 				$this->links['Left'] = $this->db->getInt('link_left');
-				
+
 			if($this->db->getField('link_right'))
 				$this->links['Right'] = $this->db->getInt('link_right');
-				
-	
+
+
 			$this->db->query('SELECT * FROM warp
 								WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . '
 								AND (
@@ -214,7 +214,7 @@ class SmrSector {
 		}
 		return false;
 	}
-	
+
 	public function getFedRaceIDs() {
 		$raceIDs = array();
 		$locations =& $this->getLocations();
@@ -267,7 +267,7 @@ class SmrSector {
 				$message .= 'entering';
 		}
 		$message .= ' sector #'.$this->getSectorID();
-		
+
 		$forces =& $this->getForces();
 		foreach($forces as &$force) {
 			$force->ping($message,$player);
@@ -289,7 +289,7 @@ class SmrSector {
 				$message .= 'leaving';
 		}
 		$message .= ' sector #'.$this->getSectorID();
-			
+
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
 		foreach($forces as &$force) {
@@ -310,30 +310,30 @@ class SmrSector {
 			$force->ping($message,$player);
 		} unset($force);
 	}
-	
+
 	public function getGameID() {
 		return $this->gameID;
 	}
-	
+
 	public function getSectorID() {
 		return $this->sectorID;
 	}
-	
+
 	public function getGalaxyID() {
 		return $this->galaxyID;
 	}
-	
+
 	public function setGalaxyID($galaxyID) {
 		if($this->galaxyID==$galaxyID)
 			return;
 		$this->galaxyID=$galaxyID;
 		$this->hasChanged=true;
 	}
-	
+
 	public function getGalaxyName() {
 		return $this->getGalaxy()->getName();
 	}
-	
+
 	public function getNumberOfLinks() {
 		$num=0;
 		if(!is_array($this->getLinks()))
@@ -343,18 +343,18 @@ class SmrSector {
 				$num++;
 		return $num;
 	}
-	
+
 	public function getNumberOfConnections() {
 		$links = $this->getNumberOfLinks();
 		if($this->hasWarp())
 			$links++;
 		return $links;
 	}
-	
+
 	public function &getGalaxy() {
 		return SmrGalaxy::getGalaxy($this->getGameID(),$this->getGalaxyID());
 	}
-	
+
 	public function getNeighbourID($dir) {
 		if($this->hasLink($dir))
 			return $this->getLink($dir);
@@ -386,7 +386,7 @@ class SmrSector {
 		}
 		return $neighbour;
 	}
-	
+
 	public function getSectorDirection($sectorID) {
 		if($sectorID == $this->getSectorID())
 			return 'Current';
@@ -397,33 +397,33 @@ class SmrSector {
 			return 'Warp';
 		return 'None';
 	}
-	
+
 	public function &getNeighbourSector($dir) {
 		return SmrSector::getSector($this->getGameID(),$this->getNeighbourID($dir));
 	}
-	
+
 	public function getLinks() {
 		return $this->links;
 	}
-	
+
 	public function isLinked($sectorID) {
 		return in_array($sectorID,$this->links)||$sectorID==$this->getWarp();
 	}
-	
+
 	public function getLink($name) {
 		return isset($this->links[$name]) ? $this->links[$name] : 0;
 	}
-	
+
 	public function hasLink($name) {
 		return $this->getLink($name)!=0;
 	}
-	
+
 	public function &getLinkSector($name) {
 		if($this->hasLink($name))
 			return SmrSector::getSector($this->getGameID(),$this->getLink($name));
 		return false;
 	}
-	
+
 	/**
 	 * Cannot be used for Warps
 	 */
@@ -436,7 +436,7 @@ class SmrSector {
 			$this->links[$name] = $linkID;
 		$this->hasChanged=true;
 	}
-	
+
 	/**
 	 * Cannot be used for Warps
 	 */
@@ -460,7 +460,7 @@ class SmrSector {
 		$this->setLink($dir,0);
 		$this->getNeighbourSector($dir)->setLink(self::oppositeDir($dir),0);
 	}
-	
+
 	protected static function oppositeDir($dir) {
 		switch($dir) {
 			case 'Up': return 'Down';
@@ -470,67 +470,67 @@ class SmrSector {
 			case 'Warp': return 'Warp';
 		}
 	}
-	
+
 	public function getLinkUp() {
 		return $this->getLink('Up');
 	}
-	
+
 	public function setLinkUp($linkID) {
 		$this->setLink('Up',$linkID);
 	}
-	
+
 	public function hasLinkUp() {
 		return $this->hasLink('Up');
 	}
-	
+
 	public function getLinkDown() {
 		return $this->getLink('Down');
 	}
-	
+
 	public function setLinkDown($linkID) {
 		$this->setLink('Down',$linkID);
 	}
-	
+
 	public function hasLinkDown() {
 		return $this->hasLink('Down');
 	}
-	
+
 	public function getLinkLeft() {
 		return $this->getLink('Left');
 	}
-	
+
 	public function hasLinkLeft() {
 		return $this->hasLink('Left');
 	}
-	
+
 	public function setLinkLeft($linkID) {
 		$this->setLink('Left',$linkID);
 	}
-	
+
 	public function getLinkRight() {
 		return $this->getLink('Right');
 	}
-	
+
 	public function hasLinkRight() {
 		return $this->hasLink('Right');
 	}
-	
+
 	public function setLinkRight($linkID) {
 		$this->setLink('Right',$linkID);
 	}
-	
+
 	public function getWarp() {
 		return $this->warp;
 	}
-	
+
 	public function &getWarpSector() {
 		return SmrSector::getSector($this->getGameID(),$this->getWarp());
 	}
-	
+
 	public function hasWarp() {
 		return $this->getWarp()!=0;
 	}
-	
+
 	public function setWarp(SmrSector &$warp,$justThisObjectData=false) {
 		if($justThisObjectData===false) {
 			if($this->hasWarp()) {
@@ -552,7 +552,7 @@ class SmrSector {
 		}
 		$this->warp = $warp->getSectorID();
 	}
-	
+
 	public function removeWarp() {
 		if($this->hasWarp()) {
 			//Update both possible combinations for the warp
@@ -567,7 +567,7 @@ class SmrSector {
 		}
 		$this->warp = 0;
 	}
-	
+
 	public function hasMine() {
 		//TODO
 		return false;
@@ -580,11 +580,11 @@ class SmrSector {
 	public function &getPort() {
 		return SmrPort::getPort($this->getGameID(),$this->getSectorID());
 	}
-	
+
 	public function &createPort() {
 		return SmrPort::createPort($this->getGameID(),$this->getSectorID());
 	}
-	
+
 	public function removePort() {
 		SmrPort::removePort($this->getGameID(),$this->getSectorID());
 	}
@@ -596,7 +596,7 @@ class SmrSector {
 	public function &getCachedPort(AbstractSmrPlayer &$player) {
 		return SmrPort::getCachedPort($this->getGameID(),$this->getSectorID(),$player->getAccountID());
 	}
-	
+
 	public function hasAnyLocationsWithAction() {
 		$locations =& SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID());
 		$hasAction = false;
@@ -606,7 +606,7 @@ class SmrSector {
 		}
 		return $hasAction;
 	}
-	
+
 	public function hasLocation($locationTypeID=false) {
 		$locations =& $this->getLocations();
 		if(count($locations) == 0)
@@ -619,17 +619,17 @@ class SmrSector {
 		}
 		return false;
 	}
-	
+
 	public function &getLocations() {
 		return SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID());
 	}
-	
+
 	public function addLocation(SmrLocation &$location) {
 		$this->db->query('INSERT INTO location (game_id,sector_id,location_type_id)
 						values(' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($location->getTypeID()) . ')');
 		SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID(),true);
 	}
-	
+
 	public function removeAllLocations() {
 		$this->db->query('DELETE FROM location WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id=' . $this->db->escapeNumber($this->getSectorID()));
 		SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID(),true);
@@ -638,15 +638,15 @@ class SmrSector {
 	public function hasPlanet() {
 		return $this->getPlanet()->exists();
 	}
-	
+
 	public function &getPlanet() {
 		return SmrPlanet::getPlanet($this->getGameID(),$this->getSectorID());
 	}
-	
+
 	public function &createPlanet() {
 		return SmrPlanet::createPlanet($this->getGameID(),$this->getSectorID());
 	}
-	
+
 	public function removePlanet() {
 		SmrPlanet::removePlanet($this->getGameID(),$this->getSectorID());
 	}
@@ -751,7 +751,8 @@ class SmrSector {
 		if($attackingPlayer->forceNAPAlliance($forceOwner)) {
 			throw new Exception('The trader has a force NAP.');
 		}
-		return array($attackingPlayer->getAccountID() => &$attackingPlayer);
+		$return = array($attackingPlayer->getAccountID() => &$attackingPlayer);
+		return $return;
 //		$fightingPlayers = array();
 //		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
 //		if(count($alliancePlayers) > 0) {
@@ -821,7 +822,7 @@ class SmrSector {
 		}
 		return $fightingPlayers;
 	}
-	
+
 	public static function &limitFightingTraders(array &$fightingPlayers, AbstractSmrPlayer &$keepPlayer) {
 		// Cap fleets to the required size
 		$fleet_size = count($fightingPlayers);
@@ -849,34 +850,34 @@ class SmrSector {
 			} unset($player);
 		return $fightingPlayers;
 	}
-	
+
 	public function getBattles() {
 		return $this->battles;
 	}
-	
+
 	public function setBattles($amount) {
 		if($this->battles == $amount)
 			return;
 		$this->battles = $amount;
 		$this->hasChanged = true;
 	}
-	
+
 	public function decreaseBattles($amount) {
 		$this->setBattles($this->battles-$amount);
 	}
-	
+
 	public function increaseBattles($amount) {
 		$this->setBattles($this->battles+$amount);
 	}
-	
+
 	function equals(SmrSector &$otherSector) {
 		return $otherSector->getSectorID()==$this->getSectorID()&&$otherSector->getGameID()==$this->getGameID();
 	}
-	
+
 	function isLinkedSector(SmrSector &$otherSector) {
 		return $otherSector->getGameID()==$this->getGameID()&&($otherSector->getSectorID()==$this->getWarp()||in_array($otherSector->getSectorID(),$this->getLinks()));
 	}
-	
+
 	public function isVisited(AbstractSmrPlayer &$player=null) {
 		if($player===null)
 			return true;
@@ -886,23 +887,23 @@ class SmrSector {
 		}
 		return $this->visited[$player->getAccountID()];
 	}
-	
+
 	public function getLocalMapHREF() {
 		return Globals::getSectorMoveHREF($this->getSectorID(), 'map_local.php');
 	}
-	
+
 	public function getCurrentSectorHREF() {
 		return Globals::getCurrentSectorMoveHREF($this->getSectorID());
 	}
-	
+
 	public function getGalaxyMapHREF() {
 		return '?sector_id='.$this->getSectorID();
 	}
-	
+
 	public function getScanSectorHREF() {
 		return Globals::getSectorScanHREF($this->getSectorID());
 	}
-	
+
 	public function hasX(/*Object*/ &$x, AbstractSmrPlayer &$player=null) {
 		if($x instanceof SmrSector) {
 			return $this->equals($x);
