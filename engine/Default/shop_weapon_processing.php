@@ -17,7 +17,7 @@ if ($action == 'Buy') {
 	}
 
 	if ($ship->getOpenWeaponSlots() < 1) {
-		create_error('You can\'t buy any more weapon!');
+		create_error('You can\'t buy any more weapons!');
 	}
 
 	if ($weapon->getBuyerRestriction() == 2 && $player->getAlignment() > -100) {
