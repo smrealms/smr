@@ -12,7 +12,7 @@ if ($action == 'Buy') {
 	}
 
 	// can we load such a weapon (power_level)
-	if (!$ship->checkPowerLevel($var['power_level'])) {
+	if (!$ship->checkPowerLevel($weapon->getPowerLevel())) {
 		create_error('Your ship doesn\'t have enough power to support that weapon!');
 	}
 
