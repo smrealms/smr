@@ -22,7 +22,8 @@ if ($location->isWeaponSold()) {
 	$PHP_OUTPUT.=('<th align="center">Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
-	foreach($location->getWeaponsSold() as &$weaponSold) {
+	$weaponsSold =& $location->getWeaponsSold();
+	foreach($weaponsSold as &$weaponSold) {
 		$container = create_container('shop_weapon_processing.php');
 		transfer('LocationID');
 		$container['weapon_type_id'] = $weapon_type_id;
