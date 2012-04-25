@@ -26,7 +26,7 @@ if ($location->isWeaponSold()) {
 	foreach($weaponsSold as &$weaponSold) {
 		$container = create_container('shop_weapon_processing.php');
 		transfer('LocationID');
-		$container['weapon_type_id'] = $weapon_type_id;
+		$container['weapon_type_id'] = $weaponSold->getWeaponTypeID();
 		$PHP_OUTPUT.=create_echo_form($container);
 
 		$PHP_OUTPUT.=('<tr>');
