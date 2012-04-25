@@ -1,7 +1,7 @@
 <?php
 $action = $_REQUEST['action'];
 if ($action == 'Buy') {
-	$weapon =& SmrWeapon::getWeapon($var['weapon_type_id']);
+	$weapon =& SmrWeapon::getWeapon($player->getGameID(), $var['weapon_type_id']);
 	if ($weapon->getRaceID() != RACE_NEUTRAL && $player->getRelation($weapon->getRaceID()) < 300) {
 		create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
 	}
@@ -34,7 +34,7 @@ if ($action == 'Buy') {
 	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
 }
 elseif ($action == 'Sell') {
-	$weapon =& SmrWeapon::getWeapon($var['weapon_type_id']);
+	$weapon =& SmrWeapon::getWeapon($player->getGameID(), $var['weapon_type_id']);
 	// mhh we wanna sell our weapon
 	// give the money to the user
 	$player->increaseCredits(floor($weapon->getCost() * WEAPON_REFUND_PERCENT));
