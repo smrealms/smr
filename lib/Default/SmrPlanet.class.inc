@@ -555,7 +555,7 @@ class SmrPlanet {
 				$db = new SmrMySqlDatabase();
 				// get buildingss from db
 				$db->query('SELECT construction_id, max_construction FROM planet_construction');
-				while ($this->db->nextRecord()) {
+				while ($db->nextRecord()) {
 					self::$maxBuildings[$db->getInt('construction_id')] = $db->getInt('max_construction');
 				}
 			}
