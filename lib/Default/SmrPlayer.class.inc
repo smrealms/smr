@@ -823,10 +823,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public function getCustomShipName() {
 		if(!isset($this->customShipName)) {
 			$this->db->query('SELECT * FROM ship_has_name WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
-			if ($this->db->nextRecord())
+			if ($this->db->nextRecord()) {
 				$this->customShipName = $this->db->getField('ship_name');
-			else
+			}
+			else {
 				$this->customShipName = false;
+			}
 		}
 		return $this->customShipName;
 	}
