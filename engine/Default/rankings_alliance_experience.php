@@ -6,7 +6,7 @@ create_ranking_menu(1, 0);
 $db->query('SELECT alliance_id, sum( experience ) AS alliance_exp, count( account_id ) AS members, alliance_name AS name
 				FROM alliance
 				LEFT JOIN player USING (game_id,alliance_id)
-				WHERE alliance.game_id = ' . $db->escapeNumber($player->getGameID()) . ' 
+				WHERE alliance.game_id = ' . $db->escapeNumber($player->getGameID()) . '
 				GROUP BY alliance_id
 				ORDER BY alliance_exp DESC');
 $alliances = array();
@@ -65,8 +65,7 @@ foreach ($alliances as $id => $infoArray) {
 }
 $PHP_OUTPUT.=('</table>');
 
-$action = $_REQUEST['action'];
-if ($action == 'Show') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
 	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	SmrSession::updateVar('MinRank',$min_rank);
@@ -113,7 +112,7 @@ foreach ($alliances as $id => $infoArray) {
 	$currAllianceName = $infoArray[0];
 	$totalExp = $infoArray[1];
 	$members = $infoArray[2];
-	
+
 	$PHP_OUTPUT.=('<tr>');
 	$style = 'style="vertical-align:top;text-align:center;"';
 	$style2 = '';

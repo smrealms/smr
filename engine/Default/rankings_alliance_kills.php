@@ -41,7 +41,7 @@ foreach($alliances as $id => $infoArray) {
 	elseif ($out)
 		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>'.$rank.'</td>');
-	
+
 	$PHP_OUTPUT.=('<td valign="top"');
 	if ($player->getAllianceID() == $id)
 		$PHP_OUTPUT.=(' class="bold"');
@@ -55,21 +55,20 @@ foreach($alliances as $id => $infoArray) {
 	else
 		$PHP_OUTPUT.=create_link($container, $currAllianceName);
 	$PHP_OUTPUT.=('</td>');
-	
+
 	$PHP_OUTPUT.=('<td valign="top" align="right"');
 	if ($player->getAllianceID() == $id)
 		$PHP_OUTPUT.=(' class="bold"');
 	if ($out)
 		$PHP_OUTPUT.=(' class="red"');
 	$PHP_OUTPUT.=('>' . number_format($numKills) . '</td>');
-	
+
 	$PHP_OUTPUT.=('</tr>');
 
 }
 $PHP_OUTPUT.=('</table>');
 
-$action = $_REQUEST['action'];
-if ($action == 'Show') {
+if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
 	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 	SmrSession::updateVar('MinRank',$min_rank);
@@ -114,7 +113,7 @@ foreach ($alliances as $id => $infoArray) {
 	$currAllianceName = $infoArray[0];
 	$numKills = $infoArray[1];
 	$out = (!$infoArray[2]);
-	
+
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td valign="top" align="center"');
 	if ($player->getAllianceID() == $id)
@@ -136,7 +135,7 @@ foreach ($alliances as $id => $infoArray) {
 	else
 		$PHP_OUTPUT.=create_link($container, $currAllianceName);
 	$PHP_OUTPUT.=('</td>');
-	
+
 	$PHP_OUTPUT.=('<td valign="top" align="right"');
 	if ($player->getAllianceID() == $id)
 		$PHP_OUTPUT.=(' class="bold"');
