@@ -205,8 +205,6 @@ if (!empty($delete)) {
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM ship_has_illusion
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
-			$db->query('DELETE FROM ship_has_name
-						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM ship_has_weapon
 						WHERE account_id=' . $db->escapeNumber($account_id) . ' AND game_id=' . $db->escapeNumber($game_id));
 			$db->query('DELETE FROM ship_is_cloaked

@@ -47,10 +47,11 @@ if(!isset($var['ShipName'])) {
 				create_error('Image is bigger than '.MAX_IMAGE_SIZE.'k.');
 			}
 
-			$name = '<img style="padding:3px;" src="'.URL.'/upload/' . $player->getAccountID() . 'logo"><br />';
-			move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $player->getAccountID() . 'logo');
-			$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' .
-					$player->getGameID().', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escape_string($name, false) . ')');
+			$filename = $player->getAccountID() . 'logo' . $player->getGameID();
+			$name = '<img style="padding:3px;" src="'.URL.'/upload/' . $filename . '"><br />';
+			move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $filename);
+			$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
+						VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($name) . ')');
 			$account->decreaseTotalSmrCredits($cred_cost);
 			$container = create_container('skeleton.php','current_sector.php');
 			$container['msg'] = '<div align="center">Your logo was successfully painted!</div><br />';
@@ -147,7 +148,8 @@ if (!stristr($name, '</marquee>')) {
 	$name .= '<br />';
 }
 
-$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name) VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escape_string($name, false) . ')');
+$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
+			VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($name) . ')');
 $account->decreaseTotalSmrCredits($cred_cost);
 
 $message = '<div align="center">Thanks for your purchase! Your ship is ready!';
