@@ -50,8 +50,8 @@ if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_
 	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 }
 else {
-	$min_rank = $our_rank - 5;
-	$max_rank = $our_rank + 5;
+	$min_rank = 1;
+	$max_rank = 10;
 }
 
 if ($min_rank < 0) {
