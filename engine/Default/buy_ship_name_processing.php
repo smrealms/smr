@@ -153,7 +153,7 @@ $db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
 $account->decreaseTotalSmrCredits($cred_cost);
 
 $message = '<div align="center">Thanks for your purchase! Your ship is ready!';
-if ($var['ShipName']) {
+if (isset($var['ShipName'])) {
 	$message .= '<br />If your ship is found to use HTML inappropriately you may be banned.  If your ship does contain inappropriate HTML talk to an admin ASAP.';
 }
 $message .= '</div>';

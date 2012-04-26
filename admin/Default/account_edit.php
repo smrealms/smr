@@ -2,23 +2,41 @@
 
 $template->assign('PageTopic','Edit Account');
 
-if(isset($_REQUEST['account_id'])) {
+if(isset($_REQUEST['account_id']) && is_numeric($_REQUEST['account_id'])) {
 	SmrSession::updateVar('account_id',$_REQUEST['account_id']);
+}
+elseif(!isset($var['account_id'])) {
+	SmrSession::updateVar('account_id', 0);
 }
 if(isset($_REQUEST['login'])) {
 	SmrSession::updateVar('login',$_REQUEST['login']);
 }
+elseif(!isset($var['login'])) {
+	SmrSession::updateVar('login', '');
+}
 if(isset($_REQUEST['val_code'])) {
 	SmrSession::updateVar('val_code',$_REQUEST['val_code']);
+}
+elseif(!isset($var['val_code'])) {
+	SmrSession::updateVar('val_code', '');
 }
 if(isset($_REQUEST['email'])) {
 	SmrSession::updateVar('email',$_REQUEST['email']);
 }
+elseif(!isset($var['email'])) {
+	SmrSession::updateVar('email', '');
+}
 if(isset($_REQUEST['hofname'])) {
 	SmrSession::updateVar('hofname',$_REQUEST['hofname']);
 }
+elseif(!isset($var['hofname'])) {
+	SmrSession::updateVar('hofname', '');
+}
 if(isset($_REQUEST['player_name'])) {
 	SmrSession::updateVar('player_name',$_REQUEST['player_name']);
+}
+elseif(!isset($var['player_name'])) {
+	SmrSession::updateVar('player_name', '');
 }
 
 if(!empty($var['account_id']) && !is_numeric($var['account_id'])) {
@@ -26,15 +44,7 @@ if(!empty($var['account_id']) && !is_numeric($var['account_id'])) {
 }
 
 $account_id = $var['account_id'];
-$login = $var['login'];
-$val_code = $var['val_code'];
-$email = $var['email'];
-$hofName = $var['hofname'];
 $player_name = $var['player_name'];
-
-if (empty($account_id)) {
-	$account_id = 0;
-}
 
 // create account object
 $curr_account = false;
@@ -43,23 +53,23 @@ if (!empty($player_name) && !is_array($player_name)) {
 	$db->query('SELECT * FROM player
 				WHERE player_name = ' . $db->escapeString($player_name));
 	if ($db->nextRecord()) {
-		$account_id = $db->getField('account_id');
+		$account_id = $db->getInt('account_id');
 	}
 	else {
 		$db->query('SELECT * FROM player
 					WHERE player_name LIKE ' . $db->escapeString($player_name));
 		if ($db->nextRecord()) {
-			$account_id = $db->getField('account_id');
+			$account_id = $db->getInt('account_id');
 		}
 	}
 }
 
 // get account from db
 $db->query('SELECT account_id FROM account WHERE account_id = '.$db->escapeNumber($account_id).' OR ' .
-									   'login LIKE ' . $db->escape_string($login) . ' OR ' .
-									   'email LIKE ' . $db->escape_string($email) . ' OR ' .
-									   'hof_name LIKE ' . $db->escapeString($hofName) . ' OR ' .
-									   'validation_code LIKE ' . $db->escape_string($val_code));
+									   'login LIKE ' . $db->escape_string($var['login']) . ' OR ' .
+									   'email LIKE ' . $db->escape_string($var['email']) . ' OR ' .
+									   'hof_name LIKE ' . $db->escapeString($var['hofname']) . ' OR ' .
+									   'validation_code LIKE ' . $db->escape_string($var['val_code']));
 if ($db->nextRecord()) {
 	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
 	$template->assignByRef('EditingAccount', $curr_account);
