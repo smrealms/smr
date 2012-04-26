@@ -36,11 +36,11 @@ B. Disciplinary actions.
 
 <ol>
 	<li>There are 4 kinds of disciplinary action: a verbal warning, a kick, a short term ban (normally 24 hours), and a long term ban (up to life time).</li>
-	
+
 	<li>Disciplinary actions should start with the lowest level and continue to the highest.</li>
-	
+
 	<li>Normally, only the first 3 levels will be used with only 1 stop at each of the 2 lower levels.</li>
-	
+
 	<li>The amount of stops at lower levels can be increased if:
 		<ol type='a'>
 			<li>the offender is a newer chat user,</li>
@@ -48,7 +48,7 @@ B. Disciplinary actions.
 			<li>other special circumstances are at hand.</li>
 		</ol>
 	</li>
-	
+
 	<li>The amount of stops at lower levels can be decreased if:
 		<ol type='a'>
 			<li>the offender has been punished multiple times,</li>
@@ -56,14 +56,14 @@ B. Disciplinary actions.
 			<li>other special circumstances are at hand.</li>
 		</ol>
 	</li>
-	
+
 	<li>In extreme cases of severe and/or multiple offences long term bans will be issued.</li>
-	
+
 	<li>In especially severe cases, including, but not limited to ban hopping in game action will be taken.</li>
-	
+
 	<li>If you disagree with the action taken against you feel free to complain to the chat admin aka RCK in chat or through email chat@smrealms.de</li>
 </ol>
 <br />
 <br />
 <br />
-<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=<?php echo urlencode($AutoChannels); ?>&autoConnect=true&nick=<?php echo urlencode('SMR-'.str_replace(' ','_',$ThisPlayer->getPlayerName())); ?>" target="_chat" class="submitStyle">Chat</a></center>
+<center><a href="http://widget.mibbit.com/?settings=5f6a385735f22a3138c5cc6059dab2f4&server=irc.coldfront.net&channel=<?php echo $AutoChannels; ?>&autoConnect=true&nick=<?php echo urlencode('SMR-'.str_replace(' ','_',$ThisPlayer->getPlayerName())); ?>" target="_chat" class="submitStyle">Chat</a></center>
