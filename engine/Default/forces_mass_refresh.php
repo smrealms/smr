@@ -28,7 +28,7 @@ if($player->hasAlliance()) {
 	}
 }
 else {
-	$db->query('UPDATE sector_has_forces SET refresh_at=' . $db2->escapeNumber(TIME+2).', refresher=' . $db->escapeNumber($player->getAccountID()) . '
+	$db->query('UPDATE sector_has_forces SET refresh_at=' . $db->escapeNumber(TIME+2).', refresher=' . $db->escapeNumber($player->getAccountID()) . '
 				WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND sector_id = ' . $db->escapeNumber($player->getSectorID()) . ' AND owner_id=' . $db->escapeNumber($db->getInt('account_id')) . ' LIMIT 1');
 }
