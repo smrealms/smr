@@ -1,8 +1,6 @@
 <?php
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'word_filter.php';
+$container = create_container('skeleton.php', 'word_filter.php');
 
 if(!isset($_REQUEST['Word']) || !isset($_REQUEST['WordReplacement'])) {
 	$container['error'] = 1;
@@ -10,8 +8,8 @@ if(!isset($_REQUEST['Word']) || !isset($_REQUEST['WordReplacement'])) {
 	exit;
 }
 
-$word = mysql_real_escape_string(strtoupper(trim($_REQUEST['Word'])));
-$word_replacement = mysql_real_escape_string(strtoupper(trim($_REQUEST['WordReplacement'])));
+$word = strtoupper(trim($_REQUEST['Word']));
+$word_replacement = strtoupper(trim($_REQUEST['WordReplacement']));
 
 if(empty($word) || empty($word_replacement)) {
 	$container['error'] = 1;
@@ -29,9 +27,9 @@ if($db->nextRecord()) {
 	exit;
 }
 
-$db->query('INSERT INTO word_filter(word_value,word_replacement) VALUES (' . $db->escapeString($word) . ',' . $db->escapeString($word_replacement) . '\')');
+$db->query('INSERT INTO word_filter(word_value,word_replacement) VALUES (' . $db->escapeString($word) . ',' . $db->escapeString($word_replacement) . ')');
 
 $container['error'] = 2;
 forward($container);
- 
+
 ?>
