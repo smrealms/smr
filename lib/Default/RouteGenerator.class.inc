@@ -41,7 +41,7 @@ class RouteGenerator {
 
 	/**
 	 * Works by pass by reference so will update higher levels, hacky but works.
-	 * 
+	 *
 	 * @param startSectorId
 	 * @param forwardRoutes
 	 * @param routeLists
@@ -58,7 +58,7 @@ class RouteGenerator {
 
 	/**
 	 * Works by pass by reference so will update higher levels, hacky but works.
-	 * 
+	 *
 	 * @param startSectorId
 	 * @param routeToContinue
 	 * @param forwardRoutes
@@ -201,7 +201,7 @@ class RouteGenerator {
 				} unset($value);
 			}
 		} unset($routesByMulti);
-		
+
 		$i = 0;
 		krsort(self::$moneyRoutes);
 		foreach(self::$moneyRoutes as $multi => &$routesByMulti) {
@@ -236,7 +236,7 @@ abstract class Route {
 	}
 
 	public function getOverallMoneyMultiplier() {
-		return ($this->getForwardRoute()->getOverallMoneyMultiplier() + $this->getReturnRoute()->getOverallMoneyMultiplier()) / 2;
+		return ($this->getForwardRoute()->getOverallMoneyMultiplier() + $this->getReturnRoute()->getOverallMoneyMultiplier()) / $this->getTurnsForRoute();
 	}
 
 	public function getTurnsForRoute() {
@@ -246,7 +246,7 @@ abstract class Route {
 	public function getMultiplierSum() {
 		return $this->getForwardRoute()->getMultiplierSum() + $this->getReturnRoute()->getMultiplierSum();
 	}
-	
+
 	public function containsPort($sectorID) {
 		$route = $this->getReturnRoute();
 		return ($route != null && $route->containsPort($sectorID)) || (($route = $this->getForwardRoute()) != null && $route->containsPort($sectorID));
@@ -390,7 +390,7 @@ class OneWayRoute extends Route {
 			return 1;
 		return -1;
 	}
-	
+
 	public function containsPort($sectorID) {
 		return $this->sellSectorId == $sectorID || $this->buySectorId == $sectorID;
 	}
