@@ -2,11 +2,11 @@
 
 $template->assign('PageTopic','Space Merchant Realms Chat Room Rules');
 
-$autoChannels = '#SMR';
+$autoChannels = urlencode('#SMR');
 if($player->hasAlliance()) {
 	$allianceChan = $player->getAlliance()->getIrcChannel();
 	if($allianceChan != '') {
-		$autoChannels .= ',' . $allianceChan;
+		$autoChannels .= ',' . urlencode($allianceChan);
 	}
 }
 $template->assign('AutoChannels', $autoChannels);
