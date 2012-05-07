@@ -1,6 +1,8 @@
 #!/usr/bin/php -q
 <?php
 
+class TimeoutException extends Exception {}
+
 function echo_r($message)
 {
 	if (is_array($message)) {
@@ -95,65 +97,68 @@ $running = true;
 
 // after a timeout we start over
 while ($running) {
+	try {
+		echo_r('Connecting to ' . $address);
+		$fp = fsockopen($address, $port);
+		if ($fp) {
+			echo_r('Socket ' . $fp . ' is connected... Identifying...');
 
-	echo_r('Connecting to ' . $address);
-	$fp = fsockopen($address, $port);
-	if ($fp) {
-		echo_r('Socket ' . $fp . ' is connected... Identifying...');
-		
-		
-		safefputs($fp, 'NICK CareGhost' . EOL);
-		safefputs($fp, 'USER ' . strtolower(IRC_BOT_NICK) . ' oberon smrealms.de :Official SMR bot' . EOL);
 
-		// kill any other user that is using our nick
-		safefputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . $pass . EOL);
+			safefputs($fp, 'NICK CareGhost' . EOL);
+			safefputs($fp, 'USER ' . strtolower(IRC_BOT_NICK) . ' oberon smrealms.de :Official SMR bot' . EOL);
 
-		sleep(1);
+			// kill any other user that is using our nick
+			safefputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . $pass . EOL);
 
-		//4
-		safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
-		safefputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
-
-		// join our public channel
-		if (!IRC_DEBUGGING) {
-			safefputs($fp, 'JOIN #smr' . EOL);
-			safefputs($fp, 'JOIN #smr-bar' . EOL);
 			sleep(1);
-			safefputs($fp, 'WHO #smr' . EOL);
-			safefputs($fp, 'WHO #smr-bar' . EOL);
 
-			// join all alliance channels
-			$db->query('SELECT    channel ' .
-					   'FROM      irc_alliance_has_channel ' .
-					   'JOIN game USING (game_id) ' .
-					   'WHERE     start_date < ' . time() .
-					   '  AND     end_date > ' . time());
-			while ($db->nextRecord()) {
-				$alliance_channel = $db->getField('channel');
-				// join channels
-				safefputs($fp, 'JOIN ' . $alliance_channel . EOL);
+			//4
+			safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
+			safefputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
+
+			// join our public channel
+			if (!IRC_DEBUGGING) {
+				safefputs($fp, 'JOIN #smr' . EOL);
+				safefputs($fp, 'JOIN #smr-bar' . EOL);
 				sleep(1);
-				safefputs($fp, 'WHO ' . $alliance_channel . EOL);
+				safefputs($fp, 'WHO #smr' . EOL);
+				safefputs($fp, 'WHO #smr-bar' . EOL);
+
+				// join all alliance channels
+				$db->query('SELECT    channel ' .
+						'FROM      irc_alliance_has_channel ' .
+						'JOIN game USING (game_id) ' .
+						'WHERE     start_date < ' . time() .
+						'  AND     end_date > ' . time());
+				while ($db->nextRecord()) {
+					$alliance_channel = $db->getField('channel');
+					// join channels
+					safefputs($fp, 'JOIN ' . $alliance_channel . EOL);
+					sleep(1);
+					safefputs($fp, 'WHO ' . $alliance_channel . EOL);
+				}
+
 			}
 
+			stream_set_blocking($fp, true);
+			while (!feof($fp)) {
+				readFromStream($fp);
+			}
+			fclose($fp); // close socket
+
+		} else {
+
+			// network troubles
+			echo_r('There was an error connecting to ' . $address . '/' . $port);
+
+			// sleep and try again!
+			sleep(60);
+
 		}
-
-		stream_set_blocking($fp, true);
-		while (!feof($fp)) {
-			readFromStream($fp);
-		}
-		fclose($fp); // close socket
-
-	} else {
-
-		// network troubles
-		echo_r('There was an error connecting to ' . $address . '/' . $port);
-
-		// sleep and try again!
-		sleep(60);
-
 	}
-
+	catch (TimeoutException $e) {
+		// Ignore the timeout exception, we'll loop round and reconnect.
+	}
 } // end of while running
 
 function safefputs($fp, $text) {
@@ -168,7 +173,7 @@ function readFromStream($fp) {
 	if($last_ping == 0) {
 		$last_ping = time();
 	}
-	
+
 	$rdata = fgets($fp, 4096);
 	$rdata = preg_replace('/\s+/', ' ', $rdata);
 
@@ -184,7 +189,7 @@ function readFromStream($fp) {
 	if ($last_ping < time() - 300) {
 		echo_r('TIMEOUT detected!');
 		fclose($fp); // close socket
-		exit;
+		throw new TimeoutException();
 	}
 
 	// we simply do some poll stuff here
@@ -192,7 +197,7 @@ function readFromStream($fp) {
 	check_events($fp);
 	check_sms_dlr($fp);
 	check_sms_response($fp);
-	
+
 	if (strlen($rdata) == 0) {
 		return false;
 	}
