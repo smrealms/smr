@@ -110,20 +110,20 @@ class SmrSession {
 			'universe_create_sectors.php' => self::ALWAYS_AVAILABLE,
 			'universe_create_warps.php' => self::ALWAYS_AVAILABLE
 		);
-	
+
 	private static $URL_LOAD_DELAY = array(
 		'configure_hardware.php' => .4,
 		'forces_drop.php' => .4,
-		'forces_drop_processing.php' => .4,
+		'forces_drop_processing.php' => .5,
 		'forces_refresh_processing.php' => .4,
 		'sector_jump_processing.php' => .4,
 		'sector_move_processing.php' => .4,
 		'sector_scan.php' => .4,
 		'shop_goods_processing.php' => .4,
-		'trader_attack_processing.php' => .65,
-		'trader_examine.php' => .4
+		'trader_attack_processing.php' => .75,
+		'trader_examine.php' => .75
 	);
-	
+
 	protected static $db;
 
 	public static $session_id;
@@ -137,7 +137,7 @@ class SmrSession {
 	public static $generate;
 	public static $SN;
 	public static $lastSN;
-	
+
 	protected static $previousAjaxReturns;
 	protected static $ajaxReturns=array();
 
@@ -159,7 +159,7 @@ class SmrSession {
 		// try to get current session
 		self::$db->query('DELETE FROM active_session WHERE last_accessed < ' . self::$db->escapeNumber(time() - self::TIME_BEFORE_EXPIRY));
 		self::fetchVarInfo();
-		
+
 		if(!USING_AJAX && isset($_REQUEST['sn']) && isset(self::$var[$_REQUEST['sn']]) && !empty(self::$var[$_REQUEST['sn']])) {
 			$var = self::$var[$_REQUEST['sn']];
 			$currentPage = $var['url'] == 'skeleton.php' ? $var['body'] : $var['url'];
@@ -172,14 +172,14 @@ class SmrSession {
 			}
 			self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
 		}
-		
+
 		define('MICRO_TIME', microtime());
 		define('TIME', (int)microtimeSec(MICRO_TIME));
-		
+
 		if(class_exists('SmrMySqlDatabase',false))
 			$db = new SmrMySqlDatabase();
 	}
-	
+
 	public static function fetchVarInfo() {
 		self::$db->query('SELECT * FROM active_session WHERE session_id = ' . self::$db->escapeString(self::$session_id) . ' LIMIT 1');
 		if (self::$db->nextRecord()) {
@@ -228,7 +228,7 @@ class SmrSession {
 			self::$commonIDs	= array();
 		}
 	}
-	
+
 	public static function update() {
 		self::$db = new SmrSessionMySqlDatabase();
 		foreach(self::$var as $key => &$value) {
@@ -251,7 +251,7 @@ class SmrSession {
 		// This takes us back to the standard database if we had to change it.
 		$db = new SmrMySqlDatabase();
 	}
-	
+
 	public static function updateSN() {
 		self::$db = new SmrSessionMySqlDatabase();
 		if(!USING_AJAX)
@@ -269,7 +269,7 @@ class SmrSession {
 		self::$game_id = 0;
 		$db = new SmrMySqlDatabase();
 	}
-	
+
 	public static function retrieveVar($sn) {
 		if(!isset(self::$var[$sn]) || empty(self::$var[$sn]))
 			return false;
@@ -280,12 +280,12 @@ class SmrSession {
 			unset(self::$commonIDs[self::$var[$sn]['CommonID']]); //Do not store common id for current page
 			unset(self::$var[$sn]['CommonID']);
 		}
-		
+
 		self::$var[$sn]['RemainingPageLoads'] += 1; // Allow refreshing
 		self::$var[$sn]['Expires'] = 0; // Allow refreshing forever
 		return self::$var[$sn];
 	}
-	
+
 	public static function resetLink($container, $sn) { //Do not allow sharing SN, useful for forwarding.
 		global $lock;
 		if(isset(self::$var[$sn]['CommonID'])) {
@@ -304,7 +304,7 @@ class SmrSession {
 			self::update();
 		return $sn;
 	}
-	
+
 	public static function updateVar($key,$value) {
 		global $var;
 		if($value===null) {
@@ -316,12 +316,12 @@ class SmrSession {
 			self::$var[self::$SN][$key] = $value;
 		}
 	}
-	
+
 	public static function clearLinks() {
 		self::$var = array(self::$SN => self::$var[self::$SN]);
 		self::$commonIDs = array();
 	}
-	
+
 	public static function addLink($container, $sn = false) { // Container['ID'] MUST be unique to a specific action, if there will be two different outcomes from containers given the same ID then problems will likely arise.
 		if(!isset($container['Expires'])) {
 			$container['Expires'] = 0; // Lasts forever
@@ -330,18 +330,18 @@ class SmrSession {
 			$pageURL = $container['url'] == 'skeleton.php' ? $container['body'] : $container['url'];
 			$container['RemainingPageLoads'] = isset(self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL]) ? self::$URL_DEFAULT_REMAINING_PAGE_LOADS[$pageURL] : 1; // Allow refreshing
 		}
-			
+
 		if($sn === false) {
 			$sn = self::generateSN($container);
 		}
 		else {
-			// If we've been provided an SN to use then copy over the existing 'PreviousRequestTime' 
+			// If we've been provided an SN to use then copy over the existing 'PreviousRequestTime'
 			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime'];
 		}
 		self::$var[$sn] = $container;
 		return $sn;
 	}
-	
+
 	protected static function generateSN(&$container) {
 		$container['CommonID'] = self::getCommonID($container);
 		if(isset(self::$commonIDs[$container['CommonID']])) {
@@ -357,7 +357,7 @@ class SmrSession {
 		self::$commonIDs[$container['CommonID']] = $sn;
 		return $sn;
 	}
-	
+
 	protected static function getCommonID($commonContainer) {
 		unset($commonContainer['Expires']);
 		unset($commonContainer['RemainingPageLoads']);
@@ -373,12 +373,12 @@ class SmrSession {
 		else
 			return '?sn=' . $sn;
 	}
-	
+
 	public static function addAjaxReturns($element,$contents) {
 		self::$ajaxReturns[$element] = $contents;
 		return isset(self::$previousAjaxReturns[$element])&&self::$previousAjaxReturns[$element]==$contents;
 	}
-	
+
 	public static function saveAjaxReturns() {
 		if(empty(self::$ajaxReturns))
 			return;
