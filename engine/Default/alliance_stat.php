@@ -10,7 +10,6 @@ require_once(get_file_loc('menu.inc'));
 create_alliance_menu($alliance_id,$alliance->getLeaderID());
 
 $container=create_container('alliance_stat_processing.php');
-$container['body'] = '';
 $container['alliance_id'] = $alliance_id;
 
 $form = create_form($container,'Change');
@@ -41,7 +40,7 @@ if ($player->isAllianceLeader()) {
 }
 if ($db->getBoolean('change_mod')) {
 	$PHP_OUTPUT.= '<tr><td class="top">Image URL:&nbsp;</td><td><input type="text" name="url" size="30" value="'.htmlspecialchars($alliance->getImageURL()).'"></td></tr>';
-	
+
 	$PHP_OUTPUT.= '<tr><td class="top">Message Of The Day:&nbsp;</td><td><textarea name="mod">';
 	$PHP_OUTPUT.= $alliance->getMotD();
 	$PHP_OUTPUT.= '</textarea></td></tr>';

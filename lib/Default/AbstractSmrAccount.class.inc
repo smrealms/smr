@@ -279,11 +279,8 @@ abstract class AbstractSmrAccount {
 	}
 
 	function updateIP() {
-		// try to get a real ip first
-		if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-			$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-		else
-			$curr_ip = $_SERVER['REMOTE_ADDR'];
+		$curr_ip = getIpAddress();
+		$this->log(LOG_TYPE_LOGIN, 'logged in from '.$curr_ip);
 
 		// more than 50 elements in it?
 

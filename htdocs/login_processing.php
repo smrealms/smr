@@ -175,14 +175,6 @@ try {
 	// save ip
 	$account->updateIP();
 
-	// try to get a real ip first
-	if (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-		$curr_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	else
-		$curr_ip = $_SERVER['REMOTE_ADDR'];
-
-	// log?
-	$account->log(LOG_TYPE_LOGIN, 'logged in from '.$curr_ip);
 	//now we set a cookie that we can use for mult checking
 	if (!isset($_COOKIE['Session_Info'])) {
 		//we get their info from db if they have any
