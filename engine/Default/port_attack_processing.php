@@ -67,8 +67,9 @@ $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->g
 unserialize($serializedResults); //because of references we have to undo this.
 $logId = $db->escapeString('[ATTACK_RESULTS]'.$db->getInsertID());
 foreach($attackers as &$attacker) {
-	if(!$player->equals($attacker))
-		$db->query('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getAccountID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ','.$db->escapeNumber($logId).')');
+	if(!$player->equals($attacker)) {
+		$db->query('REPLACE INTO sector_message VALUES(' . $db->escapeNumber($attacker->getAccountID()) . ',' . $db->escapeNumber($attacker->getGameID()) . ','.$db->escapeNumberString($logId).')');
+	}
 } unset($attacker);
 
 $container = array();
