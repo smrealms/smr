@@ -72,8 +72,7 @@ foreach($attackers as &$attacker) {
 	}
 } unset($attacker);
 
-$container = array();
-$container=create_container('skeleton.php','port_attack.php');
+$container = create_container('skeleton.php','port_attack.php');
 $container['sector_id'] = $port->getSectorID();
 
 // If they died on the shot they get to see the results
