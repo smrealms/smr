@@ -55,8 +55,10 @@ function echo_nav($topic_id) {
 		if (!$db2->getNumRows())
 			$db2->query('SELECT * FROM manual WHERE parent_topic_id = '.$db2->escapeNumber($parent_topic_id).' AND order_id = '.$db2->escapeNumber($order_id + 1));
 
+		$seenParentIDs = array(0);
 		$curr_parent_topic_id = $parent_topic_id;
-		while (!$db2->getNumRows() && $curr_parent_topic_id != 0) {
+		while (!$db2->getNumRows() && !in_array($seenParentIDs, $curr_parent_topic_id)) {
+			$seenParentIDs[] = $curr_parent_topic_id;
 			$db3->query('SELECT * FROM manual WHERE topic_id = '.$db3->escapeNumber($parent_topic_id));
 			$db3->nextRecord();
 			$curr_order_id = $db3->getField('order_id');
