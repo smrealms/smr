@@ -66,12 +66,8 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 						if ($action == BBCODE_CHECK) {
 							return true;
 						}
-
-						if($disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
-							$container = create_container('skeleton.php','council_list.php', array('race_id' => $raceID));
-							return create_link($container,  AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID,$player));
-						}
-						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID,$player);
+						$linked = $disableBBLinks===false && $overrideGameID==SmrSession::$game_id;
+						return AbstractSmrPlayer::getColouredRaceNameOrDefault($raceID, $player, $linked);
 					}
 				}
 			break;
