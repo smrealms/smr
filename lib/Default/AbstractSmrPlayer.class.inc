@@ -439,15 +439,21 @@ abstract class AbstractSmrPlayer {
 		return Globals::getRaceName($this->getRaceID());
 	}
 
-	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer &$player = null) {
-		if($player!==null)
-			return $player->getColouredRaceName($otherRaceID);
-		return get_colored_text(0, Globals::getRaceName($otherRaceID));
+	public static function getColouredRaceNameOrDefault($otherRaceID, AbstractSmrPlayer &$player = null, $linked = false) {
+		$relations = 0;
+		if($player !== null) {
+			$relations = $player->getRelation($otherRaceID);
+		}
+		$raceName = get_colored_text($relations, Globals::getRaceName($otherRaceID));
+		if($linked === true) {
+			$container = create_container('skeleton.php','council_list.php', array('race_id' => $otherRaceID));
+			$raceName = create_link($container, $raceName);
+		}
+		return $raceName;
 	}
 
-	public function getColouredRaceName($otherRaceID) {
-		$raceRelations =& Globals::getRaceRelations($this->getGameID(),$this->getRaceID());
-		return get_colored_text($raceRelations[$otherRaceID], Globals::getRaceName($otherRaceID));
+	public function getColouredRaceName($otherRaceID, $linked = false) {
+		return self::getColouredRaceNameOrDefault($otherRaceID, $this, $linked);
 	}
 
 	public function setRaceID($raceID) {
@@ -487,15 +493,20 @@ abstract class AbstractSmrPlayer {
 		return $this->hasAlliance()?'[alliance='.$this->getAllianceID().']':$this->getAllianceName();
 	}
 
-	public function getAllianceName() {
+	public function getAllianceName($linked = false) {
 		if(!isset($this->allianceName)) {
 			//get alliance info
-			if ($this->allianceID > 0) {
+			if ($this->hasAlliance()) {
 				$this->db->query('SELECT alliance_name FROM alliance WHERE alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
 				$this->db->nextRecord();
 				$this->allianceName = stripslashes($this->db->getField('alliance_name'));
 			}
-			else $this->allianceName = 'No Alliance';
+			else {
+				$this->allianceName = 'No Alliance';
+			}
+		}
+		if($this->hasAlliance() && $linked === true) {
+			return create_link($this->getAllianceRosterHREF(), $this->allianceName);
 		}
 		return $this->allianceName;
 	}

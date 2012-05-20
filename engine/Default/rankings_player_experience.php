@@ -1,10 +1,10 @@
 <?php
 
 $template->assign('PageTopic','Experience Rankings');
+$template->assign('RankingStat', 'Experience');
 
 require_once(get_file_loc('menu.inc'));
 create_ranking_menu(0, 0);
-
 
 // what rank are we?
 $db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
@@ -16,161 +16,91 @@ $db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($p
 				)
 			)');
 $db->nextRecord();
-$our_rank = $db->getInt('count(*)');
+$ourRank = $db->getInt('count(*)');
+$template->assign('OurRank', $ourRank);
 
 // how many players are there?
 $db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 $db->nextRecord();
-$total_player = $db->getInt('count(*)');
-
-$PHP_OUTPUT.=('<div align="center">');
-$PHP_OUTPUT.=('<p>Here are the rankings of players by their experience</p>');
-$PHP_OUTPUT.=('The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p>');
-$PHP_OUTPUT.=('<p>You are ranked '.$our_rank.' out of '.$total_player.'</p>');
-$PHP_OUTPUT.=('<table class="standard" width="95%">');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th>Rank</th>');
-$PHP_OUTPUT.=('<th>Player</th>');
-$PHP_OUTPUT.=('<th>Race</th>');
-$PHP_OUTPUT.=('<th>Alliance</th>');
-$PHP_OUTPUT.=('<th>Experience</th>');
-$PHP_OUTPUT.=('</tr>');
+$totalPlayers = $db->getInt('count(*)');
+$template->assign('TotalPlayers', $totalPlayers);
 
 $db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT 10');
-
 $rank = 0;
-while ($db->nextRecord()) {
-	// get current account and player
-	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
-	$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
+$rankings = array();
+while ($db->nextRecord()) {
 	// increase rank counter
 	$rank++;
+	$rankings[$rank] = array();
+	$currentPlayer =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 	$class='';
-	if ($player->equals($curr_player))
+	if ($player->equals($currentPlayer))
 		$class .= 'bold';
-	if($curr_account->isNewbie())
+	if($currentPlayer->getAccount()->isNewbie())
 		$class.= ' newbie';
 	if($class!='')
 		$class = ' class="'.trim($class).'"';
-	$PHP_OUTPUT.= '<tr'.$class.'>';
 
-	$PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
-
-	$PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
-
-	$container = array();
-	$container['url']		= 'skeleton.php';
-	$container['body']		= 'trader_search_result.php';
-	$container['player_id'] = $curr_player->getPlayerID();
-	$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
-
-	$PHP_OUTPUT.=('</td>');
-	$container = create_container('skeleton.php', 'council_list.php');
-	$container['race_id'] = $curr_player->getRaceID();
-	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
-
-	$PHP_OUTPUT.=('<td valign="top">');
-	if ($curr_player->hasAlliance()) {
-		$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
-	}
-	else
-		$PHP_OUTPUT.=('(none)');
-	$PHP_OUTPUT.=('</td>');
-	$PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getExperience()) . '</td>');
-	$PHP_OUTPUT.=('</tr>');
+	$rankings[$rank]['Player'] =& $currentPlayer;
+	$rankings[$rank]['Class'] = $class;
+	$rankings[$rank]['Value'] = number_format($currentPlayer->getExperience());
 }
+$template->assignByRef('Rankings', $rankings);
 
-$PHP_OUTPUT.=('</table>');
 if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank'])&&is_numeric($_REQUEST['max_rank'])) {
-	$min_rank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-	$max_rank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-	SmrSession::updateVar('MinRank',$min_rank);
-	SmrSession::updateVar('MaxRank',$max_rank);
+	$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	$maxRank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	SmrSession::updateVar('MinRank',$minRank);
+	SmrSession::updateVar('MaxRank',$maxRank);
 }
 elseif(isset($var['MinRank'])&&isset($var['MaxRank'])) {
-	$min_rank = $var['MinRank'];
-	$max_rank = $var['MaxRank'];
+	$minRank = $var['MinRank'];
+	$maxRank = $var['MaxRank'];
 }
 else {
-	$min_rank = $our_rank - 5;
-	$max_rank = $our_rank + 5;
+	$minRank = $ourRank - 5;
+	$maxRank = $ourRank + 5;
 }
 
-if ($min_rank <= 0) {
-	$min_rank = 1;
-	$max_rank = 10;
+if ($minRank <= 0 || $minRank > $totalPlayers) {
+	$minRank = 1;
+	$maxRank = 10;
 }
 
-if ($max_rank > $total_player)
-	$max_rank = $total_player;
+if ($maxRank > $totalPlayers) {
+	$maxRank = $totalPlayers;
+}
 
-$container = array();
-$container['url']		= 'skeleton.php';
-$container['body']		= 'rankings_player_experience.php';
-$container['min_rank']	= $min_rank;
-$container['max_rank']	= $max_rank;
+$template->assign('MaxRank', $maxRank);
+$template->assign('MinRank', $minRank);
 
-$PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<p><input type="text" name="min_rank" value="'.$min_rank.'" size="3" id="InputFields" class="center">&nbsp;-&nbsp;<input type="text" name="max_rank" value="'.$max_rank.'" size="3" id="InputFields" class="center">&nbsp;');
-$PHP_OUTPUT.=create_submit('Show');
-$PHP_OUTPUT.=('</p></form>');
-$PHP_OUTPUT.=('<table class="standard" width="95%">');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th>Rank</th>');
-$PHP_OUTPUT.=('<th>Player</th>');
-$PHP_OUTPUT.=('<th>Race</th>');
-$PHP_OUTPUT.=('<th>Alliance</th>');
-$PHP_OUTPUT.=('<th>Experience</th>');
-$PHP_OUTPUT.=('</tr>');
+$container = create_container('skeleton.php', 'rankings_player_experience.php');
+$container['min_rank']	= $minRank;
+$container['max_rank']	= $maxRank;
+$template->assign('FilterRankingsHREF', SmrSession::getNewHREF($container));
 
-$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT ' . ($min_rank - 1) . ', ' . ($max_rank - $min_rank + 1));
-
-$rank = $min_rank - 1;
+$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT ' . ($minRank - 1) . ', ' . ($maxRank - $minRank + 1));
+$rank = $minRank - 1;
+$filteredRankings = array();
 while ($db->nextRecord()) {
-	// get current account and player
-	$curr_account =& SmrAccount::getAccount($db->getField('account_id'));
-	$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
-
 	// increase rank counter
 	$rank++;
+	$filteredRankings[$rank] = array();
+	$currentPlayer =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 	$class='';
-	if ($player->equals($curr_player))
+	if ($player->equals($currentPlayer))
 		$class .= 'bold';
-	if($curr_account->isNewbie())
+	if($currentPlayer->getAccount()->isNewbie())
 		$class.= ' newbie';
 	if($class!='')
 		$class = ' class="'.trim($class).'"';
-	$PHP_OUTPUT.= '<tr'.$class.'>';
 
-	$PHP_OUTPUT.=('<td valign="top" align="center">'.$rank.'</td>');
-	$PHP_OUTPUT.=('<td valign="top">'.$curr_player->getLevelName().' ');
-
-	$container = array();
-	$container['url']		= 'skeleton.php';
-	$container['body']		= 'trader_search_result.php';
-	$container['player_id'] = $curr_player->getPlayerID();
-	$PHP_OUTPUT.=create_link($container, $curr_player->getDisplayName());
-
-	$PHP_OUTPUT.=('</td>');
-	$container = create_container('skeleton.php', 'council_list.php');
-	$container['race_id'] = $curr_player->getRaceID();
-	$PHP_OUTPUT.=('<td valign="top">'.create_link($container, $player->getColouredRaceName($curr_player->getRaceID())).'</td>');
-
-	$PHP_OUTPUT.=('<td valign="top">');
-	if ($curr_player->hasAlliance()) {
-		$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
-	}
-	else
-		$PHP_OUTPUT.=('(none)');
-	$PHP_OUTPUT.=('</td>');
-	$PHP_OUTPUT.=('<td valign="top" align="right">' . number_format($curr_player->getExperience()) . '</td>');
-	$PHP_OUTPUT.=('</tr>');
+	$filteredRankings[$rank]['Player'] =& $currentPlayer;
+	$filteredRankings[$rank]['Class'] = $class;
+	$filteredRankings[$rank]['Value'] = number_format($currentPlayer->getExperience());
 }
-
-$PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</div>');
-
+$template->assignByRef('FilteredRankings', $filteredRankings);
 ?>
