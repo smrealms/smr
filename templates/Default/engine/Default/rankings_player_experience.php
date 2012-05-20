@@ -14,7 +14,7 @@
 			<tr<?php echo $Ranking['Class']; ?>>
 				<td valign="top" align="center"><?php echo $Ranking['Rank']; ?></td>
 				<td valign="top"><?php echo $Ranking['Player']->getLevelName(); ?> <?php echo $Ranking['Player']->getLinkedDisplayName(false); ?></td>
-				<td valign="top"><?php echo $Ranking['Player']->getColouredRaceName(true); ?></td>
+				<td valign="top"><?php echo $ThisPlayer->getColouredRaceName($Ranking['Player']->getRaceID(), true); ?></td>
 				<td valign="top"><?php echo $Ranking['Player']->getAllianceName(true); ?></td>
 				<td valign="top"><?php echo $Ranking['Value']; ?></td>
 			</tr><?php
@@ -38,7 +38,7 @@
 			<tr<?php echo $Ranking['Class']; ?>>
 				<td valign="top" align="center"><?php echo $Ranking['Rank']; ?></td>
 				<td valign="top"><?php echo $Ranking['Player']->getLevelName(); ?> <?php echo $Ranking['Player']->getLinkedDisplayName(false); ?></td>
-				<td valign="top"><?php echo $ThisPlayer->getColouredRaceName($Ranking['Player'], true); ?></td>
+				<td valign="top"><?php echo $ThisPlayer->getColouredRaceName($Ranking['Player']->getRaceID(), true); ?></td>
 				<td valign="top"><?php echo $Ranking['Player']->getAllianceName(true); ?></td>
 				<td valign="top"><?php echo $Ranking['Value']; ?></td>
 			</tr><?php
