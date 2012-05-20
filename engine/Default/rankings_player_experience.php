@@ -99,7 +99,7 @@ while ($db->nextRecord()) {
 	if($class!='')
 		$class = ' class="'.trim($class).'"';
 
-	$filteredRankings[$rank] = array(
+	$rankings[$rank] = array(
 		'Rank' => $rank,
 		'Player' => &$currentPlayer,
 		'Class' => $class,
