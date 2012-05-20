@@ -32,7 +32,6 @@ $rankings = array();
 while ($db->nextRecord()) {
 	// increase rank counter
 	$rank++;
-	$rankings[$rank] = array();
 	$currentPlayer =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 	$class='';
@@ -43,9 +42,12 @@ while ($db->nextRecord()) {
 	if($class!='')
 		$class = ' class="'.trim($class).'"';
 
-	$rankings[$rank]['Player'] =& $currentPlayer;
-	$rankings[$rank]['Class'] = $class;
-	$rankings[$rank]['Value'] = number_format($currentPlayer->getExperience());
+	$filteredRankings[$rank] = array(
+		'Rank' => $rank,
+		'Player' => &$currentPlayer,
+		'Class' => $class,
+		'Value' => number_format($currentPlayer->getExperience())
+	);
 }
 $template->assignByRef('Rankings', $rankings);
 
@@ -87,7 +89,6 @@ $filteredRankings = array();
 while ($db->nextRecord()) {
 	// increase rank counter
 	$rank++;
-	$filteredRankings[$rank] = array();
 	$currentPlayer =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 
 	$class='';
@@ -98,9 +99,12 @@ while ($db->nextRecord()) {
 	if($class!='')
 		$class = ' class="'.trim($class).'"';
 
-	$filteredRankings[$rank]['Player'] =& $currentPlayer;
-	$filteredRankings[$rank]['Class'] = $class;
-	$filteredRankings[$rank]['Value'] = number_format($currentPlayer->getExperience());
+	$filteredRankings[$rank] = array(
+		'Rank' => $rank,
+		'Player' => &$currentPlayer,
+		'Class' => $class,
+		'Value' => number_format($currentPlayer->getExperience())
+	);
 }
 $template->assignByRef('FilteredRankings', $filteredRankings);
 ?>
