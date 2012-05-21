@@ -12,8 +12,7 @@ if ($game['GameCreditsRequired'] > 0) {
 }
 
 // is the game already full?
-$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($var['game_id']));
-if ($db->nextRecord() && $db->getInt('count(*)') >= $game['GameMaxPlayers']) {
+if (SmrGame::getGame($var['game_id'])->getTotalPlayers() >= $game['GameMaxPlayers']) {
 	create_error('The maximum number of players in that game is reached!');
 }
 
