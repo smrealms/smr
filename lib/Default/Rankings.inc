@@ -56,8 +56,8 @@ class Rankings {
 
 		SmrSession::updateVar('MinRank',$minRank);
 		SmrSession::updateVar('MaxRank',$maxRank);
-		$template->assign('MaxRank', $minRank);
-		$template->assign('MinRank', $maxRank);
+		$template->assign('MinRank', $minRank);
+		$template->assign('MaxRank', $maxRank);
 	}
 }
 
