@@ -157,10 +157,12 @@ function create_ranking_menu($active_level1 = 0, $active_level2 = 0) {
 
 	// player rankings
 	$menu_item = array();
-	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings','nav');
+//	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Player Rankings','nav');
+	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_player_profit.php'), 'Player Rankings','nav');
 
 	$menu_subitem = array();
-	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Experience','nav');
+//	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_experience.php'), 'Experience','nav');
+	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_profit.php'), 'Profit','nav');
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_kills.php'), 'Kills','nav');
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_player_death.php'), 'Death','nav');
 

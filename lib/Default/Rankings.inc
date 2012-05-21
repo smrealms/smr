@@ -26,7 +26,7 @@ class Rankings {
 				'Rank' => $rank,
 				'Player' => &$currentPlayer,
 				'Class' => $class,
-				'Value' => number_format($db->getInt('value'))
+				'Value' => number_format($db->getInt('amount'))
 			);
 		}
 		return $rankings;
