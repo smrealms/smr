@@ -4,7 +4,7 @@ class Rankings {
 	private function __construct() {
 	}
 
-	public static function collectRankings(SmrMySqlDatabase &$db, AbstractSmrPlayer &$player, $rank) {
+	public static function &collectRankings(SmrMySqlDatabase &$db, AbstractSmrPlayer &$player, $rank) {
 		$rankings = array();
 		while ($db->nextRecord()) {
 			// increase rank counter
