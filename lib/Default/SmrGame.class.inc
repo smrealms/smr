@@ -330,6 +330,7 @@ class SmrGame {
 			$this->db->nextRecord();
 			$this->totalPlayers = $this->db->getInt('count(*)');
 		}
+		return $this->totalPlayers;
 	}
 
 	public function getNumberOfGalaxies() {

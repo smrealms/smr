@@ -66,6 +66,7 @@ class SmrSession {
 			'rankings_player_death.php' => self::ALWAYS_AVAILABLE,
 			'rankings_player_experience.php' => self::ALWAYS_AVAILABLE,
 			'rankings_player_kills.php' => self::ALWAYS_AVAILABLE,
+			'rankings_player_profit.php' => self::ALWAYS_AVAILABLE,
 			'rankings_race_death.php' => self::ALWAYS_AVAILABLE,
 			'rankings_race_kills.php' => self::ALWAYS_AVAILABLE,
 			'rankings_race.php' => self::ALWAYS_AVAILABLE,

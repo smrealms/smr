@@ -754,7 +754,8 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$container['body'] = 'trader_search.php';
 		$template->assign('SearchForTraderLink',SmrSession::getNewHREF($container));
 
-		$container['body'] = 'rankings_player_experience.php';
+//		$container['body'] = 'rankings_player_experience.php';
+		$container['body'] = 'rankings_player_profit.php';
 		$template->assign('RankingsLink',SmrSession::getNewHREF($container));
 
 		$container['body'] = 'hall_of_fame_new.php';
