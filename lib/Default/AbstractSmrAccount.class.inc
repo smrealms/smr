@@ -4,10 +4,11 @@ abstract class AbstractSmrAccount {
 	const USER_RANKINGS_TOTAL_SCORE_POW = .3;
 	const USER_RANKINGS_RANK_BOUNDARY = 5.2;
 	protected static $USER_RANKINGS_SCORE = array(
+		// [Stat, a, b]
+		// Used as: pow(Stat * a, USER_RANKINGS_EACH_STAT_POW) * b
 		array(array('Trade','Experience','Total'),.1,0.5),
 		array(array('Trade','Money','Profit'),0.00005,0.5),
 		array(array('Killing','Kills'),1000,1)
-//		array(array('','',''),),
 		);
 
 	protected static $CACHE_ACCOUNTS = array();
