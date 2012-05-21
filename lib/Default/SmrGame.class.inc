@@ -23,6 +23,8 @@ class SmrGame {
 	protected $allianceMaxVets;
 	protected $startingCredits;
 
+	protected $totalPlayers;
+
 	protected $hasChanged = false;
 	protected $isNew = false;
 
@@ -320,6 +322,14 @@ class SmrGame {
 		}
 		$this->startingCredits=$int;
 		$this->hasChanged=true;
+	}
+
+	public function getTotalPlayers() {
+		if(!isset($this->totalPlayers)) {
+			$this->db->query('SELECT count(*) FROM player WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$this->db->nextRecord();
+			$this->totalPlayers = $this->db->getInt('count(*)');
+		}
 	}
 
 	public function getNumberOfGalaxies() {

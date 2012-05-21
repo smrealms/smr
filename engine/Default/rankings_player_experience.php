@@ -1,7 +1,6 @@
 <?php
 
 $template->assign('PageTopic','Experience Rankings');
-$template->assign('RankingStat', 'Experience');
 
 require_once(get_file_loc('menu.inc'));
 create_ranking_menu(0, 0);
@@ -19,92 +18,73 @@ $db->nextRecord();
 $ourRank = $db->getInt('count(*)');
 $template->assign('OurRank', $ourRank);
 
-// how many players are there?
-$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-$db->nextRecord();
-$totalPlayers = $db->getInt('count(*)');
+$totalPlayers = $player->getGame()->getTotalPlayers();
 $template->assign('TotalPlayers', $totalPlayers);
 
-$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT 10');
-$rank = 0;
+$db->query('SELECT account_id, experience value FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT 10');
+$template->assignByRef('Rankings', collectRankings($db, 0));
 
-$rankings = array();
-while ($db->nextRecord()) {
-	// increase rank counter
-	$rank++;
-	$currentPlayer =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
+calculateMinMaxRanks($ourRank, $totalPlayers);
+$template->assign('MaxRank', $var['MaxRank']);
+$template->assign('MinRank', $var['MinRank']);
 
-	$class='';
-	if ($player->equals($currentPlayer))
-		$class .= 'bold';
-	if($currentPlayer->getAccount()->isNewbie())
-		$class.= ' newbie';
-	if($class!='')
-		$class = ' class="'.trim($class).'"';
+$container = create_container('skeleton.php', 'rankings_player_experience.php');
+$template->assign('FilterRankingsHREF', SmrSession::getNewHREF($container));
 
-	$rankings[$rank] = array(
-		'Rank' => $rank,
-		'Player' => &$currentPlayer,
-		'Class' => $class,
-		'Value' => number_format($currentPlayer->getExperience())
-	);
+$lowerLimit = $var['MinRank'] - 1;
+$db->query('SELECT account_id, experience value FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT ' . $lowerLimit . ', ' . ($var['MaxRank'] - $lowerLimit));
+$template->assignByRef('FilteredRankings', collectRankings($db, $lowerLimit));
+
+function collectRankings(&$db, $player, $rank) {
+	$rankings = array();
+	while ($db->nextRecord()) {
+		// increase rank counter
+		$rank++;
+		$currentPlayer =& SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
+
+		$class='';
+		if ($player->equals($currentPlayer)) {
+			$class .= 'bold';
+		}
+		if($currentPlayer->getAccount()->isNewbie()) {
+			$class.= ' newbie';
+		}
+		if($class!='') {
+			$class = ' class="'.trim($class).'"';
+		}
+
+		$rankings[$rank] = array(
+			'Rank' => $rank,
+			'Player' => &$currentPlayer,
+			'Class' => $class,
+			'Value' => number_format($db->getInt('value'))
+		);
+	}
+	return $rankings;
 }
-$template->assignByRef('Rankings', $rankings);
 
-if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank'])&&is_numeric($_REQUEST['max_rank'])) {
-	$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
-	$maxRank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+function calculateMinMaxRanks($ourRank, $totalPlayers) {
+	if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
+		$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+		$maxRank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
+	}
+	elseif(isset($var['MinRank']) && isset($var['MaxRank'])) {
+		$minRank = $var['MinRank'];
+		$maxRank = $var['MaxRank'];
+	}
+	else {
+		$minRank = $ourRank - 5;
+		$maxRank = $ourRank + 5;
+	}
+
+	if ($minRank <= 0 || $minRank > $totalPlayers) {
+		$minRank = 1;
+		$maxRank = 10;
+	}
+
+	$maxRank = min($maxRank, $totalPlayers);
+
 	SmrSession::updateVar('MinRank',$minRank);
 	SmrSession::updateVar('MaxRank',$maxRank);
 }
-elseif(isset($var['MinRank'])&&isset($var['MaxRank'])) {
-	$minRank = $var['MinRank'];
-	$maxRank = $var['MaxRank'];
-}
-else {
-	$minRank = $ourRank - 5;
-	$maxRank = $ourRank + 5;
-}
-
-if ($minRank <= 0 || $minRank > $totalPlayers) {
-	$minRank = 1;
-	$maxRank = 10;
-}
-
-if ($maxRank > $totalPlayers) {
-	$maxRank = $totalPlayers;
-}
-
-$template->assign('MaxRank', $maxRank);
-$template->assign('MinRank', $minRank);
-
-$container = create_container('skeleton.php', 'rankings_player_experience.php');
-$container['min_rank']	= $minRank;
-$container['max_rank']	= $maxRank;
-$template->assign('FilterRankingsHREF', SmrSession::getNewHREF($container));
-
-$db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT ' . ($minRank - 1) . ', ' . ($maxRank - $minRank + 1));
-$rank = $minRank - 1;
-$filteredRankings = array();
-while ($db->nextRecord()) {
-	// increase rank counter
-	$rank++;
-	$currentPlayer =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
-
-	$class='';
-	if ($player->equals($currentPlayer))
-		$class .= 'bold';
-	if($currentPlayer->getAccount()->isNewbie())
-		$class.= ' newbie';
-	if($class!='')
-		$class = ' class="'.trim($class).'"';
-
-	$filteredRankings[$rank] = array(
-		'Rank' => $rank,
-		'Player' => &$currentPlayer,
-		'Class' => $class,
-		'Value' => number_format($currentPlayer->getExperience())
-	);
-}
-$template->assignByRef('FilteredRankings', $filteredRankings);
 ?>

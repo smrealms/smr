@@ -19,9 +19,7 @@ $db->nextRecord();
 $our_rank = $db->getInt('count(*)');
 
 // how many players are there?
-$db->query('SELECT count(*) FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-$db->nextRecord();
-$total_player = $db->getInt('count(*)');
+$total_player = $player->getGame()->getTotalPlayers();
 
 $PHP_OUTPUT.=('<div align="center">');
 $PHP_OUTPUT.=('<p>Here are the rankings of players by their deaths</p>');
