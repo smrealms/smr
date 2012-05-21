@@ -33,7 +33,7 @@ class Rankings {
 	}
 
 	public static function calculateMinMaxRanks($ourRank, $totalPlayers) {
-		global $var;
+		global $var, $template;
 		if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
 			$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
 			$maxRank = max($_REQUEST['min_rank'], $_REQUEST['max_rank']);
@@ -56,6 +56,8 @@ class Rankings {
 
 		SmrSession::updateVar('MinRank',$minRank);
 		SmrSession::updateVar('MaxRank',$maxRank);
+		$template->assign('MaxRank', $minRank);
+		$template->assign('MinRank', $maxRank);
 	}
 }
 
