@@ -98,6 +98,8 @@ $running = true;
 // after a timeout we start over
 while ($running) {
 	try {
+		// Reset last ping each time we try connecting.
+		$last_ping = time();
 		echo_r('Connecting to ' . $address);
 		$fp = fsockopen($address, $port);
 		if ($fp) {
@@ -169,10 +171,7 @@ function safefputs($fp, $text) {
 }
 
 function readFromStream($fp) {
-	static $last_ping = 0;
-	if($last_ping == 0) {
-		$last_ping = time();
-	}
+	global $last_ping;
 
 	$rdata = fgets($fp, 4096);
 	$rdata = preg_replace('/\s+/', ' ', $rdata);
