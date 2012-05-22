@@ -14,7 +14,11 @@ if(in_array($player->getAccountID(), $accountIDs)) {
 }
 
 foreach ($accountIDs as $accountID) {
-	SmrPlayer::getPlayer($accountID, $player->getGameID())->leaveAlliance($player);
+	$currPlayer =& SmrPlayer::getPlayer($accountID, $player->getGameID());
+	if(!$player->sameAlliance($currPlayer)) {
+		throw new Exception('Cannot kick someone from another alliance!');
+	}
+	$currPlayer->leaveAlliance($player);
 }
 
 forward(create_container('skeleton.php', 'alliance_roster.php'));
