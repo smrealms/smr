@@ -21,8 +21,8 @@ function channel_msg_ship($fp, $rdata) {
 			$speed_length = strlen('Speed');
 			$cost_length = max(strlen('Costs'), strlen($cost));
 
-			fputs($fp, 'NOTICE '.$msg[1].' :' . fill_string('Name', $name_length) . ' | ' . fill_string('Hardpoints', $hp_length) . ' | ' . fill_string('Speed', $speed_length) . ' | ' . fill_string('Costs', $cost_length) . EOL);
-			fputs($fp, 'NOTICE '.$msg[1].' :' . fill_string($ship_name, $name_length) . ' | ' . fill_string($hardpoint, $hp_length) . ' | ' . fill_string($speed, $speed_length) . ' | ' . fill_string($cost, $cost_length) . EOL);
+			fputs($fp, 'NOTICE '.$msg[1].' :' . str_pad('Name', $name_length) . ' | ' . str_pad('Hardpoints', $hp_length) . ' | ' . str_pad('Speed', $speed_length) . ' | ' . str_pad('Costs', $cost_length) . EOL);
+			fputs($fp, 'NOTICE '.$msg[1].' :' . str_pad($ship_name, $name_length) . ' | ' . str_pad($hardpoint, $hp_length) . ' | ' . str_pad($speed, $speed_length) . ' | ' . str_pad($cost, $cost_length) . EOL);
 
 		} else
 			fputs($fp, 'NOTICE '.$msg[1].' :There is no ship called '.$msg[4].'!'.EOL);
