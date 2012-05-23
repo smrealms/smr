@@ -21,16 +21,6 @@ function write_log_message($msg)
 	fclose($logFile);
 }
 
-function fill_string($str, $length)
-{
-
-	while (strlen($str) < $length)
-		$str .= ' ';
-
-	return $str;
-
-}
-
 // config file
 include(realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
 
