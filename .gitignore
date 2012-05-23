@@ -26,3 +26,4 @@
 # /lib/Login/
 /lib/Login/socialConfig.specific.inc
 /sys$command
+/tools/irc/config.specific.php

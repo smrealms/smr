@@ -38,10 +38,7 @@ include(LIB . '/Default/SmrMySqlDatabase.class.inc');
 
 include(ENGINE . '/Default/smr.inc');
 
-$address = 'ice.coldfront.net';
-$port = 6667;
-define('IRC_BOT_NICK', 'Caretaker');
-$pass = 'smr4ever';
+require_once('irc/config.specific.php');
 
 // timer events
 $events = array();
@@ -100,23 +97,23 @@ while ($running) {
 	try {
 		// Reset last ping each time we try connecting.
 		$last_ping = time();
-		echo_r('Connecting to ' . $address);
-		$fp = fsockopen($address, $port);
+		echo_r('Connecting to ' . IRC_BOT_SERVER_ADDRESS);
+		$fp = fsockopen(IRC_BOT_SERVER_ADDRESS, IRC_BOT_SERVER_PORT);
 		if ($fp) {
 			echo_r('Socket ' . $fp . ' is connected... Identifying...');
 
 
-			safefputs($fp, 'NICK CareGhost' . EOL);
-			safefputs($fp, 'USER ' . strtolower(IRC_BOT_NICK) . ' oberon smrealms.de :Official SMR bot' . EOL);
+			safefputs($fp, 'NICK ' . IRC_BOT_NICK_BACKUP . EOL);
+			safefputs($fp, 'USER ' . IRC_BOT_USER . EOL);
 
 			// kill any other user that is using our nick
-			safefputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . $pass . EOL);
+			safefputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . IRC_BOT_PASS . EOL);
 
 			sleep(1);
 
 			//4
 			safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
-			safefputs($fp, 'NICKSERV IDENTIFY ' . $pass . EOL);
+			safefputs($fp, 'NICKSERV IDENTIFY ' . IRC_BOT_PASS . EOL);
 
 			// join our public channel
 			if (!IRC_DEBUGGING) {
@@ -151,7 +148,7 @@ while ($running) {
 		} else {
 
 			// network troubles
-			echo_r('There was an error connecting to ' . $address . '/' . $port);
+			echo_r('There was an error connecting to ' . IRC_BOT_SERVER_ADDRESS . '/' . IRC_BOT_SERVER_PORT);
 
 			// sleep and try again!
 			sleep(60);
