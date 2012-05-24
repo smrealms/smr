@@ -38,26 +38,25 @@
 								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
 							}
 						} ?>
-						</select>
-						 vs.
-						<select name="alliance2" id="InputFields">
-							<option value="-1">Select an alliance</option><?php
-							if(isset($NewsAlliances) && count($NewsAlliances)>0) {
-								foreach($NewsAlliances as $NewsAlliance) {
-									?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
-								}
-							} ?>
-						</select><br />
-						<br />
-						<input type="submit" value="Search For Alliances" name="submit">
-					</td>
-				</tr>
-			</table>
-		</form>
-		<br /><br /><br />
-	<?php
+					</select>
+						vs.
+					<select name="alliance2" id="InputFields">
+						<option value="-1">Select an alliance</option><?php
+						if(isset($NewsAlliances) && count($NewsAlliances)>0) {
+							foreach($NewsAlliances as $NewsAlliance) {
+								?><option value="<?php echo $NewsAlliance['ID']; ?>"><?php echo $NewsAlliance['Name']; ?></option><?php
+							}
+						} ?>
+					</select><br />
+					<br />
+					<input type="submit" value="Search For Alliances" name="submit">
+				</td>
+			</tr>
+		</table>
+	</form>
+	<br /><br /><br /><?php
 	echo $PHP_OUTPUT;
-	
+
 	if(isset($NewsItems) && count($NewsItems) > 0) { ?>
 		Showing most recent <span class="yellow"><?php echo count($NewsItems); ?></span> news items.<br />
 		<table class="standard">
