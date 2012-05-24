@@ -1847,9 +1847,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	public function getAllianceRosterHREF() {
-		$container = create_container('skeleton.php','alliance_roster.php');
-		$container['alliance_id'] = $this->getAllianceID();
-		return SmrSession::getNewHREF($container);
+		return Globals::getAllianceRosterHREF($this->getAllianceID());
 	}
 
 	public function getToggleWeaponHidingHREF() {

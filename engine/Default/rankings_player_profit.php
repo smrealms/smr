@@ -26,7 +26,6 @@ $ourRank = $db->getInt('count(*)');
 $template->assign('OurRank', $ourRank);
 
 $totalPlayers = $player->getGame()->getTotalPlayers();
-$template->assign('TotalPlayers', $totalPlayers);
 
 $db->query('SELECT p.account_id, COALESCE(ph.amount,0) amount FROM player p LEFT JOIN player_hof ph ON p.account_id = ph.account_id AND p.game_id = ph.game_id AND ph.type = ' . $profitTypeEscaped . ' WHERE p.game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY amount DESC, player_name ASC LIMIT 10');
 $template->assignByRef('Rankings', Rankings::collectRankings($db, $player, 0));
