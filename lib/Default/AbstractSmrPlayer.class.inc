@@ -31,7 +31,6 @@ abstract class AbstractSmrPlayer {
 	protected $shipID;
 	protected $kills;
 	protected $deaths;
-	protected $allianceName;
 	protected $goods;
 	protected $goodsExpGained;
 	protected $gadgets;
@@ -416,17 +415,8 @@ abstract class AbstractSmrPlayer {
 
 	public function getLinkedDisplayName($includeAlliance=true) {
 		$return = '<a href="'.$this->getTraderSearchHREF().'">'.$this->getDisplayName().'</a>';
-
 		if($includeAlliance) {
-			$return.= ' (';
-			if($this->hasAlliance()) {
-				$return .= '<a href="'.$this->getAllianceRosterHREF().'">';
-			}
-			$return .= $this->getAllianceName();
-			if($this->hasAlliance()) {
-				$return.='</a>';
-			}
-			$return.= ')';
+			$return .= ' (' . $this->getAllianceName(true) . ')';
 		}
 		return $return;
 	}
@@ -494,21 +484,12 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getAllianceName($linked = false) {
-		if(!isset($this->allianceName)) {
-			//get alliance info
-			if ($this->hasAlliance()) {
-				$this->db->query('SELECT alliance_name FROM alliance WHERE alliance_id = ' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT 1');
-				$this->db->nextRecord();
-				$this->allianceName = stripslashes($this->db->getField('alliance_name'));
-			}
-			else {
-				$this->allianceName = 'No Alliance';
-			}
+		if($this->hasAlliance()) {
+			return $this->getAlliance()->getAllianceName($linked);
 		}
-		if($this->hasAlliance() && $linked === true) {
-			return create_link($this->getAllianceRosterHREF(), $this->allianceName);
+		else {
+			return 'No Alliance';
 		}
-		return $this->allianceName;
 	}
 
 	public function getSpanColour() {

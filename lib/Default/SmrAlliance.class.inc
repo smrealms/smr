@@ -73,12 +73,23 @@ class SmrAlliance {
 		return $this->allianceID;
 	}
 
-	public function getAllianceName() {
+	public function getAllianceName($linked = false) {
+		if($linked === true && !$this->hasDisbanded()) {
+			return create_link(Globals::getAllianceRosterHREF($this->getAllianceID()), $this->allianceName);
+		}
 		return $this->allianceName;
 	}
 
 	public function getGameID() {
 		return $this->gameID;
+	}
+
+	public function hasDisbanded() {
+		return !$this->hasLeader();
+	}
+
+	public function hasLeader() {
+		return $this->getLeaderID() != 0;
 	}
 
 	public function getLeaderID() {
@@ -87,10 +98,6 @@ class SmrAlliance {
 
 	public function &getLeader() {
 		return SmrPlayer::getPlayer($this->getLeaderID(),$this->getGameID());
-	}
-
-	public function getDescription() {
-		return $this->description;
 	}
 
 	public function getIrcChannel() {
@@ -163,6 +170,18 @@ class SmrAlliance {
 
 	public function setPassword($password) {
 		$this->password = $password;
+	}
+
+	public function getKills() {
+		return $this->kills;
+	}
+
+	public function getDeaths() {
+		return $this->deaths;
+	}
+
+	public function getDescription() {
+		return $this->description;
 	}
 
 	public function setAllianceDescription($description) {

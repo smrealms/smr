@@ -4,6 +4,31 @@ class Rankings {
 	private function __construct() {
 	}
 
+	public static function &collectAllianceRankings(SmrMySqlDatabase &$db, AbstractSmrPlayer &$player, $rank) {
+		$rankings = array();
+		while ($db->nextRecord()) {
+			// increase rank counter
+			$rank++;
+			$currentAlliance =& SmrAlliance::getAlliance($db->getInt('alliance_id'), $player->getGameID());
+
+			$class = '';
+			if ($player->getAllianceID() == $currentAlliance->getAllianceID()) {
+				$class = ' class="bold"';
+			}
+			else if($currentAlliance->hasDisbanded()) {
+				$class = ' class="red"';
+			}
+
+			$rankings[$rank] = array(
+				'Rank' => $rank,
+				'Alliance' => &$currentAlliance,
+				'Class' => $class,
+				'Value' => $db->getInt('amount')
+			);
+		}
+		return $rankings;
+	}
+
 	public static function &collectRankings(SmrMySqlDatabase &$db, AbstractSmrPlayer &$player, $rank) {
 		$rankings = array();
 		while ($db->nextRecord()) {
@@ -26,13 +51,13 @@ class Rankings {
 				'Rank' => $rank,
 				'Player' => &$currentPlayer,
 				'Class' => $class,
-				'Value' => number_format($db->getInt('amount'))
+				'Value' => $db->getInt('amount')
 			);
 		}
 		return $rankings;
 	}
 
-	public static function calculateMinMaxRanks($ourRank, $totalPlayers) {
+	public static function calculateMinMaxRanks($ourRank, $totalRanks) {
 		global $var, $template;
 		if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'Show' && is_numeric($_REQUEST['min_rank']) && is_numeric($_REQUEST['max_rank'])) {
 			$minRank = min($_REQUEST['min_rank'], $_REQUEST['max_rank']);
@@ -47,17 +72,18 @@ class Rankings {
 			$maxRank = $ourRank + 5;
 		}
 
-		if ($minRank <= 0 || $minRank > $totalPlayers) {
+		if ($minRank <= 0 || $minRank > $totalRanks) {
 			$minRank = 1;
 			$maxRank = 10;
 		}
 
-		$maxRank = min($maxRank, $totalPlayers);
+		$maxRank = min($maxRank, $totalRanks);
 
 		SmrSession::updateVar('MinRank',$minRank);
 		SmrSession::updateVar('MaxRank',$maxRank);
 		$template->assign('MinRank', $minRank);
 		$template->assign('MaxRank', $maxRank);
+		$template->assign('TotalRanks', $totalRanks);
 	}
 }
 

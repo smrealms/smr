@@ -21,7 +21,6 @@ $ourRank = $db->getInt('count(*)');
 $template->assign('OurRank', $ourRank);
 
 $totalPlayers = $player->getGame()->getTotalPlayers();
-$template->assign('TotalPlayers', $totalPlayers);
 
 $db->query('SELECT account_id, experience amount FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY experience DESC, player_name LIMIT 10');
 $template->assignByRef('Rankings', Rankings::collectRankings($db, $player, 0));
