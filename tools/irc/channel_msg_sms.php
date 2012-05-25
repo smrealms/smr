@@ -167,7 +167,7 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 			elseif ($response_code == 40)
 				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Unknown route!' . EOL);
 			elseif ($response_code == 50)
-				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Identifikation failed!' . EOL);
+				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Identification failed!' . EOL);
 			elseif ($response_code == 60)
 				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there was an error while sending your text message: Insufficient funds! Please donate!' . EOL);
 			elseif ($response_code == 70)
