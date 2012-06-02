@@ -121,6 +121,7 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 
 		$url = 'http://gw.mobilant.com';
 		$request = '';
+		$param = array();
 		$param['key'] = SMS_GATEWAY_KEY;
 		$param['message'] = $msg;
 		// numbers like +177 will be (for some reason) 'corrected' to a german number because it's a common area code here
