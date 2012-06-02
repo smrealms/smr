@@ -17,15 +17,21 @@ $time_start = getmicrotime();
 
 // config file
 require_once("config.inc");
-require_once("config.php");
 require_once(ENGINE . "1.2/smr.inc");
 
 // overwrite database class to use our db
 require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
 
+require_once(get_file_loc('SmrSession.class.inc'));
+require_once(get_file_loc('Globals.class.inc'));
+// do we have a session?
+if (SmrSession::$old_account_id == 0 || SmrSession::$game_id == 0 || Globals::getGameType(SmrSession::$game_id) != '1.2') {
+	header('Location: ' . URL . '/loader.php');
+	exit;
+}
+
 //include function
 $includes = new SmrMySqlDatabase();
-require_once(get_file_loc('SmrSession.class.inc'));
 require_once(get_file_loc('smr_account.inc'));
 require_once(get_file_loc('smr_player.inc'));
 require_once(get_file_loc('smr_ship.inc'));
@@ -50,13 +56,6 @@ $db = new SmrMySqlDatabase();
 
 //echo "<pre>";print_r($session);echo'</pre>';
 //exit;
-// do we have a session?
-if (SmrSession::$old_account_id == 0) {
-
-	header("Location: ".URL."/login.php");
-	exit;
-
-}
 
 // ********************************
 // *
@@ -87,7 +86,7 @@ $account->get_by_id(SmrSession::$old_account_id);
 // *
 // ********************************
 $sn = $_REQUEST['sn'];
-	
+
 // check if we got a sn number with our url
 if (empty($sn))
 	create_error('Your browser lost the SN. Try to reload the page!');
@@ -118,7 +117,7 @@ function do_voodoo() {
 	ob_clean();
 
 	global $lock, $var;
-	
+
 	foreach ($GLOBALS as $key => $value) {
 	   	$$key = &$GLOBALS[$key];
 	}
@@ -161,7 +160,7 @@ function do_voodoo() {
 	}
 
 	require(get_file_loc($var["url"]));
-	
+
 	SmrSession::update();
 
 	if($lock) {
@@ -181,7 +180,7 @@ function acquire_lock($sector) {
 		return true;
 	// Insert ourselves into the queue.
 	$db->query('INSERT INTO locks_queue (game_id,account_id,sector_id,timestamp) VALUES(' . SmrSession::$game_id . ',' . SmrSession::$old_account_id . ',' . $sector . ',' . time() . ')');
-			
+
 	$lock = $db->insert_id();
 
 	for($i=0;$i<200;++$i) {
@@ -200,7 +199,7 @@ function acquire_lock($sector) {
 					exit;
 				}
 			}
-			
+
 			usleep(25000 * $db->f('COUNT(*)'));
 			continue;
 		}
@@ -315,6 +314,6 @@ function printmicrotime($rt) {
 		$runtime = number_format($rt[$step] - $rt[$j], 8);
 		print("Step $step executed in $runtime seconds<br />");
 	}
-	
+
 }
 ?>
