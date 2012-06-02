@@ -37,28 +37,30 @@ Table of Content
 ----------------
 
 	This section descibes how the code has to be look like.
-	The opening brace '{' has to be on the same line as the last command. The next lines has
-	to be indented by one tabluator (which equals 4 spaces) To minimize loading times always
-	use tabulator characters instead of it equal spaces.
-	the closing bracket has to be reidented. The block have to be surrounded by one
-	empty line (before and after). So typical code would look like:
+	The opening brace '{' has to be on the same line as the last command. The next line has
+	to be indented by one hard tab (which equals 4 spaces) To minimize loading times always
+	use hard tabs instead of spaces.
+	The closing bracket has to be reindented. So typical code would look like:
 
 		if (!empty($action)) {
-			doSomtething1();
-			doSomtething2();
+			doSomething1();
+			doSomething2();
 		}
 
-	If the is only one line leave out the brackets and the empty lines!
+	If there is only one line keep the brackets!
 
-		if (!empty($action))
+		if (!empty($action)) {
 			doSomtething();
+		}
 
 	For HTML form elements always use the css class InputFields
 
-		$PHP_OUTPUT.=('<input id="InputFields">');
+		$PHP_OUTPUT .= '<input id="InputFields">';
 
-	Each line that is within a new code block have to be indented by one tabulator!
+	Each line that is within a new code block have to be indented by one tab!
 	It has to equal 4 spaces!
+	
+	$PHP_OUTPUT is a special variable used for scripts that have not yet been transitioned to the template system.
 
 
 2.3. Using HTML links
@@ -67,8 +69,8 @@ Table of Content
 	Never use the <a href=''></a> to create a link in SMR!
 	SEARCH YOUR FILES FOR 'HREF'! If you get a result you made something wrong and didn't
 	follow this guide!
-	I've created a functionality to transport information from one page to another pager
-	safely through database. To use this functionality you must proceed the following
+	I've created a functionality to transport information from one page to another page
+	safely through the database. To use this functionality you must proceed the following
 	guideline. To transport any variables between pages you must create a container object.
 	This object is an error that must have at least one element with the URL of the calling
 	page. First of all you have to create a new container array. NEVER reuse an old container
@@ -77,7 +79,7 @@ Table of Content
 	Preferred is to use create_container:
 	$container = create_container('skeleton.php', 'game_play.php');
 
-	So the first line would be:
+	The alternative is to do it all manually:
 
 		$container = array();
 
@@ -93,29 +95,29 @@ Table of Content
 
 	If you need to transfer any other paramters use
 
-		$container['parameter_name'] = 'parameter_value';
+		$container['ParameterName'] = 'value';
 
 	On the next page (game_play.php) you would have access to a variable called $var. To echo
 	the value of this parameter use:
 
-		$PHP_OUTPUT.=($var['parameter_name']);
+		$PHP_OUTPUT .= $var['parameter_name'];
 
 	You have created the link. It is an object in the memory. To actually echo the link
 	into the page you must use the this:
 
-		$PHP_OUTPUT.=create_link($container, 'Play Game');
+		$PHP_OUTPUT .= create_link($container, 'Play Game');
 
 	The first parameter defines the container we created above. The next parameter defines the
 	name of the link that will be echoed on the page. You can provide any text here you need.
 	Even images
 
-		$PHP_OUTPUT.=create_link($container, '<img src="game_play.gif">');
+		$PHP_OUTPUT .= create_link($container, '<img src="game_play.gif">');
 
 	This echos an image to the page. If the user echos this image he will be forwarded to
 	game_play.php
 	If you don't need any parameters on the next page you can use a much simplier version.
 
-		$PHP_OUTPUT.=create_link(create_container('skeleton.php', 'game_play.php'),
+		$PHP_OUTPUT .= create_link(create_container('skeleton.php', 'game_play.php'),
 									'Play Game');
 
 	create_container() is a function that always takes two parameters. the url and the body page
@@ -126,7 +128,7 @@ Table of Content
 
 		$link = create_link(create_container('skeleton.php', 'game_play.php'),
 											 'Play Game');
-		$PHP_OUTPUT.=($link);
+		$PHP_OUTPUT .= $link;
 
 	You can see that create_link() simply returns the HTML expression of the link. By the way:
 	$PHP_OUTPUT.=create_link() does exactly the above two lines. it creates the link (using create_link()) and
@@ -140,8 +142,7 @@ Table of Content
 	extending the form url! This is not safe and can be modified by the user.
 	First you have to create a container object first with url.
 
-		$container = array();
-		$container['url'] = 'message_send_processing.php';
+		$container = create_container('message_send_processing.php');
 
 	Put parameters you probably need into the container:
 
@@ -234,5 +235,6 @@ Table of Content
 
 	In case you have to present the user an error page you have to use create_error() like
 
-		if ($player->getNewbieTurns() > 0)
+		if ($player->getNewbieTurns() > 0) {
 			create_error('You are under newbie protection!');
+		}
