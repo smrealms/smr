@@ -10,7 +10,7 @@ if($_REQUEST['action'] == 'Preview messages') {
 	if(!empty($offenderReply))
 		$container['PreviewOffender'] = $offenderReply;
 	$container['OffenderBanPoints'] = $_REQUEST['offenderBanPoints'];
-	
+
 	if(!empty($offendedReply))
 		$container['PreviewOffended'] = $offendedReply;
 	$container['OffendedBanPoints'] = $_REQUEST['offendedBanPoints'];
@@ -20,13 +20,12 @@ if($_REQUEST['action'] == 'Preview messages') {
 
 if (isset($offenderReply) && $offenderReply != '') {
 	SmrPlayer::sendMessageFromAdmin($var['game_id'], $var['offender'], $offenderReply);
-	
+
 	//do we have points?
 	if ($_REQUEST['offenderBanPoints']) {
-		$reasonID = 7;
 		$suspicion = 'Inappropriate In-Game Message';
 		$offenderAccount =& SmrAccount::getAccount($var['offender']);
-		$offenderAccount->addPoints($_REQUEST['offenderBanPoints'],$account,$reasonID,$suspicion);
+		$offenderAccount->addPoints($_REQUEST['offenderBanPoints'],$account,7,$suspicion);
 	}
 }
 if (isset($_REQUEST['offendedReply'])) $offendedReply = $_REQUEST['offendedReply'];
@@ -37,10 +36,9 @@ if (isset($offendedReply) && $offendedReply != '') {
 
 	//do we have points?
 	if ($_REQUEST['offendedBanPoints']) {
-		$reasonID = 7;
 		$suspicion = 'Inappropriate In-Game Message';
 		$offenderAccount =& SmrAccount::getAccount($var['offended']);
-		$offenderAccount->addPoints($_REQUEST['offendedBanPoints'],$account,$reasonID,$suspicion);
+		$offenderAccount->addPoints($_REQUEST['offendedBanPoints'],$account,7,$suspicion);
 	}
 }
 forward(create_container('skeleton.php', 'notify_view.php'));
