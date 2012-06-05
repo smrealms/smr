@@ -1,5 +1,4 @@
 <?php
-require_once('socialConfig.specific.inc');
 class SocialLogin {
 	private $valid = false;
 	private $loginType = null;
@@ -34,7 +33,7 @@ class SocialLogin {
 		}
 		return self::$twitter;
 	}
-	
+
 	public static function &getOpenIdObj() {
 		if(self::$openID==null) {
 			require_once(LIB.'External/OpenID/openid.php');
@@ -42,11 +41,11 @@ class SocialLogin {
 		}
 		return self::$openID;
 	}
-	
+
 	public static function getFacebookLoginUrl() {
 		return self::getFacebookObj()->getLoginUrl(array('redirect_uri'=>URL.'/login_processing.php?loginType=Facebook','scope'=>'email'));
 	}
-	
+
 	public static function getTwitterLoginUrl() {
 		if(!isset($_SESSION)) {
 			session_start();
@@ -55,7 +54,7 @@ class SocialLogin {
 		$_SESSION['TwitterToken'] = self::getTwitterObj()->getRequestToken(URL.'/login_processing.php?loginType=Twitter');
 		return self::getTwitterObj()->getAuthorizeURL($_SESSION['TwitterToken']);
 	}
-	
+
 	public static function getOpenIdLoginUrl($loginType) {
 		if(!isset(self::$OPEN_ID_IDENTITIES[$loginType])) {
 			throw new Exception('OpenID does not exist for login type: '.$loginType);
@@ -66,7 +65,7 @@ class SocialLogin {
 		$openID->identity = self::$OPEN_ID_IDENTITIES[$loginType];
 		return $openID->authUrl();
 	}
-	
+
 	public function __construct($loginType) {
 		if($loginType=='Facebook') {
 			if($this->userID=self::getFacebookObj()->getUser()) {
@@ -82,7 +81,7 @@ class SocialLogin {
 			self::getTwitterObj()->getAccessToken($_REQUEST['oauth_verifier']);
 			if(self::getTwitterObj()->http_code == 200) {
 				$this->loginType=$loginType;
-				
+
 				$userInfo = self::getTwitterObj()->get('account/verify_credentials');
 				$this->userID=$userInfo->id_str;
 				$spaceIndex = strpos($userInfo->name, ' ');
@@ -110,19 +109,19 @@ class SocialLogin {
 			}
 		}
 	}
-	
+
 	public function isValid() {
 		return $this->valid;
 	}
-	
+
 	public function getLoginType() {
 		return $this->loginType;
 	}
-	
+
 	public function getUserID() {
 		return $this->userID;
 	}
-	
+
 	public function getEmail() {
 		return $this->email;
 	}
