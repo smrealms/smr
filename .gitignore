@@ -12,9 +12,6 @@
 /htdocs/config.specific.php
 /htdocs/upload
 
-# /lib/1.2/
-/lib/1.2/SmrMySqlDatabase.class.inc
-
 # /lib/Default/
 /lib/Default/SmrMySqlDatabase.class.inc
 /lib/Default/SmrHistoryMySqlDatabase.class.inc
