@@ -293,7 +293,7 @@ CREATE TABLE IF NOT EXISTS `album_has_comments` (
 CREATE TABLE IF NOT EXISTS `alliance` (
   `alliance_id` smallint(6) unsigned NOT NULL DEFAULT '0',
   `game_id` int(10) unsigned NOT NULL DEFAULT '0',
-  `alliance_name` varchar(32) DEFAULT NULL,
+  `alliance_name` varchar(36) DEFAULT NULL,
   `alliance_description` varchar(255) DEFAULT NULL,
   `alliance_password` varchar(32) DEFAULT NULL,
   `leader_id` int(10) unsigned DEFAULT '0',
