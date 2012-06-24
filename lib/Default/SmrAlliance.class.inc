@@ -227,7 +227,7 @@ class SmrAlliance {
 			$this->db->query('SELECT COUNT(*) AS num_orig_vets
 							FROM player_joined_alliance
 							JOIN player USING (alliance_id, game_id)
-							AND game_id='.$this->db->escapeNumber($player->getGameID()).'
+							WHERE game_id='.$this->db->escapeNumber($player->getGameID()).'
 							AND alliance_id='.$this->db->escapeNumber($this->getAllianceID()).'
 							AND status=\'VETERAN\'');
 			if(!$this->db->nextRecord() || $this->db->getInt('num_orig_vets') < $maxVets) {
