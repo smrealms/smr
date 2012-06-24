@@ -31,7 +31,7 @@ try {
 	$NPC_LOGINS_USED = array('');
 	
 	if(!defined('NPC_GAME_ID')) {
-		define('NPC_GAME_ID',48);
+		define('NPC_GAME_ID',50);
 	}
 	define('NPC_LOW_TURNS',75);
 	define('NPC_LOW_NEWBIE_TURNS',10);
