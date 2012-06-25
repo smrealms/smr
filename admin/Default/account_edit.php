@@ -50,8 +50,9 @@ $player_name = $var['player_name'];
 $curr_account = false;
 
 if (!empty($player_name) && !is_array($player_name)) {
-	$db->query('SELECT * FROM player
-				WHERE player_name = ' . $db->escapeString($player_name));
+	$db->query('SELECT account_id FROM player
+				WHERE player_name = ' . $db->escapeString($player_name) . '
+				ORDER BY game_id DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		$account_id = $db->getInt('account_id');
 	}
