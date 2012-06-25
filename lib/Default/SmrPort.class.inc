@@ -8,6 +8,8 @@ class SmrPort {
 	const CHANCE_TO_DOWNGRADE = 15;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
+	const BASE_DEFENCES = 1000;
+	const DEFENCES_PER_LEVEL = 1000;
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
 	private static $BASE_REFRESH_PER_HOUR = array(
 		'1' => 150,
@@ -146,16 +148,17 @@ class SmrPort {
 	
 	public function checkDefenses() {
 		if(!$this->isUnderAttack()) {
-			$richMod = $this->getUpgrade() / $this->getUpgradeRequirement(); // be equal to port level for bonus
-			if($richMod < 0) $richMod = 0;
-			//defences restock (check for fed arrival)
-			$federalMod = 0;
-			if(TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY)
+			$defences = self::BASE_DEFENCES + $this->getLevel() * self::DEFENCES_PER_LEVEL;
+			// Upgrade modifier
+			$defences += max(0, round(self::DEFENCES_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
+			// Defences restock (check for fed arrival)
+			if(TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
 				$federalMod = (self::TIME_FEDS_STAY - (TIME - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
-			if ($federalMod < 0) $federalMod = 0;
-			$this->setShields($this->getLevel() * 1000 + 1000 + round($richMod * 375) + round($federalMod * self::MAX_FEDS_BONUS));
-			$this->setArmour($this->getLevel() * 1000 + 1000 + round($richMod * 375) + round($federalMod * self::MAX_FEDS_BONUS));
-			$this->setCDs($this->getLevel() * 100 + 100 + round($richMod * 37.5) + round($federalMod * self::MAX_FEDS_BONUS/10));
+				$defences += max(0, round($federalMod * self::MAX_FEDS_BONUS));
+			}
+			$this->setShields($defences);
+			$this->setArmour($defences);
+			$this->setCDs($defences/10);
 		}
 	}
 	
