@@ -128,7 +128,7 @@ if($Game['GameDescription']) { ?>
 var	desc = new Array(<?php echo $RaceDescriptions; ?>);
 function go() {
 	var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;
-	document.getElementById('race_image').src = "images/race" + race_id + ".gif";
+	document.getElementById('race_image').src = "images/race" + race_id + ".jpg";
 	document.getElementById('graphframe').src = "images/graph" + race_id + ".gif";
 	document.getElementById('race_descr').innerHTML = desc[race_id - 1];
 }
