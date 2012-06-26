@@ -291,7 +291,7 @@
 
 		if(isset($EditingAccount)) { ?>
 			<td>
-				<div class="buttonA"><a class="buttonA" href="<?php $ResetFormHREF; ?>">&nbsp;Reset Form&nbsp;</a></div>
+				<div class="buttonA"><a class="buttonA" href="<?php echo $ResetFormHREF; ?>">&nbsp;Reset Form&nbsp;</a></div>
 			</td><?php
 		} ?>
 </table>
