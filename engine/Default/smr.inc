@@ -775,6 +775,9 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	$container = create_container('skeleton.php', 'preferences.php');
 	$template->assign('PreferencesLink',SmrSession::getNewHREF($container));
 
+	$container['body'] = 'admin_tools.php';
+	$template->assign('AdminToolsLink',SmrSession::getNewHREF($container));
+	
 	$container['body'] = 'album_edit.php';
 	$template->assign('EditPhotoLink',SmrSession::getNewHREF($container));
 
