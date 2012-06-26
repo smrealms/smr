@@ -221,7 +221,7 @@ class Globals {
 	public static function &getGameInfo($gameID = false) {
 		if($gameID===false) {
 			self::initialiseDatabase();
-			self::$db->query('SELECT game_id FROM game');
+			self::$db->query('SELECT game_id FROM game ORDER BY end_date DESC');
 			$allGames = array();
 			while(self::$db->nextRecord()) {
 				$allGames[self::$db->getInt('game_id')] = self::getGameInfo(self::$db->getInt('game_id'));
