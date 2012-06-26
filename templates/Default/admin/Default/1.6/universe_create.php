@@ -92,11 +92,10 @@ create_echo_form($link);
 	<table class="standard">
 		<tr>
 			<td class="right">
-				<select name="game_id">
-				<?php
-				foreach($EditGames as $Game) {
-					?><option value="<?php echo $Game['GameID']; ?>"><?php echo $Game['GameName']; ?></option><?php
-				} ?>
+				<select name="game_id"><?php
+					foreach($EditGames as $Game) {
+						?><option value="<?php echo $Game['ID']; ?>"><?php echo $Game['GameName']; ?></option><?php
+					} ?>
 				</select>
 			</td>
 		</tr>

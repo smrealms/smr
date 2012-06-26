@@ -12,11 +12,15 @@ $template->assign('CreateGalaxiesHREF',SmrSession::getNewHREF($container));
 $container['body'] = '1.6/universe_create_sectors.php';
 $template->assign('EditGameHREF',SmrSession::getNewHREF($container));
 
-$editGames=array();
-$db->query('SELECT * FROM game'.($account->hasPermission(PERMISSION_EDIT_STARTED_GAMES)?'':' WHERE start_date > ' . $db->escapeNumber(TIME)) . ' ORDER BY game_id DESC');
-while ($db->nextRecord()) {
-	$editGames[$db->getField('game_id')] = array('GameID'=>$db->getField('game_id'),'GameName'=>$db->getField('game_name'));
+if($account->hasPermission(PERMISSION_EDIT_STARTED_GAMES)) {
+	$games = Globals::getGameInfo();
 }
-
-$template->assignByRef('EditGames',$editGames);
+else {
+	$games = array();
+	$db->query('SELECT game_id FROM game WHERE start_date > ' . $db->escapeNumber(TIME) . ' ORDER BY end_date DESC');
+	while ($db->nextRecord()) {
+		$games[$db->getInt('game_id')] = Globals::getGameInfo($db->getInt('game_id'));
+	}
+}
+$template->assignByRef('EditGames',$games);
 ?>
