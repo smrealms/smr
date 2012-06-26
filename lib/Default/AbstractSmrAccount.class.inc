@@ -68,6 +68,7 @@ abstract class AbstractSmrAccount {
 	protected $timeShort;
 	protected $template;
 	protected $hotkeys = array();
+	protected $permissions;
 
 	protected $npc;
 
@@ -1051,14 +1052,26 @@ abstract class AbstractSmrAccount {
 		$time = max(TIME,$this->getMailBanned());
 		$this->setMailBanned($time+$increaseTime);
 	}
+	
+	public function getPermissions() {
+		if(!isset($this->permissions)) {
+			$this->permissions = array();
+			$this->db->query('SELECT permission_id
+						FROM account_has_permission
+						WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()));
+			while($this->db->nextRecord()) {
+				$this->permissions[$this->db->getInt('permission_id')] = true;
+			}
+		}
+		return $this->permissions;
+	}
 
-	public function hasPermission($permissionID) {
-		//TODO: Should grab all permissions and cache.
-		$this->db->query('SELECT *
-					FROM account_has_permission
-					WHERE account_id = '.$this->db->escapeNumber($this->getAccountID()).' AND
-						permission_id = '.$this->db->escapeNumber($permissionID).' LIMIT 1');
-		return $this->db->nextRecord();
+	public function hasPermission($permissionID = false) {
+		$permissions = $this->getPermissions();
+		if($permissionID === false) {
+			return count($permissions) > 0;
+		}
+		return isset($permissions[$permissionID]) ? $permissions[$permissionID] : false;
 	}
 
 	public function getPoints() {
