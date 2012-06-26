@@ -38,6 +38,12 @@ if(isset($_REQUEST['player_name'])) {
 elseif(!isset($var['player_name'])) {
 	SmrSession::updateVar('player_name', '');
 }
+if(isset($_REQUEST['game_id'])) {
+	SmrSession::updateVar('SearchGameID',$_REQUEST['game_id']);
+}
+elseif(!isset($var['SearchGameID'])) {
+	SmrSession::updateVar('SearchGameID', 0);
+}
 
 if(!empty($var['account_id']) && !is_numeric($var['account_id'])) {
 	create_error('Account ID must be a number.');
@@ -50,15 +56,16 @@ $player_name = $var['player_name'];
 $curr_account = false;
 
 if (!empty($player_name) && !is_array($player_name)) {
+	$gameIDClause = $var['SearchGameID'] != 0 ? ' AND game_id = ' . $db->escapeNumber($var['SearchGameID']) . ' ': '';
 	$db->query('SELECT account_id FROM player
-				WHERE player_name = ' . $db->escapeString($player_name) . '
+				WHERE player_name = ' . $db->escapeString($player_name) . $gameIDClause . '
 				ORDER BY game_id DESC LIMIT 1');
 	if ($db->nextRecord()) {
 		$account_id = $db->getInt('account_id');
 	}
 	else {
 		$db->query('SELECT * FROM player
-					WHERE player_name LIKE ' . $db->escapeString($player_name));
+					WHERE player_name LIKE ' . $db->escapeString($player_name . '%') . $gameIDClause);
 		if ($db->nextRecord()) {
 			$account_id = $db->getInt('account_id');
 		}

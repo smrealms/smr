@@ -272,6 +272,18 @@
 				<tr>
 					<td align="right" class="bold">Player Name:</td>
 					<td><input type="text" name="player_name" id="InputFields" size="20"></td>
+				</tr>
+				<tr>
+					<td align="right" class="bold">Game:</td>
+					<td>
+						<select name="game_id" size="1" id="InputFields">
+							<option value="0">All Games</option><?php
+							$Games =& Globals::getGameInfo();
+							foreach($Games as &$Game) {
+								?><option value="<?php echo $Game['ID']; ?>"><?php echo $Game['GameName']; ?></option><?php
+							} unset($Game); ?>
+						</select>
+					</td>
 				</tr><?php
 			} ?>
 
