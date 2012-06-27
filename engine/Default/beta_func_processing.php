@@ -67,7 +67,7 @@ elseif ($var['func'] == 'Exp') {
 	$player->setExperience($exp);
 }
 elseif ($var['func'] == 'Align') {
-	$align=min(-500, max(500, (int)$_REQUEST['align']));
+	$align=max(-500, min(500, (int)$_REQUEST['align']));
 	$player->setAlignment($align);
 }
 elseif ($var['func'] == 'Kills') {
