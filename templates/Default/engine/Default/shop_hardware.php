@@ -1,33 +1,33 @@
 <?php
 if (isset($HardwareSold)) { ?>
-	<table class="standard">
+	<script type="text/javascript">
+		function recalcOnKeyUp(hardwareTypeID, cost) {
+			var form = document.getElementById('hardwareForm' + hardwareTypeID);
+			form.total.value = form.amount.value * cost;
+		}
+	</script>
+	<table class="center standard">
 		<tr>
-			<th align="center">Name</th>
-			<th align="center">Purchase Amount</th>
+			<th>Name</th>
+			<th>Purchase Amount</th>
 			<th>&nbsp;</th>
-			<th align="center">Unit Cost</th>
+			<th>Unit Cost</th>
 			<th>&nbsp;</th>
-			<th align="center" width="75">Totals</th>
-			<th align="center">Action</th>
+			<th width="75">Totals</th>
+			<th>Action</th>
 		</tr><?php
 		foreach ($HardwareSold as $HardwareTypeID => $Hardware) {
 			$AmountToBuy = $ThisShip->getMaxHardware($HardwareTypeID) - $ThisShip->getHardware($HardwareTypeID); ?>
 
-			<script type="text/javascript">
-				function recalc_<?php echo $HardwareTypeID; ?>_onkeyup() {
-					var form = document.getElementById('hardwareForm<?php echo $HardwareTypeID; ?>');
-					form.total.value = form.amount.value * <?php echo $Hardware['Cost']; ?>;
-				}
-			</script>
 			<form method="POST" id="hardwareForm<?php echo $HardwareTypeID; ?>" action="<?php echo $Hardware['HREF']; ?>">
 				<tr>
-					<td align="center"><?php echo $Hardware['Name']; ?></td>
-					<td align="center"><input type="text" name="amount" value="<?php echo $AmountToBuy; ?>" size="5" onKeyUp="recalc_<?php echo $HardwareTypeID; ?>_onkeyup()" id="InputFields" class="center"></td>
+					<td><?php echo $Hardware['Name']; ?></td>
+					<td><input type="text" name="amount" value="<?php echo $AmountToBuy; ?>" size="5" onKeyUp="recalcOnKeyUp(<?php echo $HardwareTypeID; ?>,<?php echo $Hardware['Cost']; ?>)" id="InputFields" class="center"></td>
 					<td>*</td>
-					<td align="center"><?php echo number_format($Hardware['Cost']); ?></td>
+					<td><?php echo number_format($Hardware['Cost']); ?></td>
 					<td>=</td>
-					<td align="center"><input type="text" name="total" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" id="InputFields" class="center"></td>
-					<td align="center">
+					<td><input type="text" name="total" disabled="disabled" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" id="InputFields" class="center"></td>
+					<td>
 						<input type="submit" name="action" value="Buy" id="InputFields" />
 					</td>
 				</tr>
