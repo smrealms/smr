@@ -4,7 +4,7 @@ $template->assign('PageTopic','Profit Rankings');
 
 require_once(get_file_loc('Rankings.inc'));
 require_once(get_file_loc('menu.inc'));
-create_ranking_menu(0, 0);
+create_ranking_menu(0, 1);
 
 $profitType = array('Trade','Money','Profit');
 $profitTypeEscaped = $db->escapeArray($profitType,false,true,':',false);
