@@ -13,22 +13,22 @@ $ourRank = 0;
 if ($player->hasAlliance()) {
 	$db->query('SELECT count(*)
 				FROM (
-					SELECT alliance_id, alliance_name, SUM(experience) experience
+					SELECT alliance_id, alliance_name, SUM(experience) amount
 					FROM alliance
 					LEFT JOIN player USING (game_id, alliance_id)
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					GROUP BY alliance_id, alliance_name
 				) t, (
-					SELECT SUM(experience) experience
+					SELECT SUM(experience) amount
 					FROM alliance
 					LEFT JOIN player USING (game_id, alliance_id)
 					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 				) us
 				WHERE (
-					t.experience > us.experience
+					t.amount > us.amount
 					OR (
-						t.experience = us.experience
+						t.amount = us.amount
 						AND alliance_name <= ' . $db->escapeString($player->getAllianceName()) . '
 					)
 				)');
