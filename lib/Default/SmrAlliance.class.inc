@@ -226,7 +226,7 @@ class SmrAlliance {
 			}
 			$this->db->query('SELECT COUNT(*) AS num_orig_vets
 							FROM player_joined_alliance
-							JOIN player USING (alliance_id, game_id)
+							JOIN player USING (account_id, alliance_id, game_id)
 							WHERE game_id='.$this->db->escapeNumber($player->getGameID()).'
 							AND alliance_id='.$this->db->escapeNumber($this->getAllianceID()).'
 							AND status=\'VETERAN\'');
