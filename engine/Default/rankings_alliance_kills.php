@@ -2,7 +2,7 @@
 $template->assign('PageTopic','Alliance Kill Rankings');
 require_once(get_file_loc('Rankings.inc'));
 require_once(get_file_loc('menu.inc'));
-create_ranking_menu(1, 1);
+create_ranking_menu(1, 2);
 
 $db->query('SELECT count(*) FROM alliance
 			WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
