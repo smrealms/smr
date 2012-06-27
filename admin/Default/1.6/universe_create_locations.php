@@ -44,7 +44,7 @@ foreach ($locations as &$location) {
 	if ($location->isHardwareSold()) {
 		$hardwareSold =& $location->getHardwareSold();
 		foreach ($hardwareSold as &$hardware) {
-			$extra .= $hardware . '<br />';
+			$extra .= $hardware['Name'] . '<br />';
 		} unset($hardware);
 	}
 	$extra .= '</span>';

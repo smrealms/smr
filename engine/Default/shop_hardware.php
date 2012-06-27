@@ -2,15 +2,12 @@
 
 $template->assign('PageTopic','Hardware Shop');
 
-$db->query('SELECT * FROM location
-			JOIN location_type USING (location_type_id)
-			JOIN location_sells_hardware USING (location_type_id)
-			JOIN hardware_type USING (hardware_type_id)
-			WHERE sector_id = ' . $db->escapeNumber($player->getSectorID()) . '
-				AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND location_type_id = '.$db->escapeNumber($var['LocationID']));
+if(!$player->getSector()->hasLocation($var['LocationID'])) {
+	create_error('That location does not exist in this sector');
+}
 
-if ($db->getNumRows() > 0 ) {
+$location =& SmrLocation::getLocation($var['LocationID']);
+if ($location->isHardwareSold()) {
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center">Name</th>');
@@ -24,36 +21,30 @@ if ($db->getNumRows() > 0 ) {
 
 	$form = 0;
 
-	while ($db->nextRecord()) {
-		$hardware_name = $db->getField('hardware_name');
-		$hardware_type_id = $db->getField('hardware_type_id');
-		$cost = $db->getField('cost');
+	$hardwareSold = $location->getHardwareSold();
+	foreach ($hardwareSold as $hardwareTypeID => $hardware) {
+		$amount = $ship->getMaxHardware($hardwareTypeID) - $ship->getHardware($hardwareTypeID);
 
-		$amount = $ship->getMaxHardware($hardware_type_id) - $ship->getHardware($hardware_type_id);
-
-		$PHP_OUTPUT.=('<script type="text/javascript" language="JavaScript">'.EOL);
-		$PHP_OUTPUT.=('function recalc_' . $hardware_type_id . '_onkeyup() {'.EOL);
-		//$PHP_OUTPUT.=('window.document.form_$hardware_type_id.total.value = window.document.form_$hardware_type_id.amount.value * $cost;'.EOL);
-		$PHP_OUTPUT.=('window.document.forms['.$form.'].total.value = window.document.forms['.$form.'].amount.value * '.$cost.';'.EOL);
-		$PHP_OUTPUT.=('}'.EOL);
-		$PHP_OUTPUT.=('</script>');
+		$PHP_OUTPUT.=('<script type="text/javascript" language="JavaScript">
+						function recalc_' . $hardwareTypeID . '_onkeyup() {
+							window.document.forms['.$form.'].total.value = window.document.forms['.$form.'].amount.value * '.$hardware['Cost'].';
+						}
+					</script>');
 
 		$form++;
 
 		$container = create_container('shop_hardware_processing.php');
 		transfer('LocationID');
-		$container['hardware_id'] = $hardware_type_id;
-		$container['hardware_name'] = $hardware_name;
-		$container['cost'] = $cost;
+		$container['hardware_id'] = $hardwareTypeID;
 
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center">'.$hardware_name.'</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="'.$amount.'" size="5" onKeyUp="recalc_' . $hardware_type_id . '_onkeyup()" id="InputFields" class="center"></td>');
+		$PHP_OUTPUT.=('<td align="center">'.$hardware['Name'].'</td>');
+		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="'.$amount.'" size="5" onKeyUp="recalc_' . $hardwareTypeID . '_onkeyup()" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td>*</td>');
-		$PHP_OUTPUT.=('<td align="center">'.number_format($cost).'</td>');
+		$PHP_OUTPUT.=('<td align="center">'.number_format($hardware['Cost']).'</td>');
 		$PHP_OUTPUT.=('<td>=</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="text" name="total" value="' . ($amount * $cost) . '" size="7" id="InputFields" class="center"></td>');
+		$PHP_OUTPUT.=('<td align="center"><input type="text" name="total" value="' . ($amount * $hardware['Cost']) . '" size="7" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit('Buy');
 		$PHP_OUTPUT.=('</td>');
@@ -62,7 +53,6 @@ if ($db->getNumRows() > 0 ) {
 	}
 
 	$PHP_OUTPUT.=('</table>');
-
 }
 else $PHP_OUTPUT.=('I have nothing to sell to you. Get out of here!');
 

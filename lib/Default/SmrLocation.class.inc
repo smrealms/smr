@@ -220,9 +220,9 @@ class SmrLocation {
 	public function &getHardwareSold() {
 		if(!isset($this->hardwareSold)) {
 			$this->hardwareSold = array();
-			$this->db->query('SELECT * FROM location_sells_hardware JOIN hardware_type USING(hardware_type_id) WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
+			$this->db->query('SELECT hardware_type_id FROM location_sells_hardware WHERE location_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
 			while($this->db->nextRecord()) {
-				$this->hardwareSold[$this->db->getInt('hardware_type_id')] = $this->db->getField('hardware_name');
+				$this->hardwareSold[$this->db->getInt('hardware_type_id')] = Globals::getHardwareTypes($this->db->getInt('hardware_type_id'));
 			}
 		}
 		return $this->hardwareSold;

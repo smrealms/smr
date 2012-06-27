@@ -11,7 +11,7 @@ foreach($Locations as $Location) { ?>
 	<td><?php echo $Location->isUG() ?></td>
 	<td><?php
 		foreach($Location->getHardwareSold() as $Hardware) {
-			echo $Hardware ?><br /><?php
+			echo $Hardware['Name']; ?><br /><?php
 		} ?>
 	</td>
 	<td><?php

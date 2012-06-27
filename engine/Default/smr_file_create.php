@@ -75,7 +75,7 @@ foreach($locations as &$location) {
 		$locHardwares =& $location->getHardwareSold();
 		$locSells.='ShipEquipment=';
 		foreach($locHardwares as $locHardware) {
-			$locSells.=$locHardware.';';
+			$locSells.=$locHardware['Name'].';';
 		}
 		$locSells = substr($locSells,0,-1).',';
 	}
