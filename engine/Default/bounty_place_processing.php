@@ -1,16 +1,22 @@
 <?php
-$sector =& $player->getSector();
 
-$container = array();
-$container['url'] = 'skeleton.php';
+if(!$player->getSector()->hasLocation($var['LocationID'])) {
+	create_error('That location does not exist in this sector');
+}
+
+$location =& SmrLocation::getLocation($var['LocationID']);
+$container = create_container('skeleton.php');
 transfer('LocationID');
-if ($sector->hasHQ()) {
+if ($location->isHQ()) {
 	$container['body'] = 'government.php';
 	$type = 'HQ';
 }
-else {
+else if($location->isUG()) {
 	$container['body'] = 'underground.php';
 	$type = 'UG';
+}
+else {
+	create_error('The location is not a UG or HQ, how did you get here?');
 }
 $action = $_REQUEST['action'];
 // if we don't have a yes we leave immediatly
