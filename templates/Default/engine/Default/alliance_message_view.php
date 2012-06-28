@@ -44,7 +44,7 @@ if(	isset($PrevThread) || isset($NextThread) ) { ?>
 				<td><?php echo bbifyMessage($Reply['Message']); ?></td>
 				<td class="shrink noWrap top"><?php echo date(DATE_FULL_SHORT,$Reply['SendTime']); ?></td><?php
 				if($Thread['CanDelete']) {
-					?><td class="shrink noWrap top"><a href="<?php echo $Reply['DeleteHref']; ?>"><img src="images/silk/cross.png" alt="Delete" title="Delete Post"/></a></td><?php
+					?><td class="shrink noWrap top"><a href="<?php echo $Reply['DeleteHref']; ?>"><img src="images/silk/cross.png" width="16" height="16" alt="Delete" title="Delete Post"/></a></td><?php
 				} ?>
 			</tr><?php
 		} unset($Reply); ?>

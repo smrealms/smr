@@ -24,18 +24,18 @@ if($ThisShip->hasWeapons()) { ?>
 					<td><input type="hidden" name="weapon_reorder[]" value="<?php echo $OrderID ?>" />
 						<noscript><a href="<?php echo Globals::getWeaponReorderHREF($OrderID,'Up') ?>"></noscript><?php
 						if($OrderID > 0) { ?>
-							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up.gif" alt="Switch up" title="Switch up"><?php
+							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up.gif" width="24" height="24" alt="Switch up" title="Switch up"><?php
 						}
 						else { ?>
-							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up_push.gif" alt="Push up" title="Push up"><?php
+							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,-1)" src="images/up_push.gif" width="24" height="24" alt="Push up" title="Push up"><?php
 						} ?>
 						<noscript></a>
 						<a href="<?php echo Globals::getWeaponReorderHREF($OrderID,'Down') ?>"></noscript><?php
 						if($OrderID < $ThisShip->getNumWeapons()-1) { ?>
-							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down.gif" alt="Switch down" title="Switch down"><?php
+							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down.gif" width="24" height="24" alt="Switch down" title="Switch down"><?php
 						}
 						else { ?>
-							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down_push.gif" alt="Push down" title="Push down"><?php
+							<img style="cursor:pointer;" onclick="moveRow(this.parentNode,1)" src="images/down_push.gif" width="24" height="24" alt="Push down" title="Push down"><?php
 						} ?>
 						<noscript></a></noscript>
 					</td>

@@ -928,7 +928,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 			$img = $voteLinks[$i]['default_img'];
 		}
 
-		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $voteLinks[$i]['name'] . '"></a>';
+		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $voteLinks[$i]['name'] . '" width="98" height="41"></a>';
 	}
 	$template->assign('VoteSites',$voteSite);
 	$template->assign('TimeToNextVote',$minVoteTime);
