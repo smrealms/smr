@@ -938,11 +938,17 @@ class SmrPort {
 		$container['port_id'] = $this->getSectorID();
 		return SmrSession::getNewHREF($container);
 	}
-	
+
 	public function getLootHREF($justContainer = false) {
 		$container = create_container('skeleton.php','port_loot.php');
 		$container['port_id'] = $this->getSectorID();
 		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
+	}
+
+	public function getLootGoodHREF(array &$boughtGood) {
+		$container = create_container('port_loot_processing.php');
+		$container['GoodID'] = $boughtGood['ID'];
+		return SmrSession::getNewHREF($container);
 	}
 	public function isCachedVersion() {
 		return $this->cachedVersion;

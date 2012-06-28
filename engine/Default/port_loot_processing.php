@@ -1,6 +1,6 @@
 <?php
 // get good name, id, ...
-$good_id = $var['good_id'];
+$good_id = $var['GoodID'];
 $good_name = Globals::getGoodName($good_id);
 $amount = $_REQUEST['amount'];
 if (!is_numeric($amount))
