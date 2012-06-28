@@ -1251,5 +1251,37 @@ abstract class AbstractSmrPlayer {
 		}
 		return !isset($this->visitedSectors[$sectorID]);
 	}
+
+	public function getExamineTraderHREF() {
+		$container = create_container('skeleton.php','trader_examine.php');
+		$container['target'] = $this->getAccountID();
+		return SmrSession::getNewHREF($container);
+	}
+
+	public function getAttackTraderHREF() {
+		return Globals::getAttackTraderHREF($this->getAccountID());
+	}
+
+	public function getPlanetKickHREF() {
+		$container = create_container('planet_kick_processing.php','trader_attack_processing.php');
+		$container['account_id'] = $this->getAccountID();
+		return SmrSession::getNewHREF($container);
+	}
+
+	public function getTraderSearchHREF() {
+		$container = create_container('skeleton.php','trader_search_result.php');
+		$container['player_id'] = $this->getPlayerID();
+		return SmrSession::getNewHREF($container);
+	}
+
+	public function getAllianceRosterHREF() {
+		return Globals::getAllianceRosterHREF($this->getAllianceID());
+	}
+
+	public function getToggleWeaponHidingHREF() {
+		$container = create_container('skeleton.php','toggle_processing.php');
+		$container['toggle'] = 'WeaponHiding';
+		return SmrSession::getNewHREF($container);
+	}
 }
 ?>
