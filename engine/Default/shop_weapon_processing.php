@@ -1,7 +1,16 @@
 <?php
-$action = $_REQUEST['action'];
-if ($action == 'Buy') {
-	$weapon =& SmrWeapon::getWeapon($player->getGameID(), $var['weapon_type_id']);
+if(!$player->getSector()->hasLocation($var['LocationID'])) {
+	create_error('That location does not exist in this sector');
+}
+
+$weapon =& SmrWeapon::getWeapon($player->getGameID(), $var['WeaponTypeID']);
+// Are we buying?
+if (!isset($var['OrderID'])) {
+	$location =& SmrLocation::getLocation($var['LocationID']);
+	if(!$location->isWeaponSold($var['WeaponTypeID'])) {
+		create_error('We do not sell that weapon here!');
+	}
+	
 	if ($weapon->getRaceID() != RACE_NEUTRAL && $player->getRelation($weapon->getRaceID()) < 300) {
 		create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
 	}
@@ -33,14 +42,13 @@ if ($action == 'Buy') {
 	$weapon =& $ship->addWeapon($weapon->getWeaponTypeID());
 	$account->log(LOG_TYPE_HARDWARE, 'Player Buys a '.$weapon->getName(), $player->getSectorID());
 }
-elseif ($action == 'Sell') {
-	$weapon =& SmrWeapon::getWeapon($player->getGameID(), $var['weapon_type_id']);
+else {
 	// mhh we wanna sell our weapon
 	// give the money to the user
 	$player->increaseCredits(floor($weapon->getCost() * WEAPON_REFUND_PERCENT));
 
 	// take weapon
-	$ship->removeWeapon($var['order_id']);
+	$ship->removeWeapon($var['OrderID']);
 
 	$account->log(LOG_TYPE_HARDWARE, 'Player Sells a '.$weapon->getName(), $player->getSectorID());
 }

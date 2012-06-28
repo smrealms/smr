@@ -61,6 +61,21 @@ class SmrWeapon extends AbstractSmrCombatWeapon {
 			$this->maxDamage = max($this->shieldDamage,$this->armourDamage);
 		}
 	}
+
+	public function getBuyHREF(SmrLocation $location) {
+		$container = create_container('shop_weapon_processing.php');
+		$container['LocationID'] = $location->getTypeID();
+		$container['WeaponTypeID'] = $this->getWeaponTypeID();
+		return SmrSession::getNewHREF($container);
+	}
+
+	public function getSellHREF(SmrLocation $location, $orderID) {
+		$container = create_container('shop_weapon_processing.php');
+		$container['LocationID'] = $location->getTypeID();
+		$container['WeaponTypeID'] = $this->getWeaponTypeID();
+		$container['OrderID'] = $orderID;
+		return SmrSession::getNewHREF($container);
+	}
 	
 	public function getWeaponTypeID() {
 		return $this->weaponTypeID;
