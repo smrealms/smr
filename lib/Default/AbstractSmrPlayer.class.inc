@@ -1252,6 +1252,10 @@ abstract class AbstractSmrPlayer {
 		return !isset($this->visitedSectors[$sectorID]);
 	}
 
+	public function getLeaveNewbieProtectionHREF() {
+		return SmrSession::getNewHREF(create_container('leave_newbie_processing.php'));
+	}
+
 	public function getExamineTraderHREF() {
 		$container = create_container('skeleton.php','trader_examine.php');
 		$container['target'] = $this->getAccountID();
