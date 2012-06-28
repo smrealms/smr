@@ -70,7 +70,7 @@ else {
 						</td>
 						<td class="noWrap"<?php if(!isset($Message['Sender'])) { ?> colspan="3"<?php } ?>>Date: <?php echo date(DATE_FULL_SHORT, $Message['SendTime']); ?></td>
 						<td>
-							<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/notify.gif" border="0" align="right" title="Report this message to an admin" /></a>
+							<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/notify.gif" width="14" height="11" border="0" align="right" title="Report this message to an admin" /></a>
 						</td><?php
 						if (isset($Message['Sender'])) { ?>
 							<td>
