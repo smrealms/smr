@@ -454,6 +454,10 @@ function exitNPC() {
 
 function changeNPCLogin() {
 	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED,$underAttack,$previousContainer;
+	if($actions > 0) {
+		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage ());
+		exit;
+	}
 	$actions=-1;
 	$GLOBALS['TRADE_ROUTE'] = null;
 	$db = new SmrMySqlDatabase();
