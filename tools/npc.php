@@ -417,10 +417,13 @@ function debug($message, $debugObject = null) {
 }
 
 function processContainer($container) {
-	global $forwardedContainer, $previousContainer;
+	global $forwardedContainer, $previousContainer, $player;
 	if($container == $previousContainer && $forwardedContainer['body'] != 'forces_attack.php') {
 		debug('We are executing the same container twice?', array('ForwardedContainer' => $forwardedContainer, 'Container' => $container));
-		throw new Exception('We are executing the same container twice?');
+		if($player->hasNewbieTurns() || $player->hasFederalProtection()) {
+			// Only throw the exception if we have protection, otherwise let's hope that the NPC will be able to find its way to safety rather than dying in the open.
+			throw new Exception('We are executing the same container twice?');
+		}
 	}
 	clearCaches(); //Clear caches of anything we have used for decision making before processing container and getting lock.
 	$previousContainer = $container;
