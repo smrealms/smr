@@ -1,7 +1,6 @@
 <?php
 @date_default_timezone_set(@date_default_timezone_get());
-
-require_once('config.specific.php');
+require_once(dirname(__FILE__) . '/config.specific.php');
 
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
