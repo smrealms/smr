@@ -22,13 +22,12 @@ function write_log_message($msg)
 }
 
 // config file
-include(realpath(dirname(__FILE__)) . '/../htdocs/config.inc');
-
-include(LIB . '/Default/SmrMySqlDatabase.class.inc');
-
-include(ENGINE . '/Default/smr.inc');
-
-require_once('irc/config.specific.php');
+require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
+// bot config
+require_once(TOOLS . 'irc/config.specific.php');
+// some libs
+require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
+require_once(get_file_loc('smr.inc'));
 
 // timer events
 $events = array();
@@ -56,24 +55,24 @@ define('IRC_LOGGING', $logging);
 define('IRC_DEBUGGING', $debugging);
 
 // include all sub files
-require_once('irc/server.php');
-require_once('irc/ctcp.php');
-require_once('irc/invite.php');
-//require_once('irc/rank.php');
-//require_once('irc/ship.php');
-require_once('irc/user.php');
-require_once('irc/query.php');
-require_once('irc/notice.php');
-//require_once('irc/weapon.php');
-//require_once('irc/level.php');
-require_once('irc/channel.php');
-require_once('irc/channel_action.php');
-require_once('irc/channel_msg.php');
-require_once('irc/channel_msg_op.php');
-require_once('irc/channel_msg_sd.php');
-require_once('irc/channel_msg_seed.php');
-require_once('irc/channel_msg_sms.php');
-require_once('irc/maintenance.php');
+require_once(TOOLS . 'irc/server.php');
+require_once(TOOLS . 'irc/ctcp.php');
+require_once(TOOLS . 'irc/invite.php');
+//require_once(TOOLS . 'irc/rank.php');
+//require_once('TOOLS . irc/ship.php');
+require_once(TOOLS . 'irc/user.php');
+require_once(TOOLS . 'irc/query.php');
+require_once(TOOLS . 'irc/notice.php');
+//require_once(TOOLS . 'irc/weapon.php');
+//require_once(TOOLS . 'irc/level.php');
+require_once(TOOLS . 'irc/channel.php');
+require_once(TOOLS . 'irc/channel_action.php');
+require_once(TOOLS . 'irc/channel_msg.php');
+require_once(TOOLS . 'irc/channel_msg_op.php');
+require_once(TOOLS . 'irc/channel_msg_sd.php');
+require_once(TOOLS . 'irc/channel_msg_seed.php');
+require_once(TOOLS . 'irc/channel_msg_sms.php');
+require_once(TOOLS . 'irc/maintenance.php');
 
 // delete all seen stats that appear to be on (we do not want to take something for granted that happend while we were away)
 $db = new SmrMySqlDatabase();

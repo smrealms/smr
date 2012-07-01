@@ -1,11 +1,15 @@
 <?php
 try {
 	echo '<pre>';
-	require_once('../htdocs/config.inc');
+    // global config
+    require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
+    // bot config
+    require_once(TOOLS . 'irc/config.specific.php');
+    // needed libs
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/Globals.class.inc');
-	
-	$db = new SmrMySqlDatabase();
+
+    $db = new SmrMySqlDatabase();
 	
 	debug('Script started');
 	define('SCRIPT_ID', $db->getInsertID());
@@ -29,17 +33,7 @@ try {
 	require_once(get_file_loc('SmrAccount.class.inc'));
 
 	$NPC_LOGINS_USED = array('');
-	
-	if(!defined('NPC_GAME_ID')) {
-		define('NPC_GAME_ID',50);
-	}
-	define('NPC_LOW_TURNS',75);
-	define('NPC_LOW_NEWBIE_TURNS',10);
-	define('MINUMUM_RESERVE_CREDITS',100000);
-	define('MIN_NEWBIE_TURNS_TO_BUY_CARGO',50);
-	define('MIN_SLEEP_TIME',800000);
-	define('MAX_SLEEP_TIME',1100000);
-	
+
 	$SHIP_UPGRADE_PATH = array(
 		2 => array( //Alskant
 			SHIP_TYPE_TRADE_MASTER,
