@@ -33,25 +33,27 @@ SMR requires write access to htdocs/upload, you will need to create this folder.
 ## Database
 SMR is using [Flyway](http://code.google.com/p/flyway) to deploy database patches.
 
-1. Download Flyway `wget http://flyway.googlecode.com/files/flyway-commandline-1.6.1-dist.tar.gz && tar -xvzf flyway-commandline-1.6.1-dist.tar.gz -C /opt`
+1. Download and untar Flyway
+`wget http://flyway.googlecode.com/files/flyway-commandline-1.6.1-dist.tar.gz && tar -xvzf flyway-commandline-1.6.1-dist.tar.gz -C /opt`
 2. Set the following options in /opt/flyway-commandline-1.6.1/conf/flyway.properties
-
-`flyway.driver=com.mysql.jdbc.Driver
+`
+flyway.driver=com.mysql.jdbc.Driver
 flyway.url=jdbc:mysql://localhost/smr_live
 flyway.user=smr
 flyway.password=YOUR_DATABSE_PASSWORD`
 
 3. Download the Java MySQL Connector from http://www.mysql.de/downloads/connector/j
 4. Unzip it and put the jar into /opt/flyway-commandline-1.6.1/jars
-5. Direct sql folder to SMR patches `cd /opt/flyway-commandline-1.6.1 && rm -Rf sql && ln -s <GIT_ROOT_PATH>/db/patches sql´
-6. Initialize database ´./flyway.sh init´ which automatically creates the needed database tables and initializes the version
+5. Direct sql folder to SMR patches 
+`cd /opt/flyway-commandline-1.6.1 && rm -Rf sql && ln -s <GIT_ROOT_PATH>/db/patches sql`
+6. Initialize database `./flyway.sh init` which automatically creates the needed database tables and initializes the version
 7. Run all patches `./flyway.sh migrate`
 
 If you start with an existing database you need to follow above steps 1 to 5 and initialize the databse with the following command:
-`./flyway.sh -initialVersion=1.6.39 init` which would mean that your current database equals the one from SMR 1.6.39. From this point on you can use `flyway.sh migrate` to update to latest database.
+`./flyway.sh -initialVersion=1.6.39 init` which would mean that your current database equals the one from SMR 1.6.39. From this point on you can use `./flyway.sh migrate` to update to latest database.
 After creating a user account I would recommend inserting a row into the permission table corresponding to the account you created and with a permission_id of 1 in order to give yourself admin permissions.
 
-In case you need to change database with a new version put a file called V<VERSION_NUMBER>__NAME.sql into db/patches folder. One version can have multiple patches.
+In case you need to change database with a new version put a file called `V<VERSION_NUMBER>__NAME.sql` into db/patches folder. One version can have multiple patches.
 
 
 # Coding Style
