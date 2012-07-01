@@ -434,12 +434,7 @@ abstract class AbstractSmrPlayer {
 		if($player !== null) {
 			$relations = $player->getRelation($otherRaceID);
 		}
-		$raceName = get_colored_text($relations, Globals::getRaceName($otherRaceID));
-		if($linked === true) {
-			$container = create_container('skeleton.php','council_list.php', array('race_id' => $otherRaceID));
-			$raceName = create_link($container, $raceName);
-		}
-		return $raceName;
+		return Globals::getColouredRaceName($otherRaceID, $relations, $linked);
 	}
 
 	public function getColouredRaceName($otherRaceID, $linked = false) {
