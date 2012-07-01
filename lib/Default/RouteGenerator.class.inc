@@ -232,19 +232,23 @@ class RouteGenerator {
 
 abstract class Route {
 	public function getOverallExpMultiplier() {
-		return ($this->getForwardRoute()->getMultiplierSum() + $this->getReturnRoute()->getMultiplierSum()) / $this->getTurnsForRoute();
+		return $this->getExpMultiplierSum() / $this->getTurnsForRoute();
 	}
 
 	public function getOverallMoneyMultiplier() {
-		return ($this->getForwardRoute()->getOverallMoneyMultiplier() + $this->getReturnRoute()->getOverallMoneyMultiplier()) / $this->getTurnsForRoute();
+		return $this->getMoneyMultiplierSum() / $this->getTurnsForRoute();
 	}
 
 	public function getTurnsForRoute() {
 		return $this->getForwardRoute()->getTurnsForRoute() + $this->getReturnRoute()->getTurnsForRoute();
 	}
 
-	public function getMultiplierSum() {
-		return $this->getForwardRoute()->getMultiplierSum() + $this->getReturnRoute()->getMultiplierSum();
+	public function getMoneyMultiplierSum() {
+		return $this->getForwardRoute()->getExpMultiplierSum() + $this->getReturnRoute()->getExpMultiplierSum();
+	}
+
+	public function getExpMultiplierSum() {
+		return $this->getForwardRoute()->getExpMultiplierSum() + $this->getReturnRoute()->getExpMultiplierSum();
 	}
 
 	public function containsPort($sectorID) {
@@ -350,7 +354,7 @@ class OneWayRoute extends Route {
 		return ($this->buyDi + $this->sellDi) / getTurnsForRoute();
 	}
 
-	public function getOverallMoneyMultiplier() {// TODO sellDi stuff and check accuracy of formula
+	public function getMoneyMultiplierSum() {// TODO sellDi stuff and check accuracy of formula
 		$buyRelFactor = 1;
 		$sellRelFactor = 1;
 		if (ROUTE_GEN_USE_RELATIONS_FACTOR===true) {
@@ -362,16 +366,16 @@ class OneWayRoute extends Route {
 		}
 		$goodInfo = Globals::getGood($this->goodId);
 		$buyPrice = round(($goodInfo['BasePrice'] * 0.6 * pow($this->buyDi + .5, 1.8) * $buyRelFactor));
-		$sellPrice = round(($goodInfo['BasePrice'] * 0.5 * pow($this->sellDi, 1.84) * $sellRelFactor / 38.56 /*
-																																 * * (1 +
-																																 * (10 -
-																																 * $port_lvl) /
-																																 * 50)
-																																 */));
+		$sellPrice = round(($goodInfo['BasePrice'] * 0.5 * pow($this->sellDi, 1.84) * $sellRelFactor / 38.56	/*
+																												* * (1 +
+																												* (10 -
+																												* $port_lvl) /
+																												* 50)
+																												*/));
 		return $buyPrice - $sellPrice;
 	}
 
-	public function getMultiplierSum() {
+	public function getExpMultiplierSum() {
 		return $this->buyDi + $this->sellDi;
 	}
 
