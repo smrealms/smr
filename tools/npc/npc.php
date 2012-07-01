@@ -471,7 +471,12 @@ function changeNPCLogin() {
 	
 	debug('Choosing new NPC');
 	$db2 = new SmrMySqlDatabase();
-	$db->query('SELECT login, player_name, alliance_name FROM npc_logins WHERE active='.$db->escapeBoolean(true).' AND working='.$db->escapeBoolean(false).' AND login NOT IN ('.$db->escapeArray($NPC_LOGINS_USED).')');
+	$db->query('SELECT login, npc.player_name, alliance_name
+				FROM npc_logins npc
+				LEFT JOIN account a USING(login)
+				LEFT JOIN player p ON a.account_id = p.account_id AND p.game_id = ' . $db->escapeNumber(NPC_GAME_ID) . '
+				WHERE active=' . $db->escapeBoolean(true) . ' AND working=' . $db->escapeBoolean(false) . ' AND login NOT IN (' . $db->escapeArray($NPC_LOGINS_USED) . ')
+				ORDER BY (turns IS NOT NULL), turns DESC');
 	while($db->nextRecord()) {
 		$db2->query('UPDATE npc_logins SET working='.$db2->escapeBoolean(true).' WHERE login='.$db2->escapeString($db->getField('login')).' AND working='.$db2->escapeBoolean(false));
 		if($db2->getChangedRows()>0) {
