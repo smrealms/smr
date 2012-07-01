@@ -15,6 +15,7 @@ $RACES =& Globals::getRaces();
 $raceRelations =& Globals::getRaceRelations($player->getGameID(),$raceID);
 
 $peaceRaces = array();
+$neutralRaces = array();
 $warRaces = array();
 foreach ($RACES as $otherRaceID => $raceInfo) {
 	if($otherRaceID != RACE_NEUTRAL && $raceID != $otherRaceID) {
@@ -24,10 +25,14 @@ foreach ($RACES as $otherRaceID => $raceInfo) {
 		else if($raceRelations[$otherRaceID] <= -300) {
 			$warRaces[$otherRaceID] = $raceInfo;
 		}
+		else {
+			$neutralRaces[$otherRaceID] = $raceInfo;
+		}
 	}
 }
 
 $template->assignByRef('PeaceRaces', $peaceRaces);
+$template->assignByRef('NeutralRaces', $neutralRaces);
 $template->assignByRef('WarRaces', $warRaces);
 
 ?>
