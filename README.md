@@ -23,6 +23,7 @@ Currently it is required to create installation specific copies of the following
 
 For "Caretaker" functionality:
 * tools/irc/config.specific.sample.php -> tools/irc/config.specific.php
+
 For npc:
 * tools/npc/config.specific.sample.php -> tools/npc/config.specific.php
 
@@ -36,19 +37,31 @@ SMR requires write access to htdocs/upload, you will need to create this folder.
 SMR is using [Flyway](http://code.google.com/p/flyway) to deploy database patches.
 
 1. Download and untar Flyway
-`wget http://flyway.googlecode.com/files/flyway-commandline-1.6.1-dist.tar.gz && tar -xvzf flyway-commandline-1.6.1-dist.tar.gz -C /opt`
+
+    ```bash
+    wget http://flyway.googlecode.com/files/flyway-commandline-1.6.1-dist.tar.gz && tar -xvzf flyway-commandline-1.6.1-dist.tar.gz -C /opt
+    ```
+
 2. Set the following options in /opt/flyway-commandline-1.6.1/conf/flyway.properties
-`
-flyway.driver=com.mysql.jdbc.Driver
-flyway.url=jdbc:mysql://localhost/smr_live
-flyway.user=smr
-flyway.password=YOUR_DATABSE_PASSWORD`
+    ```bash
+    flyway.driver=com.mysql.jdbc.Driver
+    flyway.url=jdbc:mysql://localhost/smr_live
+    flyway.user=smr
+    flyway.password=YOUR_DATABSE_PASSWORD
+    ```
 
 3. Download the Java MySQL Connector from http://www.mysql.de/downloads/connector/j
+
 4. Unzip it and put the jar into /opt/flyway-commandline-1.6.1/jars
-5. Direct sql folder to SMR patches 
-`cd /opt/flyway-commandline-1.6.1 && rm -Rf sql && ln -s <GIT_ROOT_PATH>/db/patches sql`
+
+5. Point sql folder to SMR patches
+
+    ```
+    cd /opt/flyway-commandline-1.6.1 && rm -Rf sql && ln -s <GIT_ROOT_PATH>/db/patches sql
+    ```
+
 6. Initialize database `./flyway.sh init` which automatically creates the needed database tables and initializes the version
+
 7. Run all patches `./flyway.sh migrate`
 
 If you start with an existing database you need to follow above steps 1 to 5 and initialize the databse with the following command:
