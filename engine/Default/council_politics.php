@@ -1,64 +1,33 @@
 <?php
 require_once(get_file_loc('menu.inc'));
 
-// echo topic
+if (!isset($var['race_id'])) {
+	SmrSession::updateVar('race_id', $player->getRaceID());
+}
 $raceID = $var['race_id'];
-if (empty($raceID))
-	$raceID = $player->getRaceID();
-$RACES =& Globals::getRaces();
-$raceRelations =& Globals::getRaceRelations($player->getGameID(),$raceID);
 
-$template->assign('PageTopic','Ruling Council Of ' . $RACES[$raceID]['Race Name']);
+$template->assign('PageTopic','Ruling Council Of ' . Globals::getRaceName($raceID));
 
 // echo menu
 create_council_menu($raceID);
 
-$PHP_OUTPUT.=('<div align="center">');
-$PHP_OUTPUT.=('<p>We are at War/Peace<br />with the following races:</p>');
+$RACES =& Globals::getRaces();
+$raceRelations =& Globals::getRaceRelations($player->getGameID(),$raceID);
 
-$PHP_OUTPUT.=('<table>');
-$PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<th width="150">Peace</th>');
-$PHP_OUTPUT.=('<th width="150">War</th>');
-$PHP_OUTPUT.=('</tr>');
-
-$PHP_OUTPUT.=('<tr>');
-
-// peace
-$PHP_OUTPUT.=('<td align="center" valign="top">');
-$PHP_OUTPUT.=('<table>');
-
+$peaceRaces = array();
+$warRaces = array();
 foreach ($RACES as $otherRaceID => $raceInfo) {
-	if($raceID != RACE_NEUTRAL && $raceID != $otherRaceID && $raceRelations[$otherRaceID] >= 300) {
-		$container = create_container('skeleton.php', 'council_send_message.php');
-		$container['race_id'] = $otherRaceID;
-		$PHP_OUTPUT.=('<tr><td align="center">');
-		$PHP_OUTPUT.=create_link($container, get_colored_text($raceRelations[$otherRaceID], $raceInfo['Race Name']));
-		$PHP_OUTPUT.=('</td></tr>');
+	if($otherRaceID != RACE_NEUTRAL && $raceID != $otherRaceID) {
+		if($raceRelations[$otherRaceID] >= 300) {
+			$peaceRaces[$otherRaceID] = $raceInfo;
+		}
+		else if($raceRelations[$otherRaceID] <= -300) {
+			$warRaces[$otherRaceID] = $raceInfo;
+		}
 	}
 }
 
-$PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</td>');
-
-// war
-$PHP_OUTPUT.=('<td align="center" valign="top">');
-$PHP_OUTPUT.=('<table>');
-foreach ($RACES as $otherRaceID => $raceInfo) {
-	if($raceID != RACE_NEUTRAL && $raceID != $otherRaceID && $raceRelations[$otherRaceID] <= -300) {
-		$container = create_container('skeleton.php', 'council_send_message.php');
-		$container['race_id'] = $otherRaceID;
-		$PHP_OUTPUT.=('<tr><td align="center">');
-		$PHP_OUTPUT.=create_link($container, get_colored_text($raceRelations[$otherRaceID], $raceInfo['Race Name']));
-		$PHP_OUTPUT.=('</td></tr>');
-	}
-}
-$PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</td>');
-
-$PHP_OUTPUT.=('</tr>');
-
-$PHP_OUTPUT.=('</table>');
-$PHP_OUTPUT.=('</div>');
+$template->assignByRef('PeaceRaces', $peaceRaces);
+$template->assignByRef('WarRaces', $warRaces);
 
 ?>

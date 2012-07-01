@@ -148,6 +148,20 @@ class Globals {
 		return $races[$raceID]['Race Name'];
 	}
 
+	public static function getColouredRaceNameForRace($raceID, $gameID, $fromRaceID, $linked = true) {
+		$raceRelations =& Globals::getRaceRelations($gameID, $fromRaceID);
+		return self::getColouredRaceName($raceID, $raceRelations[$raceID], $linked);
+	}
+
+	public static function getColouredRaceName($raceID, $relations, $linked = true) {
+		$raceName = get_colored_text($relations, Globals::getRaceName($raceID));
+		if($linked === true) {
+			$container = create_container('skeleton.php','council_list.php', array('race_id' => $raceID));
+			$raceName = create_link($container, $raceName);
+		}
+		return $raceName;
+	}
+
 	public static function &getGoods() {
 		if(self::$GOODS==null) {
 			self::initialiseDatabase();
