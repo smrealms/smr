@@ -31,7 +31,7 @@ function check_sms_dlr($fp)
 		} elseif ($status == 'BUFFERED') {
 			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text message has been buffered and will be delivered when ' . $receiver->getIrcNick() . ' turns on his/her cell phone.' . EOL);
 		} elseif ($status == 'TRANSMITTED') {
-			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text message has been delivered to ' . $receiver->getIrcNick() . '\'s cell phone.' . EOL);
+			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Your text message has been sent.' . EOL);
 		} else {
 			fputs($fp, 'NOTICE ' . $sender->getIrcNick() . ' :Something unexpected happend to your text message. Status returned by gateway was: ' . $status . EOL);
 		}
@@ -39,7 +39,8 @@ function check_sms_dlr($fp)
 		// update announce status
 		$db->query('UPDATE account_sms_dlr ' .
 		           'SET    announce = 1 ' .
-		           'WHERE  message_id = ' . $message_id);
+		           'WHERE  message_id = ' . $message_id .
+                   'AND    status = ' . $status);
 	}
 
 }
@@ -64,7 +65,7 @@ function check_sms_response($fp)
 
 		$orig_sender =& SmrAccount::getAccount($orig_sender_id, true);
 
-		fputs($fp, 'NOTICE ' . $orig_sender->getIrcNick() . ' :You have received an response to your text: ' . EOL);
+		fputs($fp, 'NOTICE ' . $orig_sender->getIrcNick() . ' :You have received a response to your text: ' . EOL);
 		fputs($fp, 'NOTICE ' . $orig_sender->getIrcNick() . ' :' . $message . EOL);
 
 		// update announce status

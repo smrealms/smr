@@ -1,0 +1,1 @@
+ALTER TABLE  `account_sms_dlr` DROP PRIMARY KEY;
