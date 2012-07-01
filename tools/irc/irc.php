@@ -113,11 +113,11 @@ while ($running) {
 				safefputs($fp, 'WHO #smr-bar' . EOL);
 
 				// join all alliance channels
-				$db->query('SELECT    channel ' .
-						'FROM      irc_alliance_has_channel ' .
-						'JOIN game USING (game_id) ' .
-						'WHERE     start_date < ' . time() .
-						'  AND     end_date > ' . time());
+				$db->query('SELECT channel
+							FROM irc_alliance_has_channel
+							JOIN game USING (game_id)
+							WHERE start_date < ' . time() . '
+								AND end_date > ' . time());
 				while ($db->nextRecord()) {
 					$alliance_channel = $db->getField('channel');
 					// join channels

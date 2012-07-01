@@ -39,15 +39,15 @@ function channel_join($fp, $rdata)
 				fputs($fp, 'PRIVMSG ' . $channel . ' :Welcome back ' . $nick . '. While being away ' . $seen_by . ' was looking for you.' . EOL);
 			}
 
-			$db->query('UPDATE irc_seen SET ' .
-			           'signed_on = ' . $db->escapeNumber(time()) . ', ' .
-			           'signed_off = 0, ' .
-			           'user = ' . $db->escapeString($user) . ', ' .
-			           'host = ' . $db->escapeString($host) . ', ' .
-			           'seen_count = 0, ' .
-			           'seen_by = NULL, ' .
-			           'registered = NULL ' .
-			           'WHERE seen_id = ' . $db->escapeNumber($seen_id));
+			$db->query('UPDATE irc_seen
+						SET signed_on = ' . $db->escapeNumber(time()) . ',
+							signed_off = 0,
+							user = ' . $db->escapeString($user) . ',
+							host = ' . $db->escapeString($host) . ',
+							seen_count = 0,
+							seen_by = NULL,
+							registered = NULL
+						WHERE seen_id = ' . $db->escapeNumber($seen_id));
 
 		} else {
 			// new nick?
@@ -61,11 +61,11 @@ function channel_join($fp, $rdata)
 			$alliance_id = $db->getField('alliance_id');
 
 			// check if there is an upcoming op
-			$db->query('SELECT time, yes, no, maybe ' .
-					   'FROM alliance_has_op ' .
-					   'WHERE alliance_id = ' . $alliance_id . ' AND ' .
-					   '      game_id = ' . $game_id . ' AND ' .
-			           '      time > ' . time());
+			$db->query('SELECT time, yes, no, maybe
+						FROM alliance_has_op
+						WHERE alliance_id = ' . $alliance_id . '
+							AND game_id = ' . $game_id . '
+							AND time > ' . time());
 			if ($db->nextRecord()) {
 				$yes = unserialize($db->getField('yes'));
 				if (!is_array($yes))

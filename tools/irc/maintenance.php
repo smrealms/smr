@@ -4,12 +4,11 @@ function check_sms_dlr($fp)
 {
 	// get one dlr per time so we do not spam anyone
 	$db = new SmrMySqlDatabase();
-	$db->query(
-		'SELECT     * ' .
-		'FROM       account_sms_dlr ' .
-		'LEFT JOIN  account_sms_log USING (message_id) ' .
-		'WHERE      announce = 0 ' .
-		'ORDER BY   log_id'
+	$db->query('SELECT * 
+				FROM account_sms_dlr
+				LEFT JOIN account_sms_log USING (message_id)
+				WHERE announce = 0
+				ORDER BY log_id'
 	);
 	if ($db->nextRecord()) {
 		$message_id = $db->getField('message_id');
@@ -37,10 +36,10 @@ function check_sms_dlr($fp)
 		}
 
 		// update announce status
-		$db->query('UPDATE account_sms_dlr ' .
-		           'SET    announce = 1 ' .
-		           'WHERE  message_id = ' . $message_id .
-                   'AND    status = ' . $status);
+		$db->query('UPDATE account_sms_dlr
+					SET announce = 1
+					WHERE message_id = ' . $message_id . '
+						AND status = ' . $status);
 	}
 
 }
@@ -49,11 +48,10 @@ function check_sms_response($fp)
 {
 	// get one dlr per time so we do not spam anyone
 	$db = new SmrMySqlDatabase();
-	$db->query(
-		'SELECT     * ' .
-		'FROM       account_sms_response ' .
-		'LEFT JOIN  account_sms_log USING (message_id) ' .
-		'WHERE      announce = 0'
+	$db->query('SELECT *
+				FROM account_sms_response
+				LEFT JOIN account_sms_log USING (message_id)
+				WHERE announce = 0'
 	);
 	if ($db->nextRecord()) {
 		$response_id = $db->getField('response_id');
@@ -69,9 +67,9 @@ function check_sms_response($fp)
 		fputs($fp, 'NOTICE ' . $orig_sender->getIrcNick() . ' :' . $message . EOL);
 
 		// update announce status
-		$db->query('UPDATE account_sms_response ' .
-		           'SET    announce = 1 ' .
-		           'WHERE  response_id = ' . $response_id);
+		$db->query('UPDATE account_sms_response
+					SET announce = 1
+					WHERE response_id = ' . $response_id);
 	}
 
 }
