@@ -180,10 +180,10 @@ function channel_msg_seen($fp, $rdata)
 				$seen_id = $db->getField('seen_id');
 
 				// remember who did the !seen command
-				$db->query('UPDATE irc_seen SET ' .
-				           'seen_count = seen_count + 1, ' .
-				           'seen_by = ' . $db->escapeString($nick) . ' ' .
-				           'WHERE seen_id = ' . $seen_id);
+				$db->query('UPDATE irc_seen
+							SET seen_count = seen_count + 1,
+								seen_by = ' . $db->escapeString($nick) . '
+							WHERE seen_id = ' . $seen_id);
 
 				fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', ' . $seennick . ' (' . $seenuser . '@' . $seenhost . ') was last seen quitting ' . $channel . ' ' . format_time(time() - $signed_off) . ' ago after spending ' . format_time($signed_off - $signed_on) . ' there.' . EOL);
 			} else {
@@ -217,32 +217,33 @@ function channel_msg_money($fp, $rdata, $account, $player)
 
 		// get money from AA
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT alliance_account ' .
-		           'FROM alliance ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT alliance_account
+					FROM alliance
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 
 		if ($db->nextRecord())
 			fputs($fp, 'PRIVMSG ' . $channel . ' :The alliance has ' . number_format($db->getField('alliance_account')) . ' credits in the bank account.' . EOL);
 
-		$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank ' .
-		           'FROM player ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank
+					FROM player
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 
 		if ($db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them' . EOL);
 			fputs($fp, 'PRIVMSG ' . $channel . ' :and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits in their personal bank accounts.' . EOL);
 		}
 
-		$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds ' .
-		           'FROM planet ' .
-		           'WHERE game_id = ' . $player->getGameID() . ' AND ' .
-		           '      owner_id IN (SELECT account_id ' .
-		           '                   FROM player ' .
-		           '                   WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '                         game_id = ' . $player->getGameID() .
-		           '                   )');
+		$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds
+					FROM planet
+					WHERE game_id = ' . $player->getGameID() . '
+						AND owner_id IN (
+							SELECT account_id
+							FROM player
+							WHERE alliance_id = ' . $player->getAllianceID() . '
+								AND game_id = ' . $player->getGameID() . '
+						)');
 		if ($db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets' . EOL);
 			fputs($fp, 'PRIVMSG ' . $channel . ' :and ' . number_format($db->getField('total_bonds')) . ' credits in bonds.' . EOL);
@@ -367,28 +368,31 @@ function channel_msg_forces($fp, $rdata, $account, $player)
 		// did we get a galaxy name?
 		$db = new SmrMySqlDatabase();
 		if (!empty($galaxy))
-			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time ' .
-			           'FROM sector_has_forces LEFT JOIN sector USING (sector_id, game_id)' .
-			           '                       LEFT JOIN game_galaxy USING (game_id, galaxy_id) ' .
-			           'WHERE sector_has_forces.game_id = ' . $player->getGameID() . ' AND ' .
-			           '      galaxy_name = ' . $db->escapeString($galaxy) . ' AND ' .
-			           '      owner_id IN (SELECT account_id ' .
-			           '                   FROM player ' .
-			           '                   WHERE game_id = ' . $player->getGameID() . ' AND ' .
-			           '                         alliance_id = ' . $player->getAllianceID() .
-			           '                  )' .
-			           'ORDER BY expire_time ASC'
+			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time
+						FROM sector_has_forces
+						LEFT JOIN sector USING (sector_id, game_id)
+						LEFT JOIN game_galaxy USING (game_id, galaxy_id)
+						WHERE sector_has_forces.game_id = ' . $player->getGameID() . '
+							AND galaxy_name = ' . $db->escapeString($galaxy) . '
+							AND owner_id IN (
+								SELECT account_id
+								FROM player
+								WHERE game_id = ' . $player->getGameID() . '
+									AND alliance_id = ' . $player->getAllianceID() . '
+							)
+						ORDER BY expire_time ASC'
 			);
 		else
-			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time ' .
-			           'FROM sector_has_forces ' .
-			           'WHERE game_id = ' . $player->getGameID() . ' AND ' .
-			           '      owner_id IN (SELECT account_id ' .
-			           '                   FROM player ' .
-			           '                   WHERE game_id = ' . $player->getGameID() . ' AND ' .
-			           '                         alliance_id = ' . $player->getAllianceID() .
-			           '                  )' .
-			           'ORDER BY expire_time ASC'
+			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time
+				FROM sector_has_forces
+				WHERE game_id = ' . $player->getGameID() . '
+					AND owner_id IN (
+						SELECT account_id
+						FROM player
+						WHERE game_id = ' . $player->getGameID() . '
+						AND alliance_id = ' . $player->getAllianceID() . '
+					)
+				ORDER BY expire_time ASC'
 			);
 
 		if ($db->nextRecord()) {

@@ -150,8 +150,8 @@ function channel_msg_sms_send($fp, $rdata, $account, $player)
 
 		// insert log
 		$db = new SmrMySqlDatabase();
-		$db->query('INSERT INTO account_sms_log (account_id, time, receiver_id, receiver_cell, response_code, message_id) ' .
-		           'VALUES (' . $account->getAccountID() . ', ' . time() . ', ' . $recv_account->getAccountID() . ', ' . $db->escapeString($recv_account->getCellPhone()) . ', ' . $response_code . ', ' . $message_id . ')');
+		$db->query('INSERT INTO account_sms_log (account_id, time, receiver_id, receiver_cell, response_code, message_id)
+					VALUES (' . $account->getAccountID() . ', ' . time() . ', ' . $recv_account->getAccountID() . ', ' . $db->escapeString($recv_account->getCellPhone()) . ', ' . $response_code . ', ' . $message_id . ')');
 
 		// confirm sending
 		if (SMS_DEBUG) {

@@ -43,10 +43,10 @@ function channel_msg_op_info($fp, $rdata, $account, $player)
 
 		// get the op from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time, yes, no, maybe ' .
-		           'FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT time, yes, no, maybe
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
@@ -127,19 +127,19 @@ function channel_msg_op_cancel($fp, $rdata, $account, $player)
 
 		// get the op from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time ' .
-		           'FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT time
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
 		}
 
 		// just get rid of op
-		$db->query('DELETE FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('DELETE FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The OP has been canceled.' . EOL);
 		return true;
@@ -171,10 +171,10 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 
 		// get the op from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time ' .
-		           'FROM   alliance_has_op ' .
-		           'WHERE  alliance_id = ' . $player->getAllianceID() . ' ' .
-		           '  AND  game_id = ' . $player->getGameID());
+		$db->query('SELECT time
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND  game_id = ' . $player->getGameID());
 		if ($db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :There is already an OP scheduled. Cancel it first!' . EOL);
 			return true;
@@ -186,8 +186,8 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 		}
 
 		// add op to db
-		$db->query('INSERT INTO alliance_has_op (alliance_id, game_id, time) ' .
-		           'VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $db->escapeNumber($op_time) . ')');
+		$db->query('INSERT INTO alliance_has_op (alliance_id, game_id, time)
+					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $db->escapeNumber($op_time) . ')');
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The OP has been scheduled.' . EOL);
 		return true;
@@ -218,10 +218,10 @@ function channel_msg_op_turns($fp, $rdata, $account, $player)
 
 		// get the op from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time, yes ' .
-		           'FROM   alliance_has_op ' .
-		           'WHERE  alliance_id = ' . $player->getAllianceID() . ' ' .
-		           '  AND  game_id = ' . $player->getGameID());
+		$db->query('SELECT time, yes
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND  game_id = ' . $player->getGameID());
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there is no op scheduled.' . EOL);
 			return true;
@@ -282,10 +282,10 @@ function channel_msg_op_yes($fp, $rdata, $account, $player)
 
 		// get the op info from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time, yes, no, maybe ' .
-		           'FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT time, yes, no, maybe
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
@@ -320,12 +320,12 @@ function channel_msg_op_yes($fp, $rdata, $account, $player)
 		}
 
 		// save it back in the database
-		$db->query('UPDATE alliance_has_op ' .
-		           'SET yes   = ' . $db->escapeString(serialize($yes)) . ', ' .
-		           '    no    = ' . $db->escapeString(serialize($no)) . ', ' .
-		           '    maybe = ' . $db->escapeString(serialize($maybe)) . ' ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('UPDATE alliance_has_op
+			SET yes   = ' . $db->escapeString(serialize($yes)) . ',
+				no    = ' . $db->escapeString(serialize($no)) . ',
+				maybe = ' . $db->escapeString(serialize($maybe)) . '
+			WHERE alliance_id = ' . $player->getAllianceID() . '
+				AND game_id = ' . $player->getGameID());
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the YES list. Yes: ' . count($yes) . ', No: ' . count($no) . ', Maybe: ' . count($maybe) . EOL);
 
@@ -351,10 +351,10 @@ function channel_msg_op_no($fp, $rdata, $account, $player)
 
 		// get the op info from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time, yes, no, maybe ' .
-		           'FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT time, yes, no, maybe
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
@@ -389,12 +389,12 @@ function channel_msg_op_no($fp, $rdata, $account, $player)
 		}
 
 		// save it back in the database
-		$db->query('UPDATE alliance_has_op ' .
-		           'SET yes   = ' . $db->escapeString(serialize($yes)) . ', ' .
-		           '    no    = ' . $db->escapeString(serialize($no)) . ', ' .
-		           '    maybe = ' . $db->escapeString(serialize($maybe)) . ' ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('UPDATE alliance_has_op
+			SET yes   = ' . $db->escapeString(serialize($yes)) . ',
+				no    = ' . $db->escapeString(serialize($no)) . ',
+				maybe = ' . $db->escapeString(serialize($maybe)) . '
+			WHERE alliance_id = ' . $player->getAllianceID() . '
+				AND game_id = ' . $player->getGameID());
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the NO list. Yes: ' . count($yes) . ', No: ' . count($no) . ', Maybe: ' . count($maybe) . EOL);
 
@@ -420,10 +420,10 @@ function channel_msg_op_maybe($fp, $rdata, $account, $player)
 
 		// get the op info from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time, yes, no, maybe ' .
-		           'FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT time, yes, no, maybe
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
@@ -458,12 +458,12 @@ function channel_msg_op_maybe($fp, $rdata, $account, $player)
 		}
 
 		// save it back in the database
-		$db->query('UPDATE alliance_has_op ' .
-		           'SET yes   = ' . $db->escapeString(serialize($yes)) . ', ' .
-		           '    no    = ' . $db->escapeString(serialize($no)) . ', ' .
-		           '    maybe = ' . $db->escapeString(serialize($maybe)) . ' ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('UPDATE alliance_has_op
+			SET yes   = ' . $db->escapeString(serialize($yes)) . ',
+				no    = ' . $db->escapeString(serialize($no)) . ',
+				maybe = ' . $db->escapeString(serialize($maybe)) . '
+			WHERE alliance_id = ' . $player->getAllianceID() . '
+				AND game_id = ' . $player->getGameID());
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the MAYBE list. Yes: ' . count($yes) . ', No: ' . count($no) . ', Maybe: ' . count($maybe) . EOL);
 
@@ -489,10 +489,10 @@ function channel_msg_op_list($fp, $rdata, $account, $player)
 
 		// get the op info from db
 		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time, yes, no, maybe ' .
-		           'FROM alliance_has_op ' .
-		           'WHERE alliance_id = ' . $player->getAllianceID() . ' AND ' .
-		           '      game_id = ' . $player->getGameID());
+		$db->query('SELECT time, yes, no, maybe
+					FROM alliance_has_op
+					WHERE alliance_id = ' . $player->getAllianceID() . '
+						AND game_id = ' . $player->getGameID());
 		if (!$db->nextRecord()) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
 			return true;
