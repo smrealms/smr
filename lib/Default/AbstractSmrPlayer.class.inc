@@ -396,12 +396,8 @@ abstract class AbstractSmrPlayer {
 		$this->hasChanged = true;
 	}
 
-	public function getName() {
-		return $this->playerName;
-	}
-
 	public function getDisplayName($includeAlliance=false) {
-		$return = get_colored_text($this->getAlignment(),$this->getName().' ('.$this->getPlayerID().')');
+		$return = get_colored_text($this->getAlignment(),$this->getPlayerName().' ('.$this->getPlayerID().')');
 		if($includeAlliance) {
 			$return.= ' (' . $this->getAllianceName() . '</a>' . ')';
 		}
