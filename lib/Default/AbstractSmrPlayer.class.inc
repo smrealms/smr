@@ -404,8 +404,7 @@ abstract class AbstractSmrPlayer {
 		if($includeAlliance) {
 			$return.= ' (' . $this->getAllianceName() . '</a>' . ')';
 		}
-//NPC: get_colored_name($dead_guy->getPlayerName(), $dead_guy->getAlignment()) . ' <span class='npcColor'>[NPC]</span>';
-			return $return;
+		return $return;
 	}
 
 	public function getBBLink() {
