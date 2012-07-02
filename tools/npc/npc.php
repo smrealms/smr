@@ -96,77 +96,7 @@ try {
 	NPCStuff();
 }
 catch(Exception $e) {
-	global $account,$var,$player,$NPC_LOGIN;
-	$errorType = 'Error';
-	$message='';
-	$currMySQLError='';
-	if(is_object($account)) {
-		$message .= 'Script: '.SCRIPT_ID.EOL.EOL.'-----------'.EOL.EOL.
-			'Login: '.$account->getLogin().EOL.EOL.'-----------'.EOL.EOL.
-			'Account ID: '.$account->getAccountID().EOL.EOL.'-----------'.EOL.EOL.
-			'E-Mail: '.$account->getEmail().EOL.EOL.'-----------'.EOL.EOL;
-	}
-	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
-	if($currMySQLError = mysql_error()) {
-		$errorType = 'Database Error';
-		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
-	}
-	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
-		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
-		'USING_AJAX: '.(defined('USING_AJAX')?var_export(USING_AJAX,true):'undefined');
-		
-	try {
-		if(function_exists('release_lock'))
-			release_lock(); //Try to release lock so they can carry on normally
-	}
-	catch(Exception $ee) {
-		$message .= EOL.EOL.'-----------'.EOL.EOL.
-					'Releasing Lock Failed' .EOL.
-					'Message: ' . $ee->getMessage() .EOL.EOL;
-		if($currMySQLError!=mysql_error()) {
-			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
-		}
-		$message .= 'Trace: ' . $ee->getTraceAsString();
-	}
-		
-	try {
-		$db = new SmrMySqlDatabase();
-		$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN['Login']));
-		if($db->getChangedRows()>0)
-			debug('Unlocked NPC: '.$NPC_LOGIN['Login']);
-		else
-			debug('Failed to unlock NPC: '.$NPC_LOGIN['Login']);
-	}
-	catch(Exception $ee) {
-		$message .= EOL.EOL.'-----------'.EOL.EOL.
-					'Releasing NPC Failed' .EOL.
-					'Message: ' . $ee->getMessage() .EOL.EOL;
-		if($currMySQLError!=mysql_error()) {
-			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
-		}
-		$message .= 'Trace: ' . $ee->getTraceAsString();
-	}
-	
-	var_dump($message);
-	
-	try {
-		if(is_object($player) && method_exists($player,'sendMessageToBox'))
-			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else if(is_object($account) && method_exists($account,'sendMessageToBox'))
-			$account->sendMessageToBox(BOX_BUGS_AUTO, $message);
-		else
-			mail('bugs@smrealms.de',
-			 'Automatic Bug Report',
-			 $message,
-			 'From: bugs@smrealms.de');
-	}
-	catch(Exception $e) {
-		mail('bugs@smrealms.de',
-		 'Automatic Bug Report',
-		 $message,
-		 'From: bugs@smrealms.de');
-	}
-	
+	logException($e);
 	exit;
 }
 		
