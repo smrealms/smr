@@ -388,7 +388,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getPlayerName() {
-		return $this->playerName;
+		return $this->playerName . ($this->isNPC() ? ' <span class="npcColor">[NPC]</span>' : '');
 	}
 
 	public function setPlayerName($name) {
@@ -397,7 +397,10 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getDisplayName($includeAlliance=false) {
-		$return = get_colored_text($this->getAlignment(),$this->getPlayerName().' ('.$this->getPlayerID().')');
+		$return = get_colored_text($this->getAlignment(),$this->playerName.' ('.$this->getPlayerID().')');
+		if($this->isNPC()) {
+			$return .= ' <span class="npcColor">[NPC]</span>';
+		}
 		if($includeAlliance) {
 			$return.= ' (' . $this->getAllianceName() . '</a>' . ')';
 		}
