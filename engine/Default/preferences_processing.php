@@ -225,7 +225,7 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	// trim input now
 	$player_name = trim($_POST['PlayerName']);
 
-	$old_name = $player->getName();
+	$old_name = $player->getPlayerName();
 
 	if($old_name == $player_name) {
 		create_error('Your player already has that name!');
