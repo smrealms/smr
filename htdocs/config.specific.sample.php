@@ -25,6 +25,8 @@ define('FACEBOOK_APP_SECRET','');
 define('TWITTER_CONSUMER_KEY','');
 define('TWITTER_CONSUMER_SECRET','');
 
+define('ENABLE_NPCS_CHESS', false);
+
 $COMPATIBILITY_DATABASES = array();
 //	array(
 //		'Game' => array(
