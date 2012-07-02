@@ -166,6 +166,70 @@ class ChessGame {
 		return $this->moves;
 	}
 
+	public function getFENString() {
+		$fen = '';
+		$board =& $this->getBoard();
+		$blanks = 0;
+		for($y=0; $y < 8; $y++) {
+			if($y > 0) {
+				if($blanks > 0) {
+					$fen .= $blanks;
+					$blanks = 0;
+				}
+				$fen .= '/';
+			}
+			for($x=0; $x < 8; $x++) {
+				if($board[$y][$x] == null) {
+					$blanks++;
+				}
+				else {
+					if($blanks > 0) {
+						$fen .= $blanks;
+						$blanks = 0;
+					}
+					$fen .= $board[$y][$x]->getPieceLetter();
+				}
+			}
+		}
+		switch($this->getCurrentTurnColour()) {
+			case self::PLAYER_WHITE:
+				$fen .= ' w ';
+			break;
+			case self::PLAYER_BLACK:
+				$fen .= ' b ';
+			break;
+		}
+
+		// Castling
+		if($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['King'] === true) {
+			$fen .= 'K';
+		}
+		if($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['Queen'] === true) {
+			$fen .= 'Q';
+		}
+		if($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['King'] === true) {
+			$fen .= 'k';
+		}
+		if($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['Queen'] === true) {
+			$fen .= 'q';
+		}
+		if(!($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['King'] || $this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['Queen']
+				|| $this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['King'] || $this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['Queen'])) {
+			$fen .= '-';
+		}
+		$fen .= ' ';
+
+		if($this->hasMoved[ChessPiece::PAWN][0] != -1) {
+			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]) . $this->hasMoved[ChessPiece::PAWN][1];
+		}
+		else {
+			$fen .= '-';
+		}
+		$fen .= ' 0 ' . floor(count($this->moves)/2);
+
+		return $fen;
+	}
+
 	//TODO: this hasn't been fully translated to PHP yet, if it ever should be?
 //	public function getMessages() {
 //		if($this->messages == null) {

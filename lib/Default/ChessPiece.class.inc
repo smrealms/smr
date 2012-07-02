@@ -225,13 +225,45 @@ class ChessPiece {
 		}
 		return array('PieceID' => $pawnPromotionPieceID, 'PieceNo' => $i);
 	}
-	
+
+	public function getPieceLetter() {
+		return self::getLetterForPiece($this->pieceID,$this->colour);
+	}
+
 	public function getPieceSymbol() {
 		return self::getSymbolForPiece($this->pieceID,$this->colour);
 	}
-	
+
 	public static function getSymbolForPiece($pieceID, $colour) {
 		return "&#" . (9811 + $pieceID + ($colour == ChessGame::PLAYER_WHITE ? 0 : 6)) . ";";
+	}
+
+	public static function getLetterForPiece($pieceID, $colour) {
+		switch($pieceID) {
+			case self::KING:
+				$letter = 'k';
+			break;
+			case self::QUEEN:
+				$letter = 'q';
+			break;
+			case self::ROOK:
+				$letter = 'r';
+			break;
+			break;
+			case self::BISHOP:
+				$letter = 'b';
+			break;
+			case self::KNIGHT:
+				$letter = 'n';
+			break;
+			case self::PAWN:
+				$letter = 'p';
+			break;
+		}
+		if($colour == ChessGame::PLAYER_WHITE) {
+			$letter = strtoupper($letter);
+		}
+		return $letter;
 	}
 }
 ?>
