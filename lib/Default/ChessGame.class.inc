@@ -24,6 +24,26 @@ class ChessGame {
 	private $moves;
 	private $messages;
 
+	public static function &getNPCMoveGames($forceUpdate = false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT chess_game_id
+					FROM npc_logins
+					JOIN account USING(login)
+					JOIN chess_game ON account_id = black_id OR account_id = white_id
+					WHERE end_time > ' . TIME . ' OR end_time IS NULL;');
+		$games = array();
+		while($db->nextRecord()) {
+			$game =& self::getChessGame($db->getInt('chess_game_id'), $forceUpdate);
+			var_dump($db->getInt('chess_game_id'));
+			var_dump($game->getCurrentTurnPlayer()->isNPC());
+			var_dump($game->getCurrentTurnPlayer()->getPlayerName());
+			if($game->getCurrentTurnPlayer()->isNPC()) {
+				$games[] =& $game;
+			}
+		}
+		return $games;
+	}
+
 	public static function &getOngoingAccountGames($accountID) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id FROM chess_game WHERE (black_id = ' . $db->escapeNumber($accountID) . ' OR white_id = ' . $db->escapeNumber($accountID) . ') AND (end_time > ' . TIME . ' OR end_time IS NULL);');
@@ -555,6 +575,18 @@ class ChessGame {
 		}
 	}
 
+	public function tryAlgebraicMove($move) {
+		$x = ord($move[0]) - ord('a');
+		$y = 8 - $move[1];
+		$toX = ord($move[2]) - ord('a');
+		$toY = 8 - $move[3];
+		$pawnPromotionPiece = null;
+		if(isset($move[4])) {
+			$pawnPromotionPiece = ChessPiece::getPieceForLetter($move[4]);
+		}
+		return $this->tryMove($x, $y, $toX, $toY, $this->getCurrentTurnAccountID(), $pawnPromotionPiece);
+	}
+
 	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
 		if($this->getCurrentTurnAccountID() != $forAccountID) {
 			return 4;
@@ -652,6 +684,7 @@ class ChessGame {
 						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 					}
 					else {
+						var_dump($this->getCurrentTurnAccountID());
 						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 						if($checking == 'CHECK') {
 							$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
@@ -733,7 +766,7 @@ class ChessGame {
 
 	public function &getCurrentTurnPlayer() {
 		try {
-		return SmrPlayer::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
+			return SmrPlayer::getPlayer($this->getCurrentTurnAccountID(), $this->getGameID());
 		}
 		catch(Exception $e) {
 			$null = null;
