@@ -492,6 +492,20 @@ class ChessGame {
 	}
 
 	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
+		$lastTurnPlayer =& $this->getCurrentTurnPlayer();
+		$return = $this->realTryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece);
+		switch($return) {
+			case 0:
+				//Success
+				SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+			break;
+			case 1:
+				SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+		}
+		return $return;
+	}
+
+	private function realTryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
 		if($this->getCurrentTurnAccountID() != $forAccountID) {
 			return 4;
 		}
