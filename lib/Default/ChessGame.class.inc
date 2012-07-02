@@ -556,23 +556,10 @@ class ChessGame {
 	}
 
 	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
-		$lastTurnPlayer =& $this->getCurrentTurnPlayer();
-		$return = $this->realTryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece);
-		switch($return) {
-			case 0:
-				//Success
-				SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
-			break;
-			case 1:
-				SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
-		}
-		return $return;
-	}
-
-	private function realTryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
 		if($this->getCurrentTurnAccountID() != $forAccountID) {
 			return 4;
 		}
+		$lastTurnPlayer =& $this->getCurrentTurnPlayer();
 		$this->getBoard();
 		$p = $this->board[$y][$x];
 		if($p == null || $p->colour != $this->getColourForAccountID($forAccountID)) {
@@ -662,10 +649,14 @@ class ChessGame {
 						$currentPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
 						$otherPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
 						$return = 1;
+						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 					}
-					else if($checking == 'CHECK') {
-						$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
-						$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'), HOF_PUBLIC);
+					else {
+						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+						if($checking == 'CHECK') {
+							$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
+							$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'), HOF_PUBLIC);
+						}
 					}
 				}
 				$currentPlayer->saveHOF();
