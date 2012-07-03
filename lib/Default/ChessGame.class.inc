@@ -34,9 +34,6 @@ class ChessGame {
 		$games = array();
 		while($db->nextRecord()) {
 			$game =& self::getChessGame($db->getInt('chess_game_id'), $forceUpdate);
-			var_dump($db->getInt('chess_game_id'));
-			var_dump($game->getCurrentTurnPlayer()->isNPC());
-			var_dump($game->getCurrentTurnPlayer()->getPlayerName());
 			if($game->getCurrentTurnPlayer()->isNPC()) {
 				$games[] =& $game;
 			}
@@ -178,9 +175,22 @@ class ChessGame {
 		if($this->moves == null) {
 			$this->db->query('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
 			$this->moves = array();
+			$mate = false;
 			while($this->db->nextRecord()) {
 				$pieceTakenID = $this->db->getField('piece_taken') == null ? null : $this->db->getInt('piece_taken');
 				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $this->db->getField('castling'), $this->db->getBoolean('en_passant'), $this->db->getInt('promote_piece_id'));
+				$mate = $this->db->getField('checked') == 'MATE';
+			}
+			if(!$mate && $this->getEndDate() < TIME) {
+				if($this->getWinner() != 0) {
+					$this->moves[] = ($this->getWinner() == $this->getWhiteID() ? 'Black' : 'White') . ' Resigned.';
+				}
+				else if(count($this->moves) < 2) {
+					$this->moves[] = 'Game Cancelled.';
+				}
+				else {
+					$this->moves[] = 'Game Drawn.';
+				}
 			}
 		}
 		return $this->moves;
@@ -674,17 +684,11 @@ class ChessGame {
 				$return = 0;
 				if($checking != null) {
 					if($checking == 'MATE') {
-						$this->winner = $forAccountID;
-						$this->db->query('UPDATE chess_game
-										SET end_time=' . $this->db->escapeNumber(TIME) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
-										WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
-						$currentPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
-						$otherPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
+						$this->setWinner($forAccountID);
 						$return = 1;
 						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 					}
 					else {
-						var_dump($this->getCurrentTurnAccountID());
 						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 						if($checking == 'CHECK') {
 							$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
@@ -752,6 +756,26 @@ class ChessGame {
 		return $this->winner;
 	}
 
+	public function &setWinner($accountID) {
+		$this->winner = $accountID;
+		$this->db->query('UPDATE chess_game
+						SET end_time=' . $this->db->escapeNumber(TIME) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
+						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
+		$whitePlayer =& $this->getWhitePlayer();
+		$blackPlayer =& $this->getBlackPlayer();
+		if($whitePlayer->getAccountID() == $this->winner) {
+			$winningPlayer =& $whitePlayer;
+			$losingPlayer =& $blackPlayer;
+		}
+		else {
+			$winningPlayer =& $blackPlayer;
+			$losingPlayer =& $whitePlayer;
+		}
+		$winningPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
+		$losingPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
+		return array('Winner' => &$winningPlayer, 'Loser' => $losingPlayer);
+	}
+
 	public function &getHasMoved() {
 		return $this->hasMoved;
 	}
@@ -778,8 +802,34 @@ class ChessGame {
 		return $accountID == $this->getCurrentTurnAccountID();
 	}
 
+	public function resign($accountID) {
+		// If only 1 person has moved then just end the game.
+		if(count($this->getMoves()) < 2) {
+			$this->endDate = TIME;
+			$this->db->query('UPDATE chess_game
+							SET end_time=' . $this->db->escapeNumber(TIME) . '
+							WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
+			return 1;
+		}
+		else {
+			if($this->getBlackID() == $accountID) {
+				$results =& $this->setWinner($this->getWhiteID());
+			}
+			else {
+				$results =& $this->setWinner($this->getBlackID());
+			}
+			$results['Loser']->increaseHOF(1, array('Chess','Games','Resigned'), HOF_PUBLIC);
+			SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getGameID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
+			return 0;
+		}
+	}
+
 	public function getPlayGameHREF() {
 		return SmrSession::getNewHREF(create_container('skeleton.php','chess_play.php',array('ChessGameID' => $this->chessGameID)));
+	}
+
+	public function getResignHREF() {
+		return SmrSession::getNewHREF(create_container('skeleton.php','chess_resign_processing.php',array('ChessGameID' => $this->chessGameID)));
 	}
 }
 ?>

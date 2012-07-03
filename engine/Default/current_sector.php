@@ -99,7 +99,7 @@ if (isset($var['AttackMessage'])) {
 }
 if (isset($var['msg'])) {
 	checkForForceRefreshMessage($var['msg']);
-	$template->assign('VarMessage',$var['msg']);
+	$template->assign('VarMessage',  bbifyMessage($var['msg']));
 }
 
 //error msgs take precedence
