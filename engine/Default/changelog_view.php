@@ -2,11 +2,15 @@
 
 $template->assign('PageTopic','Change Log');
 
+if(isset($var['Since'])) {
+	$PHP_OUTPUT.='<big>Here are the updates that have gone live since your last visit, enjoy!</big><br/><br/>';
+}
+
 $db2 = new SmrMySqlDatabase();
 
 $db->query('SELECT *
 			FROM version
-			WHERE version_id <= ' . $db->escapeNumber($var['version_id']) . '
+			WHERE went_live > ' . (isset($var['Since']) ? $db->escapeNumber($var['Since']) : '0') . '
 			ORDER BY version_id DESC');
 while ($db->nextRecord()) {
 	$version_id = $db->getInt('version_id');
@@ -34,6 +38,9 @@ while ($db->nextRecord()) {
 	}
 
 	$PHP_OUTPUT.=('</ul><br />');
+	if(isset($var['Since'])) {
+		$PHP_OUTPUT.=create_button(create_container('logged_in.php'), 'Continue');
+	}
 }
 
 ?>

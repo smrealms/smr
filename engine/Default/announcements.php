@@ -32,7 +32,8 @@ while ($db->nextRecord()) {
 
 $PHP_OUTPUT.= '</table><br />';
 
-$container = create_container('logged_in.php');
-$PHP_OUTPUT.=create_button($container,'Select a Game!');
+$container = create_container('login_check_processing.php');
+$container['CheckType'] = 'Updates';
+$PHP_OUTPUT .= create_button($container, 'Continue');
 
 ?>
