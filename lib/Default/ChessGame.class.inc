@@ -788,7 +788,7 @@ class ChessGame {
 		return $this->winner;
 	}
 
-	public function &setWinner($accountID) {
+	public function setWinner($accountID) {
 		$this->winner = $accountID;
 		$this->db->query('UPDATE chess_game
 						SET end_time=' . $this->db->escapeNumber(TIME) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
