@@ -614,6 +614,7 @@ class ChessGame {
 		$moves = $p->getPossibleMoves($this->board, $this->getHasMoved(), $forAccountID);
 		foreach($moves as $move) {
 			if($move[0]==$toX && $move[1]==$toY) {
+				$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
 				$currentPlayer =& $this->getCurrentTurnPlayer();
 
 				$moveInfo = ChessGame::movePiece($this->board, $this->getHasMoved(), $x, $y, $toX, $toY, $pawnPromotionPiece);
@@ -653,10 +654,10 @@ class ChessGame {
 				$otherPlayer =& $this->getCurrentTurnPlayer();
 				if($moveInfo['PawnPromotion'] !== false) {
 					$piecePromotedSymbol = $p->getPieceSymbol();
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted','Total'), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted','Total'), HOF_PUBLIC);
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Own Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array($chessType,'Moves','Own Pawns Promoted','Total'), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array($chessType,'Moves','Opponent Pawns Promoted','Total'), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array($chessType,'Moves','Own Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array($chessType,'Moves','Opponent Pawns Promoted',$piecePromotedSymbol), HOF_PUBLIC);
 				}
 				$this->db->query('INSERT INTO chess_game_moves
 								(chess_game_id,piece_id,start_x,start_y,end_x,end_y,checked,piece_taken,castling,en_passant,promote_piece_id)
@@ -664,16 +665,16 @@ class ChessGame {
 								(' . $this->db->escapeNumber($p->gameID) . ',' . $this->db->escapeNumber($pieceID) . ',' . $this->db->escapeNumber($x) . ',' . $this->db->escapeNumber($y) . ',' . $this->db->escapeNumber($toX) . ',' . $this->db->escapeNumber($toY) . ',' . $this->db->escapeString($checking, true, true) . ',' . ($moveInfo['PieceTaken'] == null ? 'NULL' : $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID)) . ',' . $this->db->escapeString($moveInfo['Castling']['Type'], true, true) . ',' . $this->db->escapeBoolean($moveInfo['EnPassant']) . ',' . ($moveInfo['PawnPromotion'] == false ? 'NULL' : $this->db->escapeNumber($moveInfo['PawnPromotion']['PieceID'])) . ');');
 
 
-				$currentPlayer->increaseHOF(1, array('Chess','Moves','Total Taken'), HOF_PUBLIC);
+				$currentPlayer->increaseHOF(1, array($chessType,'Moves','Total Taken'), HOF_PUBLIC);
 				if($moveInfo['PieceTaken'] != null) {
 					$this->db->query('DELETE FROM chess_game_pieces
 									WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->accountID) . ' AND piece_id=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceID) . ' AND piece_no=' . $this->db->escapeNumber($moveInfo['PieceTaken']->pieceNo) . ';');
 
 					$pieceTakenSymbol = $moveInfo['PieceTaken']->getPieceSymbol();
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken','Total'), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken','Total'), HOF_PUBLIC);
-					$currentPlayer->increaseHOF(1, array('Chess','Moves','Opponent Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
-					$otherPlayer->increaseHOF(1, array('Chess','Moves','Own Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array($chessType,'Moves','Opponent Pieces Taken','Total'), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array($chessType,'Moves','Own Pieces Taken','Total'), HOF_PUBLIC);
+					$currentPlayer->increaseHOF(1, array($chessType,'Moves','Opponent Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
+					$otherPlayer->increaseHOF(1, array($chessType,'Moves','Own Pieces Taken',$pieceTakenSymbol), HOF_PUBLIC);
 				}
 				$this->db->query('UPDATE chess_game_pieces
 							SET x=' . $this->db->escapeNumber($toX) . ', y=' . $this->db->escapeNumber($toY) .
@@ -693,8 +694,8 @@ class ChessGame {
 				else {
 					SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
 					if($checking == 'CHECK') {
-						$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
-						$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'), HOF_PUBLIC);
+						$currentPlayer->increaseHOF(1, array($chessType,'Moves','Check Given'), HOF_PUBLIC);
+						$otherPlayer->increaseHOF(1, array($chessType,'Moves','Check Received'), HOF_PUBLIC);
 					}
 				}
 				$currentPlayer->saveHOF();
@@ -794,8 +795,9 @@ class ChessGame {
 		$winnerColour = $this->getColourForAccountID($accountID);
 		$winningPlayer =& $this->getColourPlayer($winnerColour);
 		$losingPlayer =& $this->getColourPlayer(self::getOtherColour($winnerColour));
-		$winningPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
-		$losingPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
+		$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
+		$winningPlayer->increaseHOF(1, array($chessType,'Games','Won'), HOF_PUBLIC);
+		$losingPlayer->increaseHOF(1, array($chessType,'Games','Lost'), HOF_PUBLIC);
 		return array('Winner' => &$winningPlayer, 'Loser' => $losingPlayer);
 	}
 
@@ -825,6 +827,10 @@ class ChessGame {
 		return $accountID == $this->getCurrentTurnAccountID();
 	}
 
+	public function isNPCGame() {
+		return $this->getWhitePlayer()->isNPC() || $this->getBlackPlayer()->isNPC();
+	}
+
 	public static function getOtherColour($colour) {
 		if($colour == self::PLAYER_WHITE) {
 			return self::PLAYER_BLACK;
@@ -851,7 +857,8 @@ class ChessGame {
 			$loserColour = $this->getColourForAccountID($accountID);
 			$winnerAccountID = $this->getColourID(self::getOtherColour($loserColour));
 			$results =& $this->setWinner($winnerAccountID);
-			$results['Loser']->increaseHOF(1, array('Chess','Games','Resigned'), HOF_PUBLIC);
+			$chessType = $this->isNPCGame() ? 'Chess (NPC)' : 'Chess';
+			$results['Loser']->increaseHOF(1, array($chessType,'Games','Resigned'), HOF_PUBLIC);
 			SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getGameID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
 			return 0;
 		}
