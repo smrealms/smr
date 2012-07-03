@@ -181,7 +181,7 @@ class ChessGame {
 				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $this->db->getField('castling'), $this->db->getBoolean('en_passant'), $this->db->getInt('promote_piece_id'));
 				$mate = $this->db->getField('checked') == 'MATE';
 			}
-			if(!$mate && $this->getEndDate() < TIME) {
+			if(!$mate && $this->hasEnded()) {
 				if($this->getWinner() != 0) {
 					$this->moves[] = ($this->getWinner() == $this->getWhiteID() ? 'Black' : 'White') . ' Resigned.';
 				}
@@ -371,7 +371,7 @@ class ChessGame {
 	}
 
 	public function createMove($pieceID, $startX, $startY, $endX, $endY, $pieceTaken, $checking, $playerColour, $castling, $enPassant, $promotionPieceID) {
-		$otherPlayerColour = $playerColour == self::PLAYER_WHITE ? self::PLAYER_BLACK : self::PLAYER_WHITE;
+		$otherPlayerColour = self::getOtherColour($playerColour);
 		if($pieceID == ChessPiece::KING) {
 			$this->hasMoved[$playerColour][ChessPiece::KING] = true;
 		}
@@ -598,6 +598,9 @@ class ChessGame {
 	}
 
 	public function tryMove($x, $y, $toX, $toY, $forAccountID, $pawnPromotionPiece) {
+		if($this->hasEnded()) {
+			return 5;
+		}
 		if($this->getCurrentTurnAccountID() != $forAccountID) {
 			return 4;
 		}
@@ -637,7 +640,7 @@ class ChessGame {
 				if($p->isAttacking($this->board, $this->getHasMoved(), true)) {
 					$checking = 'CHECK';
 				}
-				if($this->isCheckmated($p->colour == self::PLAYER_WHITE ? self::PLAYER_BLACK : self::PLAYER_WHITE)) {
+				if($this->isCheckmated(self::getOtherColour($p->colour))) {
 					$checking = 'MATE';
 				}
 				if($this->moves!=null) {
@@ -744,12 +747,41 @@ class ChessGame {
 		return $this->blackID;
 	}
 
+	public function getColourID($colour) {
+		if($colour == self::PLAYER_WHITE) {
+			return $this->getWhiteID();
+		}
+		if($colour == self::PLAYER_BLACK) {
+			return $this->getBlackID();
+		}
+	}
+
+	public function &getColourPlayer($colour) {
+		try {
+			return SmrPlayer::getPlayer($this->getColourID($colour), $this->getGameID());
+		}
+		catch(Exception $e) {
+			$null = null;
+			return $null;
+		}
+	}
+
 	public function getColourForAccountID($accountID) {
-		return $accountID == $this->getWhiteID() ? self::PLAYER_WHITE : ($accountID == $this->getBlackID() ? self::PLAYER_BLACK : false);
+		if($accountID == $this->getWhiteID()) {
+			return self::PLAYER_WHITE;
+		}
+		if($accountID == $this->getBlackID()) {
+			return self::PLAYER_BLACK;
+		}
+		return false;
 	}
 
 	public function getEndDate() {
 		return $this->endDate;
+	}
+
+	public function hasEnded() {
+		return $this->endDate != 0 && $this->endDate < TIME;
 	}
 
 	public function getWinner() {
@@ -761,16 +793,9 @@ class ChessGame {
 		$this->db->query('UPDATE chess_game
 						SET end_time=' . $this->db->escapeNumber(TIME) . ', winner_id=' . $this->db->escapeNumber($this->winner) . '
 						WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ';');
-		$whitePlayer =& $this->getWhitePlayer();
-		$blackPlayer =& $this->getBlackPlayer();
-		if($whitePlayer->getAccountID() == $this->winner) {
-			$winningPlayer =& $whitePlayer;
-			$losingPlayer =& $blackPlayer;
-		}
-		else {
-			$winningPlayer =& $blackPlayer;
-			$losingPlayer =& $whitePlayer;
-		}
+		$winnerColour = $this->getColourForAccountID($accountID);
+		$winningPlayer =& $this->getColourPlayer($winnerColour);
+		$losingPlayer =& $this->getColourPlayer(self::getOtherColour($winnerColour));
 		$winningPlayer->increaseHOF(1, array('Chess','Games','Won'), HOF_PUBLIC);
 		$losingPlayer->increaseHOF(1, array('Chess','Games','Lost'), HOF_PUBLIC);
 		return array('Winner' => &$winningPlayer, 'Loser' => $losingPlayer);
@@ -802,7 +827,20 @@ class ChessGame {
 		return $accountID == $this->getCurrentTurnAccountID();
 	}
 
+	public static function getOtherColour($colour) {
+		if($colour == self::PLAYER_WHITE) {
+			return self::PLAYER_BLACK;
+		}
+		if($colour == self::PLAYER_BLACK) {
+			return self::PLAYER_WHITE;
+		}
+		return false;
+	}
+
 	public function resign($accountID) {
+		if($this->hasEnded() || !$this->getColourForAccountID($accountID)) {
+			return false;
+		}
 		// If only 1 person has moved then just end the game.
 		if(count($this->getMoves()) < 2) {
 			$this->endDate = TIME;
@@ -812,12 +850,9 @@ class ChessGame {
 			return 1;
 		}
 		else {
-			if($this->getBlackID() == $accountID) {
-				$results =& $this->setWinner($this->getWhiteID());
-			}
-			else {
-				$results =& $this->setWinner($this->getBlackID());
-			}
+			$loserColour = $this->getColourForAccountID($accountID);
+			$winnerAccountID = $this->getColourID(self::getOtherColour($loserColour));
+			$results =& $this->setWinner($winnerAccountID);
 			$results['Loser']->increaseHOF(1, array('Chess','Games','Resigned'), HOF_PUBLIC);
 			SmrPlayer::sendMessageFromCasino($results['Winner']->getGameID(), $results['Winner']->getGameID(), '[player=' . $results['Loser']->getPlayerID() . '] just resigned against you in [chess=' . $this->getChessGameID() . '].');
 			return 0;

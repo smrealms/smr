@@ -7,7 +7,7 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 	$y = $_REQUEST['y'];
 	$toX = $_REQUEST['toX'];
 	$toY = $_REQUEST['toY'];
-	if($chessGame->getEndDate()==null) {
+	if(!$chessGame->hasEnded()) {
 		if($chessGame->isCurrentTurn($account->getAccountID())) {
 			$board = $chessGame->getBoard();
 			if($board[$y][$x] != null) {
@@ -26,6 +26,9 @@ if(is_numeric($_REQUEST['x']) && is_numeric($_REQUEST['y']) && is_numeric($_REQU
 					break;
 					case 4:
 						$template->assign('MoveMessage', 'It is not your turn to move.');
+					break;
+					case 5:
+						$template->assign('MoveMessage', 'The game is over.');
 					break;
 				}
 			}
