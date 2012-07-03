@@ -6,7 +6,7 @@ print_galactic_post_menue();
 $db->query("SELECT * FROM galactic_post_applications WHERE game_id = $player->game_id");
 if ($db->nf()) {
 
-    print("You have recieved an application from the following players (click name to view description)<br>");
+    print("You have received an application from the following players (click name to view description)<br>");
     print("Becareful when choosing your writters.  Make sure it is someone who will actually help you.<br><br>");
 
 } else

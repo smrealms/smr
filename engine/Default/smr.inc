@@ -692,7 +692,7 @@ function doTickerAssigns(&$template,&$player,&$db) {
 						AND game_id=' . $db->escapeNumber($player->getGameID()) . '
 						AND message_type_id=' . $db->escapeNumber(MSG_SCOUT) . '
 						AND send_time>=' . $db->escapeNumber($max) . '
-						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > ' . $db->escapeNumber(TIME) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND reciever_delete = \'FALSE\'
+						AND sender_id NOT IN (SELECT account_id FROM player_has_ticker WHERE type='.$db->escapeString('BLOCK').' AND expires > ' . $db->escapeNumber(TIME) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ') AND receiver_delete = \'FALSE\'
 						ORDER BY send_time DESC
 						LIMIT 4');
 			while($db->nextRecord()) {

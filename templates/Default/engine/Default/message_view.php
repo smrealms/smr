@@ -61,8 +61,8 @@ else {
 					<tr>
 						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID']; ?>" /><?php if($Message['Unread']) { ?>*<?php } ?></td>
 						<td class="noWrap" width="100%"><?php
-							if(isset($Message['RecieverDisplayName'])) {
-								?>To: <?php echo $Message['RecieverDisplayName'];
+							if(isset($Message['ReceiverDisplayName'])) {
+								?>To: <?php echo $Message['ReceiverDisplayName'];
 							}
 							else {
 								?>From: <?php echo $Message['SenderDisplayName'];

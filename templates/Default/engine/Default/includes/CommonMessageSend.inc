@@ -2,7 +2,7 @@
 <form name="MessageSendForm" method="POST" action="<?php echo $MessageSendFormHref; ?>">
 	<p>
 		<b>From: </b><?php echo $ThisPlayer->getDisplayName(); ?><br />
-		<b>To: </b><?php if(isset($Reciever) && is_object($Reciever)) {	echo $Reciever->getDisplayName(); } else { echo $Reciever; } ?>
+		<b>To: </b><?php if(isset($Receiver) && is_object($Receiver)) {	echo $Receiver->getDisplayName(); } else { echo $Receiver; } ?>
 	</p>
 	<textarea name="message" id="InputFields"><?php if(isset($Preview)) { echo $Preview; } ?></textarea><br />
 	<br />
