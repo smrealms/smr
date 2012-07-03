@@ -937,8 +937,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
 	if ($db->nextRecord()) {
-		$version_id = $db->getField('version_id');
-		$container = create_container('skeleton.php', 'changelog_view.php', array('version_id' => $version_id));
+		$container = create_container('skeleton.php', 'changelog_view.php');
 		$version = create_link($container, 'v' . $db->getField('major_version') . '.' . $db->getField('minor_version') . '.' . $db->getField('patch_level'));
 	}
 
