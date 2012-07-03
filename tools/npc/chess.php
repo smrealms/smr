@@ -70,7 +70,10 @@ try {
 			debug('Tried move: ' . $chessGame->tryAlgebraicMove($move[1]));
 			writeToEngine('ucinewgame', false);
 		}
-		usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
+		// Only sleep if we haven't just processed some games.
+		if(count($chessGames) == 0) {
+			usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
+		}
 	}
 	
 	fclose($toEngine);
