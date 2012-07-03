@@ -44,7 +44,7 @@ try {
 
 	readFromEngine();
 	writeToEngine('uci');
-	writeToEngine('setoption name Hash value 1024', false);
+	writeToEngine('setoption name Hash value ' . UCI_HASH_SIZE_MB, false);
 	writeToEngine('isready');
 	SmrSession::$game_id = 2;
 
