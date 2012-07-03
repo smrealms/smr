@@ -823,6 +823,10 @@ abstract class AbstractSmrPlayer {
 	public function setHOF($amount,array $typeList, $visibility) {
 		if(is_array($this->getHOF($typeList)))
 			throw new Exception('Trying to overwrite a HOF type: '.implode(':',$typeList));
+		if($this->isNPC()) {
+			// Don't store HOF for NPCs.
+			return;
+		}
 		if($this->getHOF($typeList)==$amount)
 			return;
 		if($amount < 0)
