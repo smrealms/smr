@@ -232,11 +232,8 @@ try {
 
 	}
 
-	$container = array();
-	$container['url'] = 'validate_check.php';
-
 	// this sn identifies our container later
-	$href = SmrSession::getNewHREF($container,true);
+	$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
 	SmrSession::update();
 	//get rid of expired messages
 	$db2->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\' WHERE expire_time < '.$db->escapeNumber(TIME).' AND expire_time > 0');
