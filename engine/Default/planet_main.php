@@ -10,10 +10,12 @@ require_once(get_file_loc('menu.inc'));
 create_planet_menu();
 
 //echo the dump cargo message or other message.
-if (isset($var['errorMsg']))
+if (isset($var['errorMsg'])) {
 	$template->assign('ErrorMsg',$var['errorMsg']);
-if (isset($var['msg']))
-	$template->assign('Msg',$var['msg']);
+}
+if (isset($var['msg'])) {
+	$template->assign('Msg', bbifyMessage($var['msg']));
+}
 
 $template->assignByRef('ThisPlanet',$planet);
 
