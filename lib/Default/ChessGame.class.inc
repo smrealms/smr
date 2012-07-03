@@ -685,18 +685,16 @@ class ChessGame {
 								WHERE chess_game_id=' . $this->db->escapeNumber($this->chessGameID) . ' AND account_id=' . $this->db->escapeNumber($p->accountID) . ' AND x = ' . $this->db->escapeNumber($moveInfo['Castling']['X']) . ' AND y = ' . $this->db->escapeNumber($y) . ';');
 				}
 				$return = 0;
-				if($checking != null) {
-					if($checking == 'MATE') {
-						$this->setWinner($forAccountID);
-						$return = 1;
-						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
-					}
-					else {
-						SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
-						if($checking == 'CHECK') {
-							$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
-							$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'), HOF_PUBLIC);
-						}
+				if($checking == 'MATE') {
+					$this->setWinner($forAccountID);
+					$return = 1;
+					SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'You have just lost [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+				}
+				else {
+					SmrPlayer::sendMessageFromCasino($lastTurnPlayer->getGameID(), $this->getCurrentTurnAccountID(), 'It is now your turn in [chess=' . $this->getChessGameID() . '] against [player=' . $lastTurnPlayer->getPlayerID() . '].');
+					if($checking == 'CHECK') {
+						$currentPlayer->increaseHOF(1, array('Chess','Moves','Check Given'), HOF_PUBLIC);
+						$otherPlayer->increaseHOF(1, array('Chess','Moves','Check Received'), HOF_PUBLIC);
 					}
 				}
 				$currentPlayer->saveHOF();
