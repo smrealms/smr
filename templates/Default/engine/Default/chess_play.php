@@ -48,7 +48,7 @@
 	</tr>
 	<tr>
 		<td></td>
-		<td><?php
+		<td id="chessButtons" class="ajax"><?php
 			if(!$ChessGame->hasEnded() && $ChessGame->getColourForAccountID($ThisPlayer->getAccountID())) {
 				?><div class="buttonA"><a class="buttonA" href="<?php echo $ChessGame->getResignHREF(); ?>">&nbsp;<?php if(count($ChessGame->getMoves()) < 2) { ?>Cancel Game<?php } else { ?>Resign<?php } ?>&nbsp;</a></div><?php
 			} ?>
