@@ -28,10 +28,8 @@ try {
 	
 		// update last login column
 		$account->updateLastLogin();
-	
-		$container = array();
-		$container['url'] = 'validate_check.php';
-		$href = SmrSession::getNewHREF($container,true);
+
+		$href = SmrSession::getNewHREF(create_container('login_check_processing.php'), true);
 		SmrSession::update();
 	
 		header('Location: '.$href);
