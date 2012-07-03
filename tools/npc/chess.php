@@ -46,14 +46,13 @@ try {
 	writeToEngine('uci');
 	writeToEngine('setoption name Hash value ' . UCI_HASH_SIZE_MB, false);
 	writeToEngine('isready');
+	writeToEngine('ucinewgame', false);
 	SmrSession::$game_id = 2;
 
 	require_once(get_file_loc('ChessGame.class.inc'));
 	while(true) {
 		$chessGames =& ChessGame::getNPCMoveGames(true);
-		var_dump($chessGames);
 		foreach($chessGames as &$chessGame) {
-			writeToEngine('ucinewgame', false);
 			writeToEngine('position fen ' . $chessGame->getFENString(), false);
 			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == ChessGame::PLAYER_WHITE ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
 			stream_set_blocking($fromEngine, 1);
@@ -69,6 +68,7 @@ try {
 
 			debug('Taking move: ', $move[1]);
 			debug('Tried move: ' . $chessGame->tryAlgebraicMove($move[1]));
+			writeToEngine('ucinewgame', false);
 		}
 		usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
 	}
