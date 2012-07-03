@@ -13,8 +13,8 @@ if (!isset ($var['folder_id'])) {
 				WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_POLITICAL) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND reciever_delete = ' . $db->escapeBoolean(false) . '
-					AND reciever_delete = ' . $db->escapeBoolean(false) . '
+					AND receiver_delete = ' . $db->escapeBoolean(false) . '
+					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 				LIMIT 1');
 	if ($db->getNumRows() || $player->isOnCouncil()) {
 		$db->query('SELECT * FROM message_type
@@ -36,7 +36,7 @@ if (!isset ($var['folder_id'])) {
 						AND game_id = ' . $db2->escapeNumber($player->getGameID()) . '
 						AND message_type_id = ' . $db2->escapeNumber($message_type_id) . '
 						AND msg_read = ' . $db2->escapeBoolean(false) . '
-						AND reciever_delete = ' . $db2->escapeBoolean(false) . ' LIMIT 1');
+						AND receiver_delete = ' . $db2->escapeBoolean(false) . ' LIMIT 1');
 		$messageBox['HasUnread'] = $db2->getNumRows() != 0;
 
 		$messageBox['MessageCount'] = 0;
@@ -45,7 +45,7 @@ if (!isset ($var['folder_id'])) {
 					WHERE account_id = ' . $db2->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db2->escapeNumber($player->getGameID()) . '
 						AND message_type_id = ' . $db2->escapeNumber($message_type_id) . '
-						AND reciever_delete = ' . $db2->escapeBoolean(false));
+						AND receiver_delete = ' . $db2->escapeBoolean(false));
 		if ($db2->nextRecord()) {
 			$messageBox['MessageCount'] = $db2->getField('message_count');
 		}
@@ -97,7 +97,7 @@ else {
 	else {
 		$whereClause .= ' AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = ' . $db->escapeNumber($var['folder_id']) . '
-						AND reciever_delete = ' . $db->escapeBoolean(false);
+						AND receiver_delete = ' . $db->escapeBoolean(false);
 	}
 
 	if ($var['folder_id'] == MSG_SENT) {
@@ -198,7 +198,7 @@ function displayScouts(&$db, &$messageBox, &$player, $read, $group) {
 					WHERE message.account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND player.game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
-					AND reciever_delete = ' . $db->escapeBoolean(false) . '
+					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 					AND msg_read = ' . $db->escapeBoolean($read) . '
 					GROUP BY sender_id, msg_read
 					ORDER BY send_time DESC';
@@ -218,7 +218,7 @@ function displayScouts(&$db, &$messageBox, &$player, $read, $group) {
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT) . '
-					AND reciever_delete = ' . $db->escapeBoolean(false) . '
+					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 					AND msg_read = ' . $db->escapeBoolean($read) . '
 					ORDER BY send_time DESC';
 		$db->query($query);
@@ -246,7 +246,7 @@ function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $mess
 	$message['Text'] = $message_text;
 	$messageBox['GroupedMessages'][] = $message;
 }
-function displayMessage(&$messageBox, $message_id, $reciever_id, $sender_id, $message_text, $send_time, $msg_read, $type, $sentMessage = false) {
+function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $message_text, $send_time, $msg_read, $type, $sentMessage = false) {
 	require_once(get_file_loc('message.functions.inc'));
 	global $player, $account;
 
@@ -290,11 +290,11 @@ function displayMessage(&$messageBox, $message_id, $reciever_id, $sender_id, $me
 	$message['Text'] = $message_text;
 	$message['SenderDisplayName'] = $senderName;
 
-	$reciever = & SmrPlayer::getPlayer($reciever_id, $player->getGameID());
-	if ($sentMessage && is_object($reciever)) {
+	$receiver = & SmrPlayer::getPlayer($receiver_id, $player->getGameID());
+	if ($sentMessage && is_object($receiver)) {
 		$container = create_container('skeleton.php', 'trader_search_result.php');
-		$container['player_id'] = $reciever->getPlayerID();
-		$message['RecieverDisplayName'] = create_link($container, $reciever->getDisplayName());
+		$container['player_id'] = $receiver->getPlayerID();
+		$message['ReceiverDisplayName'] = create_link($container, $receiver->getDisplayName());
 	}
 
 	$message['Unread'] = $msg_read == 'FALSE';

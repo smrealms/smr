@@ -16,7 +16,7 @@ else
 // get message form db
 $db->query('SELECT account_id, sender_id, message_text
 			FROM message
-			WHERE message_id = ' . $var['message_id'].' AND reciever_delete = \'FALSE\'');
+			WHERE message_id = ' . $var['message_id'].' AND receiver_delete = \'FALSE\'');
 if (!$db->nextRecord())
 	create_error('Could not find the message you selected!');
 

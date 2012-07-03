@@ -14,7 +14,7 @@ if ($action == 'Marked Messages') {
 						AND send_time >= ' . $db->escapeNumber($temp[1]) . '
 						AND send_time <= ' . $db->escapeNumber($temp[2]) . '
 						AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
-						AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT).' AND reciever_delete = ' . $db->escapeBoolean(false));
+						AND message_type_id = ' . $db->escapeNumber(MSG_SCOUT).' AND receiver_delete = ' . $db->escapeBoolean(false));
 			while ($db->nextRecord()) {
 				$message_id_list[] = $db->getInt('message_id');
 			}
@@ -26,11 +26,11 @@ if ($action == 'Marked Messages') {
 	if($var['folder_id']==MSG_SENT)
 		$db->query('UPDATE message SET sender_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN ('.$db->escapeArray($message_id_list).')');
 	else
-		$db->query('UPDATE message SET reciever_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN ('.$db->escapeArray($message_id_list).')');
+		$db->query('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . ' WHERE message_id IN ('.$db->escapeArray($message_id_list).')');
 }
 else {
 	if ($var['folder_id'] == MSG_SCOUT) {
-		$db->query('UPDATE message SET reciever_delete = ' . $db->escapeBoolean(true) . '
+		$db->query('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . '
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND message_type_id = '.$db->escapeNumber($var['folder_id']).'
 						AND game_id = ' . $db->escapeNumber($player->getGameID()));
@@ -41,7 +41,7 @@ else {
 						AND game_id = ' . $db->escapeNumber($player->getGameID()));
 	}
 	else {
-		$db->query('UPDATE message SET reciever_delete = ' . $db->escapeBoolean(true) . '
+		$db->query('UPDATE message SET receiver_delete = ' . $db->escapeBoolean(true) . '
 					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						AND message_type_id = ' . $db->escapeNumber($var['folder_id']) . '
