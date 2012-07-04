@@ -39,7 +39,7 @@ function check_sms_dlr($fp)
 		$db->query('UPDATE account_sms_dlr
 					SET announce = 1
 					WHERE message_id = ' . $message_id . '
-						AND status = ' . $status);
+						AND status = ' . $db->escapeString($status));
 	}
 
 }
