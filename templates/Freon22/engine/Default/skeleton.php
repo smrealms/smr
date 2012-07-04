@@ -19,6 +19,7 @@
 		if(isset($HeaderTemplateInclude)) {
 			$this->includeTemplate($HeaderTemplateInclude);
 		} ?>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 		<script type="text/javascript" src="js/smr15.js"></script>
 	</head>
 	<body>
