@@ -24,6 +24,8 @@ class ChessGame {
 	private $moves;
 	private $messages;
 
+	private $lastMove = null;
+
 	public static function &getNPCMoveGames($forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT chess_game_id
@@ -171,6 +173,11 @@ class ChessGame {
 		return $this->board;
 	}
 
+	public function getLastMove() {
+		$this->getMoves();
+		return $this->lastMove;
+	}
+
 	public function getMoves() {
 		if($this->moves == null) {
 			$this->db->query('SELECT * FROM chess_game_moves WHERE chess_game_id = ' . $this->db->escapeNumber($this->chessGameID) . ' ORDER BY move_id;');
@@ -180,6 +187,16 @@ class ChessGame {
 				$pieceTakenID = $this->db->getField('piece_taken') == null ? null : $this->db->getInt('piece_taken');
 				$this->moves[] = $this->createMove($this->db->getInt('piece_id'), $this->db->getInt('start_x'), $this->db->getInt('start_y'), $this->db->getInt('end_x'), $this->db->getInt('end_y'), $pieceTakenID, $this->db->getField('checked'), $this->db->getInt('move_id') % 2 == 1 ? self::PLAYER_WHITE : self::PLAYER_BLACK, $this->db->getField('castling'), $this->db->getBoolean('en_passant'), $this->db->getInt('promote_piece_id'));
 				$mate = $this->db->getField('checked') == 'MATE';
+				$this->lastMove = array(
+						'From' => array(
+							'X' => $this->db->getInt('start_x'),
+							'Y' => $this->db->getInt('start_y')
+						),
+						'To' => array(
+							'X' => $this->db->getInt('end_x'),
+							'Y' => $this->db->getInt('end_y')
+						)
+					);
 			}
 			if(!$mate && $this->hasEnded()) {
 				if($this->getWinner() != 0) {

@@ -433,6 +433,10 @@ table.chess {
 	border-color: #47525D;
 }
 
+.chess td.lastMove {
+	border: 4px green ridge;
+}
+
 .chess td.chessHighlight {
 	border: 4px orange ridge;
 }

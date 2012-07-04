@@ -75,5 +75,13 @@
 		$this->addJavascriptAlert($MoveMessage);
 	} ?>
 	var submitMoveHREF = '<?php echo $ChessMoveHREF; ?>',
-		availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;
+		availableMoves = <?php echo $this->addJavascriptForAjax('availableMoves', $AvailableMoves); ?>;<?php
+	$LastMove = $ChessGame->getLastMove();
+	if($LastMove != null) {
+		echo $this->addJavascriptForAjax('EVAL', '
+			$("table.chess td").removeClass("lastMove").filter(function() {
+				var x = $(this).data("x"), y = $(this).data("y");
+				return (x == ' . $LastMove['From']['X'] . ' && y == ' . $LastMove['From']['Y'] . ') || (x == ' . $LastMove['To']['X'] . ' && y == ' . $LastMove['To']['Y'] . ')
+			}).addClass("lastMove");');
+	} ?>
 </script>
