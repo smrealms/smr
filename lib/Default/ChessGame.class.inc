@@ -603,9 +603,20 @@ class ChessGame {
 	}
 
 	public function tryAlgebraicMove($move) {
-		$x = ord($move[0]) - ord('a');
+		if(strlen($move) != 4 && strlen($move) != 5) {
+			throw new Exception('Move of length "' . strlen($move) . '" is not valid, full move: ' . $move);
+		}
+		$aVal = ord('a');
+		$hVal = ord('h');
+		if(ord($move[0]) < $aVal || ord($move[2]) < $aVal
+				|| ord($move[0]) > $hVal || ord($move[2]) > $hVal
+				|| $move[1] < 1 || $move[3] < 1
+				|| $move[1] > 8 || $move[3] > 8) {
+			throw new Exception('Invalid move: ' . $move);
+		}
+		$x = ord($move[0]) - $aVal;
 		$y = 8 - $move[1];
-		$toX = ord($move[2]) - ord('a');
+		$toX = ord($move[2]) - $aVal;
 		$toY = 8 - $move[3];
 		$pawnPromotionPiece = null;
 		if(isset($move[4])) {

@@ -64,16 +64,15 @@ try {
 					exit;
 				}
 			}
+			debug('Move info: ', $move);
 			$move = explode(' ', $move);
 
 			debug('Taking move: ', $move[1]);
 			debug('Tried move: ' . $chessGame->tryAlgebraicMove($move[1]));
 			writeToEngine('ucinewgame', false);
 		}
-		// Only sleep if we haven't just processed some games.
-		if(count($chessGames) == 0) {
-			usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
-		}
+		// Always sleep for a while to make sure that PHP can't run at 100%.
+		usleep(UCI_SLEEP_BETWEEN_CYCLES_US);
 	}
 	
 	fclose($toEngine);
