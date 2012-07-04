@@ -8,7 +8,7 @@ function check_sms_dlr($fp)
 				FROM account_sms_dlr
 				LEFT JOIN account_sms_log USING (message_id)
 				WHERE announce = 0
-				ORDER BY log_id'
+				ORDER BY receive_time'
 	);
 	if ($db->nextRecord()) {
 		$message_id = $db->getField('message_id');
