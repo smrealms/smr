@@ -48,6 +48,7 @@ abstract class AbstractSmrPlayer {
 
 	protected $visitedSectors;
 
+	protected $gpWriter;
 	protected $HOF;
 	protected static $HOFVis;
 
@@ -141,6 +142,27 @@ abstract class AbstractSmrPlayer {
 
 	public function isNPC() {
 		return $this->getAccount()->isNPC();
+	}
+
+	public function getGPWriter() {
+		if(!isset($this->gpWriter)) {
+			$this->gpWriter = false;
+			$this->db->query('SELECT position FROM galactic_post_writer WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()));
+			if ($this->db->nextRecord()) {
+				$this->gpWriter = $this->db->getField('position');
+			}
+		}
+		return $this->gpWriter;
+	}
+
+	public function isGPEditor() {
+		return $this->getGPWriter() == 'editor';
+	}
+
+	public function isGPWriter() {
+//		return $this->isGPEditor() || $this->getGPWriter() == 'writer';
+		// Lets always allow people to write for the GP? The less hoops to jump through the more writers we'll have surely?
+		return true;
 	}
 
 	public function getSafeAttackRating() {
