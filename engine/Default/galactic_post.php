@@ -1,8 +1,7 @@
 <?php
 
 $template->assign('PageTopic','Galactic Post');
-$db->query('SELECT * FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
-if ($db->nextRecord() && $db->getField('position') == 'editor') {
+if ($player->isGPEditor()) {
 	$db2 = new SmrMySqlDatabase();
 	require_once(get_file_loc('menu.inc'));
 	create_galactic_post_menu();

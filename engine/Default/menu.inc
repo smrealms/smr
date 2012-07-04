@@ -66,14 +66,8 @@ function create_galactic_post_menu() {
 	$menuItems = array();
 	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
 
-	$allowedWrite = true; //Lets always allow people to write for the GP? The less hoops to jump through the more writers we'll have surely?
-	$allowedEdit = false;
-	//find out the user's privligages
-	$db = new SmrMySqlDatabase();
-	$db->query('SELECT * FROM galactic_post_writer WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND account_id = ' . $db->escapeNumber($player->getAccountID()));
-	if ($db->nextRecord()) {
-		$allowedEdit = $db->getField('position') == 'editor';
-	}
+	$allowedWrite = $player->isGPWriter();
+	$allowedEdit = $player->isGPEditor();
 
 	if ($allowedWrite === false) {
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');

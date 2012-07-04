@@ -2,7 +2,7 @@
 
 $title = trim($_REQUEST['title']);
 $message = trim($_REQUEST['message']);
-if(!isset($var['id'])) {
+if(!$player->isGPEditor()) {
 	$title = htmlentities($title,ENT_COMPAT,'utf-8');
 	$message = htmlentities($message,ENT_COMPAT,'utf-8');
 }
