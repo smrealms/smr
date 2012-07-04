@@ -36,7 +36,7 @@ class ChessGame {
 		$games = array();
 		while($db->nextRecord()) {
 			$game =& self::getChessGame($db->getInt('chess_game_id'), $forceUpdate);
-			if($game->getCurrentTurnPlayer()->isNPC()) {
+			if($game->getCurrentTurnAccount()->isNPC()) {
 				$games[] =& $game;
 			}
 		}
@@ -851,12 +851,24 @@ class ChessGame {
 		}
 	}
 
+	public function &getCurrentTurnAccount() {
+		return SmrAccount::getAccount($this->getCurrentTurnAccountID());
+	}
+
+	public function &getWhiteAccount() {
+		return SmrAccount::getAccount($this->getWhiteID());
+	}
+
+	public function &getBlackAccount() {
+		return SmrAccount::getAccount($this->getBlackID());
+	}
+
 	public function isCurrentTurn($accountID) {
 		return $accountID == $this->getCurrentTurnAccountID();
 	}
 
 	public function isNPCGame() {
-		return $this->getWhitePlayer()->isNPC() || $this->getBlackPlayer()->isNPC();
+		return $this->getWhiteAccount()->isNPC() || $this->getBlackAccount()->isNPC();
 	}
 
 	public static function getOtherColour($colour) {
