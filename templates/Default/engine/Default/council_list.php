@@ -9,7 +9,7 @@ if ($President !== false) { ?>
 			<th>Experience</th>
 		</tr>
 		<tr>
-			<td>President <?php echo $President->getLinkedDisplayName(); ?></td>
+			<td>President <?php echo $President->getLinkedDisplayName(false); ?></td>
 			<td class="center"><?php echo $ThisPlayer->getColouredRaceName($President->getRaceID(), true); ?></td>
 			<td><?php echo $President->getAllianceName(true); ?></td>
 			<td class="right"><?php echo $President->getExperience(); ?></td>
