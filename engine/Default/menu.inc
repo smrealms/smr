@@ -289,6 +289,7 @@ function create_bank_menu() {
 
 function create_hq_menu() {
 	global $var;
+	$menu_items = array();
 	$container = create_container('skeleton.php');
 	$container['LocationID'] = $var['LocationID'];
 
@@ -308,15 +309,16 @@ function create_hq_menu() {
 }
 
 function create_ug_menu() {
-
-	$menu_items[] = create_link(create_container('skeleton.php', 'underground.php'),
-													'Underground','nav');
-
-	$menu_items[] = create_link(create_container('skeleton.php', 'bounty_claim.php'),
-													'Claim Bounty','nav');
-
-	$menu_items[] = create_link(create_container('skeleton.php', 'bounty_place.php'),
-													'Place a Bounty','nav');
+	global $var;
+	$menu_items = array();
+	$container = create_container('skeleton.php');
+	$container['LocationID'] = $var['LocationID'];
+	$container['body'] = 'underground.php';
+	$menu_items[] = create_link($container, 'Underground', 'nav');
+	$container['body'] = 'bounty_claim.php';
+	$menu_items[] = create_link($container, 'Claim Bounty', 'nav');
+	$container['body'] = 'bounty_place.php';
+	$menu_items[] = create_link($container, 'Place a Bounty', 'nav');
 
 	create_menu($menu_items);
 }
@@ -327,14 +329,11 @@ function create_council_menu($race_id) {
 	$menu_items[] = create_link(create_container('skeleton.php', 'council_list.php'),
 													'View Council','nav');
 
-	$container = array();
-	$container['url'] = 'skeleton.php';
+	$container = create_container('skeleton.php');
 	$container['body'] = 'council_politics.php';
 	$container['race_id'] = $race_id;
 	$menu_items[] = create_link($container, 'Political Status','nav');
 
-	$container = array();
-	$container['url'] = 'skeleton.php';
 	$container['body'] = 'council_send_message.php';
 	$container['race_id'] = $race_id;
 	$menu_items[] = create_link($container, 'Send Message','nav');
