@@ -267,7 +267,15 @@ class ChessGame {
 		$fen .= ' ';
 
 		if($this->hasMoved[ChessPiece::PAWN][0] != -1) {
-			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]) . (8 - $this->hasMoved[ChessPiece::PAWN][1]);
+			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]);
+			switch($this->hasMoved[ChessPiece::PAWN][1]) {
+				case 3:
+					$fen .= '6';
+				break;
+				case 4:
+					$fen .= '3';
+				break;
+			}
 		}
 		else {
 			$fen .= '-';
