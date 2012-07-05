@@ -267,7 +267,7 @@ class ChessGame {
 		$fen .= ' ';
 
 		if($this->hasMoved[ChessPiece::PAWN][0] != -1) {
-			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]) . $this->hasMoved[ChessPiece::PAWN][1];
+			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]) . (8 - $this->hasMoved[ChessPiece::PAWN][1]);
 		}
 		else {
 			$fen .= '-';
