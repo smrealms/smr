@@ -172,7 +172,7 @@ foreach ($galaxies as &$galaxy) {
 			$forcesString= 'FriendlyForces=';
 			$friendlyForces =& $sector->getFriendlyForces($player);
 			foreach($friendlyForces as &$forces) {
-				$forcesString .= inify($forces->getOwner()->getName()) . '='.inify(Globals::getHardwareName(HARDWARE_MINE)).'='.$forces->getMines().';'.inify(Globals::getHardwareName(HARDWARE_COMBAT)).'='.$forces->getCDs().';'.inify(Globals::getHardwareName(HARDWARE_SCOUT)).'='.$forces->getSDs().',';
+				$forcesString .= inify($forces->getOwner()->getPlayerName()) . '='.inify(Globals::getHardwareName(HARDWARE_MINE)).'='.$forces->getMines().';'.inify(Globals::getHardwareName(HARDWARE_COMBAT)).'='.$forces->getCDs().';'.inify(Globals::getHardwareName(HARDWARE_SCOUT)).'='.$forces->getSDs().',';
 			} unset ($forces);
 			unset($friendlyForces);
 			$file .= substr($forcesString,0,-1) . EOL;
