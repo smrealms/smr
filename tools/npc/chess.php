@@ -47,7 +47,7 @@ try {
 	writeToEngine('setoption name Hash value ' . UCI_HASH_SIZE_MB, false);
 	writeToEngine('isready');
 	writeToEngine('ucinewgame', false);
-	SmrSession::$game_id = 2;
+	SmrSession::$game_id = NPC_GAME_ID;
 
 	require_once(get_file_loc('ChessGame.class.inc'));
 	while(true) {
