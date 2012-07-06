@@ -365,6 +365,7 @@ function sleepNPC() {
 
 function exitNPC() {
 	global $NPC_LOGIN;
+	debug('Exiting NPC script.');
 	if($NPC_LOGIN!==null) {
 		$db = new SmrMySqlDatabase();
 		$db->query('UPDATE npc_logins SET working='.$db->escapeBoolean(false).' WHERE login='.$db->escapeString($NPC_LOGIN['Login']));
@@ -381,6 +382,11 @@ function exitNPC() {
 
 function changeNPCLogin() {
 	global $NPC_LOGIN,$actions,$NPC_LOGINS_USED,$underAttack,$previousContainer;
+	if($actions > 0) {
+		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage ());
+		exitNPC();
+	}
+	
 	$actions=-1;
 	$GLOBALS['TRADE_ROUTE'] = null;
 	$db = new SmrMySqlDatabase();
@@ -390,10 +396,6 @@ function changeNPCLogin() {
 	else
 		debug('Failed to unlock NPC: '.$NPC_LOGIN['Login']);
 
-	if($actions > 0) {
-		debug('We have taken actions and now want to change NPC, let\'s exit and let next script choose a new NPC to reset execution time', getrusage ());
-		exit;
-	}
 	$NPC_LOGIN = null;
 
 	// We chose a new NPC, we don't care what we were doing beforehand.
