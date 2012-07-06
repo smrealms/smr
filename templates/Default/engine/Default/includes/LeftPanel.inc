@@ -45,7 +45,7 @@ if(isset($GameID)) {
 if(isset($AccountID)) { ?>
 	<a href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
 	<a href="<?php echo $PreferencesLink; ?>">Preferences</a><br /><?php
-	if($ThisAccount->hasPermission())  { ?>
+	if($ThisAccount->hasPermission()) { ?>
 		<a href="<?php echo $AdminToolsLink; ?>">Admin Tools</a><br /><?php
 	}
 	?><a href="<?php echo $LogoutLink; ?>">Logout</a><br />

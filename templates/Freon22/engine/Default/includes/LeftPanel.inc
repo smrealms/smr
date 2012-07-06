@@ -42,7 +42,10 @@ if(isset($GameID)) { ?>
 <div class="LeftNavTwo noWrap"><?php
 	if(isset($AccountID)) {
 		?><a class="leftNav" href="<?php echo $PlayGameLink; ?>">Play Game</a><br />
-			<a class="leftNav" href="<?php echo $PreferencesLink; ?>">Preferences</a><br />
+			<a class="leftNav" href="<?php echo $PreferencesLink; ?>">Preferences</a><br /><?php
+			if($ThisAccount->hasPermission()) { ?>
+				<a class="leftNav" href="<?php echo $AdminToolsLink; ?>">Admin Tools</a><br /><?php
+			} ?>
 			<a class="leftNav" href="<?php echo $LogoutLink; ?>">Logout</a><br />
 		<br /><?php
 	}
