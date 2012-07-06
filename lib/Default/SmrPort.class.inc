@@ -340,6 +340,7 @@ class SmrPort {
 	}
 	
 	public function buyGoods(array &$good,$goodsTraded,$idealPrice,$bargainPrice,$exp) {
+		$this->increaseUpgrade($goodsTraded * 10);
 		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * 1000), $bargainPrice));
 		$this->increaseCredits($bargainPrice);
 		$this->increaseExperience($exp);
@@ -348,6 +349,7 @@ class SmrPort {
 	}
 	
 	public function sellGoods(array &$good,$goodsTraded,$idealPrice,$bargainPrice,$exp) {
+		$this->increaseUpgrade($goodsTraded * 10);
 		$this->increaseExperience($exp);
 		$this->decreaseGood($good,$goodsTraded,true);
 //		$this->setGood($goodID,$this->getGood($goodID) + $amount);
