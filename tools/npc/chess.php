@@ -29,7 +29,7 @@ try {
 		global $fromEngine;
 		stream_set_blocking($fromEngine, $block == true ? 1 : 0);
 		while(($s = fgets($fromEngine)) !== false) {
-			debug('<-- ' . $s);
+			debug('<-- ' . trim($s));
 			stream_set_blocking($fromEngine, 0);
 		}
 	}
@@ -56,7 +56,7 @@ try {
 			writeToEngine('position fen ' . $chessGame->getFENString(), false);
 			writeToEngine('go ' . ($chessGame->getCurrentTurnColour() == ChessGame::PLAYER_WHITE ? 'w' : 'b') . 'time ' . UCI_TIME_PER_MOVE_MS, true, false);
 			stream_set_blocking($fromEngine, 1);
-			while(stripos($move = fgets($fromEngine), 'bestmove') !== 0) {
+			while(stripos($move = trim(fgets($fromEngine)), 'bestmove') !== 0) {
 				debug('<-- ' . $move);
 				if(stripos($move, 'Seg') === 0 || $move == '') {
 					// Segfault
