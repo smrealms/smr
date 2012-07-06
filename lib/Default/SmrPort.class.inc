@@ -10,7 +10,9 @@ class SmrPort {
 	const MAX_FEDS_BONUS = 4000;
 	const BASE_DEFENCES = 1000;
 	const DEFENCES_PER_LEVEL = 1000;
+	const DEFENCES_PER_TEN_MIL_CREDITS = 500;
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
+	const MAX_LEVEL = 9;
 	private static $BASE_REFRESH_PER_HOUR = array(
 		'1' => 150,
 		'2' => 110,
@@ -151,6 +153,8 @@ class SmrPort {
 			$defences = self::BASE_DEFENCES + $this->getLevel() * self::DEFENCES_PER_LEVEL;
 			// Upgrade modifier
 			$defences += max(0, round(self::DEFENCES_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
+			// Credits modifier
+			$defences += max(0, round(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			// Defences restock (check for fed arrival)
 			if(TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
 				$federalMod = (self::TIME_FEDS_STAY - (TIME - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
@@ -647,6 +651,9 @@ class SmrPort {
 	public function setUpgrade($upgrade) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
+		if($this->getLevel() == self::MAX_LEVEL) {
+			$upgrade = 0;
+		}
 		if($this->upgrade == $upgrade)
 			return;
 		$this->upgrade = $upgrade;
