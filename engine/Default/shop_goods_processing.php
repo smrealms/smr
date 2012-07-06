@@ -87,7 +87,7 @@ if (!empty($bargain_price) &&
 		$player->decreaseHOF($bargain_price,array('Trade','Money','Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price,array('Trade','Money','Buying'), HOF_PUBLIC);
 
-		$port->buyGoods($portGood,$amount,$bargain_price,$gained_exp);
+		$port->buyGoods($portGood,$amount,$ideal_price,$bargain_price,$gained_exp);
 
 	}
 	elseif ($portGood['TransactionType'] == 'Sell') {
@@ -99,7 +99,7 @@ if (!empty($bargain_price) &&
 		$player->increaseHOF($gained_exp,array('Trade','Experience','Selling'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price,array('Trade','Money','Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'), HOF_PUBLIC);
-		$port->sellGoods($portGood,$amount,$bargain_price,$gained_exp);
+		$port->sellGoods($portGood,$amount,$ideal_price,$bargain_price,$gained_exp);
 	}
 	$player->increaseHOF($gained_exp,array('Trade','Experience','Total'), HOF_PUBLIC);
 	$player->increaseHOF(1,array('Trade','Results','Success'), HOF_PUBLIC);

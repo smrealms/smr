@@ -339,17 +339,17 @@ class SmrPort {
 		}
 	}
 	
-	public function buyGoods(array &$good,$amount,$cost,$exp) {
-		$this->increaseUpgrade(min($amount * 1000,$cost));
-		$this->increaseCredits($cost);
+	public function buyGoods(array &$good,$goodsTraded,$idealPrice,$bargainPrice,$exp) {
+		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * 1000), $bargainPrice));
+		$this->increaseCredits($bargainPrice);
 		$this->increaseExperience($exp);
-		$this->decreaseGood($good,$amount,true);
+		$this->decreaseGood($good,$goodsTraded,true);
 //		$this->setGood($goodID,$this->getGood($goodID) + $amount);
 	}
 	
-	public function sellGoods(array &$good,$amount,$cost,$exp) {
+	public function sellGoods(array &$good,$goodsTraded,$idealPrice,$bargainPrice,$exp) {
 		$this->increaseExperience($exp);
-		$this->decreaseGood($good,$amount,true);
+		$this->decreaseGood($good,$goodsTraded,true);
 //		$this->setGood($goodID,$this->getGood($goodID) + $amount);
 	}
 	
