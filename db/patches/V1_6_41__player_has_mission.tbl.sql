@@ -1,4 +1,4 @@
-CREATE TABLE smr_new.player_has_mission
+CREATE TABLE player_has_mission
 (
 	game_id INT UNSIGNED NOT NULL,
 	account_id INT UNSIGNED NOT NULL,
