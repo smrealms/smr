@@ -4,9 +4,7 @@ $template->assign('PageTopic','Viewing Message Boxes');
 
 if(!isset($var['box_type_id'])) {
 	$db->query('SELECT count(message_id),box_type_name,box_type_id FROM message_box_types LEFT JOIN message_boxes USING(box_type_id) GROUP BY box_type_id');
-	$container=array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'box_view.php';
+	$container = create_container('skeleton.php', 'box_view.php');
 
 	$PHP_OUTPUT.=('<table class="standard">');
 	$PHP_OUTPUT.=('<tr>');
@@ -25,8 +23,7 @@ if(!isset($var['box_type_id'])) {
 else {
 	$PHP_OUTPUT.=create_link(create_container('skeleton.php','box_view.php'),'Back<br />');
 	$db->query('SELECT * FROM message_boxes WHERE box_type_id='.$db->escapeNumber($var['box_type_id']).' ORDER BY send_time DESC');
-	$container = array();
-	$container['url'] = 'box_delete_processing.php';
+	$container = create_container('box_delete_processing.php');
 	$container['box_type_id'] = $var['box_type_id'];
 	if ($db->getNumRows()) {
 		$PHP_OUTPUT.=create_echo_form($container);
@@ -42,31 +39,37 @@ else {
 		$PHP_OUTPUT.=('<table width="100%" class="standard">');
 
 		while($db->nextRecord()) {
-			$gameID = $db->getField('game_id')>0?$db->getField('game_id'):false;
+			$gameID = $db->getField('game_id');
+			$validGame = $gameID > 0 && Globals::isValidGame($gameID);
 			$PHP_OUTPUT.=('<tr>');
 			$PHP_OUTPUT.=('<td><input type="checkbox" name="message_id[]" value="'.$db->getField('message_id').'"></td>');
-			$senderPlayer = false;
-			if($gameID!==false && Globals::isValidGame($gameID))
-				$senderPlayer =& SmrPlayer::getPlayer($db->getField('sender_id'), $db->getField('game_id'));
-			$sender_acc =& SmrAccount::getAccount($db->getField('sender_id'));
-			$container = array();
-			$container['url'] = 'skeleton.php';
-			$container['body'] = 'box_reply.php';
-			$container['sender_id'] = $sender_acc->getAccountID();
-			$container['game_id'] = $gameID;
+			$senderAccount =& SmrAccount::getAccount($db->getField('sender_id'));
 			$PHP_OUTPUT.=('<td class="noWrap">');
 
-			$sender = 'From: '.$sender_acc->getLogin().' ('.$sender_acc->getAccountID().')';
-			if ($senderPlayer!==false&&$sender_acc->getLogin() != $senderPlayer->getPlayerName())
-				$sender .= ' a.k.a '.$senderPlayer->getPlayerName();
-			if($gameID!==false)
+			$sender = 'From: '.$senderAccount->getLogin().' ('.$senderAccount->getAccountID().')';
+			if ($validGame) {
+				$senderPlayer =& SmrPlayer::getPlayer($senderAccount->getAccountID(), $db->getInt('game_id'));
+				if($senderAccount->getLogin() != $senderPlayer->getPlayerName()) {
+					$sender .= ' a.k.a '.$senderPlayer->getPlayerName();
+				}
+			}
+			if($validGame) {
+				$container = create_container('skeleton.php', 'box_reply.php');
+				$container['sender_id'] = $senderAccount->getAccountID();
+				$container['game_id'] = $gameID;
 				$PHP_OUTPUT.=create_link($container, $sender);
-			else
+			}
+			else {
 				$PHP_OUTPUT.=$sender;
+			}
 			$PHP_OUTPUT.='</td>';
 			$PHP_OUTPUT.='<td>';
-			if ($gameID===false || !Globals::isValidGame($gameID)) $PHP_OUTPUT.=('Game no longer exists');
-			else $PHP_OUTPUT.=Globals::getGameName($gameID);
+			if (!$validGame) {
+				$PHP_OUTPUT.=('Game no longer exists');
+			}
+			else {
+				$PHP_OUTPUT.=Globals::getGameName($gameID);
+			}
 			$PHP_OUTPUT.=('</td></tr><tr><td colspan="3">');
 			$PHP_OUTPUT.=('Sent at ' . date(DATE_FULL_SHORT, $db->getField('send_time')));
 			$PHP_OUTPUT.='</td>';
