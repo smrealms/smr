@@ -31,7 +31,7 @@ class SmrSession {
 			'contact.php' => self::ALWAYS_AVAILABLE,
 			'council_embassy.php' => self::ALWAYS_AVAILABLE,
 			'council_list.php' => self::ALWAYS_AVAILABLE,
-			'cself::ALWAYS_AVAILABLEncil_politics.php' => self::ALWAYS_AVAILABLE,
+			'council_politics.php' => self::ALWAYS_AVAILABLE,
 			'council_send_message.php' => self::ALWAYS_AVAILABLE,
 			'council_vote.php' => self::ALWAYS_AVAILABLE,
 			'current_players.php' => self::ALWAYS_AVAILABLE,
