@@ -58,7 +58,7 @@ try {
 			stream_set_blocking($fromEngine, 1);
 			while(stripos($move = trim(fgets($fromEngine)), 'bestmove') !== 0) {
 				debug('<-- ' . $move);
-				if(stripos($move, 'Seg') === 0 || $move == '') {
+				if(stripos($move, 'Seg') === 0) {
 					// Segfault
 					debug('UCI engine segfaulted?');
 					exit;
