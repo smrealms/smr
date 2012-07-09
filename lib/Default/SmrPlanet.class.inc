@@ -172,6 +172,7 @@ class SmrPlanet {
 			$this->getStockpile();
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
+			$this->calculateInterest();
 		}
 		//		else if($create) {
 		//			$this->gameID		= (int)$gameID;
@@ -182,6 +183,53 @@ class SmrPlanet {
 		//		else {
 		//			throw new Exception('No such sector: '.$gameID.'-'.$sectorID);
 		//		}
+		}
+
+		public function getInterestRate() {
+			$level = $this->getLevel();
+			if ($level < 9) {
+				return .0404;
+			}
+			elseif ($level < 19) {
+				return .0609;
+			}
+			elseif ($level < 29) {
+				return .1236;
+			}
+			elseif ($level < 39) {
+				return .050625;
+			}
+			elseif ($level < 49) {
+				return .0404;
+			}
+			elseif ($level < 59) {
+				return .030225;
+			}
+			elseif ($level < 69) {
+				return .0201;
+			}
+			else {
+				return .018081;
+			}
+		}
+
+		public function calculateInterest() {
+			if ($this->getMaturity() < TIME && $this->getMaturity() > 0) {
+				// calc the interest for the time
+				$interest = $this->getBonds() * $this->getInterestRate();
+
+				// transfer money to free avail cash
+				$this->increaseCredits($this->getBonds() + $interest);
+
+				// reset bonds
+				$this->setBonds(0);
+
+				// reset maturity
+				$this->setMaturity(0);
+
+				// update planet
+				$this->update();
+			}
 		}
 
 		public function getGameID() {
