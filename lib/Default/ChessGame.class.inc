@@ -248,23 +248,27 @@ class ChessGame {
 		}
 
 		// Castling
-		if($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['King'] === true) {
-			$fen .= 'K';
+		$castling = '';
+		if($this->hasMoved[self::PLAYER_WHITE][ChessPiece::KING] !== true) {
+			if($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['King'] !== true) {
+				$castling .= 'K';
+			}
+			if($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['Queen'] !== true) {
+				$castling .= 'Q';
+			}
 		}
-		if($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['Queen'] === true) {
-			$fen .= 'Q';
+		if($this->hasMoved[self::PLAYER_BLACK][ChessPiece::KING] !== true) {
+			if($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['King'] !== true) {
+				$castling .= 'k';
+			}
+			if($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['Queen'] !== true) {
+				$castling .= 'q';
+			}
 		}
-		if($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['King'] === true) {
-			$fen .= 'k';
+		if($castling == '') {
+			$castling = '-';
 		}
-		if($this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['Queen'] === true) {
-			$fen .= 'q';
-		}
-		if(!($this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['King'] || $this->hasMoved[self::PLAYER_WHITE][ChessPiece::ROOK]['Queen']
-				|| $this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['King'] || $this->hasMoved[self::PLAYER_BLACK][ChessPiece::ROOK]['Queen'])) {
-			$fen .= '-';
-		}
-		$fen .= ' ';
+		$fen .= $castling . ' ';
 
 		if($this->hasMoved[ChessPiece::PAWN][0] != -1) {
 			$fen .= chr(ord('a') + $this->hasMoved[ChessPiece::PAWN][0]);
