@@ -29,10 +29,8 @@ $PHP_OUTPUT.=('</table>');
 
 $PHP_OUTPUT.=('<p>&nbsp;</p>');
 
-$bond_time = BOND_TIME / Globals::getGameSpeed($player->getGameID());
-
 $PHP_OUTPUT.=('<p>You are able to transfer this money into a saving bond.<br />');
-$PHP_OUTPUT.=('It remains there for ' . format_time($bond_time) . ' and will gain ' . ($planet->getInterestRate() * 100) . '% interest.<br /><br />');
+$PHP_OUTPUT.=('It remains there for ' . format_time($planet->getBondTime()) . ' and will gain ' . ($planet->getInterestRate() * 100) . '% interest.<br /><br />');
 
 if ($planet->getBonds() > 0) {
 
