@@ -213,10 +213,15 @@ class SmrPlanet {
 			}
 		}
 
-		public function calculateInterest() {
-			if ($this->getMaturity() < TIME && $this->getMaturity() > 0) {
+		public function calculateInterest($partial = false) {
+			if ($this->getMaturity() > 0 && ($partial === true || $this->getMaturity() < TIME)) {
 				// calc the interest for the time
 				$interest = $this->getBonds() * $this->getInterestRate();
+
+				if($partial === true && $this->getMaturity() > TIME) {
+					// Adjust interest based upon how much of the bond duration has passed.
+					$interest -= ($interest / $this->getBondTime()) * ($this->getMaturity() - TIME);
+				}
 
 				// transfer money to free avail cash
 				$this->increaseCredits($this->getBonds() + $interest);
@@ -232,7 +237,15 @@ class SmrPlanet {
 			}
 		}
 
+		public function getBondTime() {
+			return round(BOND_TIME / Globals::getGameSpeed($this->getGameID()));
+		}
+
 		public function bond() {
+			if($this->getMaturity() > 0) {
+				$this->calculateInterest(true);
+			}
+
 			// add it to bond
 			$this->increaseBonds($this->getCredits());
 
@@ -240,7 +253,7 @@ class SmrPlanet {
 			$this->setCredits(0);
 
 			// initialize time
-			$this->setMaturity(TIME + round(BOND_TIME / Globals::getGameSpeed($this->getGameID())));
+			$this->setMaturity(TIME + $this->getBondTime());
 		}
 
 		public function getGameID() {
