@@ -38,31 +38,8 @@ if ($planet->getBonds() > 0) {
 
 	if ($planet->getMaturity() > 0) {
 
-		$maturity = $planet->getMaturity() - TIME;
-		$hours = floor($maturity / 3600);
-		$minutes = ceil(($maturity - ($hours * 3600)) / 60);
-
 		$PHP_OUTPUT.=(' and will come to maturity in ');
-		if ($hours > 0) {
-
-			if ($hours > 1)
-				$PHP_OUTPUT.=($hours.' hours');
-			else
-				$PHP_OUTPUT.=('1 hour');
-
-			if ($minutes > 0)
-				$PHP_OUTPUT.=(' and ');
-
-		}
-
-		if ($minutes > 0) {
-
-			if ($minutes > 1)
-				$PHP_OUTPUT.=($minutes.' minutes');
-			else
-				$PHP_OUTPUT.=('1 minute');
-
-		}
+		$PHP_OUTPUT.=format_time($planet->getMaturity() - TIME);
 
 		$PHP_OUTPUT.=('.');
 
