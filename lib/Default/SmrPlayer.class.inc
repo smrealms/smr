@@ -319,8 +319,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
-	public function &getShip() {
-		return SmrShip::getShip($this);
+	public function &getShip($forceUpdate = false) {
+		return SmrShip::getShip($this, $forceUpdate);
 	}
 
 	public function &getAccount() {

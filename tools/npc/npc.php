@@ -161,9 +161,16 @@ function NPCStuff() {
 			if($var['url']=='shop_ship_processing.php'&&($fedContainer = plotToFed($player,true))!==true) { //We just bought a ship, we should head back to our trade gal/uno - we use HQ for now as it's both in our gal and a UNO, plus it's safe which is always a bonus
 				processContainer($fedContainer);
 			}
-			else if($player->getShip()->removeUnderAttack()===true
+			else if($player->getShip()->getUnderAttack()===true
 				&&($player->hasPlottedCourse()===false||$player->getPlottedCourse()->getEndSector()->offersFederalProtection()===false)
 				&&($fedContainer==null?$fedContainer = plotToFed($player,true):$fedContainer)!==true) { //We're under attack and need to plot course to fed.
+				// Get the lock, remove under attack and update.
+				acquire_lock($player->getSectorID());
+				$ship =& $player->getShip(true);
+				$ship->removeUnderAttack();
+				$ship->updateHardware();
+				release_lock();
+				
 				debug('Under Attack');
 				$underAttack = true;
 				processContainer($fedContainer);
