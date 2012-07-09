@@ -232,6 +232,17 @@ class SmrPlanet {
 			}
 		}
 
+		public function bond() {
+			// add it to bond
+			$this->increaseBonds($this->getCredits());
+
+			// set free cash to 0
+			$this->setCredits(0);
+
+			// initialize time
+			$this->setMaturity(TIME + round(BOND_TIME / Globals::getGameSpeed($this->getGameID())));
+		}
+
 		public function getGameID() {
 			return $this->gameID;
 		}

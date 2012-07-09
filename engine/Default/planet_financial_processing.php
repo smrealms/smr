@@ -33,16 +33,11 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 	}
 }
 elseif ($action == 'Bond It!') {
-	if(!$planet->isClaimed())
+	if(!$planet->isClaimed()) {
 		create_error('Cannot bond on an unclaimed planet.');
-	// add it to bond
-	$planet->increaseBonds($planet->getCredits());
+	}
 
-	// set free cash to 0
-	$planet->setCredits(0);
-
-	// initialize time
-	$planet->setMaturity(TIME + round(BOND_TIME / Globals::getGameSpeed($player->getGameID())));
+	$planet->bond();
 
 	// save to db
 	$account->log(LOG_TYPE_BANK, 'Player bonds '.$planet->getCredits().' credits at planet.', $player->getSectorID());
