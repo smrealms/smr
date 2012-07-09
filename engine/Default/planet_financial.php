@@ -10,51 +10,7 @@ $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$playe
 require_once(get_file_loc('menu.inc'));
 create_planet_menu();
 
-$curr_time = TIME;
-
-$lvl = $planet->getLevel();
-if ($lvl < 9)
-	$base = 1.02;
-elseif ($lvl < 19)
-	$base = 1.03;
-elseif ($lvl < 29)
-	$base = 1.06;
-elseif ($lvl < 39)
-	$base = 1.025;
-elseif ($lvl < 49)
-	$base = 1.02;
-elseif ($lvl < 59)
-	$base = 1.015;
-elseif ($lvl < 69)
-	$base = 1.01;
-else
-	$base = 1.009;
-
-$rate = pow($base,2);
-
-// grant for all days we didn't got
-while ($planet->getMaturity() < $curr_time && $planet->getMaturity() > 0) {
-	// calc the interest for the time
-	$interest = $planet->getBonds() * $rate - $planet->getBonds();
-
-	// transfer money to free avail cash
-	$planet->increaseCredits($planet->getBonds() + $interest);
-
-	// reset bonds
-	$planet->setBonds(0);
-
-	// reset maturity
-	$planet->setMaturity(0);
-
-	// update planet
-	$planet->update();
-
-}
-
 $PHP_OUTPUT.=('<p>Balance: <b>' . number_format($planet->getCredits()) . '</b></p>');
-if (!empty($interest))
-	$PHP_OUTPUT.=('<span style="font-size:75%">Since your last visit<br />you got <span class="creds bold">' . number_format(round($interest)) . '</span> credits interest!</span>');
-
 
 $PHP_OUTPUT.=create_echo_form(create_container('planet_financial_processing.php', ''));
 $PHP_OUTPUT.=('<table>');
@@ -76,7 +32,7 @@ $PHP_OUTPUT.=('<p>&nbsp;</p>');
 $bond_time = BOND_TIME / Globals::getGameSpeed($player->getGameID());
 
 $PHP_OUTPUT.=('<p>You are able to transfer this money into a saving bond.<br />');
-$PHP_OUTPUT.=('It remains there for ' . format_time($bond_time) . ' and will gain ' . ($rate * 100 - 100) . '% interest.<br /><br />');
+$PHP_OUTPUT.=('It remains there for ' . format_time($bond_time) . ' and will gain ' . ($planet->getInterestRate() * 100) . '% interest.<br /><br />');
 
 if ($planet->getBonds() > 0) {
 
@@ -84,7 +40,7 @@ if ($planet->getBonds() > 0) {
 
 	if ($planet->getMaturity() > 0) {
 
-		$maturity = $planet->getMaturity() - $curr_time;
+		$maturity = $planet->getMaturity() - TIME;
 		$hours = floor($maturity / 3600);
 		$minutes = ceil(($maturity - ($hours * 3600)) / 60);
 
