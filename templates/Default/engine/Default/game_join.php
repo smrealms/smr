@@ -65,7 +65,7 @@ if($Game['GameDescription']) { ?>
 					<tr>
 						<td align="right"><b>Name:</b></td>
 						<td><input type="text" name="player_name" maxlength="32" class="InputFields"<?php if(!isset($JoinGameFormHref)){ ?>disabled="disabled"<?php } ?>></td>
-						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race1.gif" alt="Please select a race."></td>
+						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race/race1.gif" alt="Please select a race."></td>
 					</tr>
 					<tr>
 						<td align="right"><b>Race:</b></td>
@@ -111,7 +111,7 @@ if($Game['GameDescription']) { ?>
 						<td align=left>Combat<br />
 						Strength</td>
 						<td align=center colspan=2>
-							<img width="440" height="440" border="0" name="graph" id="graphframe" src="images/graph1.gif" alt="Race overview" />
+							<img width="440" height="440" border="0" name="graph" id="graphframe" src="images/race/graph/graph1.gif" alt="Race overview" />
 						</td>
 						<td align=right>Hunting</td>
 					</tr>
@@ -128,8 +128,8 @@ if($Game['GameDescription']) { ?>
 var	desc = new Array(<?php echo $RaceDescriptions; ?>);
 function go() {
 	var race_id = document.forms[0].race_id.options[document.forms[0].race_id.selectedIndex].value;
-	document.getElementById('race_image').src = "images/race" + race_id + ".jpg";
-	document.getElementById('graphframe').src = "images/graph" + race_id + ".gif";
+	document.getElementById('race_image').src = "images/race/race" + race_id + ".jpg";
+	document.getElementById('graphframe').src = "images/race/graph/graph" + race_id + ".gif";
 	document.getElementById('race_descr').innerHTML = desc[race_id - 1];
 }
 go();

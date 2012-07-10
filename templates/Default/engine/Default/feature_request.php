@@ -74,7 +74,7 @@ if(isset($FeatureRequests)) { ?>
 				<td align="center"><textarea name="feature" id="InputFields"></textarea></td>
 			</tr>
 			<tr>
-				<td align="center">Anonymous: <input name="anon" id="InputFields" type="checkbox" checked="checked"/></td>
+				<td align="center">Anonymous: <input name="anon" id="InputFields" type="checkbox" checked="unchecked"/></td>
 			</tr>
 			<tr>
 				<td align="center"><input type="submit" name="action" value="Submit New Feature" id="InputFields"></td>

@@ -1,5 +1,5 @@
 <div class="center">
-	<p>We are at War/Peace<br />with the following races:</p>
+	<p>We currently have the following diplomatic relationships:</p>
 	<table class="center">
 		<tr>
 			<th width="150">Peace</th>
@@ -11,7 +11,8 @@
 				<table class="center"><?php
 					foreach ($PeaceRaces as $RaceID => $raceInfo) { ?>
 						<tr>
-							<td><?php echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?></td>
+							<td><img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="100" height="106" /img><br />
+							<?php echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?></td>
 						</tr><?php
 					} ?>
 				</table>
@@ -20,7 +21,7 @@
 				<table class="center"><?php
 					foreach ($NeutralRaces as $RaceID => $raceInfo) { ?>
 						<tr>
-							<td><?php echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?></td>
+							<td><img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="100" height="106" /img><br /><?php echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?></td>
 						</tr><?php
 					} ?>
 				</table>
@@ -29,7 +30,7 @@
 				<table class="center"><?php
 					foreach ($WarRaces as $RaceID => $raceInfo) { ?>
 						<tr>
-							<td><?php echo Globals::getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?></td>
+							<td><img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="100" height="106" /img><br /><?php echo Globals::		getColouredRaceNameForRace($RaceID, $ThisPlayer->getGameID(), $ThisPlayer->getRaceID()); ?></td>
 						</tr><?php
 					} ?>
 				</table>

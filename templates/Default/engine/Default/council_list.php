@@ -21,7 +21,9 @@ else {
 } ?>
 <br /><br />
 
-<div class="center bold">Member</div><br /><?php
+<div class="center"><img src="<?php echo Globals::getRaceImage($RaceID); ?>" width="212" height="270" /img><br /><br /></div>
+
+<div class="center bold">Council Members</div><br /><?php
 $CouncilMembers = Council::getRaceCouncil($ThisPlayer->getGameID(), $RaceID);
 if(count($CouncilMembers) > 0) { ?>
 	<table class="standard" align="center" width="85%">
@@ -49,7 +51,7 @@ else { ?>
 } ?>
 <br /><br />
 
-<b>View Council</b><br /><?php
+<b>View Council for:</b><br /><?php
 $Races =& Globals::getRaces();
 foreach($Races as $RaceID => $RaceInfo) {
 	if($RaceID != RACE_NEUTRAL) { ?>
