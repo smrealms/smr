@@ -219,10 +219,6 @@ class ChessGame {
 		$blanks = 0;
 		for($y=0; $y < 8; $y++) {
 			if($y > 0) {
-				if($blanks > 0) {
-					$fen .= $blanks;
-					$blanks = 0;
-				}
 				$fen .= '/';
 			}
 			for($x=0; $x < 8; $x++) {
@@ -236,6 +232,10 @@ class ChessGame {
 					}
 					$fen .= $board[$y][$x]->getPieceLetter();
 				}
+			}
+			if($blanks > 0) {
+				$fen .= $blanks;
+				$blanks = 0;
 			}
 		}
 		switch($this->getCurrentTurnColour()) {
