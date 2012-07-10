@@ -137,6 +137,9 @@ class Globals {
 																'Race ID' => self::$db->getInt('race_id'),
 																'Race Name' => self::$db->getField('race_name'),
 																'Description' => self::$db->getField('race_description'),
+																'ImageLink' => 'images/race/race' . self::$db->getInt('race_id') . '.jpg',
+																'ImageHeadLink' => 'images/race/head/race' . self::$db->getInt('race_id') . '.jpg',															
+																'ImageGraphLink' => 'images/race/graph/race' . self::$db->getInt('race_id') . '.gif',
 																);
 			}
 		}
@@ -147,7 +150,22 @@ class Globals {
 		$races =& Globals::getRaces();
 		return $races[$raceID]['Race Name'];
 	}
-
+	
+	public static function getRaceImage($raceID) {
+		$races =& Globals::getRaces();
+		return $races[$raceID]['ImageLink'];
+		}
+	
+	public static function getRaceHeadImage($raceID) {
+		$races =& Globals::getRaces();
+		return $races[$raceID]['ImageHeadLink'];
+		}
+		
+	public static function getRaceGraphImage($raceID) {
+		$races =& Globals::getRaces();
+		return $races[$raceID]['ImageGraphLink'];
+		}		
+		
 	public static function getColouredRaceNameForRace($raceID, $gameID, $fromRaceID, $linked = true) {
 		$raceRelations =& Globals::getRaceRelations($gameID, $fromRaceID);
 		return self::getColouredRaceName($raceID, $raceRelations[$raceID], $linked);
