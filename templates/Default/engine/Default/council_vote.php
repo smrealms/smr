@@ -1,5 +1,9 @@
 <div class="center bold">Diplomatic Relations</div><br />
-<div class="standard" align="center">Each member of the council is entitled to one vote daily. <br /> Each vote counts for +/-10 that race. <br />Results are updated at 00:00 daily.</div><br />
+<div class="center standard">
+	Each member of the council is entitled to one vote daily.<br />
+	Each vote counts for +/-10 that race.<br />
+	Results are updated at 00:00 daily.
+</div><br />
 
 <table class="standard" align="center" width="75%">
 	<tr>
@@ -11,8 +15,12 @@
 
 	foreach($VoteRelations as $RaceID => $VoteInfo) { ?>
 		<tr>
-			
-			<td align="center"><a href="<?php echo Globals::getCouncilHREF($RaceID); ?>"><img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="60" height="64" /img><br /><?php echo $ThisPlayer->getColouredRaceName($RaceID); ?></a></td>
+			<td align="center">
+				<a href="<?php echo Globals::getCouncilHREF($RaceID); ?>">
+					<img src="<?php echo Globals::getRaceHeadImage($RaceID); ?>" width="60" height="64" /><br /><?php
+					echo $ThisPlayer->getColouredRaceName($RaceID); ?>
+				</a>
+			</td>
 			<td align="center">
 				<form method="POST" action="<?php echo $VoteInfo['HREF']; ?>">
 					<input type="submit" name="action" value="Increase" id="InputFields"<?php if($VoteInfo['Increased']){ ?> style="background-color:green"<?php } ?> />
@@ -26,12 +34,11 @@
 	} ?>
 </table>
 
-
 <p>&nbsp;</p><?php
 
 if ($VoteTreaties) { ?>
 	<div class="center bold">Diplomatic Treaties</div><br />
-	<div class="standard" align="center">Each council member is granted one vote per treaty.<br />  Both racial presidents have the right to veto (remove) a Peace vote.</div><br />
+	<div class="center standard">Each council member is granted one vote per treaty.<br />  Both racial presidents have the right to veto (remove) a Peace vote.</div><br />
 	<table class="standard" align="center" width="65%">
 		<tr>
 			<th>Race</th>
