@@ -3,7 +3,7 @@
 $defaultEnd = TIME + (2*31*86400); //3 months 
 $template->assign('DefaultEnd',$defaultEnd);
 
-$template->assign('GameTypes',array('Default','Semi Wars','Draft'));
+$template->assign('GameTypes',array('Default','Semi Wars','Draft','Newbie'));
 
 //get information
 $container=create_container('1.6/universe_create_save_processing.php','1.6/universe_create_galaxies.php');
