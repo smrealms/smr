@@ -26,8 +26,5 @@ elseif ($action == 'Ban' || $action == 'Ban and remove exception') {
 		$bannedAccount->banAccount(0,$account,2,$ban[$id],$action == 'Ban and remove exception');
 	}
 }
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'game_play.php';
-forward($container);
+forward(create_container('skeleton.php', 'admin_tools.php'));
 ?>

@@ -25,7 +25,7 @@ if (!empty($account_id) || $game_id == 20000) {
 		}
 	}
 }
-$container = create_container('skeleton.php', 'game_play.php');
+$container = create_container('skeleton.php', 'admin_tools.php');
 $container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
 forward($container)
 

@@ -369,6 +369,6 @@ if ($action == 'Yes') {
 }
 $db = new SmrMySqlDatabase();
 //forward em
-forward(create_container('skeleton.php', 'game_play.php'));
+forward(create_container('skeleton.php', 'admin_tools.php'));
 
 ?>

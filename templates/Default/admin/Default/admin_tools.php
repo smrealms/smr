@@ -1,4 +1,10 @@
 <?php
+if(isset($ErrorMessage)) {
+	echo $ErrorMessage; ?><br /><br /><?php
+}
+if(isset($Message)) {
+	echo $Message; ?><br /><br /><?php
+}
 if(isset($AdminPermissions)) { ?>
 	<h1>Admin Tools</h1><br />
 	<ul><?php

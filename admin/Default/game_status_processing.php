@@ -10,6 +10,6 @@ elseif ($action == 'Open') {
 	$db->query('DELETE FROM game_disable;');
 }
 
-forward(create_container('skeleton.php', 'game_play.php'));
+forward(create_container('skeleton.php', 'admin_tools.php'));
 
 ?>

@@ -34,10 +34,7 @@ if (isset($first)) {
 		$bannedAccount =& SmrAccount::getAccount($account_id);
 		$bannedAccount->banAccount(0,$account,2,$val);
 	}
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'game_play.php';
-	forward($container);
+	forward(create_container('skeleton.php', 'admin_tools.php'));
 
 }
 $second = $_REQUEST['second'];
@@ -49,6 +46,12 @@ if (isset($second)) {
 $action = $_REQUEST['action'];
 if($action == 'Next Page No Disable') {
 	//we have to send back to ip check page now since we dont disable
+	if (!isset($var['continue'])) {
+		$container = create_container('skeleton.php', 'admin_tools.php');
+	}
+	else {
+		$container = create_container('skeleton.php', 'ip_view_results.php');
+	}
 	$container['variable'] = $variable;
 	$container['last_ip'] = $last_ip;
 	$container['last_acc'] = $last_acc;
@@ -57,13 +60,6 @@ if($action == 'Next Page No Disable') {
 	$closed_so_far = $_REQUEST['closed_so_far'];
 	if (isset($closed_so_far))
 		$container['closed_so_far'] = $closed_so_far;
-	if (!isset($var['continue'])) {
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'game_play.php';
-	} else {
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'ip_view_results.php';
-	}
 	forward($container);
 }
 $disable_id = $_REQUEST['disable_id'];
@@ -94,8 +90,7 @@ if (isset($closed_so_far))
 $msg = 'You have disabled '.$amount.' accounts.';
 if ($amount > 20)
     $msg .= '  How do you sleep at night ;)';
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 $container['type'] = $type;
 $container['last_ip'] = $last_ip;
 $container['last_acc'] = $last_acc;
@@ -106,7 +101,7 @@ if (isset($var['continue'])) {
 	$container['closed_so_far'] = $amount;
 	$container['body'] = 'ip_view_results.php';
 } else {
-	$container['body'] = 'game_play.php';
+	$container['body'] = 'admin_tools.php';
 	$container['msg'] = $msg;
 }
 forward($container);

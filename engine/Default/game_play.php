@@ -1,10 +1,12 @@
 <?php
 $template->assign('PageTopic','Play Game');
 
-if(isset($var['errorMsg']))
+if(isset($var['errorMsg'])) {
 	$template->assign('ErrorMessage',$var['errorMsg']);
-if (isset($var['msg']))
+}
+if (isset($var['msg'])) {
 	$template->assign('Message',$var['msg']);
+}
 
 $template->assign('UserRankingLink',SmrSession::getNewHREF(create_container('skeleton.php', 'rankings_view.php')));
 $template->assign('UserRankName',$account->getRankName());
