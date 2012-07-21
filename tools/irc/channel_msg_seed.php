@@ -62,8 +62,8 @@ function channel_msg_seedlist($fp, $rdata)
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The !seedlist command enables alliance leader to add or remove sectors to the seedlist' . EOL);
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The following sub commands are available:' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist add <sector>        Adds <sector> to the seedlist' . EOL);
-		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist del <sector>        Removes <sector> from seedlist' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist add <sector1> <sector2> ...       Adds <sector> to the seedlist' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :  !seedlist del <sector1> <sector2> ...       Removes <sector> from seedlist' . EOL);
 
 		return true;
 
@@ -82,7 +82,7 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
-		$sector = $msg[5];
+		$sectors = explode(' ', $msg[5]);
 
 		echo_r('[SEEDLIST_ADD] by ' . $nick . ' in ' . $channel);
 
@@ -92,46 +92,50 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 			return true;
 		}
 
-		// see if the sector is numeric
-		if (!is_numeric($sector)) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector needs to be numeric. Example: !seedlist add 1537' . EOL);
-			return true;
+		foreach($sectors as $sector) {
+			// see if the sector is numeric
+			if (!is_numeric($sector)) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :The sectors all need to be numeric. Example: !seedlist add 1537' . EOL);
+				return true;
+			}
 		}
 
-		// check if the sector is a part of the game
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT sector_id
-					FROM sector
-					WHERE game_id = ' . $player->getGameID() . '
-						AND  sector_id = ' . $db->escapeNumber($sector)
-		);
+		foreach($sectors as $sector) {
+			// check if the sector is a part of the game
+			$db = new SmrMySqlDatabase();
+			$db->query('SELECT sector_id
+						FROM sector
+						WHERE game_id = ' . $player->getGameID() . '
+							AND  sector_id = ' . $db->escapeNumber($sector)
+			);
 
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' does not exist in current game.' . EOL);
-			return true;
+			if (!$db->nextRecord()) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' does not exist in current game.' . EOL);
+				continue;
+			}
+
+			// check if the given sector is already part of the seed list
+			$db->query('SELECT sector_id
+						FROM alliance_has_seedlist
+						WHERE alliance_id = ' . $player->getAllianceID() . '
+							AND game_id = ' . $player->getGameID() . '
+							AND sector_id = ' . $db->escapeNumber($sector)
+			);
+
+			if ($db->nextRecord()) {
+//				fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' is already in the seedlist.' . EOL);
+				continue;
+			}
+			
+			// add sector to db
+			$db->query('INSERT INTO alliance_has_seedlist
+						(alliance_id, game_id, sector_id)
+						VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $db->escapeNumber($sector) . ')');
+
+//			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' has been added.' . EOL);
 		}
-
-		// check if the given sector is already part of the seed list
-		$db->query('SELECT sector_id
-					FROM alliance_has_seedlist
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID() . '
-						AND sector_id = ' . $db->escapeNumber($sector)
-		);
-
-		if ($db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' is already in the seedlist.' . EOL);
-			return true;
-		}
-
-		// add sector to db
-		$db->query('INSERT INTO alliance_has_seedlist
-					(alliance_id, game_id, sector_id)
-					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $db->escapeNumber($sector) . ')');
-
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' has been added.' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :The sectors have been added.' . EOL);
 		return true;
-
 	}
 
 	return false;
@@ -147,7 +151,7 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
-		$sector = $msg[5];
+		$sectors = explode(' ', $msg[5]);
 
 		echo_r('[SEEDLIST_DEL] by ' . $nick . ' in ' . $channel);
 
@@ -157,34 +161,22 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 			return true;
 		}
 
-		// see if the sector is numeric
-		if (!is_numeric($sector)) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector needs to be numeric. Example: !seedlist del 1537' . EOL);
-			return true;
+		foreach($sectors as $sector) {
+			// see if the sector is numeric
+			if (!is_numeric($sector)) {
+				fputs($fp, 'PRIVMSG ' . $channel . ' :The sectors all need to be numeric. Example: !seedlist del 1537' . EOL);
+				return true;
+			}
 		}
 
-		// check if the given sector is already part of the seed list
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT sector_id
-					FROM alliance_has_seedlist
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID() . '
-						AND sector_id = ' . $db->escapeNumber($sector)
-		);
-
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' is not part of the seedlist.' . EOL);
-			return true;
-		}
-
-		// add sector to db
+		// add sectors to db
 		$db->query('DELETE FROM alliance_has_seedlist
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID() . '
-						AND sector_id = ' . $db->escapeNumber($sector)
+						AND sector_id IN ' . $db->escapeArray($sectors)
 		);
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :The sector ' . $sector . ' has been deleted.' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :The sectors have been deleted.' . EOL);
 		return true;
 
 	}
