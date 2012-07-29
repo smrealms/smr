@@ -37,9 +37,9 @@ foreach ($locations as &$location) {
 	}
 	if ($location->isShipSold()) {
 		$shipsSold =& $location->getShipsSold();
-		foreach ($shipsSold as &$ship) {
-			$extra .= $ship['Name'] . '<br />';
-		} unset($ship);
+		foreach ($shipsSold as &$shipSold) {
+			$extra .= $shipSold['Name'] . '<br />';
+		} unset($shipSold);
 	}
 	if ($location->isHardwareSold()) {
 		$hardwareSold =& $location->getHardwareSold();
