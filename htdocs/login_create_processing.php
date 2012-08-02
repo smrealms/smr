@@ -217,7 +217,7 @@ try {
 		header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 		exit;
 	}
-	$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
+	$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give $2 worth of "reward" credits for joining.
 	if($socialLogin) {
 		$account->addAuthMethod($_SESSION['socialLogin']->getLoginType(),$_SESSION['socialLogin']->getUserID());
 		$account->setValidated(true);

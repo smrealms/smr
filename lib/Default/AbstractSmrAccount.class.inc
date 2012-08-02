@@ -431,9 +431,9 @@ abstract class AbstractSmrAccount {
 	protected function updateMaxRankAchieved($rank) {
 		if($rank <= $this->maxRankAchieved)
 			throw new Exception('Trying to set max rank achieved to a lower value: ' . $rank);
-		$delta = $rank-$this->maxRankAchieved;
+		$delta = $rank - $this->maxRankAchieved;
 		if($this->hasReferrer()) {
-			$this->getReferrer()->increaseSmrRewardCredits($delta);
+			$this->getReferrer()->increaseSmrRewardCredits($delta * CREDITS_PER_DOLLAR);
 		}
 		$this->maxRankAchieved+=$delta;
 		$this->hasChanged=true;
@@ -704,7 +704,7 @@ abstract class AbstractSmrAccount {
 
 				// creates a new user account object
 				$account =& SmrAccount::getAccountByName($db2->getField('login'));
-				$account->increaseSmrRewardCredits(2); // Give 2 "reward" credits for joining.
+				$account->increaseSmrRewardCredits(2 * CREDITS_PER_DOLLAR); // Give 2 "reward" credits for joining.
 				// insert into the account stats table
 				$db->query('INSERT INTO account_has_stats (account_id, HoF_name) VALUES('.$db->escapeNumber($account->getAccountID()).', ' . $db->escape_string($account->login) . ')');
 				SmrSession::$account_id = $account->getAccountID();
