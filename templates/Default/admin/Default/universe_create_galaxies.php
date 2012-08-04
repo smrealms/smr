@@ -6,8 +6,8 @@
 
 <form name="FORM" method="POST" action="<?php echo $CreateGalaxiesFormHref ?>"><?php
 	if($ChooseNumberOfGalaxies) { ?>
-			<p>Select number of galaxies<br />you want create!</p>
-			<input type="text" name="galaxy_count" value="10" id="InputFields" size="3">&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Next >>" id="InputFields"><?php 
+		<p>Select number of galaxies<br />you want create!</p>
+		<input type="number" name="galaxy_count" value="10" id="InputFields" size="3">&nbsp;&nbsp;&nbsp;<input type="submit" name="action" value="Next >>" id="InputFields"><?php
 	}
 	else { ?>
 		<p>
@@ -25,7 +25,7 @@
 						</select>
 					</td>
 					<td align="right">Size:</td>
-					<td align="left"><input type="text" name="size[<?php echo $i ?>]" value="15" size="3" maxlength="3" id="InputFields"></td>
+					<td align="left"><input type="number" name="size[<?php echo $i ?>]" value="15" size="3" maxlength="3" id="InputFields"></td>
 				</tr><?php
 			} ?>
 			</table>

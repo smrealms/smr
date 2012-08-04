@@ -51,7 +51,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">'.$location_name.'</b><br />');
 	while ($db2->nextRecord()) $PHP_OUTPUT.=('<span style="font-size:65%;">' . $db2->getField('hardware_name') . '</span><br />');
 	$PHP_OUTPUT.=('</td>');
-	foreach ($galaxies as $galaxy_id => $galaxy_name) $PHP_OUTPUT.=('<td align="center"><input type="input" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" class="center"></td>');
+	foreach ($galaxies as $galaxy_id => $galaxy_name) $PHP_OUTPUT.=('<td align="center"><input type="number" name="id['.$location_type_id.']['.$galaxy_id.']" size="3" id="InputFields" value="0" class="center"></td>');
 	$PHP_OUTPUT.=('</tr>');
 }
 

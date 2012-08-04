@@ -26,7 +26,7 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=('<tr>');
 		$PHP_OUTPUT.=('<td align="center">'.$good_name.'</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="'.$amount.'" maxlength="5" size="5" id="InputFields" class="center">');
+		$PHP_OUTPUT.=('<td align="center"><input type="number" name="amount" value="'.$amount.'" maxlength="5" size="5" id="InputFields" class="center">');
 		$PHP_OUTPUT.=('<td align="center">');
 		$PHP_OUTPUT.=create_submit('Dump');
 		$PHP_OUTPUT.=('</td>');

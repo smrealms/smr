@@ -115,7 +115,7 @@ if (!isset($account_num) && !isset($make)) {
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Account Number:&nbsp;</td>
-			<td><input type="text" name="account_num" size="4" value="0"></td>
+			<td><input type="number" name="account_num" size="4" value="0"></td>
 		</tr>
 		<tr>
 			<td class="top">Password:&nbsp;</td>
@@ -252,9 +252,9 @@ if (isset($account_num)) {
 		$form = create_form($container,'Show');
 		$PHP_OUTPUT.= $form['form'];
 		$PHP_OUTPUT.= '<table cellspacing="5" cellpadding="0" class="nobord"><tr><td>';
-		$PHP_OUTPUT.= '<input class="center" type="text" name="minValue" size="3" value="' . $minValue . '">';
+		$PHP_OUTPUT.= '<input type="number" class="center" name="minValue" size="3" value="' . $minValue . '">';
 		$PHP_OUTPUT.= '</td><td>-</td><td>';
-		$PHP_OUTPUT.= '<input class="center" type="text" name="maxValue" size="3" value="' . $maxValue . '">';
+		$PHP_OUTPUT.= '<input type="number" class="center" name="maxValue" size="3" value="' . $maxValue . '">';
 		$PHP_OUTPUT.= '</td><td>';
 		$PHP_OUTPUT.= $form['submit'];
 		$PHP_OUTPUT.= '</td></tr></table></form>';
@@ -308,7 +308,7 @@ if (isset($account_num)) {
 	$form = create_form($container,$actions);
 
 	$PHP_OUTPUT.= $form['form'];
-	$PHP_OUTPUT.= 'Amount:&nbsp;<input type="text" name="amount" size="10" value="0"><br /><br />';
+	$PHP_OUTPUT.= 'Amount:&nbsp;<input type="number" name="amount" size="10" value="0"><br /><br />';
 
 	$PHP_OUTPUT.= $form['submit']['Deposit'];
 	$PHP_OUTPUT.= '&nbsp;&nbsp;';

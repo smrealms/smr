@@ -13,7 +13,7 @@ if (!isset($number) && !isset($var['number'])) {
 
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('How many player\'s info do you need to check?<br />');
-	$PHP_OUTPUT.=('<input type="text" name="number" maxlength="5" size="5" id="InputFields" class="center"><br />');
+	$PHP_OUTPUT.=('<input type="number" name="number" maxlength="5" size="5" id="InputFields" class="center"><br />');
 	$PHP_OUTPUT.=create_submit('Next Page');
 	$PHP_OUTPUT.=('</form>');
 

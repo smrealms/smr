@@ -131,7 +131,7 @@ if (!empty($boughtGoods)) {
 		$PHP_OUTPUT.=('<td align="center">' . $good['Amount'] . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $good['BasePrice'] . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $ship->getCargo($good['ID']) . '</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="');
+		$PHP_OUTPUT.=('<td align="center"><input type="number" name="amount" value="');
 
 		if ($good['Amount'] < $ship->getEmptyHolds())
 			$PHP_OUTPUT.=($good['Amount']);
@@ -180,7 +180,7 @@ if (!empty($soldGoods)) {
 		$PHP_OUTPUT.=('<td align="center">' . $good['Amount'] . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $good['BasePrice'] . '</td>');
 		$PHP_OUTPUT.=('<td align="center">' . $ship->getCargo($good['ID']) . '</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="text" name="amount" value="');
+		$PHP_OUTPUT.=('<td align="center"><input type="number" name="amount" value="');
 
 		if ($good['Amount'] < $ship->getCargo($good['ID']))
 			$PHP_OUTPUT.=($good['Amount']);

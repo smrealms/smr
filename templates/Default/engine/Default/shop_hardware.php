@@ -22,11 +22,11 @@ if (isset($HardwareSold)) { ?>
 			<form method="POST" id="hardwareForm<?php echo $HardwareTypeID; ?>" action="<?php echo $Hardware['HREF']; ?>">
 				<tr>
 					<td><?php echo $Hardware['Name']; ?></td>
-					<td><input type="text" name="amount" value="<?php echo $AmountToBuy; ?>" size="5" onKeyUp="recalcOnKeyUp(<?php echo $HardwareTypeID; ?>,<?php echo $Hardware['Cost']; ?>)" id="InputFields" class="center"></td>
+					<td><input type="number" name="amount" value="<?php echo $AmountToBuy; ?>" size="5" onKeyUp="recalcOnKeyUp(<?php echo $HardwareTypeID; ?>,<?php echo $Hardware['Cost']; ?>)" id="InputFields" class="center"></td>
 					<td>*</td>
 					<td><?php echo number_format($Hardware['Cost']); ?></td>
 					<td>=</td>
-					<td><input type="text" name="total" disabled="disabled" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" id="InputFields" class="center"></td>
+					<td><input type="number" name="total" disabled="disabled" value="<?php echo $AmountToBuy * $Hardware['Cost']; ?>" size="7" id="InputFields" class="center"></td>
 					<td>
 						<input type="submit" name="action" value="Buy" id="InputFields" />
 					</td>

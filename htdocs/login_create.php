@@ -71,11 +71,11 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 					</tr>
 					<tr>
 						<td width='27%'>E-Mail Address:</td>
-						<td width='73%'><input type='text' name='email' size='50' maxlength='128' id='InputFields'></td>
+						<td width='73%'><input type='email' name='email' size='50' maxlength='128' id='InputFields'></td>
 					</tr>
 					<tr>
 						<td width='27%'>Verify E-Mail Address:</td>
-						<td width='73%'><input type='text' name='email_verify' size='50' maxlength='128' id='InputFields'></td>
+						<td width='73%'><input type='email' name='email_verify' size='50' maxlength='128' id='InputFields'></td>
 					</tr>
 					<tr>
 						<td width='27%'>Local Time:</td>

@@ -25,17 +25,17 @@ Be as accurate as possible with your bug description.</span>
 
 		<tr>
 			<td class="bold" valign="top">Description:</td>
-			<td><textarea id="InputFields" name="description" style="width:300px;height:100px;"></textarea></td>
+			<td><textarea spellcheck="true" id="InputFields" name="description" style="width:300px;height:100px;"></textarea></td>
 		</tr>
 
 		<tr>
 			<td class="bold" valign="top">Steps to repeat:</td>
-			<td><textarea id="InputFields" name="steps" style="width:300px;height:100px;"></textarea></td>
+			<td><textarea spellcheck="true" id="InputFields" name="steps" style="width:300px;height:100px;"></textarea></td>
 		</tr>
 
 		<tr>
 			<td class="bold" valign="top">Error Message:</td>
-			<td><textarea id="InputFields" name="error_msg" style="width:300px;height:100px;"></textarea></td>
+			<td><textarea spellcheck="true" id="InputFields" name="error_msg" style="width:300px;height:100px;"></textarea></td>
 		</tr>
 
 		<tr>

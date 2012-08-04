@@ -21,7 +21,7 @@
 			</tr>
 			<tr>
 				<td align="right" valign="top">Description:</td>
-				<td><textarea name="game_description" id="InputFields" style="height:100px;width:153px;"></textarea></td>
+				<td><textarea spellcheck="true" name="game_description" id="InputFields" style="height:100px;width:153px;"></textarea></td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
@@ -39,19 +39,19 @@
 			</tr>
 			<tr>
 				<td align="right">Max Players:</td>
-				<td><input type="text" name="max_player" id="InputFields" value="5000"></td>
+				<td><input type="number" name="max_player" id="InputFields" value="5000"></td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
 				<td align="right">Credits Needed:</td>
-				<td><input type="text" name="credits" id="InputFields" value="0"></td>
+				<td><input type="number" name="credits" id="InputFields" value="0"></td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
 			<tr>
 				<td align="right">Speed:</td>
-				<td><input type="text" name="speed" id="InputFields" value="1"></td>
+				<td><input type="number" name="speed" id="InputFields" value="1.5"></td>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			</tr>
@@ -59,7 +59,7 @@
 				<td align="right">Game Type:</td>
 				<td>
 					<select name="game_type" size="1" id="InputFields">
-						<option selected>Default</option>
+						<option selected="selected">Default</option>
 						<option>1.2</option>
 						<option>Semi Wars</option>
 						<option>Race_Wars</option>

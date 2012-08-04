@@ -70,8 +70,8 @@ while ($db->nextRecord()) {
 		$PHP_OUTPUT.=('</tr>');
 
 		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td><textarea name="change_message" id="InputFields" style="width:400px;height:50px;"></textarea></td>');
-		$PHP_OUTPUT.=('<td><textarea name="affected_db" id="InputFields" style="width:200px;height:50px;"></textarea></td>');
+		$PHP_OUTPUT.=('<td><textarea spellcheck="true" name="change_message" id="InputFields" style="width:400px;height:50px;"></textarea></td>');
+		$PHP_OUTPUT.=('<td><textarea spellcheck="true" name="affected_db" id="InputFields" style="width:200px;height:50px;"></textarea></td>');
 		$PHP_OUTPUT.=('</tr>');
 
 		$PHP_OUTPUT.=('<tr>');

@@ -49,7 +49,7 @@ foreach ($locations as &$location) {
 	}
 	$extra .= '</span>';
 	$PHP_OUTPUT.= '<tr><td class="right">' . $location->getName() . $extra . '</td><td class="left">';
-	$PHP_OUTPUT.= '<input type="text" value="';
+	$PHP_OUTPUT.= '<input type="number" value="';
 	if (isset($totalLocs[$location->getTypeID()])) $PHP_OUTPUT.= $totalLocs[$location->getTypeID()];
 	else $PHP_OUTPUT.= '0';
 	$PHP_OUTPUT.= '" size="5" name="loc' . $location->getTypeID() . '"></td></tr>';

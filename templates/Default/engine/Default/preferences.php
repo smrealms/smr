@@ -146,7 +146,7 @@ if(isset($GameID)) { ?>
 		
 		<tr>
 			<td>Email address:</td>
-			<td><input type="text" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" id="InputFields" size="50" /></td>
+			<td><input type="email" name="email" value="<?php echo htmlspecialchars($ThisAccount->getEmail()); ?>" id="InputFields" size="50" /></td>
 		</tr>
 		
 		<tr>
@@ -158,7 +158,7 @@ if(isset($GameID)) { ?>
 
 		<tr>
 			<td>Cell phone:</td>
-			<td><input type="text" name="cell_phone" value="<?php echo htmlspecialchars($ThisAccount->getCellPhone()); ?>" id="InputFields" size="50" /></td>
+			<td><input type="tel" name="cell_phone" value="<?php echo htmlspecialchars($ThisAccount->getCellPhone()); ?>" id="InputFields" size="50" /></td>
 		</tr>
 
 		<tr>
@@ -286,7 +286,7 @@ if(isset($GameID)) { ?>
 
 		<tr>
 			<td>Font size</td>
-			<td><input type="text" size="4" name="fontsize" value="<?php echo $ThisAccount->getFontSize(); ?>" /> Minimum font size is 50%</td>
+			<td><input type="number" size="4" name="fontsize" value="<?php echo $ThisAccount->getFontSize(); ?>" /> Minimum font size is 50%</td>
 		</tr>
 	
 		<tr>
@@ -301,7 +301,7 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Change CSS Link</td>
 			<td>
-				<input type="text" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink()); ?>"><br />
+				<input type="url" size="50" name="csslink" value="<?php echo htmlspecialchars($ThisAccount->getCssLink()); ?>"><br />
 			</td>
 		</tr>
 
@@ -425,7 +425,7 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Transfer Credits:</td>
 			<td>
-				<input type="text" name="amount" id="InputFields" style="width:30px;text-align:center;" /> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
+				<input type="number" name="amount" id="InputFields" style="width:50px;text-align:center;" /> credits to <?php if(!isset($GameID)){ ?>the account with HoF name of <?php } ?>
 				<select name="account_id" id="InputFields"><?php
 					foreach($TransferAccounts as $AccID => $AccOrPlayerName) {
 						?><option value="<?php echo $AccID; ?>"><?php echo $AccOrPlayerName; ?></option><?php

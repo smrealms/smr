@@ -30,19 +30,19 @@
 								For security reasons, please enter the Username and Email that your account is registered to:
 
 								<form action="resend_password_processing.php" method="POST">
-										<div align="center">
-												<table border="0">
-													<tr>
-															<th align="right">Username:</th>
-															<td><input name="login" id="InputFields"></td>
-													</tr>
-													<tr>
-															<th align="right">Email:</th>
-															<td><input name="email" id="InputFields"></td>
-													</tr>
-												</table>
-												<p><input type="submit" value="Resend my password" id="InputFields"></p>
-										</div>
+									<div align="center">
+										<table border="0">
+											<tr>
+												<th align="right">Username:</th>
+												<td><input type="text" name="login" id="InputFields"></td>
+											</tr>
+											<tr>
+												<th align="right">Email:</th>
+												<td><input type="email" name="email" id="InputFields"></td>
+											</tr>
+										</table>
+										<p><input type="submit" value="Resend my password" id="InputFields"></p>
+									</div>
 								</form>
 
 							</td>

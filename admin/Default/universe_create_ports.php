@@ -53,7 +53,7 @@ $PHP_OUTPUT.=('</script>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;"># of Ports</b></td>');
 foreach ($galaxies as $galaxy_id => $galaxy_name)
-	$PHP_OUTPUT.=('<td align="center"><input type="input" name="ports['.$galaxy_id.']" size="3" id="InputFields" value="0" onKeyUp="sum_onkeyup('.$count.')" class="center"></td>');
+	$PHP_OUTPUT.=('<td align="center"><input type="number" name="ports['.$galaxy_id.']" size="3" id="InputFields" value="0" onKeyUp="sum_onkeyup('.$count.')" class="center"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size="1"></td></tr>');
@@ -72,7 +72,7 @@ for ($level = 1; $level < 10; $level++) {
 
 	foreach ($galaxies as $galaxy_id => $galaxy_name) {
 		$count++;
-		$PHP_OUTPUT.=('<td align="center"><input type="input" name="input['.$galaxy_id.']['.$level.']" size="3" id="InputFields" value="'.$value.'" onKeyUp="sum_onkeyup('.$count.')" class="center"></td>');
+		$PHP_OUTPUT.=('<td align="center"><input type="number" name="input['.$galaxy_id.']['.$level.']" size="3" id="InputFields" value="'.$value.'" onKeyUp="sum_onkeyup('.$count.')" class="center"></td>');
 	}
 	$PHP_OUTPUT.=('</tr>');
 
@@ -83,7 +83,7 @@ $PHP_OUTPUT.=('<tr><td colspan="'. (sizeof($galaxies) + 1) . '"><hr noshade size
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="right"><b style="font-size:80%;">Sum</b></td>');
 foreach ($galaxies as $galaxy_id => $galaxy_name)
-	$PHP_OUTPUT.=('<td align="center"><input type="input" name="sum_'.$galaxy_id.'" size="3" id="InputFields" value="0" class="center"></td>');
+	$PHP_OUTPUT.=('<td align="center"><input type="number" name="sum_'.$galaxy_id.'" size="3" id="InputFields" value="0" class="center"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('</table></p>');

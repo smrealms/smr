@@ -43,7 +43,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold" valign="top">Why you think you should become a beta tester:</td>');
-$PHP_OUTPUT.=('<td><textarea id="InputFields" name="reasons" style="width:300px;height:100px;"></textarea></td>');
+$PHP_OUTPUT.=('<td><textarea spellcheck="true" id="InputFields" name="reasons" style="width:300px;height:100px;"></textarea></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');

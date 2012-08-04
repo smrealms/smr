@@ -121,7 +121,7 @@ else {
 		$flat_notes .= $note;
 	}
 
-	$PHP_OUTPUT.=('<textarea name="notes" style="width:300px; height:200px;" id="InputFields">'.$flat_notes.'</textarea>');
+	$PHP_OUTPUT.=('<textarea spellcheck="true" name="notes" style="width:300px; height:200px;" id="InputFields">'.$flat_notes.'</textarea>');
 	$PHP_OUTPUT.=('</form>');
 
 	$PHP_OUTPUT.=('</td>');

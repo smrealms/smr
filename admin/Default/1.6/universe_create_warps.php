@@ -27,7 +27,7 @@ $PHP_OUTPUT.= 'Working on Galaxy : ' . $galaxy->getName() . ' (' . $galaxy->getG
 $PHP_OUTPUT.= '<table class="standard">';
 foreach ($galaxies as &$eachGalaxy) {
 	$PHP_OUTPUT.= '<tr><td class="right">' . $eachGalaxy->getName() . '</td><td class="left">';
-	$PHP_OUTPUT.= '<input type="text" value="';
+	$PHP_OUTPUT.= '<input type="number" value="';
 	if (isset($warps[$eachGalaxy->getGalaxyID()])) $PHP_OUTPUT.= $warps[$eachGalaxy->getGalaxyID()];
 	else $PHP_OUTPUT.= '0';
 	$PHP_OUTPUT.= '" size="5" name="warp' . $eachGalaxy->getGalaxyID() . '"></td></tr>';

@@ -120,7 +120,7 @@ $container = $var;
 $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_sectors.php';
 $PHP_OUTPUT.= create_echo_form($container);
-$PHP_OUTPUT.= 'Connection Percent<br /><input type="text" name="connect" value="' . $connectivity . '" size="3"><br />';
+$PHP_OUTPUT.= 'Connection Percent<br /><input type="number" name="connect" value="' . $connectivity . '" size="3"><br />';
 $PHP_OUTPUT.= '<input type="submit" name="submit" value="Redo Connections"></form></td><td class="center vert_cent" width="33%">';
 $container = $var;
 $container['body'] = '1.6/universe_create_locations.php';
@@ -155,7 +155,7 @@ $container = $var;
 $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_sectors.php';
 $PHP_OUTPUT.= create_echo_form($container);
-$PHP_OUTPUT.= 'Sector ID<br /><input type="text" size="5" name="sector_edit"><br /><input type="submit" value="Modify Sector" name="submit">';
+$PHP_OUTPUT.= 'Sector ID<br /><input type="number" size="5" name="sector_edit"><br /><input type="submit" value="Modify Sector" name="submit">';
 $PHP_OUTPUT.= '</form></td></tr><tr><td class="center" colspan="3">';
 //if ($warning) {
 //	$PHP_OUTPUT.= '<span class="small">Note: When you press "Create Universe" ALL universe data will be erased and rewritten.<br />';

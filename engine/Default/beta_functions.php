@@ -61,28 +61,28 @@ $PHP_OUTPUT.=create_link($container, 'Get Full Hardware');
 //move whereever u want
 $container['func'] = 'Warp';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="sector_to" value="'.$player->getSectorID().'">&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="number" name="sector_to" value="'.$player->getSectorID().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Warp to Sector');
 $PHP_OUTPUT.=('</form>');
 
 //set turns
 $container['func'] = 'Turns';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="turns" value="'.$player->getTurns().'">&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="number" name="turns" value="'.$player->getTurns().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set Turns');
 $PHP_OUTPUT.=('</form>');
 
 //set experience
 $container['func'] = 'Exp';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="exp" value="'.$player->getExperience().'">&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="number" name="exp" value="'.$player->getExperience().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set Exp to Amount');
 $PHP_OUTPUT.=('</form>');
 
 //Set alignment
 $container['func'] = 'Align';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="align" value="'.$player->getAlignment().'">&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="number" name="align" value="'.$player->getAlignment().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set Align to Amount');
 $PHP_OUTPUT.=('</form>');
 
@@ -93,14 +93,14 @@ if ($db->nextRecord()) {
 	//Set kills
 	$container['func'] = 'Kills';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type="text" name="kills" value="' . $db->getInt('kills') . '">&nbsp;&nbsp;');
+	$PHP_OUTPUT.=('<input type="number" name="kills" value="' . $db->getInt('kills') . '">&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Set Kills to Amount');
 	$PHP_OUTPUT.=('</form>');
 
 	//Set traded xp
 	$container['func'] = 'Traded_XP';
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('<input type=text name="traded_xp" value="' . $db->getInt('experience_traded') . '">&nbsp;&nbsp;');
+	$PHP_OUTPUT.=('<input type=number name="traded_xp" value="' . $db->getInt('experience_traded') . '">&nbsp;&nbsp;');
 	$PHP_OUTPUT.=create_submit('Set Traded XP to Amount');
 	$PHP_OUTPUT.=('</form>');
 }
@@ -109,7 +109,7 @@ $PHP_OUTPUT.=('<br />Note: This sets your hardware not adds it. Also, if u have 
 //add any type of hardware
 $container['func'] = 'Hard_add';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="amount_hard" value="0"><br />');
+$PHP_OUTPUT.=('<input type="number" name="amount_hard" value="0"><br />');
 $PHP_OUTPUT.=('<select name="type_hard">');
 $db->query('SELECT * FROM hardware_type ORDER BY hardware_type_id');
 while ($db->nextRecord()) {
@@ -131,7 +131,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<option value="' . $db->getInt('race_id') . '">' . $db->getField('race_name') . '</option>');
 }
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=('<input name="amount" value="0">');
+$PHP_OUTPUT.=('<input type="number" name="amount" value="0">');
 $PHP_OUTPUT.=create_submit('Change Relations');
 $PHP_OUTPUT.=('</form>');
 
@@ -146,7 +146,7 @@ while ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<option value="' . $db->getField('race_id') . '">' . $db->getField('race_name') . '</option>');
 }
 $PHP_OUTPUT.=('</select>&nbsp;&nbsp;');
-$PHP_OUTPUT.=('<input name="amount" value="0">');
+$PHP_OUTPUT.=('<input type="number" name="amount" value="0">');
 $PHP_OUTPUT.=create_submit('Change Relations');
 $PHP_OUTPUT.=('</form>');
 

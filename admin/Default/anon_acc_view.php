@@ -10,8 +10,8 @@ if (empty($_REQUEST['anon_account'])||empty($_REQUEST['game_id'])) {
 	$container['body'] = 'anon_acc_view.php';
 	$PHP_OUTPUT.=('What account would you like to view?<br />');
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=('Account ID: <input type="text" name="anon_account" /><br />');
-	$PHP_OUTPUT.=('Game ID: <input type="text" name="game_id" /><br />');
+	$PHP_OUTPUT.=('Account ID: <input type="number" name="anon_account" /><br />');
+	$PHP_OUTPUT.=('Game ID: <input type="number" name="game_id" /><br />');
 	$PHP_OUTPUT.=create_submit('Continue');
 	$PHP_OUTPUT.=('</form>');
 

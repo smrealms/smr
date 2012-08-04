@@ -27,8 +27,8 @@ $PHP_OUTPUT.=('</select>');
 
 $PHP_OUTPUT.=('<br /><br />');
 $PHP_OUTPUT.=('Enter the amount you wish to place on this player<br />');
-$PHP_OUTPUT.=('<table class="standardnobord"><tr><td>Credits:</td><td><input type="text" name="amount" maxlength="10" size="10" id="InputFields"></td></tr>');
-$PHP_OUTPUT.=('<tr><td>Smr Credits:</td><td><input type="text" name="smrcredits" maxlength="10" size="10" id="InputFields"></td></tr></table>');
+$PHP_OUTPUT.=('<table class="standardnobord"><tr><td>Credits:</td><td><input type="number" name="amount" maxlength="10" size="10" id="InputFields"></td></tr>');
+$PHP_OUTPUT.=('<tr><td>Smr Credits:</td><td><input type="number" name="smrcredits" maxlength="10" size="10" id="InputFields"></td></tr></table>');
 
 $PHP_OUTPUT.=('<br /><br />');
 $PHP_OUTPUT.=create_submit('Place');

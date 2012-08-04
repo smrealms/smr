@@ -15,7 +15,7 @@ $PHP_OUTPUT.= '
 	</tr>
 	<tr>
 		<td class="top">Description:&nbsp;</td>
-		<td><textarea name="description"></textarea></td>
+		<td><textarea spellcheck="true" name="description"></textarea></td>
 	</tr>
 	<tr>
 		<td class="top">Password:</td>

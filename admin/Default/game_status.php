@@ -9,7 +9,7 @@ if (!$db->getNumRows()) {
 	$container['url'] = 'game_status_processing.php';
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('If you wish to close the game please enter a reason for the closure.<br /><br />');
-	$PHP_OUTPUT.=('<input type="text" name="close_reason" maxlength="255" size="100" id="InputFields"><br /><br />');
+	$PHP_OUTPUT.=('<input spellcheck="true" type="text" name="close_reason" maxlength="255" size="100" id="InputFields"><br /><br />');
 	$PHP_OUTPUT.=create_submit('Close');
 	$PHP_OUTPUT.=('</form>');
 

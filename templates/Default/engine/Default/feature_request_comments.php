@@ -31,7 +31,7 @@ if(isset($FeatureRequests)) { ?>
 				<td align="center">Comment:</td>
 			</tr>
 			<tr>
-				<td align="center"><textarea name="comment" id="InputFields"></textarea></td>
+				<td align="center"><textarea spellcheck="true" name="comment" id="InputFields"></textarea></td>
 			</tr>
 			<tr>
 				<td align="center">Anonymous: <input name="anon" id="InputFields" type="checkbox" checked="checked"/></td>

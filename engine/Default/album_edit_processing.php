@@ -9,7 +9,7 @@ $email = $_POST['email'];
 
 // get website (and validate it)
 $website = '';
-if ($_REQUEST['website'] != 'http://') {
+if ($_REQUEST['website'] != '') {
 	$website = $_POST['website'];
 	// add http:// if missing
 	if (!preg_match('=://=', $website)) {

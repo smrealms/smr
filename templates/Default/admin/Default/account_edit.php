@@ -8,7 +8,7 @@
 						echo $EditingAccount->getAccountID();
 					}
 					else { ?>
-						<input type="text" name="account_id" id="InputFields" size="5"><?php
+						<input type="number" name="account_id" id="InputFields" size="5"><?php
 					} ?>
 				</td>
 			</tr>
@@ -41,7 +41,7 @@
 						echo $EditingAccount->getEmail();
 					}
 					else { ?>
-						<input type="text" name="email" id="InputFields" size="20"><?php
+						<input type="email" name="email" id="InputFields" size="20"><?php
 					} ?>
 				</td>
 			</tr>
@@ -113,7 +113,7 @@
 
 				<tr>
 					<td align="right" valign="top" class="bold">Donation:</td>
-					<td><input type="text" name="donation" size="5" id="InputFields" class="center">$</td>
+					<td><input type="number" name="donation" size="5" id="InputFields" class="center">$</td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>
@@ -122,7 +122,7 @@
 
 				<tr>
 					<td align="right" valign="top" class="bold">Grant Reward SMR Credits:</td>
-					<td><input type="text" name="grant_credits" size="5" id="InputFields" class="center"> Credits</td>
+					<td><input type="number" name="grant_credits" size="5" id="InputFields" class="center"> Credits</td>
 				</tr>
 
 				<tr>
@@ -164,9 +164,9 @@
 							<input type="text" name="reason_msg" id="InputFields" style="width:400px;">
 						</p>
 						<p><input type="radio" name="choise" value="reopen">Reopen!</p>
-						<p><input type=text name=suspicion id="InputFields" disabled=true style="width:400px;" value="For Multi Closings Only"></p>
-						<p>Mail ban: <input type="text" name="mailban" id="InputFields" class="center" style="width:30px;"> days</p>
-						<p>Points: <input type="text" name="points" id="InputFields" class="center" style="width:30px;"> points</p><?php
+						<p><input type="text" name="suspicion" id="InputFields" disabled="disabled" style="width:400px;" value="For Multi Closings Only"></p>
+						<p>Mail ban: <input type="number" name="mailban" id="InputFields" class="center" style="width:30px;"> days</p>
+						<p>Points: <input type="number" name="points" id="InputFields" class="center" style="width:30px;"> points</p><?php
 						if ($Disabled !== false) {
 							echo $Disabled['Reason'];
 							if ($Disabled['Time'] > 0) { ?>

@@ -29,11 +29,11 @@ if (count($BankTransactions) > 0) { ?>
 			<table cellspacing="5" cellpadding="0" class="nobord">
 				<tr>
 					<td>
-						<input class="center" type="text" name="minValue" size="3" value="<?php echo $MinValue; ?>">
+						<input class="center" type="number" name="minValue" size="3" value="<?php echo $MinValue; ?>">
 					</td>
 					<td>-</td>
 					<td>
-						<input class="center" type="text" name="maxValue" size="3" value="<?php echo $MaxValue; ?>">
+						<input class="center" type="number" name="maxValue" size="3" value="<?php echo $MaxValue; ?>">
 					</td>
 					<td>
 						<input class="submit" type="submit" name="action" value="Show">
@@ -102,12 +102,12 @@ else {
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 		<tr>
 			<td class="top">Amount:&nbsp;</td>
-			<td><input type="text" name="amount" size="10">&nbsp;
+			<td><input type="number" name="amount" size="10">&nbsp;
 				Request Exemption:<input type="checkbox" name="requestExempt"></td>
 		</tr>
 		<tr>
 			<td class="top">Reason:&nbsp;</td>
-			<td><textarea name="message"></textarea></td>
+			<td><textarea spellcheck="true" name="message"></textarea></td>
 		</tr>
 	</table>
 	<br />

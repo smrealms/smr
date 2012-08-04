@@ -7,7 +7,7 @@
 		if ($Role['EditingRole']) { ?>
 			<tr>
 				<td align="left" rowspan="3">Withdrawal limit per 24 hours (Or max negative balance for "positive balance")</td>
-				<td align="left"><input type="text" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'],0); ?>" maxlength="32"></td>
+				<td align="left"><input type="number" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'],0); ?>"></td>
 			</tr>
 			<tr>
 				<td align="left">Unlimited:<input type="checkbox" name="unlimited"<?php if ($Role['WithdrawalLimit'] == ALLIANCE_BANK_UNLIMITED){ ?> checked="checked"<?php } ?>></td>

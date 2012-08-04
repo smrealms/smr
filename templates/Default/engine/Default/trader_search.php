@@ -7,6 +7,6 @@
 	<p>&nbsp;</p>
 
 	<span style="font-size:75%;">Player ID:</span><br />
-	<input type="text" name="player_id" id="InputFields" style="width:50px">&nbsp;<input type="submit" name="action" value="Search" id="InputFields" />
+	<input type="number" name="player_id" id="InputFields" style="width:50px">&nbsp;<input type="submit" name="action" value="Search" id="InputFields" />
 
 </form>

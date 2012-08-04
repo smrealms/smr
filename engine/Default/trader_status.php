@@ -148,7 +148,7 @@ $PHP_OUTPUT.= $form['form'];
 $PHP_OUTPUT.= '<table cellspacing="0" cellpadding="0" class="nobord nohpad">
 	<tr>
 		<td class="top">Note:&nbsp;</td>
-		<td colspan="2"><textarea name="note"></textarea></td>
+		<td colspan="2"><textarea spellcheck="true" name="note"></textarea></td>
 	</tr>
 </table><br />';
 $PHP_OUTPUT.= $form['submit'];

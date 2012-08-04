@@ -44,14 +44,14 @@ $PHP_OUTPUT.=('<br /><br />');
 //set experience
 $container['func'] = 'Exp';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="exp" value="'.$player->getExperience().'">&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="number" name="exp" value="'.$player->getExperience().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set Exp to Amount');
 $PHP_OUTPUT.=('</form>');
 
 //Set alignment
 $container['func'] = 'Align';
 $PHP_OUTPUT.=create_echo_form($container);
-$PHP_OUTPUT.=('<input type="text" name="align" value="'.$player->getAlignment().'">&nbsp;&nbsp;');
+$PHP_OUTPUT.=('<input type="number" name="align" value="'.$player->getAlignment().'">&nbsp;&nbsp;');
 $PHP_OUTPUT.=create_submit('Set Align to Amount');
 $PHP_OUTPUT.=('</form>');
 ?>

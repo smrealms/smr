@@ -33,7 +33,7 @@ $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td class="bold" valign="top">Message:</td>');
-$PHP_OUTPUT.=('<td><textarea id="InputFields" name="msg" style="width:500px;height:400px;"></textarea></td>');
+$PHP_OUTPUT.=('<td><textarea spellcheck="true" id="InputFields" name="msg" style="width:500px;height:400px;"></textarea></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');

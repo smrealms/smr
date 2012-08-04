@@ -15,7 +15,7 @@ $PHP_OUTPUT.=('<p>Balance: <b>' . number_format($planet->getCredits()) . '</b></
 $PHP_OUTPUT.=create_echo_form(create_container('planet_financial_processing.php', ''));
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr>');
-$PHP_OUTPUT.=('<td colspan="2" align="center"><input type="text" name="amount" value="0" id="InputFields" style="text-align:right;width:152;"></td>');
+$PHP_OUTPUT.=('<td colspan="2" align="center"><input type="number" name="amount" value="0" id="InputFields" style="text-align:right;width:152;"></td>');
 $PHP_OUTPUT.=('</tr>');
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td>');

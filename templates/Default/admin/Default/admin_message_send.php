@@ -26,8 +26,8 @@ else {
 				</select><br /><br /><?php
 			} ?>
 		</p>
-		<textarea name="message" id="InputFields"><?php if(isset($Preview)) { echo $Preview; } ?></textarea><br />
-		Hours Till Expire: <input type="text" name="expire" value="<?php echo $ExpireTime; ?>" size="2" id="InputFields"> (0 = never expire)<br />
+		<textarea spellcheck="true" name="message" id="InputFields"><?php if(isset($Preview)) { echo $Preview; } ?></textarea><br />
+		Hours Till Expire: <input type="number" name="expire" value="<?php echo $ExpireTime; ?>" size="2" id="InputFields"> (0 = never expire)<br />
 		<br />
 		<input type="submit" name="action" value="Send message" id="InputFields" />&nbsp;<input type="submit" name="action" value="Preview message" id="InputFields" />
 	</form><?php

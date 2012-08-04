@@ -27,7 +27,7 @@ else { ?>
 				</tr>
 				<tr>
 					<td>Attack/Defense</td>
-					<td><input type="text" id="InputFields" name="attack" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionAttack(); }else{ ?>0<?php } ?>" size="4" class="center">&nbsp;/&nbsp;<input type="text" id="InputFields" name="defense" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionDefense(); }else{ ?>0<?php } ?>" size="4" class="center"></td>
+					<td><input type="number" id="InputFields" name="attack" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionAttack(); }else{ ?>0<?php } ?>" size="4" class="center">&nbsp;/&nbsp;<input type="number" id="InputFields" name="defense" value="<?php if($ThisShip->hasActiveIllusion()){ echo $ThisShip->getIllusionDefense(); }else{ ?>0<?php } ?>" size="4" class="center"></td>
 				</tr>
 				<tr>
 					<td>&nbsp;</td>

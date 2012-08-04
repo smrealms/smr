@@ -15,27 +15,27 @@ create_echo_form($link);
 	</tr>
 	<tr>
 		<td class="right">Game Description</td>
-		<td class="left"><textarea name="desc"></textarea></td>
+		<td class="left"><textarea spellcheck="true" name="desc"></textarea></td>
 	</tr>
 	<tr>
 		<td class="right">Game Speed</td>
-		<td class="left"><input type="text" size="6" name="game_speed" value="1.5"></td>
+		<td class="left"><input type="number" size="6" name="game_speed" value="1.5"></td>
 	</tr>
 	<tr>
 		<td class="right">Max Turns</td>
-		<td class="left"><input type="text" size="6" name="max_turns" value="<?php echo DEFAULT_MAX_TURNS; ?>"></td>
+		<td class="left"><input type="number" size="6" name="max_turns" value="<?php echo DEFAULT_MAX_TURNS; ?>"></td>
 	</tr>
 	<tr>
 		<td class="right">Starting Turn Hours</td>
-		<td class="left"><input type="text" size="6" name="start_turns" value="<?php echo DEFAULT_START_TURN_HOURS; ?>"></td>
+		<td class="left"><input type="number" size="6" name="start_turns" value="<?php echo DEFAULT_START_TURN_HOURS; ?>"></td>
 	</tr>
 	<tr>
 		<td class="right">Max Players</td>
-		<td class="left"><input type="text" size="6" name="max_players" value="5000"></td>
+		<td class="left"><input type="number" size="6" name="max_players" value="5000"></td>
 	</tr>
 	<tr>
 		<td class="right">Number of Galaxies</td>
-		<td class="left"><input type="text" size="5" name="num_gals" value="12"></td>
+		<td class="left"><input type="number" size="5" name="num_gals" value="12"></td>
 	</tr>
 	<tr>
 		<td class="right">Start Date (DD/MM/YYYY)</td>
@@ -50,7 +50,7 @@ create_echo_form($link);
 		<td class="left"><input type="text" size="32" name="game_end" value="<?php echo date('d/m/Y',$DefaultEnd) ?>"></td></tr>
 	<tr>
 		<td class="right">Credits Required</td>
-		<td class="left"><input type="text" size="5" name="creds_needed" value="0"></td>
+		<td class="left"><input type="number" size="5" name="creds_needed" value="0"></td>
 	</tr>
 	<tr>
 		<td class="right">Game Type</td>
@@ -64,15 +64,15 @@ create_echo_form($link);
 	</tr>
 	<tr>
 		<td class="right">Alliance Max Players</td>
-		<td class="left"><input type="text" size="6" name="alliance_max_players" value="25"></td>
+		<td class="left"><input type="number" size="6" name="alliance_max_players" value="25"></td>
 	</tr>
 	<tr>
 		<td class="right">Alliance Max Vets</td>
-		<td class="left"><input type="text" size="6" name="alliance_max_vets" value="15"></td>
+		<td class="left"><input type="number" size="6" name="alliance_max_vets" value="15"></td>
 	</tr>
 	<tr>
 		<td class="right">Starting Credits</td>
-		<td class="left"><input type="text" size="6" name="starting_credits" value="100000"></td>
+		<td class="left"><input type="number" size="6" name="starting_credits" value="100000"></td>
 	</tr>
 	<tr>
 		<td class="right">Ignore Stats</td>
