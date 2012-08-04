@@ -32,24 +32,24 @@ $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="center">Mines</td>');
 $PHP_OUTPUT.=('<td align="center">' . $ship->getMines() . '</td>');
 $PHP_OUTPUT.=('<td align="center">'.$forces->getMines().'</td>');
-$PHP_OUTPUT.=('<td align="center"><input type="number" name="drop_mines" value="0" id="InputFields" style="width:100px;" class="center"></td>');
-$PHP_OUTPUT.=('<td align="center"><input type="number" name="take_mines" value="0" id="InputFields" style="width:100px;" class="center"></td>');
+$PHP_OUTPUT.=('<td align="center"><input type="number" name="drop_mines" min="0" max="50" value="0" id="InputFields" style="width:100px;" class="center"></td>');
+$PHP_OUTPUT.=('<td align="center"><input type="number" name="take_mines" min="0" max="50" value="0" id="InputFields" style="width:100px;" class="center"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="center">Combat Drones</td>');
 $PHP_OUTPUT.=('<td align="center">' . $ship->getCDs() . '</td>');
 $PHP_OUTPUT.=('<td align="center">'.$forces->getCDs().'</td>');
-$PHP_OUTPUT.=('<td align="center"><input type="number" name="drop_combat_drones" value="0" id="InputFields" style="width:100px;" class="center"></td>');
-$PHP_OUTPUT.=('<td align="center"><input type="number" name="take_combat_drones" value="0" id="InputFields" style="width:100px;" class="center"></td>');
+$PHP_OUTPUT.=('<td align="center"><input type="number" name="drop_combat_drones" min="0" max="50" value="0" id="InputFields" style="width:100px;" class="center"></td>');
+$PHP_OUTPUT.=('<td align="center"><input type="number" name="take_combat_drones" min="0" max="50" value="0" id="InputFields" style="width:100px;" class="center"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');
 $PHP_OUTPUT.=('<td align="center">Scout Drones</td>');
 $PHP_OUTPUT.=('<td align="center">' . $ship->getSDs() . '</td>');
 $PHP_OUTPUT.=('<td align="center">'.$forces->getSDs().'</td>');
-$PHP_OUTPUT.=('<td align="center"><input type="number" name="drop_scout_drones" value="0" id="InputFields" style="width:100px;" class="center"></td>');
-$PHP_OUTPUT.=('<td align="center"><input type="number" name="take_scout_drones" value="0" id="InputFields" style="width:100px;" class="center"></td>');
+$PHP_OUTPUT.=('<td align="center"><input type="number" name="drop_scout_drones" min="0" max="50" value="0" id="InputFields" style="width:100px;" class="center"></td>');
+$PHP_OUTPUT.=('<td align="center"><input type="number" name="take_scout_drones" min="0" max="50" value="0" id="InputFields" style="width:100px;" class="center"></td>');
 $PHP_OUTPUT.=('</tr>');
 
 $PHP_OUTPUT.=('<tr>');

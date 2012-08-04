@@ -19,11 +19,11 @@ create_echo_form($link);
 	</tr>
 	<tr>
 		<td class="right">Game Speed</td>
-		<td class="left"><input type="number" size="6" name="game_speed" value="1.5"></td>
+		<td class="left"><input type="number" size="6" name="game_speed" step=".25" value="1.5"></td>
 	</tr>
 	<tr>
 		<td class="right">Max Turns</td>
-		<td class="left"><input type="number" size="6" name="max_turns" value="<?php echo DEFAULT_MAX_TURNS; ?>"></td>
+		<td class="left"><input type="number" size="6" name="max_turns" step="25" value="<?php echo DEFAULT_MAX_TURNS; ?>"></td>
 	</tr>
 	<tr>
 		<td class="right">Starting Turn Hours</td>
