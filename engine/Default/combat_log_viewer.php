@@ -5,38 +5,43 @@ require_once(get_file_loc('menu.inc'));
 create_combat_log_menu();
 if (isset($_REQUEST['action'])) {
 	$submitAction = $_REQUEST['action'];
-	if ($submitAction == 'Save' && isset($_REQUEST['id'])) {
-		//save the logs we checked
-		$log_ids = array_keys($_REQUEST['id']);
-		$db->query('SELECT * FROM combat_logs WHERE log_id IN (' . $db->escapeArray($log_ids) . ') LIMIT ' . count($log_ids));
-		$unsavedLogs = array();
-		$savedLogs = array();
-		while ($db->nextRecord()) {
-			if (!$db->getField('saved')) {
-				$unsavedLogs[] = $db->getInt('log_id');
-			}
-			else {
-				$savedLogs[] = array($db->getInt('game_id'),$db->getField('type'),$db->getInt('sector_id'),$db->getInt('timestamp'),$db->getField('attacker_id'),$db->getInt('attacker_alliance_id'),$db->getInt('defender_id'),$db->getInt('defender_alliance_id'),$db->getField('result'));
-			}
+	if (isset($_REQUEST['id'])) {
+		$logIDs = array_keys($_REQUEST['id']);
+		if($submitAction == 'Save') {
+			//save the logs we checked
+			// Query means people can only save logs that they are allowd to view.
+			$db->query('INSERT IGNORE INTO player_saved_combat_logs (account_id, game_id, log_id)
+						SELECT ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', log_id
+						FROM combat_logs
+						WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
+							AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+							AND (
+								attacker_id = ' . $db->escapeNumber($player->getAccountID()) . '
+								OR defender_id = ' . $db->escapeNumber($player->getAccountID()) .
+								($player->hasAlliance() ? '
+									OR attacker_alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
+									OR defender_alliance_id = ' . $db->escapeNumber($player->getAllianceID())
+								: '') . '
+							)
+						LIMIT ' . count($logIDs));
+			$PHP_OUTPUT.=('<div align="center">' . $db->getChangedRows() . ' new logs have been saved.</div><br />');
+			//back to viewing
+			$var['action'] = $var['old_action'];
 		}
-		if (sizeof($unsavedLogs)) {
-			$db->query('UPDATE combat_logs SET saved = ' . $db->escapeNumber($player->getAccountID()) . ' WHERE log_id IN (' . $db->escapeArray($unsavedLogs) . ') LIMIT ' . count($log_ids));
+		else if($submitAction == 'Delete') {
+			$db->query('DELETE FROM player_saved_combat_logs
+						WHERE log_id IN (' . $db->escapeArray($logIDs) . ')
+							AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+							AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+						LIMIT ' . count($logIDs));
+			$PHP_OUTPUT.=('<div align="center">' . $db->getChangedRows() . ' saved logs have been deleted.</div><br />');
+			//back to viewing
+			$var['action'] = $var['old_action'];
 		}
-		if (sizeof($savedLogs)) {
-			foreach ($savedLogs as $a) {
-				if (!empty($query)) {
-					$query .= ',';
-				}
-				$query .= '('.$a[0].','.$db->escape_string($a[1]).','.$a[2].','.$a[3].','.$a[4].','.$a[5].','.$a[6].','.$a[7].',' . $db->escape_string($a[8]) . ',' . $db->escapeNumber($player->getAccountID()) . ')';
-			}
-			$db->query('INSERT INTO combat_logs
-						(game_id,type,sector_id,timestamp,attacker_id,attacker_alliance_id,defender_id,defender_alliance_id,result,saved)
-						VALUES ' . $query);
-		}
-		$PHP_OUTPUT.=('<div align="center">' . count($log_ids) . ' logs have been saved.<br />');
-		//back to viewing
+	}
+	else {
 		$var['action'] = $var['old_action'];
-	} elseif (!isset($_REQUEST['id'])) $var['action'] = $var['old_action'];
+	}
 }
 if(!isset($var['action'])) {
 	SmrSession::updateVar('action',0);
@@ -116,7 +121,13 @@ switch($action) {
 		$query = 'type=\'PLANET\'';
 	break;
 	case 4:
-		$query = 'saved = ' . $db->escapeNumber($player->getAccountID());
+		$query = 'EXISTS(
+					SELECT 1
+					FROM player_saved_combat_logs
+					WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . '
+						AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+						AND log_id = c.log_id
+				)';
 	break;
 	case 6:
 		$query = 'type=\'FORCE\'';
@@ -136,11 +147,11 @@ if(isset($query) && $query) {
 	if(isset($var['page'])) {
 		$page = $var['page'];
 	}
-	$db->query('SELECT count(*) as count FROM combat_logs WHERE '.$query.' LIMIT 1');
+	$db->query('SELECT count(*) as count FROM combat_logs c WHERE '.$query.' LIMIT 1');
 	if($db->nextRecord()) {
 		$totalLogs = $db->getInt('count');
 	}
-	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs WHERE '.$query.' ORDER BY log_id DESC, sector_id LIMIT '.($page*COMBAT_LOGS_PER_PAGE).', '.COMBAT_LOGS_PER_PAGE);
+	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE '.$query.' ORDER BY log_id DESC, sector_id LIMIT '.($page*COMBAT_LOGS_PER_PAGE).', '.COMBAT_LOGS_PER_PAGE);
 }
 
 if($action != 5) {
@@ -193,7 +204,13 @@ if($action != 5) {
 		$container['direction'] = 0;
 		$actions = array();
 		$actions[] = array('View','View');
-		$actions[] = array('Save','Save');
+		if($action == 4) {
+			// Saved logs
+			$actions[] = array('Delete','Delete');
+		}
+		else {
+			$actions[] = array('Save','Save');
+		}
 		$form = create_form($container,$actions);
 		$PHP_OUTPUT.= $form['form'];
 		$container = $var;
@@ -205,7 +222,13 @@ if($action != 5) {
 		$PHP_OUTPUT.='</td><td>';
 		$PHP_OUTPUT.= $form['submit']['View'];
 		$PHP_OUTPUT.= '&nbsp;';
-		$PHP_OUTPUT.= $form['submit']['Save'];
+		if($action == 4) {
+			// Saved logs
+			$PHP_OUTPUT.= $form['submit']['Delete'];
+		}
+		else {
+			$PHP_OUTPUT.= $form['submit']['Save'];
+		}
 		$PHP_OUTPUT.='</td><td style="width: 30%" valign="middle">';
 		$container['page'] = $page+1;
 		if(($page+1)*COMBAT_LOGS_PER_PAGE<$totalLogs) {
