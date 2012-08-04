@@ -1,7 +1,11 @@
 <?php
 
-if (empty($_REQUEST['feature']))
+if (empty($_REQUEST['feature'])) {
 	create_error('We need at least a feature desciption!');
+}
+if(strlen($_REQUEST['feature']) > 500) {
+	create_error('Feature request longer than 500 characters, please be more concise!');
+}
 
 // add this feature to db
 $db->query('INSERT INTO feature_request (feature_request_id) VALUES (NULL)');
