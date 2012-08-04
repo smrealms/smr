@@ -9,7 +9,7 @@ function send_html_mail($from_name, $from_email, $to_email, $subject, $body) {
 	$headers .= 'Return-Path: '.$from_email.EOL;
 	$headers .= 'Content-Type: text/html; charset=iso-8859-1'.EOL;
 
-	$message = '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">'.EOL;
+	$message = '<!DOCTYPE html>'.EOL;
 	$message .= '<HTML><BODY>'.EOL;
 	$message .= wordwrap($body, 72);
 	$message .= '</BODY></HTML>';

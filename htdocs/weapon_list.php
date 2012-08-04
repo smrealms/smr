@@ -11,7 +11,7 @@ try {
 	
 	$db = new SmrMySqlDatabase();
 	
-	echo ('<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">');
+	echo ('<!DOCTYPE html');
 	
 	echo ('<html>');
 	echo ('<head>');

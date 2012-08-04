@@ -12,7 +12,7 @@ try {
 	$db = new SmrMySqlDatabase();
 	$db2 = new SmrMySqlDatabase();
 	?>
-	<!doctype html public "-//W3C//DTD HTML 4.0 Transitional//EN">
+	<!DOCTYPE html>
 	<html>
 	<head>
 	<link rel="stylesheet" type="text/css" href="<?php echo URL;?>/css/classic.css">
