@@ -94,7 +94,7 @@ class SmrMines extends AbstractSmrCombatWeapon {
 			return $return;
 		}
 		$damage =& $this->getModifiedDamage();
-		if($targetPlayer->getShip()->isFederal()) { // do less damage to fed ships
+		if($targetPlayer->getShip()->isFederal() || $targetPlayer->getShip()->hasDCS()) { // do less damage to fed ships and DCS
 			$damage['MaxDamage'] = round($damage['MaxDamage'] * self::FED_SHIP_DAMAGE_MODIFIER);
 			$damage['Shield'] = round($damage['Shield'] * self::FED_SHIP_DAMAGE_MODIFIER);
 			$damage['Armour'] = round($damage['Armour'] * self::FED_SHIP_DAMAGE_MODIFIER);
