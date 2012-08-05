@@ -92,7 +92,11 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' id='InputFields'<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
 					</tr>
 					<tr>
-						<td colspan='2'><?php echo recaptcha_get_html(RECAPTCHA_PUBLIC); ?></td>
+						<td colspan='2'><?php if (strlen(RECAPTCHA_PUBLIC) > 0) {
+                            echo recaptcha_get_html(RECAPTCHA_PUBLIC);
+                        } else {
+                            echo "<div style='color:red;'>reCAPTCHA disabled due to missing API key</div>";
+                        } ?></td>
 					</tr>
 					<tr>
 						<td colspan='2'>&nbsp;</td>

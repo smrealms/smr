@@ -193,7 +193,7 @@ try {
 	//$db->query('UPDATE beta_key SET used = '.$db->escapeString('TRUE').' WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
 
 	//Check the captcha if it's a standard registration.
-	if(!$socialLogin) {
+	if(!$socialLogin && strlen(RECAPTCHA_PRIVATE) > 0) {
 		require_once(LIB.'External/recaptcha/recaptchalib.php');
 		$resp = recaptcha_check_answer (RECAPTCHA_PRIVATE, $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
 
