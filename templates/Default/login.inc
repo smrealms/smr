@@ -1,20 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><?php echo $Title ?></title>
-		<script type="text/javascript">
-		<!--
-		writeCookie();
-
-		function writeCookie() {
-		var today = new Date();
-		var the_date = new Date("December 31, 2023");
-		var the_cookie_date = the_date.toGMTString();
-		var the_cookie="users_resolution="+ screen.width +"x"+ screen.height;
-		the_cookie += ";expires=" + the_cookie_date;
-		document.cookie=the_cookie;
-		//-->
-		</script>
+		<title><?php echo $Title; ?></title>
 		<style type="text/css">
 		body{
 			background:#082010;
