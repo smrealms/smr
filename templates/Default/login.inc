@@ -24,8 +24,6 @@
 			color : #FFFFFF;
 			border : 1px solid #80C870;
 			font-family: Arial;
-			font-size:inherit;
-
 		}
 		table.standard {
 			border:1px solid #0b8d35;
@@ -37,7 +35,7 @@
 			width:123px;
 			height:20px;
 		}
-		a{
+		a {
 			color:#ffffff;
 			text-decoration:none;
 			padding:0px;
@@ -73,15 +71,19 @@
 		table.center {
 			margin:auto;
 		}
-		table.nospacing {
-			border-spacing:0;
-			border-collapse:collapse;
+		.collapsed, table.collapsed, table.collapsed tr, table.collapsed th, table.collapsed td {
+			border: 0px;
+			border-spacing: 0px;
+			border-collapse: collapse;
+			padding: 0px;
+			margin: 0px;
+			font-size: 0px;
+		}
+		input.uncollapse {
+			font-size: 15px;
 		}
 		table.nobord {
 			border: 0px;
-		}
-		.nopad, .nopad tr, .nopad td {
-			padding: 0px;
 		}
 		</style>
 		<!--[if IE]>
@@ -96,10 +98,11 @@
 
 	<body>
 		<div class="center">
-			<img src="images/login/smr_banner_16.png" alt=""><br />
-			<img src="images/login/bottom_left.gif" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.png" alt="Home"></a><img src="images/login/site_map.png" alt="Site Map"><img src="images/login/contact.png" alt="Contact"><img src="images/login/bottom_right.png" alt=""><br />
-			<a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" alt="Video Tutorials"></a><a href="http://manual.smrealms.de" target="ml"><img src="images/login/sml.png" alt="Merchant Library"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.png" alt="Manual"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" alt="Web Board"></a><a href="http://www.smrealms.de/awstats/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" alt="Site Statistics"></a><br />
-
+			<p class="collapsed">
+				<img src="images/login/smr_banner_16.png" alt=""><br />
+				<img src="images/login/bottom_left.gif" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.png" alt="Home"></a><img src="images/login/site_map.png" alt="Site Map"><img src="images/login/contact.png" alt="Contact"><img src="images/login/bottom_right.png" alt=""><br />
+				<a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" alt="Video Tutorials"></a><a href="http://manual.smrealms.de" target="ml"><img src="images/login/sml.png" alt="Merchant Library"></a><a href="http://www.smrealms.de/manual.php" target="manu"><img src="images/login/manual2.png" alt="Manual"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" alt="Web Board"></a><a href="http://www.smrealms.de/awstats/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" alt="Site Statistics"></a><br />
+			</p>
 			<?php
 			/*
 			if(!$isFirefox) { ?>
@@ -124,7 +127,7 @@
 				<tr>
 					<td style="width:300px">
 						<form action="login_processing.php" method="post">
-							<table class="nospacing nobord nopad">
+							<table class="collapsed">
 								<tr>
 									<td colspan="3">
 										<img src="images/login/login_top.png" alt="">
@@ -135,8 +138,8 @@
 										<img src="images/login/loginPw.png" alt="Login/Password" />
 									</td>
 									<td>
-										<input id="login_username" class="InputFields inputbox" type="text" name="login"><br />
-										<input id="login_password" class="InputFields inputbox" type="password" name="password">
+										<input id="login_username" class="InputFields inputbox uncollapse" type="text" name="login"><br />
+										<input id="login_password" class="InputFields inputbox uncollapse" type="password" name="password">
 									</td>
 									<td>
 										<img src="images/login/loginPwRight.png" alt="">
@@ -148,7 +151,7 @@
 									</td>
 								</tr>
 							</table>
-							<table class="nospacing nobord nopad">
+							<table class="collapsed">
 								<tr>
 									<td>
 										<img src="images/login/regLeft.png" alt=""><a href="<?php echo $Links['Register'] ?>"><img src="images/login/register.png" alt="Register"></a><a href="resend_password.php"><img src="images/login/pw_reset.png" alt="Reset Password"></a><img src="images/login/regRight.png" alt="">
