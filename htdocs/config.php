@@ -101,7 +101,10 @@ define('SHIP_TYPE_VENGEANCE',72);
  * Combat system
  */
 define('MAX_ATTACK_RATING_NEWBIE',4);
-define('MAXIMUM_FLEET_SIZE', 10);
+define('MAXIMUM_PVP_FLEET_SIZE', 10);
+define('MAXIMUM_PORT_FLEET_SIZE', 10);
+define('MAXIMUM_PLANET_FLEET_SIZE', 10);
+define('MAXIMUM_FORCES_FLEET_SIZE', 1);
 define('MINE_ARMOUR', 20);
 define('CD_ARMOUR', 3);
 define('SD_ARMOUR', 20);

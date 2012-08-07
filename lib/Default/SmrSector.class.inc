@@ -751,19 +751,17 @@ class SmrSector {
 		if($attackingPlayer->forceNAPAlliance($forceOwner)) {
 			throw new Exception('The trader has a force NAP.');
 		}
-		$return = array($attackingPlayer->getAccountID() => &$attackingPlayer);
-		return $return;
-//		$fightingPlayers = array();
-//		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
-//		if(count($alliancePlayers) > 0) {
-//			foreach($alliancePlayers as $accountID => $player) {
-//				if($player->canFight()) {
-//					if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
-//						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
-//				}
-//			}
-//		}
-//		return self::limitFightingTraders($fightingPlayers,$attackingPlayer);
+		$fightingPlayers = array();
+		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+		if(count($alliancePlayers) > 0) {
+			foreach($alliancePlayers as $accountID => $player) {
+				if($player->canFight()) {
+					if($attackingPlayer->traderAttackForceAlliance($player) && !$player->forceNAPAlliance($forceOwner))
+						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
+				}
+			}
+		}
+		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_FORCES_FLEET_SIZE);
 	}
 
 	public function &getFightingTradersAgainstPort(AbstractSmrPlayer &$attackingPlayer, SmrPort &$defendingPort) {
@@ -776,7 +774,7 @@ class SmrSector {
 						$fightingPlayers[$accountID] =& $alliancePlayers[$accountID];
 				}
 			}
-		return self::limitFightingTraders($fightingPlayers,$attackingPlayer);
+		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PORT_FLEET_SIZE);
 	}
 
 	public function &getFightingTradersAgainstPlanet(AbstractSmrPlayer &$attackingPlayer, SmrPlanet &$defendingPlanet) {
@@ -791,7 +789,7 @@ class SmrSector {
 				}
 			}
 		}
-		return self::limitFightingTraders($fightingPlayers,$attackingPlayer);
+		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PLANET_FLEET_SIZE);
 	}
 
 	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer, $checkForCloak=false) {
@@ -810,12 +808,12 @@ class SmrSector {
 						$defenders[] =& $alliancePlayers[$accountID];
 				}
 			}
-		$attackers =& self::limitFightingTraders($attackers,$attackingPlayer);
+		$attackers =& self::limitFightingTraders($attackers, $attackingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		shuffle($attackers);
 		foreach($attackers as &$attacker) {
 			$fightingPlayers['Attackers'][$attacker->getAccountID()] =& $attacker;
 		}
-		$defenders =& self::limitFightingTraders($defenders,$defendingPlayer);
+		$defenders =& self::limitFightingTraders($defenders,$defendingPlayer, MAXIMUM_PVP_FLEET_SIZE);
 		shuffle($defenders);
 		foreach($defenders as &$defender) {
 			$fightingPlayers['Defenders'][$defender->getAccountID()] =& $defender;
@@ -823,12 +821,12 @@ class SmrSector {
 		return $fightingPlayers;
 	}
 
-	public static function &limitFightingTraders(array &$fightingPlayers, AbstractSmrPlayer &$keepPlayer) {
+	public static function &limitFightingTraders(array &$fightingPlayers, AbstractSmrPlayer &$keepPlayer, $maximumFleetSize) {
 		// Cap fleets to the required size
 		$fleet_size = count($fightingPlayers);
-		if($fleet_size > MAXIMUM_FLEET_SIZE) {
+		if($fleet_size > $maximumFleetSize) {
 			// We use random key to stop the same people being capped all the time
-			for($j=0;$j<$fleet_size-MAXIMUM_FLEET_SIZE;++$j) {
+			for($j=0;$j<$fleet_size-$maximumFleetSize;++$j) {
 				do {
 					$key = array_rand($fightingPlayers);
 				} while($keepPlayer->equals($fightingPlayers[$key]));
