@@ -1,3 +1,4 @@
+<a href="http://wiki.smrealms.de/index.php?title=Game_Guide:_Politics_and_the_Ruling_Council" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 <div class="center bold">President</div><br /><?php
 $President =& Council::getPresident($ThisPlayer->getGameID(),$RaceID);
 if ($President !== false) { ?>

@@ -645,8 +645,8 @@ function createGame($gameID) {
 	
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 22, \'Ships\')');
 	$text = 'Everything you do in SMR is done while you are flying some kind of ship - it can be anything from an escape pod to a huge IkThorne mothership, but you are always the pilot of something. In addition to the neutral ships, each race also has unique ships that only race members can purchase. You can find the SMR shiplist here:<br />
-	<br />
-	<a href="http://www.smrealms.de/manual.php?52">http://www.smrealms.de/manual.php?52</a><br />
+	<a href="http://www.smrealms.de/ship_list.php target="_blank">http://www.smrealms.de/ship_list.php</a> <br />
+	Additional information relating to ships can be found in the <a href="http://wiki.smrealms.de/" target="_blank">SMR wiki</a><br />
 	<br />
 	It is important to choose ships to match your budget and your needs, and the biggest or most expensive ships are not always the best ones for all purposes.<br />
 	<br />
@@ -674,7 +674,7 @@ function createGame($gameID) {
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 23, \'Weapons\')');
 	$text = 'SMR has a wide variety of weapons with which to arm your ships, and information on weapon capabilities can be found here:<br />
 	<br />
-	<a href="http://www.smrealms.de/manual.php?53">http://www.smrealms.de/manual.php?53</a><br />
+	<a href="http://www.smrealms.de/weapon_list.php">http://www.smrealms.de/weapon_list.php</a><br />
 	<br />
 	There are a few things to consider when choosing weapons, and the weapon combination that works for one player may not be suited to the style or the needs of another.<br />
 	<br />

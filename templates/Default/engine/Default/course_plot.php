@@ -1,5 +1,7 @@
+<a href="http://wiki.smrealms.de/index.php?title=Game_Guide:_How_your_ship_works" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: How Your Ship Works"/></a>
 <form class="standard" id="PlotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">
-	<h2>Conventional</h2><br />
+	<h2>Conventional</h2>
+	<div class="standard">Enter a destination sector.</div>
 	<table class="nobord nohpad">
 		<tr>
 			<td>From:&nbsp;</td>
@@ -14,7 +16,8 @@
 $this->includeTemplate('includes/JumpDrive.inc'); ?>
 
 <br />
-<h2>Plot To Nearest</h2><br />
+<h2>Plot To Nearest</h2>
+<div class="standard">Select a location to plot to. You are only able to plot to sectors you have explored.</div><br />
 <form class="standard" id="SelectXTypeForm" method="POST" action="">
 	<select name="xtype" onchange="this.form.submit()"><?php
 	foreach($AllXTypes as $EachXType) {
@@ -25,7 +28,7 @@ $this->includeTemplate('includes/JumpDrive.inc'); ?>
 </form><?php
 if(isset($XType)) { ?>
 	<form class="standard" id="PlotNearestForm" method="POST" action="<?php echo $PlotNearestFormLink; ?>">
-		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br /><br />
+		<input type="hidden" name="xtype" value="<?php echo $XType; ?>" /><br />
 		<select name="X" onchange="this.form.submit()"><?php
 			switch($XType) {
 				case 'Technology':
