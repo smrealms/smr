@@ -31,7 +31,7 @@ $actions = array(
 $form = create_form($container,$actions);
 
 $PHP_OUTPUT.= $form['form'];
-$PHP_OUTPUT.= 'Amount:&nbsp;<input type="number" step="100000" name="amount" size="10" value="0"><br /><br />';
+$PHP_OUTPUT.= 'Amount:&nbsp;<input type="number" name="amount" size="10" value="0"><br /><br />';
 
 $PHP_OUTPUT.= $form['submit']['Deposit'];
 $PHP_OUTPUT.= '&nbsp;&nbsp;';
