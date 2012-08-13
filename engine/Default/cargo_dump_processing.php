@@ -42,7 +42,7 @@ if(is_object($good_distance)) {
 }
 $good_distance = max(1,$good_distance);
 
-$lost_xp = (round($amount / 30) + 1) * 2 * $good_distance;
+$lost_xp = round(SmrPort::getBaseExperience($amount, $good_distance));
 $player->decreaseExperience($lost_xp);
 $player->increaseHOF($lost_xp,array('Trade','Experience', 'Jettisoned'), HOF_PUBLIC);
 

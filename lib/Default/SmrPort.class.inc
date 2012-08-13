@@ -102,6 +102,10 @@ class SmrPort {
 			}
 		}
 	}
+
+	public static function getBaseExperience($cargo, $distance) {
+		return ($cargo / 13) * $distance;
+	}
 	
 	protected function __construct($gameID,$sectorID) {
 		$this->db = new SmrMySqlDatabase();

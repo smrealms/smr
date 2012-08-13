@@ -67,10 +67,10 @@ if (!empty($bargain_price) &&
 
 	// base xp is the amount you would get for a perfect trade.
 	// this is the absolut max. the real xp can only be smaller.
-	$base_xp = ($ship->getCargoHolds() / 13) * $port->getGoodDistance($good_id);
+	$base_xp = SmrPort::getBaseExperience($amount, $port->getGoodDistance($good_id));
 
 	// if offered equals ideal we get a problem (division by zero)
-	$gained_exp = round($port->calculateExperiencePercent($ideal_price,$offered_price,$bargain_price,$portGood['TransactionType']) * $base_xp * $amount / $ship->getCargoHolds());
+	$gained_exp = round($port->calculateExperiencePercent($ideal_price,$offered_price,$bargain_price,$portGood['TransactionType']) * $base_xp);
 
 	//will use these variables in current sector and port after successful trade
 	$container['traded_xp'] = $gained_exp;
