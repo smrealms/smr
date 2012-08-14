@@ -15,7 +15,8 @@ while ($db->nextRecord()) {
 }
 $template->assignByRef('TraderPlanets',$traderPlanets);
 
-$isLeader = false;
+// Count the player as leader if they have no alliance.
+$isLeader = !$player->hasAlliance();
 
 if ($player->hasAlliance()) {
 	$db->query('SELECT planet.sector_id FROM player
