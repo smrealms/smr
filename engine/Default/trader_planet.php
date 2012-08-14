@@ -33,13 +33,9 @@ if ($player->hasAlliance()) {
 	$template->assignByRef('AlliancePlanets',$alliancePlanets);
 	
 	// Check if they are alliance leader (which will show bonds)
-	$db->query('SELECT COUNT(1) FROM alliance WHERE alliance.alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND alliance.game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance.leader_id = ' . $db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
-	$db->next_record();
-	if($db->getInt('COUNT(1)')) {
-		$isLeader = true;
-	}
+	$isLeader = $player->getAlliance()->getLeaderID() == $player->getAccountID();
 }
 
-$template->assignByRef('isLeader',$isLeader);
+$template->assignByRef('IsLeader',$isLeader);
 
 ?>

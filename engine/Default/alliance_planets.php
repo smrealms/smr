@@ -25,7 +25,7 @@ while ($db->nextRecord()) {
 	$alliancePlanets[$sectorID]->getCurrentlyBuilding(); //In case anything gets updated here we want to do it before template.
 }
 $template->assignByRef('AlliancePlanets',$alliancePlanets);
-$isLeader = ($player->getAccountID() == $alliance->getLeaderID());
-$template->assignByRef('isLeader',$isLeader);
+$isLeader = $player->getAccountID() == $alliance->getLeaderID();
+$template->assignByRef('IsLeader',$isLeader);
 
 ?>

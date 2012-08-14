@@ -13,8 +13,10 @@ if (count($Planets) > 0) { ?>
 			<th>Shields</th>
 			<th>Drones</th>
 			<th>Supplies</th>
-			<th>Build</th>
-			<?php if(isset($isLeader) && $isLeader) { echo '<th>Bonds</th>';}?>
+			<th>Build</th><?php
+			if(isset($IsLeader) && $IsLeader) { ?>
+				<th>Bonds</th><?php
+			} ?>
 		</tr><?php
 		foreach($Planets as &$Planet) { ?>
 			<tr>
@@ -51,19 +53,24 @@ if (count($Planets) > 0) { ?>
 					else {
 						?>Nothing<?php
 					} ?>
-				</td>
-				<?php
-				if(isset($isLeader) && $isLeader) {
-					echo '<td>';
-					if($Planet->getBonds() > 0) {
-						echo '<p>Credits:<br>', ($Planet->getBonds()), '</p><p>Matures:<br>', date(DATE_FULL_SHORT_SPLIT,$Planet->getMaturity()), '</p>';
-					}
-					else {
-						echo 'None';
-					}
-					echo '</td>';
-				}
-				?>
+				</td><?php
+				if(isset($IsLeader) && $IsLeader) { ?>
+					<td><?php
+						if($Planet->getBonds() > 0) { ?>
+							<p>
+								Credits:<br/><?php
+								echo $Planet->getBonds(); ?>
+							</p>
+							<p>
+								Matures:<br/><?php
+								echo date(DATE_FULL_SHORT_SPLIT,$Planet->getMaturity()); ?>
+							</p><?php
+						}
+						else {?>
+							None<?php
+						} ?>
+					</td><?php
+				} ?>
 			</tr><?php
 		} ?>
 	</table><br><?php
