@@ -24,7 +24,8 @@ $template->assign('ShipsSoldHREF',$shipsSoldHREF);
 
 if (isset($var['ship_id'])) {
 	$compareShip = AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$var['ship_id']);
-	$compareShip['Speed'] *= Globals::getGameSpeed($player->getGameID());
+	$compareShip['RealSpeed'] = $compareShip['Speed'] * Globals::getGameSpeed($player->getGameID());
+	$compareShip['Turns'] = round($player->getTurns()*$compareShip['Speed']/$ship->getSpeed());
 
 	$container = create_container('shop_ship_processing.php');
 	transfer('LocationID');
