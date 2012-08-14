@@ -81,6 +81,12 @@ if (isset($CompareShip)) { ?>
 			<td><?php echo number_colour_format($CompareShip['Speed']-$ThisShip->getRealSpeed()); ?></td>
 		</tr>
 		<tr>
+			<td>Turns</td>
+			<td><?php echo $ThisPlayer->getTurns() ?></td>
+			<td><?php $newTurns = round($ThisPlayer->getTurns()*$CompareShip['Speed']/$ThisShip->getRealSpeed()); echo $newTurns; ?></td>
+			<td><?php echo number_colour_format($newTurns - $ThisPlayer->getTurns()); ?></td>
+		</td>
+		<tr>
 			<td>Scanner</td>
 			<td><?php if($ThisShip->canHaveScanner()) { ?>+<?php } else { ?>-<?php } ?></td>
 			<td><?php if($CompareShip['MaxHardware'][HARDWARE_SCANNER]) { ?>+<?php } else { ?>-<?php } ?></td>
