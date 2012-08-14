@@ -20,7 +20,7 @@
 	<body>
 		<h1>View Galaxy</h1>
 		<br/>
-		<form class="standard" name="GalaxyMapForm" method="GET">
+		<form name="GalaxyMapForm" method="GET">
 			Switch galaxy
 			<select name="galaxy_id" onchange="this.form.submit()"><?php
 				foreach($GameGalaxies as &$GameGalaxy) { 
@@ -33,7 +33,7 @@
 			<input type="submit" value="View"/>&nbsp;
 		</form>
 		<br>
-		<form class="standard" name="GalaxyMapJumpTo" method="get">
+		<form name="GalaxyMapJumpTo" method="GET">
 			Switch sector 
 			<input type="text" size="5" maxlength="5" name="sector_id" />&nbsp;
 			<input type="submit" value="View" />
