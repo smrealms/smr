@@ -1,4 +1,5 @@
 <?php
+
 if (count($Planets) > 0) { ?>
 	<table class="standard inset">
 		<tr>
@@ -13,6 +14,7 @@ if (count($Planets) > 0) { ?>
 			<th>Drones</th>
 			<th>Supplies</th>
 			<th>Build</th>
+			<?php if(isset($isLeader) && $isLeader) { echo '<th>Bonds</th>';}?>
 		</tr><?php
 		foreach($Planets as &$Planet) { ?>
 			<tr>
@@ -50,7 +52,19 @@ if (count($Planets) > 0) { ?>
 						?>Nothing<?php
 					} ?>
 				</td>
+				<?php
+				if(isset($isLeader) && $isLeader) {
+					echo '<td>';
+					if($Planet->getBonds() > 0) {
+						echo '<p>Credits:<br>', ($Planet->getBonds()), '</p><p>Matures:<br>', date(DATE_FULL_SHORT_SPLIT,$Planet->getMaturity()), '</p>';
+					}
+					else {
+						echo 'None';
+					}
+					echo '</td>';
+				}
+				?>
 			</tr><?php
 		} ?>
-	</table><?php
+	</table><br><?php
 } ?>
