@@ -21,8 +21,8 @@
 		<h1>View Galaxy</h1>
 		<br/>
 		<form name="GalaxyMapForm" method="GET">
-			Switch galaxy
-			<select name="galaxy_id" onchange="this.form.submit()"><?php
+			<label for="galaxy_id">Switch galaxy</label>&nbsp;
+			<select name="galaxy_id" id="galaxy_id" onchange="this.form.submit()"><?php
 				foreach($GameGalaxies as &$GameGalaxy) { 
 					$GalaxyID = $GameGalaxy->getGalaxyID(); ?>
 					<option value="<?php echo $GalaxyID; ?>"<?php if($ThisGalaxy->equals($GameGalaxy)){ ?> selected="selected"<?php } ?>>
@@ -30,12 +30,12 @@
 					</option><?php
 				} unset($GameGalaxy); ?>
 			</select>&nbsp;
-			<input type="submit" value="View"/>&nbsp;
+			<input type="submit" value="View"/>
 		</form>
 		<br>
 		<form name="GalaxyMapJumpTo" method="GET">
-			Switch sector 
-			<input type="text" size="5" maxlength="5" name="sector_id" />&nbsp;
+			<label for="sector_id">Switch sector</label>&nbsp;
+			<input type="text" size="5" maxlength="5" name="sector_id" id="sector_id" />&nbsp;
 			<input type="submit" value="View" />
 		</form>
 		
