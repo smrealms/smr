@@ -33,7 +33,7 @@
 			<input type="submit" value="View"/>&nbsp;
 		</form>
 		<br>
-		<form class="standard" name="GalaxyMapJumpTo" METHOD="GET">
+		<form class="standard" name="GalaxyMapJumpTo" method="get">
 			Switch sector 
 			<input type="text" size="5" maxlength="5" name="sector_id" />&nbsp;
 			<input type="submit" value="View" />
