@@ -111,6 +111,11 @@ $PHP_OUTPUT.= '
 	<th><a href="'.Globals::getAllianceRosterHREF($alliance->getAllianceID(),'getExperience',$var['SortKey']=='getExperience'?!$var['SortDesc']:true).'">Experience</a></th>
 ';
 
+// May want to make status a role in future but for now it's leaders only
+if($player->getAccountID() == $alliance->getLeaderID()) {
+	$PHP_OUTPUT.='<th>Status</th>';
+}
+
 if($varAction == 'Show Alliance Roles') {
 	$PHP_OUTPUT.= '<th>Role</th>';
 }
@@ -212,6 +217,21 @@ foreach($alliancePlayers as &$alliancePlayer) {
 		}
 		$PHP_OUTPUT.= '</td>';
 	}
+	
+	/* Display ban status if alliance leader is viewing roster */
+	if($player->getAccountID() == $alliance->getLeaderID()) {
+		$allianceAccount = SmrAccount::getAccount($alliancePlayer->getAccountID());
+		$disabled = $allianceAccount->isDisabled();
+		if($disabled) {
+			$PHP_OUTPUT .= '</p><p>';
+			$PHP_OUTPUT .= '<td><p>Banned:<br>'. $disabled['Reason'] . '</p>';
+			$PHP_OUTPUT .= '<p>Expires:<br> ' . date(DATE_FULL_SHORT_SPLIT,$disabled['Time']) . '</p></td>';
+		}
+		else {
+			$PHP_OUTPUT.= '<td class="shrink center">Active</td>';
+		}
+	}
+	
 	$PHP_OUTPUT.= '</tr>';
 } unset($alliancePlayer);
 
