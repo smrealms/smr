@@ -57,14 +57,10 @@ if (count($Planets) > 0) { ?>
 				if(isset($IsLeader) && $IsLeader) { ?>
 					<td><?php
 						if($Planet->getBonds() > 0) { ?>
-							<p>
-								Credits:<br/><?php
-								echo $Planet->getBonds(); ?>
-							</p>
-							<p>
-								Matures:<br/><?php
-								echo date(DATE_FULL_SHORT_SPLIT,$Planet->getMaturity()); ?>
-							</p><?php
+							Credits:<br/><?php
+							echo $Planet->getBonds(); ?><br/><br/>
+							Matures:<br/><?php
+							echo format_time($Planet->getMaturity() - TIME, true);
 						}
 						else {?>
 							None<?php
