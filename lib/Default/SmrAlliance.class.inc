@@ -278,20 +278,20 @@ class SmrAlliance {
 	}
 	
 	public function getActiveIDs() {
+		$activeIDs = array();
 		
-		$ActiveIDs = array();
-		
-		$this->db->query('SELECT player.account_id FROM active_session, player WHERE
-				 active_session.game_id = ' . $this->db->escapeNumber($this->gameID) . ' 
-				AND player.alliance_id = ' . $this->db->escapeNumber($this->allianceID) . '
-				AND player.account_id = active_session.account_id
-				AND last_accessed >= ' . $this->db->escapeNumber(TIME - 600));
+		$this->db->query('SELECT account_id
+						FROM active_session
+						JOIN player USING(account_id, game_id)
+						WHERE game_id = ' . $this->db->escapeNumber($this->gameID) . '
+							AND alliance_id = ' . $this->db->escapeNumber($this->allianceID) . '
+							AND last_accessed >= ' . $this->db->escapeNumber(TIME - 600));
 		
 		while($this->db->nextRecord()) {
-			$ActiveIDs[] = $this->db->getInt('account_id');
+			$activeIDs[] = $this->db->getInt('account_id');
 		}
 		
-		return $ActiveIDs;
+		return $activeIDs;
 	}
 	
 }

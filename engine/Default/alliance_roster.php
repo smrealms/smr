@@ -217,23 +217,18 @@ foreach($alliancePlayers as &$alliancePlayer) {
 		}
 		$PHP_OUTPUT.= '</td>';
 	}
-	
-	if(in_array($alliancePlayer->getAccountID(), $ActiveIDs)) {
-		$PHP_OUTPUT.= '<td class="center">Online</td>';
-	}
-	else if($player->getAccountID() == $alliance->getLeaderID()) {
-		// Display ban status to account leader. In THEORY they can't be banned and active at the same time
-		$allianceAccount = SmrAccount::getAccount($alliancePlayer->getAccountID());
-		$disabled = $allianceAccount->isDisabled();
-		if($disabled) {
-			$PHP_OUTPUT .= '<td><p>Banned Until:<br/>' .  date(DATE_FULL_SHORT_SPLIT,$disabled['Time']) . '</p></td>';
+
+	if($player->getAllianceID() == $alliance->getAllianceID()) {
+		if(in_array($alliancePlayer->getAccountID(), $ActiveIDs)) {
+			$PHP_OUTPUT.= '<td class="center">Online</td>';
+		}
+		else if($player->getAccountID() == $alliance->getLeaderID() && $disabled = SmrAccount::getAccount($alliancePlayer->getAccountID())->isDisabled()) {
+			// Display ban status to account leader.
+				$PHP_OUTPUT .= '<td><p>Banned Until:<br/>' .  date(DATE_FULL_SHORT_SPLIT,$disabled['Time']) . '</p></td>';
 		}
 		else {
 			$PHP_OUTPUT.= '<td class="center">Offline</td>';
-		}		
-	}
-	else {
-		$PHP_OUTPUT.= '<td class="center">Offline</td>';
+		}
 	}
 	
 	$PHP_OUTPUT.= '</tr>';
