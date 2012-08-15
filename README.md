@@ -82,6 +82,13 @@ This is the coding style that should be used for any new code, although currentl
 	}
 	```
 
+* Variable names should be camelCase normally, except when in templates when they should be UpperCamelCase (to enforce some mental separation between the two contexts).
+
+	```php
+	$applicationVar = 'value';
+	$TemplateVar = 'value';
+	```
+
 * Function names should be camelCase, class names should be UpperCamelCase
 
 	```php
