@@ -85,8 +85,8 @@ try {
 			<th align="center"><a href="?order=cost&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cost</span></a></th>
 			<th align="center"><a href="?order=speed&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Speed</span></a></th>
 			<th align="center"><a href="?order=hardpoint&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Hardpoints</span></a></th>
-			<th align="center"><a href="?order=buyer_restriction&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Restriction</span></a></th>
-			<th align="center"><a href="?order=lvl_needed&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Level Needed(Semi War)</span></a></th>
+			<th align="center"><a href="?order=buyer_restriction&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Restriction</span></a></th><?php
+/*			<th align="center"><a href="?order=lvl_needed&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Level Needed(Semi War)</span></a></th>*/ ?>
 			<th align="center"><a href="?hardwarea=1&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Shields</span></a></th>
 			<th align="center"><a href="?hardwarea=2&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Armour</span></a></th>
 			<th align="center"><a href="?hardwarea=3&seq=<?php echo $seq; ?>"><span style="color:#80C870;">Cargo</span></a></th>
@@ -127,7 +127,7 @@ function buildShipStats($db) {
 	else
 		$restriction = '&nbsp;';
     $stat[] = $restriction;
-    $stat[] = $db->getInt('lvl_needed');
+//    $stat[] = $db->getInt('lvl_needed');
 	$stat[] = $db->getInt('max_amount');
 	$hardware_id = 2;
     //get our hardware
