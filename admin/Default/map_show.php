@@ -8,8 +8,7 @@ if(isset( $_REQUEST['game_id'])) {
 
 if (isset($var['GameID'])) {
 
-    $container = array();
-    $container['url'] = 'map_show_processing.php';
+    $container = create_container('map_show_processing.php');
     $container['game_id'] = $var['GameID'];
 
     $PHP_OUTPUT .= create_echo_form($container);
@@ -17,7 +16,7 @@ if (isset($var['GameID'])) {
     $PHP_OUTPUT .= ('<option value="0">[Please Select]</option>');
     $PHP_OUTPUT .= ('<option value="all">All Players</option>');
 
-    $db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($var['GameID']) . ' ORDER BY player_id');
+    $db->query('SELECT * FROM player WHERE game_id = ' . $db->escapeNumber($var['GameID']) . ' ORDER BY player_name');
 
     while ($db->nextRecord()) {
         $PHP_OUTPUT .= ('<option value="' . $db->getField('account_id') . '">' . stripslashes($db->getField('player_name')) . ' (' . $db->getField('player_id') . ')</option>');
@@ -33,7 +32,7 @@ else {
     $PHP_OUTPUT .= ('<select name="game_id" size="1" id="InputFields">');
     $PHP_OUTPUT .= ('<option value="0">[Please Select]</option>');
 
-    $db->query('SELECT * FROM game ORDER BY game_id');
+    $db->query('SELECT * FROM game ORDER BY game_id DESC');
     while ($db->nextRecord()) {
         $PHP_OUTPUT .= ('<option value="' . $db->getField('game_id') . '">' . $db->getField('game_name') . '</option>');
 	}
