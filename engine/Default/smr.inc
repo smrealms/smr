@@ -91,6 +91,15 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
 			break;
+			
+			case 'sector':
+				$sectorID = $default;
+
+				if(!is_numeric($sectorID)) {
+					return $sectorID;
+				}
+				return '<a href="' .Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">#' . $default . '</a>';
+			break;			
 		}
 	}
 	catch (Exception $e) {
@@ -129,6 +138,7 @@ function &bbifyMessage($message,$noLinks=false) {
 		$bbParser->AddRule('race',$smrRule);
 		$bbParser->AddRule('servertimetouser',$smrRule);
 		$bbParser->AddRule('chess',$smrRule);
+		$bbParser->AddRule('sector',$smrRule);
 	}
 	global $disableBBLinks;
 	if($noLinks===true)
