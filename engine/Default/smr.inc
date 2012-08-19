@@ -20,7 +20,7 @@ function parseBoolean($check) {
 }
 
 function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagContent) {
-	global $overrideGameID, $disableBBLinks, $player, $account;
+	global $overrideGameID, $disableBBLinks, $player, $account, $var;
 	try {
 		switch($tagName) {
 			case 'player':
@@ -95,10 +95,22 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 			case 'sector':
 				$sectorID = $default;
 
-				if(!is_numeric($sectorID)) {
-					return $sectorID;
+				if ($action == BBCODE_CHECK) {
+					return true;
 				}
-				return '<a href="' .Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">#' . $default . '</a>';
+
+				// The use of $var here is for a corner case where an admin can check reported messages whilst being in-game.
+				// Ugly but working, probably want a better mechanism to check if more BBCode tags get added
+				if(is_numeric($sectorID) &&
+					SmrSession::$game_id &&
+					SmrGalaxy::getGalaxyContaining($overrideGameID, $sectorID) &&
+					$var['body'] != "notify_view.php" &&
+					$linked = $disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
+					return '<a href="' .Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">#' . $sectorID . '</a>';					
+				}
+				
+				return '#' . $sectorID;
+				
 			break;			
 		}
 	}
