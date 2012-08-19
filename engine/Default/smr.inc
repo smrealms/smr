@@ -105,7 +105,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					SmrSession::$game_id &&
 					SmrGalaxy::getGalaxyContaining($overrideGameID, $sectorID) &&
 					$var['body'] != "notify_view.php" &&
-					$linked = $disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
+					$disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
 					return '<a href="' .Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">#' . $sectorID . '</a>';					
 				}
 				
