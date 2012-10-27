@@ -257,15 +257,11 @@ elseif ($type == 'list') {
 } elseif ($type == 'alliance_ips') {
 
 	list ($alliance, $game) = preg_split('/[\/]/', $variable);
-	if(!is_numeric($game)||!is_numeric($alliance)) create_error('Incorrect format used.');
-	$db->query('SELECT * FROM player WHERE game_id = '.$db->escapeNumber($game).' AND alliance_id = '.$db->escapeNumber($alliance));
-	$list = array();
-	while ($db->nextRecord()) {
-		$list[] = $db->getInt('account_id');
+	if(!is_numeric($game)||!is_numeric($alliance)) {
+		create_error('Incorrect format used.');
 	}
-	$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
-	$container = array();
-	$container['url'] = 'account_close.php';
+	$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE game_id = ' . $db->escapeNumber($game) . ' AND alliance_id = ' . $db->escapeNumber($alliance) . ' ORDER BY ip');
+	$container = create_container('account_close.php');
 	$db2->query('SELECT * FROM alliance WHERE alliance_id = '.$db->escapeNumber($alliance).' AND game_id = '.$db->escapeNumber($game));
 	$db2->nextRecord();
 	$name = stripslashes($db2->getField('alliance_name'));
@@ -321,16 +317,9 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
 
 } elseif ($type == 'wild_log') {
-
-	$db->query('SELECT * FROM account WHERE login LIKE '.$db->escapeString($variable).' ORDER BY login');
-	$list = array();
+	$db->query('SELECT ip.* FROM account_has_ip ip JOIN account USING(account_id) WHERE login LIKE ' . $db->escapeString($variable) . ' ORDER BY login, ip');
 	if ($db->getNumRows()) {
-		while ($db->nextRecord()) {
-			$list[] = $db->getField('account_id');
-		}
-		$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).' ORDER BY ip');
-		$container = array();
-		$container['url'] = 'account_close.php';
+		$container = create_container('account_close.php');
 		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.= create_table();
@@ -385,16 +374,9 @@ elseif ($type == 'list') {
 		$PHP_OUTPUT.=('No login names LIKE '.$variable.' found');
 
 } elseif ($type == 'wild_in') {
-
-	$db->query('SELECT * FROM player WHERE player_name LIKE '.$db->escapeString($variable).' ORDER BY player_name');
-	$list = array();
+	$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name LIKE ' . $db->escapeString($variable) . ' ORDER BY player_name, ip');
 	if ($db->getNumRows()) {
-		while ($db->nextRecord()) {
-			$list[] = $db->getField('account_id');
-		}
-		$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
-		$container = array();
-		$container['url'] = 'account_close.php';
+		$container = create_container('account_close.php');
 		$PHP_OUTPUT.=('<center>Listing all IPs for login names LIKE '.$variable.'<br /><br />');
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.= create_table();
@@ -466,21 +448,9 @@ elseif ($type == 'list') {
 
 } elseif ($type == 'compare') {
 
-	$p = preg_split('/[,]+[\s]/', $variable);
-
-	$list = array(0);
-	foreach ($p as $val) {
-		$list[] = $val;
-	}
-
-	$db->query('SELECT * FROM player WHERE player_name IN ('.$db->escapeArray($list).')');
-	$list = array(0);
-	while ($db->nextRecord()) {
-		$list[] = $db->getInt('account_id');
-	}
-	$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
-	$container = array();
-	$container['url'] = 'account_close.php';
+	$list = preg_split('/[,]+[\s]/', $variable);
+	$db->query('SELECT ip.* FROM account_has_ip ip JOIN player USING(account_id) WHERE player_name IN (' . $db->escapeArray($list).') ORDER BY ip');
+	$container = create_container('account_close.php');
 	$PHP_OUTPUT.=('<center>Listing all IPs for ingame names '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.= create_table();
@@ -546,24 +516,11 @@ elseif ($type == 'list') {
 	$PHP_OUTPUT.=create_submit('Disable Accounts');
 	$PHP_OUTPUT.=('<input type=hidden name=first value="first"></form></center>');
 
-} elseif ($type == 'compare_log') {
-
-	$p = preg_split('/[,]+[\s]/', $variable);
-
-	$list = array();
-	foreach ($p as $val) {
-		$list[] = $val;
-	}
-
-	$db->query('SELECT * FROM account WHERE login IN ('.$db->escapeArray($list).')');
-	$list = array();
-	while ($db->nextRecord()) {
-		$list[] = $db->getInt('account_id');
-	}
-	$list .= ')';
-	$db->query('SELECT * FROM account_has_ip WHERE account_id IN ('.$db->escapeArray($list).') ORDER BY ip');
-	$container = array();
-	$container['url'] = 'account_close.php';
+}
+elseif ($type == 'compare_log') {
+	$list = preg_split('/[,]+[\s]/', $variable);
+	$db->query('SELECT ip.* FROM account_has_ip JOIN account USING(account_id) WHERE login IN (' . $db->escapeArray($list) . ') ORDER BY ip');
+	$container = create_container('account_close.php');
 	$PHP_OUTPUT.=('<center>Listing all IPs for logins '.$variable.'<br /><br />');
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.= create_table();
