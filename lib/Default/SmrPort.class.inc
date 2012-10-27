@@ -576,7 +576,7 @@ class SmrPort {
 			$this->setReinforceTime($nextReinforce);
 			$this->updateAttackStarted();
 			//add news
-			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector #<span class="sectorColor">' . $this->getSectorID() . '</span>. It is under attack by ';
+			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. It is under attack by ';
 			if($trigger->hasAlliance())
 				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
 			else

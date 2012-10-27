@@ -706,6 +706,10 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'mission_accept_processing.php', array('MissionID'=>$mission['ID'])));
 	}
 
+	public static function getSectorBBLink($sectorID) {
+		return '[sector=' . $sectorID . ']';
+	}
+
 	public static function getAvailableTemplates() {
 		return array('Default' => array('Default'),
 			'Freon22' => array('Default','Blue','ClassicGreen','None'));

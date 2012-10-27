@@ -266,7 +266,7 @@ class SmrSector {
 			default:
 				$message .= 'entering';
 		}
-		$message .= ' sector #'.$this->getSectorID();
+		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
 		$forces =& $this->getForces();
 		foreach($forces as &$force) {
@@ -288,7 +288,7 @@ class SmrSector {
 			default:
 				$message .= 'leaving';
 		}
-		$message .= ' sector #'.$this->getSectorID();
+		$message .= ' sector ' . Globals::getSectorBBLink($this->getSectorID());
 
 		// iterate over all scout drones in sector
 		$forces =& $this->getForces();
@@ -306,7 +306,7 @@ class SmrSector {
 		$forces =& $this->getForces();
 		foreach($forces as &$force) {
 			// send scout messages to user
-			$message = 'Your forces have spotted that ' . $player->getBBLink() . ' has been <span class="red">DESTROYED</span> in sector #'.$this->sectorID;
+			$message = 'Your forces have spotted that ' . $player->getBBLink() . ' has been <span class="red">DESTROYED</span> in sector ' . Globals::getSectorBBLink($this->sectorID);
 			$force->ping($message,$player);
 		} unset($force);
 	}

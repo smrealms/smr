@@ -1113,12 +1113,12 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$named_ship = strip_tags($killer->getCustomShipName(), '<font><span><img>');
 			$msg .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
-		$msg .= ' in Sector&nbsp;#' . $this->getSectorID();
+		$msg .= ' in Sector&nbsp;' . Globals::getSectorBBLink($this->getSectorID());
 		$this->getSector()->increaseBattles(1);
 		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($msg,true) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
-		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
-		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector <span class="blue">#' . $this->getSectorID() . '</span>',false);
+		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()), false);
+		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()), false);
 
 		// The person who got the kill gains experience
 		$expGainPercent = 0.04875 + 0.03 * ($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID());
@@ -1286,7 +1286,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
-		$news_message .= ' was destroyed by forces in sector #'.$forces->getSectorID();
+		$news_message .= ' was destroyed by forces in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
 						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
@@ -1347,7 +1347,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
-		$news_message .= ' was destroyed by '.$planet->getDisplayName().'\'s planetary defenses in Sector #'.$planet->getSectorID().'.';
+		$news_message .= ' was destroyed by ' . $planet->getDisplayName() . '\'s planetary defenses in sector ' . Globals::getSectorBBLink($planet->getSectorID()) . '.';
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
 						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($planetOwner->getAccountID()) . ',' . $this->db->escapeNumber($planetOwner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');

@@ -99,16 +99,18 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return true;
 				}
 
+				$sectorTag = '<span class="sectorColor">#' . $sectorID . '</span>';
+
 				// The use of $var here is for a corner case where an admin can check reported messages whilst being in-game.
 				// Ugly but working, probably want a better mechanism to check if more BBCode tags get added
-				if(is_numeric($sectorID) &&
-					SmrSession::$game_id > 0 &&
-					SmrGalaxy::getGalaxyContaining($overrideGameID, $sectorID) !== false &&
-					$disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
-					return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">#' . $sectorID . '</a>';					
+				if(is_numeric($sectorID)
+					&& SmrSession::$game_id > 0
+					&& SmrGalaxy::getGalaxyContaining($overrideGameID, $sectorID) !== false
+					&& $disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
+					return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
 				
-				return '#' . $sectorID;
+				return $sectorTag;
 				
 			break;			
 		}

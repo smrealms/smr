@@ -7,7 +7,7 @@ $planetPlayer =& SmrPlayer::getPlayer($var['account_id'], $player->getGameID());
 $owner =& $planet->getOwner();
 if ($owner->getAllianceID() != $player->getAllianceID())
 	create_error('You can not kick someone off a planet your alliance does not own!');
-$message = 'You have been kicked from '.$planet->getName().' in #'.$player->getSectorID();
+$message = 'You have been kicked from ' . $planet->getName() . ' in ' . Globals::getSectorBBLink($player->getSectorID());
 $player->sendMessage($planetPlayer->getAccountID(), 2, $message, false);
 
 $planetPlayer->setLandedOnPlanet(false);

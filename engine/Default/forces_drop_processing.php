@@ -187,7 +187,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 	else
 		$message .= ' from/to';
 
-	$message .= ' your stack in sector #'.$forces->getSectorID();
+	$message .= ' your stack in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 
 	$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
 }
