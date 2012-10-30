@@ -100,9 +100,9 @@ function channel_msg_seedlist_add($fp, $rdata, $account, $player)
 			}
 		}
 
+		$db = new SmrMySqlDatabase();
 		foreach($sectors as $sector) {
 			// check if the sector is a part of the game
-			$db = new SmrMySqlDatabase();
 			$db->query('SELECT sector_id
 						FROM sector
 						WHERE game_id = ' . $player->getGameID() . '
@@ -170,6 +170,7 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 		}
 
 		// add sectors to db
+		$db = new SmrMySqlDatabase();
 		$db->query('DELETE FROM alliance_has_seedlist
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID() . '
