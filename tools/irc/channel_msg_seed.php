@@ -174,7 +174,7 @@ function channel_msg_seedlist_del($fp, $rdata, $account, $player)
 		$db->query('DELETE FROM alliance_has_seedlist
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID() . '
-						AND sector_id IN ' . $db->escapeArray($sectors)
+						AND sector_id IN (' . $db->escapeArray($sectors) . ')'
 		);
 
 		fputs($fp, 'PRIVMSG ' . $channel . ' :The sectors have been deleted.' . EOL);
