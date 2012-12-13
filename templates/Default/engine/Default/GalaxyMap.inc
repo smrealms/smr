@@ -23,7 +23,7 @@
 					$('html, body').animate({
 						scrollTop: focusSector.offset().top + focusSector.height() / 2 - window.innerHeight / 2,
 						scrollLeft: focusSector.offset().left + focusSector.width() / 2 - window.innerWidth / 2
-					}, <?php echo $ThisGalaxy->getSize(); ?>);
+					}, <?php echo ($ThisGalaxy->getWidth() + $ThisGalaxy->getHeight()) * 15; ?>);
 				});
 			</script><?php
 		} ?>
