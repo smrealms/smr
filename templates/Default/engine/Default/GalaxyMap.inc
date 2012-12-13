@@ -19,11 +19,11 @@
 		if(isset($FocusSector)) { ?>
 			<script>
 				$(function() {
-					var focusSector = $('#sector<?php echo $FocusSector; ?>');
-					$('html, body').animate({
-						scrollTop: focusSector.offset().top + focusSector.height() / 2 - window.innerHeight / 2,
-						scrollLeft: focusSector.offset().left + focusSector.width() / 2 - window.innerWidth / 2
-					}, <?php echo ($ThisGalaxy->getWidth() + $ThisGalaxy->getHeight()) * 15; ?>);
+					var focusSector = $('#sector<?php echo $FocusSector; ?>'),
+						body = $('html, body'),
+						offset = focusSector.offset();
+					body.scrollTop(offset.top + focusSector.height() / 2 - window.innerHeight / 2);
+					body.scrollLeft(offset.left + focusSector.width() / 2 - window.innerWidth / 2);
 				});
 			</script><?php
 		} ?>
