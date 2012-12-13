@@ -23,7 +23,7 @@
 					$('html, body').animate({
 						scrollTop: focusSector.offset().top + focusSector.height() / 2 - window.innerHeight / 2,
 						scrollLeft: focusSector.offset().left + focusSector.width() / 2 - window.innerWidth / 2
-					}, 1000);
+					}, <?php echo $ThisGalaxy->getSize(); ?>);
 				});
 			</script><?php
 		} ?>
@@ -51,7 +51,7 @@
 			<input type="submit" value="View" />
 		</form>
 		
-		<p>Galaxy map of the known <b><big><?php echo $GalaxyName; ?></big></b> galaxy.</p>
+		<p>Galaxy map of the known <b><big><?php echo $ThisGalaxy->getName(); ?></big></b> galaxy.</p>
 	
 		<?php $this->includeTemplate('includes/SectorMap.inc',array('GalaxyMap'=>true)); ?>
 	</body>

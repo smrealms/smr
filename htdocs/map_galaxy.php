@@ -64,8 +64,6 @@ try {
 	}
 	
 	
-	$template->assign('GalaxyName',$galaxy->getName());
-	
 	if($account->isCenterGalaxyMapOnPlayer() || isset($_REQUEST['sector_id'])) {
 		if(isset($_REQUEST['sector_id']))
 			$topLeft =& SmrSector::getSector($player->getGameID(),$_REQUEST['sector_id']);
