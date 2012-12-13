@@ -8,13 +8,25 @@
 		if(isset($ExtraCSSLink)) {
 			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
 		} ?>
-	    <title>Galaxy Map</title>
-	    <meta http-equiv="pragma" content="no-cache">
-	    <style type="text/css">
-	      body {
-	        font-size:<?php echo $ThisAccount->getFontSize(); ?>%;
-	      }
-	    </style>
+		<title>Galaxy Map</title>
+		<meta http-equiv="pragma" content="no-cache">
+		<style type="text/css">
+			body {
+				font-size:<?php echo $ThisAccount->getFontSize(); ?>%;
+			}
+		</style>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script><?php
+		if(isset($FocusSector)) { ?>
+			<script>
+				$(function() {
+					var focusSector = $('#sector<?php echo $FocusSector; ?>');
+					$('html, body').animate({
+						scrollTop: focusSector.offset().top + focusSector.height() / 2 - window.innerHeight / 2,
+						scrollLeft: focusSector.offset().left + focusSector.width() / 2 - window.innerWidth / 2
+					}, 1000);
+				});
+			</script><?php
+		} ?>
     </head>
 	
 	<body>

@@ -75,6 +75,7 @@ try {
 		if(!$galaxy->contains($topLeft->getSectorID()))
 			$topLeft =& SmrSector::getSector($player->getGameID(),$galaxy->getStartSector());
 		else {
+			$template->assign('FocusSector', $topLeft->getSectorID());
 			//go left then up
 			for ($i=0;$i<floor($galaxy->getWidth()/2);$i++)
 				$topLeft =& $topLeft->getNeighbourSector('Left');
