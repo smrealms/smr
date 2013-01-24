@@ -69,7 +69,9 @@ foreach($PLANET_BUILDINGS as $planetBuilding) {
 	else
 		$PHP_OUTPUT.=number_format($planetBuilding['Credit Cost']).'-credits, ';
 
-	$PHP_OUTPUT.= format_time(($planetBuilding['Build Time']) / Globals::getGameSpeed($player->getGameID()));
+	//$PHP_OUTPUT.= format_time(($planetBuilding['Build Time']) / Globals::getGameSpeed($player->getGameID()));
+	
+	$PHP_OUTPUT.= format_time($planet->getConstructionTime($planetBuilding['ConstructionID']) - TIME);
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
