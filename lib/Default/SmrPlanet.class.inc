@@ -765,10 +765,10 @@ class SmrPlanet {
 	function getConstructionTime($constructionID) {
 		$buildings = $this->getBuildings();
 		$PLANET_BUILDINGS = &Globals::getPlanetBuildings();
-		$current_buildings = $buildings[$constructionID];
-		$max_buildings = $PLANET_BUILDINGS[$constructionID]["Max Amount"];
+		$currentBuildings = $buildings[$constructionID];
+		$maxBuildings = $PLANET_BUILDINGS[$constructionID]["Max Amount"];
 		// Replace this with the real equations once RCK provides some that aren't gibberish.
-		$constructionTime = TIME + ceil(3.8030328 * $PLANET_BUILDINGS[$constructionID]['Build Time'] * pow(($current_buildings/$max_buildings),3)/Globals::getGameSpeed($this->getGameID()));
+		$constructionTime = TIME + ceil(3.8030328 * $PLANET_BUILDINGS[$constructionID]['Build Time'] * pow(($currentBuildings/$maxBuildings),3)/Globals::getGameSpeed($this->getGameID()));
 		return $constructionTime;		
 	}
 	

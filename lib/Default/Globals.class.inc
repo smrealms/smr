@@ -68,7 +68,6 @@ class Globals {
 				$PLANET_BUILDINGS[$buildingID]['Description'] = self::$db->getField('construction_description');
 //				$PLANET_BUILDINGS[$buildingID]['Area'] = array(self::$db->getField('area'),self::$db->getField('metals'),self::$db->getField('energy'));
 				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = self::$db->getField('max_construction');
-				
 				$PLANET_BUILDINGS[$buildingID]['ExpGain'] = self::$db->getField('exp_gain');
 
 				$PLANET_BUILDINGS[$buildingID]['Build Time'] = 0;
