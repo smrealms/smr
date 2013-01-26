@@ -766,10 +766,10 @@ class SmrPlanet {
 		$buildings = $this->getBuildings();
 		$PLANET_BUILDINGS = &Globals::getPlanetBuildings();
 		$currentBuildings = $buildings[$constructionID];
-		$maxBuildings = $PLANET_BUILDINGS[$constructionID]["Max Amount"];
+		$maxBuildings = $PLANET_BUILDINGS[$constructionID]['Max Amount'];
 		// Replace this with the real equations once RCK provides some that aren't gibberish.
-		$constructionTime = TIME + ceil(3.8030328 * $PLANET_BUILDINGS[$constructionID]['Build Time'] * pow(($currentBuildings/$maxBuildings),3)/Globals::getGameSpeed($this->getGameID()));
-		return $constructionTime;		
+		$constructionTime = TIME + ceil(3.8030328 * $PLANET_BUILDINGS[$constructionID]['Build Time'] * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
+		return $constructionTime;
 	}
 	
 	function startBuilding(AbstractSmrPlayer &$constructor,$constructionID) {
@@ -784,7 +784,6 @@ class SmrPlanet {
 		}
 	
 		// gets the time for the buildings
-		//$timeComplete = TIME + round($PLANET_BUILDINGS[$constructionID]['Build Time'] / Globals::getGameSpeed($this->getGameID()));
 		$timeComplete = $this->getConstructionTime($constructionID);
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
 						'VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($constructionID) . ', ' . $this->db->escapeNumber($constructor->getAccountID()) . ',' . $this->db->escapeNumber($timeComplete) . ')');
