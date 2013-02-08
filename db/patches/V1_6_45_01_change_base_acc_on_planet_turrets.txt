@@ -1,0 +1,1 @@
+UPDATE weapon_type SET accuracy = 95 WHERE weapon_type_id = 10001;
