@@ -1,3 +1,5 @@
+ALTER TABLE planet_construction 
+CHANGE construction_description construction_description VARCHAR( 100 );
 UPDATE planet_construction
 SET construction_description = 'Increases planet&rsquo;s maximum shield capacity by 100 shields' WHERE construction_id = 1;
 UPDATE planet_construction
