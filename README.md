@@ -64,12 +64,19 @@ SMR is using [Flyway](http://code.google.com/p/flyway) to deploy database patche
 
 7. Run all patches `./flyway.sh migrate`
 
-If you start with an existing database you need to follow above steps 1 to 5 and initialize the databse with the following command:
-`./flyway.sh -initialVersion=1.6.39 init` which would mean that your current database equals the one from SMR 1.6.39. From this point on you can use `./flyway.sh migrate` to update to latest database.
+If you start with an existing database you need to follow above steps 1 to 5 and initialize the database with the following command:  
+`./flyway.sh -initialVersion=1.6.39 init` which would mean that your current database equals the one from SMR 1.6.39. From this point on you can use `./flyway.sh migrate` to update to latest database.  
 After creating a user account I would recommend inserting a row into the permission table corresponding to the account you created and with a permission_id of 1 in order to give yourself admin permissions.
 
 In case you need to change database with a new version put a file called `V<VERSION_NUMBER>__NAME.sql` into db/patches folder. One version can have multiple patches.
 
+## Permissions
+In order to create an admin account you should first create a standard account via the register form, then add an entry to the "account_has_permission" table for the "account_id" of the created account and "permission_id" 1 (which is the permission to manage admin permissions).  
+Once you have added this entry the account should now have an "Admin Tools" link on the left whilst logged in, which will allow you to assign any extra permissions to yourself and others.
+
+## Creating a Game
+To create a game you will have to have assigned yourself the "1.6 Universe Generator" and then access this link via the admin tools to create the game.  
+Once you are happy with the game you need to edit the "game" table and set the "enabled" flag for your game to 'TRUE' in order for it to appear in the list of games to join.
 
 # Coding Style
 This is the coding style that should be used for any new code, although currently not all code currently follows these guidelines (the guidelines are also likely to require extension).
@@ -158,4 +165,4 @@ For any page which takes input through POST or GET (or other forms?) they should
 
 ## Abstract vs normal classes
 This initially started out to be used in the "standard" way for NPCs but that idea has since been discarded.
-Now all core/shared "Default" code should be here, with the normal class child implementing game type specific functionality/overrides, for instance "lib/Semi Wars/SmrAccount" which is used to make every account appear to be a "vet" account when playing semi wars.
+Now all core/shared "Default" code should be in the abstract version, with the normal class child implementing game type specific functionality/overrides, for instance "lib/Semi Wars/SmrAccount" which is used to make every account appear to be a "vet" account when playing semi wars.
