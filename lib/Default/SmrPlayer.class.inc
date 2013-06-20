@@ -224,10 +224,8 @@ class SmrPlayer extends AbstractSmrPlayer {
             $sd['sectorId'] = $result['sector_id'];
             $sd['offsetTop'] = $result['offset_top'];
             $sd['offsetLeft'] = $result['offset_left'];
-
             $this->storedDestinations[] = $sd;
         }
-
 	}
 
 	public function getSQL() {

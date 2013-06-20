@@ -11,5 +11,4 @@ CREATE TABLE IF NOT EXISTS player_stored_sector(
   #CONSTRAINT FOREIGN KEY (sector_id) REFERENCES sector (sector_id) ON DELETE CASCADE ON UPDATE CASCADE,
 
   INDEX(player_id)
-
 ) ENGINE=InnoDB;

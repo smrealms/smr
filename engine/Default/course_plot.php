@@ -31,5 +31,4 @@ $template->assign('StoredDestinations',$player->getStoredDestinations());
 $container=create_container('course_maintain_destination_button.php','');
 $container['target_page'] = 'course_plot.php';
 $template->assign('ManageDestination',SmrSession::getNewHREF($container));
-
 ?>

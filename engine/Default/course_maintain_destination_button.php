@@ -1,6 +1,5 @@
 <?php
 
-
 function processDeleteButton($player, $db){
     $playerTargetSectorId = trim($_POST['playerTargetSectorId']);
 
