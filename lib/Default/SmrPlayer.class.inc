@@ -47,6 +47,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	protected $SQL;
 
+    protected $storedDestinations;
+
 //	public static function getPlayers($gameAccountIDArray,$forceUpdate = false) {
 //		global $CACHE_PLAYERS;
 //		$playerArray = array();
@@ -211,6 +213,21 @@ class SmrPlayer extends AbstractSmrPlayer {
 		else {
 			throw new Exception('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
 		}
+
+        $this->storedDestinations = array();
+        $this->db->query("SELECT * from player_stored_sector where player_id=".$this->playerID);
+        while($this->db->nextRecord()){
+            $result = $this->db->getRow();
+            $sd = array();
+            $sd['id'] = $result['player_stored_sector_id'];
+            $sd['label'] = $result['label'];
+            $sd['sectorId'] = $result['sector_id'];
+            $sd['offsetTop'] = $result['offset_top'];
+            $sd['offsetLeft'] = $result['offset_left'];
+
+            $this->storedDestinations[] = $sd;
+        }
+
 	}
 
 	public function getSQL() {
@@ -1827,5 +1844,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public function __sleep() {
 		return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName');
 	}
+
+    public function getStoredDestinations(){
+        return $this->storedDestinations;
+    }
 }
 ?>
