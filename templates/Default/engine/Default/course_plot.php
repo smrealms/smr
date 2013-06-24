@@ -21,7 +21,7 @@ $this->includeTemplate('includes/JumpDrive.inc'); ?>
 <form class="standard" id="SelectXTypeForm" method="POST" action="">
 	<select name="xtype" onchange="this.form.submit()"><?php
 	foreach($AllXTypes as $EachXType) {
-		?><option value="<?php echo $EachXType; ?>"<?php if(isset($XType)&&$EachXType==$XType){ ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
+		?><option value="<?php echo $EachXType; ?>"<?php if(isset($XType)&&$EachXType==$XType) { ?> selected="selected"<?php } ?>><?php echo $EachXType; ?></option><?php
 	} ?>
 	</select>&nbsp;
 	<input type="submit" value="Select" />
@@ -85,58 +85,59 @@ if(isset($XType)) { ?>
 <h2>Stored destinations</h2>
 
 <script type="text/javascript">
-    function processCourse(s){
-        document.getElementById('plotCourseForm').to.value=s;
-        document.getElementById('plotCourseForm').submit();
-    }
+	function processCourse(sectorID) {
+		var plotCourseForm = document.getElementById('plotCourseForm');
+		plotCourseForm.to.value = sectorID;
+		plotCourseForm.submit();
+	}
 
-    function processRemove(s){
-        document.getElementById('manageDestination').playerTargetSectorId.value=s;
-        document.getElementById('manageDestination').type.value="delete";
-        document.getElementById('manageDestination').submit();
-    }
+	function processRemove(sectorID) {
+		var manageDestination = document.getElementById('manageDestination');
+		manageDestination.sectorId.value = sectorID;
+		manageDestination.type.value = 'delete';
+		manageDestination.submit();
+	}
 
-    $(document).ready(function(){
-        $('.draggableObject').draggable({ containment: 'parent' });
-        $('#droppableObject').droppable({
-            drop: function(event, ui){
-                var $this = $(this);
-                var droppedObject = ui.draggable.data('object');
-                $this.removeClass();
-                document.getElementById('manageDestination').playerTargetSectorId.value=droppedObject;
-                document.getElementById('manageDestination').offsetTop.value=ui.draggable.position().top;
-                document.getElementById('manageDestination').offsetLeft.value=ui.draggable.position().left;
-                document.getElementById('manageDestination').type.value="move";
-                document.getElementById('manageDestination').submit();
-        }});
-    });
+	$(function() {
+		$('.draggableObject').draggable({ containment: 'parent' });
+		$('#droppableObject').droppable({
+			drop: function(event, ui) {
+				var manageDestination = document.getElementById('manageDestination'),
+					sectorID = ui.draggable.data('sector-id'),
+					pos = ui.draggable.position();
+				manageDestination.sectorId.value = sectorID;
+				manageDestination.offsetTop.value = pos.top;
+				manageDestination.offsetLeft.value = pos.left;
+				manageDestination.type.value = 'move';
+				manageDestination.submit();
+			}
+		});
+	});
 </script>
-<div id="droppableObject" style="width:500px; height: 300px; position: relative; border:2px solid; border-radius:25px; border-color: #008000">
-
-  <?php foreach($StoredDestinations as $SD){ ?>
-    <div class="draggableObject <?php echo $SD['id'];?>"
-         style="padding: 1em;  display:inline; zoom:1;  border:2px solid; border-color: #008000; position: absolute; top:<?php echo $SD['offsetTop']?>px; left:<?php echo $SD['offsetLeft']?>px"
-         data-object="<?php echo $SD['id'];?> ">
-      <a href="javascript:processCourse(<?php echo $SD['sectorId'];?>)" > <?php echo $SD['label'] ?></a>
-      <a href="javascript:processRemove(<?php echo $SD['id'];?>)"> _</a>
-    </div>
-    <?php }?>
+<div id="droppableObject" class="savedDestinationArea"><?php
+	foreach($StoredDestinations as $SD) { ?>
+		<div class="draggableObject savedDestination"
+			style="top:<?php echo $SD['OffsetTop']; ?>px; left:<?php echo $SD['OffsetLeft']; ?>px"
+			data-sector-id="<?php echo $SD['SectorID']; ?> ">
+			<a href="javascript:processCourse(<?php echo $SD['SectorID'];?>)"> <?php echo $SD['Label']; ?></a>
+			<a href="javascript:processRemove(<?php echo $SD['SectorID'];?>)"> <img src="images/silk/cross.png" width="16" height="16" alt="X" title="Delete Saved Sector"/></a>
+		</div><?php
+	} ?>
 </div>
 
 <br/><br/>
 <h2>Add new destination</h2>
 
 <form class="standard" id="manageDestination" method="POST" action="<?php echo $ManageDestination; ?>">
-    <label for="sectorId">Destination</label> <input type="text" name="sectorId" value="1" size="4"/> &nbsp; &nbsp;
-    <label for="label">Label</label> <input type="text" name="label" value="" size="14"/> &nbsp;
-    <input type="hidden" name="type"    value="add"/>
-    <input type="hidden" name="playerTargetSectorId"    value=""/>
-    <input type="hidden" name="offsetTop"      value="0"/>
-    <input type="hidden" name="offsetLeft"      value="0"/>
-    <input type="submit" value="add destination"/>
+	<label for="sectorId">Destination</label> <input type="text" name="sectorId" value="1" size="4"/> &nbsp; &nbsp;
+	<label for="label">Label</label> <input type="text" name="label" value="" size="14"/> &nbsp;
+	<input type="hidden" name="type" value="add"/>
+	<input type="hidden" name="offsetTop" value="0"/>
+	<input type="hidden" name="offsetLeft" value="0"/>
+	<input type="submit" value="Add Destination"/>
 </form>
 
 <form  id="plotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">
-    <input type="hidden" name="from"    value="<?php echo $ThisPlayer->getSectorID(); ?>"/>
-    <input type="hidden" name="to"      value="1"/>
+	<input type="hidden" name="from" value="<?php echo $ThisPlayer->getSectorID(); ?>"/>
+	<input type="hidden" name="to" value="1"/>
 </form>
