@@ -120,8 +120,6 @@ if(isset($XType)) { ?>
       <a href="javascript:processCourse(<?php echo $SD['sectorId'];?>)" > <?php echo $SD['label'] ?></a>
       <a href="javascript:processRemove(<?php echo $SD['id'];?>)"> _</a>
     </div>
-
-
     <?php }?>
 </div>
 
