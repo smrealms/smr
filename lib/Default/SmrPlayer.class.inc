@@ -47,7 +47,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	protected $SQL;
 
-    protected $storedDestinations;
 
 //	public static function getPlayers($gameAccountIDArray,$forceUpdate = false) {
 //		global $CACHE_PLAYERS;
@@ -214,18 +213,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			throw new Exception('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
 		}
 
-        $this->storedDestinations = array();
-        $this->db->query("SELECT * from player_stored_sector where player_id=".$this->playerID);
-        while($this->db->nextRecord()){
-            $result = $this->db->getRow();
-            $sd = array();
-            $sd['id'] = $result['player_stored_sector_id'];
-            $sd['label'] = $result['label'];
-            $sd['sectorId'] = $result['sector_id'];
-            $sd['offsetTop'] = $result['offset_top'];
-            $sd['offsetLeft'] = $result['offset_left'];
-            $this->storedDestinations[] = $sd;
-        }
+
 	}
 
 	public function getSQL() {
@@ -1844,7 +1832,120 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
     public function getStoredDestinations(){
-        return $this->storedDestinations;
+        $storedDestinations = array();
+        $this->db->query("SELECT * from player_stored_sector where player_id=".$this->playerID);
+        while($this->db->nextRecord()){
+            $result = $this->db->getRow();
+            $sd = array();
+            $sd['id'] = $result['player_stored_sector_id'];
+            $sd['label'] = $result['label'];
+            $sd['sectorId'] = $result['sector_id'];
+            $sd['offsetTop'] = $result['offset_top'];
+            $sd['offsetLeft'] = $result['offset_left'];
+            $storedDestinations[] = $sd;
+        }
+        return $storedDestinations;
     }
+
+
+    function moveDestinationButton($playerTargetSectorId, $offsetTop, $offsetLeft, $db){
+
+        // perform some basic checks on both numbers
+        if (empty($playerTargetSectorId) ){
+            create_error('Which button do you want to move ?');
+        }
+
+        if (!is_numeric($playerTargetSectorId) ){
+            create_error('Your kidding me, or ?');
+        }
+
+        if (empty($offsetTop) ){
+            create_error('Dude, offsetTop not set; do you want to cheat ?');
+        }
+
+        if (empty($offsetLeft) ){
+            create_error('Dude, offsetLeft not set; do you want to cheat ?');
+        }
+
+        if( !is_numeric($offsetLeft) || !is_numeric($offsetTop)){
+            create_error('offset must be a number.');
+        }
+        $offsetTop = round($offsetTop);
+        $offsetLeft = round($offsetLeft);
+
+        if($offsetLeft < 0 || $offsetLeft > 800 || $offsetTop < 0 || $offsetTop > 800){
+            create_error('offset must be between 0 and 800.');
+        }
+
+        // target stored ?
+        $pd = null;
+        foreach($this->getStoredDestinations()  as $sd){
+            if($sd['id'] == $playerTargetSectorId){
+                $pd = $sd;
+                $sd['offsetTop']=$offsetTop;
+                $sd['offsetLeft']=$offsetLeft;
+            }
+        }
+
+        if(!$pd){
+            create_error('Dude, you do not own that button. ');
+        }
+
+        $query = "UPDATE player_stored_sector SET offset_left=".$db->escapeNumber($offsetLeft).", offset_top=".$db->escapeNumber($offsetTop)." WHERE player_stored_sector_id=".$db->escapeNumber($playerTargetSectorId);
+        $db->query($query);
+    }
+
+    function addDestinationButton($sectorId, $label, $db){
+
+        // perform some basic checks on both numbers
+        if (empty($sectorId) ){
+            create_error('Where do you want to go today?');
+        }
+
+        if (!is_numeric($sectorId)){
+            create_error('Please enter only numbers!');
+        }
+
+        if(SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorId) === false){
+                create_error("Sector is unknown or does not exist");
+        }
+
+        // sector already stored ?
+        foreach($this->getStoredDestinations() as $sd){
+            if($sd['sectorId'] == $sectorId){
+                create_error('Sector already stored!');
+            }
+        }
+
+        $query = "INSERT INTO player_stored_sector (player_id, sector_id, label, offset_top, offset_left) VALUES (".$db->escapeNumber($this->getPlayerID()).", ".$db->escapeNumber($sectorId).",".$db->escapeString($label,true).",1,1)";
+        $db->query($query);
+    }
+
+    function deleteDestinationButton($playerTargetSectorId, $db){
+
+        // perform some basic checks on both numbers
+        if (empty($playerTargetSectorId) ){
+            create_error('Which button do you want to move ?');
+        }
+
+        if (!is_numeric($playerTargetSectorId) ){
+            create_error('Your kidding me, or ?');
+        }
+
+        // target stored ?
+        $pd = null;
+        $storedDestinations = $this->getStoredDestinations();
+        foreach($storedDestinations as &$sd){
+            if($sd['id'] == $playerTargetSectorId){
+                $query = "DELETE FROM player_stored_sector where player_stored_sector_id=".$db->escapeNumber($playerTargetSectorId);
+                $db->query($query);
+                //unset($this->savedDestinations[$sd]);
+                //$this->savedDestinations = array_values($player->savedDestinations);
+                break;
+            }
+        }
+    }
+
+
 }
 ?>
