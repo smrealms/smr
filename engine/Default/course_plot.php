@@ -24,4 +24,11 @@ else if(!isset($var['XType']))
 	SmrSession::updateVar('XType','Technology');
 $template->assign('XType',$var['XType']);
 $template->assign('AllXTypes',array('Technology','Ships','Weapons','Locations','Goods'));
+
+
+// get saved destinations
+$template->assign('StoredDestinations',$player->getStoredDestinations());
+$container=create_container('course_destination_button_processing.php','');
+$container['target_page'] = 'course_plot.php';
+$template->assign('ManageDestination',SmrSession::getNewHREF($container));
 ?>

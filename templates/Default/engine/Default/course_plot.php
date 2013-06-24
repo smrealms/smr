@@ -79,3 +79,64 @@ if(isset($XType)) { ?>
 		<input type="submit" value="Go" />
 	</form><?php
 } ?>
+
+<br />
+<br />
+<h2>Stored destinations</h2>
+
+<script type="text/javascript">
+    function processCourse(s){
+        document.getElementById('plotCourseForm').to.value=s;
+        document.getElementById('plotCourseForm').submit();
+    }
+
+    function processRemove(s){
+        document.getElementById('manageDestination').playerTargetSectorId.value=s;
+        document.getElementById('manageDestination').type.value="delete";
+        document.getElementById('manageDestination').submit();
+    }
+
+    $(document).ready(function(){
+        $('.draggableObject').draggable({ containment: 'parent' });
+        $('#droppableObject').droppable({
+            drop: function(event, ui){
+                var $this = $(this);
+                var droppedObject = ui.draggable.data('object');
+                $this.removeClass();
+                document.getElementById('manageDestination').playerTargetSectorId.value=droppedObject;
+                document.getElementById('manageDestination').offsetTop.value=ui.draggable.position().top;
+                document.getElementById('manageDestination').offsetLeft.value=ui.draggable.position().left;
+                document.getElementById('manageDestination').type.value="move";
+                document.getElementById('manageDestination').submit();
+        }});
+    });
+</script>
+<div id="droppableObject" style="width:500px; height: 300px; position: relative; border:2px solid; border-radius:25px; border-color: #008000">
+
+  <?php foreach($StoredDestinations as $SD){ ?>
+    <div class="draggableObject <?php echo $SD['id'];?>"
+         style="padding: 1em;  display:inline; zoom:1;  border:2px solid; border-color: #008000; position: absolute; top:<?php echo $SD['offsetTop']?>px; left:<?php echo $SD['offsetLeft']?>px"
+         data-object="<?php echo $SD['id'];?> ">
+      <a href="javascript:processCourse(<?php echo $SD['sectorId'];?>)" > <?php echo $SD['label'] ?></a>
+      <a href="javascript:processRemove(<?php echo $SD['id'];?>)"> _</a>
+    </div>
+    <?php }?>
+</div>
+
+<br/><br/>
+<h2>Add new destination</h2>
+
+<form class="standard" id="manageDestination" method="POST" action="<?php echo $ManageDestination; ?>">
+    <label for="sectorId">Destination</label> <input type="text" name="sectorId" value="1" size="4"/> &nbsp; &nbsp;
+    <label for="label">Label</label> <input type="text" name="label" value="" size="14"/> &nbsp;
+    <input type="hidden" name="type"    value="add"/>
+    <input type="hidden" name="playerTargetSectorId"    value=""/>
+    <input type="hidden" name="offsetTop"      value="0"/>
+    <input type="hidden" name="offsetLeft"      value="0"/>
+    <input type="submit" value="add destination"/>
+</form>
+
+<form  id="plotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">
+    <input type="hidden" name="from"    value="<?php echo $ThisPlayer->getSectorID(); ?>"/>
+    <input type="hidden" name="to"      value="1"/>
+</form>
