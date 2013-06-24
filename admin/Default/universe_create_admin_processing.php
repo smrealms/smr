@@ -111,11 +111,12 @@ $max_sector = $db->getField('MAX(sector_id)');
 
 for ($i = $min_sector; $i <= $max_sector; $i++) {
 
-    //if this is our home sector we dont add it.
-    if ($i == $home_sector_id)
-        continue;
+	//if this is our home sector we dont add it.
+	if ($i == $home_sector_id) {
+		continue;
+	}
 
-    $db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES (' . $_POST['admin_id'] . ', ' . $var['game_id'] . ', '.$i.')');
+	$db->query('INSERT INTO player_visited_sector (account_id, game_id, sector_id) VALUES (' . $_POST['admin_id'] . ', ' . $var['game_id'] . ', '.$i.')');
 
 }
 

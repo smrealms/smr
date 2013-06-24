@@ -8,13 +8,12 @@ $db->query('SELECT * FROM message_notify');
 $container = array();
 $container['url'] = 'notify_delete_processing.php';
 if ($db->getNumRows()) {
-    $PHP_OUTPUT.=create_echo_form($container);
-    $PHP_OUTPUT.=('<br />');
-    $PHP_OUTPUT.=('Click either name to reply<br />');
-    $PHP_OUTPUT.=('<table width="100%" class="standard">');
+	$PHP_OUTPUT.=create_echo_form($container);
+	$PHP_OUTPUT.=('<br />');
+	$PHP_OUTPUT.=('Click either name to reply<br />');
+	$PHP_OUTPUT.=('<table width="100%" class="standard">');
 
-    while($db->nextRecord())
-    {
+	while($db->nextRecord()) {
 		$PHP_OUTPUT.=('<tr>');
 		$notify_id = $db->getField('notify_id');
 		$PHP_OUTPUT.=('<td><input type="checkbox" name="notify_id[]" value="'.$notify_id.'"></td>');
@@ -69,13 +68,13 @@ if ($db->getNumRows()) {
 		$PHP_OUTPUT.=bbifyMessage($message);
 		$PHP_OUTPUT.=('</td></tr>');
 
-    }
+	}
 
-    $PHP_OUTPUT.=('</table>');
-    $PHP_OUTPUT.=create_submit('Delete');
-    $PHP_OUTPUT.=('</form>');
+	$PHP_OUTPUT.=('</table>');
+	$PHP_OUTPUT.=create_submit('Delete');
+	$PHP_OUTPUT.=('</form>');
 
 } else
-    $PHP_OUTPUT.=('There are no reported Messages.');
+	$PHP_OUTPUT.=('There are no reported Messages.');
 
 ?>

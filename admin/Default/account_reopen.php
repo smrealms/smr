@@ -11,7 +11,7 @@ if ($action == 'Reopen and add to exceptions') {
 		$curr_exception = $exception[$id];
 		$bannedAccount =& SmrAccount::getAccount($id);
 		$bannedAccount->unbanAccount($account,$curr_exception);
-    }
+	}
 }
 else {
 	foreach ($account_id as $id) {

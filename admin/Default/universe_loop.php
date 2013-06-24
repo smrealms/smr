@@ -9,8 +9,9 @@ $PHP_OUTPUT.=('<select name="game_id" size="1" id="InputFields">');
 
 $db->query('SELECT * FROM game ORDER BY game_id');
 
-while ($db->nextRecord())
-    $PHP_OUTPUT.=('<option value="' . $db->getField('game_id') . '">' . $db->getField('game_name') . '</option>');
+while ($db->nextRecord()) {
+	$PHP_OUTPUT.=('<option value="' . $db->getField('game_id') . '">' . $db->getField('game_name') . '</option>');
+}
 
 $PHP_OUTPUT.=('</select>');
 $PHP_OUTPUT.=create_submit('Next >>');
