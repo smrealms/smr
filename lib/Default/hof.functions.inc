@@ -157,4 +157,5 @@ function buildBreadcrumb(&$var,&$hofTypes,$hofName) {
 	$viewing.= '<br /><br />';
 	return $viewing;
 }
+
 ?>

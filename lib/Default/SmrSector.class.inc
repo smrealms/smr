@@ -767,6 +767,7 @@ class SmrSector {
 	public function &getFightingTradersAgainstPort(AbstractSmrPlayer &$attackingPlayer, SmrPort &$defendingPort) {
 		$fightingPlayers = array();
 		$alliancePlayers =& SmrPlayer::getSectorPlayersByAlliances($this->getGameID(),$this->getSectorID(), array($attackingPlayer->getAllianceID()));
+        if(count($fightingPlayers)==0) return array($attackingPlayer);
 		if(count($alliancePlayers) > 0)
 			foreach($alliancePlayers as $accountID => $player) {
 				if($player->canFight()) {

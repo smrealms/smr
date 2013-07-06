@@ -1,6 +1,7 @@
 <?php
 $template->assign('PageTopic','Trader Status');
 
+require_once(get_file_loc('Rankings.inc'));
 require_once(get_file_loc('menu.inc'));
 create_trader_menu();
 
@@ -119,6 +120,10 @@ $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">User Ranking</sp
 $PHP_OUTPUT.= '<br />You are ranked as a <span class="green">';
 $PHP_OUTPUT.= $account->getRankName();
 $PHP_OUTPUT.= '</span> player.<br /><br />';
+
+$ranking = Rankings::getPlayerOperationScore($db,$player);
+$PHP_OUTPUT.='<span class="bold">Operations: <span>';
+$PHP_OUTPUT.='<span class="green">'.$ranking['score']." (".$ranking['currRanking'].")" ;
 $PHP_OUTPUT.= '</td></tr></table><br />';
 
 $container = array();

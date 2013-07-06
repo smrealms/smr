@@ -80,6 +80,12 @@ if($player->isDead()) {
 	$container['override_death'] = TRUE;
 }
 
+if ($port->isDestroyed()) {
+    foreach($attackers as &$attacker) {
+        $attacker->addOperationScore($port);
+    }
+}
+
 $container['results'] = $serializedResults;
 forward($container);
 

@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by JetBrains PhpStorm.
- * User: tmaus
- * Date: 03.07.13
- * Time: 15:40
- * To change this template use File | Settings | File Templates.
- */
 
 class HoF {
     private function __construct() {
@@ -14,25 +7,37 @@ class HoF {
 
 
     public static function getHofRanking(SmrMySqlDatabase &$db, $order){
+        $subselect = null;
         switch($order){
             case 1:
-                $order = "SUM(EXPERIENCE) DESC";
-                break;
-            case 2:
-                $order = "SUM(po.score) DESC";
+                $order = "a.login";
                 break;
             case 3:
+                $order = "SUM(EXPERIENCE) DESC";
+                $subselect = ",(SELECT label FROM ranking WHERE experience <= SUM(p.experience) ORDER BY experience DESC LIMIT 1 ) AS ranking";
+                break;
+            case 5:
+                $order = "SUM(po.score) DESC";
+                $subselect = ",(SELECT label FROM ranking WHERE operation <= SUM(po.score) ORDER BY operation DESC LIMIT 1 ) AS ranking";
+                break;
+            case 7:
                 $order = "SUM(p.kills) DESC";
+                $subselect = ",(SELECT label FROM ranking WHERE kills <= SUM(p.kills) ORDER BY kills DESC LIMIT 1 ) AS ranking";
                 break;
             default:
                 $order = "SUM(EXPERIENCE) DESC";
+                $subselect = ",(SELECT label FROM ranking WHERE experience <= SUM(p.experience) ORDER BY experience DESC LIMIT 1 ) AS ranking";
         }
         $arr = array();
-        $query = "SELECT p.account_id AS accountId,  SUM(po.score) AS operation, SUM(p.experience), SUM(p.kills) as kills "
-                 ." FROM player_operation po, player p "
+        $query = "SELECT a.login AS login, p.account_id AS accountId,  SUM(po.score) AS operation, SUM(p.experience) AS experience, SUM(p.kills) AS kills";
+        if($subselect){
+            $query .= $subselect;
+        }
+        $query .= " FROM player_operation po, player p, account a "
                  ." WHERE  p.player_id=po.player_id "
-                 ." GROUP BY  account_id "
-                 . $order;
+                 ." AND a.account_id=p.account_id "
+                 ." GROUP BY  a.account_id "
+                 ." ORDER BY " . $order;
 
         $db->query($query);
 

@@ -1946,6 +1946,29 @@ class SmrPlayer extends AbstractSmrPlayer {
         }
     }
 
+    public function addOperationScore($target){
+        $type = "unknown";
+
+        if($target instanceof SmrPort){
+            $score = $this->getGame()->getPortLevelMultiplier()*$target->getLevel();
+            $type = 'port';
+        }else if ($target instanceof SmrPlanet){
+            $score = round($this->getGame()->getPlanetLevelMultiplier()*$target->getLevel());
+            $type = 'planet';
+        }else{
+            return;
+        }
+
+        $query = "INSERT INTO player_operation (game_id, player_id, sector_id, type, score, created_at) VALUES ("
+            .$this->db->escapeNumber($this->gameID).","
+            .$this->db->escapeNumber($this->playerID).","
+            .$this->db->escapeNumber($this->sectorID).","
+            .$this->db->escapeString($type).","
+            .$this->db->escapeNumber($score).","
+            .time().")";
+        $this->db->query($query);
+
+    }
 
 }
 ?>

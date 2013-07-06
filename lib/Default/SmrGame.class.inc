@@ -28,6 +28,10 @@ class SmrGame {
 	protected $hasChanged = false;
 	protected $isNew = false;
 
+    // hof related attributes
+    protected $portLevelMultiplier = 3;
+    protected $planetLevelMultiplier = 2;
+
 	public static function &getGame($gameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_GAMES[$gameID])) {
 			$g = new SmrGame($gameID);
@@ -340,6 +344,14 @@ class SmrGame {
 	public function equals(SmrGame $otherGame) {
 		return $otherGame->getGameID()==$this->getGameID();
 	}
+
+    public function getPortLevelMultiplier(){
+        return $this->portLevelMultiplier;
+    }
+
+    public function getPlanetLevelMultiplier(){
+        return $this->planetLevelMultiplier;
+    }
 }
 
 ?>

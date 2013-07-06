@@ -99,6 +99,12 @@ if($player->isDead()) {
 	$container['override_death'] = TRUE;
 }
 
+if ($planet->isDestroyed()) {
+    foreach($attackers as &$attacker) {
+        $attacker->addOperationScore($planet);
+    }
+}
+
 $container['results'] = $serializedResults;
 forward($container);
 ?>
