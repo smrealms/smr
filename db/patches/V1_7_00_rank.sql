@@ -1,0 +1,1 @@
+INSERT INTO permission (permission_name,link_to) VALUES ('HOF Management','hof_manage.php');
