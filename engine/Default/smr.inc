@@ -439,11 +439,12 @@ function makeBold($value) {
 //
 //}
 
+/*
 function hex2bin( $data ) {
 	$len = strlen( $data );
 	return pack( 'H' . $len, $data );
 }
-
+*/
 function word_filter($string) {
 	static $words;
 
@@ -786,7 +787,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	}
 
 	if (SmrSession::$account_id > 0 && empty($var['logoff'])) {
-		$container = create_container('skeleton.php', 'hall_of_fame_new.php');
+		$container = create_container('skeleton.php', 'hof.php');
 		$template->assign('HallOfFameLink',SmrSession::getNewHREF($container));
 
 		$template->assign('AccountID',SmrSession::$account_id);
