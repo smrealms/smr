@@ -11,3 +11,8 @@ ADD INDEX game_id (
 ALTER TABLE message ADD INDEX (
 	message_type_id
 );
+
+-- This index is used on logging in, to expire out of date messages.
+ALTER TABLE message ADD INDEX (
+	expire_time
+);
