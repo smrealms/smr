@@ -242,16 +242,10 @@ try {
 	//check to see if we need to remove player_has_unread
 	$db2 = new SmrMySqlDatabase();
 	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
-	$db2->query('SELECT game_id, message_type_id FROM message WHERE account_id = '.$db->escapeNumber($account->getAccountID()).' AND msg_read = \'FALSE\' AND receiver_delete = \'FALSE\'');
-
-	while ($db2->nextRecord())
-		$db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES (' . $db->escapeNumber($db2->getInt('game_id')) . ', '.$db->escapeNumber($account->getAccountID()).', ' . $db->escapeNumber($db2->getInt('message_type_id')) . ')');
-	//if (!empty($_POST['return_page'])) {
-	//echo 'DAMN';
-	//	header('Location: ' . $_POST['return_page']);
-	//	exit;
-	//
-	//}
+	$db2->query('
+		INSERT INTO player_has_unread_messages (game_id, account_id, message_type_id)
+		SELECT game_id, account_id, message_type_id FROM message WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND msg_read = ' . $db->escapeBoolean(false) . ' AND receiver_delete = ' . $db->escapeBoolean(false)
+	);
 
 	header('Location: '.$href);
 	exit;
