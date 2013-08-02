@@ -238,7 +238,7 @@ try {
 	//get rid of expired messages
 	$db2->query('UPDATE message SET receiver_delete = \'TRUE\', sender_delete = \'TRUE\', expire_time = 0 WHERE expire_time < '.$db->escapeNumber(TIME).' AND expire_time != 0');
 	// Mark message as read if it was sent to self as a mass mail.
-	$db2->query('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
+	$db2->query('UPDATE message SET msg_read = \'TRUE\' WHERE account_id = ' . $db->escapeNumber($account->getAccountID()) . ' AND account_id = sender_id AND message_type_id IN (' . $db->escapeArray(array(MSG_ALLIANCE, MSG_GLOBAL, MSG_POLITICAL)) . ');');
 	//check to see if we need to remove player_has_unread
 	$db2 = new SmrMySqlDatabase();
 	$db2->query('DELETE FROM player_has_unread_messages WHERE account_id = '.$db->escapeNumber($account->getAccountID()));
