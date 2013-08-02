@@ -12,7 +12,7 @@ if (empty($gameID)) {
 }
 else {
 	$container = create_container('admin_message_send_processing.php');
-	$container['GameID'] = $gameID;
+	$container['SendGameID'] = $gameID;
 	$template->assign('AdminMessageSendFormHref',SmrSession::getNewHREF($container));
 	$template->assign('MessageGameID',$gameID);
 	$template->assign('ExpireTime', 1);
