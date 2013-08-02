@@ -1,5 +1,5 @@
 -- This is to remove message_type_id from this index, it's getting its own index.
-ALTER TABLE smr_live.message
+ALTER TABLE message
 DROP INDEX game_id,
 ADD INDEX game_id (
 	game_id
