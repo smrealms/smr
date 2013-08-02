@@ -184,10 +184,13 @@
 							</a><br /><br />
 							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getOpenIdLoginUrl('Google')); ?>">
 								<img alt="Google Login" src="images/login/google.png">
-							</a>&nbsp;
+							</a>
+							<?php /*
 							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getTwitterLoginUrl()); ?>">
 								<img alt="Twiiter Login" src="images/login/twitter.png">
 							</a>
+							*/
+							?>
 						</span>
 					</td>
 					<td style="width:470px"><?php
