@@ -1854,31 +1854,18 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	function moveDestinationButton($sectorID, $offsetTop, $offsetLeft) {
 
-		// perform some basic checks on both numbers
-		if (empty($sectorID)) {
-			create_error('Which button do you want to move ?');
-		}
-
-		if (!is_numeric($sectorID)) {
-			create_error('Your kidding me, or ?');
-		}
-
-		if (empty($offsetTop)) {
-			create_error('Dude, offsetTop not set; do you want to cheat ?');
-		}
-
-		if (empty($offsetLeft)) {
-			create_error('Dude, offsetLeft not set; do you want to cheat ?');
+		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorId) === false) {
+			create_error('You want to move a non-existent sector?');
 		}
 
 		if( !is_numeric($offsetLeft) || !is_numeric($offsetTop)) {
-			create_error('offset must be a number.');
+			create_error('The position of the saved sector must be numeric!.');
 		}
 		$offsetTop = round($offsetTop);
 		$offsetLeft = round($offsetLeft);
 
-		if($offsetLeft < 0 || $offsetLeft > 800 || $offsetTop < 0 || $offsetTop > 800) {
-			create_error('offset must be between 0 and 800.');
+		if($offsetLeft < 0 || $offsetLeft > 500 || $offsetTop < 0 || $offsetTop > 300) {
+			create_error('The saved sector must be in the box!');
 		}
 
 		$storedDestinations =& $this->getStoredDestinations();
@@ -1897,22 +1884,13 @@ class SmrPlayer extends AbstractSmrPlayer {
 			}
 		}
 
-		create_error('Dude, you do not own that button. ');
+		create_error('You do not have a saved sector for #' . $sectorID);
 	}
 
 	function addDestinationButton($sectorId, $label) {
 
-		// perform some basic checks on both numbers
-		if (empty($sectorId)) {
-			create_error('Where do you want to go today?');
-		}
-
-		if (!is_numeric($sectorId)) {
-			create_error('Please enter only numbers!');
-		}
-
-		if(SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorId) === false) {
-			create_error("Sector is unknown or does not exist");
+		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorId) === false) {
+			create_error('You want to add a non-existent sector?');
 		}
 
 		// sector already stored ?
@@ -1936,13 +1914,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 	}
 
 	function deleteDestinationButton($sectorID) {
-		// perform some basic checks on both numbers
-		if (empty($sectorID)) {
-			create_error('Which button do you want to move ?');
-		}
-
-		if (!is_numeric($sectorID)) {
-			create_error('Your kidding me, or ?');
+		if (!is_numeric($sectorID) || $sectorID < 1) {
+			create_error('You want to remove a non-existent sector?');
 		}
 
 		foreach($this->getStoredDestinations() as $key => $sd) {
@@ -1959,7 +1932,5 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 		return false;
 	}
-
-
 }
 ?>
