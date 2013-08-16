@@ -21,6 +21,7 @@ UPDATE weapon_type SET cost = 82750 WHERE weapon_name = 'Thevian Assault Laser';
 UPDATE weapon_type SET cost = 84000 WHERE weapon_name = 'Alskant Space Flechette';
 UPDATE weapon_type SET cost = 80000 WHERE weapon_name = 'Ik-Thorne Burst Laser System';
 UPDATE weapon_type SET cost = 79500 WHERE weapon_name = 'WQ Human Multi-Phase Laser';
+UPDATE weapon_type SET buyer_restriction = 3 WHERE weapon_name = 'Newbie Pulse Laser';
 UPDATE weapon_type SET cost = 76000 WHERE weapon_name = 'Pulse Laser';
 UPDATE weapon_type SET cost = 59000 WHERE weapon_name = 'Nijarin Ion Disrupter';
 UPDATE weapon_type SET cost = 59000 WHERE weapon_name = 'Large Laser';

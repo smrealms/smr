@@ -33,6 +33,8 @@ if (!isset($var['OrderID'])) {
 		create_error('You can\'t buy evil weapons!');
 	} else if ($weapon->getBuyerRestriction() == 1 && $player->getAlignment() < 100) {
 		create_error('You can\'t buy good weapons!');
+	} else if ($weapon->getBuyerRestriction() == 3 && !$player->getAccount()->isNewbie()) {
+		create_error('You can\'t buy newbie weapons!');
 	}
 
 	// take the money from the user

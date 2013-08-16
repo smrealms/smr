@@ -58,12 +58,19 @@ try {
 	    $stat[] = $db->getInt('armour_damage');
 	    $stat[] = $db->getInt('accuracy');
 	    $stat[] = $db->getInt('power_level');
-		if ($db->getInt('buyer_restriction') == 1)
-	    	$restriction = '<font color="green">Good</font>';
-		elseif ($db->getInt('buyer_restriction') == 2)
-	    	$restriction = '<font color="red">Evil</font>';
-		else
-	    	$restriction = '&nbsp;';
+		switch($db->getInt('buyer_restriction')) {
+			case 1:
+		    	$restriction = '<font color="green">Good</font>';
+			break;
+			case 2:
+				$restriction = '<font color="red">Evil</font>';
+			break;
+			case 3:
+				$restriction = '<font color="#06F">Newbie</font>';
+			break;
+			default:
+		    	$restriction = '&nbsp;';
+		}
 	    $stat[] = $restriction;
 	
 	    echo ('<tr>');
