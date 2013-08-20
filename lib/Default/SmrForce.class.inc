@@ -316,6 +316,13 @@ class SmrForce {
 		return $turns;
 	}
 
+	public function getAttackTurnCost(AbstractSmrShip &$ship) {
+		if($ship->isFederal() || $ship->hasDCS()) {
+			return 2;
+		}
+		return 3;
+	}
+
 	public function getOwnerID() {
 		return $this->ownerID;
 	}

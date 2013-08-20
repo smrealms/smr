@@ -25,7 +25,7 @@ if (($ship->getAttackRating() > 0 || $ship->getCDs() > 0) &&
 	transfer('target');
 	transfer('owner_id');
 	$PHP_OUTPUT.=create_echo_form($container);
-	$PHP_OUTPUT.=create_submit('Attack Forces (3)');
+	$PHP_OUTPUT.=create_submit('Attack Forces (' . $forces->getAttackTurnCost($ship) . ')');
 	$PHP_OUTPUT.=('</form><br />');
 
 } elseif ($player->hasFederalProtection())
