@@ -1,4 +1,8 @@
 <?php
+$turns = 3;
+if($ship->isFederal() || $ship->hasDCS()) {
+	$turns = 2;
+}
 
 if ($player->hasNewbieTurns())
 	create_error('You are under newbie protection!');
@@ -6,7 +10,7 @@ if($player->hasFederalProtection())
 	create_error('You are under federal protection.');
 if($player->isLandedOnPlanet())
 	create_error('You cannot attack forces whilst on a planet!');
-if ($player->getTurns() < 3)
+if ($player->getTurns() < $turns)
 	create_error('You do not have enough turns to attack these forces!');
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
@@ -23,7 +27,7 @@ if($player->forceNAPAlliance($forceOwner))
 	create_error('You have a force NAP, you cannot attack these forces!');
 
 // take the turns
-$player->takeTurns(3,1);
+$player->takeTurns($turns, 1);
 
 // delete plotted course
 $player->deletePlottedCourse();

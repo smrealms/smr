@@ -22,7 +22,7 @@ if($player->forceNAPAlliance($forceOwner))
 // delete plotted course
 $player->deletePlottedCourse();
 
-$player->takeTurns($forces->getBumpTurnCost());
+$player->takeTurns($forces->getBumpTurnCost($ship));
 
 
 // send message if scouts are present
