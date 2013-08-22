@@ -44,4 +44,4 @@ UPDATE ship_type SET speed = 11 WHERE ship_type_id = 31;
 UPDATE ship_type SET speed = 9 WHERE ship_type_id = 6;
 
 -- Thief to 175 holds
-UPDATE ship_type_support_hardware SET max_amount = 175 WHERE ship_type_id = 23 AND hardware_type_id = 1;
+UPDATE ship_type_support_hardware SET max_amount = 175 WHERE ship_type_id = 23 AND hardware_type_id = 3;
