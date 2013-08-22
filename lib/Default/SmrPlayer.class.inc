@@ -1854,7 +1854,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	function moveDestinationButton($sectorID, $offsetTop, $offsetLeft) {
 
-		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorId) === false) {
+		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorID) === false) {
 			create_error('You want to move a non-existent sector?');
 		}
 
@@ -1887,29 +1887,29 @@ class SmrPlayer extends AbstractSmrPlayer {
 		create_error('You do not have a saved sector for #' . $sectorID);
 	}
 
-	function addDestinationButton($sectorId, $label) {
+	function addDestinationButton($sectorID, $label) {
 
-		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorId) === false) {
+		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorID) === false) {
 			create_error('You want to add a non-existent sector?');
 		}
 
 		// sector already stored ?
 		foreach($this->getStoredDestinations() as $sd) {
-			if($sd['SectorID'] == $sectorId) {
+			if($sd['SectorID'] == $sectorID) {
 				create_error('Sector already stored!');
 			}
 		}
 
 		$this->storedDestinations[] = array(
 			'Label' => $label,
-			'SectorID' => (int)$sectorId,
+			'SectorID' => (int)$sectorID,
 			'OffsetTop' => 1,
 			'OffsetLeft' => 1
 		);
 
 		$this->db->query('
 			INSERT INTO player_stored_sector (account_id, game_id, sector_id, label, offset_top, offset_left)
-			VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($sectorId) . ',' . $this->db->escapeString($label, true) . ',1,1)'
+			VALUES (' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($sectorID) . ',' . $this->db->escapeString($label, true) . ',1,1)'
 		);
 	}
 
