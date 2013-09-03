@@ -385,6 +385,9 @@ class SmrPort {
 		while($this->getLevel()<$level) {
 			$this->doUpgrade();
 		}
+		while($this->getLevel()>$level) {
+			$this->doDowngrade();
+		}
 	}
 	
 	protected function selectAndAddGood($goodClass) {
@@ -630,7 +633,11 @@ class SmrPort {
 		$this->combatDrones=$combatDrones;
 		$this->hasChanged=true;
 	}
-	
+
+	public function setCreditsToDefault() {
+		$this->setCredits(($this->getLevel()-1)*2000000);
+	}
+
 	public function setCredits($credits) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');

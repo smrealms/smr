@@ -235,7 +235,7 @@ elseif ($submit == 'Create Ports and Mines') {
 				$port =& $galSector->createPort();
 				$port->setRaceID($raceID);
 				$port->upgradeToLevel($i);
-				$port->addCredits(($port->getLevel()-1)*2000000);
+				$port->setCreditsToDefault();
 			}
 		}
 		SmrPort::savePorts();
@@ -292,13 +292,15 @@ elseif ($submit == 'Edit Sector') {
 	else $sector->removePlanet();
 	//update port
 	if ($_POST['port_level'] > 0) {
-		if(!$sector->hasPort() || $sector->getPort()->getLevel()!=$_POST['port_level']) {
-			$sector->removePort();
+		if(!$sector->hasPort()) {
 			$port =& $sector->createPort();
-			$port->upgradeToLevel($_POST['port_level']);
 		}
 		else {
 			$port =& $sector->getPort();
+		}
+		if ($port->getLevel()!=$_POST['port_level']) {
+			$port->upgradeToLevel($_POST['port_level']);
+			$port->setCreditsToDefault();
 		}
 		$port->setRaceID($_POST['port_race']);
 		$port->update();
