@@ -162,7 +162,6 @@ class Rankings {
     }
 
     public static function getAccountRanking(SmrMySqlDatabase &$db, &$account){
-        $rankings = Rankings::getRankings($db);
 
         $db->query("SELECT SUM(score) operation FROM player_operation po,  account a "
             ." WHERE po.account_id=a.account_id "

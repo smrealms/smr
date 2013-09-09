@@ -18,7 +18,6 @@ foreach($gameRankings as $rank=>$obj){
         break;
     }
 }
-
 $template->assign('OurRank', $ourRank);
 
 $totalPlayers = $player->getGame()->getTotalPlayers();

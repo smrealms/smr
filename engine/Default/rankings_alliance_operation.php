@@ -16,7 +16,6 @@ if ($player->hasAlliance()) {
             break;
         }
     }
-
 }
 
 $template->assign('OurRank', $ourRank);

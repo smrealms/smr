@@ -180,7 +180,6 @@ function create_ranking_menu($active_level1 = 0, $active_level2 = 0) {
 
 	$menu[] = $menu_item;
 
-
 	$menu_item = array();
 	$menu_item['entry'] = create_link(create_container('skeleton.php', 'rankings_race.php'), 'Racial Standings','nav');
 

@@ -1967,7 +1967,6 @@ class SmrPlayer extends AbstractSmrPlayer {
             .$this->db->escapeNumber($score).","
             .time().")";
         $this->db->query($query);
-
     }
 
 }
