@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS ranking(
 
 CREATE TABLE IF NOT EXISTS player_operation(
   player_operation_id int(10) not null auto_increment,
-  player_id int(10) not null,
+  account_id int(10) not null,
   sector_id int(10) not null,
   game_id int(10) not null,
   type varchar(24) not null,

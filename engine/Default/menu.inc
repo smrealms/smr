@@ -173,7 +173,7 @@ function create_ranking_menu($active_level1 = 0, $active_level2 = 0) {
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_profit.php'), 'Profit','nav');
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_kills.php'), 'Kills','nav');
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_death.php'), 'Death','nav');
-    $menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_operation.php'), 'Death','nav');
+    $menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_operation.php'), 'Operations','nav');
 	$menu_subitem[] = create_link(create_container('skeleton.php', 'rankings_alliance_vs_alliance.php'), 'Versus','nav');
 
 	$menu_item['submenu'] = $menu_subitem;

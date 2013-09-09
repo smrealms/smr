@@ -1959,9 +1959,9 @@ class SmrPlayer extends AbstractSmrPlayer {
             return;
         }
 
-        $query = "INSERT INTO player_operation (game_id, player_id, sector_id, type, score, created_at) VALUES ("
+        $query = "INSERT INTO player_operation (game_id, account_id, sector_id, type, score, created_at) VALUES ("
             .$this->db->escapeNumber($this->gameID).","
-            .$this->db->escapeNumber($this->playerID).","
+            .$this->db->escapeNumber($this->accountID).","
             .$this->db->escapeNumber($this->sectorID).","
             .$this->db->escapeString($type).","
             .$this->db->escapeNumber($score).","

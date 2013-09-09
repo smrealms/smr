@@ -164,18 +164,17 @@ class Rankings {
     public static function getAccountRanking(SmrMySqlDatabase &$db, &$account){
         $rankings = Rankings::getRankings($db);
 
-        $db->query("SELECT SUM(score) operation FROM player_operation po, player p, account a "
-            ." WHERE po.player_id=p.player_id "
-            ." AND p.account_id=a.account_id "
+        $db->query("SELECT SUM(score) operation FROM player_operation po,  account a "
+            ." WHERE po.account_id=a.account_id "
             ." AND a.account_id=".$db->escapeNumber($account->getAccountID()));
 
-        $operation = ($db->nextRecord())? $db->fetch_row()['operation'] : 0;
-
+        $row = $db->fetch_row();
+        return ($row)? $row['operation'] : 0;
     }
 
     public static function getPlayerOperationScore(SmrMySqlDatabase &$db, &$player){
         $retVal = array();
-        $query = "SELECT sum(score) AS score FROM player_operation WHERE player_id=". $player->getPlayerID();
+        $query = "SELECT sum(score) AS score FROM player_operation WHERE account_id=". $player->getAccountID();
         $db->query($query);
         if($db->nextRecord()){
             $retVal['score'] = $db->getRow()['score'];
@@ -197,10 +196,9 @@ class Rankings {
 
     public static function getGamePlayerOperationRanking(SmrMySqlDatabase &$db, $gameId){
         $arr = array();
-        $query = "SELECT p.account_id, po.player_id, SUM(po.score) AS amount FROM player_operation po, player p "
-                    ." WHERE po.game_id=".$db->escapeNumber($gameId)
-                    ." AND p.player_id=po.player_id "
-                    ." GROUP BY p.account_id "
+        $query = "SELECT account_id,  SUM(score) AS amount FROM player_operation  "
+                    ." WHERE game_id=".$db->escapeNumber($gameId)
+                    ." GROUP BY account_id "
                     ." ORDER BY SUM(score) DESC";
         $db->query($query);
 
@@ -242,13 +240,17 @@ class Rankings {
 
     public static function getGameAllianceOperationRanking(SmrMySqlDatabase &$db, &$gameId){
         $arr = array();
-        $query =    " SELECT a.alliance_name, p.alliance_id,   SUM(po.score) as amount"
-                   ." FROM player_operation po, player p, alliance a "
-                   ." WHERE po.game_id=".$db->escapeNumber($gameId)
-                   ." AND p.player_id=po.player_id "
-                   ." AND p.alliance_id > 0 "
-                   ." GROUP BY p.alliance_id "
-                   ." ORDER BY SUM(score) DESC";
+        $query = " SELECT  a.alliance_name, p.alliance_id, SUM(po.score) as amount"
+                ." FROM player_operation po, alliance a,  player p "
+                ." WHERE po.game_id= ".$db->escapeNumber($gameId)
+				." AND a.game_id=".$db->escapeNumber($gameId)
+                ." AND p.alliance_id > 0 "
+                ." AND po.account_id = p.account_id "
+			    ." AND po.game_id = p.game_id "
+			    ." AND p.alliance_id = a.alliance_id "
+                ." GROUP BY p.alliance_id "
+                ." ORDER BY SUM(score) DESC";
+
         $db->query($query);
 
         while($db->nextRecord()){

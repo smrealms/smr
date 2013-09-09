@@ -13,7 +13,7 @@ $gameRankings = Rankings::getGamePlayerOperationRanking($db, $player->getGameID(
 
 $ourRank = 1;
 foreach($gameRankings as $rank=>$obj){
-    if($obj['player_id']==$player->getPlayerID()){
+    if($obj['account_id']==$player->getAccountID()){
         $ourRank = $rank+1;
         break;
     }

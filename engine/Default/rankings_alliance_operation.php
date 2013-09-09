@@ -4,7 +4,7 @@ $template->assign('PageTopic','Alliance Operation Rankings');
 
 require_once(get_file_loc('Rankings.inc'));
 require_once(get_file_loc('menu.inc'));
-create_ranking_menu(0, 0);
+create_ranking_menu(1, 3);
 
 $gameRankings = Rankings::getGameAllianceOperationRanking($db, $player->getGameID());
 
