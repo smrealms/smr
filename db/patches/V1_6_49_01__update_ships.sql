@@ -36,8 +36,9 @@ UPDATE ship_type SET cost = 235900, hardpoint = 12 WHERE ship_type_id = 71;
 -- Federal Discovery to 1,335,689 credits and 4 hardpoints
 UPDATE ship_type_support_hardware SET cost = 1335689, hardpoint = 4 WHERE ship_type_id = 20;
 
--- Juggernaut to 5,404,130 credits and 6 hardpoints
+-- Juggernaut to 5,404,130 credits, 6 hardpoints and 1300 armour
 UPDATE ship_type_support_hardware SET cost = 5404130, hardpoint = 6 WHERE ship_type_id = 37;
+UPDATE ship_type_support_hardware SET max_amount = 1300 WHERE ship_type_id = 37 AND hardware_type_id = 2;
 
 -- Vindicator to 6,400,000 credits
 UPDATE ship_type_support_hardware SET cost = 6400000 WHERE ship_type_id = 74;
