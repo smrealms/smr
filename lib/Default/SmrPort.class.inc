@@ -20,7 +20,7 @@ class SmrPort {
 	);
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
-	const GOODS_TRADED_MONEY_MULTIPLIER = 10;
+	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
 	
 	protected $db;
 	
@@ -349,7 +349,9 @@ class SmrPort {
 	}
 
 	protected function tradeGoods(array &$good, $goodsTraded, $exp) {
-		$this->increaseUpgrade($goodsTraded * self::GOODS_TRADED_MONEY_MULTIPLIER);
+		$goodsTradedMoney = $goodsTraded * self::GOODS_TRADED_MONEY_MULTIPLIER;
+		$this->increaseUpgrade($goodsTradedMoney);
+		$this->increaseCredits($goodsTradedMoney);
 		$this->increaseExperience($exp);
 		$this->decreaseGood($good,$goodsTraded,true);
 	}
