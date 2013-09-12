@@ -888,9 +888,9 @@ class SmrPort {
 //		$relations_factor_buy = 2-(($relations + 500) / 1500);
 //		$relations_factor_sell = ($relations + 500) / 1500;
 		if($transactionType == 'Sell')
-			$idealPrice = round(.75 * $numGoods * $base * 0.6 * (pow($dist + .5, 1.8)) * (2.5-($supply / $maxSupply)) * (($relations + 350) / 8415) );
+			$idealPrice = round($numGoods * $base * 0.6 * (pow($dist + .5, 1.8)) * (2.5-($supply / $maxSupply)) * (($relations + 350) / 8415) );
 		else if($transactionType == 'Buy')
-			$idealPrice = round($numGoods * $base * 0.5 * pow($dist, 1.84) * (2.5-($supply / $maxSupply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 38.56 * (1 + (10 - $this->getLevel()) / 50));
+			$idealPrice = round($numGoods * $base * 0.7 * pow($dist, 1.84) * (2.5-($supply / $maxSupply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 38.56 * (1 + (10 - $this->getLevel()) / 50));
 		return $idealPrice;
 	}
 	
