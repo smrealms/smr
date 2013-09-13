@@ -21,9 +21,7 @@ if(!$port->exists())
 
 
 if ($port->isDestroyed()) {
-	$container=create_container('skeleton.php','port_attack.php');
-	$container['sector_id'] = $port->getSectorID();
-	forward($container);
+	forward(create_container('skeleton.php','port_attack.php'));
 }
 
 // take the turns
@@ -73,7 +71,6 @@ foreach($attackers as &$attacker) {
 } unset($attacker);
 
 $container = create_container('skeleton.php','port_attack.php');
-$container['sector_id'] = $port->getSectorID();
 
 // If they died on the shot they get to see the results
 if($player->isDead()) {

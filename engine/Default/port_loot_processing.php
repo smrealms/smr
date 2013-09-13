@@ -24,9 +24,7 @@ if ($player->getTurns() == 0)
    create_error('You don\'t have enough turns to loot.');
 
 $account->log(LOG_TYPE_TRADING, 'Player Loots '.$amount.' '.$good_name, $player->getSectorID());
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'port_loot.php';
+$container = create_container('skeleton.php', 'port_loot.php');
 $ship->increaseCargo($good_id,$amount);
 $ship->updateCargo();
 $port->decreaseGoodAmount($good_id,$amount);

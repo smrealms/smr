@@ -13,5 +13,5 @@ if(isset($var['override_death']))
 	$template->assign('OverrideDeath',true);
 else
 	$template->assign('OverrideDeath',false);
-$template->assignByRef('Port',SmrPort::getPort($player->getGameID(),$var['sector_id']));
+$template->assignByRef('Port',$sector->getPort());
 ?>

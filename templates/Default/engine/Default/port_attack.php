@@ -1,7 +1,7 @@
 <?php $this->includeTemplate('includes/PortFullCombatResults.inc'); ?><br />
 <br />
 <div align="center"><?php
-if(!$OverrideDeath && !$Port->isDestroyed()) { ?>
+	if(!$OverrideDeath && !$Port->isDestroyed()) { ?>
 		<div style="width:50%">
 			<div class="buttonA">
 				<a href="<?php echo $Port->getAttackHREF() ?>" class="buttonA">Continue Attack</a>
@@ -16,13 +16,16 @@ if(!$OverrideDeath && !$Port->isDestroyed()) { ?>
 			<span class="yellow">You have destroyed the port.</span><?php
 		} ?><br />
 		<div class="buttonA"><?php
-		if($OverrideDeath) { ?>
+			if($OverrideDeath) { ?>
 				<a href="<?php echo Globals::getPodScreenHREF() ?>" class="buttonA">Let there be pod</a><?php
 			}
 			else { ?>
 				<a href="<?php echo Globals::getCurrentSectorHREF() ?>" class="buttonA">Current Sector</a>&nbsp;
-				<a href="<?php echo $Port->getClaimHREF() ?>" class="buttonA">Claim this port for your race</a>&nbsp;
-				<a href="<?php echo $Port->getLootHREF() ?>" class="buttonA">Loot the port</a><?php
+				<a href="<?php echo $Port->getClaimHREF(); ?>" class="buttonA">Claim this port for your race</a>&nbsp;
+				<a href="<?php echo $Port->getLootHREF(); ?>" class="buttonA">Loot the port<?php if($Port->getCredits() > 0) { ?>(100% money)<?php } ?></a><?php
+				if($Port->getLevel() > 1) { ?>&nbsp;
+					<a href="<?php echo $Port->getRazeHREF(); ?>" class="buttonA">Raze the port (<?php echo SmrPort::RAZE_MONEY_PERCENT; ?>% money, 1 downgrade)</a><?php
+				}
 			} ?>
 		</div><?php
 	} ?>

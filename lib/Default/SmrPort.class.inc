@@ -21,6 +21,7 @@ class SmrPort {
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
 	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
+	const RAZE_MONEY_PERCENT = 75;
 	
 	protected $db;
 	
@@ -168,6 +169,7 @@ class SmrPort {
 			$this->setShields($defences);
 			$this->setArmour($defences);
 			$this->setCDs($defences/10);
+			$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		}
 	}
 	
@@ -962,9 +964,20 @@ class SmrPort {
 		return SmrSession::getNewHREF($container);
 	}
 
+	public function getRazeHREF($justContainer = false) {
+		$container = create_container('skeleton.php','port_payout_processing.php');
+		$container['PayoutType'] = 'Raze';
+		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
+	}
+
 	public function getLootHREF($justContainer = false) {
-		$container = create_container('skeleton.php','port_loot.php');
-		$container['port_id'] = $this->getSectorID();
+		if($this->getCredits() == 0) {
+			$container = create_container('skeleton.php','port_payout_processing.php');
+			$container['PayoutType'] = 'Loot';
+		}
+		else {
+			$container = create_container('skeleton.php','port_loot.php');
+		}
 		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
 	}
 
@@ -1194,25 +1207,50 @@ class SmrPort {
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
 	}
-	
+
+	protected function &getAttackersToCredit() {
+		//get all players involved for HoF
+		$attackers = array();
+		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
+		while ($this->db->nextRecord()) {
+			$attackers[] =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
+		}
+		return $attackers;
+	}
+
 	protected function creditCurrentAttackersForKill() {
 		//get all players involved for HoF
-		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
-		$numToDelete = $this->db->getNumRows();
-		while ($this->db->nextRecord()) {
-			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF($this->db->getInt('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
-			$currPlayer->increaseHOF(1,array('Combat','Port','Total Raided'), HOF_PUBLIC);
+		$attackers = $this->getAttackersToCredit();
+		foreach($attackers as &$attacker) {
+			$attacker->increaseHOF($this->db->getInt('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
+			$attacker->increaseHOF(1,array('Combat','Port','Total Raided'), HOF_PUBLIC);
 		}
-		$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . $this->db->escapeNumber($numToDelete));
+	}
+
+	protected function payout(AbstractSmrPlayer &$killer, $credits, $payoutType) {
+		if($this->getCredits() == 0) {
+			return;
+		}
+		$killer->increaseCredits($credits);
+		$killer->increaseHOF($credits, array('Combat','Port','Money','Gained'), HOF_PUBLIC);
+		$attackers = $this->getAttackersToCredit();
+		foreach($attackers as &$attacker) {
+			$attacker->increaseHOF(1, array('Combat','Port',$payoutType), HOF_PUBLIC);
+		}
+		$this->setCredits(0);
+	}
+
+	public function razePort(AbstractSmrPlayer &$killer) {
+		$this->payout($killer, $this->getCredits() * self::RAZE_MONEY_PERCENT / 100, 'Razed');
+		$this->doDowngrade();
+	}
+
+	public function lootPort(AbstractSmrPlayer &$killer) {
+		$this->payout($killer, $this->getCredits(), 'Looted');
 	}
 	
 	public function &killPortByPlayer(AbstractSmrPlayer &$killer) {
 		$return = array();
-		$return['KillerCredits'] = $this->getCredits();
-		$killer->increaseCredits($return['KillerCredits']);
-		$killer->increaseHOF($return['KillerCredits'],array('Combat','Port','Money','Gained'), HOF_PUBLIC);
-		$this->setCredits(0);
 		
 		$this->creditCurrentAttackersForKill();
 		
