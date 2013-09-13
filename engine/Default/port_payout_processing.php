@@ -11,6 +11,7 @@ switch($var['PayoutType']) {
 		throw new Exception('Unknown payout type: ', $var['PayoutType']);
 }
 $account->log(LOG_TYPE_TRADING, 'Player Triggers Payout: ' . $var['PayoutType'], $player->getSectorID());
+$port->update();
 forward(create_container('skeleton.php', 'port_loot.php'));
 
 ?>
