@@ -1232,7 +1232,7 @@ class SmrPort {
 
 	protected function payout(AbstractSmrPlayer &$killer, $credits, $payoutType) {
 		if($this->getCredits() == 0) {
-			return;
+			return false;
 		}
 		$killer->increaseCredits($credits);
 		$killer->increaseHOF($credits, array('Combat','Port','Money','Gained'), HOF_PUBLIC);
@@ -1241,11 +1241,13 @@ class SmrPort {
 			$attacker->increaseHOF(1, array('Combat','Port',$payoutType), HOF_PUBLIC);
 		}
 		$this->setCredits(0);
+		return true;
 	}
 
 	public function razePort(AbstractSmrPlayer &$killer) {
-		$this->payout($killer, $this->getCredits() * self::RAZE_MONEY_PERCENT / 100, 'Razed');
-		$this->doDowngrade();
+		if($this->payout($killer, $this->getCredits() * self::RAZE_MONEY_PERCENT / 100, 'Razed')) {
+			$this->doDowngrade();
+		}
 	}
 
 	public function lootPort(AbstractSmrPlayer &$killer) {
