@@ -640,7 +640,7 @@ class SmrPort {
 	}
 
 	public function setCreditsToDefault() {
-		$this->setCredits(($this->getLevel()-1)*2000000);
+		$this->setCredits(1250000 + $this->getLevel()*1250000 + pow($this->getLevel(), 2) * 275000);
 	}
 
 	public function setCredits($credits) {
