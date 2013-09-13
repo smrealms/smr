@@ -61,9 +61,9 @@ UPDATE ship_type SET cost = 18572719 WHERE ship_type_id = 55;
 -- Mother Ship to 12,932,759 credits
 UPDATE ship_type SET cost = 12932759 WHERE ship_type_id = 49;
 
--- Fury to 12,932,759 credits and 900 armour
+-- Fury to 12,932,759 credits and 900 shields
 UPDATE ship_type SET cost = 17655001 WHERE ship_type_id = 75;
-UPDATE ship_type_support_hardware SET max_amount = 900 WHERE ship_type_id = 75 AND hardware_type_id = 2;
+UPDATE ship_type_support_hardware SET max_amount = 900 WHERE ship_type_id = 75 AND hardware_type_id = 1;
 
 -- Freighter to 5,791,393 credits
 UPDATE ship_type SET cost = 5791393 WHERE ship_type_id = 10;
