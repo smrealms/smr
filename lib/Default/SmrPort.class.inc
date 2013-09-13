@@ -169,6 +169,9 @@ class SmrPort {
 			$this->setShields($defences);
 			$this->setArmour($defences);
 			$this->setCDs($defences/10);
+			if($this->getCredits() == 0) {
+				$this->setCreditsToDefault();
+			}
 			$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		}
 	}
