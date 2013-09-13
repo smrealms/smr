@@ -974,7 +974,7 @@ class SmrPort {
 	}
 
 	public function getLootHREF($justContainer = false) {
-		if($this->getCredits() == 0) {
+		if($this->getCredits() > 0) {
 			$container = create_container('skeleton.php','port_payout_processing.php');
 			$container['PayoutType'] = 'Loot';
 		}
