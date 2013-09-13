@@ -2,16 +2,18 @@
 $port =& $player->getSectorPort();
 switch($var['PayoutType']) {
 	case 'Raze':
-		$port->razePort($player);
+		$credits = $port->razePort($player);
 	break;
 	case 'Loot':
-		$port->lootPort($player);
+		$credits = $port->lootPort($player);
 	break;
 	default:
 		throw new Exception('Unknown payout type: ', $var['PayoutType']);
 }
 $account->log(LOG_TYPE_TRADING, 'Player Triggers Payout: ' . $var['PayoutType'], $player->getSectorID());
 $port->update();
-forward(create_container('skeleton.php', 'port_loot.php'));
+$container = create_container('skeleton.php', 'current_sector.php');
+$container['msg'] = 'You have taken <span class="creds">' . $credits . '</span> from the port.';
+forward($container);
 
 ?>

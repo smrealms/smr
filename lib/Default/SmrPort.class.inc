@@ -979,7 +979,8 @@ class SmrPort {
 			$container['PayoutType'] = 'Loot';
 		}
 		else {
-			$container = create_container('skeleton.php','port_loot.php');
+			$container = create_container('skeleton.php','current_sector.php');
+			$container['msg'] = 'This port has already been looted.';
 		}
 		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
 	}
@@ -1245,13 +1246,17 @@ class SmrPort {
 	}
 
 	public function razePort(AbstractSmrPlayer &$killer) {
+		$credits = $this->getCredits();
 		if($this->payout($killer, $this->getCredits() * self::RAZE_MONEY_PERCENT / 100, 'Razed')) {
 			$this->doDowngrade();
 		}
+		return $credits;
 	}
 
 	public function lootPort(AbstractSmrPlayer &$killer) {
-		$this->payout($killer, $this->getCredits(), 'Looted');
+		$credits = $this->getCredits();
+		$this->payout($killer, $credits, 'Looted');
+		return $credits;
 	}
 	
 	public function &killPortByPlayer(AbstractSmrPlayer &$killer) {
