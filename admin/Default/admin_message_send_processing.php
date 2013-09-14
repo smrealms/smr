@@ -4,14 +4,14 @@ $message = trim($_REQUEST['message']);
 $expire = $_REQUEST['expire'];
 if($_REQUEST['action'] == 'Preview message') {
 	$container = create_container('skeleton.php','admin_message_send.php');
-	transfer('GameID');
+	transfer('SendGameID');
 	$container['preview'] = $message;
 	$container['expire'] = $expire;
 	forward($container);
 }
 
 $account_id = $_REQUEST['account_id'];
-$game_id = $var['GameID'];
+$game_id = $var['SendGameID'];
 if (!empty($account_id) || $game_id == 20000) {
 	if ($expire > 0) $expire = ($expire * 3600) + TIME;
 	if ($game_id != 20000) {

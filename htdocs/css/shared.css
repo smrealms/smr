@@ -225,7 +225,7 @@ table.center {
 	color: #FF0;
 }
 .exp {
-	color:#00F;
+	color:#06F;
 }
 .shields {
 	color: #0FF;
@@ -459,4 +459,18 @@ table#moveTable td {
 
 .pointer {
 	cursor: pointer;
+}
+
+.savedDestinationArea {
+	width: 500px;
+	height: 300px;
+	position: relative;
+	border: 2px solid #008000;
+	border-radius: 25px;
+}
+.savedDestination {
+	padding: 1em;
+	display: inline;
+	border: 2px solid #008000;
+	position: absolute; 
 }

@@ -14,7 +14,6 @@ if (!isset ($var['folder_id'])) {
 					AND message_type_id = ' . $db->escapeNumber(MSG_POLITICAL) . '
 					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 					AND receiver_delete = ' . $db->escapeBoolean(false) . '
-					AND receiver_delete = ' . $db->escapeBoolean(false) . '
 				LIMIT 1');
 	if ($db->getNumRows() || $player->isOnCouncil()) {
 		$db->query('SELECT * FROM message_type
@@ -22,7 +21,7 @@ if (!isset ($var['folder_id'])) {
 	}
 	else {
 		$db->query('SELECT * FROM message_type
-					WHERE message_type_id != 5
+					WHERE message_type_id != ' . $db->escapeNumber(MSG_POLITICAL) . '
 					ORDER BY message_type_id');
 	}
 	$messageBoxes = array ();

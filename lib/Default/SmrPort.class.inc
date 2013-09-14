@@ -4,8 +4,8 @@ class SmrPort {
 	protected static $CACHE_CACHED_PORTS = array();
 	
 	const NUMBER_OF_PORT_WEAPONS = 10;
-	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 200;
-	const CHANCE_TO_DOWNGRADE = 3;
+	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325;
+	const CHANCE_TO_DOWNGRADE = 1;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
 	const BASE_DEFENCES = 1000;
@@ -20,6 +20,8 @@ class SmrPort {
 	);
 	const REFRESH_PER_GOOD = .9;
 	const TIME_TO_CREDIT_RAID = 10800; // 3 hours
+	const GOODS_TRADED_MONEY_MULTIPLIER = 50;
+	const RAZE_MONEY_PERCENT = 75;
 	
 	protected $db;
 	
@@ -167,6 +169,10 @@ class SmrPort {
 			$this->setShields($defences);
 			$this->setArmour($defences);
 			$this->setCDs($defences/10);
+			if($this->getCredits() == 0) {
+				$this->setCreditsToDefault();
+			}
+			$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		}
 	}
 	
@@ -346,21 +352,23 @@ class SmrPort {
 			}
 		}
 	}
-	
-	public function buyGoods(array &$good,$goodsTraded,$idealPrice,$bargainPrice,$exp) {
-		$this->increaseUpgrade($goodsTraded * 10);
-		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * 1000), $bargainPrice));
-		$this->increaseCredits($bargainPrice);
+
+	protected function tradeGoods(array &$good, $goodsTraded, $exp) {
+		$goodsTradedMoney = $goodsTraded * self::GOODS_TRADED_MONEY_MULTIPLIER;
+		$this->increaseUpgrade($goodsTradedMoney);
+		$this->increaseCredits($goodsTradedMoney);
 		$this->increaseExperience($exp);
 		$this->decreaseGood($good,$goodsTraded,true);
-//		$this->setGood($goodID,$this->getGood($goodID) + $amount);
 	}
 	
-	public function sellGoods(array &$good,$goodsTraded,$idealPrice,$bargainPrice,$exp) {
-		$this->increaseUpgrade($goodsTraded * 10);
-		$this->increaseExperience($exp);
-		$this->decreaseGood($good,$goodsTraded,true);
-//		$this->setGood($goodID,$this->getGood($goodID) + $amount);
+	public function buyGoods(array &$good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
+		$this->tradeGoods($good, $goodsTraded, $exp);
+		$this->increaseUpgrade(min(max($idealPrice, $goodsTraded * 1000), $bargainPrice));
+		$this->increaseCredits($bargainPrice);
+	}
+	
+	public function sellGoods(array &$good, $goodsTraded, $idealPrice, $bargainPrice, $exp) {
+		$this->tradeGoods($good, $goodsTraded, $exp);
 	}
 	
 	public function checkForUpgrade() {
@@ -384,6 +392,9 @@ class SmrPort {
 			throw new Exception('Cannot upgrade a cached port!');
 		while($this->getLevel()<$level) {
 			$this->doUpgrade();
+		}
+		while($this->getLevel()>$level) {
+			$this->doDowngrade();
 		}
 	}
 	
@@ -630,7 +641,11 @@ class SmrPort {
 		$this->combatDrones=$combatDrones;
 		$this->hasChanged=true;
 	}
-	
+
+	public function setCreditsToDefault() {
+		$this->setCredits(1250000 + $this->getLevel()*1250000 + pow($this->getLevel(), 2) * 275000);
+	}
+
 	public function setCredits($credits) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
@@ -881,9 +896,9 @@ class SmrPort {
 //		$relations_factor_buy = 2-(($relations + 500) / 1500);
 //		$relations_factor_sell = ($relations + 500) / 1500;
 		if($transactionType == 'Sell')
-			$idealPrice = round(.75 * $numGoods * $base * 0.6 * (pow($dist + .5, 1.8)) * (2.5-($supply / $maxSupply)) * (($relations + 350) / 8415) );
+			$idealPrice = round($numGoods * $base * 0.6 * (pow($dist + .5, 1.8)) * (2.5-($supply / $maxSupply)) * (($relations + 350) / 8415) );
 		else if($transactionType == 'Buy')
-			$idealPrice = round($numGoods * $base * 0.5 * pow($dist, 1.84) * (2.5-($supply / $maxSupply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 38.56 * (1 + (10 - $this->getLevel()) / 50));
+			$idealPrice = round($numGoods * $base * 0.7 * pow($dist, 1.84) * (2.5-($supply / $maxSupply)) * (2-($relations + 50) / 850) * (($relations + 350) / 1500) / 38.56 * (1 + (10 - $this->getLevel()) / 50));
 		return $idealPrice;
 	}
 	
@@ -952,9 +967,21 @@ class SmrPort {
 		return SmrSession::getNewHREF($container);
 	}
 
+	public function getRazeHREF($justContainer = false) {
+		$container = create_container('skeleton.php','port_payout_processing.php');
+		$container['PayoutType'] = 'Raze';
+		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
+	}
+
 	public function getLootHREF($justContainer = false) {
-		$container = create_container('skeleton.php','port_loot.php');
-		$container['port_id'] = $this->getSectorID();
+		if($this->getCredits() > 0) {
+			$container = create_container('skeleton.php','port_payout_processing.php');
+			$container['PayoutType'] = 'Loot';
+		}
+		else {
+			$container = create_container('skeleton.php','current_sector.php');
+			$container['msg'] = 'This port has already been looted.';
+		}
 		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
 	}
 
@@ -1184,25 +1211,56 @@ class SmrPort {
 		$this->decreaseArmour($actualDamage);
 		return $actualDamage;
 	}
-	
+
+	protected function &getAttackersToCredit() {
+		//get all players involved for HoF
+		$attackers = array();
+		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
+		while ($this->db->nextRecord()) {
+			$attackers[] =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
+		}
+		return $attackers;
+	}
+
 	protected function creditCurrentAttackersForKill() {
 		//get all players involved for HoF
-		$this->db->query('SELECT account_id,level FROM player_attacks_port WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND time > ' . $this->db->escapeNumber(TIME - self::TIME_TO_CREDIT_RAID));
-		$numToDelete = $this->db->getNumRows();
-		while ($this->db->nextRecord()) {
-			$currPlayer =& SmrPlayer::getPlayer($this->db->getField('account_id'),$this->getGameID());
-			$currPlayer->increaseHOF($this->db->getInt('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
-			$currPlayer->increaseHOF(1,array('Combat','Port','Total Raided'), HOF_PUBLIC);
+		$attackers = $this->getAttackersToCredit();
+		foreach($attackers as &$attacker) {
+			$attacker->increaseHOF($this->db->getInt('level'),array('Combat','Port','Levels Raided'), HOF_PUBLIC);
+			$attacker->increaseHOF(1,array('Combat','Port','Total Raided'), HOF_PUBLIC);
 		}
-		$this->db->query('DELETE FROM player_attacks_port WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . $this->db->escapeNumber($numToDelete));
+	}
+
+	protected function payout(AbstractSmrPlayer &$killer, $credits, $payoutType) {
+		if($this->getCredits() == 0) {
+			return false;
+		}
+		$killer->increaseCredits($credits);
+		$killer->increaseHOF($credits, array('Combat','Port','Money','Gained'), HOF_PUBLIC);
+		$attackers = $this->getAttackersToCredit();
+		foreach($attackers as &$attacker) {
+			$attacker->increaseHOF(1, array('Combat','Port',$payoutType), HOF_PUBLIC);
+		}
+		$this->setCredits(0);
+		return true;
+	}
+
+	public function razePort(AbstractSmrPlayer &$killer) {
+		$credits = $this->getCredits();
+		if($this->payout($killer, $this->getCredits() * self::RAZE_MONEY_PERCENT / 100, 'Razed')) {
+			$this->doDowngrade();
+		}
+		return $credits;
+	}
+
+	public function lootPort(AbstractSmrPlayer &$killer) {
+		$credits = $this->getCredits();
+		$this->payout($killer, $credits, 'Looted');
+		return $credits;
 	}
 	
 	public function &killPortByPlayer(AbstractSmrPlayer &$killer) {
 		$return = array();
-		$return['KillerCredits'] = $this->getCredits();
-		$killer->increaseCredits($return['KillerCredits']);
-		$killer->increaseHOF($return['KillerCredits'],array('Combat','Port','Money','Gained'), HOF_PUBLIC);
-		$this->setCredits(0);
 		
 		$this->creditCurrentAttackersForKill();
 		

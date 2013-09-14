@@ -70,11 +70,13 @@ if (isset($disable_id)) {
 
 		// generate list of messages that should be deleted
 		$reason = $suspicion[$id];
-		if (empty($reason) || $reason == '')
+		if (empty($reason) || $reason == '') {
 			$reason = $suspicion2[$id];
-	    $db->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));
-	    if (!$db->getNumRows())
+		}
+		$db->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));
+		if (!$db->getNumRows()) {
 			$amount += 1;
+		}
 
 		//never expire
 		$bannedAccount =& SmrAccount::getAccount($id);
@@ -88,8 +90,9 @@ $closed_so_far = $_REQUEST['closed_so_far'];
 if (isset($closed_so_far))
 	$amount += $closed_so_far;
 $msg = 'You have disabled '.$amount.' accounts.';
-if ($amount > 20)
-    $msg .= '  How do you sleep at night ;)';
+if ($amount > 20) {
+	$msg .= '  How do you sleep at night ;)';
+}
 $container = create_container('skeleton.php');
 $container['type'] = $type;
 $container['last_ip'] = $last_ip;

@@ -1,13 +1,10 @@
 <?php
-
 if ($player->hasNewbieTurns())
 	create_error('You are under newbie protection!');
 if($player->hasFederalProtection())
 	create_error('You are under federal protection.');
 if($player->isLandedOnPlanet())
 	create_error('You cannot attack forces whilst on a planet!');
-if ($player->getTurns() < 3)
-	create_error('You do not have enough turns to attack these forces!');
 if(!$player->canFight())
 	create_error('You are not allowed to fight!');
 
@@ -16,6 +13,8 @@ $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var
 
 if(!$forces->exists())
 	create_error('These forces no longer exist.');
+if ($player->getTurns() < $forces->getAttackTurnCost($ship))
+	create_error('You do not have enough turns to attack these forces!');
 
 $forceOwner =& $forces->getOwner();
 
@@ -23,7 +22,7 @@ if($player->forceNAPAlliance($forceOwner))
 	create_error('You have a force NAP, you cannot attack these forces!');
 
 // take the turns
-$player->takeTurns(3,1);
+$player->takeTurns($forces->getAttackTurnCost($ship), 1);
 
 // delete plotted course
 $player->deletePlottedCourse();

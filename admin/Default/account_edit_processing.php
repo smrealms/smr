@@ -24,17 +24,16 @@ if (!empty($donation)) {
 	// add entry to account donated table
 	$db->query('INSERT INTO account_donated (account_id, time, amount) VALUES ('.$db->escapeNumber($account_id).', ' . $db->escapeNumber(TIME) . ' , '.$db->escapeNumber($donation).')');
 
-    // add the credits to the players account - if requested
-    if (!empty($smr_credit))
-    {
-    	$curr_account->increaseSmrCredits($donation * CREDITS_PER_DOLLAR);
+	// add the credits to the players account - if requested
+	if (!empty($smr_credit)) {
+		$curr_account->increaseSmrCredits($donation * CREDITS_PER_DOLLAR);
 	}
 
 	$msg .= 'added $'.$donation;
 
 }
 if(!empty($_REQUEST['grant_credits'])&&is_numeric($_REQUEST['grant_credits'])) {
-    $curr_account->increaseSmrRewardCredits($_REQUEST['grant_credits']);
+	$curr_account->increaseSmrRewardCredits($_REQUEST['grant_credits']);
 	if (strlen($msg) > 9)
 		$msg .= 'and ';
 	$msg .= 'added ' . $_REQUEST['grant_credits'] . ' reward credits';

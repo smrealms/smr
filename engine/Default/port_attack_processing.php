@@ -21,13 +21,8 @@ if(!$port->exists())
 
 
 if ($port->isDestroyed()) {
-	$container=create_container('skeleton.php','port_attack.php');
-	$container['sector_id'] = $port->getSectorID();
-	forward($container);
+	forward(create_container('skeleton.php','port_attack.php'));
 }
-
-// take the turns
-$player->takeTurns(3,0);
 
 
 // ********************************
@@ -44,8 +39,9 @@ $attackers =& $sector->getFightingTradersAgainstPort($player, $port);
 
 $port->attackedBy($player,$attackers);
 
-//decloak all attackers
+// take the turns and decloak all attackers
 foreach($attackers as &$attacker) {
+	$attacker->takeTurns(3,0);
 	$attacker->getShip()->decloak();
 } unset($attacker);
 
@@ -73,7 +69,6 @@ foreach($attackers as &$attacker) {
 } unset($attacker);
 
 $container = create_container('skeleton.php','port_attack.php');
-$container['sector_id'] = $port->getSectorID();
 
 // If they died on the shot they get to see the results
 if($player->isDead()) {

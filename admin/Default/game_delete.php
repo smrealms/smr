@@ -16,8 +16,8 @@ $db->query('SELECT * FROM game');
 while($db->nextRecord()) {
 
 	//check to see if it needs to be deleted
-    $id_game = $db->getField('game_id');
-    $name = $db->getField('game_name');
+	$id_game = $db->getField('game_id');
+	$name = $db->getField('game_name');
 
 	$PHP_OUTPUT.=('<option value="'.$id_game.'">'.$name.'</option>');
 

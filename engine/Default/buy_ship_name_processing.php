@@ -6,7 +6,7 @@ $actionHtmlShipName = 'Include HTML (' . CREDITS_PER_HTML_SHIP_NAME .' SMR Credi
 $actionTextShipName = 'Get It Painted! (' . CREDITS_PER_TEXT_SHIP_NAME . ' SMR Credit)';
 $actionShipLogo = 'Paint a logo (' . CREDITS_PER_SHIP_LOGO . ' SMR Credits)';
 
-if(isset($var['ShipName'])) {
+if(isset($var['ShipName']) || $action == $actionHtmlShipName) {
 	$cred_cost = CREDITS_PER_HTML_SHIP_NAME;
 }
 else if($action == $actionShipLogo) {

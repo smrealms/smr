@@ -3,8 +3,7 @@ $template->assign('PageTopic','Reply To Reported Messages');
 
 require_once(get_file_loc('message.functions.inc'));
 
-$container = array();
-$container['url']        = 'notify_reply_processing.php';
+$container = create_container('notify_reply_processing.php');
 transfer('game_id');
 transfer('offended');
 transfer('offender');

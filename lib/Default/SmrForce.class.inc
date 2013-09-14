@@ -296,15 +296,28 @@ class SmrForce {
 		return $this->getGalaxy()->getMaxForceTime();
 	}
 
-	public function getBumpTurnCost() {
+	public function getBumpTurnCost(AbstractSmrShip &$ship) {
 		$mines = $this->getMines();
 		if($mines <= 1) {
 			return 0;
 		}
 		if($mines < 10) {
-			return 1;
+			$turns = 1;
 		}
-		if($mines < 25) {
+		else if($mines < 25) {
+			$turns = 2;
+		}
+		else {
+			$turns = 3;
+		}
+		if($ship->isFederal() || $ship->hasDCS()) {
+			$turns -= 1;
+		}
+		return $turns;
+	}
+
+	public function getAttackTurnCost(AbstractSmrShip &$ship) {
+		if($ship->isFederal() || $ship->hasDCS()) {
 			return 2;
 		}
 		return 3;

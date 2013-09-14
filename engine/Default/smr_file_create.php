@@ -26,7 +26,7 @@ foreach($goods as &$good) {
 
 $file.='[Weapons]
 ; Weapon = Race,Cost,Shield,Armour,Accuracy,Power level,EMP (%),Align Restriction,Attack Restriction
-; Align: 0=none, 1=good, 2=evil
+; Align: 0=none, 1=good, 2=evil, 3=newbie
 ; Attack: 0=none, 1=raid' . EOL;
 $weapons =& SmrWeapon::getAllWeapons(Globals::getGameType($gameID));
 foreach($weapons as &$weapon) {

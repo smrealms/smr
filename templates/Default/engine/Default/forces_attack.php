@@ -4,7 +4,7 @@
 	if(isset($Target)) { ?>
 		<div style="width:50%">
 			<div class="buttonA">
-				<a href="<?php echo $Target->getAttackForcesHREF() ?>" class="buttonA">Continue Attack</a>
+				<a href="<?php echo $Target->getAttackForcesHREF() ?>" class="buttonA">Continue Attack (<?php echo $Target->getAttackTurnCost($ThisShip); ?>)</a>
 			</div>
 		</div><?php
 	}

@@ -62,7 +62,7 @@ if ($player->getLastSectorID() != $var['target_sector']) {
 	
 	if($mine_owner_id) {
 		if ($player->hasNewbieTurns()) {
-			$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
+			$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
 			$player->takeTurns($turns,$turns);
 			$container = create_container('skeleton.php', 'current_sector.php');
 			$container['msg']= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns.' turn'.($turns==1?'':'s') . ' to navigate the minefield safely';
@@ -132,7 +132,7 @@ foreach($sectorForces as &$forces) {
 
 if ($mine_owner_id) {
 	if ($player->hasNewbieTurns()) {
-		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost();
+		$turns = $sectorForces[$mine_owner_id]->getBumpTurnCost($ship);
 		$player->takeTurns($turns,$turns);
 		$container = create_container('skeleton.php', 'current_sector.php');
 		$container['msg']= 'You have just flown past a sprinkle of mines.<br />Because of your newbie status you have been spared from the harsh reality of the forces.<br />It has cost you ' . $turns.' turn'.($turns==1?'':'s') . ' to navigate the minefield safely.';
