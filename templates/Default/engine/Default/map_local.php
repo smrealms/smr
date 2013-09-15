@@ -1,4 +1,4 @@
-<div align="center">
+<div class="center">
 	Local Map of the Known <span class="big bold">
 	<?php echo $GalaxyName ?>
 	</span> Galaxy.<br />
