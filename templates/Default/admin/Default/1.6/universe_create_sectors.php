@@ -3,15 +3,15 @@
 		echo $Message; ?><br /><br /><?php
 	} ?>
 	Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGalaxyID(); ?>)<br />
-	<form method="POST" action="<?php echo $SubmitChangesHREF; ?>">
-		<select name="jumpgal" onchange="console.log(this.form)"><?php
+	<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
+		<select name="jumpgal" onchange="this.form.submit()"><?php
 			foreach($Galaxies as &$CurrentGalaxy) { ?>
 				<option value="<?php echo $CurrentGalaxy->getGalaxyID(); ?>"<?php if($CurrentGalaxy->equals($Galaxy)) { ?> selected="SELECTED"<?php } ?>><?php
 					echo $CurrentGalaxy->getName(); ?>
 				</option><?php
 			} ?>
 		</select>
-		<input type="submit" name="submit" value="Jump To Galaxy">
+		<input type="submit" value="Jump To Galaxy">
 	</form>
 </div><br />
 <?php $this->includeTemplate('includes/SectorMap.inc'); ?>

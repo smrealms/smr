@@ -47,6 +47,9 @@ $container['url'] = '1.6/universe_create_save_processing.php';
 $container['body'] = '1.6/universe_create_sectors.php';
 $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
 
+$container['submit'] = 'Jump To Galaxy';
+$template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
+
 $container = $var;
 $container['body'] = '1.6/universe_create_sector_details.php';
 $template->assign('UniGen', $container);
