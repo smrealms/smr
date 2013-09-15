@@ -118,7 +118,11 @@
 							</div>
 						<?php
 						}
-						if($GalaxyMap) { ?>
+						if($UniGen) {
+							$UniGen['sector_id'] = $Sector->getSectorID(); ?>
+							<a href="<?php echo SmrSession::getNewHREF($UniGen); ?>"><img title="" alt="" class="move_hack" src="images/blank.gif" width="120" height="120"/></a><?php
+						}
+						else if($GalaxyMap) { ?>
 							<a href="<?php echo $Sector->getGalaxyMapHREF(); ?>"><img title="" alt="" class="move_hack" src="images/blank.gif" width="120" height="120"/></a><?php
 						}
 						else if($isLinkedSector) { ?>
