@@ -8,7 +8,7 @@ if (!isset($var['gal_on'])) SmrSession::updateVar('gal_on', 1);
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 
-$topLeft =& SmrSector::getSector($player->getGameID(), $galaxy->getStartSector());
+$topLeft =& SmrSector::getSector($var['game_id'], $galaxy->getStartSector());
 $mapSectors = array();
 $leftMostSec =& $topLeft;
 for ($i=0;$i<$galaxy->getHeight();$i++) {
