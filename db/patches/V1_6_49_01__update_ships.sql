@@ -2,7 +2,7 @@
 UPDATE ship_type SET hardpoint = 7 WHERE ship_type_id = 59;
 
 -- Celestial Combatant to 2,656,949 credits and 7 hardpoints
-UPDATE ship_type SET cost = 2656949, hardpoint = 7, speed = 13 WHERE ship_type_id = 19;
+UPDATE ship_type SET cost = 2656949, hardpoint = 7 WHERE ship_type_id = 19;
 
 -- Goliath to 2,580,866 credits and 7 hardpoints
 UPDATE ship_type SET cost = 2580866, hardpoint = 7 WHERE ship_type_id = 36;
@@ -25,7 +25,7 @@ UPDATE ship_type SET cost = 2883452, hardpoint = 7 WHERE ship_type_id = 24;
 
 -- Celestial Mercenary to 7 hardpoints and 20 scouts
 UPDATE ship_type SET hardpoint = 7 WHERE ship_type_id = 18;
-UPDATE ship_type_support_hardware SET max_amount = 360 WHERE ship_type_id = 18 AND hardware_type_id = 5;
+UPDATE ship_type_support_hardware SET max_amount = 20 WHERE ship_type_id = 18 AND hardware_type_id = 5;
 
 -- Federal Warrant to 3,026,598 credits and 7 hardpoints
 UPDATE ship_type SET cost = 3026598, hardpoint = 7 WHERE ship_type_id = 21;
