@@ -3,8 +3,8 @@
 	foreach($MapSectors as &$MapSector) { ?>
 		<tr><?php
 			foreach($MapSector as &$Sector) {
-				$isCurrentSector = $ThisSector->equals($Sector);
-				$isLinkedSector = $ThisSector->isLinkedSector($Sector); ?>
+				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
+				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector); ?>
 				<td>
 					<?php if($isCurrentSector){ ?><div class="currentSeclm"><?php } ?>
 					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm2<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
@@ -16,9 +16,9 @@
 									} ?>
 								</div><?php
 							}
-							if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || $ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)) { ?>
+							if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
 								<div class="lmp"><?php
-									if($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)) {
+									if(!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector))) {
 										?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
 									}
 									if($Sector->isVisited($ThisPlayer) && $Sector->hasWarp()) {
@@ -32,10 +32,10 @@
 									} ?>
 								</div><?php
 							}
-							$CanScanSector = ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
+							$CanScanSector = $UniGen || ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
 							if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($ThisPlayer) || $Sector->hasFriendlyTraders($ThisPlayer)) { ?>
 								<div class="lmtf"><?php
-									if(($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($ThisPlayer)) {
+									if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($ThisPlayer))) {
 										if($CanScanSector && $Sector->hasEnemyTraders($ThisPlayer)) {
 											?><img title="Enemy Trader" alt="Enemy Trader" src="images/enemyTrader.png" width="13" height="16"/><?php
 										}

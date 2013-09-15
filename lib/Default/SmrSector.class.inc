@@ -589,11 +589,15 @@ class SmrSector {
 		SmrPort::removePort($this->getGameID(),$this->getSectorID());
 	}
 
-	public function hasCachedPort(AbstractSmrPlayer &$player) {
+	public function hasCachedPort(AbstractSmrPlayer &$player=null) {
 		return $this->getCachedPort($player)!==false;
 	}
 
-	public function &getCachedPort(AbstractSmrPlayer &$player) {
+	public function &getCachedPort(AbstractSmrPlayer &$player=null) {
+		if($player == null) {
+			$return = false;
+			return $return;
+		}
 		return SmrPort::getCachedPort($this->getGameID(),$this->getSectorID(),$player->getAccountID());
 	}
 
@@ -655,8 +659,8 @@ class SmrSector {
 		return count($this->getForces()) > 0;
 	}
 
-	public function hasEnemyForces(AbstractSmrPlayer &$player) {
-		if(!$this->hasForces())
+	public function hasEnemyForces(AbstractSmrPlayer &$player=null) {
+		if($player == null || !$this->hasForces())
 			return false;
 		$forces =& $this->getForces();
 		foreach($forces as &$force) {
@@ -678,8 +682,8 @@ class SmrSector {
 		return $enemyForces;
 	}
 
-	public function hasFriendlyForces(AbstractSmrPlayer &$player) {
-		if(!$this->hasForces())
+	public function hasFriendlyForces(AbstractSmrPlayer &$player=null) {
+		if($player == null || !$this->hasForces())
 			return false;
 		$forces =& $this->getForces();
 		foreach($forces as &$force) {
@@ -724,8 +728,8 @@ class SmrSector {
 		return count($this->getOtherTraders($player)) > 0;
 	}
 
-	public function hasEnemyTraders(AbstractSmrPlayer &$player) {
-		if(!$this->hasOtherTraders($player))
+	public function hasEnemyTraders(AbstractSmrPlayer &$player=null) {
+		if($player == null || !$this->hasOtherTraders($player))
 			return false;
 		$otherPlayers =& $this->getOtherTraders($player);
 		foreach($otherPlayers as &$otherPlayer) {
@@ -735,8 +739,8 @@ class SmrSector {
 		return false;
 	}
 
-	public function hasFriendlyTraders(AbstractSmrPlayer &$player) {
-		if(!$this->hasOtherTraders($player))
+	public function hasFriendlyTraders(AbstractSmrPlayer &$player=null) {
+		if($player == null || !$this->hasOtherTraders($player))
 			return false;
 		$otherPlayers =& $this->getOtherTraders($player);
 		foreach($otherPlayers as &$otherPlayer) {
