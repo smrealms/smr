@@ -216,29 +216,30 @@ class SmrPort {
 		}
 		return $this->goods;
 	}
-	public function &getVisibleGoods(AbstractSmrPlayer &$player) {
+	public function &getVisibleGoods(AbstractSmrPlayer &$player=null) {
 		$goods = $this->getGoods();
-		$visibleGoods = array();
-		$visibleGoods['All Goods'] = array();
-		$visibleGoods['Sell'] = array();
-		$visibleGoods['Buy'] = array();
+		$visibleGoods = array(
+			'All Goods' => array(),
+			'Sell' => array(),
+			'Buy' => array()
+		);
 		foreach($goods['All Goods'] as $key => &$good) {
-			if($player->meetsAlignmentRestriction($good['AlignRestriction'])) {
+			if($player == null || $player->meetsAlignmentRestriction($good['AlignRestriction'])) {
 				$visibleGoods['All Goods'][$key] =& $good;
 				$visibleGoods[$good['TransactionType']][$key] =& $good;
 			}
 		}
 		return $visibleGoods;
 	}
-	public function &getVisibleGoodsAll(&$player) {
+	public function &getVisibleGoodsAll(&$player=null) {
 		$goods = $this->getVisibleGoods($player);
 		return $goods['All Goods'];
 	}
-	public function &getVisibleGoodsSold(&$player) {
+	public function &getVisibleGoodsSold(&$player=null) {
 		$goods = $this->getVisibleGoods($player);
 		return $goods['Sell'];
 	}
-	public function &getVisibleGoodsBought(AbstractSmrPlayer &$player) {
+	public function &getVisibleGoodsBought(AbstractSmrPlayer &$player=null) {
 		$goods = $this->getVisibleGoods($player);
 		return $goods['Buy'];
 	}

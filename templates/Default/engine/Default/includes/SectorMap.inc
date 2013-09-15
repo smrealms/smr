@@ -89,8 +89,8 @@
 									?><img src="images/link_ver.gif" width="5" height="12" alt="Right" title="Right" /><?php
 								} ?>
 							</div><?php
-							if(($isCurrentSector && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer)) {
-								if($isCurrentSector && $Sector->hasPort()) {
+							if((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer)) {
+								if(($UniGen || $isCurrentSector) && $Sector->hasPort()) {
 									$Port =& $Sector->getPort();
 								}
 								else if($Sector->hasCachedPort($ThisPlayer)) {
