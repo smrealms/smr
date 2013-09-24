@@ -138,7 +138,8 @@ function create_planet_menu() {
 						array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defenses'),
 						array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership'),
 						array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile'),
-						array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial')));
+						array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial'),
+                        array('Link'=>Globals::getPlanetResearchHREF(),'Text'=>'Research')));
 }
 
 /*
