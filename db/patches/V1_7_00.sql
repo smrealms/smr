@@ -27,19 +27,13 @@ DROP TABLE IF EXISTS `game_research_ship_certificate` ;
 
 CREATE  TABLE IF NOT EXISTS `game_research_ship_certificate` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `game_research_id` INT NOT NULL ,
-  `game_research_certficiate_id` INT NULL ,
-  `race_id` INT NULL ,
+  `game_research_certificate_id` INT NOT NULL ,
   `ship_type_id` INT NOT NULL ,
-  `predecessor_id` INT NULL ,
-  `spanning_research` TINYINT(1) NULL ,
   `parent_id` INT NULL ,
   PRIMARY KEY (`id`) )
   ENGINE = InnoDB;
 
-CREATE INDEX `GRSC_GAME_RESEARCH_IDX` ON `game_research_ship_certificate` (`game_research_id` ASC) ;
-
-CREATE INDEX `GRSC_GAME_RESEARCH_CERTIFICATE_IDX` ON `game_research_ship_certificate` (`game_research_certficiate_id` ASC) ;
+CREATE INDEX `GRSC_GAME_RESEARCH_CERTIFICATE_IDX` ON `game_research_ship_certificate` (`game_research_certificate_id` ASC) ;
 
 CREATE INDEX `GRSC_PARENT_IDX` ON `game_research_ship_certificate` (`parent_id` ASC) ;
 
@@ -109,4 +103,3 @@ CREATE INDEX `GARP_GAME_ALLIANCE_SHIP_CERTIFICATE_IDX` ON `game_alliance_researc
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
-

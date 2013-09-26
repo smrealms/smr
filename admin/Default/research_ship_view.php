@@ -1,6 +1,7 @@
 <?php
 
 require_once(get_file_loc('Research.class.inc'));
+require_once(get_file_loc('AbstractSmrShip.class.inc'));
 
 if(isset($var['errorMsg'])) {
 	$template->assign('ErrorMessage',$var['errorMsg']);
@@ -19,9 +20,6 @@ $gameResearchId = $var['gameResearchId'];
 
 if(isset($gameResearchId)){
 
-    $container = create_container("skeleton.php","research_process.php");
-    $container['gameResearchId'] = $gameResearchId;
-
     // get research entry
     $db->query('SELECT * FROM smr.game_research WHERE id='.$db->escapeNumber($gameResearchId));
     $gameResearch = null;
@@ -39,31 +37,40 @@ if(isset($gameResearchId)){
     $template->assign("Races",$races);
 
     $researchCertificates = $research->getResearchCertificates($gameResearchId);
-    foreach($researchCertificates AS &$cert){
-        $container['deleteResearchCertificate']=$cert['id'];
-        $cert['deleteHref'] =  SmrSession::getNewHREF($container);
+    $container = create_container("skeleton.php","research_process.php");
+    $container['gameResearchId'] = $gameResearchId;
+
+    if(isset($researchCertificates)){
+        foreach($researchCertificates AS &$cert){
+            $container['deleteResearchCertificate']=$cert['id'];
+            $cert['deleteHref'] =  SmrSession::getNewHREF($container);
+        }
     }
+
 
     $template->assign("GameResearchCertificates", $researchCertificates);
 
-    $gameResearchShipCertificates = null;
-    $db->query('SELECT * FROM game_research_ship_certificate WHERE game_research_id='.$db->escapeNumber($gameResearchId));
-    while ($db->nextRecord()){
-        $gameResearchShipCertificates[] = $db->getRow();
+    $researchShipCertificates = $research->getResearchShipCertificates($gameResearchId);
+
+    $container = create_container("skeleton.php","research_process.php");
+    $container['gameResearchId'] = $gameResearchId;
+    if(isset($researchShipCertificates)){
+        foreach($researchShipCertificates AS &$cert){
+            $container['deleteResearchShipCertificate']=$cert['id'];
+            $cert['deleteHref'] =  SmrSession::getNewHREF($container);
+        }
     }
-    $template->assign("GameResearchShipCertificates", $gameResearchCertificates);
+
+    $template->assign("GameResearchShipCertificates", $researchShipCertificates);
 
     // create game instance ...
     $game = SmrGame::getGame($gameResearch['game_id']);
     $template->assign('Game',$game);
 
+    $container = create_container("skeleton.php","research_process.php");
+    $container['gameResearchId'] = $gameResearchId;
     $template->assign('AddCertificateHref', SmrSession::getNewHREF($container));
 
+    $template->assignByRef('ShipTypes', AbstractSmrShip::getAllBaseShips(0));
 }
-
-
-
-
-
-
 ?>

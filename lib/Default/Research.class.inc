@@ -21,6 +21,50 @@ class Research {
         $this->db = new SmrMySqlDatabase();
     }
 
+    public function deleteResearchShipCertificate(&$researchShipCertificateId){
+        $this->db->query("DELETE FROM game_research_ship_certificate WHERE id=".$this->db->escapeNumber($researchShipCertificateId));
+    }
+
+    public function getResearchShipCertificates(&$gameResearchId){
+        $query = "SELECT grsc.id, st.ship_name, cert.label, cert2.label as parent "
+                        ." FROM game_research_ship_certificate grsc, game_research_certificate cert, ship_type st "
+                        ." LEFT JOIN game_research_certificate cert2 ON parent_id=cert2.id "
+                        ." WHERE grsc.game_research_certificate_id=cert.id "
+                        ." AND grsc.ship_type_id=st.ship_type_id "
+                        ." AND cert.game_research_id=".$this->db->escapeNumber($gameResearchId);
+        $this->db->query($query);
+
+        $result = array();
+        while ($this->db->nextRecord()){
+            $result[] = $this->db->getRow();
+        }
+        return $result;
+    }
+
+    public function assignResearchCertificateToShipType($researchCertificateId, $shipTypeId, $parentId){
+        $this->db->query("SELECT * FROM game_research_ship_certificate WHERE ".
+                    " game_research_certificate_id=".$this->db->escapeNumber($researchCertificateId).
+                    " AND ship_type_id=".$this->db->escapeNumber($shipTypeId));
+
+        if($this->db->nextRecord()){
+            return;
+        }
+
+        $query = "INSERT INTO game_research_ship_certificate (game_research_certificate_id, ship_type_id";
+        if(isset($parentId)){
+            $query .= ", parent_id";
+        }
+        $query .= ") VALUES (".$this->db->escapeNumber($researchCertificateId).
+                    ", ".$this->db->escapeNumber($shipTypeId);
+
+        if(isset($parentId)){
+            $query .= ", ".$this->db->escapeNumber($parentId);
+        }
+        $query .=")";
+
+        $this->db->query($query);
+    }
+
     /**
      * Deletes the row identified by the researchCertificateId
      * Updates all entries that have their parent_id=researchCertificateId by setting it to NULL
@@ -41,6 +85,9 @@ class Research {
         $this->db->query('SELECT c.*, race.race_name FROM game_research_certificate c LEFT JOIN race ON c.race_id=race.race_id WHERE game_research_id='.$this->db->escapeNumber($gameResearchId)." ORDER BY parent_id");
         while ($this->db->nextRecord()){
             $gameResearchCertificates[] = $this->db->getRow();
+        }
+        if(!isset($gameResearchCertificates)){
+            return;
         }
         foreach($gameResearchCertificates AS &$cert){
             if($cert['parent_id'] != null){
