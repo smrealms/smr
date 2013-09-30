@@ -589,17 +589,22 @@ class SmrPort {
 			$this->updateAttackStarted();
 			//add news
 			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. It is under attack by ';
-			if($trigger->hasAlliance())
+			if($trigger->hasAlliance()) {
 				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
-			else
+			}
+			else {
 				$newsMessage .= $trigger->getBBLink();
+			}
 			
 			$newsMessage .= '. The Federal Government is offering ';
-			
-			if($trigger->hasAlliance())
-				$newsMessage .= 'various bounties for the deaths of any raiding members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
-			else
-				$newsMessage .= 'a bounty of ' . number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL)) . ' credits for the death of '.$trigger->getBBLink();
+			$bounty = number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
+
+			if($trigger->hasAlliance()) {
+				$newsMessage .= 'bounties of ' . $bounty . ' for the deaths of any raiding members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
+			}
+			else {
+				$newsMessage .= 'a bounty of ' . $bounty . ' credits for the death of '.$trigger->getBBLink();
+			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
 			$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($newsMessage) . ',\'REGULAR\',' . $this->db->escapeNumber($trigger->getAccountID()) . ',' . $this->db->escapeNumber($trigger->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
