@@ -21,6 +21,29 @@ class Research {
         $this->db = new SmrMySqlDatabase();
     }
 
+    /**
+     * Fetches all available ship researches for the given game
+     * @param $gameResearchId
+     * @return array
+     *      ship_type_id => "foreign key" on ship_type_id
+     *      alliance_id => alliance_id in case research has been passed by that alliance
+     */
+    public function getGameResearchableShips(&$gameResearchId){
+        $this->db->query(    "SELECT gc.ship_type_id, ga.alliance_id "
+                            ." FROM smr.game_research_ship_certificate  gc"
+                            ." JOIN smr.game_research_certificate gr "
+	                        ." ON gc.game_research_certificate_id=gr.id "
+                            ." LEFT JOIN smr.game_alliance_ship_certificate ga "
+	                        ." ON ga.game_research_ship_certificate_id= gc.id "
+                            ." WHERE gr.game_research_id=".$this->db->escapeNumber($gameResearchId));
+
+        $result = array();
+        while ($this->db->nextRecord()){
+            $result[] = $this->db->getRow();
+        }
+        return $result;
+    }
+
     public function deleteResearchShipCertificate(&$researchShipCertificateId){
         $this->db->query("DELETE FROM game_research_ship_certificate WHERE id=".$this->db->escapeNumber($researchShipCertificateId));
     }

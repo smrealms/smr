@@ -1,5 +1,6 @@
 
 #INSERT INTO permission (permission_id, permission_name,link_to) VALUES (34, 'Research','research_view.php');
+
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
@@ -67,15 +68,12 @@ DROP TABLE IF EXISTS `game_alliance_ship_certificate` ;
 
 CREATE  TABLE IF NOT EXISTS `game_alliance_ship_certificate` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `game_research_id` INT NOT NULL ,
   `game_research_ship_certificate_id` INT NOT NULL ,
   `alliance_id` INT NOT NULL ,
   PRIMARY KEY (`id`) )
   ENGINE = InnoDB;
 
 CREATE INDEX `GASC_GAME_RESEARCH_SHIP_CERTIFICATE_IDX` ON `game_alliance_ship_certificate` (`game_research_ship_certificate_id` ASC) ;
-
-CREATE INDEX `GASC_GAME_RESEARCH_IDX` ON `game_alliance_ship_certificate` (`game_research_id` ASC) ;
 
 CREATE INDEX `GASC_ALLIANCE_IDX` ON `game_alliance_ship_certificate` (`alliance_id` ASC) ;
 
