@@ -1,4 +1,11 @@
 <?php
+
+require_once(get_file_loc('Research.class.inc'));
+
+$research = new Research();
+$gameResearch = $research->getGameResearch($player->getGameID());
+$research->processAllianceResearchInProgress($player, $gameResearch['id']);
+
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 
@@ -20,6 +27,7 @@ if (isset($var['msg'])) {
 $template->assignByRef('ThisPlanet',$planet);
 
 doTickerAssigns($template, $player, $db);
+
 
 $template->assign('LaunchFormLink',SmrSession::getNewHREF(create_container('planet_launch_processing.php', '')));
 ?>

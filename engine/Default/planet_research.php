@@ -9,7 +9,13 @@ $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$playe
 require_once(get_file_loc('menu.inc'));
 create_planet_menu();
 
-$PHP_OUTPUT.=('<br/>');
+require_once(get_file_loc('Research.class.inc'));
+$research = new Research();
+
+$gameResearch = $research->getGameResearch($player->getGameID());
+
+$template->assign('ResearchedCertificates', $research->getAllianceResearchedCertificates($gameResearch['id'], $player->getAllianceID()));
+$template->assign('ResearchableCertificates', $research->getAllianceResearchableCertificates($gameResearch['id'], $player->getAllianceID()));
 
 
 ?>

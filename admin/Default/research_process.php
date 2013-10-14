@@ -12,7 +12,7 @@ if( isset($request['addCertificate']) && isset($request['gameResearchId'])){
     $duration = $request['duration'] ?: 24;
     $iteration = $request['iteration'] ?:1;
     $parentId = $request['parentId'] ?: null;
-    $combinedResearch = $request['gameResearchId'] ?: null;
+    $combinedResearch = $request['combinedResearch'] ?: null;
 
     $r = $research->addResearchCertificate($gameResearchId,$label, $raceId, $duration, $iteration, $parentId, $combinedResearch);
 
