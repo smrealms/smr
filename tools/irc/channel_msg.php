@@ -103,11 +103,7 @@ function channel_msg_with_registration($fp, $rdata)
 			return true;
 		if (channel_msg_op_turns($fp, $rdata, $account, $player))
 			return true;
-		if (channel_msg_op_yes($fp, $rdata, $account, $player))
-			return true;
-		if (channel_msg_op_no($fp, $rdata, $account, $player))
-			return true;
-		if (channel_msg_op_maybe($fp, $rdata, $account, $player))
+		if (channel_msg_op_response($fp, $rdata, $account, $player))
 			return true;
 		if (channel_msg_op_list($fp, $rdata, $account, $player))
 			return true;

@@ -268,17 +268,17 @@ function channel_msg_op_turns($fp, $rdata, $account, $player)
 
 }
 
-function channel_msg_op_yes($fp, $rdata, $account, $player)
-{
+function channel_msg_op_response($fp, $rdata, $account, $player) {
 
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op yes\s$/i', $rdata, $msg)) {
+	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op (yes|no|maybe)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
 		$user = $msg[2];
 		$host = $msg[3];
 		$channel = $msg[4];
+		$response = strtoupper($msg[5]);
 
-		echo_r('[OP_YES] by ' . $nick . ' in ' . $channel);
+		echo_r('[OP_' . $response . '] by ' . $nick . ' in ' . $channel);
 
 		// get the op info from db
 		$db = new SmrMySqlDatabase();
@@ -292,81 +292,9 @@ function channel_msg_op_yes($fp, $rdata, $account, $player)
 		}
 
 		$db->query('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response)
-					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $player->getAccountID() . ', \'YES\')');
+					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $player->getAccountID() . ', ' . $db->escapeString($response) . ')');
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the YES list.' . EOL);
-
-		return true;
-
-	}
-
-	return false;
-
-}
-
-function channel_msg_op_no($fp, $rdata, $account, $player)
-{
-
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op no\s$/i', $rdata, $msg)) {
-
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-
-		echo_r('[OP_NO] by ' . $nick . ' in ' . $channel);
-
-		// get the op info from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT 1
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
-			return true;
-		}
-
-		$db->query('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response)
-					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $player->getAccountID() . ', \'NO\')');
-
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the NO list.' . EOL);
-
-		return true;
-
-	}
-
-	return false;
-
-}
-
-function channel_msg_op_maybe($fp, $rdata, $account, $player)
-{
-
-	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op maybe\s$/i', $rdata, $msg)) {
-
-		$nick = $msg[1];
-		$user = $msg[2];
-		$host = $msg[3];
-		$channel = $msg[4];
-
-		echo_r('[OP_MAYBE] by ' . $nick . ' in ' . $channel);
-
-		// get the op info from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT 1
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
-			return true;
-		}
-
-		$db->query('REPLACE INTO alliance_has_op_response (alliance_id, game_id, account_id, response)
-					VALUES (' . $player->getAllianceID() . ', ' . $player->getGameID() . ', ' . $player->getAccountID() . ', \'MAYBE\')');
-
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the MAYBE list.' . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', you have been added to the ' . $response . ' list.' . EOL);
 
 		return true;
 
