@@ -12,4 +12,4 @@ g=function(t){var n=$(this)
 t.toX=n.data("x"),t.toY=n.data("y"),$.get(submitMoveHREF,t,function(t,n,e){h(),a(t,n,e)},"xml")},window.highlightMoves=h=function(){var n,e,i,o,a=$(".chessHighlight")
 0===a.length?(n=$(this),e=n.data("x"),i=n.data("y"),o=t(g,{x:e,y:i}),$(availableMoves[i][e]).addClass("chessHighlight").each(function(t,n){n.onclick=o})):a.removeClass("chessHighlight").each(function(t,n){n.onclick=h})},window.startRefresh=function(t){t&&(e=t,o=r("sn"),o!==!1&&c())}
 var d=!1
-window.followLink=function(t){return function(){d!==!0&&(d=!0,location.href=t,l())}},$(function(){$("a:not([target])").click(function(t){d!==!0?(d=!0,l()):t.preventDefault()})}),window.toggleWepD=function(t){$(".wep1:visible").slideToggle(600),$(".wep1:hidden").fadeToggle(600),$.get(t)}}()
+window.followLink=function(t){return function(){d!==!0&&(d=!0,location.href=t,l())}},$(function(){$("a:not([target])").click(function(t){1===t.which&&(d!==!0?(d=!0,l()):t.preventDefault())})}),window.toggleWepD=function(t){$(".wep1:visible").slideToggle(600),$(".wep1:hidden").fadeToggle(600),$.get(t)}}()
