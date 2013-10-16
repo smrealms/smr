@@ -14,7 +14,7 @@ function check_for_registration(&$account, &$player, $fp, $nick, $channel, $call
 
 		// execute a whois and continue here on whois
 		fputs($fp, 'WHOIS ' . $nick . EOL);
-		array_push($actions, array('MSG_318', $channel, $nick, $callback, time()));
+		array_push($actions, array('MSG_318', $channel, $nick, $callback, time(), $validationMessages));
 
 		return true;
 	}

@@ -68,7 +68,9 @@ function notice_nickserv_unknown_user($fp, $rdata)
 				
 				unset($actions[$key]);
 
-				fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+				if($action[5] === true) {
+					fputs($fp, 'PRIVMSG ' . $action[1] . ' :' . $nick . ', you are not using a registered nick. Please identify with NICKSERV and try the last command again.' . EOL);
+				}
 
 			}
 
