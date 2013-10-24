@@ -9,13 +9,12 @@ if (isset($var['msg'])) {
 	$template->assign('Message',$var['msg']);
 }
 
-$research = new Research();
-
 if(isset($_REQUEST['gameId'])){
     $game = SmrGame::getGame($_REQUEST['gameId']);
+    $research = new Research($_REQUEST['gameId']);
+    $gr = $research->getGameResearchAss();
     $container = create_container('skeleton.php', 'research_ship_view.php');
-    $gameResearch = $research->getGameResearch($_REQUEST['gameId']);
-    $container['gameResearchId'] = $gameResearch['id'];
+    $container['gameId'] = $gr['game_id'];
     $template->assign('Game',$game);
     $template->assign('ShipResearchHref', SmrSession::getNewHREF($container));
 

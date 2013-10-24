@@ -3,22 +3,31 @@
 require_once(get_file_loc('Research.class.inc'));
 
 $request = $_REQUEST;
-$research = new Research();
+$research = new Research( isset($request['gameId'])? $request['gameId'] : $var['gameId'] );
+$gr = $research->getGameResearchAss();
 
-if( isset($request['addCertificate']) && isset($request['gameResearchId'])){
+$container = create_container('skeleton.php', 'research_ship_view.php');
+
+if( isset($var['researchCertificate'])){
+    $research->startShipResearch($gr['game_id'], $player, $var['researchCertificate']);
+    $container = create_container('skeleton.php', 'planet_research.php');
+}
+
+if( isset($request['addCertificate'])){
     $gameResearchId = $request['gameResearchId'];
     $label = $request['label'] ?: "Certificate_".rand(100,1000);
     $raceId = $request['raceId'] ?: null;
     $duration = $request['duration'] ?: 24;
     $iteration = $request['iteration'] ?:1;
     $parentId = $request['parentId'] ?: null;
+    $credits = $request['credits'] ?: 0;
+    $computer = $request['computer'] ? :0;
     $combinedResearch = $request['combinedResearch'] ?: null;
 
-    $r = $research->addResearchCertificate($gameResearchId,$label, $raceId, $duration, $iteration, $parentId, $combinedResearch);
-
+    $r = $research->addResearchCertificate($label, $raceId, $duration, $iteration, $parentId, $combinedResearch, $credits, $computer);
 }
 
-if(isset($request['assignCertificate']) && isset($request['gameResearchId'])){
+if(isset($request['assignCertificate'])){
     if(isset($request['researchCertificateId']) && isset($request['shipTypeId'])){
         $research->assignResearchCertificateToShipType($request['researchCertificateId'], $request['shipTypeId'],$request['parentId']);
     }
@@ -32,10 +41,6 @@ if(isset($var['deleteResearchShipCertificate']) && isset($var['gameResearchId'])
     $research->deleteResearchShipCertificate($var['deleteResearchShipCertificate']);
 }
 
-
-$container = create_container('skeleton.php', 'research_ship_view.php');
-$container['gameResearchId'] = isset($request['gameResearchId']) ? $request['gameResearchId']: $var['gameResearchId'];
+$container['gameId'] = isset($request['gameId']) ? $request['gameId']: $var['gameId'];
 forward($container);
-
-
 ?>

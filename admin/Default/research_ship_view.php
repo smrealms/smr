@@ -10,23 +10,21 @@ if (isset($var['msg'])) {
 	$template->assign('Message',$var['msg']);
 }
 
-$research = new Research();
 
-if (isset($var['gameId'])) {
-    $gameResearch = $research->getGameResearch($var['gameId']);
-}
+//if(!isset($var['gameResearchId'])){
+//    create_error("gameResearchId is missing !!!: ");
+//}
 
-$gameResearchId = $var['gameResearchId'];
-
-if(isset($gameResearchId)){
+    $research = new Research($var['gameId']);
+    $gr = $research->getGameResearchAss();
 
     // get research entry
-    $db->query('SELECT * FROM smr.game_research WHERE id='.$db->escapeNumber($gameResearchId));
-    $gameResearch = null;
-    if($db->nextRecord()){
-        $gameResearch = $db->getRow();
-    }
-    $template->assign("GameResearch",$gameResearch);
+    //$db->query('SELECT * FROM smr.game_research WHERE id='.$db->escapeNumber($gr['id']));
+    //$gameResearch = null;
+    //if($db->nextRecord()){
+    //    $gameResearch = $db->getRow();
+    //}
+    $template->assign("GameResearch",$gr);
 
     // get races
     $db->query("SELECT * FROM race");
@@ -36,9 +34,9 @@ if(isset($gameResearchId)){
     }
     $template->assign("Races",$races);
 
-    $researchCertificates = $research->getResearchCertificates($gameResearchId);
+    $researchCertificates = $research->getResearchCertificates();
     $container = create_container("skeleton.php","research_process.php");
-    $container['gameResearchId'] = $gameResearchId;
+    $container['gameId'] = $gr['game_id'];
 
     if(isset($researchCertificates)){
         foreach($researchCertificates AS &$cert){
@@ -50,10 +48,10 @@ if(isset($gameResearchId)){
 
     $template->assign("GameResearchCertificates", $researchCertificates);
 
-    $researchShipCertificates = $research->getResearchShipCertificates($gameResearchId);
+    $researchShipCertificates = $research->getResearchShipCertificates();
 
     $container = create_container("skeleton.php","research_process.php");
-    $container['gameResearchId'] = $gameResearchId;
+    $container['gameId'] = $gr['game_id'];
     if(isset($researchShipCertificates)){
         foreach($researchShipCertificates AS &$cert){
             $container['deleteResearchShipCertificate']=$cert['id'];
@@ -64,13 +62,13 @@ if(isset($gameResearchId)){
     $template->assign("GameResearchShipCertificates", $researchShipCertificates);
 
     // create game instance ...
-    $game = SmrGame::getGame($gameResearch['game_id']);
+    $game = SmrGame::getGame($gr['game_id']);
     $template->assign('Game',$game);
 
     $container = create_container("skeleton.php","research_process.php");
-    $container['gameResearchId'] = $gameResearchId;
+    $container['gameId'] = $gr['game_id'];
     $template->assign('AddCertificateHref', SmrSession::getNewHREF($container));
 
     $template->assignByRef('ShipTypes', AbstractSmrShip::getAllBaseShips(0));
-}
+
 ?>

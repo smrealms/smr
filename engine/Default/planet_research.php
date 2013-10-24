@@ -10,12 +10,26 @@ require_once(get_file_loc('menu.inc'));
 create_planet_menu();
 
 require_once(get_file_loc('Research.class.inc'));
-$research = new Research();
+$research = new Research($player->getGameID());
 
-$gameResearch = $research->getGameResearch($player->getGameID());
-
-$template->assign('ResearchedCertificates', $research->getAllianceResearchedCertificates($gameResearch['id'], $player->getAllianceID()));
-$template->assign('ResearchableCertificates', $research->getAllianceResearchableCertificates($gameResearch['id'], $player->getAllianceID()));
+$researchInProgressArr = $research->getAllianceResearchInProgress($player->getAllianceID());
+$researchableCertArr = $research->getAllianceResearchableShipCertificates($player->getAllianceID());
 
 
+$playerIsResearching = $research->isPlayerResearching($researchInProgressArr, $player->getPlayerID());
+$planetInResearch = $research->isPlanetInResearch($player->getSectorPlanet()->getSectorID());
+if(!$planetInResearch && !$playerIsResearching){
+    foreach($researchableCertArr AS &$r){
+        $container = create_container('skeleton.php', 'research_process.php');
+        $container['researchCertificate'] = $r['research_ship_cert_id'];
+        $container['gameId'] = $player->getGameID();
+        $r['ResearchCertificateHRF'] = SmrSession::getNewHREF($container);
+    }
+}
+
+$template->assign("PlayerResearching", $playerIsResearching);
+$template->assign("PlanetResearching", $planetInResearch);
+
+$template->assign('ResearchedCertificates', $research->getAllianceResearchedCertificates($player->getAllianceID()));
+$template->assign('ResearchableCertificates', $researchableCertArr);
 ?>

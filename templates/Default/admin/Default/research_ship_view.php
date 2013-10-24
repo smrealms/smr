@@ -6,7 +6,7 @@ if(isset($Message)) {
 	echo $Message; ?><br /><br /><?php
 } ?>
 
-	<h1>Ship Research</h1><br />
+	<h1>Ship Research for GameResearchId: <?php echo $GameResearch['id'] ?></h1><br />
 
     <h2>Certificates</h2>
     <?php if(isset($GameResearchCertificates)){ ?>
@@ -17,6 +17,8 @@ if(isset($Message)) {
                 <th>Race</th>
                 <th>Duration in hours</th>
                 <th>Iterations</th>
+                <th>Credits</th>
+                <th>Computer</th>
                 <th>Multirace</th>
                 <th>Parent</th>
                 <th>DELETE</th>
@@ -28,6 +30,8 @@ if(isset($Message)) {
                     <td align="center"><?php if(isset($cert['race_name'])) echo $cert['race_name'] ?></td>
                     <td align="center"><?php echo $cert['duration'] ?></td>
                     <td align="center"><?php echo $cert['iteration'] ?></td>
+                    <td align="center"><?php echo $cert['credits'] ?></td>
+                    <td align="center"><?php echo $cert['computer'] ?></td>
                     <td align="center"><?php if(isset($cert['combined_research'])) echo "YES" ?></td>
                     <td align="center"><?php if(isset($cert['parent_label'])) echo $cert['parent_label'] ?></td>
                     <td align="center"><a href="<?php echo $cert['deleteHref'] ?>">DELETE</a></td>
@@ -38,18 +42,14 @@ if(isset($Message)) {
     <?php } ?>
     <p><b>Add a new certificate</b></p>
 <form name="AddCertificate" method="POST" action="<?php echo $AddCertificateHref; ?>">
-<input type="hidden" name="gameResearchId" value="<?php echo $GameResearch['id']; ?>"/>
+<input type="hidden" name="gameId" value="<?php echo $GameResearch['game_id']; ?>"/>
         <table>
             <tr>
-                <th>Give the certificate a name</th>
-            </tr>
-            <tr>
+                <td><b>Label for the certificate</b></td>
                 <td><input type="text" name="label" size="50"/></td>
             </tr>
             <tr>
-                <th>Select race that is allowed to research this certificate (None for any)</th>
-            </tr>
-            <tr>
+                <td><b>Select race that is allowed to research this certificate (None for any)</b></td>
                 <td><select name="raceId" size="1" id="InputFields">
                         <option value="">None</option>
                         <?php foreach($Races as $r) {?>
@@ -58,27 +58,27 @@ if(isset($Message)) {
                     </select></td>
             </tr>
             <tr>
-                <th>Research duration in hours</th>
-            </tr>
-            <tr>
+                <td><b>Research duration in hours</b></td>
                 <td><input type="text" name="duration" size="2"/> </td>
             </tr>
             <tr>
-                <th>Research iteration in order to conclude the research</th>
-            </tr>
-            <tr>
+                <td><b>Research iteration in order to conclude the research</b></td>
                 <td><input type="text" name="iteration" size="1"/> </td>
             </tr>
             <tr>
-                <th>Do all races need to research on that certificate ?</th>
+                <td><b>Credits to start research</b></td>
+                <td><input type="text" name="credits" size="8"/> </td>
             </tr>
             <tr>
+                <td><b>Computers on planet to start research</b></td>
+                <td><input type="text" name="computer" size="5"/> </td>
+            </tr>
+            <tr>
+                <td><b>Do all races need to research on that certificate ?</b></td>
                 <td><input type="checkbox" name="combinedResearch" value="1" /> </td>
             </tr>
             <tr>
-                <th>Predecessor certificate</th>
-            </tr>
-            <tr>
+                <td></b>Predecessor certificate</b></td>
                 <td><select name="parentId" size="1" id="InputFields">
                         <option value="">None</option>
 
@@ -125,7 +125,7 @@ if(isset($Message)) {
 
     <p><b>Assign ship to certificate</b></p>
 <form name="AssignShipToCertificate" method="POST" action="<?php echo $AddCertificateHref; ?>">
-    <input type="hidden" name="gameResearchId" value="<?php echo $GameResearch['id']; ?>"/>
+    <input type="hidden" name="gameId" value="<?php echo $GameResearch['game_id']; ?>"/>
     <table>
 
         <tr>
