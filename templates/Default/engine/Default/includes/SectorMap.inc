@@ -1,5 +1,6 @@
 <table class="lmt" style="margin: auto;"><?php
 	$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
+	$UniGen = isset($UniGen)&&$UniGen;
 	foreach($MapSectors as &$MapSector) { ?>
 		<tr><?php
 			foreach($MapSector as &$Sector) {
