@@ -9,7 +9,7 @@ $gr = $research->getGameResearchAss();
 $container = create_container('skeleton.php', 'research_ship_view.php');
 
 if( isset($var['researchCertificate'])){
-    $research->startShipResearch($gr['game_id'], $player, $var['researchCertificate']);
+    $research->startShipResearch($player, $var['researchCertificate']);
     $container = create_container('skeleton.php', 'planet_research.php');
 }
 

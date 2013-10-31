@@ -2,9 +2,9 @@
 
 require_once(get_file_loc('Research.class.inc'));
 
-$research = new Research();
-$gameResearch = $research->getGameResearch($player->getGameID());
-$research->processAllianceResearchInProgress($player, $gameResearch['id']);
+$research = new Research($player->getGameID());
+
+$research->processAllianceResearchInProgress($player);
 
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');

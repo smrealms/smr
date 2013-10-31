@@ -62,27 +62,22 @@ CREATE INDEX `GRC_GAME_RESARCH_IDX` ON `game_research_certificate` (`game_resear
 CREATE INDEX `GRC_PARENT_IDX` ON `game_research_certificate` (`parent_id` ASC);
 
 
+-----------------------------------------------------
+-- Table `game_alliance_certificate`
 -- -----------------------------------------------------
--- Table `game_alliance_ship_certificate`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `game_alliance_ship_certificate` ;
+DROP TABLE IF EXISTS `game_alliance_certificate` ;
 
-CREATE TABLE IF NOT EXISTS `game_alliance_ship_certificate` (
+CREATE TABLE IF NOT EXISTS `game_alliance_certificate` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `game_research_ship_certificate_id` INT NOT NULL,
+  `game_research_certificate_id` INT NOT NULL,
   `alliance_id` INT NOT NULL,
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
-CREATE INDEX `GASC_GAME_RESEARCH_SHIP_CERTIFICATE_IDX` ON `game_alliance_ship_certificate` (`game_research_ship_certificate_id` ASC);
+CREATE INDEX `GASC_GAME_RESEARCH_CERTIFICATE_IDX` ON `game_alliance_certificate` (`game_research_certificate_id` ASC);
 
-CREATE INDEX `GASC_ALLIANCE_IDX` ON `game_alliance_ship_certificate` (`alliance_id` ASC);
+CREATE INDEX `GASC_ALLIANCE_IDX` ON `game_alliance_certificate` (`alliance_id` ASC);
 
-
--- -----------------------------------------------------
--- Table `game_alliance_research_progress`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `game_alliance_research_progress` ;
 
 -- -----------------------------------------------------
 -- Table `game_alliance_research_progress`
@@ -91,7 +86,7 @@ DROP TABLE IF EXISTS `game_alliance_research_progress` ;
 
 CREATE TABLE IF NOT EXISTS `game_alliance_research_progress` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `game_research_ship_certificate_id` INT NULL,
+  `game_research_certificate_id` INT NULL,
   `started_at` INT(10) NOT NULL,
   `player_id` INT NOT NULL,
   `status` VARCHAR(50) NOT NULL,
@@ -100,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `game_alliance_research_progress` (
   PRIMARY KEY (`id`))
   ENGINE = InnoDB;
 
-CREATE INDEX `GARP_GAME_RESEARCH_SHIP_CERTIFICATE_IDX` ON `game_alliance_research_progress` (`game_research_ship_certificate_id` ASC);
+CREATE INDEX `GARP_GAME_RESEARCH_CERTIFICATE_IDX` ON `game_alliance_research_progress` (`game_research_certificate_id` ASC);
 
 CREATE INDEX `GARP_ALLIANCE_IDX` ON `game_alliance_research_progress` (`alliance_id` ASC);
 

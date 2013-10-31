@@ -15,21 +15,27 @@ $research = new Research($player->getGameID());
 $researchInProgressArr = $research->getAllianceResearchInProgress($player->getAllianceID());
 $researchableCertArr = $research->getAllianceResearchableShipCertificates($player->getAllianceID());
 
+$planetInResearch = false;
+foreach($researchInProgressArr as &$z){
+    if($z['sector_id']==$player->getSectorID()){
+        $template->assign("PlanetResearching", $z);
+        $planetInResearch = true;
+    }
+}
 
 $playerIsResearching = $research->isPlayerResearching($researchInProgressArr, $player->getPlayerID());
-$planetInResearch = $research->isPlanetInResearch($player->getSectorPlanet()->getSectorID());
+//$planetInResearch = $research->isPlanetInResearch($player->getSectorPlanet()->getSectorID());
 if(!$planetInResearch && !$playerIsResearching){
     foreach($researchableCertArr AS &$r){
         $container = create_container('skeleton.php', 'research_process.php');
-        $container['researchCertificate'] = $r['research_ship_cert_id'];
+        $container['researchCertificate'] = $r['id'];
         $container['gameId'] = $player->getGameID();
         $r['ResearchCertificateHRF'] = SmrSession::getNewHREF($container);
     }
 }
 
 $template->assign("PlayerResearching", $playerIsResearching);
-$template->assign("PlanetResearching", $planetInResearch);
-
+$template->assign("ResearchInProgress", $researchInProgressArr);
 $template->assign('ResearchedCertificates', $research->getAllianceResearchedCertificates($player->getAllianceID()));
 $template->assign('ResearchableCertificates', $researchableCertArr);
 ?>
