@@ -63,7 +63,7 @@ if(isset($Message)) {
             </tr>
             <tr>
                 <td><b>Research iteration in order to conclude the research</b></td>
-                <td><input type="text" name="iteration" size="1"/> </td>
+                <td><!-- <input type="text" name="iteration" size="1"/> --> NEXT RELEASE</td>
             </tr>
             <tr>
                 <td><b>Credits to start research</b></td>
@@ -75,7 +75,7 @@ if(isset($Message)) {
             </tr>
             <tr>
                 <td><b>Do all races need to research on that certificate ?</b></td>
-                <td><input type="checkbox" name="combinedResearch" value="1" /> </td>
+                <td> <!-- <input type="checkbox" name="combinedResearch" value="1" /> --> !!! NEXT RELEASE !!!</td>
             </tr>
             <tr>
                 <td></b>Predecessor certificate</b></td>

@@ -22,7 +22,7 @@ class SmrAlliance {
 
 	protected $memberList;
 
-    public static function sendMessage($allianceID, $gameID, $msg, $senderDelete=0){
+    public static function sendMessage($allianceID, $gameID, $msg){
 
         $db = new SmrMySqlDatabase();
         $message = trim($msg);
@@ -37,21 +37,23 @@ class SmrAlliance {
             $accountIds[] = $db->getRow();
         }
 
-        foreach($accountIds AS $aId){
-            $db->query('INSERT INTO message
-                (account_id,game_id,message_type_id,message_text,
-                sender_id,send_time,expire_time,sender_delete) VALUES(' .
-                $db->escapeNumber($aId) . ',' .
-                $db->escapeNumber($gameID) . ',' .
-                $db->escapeNumber(MSG_ALLIANCE) . ',' .
-                $db->escapeString($message) . ',' .
-                $db->escapeNumber(0) . ',' .
-                $db->escapeNumber(TIME) . ',' .
-                $db->escapeNumber(86400 * 31) . ',' .
-                $db->escapeBoolean($senderDelete) . ')');
+        foreach($accountIds AS $acc){
+            $query = "INSERT INTO message "
+                    ." (account_id,game_id,message_type_id,message_text, "
+                    ." sender_id,send_time,expire_time,sender_delete) VALUES("
+                    .$db->escapeNumber($acc['account_id']) . ',' .
+                    $db->escapeNumber($gameID) . ',' .
+                    $db->escapeNumber(MSG_ALLIANCE) . ',' .
+                    $db->escapeString($message) . ',' .
+                    $db->escapeNumber(0) . ',' .
+                    $db->escapeNumber(TIME) . ',' .
+                    $db->escapeNumber(86400 * 31) .",'FALSE')";
+
+            $db->query($query);
+            unset($query);
 
             $db->query('REPLACE INTO player_has_unread_messages (game_id, account_id, message_type_id) VALUES
-                            (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($aId) . ', ' . $db->escapeNumber(MSG_ALLIANCE) . ')');
+                            (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($acc['account_id']) . ', ' . $db->escapeNumber(MSG_ALLIANCE) . ')');
 
         }
     }

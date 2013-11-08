@@ -19,12 +19,13 @@ $planetInResearch = false;
 foreach($researchInProgressArr as &$z){
     if($z['sector_id']==$player->getSectorID()){
         $template->assign("PlanetResearching", $z);
+        $template->assign("Msg",$z['player_name']." is researching '".$z['cert_label']
+                            ."'. Reseach ends ".date("d/m/Y H:i:s",$z['expires']));
         $planetInResearch = true;
     }
 }
 
-$playerIsResearching = $research->isPlayerResearching($researchInProgressArr, $player->getPlayerID());
-//$planetInResearch = $research->isPlanetInResearch($player->getSectorPlanet()->getSectorID());
+$playerIsResearching = $research->isPlayerResearching($researchInProgressArr, $player);
 if(!$planetInResearch && !$playerIsResearching){
     foreach($researchableCertArr AS &$r){
         $container = create_container('skeleton.php', 'research_process.php');

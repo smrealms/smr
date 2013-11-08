@@ -17,15 +17,60 @@ class Research {
     protected $db;
     protected $gameResearch = null;
 
+
     // assure that multiple transactions within one request do not penetrate DB too much
     private $researchInProgressArray = array();
 
-    public  $RESEARCH_PROCESS_STATES = array('progress'=>'IN_PROGRESS', 'msp'=>'MILESTONE_PASSED', 'psd'=>'PASSED');
+    public  $RESEARCH_PROCESS_STATES = array('progress'=>'IN_PROGRESS', 'msp'=>'MILESTONE_PASSED', 'psd'=>'PASSED','cnc'=>'CANCELLED');
 
 
     function __construct($gameId) {
         $this->db = new SmrMySqlDatabase();
         $this->getGameResearch($gameId);
+    }
+
+    public function getAlliancePlayerResearchInProgress($player){
+        $this->db->query("SELECT garp.*, grc.label AS cert_label "
+        ." FROM game_alliance_research_progress garp, "
+        ." game_research_certificate grc "
+        ." WHERE player_id=".$this->db->escapeNumber($player->getPlayerID())
+        ." AND game_research_certificate_id=grc.id "
+        ." AND game_research_id=".$this->gameResearch['id']
+        ." AND status='IN_PROGRESS' ");
+
+        if($this->db->nextRecord()){
+            return $this->db->fetch_row();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $player
+     */
+    public function cancelUserResearch($player){
+
+        $inProgress = $this->getAlliancePlayerResearchInProgress($player);
+        if($inProgress){
+            $query = "UPDATE game_alliance_research_progress SET status='".$this->RESEARCH_PROCESS_STATES['cnc']."'"
+                    ." WHERE id=".$this->db->escapeNumber($inProgress['id']);
+            $this->db->query($query);
+        }
+
+        $msg = $player->getPlayerName()." cancelled research of '".$inProgress['cert_label']."'";
+        SmrAlliance::sendMessage($player->getAllianceID(), $player->getGameID(),$msg);
+    }
+
+
+
+    private function getGameResearchCertificate($gameResearchCertificateId){
+        $query = "SELECT * FROM game_research_certificate WHERE id=".$this->db->escapeNumber($gameResearchCertificateId);
+
+        $this->db->query($query);
+        if(!$this->db->nextRecord()){
+            return null;
+        }
+        return $this->db->getRow();
     }
 
     /**
@@ -35,9 +80,36 @@ class Research {
      * @return bool
      */
     public function startShipResearch($player, $researchCertificateId){
+        $resp = array();
+
         if($this->isPlanetInResearch($player->getSectorID())){
-            return false;
+            $resp['error'] = "Planet currently researching !!!";
+            return $resp;
         }
+
+        $researchCert = $this->getGameResearchCertificate($researchCertificateId);
+        if(!$researchCert){
+            $resp['error'] = "Research Certificate cannot be found .. Are you trying to cheat me !!!";
+            return $resp;
+        }
+
+        $planet = $player->getSectorPlanet();
+        if($planet->getCredits()<$researchCert['credits']){
+            $resp['error'] = "Planet covers ".$planet->getCredits()
+                    ." credits, required to bootstrap research are "
+                    .$researchCert['credits']." however !!!";
+            return $resp;
+        }
+        if($planet->getStockpile(10)<$researchCert['computer']){
+            $resp['error'] =  "Planet covers ".$planet->getStockpile(10)
+            ." computers, required to bootstrap research are "
+            .$researchCert['computer']." however !!!";
+            return $resp;
+        }
+
+        $resp['success'] = "You started to research '".$researchCert['label']."'. "
+                            .$planet->getCredits()." credits and "
+                            .$researchCert['computer']." computers have been taken from planet stock. ";
 
         $query = "INSERT INTO game_alliance_research_progress (game_research_certificate_id, started_at, player_id, status, alliance_id, sector_id) "
                 ." VALUES (".$this->db->escape($researchCertificateId)
@@ -49,7 +121,15 @@ class Research {
                 .")";
 
         $this->db->query($query);
-        return true;
+
+        $planet->decreaseStockpile(10,$researchCert['computer']);
+        $planet->decreaseCredits($researchCert['credits']);
+
+        $msg = $player->getPlayerName()." started research of '".$researchCert['label']."' ";
+        SmrAlliance::sendMessage($player->getAllianceID(), $player->getGameID(),$msg);
+
+
+        return $resp;
     }
 
     /**
@@ -121,9 +201,13 @@ class Research {
         return $row['rows'] > 0;
     }
 
-    public function isPlayerResearching(&$allianceResearchInProgressArr, &$playerId){
+    public function isPlayerResearching($allianceResearchInProgressArr, $player){
+
+        if(!$allianceResearchInProgressArr){
+            $allianceResearchInProgressArr = $this->getAllianceResearchInProgress($player->getAllianceID());
+        }
         foreach($allianceResearchInProgressArr AS $r){
-            if($r['player_id']==$playerId){
+            if($r['player_id']==$player->getPlayerId()){
                 return true;
             }
         }
@@ -141,9 +225,9 @@ class Research {
             if(!empty($result)){
                 foreach($result AS $r){
                     if($r['status']==$this->RESEARCH_PROCESS_STATES['progress']){
-                        $expires =  strtotime(" +".$r['cert_duration']." hours", strtotime($r['started_at']));
+                        $expires = strtotime(" +".$r['cert_duration']." hours", $r['started_at']);
                         if(time()  > $expires){
-                            $this->processAllianceResearchMilestone($result, $r, $player->getAllianceID());
+                            $this->processAllianceResearchMilestone($result, $r, $player);
                         }
                     }
                 }
@@ -151,7 +235,7 @@ class Research {
         }
     }
 
-    private function processAllianceResearchMilestone($inProgressArr, $research, $allianceId){
+    private function processAllianceResearchMilestone($inProgressArr, $research, $player){
 
         if($research['cert_iteration'] == 1){
             $this->db->query("UPDATE game_alliance_research_progress "
@@ -159,9 +243,13 @@ class Research {
 
             $this->db->query("INSERT INTO game_alliance_certificate (game_research_certificate_id, alliance_id)"
             ." VALUES (".$research['cert_id']
-            .",".$this->db->escapeNumber($allianceId)
+            .",".$this->db->escapeNumber($player->getAllianceID())
             .")");
-            // @TODO send alliance message
+
+            $msg = $player->getPlayerName()." finished research of '".$research['cert_label']."' ";
+            SmrAlliance::sendMessage($player->getAllianceID(), $player->getGameID(),$msg);
+
+
             return;
         }
 
@@ -265,16 +353,18 @@ class Research {
      * @return array
      */
     public function getAllianceResearchedCertificates($allianceId){
-        $this->db->query(    " SELECT cert.id AS cert_id, cert.label, cert.parent_id, st.ship_type_id,st.ship_name "
-                            ." FROM game_research_certificate cert, "
-	                        ." game_research_ship_certificate cf, "
-	                        ." game_alliance_certificate gac, "
-	                        ." ship_type st "
-                            ." WHERE cert.id=cf.game_research_certificate_id "
-                            ." AND cf.ship_type_id=st.ship_type_id "
-                            ." AND cert.id=gac.game_research_certificate_id "
-                            ." AND cert.game_research_id=".$this->db->escapeNumber($this->gameResearch['id'])
-                            ." AND gac.alliance_id=".$this->db->escapeNumber($allianceId));
+        $query =   " SELECT cert.id AS cert_id, cert.label, cert.parent_id, st.ship_type_id,st.ship_name "
+                ." FROM game_research_certificate cert, "
+                ." game_research_ship_certificate cf, "
+                ." game_alliance_certificate gac, "
+                ." ship_type st "
+                ." WHERE cert.id=cf.game_research_certificate_id "
+                ." AND cf.ship_type_id=st.ship_type_id "
+                ." AND cert.id=gac.game_research_certificate_id "
+                ." AND cert.game_research_id=".$this->db->escapeNumber($this->gameResearch['id'])
+                ." AND gac.alliance_id=".$this->db->escapeNumber($allianceId);
+
+        $this->db->query($query);
 
         $result = array();
         while ($this->db->nextRecord()){

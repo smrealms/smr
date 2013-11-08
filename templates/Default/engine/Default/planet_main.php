@@ -5,6 +5,10 @@ if (isset($ErrorMsg)) {
 if (isset($Msg)) {
 	echo $Msg; ?><br /><?php
 }
+
+if(isset($InResearch)){
+    echo $InResearch; ?><br /><br/><?php
+}
 ?>
 <table class="standardnobord fullwidth">
 	<tr>
