@@ -111,7 +111,7 @@
 
 					<p>&nbsp;</p>
 
-					<div align="center" style="font-size=80%;">
+					<div align="center" style="font-size:80%;">
 						I have read and accepted the User Agreement above,<br />
 						made sure all information submitted is correct,<br />
 						and understand that my account can be closed or deleted<br />
