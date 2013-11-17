@@ -210,6 +210,7 @@ define('MISJUMP_DISTANCE_DIFF_FACTOR', 1.2);
 define('TURNS_JUMP_MINIMUM', 10);
 
 define('TURNS_TO_CLOAK',1);
+define('TURNS_TO_SHOOT_PORT',3);
 
 define('GOOD_NOTHING',0);
 /*
