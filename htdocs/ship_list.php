@@ -128,8 +128,7 @@ function buildShipStats($db) {
 		$restriction = '&nbsp;';
     $stat[] = $restriction;
 //    $stat[] = $db->getInt('lvl_needed');
-	$stat[] = $db->getInt('max_amount');
-	$hardware_id = 2;
+	$hardware_id = 1;
     //get our hardware
     while ($hardware_id <= 11)
     {
