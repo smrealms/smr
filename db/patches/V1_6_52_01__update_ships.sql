@@ -33,7 +33,7 @@ UPDATE ship_type_support_hardware SET max_amount = 40 WHERE ship_type_id = 48 AN
 UPDATE ship_type_support_hardware SET max_amount = 290 WHERE ship_type_id = 48 AND hardware_type_id = 4;
 
 -- Medium Carrier to 6,030,523 credits, 425 shields, 40 armour, and 220 CDs
-UPDATE ship_type SET cost = 6030523 WHERE ship_type_id = 59;
+UPDATE ship_type SET cost = 6030523 WHERE ship_type_id = 27;
 UPDATE ship_type_support_hardware SET max_amount = 425 WHERE ship_type_id = 27 AND hardware_type_id = 1;
 UPDATE ship_type_support_hardware SET max_amount = 40 WHERE ship_type_id = 27 AND hardware_type_id = 2;
 UPDATE ship_type_support_hardware SET max_amount = 220 WHERE ship_type_id = 27 AND hardware_type_id = 4;
