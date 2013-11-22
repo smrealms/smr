@@ -39,14 +39,23 @@ try {
 	}
 	
 	if(isset($_REQUEST['sector_id'])) {
-		if(($galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $_REQUEST['sector_id'])) === false) {
+		$sectorID = $_REQUEST['sector_id'];
+		if(!is_numeric($sectorID)) {
+			header('location: ' . URL . '/error.php?msg=Sector id was not a number.');
+		}
+		$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $sectorID);
+		if($galaxy === false) {
 			header('location: ' . URL . '/error.php?msg=Invalid sector id');
 			exit;
 		}
 	}
 	else if(isset($_REQUEST['galaxy_id'])) {
+		$galaxyID = $_REQUEST['galaxy_id'];
+		if(!is_numeric($galaxyID)) {
+			header('location: ' . URL . '/error.php?msg=Galaxy id was not a number.');
+		}
 		try {
-			$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$_REQUEST['galaxy_id']);
+			$galaxy =& SmrGalaxy::getGalaxy(SmrSession::$game_id,$galaxyID);
 		}
 		catch(Exception $e) {
 			header('location: ' . URL . '/error.php?msg=Invalid galaxy id');
@@ -59,14 +68,14 @@ try {
 	// create account object
 	$account =& $player->getAccount();
 	
-	if (!isset($_REQUEST['galaxy_id']) && !isset($_REQUEST['sector_id'])) {
+	if (!isset($galaxyID) && !isset($sectorID)) {
 		$galaxy =& SmrGalaxy::getGalaxyContaining(SmrSession::$game_id,$player->getSectorID());
 	}
 	
 	
-	if($account->isCenterGalaxyMapOnPlayer() || isset($_REQUEST['sector_id'])) {
-		if(isset($_REQUEST['sector_id']))
-			$topLeft =& SmrSector::getSector($player->getGameID(),$_REQUEST['sector_id']);
+	if(isset($sectorID) || $account->isCenterGalaxyMapOnPlayer()) {
+		if(isset($sectorID))
+			$topLeft =& SmrSector::getSector($player->getGameID(),$sectorID);
 		else
 			$topLeft =& $player->getSector();
 		
