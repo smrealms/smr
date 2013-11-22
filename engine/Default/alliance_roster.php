@@ -111,14 +111,14 @@ $PHP_OUTPUT.= '
 	<th><a href="'.Globals::getAllianceRosterHREF($alliance->getAllianceID(),'getExperience',$var['SortKey']=='getExperience'?!$var['SortDesc']:true).'">Experience</a></th>
 ';
 
+if($varAction == 'Show Alliance Roles') {
+	$PHP_OUTPUT.= '<th>Role</th>';
+}
+
 // Alliance members get to see active/inactive status of members
 if($player->getAllianceID() == $alliance->getAllianceID()) {
 	$PHP_OUTPUT.='<th class="shrink">Status</th>';
 	$ActiveIDs = $alliance->getActiveIDs();
-}
-
-if($varAction == 'Show Alliance Roles') {
-	$PHP_OUTPUT.= '<th>Role</th>';
 }
 
 $PHP_OUTPUT.= '</tr>';
