@@ -3,14 +3,17 @@ class SmrPort {
 	protected static $CACHE_PORTS = array();
 	protected static $CACHE_CACHED_PORTS = array();
 	
-	const NUMBER_OF_PORT_WEAPONS = 10;
+	const NUMBER_OF_PORT_WEAPONS = 6;
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325;
 	const CHANCE_TO_DOWNGRADE = 1;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
-	const BASE_DEFENCES = 1000;
-	const DEFENCES_PER_LEVEL = 1000;
-	const DEFENCES_PER_TEN_MIL_CREDITS = 500;
+	const BASE_CDS = 1000;
+	const CDS_PER_LEVEL = 70;
+	const CDS_PER_TEN_MIL_CREDITS = 25;
+	const BASE_DEFENCES = 500;
+	const DEFENCES_PER_LEVEL = 700;
+	const DEFENCES_PER_TEN_MIL_CREDITS = 250;
 	const BARGAIN_LENIENCY_PERCENT = 0.01;
 	const MAX_LEVEL = 9;
 	private static $BASE_REFRESH_PER_HOUR = array(
@@ -157,18 +160,23 @@ class SmrPort {
 	public function checkDefenses() {
 		if(!$this->isUnderAttack()) {
 			$defences = self::BASE_DEFENCES + $this->getLevel() * self::DEFENCES_PER_LEVEL;
+			$cds = self::BASE_CDS + $this->getLevel() * self::CDS_PER_LEVEL;
 			// Upgrade modifier
 			$defences += max(0, round(self::DEFENCES_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
+			$cds += max(0, round(self::CDS_PER_LEVEL * $this->getUpgrade() / $this->getUpgradeRequirement()));
 			// Credits modifier
 			$defences += max(0, round(self::DEFENCES_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
+			$cds += max(0, round(self::CDS_PER_TEN_MIL_CREDITS * $this->getCredits() / 10000000));
 			// Defences restock (check for fed arrival)
 			if(TIME < $this->getReinforceTime() + self::TIME_FEDS_STAY) {
 				$federalMod = (self::TIME_FEDS_STAY - (TIME - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
-				$defences += max(0, round($federalMod * self::MAX_FEDS_BONUS));
+				$federalMod = max(0, round($federalMod * self::MAX_FEDS_BONUS));
+				$defences += $federalMod;
+				$cds += $federalMod / 10;
 			}
 			$this->setShields($defences);
 			$this->setArmour($defences);
-			$this->setCDs($defences/10);
+			$this->setCDs($cds);
 			if($this->getCredits() == 0) {
 				$this->setCreditsToDefault();
 			}
@@ -649,7 +657,7 @@ class SmrPort {
 	}
 
 	public function setCreditsToDefault() {
-		$this->setCredits(1250000 + $this->getLevel()*1250000 + pow($this->getLevel(), 2) * 275000);
+		$this->setCredits(3000000 + $this->getLevel()*1500000 + pow($this->getLevel(), 2) * 300000);
 	}
 
 	public function setCredits($credits) {
