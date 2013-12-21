@@ -22,15 +22,14 @@ if( isset($var['researchCertificate'])){
 }
 
 if( isset($request['addCertificate'])){
-    $gameResearchId = $request['gameResearchId'];
-    $label = $request['label'] ?: "Certificate_".rand(100,1000);
-    $raceId = $request['raceId'] ?: null;
-    $duration =  $request['duration'] ?: 24;
-    $iteration = $request['iteration'] ?:1;
-    $parentId = $request['parentId'] ?: null;
-    $credits = $request['credits'] ?: 0;
-    $computer = $request['computer'] ? :0;
-    $combinedResearch = $request['combinedResearch'] ?: null;
+    $label = (isset($request['label']) && !empty($request['label'])) ? $request['label'] : "Certificate_".rand(100,1000);
+    $raceId = (isset($request['raceId']) && !empty($request['raceId']))  ? $request['raceId'] : null;
+    $duration = (isset($request['duration']) && !empty($request['duration'])) ? $request['duration'] : 24;
+    $iteration = (isset($request['iteration']) && !empty($request['iteration'])) ? $request['iteration'] : 1;
+    $parentId = (isset($request['parentId']) && !empty($request['parentId'])) ? $request['parentId'] : null;
+    $credits = (isset($request['credits']) && !empty($request['credits']))  ? $request['credits'] : 0;
+    $computer = (isset($request['computer']) && !empty($request['computer'])) ? $request['computer'] : 0;
+    $combinedResearch = (isset($request['combinedResearch']) && !empty($request['combinedResearch'])) ? $request['combinedResearch'] : null;
 
     $r = $research->addResearchCertificate($label, $raceId, $duration, $iteration, $parentId, $combinedResearch, $credits, $computer);
 }

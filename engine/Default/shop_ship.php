@@ -5,8 +5,8 @@ $template->assign('PageTopic','Ship Dealer');
 
 $shipsSold = array();
 
-$research = new Research();
-$gameResearch = $research->getGameResearch($player->getGameID());
+$research = new Research($player->getGameID());
+$gameResearch = $research->getGameResearchAss();
 $researchableShips = null;
 
 if($gameResearch && $gameResearch['ship_research']){
