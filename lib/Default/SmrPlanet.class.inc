@@ -1077,6 +1077,11 @@ class SmrPlanet {
 		$this->db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		$this->removeClaimed();
 		$this->removePassword();
+
+        require_once(get_file_loc('Research.class.inc'));
+        $research = new Research($killer->getGameID());
+        $research->cancelPlanetResearch($killer->getSectorID());
+
 		return $return;
 	}
 }

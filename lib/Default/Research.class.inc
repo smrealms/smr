@@ -11,6 +11,7 @@
  */
 require_once(get_file_loc('SmrAlliance.class.inc'));
 require_once(get_file_loc('SmrPlayer.class.inc'));
+require_once(get_file_loc('SmrPlanet.class.inc'));
 
 class Research {
     protected $game;
@@ -29,6 +30,57 @@ class Research {
         $this->getGameResearch($gameId);
     }
 
+    /**
+     * @return array
+     */
+    public function getResearchInProgress(){
+        if(!empty($this->researchInProgressArray)){
+            return $this->researchInProgressArray;
+        }
+        $query =     "SELECT garp.id, garp.started_at, garp.player_id, garp.status, garp.sector_id, grc.id AS cert_id, "
+            ." grc.label AS cert_label, grc.duration AS cert_duration, grc.iteration AS cert_iteration, "
+            ." p.player_name "
+            ." FROM game_alliance_research_progress garp, "
+            ." game_research_certificate grc, "
+            ." game_research gr, "
+            ." player p "
+            ." WHERE garp.game_research_certificate_id=grc.id "
+            ." AND grc.game_research_id=gr.id "
+            ." AND garp.player_id=p.player_id "
+            ." AND p.game_id=gr.game_id "
+            ." AND game_research_id=".$this->db->escapeNumber($this->gameResearch['id'])
+            ." AND status in ('".$this->RESEARCH_PROCESS_STATES['progress']."','".$this->RESEARCH_PROCESS_STATES['msp']."')";
+
+        $this->db->query($query);
+        $result = array();
+        while ($this->db->nextRecord()){
+            $row = $this->db->getRow();
+            $row['expires'] =  strtotime(" +".$row['cert_duration']." hours", $row['started_at']);
+            $result[] = $row;
+        }
+        $this->researchInProgressArray = $result;
+        return $result;
+    }
+
+    /**
+     * @param $player
+     */
+    public function cancelPlanetResearch($sectorId){
+        if($this->isPlanetInResearch($sectorId)){
+            $inProgressAss = $this->getResearchInProgress();
+            foreach($inProgressAss AS $v){
+                if($v['sector_id']==$sectorId){
+                    $this->cancelUserResearch(SmrPlayer::getPlayerByPlayerID($v['player_id'], $this->gameResearch['game_id']));
+                    break;
+                }
+            }
+        }
+    }
+
+    /**
+     * @param $player
+     * @return null
+     */
     public function getAlliancePlayerResearchInProgress($player){
         $this->db->query("SELECT garp.*, grc.label AS cert_label "
         ." FROM game_alliance_research_progress garp, "
@@ -62,7 +114,10 @@ class Research {
     }
 
 
-
+    /**
+     * @param $gameResearchCertificateId
+     * @return null
+     */
     private function getGameResearchCertificate($gameResearchCertificateId){
         $query = "SELECT * FROM game_research_certificate WHERE id=".$this->db->escapeNumber($gameResearchCertificateId);
 
@@ -221,7 +276,7 @@ class Research {
      */
     public function processAllianceResearchInProgress($player){
         if($player->getAllianceID() != null){
-            $result = $this->getAllianceResearchInProgress($this->gameResearch['id'], $player->getAllianceID());
+            $result = $this->getAllianceResearchInProgress($player->getAllianceID());
             if(!empty($result)){
                 foreach($result AS $r){
                     if($r['status']==$this->RESEARCH_PROCESS_STATES['progress']){
@@ -249,7 +304,6 @@ class Research {
             $msg = $player->getPlayerName()." finished research of '".$research['cert_label']."' ";
             SmrAlliance::sendMessage($player->getAllianceID(), $player->getGameID(),$msg);
 
-
             return;
         }
 
@@ -267,7 +321,7 @@ class Research {
             }
             $this->db->query("INSERT INTO game_alliance_certificate (game_research_certificate_id, alliance_id)"
                             ." VALUES (".$research['cert_id']
-                            .",".$this->db->escapeNumber($allianceId)
+                            .",".$this->db->escapeNumber($player->getAllianceID())
                             .")");
             // @TODO send alliance message
 
@@ -429,7 +483,7 @@ class Research {
                             ." FROM game_research_ship_certificate  gc"
                             ." JOIN game_research_certificate gr "
 	                        ." ON gc.game_research_certificate_id=gr.id "
-                            ." LEFT JOIN game_alliance_ship_certificate ga "
+                            ." LEFT JOIN game_alliance_certificate ga "
 	                        ." ON ga.game_research_ship_certificate_id= gc.id "
                             ." WHERE gr.game_research_id=".$this->db->escapeNumber($this->gameResearch['id']));
 
