@@ -194,7 +194,7 @@ class Research {
     public function getAllianceResearchableShipCertificates($allianceId){
 
         // fetch the researches the alliance has already passed
-        $researchedCerts = $this->getAllianceResearchedCertificates($this->gameResearch['id'], $allianceId);
+        $researchedCerts = $this->getAllianceResearchedCertificates($allianceId);
         $researchedCertIds = 0;
         if($researchedCerts){
             $arr = array();
@@ -281,6 +281,7 @@ class Research {
                 foreach($result AS $r){
                     if($r['status']==$this->RESEARCH_PROCESS_STATES['progress']){
                         $expires = strtotime(" +".$r['cert_duration']." hours", $r['started_at']);
+                        $time = time();
                         if(time()  > $expires){
                             $this->processAllianceResearchMilestone($result, $r, $player);
                         }
@@ -484,7 +485,7 @@ class Research {
                             ." JOIN game_research_certificate gr "
 	                        ." ON gc.game_research_certificate_id=gr.id "
                             ." LEFT JOIN game_alliance_certificate ga "
-	                        ." ON ga.game_research_ship_certificate_id= gc.id "
+	                        ." ON ga.game_research_certificate_id= gc.id "
                             ." WHERE gr.game_research_id=".$this->db->escapeNumber($this->gameResearch['id']));
 
         $result = array();

@@ -38,8 +38,8 @@ if ($db->getNumRows() > 0 ) {
                         $shipsSold[$shipTypeID] =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$shipTypeID);
                         $container['level_needed'] = $shipsSold[$shipTypeID]['Level'];
                         $shipsSoldHREF[$shipTypeID] = SmrSession::getNewHREF($container);
-                        break;
                     }
+                    break;
                 }
             }
             // ship_type in location and not researchable, display it
