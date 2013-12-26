@@ -507,14 +507,17 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
-	public function getAllianceRole() {
+	public function getAllianceRole($allianceID = false) {
+		if ($allianceID === false) {
+			$allianceID = $this->getAllianceID();
+		}
 		// TODO: Cache this.
-		if($this->hasAlliance()) {
+		if($allianceID != 0) {
 			$this->db->query('SELECT role_id
 						FROM player_has_alliance_role
 						WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()) . '
 						AND game_id=' . $this->db->escapeNumber($this->getGameID()) . '
-						AND alliance_id=' . $this->db->escapeNumber($this->getAllianceID()) . '
+						AND alliance_id=' . $this->db->escapeNumber($allianceID) . '
 						LIMIT 1');
 			if ($this->db->nextRecord()) {
 				return $this->db->getInt('role_id');

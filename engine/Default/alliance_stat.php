@@ -13,13 +13,9 @@ $container=create_container('alliance_stat_processing.php');
 $container['alliance_id'] = $alliance_id;
 
 $form = create_form($container,'Change');
-$db->query('SELECT role_id FROM player_has_alliance_role WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($alliance_id));
-if ($db->nextRecord()) {
-	$role_id = $db->getInt('role_id');
-}
-else {
-	$role_id = 0;
-}
+
+$role_id = $player->getAllianceRole($alliance->getAllianceID());
+
 $db->query('SELECT * FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance_id) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 $db->nextRecord();
 $PHP_OUTPUT.= $form['form'];

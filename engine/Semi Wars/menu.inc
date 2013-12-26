@@ -27,9 +27,7 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) 
 		}
 	}
 
-	$db->query('SELECT role_id FROM player_has_alliance_role WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id=' . $db->escapeNumber($player->getAllianceID()));
-	if ($db->nextRecord()) $role_id = $db->getInt('role_id');
-	else $role_id = 0;
+	$role_id = $player->getAllianceRole();
 	$db->query('SELECT send_alliance_msg FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND role_id = ' . $db->escapeNumber($role_id));
 	$db->nextRecord();
 	$send = $db->getBoolean('send_alliance_msg');

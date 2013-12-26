@@ -51,13 +51,7 @@ else {
 	}
 	$query = '';
 	if ($alliance_id == $player->getAllianceID()) {
-		$db->query('SELECT role_id FROM player_has_alliance_role WHERE account_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($alliance_id));
-		if ($db->nextRecord()) {
-			$role_id = $db->getInt('role_id');
-		}
-		else {
-			$role_id = 0;
-		}
+		$role_id = $player->getAllianceRole($alliance_id);
 		$query = 'role_id = ' . $db->escapeNumber($role_id);
 	} else {
 		$query = 'role = ' . $db->escape_string($player->getAllianceName());
