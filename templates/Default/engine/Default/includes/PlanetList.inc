@@ -27,8 +27,8 @@ if (count($Planets) > 0) { ?>
 				<td class="shrink center"><?php echo $Planet->getBuilding(PLANET_GENERATOR); ?></td>
 				<td class="shrink center"><?php echo $Planet->getBuilding(PLANET_HANGAR); ?></td>
 				<td class="shrink center"><?php echo $Planet->getBuilding(PLANET_TURRET); ?></td>
-				<td class="shrink center"><?php echo $Planet->getShields(); ?></td>
-				<td class="shrink center"><?php echo $Planet->getCDs(); ?></td>
+				<td class="shrink center"><?php echo $Planet->getShields(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxShields(); ?></td>
+				<td class="shrink center"><?php echo $Planet->getCDs(); ?>&nbsp;/&nbsp;<?php echo $Planet->getMaxCDs(); ?></td>
 				<td class="shrink noWrap"><?php
 					$Supply = false;
 					foreach ($Planet->getStockpile() as $GoodID => $Amount) {
