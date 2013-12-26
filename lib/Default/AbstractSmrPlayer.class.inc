@@ -507,6 +507,22 @@ abstract class AbstractSmrPlayer {
 		}
 	}
 
+	public function getAllianceRole() {
+		// TODO: Cache this.
+		if($this->hasAlliance()) {
+			$this->db->query('SELECT role_id
+						FROM player_has_alliance_role
+						WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()) . '
+						AND game_id=' . $this->db->escapeNumber($this->getGameID()) . '
+						AND alliance_id=' . $this->db->escapeNumber($this->getAllianceID()) . '
+						LIMIT 1');
+			if ($this->db->nextRecord()) {
+				return $this->db->getInt('role_id');
+			}
+		}
+		return 0;
+	}
+
 	public function getSpanColour() {
 		return get_colored_name('NA', $this->alignment, 'Game', 'Color');
 	}
