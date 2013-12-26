@@ -47,6 +47,9 @@ abstract class AbstractSmrPlayer {
 	protected $missions;
 
 	protected $visitedSectors;
+	protected $allianceRoles = array(
+		0 => 0
+	);
 
 	protected $gpWriter;
 	protected $HOF;
@@ -511,8 +514,8 @@ abstract class AbstractSmrPlayer {
 		if ($allianceID === false) {
 			$allianceID = $this->getAllianceID();
 		}
-		// TODO: Cache this.
-		if($allianceID != 0) {
+		if(!isset($this->allianceRoles[$allianceID])) {
+			$this->allianceRoles[$allianceID] = 0;
 			$this->db->query('SELECT role_id
 						FROM player_has_alliance_role
 						WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()) . '
@@ -520,10 +523,10 @@ abstract class AbstractSmrPlayer {
 						AND alliance_id=' . $this->db->escapeNumber($allianceID) . '
 						LIMIT 1');
 			if ($this->db->nextRecord()) {
-				return $this->db->getInt('role_id');
+				$this->allianceRoles[$allianceID] = $this->db->getInt('role_id');
 			}
 		}
-		return 0;
+		return $this->allianceRoles[$allianceID];
 	}
 
 	public function getSpanColour() {
