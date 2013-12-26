@@ -63,7 +63,7 @@ if ($ShowRoles) { ?>
 			if($Class!='') {
 				$Class = ' class="'.trim($Class).'"';
 			} ?>
-			<tr<?php echo $class; ?>>
+			<tr<?php echo $Class; ?>>
 
 				<td class="center shrink"><?php
 					if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
