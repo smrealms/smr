@@ -20,10 +20,21 @@ try {
 		<title>Space Merchant Realms - Ship List</title>
 		<meta http-equiv="pragma" content="no-cache">
 	<style>
+	#container {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	#main {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
 	select {
 		border: solid #80C870 1px;
 		background-color: #0A4E1D;
-		color: #80C870; }
+		color: #80C870; 
+	}
 	optgroup {
 		border: solid #80C870 1px;
 	}
@@ -212,35 +223,32 @@ catch(Exception $e) {
 }
 
 function buildSelector($db,  $id, $name, $table) {
-	$selector = '<br><form class="selector" action="" method="get">';
-	$selector .= '<select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
-		$db->query("select distinct ".$name." from ".$table." order by ".$name);
+	$selector = '<br><select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
+	$db->query("select distinct ".$name." from ".$table." order by ".$name);
 	while ($db->nextRecord()) {
 		$selector .= '<option value="'.$db->getField($name).'">'
 		.$db->getField($name).'</option>';
 	}
-	$selector .= '</select></form>';
+	$selector .= '</select>';
 	return $selector;
 }
 
 function buildRestriction() {
-	$restrict = '<br><form class="selector" action="" method="get">'
-	.'<select id="restrictPick" name="restrict" onchange="restrictPickf()">'
+	$restrict = '<br><select id="restrictPick" name="restrict" onchange="restrictPickf()">'
 	.'<option value="All">All</option>'
 	.'<option value="">None</option>'
 	."<option value='<font color=\"green\">Good</font>'>Good</option>"
-	."<option value='<font color=\"red\">Evil</font>' style=\"color: red;\">Evil</option></select></form>";
+	."<option value='<font color=\"red\">Evil</font>' style=\"color: red;\">Evil</option></select>";
 	
 	return $restrict;
 
 }
 
 function buildToggle($id) {
-	$toggle = '<br><form class="selector" action="" method="get">'
-	.'<select id="'.$id.'" name="'.$id.'" onchange="'.$id.'f()">'
+	$toggle = '<br><select id="'.$id.'" name="'.$id.'" onchange="'.$id.'f()">'
 	.'<option value="All">All</option>'
 	.'<option value="Yes">Yes</option>'
-	.'<option value="">No</option></select></form>';
+	.'<option value="">No</option></select>';
 	
 	return $toggle;
 
@@ -264,7 +272,7 @@ function buildShipStats($db) {
 		$restriction = '';
 	$stat[] = $restriction;
 //    $stat[] = $db->getInt('lvl_needed');
-	$stat[] = $db->getInt('max_amount');
+	$stat[] = number_format($db->getInt('max_amount'));
 	$hardware_id = 2;
 	//get our hardware
 	while ($hardware_id <= 11)

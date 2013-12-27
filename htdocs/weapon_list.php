@@ -20,6 +20,16 @@ try {
 	echo ('<title>Weapon List</title>');
 	echo ('<meta http-equiv="pragma" content="no-cache">');?>
 	<style>
+	#container {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	#main {
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
 	select {
 		border: solid #80C870 1px;
 		background-color: #0A4E1D;
@@ -81,28 +91,28 @@ try {
 		function applyFilter() {
 			var table 	= document.getElementById("table");
 			for (var i=1; i < table.rows.length; i++) {
-					show = true;
-					for (var j=0; j < table.rows[i].cells.length; j++) {
-						if (window.filter[j] == "All")
-							continue;
-						if( Object.prototype.toString.call( window.filter[j] ) === '[object Array]' ) {
-							if (!window.filter[j].in_array(table.rows[i].cells[j].innerHTML)) {
-								show = false;
-								break;
-							}
-						} else {
-							if (table.rows[i].cells[j].innerHTML != window.filter[j]) {
-								show = false;
-								break;
-							}
+				show = true;
+				for (var j=0; j < table.rows[i].cells.length; j++) {
+					if (window.filter[j] == "All")
+						continue;
+					if( Object.prototype.toString.call( window.filter[j] ) === '[object Array]' ) {
+						if (!window.filter[j].in_array(table.rows[i].cells[j].innerHTML)) {
+							show = false;
+							break;
+						}
+					} else {
+						if (table.rows[i].cells[j].innerHTML != window.filter[j]) {
+							show = false;
+							break;
 						}
 					}
-					if (show)
-						table.rows[i].style.display="";
-					else
-						table.rows[i].style.display="none";
-					
 				}
+				if (show)
+					table.rows[i].style.display="";
+				else
+					table.rows[i].style.display="none";
+				
+			}
 			
 		}
 	
@@ -131,7 +141,7 @@ try {
 	$restrict 	= buildRestriction();
 	
 	echo ('<div id="container" style="padding: 0;">');
-	echo ('<div style="width:800px; margin-left:auto; margin-right:auto;">');
+	echo ('<div id="main" style="width:800px; margin-left:auto; margin-right:auto;">');
 	echo (buildRaceBox($db));	
 	$db->query('SELECT * FROM weapon_type, race WHERE weapon_type.race_id = race.race_id ORDER BY '.$order_by.' '.$seq);
 	echo ('<table id="table" class="standard">');
@@ -186,26 +196,24 @@ catch(Exception $e) {
 }
 
 function buildSelector($db,  $id, $name, $table) {
-	$selector = '<br><form class="selector" action="" method="get">';
-	$selector .= '<select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
-		$db->query("select distinct ".$name." from ".$table." order by ".$name);
+	$selector = '<br><select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
+	$db->query("SELECT DISTINCT ".$name." FROM ".$table." ORDER BY ".$name);
 	while ($db->nextRecord()) {
 		$selector .= '<option value="'.$db->getField($name).'">'
 		.$db->getField($name).'</option>';
 	}
-	$selector .= '</select></form>';
+	$selector .= '</select>';
 	return $selector;
 }
 
 function buildRestriction() {
-	$restrict = '<br><form class="selector" action="" method="get">'
-	.'<select id="restrictPick" name="restrict" onchange="restrictPickf()">'
+	$restrict = '<br><select id="restrictPick" name="restrict" onchange="restrictPickf()">'
 	.'<option value="All">All</option>'
 	.'<option value="-">None</option>'
 	."<option value='<font color=\"green\">Good</font>'>Good</option>"
 	."<option value='<font color=\"red\">Evil</font>' style=\"color: red;\">Evil</option>"
 	."<option value='<font color=\"#06F\">Newbie</font>' style=\"color: #06F;\">Newbie</option>"
-	."</select></form>";
+	."</select>";
 	
 	return $restrict;
 
@@ -214,10 +222,10 @@ function buildRestriction() {
 function buildRaceBox($db) {
 	$racebox;
 	$racebox = '<form id="raceform" name="raceform" align="center" style="text-align:center;">';
-	$db->query("select * from race order by race_id");
+	$db->query("SELECT * FROM race ORDER BY race_id");
 	while ($db->nextRecord()) {
 		$race = $db->getField("race_name");
-		$racebox .= '<input type="checkbox" name="races" value="'.$race.'" onClick="raceToggle()">'.$race;
+		$racebox .= '<input type="checkbox" id="'.$race.'" name="races" value="'.$race.'" onClick="raceToggle()"><label for="'.$race.'">'.$race.'</label>';
 	}
 	$racebox .= '</form>';
 	return $racebox;
