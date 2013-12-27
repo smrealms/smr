@@ -20,11 +20,11 @@ try {
 		<title>Space Merchant Realms - Ship List</title>
 		<meta http-equiv="pragma" content="no-cache">
 	<style>
-	SELECT {
+	select {
 		border: solid #80C870 1px;
 		background-color: #0A4E1D;
 		color: #80C870; }
-	OPTGROUP {
+	optgroup {
 		border: solid #80C870 1px;
 	}
 	</style>
@@ -32,177 +32,66 @@ try {
 		//JS code by Astax to foster filtering the results
 		
 		//Use window variable to store filter values, this is kinda like a JS equivellent of global
-		window.filter = new Array("All", "All", "All", "All", "All", "All", "All", "All", "All", "All",
-		"All", "All", "All", "All", "All", "All", "All", "All", "All");
+		window.filter = ["All", "All", "All", "All", "All", "All", "All", "All", "All", "All",
+		"All", "All", "All", "All", "All", "All", "All", "All", "All"];
 		function classPickf() {
-			var option 	= document.getElementById("classPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[2] = "All";
-			else
-				window.filter[2] = selected;
-			applyFilter();
-		
+			filterSelect("classPick", 2);	
 		}
 		function racePickf() {
-			var option 	= document.getElementById("racePick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[1] = "All";
-			else
-				window.filter[1] = selected;
-			applyFilter();
-		
+			filterSelect("racePick", 1);		
 		}
 		function speedPickf() {
-			var option 	= document.getElementById("speedPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[4] = "All";
-			else
-				window.filter[4] = selected;
-			applyFilter();
-		
+			filterSelect("speedPick", 4);		
 		}
 		function hpPickf() {
-			var option 	= document.getElementById("hpPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[5] = "All";
-			else
-				window.filter[5] = selected;
-			applyFilter();
-		
+			filterSelect("hpPick", 5);		
 		}
 		function restrictPickf() {
-			var option 	= document.getElementById("restrictPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[6] = "All";
-			else
-				window.filter[6] = selected;
-			applyFilter();
-		
+			filterSelect("restrictPick", 6);			
 		}
 		function scannerPickf() {
-			var option 	= document.getElementById("scannerPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[13] = "All";
-			else
-				window.filter[13] = selected;
-			applyFilter();
-		
+			filterSelect("scannerPick", 14);						
 		}
 		function cloakPickf() {
-			var option 	= document.getElementById("cloakPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[14] = "All";
-			else
-				window.filter[14] = selected;
-			applyFilter();
-		
+			filterSelect("cloakPick", 14);			
 		}
 		function illusionPickf() {
-			var option 	= document.getElementById("illusionPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[15] = "All";
-			else
-				window.filter[15] = selected;
-			applyFilter();
-		
+			filterSelect("illusionPick", 15);	
 		}
 		function jumpPickf() {
-			var option 	= document.getElementById("jumpPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[16] = "All";
-			else
-				window.filter[16] = selected;
-			applyFilter();
-		
+			filterSelect("jumpPick", 16);	
 		}
 		function scramblePickf() {
-			var option 	= document.getElementById("scramblePick");
-			var selected;
+			filterSelect("scramblePick", 17);	
+		}
+		function filterSelect(selectId, filterId) {
+			var option 	= document.getElementById(selectId);
+			var selected = option.options[option.selectedIndex].value;
 			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
 			if (selected == "null") 
-				window.filter[17] = "All";
+				window.filter[filterId] = "All";
 			else
-				window.filter[17] = selected;
+				window.filter[filterId] = selected;
 			applyFilter();
 		
 		}
 		function applyFilter() {
 			var table 	= document.getElementById("table");
 			for (var i=1; i < table.rows.length; i++) {
-					show = true;
-					for (var j=0; j < table.rows[i].cells.length; j++) {
-						if (window.filter[j] == "All")
-							continue;
-						if (table.rows[i].cells[j].innerHTML != window.filter[j]) {
-							show = false;
-							break;
-						}
+				show = true;
+				for (var j=0; j < table.rows[i].cells.length; j++) {
+					if (window.filter[j] == "All")
+						continue;
+					if (table.rows[i].cells[j].innerHTML != window.filter[j]) {
+						show = false;
+						break;
 					}
-					if (show)
-						table.rows[i].style.display="";
-					else
-						table.rows[i].style.display="none";
-					
 				}
-			
+				if (show)
+					table.rows[i].style.display="";
+				else
+					table.rows[i].style.display="none";	
+			}		
 		}
 	
 	</script>
@@ -314,7 +203,7 @@ try {
 		</tr><?php
 
 	foreach($shipArray as $stat) {
-	    echo ('<tr>');
+		echo ('<tr>');
 		foreach ($stat as $value)
 			echo ('<td align="center">'.$value.'</td>');
 		echo ('</tr>');
@@ -363,35 +252,35 @@ function buildToggle($id) {
 function buildShipStats($db) {
 	//we want to put them all in an array so we dont have to have 15 td rows
 	$stat = array();
-    $stat[] = str_replace(' ','&nbsp;',$db->getField('ship_name'));
+	$stat[] = str_replace(' ','&nbsp;',$db->getField('ship_name'));
 	//$stat[] = str_replace(' ','&nbsp;',$db->getField('race_name'));
 	$stat[] = $db->getField('race_name');
 	$stat[] = str_replace(' ','&nbsp;',$db->getField('ship_class_name'));
 	$stat[] = number_format($db->getInt('cost'));
-    $stat[] = $db->getInt('speed');
+	$stat[] = $db->getInt('speed');
 	$stat[] = $db->getInt('hardpoint');
 	if ($db->getField('buyer_restriction') == 1)
 		$restriction = '<font color="green">Good</font>';
-    elseif ($db->getField('buyer_restriction') == 2)
+	elseif ($db->getField('buyer_restriction') == 2)
 		$restriction = '<font color="red">Evil</font>';
 	else
 		$restriction = '';
-    $stat[] = $restriction;
+	$stat[] = $restriction;
 //    $stat[] = $db->getInt('lvl_needed');
 	$stat[] = $db->getInt('max_amount');
 	$hardware_id = 2;
-    //get our hardware
-    while ($hardware_id <= 11)
-    {
-		if($db->nextRecord()) {
-
-	    	if ($hardware_id < 7)
-		    	$stat[] = number_format($db->getInt('max_amount'));
-    		elseif ($db->getInt('max_amount') == 1)
-        		$stat[] = 'Yes';
-            else
-	        	$stat[] = '';
-	    }
+	//get our hardware
+	while ($hardware_id <= 11)
+	{
+		if($db->nextRecord()) 
+		{
+			if ($hardware_id < 7)
+				$stat[] = number_format($db->getInt('max_amount'));
+			elseif ($db->getInt('max_amount') == 1)
+				$stat[] = 'Yes';
+			else
+				$stat[] = '';
+		}
         $hardware_id++;
 	}
 	return $stat;

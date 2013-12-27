@@ -20,11 +20,11 @@ try {
 	echo ('<title>Weapon List</title>');
 	echo ('<meta http-equiv="pragma" content="no-cache">');?>
 	<style>
-	SELECT {
+	select {
 		border: solid #80C870 1px;
 		background-color: #0A4E1D;
 		color: #80C870; }
-	OPTGROUP {
+	optgroup {
 		border: solid #80C870 1px;
 	}
 	</style>
@@ -51,51 +51,25 @@ try {
 			}
 		}
 		function racePickf() {
-			var option 	= document.getElementById("racePick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[1] = "All";
-			else
-				window.filter[1] = selected;
-			applyFilter();
-		
+			filterSelect("powerPick", 1);	
 		}
 		function powerPickf() {
-			var option 	= document.getElementById("powerPick");
-			var selected;
+			filterSelect("powerPick", 6);	
+		}
+		function restrictPickf() {0
+			filterSelect("restrictPick", 7);			
+		}
+		function filterSelect(selectId, filterId) {
+			var option 	= document.getElementById(selectId);
+			var selected = option.options[option.selectedIndex].value;
 			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
 			if (selected == "null") 
-				window.filter[6] = "All";
+				window.filter[filterId] = "All";
 			else
-				window.filter[6] = selected;
+				window.filter[filterId] = selected;
 			applyFilter();
 		
 		}
-		function restrictPickf() {
-			var option 	= document.getElementById("restrictPick");
-			var selected;
-			
-			for (var i=0; i < option.options.length; i++) {
-				if (option.options[i].selected)
-					selected = option.options[i].value;
-			}
-			if (selected == "null") 
-				window.filter[7] = "All";
-			else
-				window.filter[7] = selected;
-			applyFilter();
-		
-		}
-		
 		function raceToggle() {
 			var toggle = document.getElementById("raceform");
 			window.filter[1] = new Array();
@@ -176,17 +150,17 @@ try {
 	echo ('</tr>');
 	while ($db->nextRecord()) {
 		//we need an array so we dont have 8 td rows
-	    $stat = array();
-	    $stat[] = $db->getField('weapon_name');
-	    $stat[] = $db->getField('race_name');
-	    $stat[] = number_format($db->getInt('cost'));
-	    $stat[] = $db->getInt('shield_damage');
-	    $stat[] = $db->getInt('armour_damage');
-	    $stat[] = $db->getInt('accuracy');
-	    $stat[] = $db->getInt('power_level');
+		$stat = array();
+		$stat[] = $db->getField('weapon_name');
+		$stat[] = $db->getField('race_name');
+		$stat[] = number_format($db->getInt('cost'));
+		$stat[] = $db->getInt('shield_damage');
+		$stat[] = $db->getInt('armour_damage');
+		$stat[] = $db->getInt('accuracy');
+		$stat[] = $db->getInt('power_level');
 		switch($db->getInt('buyer_restriction')) {
 			case 1:
-		    	$restriction = '<font color="green">Good</font>';
+				$restriction = '<font color="green">Good</font>';
 			break;
 			case 2:
 				$restriction = '<font color="red">Evil</font>';
@@ -201,10 +175,9 @@ try {
 	
 	    echo ('<tr>');
 	    foreach ($stat as $value)
-		    echo ('<td align="center">'.$value.'</td>');
+			echo ('<td align="center">'.$value.'</td>');
 	
-	    echo ('</tr>');
-	
+		echo ('</tr>');
 	}
 	echo ('</table></div></div>');
 	
