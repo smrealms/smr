@@ -63,10 +63,7 @@ try {
 			var option 	= document.getElementById(selectId);
 			var selected = option.options[option.selectedIndex].value;
 			
-			if (selected == "null") 
-				window.filter[filterId] = "All";
-			else
-				window.filter[filterId] = selected;
+			window.filter[filterId] = selected;
 			applyFilter();
 		
 		}
@@ -190,7 +187,7 @@ catch(Exception $e) {
 
 function buildSelector($db,  $id, $name, $table) {
 	$selector = '<br><form class="selector" action="" method="get">';
-	$selector .= '<select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value=null>All</option>';
+	$selector .= '<select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
 		$db->query("select distinct ".$name." from ".$table." order by ".$name);
 	while ($db->nextRecord()) {
 		$selector .= '<option value="'.$db->getField($name).'">'
@@ -203,7 +200,7 @@ function buildSelector($db,  $id, $name, $table) {
 function buildRestriction() {
 	$restrict = '<br><form class="selector" action="" method="get">'
 	.'<select id="restrictPick" name="restrict" onchange="restrictPickf()">'
-	.'<option value=null>All</option>'
+	.'<option value="All">All</option>'
 	.'<option value="-">None</option>'
 	."<option value='<font color=\"green\">Good</font>'>Good</option>"
 	."<option value='<font color=\"red\">Evil</font>' style=\"color: red;\">Evil</option>"
