@@ -15,7 +15,7 @@
 				font-size:<?php echo $ThisAccount->getFontSize(); ?>%;
 			}
 		</style>
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script><?php
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><?php
 		if(isset($FocusSector)) { ?>
 			<script>
 				$(function() {
