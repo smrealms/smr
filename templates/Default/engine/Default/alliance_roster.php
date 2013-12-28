@@ -38,12 +38,12 @@ if ($ShowRoles) { ?>
 <div align="center">
 	<table class="standard fullwidth">
 		<tr>
-			<th>&nbsp;</th>
+			<th class="shrink">&nbsp;</th>
 			<th><a href="<?php echo $SortPlayerNameHREF; ?>">Trader Name</a></th>
-			<th><a href="<?php echo $SortRaceNameHREF; ?>">Race</a></th>
-			<th><a href="<?php echo $SortExperienceHREF; ?>">Experience</a></th><?php
+			<th class="shrink"><a href="<?php echo $SortRaceNameHREF; ?>">Race</a></th>
+			<th class="shrink"><a href="<?php echo $SortExperienceHREF; ?>">Experience</a></th><?php
 			if($ShowRoles) { ?>
-				<th>Role</th><?php
+				<th class="shrink">Role</th><?php
 			}
 			if(isset($ActiveIDs)) { ?>
 				<th class="shrink">Status</th><?php
@@ -65,21 +65,21 @@ if ($ShowRoles) { ?>
 			} ?>
 			<tr<?php echo $Class; ?>>
 
-				<td class="center shrink"><?php
+				<td class="center"><?php
 					if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
 					echo $Count++; ?>
 				</td>
 				<td><?php
 					echo $AlliancePlayer->getLevelName(); ?>&nbsp;<?php echo $AlliancePlayer->getLinkedDisplayName(false); ?>
 				</td>
-				<td class="center shrink"><?php
+				<td class="center"><?php
 					echo $ThisPlayer->getColouredRaceName($AlliancePlayer->getRaceID()); ?>
 				</td>
-				<td class="shrink center"><?php
+				<td class="center"><?php
 					echo $AlliancePlayer->getExperience(); ?>
 				</td><?php
 				if ($ShowRoles) { ?>
-					<td class="shrink right"><?php
+					<td><?php
 						$PlayerRole = $AlliancePlayer->getAllianceRole();
 						if ($CanChangeRoles && $AlliancePlayer->getAccountID() != $Alliance->getLeaderID()) { ?>
 							<select name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]" id="InputFields"><?php
