@@ -86,7 +86,7 @@ try {
 		function applyFilter() {
 			var table 	= document.getElementById("table");
 			for (var i=1; i < table.rows.length; i++) {
-				show = true;
+				var show = true;
 				for (var j=0; j < table.rows[i].cells.length; j++) {
 					if (window.filter[j] == "All")
 						continue;
