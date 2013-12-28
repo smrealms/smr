@@ -176,12 +176,12 @@ try {
 				$restriction = '<font color="#06F">Newbie</font>';
 			break;
 			default:
-		    	$restriction = '-';
+				$restriction = '-';
 		}
-	    $stat[] = $restriction;
+		$stat[] = $restriction;
 	
-	    echo ('<tr>');
-	    foreach ($stat as $value)
+		echo ('<tr>');
+		foreach ($stat as $value)
 			echo ('<td align="center">'.$value.'</td>');
 	
 		echo ('</tr>');
@@ -195,7 +195,7 @@ catch(Exception $e) {
 	handleException($e);
 }
 
-function buildSelector($db,  $id, $name, $table) {
+function buildSelector($db, $id, $name, $table) {
 	$selector = '<br><select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
 	$db->query("SELECT DISTINCT ".$name." FROM ".$table." ORDER BY ".$name);
 	while ($db->nextRecord()) {

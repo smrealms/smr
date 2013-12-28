@@ -109,16 +109,16 @@ try {
 	$order = @$_REQUEST['order'];
 	$hardwarea = @$_REQUEST['hardwarea'];
 	
-	$class 		= buildSelector($db, "classPick", "ship_class_name", "ship_class");
-	$race 		= buildSelector($db, "racePick", "race_name", "race");
-	$speed 		= buildSelector($db, "speedPick", "speed", "ship_type");
-	$hardpoint  = buildSelector($db, "hpPick", "hardpoint", "ship_type");
-	$restrict 	= buildRestriction();
-	$scanner 	= buildToggle("scannerPick");
-	$cloak 		= buildToggle("cloakPick");
-	$illusion 	= buildToggle("illusionPick");
-	$jump 		= buildToggle("jumpPick");
-	$scramble 	= buildToggle("scramblePick");
+	$class		= buildSelector($db, "classPick", "ship_class_name", "ship_class");
+	$race		= buildSelector($db, "racePick", "race_name", "race");
+	$speed		= buildSelector($db, "speedPick", "speed", "ship_type");
+	$hardpoint	= buildSelector($db, "hpPick", "hardpoint", "ship_type");
+	$restrict	= buildRestriction();
+	$scanner	= buildToggle("scannerPick");
+	$cloak		= buildToggle("cloakPick");
+	$illusion	= buildToggle("illusionPick");
+	$jump		= buildToggle("jumpPick");
+	$scramble	= buildToggle("scramblePick");
 	
 	echo ('<body>');
 	if (empty($seq)) {
@@ -222,7 +222,7 @@ catch(Exception $e) {
 	handleException($e);
 }
 
-function buildSelector($db,  $id, $name, $table) {
+function buildSelector($db, $id, $name, $table) {
 	$selector = '<br><select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
 	$db->query("select distinct ".$name." from ".$table." order by ".$name);
 	while ($db->nextRecord()) {
@@ -271,7 +271,7 @@ function buildShipStats($db) {
 	else
 		$restriction = '';
 	$stat[] = $restriction;
-//    $stat[] = $db->getInt('lvl_needed');
+//	$stat[] = $db->getInt('lvl_needed');
 	$stat[] = number_format($db->getInt('max_amount'));
 	$hardware_id = 2;
 	//get our hardware
@@ -286,7 +286,7 @@ function buildShipStats($db) {
 			else
 				$stat[] = '';
 		}
-        $hardware_id++;
+		$hardware_id++;
 	}
 	return $stat;
 }
