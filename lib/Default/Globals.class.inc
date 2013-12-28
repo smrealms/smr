@@ -526,13 +526,11 @@ class Globals {
 		return SmrSession::getNewHREF($container);
 	}
 
-	public static function getAllianceRosterHREF($allianceID = null, $sortKey = 'getExperience', $sortDesc = true) {
+	public static function getAllianceRosterHREF($allianceID = null) {
 		$container = create_container('skeleton.php', 'alliance_roster.php');
 		if ($allianceID!=null) {
 			$container['alliance_id'] = $allianceID;
 		}
-		$container['SortKey'] = $sortKey;
-		$container['SortDesc'] = $sortDesc;
 		return SmrSession::getNewHREF($container);
 	}
 

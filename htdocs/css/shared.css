@@ -474,3 +474,8 @@ table#moveTable td {
 	border: 2px solid #008000;
 	position: absolute; 
 }
+
+/* List.js*/
+.sort {
+	cursor: pointer;
+}

@@ -6,13 +6,6 @@ if (!isset($var['alliance_id'])) {
 	SmrSession::updateVar('alliance_id',$player->getAllianceID());
 }
 
-if(!isset($var['SortKey'])) {
-	SmrSession::updateVar('SortKey','getExperience');
-}
-if(!isset($var['SortDesc'])) {
-	SmrSession::updateVar('SortDesc',true);
-}
-
 $alliance =& SmrAlliance::getAlliance($var['alliance_id'],$player->getGameID());
 $template->assignByRef('Alliance', $alliance);
 
@@ -66,19 +59,12 @@ if($account->getAccountID() == $alliance->getLeaderID() || $account->hasPermissi
 	$template->assign('EditAllianceDescriptionHREF', SmrSession::getNewHREF($container));
 }
 
-$template->assign('SortPlayerNameHREF', Globals::getAllianceRosterHREF($alliance->getAllianceID(),'getPlayerName',$var['SortKey']=='getPlayerName'?!$var['SortDesc']:false));
-$template->assign('SortRaceNameHREF', Globals::getAllianceRosterHREF($alliance->getAllianceID(),'getRaceName',$var['SortKey']=='getRaceName'?!$var['SortDesc']:false));
-$template->assign('SortExperienceHREF', Globals::getAllianceRosterHREF($alliance->getAllianceID(),'getExperience',$var['SortKey']=='getExperience'?!$var['SortDesc']:true));
-
 $db->query('SELECT 1 FROM alliance_has_roles WHERE alliance_id = ' . $db->escapeNumber($alliance->getAllianceID()) . ' AND game_id = ' . $db->escapeNumber($alliance->getGameID()) . '
 			AND role_id = ' . $db->escapeNumber($player->getAllianceRole()) . ' AND change_roles = \'TRUE\'');
 $allowed = $db->nextRecord();
 $template->assign('CanChangeRoles', $allowed);
 
 $alliancePlayers =& SmrPlayer::getAlliancePlayers($player->getGameID(),$alliance->getAllianceID());
-if($var['SortKey']!='getExperience' || $var['SortDesc']!==true) {
-	Sorter::sortByNumMethod($alliancePlayers, $var['SortKey'], $var['SortDesc']);
-}
 $template->assignByRef('AlliancePlayers', $alliancePlayers);
 
 if ($alliance->getAllianceID() == $player->getAllianceID()) {
