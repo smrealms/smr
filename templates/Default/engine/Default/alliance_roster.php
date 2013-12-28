@@ -50,8 +50,8 @@ if ($ShowRoles) { ?>
 			} ?>
 		</tr><?php
 
+		$Count = 1;
 		foreach($AlliancePlayers as &$AlliancePlayer) {
-			$Count = 1;
 			$Class = '';
 			// check if this guy is the current guy
 			if ($ThisPlayer->equals($AlliancePlayer)) {
