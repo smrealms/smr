@@ -80,8 +80,8 @@ if ($ShowRoles) { ?>
 				</td><?php
 				if ($ShowRoles) { ?>
 					<td class="shrink right"><?php
-						if ($CanChangeRoles && $AlliancePlayer->getAccountID() != $Alliance->getLeaderID()) {
-							$PlayerRole = $AlliancePlayer->getRoleID(); ?>
+						$PlayerRole = $AlliancePlayer->getAllianceRole();
+						if ($CanChangeRoles && $AlliancePlayer->getAccountID() != $Alliance->getLeaderID()) { ?>
 							<select name="role[<?php echo $AlliancePlayer->getAccountID(); ?>]" id="InputFields"><?php
 								foreach ($Roles as $RoleID => $Role) { ?>
 									<option value="<?php echo $RoleID; ?>"<?php
@@ -117,9 +117,9 @@ if ($ShowRoles) { ?>
 if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br /><?php
 	if ($ShowRoles) { ?>
-		<input class="submit" type="submit" name="action" value="Save Alliance Roles"></form>&nbsp;&nbsp;<?php
-	} ?>
-	<div class="buttonA"><a class="buttonA" href="<?php echo $ToggleRolesHREF; ?>">&nbsp;<?php if ($ShowRoles) { ?>Hide Alliance Roles<?php } else { ?>Hide Alliance Roles<?php } ?>&nbsp;</a></div><?php
+		<input class="submit" type="submit" name="action" value="Save Alliance Roles">&nbsp;&nbsp;<?php
+	} ?><div class="buttonA"><a class="buttonA" href="<?php echo $ToggleRolesHREF; ?>">&nbsp;<?php if ($ShowRoles) { ?>Hide Alliance Roles<?php } else { ?>Hide Alliance Roles<?php } ?>&nbsp;</a></div>
+	</form><?php
 }
 
 if ($CanJoin === true) { ?>
