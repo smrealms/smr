@@ -25,9 +25,9 @@ if ($ShowRoles) { ?>
 		</tr>
 		<tr class="bold">
 			<td><?php echo $Alliance->getAllianceName(); ?></td>
-			<td class="center shrink"><?php echo $AllianceExp; ?></td>
-			<td class="center shrink"><?php echo $AllianceAverageExp; ?></td>
-			<td class="center shrink"><?php echo $Alliance->getNumMembers(); ?></td>
+			<td class="center shrink"><?php echo number_format($AllianceExp); ?></td>
+			<td class="center shrink"><?php echo number_format($AllianceAverageExp); ?></td>
+			<td class="center shrink"><?php echo number_format($Alliance->getNumMembers()); ?></td>
 		</tr>
 	</table>
 	<br />
@@ -76,7 +76,7 @@ if ($ShowRoles) { ?>
 						echo $ThisPlayer->getColouredRaceName($AlliancePlayer->getRaceID()); ?>
 					</td>
 					<td class="center experience"><?php
-						echo $AlliancePlayer->getExperience(); ?>
+						echo number_format($AlliancePlayer->getExperience()); ?>
 					</td><?php
 					if ($ShowRoles) { ?>
 						<td class="role"><?php
