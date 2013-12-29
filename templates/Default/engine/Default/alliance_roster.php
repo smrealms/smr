@@ -140,7 +140,7 @@ else if($CanJoin !== false) { ?>
 var list = new List('alliance-roster', {
 	valueNames: ['name', 'race', 'experience', 'role', 'status'],
 	sortFunction: function(a, b) {
-		return list.sort.naturalSort(a.values()[this.valueName].replace(/,/g,''), b.values()[this.valueName].replace(/,/g,''), this);
+		return list.sort.naturalSort(a.values()[this.valueName].replace(/<.*?>|,/g,''), b.values()[this.valueName].replace(/<.*?>|,/g,''), this);
 	}
 });
 </script>

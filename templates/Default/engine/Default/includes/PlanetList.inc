@@ -79,7 +79,7 @@ if (count($Planets) > 0) { ?>
 	var list = new List('planet-list', {
 		valueNames: ['name', 'lvl', 'owner', 'sector', 'gen', 'hangar', 'turret', 'pShields', 'pCDs', 'build', 'bonds'],
 		sortFunction: function(a, b) {
-			return list.sort.naturalSort(a.values()[this.valueName].replace(/,/g,''), b.values()[this.valueName].replace(/,/g,''), this);
+			return list.sort.naturalSort(a.values()[this.valueName].replace(/<.*?>|,/g,''), b.values()[this.valueName].replace(/<.*?>|,/g,''), this);
 		}
 	});
 	</script><?php
