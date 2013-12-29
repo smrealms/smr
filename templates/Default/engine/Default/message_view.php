@@ -55,7 +55,7 @@ else {
 																						<option>Marked Messages</option>
 																						<option>All Messages</option>
 																					</select>
-					<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> message<?php if($MessageBox['TotalMessages']!=1) { ?>s<?php } if($MessageBox['TotalMessages']!=$MessageBox['NumberMessages']){ ?> of which <span class="yellow"><?php echo $MessageBox['NumberMessages']; ?></span> <?php if($MessageBox['NumberMessages'] == 1){ ?>is<?php }else{ ?>are<?php } ?> being displayed<?php } ?>.</p>
+					<p>You have <span class="yellow"><?php echo $MessageBox['TotalMessages']; ?></span> <?php echo $this->pluralise('message', $MessageBox['TotalMessages']); if($MessageBox['TotalMessages']!=$MessageBox['NumberMessages']){ ?> of which <span class="yellow"><?php echo $MessageBox['NumberMessages']; ?></span> <?php echo $this->pluralise('is', $MessageBox['NumberMessages']); ?> being displayed<?php } ?>.</p>
 				</td>
 				<td style="width: 30%" valign="middle"><?php
 					if(isset($NextPageHREF)) {

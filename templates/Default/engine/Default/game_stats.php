@@ -184,7 +184,7 @@
 		else {
 			?>A few of them<?php
 		} ?>
-		were moving so your ship computer was able to intercept <?php echo count($CurrentPlayers); ?> transmission<?php if (count($CurrentPlayers) > 1){ ?>s<?php } ?>.<br /><?php
+		were moving so your ship computer was able to intercept <?php echo count($CurrentPlayers), ' ', $this->pluralise('transmission', count($CurrentPlayers)); ?>.<br /><?php
 	} ?>
 
 	The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p><?php
