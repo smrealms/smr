@@ -2,12 +2,9 @@
 
 $template->assign('PageTopic','List Of Alliances');
 
-$PHP_OUTPUT.= '<div align="center">';
-
 if (!$player->hasAlliance()) {
 	$container = create_container('skeleton.php','alliance_create.php');
-	$PHP_OUTPUT.= create_button($container,'Create your own alliance!');
-	$PHP_OUTPUT.= '<br /><br />';
+	$template->assign('CreateAllianceHREF', SmrSession::getNewHREF($container));
 }
 
 
@@ -33,25 +30,16 @@ ORDER BY ' . $var['order'] . ' ' . $var['sequence']
 );
 
 $container['sequence'] = $var['sequence'] == 'DESC' ? 'ASC' : 'DESC';
-
-// do we have any alliances?
+$alliances = array();
 if ($db->getNumRows() > 0) {
-	$PHP_OUTPUT.= '<table class="standard inset"><tr><th>';
 	$container['order'] = 'alliance_name';
-	$PHP_OUTPUT.=create_header_link($container,'Alliance Name');
-	$PHP_OUTPUT.= '</th><th class="shrink">';
+	$template->assign('SortNameHREF',SmrSession::getNewHREF($container));
 	$container['order'] = 'alliance_xp';
-	$PHP_OUTPUT.=create_header_link($container,'Total Experience');
-	$PHP_OUTPUT.= '</th><th class="shrink">';
+	$template->assign('SortTotalExpHREF',SmrSession::getNewHREF($container));
 	$container['order'] = 'alliance_avg';
-	$PHP_OUTPUT.=create_header_link($container, 'Average Experience');
-	$PHP_OUTPUT.= '</th><th class="shrink">';
+	$template->assign('SortAvgExpHREF',SmrSession::getNewHREF($container));
 	$container['order'] = 'alliance_member_count';
-	$PHP_OUTPUT.=create_header_link($container, 'Members');
-	$PHP_OUTPUT.= '</th>';
-	$PHP_OUTPUT.= '</tr>';
-
-
+	$template->assign('SortMembersHREF',SmrSession::getNewHREF($container));
 	while ($db->nextRecord()) {
 		if ($db->getField('alliance_id') != $player->getAllianceID()) {
 			$container['body'] = 'alliance_roster.php';
@@ -59,21 +47,17 @@ if ($db->getNumRows() > 0) {
 		else {
 			$container['body'] = 'alliance_mod.php';
 		}
-		$container['alliance_id'] = $db->getInt('alliance_id');
+		$allianceID = $db->getInt('alliance_id');
+		$container['alliance_id'] = $allianceID;
 
-		$PHP_OUTPUT.= '<tr><td>';
-		$PHP_OUTPUT.=create_link($container, $db->getField('alliance_name'));
-		$PHP_OUTPUT.= '</td>';
-		$PHP_OUTPUT.= '<td class="right">' . number_format($db->getInt('alliance_xp')) . '</td>';
-		$PHP_OUTPUT.= '<td class="right">' . number_format($db->getInt('alliance_avg')) . '</td>';
-		$PHP_OUTPUT.= '<td class="right">' . number_format($db->getInt('alliance_member_count')) . '</td></tr>';
-
+		$alliances[$allianceID] = array(
+			'ViewHREF' => SmrSession::getNewHREF($container),
+			'Name' => $db->getField('alliance_name'),
+			'TotalExperience' => $db->getInt('alliance_xp'),
+			'AverageExperience' => $db->getInt('alliance_avg'),
+			'Members' => $db->getInt('alliance_member_count'),
+		);
 	}
-	$PHP_OUTPUT.= '</table><br />Click column table to reorder!';
-
 }
-else
-	$PHP_OUTPUT.= 'Currently there are no alliances.';
-
-$PHP_OUTPUT.= '</div>';
+$template->assign('Alliances', $alliances);
 ?>
