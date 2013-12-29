@@ -93,9 +93,9 @@ if ($ShowRoles) { ?>
 								echo $Roles[$PlayerRole];
 							} ?>
 						</td><?php
-					} ?>
-					<td class="center status"><?php
-						if($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) {
+					}
+					if($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
+						<td class="center status"><?php
 							if(in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
 								<span class="green">Online</span><?php
 							}
@@ -104,9 +104,9 @@ if ($ShowRoles) { ?>
 							}
 							else { ?>
 								<span class="red">Offline</span><?php
-							}
-						} ?>
-					</td>
+							} ?>
+						</td><?php
+					} ?>
 				</tr><?php
 			} ?>
 		</tbody>
