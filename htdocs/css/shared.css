@@ -164,7 +164,7 @@ div.secNavBox div.move_warp {
 .center {
 	text-align: center;
 }
-table.center {
+table.center, table.centered {
 	margin:auto;
 }
 .nopad {
