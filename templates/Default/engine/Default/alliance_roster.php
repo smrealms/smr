@@ -142,7 +142,7 @@ else if($CanJoin !== false) { ?>
 
 <script type="text/javascript" src="js/list.1.0.0.min.js"></script>
 <script>
-var list = new List('alliance-roster', {
+new List('alliance-roster', {
 	valueNames: ['name', 'race', 'experience', 'role', 'status']
 });
 </script>
