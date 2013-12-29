@@ -4,18 +4,22 @@
 	$President =& Council::getPresident($ThisPlayer->getGameID(),$RaceID);
 	if ($President !== false) { ?>
 		<table class="standard" width="75%">
-			<tr>
-				<th>Name</th>
-				<th>Race</th>
-				<th>Alliance</th>
-				<th>Experience</th>
-			</tr>
-			<tr>
-				<td>President <?php echo $President->getLinkedDisplayName(false); ?></td>
-				<td class="center"><?php echo $ThisPlayer->getColouredRaceName($President->getRaceID(), true); ?></td>
-				<td><?php echo $President->getAllianceName(true); ?></td>
-				<td class="right"><?php echo $President->getExperience(); ?></td>
-			</tr>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Race</th>
+					<th>Alliance</th>
+					<th>Experience</th>
+				</tr>
+			</thead>
+			<tbody id="president" class="ajax">
+				<tr>
+					<td>President <?php echo $President->getLinkedDisplayName(false); ?></td>
+					<td class="center"><?php echo $ThisPlayer->getColouredRaceName($President->getRaceID(), true); ?></td>
+					<td><?php echo $President->getAllianceName(true); ?></td>
+					<td class="right"><?php echo $President->getExperience(); ?></td>
+				</tr>
+			</tbody>
 		</table><?php
 	}
 	else {
@@ -28,28 +32,32 @@
 	<h3>Council Members</h3><br /><?php
 	$CouncilMembers = Council::getRaceCouncil($ThisPlayer->getGameID(), $RaceID);
 	if(count($CouncilMembers) > 0) { ?>
-		<table class="standard" width="85%">
-			<tr>
-				<th>&nbsp;</th>
-				<th>Name</th>
-				<th>Race</th>
-				<th>Alliance</th>
-				<th>Experience</th>
-			</tr><?php
-			foreach($CouncilMembers as $Ranking => $AccountID) {
-				$CouncilPlayer =& SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
-				<tr<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> class="bold"<?php } ?>>
-					<td class="right"><?php echo $Ranking; ?></td>
-					<td><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
-					<td class="center"><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
-					<td><?php echo $CouncilPlayer->getAllianceName(true); ?></td>
-					<td class="right"><?php echo $CouncilPlayer->getExperience(); ?></td>
-				</tr><?php
-			} ?>
+		<table id="council-members" class="standard" width="85%">
+			<thead>
+				<tr>
+					<th>&nbsp;</th>
+					<th class="sort" data-sort="name">Name</th>
+					<th>Race</th>
+					<th class="sort" data-sort="alliance">Alliance</th>
+					<th class="sort" data-sort="experience">Experience</th>
+				</tr>
+			</thead>
+			<tbody class="list"><?php
+				foreach($CouncilMembers as $Ranking => $AccountID) {
+					$CouncilPlayer =& SmrPlayer::getPlayer($AccountID, $ThisPlayer->getGameID()); ?>
+					<tr id="player-<?php echo $CouncilPlayer->getPlayerID(); ?>" class="ajax<?php if ($ThisPlayer->equals($CouncilPlayer)) { ?> bold<?php } ?>">
+						<td class="right"><?php echo $Ranking; ?></td>
+						<td class="name"><?php echo $CouncilPlayer->getLevelName(); ?> <?php echo $CouncilPlayer->getLinkedDisplayName(false); ?></td>
+						<td class="center"><?php echo $ThisPlayer->getColouredRaceName($CouncilPlayer->getRaceID(), true); ?></td>
+						<td class="alliance"><?php echo $CouncilPlayer->getAllianceName(true); ?></td>
+						<td class="experience right"><?php echo $CouncilPlayer->getExperience(); ?></td>
+					</tr><?php
+				} ?>
+			</tbody>
 		</table><?php
 	}
 	else { ?>
-		<div align="center">This council doesn't have any members!</div><?php
+		This council doesn't have any members!<?php
 	} ?>
 </div>
 <br /><br />
@@ -63,3 +71,19 @@ foreach($Races as $RaceID => $RaceInfo) {
 		</span><br /><?php
 	}
 } ?>
+<script type="text/javascript" src="js/list.1.0.0.custom.min.js"></script>
+<script>
+var list = new List('council-members', {
+	valueNames: ['name', 'race', 'alliance', 'experience'],
+	sortFunction: function(a, b) {
+		var regex;
+		if(this.valueName === 'name') {
+			regex = /^.*?<.*?>|<.*?>/g;
+		}
+		else {
+			regex = /,/g;
+		}
+		return list.sort.naturalSort(a.values()[this.valueName].replace(regex,''), b.values()[this.valueName].replace(regex,''), this);
+	}
+});
+</script>
