@@ -535,7 +535,7 @@ class Globals {
 	}
 
 	public static function getAllianceListHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_list.php', array('order'=>'alliance_name')));
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_list.php'));
 	}
 
 	public static function getAllianceNewsHREF($allianceID) {

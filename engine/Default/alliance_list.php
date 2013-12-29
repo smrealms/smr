@@ -8,11 +8,7 @@ if (!$player->hasAlliance()) {
 }
 
 
-$container = create_container('skeleton.php','alliance_list.php');
-
-if(!isset($var['sequence'])) {
-	SmrSession::updateVar('sequence', 'ASC');
-}
+$container = create_container('skeleton.php');
 
 // get list of alliances
 $db->query('SELECT 
@@ -26,38 +22,27 @@ JOIN alliance USING (game_id, alliance_id)
 WHERE leader_id > 0
 AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 GROUP BY alliance_id 
-ORDER BY ' . $var['order'] . ' ' . $var['sequence']
+ORDER BY alliance_name ASC'
 );
 
-$container['sequence'] = $var['sequence'] == 'DESC' ? 'ASC' : 'DESC';
 $alliances = array();
-if ($db->getNumRows() > 0) {
-	$container['order'] = 'alliance_name';
-	$template->assign('SortNameHREF',SmrSession::getNewHREF($container));
-	$container['order'] = 'alliance_xp';
-	$template->assign('SortTotalExpHREF',SmrSession::getNewHREF($container));
-	$container['order'] = 'alliance_avg';
-	$template->assign('SortAvgExpHREF',SmrSession::getNewHREF($container));
-	$container['order'] = 'alliance_member_count';
-	$template->assign('SortMembersHREF',SmrSession::getNewHREF($container));
-	while ($db->nextRecord()) {
-		if ($db->getField('alliance_id') != $player->getAllianceID()) {
-			$container['body'] = 'alliance_roster.php';
-		}
-		else {
-			$container['body'] = 'alliance_mod.php';
-		}
-		$allianceID = $db->getInt('alliance_id');
-		$container['alliance_id'] = $allianceID;
-
-		$alliances[$allianceID] = array(
-			'ViewHREF' => SmrSession::getNewHREF($container),
-			'Name' => $db->getField('alliance_name'),
-			'TotalExperience' => $db->getInt('alliance_xp'),
-			'AverageExperience' => $db->getInt('alliance_avg'),
-			'Members' => $db->getInt('alliance_member_count'),
-		);
+while ($db->nextRecord()) {
+	if ($db->getField('alliance_id') != $player->getAllianceID()) {
+		$container['body'] = 'alliance_roster.php';
 	}
+	else {
+		$container['body'] = 'alliance_mod.php';
+	}
+	$allianceID = $db->getInt('alliance_id');
+	$container['alliance_id'] = $allianceID;
+
+	$alliances[$allianceID] = array(
+		'ViewHREF' => SmrSession::getNewHREF($container),
+		'Name' => $db->getField('alliance_name'),
+		'TotalExperience' => $db->getInt('alliance_xp'),
+		'AverageExperience' => $db->getInt('alliance_avg'),
+		'Members' => $db->getInt('alliance_member_count'),
+	);
 }
 $template->assign('Alliances', $alliances);
 ?>
