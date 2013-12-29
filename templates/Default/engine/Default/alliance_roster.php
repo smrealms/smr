@@ -1,20 +1,21 @@
 <?php
 
-$varAction = isset($var['action']) ? $var['action'] : '';
-// Does anyone actually use these?
 if ($ShowRoles) { ?>
 	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
 } ?>
 
 
-<div align="center"><?php
-	echo bbifyMessage($Alliance->getDescription());
+<div align="center">
+	<div id="alliance-desc" class="ajax"><?php
+		echo bbifyMessage($Alliance->getDescription()); ?>
+	</div><?php
 	if(isset($EditAllianceDescriptionHREF)) { ?>
-		<br /><br />
-		<div class="buttonA"><a class="buttonA" href="<?php echo $EditAllianceDescriptionHREF; ?>">&nbsp;Edit&nbsp;</a></div><?php
+		<br />
+		<div class="buttonA"><a class="buttonA" href="<?php echo $EditAllianceDescriptionHREF; ?>">&nbsp;Edit&nbsp;</a></div>
+		<br /><?php
 	} ?>
 
-	<br /><br />
+	<br />
 
 	<table class="standard inset">
 		<tr>
@@ -23,7 +24,7 @@ if ($ShowRoles) { ?>
 			<th>Average Experience</th>
 			<th>Members</th>
 		</tr>
-		<tr class="bold">
+		<tr id="alliance-info" class="ajax bold">
 			<td><?php echo $Alliance->getAllianceName(); ?></td>
 			<td class="center shrink"><?php echo number_format($AllianceExp); ?></td>
 			<td class="center shrink"><?php echo number_format($AllianceAverageExp); ?></td>
@@ -55,16 +56,12 @@ if ($ShowRoles) { ?>
 				$Class = '';
 				// check if this guy is the current guy
 				if ($ThisPlayer->equals($AlliancePlayer)) {
-					$Class .= 'bold';
+					$Class .= ' bold';
 				}
 				if($AlliancePlayer->getAccount()->isNewbie()) {
 					$Class.= ' newbie';
-				}
-				if($Class!='') {
-					$Class = ' class="'.trim($Class).'"';
 				} ?>
-				<tr<?php echo $Class; ?>>
-
+				<tr id="player-<?php echo $AlliancePlayer->getPlayerID(); ?>" class="ajax<?php echo $Class; ?>">
 					<td class="center"><?php
 						if ($AlliancePlayer->getAccountID() == $Alliance->getLeaderID()) { ?>*<?php }
 						echo $Count++; ?>
