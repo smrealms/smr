@@ -44,10 +44,11 @@ if ($db->getNumRows() > 0) {
 	$i=0;
 	$alliance_eyes = array();
 	while ($db->nextRecord()) {
+		$threadID = $db->getInt('thread_id');
 		$alliance_eyes[$i] = $db->getInt('alliance_only') == 1;
-		$threads[$i]['thread_id'] = $db->getInt('thread_id');
+		$threads[$i]['ThreadID'] = $threadID;
 
-		$thread_ids[$i] = $db->getInt('thread_id');
+		$thread_ids[$i] = $threadID;
 		$thread_topics[$i] = $db->getField('topic');
 
 		$threads[$i]['Topic'] = $db->getField('topic');
@@ -57,7 +58,7 @@ if ($db->getNumRows() > 0) {
 					WHERE account_id=' . $db2->escapeNumber($player->getAccountID()) . '
 					AND game_id=' . $db2->escapeNumber($player->getGameID()) . '
 					AND alliance_id =' . $db2->escapeNumber($alliance->getAllianceID()) . '
-					AND thread_id=' . $db2->escapeNumber($db->getInt('thread_id')) . ' 
+					AND thread_id=' . $db2->escapeNumber($threadID) . '
 					AND time>' . $db2->escapeNumber($db->getInt('sendtime')) . ' LIMIT 1');
 		$threads[$i]['Unread'] = $db2->getNumRows() == 0;
 		
@@ -69,7 +70,7 @@ if ($db->getNumRows() > 0) {
 						JOIN alliance_thread ON alliance_thread.game_id = player.game_id AND player.account_id=alliance_thread.sender_id
 						WHERE player.game_id=' . $db2->escapeNumber($player->getGameID()) . '
 						AND alliance_thread.alliance_id=' . $db2->escapeNumber($alliance->getAllianceID()) . '
-						AND alliance_thread.thread_id=' . $db2->escapeNumber($db->getInt('thread_id')) . '
+						AND alliance_thread.thread_id=' . $db2->escapeNumber($threadID) . '
 						AND alliance_thread.reply_id=1 LIMIT 1
 						');
 			if($db2->nextRecord()) {
@@ -94,7 +95,7 @@ if ($db->getNumRows() > 0) {
 		$db2->nextRecord();
 		$threads[$i]['CanDelete'] = $player->getAccountID() == $sender_id || $db2->getBoolean('mb_messages');
 		if($threads[$i]['CanDelete']) {
-			$container['thread_id'] = $db->getInt('thread_id');
+			$container['thread_id'] = $threadID;
 			$threads[$i]['DeleteHref'] = SmrSession::getNewHREF($container);
 		}
 		$threads[$i]['Replies'] = $db->getInt('num_replies');
