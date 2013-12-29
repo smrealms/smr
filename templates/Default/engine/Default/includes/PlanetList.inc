@@ -22,7 +22,7 @@ if (count($Planets) > 0) { ?>
 		</thead>
 		<tbody class="list"><?php
 			foreach($Planets as &$Planet) { ?>
-				<tr>
+				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
 					<td class="name"><?php echo $Planet->getName(); ?></td>
 					<td class="lvl noWrap"><?php echo number_format($Planet->getLevel(),2); ?></td>
 					<td class="owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
