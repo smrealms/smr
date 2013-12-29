@@ -29,5 +29,62 @@ if(isset($CombatResultsType)&&$CombatResultsType) {
 	}
 }
 else {
-	echo $PHP_OUTPUT;
+	if(isset($Message)) {?>
+		<div class="center"><?php echo $Message; ?></div><br /><?php
+	} ?>
+	<div align="center"><?php
+		$NumLogs = count($Logs);
+		if($NumLogs > 0) { ?>
+			There <?php echo $this->pluralise('is', $TotalLogs), ' ', $TotalLogs, $this->pluralise(' log', $NumLogs); ?> available for viewing of which <?php echo $NumLogs, ' ', $this->pluralise('is', $NumLogs); ?> being shown.<br /><br />
+			<form class="standard" method="POST" action="<?php echo $LogFormHREF; ?>">
+			<table class="fullwidth center">
+				<tr>
+					<td style="width: 30%" valign="middle"><?php
+						if(isset($PreviousPage)) { ?>
+							<a href="<?php echo $PreviousPage; ?>"><img src="images/album/rew.jpg" width="25" height="25" alt="Previous Page" border="0"></a><?php
+						} ?>
+					</td>
+					<td>
+						<input class="submit" type="submit" name="action" value="View"><?php
+						if($CanDelete) {
+							?>&nbsp;<input class="submit" type="submit" name="action" value="Delete"><?php
+						}
+						if($CanSave) {
+							?>&nbsp;<input class="submit" type="submit" name="action" value="Save"><?php
+						} ?>
+					</td>
+					<td style="width: 30%" valign="middle"><?php
+						if(isset($NextPage)) { ?>
+							<a href="<?php echo $NextPage; ?>"><img src="images/album/fwd.jpg" width="25" height="25" alt="Next Page" border="0"></a><?php
+						} ?>
+					</td>
+				</tr>
+			</table>
+			<br /><br />
+			<table class="standard fullwidth">
+				<tr>
+					<th class="shrink">View</th>
+					<th class="shrink">Date</th>
+					<th class="shrink">Sector</th>
+					<th>Attacker</th>
+					<th>Defender</th>
+				</tr><?php
+					foreach ($Logs as $LogID => $Log) { ?>
+						<tr>
+							<td class="center">
+								<input type="checkbox" value="on" name="id[<?php echo $LogID; ?>]">
+							</td>
+							<td class="noWrap"><?php echo date(DATE_FULL_SHORT, $Log['Time']); ?></td>
+							<td class="center"><?php echo $Log['Sector']; ?></td>
+							<td><?php echo $Log['Attacker']; ?></td>
+							<td><?php echo $Log['Defender']; ?></td>
+						</tr><?php
+					} ?>
+				</table>
+			</form><?php
+		}
+		else { ?>
+			No combat logs found<?php
+		} ?>
+	</div><?php
 } ?>

@@ -24,7 +24,7 @@ if (isset($_REQUEST['action'])) {
 								: '') . '
 							)
 						LIMIT ' . count($logIDs));
-			$PHP_OUTPUT.=('<div align="center">' . $db->getChangedRows() . ' new logs have been saved.</div><br />');
+			$template->assign('Message', $db->getChangedRows() . ' new logs have been saved.');
 			//back to viewing
 			$var['action'] = $var['old_action'];
 		}
@@ -34,7 +34,7 @@ if (isset($_REQUEST['action'])) {
 							AND account_id = ' . $db->escapeNumber($player->getAccountID()) . '
 							AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
 						LIMIT ' . count($logIDs));
-			$PHP_OUTPUT.=('<div align="center">' . $db->getChangedRows() . ' saved logs have been deleted.</div><br />');
+			$template->assign('Message', $db->getChangedRows() . ' new logs have been deleted.');
 			//back to viewing
 			$var['action'] = $var['old_action'];
 		}
@@ -105,7 +105,7 @@ if(isset($display_id)) {
 		$template->assignByRef('CombatResults',$results);
 	}
 	else {
-		$PHP_OUTPUT.= '<span class="red bold">Error:</span> log not found';
+		create_error('Combat log not found');
 	}
 }
 
@@ -150,138 +150,77 @@ if(isset($query) && $query) {
 	$db->query('SELECT count(*) as count FROM combat_logs c WHERE '.$query.' LIMIT 1');
 	if($db->nextRecord()) {
 		$totalLogs = $db->getInt('count');
+		$template->assign('TotalLogs', $totalLogs);
 	}
 	$db->query('SELECT attacker_id,defender_id,timestamp,sector_id,log_id FROM combat_logs c WHERE '.$query.' ORDER BY log_id DESC, sector_id LIMIT '.($page*COMBAT_LOGS_PER_PAGE).', '.COMBAT_LOGS_PER_PAGE);
 }
 
 if($action != 5) {
-	$PHP_OUTPUT.= '<div align="center">';
+	function getParticipantName($accountID, $sectorID) {
+		global $player;
+		if($accountID == ACCOUNT_ID_PORT) {
+			return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColor">#' . $sectorID . '</span></a>';
+		}
+		if($accountID == ACCOUNT_ID_PLANET) {
+			return '<span class="yellow">Planetary Defenses</span>';
+		}
+
+		return SmrPlayer::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
+	}
+
+	$logs = array();
 	if($db->getNumRows() > 0) {
-		$num = $db->getNumRows();
-		$PHP_OUTPUT.= 'There ';
-		if ($totalLogs > 1) {
-			$PHP_OUTPUT.= 'are ';
-		}
-		else {
-			$PHP_OUTPUT.= 'is ';
-		}
-		$PHP_OUTPUT.= $totalLogs;
 		switch($action) {
 			case 0:
-				$PHP_OUTPUT.= ' personal';
+				$type = ' personal';
 			break;
 			case 1:
-				$PHP_OUTPUT.= ' alliance';
+				$type = ' alliance';
 			break;
 			case 2:
-				$PHP_OUTPUT.= ' port';
+				$type = ' port';
 			break;
 			case 3:
-				$PHP_OUTPUT.= ' planet';
+				$type = ' planet';
 			break;
 			case 4:
-				$PHP_OUTPUT.= ' saved';
+				$type = ' saved';
 			break;
 			case 6:
-				$PHP_OUTPUT.= ' force';
+				$type = ' force';
 			break;
 		}
-		$PHP_OUTPUT.= ' log';
-		if ($num > 1) {
-			$PHP_OUTPUT.= 's';
-		}
-		$PHP_OUTPUT.= ' available for viewing of which '.$num;
-		if ($totalLogs > 1) {
-			$PHP_OUTPUT.= ' are';
-		}
-		else {
-			$PHP_OUTPUT.= ' is';
-		}
-		$PHP_OUTPUT.=' being shown.<br /><br />';
+		$template->assign('LogType', $type);
 		$container = create_container('skeleton.php', 'combat_log_viewer.php');
 		$container['action'] = 5;
 		$container['old_action'] = $action;
 		$container['direction'] = 0;
-		$actions = array();
-		$actions[] = array('View','View');
-		if($action == 4) {
-			// Saved logs
-			$actions[] = array('Delete','Delete');
-		}
-		else {
-			$actions[] = array('Save','Save');
-		}
-		$form = create_form($container,$actions);
-		$PHP_OUTPUT.= $form['form'];
+		$template->assign('LogFormHREF', SmrSession::getNewHREF($container));
+
 		$container = $var;
-		$container['page'] = $page-1;
-		$PHP_OUTPUT.='<table class="fullwidth center"><tr><td style="width: 30%" valign="middle">';
 		if($page>0) {
-			$PHP_OUTPUT.='<a href="'.SmrSession::getNewHREF($container).'"><img src="'.URL.'/images/album/rew.jpg" alt="Previous Page" border="0"></a>';
+			$container['page'] = $page-1;
+			$template->assign('PreviousPage', SmrSession::getNewHREF($container));
 		}
-		$PHP_OUTPUT.='</td><td>';
-		$PHP_OUTPUT.= $form['submit']['View'];
-		$PHP_OUTPUT.= '&nbsp;';
-		if($action == 4) {
-			// Saved logs
-			$PHP_OUTPUT.= $form['submit']['Delete'];
-		}
-		else {
-			$PHP_OUTPUT.= $form['submit']['Save'];
-		}
-		$PHP_OUTPUT.='</td><td style="width: 30%" valign="middle">';
-		$container['page'] = $page+1;
 		if(($page+1)*COMBAT_LOGS_PER_PAGE<$totalLogs) {
-			$PHP_OUTPUT.='<a href="'.SmrSession::getNewHREF($container).'"><img src="'.URL.'/images/album/fwd.jpg" alt="Next Page" border="0"></a>';
+			$container['page'] = $page+1;
+			$template->assign('NextPage', SmrSession::getNewHREF($container));
 		}
-		$PHP_OUTPUT.='</td></tr></table>';
-		$PHP_OUTPUT.= '<br /><br /><table class="standard fullwidth">';
-		$PHP_OUTPUT.= '<tr><th>View</th><th>Date</th><th>Sector</th><th>Attacker</th><th>Defender</th></tr>';
+		// Saved logs
+		$template->assign('CanDelete', $action == 4);
+		$template->assign('CanSave', $action != 4);
+
 		while($db->nextRecord()) {
-			//attacker_id,defender_id,timestamp,sector_id,log_id
-			$logs[$db->getField('log_id')] = array($db->getField('attacker_id'),$db->getField('defender_id'),$db->getField('timestamp'),$db->getField('sector_id'));
-			$playerIDs[] = $db->getField('attacker_id');
-			$playerIDs[] = $db->getField('defender_id');
+			$sectorID = $db->getInt('sector_id');
+			$logs[$db->getField('log_id')] = array(
+				'Attacker' => getParticipantName($db->getInt('attacker_id'), $sectorID),
+				'Defender' => getParticipantName($db->getInt('defender_id'), $sectorID),
+				'Time' => $db->getInt('timestamp'),
+				'Sector' => $sectorID
+			);
 		}
-		array_unique($playerIDs);
-		$db->query('SELECT * FROM player
-					WHERE account_id IN (' . $db->escapeArray($playerIDs) . ')
-					AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					LIMIT ' . sizeof($playerIDs));
-		while ($db->nextRecord()) {
-			$currPlayer =& SmrPlayer::getPlayer($db->getRow(), $player->getGameID());
-			$players[$db->getField('account_id')] = $currPlayer->getLinkedDisplayName(false);
-		}
-		foreach ($logs as $id => $info) {
-			$container['id'] = $id;
-			$PHP_OUTPUT.= '<tr>';
-			$PHP_OUTPUT.= '<td class="center shrink">';
-			$PHP_OUTPUT.= '<input type="checkbox" value="on" name="id[' . $id . ']">';
-			$PHP_OUTPUT.= '</td>';
-			if(isset($players[$info[0]])) {
-				$attacker_name = $players[$info[0]];
-			}
-			else {
-				$attacker_name = 'Unknown Attacker';
-			}
-			if(isset($players[$info[1]])) {
-				$defender_name = $players[$info[1]];
-			}
-			else {
-				$defender_name = 'Unknown Defender';
-			}
-			$PHP_OUTPUT.= '<td class="shrink noWrap">' . date(DATE_FULL_SHORT,$info[2]) . '</td>';
-			$PHP_OUTPUT.= '<td class="center shrink">' . $info[3] . '</td>';
-			$PHP_OUTPUT.= '<td>' . $attacker_name . '</td>';
-			$PHP_OUTPUT.= '<td>' . $defender_name . '</td>';
-		}
-		$PHP_OUTPUT.= '</table>';
-		$PHP_OUTPUT.= '</form>';
 	}
-	else {
-		$PHP_OUTPUT.= 'No combat logs found';
-	}
-	$PHP_OUTPUT.= '</div>';
+	$template->assign('Logs', $logs);
 }
 
 ?>
