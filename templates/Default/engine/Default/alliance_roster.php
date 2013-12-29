@@ -3,7 +3,7 @@
 $varAction = isset($var['action']) ? $var['action'] : '';
 // Does anyone actually use these?
 if ($ShowRoles) { ?>
-	<form class="standard" method="POST')" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
+	<form class="standard" method="POST" action="<?php echo $SaveAllianceRolesHREF; ?>"><?php
 } ?>
 
 
