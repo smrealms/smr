@@ -30,13 +30,11 @@ if ($ShowRoles) { ?>
 			<td class="center shrink"><?php echo $Alliance->getNumMembers(); ?></td>
 		</tr>
 	</table>
-</div>
-<br />
+	<br />
 
-<h2>Current Members</h2><br />
+	<h2>Current Members</h2><br />
 
-<div id="alliance-roster" align="center">
-	<table class="standard fullwidth">
+	<table id="alliance-roster" class="standard fullwidth">
 		<thead>
 			<tr>
 				<th class="shrink">&nbsp;</th>
