@@ -8,54 +8,52 @@
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector); ?>
 				<td>
 					<?php if($isCurrentSector){ ?><div class="currentSeclm"><?php } ?>
-					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm2<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector">
-						<div class="lmup"><?php
-							if($Sector->isVisited($ThisPlayer)) { ?>
-								<div class="center lmup"><?php
-									if($Sector->getLinkUp()) { ?>
-										<img src="images/link_hor.gif" width="12" height="5" alt="Up" title="Up" /><?php
-									} ?>
-								</div><?php
-							}
-							if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
-								<div class="lmp"><?php
-									if(!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector))) {
-										?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
+					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm2<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector"><?php
+						if($Sector->isVisited($ThisPlayer)) { ?>
+							<div class="center lmup"><?php
+								if($Sector->getLinkUp()) { ?>
+									<img src="images/link_hor.gif" width="12" height="5" alt="Up" title="Up" /><?php
+								} ?>
+							</div><?php
+						}
+						if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
+							<div class="lmp"><?php
+								if(!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector))) {
+									?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
+								}
+								if($Sector->isVisited($ThisPlayer) && $Sector->hasWarp()) {
+									if($GalaxyMap){ ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php }
+									else if($isCurrentSector){ ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapHREF(); ?>"><?php } ?>
+										<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxyName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.png" width="16" height="16" /><?php
+									if($isCurrentSector || $GalaxyMap){ ?></a><?php }
+								}
+								if($Sector->isVisited($ThisPlayer) && $Sector->hasMine()) {
+									?><img src="images/asteroid.gif" width="16" height="16" alt="Mining Available Here" title="Mining Available Here" /><?php
+								} ?>
+							</div><?php
+						}
+						$CanScanSector = $UniGen || ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
+						if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($ThisPlayer) || $Sector->hasFriendlyTraders($ThisPlayer)) { ?>
+							<div class="lmtf"><?php
+								if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($ThisPlayer))) {
+									if($CanScanSector && $Sector->hasEnemyTraders($ThisPlayer)) {
+										?><img title="Enemy Trader" alt="Enemy Trader" src="images/enemyTrader.png" width="13" height="16"/><?php
 									}
-									if($Sector->isVisited($ThisPlayer) && $Sector->hasWarp()) {
-										if($GalaxyMap){ ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php }
-										else if($isCurrentSector){ ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapHREF(); ?>"><?php } ?>
-											<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxyName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.png" width="16" height="16" /><?php
-										if($isCurrentSector || $GalaxyMap){ ?></a><?php }
+									if($Sector->hasFriendlyTraders($ThisPlayer)) {
+										?><img title="Friendly Trader" alt="Friendly Trader" src="images/friendlyTrader.png" width="13" height="16"/><?php
 									}
-									if($Sector->isVisited($ThisPlayer) && $Sector->hasMine()) {
-										?><img src="images/asteroid.gif" width="16" height="16" alt="Mining Available Here" title="Mining Available Here" /><?php
-									} ?>
-								</div><?php
-							}
-							$CanScanSector = $UniGen || ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
-							if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($ThisPlayer) || $Sector->hasFriendlyTraders($ThisPlayer)) { ?>
-								<div class="lmtf"><?php
-									if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($ThisPlayer))) {
-										if($CanScanSector && $Sector->hasEnemyTraders($ThisPlayer)) {
-											?><img title="Enemy Trader" alt="Enemy Trader" src="images/enemyTrader.png" width="13" height="16"/><?php
-										}
-										if($Sector->hasFriendlyTraders($ThisPlayer)) {
-											?><img title="Friendly Trader" alt="Friendly Trader" src="images/friendlyTrader.png" width="13" height="16"/><?php
-										}
+								}
+								if($Sector->hasForces()) {
+									if($CanScanSector && $Sector->hasEnemyForces($ThisPlayer)) {
+										?><img title="Enemy Forces" alt="Enemy Forces" src="images/enemyForces.png" width="13" height="16"/><?php
 									}
-									if($Sector->hasForces()) {
-										if($CanScanSector && $Sector->hasEnemyForces($ThisPlayer)) {
-											?><img title="Enemy Forces" alt="Enemy Forces" src="images/enemyForces.png" width="13" height="16"/><?php
-										}
-										if($Sector->hasFriendlyForces($ThisPlayer)) {
-											?><img title="Friendly Forces" alt="Friendly Forces" src="images/friendlyForces.png" width="13" height="16"/><?php
-										}
-										/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
-									} ?>
-								</div><?php
-							} ?>
-						</div><?php
+									if($Sector->hasFriendlyForces($ThisPlayer)) {
+										?><img title="Friendly Forces" alt="Friendly Forces" src="images/friendlyForces.png" width="13" height="16"/><?php
+									}
+									/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
+								} ?>
+							</div><?php
+						}
 						if($Sector->isVisited($ThisPlayer)) {
 							if($Sector->hasLocation() || $Sector->hasPlanet()) { ?>
 								<div class="center lmloc fullwidth"><?php
