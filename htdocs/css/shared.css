@@ -306,6 +306,16 @@ table.lmt {
 	border-collapse: collapse;
 	border-spacing: 1px;
 }
+/* Connecting icons */
+div.hcon {
+	background: url('../images/link_hor.gif') no-repeat center;
+}
+div.lcon {
+	background: url('../images/link_ver.gif') no-repeat left center;
+}
+div.rcon {
+	background: url('../images/link_ver.gif') no-repeat right center;
+}
 /*Local up link Icon*/
 div.lm_sector div.lmup {
 	position: absolute;
@@ -380,6 +390,7 @@ div.lmdown {
 	top: 110px;
 	left: 0px;
 	height: 10px;
+	width: 120px;
 }
 div.lm_sector {
 	position: relative;
