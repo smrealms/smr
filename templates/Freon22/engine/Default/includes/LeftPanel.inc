@@ -54,7 +54,7 @@ if(isset($GameID)) { ?>
 	} ?>
 	<a class="leftNav" href="manual.php" target="manual">Manual</a><br /><?php
 	if(isset($GameID)) {
-		?><a class="leftNav" href="<?php echo Globals::getSmrFileCreateHREF(); ?>">DL Sectors File</a><br /><?php
+		?><a class="leftNav" href="<?php echo Globals::getSmrFileCreateHREF(); ?>" target="_self">DL Sectors File</a><br /><?php
 	} ?>
 	<a class="leftNav" href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
 	<a class="leftNav" href="album/" target="album">View Album</a><br /><br /><?php

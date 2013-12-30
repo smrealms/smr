@@ -58,7 +58,7 @@ else {
 ?>
 <a href="http://wiki.smrealms.de" target="_blank">SMR Wiki</a><br /><?php
 if(isset($GameID)) {
-	?><a href="<?php echo Globals::getSmrFileCreateHREF(); ?>">DL Sectors File</a><br /><?php
+	?><a href="<?php echo Globals::getSmrFileCreateHREF(); ?>" target="_self">DL Sectors File</a><br /><?php
 } ?>
 <a href="<?php echo $EditPhotoLink; ?>">Edit Photo</a><br />
 <a href="album/" target="album">View Album</a><br /><br /><?php
