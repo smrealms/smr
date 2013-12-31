@@ -406,7 +406,8 @@ div.lm_sector {
 	width: 120px;
 	height: 120px;
 }
-div.lm_sector img.move_hack {
+div.lm_sector .move_hack {
+	background: none;
 	height: 120px;
 	width: 120px;
 	position: absolute;

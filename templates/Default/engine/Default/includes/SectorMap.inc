@@ -102,16 +102,16 @@
 						}
 						if($UniGen) {
 							$UniGen['sector_id'] = $Sector->getSectorID(); ?>
-							<a href="<?php echo SmrSession::getNewHREF($UniGen); ?>"><img title="" alt="" class="move_hack" src="images/blank.gif" width="120" height="120"/></a><?php
+							<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php
 						}
 						else if($GalaxyMap) { ?>
-							<a href="<?php echo $Sector->getGalaxyMapHREF(); ?>"><img title="" alt="" class="move_hack" src="images/blank.gif" width="120" height="120"/></a><?php
+							<a class="move_hack" href="<?php echo $Sector->getGalaxyMapHREF(); ?>"></a><?php
 						}
 						else if($isLinkedSector) { ?>
-							<a href="<?php echo $Sector->getLocalMapHREF(); ?>"><img title="" alt="" class="move_hack" src="images/blank.gif" width="120" height="120"/></a><?php
+							<a class="move_hack" href="<?php echo $Sector->getLocalMapHREF(); ?>"></a><?php
 						}
 						else if($isCurrentSector) { ?>
-							<a href="<?php echo Globals::getCurrentSectorHREF(); ?>"><img title="" alt="" class="move_hack" src="images/blank.gif" width="120" height="120"/></a><?php
+							<a class="move_hack" href="<?php echo Globals::getCurrentSectorHREF(); ?>"></a><?php
 						} ?>
 					</div>
 					<?php if($isCurrentSector){ ?></div><?php } ?>
