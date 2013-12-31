@@ -1,4 +1,4 @@
-<table class="lmt" style="margin: auto;"><?php
+<table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
 	$UniGen = isset($UniGen) ? $UniGen : false;
 	foreach($MapSectors as &$MapSector) { ?>
@@ -6,7 +6,7 @@
 			foreach($MapSector as &$Sector) {
 				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector); ?>
-				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector"><?php
+				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
 					if($Sector->isVisited($ThisPlayer)) { ?>
 						<div class="lmup <?php if($Sector->getLinkUp()) { ?>hcon<?php } else { ?>wall<?php } ?>"></div><?php
 					}
