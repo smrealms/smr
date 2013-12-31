@@ -73,7 +73,7 @@
 							} ?>
 							<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>lcon<?php } else { ?>wall<?php } ?>"></div><?php
 						} ?>
-						<div class="lmsector center <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?> fullwidth"><?php echo $Sector->getSectorID(); ?></div><?php
+						<div class="lmsector <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
 						if($Sector->isVisited($ThisPlayer)) { ?>
 							<div class="lmright <?php if($Sector->getLinkRight()) { ?> rcon<?php } else { ?>wall<?php } ?>"></div><?php
 							if((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer)) {
@@ -83,7 +83,7 @@
 								else if($Sector->hasCachedPort($ThisPlayer)) {
 									$Port =& $Sector->getCachedPort($ThisPlayer);
 								} ?>
-								<div class="left lmport <?php if($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>"><?php
+								<div class="lmport <?php if($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>"><?php
 									if($isCurrentSector && !$GalaxyMap) {
 										?><a href="<?php echo Globals::getTradeHREF(); ?>"><?php
 									} ?>
