@@ -326,8 +326,10 @@ div.wall {
 div.lmup, div.lmdown {
 	position: absolute;
 	left: 0px;
-	right: 0px;
+	width: 120px;
 	height: 5px;
+	/* This is required for IE6, otherwise it renders as higher than 5px */
+	font-size: 0px;
 }
 div.lmup {
 	top: 0px;
@@ -338,7 +340,7 @@ div.lmdown {
 div.lmright, div.lmleft {
 	position: absolute;
 	top: 0px;
-	bottom: 0px;
+	height: 120px;
 	width: 5px;
 }
 div.lmright {
@@ -370,7 +372,7 @@ div.lmleft {
 	position: absolute;
 	top: 28px;
 	left: 0px;
-	right: 0px;
+	width: 120px;
 	height: 18px;
 	z-index: 2;
 }
@@ -379,7 +381,7 @@ div.lmleft {
 	position: absolute;
 	top: 46px;
 	left: 10px;
-	right: 10px;
+	width: 100px;
 	height: 20px;
 	text-align: center;
 }
