@@ -52,7 +52,7 @@
 						}
 						if($Sector->isVisited($ThisPlayer)) {
 							if($Sector->hasLocation() || $Sector->hasPlanet()) { ?>
-								<div class="center lmloc fullwidth"><?php
+								<div class="lmloc"><?php
 								if($Sector->hasLocation()) {
 									foreach($Sector->getLocations() as $Location) {
 										if($isCurrentSector && $Location->hasAction() && !$GalaxyMap) {

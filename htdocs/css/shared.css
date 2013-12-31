@@ -348,9 +348,11 @@ div.lm_sector div.lmtf {
 }
 /*Local locations*/
 div.lm_sector div.lmloc {
+	text-align: center;
 	position: absolute;
 	top: 28px;
 	left: 0px;
+	right: 0px;
 	height: 18px;
 	z-index: 2;
 }
