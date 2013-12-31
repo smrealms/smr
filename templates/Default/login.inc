@@ -175,7 +175,7 @@
 							</table>
 						</form>
 					</td>
-					<td style="text-align: center; padding: 3px; width: 200px;">
+					<td class="center" style="padding: 3px; width: 200px;">
 						<span style="font-size: 14px;">Or login with:</span>
 						<span style="font-size: 3px;"><br /><br />
 							<?php require_once(LIB.'Login/SocialLogin.class.inc'); ?>

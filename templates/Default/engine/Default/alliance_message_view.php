@@ -4,19 +4,19 @@ if(	isset($PrevThread) || isset($NextThread) ) { ?>
 	<table class="nobord fullwidth">
 		<tr><?php
 		if(isset($PrevThread)) { ?>
-				<td style="text-align:left">
-					<a href="<?php echo $PrevThread['Href']; ?>"><img src="images/album/rew.jpg" alt="Previous" title="Previous"></a>
-					&nbsp;&nbsp;<?php echo $PrevThread['Topic']; ?>
-				</td><?php
+			<td>
+				<a href="<?php echo $PrevThread['Href']; ?>"><img src="images/album/rew.jpg" alt="Previous" title="Previous"></a>
+				&nbsp;&nbsp;<?php echo $PrevThread['Topic']; ?>
+			</td><?php
 		}
 		else {
 			?><td>&nbsp;</td><?php
 		}
 		if(isset($NextThread)) { ?>
-				<td style="text-align:right">
-				<?php echo $NextThread['Topic']; ?>&nbsp;&nbsp;
-				<a href="<?php echo $NextThread['Href']; ?>"><img src="images/album/fwd.jpg" alt="Next" title="Next"></a>
-				</td><?php
+			<td class="right">
+			<?php echo $NextThread['Topic']; ?>&nbsp;&nbsp;
+			<a href="<?php echo $NextThread['Href']; ?>"><img src="images/album/fwd.jpg" alt="Next" title="Next"></a>
+			</td><?php
 		}
 		else {
 			?><td>&nbsp;</td><?php
