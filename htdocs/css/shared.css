@@ -368,18 +368,17 @@ div.lm_sector div.lmleft {
 div.lm_sector div.lmsector {
 	position: absolute;
 	top: 46px;
-	left: 20px;
+	left: 10px;
+	right: 10px;
 	height: 20px;
 	text-align: center;
-	width: 80px;
 }
 /*Local right link Icon*/
 div.lm_sector div.lmright {
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
-	left: 110px;
-	text-align: right;
+	right: 0px;
 	width: 10px;
 }
 /*Local port section*/
@@ -400,8 +399,8 @@ div.lmdown {
 	position: absolute;
 	top: 110px;
 	left: 0px;
+	right: 0px;
 	height: 10px;
-	width: 120px;
 }
 div.lm_sector {
 	position: relative;
