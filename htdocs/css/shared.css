@@ -318,9 +318,9 @@ div.rcon {
 }
 
 /* Walls */
-/*div.wall {
+div.wall {
 	background: black;
-}*/
+}
 /*Local up link Icon*/
 div.lm_sector div.lmup {
 	position: absolute;
@@ -333,7 +333,6 @@ div.lm_sector div.lmup {
 div.lm_sector div.lmp {
 	position: absolute;
 	top: 10px;
-	left: 0px;
 	height: 18px;
 	z-index: 2;
 }
@@ -383,11 +382,15 @@ div.lm_sector div.lmright {
 /*Local port section*/
 div.lm_sector div.lmport {
 	position: absolute;
-	top: 66px;
-	left: 0px;
-	height: 44px;
+	top: 70px;
+	height: 40px;
 	z-index: 2;
-	/*width: 120px;*/
+}
+div.lm_sector div.lmport.a {
+	left: 0px;
+}
+div.lm_sector div.lmport.b {
+	left: 10px;
 }
 /*Local down link Icon*/
 div.lmdown {

@@ -83,7 +83,7 @@
 								else if($Sector->hasCachedPort($ThisPlayer)) {
 									$Port =& $Sector->getCachedPort($ThisPlayer);
 								} ?>
-								<div class="left lmport"><?php
+								<div class="left lmport <?php if($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>"><?php
 									if($isCurrentSector && !$GalaxyMap) {
 										?><a href="<?php echo Globals::getTradeHREF(); ?>"><?php
 									} ?>
