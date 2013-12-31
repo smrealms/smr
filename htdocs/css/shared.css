@@ -304,7 +304,8 @@ a.buttonA  {
 /* LM */
 table.lmt {
 	border-collapse: separate;
-	border-spacing: 6px
+	border-spacing: 6px;
+	table-layout: fixed;
 }
 table.lmt td {
 	padding: 0px;
@@ -399,6 +400,8 @@ div.lmleft {
 	position: relative;
 	width: 120px;
 	height: 120px;
+	min-width: 120px;
+	min-height: 120px;
 }
 .lm_sector .move_hack {
 	background: none;
