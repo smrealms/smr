@@ -158,6 +158,9 @@ div.secNavBox div.move_warp {
 .fullheight {
 	height: 100%;
 }
+.left {
+	text-align: left;
+}
 .right {
 	text-align: right;
 }

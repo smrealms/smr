@@ -127,7 +127,7 @@ if (!empty($boughtGoods)) {
 		$PHP_OUTPUT.=create_echo_form($container);
 			
 		$PHP_OUTPUT.=('<tr class="center">');
-		$PHP_OUTPUT.=('<td>'.$good['Name'].'</td>');
+		$PHP_OUTPUT.=('<td class="left"><img src="' . $good['ImageLink'] . '" width="13" height="16" title="' . $good['Name'] . '" alt=""> ' . $good['Name'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $good['Amount'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $good['BasePrice'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $ship->getCargo($good['ID']) . '</td>');
@@ -176,7 +176,7 @@ if (!empty($soldGoods)) {
 		$PHP_OUTPUT.=create_echo_form($container);
 
 		$PHP_OUTPUT.=('<tr class="center">');
-		$PHP_OUTPUT.=('<td>'.$good['Name'].'</td>');
+		$PHP_OUTPUT.=('<td class="left"><img src="' . $good['ImageLink'] . '" width="13" height="16" title="' . $good['Name'] . '" alt=""> ' . $good['Name'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $good['Amount'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $good['BasePrice'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $ship->getCargo($good['ID']) . '</td>');
