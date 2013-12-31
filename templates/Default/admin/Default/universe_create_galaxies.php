@@ -14,8 +14,8 @@
 			<table cellpadding="5" border="0"><?php
 			for($i=0;$i<$NumberOfGalaxies;$i++) { ?>
 				<tr>
-					<td align="right">Name:</td>
-					<td align="left">
+					<td class="right">Name:</td>
+					<td>
 						<select name="galaxy[<?php echo $i ?>]" size="1" id="InputFields"><?php
 						foreach($GalaxyNames as $GalaxyNumber => $GalaxyName) { ?>
 							<option value="<?php echo $GalaxyNumber ?>"<?php if($i == $GalaxyNumber){ ?> selected<?php } ?>>
@@ -24,8 +24,8 @@
 						<?php } ?>
 						</select>
 					</td>
-					<td align="right">Size:</td>
-					<td align="left"><input type="number" name="size[<?php echo $i ?>]" value="15" size="3" maxlength="3" id="InputFields"></td>
+					<td class="right">Size:</td>
+					<td><input type="number" name="size[<?php echo $i ?>]" value="15" size="3" maxlength="3" id="InputFields"></td>
 				</tr><?php
 			} ?>
 			</table>

@@ -48,7 +48,7 @@ foreach ($locations as &$location) {
 		} unset($hardware);
 	}
 	$extra .= '</span>';
-	$PHP_OUTPUT.= '<tr><td class="right">' . $location->getName() . $extra . '</td><td class="left">';
+	$PHP_OUTPUT.= '<tr><td class="right">' . $location->getName() . $extra . '</td><td>';
 	$PHP_OUTPUT.= '<input type="number" value="';
 	if (isset($totalLocs[$location->getTypeID()])) $PHP_OUTPUT.= $totalLocs[$location->getTypeID()];
 	else $PHP_OUTPUT.= '0';
