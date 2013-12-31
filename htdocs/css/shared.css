@@ -323,7 +323,7 @@ div.lmup, div.lmdown {
 	position: absolute;
 	left: 0px;
 	right: 0px;
-	height: 10px;
+	height: 5px;
 }
 div.lmup {
 	top: 0px;
@@ -335,7 +335,7 @@ div.lmright, div.lmleft {
 	position: absolute;
 	top: 0px;
 	bottom: 0px;
-	width: 10px;
+	width: 5px;
 }
 div.lmright {
 	right: 0px;
@@ -390,7 +390,7 @@ div.lm_sector div.lmport.a {
 	left: 0px;
 }
 div.lm_sector div.lmport.b {
-	left: 10px;
+	left: 5px;
 }
 div.lm_sector {
 	position: relative;
