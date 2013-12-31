@@ -99,9 +99,9 @@
 	<body>
 		<div class="center">
 			<p class="collapsed">
-				<img src="images/login/smr_banner_16.png" alt=""><br />
-				<img src="images/login/bottom_left.gif" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.png" alt="Home"></a><img src="images/login/site_map.png" alt="Site Map"><img src="images/login/contact.png" alt="Contact"><img src="images/login/bottom_right.png" alt=""><br />
-				<a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" alt="Video Tutorials"></a><a href="http://wiki.smrealms.de" target="ml"><img src="images/login/sml.png" alt="Merchant Library"></a><a href="http://wiki.smrealms.de" target="manu"><img src="images/login/manual2.png" alt="Wiki"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" alt="Web Board"></a><a href="http://www.smrealms.de/awstats/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" alt="Site Statistics"></a><br />
+				<img src="images/login/smr_banner_16.png" width="769" height="132" alt=""><br />
+				<img src="images/login/bottom_left.gif" width="7" height="11" alt=""><a href="<?php echo URL ?>"><img src="images/login/home.png" width="55" height="11" alt="Home"></a><img src="images/login/site_map.png" width="87" height="11" alt="Site Map"><img src="images/login/contact.png" width="80" height="11" alt="Contact"><img src="images/login/bottom_right.png" width="540" height="11" alt=""><br />
+				<a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" width="166" height="29" alt="Video Tutorials"></a><a href="http://wiki.smrealms.de" target="ml"><img src="images/login/sml.png" width="166" height="29" alt="Merchant Library"></a><a href="http://wiki.smrealms.de" target="manu"><img src="images/login/manual2.png" width="129" height="29" alt="Wiki"></a><a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" width="128" height="29" alt="Web Board"></a><a href="http://www.smrealms.de/awstats/awstats.pl?config=www.smrealms.de" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a><br />
 			</p>
 			<?php
 			/*
@@ -130,46 +130,46 @@
 							<table class="collapsed">
 								<tr>
 									<td colspan="3">
-										<img src="images/login/login_top.png" alt="">
+										<img src="images/login/login_top.png" width="258" height="43" alt="">
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<img src="images/login/loginPw.png" alt="Login/Password" />
+										<img src="images/login/loginPw.png" width="104" height="48" alt="Login/Password" />
 									</td>
 									<td>
 										<input id="login_username" class="InputFields inputbox uncollapse" type="text" name="login"><br />
 										<input id="login_password" class="InputFields inputbox uncollapse" type="password" name="password">
 									</td>
 									<td>
-										<img src="images/login/loginPwRight.png" alt="">
+										<img src="images/login/loginPwRight.png" width="29" height="48"  alt="">
 									</td>
 								</tr>
 								<tr>
 									<td colspan="3">
-										<img src="images/login/loginPwMid.png" alt="">
+										<img src="images/login/loginPwMid.png" width="258" height="15"  alt="">
 									</td>
 								</tr>
 							</table>
 							<table class="collapsed">
 								<tr>
 									<td>
-										<img src="images/login/regLeft.png" alt=""><a href="<?php echo $Links['Register'] ?>"><img src="images/login/register.png" alt="Register"></a><a href="resend_password.php"><img src="images/login/pw_reset.png" alt="Reset Password"></a><img src="images/login/regRight.png" alt="">
+										<img src="images/login/regLeft.png" width="30" height="11"  alt=""><a href="<?php echo $Links['Register'] ?>"><img src="images/login/register.png" width="83" height="11" alt="Register"></a><a href="resend_password.php"><img src="images/login/pw_reset.png" width="127" height="11"  alt="Reset Password"></a><img src="images/login/regRight.png" width="18" height="11" alt="">
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<img src="images/login/loginMid.png" alt="">
+										<img src="images/login/loginMid.png" width="258" height="24" alt="">
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<img src="images/login/enter_left.png" alt=""><input id="login_submit" type="image" src="images/login/enter.png" alt="Enter"><img src="images/login/enter_right.png" alt="">
+										<img src="images/login/enter_left.png" width="79" height="27" alt=""><input id="login_submit" type="image" src="images/login/enter.png" width="110" height="27" alt="Enter"><img src="images/login/enter_right.png" width="69" height="27" alt="">
 									</td>
 								</tr>
 								<tr>
 									<td>
-										<img src="images/login/enter_bottom.png" alt="">
+										<img src="images/login/enter_bottom.png" width="258" height="8" alt="">
 									</td>
 								</tr>
 							</table>
@@ -180,10 +180,10 @@
 						<span style="font-size: 3px;"><br /><br />
 							<?php require_once(LIB.'Login/SocialLogin.class.inc'); ?>
 							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getFacebookLoginUrl()); ?>">
-								<img alt="Facebook Login" src="images/login/facebook.png">
+								<img alt="Facebook Login" src="images/login/facebook.png" width="65" height="22">
 							</a><br /><br />
 							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getOpenIdLoginUrl('Google')); ?>">
-								<img alt="Google Login" src="images/login/google.png">
+								<img alt="Google Login" src="images/login/google.png" width="32" height="32">
 							</a>
 							<?php /*
 							<a style="display: inline;margin:10px;" href="<?php echo str_replace('&', '&amp;', SocialLogin::getTwitterLoginUrl()); ?>">
