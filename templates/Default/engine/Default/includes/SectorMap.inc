@@ -10,7 +10,7 @@
 					<?php if($isCurrentSector){ ?><div class="currentSeclm"><?php } ?>
 					<div id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax <?php if($isCurrentSector){ ?>currentSeclm2<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?> lm_sector"><?php
 						if($Sector->isVisited($ThisPlayer)) { ?>
-							<div class="lmup<?php if($Sector->getLinkUp()) { ?> hcon<?php } ?>"></div><?php
+							<div class="lmup <?php if($Sector->getLinkUp()) { ?>hcon<?php } else { ?>wall<?php } ?>"></div><?php
 						}
 						if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
 							<div class="lmp"><?php
@@ -71,11 +71,11 @@
 								} ?>
 								</div><?php
 							} ?>
-							<div class="left lmleft<?php if($Sector->getLinkLeft()) { ?> lcon<?php } ?>"></div><?php
+							<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>lcon<?php } else { ?>wall<?php } ?>"></div><?php
 						} ?>
 						<div class="lmsector center <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?> fullwidth"><?php echo $Sector->getSectorID(); ?></div><?php
 						if($Sector->isVisited($ThisPlayer)) { ?>
-							<div class="right lmright<?php if($Sector->getLinkRight()) { ?> rcon<?php } ?>"></div><?php
+							<div class="lmright <?php if($Sector->getLinkRight()) { ?> rcon<?php } else { ?>wall<?php } ?>"></div><?php
 							if((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer)) {
 								if(($UniGen || $isCurrentSector) && $Sector->hasPort()) {
 									$Port =& $Sector->getPort();
@@ -98,7 +98,7 @@
 									if($isCurrentSector && !$GalaxyMap){ ?></a><?php } ?>
 								</div><?php
 								} ?>
-							<div class="lmdown <?php if($Sector->getLinkDown()){ ?> hcon<?php } ?>"></div><?php
+							<div class="lmdown <?php if($Sector->getLinkDown()){ ?>hcon<?php } else { ?>wall<?php } ?>"></div><?php
 						}
 						if($UniGen) {
 							$UniGen['sector_id'] = $Sector->getSectorID(); ?>
@@ -122,5 +122,5 @@
 		SmrPort::clearCache();
 		SmrForce::clearCache();
 		SmrPlanet::clearCache();
-		} unset($MapSector); ?>
+	} unset($MapSector); ?>
 </table>

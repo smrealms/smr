@@ -316,13 +316,18 @@ div.lcon {
 div.rcon {
 	background: url('../images/link_ver.gif') no-repeat right center;
 }
+
+/* Walls */
+/*div.wall {
+	background: black;
+}*/
 /*Local up link Icon*/
 div.lm_sector div.lmup {
 	position: absolute;
 	top: 0px;
 	left: 0px;
+	right: 0px;
 	height: 10px;
-	width: 120px;
 }
 /*Local Plot/Warp Area*/
 div.lm_sector div.lmp {
@@ -352,10 +357,10 @@ div.lm_sector div.lmloc {
 /*Local left link Icon*/
 div.lm_sector div.lmleft {
 	position: absolute;
-	top: 46px;
+	top: 0px;
+	bottom: 0px;
 	left: 0px;
-	height: 20px;
-	width: 20px;
+	width: 10px;
 }
 /*Local sector number*/
 div.lm_sector div.lmsector {
@@ -369,11 +374,11 @@ div.lm_sector div.lmsector {
 /*Local right link Icon*/
 div.lm_sector div.lmright {
 	position: absolute;
-	top: 46px;
-	left: 100px;
-	height: 20px;
+	top: 0px;
+	bottom: 0px;
+	left: 110px;
 	text-align: right;
-	width: 20px;
+	width: 10px;
 }
 /*Local port section*/
 div.lm_sector div.lmport {
