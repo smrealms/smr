@@ -109,13 +109,13 @@ $boughtGoods = $port->getVisibleGoodsBought($player);
 if (!empty($boughtGoods)) {
 	$PHP_OUTPUT.=('<h2>The port sells you the following:</h2>');
 	$PHP_OUTPUT.= create_table();
-	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<th align="center">Good</th>');
-	$PHP_OUTPUT.=('<th align="center">Supply</th>');
-	$PHP_OUTPUT.=('<th align="center">Base Price</th>');
-	$PHP_OUTPUT.=('<th align="center">Amount on Ship</th>');
-	$PHP_OUTPUT.=('<th align="center">Amount to Trade</th>');
-	$PHP_OUTPUT.=('<th align="center">Action</th>');
+	$PHP_OUTPUT.=('<tr class="center">');
+	$PHP_OUTPUT.=('<th>Good</th>');
+	$PHP_OUTPUT.=('<th>Supply</th>');
+	$PHP_OUTPUT.=('<th>Base Price</th>');
+	$PHP_OUTPUT.=('<th>Amount on Ship</th>');
+	$PHP_OUTPUT.=('<th>Amount to Trade</th>');
+	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$container = array();
@@ -126,12 +126,12 @@ if (!empty($boughtGoods)) {
 		
 		$PHP_OUTPUT.=create_echo_form($container);
 			
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center">'.$good['Name'].'</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $good['Amount'] . '</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $good['BasePrice'] . '</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $ship->getCargo($good['ID']) . '</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="number" name="amount" value="');
+		$PHP_OUTPUT.=('<tr class="center">');
+		$PHP_OUTPUT.=('<td>'.$good['Name'].'</td>');
+		$PHP_OUTPUT.=('<td>' . $good['Amount'] . '</td>');
+		$PHP_OUTPUT.=('<td>' . $good['BasePrice'] . '</td>');
+		$PHP_OUTPUT.=('<td>' . $ship->getCargo($good['ID']) . '</td>');
+		$PHP_OUTPUT.=('<td><input type="number" name="amount" value="');
 
 		if ($good['Amount'] < $ship->getEmptyHolds())
 			$PHP_OUTPUT.=($good['Amount']);
@@ -139,7 +139,7 @@ if (!empty($boughtGoods)) {
 			$PHP_OUTPUT.=($ship->getEmptyHolds());
 
 		$PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
-		$PHP_OUTPUT.=('<td align="center">');
+		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=create_submit($good['TransactionType']);
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
@@ -159,13 +159,13 @@ $soldGoods = $port->getVisibleGoodsSold($player);
 if (!empty($soldGoods)) {
 	$PHP_OUTPUT.=('<h2>The port would buy the following:</h2>');
 	$PHP_OUTPUT.= create_table();
-	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<th align="center">Good</th>');
-	$PHP_OUTPUT.=('<th align="center">Demand</th>');
-	$PHP_OUTPUT.=('<th align="center">Base Price</th>');
-	$PHP_OUTPUT.=('<th align="center">Amount on Ship</th>');
-	$PHP_OUTPUT.=('<th align="center">Amount to Trade</th>');
-	$PHP_OUTPUT.=('<th align="center">Action</th>');
+	$PHP_OUTPUT.=('<tr class="center">');
+	$PHP_OUTPUT.=('<th>Good</th>');
+	$PHP_OUTPUT.=('<th>Demand</th>');
+	$PHP_OUTPUT.=('<th>Base Price</th>');
+	$PHP_OUTPUT.=('<th>Amount on Ship</th>');
+	$PHP_OUTPUT.=('<th>Amount to Trade</th>');
+	$PHP_OUTPUT.=('<th>Action</th>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$container = array();
@@ -175,12 +175,12 @@ if (!empty($soldGoods)) {
 		$container['good_id'] = $good['ID'];
 		$PHP_OUTPUT.=create_echo_form($container);
 
-		$PHP_OUTPUT.=('<tr>');
-		$PHP_OUTPUT.=('<td align="center">'.$good['Name'].'</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $good['Amount'] . '</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $good['BasePrice'] . '</td>');
-		$PHP_OUTPUT.=('<td align="center">' . $ship->getCargo($good['ID']) . '</td>');
-		$PHP_OUTPUT.=('<td align="center"><input type="number" name="amount" value="');
+		$PHP_OUTPUT.=('<tr class="center">');
+		$PHP_OUTPUT.=('<td>'.$good['Name'].'</td>');
+		$PHP_OUTPUT.=('<td>' . $good['Amount'] . '</td>');
+		$PHP_OUTPUT.=('<td>' . $good['BasePrice'] . '</td>');
+		$PHP_OUTPUT.=('<td>' . $ship->getCargo($good['ID']) . '</td>');
+		$PHP_OUTPUT.=('<td><input type="number" name="amount" value="');
 
 		if ($good['Amount'] < $ship->getCargo($good['ID']))
 			$PHP_OUTPUT.=($good['Amount']);
@@ -188,7 +188,7 @@ if (!empty($soldGoods)) {
 			$PHP_OUTPUT.=$ship->getCargo($good['ID']);
 
 		$PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
-		$PHP_OUTPUT.=('<td align="center">');
+		$PHP_OUTPUT.=('<td>');
 		$PHP_OUTPUT.=create_submit($good['TransactionType']);
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
