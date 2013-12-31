@@ -265,7 +265,7 @@ class Template {
 		if(strtolower($word) == 'is') {
 			return 'are';
 		}
-		return $word + 's';
+		return $word . 's';
 	}
 	
 	/*
