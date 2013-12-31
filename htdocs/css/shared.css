@@ -310,11 +310,8 @@ table.lmt {
 div.hcon {
 	background: url('../images/link_hor.gif') no-repeat center;
 }
-div.lcon {
-	background: url('../images/link_ver.gif') no-repeat left center;
-}
-div.rcon {
-	background: url('../images/link_ver.gif') no-repeat right center;
+div.vcon {
+	background: url('../images/link_ver.gif') no-repeat center;
 }
 
 /* Walls */

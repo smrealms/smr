@@ -71,11 +71,11 @@
 								} ?>
 								</div><?php
 							} ?>
-							<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>lcon<?php } else { ?>wall<?php } ?>"></div><?php
+							<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div><?php
 						} ?>
 						<div class="lmsector <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
 						if($Sector->isVisited($ThisPlayer)) { ?>
-							<div class="lmright <?php if($Sector->getLinkRight()) { ?> rcon<?php } else { ?>wall<?php } ?>"></div><?php
+							<div class="lmright <?php if($Sector->getLinkRight()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div><?php
 							if((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer)) {
 								if(($UniGen || $isCurrentSector) && $Sector->hasPort()) {
 									$Port =& $Sector->getPort();
