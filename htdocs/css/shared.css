@@ -321,13 +321,30 @@ div.rcon {
 div.wall {
 	background: black;
 }
-/*Local up link Icon*/
-div.lm_sector div.lmup {
+/* Local map wall/connector containers */
+div.lmup, div.lmdown {
 	position: absolute;
-	top: 0px;
 	left: 0px;
 	right: 0px;
 	height: 10px;
+}
+div.lmup {
+	top: 0px;
+}
+div.lmdown {
+	bottom: 0px;
+}
+div.lmright, div.lmleft {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	width: 10px;
+}
+div.lmright {
+	right: 0px;
+}
+div.lmleft {
+	left: 0px;
 }
 /*Local Plot/Warp Area*/
 div.lm_sector div.lmp {
@@ -356,14 +373,6 @@ div.lm_sector div.lmloc {
 	height: 18px;
 	z-index: 2;
 }
-/*Local left link Icon*/
-div.lm_sector div.lmleft {
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	left: 0px;
-	width: 10px;
-}
 /*Local sector number*/
 div.lm_sector div.lmsector {
 	position: absolute;
@@ -372,14 +381,6 @@ div.lm_sector div.lmsector {
 	right: 10px;
 	height: 20px;
 	text-align: center;
-}
-/*Local right link Icon*/
-div.lm_sector div.lmright {
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	right: 0px;
-	width: 10px;
 }
 /*Local port section*/
 div.lm_sector div.lmport {
@@ -393,14 +394,6 @@ div.lm_sector div.lmport.a {
 }
 div.lm_sector div.lmport.b {
 	left: 10px;
-}
-/*Local down link Icon*/
-div.lmdown {
-	position: absolute;
-	top: 110px;
-	left: 0px;
-	right: 0px;
-	height: 10px;
 }
 div.lm_sector {
 	position: relative;
