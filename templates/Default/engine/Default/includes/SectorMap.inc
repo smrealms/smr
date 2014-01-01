@@ -8,7 +8,10 @@
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
 					if($Sector->isVisited($ThisPlayer)) { ?>
-						<div class="lmup <?php if($Sector->getLinkUp()) { ?>hcon<?php } else { ?>wall<?php } ?>"></div><?php
+						<div class="lmup <?php if($Sector->getLinkUp()) { ?>hcon<?php } else { ?>wall<?php } ?>"></div>
+						<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div>
+						<div class="lmright <?php if($Sector->getLinkRight()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div>
+						<div class="lmdown <?php if($Sector->getLinkDown()){ ?>hcon<?php } else { ?>wall<?php } ?>"></div><?php
 					}
 					if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
 						<div class="lmp"><?php
@@ -68,12 +71,10 @@
 								if($isCurrentSector && !$GalaxyMap){ ?></a><?php }
 							} ?>
 							</div><?php
-						} ?>
-						<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div><?php
+						}
 					} ?>
 					<div class="lmsector <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
-					if($Sector->isVisited($ThisPlayer)) { ?>
-						<div class="lmright <?php if($Sector->getLinkRight()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div><?php
+					if($Sector->isVisited($ThisPlayer)) {
 						if((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer)) {
 							if(($UniGen || $isCurrentSector) && $Sector->hasPort()) {
 								$Port =& $Sector->getPort();
@@ -95,8 +96,7 @@
 										}
 								if($isCurrentSector && !$GalaxyMap){ ?></a><?php } ?>
 							</div><?php
-							} ?>
-						<div class="lmdown <?php if($Sector->getLinkDown()){ ?>hcon<?php } else { ?>wall<?php } ?>"></div><?php
+						}
 					}
 					if($UniGen) {
 						$UniGen['sector_id'] = $Sector->getSectorID(); ?>
