@@ -6,7 +6,9 @@ $submit = isset($var['submit']) ? $var['submit'] : (isset($_REQUEST['submit'])?$
 unset($var['submit']);
 
 if ($submit=='Create Game') {
-	$var['num_gals'] = $_REQUEST['num_gals'];
+	if(!is_numeric($_REQUEST['num_gals'])) {
+		create_error('Number of galaxies must be a number');
+	}
 	if(!is_numeric($_REQUEST['game_speed']))
 		create_error('Game speed must be a number.');
 	if(!is_numeric($_REQUEST['max_turns']))
@@ -25,6 +27,9 @@ if ($submit=='Create Game') {
 		create_error('Starting credits must be a number.');
 	if(!is_numeric($_REQUEST['creds_needed']))
 		create_error('Credits required must be a number.');
+
+	$var['num_gals'] = $_REQUEST['num_gals'];
+
 	//first create the game
 	$db->query('SELECT game_id FROM game WHERE game_name='.$db->escapeString($_REQUEST['game_name']).' LIMIT 1');
 	if($db->nextRecord())
@@ -84,7 +89,10 @@ else if ($submit=='Redo Connections') {
 	SmrSector::saveSectors();
 }
 elseif ($submit == 'Jump To Galaxy') {
-	$var['gal_on'] = $_REQUEST['jumpgal'];
+	if(!is_numeric($_REQUEST['jumpgal'])) {
+		create_error('New galaxy must be a number.');
+	}
+	$var['gal_on'] = (int)$_REQUEST['jumpgal'];
 }
 elseif ($submit == 'Modify Sector') {
 	if(!empty($_POST['sector_edit'])) {
