@@ -3,6 +3,7 @@ require_once(get_file_loc('SmrGalaxy.class.inc'));
 require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('SmrLocation.class.inc'));
 $submit = isset($var['submit']) ? $var['submit'] : (isset($_REQUEST['submit'])?$_REQUEST['submit']:'');
+unset($var['submit']);
 
 if ($submit=='Create Game') {
 	$var['num_gals'] = $_REQUEST['num_gals'];
