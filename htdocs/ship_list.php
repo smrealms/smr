@@ -61,7 +61,7 @@ try {
 			filterSelect("restrictPick", 6);			
 		}
 		function scannerPickf() {
-			filterSelect("scannerPick", 14);						
+			filterSelect("scannerPick", 13);
 		}
 		function cloakPickf() {
 			filterSelect("cloakPick", 14);			
