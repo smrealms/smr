@@ -1,6 +1,15 @@
 <?php
 
-$MISSION_ACTIONS = array('LeaveSector','EnterSector','WalkSector','JoinAlliance','LeaveAlliance','DisbandAlliance','KickPlayer','PlayerKicked');
+$MISSION_ACTIONS = array(
+	'LeaveSector',
+	'EnterSector',
+	'WalkSector',
+	'JoinAlliance',
+	'LeaveAlliance',
+	'DisbandAlliance',
+	'KickPlayer',
+	'PlayerKicked'
+);
 
 //REQUIREMENTS
 //if you use an array as a requirement and the requirement name represents an array, it will check every value and all must pass
@@ -48,10 +57,24 @@ $MISSIONS = array(
 		),
 		'Steps' => array(
 			array(
-				'Step' => 'MoveRacial',
-				'Detail' => 60, //Salvene
-				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the Salvene Swamp Water in this bar is awful! Go to the Sal...*Hiccup*...the Salvene galaxy, visit a bar and get me some real Salvene Swamp Water.',
-				'Task' => 'Go to the Salvene Galaxy'
+				'Step' => 'EnterSector',
+				'PickSector' => array(
+					'Type' => 'Locations',
+					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS
+				),
+				'Detail' => '<Sector>', // Salvene
+				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the Salvene Swamp Water in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
+				'Task' => 'Go to the Salvene HQ at <Sector>'
+			),
+			array(//galaxy, visit a bar and get me some real Salvene Swamp Water
+				'Step' => 'EnterSector',
+				'PickSector' => array(
+					'Type' => 'Location',
+					'X' => 'Bar'
+				),
+				'Detail' => 'Salvene Swamp Water',
+				'Text' => 'Here we are! The Salvene Galaxy! Now lets find a bar.',
+				'Task' => 'Go to a bar and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
 				'Step' => 'Drink',

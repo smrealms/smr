@@ -1084,24 +1084,35 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	function addMission($missionID,$randomSector=0) {
+	function addMission($missionID) {
 		global $MISSIONS;
 		$this->getMissions();
 
 		if(isset($this->missions[$missionID]))
 			return;
+		$sector = 0;
 
 		$mission = $MISSIONS[$missionID];
+		$stepOne = $mission['Steps'][0];
+		if(isset($stepOne['PickSector'])) {
+			require_once(get_file_loc('Plotter.class.inc'));
+			$realX = Plotter::getX($stepOne['PickSector']['Type'], $stepOne['PickSector']['X'], $this->getGameID());
+			if($realX === false) {
+				throw new Exception('Invalid X definition in mission: ' . $missionID);
+			}
+			$path =& Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
+			$sector = $path->getEndSectorID();
+		}
 		$playerMission = array(
-						'On Step' => 0,
-						'Total' => sizeof($mission['Steps']),
-						'Progress' => 0,
-						'Next Step' => 'TRUE',
-						'Expires' => (TIME + 86400),
-						'Mission ID' => $missionID,
-						'Sector' => $randomSector,
-						'Starting Sector' => $this->getSectorID()
-						);
+			'On Step' => 0,
+			'Total' => sizeof($mission['Steps']),
+			'Progress' => 0,
+			'Next Step' => 'TRUE',
+			'Expires' => (TIME + 86400),
+			'Mission ID' => $missionID,
+			'Sector' => $sector,
+			'Starting Sector' => $this->getSectorID()
+		);
 
 		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' .
 				'VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($playerMission['On Step']).','.$this->db->escapeNumber($playerMission['Progress']).','.$this->db->escapeString($playerMission['Next Step']).','.$this->db->escapeNumber($playerMission['Total']).','.$this->db->escapeNumber($playerMission['Starting Sector']).','.$this->db->escapeNumber($playerMission['Sector']).','.$this->db->escapeNumber($playerMission['Expires']).')');
