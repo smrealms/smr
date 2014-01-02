@@ -1,12 +1,13 @@
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
 	$UniGen = isset($UniGen) ? $UniGen : false;
+	$ThisPlayer = $UniGen ? null : $ThisPlayer;
 	foreach($MapSectors as &$MapSector) { ?>
 		<tr><?php
 			foreach($MapSector as &$Sector) {
 				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
-				$isVisited = $UniGen || $Sector->isVisited($ThisPlayer); ?>
+				$isVisited = $Sector->isVisited($ThisPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
 					if($isVisited) { ?>
 						<div class="lmup <?php if($Sector->getLinkUp()) { ?>hcon<?php } else { ?>wall<?php } ?>"></div>
