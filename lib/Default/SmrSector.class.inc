@@ -460,6 +460,17 @@ class SmrSector {
 		$this->setLink($dir,0);
 		$this->getNeighbourSector($dir)->setLink(self::oppositeDir($dir),0);
 	}
+	/**
+	 * Cannot be used for Warps
+	 */
+	public function toggleLink($dir) {
+		if($this->hasLink($dir)) {
+			$this->disableLink($dir);
+		}
+		else {
+			$this->enableLink($dir);
+		}
+	}
 
 	protected static function oppositeDir($dir) {
 		switch($dir) {

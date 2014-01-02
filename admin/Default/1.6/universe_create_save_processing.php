@@ -94,6 +94,10 @@ elseif ($submit == 'Jump To Galaxy') {
 	}
 	$var['gal_on'] = (int)$_REQUEST['jumpgal'];
 }
+elseif ($submit == 'Toggle Link') {
+	$sector =& SmrSector::getSector($var['game_id'],$var['sector_id']);
+	$sector->toggleLink($var['dir']);
+}
 elseif ($submit == 'Modify Sector') {
 	if(!empty($_POST['sector_edit'])) {
 		$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);

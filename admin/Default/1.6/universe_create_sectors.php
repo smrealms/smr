@@ -50,6 +50,9 @@ $template->assign('SubmitChangesHREF', SmrSession::getNewHref($container));
 $container['submit'] = 'Jump To Galaxy';
 $template->assign('JumpGalaxyHREF', SmrSession::getNewHref($container));
 
+$container['submit'] = 'Toggle Link';
+$template->assign('ToggleLink', $container);
+
 $container = $var;
 $container['body'] = '1.6/universe_create_sector_details.php';
 $template->assign('UniGen', $container);

@@ -11,8 +11,18 @@
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
 					if($isVisited) {
-						foreach($MovementTypes as $MovementType) { ?>
+						if($ToggleLink) {
+							$ToggleLink['sector_id'] = $Sector->getSectorID();
+						}
+						foreach($MovementTypes as $MovementType) {
+							if($ToggleLink) {
+								$ToggleLink['dir'] = $MovementType; ?>
+								<a href="<?php echo SmrSession::getNewHREF($ToggleLink); ?>" class="lm<?php echo $MovementType; ?>"><?php
+							} ?>
 							<div class="lm<?php echo $MovementType; ?> <?php if($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
+							if($ToggleLink) { ?>
+								</a><?php
+							}
 						}
 						if($Sector->hasLocation() || $Sector->hasPlanet()) { ?>
 							<div class="lmloc"><?php

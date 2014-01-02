@@ -326,7 +326,14 @@ div.wall {
 	background: black;
 }
 /* Local map wall/connector containers */
-div.lmUp, div.lmDown {
+a.lmUp, a.lmLeft, a.lmRight, a.lmDown {
+	background: none;
+	z-index: 2;
+}
+a.lmUp:hover div, a.lmLeft:hover div, a.lmRight:hover div, a.lmDown:hover div {
+	background: blue;
+}
+.lmUp, .lmDown {
 	position: absolute;
 	left: 0px;
 	width: 120px;
@@ -334,22 +341,22 @@ div.lmUp, div.lmDown {
 	/* This is required for IE6, otherwise it renders as higher than 5px */
 	font-size: 0px;
 }
-div.lmUp {
+.lmUp {
 	top: 0px;
 }
-div.lmDown {
+.lmDown {
 	bottom: 0px;
 }
-div.lmRight, div.lmLeft {
+.lmRight, .lmLeft {
 	position: absolute;
 	top: 0px;
 	height: 120px;
 	width: 5px;
 }
-div.lmRight {
+.lmRight {
 	right: 0px;
 }
-div.lmLeft {
+.lmLeft {
 	left: 0px;
 }
 /*Local Plot/Warp Area*/
