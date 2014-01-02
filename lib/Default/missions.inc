@@ -64,7 +64,7 @@ $MISSIONS = array(
 				),
 				'Detail' => '<Sector>', // Salvene
 				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the Salvene Swamp Water in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
-				'Task' => 'Go to the Salvene HQ at <Sector>'
+				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]'
 			),
 			array(//galaxy, visit a bar and get me some real Salvene Swamp Water
 				'Step' => 'EnterSector',
