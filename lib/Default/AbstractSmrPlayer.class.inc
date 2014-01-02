@@ -1055,57 +1055,47 @@ abstract class AbstractSmrPlayer {
 	function updateMission($missionID,$keyOrUpdateArray,$newInfo=false) {
 		$this->getMissions();
 		if(isset($this->missions[$missionID])) {
-			if(is_array($keyOrUpdateArray)) {
-				$set = '';
-				foreach($keyOrUpdateArray as $bit => $newInfo) {
-					$field = $this->missionKeyToField($bit);
-					if($field!==false) {
-						$this->missions[$missionID][$bit]=$newInfo;
-						$set .= '`'.$field.'` = '.$this->db->escapeString($newInfo).',';
-					}
-				}
-				if($set!=='') {
-					$set=substr($set,0,-1);
-					$this->db->query('UPDATE player_has_mission SET '.$set.' WHERE '.$this->SQL.' AND mission_id = '.$this->db->escapeNumber($missionID).' LIMIT 1');
-					$this->rebuildMission($missionID);
-					return true;
-				}
-			}
-			else {
-				$field = $this->missionKeyToField($keyOrUpdateArray);
-				if($field!==false) {
-					$this->missions[$missionID][$keyOrUpdateArray]=$newInfo;
-					$this->db->query('UPDATE player_has_mission SET `'.$field.'` = '.$this->db->escapeString($newInfo).' WHERE '.$this->SQL.' AND mission_id = '.$this->db->escapeNumber($missionID).' LIMIT 1');
-					$this->rebuildMission($missionID);
-					return true;
-				}
-			}
+			$mission = $this->missions[$missionID];
+			$this->db->query('
+				UPDATE player_has_mission
+				SET on_step = ' . $this->db->escapeNumber($mission['On Step']) . ',
+					progress = ' . $this->db->escapeNumber($mission['Progress']) . ',
+					next_step = ' . $this->db->escapeString($mission['Next Step']) . ',
+					total_steps = ' . $this->db->escapeNumber($mission['Total']) . ',
+					starting_sector = ' . $this->db->escapeNumber($mission['Starting Sector']) . ',
+					mission_sector = ' . $this->db->escapeNumber($mission['Sector']) . ',
+					step_fails = ' . $this->db->escapeNumber($mission['Expires']) . '
+				WHERE ' . $this->SQL . ' AND mission_id = ' . $this->db->escapeNumber($missionID) . ' LIMIT 1'
+			);
+			return true;
 		}
 		return false;
 	}
 
-	function addMission($missionID) {
+	private function setupMissionStep($missionID) {
 		global $MISSIONS;
+		$mission =& $this->missions[$missionID];
+		$step = $MISSIONS[$missionID]['Steps'][$mission['On Step']];
+		if(isset($step['PickSector'])) {
+			require_once(get_file_loc('Plotter.class.inc'));
+			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
+			if($realX === false) {
+				throw new Exception('Invalid X definition in mission: ' . $missionID);
+			}
+			$path =& Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
+			$mission['Sector'] = $path->getEndSectorID();
+		}
+	}
+
+	function addMission($missionID) {
 		$this->getMissions();
 
 		if(isset($this->missions[$missionID]))
 			return;
 		$sector = 0;
 
-		$mission = $MISSIONS[$missionID];
-		$stepOne = $mission['Steps'][0];
-		if(isset($stepOne['PickSector'])) {
-			require_once(get_file_loc('Plotter.class.inc'));
-			$realX = Plotter::getX($stepOne['PickSector']['Type'], $stepOne['PickSector']['X'], $this->getGameID());
-			if($realX === false) {
-				throw new Exception('Invalid X definition in mission: ' . $missionID);
-			}
-			$path =& Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
-			$sector = $path->getEndSectorID();
-		}
-		$playerMission = array(
+		$mission = array(
 			'On Step' => 0,
-			'Total' => sizeof($mission['Steps']),
 			'Progress' => 0,
 			'Next Step' => 'TRUE',
 			'Expires' => (TIME + 86400),
@@ -1114,10 +1104,12 @@ abstract class AbstractSmrPlayer {
 			'Starting Sector' => $this->getSectorID()
 		);
 
+		$this->missions[$missionID] =& $mission;
+		$this->rebuildMission($missionID);
+		$this->setupMissionStep($missionID);
+
 		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' .
 				'VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($playerMission['On Step']).','.$this->db->escapeNumber($playerMission['Progress']).','.$this->db->escapeString($playerMission['Next Step']).','.$this->db->escapeNumber($playerMission['Total']).','.$this->db->escapeNumber($playerMission['Starting Sector']).','.$this->db->escapeNumber($playerMission['Sector']).','.$this->db->escapeNumber($playerMission['Expires']).')');
-		$this->missions[$missionID] = $playerMission;
-		$this->rebuildMission($missionID);
 	}
 
 	function rebuildMission($missionID) {
@@ -1216,7 +1208,21 @@ abstract class AbstractSmrPlayer {
 				break;
 
 			}
-
+		$this->getMissions();
+		foreach($this->missions as $missionID => &$mission) {
+			if($mission['Task']['Step'] == $actionID) {
+				switch($actionID) {
+					case 'EnterSector':
+						if($mission['Sector'] == $values['Sector']->getSectorID()) {
+							$mission['On Step']++;
+							$this->setupMissionStep($missionID);
+							$this->rebuildMission($missionID);
+							$this->updateMission($missionID);
+						}
+					break;
+				}
+			}
+		}
 	}
 
 	public function canSeeAny(array &$otherPlayerArray) {

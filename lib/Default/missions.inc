@@ -69,12 +69,12 @@ $MISSIONS = array(
 			array(//galaxy, visit a bar and get me some real Salvene Swamp Water
 				'Step' => 'EnterSector',
 				'PickSector' => array(
-					'Type' => 'Location',
+					'Type' => 'Locations',
 					'X' => 'Bar'
 				),
 				'Detail' => 'Salvene Swamp Water',
-				'Text' => 'Here we are! The Salvene Galaxy! Now lets find a bar.',
-				'Task' => 'Go to a bar and buy a Salvene Swamp Water from the bartender. This may take many tries.'
+				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in <Sector> does the best Salvene Swamp Water around!',
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
 				'Step' => 'Drink',

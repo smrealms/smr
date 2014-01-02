@@ -34,7 +34,7 @@ function logException(Exception $e) {
 		}
 		$message .= 'Trace: ' . $ee->getTraceAsString();
 	}
-	// var_dump($message);exit;
+	var_dump($message);exit;
 	if(defined('NPC_SCRIPT')) {
 		global $NPC_LOGIN;
 		try {
