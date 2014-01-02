@@ -308,7 +308,6 @@ a.buttonA  {
 table.lmt {
 	border-collapse: separate;
 	border-spacing: 6px;
-	table-layout: fixed;
 }
 table.lmt td {
 	padding: 0px;
