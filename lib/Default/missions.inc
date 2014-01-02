@@ -57,7 +57,7 @@ $MISSIONS = array(
 				'Step' => 'Drink',
 				'Detail' => 'Salvene Swamp Water',
 				'Text' => 'Here we are! The Salvene Galaxy! Now lets find a bar.',
-				'Task' => 'Go to a bar and buy a Salvene Swamp Water from the bartender. sThis may take many tries.'
+				'Task' => 'Go to a bar and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
 				'Step' => 'MoveSector',

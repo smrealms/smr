@@ -1093,7 +1093,7 @@ abstract class AbstractSmrPlayer {
 
 		$mission = $MISSIONS[$missionID];
 		$playerMission = array(
-						'On Step' => 1,
+						'On Step' => 0,
 						'Total' => sizeof($mission['Steps']),
 						'Progress' => 0,
 						'Next Step' => 'TRUE',
