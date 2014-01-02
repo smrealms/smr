@@ -2,6 +2,7 @@
 	$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
 	$UniGen = isset($UniGen) ? $UniGen : false;
 	$ThisPlayer = $UniGen ? null : $ThisPlayer;
+	$MovementTypes = array('Up','Left','Right','Down');
 	foreach($MapSectors as &$MapSector) { ?>
 		<tr><?php
 			foreach($MapSector as &$Sector) {
@@ -9,11 +10,10 @@
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
 				$isVisited = $Sector->isVisited($ThisPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
-					if($isVisited) { ?>
-						<div class="lmup <?php if($Sector->getLinkUp()) { ?>hcon<?php } else { ?>wall<?php } ?>"></div>
-						<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div>
-						<div class="lmright <?php if($Sector->getLinkRight()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div>
-						<div class="lmdown <?php if($Sector->getLinkDown()){ ?>hcon<?php } else { ?>wall<?php } ?>"></div><?php
+					if($isVisited) {
+						foreach($MovementTypes as $MovementType) { ?>
+							<div class="lm<?php echo $MovementType; ?> <?php if($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
+						}
 						if($Sector->hasLocation() || $Sector->hasPlanet()) { ?>
 							<div class="lmloc"><?php
 							if($Sector->hasLocation()) {

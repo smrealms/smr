@@ -314,10 +314,10 @@ table.lmt td {
 	padding: 0px;
 }
 /* Connecting icons */
-div.hcon {
+div.lmUp.con, div.lmDown.con {
 	background: url('../images/link_hor.gif') no-repeat center;
 }
-div.vcon {
+div.lmLeft.con, div.lmRight.con {
 	background: url('../images/link_ver.gif') no-repeat center;
 }
 
@@ -326,7 +326,7 @@ div.wall {
 	background: black;
 }
 /* Local map wall/connector containers */
-div.lmup, div.lmdown {
+div.lmUp, div.lmDown {
 	position: absolute;
 	left: 0px;
 	width: 120px;
@@ -334,22 +334,22 @@ div.lmup, div.lmdown {
 	/* This is required for IE6, otherwise it renders as higher than 5px */
 	font-size: 0px;
 }
-div.lmup {
+div.lmUp {
 	top: 0px;
 }
-div.lmdown {
+div.lmDown {
 	bottom: 0px;
 }
-div.lmright, div.lmleft {
+div.lmRight, div.lmLeft {
 	position: absolute;
 	top: 0px;
 	height: 120px;
 	width: 5px;
 }
-div.lmright {
+div.lmRight {
 	right: 0px;
 }
-div.lmleft {
+div.lmLeft {
 	left: 0px;
 }
 /*Local Plot/Warp Area*/
