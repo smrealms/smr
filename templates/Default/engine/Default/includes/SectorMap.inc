@@ -1,14 +1,14 @@
 <table class="lmt centered"><?php
 	$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
 	$UniGen = isset($UniGen) ? $UniGen : false;
-	$ThisPlayer = $UniGen ? null : $ThisPlayer;
+	$MapPlayer = $UniGen ? null : $ThisPlayer;
 	$MovementTypes = array('Up','Left','Right','Down');
 	foreach($MapSectors as &$MapSector) { ?>
 		<tr><?php
 			foreach($MapSector as &$Sector) {
 				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
-				$isVisited = $Sector->isVisited($ThisPlayer); ?>
+				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
 					if($isVisited) {
 						foreach($MovementTypes as $MovementType) { ?>
@@ -34,32 +34,32 @@
 							} ?>
 							</div><?php
 						}
-						if((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($ThisPlayer)) {
+						if((($UniGen || $isCurrentSector) && $Sector->hasPort()) || $Sector->hasCachedPort($MapPlayer)) {
 							if(($UniGen || $isCurrentSector) && $Sector->hasPort()) {
 								$Port =& $Sector->getPort();
 							}
-							else if($Sector->hasCachedPort($ThisPlayer)) {
-								$Port =& $Sector->getCachedPort($ThisPlayer);
+							else if($Sector->hasCachedPort($MapPlayer)) {
+								$Port =& $Sector->getCachedPort($MapPlayer);
 							} ?>
 							<div class="lmport <?php if($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>"><?php
 								if($isCurrentSector && !$GalaxyMap) {
 									?><a href="<?php echo Globals::getTradeHREF(); ?>"><?php
 								} ?>
 									<img src="images/port/buy.gif" width="5" height="16" alt="Buy (<?php echo $Port->getRaceName(); ?>)" title="Buy (<?php echo $Port->getRaceName(); ?>)" /><?php
-										foreach($Port->getVisibleGoodsSold($ThisPlayer) as $Good) { ?>
+										foreach($Port->getVisibleGoodsSold($MapPlayer) as $Good) { ?>
 											<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name']; ?>" /><?php
 										} ?><br />
 									<img src="images/port/sell.gif" width="5" height="16" alt="Sell (<?php echo $Port->getRaceName(); ?>)" title="Sell (<?php echo $Port->getRaceName(); ?>)" /><?php
-										foreach($Port->getVisibleGoodsBought($ThisPlayer) as $Good) { ?>
+										foreach($Port->getVisibleGoodsBought($MapPlayer) as $Good) { ?>
 											<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name']; ?>" /><?php
 										}
 								if($isCurrentSector && !$GalaxyMap){ ?></a><?php } ?>
 							</div><?php
 						}
 					}
-					if(($isVisited && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
+					if(($isVisited && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($MapPlayer->isPartOfCourse($Sector) || ($MapPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
 						<div class="lmp"><?php
-							if(!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector))) {
+							if(!$UniGen && ($MapPlayer->isPartOfCourse($Sector) || ($MapPlayer->hasPlottedCourse()&&$isCurrentSector))) {
 								?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
 							}
 							if($isVisited) {
@@ -76,21 +76,21 @@
 						</div><?php
 					}
 					$CanScanSector = $UniGen || ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
-					if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($ThisPlayer) || $Sector->hasFriendlyTraders($ThisPlayer)) { ?>
+					if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($MapPlayer) || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
 						<div class="lmtf"><?php
-							if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($ThisPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($ThisPlayer))) {
-								if($CanScanSector && $Sector->hasEnemyTraders($ThisPlayer)) {
+							if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($MapPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($MapPlayer))) {
+								if($CanScanSector && $Sector->hasEnemyTraders($MapPlayer)) {
 									?><img title="Enemy Trader" alt="Enemy Trader" src="images/enemyTrader.png" width="13" height="16"/><?php
 								}
-								if($Sector->hasFriendlyTraders($ThisPlayer)) {
+								if($Sector->hasFriendlyTraders($MapPlayer)) {
 									?><img title="Friendly Trader" alt="Friendly Trader" src="images/friendlyTrader.png" width="13" height="16"/><?php
 								}
 							}
 							if($Sector->hasForces()) {
-								if($CanScanSector && $Sector->hasEnemyForces($ThisPlayer)) {
+								if($CanScanSector && $Sector->hasEnemyForces($MapPlayer)) {
 									?><img title="Enemy Forces" alt="Enemy Forces" src="images/enemyForces.png" width="13" height="16"/><?php
 								}
-								if($Sector->hasFriendlyForces($ThisPlayer)) {
+								if($Sector->hasFriendlyForces($MapPlayer)) {
 									?><img title="Friendly Forces" alt="Friendly Forces" src="images/friendlyForces.png" width="13" height="16"/><?php
 								}
 								/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
