@@ -4,6 +4,26 @@ class Plotter {
 	public function __construct() {
 	}
 
+	public static function getX($xType, $X, $gameID) {
+		switch($xType) {
+			case 'Technology':
+				return Globals::getHardwareTypes($X);
+			case 'Ships':
+				return AbstractSmrShip::getBaseShip(Globals::getGameType($gameID),$X);
+			case 'Weapons':
+				return SmrWeapon::getWeapon(Globals::getGameType($gameID),$X);
+			case 'Locations':
+				if(is_numeric($X)) {
+					return SmrLocation::getLocation($X);
+				}
+				return $X;
+			case 'Goods':
+				return Globals::getGood($X);
+			default:
+				return false;
+		}
+	}
+
 	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000) {
 		$checkSector =& $sector;
 		$gameID = $sector->getGameID();

@@ -1,4 +1,5 @@
 <?php
+require_once(get_file_loc('Plotter.class.inc'));
 
 if(isset($var['RealX'])) {
 	$realX = $var['RealX'];
@@ -8,43 +9,21 @@ else {
 		create_error('You have to select what you would like to find.');
 	$xType = $_REQUEST['xtype'];
 	$X = $_REQUEST['X'];
-	
-	switch($xType) {
-		case 'Technology':
-			$realX =& Globals::getHardwareTypes($X);
-		break;
-		case 'Ships':
-			$realX =& AbstractSmrShip::getBaseShip(Globals::getGameType($player->getGameID()),$X);
-		break;
-		case 'Weapons':
-			$realX =& SmrWeapon::getWeapon(Globals::getGameType($player->getGameID()),$X);
-		break;
-		case 'Locations':
-			if(is_numeric($X))
-				$realX =& SmrLocation::getLocation($X);
-			else
-				$realX = $X;
-		break;
-		case 'Goods':
-			$realX =& Globals::getGood($X);
-		break;
-		default:
-			create_error('Invalid search.');
+	$realX = Plotter::getX($xType, $X, $player->getGameID());
+	if($realX === false) {
+		create_error('Invalid search.');
 	}
-	
+
 	$account->log(LOG_TYPE_MOVEMENT, 'Player plots to nearest '.$xType.': '.$X.'.', $player->getSectorID());
 }
 
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'course_plot_result.php';
+$container = create_container('skeleton.php', 'course_plot_result.php');
 
 $sector =& $player->getSector();
 if($sector->hasX($realX,$player))
 	create_error('Current sector has what you\'re looking for!');
 
-require_once(get_file_loc('Plotter.class.inc'));
 $path =& Plotter::findDistanceToX($realX, $sector, true, $player, $player);
 if($path===false)
 	create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
