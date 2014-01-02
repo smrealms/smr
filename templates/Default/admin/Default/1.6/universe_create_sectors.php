@@ -32,7 +32,7 @@
 			<a href="<?php echo $SMRFileHREF; ?>" class="submitStyle">Create SMR file</a><br /><br />
 			<br /><?php
 			if (isset($PreviousGalaxyHREF)) { ?>
-				<a href="<?php echo PreviousGalaxyHREF; ?>" class="submitStyle">Previous Galaxy</a><br /><br /><?php
+				<a href="<?php echo $PreviousGalaxyHREF; ?>" class="submitStyle">Previous Galaxy</a><br /><br /><?php
 			}
 			if (isset($NextGalaxyHREF)) { ?>
 				<a href="<?php echo $NextGalaxyHREF; ?>" class="submitStyle">Next Galaxy</a><br /><?php
