@@ -1025,17 +1025,17 @@ abstract class AbstractSmrPlayer {
 			$this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
 			$this->missions = array();
 			while ($this->db->nextRecord()) {
-				$this->missions[$this->db->getField('mission_id')] = array(
-								'On Step' => $this->db->getField('on_step'),
-								'Total' => $this->db->getField('total_steps'),
-								'Progress' => $this->db->getField('progress'),
-								'Next Step' => $this->db->getField('next_step'),
-								'Expires' => $this->db->getField('step_fails'),
-								'Mission ID' => $this->db->getField('mission_id'),
-								'Sector' => $this->db->getField('mission_sector'),
-								'Starting Sector' => $this->db->getField('starting_sector')
-								);
-				$this->rebuildMission($this->db->getField('mission_id'));
+				$this->missions[$this->db->getInt('mission_id')] = array(
+					'On Step' => $this->db->getInt('on_step'),
+					'Total' => $this->db->getInt('total_steps'),
+					'Progress' => $this->db->getInt('progress'),
+					'Next Step' => $this->db->getInt('next_step'),
+					'Expires' => $this->db->getInt('step_fails'),
+					'Mission ID' => $this->db->getInt('mission_id'),
+					'Sector' => $this->db->getInt('mission_sector'),
+					'Starting Sector' => $this->db->getInt('starting_sector')
+				);
+				$this->rebuildMission($this->db->getInt('mission_id'));
 			}
 		}
 		return $this->missions;
@@ -1117,13 +1117,16 @@ abstract class AbstractSmrPlayer {
 		$detail = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Detail']);
 		$text = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Text']);
 		$task = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Task']);
-		if (isset($currentStep['Level']))
-			$step_level = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
-		else $step_level = 0;
+		if (isset($currentStep['Level'])) {
+			$stepLevel = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
+		}
+		else {
+			$stepLevel = 0;
+		}
 		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
 		$this->missions[$missionID]['Location'] = $MISSIONS[$missionID]['Location'];
 		$this->missions[$missionID]['Task']['Step'] = $currentStep['Step'];
-		$this->missions[$missionID]['Task']['Level'] = $step_level;
+		$this->missions[$missionID]['Task']['Level'] = $stepLevel;
 		$this->missions[$missionID]['Task']['Detail'] = $detail;
 		$this->missions[$missionID]['Task']['Text'] = $text;
 		$this->missions[$missionID]['Task']['Task'] = $task;
