@@ -5,9 +5,10 @@
 		<tr><?php
 			foreach($MapSector as &$Sector) {
 				$isCurrentSector = !$UniGen && $ThisSector->equals($Sector);
-				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector); ?>
-				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($Sector->isVisited($ThisPlayer)){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
-					if($Sector->isVisited($ThisPlayer)) { ?>
+				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
+				$isVisited = $UniGen || $Sector->isVisited($ThisPlayer); ?>
+				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
+					if($isVisited) { ?>
 						<div class="lmup <?php if($Sector->getLinkUp()) { ?>hcon<?php } else { ?>wall<?php } ?>"></div>
 						<div class="lmleft <?php if($Sector->getLinkLeft()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div>
 						<div class="lmright <?php if($Sector->getLinkRight()) { ?>vcon<?php } else { ?>wall<?php } ?>"></div>
@@ -55,12 +56,12 @@
 							</div><?php
 						}
 					}
-					if(($Sector->isVisited($ThisPlayer) && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
+					if(($isVisited && ($Sector->hasWarp() || $Sector->hasMine())) || (!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector)))) { ?>
 						<div class="lmp"><?php
 							if(!$UniGen && ($ThisPlayer->isPartOfCourse($Sector) || ($ThisPlayer->hasPlottedCourse()&&$isCurrentSector))) {
 								?><img title="Course" alt="Course" src="images/plot_icon.gif" width="16" height="16"/><?php
 							}
-							if($Sector->isVisited($ThisPlayer)) {
+							if($isVisited) {
 								if($Sector->hasWarp()) {
 									if($GalaxyMap){ ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php }
 									else if($isCurrentSector){ ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapHREF(); ?>"><?php } ?>
@@ -95,7 +96,7 @@
 							} ?>
 						</div><?php
 					} ?>
-					<div class="lmsector <?php if($Sector->isVisited($ThisPlayer)){ ?>visited<?php }else{ ?>unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
+					<div class="lmsector <?php if($isVisited){ ?>visited<?php }else{ ?>unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
 					if($UniGen) {
 						$UniGen['sector_id'] = $Sector->getSectorID(); ?>
 						<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php
