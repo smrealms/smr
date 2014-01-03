@@ -97,6 +97,7 @@ elseif ($submit == 'Jump To Galaxy') {
 elseif ($submit == 'Toggle Link') {
 	$sector =& SmrSector::getSector($var['game_id'],$var['sector_id']);
 	$sector->toggleLink($var['dir']);
+	SmrSector::saveSectors();
 }
 elseif ($submit == 'Modify Sector') {
 	if(!empty($_POST['sector_edit'])) {
