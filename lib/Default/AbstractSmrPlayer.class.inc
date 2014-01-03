@@ -1145,31 +1145,6 @@ abstract class AbstractSmrPlayer {
 		return false;
 	}
 
-	protected function missionKeyToField($bit) {
-		$field = false;
-		switch($bit) {
-			case 'On Step':
-				$field='on_step';
-			break;
-			case 'Total':
-				$field='total_steps';
-			break;
-			case 'Progress':
-				$field='progress';
-			break;
-			case 'Next Step':
-				$field='next_step';
-			break;
-			case 'Expires':
-				$field='step_fails';
-			break;
-			case 'Mission ID':
-				$field='mission_id';
-			break;
-		}
-		return $field;
-	}
-
 	public function getAvailableMissions() {
 		global $MISSIONS;
 		$availableMissions = array();
