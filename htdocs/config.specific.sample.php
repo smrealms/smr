@@ -10,7 +10,8 @@ define('UPLOAD',WWW.'upload/');
 define('ADMIN',ROOT.'admin/');
 define('TOOLS',ROOT.'tools/');
 
-define('ENABLE_BETA',false);
+define('ENABLE_DEBUG', false); // This is useful for debugging on dev machines.
+define('ENABLE_BETA', false);
 define('ACCOUNT_ID_PAGE',1403); //BETA, used for removing newbie turn
 
 define('RECAPTCHA_PUBLIC','');
