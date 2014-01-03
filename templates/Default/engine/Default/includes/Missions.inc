@@ -2,9 +2,9 @@
 /*
 $AvailableMissions =& $ThisPlayer->getAvailableMissions();
 if(count($AvailableMissions) > 0) {
-	foreach($AvailableMissions as &$AvailableMission) {
+	foreach($AvailableMissions as $MissionID => &$AvailableMission) {
 		echo bbifyMessage($AvailableMission['Steps'][0]['Text']); ?><br/>
-		<div class="buttonA"><a href="<?php echo Globals::getAcceptMissionHREF($AvailableMission); ?>" class="buttonA"> Accept </a></div><br/><?php
+		<div class="buttonA"><a href="<?php echo Globals::getAcceptMissionHREF($MissionID); ?>" class="buttonA">&nbsp;Accept&nbsp;</a></div><br/><?php
 	}
 }
 */

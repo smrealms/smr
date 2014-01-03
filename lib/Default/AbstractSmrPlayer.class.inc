@@ -1026,16 +1026,16 @@ abstract class AbstractSmrPlayer {
 			$this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
 			$this->missions = array();
 			while ($this->db->nextRecord()) {
-				$this->missions[$this->db->getInt('mission_id')] = array(
+				$missionID = $this->db->getInt('mission_id');
+				$this->missions[$missionID] = array(
 					'On Step' => $this->db->getInt('on_step'),
 					'Progress' => $this->db->getInt('progress'),
 					'Unread' => $this->db->getBoolean('unread'),
 					'Expires' => $this->db->getInt('step_fails'),
-					'Mission ID' => $this->db->getInt('mission_id'),
 					'Sector' => $this->db->getInt('mission_sector'),
 					'Starting Sector' => $this->db->getInt('starting_sector')
 				);
-				$this->rebuildMission($this->db->getInt('mission_id'));
+				$this->rebuildMission($missionID);
 			}
 		}
 		return $this->missions;
@@ -1097,7 +1097,6 @@ abstract class AbstractSmrPlayer {
 			'Progress' => 0,
 			'Unread' => true,
 			'Expires' => (TIME + 86400),
-			'Mission ID' => $missionID,
 			'Sector' => $sector,
 			'Starting Sector' => $this->getSectorID()
 		);
@@ -1167,7 +1166,7 @@ abstract class AbstractSmrPlayer {
 				throw new Exception('Invalid HasX definition in mission: ' . $missionID);
 			}
 			if($this->getSector()->hasX($realX)) {
-				$availableMissions[] = $mission;
+				$availableMissions[$missionID] = $mission;
 			}
 		}
 		return $availableMissions;

@@ -700,8 +700,8 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'buy_ship_name.php'));
 	}
 
-	public static function getAcceptMissionHREF(&$mission) {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'mission_accept_processing.php', array('MissionID'=>$mission['ID'])));
+	public static function getAcceptMissionHREF($missionID) {
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'mission_accept_processing.php', array('MissionID'=>$missionID)));
 	}
 
 	public static function getSectorBBLink($sectorID) {
