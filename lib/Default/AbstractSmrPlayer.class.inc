@@ -1122,21 +1122,25 @@ abstract class AbstractSmrPlayer {
 
 	function rebuildMission($missionID) {
 		global $MISSIONS;
-		$missionInfo = $this->missions[$missionID];
-		$currentStep = $MISSIONS[$missionID]['Steps'][$missionInfo['On Step']];
-		$text = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Text']);
-		$task = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Task']);
-		if (isset($currentStep['Level'])) {
-			$stepLevel = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
+		$mission = $this->missions[$missionID];
+		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
+
+		if($mission['On Step'] >= count($MISSIONS[$missionID]['Steps'])) {
+			// If we have completed this mission just use an empty array for the current task.
+			$currentStep = array();
 		}
 		else {
-			$stepLevel = 0;
+			$currentStep = $MISSIONS[$missionID]['Steps'][$mission['On Step']];
+			$currentStep['Text'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Text']);
+			$currentStep['Task'] = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$this->playerName),$currentStep['Task']);
+			if (isset($currentStep['Level'])) {
+				$currentStep['Level'] = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
+			}
+			else {
+				$currentStep['Level'] = 0;
+			}
 		}
-		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
 		$this->missions[$missionID]['Task'] = $currentStep;
-		$this->missions[$missionID]['Task']['Level'] = $stepLevel;
-		$this->missions[$missionID]['Task']['Text'] = $text;
-		$this->missions[$missionID]['Task']['Task'] = $task;
 	}
 
 	function deleteMission($missionID) {
