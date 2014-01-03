@@ -1028,7 +1028,6 @@ abstract class AbstractSmrPlayer {
 			while ($this->db->nextRecord()) {
 				$this->missions[$this->db->getInt('mission_id')] = array(
 					'On Step' => $this->db->getInt('on_step'),
-					'Total' => $this->db->getInt('total_steps'),
 					'Progress' => $this->db->getInt('progress'),
 					'Next Step' => $this->db->getInt('next_step'),
 					'Expires' => $this->db->getInt('step_fails'),
@@ -1062,7 +1061,6 @@ abstract class AbstractSmrPlayer {
 				SET on_step = ' . $this->db->escapeNumber($mission['On Step']) . ',
 					progress = ' . $this->db->escapeNumber($mission['Progress']) . ',
 					next_step = ' . $this->db->escapeString($mission['Next Step']) . ',
-					total_steps = ' . $this->db->escapeNumber($mission['Total']) . ',
 					starting_sector = ' . $this->db->escapeNumber($mission['Starting Sector']) . ',
 					mission_sector = ' . $this->db->escapeNumber($mission['Sector']) . ',
 					step_fails = ' . $this->db->escapeNumber($mission['Expires']) . '
@@ -1098,7 +1096,6 @@ abstract class AbstractSmrPlayer {
 			'On Step' => 0,
 			'Progress' => 0,
 			'Next Step' => 'TRUE',
-			'Total' => 0,
 			'Expires' => (TIME + 86400),
 			'Mission ID' => $missionID,
 			'Sector' => $sector,
@@ -1109,8 +1106,8 @@ abstract class AbstractSmrPlayer {
 		$this->setupMissionStep($missionID);
 		$this->rebuildMission($missionID);
 
-		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' .
-				'VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($mission['On Step']).','.$this->db->escapeNumber($mission['Progress']).','.$this->db->escapeString($mission['Next Step']).','.$this->db->escapeNumber($mission['Total']).','.$this->db->escapeNumber($mission['Starting Sector']).','.$this->db->escapeNumber($mission['Sector']).','.$this->db->escapeNumber($mission['Expires']).')');
+		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,starting_sector,mission_sector,step_fails) ' .
+				'VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($mission['On Step']).','.$this->db->escapeNumber($mission['Progress']).','.$this->db->escapeString($mission['Next Step']).','.$this->db->escapeNumber($mission['Starting Sector']).','.$this->db->escapeNumber($mission['Sector']).','.$this->db->escapeNumber($mission['Expires']).')');
 	}
 
 	function rebuildMission($missionID) {
