@@ -4,6 +4,7 @@ require_once('SmrForce.class.inc');
 require_once('SmrGame.class.inc');
 require_once('SmrAlliance.class.inc');
 require_once('missions.inc');
+require_once(get_file_loc('Plotter.class.inc'));
 
 abstract class AbstractSmrPlayer {
 	protected $db;
@@ -1077,10 +1078,9 @@ abstract class AbstractSmrPlayer {
 		$mission =& $this->missions[$missionID];
 		$step = $MISSIONS[$missionID]['Steps'][$mission['On Step']];
 		if(isset($step['PickSector'])) {
-			require_once(get_file_loc('Plotter.class.inc'));
 			$realX = Plotter::getX($step['PickSector']['Type'], $step['PickSector']['X'], $this->getGameID());
 			if($realX === false) {
-				throw new Exception('Invalid X definition in mission: ' . $missionID);
+				throw new Exception('Invalid PickSector definition in mission: ' . $missionID);
 			}
 			$path =& Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
 			$mission['Sector'] = $path->getEndSectorID();
@@ -1148,11 +1148,17 @@ abstract class AbstractSmrPlayer {
 	public function getAvailableMissions() {
 		global $MISSIONS;
 		$availableMissions = array();
-		foreach($MISSIONS as $mission) {
-			if($this->hasMission($mission['ID']))
+		foreach($MISSIONS as $missionID => $mission) {
+			if($this->hasMission($missionID)) {
 				continue;
-			if($this->getSector()->hasX($mission['Location']))
+			}
+			$realX = Plotter::getX($mission['HasX']['Type'], $mission['HasX']['X'], $this->getGameID());
+			if($realX === false) {
+				throw new Exception('Invalid HasX definition in mission: ' . $missionID);
+			}
+			if($this->getSector()->hasX($realX)) {
 				$availableMissions[] = $mission;
+			}
 		}
 		return $availableMissions;
 	}

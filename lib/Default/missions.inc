@@ -50,7 +50,10 @@ $MISSIONS = array(
 		'Name' => 'Drunk Guy',
 		'Offerer' => 'Drunk',
 		'Time Limit' => 0,
-		'Location' => 'Bar',
+		'HasX' => array(
+			'Type' => 'Locations',
+			'X' => 'Bar'
+		),
 		'Rewards' => array(
 			'Credits' => 500000,
 			'Experience' => 1000,
