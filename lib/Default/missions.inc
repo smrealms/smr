@@ -54,11 +54,6 @@ $MISSIONS = array(
 			'Type' => 'Locations',
 			'X' => 'Bar'
 		),
-		'Rewards' => array(
-			'Credits' => 500000,
-			'Experience' => 1000,
-			'Text' => '*Hiccup* For your...service *Hiccup* to me, take these *Hiccup* 500,000 credits and 1000 experience *Hiccup*!'
-		),
 		'Steps' => array(
 			array(
 				'Step' => 'EnterSector',
@@ -90,7 +85,7 @@ $MISSIONS = array(
 					'SectorID' => '<Sector>',
 					'Drink' => 'Salvene Swamp Water'
 				),
-				'Text' => 'Here we are! The Salvene Galaxy! Now lets find a bar.',
+				'Text' => 'Here we are! Now let\'s get this Salvene Swamp Water.',
 				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
@@ -103,9 +98,15 @@ $MISSIONS = array(
 			),
 			array(
 				'Step' => 'Claim',
-				'Detail' => 'Bar',
-				'Text' => 'Finally! A true Salvene Swamp Water, let return to that drunk!',
-				'Task' => 'Enter the bar to claim your reward.'
+				'Rewards' => array(
+					'Credits' => 500000,
+					'Experience' => 1000,
+					'Text' => '*Hiccup* For your...service *Hiccup* to me, take these *Hiccup* 500,000 credits and 1,000 experience *Hiccup*!'
+				),
+				'Detail' => array(
+					'SectorID' => '<Starting Sector>'
+				),
+				'Text' => 'You hand the Salvene Swamp water to the drunk!'
 			)
 		)
 	)

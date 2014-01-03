@@ -1019,10 +1019,8 @@ abstract class AbstractSmrPlayer {
 		return $this->completedMissions;
 	}
 
-	function getMissions() {
+	public function getMissions() {
 		if(!isset($this->missions)) {
-			//Get Player missions
-			global $MISSIONS;
 			$this->db->query('SELECT * FROM player_has_mission WHERE ' . $this->SQL);
 			$this->missions = array();
 			while ($this->db->nextRecord()) {
@@ -1039,6 +1037,17 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		return $this->missions;
+	}
+
+	public function getActiveMissions() {
+		global $MISSIONS;
+		$missions = $this->getMissions();
+		foreach($missions as $missionID => $mission) {
+			if($mission['On Step'] >= count($MISSIONS[$missionID]['Steps'])) {
+				unset($missions[$missionID]);
+			}
+		}
+		return $missions;
 	}
 
 	function getMission($missionID) {
@@ -1124,9 +1133,8 @@ abstract class AbstractSmrPlayer {
 			$stepLevel = 0;
 		}
 		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
-		$this->missions[$missionID]['Task']['Step'] = $currentStep['Step'];
+		$this->missions[$missionID]['Task'] = $currentStep;
 		$this->missions[$missionID]['Task']['Level'] = $stepLevel;
-		$this->missions[$missionID]['Task']['Detail'] = $currentStep['Detail'] ;
 		$this->missions[$missionID]['Task']['Text'] = $text;
 		$this->missions[$missionID]['Task']['Task'] = $task;
 	}
@@ -1152,6 +1160,38 @@ abstract class AbstractSmrPlayer {
 			}
 		}
 		return $unreadMissions;
+	}
+
+	public function claimMissionReward($missionID) {
+		global $MISSIONS;
+		$this->getMissions();
+		$mission =& $this->missions[$missionID];
+		if($mission === false) {
+			throw new Exception('Unknown mission: ' . $missionID);
+		}
+		if($mission['Task']['Step'] != 'Claim') {
+			throw new Exception('Cannot claim mission: ' . $missionID . ', for step: ' . $mission['On Step']);
+		}
+		$mission['On Step']++;
+		$mission['Unread'] = true;
+		foreach($mission['Task']['Rewards'] as $rewardItem => $amount) {
+			switch($rewardItem) {
+				case 'Credits':
+					$this->increaseCredits($amount);
+				break;
+				case 'Experience':
+					$this->increaseExperience($amount);
+				break;
+			}
+		}
+		$rewardText = $mission['Task']['Rewards']['Text'];
+		if($mission['On Step'] < count($MISSIONS[$missionID]['Steps'])) {
+			// If we haven't finished the mission yet then 
+			$this->setupMissionStep($missionID);
+		}
+		$this->rebuildMission($missionID);
+		$this->updateMission($missionID);
+		return $rewardText;
 	}
 
 	public function getAvailableMissions() {
