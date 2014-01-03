@@ -12,7 +12,7 @@
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
 					<div class="lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
 						if($isVisited) {
-							if($ToggleLink) {
+							if(isset($ToggleLink)) {
 								$ToggleLink['sector_id'] = $Sector->getSectorID();
 							}
 							foreach($MovementTypes as $MovementType) {
@@ -21,7 +21,7 @@
 									<a href="<?php echo SmrSession::getNewHREF($ToggleLink); ?>" class="lm<?php echo $MovementType; ?>"><?php
 								} ?>
 								<div class="lm<?php echo $MovementType; ?> <?php if($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
-								if($ToggleLink) { ?>
+								if(isset($ToggleLink)) { ?>
 									</a><?php
 								}
 							}
