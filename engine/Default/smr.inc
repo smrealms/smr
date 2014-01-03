@@ -312,7 +312,7 @@ function create_error($message) {
 }
 
 function resetContainer($new_container) {
-	global $time_start,$sn,$container,$var;
+	global $sn,$container,$var;
 
 	// this sn identifies our container later
 

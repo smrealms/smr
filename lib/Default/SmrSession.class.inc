@@ -299,6 +299,9 @@ class SmrSession {
 		if(!isset($container['RemainingPageLoads'])) {
 			$container['RemainingPageLoads'] = 1; // Allow refreshing
 		}
+		if(!isset($container['PreviousRequestTime'])) {
+			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
+		}
 
 		self::$var[$sn] = $container;
 		if(!$lock && !USING_AJAX)
