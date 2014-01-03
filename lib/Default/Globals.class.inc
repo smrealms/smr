@@ -423,7 +423,7 @@ class Globals {
 		return self::$AVAILABLE_LINKS['CurrentPlayers'] = SmrSession::getNewHREF(create_container('skeleton.php','current_players.php'));
 	}
 
-	public function getTradeHREF() {
+	public static function getTradeHREF() {
 		return self::$AVAILABLE_LINKS['EnterPort'] = SmrSession::getNewHREF(create_container('skeleton.php', 'shop_goods.php'));
 	}
 
@@ -508,6 +508,10 @@ class Globals {
 	public static function getPlanetFinancesHREF() {
 		return SmrSession::getNewHREF(create_container('skeleton.php','planet_financial.php'));
 	}
+
+    public static function getPlanetResearchHREF() {
+        return SmrSession::getNewHREF(create_container('skeleton.php','planet_research.php'));
+    }
 
 	public static function getAllianceHREF($allianceID = null) {
 		if ($allianceID > 0) {
