@@ -1126,8 +1126,8 @@ abstract class AbstractSmrPlayer {
 		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
 
 		if($mission['On Step'] >= count($MISSIONS[$missionID]['Steps'])) {
-			// If we have completed this mission just use an empty array for the current task.
-			$currentStep = array();
+			// If we have completed this mission just use false to indicate no current task.
+			$currentStep = false;
 		}
 		else {
 			$currentStep = $MISSIONS[$missionID]['Steps'][$mission['On Step']];
@@ -1173,7 +1173,7 @@ abstract class AbstractSmrPlayer {
 		if($mission === false) {
 			throw new Exception('Unknown mission: ' . $missionID);
 		}
-		if($mission['Task']['Step'] != 'Claim') {
+		if($mission['Task'] === false || $mission['Task']['Step'] != 'Claim') {
 			throw new Exception('Cannot claim mission: ' . $missionID . ', for step: ' . $mission['On Step']);
 		}
 		$mission['On Step']++;
@@ -1244,7 +1244,7 @@ abstract class AbstractSmrPlayer {
 			}
 		$this->getMissions();
 		foreach($this->missions as $missionID => &$mission) {
-			if($mission['Task']['Step'] == $actionID) {
+			if($mission['Task'] !== false && $mission['Task']['Step'] == $actionID) {
 				if(checkMissionRequirements($values, $mission, $this) === true) {
 					$mission['On Step']++;
 					$mission['Unread'] = true;
