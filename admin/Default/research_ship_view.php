@@ -22,7 +22,7 @@ if(isset($_REQUEST['gameId'])) {
 
     // get races
     $db->query("SELECT * FROM race");
-    $races = [];
+    $races = array();
     while ($db->nextRecord()){
         $races[] = $db->getRow();
     }
