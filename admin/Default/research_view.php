@@ -9,7 +9,11 @@ if (isset($var['msg'])) {
 	$template->assign('Message',$var['msg']);
 }
 
-if(isset($_REQUEST['gameId'])){
+if(isset($_REQUEST['gameId'])) {
+    SmrSession::updateVar('gameId',$_REQUEST['gameId']);
+}
+
+if(isset($var['gameId'])){
     $game = SmrGame::getGame($_REQUEST['gameId']);
     $research = new Research($_REQUEST['gameId']);
     $gr = $research->getGameResearchAss();

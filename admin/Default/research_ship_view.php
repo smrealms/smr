@@ -10,20 +10,14 @@ if (isset($var['msg'])) {
 	$template->assign('Message',$var['msg']);
 }
 
+if(isset($_REQUEST['gameId'])) {
+    SmrSession::updateVar('gameId',$_REQUEST['gameId']);
+}
 
-//if(!isset($var['gameResearchId'])){
-//    create_error("gameResearchId is missing !!!: ");
-//}
 
     $research = new Research($var['gameId']);
     $gr = $research->getGameResearchAss();
 
-    // get research entry
-    //$db->query('SELECT * FROM smr.game_research WHERE id='.$db->escapeNumber($gr['id']));
-    //$gameResearch = null;
-    //if($db->nextRecord()){
-    //    $gameResearch = $db->getRow();
-    //}
     $template->assign("GameResearch",$gr);
 
     // get races
