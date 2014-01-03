@@ -9,6 +9,7 @@ if ($player->getCredits() < 10) {
 $player->decreaseCredits(10);
 
 if (isset($var['action']) && $var['action'] != 'drink') {
+	$drinkName = 'water';
 	$message.= 'You ask the bartender for some water and you quickly down it.<br />You dont feel quite so intoxicated anymore.<br />';
 	$db->query('DELETE FROM player_has_drinks WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' AND account_id=' . $db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
 	$player->increaseHOF(1,array('Bar','Drinks', 'Water'), HOF_PUBLIC);
@@ -24,7 +25,7 @@ else {
 	}
 
 	if ($db->nextRecord()) {
-		$drink_name = $db->getField('drink_name');
+		$drinkName = $db->getField('drink_name');
 		$drink_id = $db->getInt('drink_id');
 
 		$db->query('SELECT drink_id FROM player_has_drinks WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER by drink_id DESC LIMIT 1');
@@ -36,22 +37,22 @@ else {
 		}
 
 		if ($drink_id != 11 && $drink_id !=1) {
-			$message.=('You have bought a '.$drink_name.' for $10');
+			$message.=('You have bought a '.$drinkName.' for $10');
 			$db->query('INSERT INTO player_has_drinks (account_id, game_id, drink_id, time) VALUES (' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($curr_drink_id) . ', ' . $db->escapeNumber(TIME) . ')');
 			$player->increaseHOF(1,array('Bar','Drinks', 'Alcoholic'), HOF_PUBLIC);
 		}
 		else {
 			$message.=('The bartender says, Ive got something special for ya.<br />');
-			$message.=('The bartender turns around for a minute and whips up a '.$drink_name.'.<br />');
+			$message.=('The bartender turns around for a minute and whips up a '.$drinkName.'.<br />');
 
 			if ($drink_id == 1) {
 				$message.=('The bartender says that Spock himself gave him the directions to make this drink.<br />');
 			}
 
-			$message.=('You drink the '.$drink_name.' and feel like like you have been drinking for hours.<br />');
+			$message.=('You drink the '.$drinkName.' and feel like like you have been drinking for hours.<br />');
 
 			if ($drink_id == 11) {
-				$message.=('After drinking the '.$drink_name.' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
+				$message.=('After drinking the '.$drinkName.' you feel like nothing can bring you down and like you are the best trader in the universe.<br />');
 			}
 
 			//has the power of 2 drinks
@@ -72,6 +73,11 @@ else {
 	}
 	$message.= 'zy<br />';
 }
+
+$player->actionTaken('BuyDrink', array(
+	'Sector' => &$sector,
+	'Drink' => $drinkName
+));
 
 //see if the player blacksout or not
 if ($num_drinks > 15) {

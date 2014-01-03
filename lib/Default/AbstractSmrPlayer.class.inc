@@ -1210,10 +1210,19 @@ abstract class AbstractSmrPlayer {
 			}
 		$this->getMissions();
 		foreach($this->missions as $missionID => &$mission) {
-			if($mission['Task']['Step'] == $actionID) {
+			$task = &$mission['Task'];
+			if($task['Step'] == $actionID) {
 				switch($actionID) {
 					case 'EnterSector':
-						if($mission['Sector'] == $values['Sector']->getSectorID()) {
+						if($task['Detail'] == $values['Sector']->getSectorID()) {
+							$mission['On Step']++;
+							$this->setupMissionStep($missionID);
+							$this->rebuildMission($missionID);
+							$this->updateMission($missionID);
+						}
+					case 'BuyDrink':
+						if($task['Detail']['Sector'] == $values['Sector']->getSectorID()
+							&& $task['Detail']['Drink'] == $values['Drink']) {
 							$mission['On Step']++;
 							$this->setupMissionStep($missionID);
 							$this->rebuildMission($missionID);

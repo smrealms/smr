@@ -8,7 +8,8 @@ $MISSION_ACTIONS = array(
 	'LeaveAlliance',
 	'DisbandAlliance',
 	'KickPlayer',
-	'PlayerKicked'
+	'PlayerKicked',
+	'BuyDrink'
 );
 
 //REQUIREMENTS
@@ -62,31 +63,34 @@ $MISSIONS = array(
 					'Type' => 'Locations',
 					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS
 				),
-				'Detail' => '<Sector>', // Salvene
+				'Detail' => '<Sector>',
 				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the Salvene Swamp Water in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
 				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]'
 			),
-			array(//galaxy, visit a bar and get me some real Salvene Swamp Water
+			array(
 				'Step' => 'EnterSector',
 				'PickSector' => array(
 					'Type' => 'Locations',
 					'X' => 'Bar'
 				),
-				'Detail' => 'Salvene Swamp Water',
+				'Detail' => '<Sector>',
 				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in <Sector> does the best Salvene Swamp Water around!',
 				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
-				'Step' => 'Drink',
-				'Detail' => 'Salvene Swamp Water',
+				'Step' => 'BuyDrink',
+				'Detail' => array(
+					'Sector' => '<Sector>',
+					'Drink' => 'Salvene Swamp Water'
+				),
 				'Text' => 'Here we are! The Salvene Galaxy! Now lets find a bar.',
-				'Task' => 'Go to a bar and buy a Salvene Swamp Water from the bartender. This may take many tries.'
+				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
-				'Step' => 'MoveSector',
+				'Step' => 'EnterSector',
 				'Detail' => '<Starting Sector>',
 				'Text' => 'Finally! A true Salvene Swamp Water, let return to that drunk!',
-				'Task' => 'Return to <Stating Sector> to claim your reward.'
+				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.'
 			),
 			array(
 				'Step' => 'Claim',
