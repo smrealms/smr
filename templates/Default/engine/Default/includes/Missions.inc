@@ -4,7 +4,6 @@ if(isset($MissionMessage)) { ?>
 	echo $MissionMessage;
 }
 
-/*
 $AvailableMissions =& $ThisPlayer->getAvailableMissions();
 if(count($AvailableMissions) > 0) {
 	foreach($AvailableMissions as $MissionID => &$AvailableMission) { ?>
@@ -13,7 +12,6 @@ if(count($AvailableMissions) > 0) {
 		<div class="buttonA"><a href="<?php echo Globals::getAcceptMissionHREF($MissionID); ?>" class="buttonA">&nbsp;Accept&nbsp;</a></div><br/><?php
 	}
 }
-*/
 
 
 $Missions =& $ThisPlayer->getActiveMissions();
