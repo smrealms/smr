@@ -1029,7 +1029,7 @@ abstract class AbstractSmrPlayer {
 				$this->missions[$this->db->getInt('mission_id')] = array(
 					'On Step' => $this->db->getInt('on_step'),
 					'Progress' => $this->db->getInt('progress'),
-					'Next Step' => $this->db->getInt('next_step'),
+					'Unread' => $this->db->getBoolean('unread'),
 					'Expires' => $this->db->getInt('step_fails'),
 					'Mission ID' => $this->db->getInt('mission_id'),
 					'Sector' => $this->db->getInt('mission_sector'),
@@ -1052,7 +1052,7 @@ abstract class AbstractSmrPlayer {
 		return $this->getMission($missionID) !== false;
 	}
 
-	function updateMission($missionID,$keyOrUpdateArray,$newInfo=false) {
+	function updateMission($missionID) {
 		$this->getMissions();
 		if(isset($this->missions[$missionID])) {
 			$mission = $this->missions[$missionID];
@@ -1060,7 +1060,7 @@ abstract class AbstractSmrPlayer {
 				UPDATE player_has_mission
 				SET on_step = ' . $this->db->escapeNumber($mission['On Step']) . ',
 					progress = ' . $this->db->escapeNumber($mission['Progress']) . ',
-					next_step = ' . $this->db->escapeString($mission['Next Step']) . ',
+					unread = ' . $this->db->escapeBoolean($mission['Unread']) . ',
 					starting_sector = ' . $this->db->escapeNumber($mission['Starting Sector']) . ',
 					mission_sector = ' . $this->db->escapeNumber($mission['Sector']) . ',
 					step_fails = ' . $this->db->escapeNumber($mission['Expires']) . '
@@ -1095,7 +1095,7 @@ abstract class AbstractSmrPlayer {
 		$mission = array(
 			'On Step' => 0,
 			'Progress' => 0,
-			'Next Step' => 'TRUE',
+			'Unread' => true,
 			'Expires' => (TIME + 86400),
 			'Mission ID' => $missionID,
 			'Sector' => $sector,
@@ -1106,8 +1106,10 @@ abstract class AbstractSmrPlayer {
 		$this->setupMissionStep($missionID);
 		$this->rebuildMission($missionID);
 
-		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,starting_sector,mission_sector,step_fails) ' .
-				'VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($mission['On Step']).','.$this->db->escapeNumber($mission['Progress']).','.$this->db->escapeString($mission['Next Step']).','.$this->db->escapeNumber($mission['Starting Sector']).','.$this->db->escapeNumber($mission['Sector']).','.$this->db->escapeNumber($mission['Expires']).')');
+		$this->db->query('
+			REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,unread,starting_sector,mission_sector,step_fails)
+			VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($mission['On Step']).','.$this->db->escapeNumber($mission['Progress']).','.$this->db->escapeBoolean($mission['Unread']).','.$this->db->escapeNumber($mission['Starting Sector']).','.$this->db->escapeNumber($mission['Sector']).','.$this->db->escapeNumber($mission['Expires']).')'
+		);
 	}
 
 	function rebuildMission($missionID) {
@@ -1138,6 +1140,19 @@ abstract class AbstractSmrPlayer {
 			return true;
 		}
 		return false;
+	}
+
+	public function markMissionsRead() {
+		$this->getMissions();
+		$unreadMissions = array();
+		foreach($this->missions as $missionID => &$mission) {
+			if($mission['Unread']) {
+				$unreadMissions[] = $missionID;
+				$mission['Unread'] = false;
+				$this->updateMission($missionID);
+			}
+		}
+		return $unreadMissions;
 	}
 
 	public function getAvailableMissions() {
@@ -1189,6 +1204,7 @@ abstract class AbstractSmrPlayer {
 			if($mission['Task']['Step'] == $actionID) {
 				if(checkMissionRequirements($values, $mission, $this) === true) {
 					$mission['On Step']++;
+					$mission['Unread'] = true;
 					$this->setupMissionStep($missionID);
 					$this->rebuildMission($missionID);
 					$this->updateMission($missionID);

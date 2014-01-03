@@ -81,7 +81,7 @@ $MISSIONS = array(
 				'Detail' => array(
 					'SectorID' => '<Sector>'
 				),
-				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in <Sector> does the best Salvene Swamp Water around!',
+				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in [sector=<Sector>] does the best Salvene Swamp Water around!',
 				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
@@ -98,7 +98,7 @@ $MISSIONS = array(
 				'Detail' => array(
 					'SectorID' => '<Starting Sector>'
 				),
-				'Text' => 'Finally! A true Salvene Swamp Water, let return to that drunk!',
+				'Text' => 'Finally! A true Salvene Swamp Water, let\'s return to that drunk!',
 				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.'
 			),
 			array(
@@ -153,110 +153,4 @@ function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer &
 	return true;
 }
 
-/*
-function getMissionText($mission) {
-	global $RACES,$GAME_ID,$TIME,$id;
-	$text = get_subtitle($mission['Name']);
-	if ($mission['On Step'] > $mission['Total']) {
-		$text .= get_status_message('green','Mission','Mission '.$mission['Name'].' Completed.');
-	}
-	else {
-		$progress = $mission['Progress'];
-		$need = $mission['Task']['Detail'];
-		$remain = $need - $progress;
-		$plural = ($remain==1?'':'s');
-		$text .= get_status_message('green','Task',$mission['Task']['Text']);
-		if ($mission['Task']['Step'] == 'KillSpawn') {
-			//get the npc
-			$sql = query('SELECT * FROM npcs WHERE game_id = '.$GAME_ID.' AND npc_id = '.$mission['Progress'].' AND dead = \'FALSE\' LIMIT 1');
-			if ($result = next_record($sql)) {
-				$name = stripslashes($result['name']);
-				$text .= get_status_message('green','Status','Kill the NPC '.$name.'.');
-			}
-			elseif ($mission['Expires'] < $TIME) {
-				$link = array();
-				$link['body'] = 'trader_missions.php';
-				$link['respawn'] = TRUE;
-				$link['mission_id'] = $mission['Mission ID'];
-				$link['text'] = 'Respawn NPC';
-				$text .= create_button($link,$id,'',TRUE);
-				$text .= '<br /><br />';
-			} else
-				$text .= get_status_message('green','Status','You must wait for a respawn.');
-			
-		}
-		elseif ($mission['Task']['Step'] == 'KillNPCs') {
-			$text .= get_status_message('green','Status','Kill '.$remain.' more NPCs.');
-		}
-		elseif ($mission['Task']['Step'] == 'KillPlayers') {
-			$text .= get_status_message('green','Status','Kill '.$remain.' more players.');
-		}
-		elseif ($mission['Task']['Step'] == 'KillName') {
-			$text .= get_status_message('green','Status','Kill '.$need.'.');
-		}
-		elseif ($mission['Task']['Step'] == 'Visit') {
-			$text .= get_status_message('green','Status','Visit a '.$need.'.');
-		}
-		elseif ($mission['Task']['Step'] == 'DrinkAmount') {
-			$text .= get_status_message('green','Status','Buy '.$remain.' more drink'.$plural.'.');
-		}
-		elseif ($mission['Task']['Step'] == 'Drink') {
-			$text .= get_status_message('green','Status','Buy a '.$need.' drink.');
-		}
-		elseif ($mission['Task']['Step'] == 'Move') {
-			$text .= get_status_message('green','Status','Move '.$remain.' more sector'.$plural.'.');
-		}
-		elseif ($mission['Task']['Step'] == 'MoveSector') {
-			$text .= get_status_message('green','Status','Move to sector '.$need.'.');
-		}
-		elseif ($mission['Task']['Step'] == 'MoveRacial') {
-			$text .= get_status_message('green','Status','Move to the racial galaxy of the '.$RACES[$need].'.');
-		}
-		elseif ($mission['Task']['Step'] == 'MoveGal') {
-			$text .= get_status_message('green','Status','Move to the '.$need.' galaxy.');
-		}
-		elseif ($mission['Task']['Step'] == 'ClearNPC') {
-			$text .= get_status_message('green','Status','Clear '.$remain.' more NPC force'.$plural.'.');
-		}
-		elseif ($mission['Task']['Step'] == 'StartPortRaid') {
-			$text .= get_status_message('green','Status','Start '.$remain.' more port raid'.$plural.'.');
-		}
-		elseif ($mission['Task']['Step'] == 'Claim') {
-			$text .= get_status_message('green','Status','Visit a '.$need.' to claim your reward.');
-		}
-		else {
-			$text .= get_status_message('green','Status','Unknown Mission Type: '.$mission['Task']['Step'].'.');
-		}
-		$text .= '<br />';
-		return $text;
-	}
-}
-
-function check_missions($player_object = '') {
-	global $error, $THIS_PLAYER, $GAME_ID,$weapons,$upgrades,$gadgets,$ship_id;
-	if ($player_object == '') $player_object = $THIS_PLAYER;
-	$playerMissions = $player_object->getMissions();
-	foreach ($playerMissions as $mission_id => $mission_stuff) {
-		//see if we need to do anything for this step
-		if ($mission_stuff['Next Step'] == 'TRUE') {
-			//display the appropriate text
-			if ($mission_stuff['On Step'] == 1)
-				$error .= get_status_message('green','Mission Accepted',$mission_stuff['Task']['Text']);
-			else
-				$error .= get_status_message('green','Mission Accomplished',$mission_stuff['Task']['Text']);
-			$player_object->updateMission($mission_id,'Next Step','FALSE');
-		}
-		if ($mission_stuff['Task']['Step'] == 'KillSpawn' && $mission_stuff['Progress'] == 0) {
-			//spawn the NPC
-			get_ship_setup($mission_stuff['Task']['Detail'],$weapons,$upgrades,$gadgets,$ship_id);
-			$npc_id = create_npc($GAME_ID,'',$player_object->getSectorID(),$ship_id,$mission_stuff['Task']['Level'],0,'',$weapons,$upgrades,$gadgets,0,'Member','None','Attacker',0);
-			//update the db for this npc id
-			$player_object->updateMission($mission_id,'Progress',$npc_id);
-		}
-		elseif ($mission_stuff['Task']['Step'] == 'ClearNPC' && $mission_stuff['Progress'] == 0) {
-			//spawn forces
-			//update db so that more forces are not spawned everytime
-		}
-	}
-} */
 ?>

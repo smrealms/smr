@@ -47,6 +47,12 @@ $template->assignByRef('Sectors',$links);
 
 doTickerAssigns($template, $player, $db);
 
+if(!isset($var['UnreadMissions'])) {
+	$unreadMissions = $player->markMissionsRead();
+	SmrSession::updateVar('UnreadMissions', $unreadMissions);
+}
+$template->assign('UnreadMissions', $var['UnreadMissions']);
+
 // *******************************************
 // *
 // * Force and other Results
