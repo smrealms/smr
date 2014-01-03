@@ -1098,6 +1098,7 @@ abstract class AbstractSmrPlayer {
 			'On Step' => 0,
 			'Progress' => 0,
 			'Next Step' => 'TRUE',
+			'Total' => 0,
 			'Expires' => (TIME + 86400),
 			'Mission ID' => $missionID,
 			'Sector' => $sector,
@@ -1105,11 +1106,11 @@ abstract class AbstractSmrPlayer {
 		);
 
 		$this->missions[$missionID] =& $mission;
-		$this->rebuildMission($missionID);
 		$this->setupMissionStep($missionID);
+		$this->rebuildMission($missionID);
 
 		$this->db->query('REPLACE INTO player_has_mission (game_id,account_id,mission_id,on_step,progress,next_step,total_steps,starting_sector,mission_sector,step_fails) ' .
-				'VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($playerMission['On Step']).','.$this->db->escapeNumber($playerMission['Progress']).','.$this->db->escapeString($playerMission['Next Step']).','.$this->db->escapeNumber($playerMission['Total']).','.$this->db->escapeNumber($playerMission['Starting Sector']).','.$this->db->escapeNumber($playerMission['Sector']).','.$this->db->escapeNumber($playerMission['Expires']).')');
+				'VALUES ('.$this->db->escapeNumber($this->gameID).','.$this->db->escapeNumber($this->accountID).','.$this->db->escapeNumber($missionID).','.$this->db->escapeNumber($mission['On Step']).','.$this->db->escapeNumber($mission['Progress']).','.$this->db->escapeString($mission['Next Step']).','.$this->db->escapeNumber($mission['Total']).','.$this->db->escapeNumber($mission['Starting Sector']).','.$this->db->escapeNumber($mission['Sector']).','.$this->db->escapeNumber($mission['Expires']).')');
 	}
 
 	function rebuildMission($missionID) {
@@ -1117,7 +1118,6 @@ abstract class AbstractSmrPlayer {
 		$RACES = Globals::getRaces();
 		$missionInfo = $this->missions[$missionID];
 		$currentStep = $MISSIONS[$missionID]['Steps'][$missionInfo['On Step']];
-		$detail = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Detail']);
 		$text = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Text']);
 		$task = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Task']);
 		if (isset($currentStep['Level'])) {
@@ -1130,7 +1130,7 @@ abstract class AbstractSmrPlayer {
 		$this->missions[$missionID]['Location'] = $MISSIONS[$missionID]['Location'];
 		$this->missions[$missionID]['Task']['Step'] = $currentStep['Step'];
 		$this->missions[$missionID]['Task']['Level'] = $stepLevel;
-		$this->missions[$missionID]['Task']['Detail'] = $detail;
+		$this->missions[$missionID]['Task']['Detail'] = $currentStep['Detail'] ;
 		$this->missions[$missionID]['Task']['Text'] = $text;
 		$this->missions[$missionID]['Task']['Task'] = $task;
 	}
