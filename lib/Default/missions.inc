@@ -63,7 +63,9 @@ $MISSIONS = array(
 					'Type' => 'Locations',
 					'X' => RACE_SALVENE + LOCATION_GROUP_RACIAL_HQS
 				),
-				'Detail' => '<Sector>',
+				'Detail' => array(
+					'SectorID' => '<Sector>'
+				),
 				'Text' => '*Hiccup* Hey! I need you to...*Hiccup* do me a favor. All the Salvene Swamp Water in this bar is awful! Go to the Sal...*Hiccup*...the Salvene HQ, they\'ll know a good bar.',
 				'Task' => 'Go to the Salvene HQ at [sector=<Sector>]'
 			),
@@ -73,14 +75,16 @@ $MISSIONS = array(
 					'Type' => 'Locations',
 					'X' => 'Bar'
 				),
-				'Detail' => '<Sector>',
+				'Detail' => array(
+					'SectorID' => '<Sector>'
+				),
 				'Text' => 'Here we are! The Salvene HQ! You ask around a bit and find that the bar in <Sector> does the best Salvene Swamp Water around!',
 				'Task' => 'Go to the bar at [sector=<Sector>] and buy a Salvene Swamp Water from the bartender. This may take many tries.'
 			),
 			array(
 				'Step' => 'BuyDrink',
 				'Detail' => array(
-					'Sector' => '<Sector>',
+					'SectorID' => '<Sector>',
 					'Drink' => 'Salvene Swamp Water'
 				),
 				'Text' => 'Here we are! The Salvene Galaxy! Now lets find a bar.',
@@ -88,7 +92,9 @@ $MISSIONS = array(
 			),
 			array(
 				'Step' => 'EnterSector',
-				'Detail' => '<Starting Sector>',
+				'Detail' => array(
+					'SectorID' => '<Starting Sector>'
+				),
 				'Text' => 'Finally! A true Salvene Swamp Water, let return to that drunk!',
 				'Task' => 'Return to [sector=<Starting Sector>] to claim your reward.'
 			),
@@ -104,6 +110,45 @@ $MISSIONS = array(
 foreach($MISSIONS as $id => &$mission) {
 	$mission['ID'] = $id;
 } unset($mission);
+
+function checkMissionRequirements(&$values, array &$mission, AbstractSmrPlayer &$player, array &$requirements = null) {
+	if($requirements == null) {
+		return checkMissionRequirements($values, $mission, $player, $mission['Task']['Detail']);
+	}
+	foreach($requirements as $reqName => $req) {
+		if(is_string($req)) {
+			// Handle aliases
+			switch($reqName) {
+				case 'SectorID':
+					$reqName = 'Sector';
+					$req = array(
+						'getSectorID' => $req
+					);
+					break;
+				default:
+					$req = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($player->getRaceID(),$mission['Sector'],$mission['Starting Sector'],$player->getPlayerName()),$req);
+
+			}
+		}
+		if(is_array($values)) {
+			$value = $values[$reqName];
+		}
+		else if(is_object($values)) {
+			$value = $values->$reqName();
+		}
+		if(is_array($req)) {
+			if(checkMissionRequirements($value, $mission, $player, $req) === false) {
+				return false;
+			}
+		}
+		else {
+			if($value != $req) {
+				return false;
+			}
+		}
+	}
+	return true;
+}
 
 /*
 function getMissionText($mission) {
