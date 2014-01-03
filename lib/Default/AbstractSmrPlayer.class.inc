@@ -1115,11 +1115,10 @@ abstract class AbstractSmrPlayer {
 
 	function rebuildMission($missionID) {
 		global $MISSIONS;
-		$RACES = Globals::getRaces();
 		$missionInfo = $this->missions[$missionID];
 		$currentStep = $MISSIONS[$missionID]['Steps'][$missionInfo['On Step']];
-		$text = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Text']);
-		$task = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($RACES[$this->getRaceID()]['Race Name'],$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Task']);
+		$text = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Text']);
+		$task = str_replace(array('<Race>','<Sector>','<Starting Sector>','<trader>'),array($this->getRaceID(),$missionInfo['Sector'],$missionInfo['Starting Sector'],$this->playerName),$currentStep['Task']);
 		if (isset($currentStep['Level'])) {
 			$stepLevel = str_replace('<Player Level>',$this->levelID,$currentStep['Level']);
 		}
@@ -1127,7 +1126,6 @@ abstract class AbstractSmrPlayer {
 			$stepLevel = 0;
 		}
 		$this->missions[$missionID]['Name'] = $MISSIONS[$missionID]['Name'];
-		$this->missions[$missionID]['Location'] = $MISSIONS[$missionID]['Location'];
 		$this->missions[$missionID]['Task']['Step'] = $currentStep['Step'];
 		$this->missions[$missionID]['Task']['Level'] = $stepLevel;
 		$this->missions[$missionID]['Task']['Detail'] = $currentStep['Detail'] ;
