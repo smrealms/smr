@@ -138,6 +138,7 @@ class SmrSession {
 	public static $generate;
 	public static $SN;
 	public static $lastSN;
+    public static $gameResearch;
 
 	protected static $previousAjaxReturns;
 	protected static $ajaxReturns=array();
