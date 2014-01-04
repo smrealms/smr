@@ -47,7 +47,7 @@ class SmrAlliance {
                     $db->escapeString($message) . ',' .
                     $db->escapeNumber(0) . ',' .
                     $db->escapeNumber(TIME) . ',' .
-                    $db->escapeNumber(86400 * 31) .",'FALSE')";
+                    $db->escapeNumber(86400 * 1000) .",'FALSE')";
 
             $db->query($query);
             unset($query);
