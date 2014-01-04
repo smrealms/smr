@@ -2,6 +2,10 @@
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 
+if(!$player->getAllianceID()){
+    create_error("Research is only available for alliance members");
+}
+
 // create planet object
 $planet =& $player->getSectorPlanet();
 $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
