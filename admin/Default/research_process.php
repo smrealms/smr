@@ -2,6 +2,8 @@
 
 require_once(get_file_loc('Research.class.inc'));
 
+
+
 $request = $_REQUEST;
 $research = new Research( isset($request['gameId'])? $request['gameId'] : $var['gameId'] );
 $gr = $research->getGameResearchAss();
@@ -40,11 +42,11 @@ if(isset($request['assignCertificate'])){
     }
 }
 
-if(isset($var['deleteResearchCertificate']) && isset($var['gameResearchId'])){
+if(isset($var['deleteResearchCertificate']) && isset($var['gameId'])){
     $research->deleteResearchCertificate($var['deleteResearchCertificate']);
 }
 
-if(isset($var['deleteResearchShipCertificate']) && isset($var['gameResearchId'])){
+if(isset($var['deleteResearchShipCertificate']) && isset($var['gameId'])){
     $research->deleteResearchShipCertificate($var['deleteResearchShipCertificate']);
 }
 
