@@ -84,7 +84,7 @@ if (isset($Msg)) {
             <td align="center"><?php echo $rc['computer'] ?> computers</td>
             <td align="center">
                 <?php if(isset($rc['ResearchCertificateHRF'])){?>
-                    <a href="<?php echo $rc['ResearchCertificateHRF'] ?>">RESEARCH</a>
+                    <a href="<?php echo $rc['ResearchCertificateHRF'] ?>"><div style="margin-top: 10px; padding: 3px; border: 2px solid darkgreen; box-shadow: 2px 2px 2px #888;">RESEARCH</div> </a>
                 <?php }?>
             </td>
         </tr>
