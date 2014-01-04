@@ -17,7 +17,7 @@ $planetPlayer->update();
 
 require_once(get_file_loc('Research.class.inc'));
 $research = new Research($player->getGameID());
-cancelUserResearch($planetPlayer);
+$research->cancelUserResearch($planetPlayer);
 
 
 forward(create_container('skeleton.php', 'planet_main.php'));
