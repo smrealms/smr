@@ -16,7 +16,7 @@
 								$ToggleLink['sector_id'] = $Sector->getSectorID();
 							}
 							foreach($MovementTypes as $MovementType) {
-								if($ToggleLink) {
+								if(isset($ToggleLink)) {
 									$ToggleLink['dir'] = $MovementType; ?>
 									<a href="<?php echo SmrSession::getNewHREF($ToggleLink); ?>" class="lm<?php echo $MovementType; ?>"><?php
 								} ?>
