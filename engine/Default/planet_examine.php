@@ -9,6 +9,8 @@ if ($planet->hasOwner()) {
 $template->assign('PageTopic','Examine Planet');
 $PHP_OUTPUT.=('<table>');
 $PHP_OUTPUT.=('<tr><td><b>Planet Name:</b></td><td>'.$planet->getName().'</td></tr>');
+$PHP_OUTPUT.=('<tr><td><b>Planet Type:</b></td><td><img align="left" src="'.$planet->getTypeImage().'" width="16" height="16" alt="Planet" title="'.$planet->getTypeName().'" />&nbsp;'.$planet->getTypeName().'</td></tr>');
+$PHP_OUTPUT.=('<tr><td></td><td>'.$planet->getTypeDescription().'</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Level:</b></td><td>' . number_format($planet->getLevel(),2) . '</td></tr>');
 $PHP_OUTPUT.=('<tr><td><b>Owner:</b></td><td>');
 if ($planet->hasOwner())
@@ -25,6 +27,7 @@ else
 	$PHP_OUTPUT.=('none');
 
 $PHP_OUTPUT.=('</td></tr>');
+
 $PHP_OUTPUT.=('</table>');
 
 $PHP_OUTPUT.=('<div align="center">');

@@ -37,10 +37,11 @@
 									}
 								}
 								if($Sector->hasPlanet()) {
+									$planet = $Sector->getPlanet();
 									if($isCurrentSector && !$GalaxyMap) {
-										?><a href="<?php echo $Sector->getPlanet()->getExamineHREF(); ?>"><?php
+										?><a href="<?php echo $planet->getExamineHREF(); ?>"><?php
 									} ?>
-									<img title="Planet" alt="Planet" src="images/planet.gif" width="16" height="16"/><?php
+									<img title="<?php echo $planet->getTypeName() ?>" alt="Planet" src="<?php echo $planet->getTypeImage() ?>" width="16" height="16"/><?php
 									if($isCurrentSector && !$GalaxyMap){ ?></a><?php }
 								} ?>
 								</div><?php

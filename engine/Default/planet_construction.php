@@ -7,7 +7,7 @@ $planet =& $player->getSectorPlanet();
 $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 
 require_once(get_file_loc('menu.inc'));
-create_planet_menu();
+create_planet_menu($planet);
 
 $PLANET_BUILDINGS =& Globals::getPlanetBuildings();
 $PHP_OUTPUT.=('<p>You are currently building: ');
@@ -52,7 +52,7 @@ foreach($PLANET_BUILDINGS as $planetBuilding) {
 	$PHP_OUTPUT.=('<td align="center">');
 	$PHP_OUTPUT.=($planet->getBuilding($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('/');
-	$PHP_OUTPUT.=(SmrPlanet::getMaxBuildings($planetBuilding['ConstructionID']));
+	$PHP_OUTPUT.=($planet->getMaxBuildings($planetBuilding['ConstructionID']));
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('<td>');
 	foreach($planetBuilding['Goods'] as $goodID => $amount) {
