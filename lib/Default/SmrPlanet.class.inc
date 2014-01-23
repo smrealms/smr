@@ -8,7 +8,7 @@ class SmrPlanet {
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
 	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 600; // 10 minutes
 
-	protected static $maxBuildings;
+	protected $maxBuildings;
 
 	protected $db;
 
@@ -26,7 +26,12 @@ class SmrPlanet {
 	protected $buildings;
 	protected $inhabitableTime;
 	protected $currentlyBuilding;
-
+	protected $typeID;
+	protected $typeName;
+	protected $typeImage;
+	protected $typeDescription;
+	
+	protected $canOptions;
 	protected $hasChanged = false;
 	protected $hasChangedStockpile = false;
 	protected $hasChangedBuildings = array();
@@ -168,11 +173,22 @@ class SmrPlanet {
 			$this->bonds			= $this->db->getInt('bonds');
 			$this->maturity			= $this->db->getInt('maturity');
 			$this->inhabitableTime	= $this->db->getInt('inhabitable_time');
-
+			$this->typeID 			= $this->db->getInt('planet_type_id');
+			
+			$this->getOptions();
 			$this->getStockpile();
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 			$this->calculateInterest();
+		
+			
+			$this->maxBuildings = array();
+
+			$this->db->query('SELECT construction_id, max_amount FROM planet_can_build WHERE planet_type_id='.$this->getTypeID());
+			while ($this->db->nextRecord()) {
+				$this->maxBuildings[$this->db->getInt('construction_id')] = $this->db->getInt('max_amount');
+			}
+		
 		}
 		//		else if($create) {
 		//			$this->gameID		= (int)$gameID;
@@ -362,7 +378,7 @@ class SmrPlanet {
 		$this->bonds = $num;
 		$this->hasChanged = true;
 	}
-
+	
 	public function increaseBonds($num) {
 		if($num == 0) {
 			return;
@@ -620,38 +636,148 @@ class SmrPlanet {
 		return $this->currentlyBuilding;
 	}
 
-	public static function getMaxBuildings($buildingTypeID=false) {
-		if(!isset(self::$maxBuildings)) {
-			self::$maxBuildings = array();
-
-			$db = new SmrMySqlDatabase();
-			// get buildingss from db
-			$db->query('SELECT construction_id, max_construction FROM planet_construction');
-			while ($db->nextRecord()) {
-				self::$maxBuildings[$db->getInt('construction_id')] = $db->getInt('max_construction');
+		public function getMaxBuildings($buildingTypeID=false) {
+			if($buildingTypeID===false) {
+				return $this->$maxBuildings;
 			}
-		}
-		if($buildingTypeID===false) {
-			return self::$maxBuildings;
-		}
-		return self::$maxBuildings[$buildingTypeID];
-		//			global $PRIMARY_BUILDINGS;
-		//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-		//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
-		//					$planet['Defined'] = TRUE;
-		//
-		//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks'])) {
-		//						foreach ($PLANET_BUILDINGS[$building_type_id]['Unlocks'] as $building_id => $max_amount)
-		//							$planet['Building Types Available'][$building_id] += $max_amount;
-		//					}
-		//
-		//					//define planet
-		//					if (isset($PRIMARY_BUILDINGS[$building_type_id])) {
-		//						$planet['Type ID'] = $PRIMARY_BUILDINGS[$building_type_id];
-		//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
-		//					}
+
+			if (isset($this->maxBuildings[$buildingTypeID])) {
+				return $this->maxBuildings[$buildingTypeID];
+			}
+
+			return 0;
+			//			global $PRIMARY_BUILDINGS;
+			//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
+			//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
+			//					$planet['Defined'] = TRUE;
+			//
+			//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks'])) {
+			//						foreach ($PLANET_BUILDINGS[$building_type_id]['Unlocks'] as $building_id => $max_amount)
+			//							$planet['Building Types Available'][$building_id] += $max_amount;
+			//					}
+			//
+			//					//define planet
+			//					if (isset($PRIMARY_BUILDINGS[$building_type_id])) {
+			//						$planet['Type ID'] = $PRIMARY_BUILDINGS[$building_type_id];
+			//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
+			//					}
 	}
 
+	public function getTypeID() {
+		return $this->typeID;
+	}
+	
+	public function setTypeID($num) {
+		$this->typeID = $num;
+		$this->updateTypeInfo();
+		$this->hasChanged = true;
+	}
+	
+	public function updateTypeInfo() {
+		$this->db->query('SELECT * FROM planet_type WHERE planet_type_id = ' . $this->getTypeID());
+		if ($this->db->nextRecord()) {
+			$this->setTypeName($this->db->getField('planet_type_name'));
+			$this->setTypeImage($this->db->getField('planet_image_link'));
+			$this->setTypeDescription($this->db->getField('planet_type_description'));
+		} else {
+			$this->setTypeName("No Type Defined");
+			$this->setTypeImage("image/planet.gif");
+			$this->setTypeDescription("No description defined in database, cotnact admins!");
+		}
+	}
+	//not public on purpose
+	function setTypeName($name) {
+		$this->typeName = $name;
+	}
+	
+	function setTypeImage($img) {
+		$this->typeImage = $img;
+	}
+	
+	function setTypeDescription($des) {
+		$this->typeDescription = $des;
+	}
+	
+	
+	public function getTypeImage() {
+		if (isset($this->typeImage))
+			return $this->typeImage;
+		return "Error";
+	}
+	
+	public function getTypeName() {
+		if (isset($this->typeName))
+			return $this->typeName;
+		return "Error";
+	}
+	
+	public function getTypeDescription() {
+		if (isset($this->typeDescription))
+			return $this->typeDescription;
+		return "Error";
+	}
+	
+	public function getPlanetID() {
+		return $this->palentID;
+	}
+	
+	public function setPlanetID($num) {
+		$this->typeID = $num;
+		$this->hasChanged = true;
+	}
+	
+	public function getOptions() {
+		if(!isset($this->canOptions)) {
+			// initialize opstions menu array
+			$this->canOptions = array();
+			// get options from db
+			$this->db->query('SELECT * FROM planet_type WHERE planet_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
+			// adding options to array
+			if ($this->db->nextRecord()) {
+				$this->canOptions['construction']	= $this->db->getBoolean('planet_can_construction');
+				$this->canOptions['defense']		= $this->db->getBoolean('planet_can_defense');
+				$this->canOptions['financial']		= $this->db->getBoolean('planet_can_financial');
+				$this->canOptions['stockpile']		= $this->db->getBoolean('planet_can_stockpile');
+				$this->canOptions['ownership']		= $this->db->getBoolean('planet_can_ownership');
+				$this->canOptions['armory']			= $this->db->getBoolean('planet_can_armory');
+				$this->canOptions['hangar']			= $this->db->getBoolean('planet_can_hangar');
+				$this->setTypeName($this->db->getField('planet_type_name'));
+				$this->setTypeDescription($this->db->getField('planet_type_description'));
+				$this->setTypeImage($this->db->getField('planet_image_link'));
+				return 0;
+			}
+		}	
+		return $this->canOptions;
+	}
+	
+	public function canConstruction() {
+		return $this->canOptions['construction'];
+	}
+	
+	public function canDefense() {
+		return $this->canOptions['defense'];
+	}
+
+	public function canStockpile() {
+		return $this->canOptions['stockpile'];
+	}
+
+	public function canFinancial() {
+		return $this->canOptions['financial'];
+	}
+
+	public function canOwnership() {
+		return $this->canOptions['ownership'];
+	}	
+	
+	public function canArmory() {
+		return $this->canOptions['armory'];
+	}
+	
+	public function canHangar() {
+		return $this->canOptions['hangar'];
+	}
+	
 	public function doDelayedUpdates() {
 		$this->setShields($this->getShields(true));
 		$this->delayedShieldsDelta = 0;
@@ -722,6 +848,15 @@ class SmrPlanet {
 	function getLevel() {
 		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_TURRET)) / 3;
 	}
+	
+	function getMaxLevel() {
+		$level = 0;
+		
+		foreach ($this->maxBuildings as $id => $amount) {
+			$level += $amount/3;
+		}
+		return $level;
+	}
 
 	function accuracy() {
 		if($this->hasWeapons()) {
@@ -746,7 +881,7 @@ class SmrPlanet {
 		if($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
-		if($this->getBuilding($constructionID) >= self::getMaxBuildings($constructionID)) {
+		if($this->getBuilding($constructionID) >= $this->getMaxBuildings($constructionID)) {
 			return 'This planet has reached the maximum buildings of that type.';
 		}
 		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
