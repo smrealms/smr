@@ -1034,14 +1034,15 @@ class SmrPlanet {
 		}
 
 		$return = array(
-					'KillingShot' => !$alreadyDead && $this->isDestroyed(true),
-					'TargetAlreadyDead' => $alreadyDead,
-					'Shield' => $shieldDamage,
-					'HasShields' => $this->hasShields(true),
-					'CDs' => $cdDamage,
-					'NumCDs' => $cdDamage/CD_ARMOUR,
-					'HasCDs' => $this->hasCDs(true),
-					'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
+			'KillingShot' => !$alreadyDead && $this->isDestroyed(true),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'Armour' => $armourDamage,
+			'HasShields' => $this->hasShields(true),
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage/CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(true),
+			'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
 		);
 		return $return;
 	}
