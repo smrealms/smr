@@ -1157,7 +1157,10 @@ class SmrPort {
 		$results['DeadBeforeShot'] = false;
 		$weapons =& $this->getWeapons();
 		foreach($weapons as $orderID => &$weapon) {
-			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayers[array_rand($targetPlayers)]);
+			do {
+				$targetPlayer = $targetPlayers[array_rand($targetPlayers)];
+			} while($results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] > min($results['TotalDamagePerTargetPlayer']));
+			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayer);
 			if($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
