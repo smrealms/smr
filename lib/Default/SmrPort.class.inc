@@ -1149,6 +1149,7 @@ class SmrPort {
 		$results = array('Port' => &$this, 'TotalDamage' => 0, $results['TotalDamagePerTargetPlayer'] = array());
 		foreach($targetPlayers as &$targetPlayer) {
 			$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
+			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] = 0;
 		} unset($targetPlayer);
 		if($this->isDestroyed()) {
 			$results['DeadBeforeShot'] = true;
@@ -1158,12 +1159,13 @@ class SmrPort {
 		$weapons =& $this->getWeapons();
 		foreach($weapons as $orderID => &$weapon) {
 			do {
-				$targetPlayer = $targetPlayers[array_rand($targetPlayers)];
-			} while($results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] > min($results['TotalDamagePerTargetPlayer']));
+				$targetPlayer =& $targetPlayers[array_rand($targetPlayers)];
+			} while($results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()] > min($results['TotalShotsPerTargetPlayer']));
 			$results['Weapons'][$orderID] =& $weapon->shootPlayerAsPort($this, $targetPlayer);
+			$results['TotalShotsPerTargetPlayer'][$targetPlayer->getAccountID()]++;
 			if($results['Weapons'][$orderID]['Hit']) {
 				$results['TotalDamage'] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
-				$results['TotalDamagePerTargetPlayer'][$results['Weapons'][$orderID]['TargetPlayer']->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
+				$results['TotalDamagePerTargetPlayer'][$targetPlayer->getAccountID()] += $results['Weapons'][$orderID]['ActualDamage']['TotalDamage'];
 			}
 		}
 		if($this->hasCDs()) {
