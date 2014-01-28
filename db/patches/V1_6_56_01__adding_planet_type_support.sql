@@ -25,14 +25,6 @@ CREATE TABLE IF NOT EXISTS `planet_can_build` (
 	`exp_gain` int(10) unsigned NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO `planet_can_build` (`planet_type_id`, `construction_id`, `max_amount`, `cost_time`, `exp_gain`) VALUES 
-('1', '1', '25', '10000', '90'),
-('1', '2', '100', '10000', '180'),
-('1', '3', '10', '10000', '540'),
-('2', '1', '50', '10000', '90'),
-('2', '2', '0', '10000', '180'),
-('2', '3', '15', '10000', '540');
-
 ALTER TABLE `planet`
 ADD `planet_type_id` int(10) unsigned NOT NULL DEFAULT '1';
 
@@ -44,3 +36,19 @@ UPDATE `planet_construction`
 SET `construction_description` = 'Increases planet&rsquo;s maximum drone capacity by 20 drones' WHERE `construction_id` = 2;
 UPDATE `planet_construction`
 SET `construction_description` = 'Builds a turret capable of dealing 250 damage to enemy ships when fired on' WHERE `construction_id` = 3;
+
+ALTER TABLE `planet`
+ADD `armour` int(10) unsigned NOT NULL DEFAULT '0' AFTER shields;
+
+INSERT INTO `planet_construction` (`construction_id`, `construction_name`, `construction_description`, `max_construction`, `exp_gain`) VALUES 
+(4, 'Bunker', 'Increases planet&rsquo;s maximum armour capacity by 100 armour', 0, 90);
+
+INSERT INTO `planet_can_build` (`planet_type_id`, `construction_id`, `max_amount`, `cost_time`, `exp_gain`) VALUES 
+('1', '1', '25', '10000', '90'),
+('1', '2', '100', '10000', '180'),
+('1', '3', '10', '10000', '540'),
+('1', '4', '0', '10000', '90'),
+('2', '1', '25', '10000', '90'),
+('2', '2', '0', '10000', '180'),
+('2', '3', '15', '10000', '540'),
+('2', '4', '25', '10000', '90');
