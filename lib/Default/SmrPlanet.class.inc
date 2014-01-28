@@ -18,6 +18,7 @@ class SmrPlanet {
 	protected $ownerID;
 	protected $password;
 	protected $shields;
+	protected $armour;
 	protected $drones;
 	protected $credits;
 	protected $bonds;
@@ -168,6 +169,7 @@ class SmrPlanet {
 			$this->ownerID			= $this->db->getInt('owner_id');
 			$this->password			= $this->db->getField('password');
 			$this->shields			= $this->db->getInt('shields');
+			$this->armour 			= $this->db->getInt('armour');
 			$this->drones			= $this->db->getInt('drones');
 			$this->credits			= $this->db->getInt('credits');
 			$this->bonds			= $this->db->getInt('bonds');
@@ -423,7 +425,7 @@ class SmrPlanet {
 			$this->shields=$shields;
 			$this->hasChanged = true;
 		}
-
+		
 		public function decreaseShields($number, $delayed = false) {
 			if($number == 0) {
 				return;
@@ -450,6 +452,57 @@ class SmrPlanet {
 
 		public function getMaxShields() {
 			return $this->getBuilding(PLANET_GENERATOR) * PLANET_GENERATOR_SHIELDS;
+		}
+		
+		public function getArmour($delayed = false) {
+			return $this->armour + ($delayed?$this->delayedArmourDelta:0);
+		}
+
+		public function hasArmour($delayed = false) {
+			return $this->getShields($delayed)>0;
+		}
+
+		public function setArmour($armour) {
+			if($armour<0) {
+				$armour=0;
+			}
+			if ($armour > $this->getMaxArmour()) {
+				$armour = $this->getMaxArmour();
+			}
+			if($this->armour == $armour) {
+				return;
+			}
+			$this->armour = $armour;
+			$this->hasChanged = true;
+		}		
+		
+
+		public function decreaseArmour($number, $delayed = false) {
+			if($number == 0) {
+				return;
+			}
+			if($delayed===false) {
+				$this->setArmour($this->getArmour() - $number);
+			}
+			else {
+				$this->delayedArmourDelta -= $number;
+			}
+		}
+
+		public function increaseArmour($number, $delayed = false) {
+			if($number == 0) {
+				return;
+			}
+			if($delayed===false) {
+				$this->setArmour($this->getArmour() + $number);
+			}
+			else {
+				$this->delayedArmourDelta += $number;
+			}
+		}
+
+		public function getMaxArmour() {
+			return $this->getBuilding(PLANET_BUNKER) * PLANET_BUNKER_ARMOUR;
 		}
 
 		public function getCDs($delayed = false) {
@@ -793,6 +846,7 @@ class SmrPlanet {
 									password = '.$this->db->escapeString($this->password) .',
 									planet_name = ' . $this->db->escapeString($this->planetName) . ',
 									shields = ' . $this->db->escapeNumber($this->shields) . ',
+									armour = ' . $this->db->escapeNumber($this->armour) . ',
 									drones = ' . $this->db->escapeNumber($this->drones) . ',
 									credits = ' . $this->db->escapeNumber($this->credits) . ',
 									bonds = ' . $this->db->escapeNumber($this->bonds) . ',
@@ -844,15 +898,18 @@ class SmrPlanet {
 	}
 
 	function getLevel() {
-		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_TURRET)) / 3;
+		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_BUNKER) + $this->getBuilding(PLANET_TURRET)) / 3;
 	}
 	
 	function getMaxLevel() {
 		$level = 0;
-		
-		foreach ($this->maxBuildings as $id => $amount) {
-			$level += $amount/3;
-		}
+		$level += $this->maxBuildings[PLANET_GENERATOR];
+		$level += $this->maxBuildings[PLANET_HANGAR];
+		$level += $this->maxBuildings[PLANET_BUNKER];
+		$level += $this->maxBuildings[PLANET_TURRET];
+		//foreach ($this->maxBuildings as $id => $amount) {
+		//	$level += $amount/3;
+		//}
 		return $level;
 	}
 
@@ -1100,7 +1157,7 @@ class SmrPlanet {
 		// Chance of planetary structure damage = For every 70 damage there is a 15% chance of destroying a structure.
 		// Turrets have a 1 in 6 chance of being destroyed
 		// Hangers have a 2 in 6 chance of being destroyed
-		// Generators 3 in 6 chance of being destroyed
+		// Generators/Bunkers 3 in 6 chance of being destroyed
 		//iterate over all chances
 		for ($i = 0; $damage > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damage-=self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE) {
 			//15% chance to destroy something
@@ -1135,7 +1192,15 @@ class SmrPlanet {
 							$this->checkForExcessDefense();
 							break;
 						}
-						//if no gens then we fall through
+						//if no gens try bunker
+						if ($this->hasBuilding(PLANET_BUNKER)) {
+							$results .= 'This team destroys <span style ="color:red;">1</span> generator.<br />';
+							$this->destroyBuilding(PLANET_BUNKER, 1);
+							$this->checkForExcessDefense();
+							break;
+						}
+						
+						//if no bunker then we fall through
 					default:
 						//very rare that we will not have a gen to destroy.
 						$results .= 'A planetary structure barely survived the onslaught.<br />';
@@ -1167,14 +1232,16 @@ class SmrPlanet {
 		}
 
 		$return = array(
-					'KillingShot' => !$alreadyDead && $this->isDestroyed(true),
-					'TargetAlreadyDead' => $alreadyDead,
-					'Shield' => $shieldDamage,
-					'HasShields' => $this->hasShields(true),
-					'CDs' => $cdDamage,
-					'NumCDs' => $cdDamage/CD_ARMOUR,
-					'HasCDs' => $this->hasCDs(true),
-					'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
+			'KillingShot' => !$alreadyDead && $this->isDestroyed(true),
+			'TargetAlreadyDead' => $alreadyDead,
+			'Shield' => $shieldDamage,
+			'Armour' => $armourDamage,
+			'HasShields' => $this->hasShields(true),
+			'HasArmour' => $this->hasArmour(true),
+			'CDs' => $cdDamage,
+			'NumCDs' => $cdDamage/CD_ARMOUR,
+			'HasCDs' => $this->hasCDs(true),
+			'TotalDamage' => $shieldDamage+$cdDamage+$armourDamage
 		);
 		return $return;
 	}

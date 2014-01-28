@@ -30,5 +30,17 @@
 			</td>
 		</tr>
 	</form>
+	
+	<form name="TransferArmourForm" method="POST" action="<?php echo $TransferArmourHref; ?>">
+		<tr>
+			<td>Armour</td>
+			<td align="center"><?php echo $ThisShip->getArmour(); ?></td>
+			<td align="center"><?php echo $ThisPlanet->getArmour(); ?></td>
+			<td align="center"><input type="number" name="amount" value="<?php echo min($ThisShip->getArmour()-1,$ThisPlanet->getMaxArmour()-($ThisPlanet->getArmour())); ?>" id="InputFields" size="4" class="center"></td>
+			<td>
+				<input type="submit" name="action" value="Ship" id="InputFields" />&nbsp;<input type="submit" name="action" value="Planet" id="InputFields" />
+			</td>
+		</tr>
+	</form>
 
 </table>
