@@ -295,8 +295,8 @@ elseif ($submit == 'Edit Sector') {
 	else
 		$sector->disableLink('Right');
 	//update planet
-	if ($_POST['plan_type'] == 'Uninhab') {
-		$sector->createPlanet();
+	if ($_POST['plan_type'] != '0') {
+		$sector->createPlanet($_POST['plan_type']);
 	}
 //	elseif ($_POST['plan_type'] == 'NPC') {
 //		$GAL_PLANETS[$this_sec]['Inhabitable'] = 1;

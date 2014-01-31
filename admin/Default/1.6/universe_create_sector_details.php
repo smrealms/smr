@@ -19,7 +19,19 @@ $PHP_OUTPUT.= '></td><td width="90%" class="center">';
 $PHP_OUTPUT.= 'Sector: ' . $sector->getSectorID() . '<br /><br />';
 $PHP_OUTPUT.= 'Planet Type: <select name="plan_type">';
 $PHP_OUTPUT.= '<option value="0">No Planet</option>';
-$PHP_OUTPUT.= '<option value="Uninhab"' . ($sector->hasPlanet() ? ' selected' : '') . '>Uninhabitable Planet</option>';
+
+$selected_type = 0;
+if ($sector->hasPlanet()) {
+	$selected_type = $sector->getPlanet()->getTypeID();
+}
+
+$db->query('SELECT * FROM planet_type ');
+while ($db->nextRecord()) {
+	$type = $db->getInt('planet_type_id');
+	$PHP_OUTPUT.= '<option value="'.$type.'"'.($type == $selected_type ? ' selected' : '').'>'.$db->getField('planet_type_name').'</option>';
+
+}
+//$PHP_OUTPUT.= '<option value="Uninhab"' . ($sector->hasPlanet() ? ' selected' : '') . '>Uninhabitable Planet</option>';
 //$PHP_OUTPUT.= '<option value="NPC"' . ($planet_type == 'NPC' ? ' selected' : '') . '>NPC Planet</option>';
 $PHP_OUTPUT.= '</select><br /><br />';
 

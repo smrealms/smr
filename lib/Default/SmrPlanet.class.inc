@@ -38,6 +38,7 @@ class SmrPlanet {
 	protected $hasChangedBuildings = array();
 	protected $hasStoppedBuilding = array();
 	protected $isNew = false;
+	protected $maxAttackers;
 
 	protected $delayedShieldsDelta = 0;
 	protected $delayedCDsDelta = 0;
@@ -70,15 +71,15 @@ class SmrPlanet {
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
-	public static function &createPlanet($gameID,$sectorID) {
+	public static function &createPlanet($gameID,$sectorID,$type=1) {
 		if(!self::getPlanet($gameID,$sectorID)->exists()) {
 			require_once(get_file_loc('SmrGame.class.inc'));
 			$inhabitableTime = SmrGame::getGame($gameID)->getStartDate() + pow(mt_rand(45, 85), 3);
 
 			// insert planet into db
 			$db = new SmrMySqlDatabase();
-			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time)
-				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ')');
+			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
+				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($type) . ')');
 		}
 		return self::getPlanet($gameID,$sectorID,true);
 		//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
@@ -459,7 +460,7 @@ class SmrPlanet {
 		}
 
 		public function hasArmour($delayed = false) {
-			return $this->getShields($delayed)>0;
+			return $this->getArmour($delayed)>0;
 		}
 
 		public function setArmour($armour) {
@@ -556,7 +557,7 @@ class SmrPlanet {
 		}
 
 		public function isDestroyed($delayed = false) {
-			return !$this->hasCDs($delayed) && !$this->hasShields($delayed);
+			return !$this->hasCDs($delayed) && !$this->hasShields($delayed) && !$this->hasArmour($delayed);
 		}
 
 		public function exists() {
@@ -795,6 +796,7 @@ class SmrPlanet {
 				$this->setTypeName($this->db->getField('planet_type_name'));
 				$this->setTypeDescription($this->db->getField('planet_type_description'));
 				$this->setTypeImage($this->db->getField('planet_image_link'));
+				$this->setMaxAttackers($this->db->getInt('planet_max_attackers'));
 				return 0;
 			}
 		}	
@@ -834,6 +836,14 @@ class SmrPlanet {
 		$this->delayedShieldsDelta = 0;
 		$this->setCDs($this->getCDs(true));
 		$this->delayedCDsDelta = 0;
+	}
+	
+	public function getMaxAttackers() {
+		return $this->maxAttackers;
+	}
+	
+	public function setMaxAttackers($value) {
+		$this->maxAttackers = $value;
 	}
 
 	public function update() {
@@ -898,7 +908,7 @@ class SmrPlanet {
 	}
 
 	function getLevel() {
-		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_BUNKER) + $this->getBuilding(PLANET_TURRET)) / 3;
+		return (($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_BUNKER) + $this->getBuilding(PLANET_TURRET)) / 3);
 	}
 	
 	function getMaxLevel() {
@@ -910,7 +920,7 @@ class SmrPlanet {
 		//foreach ($this->maxBuildings as $id => $amount) {
 		//	$level += $amount/3;
 		//}
-		return $level;
+		return ($level / 3);
 	}
 
 	function accuracy() {
@@ -1217,17 +1227,34 @@ class SmrPlanet {
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if(!$alreadyDead) {
-			if($damage['Shield'] || !$this->hasShields(true)) {
+			if($damage['Shield'] && $this->hasShields(true)) {
 				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']),$delayed);
+				$damage['Shield'] -= $shieldDamage;
 				$damage['MaxDamage'] -= $shieldDamage;
+				
 				if(!$this->hasShields(true) && ($shieldDamage == 0 || $damage['Rollover'])) {
-					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
-					$damage['Armour'] -= $cdDamage;
-					$damage['MaxDamage'] -= $cdDamage;
+					if ($this->hasCDs(true)) {
+						$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
+						$damage['Armour'] -= $cdDamage;
+						$damage['MaxDamage'] -= $cdDamage;
+					}
+					if ($damage['Armour'] and !$this->hasArmour(true) ) {
+						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
+						$damage['Armour'] -= $armourDamage;
+						$damage['MaxDamage'] -= $armourDamage;
+					}
 				}
+				
 			}
-			else { //hit drones behind shields
+			if ($this->hasCDs(true)) { //hit drones behind shields
 				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'],$damage['Armour'])*DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT),$delayed);
+				$damage['Armour'] -= $cdDamage;
+				$damage['MaxDamage'] -= $cdDamage;
+			}
+			if ($damage['Armour'] and !$this->hasShields(true)) { //hit armour 
+				$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
+				$damage['Armour'] -= $armourDamage;
+				$damage['MaxDamage'] -= $armourDamage;
 			}
 		}
 
@@ -1256,6 +1283,12 @@ class SmrPlanet {
 		$actualDamage = min($this->getCDs(true),floor($damage/CD_ARMOUR));
 		$this->decreaseCDs($actualDamage, $delayed);
 		return $actualDamage*CD_ARMOUR;
+	}
+	
+	protected function doArmourDamage($damage, $delayed) {
+		$actualDamage = min($this->getArmour(true),$damage);;
+		$this->decreaseArmour($actualDamage, $delayed);
+		return $actualDamage;
 	}
 
 	public function creditCurrentAttackersForKill() {

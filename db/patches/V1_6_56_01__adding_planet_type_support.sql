@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS `planet_type` (
 	`planet_type_name` varchar( 100 ),
 	`planet_type_description` varchar( 100 ),
 	`planet_image_link` varchar( 100 ),
+	`planet_max_attackers` int(10) usigned NOT NULL DEFAULT '10',
 	`planet_can_construction` 	enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE',
 	`planet_can_defense` 		enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE',
 	`planet_can_financial` 		enum('TRUE','FALSE') NOT NULL DEFAULT 'FALSE',
@@ -13,9 +14,9 @@ CREATE TABLE IF NOT EXISTS `planet_type` (
 	
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
-INSERT INTO `planet_type` (`planet_type_id`, `planet_type_name`, `planet_type_description`, `planet_image_link`, `planet_can_construction`, `planet_can_defense`, `planet_can_financial`, `planet_can_stockpile`, `planet_can_ownership`, `planet_can_armory`, `planet_can_hangar`) VALUES
-(NULL, 'Terran Planet', 'A lush world, with forests, seas, sweeping meadows, and indigenous lifeforms', 'images/planet1.png', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'FALSE', 'FALSE'),
-(NULL, 'Arid Planet', 'A world mostly devoid of surface water, but capable of supporting life', 'images/planet2.png', 'TRUE', 'TRUE', 'FALSE', 'TRUE', 'TRUE', 'TRUE', 'TRUE');
+INSERT INTO `planet_type` (`planet_type_id`, `planet_type_name`, `planet_type_description`, `planet_image_link`, `planet_max_attackers`, `planet_can_construction`, `planet_can_defense`, `planet_can_financial`, `planet_can_stockpile`, `planet_can_ownership`, `planet_can_armory`, `planet_can_hangar`) VALUES
+(NULL, 'Terran Planet', 'A lush world, with forests, seas, sweeping meadows, and indigenous lifeforms', 'images/planet1.png', '10', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'TRUE', 'FALSE', 'FALSE'),
+(NULL, 'Arid Planet', 'A world mostly devoid of surface water, but capable of supporting life', 'images/planet2.png', 'TRUE', '5', 'TRUE', 'FALSE', 'TRUE', 'TRUE', 'TRUE', 'TRUE');
 
 CREATE TABLE IF NOT EXISTS `planet_can_build` (
 	`planet_type_id` int(10) unsigned NOT NULL DEFAULT '0',
