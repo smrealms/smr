@@ -658,8 +658,8 @@ class SmrSector {
 		return SmrPlanet::getPlanet($this->getGameID(),$this->getSectorID());
 	}
 
-	public function &createPlanet() {
-		return SmrPlanet::createPlanet($this->getGameID(),$this->getSectorID());
+	public function &createPlanet($type=1) {
+		return SmrPlanet::createPlanet($this->getGameID(),$this->getSectorID(), $type);
 	}
 
 	public function removePlanet() {
@@ -804,7 +804,7 @@ class SmrSector {
 				}
 			}
 		}
-		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, MAXIMUM_PLANET_FLEET_SIZE);
+		return self::limitFightingTraders($fightingPlayers, $attackingPlayer, min($defendingPlanet->getMaxAttackers(),MAXIMUM_PLANET_FLEET_SIZE));
 	}
 
 	public function &getFightingTraders(AbstractSmrPlayer &$attackingPlayer, AbstractSmrPlayer &$defendingPlayer, $checkForCloak=false) {
