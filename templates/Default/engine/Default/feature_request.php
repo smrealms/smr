@@ -1,12 +1,12 @@
 <?php
 if(!$ShowCurrent) {
-	?><p><a href="<?php echo Globals::getFeatureRequestHREF(); ?>">View Current Feature Requests (<?php echo $CurrentTotal; ?>)</a></p><?php
+	?><p><a href="<?php echo Globals::getFeatureRequestHREF(); ?>">View New Requests (<?php echo $CurrentTotal; ?>)</a></p><?php
 }
 if($Status != 'Opened' || $ShowCurrent) {
-	?><p><a href="<?php echo $ShowOldFeaturesHref; ?>">View Old Requests (<?php echo $OldTotal; ?>)</a></p><?php
+	?><p><a href="<?php echo $ShowOldFeaturesHref; ?>">View All Open Requests (<?php echo $OldTotal; ?>)</a></p><?php
 }
 if($Status != 'Implemented') {
-	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">View Previously Implemented Features (<?php echo $PreviousImplementedTotal; ?>)</a></p><?php
+	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">View Implemented Requests (<?php echo $PreviousImplementedTotal; ?>)</a></p><?php
 }
 if($Status != 'Rejected') {
 	?><p><a href="<?php echo $ShowRejectedFeaturesHref; ?>">View Rejected Requests (<?php echo $RejectedTotal; ?>)</a></p><?php
