@@ -1,6 +1,7 @@
 <?php
-if (!Globals::isFeatureRequestOpen())
+if (!Globals::isFeatureRequestOpen()) {
 	create_error('Feature requests are currently not being accepted.');
+}
 
 $template->assign('PageTopic','Feature Request');
 
@@ -24,6 +25,19 @@ $template->assign('ShowRejectedFeaturesHref',SmrSession::getNewHREF($container))
 $showCurrent = (!isset($var['ShowOld']) || $var['ShowOld']!==true) && $var['Status']=='Opened';
 $template->assign('ShowCurrent',$showCurrent);
 $template->assign('Status',$var['Status']);
+
+if($var['Status'] != 'Implemented') {
+	$template->assign('PreviousImplementedTotal', getFeaturesCount('Implemented'));
+}
+if($var['Status'] != 'Opened' || !$showCurrent) {
+	$template->assign('CurrentTotal', getFeaturesCount('Opened', true));
+}
+if($var['Status'] != 'Opened' || $showCurrent) {
+	$template->assign('OldTotal', getFeaturesCount('Opened'));
+}
+if($var['Status'] != 'Rejected') {
+	$template->assign('RejectedTotal', getFeaturesCount('Rejected'));
+}
 
 if($var['Status'] == 'Opened') {
 	$featureVotes = array();
@@ -80,4 +94,18 @@ if ($db->getNumRows() > 0) {
 }
 
 $template->assign('FeatureRequestFormHREF',SmrSession::getNewHREF(create_container('feature_request_processing.php', '')));
+
+function getFeaturesCount($status, $onlyCurrent = false) {
+	global $db;
+	$db->query('
+		SELECT COUNT(*) AS count
+		FROM feature_request
+		JOIN feature_request_comments super USING(feature_request_id)
+		WHERE comment_id = 1
+		AND status = ' . $db->escapeString($status) .
+		($onlyCurrent?' AND EXISTS(SELECT posting_time FROM feature_request_comments WHERE feature_request_id = super.feature_request_id AND posting_time > ' . (TIME-14*86400) .')':'')
+	);
+	$db->nextRecord();
+	return $db->getInt('count');
+}
 ?>
