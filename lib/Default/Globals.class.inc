@@ -66,20 +66,25 @@ class Globals {
 				$PLANET_BUILDINGS[$buildingID]['ConstructionID'] = $buildingID;
 				$PLANET_BUILDINGS[$buildingID]['Name'] = self::$db->getField('construction_name');
 				$PLANET_BUILDINGS[$buildingID]['Description'] = self::$db->getField('construction_description');
+				$PLANET_BUILDINGS[$buildingID]['Image'] = self::$db->getField('construction_image');
 //				$PLANET_BUILDINGS[$buildingID]['Area'] = array(self::$db->getField('area'),self::$db->getField('metals'),self::$db->getField('energy'));
 //				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = self::$db->getField('max_construction');
 //				$PLANET_BUILDINGS[$buildingID]['ExpGain'] = self::$db->getField('exp_gain');
 
-				$PLANET_BUILDINGS[$buildingID]['Build Time'] = 0;
-				$db2->query('SELECT * FROM planet_cost_time WHERE construction_id=' . self::$db->escapeNumber($buildingID));
-				while($db2->nextRecord()) {
-					$PLANET_BUILDINGS[$buildingID]['Build Time'] += $db2->getInt('amount');
-				}
+//				$PLANET_BUILDINGS[$buildingID]['Build Time'] = 0;
 
-				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = 0;
-				$db2->query('SELECT * FROM planet_cost_credits WHERE construction_id=' . self::$db->escapeNumber($buildingID));
+//				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = 0;
+				$PLANET_BUILDINGS[$buildingID]['Credit Cost'] = array();
+				$PLANET_BUILDINGS[$buildingID]['Build Time'] = array();
+				$PLANET_BUILDINGS[$buildingID]['ExpGain'] = array();
+				$PLANET_BUILDINGS[$buildingID]['Max Amount'] = array();
+				
+				$db2->query('SELECT * FROM planet_can_build WHERE construction_id=' . self::$db->escapeNumber($buildingID));
 				while($db2->nextRecord()) {
-					$PLANET_BUILDINGS[$buildingID]['Credit Cost'] += $db2->getInt('amount');
+					$PLANET_BUILDINGS[$buildingID]['Credit Cost'][$db2->getInt('planet_type_id')] = $db2->getInt('cost_credit');
+					$PLANET_BUILDINGS[$buildingID]['Build Time'][$db2->getInt('planet_type_id')] = $db2->getInt('cost_time');
+					$PLANET_BUILDINGS[$buildingID]['ExpGain'][$db2->getInt('planet_type_id')] = $db2->getInt('exp_gain');
+					$PLANET_BUILDINGS[$buildingID]['Max Amount'][$db2->getInt('planet_type_id')] = $db2->getInt('max_amount');
 				}
 
 				$PLANET_BUILDINGS[$buildingID]['Goods'] = array();
@@ -87,7 +92,6 @@ class Globals {
 				while($db2->nextRecord()) {
 					$PLANET_BUILDINGS[$buildingID]['Goods'][$db2->getInt('good_id')] = $db2->getInt('amount');
 				}
-
 //				global $PLANET_RESEARCH;
 //				$PLANET_BUILDINGS[$buildingID]['Research'] = array();
 //				$researchResult = query('SELECT * FROM planet_building_research_required WHERE construction_id=' . $buildingID);

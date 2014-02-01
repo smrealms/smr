@@ -128,15 +128,42 @@ function create_trader_menu() {
 						array('Link'=>Globals::getTraderBountiesHREF(),'Text'=>'Bounties')));
 }
 
-function create_planet_menu() {
+function create_planet_menu($planet) {
 	global $template;
-	$template->assign('MenuItems', array(
-						array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main'),
-						array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction'),
-						array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defenses'),
-						array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership'),
-						array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile'),
-						array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial')));
+	
+	$menu_array = array();
+	$menu_array[] = array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main');
+	if ($planet->canConstruction()) {
+		$menu_array[] = array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction');
+	}
+	if ($planet->canDefense()) {
+		$menu_array[] = array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defense');
+	}
+	if ($planet->canOwnership()) {
+		$menu_array[] = array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership');
+	}
+	if ($planet->canStockpile()) {
+		$menu_array[] = array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile');
+	}
+	if ($planet->canFinancial()) {
+		$menu_array[] = array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial');
+	}
+	//if ($planet->canArmory()) {
+	//	$menu_array[] = array('Link'=>Globals::getPlanetArmoryHREF(),'Text'=>'Armory');
+	//}
+	//if ($planet->canHangar()) {
+	//	$menu_array[] = array('Link'=>Globals::getPlanetHangarHREF(),'Text'=>'Hangar');
+	//}
+	
+	$template->assign('MenuItems', $menu_array);
+	
+	//	$template->assign('MenuItems', array(
+	//						array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main'),
+	//						array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction'),
+	//						array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defenses'),
+	//						array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership'),
+	//						array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile'),
+	//		
 }
 
 /*

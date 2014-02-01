@@ -30,3 +30,80 @@ UPDATE location_type lt SET lt.location_image = 'images/hardware2.png' WHERE lt.
 
 #Allships
 UPDATE location_type lt SET lt.location_image = 'images/shipdealer.png' WHERE lt.location_image = 'images/shipdealer.gif';
+
+#Add colors for races
+ALTER TABLE `race` 
+ADD `race_color` VARCHAR(6) AFTER `race_description`;
+
+UPDATE `race` 
+SET `race_color` = 'FF8080' WHERE `race_id` = 9;
+UPDATE `race` 
+SET `race_color` = '804040' WHERE `race_id` = 8; 
+UPDATE `race` 
+SET `race_color` = '800000' WHERE `race_id` = 7; 
+UPDATE `race` 
+SET `race_color` = '00AA00' WHERE `race_id` = 6; 
+UPDATE `race` 
+SET `race_color` = 'BFBFFF' WHERE `race_id` = 5; 
+UPDATE `race` 
+SET `race_color` = '0000FF' WHERE `race_id` = 4; 
+UPDATE `race` 
+SET `race_color` = 'FF8000' WHERE `race_id` = 3; 
+UPDATE `race` 
+SET `race_color` = 'FF00FF' WHERE `race_id` = 2;
+
+#Add new bank icons
+UPDATE `location_type`
+SET `location_image` = 'images/bank5.png' WHERE `location_type_id` = 701;
+UPDATE `location_type`
+SET `location_image` = 'images/bank3.png' WHERE `location_type_id` = 702;
+UPDATE `location_type`
+SET `location_image` = 'images/bank2.png' WHERE `location_type_id` = 703;
+UPDATE `location_type`
+SET `location_image` = 'images/bank4.png' WHERE `location_type_id` = 704;
+
+#Add new shipdealer icons
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_als.png' WHERE `location_type_id` = 401;
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_cre.png' WHERE `location_type_id` = 402;
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_hum.png' WHERE `location_type_id` = 403;
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_ikt.png' WHERE `location_type_id` = 404;
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_sal.png' WHERE `location_type_id` = 405;
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_the.png' WHERE `location_type_id` = 406;
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_wq.png' WHERE `location_type_id` = 407;
+UPDATE `location_type`
+SET `location_image` = 'images/shipdealer_nij.png' WHERE `location_type_id` = 408;
+
+#Add new racial uno icons
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_als.png' WHERE `location_type_id` = 901;
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_cre.png' WHERE `location_type_id` = 902;
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_hum.png' WHERE `location_type_id` = 903;
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_ikt.png' WHERE `location_type_id` = 904;
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_sal.png' WHERE `location_type_id` = 905;
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_the.png' WHERE `location_type_id` = 906;
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_wq.png' WHERE `location_type_id` = 907;
+UPDATE `location_type`
+SET `location_image` = 'images/hardware_nij.png' WHERE `location_type_id` = 908;
+
+#Add new bar icons
+UPDATE `location_type`
+SET `location_image` = 'images/bar2.png' WHERE `location_type_id` = 801;
+UPDATE `location_type`
+SET `location_image` = 'images/bar3.png' WHERE `location_type_id` = 802;
+UPDATE `location_type`
+SET `location_image` = 'images/bar4.png' WHERE `location_type_id` = 803;
+UPDATE `location_type`
+SET `location_image` = 'images/bar5.png' WHERE `location_type_id` = 804;
