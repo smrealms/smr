@@ -295,9 +295,16 @@ elseif ($submit == 'Edit Sector') {
 	else
 		$sector->disableLink('Right');
 	//update planet
-	if ($_POST['plan_type'] != '0') {
+	if ($_POST['plan_type'] != '0' && !$sector->hasPlanet()) {
 		$sector->createPlanet($_POST['plan_type']);
 	}
+	elseif ($_POST['plan_type'] != '0' && $sector->hasPlanet()) {
+		$type = $sector->getPlanet()->getTypeID();
+		if ($_POST['plan_type'] != $type) {
+			$sector->getPlanet()->setTypeID($_POST['plan_type']);
+		}
+	}
+	
 //	elseif ($_POST['plan_type'] == 'NPC') {
 //		$GAL_PLANETS[$this_sec]['Inhabitable'] = 1;
 //		$GAL_PLANETS[$this_sec]['Owner'] = 0;

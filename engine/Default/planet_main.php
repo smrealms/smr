@@ -7,7 +7,7 @@ $planet =& $player->getSectorPlanet();
 $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$player->getSectorID().']');
 
 require_once(get_file_loc('menu.inc'));
-create_planet_menu();
+create_planet_menu($planet);
 
 //echo the dump cargo message or other message.
 if (isset($var['errorMsg'])) {

@@ -8,7 +8,7 @@ class SmrPlanet {
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
 	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 600; // 10 minutes
 
-	protected $maxBuildings;
+	protected $maxBuildings = null;
 
 	protected $db;
 
@@ -39,6 +39,7 @@ class SmrPlanet {
 	protected $hasStoppedBuilding = array();
 	protected $isNew = false;
 	protected $maxAttackers;
+	protected $maxLanded;
 
 	protected $delayedShieldsDelta = 0;
 	protected $delayedCDsDelta = 0;
@@ -180,17 +181,13 @@ class SmrPlanet {
 			
 			$this->getOptions();
 			$this->getStockpile();
+			$this->setMaxBuildings();
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 			$this->calculateInterest();
-		
 			
-			$this->maxBuildings = array();
-
-			$this->db->query('SELECT construction_id, max_amount FROM planet_can_build WHERE planet_type_id='.$this->getTypeID());
-			while ($this->db->nextRecord()) {
-				$this->maxBuildings[$this->db->getInt('construction_id')] = $this->db->getInt('max_amount');
-			}
+			
+			
 		
 		}
 		//		else if($create) {
@@ -475,7 +472,7 @@ class SmrPlanet {
 		}
 		$this->armour = $armour;
 		$this->hasChanged = true;
-	}		
+	}
 
 	public function decreaseArmour($number, $delayed = false) {
 		if($number == 0) {
@@ -663,11 +660,18 @@ class SmrPlanet {
 	function getCurrentlyBuilding() {
 		if(!isset($this->currentlyBuilding)) {
 			$this->currentlyBuilding = array();
-			$this->db->query('SELECT * FROM planet_is_building WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
+
+			$this->db->query('SELECT * FROM planet_is_building pi, planet_can_build pc WHERE pi.game_id = ' 
+				. $this->db->escapeNumber($this->getGameID()) . ' AND pi.sector_id = ' 
+				. $this->db->escapeNumber($this->getSectorID())
+				. ' AND pi.construction_id = pc.construction_id AND pc.planet_type_id = '.$this->getTypeID());
+			
+			
+			
 			while($this->db->nextRecord()) {
 				if($this->db->getInt('time_complete') <= TIME) {
 					$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-					$expGain = $PLANET_BUILDINGS[$this->db->getInt('construction_id')]['ExpGain'];
+					$expGain = $this->db->getInt('exp_gain');
 					$player =& SmrPlayer::getPlayer($this->db->getInt('constructor_id'),$this->getGameID());
 					$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
 					$player->increaseExperience($expGain);
@@ -689,41 +693,79 @@ class SmrPlanet {
 		return $this->currentlyBuilding;
 	}
 
-		public function getMaxBuildings($buildingTypeID=false) {
-			if($buildingTypeID===false) {
-				return $this->$maxBuildings;
-			}
-
-			if (isset($this->maxBuildings[$buildingTypeID])) {
-				return $this->maxBuildings[$buildingTypeID];
-			}
-
-			return 0;
-			//			global $PRIMARY_BUILDINGS;
-			//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
-			//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
-			//					$planet['Defined'] = TRUE;
-			//
-			//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks'])) {
-			//						foreach ($PLANET_BUILDINGS[$building_type_id]['Unlocks'] as $building_id => $max_amount)
-			//							$planet['Building Types Available'][$building_id] += $max_amount;
-			//					}
-			//
-			//					//define planet
-			//					if (isset($PRIMARY_BUILDINGS[$building_type_id])) {
-			//						$planet['Type ID'] = $PRIMARY_BUILDINGS[$building_type_id];
-			//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
-			//					}
+	public function getMaxBuildings($buildingTypeID=false) {
+		if (!isset($this->maxBuildings) || empty($this->maxBuildings)) {
+			$this->setMaxBuildings();
+		}
+		if($buildingTypeID===false && isset($this->maxBuildings)) {
+			return $this->$maxBuildings;
+		}
+		
+		if (isset($this->maxBuildings[$buildingTypeID]))
+			return $this->maxBuildings[$buildingTypeID];
+		return 0;
+		//			global $PRIMARY_BUILDINGS;
+		//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
+		//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
+		//					$planet['Defined'] = TRUE;
+		//
+		//					if (isset($PLANET_BUILDINGS[$building_type_id]['Unlocks'])) {
+		//						foreach ($PLANET_BUILDINGS[$building_type_id]['Unlocks'] as $building_id => $max_amount)
+		//							$planet['Building Types Available'][$building_id] += $max_amount;
+		//					}
+		//
+		//					//define planet
+		//					if (isset($PRIMARY_BUILDINGS[$building_type_id])) {
+		//						$planet['Type ID'] = $PRIMARY_BUILDINGS[$building_type_id];
+		//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
+		//					}
 	}
+	
+	public function setMaxBuildings() {
+		$this->maxBuildings = array();
 
+		$this->db->query('SELECT construction_id, max_amount FROM planet_can_build WHERE planet_type_id='.$this->getTypeID());
+		while ($this->db->nextRecord()) {
+			$this->maxBuildings[$this->db->getInt('construction_id')] = $this->db->getInt('max_amount');
+		}
+	}
+	
+	
 	public function getTypeID() {
 		return $this->typeID;
 	}
 	
 	public function setTypeID($num) {
 		$this->typeID = $num;
-		$this->updateTypeInfo();
+		$this->db->query('UPDATE `planet` SET planet_type_id = '.$num.' WHERE game_id = ' . $this->getGameID()
+			. ' AND sector_id = '.$this->getSectorID());
+			
+		//this will allow get to load new set from db
+		unset($this->canOptions);
+		
+		//trim buildings first
+		$this->setMaxBuildings();
+		foreach ($this->buildings as $id => $amt) {
+			if ($this->getMaxBuildings($id) < $amt) {
+				$this->destroyBuilding($id,$amt - $this->getMaxBuildings($id));
+			}
+		}
+		
+		//trim excess stockpile
+		if ($this->getShields() > $this->getMaxShields()) {
+			$this->decreaseShields($this->getShields() - $this->getMaxShields());
+		}
+		if ($this->getCDs() > $this->getMaxCDs()) {
+			$this->decreaseCDs($this->getCDs() - $this->getMaxCDs());
+		}
+		if ($this->getArmour() > $this->getMaxArmour()) {
+			$this->decreaseShields($this->getArmour() - $this->getMaxArmour());
+		}
+		
+		$this->getOptions();
+		//$this->updateTypeInfo();
 		$this->hasChanged = true;
+		$this->update();
 	}
 	
 	public function updateTypeInfo() {
@@ -798,6 +840,7 @@ class SmrPlanet {
 				$this->setTypeDescription($this->db->getField('planet_type_description'));
 				$this->setTypeImage($this->db->getField('planet_image_link'));
 				$this->setMaxAttackers($this->db->getInt('planet_max_attackers'));
+				$this->setMaxLanded($this->db->getInt('planet_max_landed'));
 				return 0;
 			}
 		}	
@@ -847,6 +890,14 @@ class SmrPlanet {
 		$this->maxAttackers = $value;
 	}
 
+	public function getMaxLanded() {
+		return $this->maxLanded;
+	}
+	
+	public function setMaxLanded($value) {
+		$this->maxLanded = $value;
+	}
+	
 	public function update() {
 		if(!$this->exists()) {
 			return;
@@ -951,7 +1002,7 @@ class SmrPlanet {
 			return 'This planet has reached the maximum buildings of that type.';
 		}
 		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-		if($constructor->getCredits() < $PLANET_BUILDINGS[$constructionID]['Credit Cost']) {
+		if($constructor->getCredits() < $PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]) {
 			return 'You do not have enough credits.';
 		}
 		// take the goods that are needed
@@ -965,11 +1016,17 @@ class SmrPlanet {
 
 	function getConstructionTime($constructionID) {
 		$buildings = $this->getBuildings();
-		$PLANET_BUILDINGS = &Globals::getPlanetBuildings();
+		$baseTime = 0;
+		$this->db->query('SELECT * FROM `planet_can_build` WHERE `planet_type_id` = '
+			.$this->getTypeID().' AND `construction_id` = '.$constructionID);
+		if ($this->db->nextRecord()) {
+			$baseTime = $this->db->getInt('cost_time');
+		}
 		$currentBuildings = $buildings[$constructionID];
-		$maxBuildings = $PLANET_BUILDINGS[$constructionID]['Max Amount'];
+		$maxBuildings = $this->getMaxBuildings($constructionID);
+		//var_dump($buildings,$baseTime,$currentBuildings,$maxBuildings);exit;
 		// Replace this with the real equations once RCK provides some that aren't gibberish.
-		$constructionTime = TIME + ceil(3.8030328 * $PLANET_BUILDINGS[$constructionID]['Build Time'] * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
+		$constructionTime = TIME + ceil(3.8030328 * $baseTime * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
 		return $constructionTime;
 	}
 	
@@ -978,7 +1035,7 @@ class SmrPlanet {
 			throw new Exception('Unable to start building: '.$message);
 		}
 		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-		$constructor->decreaseCredits($PLANET_BUILDINGS[$constructionID]['Credit Cost']);
+		$constructor->decreaseCredits($PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]);
 		// take the goods that are needed
 		foreach($PLANET_BUILDINGS[$constructionID]['Goods'] as $goodID => $amount) {
 			$this->decreaseStockpile($goodID,$amount);
@@ -1080,10 +1137,16 @@ class SmrPlanet {
 		}
 	}
 
+	
+	
 	public function &getPlayers() {
 		return SmrPlayer::getPlanetPlayers($this->getGameID(),$this->getSectorID());
 	}
 
+	public function countPlayers() {
+		return count($this->getPlayers());
+	}
+	
 	public function hasPlayers() {
 		return count($this->getPlayers()) > 0;
 	}

@@ -8,7 +8,7 @@ $template->assign('PageTopic','Planet : '.$planet->getName().' [Sector #'.$playe
 $template->assign('ThisPlanet',$planet);
 
 require_once(get_file_loc('menu.inc'));
-create_planet_menu();
+create_planet_menu($planet);
 
 $container = array();
 $container['url'] = 'planet_defense_processing.php';

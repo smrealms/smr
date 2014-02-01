@@ -27,7 +27,16 @@ else
 	$PHP_OUTPUT.=('none');
 
 $PHP_OUTPUT.=('</td></tr>');
-
+$PHP_OUTPUT.=('<tr><td><b>Defenses:</b></td><td>');
+$PHP_OUTPUT.=('This planet can repel up to '.$planet->getMaxAttackers().' attackers at a time.');
+$PHP_OUTPUT.=('<tr><td><b>Landing:</b></td><td>');
+if ($planet->getMaxLanded() == 0) {
+	$PHP_OUTPUT.=('The planetary surface can support an entire armada!');
+}
+else {
+	$PHP_OUTPUT.=('There is only room for '.$planet->getMaxLanded().' ships on the surface.');
+}
+$PHP_OUTPUT.=('</td></tr>');
 $PHP_OUTPUT.=('</table>');
 
 $PHP_OUTPUT.=('<div align="center">');
