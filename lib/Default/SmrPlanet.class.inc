@@ -400,6 +400,9 @@ class SmrPlanet {
 		if ($this->getCDs() > $this->getMaxCDs()) {
 			$this->setCDs($this->getMaxCDs());
 		}
+		if ($this->getArmour() > $this->getMaxAround()) {
+				$this->setArmour($this->getMaxArmour());
+		}
 	}
 
 	public function getShields($delayed = false) {
@@ -751,16 +754,8 @@ class SmrPlanet {
 			}
 		}
 		
-		//trim excess stockpile
-		if ($this->getShields() > $this->getMaxShields()) {
-			$this->decreaseShields($this->getShields() - $this->getMaxShields());
-		}
-		if ($this->getCDs() > $this->getMaxCDs()) {
-			$this->decreaseCDs($this->getCDs() - $this->getMaxCDs());
-		}
-		if ($this->getArmour() > $this->getMaxArmour()) {
-			$this->decreaseShields($this->getArmour() - $this->getMaxArmour());
-		}
+		//trim excess defenses
+		$this->checkForExcessDefense();
 		
 		$this->getOptions();
 		//$this->updateTypeInfo();
