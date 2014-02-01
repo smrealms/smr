@@ -512,7 +512,7 @@ class SmrPlanet {
 	}
 
 	public function hasStockpile($goodID=false) {
-		return $this->getStockpile($goodID) > 0;
+		return max($this->getStockpile($goodID)) > 0;
 	}
 
 	public function setStockpile($goodID,$amount) {
