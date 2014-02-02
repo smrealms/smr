@@ -179,6 +179,7 @@ class SmrPlanet {
 			$this->inhabitableTime	= $this->db->getInt('inhabitable_time');
 			$this->typeID 			= $this->db->getInt('planet_type_id');
 			
+			$this->updateTypeInfo();
 			$this->getOptions();
 			$this->getStockpile();
 			$this->setMaxBuildings();
@@ -761,21 +762,26 @@ class SmrPlanet {
 		$this->checkForExcessDefense();
 		
 		$this->getOptions();
-		//$this->updateTypeInfo();
+		$this->updateTypeInfo();
 		$this->hasChanged = true;
 		$this->update();
 	}
 	
 	public function updateTypeInfo() {
+	
 		$this->db->query('SELECT * FROM planet_type WHERE planet_type_id = ' . $this->getTypeID());
 		if ($this->db->nextRecord()) {
 			$this->setTypeName($this->db->getField('planet_type_name'));
 			$this->setTypeImage($this->db->getField('planet_image_link'));
 			$this->setTypeDescription($this->db->getField('planet_type_description'));
+			$this->setMaxAttackers($this->db->getInt('planet_max_attackers'));
+			$this->setMaxLanded($this->db->getInt('planet_max_landed'));
 		} else {
 			$this->setTypeName("No Type Defined");
 			$this->setTypeImage("image/planet.gif");
 			$this->setTypeDescription("No description defined in database, cotnact admins!");
+			$this->setMaxAttackers(0);
+			$this->setMaxLanded(0);
 		}
 	}
 	//not public on purpose
@@ -819,58 +825,26 @@ class SmrPlanet {
 		$this->hasChanged = true;
 	}
 	
-	public function getOptions() {
+	public function getOptions($option=false) {
+
 		if(!isset($this->canOptions)) {
-			// initialize opstions menu array
+			// initialize options menu array
 			$this->canOptions = array();
 			// get options from db
-			$this->db->query('SELECT * FROM planet_type WHERE planet_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
+			$this->db->query('SELECT * FROM planet_type_has_section WHERE planet_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
 			// adding options to array
-			if ($this->db->nextRecord()) {
-				$this->canOptions['construction']	= $this->db->getBoolean('planet_can_construction');
-				$this->canOptions['defense']		= $this->db->getBoolean('planet_can_defense');
-				$this->canOptions['financial']		= $this->db->getBoolean('planet_can_financial');
-				$this->canOptions['stockpile']		= $this->db->getBoolean('planet_can_stockpile');
-				$this->canOptions['ownership']		= $this->db->getBoolean('planet_can_ownership');
-				$this->canOptions['armory']			= $this->db->getBoolean('planet_can_armory');
-				$this->canOptions['hangar']			= $this->db->getBoolean('planet_can_hangar');
-				$this->setTypeName($this->db->getField('planet_type_name'));
-				$this->setTypeDescription($this->db->getField('planet_type_description'));
-				$this->setTypeImage($this->db->getField('planet_image_link'));
-				$this->setMaxAttackers($this->db->getInt('planet_max_attackers'));
-				$this->setMaxLanded($this->db->getInt('planet_max_landed'));
-				return 0;
+			while ($this->db->nextRecord()) {
+				$this->canOptions[$this->db->getField('planet_section')] = true;	
 			}
 		}	
+
+		if ($option) {
+			if (isset ($this->canOptions[$option])) {
+				return $this->canOptions[$option];
+			}
+			return false;
+		}
 		return $this->canOptions;
-	}
-	
-	public function canConstruction() {
-		return $this->canOptions['construction'];
-	}
-	
-	public function canDefense() {
-		return $this->canOptions['defense'];
-	}
-
-	public function canStockpile() {
-		return $this->canOptions['stockpile'];
-	}
-
-	public function canFinancial() {
-		return $this->canOptions['financial'];
-	}
-
-	public function canOwnership() {
-		return $this->canOptions['ownership'];
-	}	
-	
-	public function canArmory() {
-		return $this->canOptions['armory'];
-	}
-	
-	public function canHangar() {
-		return $this->canOptions['hangar'];
 	}
 	
 	public function doDelayedUpdates() {
