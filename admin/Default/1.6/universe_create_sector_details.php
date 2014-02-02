@@ -22,7 +22,7 @@ $PHP_OUTPUT.= '<option value="0">No Planet</option>';
 
 $selectedType = 0;
 if ($sector->hasPlanet()) {
-	$selected_type = $sector->getPlanet()->getTypeID();
+	$selectedType = $sector->getPlanet()->getTypeID();
 }
 
 $db->query('SELECT * FROM planet_type');
