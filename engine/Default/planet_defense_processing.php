@@ -97,7 +97,7 @@ elseif ($action == 'Planet') {
 	// does the user wish to transfare armour?
 	else if ($type_id == HARDWARE_ARMOUR) {
 		// do we want transfer more than we have?
-		if ($amount > $ship->getArmour()-1)
+		if ($amount >= $ship->getArmour())
 			create_error('You can\'t transfer more armour than what you carry minus one!');
 
 		// do we want to transfer more than we can carry?
