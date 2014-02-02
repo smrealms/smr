@@ -1,7 +1,6 @@
-<?php if ($ThisPlanet->getMaxShields()+$ThisPlanet->getMaxCDs()+$ThisPlanet->getMaxArmour() == 0) { 
-	echo '<p>This planet cannot store any defensive armaments.</p>';
-} 
-else { ?>	
+<?php if ($ThisPlanet->getMaxShields()+$ThisPlanet->getMaxCDs()+$ThisPlanet->getMaxArmour() == 0) { ?>
+	<p>This planet cannot store any defensive armaments.</p>
+<?php } else { ?>	
 
 <table class="standard">
 	<tr>
@@ -24,8 +23,7 @@ else { ?>
 			</td>
 		</tr>
 	</form>
-	<?php } ?>
-	<?php if ($ThisPlanet->getMaxCDs() > 0) { ?>
+	<?php } if ($ThisPlanet->getMaxCDs() > 0) { ?>
 	<form name="TransferCDsForm" method="POST" action="<?php echo $TransferCDsHref; ?>">
 		<tr>
 			<td><img id="cds" src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>Combat Drones</td>
