@@ -100,6 +100,9 @@ class SmrPlanet {
 					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		$db->query('DELETE FROM planet_is_building
 					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		//kick everyone from planet
+		$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id = ' . $db->escapeNumber($gameID));
+
 		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
