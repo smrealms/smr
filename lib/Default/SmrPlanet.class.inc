@@ -665,8 +665,8 @@ class SmrPlanet {
 
 			$this->db->query('
 				SELECT * 
-				FROM planet_is_building
-				JOIN planet_can_build USING(planet_type_id. construction_id)
+				FROM planet_is_building 
+				JOIN planet_can_build USING(construction_id)
 				WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' 
 				AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()). ' 
 				AND planet_type_id = '.$this->getTypeID());
@@ -772,13 +772,13 @@ class SmrPlanet {
 			$this->setTypeImage($this->db->getField('planet_image_link'));
 			$this->setTypeDescription($this->db->getField('planet_type_description'));
 			$this->setMaxAttackers($this->db->getInt('planet_max_attackers'));
-			$this->setMaxLanded($this->db->getInt('planet_max_landed'));
+			$this->maxLanded = $this->db->getInt('planet_max_landed');
 		} else {
 			$this->setTypeName("No Type Defined");
 			$this->setTypeImage("image/planet.gif");
 			$this->setTypeDescription("No description defined in database, cotnact admins!");
 			$this->setMaxAttackers(0);
-			$this->setMaxLanded(0);
+			$this->maxLanded = 0;
 		}
 	}
 	//not public on purpose
