@@ -97,21 +97,16 @@ $PHP_OUTPUT.=('</div>');
 $PHP_OUTPUT.=('</p>');
 
 $PHP_OUTPUT.=('<p>Your stockpile contains:');
-$stockpile = false;
-
-
-foreach ($planet->getStockpile() as $id => $amount) {
-	if ($amount > 0) {
-		if (!$stockpile) {
-			$PHP_OUTPUT.=('</p><ul>');
-			$stockpile = true;
+if ($planet->hasStockpile()) {
+	$PHP_OUTPUT.=('</p><ul>');
+	foreach ($planet->getStockpile() as $id => $amount) {
+		if ($amount > 0) {
+			$PHP_OUTPUT.=('<li><img src="' . $GOODS[$id]['ImageLink'] . '" title="' . $GOODS[$id]['Name'] . '" alt="' . $GOODS[$id]['Name'] . '" />&nbsp;' . $GOODS[$id]['Name'] . ': '.$amount.'</li>');
 		}
-		$PHP_OUTPUT.=('<li><img src="' . $GOODS[$id]['ImageLink'] . '" title="' . $GOODS[$id]['Name'] . '" alt="' . $GOODS[$id]['Name'] . '" />&nbsp;' . $GOODS[$id]['Name'] . ': '.$amount.'</li>');
 	}
-}
-if ($stockpile)
 	$PHP_OUTPUT.=('</ul>');
-else
+}
+else {
 	$PHP_OUTPUT.=(' Nothing!</p>');
-
+}
 ?>
