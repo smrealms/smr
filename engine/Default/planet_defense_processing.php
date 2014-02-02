@@ -47,7 +47,7 @@ if ($action == 'Ship') {
 		$ship->increaseCDs($amount);
 		$account->log(LOG_TYPE_PLANETS, 'Player takes '.$amount.' drones from planet.', $player->getSectorID());
 	}
-		else if ($type_id == HARDWARE_ARMOUR) {
+	else if ($type_id == HARDWARE_ARMOUR) {
 		// do we want transfer more than we have?
 		if ($amount > $planet->getArmour())
 			create_error('You can\'t take more armour from planet than are on it!');
