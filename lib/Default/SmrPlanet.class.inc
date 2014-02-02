@@ -8,7 +8,7 @@ class SmrPlanet {
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
 	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 600; // 10 minutes
 
-	protected $maxBuildings = null;
+	protected $maxBuildings;
 
 	protected $db;
 
