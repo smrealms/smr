@@ -25,7 +25,7 @@ if ($sector->hasPlanet()) {
 	$selected_type = $sector->getPlanet()->getTypeID();
 }
 
-$db->query('SELECT * FROM planet_type ');
+$db->query('SELECT * FROM planet_type');
 while ($db->nextRecord()) {
 	$type = $db->getInt('planet_type_id');
 	$PHP_OUTPUT.= '<option value="'.$type.'"'.($type == $selectedType ? ' selected' : '').'>'.$db->getField('planet_type_name').'</option>';
