@@ -1090,6 +1090,9 @@ abstract class AbstractSmrPlayer {
 				throw new Exception('Invalid PickSector definition in mission: ' . $missionID);
 			}
 			$path =& Plotter::findDistanceToX($realX, $this->getSector(), true, null, $this);
+			if($path === false) {
+				throw new Exception('Cannot find location: ' . $missionID);
+			}
 			$mission['Sector'] = $path->getEndSectorID();
 		}
 	}
