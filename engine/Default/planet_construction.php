@@ -19,8 +19,7 @@ if ($planet->hasCurrentlyBuilding()) {
 	
 		$PHP_OUTPUT.=format_time($building['TimeRemaining']);
 	
-		$container = array();
-		$container['url'] = 'planet_construction_processing.php';
+		$container = create_container('planet_construction_processing.php');
 		$container['construction_id'] = $building['ConstructionID'];
 		$PHP_OUTPUT.=create_echo_form($container);
 		$PHP_OUTPUT.=create_submit('Cancel');
