@@ -133,27 +133,22 @@ function create_planet_menu($planet) {
 	
 	$menu_array = array();
 	$menu_array[] = array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main');
-	if ($planet->canConstruction()) {
+	$planetOptions = $planet->getOptions();
+	if ($planetOptions['CONSTRUCTION']) {
 		$menu_array[] = array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction');
 	}
-	if ($planet->canDefense()) {
+	if ($planetOptions['DEFENSE']) {
 		$menu_array[] = array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defense');
 	}
-	if ($planet->canOwnership()) {
+	if ($planetOptions['OWNERSHIP']) {
 		$menu_array[] = array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership');
 	}
-	if ($planet->canStockpile()) {
+	if ($planetOptions['STOCKPILE']) {
 		$menu_array[] = array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile');
 	}
-	if ($planet->canFinancial()) {
+	if ($planetOptions['FINANCE']) {
 		$menu_array[] = array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial');
 	}
-	//if ($planet->canArmory()) {
-	//	$menu_array[] = array('Link'=>Globals::getPlanetArmoryHREF(),'Text'=>'Armory');
-	//}
-	//if ($planet->canHangar()) {
-	//	$menu_array[] = array('Link'=>Globals::getPlanetHangarHREF(),'Text'=>'Hangar');
-	//}
 	
 	$template->assign('MenuItems', $menu_array);
 	
