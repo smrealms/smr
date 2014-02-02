@@ -150,15 +150,7 @@ function create_planet_menu($planet) {
 		$menu_array[] = array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial');
 	}
 	
-	$template->assign('MenuItems', $menu_array);
-	
-	//	$template->assign('MenuItems', array(
-	//						array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main'),
-	//						array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction'),
-	//						array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defenses'),
-	//						array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership'),
-	//						array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile'),
-	//		
+	$template->assign('MenuItems', $menu_array);	
 }
 
 /*
