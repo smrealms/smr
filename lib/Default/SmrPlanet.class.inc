@@ -186,10 +186,7 @@ class SmrPlanet {
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 			$this->calculateInterest();
-			
-			
-			
-		
+
 		}
 		//		else if($create) {
 		//			$this->gameID		= (int)$gameID;
@@ -401,7 +398,7 @@ class SmrPlanet {
 		if ($this->getCDs() > $this->getMaxCDs()) {
 			$this->setCDs($this->getMaxCDs());
 		}
-		if ($this->getArmour() > $this->getMaxAround()) {
+		if ($this->getArmour() > $this->getMaxArmour()) {
 				$this->setArmour($this->getMaxArmour());
 		}
 	}
@@ -665,15 +662,14 @@ class SmrPlanet {
 	function getCurrentlyBuilding() {
 		if(!isset($this->currentlyBuilding)) {
 			$this->currentlyBuilding = array();
-			
-			
-			
-			$this->db->query('SELECT * FROM planet_is_building pi, planet_can_build pc WHERE pi.game_id = ' 
-				. $this->db->escapeNumber($this->getGameID()) . ' AND pi.sector_id = ' 
-				. $this->db->escapeNumber($this->getSectorID())
-				. ' AND pi.construction_id = pc.construction_id AND pc.planet_type_id = '.$this->getTypeID());
-			
-			
+
+			$this->db->query('
+				SELECT * 
+				FROM planet_is_building
+				JOIN planet_can_build USING(planet_type_id. construction_id)
+				WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' 
+				AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()). ' 
+				AND planet_type_id = '.$this->getTypeID());
 			
 			while($this->db->nextRecord()) {
 				if($this->db->getInt('time_complete') <= TIME) {
@@ -701,15 +697,16 @@ class SmrPlanet {
 	}
 
 	public function getMaxBuildings($buildingTypeID=false) {
-		if (!isset($this->maxBuildings) || empty($this->maxBuildings)) {
+		if (!isset($this->maxBuildings)) {
 			$this->setMaxBuildings();
 		}
-		if($buildingTypeID===false && isset($this->maxBuildings)) {
+		if($buildingTypeID===false) {
 			return $this->$maxBuildings;
 		}
 		
-		if (isset($this->maxBuildings[$buildingTypeID]))
+		if (isset($this->maxBuildings[$buildingTypeID])) {
 			return $this->maxBuildings[$buildingTypeID];
+		}
 		return 0;
 		//			global $PRIMARY_BUILDINGS;
 		//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
@@ -744,7 +741,7 @@ class SmrPlanet {
 	
 	public function setTypeID($num) {
 		$this->typeID = $num;
-		$this->db->query('UPDATE `planet` SET planet_type_id = '.$num.' WHERE game_id = ' . $this->getGameID()
+		$this->db->query('UPDATE planet SET planet_type_id = '.$this->db->escapeNumber($num).' WHERE game_id = ' . $this->getGameID()
 			. ' AND sector_id = '.$this->getSectorID());
 			
 		//this will allow get to load new set from db
@@ -866,10 +863,6 @@ class SmrPlanet {
 		return $this->maxLanded;
 	}
 	
-	public function setMaxLanded($value) {
-		$this->maxLanded = $value;
-	}
-	
 	public function update() {
 		if(!$this->exists()) {
 			return;
@@ -932,7 +925,7 @@ class SmrPlanet {
 	}
 
 	function getLevel() {
-		return (($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_BUNKER) + $this->getBuilding(PLANET_TURRET)) / 3);
+		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_BUNKER) + $this->getBuilding(PLANET_TURRET)) / 3;
 	}
 	
 	function getMaxLevel() {
@@ -989,14 +982,16 @@ class SmrPlanet {
 	function getConstructionTime($constructionID) {
 		$buildings = $this->getBuildings();
 		$baseTime = 0;
-		$this->db->query('SELECT * FROM `planet_can_build` WHERE `planet_type_id` = '
-			.$this->getTypeID().' AND `construction_id` = '.$constructionID);
+		$this->db->query('
+			SELECT * 
+			FROM planet_can_build 
+			WHERE planet_type_id = '.$this->getTypeID().' 
+			AND construction_id = '.$this->db->escapeNumber($constructionID));
 		if ($this->db->nextRecord()) {
 			$baseTime = $this->db->getInt('cost_time');
 		}
 		$currentBuildings = $buildings[$constructionID];
 		$maxBuildings = $this->getMaxBuildings($constructionID);
-		//var_dump($buildings,$baseTime,$currentBuildings,$maxBuildings);exit;
 		// Replace this with the real equations once RCK provides some that aren't gibberish.
 		$constructionTime = TIME + ceil(3.8030328 * $baseTime * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
 		return $constructionTime;
