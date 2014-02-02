@@ -27,8 +27,10 @@ $table.=('</tr>');
 $GOODS =& Globals::getGoods();
 foreach($GOODS as $goodID => $good) {
 	if (!$ship->hasCargo($goodID) && !$planet->hasStockpile($goodID)) continue;
-	if (!$present)
+	if (!$present) {
 		$present = true;
+		$PHP_OUTPUT = "";
+	}
 		
 	$container = create_container('planet_stockpile_processing.php');
 	$container['good_id'] = $goodID;
