@@ -303,6 +303,7 @@ elseif ($submit == 'Edit Sector') {
 			$type = $sector->getPlanet()->getTypeID();
 			if ($_POST['plan_type'] != $type) {
 				$sector->getPlanet()->setTypeID($_POST['plan_type']);
+			}
 		}
 	}
 	
@@ -311,7 +312,9 @@ elseif ($submit == 'Edit Sector') {
 //		$GAL_PLANETS[$this_sec]['Owner'] = 0;
 //		$GAL_PLANETS[$this_sec]['Owner Type'] = 'NPC';
 //	}
-	else $sector->removePlanet();
+	else {
+		$sector->removePlanet();
+	}
 	//update port
 	if ($_POST['port_level'] > 0) {
 		if(!$sector->hasPort()) {
