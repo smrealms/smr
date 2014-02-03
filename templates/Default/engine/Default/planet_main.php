@@ -42,21 +42,21 @@ if (isset($Msg)) {
 				</tr>
 				<?php if ($ThisPlanet->getMaxBuildings(PLANET_GENERATOR) > 0) { ?>
 				<tr>
-					<td><img class="tooltip" id="generator_tip" src="images/generator.png"  width="16" height="16" alt="Information" title="Generators protect a planet with shields. Each generator can hold '.PLANET_GENERATOR_SHIELDS.' shields." /> 
+					<td><img class="tooltip" id="generator_tip" src="images/generator.png"  width="16" height="16" alt="Information" title="Generators protect a planet with shields. Each generator can hold <?php echo PLANET_GENERATOR_SHIELDS; ?> shields." /> 
 						<label for="generator_tip">&nbsp;Generator</td>
 					<td align="center"><span id="planetGens"><?php echo $ThisPlanet->getBuilding(PLANET_GENERATOR); ?></span></td>
 					<td align="center"><?php echo $ThisPlanet->getMaxBuildings(PLANET_GENERATOR); ?></td>
 				</tr>
 				<?php } if ($ThisPlanet->getMaxBuildings(PLANET_HANGAR) > 0) { ?>
 				<tr>
-					<td><img class="tooltip" id="hangar_tip" src="images/hangar.png" width="16" height="16" alt="Information" title="Hangars house and launch combat drones(CDs). Each hangar holds '.PLANET_HANGAR_DRONES.' drones."/> 
+					<td><img class="tooltip" id="hangar_tip" src="images/hangar.png" width="16" height="16" alt="Information" title="Hangars house and launch combat drones(CDs). Each hangar holds <?php echo PLANET_HANGAR_DRONES; ?> drones."/> 
 						<label for="hangar_tip">&nbsp;Hangar</label></td>
 					<td align="center"><span id="planetHangars"><?php echo $ThisPlanet->getBuilding(PLANET_HANGAR); ?></span></td>
 					<td align="center"><?php echo $ThisPlanet->getMaxBuildings(PLANET_HANGAR); ?></td>
 				</tr>
 				<?php } if ($ThisPlanet->getMaxBuildings(PLANET_BUNKER) > 0) { ?>
 				<tr>
-					<td><img class="tooltip" id="bunker_tip" src="images/bunker.png" width="16" height="16" alt="Information" title="Bunkers fortify the defensive structures with additional armour.  Each bunker holds '.PLANET_BUNKER_ARMOUR.' units of armour."/> 
+					<td><img class="tooltip" id="bunker_tip" src="images/bunker.png" width="16" height="16" alt="Information" title="Bunkers fortify the defensive structures with additional armour.  Each bunker holds <?php echo PLANET_BUNKER_ARMOUR; ?> units of armour."/> 
 						<label for="bunker_tip">&nbsp;Bunker</td>
 					<td align="center"><span id="planetHangars"><?php echo $ThisPlanet->getBuilding(PLANET_BUNKER); ?></span></td>
 					<td align="center"><?php echo $ThisPlanet->getMaxBuildings(PLANET_BUNKER); ?></td>
