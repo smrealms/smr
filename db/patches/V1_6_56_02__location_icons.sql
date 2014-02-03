@@ -51,6 +51,9 @@ UPDATE `race`
 SET `race_color` = 'FF8000' WHERE `race_id` = 3; 
 UPDATE `race` 
 SET `race_color` = 'FF00FF' WHERE `race_id` = 2;
+UPDATE `race` 
+SET `race_color` = 'FFD800' WHERE `race_id` = 1;
+
 
 #Add new bank icons
 UPDATE `location_type`
