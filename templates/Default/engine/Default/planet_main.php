@@ -90,13 +90,13 @@ if (isset($Msg)) {
 				<?php } if ($ThisPlanet->getBuilding(PLANET_HANGAR) > 0) { ?>
 				<tr>
 					<td><img id="cds" src="images/cd.png"  width="16" height="16" alt="" title="Combat Drones"/>&nbsp;Combat Drones</td>
-					<td align="center"><span id="planetCDs"><?php echo $ThisPlanet->getCDs(); ?></span> / <span id="planetMaxCDs"><?php $ThisPlanet->getMaxCDs(); ?></span></td>
+					<td align="center"><span id="planetCDs"><?php echo $ThisPlanet->getCDs(); ?></span> / <span id="planetMaxCDs"><?php echo $ThisPlanet->getMaxCDs(); ?></span></td>
 					<td align="center">100 %</td>
 				</tr>
 				<?php } if ($ThisPlanet->getBuilding(PLANET_BUNKER) > 0) { ?>
 				<tr>
 					<td><img id="turret" src="images/armour.png"  width="16" height="16" alt="" title="Armour"/>&nbsp;Armour</td>
-					<td align="center"><span id="planetArmour"><?php echo $ThisPlanet->getArmour(); ?></span> / <span id="planetMaxArmour"><?php $ThisPlanet->getMaxArmour(); ?></span></td>
+					<td align="center"><span id="planetArmour"><?php echo $ThisPlanet->getArmour(); ?></span> / <span id="planetMaxArmour"><?php echo $ThisPlanet->getMaxArmour(); ?></span></td>
 					<td align="center">&nbsp;</td>
 				</tr>
 				<?php }	if ($ThisPlanet->getBuilding(PLANET_TURRET) > 0) { ?>
