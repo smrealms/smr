@@ -61,7 +61,7 @@ try {
 			}
 		}
 		function racePickf() {
-			filterSelect("powerPick", 1);	
+			filterSelect("racePick", 1);	
 		}
 		function powerPickf() {
 			filterSelect("powerPick", 6);	
@@ -141,49 +141,42 @@ try {
 	$restrict 	= buildRestriction();
 	
 	echo ('<div id="container" style="padding: 0;">');
-	echo ('<div id="main" style="width:800px; margin-left:auto; margin-right:auto;">');
+	echo ('<div id="main" style="width:810px; margin-left:auto; margin-right:auto;">');
 	echo (buildRaceBox($db));	
 	$db->query('SELECT * FROM weapon_type, race WHERE weapon_type.race_id = race.race_id ORDER BY '.$order_by.' '.$seq);
 	echo ('<table id="table" class="standard">');
 	echo ('<tr>');
-	echo ('<th align="center"><a href="?order=weapon_name&amp;seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
-	echo ('<th align="center"><a href="?order=race_name&amp;seq='.$seq.'"><span style=color:#80C870;>Race</span></a>'.$race.'</th>');
-	echo ('<th align="center"><a href="?order=cost&amp;seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
-	echo ('<th align="center"><a href="?order=shield_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Shield<br>Damage</span></a></th>');
-	echo ('<th align="center"><a href="?order=armour_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Armour<br>Damage</span></a></th>');
-	echo ('<th align="center"><a href="?order=accuracy&amp;seq='.$seq.'"><span style=color:#80C870;>Accuracy<br>%</span></a></th>');
-	echo ('<th align="center"><a href="?order=power_level&amp;seq='.$seq.'"><span style=color:#80C870;>Level</span></a>'.$power.'</th>');
-	echo ('<th align="center"><a href="?order=buyer_restriction&amp;seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a>'.$restrict.'</th>');
+	echo ('<th align="center" style="width: 240px;"><a href="?order=weapon_name&amp;seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
+	echo ('<th align="center" style="width: 90px;"><a href="?order=race_name&amp;seq='.$seq.'"><span style=color:#80C870;>Race</span></a>'.$race.'</th>');
+	echo ('<th align="center" style="width: 64px;"><a href="?order=cost&amp;seq='.$seq.'"><span style=color:#80C870;>Cost</span></a></th>');
+	echo ('<th align="center" style="width: 74px;"><a href="?order=shield_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Shield<br>Damage</span></a></th>');
+	echo ('<th align="center" style="width: 74px;"><a href="?order=armour_damage&amp;seq='.$seq.'"><span style=color:#80C870;>Armour<br>Damage</span></a></th>');
+	echo ('<th align="center" style="width: 85px;"><a href="?order=accuracy&amp;seq='.$seq.'"><span style=color:#80C870;>Accuracy<br>%</span></a></th>');
+	echo ('<th align="center" style="width: 51px;"><a href="?order=power_level&amp;seq='.$seq.'"><span style=color:#80C870;>Level</span></a>'.$power.'</th>');
+	echo ('<th align="center" style="width: 92px;"><a href="?order=buyer_restriction&amp;seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a>'.$restrict.'</th>');
 	echo ('</tr>');
 	while ($db->nextRecord()) {
-		//we need an array so we dont have 8 td rows
-		$stat = array();
-		$stat[] = $db->getField('weapon_name');
-		$stat[] = $db->getField('race_name');
-		$stat[] = number_format($db->getInt('cost'));
-		$stat[] = $db->getInt('shield_damage');
-		$stat[] = $db->getInt('armour_damage');
-		$stat[] = $db->getInt('accuracy');
-		$stat[] = $db->getInt('power_level');
+		echo ('<tr>');
+		echo ('<td align="center">'.$db->getField('weapon_name').'</td>');
+		echo ('<td align="center" style="color: #'.$db->getField('race_color').'">'.$db->getField('race_name').'</td>');
+		echo ('<td align="center">'.number_format($db->getInt('cost')).'</td>');
+		echo ('<td align="center">'.$db->getInt('shield_damage').'</td>');
+		echo ('<td align="center">'.$db->getInt('armour_damage').'</td>');
+		echo ('<td align="center">'.$db->getInt('accuracy').'</td>');
+		echo ('<td align="center">'.$db->getInt('power_level').'</td>');
 		switch($db->getInt('buyer_restriction')) {
 			case 1:
-				$restriction = '<font color="green">Good</font>';
+				echo ('<td align="center" style="color: green;">Good</td>');
 			break;
 			case 2:
-				$restriction = '<font color="red">Evil</font>';
+				echo ('<td align="center" style="color: red;">Evil</td>');
 			break;
 			case 3:
-				$restriction = '<font color="#06F">Newbie</font>';
+				echo ('<td align="center" style="color: #06F;">Newbie</td>');
 			break;
 			default:
-				$restriction = '-';
+				echo ('<td align="center">-</td>');
 		}
-		$stat[] = $restriction;
-	
-		echo ('<tr>');
-		foreach ($stat as $value)
-			echo ('<td align="center">'.$value.'</td>');
-	
 		echo ('</tr>');
 	}
 	echo ('</table></div></div>');
@@ -210,9 +203,9 @@ function buildRestriction() {
 	$restrict = '<br><select id="restrictPick" name="restrict" onchange="restrictPickf()">'
 	.'<option value="All">All</option>'
 	.'<option value="-">None</option>'
-	."<option value='<font color=\"green\">Good</font>'>Good</option>"
-	."<option value='<font color=\"red\">Evil</font>' style=\"color: red;\">Evil</option>"
-	."<option value='<font color=\"#06F\">Newbie</font>' style=\"color: #06F;\">Newbie</option>"
+	."<option value='Good'>Good</option>"
+	."<option value='Evil' style=\"color: red;\">Evil</option>"
+	."<option value='Newbie' style=\"color: #06F;\">Newbie</option>"
 	."</select>";
 	
 	return $restrict;
@@ -225,7 +218,11 @@ function buildRaceBox($db) {
 	$db->query("SELECT * FROM race ORDER BY race_id");
 	while ($db->nextRecord()) {
 		$race = $db->getField("race_name");
-		$racebox .= '<input type="checkbox" id="'.$race.'" name="races" value="'.$race.'" onClick="raceToggle()"><label for="'.$race.'">'.$race.'</label>';
+		$race_color = $db->getField("race_color");
+		$racebox .= '<input type="checkbox" id="'.$race.'" name="races" '
+			.'value="'.$race.'" '
+			.'onClick="raceToggle()">'
+			.'<label for="'.$race.'"><font color="#'.$race_color.'">'.$race.'</font></label>';
 	}
 	$racebox .= '</form>';
 	return $racebox;
