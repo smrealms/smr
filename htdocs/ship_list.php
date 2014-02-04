@@ -209,11 +209,12 @@ try {
 			<th align="center"><a href="?hardwarea=11&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scrambler</span></a>
 				<?php echo $scramble ?></th>
 		</tr><?php
-
+	$search = array("'", " ", ",", "<", ">", "\"");
 	foreach($shipArray as $stat) {
 		echo ('<tr>');
-		foreach ($stat as $value)
-			echo ('<td align="center">'.$value.'</td>');
+		foreach ($stat as $value) {
+			echo ('<td align="center" class="'.str_replace($search, "", $value).'">'.$value.'</td>');
+		}
 		echo ('</tr>');
 	} ?>
 	</table></div></div><?php
@@ -223,10 +224,11 @@ catch(Exception $e) {
 }
 
 function buildSelector($db, $id, $name, $table) {
+	$search = array("'", " ");
 	$selector = '<br><select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
 	$db->query("select distinct ".$name." from ".$table." order by ".$name);
 	while ($db->nextRecord()) {
-		$selector .= '<option value="'.$db->getField($name).'">'
+		$selector .= '<option value="'.$db->getField($name).'" class="'.str_replace($search, "", $db->getField($name)).'">'
 		.$db->getField($name).'</option>';
 	}
 	$selector .= '</select>';
