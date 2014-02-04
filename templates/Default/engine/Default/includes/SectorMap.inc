@@ -53,7 +53,8 @@
 								else if($Sector->hasCachedPort($MapPlayer)) {
 									$Port =& $Sector->getCachedPort($MapPlayer);
 								} ?>
-								<div class="lmport <?php if($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?>"><?php
+								<div class="lmport <?php if($Sector->getLinkLeft()) { ?>a<?php } else { ?>b<?php } ?> 
+									port<?php echo $Port->getRaceID(); ?>"><?php
 									if($isCurrentSector && !$GalaxyMap) {
 										?><a href="<?php echo Globals::getTradeHREF(); ?>"><?php
 									} ?>
