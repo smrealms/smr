@@ -10,11 +10,13 @@
 				<td style="border-right:none">
 					<a href="<?php echo Globals::getTraderRelationsHREF(); ?>"><?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID()); ?></a> Port <?php echo $Port->getSectorID(); ?> (Level <?php echo $Port->getLevel(); ?>)<br />
 						<div class="goods">
-							<img src="images/port/buy.gif" width="5" height="16" alt="Buy" title="Buy" /><?php
+							<img src="images/port/buy.png" width="5" height="16" alt="Buy" 
+								title="Buy" class="port<?php echo $Port->getRaceID(); ?>"/><?php
 							foreach($Port->getVisibleGoodsSold($ThisPlayer) as $Good) {
 								?><img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" /><?php
 							}
-							?><br /><img src="images/port/sell.gif" width="5" height="16" alt="Sell" title="Sell" /><?php
+							?><br /><img src="images/port/sell.png" width="5" height="16" alt="Sell" 
+								title="Sell" class="port<?php echo $Port->getRaceID(); ?>"/><?php
 							foreach($Port->getVisibleGoodsBought($ThisPlayer) as $Good) {
 								?><img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" /><?php
 							} ?>
