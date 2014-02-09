@@ -143,7 +143,7 @@ try {
 	echo ('<div id="container" style="padding: 0;">');
 	echo ('<div id="main" style="width:810px; margin-left:auto; margin-right:auto;">');
 	echo (buildRaceBox($db));	
-	$db->query('SELECT * FROM weapon_type, race WHERE weapon_type.race_id = race.race_id ORDER BY '.$order_by.' '.$seq);
+	$db->query('SELECT * FROM weapon_type JOIN race USING(race_id) ORDER BY '.$order_by.' '.$seq);
 	echo ('<table id="table" class="standard">');
 	echo ('<tr>');
 	echo ('<th align="center" style="width: 240px;"><a href="?order=weapon_name&amp;seq='.$seq.'"><span style=color:#80C870;>Weapon Name</span></a></th>');
@@ -155,11 +155,10 @@ try {
 	echo ('<th align="center" style="width: 51px;"><a href="?order=power_level&amp;seq='.$seq.'"><span style=color:#80C870;>Level</span></a>'.$power.'</th>');
 	echo ('<th align="center" style="width: 92px;"><a href="?order=buyer_restriction&amp;seq='.$seq.'"><span style=color:#80C870;>Restriction</span></a>'.$restrict.'</th>');
 	echo ('</tr>');
-	$search = array("'", " ");
 	while ($db->nextRecord()) {
 		echo ('<tr>');
 		echo ('<td align="center">'.$db->getField('weapon_name').'</td>');
-		echo ('<td align="center" class="'.str_replace($search, "", $db->getField('race_name')).'">'.$db->getField('race_name').'</td>');
+		echo ('<td align="center" class="race'.$db->getInt('race_id').'">'.$db->getField('race_name').'</td>');
 		echo ('<td align="center">'.number_format($db->getInt('cost')).'</td>');
 		echo ('<td align="center">'.$db->getInt('shield_damage').'</td>');
 		echo ('<td align="center">'.$db->getInt('armour_damage').'</td>');
@@ -214,16 +213,14 @@ function buildRestriction() {
 }
 
 function buildRaceBox($db) {
-	$racebox;
-	$search = array("'", " ");
 	$racebox = '<form id="raceform" name="raceform" align="center" style="text-align:center;">';
-	$db->query("SELECT * FROM race ORDER BY race_id");
+	$db->query('SELECT race_id, race_name FROM race ORDER BY race_name');
 	while ($db->nextRecord()) {
-		$race = $db->getField("race_name");
-		$racebox .= '<input type="checkbox" id="'.$race.'" name="races" '
-			.'value="'.$race.'" '
-			.'onClick="raceToggle()">'
-			.'<label for="'.$race.'" class="'.str_replace($search, "", $race).'">'.$race.'</label>';
+		$raceID = $db->getInt('race_id');
+		$raceName = $db->getField('race_name');
+		$racebox .= '
+			<input type="checkbox" id="race'.$raceID.'" name="races" value="'.$raceName.'" onClick="raceToggle()">
+			<label for="race'.$raceID.'" class="race'.$raceID.'">'.$raceName.'</label>';
 	}
 	$racebox .= '</form>';
 	return $racebox;

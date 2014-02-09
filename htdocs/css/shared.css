@@ -510,39 +510,39 @@ table#moveTable td {
 }
 
 /* race colors */
-.Neutral {
+.race1 {
 	color: #FFD800;
 }
 
-.Alskant {
+.race2 {
 	color: #FF00FF;
 }
 
-.Creonti {
+.race3 {
 	color: #FF8000;
 }
 
-.Human {
+.race4 {
 	color: #0000FF;
 }
 
-.IkThorne {
+.race5 {
 	color: #BFBFFF;
 }
 
-.Salvene {
+.race6 {
 	color: #00AA00;
 }
 
-.Thevian {
+.race7 {
 	color: #800000;
 }
 
-.WQHuman {
+.race8 {
 	color: #804040;
 }
 
-.Nijarin {
+.race9 {
 	color: #FF8080;
 }
 
