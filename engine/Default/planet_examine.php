@@ -3,7 +3,7 @@
 $template->assign('PageTopic','Examine Planet');
 
 $planet =& $player->getSectorPlanet();
-$template->assignByRef('ThisPlanet',$planet);
+$template->assignByRef('ThisPlanet', $planet);
 
 $planetLand = 
 	$planet->getOwner()->sameAlliance($player)

@@ -1088,7 +1088,6 @@ class SmrPlanet {
 		return SmrSession::getNewHREF($container);
 	}
 
-
 	public function getCancelHREF($planetBuilding) {
 		$container = create_container('planet_construction_processing.php');
 		$container['construction_id'] = $planetBuilding['ConstructionID'];
@@ -1096,6 +1095,9 @@ class SmrPlanet {
 		return SmrSession::getNewHREF($container);
 	}
 
+	public function getFinancesHREF($planetBuilding) {
+		return SmrSession::getNewHREF(create_container('planet_financial_processing.php'));
+	}
 
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) {
 		$trigger->increaseHOF(1,array('Combat','Planet','Number Of Triggers'), HOF_PUBLIC);
