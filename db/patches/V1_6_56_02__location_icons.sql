@@ -31,30 +31,6 @@ UPDATE location_type SET location_image = 'images/hardware2.png' WHERE location_
 #Allships
 UPDATE location_type SET location_image = 'images/shipdealer.png' WHERE location_image = 'images/shipdealer.gif';
 
-#Add colors for races
-ALTER TABLE race 
-ADD race_color VARCHAR(6) AFTER race_description;
-
-UPDATE race 
-SET race_color = 'FF8080' WHERE race_id = 9;
-UPDATE race 
-SET race_color = '804040' WHERE race_id = 8; 
-UPDATE race 
-SET race_color = '800000' WHERE race_id = 7; 
-UPDATE race 
-SET race_color = '00AA00' WHERE race_id = 6; 
-UPDATE race 
-SET race_color = 'BFBFFF' WHERE race_id = 5; 
-UPDATE race 
-SET race_color = '0000FF' WHERE race_id = 4; 
-UPDATE race 
-SET race_color = 'FF8000' WHERE race_id = 3; 
-UPDATE race 
-SET race_color = 'FF00FF' WHERE race_id = 2;
-UPDATE race 
-SET race_color = 'FFD800' WHERE race_id = 1;
-
-
 #Add new bank icons
 UPDATE location_type
 SET location_image = 'images/bank5.png' WHERE location_type_id = 701;
