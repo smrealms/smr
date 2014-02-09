@@ -28,10 +28,4 @@ if(!$planetLand) {
 	$planetLand = $db->nextRecord();
 }
 $template->assign('PlanetLand', $planetLand);
-if($planetLand) {
-	$template->assign('PlanetLandHREF', SmrSession::getNewHREF(create_container('planet_land_processing.php')));
-}
-else {
-	$template->assign('PlanetAttackHREF', SmrSession::getNewHREF(create_container('planet_attack_processing.php')));
-}
 ?>
