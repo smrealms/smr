@@ -1095,7 +1095,7 @@ class SmrPlanet {
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function getFinancesHREF($planetBuilding) {
+	public function getFinancesHREF() {
 		return SmrSession::getNewHREF(create_container('planet_financial_processing.php'));
 	}
 
