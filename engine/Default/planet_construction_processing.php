@@ -2,7 +2,7 @@
 if (!$player->isLandedOnPlanet())
 	create_error('You are not on a planet!');
 $planet =& $player->getSectorPlanet();
-$action = $_REQUEST['action'];
+$action = $var['action'];
 if ($action == 'Build') {
 	if(($message = $planet->canBuild($player, $var['construction_id']))!==true) {
 		create_error($message);

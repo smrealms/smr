@@ -998,7 +998,7 @@ class SmrPlanet {
 		return $constructionTime;
 	}
 	
-	function startBuilding(AbstractSmrPlayer &$constructor,$constructionID) {
+	function startBuilding(AbstractSmrPlayer &$constructor, $constructionID) {
 		if(($message = $this->canBuild($constructor, $constructionID)) !== true) {
 			throw new Exception('Unable to start building: '.$message);
 		}
@@ -1079,6 +1079,21 @@ class SmrPlanet {
 
 	public function getAttackHREF() {
 		return SmrSession::getNewHREF(create_container('planet_attack_processing.php'));
+	}
+
+	public function getBuildHREF($planetBuilding) {
+		$container = create_container('planet_construction_processing.php');
+		$container['construction_id'] = $planetBuilding['ConstructionID'];
+		$container['action'] = 'Build';
+		return SmrSession::getNewHREF($container);
+	}
+
+
+	public function getCancelHREF($planetBuilding) {
+		$container = create_container('planet_construction_processing.php');
+		$container['construction_id'] = $planetBuilding['ConstructionID'];
+		$container['action'] = 'Cancel';
+		return SmrSession::getNewHREF($container);
 	}
 
 
