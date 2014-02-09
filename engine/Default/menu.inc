@@ -128,15 +128,29 @@ function create_trader_menu() {
 						array('Link'=>Globals::getTraderBountiesHREF(),'Text'=>'Bounties')));
 }
 
-function create_planet_menu() {
+function create_planet_menu($planet) {
 	global $template;
-	$template->assign('MenuItems', array(
-						array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main'),
-						array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction'),
-						array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defenses'),
-						array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership'),
-						array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile'),
-						array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial')));
+	
+	$menu_array = array();
+	$menu_array[] = array('Link'=>Globals::getPlanetMainHREF(),'Text'=>'Planet Main');
+	$planetOptions = $planet->getOptions();
+	if ($planetOptions['CONSTRUCTION']) {
+		$menu_array[] = array('Link'=>Globals::getPlanetConstructionHREF(),'Text'=>'Construction');
+	}
+	if ($planetOptions['DEFENSE']) {
+		$menu_array[] = array('Link'=>Globals::getPlanetDefensesHREF(),'Text'=>'Defense');
+	}
+	if ($planetOptions['OWNERSHIP']) {
+		$menu_array[] = array('Link'=>Globals::getPlanetOwnershipHREF(),'Text'=>'Ownership');
+	}
+	if ($planetOptions['STOCKPILE']) {
+		$menu_array[] = array('Link'=>Globals::getPlanetStockpileHREF(),'Text'=>'Stockpile');
+	}
+	if ($planetOptions['FINANCE']) {
+		$menu_array[] = array('Link'=>Globals::getPlanetFinancesHREF(),'Text'=>'Financial');
+	}
+	
+	$template->assign('MenuItems', $menu_array);	
 }
 
 /*

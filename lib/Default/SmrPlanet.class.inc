@@ -8,7 +8,7 @@ class SmrPlanet {
 	const TIME_TO_CREDIT_BUST = 10800; // 3 hours
 	const TIME_BEFORE_REPLACING_BREAKING_NEWS = 600; // 10 minutes
 
-	protected static $maxBuildings;
+	protected $maxBuildings;
 
 	protected $db;
 
@@ -18,6 +18,7 @@ class SmrPlanet {
 	protected $ownerID;
 	protected $password;
 	protected $shields;
+	protected $armour;
 	protected $drones;
 	protected $credits;
 	protected $bonds;
@@ -26,12 +27,19 @@ class SmrPlanet {
 	protected $buildings;
 	protected $inhabitableTime;
 	protected $currentlyBuilding;
-
+	protected $typeID;
+	protected $typeName;
+	protected $typeImage;
+	protected $typeDescription;
+	
+	protected $canOptions;
 	protected $hasChanged = false;
 	protected $hasChangedStockpile = false;
 	protected $hasChangedBuildings = array();
 	protected $hasStoppedBuilding = array();
 	protected $isNew = false;
+	protected $maxAttackers;
+	protected $maxLanded;
 
 	protected $delayedShieldsDelta = 0;
 	protected $delayedCDsDelta = 0;
@@ -64,15 +72,15 @@ class SmrPlanet {
 		return self::$CACHE_PLANETS[$gameID][$sectorID];
 	}
 
-	public static function &createPlanet($gameID,$sectorID) {
+	public static function &createPlanet($gameID,$sectorID,$type=1) {
 		if(!self::getPlanet($gameID,$sectorID)->exists()) {
 			require_once(get_file_loc('SmrGame.class.inc'));
 			$inhabitableTime = SmrGame::getGame($gameID)->getStartDate() + pow(mt_rand(45, 85), 3);
 
 			// insert planet into db
 			$db = new SmrMySqlDatabase();
-			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time)
-				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ')');
+			$db->query('INSERT INTO planet (game_id, sector_id, inhabitable_time, planet_type_id)
+				VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber($sectorID) . ', ' . $db->escapeNumber($inhabitableTime) . ', ' . $db->escapeNumber($type) . ')');
 		}
 		return self::getPlanet($gameID,$sectorID,true);
 		//		if(!isset(self::$CACHE_PLANETS[$gameID][$sectorID])) {
@@ -92,6 +100,9 @@ class SmrPlanet {
 					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
 		$db->query('DELETE FROM planet_is_building
 					WHERE game_id = ' . $db->escapeNumber($gameID) . ' AND sector_id = ' . $db->escapeNumber($sectorID));
+		//kick everyone from planet
+		$db->query('UPDATE player SET land_on_planet = \'FALSE\' WHERE sector_id = ' . $db->escapeNumber($sectorID) . ' AND game_id = ' . $db->escapeNumber($gameID));
+
 		self::$CACHE_PLANETS[$gameID][$sectorID] = null;
 		unset(self::$CACHE_PLANETS[$gameID][$sectorID]);
 	}
@@ -163,13 +174,18 @@ class SmrPlanet {
 			$this->ownerID			= $this->db->getInt('owner_id');
 			$this->password			= $this->db->getField('password');
 			$this->shields			= $this->db->getInt('shields');
+			$this->armour 			= $this->db->getInt('armour');
 			$this->drones			= $this->db->getInt('drones');
 			$this->credits			= $this->db->getInt('credits');
 			$this->bonds			= $this->db->getInt('bonds');
 			$this->maturity			= $this->db->getInt('maturity');
 			$this->inhabitableTime	= $this->db->getInt('inhabitable_time');
-
+			$this->typeID 			= $this->db->getInt('planet_type_id');
+			
+			$this->updateTypeInfo();
+			$this->getOptions();
 			$this->getStockpile();
+			$this->setMaxBuildings();
 			$this->getBuildings();
 			$this->getCurrentlyBuilding();
 			$this->calculateInterest();
@@ -362,7 +378,7 @@ class SmrPlanet {
 		$this->bonds = $num;
 		$this->hasChanged = true;
 	}
-
+	
 	public function increaseBonds($num) {
 		if($num == 0) {
 			return;
@@ -383,6 +399,9 @@ class SmrPlanet {
 		}
 		if ($this->getCDs() > $this->getMaxCDs()) {
 			$this->setCDs($this->getMaxCDs());
+		}
+		if ($this->getArmour() > $this->getMaxArmour()) {
+				$this->setArmour($this->getMaxArmour());
 		}
 	}
 
@@ -436,6 +455,56 @@ class SmrPlanet {
 		return $this->getBuilding(PLANET_GENERATOR) * PLANET_GENERATOR_SHIELDS;
 	}
 
+	public function getArmour($delayed = false) {
+		return $this->armour + ($delayed?$this->delayedArmourDelta:0);
+	}
+
+	public function hasArmour($delayed = false) {
+		return $this->getArmour($delayed)>0;
+	}
+
+	public function setArmour($armour) {
+		if($armour<0) {
+			$armour=0;
+		}
+		if ($armour > $this->getMaxArmour()) {
+			$armour = $this->getMaxArmour();
+		}
+		if($this->armour == $armour) {
+			return;
+		}
+		$this->armour = $armour;
+		$this->hasChanged = true;
+	}
+
+	public function decreaseArmour($number, $delayed = false) {
+		if($number == 0) {
+			return;
+		}
+		if($delayed===false) {
+			$this->setArmour($this->getArmour() - $number);
+		}
+		else {
+			$this->delayedArmourDelta -= $number;
+		}
+	}
+
+	public function increaseArmour($number, $delayed = false) {
+		if($number == 0) {
+			return;
+		}
+		if($delayed===false) {
+			$this->setArmour($this->getArmour() + $number);
+		}
+		else {
+			$this->delayedArmourDelta += $number;
+		}
+	}
+
+	public function getMaxArmour() {
+		return $this->getBuilding(PLANET_BUNKER) * PLANET_BUNKER_ARMOUR;
+	}
+
 	public function getCDs($delayed = false) {
 		return $this->drones + ($delayed?$this->delayedCDsDelta:0);
 	}
@@ -487,7 +556,7 @@ class SmrPlanet {
 	}
 
 	public function isDestroyed($delayed = false) {
-		return !$this->hasCDs($delayed) && !$this->hasShields($delayed);
+		return !$this->hasCDs($delayed) && !$this->hasShields($delayed) && !$this->hasArmour($delayed);
 	}
 
 	public function exists() {
@@ -594,11 +663,19 @@ class SmrPlanet {
 	function getCurrentlyBuilding() {
 		if(!isset($this->currentlyBuilding)) {
 			$this->currentlyBuilding = array();
-			$this->db->query('SELECT * FROM planet_is_building WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
+
+			$this->db->query('
+				SELECT * 
+				FROM planet_is_building 
+				JOIN planet_can_build USING(construction_id)
+				WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' 
+				AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()). ' 
+				AND planet_type_id = '.$this->getTypeID());
+			
 			while($this->db->nextRecord()) {
 				if($this->db->getInt('time_complete') <= TIME) {
 					$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-					$expGain = $PLANET_BUILDINGS[$this->db->getInt('construction_id')]['ExpGain'];
+					$expGain = $this->db->getInt('exp_gain');
 					$player =& SmrPlayer::getPlayer($this->db->getInt('constructor_id'),$this->getGameID());
 					$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
 					$player->increaseExperience($expGain);
@@ -620,21 +697,18 @@ class SmrPlanet {
 		return $this->currentlyBuilding;
 	}
 
-	public static function getMaxBuildings($buildingTypeID=false) {
-		if(!isset(self::$maxBuildings)) {
-			self::$maxBuildings = array();
-
-			$db = new SmrMySqlDatabase();
-			// get buildingss from db
-			$db->query('SELECT construction_id, max_construction FROM planet_construction');
-			while ($db->nextRecord()) {
-				self::$maxBuildings[$db->getInt('construction_id')] = $db->getInt('max_construction');
-			}
+	public function getMaxBuildings($buildingTypeID=false) {
+		if (!isset($this->maxBuildings)) {
+			$this->setMaxBuildings();
 		}
 		if($buildingTypeID===false) {
-			return self::$maxBuildings;
+			return $this->$maxBuildings;
 		}
-		return self::$maxBuildings[$buildingTypeID];
+		
+		if (isset($this->maxBuildings[$buildingTypeID])) {
+			return $this->maxBuildings[$buildingTypeID];
+		}
+		return 0;
 		//			global $PRIMARY_BUILDINGS;
 		//			$PLANET_BUILDINGS = Globals::getPlanetBuildings();
 		//				if (isset($PRIMARY_BUILDINGS[$building_type_id]))
@@ -651,14 +725,145 @@ class SmrPlanet {
 		//						query('UPDATE planet SET planet_type = ' . $planet['Type ID'] . ' WHERE '.$planet['SQL'].' LIMIT 1');
 		//					}
 	}
+	
+	public function setMaxBuildings() {
+		$this->maxBuildings = array();
 
+		$this->db->query('SELECT construction_id, max_amount FROM planet_can_build WHERE planet_type_id='.$this->getTypeID());
+		while ($this->db->nextRecord()) {
+			$this->maxBuildings[$this->db->getInt('construction_id')] = $this->db->getInt('max_amount');
+		}
+	}
+	
+	
+	public function getTypeID() {
+		return $this->typeID;
+	}
+	
+	public function setTypeID($num) {
+		$this->typeID = $num;
+		$this->db->query('UPDATE planet SET planet_type_id = '.$this->db->escapeNumber($num).' WHERE game_id = ' . $this->getGameID()
+			. ' AND sector_id = '.$this->getSectorID());
+			
+		//this will allow get to load new set from db
+		unset($this->canOptions);
+		
+		//trim buildings first
+		$this->setMaxBuildings();
+		foreach ($this->buildings as $id => $amt) {
+			if ($this->getMaxBuildings($id) < $amt) {
+				$this->destroyBuilding($id,$amt - $this->getMaxBuildings($id));
+			}
+		}
+		
+		//trim excess defenses
+		$this->checkForExcessDefense();
+		
+		$this->getOptions();
+		$this->updateTypeInfo();
+		$this->hasChanged = true;
+		$this->update();
+	}
+	
+	public function updateTypeInfo() {
+	
+		$this->db->query('SELECT * FROM planet_type WHERE planet_type_id = ' . $this->getTypeID());
+		if ($this->db->nextRecord()) {
+			$this->setTypeName($this->db->getField('planet_type_name'));
+			$this->setTypeImage($this->db->getField('planet_image_link'));
+			$this->setTypeDescription($this->db->getField('planet_type_description'));
+			$this->setMaxAttackers($this->db->getInt('planet_max_attackers'));
+			$this->maxLanded = $this->db->getInt('planet_max_landed');
+		} else {
+			$this->setTypeName("No Type Defined");
+			$this->setTypeImage("image/planet.gif");
+			$this->setTypeDescription("No description defined in database, cotnact admins!");
+			$this->setMaxAttackers(0);
+			$this->maxLanded = 0;
+		}
+	}
+	//not public on purpose
+	function setTypeName($name) {
+		$this->typeName = $name;
+	}
+	
+	function setTypeImage($img) {
+		$this->typeImage = $img;
+	}
+	
+	function setTypeDescription($des) {
+		$this->typeDescription = $des;
+	}
+	
+	
+	public function getTypeImage() {
+		if (isset($this->typeImage))
+			return $this->typeImage;
+		return "Error";
+	}
+	
+	public function getTypeName() {
+		if (isset($this->typeName))
+			return $this->typeName;
+		return "Error";
+	}
+	
+	public function getTypeDescription() {
+		if (isset($this->typeDescription))
+			return $this->typeDescription;
+		return "Error";
+	}
+	
+	public function getPlanetID() {
+		return $this->palentID;
+	}
+	
+	public function setPlanetID($num) {
+		$this->typeID = $num;
+		$this->hasChanged = true;
+	}
+	
+	public function getOptions($option=false) {
+
+		if(!isset($this->canOptions)) {
+			// initialize options menu array
+			$this->canOptions = array();
+			// get options from db
+			$this->db->query('SELECT * FROM planet_type_has_section WHERE planet_type_id = ' . $this->db->escapeNumber($this->getTypeID()));
+			// adding options to array
+			while ($this->db->nextRecord()) {
+				$this->canOptions[$this->db->getField('planet_section')] = true;	
+			}
+		}	
+
+		if ($option) {
+			if (isset ($this->canOptions[$option])) {
+				return $this->canOptions[$option];
+			}
+			return false;
+		}
+		return $this->canOptions;
+	}
+	
 	public function doDelayedUpdates() {
 		$this->setShields($this->getShields(true));
 		$this->delayedShieldsDelta = 0;
 		$this->setCDs($this->getCDs(true));
 		$this->delayedCDsDelta = 0;
 	}
+	
+	public function getMaxAttackers() {
+		return $this->maxAttackers;
+	}
+	
+	public function setMaxAttackers($value) {
+		$this->maxAttackers = $value;
+	}
 
+	public function getMaxLanded() {
+		return $this->maxLanded;
+	}
+	
 	public function update() {
 		if(!$this->exists()) {
 			return;
@@ -669,6 +874,7 @@ class SmrPlanet {
 									password = '.$this->db->escapeString($this->password) .',
 									planet_name = ' . $this->db->escapeString($this->planetName) . ',
 									shields = ' . $this->db->escapeNumber($this->shields) . ',
+									armour = ' . $this->db->escapeNumber($this->armour) . ',
 									drones = ' . $this->db->escapeNumber($this->drones) . ',
 									credits = ' . $this->db->escapeNumber($this->credits) . ',
 									bonds = ' . $this->db->escapeNumber($this->bonds) . ',
@@ -720,7 +926,19 @@ class SmrPlanet {
 	}
 
 	function getLevel() {
-		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_TURRET)) / 3;
+		return ($this->getBuilding(PLANET_GENERATOR) + $this->getBuilding(PLANET_HANGAR) + $this->getBuilding(PLANET_BUNKER) + $this->getBuilding(PLANET_TURRET)) / 3;
+	}
+	
+	function getMaxLevel() {
+		$level = 0;
+		$level += $this->maxBuildings[PLANET_GENERATOR];
+		$level += $this->maxBuildings[PLANET_HANGAR];
+		$level += $this->maxBuildings[PLANET_BUNKER];
+		$level += $this->maxBuildings[PLANET_TURRET];
+		//foreach ($this->maxBuildings as $id => $amount) {
+		//	$level += $amount/3;
+		//}
+		return ($level / 3);
 	}
 
 	function accuracy() {
@@ -746,11 +964,11 @@ class SmrPlanet {
 		if($this->hasCurrentlyBuilding()) {
 			return 'There is already a building in progress!';
 		}
-		if($this->getBuilding($constructionID) >= self::getMaxBuildings($constructionID)) {
+		if($this->getBuilding($constructionID) >= $this->getMaxBuildings($constructionID)) {
 			return 'This planet has reached the maximum buildings of that type.';
 		}
 		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-		if($constructor->getCredits() < $PLANET_BUILDINGS[$constructionID]['Credit Cost']) {
+		if($constructor->getCredits() < $PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]) {
 			return 'You do not have enough credits.';
 		}
 		// take the goods that are needed
@@ -764,11 +982,19 @@ class SmrPlanet {
 
 	function getConstructionTime($constructionID) {
 		$buildings = $this->getBuildings();
-		$PLANET_BUILDINGS = &Globals::getPlanetBuildings();
+		$baseTime = 0;
+		$this->db->query('
+			SELECT * 
+			FROM planet_can_build 
+			WHERE planet_type_id = '.$this->getTypeID().' 
+			AND construction_id = '.$this->db->escapeNumber($constructionID));
+		if ($this->db->nextRecord()) {
+			$baseTime = $this->db->getInt('cost_time');
+		}
 		$currentBuildings = $buildings[$constructionID];
-		$maxBuildings = $PLANET_BUILDINGS[$constructionID]['Max Amount'];
+		$maxBuildings = $this->getMaxBuildings($constructionID);
 		// Replace this with the real equations once RCK provides some that aren't gibberish.
-		$constructionTime = TIME + ceil(3.8030328 * $PLANET_BUILDINGS[$constructionID]['Build Time'] * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
+		$constructionTime = TIME + ceil(3.8030328 * $baseTime * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
 		return $constructionTime;
 	}
 	
@@ -777,7 +1003,7 @@ class SmrPlanet {
 			throw new Exception('Unable to start building: '.$message);
 		}
 		$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-		$constructor->decreaseCredits($PLANET_BUILDINGS[$constructionID]['Credit Cost']);
+		$constructor->decreaseCredits($PLANET_BUILDINGS[$constructionID]['Credit Cost'][$this->getTypeID()]);
 		// take the goods that are needed
 		foreach($PLANET_BUILDINGS[$constructionID]['Goods'] as $goodID => $amount) {
 			$this->decreaseStockpile($goodID,$amount);
@@ -879,10 +1105,16 @@ class SmrPlanet {
 		}
 	}
 
+	
+	
 	public function &getPlayers() {
 		return SmrPlayer::getPlanetPlayers($this->getGameID(),$this->getSectorID());
 	}
 
+	public function countPlayers() {
+		return count($this->getPlayers());
+	}
+	
 	public function hasPlayers() {
 		return count($this->getPlayers()) > 0;
 	}
@@ -967,7 +1199,7 @@ class SmrPlanet {
 		// Chance of planetary structure damage = For every 70 damage there is a 15% chance of destroying a structure.
 		// Turrets have a 1 in 6 chance of being destroyed
 		// Hangers have a 2 in 6 chance of being destroyed
-		// Generators 3 in 6 chance of being destroyed
+		// Generators/Bunkers 3 in 6 chance of being destroyed
 		//iterate over all chances
 		for ($i = 0; $damage > self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE; $damage-=self::DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE) {
 			//15% chance to destroy something
@@ -1002,7 +1234,15 @@ class SmrPlanet {
 							$this->checkForExcessDefense();
 							break;
 						}
-						//if no gens then we fall through
+						//if no gens try bunker
+						if ($this->hasBuilding(PLANET_BUNKER)) {
+							$results .= 'This team destroys <span style ="color:red;">1</span> generator.<br />';
+							$this->destroyBuilding(PLANET_BUNKER, 1);
+							$this->checkForExcessDefense();
+							break;
+						}
+						
+						//if no bunker then we fall through
 					default:
 						//very rare that we will not have a gen to destroy.
 						$results .= 'A planetary structure barely survived the onslaught.<br />';
@@ -1019,17 +1259,34 @@ class SmrPlanet {
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if(!$alreadyDead) {
-			if($damage['Shield'] || !$this->hasShields(true)) {
+			if($damage['Shield'] && $this->hasShields(true)) {
 				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']),$delayed);
+				$damage['Shield'] -= $shieldDamage;
 				$damage['MaxDamage'] -= $shieldDamage;
+				
 				if(!$this->hasShields(true) && ($shieldDamage == 0 || $damage['Rollover'])) {
-					$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
-					$damage['Armour'] -= $cdDamage;
-					$damage['MaxDamage'] -= $cdDamage;
+					if ($this->hasCDs(true)) {
+						$cdDamage = $this->doCDDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
+						$damage['Armour'] -= $cdDamage;
+						$damage['MaxDamage'] -= $cdDamage;
+					}
+					if ($damage['Armour'] and !$this->hasArmour(true) ) {
+						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
+						$damage['Armour'] -= $armourDamage;
+						$damage['MaxDamage'] -= $armourDamage;
+					}
 				}
+				
 			}
-			else { //hit drones behind shields
+			if ($this->hasCDs(true)) { //hit drones behind shields
 				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'],$damage['Armour'])*DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT),$delayed);
+				$damage['Armour'] -= $cdDamage;
+				$damage['MaxDamage'] -= $cdDamage;
+			}
+			if ($damage['Armour'] and !$this->hasShields(true)) { //hit armour 
+				$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
+				$damage['Armour'] -= $armourDamage;
+				$damage['MaxDamage'] -= $armourDamage;
 			}
 		}
 
@@ -1039,6 +1296,7 @@ class SmrPlanet {
 			'Shield' => $shieldDamage,
 			'Armour' => $armourDamage,
 			'HasShields' => $this->hasShields(true),
+			'HasArmour' => $this->hasArmour(true),
 			'CDs' => $cdDamage,
 			'NumCDs' => $cdDamage/CD_ARMOUR,
 			'HasCDs' => $this->hasCDs(true),
@@ -1057,6 +1315,12 @@ class SmrPlanet {
 		$actualDamage = min($this->getCDs(true),floor($damage/CD_ARMOUR));
 		$this->decreaseCDs($actualDamage, $delayed);
 		return $actualDamage*CD_ARMOUR;
+	}
+	
+	protected function doArmourDamage($damage, $delayed) {
+		$actualDamage = min($this->getArmour(true),$damage);;
+		$this->decreaseArmour($actualDamage, $delayed);
+		return $actualDamage;
 	}
 
 	public function creditCurrentAttackersForKill() {

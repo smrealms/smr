@@ -130,8 +130,10 @@ define('DEFEND_PORT_BOUNTY_PER_LEVEL',1000000);
 define('PLANET_GENERATOR',1);
 define('PLANET_HANGAR',2);
 define('PLANET_TURRET',3);
+define('PLANET_BUNKER',4);
 define('PLANET_GENERATOR_SHIELDS',100);
 define('PLANET_HANGAR_DRONES',20);
+define('PLANET_BUNKER_ARMOUR',100);
 
 define('ALIGN_FED_PROTECTION', 0);
 
@@ -255,6 +257,7 @@ define('HARDWARE_DCS',11);
  */
 define('GENERATOR',1);
 define('HANGAR',1);
+define('BUNKER',1);
 define('TURRET',1);
 
 define('BOND_TIME',172800);

@@ -295,15 +295,26 @@ elseif ($submit == 'Edit Sector') {
 	else
 		$sector->disableLink('Right');
 	//update planet
-	if ($_POST['plan_type'] == 'Uninhab') {
-		$sector->createPlanet();
+	if ($_POST['plan_type'] != '0') {
+		if (!$sector->hasPlanet()) {
+			$sector->createPlanet($_POST['plan_type']);
+		}
+		else {
+			$type = $sector->getPlanet()->getTypeID();
+			if ($_POST['plan_type'] != $type) {
+				$sector->getPlanet()->setTypeID($_POST['plan_type']);
+			}
+		}
 	}
+	
 //	elseif ($_POST['plan_type'] == 'NPC') {
 //		$GAL_PLANETS[$this_sec]['Inhabitable'] = 1;
 //		$GAL_PLANETS[$this_sec]['Owner'] = 0;
 //		$GAL_PLANETS[$this_sec]['Owner Type'] = 'NPC';
 //	}
-	else $sector->removePlanet();
+	else {
+		$sector->removePlanet();
+	}
 	//update port
 	if ($_POST['port_level'] > 0) {
 		if(!$sector->hasPort()) {

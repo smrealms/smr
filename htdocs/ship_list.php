@@ -109,16 +109,16 @@ try {
 	$order = @$_REQUEST['order'];
 	$hardwarea = @$_REQUEST['hardwarea'];
 	
-	$class		= buildSelector($db, "classPick", "ship_class_name", "ship_class");
-	$race		= buildSelector($db, "racePick", "race_name", "race");
-	$speed		= buildSelector($db, "speedPick", "speed", "ship_type");
-	$hardpoint	= buildSelector($db, "hpPick", "hardpoint", "ship_type");
+	$class		= buildSelector($db, 'class', 'ship_class_name', 'ship_class');
+	$race		= buildSelector($db, 'race', 'race_name', 'race', 'race_id');
+	$speed		= buildSelector($db, 'speed', 'speed', 'ship_type');
+	$hardpoint	= buildSelector($db, 'hp', 'hardpoint', 'ship_type');
 	$restrict	= buildRestriction();
-	$scanner	= buildToggle("scannerPick");
-	$cloak		= buildToggle("cloakPick");
-	$illusion	= buildToggle("illusionPick");
-	$jump		= buildToggle("jumpPick");
-	$scramble	= buildToggle("scramblePick");
+	$scanner	= buildToggle('scannerPick');
+	$cloak		= buildToggle('cloakPick');
+	$illusion	= buildToggle('illusionPick');
+	$jump		= buildToggle('jumpPick');
+	$scramble	= buildToggle('scramblePick');
 	
 	echo ('<body>');
 	if (empty($seq)) {
@@ -209,11 +209,17 @@ try {
 			<th align="center"><a href="?hardwarea=11&amp;seq=<?php echo $seq; ?>"><span style="color:#80C870;">Scrambler</span></a>
 				<?php echo $scramble ?></th>
 		</tr><?php
-
+	$search = array("'", " ", ",", "<", ">", "\"");
 	foreach($shipArray as $stat) {
 		echo ('<tr>');
-		foreach ($stat as $value)
-			echo ('<td align="center">'.$value.'</td>');
+		foreach ($stat as $value) {
+			$class = '';
+			if(is_array($value)) {
+				$class = 'class="' . $value[0] . '"';
+				$value = $value[1];
+			}
+			echo ('<td align="center" '.$class.'>'.$value.'</td>');
+		}
 		echo ('</tr>');
 	} ?>
 	</table></div></div><?php
@@ -222,12 +228,19 @@ catch(Exception $e) {
 	handleException($e);
 }
 
-function buildSelector($db, $id, $name, $table) {
-	$selector = '<br><select id="'.$id.'" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
-	$db->query("select distinct ".$name." from ".$table." order by ".$name);
+function buildSelector($db, $id, $name, $table, $typeField = false) {
+	$selector = '<br><select id="'.$id.'Pick" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
+	$db->query('
+		SELECT DISTINCT '.$name. ($typeField!==false?',' . $typeField: '') . '
+		FROM '.$table.'
+		ORDER BY '.$name);
+	$class = '';
 	while ($db->nextRecord()) {
-		$selector .= '<option value="'.$db->getField($name).'">'
-		.$db->getField($name).'</option>';
+		if($typeField !== false) {
+			$class = ' class="' . $id . $db->getInt($typeField) . '"';
+		}
+		$selector .= '<option value="'.$db->getField($name).'"'.$class.'">'
+			.$db->getField($name).'</option>';
 	}
 	$selector .= '</select>';
 	return $selector;
@@ -259,7 +272,7 @@ function buildShipStats($db) {
 	$stat = array();
 	$stat[] = str_replace(' ','&nbsp;',$db->getField('ship_name'));
 	//$stat[] = str_replace(' ','&nbsp;',$db->getField('race_name'));
-	$stat[] = $db->getField('race_name');
+	$stat[] = array('race' . $db->getInt('race_id'), $db->getField('race_name'));
 	$stat[] = str_replace(' ','&nbsp;',$db->getField('ship_class_name'));
 	$stat[] = number_format($db->getInt('cost'));
 	$stat[] = $db->getInt('speed');
