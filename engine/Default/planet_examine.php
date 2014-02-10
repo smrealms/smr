@@ -6,8 +6,8 @@ $planet =& $player->getSectorPlanet();
 $template->assignByRef('ThisPlanet', $planet);
 
 $planetLand = 
-	$planet->getOwner()->sameAlliance($player)
-	|| !$planet->hasOwner()
+	!$planet->hasOwner()
+	|| $planet->getOwner()->sameAlliance($player)
 	|| in_array($player->getAccountID(), Globals::getHiddenPlayers());
 
 if(!$planetLand) {
