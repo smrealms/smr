@@ -10,7 +10,7 @@
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
-					<div class="lm_sector <?php echo "galaxy".$Sector->getGalaxy()->getGalaxyID();
+					<div class="lm_sector <?php echo "galaxy".$Sector->getGalaxyID();
 						if($isCurrentSector){ ?> currentSeclm<?php }else if($isLinkedSector){ ?> connectSeclm<?php }else if($isVisited){ ?> normalSeclm<?php }else{ ?> normalSeclmu<?php } ?>"><?php
 						if($isVisited) {
 							if(isset($ToggleLink)) {
@@ -107,10 +107,10 @@
 								}
 								if($Sector->hasForces()) {
 									if($CanScanSector && $Sector->hasEnemyForces($MapPlayer)) {
-										?><img title="Enemy Forces" alt="Enemy Forces" src="images/enemyForces.png" width="13" height="16"/><?php
+										?><img class="enemy" title="Enemy Forces" alt="Enemy Forces" src="images/forces.png" width="13" height="16"/><?php
 									}
 									if($Sector->hasFriendlyForces($MapPlayer)) {
-										?><img title="Friendly Forces" alt="Friendly Forces" src="images/friendlyForces.png" width="13" height="16"/><?php
+										?><img class="friendly" title="Friendly Forces" alt="Friendly Forces" src="images/forces.png" width="13" height="16"/><?php
 									}
 									/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
 								} ?>
