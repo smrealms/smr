@@ -10,7 +10,8 @@
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
-					<div class="lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
+					<div class="lm_sector <?php echo "galaxy".$Sector->getGalaxy()->getGalaxyID();
+						if($isCurrentSector){ ?> currentSeclm<?php }else if($isLinkedSector){ ?> connectSeclm<?php }else if($isVisited){ ?> normalSeclm<?php }else{ ?> normalSeclmu<?php } ?>"><?php
 						if($isVisited) {
 							if(isset($ToggleLink)) {
 								$ToggleLink['sector_id'] = $Sector->getSectorID();
@@ -95,10 +96,13 @@
 							<div class="lmtf"><?php
 								if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($MapPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($MapPlayer))) {
 									if($CanScanSector && $Sector->hasEnemyTraders($MapPlayer)) {
-										?><img title="Enemy Trader" alt="Enemy Trader" src="images/enemyTrader.png" width="13" height="16"/><?php
+										?><img class="enemy" title="Enemy Trader" alt="Enemy Trader" src="images/trader.png" width="13" height="16"/><?php
+									}
+									if($CanScanSector && $Sector->hasProtectedTraders($MapPlayer)) {
+										?><img class="neutral" title="Protected Trader" alt="Protected Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
 									if($Sector->hasFriendlyTraders($MapPlayer)) {
-										?><img title="Friendly Trader" alt="Friendly Trader" src="images/friendlyTrader.png" width="13" height="16"/><?php
+										?><img class="friendly" title="Friendly Trader" alt="Friendly Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
 								}
 								if($Sector->hasForces()) {

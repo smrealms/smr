@@ -424,10 +424,6 @@ a.lmUp:hover div, a.lmLeft:hover div, a.lmRight:hover div, a.lmDown:hover div {
 	z-index: 1;
 }
 
-
-
-
-
 /** Chess **/
 .chessFont {
 	font-family: 'Times New Roman';
