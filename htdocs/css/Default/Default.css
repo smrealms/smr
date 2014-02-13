@@ -262,10 +262,10 @@ table.csForces th.header {
 /* Friend vs Foe shades */
 
 .enemy {
-	background-color: #C00;
+	background-color: #FF0000;
 }
 .friendly {
-	background-color: rgb(11, 141, 53);
+	background-color: #00AA00;
 }
 .neutral {
 	background-color: yellow;
