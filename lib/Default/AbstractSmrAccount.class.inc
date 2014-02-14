@@ -1168,18 +1168,21 @@ abstract class AbstractSmrAccount {
 	}
 	public function setFriendlyColor($color) {
 		$this->friendlyColor = $color;
+		$this->hasChanged = true;
 	}
 	public function getNeutralColor() {
 		return $this->neutralColor;
 	}
 	public function setNeutralColor($color) {
 		$this->neutralColor = $color;
+		$this->hasChanged = true;
 	}
 	public function getEnemyColor() {
 		return $this->enemyColor;
 	}
 	public function setEnemyColor($color) {
 		$this->enemyColor = $color;
+		$this->hasChanged = true;
 	}
 
 	public function banAccount($expireTime,SmrAccount &$admin,$reasonID,$suspicion,$removeExceptions = false) {

@@ -125,19 +125,22 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Friendly Color:</td>
 			<td><div id="friendlyColorSelector">
-				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>"></div></div></td>
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>"></div>
+				<input type="hidden" name="friendly_color" id="InputFields" value="<?php echo $ThisAccount->getFriendlyColor(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
 			<td>Neutral Color:</td>
 			<td><div id="neutralColorSelector">
-				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>"></div></div></td>
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>"></div>
+				<input type="hidden" name="neutral_color" id="InputFields" value="<?php echo $ThisAccount->getNeutralColor(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
 			<td>Enemy Color:</td>
 			<td><div id="enemyColorSelector">
-				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>"></div></div></td>
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>"></div>
+				<input type="hidden" name="enemy_color" id="InputFields" value="<?php echo $ThisAccount->getEnemyColor(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
