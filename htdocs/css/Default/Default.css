@@ -262,11 +262,40 @@ table.csForces th.header {
 /* Friend vs Foe shades */
 
 .enemy {
+	color: #FF0000;
+}
+.enemy:hover {
+	color: #FF0000;
+}
+.enemyBack {
 	background-color: #FF0000;
 }
+.enemyBack:hover {
+	background-color: #FF0000;
+}
+
 .friendly {
+	color: #00AA00;
+}
+.friendly:hover {
+	color: #00AA00;
+}
+.friendlyBack {
 	background-color: #00AA00;
 }
+.friendlyBack:hover {
+	background-color: #00AA00;
+}
+
 .neutral {
-	background-color: yellow;
+	color: #FFD800;
+}
+.neutral:hover {
+	color: #FFD800;
+}
+.neutralBack {
+	background-color: #FFD800;
+}
+.neutralBack:hover {
+	background-color: #FFD800;
 }

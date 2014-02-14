@@ -57,11 +57,31 @@
 								<div class="buttonA"><?php
 									if($PlayersContainer instanceof SmrPlanet) {
 										if($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID() && !$ThisPlayer->equals($Player)) {
-											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Kick </a><?php
+											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="
+												<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ 
+													if (!$Player->hasFederalProtection() && !$Player->hasNewbieTurns()) {
+														?> enemy<?php 
+													} else {
+														?> neutral<?php 
+													}
+												} else {
+													?> friendly<?php 
+												}
+												?>"> Kick </a><?php
 										}
 									}
 									else {
-										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="buttonA<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ ?> enemyExamine<?php } ?>"> Examine </a><?php
+										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="
+											<?php if(!$ThisPlayer->traderNAPAlliance($Player)){ 
+												if (!$Player->hasFederalProtection() && !$Player->hasNewbieTurns()) {
+													?> enemy<?php 
+												} else {
+													?> neutral<?php 
+												}	
+											} else {
+												?> friendly<?php 
+											}
+										?>"> Examine </a><?php
 									} ?>
 								</div>
 							</td>
