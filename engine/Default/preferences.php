@@ -1,5 +1,7 @@
 <?php
 $template->assign('PageTopic','Preferences');
+$template->assign('ExtraCSSLink','css/colorpicker.css');
+$template->assign('ExtraJSLink','js/colorpicker.js');
 
 if (isset($var['reason']))
 	$template->assign('Reason',$var['reason']);

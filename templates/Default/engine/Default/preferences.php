@@ -1,4 +1,4 @@
-<?php
+<?php 
 if (isset($Reason)) {
 	?><p><big><span class="bold red"><?php echo $Reason; ?></span></big></p><?php
 }
@@ -120,6 +120,29 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td>Ban Points:</td>
 			<td><?php echo $ThisAccount->getPoints(); ?></td>
+		</tr>
+		
+		<tr>
+			<td>Friendly Color:</td>
+			<td><div id="friendlyColorSelector">
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>"></div></div></td>
+		</tr>
+		
+		<tr>
+			<td>Neutral Color:</td>
+			<td><div id="neutralColorSelector">
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>"></div></div></td>
+		</tr>
+		
+		<tr>
+			<td>Enemy Color:</td>
+			<td><div id="enemyColorSelector">
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>"></div></div></td>
+		</tr>
+		
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Update Colors" id="InputFields" /></td>
 		</tr>
 		
 		<tr>
