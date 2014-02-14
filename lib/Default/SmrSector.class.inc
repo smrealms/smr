@@ -744,8 +744,11 @@ class SmrSector {
 			return false;
 		$otherPlayers =& $this->getOtherTraders($player);
 		foreach($otherPlayers as &$otherPlayer) {
-			if(!$player->traderNAPAlliance($otherPlayer) && $otherPlayer->get('Newbie Turns') == 0)
+			if(!$player->traderNAPAlliance($otherPlayer) 
+				&& !$otherPlayer->hasNewbieTurns()
+				&& !$otherPlayer->hasFederalProtection()) {
 				return true;
+			}
 		} unset($otherPlayer);
 		return false;
 	}
@@ -766,8 +769,10 @@ class SmrSector {
 			return false;
 		$otherPlayers =& $this->getOtherTraders($player);
 		foreach($otherPlayers as &$otherPlayer) {
-			if(!$player->traderNAPAlliance($otherPlayer) && $otherPlayer->get('Newbie Turns') > 0)
+			if(!$player->traderNAPAlliance($otherPlayer) 
+				&& ($otherPlayer->hasNewbieTurns() || $otherPlayer->hasFederalProtection())) {
 				return true;
+			}
 		} unset($otherPlayer);
 		return false;
 	}
