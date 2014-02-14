@@ -482,9 +482,20 @@
 		ColorPickerSetColor: ColorPicker.setColor
 	});
 	//Added by Astax
+	function rgb2hex(rgb) {
+		rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+		function hex(x) {
+			return ("0" + parseInt(x).toString(16)).slice(-2);
+		}
+		return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	}
 	$( document ).ready(function() {
 		$('#friendlyColorSelector').ColorPicker({
 			color: $('#friendlyColorSelector .preview').attr('backgroundColor'),
+			onBeforeShow: function () {
+				var col = rgb2hex($('#friendlyColorSelector .preview').css('backgroundColor'));
+				$(this).ColorPickerSetColor(col);
+			},
 			onShow: function (colpkr) {
 				color: $('#friendlyColorSelector .preview').attr('backgroundColor');
 				$(colpkr).fadeIn(500);
@@ -494,10 +505,15 @@
 			},
 			onChange: function (hsb, hex, rgb) {
 				$('#friendlyColorSelector .preview').css('backgroundColor', '#' + hex);
+				$('#friendlyColorSelector input')[0].value=hex;
 			}
 		});
 		$('#neutralColorSelector').ColorPicker({
-			color: $('#neutralColorSelector .preview').attr('backgroundColor'),
+			color: $('#neutralColorSelector .preview').css('backgroundColor'),
+			onBeforeShow: function () {
+				var col = rgb2hex($('#neutralColorSelector .preview').css('backgroundColor'));
+				$(this).ColorPickerSetColor(col);
+			},
 			onShow: function (colpkr) {
 				$(colpkr).fadeIn(500);
 			},
@@ -506,10 +522,15 @@
 			},
 			onChange: function (hsb, hex, rgb) {
 				$('#neutralColorSelector .preview').css('backgroundColor', '#' + hex);
+				$('#neutralColorSelector input')[0].value=hex;
 			}
 		});
 		$('#enemyColorSelector').ColorPicker({
 			color: $('#enemyColorSelector .preview').attr('backgroundColor'),
+			onBeforeShow: function () {
+				var col = rgb2hex($('#enemyColorSelector .preview').css('backgroundColor'));
+				$(this).ColorPickerSetColor(col);
+			},
 			onShow: function (colpkr) {
 				$(colpkr).fadeIn(500);
 			},
@@ -518,6 +539,7 @@
 			},
 			onChange: function (hsb, hex, rgb) {
 				$('#enemyColorSelector .preview').css('backgroundColor', '#' + hex);
+				$('#enemyColorSelector input')[0].value=hex;
 			}
 		});
 	});

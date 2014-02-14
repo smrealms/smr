@@ -21,6 +21,9 @@ $retype_password = $_REQUEST['retype_password'];
 $HoF_name = trim($_REQUEST['HoF_name']);
 $ircNick = trim($_REQUEST['irc_nick']);
 $cellPhone = trim($_REQUEST['cell_phone']);
+$friendlyColor = $_REQUEST['friendly_color'];
+$neutralColor = $_REQUEST['neutral_color'];
+$enemyColor = $_REQUEST['enemy_color'];
 
 if (USE_COMPATIBILITY && $action == 'Link Account') {
 	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword'])) {
@@ -271,6 +274,12 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	$news = '<span class="blue">ADMIN</span> Please be advised that ' . $old_name . ' has changed their name to ' . $player->getBBLink() . '</span>';
 	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
+}
+else if ($action == 'Update Colors') {
+	$account->setFriendlyColor($friendlyColor);
+	$account->setNeutralColor($neutralColor);
+	$account->setEnemyColor($enemyColor);
+	$account->update();
 }
 
 forward($container);
