@@ -280,6 +280,14 @@ else if ($action == 'Update Colors') {
 	$account->setNeutralColor($neutralColor);
 	$account->setEnemyColor($enemyColor);
 	$account->update();
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have set new colors.';
+}
+else if ($action == 'Default Colors') {
+	$account->setFriendlyColor('00AA00');
+	$account->setNeutralColor('FFD800');
+	$account->setEnemyColor('FF0000');
+	$account->update();
+	$container['msg'] = '<span class="green">SUCCESS: </span>You have restored default colors.';
 }
 
 forward($container);

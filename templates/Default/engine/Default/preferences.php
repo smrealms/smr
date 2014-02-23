@@ -149,6 +149,11 @@ if(isset($GameID)) { ?>
 		</tr>
 		
 		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Default Colors" id="InputFields" /></td>
+		</tr>
+		
+		<tr>
 			<td>Old Password:</td>
 			<td><input type="password" name="old_password" id="InputFields" size="25" /></td>
 		</tr>
