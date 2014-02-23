@@ -234,13 +234,25 @@ div.secNavBox div div {
 /*Local map sectors by galaxy id*/
 
 /* WQ Human = 8 */
-.connectSeclm.galaxy8 {
-	background-color: grey;
+
+.lmt.galaxy8 {
+	background-color: #573b3b;
+}
+.lmsector.galaxy8.visited {
+	color: black;
+}
+.lmsector.galaxy8.unvisited {
+	color: #f0dada;
 }
 .normalSeclm.galaxy8 {
-	background-color: grey;
+	background-color: #a85959;
 }
-
+.currentSeclm.galaxy8{
+	background-color: #d19b9b;
+}
+.connectSeclm.galaxy8 {
+	background-color: #d19b9b;
+}
 
 /* CS */
 table.csShips th.header {

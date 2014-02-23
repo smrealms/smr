@@ -582,7 +582,7 @@ class SmrPlanet {
 
 	public function hasStockpile($goodID=false) {
 		if($goodID===false) {
-			return max($this->getStockpile($goodID)) > 0;
+			return @max($this->getStockpile(false)) > 0;
 		}
 		else {
 			return $this->getStockpile($goodID) > 0;
@@ -996,7 +996,11 @@ class SmrPlanet {
 		if ($this->db->nextRecord()) {
 			$baseTime = $this->db->getInt('cost_time');
 		}
-		$currentBuildings = $buildings[$constructionID];
+		if (isset($buildings[$constructionID])) {
+			$currentBuildings = $buildings[$constructionID];
+		} else {
+			$currentBuildings = 0;
+		}
 		$maxBuildings = $this->getMaxBuildings($constructionID);
 		// Replace this with the real equations once RCK provides some that aren't gibberish.
 		$constructionTime = TIME + ceil(3.8030328 * $baseTime * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));

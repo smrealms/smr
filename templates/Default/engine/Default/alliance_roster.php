@@ -97,13 +97,13 @@ if ($ShowRoles) { ?>
 					if($ThisPlayer->getAllianceID() == $Alliance->getAllianceID()) { ?>
 						<td class="center status"><?php
 							if(in_array($AlliancePlayer->getAccountID(), $ActiveIDs)) { ?>
-								<span class="green">Online</span><?php
+								<span class="friendly">Online</span><?php
 							}
 							else if($ThisPlayer->getAccountID() == $Alliance->getLeaderID() && $Disabled = SmrAccount::getAccount($AlliancePlayer->getAccountID())->isDisabled()) { ?>
-								<span class="red">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT,$Disabled['Time']); ?></span><?php
+								<span class="enemy">Banned Until:<br/><?php echo date(DATE_FULL_SHORT_SPLIT,$Disabled['Time']); ?></span><?php
 							}
 							else { ?>
-								<span class="red">Offline</span><?php
+								<span class="enemy">Offline</span><?php
 							} ?>
 						</td><?php
 					} ?>

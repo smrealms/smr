@@ -1,8 +1,10 @@
-<table class="lmt centered"><?php
-	$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
-	$UniGen = isset($UniGen) ? $UniGen : false;
-	$MapPlayer = $UniGen ? null : $ThisPlayer;
-	$MovementTypes = array('Up','Left','Right','Down');
+<?php
+$GalaxyMap = isset($GalaxyMap)&&$GalaxyMap;
+$UniGen = isset($UniGen) ? $UniGen : false;
+$MapPlayer = $UniGen ? null : $ThisPlayer;
+$MovementTypes = array('Up','Left','Right','Down');
+?>
+<table class="lmt centered <?php echo "galaxy".$MapSectors[0][0]->getGalaxyID(); ?>"><?php
 	foreach($MapSectors as &$MapSector) { ?>
 		<tr><?php
 			foreach($MapSector as &$Sector) {
@@ -21,7 +23,7 @@
 									$ToggleLink['dir'] = $MovementType; ?>
 									<a href="<?php echo SmrSession::getNewHREF($ToggleLink); ?>" class="lm<?php echo $MovementType; ?>"><?php
 								} ?>
-								<div class="lm<?php echo $MovementType; ?> <?php if($Sector->getLink($MovementType)) { ?>con<?php } else { ?>wall<?php } ?>"></div><?php
+								<div class="lm<?php echo $MovementType; ?> <?php echo "galaxy".$Sector->getGalaxyID(); if($Sector->getLink($MovementType)) { ?> con<?php } else { ?> wall<?php } ?>"></div><?php
 								if(isset($ToggleLink)) { ?>
 									</a><?php
 								}
@@ -116,7 +118,7 @@
 								} ?>
 							</div><?php
 						} ?>
-						<div class="lmsector <?php if($isVisited){ ?>visited<?php }else{ ?>unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
+						<div class="lmsector <?php echo "galaxy".$Sector->getGalaxyID(); if($isVisited){ ?> visited<?php }else{ ?> unvisited<?php } ?>"><?php echo $Sector->getSectorID(); ?></div><?php
 						if($UniGen) {
 							$UniGen['sector_id'] = $Sector->getSectorID(); ?>
 							<a class="move_hack" href="<?php echo SmrSession::getNewHREF($UniGen); ?>"></a><?php

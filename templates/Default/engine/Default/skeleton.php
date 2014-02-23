@@ -3,7 +3,8 @@
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8" />
 		<title><?php echo $Title; ?> <?php if(isset($GameName)) echo $GameName; ?></title>
-		<meta http-equiv="pragma" content="no-cache"><?php
+		<meta http-equiv="pragma" content="no-cache">
+		<?php
 		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
 			<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
@@ -61,14 +62,19 @@
 		if(isset($HeaderTemplateInclude)) {
 			$this->includeTemplate($HeaderTemplateInclude);
 		} ?>
-		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" href="css/bootstrap.css">
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="js/jquery.confirm.min.js"></script>
+		
 		<script type="text/javascript" src="js/smr15.js"></script>
+
 		<?php if(isset($ExtraJSLink)) { ?>
 			<script type="text/javascript" src="<?php echo $ExtraJSLink; ?>"></script>
 		<?php } ?>
-
+		
 	</head>
 	<body>
 		<table class="m" align="center">
