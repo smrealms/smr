@@ -25,7 +25,7 @@
 
 	</p>
 
-	<input type="button" class="bond" name="action" value="Bond It!" id="InputFields" />
+	<input type="submit" class="bond" name="action" value="Bond It!" id="InputFields" />
 	
 </form>
 
