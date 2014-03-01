@@ -1,7 +1,7 @@
 -- Retribution to 8 hardpoints, 350 shields, 230 armour, and 0 CDs
 UPDATE ship_type SET hardpoint = 8 WHERE ship_type_id = 73;
 UPDATE ship_type_support_hardware SET max_amount = 350 WHERE ship_type_id = 73 AND hardware_type_id = 1;
-UPDATE ship_type_support_hardware SET max_amount = 350 WHERE ship_type_id = 73 AND hardware_type_id = 2;
+UPDATE ship_type_support_hardware SET max_amount = 230 WHERE ship_type_id = 73 AND hardware_type_id = 2;
 UPDATE ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 73 AND hardware_type_id = 3;
 
 -- Negotiator to 3 hardpoints
@@ -34,16 +34,16 @@ UPDATE ship_type SET hardpoint = 3 WHERE ship_type_id = 45;
 UPDATE ship_type_support_hardware SET max_amount = 325 WHERE ship_type_id = 45 AND hardware_type_id = 1;
 UPDATE ship_type_support_hardware SET max_amount = 50 WHERE ship_type_id = 45 AND hardware_type_id = 2;
 
--- Star Ranger to 5 hardpoints, 325 shields, and 50 armour
+-- Star Ranger to 5 hardpoints, 175 shields, and 150 armour
 UPDATE ship_type SET hardpoint = 5 WHERE ship_type_id = 58;
 UPDATE ship_type_support_hardware SET max_amount = 175 WHERE ship_type_id = 58 AND hardware_type_id = 1;
 UPDATE ship_type_support_hardware SET max_amount = 150 WHERE ship_type_id = 58 AND hardware_type_id = 2;
 
--- Unarmed Scout to 325 shields and 50 armour
+-- Unarmed Scout to 300 shields and 175 armour
 UPDATE ship_type_support_hardware SET max_amount = 300 WHERE ship_type_id = 13 AND hardware_type_id = 1;
 UPDATE ship_type_support_hardware SET max_amount = 175 WHERE ship_type_id = 13 AND hardware_type_id = 2;
 
--- Watchful Eye to 3 hardpoints, 325 shields, and 50 armour
+-- Watchful Eye to 3 hardpoints, 150 shields, and 200 armour
 UPDATE ship_type SET hardpoint = 5 WHERE ship_type_id = 52;
 UPDATE ship_type_support_hardware SET max_amount = 150 WHERE ship_type_id = 52 AND hardware_type_id = 1;
 UPDATE ship_type_support_hardware SET max_amount = 200 WHERE ship_type_id = 52 AND hardware_type_id = 2;
