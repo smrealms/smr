@@ -229,7 +229,7 @@ catch(Exception $e) {
 }
 
 function buildSelector($db, $id, $name, $table, $typeField = false) {
-	$selector = '<br><select id="'.$id.'Pick" name="'.$name.'" onchange="'.$id.'f()"><option value="All">All</option>';
+	$selector = '<br><select id="'.$id.'Pick" name="'.$name.'" onchange="'.$id.'Pickf()"><option value="All">All</option>';
 	$db->query('
 		SELECT DISTINCT '.$name. ($typeField!==false?',' . $typeField: '') . '
 		FROM '.$table.'
@@ -237,9 +237,9 @@ function buildSelector($db, $id, $name, $table, $typeField = false) {
 	$class = '';
 	while ($db->nextRecord()) {
 		if($typeField !== false) {
-			$class = ' class="' . $id . $db->getInt($typeField) . '"';
+			$class = 'class="' . $id . $db->getInt($typeField) . '"';
 		}
-		$selector .= '<option value="'.$db->getField($name).'"'.$class.'">'
+		$selector .= '<option '.$class.' value="'.$db->getField($name).'">'
 			.$db->getField($name).'</option>';
 	}
 	$selector .= '</select>';
