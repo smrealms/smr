@@ -407,6 +407,14 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 }
 
 function get_colored_text($value, $text = null, $type='Game', $return_type = 'Normal') {
+	if ($value > 300) {
+		$class = 'friendly';
+	} else if ($value < -300) {
+		$class = 'enemy';
+	} else {
+		$class = 'neutral';
+	}
+	return '<span class="' . $class . '">' . $text . '</span>';
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
 }
 
