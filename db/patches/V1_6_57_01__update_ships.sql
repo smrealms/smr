@@ -2,7 +2,8 @@
 UPDATE ship_type SET hardpoint = 8 WHERE ship_type_id = 73;
 UPDATE ship_type_support_hardware SET max_amount = 350 WHERE ship_type_id = 73 AND hardware_type_id = 1;
 UPDATE ship_type_support_hardware SET max_amount = 230 WHERE ship_type_id = 73 AND hardware_type_id = 2;
-UPDATE ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 73 AND hardware_type_id = 3;
+UPDATE ship_type_support_hardware SET max_amount = 70 WHERE ship_type_id = 73 AND hardware_type_id = 3;
+UPDATE ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 73 AND hardware_type_id = 4;
 
 -- Negotiator to 3 hardpoints
 UPDATE ship_type SET hardpoint = 3 WHERE ship_type_id = 63;
@@ -10,7 +11,8 @@ UPDATE ship_type SET hardpoint = 3 WHERE ship_type_id = 63;
 -- Vindicator to 8 hardpoints, 475 shields, and 0 CDs
 UPDATE ship_type SET hardpoint = 8 WHERE ship_type_id = 74;
 UPDATE ship_type_support_hardware SET max_amount = 475 WHERE ship_type_id = 74 AND hardware_type_id = 1;
-UPDATE ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 74 AND hardware_type_id = 3;
+UPDATE ship_type_support_hardware SET max_amount = 50 WHERE ship_type_id = 74 AND hardware_type_id = 3;
+UPDATE ship_type_support_hardware SET max_amount = 0 WHERE ship_type_id = 74 AND hardware_type_id = 4;
 
 -- Planetary Freighter to 450 shields and 900 armour
 UPDATE ship_type_support_hardware SET max_amount = 450 WHERE ship_type_id = 11 AND hardware_type_id = 1;
