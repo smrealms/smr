@@ -582,7 +582,8 @@ class SmrPlanet {
 
 	public function hasStockpile($goodID=false) {
 		if($goodID===false) {
-			return max($this->getStockpile($goodID)) > 0;
+			$stockpile = $this->getStockpile($goodID);
+			return count($stockpile) > 0 && max($stockpile) > 0;
 		}
 		else {
 			return $this->getStockpile($goodID) > 0;
