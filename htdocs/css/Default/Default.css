@@ -233,8 +233,9 @@ div.secNavBox div div {
 
 /*Local map sectors by galaxy id*/
 
-/* WQ Human = 8 */
+/* WQ Human = 8 as example */
 
+/*
 .lmt.galaxy8 {
 	background-color: #573b3b;
 }
@@ -253,7 +254,7 @@ div.secNavBox div div {
 .connectSeclm.galaxy8 {
 	background-color: #d19b9b;
 }
-
+*/
 /* CS */
 table.csShips th.header {
 	background: #500;
