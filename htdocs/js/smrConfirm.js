@@ -23,3 +23,16 @@ $(".bond").confirm({
     confirmButton: "Yes",
     cancelButton: "No"
 });
+$(".kick").confirm({
+    text: "Are you sure you want to kick this player?",
+    confirm: function(button) {
+		//this is also a hack :/
+		window.location = button[0].href;
+		
+    },
+    cancel: function(button) {
+
+    },
+    confirmButton: "Yes",
+    cancelButton: "No"
+});
