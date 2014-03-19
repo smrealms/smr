@@ -101,7 +101,11 @@ if(isset($GameID)) { ?>
 		<a href="<?php echo $DropCDLink; ?>">
 			<span class="bold">[X]</span>
 		</a><?php
-	} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs(),number_format($ThisShip->getCDs()).'/'.number_format($ThisShip->getMaxCDs())); ?></span><br /><?php
+	} if(isset($DropCDMaxLink)) { ?>
+		<a href="<?php echo $DropCDMaxLink; ?>">
+			<span class="bold">[O]</span>
+		</a><?php
+	}?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs(),number_format($ThisShip->getCDs()).'/'.number_format($ThisShip->getMaxCDs())); ?></span><br /><?php
 	
 	if(isset($DropSDLink)) { ?>
 		<a href="<?php echo $DropSDLink; ?>">

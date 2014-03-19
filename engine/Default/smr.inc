@@ -935,6 +935,11 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 			$container['owner_id'] = $player->getAccountID();
 			$container['drop_combat_drones'] = 1;
 			$template->assign('DropCDLink',SmrSession::getNewHREF($container));
+			$container = create_container('forces_drop_processing.php');
+			$container['owner_id'] = $player->getAccountID();
+			$container['drop_combat_drones'] = min(50, $ship->getCDs());
+			$template->assign('DropCDMaxLink',SmrSession::getNewHREF($container));
+			
 		}
 
 		if ($ship->hasSDs()) {
