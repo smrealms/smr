@@ -101,7 +101,7 @@ else {
 if ($db->getNumRows()) {
 	$NewsItems = array();
 	while ($db->nextRecord()) {
-		$NewsItems[] = array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message')));
+		$NewsItems[] = array('Time' => $db->getField('time'), 'Message' => bbifyMessage($db->getField('news_message')), 'Type' => $db->getField('type'));
 	}
 	$template->assign('NewsItems',$NewsItems);
 }

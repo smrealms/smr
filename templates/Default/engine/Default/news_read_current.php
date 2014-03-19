@@ -8,12 +8,14 @@ if(isset($NewsItems) && count($NewsItems) > 0) { ?>
 	<table class="standard">
 		<tr>
 			<th align="center">Time</th>
+			<th align="center">*</th>
 			<th align="center">News</th>
 		</tr>
 		<?php
 		foreach($NewsItems as $NewsItem) { ?>
 			<tr>
 				<td align="center"><?php echo date(DATE_FULL_SHORT, $NewsItem['Time']); ?></td>
+				<td align="center" style="vertical-align:middle;"><div class="news<?php echo $NewsItem['Type']; ?>"/></td>
 				<td style="vertical-align:middle;"><?php echo $NewsItem['Message']; ?></td>
 			</tr><?php
 		} ?>
