@@ -269,7 +269,7 @@ if (isset($account_num)) {
 			$PHP_OUTPUT.= date(DATE_FULL_SHORT_SPLIT, $db->getInt('time'));
 			$PHP_OUTPUT.= '</td><td>';
 			$container['player_id']	= $db->getInt('player_id');
-			$PHP_OUTPUT.=create_link($container, get_colored_text($db->getInt('alignment'),$db->getField('player_name')));
+			$PHP_OUTPUT.=create_link($container, get_alignment_text($db->getInt('alignment'),$db->getField('player_name')));
 			$PHP_OUTPUT.= '</td><td class="shrink right">';
 			if ($db->getField('transaction') == 'Payment') {
 				$PHP_OUTPUT.= (number_format($db->getInt('amount')));

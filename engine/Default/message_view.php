@@ -205,7 +205,7 @@ function displayScouts(&$db, &$messageBox, &$player, $read, $group) {
 		$db->query($query);
 		while ($db->nextRecord()) {
 			//display grouped stuff (allow for deletion)
-			$playerName = get_colored_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
+			$playerName = get_alignment_text($db->getField('alignment'), stripslashes($db->getField('sender')) . ' (' . $db->getField('player_id') . ')');
 			$message = 'Your forces have spotted ' . $playerName . ' passing your forces ' . $db->getField('number') . ' times.';
 			displayGrouped($messageBox, $playerName, $db->getField('player_id'), $db->getField('sender_id'), $message, $db->getField('first'), $db->getField('last'), $db->getField('msg_read') == 'FALSE');
 		}

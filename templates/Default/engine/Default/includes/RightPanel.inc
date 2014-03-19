@@ -46,7 +46,7 @@ if(isset($GameID)) { ?>
 			<img src="images/bar_right.gif" width="5" height="10" title="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" alt="<?php echo $Experience; ?>/<?php echo $NextLevelExperience; ?>" /><br />
 		</span>
 	</a>
-	Alignment : <span id="align"><?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?></span><br />
+	Alignment : <span id="align"><?php echo get_alignment_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?></span><br />
 	Alliance : <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php
 		echo $ThisPlayer->getAllianceName();
 		if($ThisPlayer->hasAlliance()) {

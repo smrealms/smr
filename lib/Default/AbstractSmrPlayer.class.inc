@@ -423,7 +423,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getDisplayName($includeAlliance=false) {
-		$return = get_colored_text($this->getAlignment(),$this->playerName.' ('.$this->getPlayerID().')');
+		$return = get_alignment_text($this->getAlignment(),$this->playerName.' ('.$this->getPlayerID().')');
 		if($this->isNPC()) {
 			$return .= ' <span class="npcColor">[NPC]</span>';
 		}

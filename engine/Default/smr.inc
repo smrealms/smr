@@ -418,6 +418,27 @@ function get_colored_text($value, $text = null, $type='Game', $return_type = 'No
 	return get_colored_text_range($value, 300, $text, -300, $type, $return_type);
 }
 
+function get_alignment_text($value, $text = null, $type='Game', $return_type = 'Normal') {
+	if ($value >= 200) {
+		$class = 'holy';
+	} else if ($value >= 150 && $value < 200) {
+		$class = 'good';
+	} else if ($value >= 50 && $value < 150) {
+		$class = 'slightgood';
+	} else if ($value >= -50 && $value < 50) {
+		$class = 'even';
+	} else if ($value >= -150 && $value < -50) {
+		$class = 'slightbad';
+	} else if ($value >= -200 && $value < -150) {
+		$class = 'bad';
+	} else if ($value < -200) {
+		$class = 'evil';
+	} else {
+		$class = 'even';
+	}
+	return '<span class="' . $class . '">' . $text . '</span>';
+}
+
 function makeBold($value) {
 	if ($value)
 		return ' style="font-weight:bold;"';
