@@ -595,9 +595,47 @@ table#moveTable td {
 }
 
 /* News types */
+.newscombat {
+	width: 16px;
+	height: 16px;
+	background-image: url("../images/news/combat.png");
+	background-size: contain;
+}
+.newsforces {
+	width: 16px;
+	height: 16px;
+	background-image: url("../images/news/forces.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
+.newslotto {
+	width: 16px;
+	height: 16px;
+	background-image: url("../images/news/lotto.png");
+	background-size: contain;
+}
 .newsregular {
 	width: 16px;
 	height: 16px;
 	background-image: url("../images/news/regular.png");
+	background-size: contain;
+}
+.newsplanet {
+	width: 16px;
+	height: 16px;
+	background-image: url("../images/news/planet.png");
+	background-size: contain;
+}
+.newsport {
+	width: 16px;
+	height: 16px;
+	background-image: url("../images/news/port.png");
+	background-size: contain;
+}
+.newsbreaking {
+	width: 16px;
+	height: 16px;
+	background-image: url("../images/news/breaking.png");
 	background-size: contain;
 }
