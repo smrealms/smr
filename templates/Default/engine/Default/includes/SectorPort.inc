@@ -10,16 +10,34 @@
 				<td style="border-right:none">
 					<a href="<?php echo Globals::getTraderRelationsHREF(); ?>"><?php echo $ThisPlayer->getColouredRaceName($Port->getRaceID()); ?></a> Port <?php echo $Port->getSectorID(); ?> (Level <?php echo $Port->getLevel(); ?>)<br />
 						<div class="goods">
-							<img src="images/port/buy.png" width="5" height="16" alt="Buy" 
-								title="Buy" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-							foreach($Port->getVisibleGoodsSold($ThisPlayer) as $Good) {
-								?><img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" /><?php
-							}
-							?><br /><img src="images/port/sell.png" width="5" height="16" alt="Sell" 
-								title="Sell" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-							foreach($Port->getVisibleGoodsBought($ThisPlayer) as $Good) {
-								?><img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>" /><?php
-							} ?>
+							<div style="display: inline;" 
+								data-tip="<?php echo $Port->getRaceName(); ?> Port">
+							<img src="images/port/buy.png" width="5" height="16" alt="Buy (<?php echo $Port->getRaceName(); ?>)" 
+								class="port<?php echo $Port->getRaceID(); ?>"/></div><?php
+								foreach($Port->getVisibleGoodsSold($MapPlayer) as $Good) { ?>
+									<div style="display:inline;" 
+										data-tip="Buy <?php echo $Good['Name']; ?>">
+										<img src="images/blank_13.png" alt="<?php echo $Good['Name']; ?>" 
+										class="goods" 
+										style="background-image: url('<?php echo $Good['ImageLink']; ?>');" 
+										/>
+									</div><?php
+								} ?>
+							
+							
+							<br /><div style="display:inline;" 
+								data-tip="<?php echo $Port->getRaceName(); ?> Port">
+							<img src="images/port/sell.png" width="5" height="16" alt="Sell (<?php echo $Port->getRaceName(); ?>)" 
+							class="port<?php echo $Port->getRaceID(); ?>"/></div><?php
+								foreach($Port->getVisibleGoodsBought($MapPlayer) as $Good) { ?>
+									<div style="display:inline;" 
+										data-tip="Sell <?php echo $Good['Name']; ?>">
+										<img src="images/blank_13.png" alt="<?php echo $Good['Name']; ?>" 
+										class="good" 
+										style="background-image: url('<?php echo $Good['ImageLink']; ?>');" 
+										/>
+									</div><?php
+								} ?>
 						</div>
 					</td>
 				<td style="padding-right:1px;border-left:none;vertical-align:bottom;" class="right">
