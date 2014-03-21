@@ -12,7 +12,15 @@ if($ThisSector->hasLocation()) {
 		foreach($Locations as $Location) { ?>
 			<tr>
 				<td<?php if(!$Location->hasAction() && $ThisSector->hasAnyLocationsWithAction()){ ?> colspan="2"<?php } ?>>
-					<img align="left"src="<?php echo $Location->getImage(); ?>" width="16" height="16" alt="<?php echo $Location->getName(); ?>" title="<?php echo $Location->getName(); ?>" /> <?php echo $Location->getName(); ?>
+					<div style="" 
+						data-img="../<?php echo $Location->getImage(); ?>"
+						data-tip="<?php echo $Location->getName(); ?>">
+						<img align="left" src="images/blank_16.png" 
+						style="background-image: url('<?php echo $Location->getImage(); ?>');" 
+						class="locations locationt<?php echo (int)($Location->getTypeID()/100); ?> location<?php echo $Location->getTypeID(); ?>" 
+						alt="<?php echo $Location->getName(); ?>"/> 
+					</div>
+					&nbsp;<?php echo $Location->getName(); ?>
 				</td><?php
 				if($Location->hasAction()) { ?>
 					<td class="shrink noWrap">
