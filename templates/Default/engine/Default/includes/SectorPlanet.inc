@@ -1,6 +1,6 @@
 <?php
 if($ThisSector->hasPlanet()) {
-	$Planet =& $ThisSector->getPlanet(); ?>
+	$planet =& $ThisSector->getPlanet(); ?>
 	<table class="standard csl">
 		<tr>
 			<th>Planet</th>
@@ -8,10 +8,15 @@ if($ThisSector->hasPlanet()) {
 		</tr>
 		<tr>
 			<td>
-				<img align="left" src="<?php echo $Planet->getTypeImage()?>" width="16" height="16" alt="Planet" title="<?php echo $Planet->getTypeName() ?>" />
-				&nbsp;<?php echo $Planet->getName() ?>&nbsp;
-				<?php echo $Planet->getTypeName() ?>&nbsp;
-				<?php if($Planet->isInhabitable()) { ?>
+				<div style="display: inline; padding: 0; margins: 0;"
+					data-img="../<?php echo $planet->getTypeImage(); ?>" 
+					data-tip="<?php echo $planet->getTypeName().': '.$planet->getName(); ?>">
+					<img alt="Planet" src="images/blank_16.png" 
+					style="background-image: url('<?php echo $planet->getTypeImage(); ?>');"  
+					class="planets planett<?php echo $planet->getTypeID(); ?>"/>
+				</div>&nbsp;<?php echo $planet->getName() ?>&nbsp;
+				<?php echo $planet->getTypeName() ?>&nbsp;
+				<?php if($planet->isInhabitable()) { ?>
 					<span class="inhab">Inhabitable</span>
 				<?php 
 				}
@@ -22,7 +27,7 @@ if($ThisSector->hasPlanet()) {
 			</td>
 			<td class="center noWrap shrink">
 				<div class="buttonA">
-					<a class="buttonA" href="<?php echo $Planet->getExamineHREF() ?>">&nbsp;Examine&nbsp;</a>
+					<a class="buttonA" href="<?php echo $planet->getExamineHREF() ?>">&nbsp;Examine&nbsp;</a>
 				</div>
 			</td>
 		</tr>
