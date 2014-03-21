@@ -35,7 +35,16 @@ $MovementTypes = array('Up','Left','Right','Down');
 										if($isCurrentSector && $Location->hasAction() && !$GalaxyMap) {
 											?><a href="<?php echo $Location->getExamineHREF() ?>"><?php
 										} ?>
-											<img src="<?php echo $Location->getImage() ?>" width="16" height="16" alt="<?php echo $Location->getName() ?>" title="<?php echo $Location->getName() ?>" /><?php
+											<div style="display:inline;" 
+												data-img="../<?php echo $Location->getImage(); ?>"
+												data-tip="<?php echo $Location->getName(); ?>">
+												<img src="images/blank_16.png" 
+												style="background-image: url('<?php echo $Location->getImage(); ?>');" 
+												class="locations locationt<?php echo (int)($Location->getTypeID()/100); ?> location<?php echo $Location->getTypeID(); ?>" 
+												alt="<?php echo $Location->getName(); ?>"/> 
+											</div>
+												
+										<?php
 										if($isCurrentSector && $Location->hasAction() && !$GalaxyMap){ ?></a><?php }
 									}
 								}
@@ -44,7 +53,14 @@ $MovementTypes = array('Up','Left','Right','Down');
 									if($isCurrentSector && !$GalaxyMap) {
 										?><a href="<?php echo $planet->getExamineHREF(); ?>"><?php
 									} ?>
-									<img title="<?php echo $planet->getTypeName() ?>" alt="Planet" src="<?php echo $planet->getTypeImage() ?>" width="16" height="16"/><?php
+									<div style="display:inline;" 
+										data-img="../<?php echo $planet->getTypeImage(); ?>" 
+										data-tip="<?php echo $planet->getTypeName().': '.$planet->getName(); ?>">
+										<img alt="Planet" src="images/blank_16.png" 
+										style="background-image: url('<?php echo $planet->getTypeImage(); ?>');"  
+										class="planets planett<?php echo $planet->getTypeID(); ?>"/>
+									</div>
+								<?php
 									if($isCurrentSector && !$GalaxyMap){ ?></a><?php }
 								} ?>
 								</div><?php
