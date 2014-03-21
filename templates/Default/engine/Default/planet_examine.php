@@ -5,7 +5,24 @@
 	</tr>
 	<tr>
 		<td class="bold">Planet Type:</td>
-		<td><img class="left" src="<?php echo $ThisPlanet->getTypeImage(); ?>" width="16" height="16" alt="Planet" title="<?php echo $ThisPlanet->getTypeName(); ?>" />&nbsp;<?php echo $ThisPlanet->getTypeName(); ?></td>
+		<td>
+		<div style="display: inline; padding: 0; margins: 0;"
+			data-img="../<?php echo $ThisPlanet->getTypeImage(); ?>" 
+			data-tip="<?php echo $ThisPlanet->getTypeName().': '.$ThisPlanet->getName(); ?>">
+			<img alt="Planet" src="images/blank_16.png" 
+			style="background-image: url('<?php echo $ThisPlanet->getTypeImage(); ?>');"  
+			class="planets planett<?php echo $ThisPlanet->getTypeID(); ?>"/>
+		</div>
+		<?php echo $ThisPlanet->getTypeName() ?>:
+		<?php if($ThisPlanet->isInhabitable()) { ?>
+			<span class="inhab">Inhabitable</span>
+		<?php 
+		}
+		else { ?>
+			<span class="uninhab">Uninhabitable</span>
+		<?php
+		} ?>
+		</td>
 	</tr>
 	<tr>
 		<td></td>
