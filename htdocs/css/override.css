@@ -34,3 +34,30 @@
 	padding: 0;
 	background-image: url("../images/planet.gif")!important;
 }
+.warp {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/warp.png")!important;
+}
+.holy {
+	color: #1DFF00;
+}
+.good {
+	color: #7FFF00;
+}
+.slightgood {
+	color: #CDFF00;
+}
+.even {
+	color: #F7FF00;
+}
+.slightbad {
+	color: #FF8D00;
+}
+.bad {
+	color: #FF5C00;
+}
+.evil {
+	color: #FF5C00;
+}
