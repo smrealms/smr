@@ -625,8 +625,8 @@ abstract class AbstractSmrShip {
 		return !$this->hasArmour()&&!$this->hasShields();
 	}
 
-	public function canAcceptCDs() {
-		return $this->getCDs()<$this->getMaxCDs();
+	public function canAcceptCDs($cds=1) {
+		return $cds<=($this->getMaxCDs()-$this->getCDs());
 	}
 
 	public function canAcceptSDs() {
