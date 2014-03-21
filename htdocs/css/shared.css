@@ -704,3 +704,9 @@ table#moveTable td {
 	padding: 0;
 	background-image: url("../images/blank_13.png");
 }
+.warp {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/blank_16.png");
+}
