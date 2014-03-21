@@ -698,3 +698,9 @@ table#moveTable td {
 	padding: 0;
 	background-image: url("../images/planet.gif");
 }
+.good {	
+	width: 13px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/blank_13.png");
+}
