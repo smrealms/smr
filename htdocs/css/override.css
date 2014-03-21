@@ -1,0 +1,36 @@
+.locationt1 {
+	background-image: url("../images/government.gif")!important;
+}
+.locationt2 {
+	background-image: url("../images/beacon.gif")!important;
+}
+.locationt3 {
+	background-image: url("../images/weapon_shop.gif")!important;
+}
+.locationt4 {
+	background-image: url("../images/shipdealer.gif")!important;
+}
+.locationt5 {
+	background-image: url("../images/shipdealer.gif")!important;
+}
+.locationt6 {
+	background-image: url("../images/hardware.png")!important;
+}
+.locationt7 {
+	background-image: url("../images/bank.png")!important;
+}
+.locationt8 {
+	background-image: url("../images/bar.gif")!important;
+}
+.locationt9 {
+	background-image: url("../images/hardware.png")!important;
+}
+.location102 {
+	background-image: url("../images/underground.gid")!important;
+}
+.planets {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/planet.gif")!important;
+}
