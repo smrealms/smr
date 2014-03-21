@@ -72,6 +72,7 @@ abstract class AbstractSmrAccount {
 	protected $friendlyColor;
 	protected $neutralColor;
 	protected $enemyColor;
+	protected $overrideIcons;
 
 	protected $npc;
 
@@ -189,6 +190,7 @@ abstract class AbstractSmrAccount {
 			$this->friendlyColor 	= $row['friendly_color'];
 			$this->neutralColor 	= $row['neutral_color'];
 			$this->enemyColor 		= $row['enemy_color'];
+			$this->overrideIcons 	= $row['override_icons'];
 
 			$this->cssLink			= $row['css_link'];
 			$this->defaultCSSEnabled	= $this->db->getBoolean('default_css_enabled');
@@ -260,7 +262,7 @@ abstract class AbstractSmrAccount {
 	}
 
 	function update() {
-		$this->db->query('UPDATE account SET email = '.$this->db->escapeString($this->email).
+		$query = 'UPDATE account SET email = '.$this->db->escapeString($this->email).
 			', validation_code = '.$this->db->escapeString($this->validation_code).
 			', validated = '.$this->db->escapeBoolean($this->validated).
 			', password = '.$this->db->escapeString($this->password).
@@ -286,7 +288,9 @@ abstract class AbstractSmrAccount {
 			', friendly_color = ' . $this->db->escapeString($this->friendlyColor, true, true).
 			', neutral_color = ' . $this->db->escapeString($this->neutralColor, true, true).
 			', enemy_color = ' . $this->db->escapeString($this->enemyColor, true, true).
-			' WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1');
+			', override_icons = ' . $this->db->escapeString($this->overrideIcons, true, true).
+			' WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1';
+		$this->db->query($query);
 		$this->hasChanged = false;
 	}
 
@@ -1184,7 +1188,14 @@ abstract class AbstractSmrAccount {
 		$this->enemyColor = $color;
 		$this->hasChanged = true;
 	}
-
+	public function getOverrideIcons() {
+		return $this->overrideIcons;
+	}
+	public function setOverrideIcons($value) {
+		$this->overrideIcons = ($value == 'TRUE');
+		$this->hasChanged = true;
+	}
+	
 	public function banAccount($expireTime,SmrAccount &$admin,$reasonID,$suspicion,$removeExceptions = false) {
 		$this->db->query('REPLACE INTO account_is_closed
 					(account_id, reason_id, suspicion, expires)
