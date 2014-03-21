@@ -26,7 +26,7 @@
 					<tr>
 						<td class="center shrink noWrap"><?php
 							if($SharedForceAlliance && $ThisShip->canAcceptMines()&&$Force->hasMines()) {
-								?><a href="<?php echo $Force->getTakeMineHREF() ?>">[-]</a><?php
+								?><a href="<?php echo $Force->getTakeMineHREF() ?>">[-]</a><?php								
 							}
 							echo$Force->getMines();
 							if($SharedForceAlliance && $ThisShip->hasMines()&&$Force->canAcceptMines()) {
@@ -34,8 +34,13 @@
 							} ?>
 						</td>
 						<td class="center shrink noWrap"><?php
-							if($SharedForceAlliance && $ThisShip->canAcceptCDs()&&$Force->hasCDs()) {
+							if($SharedForceAlliance) {
+								if ($ThisShip->canAcceptCDs()&&$Force->hasCDs()) {
 								?><a href="<?php echo $Force->getTakeCDHREF() ?>">[-]</a><?php
+								}
+								if ($Force->getCDs()>1&&$ThisShip->canAcceptCDs($Force->getCDs())&&$Force->hasCDs()) {
+								?><a href="<?php echo $Force->getTakeCDHREF($Force->getCDs()) ?>">[--]</a><?php
+								}
 							}
 							echo $Force->getCDs();
 							if($SharedForceAlliance && $ThisShip->hasCDs()&&$Force->canAcceptCDs()) {
