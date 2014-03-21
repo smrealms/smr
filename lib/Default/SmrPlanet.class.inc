@@ -1286,7 +1286,7 @@ class SmrPlanet {
 		$cdDamage = 0;
 		$armourDamage = 0;
 		if(!$alreadyDead) {
-			if($damage['Shield'] && $this->hasShields(true)) {
+			if($damage['Shield'] || !$this->hasShields(true)) {
 				$shieldDamage = $this->doShieldDamage(min($damage['MaxDamage'],$damage['Shield']),$delayed);
 				$damage['Shield'] -= $shieldDamage;
 				$damage['MaxDamage'] -= $shieldDamage;
@@ -1297,23 +1297,15 @@ class SmrPlanet {
 						$damage['Armour'] -= $cdDamage;
 						$damage['MaxDamage'] -= $cdDamage;
 					}
-					if ($damage['Armour'] and !$this->hasArmour(true) ) {
+					if ($this->hasArmour(true) && ($cdDamage == 0 || $damage['Rollover'])) {
 						$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
 						$damage['Armour'] -= $armourDamage;
 						$damage['MaxDamage'] -= $armourDamage;
 					}
 				}
 				
-			}
-			if ($this->hasCDs(true)) { //hit drones behind shields
+			} else { // hit drones behind shields - we should only use this reduced damage branch if we cannot hit shields.
 				$cdDamage = $this->doCDDamage(floor(min($damage['MaxDamage'],$damage['Armour'])*DRONES_BEHIND_SHIELDS_DAMAGE_PERCENT),$delayed);
-				$damage['Armour'] -= $cdDamage;
-				$damage['MaxDamage'] -= $cdDamage;
-			}
-			if ($damage['Armour'] and !$this->hasShields(true)) { //hit armour 
-				$armourDamage = $this->doArmourDamage(min($damage['MaxDamage'],$damage['Armour']),$delayed);
-				$damage['Armour'] -= $armourDamage;
-				$damage['MaxDamage'] -= $armourDamage;
 			}
 		}
 
