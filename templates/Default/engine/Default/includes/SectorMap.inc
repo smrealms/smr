@@ -116,7 +116,13 @@ $MovementTypes = array('Up','Left','Right','Down');
 									if($Sector->hasWarp()) {
 										if($GalaxyMap){ ?><a href="<?php echo $Sector->getWarpSector()->getGalaxyMapHREF(); ?>"><?php }
 										else if($isCurrentSector){ ?><a href="<?php echo $Sector->getWarpSector()->getLocalMapHREF(); ?>"><?php } ?>
-											<img title="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxyName(); ?>)" alt="Warp to #<?php echo $Sector->getWarp(); ?>" src="images/warp.png" width="16" height="16" /><?php
+											<div style="display:inline;" 
+												data-tip="Warp to #<?php echo $Sector->getWarp(); ?> (<?php echo $Sector->getWarpSector()->getGalaxyName(); ?>)">
+												<img src="images/blank_16.png"  alt="Warp to #<?php echo $Sector->getWarp(); ?>"
+												class="warp" 
+												style="background-image: url('images/warp2.png');" 
+												/>
+											</div><?php
 										if($isCurrentSector || $GalaxyMap){ ?></a><?php }
 									}
 									if($Sector->hasMine()) {
