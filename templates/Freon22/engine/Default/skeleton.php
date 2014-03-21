@@ -15,14 +15,62 @@
 			body {
 				font-size:<?php echo $FontSize; ?>%;
 			}
+			<?php if (is_object($ThisAccount)) { ?>
+			/* Friend vs Foe shades */
+
+			.enemy {
+				color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
+			}
+			.enemy:hover {
+				color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
+			}
+			.enemyBack {
+				background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
+			}
+			.enemyBack:hover {
+				background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
+			}
+
+			.friendly {
+				color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			}
+			.friendly:hover {
+				color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			}
+			.friendlyBack {
+				background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			}
+			.friendlyBack:hover {
+				background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			}
+
+			.neutral {
+				color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			}
+			.neutral:hover {
+				color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			}
+			.neutralBack {
+				background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			}
+			.neutralBack:hover {
+				background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			}	
+			<?php } ?>
 		</style><?php
 		if(isset($HeaderTemplateInclude)) {
 			$this->includeTemplate($HeaderTemplateInclude);
 		} ?>
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<?php if (is_object($ThisAccount) && ($ThisAccount->getOverrideIcons()=='TRUE')) { ?>
+		<link rel="stylesheet" href="css/override.css">
+		<?php } ?>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/smr15.js"></script>
+		<?php if(isset($ExtraJSLink)) { ?>
+			<script type="text/javascript" src="<?php echo $ExtraJSLink; ?>"></script>
+		<?php } ?>
 	</head>
 	<body>
 		<div id="Container">
