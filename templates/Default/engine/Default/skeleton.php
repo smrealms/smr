@@ -64,6 +64,9 @@
 		} ?>
 		<link rel="stylesheet" type="text/css" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
 		<link rel="stylesheet" href="css/bootstrap.css">
+		<?php if (is_object($ThisAccount) && ($ThisAccount->getOverrideIcons()=='TRUE')) { ?>
+		<link rel="stylesheet" href="css/override.css">
+		<?php } ?>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/bootstrap.min.js"></script>
