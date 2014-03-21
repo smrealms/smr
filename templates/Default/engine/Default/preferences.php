@@ -374,6 +374,13 @@ if(isset($GameID)) { ?>
 				</select> - This only shows colour schemes available for the current template, if you are changing templates then save the change first to see the colour schemes for the new template.
 			</td>
 		</tr>
+		<tr>
+			<td>Classic Icons</td>
+			<td>
+				Yes: <input type="radio" name="classicicons" id="InputFields" value="Yes"<?php if($ThisAccount->getOverrideIcons()=='TRUE'){ ?> checked="checked"<?php } ?> /><br />
+				No: <input type="radio" name="classicicons" id="InputFields" value="No"<?php if($ThisAccount->getOverrideIcons()=='FALSE'){ ?> checked="checked"<?php } ?> /><br />
+			</td>
+		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
