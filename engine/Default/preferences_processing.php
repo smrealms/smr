@@ -24,6 +24,7 @@ $cellPhone = trim($_REQUEST['cell_phone']);
 $friendlyColor = $_REQUEST['friendly_color'];
 $neutralColor = $_REQUEST['neutral_color'];
 $enemyColor = $_REQUEST['enemy_color'];
+$overrideIcons = $_REQUEST['classicicons'];
 
 if (USE_COMPATIBILITY && $action == 'Link Account') {
 	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword'])) {
@@ -202,10 +203,16 @@ else if ($action == 'Change Size' && is_numeric($_REQUEST['fontsize']) && $_REQU
 else if ($action == 'Change CSS Options') {
 	$account->setCssLink($_REQUEST['csslink']);
 	$account->setDefaultCSSEnabled($_REQUEST['defaultcss']!='No');
+	if ($_REQUEST['classicicons']=='Yes') {
+		$account->setOverrideIcons('TRUE');
+	} else {
+		$account->setOverrideIcons('FALSE');
+	}
 	if(isset($_REQUEST['template']))
 		$account->setTemplate($_REQUEST['template']);
 	if(isset($_REQUEST['colour_scheme'])&&in_array($_REQUEST['colour_scheme'],Globals::getAvailableColourSchemes($account->getTemplate())))
 		$account->setColourScheme($_REQUEST['colour_scheme']);
+	$account->update();
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your CSS options.';
 }
 else if ($action == 'Change Kamikaze Setting') {
