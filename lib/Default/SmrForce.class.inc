@@ -424,9 +424,9 @@ class SmrForce {
 		return SmrSession::getNewHREF($container);
 	}
 
-	public function getTakeCDHREF() {
+	public function getTakeCDHREF($cds=1) {
 		$container = $this->getDropContainer();
-		$container['take_combat_drones']	= 1;
+		$container['take_combat_drones']	= $cds;
 		return SmrSession::getNewHREF($container);
 	}
 
