@@ -710,3 +710,33 @@ table#moveTable td {
 	padding: 0;
 	background-image: url("../images/blank_16.png");
 }
+.building {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/blank_16.png");
+}
+.building1 {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/generator.png");
+}
+.building2 {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/hangar.png");
+}
+.building3 {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/turret.png");
+}
+.building4 {
+	width: 16px;
+	height: 16px;
+	padding: 0;
+	background-image: url("../images/bunker.png");
+}

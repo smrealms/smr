@@ -11,13 +11,25 @@ if (count($Planets) > 0) { ?>
 				<th class="sort shrink" data-sort="owner">Owner</th>
 				<th class="sort shrink" data-sort="sector">Sector</th>
 				<th class="sort shrink" data-sort="gen">
-					<img class="tooltip" id="generator_tip" src="images/generator.png"  width="16" height="16" alt="G" title="Generators protect a planet with shields. Each generator can hold <?php echo PLANET_GENERATOR_SHIELDS; ?> shields." /></th>
+					<div style="display: inline; padding: 0; margins: 0;" 
+						data-tip="Generators protect a planet with shields. Each generator can hold <?php echo PLANET_GENERATOR_SHIELDS; ?> shields.">
+					<img class="tooltip building building1" id="generator_tip" src="images/blank_16.png"  alt="G" />
+					</div></th>
 				<th class="sort shrink" data-sort="hangar">
-					<img class="tooltip" id="hangar_tip" src="images/hangar.png"  width="16" height="16" alt="H" title="Hangars house and launch combat drones(CDs). Each hangar holds <?php echo PLANET_HANGAR_DRONES; ?> drones." /></th>
+					<div style="display: inline; padding: 0; margins: 0;" 
+						data-tip="Hangars house and launch combat drones(CDs). Each hangar holds <?php echo PLANET_HANGAR_DRONES; ?> drones.">
+					<img class="tooltip building building2" id="hangar_tip" src="images/blank_16.png"  alt="G" />
+					</div></th>
 				<th class="sort shrink" data-sort="bunker">
-					<img class="tooltip" id="bunker_tip" src="images/bunker.png"  width="16" height="16" alt="B" title="Bunkers fortify the defensive structures with additional armour.  Each bunker holds <?php echo PLANET_BUNKER_ARMOUR; ?> units of armour." /></th>
+					<div style="display: inline; padding: 0; margins: 0;" 
+						data-tip="Bunkers fortify the defensive structures with additional armour.  Each bunker holds <?php echo PLANET_BUNKER_ARMOUR; ?> units of armour.">
+					<img class="tooltip building building4" id="bunker_tip" src="images/blank_16.png"  alt="G" />
+					</div></th>
 				<th class="sort shrink" data-sort="turret">
-					<img class="tooltip" id="turret_tip" src="images/turret.png"  width="16" height="16" alt="T" title="Turrets fire heavy laser beams. Each planet can have a maximum of 10 turrets. These laser beams do 250/250 damage. When they fire at an attacking ship, they can destroy 250 shields, or 250 armor (but not both on the same shot)." /></th>
+					<div style="display: inline; padding: 0; margins: 0;" 
+						data-tip="Turrets fire heavy laser beams. These laser beams do 250/250 damage.">
+					<img class="tooltip building building3" id="turret_tip" src="images/blank_16.png"  alt="G" />
+					</div></th>
 				<th class="sort shrink" data-sort="pShields">Shields</th>
 				<th class="sort shrink" data-sort="pCDs">Drones</th>
 				<th class="sort shrink" data-sort="pArmour">Armour</th>
@@ -32,7 +44,13 @@ if (count($Planets) > 0) { ?>
 			foreach($Planets as &$Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
 					<td class="lvl noWrap">
-						<img class="tooltip" id="planet_image" src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
+						<div style="display: inline; padding: 0; margins: 0;"
+							data-img="../<?php echo $Planet->getTypeImage(); ?>" 
+							data-tip="<?php echo $Planet->getTypeName().': '.$Planet->getTypeDescription(); ?>">
+							<img class="tooltip" alt="Planet" src="images/blank_16.png" 
+							style="background-image: url('<?php echo $Planet->getTypeImage(); ?>');"  
+							class="planets planett<?php echo $Planet->getTypeID(); ?>"/>
+						</div></td>
 					<td class="name"><?php echo $Planet->getName(); ?></td>
 					<td class="lvl noWrap"><?php echo number_format($Planet->getLevel(),2); ?></td>
 					<td class="owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
