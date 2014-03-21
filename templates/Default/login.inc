@@ -85,6 +85,28 @@
 		table.nobord {
 			border: 0px;
 		}
+		/* New alignment colors */
+		.holy {
+			color: cornflowerblue;
+		}
+		.good {
+			color: cyan;
+		}
+		.slightgood {
+			color: darkcyan;
+		}
+		.even {
+			color: yellow;
+		}
+		.slightbad {
+			color: darkorange;
+		}
+		.bad {
+			color: firebrick;
+		}
+		.evil {
+			color: darkred;
+		}
 		</style>
 		<!--[if IE]>
 		<style>
