@@ -61,3 +61,10 @@
 .evil {
 	color: #FF5C00;
 }
+/* Connecting icons */
+div.lmUp.con, div.lmDown.con {
+	background: url('../images/link_hor.gif') no-repeat center!important;
+}
+div.lmLeft.con, div.lmRight.con {
+	background: url('../images/link_ver.gif') no-repeat center!important;
+}

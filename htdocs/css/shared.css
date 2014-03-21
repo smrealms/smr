@@ -314,10 +314,10 @@ table.lmt td {
 }
 /* Connecting icons */
 div.lmUp.con, div.lmDown.con {
-	background: url('../images/link_hor.gif') no-repeat center;
+	background: url('../images/link_hor.png') no-repeat center;
 }
 div.lmLeft.con, div.lmRight.con {
-	background: url('../images/link_ver.gif') no-repeat center;
+	background: url('../images/link_ver.png') no-repeat center;
 }
 
 /* Walls */
