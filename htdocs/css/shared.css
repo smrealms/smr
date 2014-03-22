@@ -664,7 +664,7 @@ table#moveTable td {
 }
 [data-tip]:after {
     display:none;
-    content: url(data-img) attr(data-tip);
+    content: attr(data-tip);
     position:absolute;
     top:20px;
     left:0px;
