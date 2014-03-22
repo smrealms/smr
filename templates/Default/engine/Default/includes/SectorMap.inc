@@ -136,23 +136,37 @@ $MovementTypes = array('Up','Left','Right','Down');
 							<div class="lmtf"><?php
 								if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($MapPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($MapPlayer))) {
 									if($CanScanSector && $Sector->hasEnemyTraders($MapPlayer)) {
-										?><img class="enemyBack" title="Enemy Trader" alt="Enemy Trader" src="images/trader.png" width="13" height="16"/><?php
+										?>
+										<div style="display:inline;" data-tip="Enemy Trader">
+											<img class="enemyBack" alt="Enemy Trader" src="images/trader.png" width="13" height="16"/>
+										</div><?php
 									}
 									if($CanScanSector && $Sector->hasProtectedTraders($MapPlayer)) {
-										?><img class="neutralBack" title="Protected Trader" alt="Protected Trader" src="images/trader.png" width="13" height="16"/><?php
+										?>
+										<div style="display:inline;" data-tip="Protected Trader">
+											<img class="neutralBack" alt="Protected Trader" src="images/trader.png" width="13" height="16"/>
+										</div><?php
 									}
 									if($Sector->hasFriendlyTraders($MapPlayer)) {
-										?><img class="friendlyBack" title="Friendly Trader" alt="Friendly Trader" src="images/trader.png" width="13" height="16"/><?php
+										?>
+										<div style="display:inline;" data-tip="Friendly Trader">
+											<img class="friendlyBack" alt="Friendly Trader" src="images/trader.png" width="13" height="16"/>
+										</div><?php
 									}
 								}
 								if($Sector->hasForces()) {
 									if($CanScanSector && $Sector->hasEnemyForces($MapPlayer)) {
-										?><img class="enemyBack" title="Enemy Forces" alt="Enemy Forces" src="images/forces.png" width="13" height="16"/><?php
+										?>
+										<div style="display:inline;" data-tip="Enemy Forces">
+											<img class="enemyBack" alt="Enemy Forces" src="images/forces.png" width="13" height="16"/>
+										</div><?php
 									}
 									if($Sector->hasFriendlyForces($MapPlayer)) {
-										?><img class="friendlyBack" title="Friendly Forces" alt="Friendly Forces" src="images/forces.png" width="13" height="16"/><?php
+										?>
+										<div style="display:inline;" data-tip="Friendly Forces">
+											<img class="friendlyBack" alt="Friendly Forces" src="images/forces.png" width="13" height="16"/>
+										</div><?php
 									}
-									/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
 								} ?>
 							</div><?php
 						} ?>
