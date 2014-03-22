@@ -15,3 +15,5 @@ UPDATE location_type SET location_image = 'images/jump.png' WHERE location_type_
 UPDATE location_type SET location_image = 'images/cloak.png' WHERE location_type_id = 605;
 #Drone Confusion
 UPDATE location_type SET location_image = 'images/scrambler.png' WHERE location_type_id = 608;
+#Advance Communication
+UPDATE location_type SET location_image = 'images/scanner.png' WHERE location_type_id = 604;
