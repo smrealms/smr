@@ -1,5 +1,5 @@
 INSERT INTO planet_type (planet_type_id, planet_type_name, planet_type_description, planet_image_link, planet_max_attackers, planet_max_landed) VALUES
-(NULL, 
+(3, 
 'Dwarf Planet', 
 'A smaller than usual planet, with no native life present.', 
 'images/planet3.png', 
