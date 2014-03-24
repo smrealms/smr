@@ -1172,8 +1172,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 					LIMIT 1';
 		$this->db->query($query);
 		if ($this->db->nextRecord()) {
-			$multiplier = round(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
-			$this->increaseCurrentBountyAmount('HQ',$numAttacks * $multiplier);
+			$bounty = round(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
+			$this->increaseCurrentBountyAmount('HQ', $bounty);
 		}
 
 		// Killer get marked as claimer of podded player's bounties even if they don't exist
@@ -1211,10 +1211,10 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','NPC','Money','Cost Of Ships Killed'), HOF_PUBLIC);
 
 			if($return['KillerAlign'] > 0) {
-				$killer->increaseHOF($alignChange,array('Killing','NPC','Alignment','Gain'), HOF_PUBLIC);
+				$killer->increaseHOF($return['KillerAlign'],array('Killing','NPC','Alignment','Gain'), HOF_PUBLIC);
 			}
 			else {
-				$killer->increaseHOF(-$alignChange,array('Killing','NPC','Alignment','Loss'), HOF_PUBLIC);
+				$killer->increaseHOF(-$return['KillerAlign'],array('Killing','NPC','Alignment','Loss'), HOF_PUBLIC);
 			}
 
 			$killer->increaseHOF($return['BountyGained']['Amount'],array('Killing','NPC','Money','Bounty Gained'), HOF_PUBLIC);
@@ -1232,10 +1232,10 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$killer->increaseHOF($this->getShip()->getCost(),array('Killing','Money','Cost Of Ships Killed'), HOF_PUBLIC);
 
 			if($return['KillerAlign'] > 0) {
-				$killer->increaseHOF($alignChange,array('Killing','Alignment','Gain'), HOF_PUBLIC);
+				$killer->increaseHOF($return['KillerAlign'],array('Killing','Alignment','Gain'), HOF_PUBLIC);
 			}
 			else {
-				$killer->increaseHOF(-$alignChange,array('Killing','Alignment','Loss'), HOF_PUBLIC);
+				$killer->increaseHOF(-$return['KillerAlign'],array('Killing','Alignment','Loss'), HOF_PUBLIC);
 			}
 
 			$killer->increaseHOF($return['BountyGained']['Amount'],array('Killing','Money','Bounty Gained'), HOF_PUBLIC);
