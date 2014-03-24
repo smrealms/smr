@@ -1162,20 +1162,18 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 		//check for federal bounty being offered for current port raiders;
 		$this->db->query('DELETE FROM player_attacks_port WHERE time < ' . $this->db->escapeNumber(TIME - self::TIME_FOR_FEDERAL_BOUNTY_ON_PR));
-		$query = 'SELECT count(*) as numAttacks
+		$query = 'SELECT 1
 					FROM player_attacks_port
-					JOIN player USING(game_id, account_id, sector_id)
 					JOIN port USING(game_id, sector_id)
+					JOIN player USING(game_id, account_id)
 					WHERE armour > 0
 						AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . '
-						AND game_id = ' . $this->db->escapeNumber($this->getGameID());
+						AND game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
+					LIMIT 1';
 		$this->db->query($query);
 		if ($this->db->nextRecord()) {
-			if ($this->db->getField('numAttacks')) {
-				$numAttacks = $this->db->getField('numAttacks');
-				$multiplier = round(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
-				$this->increaseCurrentBountyAmount('HQ',$numAttacks * $multiplier);
-			}
+			$multiplier = round(DEFEND_PORT_BOUNTY_PER_LEVEL * $this->getLevelID());
+			$this->increaseCurrentBountyAmount('HQ',$numAttacks * $multiplier);
 		}
 
 		// Killer get marked as claimer of podded player's bounties even if they don't exist
