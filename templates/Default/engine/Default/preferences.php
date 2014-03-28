@@ -1,4 +1,4 @@
-<?php 
+<?php
 if (isset($Reason)) {
 	?><p><big><span class="bold red"><?php echo $Reason; ?></span></big></p><?php
 }
