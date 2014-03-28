@@ -14,49 +14,31 @@
 		<style type="text/css">
 			body {
 				font-size:<?php echo $FontSize-20; ?>%;
-			}
-			<?php if (is_object($ThisAccount)) { ?>
+			}<?php
+			if (is_object($ThisAccount)) { ?>
 			/* Friend vs Foe shades */
 
-			.enemy {
+			.enemy, .enemy:hover { {
 				color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
 			}
-			.enemy:hover {
-				color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
-			}
-			.enemyBack {
-				background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
-			}
-			.enemyBack:hover {
+			.enemyBack, .enemyBack:hover {
 				background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
 			}
 
-			.friendly {
+			.friendly, .friendly:hover {
 				color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
 			}
-			.friendly:hover {
-				color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
-			}
-			.friendlyBack {
-				background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
-			}
-			.friendlyBack:hover {
+			.friendlyBack, .friendlyBack:hover {
 				background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
 			}
 
-			.neutral {
+			.neutral, .neutral:hover {
 				color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
 			}
-			.neutral:hover {
-				color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
-			}
-			.neutralBack {
+			.neutralBack, .neutralBack:hover {
 				background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
-			}
-			.neutralBack:hover {
-				background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
-			}	
-			<?php } ?>
+			}<?php 
+			} ?>
 		</style><?php
 		if(isset($HeaderTemplateInclude)) {
 			$this->includeTemplate($HeaderTemplateInclude);
