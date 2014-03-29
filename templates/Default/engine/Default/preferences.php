@@ -466,3 +466,5 @@ if(isset($GameID)) { ?>
 		</tr>
 	</table>
 </form>
+
+<script type="text/javascript" src="js/colorpicker.js"></script>
