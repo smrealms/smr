@@ -14,20 +14,46 @@
 		<style type="text/css">
 			body {
 				font-size:<?php echo $FontSize-20; ?>%;
+			}<?php
+			if (is_object($ThisAccount)) { ?>
+			/* Friend vs Foe shades */
+
+			.enemy, .enemy:hover { {
+				color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
 			}
+			.enemyBack, .enemyBack:hover {
+				background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
+			}
+
+			.friendly, .friendly:hover {
+				color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			}
+			.friendlyBack, .friendlyBack:hover {
+				background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			}
+
+			.neutral, .neutral:hover {
+				color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			}
+			.neutralBack, .neutralBack:hover {
+				background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			}<?php 
+			} ?>
 		</style><?php
 		if(isset($HeaderTemplateInclude)) {
 			$this->includeTemplate($HeaderTemplateInclude);
 		} ?>
 		<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<link rel="stylesheet" href="css/colorpicker.css" />
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
 		<script type="text/javascript" src="js/smr15.js"></script>
+		<?php if(isset($ExtraJSLink)) { ?>
+			<script type="text/javascript" src="<?php echo $ExtraJSLink; ?>"></script>
+		<?php } ?>
+
 	</head>
 	<body>
-
-
-
 		<table class="m" align="center">
 			<tr>
 				<td class="l0" rowspan="2">

@@ -69,6 +69,9 @@ abstract class AbstractSmrAccount {
 	protected $template;
 	protected $hotkeys = array();
 	protected $permissions;
+	protected $friendlyColor;
+	protected $neutralColor;
+	protected $enemyColor;
 
 	protected $npc;
 
@@ -182,6 +185,10 @@ abstract class AbstractSmrAccount {
 			$this->passwordReset	= $row['password_reset'];
 			$this->useAJAX			= $this->db->getBoolean('use_ajax');
 			$this->mailBanned		= (int)$row['mail_banned'];
+			
+			$this->friendlyColor 	= $row['friendly_color'];
+			$this->neutralColor 	= $row['neutral_color'];
+			$this->enemyColor 		= $row['enemy_color'];
 
 			$this->cssLink			= $row['css_link'];
 			$this->defaultCSSEnabled	= $this->db->getBoolean('default_css_enabled');
@@ -276,6 +283,9 @@ abstract class AbstractSmrAccount {
 			', fontsize = ' . $this->db->escapeNumber($this->fontSize).
 			', css_link = ' . $this->db->escapeString($this->cssLink,true,true).
 			', cell_phone = ' . $this->db->escapeString($this->cellPhone, true, true).
+			', friendly_color = ' . $this->db->escapeString($this->friendlyColor, true, true).
+			', neutral_color = ' . $this->db->escapeString($this->neutralColor, true, true).
+			', enemy_color = ' . $this->db->escapeString($this->enemyColor, true, true).
 			' WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1');
 		$this->hasChanged = false;
 	}
@@ -1151,6 +1161,28 @@ abstract class AbstractSmrAccount {
 		$this->banAccount($expireTime,$admin,$reasonID,$suspicion);
 
 		return $days;
+	}
+	
+	public function getFriendlyColor() {
+		return $this->friendlyColor;
+	}
+	public function setFriendlyColor($color) {
+		$this->friendlyColor = $color;
+		$this->hasChanged = true;
+	}
+	public function getNeutralColor() {
+		return $this->neutralColor;
+	}
+	public function setNeutralColor($color) {
+		$this->neutralColor = $color;
+		$this->hasChanged = true;
+	}
+	public function getEnemyColor() {
+		return $this->enemyColor;
+	}
+	public function setEnemyColor($color) {
+		$this->enemyColor = $color;
+		$this->hasChanged = true;
 	}
 
 	public function banAccount($expireTime,SmrAccount &$admin,$reasonID,$suspicion,$removeExceptions = false) {

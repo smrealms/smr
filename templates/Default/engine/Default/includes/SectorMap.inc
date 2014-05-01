@@ -10,7 +10,8 @@
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
-					<div class="lm_sector <?php if($isCurrentSector){ ?>currentSeclm<?php }else if($isLinkedSector){ ?>connectSeclm<?php }else if($isVisited){ ?>normalSeclm<?php }else{ ?>normalSeclmu<?php } ?>"><?php
+					<div class="lm_sector <?php echo "galaxy".$Sector->getGalaxyID();
+						if($isCurrentSector){ ?> currentSeclm<?php }else if($isLinkedSector){ ?> connectSeclm<?php }else if($isVisited){ ?> normalSeclm<?php }else{ ?> normalSeclmu<?php } ?>"><?php
 						if($isVisited) {
 							if(isset($ToggleLink)) {
 								$ToggleLink['sector_id'] = $Sector->getSectorID();
@@ -95,18 +96,21 @@
 							<div class="lmtf"><?php
 								if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($MapPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($MapPlayer))) {
 									if($CanScanSector && $Sector->hasEnemyTraders($MapPlayer)) {
-										?><img title="Enemy Trader" alt="Enemy Trader" src="images/enemyTrader.png" width="13" height="16"/><?php
+										?><img class="enemyBack" title="Enemy Trader" alt="Enemy Trader" src="images/trader.png" width="13" height="16"/><?php
+									}
+									if($CanScanSector && $Sector->hasProtectedTraders($MapPlayer)) {
+										?><img class="neutralBack" title="Protected Trader" alt="Protected Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
 									if($Sector->hasFriendlyTraders($MapPlayer)) {
-										?><img title="Friendly Trader" alt="Friendly Trader" src="images/friendlyTrader.png" width="13" height="16"/><?php
+										?><img class="friendlyBack" title="Friendly Trader" alt="Friendly Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
 								}
 								if($Sector->hasForces()) {
 									if($CanScanSector && $Sector->hasEnemyForces($MapPlayer)) {
-										?><img title="Enemy Forces" alt="Enemy Forces" src="images/enemyForces.png" width="13" height="16"/><?php
+										?><img class="enemyBack" title="Enemy Forces" alt="Enemy Forces" src="images/forces.png" width="13" height="16"/><?php
 									}
 									if($Sector->hasFriendlyForces($MapPlayer)) {
-										?><img title="Friendly Forces" alt="Friendly Forces" src="images/friendlyForces.png" width="13" height="16"/><?php
+										?><img class="friendlyBack" title="Friendly Forces" alt="Friendly Forces" src="images/forces.png" width="13" height="16"/><?php
 									}
 									/*?><img title="Forces" alt="Forces" src="images/forces.jpg"/><?php*/
 								} ?>

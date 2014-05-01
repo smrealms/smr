@@ -123,6 +123,32 @@ if(isset($GameID)) { ?>
 		</tr>
 		
 		<tr>
+			<td>Friendly Color:</td>
+			<td><div id="friendlyColorSelector">
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>"></div>
+				<input type="hidden" name="friendly_color" id="InputFields" value="<?php echo $ThisAccount->getFriendlyColor(); ?>"/></div></td>
+		</tr>
+		
+		<tr>
+			<td>Neutral Color:</td>
+			<td><div id="neutralColorSelector">
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>"></div>
+				<input type="hidden" name="neutral_color" id="InputFields" value="<?php echo $ThisAccount->getNeutralColor(); ?>"/></div></td>
+		</tr>
+		
+		<tr>
+			<td>Enemy Color:</td>
+			<td><div id="enemyColorSelector">
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>"></div>
+				<input type="hidden" name="enemy_color" id="InputFields" value="<?php echo $ThisAccount->getEnemyColor(); ?>"/></div></td>
+		</tr>
+		
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Update Colors" id="InputFields" /></td>
+		</tr>
+		
+		<tr>
 			<td>Old Password:</td>
 			<td><input type="password" name="old_password" id="InputFields" size="25" /></td>
 		</tr>
@@ -440,3 +466,5 @@ if(isset($GameID)) { ?>
 		</tr>
 	</table>
 </form>
+
+<script type="text/javascript" src="js/colorpicker.js"></script>
