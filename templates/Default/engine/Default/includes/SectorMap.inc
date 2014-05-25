@@ -10,7 +10,7 @@
 				$isLinkedSector = !$UniGen && $ThisSector->isLinkedSector($Sector);
 				$isVisited = $Sector->isVisited($MapPlayer); ?>
 				<td id="sector<?php echo $Sector->getSectorID(); ?>" class="ajax">
-					<div class="lm_sector <?php echo "galaxy".$Sector->getGalaxyID();
+					<div class="lm_sector galaxy<?php echo $Sector->getGalaxyID();
 						if($isCurrentSector){ ?> currentSeclm<?php }else if($isLinkedSector){ ?> connectSeclm<?php }else if($isVisited){ ?> normalSeclm<?php }else{ ?> normalSeclmu<?php } ?>"><?php
 						if($isVisited) {
 							if(isset($ToggleLink)) {
