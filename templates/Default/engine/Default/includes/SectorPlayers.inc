@@ -56,10 +56,10 @@
 							<td class="shrink center noWrap">
 								<div class="buttonA"><?php
 									if($PlayersContainer instanceof SmrPlanet) {
-										if($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID() && !$ThisPlayer->equals($Player)) {
+										if($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID()) {
 											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php 
 												if(!$ThisPlayer->traderNAPAlliance($Player)){ 
-													if (!$Player->hasFederalProtection() && !$Player->hasNewbieTurns()) {
+													if ($Player->canFight()) {
 														?> enemy<?php 
 													} else {
 														?> neutral<?php 
@@ -73,7 +73,7 @@
 									else {
 										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="<?php 
 											if(!$ThisPlayer->traderNAPAlliance($Player)){ 
-												if (!$Player->hasFederalProtection() && !$Player->hasNewbieTurns()) {
+												if ($Player->canFight()) {
 													?> enemy<?php 
 												} else {
 													?> neutral<?php 
