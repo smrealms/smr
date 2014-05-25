@@ -414,7 +414,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getPlayerName() {
-		return $this->playerName . ($this->isNPC() ? ' <span class="npcColor">[NPC]</span>' : '');
+		return $this->playerName . ($this->isNPC() ? ' <span class="npcColour">[NPC]</span>' : '');
 	}
 
 	public function setPlayerName($name) {
@@ -425,7 +425,7 @@ abstract class AbstractSmrPlayer {
 	public function getDisplayName($includeAlliance=false) {
 		$return = get_colored_text($this->getAlignment(),$this->playerName.' ('.$this->getPlayerID().')');
 		if($this->isNPC()) {
-			$return .= ' <span class="npcColor">[NPC]</span>';
+			$return .= ' <span class="npcColour">[NPC]</span>';
 		}
 		if($includeAlliance) {
 			$return.= ' (' . $this->getAllianceName() . '</a>' . ')';
@@ -531,7 +531,7 @@ abstract class AbstractSmrPlayer {
 	}
 
 	public function getSpanColour() {
-		return get_colored_name('NA', $this->alignment, 'Game', 'Color');
+		return get_colored_name('NA', $this->alignment, 'Game', 'Colour');
 	}
 
 	public function isCombatDronesKamikazeOnMines() {

@@ -16,24 +16,24 @@ if(isset($ExtraCSSLink)) {
 		/* Friend vs Foe shades */
 
 		.enemy, .enemy:hover { {
-			color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
+			color: #<?php echo $ThisAccount->getEnemyColour(); ?>;
 		}
 		.enemyBack, .enemyBack:hover {
-			background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>;
+			background-color: #<?php echo $ThisAccount->getEnemyColour(); ?>;
 		}
 
 		.friendly, .friendly:hover {
-			color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			color: #<?php echo $ThisAccount->getFriendlyColour(); ?>;
 		}
 		.friendlyBack, .friendlyBack:hover {
-			background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>;
+			background-color: #<?php echo $ThisAccount->getFriendlyColour(); ?>;
 		}
 
 		.neutral, .neutral:hover {
-			color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			color: #<?php echo $ThisAccount->getNeutralColour(); ?>;
 		}
 		.neutralBack, .neutralBack:hover {
-			background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>;
+			background-color: #<?php echo $ThisAccount->getNeutralColour(); ?>;
 		}<?php 
 	} ?>
 </style><?php

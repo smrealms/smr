@@ -159,7 +159,7 @@ if($action != 5) {
 	function getParticipantName($accountID, $sectorID) {
 		global $player;
 		if($accountID == ACCOUNT_ID_PORT) {
-			return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColor">#' . $sectorID . '</span></a>';
+			return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">Port <span class="sectorColour">#' . $sectorID . '</span></a>';
 		}
 		if($accountID == ACCOUNT_ID_PLANET) {
 			return '<span class="yellow">Planetary Defenses</span>';

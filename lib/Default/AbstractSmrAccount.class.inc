@@ -69,9 +69,9 @@ abstract class AbstractSmrAccount {
 	protected $template;
 	protected $hotkeys = array();
 	protected $permissions;
-	protected $friendlyColor;
-	protected $neutralColor;
-	protected $enemyColor;
+	protected $friendlyColour;
+	protected $neutralColour;
+	protected $enemyColour;
 
 	protected $npc;
 
@@ -186,9 +186,9 @@ abstract class AbstractSmrAccount {
 			$this->useAJAX			= $this->db->getBoolean('use_ajax');
 			$this->mailBanned		= (int)$row['mail_banned'];
 			
-			$this->friendlyColor 	= $row['friendly_color'];
-			$this->neutralColor 	= $row['neutral_color'];
-			$this->enemyColor 		= $row['enemy_color'];
+			$this->friendlyColour 	= $row['friendly_colour'];
+			$this->neutralColour 	= $row['neutral_colour'];
+			$this->enemyColour 		= $row['enemy_colour'];
 
 			$this->cssLink			= $row['css_link'];
 			$this->defaultCSSEnabled	= $this->db->getBoolean('default_css_enabled');
@@ -283,9 +283,9 @@ abstract class AbstractSmrAccount {
 			', fontsize = ' . $this->db->escapeNumber($this->fontSize).
 			', css_link = ' . $this->db->escapeString($this->cssLink,true,true).
 			', cell_phone = ' . $this->db->escapeString($this->cellPhone, true, true).
-			', friendly_color = ' . $this->db->escapeString($this->friendlyColor, true, true).
-			', neutral_color = ' . $this->db->escapeString($this->neutralColor, true, true).
-			', enemy_color = ' . $this->db->escapeString($this->enemyColor, true, true).
+			', friendly_colour = ' . $this->db->escapeString($this->friendlyColour, true, true).
+			', neutral_colour = ' . $this->db->escapeString($this->neutralColour, true, true).
+			', enemy_colour = ' . $this->db->escapeString($this->enemyColour, true, true).
 			' WHERE account_id = '.$this->db->escapeNumber($this->account_id).' LIMIT 1');
 		$this->hasChanged = false;
 	}
@@ -1163,25 +1163,25 @@ abstract class AbstractSmrAccount {
 		return $days;
 	}
 	
-	public function getFriendlyColor() {
-		return $this->friendlyColor;
+	public function getFriendlyColour() {
+		return $this->friendlyColour;
 	}
-	public function setFriendlyColor($color) {
-		$this->friendlyColor = $color;
+	public function setFriendlyColour($colour) {
+		$this->friendlyColour = $colour;
 		$this->hasChanged = true;
 	}
-	public function getNeutralColor() {
-		return $this->neutralColor;
+	public function getNeutralColour() {
+		return $this->neutralColour;
 	}
-	public function setNeutralColor($color) {
-		$this->neutralColor = $color;
+	public function setNeutralColour($colour) {
+		$this->neutralColour = $colour;
 		$this->hasChanged = true;
 	}
-	public function getEnemyColor() {
-		return $this->enemyColor;
+	public function getEnemyColour() {
+		return $this->enemyColour;
 	}
-	public function setEnemyColor($color) {
-		$this->enemyColor = $color;
+	public function setEnemyColour($colour) {
+		$this->enemyColour = $colour;
 		$this->hasChanged = true;
 	}
 

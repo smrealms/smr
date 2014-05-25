@@ -22,7 +22,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 	protected $lastNewsUpdate;
 	protected $stunned;
 	protected $fleed;
-	protected $attackColor;
+	protected $attackColour;
 	protected $kicked;
 //	protected $pastKnowledge;
 	protected $governmentHelp;
@@ -172,7 +172,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->lastNewsUpdate				= (int) $result['last_news_update'];
 			$this->stunned						= (int) $result['stunned'];
 			$this->fleed						= $result['fleed']=='TRUE';
-			$this->attackColor					= (string) $result['attack_warning'];
+			$this->attackColour					= (string) $result['attack_warning'];
 			$this->dead							= $result['dead']=='TRUE';
 			$this->startDead					= $this->dead;
 			$this->landedOnPlanet				= $result['land_on_planet']=='TRUE';
@@ -288,7 +288,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->stunned;
 			case 'Fleed':
 				return $this->fleed;
-			case 'Attack Color':
+			case 'Attack Colour':
 				return $this->attackWarning;
 //			case 'Chat':
 //				return $this->chat;
@@ -302,7 +302,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				return $this->getLevelID();
 			case 'Display Name':
 				return $this->getDisplayName();
-			case 'Span Color':
+			case 'Span Colour':
 				return $this->getSpanColour();
 //			case 'Ship Size':
 //				return $this->getShipSize();
@@ -465,16 +465,16 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->hasChanged=true;
 	}
 
-	function getAttackColor() {
-		return $this->attackColor;
+	function getAttackColour() {
+		return $this->attackColour;
 	}
 
-	function setAttackColor($colour) {
-		if($this->attackColor == $colour)
+	function setAttackColour($colour) {
+		if($this->attackColour == $colour)
 			return;
-		$this->attackColor=$colour;
+		$this->attackColour=$colour;
 		$this->hasChanged=true;
-//		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColor) . ' WHERE ' . $this->SQL . ' LIMIT 1');
+//		$this->db->query('UPDATE player SET attack_warning = ' . $this->db->escapeString($this->attackColour) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 	}
 
 	function getBank() {
@@ -1383,7 +1383,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				', last_news_update='.$this->db->escapeNumber($this->lastNewsUpdate).
 				', stunned='.$this->db->escapeString($this->stunned).
 				', fleed='.$this->db->escapeBoolean($this->fleed).
-				', attack_warning='.$this->db->escapeString($this->attackColor).
+				', attack_warning='.$this->db->escapeString($this->attackColour).
 				', dead='.$this->db->escapeBoolean($this->dead).
 				', land_on_planet='.$this->db->escapeBoolean($this->landedOnPlanet).
 				', kicked='.$this->db->escapeBoolean($this->kicked).

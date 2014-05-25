@@ -144,7 +144,7 @@
 								}
 								if($ThisShip->hasActiveIllusion()) { ?>
 									<a href="<?php echo $HardwareLink; ?>">
-										<span class="npcColor"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
+										<span class="npcColour"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
 										IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?>
 									</a><br />
 									<br /><?php

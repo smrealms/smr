@@ -21,9 +21,9 @@ $retype_password = $_REQUEST['retype_password'];
 $HoF_name = trim($_REQUEST['HoF_name']);
 $ircNick = trim($_REQUEST['irc_nick']);
 $cellPhone = trim($_REQUEST['cell_phone']);
-$friendlyColor = $_REQUEST['friendly_color'];
-$neutralColor = $_REQUEST['neutral_color'];
-$enemyColor = $_REQUEST['enemy_color'];
+$friendlyColour = $_REQUEST['friendly_color'];
+$neutralColour = $_REQUEST['neutral_color'];
+$enemyColour = $_REQUEST['enemy_color'];
 
 if (USE_COMPATIBILITY && $action == 'Link Account') {
 	if(!$account->linkAccount($_REQUEST['oldAccountLogin'],$_REQUEST['oldAccountPassword'])) {
@@ -275,15 +275,15 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	$db->query('INSERT INTO news (time, news_message, game_id, dead_id,dead_alliance) VALUES (' . $db->escapeNumber(TIME) . ',' . $db->escape_string($news, FALSE) . ',' . $db->escapeNumber($player->getGameID()) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ')');
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }
-else if ($action == 'Update Colors') {
-	if (strlen($friendlyColor) == 6) {
-		$account->setFriendlyColor($friendlyColor);
+else if ($action == 'Update Colours') {
+	if (strlen($friendlyColour) == 6) {
+		$account->setFriendlyColour($friendlyColour);
 	}
-	if (strlen($neutralColor) == 6) {
-		$account->setNeutralColor($neutralColor);
+	if (strlen($neutralColour) == 6) {
+		$account->setNeutralColour($neutralColour);
 	}
-	if (strlen($enemyColor) == 6) {
-		$account->setEnemyColor($enemyColor);
+	if (strlen($enemyColour) == 6) {
+		$account->setEnemyColour($enemyColour);
 	}
 	$account->update();
 }

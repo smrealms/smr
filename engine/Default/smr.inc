@@ -99,7 +99,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return true;
 				}
 
-				$sectorTag = '<span class="sectorColor">#' . $sectorID . '</span>';
+				$sectorTag = '<span class="sectorColour">#' . $sectorID . '</span>';
 
 				// The use of $var here is for a corner case where an admin can check reported messages whilst being in-game.
 				// Ugly but working, probably want a better mechanism to check if more BBCode tags get added
@@ -393,7 +393,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 			$g_component = 'ff';
 		}
 		$colour = $r_component . $g_component . '00';
-		if ($return_type == 'Color') return $colour;
+		if ($return_type == 'Colour') return $colour;
 		return '<span style="color:#' . $colour . '">' . $text . '</span>';
 	}
 	elseif ($type == 'IRC') {
@@ -401,7 +401,7 @@ function get_colored_text_range($value, $maxValue, $text = null, $minValue = 0, 
 		if ($normalisedValue == 255) $colour = '[k03]';
 		elseif ($normalisedValue == -255) $colour = '[k04]';
 		else $colour = '[k08]';
-		if ($return_type == 'Color') return $colour;
+		if ($return_type == 'Colour') return $colour;
 		return $colour . $text;
 	}
 }

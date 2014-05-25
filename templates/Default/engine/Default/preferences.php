@@ -123,29 +123,29 @@ if(isset($GameID)) { ?>
 		</tr>
 		
 		<tr>
-			<td>Friendly Color:</td>
+			<td>Friendly Colour:</td>
 			<td><div id="friendlyColorSelector">
-				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColor(); ?>"></div>
-				<input type="hidden" name="friendly_color" id="InputFields" value="<?php echo $ThisAccount->getFriendlyColor(); ?>"/></div></td>
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getFriendlyColour(); ?>"></div>
+				<input type="hidden" name="friendly_color" id="InputFields" value="<?php echo $ThisAccount->getFriendlyColour(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
-			<td>Neutral Color:</td>
+			<td>Neutral Colour:</td>
 			<td><div id="neutralColorSelector">
-				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColor(); ?>"></div>
-				<input type="hidden" name="neutral_color" id="InputFields" value="<?php echo $ThisAccount->getNeutralColor(); ?>"/></div></td>
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getNeutralColour(); ?>"></div>
+				<input type="hidden" name="neutral_color" id="InputFields" value="<?php echo $ThisAccount->getNeutralColour(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
-			<td>Enemy Color:</td>
+			<td>Enemy Colour:</td>
 			<td><div id="enemyColorSelector">
-				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColor(); ?>"></div>
-				<input type="hidden" name="enemy_color" id="InputFields" value="<?php echo $ThisAccount->getEnemyColor(); ?>"/></div></td>
+				<div class="preview" style="background-color: #<?php echo $ThisAccount->getEnemyColour(); ?>"></div>
+				<input type="hidden" name="enemy_color" id="InputFields" value="<?php echo $ThisAccount->getEnemyColour(); ?>"/></div></td>
 		</tr>
 		
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Update Colors" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Update Colours" id="InputFields" /></td>
 		</tr>
 		
 		<tr>

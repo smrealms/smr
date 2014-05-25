@@ -33,7 +33,7 @@
 										echo $Ship->getIllusionShipName();
 									}
 									else if($Ship->getName() != $Ship->getIllusionShipName()) {
-										?> <span class="npcColor">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
+										?> <span class="npcColour">(<?php echo $Ship->getIllusionShipName(); ?>)</span><?php
 									}
 								}
 								if($Ship->isCloaked()) {
@@ -49,7 +49,7 @@
 										echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense();
 									}
 									else if($Ship->getAttackRating() != $Ship->getIllusionAttack() || $Ship->getDefenseRating() != $Ship->getIllusionDefense()) {
-										?> <span class="npcColor">(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)</span><?php
+										?> <span class="npcColour">(<?php echo $Ship->getIllusionAttack(); ?> / <?php echo $Ship->getIllusionDefense(); ?>)</span><?php
 									}
 								} ?></td>
 							<td class="shrink center noWrap"><?php echo $Player->getLevelID() ?></td>
