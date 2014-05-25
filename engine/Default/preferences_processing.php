@@ -276,13 +276,13 @@ else if (strpos(trim($action),'Alter Player')===0) {
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your player name.';
 }
 else if ($action == 'Update Colors') {
-	if (strlen($friendlyColor)) == 6) {
+	if (strlen($friendlyColor) == 6) {
 		$account->setFriendlyColor($friendlyColor);
 	}
-	if (strlen($neutralColor)) == 6) {
+	if (strlen($neutralColor) == 6) {
 		$account->setNeutralColor($neutralColor);
 	}
-	if (strlen($enemyColor)) == 6) {
+	if (strlen($enemyColor) == 6) {
 		$account->setEnemyColor($enemyColor);
 	}
 	$account->update();
