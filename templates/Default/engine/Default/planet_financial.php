@@ -1,6 +1,6 @@
 <p>Balance: <b><?php echo number_format($ThisPlanet->getCredits()); ?></b></p>
 
-<form method="POST" action="<?php echo $ThisPlanet->getFinancesHREF(); ?>">
+<form id="finance" method="POST" action="<?php echo $ThisPlanet->getFinancesHREF(); ?>">
 	<table>
 		<tr>
 			<td colspan="2" align="center"><input type="number" name="amount" value="0" id="InputFields" style="text-align:right;width:152;"></td>
@@ -25,5 +25,5 @@
 
 	</p>
 
-	<input type="submit" name="action" value="Bond It!" id="InputFields" />
+	<input type="button" class="bond" name="action" value="Bond It!" id="InputFields" />
 </form>
