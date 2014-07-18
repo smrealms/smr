@@ -110,7 +110,7 @@ define('SHIP_TYPE_FURY',75);
  * Combat system
  */
 define('MAX_ATTACK_RATING_NEWBIE',4);
-define('MAXIMUM_PVP_FLEET_SIZE', 3);
+define('MAXIMUM_PVP_FLEET_SIZE', 10);
 define('MAXIMUM_PORT_FLEET_SIZE', 10);
 define('MAXIMUM_PLANET_FLEET_SIZE', 10);
 define('MAXIMUM_FORCES_FLEET_SIZE', 1);
