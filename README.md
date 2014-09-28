@@ -34,17 +34,16 @@ For these files the sample version should provide good hints on what info is req
 SMR requires write access to htdocs/upload, you will need to create this folder.
 
 ## Database
-SMR is using [Flyway](http://code.google.com/p/flyway) to deploy database patches.
+SMR is using [Flyway](http://flywaydb.org) to deploy database patches.
 
 1. Download and untar Flyway
 
     ```bash
-    wget http://flyway.googlecode.com/files/flyway-commandline-1.6.1-dist.tar.gz && tar -xvzf flyway-commandline-1.6.1-dist.tar.gz -C /opt
+    wget http://repo1.maven.org/maven2/org/flywaydb/flyway-commandline/3.0/flyway-commandline-3.0.tar.gz && tar -xvzf flyway-commandline-3.0.tar.gz -C /opt
     ```
 
-2. Set the following options in /opt/flyway-commandline-1.6.1/conf/flyway.properties
+2. Set the following options in /opt/flyway-3.0/conf/flyway.properties
     ```bash
-    flyway.driver=com.mysql.jdbc.Driver
     flyway.url=jdbc:mysql://localhost/smr_live
     flyway.user=smr
     flyway.password=YOUR_DATABSE_PASSWORD
@@ -52,12 +51,12 @@ SMR is using [Flyway](http://code.google.com/p/flyway) to deploy database patche
 
 3. Download the Java MySQL Connector from http://www.mysql.de/downloads/connector/j
 
-4. Unzip it and put the jar into /opt/flyway-commandline-1.6.1/jars
+4. Unzip it and put the jar into /opt/flyway-3.0/jars
 
 5. Point sql folder to SMR patches
 
     ```
-    cd /opt/flyway-commandline-1.6.1 && rm -Rf sql && ln -s <GIT_ROOT_PATH>/db/patches sql
+    cd /opt/flyway-3.0 && rm -Rf sql && ln -s <GIT_ROOT_PATH>/db/patches sql
     ```
 
 6. Initialize database `./flyway.sh init` which automatically creates the needed database tables and initializes the version
