@@ -25,6 +25,8 @@ class Plotter {
 	}
 
 	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000) {
+		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE-1;
+
 		$checkSector =& $sector;
 		$gameID = $sector->getGameID();
 		$distances = array();
@@ -41,7 +43,7 @@ class Plotter {
 		if($checkSector->hasWarp()===true) {
 			$d = new Distance($gameID,$checkSector->getSectorID());
 			$d->addWarpToPath($checkSector->getWarp());
-			$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $d;
+			$distanceQ[$warpAddIndex][] = $d;
 		}
 		foreach ($checkSector->getLinks() as $nextSector) {
 			if($nextSector!==0) {
@@ -85,7 +87,7 @@ class Plotter {
 						if (!isset($visitedSectors[$checkSector->getWarp()])) {
 							$cloneDistance = clone($distance);
 							$cloneDistance->addWarpToPath($checkSector->getWarp());
-							$distanceQ[TURNS_WARP_SECTOR_EQUIVALENCE][] = $cloneDistance;
+							$distanceQ[$warpAddIndex][] = $cloneDistance;
 						}
 					}
 					foreach ($checkSector->getLinks() as $nextSector) {
