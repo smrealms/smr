@@ -26,3 +26,5 @@
 /sys$command
 /tools/irc/config.specific.php
 /tools/npc/config.specific.php
+
+/newsletters
