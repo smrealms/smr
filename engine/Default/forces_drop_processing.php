@@ -120,7 +120,10 @@ if ($change_mines != 0) {
 	if($change_mines>0) {
 		$ship->decreaseMines($change_mines);
 		$forces->addMines($change_mines);
-		$ship->decloak();
+		if ($ship->isCloaked()) {
+			$ship->decloak();
+			$player->giveTurns(1);
+		}
 	}
 	else {
 		$ship->increaseMines(-$change_mines);
