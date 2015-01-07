@@ -70,19 +70,21 @@ function channel_msg_op_info($fp, $rdata, $account, $player)
 					WHERE alliance_id = ' . $player->getAllianceID() . '
 						AND game_id = ' . $player->getGameID() . '
 						AND account_id = ' . $player->getAccountID());
-		if ($db->nextRecord())
-			$msg = 'You are on the ' . $db->getField('response') . ' list. ';
-		else
-			$msg = 'You have not signed up for this one. ';
+		if ($db->nextRecord()) {
+            $msg = 'You are on the ' . $db->getField('response') . ' list. ';
 
-		// get uncached ship
-		$ship =& SmrShip::getShip($player, true);
-		$op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600));
+            // get uncached ship
+            $ship =& SmrShip::getShip($player, true);
+            $op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600));
 
-		if ($op_turns > $player->getMaxTurns())
-			$msg .= 'You will have max turns by then. If you do not move you\'ll waste ' . ($op_turns - $player->getMaxTurns()) . ' turns.';
-		else
-			$msg .= 'You will have ' . $op_turns . ' turns by then.';
+            if ($op_turns > $player->getMaxTurns())
+                $msg .= 'You will have max turns by then. If you do not move you\'ll waste ' . ($op_turns - $player->getMaxTurns()) . ' turns.';
+            else
+                $msg .= 'You will have ' . $op_turns . ' turns by then.';
+
+        } else {
+            $msg = 'You have not signed up for this one.';
+        }
 
 		// announce signup status
 		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $msg . EOL);
