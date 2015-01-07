@@ -91,18 +91,14 @@ while ($running) {
 		if ($fp) {
 			echo_r('Socket ' . $fp . ' is connected... Identifying...');
 
-
-			safefputs($fp, 'NICK ' . IRC_BOT_NICK_BACKUP . EOL);
+			safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
 			safefputs($fp, 'USER ' . IRC_BOT_USER . EOL);
 
-			// kill any other user that is using our nick
-			safefputs($fp, 'NICKSERV GHOST ' . IRC_BOT_NICK . ' ' . IRC_BOT_PASS . EOL);
+			sleep(3);
 
-			sleep(1);
-
-			//4
-			safefputs($fp, 'NICK ' . IRC_BOT_NICK . EOL);
 			safefputs($fp, 'NICKSERV IDENTIFY ' . IRC_BOT_PASS . EOL);
+
+            sleep(5);
 
 			// join our public channel
 			if (!IRC_DEBUGGING) {
