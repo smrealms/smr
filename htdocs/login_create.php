@@ -10,6 +10,7 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 	<link rel="stylesheet" type="text/css" href="<?php echo DEFAULT_CSS_COLOUR; ?>">
 	<style>.recaptchatable #recaptcha_response_field {background:white; color: black;}</style>
 	<title>Space Merchant Realms</title>
+	<script src='//www.google.com/recaptcha/api.js'></script>
 </head>
 
 <body>
@@ -92,13 +93,7 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 						<td width='73%'><input type='text' name='referral_id' size='10' maxlength='20' id='InputFields'<?php if(isset($_REQUEST['ref'])){ echo 'value="'.htmlspecialchars($_REQUEST['ref']).'"'; }?>></td>
 					</tr>
 					<tr>
-						<td colspan='2'><?php
-							if (strlen(RECAPTCHA_PUBLIC) > 0) {
-								echo recaptcha_get_html(RECAPTCHA_PUBLIC, null, true);
-							} else {
-								echo "<div style='color:red;'>reCAPTCHA disabled due to missing API key</div>";
-							}
-						?></td>
+						<td colspan='2'><div class="g-recaptcha" data-sitekey="<?php echo RECAPTCHA_PUBLIC; ?>"></div></td>
 					</tr>
 					<tr>
 						<td colspan='2'>&nbsp;</td>
