@@ -195,7 +195,7 @@ try {
 	//Check the captcha if it's a standard registration.
 	if(!$socialLogin && strlen(RECAPTCHA_PRIVATE) > 0) {
 		require_once(LIB.'External/recaptcha/recaptchalib.php');
-		$reCaptcha = new ReCaptcha($secret);
+		$reCaptcha = new ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
 		$resp = $reCaptcha->verifyResponse(
 			$_SERVER['REMOTE_ADDR'],
