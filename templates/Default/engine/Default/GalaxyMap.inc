@@ -1,21 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head><?php
-		if(!is_object($ThisAccount) || $ThisAccount->isDefaultCSSEnabled()) { ?>
-			<link rel="stylesheet" type="text/css" href="<?php echo $CSSLink; ?>">
-			<link rel="stylesheet" type="text/css" href="<?php echo $CSSColourLink; ?>" /><?php
-		}
-		if(isset($ExtraCSSLink)) {
-			?><link rel="stylesheet" type="text/css" href="<?php echo $ExtraCSSLink; ?>" /><?php
-		} ?>
-		<title>Galaxy Map</title>
-		<meta http-equiv="pragma" content="no-cache">
-		<style type="text/css">
-			body {
-				font-size:<?php echo $ThisAccount->getFontSize(); ?>%;
-			}
-		</style>
-		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script><?php
+		$this->includeTemplate('includes/Head.inc');
 		if(isset($FocusSector)) { ?>
 			<script>
 				$(function() {
