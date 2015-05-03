@@ -37,10 +37,9 @@ if ($db->nextRecord()) {
 
 if($_REQUEST['to_email']=='*') {
 	// counter
-	$i = 1;
 	$total = 0;
 
-	$db->query('SELECT account_id, email, first_name, last_name FROM newsletter_accounts WHERE account_id >= '.$db->escapeNumber($i).' ORDER BY account_id');
+    $db->query('SELECT account_id, email, first_name, last_name FROM account WHERE validated="TRUE" AND email NOT IN ("noone@smrealms.de","NPC@smrealms.de") AND NOT(EXISTS(SELECT account_id FROM account_is_closed WHERE account_is_closed.account_id=account.account_id))');
 	while ($db->nextRecord()) {
 		// get account data
 		$account_id	= $db->getField('account_id');
@@ -67,8 +66,6 @@ if($_REQUEST['to_email']=='*') {
 
 		// Clear all addresses for next loop
 		$mail->ClearAddresses();
-
-		//sleep(1);
 
 	}
 
