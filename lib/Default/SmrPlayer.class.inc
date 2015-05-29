@@ -1287,7 +1287,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$named_ship = strip_tags($this->getCustomShipName(), '<font><span><img>');
 			$news_message .= ' flying <span class="yellow">'.$named_ship.'</span>';
 		}
-		$news_message .= ' was destroyed by forces in sector ' . Globals::getSectorBBLink($forces->getSectorID());
+		$news_message .= ' was destroyed by ' . $owner->getBBLink() . '\'s forces in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 		// insert the news entry
 		$this->db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance,dead_id,dead_alliance)
 						VALUES(' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news_message) . ',' . $this->db->escapeNumber($owner->getAccountID()) . ',' . $this->db->escapeNumber($owner->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
