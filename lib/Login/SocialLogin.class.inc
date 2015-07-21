@@ -9,7 +9,7 @@ class SocialLogin {
 	private static $facebook=null;
 	private static $twitter=null;
 	private static $openID=null;
-	private static $OPEN_ID_IDENTITIES = array('Google' => 'https://www.google.com/accounts/o8/id');
+	private static $OPEN_ID_IDENTITIES = array();
 
 	private static function &getFacebookObj() {
 		if(self::$facebook==null) {
