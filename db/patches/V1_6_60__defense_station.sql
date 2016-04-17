@@ -1,3 +1,4 @@
+ALTER TABLE `planet_type` CHANGE `planet_type_description` `planet_type_description` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;
 INSERT INTO planet_type (planet_type_id, planet_type_name, planet_type_description, planet_image_link, planet_max_attackers, planet_max_landed) VALUES
 (4, 
 'Defense World', 
