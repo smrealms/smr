@@ -91,7 +91,7 @@ if($Game['GameDescription']) { ?>
 				</ul>
 				</p>
 				<h2>Create your trader</h2>
-				<p>Now it is time for you to create your Trader Will and begin your quest for riches, fame and glory! Where will your destiny take you?</p>
+				<p>Now it is time for you to create your Trader and begin your quest for riches, fame and glory! Where will your destiny take you?</p>
 				<table>
 					<tr>
 						<td align="right"><b>Name:</b></td>
