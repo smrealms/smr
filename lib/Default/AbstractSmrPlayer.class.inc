@@ -348,11 +348,12 @@ abstract class AbstractSmrPlayer {
 	public function setCredits($credits) {
 		if($this->credits == $credits)
 			return;
-		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) return;
+		if (has_privilege('Money Doesn\'t Matter',$this->accountID)) 
+			return;
 		if($credits < 0)
 			throw new Exception('Trying to set negative credits.');
 		if($credits > MAX_MONEY)
-			throw new Exception('Trying to set more than max credits.');
+			$credits = MAX_MONEY;
 		$this->credits = $credits;
 		$this->hasChanged=true;
 	}
