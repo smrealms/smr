@@ -38,7 +38,6 @@
 	     buttons: [
 		       {
 		       text: "Confirm",
-			   "class": 'BondDialogButton',
 			   click: function() {
 			   $(this).dialog('close');
 			   $(".BondFormSubmit").off("click");
@@ -47,7 +46,6 @@
 		       },
 		       {
 		       text: "Cancel",
-			   "class": 'BondDialogButton',
 			   click: function() {
 			   $(this).dialog('close');
 			 }
