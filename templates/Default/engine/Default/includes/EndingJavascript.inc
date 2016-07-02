@@ -1,5 +1,6 @@
 <script type="text/javascript" src="js/jquery.hotkeys.js"></script>
-<script type="text/javascript" src="js/ajax.js"></script><?php
+<script type="text/javascript" src="js/ajax.js"></script>
+<script type="text/javascript" src="js/smrConfirm.js"></script><?php
 if(!empty($js)) {
 	?><script type="text/javascript" src="<?php echo $js; ?>"></script><?php
 }
