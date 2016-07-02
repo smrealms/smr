@@ -1,6 +1,6 @@
 <p>Balance: <b><?php echo number_format($ThisPlanet->getCredits()); ?></b></p>
 
-<form method="POST" action="<?php echo $ThisPlanet->getFinancesHREF(); ?>">
+<form id="BondForm" method="POST" action="<?php echo $ThisPlanet->getFinancesHREF(); ?>">
 	<table>
 		<tr>
 			<td colspan="2" align="center"><input type="number" name="amount" value="0" id="InputFields" style="text-align:right;width:152;"></td>
@@ -25,5 +25,41 @@
 
 	</p>
 
-	<input type="submit" name="action" value="Bond It!" id="InputFields" />
+	<input class="BondFormSubmit" type="submit" name="action" value="Bond It!" id="InputFields" />
 </form>
+<div id="BondDialog" title="Confirmation required">You will be unable to access these funds until the bond matures.<br><br>Please confirm you wish to proceed.</div>
+<script>
+   $(function(){
+       $("#BondDialog").dialog({
+	 autoOpen: false,
+	     modal: true,
+	     height: 200,
+	     resizable: false,
+	     buttons: [
+		       {
+		       text: "Confirm",
+			   "class": 'BondDialogButton',
+			   click: function() {
+			   $(this).dialog('close');
+			   $(".BondFormSubmit").off("click");
+			   $(".BondFormSubmit").click();
+			 }
+		       },
+		       {
+		       text: "Cancel",
+			   "class": 'BondDialogButton',
+			   click: function() {
+			   $(this).dialog('close');
+			 }
+		       }],
+	     close: function() {
+	     $(this).dialog('close');
+	   }
+	 });
+        
+       $(".BondFormSubmit").on("click", function() {
+	   $("#BondDialog").dialog('open');
+	   return false;
+	 });
+     });
+</script>
