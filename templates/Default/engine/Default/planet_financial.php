@@ -29,35 +29,35 @@
 </form>
 <div id="BondDialog" title="Confirmation required">You will be unable to access these funds until the bond matures.<br><br>Please confirm you wish to proceed.</div>
 <script>
-   $(function(){
-       $("#BondDialog").dialog({
-	 autoOpen: false,
-	     modal: true,
-	     height: 200,
-	     resizable: false,
-	     buttons: [
-		       {
-		       text: "Confirm",
-			   click: function() {
-			   $(this).dialog('close');
-			   $(".BondFormSubmit").off("click");
-			   $(".BondFormSubmit").click();
-			 }
-		       },
-		       {
-		       text: "Cancel",
-			   click: function() {
-			   $(this).dialog('close');
-			 }
-		       }],
-	     close: function() {
-	     $(this).dialog('close');
-	   }
-	 });
+$(function(){
+	$("#BondDialog").dialog({
+		autoOpen: false,
+		modal: true,
+		height: 200,
+		resizable: false,
+		buttons:
+			[{
+				text: "Confirm",
+				click: function() {
+					$(this).dialog('close');
+					$(".BondFormSubmit").off("click");
+					$(".BondFormSubmit").click();
+				}
+			},
+			{
+				text: "Cancel",
+				click: function() {
+				$(this).dialog('close');
+			}
+			}],
+		close: function() {
+			$(this).dialog('close');
+		}
+	});
         
-       $(".BondFormSubmit").on("click", function() {
-	   $("#BondDialog").dialog('open');
-	   return false;
-	 });
-     });
+	$(".BondFormSubmit").on("click", function() {
+		$("#BondDialog").dialog('open');
+		return false;
+	});
+});
 </script>
