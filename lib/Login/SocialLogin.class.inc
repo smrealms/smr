@@ -1,4 +1,35 @@
 <?php
+// Autoloader for the new Facebook API
+require_once(LIB . 'External/Facebook/autoload.php');
+
+// It would be cleaner to store the facebook CSRF token in the session but this will do.
+if(!session_id()) {
+	session_start();
+}
+
+
+// Hackish but it's because we're not on v5.6 of PHP which has this builtin
+if(!function_exists('hash_equals'))
+{
+    function hash_equals($str1, $str2)
+    {
+        if(strlen($str1) != strlen($str2))
+        {
+            return false;
+        }
+        else
+        {
+            $res = $str1 ^ $str2;
+            $ret = 0;
+            for($i = strlen($res) - 1; $i >= 0; $i--)
+            {
+                $ret |= ord($res[$i]);
+            }
+            return !$ret;
+        }
+    }
+}
+
 class SocialLogin {
 	private $valid = false;
 	private $loginType = null;
@@ -13,12 +44,11 @@ class SocialLogin {
 
 	private static function &getFacebookObj() {
 		if(self::$facebook==null) {
-			require_once(LIB.'External/Facebook/facebook.php');
-			self::$facebook = new Facebook(array(
-				'appId' => FACEBOOK_APP_ID,
-				'secret' => FACEBOOK_APP_SECRET,
-				'cookie' => true,
-			));
+			self::$facebook = new Facebook\Facebook([
+				'app_id' => FACEBOOK_APP_ID,
+				'app_secret' => FACEBOOK_APP_SECRET,
+				'default_graph_version' => 'v2.7'
+			]);
 		}
 		return self::$facebook;
 	}
@@ -43,7 +73,10 @@ class SocialLogin {
 	}
 
 	public static function getFacebookLoginUrl() {
-		return self::getFacebookObj()->getLoginUrl(array('redirect_uri'=>URL.'/login_processing.php?loginType=Facebook','scope'=>'email'));
+		$helper = self::getFacebookObj()->getRedirectLoginHelper();
+		$permissions = ['email'];
+		$loginUrl = $helper->GetLoginUrl(URL . '/login_processing.php?loginType=Facebook', $permissions);
+		return $loginUrl;
 	}
 
 	public static function getTwitterLoginUrl() {
@@ -68,14 +101,15 @@ class SocialLogin {
 
 	public function __construct($loginType) {
 		if($loginType=='Facebook') {
-			if($this->userID=self::getFacebookObj()->getUser()) {
-				$this->loginType=$loginType;
-				$userInfo = self::getFacebookObj()->api('me');
-				$this->email=$userInfo['email'];
-				$this->firstName=$userInfo['first_name'];
-				$this->lastName=$userInfo['last_name'];
-				$this->valid = true;
-			}
+			$helper = self::getFacebookObj()->getRedirectLoginHelper();
+			$accessToken = $helper->getAccessToken();
+			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
+			$userInfo = $response->getGraphUser();
+			$this->loginType = $loginType;
+			$this->email = $userInfo['email'];
+			$this->firstName = $userInfo['first_name'];
+			$this->lastName = $UserInfo['last_name'];
+			$this->valid = true;
 		}
 		else if($loginType == 'Twitter') {
 			self::getTwitterObj()->getAccessToken($_REQUEST['oauth_verifier']);
