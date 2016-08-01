@@ -84,16 +84,10 @@ class SocialLogin {
 	public function __construct($loginType) {
 
 		if($loginType=='Facebook') {
-try{
 			$helper = self::getFacebookObj()->getRedirectLoginHelper();
 			$accessToken = $helper->getAccessToken();
 			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
 			$userInfo = $response->getGraphUser();
-}
-catch (\Exception $e){
-echo $e->getMessage();
-exit;
-}
 			$this->loginType = $loginType;
 			$this->email = $userInfo['email'];
 			$this->firstName = $userInfo['first_name'];
