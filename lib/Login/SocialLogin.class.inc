@@ -1,34 +1,4 @@
 <?php
-// Autoloader for the new Facebook API
-require_once(LIB . 'External/Facebook/autoload.php');
-
-// It would be cleaner to store the facebook CSRF token in the session but this will do.
-if(!session_id()) {
-	session_start();
-}
-
-
-// Hackish but it's because we're not on v5.6 of PHP which has this builtin
-if(!function_exists('hash_equals'))
-{
-    function hash_equals($str1, $str2)
-    {
-        if(strlen($str1) != strlen($str2))
-        {
-            return false;
-        }
-        else
-        {
-            $res = $str1 ^ $str2;
-            $ret = 0;
-            for($i = strlen($res) - 1; $i >= 0; $i--)
-            {
-                $ret |= ord($res[$i]);
-            }
-            return !$ret;
-        }
-    }
-}
 
 class SocialLogin {
 	private $valid = false;
@@ -43,6 +13,17 @@ class SocialLogin {
 	private static $OPEN_ID_IDENTITIES = array();
 
 	private static function &getFacebookObj() {
+		
+		if(self::$facebook==null) {
+			if(!isset($_SESSION)) {
+				session_start();
+			}
+		}
+
+		// Autoloader for the new Facebook API
+		require_once(LIB . 'External/Facebook/autoload.php');
+		require_once(LIB . 'External/Facebook/polyfills.php');
+
 		if(self::$facebook==null) {
 			self::$facebook = new Facebook\Facebook([
 				'app_id' => FACEBOOK_APP_ID,
@@ -50,6 +31,7 @@ class SocialLogin {
 				'default_graph_version' => 'v2.7'
 			]);
 		}
+
 		return self::$facebook;
 	}
 
@@ -100,11 +82,18 @@ class SocialLogin {
 	}
 
 	public function __construct($loginType) {
+
 		if($loginType=='Facebook') {
+try{
 			$helper = self::getFacebookObj()->getRedirectLoginHelper();
 			$accessToken = $helper->getAccessToken();
 			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
 			$userInfo = $response->getGraphUser();
+}
+catch (\Exception $e){
+echo $e->getMessage();
+exit;
+}
 			$this->loginType = $loginType;
 			$this->email = $userInfo['email'];
 			$this->firstName = $userInfo['first_name'];
