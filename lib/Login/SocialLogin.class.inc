@@ -1,4 +1,5 @@
 <?php
+
 class SocialLogin {
 	private $valid = false;
 	private $loginType = null;
@@ -12,14 +13,25 @@ class SocialLogin {
 	private static $OPEN_ID_IDENTITIES = array();
 
 	private static function &getFacebookObj() {
+		
 		if(self::$facebook==null) {
-			require_once(LIB.'External/Facebook/facebook.php');
-			self::$facebook = new Facebook(array(
-				'appId' => FACEBOOK_APP_ID,
-				'secret' => FACEBOOK_APP_SECRET,
-				'cookie' => true,
-			));
+			if(!isset($_SESSION)) {
+				session_start();
+			}
 		}
+
+		// Autoloader for the new Facebook API
+		require_once(LIB . 'External/Facebook/autoload.php');
+		require_once(LIB . 'External/Facebook/polyfills.php');
+
+		if(self::$facebook==null) {
+			self::$facebook = new Facebook\Facebook([
+				'app_id' => FACEBOOK_APP_ID,
+				'app_secret' => FACEBOOK_APP_SECRET,
+				'default_graph_version' => 'v2.7'
+			]);
+		}
+
 		return self::$facebook;
 	}
 
@@ -43,7 +55,10 @@ class SocialLogin {
 	}
 
 	public static function getFacebookLoginUrl() {
-		return self::getFacebookObj()->getLoginUrl(array('redirect_uri'=>URL.'/login_processing.php?loginType=Facebook','scope'=>'email'));
+		$helper = self::getFacebookObj()->getRedirectLoginHelper();
+		$permissions = ['email'];
+		$loginUrl = $helper->GetLoginUrl(URL . '/login_processing.php?loginType=Facebook', $permissions);
+		return $loginUrl;
 	}
 
 	public static function getTwitterLoginUrl() {
@@ -67,15 +82,17 @@ class SocialLogin {
 	}
 
 	public function __construct($loginType) {
+
 		if($loginType=='Facebook') {
-			if($this->userID=self::getFacebookObj()->getUser()) {
-				$this->loginType=$loginType;
-				$userInfo = self::getFacebookObj()->api('me');
-				$this->email=$userInfo['email'];
-				$this->firstName=$userInfo['first_name'];
-				$this->lastName=$userInfo['last_name'];
-				$this->valid = true;
-			}
+			$helper = self::getFacebookObj()->getRedirectLoginHelper();
+			$accessToken = $helper->getAccessToken();
+			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
+			$userInfo = $response->getGraphUser();
+			$this->loginType = $loginType;
+			$this->email = $userInfo['email'];
+			$this->firstName = $userInfo['first_name'];
+			$this->lastName = $UserInfo['last_name'];
+			$this->valid = true;
 		}
 		else if($loginType == 'Twitter') {
 			self::getTwitterObj()->getAccessToken($_REQUEST['oauth_verifier']);
