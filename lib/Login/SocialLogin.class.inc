@@ -92,7 +92,7 @@ class SocialLogin {
 			$this->userID = $userInfo->getId();
 			$this->email = $userInfo->getEmail();
 			$this->firstName = $userInfo->getFirstName();
-			$this->lastName = $UserInfo->getLastName();
+			$this->lastName = $userInfo->getLastName();
 			$this->valid = true;
 		}
 		else if($loginType == 'Twitter') {
