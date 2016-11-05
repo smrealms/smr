@@ -89,7 +89,7 @@ class SocialLogin {
 			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
 			$userInfo = $response->getGraphUser();
 			$this->loginType = $loginType;
-			$this->userID = $userInfo->getID();
+			$this->userID = $userInfo->getId();
 			$this->email = $userInfo->getEmail();
 			$this->firstName = $userInfo->getFirstName();
 			$this->lastName = $UserInfo->getLastName();
