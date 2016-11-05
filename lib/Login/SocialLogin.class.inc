@@ -89,9 +89,10 @@ class SocialLogin {
 			$response = self::getFacebookObj()->get('/me?fields=first_name,last_name,email', $accessToken);
 			$userInfo = $response->getGraphUser();
 			$this->loginType = $loginType;
-			$this->email = $userInfo['email'];
-			$this->firstName = $userInfo['first_name'];
-			$this->lastName = $UserInfo['last_name'];
+			$this->userID = $userInfo->getID();
+			$this->email = $userInfo->getEmail();
+			$this->firstName = $userInfo->getFirstName();
+			$this->lastName = $UserInfo->getLastName();
 			$this->valid = true;
 		}
 		else if($loginType == 'Twitter') {
