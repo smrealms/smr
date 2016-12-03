@@ -19,7 +19,7 @@ print('<br /><br /><br />');
 // Begin PayPal Logo
 print("<form action=\"https://www.paypal.com/cgi-bin/webscr\" method=\"post\">");
 print("<input type=\"hidden\" name=\"cmd\" value=\"_xclick\">");
-print("<input type=\"hidden\" name=\"business\" value=\"paypal@chaos-inc.de\">");
+print("<input type=\"hidden\" name=\"business\" value=\"mrspock@smrealms.de\">");
 print("<input type=\"hidden\" name=\"item_name\" value=\"Support development with money.\">");
 print("<input type=\"hidden\" name=\"item_number\" value=\"" . $account->account_id . "\">");
 print("<input type=\"hidden\" name=\"no_shipping\" value=\"1\">");
