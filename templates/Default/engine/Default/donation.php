@@ -5,7 +5,7 @@ Current donation rate is: $<?php echo number_format($TotalDonation / 90*7, 2); ?
 
 <form action="https://www.paypal.com/cgi-bin/webscr" method="post">
 	<input type="hidden" name="cmd" value="_xclick">
-	<input type="hidden" name="business" value="paypal@chaos-inc.de">
+	<input type="hidden" name="business" value="mrspock@smrealms.de">
 	<input type="hidden" name="item_name" value="Support development with money.">
 	<input type="hidden" name="item_number" value="<?php echo $ThisAccount->getAccountID(); ?>">
 	<input type="hidden" name="no_shipping" value="1">
