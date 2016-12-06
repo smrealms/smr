@@ -128,7 +128,7 @@ require_once(LIB.'External/recaptcha/recaptchalib.php');
 						<td width='27%'>Country:</td>
 						<td width='73%'>
 							<select name='country_code' id='InputFields'>
-								<option value="None" selected="selected">[Select your country]</option>
+								<option value="" selected="selected">[Select your country]</option>
 								<option value='US'>United States</option>
 								<option value='UK'>United Kingdom</option>
 								<option value='DE'>Germany</option>

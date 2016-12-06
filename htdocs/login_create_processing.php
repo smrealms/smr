@@ -145,6 +145,11 @@ try {
 		//}
 
 		$country_code = $_REQUEST['country_code'];
+		if (strlen($country_code) > 2) {
+			$msg = 'Country code too long!';
+			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+			exit;
+		}
 		//if (empty($country_code)) {
 		//
 		//	$msg = 'Please choose a country!';
