@@ -1,0 +1,11 @@
+{
+    "name": "smr/smr",
+    "description": "SMR",
+    "license": "AGPL-3.0",
+    "require": {
+        "ext-curl": "*",
+        "ext-json": "^1.0.0",
+        "ext-mysql": "^1.0.0",
+        "php": "^5.4.0"
+    }
+}

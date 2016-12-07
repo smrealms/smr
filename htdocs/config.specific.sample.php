@@ -1,7 +1,7 @@
 <?php
 define('USE_COMPATIBILITY',false);
 
-define('URL','http://www.yourdomain.com/smr');
+define('URL','http://localhost');
 define('ROOT','/usr/share/smr/');
 define('LIB',ROOT.'lib/');
 define('ENGINE',ROOT.'engine/');
@@ -10,7 +10,7 @@ define('UPLOAD',WWW.'upload/');
 define('ADMIN',ROOT.'admin/');
 define('TOOLS',ROOT.'tools/');
 
-define('ENABLE_DEBUG', false); // This is useful for debugging on dev machines.
+define('ENABLE_DEBUG', true); // This is useful for debugging on dev machines.
 define('ENABLE_BETA', false);
 define('ACCOUNT_ID_PAGE',1403); //BETA, used for removing newbie turn
 
