@@ -47,6 +47,10 @@
 				<tr>
 					<td align="left">Send Alliance Message</td>
 					<td align="left"><input type="checkbox" name="sendAllMsg"<?php if ($Role['SendAllianceMessage']){ ?> checked="checked"<?php } ?>></td>
+				</tr>
+				<tr>
+					<td align="left">View Bonds In Planet List</td>
+					<td align="left"><input type="checkbox" name="viewBonds"<?php if ($Role['ViewBondsInPlanetList']){ ?> checked="checked"<?php } ?>></td>
 				</tr><?php
 			}
 		} ?>

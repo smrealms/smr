@@ -15,8 +15,22 @@ while ($db->nextRecord()) {
 }
 $template->assignByRef('TraderPlanets',$traderPlanets);
 
-// Count the player as leader if they have no alliance.
-$isLeader = !$player->hasAlliance();
+// Determine if the player can view bonds on the planet list
+// If not in an alliance, they can always view bonds
+$viewBonds = TRUE;
+if ($player->hasAlliance()) {
+	$role_id = $player->getAllianceRole($player->getAllianceID());
+	$db->query('
+	SELECT *
+	FROM alliance_has_roles
+	WHERE alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
+	AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
+	AND role_id = ' . $db->escapeNumber($role_id)
+	);
+	$db->nextRecord();
+	$viewBonds = $db->getBoolean('view_bonds');
+}
+$template->assignByRef('CanViewBonds', $viewBonds);
 
 if ($player->hasAlliance()) {
 	$db->query('SELECT planet.sector_id FROM player
@@ -32,11 +46,6 @@ if ($player->hasAlliance()) {
 		$alliancePlanets[$sectorID]->getCurrentlyBuilding(); //In case anything gets updated here we want to do it before template.
 	}
 	$template->assignByRef('AlliancePlanets',$alliancePlanets);
-	
-	// Check if they are alliance leader (which will show bonds)
-	$isLeader = $player->getAlliance()->getLeaderID() == $player->getAccountID();
 }
-
-$template->assignByRef('IsLeader',$isLeader);
 
 ?>

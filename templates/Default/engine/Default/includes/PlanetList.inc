@@ -23,7 +23,7 @@ if (count($Planets) > 0) { ?>
 				<th class="sort shrink" data-sort="pArmour">Armour</th>
 				<th class="shrink">Supplies</th>
 				<th class="sort shrink" data-sort="build">Build</th><?php
-				if(isset($IsLeader) && $IsLeader) { ?>
+				if($CanViewBonds) { ?>
 					<th class="bonds shrink">Bonds</th><?php
 				} ?>
 			</tr>
@@ -69,7 +69,7 @@ if (count($Planets) > 0) { ?>
 							?>Nothing<?php
 						} ?>
 					</td><?php
-					if(isset($IsLeader) && $IsLeader) { ?>
+					if($CanViewBonds) { ?>
 						<td class="bonds"><?php
 							if($Planet->getBonds() > 0) { ?>
 								Credits:<br/><?php
