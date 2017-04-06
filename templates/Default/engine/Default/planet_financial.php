@@ -10,54 +10,30 @@
 			<td><input type="submit" name="action" value="Withdraw" id="InputFields" /></td>
 		</tr>
 	</table>
-
-	<p>&nbsp;</p>
-
-	<p>You are able to transfer this money into a saving bond.<br />
-	It remains there for <?php echo format_time($ThisPlanet->getBondTime()); ?> and will gain <?php echo $ThisPlanet->getInterestRate() * 100; ?>% interest.<br /><br /><?php
-
-	if ($ThisPlanet->getBonds() > 0) { ?>
-		Right now there are <?php echo number_format($ThisPlanet->getBonds()); ?> credits bonded<?php
-		if ($ThisPlanet->getMaturity() > 0) { ?>
-			and will come to maturity in <?php echo format_time($ThisPlanet->getMaturity() - TIME);
-		}
-	} ?>
-
-	</p>
-
-	<input class="BondFormSubmit" type="submit" name="action" value="Bond It!" id="InputFields" />
 </form>
-<div id="BondDialog" title="Confirmation required">You will be unable to access these funds until the bond matures.<br><br>Please confirm you wish to proceed.</div>
-<script>
-$(function(){
-	$("#BondDialog").dialog({
-		autoOpen: false,
-		modal: true,
-		height: 200,
-		resizable: false,
-		buttons:
-			[{
-				text: "Confirm",
-				click: function() {
-					$(this).dialog('close');
-					$(".BondFormSubmit").off("click");
-					$(".BondFormSubmit").click();
-				}
-			},
-			{
-				text: "Cancel",
-				click: function() {
-				$(this).dialog('close');
-			}
-			}],
-		close: function() {
-			$(this).dialog('close');
-		}
-	});
-        
-	$(".BondFormSubmit").on("click", function() {
-		$("#BondDialog").dialog('open');
-		return false;
-	});
-});
-</script>
+
+	<p>&nbsp;</p> <?php
+
+// Print bond properties if the planet is claimed
+if (!$ThisPlanet->isClaimed()) {
+	echo "This planet must be claimed before you can bond funds here.<br /><br />";
+} else { ?>
+	You are able to transfer these credits into a planetary bond.<br />
+	The credits will remain bonded for <?php echo format_time($ThisPlanet->getBondTime()); ?> and will gain <?php echo $ThisPlanet->getInterestRate() * 100; ?>% interest.<br /><br /><?php
+}
+
+// Always display the bond status if there is a bond
+if ($ThisPlanet->getBonds() > 0) { ?>
+	Right now there are <?php echo number_format($ThisPlanet->getBonds()); ?> credits bonded<?php
+	if ($ThisPlanet->getMaturity() > 0) { ?>
+		and will come to maturity in <?php echo format_time($ThisPlanet->getMaturity() - TIME); ?>.
+		<br /><br /> <?php
+	}
+}
+
+// Allow the player to bond if the planet is claimed
+if ($ThisPlanet->isClaimed()) { ?>
+	<div class="buttonA">
+		<a id="bondFunds" class="buttonA" href="<?php echo $ThisPlanet->getBondConfirmationHREF(); ?>">&nbsp;Bond Funds&nbsp;</a>
+	</div>&nbsp; <?php
+} ?>

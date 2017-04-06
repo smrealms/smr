@@ -4,6 +4,8 @@ if (!$player->isLandedOnPlanet())
 $planet =& $player->getSectorPlanet();
 $action = $_REQUEST['action'];
 $amount = $_REQUEST['amount'];
+
+// Player has requested a planetary fund transaction
 if ($action == 'Deposit' || $action == 'Withdraw') {
 	if (!is_numeric($amount))
 		create_error('Numbers only please!');
@@ -32,15 +34,13 @@ if ($action == 'Deposit' || $action == 'Withdraw') {
 		$account->log(LOG_TYPE_BANK, 'Player takes '.$amount.' credits from planet', $player->getSectorID());
 	}
 }
-elseif ($action == 'Bond It!') {
-	if(!$planet->isClaimed()) {
-		create_error('Cannot bond on an unclaimed planet.');
-	}
 
+// Player has confirmed the request to bond
+elseif ($action == 'Confirm') {
 	$planet->bond();
 
 	// save to db
-	$account->log(LOG_TYPE_BANK, 'Player bonds '.$planet->getCredits().' credits at planet.', $player->getSectorID());
+	$account->log(LOG_TYPE_BANK, 'Player bonds '.$planet->getBonds().' credits at planet.', $player->getSectorID());
 }
 
 forward(create_container('skeleton.php', 'planet_financial.php'));

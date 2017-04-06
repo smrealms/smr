@@ -1105,6 +1105,10 @@ class SmrPlanet {
 		return SmrSession::getNewHREF(create_container('planet_financial_processing.php'));
 	}
 
+	public function getBondConfirmationHREF() {
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_bond_confirmation.php'));
+	}
+
 	public function attackedBy(AbstractSmrPlayer $trigger, array $attackers) {
 		$trigger->increaseHOF(1,array('Combat','Planet','Number Of Triggers'), HOF_PUBLIC);
 		foreach ($attackers as $attacker) {
