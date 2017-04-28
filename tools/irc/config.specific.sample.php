@@ -1,6 +1,6 @@
 <?php
 
-define('IRC_BOT_SERVER_ADDRESS', 'ice.coldfront.net');
+define('IRC_BOT_SERVER_ADDRESS', 'irc.theairlock.net');
 define('IRC_BOT_SERVER_PORT', 6667);
 define('IRC_BOT_NICK', 'Caretaker');
 define('IRC_BOT_PASS', 'secret_key');
