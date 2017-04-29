@@ -6,7 +6,7 @@
 		</tr><?php
 		if ($Role['EditingRole']) { ?>
 			<tr>
-				<td align="left" rowspan="3">Withdrawal limit per 24 hours (Or max negative balance for "positive balance")</td>
+				<td align="left" rowspan="3">Withdrawal limit per 24 hours<br>(Or max negative balance for "positive balance")</td>
 				<td align="left"><input type="number" name="maxWith" value="<?php echo max($Role['WithdrawalLimit'],0); ?>"></td>
 			</tr>
 			<tr>
@@ -25,7 +25,7 @@
 					<td align="left"><input type="checkbox" name="changePW"<?php if ($Role['ChangePass']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
-					<td align="left">Change MoD</td>
+					<td align="left">Change Message Of The Day</td>
 					<td align="left"><input type="checkbox" name="changeMoD"<?php if ($Role['ChangeMod']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
@@ -37,16 +37,20 @@
 					<td align="left"><input type="checkbox" name="planets"<?php if ($Role['PlanetAccess']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
-					<td align="left">Moderate messageboard</td>
+					<td align="left">Moderate Message Board</td>
 					<td align="left"><input type="checkbox" name="mbMessages"<?php if ($Role['ModerateMessageboard']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
-					<td align="left">Exempt withdrawals</td>
+					<td align="left">Exempt Withdrawals</td>
 					<td align="left"><input type="checkbox" name="exemptWithdrawals" alt="This user can mark withdrawals from the alliance account as 'for the alliance' instead of 'for the individual'"<?php if ($Role['ExemptWithdrawals']){ ?> checked="checked"<?php } ?>></td>
 				</tr>
 				<tr>
 					<td align="left">Send Alliance Message</td>
 					<td align="left"><input type="checkbox" name="sendAllMsg"<?php if ($Role['SendAllianceMessage']){ ?> checked="checked"<?php } ?>></td>
+				</tr>
+				<tr>
+					<td align="left">View Bonds In Planet List</td>
+					<td align="left"><input type="checkbox" name="viewBonds"<?php if ($Role['ViewBondsInPlanetList']){ ?> checked="checked"<?php } ?>></td>
 				</tr><?php
 			}
 		} ?>
