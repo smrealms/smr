@@ -157,7 +157,8 @@ foreach ($galaxies as &$galaxy) {
 			unset($port);
 		}
 		if($sector->hasPlanet()) {
-			$file .= 'Planet=1' . EOL;
+			$planetType = $sector->getPlanet()->getTypeID();
+			$file .= 'Planet=' . $planetType . EOL;
 		}
 		if($sector->hasLocation()) {
 			$locationsString= 'Locations=';
