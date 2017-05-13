@@ -23,8 +23,8 @@ function server_ping($fp, $rdata)
 function server_msg_307($fp, $rdata)
 {
 
-	// :ice.coldfront.net 307 Caretaker MrSpock :is a registered nick
-	if (preg_match('/^:(.*) 307 ' . IRC_BOT_NICK . ' (.*) :is a registered nick\s/i', $rdata, $msg)) {
+	// :alpha.theairlock.net 307 Caretaker MrSpock :is identified for this nick
+	if (preg_match('/^:(.*) 307 ' . IRC_BOT_NICK . ' (.*) :is identified for this nick\s/i', $rdata, $msg)) {
 
 		$server = $msg[1];
 		$nick = $msg[2];
