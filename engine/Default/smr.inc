@@ -91,7 +91,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 				}
 				return '<a href="' . $chessGame->getPlayGameHREF() . '">chess game (' . $chessGame->getChessGameID() . ')</a>';
 			break;
-			
+
 			case 'sector':
 				$sectorID = $default;
 
@@ -109,10 +109,10 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					&& $disableBBLinks===false && $overrideGameID==SmrSession::$game_id) {
 					return '<a href="' . Globals::getPlotCourseHREF($player->getSectorID(), $sectorID) . '">' . $sectorTag . '</a>';
 				}
-				
+
 				return $sectorTag;
-				
-			break;			
+
+			break;
 		}
 	}
 	catch (Exception $e) {
@@ -120,7 +120,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	if ($action == BBCODE_CHECK) {
 		return false;
 	}
-	return htmlspecialchars($params['_tag']) . $content . htmlspecialchars($params['_endtag']);
+	return htmlspecialchars($params['_tag']) . $tagContent . htmlspecialchars($params['_endtag']);
 }
 
 function &xmlify(&$str) {
@@ -801,7 +801,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 
 	$container['body'] = 'admin_tools.php';
 	$template->assign('AdminToolsLink',SmrSession::getNewHREF($container));
-	
+
 	$container['body'] = 'album_edit.php';
 	$template->assign('EditPhotoLink',SmrSession::getNewHREF($container));
 
