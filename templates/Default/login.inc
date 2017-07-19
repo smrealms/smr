@@ -117,20 +117,6 @@
                 <a href="http://www.smrealms.de/cgi-bin/awstats.pl" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a><br />
 			</p>
 			<?php
-			/*
-			if(!$isFirefox) { ?>
-				<br />
-				<a class="button" href="http://www.spreadfirefox.com/node&amp;id=216853&amp;t=210">
-				<img alt="Get Firefox!" title="Get Firefox!" src="images/firefox.png"></a><br />
-				SMR is primarly coded and tested with Firefox.<br />Firefox is recommended for the best gameplay.
-				<a href="http://www.spreadfirefox.com/node&amp;id=216853&amp;t=215">Download Firefox</a> now, it's free.
-				<br /><?php
-			}
-
-			/*if($isAprilFools) { ?>
-				<a href="http://www.smrealms.de/merge.php"><span class="red bold">Important Announcement</span></a> : SMR and TDZK are set to merge.
-				Please <a href="http://www.smrealms.de/merge.php">click here</a> for more details.<?php
-			} */
 
 			if(isset($Message)) { ?>
 				<h4 style="margin-bottom: 0px;"><?php echo $Message ?></h4><?php
