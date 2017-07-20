@@ -1,11 +1,90 @@
-# Installation
+# Installation with docker
+
+## Building an SMR docker image
+```
+docker build --tag smrealms/smr .
+```
+
+## Running a mysql server via docker (optional)
+
+### Start the mysql server
+```
+docker run \
+	--name='smr-mysql' \
+	--env='MYSQL_RANDOM_ROOT_PASSWORD=yes' \
+	--env='MYSQL_USER=smr' \
+	--env='MYSQL_PASSWORD=smr' \
+	--env='MYSQL_DATABASE=smr_live' \
+	--detach \
+	mysql:5.5
+```
+### Populate the mysql server
+```
+docker run \
+	--rm \
+	--link='smr-mysql' \
+	--volume="$(pwd)/db/patches:/flyway/sql:ro" \
+	shouldbee/flyway \
+	-url='jdbc:mysql://smr-mysql/smr_live' \
+	-user='smr' \
+	-password='smr' \
+	init
+
+docker run \
+	--rm \
+	--link='smr-mysql' \
+	--volume="$(pwd)/db/patches:/flyway/sql:ro" \
+	shouldbee/flyway \
+	-url='jdbc:mysql://smr-mysql/smr_live' \
+	-user='smr' \
+	-password='smr' \
+	migrate
+```
+
+## Running SMR via docker
+
+You must change the paths to filled in config files, see the config section below for more info
+
+For production
+```
+docker run \
+	--name="smr" \
+	--link='smr-mysql' \
+	--publish='80:80' \
+	--volume="/path/to/config.specific.php:/usr/share/smr/htdocs/config.specific.php:ro" \
+	--volume="/path/to/SmrSessionMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrSessionMySqlDatabase.class.inc:ro" \
+	--volume="/path/to/SmrMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrMySqlDatabase.class.inc:ro" \
+	--detach \
+	smrealms/smr
+```
+For development (will automatically pick up source changes, but you will need to make sure you have run `composer install`)
+```
+docker run \
+	--name="smr" \
+	--link='smr-mysql' \
+	--publish='80:80' \
+	--volume="$(pwd):/usr/share/smr" \
+	--volume="$(pwd)/htdocs/config.specific.sample.php:/usr/share/smr/htdocs/config.specific.php:ro" \
+	--volume="$(pwd)/lib/Default/SmrSessionMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrSessionMySqlDatabase.class.inc:ro" \
+	--volume="$(pwd)/lib/Default/SmrMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrMySqlDatabase.class.inc:ro" \
+	--detach \
+	smrealms/smr
+```
+
+## Viewing logs via docker
+
+```
+docker logs -f smr
+```
+
+# Installation natively
 
 ## Dependencies
 These list the known dependencies, there may be more - please update if you find any!
 
 ### Core
 * PHP 5.3+
-* MySQL 5.1+
+* MySQL 5.5
 
 ### PHP Extensions
 * MySQL http://php.net/manual/en/book.mysql.php
@@ -46,7 +125,7 @@ SMR is using [Flyway](http://flywaydb.org) to deploy database patches.
     ```bash
     flyway.url=jdbc:mysql://localhost/smr_live
     flyway.user=smr
-    flyway.password=YOUR_DATABSE_PASSWORD
+    flyway.password=YOUR_DATABASE_PASSWORD
     ```
 
 3. Download the Java MySQL Connector from http://www.mysql.de/downloads/connector/j
@@ -63,18 +142,21 @@ SMR is using [Flyway](http://flywaydb.org) to deploy database patches.
 
 7. Run all patches `./flyway.sh migrate`
 
-If you start with an existing database you need to follow above steps 1 to 5 and initialize the database with the following command:  
-`./flyway.sh -initialVersion=1.6.39 init` which would mean that your current database equals the one from SMR 1.6.39. From this point on you can use `./flyway.sh migrate` to update to latest database.  
+If you start with an existing database you need to follow above steps 1 to 5 and initialize the database with the following command:
+`./flyway.sh -initialVersion=1.6.39 init` which would mean that your current database equals the one from SMR 1.6.39. From this point on you can use `./flyway.sh migrate` to update to latest database.
 After creating a user account I would recommend inserting a row into the permission table corresponding to the account you created and with a permission_id of 1 in order to give yourself admin permissions.
 
 In case you need to change database with a new version put a file called `V<VERSION_NUMBER>__NAME.sql` into db/patches folder. One version can have multiple patches.
 
+
+# Runtime
+
 ## Permissions
-In order to create an admin account you should first create a standard account via the register form, then add an entry to the "account_has_permission" table for the "account_id" of the created account and "permission_id" 1 (which is the permission to manage admin permissions).  
+In order to create an admin account you should first create a standard account via the register form, then add an entry to the "account_has_permission" table for the "account_id" of the created account and "permission_id" 1 (which is the permission to manage admin permissions).
 Once you have added this entry the account should now have an "Admin Tools" link on the left whilst logged in, which will allow you to assign any extra permissions to yourself and others.
 
 ## Creating a Game
-To create a game you will have to have assigned yourself the "1.6 Universe Generator" and then access this link via the admin tools to create the game.  
+To create a game you will have to have assigned yourself the "1.6 Universe Generator" and then access this link via the admin tools to create the game.
 Once you are happy with the game you need to edit the "game" table and set the "enabled" flag for your game to 'TRUE' in order for it to appear in the list of games to join.
 
 # Coding Style
@@ -99,9 +181,9 @@ This is the coding style that should be used for any new code, although currentl
 
 	```php
 	function exampleFunction() {
-	
+
 	}
-	
+
 	class ExampleClass {
 		public function exampleMethod() {
 		}

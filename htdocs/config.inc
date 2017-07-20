@@ -20,7 +20,7 @@ function logException(Exception $e) {
 	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
 		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
 		'USING_AJAX: '.(defined('USING_AJAX')?var_export(USING_AJAX,true):'undefined');
-		
+
 	try {
 		if(function_exists('release_lock'))
 			release_lock(); //Try to release lock so they can carry on normally
@@ -60,7 +60,7 @@ function logException(Exception $e) {
 		var_dump($message);
 		exit;
 	}
-	
+
 	try {
 		if(is_object($player) && method_exists($player,'sendMessageToBox'))
 			$player->sendMessageToBox(BOX_BUGS_AUTO, $message);
@@ -116,6 +116,7 @@ function explodeElement($delimiter, $string, $index) {
 	return $arr[$index];
 }
 
+require_once('../vendor/autoload.php');
 require_once('config.php');
 
 //	//num races
