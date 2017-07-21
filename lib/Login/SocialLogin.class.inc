@@ -13,16 +13,12 @@ class SocialLogin {
 	private static $OPEN_ID_IDENTITIES = array();
 
 	private static function &getFacebookObj() {
-		
+
 		if(self::$facebook==null) {
 			if(!isset($_SESSION)) {
 				session_start();
 			}
 		}
-
-		// Autoloader for the new Facebook API
-		require_once(LIB . 'External/Facebook/autoload.php');
-		require_once(LIB . 'External/Facebook/polyfills.php');
 
 		if(self::$facebook==null) {
 			self::$facebook = new Facebook\Facebook([
