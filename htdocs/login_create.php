@@ -1,6 +1,5 @@
 <?php
 require_once('config.inc');
-require_once(LIB.'External/recaptcha/recaptchalib.php');
 ?>
 <!DOCTYPE html>
 
