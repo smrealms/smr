@@ -213,13 +213,12 @@ try {
 		}
 	}
 
-	$icq = $_REQUEST['icq'];
 	// create account
 	$timez = $_REQUEST['timez'];
 
 	// creates a new user account object
 	try {
-		$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$icq,$timez,$referral);
+		$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$timez,$referral);
 	}
 	catch(Exception $e) {
 		$msg = 'Invalid referral id!';

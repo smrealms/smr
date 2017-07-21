@@ -370,19 +370,6 @@ require_once('config.inc');
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<td colspan='2'>&nbsp;</td>
-					</tr>
-					<tr>
-						<th colspan='2'>Various Information (Optional)</th>
-					</tr>
-					<tr>
-						<td colspan='2'>&nbsp;</td>
-					</tr>
-					<tr>
-						<td width='27%'>ICQ:</td>
-						<td width='73%'><input type='text' name='icq' size='20' maxlength='15' id='InputFields'></td>
-					</tr>
 					</table>
 
 					<p>&nbsp;</p>
