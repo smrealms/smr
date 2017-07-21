@@ -9,17 +9,26 @@ if ($sector->hasHQ())
 else
 	create_ug_menu();
 
-if ($player->hasMilitaryPayment()) {
-	$PHP_OUTPUT.=('For your military help you have been paid <span class="creds">'.number_format($player->getMilitaryPayment()).'</span> credits');
+// We can only claim the payment once, so to prevent clobbering the message
+// upon AJAX refresh, we store it as a session variable when we first get it.
+if(!isset($var['ClaimText'])) {
+	if ($player->hasMilitaryPayment()) {
+		$payment = $player->getMilitaryPayment();
+		$player->increaseHOF($payment, array('Military Payment','Money','Claimed'), HOF_PUBLIC);
 
-	$player->increaseHOF($player->getMilitaryPayment(),array('Military Payment','Money','Claimed'), HOF_PUBLIC);
+		// add to our cash
+		$player->increaseCredits($payment);
+		$player->setMilitaryPayment(0);
+		$player->update();
 
-	// add to our cash
-	$player->increaseCredits($player->getMilitaryPayment());
-	$player->setMilitaryPayment(0);
-	$player->update();
+		$claimText = ('For your military activity you have been paid <span class="creds">'.number_format($payment).'</span> credits.');
+	} else {
+		$claimText = ('You have done nothing worthy of military payment.');
+	}
 
-} else
-	$PHP_OUTPUT.=('You have done nothing worthy of military payment');
+	SmrSession::updateVar('ClaimText', $claimText);
+}
+
+$PHP_OUTPUT .= $var['ClaimText'];
 
 ?>
