@@ -55,6 +55,10 @@ class SocialLogin {
 	}
 
 	public static function getFacebookLoginUrl() {
+		if (empty(FACEBOOK_APP_ID)) {
+			// No facebook app specified. Continuing would throw an exception.
+			return;
+		}
 		$helper = self::getFacebookObj()->getRedirectLoginHelper();
 		$permissions = ['email'];
 		$loginUrl = $helper->GetLoginUrl(URL . '/login_processing.php?loginType=Facebook', $permissions);
