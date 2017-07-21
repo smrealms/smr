@@ -199,15 +199,14 @@ try {
 
 	//Check the captcha if it's a standard registration.
 	if(!$socialLogin && strlen(RECAPTCHA_PRIVATE) > 0) {
-		require_once(LIB.'External/recaptcha/recaptchalib.php');
-		$reCaptcha = new ReCaptcha(RECAPTCHA_PRIVATE);
+		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
 		// Was there a reCAPTCHA response?
-		$resp = $reCaptcha->verifyResponse(
-			$_SERVER['REMOTE_ADDR'],
-			$_POST['g-recaptcha-response']
+		$resp = $reCaptcha->verify(
+			$_POST['g-recaptcha-response'],
+			$_SERVER['REMOTE_ADDR']
 		);
 
-		if (!$resp->success) {
+		if (!$resp->isSuccess()) {
 			$msg = 'Invalid captcha!';
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
