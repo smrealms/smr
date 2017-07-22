@@ -437,7 +437,7 @@ function changeNPCLogin() {
 
 	if(SmrAccount::getAccountByName($NPC_LOGIN['Login'])==null) {
 		debug('Creating account for: '.$NPC_LOGIN['Login']);
-		$account =& SmrAccount::createAccount($NPC_LOGIN['Login'],'','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
+		$account =& SmrAccount::createAccount($NPC_LOGIN['Login'],'','NPC@smrealms.de','NPC','NPC','NPC','NPC','NPC','NPC',0,0);
 		$account->setValidated(true);
 	}
 	else {
