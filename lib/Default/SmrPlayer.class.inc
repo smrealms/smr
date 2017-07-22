@@ -1296,6 +1296,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 
+		$return['LostCredits'] = $this->getCredits();
+
 		$this->db->query('SELECT * FROM alliance_vs_alliance
 						WHERE alliance_id_1 = -1 AND alliance_id_2 = ' . $this->db->escapeNumber($this->getAllianceID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
 		if ($this->db->nextRecord()) {
@@ -1332,6 +1334,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
 
+		$return['LostCredits'] = $this->getCredits();
+
 		$this->killPlayer($port->getSectorID());
 		return $return;
 	}
@@ -1356,6 +1360,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$expLossPercentage = .27 - $planet->getLevel()/1000;
 		$return['DeadExp'] = floor($this->getExperience() * $expLossPercentage);
 		$this->decreaseExperience($return['DeadExp']);
+
+		$return['LostCredits'] = $this->getCredits();
 
 		$this->killPlayer($planet->getSectorID());
 		return $return;
