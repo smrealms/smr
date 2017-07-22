@@ -1,5 +1,7 @@
 <?php
 require_once(get_file_loc('SmrPlayer.class.inc'));
+require_once(get_file_loc('SmrPlanetType.class.inc'));
+
 class SmrPlanet {
 	protected static $CACHE_PLANETS = array();
 
@@ -28,9 +30,7 @@ class SmrPlanet {
 	protected $inhabitableTime;
 	protected $currentlyBuilding;
 	protected $typeID;
-	protected $typeName;
-	protected $typeImage;
-	protected $typeDescription;
+	protected $typeInfo;
 	
 	protected $canOptions;
 	protected $hasChanged = false;
@@ -38,8 +38,6 @@ class SmrPlanet {
 	protected $hasChangedBuildings = array();
 	protected $hasStoppedBuilding = array();
 	protected $isNew = false;
-	protected $maxAttackers;
-	protected $maxLanded;
 
 	protected $delayedShieldsDelta = 0;
 	protected $delayedCDsDelta = 0;
@@ -772,61 +770,37 @@ class SmrPlanet {
 	}
 	
 	public function updateTypeInfo() {
-	
-		$this->db->query('SELECT * FROM planet_type WHERE planet_type_id = ' . $this->getTypeID());
-		if ($this->db->nextRecord()) {
-			$this->setTypeName($this->db->getField('planet_type_name'));
-			$this->setTypeImage($this->db->getField('planet_image_link'));
-			$this->setTypeDescription($this->db->getField('planet_type_description'));
-			$this->setMaxAttackers($this->db->getInt('planet_max_attackers'));
-			$this->maxLanded = $this->db->getInt('planet_max_landed');
+		if ($this->getTypeID() == 1) {
+			$this->typeInfo = new TerranPlanet();
+		} else if ($this->getTypeID() == 2) {
+			$this->typeInfo = new AridPlanet();
+		} else if ($this->getTypeID() == 3) {
+			$this->typeInfo = new DwarfPlanet();
+		} else if ($this->getTypeID() == 4) {
+			$this->typeInfo = new DefenseWorld();
 		} else {
-			$this->setTypeName("No Type Defined");
-			$this->setTypeImage("image/planet.gif");
-			$this->setTypeDescription("No description defined in database, cotnact admins!");
-			$this->setMaxAttackers(0);
-			$this->maxLanded = 0;
+			create_error('Unknown planet type ID: ' . $this->getTypeID());
 		}
 	}
-	//not public on purpose
-	function setTypeName($name) {
-		$this->typeName = $name;
-	}
-	
-	function setTypeImage($img) {
-		$this->typeImage = $img;
-	}
-	
-	function setTypeDescription($des) {
-		$this->typeDescription = $des;
-	}
-	
 	
 	public function getTypeImage() {
-		if (isset($this->typeImage))
-			return $this->typeImage;
-		return "Error";
+		return $this->typeInfo->imageLink();
 	}
 	
 	public function getTypeName() {
-		if (isset($this->typeName))
-			return $this->typeName;
-		return "Error";
+		return $this->typeInfo->name();
 	}
 	
 	public function getTypeDescription() {
-		if (isset($this->typeDescription))
-			return $this->typeDescription;
-		return "Error";
+		return $this->typeInfo->description();
 	}
 	
-	public function getPlanetID() {
-		return $this->palentID;
+	public function getMaxAttackers() {
+		return $this->typeInfo->maxAttackers();
 	}
-	
-	public function setPlanetID($num) {
-		$this->typeID = $num;
-		$this->hasChanged = true;
+
+	public function getMaxLanded() {
+		return $this->typeInfo->maxLanded();
 	}
 	
 	public function getOptions($option=false) {
@@ -856,18 +830,6 @@ class SmrPlanet {
 		$this->delayedShieldsDelta = 0;
 		$this->setCDs($this->getCDs(true));
 		$this->delayedCDsDelta = 0;
-	}
-	
-	public function getMaxAttackers() {
-		return $this->maxAttackers;
-	}
-	
-	public function setMaxAttackers($value) {
-		$this->maxAttackers = $value;
-	}
-
-	public function getMaxLanded() {
-		return $this->maxLanded;
 	}
 	
 	public function update() {
