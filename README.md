@@ -110,7 +110,7 @@ For these files the sample version should provide good hints on what info is req
 
 
 ## Filesystem permissions
-SMR requires write access to htdocs/upload, you will need to create this folder.
+SMR requires write access to htdocs/upload.
 
 ## Database
 SMR is using [Flyway](http://flywaydb.org) to deploy database patches.
