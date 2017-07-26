@@ -15,7 +15,8 @@ create_echo_form($link);
 			<td class="right">
 				<select name="game_id"><?php
 					foreach($EditGames as $Game) {
-						?><option value="<?php echo $Game['ID']; ?>"><?php echo $Game['GameName']; ?></option><?php
+						$displayName = "(" . $Game['ID'] . ") " . $Game['GameName'];
+						?><option value="<?php echo $Game['ID']; ?>"><?php echo $displayName; ?></option><?php
 					} ?>
 				</select>
 			</td>
