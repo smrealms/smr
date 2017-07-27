@@ -124,7 +124,7 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 }
 
 function &xmlify(&$str) {
-	$xml = str_replace('&nbsp;','&#160;',htmlentities($str,ENT_COMPAT,'utf-8'));
+	$xml = htmlspecialchars($str, ENT_XML1, 'utf-8');
 	return $xml;
 }
 
