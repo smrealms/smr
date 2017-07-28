@@ -206,6 +206,6 @@ $PHP_OUTPUT.=('<h2>Or do you want to:</h2>');
 
 $PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'current_sector.php'));
 $PHP_OUTPUT.=create_submit('Leave Port');
-$PHP_OUTPUT.=('<form>');
+$PHP_OUTPUT.=('</form>');
 
 ?>
