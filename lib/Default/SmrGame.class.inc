@@ -340,6 +340,11 @@ class SmrGame {
 	public function equals(SmrGame $otherGame) {
 		return $otherGame->getGameID()==$this->getGameID();
 	}
+
+	// Convenience function for printing the game name with id
+	public function getDisplayName() {
+		return $this->getName() . " (" . $this->getGameID() . ")";
+	}
 }
 
 ?>
