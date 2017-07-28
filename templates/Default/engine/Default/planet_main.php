@@ -19,7 +19,7 @@ if (isset($Msg)) {
 		</td>
 	<tr>
 		<td style="width:50%">
-			<a href="http://wiki.smrealms.de/index.php?title=Planets" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
+			<a href="<?php echo WIKI_URL; ?>/index.php?title=Planets" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
 			<table class="standard">
 				<tr>
 					<th width="145">&nbsp;</th>

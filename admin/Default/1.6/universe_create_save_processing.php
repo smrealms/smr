@@ -675,7 +675,7 @@ function createGame($gameID) {
 	$db->query('REPLACE INTO alliance_thread_topic (game_id, alliance_id, thread_id, topic) VALUES (' . $db->escapeNumber($gameID) . ', ' . $db->escapeNumber(NHA_ID) . ', 22, \'Ships\')');
 	$text = 'Everything you do in SMR is done while you are flying some kind of ship - it can be anything from an escape pod to a huge IkThorne mothership, but you are always the pilot of something. In addition to the neutral ships, each race also has unique ships that only race members can purchase. You can find the SMR shiplist here:<br />
 	<a href="http://www.smrealms.de/ship_list.php target="_blank">http://www.smrealms.de/ship_list.php</a> <br />
-	Additional information relating to ships can be found in the <a href="http://wiki.smrealms.de/" target="_blank">SMR wiki</a><br />
+	Additional information relating to ships can be found in the <a href="' . WIKI_URL . '" target="_blank">SMR wiki</a><br />
 	<br />
 	It is important to choose ships to match your budget and your needs, and the biggest or most expensive ships are not always the best ones for all purposes.<br />
 	<br />
