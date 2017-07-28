@@ -820,15 +820,6 @@ class SmrPlanet {
 		return "Error";
 	}
 	
-	public function getPlanetID() {
-		return $this->palentID;
-	}
-	
-	public function setPlanetID($num) {
-		$this->typeID = $num;
-		$this->hasChanged = true;
-	}
-	
 	public function getOptions($option=false) {
 
 		if(!isset($this->canOptions)) {
