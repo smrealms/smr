@@ -7,6 +7,29 @@ $link['nogid'] = TRUE;
 $link['valid_for'] = -10;
 create_echo_form($link);
 ?>
+
+<h1>Edit Existing Games</h1>
+<form method="POST" action="<?php echo $EditGameHREF; ?>">
+	<table class="standard">
+		<tr>
+			<td class="right">
+				<select name="game_id"><?php
+					foreach($EditGames as $Game) {
+						$displayName = "(" . $Game['ID'] . ") " . $Game['GameName'];
+						?><option value="<?php echo $Game['ID']; ?>"><?php echo $displayName; ?></option><?php
+					} ?>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td class="center"><input type="submit" value="Edit" name="Edit"></td>
+		</tr>
+	</table>
+</form>
+
+<br /><br />
+
+<h1>Create New Game</h1>
 <form method="POST" action="<?php echo $CreateGalaxiesHREF; ?>">
 	<table class="standard">
 	<tr>
@@ -84,23 +107,5 @@ create_echo_form($link);
 	<tr>
 		<td class="center" colspan="2"><input type="submit" value="Create Game" name="submit"></td>
 	</tr>
-	</table>
-</form>
-<br /><br />
-
-<form method="POST" action="<?php echo $EditGameHREF; ?>">
-	<table class="standard">
-		<tr>
-			<td class="right">
-				<select name="game_id"><?php
-					foreach($EditGames as $Game) {
-						?><option value="<?php echo $Game['ID']; ?>"><?php echo $Game['GameName']; ?></option><?php
-					} ?>
-				</select>
-			</td>
-		</tr>
-		<tr>
-			<td class="center"><input type="submit" value="Edit" name="Edit"></td>
-		</tr>
 	</table>
 </form>
