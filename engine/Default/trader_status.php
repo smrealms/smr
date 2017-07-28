@@ -82,7 +82,7 @@ if($bounty['Amount']>0||$bounty['SmrCredits']>0)
 else
 	$PHP_OUTPUT.= 'None';
 
-$PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><a href="http://www.smrealms.de/ship_list.php" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Ship List"/></a><br />Name: ';
+$PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><a href="' . URL . '/ship_list.php" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Ship List"/></a><br />Name: ';
 
 $PHP_OUTPUT.= $ship->getName();
 $PHP_OUTPUT.= '<br />Speed: ';
