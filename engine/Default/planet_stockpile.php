@@ -41,7 +41,9 @@ foreach($GOODS as $goodID => $good) {
 	$PHP_OUTPUT.=('<td>'.$good['Name'].'</td>');
 	$PHP_OUTPUT.=('<td align="center">' . $ship->getCargo($goodID) . '</td>');
 	$PHP_OUTPUT.=('<td align="center">' . $planet->getStockpile($goodID) . '</td>');
-	$PHP_OUTPUT.=('<td align="center"><input type="number" name="amount" value="' . $ship->getCargo($goodID) . '" id="InputFields" size="4" class="center"/></td>');
+	$default_amount = min($ship->getCargo($goodID),
+	                      $planet->getRemainingStockpile($goodID));
+	$PHP_OUTPUT.=('<td align="center"><input type="number" name="amount" value="' . $default_amount . '" id="InputFields" size="4" class="center"/></td>');
 	$PHP_OUTPUT.=('<td>');
 	$PHP_OUTPUT.=create_submit('Ship');
 	$PHP_OUTPUT.=('&nbsp;');
