@@ -56,7 +56,7 @@ else {
 }
 //<a href="http://www.azool.us/baalz/" target="manual">Help Pages</a><br />
 ?>
-<a href="http://wiki.smrealms.de" target="_blank">SMR Wiki</a><br /><?php
+<a href="<?php echo WIKI_URL; ?>" target="_blank">SMR Wiki</a><br /><?php
 if(isset($GameID)) {
 	?><a href="<?php echo Globals::getSmrFileCreateHREF(); ?>" target="_self">DL Sectors File</a><br /><?php
 } ?>

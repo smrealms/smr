@@ -20,4 +20,4 @@
 
 <p>Plan for your safety now. Remember to use federal protection (Must have an acceptable attack rating, this increases/decreases with your align so it is safest to have an attack rating of 0 if unsure, also make sure to stick to the federal space of friendly races), know where your alliances strongest planets are, and watch out for the people looking for you.</p>
 
-<p>For more information visit the <a href="http://wiki.smrealms.de">SMR Wiki</a></p>
+<p>For more information visit the <a href="<?php echo WIKI_URL; ?>">SMR Wiki</a></p>

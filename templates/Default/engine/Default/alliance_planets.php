@@ -6,7 +6,7 @@
 	}
 	else { ?>
 		Your alliance has no claimed planets.
-		<a href="http://wiki.smrealms.de/index.php?title=Planets" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
+		<a href="<?php echo WIKI_URL; ?>/index.php?title=Planets" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a>
 		<?php
 	} ?>
 </div>

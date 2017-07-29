@@ -25,6 +25,8 @@ define('MAX_IMAGE_HEIGHT',30);
 define('IRC_BOT_SOCKET', '/tmp/ircbot.sock');
 define('MULTI_CHECKING_COOKIE_VERSION','v3');
 
+define('WIKI_URL', 'http://wiki.smrealms.de');
+
 /*
  * Localisations
  */
