@@ -29,11 +29,11 @@ else {
 					AND game_id = '.$db->escapeNumber($game).'
 				ORDER BY transaction_id');
 	if ($db->getNumRows() > 0) {
-		$template->assign('PageTopic','Anonymous Account '.$acc);
+		$PHP_OUTPUT.="<p>Transactions from Anonymous Account $acc in Game $game</p>";
 		$PHP_OUTPUT.= create_table();
 		$PHP_OUTPUT.=('<tr><th align=center>Player Name</th><th align=center>Type</th><th align=center>Amount</th></tr>');
 		while ($db->nextRecord()) {
-			$db2->query('SELECT * FROM player WHERE account_id = ' . $db2->escapeNumber($db->getInt('account_id')));
+			$db2->query('SELECT player_name FROM player WHERE account_id=' . $db2->escapeNumber($db->getInt('account_id')) . ' AND game_id=' . $db2->escapeNumber($game));
 			$db2->nextRecord();
 			$PHP_OUTPUT.=('<tr><td align=center>');
 			$PHP_OUTPUT.=$db2->getField('player_name');
