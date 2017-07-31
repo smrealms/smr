@@ -61,9 +61,9 @@ foreach ($totals as $accId => $total) {
 	}
 	$text .= '<tr>';
 	$text .= '<td><span class="yellow">' . $players[$accId] . '</span></td>';
-	$text .= '<td align="right">' . number_format($trans[$accId][DEPOSIT]) . '</td>';
-	$text .= '<td align="right">-' . number_format($trans[$accId][WITHDRAW]) . '</td>';
-	$text .= '<td align="right"><span class="';
+	$text .= '<td class="right">' . number_format($trans[$accId][DEPOSIT]) . '</td>';
+	$text .= '<td class="right">-' . number_format($trans[$accId][WITHDRAW]) . '</td>';
+	$text .= '<td class="right"><span class="';
 	if ($total < 0) {
 		$text .= 'red bold';
 	}
