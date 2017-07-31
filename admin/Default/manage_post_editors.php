@@ -4,8 +4,7 @@ $template->assign('PageTopic', 'Manage Galactic Post Editors');
 
 // Get the list of active games ordered by reverse start date
 $activeGames = array();
-$db_time = $db->escapeNumber(TIME);
-$db->query('SELECT game_id, game_name FROM game WHERE start_date < ' . $db_time . ' AND end_date > ' . $db_time . ' ORDER BY start_date DESC');
+$db->query('SELECT game_id, game_name FROM game WHERE start_date < ' . $db->escapeNumber(TIME) . ' AND end_date > ' . $db->escapeNumber(TIME) . ' ORDER BY start_date DESC');
 while ($db->nextRecord()) {
 	$activeGames[] = array('game_name' => $db->getField('game_name'),
 	                       'game_id' => $db->getInt('game_id'));
@@ -38,7 +37,7 @@ $template->assign('ProcessingMsg', $var['processing_msg']);
 
 // Create the link to the processing file
 // Pass entire $var so the processing file knows the selected game
-$link_container = create_container('manage_post_editors_processing.php', '', $var);
-$template->assign('PostEditorHREF', SmrSession::getNewHREF($link_container));
+$linkContainer = create_container('manage_post_editors_processing.php', '', $var);
+$template->assign('PostEditorHREF', SmrSession::getNewHREF($linkContainer));
 
 ?>

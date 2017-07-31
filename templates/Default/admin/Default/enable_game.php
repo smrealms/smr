@@ -5,8 +5,8 @@ if (!empty($ProcessingMsg)) {
 	echo $ProcessingMsg;
 }
 
-if (empty($DisabledGames)) {
-	echo "<p>All games are already enabled!</p>";
+if (empty($DisabledGames)) { ?>
+	<p>All games are already enabled!</p><?php
 } else { ?>
 
 	<p>Select the game you would like to enable.<br />
