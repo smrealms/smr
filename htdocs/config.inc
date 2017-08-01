@@ -116,7 +116,7 @@ function explodeElement($delimiter, $string, $index) {
 	return $arr[$index];
 }
 
-require_once('../vendor/autoload.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 require_once('config.php');
 
 //	//num races
