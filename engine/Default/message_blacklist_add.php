@@ -14,11 +14,9 @@ if(isset($var['account_id'])) {
 	$blacklisted_id = $var['account_id'];
 }
 else {
-	$player_name = mysql_real_escape_string($_REQUEST['PlayerName']);
-
 	$db = new SmrMySqlDatabase();
 
-	$db->query('SELECT account_id FROM player WHERE player_name=' . $db->escapeString($player_name) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
+	$db->query('SELECT account_id FROM player WHERE player_name=' . $db->escapeString($_REQUEST['PlayerName']) . ' AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 
 	if(!$db->nextRecord()) {
 		$container['error'] = 1;
