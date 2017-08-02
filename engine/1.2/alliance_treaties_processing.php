@@ -148,8 +148,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$db->next_record();
 	$leader_2 = $db->f("leader_id");
 	$message = 'An ambassador from <span class="yellow">' . $alliance_name . '</span> has arrived.';
-	$message = mysql_real_escape_string($message);
-	$msg = '(' . SmrSession::$game_id . ',' . $leader_2 . ',6,"' . $message . '",0,' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
+	$msg = '(' . SmrSession::$game_id . ',' . $leader_2 . ',6,"' . $db->escape_string($message) . '",0,' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
 	$db->query("INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES $msg");
 	$db->query("INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ($leader_2, ".SmrSession::$game_id.", 6)");
 	$container=array();

@@ -22,7 +22,7 @@ if (isset($_REQUEST['action'])) {
 		if (sizeof($savedLogs)) {
 			foreach ($savedLogs as $a) {
 				if (!empty($query)) $query .= ",";
-				$query .= "($a[0],'$a[1]',$a[2],$a[3],$a[4],$a[5],$a[6],$a[7],'" . mysql_real_escape_string($a[8]) . "'," . $player->account_id . ")";
+				$query .= "($a[0],'$a[1]',$a[2],$a[3],$a[4],$a[5],$a[6],$a[7],'" . $db->escape_string($a[8]) . "'," . $player->account_id . ")";
 			}
 			$db->query('INSERT INTO combat_logs 
 						(game_id,type,sector_id,timestamp,attacker_id,attacker_alliance_id,defender_id,defender_alliance_id,result,saved)

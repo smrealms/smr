@@ -761,8 +761,7 @@ function processNews() {
 		$text .= " The Federal Government is offering a bounty of " . round($player->level_id * .4) . " million credits for the death of <span class=\"yellow\">$player->player_name</span>";
 	}
 	$text .= " prior to the destruction of the port, or until federal forces arrive to defend the port.";
-	$text = mysql_real_escape_string($text);
-	$db->query("INSERT INTO news (game_id, time, news_message, type) VALUES ($player->game_id, " . TIME . ", '$text', 'regular')");
+	$db->query("INSERT INTO news (game_id, time, news_message, type) VALUES ($player->game_id, " . TIME . ", '" . $db->escape_string($text) . "', 'regular')");
 }
 function hofTracker($players, $port) {
 	if (DEBUG) print("Tracking HoF<br>");
@@ -895,8 +894,7 @@ function processResults(&$players, &$port, $fleet, $weapons) {
 				$news = '<span class="yellow smallCaps">Port ' . $player->sector_id . '</span> has been successfully raided by ';
 				if ($player->alliance_id) $news .= 'the members of <span class="yellow">' . $player->alliance_name . '</span>';
 				else $news .= '<span class="yellow">' . $player->player_name . '</span>';
-				$news = mysql_real_escape_string($news);
-				$db->query("INSERT INTO news (game_id, time, news_message, type) VALUES ($player->game_id, " . TIME . ", '$news', 'regular')");
+				$db->query("INSERT INTO news (game_id, time, news_message, type) VALUES ($player->game_id, " . TIME . ", '" . $db->escape_string($news) . "', 'regular')");
 				// Trigger gets an alignment change and a bounty if port is taken
 				$db->query("SELECT * FROM bounty WHERE game_id = $player->game_id AND account_id = $player->account_id " .
 					"AND claimer_id = 0 AND type = 'HQ'");
@@ -998,13 +996,12 @@ function podPlayers($IDArray, $ships, $hqs, $port, $players) {
 		
 		$msg .= ' was destroyed while invading ';
 		$msg .= "<span style=\"color:yellow;font-variant:small-caps\">Port " . $player->sector_id . "</span>.";
-		$msg = mysql_real_escape_string($msg);
-		$db->query("INSERT INTO news (game_id, time, news_message) VALUES ($player->game_id, " . TIME . ", '$msg')");
+		$db->query("INSERT INTO news (game_id, time, news_message) VALUES ($player->game_id, " . TIME . ", '" . $db->escape_string($msg) . "')");
 		
 		$killer_id = 0;
 		
-		$temp = mysql_real_escape_string('You were <span class="red">DESTROYED</span> by <span style="color:yellow;font-variant:small-caps">Port ' . $player->sector_id . '</span>\'s defenses.');
-		$msg = '(' . SmrSession::$game_id . ',' . $accId . ',2,"' . $temp . '",' . $killer_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
+		$temp = 'You were <span class="red">DESTROYED</span> by <span style="color:yellow;font-variant:small-caps">Port ' . $player->sector_id . '</span>\'s defenses.';
+		$msg = '(' . SmrSession::$game_id . ',' . $accId . ',2,"' . $db->escape_string($temp) . '",' . $killer_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
 		$db->query("INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES $msg");
 		$db->query("INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ($accId, ".SmrSession::$game_id.", 2)");
 		unset($temp);
@@ -1031,7 +1028,6 @@ function sendReport($results, $port) {
 		$topic = "Port Siege Report Sector $player->sector_id";
 		$text = "Reports have come in from the space above <span class=\"yellow\">Port " . $player->sector_id . "</span> and have confirmed our <span class=\"red\">siege</span>!<br />";
 		$text .= $mainText;
-		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
 		$db->query("SELECT * FROM alliance_thread_topic WHERE game_id = $player->game_id AND alliance_id = $player->alliance_id AND topic = '$topic' LIMIT 1");
 		if ($db->next_record()) $thread_id = $db->f("thread_id");
@@ -1049,7 +1045,7 @@ function sendReport($results, $port) {
 		if ($db->next_record()) $reply_id = $db->f("reply_id") + 1;
 		else $reply_id = 1;
 		$db->query("INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES " .
-				"($player->game_id, $player->alliance_id, $thread_id, $reply_id, '$text', 0, " . TIME . ")");
+				"($player->game_id, $player->alliance_id, $thread_id, $reply_id, '" . $db->escape_string($text) . "', 0, " . TIME . ")");
 	}
 }
 function portDowngrade(&$results, &$port) {
@@ -1129,7 +1125,7 @@ sendReport($results, $port);
 doLog($results);
 //insert into combat logs
 $finalResults = $results[0] . '<br /><img src="images/portAttack.jpg" width="480px" height="330px" alt="Port Attack" title="Port Attack"><br />' . $results[1];
-$db->query('INSERT INTO combat_logs VALUES("",' . SmrSession::$game_id . ',"PORT",' . $player->sector_id . ',' . time() . ',' . SmrSession::$old_account_id . ',' . $player->alliance_id . ',0,0,"' . mysql_real_escape_string(gzcompress($finalResults)) . '", "FALSE")');
+$db->query('INSERT INTO combat_logs VALUES("",' . SmrSession::$game_id . ',"PORT",' . $player->sector_id . ',' . time() . ',' . SmrSession::$old_account_id . ',' . $player->alliance_id . ',0,0,"' . $db->escape_string(gzcompress($finalResults)) . '", "FALSE")');
 if (DEBUG) print("Pre Forward/Display<br>");
 $container=array();
 $container["url"] = "skeleton.php";

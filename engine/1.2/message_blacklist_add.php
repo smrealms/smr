@@ -10,11 +10,9 @@ if(!isset($_REQUEST['PlayerName'])) {
 	exit;
 }
 
-$player_name = mysql_real_escape_string($_REQUEST['PlayerName']);
-
 $db = new SmrMySqlDatabase();
 
-$db->query('SELECT account_id FROM player WHERE player_name=\'' . $player_name . '\' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
+$db->query('SELECT account_id FROM player WHERE player_name=\'' . $db->escape_string($_REQUEST['PlayerName']) . '\' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
 if(!$db->next_record()) {
 	$container['error'] = 1;	

@@ -36,7 +36,7 @@ if($db->next_record()) {
 list($usec, $sec) = explode(" ", microtime());
 $usec = (int)($usec * 1000);
 
-$db->query('INSERT INTO combat_logs VALUES("",' . SmrSession::$game_id . ',"PLAYER",' . $player->sector_id . ',' . $sec . ',' . SmrSession::$old_account_id . ',' . $player->alliance_id . ',' . $var['target'] . ',' . $defender_alliance_id . ',"' . mysql_real_escape_string(gzcompress($results)) . '")');
+$db->query('INSERT INTO combat_logs VALUES("",' . SmrSession::$game_id . ',"PLAYER",' . $player->sector_id . ',' . $sec . ',' . SmrSession::$old_account_id . ',' . $player->alliance_id . ',' . $var['target'] . ',' . $defender_alliance_id . ',"' . $db->escape_string(gzcompress($results)) . '")');
 
 echo $results;
 

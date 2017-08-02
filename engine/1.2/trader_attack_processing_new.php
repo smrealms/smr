@@ -865,7 +865,7 @@ function build_results(&$players,&$fleets,&$weapons,&$killed_ids,&$killer_ids) {
 
 function process_news(&$players,&$killed_id,&$ship_names) {
 
-	global $session,$player;
+	global $session,$player,$db;
 	
 	$killer_id = $players[$killed_id][KILLER];
 	$msg = $players[$killed_id][PLAYER_NAME];
@@ -906,19 +906,19 @@ function process_news(&$players,&$killed_id,&$ship_names) {
 	*/
  	$msg .= ' in Sector&nbsp#' . $player->sector_id;
 
-	return '(' . SmrSession::$game_id . ',' . TIME . ',"' . mysql_real_escape_string($msg) . '","regular")';
+	return '(' . SmrSession::$game_id . ',' . TIME . ',"' . $db->escape_string($msg) . '","regular")';
 }
 
 function process_messages(&$players,$killed_id) {
 
-	global $session,$player;
+	global $session,$player,$db;
 	
 	$killer_id = $players[$killed_id][KILLER];
 	
-	$temp = mysql_real_escape_string('You were <span class="red">DESTROYED</span> by ' . $players[$killer_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->sector_id . '</span>');
-	$msg .= '(' . SmrSession::$game_id . ',' . $killed_id . ',2,"' . $temp . '",' . $killer_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
-	$temp = mysql_real_escape_string('You <span class="red">DESTROYED</span> ' . $players[$killed_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->sector_id . '</span>');
-	$msg .= ',(' . SmrSession::$game_id . ',' . $killer_id . ',2,"' . $temp . '",' . $killed_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
+	$temp = 'You were <span class="red">DESTROYED</span> by ' . $players[$killer_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->sector_id . '</span>';
+	$msg .= '(' . SmrSession::$game_id . ',' . $killed_id . ',2,"' . $db->escape_string($temp) . '",' . $killer_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
+	$temp = 'You <span class="red">DESTROYED</span> ' . $players[$killed_id][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->sector_id . '</span>';
+	$msg .= ',(' . SmrSession::$game_id . ',' . $killer_id . ',2,"' . $db->escape_string($temp) . '",' . $killed_id . ',' . TIME . ',"FALSE",' . MESSAGE_EXPIRES . ')';
 
 	return $msg;	
 }
@@ -1291,7 +1291,7 @@ foreach($account_ids as $account_id) {
 
 $db->query('UPDATE sector SET battles=battles+1 WHERE sector_id=' . $player->sector_id . ' AND game_id=' . SmrSession::$game_id . ' LIMIT 1');
 
-$db->query('INSERT INTO combat_logs VALUES("",' . SmrSession::$game_id . ',"PLAYER",' . $player->sector_id . ',' . time() . ',' . SmrSession::$old_account_id . ',' . $player->alliance_id . ',' . $var['target'] . ',' . $players[$var['target']][ALLIANCE_ID] . ',"' . mysql_real_escape_string(gzcompress($results)) . '", "FALSE")');
+$db->query('INSERT INTO combat_logs VALUES("",' . SmrSession::$game_id . ',"PLAYER",' . $player->sector_id . ',' . time() . ',' . SmrSession::$old_account_id . ',' . $player->alliance_id . ',' . $var['target'] . ',' . $players[$var['target']][ALLIANCE_ID] . ',"' . $db->escape_string(gzcompress($results)) . '", "FALSE")');
 
 $container = array();
 $container["url"] = "skeleton.php";
