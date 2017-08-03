@@ -1,4 +1,4 @@
-FROM php:5.4-apache
+FROM php:5.6-apache
 RUN apt-get update \
 	&& apt-get install -y libcurl4-openssl-dev git \
 	&& rm -rf /var/lib/apt/lists/* \
