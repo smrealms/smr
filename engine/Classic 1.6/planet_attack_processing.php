@@ -710,7 +710,6 @@ function processNews($fleet, $planet) {
 				$text .= ', a member of ' . stripslashes($db->f('alliance_name'));
 			}
 			$text .= '.';
-			$text = mysql_real_escape_string($text);
 			$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'breaking\','.$player->getAccountID().','.$player->getAllianceID().','.$planet[OWNER].','.$allianceID.')');
 		}
 	}
@@ -909,16 +908,15 @@ function podPlayers($IDArray, $ships, $hqs, $planet, $players) {
 		$msg .= ' was destroyed by ';
 		$msg .= '<span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s planetary defenses';
 	 	$msg .= ' in Sector&nbsp#' . $player->getSectorID();
-		$msg = mysql_real_escape_string($msg);
 		$db->query('INSERT INTO news (game_id, time, news_message,killer_id,killer_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($msg).','.$currPlayer->getAccountID().','.$currPlayer->getAllianceID().')');
 		
 		$killer_id = $planet[OWNER];
 		
-		$temp = mysql_real_escape_string('You were <span class="red">DESTROYED</span> by <span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s planetary defenses in sector <span class="blue">#' . $player->getSectorID() . '</span>');
+		$temp = 'You were <span class="red">DESTROYED</span> by <span style="color:yellow;font-variant:small-caps">' . $planet[PLANET_NAME] . '</span>\'s planetary defenses in sector <span class="blue">#' . $player->getSectorID() . '</span>';
 		$msg = '(' . SmrSession::$game_id . ',' . $accId . ',2,' . $db->escape_string($temp) . ',' . $killer_id . ',' . TIME . ',\'FALSE\',' . MESSAGE_EXPIRES . ')';
 		$db->query('INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES '.$msg);
 		$db->query('INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ('.$accId.', '.SmrSession::$game_id.', 2)');
-		$temp = mysql_real_escape_string('Your planet <span class="red">DESTROYED</span> ' . $players[$accId][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->getSectorID() . '</span>');
+		$temp = 'Your planet <span class="red">DESTROYED</span> ' . $players[$accId][PLAYER_NAME] . ' in sector <span class="blue">#' . $player->getSectorID() . '</span>';
 		$msg = '(' . SmrSession::$game_id . ',' . $killer_id . ',2,' . $db->escape_string($temp) . ',' . $accId . ',' . TIME . ',\'FALSE\',' . MESSAGE_EXPIRES . ')';
 		$db->query('INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time, msg_read, expire_time) VALUES '.$msg);
 		$db->query('INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ('.$killer_id.', '.SmrSession::$game_id.', 2)');
@@ -952,7 +950,6 @@ function sendReport($results, $planet) {
 		$topic = 'Planet Attack Report Sector $player->getSectorID()';
 		$text = 'Reports from the surface of $planetName confirm that it is under <span class="red">attack</span>!<br />';
 		$text .= $mainText;
-		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$ownerAlliance.' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 		if ($db->next_record()) $thread_id = $db->f('thread_id');
@@ -980,7 +977,6 @@ function sendReport($results, $planet) {
 	} else {
 		$text = 'Reports from the surface of '.$planetName.' confirm that it is under <span class="red">attack</span>!<br />';
 		$text .= $mainText;
-		$text = mysql_real_escape_string($text);
 		$db->query('INSERT INTO message (game_id, account_id, message_type_id, message_text, sender_id, send_time) VALUES ' .
 					'('.$player->getGameID().', ' . $planet[OWNER] . ', 3, '.$db->escapeString($text).', 0, ' . TIME . ')');
 		$db->query('INSERT INTO player_has_unread_messages (account_id, game_id, message_type_id) VALUES ' .
@@ -989,7 +985,6 @@ function sendReport($results, $planet) {
 		$topic = 'Planet Siege Report Sector '.$player->getSectorID();
 		$text = 'Reports have come in from the space above $planetName and have confirmed our <span class="red">siege</span>!<br />';
 		$text .= $mainText;
-		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 		if ($db->next_record()) $thread_id = $db->f('thread_id');

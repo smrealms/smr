@@ -88,7 +88,6 @@ forward($container);
 //		$topic = 'Port Siege Report Sector '.$player->getSectorID();
 //		$text = 'Reports have come in from the space above <span class="yellow">Port ' . $player->getSectorID() . '</span> and have confirmed our <span class="red">siege</span>!<br />';
 //		$text .= $mainText;
-//		$text = mysql_real_escape_string($text);
 //		$thread_id = 0;
 //		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . ' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 //		if ($db->nextRecord()) $thread_id = $db->getField('thread_id');

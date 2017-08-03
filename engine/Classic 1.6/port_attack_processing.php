@@ -705,7 +705,6 @@ function processNews() {
 		$text .= ' The Federal Government is offering a bounty of ' . round($player->getLevelID() * .4) . ' million credits for the death of <span class="yellow">'.$player->getPlayerName().'</span>';
 	}
 	$text .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
-	$text = mysql_real_escape_string($text);
 	$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($text).', \'regular\','.$player->getAccountID().','.$player->getAllianceID().','.ACCOUNT_ID_PORT.')');
 }
 function hofTracker($players, $port) {
@@ -835,7 +834,6 @@ function processResults(&$players, &$port, $fleet, $weapons) {
 				$news = '<span class="yellow smallCaps">Port ' . $player->getSectorID() . '</span> has been successfully raided by ';
 				if ($player->getAllianceID()) $news .= 'the members of <span class="yellow">' . $player->getAllianceName() . '</span>';
 				else $news .= '<span class="yellow">' . $player->getPlayerName() . '</span>';
-				$news = mysql_real_escape_string($news);
 				$db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($news).', \'regular\','.$player->getAccountID().','.$player->getAllianceID().','.ACCOUNT_ID_PORT.')');
 				// Trigger gets an alignment change and a bounty if port is taken
 				$db->query('SELECT * FROM bounty WHERE game_id = '.$player->getGameID().' AND account_id = '.$player->getAccountID().' ' .
@@ -940,7 +938,6 @@ function podPlayers($IDArray, $ships, $hqs, $port, $players) {
 		
 		$msg .= ' was destroyed while invading ';
 		$msg .= '<span style="color:yellow;font-variant:small-caps">Port ' . $player->getSectorID() . '</span>.';
-		$msg = mysql_real_escape_string($msg);
 		$db->query('INSERT INTO news (game_id, time, news_message,killer_id,dead_id,dead_alliance) VALUES ('.$player->getGameID().', ' . TIME . ', '.$db->escapeString($msg).','.ACCOUNT_ID_PORT.','.$currPlayer->getAccountID().','.$currPlayer->getAllianceID().')');
 		
 		$killer_id = 0;
@@ -973,7 +970,6 @@ function sendReport($results, $port) {
 		$topic = 'Port Siege Report Sector '.$player->getSectorID();
 		$text = 'Reports have come in from the space above <span class="yellow">Port ' . $player->getSectorID() . '</span> and have confirmed our <span class="red">siege</span>!<br />';
 		$text .= $mainText;
-		$text = mysql_real_escape_string($text);
 		$thread_id = 0;
 		$db->query('SELECT * FROM alliance_thread_topic WHERE game_id = '.$player->getGameID().' AND alliance_id = '.$player->getAllianceID().' AND topic = '.$db->escapeString($topic).' LIMIT 1');
 		if ($db->next_record()) $thread_id = $db->f('thread_id');
