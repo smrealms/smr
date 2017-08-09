@@ -46,36 +46,36 @@ $players[0] = 'Alliance Funds';
 while ($db->nextRecord()) {
 	$players[$db->getField('account_id')] = $db->getField('player_name');
 }
+
 //format it this way so its easy to send to the alliance MB if requested.
-$text = '<table class="nobord" cellspacing="0" align="center">';
+$text = '<table class="nobord" cellspacing="1" align="center">';
+$text .= '<tr><th>Player</th><th>Deposits</th><th>Withdrawals</th><th>Total</th></tr>';
+$balance = 0;
 foreach ($totals as $accId => $total) {
-	$text .= '<tr><td>';
+	$balance += $total;
 	if (empty($trans[$accId][DEPOSIT])) {
 		$trans[$accId][DEPOSIT] = 0;
 	}
 	if (empty($trans[$accId][WITHDRAW])) {
 		$trans[$accId][WITHDRAW] = 0;
 	}
-	$text .= '<table class="nobord" cellspacing="0">';
-	$text .= '<tr><td colspan="2"><span class="yellow">' . $players[$accId] . ':</span></td></tr>';
-	$text .= '<tr><td>Deposits</td><td>' . number_format($trans[$accId][DEPOSIT]) . '</td></tr>';
-	$text .= '<tr><td>Withdrawals</td><td> -' . number_format($trans[$accId][WITHDRAW]) . '</td></tr>';
-	$text .= '<tr><td><span class="bold">Total</td><td><span class="';
+	$text .= '<tr>';
+	$text .= '<td><span class="yellow">' . $players[$accId] . '</span></td>';
+	$text .= '<td class="right">' . number_format($trans[$accId][DEPOSIT]) . '</td>';
+	$text .= '<td class="right">-' . number_format($trans[$accId][WITHDRAW]) . '</td>';
+	$text .= '<td class="right"><span class="';
 	if ($total < 0) {
 		$text .= 'red bold';
 	}
 	else {
 		$text .= 'bold';
 	}
-	$text .= '">' . number_format($total) . '</span></td></tr></table><br />';
-	$text .= '</td></tr>';
-	$balance += $total;
-}
-if (empty($balance)) {
-	$balance = 0;
+	$text .= '">' . number_format($total) . '</span></td>';
+	$text .= '</tr>';
 }
 $text .= '</table>';
 $text = '<div align="center"><br />Ending Balance: ' . number_format($balance) . '</div><br />' . $text;
+
 $container=create_container('skeleton.php', 'bank_report.php');
 $container['alliance_id'] = $alliance_id;
 $container['text'] = $text;
