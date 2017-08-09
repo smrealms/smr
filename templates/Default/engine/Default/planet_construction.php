@@ -1,17 +1,18 @@
-<p>You are currently building: <?php
+You are currently building: <?php
 	if ($ThisPlanet->hasCurrentlyBuilding()) {
 		$CurrentlyBuilding = $ThisPlanet->getCurrentlyBuilding();
 		foreach($CurrentlyBuilding as $Building) { ?>
 			<br /><?php
 			echo $PlanetBuildings[$Building['ConstructionID']]['Name']; ?> which will finish in <?php echo format_time($Building['TimeRemaining']); ?>
+			<br /><br />
 			<div class="buttonA"><a class="buttonA" href="<?php echo $ThisPlanet->getCancelHREF($Building); ?>">&nbsp;Cancel&nbsp;</a></div><?php
 		}
 	}
 	else { ?>
 		Nothing!<?php
 	} ?>
-</p>
 
+<br /><br />
 <table class="standard">
 	<tr>
 		<th></th>
