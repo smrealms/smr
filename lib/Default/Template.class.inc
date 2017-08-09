@@ -296,8 +296,6 @@ class Template {
 			return '';
 		}
 
-		require_once(LIB.'External/phpQuery/phpQuery.php');
-		
 		$xml='';
 		$html = phpQuery::newDocument($str);
 		$searches = array('span[id]','.ajax');

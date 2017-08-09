@@ -3,6 +3,7 @@
     "description": "SMR",
     "license": "AGPL-3.0",
     "require": {
+        "electrolinux/phpquery": "0.9.6",
         "ext-curl": "*",
         "ext-json": "^1.0.0",
         "ext-mysql": "^1.0.0",
