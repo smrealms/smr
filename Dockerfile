@@ -1,3 +1,4 @@
+# Dockerfile for smr service
 FROM php:5.6-apache
 RUN apt-get update \
 	&& apt-get install -y libcurl4-openssl-dev git sendmail \
@@ -19,8 +20,13 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY composer.json .
 RUN composer install --no-interaction
 
+# Copy the smr source tree
 COPY . .
-VOLUME htdocs/upload
+
+# Replace placeholders in local files
+ARG MYSQL_PASSWORD
+RUN sed "s/__MYSQL_PASSWORD__/${MYSQL_PASSWORD}/" lib/Default/SmrMySqlSecrets.sample.inc > lib/Default/SmrMySqlSecrets.inc
+
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 
 # Provide a FQDN for sendmail (since /etc/hosts cannot be modified during the
