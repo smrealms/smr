@@ -52,8 +52,7 @@ docker run \
 	--link='smr-mysql' \
 	--publish='80:80' \
 	--volume="/path/to/config.specific.php:/usr/share/smr/htdocs/config.specific.php:ro" \
-	--volume="/path/to/SmrSessionMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrSessionMySqlDatabase.class.inc:ro" \
-	--volume="/path/to/SmrMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrMySqlDatabase.class.inc:ro" \
+	--volume="/path/to/SmrMySqlSecrets.sample.inc:/usr/share/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
 	--detach \
 	smrealms/smr
 ```
@@ -65,8 +64,7 @@ docker run \
 	--publish='80:80' \
 	--volume="$(pwd):/usr/share/smr" \
 	--volume="$(pwd)/htdocs/config.specific.sample.php:/usr/share/smr/htdocs/config.specific.php:ro" \
-	--volume="$(pwd)/lib/Default/SmrSessionMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrSessionMySqlDatabase.class.inc:ro" \
-	--volume="$(pwd)/lib/Default/SmrMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrMySqlDatabase.class.inc:ro" \
+	--volume="$(pwd)/lib/Default/SmrMySqlSecrets.sample.inc:/usr/share/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
 	--detach \
 	smrealms/smr
 ```
@@ -83,7 +81,7 @@ docker logs -f smr
 These list the known dependencies, there may be more - please update if you find any!
 
 ### Core
-* PHP 5.3+
+* PHP 5.4+
 * MySQL 5.5
 
 ### PHP Extensions
@@ -97,8 +95,7 @@ These list the known dependencies, there may be more - please update if you find
 Currently it is required to create installation specific copies of the following files:
 
 * htdocs/config.specific.sample.php -> htdocs/config.specific.php
-* lib/Default/SmrSessionMySqlDatabase.class.sample.inc -> lib/Default/SmrSessionMySqlDatabase.class.inc
-* lib/Default/SmrMySqlDatabase.class.sample.inc -> lib/Default/SmrMySqlDatabase.class.inc
+* lib/Default/SmrMySqlSecrets.sample.inc -> lib/Default/SmrMySqlSecrets.inc
 
 For "Caretaker" functionality:
 * tools/irc/config.specific.sample.php -> tools/irc/config.specific.php
