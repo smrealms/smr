@@ -35,7 +35,7 @@ else {
 	<div align="center"><?php
 		$NumLogs = count($Logs);
 		if($NumLogs > 0) { ?>
-		There <span id="total-logs"><?php echo $this->pluralise('is', $TotalLogs), ' ', $TotalLogs, $this->pluralise(' log', $NumLogs); ?></span> available for viewing of which <?php echo $NumLogs, ' ', $this->pluralise('is', $NumLogs); ?> being shown.<br /><br />
+			There <span id="total-logs"><?php echo $this->pluralise('is', $TotalLogs), ' ', $TotalLogs, ' ', $LogType, $this->pluralise(' log', $NumLogs); ?></span> available for viewing of which <?php echo $NumLogs, ' ', $this->pluralise('is', $NumLogs); ?> being shown.<br /><br />
 			<form class="standard" method="POST" action="<?php echo $LogFormHREF; ?>">
 				<table class="fullwidth center">
 					<tr>
@@ -97,7 +97,7 @@ else {
 			</script><?php
 		}
 		else { ?>
-			No combat logs found<?php
+			No <?php echo $LogType; ?> combat logs found<?php
 		} ?>
 	</div><?php
 } ?>
