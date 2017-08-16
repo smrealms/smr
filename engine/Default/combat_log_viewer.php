@@ -168,29 +168,32 @@ if($action != 5) {
 		return SmrPlayer::getPlayer($accountID, $player->getGameID())->getLinkedDisplayName(false);
 	}
 
+	// For display purposes, describe the type of log
+	switch($action) {
+		case 0:
+			$type = ' personal';
+		break;
+		case 1:
+			$type = ' alliance';
+		break;
+		case 2:
+			$type = ' port';
+		break;
+		case 3:
+			$type = ' planet';
+		break;
+		case 4:
+			$type = ' saved';
+		break;
+		case 6:
+			$type = ' force';
+		break;
+	}
+	$template->assign('LogType', $type);
+
+	// Construct the list of logs of this type
 	$logs = array();
 	if($db->getNumRows() > 0) {
-		switch($action) {
-			case 0:
-				$type = ' personal';
-			break;
-			case 1:
-				$type = ' alliance';
-			break;
-			case 2:
-				$type = ' port';
-			break;
-			case 3:
-				$type = ' planet';
-			break;
-			case 4:
-				$type = ' saved';
-			break;
-			case 6:
-				$type = ' force';
-			break;
-		}
-		$template->assign('LogType', $type);
 		$container = create_container('skeleton.php', 'combat_log_viewer.php');
 		$container['action'] = 5;
 		$container['old_action'] = $action;
