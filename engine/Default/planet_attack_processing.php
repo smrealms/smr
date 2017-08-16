@@ -70,7 +70,14 @@ $account->log(LOG_TYPE_PLANET_BUSTING, 'Player attacks planet, the planet does '
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
-$planetAttackMessage = 'Reports from the surface of '.$planet->getDisplayName().' confirm that it is under <span class="red">attack</span>!';
+// Add this log to the `combat_logs` database table
+$serializedResults = serialize($results);
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+unserialize($serializedResults); //because of references we have to undo this.
+$logId = $db->getInsertID();
+
+// Send notification to planet owners
+$planetAttackMessage = 'Reports from the surface of '.$planet->getDisplayName().' confirm that it is under <span class="red">attack</span>! [combatlog='.$logId.']';
 if($planetOwner->hasAlliance()) {
 	$db->query('SELECT account_id FROM player WHERE game_id=' . $planetOwner->getGameID() .
 			' AND alliance_id=' . $planetOwner->getAllianceID()); //No limit in case they are over limit - ie NHA
@@ -80,13 +87,10 @@ if($planetOwner->hasAlliance()) {
 else
 	SmrPlayer::sendMessageFromPlanet($planet->getGameID(),$planetOwner->getAccountID(),$planetAttackMessage);
 
-$serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'PLANET\',' . $planet->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ','.$planetOwner->getAccountID().',' . $planetOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
-unserialize($serializedResults); //because of references we have to undo this.
-$logId = $db->escapeString('[ATTACK_RESULTS]'.$db->getInsertID());
+// Update sector messages for attackers
 foreach($attackers as &$attacker) {
 	if(!$player->equals($attacker))
-		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ','.$logId.')');
+		$db->query('REPLACE INTO sector_message VALUES(' . $attacker->getAccountID() . ',' . $attacker->getGameID() . ',' . $db->escapeString('[ATTACK_RESULTS]'.$logId) . ')');
 } unset($attacker);
 
 $container = array();
