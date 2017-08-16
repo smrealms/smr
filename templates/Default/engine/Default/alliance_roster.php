@@ -115,9 +115,10 @@ if ($ShowRoles) { ?>
 
 if ($Alliance->getAllianceID() == $ThisPlayer->getAllianceID()) { ?>
 	<br /><h2>Options</h2><br /><?php
-	if ($ShowRoles) { ?>
+	if ($ShowRoles && $CanChangeRoles) { ?>
 		<input class="submit" type="submit" name="action" value="Save Alliance Roles">&nbsp;&nbsp;<?php
-	} ?><div class="buttonA"><a class="buttonA" href="<?php echo $ToggleRolesHREF; ?>">&nbsp;<?php if ($ShowRoles) { ?>Hide Alliance Roles<?php } else { ?>Show Alliance Roles<?php } ?>&nbsp;</a></div>
+	} ?>
+	<div class="buttonA"><a class="buttonA" href="<?php echo $ToggleRolesHREF; ?>">&nbsp;<?php if ($ShowRoles) { ?>Hide Alliance Roles<?php } else { ?>Show Alliance Roles<?php } ?>&nbsp;</a></div>
 	</form><?php
 }
 
