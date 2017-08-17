@@ -17,7 +17,18 @@ $mail->WordWrap = 72;
 
 $mail->Subject = 'Space Merchant Realms Newsletter #' . $var['newsletter_id'];
 
-function set_mail_body(&$mail, $newsletterHtml, $newsletterText) {
+function set_mail_body(&$mail, $newsletterHtml, $newsletterText, $salutation) {
+	// Prepend the salutation if one is given
+	if ($salutation) {
+		if (!empty($newsletterHtml)) {
+			$newsletterHtml = $salutation . '<br /><br />' . $newsletterHtml;
+		}
+		if (!empty($newsletterText)) {
+			$newsletterText = $salutation . EOL . EOL . $newsletterText;
+		}
+	}
+
+	// Set the body text, giving preference to HTML
 	if(!empty($newsletterHtml)) {
 		$mail->MsgHTML($newsletterHtml);
 		if(!empty($newsletterText)) {
@@ -32,7 +43,8 @@ function set_mail_body(&$mail, $newsletterHtml, $newsletterText) {
 }
 
 // Set the body of the e-mail
-set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text']);
+set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'],
+              $_REQUEST['salutation']);
 
 if($_REQUEST['to_email']=='*') {
 	// counter
@@ -44,6 +56,12 @@ if($_REQUEST['to_email']=='*') {
 		$account_id	= $db->getField('account_id');
 		$to_email	= $db->getField('email');
 		$to_name	= $db->getField('first_name') . ' ' . $db->getField('last_name');
+
+		// Reset the message body with personalized salutation, if requested
+		if ($_REQUEST['salutation']) {
+			$salutation = $_REQUEST['salutation'] . ' ' . $to_name . ',';
+			set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text'], $salutation);
+		}
 
 		// debug output
 		echo $account_id.'. Preparing mail for '.$to_name.' <'.$to_email.'>... ';
@@ -75,6 +93,7 @@ if($_REQUEST['to_email']=='*') {
 	exit();
 }
 else {
+
 	$mail->AddAddress($_REQUEST['to_email'], $_REQUEST['to_email']);
 
 	$mail->Send();

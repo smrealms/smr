@@ -5,9 +5,14 @@ if (!isset($NewsletterId)) { ?>
 	<h2>Send Newsletter</h2>
 	<p>This sends the latest newsletter added to the DB: Newsletter #<?php echo $NewsletterId; ?></p>
 
-	<p>Enter a recipient address (* for all players). Please send to yourself first to verify that
-	everything displays as intended.</p>
 	<?php echo $ProcessingForm; ?>
+	<p>Choose a salutation for the newsletter (e.g. "Hello Players,"). If sending to<br />
+	all players, specify only the greeting (e.g. "Hello") to prefix the account name.<br />
+	If left empty, no salutation will be added.</p>
+	<input type="text" name="salutation" value="Hello" id="InputFields" size="25">
+
+	<p>Enter a recipient address (* for all players).<br />
+	Please send to yourself first to verify that everything displays as intended.</p>
 	<input type="text" name="to_email" value="<?php echo htmlspecialchars($CurrentEmail); ?>" id="InputFields" size="25">
 
 	<p><?php echo create_submit('Send'); ?></p>
