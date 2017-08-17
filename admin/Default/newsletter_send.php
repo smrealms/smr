@@ -9,11 +9,13 @@ $processingContainer = create_container('newsletter_send_processing.php');
 $db = new SmrMySqlDatabase();
 $db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
 if ($db->nextRecord()) {
-	// Give both the template and processing container access to the same data
-	$processingContainer['newsletter_id']   = $db->getField('newsletter_id');
+	$id = $db->getField('newsletter_id');
+	$template->assign('NewsletterId', $id);
+	$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #'.$id);
+
+	// Give both the template and processing container access to the message
 	$processingContainer['newsletter_html'] = $db->getField('newsletter_html');
 	$processingContainer['newsletter_text'] = $db->getField('newsletter_text');
-	$template->assign('NewsletterId',   $db->getField('newsletter_id'));
 	$template->assign('NewsletterHtml', $db->getField('newsletter_html'));
 	$template->assign('NewsletterText', $db->getField('newsletter_text'));
 }

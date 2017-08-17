@@ -15,7 +15,7 @@ $mail->AddReplyTo('newsletter@smrealms.de', 'SMR Support');
 $mail->Encoding = 'base64';
 $mail->WordWrap = 72;
 
-$mail->Subject = 'Space Merchant Realms Newsletter #' . $var['newsletter_id'];
+$mail->Subject = $_REQUEST['subject'];
 
 function set_mail_body(&$mail, $newsletterHtml, $newsletterText, $salutation) {
 	// Prepend the salutation if one is given
