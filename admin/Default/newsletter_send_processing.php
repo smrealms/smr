@@ -15,25 +15,24 @@ $mail->AddReplyTo('newsletter@smrealms.de', 'SMR Support');
 $mail->Encoding = 'base64';
 $mail->WordWrap = 72;
 
-$db = new SmrMySqlDatabase();
-$db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
-if ($db->nextRecord()) {
-	$mail->Subject = 'Space Merchant Realms Newsletter #' . $db->getField('newsletter_id');
+$mail->Subject = 'Space Merchant Realms Newsletter #' . $var['newsletter_id'];
 
-	$newsletterHtml = $db->getField('newsletter_html');
-	$newsletterText = $db->getField('newsletter_text');
-
+function set_mail_body(&$mail, $newsletterHtml, $newsletterText) {
 	if(!empty($newsletterHtml)) {
 		$mail->MsgHTML($newsletterHtml);
-		if(!empty($newsletterText))
+		if(!empty($newsletterText)) {
 			$mail->AltBody = $newsletterText;
-	}
-	else
+		}
+	} else {
 		$mail->Body = $newsletterText;
+	}
 
 	// attach footer
-//	$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
+	//$mail->Body   .= EOL.EOL.'Thank you,'.EOL.'   SMR Support Team'.EOL.EOL.'Note: You receive this e-mail because you are registered with Space Merchant Realms. If you prefer not to get any further notices please respond and we will disable your account.';
 }
+
+// Set the body of the e-mail
+set_mail_body($mail, $var['newsletter_html'], $var['newsletter_text']);
 
 if($_REQUEST['to_email']=='*') {
 	// counter
