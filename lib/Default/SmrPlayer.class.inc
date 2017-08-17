@@ -97,7 +97,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				$accountID = $db->getInt('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
 			}
-			return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
+			self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID] =& $players;
 		}
 		return self::$CACHE_SECTOR_PLAYERS[$gameID][$sectorID];
 	}
@@ -111,7 +111,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				$accountID = $db->getField('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID,$forceUpdate);
 			}
-			return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] =& $players;
+			self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID] =& $players;
 		}
 		return self::$CACHE_PLANET_PLAYERS[$gameID][$sectorID];
 	}
@@ -125,7 +125,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				$accountID = $db->getInt('account_id');
 				$players[$accountID] =& self::getPlayer($accountID,$gameID);
 			}
-			return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] =& $players;
+			self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID] =& $players;
 		}
 		return self::$CACHE_ALLIANCE_PLAYERS[$gameID][$allianceID];
 	}
@@ -133,7 +133,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 	public static function &getPlayer($accountIDOrResultArray,$gameID,$forceUpdate = false) {
 		if($forceUpdate || is_array($accountIDOrResultArray) || !isset(self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray])) {
 			$p = new SmrPlayer($gameID,$accountIDOrResultArray);
-			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
+			self::$CACHE_PLAYERS[$gameID][$p->getAccountID()] =& $p;
+			return self::$CACHE_PLAYERS[$gameID][$p->getAccountID()];
 		}
 		return self::$CACHE_PLAYERS[$gameID][$accountIDOrResultArray];
 	}

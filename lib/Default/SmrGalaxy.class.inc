@@ -27,7 +27,7 @@ class SmrGalaxy {
 				$galaxyID = $db->getField('galaxy_id');
 				$galaxies[$galaxyID] =& self::getGalaxy($gameID,$galaxyID,$forceUpdate);
 			}
-			return self::$CACHE_GAME_GALAXIES[$gameID] =& $galaxies;
+			self::$CACHE_GAME_GALAXIES[$gameID] =& $galaxies;
 		}
 		return self::$CACHE_GAME_GALAXIES[$gameID];
 	}
