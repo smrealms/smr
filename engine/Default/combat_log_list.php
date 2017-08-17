@@ -11,22 +11,22 @@ if (isset($var['message'])) {
 
 // $var['action'] is the page log type
 if(!isset($var['action'])) {
-	SmrSession::updateVar('action',0);
+	SmrSession::updateVar('action', COMBAT_LOG_PERSONAL);
 }
 $action = $var['action'];
 
 switch($action) {
-	case 0:
-	case 1:
+	case COMBAT_LOG_PERSONAL:
+	case COMBAT_LOG_ALLIANCE:
 		$query = 'type=\'PLAYER\'';
 	break;
-	case 2:
+	case COMBAT_LOG_PORT:
 		$query = 'type=\'PORT\'';
 	break;
-	case 3:
+	case COMBAT_LOG_PLANET:
 		$query = 'type=\'PLANET\'';
 	break;
-	case 4:
+	case COMBAT_LOG_SAVED:
 		$query = 'EXISTS(
 					SELECT 1
 					FROM player_saved_combat_logs
@@ -35,14 +35,14 @@ switch($action) {
 						AND log_id = c.log_id
 				)';
 	break;
-	case 6:
+	case COMBAT_LOG_FORCE:
 		$query = 'type=\'FORCE\'';
 	break;
 	default:
 }
 if(isset($query) && $query) {
 	$query .= ' AND game_id=' . $db->escapeNumber($player->getGameID());
-	if($action != 0 //personal
+	if($action != COMBAT_LOG_PERSONAL
 		&& $player->hasAlliance()) {
 		$query .= ' AND (attacker_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ' OR defender_alliance_id=' . $db->escapeNumber($player->getAllianceID()) . ') ';
 	}
@@ -75,22 +75,22 @@ function getParticipantName($accountID, $sectorID) {
 
 // For display purposes, describe the type of log
 switch($action) {
-	case 0:
+	case COMBAT_LOG_PERSONAL:
 		$type = ' personal';
 	break;
-	case 1:
+	case COMBAT_LOG_ALLIANCE:
 		$type = ' alliance';
 	break;
-	case 2:
+	case COMBAT_LOG_PORT:
 		$type = ' port';
 	break;
-	case 3:
+	case COMBAT_LOG_PLANET:
 		$type = ' planet';
 	break;
-	case 4:
+	case COMBAT_LOG_SAVED:
 		$type = ' saved';
 	break;
-	case 6:
+	case COMBAT_LOG_FORCE:
 		$type = ' force';
 	break;
 }
@@ -116,8 +116,8 @@ if($db->getNumRows() > 0) {
 		$template->assign('NextPage', SmrSession::getNewHREF($container));
 	}
 	// Saved logs
-	$template->assign('CanDelete', $action == 4);
-	$template->assign('CanSave', $action != 4);
+	$template->assign('CanDelete', $action == COMBAT_LOG_SAVED);
+	$template->assign('CanSave', $action != COMBAT_LOG_SAVED);
 
 	while($db->nextRecord()) {
 		$sectorID = $db->getInt('sector_id');

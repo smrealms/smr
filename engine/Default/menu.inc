@@ -101,17 +101,17 @@ function create_combat_log_menu() {
 	$container = create_container('skeleton.php', 'combat_log_list.php');
 	$menuItems = array();
 
-	$container['action'] = 0;
+	$container['action'] = COMBAT_LOG_PERSONAL;
 	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Personal');
-	$container['action'] = 1;
+	$container['action'] = COMBAT_LOG_ALLIANCE;
 	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Alliance');
-	$container['action'] = 6;
+	$container['action'] = COMBAT_LOG_FORCE;
 	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Force');
-	$container['action'] = 2;
+	$container['action'] = COMBAT_LOG_PORT;
 	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Port');
-	$container['action'] = 3;
+	$container['action'] = COMBAT_LOG_PLANET;
 	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Planet');
-	$container['action'] = 4;
+	$container['action'] = COMBAT_LOG_SAVED;
 	$menuItems[] = array('Link'=>SmrSession::getNewHREF($container),'Text'=>'Saved');
 
 	$template->assign('MenuItems',$menuItems);

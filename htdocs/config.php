@@ -109,6 +109,16 @@ define('SHIP_TYPE_VENGEANCE',72);
 define('SHIP_TYPE_FURY',75);
 
 /*
+ * Combat log pages
+ */
+define('COMBAT_LOG_PERSONAL', 0);
+define('COMBAT_LOG_ALLIANCE', 1);
+define('COMBAT_LOG_FORCE',    2);
+define('COMBAT_LOG_PORT',     3);
+define('COMBAT_LOG_PLANET',   4);
+define('COMBAT_LOG_SAVED',    5);
+
+/*
  * Combat system
  */
 define('MAX_ATTACK_RATING_NEWBIE',4);
