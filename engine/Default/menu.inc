@@ -98,7 +98,7 @@ function create_message_menu() {
 function create_combat_log_menu() {
 	global $template;
 
-	$container = create_container('skeleton.php','combat_log_viewer.php');
+	$container = create_container('skeleton.php', 'combat_log_list.php');
 	$menuItems = array();
 
 	$container['action'] = 0;

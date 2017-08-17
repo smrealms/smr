@@ -25,6 +25,7 @@ class SmrSession {
 			'changelog_view.php' => self::ALWAYS_AVAILABLE,
 			'chat_rules.php' => self::ALWAYS_AVAILABLE,
 			'chess_play.php' => self::ALWAYS_AVAILABLE,
+			'combat_log_list.php' => self::ALWAYS_AVAILABLE,
 			'combat_log_viewer.php' => self::ALWAYS_AVAILABLE,
 			'current_sector.php' => self::ALWAYS_AVAILABLE,
 			'configure_hardware.php' => self::ALWAYS_AVAILABLE,
