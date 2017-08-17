@@ -24,7 +24,7 @@ if (!isset($NewsletterId)) { ?>
 
 	<h2>Newsletter #<?php echo $NewsletterId; ?> Preview</h2>
 	<p>HTML body (will be displayed in most e-mail clients):</p>
-	<table class="standard">
+	<table class="standard" width=75%>
 		<tr>
 			<td><?php echo $NewsletterHtml; ?></td>
 		</tr>
@@ -32,9 +32,9 @@ if (!isset($NewsletterId)) { ?>
   <br />
 
 	<p>Plain text body (will only be displayed if HTML is empty or in e-mail clients that don't support HTML):</p>
-	<table class="standard">
+	<table class="standard" width=75%>
 		<tr>
-			<td><pre><?php echo $NewsletterText; ?></pre></td>
+			<td><pre style="white-space:pre-wrap"><?php echo $NewsletterText; ?></pre></td>
 		</tr>
 	</table>
 
