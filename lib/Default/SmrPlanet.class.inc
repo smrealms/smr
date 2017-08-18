@@ -43,6 +43,7 @@ class SmrPlanet {
 
 	protected $delayedShieldsDelta = 0;
 	protected $delayedCDsDelta = 0;
+	protected $delayedArmourDelta = 0;
 
 	public static function refreshCache() {
 		foreach(self::$CACHE_PLANETS as $gameID => &$gamePlanets) {
@@ -847,6 +848,8 @@ class SmrPlanet {
 		$this->delayedShieldsDelta = 0;
 		$this->setCDs($this->getCDs(true));
 		$this->delayedCDsDelta = 0;
+		$this->setArmour($this->getArmour(true));
+		$this->delayedArmourDelta = 0;
 	}
 	
 	public function getMaxAttackers() {
