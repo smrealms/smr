@@ -1344,7 +1344,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return = array();
 		// send a message to the person who died
 		$planetOwner =& $planet->getOwner();
-		$this->sendMessage($planetOwner->getAccountID(), MSG_PLAYER, 'Your planet <span class="red">DESTROYED</span> '.$this->getBBLink().' in sector '.$planet->getSectorID(),false);
+		$this->sendMessage($planetOwner->getAccountID(), MSG_PLAYER, 'Your planet <span class="red">DESTROYED</span>&nbsp;'.$this->getBBLink().' in sector '.$planet->getSectorID(),false);
 		$planetOwner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by '.$planet->getDisplayName().'\'s defenses.',false);
 
 		$news_message = $this->getBBLink();
