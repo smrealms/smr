@@ -73,3 +73,35 @@ if(count($PickPlayers)>0) { ?>
 else {
 	?>No one left to pick.<?php
 } ?>
+
+<br /><br />
+<h2>Draft History</h2>
+<?php
+if (count($History) > 0) { ?>
+	<table class="standard">
+		<tr>
+			<th>Pick</th>
+			<th>Leader</th>
+			<th>Date Picked</th>
+			<th>Player Name</th>
+			<th>Race Name</th>
+			<th>HoF Name</th>
+			<th>User Score</th>
+		</tr><?php
+		foreach(array_reverse($History, true) as $i => &$Pick) { ?>
+			<tr>
+				<td class="center"><?php echo $i+1; ?></td>
+				<td><?php echo $Pick['Leader']->getPlayerName(); ?></td>
+				<td><?php echo date(DATE_FULL_SHORT, $Pick['Time']); ?></td>
+				<td><?php echo $Pick['Player']->getPlayerName(); ?></td>
+				<td><?php echo $Pick['Player']->getRaceName(); ?></td>
+				<td><?php echo $Pick['Player']->getAccount()->getHofName(true); ?></td>
+				<td><?php echo $Pick['Player']->getAccount()->getScore(); ?></td>
+			</tr><?php
+		} ?>
+	</table><?php
+} else { ?>
+	No picks have been made yet.<?php
+}
+
+?>

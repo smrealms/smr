@@ -39,4 +39,17 @@ while($db->nextRecord()) {
 }
 
 $template->assignByRef('PickPlayers', $players);
+
+// Get the draft history
+$history = array();
+$db->query('SELECT * FROM draft_history WHERE game_id=' . $db->escapeNumber($player->getGameID()) . ' ORDER BY draft_id');
+while ($db->nextRecord()) {
+	$leader =& SmrPlayer::getPlayer($db->getInt('leader_account_id'), $player->getGameID());
+	$pickedPlayer =& SmrPlayer::getPlayer($db->getInt('picked_account_id'), $player->getGameID());
+	$history[] = array('Leader' => &$leader,
+	                   'Player' => &$pickedPlayer,
+	                   'Time'   => $db->getInt('time'));
+}
+
+$template->assignByRef('History', $history);
 ?>
