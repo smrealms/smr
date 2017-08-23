@@ -806,8 +806,12 @@ abstract class AbstractSmrAccount {
 		$this->update();
 	}
 
-	public function getHofName() {
-		return $this->hofName;
+	public function getHofName($linked=false) {
+		if ($linked) {
+			return '<a href="' . $this->getPersonalHofHREF() . '">' . $this->hofName . '</a>';
+		} else {
+			return $this->hofName;
+		}
 	}
 
 	public function setHofName($name) {

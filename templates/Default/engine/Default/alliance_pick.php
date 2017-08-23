@@ -61,7 +61,7 @@ if(count($PickPlayers)>0) { ?>
 					<?php echo $PickPlayer['Player']->getRaceName(); ?>
 				</td>
 				<td>
-					<a href="<?php echo $PickPlayer['Player']->getAccount()->getPersonalHofHREF(); ?>"><?php echo $PickPlayer['Player']->getAccount()->getHofName(); ?></a>
+					<?php echo $PickPlayer['Player']->getAccount()->getHofName(true); ?>
 				</td>
 				<td>
 					<?php echo $PickPlayer['Player']->getAccount()->getScore(); ?>
