@@ -10,18 +10,8 @@ if($db->nextRecord()) {
 	create_error('You cannot pick another leader.');
 }
 
-$db->query('
-SELECT MIN(alliance_member) min_members
-FROM
-(
-	SELECT COUNT(*) alliance_member
-	FROM player
-	WHERE game_id='.$db->escapeNumber($player->getGameID()).' AND alliance_id!='.$db->escapeNumber(NHA_ID).' AND alliance_id!=0
-	GROUP BY alliance_id
-) t');
-$db->nextRecord();
-
-if($player->getAlliance()->getNumMembers()>$db->getInt('min_members')) {
+require_once('alliance_pick.inc');
+if($player->getAlliance()->getNumMembers() > min_alliance_members($player->getGameID())) {
 	create_error('You have to wait for others to pick first.');
 }
 $pickedPlayer =& SmrPlayer::getPlayer($var['PickedAccountID'], $player->getGameID());
@@ -38,6 +28,6 @@ if($pickedPlayer->hasAlliance()) {
 $pickedPlayer->joinAlliance($player->getAllianceID());
 $pickedPlayer->update();
 
-forward(create_container('skeleton.php', 'alliance_roster.php'));
+forward(create_container('skeleton.php', 'alliance_pick.php'));
 
 ?>
