@@ -45,13 +45,9 @@ if(count($PickPlayers)>0) { ?>
 		</tr><?php
 		foreach($PickPlayers as &$PickPlayer) { ?>
 			<tr>
-				<td><?php
+				<td class="center"><?php
 				if ($CanPick) { ?>
-					<div>
-						<form id="PlayerPickForm" action="<?php echo $PickPlayer['HREF']; ?>" method="POST">
-							<input type="submit" value="Pick"/>
-						</form>
-					</div><?php
+					<div class="buttonA"><a class="buttonA" href="<?php echo $PickPlayer['HREF'] ?>">&nbsp;Pick&nbsp;</a></div><?php
 				} ?>
 				</td>
 				<td>
