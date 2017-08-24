@@ -11,7 +11,8 @@ if($db->nextRecord()) {
 }
 
 require_once('alliance_pick.inc');
-if($player->getAlliance()->getNumMembers() > min_alliance_members($player->getGameID())) {
+$teams = get_draft_teams($player->getGameID());
+if(!$teams[$player->getAccountID()]['CanPick']) {
 	create_error('You have to wait for others to pick first.');
 }
 $pickedPlayer =& SmrPlayer::getPlayer($var['PickedAccountID'], $player->getGameID());

@@ -13,7 +13,7 @@
 			// The leader may not have made an alliance yet
 			if (isset($Team['Alliance'])) { ?>
 				<td><?php echo $Team['Alliance']->getAllianceName(true); ?></td>
-				<td class="center"><?php echo $Team['Alliance']->getNumMembers(); ?></td>
+				<td class="center"><?php echo $Team['Size']; ?></td>
 				<td class="center"><?php
 					if ($Team['CanPick']) { ?>
 						<span class="green">YES</span><?php

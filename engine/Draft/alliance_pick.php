@@ -4,30 +4,14 @@ $template->assign('PageTopic',$alliance->getAllianceName() . ' (' . $alliance->g
 require_once(get_file_loc('menu.inc'));
 create_alliance_menu($alliance->getAllianceID(),$alliance->getLeaderID());
 
-require_once('alliance_pick.inc');
-$minMembers = min_alliance_members($player->getGameID());
-
 // Get the current teams
-$teams = array();
-$db->query('SELECT account_id FROM draft_leaders WHERE game_id='.$db->escapeNumber($player->getGameID()));
-while ($db->nextRecord()) {
-	$leader =& SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
-	if ($leader->hasAlliance()) {
-		$draftAlliance =& $leader->getAlliance();
-		$canPick = $draftAlliance->getNumMembers() <= $minMembers;
-		$teams[] = array('Leader'   => &$leader,
-		                 'Alliance' => &$draftAlliance,
-		                 'CanPick'  => $canPick);
-	} else {
-		$teams[] = array('Leader'   => &$leader);
-	}
-}
-
+require_once('alliance_pick.inc');
+$teams = get_draft_teams($player->getGameID());
 $template->assignByRef('Teams', $teams);
 
 // Add information about current player
 $template->assign('PlayerID', $player->getPlayerID());
-$template->assign('CanPick', $alliance->getNumMembers() <= $minMembers);
+$template->assign('CanPick', $teams[$player->getAccountID()]['CanPick']);
 
 // Get a list of players still in the pick pool
 $players = array();
