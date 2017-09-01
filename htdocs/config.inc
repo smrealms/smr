@@ -104,11 +104,20 @@ function microtimeDiff($m1,$m2) {
 }
 
 function microtimeSec($microtime) {
-	return (int)substr($microtime,11);
+	if (strlen($microtime) == 21) {
+		return substr($microtime,11);
+	} else {
+		throw new Exception('Not a microtime! ('.$microtime.')');
+	}
 }
 
 function microtimeMSec($microtime) {
-	return (int)substr($microtime,2,6);
+	if (strlen($microtime) == 21) {
+		// Do not cast to int, because the substring can begin with '0'
+		return substr($microtime,2,6);
+	} else {
+		throw new Exception('Not a microtime! ('.$microtime.')');
+	}
 }
 
 function explodeElement($delimiter, $string, $index) {
