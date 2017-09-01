@@ -61,8 +61,22 @@ abstract class MySqlDatabase implements Database {
 		return (float)$this->dbRecord[$name];
 	}
 	
-	public function getMicrotime($name) {
-		return '0.'.substr($this->dbRecord[$name],-6).'00 '.substr($this->dbRecord[$name],0,-6);
+	// WARNING: In the past, Microtime was stored in the database incorrectly.
+	// For backwards compatibility, set $pad_msec=true to try to guess at the
+	// intended value. This is not safe if the Microtime length is wrong for an
+	// unrelated reason!
+	public function getMicrotime($name, $pad_msec=false) {
+		$data = $this->dbRecord[$name];
+		$sec  = substr($data, 0, 10);
+		$msec = substr($data, 10);
+		if (strlen($msec) != 6) {
+			if ($pad_msec) {
+				$msec = str_pad($msec, 6, '0', STR_PAD_LEFT);
+			} else {
+				throw new Exception('Field is not an escaped microtime ('.$data.')');
+			}
+		}
+		return '0.'.$msec.'00 '.$sec;
 	}
 	
 	public function getObject($name,$compressed=false) {
