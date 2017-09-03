@@ -37,7 +37,8 @@ else {
 	$db2 = new SmrMySqlDatabase();
 
 	// predefine a color array
-	$avail_colors = array('#FFFFFF', '#FF0000', '#00FF00', '#0000FF');
+	$avail_colors = array('#FFFFFF', '#00FF00', '#FF3377', '#0099FF',
+	                      '#FF0000', '#0000FF');
 
 	// now assign each account id a color
 	for ($i = 0; $i < count($account_ids); $i++) {
