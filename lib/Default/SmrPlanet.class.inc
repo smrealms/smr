@@ -75,7 +75,9 @@ class SmrPlanet {
 	public static function &createPlanet($gameID,$sectorID,$type=1) {
 		if(!self::getPlanet($gameID,$sectorID)->exists()) {
 			require_once(get_file_loc('SmrGame.class.inc'));
-			$inhabitableTime = SmrGame::getGame($gameID)->getStartDate() + pow(mt_rand(45, 85), 3);
+			$minTime = max(SmrGame::getGame($gameID)->getStartDate(),
+			               SmrGame::getGame($gameID)->getStartTurnsDate());
+			$inhabitableTime = $minTime + pow(mt_rand(45, 85), 3);
 
 			// insert planet into db
 			$db = new SmrMySqlDatabase();
