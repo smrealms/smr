@@ -167,8 +167,6 @@ elseif ($submit == 'Create Planets') {
 	$galaxies =& SmrGalaxy::getGameGalaxies($var['game_id']);
 	$galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 	$galSectors =& $galaxy->getSectors();
-	//get totals
-	$numberOfPlanets=0;
 	foreach ($galSectors as &$galSector) {
 		if($galSector->hasPlanet()) {
 			$galSector->removePlanet();
@@ -176,30 +174,12 @@ elseif ($submit == 'Create Planets') {
 	}
 	$numberOfPlanets = $_POST['Uninhab'];
 //	$numberOfNpcPlanets = $_POST['NPC'];
-	$updatePlan = array();
-	$updatePlan['Uninhab'] = $num_uninhab;
-	$updatePlan['NPC'] = $num_npc;
 	
 	for ($i=1;$i<=$numberOfPlanets;$i++) {
 		$galSector =& $galSectors[array_rand($galSectors)];
 		while ($galSector->hasPlanet()) $galSector =& $galSectors[array_rand($galSectors)]; //1 per sector
-
 		$galSector->createPlanet();
-		//inhabitable between 7 and 10 days (from start of game)
-//		$updatePlan[$sector]['Inhabitable'] = $start_time + mt_rand(7,10) * 3600 * 24;
-//		$updatePlan[$sector]['Owner'] = 0;
-//		$updatePlan[$sector]['Owner Type'] = 'Player';
 	}
-//	for ($i=1;$i<=$numberOfNpcPlanets;$i++) {
-//		$galSector =& $galSectors[array_rand($galSectors)];
-//		while ($galSector->hasPlanet()) $galSector =& $galSectors[array_rand($galSectors)]; //1 per sector
-//
-//		$galSector->createPlanet();
-//		//NPC Controlled
-//		$updatePlan[$sector]['Inhabitable'] = $start_time + mt_rand(7,10) * 3600 * 24;
-//		$updatePlan[$sector]['Owner'] = 0; //owning NPC to be determined in the create script
-//		$updatePlan[$sector]['Owner Type'] = 'NPC';
-//	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 }
 elseif ($submit == 'Create Ports and Mines') {
