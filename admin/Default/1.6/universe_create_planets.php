@@ -9,10 +9,15 @@ while ($db->nextRecord()) {
 }
 $template->assignByRef('AllowedTypes', $allowedTypes);
 
+// Initialize all planet counts to zero
+$numberOfPlanets = array();
+foreach (array_keys($allowedTypes) as $ID) {
+	$numberOfPlanets[$ID] = 0;
+}
+
 // Get the current number of each type of planet
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galSectors =& $galaxy->getSectors();
-$numberOfPlanets = array();
 foreach ($galSectors as &$galSector) {
 	if($galSector->hasPlanet()) {
 		$numberOfPlanets[$galSector->getPlanet()->getTypeID()]++;
