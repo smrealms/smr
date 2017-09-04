@@ -172,13 +172,21 @@ elseif ($submit == 'Create Planets') {
 			$galSector->removePlanet();
 		}
 	}
-	$numberOfPlanets = $_POST['Uninhab'];
 //	$numberOfNpcPlanets = $_POST['NPC'];
-	
-	for ($i=1;$i<=$numberOfPlanets;$i++) {
-		$galSector =& $galSectors[array_rand($galSectors)];
-		while ($galSector->hasPlanet()) $galSector =& $galSectors[array_rand($galSectors)]; //1 per sector
-		$galSector->createPlanet();
+
+	$allowedTypeIDs = array();
+	$db->query('SELECT planet_type_id FROM planet_type');
+	while ($db->nextRecord()) {
+		$allowedTypeIDs[] = $db->getInt('planet_type_id');
+	}
+
+	foreach ($allowedTypeIDs as $planetTypeID) {
+		$numberOfPlanets = $_POST['type' . $planetTypeID];
+		for ($i=1;$i<=$numberOfPlanets;$i++) {
+			$galSector =& $galSectors[array_rand($galSectors)];
+			while ($galSector->hasPlanet()) $galSector =& $galSectors[array_rand($galSectors)]; //1 per sector
+			$galSector->createPlanet($planetTypeID);
+		}
 	}
 	$var['message'] = '<span class="green">Success</span> : Succesfully added planets.';
 }

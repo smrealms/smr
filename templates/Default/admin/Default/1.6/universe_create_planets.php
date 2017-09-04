@@ -4,11 +4,17 @@ Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGa
 <?php echo $Form; ?>
 <table class="standard">
 	<tr>
-		<td class="right">Uninhabited Planets</td>
-		<td><input type="number" value="<?php echo $NumberOfPlanets; ?>" size="5" name="Uninhab"></td>
-	</tr>
+		<th>Planet Type</th>
+		<th>Amount</th>
+	</tr><?php
+	foreach ($AllowedTypes as $ID => $Name) { ?>
+		<tr>
+			<td class="right"><?php echo $Name; ?></td>
+			<td><input type="number" value="<?php echo $NumberOfPlanets[$ID]; ?>" size="5" name="type<?php echo $ID; ?>"></td>
+		</tr><?php
+	} ?>
 	<tr>
-		<td class="right">NPC Planets - Won't work</td>
+		<td class="right">NPC - Won't work</td>
 		<td><input type="number" value="<?php echo $NumberOfNpcPlanets; ?>" size="5" name="NPC"></td>
 	</tr>
 	<tr>

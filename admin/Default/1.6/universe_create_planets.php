@@ -1,18 +1,26 @@
 <?php
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 
+// Get a list of all available planet types
+$allowedTypes = array();
+$db->query('SELECT * FROM planet_type');
+while ($db->nextRecord()) {
+	$allowedTypes[$db->getInt('planet_type_id')] = $db->getField('planet_type_name');
+}
+$template->assignByRef('AllowedTypes', $allowedTypes);
+
+// Get the current number of each type of planet
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $galSectors =& $galaxy->getSectors();
-//get totals
-$numberOfPlanets=0;
+$numberOfPlanets = array();
 foreach ($galSectors as &$galSector) {
 	if($galSector->hasPlanet()) {
-		$numberOfPlanets++;
+		$numberOfPlanets[$galSector->getPlanet()->getTypeID()]++;
 	}
 }
 
 $template->assignByRef('Galaxy', $galaxy);
-$template->assign('NumberOfPlanets', $numberOfPlanets);
+$template->assignByRef('NumberOfPlanets', $numberOfPlanets);
 
 $numberOfNpcPlanets = (isset($planet_info['NPC']) ? $planet_info['NPC'] : 0);
 $template->assign('NumberOfNpcPlanets', $numberOfNpcPlanets);
