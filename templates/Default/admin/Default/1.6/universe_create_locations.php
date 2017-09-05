@@ -3,11 +3,17 @@ Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGa
 <?php echo $Form; ?>
 
 <table class="standard"><?php
-	foreach ($Locations as &$location) { ?>
+	foreach ($LocTypes as $category => $LocIDs) { ?>
 		<tr>
-			<td class="right"><?php echo $location->getName() . $ExtraLocs[$location->getTypeID()]; ?></td>
-			<td><input type="number" value="<?php echo $TotalLocs[$location->getTypeID()]; ?>" size="5" name="loc<?php echo $location->getTypeID(); ?>"></td>
+			<th><?php echo $category; ?></th>
+			<th>Amount</th>
 		</tr><?php
+		foreach ($LocIDs as $LocID) { ?>
+			<tr>
+				<td class="right"><?php echo $LocText[$LocID]; ?></td>
+				<td><input type="number" value="<?php echo $TotalLocs[$LocID]; ?>" size="5" name="loc<?php echo $LocID; ?>"></td>
+			</tr><?php
+		}
 	} ?>
 
 	<tr>

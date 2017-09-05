@@ -2,7 +2,6 @@
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 
 $locations =& SmrLocation::getAllLocations();
-$template->assignByRef('Locations', $locations);
 
 // Initialize all location counts to zero
 $totalLocs = array();
@@ -24,32 +23,50 @@ $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $template->assignByRef('Galaxy', $galaxy);
 
 // Set any extra information to be displayed with each location
-$extraLocs = array();
+$locText = array();
+$locTypes = array();
 foreach ($locations as &$location) {
 	$extra = '<span class="small"><br />';
 	if ($location->isWeaponSold()) {
+		$locTypes['Weapons'][] = $location->getTypeID();
 		$weaponsSold =& $location->getWeaponsSold();
 		foreach($weaponsSold as &$weapon) {
 			$extra .= $weapon->getName() . '&nbsp;&nbsp;&nbsp;(' . $weapon->getShieldDamage() . '/' . $weapon->getArmourDamage() . '/' . $weapon->getBaseAccuracy() . ')<br />';
 		} unset($weapon);
 	}
-	if ($location->isShipSold()) {
+	elseif ($location->isShipSold()) {
+		$locTypes['Ships'][] = $location->getTypeID();
 		$shipsSold =& $location->getShipsSold();
 		foreach ($shipsSold as &$shipSold) {
 			$extra .= $shipSold['Name'] . '<br />';
 		} unset($shipSold);
 	}
-	if ($location->isHardwareSold()) {
+	elseif ($location->isHardwareSold()) {
+		$locTypes['Hardware'][] = $location->getTypeID();
 		$hardwareSold =& $location->getHardwareSold();
 		foreach ($hardwareSold as &$hardware) {
 			$extra .= $hardware['Name'] . '<br />';
 		} unset($hardware);
 	}
+	elseif ($location->isBar()) {
+		$locTypes['Bars'][] = $location->getTypeID();
+	}
+	elseif ($location->isBank()) {
+		$locTypes['Banks'][] = $location->getTypeID();
+	}
+	elseif ($location->isHQ() || $location->isUG() || $location->isFed()) {
+		$locTypes['Headquarters'][] = $location->getTypeID();
+	}
+	else {
+		// Anything that doesn't fit the other categories
+		$locTypes['Miscellaneous'][] = $location->getTypeID();
+	}
 	$extra .= '</span>';
 
-	$extraLocs[$location->getTypeID()] = $extra;
+	$locText[$location->getTypeID()] = $location->getName() . $extra;
 } unset($location);
-$template->assignByRef('ExtraLocs', $extraLocs);
+$template->assignByRef('LocText', $locText);
+$template->assignByRef('LocTypes', $locTypes);
 
 // Form to make location changes
 $container = create_container('1.6/universe_create_save_processing.php',
