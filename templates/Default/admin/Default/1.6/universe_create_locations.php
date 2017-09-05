@@ -5,16 +5,27 @@ foreach ($LocTypes as $category => $LocIDs) { ?>
 		<a href="javascript:;" onclick="window.location.hash='<?php echo $category; ?>'">Jump to <?php echo $category; ?></a><br /><?php
 } ?>
 
+<br />
+Click a category heading to toggle its display.
+
 <?php echo $Form; ?>
 
-<table class="standard"><?php
+<table class="standard">
+	<!-- colgroup style ensures fixed table width as categories are toggled -->
+	<colgroup>
+		<col style="width:250px">
+		<col style="width:158px">
+	</colgroup>
+	<?php
 	foreach ($LocTypes as $category => $LocIDs) { ?>
 		<tr>
-			<th id="<?php echo $category; ?>"><?php echo $category; ?></th>
+			<th id="<?php echo $category; ?>">
+				<a href="javascript:;" onclick="$('.toggle-<?php echo $category; ?>').toggle();"><?php echo $category; ?></a>
+			</th>
 			<th>Amount</th>
 		</tr><?php
 		foreach ($LocIDs as $LocID) { ?>
-			<tr>
+			<tr class="toggle-<?php echo $category; ?>">
 				<td class="right"><?php echo $LocText[$LocID]; ?></td>
 				<td><input type="number" value="<?php echo $TotalLocs[$LocID]; ?>" size="5" name="loc<?php echo $LocID; ?>"></td>
 			</tr><?php
