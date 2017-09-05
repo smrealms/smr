@@ -1,11 +1,16 @@
-Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGalaxyID() ?>)<br />
+Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGalaxyID() ?>)<br /><br />
+
+<?php
+foreach ($LocTypes as $category => $LocIDs) { ?>
+		<a href="javascript:;" onclick="window.location.hash='<?php echo $category; ?>'">Jump to <?php echo $category; ?></a><br /><?php
+} ?>
 
 <?php echo $Form; ?>
 
 <table class="standard"><?php
 	foreach ($LocTypes as $category => $LocIDs) { ?>
 		<tr>
-			<th><?php echo $category; ?></th>
+			<th id="<?php echo $category; ?>"><?php echo $category; ?></th>
 			<th>Amount</th>
 		</tr><?php
 		foreach ($LocIDs as $LocID) { ?>
