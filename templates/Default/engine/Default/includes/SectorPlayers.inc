@@ -1,3 +1,18 @@
+<?php
+function getPlayerOptionClass(&$player, &$other) {
+	// Returns the CSS relational class of player "other" relative to "player".
+	if (!$player->traderNAPAlliance($other)) {
+		if ($other->canFight()) {
+			return "enemy";
+		} else {
+			return "neutral";
+		}
+	} else {
+		return "friendly";
+	}
+}
+?>
+
 <div id="players_cs" class="ajax"><?php
 	if($PlayersContainer->hasOtherTraders($ThisPlayer)) {
 		$Players =& $PlayersContainer->getOtherTraders($ThisPlayer);
@@ -58,29 +73,13 @@
 									if($PlayersContainer instanceof SmrPlanet) {
 										if($ThisPlanet->getOwnerID() == $ThisPlayer->getAccountID()) {
 											?><a href="<?php echo $Player->getPlanetKickHREF() ?>" class="<?php 
-												if(!$ThisPlayer->traderNAPAlliance($Player)){ 
-													if ($Player->canFight()) {
-														?> enemy<?php 
-													} else {
-														?> neutral<?php 
-													}
-												} else {
-													?> friendly<?php 
-												}
+												echo getPlayerOptionClass($ThisPlayer, $Player);
 												?>"> Kick </a><?php
 										}
 									}
 									else {
 										?><a href="<?php echo $Player->getExamineTraderHREF() ?>" class="<?php 
-											if(!$ThisPlayer->traderNAPAlliance($Player)){ 
-												if ($Player->canFight()) {
-													?> enemy<?php 
-												} else {
-													?> neutral<?php 
-												}	
-											} else {
-												?> friendly<?php 
-											}
+											echo getPlayerOptionClass($ThisPlayer, $Player);
 										?>"> Examine </a><?php
 									} ?>
 								</div>
