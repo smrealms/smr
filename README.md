@@ -7,6 +7,7 @@ First, you must write a `.env` file with the following format:
 SMR_CONFIG_FILE=/path/to/config.specific.php
 MYSQL_ROOT_PASSWORD=chooseapassword
 MYSQL_PASSWORD=chooseapassword
+MYSQL_HOST=chooseahost  # must be unique on each network
 ```
 
 Then you can start up the persistent services

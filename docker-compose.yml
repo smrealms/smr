@@ -6,6 +6,7 @@ services:
             context: .
             args:
                 MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+                MYSQL_HOST: ${MYSQL_HOST}
         ports:
             - "80:80"
         volumes:
@@ -30,7 +31,7 @@ services:
 
     flyway:
         image: claycephas/flyway
-        command: -url=jdbc:mysql://smr-mysql/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
+        command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
         links:
             - mysql
         volumes:
@@ -38,7 +39,7 @@ services:
 
     mysql:
         image: mysql:5.5
-        container_name: smr-mysql
+        container_name: ${MYSQL_HOST}
         # By using the default image, we must expose the secrets in
         # the runtime environment (because we can't specify build args).
         environment:

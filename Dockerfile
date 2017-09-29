@@ -25,7 +25,9 @@ COPY . .
 
 # Replace placeholders in local files
 ARG MYSQL_PASSWORD
+ARG MYSQL_HOST
 RUN sed "s/__MYSQL_PASSWORD__/${MYSQL_PASSWORD}/" lib/Default/SmrMySqlSecrets.sample.inc > lib/Default/SmrMySqlSecrets.inc
+RUN sed -i "s/__MYSQL_HOST__/${MYSQL_HOST}/" lib/Default/SmrMySqlSecrets.inc
 
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 
