@@ -172,7 +172,7 @@ class SmrPort {
 				$federalMod = (self::TIME_FEDS_STAY - (TIME - $this->getReinforceTime())) / self::TIME_FEDS_STAY;
 				$federalMod = max(0, round($federalMod * self::MAX_FEDS_BONUS));
 				$defences += $federalMod;
-				$cds += $federalMod / 10;
+				$cds += round($federalMod / 10);
 			}
 			$this->setShields($defences);
 			$this->setArmour($defences);
