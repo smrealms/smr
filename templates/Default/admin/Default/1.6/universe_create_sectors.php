@@ -2,7 +2,25 @@
 	if(isset($Message)) {
 		echo $Message; ?><br /><br /><?php
 	} ?>
-	Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGalaxyID(); ?>)<br />
+
+	Working on Galaxy <?php echo $Galaxy->getGalaxyID(); ?>/<?php echo count($Galaxies); ?><br />
+
+	<table align="center" class="standard">
+		<tr>
+			<th>Name</th>
+			<th>Type</th>
+			<th>Size</th>
+			<th>Max Force Time</th>
+		</tr>
+		<tr>
+			<td><?php echo $Galaxy->getName(); ?></td>
+			<td><?php echo $Galaxy->getGalaxyType(); ?></td>
+			<td><?php echo $Galaxy->getWidth(); ?> x <?php echo $Galaxy->getHeight(); ?></td>
+			<td><?php echo $Galaxy->getMaxForceTime() / 3600; ?> hours</td>
+		</tr>
+	</table>
+	<br />
+
 	<form method="POST" action="<?php echo $JumpGalaxyHREF; ?>">
 		<select name="jumpgal" onchange="this.form.submit()"><?php
 			foreach($Galaxies as &$CurrentGalaxy) { ?>
