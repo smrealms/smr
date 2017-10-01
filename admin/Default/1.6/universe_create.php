@@ -12,7 +12,10 @@ $template->assign('CreateGalaxiesHREF',SmrSession::getNewHREF($container));
 $container['body'] = '1.6/universe_create_sectors.php';
 $template->assign('EditGameHREF',SmrSession::getNewHREF($container));
 
-if($account->hasPermission(PERMISSION_EDIT_STARTED_GAMES)) {
+$canEditStartedGames = $account->hasPermission(PERMISSION_EDIT_STARTED_GAMES);
+$template->assign('CanEditStartedGames', $canEditStartedGames);
+
+if($canEditStartedGames) {
 	$games = Globals::getGameInfo();
 }
 else {
