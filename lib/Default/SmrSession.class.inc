@@ -300,7 +300,9 @@ class SmrSession {
 			$container['RemainingPageLoads'] = 1; // Allow refreshing
 		}
 		if(!isset($container['PreviousRequestTime'])) {
-			$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
+			if(isset(self::$var[$sn]['PreviousRequestTime'])) {
+				$container['PreviousRequestTime'] = self::$var[$sn]['PreviousRequestTime']; // Copy across the previous request time if not explicitly set.
+			}
 		}
 
 		self::$var[$sn] = $container;

@@ -12,7 +12,7 @@ create_planet_menu($planet);
 
 $PHP_OUTPUT.=('<p>There are no goods present on your ship or the planet!</p>');
 $present = false;
-$table.=('<p>');
+$table=('<p>');
 $table.=('<table class="standard">');
 
 $table.=('<tr>');

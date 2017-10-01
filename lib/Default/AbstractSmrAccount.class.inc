@@ -741,8 +741,9 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function setEmail($email) {
-		if($this->$email==$email)
+		if($this->email==$email) {
 			return;
+		}
 		$this->email = $email;
 		$this->hasChanged = true;
 		$this->update();

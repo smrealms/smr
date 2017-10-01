@@ -60,7 +60,7 @@ class SmrForce {
 			while($db->nextRecord()) {
 				$forces[$db->getField('owner_id')] =& self::getForce($gameID,$sectorID,$db->getInt('owner_id'));
 			}
-			return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] =& $forces;
+			self::$CACHE_SECTOR_FORCES[$gameID][$sectorID] =& $forces;
 		}
 		return self::$CACHE_SECTOR_FORCES[$gameID][$sectorID];
 	}
@@ -69,7 +69,7 @@ class SmrForce {
 		if($forceUpdate || !isset(self::$CACHE_FORCES[$gameID][$sectorID][$ownerID])) {
 			self::tidyUpForces(SmrGalaxy::getGalaxyContaining($gameID,$sectorID));
 			$p = new SmrForce($gameID,$sectorID,$ownerID);
-			return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID] =& $p;
+			self::$CACHE_FORCES[$gameID][$sectorID][$ownerID] =& $p;
 		}
 		return self::$CACHE_FORCES[$gameID][$sectorID][$ownerID];
 	}

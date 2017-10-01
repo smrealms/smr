@@ -44,7 +44,7 @@ class SmrLocation {
 				$locations[$i] =& self::getLocation($db->getField('location_type_id'));
 				$i++;
 			}
-			return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] =& $locations;
+			self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID] =& $locations;
 		}
 		return self::$CACHE_SECTOR_LOCATIONS[$gameID][$sectorID];
 	}
@@ -52,7 +52,7 @@ class SmrLocation {
 	public static function &getLocation($locationTypeID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_LOCATIONS[$locationTypeID])) {
 			$p = new SmrLocation($locationTypeID);
-			return self::$CACHE_LOCATIONS[$locationTypeID] =& $p;
+			self::$CACHE_LOCATIONS[$locationTypeID] =& $p;
 		}
 		return self::$CACHE_LOCATIONS[$locationTypeID];
 	}
