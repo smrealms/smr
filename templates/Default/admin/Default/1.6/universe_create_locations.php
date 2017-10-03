@@ -8,34 +8,34 @@ foreach ($LocTypes as $category => $LocIDs) { ?>
 <br />
 Click a category heading to toggle its display.
 
-<?php echo $Form; ?>
+<form method="POST" action="<?php echo $CreateLocationsFormHREF; ?>">
 
-<table class="standard">
-	<!-- colgroup style ensures fixed table width as categories are toggled -->
-	<colgroup>
-		<col style="width:250px">
-		<col style="width:158px">
-	</colgroup>
-	<?php
-	foreach ($LocTypes as $category => $LocIDs) { ?>
-		<tr>
-			<th id="<?php echo $category; ?>">
-				<a href="javascript:;" onclick="$('.toggle-<?php echo $category; ?>').toggle();"><?php echo $category; ?></a>
-			</th>
-			<th>Amount</th>
-		</tr><?php
-		foreach ($LocIDs as $LocID) { ?>
-			<tr class="toggle-<?php echo $category; ?>">
-				<td class="right"><?php echo $LocText[$LocID]; ?></td>
-				<td><input type="number" value="<?php echo $TotalLocs[$LocID]; ?>" size="5" name="loc<?php echo $LocID; ?>"></td>
+	<table class="standard">
+		<!-- colgroup style ensures fixed table width as categories are toggled -->
+		<colgroup>
+			<col style="width:250px">
+			<col style="width:158px">
+		</colgroup>
+		<?php
+		foreach ($LocTypes as $category => $LocIDs) { ?>
+			<tr>
+				<th id="<?php echo $category; ?>">
+					<a href="javascript:;" onclick="$('.toggle-<?php echo $category; ?>').toggle();"><?php echo $category; ?></a>
+				</th>
+				<th>Amount</th>
 			</tr><?php
-		}
-	} ?>
+			foreach ($LocIDs as $LocID) { ?>
+				<tr class="toggle-<?php echo $category; ?>">
+					<td class="right"><?php echo $LocText[$LocID]; ?></td>
+					<td><input type="number" value="<?php echo $TotalLocs[$LocID]; ?>" size="5" name="loc<?php echo $LocID; ?>"></td>
+				</tr><?php
+			}
+		} ?>
 
-	<tr>
-		<td colspan="2" class="center"><input type="submit" name="submit" value="Create Locations"><br /><br /><a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a></td>
-	</tr>
-</table>
+		<tr>
+			<td colspan="2" class="center"><input type="submit" name="submit" value="Create Locations"><br /><br /><a href="<?php echo $CancelHREF; ?>" class="submitStyle">Cancel</a></td>
+		</tr>
+	</table>
 
 </form>
 

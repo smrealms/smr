@@ -71,7 +71,7 @@ $template->assignByRef('LocTypes', $locTypes);
 // Form to make location changes
 $container = create_container('1.6/universe_create_save_processing.php',
                               '1.6/universe_create_sectors.php', $var);
-$template->assign('Form', create_echo_form($container));
+$template->assign('CreateLocationsFormHREF', SmrSession::getNewHREF($container));
 
 // HREF to cancel and return to the previous page
 $container = create_container('skeleton.php', '1.6/universe_create_sectors.php', $var);
