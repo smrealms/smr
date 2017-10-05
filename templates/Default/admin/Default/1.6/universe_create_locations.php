@@ -11,6 +11,12 @@ foreach ($LocTypes as $category => $LocIDs) { ?>
 <br />
 Click a category heading to toggle its display.
 
+<style type="text/css">
+	tr.collapsible:hover {
+		cursor:pointer;
+	}
+</style>
+
 <form method="POST" action="<?php echo $CreateLocationsFormHREF; ?>">
 
 	<table class="standard">
@@ -21,10 +27,8 @@ Click a category heading to toggle its display.
 		</colgroup>
 		<?php
 		foreach ($LocTypes as $category => $LocIDs) { ?>
-			<tr>
-				<th id="<?php echo $category; ?>">
-					<a href="javascript:;" onclick="$('.toggle-<?php echo $category; ?>').toggle();"><?php echo $category; ?></a>
-				</th>
+			<tr class="collapsible" onclick="$('.toggle-<?php echo $category; ?>').toggle();">
+				<th id="<?php echo $category; ?>"><?php echo $category; ?></th>
 				<th>Amount</th>
 			</tr><?php
 			foreach ($LocIDs as $LocID) { ?>
