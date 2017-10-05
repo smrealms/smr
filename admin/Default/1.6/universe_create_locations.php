@@ -22,51 +22,73 @@ $template->assignByRef('TotalLocs', $totalLocs);
 $galaxy =& SmrGalaxy::getGalaxy($var['game_id'],$var['gal_on']);
 $template->assignByRef('Galaxy', $galaxy);
 
+// Though we expect a location to be only in one category, it is possible to
+// edit a location in the Admin Tools so that it is in two or more categories.
+// For simplicity here, it will only show up in the first category it matches,
+// but it will identify all other categories that it is in.
+// If multi-category locations becomes common, this code should be modified.
+class Categories {
+	public $locTypes = array();
+	private $locAdded = array();  // list of locs added to a category
+	public function addLoc($locID, $category) {
+		if (!$this->added($locID)) {
+			$this->locTypes[$category][] = $locID;
+			$this->locAdded[] = $locID;
+			return '';
+		} else {
+			return "<b>Also in $category</b><br />";
+		}
+	}
+	public function added($locID) {
+		return in_array($locID, $this->locAdded);
+	}
+}
+
 // Set any extra information to be displayed with each location
 $locText = array();
-$locTypes = array();
+$categories = new Categories();
 foreach ($locations as &$location) {
 	$extra = '<span class="small"><br />';
 	if ($location->isWeaponSold()) {
-		$locTypes['Weapons'][] = $location->getTypeID();
+		$extra .= $categories->addLoc($location->getTypeID(), 'Weapons');
 		$weaponsSold =& $location->getWeaponsSold();
 		foreach($weaponsSold as &$weapon) {
 			$extra .= $weapon->getName() . '&nbsp;&nbsp;&nbsp;(' . $weapon->getShieldDamage() . '/' . $weapon->getArmourDamage() . '/' . $weapon->getBaseAccuracy() . ')<br />';
 		} unset($weapon);
 	}
-	elseif ($location->isShipSold()) {
-		$locTypes['Ships'][] = $location->getTypeID();
+	if ($location->isShipSold()) {
+		$extra .= $categories->addLoc($location->getTypeID(), 'Ships');
 		$shipsSold =& $location->getShipsSold();
 		foreach ($shipsSold as &$shipSold) {
 			$extra .= $shipSold['Name'] . '<br />';
 		} unset($shipSold);
 	}
-	elseif ($location->isHardwareSold()) {
-		$locTypes['Hardware'][] = $location->getTypeID();
+	if ($location->isHardwareSold()) {
+		$extra .= $categories->addLoc($location->getTypeID(), 'Hardware');
 		$hardwareSold =& $location->getHardwareSold();
 		foreach ($hardwareSold as &$hardware) {
 			$extra .= $hardware['Name'] . '<br />';
 		} unset($hardware);
 	}
-	elseif ($location->isBar()) {
-		$locTypes['Bars'][] = $location->getTypeID();
+	if ($location->isBar()) {
+		$extra .= $categories->addLoc($location->getTypeID(), 'Bars');
 	}
-	elseif ($location->isBank()) {
-		$locTypes['Banks'][] = $location->getTypeID();
+	if ($location->isBank()) {
+		$extra .= $categories->addLoc($location->getTypeID(), 'Banks');
 	}
-	elseif ($location->isHQ() || $location->isUG() || $location->isFed()) {
-		$locTypes['Headquarters'][] = $location->getTypeID();
+	if ($location->isHQ() || $location->isUG() || $location->isFed()) {
+		$extra .= $categories->addLoc($location->getTypeID(), 'Headquarters');
 	}
-	else {
+	if (!$categories->added($location->getTypeID())) {
 		// Anything that doesn't fit the other categories
-		$locTypes['Miscellaneous'][] = $location->getTypeID();
+		$extra .= $categories->addLoc($location->getTypeID(), 'Miscellaneous');
 	}
 	$extra .= '</span>';
 
 	$locText[$location->getTypeID()] = $location->getName() . $extra;
 } unset($location);
 $template->assignByRef('LocText', $locText);
-$template->assignByRef('LocTypes', $locTypes);
+$template->assignByRef('LocTypes', $categories->locTypes);
 
 // Form to make location changes
 $container = create_container('1.6/universe_create_save_processing.php',
