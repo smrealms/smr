@@ -2,7 +2,10 @@ Working on Galaxy : <?php echo $Galaxy->getName(); ?> (<?php echo $Galaxy->getGa
 
 <?php
 foreach ($LocTypes as $category => $LocIDs) { ?>
-		<a href="javascript:;" onclick="window.location.hash='<?php echo $category; ?>'">Jump to <?php echo $category; ?></a><br /><?php
+	<!-- There is custom js that disables clicking links multiple times for any
+	link that does not have a target. Since this affects anchors as well, we
+	explicitly use the default target "_self" so the selector skips it. -->
+	<a href="#<?php echo $category; ?>" target="_self">Jump to <?php echo $category; ?></a><br /><?php
 } ?>
 
 <br />
