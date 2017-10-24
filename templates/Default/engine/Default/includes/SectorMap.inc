@@ -94,7 +94,7 @@
 						$CanScanSector = $UniGen || ($ThisShip->hasScanner() && $isLinkedSector) || $isCurrentSector;
 						if( ($CanScanSector && ($Sector->hasForces() || $Sector->hasPlayers()) ) || $Sector->hasFriendlyForces($MapPlayer) || $Sector->hasFriendlyTraders($MapPlayer)) { ?>
 							<div class="lmtf"><?php
-								if(!$UniGen && (($isCurrentSector && $Sector->hasOtherTraders($MapPlayer)) || ($ThisShip->hasScanner() && $isLinkedSector && $Sector->hasPlayers()) || $Sector->hasFriendlyTraders($MapPlayer))) {
+								if(!$UniGen) {
 									if($CanScanSector && $Sector->hasEnemyTraders($MapPlayer)) {
 										?><img class="enemyBack" title="Enemy Trader" alt="Enemy Trader" src="images/trader.png" width="13" height="16"/><?php
 									}
