@@ -29,7 +29,6 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 					return true;
 				}
 				$container = create_container('skeleton.php', 'combat_log_viewer.php');
-				$container['action'] = 5;
 				$container['log_ids'] = array($logID);
 				$container['current_log'] = 0;
 				return '<a href="' . SmrSession::getNewHREF($container) . '"><img src="images/notify.gif" width="14" height="11" border="0" title="View the combat log" /></a>';
@@ -770,7 +769,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 
 		$template->assign('PoliticsLink',Globals::getPoliticsHREF());
 
-		$container['body'] = 'combat_log_viewer.php';
+		$container['body'] = 'combat_log_list.php';
 		$template->assign('CombatLogsLink',SmrSession::getNewHREF($container));
 
 		$template->assign('PlanetLink',Globals::getTraderPlanetHREF());
