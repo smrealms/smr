@@ -3,7 +3,9 @@
 $template->assign('PageTopic', 'Enable New Games');
 
 // If we have just forwarded from the processing file, pass its message.
-$template->assign('ProcessingMsg', $var['processing_msg']);
+if (isset($var['processing_msg'])) {
+	$template->assign('ProcessingMsg', $var['processing_msg']);
+}
 
 // Get the list of disabled games
 $db->query('SELECT game_name, game_id FROM game WHERE enabled=' . $db->escapeBoolean(false));
