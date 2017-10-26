@@ -1,10 +1,25 @@
 <?php
 $template->assign('PageTopic','Newsletter');
 
-$PHP_OUTPUT.=('This uses the last newsletter to be added to the DB!<br />Please enter an eMail address where the newsletter should be sent (* for all):');
-$PHP_OUTPUT.=create_echo_form(create_container('newsletter_send_processing.php', ''));
-$PHP_OUTPUT.=('<input type="text" name="to_email" value="'.htmlspecialchars($account->getEmail()).'" id="InputFields" size="25">&nbsp;');
-$PHP_OUTPUT.=create_submit('Send');
-$PHP_OUTPUT.=('</form>');
+$template->assign('CurrentEmail', $account->getEmail());
 
+$processingContainer = create_container('newsletter_send_processing.php');
+
+// Get the most recent newsletter text for preview
+$db = new SmrMySqlDatabase();
+$db->query('SELECT newsletter_id, newsletter_html, newsletter_text FROM newsletter ORDER BY newsletter_id DESC LIMIT 1');
+if ($db->nextRecord()) {
+	$id = $db->getField('newsletter_id');
+	$template->assign('NewsletterId', $id);
+	$template->assign('DefaultSubject', 'Space Merchant Realms Newsletter #'.$id);
+
+	// Give both the template and processing container access to the message
+	$processingContainer['newsletter_html'] = $db->getField('newsletter_html');
+	$processingContainer['newsletter_text'] = $db->getField('newsletter_text');
+	$template->assign('NewsletterHtml', $db->getField('newsletter_html'));
+	$template->assign('NewsletterText', $db->getField('newsletter_text'));
+}
+
+// Create the form for the populated processing container
+$template->assign('ProcessingForm', create_echo_form($processingContainer));
 ?>
