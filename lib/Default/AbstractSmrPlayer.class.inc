@@ -52,6 +52,7 @@ abstract class AbstractSmrPlayer {
 		0 => 0
 	);
 
+	protected $draftLeader;
 	protected $gpWriter;
 	protected $HOF;
 	protected static $HOFVis;
@@ -146,6 +147,17 @@ abstract class AbstractSmrPlayer {
 
 	public function isNPC() {
 		return $this->getAccount()->isNPC();
+	}
+
+	public function isDraftLeader() {
+		if(!isset($this->draftLeader)) {
+			$this->draftLeader = false;
+			$this->db->query('SELECT 1 FROM draft_leaders WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' AND account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' LIMIT 1');
+			if ($this->db->nextRecord()) {
+				$this->draftLeader = true;
+			}
+		}
+		return $this->draftLeader;
 	}
 
 	public function getGPWriter() {
