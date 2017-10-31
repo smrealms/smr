@@ -1,0 +1,64 @@
+version: '2'
+services:
+    smr-common:
+        # Base configuration for `smr` (production) and `smr-dev` (testing).
+        build:
+            context: .
+            args:
+                MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+                MYSQL_HOST: ${MYSQL_HOST}
+        ports:
+            - "80:80"
+        volumes:
+            - smr_upload:/usr/share/smr/htdocs/upload
+            - ${SMR_CONFIG_FILE}:/usr/share/smr/htdocs/config.specific.php:ro
+
+    smr:
+        extends: smr-common
+        # Links cannot be defined in extended services (i.e. smr-common)
+        links:
+            - mysql
+
+    smr-dev:
+        extends: smr-common
+        # Links cannot be defined in extended services (i.e. smr-common)
+        links:
+            - mysql
+        volumes:
+            # Mount the source code instead of copying it.
+            # You must have run `composer install` to do this.
+            - .:/usr/share/smr:ro
+
+    flyway:
+        image: claycephas/flyway
+        command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
+        links:
+            - mysql
+        volumes:
+            - ./db/patches:/flyway/sql:ro
+
+    mysql:
+        image: mysql:5.5
+        container_name: ${MYSQL_HOST}
+        # By using the default image, we must expose the secrets in
+        # the runtime environment (because we can't specify build args).
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_USER:          smr
+            MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+            MYSQL_DATABASE:      smr_live
+        volumes:
+            - smr_mysql_data:/var/lib/mysql
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        # Publish to port 8080
+        ports:
+            - 8080:80
+        links:
+            - mysql:db
+
+# We want persistent, anonymous data volumes
+volumes:
+    smr_upload:
+    smr_mysql_data:

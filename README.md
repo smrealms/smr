@@ -1,80 +1,37 @@
 # Installation with docker
 
-## Building an SMR docker image
-```
-docker build --tag smrealms/smr .
-```
-
-## Running a mysql server via docker (optional)
-
-### Start the mysql server
-```
-docker run \
-	--name='smr-mysql' \
-	--env='MYSQL_RANDOM_ROOT_PASSWORD=yes' \
-	--env='MYSQL_USER=smr' \
-	--env='MYSQL_PASSWORD=smr' \
-	--env='MYSQL_DATABASE=smr_live' \
-	--detach \
-	mysql:5.5
-```
-### Populate the mysql server
-```
-docker run \
-	--rm \
-	--link='smr-mysql' \
-	--volume="$(pwd)/db/patches:/flyway/sql:ro" \
-	shouldbee/flyway \
-	-url='jdbc:mysql://smr-mysql/smr_live' \
-	-user='smr' \
-	-password='smr' \
-	init
-
-docker run \
-	--rm \
-	--link='smr-mysql' \
-	--volume="$(pwd)/db/patches:/flyway/sql:ro" \
-	shouldbee/flyway \
-	-url='jdbc:mysql://smr-mysql/smr_live' \
-	-user='smr' \
-	-password='smr' \
-	migrate
+## Start up the services
+First, you must write a `.env` file with the following format:
+```bash
+# Variables needed by docker-compose.yml
+SMR_CONFIG_FILE=/path/to/config.specific.php
+MYSQL_ROOT_PASSWORD=chooseapassword
+MYSQL_PASSWORD=chooseapassword
+MYSQL_HOST=chooseahost  # must be unique on each network
 ```
 
-## Running SMR via docker
-
-You must change the paths to filled in config files, see the config section below for more info
-
-For production
+Then you can start up the persistent services
 ```
-docker run \
-	--name="smr" \
-	--link='smr-mysql' \
-	--publish='80:80' \
-	--volume="/path/to/config.specific.php:/usr/share/smr/htdocs/config.specific.php:ro" \
-	--volume="/path/to/SmrSessionMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrSessionMySqlDatabase.class.inc:ro" \
-	--volume="/path/to/SmrMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrMySqlDatabase.class.inc:ro" \
-	--detach \
-	smrealms/smr
-```
-For development (will automatically pick up source changes, but you will need to make sure you have run `composer install`)
-```
-docker run \
-	--name="smr" \
-	--link='smr-mysql' \
-	--publish='80:80' \
-	--volume="$(pwd):/usr/share/smr" \
-	--volume="$(pwd)/htdocs/config.specific.sample.php:/usr/share/smr/htdocs/config.specific.php:ro" \
-	--volume="$(pwd)/lib/Default/SmrSessionMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrSessionMySqlDatabase.class.inc:ro" \
-	--volume="$(pwd)/lib/Default/SmrMySqlDatabase.class.sample.inc:/usr/share/smr/lib/Default/SmrMySqlDatabase.class.inc:ro" \
-	--detach \
-	smrealms/smr
+docker-compose up --build -d smr mysql phpmyadmin
 ```
 
-## Viewing logs via docker
+For development, it may be desirable to automatically pick up source code changes without rebuilding the docker image. You will need to make sure you have run `composer install`, then you can replace the `smr` service with `smr-dev`, i.e.:
+```
+docker-compose up --build -d smr-dev mysql phpmyadmin
+```
+
+## Populate the mysql database
+To initialize the database or update it with new patches, run:
+```
+docker-compose run --rm flyway
+```
+If you are starting from an empty database, this must be run after
+starting up the `mysql` service for the first time.
+
+## Viewing logs via docker-compose
 
 ```
-docker logs -f smr
+docker-compose logs
 ```
 
 # Installation natively
@@ -83,7 +40,7 @@ docker logs -f smr
 These list the known dependencies, there may be more - please update if you find any!
 
 ### Core
-* PHP 5.3+
+* PHP 5.4+
 * MySQL 5.5
 
 ### PHP Extensions
@@ -97,8 +54,7 @@ These list the known dependencies, there may be more - please update if you find
 Currently it is required to create installation specific copies of the following files:
 
 * htdocs/config.specific.sample.php -> htdocs/config.specific.php
-* lib/Default/SmrSessionMySqlDatabase.class.sample.inc -> lib/Default/SmrSessionMySqlDatabase.class.inc
-* lib/Default/SmrMySqlDatabase.class.sample.inc -> lib/Default/SmrMySqlDatabase.class.inc
+* lib/Default/SmrMySqlSecrets.sample.inc -> lib/Default/SmrMySqlSecrets.inc
 
 For "Caretaker" functionality:
 * tools/irc/config.specific.sample.php -> tools/irc/config.specific.php
