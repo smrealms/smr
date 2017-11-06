@@ -33,7 +33,9 @@ if ($activeGames) {
 }
 
 // If we have just forwarded from the processing file, pass its message.
-$template->assign('ProcessingMsg', $var['processing_msg']);
+if (isset($var['processing_msg'])) {
+	$template->assign('ProcessingMsg', $var['processing_msg']);
+}
 
 // Create the link to the processing file
 // Pass entire $var so the processing file knows the selected game

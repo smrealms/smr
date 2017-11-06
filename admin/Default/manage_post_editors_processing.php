@@ -40,8 +40,11 @@ else {
 	$msg = "<span class='red'>ERROR: </span>Do not know action '$action'!";
 }
 
+if (!empty($msg)) {
+	SmrSession::updateVar('processing_msg', $msg);
+}
+
 // Pass entire $var so that the selected game remains selected
-SmrSession::updateVar('processing_msg', $msg);
 forward(create_container('skeleton.php', 'manage_post_editors.php', $var));
 
 ?>
