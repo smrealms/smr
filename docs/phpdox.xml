@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<phpdox xmlns="http://xml.phpdox.net/config">
+  <project name="SMR" source="${basedir}/smr/lib/Default" workdir="${basedir}/xml">
+    <collector backend="parser" publiconly="false">
+      <include mask="*.inc" />
+    </collector>
+    <generator output="${basedir}">
+      <enrich base="${basedir}">
+        <source type="git">
+          <git binary="git" />
+        </source>
+      </enrich>
+      <build engine="html" output="html" />
+    </generator>
+  </project>
+</phpdox>

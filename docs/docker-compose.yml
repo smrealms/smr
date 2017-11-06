@@ -1,0 +1,13 @@
+version: '2'
+
+services:
+    phpdox:
+        build:
+            context: .
+        volumes:
+            # phpdox configuration file
+            - ./phpdox.xml:/api/phpdox.xml:ro
+            # Mount entire src code for git enricher
+            - ../:/api/smr:ro
+            # Mount phpdox output dir for access to html
+            - ./api:/api:rw
