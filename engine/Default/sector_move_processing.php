@@ -88,7 +88,8 @@ if ($player->hasPlottedCourse()) {
 }
 
 // log action
-$player->actionTaken('WalkSector',array('Sector'=>&$sector));
+$targetSector =& SmrSector::getSector($player->getGameID(), $var['target_sector']);
+$player->actionTaken('WalkSector', array('Sector' => &$targetSector));
 
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_WALK);
