@@ -95,7 +95,7 @@ else {
 						</td>
 					</tr>
 					<tr>
-						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
+						<td colspan="6"><?php echo $Message['Text']; ?></td>
 					</tr>
 					<?php
 				} unset($Message);
@@ -108,7 +108,7 @@ else {
 						<td class="noWrap" colspan="4">Date: <?php echo date(DATE_FULL_SHORT, $Message['FirstSendTime']); ?> - <?php echo date(DATE_FULL_SHORT, $Message['LastSendTime']); ?></td>
 					</tr>
 					<tr>
-						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
+						<td colspan="6"><?php echo $Message['Text']; ?></td>
 					</tr>
 					<?php
 				} unset($Message);

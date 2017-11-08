@@ -285,8 +285,15 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 		$message['Sender'] = & $sender;
 	}
 
+	// Player messages must not have access to bbify, otherwise they could
+	// create links to pages that they should not have access to.
+	if (SmrAccount::isPlayerAccount($sender_id)) {
+		$message['Text'] = $message_text;
+	} else {
+		$message['Text'] = bbifyMessage($message_text);
+	}
+
 	$message['ID'] = $message_id;
-	$message['Text'] = $message_text;
 	$message['SenderDisplayName'] = $senderName;
 
 	$receiver = & SmrPlayer::getPlayer($receiver_id, $player->getGameID());
