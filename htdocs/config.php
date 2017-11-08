@@ -17,6 +17,8 @@ define('ACCOUNT_ID_GROUP_RACES',65500);
 define('ACCOUNT_ID_SCOUT_DRONE', 65499);
 define('ACCOUNT_ID_FED_CLERK', 65498);
 define('ACCOUNT_ID_NHL',36);
+// This MUST be smaller than the above account ID's
+define('MAX_PLAYER_ACCOUNT_ID', 65400);
 
 define('TIME_BETWEEN_VOTING',84600); //23 1/2 hours
 define('TIME_BEFORE_NEWBIE_TIME',3600); //1 hour
