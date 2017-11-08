@@ -15,7 +15,7 @@ will pick up any changes except to `Dockerfile`. If you ever need to modify
 To view the documentation locally, run:
 
 ```
-some-browser ./api/html/index.xhtml
+some-browser ./api/html/index.html
 ```
 
 Where `some-browser` is your browser of choice.
