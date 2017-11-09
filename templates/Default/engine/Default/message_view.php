@@ -81,10 +81,7 @@ else {
 								?>From: <?php echo $Message['SenderDisplayName'];
 							} ?>
 						</td>
-						<td class="noWrap"<?php if(!isset($Message['Sender'])) { ?> colspan="3"<?php } ?>>Date: <?php echo date(DATE_FULL_SHORT, $Message['SendTime']); ?></td>
-						<td>
-							<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/report.png" width="16" height="16" border="0" align="right" title="Report this message to an admin" /></a>
-						</td><?php
+						<td class="noWrap"<?php if(!isset($Message['Sender'])) { ?> colspan="3"<?php } ?>>Date: <?php echo date(DATE_FULL_SHORT, $Message['SendTime']); ?></td><?php
 						if (isset($Message['Sender'])) { ?>
 							<td>
 								<a href="<?php echo $Message['BlacklistHref']; ?>">Blacklist Player</a>
@@ -93,9 +90,12 @@ else {
 								<a href="<?php echo $Message['ReplyHref']; ?>">Reply</a>
 							</td><?php
 						} ?>
+						<td>
+							<a href="<?php echo $Message['ReportHref']; ?>"><img src="images/report.png" width="16" height="16" border="0" align="right" title="Report this message to an admin" /></a>
+						</td>
 					</tr>
 					<tr>
-						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
+						<td colspan="6"><?php echo $Message['Text']; ?></td>
 					</tr>
 					<?php
 				} unset($Message);
@@ -108,7 +108,7 @@ else {
 						<td class="noWrap" colspan="4">Date: <?php echo date(DATE_FULL_SHORT, $Message['FirstSendTime']); ?> - <?php echo date(DATE_FULL_SHORT, $Message['LastSendTime']); ?></td>
 					</tr>
 					<tr>
-						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
+						<td colspan="6"><?php echo $Message['Text']; ?></td>
 					</tr>
 					<?php
 				} unset($Message);

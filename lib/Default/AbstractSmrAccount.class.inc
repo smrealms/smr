@@ -77,6 +77,11 @@ abstract class AbstractSmrAccount {
 
 	protected $hasChanged;
 
+	// Determines if account ID corresponds to a player or a game service
+	public static function isPlayerAccount($accountID) {
+		return $accountID <= MAX_PLAYER_ACCOUNT_ID;
+	}
+
 	public static function getDefaultHotkeys() {
 		return self::$DEFAULT_HOTKEYS;
 	}
