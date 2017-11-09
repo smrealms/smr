@@ -421,7 +421,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$allianceID = $this->getAllianceID();
 		$alliance = $this->getAlliance();
 		if($kickedBy != null) {
-			$kickedBy->sendMessage($this->getAccountID(), 2, 'You were kicked out of the alliance!', false);
+			$kickedBy->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were kicked out of the alliance!', false);
 			$this->actionTaken('PlayerKicked', array('Alliance' => &$alliance, 'Player' => &$kickedBy));
 			$kickedBy->actionTaken('KickPlayer', array('Alliance' => &$alliance, 'Player' => &$this));
 		}
@@ -431,7 +431,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		else {
 			$this->actionTaken('LeaveAlliance', array('Alliance' => &$alliance));
 			if ($alliance->getLeaderID() != 0 && $alliance->getLeaderID() != ACCOUNT_ID_NHL) {
-				$this->sendMessage($alliance->getLeaderID(), 2, 'I left your alliance!', false);
+				$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I left your alliance!', false);
 			}
 		}
 
@@ -450,7 +450,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->setAllianceID($allianceID);
 		$alliance = $this->getAlliance();
 		if (!$this->isAllianceLeader())
-			$this->sendMessage($alliance->getLeaderID(), 2, 'I joined your alliance!', false);
+			$this->sendMessage($alliance->getLeaderID(), MSG_PLAYER, 'I joined your alliance!', false);
 		$this->db->query('INSERT INTO player_has_alliance_role (game_id, account_id, role_id, alliance_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getAccountID()) . ', 2,' . $this->db->escapeNumber($alliance->getAllianceID()) . ')');
 		$this->actionTaken('JoinAlliance', array('Alliance' => &$alliance));
 	}
