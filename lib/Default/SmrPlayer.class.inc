@@ -1121,8 +1121,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->getSector()->increaseBattles(1);
 		$this->db->query('INSERT INTO news (game_id,time,news_message,type,killer_id,killer_alliance,dead_id,dead_alliance) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber(TIME) . ',' . $this->db->escapeString($msg,true) . ',\'regular\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber($this->getAccountID()) . ',' . $this->db->escapeNumber($this->getAllianceID()) . ')');
 
-		$killer->sendMessage($this->getAccountID(),MSG_PLAYER,'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()), false);
-		$this->sendMessage($killer->getAccountID(),MSG_PLAYER,'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()), false);
+		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by ' . $killer->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
+		self::sendMessageFromFedClerk($this->getGameID(), $killer->getAccountID(), 'You <span class="red">DESTROYED</span>&nbsp;' . $this->getBBLink() . ' in sector ' . Globals::getSectorBBLink($this->getSectorID()));
 
 		// The person who got the kill gains experience
 		$expGainPercent = 0.04875 + 0.03 * ($this->getLevelID() - $killer->getLevelID()) / max($this->getLevelID(), $killer->getLevelID());
@@ -1280,8 +1280,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return = array();
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
-		$this->sendMessage($owner->getAccountID(), MSG_PLAYER, 'Your forces <span class="red">DESTROYED </span>'.$this->getBBLink().' in sector '.$forces->getSectorID(),false);
-		$owner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by '.$owner->getBBLink().'\'s forces in sector '.$forces->getSectorID(),false);
+		self::sendMessageFromFedClerk($this->getGameID(), $owner->getAccountID(), 'Your forces <span class="red">DESTROYED </span>'.$this->getBBLink().' in sector '.$forces->getSectorID());
+		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$owner->getBBLink().'\'s forces in sector '.$forces->getSectorID());
 
 		$news_message = $this->getBBLink();
 		if ($this->hasCustomShipName()) {
@@ -1345,8 +1345,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return = array();
 		// send a message to the person who died
 		$planetOwner =& $planet->getOwner();
-		$this->sendMessage($planetOwner->getAccountID(), MSG_PLAYER, 'Your planet <span class="red">DESTROYED</span>&nbsp;'.$this->getBBLink().' in sector '.$planet->getSectorID(),false);
-		$planetOwner->sendMessage($this->getAccountID(), MSG_PLAYER, 'You were <span class="red">DESTROYED</span> by '.$planet->getDisplayName().'\'s defenses.',false);
+		self::sendMessageFromFedClerk($this->getGameID(), $planetOwner->getAccountID(), 'Your planet <span class="red">DESTROYED</span>&nbsp;'.$this->getBBLink().' in sector '.$planet->getSectorID());
+		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$planet->getDisplayName().'\'s defenses.');
 
 		$news_message = $this->getBBLink();
 		if ($this->hasCustomShipName()) {
@@ -1718,6 +1718,11 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$expires += TIME;
 		// send him the message
 		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $messageTypeID == MSG_SCOUT, $unread);
+	}
+
+	public static function sendMessageFromFedClerk($gameID, $receiverID, $message) {
+		$expires = TIME + 86400 * 31;
+		self::doMessageSending(ACCOUNT_ID_FED_CLERK, $receiverID, $gameID, MSG_PLAYER, $message, $expires);
 	}
 
 	public static function sendMessageFromScoutDrone($gameID, $receiverID, $message) {
