@@ -1314,8 +1314,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return = array();
 		$owner =& $forces->getOwner();
 		// send a message to the person who died
-		self::sendMessageFromFedClerk($this->getGameID(), $owner->getAccountID(), 'Your forces <span class="red">DESTROYED </span>'.$this->getBBLink().' in sector '.$forces->getSectorID());
-		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$owner->getBBLink().'\'s forces in sector '.$forces->getSectorID());
+		self::sendMessageFromFedClerk($this->getGameID(), $owner->getAccountID(), 'Your forces <span class="red">DESTROYED </span>'.$this->getBBLink().' in sector '.Globals::getSectorBBLink($forces->getSectorID()));
+		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by '.$owner->getBBLink().'\'s forces in sector '.Globals::getSectorBBLink($this->getSectorID()));
 
 		$news_message = $this->getBBLink();
 		if ($this->hasCustomShipName()) {
@@ -1379,7 +1379,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$return = array();
 		// send a message to the person who died
 		$planetOwner =& $planet->getOwner();
-		self::sendMessageFromFedClerk($this->getGameID(), $planetOwner->getAccountID(), 'Your planet <span class="red">DESTROYED</span>&nbsp;'.$this->getBBLink().' in sector '.$planet->getSectorID());
+		self::sendMessageFromFedClerk($this->getGameID(), $planetOwner->getAccountID(), 'Your planet <span class="red">DESTROYED</span>&nbsp;'.$this->getBBLink().' in sector '.Globals::getSectorBBLink($planet->getSectorID()));
 		self::sendMessageFromFedClerk($this->getGameID(), $this->getAccountID(), 'You were <span class="red">DESTROYED</span> by the planetary defenses of '.$planet->getDisplayName());
 
 		$news_message = $this->getBBLink();
