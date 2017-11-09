@@ -11,6 +11,8 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false) {
 		$return = '<span class="green">Alliance Ambassador</span>';
 	else if($accountID==ACCOUNT_ID_CASINO)
 		$return = '<span class="yellow">Casino</span>';
+	else if($accountID==ACCOUNT_ID_FED_CLERK)
+		$return = '<span class="yellow">Federal Clerk</span>';
 	else {
 		$RACES =& Globals::getRaces();
 		foreach($RACES as $raceID => &$raceInfo) {
@@ -29,10 +31,6 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false) {
 					
 				case MSG_ALLIANCE:
 					$return = '<span class="green">Alliance Ambassador</span>';
-				break;
-							
-				case MSG_PLAYER:
-					$return = '<span class="yellow">Port Defenses</span>';
 				break;
 							
 				default:
