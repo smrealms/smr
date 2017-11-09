@@ -983,7 +983,6 @@ class SmrPlanet {
 	}
 
 	function getConstructionTime($constructionID) {
-		$buildings = $this->getBuildings();
 		$baseTime = 0;
 		$this->db->query('
 			SELECT * 
@@ -993,7 +992,7 @@ class SmrPlanet {
 		if ($this->db->nextRecord()) {
 			$baseTime = $this->db->getInt('cost_time');
 		}
-		$currentBuildings = $buildings[$constructionID];
+		$currentBuildings = $this->getBuilding($constructionID);
 		$maxBuildings = $this->getMaxBuildings($constructionID);
 		// Replace this with the real equations once RCK provides some that aren't gibberish.
 		$constructionTime = TIME + ceil(3.8030328 * $baseTime * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
