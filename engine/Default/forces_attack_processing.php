@@ -52,6 +52,7 @@ foreach($attackers as &$attacker) {
 	$attacker->setLastSectorID(0);
 } unset($attacker);
 
+$results['Attackers'] = array('TotalDamage' => 0);
 foreach($attackers as &$attacker) {
 	$playerResults =& $attacker->shootForces($forces);
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
@@ -59,17 +60,15 @@ foreach($attackers as &$attacker) {
 } unset($attacker);
 
 $results['Forces'] =& $forces->shootPlayers($attackers,false);
+$forces->updateExpire();
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
-$forces->updateExpire();
 
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 unserialize($serializedResults); //because of references we have to undo this.
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'forces_attack.php';
+$container = create_container('skeleton.php', 'forces_attack.php');
 
 // If their target is dead there is no continue attack button
 if($forces->exists())
@@ -85,5 +84,4 @@ if($player->isDead()) {
 
 $container['results'] = $serializedResults;
 forward($container);
-
 ?>

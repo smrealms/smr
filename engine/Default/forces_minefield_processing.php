@@ -19,11 +19,11 @@ $forceOwner =& $forces->getOwner();
 if($player->forceNAPAlliance($forceOwner))
 	create_error('You have a force NAP, you cannot attack these forces!');
 
-// delete plotted course
-$player->deletePlottedCourse();
-
+// take the turns
 $player->takeTurns($forces->getBumpTurnCost($ship));
 
+// delete plotted course
+$player->deletePlottedCourse();
 
 // send message if scouts are present
 if ($forces->hasSDs()) {
@@ -62,7 +62,7 @@ foreach($attackers as &$attacker) {
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
 $serializedResults = serialize($results);
-$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $forces->getSectorID() . ',' . TIME . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $forceOwner->getAccountID() . ',' . $forceOwner->getAllianceID() . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
+$db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 unserialize($serializedResults); //because of references we have to undo this.
 
 $container = create_container('skeleton.php', 'forces_attack.php');
