@@ -345,7 +345,7 @@ class SmrForce {
 		}
 		$owner =& $this->getOwner();
 		if(!$playerPinging->sameAlliance($owner)) {
-			$playerPinging->sendMessage($owner->getAccountID(), MSG_SCOUT, $pingMessage,false);
+			SmrPlayer::sendMessageFromScoutDrone($owner->getGameID(), $owner->getAccountID(), $pingMessage);
 		}
 	}
 
