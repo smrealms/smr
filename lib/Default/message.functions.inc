@@ -15,7 +15,7 @@ function &getMessagePlayer($accountID, $gameID, $messageType = false) {
 		$RACES =& Globals::getRaces();
 		foreach($RACES as $raceID => &$raceInfo) {
 			if($accountID==ACCOUNT_ID_GROUP_RACES+$raceID) {
-				$return = '<span class="yellow">'.$raceInfo['Race Name'].'</span>';
+				$return = '<span class="yellow">'.$raceInfo['Race Name'].' Government</span>';
 				return $return;
 			}
 		}
