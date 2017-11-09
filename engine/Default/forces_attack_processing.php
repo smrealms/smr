@@ -11,10 +11,25 @@ if(!$player->canFight())
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
-if(!$forces->exists())
-	create_error('These forces no longer exist.');
-if ($player->getTurns() < $forces->getAttackTurnCost($ship))
-	create_error('You do not have enough turns to attack these forces!');
+// The attack is processed slightly differently if the attacker bumped into mines
+// when moving into sector
+if ($var['action'] == 'attack') {
+	$bump = false;
+} else if ($var['action'] == 'bump') {
+	$bump = true;
+} else {
+	create_error('Action must be either bump or attack');
+}
+
+if ($bump) {
+	if (!$forces->hasMines())
+		create_error('No mines in sector!');
+} else {
+	if(!$forces->exists())
+		create_error('These forces no longer exist.');
+	if ($player->getTurns() < $forces->getAttackTurnCost($ship))
+		create_error('You do not have enough turns to attack these forces!');
+}
 
 $forceOwner =& $forces->getOwner();
 
@@ -22,7 +37,11 @@ if($player->forceNAPAlliance($forceOwner))
 	create_error('You have a force NAP, you cannot attack these forces!');
 
 // take the turns
-$player->takeTurns($forces->getAttackTurnCost($ship), 1);
+if ($bump) {
+	$player->takeTurns($forces->getBumpTurnCost($ship));
+} else {
+	$player->takeTurns($forces->getAttackTurnCost($ship), 1);
+}
 
 // delete plotted course
 $player->deletePlottedCourse();
@@ -41,16 +60,28 @@ if ($forces->hasSDs()) {
 
 $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
-				'Forced' => false);
+				'Forced' => $bump);
 
 $sector =& $player->getSector();
-$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
+if ($bump) {
+	//When hitting mines by bumping only the current player attacks/gets hit.
+	$attackers = array(&$player);
+} else {
+	$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
+}
 
 //decloak all attackers
 foreach($attackers as &$attacker) {
 	$attacker->getShip()->decloak();
-	$attacker->setLastSectorID(0);
+	if (!$bump) {
+		$attacker->setLastSectorID(0);
+	}
 } unset($attacker);
+
+// If mines are bumped, the forces shoot first. Otherwise player shoots first.
+if ($bump) {
+	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
+}
 
 $results['Attackers'] = array('TotalDamage' => 0);
 foreach($attackers as &$attacker) {
@@ -59,8 +90,10 @@ foreach($attackers as &$attacker) {
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($attacker);
 
-$results['Forces'] =& $forces->shootPlayers($attackers,false);
-$forces->updateExpire();
+if (!$bump) {
+	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
+	$forces->updateExpire();
+}
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 

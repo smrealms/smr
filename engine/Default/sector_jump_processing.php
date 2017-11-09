@@ -127,7 +127,8 @@ if($mineOwnerID) {
 		forward($container);
 	}
 	else {
-		$container = create_container('forces_minefield_processing.php');
+		$container = create_container('forces_attack_processing.php');
+		$container['action'] = 'bump';
 		$container['owner_id'] = $mineOwnerID;
 		forward($container);
 	}

@@ -22,6 +22,7 @@ if (($ship->getAttackRating() > 0 || $ship->getCDs() > 0) &&
 
 	$container = array();
 	$container['url'] = 'forces_attack_processing.php';
+	$container['action'] = 'attack';
 	transfer('target');
 	transfer('owner_id');
 	$PHP_OUTPUT.=create_echo_form($container);
