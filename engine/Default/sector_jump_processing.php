@@ -127,9 +127,9 @@ if($mineOwnerID) {
 		forward($container);
 	}
 	else {
-		$owner_id = $mineOwnerID;
-		require_once('forces_minefield_processing.php');
-		exit;
+		$container = create_container('forces_minefield_processing.php');
+		$container['owner_id'] = $mineOwnerID;
+		forward($container);
 	}
 }
 

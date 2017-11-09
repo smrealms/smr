@@ -69,9 +69,9 @@ if ($player->getLastSectorID() != $var['target_sector']) {
 			forward($container);
 		}
 		else {
-			$owner_id = $mine_owner_id;
-			require_once('forces_minefield_processing.php');
-			return;
+			$container = create_container('forces_minefield_processing.php');
+			$container['owner_id'] = $mine_owner_id;
+			forward($container);
 		}
 	}
 }
@@ -140,9 +140,9 @@ if ($mine_owner_id) {
 		forward($container);
 	}
 	else {
-		$owner_id = $mine_owner_id;
-		require_once('forces_minefield_processing.php');
-		return;
+		$container = create_container('forces_minefield_processing.php');
+		$container['owner_id'] = $mine_owner_id;
+		forward($container);
 	}
 }
 

@@ -9,7 +9,7 @@ if(!$player->canFight())
 	create_error('You are not allowed to fight!');
 
 require_once(get_file_loc('SmrForce.class.inc'));
-$forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $owner_id);
+$forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
 if (!$forces->hasMines())
 	create_error('No mines in sector!');
