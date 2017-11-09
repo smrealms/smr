@@ -339,8 +339,8 @@ class SmrForce {
 		return $this->sectorID;
 	}
 
-	public function ping($pingMessage, AbstractSmrPlayer &$playerPinging) {
-		if(!$this->hasSDs()) {
+	public function ping($pingMessage, AbstractSmrPlayer &$playerPinging, $skipCheck=false) {
+		if(!$this->hasSDs() && !$skipCheck) {
 			return;
 		}
 		$owner =& $this->getOwner();

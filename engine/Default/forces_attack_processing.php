@@ -46,11 +46,9 @@ if ($bump) {
 // delete plotted course
 $player->deletePlottedCourse();
 
-// send message if scouts are present
-if ($forces->hasSDs()) {
-	$message = 'Your forces in sector '.$forces->getSectorID().' are being attacked by '.$player->getPlayerName();
-	$forces->ping($message, $player);
-}
+// A message will be sent if scouts are present before the attack.
+// Sending occurs after the attack so we can link the combat log.
+$sendMessage = $forces->hasSDs();
 
 // ********************************
 // *
@@ -97,9 +95,16 @@ if (!$bump) {
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
 
+// Add this log to the `combat_logs` database table
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 unserialize($serializedResults); //because of references we have to undo this.
+$logId = $db->getInsertID();
+
+if ($sendMessage) {
+	$message = 'Your forces in sector '.Globals::getSectorBBLink($forces->getSectorID()).' are under <span class="red">attack</span> by '.$player->getBBLink().'! [combatlog='.$logId.']';
+	$forces->ping($message, $player, true);
+}
 
 $container = create_container('skeleton.php', 'forces_attack.php');
 
