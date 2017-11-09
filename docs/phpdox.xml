@@ -10,7 +10,9 @@
           <git binary="git" />
         </source>
       </enrich>
-      <build engine="html" output="html" />
+      <build engine="html" output="html">
+        <file extension="html" />
+      </build>
     </generator>
   </project>
 </phpdox>

@@ -1,6 +1,13 @@
 version: '2'
 
 services:
+    smr-docs:
+        image: nginx:alpine
+        volumes:
+            - ./api/html:/usr/share/nginx/html:ro
+        ports:
+            - "8081:80"
+
     phpdox:
         build:
             context: .
