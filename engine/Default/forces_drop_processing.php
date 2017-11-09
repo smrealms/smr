@@ -132,7 +132,11 @@ if ($change_mines != 0) {
 }
 
 // message to send out
-if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isForceDropMessages()) {
+// only send the message if the stack has (or had) scout drones
+if ($forces->getOwnerID() != $player->getAccountID() &&
+    $forces->getOwner()->isForceDropMessages() &&
+    ($forces->hasSDs() || $change_scout_drones != 0))
+{
 	$mines_message = '';
 	if ($change_mines > 0)
 		$mines_message = 'added ' . $change_mines . ' mine';
@@ -167,7 +171,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 		$scout_drones_message .= 's';
 
 	// now compile it together
-	$message = $player->getPlayerName().' has ' . $mines_message;
+	$message = $player->getBBLink().' has ' . $mines_message;
 
 	if (!empty($mines_message) && isset($combat_drones_message) && !isset($scout_drones_message))
 		$message .= ' and '.$combat_drones_message;
@@ -192,7 +196,7 @@ if ($forces->getOwnerID() != $player->getAccountID() && $forces->getOwner()->isF
 
 	$message .= ' your stack in sector ' . Globals::getSectorBBLink($forces->getSectorID());
 
-	$player->sendMessage($forces->getOwnerID(), MSG_SCOUT, $message, false);
+	SmrPlayer::sendMessageFromScoutDrone($player->getGameID(), $forces->getOwnerID(), $message);
 }
 
 $account->log(LOG_TYPE_FORCES, $change_combat_drones.' combat drones, '.$change_scout_drones.' scout drones, '.$change_mines.' mines', $player->getSectorID());
