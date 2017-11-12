@@ -6,6 +6,8 @@ $db2 = new SmrMySqlDatabase();
 if (isset($var['news'])) {
 	$db->query('INSERT INTO news (game_id, time, news_message, type) ' .
 		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escape_string($var['news'], false) . ', \'BREAKING\')');
+	// avoid multiple insertion on ajax updates
+	SmrSession::updateVar('news', null);
 }
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->getNumRows()) {
