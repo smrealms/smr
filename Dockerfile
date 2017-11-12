@@ -2,7 +2,7 @@ FROM php:5.6-apache
 RUN apt-get update \
 	&& apt-get install -y libcurl4-openssl-dev git sendmail \
 	&& rm -rf /var/lib/apt/lists/* \
-	&& docker-php-ext-install curl json mysqli
+	&& docker-php-ext-install curl json mysql
 
 # We need to set 'sendmail_path' since php doesn't know about sendmail when it's built
 RUN echo 'sendmail_path = "/usr/sbin/sendmail -t -i"' > /usr/local/etc/php/conf.d/mail.ini
