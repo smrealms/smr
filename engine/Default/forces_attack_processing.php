@@ -11,10 +11,25 @@ if(!$player->canFight())
 require_once(get_file_loc('SmrForce.class.inc'));
 $forces =& SmrForce::getForce($player->getGameID(), $player->getSectorID(), $var['owner_id']);
 
-if(!$forces->exists())
-	create_error('These forces no longer exist.');
-if ($player->getTurns() < $forces->getAttackTurnCost($ship))
-	create_error('You do not have enough turns to attack these forces!');
+// The attack is processed slightly differently if the attacker bumped into mines
+// when moving into sector
+if ($var['action'] == 'attack') {
+	$bump = false;
+} else if ($var['action'] == 'bump') {
+	$bump = true;
+} else {
+	create_error('Action must be either bump or attack');
+}
+
+if ($bump) {
+	if (!$forces->hasMines())
+		create_error('No mines in sector!');
+} else {
+	if(!$forces->exists())
+		create_error('These forces no longer exist.');
+	if ($player->getTurns() < $forces->getAttackTurnCost($ship))
+		create_error('You do not have enough turns to attack these forces!');
+}
 
 $forceOwner =& $forces->getOwner();
 
@@ -22,16 +37,18 @@ if($player->forceNAPAlliance($forceOwner))
 	create_error('You have a force NAP, you cannot attack these forces!');
 
 // take the turns
-$player->takeTurns($forces->getAttackTurnCost($ship), 1);
+if ($bump) {
+	$player->takeTurns($forces->getBumpTurnCost($ship));
+} else {
+	$player->takeTurns($forces->getAttackTurnCost($ship), 1);
+}
 
 // delete plotted course
 $player->deletePlottedCourse();
 
-// send message if scouts are present
-if ($forces->hasSDs()) {
-	$message = 'Your forces in sector '.$forces->getSectorID().' are being attacked by '.$player->getPlayerName();
-	$forces->ping($message, $player);
-}
+// A message will be sent if scouts are present before the attack.
+// Sending occurs after the attack so we can link the combat log.
+$sendMessage = $forces->hasSDs();
 
 // ********************************
 // *
@@ -41,35 +58,55 @@ if ($forces->hasSDs()) {
 
 $results = array('Attackers' => array('TotalDamage' => 0),
 				'Forces' => array(),
-				'Forced' => false);
+				'Forced' => $bump);
 
 $sector =& $player->getSector();
-$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
+if ($bump) {
+	//When hitting mines by bumping only the current player attacks/gets hit.
+	$attackers = array(&$player);
+} else {
+	$attackers =& $sector->getFightingTradersAgainstForces($player, $forces);
+}
 
 //decloak all attackers
 foreach($attackers as &$attacker) {
 	$attacker->getShip()->decloak();
-	$attacker->setLastSectorID(0);
+	if (!$bump) {
+		$attacker->setLastSectorID(0);
+	}
 } unset($attacker);
 
+// If mines are bumped, the forces shoot first. Otherwise player shoots first.
+if ($bump) {
+	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
+}
+
+$results['Attackers'] = array('TotalDamage' => 0);
 foreach($attackers as &$attacker) {
 	$playerResults =& $attacker->shootForces($forces);
 	$results['Attackers']['Traders'][$attacker->getAccountID()]  =& $playerResults;
 	$results['Attackers']['TotalDamage'] += $playerResults['TotalDamage'];
 } unset($attacker);
 
-$results['Forces'] =& $forces->shootPlayers($attackers,false);
+if (!$bump) {
+	$results['Forces'] =& $forces->shootPlayers($attackers, $bump);
+	$forces->updateExpire();
+}
 
 $ship->removeUnderAttack(); //Don't show attacker the under attack message.
-$forces->updateExpire();
 
+// Add this log to the `combat_logs` database table
 $serializedResults = serialize($results);
 $db->query('INSERT INTO combat_logs VALUES(\'\',' . $db->escapeNumber($player->getGameID()) . ',\'FORCE\',' . $db->escapeNumber($forces->getSectorID()) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($player->getAllianceID()) . ',' . $db->escapeNumber($forceOwner->getAccountID()) . ',' . $db->escapeNumber($forceOwner->getAllianceID()) . ',' . $db->escapeBinary(gzcompress($serializedResults)) . ')');
 unserialize($serializedResults); //because of references we have to undo this.
+$logId = $db->getInsertID();
 
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'forces_attack.php';
+if ($sendMessage) {
+	$message = 'Your forces in sector '.Globals::getSectorBBLink($forces->getSectorID()).' are under <span class="red">attack</span> by '.$player->getBBLink().'! [combatlog='.$logId.']';
+	$forces->ping($message, $player, true);
+}
+
+$container = create_container('skeleton.php', 'forces_attack.php');
 
 // If their target is dead there is no continue attack button
 if($forces->exists())
@@ -85,5 +122,4 @@ if($player->isDead()) {
 
 $container['results'] = $serializedResults;
 forward($container);
-
 ?>

@@ -339,8 +339,8 @@ class SmrForce {
 		return $this->sectorID;
 	}
 
-	public function ping($pingMessage, AbstractSmrPlayer &$playerPinging) {
-		if(!$this->hasSDs()) {
+	public function ping($pingMessage, AbstractSmrPlayer &$playerPinging, $skipCheck=false) {
+		if(!$this->hasSDs() && !$skipCheck) {
 			return;
 		}
 		$owner =& $this->getOwner();
@@ -392,6 +392,7 @@ class SmrForce {
 
 	public function getAttackForcesHREF() {
 		$container = create_container('forces_attack_processing.php');
+		$container['action'] = 'attack';
 		$container['owner_id']	= $this->getOwnerID();
 		return SmrSession::getNewHREF($container);
 	}
