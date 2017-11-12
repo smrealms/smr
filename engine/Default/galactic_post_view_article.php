@@ -58,9 +58,9 @@ if (isset($var['id'])) {
 	$container['url'] = 'galactic_post_add_article_to_paper.php';
 	transfer('id');
 	if (!$db->getNumRows()) {
-		$PHP_OUTPUT.=('You have no papers made that you can add an article to.');
+		$PHP_OUTPUT.=('You have no papers made that you can add an article to. ');
 		$PHP_OUTPUT.=create_link(create_container('skeleton.php', 'galactic_post_make_paper.php'), '<b>Click Here</b>');
-		$PHP_OUTPUT.=('To make a new one.');
+		$PHP_OUTPUT.=(' to make a new one.<br />');
 	}
 	while ($db->nextRecord()) {
 		$paper_title = $db->getField('title');
