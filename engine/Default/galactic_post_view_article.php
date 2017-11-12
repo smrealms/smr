@@ -8,6 +8,7 @@ if (isset($var['news'])) {
 		'VALUES(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escape_string($var['news'], false) . ', \'BREAKING\')');
 	// avoid multiple insertion on ajax updates
 	SmrSession::updateVar('news', null);
+	SmrSession::updateVar('added_to_breaking_news', true);
 }
 $db->query('SELECT * FROM galactic_post_article WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
 if ($db->getNumRows()) {
@@ -68,13 +69,18 @@ if (isset($var['id'])) {
 		$PHP_OUTPUT.=create_link($container, '<b>Add this article to '.$paper_title.'!</b>');
 		$PHP_OUTPUT.=('<br />');
 	}
-	$container = array();
-	$container['url'] = 'skeleton.php';
-	$container['body'] = 'galactic_post_view_article.php';
-	$container['news'] = $message;
-	transfer('id');
-	$PHP_OUTPUT.=('<small><br />note: breaking news is in the news section.<br /></small>');
-	$PHP_OUTPUT.=create_link($container, 'Add to Breaking News');
+
+	// breaking news options
+	$PHP_OUTPUT.=('<br />');
+	if (isset($var['added_to_breaking_news'])) {
+		$PHP_OUTPUT.='<span class="green">SUCCESS</span>: added article to Breaking News';
+	} else {
+		$container = create_container('skeleton.php', 'galactic_post_view_article.php');
+		$container['news'] = $message;
+		transfer('id');
+		$PHP_OUTPUT.=create_link($container, '<b>Add this article to Breaking News</b>');
+		$PHP_OUTPUT.=('<small><br />note: breaking news is in the news section.</small>');
+	}
 }
 
 ?>
