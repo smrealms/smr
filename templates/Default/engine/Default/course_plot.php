@@ -1,4 +1,4 @@
-<a href="<?php echo WIKI_URL; ?>/index.php?title=Game_Guide:_How_your_ship_works" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: How Your Ship Works"/></a>
+<a href="<?php echo WIKI_URL; ?>/game-guide/how-your-ship-works" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: How Your Ship Works"/></a>
 <form class="standard" id="PlotCourseForm" method="POST" action="<?php echo $PlotCourseFormLink; ?>">
 	<h2>Conventional</h2>
 	<div class="standard">Enter a destination sector.</div>

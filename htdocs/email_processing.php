@@ -59,7 +59,7 @@ try {
 		'You changed your email address registered within SMR and need to revalidate now!'.EOL.EOL.
 		'   Your new validation code is: '.$account->getValidationCode().EOL.EOL.
 		'The Space Merchant Realms server is on the web at '.URL.'/.'.EOL.
-		'You\'ll find a quick how-to-play here <a href="' . WIKI_URL . '/index.php?title=Video_Tutorials#A_Look_At_The_Game">SMR Wiki: A look at the game</a>'.EOL.
+		'You\'ll find a quick how-to-play here <a href="' . WIKI_URL . '/game-guide">SMR Wiki: A look at the game</a>'.EOL.
 		'Please verify within the next 7 days or your account will be automatically deleted.',
 		'From: support@smrealms.de');
 

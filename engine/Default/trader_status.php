@@ -9,7 +9,7 @@ $container['url'] = 'skeleton.php';
 
 $PHP_OUTPUT.= '<table class="standard fullwidth"><tr><td style="width:50%" class="top">';
 
-$PHP_OUTPUT.= '<span class="yellow bold">Protection</span><a href="' . WIKI_URL . '/index.php?title=Game_Guide:_Federal_Protection" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Protection"/></a><br />';
+$PHP_OUTPUT.= '<span class="yellow bold">Protection</span><a href="' . WIKI_URL . '/game-guide/protection" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Protection"/></a><br />';
 if($player->getNewbieTurns()) {
 	$PHP_OUTPUT.= 'You are under <span class="green">NEWBIE</span> protection.<br /><br />';
 
@@ -38,7 +38,7 @@ foreach($RACES as $raceID => $raceInfo) {
 $PHP_OUTPUT.= '<br />';
 
 $container['body'] = 'council_list.php';
-$PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Politics</span><a href="' . WIKI_URL . '/index.php?title=Game_Guide:_Politics_and_the_Ruling_Council" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>');
+$PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Politics</span><a href="' . WIKI_URL . '/game-guide/politics" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>');
 $PHP_OUTPUT.= '<br />';
 
 require_once(get_file_loc('council.inc'));
@@ -58,7 +58,7 @@ else {
 $PHP_OUTPUT.= '<br /><br />';
 
 $container['body'] = 'trader_savings.php';
-$PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Savings</span><a href="' . WIKI_URL . '/index.php?title=Banks" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Banks"/></a>');
+$PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Savings</span><a href="' . WIKI_URL . '/game-guide/locations#banks" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Banks"/></a>');
 $PHP_OUTPUT.= '<br />You have <span class="yellow">';
 
 $PHP_OUTPUT.= number_format($player->getBank());
@@ -67,7 +67,7 @@ $PHP_OUTPUT.= '</span> credits in your personal account.';
 $PHP_OUTPUT.= '</td><td class="top" style="width:50%">';
 
 $container['body'] = 'trader_bounties.php';
-$PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Bounties</span><a href="' . WIKI_URL . '/index.php?title=Headquarters" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Bounties"/></a>');
+$PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Bounties</span><a href="' . WIKI_URL . '/game-guide/locations#headquarters" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Bounties"/></a>');
 
 $PHP_OUTPUT.= '<br /><span class="green">Federal: </span>';
 $bounty = $player->getCurrentBounty('HQ');
@@ -89,7 +89,7 @@ $PHP_OUTPUT.= '<br />Speed: ';
 $PHP_OUTPUT.= $ship->getRealSpeed();
 $PHP_OUTPUT.= ' turns/hour<br />Max: ';
 $PHP_OUTPUT.= $player->getMaxTurns();
-$PHP_OUTPUT.= ' turns<br /><br /><span class="yellow bold">Supported Hardware</span><a href="' . WIKI_URL . '/index.php?title=Game_Guide:_Technologies" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Technologies"/></a><br />';
+$PHP_OUTPUT.= ' turns<br /><br /><span class="yellow bold">Supported Hardware</span><a href="' . WIKI_URL . '/game-guide/technologies" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Technologies"/></a><br />';
 
 if (!$ship->canHaveScanner() &&
 	!$ship->canHaveIllusion() &&
@@ -104,7 +104,7 @@ else {
 	if ($ship->canHaveDCS()) $PHP_OUTPUT.= 'Drone Scrambler<br />';
 }
 
-$PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="levelRequirements"><span class="yellow bold">Next Level</span></a><a href="' . WIKI_URL . '/index.php?title=Game_Guide:_Experience_Levels" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/></a><br />';
+$PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="levelRequirements"><span class="yellow bold">Next Level</span></a><a href="' . WIKI_URL . '/game-guide/experience-levels" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $db->escapeNumber($player->getExperience()) . ' ORDER BY requirement ASC LIMIT 1');
 if(!$db->nextRecord()) {
 	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');

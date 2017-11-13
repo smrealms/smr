@@ -5,7 +5,7 @@ if (count($Planets) > 0) { ?>
 		<thead>
 			<tr>
 				<th class="sort shrink" data-sort="image">
-					<a href="<?php echo WIKI_URL; ?>/index.php?title=Planets" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a></th>
+					<a href="<?php echo WIKI_URL; ?>/game-guide/locations#planets" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Planets"/></a></th>
 				<th class="sort shrink" data-sort="name">Name</th>
 				<th class="sort shrink" data-sort="lvl">Level</th>
 				<th class="sort shrink" data-sort="owner">Owner</th>

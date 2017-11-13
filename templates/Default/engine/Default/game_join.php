@@ -62,7 +62,7 @@ if($Game['GameDescription']) { ?>
 						<li>Names that violate these rules will be changed by the admins and require you to change your name, in extreme cases, abuse of the naming process will result in your account being banned.</li>
 					</ul>
 					If you disregard these rules, your player will be deleted, so choose your name wisely.<br /><br />
-					All Space Merchant Realms Rules can be viewed on the Space Merchant Realms Wiki under <a href="<?php echo WIKI_URL; ?>/index.php?title=Space_Merchant_Realms_v1.6_Rules" target="_blank">Rules<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Rules"/></a>
+					All Space Merchant Realms Rules can be viewed on the Space Merchant Realms Wiki under <a href="<?php echo WIKI_URL; ?>/rules" target="_blank">Rules<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Rules"/></a>
 					<br />
 				</p>	
 				<h2>Choosing Your Race</h2>
@@ -78,7 +78,7 @@ if($Game['GameDescription']) { ?>
 					<br />
 					Each race has unique characteristics that cannot be represented by the graphs to be shown here. Races that appear strongest may have certain disadvantages while races that appear weakest have special benefits. Listed below are some of the basic characteristics of each race.<br />
 					<br />
-					A full description including benefits and disadvantages as well as ship lists of each race can be seen by accessing SMR Wiki <a href="<?php echo WIKI_URL; ?>/index.php?title=Game_Guide:_Races" target="_blank">Races<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Races"/></a> page.<br /><br />
+					A full description including benefits and disadvantages as well as ship lists of each race can be seen by accessing SMR Wiki <a href="<?php echo WIKI_URL; ?>/game-guide/races" target="_blank">Races<img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Races"/></a> page.<br /><br />
 				<ul>
 					<li>Alskant - Large variety of hardware but no dedicated warship. Trade bonus with Neutral ports.</li>
 					<li>Creonti - Cute and cuddly with lots of firepower. Ships' defences consist predominantly of armour.</li>

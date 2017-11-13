@@ -1,4 +1,4 @@
-<a href="<?php echo WIKI_URL; ?>/index.php?title=Game_Guide:_Politics_and_the_Ruling_Council" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
+<a href="<?php echo WIKI_URL; ?>/game-guide/politics" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Politics"/></a>
 <div class="center bold">Diplomatic Treaties</div><br />
 <div class="center standard">
 	Welcome President <?php echo $ThisPlayer->getDisplayName(); ?>,<br /><br />
