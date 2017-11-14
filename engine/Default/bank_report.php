@@ -16,23 +16,15 @@ $db->query('SELECT * FROM alliance_bank_transactions WHERE alliance_id = ' . $db
 if (!$db->getNumRows()) {
 	create_error('Your alliance has no recorded transactions.');
 }
+$trans = array();
 while ($db->nextRecord()) {
-	if ($db->getField('transaction') == 'Payment') {
-		if (!$db->getField('exempt')) {
-			$trans[$db->getInt('payee_id')][WITHDRAW] += $db->getInt('amount');
-		}
-		else {
-			$trans[0][WITHDRAW] += $db->getField('amount');
-		}
+	$transType = ($db->getField('transaction') == 'Payment') ? WITHDRAW : DEPOSIT;
+	$payeeId = ($db->getField('exempt')) ? 0 : $db->getInt('payee_id');
+	// initialize payee if necessary
+	if (!isset($trans[$payeeId])) {
+		$trans[$payeeId] = array(WITHDRAW => 0, DEPOSIT => 0);
 	}
-	else {
-		if (!$db->getField('exempt')) {
-			$trans[$db->getInt('payee_id')][DEPOSIT] += $db->getInt('amount');
-		}
-		else {
-			$trans[0][DEPOSIT] += $db->getInt('amount');
-		}
-	}
+	$trans[$payeeId][$transType] += $db->getInt('amount');
 }
 
 //ordering
