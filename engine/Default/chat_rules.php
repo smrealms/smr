@@ -1,6 +1,6 @@
 <?php
 
-$template->assign('PageTopic','Space Merchant Realms Chat Room Rules');
+$template->assign('PageTopic','Space Merchant Realms Chat');
 
 $autoChannels = urlencode('#SMR');
 if($player->hasAlliance()) {
