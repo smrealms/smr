@@ -97,6 +97,7 @@ else {
 	?>Your alliance account is still unused.<br /><?php
 } ?>
 
+<br />
 <h2>Make transaction</h2><br />
 <form class="standard" method="POST" action="<?php echo $BankTransactionFormHREF; ?>">
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">
