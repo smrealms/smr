@@ -23,7 +23,24 @@ if(isset($Comments)) { ?>
 			</tr><?php
 		} unset($Comment); ?>
 	</table><?php
+}
+
+if ($FeatureModerator) { ?>
+	<form name="FeatureRequestStatusForm" method="POST" action="<?php echo $FeatureRequestStatusFormHREF; ?>">
+		<div align="right">&nbsp;
+			<select name="status">
+				<option disabled selected value style="display:none"> -- Select Status -- </option>
+				<option value="Implemented">Implemented</option>
+				<option value="Rejected">Rejected</option>
+				<option value="Opened">Open</option>
+				<option value="Deleted">Delete</option>
+			</select>&nbsp;
+			<input type="hidden" name="set_status_ids[]" value="<?php echo $FeatureRequestId; ?>" />
+			<input type="submit" name="action" value="Set Status" />
+		</div><br />
+	</form><?php
 } ?>
+
 <p>
 	<form name="FeatureRequestCommentForm" method="POST" action="<?php echo $FeatureRequestCommentFormHREF; ?>">
 		<table>

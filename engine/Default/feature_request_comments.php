@@ -17,6 +17,12 @@ if ($db->getNumRows() > 0) {
 	$featureModerator = $account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST);
 	$template->assign('FeatureModerator',$featureModerator);
 
+	// variables needed to set the status for this feature request
+	if ($featureModerator) {
+		$template->assign('FeatureRequestId', $var['RequestID']);
+		$template->assign('FeatureRequestStatusFormHREF', SmrSession::getNewHREF(create_container('feature_request_vote_processing.php')));
+	}
+
 	$featureRequestComments = array();
 	while ($db->nextRecord()) {
 		$commentID = $db->getField('comment_id');
