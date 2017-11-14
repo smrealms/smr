@@ -55,8 +55,14 @@ if(isset($FeatureRequests)) { ?>
 			} unset($FeatureRequest); ?>
 		</table>
 		<div align="right"><?php
-			if($FeatureModerator) {
-				?>&nbsp;<select name="status"><option value="Implemented">Implemented</option><option value="Rejected">Rejected</option><option value="Opened">Open</option><option value="Deleted">Delete</option></select>&nbsp;<input type="submit" name="action" value="Set Status"><?php
+			if($FeatureModerator) { ?>&nbsp;
+				<select name="status">
+					<option disabled selected value style="display:none"> -- Select Status -- </option>
+					<option value="Implemented">Implemented</option>
+					<option value="Rejected">Rejected</option>
+					<option value="Opened">Open</option>
+					<option value="Deleted">Delete</option>
+				</select>&nbsp;<input type="submit" name="action" value="Set Status"><?php
 			}
 			if($Status == 'Opened') { ?>
 				<input type="submit" name="action" value="Vote"><?php
