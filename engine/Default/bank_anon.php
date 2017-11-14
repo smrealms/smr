@@ -182,7 +182,6 @@ if (isset($account_num)) {
 	}
 
 	$balance = $db->getInt('amount');
-	$password= $db->getField('password');
 
 	$PHP_OUTPUT.= 'Hello ' . $player->getPlayerName();
 	$PHP_OUTPUT.= '<br />';
@@ -292,7 +291,6 @@ if (isset($account_num)) {
 	$PHP_OUTPUT.= '<br />';
 	$PHP_OUTPUT.= '<h2>Make transaction</h2><br />';
 	$container=create_container('bank_anon_processing.php');
-	$container['Password'] = $password;
 	$container['AccountNumber'] = $account_num;
 	$actions = array(
 		array('Deposit','Deposit'),
