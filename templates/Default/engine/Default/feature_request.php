@@ -49,7 +49,7 @@ if(isset($FeatureRequests)) { ?>
 						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if($FeatureRequest['VotedFor'] == 'NO') { ?> checked="checked"<?php } ?>></td><?php
 					}
 					if($FeatureModerator) {
-						?><td valign="middle" align="center"><input type="checkbox" name="delete[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
+						?><td valign="middle" align="center"><input type="checkbox" name="set_status_ids[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
 					} ?>
 				</tr><?php
 			} unset($FeatureRequest); ?>

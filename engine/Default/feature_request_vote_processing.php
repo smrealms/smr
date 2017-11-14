@@ -18,7 +18,7 @@ else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' 
 		create_error('You have to select a status to set');
 	}
 	$status = $_REQUEST['status'];
-	if(empty($_REQUEST['delete']))
+	if(empty($_REQUEST['set_status_ids']))
 		create_error('You have to select a feature');
 	if(!$account->hasPermission(PERMISSION_MODERATE_FEATURE_REQUEST))
 		create_error('You do not have permission to do that');
@@ -42,8 +42,8 @@ else if($_REQUEST['action']=='Set Status' || $_REQUEST['status']=='Implemented' 
 				WHERE feature_request_id=fr.feature_request_id
 					AND vote_type=' . $db->escapeString('NO') . '
 			)
-			WHERE feature_request_id IN (' . $db->escapeArray($_REQUEST['delete']) . ')');
-	foreach($_REQUEST['delete'] as $featureID) {
+			WHERE feature_request_id IN (' . $db->escapeArray($_REQUEST['set_status_ids']) . ')');
+	foreach($_REQUEST['set_status_ids'] as $featureID) {
 		$db->query('INSERT INTO feature_request_comments (feature_request_id, poster_id, posting_time, anonymous, text)
 					VALUES(' . $db->escapeNumber($featureID) . ', ' . $db->escapeNumber(SmrSession::$account_id) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(false) . ',' . $db->escapeString($status) . ')');
 	}
