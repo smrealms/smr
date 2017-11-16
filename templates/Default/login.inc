@@ -102,19 +102,20 @@
 				<img src="images/login/smr_banner_16.png" width="769" height="132" alt=""><br />
 				<img src="images/login/bottom_left.gif" width="7" height="11" alt="">
 
-                <!-- small header menu -->
-                <a href="<?php echo URL ?>"><img src="images/login/home.png" width="55" height="11" alt="Home"></a>
-                <img src="images/login/site_map.png" width="87" height="11" alt="Site Map">
-                <img src="images/login/contact.png" width="80" height="11" alt="Contact">
+				<!-- small header menu -->
+				<a href="<?php echo URL ?>"><img src="images/login/home.png" width="55" height="11" alt="Home"></a>
+				<img src="images/login/site_map.png" width="87" height="11" alt="Site Map">
+				<a href="mailto:support@smrealms.de" target="_blank"><img src="images/login/contact.png" width="80" height="11" alt="Contact"></a>
 
-                <img src="images/login/bottom_right.png" width="540" height="11" alt=""><br />
+				<img src="images/login/bottom_right.png" width="540" height="11" alt=""><br />
 
-                <!-- header menu -->
-                <a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" width="166" height="29" alt="Video Tutorials"></a>
-                <a href="<?php echo WIKI_URL; ?>" target="ml"><img src="images/login/sml.png" width="166" height="29" alt="Merchant Library"></a>
-                <a href="<?php echo WIKI_URL; ?>" target="manu"><img src="images/login/manual2.png" width="129" height="29" alt="Wiki"></a>
-                <a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" width="128" height="29" alt="Web Board"></a>
-                <a href="<?php echo URL; ?>/cgi-bin/awstats.pl" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a><br />
+				<!-- header menu -->
+				<a href="<?php echo WIKI_URL; ?>/tutorials#video-tutorials" target="vid"><img src="images/login/video.png" width="166" height="29" alt="Video Tutorials"></a>
+				<a href="<?php echo WIKI_URL; ?>" target="ml"><img src="images/login/sml.png" width="166" height="29" alt="Merchant Library"></a>
+				<a href="<?php echo WIKI_URL; ?>" target="manu"><img src="images/login/manual2.png" width="129" height="29" alt="Wiki"></a>
+				<a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" width="128" height="29" alt="Web Board"></a>
+				<a href="<?php echo URL; ?>/cgi-bin/awstats.pl" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a>
+				<br />
 			</p>
 			<?php
 
