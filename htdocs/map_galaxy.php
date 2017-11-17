@@ -113,8 +113,8 @@ try {
 	if($account->getCssLink()!=null)
 		$template->assign('ExtraCSSLink',$account->getCssLink());
 	$template->assign('Title', 'Galaxy Map');
-	$template->assign('CSSLink',URL.'/css/'.$account->getTemplate().'.css');
-	$template->assign('CSSColourLink',URL.'/css/'.$account->getTemplate().'/'.$account->getColourScheme().'.css');
+	$template->assign('CSSLink', $account->getCssUrl());
+	$template->assign('CSSColourLink', $account->getCssColourUrl());
 	$template->assignByRef('ThisGalaxy',$galaxy);
 	$template->assignByRef('ThisAccount',$account);
 	$template->assignByRef('GameGalaxies',SmrGalaxy::getGameGalaxies($player->getGameID()));
