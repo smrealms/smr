@@ -213,46 +213,13 @@ function channel_msg_money($fp, $rdata, $account, $player)
 
 		echo_r('[MONEY] by ' . $nick . ' in ' . $channel);
 
-		// get money from AA
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT alliance_account
-					FROM alliance
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
+		$result = shared_channel_msg_money($player);
 
-		if ($db->nextRecord())
-			fputs($fp, 'PRIVMSG ' . $channel . ' :The alliance has ' . number_format($db->getField('alliance_account')) . ' credits in the bank account.' . EOL);
-
-		$db->query('SELECT sum(credits) as total_onship, sum(bank) as total_onbank
-					FROM player
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-
-		if ($db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :Alliance members carry a total of ' . number_format($db->getField('total_onship')) . ' credits with them' . EOL);
-			fputs($fp, 'PRIVMSG ' . $channel . ' :and keep a total of ' . number_format($db->getField('total_onbank')) . ' credits in their personal bank accounts.' . EOL);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
-		$db->query('SELECT SUM(credits) AS total_credits, SUM(bonds) AS total_bonds
-					FROM planet
-					WHERE game_id = ' . $player->getGameID() . '
-						AND owner_id IN (
-							SELECT account_id
-							FROM player
-							WHERE alliance_id = ' . $player->getAllianceID() . '
-								AND game_id = ' . $player->getGameID() . '
-						)');
-		if ($db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :There is a total of ' . number_format($db->getField('total_credits')) . ' credits on the planets' . EOL);
-			fputs($fp, 'PRIVMSG ' . $channel . ' :and ' . number_format($db->getField('total_bonds')) . ' credits in bonds.' . EOL);
-		}
-
-		return true;
-
-	}
-
-	return false;
-
+		return !empty($result);
 }
 
 function channel_msg_timer($fp, $rdata)
