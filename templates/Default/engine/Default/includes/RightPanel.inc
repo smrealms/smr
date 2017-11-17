@@ -35,7 +35,7 @@ if(isset($GameID)) { ?>
 	Credits : <span id="creds"><?php echo number_format($ThisPlayer->getCredits()); ?></span><br />
 	Experience : <span id="exp"><?php echo number_format($ThisPlayer->getExperience()); ?></span><br />
 	<a href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements">Level : <span id="lvl"><?php echo $ThisPlayer->getLevelID(); ?></span></a><br />
-	<a href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements">Next Level: </a><a href="<?php echo WIKI_URL; ?>/index.php?title=Game_Guide:_Experience_Levels" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/></a><br /><?php
+	<a href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements">Next Level: </a><a href="<?php echo WIKI_URL; ?>/game-guide/experience-levels" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/></a><br /><?php
 	$NextLevelExperience = number_format($ThisPlayer->getNextLevelExperience());
 	$Experience = number_format($ThisPlayer->getExperience()); ?>
 	<a href="<?php echo URL; ?>/level_requirements.php" target="levelRequirements">

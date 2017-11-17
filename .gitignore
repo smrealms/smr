@@ -4,6 +4,7 @@
 /.project
 /.idea
 /nbproject
+/composer.lock
 
 # /.settings/
 /.settings/

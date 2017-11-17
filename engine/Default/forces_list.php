@@ -37,7 +37,7 @@ if ($db->getNumRows() > 0) {
 	$container['subcategory'] = $category;
 
 	$PHP_OUTPUT.=create_table();
-	$PHP_OUTPUT.=('<a href="' . WIKI_URL . '/index.php?title=Game_Guide:_Forces" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/></a><br />');
+	$PHP_OUTPUT.=('<a href="' . WIKI_URL . '/game-guide/forces" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/></a><br />');
 	$PHP_OUTPUT.=('<tr>');
 	setCategories($container,'sector_id',$category,$categorySQL,$subcategory);
 	$PHP_OUTPUT.=('<th align="center">');
@@ -77,7 +77,7 @@ if ($db->getNumRows() > 0) {
 }
 
 else
-	$PHP_OUTPUT.=('You have no deployed forces <a href="' . WIKI_URL . '/index.php?title=Game_Guide:_Forces" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/></a>');
+	$PHP_OUTPUT.=('You have no deployed forces <a href="' . WIKI_URL . '/game-guide/forces" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/></a>');
 
 
 function setCategories(&$container,$newCategory,$oldCategory,$oldCategorySQL,$subcategory) {

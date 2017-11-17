@@ -52,7 +52,7 @@ AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
 AND expire_time >= ' . $db->escapeNumber(TIME) . '
 ORDER BY ' . $categorySQL . ', ' . $subcategory);
 
-$PHP_OUTPUT.= '<div align="center"><a href="' . WIKI_URL . '/index.php?title=Game_Guide:_Forces" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/></a>';
+$PHP_OUTPUT.= '<div align="center"><a href="' . WIKI_URL . '/game-guide/forces" target="_blank"><img align="right" src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Forces"/></a>';
 
 if ($db->getNumRows() > 0) {
 	$PHP_OUTPUT.= 'Your alliance currently has ';
