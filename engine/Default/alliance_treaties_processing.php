@@ -122,7 +122,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$leader_2 = $db->getField('leader_id');
 	$message = 'An ambassador from <span class="yellow">' . $alliance1->getAllianceName() . '</span> has arrived.';
 
-	SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader_2, $message, MESSAGE_EXPIRES);
+	SmrPlayer::sendMessageFromAllianceAmbassador($player->getGameID(), $leader_2, $message);
 	$container=create_container('skeleton.php', 'alliance_treaties.php');
 	$container['alliance_id'] = $alliance_id_1;
 	$container['message'] = 'The treaty offer has been sent.';
