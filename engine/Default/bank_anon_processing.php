@@ -77,9 +77,8 @@ else {
 }
 
 $container = create_container('skeleton.php', 'bank_anon.php');
-$container['account_num'] = $account_num;
+$container['AccountNumber'] = $account_num;
 $container['allowed'] = 'yes';
-transfer($password);
 forward($container);
 
 ?>

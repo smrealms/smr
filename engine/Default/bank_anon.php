@@ -15,7 +15,9 @@ if (!$account->isValidated()) {
 if(isset($_REQUEST['account_num'])) {
 	SmrSession::updateVar('AccountNumber',$_REQUEST['account_num']);
 }
-$account_num = $var['AccountNumber'];
+if(isset($var['AccountNumber'])) {
+	$account_num = $var['AccountNumber'];
+}
 if(isset($account_num) && !is_numeric($account_num)) {
 	create_error('Account number must be a number!');
 }
@@ -29,15 +31,6 @@ if(isset($_REQUEST['minValue'])) {
 	SmrSession::updateVar('MinValue',$_REQUEST['minValue']);
 }
 
-$make = $var['make'];
-if (isset($var['made'])) {
-	$made = $var['made'];
-}
-
-if (isset($var['amount'])) {
-	$amount = $var['amount'];
-}
-
 if (!isset($account_num)) {
 	$topic = 'Anonymous Account';
 }
@@ -49,7 +42,7 @@ $template->assign('PageTopic',$topic);
 require_once(get_file_loc('menu.inc'));
 create_bank_menu();
 
-if (isset($make)) {
+if (isset($var['make'])) {
 	$PHP_OUTPUT.= 'Hello ' . $player->getPlayerName();
 	$PHP_OUTPUT.= '<br /><br />';
 
@@ -78,7 +71,7 @@ if (isset($make)) {
 	$PHP_OUTPUT.= '</form>';
 }
 
-if (isset($made) && !USING_AJAX) {
+if (isset($var['made']) && !USING_AJAX) {
 	$PHP_OUTPUT.= 'Hello ' . $player->getPlayerName();
 	$PHP_OUTPUT.= '<br /><br />';
 
@@ -103,7 +96,7 @@ if (isset($made) && !USING_AJAX) {
 
 $container = create_container('skeleton.php');
 
-if (!isset($account_num) && !isset($make)) {
+if (!isset($account_num) && !isset($var['make'])) {
 	$PHP_OUTPUT.= 'Hello ' . $player->getPlayerName();
 	$PHP_OUTPUT.= '<br /><br />';
 
@@ -178,7 +171,7 @@ if (isset($account_num)) {
 				AND game_id=' . $db->escapeNumber($player->getGameID()) . ' LIMIT 1');
 
 	if($db->nextRecord()) {
-		if ($var['allowed'] != 'yes') {
+		if (!isset($var['allowed']) || $var['allowed'] != 'yes') {
 			if ($db->getField('password') != $var['Password']) {
 				create_error('Invalid password!');
 			}
@@ -189,7 +182,6 @@ if (isset($account_num)) {
 	}
 
 	$balance = $db->getInt('amount');
-	$password= $db->getField('password');
 
 	$PHP_OUTPUT.= 'Hello ' . $player->getPlayerName();
 	$PHP_OUTPUT.= '<br />';
@@ -299,7 +291,6 @@ if (isset($account_num)) {
 	$PHP_OUTPUT.= '<br />';
 	$PHP_OUTPUT.= '<h2>Make transaction</h2><br />';
 	$container=create_container('bank_anon_processing.php');
-	$container['Password'] = $password;
 	$container['AccountNumber'] = $account_num;
 	$actions = array(
 		array('Deposit','Deposit'),
