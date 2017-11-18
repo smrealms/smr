@@ -19,6 +19,7 @@ $new_password = $_REQUEST['new_password'];
 $old_password = $_REQUEST['old_password'];
 $retype_password = $_REQUEST['retype_password'];
 $HoF_name = trim($_REQUEST['HoF_name']);
+$discordId = trim($_REQUEST['discord_id']);
 $ircNick = trim($_REQUEST['irc_nick']);
 $cellPhone = trim($_REQUEST['cell_phone']);
 $friendlyColour = $_REQUEST['friendly_color'];
@@ -119,7 +120,23 @@ elseif ($action == 'Change Name') {
 	$account->setHofName($HoF_name);
 	$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your hall of fame name.';
 }
-elseif ($action == 'Change Nick') {
+
+elseif ($action == 'Change Discord ID') {
+	if (empty($discordId)) {
+		$account->setDiscordId(null);
+		$container['msg'] = '<span class="green">SUCCESS: </span>You have deleted your Discord User ID.';
+
+	} else {
+		// no duplicates
+		$db->query('SELECT * FROM account WHERE discord_id =' . $db->escapeString($discordId) . ' AND account_id != '.$db->escapeNumber($account->getAccountID()).' LIMIT 1');
+		if ($db->nextRecord()) create_error('Someone is already using that Discord User ID!');
+
+		$account->setDiscordId($discordId);
+		$container['msg'] = '<span class="green">SUCCESS: </span>You have changed your Discord User ID.';
+	}
+}
+
+elseif ($action == 'Change IRC Nick') {
 	for ($i = 0; $i < strlen($ircNick); $i++) {
 		// disallow certain ascii chars (and whitespace!)
 		if (ord($ircNick[$i]) < 33 || ord($ircNick[$i]) > 127)
