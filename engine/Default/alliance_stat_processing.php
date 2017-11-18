@@ -10,6 +10,9 @@ if (isset($_REQUEST['password'])) {
 if (isset($_REQUEST['description'])) {
 	$description = trim($_REQUEST['description']);
 }
+if (isset($_REQUEST['discord'])) {
+	$discordChannel = trim($_REQUEST['discord']);
+}
 if (isset($_REQUEST['irc'])) {
 	$irc = trim($_REQUEST['irc']);
 }
@@ -38,6 +41,17 @@ if (isset($password)) {
 }
 if (isset($description)) {
 	$alliance->setAllianceDescription($description);
+}
+if (isset($discordChannel)) {
+	if (empty($discordChannel)) {
+		$alliance->setDiscordChannel(null);
+	} else {
+		// no duplicates in a given game
+		$db->query('SELECT * FROM alliance WHERE discord_channel =' .$db->escapeString($discordChannel) .' AND game_id = '.$db->escapeNumber($alliance->getGameID()).' AND alliance_id != '.$db->escapeNumber($alliance->getAllianceID()).' LIMIT 1');
+		if ($db->nextRecord()) create_error('Another alliance is already using that Discord Channel ID!');
+
+		$alliance->setDiscordChannel($discordChannel);
+	}
 }
 if (isset($irc)) {
 	$alliance->setIrcChannel($irc);

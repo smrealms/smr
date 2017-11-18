@@ -16,6 +16,10 @@ if ($CanChangeDescription) { ?>
 
 if ($CanChangeChatChannel) { ?>
 	<tr>
+		<td class="top">Discord Channel ID:&nbsp;</td>
+		<td><input type="text" name="discord" size="30" value="<?php echo htmlspecialchars($Alliance->getDiscordChannel()); ?>" /></td>
+	</tr>
+	<tr>
 		<td class="top">IRC Channel:&nbsp;</td>
 		<td><input type="text" name="irc" size="30" value="<?php echo htmlspecialchars($Alliance->getIrcChannel()); ?>">(For Caretaker and autojoining via chat link - works best if you join the channel using the chat link and type "/autoconnect on" as an op)</td>
 	</tr><?php
