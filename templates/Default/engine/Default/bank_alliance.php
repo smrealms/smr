@@ -23,7 +23,7 @@ else { ?>
 <br /><br /><?php
 
 // only if we have at least one result
-if (count($BankTransactions) > 0) { ?>
+if (!empty($BankTransactions)) { ?>
 	<div align="center">
 		<form class="standard" method="POST" action="<?php echo $FilterTransactionsFormHREF; ?>">
 			<table cellspacing="5" cellpadding="0" class="nobord">
@@ -97,6 +97,7 @@ else {
 	?>Your alliance account is still unused.<br /><?php
 } ?>
 
+<br />
 <h2>Make transaction</h2><br />
 <form class="standard" method="POST" action="<?php echo $BankTransactionFormHREF; ?>">
 	<table cellspacing="0" cellpadding="0" class="nobord nohpad">

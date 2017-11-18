@@ -104,7 +104,7 @@ forward($container);
 //		if ($db->nextRecord()) $reply_id = $db->getField('reply_id') + 1;
 //		else $reply_id = 1;
 //		$db->query('INSERT INTO alliance_thread (game_id, alliance_id, thread_id, reply_id, text, sender_id, time) VALUES ' .
-//				'(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', 0, ' . TIME . ')');
+//				'(' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAllianceID()) . ', '.$thread_id.', '.$reply_id.', '.$db->escapeString($text).', ACCOUNT_ID_PORT, ' . TIME . ')');
 //	}
 //}
 ?>

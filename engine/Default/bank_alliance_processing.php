@@ -115,7 +115,7 @@ if ($db->nextRecord()) {
 }
 
 // save log
-if ($_REQUEST['requestExempt']) {
+if (!empty($_REQUEST['requestExempt'])) {
 	$requestExempt = 1;
 }
 else {

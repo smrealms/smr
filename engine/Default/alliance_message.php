@@ -62,7 +62,16 @@ if ($db->getNumRows() > 0) {
 					AND time>' . $db2->escapeNumber($db->getInt('sendtime')) . ' LIMIT 1');
 		$threads[$i]['Unread'] = $db2->getNumRows() == 0;
 		
-		if ($db->getInt('sender_id') > 0) {
+		// Determine the thread author display name
+		$sender_id = $db->getInt('sender_id');
+		$playerName = 'Unknown'; // default
+		if ($sender_id == ACCOUNT_ID_PLANET) {
+			$playerName = 'Planet Reporter';
+		} elseif ($sender_id == ACCOUNT_ID_BANK_REPORTER) {
+			$playerName = 'Bank Reporter';
+		} elseif ($sender_id == ACCOUNT_ID_ADMIN) {
+			$playerName = 'Game Admins';
+		} else {
 			$db2->query('SELECT
 						player.player_name as player_name,
 						alliance_thread.sender_id as sender_id
@@ -78,16 +87,6 @@ if ($db->getNumRows() > 0) {
 				$author =& SmrPlayer::getPlayer($sender_id, $player->getGameID());
 				$playerName = $author->getLinkedDisplayName(false);
 			}
-			else {
-				$playerName = 'Unknown';
-			}
-		}
-		else {
-			$sender_id = $db->getInt('sender_id');
-			if ($sender_id == 0) $playerName = 'Planet Reporter';
-			if ($sender_id == -1) $playerName = 'Bank Reporter';
-			if ($sender_id == -2) $playerName = 'Forces Reporter';
-			if ($sender_id == -3) $playerName = 'Game Admins';
 		}
 		$threads[$i]['Sender'] = $playerName;
 
