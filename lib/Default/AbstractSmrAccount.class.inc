@@ -107,6 +107,16 @@ abstract class AbstractSmrAccount {
 		return $return;
 	}
 
+	public static function getAccountByDiscordId($id, $forceUpdate=false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT account_id FROM account where discord_id = '.$db->escapeString($id).' LIMIT 1');
+		if ($db->nextRecord()) {
+			return self::getAccount($db->getField('account_id'), $forceUpdate);
+		} else {
+			return null;
+		}
+	}
+
 	public static function &getAccountByIrcNick($nick, $forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT account_id FROM account WHERE irc_nick = '.$db->escapeString($nick).' LIMIT 1');
