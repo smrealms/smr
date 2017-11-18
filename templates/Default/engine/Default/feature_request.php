@@ -40,7 +40,7 @@ if(isset($FeatureRequests)) { ?>
 					if($FeatureModerator) {
 						?><td><?php echo $FeatureRequest['RequestAccount']->getLogin(); ?>&nbsp;(<?php echo $FeatureRequest['RequestAccount']->getAccountID(); ?>)</td><?php
 					} ?>
-					<td><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?> / <?php echo $FeatureRequest['Votes']['YES'] + $FeatureRequest['Votes']['FAVOURITE']; ?> / <?php echo $FeatureRequest['Votes']['NO']; ?></td>
+					<td><span class="bold green"><?php echo $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="green"><?php echo $FeatureRequest['Votes']['YES'] + $FeatureRequest['Votes']['FAVOURITE']; ?></span> / <span class="red"><?php echo $FeatureRequest['Votes']['NO']; ?></span></td>
 					<td class="left"><?php echo bbifyMessage($FeatureRequest['Message']); ?></td>
 					<td class="shrink noWrap top"><a href="<?php echo $FeatureRequest['CommentsHREF']; ?>">View (<?php echo $FeatureRequest['Comments']; ?>)</a></td><?php
 					if($Status == 'Opened') { ?>
@@ -49,14 +49,20 @@ if(isset($FeatureRequests)) { ?>
 						<td><input type="radio" name="vote[<?php echo $FeatureRequest['RequestID']; ?>]" value="NO"<?php if($FeatureRequest['VotedFor'] == 'NO') { ?> checked="checked"<?php } ?>></td><?php
 					}
 					if($FeatureModerator) {
-						?><td valign="middle" align="center"><input type="checkbox" name="delete[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
+						?><td valign="middle" align="center"><input type="checkbox" name="set_status_ids[]" value="<?php echo $FeatureRequest['RequestID']; ?>"></td><?php
 					} ?>
 				</tr><?php
 			} unset($FeatureRequest); ?>
 		</table>
 		<div align="right"><?php
-			if($FeatureModerator) {
-				?>&nbsp;<select name="status"><option value="Implemented">Implemented</option><option value="Rejected">Rejected</option><option value="Opened">Open</option><option value="Deleted">Delete</option></select>&nbsp;<input type="submit" name="action" value="Set Status"><?php
+			if($FeatureModerator) { ?>&nbsp;
+				<select name="status">
+					<option disabled selected value style="display:none"> -- Select Status -- </option>
+					<option value="Implemented">Implemented</option>
+					<option value="Rejected">Rejected</option>
+					<option value="Opened">Open</option>
+					<option value="Deleted">Delete</option>
+				</select>&nbsp;<input type="submit" name="action" value="Set Status"><?php
 			}
 			if($Status == 'Opened') { ?>
 				<input type="submit" name="action" value="Vote"><?php
