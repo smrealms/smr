@@ -1,0 +1,10 @@
+{
+    "name": "smr/discordbot",
+    "description": "SMR Autopilot",
+    "license": "AGPL-3.0",
+    "require": {
+        "ext-mysqli": "*",
+        "php": "^7.0.0"
+    }
+}
+
