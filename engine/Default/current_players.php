@@ -130,6 +130,8 @@ if ($count_last_active > 0) {
 	$PHP_OUTPUT.=('	</table>');
 }
 
+$PHP_OUTPUT.='<br /><div class="buttonA"><a class="buttonA" href="'.Globals::getSendGlobalMessageHREF().'">&nbsp;Send Global Message&nbsp;</a></div>';
+
 $PHP_OUTPUT.=('</div>');
 
 ?>
