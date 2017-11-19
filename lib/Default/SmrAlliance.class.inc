@@ -30,6 +30,16 @@ class SmrAlliance {
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
 	}
 
+	public static function getAllianceByDiscordChannel($channel, $forceUpdate=false) {
+		$db = new SmrMySqlDatabase();
+		$db->query('SELECT alliance_id, game_id FROM alliance WHERE discord_channel = '.$db->escapeString($channel).' ORDER BY game_id DESC LIMIT 1');
+		if ($db->nextRecord()) {
+			return self::getAlliance($db->getInt('alliance_id'), $db->getInt('game_id'), $forceUpdate);
+		} else {
+			return null;
+		}
+	}
+
 	public static function &getAllianceByIrcChannel($channel,$forceUpdate = false) {
 		$db = new SmrMySqlDatabase();
 		$db->query('SELECT alliance_id, game_id FROM irc_alliance_has_channel WHERE channel = '.$db->escapeString($channel).' LIMIT 1');
