@@ -16,7 +16,8 @@ if ($CanChangeDescription) { ?>
 
 if ($CanChangeChatChannel) { ?>
 	<tr>
-		<td class="top">IRC Channel:&nbsp;</td><td><input type="text" name="irc" size="30" value="<?php htmlspecialchars($Alliance->getIrcChannel()); ?>">(For Caretaker and autojoining via chat link - works best if you join the channel using the chat link and type "/autoconnect on" as an op)</td>
+		<td class="top">IRC Channel:&nbsp;</td>
+		<td><input type="text" name="irc" size="30" value="<?php echo htmlspecialchars($Alliance->getIrcChannel()); ?>">(For Caretaker and autojoining via chat link - works best if you join the channel using the chat link and type "/autoconnect on" as an op)</td>
 	</tr><?php
 }
 
