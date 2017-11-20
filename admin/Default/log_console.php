@@ -31,7 +31,7 @@ if ($db->getNumRows()) {
 	$template->assignByRef('LogTypes', $logTypes);
 
 	$template->assign('LogConsoleFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_console_detail.php')));
-	$template->assign('AnonAccessHRE', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
+	$template->assign('AnonAccessHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
 }
 $template->assignByRef('LoggedAccounts',$loggedAccounts);
 ?>
