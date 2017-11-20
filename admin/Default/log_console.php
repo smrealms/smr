@@ -15,7 +15,7 @@ if ($db->getNumRows()) {
 		$loggedAccounts[$accountID] = array('AccountID' => $accountID,
 								'Login' => $db->getField('login'),
 								'TotalEntries' => $db->getInt('number_of_entries'),
-								'Checked' => is_array($var['account_ids']) && in_array($accountID, $var['account_ids']),
+								'Checked' => isset($var['account_ids']) && in_array($accountID, $var['account_ids']),
 								'Notes' => '');
 
 		$db2->query('SELECT notes FROM log_has_notes WHERE account_id = '.$db2->escapeNumber($accountID));
