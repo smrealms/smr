@@ -7,7 +7,7 @@ RUN apt-get update \
 # We need to set 'sendmail_path' since php doesn't know about sendmail when it's built
 RUN echo 'sendmail_path = "/usr/sbin/sendmail -t -i"' > /usr/local/etc/php/conf.d/mail.ini
 
-WORKDIR /usr/share/smr/
+WORKDIR /smr/
 
 # runkit is needed to use NPC's
 RUN pear channel-discover zenovich.github.io/pear \
