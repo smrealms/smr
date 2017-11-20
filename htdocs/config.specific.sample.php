@@ -2,7 +2,7 @@
 define('USE_COMPATIBILITY',false);
 
 define('URL','http://localhost');
-define('ROOT','/usr/share/smr/');
+define('ROOT','/smr/');
 define('LIB',ROOT.'lib/');
 define('ENGINE',ROOT.'engine/');
 define('WWW',ROOT.'htdocs/');

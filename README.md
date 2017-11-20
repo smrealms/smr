@@ -51,8 +51,8 @@ docker run \
 	--name="smr" \
 	--link='smr-mysql' \
 	--publish='80:80' \
-	--volume="/path/to/config.specific.php:/usr/share/smr/htdocs/config.specific.php:ro" \
-	--volume="/path/to/SmrMySqlSecrets.sample.inc:/usr/share/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
+	--volume="/path/to/config.specific.php:/smr/htdocs/config.specific.php:ro" \
+	--volume="/path/to/SmrMySqlSecrets.sample.inc:/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
 	--detach \
 	smrealms/smr
 ```
@@ -62,9 +62,9 @@ docker run \
 	--name="smr" \
 	--link='smr-mysql' \
 	--publish='80:80' \
-	--volume="$(pwd):/usr/share/smr" \
-	--volume="$(pwd)/htdocs/config.specific.sample.php:/usr/share/smr/htdocs/config.specific.php:ro" \
-	--volume="$(pwd)/lib/Default/SmrMySqlSecrets.sample.inc:/usr/share/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
+	--volume="$(pwd):/smr" \
+	--volume="$(pwd)/htdocs/config.specific.sample.php:/smr/htdocs/config.specific.php:ro" \
+	--volume="$(pwd)/lib/Default/SmrMySqlSecrets.sample.inc:/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
 	--detach \
 	smrealms/smr
 ```
