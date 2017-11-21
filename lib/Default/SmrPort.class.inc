@@ -43,9 +43,6 @@ class SmrPort {
 	protected $experience;
 	protected $goods;
 	
-	protected $turrets = 20;
-	protected $turretDamage = 250;
-	
 	protected $cachedVersion = false;
 	protected $cachedTime = TIME;
 	
@@ -813,11 +810,16 @@ class SmrPort {
 	public function getUpgrade() {
 		return $this->upgrade;
 	}
-	
+
+	public function getNumWeapons() {
+		return self::NUMBER_OF_PORT_WEAPONS;
+	}
+
 	public function &getWeapons() {
 		$weapons = array();
-		for($i=0;$i<self::NUMBER_OF_PORT_WEAPONS;++$i)
+		for ($i=0; $i<$this->getNumWeapons(); ++$i) {
 			$weapons[$i] =& SmrWeapon::getWeapon(Globals::getGameType($this->getGameID()),WEAPON_PORT_TURRET);
+		}
 		return $weapons;
 	}
 

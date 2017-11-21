@@ -28,6 +28,10 @@ if ($ThisShip->hasScanner()) {
 			<td>Armour</td>
 			<td align="center"><?php echo $Port->getArmour(); ?></td>
 		</tr>
+		<tr>
+			<td>Turrets</td>
+			<td align="center"><?php echo $Port->getNumWeapons(); ?></td>
+		</tr>
 	</table>
 </p><?php
 } ?>
