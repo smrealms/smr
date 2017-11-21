@@ -44,6 +44,7 @@ abstract class AbstractSmrAccount {
 	protected $validation_code;
 	protected $last_login;
 	protected $hofName;
+	protected $discordId;
 	protected $ircNick;
 	protected $veteran;
 	protected $logging;
@@ -212,6 +213,7 @@ abstract class AbstractSmrAccount {
 			$this->maxRankAchieved	= $row['max_rank_achieved'];
 
 			$this->hofName			= $row['hof_name'];
+			$this->discordId		= $row['discord_id'];
 			$this->ircNick			= $row['irc_nick'];
 
 			$this->dateShort		= $row['date_short'];
@@ -277,6 +279,7 @@ abstract class AbstractSmrAccount {
 			', logging = '.$this->db->escapeBoolean($this->logging).
 			', time_short = ' . $this->db->escapeString($this->timeShort).
 			', date_short = ' . $this->db->escapeString($this->dateShort).
+			', discord_id = ' . $this->db->escapeString($this->discordId, true, true).
 			', irc_nick = ' . $this->db->escapeString($this->ircNick, true, true).
 			', hof_name = ' . $this->db->escapeString($this->hofName).
 			', colour_scheme = ' . $this->db->escapeString($this->colourScheme).
@@ -830,6 +833,19 @@ abstract class AbstractSmrAccount {
 		if($this->ircNick==$nick)
 			return;
 		$this->ircNick = $nick;
+		$this->hasChanged = true;
+		$this->update();
+	}
+
+	public function getDiscordId() {
+		return $this->discordId;
+	}
+
+	public function setDiscordId($id) {
+		if ($this->discordId == $id) {
+			return;
+		}
+		$this->discordId = $id;
 		$this->hasChanged = true;
 		$this->update();
 	}

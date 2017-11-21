@@ -18,6 +18,7 @@ class SmrAlliance {
 	protected $deaths;
 	protected $motd;
 	protected $imgSrc;
+	protected $discordChannel;
 	protected $ircChannel;
 
 	protected $memberList;
@@ -59,6 +60,7 @@ class SmrAlliance {
 			$this->deaths			= $this->db->getInt('alliance_deaths');
 			$this->motd				= strip_tags(stripslashes($this->db->getField('mod')));
 			$this->imgSrc			= $this->db->getField('img_src');
+			$this->discordChannel	= $this->db->getField('discord_channel');
 
 			if (empty($this->kills)) {
 				$this->kills = 0;
@@ -98,6 +100,14 @@ class SmrAlliance {
 
 	public function &getLeader() {
 		return SmrPlayer::getPlayer($this->getLeaderID(),$this->getGameID());
+	}
+
+	public function getDiscordChannel() {
+		return $this->discordChannel;
+	}
+
+	public function setDiscordChannel($channelId) {
+		$this->discordChannel = $channelId;
 	}
 
 	public function getIrcChannel() {
@@ -259,6 +269,7 @@ class SmrAlliance {
 								img_src = ' . $this->db->escapeString($this->imgSrc) . ',
 								alliance_kills = '.$this->db->escapeNumber($this->kills).',
 								alliance_deaths = '.$this->db->escapeNumber($this->deaths).',
+								discord_channel = '.$this->db->escapeString($this->discordChannel).',
 								leader_id = '.$this->db->escapeNumber($this->leaderID).'
 							WHERE alliance_id = '.$this->db->escapeNumber($this->allianceID).'
 								AND game_id = '.$this->db->escapeNumber($this->gameID));

@@ -209,7 +209,17 @@ if(isset($GameID)) { ?>
 		<tr>
 			<td colspan="2">&nbsp;</td>
 		</tr>
-	
+
+		<tr>
+			<td>Discord User ID:</td>
+			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId()); ?>" id="InputFields" size=50 /></td>
+		</tr>
+
+		<tr>
+			<td>&nbsp;</td>
+			<td><input type="submit" name="action" value="Change Discord ID" id="InputFields" /></td>
+		</tr>
+
 		<tr>
 			<td>IRC Nick:</td>
 			<td><input type="text" name="irc_nick" value="<?php echo htmlspecialchars($ThisAccount->getIrcNick()); ?>" id="InputFields" size="50" /></td>
@@ -217,7 +227,7 @@ if(isset($GameID)) { ?>
 
 		<tr>
 			<td>&nbsp;</td>
-			<td><input type="submit" name="action" value="Change Nick" id="InputFields" /></td>
+			<td><input type="submit" name="action" value="Change IRC Nick" id="InputFields" /></td>
 		</tr>
 
 		<tr>
