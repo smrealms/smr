@@ -23,6 +23,7 @@ WORKDIR /anubisbot
 RUN php ./cli make:command Turns
 RUN php ./cli make:command Money
 RUN php ./cli make:command Game
+RUN php ./cli make:command Invite
 
 COPY tools/discord/cli .
 COPY tools/discord/registrar.php .

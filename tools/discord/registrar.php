@@ -13,6 +13,7 @@ return [
         App\Commands\Turns::class,
         App\Commands\Money::class,
         App\Commands\Game::class,
+        App\Commands\Invite::class,
     ],
 
     // All command aliases are registered here
