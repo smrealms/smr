@@ -6,15 +6,25 @@ create_galactic_post_menu();
 
 $db2 = new SmrMySqlDatabase();
 $db3 = new SmrMySqlDatabase();
-$db->query('SELECT * FROM galactic_post_online WHERE game_id = ' . $db->escapeNumber($player->getGameID()));
-if ($db->nextRecord()) {
-	$paper_id = $db->getField('paper_id');
-	$db2->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND paper_id = '.$paper_id);
+
+if (!empty($var['paper_id'])) {
+	if (!isset($var['game_id'])) {
+		create_error('Must specify a game ID!');
+	}
+
+	// Create link back to past editions
+	if (isset($var['back']) && $var['back']) {
+		$container = create_container('skeleton.php', 'galactic_post_past.php');
+		$container['game_id'] = $var['game_id'];
+		$PHP_OUTPUT .= create_link($container, '<b>&lt;&lt;Back</b>');
+	}
+
+	$db2->query('SELECT * FROM galactic_post_paper WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' AND paper_id = '.$var['paper_id']);
 	$db2->nextRecord();
 	$paper_name = bbifyMessage($db2->getField('title'));
 
 	$template->assign('PageTopic','Reading <i>Galactic Post</i> Edition : '.$paper_name);
-	$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$db2->escapeNumber($paper_id).' AND game_id = '.$db2->escapeNumber($player->getGameID()));
+	$db2->query('SELECT * FROM galactic_post_paper_content WHERE paper_id = '.$db2->escapeNumber($var['paper_id']).' AND game_id = '.$db2->escapeNumber($var['game_id']));
 	$even = $db2->getNumRows() % 2 == 0;
 	$curr_position = 0;
 	$PHP_OUTPUT.=('<table align="center" spacepadding="20" cellspacing="20">');
@@ -30,7 +40,7 @@ if ($db->nextRecord()) {
 		}
 		$db2->nextRecord();
 		//now we have the articles in this paper.
-		$db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$db3->escapeNumber($player->getGameID()).' AND article_id = '.$db3->escapeNumber($db2->getField('article_id')).' LIMIT 1');
+		$db3->query('SELECT * FROM galactic_post_article WHERE game_id = '.$db3->escapeNumber($var['game_id']).' AND article_id = '.$db3->escapeNumber($db2->getField('article_id')).' LIMIT 1');
 		$db3->nextRecord();
 
 		if ($curr_position % 2 == 1) {

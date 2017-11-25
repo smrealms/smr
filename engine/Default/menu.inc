@@ -62,7 +62,8 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) 
 function create_galactic_post_menu() {
 	global $template, $player;
 	$menuItems = array();
-	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('galactic_post_current.php')),'Text'=>'Current Edition');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_past.php')),'Text'=>'Past Editions');
 
 	$allowedWrite = $player->isGPWriter();
 	$allowedEdit = $player->isGPEditor();

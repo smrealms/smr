@@ -782,7 +782,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$container['body'] = 'news_read_current.php';
 		$template->assign('ReadNewsLink',SmrSession::getNewHREF($container));
 
-		$container['body'] = 'galactic_post_read.php';
+		$container['body'] = 'galactic_post_current.php';
 		$template->assign('GalacticPostLink',SmrSession::getNewHREF($container));
 
 		$container['body'] = 'trader_search.php';
