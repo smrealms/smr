@@ -119,43 +119,6 @@ try {
 			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
 			exit;
 		}
-
-		$address = $_REQUEST['address'];
-		//if (empty($address)) {
-		//
-		//	$msg = 'Address is missing!';
-		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		//	exit;
-		//}
-
-		$city = $_REQUEST['city'];
-		//if (empty($city)) {
-		//
-		//	$msg = 'City is missing!';
-		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		//	exit;
-		//}
-
-		$postal_code = $_REQUEST['postal_code'];
-		//if (empty($postal_code)) {
-		//
-		//	$msg = 'Postal code is missing!';
-		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		//	exit;
-		//}
-
-		$country_code = $_REQUEST['country_code'];
-		if (strlen($country_code) > 2) {
-			$msg = 'Country code too long!';
-			header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-			exit;
-		}
-		//if (empty($country_code)) {
-		//
-		//	$msg = 'Please choose a country!';
-		//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-		//	exit;
-		//}
 	}
 
 	if ($login == $password) {
@@ -187,16 +150,6 @@ try {
 		exit;
 	}
 
-	//BETA
-	//$betaKey = $_REQUEST['beta_key'];
-	//$db->query('SELECT used FROM beta_key WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
-	//if (!$db->nextRecord() || $db->getField('used') == 'TRUE') {
-	//	$msg = 'Invalid or used beta key.';
-	//	header('Location: '.URL.'/error.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
-	//	exit;
-	//}
-	//$db->query('UPDATE beta_key SET used = '.$db->escapeString('TRUE').' WHERE code = '.$db->escapeString($betaKey).' LIMIT 1');
-
 	//Check the captcha if it's a standard registration.
 	if(!$socialLogin && strlen(RECAPTCHA_PRIVATE) > 0) {
 		$reCaptcha = new \ReCaptcha\ReCaptcha(RECAPTCHA_PRIVATE);
@@ -218,7 +171,7 @@ try {
 
 	// creates a new user account object
 	try {
-		$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$timez,$referral);
+		$account =& SmrAccount::createAccount($login,$password,$email,$first_name,$last_name,$timez,$referral);
 	}
 	catch(Exception $e) {
 		$msg = 'Invalid referral id!';
