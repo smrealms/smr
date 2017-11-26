@@ -2,13 +2,6 @@
 define('USE_COMPATIBILITY',false);
 
 define('URL','http://localhost');
-define('ROOT','/smr/');
-define('LIB',ROOT.'lib/');
-define('ENGINE',ROOT.'engine/');
-define('WWW',ROOT.'htdocs/');
-define('UPLOAD',WWW.'upload/');
-define('ADMIN',ROOT.'admin/');
-define('TOOLS',ROOT.'tools/');
 
 define('ENABLE_DEBUG', true); // This is useful for debugging on dev machines.
 define('ENABLE_BETA', false);
