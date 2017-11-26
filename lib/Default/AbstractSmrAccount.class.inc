@@ -130,7 +130,7 @@ abstract class AbstractSmrAccount {
 		}
 	}
 
-	public static function &createAccount($login,$password,$email,$first_name,$last_name,$address,$city,$postal_code,$country_code,$timez,$referral) {
+	public static function &createAccount($login,$password,$email,$first_name,$last_name,$timez,$referral) {
 		if($referral!=0) {
 			try {
 				SmrAccount::getAccount($referral);
@@ -140,11 +140,10 @@ abstract class AbstractSmrAccount {
 			}
 		}
 		$db = new SmrMySqlDatabase();
-		$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
+		$db->query('INSERT INTO account (login, password, email, first_name, last_name, validation_code, last_login, offset,referral_id,hof_name) VALUES(' .
 			$db->escape_string($login) . ', ' . $db->escape_string(md5($password)) . ', ' . $db->escape_string($email) . ', ' .
 			$db->escape_string($first_name) . ', ' . $db->escape_string($last_name) . ', ' .
-			$db->escape_string($address) . ', ' . $db->escape_string($city) . ', ' . $db->escape_string($postal_code) . ', ' .
-			$db->escape_string($country_code) . ', ' . $db->escape_string(substr(SmrSession::$session_id, 0, 10)) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral).','.$db->escapeString($login).')');
+			$db->escape_string(substr(SmrSession::$session_id, 0, 10)) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeNumber($timez) . ',' . $db->escapeNumber($referral).','.$db->escapeString($login).')');
 		return self::getAccountByName($login);
 	}
 
@@ -707,11 +706,10 @@ abstract class AbstractSmrAccount {
 				}
 
 				$db = new SmrMySqlDatabase();
-				$db->query('INSERT INTO account (login, password, email, first_name, last_name, address, city, postal_code, country_code, validation_code, veteran, last_login, logging, offset,images,fontsize,referral_id,hof_name,validated) VALUES(' .
+				$db->query('INSERT INTO account (login, password, email, first_name, last_name, validation_code, veteran, last_login, logging, offset,images,fontsize,referral_id,hof_name,validated) VALUES(' .
 							$db->escape_string($db2->getField('login')) . ', ' . $db->escape_string(md5($db2->getField('password'))) . ', ' . $db->escape_string($db2->getField('email')) . ', ' .
 							$db->escape_string($db2->getField('first_name')) . ', ' . $db->escape_string($db2->getField('last_name')) . ', ' .
-							$db->escape_string($db2->getField('address')) . ', ' . $db->escape_string($db2->getField('city')) . ', ' . $db->escape_string($db2->getField('postal_code')) . ', ' .
-							$db->escape_string($db2->getField('country_code')) . ', ' . $db->escape_string($db2->getField('validation_code')) . ',' .
+							$db->escape_string($db2->getField('validation_code')) . ',' .
 							$db->escape_string($db2->getField('veteran')) . ',' . $db->escapeBoolean(false) . ',' . TIME . ',' .$db->escapeNumber($db2->getInt('offset')).',' .
 							$db->escapeString($db2->getField('images')).','.$db->escapeString($db2->getField('fontsize')+20).','.$db->escapeNumber(0).','.$db->escapeString($db2->getField('login')).','.$db->escapeString($db2->getField('validated')).')');
 
