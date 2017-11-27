@@ -15,7 +15,7 @@ if ($db->getNumRows()) {
 		$loggedAccounts[$accountID] = array('AccountID' => $accountID,
 								'Login' => $db->getField('login'),
 								'TotalEntries' => $db->getInt('number_of_entries'),
-								'Checked' => is_array($var['account_ids']) && in_array($accountID, $var['account_ids']),
+								'Checked' => isset($var['account_ids']) && in_array($accountID, $var['account_ids']),
 								'Notes' => '');
 
 		$db2->query('SELECT notes FROM log_has_notes WHERE account_id = '.$db2->escapeNumber($accountID));
@@ -31,7 +31,7 @@ if ($db->getNumRows()) {
 	$template->assignByRef('LogTypes', $logTypes);
 
 	$template->assign('LogConsoleFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_console_detail.php')));
-	$template->assign('AnonAccessHRE', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
+	$template->assign('AnonAccessHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'log_anonymous_account.php')));
 }
 $template->assignByRef('LoggedAccounts',$loggedAccounts);
 ?>

@@ -21,9 +21,13 @@ else if($CombatResultsType=='FORCE') {
 	$this->includeTemplate('includes/ForceFullCombatResults.inc',array('FullForceCombatResults'=>$CombatResults));
 }
 else if($CombatResultsType=='PORT') {
-	$this->includeTemplate('includes/PortFullCombatResults.inc',array('FullPortCombatResults'=>$CombatResults));
+	$this->includeTemplate('includes/PortFullCombatResults.inc',array('FullPortCombatResults'=>$CombatResults,
+	                                                                  'MinimalDisplay'=>false,
+	                                                                  'AlreadyDestroyed'=>false));
 }
 else if($CombatResultsType=='PLANET') {
-	$this->includeTemplate('includes/PlanetFullCombatResults.inc',array('FullPlanetCombatResults'=>$CombatResults));
+	$this->includeTemplate('includes/PlanetFullCombatResults.inc',array('FullPlanetCombatResults'=>$CombatResults,
+	                                                                    'MinimalDisplay'=>false,
+	                                                                    'AlreadyDestroyed'=>false));
 }
 ?>
