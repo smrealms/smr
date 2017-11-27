@@ -12,10 +12,9 @@ if(isset($Message)) {
 	Thank you for trying out Space Merchant Realms! We hope that you are enjoying the game. However,
 	in order for you to experience the full features of the game, you need to validate your login.
 	When you first created your login, you should have received an email confirmation which includes
-	your validation code. if(you have not received this, please verify that you gave us the correct
-	email address by going to the user preferences page. if(it
-	is incorrect, please edit the email address and it will generate a new code and have it sent to
-	you.
+	your validation code. If you have not received this email, please verify that you gave us the
+	correct address by going to the user preferences page. If the address is incorrect, please edit
+	it and a new validation code will be sent to you.
 </p>
 <p>
 	The following restrictions are placed on users who have not validated their account:
