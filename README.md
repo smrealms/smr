@@ -51,8 +51,7 @@ docker run \
 	--name="smr" \
 	--link='smr-mysql' \
 	--publish='80:80' \
-	--volume="/path/to/config.specific.php:/smr/htdocs/config.specific.php:ro" \
-	--volume="/path/to/SmrMySqlSecrets.sample.inc:/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
+	--volume="/path/to/config:/smr/config:ro" \
 	--detach \
 	smrealms/smr
 ```
@@ -63,8 +62,7 @@ docker run \
 	--link='smr-mysql' \
 	--publish='80:80' \
 	--volume="$(pwd):/smr" \
-	--volume="$(pwd)/htdocs/config.specific.sample.php:/smr/htdocs/config.specific.php:ro" \
-	--volume="$(pwd)/lib/Default/SmrMySqlSecrets.sample.inc:/smr/lib/Default/SmrMySqlSecrets.inc:ro" \
+	--volume="$(pwd)/config:/smr/config:ro" \
 	--detach \
 	smrealms/smr
 ```
@@ -94,8 +92,8 @@ These list the known dependencies, there may be more - please update if you find
 ## Config files
 Currently it is required to create installation specific copies of the following files:
 
-* htdocs/config.specific.sample.php -> htdocs/config.specific.php
-* lib/Default/SmrMySqlSecrets.sample.inc -> lib/Default/SmrMySqlSecrets.inc
+* config/config.specific.sample.php -> config/config.specific.php
+* config/SmrMySqlSecrets.sample.inc -> config/SmrMySqlSecrets.inc
 
 For "Caretaker" functionality:
 * tools/irc/config.specific.sample.php -> tools/irc/config.specific.php
