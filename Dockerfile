@@ -20,7 +20,6 @@ COPY composer.json .
 RUN composer install --no-interaction
 
 COPY . .
-VOLUME htdocs/upload
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 
 # Provide a FQDN for sendmail (since /etc/hosts cannot be modified during the
