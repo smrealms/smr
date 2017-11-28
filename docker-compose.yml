@@ -1,0 +1,78 @@
+# You must include a `.env` file with the following content:
+#   MYSQL_ROOT_PASSWORD=chooseapassword
+#   MYSQL_PASSWORD=chooseapassword
+#   MYSQL_HOST=chooseahost
+
+version: '2'
+services:
+    smr-common:
+        # Base configuration for `smr` (production) and `smr-dev` (testing).
+        build:
+            context: .
+        ports:
+            - "80:80"
+        volumes:
+            - smr_upload:/smr/htdocs/upload
+            - ./config:/smr/config:ro
+
+    smr:
+        extends: smr-common
+        # Links cannot be defined in extended services (i.e. smr-common)
+        links:
+            - mysql
+
+    smr-dev:
+        extends: smr-common
+        # Links cannot be defined in extended services (i.e. smr-common)
+        links:
+            - mysql
+        volumes:
+            # Mount the source code instead of copying it.
+            # You must have run `composer install` to do this.
+            - .:/smr:rw
+
+    flyway:
+        image: claycephas/flyway
+        command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
+        links:
+            - mysql
+        volumes:
+            - ./db/patches:/flyway/sql:ro
+
+    mysql:
+        image: mysql:5.7
+        container_name: ${MYSQL_HOST}
+        # By using the default image, we must expose the secrets in
+        # the runtime environment (because we can't specify build args).
+        environment:
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+            MYSQL_USER:          smr
+            MYSQL_PASSWORD:      ${MYSQL_PASSWORD}
+            MYSQL_DATABASE:      smr_live
+        volumes:
+            - smr_mysql_data:/var/lib/mysql
+        # The mysql:5.7+ docker default sql mode uses STRICT_TRANS_TABLES,
+        # which is incompatible with the way the SMR database is used.
+        # Therefore, we override CMD to omit this sql mode.
+        command: ["mysqld", "--sql-mode=NO_ENGINE_SUBSTITUTION"]
+
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        # Publish to port 8080
+        ports:
+            - 8080:80
+        links:
+            - mysql:db
+
+    discord:
+        build:
+            context: .
+            dockerfile: ./tools/discord/Dockerfile
+        volumes:
+            - ./config:/smr/config
+
+# We want persistent, anonymous data volumes
+volumes:
+    smr_upload:
+    smr_mysql_data:
