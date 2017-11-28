@@ -14,9 +14,10 @@ define('WWW', ROOT.'htdocs/');
 define('UPLOAD', WWW.'upload/');
 define('ADMIN', ROOT.'admin/');
 define('TOOLS', ROOT.'tools/');
+define('CONFIG', ROOT.'config/');
 
 // Define server-specific constants
-require_once(WWW . '/config.specific.php');
+require_once(CONFIG . 'config.specific.php');
 
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
