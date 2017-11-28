@@ -1,11 +1,6 @@
 <?php
 @date_default_timezone_set(@date_default_timezone_get());
 
-if (ENABLE_DEBUG) {
-	// Warn about everything when in debug mode
-	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
-}
-
 // Repository paths
 define('ROOT', __DIR__ . '/../');
 define('LIB', ROOT.'lib/');
@@ -17,6 +12,11 @@ define('TOOLS', ROOT.'tools/');
 
 // Define server-specific constants
 require_once(WWW . '/config.specific.php');
+
+if (ENABLE_DEBUG) {
+	// Warn about everything when in debug mode
+	error_reporting(E_ERROR | E_WARNING | E_PARSE | E_NOTICE);
+}
 
 define('ACCOUNT_ID_PORT',65535);
 define('ACCOUNT_ID_ADMIN',65534);
