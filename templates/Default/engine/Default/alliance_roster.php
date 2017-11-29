@@ -135,13 +135,12 @@ else if($CanJoin !== false) { ?>
 }
 ?>
 
-
-<script type="text/javascript" src="js/list.1.0.0.custom.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 <script>
 var list = new List('alliance-roster', {
 	valueNames: ['name', 'race', 'experience', 'role', 'status'],
-	sortFunction: function(a, b) {
-		return list.sort.naturalSort(a.values()[this.valueName].replace(/<.*?>|,/g,''), b.values()[this.valueName].replace(/<.*?>|,/g,''), this);
+	sortFunction: function(a, b, options) {
+		return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
 	}
 });
 </script>

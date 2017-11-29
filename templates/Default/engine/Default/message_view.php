@@ -23,12 +23,12 @@ if (isset($MessageBoxes)) { ?>
 		</tbody>
 	</table>
 	<p><a href="<?php echo $ManageBlacklistLink; ?>">Manage Player Blacklist</a></p>
-	<script type="text/javascript" src="js/list.1.0.0.custom.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 	<script>
 	var list = new List('folders', {
 		valueNames: ['name', 'messages'],
-		sortFunction: function(a, b) {
-			return list.sort.naturalSort(a.values()[this.valueName].replace(/<.*?>|,/g,''), b.values()[this.valueName].replace(/<.*?>|,/g,''), this);
+		sortFunction: function(a, b, options) {
+			return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
 		}
 	});
 	</script><?php

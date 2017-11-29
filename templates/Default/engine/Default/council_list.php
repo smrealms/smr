@@ -71,19 +71,19 @@ foreach($Races as $RaceID => $RaceInfo) {
 		</span><br /><?php
 	}
 } ?>
-<script type="text/javascript" src="js/list.1.0.0.custom.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 <script>
 var list = new List('council-members', {
 	valueNames: ['name', 'race', 'alliance', 'experience'],
-	sortFunction: function(a, b) {
+	sortFunction: function(a, b, options) {
 		var regex;
-		if(this.valueName === 'name') {
+		if(options.valueName === 'name') {
 			regex = /^.*?<.*?>|<.*?>/g;
 		}
 		else {
 			regex = /,/g;
 		}
-		return list.sort.naturalSort(a.values()[this.valueName].replace(regex,''), b.values()[this.valueName].replace(regex,''), this);
+		return list.utils.naturalSort(a.values()[options.valueName].replace(regex,''), b.values()[options.valueName].replace(regex,''), options);
 	}
 });
 </script>
