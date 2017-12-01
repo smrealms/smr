@@ -676,15 +676,12 @@ class SmrPlanet {
 			$this->db->query('
 				SELECT * 
 				FROM planet_is_building 
-				JOIN planet_can_build USING(construction_id)
 				WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . ' 
-				AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()). ' 
-				AND planet_type_id = '.$this->getTypeID());
+				AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()));
 			
 			while($this->db->nextRecord()) {
 				if($this->db->getInt('time_complete') <= TIME) {
-					$PLANET_BUILDINGS =& Globals::getPlanetBuildings();
-					$expGain = $this->db->getInt('exp_gain');
+					$expGain = $this->getConstructionExp($this->db->getInt('construction_id'));
 					$player =& SmrPlayer::getPlayer($this->db->getInt('constructor_id'),$this->getGameID());
 					$player->increaseHOF(1,array('Planet','Buildings','Built'), HOF_ALLIANCE);
 					$player->increaseExperience($expGain);
@@ -988,6 +985,13 @@ class SmrPlanet {
 		$currentBuildings = $this->getBuilding($constructionID);
 		$maxBuildings = $this->getMaxBuildings($constructionID);
 		return 3.8030328 * pow(($currentBuildings/$maxBuildings), 3);
+	}
+
+	// Amount of exp gained to build the next building of this type
+	function getConstructionExp($constructionID) {
+		$baseExp = Globals::getPlanetBuildings()[$constructionID]['ExpGain'][$this->getTypeID()];
+		$expGain = ceil($baseExp * $this->getCompletionModifier($constructionID));
+		return $expGain;
 	}
 
 	// Amount of time (in seconds) to build the next building of this type
