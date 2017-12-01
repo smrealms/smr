@@ -982,20 +982,18 @@ class SmrPlanet {
 		return true;
 	}
 
-	function getConstructionTime($constructionID) {
-		$baseTime = 0;
-		$this->db->query('
-			SELECT * 
-			FROM planet_can_build 
-			WHERE planet_type_id = '.$this->getTypeID().' 
-			AND construction_id = '.$this->db->escapeNumber($constructionID));
-		if ($this->db->nextRecord()) {
-			$baseTime = $this->db->getInt('cost_time');
-		}
+	// Modifier for planet building based on the number of buildings.
+	// The average value of this modifier should roughly be 1.
+	private function getCompletionModifier($constructionID) {
 		$currentBuildings = $this->getBuilding($constructionID);
 		$maxBuildings = $this->getMaxBuildings($constructionID);
-		// Replace this with the real equations once RCK provides some that aren't gibberish.
-		$constructionTime = TIME + ceil(3.8030328 * $baseTime * pow(($currentBuildings/$maxBuildings), 3) / Globals::getGameSpeed($this->getGameID()));
+		return 3.8030328 * pow(($currentBuildings/$maxBuildings), 3);
+	}
+
+	// Amount of time (in seconds) to build the next building of this type
+	function getConstructionTime($constructionID) {
+		$baseTime = Globals::getPlanetBuildings()[$constructionID]['Build Time'][$this->getTypeID()];
+		$constructionTime = ceil($baseTime * $this->getCompletionModifier($constructionID) / Globals::getGameSpeed($this->getGameID()));
 		return $constructionTime;
 	}
 	
@@ -1011,7 +1009,7 @@ class SmrPlanet {
 		}
 	
 		// gets the time for the buildings
-		$timeComplete = $this->getConstructionTime($constructionID);
+		$timeComplete = TIME + $this->getConstructionTime($constructionID);
 		$this->db->query('INSERT INTO planet_is_building (game_id, sector_id, construction_id, constructor_id, time_complete) ' .
 						'VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $this->db->escapeNumber($constructionID) . ', ' . $this->db->escapeNumber($constructor->getAccountID()) . ',' . $this->db->escapeNumber($timeComplete) . ')');
 

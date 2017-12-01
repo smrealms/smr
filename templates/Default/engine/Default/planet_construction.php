@@ -45,7 +45,7 @@ You are currently building: <?php
 						 echo number_format($PlanetBuilding['Credit Cost'][$ThisPlanet->getTypeID()]); ?>-credits, <?php
 					}
 
-					echo format_time($ThisPlanet->getConstructionTime($PlanetBuilding['ConstructionID']) - TIME); ?>
+					echo format_time($ThisPlanet->getConstructionTime($PlanetBuilding['ConstructionID'])); ?>
 				</td>
 				<td><?php
 					if ($ThisPlanet->canBuild($ThisPlayer, $PlanetBuilding['ConstructionID'])===true) { ?>
