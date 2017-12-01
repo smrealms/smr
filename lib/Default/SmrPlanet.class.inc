@@ -984,7 +984,7 @@ class SmrPlanet {
 	private function getCompletionModifier($constructionID) {
 		$currentBuildings = $this->getBuilding($constructionID);
 		$maxBuildings = $this->getMaxBuildings($constructionID);
-		return 3.8030328 * pow(($currentBuildings/$maxBuildings), 3);
+		return 0.01 + 2.97 * pow($currentBuildings/$maxBuildings, 2);
 	}
 
 	// Amount of exp gained to build the next building of this type
