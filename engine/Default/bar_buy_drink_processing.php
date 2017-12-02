@@ -80,7 +80,7 @@ $player->actionTaken('BuyDrink', array(
 ));
 
 //see if the player blacksout or not
-if ($num_drinks > 15) {
+if (isset($num_drinks) && $num_drinks > 15) {
 	$percent = mt_rand(1,25);
 	$lostCredits = round($player->getCredits() * $percent / 100);
 
