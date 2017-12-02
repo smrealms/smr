@@ -1342,6 +1342,18 @@ abstract class AbstractSmrPlayer {
 		return true;
 	}
 
+	// Get an array of goods that are visible to the player
+	public function getVisibleGoods() {
+		$goods = Globals::getGoods();
+		$visibleGoods = array();
+		foreach ($goods as $key => $good) {
+			if ($this->meetsAlignmentRestriction($good['AlignRestriction'])) {
+				$visibleGoods[$key] = $good;
+			}
+		}
+		return $visibleGoods;
+	}
+
 	/**
 	 * Will retrieve all visited sectors, use only when you are likely to check a large number of these
 	 */

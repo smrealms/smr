@@ -69,7 +69,7 @@ if(isset($XType)) { ?>
 				break;
 				case 'Sell Goods':
 				case 'Buy Goods':
-					$Goods = Globals::getGoods();
+					$Goods = $ThisPlayer->getVisibleGoods();
 					foreach ($Goods as $Good) {
 						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
 					}
