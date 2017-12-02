@@ -13,6 +13,7 @@ if ($db->getNumRows()) {
 		$container['good_id'] = $db->getInt('good_id');
 
 		$goods[] = array(
+			'image' => Globals::getGood($db->getInt('good_id'))['ImageLink'],
 			'name' => $db->getField('good_name'),
 			'amount' => $db->getInt('amount'),
 			'dump_href' => SmrSession::getNewHREF($container),

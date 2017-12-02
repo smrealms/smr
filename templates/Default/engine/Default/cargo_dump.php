@@ -15,12 +15,12 @@ if (empty($Goods)) { ?>
 		foreach ($Goods as $good) { ?>
 			<form name="DumpForm" method="POST" action="<?php echo $good['dump_href']; ?>">
 				<tr>
-					<td align="center"><?php echo $good['name']; ?></td>
-					<td align="center">
+					<td><img src="<?php echo $good['image']; ?>" width="13" height="16" title="<?php echo $good['name']; ?>" />&nbsp;<?php echo $good['name']; ?></td>
+					<td class="center">
 						<input type="number" name="amount" value="<?php echo $good['amount']; ?>" maxlength="5" size="5" id="InputFields" class="center" />
 					</td>
-					<td align="center">
-						<input type="submit" name="action" value="Dump" id="InputFields" />
+					<td class="center">
+						<input type="submit" name="action" value="Dump (1)" id="InputFields" />
 					</td>
 				</tr>
 			</form><?php
