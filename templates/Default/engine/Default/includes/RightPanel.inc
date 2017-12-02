@@ -114,7 +114,7 @@ if(isset($GameID)) { ?>
 	if($ThisShip->hasCargo()) {
 		foreach($ThisShip->getCargo() as $GoodID => $GoodAmount) {
 			$Good =& Globals::getGood($GoodID); ?>
-			<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" alt="<?php echo $Good['Name']; ?>"> : <?php echo $GoodAmount; ?><br /><?php
+			<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name']; ?>" alt="<?php echo $Good['Name']; ?>"> : <?php echo $GoodAmount; ?><br /><?php
 		}
 	} ?>
 	Empty : <?php echo $ThisShip->getEmptyHolds(); ?><br /><br />
