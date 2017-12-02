@@ -31,10 +31,6 @@ if (isset($password) && $password == '') {
 	create_error('You cannot set an empty password!');
 }
 
-if (isset($description) && $description == '') {
-	create_error('Please enter a description for your alliance.');
-}
-
 $alliance =& SmrAlliance::getAlliance($alliance_id, $player->getGameID());
 if (isset($password)) {
 	$alliance->setPassword($password);
