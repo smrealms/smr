@@ -17,8 +17,12 @@ class Plotter {
 					return SmrLocation::getLocation($X);
 				}
 				return $X;
-			case 'Goods':
-				return Globals::getGood($X);
+			case 'Sell Goods':
+			case 'Buy Goods':
+				// $X is the good ID
+				$good = Globals::getGood($X);
+				$good['TransactionType'] = explode(' ', $xType)[0];
+				return $good;
 			case 'Galaxies':
 				// $X is the galaxyID
 				return SmrGalaxy::getGalaxy($gameID, $X);

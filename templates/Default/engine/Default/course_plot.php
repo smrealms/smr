@@ -67,11 +67,12 @@ if(isset($XType)) { ?>
 						?><option value="<?php echo $Location->getTypeID(); ?>"><?php echo $Location->getName(); ?></option><?php
 					} unset($Location);
 				break;
-				case 'Goods':
-					$Goods =& Globals::getGoods();
-					foreach($Goods as &$Good) {
+				case 'Sell Goods':
+				case 'Buy Goods':
+					$Goods = Globals::getGoods();
+					foreach ($Goods as $Good) {
 						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
-					} unset($Good);
+					}
 				break;
 				case 'Galaxies':
 					$Galaxies =& SmrGalaxy::getGameGalaxies($ThisPlayer->getGameID());
