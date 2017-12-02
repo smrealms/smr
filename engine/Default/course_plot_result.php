@@ -31,28 +31,10 @@ if ($sector->isLinked($next_sector)) {
 		$player->setPlottedCourse($path);
 	}
 
-	//$PHP_OUTPUT.=create_echo_form($container);
 	if (!$player->isLandedOnPlanet()) {
-		$nextSector =& SmrSector::getSector($player->getGameID(),$path->getNextOnPath(),$player->getAccountID());
-	
-		$PHP_OUTPUT.='<table class="nobord" width="100%">
-			<tr>
-				<td class="top right">
-					<div class="buttonA">
-						<a class="buttonA" href="'.$nextSector->getCurrentSectorHREF().'">&nbsp; Follow Course ('.$path->getNextOnPath().') &nbsp;</a>
-					</div>
-				</td>
-			</tr>';
-		if($ship->hasScanner()) {
-			$PHP_OUTPUT.='<tr>
-				<td class="top right">
-					<div class="buttonA">
-						<a class="buttonA" href="'.$nextSector->getScanSectorHREF().'">&nbsp; Scan Course ('.$path->getNextOnPath().') &nbsp;</a>
-					</div>
-				</td>
-			</tr>';
-		}
-		$PHP_OUTPUT.='</table>';
+		// If the course can immediately be followed, display it on the current sector page
+		$container = create_container('skeleton.php', 'current_sector.php');
+		forward($container);
 	}
 }
 
