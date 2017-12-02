@@ -946,6 +946,9 @@ class SmrSector {
 		if ($x instanceof SmrLocation) {
 			return $this->hasLocation($x->getTypeID());
 		}
+		if ($x instanceof SmrGalaxy) {
+			return $x->contains($this);
+		}
 
 		if(is_array($x) && $x['Type']=='Good') //Check if it's possible for port to have X, hacky but nice performance gains
 			if ($this->hasPort())

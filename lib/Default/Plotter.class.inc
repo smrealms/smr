@@ -19,6 +19,9 @@ class Plotter {
 				return $X;
 			case 'Goods':
 				return Globals::getGood($X);
+			case 'Galaxies':
+				// $X is the galaxyID
+				return SmrGalaxy::getGalaxy($gameID, $X);
 			default:
 				return false;
 		}

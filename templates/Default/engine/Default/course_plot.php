@@ -73,6 +73,12 @@ if(isset($XType)) { ?>
 						?><option value="<?php echo $Good['ID']; ?>"><?php echo $Good['Name']; ?></option><?php
 					} unset($Good);
 				break;
+				case 'Galaxies':
+					$Galaxies =& SmrGalaxy::getGameGalaxies($ThisPlayer->getGameID());
+					foreach($Galaxies as &$Galaxy) {
+						?><option value="<?php echo $Galaxy->getGalaxyID(); ?>"><?php echo $Galaxy->getName(); ?></option><?php
+					} unset($Galaxy);
+				break;
 				default:
 			} ?>
 		</select>&nbsp;
