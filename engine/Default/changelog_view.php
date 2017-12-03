@@ -38,9 +38,10 @@ while ($db->nextRecord()) {
 	}
 
 	$PHP_OUTPUT.=('</ul><br />');
-	if(isset($var['Since'])) {
-		$PHP_OUTPUT.=create_button(create_container('logged_in.php'), 'Continue');
-	}
+}
+
+if(isset($var['Since'])) {
+	$PHP_OUTPUT.=create_button(create_container('logged_in.php'), 'Continue');
 }
 
 ?>
