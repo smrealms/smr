@@ -1,6 +1,12 @@
 <?php
 
 function shared_channel_msg_money($player) {
+	// Insist the player is in an alliance, otherwise this reports data
+	// for ALL allianceless (i.e. alliance=0) players.
+	if (!$player->hasAlliance()) {
+		return array('This command can only be used when you are in an alliance.');
+	}
+
 	$result = array();
 
 	// get money from AA
