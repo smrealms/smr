@@ -94,12 +94,12 @@ if($Game['GameDescription']) { ?>
 				<p>Now it is time for you to create your Trader and begin your quest for riches, fame and glory! Where will your destiny take you?</p>
 				<table>
 					<tr>
-						<td align="right"><b>Name:</b></td>
+						<td align="right"><b>Name:</b>&nbsp;</td>
 						<td><input type="text" name="player_name" maxlength="32" class="InputFields"<?php if(!isset($JoinGameFormHref)){ ?>disabled="disabled"<?php } ?>></td>
 						<td rowspan="4" class="standard"><img id="race_image" name="race_image" src="images/race/race1.gif" alt="Please select a race."></td>
 					</tr>
 					<tr>
-						<td align="right"><b>Race:</b></td>
+						<td align="right"><b>Race:</b>&nbsp;</td>
 						<td>
 						<select name="race_id" size="1" style="border-width:0px;width:150px;" OnChange="go();">
 							<?php /*<option value="1">[please select]</option> */
