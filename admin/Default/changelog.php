@@ -9,6 +9,11 @@ $link_set_live = true;
 $db->query('SELECT *
 			FROM version
 			ORDER BY version_id DESC');
+
+if ($db->getNumRows() == 0) {
+	$PHP_OUTPUT.=('Must add an initial version in the database first!');
+}
+
 while ($db->nextRecord()) {
 	$version_id = $db->getInt('version_id');
 	$version = $db->getInt('major_version') . '.' . $db->getInt('minor_version') . '.' . $db->getInt('patch_level');
