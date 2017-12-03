@@ -98,7 +98,6 @@ if ($action == 'Yes') {
 	$smr_db_sql[] = 'DELETE FROM blackjack WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM galactic_post_applications WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM galactic_post_article WHERE game_id = '.$db->escapeNumber($game_id);
-	$smr_db_sql[] = 'DELETE FROM galactic_post_online WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM galactic_post_paper WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM galactic_post_paper_content WHERE game_id = '.$db->escapeNumber($game_id);
 	$smr_db_sql[] = 'DELETE FROM galactic_post_writer WHERE game_id = '.$db->escapeNumber($game_id);

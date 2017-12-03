@@ -62,22 +62,15 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) 
 function create_galactic_post_menu() {
 	global $template, $player;
 	$menuItems = array();
-	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_read.php')),'Text'=>'Current Edition');
-
-	$allowedWrite = $player->isGPWriter();
-	$allowedEdit = $player->isGPEditor();
-
-	if ($allowedWrite === false) {
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('galactic_post_current.php')),'Text'=>'Current Edition');
+	$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_past.php')),'Text'=>'Past Editions');
+	if ($player->isGPWriter()) {
+		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
+	} else {
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_application.php')),'Text'=>'Apply as writer!');
 	}
-	if ($allowedEdit === true) {
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_view_applications.php')),'Text'=>'View the applications');
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_view_article.php')),'Text'=>'View the articles');
+	if ($player->isGPEditor()) {
 		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post.php')),'Text'=>'Editor Options');
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_make_paper.php')),'Text'=>'Make a paper');
-	}
-	if ($allowedWrite === true) {
-		$menuItems[] = array('Link'=>SmrSession::getNewHREF(create_container('skeleton.php', 'galactic_post_write_article.php')),'Text'=>'Write an article');
 	}
 	$template->assign('MenuItems', $menuItems);
 }
