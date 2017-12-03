@@ -1,0 +1,34 @@
+#!/bin/env php
+<?php
+
+require_once __DIR__.'/vendor/autoload.php';
+
+// config file and common libs
+define('SMR_ROOT', '/smr/');
+require_once(SMR_ROOT . 'htdocs/config.inc');
+
+require_once(LIB . 'Default/Globals.class.inc');
+require_once(LIB . 'Default/SmrPlayer.class.inc');
+require_once(LIB . 'Default/SmrAccount.class.inc');
+
+require_once(TOOLS . 'discord/utils/GameLink.inc');
+require_once(TOOLS . 'discord/utils/catch_throws.inc');
+
+use Symfony\Component\Console\Application;
+use Core\Console\Console;
+
+error_reporting(E_ALL);
+
+$app = new Application();
+$console = new Console();
+
+// Get console commands
+$commands = config_get('console');
+
+// Register all commands with Symfony's console app
+foreach ($commands as $command) {
+    $app->add($console->register($command));
+}
+
+// Run the app
+$app->run();
