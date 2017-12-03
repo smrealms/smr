@@ -10,7 +10,7 @@ $form = create_form($container,'Handover Leadership');
 
 $PHP_OUTPUT.= $form['form'];
 
-$PHP_OUTPUT.= 'Please select the new Leader:&nbsp;&nbsp;&nbsp;<select name="leader_id" size="1">';
+$PHP_OUTPUT.= 'Please select the new Leader:&nbsp;&nbsp;&nbsp;<select name="leader_id" id="InputFields" size="1">';
 
 $db->query('
 SELECT account_id,player_id,player_name 
