@@ -12,6 +12,7 @@
 # /config/
 /config/config.specific.php
 /config/SmrMySqlSecrets.inc
+/config/discord/config.specific.php
 
 # /htdocs/
 /htdocs/upload
