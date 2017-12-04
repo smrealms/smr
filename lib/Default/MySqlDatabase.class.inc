@@ -23,6 +23,15 @@ abstract class MySqlDatabase implements Database {
 		}
 //		mysql_query("SET NAMES 'utf8' COLLATE 'utf8_general_ci'", self::$dbConn);
 	}
+
+	// This should not be needed except perhaps by persistent connections
+	public function close() {
+		if (self::$dbConn) {
+			mysql_close(self::$dbConn);
+			self::$dbConn = false;
+			self::$currDbName = false;
+		}
+	}
 	
 	public function query($query) {
 		if(!$this->dbResult = @mysql_query($query, self::$dbConn)) {
