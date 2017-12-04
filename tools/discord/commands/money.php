@@ -11,6 +11,10 @@ $fn_money = function ($message) {
 		$text = implode(EOL, $result);
 		$message->channel->sendMessage($text);
 	}
+
+	// Close the connection to prevent timeouts
+	$db = new SmrMySqlDatabase();
+	$db->close();
 };
 
 $discord->registerCommand('money', $fn_money, ['description' => 'Get alliance financial status']);

@@ -19,4 +19,9 @@ require_once('commands/game.php');
 require_once('commands/turns.php');
 require_once('commands/invite.php');
 
+// Close the connection we may have opened during startup
+// to avoid a mysql timeout.
+$db = new SmrMySqlDatabase();
+$db->close();
+
 $discord->run();
