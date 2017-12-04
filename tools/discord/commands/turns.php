@@ -19,6 +19,10 @@ $fn_turns = function ($message) {
 	}
 
 	$message->channel->sendMessage($msg);
+
+	// Close the connection to prevent timeouts
+	$db = new SmrMySqlDatabase();
+	$db->close();
 };
 
 $discord->registerCommand('turns', $fn_turns, ['description' => 'Get current turns']);
