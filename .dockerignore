@@ -1,0 +1,15 @@
+# Files to ignore when building Docker image
+
+# Git data directory
+.git
+
+# Committed files that are not needed in the build
+docker-compose.yml
+README.md
+
+# Configuration files will be bind-mounted
+config
+
+# Products from composer install
+vendor
+composer.lock
