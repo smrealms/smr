@@ -4,7 +4,7 @@ class Plotter {
 	public function __construct() {
 	}
 
-	public static function getX($xType, $X, $gameID) {
+	public static function getX($xType, $X, $gameID, $player=null) {
 		switch($xType) {
 			case 'Technology':
 				return Globals::getHardwareTypes($X);
@@ -17,8 +17,15 @@ class Plotter {
 					return SmrLocation::getLocation($X);
 				}
 				return $X;
-			case 'Goods':
-				return Globals::getGood($X);
+			case 'Sell Goods':
+			case 'Buy Goods':
+				// $X is the good ID
+				$good = Globals::getGood($X);
+				if (isset($player) && !$player->meetsAlignmentRestriction($good['AlignRestriction'])) {
+					create_error('You do not have the correct alignment to see this good!');
+				}
+				$good['TransactionType'] = explode(' ', $xType)[0];
+				return $good;
 			case 'Galaxies':
 				// $X is the galaxyID
 				return SmrGalaxy::getGalaxy($gameID, $X);

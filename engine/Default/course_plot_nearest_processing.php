@@ -9,7 +9,7 @@ else {
 		create_error('You have to select what you would like to find.');
 	$xType = $_REQUEST['xtype'];
 	$X = $_REQUEST['X'];
-	$realX = Plotter::getX($xType, $X, $player->getGameID());
+	$realX = Plotter::getX($xType, $X, $player->getGameID(), $player);
 	if($realX === false) {
 		create_error('Invalid search.');
 	}

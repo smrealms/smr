@@ -23,7 +23,7 @@ if(isset($_REQUEST['xtype']))
 else if(!isset($var['XType']))
 	SmrSession::updateVar('XType','Technology');
 $template->assign('XType',$var['XType']);
-$template->assign('AllXTypes',array('Technology','Ships','Weapons','Locations','Goods','Galaxies'));
+$template->assign('AllXTypes',array('Technology','Ships','Weapons','Locations','Sell Goods','Buy Goods','Galaxies'));
 
 
 // get saved destinations
