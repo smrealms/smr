@@ -51,6 +51,9 @@ else {
 
 $PHP_OUTPUT.=('The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p>');
 
+// Button to send a global message
+$PHP_OUTPUT.='<div class="buttonA"><a class="buttonA" href="'.Globals::getSendGlobalMessageHREF().'">&nbsp;Send Global Message&nbsp;</a></div><br /><br />';
+
 if ($count_last_active > 0) {
 	$PHP_OUTPUT.=('<table class="standard" width="95%">');
 	$PHP_OUTPUT.=('<tr>');
@@ -129,8 +132,6 @@ if ($count_last_active > 0) {
 	}
 	$PHP_OUTPUT.=('	</table>');
 }
-
-$PHP_OUTPUT.='<br /><div class="buttonA"><a class="buttonA" href="'.Globals::getSendGlobalMessageHREF().'">&nbsp;Send Global Message&nbsp;</a></div>';
 
 $PHP_OUTPUT.=('</div>');
 
