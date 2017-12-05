@@ -211,6 +211,19 @@ if(isset($GameID)) { ?>
 		</tr>
 
 		<tr>
+			<td>Chat Sharing:</td>
+			<td><div class="buttonA"><a href="<?php echo $ChatSharingHREF; ?>" class="buttonA">&nbsp;Manage Chat Sharing Settings&nbsp;</a></div></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+			<td>These settings specify who you share your game information with in supported chat services.</td>
+		<tr>
+
+		<tr>
+			<td colspan="2">&nbsp;</td>
+		</tr>
+
+		<tr>
 			<td>Discord User ID:</td>
 			<td><input type="text" name="discord_id" value="<?php echo htmlspecialchars($ThisAccount->getDiscordId()); ?>" id="InputFields" size=50 /></td>
 		</tr>

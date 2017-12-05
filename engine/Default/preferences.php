@@ -8,6 +8,8 @@ $template->assign('PreferencesFormHREF', SmrSession::getNewHREF(create_container
 
 $template->assign('PreferencesConfirmFormHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'preferences_confirm.php')));
 
+$template->assign('ChatSharingHREF', SmrSession::getNewHREF(create_container('skeleton.php', 'chat_sharing.php')));
+
 $transferAccounts = array();
 //if(SmrSession::$game_id>0) {
 //	$db->query('SELECT account_id,player_name,player_id FROM player WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' ORDER BY player_name');
