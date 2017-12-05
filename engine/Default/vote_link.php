@@ -22,14 +22,7 @@ if($valid == true) {
 	}
 }
 
-$container = create_container('skeleton.php');
-
-// Return them to the appropriate screen
-if (!$player->isLandedOnPlanet())
-	$container['body'] = 'current_sector.php';
-else
-	$container['body'] = 'planet_main.php';
-
+$container = create_container('skeleton.php', 'current_sector.php');
 $container['voted'] = true;
 forward($container);
 

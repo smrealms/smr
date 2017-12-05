@@ -38,11 +38,9 @@ $container=create_container('skeleton.php');
 if(isset($var['alliance_id'])) {
 	$container['body'] = 'alliance_roster.php';
 	transfer('alliance_id');
-}
-else if ($player->isLandedOnPlanet())
-	$container['body'] = 'planet_main.php';
-else
+} else {
 	$container['body'] = 'current_sector.php';
+}
 $container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
 forward($container);
 
