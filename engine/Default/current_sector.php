@@ -1,6 +1,9 @@
 <?php
-if($player->isLandedOnPlanet())
-	create_error('You are on a planet!');
+
+// If on a planet, forward to planet_main.php
+if($player->isLandedOnPlanet()) {
+	forward(create_container('skeleton.php', 'planet_main.php', $var));
+}
 
 $sector =& $player->getSector();
 
