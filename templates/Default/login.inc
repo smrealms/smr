@@ -27,9 +27,15 @@
 		}
 		table.standard {
 			border:1px solid #0b8d35;
+			border-spacing: 0px;
 		}
-		.standard td,th{
+		.standard td {
 			border:1px solid #0b8d35;
+		}
+		.standard th {
+			border:1px solid #0b8d35;
+			background-color: #0A4E1D;
+			color: #80C870;
 		}
 		input.inputbox {
 			width:123px;
