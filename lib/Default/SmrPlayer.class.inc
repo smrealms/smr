@@ -1,4 +1,8 @@
 <?php
+
+// Exception thrown when a player cannot be found in the database
+class PlayerNotFoundException extends Exception {}
+
 require_once(get_file_loc('AbstractSmrPlayer.class.inc'));
 require_once(get_file_loc('council.inc'));
 class SmrPlayer extends AbstractSmrPlayer {
@@ -144,7 +148,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$db->query('SELECT account_id FROM player WHERE game_id = '.$db->escapeNumber($gameID).' AND player_id = '.$db->escapeNumber($playerID).' LIMIT 1');
 		if($db->nextRecord())
 			return self::getPlayer($db->getInt('account_id'),$gameID,$forceUpdate);
-		throw new Exception('Player ID not found.');
+		throw new PlayerNotFoundException('Player ID not found.');
 	}
 
 	protected function __construct($gameID,&$accountIDOrResultArray) {
@@ -211,7 +215,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 			$this->SQL = 'account_id = ' . $this->db->escapeNumber($this->accountID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID);
 		}
 		else {
-			throw new Exception('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
+			throw new PlayerNotFoundException('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
 		}
 
 
