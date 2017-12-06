@@ -109,12 +109,13 @@
 
                 <img src="images/login/bottom_right.png" width="540" height="11" alt=""><br />
 
-                <!-- header menu -->
-                <a href="http://video.smrealms.de/" target="vid"><img src="images/login/video.png" width="166" height="29" alt="Video Tutorials"></a>
-                <a href="<?php echo WIKI_URL; ?>" target="ml"><img src="images/login/sml.png" width="166" height="29" alt="Merchant Library"></a>
-                <a href="<?php echo WIKI_URL; ?>" target="manu"><img src="images/login/manual2.png" width="129" height="29" alt="Wiki"></a>
-                <a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" width="128" height="29" alt="Web Board"></a>
-                <a href="<?php echo URL; ?>/cgi-bin/awstats.pl" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a><br />
+				<!-- header menu -->
+				<img src="images/login/bg.gif" width="166" height="29">
+				<a href="<?php echo WIKI_URL; ?>" target="manu"><img src="images/login/manual2.png" width="129" height="29" alt="Wiki"></a>
+				<a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" width="128" height="29" alt="Web Board"></a>
+				<a href="<?php echo URL; ?>/cgi-bin/awstats.pl" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a>
+				<img src="images/login/bg.gif" width="166" height="29">
+				<br />
 			</p>
 			<?php
 
