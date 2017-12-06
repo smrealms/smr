@@ -196,7 +196,7 @@
 					<td style="width:470px"><?php
 						if(isset($LoginNews)) { ?>
 							<table class="standard">
-							<tr><th>Date</th><th>News</th></tr><?php
+							<tr><th>Date</th><th>Announcements</th></tr><?php
 							foreach($LoginNews as $News) { ?>
 								<tr>
 									<td>
@@ -223,8 +223,7 @@
 					<td class="center" colspan="3">
 						Players Online Now: <?php echo $ActiveSessions; ?><br /><br /><?php
 						if(isset($GameNews)) { ?>
-							Recent News<br />
-							<table class="standard" style="width:100%"><tr><th class="center">Time</th><th class="center">News</th></tr><?php
+							<table class="standard" style="width:100%"><tr><th class="center">Time</th><th class="center">Recent News</th></tr><?php
 								foreach($GameNews as $News) { ?>
 									<tr>
 										<td><?php
