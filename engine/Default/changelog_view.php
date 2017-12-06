@@ -3,11 +3,18 @@
 $template->assign('PageTopic','Change Log');
 
 if(isset($var['Since'])) {
+	$PHP_OUTPUT.=create_button(create_container('logged_in.php'), 'Continue');
+	$PHP_OUTPUT.='<br /><br />';
 	$PHP_OUTPUT.='<big>Here are the updates that have gone live since your last visit, enjoy!</big><br/><br/>';
+
+	// Make the changelog scroll if it is larger than 420px
+	$PHP_OUTPUT.='<style>div.login_scroll {height: 420px; overflow-y: auto;}</style>';
 }
 
 $db2 = new SmrMySqlDatabase();
 
+// login_scroll class is only defined when this page is viewed during login
+$PHP_OUTPUT.='<div class="login_scroll">';
 $db->query('SELECT *
 			FROM version
 			WHERE went_live > ' . (isset($var['Since']) ? $db->escapeNumber($var['Since']) : '0') . '
@@ -39,9 +46,6 @@ while ($db->nextRecord()) {
 
 	$PHP_OUTPUT.=('</ul><br />');
 }
-
-if(isset($var['Since'])) {
-	$PHP_OUTPUT.=create_button(create_container('logged_in.php'), 'Continue');
-}
+$PHP_OUTPUT.='</div>';
 
 ?>
