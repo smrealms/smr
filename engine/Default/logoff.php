@@ -5,4 +5,9 @@ if($lock) {
 }
 SmrSession::destroy();
 
+// Send the player back to the login screen
+$msg = 'You have successfully logged off!';
+header('Location: '.URL.'/login.php?msg=' . rawurlencode(htmlspecialchars($msg, ENT_QUOTES)));
+exit;
+
 ?>
