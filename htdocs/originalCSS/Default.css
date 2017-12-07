@@ -1,7 +1,8 @@
 @import url('shared.css');
 
 html, body {
-	height: 100%;
+	height: 100%; /* fallback for older browsers */
+	height: calc(100% - 10px); /* Account for padding to fix persistent vertical scrollbar */
 }
 body {
 	font-family: Arial, Sans-Serif;
