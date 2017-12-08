@@ -117,9 +117,9 @@
 
 				<!-- header menu -->
 				<a href="<?php echo WIKI_URL; ?>/tutorials#video-tutorials" target="vid"><img src="images/login/video.png" width="166" height="29" alt="Video Tutorials"></a>
-				<a href="<?php echo WIKI_URL; ?>" target="ml"><img src="images/login/sml.png" width="166" height="29" alt="Merchant Library"></a>
 				<a href="<?php echo WIKI_URL; ?>" target="manu"><img src="images/login/manual2.png" width="129" height="29" alt="Wiki"></a>
 				<a href="http://smrcnn.smrealms.de" target="board"><img src="images/login/webboard2.png" width="128" height="29" alt="Web Board"></a>
+				<a href="album" target="ml"><img src="images/login/sml.png" width="166" height="29" alt="Merchant Library"></a>
 				<a href="<?php echo URL; ?>/cgi-bin/awstats.pl" target="stat"><img src="images/login/stats2.png" width="180" height="29" alt="Site Statistics"></a>
 				<br />
 			</p>
