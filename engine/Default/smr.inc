@@ -934,48 +934,65 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 
 		$template->assign('WeaponReorderLink',SmrSession::getNewHREF(create_container('skeleton.php', 'weapon_reorder.php')));
 
-		$nextVoteTime = array();
-		$db->query('SELECT link_id,timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' ORDER BY link_id LIMIT 3');
-		while($db->nextRecord()) {
-			$nextVoteTime[$db->getInt('link_id')] = TIME_BETWEEN_VOTING - (TIME - $db->getField('timeout'));
-		}
 	}
 
+	// ------- VOTING --------
 	$container = create_container('vote_link.php');
+	$voteSites = array();
 
-	$voteLinks = array();
-	$voteLinks[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'location' => 'http://www.mpogd.com/games/game.asp?ID=1145', 'name' => 'MPOGD');
-	//OMGN no longer do voting - the link actually just redirects to archive site.
-	///$voteLinks[2] = array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'location' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30', 'name' => 'OMGN');
-	// as long as TWG uses this stupid captcha which is very hard to figure out we will not support this site
-	// nor will we give free turns for NOT voting
-	//$voteLinks[3] = array('default_img' => 'twg.png', 'star_img' => 'twg_vote.png', 'location' => 'http://www.topwebgames.com/in.asp?id=136', 'name' => 'TWG');
+	// MPOGD no longer exists
+	//$voteSites[1] = array('default_img' => 'mpogd.png', 'star_img' => 'mpogd_vote.png', 'base_url' => 'http://www.mpogd.com/games/game.asp?ID=1145');
 
-	$minVoteTime = 86400;
-	$voteSite = array();
-	for($i=1;$i<2;$i++) {
-		if(!isset($nextVoteTime[$i])) {
-			$nextVoteTime[$i] = 0;
-		}
-		$minVoteTime = min($minVoteTime,$nextVoteTime[$i]);
-		$voteSite[$i] = '<a href=';
-		if(SmrSession::$game_id != 0 && $nextVoteTime[$i] <= 0) {
-			$container['link_id'] = $i;
-			$voteSite[$i] .= '\'javascript:voteSite("' . $voteLinks[$i]['location'] . '",';
-			$voteSite[$i] .= '"' . SmrSession::getNewHREF($container,true) . '")\'';
-			$img = $voteLinks[$i]['star_img'];
-		}
-		else {
-			$voteSite[$i] .= '"' . $voteLinks[$i]['location'] . '" target="_blank"';
-			$img = $voteLinks[$i]['default_img'];
-		}
+	// OMGN no longer do voting - the link actually just redirects to archive site.
+	//$voteSites[2] = array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'base_url' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30');
 
-		$voteSite[$i] .= '><img class="vote_site" src="'.URL.'/images/game_sites/' . $img . '" alt="' . $voteLinks[$i]['name'] . '" width="98" height="41"></a>';
+	$voteSites[3] = array('default_img' => 'twg.png',
+	                      'star_img' => 'twg_vote.png',
+	                      'base_url' => 'http://topwebgames.com/in.aspx?ID=136&alwaysreward=1');
+
+	// Determine the time left until the account can vote again at each site
+	// We ignore rows with links that are no longer active
+	// (note: try not to change the $voteSites keys)
+	$voteWait = array();
+	$activeLinks = array_keys($voteSites);
+	$db->query('SELECT link_id, timeout FROM vote_links WHERE account_id=' . $db->escapeNumber(SmrSession::$account_id) . ' AND link_id IN (' . join(',', $activeLinks) . ') LIMIT ' . $db->escapeNumber(count($activeLinks)));
+	while($db->nextRecord()) {
+		// 'timeout' is the last time the player clicked this vote site link
+		$voteWait[$db->getInt('link_id')] = ($db->getField('timeout') + TIME_BETWEEN_VOTING) - TIME;
 	}
-	$template->assign('VoteSites',$voteSite);
-	$template->assign('TimeToNextVote',$minVoteTime);
 
+	$modVoteSites = array();
+	foreach ($voteSites as $linkId => $voteSite) {
+		// If not in the vote_link database, we can vote for turns at this site now
+		if (!isset($voteWait[$linkId])) {
+			$voteWait[$linkId] = 0;
+		}
 
+		// update attributes if we can vote for free turns here
+		if (SmrSession::$game_id != 0 && $voteWait[$linkId] <= 0) {
+			$container['link_id'] = $linkId;
+			$container['can_get_turns'] = true;
+			$internalUrl = SmrSession::getNewHREF($container, true);
+			$query = array('account' => $player->getAccountID(), 'game' => $player->getGameID(), 'link' => $linkId);
+			$externalUrl = $voteSite['base_url'] . '&' . http_build_query($query);
+			$modVoteSites[] = array('url' => 'javascript:voteSite("' . $externalUrl . '","' . $internalUrl . '")',
+			                        'img' => $voteSite['star_img']);
+		} else {
+			$modVoteSites[] = array('url' => $voteSite['base_url'],
+			                        'img' => $voteSite['default_img']);
+		}
+	}
+	$template->assign('VoteSites', $modVoteSites);
+
+	// Determine the minimum time until the next vote across all sites
+	$minVoteWait = min($voteWait);
+	if ($minVoteWait <= 0) {
+		$template->assign('TimeToNextVote', 'now');
+	} else {
+		$template->assign('TimeToNextVote', 'in ' . format_time($minVoteWait, true));
+	}
+
+	// ------- VERSION --------
 	$db->query('SELECT * FROM version ORDER BY went_live DESC LIMIT 1');
 	$version = '';
 	if ($db->nextRecord()) {

@@ -1,29 +1,21 @@
 <?php
-$db->query('SELECT timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($player->getAccountID()) . ' AND link_id=' . $db->escapeNumber($var['link_id']) . ' LIMIT 1');
 
-// They get to vote once every 24 hours
-$valid = !$db->nextRecord() || $db->getField('timeout') <= TIME - TIME_BETWEEN_VOTING;
+$container = create_container('skeleton.php', 'current_sector.php');
 
-// Sanity checking
-if($var['link_id'] > 3 || $var['link_id'] < 1 ) {
-	$valid = false;
-}
-
-
-if($valid == true) {
-	if($player->getLastTurnUpdate() > $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME) { //Make sure we cannot take their last turn update before start time
+// Sanity check that we got here by means of allowing free turns
+if ($var['can_get_turns'] == true) {
+	// Turns are updated by setting the last turn update to an earlier time.
+	// Make sure not to set their last turn update to before start time.
+	if ($player->getLastTurnUpdate() > $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME) {
 		// Allow vote
-		$db->query('REPLACE INTO vote_links (account_id,link_id,timeout) VALUES(' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($var['link_id']) . ',' . $db->escapeNumber(TIME) . ')');
-		$player->setLastTurnUpdate($player->getLastTurnUpdate()-VOTE_BONUS_TURNS_TIME); //Give turns via added time, no rounding errors.
-		$player->updateTurns(); //Display updated turns straight away.
-	}
-	else {
+		$db->query('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($player->getAccountID()) . ',' . $db->escapeNumber($var['link_id']) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(false) . ')');
+		$voting = '<b><span class="red">v</span>o<span class="blue">t</span><span class="red">i</span>n<span class="blue">g</span></b>';
+		$container['msg'] = "Thank you for $voting! You will receive bonus turns once your vote is processed.";
+	} else {
 		create_error('You cannot gain bonus turns in this game yet, please wait '.format_time( $player->getGame()->getStartTurnsDate() + VOTE_BONUS_TURNS_TIME - min(TIME, $player->getLastTurnUpdate())).'.');
 	}
 }
 
-$container = create_container('skeleton.php', 'current_sector.php');
-$container['voted'] = true;
 forward($container);
 
 ?>
