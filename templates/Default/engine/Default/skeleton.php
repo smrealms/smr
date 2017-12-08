@@ -43,9 +43,11 @@
 			</tr>
 			<tr>
 				<td class="footer_left">
-					<div style="width:294px;" class="center">Get <b><u>FREE TURNS</u></b> for voting if you see the star, next available <span id="v"><?php if($TimeToNextVote <= 0){ ?>now<?php }else{ ?>in <?php echo format_time($TimeToNextVote,true); } ?></span>.</div><?php
-						foreach($VoteSites as $VoteSite) {
-							echo $VoteSite;
+					<div>Get <b><u>FREE TURNS</u></b> for voting if you see the star, available <span id="v"><?php echo $TimeToNextVote ?></span>.</div><?php
+						foreach ($VoteSites as $VoteSite) { ?>
+							<a href='<? echo $VoteSite['url']; ?>' target="_blank">
+								<img class="vote_site" src="images/game_sites/<?php echo $VoteSite['img']; ?>" alt="" width="98" height="41" />
+							</a><?php
 						} ?>
 				</td>
 				<td class="footer_right">
