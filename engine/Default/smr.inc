@@ -559,7 +559,9 @@ function do_voodoo() {
 				//Refetch var info in case it changed between grabbing lock.
 				SmrSession::fetchVarInfo();
 				if (!($var = SmrSession::retrieveVar(SmrSession::$SN))) {
-					$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber(SmrSession::$account_id) . ',0,0)');
+					if (ENABLE_DEBUG) {
+						$db->query('INSERT INTO debug VALUES (\'SPAM\',' . $db->escapeNumber(SmrSession::$account_id) . ',0,0)');
+					}
 					create_error('Please do not spam click!');
 				}
 			}
