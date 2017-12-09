@@ -8,12 +8,8 @@ $fn_game = function ($message) {
 	$msg = "I am linked to game `".$game->getDisplayName()."` in this channel.";
 
 	$message->channel->sendMessage($msg);
-
-	// Close the connection to prevent timeouts
-	$db = new SmrMySqlDatabase();
-	$db->close();
 };
 
-$discord->registerCommand('game', $fn_game, ['description' => 'Get name of game linked to this channel']);
+$discord->registerCommand('game', mysql_cleanup($fn_game), ['description' => 'Get name of game linked to this channel']);
 
 ?>
