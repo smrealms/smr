@@ -108,7 +108,7 @@ else {
 		</tr>
 		<tr>
 			<td class="top">Reason:&nbsp;</td>
-			<td><textarea spellcheck="true" name="message"></textarea></td>
+			<td><textarea spellcheck="true" name="message" style="height: 5em"></textarea></td>
 		</tr>
 	</table>
 	<br />
