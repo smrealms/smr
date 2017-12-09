@@ -10,7 +10,7 @@ error_reporting(E_ALL);
 
 $discord = new Discord\DiscordCommandClient([
 	'token' => DISCORD_TOKEN,
-	'prefix' => '.',
+	'prefix' => defined('COMMAND_PREFIX') ? COMMAND_PREFIX : '.',
 	'discordOptions' => (['loggerLevel' => 'INFO']),
 ]);
 
