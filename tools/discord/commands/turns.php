@@ -6,12 +6,12 @@ function get_turns($player) {
 	$turns = $player->getTurns() + floor((time() - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600);
 	$turns = min($turns, $player->getMaxTurns());
 
-	$msg = $player->getPlayerName() . " has $turns/" . $player->getMaxTurns() . " turns";
+	$msg = $player->getPlayerName() . " has $turns/" . $player->getMaxTurns() . " turns.";
 
 	// Calculate time to max turns if under the max
 	if ($turns < $player->getMaxTurns()) {
 		$maxTime = ceil(($player->getMaxTurns() - $turns) * 3600 / $ship->getRealSpeed());
-		$msg .= "\nMax turns will be reached in " . format_time($maxTime, true);
+		$msg .= " At max turns in " . format_time($maxTime, true) . ".";
 	}
 
 	return $msg;
@@ -50,7 +50,7 @@ $fn_turns_all = function ($message) {
 		}
 	}
 
-	$message->channel->sendMessage(join("\n\n", $results));
+	$message->channel->sendMessage(join("\n", $results));
 };
 
 $cmd_turns = $discord->registerCommand('turns', mysql_cleanup($fn_turns), ['description' => 'Get current turns']);
