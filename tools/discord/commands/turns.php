@@ -23,10 +23,6 @@ $fn_turns = function ($message) {
 
 	$msg = get_turns($link->player);
 	$message->channel->sendMessage($msg);
-
-	// Close the connection to prevent timeouts
-	$db = new SmrMySqlDatabase();
-	$db->close();
 };
 
 $fn_turns_all = function ($message) {
@@ -55,13 +51,10 @@ $fn_turns_all = function ($message) {
 	}
 
 	$message->channel->sendMessage(join("\n\n", $results));
-
-	// Close the connection to prevent timeouts
-	$db2->close();
 };
 
-$cmd_turns = $discord->registerCommand('turns', $fn_turns, ['description' => 'Get current turns']);
+$cmd_turns = $discord->registerCommand('turns', mysql_cleanup($fn_turns), ['description' => 'Get current turns']);
 
-$cmd_turns->registerSubCommand('all', $fn_turns_all, ['description' => 'Get current turns for all players whose info is shared with you']);
+$cmd_turns->registerSubCommand('all', mysql_cleanup($fn_turns_all), ['description' => 'Get current turns for all players whose info is shared with you']);
 
 ?>
