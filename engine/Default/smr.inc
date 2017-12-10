@@ -132,12 +132,12 @@ function smrBBCode($bbParser, $action, $tagName, $default, $tagParams, $tagConte
 	return htmlspecialchars($params['_tag']) . $tagContent . htmlspecialchars($params['_endtag']);
 }
 
-function &xmlify(&$str) {
+function xmlify($str) {
 	$xml = htmlspecialchars($str, ENT_XML1, 'utf-8');
 	return $xml;
 }
 
-function &bbifyMessage($message,$noLinks=false) {
+function bbifyMessage($message, $noLinks=false) {
 	static $bbParser;
 	if(!isset($bbParser)) {
 		require_once(LIB.'External/BBCode/nbbc.php');

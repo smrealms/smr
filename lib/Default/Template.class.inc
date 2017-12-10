@@ -178,7 +178,7 @@ class Template {
 //		}
 //	}
 	
-	protected function checkDisableAJAX(&$html) {
+	protected function checkDisableAJAX($html) {
 		return preg_match('/<input'.'[^>]*'.'[^(submit)(hidden)(image)]'.'[^>]*'.'>/i', $html)!=0;
 	}
 	
