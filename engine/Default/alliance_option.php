@@ -38,7 +38,7 @@ if ($db->getBoolean('remove_member')) {
 		'text' => 'Remove a trader from alliance roster.',
 	);
 }
-if ($player->getAccountID() == $alliance->getLeaderID()) {
+if ($player->isAllianceLeader()) {
 	$container['body'] = 'alliance_leadership.php';
 	$links[] = array(
 		'link' => create_link($container, 'Handover Leadership'),
@@ -71,6 +71,13 @@ if ($db->getBoolean('treaty_entry')) {
 	$links[] = array(
 		'link' => create_link($container, 'Negotiate Treaties'),
 		'text' => 'Negotitate treaties with other alliances.',
+	);
+}
+if ($player->isAllianceLeader()) {
+	$container['body'] = 'alliance_set_op.php';
+	$links[] = array(
+		'link' => create_link($container, 'Schedule Operation'),
+		'text' => 'Schedule and manage the next alliance operation.',
 	);
 }
 
