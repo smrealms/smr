@@ -270,3 +270,14 @@ table.csForces th.header {
 .neutralBack, .neutralBack:hover {
 	background-color: #FFD800;
 }
+
+/* Op response table */
+table.opResponse {
+	border: 2px solid #BB0808;
+	background-color: #500;
+	border-spacing: 0px;
+}
+.opResponse th {
+	background-color: #BB0808;
+	color: #DEDE00;
+}
