@@ -89,7 +89,11 @@ $PHP_OUTPUT.= '<br />Speed: ';
 $PHP_OUTPUT.= $ship->getRealSpeed();
 $PHP_OUTPUT.= ' turns/hour<br />Max: ';
 $PHP_OUTPUT.= $player->getMaxTurns();
-$PHP_OUTPUT.= ' turns<br /><br /><span class="yellow bold">Supported Hardware</span><a href="' . WIKI_URL . '/game-guide/technologies" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Technologies"/></a><br />';
+$PHP_OUTPUT.= ' turns<br /><br />';
+
+$container['body'] = 'configure_hardware.php';
+$PHP_OUTPUT.= create_link($container, '<span class="yellow bold">Supported Hardware</span>');
+$PHP_OUTPUT.= '<a href="' . WIKI_URL . '/game-guide/technologies" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Technologies"/></a><br />';
 
 if (!$ship->canHaveScanner() &&
 	!$ship->canHaveIllusion() &&
