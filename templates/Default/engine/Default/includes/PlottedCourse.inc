@@ -11,12 +11,12 @@ if($ThisPlayer->hasPlottedCourse()) {
 			</td>
 			<td class="top right">
 				<div class="buttonA">
-					<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorHREF(); ?>">&nbsp; Follow Course (<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
+					<a class="buttonA" href="<?php echo $NextSector->getCurrentSectorHREF(); ?>">&nbsp; Follow Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
 				</div><?php
 				if($ThisShip->hasScanner()) { ?>
 					<br /><br />
 					<div class="buttonA">
-						<a class="buttonA" href="<?php echo $NextSector->getScanSectorHREF(); ?>">&nbsp; Scan Course (<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
+						<a class="buttonA" href="<?php echo $NextSector->getScanSectorHREF(); ?>">&nbsp; Scan Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
 					</div><?php
 				} ?>
 			</td>
