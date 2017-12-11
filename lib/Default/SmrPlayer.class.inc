@@ -1543,6 +1543,22 @@ class SmrPlayer extends AbstractSmrPlayer {
 		}
 	}
 
+	// Get bounties that can be claimed by this player
+	// Type must be 'HQ' or 'UG'
+	public function getClaimableBounties($type) {
+		$bounties = array();
+		$this->db->query('SELECT * FROM bounty WHERE claimer_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND type=' . $this->db->escapeString($type));
+		while ($this->db->nextRecord()) {
+			$bounties[] = array(
+				'player' => SmrPlayer::getPlayer($this->db->getInt('account_id'), $this->getGameID()),
+				'bounty_id' => $this->db->getInt('bounty_id'),
+				'credits' => $this->db->getInt('amount'),
+				'smr_credits' => $this->db->getInt('smr_credits'),
+			);
+		}
+		return $bounties;
+	}
+
 	public function isPresident() {
 		$president =& Council::getPresident($this->getGameID(),$this->getRaceID());
 		return is_object($president)&&$this->equals($president);

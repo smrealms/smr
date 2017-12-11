@@ -6,26 +6,23 @@ $template->assign('PageTopic','Bounty Payout');
 require_once(get_file_loc('menu.inc'));
 if ($sector->hasHQ()) {
 	create_hq_menu();
-	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND type = \'HQ\'');
+	$bounties = $player->getClaimableBounties('HQ');
 }
 else {
 	create_ug_menu();
-	$db->query('SELECT * FROM bounty WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . ' AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . ' AND type = \'UG\'');
+	$bounties = $player->getClaimableBounties('UG');
 }
 
 $claimText='';
 
 if(!isset($var['ClaimText'])) {
-	if ($db->getNumRows()) {
+	if (!empty($bounties)) {
 		$claimText.=('You have claimed the following bounties<br /><br />');
-		$db2 = new SmrMySqlDatabase();
 	
-		while ($db->nextRecord()) {
+		foreach ($bounties as $bounty) {
 			// get bounty id from db
-			$bounty_id = $db->getInt('bounty_id');
-			$acc_id = $db->getInt('account_id');
-			$amount = $db->getInt('amount');
-			$smrCredits = $db->getInt('smr_credits');
+			$amount = $bounty['credits'];
+			$smrCredits = $bounty['smr_credits'];
 			// no interest on bounties
 			// $time = TIME;
 			// $days = ($time - $db->getField('time')) / 60 / 60 / 24;
@@ -34,8 +31,7 @@ if(!isset($var['ClaimText'])) {
 			// add bounty to our cash
 			$player->increaseCredits($amount);
 			$account->increaseSmrCredits($smrCredits);
-			$name =& SmrPlayer::getPlayer($acc_id, $player->getGameID());
-			$claimText.=('<span class="yellow">'.$name->getPlayerName().'</span> : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
+			$claimText.=('<span class="yellow">'.$bounty['player']->getPlayerName().'</span> : <span class="creds">' . number_format($amount) . '</span> credits and <span class="red">' . number_format($smrCredits) . '</span> SMR credits<br />');
 	
 			// add HoF stat
 			$player->increaseHOF(1,array('Bounties','Claimed','Results'), HOF_PUBLIC);
@@ -43,10 +39,10 @@ if(!isset($var['ClaimText'])) {
 			$player->increaseHOF($smrCredits,array('Bounties','Claimed','SMR Credits'), HOF_PUBLIC);
 	
 			// delete bounty
-			$db2->query('DELETE FROM bounty
-						WHERE game_id = ' . $db2->escapeNumber($player->getGameID()) . '
-							AND claimer_id = ' . $db2->escapeNumber($player->getAccountID()) . '
-							AND bounty_id = ' . $db2->escapeNumber($bounty_id));
+			$db->query('DELETE FROM bounty
+						WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+							AND claimer_id = ' . $db->escapeNumber($player->getAccountID()) . '
+							AND bounty_id = ' . $db->escapeNumber($bounty['bounty_id']));
 		}
 	}
 	else {

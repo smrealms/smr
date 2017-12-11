@@ -15,7 +15,7 @@ Bounties awaiting collection:<br /><br />
 					echo "None";
 				}
 				foreach ($Claims as $Claim) {
-					echo $Claim['name']; ?> : <span class="creds"><? echo $Claim['credits']; ?></span> credits and <span class="yellow"><?php echo $Claim['smr_credits']; ?></span> SMR credits<br />
+					echo $Claim['player']->getLinkedDisplayName(); ?> : <span class="creds"><? echo number_format($Claim['credits']); ?></span> credits and <span class="yellow"><?php echo number_format($Claim['smr_credits']); ?></span> SMR credits<br />
 					<?php
 				} ?>
 			</td><?php
