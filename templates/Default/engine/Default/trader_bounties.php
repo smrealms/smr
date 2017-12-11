@@ -1,5 +1,17 @@
+You have the following bounties on your head:<br /><br />
+<table>
+	<tr>
+		<td><span class="green">Federal</span> :</td>
+		<td><?php echo $BountyHQ; ?></td>
+	</tr>
+	<tr>
+		<td><span class="red">Underground</span> :</td>
+		<td><?php echo $BountyUG; ?></td>
+	</tr>
+</table>
+<br />
 
-Bounties awaiting collection:<br /><br />
+<p>Bounties awaiting your collection:</p>
 
 <table class="standard fullwidth">
 	<tr>

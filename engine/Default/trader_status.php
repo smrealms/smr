@@ -66,22 +66,23 @@ $PHP_OUTPUT.= '</span> credits in your personal account.';
 
 $PHP_OUTPUT.= '</td><td class="top" style="width:50%">';
 
+// Bounties
 $container['body'] = 'trader_bounties.php';
 $PHP_OUTPUT.=create_link($container, '<span class="yellow bold">Bounties</span><a href="' . WIKI_URL . '/game-guide/locations#headquarters" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Bounties"/></a>');
 
-$PHP_OUTPUT.= '<br /><span class="green">Federal: </span>';
-$bounty = $player->getCurrentBounty('HQ');
-if($bounty['Amount']>0||$bounty['SmrCredits']>0)
-	$PHP_OUTPUT.= number_format($bounty['Amount']).' credits and '.number_format($bounty['SmrCredits']).' SMR credits';
-else
-	$PHP_OUTPUT.= 'None';
-$PHP_OUTPUT.= '<br /><span class="red">Underground: </span>';
-$bounty = $player->getCurrentBounty('UG');
-if($bounty['Amount']>0||$bounty['SmrCredits']>0)
-	$PHP_OUTPUT.= number_format($bounty['Amount']).' credits and '.number_format($bounty['SmrCredits']).' SMR credits';
-else
-	$PHP_OUTPUT.= 'None';
+$db->query('SELECT count(*) FROM bounty WHERE claimer_id=' . $db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $db->escapeNumber($player->getGameID()));
+$db->nextRecord();
+$claims = $db->getInt('count(*)');
+$PHP_OUTPUT.= '<br />You can claim <span class="yellow">'.$claims.'</span> bounties.';
 
+if ($player->hasCurrentBounty('HQ')) {
+	$PHP_OUTPUT.= '<br />You are <span class="red">wanted</span> by the <span class="green">Federal Government</span>!';
+}
+if ($player->hasCurrentBounty('UG')) {
+	$PHP_OUTPUT.= '<br />You are <span class="red">wanted</span> by the <span class="red">Underground</span>!';
+}
+
+// Ship
 $PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><a href="' . URL . '/ship_list.php" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Ship List"/></a><br />Name: ';
 
 $PHP_OUTPUT.= $ship->getName();
