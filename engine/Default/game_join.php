@@ -22,7 +22,7 @@ if (SmrGame::getGame($var['game_id'])->getTotalPlayers() >= $game['GameMaxPlayer
 if (TIME > $game['EndDate'])
 	create_error('You want to join a game that is already over?');
 
-$template->assign('PageTopic', 'Join Game');
+$template->assign('PageTopic', 'Join Game: ' . $game['GameName'] . ' (' . $game['ID'] . ')');
 
 $raceInfo =& Globals::getRaces();
 $raceDescriptions='';
