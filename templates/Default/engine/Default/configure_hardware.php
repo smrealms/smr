@@ -1,6 +1,6 @@
 <?php
 if (!$ThisShip->hasCloak() && !$ThisShip->hasIllusion() && !$ThisShip->hasJump()) {
-	?>You have no configurable hardware!<?php
+	?>You have no configurable hardware installed!<?php
 }
 else { ?>
 	<?php
