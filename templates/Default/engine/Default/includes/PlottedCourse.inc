@@ -1,5 +1,6 @@
 <?php
 if($ThisPlayer->hasPlottedCourse()) {
+	$CancelCourseHREF = SmrSession::getNewHREF(create_container('course_plot_cancel_processing.php'));
 	$PlottedCourse =& $ThisPlayer->getPlottedCourse();
 	$NextSector =& SmrSector::getSector($ThisPlayer->getGameID(),$PlottedCourse->getNextOnPath(),$ThisPlayer->getAccountID()); ?>
 	<table class="nobord fullwidth">
@@ -19,6 +20,10 @@ if($ThisPlayer->hasPlottedCourse()) {
 						<a class="buttonA" href="<?php echo $NextSector->getScanSectorHREF(); ?>">&nbsp; Scan Course (#<?php echo $PlottedCourse->getNextOnPath(); ?>) &nbsp;</a>
 					</div><?php
 				} ?>
+				<br /><br />
+				<div class="buttonA">
+					<a class="buttonA" href="<?php echo $CancelCourseHREF; ?>">&nbsp; Cancel Course &nbsp;</a>
+				</div>
 			</td>
 		</tr>
 	</table><?php
