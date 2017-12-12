@@ -474,7 +474,17 @@ function word_filter($string) {
 	}
 
 	return $string;
+}
 
+// choose correct pluralization based on amount
+function pluralise($word, $count = 0) {
+	if($count == 1) {
+		return $word;
+	}
+	if(strtolower($word) == 'is') {
+		return 'are';
+	}
+	return $word . 's';
 }
 
 function getIpAddress() {
