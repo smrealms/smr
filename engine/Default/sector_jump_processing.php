@@ -11,9 +11,10 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$sector->markVisited($player);
 	forward(create_container('skeleton.php', 'current_sector.php'));
 }
-$action = $_REQUEST['action'];
-if ($action == 'No')
+
+if (isset($_POST['action']) && $_POST['action'] == 'No') {
 	forward(create_container('skeleton.php', $var['target_page']));
+}
 
 // you can't move while on planet
 if ($player->isLandedOnPlanet())
@@ -29,6 +30,16 @@ if (!is_numeric($target))
 if ($player->getSectorID() == $target)
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
+if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
+	create_error('The target sector doesn\'t exist!');
+
+// If the Calculate Turn Cost button was pressed
+if (isset($_POST['action']) && $_POST['action'] == 'Calculate Turn Cost') {
+	$container = create_container('skeleton.php', 'sector_jump_calculate.php');
+	$container['target'] = $target;
+	forward($container);
+}
+
 if ($sector->hasForces()) {
 	$sectorForces =& $sector->getForces();
 	foreach($sectorForces as &$forces) {
@@ -37,9 +48,6 @@ if ($sector->hasForces()) {
 		}
 	} unset($forces);
 }
-
-if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
-	create_error('The target sector doesn\'t exist!');
 
 // create sector object for target sector
 $targetSector =& SmrSector::getSector($player->getGameID(), $target);
