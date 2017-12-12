@@ -1,7 +1,9 @@
 <?php
+
 $sector =& $player->getSector();
 if (isset($_REQUEST['target'])) $target = trim($_REQUEST['target']);
 else $target = $var['target'];
+
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$player->setSectorID($target);
@@ -12,15 +14,6 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 $action = $_REQUEST['action'];
 if ($action == 'No')
 	forward(create_container('skeleton.php', $var['target_page']));
-
-// get from and to sectors
-$from = $player->getSectorID();
-
-if (empty($target) || $target == '')
-	create_error('Where do you want to go today?');
-
-// get our rank
-$rank_id = $account->getRank();
 
 // you can't move while on planet
 if ($player->isLandedOnPlanet())
@@ -40,7 +33,7 @@ if ($sector->hasForces()) {
 	$sectorForces =& $sector->getForces();
 	foreach($sectorForces as &$forces) {
 		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
-			create_error('You cant jump when there are unfriendly forces in the sector!');
+			create_error('You cannot jump when there are hostile mines in the sector!');
 		}
 	} unset($forces);
 }
