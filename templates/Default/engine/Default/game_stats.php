@@ -175,7 +175,7 @@
 	accessed the server in the last 10 minutes.<br /><?php
 	
 	if (count($CurrentPlayers) == 0) {
-		?>Noone was moving so your ship computer couldn't intercept any transmissions.<br /><?php
+		?>No one was moving so your ship computer couldn't intercept any transmissions.<br /><?php
 	}
 	else {
 		if (count($CurrentPlayers) == $PlayersAccessed) {
