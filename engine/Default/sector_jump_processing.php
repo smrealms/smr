@@ -49,19 +49,20 @@ $path =& Plotter::findDistanceToX($targetSector, $player->getSector(), true);
 if($path===false)
 	create_error('Unable to plot from '.$start.' to '.$target.'.');
 
-// send scout msg
-$sector->leavingSector($player,MOVEMENT_JUMP);
-
-// Move the user around
-// TODO: (Must be done while holding both sector locks)
 $distance = $path->getRelativeDistance();
 $turnsToJump = max(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE));
+
+$maxMisjump = max(0,round(($distance - $turnsToJump) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
 
 // check for turns
 if ($player->getTurns() < $turnsToJump)
 	create_error('You don\'t have enough turns for that jump!');
 
-$maxMisjump = max(0,round(($distance - $turnsToJump) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
+// send scout msg
+$sector->leavingSector($player,MOVEMENT_JUMP);
+
+// Move the user around
+// TODO: (Must be done while holding both sector locks)
 $misjump = mt_rand(0,$maxMisjump);
 if ($misjump > 0) { // we missed the sector
 	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
