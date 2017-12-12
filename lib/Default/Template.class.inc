@@ -258,16 +258,6 @@ class Template {
 		}
 	}
 
-	protected function pluralise($word, $count = 0) {
-		if($count == 1) {
-			return $word;
-		}
-		if(strtolower($word) == 'is') {
-			return 'are';
-		}
-		return $word . 's';
-	}
-	
 	/*
 	 * EVAL is special (well, will be when needed and implemented in the javascript).
 	 */
