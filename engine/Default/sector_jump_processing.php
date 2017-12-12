@@ -44,15 +44,9 @@ if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
 // create sector object for target sector
 $targetSector =& SmrSector::getSector($player->getGameID(), $target);
 
-require_once(get_file_loc('Plotter.class.inc'));
-$path =& Plotter::findDistanceToX($targetSector, $player->getSector(), true);
-if($path===false)
-	create_error('Unable to plot from '.$start.' to '.$target.'.');
-
-$distance = $path->getRelativeDistance();
-$turnsToJump = max(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE));
-
-$maxMisjump = max(0,round(($distance - $turnsToJump) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
+$jumpInfo = $player->getJumpInfo($targetSector);
+$turnsToJump = $jumpInfo['turn_cost'];
+$maxMisjump = $jumpInfo['max_misjump'];
 
 // check for turns
 if ($player->getTurns() < $turnsToJump)
