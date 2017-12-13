@@ -172,7 +172,9 @@ class SmrSession {
 			//	echo 'Sleeping for: ' . $sleepTime . 'us';
 				usleep($sleepTime);
 			}
-			self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
+			if (ENABLE_DEBUG) {
+				self::$db->query('INSERT INTO debug VALUES (' . self::$db->escapeString('Delay: ' . $currentPage) . ',' . self::$db->escapeNumber(self::$account_id) . ',' . self::$db->escapeNumber($initialTimeBetweenLoads) . ',' . self::$db->escapeNumber($timeBetweenLoads) . ')');
+			}
 		}
 
 		define('MICRO_TIME', microtime());
