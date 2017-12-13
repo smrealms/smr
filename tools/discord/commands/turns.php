@@ -2,14 +2,13 @@
 
 function get_turns_message($player) {
 	// turns only update when the player is active, so calculate current turns
-	$ship = $player->getShip(true);
-	$turns = $player->getTurns() + floor((time() - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600);
-	$turns = min($turns, $player->getMaxTurns());
-
+	$turns = min($player->getTurns() + $player->getTurnsGained(time(), true),
+	             $player->getMaxTurns());
 	$msg = $player->getPlayerName() . " has $turns/" . $player->getMaxTurns() . " turns.";
 
 	// Calculate time to max turns if under the max
 	if ($turns < $player->getMaxTurns()) {
+		$ship = $player->getShip(true);
 		$maxTime = ceil(($player->getMaxTurns() - $turns) * 3600 / $ship->getRealSpeed());
 		$msg .= " At max turns in " . format_time($maxTime, true) . ".";
 	}

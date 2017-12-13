@@ -607,20 +607,26 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->originalMaintenance;
 	}
 
+	// Turns only update when player is active.
+	// Calculate turns gained between given time and the last turn update
+	public function getTurnsGained($time, $forceUpdate=false) {
+		$timeDiff = $time - $this->getLastTurnUpdate();
+		$ship = $this->getShip($forceUpdate);
+		$extraTurns = floor($timeDiff * $ship->getRealSpeed() / 3600);
+		return $extraTurns;
+	}
+
 	public function updateTurns() {
 		// is account validated?
 		if (!$this->getAccount()->isValidated()) return;
-		$ship =& $this->getShip();
-
-		// update turns?
-		$time_diff = TIME - $this->getLastTurnUpdate();
 
 		// how many turns would he get right now?
-		$extraTurns = floor($time_diff * $ship->getRealSpeed() / 3600);
+		$extraTurns = $this->getTurnsGained(TIME);
 
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
 			// recalc the time to avoid errors
+			$ship =& $this->getShip();
 			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed());
 
 			$startTurnsDate = $this->getGame()->getStartTurnsDate();
@@ -632,12 +638,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			}
 
 			$this->setLastTurnUpdate($newLastTurnUpdate);
-
-
 			$this->giveTurns($extraTurns);
 		}
 	}
-
 
 	function isIgnoreGlobals() {
 		return $this->ignoreGlobals;
