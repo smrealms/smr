@@ -23,6 +23,6 @@ if (!empty($OpDate)) { ?>
 	<form method="POST" action="<?php echo $OpProcessingHREF; ?>">
 		<input type="text" name="date" />
 		<input type="submit" value="Confirm" />
-	</form><?
+	</form><?php
 }
 ?>
