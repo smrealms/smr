@@ -30,26 +30,7 @@ $fn_turns_all = function ($message) {
 	if (!$link->valid) return;
 	$player = $link->player;
 
-	// initialize results with current player
-	$results = array(get_turns_message($player));
-
-	// process shared players
-	$db2 = new SmrMySqlDatabase();
-	$db2->query('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $db2->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db2->escapeNumber($player->getGameID()) . ')');
-	while ($db2->nextRecord()) {
-		try {
-			$otherPlayer = SmrPlayer::getPlayer($db2->getInt('from_account_id'), $player->getGameID(), true);
-		} catch (PlayerNotFoundException $e) {
-			// Skip players that have not joined this game
-			continue;
-		}
-
-		// players must be in the same alliance
-		if ($player->hasAlliance() && $player->getAllianceID() == $otherPlayer->getAllianceID()) {
-			$results[] = get_turns_message($otherPlayer);
-		}
-	}
-
+	$results = array_map('get_turns_message', $player->getSharingPlayers(true));
 	$message->channel->sendMessage(join("\n", $results));
 };
 

@@ -217,8 +217,36 @@ class SmrPlayer extends AbstractSmrPlayer {
 		else {
 			throw new PlayerNotFoundException('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
 		}
+	}
 
+	// Get array of players whose info can be accessed by this player.
+	// Skips players who are not in the same alliance as this player.
+	public function getSharingPlayers($forceUpdate=false) {
+		$results = array($this);
 
+		// Only return this player if not in an alliance
+		if (!$this->hasAlliance()) {
+			return $results;
+		}
+
+		// Get other players who are sharing info for this game.
+		// NOTE: game_id=0 means that player shares info for all games.
+		$this->db->query('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND (game_id=0 OR game_id=' . $this->db->escapeNumber($this->getGameID()) . ')');
+		while ($this->db->nextRecord()) {
+			try {
+				$otherPlayer = SmrPlayer::getPlayer($this->db->getInt('from_account_id'),
+				                                    $this->getGameID(), $forceUpdate);
+			} catch (PlayerNotFoundException $e) {
+				// Skip players that have not joined this game
+				continue;
+			}
+
+			// players must be in the same alliance
+			if ($this->sameAlliance($otherPlayer)) {
+				$results[] = $otherPlayer;
+			}
+		}
+		return $results;
 	}
 
 	public function getSQL() {
