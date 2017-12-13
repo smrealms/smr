@@ -1836,6 +1836,20 @@ class SmrPlayer extends AbstractSmrPlayer {
 		$this->db->query('DELETE FROM player_plotted_course WHERE '.$this->SQL.' LIMIT 1');
 	}
 
+	// Computes the turn cost and max misjump between current and target sector
+	public function getJumpInfo(SmrSector $targetSector) {
+		require_once(get_file_loc('Plotter.class.inc'));
+		$path = Plotter::findDistanceToX($targetSector, $this->getSector(), true);
+		if ($path===false) {
+			create_error('Unable to plot from '.$this->getSectorID().' to '.$targetSector->getSectorID().'.');
+		}
+		$distance = $path->getRelativeDistance();
+
+		$turnCost = max(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE));
+		$maxMisjump = max(0, round(($distance - $turnCost) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $this->getLevelID() * MISJUMP_LEVEL_FACTOR)));
+		return array('turn_cost' => $turnCost, 'max_misjump' => $maxMisjump);
+	}
+
 	public function __sleep() {
 		return array('accountID', 'gameID', 'sectorID', 'alignment', 'playerID', 'playerName');
 	}

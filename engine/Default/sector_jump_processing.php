@@ -1,7 +1,9 @@
 <?php
+
 $sector =& $player->getSector();
 if (isset($_REQUEST['target'])) $target = trim($_REQUEST['target']);
 else $target = $var['target'];
+
 //allow hidden players (admins that don't play) to move without pinging, hitting mines, losing turns
 if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$player->setSectorID($target);
@@ -9,18 +11,10 @@ if (in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 	$sector->markVisited($player);
 	forward(create_container('skeleton.php', 'current_sector.php'));
 }
-$action = $_REQUEST['action'];
-if ($action == 'No')
+
+if (isset($_POST['action']) && $_POST['action'] == 'No') {
 	forward(create_container('skeleton.php', $var['target_page']));
-
-// get from and to sectors
-$from = $player->getSectorID();
-
-if (empty($target) || $target == '')
-	create_error('Where do you want to go today?');
-
-// get our rank
-$rank_id = $account->getRank();
+}
 
 // you can't move while on planet
 if ($player->isLandedOnPlanet())
@@ -36,39 +30,41 @@ if (!is_numeric($target))
 if ($player->getSectorID() == $target)
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
+if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
+	create_error('The target sector doesn\'t exist!');
+
+// If the Calculate Turn Cost button was pressed
+if (isset($_POST['action']) && $_POST['action'] == 'Calculate Turn Cost') {
+	$container = create_container('skeleton.php', 'sector_jump_calculate.php');
+	$container['target'] = $target;
+	forward($container);
+}
+
 if ($sector->hasForces()) {
 	$sectorForces =& $sector->getForces();
 	foreach($sectorForces as &$forces) {
 		if($forces->hasMines() && !$player->forceNAPAlliance($forces->getOwner())) {
-			create_error('You cant jump when there are unfriendly forces in the sector!');
+			create_error('You cannot jump when there are hostile mines in the sector!');
 		}
 	} unset($forces);
 }
 
-if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
-	create_error('The target sector doesn\'t exist!');
-
 // create sector object for target sector
 $targetSector =& SmrSector::getSector($player->getGameID(), $target);
 
-require_once(get_file_loc('Plotter.class.inc'));
-$path =& Plotter::findDistanceToX($targetSector, $player->getSector(), true);
-if($path===false)
-	create_error('Unable to plot from '.$start.' to '.$target.'.');
+$jumpInfo = $player->getJumpInfo($targetSector);
+$turnsToJump = $jumpInfo['turn_cost'];
+$maxMisjump = $jumpInfo['max_misjump'];
+
+// check for turns
+if ($player->getTurns() < $turnsToJump)
+	create_error('You don\'t have enough turns for that jump!');
 
 // send scout msg
 $sector->leavingSector($player,MOVEMENT_JUMP);
 
 // Move the user around
 // TODO: (Must be done while holding both sector locks)
-$distance = $path->getRelativeDistance();
-$turnsToJump = max(TURNS_JUMP_MINIMUM, round($distance * TURNS_PER_JUMP_DISTANCE));
-
-// check for turns
-if ($player->getTurns() < $turnsToJump)
-	create_error('You don\'t have enough turns for that jump!');
-
-$maxMisjump = max(0,round(($distance - $turnsToJump) * MISJUMP_DISTANCE_DIFF_FACTOR / (1 + $player->getLevelID() * MISJUMP_LEVEL_FACTOR)));
 $misjump = mt_rand(0,$maxMisjump);
 if ($misjump > 0) { // we missed the sector
 	$distances = Plotter::findDistanceToX('Distance', $targetSector, false, null, null, $misjump);
