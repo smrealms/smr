@@ -55,20 +55,13 @@ $player->increaseHOF($amount,array('Trade','Goods', 'Jettisoned'), HOF_PUBLIC);
 // log action
 $account->log(LOG_TYPE_TRADING, 'Dumps '.$amount.' of '.$good_name.' and looses '.$lost_xp.' experience', $player->getSectorID());
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php', 'current_sector.php');
+
 if ($amount > 1) {
 	$container['msg'] = 'You have jettisoned <span class="yellow">'.$amount.'</span> units of '.$good_name.' and have lost <span class="exp">'.$lost_xp.'</span> experience.';
 }
 else {
 	$container['msg'] = 'You have jettisoned <span class="yellow">'.$amount.'</span> unit of '.$good_name.' and have lost <span class="exp">'.$lost_xp.'</span> experience.';
-}
-
-if ($player->isLandedOnPlanet()) {
-	$container['body'] = 'planet_main.php';
-}
-else {
-	$container['body'] = 'current_sector.php';
 }
 
 forward($container);

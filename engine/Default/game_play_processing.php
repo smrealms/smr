@@ -13,11 +13,6 @@ $player->update();
 // log
 $account->log(LOG_TYPE_GAME_ENTERING, 'Player entered game '.SmrSession::$game_id, $player->getSectorID());
 
-$container = create_container('skeleton.php');
-if ($player->isLandedOnPlanet())
-	$container['body'] = 'planet_main.php';
-else
-	$container['body'] = 'current_sector.php';
-
+$container = create_container('skeleton.php', 'current_sector.php');
 forward($container);
 ?>

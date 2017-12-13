@@ -765,13 +765,6 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$template->assign('GameName',Globals::getGameName(SmrSession::$game_id));
 		$template->assign('GameID',SmrSession::$game_id);
 
-		if ($player->isLandedOnPlanet()) {
-			$template->assign('PlanetMainLink',Globals::getPlanetMainHREF());
-		}
-		else {
-			$template->assign('LocalMapLink',Globals::getLocalMapHREF());
-		}
-
 		$template->assign('PlotCourseLink',Globals::getPlotCourseHREF());
 
 		$template->assign('TraderLink',Globals::getTraderStatusHREF());

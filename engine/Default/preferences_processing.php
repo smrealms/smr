@@ -1,14 +1,8 @@
 <?php
 
-$container = array();
-$container['url'] = 'skeleton.php';
+$container = create_container('skeleton.php');
 if (SmrSession::$game_id > 0) {
-	if ($player->isLandedOnPlanet()) {
-		$container['body'] = 'planet_main.php';
-	}
-	else {
-		$container['body'] = 'current_sector.php';
-	}
+	$container['body'] = 'current_sector.php';
 }
 else {
 	$container['body'] = 'game_play.php';

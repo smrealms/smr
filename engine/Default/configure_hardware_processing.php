@@ -25,14 +25,7 @@ elseif ($var['action'] == 'Disable Illusion') {
 	$ship->disableIllusion();
 }
 
-$container = create_container('skeleton.php');
-if ($player->isLandedOnPlanet()) {
-	$container['body'] = 'planet_main.php';
-}
-else {
-	$container['body'] = 'current_sector.php';
-}
-
+$container = create_container('skeleton.php', 'current_sector.php');
 forward($container);
 
 ?>
