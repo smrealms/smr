@@ -31,7 +31,6 @@ function channel_msg_op($fp, $rdata)
 
 function channel_msg_op_info($fp, $rdata, $account, $player)
 {
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op info\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -41,60 +40,15 @@ function channel_msg_op_info($fp, $rdata, $account, $player)
 
 		echo_r('[OP_INFO] by ' . $nick . ' in ' . $channel);
 
-		// get the op from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
-			return true;
-		}
-
-		// retrieve values
-		$op_time = $db->getField('time');
-
-		// check that the op is in the future
-		if ($op_time < time()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', sorry. You missed the OP.' . EOL);
-			return true;
-		}
-
-		// announce time left
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the next scheduled op will be in ' . format_time($op_time - time()) . EOL);
-
-		// have we signed up?
-		$db->query('SELECT response
-					FROM alliance_has_op_response
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID() . '
-						AND account_id = ' . $player->getAccountID());
-		if ($db->nextRecord()) {
-            $msg = 'You are on the ' . $db->getField('response') . ' list. ';
-
-            // get uncached ship
-            $ship =& SmrShip::getShip($player, true);
-            $op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600));
-
-            if ($op_turns > $player->getMaxTurns())
-                $msg .= 'You will have max turns by then. If you do not move you\'ll waste ' . ($op_turns - $player->getMaxTurns()) . ' turns.';
-            else
-                $msg .= 'You will have ' . $op_turns . ' turns by then.';
-
-        } else {
-            $msg = 'You have not signed up for this one.';
-        }
-
 		// announce signup status
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $msg . EOL);
+		$result = shared_channel_msg_op_info($player);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+		}
 
 		return true;
-
 	}
-
 	return false;
-
 }
 
 function channel_msg_op_cancel($fp, $rdata, $account, $player)
