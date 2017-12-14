@@ -19,7 +19,8 @@ while ($db->nextRecord()) {
 	$roleID = $db->getField('role_id');
 	$allianceRoles[$roleID]['RoleID'] = $roleID;
 	$allianceRoles[$roleID]['Name'] = $db->getField('role');
-	$allianceRoles[$roleID]['EditingRole'] = $var['role_id'] == $roleID;
+	$allianceRoles[$roleID]['EditingRole'] = isset($var['role_id']) && $var['role_id'] == $roleID;
+	$allianceRoles[$roleID]['CreatingRole'] = false;
 	if ($allianceRoles[$roleID]['EditingRole']) {
 		$container = create_container('alliance_roles_processing.php');
 		$allianceRoles[$roleID]['WithdrawalLimit'] = $db->getInt('with_per_day');
@@ -53,9 +54,11 @@ $container['alliance_id'] = $alliance->getAllianceID();
 
 $template->assign('CreateRole', array(
 	'HREF' => SmrSession::getNewHREF($container),
+	'Name' => '',
 	'CreatingRole' => true,
 	'EditingRole' => true,
 	'WithdrawalLimit' => 0,
+	'PositiveBalance' => false,
 	'TreatyCreated' => false,
 	'RemoveMember' => false,
 	'ChangePass' => false,
