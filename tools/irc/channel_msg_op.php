@@ -251,7 +251,6 @@ function channel_msg_op_response($fp, $rdata, $account, $player) {
 
 function channel_msg_op_list($fp, $rdata, $account, $player)
 {
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op list\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -261,74 +260,15 @@ function channel_msg_op_list($fp, $rdata, $account, $player)
 
 		echo_r('[OP_LIST] by ' . $nick . ' in ' . $channel);
 
-		// get the op info from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT 1
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
-			return true;
-		}
-
-		$yes = array();
-		$no = array();
-		$maybe = array();
-		$db->query('SELECT account_id, response
-					FROM alliance_has_op_response
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		while($db->nextRecord()) {
-			$respondingPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
-			if(!$player->sameAlliance($respondingPlayer)) {
-				continue;
-			}
-			switch($db->getField('response')) {
-				case 'YES':
-					$yes[] = $respondingPlayer;
-				break;
-				case 'NO':
-					$no[] = $respondingPlayer;
-				break;
-				case 'MAYBE':
-					$maybe[] = $respondingPlayer;
-				break;
-			}
-		}
-
-		if ((count($yes) + count($no) + count($maybe)) == 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :Noone has signed up for the upcoming OP.' . EOL);
-			return true;
-		}
-
-		if (count($yes) > 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :YES (' . count($yes) . '):' . EOL);
-			foreach ($yes as $attendee) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :  * ' . $attendee->getPlayerName() . EOL);
-			}
-		}
-
-		if (count($no) > 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :NO (' . count($no) . '):' . EOL);
-			foreach ($no as $attendee) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :  * ' . $attendee->getPlayerName() . EOL);
-			}
-		}
-
-		if (count($maybe) > 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :MAYBE (' . count($maybe) . '):' . EOL);
-			foreach ($maybe as $attendee) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :  * ' . $attendee->getPlayerName() . EOL);
-			}
+		$result = shared_channel_msg_op_list($player);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
 function channel_op_notification($fp, $rdata, $nick, $channel) {
