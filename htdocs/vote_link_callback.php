@@ -17,8 +17,14 @@ if ($db->nextRecord()) {
 	// Eligibility was checked when `turns_claimed` was set to false.
 	// So give free turns now!
 	$player = SmrPlayer::getPlayer($_POST['account'], $_POST['game']);
+
+	// Lock the sector to ensure the player gets the turns
+	// Refresh player after lock is acquired in case any values are stale
+	acquire_lock($player->getSectorID());
+	SmrPlayer::refreshCache();
 	$player->setLastTurnUpdate($player->getLastTurnUpdate()-VOTE_BONUS_TURNS_TIME); //Give turns via added time, no rounding errors.
 	$player->save();
+	release_lock();
 
 	// Prevent getting additional turns until a valid free turns link is clicked again
 	$db->query('UPDATE vote_links SET turns_claimed=' . $db->escapeBoolean(true) . ' WHERE account_id=' . $db->escapeNumber($_POST['account']) . ' AND link_id=' . $db->escapeNumber($_POST['link']));
