@@ -4,7 +4,7 @@ try {
 	// global config
 	require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
 	// bot config
-	require_once(TOOLS . 'npc/config.specific.php');
+	require_once(CONFIG . 'npc/config.specific.php');
 	// needed libs
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(LIB . 'Default/Globals.class.inc');

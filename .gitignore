@@ -14,6 +14,7 @@
 /config/SmrMySqlSecrets.inc
 /config/discord/config.specific.php
 /config/irc/config.specific.php
+/config/npc/config.specific.php
 
 # /htdocs/
 /htdocs/upload
@@ -25,7 +26,6 @@
 /lib/Default/Smr12HistoryMySqlDatabase.class.inc
 
 /sys$command
-/tools/npc/config.specific.php
 
 /newsletters
 /vendor
