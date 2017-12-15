@@ -72,6 +72,13 @@ services:
         volumes:
             - ./config:/smr/config
 
+    irc:
+        build:
+            context: .
+            dockerfile: ./tools/irc/Dockerfile
+        volumes:
+            - ./config:/smr/config
+
 # We want persistent, anonymous data volumes
 volumes:
     smr_upload:
