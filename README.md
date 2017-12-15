@@ -96,7 +96,7 @@ Currently it is required to create installation specific copies of the following
 * config/SmrMySqlSecrets.sample.inc -> config/SmrMySqlSecrets.inc
 
 For "Caretaker" functionality:
-* tools/irc/config.specific.sample.php -> tools/irc/config.specific.php
+* config/irc/config.specific.sample.php -> config/irc/config.specific.php
 
 For npc:
 * tools/npc/config.specific.sample.php -> tools/npc/config.specific.php
