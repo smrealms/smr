@@ -33,7 +33,7 @@ define('TIME_BEFORE_NEWBIE_TIME',3600); //1 hour
 define('TIME_FOR_COUNCIL_VOTE',172800); //2 days
 define('TIME_FOR_WAR_VOTE_FED_SAFETY',259200); //3 days
 define('TIME_MAP_BUY_WAIT',259200); //3 days
-define('VOTE_BONUS_TURNS_TIME',1200); //20 mins
+define('VOTE_BONUS_TURNS_TIME',1800); //30 mins
 
 define('MAX_IMAGE_SIZE',30); //in kb
 define('MAX_IMAGE_WIDTH',200);
