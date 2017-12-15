@@ -147,7 +147,6 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 
 function channel_msg_op_turns($fp, $rdata, $account, $player)
 {
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op turns\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -157,60 +156,20 @@ function channel_msg_op_turns($fp, $rdata, $account, $player)
 
 		echo_r('[OP_TURNS] by ' . $nick . ' in ' . $channel);
 
-		// check if $nick is leader
 		if (!$player->isAllianceLeader(true)) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can use this command.' . EOL);
 			return true;
 		}
 
-		// get the op from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there is no op scheduled.' . EOL);
-			return true;
-		}
-
-		$op_time = $db->getField('time');
-
-		// the op needs to be running
-		if ($op_time > time()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the OP has not started yet.' . EOL);
-			return true;
-		}
-
-		$oppers = array();
-		$db->query('SELECT account_id
-					FROM alliance_has_op_response
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID() . '
-						AND response = \'YES\'');
-		while($db->nextRecord()) {
-			
-			$attendeePlayer =& SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), true);
-			if ($attendeePlayer == null || $attendeePlayer->getAllianceID() != $player->getAllianceID())
-				continue;
-
-			$oppers[$attendeePlayer->getPlayerName()] = $attendeePlayer->getTurns();
-		}
-
-		// sort by turns
-		arsort($oppers);
-
-		// return result to channel
-		foreach ($oppers as $opper => $turn) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $opper . ': ' . $turn . EOL);
+		$result = shared_channel_msg_op_turns($player);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
 function channel_msg_op_response($fp, $rdata, $account, $player) {

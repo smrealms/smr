@@ -76,6 +76,7 @@ require_once(TOOLS . 'irc/maintenance.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_money.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_op_info.php');
 require_once(TOOLS . 'chat_helpers/channel_msg_op_list.php');
+require_once(TOOLS . 'chat_helpers/channel_msg_op_turns.php');
 
 // delete all seen stats that appear to be on (we do not want to take something for granted that happend while we were away)
 $db = new SmrMySqlDatabase();
