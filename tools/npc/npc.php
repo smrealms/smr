@@ -88,6 +88,14 @@ try {
 	require_once(get_file_loc('RouteGenerator.class.inc'));
 	require_once(get_file_loc('shop_goods.inc'));
 
+	// Make sure NPC's have been set up in the database
+	$db = new SmrMySqlDatabase();
+	$db->query('SELECT 1 FROM npc_logins LIMIT 1');
+	if (!$db->nextRecord()) {
+		debug('No NPCs have been created yet!');
+		exit;
+	}
+
 	try {
 		changeNPCLogin();
 	}
