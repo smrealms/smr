@@ -9,11 +9,6 @@ RUN echo 'sendmail_path = "/usr/sbin/sendmail -t -i"' > /usr/local/etc/php/conf.
 
 WORKDIR /smr/
 
-# runkit is needed to use NPC's
-RUN pear channel-discover zenovich.github.io/pear \
-	&& pecl install zenovich/runkit-1.0.4 \
-	&& docker-php-ext-enable runkit
-
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY composer.json .
