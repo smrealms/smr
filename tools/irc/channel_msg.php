@@ -219,7 +219,10 @@ function channel_msg_money($fp, $rdata, $account, $player)
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
-		return !empty($result);
+		return true;
+	}
+
+	return false;
 }
 
 function channel_msg_timer($fp, $rdata)
