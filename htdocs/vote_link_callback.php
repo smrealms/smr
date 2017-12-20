@@ -20,7 +20,7 @@ require_once('config.inc');
 require_once(ENGINE . 'Default/smr.inc');
 
 // Is the player allowed to get free turns from this link right now?
-// If player clicked a valid free turns link, they have `can_get_turns=true`
+// If player clicked a valid free turns link, they have `turns_claimed=false`
 $db = new SmrMySqlDatabase();
 $db->query('SELECT timeout FROM vote_links WHERE account_id=' . $db->escapeNumber($accountId) . ' AND link_id=' . $db->escapeNumber($linkId) . ' AND turns_claimed=' . $db->escapeBoolean(false) . ' LIMIT 1');
 
@@ -38,7 +38,7 @@ if ($db->nextRecord()) {
 	release_lock();
 
 	// Prevent getting additional turns until a valid free turns link is clicked again
-	$db->query('UPDATE vote_links SET turns_claimed=' . $db->escapeBoolean(true) . ' WHERE account_id=' . $db->escapeNumber($accountId) . ' AND link_id=' . $db->escapeNumber($linkId));
+	$db->query('REPLACE INTO vote_links (account_id, link_id, timeout, turns_claimed) VALUES(' . $db->escapeNumber($accountId) . ',' . $db->escapeNumber($linkId) . ',' . $db->escapeNumber(TIME) . ',' . $db->escapeBoolean(true) . ')');
 }
 
 ?>
