@@ -2,6 +2,7 @@
 #   MYSQL_ROOT_PASSWORD=chooseapassword
 #   MYSQL_PASSWORD=chooseapassword
 #   MYSQL_HOST=chooseahost
+#   PHP_DEBUG=1 or 0
 
 version: '2'
 services:
@@ -9,6 +10,8 @@ services:
         # Base configuration for `smr` (production) and `smr-dev` (testing).
         build:
             context: .
+            args:
+                - PHP_DEBUG=${PHP_DEBUG}
         ports:
             - "80:80"
         volumes:
