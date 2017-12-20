@@ -13,3 +13,6 @@ config
 # Products from composer install
 vendor
 composer.lock
+
+# docker-compose environment variable file
+.env
