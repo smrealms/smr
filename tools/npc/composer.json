@@ -1,0 +1,10 @@
+{
+    "name": "smr/npc",
+    "description": "SMR NPC",
+    "license": "AGPL-3.0",
+    "require": {
+        "ext-mysqli": "*",
+        "ext-mysql": "*",
+        "php": "^5.6.0"
+    }
+}

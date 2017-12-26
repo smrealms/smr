@@ -24,7 +24,7 @@ function write_log_message($msg)
 // config file
 require_once(realpath(dirname(__FILE__)) . '/../../htdocs/config.inc');
 // bot config
-require_once(TOOLS . 'irc/config.specific.php');
+require_once(CONFIG . 'irc/config.specific.php');
 // some libs
 require_once(LIB . 'Default/Globals.class.inc');
 require_once(get_file_loc('smr.inc'));

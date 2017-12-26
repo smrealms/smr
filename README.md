@@ -96,10 +96,10 @@ Currently it is required to create installation specific copies of the following
 * config/SmrMySqlSecrets.sample.inc -> config/SmrMySqlSecrets.inc
 
 For "Caretaker" functionality:
-* tools/irc/config.specific.sample.php -> tools/irc/config.specific.php
+* config/irc/config.specific.sample.php -> config/irc/config.specific.php
 
 For npc:
-* tools/npc/config.specific.sample.php -> tools/npc/config.specific.php
+* config/npc/config.specific.sample.php -> config/npc/config.specific.php
 
 For these files the sample version should provide good hints on what info is required, there are also other sample files but these are generally not required (read: only for supporting old 1.2 databases, you're unlikely to have one of those lying about ;) )
 
