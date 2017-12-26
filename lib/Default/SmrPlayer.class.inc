@@ -217,8 +217,36 @@ class SmrPlayer extends AbstractSmrPlayer {
 		else {
 			throw new PlayerNotFoundException('Invalid accountID: '.$accountIDOrResultArray . ' OR gameID:'.$gameID);
 		}
+	}
 
+	// Get array of players whose info can be accessed by this player.
+	// Skips players who are not in the same alliance as this player.
+	public function getSharingPlayers($forceUpdate=false) {
+		$results = array($this);
 
+		// Only return this player if not in an alliance
+		if (!$this->hasAlliance()) {
+			return $results;
+		}
+
+		// Get other players who are sharing info for this game.
+		// NOTE: game_id=0 means that player shares info for all games.
+		$this->db->query('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND (game_id=0 OR game_id=' . $this->db->escapeNumber($this->getGameID()) . ')');
+		while ($this->db->nextRecord()) {
+			try {
+				$otherPlayer = SmrPlayer::getPlayer($this->db->getInt('from_account_id'),
+				                                    $this->getGameID(), $forceUpdate);
+			} catch (PlayerNotFoundException $e) {
+				// Skip players that have not joined this game
+				continue;
+			}
+
+			// players must be in the same alliance
+			if ($this->sameAlliance($otherPlayer)) {
+				$results[] = $otherPlayer;
+			}
+		}
+		return $results;
 	}
 
 	public function getSQL() {
@@ -579,20 +607,26 @@ class SmrPlayer extends AbstractSmrPlayer {
 		return $this->originalMaintenance;
 	}
 
+	// Turns only update when player is active.
+	// Calculate turns gained between given time and the last turn update
+	public function getTurnsGained($time, $forceUpdate=false) {
+		$timeDiff = $time - $this->getLastTurnUpdate();
+		$ship = $this->getShip($forceUpdate);
+		$extraTurns = floor($timeDiff * $ship->getRealSpeed() / 3600);
+		return $extraTurns;
+	}
+
 	public function updateTurns() {
 		// is account validated?
 		if (!$this->getAccount()->isValidated()) return;
-		$ship =& $this->getShip();
-
-		// update turns?
-		$time_diff = TIME - $this->getLastTurnUpdate();
 
 		// how many turns would he get right now?
-		$extraTurns = floor($time_diff * $ship->getRealSpeed() / 3600);
+		$extraTurns = $this->getTurnsGained(TIME);
 
 		// do we have at least one turn to give?
 		if ($extraTurns > 0) {
 			// recalc the time to avoid errors
+			$ship =& $this->getShip();
 			$newLastTurnUpdate = $this->getLastTurnUpdate() + ceil($extraTurns * 3600 / $ship->getRealSpeed());
 
 			$startTurnsDate = $this->getGame()->getStartTurnsDate();
@@ -604,12 +638,9 @@ class SmrPlayer extends AbstractSmrPlayer {
 			}
 
 			$this->setLastTurnUpdate($newLastTurnUpdate);
-
-
 			$this->giveTurns($extraTurns);
 		}
 	}
-
 
 	function isIgnoreGlobals() {
 		return $this->ignoreGlobals;

@@ -2,14 +2,13 @@
 
 function get_turns_message($player) {
 	// turns only update when the player is active, so calculate current turns
-	$ship = $player->getShip(true);
-	$turns = $player->getTurns() + floor((time() - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600);
-	$turns = min($turns, $player->getMaxTurns());
-
+	$turns = min($player->getTurns() + $player->getTurnsGained(time(), true),
+	             $player->getMaxTurns());
 	$msg = $player->getPlayerName() . " has $turns/" . $player->getMaxTurns() . " turns.";
 
 	// Calculate time to max turns if under the max
 	if ($turns < $player->getMaxTurns()) {
+		$ship = $player->getShip(true);
 		$maxTime = ceil(($player->getMaxTurns() - $turns) * 3600 / $ship->getRealSpeed());
 		$msg .= " At max turns in " . format_time($maxTime, true) . ".";
 	}
@@ -30,26 +29,7 @@ $fn_turns_all = function ($message) {
 	if (!$link->valid) return;
 	$player = $link->player;
 
-	// initialize results with current player
-	$results = array(get_turns_message($player));
-
-	// process shared players
-	$db2 = new SmrMySqlDatabase();
-	$db2->query('SELECT from_account_id FROM account_shares_info WHERE to_account_id=' . $db2->escapeNumber($player->getAccountID()) . ' AND (game_id=0 OR game_id=' . $db2->escapeNumber($player->getGameID()) . ')');
-	while ($db2->nextRecord()) {
-		try {
-			$otherPlayer = SmrPlayer::getPlayer($db2->getInt('from_account_id'), $player->getGameID(), true);
-		} catch (PlayerNotFoundException $e) {
-			// Skip players that have not joined this game
-			continue;
-		}
-
-		// players must be in the same alliance
-		if ($player->hasAlliance() && $player->getAllianceID() == $otherPlayer->getAllianceID()) {
-			$results[] = get_turns_message($otherPlayer);
-		}
-	}
-
+	$results = array_map('get_turns_message', $player->getSharingPlayers(true));
 	$message->channel->sendMessage(join("\n", $results));
 };
 
