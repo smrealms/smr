@@ -946,9 +946,23 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 	// OMGN no longer do voting - the link actually just redirects to archive site.
 	//$voteSites[2] = array('default_img' => 'omgn.png', 'star_img' => 'omgn_vote.png', 'base_url' => 'http://www.omgn.com/topgames/vote.php?Game_ID=30');
 
-	$voteSites[3] = array('default_img' => 'twg.png',
-	                      'star_img' => 'twg_vote.png',
-	                      'base_url' => 'http://topwebgames.com/in.aspx?ID=136&alwaysreward=1');
+	$voteSites[3] = array(
+		'default_img' => 'twg.png',
+		'star_img' => 'twg_vote.png',
+		'base_url' => 'http://topwebgames.com/in.aspx?ID=136&alwaysreward=1',
+		'url' => function ($baseUrl, $accountId, $gameId, $linkId) {
+			$query = array('account' => $accountId, 'game' => $gameId, 'link' => $linkId);
+			return $baseUrl . '&' . http_build_query($query);
+		},
+	);
+	$voteSites[4] = array(
+		'default_img' => 'dog.png',
+		'star_img' => 'dog_vote.png',
+		'base_url' => 'http://www.directoryofgames.com/main.php?view=topgames&action=vote&v_tgame=2315',
+		'url' => function ($baseUrl, $accountId, $gameId, $linkId) {
+			return "$baseUrl&votedef=$accountId,$gameId,$linkId";
+		},
+	);
 
 	// Determine the time left until the account can vote again at each site
 	// We ignore rows with links that are no longer active
@@ -973,8 +987,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 			$container['link_id'] = $linkId;
 			$container['can_get_turns'] = true;
 			$internalUrl = SmrSession::getNewHREF($container, true);
-			$query = array('account' => $player->getAccountID(), 'game' => $player->getGameID(), 'link' => $linkId);
-			$externalUrl = $voteSite['base_url'] . '&' . http_build_query($query);
+			$externalUrl = $voteSite['url']($voteSite['base_url'], $player->getAccountID(), $player->getGameID(), $linkId);
 			$modVoteSites[] = array('url' => 'javascript:voteSite("' . $externalUrl . '","' . $internalUrl . '")',
 			                        'img' => $voteSite['star_img']);
 		} else {
