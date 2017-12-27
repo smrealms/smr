@@ -19,6 +19,9 @@ require_once('commands/money.php');
 require_once('commands/game.php');
 require_once('commands/turns.php');
 require_once('commands/invite.php');
+require_once('commands/op.php');
+require_once('commands/seed.php');
+require_once('commands/seedlist.php');
 
 // Close the connection we may have opened during startup
 // to avoid a mysql timeout.

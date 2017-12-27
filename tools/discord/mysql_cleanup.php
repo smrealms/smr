@@ -5,9 +5,15 @@
 function mysql_cleanup(callable $func) {
 
 	// Create a new closure that wraps the original closure
-	$func_wrapper = function ($message) use ($func) {
+	$func_wrapper = function ($message, $params) use ($func) {
 		// First, call the original closure
-		$func($message);
+		try {
+			$func($message, $params);
+		} catch (Exception $e) {  // NOTE: in PHP7, switch to Throwable
+			print('Error in '.$e->getFile().' line '.$e->getLine().':'.EOL);
+			print($e->getMessage() . EOL);
+			$message->reply('I encountered an error. Please report this to an admin!');
+		}
 
 		// Then, close the mysql connection to prevent timeouts
 		$db = new SmrMySqlDatabase();

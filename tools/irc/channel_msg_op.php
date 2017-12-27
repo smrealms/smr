@@ -31,7 +31,6 @@ function channel_msg_op($fp, $rdata)
 
 function channel_msg_op_info($fp, $rdata, $account, $player)
 {
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op info\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -41,60 +40,15 @@ function channel_msg_op_info($fp, $rdata, $account, $player)
 
 		echo_r('[OP_INFO] by ' . $nick . ' in ' . $channel);
 
-		// get the op from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
-			return true;
-		}
-
-		// retrieve values
-		$op_time = $db->getField('time');
-
-		// check that the op is in the future
-		if ($op_time < time()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', sorry. You missed the OP.' . EOL);
-			return true;
-		}
-
-		// announce time left
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the next scheduled op will be in ' . format_time($op_time - time()) . EOL);
-
-		// have we signed up?
-		$db->query('SELECT response
-					FROM alliance_has_op_response
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID() . '
-						AND account_id = ' . $player->getAccountID());
-		if ($db->nextRecord()) {
-            $msg = 'You are on the ' . $db->getField('response') . ' list. ';
-
-            // get uncached ship
-            $ship =& SmrShip::getShip($player, true);
-            $op_turns = ($player->getTurns() + floor(($op_time - $player->getLastTurnUpdate()) * $ship->getRealSpeed() / 3600));
-
-            if ($op_turns > $player->getMaxTurns())
-                $msg .= 'You will have max turns by then. If you do not move you\'ll waste ' . ($op_turns - $player->getMaxTurns()) . ' turns.';
-            else
-                $msg .= 'You will have ' . $op_turns . ' turns by then.';
-
-        } else {
-            $msg = 'You have not signed up for this one.';
-        }
-
 		// announce signup status
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $msg . EOL);
+		$result = shared_channel_msg_op_info($player);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
+		}
 
 		return true;
-
 	}
-
 	return false;
-
 }
 
 function channel_msg_op_cancel($fp, $rdata, $account, $player)
@@ -193,7 +147,6 @@ function channel_msg_op_set($fp, $rdata, $account, $player)
 
 function channel_msg_op_turns($fp, $rdata, $account, $player)
 {
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op turns\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -203,60 +156,20 @@ function channel_msg_op_turns($fp, $rdata, $account, $player)
 
 		echo_r('[OP_TURNS] by ' . $nick . ' in ' . $channel);
 
-		// check if $nick is leader
 		if (!$player->isAllianceLeader(true)) {
 			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', only the leader of the alliance can use this command.' . EOL);
 			return true;
 		}
 
-		// get the op from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT time
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', there is no op scheduled.' . EOL);
-			return true;
-		}
-
-		$op_time = $db->getField('time');
-
-		// the op needs to be running
-		if ($op_time > time()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', the OP has not started yet.' . EOL);
-			return true;
-		}
-
-		$oppers = array();
-		$db->query('SELECT account_id
-					FROM alliance_has_op_response
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID() . '
-						AND response = \'YES\'');
-		while($db->nextRecord()) {
-			
-			$attendeePlayer =& SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID(), true);
-			if ($attendeePlayer == null || $attendeePlayer->getAllianceID() != $player->getAllianceID())
-				continue;
-
-			$oppers[$attendeePlayer->getPlayerName()] = $attendeePlayer->getTurns();
-		}
-
-		// sort by turns
-		arsort($oppers);
-
-		// return result to channel
-		foreach ($oppers as $opper => $turn) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $opper . ': ' . $turn . EOL);
+		$result = shared_channel_msg_op_turns($player);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
 function channel_msg_op_response($fp, $rdata, $account, $player) {
@@ -297,7 +210,6 @@ function channel_msg_op_response($fp, $rdata, $account, $player) {
 
 function channel_msg_op_list($fp, $rdata, $account, $player)
 {
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!op list\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -307,74 +219,15 @@ function channel_msg_op_list($fp, $rdata, $account, $player)
 
 		echo_r('[OP_LIST] by ' . $nick . ' in ' . $channel);
 
-		// get the op info from db
-		$db = new SmrMySqlDatabase();
-		$db->query('SELECT 1
-					FROM alliance_has_op
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		if (!$db->nextRecord()) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your leader has not scheduled an OP.' . EOL);
-			return true;
-		}
-
-		$yes = array();
-		$no = array();
-		$maybe = array();
-		$db->query('SELECT account_id, response
-					FROM alliance_has_op_response
-					WHERE alliance_id = ' . $player->getAllianceID() . '
-						AND game_id = ' . $player->getGameID());
-		while($db->nextRecord()) {
-			$respondingPlayer = SmrPlayer::getPlayer($db->getInt('account_id'), $player->getGameID());
-			if(!$player->sameAlliance($respondingPlayer)) {
-				continue;
-			}
-			switch($db->getField('response')) {
-				case 'YES':
-					$yes[] = $respondingPlayer;
-				break;
-				case 'NO':
-					$no[] = $respondingPlayer;
-				break;
-				case 'MAYBE':
-					$maybe[] = $respondingPlayer;
-				break;
-			}
-		}
-
-		if ((count($yes) + count($no) + count($maybe)) == 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :Noone has signed up for the upcoming OP.' . EOL);
-			return true;
-		}
-
-		if (count($yes) > 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :YES (' . count($yes) . '):' . EOL);
-			foreach ($yes as $attendee) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :  * ' . $attendee->getPlayerName() . EOL);
-			}
-		}
-
-		if (count($no) > 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :NO (' . count($no) . '):' . EOL);
-			foreach ($no as $attendee) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :  * ' . $attendee->getPlayerName() . EOL);
-			}
-		}
-
-		if (count($maybe) > 0) {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :MAYBE (' . count($maybe) . '):' . EOL);
-			foreach ($maybe as $attendee) {
-				fputs($fp, 'PRIVMSG ' . $channel . ' :  * ' . $attendee->getPlayerName() . EOL);
-			}
+		$result = shared_channel_msg_op_list($player);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
 function channel_op_notification($fp, $rdata, $nick, $channel) {
