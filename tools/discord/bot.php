@@ -23,6 +23,7 @@ require_once('commands/op.php');
 require_once('commands/seed.php');
 require_once('commands/seedlist.php');
 require_once('commands/forces.php');
+require_once('commands/8ball.php');
 
 // Close the connection we may have opened during startup
 // to avoid a mysql timeout.

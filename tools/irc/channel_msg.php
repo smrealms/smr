@@ -277,29 +277,6 @@ function channel_msg_timer($fp, $rdata)
 
 function channel_msg_8ball($fp, $rdata)
 {
-	static $answers = array(
-		'Signs point to yes.',
-		'Yes.',
-		'Reply hazy, try again.',
-		'Without a doubt.',
-		'My sources say no.',
-		'As I see it, yes.',
-		'You may rely on it.',
-		'Concentrate and ask again.',
-		'Outlook not so good.',
-		'It is decidedly so.',
-		'Better not tell you now.',
-		'Very doubtful.',
-		'Yes - definitely.',
-		'It is certain.',
-		'Cannot predict now.',
-		'Most likely.',
-		'Ask again later.',
-		'My reply is no.',
-		'Outlook good.',
-		'Don\'t count on it.'
-	);
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!8ball (.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -310,14 +287,12 @@ function channel_msg_8ball($fp, $rdata)
 
 		echo_r('[8BALL] by ' . $nick . ' in ' . $channel . '. Question: ' . $question);
 
-		fputs($fp, 'PRIVMSG ' . $channel . ' :' . $answers[rand(0, count($answers) - 1)] . EOL);
+		fputs($fp, 'PRIVMSG ' . $channel . ' :' . shared_channel_msg_8ball() . EOL);
 
 		return true;
-
 	}
 
 	return false;
-
 }
 
 function channel_msg_forces($fp, $rdata, $account, $player)
