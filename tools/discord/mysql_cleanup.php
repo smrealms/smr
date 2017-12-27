@@ -5,9 +5,9 @@
 function mysql_cleanup(callable $func) {
 
 	// Create a new closure that wraps the original closure
-	$func_wrapper = function ($message) use ($func) {
+	$func_wrapper = function ($message, $params) use ($func) {
 		// First, call the original closure
-		$func($message);
+		$func($message, $params);
 
 		// Then, close the mysql connection to prevent timeouts
 		$db = new SmrMySqlDatabase();
