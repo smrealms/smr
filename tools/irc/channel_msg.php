@@ -322,7 +322,6 @@ function channel_msg_8ball($fp, $rdata)
 
 function channel_msg_forces($fp, $rdata, $account, $player)
 {
-
 	if (preg_match('/^:(.*)!(.*)@(.*)\sPRIVMSG\s(.*)\s:!forces(.*)\s$/i', $rdata, $msg)) {
 
 		$nick = $msg[1];
@@ -333,52 +332,15 @@ function channel_msg_forces($fp, $rdata, $account, $player)
 
 		echo_r('[FORCE_EXPIRE] by ' . $nick . ' in ' . $channel . ' Galaxy: ' . $galaxy);
 
-		// did we get a galaxy name?
-		$db = new SmrMySqlDatabase();
-		if (!empty($galaxy))
-			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time
-						FROM sector_has_forces
-						LEFT JOIN sector USING (sector_id, game_id)
-						LEFT JOIN game_galaxy USING (game_id, galaxy_id)
-						WHERE sector_has_forces.game_id = ' . $player->getGameID() . '
-							AND galaxy_name = ' . $db->escapeString($galaxy) . '
-							AND owner_id IN (
-								SELECT account_id
-								FROM player
-								WHERE game_id = ' . $player->getGameID() . '
-									AND alliance_id = ' . $player->getAllianceID() . '
-							)
-						ORDER BY expire_time ASC'
-			);
-		else
-			$db->query('SELECT sector_has_forces.sector_id AS sector, combat_drones, scout_drones, mines, expire_time
-				FROM sector_has_forces
-				WHERE game_id = ' . $player->getGameID() . '
-					AND owner_id IN (
-						SELECT account_id
-						FROM player
-						WHERE game_id = ' . $player->getGameID() . '
-						AND alliance_id = ' . $player->getAllianceID() . '
-					)
-				ORDER BY expire_time ASC'
-			);
-
-		if ($db->nextRecord()) {
-			$sector_id = $db->getField('sector');
-			$expire = $db->getField('expire_time');
-
-			fputs($fp, 'PRIVMSG ' . $channel . ' :Forces in sector ' . $sector_id . ' will expire in ' . format_time($expire - time()) . EOL);
-		} else {
-			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $nick . ', your alliance does not own any forces that could expire.' . EOL);
+		$result = shared_channel_msg_forces($player, $galaxy);
+		foreach ($result as $line) {
+			fputs($fp, 'PRIVMSG ' . $channel . ' :' . $line . EOL);
 		}
 
-
 		return true;
-
 	}
 
 	return false;
-
 }
 
 function channel_msg_help($fp, $rdata)
