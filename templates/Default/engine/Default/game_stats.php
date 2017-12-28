@@ -33,11 +33,6 @@
 						<td align="left"><?php echo date(DATE_FULL_SHORT,Globals::getGameEndDate($StatsGameID)); ?></td>
 					</tr>
 					<tr>
-						<td align="right">Current Players</td>
-						<td>&nbsp;</td>
-						<td align="left"><?php echo number_format(count($CurrentPlayers)); ?></td>
-					</tr>
-					<tr>
 						<td align="right">Max Turns</td>
 						<td>&nbsp;</td>
 						<td align="left"><?php echo number_format(Globals::getGameMaxTurns($StatsGameID)); ?></td>
@@ -163,59 +158,4 @@
 			</td>
 		</tr>
 	</table>
-
-	<h1>Current Players</h1>
-	<p>There <?php
-	if ($PlayersAccessed != 1) {
-		?>are <?php echo $PlayersAccessed; ?> players who have<?php
-	}
-	else {
-		?>is 1 player who has<?php
-	} ?>
-	accessed the server in the last 10 minutes.<br /><?php
-	
-	if (count($CurrentPlayers) == 0) {
-		?>No one was moving so your ship computer couldn't intercept any transmissions.<br /><?php
-	}
-	else {
-		if (count($CurrentPlayers) == $PlayersAccessed) {
-			?>All of them<?php
-		}
-		else {
-			?>A few of them<?php
-		} ?>
-		were moving so your ship computer was able to intercept <?php echo count($CurrentPlayers), ' ', pluralise('transmission', count($CurrentPlayers)); ?>.<br /><?php
-	} ?>
-
-	The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p><?php
-
-	if (count($CurrentPlayers) > 0) { ?>
-		<table class="standard" width="95%">
-			<tr>
-				<th>Player</th>
-				<th>Race</th>
-				<th>Alliance</th>
-				<th>Experience</th>
-			</tr><?php
-			foreach($CurrentPlayers as &$CurrentPlayer) {
-				$Style = '';
-				if ($CurrentPlayer->getAccount()->isNewbie()) {
-					$Style = 'italic';
-				}
-				if ($CurrentPlayer->getAccountID() == $ThisAccount->getAccountID()) {
-					$Style .= ' bold';
-				}
-				if (!empty($Style)) {
-					$Style = ' class="'.trim($Style).'"';
-				}
-				?>
-				<tr>
-					<td valign="top"<?php echo $Style; ?>><?php echo $CurrentPlayer->getLevelName();?> <?php echo $CurrentPlayer->getDisplayName(); ?></td>
-					<td align="center"<?php echo $Style; ?>><?php echo AbstractSmrPlayer::getColouredRaceNameOrDefault($CurrentPlayer->getRaceID(),$ThisPlayer); ?></td>
-					<td<?php echo $Style; ?>><?php echo $CurrentPlayer->getAllianceName(); ?></td>
-					<td align="right"<?php echo $Style; ?>><?php echo number_format($CurrentPlayer->getExperience()); ?></td>
-				</tr><?php
-			} unset($CurrentPlayer); ?>
-		</table><?php
-	} ?>
 </div>
