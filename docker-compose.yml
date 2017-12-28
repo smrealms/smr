@@ -86,6 +86,14 @@ services:
         volumes:
             - ./config:/smr/config
 
+    # Generate rich API documentation of the SMR source code.
+    api-docs:
+        build:
+            context: .
+            dockerfile: ./docs/Dockerfile
+        ports:
+            - "8081:80"
+
 # We want persistent, anonymous data volumes
 volumes:
     smr_upload:

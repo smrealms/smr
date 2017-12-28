@@ -1,4 +1,4 @@
-FROM php:7
+FROM php:7.1 as builder
 
 # Install phpDox - https://github.com/theseer/phpdox
 # - dependency: XSL
@@ -17,4 +17,21 @@ RUN composer global require --no-plugins --no-scripts --dev theseer/phpdox
 ENV PATH /root/.composer/vendor/bin:$PATH
 
 WORKDIR "/api"
-ENTRYPOINT ["phpdox"]
+
+# Add the phpDox configuration file
+COPY ./docs/phpdox.xml .
+
+# Mount entire source code
+# NOTE: we lose the git enricher because .git is in the .dockerignore
+# (See https://github.com/moby/moby/issues/12886 to follow the issue)
+COPY . ./smr/
+
+# Run phpDox to generate the html documentation
+RUN phpdox
+
+#--------------------
+
+FROM nginx:alpine
+
+# Only the html files are needed in the nginx stage of the build
+COPY --from=builder /api/html/ /usr/share/nginx/html/
