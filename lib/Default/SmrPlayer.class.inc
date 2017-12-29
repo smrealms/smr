@@ -39,7 +39,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 //	protected $chatPosition;
 	protected $displayMissions;
 	protected $displayWeapons;
-	protected $useAJAX;
 	protected $ignoreGlobals;
 //	protected $changedStats;
 	protected $mining;
