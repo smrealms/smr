@@ -1849,13 +1849,8 @@ class SmrPlayer extends AbstractSmrPlayer {
 				$this->plottedCourse = unserialize($this->db->getField('course'));
 				$endSectorID = $this->plottedCourse->getEndSectorID();
 				if($endSectorID != $this->getSectorID() && $this->plottedCourse->isInPath($this->getSectorID())) {
-					// Current sector is in the path, we have jumped along it somehow so lets replot
-					$this->plottedCourse =& Plotter::findReversiblePathToX($this->plottedCourse->getEndSector(), $this->getSector(), true);
-					if($this->plottedCourse === false) {
-						throw new Exception('For some reason we could not replot from "'.$this->getSectorID().'" to "'.$endSectorID);
-					}
-					$this->plottedCourse->removeStart();
-					$this->setPlottedCourse($this->plottedCourse);
+					// Current sector is in the path, we have jumped along it somehow
+					$this->setPlottedCourse($this->plottedCourse->skipToSector($this->getSectorID()));
 				}
 			}
 			else

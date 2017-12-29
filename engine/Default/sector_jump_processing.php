@@ -96,11 +96,17 @@ release_lock();
 // We need a lock on the new sector so that more than one person isn't hitting the same mines
 acquire_lock($player->getSectorID());
 
-// delete plotted course
-$player->deletePlottedCourse();
-
 // get new sector object
 $sector =& $player->getSector();
+
+// If we have jumped into a future of our plotted course, update!
+if ($player->hasPlottedCourse()) {
+	$path = $player->getPlottedCourse();
+	if ($path->isInPath($sector->getSectorID())) {
+		$path->skipToSector($sector->getSectorID());
+		$player->setPlottedCourse($path);
+	}
+}
 
 // make current sector visible to him
 $sector->markVisited($player);

@@ -107,7 +107,7 @@ class Plotter {
 		//Warps first as a slight optimisation due to how visitedSectors is set.
 		if($checkSector->hasWarp()===true) {
 			$d = new Distance($gameID,$checkSector->getSectorID());
-			$d->addWarpToPath($checkSector->getWarp());
+			$d->addWarpToPath($checkSector->getWarp(), $checkSector->getSectorID());
 			$distanceQ[$warpAddIndex][] = $d;
 		}
 		foreach ($checkSector->getLinks() as $nextSector) {
@@ -151,7 +151,7 @@ class Plotter {
 					if($checkSector->hasWarp()===true) {
 						if (!isset($visitedSectors[$checkSector->getWarp()])) {
 							$cloneDistance = clone($distance);
-							$cloneDistance->addWarpToPath($checkSector->getWarp());
+							$cloneDistance->addWarpToPath($checkSector->getWarp(), $checkSector->getSectorID());
 							$distanceQ[$warpAddIndex][] = $cloneDistance;
 						}
 					}
@@ -198,6 +198,7 @@ class Distance {
 	private $distance = -1; //First sector added will be the start and a distance of 0
 	private $numWarps = 0;
 	private $path = array();
+	private $warpMap = array();
 
 	public function __construct($gameID,$_startSectorId) {
 		$this->gameID = $gameID;
@@ -209,14 +210,6 @@ class Distance {
 //		$this->numWarps = $_numWarps;
 //		$this->path = $_path;
 //	}
-
-	public function setDistance($_distance) {
-		$this->distance = $_distance;
-	}
-
-	public function setNumWarps($_numWarps) {
-		$this->numWarps = $_numWarps;
-	}
 
 	protected function incrementDistance() {
 		$this->distance++;
@@ -237,10 +230,6 @@ class Distance {
 	public function getNumWarps() {
 		return $this->numWarps;
 	}
-
-//	public function clone() {
-//		return new Distance($this->distance, $this->numWarps, clone($this->path));
-//	}
 
 	public function getTurns() {
 		return $this->distance * TURNS_PER_SECTOR + $this->numWarps * TURNS_PER_WARP;
@@ -283,8 +272,10 @@ class Distance {
 		return $this->path;
 	}
 	
+	// NOTE: this assumes 2-way warps
 	public function reversePath() {
 		$this->path = array_reverse($this->path);
+		$this->warpMap = array_flip($this->warpMap);
 	}
 
 	/**
@@ -296,9 +287,10 @@ class Distance {
 		$this->path[] = $nextSector;
 	}
 	
-	public function addWarpToPath($nextSector) {
+	public function addWarpToPath($sectorAfterWarp, $sectorBeforeWarp) {
 		$this->incrementNumWarps();
-		$this->path[] = $nextSector;
+		$this->path[] = $sectorAfterWarp;
+		$this->warpMap[$sectorBeforeWarp] = $sectorAfterWarp;
 	}
 	
 	public function getNextOnPath() {
@@ -320,20 +312,23 @@ class Distance {
 	public function isInPath($sectorID) {
 		return in_array($sectorID,$this->getPath());
 	}
+
+	/**
+	 * If the given sector is in the path, then return the segment
+	 * of the path that comes after the given sector.
+	 */
+	public function skipToSector($sectorID) {
+		$position = array_search($sectorID, $this->path);
+		if ($position !== false) {
+			// The resulting path does not include sectorID, i.e. (sectorID,end]
+			$this->path = array_slice($this->path, $position + 1);
+			$this->numWarps = count(array_intersect($this->path, array_values($this->warpMap)));
+			$this->distance = count($this->path) - $this->numWarps;
+			return $this;
+		} else {
+			throw new Exception('Cannot skip to sector not in path!');
+		}
+	}
 }
-//$d = new Distance(1);
-//$d->addToPath(3);
-//$d2 = clone($d);
-//$d2->addWarpToPath(6);
-//var_dump($d);
-//var_dump($d2);
 
-//$x = 1;
-
-//$x = Globals::getGood(1);
-//$x['TransactionType'] = 'Sell';
-
-//$x =& SmrSector::getSector(1,2);
-//var_dump($x);
-//var_dump(Plotter::findDistanceToX($x, SmrSector::getSector(1,1), 0, 2000, 500,true));
 ?>
