@@ -3,7 +3,10 @@
 //get game id
 $gameID = $var['game_id'];
 
-$template->assign('StatsGameID',$gameID);
+$statsGame = SmrGame::getGame($gameID);
+$template->assign('StatsGame', $statsGame);
+
+$template->assign('PageTopic', 'Game Stats: ' . $statsGame->getName() . ' (' . $gameID . ')');
 
 $db->query('SELECT count(*) total_players, MAX(experience) max_exp, MAX(alignment) max_align, MIN(alignment) min_alignment, MAX(kills) max_kills FROM player WHERE game_id = '.$gameID.' ORDER BY experience DESC');
 if ($db->nextRecord()) {
@@ -41,29 +44,5 @@ if ($db->getNumRows() > 0) {
 	}
 	$template->assign('KillRankings',$killRankings);
 }
-
-
-$db->query('SELECT * FROM active_session
-			WHERE last_accessed >= ' . (TIME - 600) . ' AND
-				game_id = '.$gameID);
-$count_real_last_active = $db->getNumRows();
-
-$db->query('SELECT account_id FROM player ' .
-		'WHERE last_cpl_action >= ' . (TIME - 600) . ' AND ' .
-				'game_id = '.$gameID.' ' .
-		'ORDER BY experience DESC, player_name');
-$count_last_active = $db->getNumRows();
-
-// fix it if some1 is using the logoff button
-if ($count_real_last_active < $count_last_active)
-	$count_real_last_active = $count_last_active;
-
-$template->assign('PlayersAccessed',$count_real_last_active);
-
-$currentPlayers = array();
-while ($db->nextRecord()) {
-	$currentPlayers[] =& SmrPlayer::getPlayer($db->getField('account_id'), $gameID);
-}
-$template->assign('CurrentPlayers',$currentPlayers);
 
 ?>

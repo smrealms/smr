@@ -195,19 +195,16 @@ if ($db->getNumRows()) {
 		$games['Previous'][$game_id]['EndDate'] = date(DATE_DATE_SHORT,$db->getField('end_date'));
 		$games['Previous'][$game_id]['Speed'] = $db->getField('game_speed');
 		// create a container that will hold next url and additional variables.
-		$container = array();
+		$container = create_container('skeleton.php');
 		$container['game_id'] = $container['GameID'] = $game_id;
-		$container['url'] = 'skeleton.php';
 		$container['game_name'] = $games['Previous'][$game_id]['Name'];
-		$container['body'] = 'games_previous.php';
 
-//		$games['Previous'][$game_id]['PreviousGameLink'] = SmrSession::getNewHREF($container);
 		$container['body'] = 'hall_of_fame_new.php';
 		$games['Previous'][$game_id]['PreviousGameHOFLink'] = SmrSession::getNewHREF($container);
 		$container['body'] = 'news_read.php';
 		$games['Previous'][$game_id]['PreviousGameNewsLink'] = SmrSession::getNewHREF($container);
-		$container['body'] = 'games_previous_detail.php';
-//		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
+		$container['body'] = 'game_stats.php';
+		$games['Previous'][$game_id]['PreviousGameStatsLink'] = SmrSession::getNewHREF($container);
 	}
 }
 
