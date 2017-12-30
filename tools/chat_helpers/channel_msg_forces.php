@@ -4,7 +4,19 @@ require_once(TOOLS . 'chat_helpers/channel_msg_seedlist.php');
 
 function shared_channel_msg_forces($player, $option) {
 	$db = new SmrMySqlDatabase();
-	if (!empty($option) && $option == "seedlist") {
+	if (empty($option)) {
+		$db->query('SELECT sector_has_forces.sector_id AS sector, expire_time
+			FROM sector_has_forces
+			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+				AND owner_id IN (
+					SELECT account_id FROM player
+					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
+					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
+				)
+			ORDER BY expire_time ASC LIMIT 1'
+		);
+	}
+	else if ($option == "seedlist") {
 		// are we restricting to the seedlist?
 		$seedlist = get_seedlist($player);
 		if (count($seedlist) == 0) {
@@ -22,7 +34,7 @@ function shared_channel_msg_forces($player, $option) {
 			ORDER BY expire_time ASC LIMIT 1'
 		);
 	}
-	else if (!empty($option)) {
+	else {
 		// did we get a galaxy name?
 		$db->query('SELECT galaxy_id FROM game_galaxy WHERE galaxy_name = ' . $db->escapeString($option));
 		if ($db->nextRecord()) {
@@ -41,18 +53,6 @@ function shared_channel_msg_forces($player, $option) {
 								AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
 						)
 					ORDER BY expire_time ASC LIMIT 1'
-		);
-	}
-	else {
-		$db->query('SELECT sector_has_forces.sector_id AS sector, expire_time
-			FROM sector_has_forces
-			WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-				AND owner_id IN (
-					SELECT account_id FROM player
-					WHERE game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-				)
-			ORDER BY expire_time ASC LIMIT 1'
 		);
 	}
 
