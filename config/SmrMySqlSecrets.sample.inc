@@ -5,6 +5,10 @@ trait SmrMySqlSecrets {
 	private static $user = 'smr';
 	private static $password = 'smr';
 
+	// Set to null to use defaults
+	private static $port = null;
+	private static $socket = null;
+
 	// Uncomment if using compatibility databases
 	//private static $dbName_Smr12History = 'smr_12_history';
 	//private static $dbName_Smr12 = 'smr_live';
