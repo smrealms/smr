@@ -17,6 +17,9 @@ RUN composer install --no-interaction
 COPY . .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 
+# Make the upload directory writable by the apache user
+RUN chown www-data ./htdocs/upload
+
 # Provide a FQDN for sendmail (since /etc/hosts cannot be modified during the
 # build), then start the sendmail service before initiating apache.
 CMD ["sh", "-c", "echo \"$(hostname -i) $(hostname) $(hostname).localhost\" >> /etc/hosts && /usr/sbin/service sendmail restart && apache2-foreground"]
