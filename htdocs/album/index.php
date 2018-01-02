@@ -117,7 +117,7 @@ catch(Exception $e) {
 <table width="100%" height="100%" border="0" cellspacing="5" cellpadding="5">
 <tr>
 <td valign="top" align="center">
-<form action="<?php echo URL; ?>/album/search_processing.php">
+<form action="search_processing.php">
 Quick Search:<br />
 <input type="text" name="nick" size="10" id="InputFields"><br />
 <input type="submit" value="Search" id="InputFields">

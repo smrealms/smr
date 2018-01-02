@@ -37,7 +37,7 @@ function main_page() {
 			$page_views = $db->getField('page_views');
 			$nick = get_album_nick($db->getField('account_id'));
 
-			echo('<a href="'.URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> ('.$page_views.')<br />');
+			echo('<a href="?' . urlencode($nick) . '">'.$nick.'</a> ('.$page_views.')<br />');
 		}
 	}
 
@@ -53,7 +53,7 @@ function main_page() {
 			$created = $db->getField('created');
 			$nick = get_album_nick($db->getField('account_id'));
 
-			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT')?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="'.URL.'/album/?' . urlencode($nick) . '">'.$nick.'</a> added</span><br />');
+			echo('<span style="font-size:85%;"><b>[' . date(defined('DATE_FULL_SHORT')?DATE_FULL_SHORT:DEFAULT_DATE_FULL_SHORT, $created) . ']</b> Picture of <a href="?' . urlencode($nick) . '">'.$nick.'</a> added</span><br />');
 		}
 	}
 	else
@@ -114,7 +114,7 @@ function album_entry($album_id) {
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 		$priv_nick = $db->getField('hof_name');
-		echo '<a href="'.URL.'/album/?' . urlencode($priv_nick) . '"><img src="'.URL.'/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
+		echo '<a href="?' . urlencode($priv_nick) . '"><img src="/images/album/rew.jpg" alt="'.$priv_nick.'" border="0"></a>&nbsp;&nbsp;&nbsp;';
 	}
 	echo '</td>';
 	echo('<td style="text-align: center;" valign="middle"><span style="font-size:150%;">'.$nick.'</span><br /><span style="font-size:75%;">Views: '.$page_views.'</span></td>');
@@ -128,7 +128,7 @@ function album_entry($album_id) {
 	echo '<td style="text-align: center; width: 30%" valign="middle">';
 	if ($db->nextRecord()) {
 		$next_nick = $db->getField('hof_name');
-		echo '&nbsp;&nbsp;&nbsp;<a href="'.URL.'/album/?' . urlencode($next_nick) . '"><img src="'.URL.'/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a>';
+		echo '&nbsp;&nbsp;&nbsp;<a href="?' . urlencode($next_nick) . '"><img src="/images/album/fwd.jpg" alt="'.$next_nick.'" border="0"></a>';
 	}
 	echo '</td>';
 
@@ -141,9 +141,9 @@ function album_entry($album_id) {
 	echo('<td colspan="2" align="center" valign="middle">');
 
 	if ($disabled == false)
-		echo('<img src="'.URL.'/upload/'.$album_id.'">');
+		echo('<img src="../upload/'.$album_id.'">');
 	else
-		echo('<img src="'.URL.'/images/album/disabled.jpg">');
+		echo('<img src="../images/album/disabled.jpg">');
 
 	echo('</td>');
 	echo('</tr>');
@@ -200,7 +200,7 @@ function album_entry($album_id) {
 	}
 
 	if (SmrSession::$account_id > 0) {
-		echo('<form action="'.URL.'/album/album_comment.php">');
+		echo('<form action="album_comment.php">');
 		echo('<input type="hidden" name="album_id" value="'.$album_id.'">');
 		echo('<table>');
 		echo('<tr>');
@@ -219,7 +219,7 @@ function album_entry($album_id) {
 		echo('</form>');
 	}
 	else
-		echo('<p>Please <a href="'.URL.'/login.php?return_page='.URL.'/album/?' . urlencode($nick) . '"><u>login</u></a> if you want comment on this picture!</p>');
+		echo('<p>Please <a href="/login.php?return_page='.URL.'/album/?' . urlencode($nick) . '"><u>login</u></a> if you want comment on this picture!</p>');
 
 	echo('</td>');
 	echo('</tr>');
@@ -244,7 +244,7 @@ function search_result($album_ids) {
 
 		$nick = get_album_nick($album_id);
 
-		echo('<a href="'.URL.'/album/?' . urlencode($nick) . '" style="font-size:80%;">'.$nick.'</a><br />');
+		echo('<a href="?' . urlencode($nick) . '" style="font-size:80%;">'.$nick.'</a><br />');
 
 		if (floor(sizeof($album_ids) / 4) > 0 && $count % floor(sizeof($album_ids) / 4) == 0)
 			echo('</td><td width="25%" valign="top">');
@@ -255,33 +255,33 @@ function search_result($album_ids) {
 
 function create_link_list() {
 	echo('<div align="center" style="font-size:80%;">[ ');
-	echo('<a href="'.URL.'/album/?%">All</a> | ');
-	echo('<a href="'.URL.'/album/?A">A</a> | ');
-	echo('<a href="'.URL.'/album/?B">B</a> | ');
-	echo('<a href="'.URL.'/album/?C">C</a> | ');
-	echo('<a href="'.URL.'/album/?D">D</a> | ');
-	echo('<a href="'.URL.'/album/?E">E</a> | ');
-	echo('<a href="'.URL.'/album/?F">F</a> | ');
-	echo('<a href="'.URL.'/album/?G">G</a> | ');
-	echo('<a href="'.URL.'/album/?H">H</a> | ');
-	echo('<a href="'.URL.'/album/?I">I</a> | ');
-	echo('<a href="'.URL.'/album/?J">J</a> | ');
-	echo('<a href="'.URL.'/album/?K">K</a> | ');
-	echo('<a href="'.URL.'/album/?L">L</a> | ');
-	echo('<a href="'.URL.'/album/?M">M</a> | ');
-	echo('<a href="'.URL.'/album/?N">N</a> | ');
-	echo('<a href="'.URL.'/album/?O">O</a> | ');
-	echo('<a href="'.URL.'/album/?P">P</a> | ');
-	echo('<a href="'.URL.'/album/?Q">Q</a> | ');
-	echo('<a href="'.URL.'/album/?R">R</a> | ');
-	echo('<a href="'.URL.'/album/?S">S</a> | ');
-	echo('<a href="'.URL.'/album/?T">T</a> | ');
-	echo('<a href="'.URL.'/album/?U">U</a> | ');
-	echo('<a href="'.URL.'/album/?V">V</a> | ');
-	echo('<a href="'.URL.'/album/?W">W</a> | ');
-	echo('<a href="'.URL.'/album/?X">X</a> | ');
-	echo('<a href="'.URL.'/album/?Y">Y</a> | ');
-	echo('<a href="'.URL.'/album/?Z">Z</a> ]</div>');
+	echo('<a href="?%">All</a> | ');
+	echo('<a href="?A">A</a> | ');
+	echo('<a href="?B">B</a> | ');
+	echo('<a href="?C">C</a> | ');
+	echo('<a href="?D">D</a> | ');
+	echo('<a href="?E">E</a> | ');
+	echo('<a href="?F">F</a> | ');
+	echo('<a href="?G">G</a> | ');
+	echo('<a href="?H">H</a> | ');
+	echo('<a href="?I">I</a> | ');
+	echo('<a href="?J">J</a> | ');
+	echo('<a href="?K">K</a> | ');
+	echo('<a href="?L">L</a> | ');
+	echo('<a href="?M">M</a> | ');
+	echo('<a href="?N">N</a> | ');
+	echo('<a href="?O">O</a> | ');
+	echo('<a href="?P">P</a> | ');
+	echo('<a href="?Q">Q</a> | ');
+	echo('<a href="?R">R</a> | ');
+	echo('<a href="?S">S</a> | ');
+	echo('<a href="?T">T</a> | ');
+	echo('<a href="?U">U</a> | ');
+	echo('<a href="?V">V</a> | ');
+	echo('<a href="?W">W</a> | ');
+	echo('<a href="?X">X</a> | ');
+	echo('<a href="?Y">Y</a> | ');
+	echo('<a href="?Z">Z</a> ]</div>');
 	echo('<hr align="center">');
 }
 

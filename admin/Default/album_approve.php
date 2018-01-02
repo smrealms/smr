@@ -51,9 +51,9 @@ if ($db->nextRecord()) {
 	$PHP_OUTPUT.=('<td colspan="2" align="center" valign="middle">');
 
 	if ($disabled == 'FALSE')
-		$PHP_OUTPUT.=('<img src="'.URL.'/upload/'.$album_id.'">');
+		$PHP_OUTPUT.=('<img src="upload/'.$album_id.'">');
 	else
-		$PHP_OUTPUT.=('<img src="'.URL.'/upload/0">');
+		$PHP_OUTPUT.=('<img src="upload/0">');
 
 	$PHP_OUTPUT.=('</td>');
 	$PHP_OUTPUT.=('</tr>');

@@ -10,7 +10,7 @@ if ($val == 3) {
 	$hunt = 8;
 	
 }
-echo ('<body background="'.URL.'/images/graph'.$val.'.gif">');
+echo ('<body background="images/graph'.$val.'.gif">');
 /*
 echo ('<font color=white size=4><div align=center valign=top><font size=1>&nbsp;&nbsp;&nbsp;</font>'.$trade.'</div>');
 echo ('<br /><br /><br /><br /><br /><br /><br /><font size=1><br /><br /><br /></font><div align=justify>'.$combat.'&nbsp;');
