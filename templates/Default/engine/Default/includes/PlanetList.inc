@@ -31,7 +31,7 @@ if (count($Planets) > 0) { ?>
 		<tbody class="list"><?php
 			foreach($Planets as &$Planet) { ?>
 				<tr id="planet-<?php echo $Planet->getSectorID(); ?>" class="ajax">
-					<td class="lvl noWrap">
+					<td class="image noWrap">
 						<img class="tooltip" id="planet_image" src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
 					<td class="name"><?php echo $Planet->getName(); ?></td>
 					<td class="lvl noWrap"><?php echo number_format($Planet->getLevel(),2); ?></td>
