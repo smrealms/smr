@@ -81,7 +81,7 @@ else {
 								?>From: <?php echo $Message['SenderDisplayName'];
 							} ?>
 						</td>
-						<td class="noWrap"<?php if(!isset($Message['Sender'])) { ?> colspan="4"<?php } ?>>Date: <?php echo date(DATE_FULL_SHORT, $Message['SendTime']); ?></td>
+						<td class="noWrap"<?php if(!isset($Message['Sender'])) { ?> colspan="4"<?php } ?>>Date: <?php echo $Message['SendTime']; ?></td>
 						<?php
 						if (isset($Message['Sender'])) { ?>
 							<td>
@@ -100,21 +100,9 @@ else {
 					</tr>
 					<?php
 				} unset($Message);
-			}
-			if(isset($MessageBox['GroupedMessages'])) {
-				foreach($MessageBox['GroupedMessages'] as &$Message) { ?>
-					<tr>
-						<td width="10"><input type="checkbox" name="message_id[]" value="<?php echo $Message['ID'] ?>" /><?php if($Message['Unread']) { ?>*<?php } ?></td>
-						<td class="noWrap" width="100%">From: <?php echo $Message['SenderDisplayName']; ?></td>
-						<td class="noWrap" colspan="4">Date: <?php echo date(DATE_FULL_SHORT, $Message['FirstSendTime']); ?> - <?php echo date(DATE_FULL_SHORT, $Message['LastSendTime']); ?></td>
-					</tr>
-					<tr>
-						<td colspan="6"><?php echo bbifyMessage($Message['Text']); ?></td>
-					</tr>
-					<?php
-				} unset($Message);
 			} ?>
 		</table>
+
 		<table class="fullwidth center">
 			<tr>
 				<td style="width: 30%" valign="middle"><?php
