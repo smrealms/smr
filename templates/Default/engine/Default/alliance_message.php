@@ -28,7 +28,7 @@ if (count($Threads) > 0) { ?>
 						} ?>
 					</td>
 					<td class="replies center"><?php echo $Thread['Replies']; ?></td>
-					<td class="lastReply noWrap"><?php echo date(DATE_FULL_SHORT, $Thread['SendTime']); ?></td>
+					<td class="lastReply noWrap" data-lastReply="<?php echo $Thread['SendTime']; ?>"><?php echo date(DATE_FULL_SHORT, $Thread['SendTime']); ?></td>
 				</tr><?php
 			} ?>
 		</tbody>
@@ -57,7 +57,7 @@ if (isset($CreateNewThreadFormHref)) { ?>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
 <script>
 var list = new List('topic-list', {
-	valueNames: ['topic', 'author', 'replies', 'lastReply'],
+	valueNames: ['topic', 'author', 'replies', {name: 'lastReply', attr: 'data-lastReply'}],
 	sortFunction: function(a, b, options) {
 		return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
 	}
