@@ -13,9 +13,11 @@ function logException(Exception $e) {
 			'E-Mail: '.$account->getEmail().EOL.EOL.'-----------'.EOL.EOL;
 	}
 	$message .= 'Error Message: '.$e->getMessage().EOL.EOL.'-----------'.EOL.EOL;
-	if($currMySQLError = mysql_error()) {
+	require_once(LIB . '/Default/SmrMySqlDatabase.class.inc');
+	$db = new SmrMySqlDatabase();
+	if($currMySQLError = $db->getError()) {
 		$errorType = 'Database Error';
-		$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL.'-----------'.EOL.EOL;
+		$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL.'-----------'.EOL.EOL;
 	}
 	$message .=	'Trace MSG: '.$e->getTraceAsString().EOL.EOL.'-----------'.EOL.EOL.
 		'$var: '.var_export($var,true).EOL.EOL.'-----------'.EOL.EOL.
@@ -29,8 +31,8 @@ function logException(Exception $e) {
 		$message .= EOL.EOL.'-----------'.EOL.EOL.
 					'Releasing Lock Failed' .EOL.
 					'Message: ' . $ee->getMessage() .EOL.EOL;
-		if($currMySQLError!=mysql_error()) {
-			$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
+		if($currMySQLError!=$db->getError()) {
+			$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL;
 		}
 		$message .= 'Trace: ' . $ee->getTraceAsString();
 	}
@@ -49,8 +51,8 @@ function logException(Exception $e) {
 			$message .= EOL.EOL.'-----------'.EOL.EOL.
 						'Releasing NPC Failed' .EOL.
 						'Message: ' . $ee->getMessage() .EOL.EOL;
-			if($currMySQLError!=mysql_error()) {
-				$message .= 'MySQL Error MSG: '.mysql_error().EOL.EOL;
+			if($currMySQLError!=$db->getError()) {
+				$message .= 'MySQL Error MSG: '.$db->getError().EOL.EOL;
 			}
 			$message .= 'Trace: ' . $ee->getTraceAsString();
 		}
