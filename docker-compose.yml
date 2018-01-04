@@ -35,7 +35,7 @@ services:
             - ./templates:/smr/templates
 
     flyway:
-        image: claycephas/flyway
+        image: boxfuse/flyway:latest-alpine
         command: -url=jdbc:mysql://${MYSQL_HOST}/smr_live -user=smr -password=${MYSQL_PASSWORD} migrate
         links:
             - mysql

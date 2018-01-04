@@ -24,17 +24,7 @@ docker run \
 	--rm \
 	--link='smr-mysql' \
 	--volume="$(pwd)/db/patches:/flyway/sql:ro" \
-	shouldbee/flyway \
-	-url='jdbc:mysql://smr-mysql/smr_live' \
-	-user='smr' \
-	-password='smr' \
-	init
-
-docker run \
-	--rm \
-	--link='smr-mysql' \
-	--volume="$(pwd)/db/patches:/flyway/sql:ro" \
-	shouldbee/flyway \
+	boxfuse/flyway:latest-alpine \
 	-url='jdbc:mysql://smr-mysql/smr_live' \
 	-user='smr' \
 	-password='smr' \
