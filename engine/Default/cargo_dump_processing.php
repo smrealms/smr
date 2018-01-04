@@ -76,7 +76,7 @@ else {
 $player->takeTurns(1,1);
 
 $ship->decreaseCargo($good_id,$amount);
-$player->increaseHOF($amount,array('Trade','Goods', 'Jettisoned'), HOF_PUBLIC);
+$player->increaseHOF($amount,array('Trade','Goods', 'Jettisoned'), HOF_ALLIANCE);
 
 forward($container);
 
