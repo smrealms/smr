@@ -58,7 +58,3 @@ Your image will be posted under your <i>Hall Of Fame</i> nick!<br />
 		</tr>
 	</table>
 </form>
-
-<?php
-echo $PHP_OUTPUT;
-?>

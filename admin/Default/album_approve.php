@@ -73,7 +73,7 @@ if ($db->nextRecord()) {
 	if (empty($website))
 		$website = 'N/A';
 	$PHP_OUTPUT.=('<tr>');
-	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Website :</td><td><a href="'.$webpage.'">'.$webpage.'</a></td>');
+	$PHP_OUTPUT.=('<td align="right" width="10%" class="bold">Website :</td><td><a href="'.$website.'">'.$website.'</a></td>');
 	$PHP_OUTPUT.=('</tr>');
 
 	$PHP_OUTPUT.=('<tr>');
