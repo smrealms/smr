@@ -82,7 +82,7 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
-		$player->increaseHOF($amount,array('Trade','Goods','Bought'), HOF_PUBLIC);
+		$player->increaseHOF($amount,array('Trade','Goods','Bought'), HOF_ALLIANCE);
 		$player->increaseHOF($gained_exp,array('Trade','Experience','Buying'), HOF_PUBLIC);
 		$player->decreaseHOF($bargain_price,array('Trade','Money','Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price,array('Trade','Money','Buying'), HOF_PUBLIC);
@@ -95,7 +95,7 @@ if (!empty($bargain_price) &&
 		$container['traded_transaction'] = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
 		$player->increaseCredits($bargain_price);
-		$player->increaseHOF($amount,array('Trade','Goods','Sold'), HOF_PUBLIC);
+		$player->increaseHOF($amount,array('Trade','Goods','Sold'), HOF_ALLIANCE);
 		$player->increaseHOF($gained_exp,array('Trade','Experience','Selling'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price,array('Trade','Money','Profit'), HOF_PUBLIC);
 		$player->increaseHOF($bargain_price,array('Trade','Money','Selling'), HOF_PUBLIC);
