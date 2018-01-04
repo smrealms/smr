@@ -295,7 +295,7 @@ define('BOND_TIME',172800);
  * Miscellaneous definitions
  */
 
-define('STARTING_NEWBIE_TURNS_NEWBIE', 500);
+define('STARTING_NEWBIE_TURNS_NEWBIE', 750);
 define('STARTING_NEWBIE_TURNS_VET', 250);
 
 define('NEWBIE', 1);
