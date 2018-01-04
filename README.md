@@ -55,13 +55,17 @@ docker run \
 	--detach \
 	smrealms/smr
 ```
-For development (will automatically pick up source changes, but you will need to make sure you have run `composer install`)
+For development (will automatically pick up source changes)
 ```
 docker run \
 	--name="smr" \
 	--link='smr-mysql' \
 	--publish='80:80' \
-	--volume="$(pwd):/smr" \
+	--volume="$(pwd)/admin:/smr/admin" \
+	--volume="$(pwd)/engine:/smr/engine" \
+	--volume="$(pwd)/htdocs:/smr/htdocs" \
+	--volume="$(pwd)/lib:/smr/lib" \
+	--volume="$(pwd)/templates:/smr/templates" \
 	--volume="$(pwd)/config:/smr/config:ro" \
 	--detach \
 	smrealms/smr

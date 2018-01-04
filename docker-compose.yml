@@ -28,8 +28,11 @@ services:
             - mysql
         volumes:
             # Mount the source code instead of copying it.
-            # You must have run `composer install` to do this.
-            - .:/smr:rw
+            - ./admin:/smr/admin
+            - ./engine:/smr/engine
+            - ./htdocs:/smr/htdocs
+            - ./lib:/smr/lib
+            - ./templates:/smr/templates
 
     flyway:
         image: claycephas/flyway
