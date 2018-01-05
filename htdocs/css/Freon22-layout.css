@@ -143,14 +143,11 @@ tr.topRow {
 	margin: 10px 50px 10px 10px;
 }
 div.rightInfoShip {
-	font-family: 'Bookman Old Style', serif;
 	font-weight: bold;
-	font-size: 1.15em;
 }
 div.rightInfoShip a {
-	font-family: 'Bookman Old Style', serif;
 	font-weight: bold;
-	font-size: 1.15em;	
+	font-size: 1.15em;
 }
 
 /* ****************************************************
