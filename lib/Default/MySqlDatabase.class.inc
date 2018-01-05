@@ -3,6 +3,7 @@ require_once('Database.interface.inc');
 abstract class MySqlDatabase implements Database {
 	protected static $errorAlreadyTriggered=false;
 	protected static $dbConn;
+	protected static $selectedDbName;
 	protected $dbResult = null;
 	protected $dbRecord = null;
 	
@@ -12,6 +13,15 @@ abstract class MySqlDatabase implements Database {
 			if (self::$dbConn->connect_errno) {
 				$this->error('Connection failed: ' . self::$dbConn->connect_error);
 			}
+			self::$selectedDbName = $dbName;
+		}
+
+		// Do we need to switch databases (e.g. for compatability db access)?
+		if (self::$selectedDbName != $dbName) {
+			if (!self::$dbConn->select_db($dbName)) {
+				$this->error('Database selection failed for ' . $dbName);
+			}
+			self::$selectedDbName = $dbName;
 		}
 	}
 
