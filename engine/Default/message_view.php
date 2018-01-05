@@ -240,10 +240,9 @@ function displayGrouped(&$messageBox, $playerName, $player_id, $sender_id, $mess
 	$container = create_container('skeleton.php', 'trader_search_result.php');
 	$container['player_id'] = $player_id;
 	$message['SenderDisplayName'] = create_link($container, $playerName);
-	$message['FirstSendTime'] = $first;
-	$message['LastSendTime'] = $last;
+	$message['SendTime'] = date(DATE_FULL_SHORT, $first) . " - " . date(DATE_FULL_SHORT, $last);
 	$message['Text'] = $message_text;
-	$messageBox['GroupedMessages'][] = $message;
+	$messageBox['Messages'][] = $message;
 }
 function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $message_text, $send_time, $msg_read, $type, $sentMessage = false) {
 	require_once(get_file_loc('message.functions.inc'));
@@ -297,7 +296,7 @@ function displayMessage(&$messageBox, $message_id, $receiver_id, $sender_id, $me
 	}
 
 	$message['Unread'] = $msg_read == 'FALSE';
-	$message['SendTime'] = $send_time;
+	$message['SendTime'] = date(DATE_FULL_SHORT, $send_time);
 	$messageBox['Messages'][] = & $message;
 }
 ?>
