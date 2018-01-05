@@ -17,7 +17,7 @@ if (isset($_POST['account']) && isset($_POST['game']) && isset($_POST['link'])) 
 }
 
 require_once('config.inc');
-require_once(ENGINE . 'Default/smr.inc');
+require_once(LIB . 'Default/smr.inc');
 
 // Is the player allowed to get free turns from this link right now?
 // If player clicked a valid free turns link, they have `turns_claimed=false`

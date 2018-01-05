@@ -1,7 +1,7 @@
 <?php
 
 require_once('/home/page/SMR/htdocs/config.inc');
-require_once(ENGINE . 'Default/smr.inc');
+require_once(LIB . 'Default/smr.inc');
 require_once(get_file_loc('SmrSector.class.inc'));
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 require_once(get_file_loc('Plotter.class.inc'));

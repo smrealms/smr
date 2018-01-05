@@ -14,7 +14,7 @@
 include('../config.inc');
 
 include(LIB . 'Default/SmrMySqlDatabase.class.inc');
-include(ENGINE . '/Default/smr.inc');
+include(LIB . 'Default/smr.inc');
 
 // database object
 $db = new SmrMySqlDatabase();
