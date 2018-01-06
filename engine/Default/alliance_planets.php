@@ -21,22 +21,7 @@ $db->nextRecord();
 $viewBonds = $db->getBoolean('view_bonds');
 $template->assignByRef('CanViewBonds', $viewBonds);
 
-// Ugly, but funtional
-$db->query('
-SELECT planet.sector_id
-FROM player
-JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
-WHERE player.game_id=' . $db->escapeNumber($alliance->getGameID()) . '
-AND player.alliance_id=' . $db->escapeNumber($alliance->getAllianceID()) . '
-ORDER BY planet.sector_id
-');
-
-$alliancePlanets = array();
-while ($db->nextRecord()) {
-	$sectorID = $db->getInt('sector_id');
-	$alliancePlanets[$sectorID] =& SmrPlanet::getPlanet($player->getGameID(),$sectorID);
-	$alliancePlanets[$sectorID]->getCurrentlyBuilding(); //In case anything gets updated here we want to do it before template.
-}
+$alliancePlanets = $alliance->getPlanets();
 $template->assignByRef('AlliancePlanets',$alliancePlanets);
 
 ?>

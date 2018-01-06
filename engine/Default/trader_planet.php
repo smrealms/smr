@@ -33,18 +33,8 @@ if ($player->hasAlliance()) {
 $template->assignByRef('CanViewBonds', $viewBonds);
 
 if ($player->hasAlliance()) {
-	$db->query('SELECT planet.sector_id FROM player
-				JOIN planet ON player.account_id = planet.owner_id AND player.game_id = planet.game_id
-				WHERE player.game_id = ' . $db->escapeNumber($player->getGameID()) . '
-					AND player.account_id != ' . $db->escapeNumber($player->getAccountID()) . '
-					AND alliance_id = ' . $db->escapeNumber($player->getAllianceID()) . '
-				ORDER BY planet.sector_id');
-	$alliancePlanets = array();
-	while ($db->nextRecord()) {
-		$sectorID = $db->getInt('sector_id');
-		$alliancePlanets[$sectorID] =& SmrPlanet::getPlanet($player->getGameID(),$sectorID);
-		$alliancePlanets[$sectorID]->getCurrentlyBuilding(); //In case anything gets updated here we want to do it before template.
-	}
+	// Get alliance planets, excluding this player's planet
+	$alliancePlanets = $player->getAlliance()->getPlanets($player->getAccountID());
 	$template->assignByRef('AlliancePlanets',$alliancePlanets);
 }
 
