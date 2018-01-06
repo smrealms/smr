@@ -776,7 +776,7 @@ function doSkeletionAssigns(&$template,&$player,&$ship,&$sector,&$db,&$account) 
 		$container['body'] = 'combat_log_list.php';
 		$template->assign('CombatLogsLink',SmrSession::getNewHREF($container));
 
-		$template->assign('PlanetLink',Globals::getTraderPlanetHREF());
+		$template->assign('PlanetLink',Globals::getPlanetListHREF($player->getAllianceID()));
 
 		$container['body'] = 'forces_list.php';
 		$template->assign('ForcesLink',SmrSession::getNewHREF($container));

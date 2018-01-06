@@ -24,7 +24,7 @@ if(isset($GameID)) {
 	<br />
 	<br />
 	<?php /* <a href="<?php echo $TradingLink; ?>">Trading</a><br /> */ ?>
-	<a href="<?php echo $PlanetLink; ?>">Planet</a><br />
+	<a href="<?php echo $PlanetLink; ?>">Planets</a><br />
 	<a href="<?php echo $ForcesLink; ?>">Forces</a><br />
 	<a href="<?php echo Globals::getCasinoHREF(); ?>">Casino</a><br />
 	<br />

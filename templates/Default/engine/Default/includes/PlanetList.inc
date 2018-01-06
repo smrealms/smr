@@ -22,10 +22,7 @@ if (count($Planets) > 0) { ?>
 				<th class="sort shrink" data-sort="pCDs">Drones</th>
 				<th class="sort shrink" data-sort="pArmour">Armour</th>
 				<th class="shrink">Supplies</th>
-				<th class="sort shrink" data-sort="build">Build</th><?php
-				if($CanViewBonds) { ?>
-					<th class="bonds shrink">Bonds</th><?php
-				} ?>
+				<th class="sort shrink" data-sort="build">Build</th>
 			</tr>
 		</thead>
 		<tbody class="list"><?php
@@ -34,7 +31,7 @@ if (count($Planets) > 0) { ?>
 					<td class="image noWrap">
 						<img class="tooltip" id="planet_image" src="<?php echo $Planet->getTypeImage(); ?>"  width="16" height="16" alt="" title="<?php echo $Planet->getTypename().': '.$Planet->getTypeDescription(); ?>" /></td>
 					<td class="name"><?php echo $Planet->getName(); ?></td>
-					<td class="lvl noWrap"><?php echo number_format($Planet->getLevel(),2); ?></td>
+					<td class="lvl center"><?php echo number_format($Planet->getLevel(),2); ?></td>
 					<td class="owner noWrap"><?php echo $Planet->getOwner()->getLinkedDisplayName(false); ?></td>
 					<td class="sector center"><a href="<?php echo Globals::getPlotCourseHREF($ThisPlayer->getSectorID(), $Planet->getSectorID()); ?>"><?php echo $Planet->getSectorID(); ?></a>&nbsp;(<a href="<?php echo $Planet->getGalaxy()->getGalaxyMapHREF(); ?>" target="gal_map"><?php echo $Planet->getGalaxy()->getName(); ?></a>)</td>
 					<td class="gen center"><?php echo $Planet->getBuilding(PLANET_GENERATOR); ?></td>
@@ -68,20 +65,7 @@ if (count($Planets) > 0) { ?>
 						else {
 							?>Nothing<?php
 						} ?>
-					</td><?php
-					if($CanViewBonds) { ?>
-						<td class="bonds"><?php
-							if($Planet->getBonds() > 0) { ?>
-								Credits:<br/><?php
-								echo $Planet->getBonds(); ?><br/><br/>
-								Matures:<br/><?php
-								echo format_time($Planet->getMaturity() - TIME, true);
-							}
-							else {?>
-								None<?php
-							} ?>
-						</td><?php
-					} ?>
+					</td>
 				</tr><?php
 			} ?>
 		</tbody>

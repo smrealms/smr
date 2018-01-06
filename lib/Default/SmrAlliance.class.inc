@@ -332,9 +332,8 @@ class SmrAlliance {
 
 	/**
 	 * Return all planets owned by members of this alliance.
-	 * Optionally exclude planet owned by $excludeAccountID.
 	 */
-	public function getPlanets($excludeAccountID=false) {
+	public function getPlanets() {
 		$this->db->query('SELECT planet.sector_id
 			FROM player
 			JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
@@ -345,10 +344,6 @@ class SmrAlliance {
 		$planets = array();
 		while ($this->db->nextRecord()) {
 			$planet = SmrPlanet::getPlanet($this->gameID, $this->db->getInt('sector_id'));
-			// Optionally exclude a planet (for the trader planet page)
-			if ($planet->getOwnerID() == $excludeAccountID) {
-				continue;
-			}
 			// Call to make sure planet properties are up-to-date.
 			$planet->getCurrentlyBuilding();
 			$planets[] = $planet;
