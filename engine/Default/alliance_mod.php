@@ -60,6 +60,12 @@ if ($db->getBoolean('change_mod') || $db->getBoolean('change_pass')) {
 	$container['alliance_id'] = $alliance->getAllianceID();
 	$PHP_OUTPUT.=create_button($container,'Edit');
 }
+
+$discordServer = $alliance->getDiscordServer();
+if (!empty($discordServer)) {
+	$PHP_OUTPUT .= '<br /><br /><br /><iframe src="https://discordapp.com/widget?id=' . $discordServer . '&theme=dark" width="350" height="375" allowtransparency="true" frameborder="0"></iframe>';
+}
+
 $PHP_OUTPUT.= '</div>';
 
 ?>
