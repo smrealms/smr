@@ -1770,6 +1770,14 @@ class SmrPlayer extends AbstractSmrPlayer {
 		self::doMessageSending($this->getAccountID(),$receiverID, $this->getGameID(), $messageTypeID, $message, $expires, $messageTypeID == MSG_SCOUT, $unread);
 	}
 
+	public function sendMessageFromOpAnnounce($receiverID, $message, $expires=false) {
+		// get expire time if not set
+		if ($expires === false) {
+			$expires = TIME + 86400 * 14;
+		}
+		self::doMessageSending(ACCOUNT_ID_OP_ANNOUNCE, $receiverID, $this->getGameID(), MSG_ALLIANCE, $message, $expires);
+	}
+
 	public static function sendMessageFromPlanet($gameID, $receiverID, $message) {
 		//get expire time
 		$expires = TIME + 86400 * 31;
