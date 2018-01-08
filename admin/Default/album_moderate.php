@@ -3,29 +3,24 @@
 require_once(LIB . 'Album/album_functions.php');
 $db = new SmrMySqlDatabase(); // required when referred from album
 
-if(isset($_REQUEST['account_id']))
+if (isset($_REQUEST['account_id'])) {
 	SmrSession::updateVar('account_id',$_REQUEST['account_id']);
-$account_id = $var['account_id'];
+}
 
 // echo green topic
-$PHP_OUTPUT.=create_link(create_container('skeleton.php', 'album_moderate.php'),
-		   '<h1>MODERATE PHOTO ALBUM</h1>');
+$PHP_OUTPUT.='<h1>Moderate Photo Album</h1>';
 
-// if we don't have an account id yet, ask for it (and echo error message if invalid number was entered)
-if (empty($account_id)) {
-	$PHP_OUTPUT.=('Enter the account id of the entry you wish to edit:');
-	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'album_moderate.php'));
-	$PHP_OUTPUT.=('<input type="number" name="account_id" size="5" id="InputFields" class="center">&nbsp;');
-	$PHP_OUTPUT.=create_submit('Submit');
-	$PHP_OUTPUT.=('</form>');
-	$PHP_OUTPUT.=($error_msg);
-}
-else {
+// Process account_id and perform error checking
+if (isset($var['account_id'])) {
+	$account_id = $var['account_id'];
+
 	// check if input is numeric
-	if (!is_numeric($account_id))
-		create_error('Please enter an account ID, which has to be numeric!');
+	if (!is_numeric($account_id)) {
+		$account_id = 0;
+		$error_msg = '<span class="red bold">ERROR:</span> Please enter an account ID, which has to be numeric!';
+	}
 
-	// check if the givin account really has an entry
+	// check if the given account really has an entry
 	if ($account_id > 0) {
 		$db->query('SELECT * FROM album WHERE account_id = '.$db->escapeNumber($account_id).' AND Approved = \'YES\'');
 		if ($db->nextRecord()) {
@@ -40,17 +35,34 @@ else {
 		}
 		else {
 			$account_id = 0;
-			$error_msg = '<div align="center" class="red bold">This User doesn\'t have an album entry or it needs to be approved first!</div>';
+			$error_msg = '<span class="red bold">ERROR:</span> This User doesn\'t have an album entry or it needs to be approved first!';
 		}
 	}
+}
+
+// if we don't have an account id yet, ask for it (and echo error message if invalid number was entered)
+if (empty($account_id)) {
+	$PHP_OUTPUT.='<br />';
+	$PHP_OUTPUT.=('Enter the account id of the entry you wish to edit:');
+	$PHP_OUTPUT.=create_echo_form(create_container('skeleton.php', 'album_moderate.php'));
+	$PHP_OUTPUT.=('<input type="number" name="account_id" size="5" id="InputFields" class="center">&nbsp;');
+	$PHP_OUTPUT.=create_submit('Submit');
+	$PHP_OUTPUT.=('</form>');
+	if (isset($error_msg)) {
+		$PHP_OUTPUT.=('<br />' . $error_msg);
+	}
+}
+else {
 
 	$container = create_container('album_moderate_processing.php', '');
 	$container['account_id'] = $account_id;
 
+	$PHP_OUTPUT.=create_link(create_container('skeleton.php', 'album_moderate.php'), '&lt;&lt;Back');
+	$PHP_OUTPUT.='<br /><br />';
 	$PHP_OUTPUT.=('<table border="0" align="center" cellpadding="5" cellspacing="0">');
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<td align="center" colspan="3">');
-	$PHP_OUTPUT.=('<span style="font-size:150%;">'.get_album_nick($account_id).'</span></td><td>&nbsp;</td>');
+	$PHP_OUTPUT.=('<span style="font-size:150%;"><b>Album&nbsp;Nickname:</b> '.get_album_nick($account_id).'</span></td><td>&nbsp;</td>');
 	$PHP_OUTPUT.=('</tr>');
 	$PHP_OUTPUT.=('<tr>');
 
