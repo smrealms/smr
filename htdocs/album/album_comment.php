@@ -7,7 +7,7 @@ function create_error_offline($msg) {
 
 try {
 	require_once('../config.inc');
-	require_once(ENGINE . 'Default/smr.inc');
+	require_once(LIB . 'Default/smr.inc');
 	require_once(get_file_loc('SmrMySqlDatabase.class.inc'));
 	require_once(get_file_loc('SmrSession.class.inc'));
 

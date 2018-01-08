@@ -2,7 +2,7 @@
 try {
 	// includes
 	require_once('config.inc');
-	require_once(ENGINE . 'Default/smr.inc');
+	require_once(LIB . 'Default/smr.inc');
 	require_once(LIB . 'Default/SmrMySqlDatabase.class.inc');
 	require_once(get_file_loc('SmrAccount.class.inc'));
 	require_once(get_file_loc('SmrSession.class.inc'));

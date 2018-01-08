@@ -1,6 +1,6 @@
 <?php
 // include helper file
-require_once('shop_goods.inc');
+require_once(LIB . 'Default/shop_goods.inc');
 
 // create object from port we can work with
 $port =& $player->getSectorPort();
