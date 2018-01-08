@@ -98,9 +98,7 @@ if ($count_last_active > 0) {
 		$PHP_OUTPUT.= '<tr'.$class.'>';
 
 		$PHP_OUTPUT.=('<td valign="top">');
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_search_result.php';
+		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id']	= $curr_player->getPlayerID();
 		$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
 		$db2->query('SELECT * FROM cpl_tag WHERE account_id = ' . $db2->escapeNumber($curr_player->getAccountID()) . ' ORDER BY custom DESC');
@@ -114,9 +112,7 @@ if ($count_last_active > 0) {
 		}
 		$PHP_OUTPUT.=create_link($container, $name);
 		$PHP_OUTPUT.=('</td>');
-		$container = array();
-		$container['url'] = 'skeleton.php';
-		$container['body'] = 'council_list.php';
+		$container = create_container('skeleton.php', 'council_list.php');
 		$container['race_id'] = $curr_player->getRaceID();
 		$PHP_OUTPUT.=('<td class="center">');
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));

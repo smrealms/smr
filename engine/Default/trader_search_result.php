@@ -47,9 +47,7 @@ if ($db->getNumRows() > 0) {
 		$curr_player =& SmrPlayer::getPlayer($db->getField('account_id'), $player->getGameID());
 		$PHP_OUTPUT.=('<tr>');
 
-		$container = array();
-		$container['url']		= 'skeleton.php';
-		$container['body']		= 'trader_search_result.php';
+		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id']	= $curr_player->getPlayerID();
 
 		$PHP_OUTPUT.=('<td>');
@@ -148,9 +146,7 @@ if (empty($player_id)) {
 
 			$PHP_OUTPUT.=('<tr>');
 	
-			$container = array();
-			$container['url']		= 'skeleton.php';
-			$container['body']		= 'trader_search_result.php';
+			$container = create_container('skeleton.php', 'trader_search_result.php');
 			$container['player_id']	= $curr_player->getPlayerID();
 	
 			$PHP_OUTPUT.=('<td>');
