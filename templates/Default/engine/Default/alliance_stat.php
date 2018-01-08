@@ -16,9 +16,18 @@ if ($CanChangeDescription) { ?>
 
 if ($CanChangeChatChannel) { ?>
 	<tr>
+		<td class="top">Discord Server ID:&nbsp;</td>
+		<td>
+			<input type="text" name="discord_server" size="30" value="<?php echo htmlspecialchars($Alliance->getDiscordServer()); ?>" />&nbsp;
+			<a href="<?php echo WIKI_URL; ?>/chat#alliance-discord-widget" target="_blank">
+				<img src="images/silk/help.png" width="16" height="16" alt="" title="Goto SMR Wiki: Discord Widget"/>
+			</a>
+			<br />Adds the Discord join server widget to the Message of the Day page.
+		</td>
+	<tr>
 		<td class="top noWrap">Discord Channel ID:&nbsp;</td>
 		<td>
-			<input type="text" name="discord" size="30" value="<?php echo htmlspecialchars($Alliance->getDiscordChannel()); ?>" />&nbsp;
+			<input type="text" name="discord_channel" size="30" value="<?php echo htmlspecialchars($Alliance->getDiscordChannel()); ?>" />&nbsp;
 			<a href="<?php echo WIKI_URL; ?>/chat#autopilot-for-alliance-channels" target="_blank">
 				<img src="images/silk/help.png" width="16" height="16" alt="" title="Goto SMR Wiki: Autopilot"/>
 			</a>

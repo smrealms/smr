@@ -10,8 +10,11 @@ if (isset($_REQUEST['password'])) {
 if (isset($_REQUEST['description'])) {
 	$description = trim($_REQUEST['description']);
 }
-if (isset($_REQUEST['discord'])) {
-	$discordChannel = trim($_REQUEST['discord']);
+if (isset($_REQUEST['discord_server'])) {
+	$discordServer = trim($_REQUEST['discord_server']);
+}
+if (isset($_REQUEST['discord_channel'])) {
+	$discordChannel = trim($_REQUEST['discord_channel']);
 }
 if (isset($_REQUEST['irc'])) {
 	$irc = trim($_REQUEST['irc']);
@@ -37,6 +40,9 @@ if (isset($password)) {
 }
 if (isset($description)) {
 	$alliance->setAllianceDescription($description);
+}
+if (isset($discordServer)) {
+	$alliance->setDiscordServer($discordServer);
 }
 if (isset($discordChannel)) {
 	if (empty($discordChannel)) {
