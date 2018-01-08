@@ -4,7 +4,7 @@ var exec = function(s) {
 };
 (function() {
 	"use strict";
-	var bindOne, updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=false, xmlHttpRefresh, sn, updateRefresh, updateRefreshRequest, stopAJAX, getURLParameter;
+	var bindOne, updateRefreshTimeout, refreshSpeed, ajaxRunning = true, refreshReady = true, disableStartAJAX=true, xmlHttpRefresh, sn, updateRefresh, updateRefreshRequest, stopAJAX, getURLParameter;
 
 	bindOne = function(func, arg) {
 		return function() {
@@ -14,7 +14,7 @@ var exec = function(s) {
 
 	// startAJAX
 	window.onfocus = function() {
-		// Start the Ajax updates
+		// Start the Ajax updates if startRefresh has been called
 		if(!disableStartAJAX) {
 			ajaxRunning = true;
 			clearTimeout(updateRefreshTimeout);
@@ -143,6 +143,10 @@ var exec = function(s) {
 
 	//Globals
 	window.startRefresh = function(_refreshSpeed) {
+		// If auto-refresh is disabled in preferences, then this function is not called,
+		// so make sure the refresh is enabled ONLY if this function is called.
+		disableStartAJAX = false;
+
 		if(!_refreshSpeed) {
 			return;
 		}
