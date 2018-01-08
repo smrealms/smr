@@ -85,11 +85,15 @@ class SmrAlliance {
 		return $this->allianceID;
 	}
 
-	public function getAllianceName($linked = false) {
-		if($linked === true && !$this->hasDisbanded()) {
-			return create_link(Globals::getAllianceRosterHREF($this->getAllianceID()), $this->allianceName);
+	public function getAllianceName($linked=false, $includeAllianceID=false) {
+		$name = $this->allianceName;
+		if ($includeAllianceID) {
+			$name .= ' (' . $this->allianceID . ')';
 		}
-		return $this->allianceName;
+		if($linked === true && !$this->hasDisbanded()) {
+			return create_link(Globals::getAllianceRosterHREF($this->getAllianceID()), $name);
+		}
+		return $name;
 	}
 
 	public function getGameID() {
@@ -210,7 +214,7 @@ class SmrAlliance {
 			return;
 		}
 		global $player,$account;
-		$boxDescription = 'Alliance '.$this->getAllianceName().'('.$this->getAllianceID().') had their description changed to:'.EOL.EOL.$description;
+		$boxDescription = 'Alliance '.$this->getAllianceName(false, true).' had their description changed to:'.EOL.EOL.$description;
 		if(is_object($player)) {
 			$player->sendMessageToBox(BOX_ALLIANCE_DESCRIPTIONS,$boxDescription);
 		}
