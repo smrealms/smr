@@ -65,7 +65,7 @@ foreach($attackers as &$attacker) {
 	$PHP_OUTPUT.=($attacker->getLinkedDisplayName(false).'<br />');
 	$PHP_OUTPUT.=('Race: '.$attacker->getRaceName().'<br />');
 	$PHP_OUTPUT.=('Level: '.$attacker->getLevelID().'<br />');
-	$PHP_OUTPUT.=('Alliance: '.create_link($attacker->getAllianceRosterHREF(), $attacker->getAllianceName()).'<br /><br />');
+	$PHP_OUTPUT.=('Alliance: '.$attacker->getAllianceName(true).'<br /><br />');
 	$PHP_OUTPUT.=('<small>');
 	$PHP_OUTPUT.=($attackerShip->getName().'<br />');
 	$PHP_OUTPUT.=('Rating : ' . $attackerShip->getAttackRating() . '/' . $attackerShip->getDefenseRating() . '<br />');

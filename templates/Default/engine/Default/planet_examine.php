@@ -29,8 +29,8 @@
 	<tr>
 		<td class="bold">Alliance:</td>
 		<td><?php
-			if ($ThisPlanet->hasOwner()) { ?>
-				<a href="<?php echo $ThisPlanet->getOwner()->getAllianceRosterHREF(); ?>"><?php echo $ThisPlanet->getOwner()->getAllianceName(); ?></a><?php
+			if ($ThisPlanet->hasOwner()) {
+				echo $ThisPlanet->getOwner()->getAllianceName(true);
 			}
 			else { ?>
 				none<?php
