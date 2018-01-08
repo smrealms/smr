@@ -75,10 +75,7 @@
 												Alignment: <span id="align"><?php echo get_colored_text($ThisPlayer->getAlignment(),number_format($ThisPlayer->getAlignment())); ?></span><br />
 												
 												Alliance: <span id="alliance"><a href="<?php echo Globals::getAllianceHREF($ThisPlayer->getAllianceID()); ?>"><?php
-													echo $ThisPlayer->getAllianceName();
-													if($ThisPlayer->hasAlliance()) {
-														echo '('.number_format($ThisPlayer->getAllianceID()).')';
-													} ?></a></span>
+													echo $ThisPlayer->getAllianceName(false, true); ?></a></span>
 											</div>
 										</td>
 									</tr>

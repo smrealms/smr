@@ -510,9 +510,9 @@ abstract class AbstractSmrPlayer {
 		return $this->hasAlliance()?'[alliance='.$this->getAllianceID().']':$this->getAllianceName();
 	}
 
-	public function getAllianceName($linked = false) {
+	public function getAllianceName($linked=false, $includeAllianceID=false) {
 		if($this->hasAlliance()) {
-			return $this->getAlliance()->getAllianceName($linked);
+			return $this->getAlliance()->getAllianceName($linked, $includeAllianceID);
 		}
 		else {
 			return 'No Alliance';

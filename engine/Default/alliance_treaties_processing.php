@@ -66,7 +66,7 @@ if (isset($_REQUEST['proposedAlliance'])) {
 	$mbRead = $mbWrite || isset($_REQUEST['mbRead']);
 	$modRead = isset($_REQUEST['modRead']);
 	//get confirmation
-	$template->assign('PageTopic',$alliance1->getAllianceName() . ' (' . $alliance1->getAllianceID() . ')');
+	$template->assign('PageTopic', $alliance1->getAllianceName(false, true));
 	require_once(get_file_loc('menu.inc'));
 	create_alliance_menu($alliance1->getAllianceID(),$alliance1->getLeaderID());
 	$PHP_OUTPUT.=('<br /><br /');
