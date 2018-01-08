@@ -109,99 +109,8 @@
 								</div>
 
 								<div class="rightInfoShip">
-									<a href="<?php echo URL; ?>/ship_list.php" target="shipList"><span id="ship_name"><?php echo $ThisShip->getName(); ?></span></a><br /><?php
-									if($ThisPlayer->hasCustomShipName()) {
-										echo $ThisPlayer->getCustomShipName(); ?><br /><?php
-									} ?>
-									Rating: <span id="offense"><?php echo get_colored_text_range($ThisShip->getAttackRating() <= $ThisPlayer->getSafeAttackRating() ? 1 : 0, 1, number_format($ThisShip->getAttackRating())); ?></span>/<span id="defense"><?php echo get_colored_text_range($ThisShip->getDefenseRating(), $ThisShip->getMaxDefenseRating()); ?></span><br />
-								</div><br />
-								
-								Shields : <span id="shields"><?php echo get_colored_text_range($ThisShip->getShields(),$ThisShip->getMaxShields(),number_format($ThisShip->getShields()).'/'.number_format($ThisShip->getMaxShields())); ?></span><br />
-								
-								Armour : <span id="armour"><?php echo get_colored_text_range($ThisShip->getArmour(),$ThisShip->getMaxArmour(),number_format($ThisShip->getArmour()).'/'.number_format($ThisShip->getMaxArmour())); ?></span><br />
-
-								<a class="nav" href="<?php echo $HardwareLink; ?>">CIJSD: <?php
-									if($ThisShip->hasCloak()) echo '*';
-									else echo '-';
-									if($ThisShip->hasIllusion()) echo '*';
-									else echo '-';
-									if($ThisShip->hasJump()) echo '*';
-									else echo '-';
-									if($ThisShip->hasScanner()) echo '*';
-									else echo '-';
-									if($ThisShip->hasDCS()) echo '*';
-									else echo '-';
-								?></a><br /><br /><?php
-								if($ThisShip->hasCloak()) { ?>
-									<a href="<?php echo $HardwareLink; ?>"><?php
-										if($ThisShip->isCloaked()) {
-											?><strong class="green">*** Cloak active ***</strong><?php
-										}
-										else {
-											?><strong class="red">*** Cloak inactive ***</strong><?php
-										} ?>
-									</a><br /><br /><?php
-								}
-								if($ThisShip->hasActiveIllusion()) { ?>
-									<a href="<?php echo $HardwareLink; ?>">
-										<span class="npcColour"><?php echo $ThisShip->getIllusionShipName(); ?></span><br />
-										IG Rating : <?php echo $ThisShip->getIllusionAttack(); ?>/<?php echo $ThisShip->getIllusionDefense(); ?>
-									</a><br />
-									<br /><?php
-								} ?>
-								
-								<a class="nav big" href="<?php echo $ForceDropLink; ?>">Forces</a><br /><?php
-								
-								if(isset($DropMineLink)) { ?>
-									<a class="nav" href="<?php echo $DropMineLink; ?>">
-										<span class="bold">[X]</span>
-									</a><?php
-								} ?>Mines : <?php echo $ThisShip->getMines(); ?>/<?php echo $ThisShip->getMaxMines(); ?><br /><?php
-			
-								if(isset($DropCDLink)) { ?>
-									<a class="nav" href="<?php echo $DropCDLink; ?>">
-										<span class="bold">[X]</span>
-									</a><?php
-								} ?>Combat : <span id="cds"><?php echo get_colored_text_range($ThisShip->getCDs(),$ThisShip->getMaxCDs(),number_format($ThisShip->getCDs()).'/'.number_format($ThisShip->getMaxCDs())); ?></span><br /><?php
-			
-								if(isset($DropSDLink)) { ?>
-									<a class="nav" href="<?php echo $DropSDLink; ?>">
-										<span class="bold">[X]</span>
-									</a><?php
-								} ?>Scout : <?php echo $ThisShip->getSDs(); ?>/<?php echo $ThisShip->getMaxSDs(); ?><br />
-								<br />
-								
-								<a class="nav" href="<?php echo $CargoJettisonLink; ?>">Cargo Holds (<?php echo $ThisShip->getCargoHolds(); ?>/<?php echo $ThisShip->getMaxCargoHolds(); ?>)</a><br /><?php
-								
-								if($ThisShip->hasCargo()) {
-									foreach($ThisShip->getCargo() as $GoodID => $GoodAmount) {
-										$Good =& Globals::getGood($GoodID); ?>
-										<img src="<?php echo $Good['ImageLink']; ?>" alt="<?php echo $Good['Name']; ?>" /> : <?php echo $GoodAmount; ?><br /><?php
-									}
-								} ?>
-								
-								Empty : <?php echo $ThisShip->getEmptyHolds(); ?><br />
-								<br />
-								<a class="nav big" href="<?php echo $WeaponReorderLink; ?>">Weapons</a><br /><?php
-								if($ThisShip->hasWeapons()) { ?>
-									<div class="wep_drop1" id="hide-show" onclick="toggleWepD('<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>');">
-										<noscript><a href="<?php echo $ThisPlayer->getToggleWeaponHidingHREF(); ?>"></noscript>
-											Show/Hide (<?php echo $ThisShip->getNumWeapons(); ?>)<br />
-											<span class="wep1"<?php if(!$ThisPlayer->isDisplayWeapons()){ ?>style="display: none;"<?php } ?>><?php
-												$Weapons =& $ThisShip->getWeapons();
-												foreach($Weapons as &$Weapon) { 
-													echo $Weapon->getName(); ?><br /><?php
-												} unset($Weapon); unset($Weapons); ?>
-											</span>
-										<noscript></a></noscript>
-									</div><?php
-								} ?>
-								Open : <?php echo $ThisShip->getOpenWeaponSlots(); ?><br />
-								<span class="noWrap">Total Damage: (<?php echo $ThisShip->getTotalShieldDamage(); ?>/<?php echo $ThisShip->getTotalArmourDamage(); ?>)</span><br />
-								Power Used: <?php echo $ThisShip->getPowerUsed(); ?>/<?php echo $ThisShip->getMaxPower();
-								if(ENABLE_BETA) {
-									?><br /><br /><a class="nav" href="<?php echo Globals::getBetaFunctionsHREF(); ?>">Beta Functions</a><?php
-								} ?>
+									<?php $this->includeTemplate('includes/RightPanelShip.inc'); ?>
+								</div>
 							</div><?php
 						} ?>
 					</td>
@@ -219,11 +128,7 @@
 							$this->includeTemplate($TemplateBody); ?>
 						</div>
 						<div style="width:60%; float: left;" class="left">
-							<span style="font-size: xx-small;">Get <b><u>FREE TURNS</u></b> for voting if you see the star, next available <span id="v"><?php if($TimeToNextVote <= 0){ ?>now<?php }else{ ?>in <?php echo format_time($TimeToNextVote,true); } ?></span>.</span>
-							<br /><?php
-							foreach($VoteSites as $VoteSite) {
-								echo $VoteSite;
-							} ?>
+							<?php $this->includeTemplate('includes/VoteLinks.inc'); ?>
 						</div>
 						<div class="copyright">
 							SMR <?php echo $Version; ?>&copy;2007-<?php echo $CurrentYear; ?> Page and SMR

@@ -1,14 +1,12 @@
 <?php
 if(isset($GameID)) { ?>
 	<div class="LeftNavOne noWrap"><?php
-		if(!$ThisPlayer->isLandedOnPlanet()) {
-			?><a class="leftNav" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br /><?php
-		 }
-		if(isset($PlanetMainLink)) {
-			?><a class="leftNav" href="<?php echo $PlanetMainLink; ?>">Planet Main</a><br /><?php
-		 }
-		if(isset($LocalMapLink)) {
-			?><a class="leftNav" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
+		// Use the current sector link for Planet Main to enable the hotkey
+		if ($ThisPlayer->isLandedOnPlanet()) { ?>
+			<a class="leftNav bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Planet Main</a><br /><?php
+		} else { ?>
+			<a class="leftNav bold" href="<?php echo Globals::getCurrentSectorHREF(); ?>">Current Sector</a><br />
+			<a class="leftNav bold" href="<?php echo Globals::getLocalMapHREF(); ?>">Local Map</a><br /><?php
 		}
 		if(isset($PlotCourseLink)) {
 			?><a class="leftNav" href="<?php echo $PlotCourseLink; ?>">Plot A Course</a><br /><?php
