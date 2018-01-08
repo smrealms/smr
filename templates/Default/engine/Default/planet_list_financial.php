@@ -19,7 +19,7 @@
 			}
 		} else {
 			if (!$PlayerOnly) { ?>
-				<?php echo $Alliance->getAllianceName(true); ?> currently has <span id="numplanets"><?php echo count($AllPlanets); ?></span> planets in the universe!<br /><br /><?php
+				<?php echo $Alliance->getAllianceName(true); ?> currently has <span id="numplanets"><?php echo count($AllPlanets); ?></span> <?php echo pluralise('planet', count($AllPlanets)); ?> in the universe!<br /><br /><?php
 			}
 			$this->includeTemplate('includes/PlanetListFinancial.inc',array('Planets'=>&$AllPlanets));
 		}
