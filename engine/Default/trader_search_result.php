@@ -58,13 +58,7 @@ if ($db->getNumRows() > 0) {
 		}
 		$PHP_OUTPUT.=('</td>');
 
-		$PHP_OUTPUT.=('<td>');
-		if ($curr_player->hasAlliance()) {
-			$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
-		}
-		else
-			$PHP_OUTPUT.=('(none)');
-		$PHP_OUTPUT.=('</td>');
+		$PHP_OUTPUT.=('<td>' . $curr_player->getAllianceName(true) . '</td>');
 		$container = create_container('skeleton.php', 'council_list.php');
 		$container['race_id'] = $curr_player->getRaceID();
 		$PHP_OUTPUT.=('<td align="center" valign="middle">');
@@ -157,13 +151,7 @@ if (empty($player_id)) {
 			}
 			$PHP_OUTPUT.=('</td>');
 	
-			$PHP_OUTPUT.=('<td>');
-			if ($curr_player->hasAlliance()) {
-				$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
-			}
-			else
-				$PHP_OUTPUT.=('(none)');
-			$PHP_OUTPUT.=('</td>');
+			$PHP_OUTPUT.=('<td>' . $curr_player->getAllianceName(true) . '</td>');
 			$container = create_container('skeleton.php', 'council_send_message.php');
 			$container['race_id'] = $curr_player->getRaceID();
 			$PHP_OUTPUT.=('<td align="center" valign="middle">');

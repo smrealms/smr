@@ -117,13 +117,8 @@ if ($count_last_active > 0) {
 		$PHP_OUTPUT.=('<td class="center">');
 		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
 		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td>');
-		if ($curr_player->hasAlliance()) {
-			$PHP_OUTPUT.=create_link($curr_player->getAllianceRosterHREF(), $curr_player->getAllianceName());
-		}
-		else
-			$PHP_OUTPUT.=('(none)');
-		$PHP_OUTPUT.= '</td><td class="right">'. number_format($curr_player->getExperience()) . '</td>';
+		$PHP_OUTPUT.=('<td>' . $curr_player->getAllianceName(true) . '</td>');
+		$PHP_OUTPUT.= '<td class="right">'. number_format($curr_player->getExperience()) . '</td>';
 		$PHP_OUTPUT.=('</tr>');
 	}
 	$PHP_OUTPUT.=('	</table>');
