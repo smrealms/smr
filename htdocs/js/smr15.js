@@ -1,9 +1,89 @@
-!function(){"use strict"
-var t,n,o,e,a,c,l
-window.voteSite=function(t,n){window.open(t),window.location=n},e=function(t,n,o){for(var e=1,a=0,c=document.FORM;n>=e;e++)a+=1*c[t+e].value
-c[o].value=a},a=function(){e("port",9,"total")},window.startCalc=function(){t=setInterval(a,10)},window.stopCalc=function(){clearInterval(t)},c=function(){e("mine",20,"totalM")},window.startCalcM=function(){n=setInterval(c,10)},window.stopCalcM=function(){clearInterval(n)},window.setEven=function(){var t=2,n=document.FORM
-for(n.race1.value=12;9>=t;t++)n["race"+t].value=11
-n.racedist.value=100},l=function(){e("race",9,"racedist")},window.startRaceCalc=function(){o=setInterval(l,10)},window.stopRaceCalc=function(){clearInterval(o)}
-var r,i,u,d,s,w,v,f=!1
-w=function(){clearInterval(d),r.style.backgroundColor=u,f=!1},v=function(){var t=document.getElementsByTagName("body")[0]
-t.style.backgroundColor=t.style.backgroundColor===u?i:u},window.triggerAttackBlink=function(t){null==u&&(u=document.getElementsByTagName("body")[0].style.backgroundColor),i="#"+t,clearTimeout(s),f===!1&&(f=!0,v(),d=setInterval(v,500)),s=setTimeout(w,3500)}}()
+(function() {
+"use strict";
+
+	var intervalCalc, intervalM, intervalRace, doCalc, calc, calcM, raceCalc;
+	
+	window.voteSite = function(url,snUrl) {
+		window.open(url);
+		window.location=snUrl;
+	};
+
+	doCalc = function(type, number, totalDest) {
+		var i = 1, total = 0, df=document.FORM;
+		for(; i<=number; i++) {
+			total += df[type+i].value * 1;
+		}
+		df[totalDest].value = total;
+	};
+
+	calc = function() {
+		doCalc('port', 9, 'total');
+	};
+	window.startCalc = function() {
+		intervalCalc = setInterval(calc,10);
+	};
+	window.stopCalc = function() {
+		clearInterval(intervalCalc);
+	};
+	
+	calcM = function() {
+		doCalc('mine', 20, 'totalM');
+	};
+	window.startCalcM = function() {
+		intervalM = setInterval(calcM,10);
+	};
+	window.stopCalcM = function() {
+		clearInterval(intervalM);
+	};
+	window.setEven = function() {
+		var i = 2, df=document.FORM;
+		df.race1.value = 12;
+		for(; i<=9; i++) {
+			df['race'+i].value = 11;
+		}
+		df.racedist.value = 100;
+	};
+	
+	raceCalc = function() {
+		doCalc('race', 9, 'racedist');
+	};
+	window.startRaceCalc = function() {
+		intervalRace = setInterval(raceCalc,10);
+	};
+	window.stopRaceCalc = function() {
+		clearInterval(intervalRace);
+	};
+
+	var body, currentlyFlashing=false, flashColour, origColour, intervalFlash, timeoutStopFlash, stopFlash, bgFlash;
+
+	stopFlash = function() {
+		clearInterval(intervalFlash);
+		body.style.backgroundColor = origColour;
+		currentlyFlashing = false;
+	};
+
+	bgFlash = function() {
+		var body = document.getElementsByTagName('body')[0];
+		if(body.style.backgroundColor === origColour) {
+			body.style.backgroundColor = flashColour;
+		}
+		else {
+			body.style.backgroundColor = origColour;
+		}
+	};
+
+	window.triggerAttackBlink = function(colour) {
+		if(origColour == null) {
+			origColour = document.getElementsByTagName('body')[0].style.backgroundColor;
+		}
+		flashColour = '#'+colour;
+		clearTimeout(timeoutStopFlash);
+		if (currentlyFlashing === false) {
+			currentlyFlashing = true;
+			//flash 3 times
+			bgFlash();
+			intervalFlash = setInterval(bgFlash,500);
+		}
+		timeoutStopFlash = setTimeout(stopFlash,3500);
+	};
+})();

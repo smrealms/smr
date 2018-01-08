@@ -1,1 +1,27 @@
-function AttackBlink(){var a=document.getElementById("attack_warning");AttackToggle=!AttackToggle,AttackToggle===!1?a.style.color="#ff0000":AttackToggle===!0&&(a.style.color="#aa0000")}function SetBlink(){setInterval(AttackBlink,250)}function DoSubmit(a,b){var c=document.forms[b],d=document.createElement("input");d.setAttribute("type","hidden"),d.setAttribute("name","action"),d.setAttribute("value",a),c.appendChild(d),c.submit()}var AttackToggle=!1
+var AttackToggle = false;
+
+function AttackBlink() {
+	var ele = document.getElementById('attack_warning');
+
+	AttackToggle = !AttackToggle;
+	if (AttackToggle === false) {
+		ele.style.color = '#ff0000';
+	}
+	else if (AttackToggle === true) {
+		ele.style.color = '#aa0000';
+	}
+}
+
+function SetBlink() {
+	setInterval(AttackBlink,250);
+}
+
+function DoSubmit(action,form_id) {
+	var form = document.forms[form_id];
+	var input = document.createElement('input');
+	input.setAttribute('type', 'hidden');
+	input.setAttribute('name', 'action');
+	input.setAttribute('value', action);
+	form.appendChild(input);
+	form.submit();
+}

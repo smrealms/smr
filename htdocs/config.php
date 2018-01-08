@@ -343,8 +343,26 @@ define('EOL',"\n");
 
 define('TEMPLATES_DIR',ROOT . 'templates/');
 
-define('DEFAULT_CSS',URL.'/css/Default.css');
-define('DEFAULT_CSS_COLOUR',URL.'/css/Default/Default.css');
+// These CSS URLs must be hard-coded here so that grunt-cache-bust
+// can replace them with the hashed filenames.
+$CSS_URLS = array(
+	'Default' => 'css/Default.css',
+	'Freon22' => 'css/Freon22.css',
+);
+$CSS_COLOUR_URLS = array(
+	'Default' => array(
+		'Default' => 'css/Default/Default.css',
+	),
+	'Freon22' => array(
+		'Default'      => 'css/Freon22/Default.css',
+		'Blue'         => 'css/Freon22/Blue.css',
+		'ClassicGreen' => 'css/Freon22/ClassicGreen.css',
+		'None'         => 'css/Freon22/None.css',
+	),
+);
+
+define('DEFAULT_CSS', $CSS_URLS['Default']);
+define('DEFAULT_CSS_COLOUR', $CSS_COLOUR_URLS['Default']['Default']);
 
 define('AJAX_DEFAULT_REFRESH_TIME',1500);
 define('AJAX_UNPROTECTED_REFRESH_TIME',800);

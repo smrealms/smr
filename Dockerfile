@@ -1,3 +1,21 @@
+FROM node:alpine as builder
+
+WORKDIR /smr/
+
+# See https://github.com/hollandben/grunt-cache-bust/issues/236
+RUN npm i --save grunt grunt-contrib-uglify grunt-contrib-cssmin grunt-cache-bust@1.4.1
+
+# Copy the SMR source code
+COPY . .
+
+# Perform CSS/JS minification and cache busting
+RUN npx grunt
+
+# Remove local grunt install so it is not copied to the next build stage
+RUN rm -rf node_modules
+
+#---------------------------
+
 FROM php:5.6-apache
 RUN apt-get update \
 	&& apt-get install -y libcurl4-openssl-dev git sendmail \
@@ -14,7 +32,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 COPY composer.json .
 RUN composer install --no-interaction
 
-COPY . .
+COPY --from=builder /smr .
 RUN rm -rf /var/www/html/ && ln -s "$(pwd)/htdocs" /var/www/html
 
 # Make the upload directory writable by the apache user

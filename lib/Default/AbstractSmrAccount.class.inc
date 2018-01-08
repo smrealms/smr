@@ -776,10 +776,12 @@ abstract class AbstractSmrAccount {
 		$this->update();
 	}
 
+	// gets the extra CSS file linked in preferences
 	public function getCssLink() {
 		return $this->cssLink;
 	}
 
+	// sets the extra CSS file linked in preferences
 	public function setCssLink($link) {
 		if($this->cssLink==$link)
 			return;
@@ -815,6 +817,18 @@ abstract class AbstractSmrAccount {
 		$this->colourScheme = $colourScheme;
 		$this->hasChanged = true;
 		$this->update();
+	}
+
+	// gets the CSS URL based on the template name specified in preferences
+	public function getCssUrl() {
+		global $CSS_URLS;
+		return $CSS_URLS[$this->getTemplate()];
+	}
+
+	// gets the CSS_COLOUR URL based on the template and color scheme specified in preferences
+	public function getCssColourUrl() {
+		global $CSS_COLOUR_URLS;
+		return $CSS_COLOUR_URLS[$this->getTemplate()][$this->getColourScheme()];
 	}
 
 	public function getHofName($linked=false) {
