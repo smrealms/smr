@@ -1,32 +1,46 @@
 <?php
 if ($ThisLocation->isWeaponSold()) { ?>
-	<table class="center standard">
-		<tr>
-			<th>Name</th>
-			<th>Shield Damage</th>
-			<th>Armour Damage</th>
-			<th>Accuracy</th>
-			<th>Race</th>
-			<th>Power Level</th>
-			<th>Cost</th>
-			<th>Action</th>
-		</tr><?php
-
-		$WeaponsSold =& $ThisLocation->getWeaponsSold();
-		foreach($WeaponsSold as &$Weapon) { ?>
+	<table id="weapon-list" class="center standard">
+		<thead>
 			<tr>
-				<td><?php echo $Weapon->getName(); ?></td>
-				<td><?php echo $Weapon->getShieldDamage(); ?></td>
-				<td><?php echo $Weapon->getArmourDamage(); ?></td>
-				<td><?php echo $Weapon->getBaseAccuracy(); ?></td>
-				<td><?php echo $Weapon->getRaceName(); ?></td>
-				<td><?php echo $Weapon->getPowerLevel(); ?></td>
-				<td><?php echo $Weapon->getCost(); ?></td>
-				<td><a href="<?php echo $Weapon->getBuyHREF($ThisLocation); ?>" class="submitStyle">Buy</a></td>
-				</td>
-			</tr><?php
-		} unset($Weapon);?>
-	</table><?php
+				<th class="sort" data-sort="sort_name">Name</th>
+				<th class="sort" data-sort="sort_shield">Shield Damage</th>
+				<th class="sort" data-sort="sort_armor">Armour Damage</th>
+				<th class="sort" data-sort="sort_acc">Accuracy</th>
+				<th class="sort" data-sort="sort_race">Race</th>
+				<th class="sort" data-sort="sort_power">Power Level</th>
+				<th class="sort" data-sort="sort_cost">Cost</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+
+		<tbody class="list"><?php
+			$WeaponsSold =& $ThisLocation->getWeaponsSold();
+			foreach($WeaponsSold as &$Weapon) { ?>
+				<tr>
+					<td class="sort_name"><?php echo $Weapon->getName(); ?></td>
+					<td class="sort_shield"><?php echo $Weapon->getShieldDamage(); ?></td>
+					<td class="sort_armor"><?php echo $Weapon->getArmourDamage(); ?></td>
+					<td class="sort_acc"><?php echo $Weapon->getBaseAccuracy(); ?></td>
+					<td class="sort_race"><?php echo $Weapon->getRaceName(); ?></td>
+					<td class="sort_power"><?php echo $Weapon->getPowerLevel(); ?></td>
+					<td class="sort_cost"><?php echo $Weapon->getCost(); ?></td>
+					<td><a href="<?php echo $Weapon->getBuyHREF($ThisLocation); ?>" class="submitStyle">Buy</a></td>
+					</td>
+				</tr><?php
+			} unset($Weapon);?>
+		</tbody>
+	</table>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+	<script>
+	var list = new List('weapon-list', {
+		valueNames: ['sort_name', 'sort_shield', 'sort_armor', 'sort_acc', 'sort_race', 'sort_power', 'sort_cost'],
+		sortFunction: function(a, b, options) {
+			return list.utils.naturalSort(a.values()[options.valueName].replace(/<.*?>|,/g,''), b.values()[options.valueName].replace(/<.*?>|,/g,''), options);
+		}
+	});
+	</script><?php
 }
 
 if ($ThisShip->hasWeapons()) { ?>
