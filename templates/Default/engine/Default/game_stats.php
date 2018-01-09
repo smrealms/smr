@@ -112,7 +112,9 @@
 				</table>
 			</td>
 		</tr>
-	</table><br />
+	</table>
+	<br />
+
 	<table class="standard">
 		<tr>
 			<td align="center">Top 10 Players in Experience</td>
@@ -152,6 +154,52 @@
 								<td align="center"><?php echo number_format($RankedPlayer->getKills()); ?></td>
 							</tr><?php
 						} unset($RankedPlayer); ?>
+					</table><?php
+				} ?>
+			</td>
+		</tr>
+	</table>
+	<br />
+
+	<table class="standard">
+		<tr>
+			<td align="center">Top 10 Alliances in Experience</td>
+			<td align="center">Top 10 Alliances in Kills</td>
+		</tr>
+		<tr>
+			<td class="center" style="border:none"><?php
+				if (isset($AllianceExpRankings)) { ?>
+					<table class="nobord">
+						<tr>
+							<th align="center">Rank</th>
+							<th align="center">Alliance</th>
+							<th align="center">Experience</th>
+						</tr><?php
+						foreach ($AllianceExpRankings as $Rank => $RankedAlliance) { ?>
+							<tr>
+								<td align="center"><?php echo $Rank; ?></td>
+								<td align="center"><?php echo $RankedAlliance['Alliance']->getAllianceName(); ?></td>
+								<td align="center"><?php echo number_format($RankedAlliance['Amount']); ?></td>
+							</tr><?php
+						} ?>
+					</table><?php
+				} ?>
+			</td>
+			<td align="center"><?php
+				if (isset($AllianceKillRankings)) { ?>
+					<table class="nobord">
+						<tr>
+							<th align="center">Rank</th>
+							<th align="center">Alliance</th>
+							<th align="center">Kills</th>
+						</tr><?php
+						foreach ($AllianceKillRankings as $Rank => $RankedAlliance) { ?>
+							<tr>
+								<td align="center"><?php echo $Rank; ?></td>
+								<td align="center"><?php echo $RankedAlliance['Alliance']->getAllianceName(); ?></td>
+								<td align="center"><?php echo number_format($RankedAlliance['Amount']); ?></td>
+							</tr><?php
+						} ?>
 					</table><?php
 				} ?>
 			</td>

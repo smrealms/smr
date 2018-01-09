@@ -45,4 +45,27 @@ if ($db->getNumRows() > 0) {
 	$template->assign('KillRankings',$killRankings);
 }
 
+function allianceTopTen($gameID, $field) {
+	$db = new SmrMySqlDatabase();
+	$db->query('SELECT alliance_id, SUM(' . $field . ') amount
+				FROM alliance
+				LEFT JOIN player USING (game_id, alliance_id)
+				WHERE game_id = ' . $db->escapeNumber($gameID) . '
+				GROUP BY alliance_id, alliance_name
+				ORDER BY amount DESC, alliance_name
+				LIMIT 10');
+	$rankings = array();
+	if ($db->getNumRows() > 0) {
+		$rank = 0;
+		while ($db->nextRecord()) {
+			++$rank;
+			$rankings[$rank]['Alliance'] = SmrAlliance::getAlliance($db->getInt('alliance_id'), $gameID);
+			$rankings[$rank]['Amount'] = $db->getInt('amount');
+		}
+	}
+	return $rankings;
+}
+
+$template->assign('AllianceExpRankings', allianceTopTen($gameID, 'experience'));
+$template->assign('AllianceKillRankings', allianceTopTen($gameID, 'kills'));
 ?>
