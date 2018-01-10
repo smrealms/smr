@@ -593,9 +593,9 @@ class SmrPort {
 			$this->setReinforceTime($nextReinforce);
 			$this->updateAttackStarted();
 			//add news
-			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> The federal government has received a distress call from the port in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. It is under attack by ';
+			$newsMessage = '<span class="red bold">*MAYDAY* *MAYDAY*</span> A distress beacon has been activated by the port in sector ' . Globals::getSectorBBLink($this->getSectorID()) . '. It is under attack by ';
 			if($trigger->hasAlliance()) {
-				$newsMessage .= 'members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
+				$newsMessage .= 'members of '.$trigger->getAllianceBBLink();
 			}
 			else {
 				$newsMessage .= $trigger->getBBLink();
@@ -605,10 +605,10 @@ class SmrPort {
 			$bounty = number_format(round($trigger->getLevelID() * DEFEND_PORT_BOUNTY_PER_LEVEL));
 
 			if($trigger->hasAlliance()) {
-				$newsMessage .= 'bounties of ' . $bounty . ' for the deaths of any raiding members of <span class="yellow">'.$trigger->getAllianceBBLink().'</span>';
+				$newsMessage .= 'bounties of <span class="creds">' . $bounty . '</span> credits for the deaths of any raiding members of '.$trigger->getAllianceBBLink();
 			}
 			else {
-				$newsMessage .= 'a bounty of ' . $bounty . ' credits for the death of '.$trigger->getBBLink();
+				$newsMessage .= 'a bounty of <span class="creds">' . $bounty . '</span> credits for the death of '.$trigger->getBBLink();
 			}
 			$newsMessage .= ' prior to the destruction of the port, or until federal forces arrive to defend the port.';
 //			$irc_message = '[k00,01]The port in sector [k11]'.$this->sectorID.'[k00] is under attack![/k]';
