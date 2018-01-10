@@ -2,15 +2,15 @@
 
 $template->assign('PageTopic','Create Universe - Adding Galaxies (2/10)');
 
+$galaxy_count = SmrSession::getRequestVar('galaxy_count');
+
 $db->query('SELECT * FROM game WHERE game_id = ' . $db->escapeNumber($var['game_id']));
 if ($db->nextRecord())
 	$template->assign('GameName',$db->getField('game_name'));
-$galaxy_count = isset($_REQUEST['galaxy_count']) ? $_REQUEST['galaxy_count'] : 0;
 if (empty($galaxy_count)) {
 	// do we already have galaxies?
 	$db->query('SELECT * FROM sector WHERE game_id = ' . $db->escapeNumber($var['game_id']) . ' GROUP BY galaxy_id');
 	$galaxy_count = $db->getNumRows();
-
 }
 
 if (empty($galaxy_count)) {
