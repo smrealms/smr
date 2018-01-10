@@ -3,13 +3,12 @@ class SmrPort {
 	protected static $CACHE_PORTS = array();
 	protected static $CACHE_CACHED_PORTS = array();
 	
-	const NUMBER_OF_PORT_WEAPONS = 6;
 	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325;
 	const CHANCE_TO_DOWNGRADE = 1;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
-	const BASE_CDS = 1000;
-	const CDS_PER_LEVEL = 70;
+	const BASE_CDS = 500;
+	const CDS_PER_LEVEL = 125;
 	const CDS_PER_TEN_MIL_CREDITS = 25;
 	const BASE_DEFENCES = 500;
 	const DEFENCES_PER_LEVEL = 700;
@@ -654,7 +653,7 @@ class SmrPort {
 	}
 
 	public function setCreditsToDefault() {
-		$this->setCredits(3000000 + $this->getLevel()*1500000 + pow($this->getLevel(), 2) * 300000);
+		$this->setCredits(2100000 + $this->getLevel()*1600000 + pow($this->getLevel(), 2) * 300000);
 	}
 
 	public function setCredits($credits) {
@@ -812,7 +811,7 @@ class SmrPort {
 	}
 
 	public function getNumWeapons() {
-		return self::NUMBER_OF_PORT_WEAPONS;
+		return $this->getLevel() + 3;
 	}
 
 	public function &getWeapons() {

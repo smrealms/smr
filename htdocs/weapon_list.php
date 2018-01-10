@@ -174,6 +174,12 @@ try {
 			case BUYER_RESTRICTION_NEWBIE:
 				echo ('<td align="center" style="color: #06F;">Newbie</td>');
 			break;
+			case BUYER_RESTRICTION_PORT:
+				echo ('<td align="center" style="color: yellow;">Port</td>');
+			break;
+			case BUYER_RESTRICTION_PLANET:
+				echo ('<td align="center" style="color: yellow;">Planet</td>');
+			break;
 			default:
 				echo ('<td align="center">-</td>');
 		}
