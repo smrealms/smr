@@ -290,6 +290,25 @@ class SmrSession {
 		return self::$var[$sn];
 	}
 
+	/**
+	 * Gets a var from $_REQUEST (or $default) and then stores it in the
+	 * session so that it can still be retrieved when the page auto-refreshes.
+	 * This is the recommended way to get $_REQUEST data.
+	 */
+	public static function getRequestVar($varName, $default=null) {
+		global $var;
+		// Set the session var, if in $_REQUESTS or if a default is given
+		if (isset($_REQUEST[$varName])) {
+			self::updateVar($varName, $_REQUEST[$varName]);
+		} elseif (isset($default) && !isset($var[$varName])) {
+			self::updateVar($varName, $default);
+		}
+		// Return the possibly updated session var
+		if (isset($var[$varName])) {
+			return $var[$varName];
+		}
+	}
+
 	public static function resetLink($container, $sn) { //Do not allow sharing SN, useful for forwarding.
 		global $lock;
 		if(isset(self::$var[$sn]['CommonID'])) {
