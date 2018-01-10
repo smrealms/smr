@@ -259,13 +259,6 @@ function different_level($rank1, $rank2, $forced_vet1, $forced_vet2) {
 
 }
 
-function hex2bin( $data ) {
-
-	$len = strlen( $data );
-	return pack( "H" . $len, $data );
-
-}
-
 function word_filter($string) {
 	
 	static $words;

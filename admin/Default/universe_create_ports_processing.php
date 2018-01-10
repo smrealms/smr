@@ -25,10 +25,8 @@ function draw_rand_array($array, $draws) {
 
 }
 
-
 $action = $_REQUEST['action'];
 if ($action == 'Skip >>') {
-
 	$container = array();
 	$container['url']		= 'skeleton.php';
 	$container['body']		= 'universe_create_planets.php';
@@ -135,7 +133,7 @@ foreach($ports as $galaxy_id => $amount) {
 		$curr_goods = $goods;
 
 		// add 4 from good_class one
-		$good_ids = draw_rand_array(& $curr_goods[1], 4);
+		$good_ids = draw_rand_array($curr_goods[1], 4);
 
 		// now go through each lvl. and add one good from it's class each time
 		for ($level_count = 2; $level_count <= $level; $level_count++) {
@@ -148,7 +146,7 @@ foreach($ports as $galaxy_id => $amount) {
 				$good_class = 3;
 
 			// get one good
-			$good_ids[] = draw_rand_array(& $curr_goods[$good_class], 1);
+			$good_ids[] = draw_rand_array($curr_goods[$good_class], 1);
 
 		}
 
