@@ -3,7 +3,8 @@ class SmrPort {
 	protected static $CACHE_PORTS = array();
 	protected static $CACHE_CACHED_PORTS = array();
 	
-	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325;
+	const DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE = 300; // single player
+	const DAMAGE_NEEDED_FOR_DOWNGRADE_CHANCE = 325; // all attackers
 	const CHANCE_TO_DOWNGRADE = 1;
 	const TIME_FEDS_STAY = 1800;
 	const MAX_FEDS_BONUS = 4000;
@@ -1289,7 +1290,7 @@ class SmrPort {
 		if ($killer->hasAlliance()) $news .= 'the members of <span class="yellow">' . $killer->getAllianceBBLink() . '</span>';
 		else $news .= $killer->getBBLink();
 		$this->db->query('INSERT INTO news (game_id, time, news_message, type,killer_id,killer_alliance,dead_id) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber(TIME) . ', ' . $this->db->escapeString($news) . ', \'REGULAR\',' . $this->db->escapeNumber($killer->getAccountID()) . ',' . $this->db->escapeNumber($killer->getAllianceID()) . ',' . $this->db->escapeNumber(ACCOUNT_ID_PORT) . ')');
-		// Trigger gets an alignment change and a bounty if port is taken
+		// Killer gets a relations change and a bounty if port is taken
 		$return['KillerBounty'] = $killer->getExperience() * $this->getLevel();
 		$killer->increaseCurrentBountyAmount('HQ',$return['KillerBounty']);
 		$killer->increaseHOF($return['KillerBounty'],array('Combat','Port','Bounties','Gained'), HOF_PUBLIC);
@@ -1298,18 +1299,6 @@ class SmrPort {
 			$return['KillerRelations'] = 45;
 			$killer->decreaseRelations($return['KillerRelations'],$this->getRaceID());
 			$killer->increaseHOF($return['KillerRelations'],array('Combat','Port','Relation','Loss'), HOF_PUBLIC);
-		}
-		// also we change alignment
-		$relations = Globals::getRaceRelations($killer->getGameID(),$killer->getRaceID());
-		if ($relations[$this->getRaceID()] < -299) {
-			$return['KillerAlign'] = $this->getLevel() * 2;
-			$killer->increaseAlignment($return['KillerAlign']);
-			$killer->increaseHOF($return['KillerAlign'],array('Combat','Port','Alignment','Gain'), HOF_PUBLIC);
-		}
-		else {
-			$return['KillerAlign'] = -$this->getLevel() * 2;
-			$killer->decreaseAlignment(-$return['KillerAlign']);
-			$killer->increaseHOF(-$return['KillerAlign'],array('Combat','Port','Alignment','Loss'), HOF_PUBLIC);
 		}
 		
 		return $return;
