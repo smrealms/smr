@@ -26,7 +26,7 @@ class SmrAlliance {
 
 	public static function &getAlliance($allianceID,$gameID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_ALLIANCES[$gameID][$allianceID])) {
-			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($gameID,$allianceID);
+			self::$CACHE_ALLIANCES[$gameID][$allianceID] = new SmrAlliance($allianceID, $gameID);
 		}
 		return self::$CACHE_ALLIANCES[$gameID][$allianceID];
 	}
@@ -51,7 +51,7 @@ class SmrAlliance {
 		return $return;
 	}
 
-	function __construct($gameID, $allianceID) {
+	protected function __construct($allianceID, $gameID) {
 		$this->db = new SmrMySqlDatabase();
 
 		$this->allianceID = $allianceID;
