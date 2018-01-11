@@ -438,15 +438,8 @@ class SmrPort {
 			
 			case 6:
 			case 7:
+			case 8:
 				$this->selectAndAddGood(3);
-			break;
-
-			case 8: // Add 1 level 3, and 50% chance of level 4
-				$this->selectAndAddGood(3);
-		
-				if (mt_rand(1,100) <= 50) { //50% chance to get tier 4 when upgrading to level 9
-					$this->selectAndAddGood(4);
-				}
 			break;
 			
 			default: // We don't want to add goods.
@@ -541,6 +534,7 @@ class SmrPort {
 			
 			case 7:
 			case 8:
+			case 9:
 				do {
 					$newGood = array_shift($GOODS);
 				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
@@ -549,25 +543,6 @@ class SmrPort {
 				$this->removePortGood($newGood['ID']);
 			break;
 
-			case 9: // Add 1 level 3, and 50% chance of level 4
-				do {
-					$newGood = array_shift($GOODS);;
-				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->removePortGood($newGood['ID']);
-		
-				$GOODS = Globals::getGoods();
-				shuffle($GOODS);
-				$count = count($GOODS);
-				do {
-					$newGood = array_shift($GOODS);;
-				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=4) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->removePortGood($newGood['ID']);
-			break;
-			
 			default: // We don't want to add goods.
 			break;
 		}
