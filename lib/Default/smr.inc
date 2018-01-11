@@ -448,12 +448,6 @@ function makeBold($value) {
 //	return false;
 //
 //}
-if(!function_exists('hex2bin')) {
-	function hex2bin( $data ) {
-		$len = strlen( $data );
-		return pack( 'H' . $len, $data );
-	}
-}
 
 function word_filter($string) {
 	static $words;

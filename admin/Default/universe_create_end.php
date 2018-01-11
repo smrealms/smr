@@ -21,7 +21,7 @@ $planetAccess = TRUE;
 $exemptWith = TRUE;
 $mbMessages = TRUE;
 $sendAllMsg = TRUE;
-$viewBonds = TRUE
+$viewBonds = TRUE;
 $db->query('REPLACE INTO alliance_has_roles (alliance_id, game_id, role_id, role, with_per_day, remove_member, change_pass, change_mod, change_roles, planet_access, exempt_with, mb_messages, send_alliance_msg, view_bonds) ' .
 			'VALUES (302, '.$game_id.', 1, \'Leader\', '.$withPerDay.', '.$db->escapeString($removeMember).', '.$db->escapeString($changePass).', '.$db->escapeString($changeMOD).', '.$db->escapeString($changeRoles).', '.$db->escapeString($planetAccess).', '.$db->escapeString($exemptWith).', '.$db->escapeString($mbMessages).', '.$db->escapeString($sendAllMsg).', '.$db->escapeString($viewBonds).')');
 $withPerDay = ALLIANCE_BANK_UNLIMITED;

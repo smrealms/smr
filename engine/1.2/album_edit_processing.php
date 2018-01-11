@@ -178,7 +178,7 @@ function php_link_check($url, $r = FALSE) {
 	if (!checkdnsrr($url["host"], "A"))
 		return FALSE;
 
-	$fp = fsockopen($url["host"], $url["port"], &$errno, &$errstr, 30);
+	$fp = fsockopen($url["host"], $url["port"], $errno, $errstr, 30);
 
 	if (!$fp) return FALSE;
 	else
