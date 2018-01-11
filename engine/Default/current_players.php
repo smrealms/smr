@@ -12,92 +12,61 @@ if(SmrSession::$last_accessed < TIME - 600)
 	++$count_real_last_active;
 
 
-if (empty($var['sort'])) $sort = 'experience DESC, player_name';
-else $sort = $var['sort'];
-if (empty($var['seq'])) $seq = 'DESC';
-else $seq = $var['seq'];
-
 $db->query('SELECT * FROM player
 		WHERE last_cpl_action >= ' . $db->escapeNumber(TIME - 600) . '
 			AND game_id = ' . $db->escapeNumber($player->getGameID()) . '
-		ORDER BY '.$sort.' '.$seq);
+		ORDER BY experience DESC, player_name DESC');
 $count_last_active = $db->getNumRows();
 
 // fix it if some1 is using the logoff button
 if ($count_real_last_active < $count_last_active)
 	$count_real_last_active = $count_last_active;
-$PHP_OUTPUT.=('<div align="center">');
-$PHP_OUTPUT.=('<p>There ');
-if ($count_real_last_active != 1)
-	$PHP_OUTPUT.=('are '.$count_real_last_active.' players who have ');
-else
-	$PHP_OUTPUT.=('is 1 player who has ');
-$PHP_OUTPUT.=('accessed the server in the last 10 minutes.<br />');
 
-if ($count_last_active == 0)
-	$PHP_OUTPUT.=('No one was moving so your ship computer can\'t intercept any transmissions.<br />');
-else {
-	if ($count_last_active == $count_real_last_active)
-		$PHP_OUTPUT.=('All of them ');
-	else
-		$PHP_OUTPUT.=('A few of them ');
+// Get the summary text
+$summary = 'There ';
+if ($count_real_last_active != 1) {
+	$summary .= 'are '.$count_real_last_active.' players who have ';
+} else {
+	$summary .= 'is 1 player who has ';
+}
+$summary .= 'accessed the server in the last 10 minutes.<br />';
 
-	$PHP_OUTPUT.=('were moving so your ship computer was able to intercept '.$count_last_active.' transmission');
-
-	if ($count_last_active > 1)
-		$PHP_OUTPUT.=('s');
-	$PHP_OUTPUT.=('.<br />');
+if ($count_last_active == 0) {
+	$summary .= 'No one was moving so your ship computer can\'t intercept any transmissions.';
+} else {
+	if ($count_last_active == $count_real_last_active) {
+		$summary .= 'All ';
+	} else {
+		$summary .= 'A few ';
+	}
+	$summary .= 'of them were moving so your ship computer was able to intercept '.$count_last_active.' '.pluralise('transmission', $count_last_active).'.';
 }
 
-$PHP_OUTPUT.=('The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.</p>');
+$summary .= '<br />The traders listed in <span class="italic">italics</span> are still ranked as Newbie or Beginner.';
 
-// Button to send a global message
-$PHP_OUTPUT.='<div class="buttonA"><a class="buttonA" href="'.Globals::getSendGlobalMessageHREF().'">&nbsp;Send Global Message&nbsp;</a></div><br /><br />';
+$template->assign('Summary', $summary);
 
+$allRows = array();
 if ($count_last_active > 0) {
-	$PHP_OUTPUT.=('<table class="standard" width="95%">');
-	$PHP_OUTPUT.=('<tr>');
-	$container = create_container('skeleton.php', 'current_players.php');
-	if ($seq == 'DESC') {
-		$container['seq'] = 'ASC';
-	}
-	else {
-		$container['seq'] = 'DESC';
-	}
-	$container['sort'] = 'player_name';
-	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Player</span>');
-	$PHP_OUTPUT.=('</th>');
-	$container['sort'] = 'race_id';
-	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Race</span>');
-	$PHP_OUTPUT.=('</th>');
-	$container['sort'] = 'alliance_id';
-	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Alliance</span>');
-	$PHP_OUTPUT.=('</th>');
-	$container['sort'] = 'experience';
-	$PHP_OUTPUT.=('<th>');
-	$PHP_OUTPUT.=create_link($container, '<span class="lgreen">Experience</span>');
-	$PHP_OUTPUT.=('</th>');
-	$PHP_OUTPUT.=('</tr>');
-
 	$db2 = new SmrMySqlDatabase();
 	while ($db->nextRecord()) {
+		$row = array();
+
 		$accountID = $db->getField('account_id');
 		$curr_player =& SmrPlayer::getPlayer($accountID, $player->getGameID());
-		$curr_account =& SmrAccount::getAccount($accountID);
+		$row['player'] = $curr_player;
 
+		// How should we style the row for this player?
 		$class='';
 		if ($player->equals($curr_player))
 			$class .= 'bold';
-		if($curr_account->isNewbie())
+		if ($curr_player->getAccount()->isNewbie())
 			$class.= ' newbie';
-		if($class!='')
+		if ($class!='')
 			$class = ' class="'.trim($class).'"';
-		$PHP_OUTPUT.= '<tr'.$class.'>';
+		$row['tr_class'] = $class;
 
-		$PHP_OUTPUT.=('<td valign="top">');
+		// What should the player name be displayed as?
 		$container = create_container('skeleton.php', 'trader_search_result.php');
 		$container['player_id']	= $curr_player->getPlayerID();
 		$name = $curr_player->getLevelName() . ' ' . $curr_player->getDisplayName();
@@ -110,20 +79,13 @@ if ($count_last_active > 0) {
 			}
 			else $name .= ' ' . $db2->getField('tag');
 		}
-		$PHP_OUTPUT.=create_link($container, $name);
-		$PHP_OUTPUT.=('</td>');
-		$container = create_container('skeleton.php', 'council_list.php');
-		$container['race_id'] = $curr_player->getRaceID();
-		$PHP_OUTPUT.=('<td class="center">');
-		$PHP_OUTPUT.=create_link($container, $player->getColouredRaceName($curr_player->getRaceID()));
-		$PHP_OUTPUT.=('</td>');
-		$PHP_OUTPUT.=('<td>' . $curr_player->getAllianceName(true) . '</td>');
-		$PHP_OUTPUT.= '<td class="right">'. number_format($curr_player->getExperience()) . '</td>';
-		$PHP_OUTPUT.=('</tr>');
+		$row['name_link'] = create_link($container, $name);
+
+		$allRows[] = $row;
 	}
-	$PHP_OUTPUT.=('	</table>');
 }
 
-$PHP_OUTPUT.=('</div>');
+$template->assign('AllRows', $allRows);
+$template->assign('ThisPlayer', $player);
 
 ?>
