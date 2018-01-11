@@ -492,13 +492,24 @@ class SmrPort {
 		return $downgrades;
 	}
 	
+	protected function selectAndRemoveGood($goodClass) {
+		// Pick good to remove from the list of goods the port currently has
+		$goods = $this->getGoodsAll();
+		shuffle($goods);
+
+		foreach ($goods as $good) {
+			if ($good['Class'] == $goodClass) {
+				$this->removePortGood($good['ID']);
+				return;
+			}
+		}
+		throw new Exception('Failed to remove a good!');
+	}
+
 	protected function doDowngrade() {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot downgrade a cached port!');
-		
-		$GOODS = Globals::getGoods();
-		shuffle($GOODS);
-		$count = count($GOODS);
+
 		switch($this->level) {
 			case 1: // we don't want to downgrade a level 1 port
 //				for($i=0;$i<3;$i++) { // Add 3 goods for upgrading to level 1
@@ -512,35 +523,20 @@ class SmrPort {
 			break;
 			
 			case 2:
-				do {
-					$newGood = array_shift($GOODS);
-				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=1) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->removePortGood($newGood['ID']);
+				$this->selectAndRemoveGood(1);
 			break;
 			
 			case 3:
 			case 4:
 			case 5:
 			case 6:
-				do {
-					$newGood = array_shift($GOODS);
-				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=2) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->removePortGood($newGood['ID']);
+				$this->selectAndRemoveGood(2);
 			break;
 			
 			case 7:
 			case 8:
 			case 9:
-				do {
-					$newGood = array_shift($GOODS);
-				} while( (!$this->hasGood($newGood['ID']) || $newGood['Class']!=3) && ($count = count($GOODS))!=0 );
-				if($count == 0)
-					break;
-				$this->removePortGood($newGood['ID']);
+				$this->selectAndRemoveGood(3);
 			break;
 
 			default: // We don't want to add goods.
