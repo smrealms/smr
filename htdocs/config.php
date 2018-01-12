@@ -63,6 +63,12 @@ define('BUYER_RESTRICTION_EVIL', 2);
 define('BUYER_RESTRICTION_NEWBIE', 3);
 
 /*
+ * Alignment
+ */
+define('ALIGNMENT_GOOD', 100);
+define('ALIGNMENT_EVIL', -100);
+
+/*
  * Log types
  */
 define('LOG_TYPE_LOGIN', 1);
