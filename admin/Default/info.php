@@ -1,15 +1,16 @@
 <?php
 
 $template->assign('PageTopic','Checking Info');
-$container = array();
-$container['url'] = 'skeleton.php';
-$container['body'] = 'info.php';
-if (isset($_REQUEST['number'])) $number = $_REQUEST['number'];
-$login = $_REQUEST['login'];
-if (isset($number))
+$container = create_container('skeleton.php', 'info.php');
+
+$login = SmrSession::getRequestVar('login');
+$number = SmrSession::getRequestVar('number');
+if (isset($number)) {
 	$container['number'] = $number;
+}
+
 $u = 3;
-if (!isset($number) && !isset($var['number'])) {
+if (!isset($number)) {
 
 	$PHP_OUTPUT.=create_echo_form($container);
 	$PHP_OUTPUT.=('How many player\'s info do you need to check?<br />');
@@ -35,7 +36,6 @@ if (!isset($number) && !isset($var['number'])) {
 
 } else {
 
-	if (isset($var['number'])) $number = $var['number'];
 	$db2 = new SmrMySqlDatabase();
 	$db3 = new SmrMySqlDatabase();
 	$container = array();
