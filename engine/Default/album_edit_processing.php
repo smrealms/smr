@@ -104,7 +104,7 @@ else {
 				VALUES(' . $db->escapeNumber(SmrSession::$account_id) . ', ' . $db->escapeString($location) . ', ' . $db->escapeString($email) . ', ' . $db->escapeString($website) . ', ' . $db->escapeNumber($day) . ', ' . $db->escapeNumber($month) . ', ' . $db->escapeNumber($year) . ', ' . $db->escapeString($other) . ', ' . $db->escapeNumber(TIME) . ', ' . $db->escapeNumber(TIME) . ', \'TBC\')');
 }
 
-if ($comment) {
+if (!empty($comment)) {
 	// check if we have comments for this album already
 	$db->lockTable('album_has_comments');
 
