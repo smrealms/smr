@@ -1,6 +1,6 @@
 <?php
 
-if ($player->getAlignment() >= 100) {
+if ($player->getAlignment() >= ALIGNMENT_GOOD) {
 	create_error('You are not allowed to come in here!');
 }
 
@@ -21,7 +21,7 @@ require_once(get_file_loc('gov.functions.inc'));
 displayBountyList($PHP_OUTPUT,'UG',0);
 displayBountyList($PHP_OUTPUT,'UG',$player->getAccountID());
 
-if ($player->getAlignment() <= 99 && $player->getAlignment() >= -100) {
+if ($player->getAlignment() < ALIGNMENT_GOOD && $player->getAlignment() >= ALIGNMENT_EVIL) {
 	$container = create_container('government_processing.php');
 	transfer('LocationID');
 	$PHP_OUTPUT.=create_echo_form($container);

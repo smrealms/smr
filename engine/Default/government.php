@@ -1,7 +1,7 @@
 <?php
 
 // check if our alignment is high enough
-if ($player->getAlignment() <= -100) {
+if ($player->getAlignment() <= ALIGNMENT_EVIL) {
 	create_error('You are not allowed to enter our Government HQ!');
 }
 if(!$player->getSector()->hasLocation($var['LocationID'])) {
@@ -42,7 +42,7 @@ displayBountyList($PHP_OUTPUT,'HQ',0);
 displayBountyList($PHP_OUTPUT,'HQ',$player->getAccountID());
 
 
-if ($player->getAlignment() >= -99 && $player->getAlignment() <= 100) {
+if ($player->getAlignment() > ALIGNMENT_EVIL && $player->getAlignment() <= ALIGNMENT_GOOD) {
 	$container = create_container('government_processing.php');
 	transfer('LocationID');
 	$PHP_OUTPUT.=create_echo_form($container);

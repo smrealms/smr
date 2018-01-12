@@ -165,13 +165,13 @@ try {
 		echo ('<td align="center">'.$db->getInt('accuracy').'</td>');
 		echo ('<td align="center">'.$db->getInt('power_level').'</td>');
 		switch($db->getInt('buyer_restriction')) {
-			case 1:
+			case BUYER_RESTRICTION_GOOD:
 				echo ('<td align="center" style="color: green;">Good</td>');
 			break;
-			case 2:
+			case BUYER_RESTRICTION_EVIL:
 				echo ('<td align="center" style="color: red;">Evil</td>');
 			break;
-			case 3:
+			case BUYER_RESTRICTION_NEWBIE:
 				echo ('<td align="center" style="color: #06F;">Newbie</td>');
 			break;
 			default:
