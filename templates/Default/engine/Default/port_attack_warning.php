@@ -10,7 +10,6 @@ Without an armada behind you, the outcome may not be pleasant.
 <?php
 if ($ThisShip->hasScanner()) {
 	$Port = $ThisSector->getPort(); ?>
-<p>
 	<table class="standard">
 		<tr>
 			<th>Port</th>
@@ -33,7 +32,7 @@ if ($ThisShip->hasScanner()) {
 			<td align="center"><?php echo $Port->getNumWeapons(); ?></td>
 		</tr>
 	</table>
-</p><?php
+	<br /><?php
 } ?>
 
 Are you sure you want to attack this port?<br /><br />
