@@ -56,6 +56,13 @@ define('DEFAULT_DATE_FULL_SHORT_SPLIT',DEFAULT_DATE_DATE_SHORT.'\<b\r /\>'.DEFAU
 define('DEFAULT_DATE_FULL_LONG','l jS F '.DEFAULT_DATE_TIME_SHORT);
 
 /*
+ * Buyer restrictions for ships and weapons
+ */
+define('BUYER_RESTRICTION_GOOD', 1);
+define('BUYER_RESTRICTION_EVIL', 2);
+define('BUYER_RESTRICTION_NEWBIE', 3);
+
+/*
  * Log types
  */
 define('LOG_TYPE_LOGIN', 1);

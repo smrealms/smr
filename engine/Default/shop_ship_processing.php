@@ -9,10 +9,10 @@ $cost = $ship->getCostToUpgrade($shipID);
 //(22,25,23,75,43,55,61,24,21,38,67,33,49)
 // Top racials minus ATM + top UG/FED are restricted 
 
-if ($newShip['AlignRestriction'] == 2 && $player->getAlignment() > -100)
+if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_EVIL && $player->getAlignment() > -100)
 	create_error('You can\'t buy smuggler ships!');
 
-if ($newShip['AlignRestriction'] == 1 && $player->getAlignment() < 100)
+if ($newShip['AlignRestriction'] == BUYER_RESTRICTION_GOOD && $player->getAlignment() < 100)
 	create_error('You can\'t buy federal ships!');
 
 if ($newShip['RaceID'] != 1 && $player->getRaceID() != $newShip['RaceID'])
