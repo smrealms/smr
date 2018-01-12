@@ -1052,7 +1052,11 @@ class SmrPort {
 		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
 	
+	// This is a magic method used when serializing an SmrPort instance
 	public function __sleep() {
+		// Note: we artificially set some properties here (i.e. goods set to 1,
+		// and good distance unset) so that the hash of the serialized object
+		// is the same for all players. This greatly improves cache efficiency.
 		$this->getGoods(); //have to make sure goods have been loaded
 		foreach($this->goods['All Goods'] as &$good) {
 			$good['Amount'] = 1;
@@ -1067,6 +1071,9 @@ class SmrPort {
 	}
 	
 	public function update() {
+		if ($this->isCachedVersion()) {
+			throw new Exception('Cannot update a cached port!');
+		}
 		if(!$this->exists())
 			return;
 		if($this->hasChanged) {
