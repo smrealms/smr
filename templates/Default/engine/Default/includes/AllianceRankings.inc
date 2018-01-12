@@ -1,7 +1,7 @@
 <div align="center">
 	<p>Here are the rankings of alliances by their <?php echo strtolower($RankingStat); ?>.</p><?php
 	if (isset($OurRank)) { ?>
-		<p>You alliance is ranked <?php echo number_format($OurRank); ?> out of <?php echo number_format($TotalRanks); ?> alliances.</p><?php
+		<p>Your alliance is ranked <?php echo number_format($OurRank); ?> out of <?php echo number_format($TotalRanks); ?> alliances.</p><?php
 	}
 	$this->includeTemplate('includes/AllianceRankingsList.inc', array('RankingStat' => $RankingStat, 'Rankings' => $Rankings)); ?>
 	<form method="POST" action="<?php echo $FilterRankingsHREF; ?>">
