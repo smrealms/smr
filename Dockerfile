@@ -34,6 +34,9 @@ RUN [ "$PHP_DEBUG" = "1" ] && echo "Using development php.ini" || \
 # We need to set 'sendmail_path' since php doesn't know about sendmail when it's built
 RUN echo 'sendmail_path = "/usr/sbin/sendmail -t -i"' > /usr/local/etc/php/conf.d/mail.ini
 
+# Disable apache .htaccess files (suggested optimization)
+RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/docker-php.conf
+
 WORKDIR /smr/
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
