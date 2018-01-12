@@ -42,7 +42,6 @@ if (!isset($number) && !isset($var['number'])) {
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center noWrap">Name</th>');
 	$PHP_OUTPUT.=('<th align="center noWrap">First and Last Name</th>');
-	$PHP_OUTPUT.=('<th align="center noWrap">City</th>');
 	$PHP_OUTPUT.=('<th align="center noWrap">Email</th>');
 	$PHP_OUTPUT.=('<th align="center noWrap">Disabled Info</th>');
 	$PHP_OUTPUT.=('<th algin="center noWrap">Exception Reason</th>');
@@ -59,12 +58,10 @@ if (!isset($number) && !isset($var['number'])) {
 			$login_name = $db->getField('login');
 			$aname .= '&nbsp;';
 			$aname .= $db->getField('last_name');
-			$city = $db->getField('city');
 			$email = $db->getField('email');
 			$id = $db->getField('account_id');
 			$PHP_OUTPUT.=('<td align="center">'.$name.'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$aname.'</td>');
-			$PHP_OUTPUT.=('<td align="center">'.$city.'</td>');
 			$PHP_OUTPUT.=('<td align="center">'.$email.'</td>');
 			$names = array();
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db->escapeNumber($id));

@@ -46,7 +46,7 @@ if (!isset($number) && !isset($var['number'])) {
 	$PHP_OUTPUT.= create_table();
 	$PHP_OUTPUT.=('<tr>');
 	$PHP_OUTPUT.=('<th align="center noWrap">Name</th>');
-	$PHP_OUTPUT.=('<th align="center noWrap">City & Email</th>');
+	$PHP_OUTPUT.=('<th align="center noWrap">Email</th>');
 	$PHP_OUTPUT.=('<th align="center noWrap">Disabled Info</th>');
 	$PHP_OUTPUT.=('<th algin="center noWrap">Exception</th>');
 	$PHP_OUTPUT.=('<th algin="center noWrap">Ban</th>');
@@ -62,11 +62,10 @@ if (!isset($number) && !isset($var['number'])) {
 			$login_name = $db->getField('login');
 			$aname .= '&nbsp;';
 			$aname .= $db->getField('last_name');
-			$city = $db->getField('city');
 			$email = $db->getField('email');
 			$id = $db->getField('account_id');
 			$PHP_OUTPUT.=('<td align="center">'.$aname.'<br />'.$name.'<br />Account:'.$id.'</td>');
-			$PHP_OUTPUT.=('<td align="center">'.$city.'<br />'.$email.'</td>');
+			$PHP_OUTPUT.=('<td align="center">'.$email.'</td>');
 			//check who they match...first find out the method.
 			$db2->query('SELECT * FROM account_is_closed WHERE account_id = '.$db2->escapeNumber($id));
 			if ($db2->nextRecord()) $reason = $db2->getField('suspicion');
