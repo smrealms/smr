@@ -34,6 +34,61 @@ class Plotter {
 		}
 	}
 
+	/**
+	 * Returns the shortest path from $sector to $x as a Distance object.
+	 * The path is guaranteed reversible ($x -> $sector == $sector -> $x), which
+	 * is not true for findDistanceToX. If $x is not a SmrSector, then this
+	 * function does 2x the work.
+	 */
+	public static function findReversiblePathToX($x, SmrSector $sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExplored=null, AbstractSmrPlayer $player=null) {
+		if ($x instanceof SmrSector) {
+
+			// To ensure reversibility, always plot lowest to highest.
+			$reverse = $sector->getSectorID() > $x->getSectorID();
+			if ($reverse) {
+				$start = $x;
+				$end = $sector;
+			} else {
+				$start = $sector;
+				$end = $x;
+			}
+			$path = Plotter::findDistanceToX($end, $start, $useFirst,
+			                                 isset($needsToHaveBeenExploredBy) ? $needsToHavebeenExploredBy : null,
+			                                 isset($player) ? $player : null);
+			if ($path===false) {
+				create_error('Unable to plot from '.$sector->getSectorID().' to '.$x->getSectorID().'.');
+			}
+			// Reverse if we plotted $x -> $sector (since we want $sector -> $x)
+			if ($reverse) {
+				$path->reversePath();
+			}
+
+		} else {
+
+			// At this point we don't know what sector $x will be at
+			$path = Plotter::findDistanceToX($x, $sector, $useFirst,
+			                                 isset($needsToHaveBeenExploredBy) ? $needsToHavebeenExploredBy : null,
+			                                 isset($player) ? $player : null);
+			if ($path===false) {
+				create_error('Unable to find what you\'re looking for, it either hasn\'t been added to this game or you haven\'t explored it yet.');
+			}
+			// Now that we know where $x is, make sure path is reversible
+			// (i.e. start sector < end sector)
+			if ($path->getEndSectorID() < $sector->getSectorID()) {
+				$path =& Plotter::findDistanceToX($sector, $path->getEndSector(), true);
+				$path->reversePath();
+			}
+
+		}
+		return $path;
+	}
+
+	/**
+	 * Returns the shortest path from $sector to $x as a Distance object.
+	 * $x can be any type implemented by SmrSector::hasX or the string 'Distance'.
+	 * The resulting path prefers neighbors in their order in SmrSector->links,
+	 * (i.e. up, down, left, right).
+	 */
 	public static function &findDistanceToX($x, SmrSector &$sector, $useFirst, AbstractSmrPlayer $needsToHaveBeenExploredBy=null, AbstractSmrPlayer $player=null, $distanceLimit=10000, $lowLimit=0, $highLimit=100000) {
 		$warpAddIndex = TURNS_WARP_SECTOR_EQUIVALENCE-1;
 
