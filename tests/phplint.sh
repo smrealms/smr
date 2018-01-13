@@ -6,17 +6,16 @@
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." && pwd )"
 
 ERROR="false"
-FILES=$(find $ROOT -type f -name "*.php" -o -name "*.inc")
-while read FILE;
+while IFS= read -d '' FILE;
 do
     RESULTS=`php -l "$FILE" 2>&1`
 
-    if [ "$RESULTS" != "No syntax errors detected in $FILE" ] ; then
+    if [[ "$RESULTS" != "No syntax errors detected in $FILE" ]] ; then
         echo "====> $FILE"
         echo "$RESULTS"
         ERROR="true"
     fi
-done <<< $FILES
+done < <(find $ROOT -type f -name "*.php" -o -name "*.inc" -print0)
 
 if [[ "$ERROR" == "true" ]] ; then
     exit 1
