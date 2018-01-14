@@ -41,7 +41,11 @@ class SmrPort {
 	protected $credits;
 	protected $upgrade;
 	protected $experience;
-	protected $goods;
+
+	protected $goodIDs = array('All' => array(), 'Sell' => array(), 'Buy' => array());
+	protected $goodAmounts;
+	protected $goodDistances;
+	protected $goods;   // DEPRECATED!
 	
 	protected $cachedVersion = false;
 	protected $cachedTime = TIME;
@@ -111,7 +115,8 @@ class SmrPort {
 	
 	protected function __construct($gameID,$sectorID) {
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('SELECT * FROM port WHERE sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID) . ' LIMIT 1');
+		$this->SQL = 'sector_id = ' . $this->db->escapeNumber($sectorID) . ' AND game_id = ' . $this->db->escapeNumber($gameID);
+		$this->db->query('SELECT * FROM port WHERE ' . $this->SQL . ' LIMIT 1');
 		if ($this->db->nextRecord()) {
 			$this->gameID = $this->db->getInt('game_id');
 			$this->sectorID = $this->db->getInt('sector_id');
@@ -126,9 +131,6 @@ class SmrPort {
 			$this->credits = $this->db->getInt('credits');
 			$this->upgrade = $this->db->getInt('upgrade');
 			$this->experience = $this->db->getInt('experience');
-			
-			$this->SQL = 'sector_id = ' . $this->db->escapeNumber($this->sectorID) . ' AND game_id = ' . $this->db->escapeNumber($this->gameID);
-			
 			
 			$this->checkDefenses();
 			$this->getGoods();
@@ -149,8 +151,6 @@ class SmrPort {
 			$this->credits = 0;
 			$this->upgrade = 0;
 			$this->experience = 0;
-			
-			$this->SQL = 'sector_id = '.$this->sectorID.' AND game_id = '.$this->gameID;
 		}
 	}
 	
@@ -181,154 +181,153 @@ class SmrPort {
 		}
 	}
 	
-	private function restockGood(&$good, $secondsSinceRefresh) {
+	private function restockGood($goodID, $secondsSinceRefresh) {
+		$good = Globals::getGood($goodID);
 		$db = new SmrMySqlDatabase();
 		$refreshPerHour = self::$BASE_REFRESH_PER_HOUR[$good['Class']] * Globals::getGameSpeed($this->getGameID());
 		$refreshPerSec = $refreshPerHour / 3600;
 		$amountToAdd = floor($secondsSinceRefresh * $refreshPerSec);
 		
-		if ($good['Amount'] > $good['Max'] || ($good['Amount'] < $good['Max'] && $amountToAdd > 0)) {
-			$good['Amount'] = min($good['Max'], $good['Amount'] + $amountToAdd);
-			$db->query('UPDATE port_has_goods SET amount = ' . $db->escapeNumber($good['Amount']) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $db->escapeNumber($good['ID']) . ' LIMIT 1');
+		$amount = $this->getGoodAmount($goodID);
+		if ($amount > $good['Max'] || ($amount < $good['Max'] && $amountToAdd > 0)) {
+			$newAmount = min($good['Max'], $amount + $amountToAdd);
+			$this->setGoodAmount($goodID, $newAmount);
 		}
 		return round($amountToAdd / $refreshPerSec);
 	}
 	
-	public function &getGoods() {
-		if(!$this->isCachedVersion() && empty($this->goods)) {
-			$GOODS = Globals::getGoods();
+	// Sets the class members that identify port trade goods
+	private function getGoods() {
+		if ($this->isCachedVersion()) {
+			throw new Exception('Cannot call getGoods on cached port');
+		}
+		if (empty($this->goodIDs['All'])) {
 			$secondsSinceRefresh = max(0, TIME - $this->lastUpdate);
 				
-			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC LIMIT ' . count($GOODS));
+			$this->db->query('SELECT * FROM port_has_goods WHERE ' . $this->SQL . ' ORDER BY good_id ASC');
 			
 			$timeRefreshed = $secondsSinceRefresh;
-			$this->goods['Sell'] = array();
-			$this->goods['Buy'] = array();
-			$this->goods['All Goods'] = array();
 			while ($this->db->nextRecord()) {
-				$good = $GOODS[$this->db->getInt('good_id')];
-				$good['Amount'] = $this->db->getInt('amount');
-				$good['TransactionType'] = $this->db->getField('transaction_type');
-				$timeRefreshed = min($timeRefreshed, $this->restockGood($good, $secondsSinceRefresh));
-				
-				$g = $good;
-				$this->goods['All Goods'][$g['ID']] =& $g;
-				$this->goods[$g['TransactionType']][$g['ID']] =& $g;
-				unset($g); //HACK Don't want to keep g around - it kills goods due to references.
+				$goodID = $this->db->getInt('good_id');
+				$transactionType = $this->db->getField('transaction_type');
+				$this->goodAmounts[$goodID] = $this->db->getInt('amount');
+				$this->goodIDs[$transactionType][] = $goodID;
+				$this->goodIDs['All'][] = $goodID;
+
+				$timeRefreshed = min($timeRefreshed, $this->restockGood($goodID, $secondsSinceRefresh));
 			}
 			$this->lastUpdate += $timeRefreshed;
 			$this->db->query('UPDATE port SET last_update = ' . $this->db->escapeNumber($this->lastUpdate) . ' WHERE ' . $this->SQL . ' LIMIT 1');
 		}
-		return $this->goods;
 	}
-	public function &getVisibleGoods(AbstractSmrPlayer &$player=null) {
-		$goods = $this->getGoods();
-		$visibleGoods = array(
-			'All Goods' => array(),
-			'Sell' => array(),
-			'Buy' => array()
-		);
-		foreach($goods['All Goods'] as $key => &$good) {
-			if($player == null || $player->meetsAlignmentRestriction($good['AlignRestriction'])) {
-				$visibleGoods['All Goods'][$key] =& $good;
-				$visibleGoods[$good['TransactionType']][$key] =& $good;
-			}
+
+	private function getVisibleGoods($transaction, AbstractSmrPlayer &$player=null) {
+		$goodIDs = $this->goodIDs[$transaction];
+		if ($player == null) {
+			return $goodIDs;
+		} else {
+			return array_filter($goodIDs, function($goodID) use ($player) {
+				$good = Globals::getGood($goodID);
+				return $player->meetsAlignmentRestriction($good['AlignRestriction']);
+			});
 		}
 		return $visibleGoods;
 	}
-	public function &getVisibleGoodsAll(&$player=null) {
-		$goods = $this->getVisibleGoods($player);
-		return $goods['All Goods'];
+
+	/**
+	 * Get IDs of goods that can be sold by $player to the port
+	 */
+	public function getVisibleGoodsSold(AbstractSmrPlayer &$player=null) {
+		return $this->getVisibleGoods('Sell', $player);
 	}
-	public function &getVisibleGoodsSold(&$player=null) {
-		$goods = $this->getVisibleGoods($player);
-		return $goods['Sell'];
-	}
-	public function &getVisibleGoodsBought(AbstractSmrPlayer &$player=null) {
-		$goods = $this->getVisibleGoods($player);
-		return $goods['Buy'];
-	}
-	
-	public function &getGoodsAll() {
-		$this->getGoods();
-		return $this->goods['All Goods'];
+
+	/**
+	 * Get IDs of goods that can be bought by $player from the port
+	 */
+	public function getVisibleGoodsBought(AbstractSmrPlayer &$player=null) {
+		return $this->getVisibleGoods('Buy', $player);
 	}
 	
-	public function &getGoodsSold() {
-		$this->getGoods();
-		return $this->goods['Sell'];
+	public function &getAllGoodIDs() {
+		return $this->goodIDs['All'];
 	}
 	
-	public function &getGoodsBought() {
-		$this->getGoods();
-		return $this->goods['Buy'];
+	/**
+	 * Get IDs of goods that can be sold to the port
+	 */
+	public function &getSoldGoodIDs() {
+		return $this->goodIDs['Sell'];
+	}
+	
+	/**
+	 * Get IDs of goods that can be bought from the port
+	 */
+	public function &getBoughtGoodIDs() {
+		return $this->goodIDs['Buy'];
 	}
 	
 	public function &getGood($goodID) {
-		$goods = $this->getGoods();
-		if(isset($goods['All Goods'][$goodID]))
-			return $goods['All Goods'][$goodID];
-		else {
+		if ($this->hasGood($goodID)) {
+			return Globals::getGood($goodID);
+		} else {
 			$return = false;
 			return $return;
 		}
 	}
 	
 	public function getGoodDistance($goodID) {
-		$good =& $this->getGood($goodID);
-		if(!isset($good['Distance'])) {
-			$x = Globals::getGood($goodID);
-			switch($good['TransactionType']) {
-				case 'Buy':
-					$x['TransactionType'] = 'Sell';
-				break;
-				case 'Sell':
-					$x['TransactionType'] = 'Buy';
+		if (!isset($this->goodDistances[$goodID])) {
+			$x = $this->getGood($goodID);
+			if ($x === false) {
+				throw new Exception('This port does not have this good!');
+			}
+			if ($this->hasGood($goodID, 'Buy')) {
+				$x['TransactionType'] = 'Sell';
+			} else {
+				$x['TransactionType'] = 'Buy';
 			}
 			$di = Plotter::findDistanceToX($x, $this->getSector(), true);
 			if(is_object($di))
 				$di = $di->getRelativeDistance();
-			$good['Distance'] = max(1,$di);
+			$this->goodDistances[$goodID] = max(1, $di);
 		}
-		return $good['Distance'];
+		return $this->goodDistances[$goodID];
 	}
 	
-	public function getGoodStatus($goodID) {
-		$good =& $this->getGood($goodID);
-		return $good['TransactionType'];
+	/**
+	 * Returns the transaction type for this good (Buy or Sell).
+	 * Note: this is the player's transaction, not the port's.
+	 */
+	public function getGoodTransaction($goodID) {
+		foreach (array('Buy', 'Sell') as $transaction) {
+			if ($this->hasGood($goodID, $transaction)) {
+				return $transaction;
+			}
+		}
 	}
 	
 	public function hasGood($goodID,$type=false) {
-		$good =& $this->getGood($goodID);
-		if($good===false)
-			return false;
-		if(!$type)
-			return true;
-		return $good['TransactionType'] == $type;
+		if ($type === false) {
+			$type = 'All';
+		}
+		return in_array($goodID, $this->goodIDs[$type]);
 	}
 	
 	public function setGoodAmount($goodID,$amount) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		$this->getGoods();
 		if($amount < 0)
 			$amount = 0;
-		$max = $this->goods['All Goods'][$goodID]['Max'];
+		$max = $this->getGood($goodID)['Max'];
 		if($amount > $max)
 			$amount = $max;
-		if($this->goods['All Goods'][$goodID]['Amount'] == $amount)
+		if($this->getGoodAmount($goodID) == $amount)
 			return;
-		$this->goods['All Goods'][$goodID]['Amount'] = $amount;
-		if(isset($this->goods['Sell'][$goodID]))
-			$this->goods['Sell'][$goodID]['Amount'] = $amount;
-		else if(isset($this->goods['Buy'][$goodID]))
-			$this->goods['Buy'][$goodID]['Amount'] = $amount;
-		$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . ' WHERE ' . $this->SQL . ' AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
+		$this->goodAmounts[$goodID] = $amount;
 	}
 	
 	public function getGoodAmount($goodID) {
-		$good =& $this->getGood($goodID);
-		return $good['Amount'];
+		return $this->goodAmounts[$goodID];
 	}
 	
 	public function decreaseGood(array &$good,$amount,$doRefresh) {
@@ -350,11 +349,11 @@ class SmrPort {
 	protected function refreshGoods($classTraded,$amountTraded) {
 		$refreshAmount = round($amountTraded * self::REFRESH_PER_GOOD);
 		//refresh goods that need it
-		$portGoods =& $this->getGoodsAll();
 		$refreshClass = $classTraded+1;
-		foreach ($portGoods as &$good) {
-			if($good['Class']==$refreshClass) {
-				$this->increaseGoodAmount($good['ID'], $refreshAmount);
+		foreach ($this->getAllGoodIDs() as $goodID) {
+			$goodClass = Globals::getGood($goodID)['Class'];
+			if ($goodClass == $refreshClass) {
+				$this->increaseGoodAmount($goodID, $refreshAmount);
 			}
 		}
 	}
@@ -458,21 +457,28 @@ class SmrPort {
 			throw new Exception('Cannot update a cached port!');
 		if(!is_numeric($goodID))
 			return false;
-		$newGood = Globals::getGood($goodID);
-		$newGood['Amount'] = $newGood['Max'];
-		$newGood['TransactionType'] = $type;
-		$this->goods['All Goods'][$goodID] =& $newGood;
-		$this->goods[$type][$goodID] =& $newGood;
-		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($newGood['Amount']) . ')');
+		$this->goodIDs['All'][] = $goodID;
+		$this->goodIDs[$type][] = $goodID;
+		// sort ID arrays, since the good ID might not be the largest
+		sort($this->goodIDs['All']);
+		sort($this->goodIDs[$type]);
+		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
+		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ')');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
 	protected function removePortGood($goodID) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		unset($this->goods['All Goods'][$goodID]);
-		if(isset($this->goods['Sell'][$goodID])) unset($this->goods['Sell'][$goodID]);
-		elseif(isset($this->goods['Buy'][$goodID])) unset($this->goods['Buy'][$goodID]);
+		if (($key = array_search($goodID, $this->goodIDs['All'])) !== false) {
+			array_splice($this->goodIDs['All'], $key, 1);
+		}
+		if (($key = array_search($goodID, $this->goodIDs['Buy'])) !== false) {
+			array_splice($this->goodIDs['Buy'], $key, 1);
+		}
+		elseif (($key = array_search($goodID, $this->goodIDs['Sell'])) !== false) {
+			array_splice($this->goodIDs['Sell'], $key, 1);
+		}
 		
 		$this->db->query('DELETE FROM port_has_goods WHERE '.$this->SQL.' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
@@ -494,10 +500,11 @@ class SmrPort {
 	
 	protected function selectAndRemoveGood($goodClass) {
 		// Pick good to remove from the list of goods the port currently has
-		$goods = $this->getGoodsAll();
-		shuffle($goods);
+		$goodIDs = $this->getAllGoodIDs();
+		shuffle($goodIDs);
 
-		foreach ($goods as $good) {
+		foreach ($goodIDs as $goodID) {
+			$good =& Globals::getGood($goodID);
 			if ($good['Class'] == $goodClass) {
 				$this->removePortGood($good['ID']);
 				return;
@@ -731,6 +738,7 @@ class SmrPort {
 			return;
 		$this->raceID = $raceID;
 		$this->hasChanged=true;
+		// route_cache tells NPC's where they can trade
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
 	
@@ -873,11 +881,10 @@ class SmrPort {
 //		echo 'Good:'.$goodID.',Dist::'.$dist.',Type:'.$transactionType.',NumGoods:'.$numGoods.',Relations:'.$relations.',';
 		if($relations>1000)
 			$relations=1000;
-		$goods = $this->getGoods();
-		$good = $goods['All Goods'][$goodID];
+		$good =& $this->getGood($goodID);
 		$base = $good['BasePrice'];
 		$maxSupply = $good['Max'];
-		$supply = $good['Amount'];
+		$supply = $this->getGoodAmount($goodID);
 		$dist = $this->getGoodDistance($goodID);
 	
 //		$relations_factor_buy = 2-(($relations + 500) / 1500);
@@ -972,9 +979,9 @@ class SmrPort {
 		return $justContainer === false ? SmrSession::getNewHREF($container) : $container;
 	}
 
-	public function getLootGoodHREF(array &$boughtGood) {
+	public function getLootGoodHREF($boughtGoodID) {
 		$container = create_container('port_loot_processing.php');
-		$container['GoodID'] = $boughtGood['ID'];
+		$container['GoodID'] = $boughtGoodID;
 		return SmrSession::getNewHREF($container);
 	}
 	public function isCachedVersion() {
@@ -999,12 +1006,6 @@ class SmrPort {
 	}
 	public function addCachePorts(array $accountIDs) {
 		if (count($accountIDs)>0 && $this->exists()) {
-			$cachedVersion = $this->cachedVersion;
-			$this->getGoods();
-			$goods = array();
-			foreach($this->goods['All Goods'] as $key => &$good) {
-				$goods[$key] = $good;
-			} unset($good);
 			$cache = $this->db->escapeBinary(gzcompress(serialize($this)));
 			$cacheHash = $this->db->escapeString(md5($cache));
 			//give them the port info
@@ -1022,11 +1023,7 @@ class SmrPort {
 						VALUES (' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($this->getSectorID()) . ', ' . $cacheHash . ', ' . $cache.')');
 
 			$this->db->query('UPDATE player_visited_port SET visited=' . $this->db->escapeNumber($this->getCachedTime()) . ', port_info_hash=' . $cacheHash . ' WHERE visited<=' . $this->db->escapeNumber($this->getCachedTime()) . ' AND account_id IN (' . $this->db->escapeArray($accountIDs) . ') AND sector_id=' . $this->db->escapeNumber($this->getSectorID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) . ' LIMIT ' . count($accountIDs));
-			$this->cachedVersion = $cachedVersion; //Serializing this would have designated it as cached, this version might not be.
 
-			foreach($goods as $key => &$good) {
-				$this->goods['All Goods'][$key] =& $good;
-			} unset($good); //Serializing this would have screwed up stock counts
 			unset($cache);
 			return true;
 		}
@@ -1052,22 +1049,27 @@ class SmrPort {
 		return self::$CACHE_CACHED_PORTS[$gameID][$sectorID][$accountID];
 	}
 	
-	// This is a magic method used when serializing an SmrPort instance
+	// This is a magic method used when serializing an SmrPort instance.
+	// It designates which members should be included in the serialization.
 	public function __sleep() {
-		// Note: we artificially set some properties here (i.e. goods set to 1,
-		// and good distance unset) so that the hash of the serialized object
-		// is the same for all players. This greatly improves cache efficiency.
-		$this->getGoods(); //have to make sure goods have been loaded
-		foreach($this->goods['All Goods'] as &$good) {
-			$good['Amount'] = 1;
-			unset($good['Distance']);
-		} unset($good);
-		$this->cachedVersion = true;
-		return array('gameID', 'sectorID', 'raceID', 'level', 'cachedVersion', 'goods');
+		// We omit `goodAmounts` and `goodDistances` so that the hash of the
+		// serialized object is the same for all players. This greatly improves
+		// cache efficiency.
+		return array('gameID', 'sectorID', 'raceID', 'level', 'goodIDs');
 	}
 	
 	public function __wakeup() {
+		$this->cachedVersion = true;
 		$this->db = new SmrMySqlDatabase();
+
+		// DEPRECATED: this is for unserializing old SmrPort data.
+		// Remove after game 117 ends.
+		if (isset($this->goods)) {
+			$this->goodIDs = array();
+			foreach ($this->goods as $transaction => $goods) {
+				$this->goodIDs[$transaction] = array_keys($goods);
+			}
+		}
 	}
 	
 	public function update() {
@@ -1112,12 +1114,14 @@ class SmrPort {
 			}
 			$this->hasChanged=false;
 		}
-		if(isset($this->goods))
-			foreach ($this->goods['All Goods'] as $good)
-				$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($good['Amount']) . '
+		if (isset($this->goodAmounts)) {
+			foreach ($this->goodAmounts as $goodID => $amount) {
+				$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . '
 									WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
 										AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
-										AND good_id = ' . $this->db->escapeNumber($good['ID']) . ' LIMIT 1');
+										AND good_id = ' . $this->db->escapeNumber($goodID) . ' LIMIT 1');
+			}
+		}
 	}
 	
 	

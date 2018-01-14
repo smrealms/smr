@@ -40,14 +40,13 @@ if (!empty($var['traded_xp']) ||
 // test if we are searched. (but only if we hadn't a previous trade here
 }
 elseif ($player->getLastPort() != $player->getSectorID()) {
-	$allGoods = $port->getGoodsAll();
 
 	$base_chance = 15;
-	if(isset($allGoods[5]))
+	if ($port->hasGood(5))
 		$base_chance -= 4;
-	if(isset($allGoods[9]))
+	if ($port->hasGood(9))
 		$base_chance -= 4;
-	if(isset($allGoods[12]))
+	if ($port->hasGood(12))
 		$base_chance -= 4;
 
 	if ($ship->getShipTypeID() == 23 || $ship->getShipTypeID() == 24 || $ship->getShipTypeID() == 25)
@@ -121,26 +120,28 @@ if (!empty($boughtGoods)) {
 	$container = array();
 	$container['url'] = 'shop_goods_processing.php';
 
-	foreach ($boughtGoods as $good) {
+	foreach ($boughtGoods as $goodID) {
+		$amount = $port->getGoodAmount($goodID);
+		$good =& Globals::getGood($goodID);
 		$container['good_id'] = $good['ID'];
 		
 		$PHP_OUTPUT.=create_echo_form($container);
 			
 		$PHP_OUTPUT.=('<tr class="center">');
 		$PHP_OUTPUT.=('<td class="left"><img src="' . $good['ImageLink'] . '" width="13" height="16" title="' . $good['Name'] . '" alt=""> ' . $good['Name'] . '</td>');
-		$PHP_OUTPUT.=('<td>' . $good['Amount'] . '</td>');
+		$PHP_OUTPUT.=('<td>' . $amount . '</td>');
 		$PHP_OUTPUT.=('<td>' . $good['BasePrice'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $ship->getCargo($good['ID']) . '</td>');
 		$PHP_OUTPUT.=('<td><input type="number" name="amount" value="');
 
-		if ($good['Amount'] < $ship->getEmptyHolds())
-			$PHP_OUTPUT.=($good['Amount']);
+		if ($amount < $ship->getEmptyHolds())
+			$PHP_OUTPUT.=($amount);
 		else
 			$PHP_OUTPUT.=($ship->getEmptyHolds());
 
 		$PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td>');
-		$PHP_OUTPUT.=create_submit($good['TransactionType']);
+		$PHP_OUTPUT.=create_submit('Buy');
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
 		
@@ -171,25 +172,27 @@ if (!empty($soldGoods)) {
 	$container = array();
 	$container['url'] = 'shop_goods_processing.php';
 
-	foreach ($soldGoods as $good) {
+	foreach ($soldGoods as $goodID) {
+		$amount = $port->getGoodAmount($goodID);
+		$good =& Globals::getGood($goodID);
 		$container['good_id'] = $good['ID'];
 		$PHP_OUTPUT.=create_echo_form($container);
 
 		$PHP_OUTPUT.=('<tr class="center">');
 		$PHP_OUTPUT.=('<td class="left"><img src="' . $good['ImageLink'] . '" width="13" height="16" title="' . $good['Name'] . '" alt=""> ' . $good['Name'] . '</td>');
-		$PHP_OUTPUT.=('<td>' . $good['Amount'] . '</td>');
+		$PHP_OUTPUT.=('<td>' . $amount . '</td>');
 		$PHP_OUTPUT.=('<td>' . $good['BasePrice'] . '</td>');
 		$PHP_OUTPUT.=('<td>' . $ship->getCargo($good['ID']) . '</td>');
 		$PHP_OUTPUT.=('<td><input type="number" name="amount" value="');
 
-		if ($good['Amount'] < $ship->getCargo($good['ID']))
-			$PHP_OUTPUT.=($good['Amount']);
+		if ($amount < $ship->getCargo($good['ID']))
+			$PHP_OUTPUT.=($amount);
 		else
 			$PHP_OUTPUT.=$ship->getCargo($good['ID']);
 
 		$PHP_OUTPUT.=('" size="4" id="InputFields" class="center"></td>');
 		$PHP_OUTPUT.=('<td>');
-		$PHP_OUTPUT.=create_submit($good['TransactionType']);
+		$PHP_OUTPUT.=create_submit('Sell');
 		$PHP_OUTPUT.=('</td>');
 		$PHP_OUTPUT.=('</tr>');
 		$PHP_OUTPUT.=('</form>');

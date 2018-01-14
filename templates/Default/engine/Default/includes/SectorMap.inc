@@ -61,12 +61,14 @@
 									} ?>
 										<img src="images/port/buy.png" width="5" height="16" alt="Buy (<?php echo $Port->getRaceName(); ?>)" 
 											title="Buy (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-											foreach($Port->getVisibleGoodsSold($MapPlayer) as $Good) { ?>
+											foreach($Port->getVisibleGoodsSold($MapPlayer) as $GoodID) {
+												$Good =& Globals::getGood($GoodID); ?>
 												<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name']; ?>" /><?php
 											} ?><br />
 										<img src="images/port/sell.png" width="5" height="16" alt="Sell (<?php echo $Port->getRaceName(); ?>)" 
 										title="Sell (<?php echo $Port->getRaceName(); ?>)" class="port<?php echo $Port->getRaceID(); ?>"/><?php
-											foreach($Port->getVisibleGoodsBought($MapPlayer) as $Good) { ?>
+											foreach($Port->getVisibleGoodsBought($MapPlayer) as $GoodID) {
+												$Good =& Globals::getGood($GoodID); ?>
 												<img src="<?php echo $Good['ImageLink']; ?>" width="13" height="16" title="<?php echo $Good['Name'] ?>" alt="<?php echo $Good['Name']; ?>" /><?php
 											}
 									if($isCurrentSector && !$GalaxyMap){ ?></a><?php } ?>

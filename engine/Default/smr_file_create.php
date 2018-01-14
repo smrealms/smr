@@ -137,23 +137,13 @@ foreach ($galaxies as &$galaxy) {
 				$port =& $sector->getCachedPort($player);
 			$file .= 'Port Level='.$port->getLevel() . EOL;
 			$file .= 'Port Race=' . $port->getRaceID() . EOL;
-			$portGoods =& $port->getGoods();
-			if(count($portGoods['Sell'])>0) {
-				$buyString = 'Buys=';
-				foreach($portGoods['Sell'] as $goodID => $amount) {
-					$buyString .= $goodID .',';
-				}
-				$file .= substr($buyString,0,-1) . EOL;
+			if (!empty($port->getSoldGoodIDs())) {
+				$file .= 'Buys=' . join(',', $port->getSoldGoodIDs()) . EOL;
 			}
 			
-			if(count($portGoods['Buy'])>0) {
-				$sellString = 'Sells=';
-				foreach($portGoods['Buy'] as $goodID => $amount) {
-					$sellString .= $goodID .',';
-				}
-				$file .= substr($sellString,0,-1) . EOL;
+			if (!empty($port->getBoughtGoodIDs())) {
+				$file .= 'Sells=' . join(',', $port->getBoughtGoodIDs()) . EOL;
 			}
-			unset($portGoods);
 			unset($port);
 		}
 		if($sector->hasPlanet()) {

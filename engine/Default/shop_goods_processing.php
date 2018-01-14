@@ -25,30 +25,35 @@ $port =& $sector->getPort();
 if ($player->getRelation($port->getRaceID()) < -300)
 	create_error('This port refuses to trade with you because you are at <big><span class="bold red">WAR!</span></big>');
 
+// does the port actually buy or sell this good?
+$transaction = $port->getGoodTransaction($good_id);
+if (empty($transaction))
+	create_error('I don\'t trade in that good.');
+
 $portGood = $port->getGood($good_id);
 // check if there are enough left at port
-if ($portGood['Amount'] < $amount)
+if ($port->getGoodAmount($good_id) < $amount)
 	create_error('I\'m short of '.$good_name.'. So I\'m not going to sell you '.$amount.' pcs.');
 
 // does we have what we are going to sell?
-if ($portGood['TransactionType'] == 'Sell' && $amount > $ship->getCargo($good_id))
+if ($transaction == 'Sell' && $amount > $ship->getCargo($good_id))
 	create_error('Scanning your ships indicates you don\'t have '.$amount.' pcs. of '.$good_name.'!');
 
 // check if we have enough room for the thing we are going to buy
-if ($portGood['TransactionType'] == 'Buy' && $amount > $ship->getEmptyHolds())
+if ($transaction == 'Buy' && $amount > $ship->getEmptyHolds())
 	create_error('Scanning your ships indicates you don\'t have enough free cargo bays!');
 
 // check if the guy has enough money
-if ($portGood['TransactionType'] == 'Buy' && $player->getCredits() < $bargain_price)
+if ($transaction == 'Buy' && $player->getCredits() < $bargain_price)
 	create_error('You don\'t have enough credits!');
 
 // get relations for us (global + personal)
 $relations = $player->getRelation($port->getRaceID());
 
-if (!isset($var['ideal_price'])) SmrSession::updateVar('ideal_price',$port->getIdealPrice($good_id, $portGood['TransactionType'], $amount, $relations));
+if (!isset($var['ideal_price'])) SmrSession::updateVar('ideal_price',$port->getIdealPrice($good_id, $transaction, $amount, $relations));
 $ideal_price = $var['ideal_price'];
 
-if (!isset($var['offered_price'])) SmrSession::updateVar('offered_price',$port->getOfferPrice($ideal_price, $relations, $portGood['TransactionType']));
+if (!isset($var['offered_price'])) SmrSession::updateVar('offered_price',$port->getOfferPrice($ideal_price, $relations, $transaction));
 $offered_price = $var['offered_price'];
 
 // nothing should happen here but just to avoid / by 0
@@ -57,8 +62,8 @@ if ($ideal_price == 0 || $offered_price == 0)
 
 // can we accept the current price?
 if (!empty($bargain_price) &&
-	(($portGood['TransactionType'] == 'Buy' && $bargain_price >= $ideal_price) ||
-	($portGood['TransactionType'] == 'Sell' && $bargain_price <= $ideal_price))) {
+	(($transaction == 'Buy' && $bargain_price >= $ideal_price) ||
+	($transaction == 'Sell' && $bargain_price <= $ideal_price))) {
 
 	// the url we going to
 	$container = create_container('skeleton.php');
@@ -70,7 +75,7 @@ if (!empty($bargain_price) &&
 	$base_xp = SmrPort::getBaseExperience($amount, $port->getGoodDistance($good_id));
 
 	// if offered equals ideal we get a problem (division by zero)
-	$gained_exp = round($port->calculateExperiencePercent($ideal_price,$offered_price,$bargain_price,$portGood['TransactionType']) * $base_xp);
+	$gained_exp = round($port->calculateExperiencePercent($ideal_price,$offered_price,$bargain_price,$transaction) * $base_xp);
 
 	//will use these variables in current sector and port after successful trade
 	$container['traded_xp'] = $gained_exp;
@@ -78,7 +83,7 @@ if (!empty($bargain_price) &&
 	$container['traded_good'] = $good_name;
 	$container['traded_credits'] = $bargain_price;
 
-	if ($portGood['TransactionType'] == 'Buy') {
+	if ($transaction == 'Buy') {
 		$container['traded_transaction'] = 'bought';
 		$ship->increaseCargo($good_id,$amount);
 		$player->decreaseCredits($bargain_price);
@@ -90,7 +95,7 @@ if (!empty($bargain_price) &&
 		$port->buyGoods($portGood,$amount,$ideal_price,$bargain_price,$gained_exp);
 
 	}
-	elseif ($portGood['TransactionType'] == 'Sell') {
+	elseif ($transaction == 'Sell') {
 
 		$container['traded_transaction'] = 'sold';
 		$ship->decreaseCargo($good_id,$amount);
@@ -105,7 +110,7 @@ if (!empty($bargain_price) &&
 	$player->increaseHOF(1,array('Trade','Results','Success'), HOF_PUBLIC);
 
 	// log action
-	$account->log(LOG_TYPE_TRADING, $portGood['TransactionType'] . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());
+	$account->log(LOG_TYPE_TRADING, $transaction . 's '.$amount.' '.$good_name.' for '.$bargain_price.' credits and '.$gained_exp.' experience', $player->getSectorID());
 
 	$player->increaseExperience($gained_exp);
 
