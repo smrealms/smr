@@ -1867,8 +1867,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				(account_id, game_id, course)
 				VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeBinary(serialize($this->plottedCourse)) . ')');
 		else if($hadPlottedCourse) {
-			$this->plottedCourse = false;
-			$this->db->query('DELETE FROM player_plotted_course WHERE account_id = ' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id = ' . $this->db->escapeNumber($this->getGameID()));
+			$this->deletePlottedCourse();
 		}
 	}
 
