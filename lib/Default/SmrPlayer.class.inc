@@ -1848,7 +1848,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 				// get the course back
 				$this->plottedCourse = unserialize($this->db->getField('course'));
 				$endSectorID = $this->plottedCourse->getEndSectorID();
-				if($endSectorID != $this->getSectorID() && $this->plottedCourse->isInPath($this->getSectorID())) {
+				if ($endSectorID != $this->getSectorID() && $this->isPartOfCourse($this->getSector())) {
 					// Current sector is in the path, we have jumped along it somehow
 					$this->setPlottedCourse($this->plottedCourse->skipToSector($this->getSectorID()));
 				}
