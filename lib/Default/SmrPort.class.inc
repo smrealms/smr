@@ -49,6 +49,7 @@ class SmrPort {
 	
 	protected $cachedVersion = false;
 	protected $cachedTime = TIME;
+	protected $cacheIsValid = true;
 	
 	protected $SQL;
 	
@@ -386,9 +387,6 @@ class SmrPort {
 			$this->decreaseCredits($this->getUpgradeRequirement());
 			$this->doUpgrade();
 		}
-		if($upgrades > 0) {
-			$this->updateSectorPlayersCache();
-		}
 		return $upgrades;
 	}
 	
@@ -462,7 +460,9 @@ class SmrPort {
 		// sort ID arrays, since the good ID might not be the largest
 		sort($this->goodIDs['All']);
 		sort($this->goodIDs[$type]);
+
 		$this->goodAmounts[$goodID] = Globals::getGood($goodID)['Max'];
+		$this->cacheIsValid = false;
 		$this->db->query('REPLACE INTO port_has_goods (game_id, sector_id, good_id, transaction_type, amount) VALUES (' . $this->db->escapeNumber($this->getGameID()) . ',' . $this->db->escapeNumber($this->getSectorID()) . ',' . $this->db->escapeNumber($goodID) . ',' . $this->db->escapeString($type) . ',' . $this->db->escapeNumber($this->getGoodAmount($goodID)) . ')');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
@@ -480,6 +480,7 @@ class SmrPort {
 			array_splice($this->goodIDs['Sell'], $key, 1);
 		}
 		
+		$this->cacheIsValid = false;
 		$this->db->query('DELETE FROM port_has_goods WHERE '.$this->SQL.' AND good_id=' . $this->db->escapeNumber($goodID) . ';');
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
@@ -491,9 +492,6 @@ class SmrPort {
 				++$downgrades;
 				$this->doDowngrade();
 			}
-		}
-		if($downgrades > 0) {
-			$this->updateSectorPlayersCache();
 		}
 		return $downgrades;
 	}
@@ -737,7 +735,8 @@ class SmrPort {
 		if($this->raceID == $raceID)
 			return;
 		$this->raceID = $raceID;
-		$this->hasChanged=true;
+		$this->hasChanged = true;
+		$this->cacheIsValid = false;
 		// route_cache tells NPC's where they can trade
 		$this->db->query('DELETE FROM route_cache WHERE game_id='.$this->db->escapeNumber($this->getGameID()));
 	}
@@ -1076,8 +1075,16 @@ class SmrPort {
 		if ($this->isCachedVersion()) {
 			throw new Exception('Cannot update a cached port!');
 		}
-		if(!$this->exists())
+		if (!$this->exists()) {
 			return;
+		}
+
+		// If any cached members (see `__sleep`) changed, update the cached port
+		if (!$this->cacheIsValid) {
+			$this->updateSectorPlayersCache();
+		}
+
+		// If any fields in the `port` table have changed, update table
 		if($this->hasChanged) {
 			if($this->isNew===false) {
 				$this->db->query('UPDATE port SET experience = ' . $this->db->escapeNumber($this->getExperience()) .
@@ -1114,6 +1121,8 @@ class SmrPort {
 			}
 			$this->hasChanged=false;
 		}
+
+		// Update the port good amounts
 		if (isset($this->goodAmounts)) {
 			foreach ($this->goodAmounts as $goodID => $amount) {
 				$this->db->query('UPDATE port_has_goods SET amount = ' . $this->db->escapeNumber($amount) . '
