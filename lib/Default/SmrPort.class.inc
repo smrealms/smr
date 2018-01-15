@@ -1264,7 +1264,12 @@ class SmrPort {
 	
 	public function &killPortByPlayer(AbstractSmrPlayer &$killer) {
 		$return = array();
-		
+
+		// Port is destroyed, so empty the port of all trade goods
+		foreach ($this->getAllGoodIDs() as $goodID) {
+			$this->setGoodAmount($goodID, 0);
+		}
+
 		$this->creditCurrentAttackersForKill();
 		
 		// News Entry
