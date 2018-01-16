@@ -183,17 +183,12 @@ class SmrPort {
 	}
 	
 	private function restockGood($goodID, $secondsSinceRefresh) {
-		$good = Globals::getGood($goodID);
-		$db = new SmrMySqlDatabase();
-		$refreshPerHour = self::$BASE_REFRESH_PER_HOUR[$good['Class']] * Globals::getGameSpeed($this->getGameID());
+		$goodClass = Globals::getGood($goodID)['Class'];
+		$refreshPerHour = self::$BASE_REFRESH_PER_HOUR[$goodClass] * Globals::getGameSpeed($this->getGameID());
 		$refreshPerSec = $refreshPerHour / 3600;
 		$amountToAdd = floor($secondsSinceRefresh * $refreshPerSec);
+		$this->increaseGoodAmount($goodID, $amountToAdd);
 		
-		$amount = $this->getGoodAmount($goodID);
-		if ($amount > $good['Max'] || ($amount < $good['Max'] && $amountToAdd > 0)) {
-			$newAmount = min($good['Max'], $amount + $amountToAdd);
-			$this->setGoodAmount($goodID, $newAmount);
-		}
 		return round($amountToAdd / $refreshPerSec);
 	}
 	
@@ -317,11 +312,8 @@ class SmrPort {
 	public function setGoodAmount($goodID,$amount) {
 		if($this->isCachedVersion())
 			throw new Exception('Cannot update a cached port!');
-		if($amount < 0)
-			$amount = 0;
-		$max = $this->getGood($goodID)['Max'];
-		if($amount > $max)
-			$amount = $max;
+		// The new amount must be between 0 and the max for this good
+		$amount = max(0, min($amount, $this->getGood($goodID)['Max']));
 		if($this->getGoodAmount($goodID) == $amount)
 			return;
 		$this->goodAmounts[$goodID] = $amount;
