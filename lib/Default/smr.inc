@@ -1,11 +1,11 @@
 <?php
 
-require_once(LIB . '/Default/Globals.class.inc');
-require_once(get_file_loc('SmrPlayer.class.inc'));
-require_once(get_file_loc('SmrAccount.class.inc'));
-require_once(get_file_loc('SmrShip.class.inc'));
-require_once(get_file_loc('SmrSector.class.inc'));
-require_once(get_file_loc('Sorter.class.inc'));
+require_once('Globals.class.inc');
+require_once('SmrPlayer.class.inc');
+require_once('SmrAccount.class.inc');
+require_once('SmrShip.class.inc');
+require_once('SmrSector.class.inc');
+require_once('Sorter.class.inc');
 
 function htmliseMessage($message) {
 	$message = htmlentities($message,ENT_COMPAT,'utf-8');
