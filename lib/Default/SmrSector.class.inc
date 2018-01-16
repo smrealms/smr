@@ -82,10 +82,9 @@ class SmrSector {
 
 	protected function __construct($gameID, $sectorID,$create=false) {
 		$this->db = new SmrMySqlDatabase();
+		$this->SQL = 'game_id = ' . $this->db->escapeNumber($gameID) . ' AND sector_id = ' . $this->db->escapeNumber($sectorID);
 
-		$this->db->query('SELECT * FROM sector
-							WHERE game_id = ' . $this->db->escapeNumber($gameID) . '
-							AND sector_id = ' . $this->db->escapeNumber($sectorID) . ' LIMIT 1');
+		$this->db->query('SELECT * FROM sector WHERE ' . $this->SQL . ' LIMIT 1');
 		if($this->db->nextRecord()) {
 			$this->sectorID		= $this->db->getInt('sector_id');
 			$this->gameID		= $this->db->getInt('game_id');
@@ -138,8 +137,7 @@ class SmrSector {
 									', link_right=' . $this->db->escapeNumber($this->getLinkRight()) .
 									', link_down=' . $this->db->escapeNumber($this->getLinkDown()) .
 									', link_left=' . $this->db->escapeNumber($this->getLinkLeft()) .
-								' WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-									AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' LIMIT 1');
+								' WHERE ' . $this->SQL . ' LIMIT 1');
 			}
 			else {
 				$this->db->query('INSERT INTO sector(sector_id,game_id,galaxy_id,link_up,link_down,link_left,link_right)
@@ -163,9 +161,7 @@ class SmrSector {
 
 		//now delete the entry from visited
 		if(!$this->isVisited($player))
-			$this->db->query('DELETE FROM player_visited_sector
-								WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
+			$this->db->query('DELETE FROM player_visited_sector WHERE ' . $this->SQL . '
 								 AND account_id = ' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
 		$this->visited[$player->getAccountID()]=true;
 	}
@@ -295,9 +291,7 @@ class SmrSector {
 		foreach($forces as &$force) {
 			$force->ping($message,$player);
 		} unset($force);
-		$this->db->query('UPDATE sector_has_forces SET refresher = 0
-							WHERE game_id = ' . $this->db->escapeNumber($this->getGameID()) . '
-								AND sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . '
+		$this->db->query('UPDATE sector_has_forces SET refresher = 0 WHERE ' . $this->SQL . '
 								AND refresher = ' . $this->db->escapeNumber($player->getAccountID()));
 	}
 
@@ -646,7 +640,7 @@ class SmrSector {
 	}
 
 	public function removeAllLocations() {
-		$this->db->query('DELETE FROM location WHERE game_id=' . $this->db->escapeNumber($this->getGameID()) . ' AND sector_id=' . $this->db->escapeNumber($this->getSectorID()));
+		$this->db->query('DELETE FROM location WHERE ' . $this->SQL);
 		SmrLocation::getSectorLocations($this->getGameID(),$this->getSectorID(),true);
 	}
 
@@ -911,7 +905,7 @@ class SmrSector {
 		if($player===null)
 			return true;
 		if(!isset($this->visited[$player->getAccountID()])) {
-			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE sector_id = ' . $this->db->escapeNumber($this->getSectorID()) . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()) .' LIMIT 1');
+			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL . ' AND account_id=' . $this->db->escapeNumber($player->getAccountID()) . ' LIMIT 1');
 			$this->visited[$player->getAccountID()] = !$this->db->nextRecord();
 		}
 		return $this->visited[$player->getAccountID()];
