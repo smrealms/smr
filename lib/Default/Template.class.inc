@@ -31,7 +31,9 @@ class Template {
 	}
 	
 	public function display($templateName,$forAjax=false, $xmlResponse=false) {
-		@ob_clean();
+		if (ob_get_length() > 0) {
+			ob_clean();
+		}
 		ob_start();
 		$this->includeTemplate($templateName);
 		$this->captures[$this->currentCaptureID].=ob_get_clean();
