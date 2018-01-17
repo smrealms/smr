@@ -358,7 +358,9 @@ abstract class AbstractSmrAccount {
 	}
 
 	public function isVeteran() {
-		return $this->isVeteranBumped() || $this->getRank() >= FLEDGLING;
+		// Use maxRankAchieved to avoid a database call to get user stats.
+		// This saves a lot of time on the CPL, Rankings, Rosters, etc.
+		return $this->isVeteranBumped() || $this->maxRankAchieved >= FLEDGLING;
 	}
 
 	public function isNewbie() {
