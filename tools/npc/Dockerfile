@@ -18,7 +18,9 @@ COPY tools/npc/composer.json .
 RUN composer install --no-interaction
 
 # Get the SMR source code
-COPY . .
+COPY ./htdocs ./htdocs
+COPY ./lib ./lib
+COPY ./tools ./tools
 
 WORKDIR /smr/tools/npc
 
