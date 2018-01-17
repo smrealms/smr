@@ -6,7 +6,6 @@
         "electrolinux/phpquery": "0.9.6",
         "ext-curl": "*",
         "ext-json": "^1.0.0",
-        "ext-mysql": "^1.0.0",
         "ext-mysqli": "*",
         "facebook/graph-sdk": "^5.5.0",
         "google/recaptcha": "~1.1",
