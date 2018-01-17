@@ -4,7 +4,6 @@
     "license": "AGPL-3.0",
     "require": {
         "ext-mysqli": "*",
-        "ext-mysql": "*",
         "php": "^5.6.0",
         "illuminate/support": "5.4.36",
         "team-reflex/discord-php": "*"
