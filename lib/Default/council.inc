@@ -86,11 +86,11 @@ function modifyRelations($race_id_1) {
 		if ($db2->nextRecord())
 			$relation = $db2->getField('relation') + $relation_modifier;
 
-		if ($relation < -500)
-			$relation = -500;
-
-		if ($relation > 500)
-			$relation = 500;
+		if ($relation < MIN_GLOBAL_RELATIONS) {
+			$relation = MIN_GLOBAL_RELATIONS;
+		} elseif ($relation > MAX_GLOBAL_RELATIONS) {
+			$relation = MAX_GLOBAL_RELATIONS;
+		}
 
 		$db2->query('UPDATE race_has_relation
 					SET relation = ' . $db2->escapeNumber($relation) . '

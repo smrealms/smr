@@ -53,9 +53,9 @@ if ($submit=='Create Game') {
 	$races =& Globals::getRaces();
 	foreach ($races as &$race) {
 		foreach ($races as &$race2) {
-			if ($race['Race ID'] == $race2['Race ID']) $amount = 500;
+			if ($race['Race ID'] == $race2['Race ID']) $amount = MAX_GLOBAL_RELATIONS;
 			elseif ($race['Race ID'] == 1 || $race2['Race ID'] == 1) $amount = 0; //0 relats with neutral
-			else $amount = -500;
+			else $amount = MIN_GLOBAL_RELATIONS;
 			$db->query('REPLACE INTO race_has_relation (game_id, race_id_1, race_id_2, relation)
 						VALUES (' . $db->escapeNumber($var['game_id']) . ',' . $db->escapeNumber($race['Race ID']) . ',' . $db->escapeNumber($race2['Race ID']) . ',' . $db->escapeNumber($amount) . ')');
 		}
