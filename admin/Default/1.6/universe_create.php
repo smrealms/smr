@@ -15,15 +15,14 @@ $template->assign('EditGameHREF',SmrSession::getNewHREF($container));
 $canEditStartedGames = $account->hasPermission(PERMISSION_EDIT_STARTED_GAMES);
 $template->assign('CanEditStartedGames', $canEditStartedGames);
 
-if($canEditStartedGames) {
-	$games = Globals::getGameInfo();
-}
-else {
-	$games = array();
+$games = array();
+if ($canEditStartedGames) {
+	$db->query('SELECT game_id FROM game ORDER BY end_date DESC');
+} else {
 	$db->query('SELECT game_id FROM game WHERE start_date > ' . $db->escapeNumber(TIME) . ' ORDER BY end_date DESC');
-	while ($db->nextRecord()) {
-		$games[$db->getInt('game_id')] = Globals::getGameInfo($db->getInt('game_id'));
-	}
+}
+while ($db->nextRecord()) {
+	$games[] = SmrGame::getGame($db->getInt('game_id'));
 }
 $template->assignByRef('EditGames',$games);
 ?>

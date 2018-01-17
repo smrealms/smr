@@ -278,10 +278,9 @@
 					<td>
 						<select name="game_id" size="1" id="InputFields">
 							<option value="0">All Games</option><?php
-							$Games =& Globals::getGameInfo();
-							foreach($Games as &$Game) {
-								?><option value="<?php echo $Game['ID']; ?>"><?php echo $Game['GameName']; ?></option><?php
-							} unset($Game); ?>
+							foreach ($Games as $Game) {
+								?><option value="<?php echo $Game->getGameID(); ?>"><?php echo $Game->getDisplayName(); ?></option><?php
+							} ?>
 						</select>
 					</td>
 				</tr><?php

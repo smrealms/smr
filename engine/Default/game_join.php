@@ -1,28 +1,28 @@
 <?php
 
-$game =& Globals::getGameInfo($var['game_id']);
+$game = SmrGame::getGame($var['game_id']);
 
 $template->assignByRef('Game',$game);
 
 // do we need credits for this game?
-if ($game['GameCreditsRequired'] > 0) {
+if ($game->getCreditsNeeded() > 0) {
 	// do we have enough
-	if ($account->getTotalSmrCredits() < $game['GameCreditsRequired'])
+	if ($account->getTotalSmrCredits() < $game->getCreditsNeeded())
 		create_error('Sorry you do not have enough SMR Credits to play this game.<br />To get SMR credits you need to donate to SMR.');
 }
 
 // is the game already full?
-if (SmrGame::getGame($var['game_id'])->getTotalPlayers() >= $game['GameMaxPlayers']) {
+if ($game->getTotalPlayers() >= $game->getMaxPlayers()) {
 	create_error('The maximum number of players in that game is reached!');
 }
 
 //if (TIME < $game['StartDate'])
 //	create_error('You want to join a game that hasn\'t started yet?');
 
-if (TIME > $game['EndDate'])
+if (TIME > $game->getEndDate())
 	create_error('You want to join a game that is already over?');
 
-$template->assign('PageTopic', 'Join Game: ' . $game['GameName'] . ' (' . $game['ID'] . ')');
+$template->assign('PageTopic', 'Join Game: ' . $game->getDisplayName());
 
 $raceInfo =& Globals::getRaces();
 $raceDescriptions='';
@@ -43,7 +43,7 @@ $template->assign('RaceDescriptions',$raceDescriptions);
 $container = array();
 $container['game_id'] = $var['game_id'];
 $container['url'] = 'game_join_processing.php';
-if (TIME >= $game['StartDate'])
+if (TIME >= $game->getStartDate())
 	$template->assign('JoinGameFormHref',SmrSession::getNewHREF($container));
 
 $db2 = new SmrMySqlDatabase();

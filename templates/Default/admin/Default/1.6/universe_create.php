@@ -22,8 +22,7 @@ if (count($EditGames) == 0) { ?>
 				<td class="right">
 					<select name="game_id"><?php
 						foreach($EditGames as $Game) {
-							$displayName = "(" . $Game['ID'] . ") " . $Game['GameName'];
-							?><option value="<?php echo $Game['ID']; ?>"><?php echo $displayName; ?></option><?php
+							?><option value="<?php echo $Game->getGameID(); ?>"><?php echo $Game->getDisplayName(); ?></option><?php
 						} ?>
 					</select>
 				</td>
