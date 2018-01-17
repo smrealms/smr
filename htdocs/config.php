@@ -1,5 +1,5 @@
 <?php
-@date_default_timezone_set(@date_default_timezone_get());
+ini_set('date.timezone', 'UTC');
 
 // Repository paths
 define('ROOT', __DIR__ . '/../');
