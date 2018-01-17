@@ -182,6 +182,13 @@ define('PLANET_BUNKER_ARMOUR',100);
 define('ALIGN_FED_PROTECTION', 0);
 
 /*
+ * Relations
+ */
+define('MAX_GLOBAL_RELATIONS', 500);
+define('MIN_GLOBAL_RELATIONS', -500);
+define('MIN_RELATIONS', -1000);
+
+/*
  * HoF
  */
 define('HOF_PUBLIC', 'PUBLIC');
@@ -341,7 +348,6 @@ define('MR_FACTOR', 15);
 define('INCREASED_DAMAGE_GADGET_FACTOR', .07);
 define('WEAPON_DAMAGE_STAT_FACTOR', .025);
 
-define('MIN_RELATIONS', -1000);
 define('MIN_EXPERIENCE',0);
 define('MAX_EXPERIENCE',4294967296);
 define('MAX_COUNCIL_MEMBERS',5);
