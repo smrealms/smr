@@ -2,42 +2,12 @@
 
 $template->assign('PageTopic','Edit Account');
 
-if(isset($_REQUEST['account_id']) && is_numeric($_REQUEST['account_id'])) {
-	SmrSession::updateVar('account_id',$_REQUEST['account_id']);
-}
-elseif(!isset($var['account_id'])) {
-	SmrSession::updateVar('account_id', 0);
-}
-if(isset($_REQUEST['login'])) {
-	SmrSession::updateVar('login',$_REQUEST['login']);
-}
-elseif(!isset($var['login'])) {
-	SmrSession::updateVar('login', '');
-}
-if(isset($_REQUEST['val_code'])) {
-	SmrSession::updateVar('val_code',$_REQUEST['val_code']);
-}
-elseif(!isset($var['val_code'])) {
-	SmrSession::updateVar('val_code', '');
-}
-if(isset($_REQUEST['email'])) {
-	SmrSession::updateVar('email',$_REQUEST['email']);
-}
-elseif(!isset($var['email'])) {
-	SmrSession::updateVar('email', '');
-}
-if(isset($_REQUEST['hofname'])) {
-	SmrSession::updateVar('hofname',$_REQUEST['hofname']);
-}
-elseif(!isset($var['hofname'])) {
-	SmrSession::updateVar('hofname', '');
-}
-if(isset($_REQUEST['player_name'])) {
-	SmrSession::updateVar('player_name',$_REQUEST['player_name']);
-}
-elseif(!isset($var['player_name'])) {
-	SmrSession::updateVar('player_name', '');
-}
+$account_id = SmrSession::getRequestVar('account_id', 0);
+$player_name = SmrSession::getRequestVar('player_name', '');
+SmrSession::getRequestVar('login', '');
+SmrSession::getRequestVar('val_code', '');
+SmrSession::getRequestVar('email', '');
+SmrSession::getRequestVar('hofname', '');
 if(isset($_REQUEST['game_id'])) {
 	SmrSession::updateVar('SearchGameID',$_REQUEST['game_id']);
 }
@@ -45,12 +15,9 @@ elseif(!isset($var['SearchGameID'])) {
 	SmrSession::updateVar('SearchGameID', 0);
 }
 
-if(!empty($var['account_id']) && !is_numeric($var['account_id'])) {
+if(!empty($account_id) && !is_numeric($account_id)) {
 	create_error('Account ID must be a number.');
 }
-
-$account_id = $var['account_id'];
-$player_name = $var['player_name'];
 
 // create account object
 $curr_account = false;
@@ -144,7 +111,11 @@ if ($curr_account!==false) {
 }
 
 
-$template->assign('ErrorMessage', $var['errorMsg']);
-$template->assign('Message', $var['msg']);
+if (isset($var['errorMsg'])) {
+	$template->assign('ErrorMessage', $var['errorMsg']);
+}
+if (isset($var['msg'])) {
+	$template->assign('Message', $var['msg']);
+}
 
 ?>
