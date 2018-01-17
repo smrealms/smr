@@ -24,9 +24,13 @@ if (!empty($account_id) || $game_id == 20000) {
 			SmrPlayer::sendMessageFromAdmin($db->getField('game_id'), $db->getField('account_id'), $message,$expire);
 		}
 	}
+	$msg = '<span class="green">SUCCESS: </span>Your message has been sent.';
+} else {
+	$msg = '<span class="bold red">ERROR: </span>You must specify a player to message!';
 }
+
 $container = create_container('skeleton.php', 'admin_tools.php');
-$container['msg'] = '<span class="green">SUCCESS: </span>Your message has been sent.';
+$container['msg'] = $msg;
 forward($container)
 
 ?>
