@@ -1,5 +1,10 @@
 <?php
+
+// Exception thrown when a game cannot be found in the database
+class GameNotFoundException extends Exception {}
+
 require_once('SmrGalaxy.class.inc');
+
 class SmrGame {
 	protected static $CACHE_GAMES = array();
 
@@ -79,7 +84,7 @@ class SmrGame {
 			return;
 		}
 		else {
-			throw new Exception('No such game: ' . $gameID);
+			throw new GameNotFoundException('No such game: ' . $gameID);
 		}
 	}
 

@@ -244,7 +244,12 @@ class Globals {
 	}
 
 	public static function isValidGame($gameID) {
-		return self::getGameInfo($gameID)!==false;
+		try {
+			SmrGame::getGame($gameID);
+			return true;
+		} catch (GameNotFoundException $e) {
+			return false;
+		}
 	}
 
 	public static function &getGameInfo($gameID = false) {
@@ -257,8 +262,7 @@ class Globals {
 			}
 			return $allGames;
 		}
-		try {
-			$gameID = (int)$gameID;
+		if (self::isValidGame($gameID)) {
 			$game =& SmrGame::getGame($gameID);
 			$gameInfo = array(
 					'ID' => $game->getGameID(),
@@ -278,14 +282,8 @@ class Globals {
 					'IgnoreStats' => $game->isIgnoreStats(),
 					'StartingCredits' => $game->getStartingCredits()
 					);
-		}
-		catch (Exception $e) {
-			if(stripos($e->getMessage(),'No such game')!==false) {
-				$gameInfo = false;
-			}
-			else {
-				throw $e;
-			}
+		} else {
+			$gameInfo = false;
 		}
 		return $gameInfo;
 	}
