@@ -174,8 +174,8 @@ class DummyPlayer extends AbstractSmrPlayer {
 //		$killer->increaseHOF($this->getShip()->getCost(),'killing','ships_killed_cost');
 
 		// The killer may change alignment
-		$relations = Globals::getRaceRelations($this->getGameID(),$killer->getRaceID());
-		$relation = $relations[$this->getRaceID()];
+		$relations = Globals::getRaceRelations($this->getGameID(), $this->getRaceID());
+		$relation = $relations[$killer->getRaceID()];
 
 		$alignChangePerRelation = 0.1;
 		if($relation >= RELATIONS_PEACE || $relation <= RELATIONS_WAR)

@@ -57,8 +57,7 @@ if (!$VoteTreaties) { ?>
 	<tr>
 		<th>Race</th>
 		<th>Vote</th>
-		<th>Our Relation<br />with them</th>
-		<th>Their Relation<br />with us</th>
+		<th>Relations</th>
 	</tr><?php
 
 	foreach($VoteRelations as $RaceID => $VoteInfo) { ?>
@@ -76,8 +75,7 @@ if (!$VoteTreaties) { ?>
 					<input type="submit" name="action" value="Decrease" id="InputFields"<?php if($VoteInfo['Decreased']){ ?> style="background-color:green"<?php } ?> />
 				</form>
 			</td>
-			<td align="center"><?php echo get_colored_text($VoteInfo['RelationToThem']); ?></td>
-			<td align="center"><?php echo get_colored_text($VoteInfo['RelationToUs']); ?></td>
+			<td align="center"><?php echo get_colored_text($VoteInfo['Relations']); ?></td>
 		</tr><?php
 	} ?>
 </table>

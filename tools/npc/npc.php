@@ -527,8 +527,7 @@ function doUNO($hardwareID,$amount) {
 function tradeGoods($goodID,AbstractSmrPlayer &$player,SmrPort &$port) {
 	sleepNPC(); //We have an extra sleep at port to make the NPC more vulnerable.
 	$ship =& $player->getShip();
-	$portRelations = Globals::getRaceRelations($player->getGameID(),$port->getRaceID());
-	$relations = $player->getRelation($port->getRaceID()) + $portRelations[$player->getRaceID()];
+	$relations = $player->getRelation($port->getRaceID());
 
 	$portGood = $port->getGood($goodID);
 	

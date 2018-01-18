@@ -94,9 +94,14 @@ function modifyRelations($race_id_1) {
 
 		$db2->query('UPDATE race_has_relation
 					SET relation = ' . $db2->escapeNumber($relation) . '
-					WHERE race_id_1 = ' . $db2->escapeNumber($race_id_1) . '
-						AND race_id_2 = '.$db2->escapeNumber($race_id_2) . '
-						AND game_id = '.$db2->escapeNumber($player->getGameID()));
+					WHERE game_id = '.$db2->escapeNumber($player->getGameID()).'
+						AND (
+								race_id_1 = '.$db2->escapeNumber($race_id_1).'
+								AND race_id_2 = '.$db2->escapeNumber($race_id_2).'
+							OR
+								race_id_1 = '.$db2->escapeNumber($race_id_2).'
+								AND race_id_2 = '.$db2->escapeNumber($race_id_1).'
+						)');
 
 		$db2->query('DELETE FROM player_votes_relation
 					WHERE account_id = ' . $db2->escapeNumber($account_id) . '
