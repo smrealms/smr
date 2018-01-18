@@ -22,8 +22,20 @@ RUN apt-get update \
 	&& rm -rf /var/lib/apt/lists/* \
 	&& docker-php-ext-install curl json mysqli
 
+# Use the production php.ini unless PHP_DEBUG=1 (defaults to 0)
+ARG PHP_DEBUG=0
+RUN [ "$PHP_DEBUG" = "1" ] && echo "Using development php.ini" || \
+	{ echo "Using production php.ini" \
+		&& mkdir /usr/src/php \
+		&& tar --file /usr/src/php.tar.xz --extract --strip-components=1 --directory /usr/src/php \
+		&& cp /usr/src/php/php.ini-production /usr/local/etc/php/php.ini; \
+	}
+
 # We need to set 'sendmail_path' since php doesn't know about sendmail when it's built
 RUN echo 'sendmail_path = "/usr/sbin/sendmail -t -i"' > /usr/local/etc/php/conf.d/mail.ini
+
+# Disable apache .htaccess files (suggested optimization)
+RUN sed -i 's/AllowOverride All/AllowOverride None/g' /etc/apache2/conf-enabled/docker-php.conf
 
 WORKDIR /smr/
 
