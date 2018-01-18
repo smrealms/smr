@@ -11,7 +11,7 @@ if (!isset($var['OrderID'])) {
 		create_error('We do not sell that weapon here!');
 	}
 	
-	if ($weapon->getRaceID() != RACE_NEUTRAL && $player->getRelation($weapon->getRaceID()) < 300) {
+	if ($weapon->getRaceID() != RACE_NEUTRAL && $player->getRelation($weapon->getRaceID()) < RELATIONS_PEACE) {
 		create_error('We are at WAR!!! Do you really think I\'m gonna sell you that weapon?');
 	}
 

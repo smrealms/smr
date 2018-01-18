@@ -987,7 +987,7 @@ abstract class AbstractSmrShip {
 		// Increase if player and port races are at war; decrease otherwise.
 		if ($results['TotalDamage'] >= SmrPort::DAMAGE_NEEDED_FOR_ALIGNMENT_CHANGE) {
 			$relations = Globals::getRaceRelations($thisPlayer->getGameID(), $thisPlayer->getRaceID());
-			if ($relations[$port->getRaceID()] <= -300) {
+			if ($relations[$port->getRaceID()] <= RELATIONS_WAR) {
 				$thisPlayer->increaseAlignment(1);
 				$thisPlayer->increaseHOF(1, array('Combat','Port','Alignment','Gain'), HOF_PUBLIC);
 			} else {
