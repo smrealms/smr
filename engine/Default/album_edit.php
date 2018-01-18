@@ -22,7 +22,7 @@ if ($db->nextRecord()) {
 		$albumEntry['Status']=('<span class="red">Disabled</span>');
 	}
 	elseif ($approved == 'YES') {
-		$albumEntry['Status']=('<a href="'.URL.'/album/?'.$account->getHofName().'" class="dgreen">Online</a>');
+		$albumEntry['Status']=('<a href="album/?'.$account->getHofName().'" class="dgreen">Online</a>');
 	}
 		
 	if(is_readable(UPLOAD . SmrSession::$account_id)) {

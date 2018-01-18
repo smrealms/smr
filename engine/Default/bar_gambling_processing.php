@@ -154,8 +154,6 @@ elseif ($action == 'blackjack') {
 	}
 
 	function create_card($card, $show) {
-		//picture directory
-		$dir = URL . '/images';
 		//only display what the card really is if they want to
 		$card_height = 100;
 		$card_width = 125;
@@ -164,14 +162,14 @@ elseif ($action == 'blackjack') {
 		//lets try and echo cards
 		$return.=('<table style="border:1px solid green"><tr><td><table><tr><td valign=top align=left height='.$card_height.' width='.$card_width.'>');
 		if ($show) {
-			$return.=('<h1>'.$first.'<img src="'.$dir.'/'.$second.'.gif"></h1></td></tr>');
+			$return.=('<h1>'.$first.'<img src="images/'.$second.'.gif"></h1></td></tr>');
 		}
 		else {
 			$return.=('</td></tr>');
 		}
 		$return.=('<tr><td valign=bottom align=right height='.$card_height.' width='.$card_width.'>');
 		if ($show) {
-			$return.=('<h1><img src="'.$dir.'/'.$second.'.gif">'.$first.'</h1></td></tr></table>');
+			$return.=('<h1><img src="images/'.$second.'.gif">'.$first.'</h1></td></tr></table>');
 		}
 		else {
 			$return.=('</td></tr></table>');

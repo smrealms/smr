@@ -83,7 +83,7 @@ else {
 					 'Thanks,'.EOL.EOL .
 					 'Admin Team';
 
-	$PHP_OUTPUT.=('<td colspan="2"><img src="'.URL.'/upload/'.$account_id.'"></td>');
+	$PHP_OUTPUT.=('<td colspan="2"><img src="upload/'.$account_id.'"></td>');
 	$PHP_OUTPUT.=('<td style="font-size:75%;">You can edit the text that will be sent<br />to that user as an email if you reset his picture!<br /><br />');
 	$PHP_OUTPUT.=('<textarea spellcheck="true" name="email_txt" id="InputFields" style="width:300;height:200;">'.$default_email.'</textarea></td>');
 	$PHP_OUTPUT.=('</form>');

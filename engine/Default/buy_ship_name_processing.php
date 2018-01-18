@@ -48,7 +48,7 @@ if(!isset($var['ShipName'])) {
 			}
 
 			$filename = $player->getAccountID() . 'logo' . $player->getGameID();
-			$name = '<img style="padding:3px;" src="'.URL.'/upload/' . $filename . '"><br />';
+			$name = '<img style="padding:3px;" src="upload/' . $filename . '"><br />';
 			move_uploaded_file($_FILES['photo']['tmp_name'], UPLOAD . $filename);
 			$db->query('REPLACE INTO ship_has_name (game_id, account_id, ship_name)
 						VALUES (' . $db->escapeNumber($player->getGameID()) . ', ' . $db->escapeNumber($player->getAccountID()) . ', ' . $db->escapeString($name) . ')');

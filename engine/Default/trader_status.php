@@ -83,7 +83,7 @@ if ($player->hasCurrentBounty('UG')) {
 }
 
 // Ship
-$PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><a href="' . URL . '/ship_list.php" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Ship List"/></a><br />Name: ';
+$PHP_OUTPUT.= '<br /><br /><span class="yellow bold">Ship</span><a href="ship_list.php" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Ship List"/></a><br />Name: ';
 
 $PHP_OUTPUT.= $ship->getName();
 $PHP_OUTPUT.= '<br />Speed: ';
@@ -109,7 +109,7 @@ else {
 	if ($ship->canHaveDCS()) $PHP_OUTPUT.= 'Drone Scrambler<br />';
 }
 
-$PHP_OUTPUT.= '<br /><a href="'.URL.'/level_requirements.php" target="levelRequirements"><span class="yellow bold">Next Level</span></a><a href="' . WIKI_URL . '/game-guide/experience-levels" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/></a><br />';
+$PHP_OUTPUT.= '<br /><a href="level_requirements.php" target="levelRequirements"><span class="yellow bold">Next Level</span></a><a href="' . WIKI_URL . '/game-guide/experience-levels" target="_blank"><img src="images/silk/help.png" width="16" height="16" alt="Wiki Link" title="Goto SMR Wiki: Experience Levels"/></a><br />';
 $db->query('SELECT level_name,requirement FROM level WHERE requirement>' . $db->escapeNumber($player->getExperience()) . ' ORDER BY requirement ASC LIMIT 1');
 if(!$db->nextRecord()) {
 	$db->query('SELECT level_name,requirement FROM level ORDER BY requirement DESC LIMIT 1');
