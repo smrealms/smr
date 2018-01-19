@@ -30,6 +30,7 @@ if ($FeatureModerator) { ?>
 		<div align="right">&nbsp;
 			<select name="status">
 				<option disabled selected value style="display:none"> -- Select Status -- </option>
+				<option value="Accepted">Accepted</option>
 				<option value="Implemented">Implemented</option>
 				<option value="Rejected">Rejected</option>
 				<option value="Opened">Open</option>

@@ -10,6 +10,10 @@ if(!isset($var['Status'])) {
 }
 
 $container = $var;
+$container['Status'] = 'Accepted';
+$template->assign('ViewAcceptedFeaturesHref', SmrSession::getNewHREF($container));
+
+$container = $var;
 $container['Status'] = 'Implemented';
 $template->assign('ViewImplementedFeaturesHref',SmrSession::getNewHREF($container));
 
@@ -26,6 +30,9 @@ $showCurrent = (!isset($var['ShowOld']) || $var['ShowOld']!==true) && $var['Stat
 $template->assign('ShowCurrent',$showCurrent);
 $template->assign('Status',$var['Status']);
 
+if($var['Status'] != 'Accepted') {
+	$template->assign('AcceptedTotal', getFeaturesCount('Accepted'));
+}
 if($var['Status'] != 'Implemented') {
 	$template->assign('PreviousImplementedTotal', getFeaturesCount('Implemented'));
 }

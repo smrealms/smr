@@ -5,6 +5,9 @@ if(!$ShowCurrent) {
 if($Status != 'Opened' || $ShowCurrent) {
 	?><p><a href="<?php echo $ShowOldFeaturesHref; ?>">View All Open Requests (<?php echo $OldTotal; ?>)</a></p><?php
 }
+if($Status != 'Accepted') {
+	?><p><a href="<?php echo $ViewAcceptedFeaturesHref; ?>">View Accepted Requests (<?php echo $AcceptedTotal; ?>)</a></p><?php
+}
 if($Status != 'Implemented') {
 	?><p><a href="<?php echo $ViewImplementedFeaturesHref; ?>">View Implemented Requests (<?php echo $PreviousImplementedTotal; ?>)</a></p><?php
 }
@@ -58,6 +61,7 @@ if(isset($FeatureRequests)) { ?>
 			if($FeatureModerator) { ?>&nbsp;
 				<select name="status">
 					<option disabled selected value style="display:none"> -- Select Status -- </option>
+					<option value="Accepted">Accepted</option>
 					<option value="Implemented">Implemented</option>
 					<option value="Rejected">Rejected</option>
 					<option value="Opened">Open</option>
