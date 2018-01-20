@@ -1360,7 +1360,7 @@ abstract class AbstractSmrPlayer {
 	public function hasVisitedSector($sectorID) {
 		if(!isset($this->visitedSectors)) {
 			$this->visitedSectors = array();
-			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE account_id=' . $this->db->escapeNumber($this->getAccountID()) . ' AND game_id=' . $this->db->escapeNumber($this->getGameID()));
+			$this->db->query('SELECT sector_id FROM player_visited_sector WHERE ' . $this->SQL);
 			while($this->db->nextRecord())
 				$this->visitedSectors[$this->db->getField('sector_id')] = false;
 		}
