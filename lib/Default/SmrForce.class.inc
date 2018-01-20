@@ -91,7 +91,6 @@ class SmrForce {
 
 	protected function __construct($gameID,$sectorID, $ownerID) {
 		$this->db = new SmrMySqlDatabase();
-		$this->db->query('DELETE FROM sector_has_forces WHERE expire_time < ' . $this->db->escapeNumber(TIME));
 		$this->db->query('SELECT * FROM sector_has_forces
 							WHERE game_id = '.$this->db->escapeNumber($gameID).'
 								AND sector_id = '.$this->db->escapeNumber($sectorID).'
