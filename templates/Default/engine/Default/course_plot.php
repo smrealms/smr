@@ -136,8 +136,8 @@ if(isset($XType)) { ?>
 <h2>Add new destination</h2>
 
 <form class="standard" id="manageDestination" method="POST" action="<?php echo $ManageDestination; ?>">
-	<label for="sectorId">Destination</label> <input type="text" name="sectorId" value="1" size="4"/> &nbsp; &nbsp;
-	<label for="label">Label</label> <input type="text" name="label" value="" size="14"/> &nbsp;
+	<label for="sectorId">Sector:</label>&nbsp;<input type="number" name="sectorId" style="width:75px" /> &nbsp; &nbsp;
+	<label for="label">Label:</label>&nbsp;<input type="text" name="label" value="" size="14"/> &nbsp;
 	<input type="hidden" name="type" value="add"/>
 	<input type="hidden" name="offsetTop" value="0"/>
 	<input type="hidden" name="offsetLeft" value="0"/>
