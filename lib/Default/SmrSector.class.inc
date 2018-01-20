@@ -5,6 +5,9 @@ require_once(get_file_loc('SmrPlanet.class.inc'));
 require_once(get_file_loc('SmrPort.class.inc'));
 require_once(get_file_loc('SmrGalaxy.class.inc'));
 
+// Exception thrown when a sector cannot be found in the database
+class SectorNotFoundException extends Exception {}
+
 class SmrSector {
 	protected static $CACHE_SECTORS = array();
 	protected static $CACHE_GALAXY_SECTORS = array();
@@ -23,6 +26,19 @@ class SmrSector {
 
 	protected $hasChanged = false;
 	protected $isNew = false;
+
+	/**
+	 * Constructs the sector to determine if it exists.
+	 * Returns a boolean value.
+	 */
+	public static function sectorExists($gameID, $sectorID) {
+		try {
+			self::getSector($gameID, $sectorID);
+			return true;
+		} catch (SectorNotFoundException $e) {
+			return false;
+		}
+	}
 
 	public static function &getGalaxySectors($gameID,$galaxyID,$forceUpdate = false) {
 		if($forceUpdate || !isset(self::$CACHE_GALAXY_SECTORS[$gameID][$galaxyID])) {
@@ -124,7 +140,7 @@ class SmrSector {
 			return;
 		}
 		else {
-			throw new Exception('No such sector: '.$gameID.'-'.$sectorID);
+			throw new SectorNotFoundException('No such sector: '.$gameID.'-'.$sectorID);
 		}
 	}
 

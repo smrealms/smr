@@ -30,8 +30,9 @@ if (!is_numeric($target))
 if ($player->getSectorID() == $target)
 	create_error('Hmmmm...if ' . $player->getSectorID() . '=' . $target . ' then that means...YOU\'RE ALREADY THERE! *cough*you\'re real smart*cough*');
 
-if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $target))
+if (!SmrSector::sectorExists($player->getGameID(), $target)) {
 	create_error('The target sector doesn\'t exist!');
+}
 
 // If the Calculate Turn Cost button was pressed
 if (isset($_POST['action']) && $_POST['action'] == 'Calculate Turn Cost') {

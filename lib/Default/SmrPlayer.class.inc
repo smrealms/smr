@@ -1923,10 +1923,6 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	function moveDestinationButton($sectorID, $offsetTop, $offsetLeft) {
 
-		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorID) === false) {
-			create_error('You want to move a non-existent sector?');
-		}
-
 		if( !is_numeric($offsetLeft) || !is_numeric($offsetTop)) {
 			create_error('The position of the saved sector must be numeric!.');
 		}
@@ -1956,7 +1952,7 @@ class SmrPlayer extends AbstractSmrPlayer {
 
 	function addDestinationButton($sectorID, $label) {
 
-		if (!is_numeric($sectorID) || $sectorID < 1 || SmrGalaxy::getGalaxyContaining($this->getGameID(), $sectorID) === false) {
+		if (!is_numeric($sectorID) || !SmrSector::sectorExists($this->getGameID(), $sectorID)) {
 			create_error('You want to add a non-existent sector?');
 		}
 
