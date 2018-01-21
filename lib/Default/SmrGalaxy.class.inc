@@ -267,14 +267,7 @@ class SmrGalaxy {
 	}
 	
 	public static function &getGalaxyContaining($gameID, $sectorID) {
-		$galaxies =& SmrGalaxy::getGameGalaxies($gameID);
-		foreach($galaxies as &$galaxy) {
-			if($galaxy->contains($sectorID)) {
-				return $galaxy;
-			}
-		}
-		$return = false;
-		return $return;
+		return SmrSector::getSector($gameID, $sectorID)->getGalaxy();
 	}
 	
 	function equals(SmrGalaxy $otherGalaxy) {

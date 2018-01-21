@@ -43,8 +43,9 @@ try {
 		if(!is_numeric($sectorID)) {
 			header('location: ' . URL . '/error.php?msg=Sector id was not a number.');
 		}
-		$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $sectorID);
-		if($galaxy === false) {
+		try {
+			$galaxy = SmrGalaxy::getGalaxyContaining(SmrSession::$game_id, $sectorID);
+		} catch (SectorNotFoundException $e) {
 			header('location: ' . URL . '/error.php?msg=Invalid sector id');
 			exit;
 		}

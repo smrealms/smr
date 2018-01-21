@@ -53,7 +53,7 @@ elseif ($var['func'] == 'Warp') {
 	if(!is_numeric($sector_to)) {
 		create_error('Sector ID has to be a number.');
 	}
-	if(!SmrGalaxy::getGalaxyContaining($player->getGameID(), $sector_to)) {
+	if (!SmrSector::sectorExists($player->getGameID(), $sector_to)) {
 		create_error('Sector ID is not in any galaxy.');
 	}
 	$player->setSectorID($sector_to);
