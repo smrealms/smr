@@ -2,7 +2,7 @@
 if (!isset($MessageGameID)) { ?>
 	<form name="AdminMessageChooseGameForm" method="POST" action="<?php echo $AdminMessageChooseGameFormHref; ?>">
 		<p>Please select a game:</p>
-		<select name="game_id" size="1" id="InputFields">
+		<select name="SendGameID" size="1" id="InputFields">
 			<option value="20000">Send to All Players</option><?php
 			foreach ($ActiveGames as $Game) {
 				?><option value="<?php echo $Game->getGameID(); ?>"><?php echo $Game->getDisplayName(); ?></option><?php

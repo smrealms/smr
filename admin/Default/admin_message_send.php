@@ -1,10 +1,8 @@
 <?php
 
-$template->assign('PageTopic','Send Message');
-if(isset($_REQUEST['game_id'])) {
-	SmrSession::updateVar('SendGameID',$_REQUEST['game_id']);
-}
-$gameID = $var['SendGameID'];
+$template->assign('PageTopic', 'Send Admin Message');
+
+$gameID = SmrSession::getRequestVar('SendGameID');
 // check if we know the game yet
 if (empty($gameID)) {
 	$template->assign('AdminMessageChooseGameFormHref',SmrSession::getNewHREF(create_container('skeleton.php', 'admin_message_send.php')));

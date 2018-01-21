@@ -311,6 +311,6 @@
 if(isset($ErrorMessage)) { ?>
 	<div align="center"><?php echo $ErrorMessage; ?></div><?php
 }
-
-?>
-<div align="center"><?php echo $Message; ?></div>
+if(isset($Message)) { ?>
+	<div align="center"><?php echo $Message; ?></div><?php
+} ?>
