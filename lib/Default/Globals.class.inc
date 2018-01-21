@@ -551,16 +551,20 @@ class Globals {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_message.php', array('alliance_id'=>$allianceID)));
 	}
 
-	public static function getAlliancePlanetsHREF($allianceID) {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_planets.php', array('alliance_id'=>$allianceID)));
-	}
-
 	public static function getAllianceForcesHREF($allianceID) {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_forces.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getAllianceOptionsHREF($allianceID) {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'alliance_option.php', array('alliance_id'=>$allianceID)));
+	}
+
+	public static function getPlanetListHREF($allianceID) {
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_list.php', array('alliance_id'=>$allianceID)));
+	}
+
+	public static function getPlanetListFinancialHREF($allianceID) {
+		return SmrSession::getNewHREF(create_container('skeleton.php', 'planet_list_financial.php', array('alliance_id'=>$allianceID)));
 	}
 
 	public static function getViewMessagesHREF() {
@@ -584,10 +588,6 @@ class Globals {
 
 	public static function getTraderStatusHREF() {
 		return SmrSession::getNewHREF(create_container('skeleton.php', 'trader_status.php'));
-	}
-
-	public static function getTraderPlanetHREF() {
-		return SmrSession::getNewHREF(create_container('skeleton.php', 'trader_planet.php'));
 	}
 
 	public static function getCouncilHREF($raceID=false) {

@@ -47,7 +47,7 @@ function create_alliance_menu($alliance_id = null, $alliance_leader_id = FALSE) 
 		$menuItems[] = array('Link'=>Globals::getAllianceMessageBoardHREF($alliance_id),'Text'=>'Message Board');
 	}
 	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers()) || $planetLand) {
-		$menuItems[] = array('Link'=>Globals::getAlliancePlanetsHREF($alliance_id),'Text'=>'Planets');
+		$menuItems[] = array('Link'=>Globals::getPlanetListHREF($alliance_id),'Text'=>'Planets');
 	}
 	if ($in_alliance || in_array($player->getAccountID(), Globals::getHiddenPlayers())) {
 		$menuItems[] = array('Link'=>Globals::getAllianceForcesHREF($alliance_id),'Text'=>'Forces');
@@ -121,7 +121,7 @@ function create_trader_menu() {
 	global $player, $template;
 	$template->assign('MenuItems', array(
 						array('Link'=>Globals::getTraderStatusHREF(),'Text'=>'Trader Status'),
-						array('Link'=>Globals::getTraderPlanetHREF(),'Text'=>'Planet'),
+						array('Link'=>Globals::getPlanetListHREF($player->getAllianceID()),'Text'=>'Planet'),
 						array('Link'=>Globals::getAllianceHREF($player->getAllianceID()),'Text'=>'Alliance'),
 						array('Link'=>Globals::getCouncilHREF(),'Text'=>'Politics'),
 						array('Link'=>Globals::getTraderRelationsHREF(),'Text'=>'Relations'),

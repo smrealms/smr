@@ -329,7 +329,28 @@ class SmrAlliance {
 		
 		return $activeIDs;
 	}
-	
+
+	/**
+	 * Return all planets owned by members of this alliance.
+	 */
+	public function getPlanets() {
+		$this->db->query('SELECT planet.sector_id
+			FROM player
+			JOIN planet ON player.game_id = planet.game_id AND player.account_id = planet.owner_id
+			WHERE player.game_id=' . $this->db->escapeNumber($this->gameID) . '
+			AND player.alliance_id=' . $this->db->escapeNumber($this->allianceID) . '
+			ORDER BY planet.sector_id
+		');
+		$planets = array();
+		while ($this->db->nextRecord()) {
+			$planet = SmrPlanet::getPlanet($this->gameID, $this->db->getInt('sector_id'));
+			// Call to make sure planet properties are up-to-date.
+			$planet->getCurrentlyBuilding();
+			$planets[] = $planet;
+		}
+		return $planets;
+	}
+
 }
 
 ?>
