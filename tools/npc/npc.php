@@ -1,4 +1,8 @@
 <?php
+
+// Use this exception to help override container forwarding for NPC's
+class ForwardException extends Exception {}
+
 try {
 	echo '<pre>';
 	// global config
@@ -22,8 +26,8 @@ try {
 			debug('Hit an error');
 			throw new Exception($container['message']);
 		}
-		throw new Exception('Forward'); //We catch and check for exceptions with the message "Forward" in NPCStuff, very hacky but works - need to extend Exception for a less over-arching catch.
-											//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
+		//We have to throw the exception to get back up the stack, otherwise we quickly hit problems of overflowing the stack.
+		throw new ForwardException;
 	}
 	define('OVERRIDE_FORWARD',true);
 	
@@ -99,7 +103,7 @@ try {
 	try {
 		changeNPCLogin();
 	}
-	catch(Exception $e) {}
+	catch(ForwardException $e) {}
 	
 	NPCStuff();
 }
@@ -313,9 +317,7 @@ function NPCStuff() {
 			}
 			*/
 		}
-		catch(Exception $e) {
-			if($e->getMessage()!='Forward')
-				throw $e;
+		catch(ForwardException $e) {
 			global $lock;
 			if($lock) { //only save if we have the lock.
 				SmrSector::saveSectors();
@@ -464,7 +466,7 @@ function changeNPCLogin() {
 		processContainer(joinGame(SmrSession::$game_id,$NPC_LOGIN['PlayerName']));
 	}
 	
-	throw new Exception('Forward');
+	throw new ForwardException;
 }
 
 function canWeUNO(AbstractSmrPlayer &$player, $oppurtunisticOnly) {
