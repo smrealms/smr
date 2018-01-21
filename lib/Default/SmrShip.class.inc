@@ -120,11 +120,15 @@ class SmrShip extends AbstractSmrShip {
 	}
 	
 	function updateHardware() {
-		if($this->hasChangedHardware === true) {
+		if (!empty($this->hasChangedHardware)) {
 			$this->db->lockTable('ship_has_hardware');
 			
-			// write hardware info
-			foreach ($this->hardware as $hardwareTypeID => $amount) {
+			// write hardware info only for hardware that has changed
+			foreach ($this->hasChangedHardware as $hardwareTypeID => $hasChanged) {
+				if (!$hasChanged) {
+					continue;
+				}
+				$amount = $this->getHardware($hardwareTypeID);
 				if ($amount > 0) {
 					$this->db->query('REPLACE INTO ship_has_hardware (account_id, game_id, hardware_type_id, amount, old_amount) VALUES(' . $this->db->escapeNumber($this->getAccountID()) . ', ' . $this->db->escapeNumber($this->getGameID()) . ', ' . $this->db->escapeNumber($hardwareTypeID) . ', ' . $this->db->escapeNumber($amount) . ', ' . $this->db->escapeNumber($this->getOldHardware($hardwareTypeID)) . ')');
 				}
@@ -133,7 +137,7 @@ class SmrShip extends AbstractSmrShip {
 				}
 			}
 			$this->db->unlock();
-			$this->hasChangedHardware = false;
+			$this->hasChangedHardware = array();
 		}
 	}
 	
